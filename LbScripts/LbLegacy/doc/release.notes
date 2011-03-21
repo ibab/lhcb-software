@@ -1,7 +1,8 @@
 2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed unTarFile function. Now an output_path parameter
-	can be passed to the function.
+	* python/LbLegacy/install_project.py:
+	- fixed unTarFile function. Now an output_path parameter can be passed to the function.
+	- changed realpath into abspath.
 
 2011-03-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

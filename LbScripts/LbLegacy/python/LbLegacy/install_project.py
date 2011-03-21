@@ -1640,8 +1640,8 @@ def createBaseDirs(pname, pversion):
     mysiteroot = os.environ["MYSITEROOT"]
 
 
-    mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
-    thispwd = os.path.realpath(os.getcwd())
+    mypath = os.path.abspath(mysiteroot.split(os.pathsep)[0])
+    thispwd = os.path.abspath(os.getcwd())
     if sys.platform == 'win32' :
         if mypath.upper() != thispwd.upper() :
             log.warning("Using the directory %s for installation" % mypath)
