@@ -4483,7 +4483,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterPage.setName( page->name() );
         m_presenterPage.setShortDoc( page->doc() );
         page -> getHistogramList( &m_presenterPage.onlineHistos() ) ;
-        m_presenterPage.prepareAccess( m_histogramDB );
+        m_presenterPage.prepareAccess( m_histogramDB, partition );
 
         if ( pres::Online == m_presenterInfo.presenterMode() ) {
           m_presenterPage.setDimBrowser( m_dimBrowser );

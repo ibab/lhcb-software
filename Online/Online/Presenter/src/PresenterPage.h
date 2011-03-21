@@ -66,7 +66,7 @@ public:
   std::vector<OnlineHistoOnPage*>& onlineHistos() { return m_onlineHistosOnPage; }
   
   //== Prepare the list of histogram to access
-  void prepareAccess( OnlineHistDB* histDB );
+  void prepareAccess( OnlineHistDB* histDB, std::string& partition );
 
   //== Load the histograms from DIM services
   void loadFromDIM( std::string& partition, bool update );

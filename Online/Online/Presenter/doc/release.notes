@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-21 - Olivier Callot
+ - Make trend plot partition dependent.
+
 ! 2011-03-18 - Olivier Callot
  - Fix the trend plot and its refresh.
 

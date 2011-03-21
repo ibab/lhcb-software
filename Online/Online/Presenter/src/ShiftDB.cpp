@@ -40,9 +40,10 @@ ShiftDB::~ShiftDB() { }
 //=============================================================================
 void ShiftDB::readWebFile( const boost::gregorian::date * day ) {
   m_shifters.clear() ;
+  std::string hostName = "lbshiftdb.cern.ch";
 
   boost::asio::ip::tcp::iostream 
-    web_stream( "shiftdb.lbdaq.cern.ch" , "http" ) ;
+    web_stream( hostName, "http" ) ;
 
   if ( ! web_stream ) {
     std::cerr << "Cannot open shiftdb script via the web" << std::endl ;
@@ -52,21 +53,23 @@ void ShiftDB::readWebFile( const boost::gregorian::date * day ) {
 
   // Send HTTP request to web server
   web_stream << "GET /shiftdb_report.py?format=twiki&"
-	     << "sDate=" << boost::gregorian::to_iso_string( *day ) 
-	     << " HTTP/1.0\r\n" 
-	     << "Host:shiftdb.lbdaq.cern.ch\r\n" 
-	     << "\r\n" << std::flush ;
+             << "sDate=" << boost::gregorian::to_iso_string( *day ) 
+             << " HTTP/1.0\r\n" 
+             << "Host:" << hostName << "\r\n\r\n" 
+             << std::flush ;
 
   std::string line ;
 
   // Check that the web server answers correctly
   std::getline( web_stream , line ) ;
+  std::cout << line << std::endl;
+
   if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
     std::cerr << "ShiftDB server does not reply" << std::endl ;
     m_open = false ;
     return ;
   }
-
+  
   // Parse the answer of the web server with | as separator
   boost::char_separator< char > sep( "|" , "" , boost::keep_empty_tokens ) ;
   boost::tokenizer< boost::char_separator< char > > tok( line , sep ) ;

@@ -69,7 +69,7 @@ void PresenterPage::clear ( ) {
 //=========================================================================
 //  Prepare the histogram descriptions for access
 //=========================================================================
-void PresenterPage::prepareAccess( OnlineHistDB* histDB  ) {
+void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition  ) {
   std::cout << "** Preparing access for " << m_onlineHistosOnPage.size() << " online histos on page" << std::endl;
   std::vector<OnlineHistogram*> anaHistos;
   anaHistos.reserve( 100 ); // avoid relocation
@@ -82,6 +82,9 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB  ) {
     if ( myHist->type() == OnlineHistDBEnv::TRE ) {
       std::string file = myHist->hname();
       if ( file.find( ".trend" ) < file.size() ) file = file.substr( 0, file.find( ".trend" ) );
+      unsigned indx = file.size();
+      while ( 0 < indx && file[indx-1] != '/' ) --indx;
+      file = file.substr(0,indx) + partition + "_" + file.substr( indx );
       std::string variable = myHist->algorithm();
       bool existed = false;
       for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
