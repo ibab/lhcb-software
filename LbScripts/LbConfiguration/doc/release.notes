@@ -1,3 +1,7 @@
+2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: changed realpath into abspath.
+
 2011-03-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: Removed annoying message about unknow CMTCONFIG.
