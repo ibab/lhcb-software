@@ -150,19 +150,19 @@ StatusCode PatCheckerUpgrade::initialize() {
   m_allCounters.push_back( m_kSNew  );
   m_allCounters.push_back( m_best  );
 
-  m_ttForward = tool<PatTTCounter>( "PatTTCounter", "TTForward", this );
+  m_ttForward = tool<IPatTTCounter>( "PatTTCounter", "TTForward", this );
   m_ttForward->setContainer( forwardName );
   m_ttForward->addSelection( "   with hits" );
   m_ttForward->addSelection( "        long" );
   m_ttForward->addSelection( "long > 5 GeV" );
 
-  m_ttMatch = tool<PatTTCounter>( "PatTTCounter", "TTMatch", this );
+  m_ttMatch = tool<IPatTTCounter>( "PatTTCounter", "TTMatch", this );
   m_ttMatch->setContainer( LHCb::TrackLocation::Match );
   m_ttMatch->addSelection( "   with hits" );
   m_ttMatch->addSelection( "        long" );
   m_ttMatch->addSelection( "long > 5 GeV" );
 
-  m_ttDownst = tool<PatTTCounter>( "PatTTCounter", "TTDownstream", this );
+  m_ttDownst = tool<IPatTTCounter>( "PatTTCounter", "TTDownstream", this );
   m_ttDownst->setContainer( LHCb::TrackLocation::Downstream );
   m_ttDownst->addSelection( "   with hits" );
   m_ttDownst->addSelection( "    has Seed" );
@@ -201,7 +201,7 @@ StatusCode PatCheckerUpgrade::execute() {
     (*itC)->initEvent();
   }
 
-  for ( std::vector<PatTTCounter*>::iterator itCt = m_allTTCounters.begin();
+  for ( std::vector<IPatTTCounter*>::iterator itCt = m_allTTCounters.begin();
         m_allTTCounters.end() != itCt; ++itCt ) {
     (*itCt)->initEvent();
   }
@@ -425,7 +425,7 @@ StatusCode PatCheckerUpgrade::finalize() {
     (*itC)->printStatistics();
   }
 
-  for ( std::vector<PatTTCounter*>::iterator itCt = m_allTTCounters.begin();
+  for ( std::vector<IPatTTCounter*>::iterator itCt = m_allTTCounters.begin();
         m_allTTCounters.end() != itCt; ++itCt ) {
     (*itCt)->printStatistics();
   }

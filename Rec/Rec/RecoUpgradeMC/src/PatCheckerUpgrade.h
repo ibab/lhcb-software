@@ -9,7 +9,7 @@
 
 // local
 #include "PatCounterUpgrade.h"
-#include "PatTTCounter.h"
+#include "PatKernel/IPatTTCounter.h"
 
 /** @class PatCheckerUpgrade PatCheckerUpgrade.h
  *  Check the quality of the pattern, by comparing to MC information
@@ -52,14 +52,14 @@
     PatCounterUpgrade* m_kSNew;
     PatCounterUpgrade* m_best;
     
-    PatTTCounter* m_ttForward;
-    PatTTCounter* m_ttMatch;
-    PatTTCounter* m_ttDownst;
+    IPatTTCounter* m_ttForward;
+    IPatTTCounter* m_ttMatch;
+    IPatTTCounter* m_ttDownst;
     
     //== Vector of the counters
     std::vector<PatCounterUpgrade*> m_allCounters;
     
-    std::vector<PatTTCounter*> m_allTTCounters;
+    std::vector<IPatTTCounter*> m_allTTCounters;
 
     bool m_measureTime;
     ISequencerTimerTool* m_timer;
