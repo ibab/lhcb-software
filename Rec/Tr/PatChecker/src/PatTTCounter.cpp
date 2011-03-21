@@ -25,7 +25,7 @@ PatTTCounter::PatTTCounter( const std::string& type,
                             const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<PatTTCounter>(this);
+  declareInterface<IPatTTCounter>(this);
   m_link      = NULL;
   m_nbGhost   = 0.;
   m_nbGhostHit = 0.;

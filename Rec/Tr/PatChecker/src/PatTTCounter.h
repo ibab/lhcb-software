@@ -9,26 +9,24 @@
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 #include "Linker/LinkerTool.h"
+#include "PatKernel/IPatTTCounter.h"
 
-static const InterfaceID IID_PatTTCounter ( "PatTTCounter", 1, 0 );
 
 /** @class PatTTCounter PatTTCounter.h
  *  
  *
  *  @author Olivier Callot
  *  @date   2006-06-28
+ * slightly modifed by Wenbin Qian for implemntation
  *  @update for A-Team framework 2007-08-20 SHM
  */
 
 
-  class PatTTCounter : public GaudiTool {
+  class PatTTCounter : virtual public IPatTTCounter, public GaudiTool {
     
   public: 
     
-    // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_PatTTCounter; }
-    
-    /// Standard constructor
+     /// Standard constructor
     PatTTCounter( const std::string& type, 
 		  const std::string& name,
 		  const IInterface* parent);
@@ -42,8 +40,8 @@ static const InterfaceID IID_PatTTCounter ( "PatTTCounter", 1, 0 );
 		std::vector<bool> flags, 
 		std::vector<LHCb::LHCbID>& ids );
     
-    void setContainer( std::string name )  { m_container = name; }
-    
+   void setContainer( std::string name )  { m_container = name; }    
+
     void addSelection ( std::string name );
     
     void printStatistics();
@@ -56,7 +54,7 @@ static const InterfaceID IID_PatTTCounter ( "PatTTCounter", 1, 0 );
     typedef InvTable::Range        InvRange;
     typedef InvTable::iterator     InvIterator;
     
-    std::string m_container;
+   
     TrackAsct* m_link;
     const InvTable* m_invTable;
     bool m_validData;
@@ -65,6 +63,7 @@ static const InterfaceID IID_PatTTCounter ( "PatTTCounter", 1, 0 );
     double m_nbGhostHit;
     int m_totTrack;
     
+    std::string m_container;
     std::vector<std::string> m_name;    ///< Name of the sub-counters
     std::vector<double> m_nbTrack;
     std::vector<double> m_mcHits;          ///< Nb of MC hits on tracks
