@@ -56,6 +56,7 @@ private:
   double m_IP_cut_kaonS;
   double m_phicut_kaonS;
   double m_etacut_kaonS;
+  double m_dRcut_kaonS;
   double m_dQcut_kaonS;
   double m_lcs_cut;
   double m_KaonSPID_kpS_cut;
@@ -63,6 +64,9 @@ private:
   double m_ipPU_cut_kS;
   double m_distPhi_cut_kS;
   double m_ProbMin_kaonS;
+  double m_P0_Cal_kaonS ;
+  double m_P1_Cal_kaonS ;
+  double m_Eta_Cal_kaonS ;
 
   double m_AverageOmega;
 };

@@ -13,7 +13,7 @@ from Configurables import GaudiSequencer, DaVinci
 ##
 # CheatedSelection.
 
-from Configurables import CheatedSelection, PhysDesktop
+from Configurables import CheatedSelection
 
 cheatsel = CheatedSelection("CheatedSelection")
 cheatsel.InputLocations = [ "Phys/TaggingPions" ]
@@ -33,8 +33,6 @@ tag = BTagging("BTagging")
 tag.InputLocations = [ location ]
 
 tag.OutputLevel    = 3
-tag.addTool( PhysDesktop )
-tag.PhysDesktop.OutputLevel = 4
 tag.addTool( TriggerTisTos )
 tag.TriggerTisTos.OutputLevel = 4
 tag.addTool( TaggingUtils )
@@ -51,8 +49,8 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 tag.BTaggingTool.OutputLevel  = 4
 
 #Import cuts
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_Moriond.py') # default
-#importOptions('$FLAVOURTAGGINGOPTS/cuts_mc2010_nu25_v1.py') # mc
+from FlavourTagging.Tunings import TuneTool
+TuneTool(tag,"MC10") #for example
 
 ######################################################################\
 ##

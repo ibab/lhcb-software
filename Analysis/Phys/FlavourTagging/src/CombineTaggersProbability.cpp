@@ -29,7 +29,10 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
 
 }
 CombineTaggersProbability::~CombineTaggersProbability(){}
-StatusCode CombineTaggersProbability::initialize() { return StatusCode::SUCCESS; }
+StatusCode CombineTaggersProbability::initialize() { 
+  warning() << "Comb OS calib ctt: P0_Cal "<<m_P0_Cal_OS<<", P1_Cal "<<m_P1_Cal_OS<<endreq;
+  return StatusCode::SUCCESS; }
+
 StatusCode CombineTaggersProbability::finalize()   { return StatusCode::SUCCESS; }
 
 //=============================================================================

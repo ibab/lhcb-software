@@ -23,7 +23,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
 
   declareProperty( "CombTech",     m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",m_NeuralNetName        = "NNetTool_MLP" );
-  declareProperty( "AverageOmega", m_AverageOmega         = 0.33 );
+  declareProperty( "Muon_AverageOmega", m_AverageOmega         = 0.33 );
 
   declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
   declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
@@ -36,7 +36,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.36 ); 
   declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.316 ); 
 
-  declareProperty( "ProbMin_muon", m_ProbMin_muon = 0. ); //no cut
+  declareProperty( "Muon_ProbMin", m_ProbMin_muon = 0. ); //no cut
 
   m_nnet = 0;
   m_util = 0;
@@ -46,6 +46,8 @@ TaggerMuonTool::~TaggerMuonTool() {};
 
 //=====================================================================
 StatusCode TaggerMuonTool::initialize() { 
+
+  warning() << "Mu calib ctt: P0_Cal "<<m_P0_Cal_muon<<", P1_Cal "<<m_P1_Cal_muon<<endreq;
 
   StatusCode sc = service("EventDataSvc", m_eventSvc, true);
   if( sc.isFailure() ) {

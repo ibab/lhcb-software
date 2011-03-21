@@ -22,22 +22,25 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "AverageOmega",    m_AverageOmega   = 0.33 );
+  declareProperty( "KaonSame_AverageOmega",    m_AverageOmega   = 0.33 );
   
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.55 *GeV );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.2 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.5 );
   declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 0.8 );
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 0.8 );
+  declareProperty( "KaonSame_dR_cut", m_dRcut_kaonS= 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 2.0 *GeV);
-  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 2.75 );
-  declareProperty( "KaonS_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
-  declareProperty( "KaonS_distPhi_cut", m_distPhi_cut_kS= 0.005 );
+  declareProperty( "KaonSame_lcs_cut",   m_lcs_cut      = 2.75 );
+  declareProperty( "KaonSame_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
+  declareProperty( "KaonSame_distPhi_cut", m_distPhi_cut_kS= 0.005 );
+  declareProperty( "KaonSame_PIDk_cut", m_KaonSPID_kS_cut  =  6.5 );
+  declareProperty( "KaonSame_PIDkp_cut",m_KaonSPID_kpS_cut = -1.0 );
 
-  declareProperty( "KaonSPID_kS_cut", m_KaonSPID_kS_cut  =  6.5 );
-  declareProperty( "KaonSPID_kpS_cut",m_KaonSPID_kpS_cut = -1.0 );
-
-  declareProperty( "ProbMin_kaonS",   m_ProbMin_kaonS    = 0. ); //no cut
+  declareProperty( "KaonSame_ProbMin",   m_ProbMin_kaonS    = 0. ); //no cut
+  declareProperty( "KaonSame_P0_Cal",  m_P0_Cal_kaonS   = 0.0 );
+  declareProperty( "KaonSame_P1_Cal",  m_P1_Cal_kaonS   = 1. );
+  declareProperty( "KaonSame_Eta_Cal", m_Eta_Cal_kaonS  = 0. );
 
   m_nnet = 0;
   m_util = 0;
@@ -47,6 +50,8 @@ TaggerKaonSameTool::~TaggerKaonSameTool() {};
 
 //=====================================================================
 StatusCode TaggerKaonSameTool::initialize() { 
+
+  warning() << "KSS calib ctt: P0_Cal "<<m_P0_Cal_kaonS<<", P1_Cal "<<m_P1_Cal_kaonS<<endreq;
 
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
   if(! m_nnet) {
@@ -133,11 +138,13 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( distphi < m_distPhi_cut_kS ) continue;
 
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    if(deta > m_etacut_kaonS) continue;
-
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
+    double dR = sqrt(deta*deta+dphi*dphi);
+
+    if(deta > m_etacut_kaonS) continue;
     if(dphi > m_phicut_kaonS) continue;
+    //if(dR> m_dRcut_kaonS) continue; //future studies, seems to be better than eta phi
 
     Gaudi::LorentzVector pm  = (*ipart)->momentum();
     double E = sqrt(pm.P() * pm.P()+ 493.677*MeV * 493.677*MeV);
@@ -184,6 +191,10 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = m_nnet->MLPkS( NNinputs );
     verbose()<<" KaonS pn inputs="<<NNinputs<<endreq;
     verbose()<<" KaonS pn ="<<pn<<endreq;
+
+    //Calibration (w=1-pn) w' = p0 + p1(w-eta)                                  
+    pn = 1 - m_P0_Cal_kaonS - m_P1_Cal_kaonS * ( (1-pn)-m_Eta_Cal_kaonS);
+    debug() << " SS Kaon pn="<< pn <<" w="<<1-pn<<endmsg;
 
     if( pn < m_ProbMin_kaonS ) return tkaonS;
 

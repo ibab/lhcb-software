@@ -23,15 +23,15 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
 
   declareProperty( "SecondaryVertexName", 
                    m_SecondaryVertexToolName = "SVertexOneSeedTool" );
-  declareProperty( "AverageOmega", m_AverageOmega         = 0.41 );
+  declareProperty( "Vtx_AverageOmega", m_AverageOmega         = 0.41 );
  
   //NNet - no bias, Probability - old with bias:
   declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); 
   declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
 
-  declareProperty( "PowerK",       m_PowerK               = 0.4 );
-  declareProperty( "MinimumVCharge", m_MinimumVCharge     = 0.17 );
-  declareProperty( "ProbMin_vtx", m_ProbMin_vtx           = 0.53);
+  declareProperty( "Vtx_PowerK",       m_PowerK               = 0.4 );
+  declareProperty( "Vtx_MinimumVCharge", m_MinimumVCharge     = 0.17 );
+  declareProperty( "Vtx_ProbMin", m_ProbMin_vtx           = 0.53);
   
   declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.451 ); 
   declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.358 ); 
@@ -52,6 +52,8 @@ TaggerVertexChargeTool::~TaggerVertexChargeTool() {};
 
 //=====================================================================
 StatusCode TaggerVertexChargeTool::initialize() {
+
+  warning() << "Vtx calib ctt: P0_Cal "<<m_P0_Cal_vtx<<", P1_Cal "<<m_P1_Cal_vtx<<endreq;
 
   m_svtool = tool<ISecondaryVertexTool> ("SVertexOneSeedTool", 
                                          m_SecondaryVertexToolName, this);
