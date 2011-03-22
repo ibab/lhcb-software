@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v3r3p1 2011-03-22 ===================
 ! 2011-03-22 - Victor Coco
  - add protoparticle to DefaultParticle in Hlt2PreSelDV 
    implement the beam spot postion extracted from velo resolver
