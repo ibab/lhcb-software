@@ -20,8 +20,6 @@
 #include <VeloDet/DeVeloRType.h>
 #include "VeloDet/DeVelo.h"
 
-#include "VeloDet/DeVelo.h"
-
 /** @class Hlt2PreSelDV Hlt2PreSelDV.h
  *  @brief Turn a given container of RecVertex if they fulfill some criteria
  *  @author Neal Gauvin
@@ -47,6 +45,8 @@ private:
   IGeometryInfo* m_lhcbGeo;
   ITransportSvc * m_transSvc;
 
+  StatusCode UpdateBeamSpot();
+  
   ///Get all RecVertex from RecVerticesLocation
   void GetRecVertices( LHCb::RecVertex::ConstVector & );
   ///Get the upstream PV
@@ -144,6 +144,9 @@ private:
   std::string m_RCut;         
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
+  double m_beamSpotX;
+  double m_beamSpotY;
+  
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame

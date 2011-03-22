@@ -258,7 +258,7 @@ StatusCode Hlt2SelDV::execute() {
   for( Particle::Range::const_iterator is = preys.begin(); 
        is < iend; ++is ){
     const Particle * p = (*is);
-
+    
     //Get rid of non-reconstructed particles, i.e. with no daughters.
     if( p->isBasicParticle() ){ 
       debug()<<"Basic particle !" << endmsg; 

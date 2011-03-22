@@ -57,7 +57,7 @@ Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
   declareProperty("DetDist", m_DetDist = 1*mm );
   declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
   //"", "FromUpstreamPV", "FromBeamLine"
-  declareProperty("RCutMethod", m_RCut = "FromUpstreamPV" );
+  declareProperty("RCutMethod", m_RCut = "FromBeamSpot" );
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
   declareProperty("UseMap", m_UseMap = true );
@@ -179,8 +179,35 @@ StatusCode Hlt2PreSelDV::initialize() {
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
 
+  if( m_RCut =="FromBeamSpot" ){
+    registerCondition("/dd/Conditions/Online/Velo/MotionSystem",&Hlt2PreSelDV::UpdateBeamSpot);
+    this->UpdateBeamSpot();
+  }
+  
+  
   return StatusCode::SUCCESS;
 }
+StatusCode Hlt2PreSelDV::UpdateBeamSpot()
+{
+
+  if (! exist<Condition>(detSvc(),"/dd/Conditions/Online/Velo/MotionSystem" )){ 
+    Warning( "Unable to locate CONDITION='/dd/Conditions/Online/Velo/MotionSystem'" ) ;
+    return StatusCode::FAILURE;
+  }
+  Condition *myCond =  get<Condition>(detSvc(),"/dd/Conditions/Online/Velo/MotionSystem" );
+  
+  //
+  const double xRC = myCond -> paramAsDouble ( "ResolPosRC" ) ;
+  const double xLA = myCond -> paramAsDouble ( "ResolPosLA" ) ;
+  const double   Y = myCond -> paramAsDouble ( "ResolPosY"  ) ;
+  //
+  m_beamSpotX = ( xRC + xLA ) / 2;
+  m_beamSpotY = Y ;
+  
+  
+  return StatusCode::SUCCESS;
+}
+
 
 //=============================================================================
 // Main execution
@@ -220,9 +247,15 @@ StatusCode Hlt2PreSelDV::initialize() {
       m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
     }
   } 
-  else if (m_RCut=="FromUpstreamPV"){
-      m_BeamLine->setReferencePoint( UpPV->position() );
-      m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
+  else if (m_RCut=="FromUpstreamPV" ){
+    Gaudi::XYZPoint beamSpot( UpPV->position());
+    m_BeamLine->setReferencePoint(beamSpot );
+    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
+  }
+  else if ( m_RCut=="FromBeamSpot"){
+    Gaudi::XYZPoint beamSpot( m_beamSpotX,m_beamSpotY,UpPV->position().z());
+    m_BeamLine->setReferencePoint(beamSpot );
+    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   }
 
 
@@ -259,7 +292,7 @@ StatusCode Hlt2PreSelDV::initialize() {
     const RecVertex* rv = *i;
     const SmartRefVector< Track > & Tracks = rv->tracks();
     size = Tracks.size();
-    double r = RFromBL( rv->position() ); //R to beam line
+    double r  = RFromBL( rv->position() ); //R to beam line
     if( msgLevel(MSG::DEBUG) ){
       debug() << "------------- Reconstructed Vertex -----------" << endmsg;
       debug() << "Position " << rv->position() <<" R "<< r
@@ -271,7 +304,7 @@ StatusCode Hlt2PreSelDV::initialize() {
     if( !m_KeepLowestZ ){
       if( i == RV.begin() ) continue;
       //Do not keep if before the upPV
-      if( m_RCut=="FromUpstreamPV" && 
+      if( ( m_RCut=="FromUpstreamPV" || m_RCut=="FromBeamSpot" ) && 
           rv->position().z() < m_BeamLine->referencePoint().z() ) continue;
     }
 
@@ -440,59 +473,60 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         }
 
         if( it == m_map.end() ) {
-	  part = DefaultParticle(*iVtx);
-	}
+          part = DefaultParticle(*iVtx);
+        }
         if( part != NULL ){
           tmpVtx.addToOutgoingParticles( part );
           tmpPart.addToDaughters( part );
           mom += part->momentum();
         }      
       }
-    } else {
-      //Find all particles that have tracks in RecVertex
-      Particle::ConstVector::const_iterator jend = Parts.end();
-      for ( Particle::ConstVector::const_iterator j = Parts.begin();
-	    j != jend;++j) {
-	
-	if( (*j)->proto() == NULL ) continue;
-	if( (*j)->proto()->track() == NULL ) continue;
-	const Track * tk = (*j)->proto()->track();
-	//if( !TestTrack( tk ) ) continue;
-	while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
-	  ++iVtx;
-	}
-
-	if( (*iVtx)->key() == tk->key() ){ 
-	  if( (*iVtx)->key() != endkey ) ++iVtx; 
-	  // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
-	    tmpVtx.addToOutgoingParticles ( *j );
-	    tmpPart.addToDaughters( *j );
-	    mom += (*j)->momentum();
-	  //const LHCb::Particle* clonedPart =  (*j )->clone();
-	  //tmpVtx.addToOutgoingParticles ( clonedPart );
-	  //tmpPart.addToDaughters( clonedPart );
-	  //mom += clonedPart->momentum();
-	  continue;
-	}
-      }
-
-      /*
+    }
+    else {
       //Find all particles that have tracks in RecVertex
       Particle::ConstVector::const_iterator jend = Parts.end();
       for ( Particle::ConstVector::const_iterator j = Parts.begin();
             j != jend;++j) {
+        
         if( (*j)->proto() == NULL ) continue;
         if( (*j)->proto()->track() == NULL ) continue;
         const Track * tk = (*j)->proto()->track();
-        for( SmartRefVector< Track >::const_iterator itr = rv->tracks().begin(); itr !=  rv->tracks().end(); ++itr ){
-	  if( (fabs((*itr)->p()-tk->p())<1e-10) ){ 
+        //if( !TestTrack( tk ) ) continue;
+        while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
+          ++iVtx;
+        }
+        
+        if( (*iVtx)->key() == tk->key() ){ 
+          if( (*iVtx)->key() != endkey ) ++iVtx; 
+          // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
+          tmpVtx.addToOutgoingParticles ( *j );
+          tmpPart.addToDaughters( *j );
+          mom += (*j)->momentum();
+          //const LHCb::Particle* clonedPart =  (*j )->clone();
+          //tmpVtx.addToOutgoingParticles ( clonedPart );
+          //tmpPart.addToDaughters( clonedPart );
+          //mom += clonedPart->momentum();
+          continue;
+        }
+      }
+      
+      /*
+      //Find all particles that have tracks in RecVertex
+      Particle::ConstVector::const_iterator jend = Parts.end();
+      for ( Particle::ConstVector::const_iterator j = Parts.begin();
+      j != jend;++j) {
+      if( (*j)->proto() == NULL ) continue;
+      if( (*j)->proto()->track() == NULL ) continue;
+      const Track * tk = (*j)->proto()->track();
+      for( SmartRefVector< Track >::const_iterator itr = rv->tracks().begin(); itr !=  rv->tracks().end(); ++itr ){
+      if( (fabs((*itr)->p()-tk->p())<1e-10) ){ 
 	    tmpVtx.addToOutgoingParticles ( *j );
 	    tmpPart.addToDaughters( *j );
 	    mom += (*j)->momentum();
 	    continue;
-	  }
-	}
-	}*/
+      }
+      }
+      }*/
     }
 
     //Fill momentum and mass estimate
@@ -519,7 +553,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
 
     //Remove if found to be in detector material
     if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) return false;
-
     this->markNewTree(tmpPart.clone());
     
   } else {
@@ -630,6 +663,9 @@ const Particle * Hlt2PreSelDV::DefaultParticle( const Track * p ){
   double pz = m_pt/sqrt( sx*sx + sy*sy );
   double e = std::sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
   Particle pion;
+  ProtoParticle protoPion;
+  protoPion.setTrack(p);
+  pion.setProto(protoPion.clone());
   const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
   pion.setMomentum(mom);
 

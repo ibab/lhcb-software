@@ -19,7 +19,7 @@ use DaVinciKernel   v*    Phys
 use DetDesc v* Det
 use CaloDet             v* Det
 use VeloDet             v* Det
-
+use LoKiTrigger        v* Phys
 include_path      none
 #============================================================================
 # Component library building rule
