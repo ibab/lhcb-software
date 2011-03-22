@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-03-22 - Chris Jones
+ - Protect TrackSelector::accept against exceptions being thrown from the
+   Track and/or State methods with a try block. If an exception is intercepted
+   a warning is printed and the track rejected.
+
 ! 2011-03-18 - Paul Seyfert
  - Included renamed version of Hlt/HltMuon (used in TrackEffVeloMuon), which is
    not maintained by the HLT-crew anymore. Included to Tr/TrackTools to remove

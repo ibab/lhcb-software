@@ -4,9 +4,6 @@
  *
  *  Header file for reconstruction tool : TrackSelector
  *
- *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.12 2010-02-23 00:12:09 wouter Exp $
- *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/12/2005
@@ -32,6 +29,7 @@
 
 // STL
 #include <string>
+#include <sstream>
 
 // base class
 #include "TrackSelectorBase.h"

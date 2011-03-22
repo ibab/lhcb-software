@@ -4,9 +4,6 @@
  *
  *  Implementation file for reconstruction tool : TrackSelector
  *
- *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.26 2010-02-23 00:12:09 wouter Exp $
- *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/12/2005
@@ -48,7 +45,7 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MaxChi2PerDoFUpstream",   m_maxChi2Upstream  = -1 );
   declareProperty( "MaxChi2PerDoFDownstream", m_maxChi2Downstream  = -1 );
   declareProperty( "MaxChi2PerDoFVelo",       m_maxChi2Velo  = -1 );
-  
+
   declareProperty( "MinHitCut",  m_minHitCut   = 0.0 );
   declareProperty( "MaxHitCut",  m_maxHitCut   = boost::numeric::bounds<double>::highest() );
 
@@ -80,7 +77,6 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MaxNVeloHoles",   m_maxNVeloHoles     = 999 ) ;
   declareProperty( "MinNOTHits",      m_minNOTHits        = 0 ) ;
   declareProperty( "MinNTTHits",      m_minNTTHits        = 0 ) ;
-  
 
 }
 
@@ -88,138 +84,165 @@ TrackSelector::~TrackSelector() { }
 
 bool TrackSelector::accept ( const Track& aTrack ) const
 {
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Trying Track " << aTrack.key() << " " << aTrack.type()
-              << " P=" << aTrack.p() << " Pt=" << aTrack.pt()
-              << endreq;
-  }
-
-  // NDOF
-  const int ndof = aTrack.nDoF();
-  if ( ndof < m_minNDoF || ndof > m_maxNDoF )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> NDoF " << aTrack.nDoF() << " failed cut" << endreq;
-    return false;
-  }
-
-  // chi-squared
-  double chi2 = aTrack.chi2PerDoF();
-  if ( (m_maxChi2Cut>=0 && (chi2 > m_maxChi2Cut || aTrack.nDoF()<=0 ) )  ||
-       (m_minChi2Cut>=0 && (chi2 < m_minChi2Cut || aTrack.nDoF()<=0 ) ) )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
-    return false;
-  }
-
-  const LHCb::KalmanFitResult* kalfit = dynamic_cast<const LHCb::KalmanFitResult*>(aTrack.fitResult() ) ;
-  if(kalfit) {
-    if( m_maxChi2Velo > 0 && (chi2=kalfit->chi2Velo().chi2PerDoF()) > m_maxChi2Velo ) {
-      if ( msgLevel(MSG::VERBOSE) )
-	verbose() << " -> Velo Chi^2 " << chi2 << " failed cut" << endreq;
-      return false;
-    }
-    if( m_maxChi2Upstream > 0 && (chi2=kalfit->chi2Upstream().chi2PerDoF()) > m_maxChi2Upstream ) {
-      if ( msgLevel(MSG::VERBOSE) )
-	verbose() << " -> Upstream Chi^2 " << chi2 << " failed cut" << endreq;
-      return false;
-    }
-    if( m_maxChi2Downstream > 0 && (chi2=kalfit->chi2Downstream().chi2PerDoF()) > m_maxChi2Downstream ) {
-      if ( msgLevel(MSG::VERBOSE) )
-	verbose() << " -> Downstream Chi^2 " << chi2 << " failed cut" << endreq;
-      return false;
-    }
-    if( m_maxChi2Match > 0 && (chi2=kalfit->chi2Match().chi2PerDoF()) > m_maxChi2Match ) {
-      if ( msgLevel(MSG::VERBOSE) )
-	verbose() << " -> Match Chi^2 " << chi2 << " failed cut" << endreq;
-      return false;
-    }
-  }
-
-  // cut p
-  const double p = aTrack.p() ;
-  if ( p < m_minPCut || ( m_maxPCut > 0 && p > m_maxPCut) )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << aTrack.p() << " failed cut" << endreq;
-    return false;
-  }
   
-  // cut on pt
-  const double pt = aTrack.pt() ;
-  if ( pt < m_minPtCut || ( m_maxPtCut > 0 && pt > m_maxPtCut ) )
+  // Use a try block to catch exceptions from Track and/or State classes
+  try
   {
+    
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
+    {
+      verbose() << "Trying Track " << aTrack.key() << " " << aTrack.type();
+      if ( !aTrack.states().empty() )
+        verbose() << " P=" << aTrack.p() << " Pt=" << aTrack.pt();
+      verbose()  << endreq;
+    }
+
+    // NDOF
+    const int ndof = aTrack.nDoF();
+    if ( ndof < m_minNDoF || ndof > m_maxNDoF )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> NDoF " << aTrack.nDoF() << " failed cut" << endreq;
+      return false;
+    }
+
+    // chi-squared
+    double chi2 = aTrack.chi2PerDoF();
+    if ( (m_maxChi2Cut>=0 && (chi2 > m_maxChi2Cut || aTrack.nDoF()<=0 ) )  ||
+         (m_minChi2Cut>=0 && (chi2 < m_minChi2Cut || aTrack.nDoF()<=0 ) ) )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
+      return false;
+    }
+
+    const LHCb::KalmanFitResult* kalfit = dynamic_cast<const LHCb::KalmanFitResult*>(aTrack.fitResult() ) ;
+    if(kalfit) {
+      if( m_maxChi2Velo > 0 && (chi2=kalfit->chi2Velo().chi2PerDoF()) > m_maxChi2Velo ) {
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Velo Chi^2 " << chi2 << " failed cut" << endreq;
+        return false;
+      }
+      if( m_maxChi2Upstream > 0 && (chi2=kalfit->chi2Upstream().chi2PerDoF()) > m_maxChi2Upstream ) {
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Upstream Chi^2 " << chi2 << " failed cut" << endreq;
+        return false;
+      }
+      if( m_maxChi2Downstream > 0 && (chi2=kalfit->chi2Downstream().chi2PerDoF()) > m_maxChi2Downstream ) {
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Downstream Chi^2 " << chi2 << " failed cut" << endreq;
+        return false;
+      }
+      if( m_maxChi2Match > 0 && (chi2=kalfit->chi2Match().chi2PerDoF()) > m_maxChi2Match ) {
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Match Chi^2 " << chi2 << " failed cut" << endreq;
+        return false;
+      }
+    }
+
+    // cut p
+    const double p = aTrack.p() ;
+    if ( p < m_minPCut || ( m_maxPCut > 0 && p > m_maxPCut) )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> P " << aTrack.p() << " failed cut" << endreq;
+      return false;
+    }
+
+    // cut on pt
+    const double pt = aTrack.pt() ;
+    if ( pt < m_minPtCut || ( m_maxPtCut > 0 && pt > m_maxPtCut ) )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
+      return false;
+    }
+
+    // track types
+    if ( !checkTrackType(aTrack) ) return false;
+
+    // eta
+    const double eta = aTrack.pseudoRapidity();
+    if ( eta < m_minEtaCut || eta > m_maxEtaCut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> #eta " << eta << " failed cut" << endreq;
+      return false;
+    }
+
+    // Clones
+    const double cloneDist = aTrack.info(LHCb::Track::CloneDist,9e99);
+    if ( !m_acceptClones && ( aTrack.checkFlag(LHCb::Track::Clone) ||
+                              cloneDist < m_minCloneCut || cloneDist > m_maxCloneCut ) )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Track failed clone rejection" << endmsg;
+      return false;
+    }
+
+    if ( aTrack.likelihood() < m_minLikCut || aTrack.likelihood() > m_maxLikCut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Track Likelihood " << aTrack.likelihood() << " failed cut"
+                  << endmsg;
+      return false;
+    }
+
+    // GhostProbability
+    if ( aTrack.ghostProbability() < m_minGhostProb || aTrack.ghostProbability() > m_maxGhostProb )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Track GhostProbability " << aTrack.ghostProbability() << " failed cut"
+                  << endmsg;
+      return false;
+    }
+
+    // measurements
+    const double nMeas = weightedMeasurementSum(aTrack);
+    if ( nMeas < m_minHitCut || nMeas > m_maxHitCut )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> #hits " << nMeas << " failed cut" << endreq;
+      return false;
+    }
+
+    // count number of OT, velo phi and R hits
+    if ( !checkNHits(aTrack) ) return false;
+
+    // if get here track is selected !
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
+
+  }
+  catch ( const GaudiException & excpt )
+  {
+    // print the exception message as a warning and reject the track
+    std::ostringstream mess;
+    mess << "GaudiException caught " << excpt.message() << " " 
+         << excpt.tag() << " -> Track rejected";
+    Warning( mess.str() ).ignore();
+    return false;
+  }
+  catch ( const std::exception & excpt )
+  {
+    // print the exception message as a warning and reject the track
+    std::ostringstream mess;
+    mess << "std::exception caught " << excpt.what() << " -> Track rejected";
+    Warning( mess.str() ).ignore();
     return false;
   }
 
-  // track types
-  if ( !checkTrackType(aTrack) ) return false;
-
-  // eta
-  const double eta = aTrack.pseudoRapidity();
-  if ( eta < m_minEtaCut || eta > m_maxEtaCut )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> #eta " << eta << " failed cut" << endreq;
-    return false;
-  }
-
-  // Clones
-  const double cloneDist = aTrack.info(LHCb::Track::CloneDist,9e99);
-  if ( !m_acceptClones && ( aTrack.checkFlag(LHCb::Track::Clone) ||
-                            cloneDist < m_minCloneCut || cloneDist > m_maxCloneCut ) )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track failed clone rejection" << endmsg;
-    return false;
-  }
-
-  if ( aTrack.likelihood() < m_minLikCut || aTrack.likelihood() > m_maxLikCut )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track Likelihood " << aTrack.likelihood() << " failed cut"
-                << endmsg;
-    return false;
-  }
-
-  // GhostProbability
- if ( aTrack.ghostProbability() < m_minGhostProb || aTrack.ghostProbability() > m_maxGhostProb )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track GhostProbability " << aTrack.ghostProbability() << " failed cut"
-                << endmsg;
-    return false;
-  }
-
-  // measurements
-  const double nMeas = weightedMeasurementSum(aTrack);
-  if ( nMeas < m_minHitCut || nMeas > m_maxHitCut )
-  {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> #hits " << nMeas << " failed cut" << endreq;
-    return false;
-  }
-
-  // count number of OT, velo phi and R hits
-  if ( !checkNHits(aTrack) ) return false;
-
-  // if get here track is selected !
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
+  // return OK
   return true;
 }
 
 bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
-{  
+{
   // count number of OT, velo phi and R hits
-  if ( m_minNVeloPhiHits > 0 || 
+  if ( m_minNVeloPhiHits > 0 ||
        m_minNVeloRHits   > 0 ||
        m_minNOTHits      > 0 ||
        m_minNTTHits      > 0 ||
-       m_maxNVeloHoles < 99 ) 
+       m_maxNVeloHoles < 99 )
   {
     int numVeloPhi(0), numVeloR(0), numTT(0), numOT(0) ;
     for( std::vector<LHCbID>::const_iterator it = aTrack.lhcbIDs().begin() ;
@@ -231,25 +254,25 @@ bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
       else if( it->isTT()      ) { ++numTT ;      }
     }
 
-    if ( numVeloPhi < m_minNVeloPhiHits ) 
+    if ( numVeloPhi < m_minNVeloPhiHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> #velo phi " << numVeloPhi << " failed cut" << endreq;
       return false;
     }
-    if ( numVeloR < m_minNVeloRHits ) 
+    if ( numVeloR < m_minNVeloRHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> #velo R " << numVeloR << " failed cut" << endreq;
       return false;
     }
-    if ( numOT < m_minNOTHits ) 
+    if ( numOT < m_minNOTHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> #OT " << numOT << " failed cut" << endreq;
       return false;
     }
-    if ( numTT < m_minNTTHits ) 
+    if ( numTT < m_minNTTHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> #TT " << numTT << " failed cut" << endreq;
@@ -260,14 +283,14 @@ bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
       LHCb::HitPattern hitpattern(aTrack.lhcbIDs()) ;
       int numVeloHoles = hitpattern.numVeloHoles() ;
       if( numVeloHoles > m_maxNVeloHoles ) {
-	if ( msgLevel(MSG::VERBOSE) )
-	  verbose() << " -> #VeloHoles " << numVeloHoles << " failed cut" << endreq;
-	return false;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> #VeloHoles " << numVeloHoles << " failed cut" << endreq;
+        return false;
       }
     }
 
   }
-  
+
   return true;
 }
 
