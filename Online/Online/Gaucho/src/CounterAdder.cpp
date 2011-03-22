@@ -2,7 +2,6 @@
 #include "Gaucho/ObjService.h"
 #include "Gaucho/MonServer.h"
 #include "Gaucho/ObjRPC.h"
-#include "Gaucho/MonHist.h"
 #include "Gaucho/RootHists.h"
 #include "Gaucho/RateService.h"
 #include "dis.hxx"
@@ -10,6 +9,7 @@
 #include <vector>
 #include "string.h"
 #include "Gaucho/Utilities.h"
+#include "Gaucho/AdderSys.h"
 //static int mpty;
 typedef std::pair<std::string, void*> MonPair;
 
@@ -27,7 +27,7 @@ extern "C"
 }
 CounterAdder::CounterAdder(char * taskname, char *myName, char *serviceName)
 {
-  std::string svc_prefix("/Histos/");
+  std::string svc_prefix("/Counter/");
   m_taskname = std::string(taskname);
   m_buffersize = 0;
   m_buffer = 0;
@@ -45,19 +45,14 @@ CounterAdder::CounterAdder(char * taskname, char *myName, char *serviceName)
 //  g_DNSInfo = 0;
 //  m_TaskHandler = new HAdderTaskInfoHandler();
 //  m_ServHandler = new HAdderServInfoHandler();
-  m_oldProf = 0;
+//  m_oldProf = 0;
   m_added = 0;
   m_noRPC = false;
-  gg_AdderList.push_back(this);
+  AdderSys::Instance().gg_AdderList.push_back(this);
   m_type = ADD_COUNTER;
 }
 CounterAdder::~CounterAdder()
 {
-  if (gg_DNSInfo != 0)
-  {
-    delete gg_DNSInfo;
-    gg_DNSInfo = 0;
-  }
   for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
   {
     delete i->second->m_diminfo;
@@ -126,13 +121,13 @@ void CounterAdder::Configure()
   }
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
-  if (gg_DNSInfo ==0) gg_DNSInfo = new DimInfo((char*)"DIS_DNS/SERVER_LIST",(char*)"DEAD", &gg_TaskHandler);
+//  if (AdderSys::Instance().gg_DNSInfo ==0) AdderSys::Instance().gg_DNSInfo = new DimInfo((char*)"DIS_DNS/SERVER_LIST",(char*)"DEAD", &gAdderSys::Instance().g_TaskHandler);
 //  DimServer::setDnsNode(m_outdns.c_str());
   m_outsvcname = m_name+m_serviceName;
   lib_rtl_create_lock(0,&m_maplock);
 //  printf("================Out Service Name %s %s %s\n",m_name.c_str(),m_taskname.c_str(),m_outsvcname.c_str());
 //  m_outservice = new ObjService(m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
-  std::string nam = m_name+std::string("/Histos/HistCommand");
+  std::string nam = m_name+std::string("/Counter/HistCommand");
   m_ser = new AddSerializer((ObjMap*)&m_hmap);
   m_rpc = 0;
   if (!m_noRPC)
@@ -201,7 +196,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   long long cltime;
   SerialHeader* header= ((SerialHeader*)buff);
   cltime = header->ser_tim;
-//  printf("Received size %d Header size %d\n",siz,header->buffersize);
+//  printf("Received size %d Header size %d from %s\n",siz,header->buffersize,h->getName());
   long long runno = ((SerialHeader*)buff)->run_number;
   long long current;
   if (m_IsEOR)
@@ -213,7 +208,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     current = cltime;
   }
 //  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
-  m_RateBuff = 0;
+//  m_RateBuff = 0;
   if (m_reference < current)
   {
     m_added++;
@@ -275,22 +270,24 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         {
         case C_INT:
           {
-            *(int *)sumh += *(int*)srch;
+            *(long long *)ps += *(long long*)ph;
+//            printf("Counter %s value %lld sum now %lld\n",i->first.c_str(),*(long long*)ph,*(long long *)ps);
             break;
           }
         case C_LONGLONG:
           {
-            *(long long*)sumh += *(long long*)srch;
+            *(long long*)ps += *(long long*)ph;
+//            printf("Counter %s value %lld sum now %lld\n",i->first.c_str(),*(long long*)ph,*(long long*)ps);
             break;
           }
         case C_FLOAT:
           {
-            *(float*)sumh += *(float*)srch;
+            *(float*)ps += *(float*)ph;
             break;
           }
         case C_DOUBLE:
           {
-            *(double*)sumh += *(double*)srch;
+            *(double*)ps += *(double*)ph;
             break;
           }
         default:
@@ -344,112 +341,112 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
       m_outservice->Serialize();
       m_outservice->Update();
     }
-    if (m_expandRate)
-    {
-#define MAX_SERVICE_SIZE 128
-      std::string nnam;
-      if (m_RateBuff != 0)
-      {
-        MonHist h;
-//        MyTProfile *p;
-//        if (m_isSaver)
+//    if (m_expandRate)
+//    {
+//#define MAX_SERVICE_SIZE 128
+//      std::string nnam;
+//      if (m_RateBuff != 0)
+//      {
+//        MonHist h;
+////        MyTProfile *p;
+////        if (m_isSaver)
+////        {
+////          Lock();
+////        }
+////        p = (MyTProfile*)h.de_serialize(m_RateBuff,"RATE");
+////        if (m_isSaver)
+////        {
+////          UnLock();
+////        }
+////        printf("Array Size %d Block Size %d",p->fN,h.BlockSize());
+////        p->Print("range");
+//        DimHistbuff1 *pdiff;
+//
+//        if (m_oldProf !=0)
 //        {
-//          Lock();
+//          int ndble = (m_RateBuff->nxbin+2);
+//          pdiff = (DimHistbuff1*)malloc(m_RateBuff->reclen);
+//          double *obincont  = (double*)AddPtr(AddPtr(m_oldProf,m_oldProf->dataoff),0*(m_oldProf->nxbin+2)*sizeof(double));
+//          double *nbincont  = (double*)AddPtr(AddPtr(m_RateBuff,m_RateBuff->dataoff),0*(m_RateBuff->nxbin+2)*sizeof(double));
+//          double *dbincont  = (double*)AddPtr(AddPtr(pdiff,m_RateBuff->dataoff),0*(m_RateBuff->nxbin+2)*sizeof(double));
+//          double *ocont  = (double*)AddPtr(AddPtr(m_oldProf,m_oldProf->dataoff),1*(m_oldProf->nxbin+2)*sizeof(double));
+//          double *ncont  = (double*)AddPtr(AddPtr(m_RateBuff,m_RateBuff->dataoff),1*(m_RateBuff->nxbin+2)*sizeof(double));
+//          double *dcont  = (double*)AddPtr(AddPtr(pdiff,m_RateBuff->dataoff),1*(m_RateBuff->nxbin+2)*sizeof(double));
+//          std::vector<char*> labvec;
+//          labvec.clear();
+//          labvec.push_back(0);
+//          {
+//            int i;
+//            int nbin=m_oldProf->nxbin;
+//            char *labs = (char*)AddPtr(m_oldProf,m_oldProf->xlaboff);
+//            char *lab = labs;
+//            for (i = 1; i < (nbin+1) ; ++i)
+//            {
+//              labvec.push_back(lab);
+//              lab = (char*)AddPtr(lab,strlen(lab)+1);
+//            }
+//          }
+//          for (int i = 9;i<ndble;i++)
+//          {
+//            dbincont[i] = nbincont[i]-obincont[i];
+//            dcont[i] = ncont[i]-ocont[i];
+////            printf("%d\t%f = %f - %f\n\t%f = %f - %f\n",i,dbincont[i], nbincont[i], obincont[i],dcont[i], ncont[i], ocont[i]);
+//          }
+//          OUTServiceDescr *outs;
+//          std::string nams;
+//          int i;
+//          int dim;
+//          double rate;
+//          double denom;
+////          printf("Time Bin %f\n",p->GetBinContent(8));
+////          denom  = p->GetBinContent(8)/1.0e09;
+////          denom = dbincont[8] == 0 ? 0 : dcont[8]/dbincont[8]/1.0e09;
+//          denom = ncont[8]/m_added/1.0e09;
+//          dim = m_RateBuff->nxbin;
+//          std::string sname;
+//          for (i=9;i<dim;i++)
+//          {
+//            nams  = labvec[i];
+//            outs = findOUTService(nams);
+//            RateService *s;
+//            if (outs != 0)
+//            {
+//              s = (RateService*)outs->m_svc;
+//            }
+//            else
+//            {
+//              DimServer::autoStartOn();
+//              sname = m_NamePrefix+nams;
+//              if (sname.size() < MAX_SERVICE_SIZE)
+//              {
+//                s= new RateService(sname.c_str(),(char*)"D:2;C");
+//                outs = new OUTServiceDescr((char*)nams.c_str(),(void*)s);
+//                this->m_outputServicemap.insert(OUTServicePair(nams,outs));
+//              }
+//              else
+//              {
+//                continue;
+//              }
+//            }
+////            rate = dbincont[i] == 0 ? 0 : dcont[i]/dbincont[i]/denom;
+//            double c = dcont[i];
+//            rate = c/denom;
+////            printf("%d %d %s %f %f\n",dim,i,nams.c_str(), pdiff->GetBinContent(i),rate);
+//            s->m_data.d1 = rate;
+//            s->m_data.d2 = c;
+//            int upsiz = 2*sizeof(s->m_data.d1)+strlen(s->m_data.c);
+//            s->Updater(upsiz);
+//          }
+//          delete pdiff;
 //        }
-//        p = (MyTProfile*)h.de_serialize(m_RateBuff,"RATE");
-//        if (m_isSaver)
+//        else
 //        {
-//          UnLock();
+//          m_oldProf = (DimHistbuff1*)malloc(m_RateBuff->reclen);
 //        }
-//        printf("Array Size %d Block Size %d",p->fN,h.BlockSize());
-//        p->Print("range");
-        DimHistbuff1 *pdiff;
-
-        if (m_oldProf !=0)
-        {
-          int ndble = (m_RateBuff->nxbin+2);
-          pdiff = (DimHistbuff1*)malloc(m_RateBuff->reclen);
-          double *obincont  = (double*)AddPtr(AddPtr(m_oldProf,m_oldProf->dataoff),0*(m_oldProf->nxbin+2)*sizeof(double));
-          double *nbincont  = (double*)AddPtr(AddPtr(m_RateBuff,m_RateBuff->dataoff),0*(m_RateBuff->nxbin+2)*sizeof(double));
-          double *dbincont  = (double*)AddPtr(AddPtr(pdiff,m_RateBuff->dataoff),0*(m_RateBuff->nxbin+2)*sizeof(double));
-          double *ocont  = (double*)AddPtr(AddPtr(m_oldProf,m_oldProf->dataoff),1*(m_oldProf->nxbin+2)*sizeof(double));
-          double *ncont  = (double*)AddPtr(AddPtr(m_RateBuff,m_RateBuff->dataoff),1*(m_RateBuff->nxbin+2)*sizeof(double));
-          double *dcont  = (double*)AddPtr(AddPtr(pdiff,m_RateBuff->dataoff),1*(m_RateBuff->nxbin+2)*sizeof(double));
-          std::vector<char*> labvec;
-          labvec.clear();
-          labvec.push_back(0);
-          {
-            int i;
-            int nbin=m_oldProf->nxbin;
-            char *labs = (char*)AddPtr(m_oldProf,m_oldProf->xlaboff);
-            char *lab = labs;
-            for (i = 1; i < (nbin+1) ; ++i)
-            {
-              labvec.push_back(lab);
-              lab = (char*)AddPtr(lab,strlen(lab)+1);
-            }
-          }
-          for (int i = 9;i<ndble;i++)
-          {
-            dbincont[i] = nbincont[i]-obincont[i];
-            dcont[i] = ncont[i]-ocont[i];
-//            printf("%d\t%f = %f - %f\n\t%f = %f - %f\n",i,dbincont[i], nbincont[i], obincont[i],dcont[i], ncont[i], ocont[i]);
-          }
-          OUTServiceDescr *outs;
-          std::string nams;
-          int i;
-          int dim;
-          double rate;
-          double denom;
-//          printf("Time Bin %f\n",p->GetBinContent(8));
-//          denom  = p->GetBinContent(8)/1.0e09;
-//          denom = dbincont[8] == 0 ? 0 : dcont[8]/dbincont[8]/1.0e09;
-          denom = ncont[8]/m_added/1.0e09;
-          dim = m_RateBuff->nxbin;
-          std::string sname;
-          for (i=9;i<dim;i++)
-          {
-            nams  = labvec[i];
-            outs = findOUTService(nams);
-            RateService *s;
-            if (outs != 0)
-            {
-              s = (RateService*)outs->m_svc;
-            }
-            else
-            {
-              DimServer::autoStartOn();
-              sname = m_NamePrefix+nams;
-              if (sname.size() < MAX_SERVICE_SIZE)
-              {
-                s= new RateService(sname.c_str(),(char*)"D:2;C");
-                outs = new OUTServiceDescr((char*)nams.c_str(),(void*)s);
-                this->m_outputServicemap.insert(OUTServicePair(nams,outs));
-              }
-              else
-              {
-                continue;
-              }
-            }
-//            rate = dbincont[i] == 0 ? 0 : dcont[i]/dbincont[i]/denom;
-            double c = dcont[i];
-            rate = c/denom;
-//            printf("%d %d %s %f %f\n",dim,i,nams.c_str(), pdiff->GetBinContent(i),rate);
-            s->m_data.d1 = rate;
-            s->m_data.d2 = c;
-            int upsiz = 2*sizeof(s->m_data.d1)+strlen(s->m_data.c);
-            s->Updater(upsiz);
-          }
-          delete pdiff;
-        }
-        else
-        {
-          m_oldProf = (DimHistbuff1*)malloc(m_RateBuff->reclen);
-        }
-      }
-      m_added = 0;
-      memcpy(m_oldProf,m_RateBuff,m_RateBuff->reclen);
-    }
+//      }
+//      m_added = 0;
+//      memcpy(m_oldProf,m_RateBuff,m_RateBuff->reclen);
+//    }
     if (CycleFn!= 0)
     {
       (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);

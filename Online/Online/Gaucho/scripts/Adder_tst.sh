@@ -14,4 +14,4 @@ export UTGID=Adder
 export DIM_DNS_NODE=localhost
 export OPTS=/home/beat/cmtuser/myOnline/Online/Gaucho
 export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/Online/Gaucho/$CMTCONFIG:$LD_LIBRARY_PATH
-$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline -options=$OPTS/options/Adder.opts -auto
+$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -options=/home/beat/cmtuser/myOnline/Online/Gaucho/options/nodeAdder.opts -main=$GAUDIONLINEROOT/options/Main.opts

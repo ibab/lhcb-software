@@ -18,8 +18,8 @@ class HistAdder : public MonAdder
 {
 public:
   DimHistbuff1 *m_RateBuff;
-  std::string m_MyName;
-  std::string m_NamePrefix;
+//  std::string m_MyName;
+//  std::string m_NamePrefix;
   DimHistbuff1 *m_oldProf;
   void add(void *buffer, int siz, MonInfo *h);
   HistAdder(char *taskname, char *myName, char * serviceName/*, bool expand = false*/);

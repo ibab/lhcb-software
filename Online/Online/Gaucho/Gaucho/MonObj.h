@@ -10,10 +10,10 @@ class MonObj
   virtual int xmitbuffersize()=0;
   virtual int hdrlen()=0;
   virtual int serialize(void* &ptr)=0;
-  virtual char *name()=0;
+  virtual const char *name() const=0;
   virtual void clear(void)=0;
-  virtual int namelength()=0;
-  virtual int type()=0;
+  virtual int namelength() const =0;
+  virtual int type() const =0;
   virtual void *cpyName(void*)=0;
   virtual void *cpytitle(void *ptr)=0;
   virtual void List()=0;

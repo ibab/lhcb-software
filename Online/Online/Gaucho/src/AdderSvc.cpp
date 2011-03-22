@@ -8,6 +8,7 @@
 #include "TROOT.h"
 #include "TApplication.h"
 #include "Gaucho/Utilities.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 
 //DECLARE_SERVICE_FACTORY(AdderSvc)
@@ -21,10 +22,11 @@ extern "C"
     tim->timerHandler();
   }
 }
-AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
+AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_incidentSvc(0)
 {
 //  StatusCode sc = Service::initialize();
 //  printf("AdderSvc... Constructing...\n");
+
   declareProperty("SourceTaskPattern", m_TaskName="");
   declareProperty("MyName",m_MyName="");
   declareProperty("InDNS",m_InputDNS="");
@@ -46,6 +48,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl)
   m_SaveTimer = 0;
   m_started = false;
   m_errh =0;
+  m_funcsvc = 0;
 }
 AdderSvc::~AdderSvc()
 {
@@ -53,9 +56,8 @@ AdderSvc::~AdderSvc()
 }
 StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
-  if(IService::interfaceID().versionMatch(riid))
-  {
-    *ppvIF = dynamic_cast<AdderSvc*> (this);
+  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
+    *ppvIF = (IIncidentListener*)this;
   }
   else
   {
@@ -67,10 +69,18 @@ StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 TApplication *app;
 StatusCode AdderSvc::initialize()
 {
+  Service::initialize();
   m_adder = 0;
   m_EoRadder = 0;
   m_SaveTimer = 0;
-  Service::initialize();
+  m_AdderSys = &AdderSys::Instance();
+  StatusCode sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
+  if( !sc.isSuccess() ) {
+    return sc;
+  }
+  m_incidentSvc->addListener(this,"APP_INITIALIZED");
+  m_incidentSvc->addListener(this,"APP_RUNNING");
+  m_incidentSvc->addListener(this,"APP_STOPPED");
   return StatusCode::SUCCESS;
 }
 #include "TBrowser.h"
@@ -169,14 +179,26 @@ StatusCode AdderSvc::start()
   DimServer::autoStartOn();
   DimClient::setDnsNode(m_InputDNS.c_str());
 //  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
-  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
+  if (m_AdderClass == "hists")
+  {
+    m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
+  }
+  else if (m_AdderClass == "counter")
+  {
+    m_adder = new CounterAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
+  }
 //  m_adder->setOutDNS(m_OutputDNS);
   m_adder->m_IsEOR = false;
   m_adder->m_expandRate = m_ExpandRate;
+  if (m_ExpandRate)
+  {
+    m_adder->m_NamePrefix = m_PartitionName+"_";
+  }
   m_adder->m_taskPattern = m_TaskPattern;
   m_adder->m_servicePattern = m_ServicePattern+std::string("Data");
   m_adder->setIsSaver(m_isSaver);
   m_adder->Configure();
+  m_AdderSys->Add(m_adder);
   if (m_isSaver)
   {
     m_SaveTimer = new SaveTimer(m_adder,m_SaveInterval);
@@ -187,7 +209,14 @@ StatusCode AdderSvc::start()
     m_SaveTimer->Start();
   }
 
-  m_EoRadder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"EOR");
+  if (m_AdderClass == "hists")
+  {
+    m_EoRadder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"EOR");
+  }
+  else if (m_AdderClass == "counter")
+  {
+    m_EoRadder = new CounterAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"EOR");
+  }
   m_EoRadder->setOutDNS(m_OutputDNS);
   m_EoRadder->m_IsEOR = true;
   m_EoRadder->m_expandRate = false;
@@ -196,6 +225,7 @@ StatusCode AdderSvc::start()
   m_EoRadder->m_noRPC = true;
   m_EoRadder->setIsSaver(m_isSaver);
   m_EoRadder->Configure();
+  m_AdderSys->Add(m_EoRadder);
   if (m_isSaver)
   {
     m_EoRSaver = new SaveTimer(m_EoRadder,m_SaveInterval);
@@ -204,6 +234,13 @@ StatusCode AdderSvc::start()
     m_EoRSaver->setTaskName(m_SaverTaskName);
     m_EoRSaver->setEOR(true);
     m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
+  }
+  m_funcsvc = 0;
+  if (m_AdderType == "top" || m_AdderType == "part")
+  {
+    m_Function = m_PartitionName+"_"+m_TaskName;
+    m_funcsvc = new DimService((char*)m_Function.c_str(),(char*)m_utgid.c_str());
+    m_funcsvc->updateService();
   }
   m_started = true;
   return StatusCode::SUCCESS;
@@ -222,10 +259,55 @@ StatusCode AdderSvc::stop()
 
 StatusCode AdderSvc::finalize()
 {
+  if ( m_incidentSvc ) {
+    m_incidentSvc->removeListener(this);
+    m_incidentSvc->release();
+    m_incidentSvc = 0;
+  }
   dim_lock();
-  if (m_SaveTimer != 0) {m_SaveTimer->Stop();delete m_SaveTimer;m_SaveTimer=0;}
-  if (m_adder != 0) {delete m_adder;m_adder=0;}
-  if (m_EoRadder != 0) {delete m_EoRadder;m_EoRadder=0;}
+  if (m_SaveTimer != 0)
+  {
+    m_SaveTimer->Stop();
+    delete m_SaveTimer;
+    m_SaveTimer=0;
+  }
+  if (m_adder != 0)
+  {
+    m_AdderSys->Remove(m_adder);
+    delete m_adder;
+    m_adder = 0;
+  }
+  if (m_EoRadder != 0)
+  {
+    m_AdderSys->Remove(m_EoRadder);
+    delete m_EoRadder;
+    m_EoRadder = 0;
+  }
+  if (m_funcsvc != 0)
+  {
+    delete m_funcsvc;
+    m_funcsvc = 0;
+  }
   dim_unlock();
   return Service::finalize();
+}
+
+void AdderSvc::handle(const Incident& inc)
+{
+  {
+    MsgStream log(msgSvc(), name());
+//    log << MSG::ALWAYS << "Got incident from:" << inc.source() << ": "
+//        << inc.type() << endmsg;
+  }
+  if (inc.type() == "APP_INITIALIZED")
+  {
+  }
+  else if (inc.type() == "APP_RUNNING")
+  {
+    m_AdderSys->start();
+  }
+  else if (inc.type() == "APP_STOPPED")
+  {
+    m_AdderSys->stop();
+  }
 }

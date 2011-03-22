@@ -11,6 +11,8 @@
 #include <string>
 #include <map>
 #include <set>
+#include "GaudiKernel/IIncidentListener.h"
+#include "Gaucho/AdderSys.h"
 
 // Forward declarations
 class ISvcLocator;
@@ -47,7 +49,8 @@ public:
     m_flag = false;
   }
 };
-class AdderSvc : public Service
+class IIncidentSvc;
+class AdderSvc : public Service, virtual public IIncidentListener
 {
 public:
   AdderSvc(const std::string& name, ISvcLocator* sl);
@@ -60,9 +63,9 @@ public:
   StatusCode start();
   StatusCode stop();
   StatusCode finalize();
-
+  virtual void handle(const Incident&);
 private:
-
+  AdderSys *m_AdderSys;
   std::string m_utgid;
   MonAdder *m_adder;
   MonAdder *m_EoRadder;
@@ -87,6 +90,10 @@ private:
   std::string m_SaveRootDir;
   int m_SaveInterval; //in seconds
   MyErrh *m_errh;
+  std::string m_Function;
+  DimService *m_funcsvc;
+// Reference to the IncidentSvc instance
+  IIncidentSvc             *m_incidentSvc;
 
 
   // MonObjetc to convert conters in rates

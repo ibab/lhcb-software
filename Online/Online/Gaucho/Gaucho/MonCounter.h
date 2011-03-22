@@ -31,13 +31,13 @@ protected:
   //void CopyData(double*,double*);
 public:
   char* m_name;    /** Name of the histogram **/
-  char *name();
+  const char *name() const;
   bool m_expandService;
   DimService *m_service;
   std::string m_srvcprefix;
   std::string m_fmt;
   //HistService *serv;
-  int type() {return (int)m_type;};
+  int type() const {return (int)m_type;};
   MonCounter(char *name, char *title, int *data );
   MonCounter(char *name, char *title, long long *data );
   MonCounter(char *name, char *title, float *data );
@@ -54,7 +54,7 @@ public:
   int Init(char *title);
   void *getextid (void);
   bool nameeq(char *nam, int namlen);
-  int namelength(void)
+  int namelength(void) const
   {
     return m_namelen;
   }

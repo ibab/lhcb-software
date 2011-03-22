@@ -10,13 +10,8 @@
 #include <vector>
 #include "string.h"
 #include "Gaucho/Utilities.h"
+#include "Gaucho/AdderSys.h"
 typedef std::pair<std::string, void*> HistPair;
-
-
-DimInfo *MonAdder::gg_DNSInfo =0;
-std::vector<MonAdder*> MonAdder::gg_AdderList;
-HAdderTaskInfoHandler MonAdder::gg_TaskHandler;
-HAdderServInfoHandler MonAdder::gg_ServHandler;
 
 
 
@@ -47,20 +42,15 @@ HistAdder::HistAdder(char * taskname, char *myName, char *serviceName)
   m_oldProf = 0;
   m_added = 0;
   m_noRPC = false;
-  gg_AdderList.push_back(this);
   m_type = ADD_HISTO;
+  AdderSys::Instance().gg_AdderList.push_back(this);
 }
 HistAdder::~HistAdder()
 {
-  std::vector<MonAdder*>::iterator g=std::find( gg_AdderList.begin(),gg_AdderList.end(),this);
-  if (g != gg_AdderList.end())
+  Adderlist_t::iterator g=std::find( AdderSys::Instance().gg_AdderList.begin(),AdderSys::Instance().gg_AdderList.end(),this);
+  if (g != AdderSys::Instance().gg_AdderList.end())
   {
-    gg_AdderList.erase(g);
-  }
-  if (gg_DNSInfo != 0)
-  {
-    delete gg_DNSInfo;
-    gg_DNSInfo = 0;
+    AdderSys::Instance().gg_AdderList.erase(g);
   }
   for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
   {
@@ -130,7 +120,6 @@ void HistAdder::Configure()
   }
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
-  if (gg_DNSInfo ==0) gg_DNSInfo = new DimInfo((char*)"DIS_DNS/SERVER_LIST",(char*)"DEAD", &gg_TaskHandler);
 //  DimServer::setDnsNode(m_outdns.c_str());
   m_outsvcname = m_name+m_serviceName;
   lib_rtl_create_lock(0,&m_maplock);
@@ -144,7 +133,7 @@ void HistAdder::Configure()
     m_rpc = new ObjRPC(m_ser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
   }
 }
-void HistAdder::add(void *buff, int siz, MonInfo *h)
+void HistAdder::add(void *buff, int siz, MonInfo *)
 {
   void *p;
   int n1d,n2d,nprof,nrate;

@@ -26,39 +26,62 @@
 
 
 //#include "AIDA/IProfile1D.h"
+void MonHist::_clear()
+{
+ m_type = H_ILLEGAL;
+ m_rootobj = 0;
+ m_rootdeser = 0;
+ m_cntrmgr = 0;
+ m_xmitbuffersize = sizeof(DimBuffBase);
+ m_hdrlen = 0;
+ m_buffersize = 0;
+ m_namelen = 0;
+ m_titlen = 0;
+ m_nx = 0;           /** Number of x-bins **/
+ m_xmin = 0;     /** Minimum x **/
+ m_xmax = 0;     /** Maximum y **/
+ m_ny = 0;           /* Number of y bins */
+ m_ymin = 0;     /* Minimum y */
+ m_ymax = 0;     /* Maximum y */
+ m_addoff = 0;
+
+ m_hentries = 0;
+ m_hsumw2 = 0;
+ m_hsumw = 0;
+ m_hbinsumw2 = 0;
+ m_blocksize = 0;
+ m_Xaxis = 0;
+ m_Yaxis = 0;
+ m_Xlabels = 0;
+ m_Ylabels = 0;
+ m_xlablen = 0;
+ m_ylablen = 0;
+  m_msgsvc = 0;
+ TH1D::SetDefaultSumw2();
+ TH2D::SetDefaultSumw2();
+ TProfile::SetDefaultSumw2();
+
+}
 MonHist::MonHist()
 {
-  m_msgsvc = 0;
-  m_cntrmgr = 0;
-  m_addoff = 0;
-  m_type = H_ILLEGAL;
-  m_rootobj = 0;
-  m_rootdeser = 0;
-  m_name = 0;
-  m_xmitbuffersize = sizeof(DimBuffBase);
-  m_Xlabels = 0;
-  m_Ylabels = 0;
-  m_title = 0;
-  TH1D::SetDefaultSumw2();
-  TH2D::SetDefaultSumw2();
-  TProfile::SetDefaultSumw2();
-
+  _clear();
 }
 MonHist::MonHist(IMessageSvc* msgs, const std::string& source, CntrMgr *cm)
 {
-//  setup(msgs, source,aidahist);
+// Premordial Setup....
+  _clear();
   m_msgsvc = msgs;
   m_cntrmgr = cm;
   m_addoff = 9;
   m_type = H_RATE;
-  m_rootobj = 0;
-  m_rootdeser = 0;
-  m_name = (char*)source.c_str();
+  m_name = source;
   this->m_xmitbuffersize = 0;
 }
 
 MonHist::MonHist(IMessageSvc* msgSvc, const std::string& source, const std::string &desc, const StatEntity *se)
 {
+// Premordial Setup....
+  _clear();
   m_msgsvc = msgSvc;
   setup(m_msgsvc,source,desc,se);
   m_cntrmgr = 0;
@@ -153,23 +176,26 @@ void MonHist::makeCounters()
        }
        i++;
      }
-
-     tp->GetXaxis()->SetBinLabel(1, "OffsetTimeFirstEvInRun");
-     tp->GetXaxis()->SetBinLabel(2, "OffsetTimeLastEvInCycle");
-     tp->GetXaxis()->SetBinLabel(3, "OffsetGpsTimeLastEvInCycle");
-     tp->GetXaxis()->SetBinLabel(4, "NumberofProcesses"); // actually identical to 1 for each process. adders sum it up to give the number of processes...
-     tp->GetXaxis()->SetBinLabel(5, "RunNumber");
-     tp->GetXaxis()->SetBinLabel(6, "TCK");
-     tp->GetXaxis()->SetBinLabel(7, "CycleNumber");
-     tp->GetXaxis()->SetBinLabel(8, "deltaT");
-
-     i = 9;
-     for (m_cntrmgr->m_counterMapIt = m_cntrmgr->m_counterMap.begin(); m_cntrmgr->m_counterMapIt != m_cntrmgr->m_counterMap.end(); m_cntrmgr->m_counterMapIt++)
+     TAxis *ax=tp->GetXaxis();
+     if (ax != 0)
      {
-//       msg <<MSG::DEBUG<<"label description: " << (*(m_cntrmgr->m_counterMapIt->second.first)).c_str() << endreq;
-       tp->GetXaxis()->SetBinLabel(i, (*(m_cntrmgr->m_counterMapIt->second.first)).c_str());
-//       printf("Rate Axis Label for bin %d %s\n",i, (*(m_cntrmgr->m_counterMapIt->second.first)).c_str());
-       i++;
+       ax->SetBinLabel(1, "OffsetTimeFirstEvInRun");
+       ax->SetBinLabel(2, "OffsetTimeLastEvInCycle");
+       ax->SetBinLabel(3, "OffsetGpsTimeLastEvInCycle");
+       ax->SetBinLabel(4, "NumberofProcesses"); // actually identical to 1 for each process. adders sum it up to give the number of processes...
+       ax->SetBinLabel(5, "RunNumber");
+       ax->SetBinLabel(6, "TCK");
+       ax->SetBinLabel(7, "CycleNumber");
+       ax->SetBinLabel(8, "deltaT");
+
+       i = 9;
+       for (m_cntrmgr->m_counterMapIt = m_cntrmgr->m_counterMap.begin(); m_cntrmgr->m_counterMapIt != m_cntrmgr->m_counterMap.end(); m_cntrmgr->m_counterMapIt++)
+       {
+  //       msg <<MSG::DEBUG<<"label description: " << (*(m_cntrmgr->m_counterMapIt->second.first)).c_str() << endreq;
+         ax->SetBinLabel(i, (*(m_cntrmgr->m_counterMapIt->second.first)).c_str());
+  //       printf("Rate Axis Label for bin %d %s\n",i, (*(m_cntrmgr->m_counterMapIt->second.first)).c_str());
+         i++;
+       }
      }
      this->setup(m_msgsvc);
    }
@@ -222,14 +248,10 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const std::str
   m_hentries = 0;
   m_hsumw2 = 0;
   m_hsumw = 0;
-  m_name = (char*)source.c_str();
-  m_namelen = strlen(m_name);
-  m_name = (char*)malloc(m_namelen);
-  strcpy(m_name,source.c_str());
-  m_title = (char*)desc.c_str();
-  m_titlen = strlen(m_title);
-  m_title = (char*)malloc(m_titlen);
-  strcpy(m_title,desc.c_str());
+  m_name = source;
+  m_namelen = m_name.length();
+  m_title = desc;
+  m_titlen = m_title.length();
   m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
   m_hdrlen = (m_hdrlen + 7)&~7;
   m_buffersize = 3*sizeof(double);
@@ -294,10 +316,10 @@ void MonHist::setup(IMessageSvc* msgs)
       m_hsumw = rhist->GetSumwArr();
       m_rootobj = rhist;
       m_Xaxis = rhist->GetXaxis();
-      m_name = (char*)rhist->GetName();
-      m_namelen = strlen(m_name);
-      m_title = (char*)rhist->GetTitle();
-      m_titlen = strlen(m_title);
+      m_name = rhist->GetName();
+      m_namelen = m_name.length();
+      m_title = rhist->GetTitle();
+      m_titlen = m_title.length();
       m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
       m_hdrlen = (m_hdrlen + 7)&~7;
       m_blocksize = rhist->fN*sizeof(double);
@@ -311,10 +333,10 @@ void MonHist::setup(IMessageSvc* msgs)
       m_hsumw2 = rhist->GetSumw2Arr();
       m_rootobj = rhist;
       m_Xaxis =  rhist->GetXaxis();
-      m_name = (char*)rhist->GetName();
-      m_namelen = strlen(m_name);
-      m_title = (char*)rhist->GetTitle();
-      m_titlen = strlen(m_title);
+      m_name = rhist->GetName();
+      m_namelen = m_name.length();
+      m_title = rhist->GetTitle();
+      m_titlen = m_title.length();
       m_blocksize = rhist->fN*sizeof(double);
       m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
       break;
@@ -326,11 +348,11 @@ void MonHist::setup(IMessageSvc* msgs)
       m_hentries = rhist->GetEntryArr();
       m_hsumw2 = rhist->GetSumw2Arr();
       m_rootobj = rhist;
-      m_name = (char*)rhist->GetName();
-      m_namelen = strlen(m_name);
-      m_title = (char*)rhist->GetTitle();
+      m_name = rhist->GetName();
+      m_namelen = m_name.length();
+      m_title = rhist->GetTitle();
 //      printf("+++++++++++++++++++++++++++++++2Dim Histogram. Name %s, Title %s \n",m_name, m_title);
-      m_titlen = strlen(m_title);
+      m_titlen = m_title.length();
       m_Xaxis =  rhist->GetXaxis();
       m_Yaxis = rhist->GetYaxis();
       m_blocksize = rhist->fN*sizeof(double);
@@ -404,19 +426,6 @@ MonHist::~MonHist()
     free(m_Ylabels);
     m_Ylabels = 0;
   }
-  if (m_type == C_STATENT)
-  {
-    if (m_name != 0)
-    {
-      free(m_name);
-      m_name = 0;
-    }
-    if (m_title != 0)
-    {
-      free(m_title);
-      m_title = 0;
-    }
-  }
   if (m_rootobj !=0)
   {
     if (m_type == H_RATE) delete m_rootobj;
@@ -471,7 +480,7 @@ int MonHist::xmitbuffersize()
 
 void *MonHist::cpyName(void *ptr)
 {
-  strncpy((char*)ptr,m_name,this->m_namelen);
+  strncpy((char*)ptr,m_name.c_str(),this->m_namelen);
   ((char*)ptr)[m_namelen]=0;
   ptr = (char*)ptr+m_namelen;
   return ptr;
@@ -479,7 +488,7 @@ void *MonHist::cpyName(void *ptr)
 
 void *MonHist::cpytitle(void *ptr)
 {
-  memcpy((char*)ptr,m_title,m_titlen);
+  memcpy((char*)ptr,m_title.c_str(),m_titlen);
   ((char*)ptr)[m_titlen] = 0;
   ptr = (char*)ptr+m_titlen;
   return ptr;

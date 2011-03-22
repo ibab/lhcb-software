@@ -146,7 +146,7 @@ int MonCounter::setname ( char* name)
   m_name[m_namelen]=0;
   return 0;
 }
-char *MonCounter::name()
+const char *MonCounter::name() const
 {
   return m_name;
 }

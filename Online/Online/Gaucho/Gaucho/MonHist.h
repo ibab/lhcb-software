@@ -28,9 +28,9 @@ private:
 	int m_xmitbuffersize;
 	int m_hdrlen;
 	int m_buffersize;
-	char *m_name;
+	std::string m_name;
 	int m_namelen;
-	char *m_title;      /** Pointer to Histogram Title **/
+	std::string m_title;      /** Pointer to Histogram Title **/
 	int m_titlen;
 	int m_nx;           /** Number of x-bins **/
 	double m_xmin;     /** Minimum x **/
@@ -51,11 +51,12 @@ private:
 	char **m_Ylabels;
 	int m_xlablen;
 	int m_ylablen;
+  IMessageSvc* m_msgsvc;
+	void _clear();
   void setup(IMessageSvc* msgSvc, const std::string& source, const AIDA::IBaseHistogram *aidahist);
   void setup(IMessageSvc* msgSvc);
   void setup(IMessageSvc* msgSvc, const std::string& source,const std::string& desc, const StatEntity *se);
   void cpyBinLabels(char *,char**, int);
-  IMessageSvc* m_msgsvc;
 public:
   MonHist();
   MonHist(IMessageSvc* msgSvc, const std::string& source, const AIDA::IBaseHistogram *aidahist);
@@ -66,11 +67,11 @@ public:
 	int xmitbuffersize();
 	int hdrlen(){return m_hdrlen;};
 	int serialize(void* &ptr);
-	char *name(){return m_name;};
+	const char *name() const {return m_name.c_str();};
 	void clear(void);
-	int namelength(){return m_namelen+1;};
-	int titlen(){return m_titlen+1;};
-	int type(){return m_type;};
+	int namelength() const {return m_namelen+1;};
+	int titlen() const {return m_titlen+1;};
+	int type() const {return m_type;};
 	void *cpyName(void*);
 	void *cpytitle(void *ptr);
   int GetBinLabels(TAxis *ax, char ***labs);

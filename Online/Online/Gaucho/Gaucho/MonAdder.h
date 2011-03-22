@@ -25,8 +25,6 @@ class HistServer;
 class ObjRPC;
 class MonInfo;
 class DimInfo;
-class HAdderTaskInfoHandler;
-class HAdderServInfoHandler;
 
 //static int empty=-1;
 
@@ -54,7 +52,7 @@ public:
   {
     m_serviceName = name;
     m_Info = info;
-    last_update = 0;
+    last_update = -1;
   }
 };
 class OUTServiceDescr
@@ -105,18 +103,21 @@ typedef TskMap::iterator TskIter;
 class MonAdder
 {
 public:
+  MonMap m_TaskMap;
   int m_type;
   void *CycleCBarg;
   void (*CycleFn)(void*,void*,int, MonMap *, MonAdder *);
   void *m_buffer;
   int m_buffersize;
   int m_usedSize;
+  std::string m_MyName;
+  std::string m_NamePrefix;
   std::string m_outsvcname;
   INServiceMap m_inputServicemap;
   OUTServiceMap m_outputServicemap;
   TaskServiceMap m_TaskServiceMap;
   void TaskName(std::string &server, std::string &tname, std::string &tgen);
-  void ServiceName(std::string server, std::string &svc);
+//  void ServiceName(std::string server, std::string &svc);
   std::string m_taskname;
   std::string m_srcnode;
   std::string m_taskPattern;
@@ -140,10 +141,6 @@ public:
   bool m_noRPC;
 
 public:
-  static DimInfo *gg_DNSInfo;
-  static std::vector<MonAdder*> gg_AdderList;
-  static HAdderTaskInfoHandler gg_TaskHandler;
-  static HAdderServInfoHandler gg_ServHandler;
   lib_rtl_lock_t m_lockid;
   lib_rtl_lock_t m_maplock;
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
@@ -158,8 +155,11 @@ public:
   void setSrcNode(std::string &src){m_srcnode = src;return;};
   void setOutDNS(std::string &src){m_outdns = src;return;};
   virtual void Configure(void)=0;
-  virtual void TaskHandler(char *, int);
-  virtual void ServiceHandler(DimInfo *, char *, int);
+//  virtual void TaskHandler(char *, int);
+//  virtual void ServiceHandler(DimInfo *, std::string &, char *, int);
+  virtual void NewService(DimInfo *myInfo, std::string &TaskName, std::string &ServiceName);
+  virtual void RemovedService(DimInfo *, std::string &TaskName, std::string &ServiceName);
+  virtual void TaskDied(std::string & task);
   void setIsSaver(bool p)
   {
     if (p)
@@ -225,15 +225,5 @@ public:
       return 0;
     }
   };
-};
-class HAdderTaskInfoHandler : public DimInfoHandler
-{
-public:
-  void infoHandler(void);
-};
-class HAdderServInfoHandler : public DimInfoHandler
-{
-public:
-  void infoHandler(void);
 };
 #endif
