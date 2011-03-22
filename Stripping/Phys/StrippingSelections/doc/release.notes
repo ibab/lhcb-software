@@ -7,6 +7,7 @@
 ! 2011-03-22 - Paul Seyfert
  - StrippingTrackEffDownMuon.py
    fixed copy&paste error
+   and first workaround for https://savannah.cern.ch/bugs/index.php?79826
 
 ! 2011-03-17 - Liming Zhang
  - StrippingD0forBXX.py

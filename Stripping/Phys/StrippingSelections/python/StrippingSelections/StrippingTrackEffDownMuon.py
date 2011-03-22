@@ -141,7 +141,8 @@ def selMuonPParts(name, DataType, downstreamSeq):
    downprotos.InputTrackLocation = ["Rec/Downstream/Tracks"]
    downprotos.OutputProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
-   tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed …
+   #tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed …
+   tracktypes = ["Downstream"]
    #if (trackcont == "Best") :
    #	tracktypes = [ "Long" ]
    downprotos.TrackSelector.TrackTypes = tracktypes
@@ -151,6 +152,8 @@ def selMuonPParts(name, DataType, downstreamSeq):
    	ts = getattr(selector,tsname)
    	# Set Cuts
    	ts.TrackTypes = [tsname]
+#	ts.MinNDoF = 
+	ts.MaxChi2Cut = 10
 
    addmuonpid = ChargedProtoParticleAddMuonInfo(name+"addmuoninfo")
    addmuonpid.InputMuonPIDLocation = "Rec/Muon/MuonPID/Downstream"
