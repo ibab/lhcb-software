@@ -34,35 +34,35 @@ B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 #  The lines are as follows with rates, timing and prescale respectively
 #  having used the dsts
 #  (RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py)
-#  for the October 5, 2010 Stripping Deadline, with requirements that the
+#
+#  Stripping 13, with requirements that the
 #  rate <0.05% and timing <1ms/evt.
-#
+#  
 #  LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
-#
+#  
 #  Pi line: B0->pi+ mu- nu signal line.
-#  Rate = 0.046, Timing = 0.087 , Prescale = 0.2
-#
+#  Rate = 0.044, Timing = 0.642 , Prescale = 0.1
+#  
 #  Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-#  Rate = 0.055, Timing = 0.404, Prescale = 0.25
-#
+#  Rate = 0.042, Timing = 0.649, Prescale = 0.2
+#  
 #  K line: Bs0->K+ mu- nu signal line.
-#  Rate = 0.053, Timing = 0.057, Prescale = 0.5
-#
+#  Rate = 0.046, Timing = 0.225, Prescale = 0.2
+#  
 #  K SS line:: Bs0->K+ mu+ nu Background to the K line.
-#  Rate = 0.053, Timing = 0.059, Prescale = 0.2
-#
+#  Rate = 0.045, Timing = 0.150, Prescale = 0.15
+#  
 #  Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
-#  Rate = 0.0336, Timing = 0.244, Prescale = 0.5
-#
+#  Rate = 0.048, Timing = 0.799, Prescale = 0.3
+#  
 #  Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
-#  Rate = 0.0248, Timing = 0.089, Prescale=0.5
-#
-#  K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through rho(770).
-#  Rate = 0.0372, Timing = 0.494, Prescale=1
-#
-#  K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the rho line.
-#  Rate = 0.0106, Timing = 0.049, Prescale=0.5
-#
+#  Rate = 0.045, Timing = 0.991, Prescale= 0.5
+#  
+#  K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through K*(892).
+#  Rate = 0.046, Timing = 0.777, Prescale= 0.8
+#  
+#  K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the K* line.
+#  Rate = 0.046, Timing = 0.272, Prescale= 1
 # =============================================================================
 ## 
 
@@ -87,40 +87,37 @@ hence large data samples are required to accurately
 determine the background. We anticipate that this analysis
 will require of order 1fb-1.
 
-The lines are as follows with rates, timing and prescale respectively
-having used the dsts
-(RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py)
-for the October 5, 2010 Stripping Deadline, with requirements that the
+Stripping 13, with requirements that the
 rate <0.05% and timing <1ms/evt.
 
 LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
 
 Pi line: B0->pi+ mu- nu signal line.
-Rate = 0.046, Timing = 0.087 , Prescale = 0.2
+Rate = 0.044, Timing = 0.642 , Prescale = 0.1
 
 Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-Rate = 0.055, Timing = 0.404, Prescale = 0.25
+Rate = 0.042, Timing = 0.649, Prescale = 0.2
 
 K line: Bs0->K+ mu- nu signal line.
-Rate = 0.053, Timing = 0.057, Prescale = 0.5
+Rate = 0.046, Timing = 0.225, Prescale = 0.2
 
 K SS line:: Bs0->K+ mu+ nu Background to the K line.
-Rate = 0.053, Timing = 0.059, Prescale = 0.2
+Rate = 0.045, Timing = 0.150, Prescale = 0.15
 
 Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
-Rate = 0.0336, Timing = 0.244, Prescale = 0.5
+Rate = 0.048, Timing = 0.799, Prescale = 0.3
 
 Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
-Rate = 0.0248, Timing = 0.089, Prescale=0.5
+Rate = 0.045, Timing = 0.991, Prescale= 0.5
 
-K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through rho(770).
-Rate = 0.0372, Timing = 0.494, Prescale=1
+K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through K*(892).
+Rate = 0.046, Timing = 0.777, Prescale= 0.8
 
-K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the rho line.
-Rate = 0.0106, Timing = 0.049, Prescale=0.5
-
-
-Last modification $Date: 2011-03-21 $
+K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the K* line.
+Rate = 0.046, Timing = 0.272, Prescale= 1
+=============================================================================
+ 
+Last modification $Date: 2011-03-22 $
                by $Author: aborgia $
 """
 
@@ -332,8 +329,8 @@ class B2XuMuNuBuilder(LineBuilder):
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import DataOnDemand
         return StrippingLine(self._name+'Bd2PiLine',
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             prescale = 0.2,
+                             # HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+                             prescale = 0.1,
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -348,8 +345,8 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.25,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.2,
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -364,8 +361,8 @@ class B2XuMuNuBuilder(LineBuilder):
 
     def _Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+        return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.3,
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -381,7 +378,7 @@ class B2XuMuNuBuilder(LineBuilder):
     def _RhoWS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -396,8 +393,8 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+        return StrippingLine(self._name+'Bs2KLine', prescale = 0.2,
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -412,8 +409,8 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.2,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+        return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.15,
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -428,8 +425,8 @@ class B2XuMuNuBuilder(LineBuilder):
 
     def _Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KstarLine', prescale = 1.,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+        return StrippingLine(self._name+'Bs2KstarLine', prescale = 0.8,
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -444,8 +441,8 @@ class B2XuMuNuBuilder(LineBuilder):
 
     def _KstarSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 0.5,
-                             HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
+        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 1.,
+                             #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
