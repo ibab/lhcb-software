@@ -77,6 +77,13 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
     OnlineHistogram* myHist = (*itHP)->histo;
 
+    if ( myHist->dimServiceName() == "Unknown" ) {
+      std::string dimName = partition + "_node_" + myHist->task() + "_00/" + myHist->identifier();
+      myHist->setDimServiceName( dimName );
+      std::cout << "OnlineHistogram identifier " << myHist->identifier()
+                << " DIM '" << myHist->dimServiceName() << "'" << std::endl;
+    }
+
     //== Is it a trend plot ?
  
     if ( myHist->type() == OnlineHistDBEnv::TRE ) {
@@ -111,10 +118,21 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
       bool existed = false;
       for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
         if ( (*itT).name == myHist->task() ) {
-          (*itT).histos.push_back( DisplayHistogram( myHist ) );
-          existed = true;
-          std::cout << myHist->task() << " ++ Histo   " << myHist->dimServiceName() << std::endl;
-          break;
+          for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
+                (*itT).histos.end() != itH; ++itH ) {
+            if ( (*itH).histo()->identifier() == myHist->identifier() ) {
+              std::cout << "              already existing " << myHist->identifier() << std::endl;
+              existed = true;
+              break;
+            }
+          }
+          if ( !existed ) {  
+            (*itT).histos.push_back( DisplayHistogram( myHist ) );
+            existed = true;
+            std::cout << myHist->task() << " ++ Histo   " << myHist->dimServiceName() << std::endl;
+            break;
+          }
+          
         }
       }
       if ( !existed ) {
@@ -232,13 +250,16 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
         if ( pos < dimName.size() ) {
           dimName.erase( 0, pos+1 );
           pos = dimName.find( "/" );
+          bool isExpertMon = false;
           if ( pos < dimName.size() ) {
+            isExpertMon = dimName.substr(0,pos) == "HltExpertMon";
             dimName.erase( 0, pos+1 );
           }
           if ( dimName.find( "GauchoJob/" ) == 0 ) {
             dimName.erase( 0, 10 );
             dimName = dimName.substr(0, dimName.find("/"))+"/"+dimName;
           }
+          if ( isExpertMon )  dimName = dimName.substr(0, dimName.find("/"))+"/"+dimName; // duplicate algo name!
         }
         (*itH).setShortName( dimName );
         if ( std::find( knownNames.begin(), knownNames.end(), dimName ) != knownNames.end() ) {

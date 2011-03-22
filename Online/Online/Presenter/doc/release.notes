@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-22 - Olivier Callot
+ - Fix offline file acces, and HltExpertMon access.
+
 ! 2011-03-21 - Olivier Callot
  - Fix the HLT1 page: Missing histogram, and multiple instances of the same histogram
 

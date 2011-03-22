@@ -1589,7 +1589,7 @@ void PresenterMainFrame::handleCommand(Command cmd) {
           m_nextIntervalButton->SetState(kButtonDisabled);
           m_currentPageName = selectedPageFromDbTree();
 
-          std::cout << "loadingPage " << m_loadingPage << "current page " << m_currentPageName << std::endl;
+          std::cout << "loadingPage " << m_loadingPage << " current page " << m_currentPageName << std::endl;
           if (!m_currentPageName.empty() && (false == m_loadingPage)) {
             std::cout << "Load page after selection of filename" << std::endl;
             loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile,
@@ -3008,6 +3008,11 @@ void PresenterMainFrame::reconfigureGUI() {
     else showDBTools(pres::ReadOnly);
   } else hideDBTools();
 
+  disablePageRefresh();
+  stopPageRefresh();
+
+  std::cout << "ReconfigureGUI: presenterMode = " << presenterMode() << std::endl;
+
   if ( pres::Online == presenterMode()) {
     if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots() ;
 
@@ -3046,9 +3051,6 @@ void PresenterMainFrame::reconfigureGUI() {
     m_trendDurationComboBox->SetEnabled(true);
 
   } else if ( pres::History == presenterMode()) {
-    disablePageRefresh();
-    stopPageRefresh();
-
     m_toolMenu->CheckEntry(OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
     if  ( m_editingAllowed ) {
@@ -3087,10 +3089,13 @@ void PresenterMainFrame::reconfigureGUI() {
     // hide refreshHistoDBListTree
     if (( pres::Online == m_prevPresenterMode) &&
         ( presenterMode() != m_prevPresenterMode)) {
+      m_loadingPage = true;  // avoid reloading page...
       partitionSelectorComboBoxHandler( 1 ) ;
+      m_loadingPage = false;
     }
+    std::cout << "ReconfigureGUI:: After Offline selector" << std::endl;
+    
   } else if (pres::EditorOnline == presenterMode()) {
-    stopPageRefresh();
     unclearHistosIfNeeded();
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
     if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots();
@@ -3129,7 +3134,6 @@ void PresenterMainFrame::reconfigureGUI() {
 
     // show refreshHistoDBListTree
   } else if (pres::EditorOffline == presenterMode()) {
-    stopPageRefresh();
     unclearHistosIfNeeded();
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
     if ( m_presenterInfo.isHistoryTrendPlotMode() ) toggleHistoryPlots() ;
@@ -3166,6 +3170,12 @@ void PresenterMainFrame::reconfigureGUI() {
       refreshHistogramSvcList(pres::s_withTree);
       partitionSelectorComboBoxHandler( 1 );
     }
+  }
+
+  if (!m_currentPageName.empty()) {
+    loadSelectedPageFromDB(m_currentPageName,
+                           m_presenterInfo.globalTimePoint() ,
+                           m_presenterInfo.globalPastDuration() ) ;
   }
 
   fClient->NeedRedraw(this);
@@ -4433,11 +4443,15 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setRwPastDuration( pastDuration ) ;
+        m_presenterInfo.setGlobalTimePoint( pres::s_startupFile ) ; 
+        m_presenterInfo.setGlobalPastDuration( pastDuration ) ; 
         m_message = m_savesetFileName;
       } else if ( "set file" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setRwPastDuration( pastDuration ) ;
+        m_presenterInfo.setGlobalTimePoint( pres::s_startupFile ) ; 
+        m_presenterInfo.setGlobalPastDuration( pastDuration ) ; 
         m_message = m_savesetFileName;
       } else {
         m_presenterInfo.setRwTimePoint( m_presenterInfo.globalTimePoint() ) ;
