@@ -292,7 +292,7 @@ def trackingDownPreFilter(name, prefilter):
     jpsidotracking.Members += [ downstreamTracking ];
     #AddDownstreamFitSeq
     jpsidotracking.Members += [TrackStateInitAlg("InitSeedDownstream")]
-    TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Downstream/Tracks"
+    TrackStateInitAlg("InitSeedDownstream").TrackLocation = "Rec/Downstream/Tracks"
     downstreamFit = ConfiguredFitDownstream()
     downstreamFit.TracksInContainer = 'Rec/Downstream/Tracks'
     jpsidotracking.Members += [downstreamFit]

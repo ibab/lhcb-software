@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-22 - Paul Seyfert
+ - StrippingTrackEffDownMuon.py
+   fixed copy&paste error
+
 ! 2011-03-17 - Liming Zhang
  - StrippingD0forBXX.py
    Add lines RS & WS D*+ -> D0 pi+, D0->K3pi with missing one pion 
