@@ -24,7 +24,7 @@ from LbConfiguration.LbLogin import getLoginCacheName, getLbLoginEnv
 from LbConfiguration.SetupProject import SetupProject
 from LbConfiguration.Platform import binary_list, binary_opt_list, getBinaryOpt
 from LbConfiguration.Tools import genProjectSetup
-from LbUtils.Path import multiPathJoin
+from LbUtils.Path import multiPathJoin, cleanPath
 from optparse import OptionParser
 
 
@@ -49,8 +49,10 @@ def fixNativeStringWithVar(data, varname, varcont=None, dotbat=False):
 def fixNativeString(data, dotbat=False):
     tobereplaced = {}
     if os.environ.has_key("HOME") and not dotbat :
+        os.environ["HOME"] = cleanPath(os.environ["HOME"])
         tobereplaced["HOME"] = os.environ["HOME"]
     if os.environ.has_key("VO_LHCB_SW_DIR") :
+        os.environ["VO_LHCB_SW_DIR"] = cleanPath(os.environ["VO_LHCB_SW_DIR"])
         tobereplaced["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"]
     if os.environ.has_key("CMTBIN") :
         tobereplaced["CMTBIN"] = os.environ["CMTBIN"]
@@ -63,6 +65,7 @@ def fixNativeString(data, dotbat=False):
         else :
             tobereplaced["CMTOPT"] = cmtconf + "-opt"
     if os.environ.has_key("AFSROOT") and dotbat:
+        os.environ["AFSROOT"] = cleanPath(os.environ["AFSROOT"])
         tobereplaced["AFSROOT"] = os.environ["AFSROOT"]
 
     for k in tobereplaced.keys() :
@@ -890,6 +893,7 @@ def updateLHCbProjectPath(mysiteroot):
             finalcmtlist.append(d)
     os.environ["LHCBPROJECTPATH"] = os.pathsep.join(finalcmtlist)
 
+
 if __name__ == '__main__':
 
     targetlocation = None
@@ -924,6 +928,7 @@ if __name__ == '__main__':
     opts, args = parser.parse_args()
 
     if opts.mysiteroot is not None:
+        opts.mysiteroot = cleanPath(opts.mysiteroot)
         updateLHCbProjectPath(opts.mysiteroot)
 
     version = opts.login_version

@@ -1,3 +1,8 @@
+2011-03-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: cleanup the initial pathes that have to be replaced (interpolated)
+	in the generated files.
+
 2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: changed realpath into abspath.
