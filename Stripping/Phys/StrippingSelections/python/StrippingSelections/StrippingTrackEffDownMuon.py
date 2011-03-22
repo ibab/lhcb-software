@@ -126,19 +126,19 @@ def selMuonPParts(name, DataType, downstreamSeq):
        Make ProtoParticles out of Downstream tracks
    """
    unpacker = UnpackTrack(name+"UnpackTrack")  # do we need this or is it here for historical reason ?
-   unpacker.InputName="pRec/Downstream/Tracks"
-   unpacker.OutputName="Rec/Downstream/Tracks"
+   unpacker.InputName="pRec/Downstream/FittedTracks"
+   unpacker.OutputName="Rec/Downstream/FittedTracks"
 
    idalg = MuonIDAlg(name+"IDalg")
    cm=ConfiguredMuonIDs.ConfiguredMuonIDs( DataType ) #data=DaVinci().getProp("DataType"))
    cm.configureMuonIDAlg(idalg)
-   idalg.TrackLocation = "Rec/Downstream/Tracks"
+   idalg.TrackLocation = "Rec/Downstream/FittedTracks"
    idalg.MuonIDLocation = "Rec/Muon/MuonPID/Downstream"
    idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream" # I would call it FromDownstream …but just to be »Klugscheißer«
 
    downprotoseq = GaudiSequencer(name+"ProtoPSeq")
    downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
-   downprotos.InputTrackLocation = ["Rec/Downstream/Tracks"]
+   downprotos.InputTrackLocation = ["Rec/Downstream/FittedTracks"]
    downprotos.OutputProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
    #tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed …
@@ -152,7 +152,7 @@ def selMuonPParts(name, DataType, downstreamSeq):
    	ts = getattr(selector,tsname)
    	# Set Cuts
    	ts.TrackTypes = [tsname]
-#	ts.MinNDoF = 
+#	ts.MinNDoF = 1 
 	ts.MaxChi2Cut = 10
 
    addmuonpid = ChargedProtoParticleAddMuonInfo(name+"addmuoninfo")
@@ -278,7 +278,7 @@ def trackingDownPreFilter(name, prefilter):
     #Jpsi_not_yet_there = LoKi__VoidFilter("Jpsi_not_yet_there")
     #Jpsi_not_yet_there.Code = "1 > CONTAINS('Rec/Track/Downstream')"
 
-    TrackToDST("DownTrackToDST").TracksInContainer = "Rec/Downstream/Tracks"
+    TrackToDST("DownTrackToDST").TracksInContainer = "Rec/Downstream/FittedTracks"
 
     TrackSys().setProp('SpecialData', ['earlyData'])
 
@@ -298,6 +298,7 @@ def trackingDownPreFilter(name, prefilter):
     TrackStateInitAlg("InitSeedDownstream").TrackLocation = "Rec/Downstream/Tracks"
     downstreamFit = ConfiguredFitDownstream()
     downstreamFit.TracksInContainer = 'Rec/Downstream/Tracks'
+    downstreamFit.TracksOutContainer = 'Rec/Downstream/FittedTracks'
     jpsidotracking.Members += [downstreamFit]
     jpsidotracking.Members += [TrackToDST("DownTrackToDST")]
 
@@ -310,7 +311,7 @@ def trackingDownPreFilter(name, prefilter):
 
     return GSWrapper(name="WrappedDownstreamTracking",
                      sequencer=jpsidotracking,
-                     output='Rec/Downstream/Tracks',
+                     output='Rec/Downstream/FittedTracks',
                      requiredSelections = [ prefilter])
 
 
