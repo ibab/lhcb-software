@@ -34,3 +34,7 @@ apply_pattern component_library library=LbHijing
 apply_pattern linker_library    library=LbHijingLib 
 apply_pattern library_stamps    library=LbHijingLib 
 
+private
+macro_append fflags "" \
+      target-gcc3   " -fno-second-underscore "
+             

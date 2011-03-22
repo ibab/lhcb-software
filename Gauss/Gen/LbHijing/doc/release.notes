@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2011-03-22 - Gloria CORTI
+ - Introduce "-fno-second-underscore" for gcc3 to test if rebuild version of
+   library in GENSER would work
+
 ! 2011-02-11 - Patrick Robbe
  - Adapt code to use ALICE hijing version from GENSER
 
