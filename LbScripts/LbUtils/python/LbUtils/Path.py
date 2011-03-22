@@ -96,7 +96,22 @@ def pathAdd(path1, path2, exist_check=False):
     for d in path2.split(os.pathsep) :
         result = pathAppend(result, d, exist_check)
     return result
-        
+
+def cleanPath(path_value, normalize=False):
+    """fully clean up a path: remove empty entries and
+    also remove trailing os.sep for each entry
+    @param path_value: initial pathname. Can be a single path or a collection separated with os.pathsep
+    @param normalized: if True remove .., removes extra '/' and convert '/' to '\\' on windows
+    """
+    lst = []
+    for p in path_value.split(os.pathsep) :
+        if p :
+            p = p.rstrip(os.sep)
+            if normalize :
+                p = os.path.normpath(p)
+            lst.append(p)
+    return os.pathsep.join(lst)
+
 
 def envPathPrepend(pathname, dirname, env_dict=None, exist_check=False):
     if not env_dict :
@@ -124,7 +139,7 @@ def multiPathUpdate(path, dirlist, interleaved=False, exist_check=False):
     @param path: original path
     @param dirlist: list of subdirectories to be collated to each entry of
                     path
-    @param interleaved: 
+    @param interleaved:
       - False : path=pth1:pth2 and dirlist=[dir1,dir2] -> pth1/dir1:pth2/dir1:pth1/dir2:pth2/dir2
       - True  : path=pth1:pth2 and dirlist=[dir1,dir2] -> pth1/dir1:pth1/dir2:pth2/dir2:pth2/dir2
     @return: the updated path

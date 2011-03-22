@@ -1,3 +1,9 @@
+2011-03-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/Path.py: implemented the cleanPath function which removes empty
+	entries in the path collection and strip right most os.sep in the path entries.
+	* LbUtils/tests/PathTest.py: test for the previous function.
+
 2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/CMT/Project.py: fixed CMTWhich: now handles correctly 3 arguments.
