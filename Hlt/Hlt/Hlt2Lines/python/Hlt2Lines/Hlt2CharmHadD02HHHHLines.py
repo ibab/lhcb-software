@@ -12,8 +12,8 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                  ## 4Body
                     'TrkPt_4Body'                 : 250.0 * MeV
                   , 'TrkP_4Body'                  : 2000.0 * MeV
-                  , 'TrkPVIPChi2_4Body'           : 2.0      # unitless
-                  , 'TrkChi2_4Body'               : 3.0      # unitless
+                  , 'TrkPVIPChi2_4Body'           : 1.7      # unitless
+                  , 'TrkChi2_4Body'               : 5.0      # unitless
                   , 'PairMinDoca_4Body'           : 0.10 * mm
                   , 'VtxPVDispChi2_4Body'         : 100.0    # unitless
                   , 'VtxChi2_4Body'               : 20.0     # unitless
@@ -21,7 +21,7 @@ class Hlt2CharmHadD02HHHHLinesConf(HltLinesConfigurableUser) :
                   , 'DSumPt_4Body'                : 2000.0 * MeV
                   , 'MCOR_MAX_4Body'              : 3500.0 * MeV
                   , 'Sig_M_MIN'                   : 1800.0 * MeV
-                  , 'Sig_M_MAX'                   : 2040.0 * MeV
+                  , 'Sig_M_MAX'                   : 1930.0 * MeV
                   , 'WideMass_M_MIN'              : 1700.0 * MeV
                   , 'WideMass_M_MAX'              : 2100.0 * MeV
                   ## 2-body Input for 4Body
