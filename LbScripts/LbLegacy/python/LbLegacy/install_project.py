@@ -1628,6 +1628,21 @@ def _multiPathJoin(path, subdir):
         pathlist.append(os.path.join(d, subdir))
     return os.pathsep.join(pathlist)
 
+def _cleanPath(path_value, normalize=False):
+    """fully clean up a path: remove empty entries and
+    also remove trailing os.sep for each entry
+    @param path_value: initial pathname. Can be a single path or a collection separated with os.pathsep
+    @param normalized: if True remove .., removes extra '/' and convert '/' to '\\' on windows
+    """
+    lst = []
+    for p in path_value.split(os.pathsep) :
+        if p :
+            p = p.rstrip(os.sep)
+            if normalize :
+                p = os.path.normpath(p)
+            lst.append(p)
+    return os.pathsep.join(lst)
+
 
 def createBaseDirs(pname, pversion):
     global cmtconfig
@@ -2226,6 +2241,9 @@ def parseArgs():
 
     return pname, pversion, binary
 
+def cleanPath(pathname):
+    pass
+
 def checkMySiteRoot():
     global multiple_mysiteroot
     log = logging.getLogger()
@@ -2233,19 +2251,14 @@ def checkMySiteRoot():
     if not os.environ.has_key("MYSITEROOT") :
         log.warning("The env variable MYSITEROOT is not set")
         if os.environ.has_key("VO_LHCB_SW_DIR") :
-            os.environ["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"].rstrip(os.sep)
+            os.environ["VO_LHCB_SW_DIR"] = _cleanPath(os.environ["VO_LHCB_SW_DIR"])
             fallback_mysiteroot = os.path.join(os.environ["VO_LHCB_SW_DIR"], "lib")
             if os.path.exists(fallback_mysiteroot) :
                 log.warning("Using $VO_LHCB_SW_DIR/lib for MYSTITEROOT")
                 os.environ["MYSITEROOT"] = fallback_mysiteroot
     else :
         # cleanup the MYSITEROOT variable. It can be a path
-        os.environ["MYSITEROOT"] = os.environ["MYSITEROOT"].strip(os.pathsep)
-        mylst = []
-        for l in os.environ["MYSITEROOT"].split(os.pathsep) :
-            # clean up extra /
-            mylst.append(l.rstrip(os.sep))
-        os.environ["MYSITEROOT"] = os.pathsep.join(mylst)
+        os.environ["MYSITEROOT"] = _cleanPath(os.environ["MYSITEROOT"])
 
     if not os.environ.has_key("MYSITEROOT") :
         log.fatal('please set MYSITEROOT to $INSTALLDIR:$MYSITEROOT before running the python script \n')
@@ -2260,7 +2273,7 @@ def checkMySiteRoot():
 
 
     if os.environ.has_key("VO_LHCB_SW_DIR") :
-        os.environ["VO_LHCB_SW_DIR"] = os.environ["VO_LHCB_SW_DIR"].rstrip(os.sep)
+        os.environ["VO_LHCB_SW_DIR"] = _cleanPath(os.environ["VO_LHCB_SW_DIR"])
         log.debug("The VO_LHCB_SW_DIR variable is set to %s" % os.environ["VO_LHCB_SW_DIR"])
         test_vo_dir = os.environ["VO_LHCB_SW_DIR"]
         test_mysiteroot = os.environ["MYSITEROOT"]

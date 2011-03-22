@@ -1,3 +1,10 @@
+2011-03-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added clone of cleanPath (LbUtils.Path) in order
+	to clean up the initial MYSITEROOT and VO_LHCB_SW_DIR. Please note that the path is
+	not normalized (os.path.normpath) because it could lead to inconsistencies if there are ".."
+	and links.
+
 2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py:
