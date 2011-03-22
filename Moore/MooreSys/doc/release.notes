@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v12r4p1>2011-03-22 Moore v12r4p1</A></H1><PRE>
+fix some warnings by including patched HltDisplVertices
+
 </PRE><H1><A NAME=v12r4>2011-03-17 Moore v12r4</A></H1><PRE>
 still based on HLT_v13r2p1, minor patches applied
 
