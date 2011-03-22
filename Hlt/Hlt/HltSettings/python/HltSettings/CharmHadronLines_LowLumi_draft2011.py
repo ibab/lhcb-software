@@ -105,11 +105,11 @@ class CharmHadronLines :
                           'Trk_PT_MIN'                :  500.0 * MeV
                         , 'Trk_P_MIN'                 : 5000.0 * MeV
                         , 'Trk_MIPCHI2DV_MIN'         :   10.0      # unitless
-                        , 'Trk_TRCHI2DOF_MAX'         :    3.0      # unitless
+                        , 'Trk_TRCHI2DOF_MAX'         :    5.0      # unitless
                         , 'Pair_AMINDOCA_MAX'         :    0.1 * mm
                         , 'Pair_BPVVDCHI2_MIN'        :   40.0      # unitless
                         , 'Pair_BPVVD_MIN'            :    3.0 * mm
-                        , 'Pair_SumAPT_MIN'           : 2000.0 * MeV
+                        , 'Pair_SumAPT_MIN'           : 1500.0 * MeV
                         , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV
                     }
 
@@ -117,16 +117,16 @@ class CharmHadronLines :
                         ## 3Body
                           'TrkPt_3Body'                 : 250.0    # MeV
                         , 'TrkP_3Body'                  : 2000.0   # MeV
-                        , 'TrkPVIPChi2_3Body'           : 5.0      # unitless
-                        , 'TrkChi2_3Body'               : 3.0      # unitless
+                        , 'TrkPVIPChi2_3Body'           : 2.0      # unitless
+                        , 'TrkChi2_3Body'               : 5.0      # unitless
                         , 'PairMinDoca_3Body'           : 0.08     # mm
                         , 'VtxPVDispChi2_3Body'         : 150.0    # unitless
                         , 'VtxChi2_3Body'               : 20.0     # unitless
                         , 'DIPChi2_3Body'               : 15.0     # unitless
-                        , 'DSumPt_3Body'                : 2500.0   # MeV
+                        , 'DSumPt_3Body'                : 2000.0   # MeV
                         , 'MCOR_MAX_3Body'              : 3500.    # MeV
                         ## 2-body Input for 3Body
-                        , 'TrkChi2_2BodyFor3Body'       : 3.0      # unitless
+                        , 'TrkChi2_2BodyFor3Body'       : 5.0      # unitless
                         , 'GEC_Filter_NTRACK'           : True     # do or do not
                         , 'GEC_NTRACK_MAX'              : 110      # max number of tracks
                         # prescales
@@ -182,19 +182,19 @@ class CharmHadronLines :
                         ## 4Body
                           'TrkPt_4Body'                 : 250.0 * MeV
                         , 'TrkP_4Body'                  : 2000.0 * MeV
-                        , 'TrkPVIPChi2_4Body'           : 1.7      # unitless
-                        , 'TrkChi2_4Body'               : 3.0      # unitless
+                        , 'TrkPVIPChi2_4Body'           : 2.0      # unitless
+                        , 'TrkChi2_4Body'               : 5.0      # unitless
                         , 'PairMinDoca_4Body'           : 0.10 * mm
                         , 'VtxPVDispChi2_4Body'         : 100.0    # unitless
                         , 'VtxChi2_4Body'               : 20.0     # unitless
                         , 'DIPChi2_4Body'               : 25.0     # unitless
-                        , 'DSumPt_4Body'                : 2000.0 * MeV
+                        , 'DSumPt_4Body'                : 1500.0 * MeV
                         , 'MCOR_MAX_4Body'              : 3500.0 * MeV
                         , 'Sig_M_MIN'                   : 1800.0 * MeV
-                        , 'Sig_M_MAX'                   : 1930.0 * MeV
+                        , 'Sig_M_MAX'                   : 2040.0 * MeV
                         , 'WideMass_M_MIN'              : 1700.0 * MeV
                         , 'WideMass_M_MAX'              : 2100.0 * MeV
-                        , 'TrkChi2_2BodyFor4Body'       : 3.0      # unitless
+                        , 'TrkChi2_2BodyFor4Body'       : 5.0      # unitless
                         , 'GEC_Filter_NTRACK'           : True
                         , 'GEC_NTRACK_MAX'              : 110
                         # prescales
