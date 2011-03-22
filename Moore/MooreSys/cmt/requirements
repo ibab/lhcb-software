@@ -12,6 +12,7 @@ use MuonID              v8r0p2  Muon
 use LoKiPhys            v9r99   Phys
 use LoKiCore            v10r9p1 Phys
 use HltDisplVertices    v3r3p1  Hlt
+use HltSettings         v5r9    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
