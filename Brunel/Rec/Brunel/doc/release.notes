@@ -3,6 +3,25 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v39r0p3>2011-03-23 Brunel v39r0p3</A></H1><PRE>
+This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
+ Rec v11r2p1 and SQLDDDB v6r4, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
+
+Patch version for production
+ - Pick up protection in Spd L0 decoding (CaloDAQ v4r21p1)
+
+Includes Det/DDDB v1r42 to pick up latest tags from SQLDDDB v6r4:
+ - Ecal pre-calibration for 2011
+ - Ecal/Hcal LED reference and initial quality for 2011
+ - Change in Prs/Ecal readout scheme for 2011
+ - New calorimeter resconstruction tuning for 2010
+ - TT/IT dead channel masks etc for 2011 startup
+ - First TT/IT/OT alignment for 2011
+ - New Rich L1 and HPD IDs for 2011
+ - VeloClusterPosition now configured with VeloError paremeterisation from DB
+
+Updated QMTest references for above changes
+
 </PRE><H1><A NAME=v39r0p2>2011-03-17 Brunel v39r0p2</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
  Rec v11r2p1 and SQLDDDB v6r1, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
