@@ -214,22 +214,28 @@ void CaloReadoutTool::putStatusOnTES(){
   // Readout Status
   typedef LHCb::RawBankReadoutStatus Status;
   typedef LHCb::RawBankReadoutStatuss Statuss;  
+  if( msgLevel( MSG::DEBUG) )debug()<< "Creating container at " 
+                                    << LHCb::RawBankReadoutStatusLocation::Default << endmsg;
   Statuss* statuss = getOrCreate<Statuss,Statuss>( LHCb::RawBankReadoutStatusLocation::Default );
-  Status* status = statuss->object ( m_status.key() );
-  if( NULL == status ){
-    status = new Status( m_status  );
-    statuss->insert( status );
+  Status* nstatus = statuss->object ( m_status.key() );
+  if( NULL == nstatus ){
+    if( msgLevel( MSG::DEBUG))debug() << "Inserting new status for bankType " 
+                                   <<Gaudi::Utils::toString( m_status.key())
+                                   <<endmsg;
+    nstatus = new Status( m_status  );
+    statuss->insert( nstatus );
   } else {
     if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  Gaudi::Utils::toString( m_status.key())
                                         << " already exists" << endmsg;
-    if( status->status() != m_status.status() ){
+    if( nstatus->status() != m_status.status() ){
       Warning("Status for bankType " +  LHCb::RawBank::typeName(m_status.key()) 
               + " already exists  with different status value -> merge both"
               , StatusCode::SUCCESS).ignore();
-      for( std::map< int, long >::iterator it = m_status.statusMap().begin() ; it != m_status.statusMap().end() ; ++it){
-        status->addStatus((*it).first , (*it).second);
+      std::map< int, long > smap = m_status.statusMap();
+      for( std::map< int, long >::iterator it = smap.begin() ; it != smap.end() ; ++it){
+        nstatus->addStatus((*it).first , (*it).second);
       }
-    } 
+    }
   }
 }
 
@@ -257,7 +263,6 @@ bool CaloReadoutTool::checkSrc(int source){
       break;
     }    
   }
-
   if(read){
     Warning("Another bank with same sourceID " + Gaudi::Utils::toString( source ) + " has already been read").ignore();
     m_status.addStatus(source, LHCb::RawBankReadoutStatus::NonUnique );

@@ -10,8 +10,9 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBankReadoutStatus.h"
+#include "CaloDet/DeCalorimeter.h"
 
-static const InterfaceID IID_ICaloReadoutTool ( "ICaloReadoutTool", 3, 0 );
+static const InterfaceID IID_ICaloReadoutTool ( "ICaloReadoutTool", 4, 0 );
 
 /** @class ICaloReadoutTool ICaloReadoutTool.h CaloDAQ/ICaloReadoutTool.h
  *  
@@ -33,10 +34,10 @@ public:
   virtual void setBanks(const std::vector<LHCb::RawBank*>* bank )=0;
   virtual void clear()=0;
   virtual void cleanData(int feb)=0;
-  virtual LHCb::RawBankReadoutStatus status()=0;
+  virtual LHCb::RawBankReadoutStatus& status()=0;
   virtual void putStatusOnTES()=0;
   virtual bool ok()=0;
-  
+  virtual DeCalorimeter* deCalo()=0;
 protected:
 
 private:

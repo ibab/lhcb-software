@@ -4,6 +4,12 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2011-03-23 - Olivier Deschamps
+  - Extend protection against multiple entry in KeyedContainer
+  - Fix coverity pb spotted by Gerhard
+  - Monitor 'DuplicateEntry' via RawBankReadoutStatus in all DAQ algs
+
+
 !========================= CaloDAQ v4r21p1 2011-03-23 =========================
 ! 2011-03-23 - Olivier Deschamps
   - protect against multiple ADC (SEU-induced ?)  : mininal protection - no monitoring (only cpp)

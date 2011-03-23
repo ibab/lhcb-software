@@ -241,10 +241,8 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       --size;
 
       LHCb::CaloCellID id1( lastID );
-      if ( 0 != adc1 ) {
-        LHCb::L0CaloAdc dum( id1, adc1 );
-        m_adcs.addEntry( dum , id1);
-      }
+      if ( 0 != adc1 )fillL0ADC( id1, adc1, sourceID);
+      
       //event dump
       if ( msgLevel( MSG::VERBOSE) ) {
         verbose() << " |  SourceID : " << sourceID
@@ -255,10 +253,8 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
       }
 
       LHCb::CaloCellID id2( ++lastID );
-      if ( 0 != adc2 ) {
-        LHCb::L0CaloAdc dum( id2, adc2 );
-        m_adcs.addEntry( dum, id2 );
-      }
+      if ( 0 != adc2 )fillL0ADC(id2,adc2,sourceID);
+      
  
       //event dump
       if ( msgLevel( MSG::VERBOSE) ) {
@@ -342,10 +338,8 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
                         << " |  ADC value = " << adc << endmsg;
             }
             
-            if ( 0 != id.index() ) {
-              LHCb::L0CaloAdc temp( id, adc );
-              m_adcs.addEntry( temp , id );
-            }
+            if ( 0 != id.index() )fillL0ADC(id,adc,sourceID);
+            
             offset += 8;
           }
         }
@@ -406,14 +400,11 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
           LHCb::CaloCellID spdId( (lastID+kk) & 0x3FFF );
           
 
-          if ( "Spd" == m_detectorName) {
-            LHCb::L0CaloAdc temp( spdId, spdData & 1 );
-            m_adcs.addEntry( temp, spdId );
-          }
-          else {
-            LHCb::L0CaloAdc temp( id, prsData & 1 );
-            m_adcs.addEntry( temp, id );
-          } 
+          if ( "Spd" == m_detectorName)
+            fillL0ADC(spdId,(spdData&1),sourceID);
+          else 
+            fillL0ADC(id,(prsData&1),sourceID);
+          
 
           //event dump
           if ( msgLevel( MSG::VERBOSE) ) {
@@ -452,14 +443,12 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
           if ( "Spd" == m_detectorName) {
             if( (item&2) != 0 ){
               LHCb::CaloCellID id ( spdId );   // SPD
-              LHCb::L0CaloAdc temp( id, 1 );
-              m_adcs.addEntry( temp, id );
+              fillL0ADC(id,1,sourceID);
             } 
           }
           else {
             if( (item&1) != 0 ){
-              LHCb::L0CaloAdc temp( prsId, 1 );
-              m_adcs.addEntry( temp, prsId );
+              fillL0ADC(prsId,1,sourceID);
             }
           }
         }
@@ -545,12 +534,10 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         if ( 0 != id.index() ){
           if ( "Spd" == m_detectorName) {
             LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
-            LHCb::L0CaloAdc temp( spdId, isSpd );
-            m_adcs.addEntry( temp , spdId);
-          }
+            fillL0ADC(spdId,isSpd,sourceID);
+         }
           else {
-            LHCb::L0CaloAdc temp( id, isPrs );
-            m_adcs.addEntry( temp, id );
+            fillL0ADC(id,isPrs,sourceID);
           }
         }
       }

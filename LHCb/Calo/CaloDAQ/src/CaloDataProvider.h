@@ -53,8 +53,16 @@ protected:
   bool decodeBank(LHCb::RawBank* bank);
   bool decodePrsTriggerBank(LHCb::RawBank* bank);
 private:
-  LHCb::CaloAdc fillAdc(LHCb::CaloCellID id, int adc){
+  LHCb::CaloAdc fillAdc(LHCb::CaloCellID id, int adc,int sourceID){
     LHCb::CaloAdc temp(id,adc);
+    if( 0 >  m_adcs.index(id)){
+      m_adcs.addEntry( temp, id);
+    }else{
+      counter("Duplicate ADC found")+=1;
+      m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::DuplicateEntry);
+      return temp;
+    }        
+
     if( id.area() != CaloCellCode::PinArea ){
       if( adc < m_minADC.adc()  )m_minADC = temp;
       if( adc > m_maxADC.adc()  )m_maxADC = temp;

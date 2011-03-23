@@ -68,9 +68,10 @@ public:
   StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);}; 
   //
   void setBanks(const std::vector<LHCb::RawBank*>* /* bank */ ){}; // harmless method
-  LHCb::RawBankReadoutStatus status(){return LHCb::RawBankReadoutStatus(); }; // harmless method
+  virtual LHCb::RawBankReadoutStatus& status(){m_status=LHCb::RawBankReadoutStatus();return m_status; }; // harmless method
   unsigned int nTell1s(){return 0;}; // harmless method
   void putStatusOnTES(){return;}; // harmless method
+  virtual DeCalorimeter* deCalo(){return m_calo;}
 
 protected:
 
@@ -120,5 +121,6 @@ private:
   LHCb::CaloAdc m_maxADC;
   LHCb::CaloAdc m_maxPinADC;
   bool m_getRaw;
+  LHCb::RawBankReadoutStatus m_status;
 };
 #endif // CALODATAPROVIDERFROMTES_H

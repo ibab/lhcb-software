@@ -72,7 +72,6 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
 
   //*** get the input data from Raw and fill the output container
   const std::vector<LHCb::L0CaloAdc>& l0Adcs = m_l0AdcTool->adcs( );
-  if(m_statusOnTES)m_l0AdcTool->putStatusOnTES();
 
 
   std::vector<LHCb::L0CaloAdc>::const_iterator il0Adc;
@@ -86,6 +85,10 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
       std::ostringstream os("");
       os << "Duplicate l0ADC for channel " << il0Adc->cellID() << endmsg;
       Warning(os.str(),StatusCode::SUCCESS).ignore();
+      int card =  m_l0AdcTool->deCalo()->cardNumber( il0Adc->cellID() );
+      int tell1=  m_l0AdcTool->deCalo()->cardToTell1( card);
+      LHCb::RawBankReadoutStatus& status = m_l0AdcTool->status();
+      status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
       delete adc;
     }     
   }
@@ -110,6 +113,10 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
       std::ostringstream os("");
       os << "Duplicate PIN l0ADC for channel " << il0Adc->cellID() << endmsg;
       Warning(os.str(),StatusCode::SUCCESS).ignore();
+      int card =  m_l0AdcTool->deCalo()->cardNumber( il0Adc->cellID() );
+      int tell1=  m_l0AdcTool->deCalo()->cardToTell1( card);
+      LHCb::RawBankReadoutStatus& status = m_l0AdcTool->status();
+      status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
       delete pinAdc;
     }
 
@@ -118,10 +125,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
             << " size " << newL0Adcs->size() << endmsg;
   }
 
-
-
-
-  
+  if(m_statusOnTES)m_l0AdcTool->putStatusOnTES();  
   return StatusCode::SUCCESS;
 }
 

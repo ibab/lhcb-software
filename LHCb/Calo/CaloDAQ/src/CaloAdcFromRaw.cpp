@@ -138,9 +138,12 @@ StatusCode CaloAdcFromRaw::execute() {
         std::ostringstream os("");
         os << "Duplicate CaloADC for channel " << id << endmsg;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_data->deCalo()->cardNumber( id );
+        int tell1=  m_data->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_data->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete out;
       }
-
     }    
   }
   // L0ADCs (ecal/hcal)
@@ -175,6 +178,10 @@ StatusCode CaloAdcFromRaw::execute() {
         std::ostringstream os("");
         os << "Duplicate L0ADC for channel " << id << endmsg;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_data->deCalo()->cardNumber( id );
+        int tell1=  m_data->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_data->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete out;
       }
     }
@@ -206,6 +213,10 @@ StatusCode CaloAdcFromRaw::execute() {
           std::ostringstream os("");
           os << "Duplicate L0Bit for channel " << id << endmsg;
           Warning(os.str(),StatusCode::SUCCESS).ignore();
+          int card =  m_data->deCalo()->cardNumber( id );
+          int tell1=  m_data->deCalo()->cardToTell1( card);
+          LHCb::RawBankReadoutStatus& status = m_data->status();
+          status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
           delete out;
       }
       }

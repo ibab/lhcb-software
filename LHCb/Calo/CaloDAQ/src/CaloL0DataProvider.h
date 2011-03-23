@@ -42,6 +42,16 @@ protected:
   bool decodeBank(LHCb::RawBank* bank);
   bool decodePrsTriggerBank(LHCb::RawBank* bank);
 private:
+  LHCb::L0CaloAdc fillL0ADC(LHCb::CaloCellID id,int adc, int sourceID){ 
+    LHCb::L0CaloAdc temp(id,adc); 
+    if( 0 >  m_adcs.index(id)){
+      m_adcs.addEntry( temp , id);
+    }else{
+      counter("Duplicate L0ADC found")+=1;
+      m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::DuplicateEntry);
+      return temp;
+    }        
+  }
   CaloVector<LHCb::L0CaloAdc>    m_adcs;
   unsigned int m_tell1s;
 };

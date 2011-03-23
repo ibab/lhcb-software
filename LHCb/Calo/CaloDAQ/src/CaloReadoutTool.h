@@ -10,7 +10,6 @@
 #include "GaudiKernel/Incident.h" 
 // from LHCb
 #include "CaloDAQ/ICaloReadoutTool.h"
-#include "CaloDet/DeCalorimeter.h"
 
 
 
@@ -60,12 +59,13 @@ public:
   virtual void clear(){Warning("DUMMY CLEARING : THIS MESSAGE MUST NOT APPEAR").ignore() ; return;}; 
   //
   virtual void cleanData(int ){return; } ;// to be implemented in the parent tool
-  virtual LHCb::RawBankReadoutStatus status(){return m_status;};
+  virtual LHCb::RawBankReadoutStatus& status(){return m_status;};
   virtual void putStatusOnTES();
   virtual bool ok(){
     if(m_getRaw)getBanks() ;
     return m_ok;
   };
+  virtual DeCalorimeter* deCalo(){return m_calo;}
   
 
   // =========================================================================

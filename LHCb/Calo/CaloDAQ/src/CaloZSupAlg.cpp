@@ -151,7 +151,6 @@ StatusCode CaloZSupAlg::execute() {
   //*** get the input data
 
   const std::vector<LHCb::CaloAdc>& adcs = m_adcTool->adcs( );
-  if(m_statusOnTES)m_adcTool->putStatusOnTES();
 
   //***  prepare the output containers
   LHCb::CaloAdcs* newAdcs=0;
@@ -228,6 +227,10 @@ StatusCode CaloZSupAlg::execute() {
         std::ostringstream os("");
         os << "Duplicate ADC for channel " << id << endmsg;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_adcTool->deCalo()->cardNumber( id );
+        int tell1=  m_adcTool->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_adcTool->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete adc;
       }      
     }
@@ -243,6 +246,10 @@ StatusCode CaloZSupAlg::execute() {
         std::ostringstream os("");
         os << "Duplicate Digit for channel " << id << endmsg;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_adcTool->deCalo()->cardNumber( id );
+        int tell1=  m_adcTool->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_adcTool->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete digit;
       }      
 
@@ -265,6 +272,7 @@ StatusCode CaloZSupAlg::execute() {
             << endmsg;
   }
 
+  if(m_statusOnTES)m_adcTool->putStatusOnTES();
 
   return StatusCode::SUCCESS;
 };

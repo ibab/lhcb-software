@@ -142,7 +142,6 @@ StatusCode CaloDigitsFromRaw::execute() {
 void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
 
   LHCb::Calo::FiredCells spdCells = m_spdTool->spdCells( );
-  if(m_statusOnTES)m_spdTool->putStatusOnTES();
 
   if(m_digitOnTES){
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
@@ -150,8 +149,22 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
     for ( std::vector<LHCb::CaloCellID>::const_iterator itD = spdCells.begin();
           spdCells.end() != itD; ++itD ) {
       LHCb::CaloDigit* dig = new LHCb::CaloDigit( *itD, energyScale );
-      digits->insert( dig );
-    }
+
+      try{
+        digits->insert( dig );
+      }catch(GaudiException &exc){
+        counter("Duplicate Spd 'digit'") += 1;
+        std::ostringstream os("");
+        os << "Duplicate digit for channel " << *itD << endmsg;
+        Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_spdTool->deCalo()->cardNumber( *itD );
+        int tell1=  m_spdTool->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_spdTool->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
+        delete dig;
+      } 
+    
+    } 
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
     debug() << m_outputDigits + m_extension << " CaloDigit container size " << digits->size() << endmsg;
@@ -163,10 +176,28 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
     for ( std::vector<LHCb::CaloCellID>::const_iterator itD = spdCells.begin();
           spdCells.end() != itD; ++itD ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( *itD, 1 );
-      adcs->insert( adc );
+
+      try{
+        adcs->insert( adc );
+      }catch(GaudiException &exc){
+        counter("Duplicate Spd 'ADC'") += 1;
+        std::ostringstream os("");
+        os << "Duplicate ADC for channel " << *itD << endmsg;
+        Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_spdTool->deCalo()->cardNumber( *itD );
+        int tell1=  m_spdTool->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_spdTool->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
+        delete adc;
+      } 
+
     }
     debug() <<  m_outputADCs + m_extension << " CaloAdc container size " << adcs->size() << endmsg;
   }
+
+  if(m_statusOnTES)m_spdTool->putStatusOnTES();
+
+
 } 
 
 //=========================================================================
@@ -180,16 +211,32 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
     put( digits, m_outputDigits+ m_extension );
     const std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );
-    if(m_statusOnTES)m_energyTool->putStatusOnTES();
+
     for ( std::vector<LHCb::CaloDigit>::const_iterator itD = allDigits.begin();
           allDigits.end() != itD; ++itD ) {
       LHCb::CaloDigit* dig = (*itD).clone();
-      digits->insert( dig );
+
+      try{
+        digits->insert( dig );
+      }catch(GaudiException &exc){
+        counter("Duplicate CaloDigit") += 1;
+        std::ostringstream os("");
+        os << "Duplicate digit for channel " << itD->cellID() << endmsg;
+        Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_energyTool->deCalo()->cardNumber( itD->cellID() );
+        int tell1=  m_energyTool->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_energyTool->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
+        delete dig;
+      } 
+
+
       verbose() << "ID " << dig->cellID() << " energy " << dig->e() << endmsg;
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
     debug() << m_outputDigits+ m_extension << " CaloDigit container size " << digits->size() << endmsg;
+    if(m_statusOnTES)m_energyTool->putStatusOnTES();
 
   }
   
@@ -202,7 +249,22 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
         for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allAdcs.begin();
           allAdcs.end() != itA; ++itA ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
-      adcs->insert(adc);
+
+      try{
+        adcs->insert(adc);
+      }catch(GaudiException &exc){
+        counter("Duplicate CaloDigit") += 1;
+        std::ostringstream os("");
+        os << "Duplicate digit for channel " << itA->cellID() << endmsg;
+        Warning(os.str(),StatusCode::SUCCESS).ignore();
+        int card =  m_energyTool->deCalo()->cardNumber( itA->cellID() );
+        int tell1=  m_energyTool->deCalo()->cardToTell1( card);
+        LHCb::RawBankReadoutStatus& status = m_energyTool->status();
+        status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
+        delete adc;
+      } 
+
+
       verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endmsg;
     }
     debug() << " CaloAdc container '"  << m_outputADCs+ m_extension  << "' -> size = " << adcs->size() << endmsg;
@@ -223,11 +285,30 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
             allPinAdcs.end() != itA; ++itA ) {
         LHCb::CaloAdc* pinAdc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
         pinAdcs->insert( pinAdc );
+
+        try{
+          pinAdcs->insert(pinAdc);
+        }catch(GaudiException &exc){
+          counter("Duplicate CaloDigit") += 1;
+          std::ostringstream os("");
+          os << "Duplicate digit for channel " << itA->cellID() << endmsg;
+          Warning(os.str(),StatusCode::SUCCESS).ignore();
+          int card =  m_energyTool->deCalo()->cardNumber( itA->cellID() );
+          int tell1=  m_energyTool->deCalo()->cardToTell1( card);
+          LHCb::RawBankReadoutStatus& status = m_energyTool->status();
+          status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
+          delete pinAdc;
+        }
+
         verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endmsg;
       }
       debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName + m_extension
               << "' -> size = " << pinAdcs->size() << endmsg;
     }
+    if(m_statusOnTES)m_energyTool->putStatusOnTES();
   }
+  
+
+
 }
 //=============================================================================

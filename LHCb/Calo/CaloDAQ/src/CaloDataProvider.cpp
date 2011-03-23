@@ -300,12 +300,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
                                           << " |  valid ? " << m_calo->valid(cellId)
                                           << " |  ADC value = " << adc << endmsg;
       
-      if ( 0 != cellId.index() ){
-        //LHCb::CaloAdc temp(cellId,adc);
-        LHCb::CaloAdc temp = fillAdc( cellId , adc);
-        m_adcs.addEntry(temp  ,cellId );        
-      }
-      
+      if ( 0 != cellId.index() )fillAdc( cellId , adc, sourceID);      
       ++data;
       --size;
     }
@@ -399,11 +394,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
         
         
         //== Keep only valid cells
-        if ( 0 != id.index() ){
-          LHCb::CaloAdc temp = fillAdc( id , adc);
-          //LHCb::CaloAdc temp(id,adc);
-          m_adcs.addEntry( temp ,id );
-        }        
+        if ( 0 != id.index() )fillAdc( id , adc,sourceID);
       }
     }
     // Check All cards have been read
@@ -480,14 +471,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
                                             << " |  CaloCell " << id
                                             << " |  valid ? " << m_calo->valid(id)
                                             << " |  ADC value = " << adc << endmsg;
-
-
-        if ( 0 != id.index() ){
-          LHCb::CaloAdc temp = fillAdc( id , adc);
-          //LHCb::CaloAdc temp(id,adc);
-          m_adcs.addEntry( temp ,id );
-        }
-        
+        if ( 0 != id.index() )fillAdc( id , adc,sourceID);        
         lenAdc--;
         offset += 16;
       }
@@ -543,13 +527,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
           LHCb::CaloCellID spdId( (lastID+kk) & 0x3FFF );
 
 
-          if ( spdData & 1 ){
-            if ( 0 != spdId.index() ){
-              //LHCb::CaloAdc temp(spdId,1);
-              LHCb::CaloAdc temp = fillAdc( spdId , 1);
-              m_adcs.addEntry( temp ,spdId) ;
-            } 
-          }
+          if ( 0 != (spdData & 1) &&  0 != spdId.index() )fillAdc( spdId , 1,sourceID);
           
               
           
@@ -587,11 +565,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         
         if ( 0 != (item & 2) ) {
           LHCb::CaloCellID id ( spdId );   // SPD
-          if ( 0 != id.index() ){
-            //LHCb::CaloAdc temp(id,1);
-            LHCb::CaloAdc temp = fillAdc( id , 1);
-            m_adcs.addEntry( temp ,id);
-          } 
+          if ( 0 != id.index() )fillAdc( id , 1,sourceID);
         }
       }
       ++data;
@@ -676,11 +650,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
 
         if ( 0 != isSpd ) {
           LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
-          if ( 0 != spdId.index() ){
-            //LHCb::CaloAdc temp(spdId,1);
-            LHCb::CaloAdc temp = fillAdc( spdId , 1);
-            m_adcs.addEntry( temp ,spdId);
-          }   
+          if ( 0 != spdId.index()) fillAdc( spdId , 1, sourceID);
         }
       }
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
