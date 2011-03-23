@@ -192,6 +192,7 @@ class HltConf(LHCbConfigurableUser):
         ###       bit 34 -> count number of 'non-lumi-exlusive events'
         ###       bit 33 -> lumi stream
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
+        from Hlt1Lines.HltL0Candidates import L0Channels
 
         from Configurables import HltRoutingBitsWriter
         routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
@@ -200,10 +201,10 @@ class HltConf(LHCbConfigurableUser):
                       ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] ] )
-                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron,lowMult','Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] ] )
-                      , 12 : "L0_CHANNEL('CALO')" # note: need to take into account prescale in L0...
-                      , 13 : "L0_CHANNEL( 'Hadron' )"
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron,lowMult','Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
+                      , 12 : "L0_CHANNEL('CALO')" if 'CALO' in L0Channels() else "" # note: need to take into account prescale in L0...
+                      , 13 : "L0_CHANNEL( 'Hadron' )" if 'Hadron' in L0Channels() else ""
                       , 14 : "L0_CHANNEL_RE('Electron|Photon')" 
                       , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
                       , 16 : "L0_CHANNEL_RE('.*NoSPD')" 
@@ -277,6 +278,11 @@ class HltConf(LHCbConfigurableUser):
         ## and persist some vertices...
         from Configurables import HltVertexReportsMaker
         vertices =[ 'PV3D', 'ProtoPV3D'  ] 
+        selections = []
+        from HltLine.HltLine     import hlt1Lines
+        for i in hlt1Lines() :
+             if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
+        vertices = [ i for i in vertices if i in selections ]
         HltVertexReportsMaker().VertexSelections = vertices
         HltVertexReportsMaker().Context = "HLT"
         ## do not write out the candidates for the vertices we store 
