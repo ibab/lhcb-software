@@ -78,6 +78,25 @@ StatusCode DeRichSystem::initialize ( )
 }
 
 //=========================================================================
+// Check and fill a map
+//=========================================================================
+template < class SOURCE, class TARGET, class MAP >
+bool DeRichSystem::safeMapFill( const SOURCE& source, const TARGET& target, MAP& map )
+{
+  std::pair<typename MAP::iterator,bool> p = 
+    map.insert(typename MAP::value_type(source,target));
+  if ( !p.second )
+  {
+    error() << "Error filling map '" << System::typeinfoName(typeid(map))
+            << "' source " << System::typeinfoName(typeid(source)) << "=" << source
+            << " already has an entry for target " << System::typeinfoName(typeid(target))
+            << " OLD=" << map[source] << " NEW=" << target
+            << endmsg;
+  }
+  return p.second;
+}
+
+//=========================================================================
 // Access on demand the Detector Elements for Rich1 and Rich2
 //=========================================================================
 DetectorElement * DeRichSystem::deRich( const Rich::DetectorType rich ) const
@@ -315,27 +334,32 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       }
     }
 
+    // Fill maps
+    bool OK = true;
     m_allHPDHardIDs.push_back(hardID);
     m_allHPDSmartIDs.push_back(hpdID);
-    m_soft2hard[hpdID]    = hardID;
-    m_hard2soft[hardID]   = hpdID;
-    m_l0hard2soft[L0ID]   = hpdID;
-    m_smartid2L0[hpdID]   = L0ID;
-    m_hardid2L0[hardID]   = L0ID;
-    m_smartid2L1[hpdID]   = L1ID;
-    m_hardid2L1[hardID]   = L1ID;
-    m_smartid2L1In[hpdID] = L1IN;
-    m_hardid2L1In[hardID] = L1IN;
-    m_smartid2copyNumber[hpdID] = copyN;
-    m_copyNumber2smartid[copyN] = hpdID;
+    OK &= safeMapFill(hpdID,hardID,m_soft2hard);
+    OK &= safeMapFill(hardID,hpdID,m_hard2soft);
+    OK &= safeMapFill(L0ID,hpdID,m_l0hard2soft);
+    OK &= safeMapFill(hpdID,L0ID,m_smartid2L0);
+    OK &= safeMapFill(hardID,L0ID,m_hardid2L0);
+    OK &= safeMapFill(hpdID,L1ID,m_smartid2L1);
+    OK &= safeMapFill(hardID,L1ID,m_hardid2L1);
+    OK &= safeMapFill(hpdID,L1IN,m_smartid2L1In);
+    OK &= safeMapFill(hardID,L1IN,m_hardid2L1In);
+    OK &= safeMapFill(L0ID,L1ID,m_l0ToL1);
+    OK &= safeMapFill(hpdID,copyN,m_smartid2copyNumber);
+    OK &= safeMapFill(copyN,hpdID,m_copyNumber2smartid);
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
-    m_L1HardIDAndInputToHPDHardID[L1HardIDAndInput(L1ID,L1IN)] = hardID;
+    const L1HardIDAndInput idAndInput(L1ID,L1IN);
+    OK &= safeMapFill(idAndInput,hardID,m_L1HardIDAndInputToHPDHardID);
     if ( std::find( m_l1IDs.rbegin(), m_l1IDs.rend(), L1ID ) == m_l1IDs.rend() )
     {
       m_l1ToRich[L1ID] = rich;
       m_l1IDs.push_back( L1ID );
     }
+    if ( !OK ) return StatusCode::FAILURE;
 
   } // end loop over conditions data
 
@@ -717,6 +741,22 @@ DeRichSystem::level1HardwareID( const Rich::DetectorType rich,
   if ( m_l1LogToHard[rich].end() == iID )
   {
     throw GaudiException( "Unknown L1 logical ID " + (std::string)logID,
+                          "DeRichSystem::level1HardwareID",
+                          StatusCode::FAILURE );
+  }
+  return (*iID).second;
+}
+
+//=========================================================================
+// Obtain the Level1 hardware ID number for a Level0 lID
+//=========================================================================
+const Rich::DAQ::Level1HardwareID 
+DeRichSystem::level1HardwareID( const Rich::DAQ::Level0ID l0ID ) const
+{
+  L0ToL1::const_iterator iID = m_l0ToL1.find(l0ID);
+  if ( m_l0ToL1.end() == iID )
+  {
+    throw GaudiException( "Unknown L0 ID " + (std::string)l0ID,
                           "DeRichSystem::level1HardwareID",
                           StatusCode::FAILURE );
   }

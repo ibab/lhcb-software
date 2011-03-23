@@ -4,6 +4,13 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-03-23 - Chris Jones
+ - Add new method to DeRichSystem to return the Level1 Hardware ID for a 
+   given Level0 ID
+ - Add some checks when filling all the various maps, to
+   first see if an entry already exists. If it does a warning is printed and
+   an error returned.
+
 ! 2011-03-04 - Chris Jones
  - Add missing !HltMode to use of condition("RadiatorComposition") and some
    basic protection against null pointer dereferencing

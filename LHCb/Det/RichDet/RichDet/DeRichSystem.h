@@ -142,22 +142,28 @@ public:
    */
   const Rich::DAQ::Level0ID level0ID( const Rich::DAQ::HPDHardwareID hardID ) const;
 
+  /** Obtain the Level1 hardware ID number for a given HPD Level0 ID
+   *  @param l0ID The Level0 ID
+   *  @return The corresponding Level1 hardware ID
+   */
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::Level0ID l0ID ) const;
+
   /** Obtain the Level1 hardware ID number for a given HPD RichSmartID
    *  @param smartID The RichSmartID for the HPD
-   *  @return The corresponding HPD Level1 hardware ID
+   *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const LHCb::RichSmartID smartID ) const;
 
   /** Obtain the Level1 hardware ID number for a given HPD hardware ID
    *  @param hardID The hardware ID for the HPD
-   *  @return The corresponding HPD Level1 hardware ID
+   *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::HPDHardwareID hardID ) const;
 
   /** Obtain the Level1 hardware ID number for a Level1 logical ID
    *  @param rich The RICH detector
    *  @param logID The logical ID for the HPD
-   *  @return The corresponding HPD Level1 hardware ID
+   *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DetectorType rich,
                                                       const Rich::DAQ::Level1LogicalID logID ) const;
@@ -242,6 +248,10 @@ private: // methods
   /// Access on demand the Detector Elements for Rich1 and Rich2
   DetectorElement * deRich( const Rich::DetectorType rich ) const;
 
+  /// Save information to a map, checking first it is not already set
+  template < class SOURCE, class TARGET, class MAP >
+  bool safeMapFill( const SOURCE& source, const TARGET& target, MAP& map );
+
 private: // data
 
   /// Type for mapping from RichSmartID to Rich::DAQ::HPDHardwareID
@@ -281,6 +291,10 @@ private: // data
   /// Typedef for mapping from HPD Hardware ID to Level0 ID
   typedef GaudiUtils::HashMap< const Rich::DAQ::HPDHardwareID, Rich::DAQ::Level0ID > HardIDToL0;
   HardIDToL0 m_hardid2L0; ///< HPD Hardware ID to L0 ID map
+
+  /// Typedef for mapping from Level0 to Level1 ID
+  typedef GaudiUtils::HashMap< const Rich::DAQ::Level0ID, Rich::DAQ::Level1HardwareID > L0ToL1;
+  L0ToL1 m_l0ToL1; ///< HPD Level0 to L1 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 ID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level1HardwareID > SmartIDToL1;
