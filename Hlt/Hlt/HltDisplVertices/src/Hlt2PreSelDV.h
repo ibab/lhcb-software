@@ -54,8 +54,7 @@ private:
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
 			   const LHCb::Particle::ConstVector &, 
-			   int & ,
-			   double );
+			   int & ,  double , LHCb::ProtoParticles& );
   /// Create a map between the Particles and the Velo Tracks
   void CreateMap( const LHCb::Particle::ConstVector & );
   /// Creates a pion with 400 MeV pt from track slopes.
@@ -143,6 +142,8 @@ private:
    ******************************************************************/
   std::string m_RCut;         
   std::string m_BLLoc;        ///< Location in TES of Beam line
+  std::string m_veloProtoPartLocation;  ///< Location in TES of VeloProtoparticles
+  
   LHCb::Particle * m_BeamLine;
   double m_beamSpotX;
   double m_beamSpotY;

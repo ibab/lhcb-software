@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltDisplVertices v3r3p1 2011-03-22 ===================
+! 2011-03-23 - Victor Coco
+ - fix potential memory leak due to protoparticle not being deleted if particle is 
+   deleted because not passing filter
+
 ! 2011-03-22 - Victor Coco
  - add protoparticle to DefaultParticle in Hlt2PreSelDV 
    implement the beam spot postion extracted from velo resolver

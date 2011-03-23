@@ -56,7 +56,6 @@ Hlt2PreSelDV::Hlt2PreSelDV( const std::string& name,
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 0  );
   declareProperty("DetDist", m_DetDist = 1*mm );
   declareProperty("RemFromRFFoil", m_RemFromRFFoil = false );
-  //"", "FromUpstreamPV", "FromBeamLine"
   declareProperty("RCutMethod", m_RCut = "FromBeamSpot" );
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
@@ -103,7 +102,11 @@ StatusCode Hlt2PreSelDV::initialize() {
   }
 
   //Sanity checks
-  if( m_UseMap ) m_Fitter = "none";
+  if( m_UseMap ){
+    m_Fitter = "none";
+    
+  }
+  
     
   
 
@@ -155,9 +158,8 @@ StatusCode Hlt2PreSelDV::initialize() {
   
 
   //Initialize Vertex Fitter
-  if( m_Fitter != "none" ){
-    m_vFit = vertexFitter(m_Fitter);
-  } 
+  if( m_Fitter != "none" ) m_vFit = vertexFitter(m_Fitter);
+   
 
 
   if( m_RemVtxFromDet != 0 || m_SaveTuple){
@@ -183,6 +185,7 @@ StatusCode Hlt2PreSelDV::initialize() {
     registerCondition("/dd/Conditions/Online/Velo/MotionSystem",&Hlt2PreSelDV::UpdateBeamSpot);
     this->UpdateBeamSpot();
   }
+  m_veloProtoPartLocation = "Hlt2/"+this->name()+"/VeloProtoP";
   
   
   return StatusCode::SUCCESS;
@@ -229,7 +232,7 @@ StatusCode Hlt2PreSelDV::UpdateBeamSpot()
   const RecVertex * UpPV = GetUpstreamPV();
   if(UpPV == NULL) return StatusCode::SUCCESS;
 
-
+  
   //Set the beam line first, it may be used by GetUpstreamPV()
   if( m_RCut=="FromBeamLine"  ){
     if( exist<Particle::Range>( m_BLLoc ) ){
@@ -282,6 +285,10 @@ StatusCode Hlt2PreSelDV::UpdateBeamSpot()
   //sort rec vertex according to z position
   sort( RV.begin(), RV.end(), Hlt2PreSelDV::CondRVz() );
 
+
+  LHCb::ProtoParticles* veloTrProtoP = new LHCb::ProtoParticles();
+  put( veloTrProtoP , m_veloProtoPartLocation );
+  
 
   //Print out displaced vertices and change them into Particles
   //Particle::ConstVector RecParts;
@@ -336,7 +343,7 @@ StatusCode Hlt2PreSelDV::UpdateBeamSpot()
     //Turn it into a Particle !
     //InitialiseGeoInfo();
     //Eventually don't keep it if close to/in detector material
-    if( !RecVertex2Particle( rv, Parts, nbRecParts, r ) ) continue;
+    if( !RecVertex2Particle( rv, Parts, nbRecParts, r , *veloTrProtoP ) ) continue;
 
 
   }
@@ -356,6 +363,12 @@ StatusCode Hlt2PreSelDV::UpdateBeamSpot()
   //   Sole difference : OutputStream is not able to write objects containing 
   //       default pions as daughters saved with the cloneTrees method.
   //return desktop()->cloneTrees( RecParts );
+  //if ( veloTrProtoP->size() == 0 ){ 
+  //   delete( veloTrProtoP );
+  // }
+  
+  
+  
   return StatusCode::SUCCESS;
 
 }
@@ -412,13 +425,8 @@ const RecVertex * Hlt2PreSelDV::GetUpstreamPV(){
     double z = pv->position().z();
     if( abs(z) > 150*mm ) continue;
     if( !HasBackAndForwardTracks( pv ) ) continue;
-    //const Gaudi::SymMatrix3x3  & mat = pv->covMatrix();
-    //double sr = sqrt( mat(0,0) + mat(1,1) );
     if( msgLevel( MSG::DEBUG ) )
       debug() <<"PV candidate : nb of tracks "<< pv->tracks().size() << endmsg;
-    //<<" sigmaR "<< sr <<" sigmaZ "<< sqrt(mat(2,2)) << endmsg;
-    //if( sr > m_PVsr ) continue;
-    //if( sqrt(mat(2,2)) > m_PVsz ) continue;
     if( pv->tracks().size() < m_PVnbtrks ) continue;
     if( z < tmp ){
       tmp = z;
@@ -434,12 +442,16 @@ const RecVertex * Hlt2PreSelDV::GetUpstreamPV(){
 //=============================================================================
 bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
                                 const Particle::ConstVector & Parts,
-				       int& nbRecParts, double r ){  
+                                       int& nbRecParts, double r , 
+                                       LHCb::ProtoParticles& veloProtos ){  
 
   Gaudi::LorentzVector mom;
   SmartRefVector< Track >::const_iterator iVtx = rv->tracks().begin();
   SmartRefVector< Track >::const_iterator iVtxend = rv->tracks().end();
   int endkey = rv->tracks().back()->key();
+
+  std::vector< const Particle* > veloPartPointers;
+  
 
   //Create map if necessary
   if( m_UseMap && !m_MapCalled ) CreateMap( Parts );
@@ -473,7 +485,24 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         }
 
         if( it == m_map.end() ) {
-          part = DefaultParticle(*iVtx);
+          const Track* p = (*iVtx);
+          double sx = p->slopes().x(); double sy = p->slopes().y();
+          double pz = m_pt/sqrt( sx*sx + sy*sy );
+          double e = std::sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
+          // new particle pointer will be handle by the markNewTree function or deleted if the 
+          Particle* pion = new Particle();
+          // new ProtoParticle --> should be written in the TES 
+          ProtoParticle* protoPion = new ProtoParticle() ;
+          protoPion->setTrack(p);
+          veloProtos.insert(protoPion);
+          
+          pion->setProto(protoPion);
+          const Gaudi::LorentzVector mom = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
+          pion->setMomentum(mom);
+          part = pion->clone();
+          veloPartPointers.push_back(part);
+          delete(pion);
+          
         }
         if( part != NULL ){
           tmpVtx.addToOutgoingParticles( part );
@@ -499,9 +528,9 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         if( (*iVtx)->key() == tk->key() ){ 
           if( (*iVtx)->key() != endkey ) ++iVtx; 
           // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
-          tmpVtx.addToOutgoingParticles ( *j );
-          tmpPart.addToDaughters( *j );
-          mom += (*j)->momentum();
+          tmpVtx.addToOutgoingParticles ( (*j ) );
+          tmpPart.addToDaughters( (*j ) );
+          mom += (*j )->momentum();
           //const LHCb::Particle* clonedPart =  (*j )->clone();
           //tmpVtx.addToOutgoingParticles ( clonedPart );
           //tmpPart.addToDaughters( clonedPart );
@@ -510,23 +539,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
         }
       }
       
-      /*
-      //Find all particles that have tracks in RecVertex
-      Particle::ConstVector::const_iterator jend = Parts.end();
-      for ( Particle::ConstVector::const_iterator j = Parts.begin();
-      j != jend;++j) {
-      if( (*j)->proto() == NULL ) continue;
-      if( (*j)->proto()->track() == NULL ) continue;
-      const Track * tk = (*j)->proto()->track();
-      for( SmartRefVector< Track >::const_iterator itr = rv->tracks().begin(); itr !=  rv->tracks().end(); ++itr ){
-      if( (fabs((*itr)->p()-tk->p())<1e-10) ){ 
-	    tmpVtx.addToOutgoingParticles ( *j );
-	    tmpPart.addToDaughters( *j );
-	    mom += (*j)->momentum();
-	    continue;
-      }
-      }
-      }*/
     }
 
     //Fill momentum and mass estimate
@@ -535,6 +547,9 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
     tmpPart.setMeasuredMassErr( 0 );
 
     if( !TestMass( tmpPart ) ){
+      for (std::vector<const Particle*>::iterator ip = veloPartPointers.begin() ; veloPartPointers.end()!= ip ; ip++){
+        delete((*ip));
+      }
       if( msgLevel(MSG::DEBUG) )
         debug() <<"Particle did not passed the mass cut --> disguarded !"
                 << endmsg;
@@ -555,7 +570,8 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
     if( IsAPointInDet( tmpPart, m_RemVtxFromDet, m_DetDist ) ) return false;
     this->markNewTree(tmpPart.clone());
     
-  } else {
+  }
+  else { // this else stand for particles created from fitter
     Particle::ConstVector Daughters;
     Particle::ConstVector::const_iterator jend = Parts.end();
     for ( Particle::ConstVector::const_iterator j = Parts.begin();
@@ -582,6 +598,8 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
       return false;
     }
 
+    this->markNewTree(tmpPart.clone());
+
     if( !TestMass( tmpPart ) ){
       if( msgLevel(MSG::DEBUG) )
         debug() <<"Particle did not passed the mass cut --> disguarded !"
@@ -590,7 +608,6 @@ bool Hlt2PreSelDV::RecVertex2Particle( const RecVertex* rv,
     }
 
     nbRecParts++;
-    this->markNewTree(tmpPart.clone());
   }
   setFilterPassed(true);
 
