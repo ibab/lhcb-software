@@ -881,7 +881,7 @@ void PresenterMainFrame::buildGUI() {
     m_databaseAlarmsDock->SetWindowName("Histogram Alarms");
     m_databaseAlarmsDock->EnableUndock(true);
     m_databaseAlarmsDock->EnableHide(true);
-    m_databaseAlarmsDock->Resize(220, 494);
+    m_databaseAlarmsDock->Resize(220, 100); //494);
     m_leftMiscFrame->AddFrame(m_databaseAlarmsDock,
                               new TGLayoutHints(kLHintsLeft |
                                                 kLHintsTop |
@@ -954,7 +954,7 @@ void PresenterMainFrame::buildGUI() {
     m_knownProblemDock -> SetWindowName( "List of known problems" ) ;
     m_knownProblemDock -> EnableUndock( true ) ;
     m_knownProblemDock -> EnableHide( true ) ;
-    m_knownProblemDock -> Resize( 220 , 494 ) ;
+    m_knownProblemDock -> Resize( 220 , 100 ); //494 ) ;
     m_leftMiscFrame -> AddFrame( m_knownProblemDock ,
                                  new TGLayoutHints(kLHintsLeft | kLHintsTop |
                                                    kLHintsExpandX | kLHintsExpandY,

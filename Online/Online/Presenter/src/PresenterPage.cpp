@@ -77,13 +77,6 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
     OnlineHistogram* myHist = (*itHP)->histo;
 
-    if ( myHist->dimServiceName() == "Unknown" ) {
-      std::string dimName = partition + "_node_" + myHist->task() + "_00/" + myHist->identifier();
-      myHist->setDimServiceName( dimName );
-      std::cout << "OnlineHistogram identifier " << myHist->identifier()
-                << " DIM '" << myHist->dimServiceName() << "'" << std::endl;
-    }
-
     //== Is it a trend plot ?
  
     if ( myHist->type() == OnlineHistDBEnv::TRE ) {
@@ -231,15 +224,14 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
     if ( foundTheTask ) {
       std::cout << "Search for services of task " << (*itT).location << std::endl;
       HistTask myHists( (*itT).location );
-      std::cout << "List services" << std::endl;
       
       std::vector<std::string> knownNames;
       //== Get the list of services...
       int kk = myHists.Directory( knownNames );
       std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
-      for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
-        std::cout << "      -" << *itS << "-" << std::endl;
-      }
+      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+      //  std::cout << "      -" << *itS << "-" << std::endl;
+      //}
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
