@@ -564,8 +564,8 @@ class bindMembers (object) :
             ex = r"SINK\( *'(\w+)' *\)"
             # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
             import re
-            s = re.search(ex,getattr(alg,'Code'))
-            if s : self._outputsel =  s.group(1) 
+            for s in re.finditer(ex,getattr(alg,'Code')) :
+                 self._outputsel =  s.group(1) 
         else :
             self._outputsel = alg.name()
         self._InputOutputLocationMatchMaker(alg) 
@@ -934,10 +934,8 @@ class Hlt1Line(object):
                     _add_to_hlt1_output_selections_ ( _m.name         () )
             elif type(_m) is LoKi__HltUnit and hasattr( _m, 'Code') :
                 ex = r"SINK\( *'(\w+)' *\)"
-                # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
                 import re
-                s = re.search(ex,getattr(_m,'Code'))
-                if s :
+                for s in re.finditer(ex,getattr(_m,'Code')) :
                         self._outputSelections +=  [ s.group(1) ]
                         _add_to_hlt1_output_selections_ ( s.group(1) )
 

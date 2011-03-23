@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v5r1p4 2011-03-23 ===================
+! 2010-03-23 - Gerhard Raven
+ - recognize SINK and add to list of outputs
+
 !========================== HltLine v5r1p3 2011-03-17 ===================
 ! 2010-03-13 - Victor Coco
  - update HltLines.py: Hlt2DisplVertices becomes Hlt2SelDV
