@@ -10,7 +10,7 @@
 from Gaudi.Configuration import *
 
 line = 'NeuroBayesMuMuLine'
-location = '/Event/Dimuon/Phys/'+line 
+location = '/Event/Dimuon/Phys/'+line+'/Particles'
 
 MessageSvc().Format = "% F%80W%S%7W%R%T %0W%M"
 from Configurables import DaVinci
@@ -55,10 +55,18 @@ tuple.TupleToolTISTOS.VerboseHlt2 = True
 DaVinci().appendToMainSequence( [ JpsiSeq.sequence(), tuple ] ) 
 ##################
 
-#from Configurables import StoreExplorerAlg
-#from Configurables import LoKi__HDRFilter   as StripFilter
-#DaVinci().appendToMainSequence( [ StripFilter( 'StripPassFilter', Code="HLT_PASS('StrippingNeuroBayesMuMuLineDecision')", Location="/Event/Strip/Phys/DecReports" ) ])
+######### Debugging
+# decision filter test
+from Configurables import LoKi__HDRFilter   as StripFilter
+DaVinci().appendToMainSequence( [ StripFilter( 'StripPassFilter', Code="HLT_PASS('StrippingNeuroBayesMuMuLineDecision')", Location="/Event/Strip/Phys/DecReports" ) ])
+
+# TES explorer
+# from Configurables import StoreExplorerAlg
 # DaVinci().appendToMainSequence( [ StoreExplorerAlg(PrintEvt=100) ] ) 
+
+# Print decay tree
+# from Configurables import PrintDecayTree
+# DaVinci().appendToMainSequence( [ PrintDecayTree( 'PrintDiMuons', Inputs = [ location ] ) ] )
 
 DaVinci().DataType = "2010"
 DaVinci().EvtMax = -1
