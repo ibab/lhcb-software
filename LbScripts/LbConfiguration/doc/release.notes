@@ -1,5 +1,7 @@
 2011-03-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* LbConfiguration/python/LbConfiguration/Version.py: added function to
+	convert version scheme (LHCB,LHCB_v22r0) <-> (LHCb, v22r0)
 	* scripts/generateLogin: fixed login shell detection for zsh.
 
 2011-03-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

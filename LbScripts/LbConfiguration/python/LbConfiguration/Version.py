@@ -154,7 +154,10 @@ def LHCb2CMT(project, version):
         DaVinci, v20r3 -> DAVINCI, DAVINCI_v20r3
     """
     cmtproj = project.upper()
-    cmtvers = "%s_%s" % (project, version)
+    if version :
+        cmtvers = "%s_%s" % (cmtproj, version)
+    else :
+        cmtvers = None
 
     return (cmtproj, cmtvers)
 
