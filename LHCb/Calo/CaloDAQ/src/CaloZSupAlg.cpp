@@ -220,13 +220,32 @@ StatusCode CaloZSupAlg::execute() {
     
     if(m_adcOnTES){
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, (*anAdc).adc() );
-      newAdcs->insert( adc ) ;
+      try{
+        newAdcs->insert( adc ) ;
+      }
+      catch(GaudiException &exc) { 
+        counter("Duplicate ADC") += 1;
+        std::ostringstream os("");
+        os << "Duplicate ADC for channel " << id << endmsg;
+        Warning(os.str(),StatusCode::SUCCESS).ignore();
+        delete adc;
+      }      
     }
 
     if(m_digitOnTES){
       double e = ( double( (*anAdc).adc() ) - m_pedShift ) * m_calo->cellGain( id );
       LHCb::CaloDigit* digit = new LHCb::CaloDigit(id,e);
-      newDigits->insert( digit ) ;
+      try{
+        newDigits->insert( digit ) ;
+      }
+      catch(GaudiException &exc) { 
+        counter("Duplicate Digit") += 1;
+        std::ostringstream os("");
+        os << "Duplicate Digit for channel " << id << endmsg;
+        Warning(os.str(),StatusCode::SUCCESS).ignore();
+        delete digit;
+      }      
+
     }
     
     if( isVerbose ) {

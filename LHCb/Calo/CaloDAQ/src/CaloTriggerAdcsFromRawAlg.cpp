@@ -77,8 +77,17 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
 
   std::vector<LHCb::L0CaloAdc>::const_iterator il0Adc;
   for( il0Adc = l0Adcs.begin(); l0Adcs.end() != il0Adc ; ++il0Adc ) {
-    LHCb::L0CaloAdc* adc = new LHCb::L0CaloAdc( (*il0Adc).cellID(), (*il0Adc).adc() );
-    newL0Adcs->insert( adc ) ;
+    LHCb::L0CaloAdc* adc = new LHCb::L0CaloAdc( (*il0Adc).cellID(), (*il0Adc).adc() );    
+    try{
+      newL0Adcs->insert( adc ) ;
+    }
+    catch(GaudiException &exc) { 
+      counter("Duplicate L0ADC") += 1;
+      std::ostringstream os("");
+      os << "Duplicate l0ADC for channel " << il0Adc->cellID() << endmsg;
+      Warning(os.str(),StatusCode::SUCCESS).ignore();
+      delete adc;
+    }     
   }
   debug() << " L0CaloAdcs container" << m_outputData 
           <<" size " << newL0Adcs->size() << endmsg;
@@ -92,7 +101,18 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
     std::vector<LHCb::L0CaloAdc>::const_iterator il0PinAdc;
     for( il0PinAdc = l0PinAdcs.begin(); l0PinAdcs.end() != il0PinAdc ; ++il0PinAdc ) {
       LHCb::L0CaloAdc* pinAdc = new LHCb::L0CaloAdc( (*il0PinAdc).cellID(), (*il0PinAdc).adc() );
+
+    try{
       newL0PinAdcs->insert( pinAdc ) ;
+    }
+    catch(GaudiException &exc) { 
+      counter("Duplicate PIN L0ADC") += 1;
+      std::ostringstream os("");
+      os << "Duplicate PIN l0ADC for channel " << il0Adc->cellID() << endmsg;
+      Warning(os.str(),StatusCode::SUCCESS).ignore();
+      delete pinAdc;
+    }
+
     }
     debug() << " PinDiode : L0CaloAdcs container " << m_pinContainer 
             << " size " << newL0Adcs->size() << endmsg;

@@ -82,8 +82,20 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
   std::vector<LHCb::CaloCellID>::const_iterator iCell;
   for( iCell = l0Cells.begin(); l0Cells.end() != iCell ; ++iCell ) {
     LHCb::L0PrsSpdHit* l0Bit = new LHCb::L0PrsSpdHit( *iCell );
-    newL0Bits->insert( l0Bit ) ;
-  };
+
+    // protect against SEU
+    try{
+      newL0Bits->insert( l0Bit ) ;
+    }catch(GaudiException &exc) { 
+      counter("Duplicate l0Bit") += 1;
+      std::ostringstream os("");
+      os << "Duplicate l0Bit for channel " << *iCell << " " << endmsg;
+      Warning(os.str(),StatusCode::SUCCESS).ignore();
+      delete l0Bit;
+    }     
+  }
+  
+
   debug() << " L0PrsSpdHits container size " << newL0Bits->size() << endmsg;
   return StatusCode::SUCCESS;
 }
