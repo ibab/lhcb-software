@@ -22,11 +22,11 @@ using namespace Rich::DAQ;
 DECLARE_TOOL_FACTORY( RawDataFormatTool )
 
 // private namespace
-namespace
-{
-  /// Default 'fake' HPD RichSmartID
-  static const LHCb::RichSmartID s_fakeHPDID( Rich::Rich1,Rich::top,0,0 );
-}
+  namespace
+  {
+    /// Default 'fake' HPD RichSmartID
+    static const LHCb::RichSmartID s_fakeHPDID( Rich::Rich1,Rich::top,0,0 );
+  }
 
 // Standard constructor
 RawDataFormatTool::RawDataFormatTool( const std::string& type,
@@ -55,6 +55,7 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "CheckODINEventIDs",  m_checkODINEventsIDs = false  );
   declareProperty( "CheckRICHEventIDs",  m_checkRICHEventsIDs = true   );
   declareProperty( "CheckBXIDs",         m_checkBxIDs         = true   );
+  declareProperty( "CheckHPDL1IDs",      m_hpdL1check         = true   );
   declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false  );
   declareProperty( "VerboseErrors",      m_verboseErrors      = false  );
   declareProperty( "ActiveRICHes",       m_richIsActive                );
@@ -100,6 +101,8 @@ StatusCode RawDataFormatTool::initialize()
     Warning( "Internal RICH Event ID checks are disabled", StatusCode::SUCCESS ).ignore();
   if ( !m_checkBxIDs )
     Warning( "Header BX ID checks are disabled",           StatusCode::SUCCESS ).ignore();
+  if ( !m_hpdL1check )
+    Warning( "HPD L1 ID checks are disabled",           StatusCode::SUCCESS ).ignore();
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -818,7 +821,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       {
         std::ostringstream mess;
         mess << "ODIN Mismatch : L1ID " << L1ID
-             << " : ODIN EvID="         << EventID(odin()->eventNumber()) 
+             << " : ODIN EvID="         << EventID(odin()->eventNumber())
              << " BxID="                << BXID(odin()->bunchId())
              << " : L1IngressHeader "   << ingressWord
              << " -> Data Suppressed";
@@ -851,7 +854,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
         {
 
           // Create data bank and decode into RichSmartIDs
-          std::auto_ptr<const HPDDataBank> 
+          std::auto_ptr<const HPDDataBank>
             hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
                                       0, // Not needed here (to be removed). Must be 0 though
                                       version ) );
@@ -927,38 +930,54 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               else
               {
 
-                // decode to smartIDs
-                hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
-
-                // Do data integrity checks
-                OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
+                // Check this HPD is connected to the expected L1 board
+                const Level1HardwareID db_L1ID = m_richSys->level1HardwareID(hpdBank->level0ID());
+                OK = ( !m_hpdL1check || L1ID == db_L1ID );
                 if ( !OK )
                 {
                   std::ostringstream mess;
-                  mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
-                       << " data block failed integrity check";
-                  Error( mess.str() ).ignore();
-                  if ( m_purgeHPDsFailIntegrity ) { newids.clear(); }
-                }
-
-                // Is all 'OK' but header is in extended mode ?
-                if ( OK && hpdBank->headerWords().size()>1 )
-                {
-                  std::ostringstream mess;
-                  mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
-                       << " in extended mode for UNKNOWN reasons";
+                  mess << "HPD L0ID=" << hpdBank->level0ID() << " found in L1HardID=" << L1ID
+                       << " but database says it should be in L1HardID=" << db_L1ID
+                       << " -> rejected";
                   Error( mess.str() ).ignore();
                 }
-
-                if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
+                else // only carry on if L1 info matches DB
                 {
-                  // printout decoded RichSmartIDs
-                  verbose() << " Decoded RichSmartIDs :-" << endmsg;
-                  for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
-                        iID != newids.end(); ++iID )
+
+                  // decode to smartIDs
+                  hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
+
+                  // Do data integrity checks
+                  OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
+                  if ( !OK )
                   {
-                    verbose() << "   " << *iID << endmsg;
+                    std::ostringstream mess;
+                    mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
+                         << " data block failed integrity check";
+                    Error( mess.str() ).ignore();
+                    if ( m_purgeHPDsFailIntegrity ) { newids.clear(); }
                   }
+
+                  // Is all 'OK' but header is in extended mode ?
+                  if ( OK && hpdBank->headerWords().size()>1 )
+                  {
+                    std::ostringstream mess;
+                    mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
+                         << " in extended mode for UNKNOWN reasons";
+                    Error( mess.str() ).ignore();
+                  }
+
+                  if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
+                  {
+                    // printout decoded RichSmartIDs
+                    verbose() << " Decoded RichSmartIDs :-" << endmsg;
+                    for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
+                          iID != newids.end(); ++iID )
+                    {
+                      verbose() << "   " << *iID << endmsg;
+                    }
+                  }
+
                 }
 
               } // event IDs OK

@@ -347,6 +347,9 @@ namespace Rich
        */
       bool m_verboseErrors;
 
+      /// Perform check of HPD L1 hardward ID to that expected by the DB
+      bool m_hpdL1check;
+
       /// Flag to turn on/off decoding of each RICH detector (default is both on)
       std::vector<bool> m_richIsActive;
 
