@@ -8,40 +8,47 @@
 #include "Gaucho/HistTask.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/MonHist.h"
-HistTask::HistTask(std::string task,std::string dns)
+//HistTask::HistTask(const std::string &task,const std::string &dns)
+//: m_DNS(dns),m_task(task)
+//{
+//  char *srvs=0;
+//  if (m_DNS == "")
+//  {
+//    m_DNS = std::string(getenv("DIM_DNS_NODE"));
+//  }
+//  DimClient::setDnsNode(m_DNS.c_str());
+//  m_taskexp = boost::regex(("(.*)"+m_task+"(.*)").c_str(),boost::regex_constants::icase);
+//  DimCurrentInfo *dns_info=new DimCurrentInfo((char*)"DIS_DNS/SERVER_LIST", (char*)"DEAD");
+//  srvs = dns_info->getString();
+////  std::string dimServers(srvs);
+//  dyn_string *svcs = Strsplit(srvs,(char*)"|");
+//  unsigned int i;
+//  m_service = "";
+//  m_RPC = 0;
+//  for (i=0;i<svcs->size();i++)
+//  {
+//    int status = boost::regex_search(svcs->at(i),m_taskexp);
+//    if (status)
+//    {
+//      m_service = std::string("MON_")+svcs->at(i).substr(0,svcs->at(i).find("@"))+std::string("/Histos/HistCommand");
+//      m_RPC = new RPCRec((char*)m_service.c_str(),3,true);
+//    }
+//  }
+//}
+HistTask::HistTask(const std::string &task,const std::string &dns)
+: m_DNS(dns),m_task(task),m_RPC(0)
 {
-  char *srvs=0;
-  m_DNS=dns;
   if (m_DNS == "")
   {
     m_DNS = std::string(getenv("DIM_DNS_NODE"));
   }
   DimClient::setDnsNode(m_DNS.c_str());
-  m_task = task;
-  m_taskexp = boost::regex((std::string("(.*)")+m_task+std::string("(.*)")).c_str(),boost::regex_constants::icase);
-  DimCurrentInfo *dns_info=new DimCurrentInfo((char*)"DIS_DNS/SERVER_LIST", (char*)"DEAD");
-  srvs = dns_info->getString();
-//  std::string dimServers(srvs);
-  dyn_string *svcs = Strsplit(srvs,(char*)"|");
-  unsigned int i;
-  m_service = "";
-  m_RPC = 0;
-  for (i=0;i<svcs->size();i++)
+  DimBrowser b;
+  m_service = "MON_"+m_task+"/Histos/HistCommand";
+  int nservcs = b.getServices((m_service+"*").c_str());
+  if (nservcs != 0)
   {
-    //std::cout << i << " -> " << svcs->at(i) << std::endl;
-    
-    int status = boost::regex_search(svcs->at(i),m_taskexp);
-    if (status)
-    {
-      m_service = std::string("MON_")+svcs->at(i).substr(0,svcs->at(i).find("@"))+std::string("/Histos/HistCommand");
-
-      //=== TEMPORARY PATCH === Beat should fix the names !!!
-      if ( svcs->at(i).substr(0,5) == "PART0" ) m_service = "MON_LHCb_Adder/Histos/HistCommand";
-      //=========================================================================================
-
-      m_RPC = new RPCRec((char*)m_service.c_str(),3,true);
-      std::cout << "Found service " << m_service << std::endl;
-    }
+    m_RPC = new RPCRec((char*)m_service.c_str(),3,true);
   }
 }
 int HistTask::Directory(std::vector<std::string> &hists)

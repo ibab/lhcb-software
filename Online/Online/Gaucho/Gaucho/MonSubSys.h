@@ -20,7 +20,8 @@
 enum
 {
   MONSUBSYS_Histogram = 1,
-  MONSUBSYS_Counter
+  MONSUBSYS_Counter,
+  MONSUBSYS_String
 };
 typedef std::map<std::string,MonObj*> ObjMap;
 

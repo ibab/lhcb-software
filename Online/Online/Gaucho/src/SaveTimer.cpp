@@ -149,7 +149,7 @@ void SaveTimer::SavetoFile(void *buff)
         hname = Strsplit(r->GetName(),"/");
         strcpy(hnam,r->GetName());
         gDirectory->Cd("/");
-        for (unsigned int i=1;i<hname->size()-1;i++)
+        for (unsigned int i=0;i<hname->size()-1;i++)
         {
           TKey *k;
           k = gDirectory->GetKey(hname->at(i).c_str());

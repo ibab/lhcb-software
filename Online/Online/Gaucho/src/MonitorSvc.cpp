@@ -735,11 +735,20 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
  }
 
   MonHist *mhist;
+  std::string hnam;
   if (m_disableMonObjectsForHistos == 0)
   {
 //    isMonObject = true;
-    mhist = new MonHist(msgSvc(),oname+"/"+name,var);
-    m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_HistSubSys));
+    if (name.find(oname) == std::string::npos)
+    {
+      hnam = oname+"/"+name;
+    }
+    else
+    {
+      hnam = name;
+    }
+    mhist = new MonHist(msgSvc(),hnam,var);
+    m_InfoMap.insert(std::make_pair(hnam,m_HistSubSys));
     m_HistSubSys->addObj(mhist);
   }
   else
