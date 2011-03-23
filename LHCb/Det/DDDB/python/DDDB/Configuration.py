@@ -117,8 +117,8 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2011 data (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20101206")
-        self.__set_tag__(["LHCBCOND"], "head-20101112")
+        self.__set_tag__(["DDDB"], "head-20110302")
+        self.__set_tag__(["LHCBCOND"], "head-20110321")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
 
     def __2010_conf__(self):
@@ -126,8 +126,8 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2010 data (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "head-20101206")
-        self.__set_tag__(["LHCBCOND"], "head-20101112")
+        self.__set_tag__(["DDDB"], "head-20110303")
+        self.__set_tag__(["LHCBCOND"], "head-20110321")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
 
     def __2009_conf__(self):
@@ -136,7 +136,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20101206")
-        self.__set_tag__(["LHCBCOND"], "head-20101112")
+        self.__set_tag__(["LHCBCOND"], "head-20110131")
         self.__set_tag__(["SIMCOND"], "MC-20101026-vc15mm-md100")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
 
