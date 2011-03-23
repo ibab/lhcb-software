@@ -51,7 +51,7 @@ class DV_draft2011 :
                                , 'Hlt2DoubleLonglived' : 4
                                , 'Hlt2SinglePSLonglived' : 4
                                }
-            ,  "RCutMethod"   : "FromUpstreamPV"
+            ,  "RCutMethod"   : "FromBeamSpot"
             ,  "RMin"         : {   'Hlt2RV2P' : 0.3
                                   , 'Hlt2SingleDown' : 0.5
                                   , 'Hlt2SingleLonglivedHighFD' : 0.7

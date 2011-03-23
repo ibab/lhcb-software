@@ -3,9 +3,14 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2011-03-23 - Victor Coco
+ - Update DV_draft2011.py with the BeamSpot method.
+
 !========================== HltSettings v5r9 2011-03-22 ===================
 ! 2011-03-22 - Gerhard Raven
 - create Physics_LowLumi_Mar2011
+
 
 !========================== HltSettings v5r8 2011-03-18 ===================
 ! 2011-03-18 - Johannes Albrecht
