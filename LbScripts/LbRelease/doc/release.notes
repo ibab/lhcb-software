@@ -1,3 +1,17 @@
+2011-03-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/scripts/lbcmtwhich: New file.
+	* LbRelease/cmt/requirements:
+	* LbRelease/python/LbRelease/CMT/__init__.py:
+	* LbRelease/python/LbRelease/CMT/LbProject.py: implemented the lbcmtwhich command: This
+	command locates the package used by the project. The version is the one of the project if
+	it is a regular project and it is the one of the package for versionless projects like
+	DBASE.
+	syntax lbcmtwhich Project Package version
+	       lbcmtwhich Project version
+           lbcmtwhich Project Package
+           lbcmtwhich Project
+
 2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/buildLCGTar:

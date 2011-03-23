@@ -31,3 +31,4 @@ apply_pattern python_alias script=checkTar
 
 
 apply_pattern python_alias script=copyLCG
+apply_pattern python_alias script=lbcmtwhich
