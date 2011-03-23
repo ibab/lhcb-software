@@ -987,8 +987,12 @@ def makeD2hhhh(moduleName, config) :
     D2KKpipi.DecayDescriptors = [ "D0 -> K- K+ pi- pi+" ]
     D2KKpipiSel = Selection("D2KKpipiFor" + moduleName, Algorithm = D2KKpipi, RequiredSelections = [ StdPi, StdK ] )
 
+    D2pipipipi = copy(D2Kpipipi)
+    D2pipipipi.DecayDescriptors = [ "D0 -> pi- pi+ pi- pi+" ]
+    D2pipipipiSel = Selection("D2pipipipiFor" + moduleName, Algorithm = D2pipipipi, RequiredSelections = [ StdPi ] )
+
     DSel = MergedSelection("D2hhhhFor" + moduleName,
-                           RequiredSelections = [ D2KpipipiSel, D2KKpipiSel ] )
+                           RequiredSelections = [ D2KpipipiSel, D2KKpipiSel, D2pipipipiSel ] )
 
     return DSel
 

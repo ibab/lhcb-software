@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-23 - Anton Poluektov 
+ - StrippingB2DX.py
+   Added D->4pi mode. Very correlated to other D->4h, no significant effect 
+   on retention. 
+
 ! 2011-03-22 - Paul Seyfert
  - StrippingTrackEffDownMuon.py
    fixed copy&paste error
