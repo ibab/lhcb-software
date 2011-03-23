@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v37r8p5' ) )
+                j = Job( application = Brunel( version = 'v39r0p2' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -98,11 +98,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v37r8p5",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v39r0p2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v37r8p5",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v39r0p2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -693,7 +693,7 @@ def saveRunInfoCache():
 def queryBKDB(run):
     print "Getting information for run", run, "from BK API... Be patient..."
     from Ganga.GPI import diracAPI
-    cmd = ( "from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
+    cmd = ( "from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
             "result = BookkeepingClient().getRunInformations("+str(run)+")" )
     res = diracAPI(cmd)
     print res
@@ -763,15 +763,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v37r8p5",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v39r0p2",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v37r8p5",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v39r0p2",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v37r8p5",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v39r0p2",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -816,6 +816,7 @@ def getRootFile(j):
     filename = getRootFilePath(j)
     if filename != "" :
         if os.path.exists(filename):
+            print "Opening file", filename
             file = TFile( filename )
         else:
             print "ERROR :", filename, "does not exist"
@@ -882,30 +883,35 @@ def fitCKExpectedHistogram(rootfile,run,rad='Rich1Gas'):
         # Get the histogram
         histName = 'RICH/RiCKResLong/'+rad+'/thetaExpect'
         hist = rootfile.Get(histName)
-
-        # Draw
-        hist.Draw()
-        # Add Run number to page
-        addRunToPlot(run)
-        # Print
-        printCanvas()
-                
-        # Basic check on the histograms before fitting
-        entries = hist.GetEntries()
-        if entries < minEntries :
-
-            result['Message'] = "Too few histogram entries"
-
+        if not hist:
+            
+            print "ERROR : Could not access histogram", histName
+            
         else:
 
-            # Mean of the histo
-            mean    = hist.GetMean()
-            meanerr = hist.GetMeanError()
+            # Draw
+            hist.Draw()
+            # Add Run number to page
+            addRunToPlot(run)
+            # Print
+            printCanvas()
+                
+            # Basic check on the histograms before fitting
+            entries = hist.GetEntries()
+            if entries < minEntries :
 
-            result = { 'Message' : "Fit OK",
-                       'OK'      : True,
-                       'Mean'    : [mean,meanerr]
-                       }
+                result['Message'] = "Too few histogram entries"
+
+            else:
+
+                # Mean of the histo
+                mean    = hist.GetMean()
+                meanerr = hist.GetMeanError()
+                
+                result = { 'Message' : "Fit OK",
+                           'OK'      : True,
+                           'Mean'    : [mean,meanerr]
+                           }
 
     return result
 
@@ -955,115 +961,120 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
         # Get the histogram
         histName = 'RICH/RiCKResLong/'+rad+'/'+plot
         hist = rootfile.Get(histName)
-
-        # Basic check on the histograms before fitting
-        entries = hist.GetEntries()
-        if entries < minEntries :
-
-            result['Message'] = "Too few histogram entries"
+        if not hist :
+            
+            print "ERROR : Could not access histogram", histName
 
         else:
 
-            preFitColor  = 12
-            fullFitColor = 2
-            bkgColor     = 4
+            # Basic check on the histograms before fitting
+            entries = hist.GetEntries()
+            if entries < minEntries :
 
-            # Get x value of highest content bin
-            # (rough estimate of peak position)
-            xPeak = hist.GetBinCenter(hist.GetMaximumBin())
-
-            # Pre Fitting range
-            delta = 0.0025
-            if rad == 'Rich2Gas' : delta = 0.00105
-            fitMin = xPeak - delta
-            fitMax = xPeak + delta
-
-            # Gaussian function
-            preFitFType = "gaus"
-            preFitF = TF1(rad+"PreFitF",preFitFType,fitMin,fitMax)
-            preFitF.SetLineColor(preFitColor)
- 
-            # Do the pre fit with just a Gaussian
-            hist.Fit(preFitF,"QRS0")
-
-            # Full Fitting range
-            if rad == 'Rich1Gas' :
-                fitMax = xPeak+0.0062
-                fitMin = xPeak-0.0085
-            else:
-                fitMax = xPeak+0.0036
-                fitMin = xPeak-0.0044
-
-            # Loop over pol fits up to the final
-            lastFitF = preFitF
-            bestFitF = preFitF
-            bestNPol = nPolFull
-            fitOK    = True
-            if nPolFull>0 :
-                for nPol in xrange(1,nPolFull+1):
-                    fFuncType = "gaus(0)+pol"+str(nPol)+"(3)"
-                    fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
-                    fFitF.SetLineColor(fullFitColor)
-                    fFitF.SetParName(0,"Gaus Constant")
-                    fFitF.SetParName(1,"Gaus Mean")
-                    fFitF.SetParName(2,"Gaus Sigma")
-                    nParamsToSet = 3
-                    if nPol > 1 : nParamsToSet = 3+nPol
-                    for p in xrange(0,nParamsToSet) :
-                        fFitF.SetParameter(p,lastFitF.GetParameter(p))
-                    hist.Fit(fFitF,"QRSE0")
-                    lastFitF = fFitF
-                    # Fit OK ?
-                    maxErrorForOK = 1e-3
-                    #gMinuit = gROOT.GetGlobal( "gMinuit", 1 )
-                    #print gMinuit.GetStatus()
-                    fitOK = fFitF.GetParError(1) < maxErrorForOK
-                    if fitOK :
-                        bestFitF = fFitF
-                        bestNPol = nPol
-                    else:
-                        if nPol == nPolFull:
-                            # Use last good fit
-                            print "Pol", nPol, "fit failed...."
-                            hist.Fit(fFitF,"RSE0")
-                            print " -> Going back to Pol", nPol-1, "fit"
-                            fitOK = True
-                        if nPol > 1 : break
-                  
-            # Draw the histogram
-            hist.Draw()
-
-            # Draw the full fit
-            bestFitF.Draw('SAME')
+                result['Message'] = "Too few histogram entries"
                 
-            # Background function
-            if bestNPol > 0 :
-                bkgFunc = TF1( rad+"BkgF", "pol"+str(bestNPol), fitMin, fitMax )
-                bkgFunc.SetLineColor(bkgColor)
-                for n in range(0,bestNPol+1):
-                    bkgFunc.SetParameter(n,bestFitF.GetParameter(n+3))
-                # Draw the background shape
-                bkgFunc.Draw('SAME')
+            else:
+
+                preFitColor  = 12
+                fullFitColor = 2
+                bkgColor     = 4
+
+                # Get x value of highest content bin
+                # (rough estimate of peak position)
+                xPeak = hist.GetBinCenter(hist.GetMaximumBin())
+
+                # Pre Fitting range
+                delta = 0.0025
+                if rad == 'Rich2Gas' : delta = 0.00105
+                fitMin = xPeak - delta
+                fitMax = xPeak + delta
+
+                # Gaussian function
+                preFitFType = "gaus"
+                preFitF = TF1(rad+"PreFitF",preFitFType,fitMin,fitMax)
+                preFitF.SetLineColor(preFitColor)
+ 
+                # Do the pre fit with just a Gaussian
+                hist.Fit(preFitF,"QRS0")
+
+                # Full Fitting range
+                if rad == 'Rich1Gas' :
+                    fitMax = xPeak+0.0062
+                    fitMin = xPeak-0.0085
+                else:
+                    fitMax = xPeak+0.0036
+                    fitMin = xPeak-0.0044
+
+                # Loop over pol fits up to the final
+                lastFitF = preFitF
+                bestFitF = preFitF
+                bestNPol = nPolFull
+                fitOK    = True
+                if nPolFull>0 :
+                    for nPol in xrange(1,nPolFull+1):
+                        fFuncType = "gaus(0)+pol"+str(nPol)+"(3)"
+                        fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
+                        fFitF.SetLineColor(fullFitColor)
+                        fFitF.SetParName(0,"Gaus Constant")
+                        fFitF.SetParName(1,"Gaus Mean")
+                        fFitF.SetParName(2,"Gaus Sigma")
+                        nParamsToSet = 3
+                        if nPol > 1 : nParamsToSet = 3+nPol
+                        for p in xrange(0,nParamsToSet) :
+                            fFitF.SetParameter(p,lastFitF.GetParameter(p))
+                        hist.Fit(fFitF,"QRSE0")
+                        lastFitF = fFitF
+                        # Fit OK ?
+                        maxErrorForOK = 1e-3
+                        # gMinuit = gROOT.GetGlobal( "gMinuit", 1 )
+                        # print gMinuit.GetStatus()
+                        fitOK = fFitF.GetParError(1) < maxErrorForOK
+                        if fitOK :
+                            bestFitF = fFitF
+                            bestNPol = nPol
+                        else:
+                            if nPol == nPolFull:
+                                # Use last good fit
+                                print "Pol", nPol, "fit failed...."
+                                hist.Fit(fFitF,"RSE0")
+                                print " -> Going back to Pol", nPol-1, "fit"
+                                fitOK = True
+                            if nPol > 1 : break
+                  
+                # Draw the histogram
+                hist.Draw()
+
+                # Draw the full fit
+                bestFitF.Draw('SAME')
+                
+                # Background function
+                if bestNPol > 0 :
+                    bkgFunc = TF1( rad+"BkgF", "pol"+str(bestNPol), fitMin, fitMax )
+                    bkgFunc.SetLineColor(bkgColor)
+                    for n in range(0,bestNPol+1):
+                        bkgFunc.SetParameter(n,bestFitF.GetParameter(n+3))
+                    # Draw the background shape
+                    bkgFunc.Draw('SAME')
                        
-            # Add Run number to plot
-            if bestNPol > 0 :
-                addRunToPlot(run,[ ("Signal+Bkg Fit",fullFitColor),
-                                   ("Bkg pol"+str(bestNPol),bkgColor) ] )
-            else:
-                addRunToPlot(run)
+                # Add Run number to plot
+                if bestNPol > 0 :
+                    addRunToPlot(run,[ ("Signal+Bkg Fit",fullFitColor),
+                                       ("Bkg pol"+str(bestNPol),bkgColor) ] )
+                else:
+                    addRunToPlot(run)
             
-            # Print to file
-            printCanvas()
+                # Print to file
+                printCanvas()
     
-            # Results of the fit
-            if fitOK :
-                result = { 'Message' : "Fit OK",
-                           'OK'      : True,
-                           'Mean'    : [bestFitF.GetParameter(1),bestFitF.GetParError(1)],
-                           'Sigma'   : [bestFitF.GetParameter(2),bestFitF.GetParError(2)]
-                           }
-            else:
-                result['Message'] = "Histogram Fit Failed"
+                # Results of the fit
+                if fitOK :
+                    result = { 'Message' : "Fit OK",
+                               'OK'      : True,
+                               'Mean'    : [bestFitF.GetParameter(1),bestFitF.GetParError(1)],
+                               'Sigma'   : [bestFitF.GetParameter(2),bestFitF.GetParError(2)]
+                               }
+                else:
+                    result['Message'] = "Histogram Fit Failed"
 
     # Return the fit result
     return result
@@ -1145,5 +1156,24 @@ def mtime(filename):
 def getPickledRunList():
     import glob
     return sorted(glob.glob('RunData/*.pck.bz2'),key=mtime)
+
+def deleteJobsWithBadRootFile(cjobs,rad='Rich1Gas'):
+
+    djobs = [ ]
+
+    for j in cjobs:
+
+        # Root file
+        rootfile = getRootFile(j)
+
+        histName = 'RICH/RiCKResLong/'+rad+'/thetaExpect'
+        hist = rootfile.Get(histName)
+        if not hist :
+            print " -> Bad ROOT file. Will delete."
+            djobs += [j]
+
+    print "Jobs to delete", djobs
+
+    for j in djobs : j.remove()
 
 #=============================================================================================

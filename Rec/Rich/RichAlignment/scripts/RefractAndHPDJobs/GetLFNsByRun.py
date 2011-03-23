@@ -17,7 +17,7 @@ if len(args) < 4:
   DIRAC.exit(2)
 
 # Get data base
-from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
 database = BookkeepingClient()
 
 exitCode = 0
@@ -36,6 +36,8 @@ elif 2010 == year :
   ConfigV = 'Collision10'
 elif 2011 == year :
   ConfigV = 'Collision11'
+elif 2012 == year :
+  ConfigV = 'Collision12'
 else:
   print 'Unknown year', year
   DIRAC.exit(2)
