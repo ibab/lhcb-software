@@ -146,7 +146,7 @@ StatusCode HltVertexReportsMaker::initialize() {
     if (std::find_if( m_selections.begin(), m_selections.end(), matchByName(pvSelectionName) ) == m_selections.end() ) {
         m_tesSelections.push_back(std::make_pair(pvSelectionName,hlt2PVLocation));
     } else {
-        warning() << " got " << pvSelectionName << " also from datasvc ... using the one from the datasvc" << endmsg;
+        debug() << " got " << pvSelectionName << " also from datasvc ... using the one from the datasvc" << endmsg;
     }
   }
 

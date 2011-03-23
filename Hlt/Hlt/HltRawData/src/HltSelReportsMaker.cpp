@@ -1040,7 +1040,18 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
     // we don't save Protoparticles, only things they lead to
     const ProtoParticle* pp = object->proto();
     if( !pp ){
-      Warning(" Particle with no daughters and no protoparticle, skipped ",StatusCode::SUCCESS, 10 );
+      std::string w = " Particle with no daughters and no protoparticle ";
+      const ObjectContainerBase *p = object->parent();
+      if (p) { 
+          IRegistry* r = p->registry();
+          if (r) {
+              w+= " with id " ; w+= r->identifier();
+          } else {
+              w += " in " ; w+= p->name() ; 
+          }
+      }
+      w+= ", skipped";
+      Warning(w,StatusCode::SUCCESS, 10 );
     } else {
       const Track* track=pp->track();
       if( track ){
