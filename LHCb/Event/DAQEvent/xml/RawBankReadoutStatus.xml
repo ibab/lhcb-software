@@ -34,7 +34,8 @@
         ErrorBank  = 256,  
         MissingStatus = 512,  
         BadMagicPattern  = 1024,
-        Unknown    = 2048 ' 
+        DuplicateEntry   = 2048,
+        Unknown    = 5096 ' 
         access = 'PUBLIC' />
       <!-- 'Unknown' MUST BE THE LAST ITEM -->
 
