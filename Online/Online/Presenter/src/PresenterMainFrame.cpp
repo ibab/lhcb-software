@@ -704,13 +704,14 @@ void PresenterMainFrame::buildGUI() {
     m_historyIntervalComboBox->SetEnabled(false);
     // Select history by run
     m_historyIntervalComboBox->AddEntry("set run number", M_IntervalPickerRun ) ;
-    m_historyIntervalComboBox->AddEntry("preset file", M_Last_File);
     m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
-    m_historyIntervalComboBox->AddEntry("preset interval", M_Last_Interval);
+    m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
     m_historyIntervalComboBox->AddEntry("last 1 hour", M_LAST_1_HOURS);
     m_historyIntervalComboBox->Select(M_LAST_1_HOURS, false);
     m_historyIntervalComboBox->AddEntry("last 8 hours", M_LAST_8_HOURS);
-    m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
+    m_historyIntervalComboBox->AddEntry("preset file", M_Last_File);
+    m_historyIntervalComboBox->AddEntry("preset interval", M_Last_Interval);
+
     m_historyIntervalComboBox->Resize(112,22);
     m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
                                        this, "handleCommand(Command)");
@@ -1508,6 +1509,10 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     m_previousIntervalButton->SetState(kButtonUp);
     m_nextIntervalButton->SetState(kButtonEngaged);
     m_nextIntervalButton->SetState(kButtonUp);
+    
+    std::cout << "Selected global time " <<   m_presenterInfo.globalTimePoint() 
+              << " duration " <<  m_presenterInfo.globalPastDuration() << std::endl;
+    
     switchToRunNavigation( false ) ;
     if ( ! m_currentPageName.empty( ) )
       loadSelectedPageFromDB( m_currentPageName ,
@@ -4472,8 +4477,6 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           m_message = Form("History from %s to %s",
                            m_intervalPickerData->getStartTimeString(),
                            m_intervalPickerData->getEndTimeString());
-            m_presenterInfo.setTimeC( m_intervalPickerData->getStartTimeString(),  
-                                      m_intervalPickerData->getEndTimeString(), true );
         }
       }
       if (m_verbosity >= pres::Verbose)

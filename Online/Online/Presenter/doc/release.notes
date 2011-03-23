@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-23 - Olivier Callot
+ - fix history access by time interval
+ - Remove patches for the head revision of Gaucho (2011-03-15)
+
 ! 2011-03-22 - Olivier Callot
  - Fix offline file acces, and HltExpertMon access.
 

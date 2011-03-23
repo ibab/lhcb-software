@@ -225,48 +225,37 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       if ( (*itS).find( partition ) != 0 ) continue;
       if ( (*itS).find( taskName ) == std::string::npos ) continue;
       (*itT).location = *itS;
-      //==== TEMPORARY PATCH === force partition number !!!!!
-      if ( taskName == "Adder" ) (*itT).location = "PART01_Adder_1";  
       foundTheTask = true;
       break;
     }
     if ( foundTheTask ) {
       std::cout << "Search for services of task " << (*itT).location << std::endl;
       HistTask myHists( (*itT).location );
-
+      std::cout << "List services" << std::endl;
+      
       std::vector<std::string> knownNames;
       //== Get the list of services...
       int kk = myHists.Directory( knownNames );
       std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
-      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
-      //  std::cout << "      -" << *itS << "-" << std::endl;
-      //}
+      for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+        std::cout << "      -" << *itS << "-" << std::endl;
+      }
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
-        std::string dimName = (*itH).histo()->dimServiceName();
-        unsigned int pos = dimName.find( "/" );
-        if ( pos < dimName.size() ) {
-          dimName.erase( 0, pos+1 );
-          pos = dimName.find( "/" );
-          bool isExpertMon = false;
-          if ( pos < dimName.size() ) {
-            isExpertMon = dimName.substr(0,pos) == "HltExpertMon";
-            dimName.erase( 0, pos+1 );
-          }
-          if ( dimName.find( "GauchoJob/" ) == 0 ) {
-            dimName.erase( 0, 10 );
-            dimName = dimName.substr(0, dimName.find("/"))+"/"+dimName;
-          }
-          if ( isExpertMon )  dimName = dimName.substr(0, dimName.find("/"))+"/"+dimName; // duplicate algo name!
+        std::string histoName = (*itH).histo()->identifier();
+        unsigned int pos = histoName.find( "/" );   // remove the task name prefix
+        if ( pos < histoName.size() ) {
+          histoName.erase( 0, pos+1 );
         }
-        (*itH).setShortName( dimName );
-        if ( std::find( knownNames.begin(), knownNames.end(), dimName ) != knownNames.end() ) {
-          std::cout << "  ++ Search for '" << dimName << "'" << std::endl;
-          histNames.push_back( dimName );
+        
+        (*itH).setShortName( histoName );
+        if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
+          std::cout << "  ++ Search for '" << histoName << "'" << std::endl;
+          histNames.push_back( histoName );
         } else {
-          std::cout << "  -- Not found '" << dimName << "'" << std::endl;
+          std::cout << "  -- Not found '" << histoName << "'" << std::endl;
         }
       }
       std::vector<TObject*> results;
