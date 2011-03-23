@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-23 - Jibo He
+ - Hlt1ProtonLines.py
+   add PT cut of Charmonium to reduce the retention rate,
+   require Phys/LoKiTracks r120449 or newer   
+
 !========================== Hlt1Lines v6r8  2011-03-18 ===================
 ! 2011-03-18 - Roel Aaij
  - Adapt Hlt1MuonLines and Hlt1Proton lines to beamspot filtering.

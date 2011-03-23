@@ -3,14 +3,16 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
-          'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
+          'EnableTiming'        : False
+        , 'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
         , 'DiProton_PT'         :  1900.   # MeV
         , 'DiProton_P'          : 10000.   # MeV  
         , 'DiProton_TrChi2'     :     5. 
-        , 'DiProton_MassMin'    :  2900.   # MeV, after Vtx fit
-        , 'DiProton_MassMax'    :  4500.   # MeV, after Vtx fit
+        , 'DiProton_MassMin'    :  2880.   # MeV, after Vtx fit
+        , 'DiProton_MassMax'    :  4000.   # MeV, after Vtx fit
         , 'DiProton_VtxDOCA'    :     0.1    
         , 'DiProton_VtxChi2'    :     4.   # dimensionless
+        , 'DiProton_JpsiPT'     :  6500.   # MeV 
 
         , 'DiProton_TrNTHits'   :    15.  # From Track lines
         , 'DiProton_VeloNHits'  :     9.   # From Track lines
@@ -24,22 +26,31 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
         , 'DiProtonLowMult_VtxChi2'    :    25.   # dimensionless
           
           }
-        
+
+    
     def DiProton_preambulo( self ):
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
-                                                       TightForward,
-                                                       FitTrack )
+                                                       TightForward)
 
         ## define some "common" preambulo 
         Preambulo = [ VeloCandidates( "DiProton" ),                      
                       TightForward,                      
-                      FitTrack,                      
                       ## helpers
                       "VertexConf = LoKi.Hlt1.VxMakerConf( %(DiProton_VtxDOCA)s * mm, \
                                                            %(DiProton_VtxChi2)s )" % self.getProps(),
                       "MakeDiProtons = TC_VXMAKE4( '', VertexConf )",
                       "from LoKiPhys.decorators import RV_MASS"
                       ]
+
+        Preambulo += [
+            "from LoKiPhys.decorators import RV_TrFUN, NTRACKS",
+            "PX1 = RV_TrFUN(TrPX,0)",
+            "PY1 = RV_TrFUN(TrPY,0)",
+            "PX2 = RV_TrFUN(TrPX,1)",
+            "PY2 = RV_TrFUN(TrPY,1)",
+            "JpsiPTCut = ( sqrt((PX1+PX2)**2 + (PY1+PY2)**2) > %(DiProton_JpsiPT)s * MeV )" % self.getProps()
+            ]
+        
         return Preambulo
 
 
@@ -89,7 +100,10 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE , 'massMin' , LoKi.Monitoring.ContextSvc ) )   
             >>  ( RV_MASS ( 'p+', 'p~-' ) < %(DiProton_MassMax)s * MeV )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass max', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'massMax' , LoKi.Monitoring.ContextSvc ) )            
+            >>  tee  ( monitor( TC_SIZE , 'massMax' , LoKi.Monitoring.ContextSvc ) )
+            >>  JpsiPTCut
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass JpsiPT', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'JpsiPT' , LoKi.Monitoring.ContextSvc ) )           
             >>  SINK( 'Hlt1DiProtonDecision' )
             >> ~TC_EMPTY
             """ % self.getProps()
