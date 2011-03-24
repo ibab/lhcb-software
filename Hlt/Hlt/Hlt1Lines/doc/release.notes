@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-24 - Jibo He
+ - Hlt1ProtonLines.py
+   Unused variables in slot removed 
+
 ! 2011-03-23 - Jibo He
  - Hlt1ProtonLines.py
    add PT cut of Charmonium to reduce the retention rate,

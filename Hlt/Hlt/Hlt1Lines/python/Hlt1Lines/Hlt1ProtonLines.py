@@ -3,12 +3,11 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
-          'EnableTiming'        : False
-        , 'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
+          'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
         , 'DiProton_PT'         :  1900.   # MeV
         , 'DiProton_P'          : 10000.   # MeV  
-        , 'DiProton_TrChi2'     :     5. 
-        , 'DiProton_MassMin'    :  2880.   # MeV, after Vtx fit
+        #, 'DiProton_TrChi2'     :     5. 
+        , 'DiProton_MassMin'    :  2800.   # MeV, after Vtx fit
         , 'DiProton_MassMax'    :  4000.   # MeV, after Vtx fit
         , 'DiProton_VtxDOCA'    :     0.1    
         , 'DiProton_VtxChi2'    :     4.   # dimensionless
@@ -19,7 +18,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
         , 'DiProton_VeloQcut'   :     3.   # From Track lines
           
         , 'DiProtonLowMult_SpdMult'    :    20.   # dimensionless, Spd Multiplicy cut 
-        , 'DiProtonLowMult_PT'         :   600.   # MeV, same as LooseForward
+        , 'DiProtonLowMult_PT'         :   500.   # MeV, same as LooseForward
         , 'DiProtonLowMult_P'          :  6000.   # MeV, same as LooseForward  
         , 'DiProtonLowMult_MassMin'    :  2800.   # MeV, after Vtx fit
         , 'DiProtonLowMult_VtxDOCA'    :     0.3    
