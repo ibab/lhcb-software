@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: $
+# $Id$
 """ This script is made to tune the AFS volume settings """
 
 from LbUtils.Script import Script
@@ -11,7 +11,7 @@ import sys
 __version__ = CVS2Version("$Name: $", "$Revision: $")
 
 class TuneAFSVolScript(Script):
-    _version = __version__    
+    _version = __version__
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
@@ -48,7 +48,7 @@ class TuneAFSVolScript(Script):
                 v.adjustQuota()
             if opts.lock :
                 v.lock()
-            if opts.unlock: 
+            if opts.unlock:
                 v.unlock()
             if opts.lock_acl :
                 v.lockACL()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: fixDoxygenLinks,v 1.1 2009-01-13 13:32:18 hmdegaud Exp $
+# $Id$
 """ 
 This tool intends to fix the wrong links to the external software created 
 by Doxygen. Usually this appears with strings like "../../http://" in the href

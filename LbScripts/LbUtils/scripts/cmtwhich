@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: $
+# $Id$
 """ This script is returning the path to a CMT project or path """
 
 from LbUtils.CMT import CMTWhich

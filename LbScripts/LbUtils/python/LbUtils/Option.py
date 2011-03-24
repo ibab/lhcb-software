@@ -1,4 +1,4 @@
-# $Id: Option.py,v 1.12 2009-11-06 14:30:54 hmdegaud Exp $
+# $Id$
 
 from optparse import OptionParser, Option, OptionContainer, OptParseError
 from LbUtils import Log, Env
@@ -107,7 +107,7 @@ class Parser(OptionParser):
             del kwargs["help_output"]
         kwargs["option_class"] = FallBackOption
         OptionParser.__init__(self, *args, **kwargs) #IGNORE:W0142
-        self._create_command_list() 
+        self._create_command_list()
         Log.addDefaultLogger(self)
         Env.addEnvironment(self)
     def _add_help_option(self):

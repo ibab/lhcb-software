@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.16 2008-05-09 12:07:53 marcocle Exp $"
+__version__ = "$Id$"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -12,16 +12,16 @@ import sys
 import __builtin__
 if "set" not in dir(__builtin__):
     # pylint: disable-msg=W0622
-    from sets import Set as set    
+    from sets import Set as set
 
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #--- Constants
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 DEFAULT_KEYPROJECT = "LHCb"
 DEFAULT_RELEASEDATE = (1970, 1, 1)
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #--- Error definitions
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 class VersionsDBError(RuntimeError):
     """
     Generic VersionsDB error.
@@ -35,7 +35,7 @@ class DuplicatedReleaseError(VersionsDBError):
     def __init__(self, rel):
         VersionsDBError.__init__(self,"Duplicated release '%s'"%(rel))
         self.release = rel
-        
+
 class DuplicatedProjectError(VersionsDBError):
     """
     Error raised when a new project is added to a release, with the same name of
@@ -51,9 +51,9 @@ class DependencyLoopError(VersionsDBError):
     """
     def __init__(self):
         VersionsDBError.__init__(self,"detected possible dependency loop.")
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #--- Utility functions
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 def _sortProjects(pl):
     """
     Sort a list of project objects according to the their dependencies.
@@ -76,9 +76,9 @@ def _sortProjects(pl):
     l = [ (weights[p.name],p.name,p) for p in pl ]
     l.sort()
     return [ i[2] for i in l ]
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #--- Main classes
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 import re
 class Version:
     """
@@ -95,7 +95,7 @@ class Version:
         self._lcg_style = False
         vers_string = str(vers_string)
         m = self.__regexp__.match(vers_string) or \
-            self.__regexp_lcg__.match(vers_string) 
+            self.__regexp_lcg__.match(vers_string)
         if m:
             if len(m.groups()) == 3: # vXrY[pZ]
                 self._lcg_style = False
@@ -177,7 +177,7 @@ class Project:
                  self.tag,
                  self.buildtimedeps,
                  self.runtimedeps)
-    
+
 class Release:
     """
     Class implementing the versions database storage.
@@ -208,7 +208,7 @@ class Release:
         if self.date < other.date: return -1
         elif self.date == other.date: return 0
         else: return 1
-        
+
     def __repr__(self):
         return "Release(name=%r,projects=%r,base=%r,date=%r)"%(self.name,
                                                                self.projects.items(),
@@ -217,7 +217,7 @@ class Release:
     def allProjects(self):
         """
         Returns a list of all the projects available in the release (either directly or
-        through the bases), sorted by dependencies. 
+        through the bases), sorted by dependencies.
         """
         # get all projects from current and base releases
         all_projs = set(self.projects.keys())
@@ -234,7 +234,7 @@ class Release:
         # according their dependencies
         all_projs = [ self[p] for p in all_projs ]
         return _sortProjects(all_projs)
-        
+
     def __str__(self):
         s = "Release '%s'"%self.name
         if self.date > DEFAULT_RELEASEDATE:
@@ -294,7 +294,7 @@ class Release:
                         for p in self.expandBuildTimeDeps(project) + local_deps ],
                       local_deps)
         return list(set(deps))
-    
+
 def addUnversionedProject(project):
     if type(project) is not Project:
         project = Project(project,"")
@@ -307,14 +307,14 @@ from xml.sax.handler import ContentHandler
 class _ReleaseSAXHandler(ContentHandler):
     """
     SAX content handler used to fill the database of releases from the XML file.
-    Note: the database is purged before a 
+    Note: the database is purged before a
     """
     def __init__(self):
         ContentHandler.__init__(self)
         self.releases = Release.__releases__
         self._currentRelease = None
         self._currentProject = None
-        
+
     def startDocument(self):
         #print "startDocument"
         # reset the DB of releases
@@ -363,16 +363,16 @@ class _ReleaseSAXHandler(ContentHandler):
             self._currentProject = None
         elif name == u'unversioned_project':
             self._currentProject = None
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #--- Initialization functions
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 def load(source):
     """
     Load the database from an XML source (filename or file object).
     """
     from xml.sax import parse
     parse(source,_ReleaseSAXHandler())
-    
+
 def loadString(source):
     """
     Load the database from an XML string.
@@ -388,16 +388,16 @@ def save(destination):
     if not hasattr(destination,"write"):
         destination = open(destination,"w")
     destination.write(generateXML())
-    
+
 def clean():
     """
     Remove all entries from the database (in memory).
     """
-    Release.__releases__ = {} 
-    Release.__unversioned_projects__ = {} 
-#------------------------------------------------------------------------------ 
+    Release.__releases__ = {}
+    Release.__unversioned_projects__ = {}
+#------------------------------------------------------------------------------
 #--- Internal query functions
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 def _findReleases(project, version):
     """
     Find all the releases that feature the specified pair (project,version).
@@ -427,11 +427,11 @@ def _getVersions(project, releases):
                  for r in releases
                  if project in getRelease(r) ] # do we want this check?
     versions = list(set(versions)) # remove duplicates
-    versions.sort() 
+    versions.sort()
     return versions
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 #--- Public query functions
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 def getCompatibleVersions(project, version, otherproject, keyproj = DEFAULT_KEYPROJECT):
     """
     Given a project and versions, find all the versions of 'otherproject' that
@@ -445,7 +445,7 @@ def getCompatibleVersions(project, version, otherproject, keyproj = DEFAULT_KEYP
 def getRuntimeVersions(project, version, keyproj = DEFAULT_KEYPROJECT):
     """
     Get a list of projects needed by the specified project and compatible with
-    the specified version of it. 
+    the specified version of it.
     """
     deps = []
     proj_releases = _findReleases(project, version)
@@ -463,31 +463,31 @@ def getRuntimeVersions(project, version, keyproj = DEFAULT_KEYPROJECT):
 
 def getRelease(name):
     """
-    Retrieve a release instance by name. 
+    Retrieve a release instance by name.
     """
     return Release.__releases__[name]
 
 def getReleases():
     """
-    Return a list of the available release names. 
+    Return a list of the available release names.
     """
     return Release.__releases__.keys()
 
 def releaseExists(name):
     """
-    Tell if a release with the given name is known. 
+    Tell if a release with the given name is known.
     """
     return name in Release.__releases__
 
 def unversionedProject(name):
     """
-    Return the set of unversioned projects known in the database. 
+    Return the set of unversioned projects known in the database.
     """
     return Release.__unversioned_projects__[name]
 
 def unversionedProjects():
     """
-    Return the set of unversioned projects known in the database. 
+    Return the set of unversioned projects known in the database.
     """
     return Release.__unversioned_projects__.values()
 
@@ -531,9 +531,9 @@ def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
         for dep in p.runtimedeps:
             xml += '    <runtimedep name="%s"/>\n'%dep
         xml += '  </unversioned_project>\n'
-    if withSchema: 
+    if withSchema:
         xml += '</lhcb:releases_db>\n'
-    else: 
+    else:
         xml += '</releases_db>\n'
     return xml
 
@@ -545,7 +545,7 @@ def generateHTML():
         elif p == "Gaudi":
             return "http://proj-gaudi.web.cern.ch/proj-gaudi"
         else:
-            return '/'.join([lhcb_base,p.lower()]) 
+            return '/'.join([lhcb_base,p.lower()])
     def proj_version(p,v):
         h = proj_home(p)
         if p == "LCGCMT":
@@ -573,7 +573,7 @@ def generateHTML():
     all_proj_names = reduce(ordered_list_merge,[ [ p.name for p in getRelease(r).allProjects() ]
                                                  for r in getReleases() ])
     unversioned_names = [ p.name for p in unversionedProjects() ]
-    
+
     # I need to remove duplicates that may appear in the output list
     out = []
     for x in all_proj_names:
@@ -620,11 +620,11 @@ td.owned {
     for r in rels:
         html += '<tr><td><b>Release "%s"</b>'%r.name
         if r.base:
-            html += '<br/>based on: &quot;%s&quot;'%r.base 
+            html += '<br/>based on: &quot;%s&quot;'%r.base
         if r.date != DEFAULT_RELEASEDATE:
             html += '<br>date: %4d-%02d-%02d</td>'%r.date
         for pn in all_proj_names:
-            if (pn in r.projects) or (pn not in r): 
+            if (pn in r.projects) or (pn not in r):
                 html += '<td class="owned">'
             else:
                 html += '<td class="inherited">'

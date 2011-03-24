@@ -1,4 +1,4 @@
-# $Id: Log.py,v 1.8 2009-11-11 10:12:58 hmdegaud Exp $
+# $Id$
 """ implement the default logging settings to the parser"""
 
 import logging
@@ -10,7 +10,7 @@ def setLogLevelCallBack(option, opt_str, value, parser):
     log = logging.getLogger()
     if opt_str == "--silent":
         log.setLevel(logging.CRITICAL)
-        setattr(parser.values, option.dest, "CRITICAL")    
+        setattr(parser.values, option.dest, "CRITICAL")
     if opt_str == "--quiet":
         log.info("setting log level to ERROR")
         log.setLevel(logging.ERROR)
@@ -45,17 +45,17 @@ def addDefaultLogger(parser, format=None):
     grp = parser.add_option_group("Logging")
     grp.add_option("--silent",
                    action="callback",
-                   callback=setLogLevelCallBack, 
+                   callback=setLogLevelCallBack,
                    dest="log_level",
                    help="silent mode. Only CRITICALS")
     grp.add_option("--quiet",
                    action="callback",
-                   callback=setLogLevelCallBack, 
+                   callback=setLogLevelCallBack,
                    dest="log_level",
                    help="quiet mode. Only ERRORS and CRITICALS")
     grp.add_option("--verbose",
-                   action="callback", 
-                   callback=setLogLevelCallBack, 
+                   action="callback",
+                   callback=setLogLevelCallBack,
                    dest="log_level",
                    help="verbose mode. Everything down to INFOS")
     grp.add_option("--debug",

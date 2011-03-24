@@ -1,4 +1,4 @@
-# $Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $
+# $Id$
 from LbUtils.Option import Parser
 from LbUtils.ConfigFile import addConfigFileOptions, readConfigFile
 from LbUtils.ConfigFile import setConfigFileDefaultValues
@@ -13,7 +13,7 @@ import sys
 import os
 
 class PlainScript:
-    _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id$".replace("$","").replace("Id:","").strip()
     _description = ""
     def __init__(self, usage=None, version=None, parser=Parser,
                  help_output=sys.stdout, description=None):
@@ -56,7 +56,7 @@ class PlainScript:
         return self.main()
 
 class ConfigScript(PlainScript):
-    _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id$".replace("$","").replace("Id:","").strip()
     _description = ""
     def __init__(self, usage=None, version=None, parser=Parser,
                  help_output=sys.stdout, description=None, use_config_file=False):
@@ -155,7 +155,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
         parser.values.output = value
 
 class SourceScript(Script):
-    _version = "$Id: Script.py,v 1.12 2010-02-09 18:08:37 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id$".replace("$","").replace("Id:","").strip()
     _description = ""
     def __init__(self, usage=None, version=None, parser=Parser, description=None):
         Script.__init__(self, usage=usage, version=version, parser=parser,

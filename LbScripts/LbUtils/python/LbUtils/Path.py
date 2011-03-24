@@ -1,4 +1,4 @@
-# $Id: Path.py,v 1.3 2010-02-26 19:28:48 hmdegaud Exp $
+# $Id$
 """ module for path walk utilities """
 
 import os

@@ -1,4 +1,4 @@
-# $Id: ConfigFile.py,v 1.3 2009-11-11 10:11:00 hmdegaud Exp $
+# $Id$
 from ConfigParser import SafeConfigParser
 
 import os
@@ -25,19 +25,19 @@ def cb_configDir(option, opt_str, value, parser):
 def cb_configName(option, opt_str, value, parser):
     parser.values.config_name = value
     parser.values.config_file = None
-    
+
 def cb_configExt(option, opt_str, value, parser):
     parser.values.config_name = value
     parser.values.config_file = None
 
-def setConfigFileDefaultValues(parser, config_file, config_dir, 
+def setConfigFileDefaultValues(parser, config_file, config_dir,
                                config_name, config_ext):
     parser.set_defaults(config_file=config_file)
     parser.set_defaults(config_dir=config_dir)
     parser.set_defaults(config_name=config_name)
     parser.set_defaults(config_ext=config_ext)
 
-def addConfigFileOptions(parser, config_file, config_dir, 
+def addConfigFileOptions(parser, config_file, config_dir,
                          config_name, config_ext):
     grp = parser.add_option_group("Config")
 #    parser.set_defaults(config_file=config_file)
@@ -112,7 +112,7 @@ def readMainConfig(parser, config_parser):
         if not o :
             del config[o]
     return config
-    
+
 def readConfigFile(parser, config_file=None):
     config_files = []
     if not config_file :
