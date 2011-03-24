@@ -80,9 +80,9 @@ confdict={
                 #Bd cuts
                 'BdVxChi2'    : 0,
                 'BdDira'      : 0.99,
-                'VxOrder'     : 0,
+                'VxOrder'     : -3.0,
                 #Bd combi cuts
-                'BdLowDM'     : -2279,
+                'BdLowDM'     : -1279,
                 'BdHighDM'    : 500,
                 #kaon parameters
                 'KPT'         : 350, # 350  # MeV
@@ -132,10 +132,10 @@ confdict={
                  #Bd cuts
                  'BdVxChi2'    : 0,
                  'BdDira'      : 0.99,
-                 'VxOrder'     : 0,
+                 'VxOrder'     : -3.0,
                  #Bd combi cuts
-                 'BdLowDM'     : -2279,
-                 'BdHighDM'    : 0,
+                 'BdLowDM'     : -1279,
+                 'BdHighDM'    : 300,
                  #kaon parameters
                  'KPT'         : 350, # MeV
                  'KTrChi2'     : 8,
@@ -157,8 +157,8 @@ confdict={
                  'DstarMassW'   : 50, 
                  #Bd-resonance parameters
                  'B0d_VCHI2'    : 10, 
-                 'B0dD0_DeltaZVtx' : -2.5, # mm
-                 'B0dPV_DeltaZVtx' : 0.5 #  mm
+                 'B0dD0_DeltaZVtx' : -3.0, # mm
+                 'B0dPV_DeltaZVtx' : -0.5 #  mm
                  }
     }
 
@@ -303,7 +303,7 @@ class Bd2DstarTauNuOneLineConf(LineBuilder):
         LineBuilder.__init__(self, name, config)
         
         #Tau: Cuts for single pions
-        self.PionCut = "(PT > %(SinglePiPT)s*MeV) & (MIPCHI2DV(PRIMARY)> %(SinglePiIPChi2)s )" %config
+        self.PionCut = "(PT > %(SinglePiPT)s*MeV) & (MIPCHI2DV(PRIMARY)> %(SinglePiIPChi2)s ) & (TRCHI2DOF < 5.0) & (PIDK < 8.0)" %config
 
         #Tau: Cuts for di pions
         self.DiPionCut = "(PT>%(DiPiPT)s*MeV) & in_range(%(DiPiLowM)s,M,%(DiPiHighM)s) & "\
