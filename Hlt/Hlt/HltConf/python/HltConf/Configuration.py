@@ -176,8 +176,8 @@ class HltConf(LHCbConfigurableUser):
         Routing bits
         """
         ## set triggerbits
-        #  0-15: reserved for ODIN  // need to add ODIN support to routing bit writer
-        # 16-31: reserved for L0    // need to add L0DU support to routing bit writer
+        #  0-7 : reserved for ODIN  // need to add ODIN support to routing bit writer
+        #  8-31: reserved for L0    // need to add L0DU support to routing bit writer
         # 32-63: reserved for Hlt1
         # 64-91: reserved for Hlt2
 
