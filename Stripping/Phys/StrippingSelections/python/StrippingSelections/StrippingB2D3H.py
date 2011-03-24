@@ -14,6 +14,7 @@ Exported symbols (use python help!):
    - makeDStarMeson
    - makeA12PiPiPi
    - makeK12KPiPi
+   - makeK12KPPbarh
    - makePions
    - makeKaons
    - StrippingB2D3HLoose
@@ -34,10 +35,9 @@ __all__ = ('B2D3HAllLinesConf',
            'makeDStarMeson',
            'makeA12PiPiPi',
            'makeK12KPiPi',
+           'makePPbarh',
            'makePions',
            'makeKaons',
-           'StrippingB2D3HLoose',
-           'StrippingB2D3HNominal'
            )
 
 confdict =  {
@@ -102,32 +102,16 @@ confdict =  {
         "B2DPiPiPiAll_Postscale"        : 1.0,
         "B2DStarPiPiPiAll_Prescale"     : 1.0,
         "B2DStarPiPiPiAll_Postscale"    : 1.0,
-        "B2D0PiPiPiSignal_Prescale"     : 1.0,
-        "B2D0PiPiPiSignal_Postscale"    : 1.0,
-        "B2DPiPiPiSignal_Prescale"      : 1.0,
-        "B2DPiPiPiSignal_Postscale"     : 1.0,
-        "B2DStarPiPiPiSignal_Prescale"  : 1.0,
-        "B2DStarPiPiPiSignal_Postscale" : 1.0,
         "B2D0KPiPiAll_Prescale"         : 1.0,
         "B2D0KPiPiAll_Postscale"        : 1.0,
         "B2DKPiPiAll_Prescale"          : 1.0,
         "B2DKPiPiAll_Postscale"         : 1.0,
         "B2DStarKPiPiAll_Prescale"      : 1.0,
         "B2DStarKPiPiAll_Postscale"     : 1.0,
-        "B2D0KPiPiSignal_Prescale"      : 1.0,
-        "B2D0KPiPiSignal_Postscale"     : 1.0,
-        "B2DKPiPiSignal_Prescale"       : 1.0,
-        "B2DKPiPiSignal_Postscale"      : 1.0,
-        "B2DStarKPiPiSignal_Prescale"   : 1.0,
-        "B2DStarKPiPiSignal_Postscale"  : 1.0,
         "B2DDAll_Prescale"              : 1.0,
         "B2DDAll_Postscale"             : 1.0,
-        "B2DDSignal_Prescale"           : 1.0,
-        "B2DDSignal_Postscale"          : 1.0,
         "B2DStarDAll_Prescale"          : 1.0,
         "B2DStarDAll_Postscale"         : 1.0,
-        "B2DStarDSignal_Prescale"       : 1.0,
-        "B2DStarDSignal_Postscale"      : 1.0,
         "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
         "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
         "WSB2D3H_Prescale"              : 0.1,
@@ -179,9 +163,6 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
     B2D0hhhAll_Prescale, Postscale = Prescale/postscale for B+ -->D0 hhh, hhh=PiPiPi or KPiPi, full mass region. [4]
     B2DhhhAll_Prescale, Postscale = Prescale/postscale for B 0/Bs-->D+/Ds hhh, hhh=PiPiPi or KPiPi, full mass region. [8]
     B2DStarhhhAll_Prescale, Postscale = Prescale/postscale for B0 -->D*+ hhh, hhh=PiPiPi or KPiPi, full mass region. [4]
-    B2D0hhhASignal Prescale, Postscale = Prescale/postscale for B+ -->D0 hhh, hhh=PiPiPi or KPiPi, signal box region. [4]
-    B2DhhhSignal_Prescale, Postscale = Prescale/postscale for B 0/Bs-->D+/Ds hhh, hhh=PiPiPi or KPiPi, signal box region. [8]
-    B2DStarhhhSignal_Prescale, Postscale = Prescale/postscale for B0 -->D*+ hhh, hhh=PiPiPi or KPiPi, signal region. [4]
 
     --> Ordered preference for reducing timing/retentions
     [1] If needed one should prescale the "B2DxxxxAll" prescale/postscale factors, say to 0.2 or 0.1 (needed for SideBand subtraction, background studies, etc)
@@ -256,32 +237,16 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                               "B2DPiPiPiAll_Postscale",
                               "B2DStarPiPiPiAll_Prescale",
                               "B2DStarPiPiPiAll_Postscale",
-                              "B2D0PiPiPiSignal_Prescale",
-                              "B2D0PiPiPiSignal_Postscale",
-                              "B2DPiPiPiSignal_Prescale",
-                              "B2DPiPiPiSignal_Postscale",
-                              "B2DStarPiPiPiSignal_Prescale",
-                              "B2DStarPiPiPiSignal_Postscale",
                               "B2D0KPiPiAll_Prescale",
                               "B2D0KPiPiAll_Postscale",
                               "B2DKPiPiAll_Prescale",
                               "B2DKPiPiAll_Postscale",
                               "B2DStarKPiPiAll_Prescale",
                               "B2DStarKPiPiAll_Postscale",
-                              "B2D0KPiPiSignal_Prescale",
-                              "B2D0KPiPiSignal_Postscale",
-                              "B2DKPiPiSignal_Prescale",
-                              "B2DKPiPiSignal_Postscale",
-                              "B2DStarKPiPiSignal_Prescale",
-                              "B2DStarKPiPiSignal_Postscale",
                               "B2DDAll_Prescale",
                               "B2DDAll_Postscale",
-                              "B2DDSignal_Prescale",
-                              "B2DDSignal_Postscale",
                               "B2DStarDAll_Prescale",
                               "B2DStarDAll_Postscale",
-                              "B2DStarDSignal_Prescale",
-                              "B2DStarDSignal_Postscale",
                               "UnbiasedB2DPiPiPiAll_Prescale",
                               "UnbiasedB2DPiPiPiAll_Postscale",
                               "WSB2D3H_Prescale",
@@ -412,6 +377,43 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                    Bach3HZVtxSep = config['Bach3HZVtxSep'],
                                    Bach3HDRPV = config['Bach3HDRPV']      
                                    )
+
+        # Make the PPbarPi bachelor
+        self.selPPbarPi = makePPbarh( 'PPbarPiForB2D3H'+name,
+                                      protonSel = self.selProtons,
+                                      hSel = self.selPions,
+                                      MinPT = config['MinPT'],
+                                      Bach3HMassWindow = 5000.0,
+                                      Bach3HDocaMax = config['Bach3HDocaMax'],
+                                      Bach3HMinPT = config['Bach3HMinPT'],
+                                      Bach3HIP2PV = config['Bach3HIP2PV'],
+                                      Bach3HIPChisq2PV = config['Bach3HIPChisq2PV'],
+                                      Bach3HVtxChisq = config['Bach3HVtxChisq'],
+                                      Bach3HVtxSepChisq = config['Bach3HVtxSepChisq'],
+                                      Bach3HDiraPV = config['Bach3HDiraPV'],
+                                      Bach3HZVtxSep = config['Bach3HZVtxSep'],
+                                      Bach3HDRPV = config['Bach3HDRPV'],
+                                      decayDesc = "[Xi_c+ -> p+ p~- pi+]cc"
+                                      )
+
+
+        # Make the PPbarPi bachelor
+        self.selPPbarK = makePPbarh( 'PPbarKForB2D3H'+name,
+                                      protonSel = self.selProtons,
+                                      hSel = self.selKaons,
+                                      MinPT = config['MinPT'],
+                                      Bach3HMassWindow = 5000.0,
+                                      Bach3HDocaMax = config['Bach3HDocaMax'],
+                                      Bach3HMinPT = config['Bach3HMinPT'],
+                                      Bach3HIP2PV = config['Bach3HIP2PV'],
+                                      Bach3HIPChisq2PV = config['Bach3HIPChisq2PV'],
+                                      Bach3HVtxChisq = config['Bach3HVtxChisq'],
+                                      Bach3HVtxSepChisq = config['Bach3HVtxSepChisq'],
+                                      Bach3HDiraPV = config['Bach3HDiraPV'],
+                                      Bach3HZVtxSep = config['Bach3HZVtxSep'],
+                                      Bach3HDRPV = config['Bach3HDRPV'],
+                                      decayDesc = "[Xi_c+ -> p+ p~- K+]cc" 
+                                      )
 
         # Filter LT Unbiased D+, the children don't suffer from lifetime biases since also prompt D's have a lifetime
         self.selUnbiasedDch = makeDMeson( 'UnbiasedForB2D3H'+name,
@@ -722,91 +724,46 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                               BDRPV = config['BDRPV'],      
                                               decayDesc = "[Lambda_b0 -> Lambda_c+ K_1(1270)-]cc",
                                               parentB = "Lambda_b0")
+
+        # Make LambdaB --> LambdaC+ (ppbarpi)+
+        name11 = 'LambdaB2LambdaCPPbarPi' + name
+        self.LambdaB2LambdaCPPbarPi = makeB2D3H(name11,
+                                   dSel = self.selLambdaC,
+                                   hhhSel = self.selPPbarPi,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[Lambda_b0 -> Lambda_c+ Xi_c~-]cc",
+                                   parentB = "Lambda_b0")
+
+        # Make LambdaB --> LambdaC+ (ppbarK)+
+        name12 = 'LambdaB2LambdaCPPbarK' + name
+        self.LambdaB2LambdaCPPbarK = makeB2D3H(name12,
+                                   dSel = self.selLambdaC,
+                                   hhhSel = self.selPPbarK,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[Lambda_b0 -> Lambda_c+ Xi_c~-]cc",
+                                   parentB = "Lambda_b0")
+
         
-        # Now, create signal lines, with tight windows around the D mass, and a narrower B mass window.
-
-        # Filter off B+ -->D0(PiPiPi) & D0 KPiPi
-        self.SignalB2D0PiPiPi = filterB2D3H('B2D0PiPiPi',
-                                            bSel = self.B2D0PiPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'B+',
-                                            parentD = 1
-                                            )
-        self.SignalB2D0KPiPi = filterB2D3H('B2D0KPiPi',
-                                            bSel = self.B2D0KPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'B+',
-                                            parentD = 1
-                                            )
-        #Filter Off the B0-->D+(PiPiPi) (includes Bs -->D_s(PiPiPi))
-        self.SignalB2DPiPiPi = filterB2D3H('B2DPiPiPi',
-                                            bSel = self.B2DPiPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'B0',
-                                            parentD = 2
-                                            )
-        #Filter Off the B0-->D+(KPiPi) (includes Bs-->Ds(KPiPi))
-        self.SignalB2DKPiPi = filterB2D3H('B2DKPiPi',
-                                            bSel = self.B2DKPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'B0',
-                                            parentD = 2
-                                            )
-        #Filter Off the B0-->D*+ (PiPiPi), D*+ -->D0pi+ 
-        self.SignalB2DStarPiPiPi = filterB2D3H('B2DStarPiPiPi',
-                                            bSel = self.B2DStarPiPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'B0',
-                                            parentD = 3
-                                            )
-        #Filter Off the B0-->D*+ (KPiPi), D*+ -->D0pi+ 
-        self.SignalB2DStarKPiPi = filterB2D3H('B2DStarKPiPi',
-                                            bSel = self.B2DStarKPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'B0',
-                                            parentD = 3
-                                            )
-        #Filter Off the B0-->D_(s)+D_(s)- 
-        self.SignalB2DD = filterB2D3H('B2DD',
-                                      bSel = self.B2DD,
-                                      tightDMassWindow = config['tightDMassWindow'],
-                                      tightBMassWindow = config['tightBMassWindow'],
-                                      parentB = 'B0',
-                                      parentD = 4
-                                      )
-        #Filter Off the B0-->D*+D_(s)- 
-        self.SignalB2DStarD = filterB2D3H('B2DStarD',
-                                      bSel = self.B2DStarD,
-                                      tightDMassWindow = config['tightDMassWindow'],
-                                      tightBMassWindow = config['tightBMassWindow'],
-                                      parentB = 'B0',
-                                      parentD = 5
-                                      )
-
-        #Filter Off the LambdaB0-->Lambda+(PiPiPi)
-        self.SignalLambdaB2LambdaCPiPiPi = filterB2D3H('LambdaB2LambdaCPiPiPi',
-                                            bSel = self.LambdaB2LambdaCPiPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'Lambda_b0',
-                                            parentD = 6
-                                            )
-
-        #Filter Off the LambdaB0-->Lambda+(KPiPi)
-        self.SignalLambdaB2LambdaCKPiPi = filterB2D3H('LambdaB2LambdaCKPiPi',
-                                            bSel = self.LambdaB2LambdaCKPiPi,
-                                            tightDMassWindow = config['tightDMassWindow'],
-                                            tightBMassWindow = config['tightBMassWindow'],
-                                            parentB = 'Lambda_b0',
-                                            parentD = 6
-                                            )
-
 
         # ----------------------------------
         # Create the Wrong-Sign Combinations
@@ -970,6 +927,43 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                               decayDesc = "[Lambda_b0 -> Lambda_c+ K_1(1270)+]cc",
                                               parentB = "Lambda_b0")
         
+        # Make LambdaB --> LambdaC+ (ppbarpi)+
+        name11 = 'WSLambdaB2LambdaCPPbarPi' + name
+        self.WSLambdaB2LambdaCPPbarPi = makeB2D3H(name11,
+                                   dSel = self.selLambdaC,
+                                   hhhSel = self.selPPbarPi,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[Lambda_b0 -> Lambda_c+ Xi_c+]cc",
+                                   parentB = "Lambda_b0")
+
+        # Make LambdaB --> LambdaC+ (ppbarK)+
+        name12 = 'WSLambdaB2LambdaCPPbarK' + name
+        self.WSLambdaB2LambdaCPPbarK = makeB2D3H(name12,
+                                   dSel = self.selLambdaC,
+                                   hhhSel = self.selPPbarK,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[Lambda_b0 -> Lambda_c+ Xi_c+]cc",
+                                   parentB = "Lambda_b0")
 
 
 
@@ -1070,6 +1064,22 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                                     FILTER = self.EventFilter
                                                     )
 
+        self.StrippingAllLambdaB2LambdaCPPbarPiLine = StrippingLine('AllLambdaB2LambdaCPPbarPiLine'+name,
+                                                    prescale = config['B2DPiPiPiAll_Prescale'],
+                                                    postscale = config['B2DPiPiPiAll_Postscale'],
+                                                    #algos = [ self.EventFilter, self.LambdaB2LambdaCPiPiPi]
+                                                    selection = self.LambdaB2LambdaCPPbarPi, 
+                                                    FILTER = self.EventFilter
+                                                    )
+
+        self.StrippingAllLambdaB2LambdaCPPbarKLine = StrippingLine('AllLambdaB2LambdaCPPbarKLine'+name,
+                                                    prescale = config['B2DKPiPiAll_Prescale'],
+                                                    postscale = config['B2DKPiPiAll_Postscale'],
+                                                    #algos = [ self.EventFilter, self.LambdaB2LambdaCPiPiPi]
+                                                    selection = self.LambdaB2LambdaCPPbarK, 
+                                                    FILTER = self.EventFilter
+                                                    )
+
         #---------------------------
         # Wrong-Sign Stripping Lines
         #---------------------------
@@ -1135,94 +1145,27 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                                                     prescale = config['WSB2D3H_Prescale'],
                                                                     postscale = config['WSB2D3H_Postscale'],
                                                                     #algos = [ self.EventFilter, self.WSLambdaB2LambdaCKPiPi]
-                                                                    selection = self.WSLambdaB2LambdaCKPiPi, 
+                                                                    selection = self.WSLambdaB2LambdaCKPiPi,
+                                                                    FILTER = self.EventFilter
+                                                                    )
+                                                                    
+        self.StrippingAllWSLambdaB2LambdaCPPbarPiLine = StrippingLine('AllWSLambdaB2LambdaCPPbarPiLine'+name,
+                                                                    prescale = config['WSB2D3H_Prescale'],
+                                                                    postscale = config['WSB2D3H_Postscale'],
+                                                                    #algos = [ self.EventFilter, self.LambdaB2LambdaCPiPiPi]
+                                                                    selection = self.WSLambdaB2LambdaCPPbarPi, 
                                                                     FILTER = self.EventFilter
                                                                     )
 
+        self.StrippingAllWSLambdaB2LambdaCPPbarKLine = StrippingLine('AllWSLambdaB2LambdaCPPbarKLine'+name,
+                                                                    prescale = config['WSB2D3H_Prescale'],
+                                                                    postscale = config['WSB2D3H_Postscale'],
+                                                                     #algos = [ self.EventFilter, self.LambdaB2LambdaCPiPiPi]
+                                                                     selection = self.WSLambdaB2LambdaCPPbarK, 
+                                                                     FILTER = self.EventFilter
+                                                                   )
+
         
-        # These are for the signal mass region with sidebands.
-        # These lines should not be prescaled unless absolutely necessary
-        # But, if prescales neeeded for future...
-
-
-        self.StrippingSignalB2D0PiPiPiLine = StrippingLine('SignalB2D0PiPiPiLine'+name,
-                                                     prescale = config['B2D0PiPiPiSignal_Prescale'],
-                                                     postscale = config['B2D0PiPiPiSignal_Postscale'],
-                                                     #algos = [  self.EventFilter, self.SignalB2D0PiPiPi]
-                                                     selection = self.SignalB2D0PiPiPi, 
-                                                     FILTER = self.EventFilter
-                                                     )
-
-        self.StrippingSignalB2D0KPiPiLine = StrippingLine('SignalB2D0KPiPiLine'+name,
-                                                     prescale = config['B2D0KPiPiSignal_Prescale'],
-                                                     postscale = config['B2D0KPiPiSignal_Postscale'],
-                                                     #algos = [  self.EventFilter, self.SignalB2D0KPiPi]
-                                                     selection = self.SignalB2D0KPiPi, 
-                                                     FILTER = self.EventFilter
-                                                     )
-
-        self.StrippingSignalB2DPiPiPiLine = StrippingLine('SignalB2DPiPiPiLine'+name,
-                                                    prescale = config['B2DPiPiPiSignal_Prescale'],
-                                                    postscale = config['B2DPiPiPiSignal_Postscale'],
-                                                    #algos = [  self.EventFilter, self.SignalB2DPiPiPi]
-                                                    selection = self.SignalB2DPiPiPi, 
-                                                    FILTER = self.EventFilter
-                                                    )
-
-        self.StrippingSignalB2DKPiPiLine = StrippingLine('SignalB2DKPiPiLine'+name,
-                                                   prescale = config['B2DKPiPiSignal_Prescale'],
-                                                   postscale = config['B2DKPiPiSignal_Postscale'],
-                                                   #algos = [  self.EventFilter, self.SignalB2DKPiPi]
-                                                   selection = self.SignalB2DKPiPi, 
-                                                   FILTER = self.EventFilter
-                                                   )
-        
-        self.StrippingSignalB2DStarPiPiPiLine = StrippingLine('SignalB2DStarPiPiPiLine'+name,
-                                                        prescale = config['B2DStarPiPiPiSignal_Prescale'],
-                                                        postscale = config['B2DStarPiPiPiSignal_Postscale'],
-                                                        #algos = [  self.EventFilter, self.SignalB2DStarPiPiPi]
-                                                        selection = self.SignalB2DStarPiPiPi, 
-                                                        FILTER = self.EventFilter
-                                                        )
-
-        self.StrippingSignalB2DStarKPiPiLine = StrippingLine('SignalB2DStarKPiPiLine'+name,
-                                                       prescale = config['B2DStarKPiPiSignal_Prescale'],
-                                                       postscale = config['B2DStarKPiPiSignal_Postscale'],
-                                                       #algos = [  self.EventFilter, self.SignalB2DStarKPiPi]
-                                                       selection = self.SignalB2DStarKPiPi, 
-                                                       FILTER = self.EventFilter
-                                                       )
-        self.StrippingSignalB2DDLine = StrippingLine('SignalB2DDLine'+name,
-                                                    prescale = config['B2DDAll_Prescale'],
-                                                    postscale = config['B2DDAll_Postscale'],
-                                                    #algos = [ self.EventFilter, self.SignalB2DD]
-                                                    selection = self.SignalB2DD, 
-                                                    FILTER = self.EventFilter
-                                                    )
-
-        self.StrippingSignalB2DStarDLine = StrippingLine('SignalB2DStarDLine'+name,
-                                                    prescale = config['B2DStarDSignal_Prescale'],
-                                                    postscale = config['B2DStarDSignal_Postscale'],
-                                                    #algos = [ self.EventFilter, self.SignalB2DStarD]
-                                                    selection = self.SignalB2DStarD, 
-                                                    FILTER = self.EventFilter
-                                                    )
-
-        self.StrippingSignalLambdaB2LambdaCPiPiPiLine = StrippingLine('SignalLambdaB2LambdaCPiPiPiLine'+name,
-                                                    prescale = config['B2DPiPiPiSignal_Prescale'],
-                                                    postscale = config['B2DPiPiPiSignal_Postscale'],
-                                                    #algos = [  self.EventFilter, self.SignalLambdaB2LambdaCPiPiPi]
-                                                    selection = self.SignalLambdaB2LambdaCPiPiPi, 
-                                                    FILTER = self.EventFilter
-                                                    )
-
-        self.StrippingSignalLambdaB2LambdaCKPiPiLine = StrippingLine('SignalLambdaB2LambdaCKPiPiLine'+name,
-                                                    prescale = config['B2DKPiPiSignal_Prescale'],
-                                                    postscale = config['B2DKPiPiSignal_Postscale'],
-                                                    #algos = [  self.EventFilter, self.SignalLambdaB2LambdaCKPiPi]
-                                                    selection = self.SignalLambdaB2LambdaCKPiPi, 
-                                                    FILTER = self.EventFilter
-                                                    )
 
 
 #ADDED (CHANGED self.lines = ---> self.registerLine
@@ -1238,6 +1181,8 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.registerLine ( self.StrippingAllB2DStarDLine )                       
         self.registerLine ( self.StrippingAllLambdaB2LambdaCPiPiPiLine )	#might be an error in line                
         self.registerLine ( self.StrippingAllLambdaB2LambdaCKPiPiLine )                       
+        self.registerLine ( self.StrippingAllLambdaB2LambdaCPPbarPiLine )
+        self.registerLine ( self.StrippingAllLambdaB2LambdaCPPbarKLine )	
         self.registerLine ( self.StrippingAllWSB2DPiPiPiLine )                       
         self.registerLine ( self.StrippingAllWSB2DKPiPiLine )                      
         self.registerLine ( self.StrippingAllWSB2DStarPiPiPiLine )                       
@@ -1246,17 +1191,9 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.registerLine ( self.StrippingAllWSB2DStarDLine )                       
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPiPiPiLine )                      
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCKPiPiLine )                      
-        self.registerLine ( self.StrippingSignalB2D0PiPiPiLine )                       
-        self.registerLine ( self.StrippingSignalB2D0KPiPiLine )                       
-        self.registerLine ( self.StrippingSignalB2DPiPiPiLine )                       
-        self.registerLine ( self.StrippingSignalB2DKPiPiLine )                       
-        self.registerLine ( self.StrippingSignalB2DStarPiPiPiLine )                       
-        self.registerLine ( self.StrippingSignalB2DStarKPiPiLine )                       
-        self.registerLine ( self.StrippingSignalB2DDLine )                     
-        self.registerLine ( self.StrippingSignalB2DStarDLine )                       
-        self.registerLine ( self.StrippingSignalLambdaB2LambdaCPiPiPiLine )                       
-        self.registerLine ( self.StrippingSignalLambdaB2LambdaCKPiPiLine )	#might be an error
-
+        self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarPiLine )
+        self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarKLine )	
+        
 def MyEventFilter(name, MaxTracks):
     """
     Create and return EventFilter object by Filtering on Ntracks
@@ -1500,6 +1437,59 @@ def makeKPiPi( name,
                                Algorithm = _k1Alg,
                                RequiredSelections = [pionSel, kaonSel]) 
     return KPiPiSelection
+
+def makePPbarh( name,
+                 protonSel,
+                 hSel,
+                 MinPT,
+                 Bach3HMassWindow, 
+                 Bach3HDocaMax, 
+                 Bach3HMinPT, 
+                 Bach3HIP2PV, 
+                 Bach3HIPChisq2PV, 
+                 Bach3HVtxChisq, 
+                 Bach3HVtxSepChisq, 
+                 Bach3HDiraPV, 
+                 Bach3HZVtxSep,
+                 Bach3HDRPV,
+                 decayDesc
+                 ):
+
+    """
+    Create and return PPbarX Selection object.
+    #
+    Arguments:
+    name                  : name of the Selection.
+    protonSel             : Proton selection object
+    hSel                  : Pion/Kaon selection object
+    MinPT                 : One track allowed to have pT less than this value
+    Bach3HMassWindow      : Mass Window
+    Bach3HDocaMax         : Maximum value for DocaMax
+    Bach3HMinPT           : Minimum pT of Candidate
+    Bach3HIP2PV           : Minimum IP to PV 
+    Bach3HIPChisq2PV      : Minimum IP Chisq to PC
+    Bach3HVtxChisq        : Maximum Vertex Chisquare
+    Bach3HVtxSepChisq,    : Minimum separation chisq. between cand and assoc. PV
+    Bach3HDiraPV          : Minimum direction angle value
+    Bach3HZVtxSep         : Minimum vertex separation from PC
+    Bach3HDRPV            : Minimum DR vertex separation from PV
+    """
+
+    
+    _ppbarhAlg = CombineParticles(name)
+    _ppbarhAlg.DecayDescriptor = decayDesc 
+    _ppbarhAlg.CombinationCut = "( (AM < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s  *MeV)" \
+                           " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & (ACUTDOCA( %(Bach3HDocaMax)s *mm, '')) ) " %locals()
+    _ppbarhAlg.MotherCut = "( (PT > %(Bach3HMinPT)s *MeV) & (VFASPF(VCHI2/VDOF)< %(Bach3HVtxChisq)s )  " \
+                       " & (BPVVDCHI2 > %(Bach3HVtxSepChisq)s ) & (MIPCHI2DV(PRIMARY) > %(Bach3HIPChisq2PV)s )" \
+                       " & (BPVDIRA > %(Bach3HDiraPV)s ) & (BPVVDZ> %(Bach3HZVtxSep)s *mm) & (BPVVDRHO > %(Bach3HDRPV)s *mm) " \
+                       " & (MIPDV(PRIMARY)> %(Bach3HIP2PV)s *mm))" % locals()
+
+    selName = 'Sel'+name
+    PPbarhSelection = Selection(selName,
+                               Algorithm = _ppbarhAlg,
+                               RequiredSelections = [protonSel, hSel]) 
+    return PPbarhSelection
 
 def makeD0Meson(name,
                 pionSel,
@@ -1847,7 +1837,7 @@ def makeB2D3H( name,
     else:
         return Selection(name, Algorithm  = _b2d3h, RequiredSelections = [dSel, hhhSel])
 
-
+"""
 def filterB2D3H( name,
                  bSel,
                  tightDMassWindow,
@@ -1855,23 +1845,20 @@ def filterB2D3H( name,
                  parentB,
                  parentD):
     
-    """
-    Filter the B-->D+3H Selection object for events in a tight signal region
-    Arguments:
-    name             : name of the Selection.
-    bSel             : B Selection object
-    tightDMassWindow : Tight D Mass Window
-    parentB          : parent B (use either B0 or B+)
+    #Filter the B-->D+3H Selection object for events in a tight signal region
+    #Arguments:
+    #name             : name of the Selection.
+    #bSel             : B Selection object
+    #tightDMassWindow : Tight D Mass Window
+    #parentB          : parent B (use either B0 or B+)
 
-    Several final states (FS) considered here for parentD
-    [1] FS = B^+ --> D^0 3h
-    [2] FS = B0 or Bs --> (D+ or D_s+) 3h
-    [3] FS = B0 or Bs --> D*+ 3h
-    [4] FS = B0 or Bs --> (D+ or D_s+) + (D- or D_s-)
-    [5] FS = B0 or Bs --> D*+ (D- or D_s-)
+    #Several final states (FS) considered here for parentD
+    #[1] FS = B^+ --> D^0 3h
+    #[2] FS = B0 or Bs --> (D+ or D_s+) 3h
+    #[3] FS = B0 or Bs --> D*+ 3h
+    #[4] FS = B0 or Bs --> (D+ or D_s+) + (D- or D_s-)
+    #[5] FS = B0 or Bs --> D*+ (D- or D_s-)
 
-
-    """
 
     _dMassCut = " "
     _bMassCut = " "
@@ -1909,3 +1896,4 @@ def filterB2D3H( name,
     _bFilter.Code = "(" + _dMassCut + " & " + _bMassCut + ")" 
 
     return Selection ('SignalSel'+name, Algorithm = _bFilter, RequiredSelections = [bSel])
+"""

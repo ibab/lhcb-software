@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-24
+ - StrippingB2D3H.py
+   Added Lambda_b -->Lambda_c p pbar pi/K lines (Right and wrong sign)
+   Removed all lines prefixed with "Signal", as they were a subset of "All" and not being used
+
+
 ! 2011-03-24 - Victor Coco
  - StrippingDisplVertices.py
    Set the default R cut method to FromBeamSpot
