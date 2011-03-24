@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-03-23 - Olivier Callot
+ - Make trend plot working in history per run mode
+ - Make trend plot editable by the select button.
+
+! 2011-03-23 - Olivier Callot
  - fix history access by time interval
  - Remove patches for the head revision of Gaucho (2011-03-15)
 

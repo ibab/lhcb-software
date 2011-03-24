@@ -69,7 +69,9 @@ public:
   void createGraph( std::vector<std::pair<int,double> > values, bool update );
 
   void copyFrom( TH1* src );
-  
+ 
+  TGraph* graph() { return m_timeGraph; }
+ 
 protected:
 
 private:

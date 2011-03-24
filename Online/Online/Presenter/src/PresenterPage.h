@@ -81,8 +81,11 @@ public:
   //== Give the (first) DisplayHistogram for the specified OnlineHistogram
   DisplayHistogram* displayHisto( OnlineHistogram* onlHist );
 
-  //== Give the (first) DisplayHistogram for the specified OnlineHistogram
+  //== Give the (first) DisplayHistogram for the specified TH1 histogram
   DisplayHistogram* displayHisto( TH1* hist );
+
+  //== Give the (first) DisplayHistogram for the specified TGraph
+  DisplayHistogram* displayHisto( TGraph* hist );
 
   bool buildAnalysisHistos (OMAlib* analysisLib, bool update );
 

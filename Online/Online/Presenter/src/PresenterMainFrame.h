@@ -63,8 +63,6 @@ class TGLabel ;
 
 class stringstream;
 
-class TBenchmark;
-
 class KnownProblemList ;
 class OnlineHistPage ;
 class RunDB ;
@@ -102,7 +100,6 @@ public:
       EDIT_HISTO_COMMAND,
       EDIT_PAGE_PROPERTIES_COMMAND,
       EDIT_ADD_TRENDINGHISTO_COMMAND ,
-      FULL_BENCHMARK_COMMAND,
       INSPECT_HISTO_COMMAND,
       HISTOGRAM_DESCRIPTION_COMMAND,
       INSPECT_PAGE_COMMAND,
@@ -180,10 +177,6 @@ public:
   };
 
   //slots
-
-  void startBenchmark(const std::string &timer);
-  void stopBenchmark(const std::string &timer);
-  void printBenchmark(const std::string &timer);
 
   void about();
   void buildGUI();
@@ -558,7 +551,6 @@ public:
   TGHotString*  m_toolOffline;
   TGHotString*  m_toolSetUtgidTaskText;
   TGHotString*  m_toolSetDimDnsText;
-  TGHotString*  m_toolFullBenchmarkText;
 
   TGPopupMenu*  m_helpMenu;
   TGHotString*  m_helpText;
@@ -650,9 +642,6 @@ public:
   TObjArray* m_histogramIdItems;
   TIterator* m_histogramIdItemsIt;
   TObject*   m_histogramIdItem;
-
-  TBenchmark* m_benchmark;
-  int m_deadTasksOnPage;
 
   RunDB * m_runDb ; ///< Interface to run database
   

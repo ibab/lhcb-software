@@ -43,7 +43,6 @@
 #include <TTimer.h>
 #include <TGFileDialog.h>
 #include <TRootHelpDialog.h>
-#include <TBenchmark.h>
 #include <TGraph.h>
 
 // BOOST
@@ -144,8 +143,6 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_folderItems(NULL),
   m_folderItemsIt(NULL),
   m_folderItem(NULL),
-  m_benchmark(NULL),
-  m_deadTasksOnPage(0),
   m_runDb( 0 ) ,
   m_intervalPickerData(NULL) ,
   m_trendingHisto( 0 ) {
@@ -154,7 +151,6 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   if (gPresenter) { return; }
   gPresenter = this;
 
-  m_benchmark = new TBenchmark();
   SetCleanup(kDeepCleanup);
 
   // Thermo palette for hitmaps
@@ -195,7 +191,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
                               m_referencePath ) ;
   m_archive->setVerbosity(m_verbosity);
 
-  m_trendDuration = 2*3600;
+  m_trendDuration = 600;
   m_trendEnd      = 0;
 }
 
@@ -260,10 +256,6 @@ PresenterMainFrame::~PresenterMainFrame() {
     delete m_knownHistoryPartitionList;
     m_knownHistoryPartitionList = NULL;
   }
-  if (0 != m_benchmark) {
-    delete m_benchmark;
-    m_benchmark = NULL;
-  }
   if (gPresenter == this) { gPresenter = 0; }
 }
 
@@ -327,7 +319,6 @@ void PresenterMainFrame::buildGUI() {
     m_toolOnline                   = new TGHotString("&Online");
     m_toolOffline                  = new TGHotString("&History mode");
     m_toolSetDimDnsText            = new TGHotString("Set &DIM DNS...");
-    m_toolFullBenchmarkText        = new TGHotString("Benchmark all pages");
 
     m_helpText         = new TGHotString("&Help");
     m_helpContentsText = new TGHotString("&Contents");
@@ -396,6 +387,7 @@ void PresenterMainFrame::buildGUI() {
     m_editMenu->DisableEntry( PICK_REFERENCE_HISTO_COMMAND);
     m_editMenu->DisableEntry( SAVE_AS_REFERENCE_HISTO_COMMAND);
     m_editMenu->DisableEntry( EDIT_PAGE_PROPERTIES_COMMAND);
+    m_editMenu->DisableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
 
     // View menu
     m_viewMenu = new TGPopupMenu(fClient->GetRoot());
@@ -442,8 +434,6 @@ void PresenterMainFrame::buildGUI() {
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
     m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
-    m_toolMenu->AddSeparator();
-    m_toolMenu->AddEntry(m_toolFullBenchmarkText, FULL_BENCHMARK_COMMAND);
     m_toolMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
                         this, "handleCommand(Command)");
 
@@ -640,12 +630,12 @@ void PresenterMainFrame::buildGUI() {
     // Select history by run
     m_trendDurationComboBox->AddEntry("Last 10 minutes", M_TrendLastTenMinutes ) ;
     m_trendDurationComboBox->AddEntry("Last 2 hours",  M_TrendLastTwoHours ) ;
-    m_trendDurationComboBox->Select( M_TrendLastTwoHours,  false);
     m_trendDurationComboBox->AddEntry("Last 24 hours", M_TrendLastDay);
     m_trendDurationComboBox->AddEntry("Last 7 days",   M_TrendLastWeek);
     m_trendDurationComboBox->AddEntry("Last 30 days",  M_TrendLastMonth);
     m_trendDurationComboBox->AddEntry("Last Year",     M_TrendLastYear);
     m_trendDurationComboBox->AddEntry("Since 2010",    M_TrendAll);
+    m_trendDurationComboBox->Select( M_TrendLastTenMinutes,  false);
     m_trendDurationComboBox->Resize(112,22);
     m_trendDurationComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
                                      this, "handleCommand(Command)");
@@ -1436,9 +1426,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case OFFLINE_MODE_COMMAND:
     setPresenterMode( pres::History ) ;
-    break;
-  case FULL_BENCHMARK_COMMAND:
-    loadAllPages();
     break;
   case ONLINE_MODE_COMMAND:
     setPresenterMode( pres::Online ) ;
@@ -2584,42 +2571,6 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
 }
 
 //==============================================================================
-// Start benchmark
-//==============================================================================
-void PresenterMainFrame::startBenchmark(const std::string &timer) {
-  m_benchmark->Start(timer.c_str()) ;
-}
-
-//==============================================================================
-// Stop benchmark
-//==============================================================================
-void PresenterMainFrame::stopBenchmark(const std::string &timer) {
-  m_benchmark->Stop(timer.c_str());
-}
-
-//==============================================================================
-// print benchmark
-//==============================================================================
-void PresenterMainFrame::printBenchmark(const std::string &timer) {
-  std::cout << m_deadTasksOnPage << ","
-            << timer << ","
-            << (m_benchmark->GetRealTime(timer.c_str())) << ","
-            << int(dbHistosOnPage.size()) << ",";
-  std::vector<DbRootHist*>::iterator timer_dbHistosOnPageIt =
-    dbHistosOnPage.begin();
-  while( timer_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
-    std::cout << (*timer_dbHistosOnPageIt)->identifier() << ","
-              << int(((*timer_dbHistosOnPageIt)->getRootHistogram())->
-                     GetEntries()) << ","
-              << m_benchmark->
-      GetRealTime((*timer_dbHistosOnPageIt)->identifier().c_str()) << ",";
-    timer_dbHistosOnPageIt++;
-  }
-  std::cout << std::endl ;
-  m_benchmark->Reset();
-}
-
-//==============================================================================
 // List histograms from a ROOT file
 //==============================================================================
 void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
@@ -2924,12 +2875,22 @@ void PresenterMainFrame::inspectHistogram() {
     referenceOverlay = true ;
   }
 
-  TH1* selectedHisto = sel->rootHist();
-  if (0 == selectedHisto) return ;
-
   TCanvas* zoomCanvas =  new TCanvas();
   zoomCanvas->cd();
-  selectedHisto->DrawCopy();
+
+  TH1* selectedHisto = sel->rootHist();
+  if (0 != selectedHisto) {
+    selectedHisto->DrawCopy();
+  } else {
+    TGraph* selectedGraph = sel->graph();
+    if ( 0 != selectedGraph ) {
+      std::cout << "Paint selected TGraph" << std::endl;
+      TGraph* newTG = (TGraph*)selectedGraph->Clone();
+      newTG->Draw( "AL" );
+    } else {
+      return;
+    }
+  }
   zoomCanvas->ToggleEventStatus();
   zoomCanvas->ToggleAutoExec();
   zoomCanvas->ToggleToolBar();
@@ -3049,7 +3010,6 @@ void PresenterMainFrame::reconfigureGUI() {
 
     if ( m_editingAllowed ) m_pickReferenceHistoButton->SetState(kButtonDisabled);
     m_viewMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
-
     m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
 
     m_historyIntervalComboBox->SetEnabled(false);
@@ -3243,7 +3203,7 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
 
     m_editMenu->EnableEntry(PICK_REFERENCE_HISTO_COMMAND);
     m_editMenu->EnableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
-
+    m_editMenu->EnableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
   } else if ( pres::ReadOnly == databasePermissions) {
     if ( m_editingAllowed ) {
       m_savePageToDatabaseButton->SetState(kButtonDisabled);
@@ -3259,6 +3219,7 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
 
     m_editMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
     m_editMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
+    m_editMenu->DisableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
   }
   m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToPage_COMMAND);
 
@@ -4913,17 +4874,16 @@ DisplayHistogram* PresenterMainFrame::selectedDisplayHistogram() {
   if ( 0 != thePad ) {
     TIter nextPadElem( thePad -> GetListOfPrimitives() ) ;
     TObject * histoCandidate ( 0 ) ;
-    TH1 * theHisto( 0 ) ;
     while ( ( histoCandidate = nextPadElem() ) ) {
-      if ( histoCandidate -> InheritsFrom( TH1::Class() ) ) {
-        theHisto = dynamic_cast< TH1 * >( histoCandidate ) ;
+     if ( histoCandidate -> InheritsFrom( TH1::Class() ) ) {
+        TH1* theHisto = dynamic_cast< TH1 * >( histoCandidate ) ;
+        dispHist = m_presenterPage.displayHisto( theHisto );
         break ;
+      } else if ( histoCandidate->InheritsFrom( TGraph::Class() ) ) {
+        TGraph* theGraph = dynamic_cast< TGraph*>( histoCandidate );
+        dispHist = m_presenterPage.displayHisto( theGraph );
+        break;
       }
-    }
-
-    if ( 0 != theHisto ) {
-      std::cout << "  selected TH1 named " << theHisto->GetName() << std::endl;
-      dispHist = m_presenterPage.displayHisto( theHisto );
     }
   }
 
@@ -5636,8 +5596,9 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
 // Display a dialog box to add a trending histo to the database
 //==============================================================================
 void PresenterMainFrame::addTrendingHisto() {
-  new CreateTrendingHistogramDialog( gClient->GetRoot() , GetMainFrame() ,
-                                     m_histogramDB ) ;
+  fClient->WaitFor(dynamic_cast< TGWindow * >( new CreateTrendingHistogramDialog( gClient->GetRoot() , 
+                                                                                   GetMainFrame() ,
+                                                                                  m_histogramDB ) ) );
 }
 
 //==============================================================================

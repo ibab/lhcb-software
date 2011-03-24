@@ -65,6 +65,11 @@ void PresenterInformation::setTimeC( std::string endTime, std::string duration, 
   }
   time = boost::posix_time::to_tm( t );
   m_startTimeC = std::mktime( &time );
+  if ( m_startTimeC > m_endTimeC ) {
+    time_t tmp = m_endTimeC;
+    m_endTimeC = m_startTimeC;
+    m_startTimeC = tmp;
+  }
   std::cout << "   -> start " << std::ctime( &m_startTimeC );
   std::cout << "        end " << std::ctime( &m_endTimeC ) << std::endl;
 }

@@ -306,12 +306,10 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       m_histogramImage->Draw();
     } else {
       std::string opt =  m_isOverlap ? "SAME" : "";
-      std::cout << "  option for drawing " << opt << std::endl;
       m_rootHistogram->Draw(opt.c_str());
     }
   } else if ( 0 != m_timeGraph ) {
     std::string opt =  m_isOverlap ? "SAME" : "AL";
-    std::cout << "  option for drawing " << opt << std::endl;
     m_timeGraph->Draw(opt.c_str());
   }
 
@@ -497,7 +495,6 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
     if(hasOption("TICK_X", &iopt)) pad->SetTickx(iopt);
     if(hasOption("TICK_Y", &iopt)) pad->SetTicky(iopt);
     if(hasOption("PADCOLOR", &iopt)) pad->SetFillColor(iopt);
-    //  }
   }
 }
 
@@ -590,7 +587,6 @@ void DisplayHistogram::setDisplayOptions ( ) {
       }
     }
   }
-  //}
 }
 
 //=========================================================================

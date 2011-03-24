@@ -83,8 +83,13 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
       std::string file = myHist->hname();
       if ( file.find( ".trend" ) < file.size() ) file = file.substr( 0, file.find( ".trend" ) );
       unsigned indx = file.size();
-      while ( 0 < indx && file[indx-1] != '/' ) --indx;
-      file = file.substr(0,indx) + partition + "_" + file.substr( indx );
+      unsigned underscore = 0;
+      while ( 0 < indx && file[indx-1] != '/' ) {
+        --indx;
+        if ( file[indx] == '_' ) underscore = indx;
+      }
+      if ( underscore == 0 ) underscore = indx;
+      file = file.substr(0,indx) + partition + "_" + file.substr( underscore );
       std::string variable = myHist->algorithm();
       bool existed = false;
       for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
@@ -122,7 +127,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
           if ( !existed ) {  
             (*itT).histos.push_back( DisplayHistogram( myHist ) );
             existed = true;
-            std::cout << myHist->task() << " ++ Histo   " << myHist->dimServiceName() << std::endl;
+            std::cout << myHist->task() << " ++ Histo   " << myHist->identifier() << std::endl;
             break;
           }
           
@@ -134,7 +139,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         newTask.dead = false;
         newTask.histos.push_back( DisplayHistogram( myHist ) );
         m_tasks.push_back( newTask );
-        std::cout << myHist->task() << " ** Histo   " << myHist->dimServiceName() << std::endl;
+        std::cout << myHist->task() << " ** Histo   " << myHist->identifier() << std::endl;
       }
     } else {    //== Analysis histograms: Get the source histograns
       anaHistos.push_back( myHist );
@@ -538,7 +543,7 @@ DisplayHistogram* PresenterPage::displayHisto( OnlineHistogram* onlHist ) {
 }
 
 //=========================================================================
-//== Give the (first) DisplayHistogram for the specified OnlineHistogram
+//== Give the (first) DisplayHistogram for the specified TH1 histogram
 //=========================================================================
 DisplayHistogram* PresenterPage::displayHisto( TH1* hist ) {
   for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
@@ -549,6 +554,18 @@ DisplayHistogram* PresenterPage::displayHisto( TH1* hist ) {
     for ( std::vector<DisplayHistogram>::iterator itDH = (*itT).histos.begin(); (*itT).histos.end() != itDH; ++itDH ) {
       if ( (*itDH).rootHist()      == hist ) return &(*itDH);
       if ( (*itDH).referenceHist() == hist ) return &(*itDH);
+    }
+  }
+  return NULL;
+}
+
+//=========================================================================
+//== Give the (first) DisplayHistogram for the specified TGraph
+//=========================================================================
+DisplayHistogram* PresenterPage::displayHisto( TGraph* hist ) {
+  for ( std::vector<TrendingFile>::iterator itT = m_trends.begin(); m_trends.end() != itT; ++itT ) {
+    for ( std::vector<DisplayHistogram>::iterator itDH = (*itT).histos.begin(); (*itT).histos.end() != itDH; ++itDH ) {
+      if ( (*itDH).graph()      == hist ) return &(*itDH);
     }
   }
   return NULL;
@@ -608,13 +625,9 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
       if ( onlHist->onpage()->isOverlap() ) {
         OnlineHistoOnPage* mother = onlHist->onpage()->getOverlap();
 
-        std::cout << "== overlap: Mother " << mother << std::endl;
-        std::cout << "   histo " << mother->histo << std::endl;
-
         for ( std::vector<OnlineHistoOnPage*>::iterator itPrev =  m_onlineHistosOnPage.begin();
               m_onlineHistosOnPage.end() != itPrev; ++itPrev ) {
           if ( (*itPrev)->histo == mother->histo) {
-            std::cout << "  display histo " <<  displayHisto( (*itPrev) ) << std::endl;
             overlayOnPad = displayHisto( (*itPrev) )->hostingPad();
             break;
           }
@@ -624,7 +637,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
 
     DisplayHistogram* dispH =  displayHisto( (*itHP)  );
     if (  dispH ) {
-      std::cout << "  display histo " << dispH->histo()->identifier()
+      std::cout << "-- display histo " << dispH->histo()->identifier()
                 << " on pad X "<< xlow << " to "<< xup
                 << "  Y " << ylow << " to " << yup
                 << " overlay " << overlayOnPad << std::endl;
