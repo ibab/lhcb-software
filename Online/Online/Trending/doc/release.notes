@@ -4,8 +4,14 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
-! 2011-03-18 - Olivier Callot
- - Upon cloing, reset all file pointers
+! 2011-03-24 - Olivier Callot
+ - New header file TrendWriter.h to be able to write from plain C++ code, without
+   the use of a Gaudi Tool. Not nice for maintenance...
+ - Rested the buffer pointers on file close, so that re-opening the file will re-
+   read it.
+ - If a threshold is negativem, it indicates a fraction of the previous value: 
+   A threshold of -0.01 indicate that we should store if the value has changed by
+   more than 1% compared to the previous stored value.
 
 ! 2010-09-08 - Markus Frank
  - Fix compile warning in TrendingTool.cpp

@@ -16,7 +16,7 @@
 class TrendingTool : public GaudiTool, virtual public ITrendingTool {
 public: 
 
-#include "TrendParams.h"
+#include "Trending/TrendParams.h"
 
   /// Standard constructor
   TrendingTool( const std::string& type, 

@@ -1,30 +1,88 @@
-// $Id: TrendingTool.cpp,v 1.6 2010-09-17 09:23:13 frankb Exp $
+// $Id: TrendingTool.h,v 1.1.1.1 2010-06-11 09:58:56 ocallot Exp $
+#ifndef TRENDWRITER_H 
+#define TRENDWRITER_H 1
+
 // Include files
 #include <ctime>
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <string>
+#include <vector>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+/** @class TrendWriter TrendWriter.h
+ *  
+ *
+ *  @author Olivier Callot
+ *  @date   2011-03-18
+ */
+class TrendWriter {
+public: 
 
-// local
-#include "TrendingTool.h"
+#include "TrendParams.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrendingTool
-//
-// 2010-06-08 : Olivier Callot
-//-----------------------------------------------------------------------------
+  /// Standard constructor
+  TrendWriter( );
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrendingTool )
+  ~TrendWriter( ); ///< Destructor
 
+  bool openWrite( std::string name, std::vector<std::string> tags, int version = 1 );
+
+  bool setThresholds( std::vector<float> thresholds );
+  
+  bool setThreshold( std::string tag, float thr );
+  
+  bool write( std::vector<float> values, int time = 0 );
+  
+  void closeFile();
+
+private:
+
+  bool loadTags( int wantedVersion );
+  
+  bool nextDataBlock( );
+
+  void createDirectoryRecord ( DirectoryRecord* dir, int time);
+  
+  int  unpackAnEvent ( );
+  
+  void writeEntry ( int now, std::vector<float>& data, bool forceWrite );
+
+  void addDataEntry( int now, std::vector<float>& data, bool forceWrite, bool full );
+
+  bool getDataContaining ( int time );
+
+  bool  nextEvent( int& time, std::vector<float>& data ) ;
+
+private:
+  bool                     m_forWriting;
+  Header                   m_tagHeader;
+  std::vector<std::string> m_tags;
+  std::vector<float>       m_thresholds;
+  std::vector<float>       m_lastData;
+  int                      m_nbTag;
+  int                      m_nbMask;
+  DirectoryRecord          m_dir;
+  DataRecord               m_data;
+  long                     m_firstDirAddress;
+  long                     m_tagAddressInFile;
+  long                     m_dirAddressInFile;
+  long                     m_dataAddressInFile;
+  FILE*                    m_file;
+  int                      m_ptDir;
+  int                      m_ptData;
+  bool                     m_hasSelection;
+  int                      m_requestedTagNumber;
+  int                      m_maxTime;
+  int                      m_tagNumber;
+  int                      m_lastTime;
+};
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrendingTool::TrendingTool( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_forWriting( false )
+TrendWriter::TrendWriter( ) :
+  m_forWriting( false )
   , m_firstDirAddress( -1 )
   , m_tagAddressInFile( -1 )
   , m_dirAddressInFile( -1 )
@@ -35,13 +93,12 @@ TrendingTool::TrendingTool( const std::string& type,
   , m_maxTime(  0x7fffffff )   // maximum time value...
   , m_lastTime( 0x7fffffff )
 {
-  declareInterface<ITrendingTool>(this);
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-TrendingTool::~TrendingTool() {
+TrendWriter::~TrendWriter() {
   if ( NULL != m_file ) closeFile();
 }
 
@@ -49,10 +106,10 @@ TrendingTool::~TrendingTool() {
 //=========================================================================
 //  Open the Trending file for writing
 //=========================================================================
-bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, int version ) {
+bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, int version ) {
 
   if ( NULL != m_file ) {
-    error() << "openWrite: file already opened!" << endmsg;
+    std::cout << "TrendWriter::openWrite: file already opened!" << std::endl;
     return false;
   }
 
@@ -61,8 +118,8 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
   for ( std::vector<std::string>::const_iterator itS = tags.begin(); tags.end() > itS+1; ++itS ) {
     for ( std::vector<std::string>::const_iterator itS1 = itS+1; tags.end() != itS1 ; ++itS1 ) {
       if ( *itS == *itS1 ) {
-        error() << "openWrite: tag " << itS-tags.begin() << " and "
-                << itS1-tags.begin() << " are identical : " << *itS << endmsg;
+        std::cout << "TrendWriter::openWrite: tag " << itS-tags.begin() << " and "
+                  << itS1-tags.begin() << " are identical : " << *itS << std::endl;
         isBad = true;
       }
     }
@@ -70,15 +127,14 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
   if ( isBad ) return true;
   unsigned int maxSize = (unsigned int)(0.1 * DATA_SIZE);
   if ( maxSize < tags.size() ) {
-    error() << "Requested to store " << tags.size() << " tags, maximum allowed " << maxSize << endmsg;
+    std::cout << "TrendWriter::openWrite: Requested to store " << tags.size() 
+              << " tags, maximum allowed " << maxSize << std::endl;
     return false;
   }  
 
   char* prefix = getenv( TREND_AREA );
   std::string fileFullName =  name + ".trend";
   if ( 0 != prefix ) fileFullName = std::string( prefix ) + fileFullName;
-
-  verbose() << "openWrite file name = " << fileFullName << endmsg;
 
   //== Try top open an existing file, else create one.
   std::string mode = "r+";
@@ -87,7 +143,7 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
     mode = "w+";
     m_file = fopen( fileFullName.c_str(), mode.c_str() );
     if ( 0 == m_file ) {
-      error() << "openWrite: Can not create file " << fileFullName << endmsg;
+      std::cout << "TrendWriter::openWrite: Can not create file " << fileFullName << std::endl;
       return false;
     }
   } else {
@@ -100,7 +156,6 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
   bool isDifferent = false;
   unsigned int kk;
   if ( tags.size() != m_tags.size() ) {
-    verbose() << "Request " << tags.size() << " tags, file has " << m_tags.size() << endmsg;
     isDifferent = true;
   } else {
     for ( kk = 0; tags.size() > kk; ++kk ) {
@@ -113,11 +168,10 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
 
   //== Is the requested vesion higher?
   if ( version <= m_tagHeader.version ) {
-    error() << "openWrite: The list of tags is incompatible with the one in the file. "
-            << "Specify a new version greater than " << m_tagHeader.version << endmsg;
+    std::cout << "TrendWriter::openWrite: The list of tags is incompatible with the one in the file. "
+              << "Specify a new version greater than " << m_tagHeader.version << std::endl;
     return false;
   }
-  debug() << "Create new version of the tag record." << endmsg;
 
   //== Get to end of file and create new tag record.
 
@@ -149,21 +203,18 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
   m_tagHeader.size    = sizeof( Header ) + tagLength;
   fwrite( &m_tagHeader, sizeof( Header ), 1, m_file );
   fwrite( tagBuffer, 1, tagLength, m_file );
-  debug() << "openWrite: Written " << tagLength << " bytes of tag + "
-          << sizeof( Header ) << " header bytes." << endmsg;
   free( tagBuffer );
 
   m_firstDirAddress = ftell( m_file );  //== First directory block is after tag block.
 
   //== Update the previous tag record if any, now that the new one is on file.
   if ( newAddress != 0 ) {
-    verbose() << "End of file at " << newAddress
-              << " read back header at " << m_tagAddressInFile << endmsg;
     fseek( m_file, m_tagAddressInFile, SEEK_SET );
     Header tagHeader;
     int nRead = fread( &tagHeader, 1, sizeof( Header ), m_file );
     if ( sizeof( Header ) != nRead ) {
-      error() << "openWrite: Error reading the header of the tag block: read " << nRead << " bytes" << endmsg;
+      std::cout << "TrendWriter::openWrite: Error reading the header of the tag block: read "
+                << nRead << " bytes" << std::endl;
       return false;
     }
     tagHeader.nextAddress = newAddress;
@@ -181,11 +232,11 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
 //=========================================================================
 //  Set the thresholds for all variables
 //=========================================================================
-bool TrendingTool::setThresholds ( std::vector<float> thr ) {
+bool TrendWriter::setThresholds ( std::vector<float> thr ) {
   if ( thr.size() != m_thresholds.size() ) {
-    error() << "setThresholds: Need " << m_thresholds.size()
-            << " values while " << thr.size() << " given. ** IGNORED **"
-            << endmsg;
+    std::cout << "TrendWriter::setThresholds: Need " << m_thresholds.size()
+              << " values while " << thr.size() << " given. ** IGNORED **"
+              << std::endl;
     return false;
   }
   for ( unsigned int kk = 0; thr.size() > kk ; ++kk ) {
@@ -197,30 +248,29 @@ bool TrendingTool::setThresholds ( std::vector<float> thr ) {
 //=========================================================================
 //  Set the threshold for a single tag
 //=========================================================================
-bool TrendingTool::setThreshold ( std::string tag, float thr) {
+bool TrendWriter::setThreshold ( std::string tag, float thr) {
   for ( unsigned int kk = 0 ; m_thresholds.size() > kk ; ++kk ) {
     if ( m_tags[kk] == tag ) {
       m_thresholds[kk] = thr;
-      debug() << "setThreshold: Threshold for '" << tag << "' set to " << thr << endmsg;
       return true;
     }
   }
-  error() << "setThreshold: Can't change threshold for '" << tag << "' : not found" << endmsg;
+  std::cout << "TrendWriter::setThreshold: Can't change threshold for '" << tag << "' : not found" << std::endl;
   return false;
 }
 
 //=========================================================================
 //  Store an event in the file
 //=========================================================================
-bool TrendingTool::write( std::vector<float> data, int now ) {
+bool TrendWriter::write( std::vector<float> data, int now ) {
 
   if ( NULL == m_file || !m_forWriting ) {
-    error() << "write: File not opened for writing!" << endmsg;
+    std::cout << "TrendWriter::write: File not opened for writing!" << std::endl;
     return false;
   }
 
   if ( 0 != m_tagHeader.nextAddress ) {
-    error() << "Writing is only possible for tags of the highest version" << endmsg;
+    std::cout << "TrendWriter::write: Writing is only possible for tags of the highest version" << std::endl;
     return false;
   }
     
@@ -228,7 +278,6 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
 
   //== Get the last entry before that time. First open the first dir if needed.
   if ( 0 > m_dirAddressInFile ) {
-    debug() << "write: Read first directory block at " << m_firstDirAddress << endmsg;
     m_dirAddressInFile = m_firstDirAddress;
     m_dir.size = 0;
     fseek( m_file, m_dirAddressInFile, SEEK_SET );
@@ -238,9 +287,6 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
       createDirectoryRecord( &m_dir, now );
     }
   }
-  debug() << "write: Directory address in file = " << m_dirAddressInFile
-          << " first time in dir " << m_dir.entry[0].firstTime
-          << " want time = " << now << endmsg;
 
   //== Check if the time is accessible from the current directory, i.e. after first and before last
   bool hasDataAfter = false;
@@ -262,15 +308,8 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
   
   //== We are positionned after the last entry before. If no data after, this is simple.
 
-  verbose() << "write: ptDir = " << m_ptDir << " first time " << m_dir.entry[m_ptDir].firstTime
-            << " nbEntries in dir " << m_dir.nbEntries
-            << " PtData " << m_ptData << " next time " <<  m_data.data[m_ptData].i
-            << " hasDataAfter " << hasDataAfter
-            << endmsg;
-
   if ( !hasDataAfter ) {
     writeEntry( now, data, true );
-
   } else {   //== Data after: Save context, read all data, and rewrite them after.
 
     long savedDirAdd  = m_dirAddressInFile;
@@ -288,7 +327,6 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
       savedTime.push_back( tTime );
       savedData.push_back( tData );
     }
-    debug() << "Saved " << savedTime.size() << " records after " << now << endmsg;
 
     m_dirAddressInFile  = savedDirAdd;
     m_dataAddressInFile = savedDataAdd;
@@ -325,7 +363,7 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
 //=========================================================================
 //  Write one entry at the current position in the file.
 //=========================================================================
-void TrendingTool::writeEntry ( int now, std::vector<float>& data, bool forceWrite ) {
+void TrendWriter::writeEntry ( int now, std::vector<float>& data, bool forceWrite ) {
   if ( 0 != m_dir.entry[m_ptDir].firstTime ) {  // There is some data block...
 
     //== If we don't have enough space, create a new data record.
@@ -338,7 +376,6 @@ void TrendingTool::writeEntry ( int now, std::vector<float>& data, bool forceWri
       m_data.size = 0;
       m_ptData    = 0;
       m_ptDir++;
-      debug() << "writeEntry: Start a new data block, ptDir = " << m_ptDir << endmsg;
       if ( m_ptDir == MAX_ENTRY-1 ) {
         long newDirAddress = m_dataAddressInFile;  // This is the next free in file, as obtained above.
         // Create a new fresh directrory block at the current location
@@ -369,16 +406,13 @@ void TrendingTool::writeEntry ( int now, std::vector<float>& data, bool forceWri
     }
   }
 
-  debug() << "writeEntry: Length of data block at "
-          << m_dataAddressInFile << " = " << m_data.size << " m_ptData " << m_ptData << endmsg;
-
   bool full = ( 0 == m_ptData );
   addDataEntry( now, data, forceWrite, full );
 }
 //=========================================================================
-//  Write a data item, with zero suppression if needed
+//  Write a data item, with zero suppression if needed. Negative threshold = fraction.
 //=========================================================================
-void TrendingTool::addDataEntry( int now, std::vector<float>& data, bool forceWrite, bool full ){
+void TrendWriter::addDataEntry( int now, std::vector<float>& data, bool forceWrite, bool full ){
     
   m_data.data[m_ptData++].i = now;
   int mask = 0;
@@ -408,8 +442,6 @@ void TrendingTool::addDataEntry( int now, std::vector<float>& data, bool forceWr
   if ( (data.size()%32) != 31 ) m_data.data[maskAddr].i = mask;
   m_data.data[m_ptData].i = 0;   // tag the end of the data block!
 
-  verbose() << "addDataEntry: Selected " << nbItem << " data to write, full = " << full << endmsg;
-
   if ( 0 < nbItem ) {
     m_lastTime          = now;
     m_data.size         = sizeof( int ) * (m_ptData+3);   // +3 as 8 bytes header + 1 extra int with a zero...
@@ -418,7 +450,6 @@ void TrendingTool::addDataEntry( int now, std::vector<float>& data, bool forceWr
     if ( forceWrite ) {
       fseek( m_file, m_dataAddressInFile, SEEK_SET );
       fwrite( &m_data, 1, sizeof(DataRecord), m_file );
-      verbose() << "-- written " << m_data.size << " bytes  at " << m_dataAddressInFile << endmsg;
     }
   } else {
     m_ptData = m_ptData - m_nbMask - 1;  // restore the data pointer.
@@ -429,10 +460,10 @@ void TrendingTool::addDataEntry( int now, std::vector<float>& data, bool forceWr
 //=========================================================================
 //  Get the next event block.
 //=========================================================================
-bool TrendingTool::nextEvent( int& time, std::vector<float>& data ) {
+bool TrendWriter::nextEvent( int& time, std::vector<float>& data ) {
 
   if ( !m_hasSelection ) {
-    error() << "nextEvent: no previous selection!" << endmsg;
+    std::cout << "TrendWriter::nextEvent: no previous selection!" << std::endl;
     return false;
   }
   //== Do we need to read the next block
@@ -465,18 +496,16 @@ bool TrendingTool::nextEvent( int& time, std::vector<float>& data ) {
     }
     mask = mask>>1;
   }
-  verbose() << "nextEvent: Returned event at time " << time << endmsg;
-
   return true;
 }
 
 //=========================================================================
 // Close the file
 //=========================================================================
-void TrendingTool::closeFile() {
+void TrendWriter::closeFile() {
   if ( 0 != m_file ) {
     int status = fclose( m_file );
-    if ( 0 != status ) error() << "fclose returned status " << status << std::endl;
+    if ( 0 != status ) std::cout << "TrendWriter::closeFile: fclose returned status " << status << std::endl;
     m_file = NULL;
   }
   m_tagAddressInFile  = -1;
@@ -484,157 +513,12 @@ void TrendingTool::closeFile() {
   m_dataAddressInFile = -1;
 }
 //=========================================================================
-// Open an existing file for reading
-//=========================================================================
-bool TrendingTool::openRead( std::string name ) {
-
-  if ( NULL != m_file ) {
-    error() << "openRead: file already opened!" << endmsg;
-    return false;
-  }
-
-  char* prefix = getenv( TREND_AREA );
-  std::string fileFullName =  name + ".trend";
-  if ( 0 != prefix ) fileFullName = std::string( prefix ) + fileFullName;
-
-  verbose() << "openRead file name = " << fileFullName << endmsg;
-
-  //== Open the existing file
-  std::string mode = "r";
-  m_file = fopen( fileFullName.c_str(), mode.c_str() );
-  if ( 0 == m_file ) {
-    error() << "openRead: Can not open file " << fileFullName << endmsg;
-    return false;
-  }
-  if ( !loadTags( -1 ) ) return false;   // Get the latest tags, return an error if...
-  m_forWriting = false;
-
-  //== read the first directory record...
-  m_dirAddressInFile = m_firstDirAddress;
-  fseek( m_file, m_dirAddressInFile, SEEK_SET );
-  fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-  
-  return true;
-}
-//=========================================================================
-//  Select the first record with the appropriate time, set the end time
-//=========================================================================
-bool TrendingTool::select( int startTime, int endTime, std::string tag ) {
-
-  if ( NULL == m_file ) {
-    error() << "select: file not opened!" << endmsg;
-    return false;
-  }
-  if ( 0 == endTime ) endTime = (int)::time( 0 );
-
-  if ( startTime > endTime ) {
-    error() << "select: End time '" << timeString( endTime ) << "' is before startTime '"
-            << timeString( startTime ) << "'" << endmsg;
-    return false;
-  }
-
-  //== If a tag is given, search for it and gets its index
-  m_tagNumber = -1;
-  if ( "" != tag ) {
-    for ( std::vector<std::string>::const_iterator itS = m_tags.begin(); m_tags.end() != itS ; ++itS ) {
-      if ( (*itS) == tag ) m_tagNumber = itS - m_tags.begin();
-    }
-    if ( 0 > m_tagNumber ) {
-      error () << "select: Requested tag '" << tag << "' not found." << endmsg;
-      return false;
-    }
-  }
-
-  m_hasSelection = true;
-
-  debug() << "select: startTime " << startTime << " first in dir " <<  m_dir.entry[0].firstTime << endmsg;
-
-  if ( !getDataContaining( startTime ) ) return false;
-
-  debug() << "Skip until startTime, current data time = " << m_data.data[m_ptData].i << endmsg;
-  while ( m_data.data[m_ptData].i < startTime ) unpackAnEvent();  // Skip entries before
-
-  m_hasSelection = true;
-  m_maxTime = endTime;
-  return true;
-}
-//=========================================================================
-// Get the next real value for the selected tag.
-//=========================================================================
-bool TrendingTool::nextValue( int& time, float& value ) {
-
-  if ( !m_hasSelection ) {
-    error() << "nextValue: no previous selection." << endmsg;
-    return false;
-  }
-  if ( 0 > m_tagNumber ) {
-    error() << "nextValue: no tag selected" << endmsg;
-    return false;
-  }
-
-  bool notFound = true;
-  while( notFound ) {
-
-    //== Do we need to read the next block
-    if ( 0 ==  m_data.data[m_ptData].i ) {
-      verbose() << "Get next data block " << endmsg;
-      if ( !nextDataBlock() ) {
-        verbose() << "nextValue: No new data block" << endmsg;
-        m_hasSelection = false;
-        return false;
-      }
-    }
-    verbose() << "nextValue: at ptData " << m_ptData << " time " << m_data.data[m_ptData].i
-              << " max " << m_maxTime << endmsg;
-
-    //== is it after the last wanted time...
-    if ( m_maxTime < m_data.data[m_ptData].i ) {
-      m_hasSelection = false;
-      return false;
-    }
-
-    time = m_data.data[m_ptData++].i;
-    int ptMask = m_ptData;
-    m_ptData  += m_nbMask;
-    int mask = 0;
-    for ( int kk = 0 ; m_nbTag > kk ; ++kk ) {
-      if ( 0 == kk%32 ) {
-        mask = m_data.data[ptMask++].i;
-      }
-      if ( mask & 1 ) {
-        if ( m_tagNumber == kk ) {
-          notFound = false;
-          value = m_data.data[m_ptData].f;
-        }
-        m_ptData++;
-      }
-      mask = mask>>1;
-    }
-  }
-  return true;
-}
-//=========================================================================
-// Get the tags for the specified version.
-//=========================================================================
-bool TrendingTool::tags( std::vector<std::string>& tags, int version ) {
-
-  if ( NULL == m_file ) {
-    error() << "tags: file not opened!" << endmsg;
-    return false;
-  }
-  if ( loadTags( version ) ) {
-    tags = m_tags;
-    return true;
-  }
-  return false;
-}
-//=========================================================================
 //  Read the latest tags..
 //=========================================================================
-bool TrendingTool::loadTags( int wantedVersion ) {
+bool TrendWriter::loadTags( int wantedVersion ) {
 
   if ( NULL == m_file ) {
-    error() << "loadTags: file not opened!" << endmsg;
+    std::cout << "TrendWriter::loadTags: file not opened!" << std::endl;
     return false;
   }
   long nextTagAddress = 0;
@@ -643,12 +527,10 @@ bool TrendingTool::loadTags( int wantedVersion ) {
     fseek( m_file, nextTagAddress, SEEK_SET );
     int nRead = fread( &m_tagHeader, 1, sizeof( Header ), m_file );
     if ( sizeof( Header ) != nRead ) {
-      error() << "openWrite: Error reading the header of the tag block: read " << nRead << " bytes" << endmsg;
+      std::cout << "TrendWriter::openWrite: Error reading the header of the tag block: read " << nRead << " bytes" << std::endl;
       return false;
     }
     m_tagAddressInFile = ftell( m_file ) - sizeof( Header );
-    verbose() << "openWrite: tag header: size " << m_tagHeader.size << " type " << m_tagHeader.type
-              << " version " << m_tagHeader.version << " next " << m_tagHeader.nextAddress << endmsg;
     nextTagAddress = m_tagHeader.nextAddress;
     if ( 0 == nextTagAddress ) break;
   }
@@ -657,7 +539,7 @@ bool TrendingTool::loadTags( int wantedVersion ) {
   char* temp = (char*)malloc( nToRead );
   int nn = fread( temp, 1, nToRead, m_file );
   if ( nn != nToRead ) {
-    error() << "openWrite: reading tags, need " << nToRead << " bytes, received " << nn << endmsg;
+    std::cout << "TrendWriter::openWrite: reading tags, need " << nToRead << " bytes, received " << nn << std::endl;
     free( temp );
     return false;
   }
@@ -677,15 +559,11 @@ bool TrendingTool::loadTags( int wantedVersion ) {
     m_tags.push_back( tag );
     m_thresholds.push_back( 0. );
     m_lastData.push_back( 0. );
-    verbose() << "loadTags: loaded tag " << tag << " n byte left = " << nn << endmsg;
   }
   m_nbTag = m_tags.size();
   m_nbMask = (m_nbTag/32) + 1;
 
   free( temp );  // release memory...
-
-  debug() << "loadTags: Found " << m_tags.size()
-          << " tags for version " << m_tagHeader.version << endmsg;
 
   return true;
 }
@@ -694,8 +572,7 @@ bool TrendingTool::loadTags( int wantedVersion ) {
 //  Get the next data block with adjusted pointers. false if no more data
 //  Directory record should be OK... Internal function.
 //=========================================================================
-bool TrendingTool::nextDataBlock ( ) {
-  verbose() << "nextDataBlock: ptDir " << m_ptDir << " nbEntries " << m_dir.nbEntries << endmsg;
+bool TrendWriter::nextDataBlock ( ) {
 
   if ( m_ptDir == m_dir.nbEntries - 1 ) {
     if ( 0 == m_dir.nextAddress ) return false;  // no more data
@@ -703,7 +580,6 @@ bool TrendingTool::nextDataBlock ( ) {
     fseek( m_file, m_dirAddressInFile, SEEK_SET );
     fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
     m_ptDir = 0;
-    verbose() << "nextDataBlock: read dir block at " << m_dirAddressInFile << " nbEntries " << m_dir.nbEntries << endmsg;
   } else {
     m_ptDir++;
   }
@@ -716,22 +592,10 @@ bool TrendingTool::nextDataBlock ( ) {
   if ( 0 == m_data.data[0].i ) return false;
   return true;
 }
-
-//=========================================================================
-//  Convert the time int to a printable string.
-//=========================================================================
-std::string TrendingTool::timeString ( int time ) {
-  std::string fmt = "%Y-%m-%d %H:%M:%S";
-  char result[40];
-  time_t tmp(time);
-  strftime( result, 40, fmt.c_str(), localtime( &tmp ) );
-  return std::string( result );
-}
-
 //=========================================================================
 // Create an empty directory record. Tag the first entry...
 //=========================================================================
-void TrendingTool::createDirectoryRecord ( DirectoryRecord* dir, int now ) {
+void TrendWriter::createDirectoryRecord ( DirectoryRecord* dir, int now ) {
   dir->size        = sizeof( DirectoryRecord );
   dir->type        = TYPE_DIR;
   dir->version     = m_tagHeader.version;
@@ -744,13 +608,12 @@ void TrendingTool::createDirectoryRecord ( DirectoryRecord* dir, int now ) {
     dir->entry[kk].fileOffset = 0;
   }
   fwrite( dir, sizeof(DirectoryRecord), 1, m_file );
-  debug() << "write: Create directory block at address " << m_dirAddressInFile << endmsg;
 }
 
 //=========================================================================
 //  Find the proper directory and data block containing a given time.
 //=========================================================================
-bool TrendingTool::getDataContaining ( int time ) {
+bool TrendWriter::getDataContaining ( int time ) {
   //== Is it before the first entry in the current directory?
   if ( time < m_dir.entry[0].firstTime ) {
     if ( m_dirAddressInFile != m_firstDirAddress ) {
@@ -764,7 +627,6 @@ bool TrendingTool::getDataContaining ( int time ) {
 
   while ( 0 !=   m_dir.entry[m_ptDir+1].firstTime &&
           time > m_dir.entry[m_ptDir+1].firstTime    ) {
-    debug() << "getDataContaining: m_ptDir " << m_ptDir << " time(ptdir+1) " <<  m_dir.entry[m_ptDir+1].firstTime << endmsg;
     if ( m_ptDir == m_dir.nbEntries-1 ) {
       if ( 0 == m_dir.nextAddress ) return false;  // no more data
       m_dirAddressInFile = m_dir.nextAddress;
@@ -783,11 +645,10 @@ bool TrendingTool::getDataContaining ( int time ) {
   m_ptData = 0;
   return true;
 }
-
 //=========================================================================
 //  Unpack an event in the data block. return the time of the event
 //=========================================================================
-int TrendingTool::unpackAnEvent ( ) {
+int TrendWriter::unpackAnEvent ( ) {
   int time = m_data.data[m_ptData++].i;
   int ptMask = m_ptData;
   m_ptData  += m_nbMask;
@@ -802,3 +663,5 @@ int TrendingTool::unpackAnEvent ( ) {
   return time;
 }
 //=============================================================================
+
+#endif // TRENDWRITER_H
