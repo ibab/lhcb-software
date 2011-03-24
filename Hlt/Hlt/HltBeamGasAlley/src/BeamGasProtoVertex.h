@@ -22,7 +22,10 @@ class BeamGasProtoVertex : public HltAlgorithm {
   typedef std::vector<Gaudi::XYZPoint> Vector3DPoints;
   void    getMeanAndSigma(const VectorD& zValues, double& sMean, double& sSigma) const;
   double  sigmaBad(double z) const;
-  bool    passZCuts(double z) const;
+  //### function to apply the zMin, zMax and lumi-region exclusion cuts
+  bool    passZCuts(double z) const {
+    return ((z > m_zTrMin && z < m_zTrMax) && (z < m_zTrExclLRLow || z > m_zTrExclLRUp)) ;
+  }
   VectorD get1DVector(const Vector3DPoints& p, int coord) const;
   bool    findProtoVertex(const VectorD& aVector);
   void    printVector(const VectorD& aVector, const std::string& aText) const;

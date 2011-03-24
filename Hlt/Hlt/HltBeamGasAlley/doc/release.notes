@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 ! 2011-02-11 Gerhard Raven
  - add a few const to make it easier to understand what is going on...
+ - write findProtoVertex using iterators instead of indices
 
 !========================== HltBeamGasAlley v2r5   2012-03-02 =================
 ! 2011-03-02 Plamen Hopchev

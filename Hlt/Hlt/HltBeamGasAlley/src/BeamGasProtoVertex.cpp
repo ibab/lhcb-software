@@ -119,141 +119,141 @@ double BeamGasProtoVertex::sigmaBad(double z) const {
   return (z < 250) ? (-1*m_sigmaBadSlope*z + m_sigmaBadConst1) : (m_sigmaBadSlope*z + m_sigmaBadConst2) ;
 }
 
-//### function to apply the zMin, zMax and lumi-region exclusion cuts
-bool BeamGasProtoVertex::passZCuts(double z) const {
-  return ((z > m_zTrMin && z < m_zTrMax) && (z < m_zTrExclLRLow || z > m_zTrExclLRUp)) ? true : false ;
-}
 
 void BeamGasProtoVertex::printVector(const VectorD& vectZ, const std::string& theText) const {
-  std::cout << theText << "\nVector Size = " << vectZ.size() << "  Contents:" << std::endl;
-  for(unsigned i=0; i<vectZ.size(); ++i) std::cout << "   " << vectZ[i] << std::endl;
-  return;
+  debug() << theText << "\nVector Size = " << vectZ.size() << "  Contents:" << "\n";
+  for(unsigned i=0; i<vectZ.size(); ++i) debug() << "   " << vectZ[i] << "\n"; 
+  debug() << endmsg;
 }
 
 //### function to look for a proto vertex
 bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
 
   //Init
-  unsigned indStartMS = 0;
-  unsigned indEndMS   = indStartMS + m_stepSize1;
-  unsigned nTracks    = zValues.size();
+  VectorD::const_iterator indStartMS = zValues.begin();
+  assert(m_stepSize1>0);
+  VectorD::const_iterator indEndMS = indStartMS + m_stepSize1;
   VectorD  vect_sample;
-  double   mean_sample  = -9999.;
-  double   sigma_sample = -9999.;
   vect_sample.reserve(m_minNumTracks+m_stepSize1);
   bool boolDecision = false;
 
   //----------------------------------------------------------
   // Loop "Main Step" on listZ until no more steps can be made
   //----------------------------------------------------------
-  while (indStartMS + m_minNumTracks <= nTracks) { // minNumTracks or minTracksToaccept !!! #2
+  int iloop = 0;
+  while (indStartMS + m_minNumTracks <= zValues.end()) { // minNumTracks or minTracksToaccept !!! #2  Note: <= should be < I think...
+      ++iloop; 
+      debug() << " loop # " << iloop << endmsg;
+      assert(indStartMS<zValues.end());
+      assert(indEndMS<=zValues.end());
 
-    vect_sample.assign( zValues.begin()+indStartMS, zValues.begin()+indEndMS);
+    vect_sample.assign( indStartMS, indEndMS);
     if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** Main Step ***");
 
+    assert(!vect_sample.empty());
+    double   mean_sample  = -9999.;
+    double   sigma_sample = -9999.;
     getMeanAndSigma(vect_sample, mean_sample, sigma_sample);
     debug() << "Mean And Sigma: " << mean_sample << " / " << sigma_sample << endmsg;
 
     double SIGMA_BAD = sigmaBad(mean_sample);
     debug() << "###SigmaBad is " << SIGMA_BAD << endmsg;
 
-    if (sigma_sample > SIGMA_BAD) {
+    if (sigma_sample > SIGMA_BAD || sigma_sample < -9998.) {
       debug() << "Sigma is too big. Starting new Main Step ..." << endmsg;
       indStartMS += m_stepSize1;
       indEndMS    = indStartMS + m_stepSize1;
+      continue;
     }    
-    else {
-      //----------------------------------------------------------
-      // ### LOOP to look for extension in the FWD direction
-      //----------------------------------------------------------
-      debug() << "Sigma is good. Starting to extend ..." << endmsg;
-      double sigma_MIN = sigma_sample;
-      double sigma_ext = -9999.;
-      double mean_ext  = -9999.;
-      unsigned indEndExt = 999;
-      unsigned numProtoVtxTracks = 0;
+    //----------------------------------------------------------
+    // ### LOOP to look for extension in the FWD direction
+    //----------------------------------------------------------
+    debug() << "Sigma is good. Starting to extend ..." << endmsg;
+    double sigma_MIN = sigma_sample;
+    double sigma_ext = -9999.;
+    double mean_ext  = -9999.;
+    VectorD::const_iterator indEndExt = zValues.end();
+    unsigned numProtoVtxTracks = 0;
 
-      for (unsigned iExtend=1; iExtend<m_maxNumExtends; ++iExtend){
-        bool AccOK = false;
-        debug() << "====== Extend FWD iteration "<< iExtend << " ======" << endmsg;
-        indEndExt = indEndMS + iExtend*m_stepSize2;
-        debug() << "indEndExt = " << indEndExt << endmsg;
-        if (indEndExt >= nTracks - 1) { 
-          debug() << "Reached Last Element - Breaking FWD Extension Loop ...\nMoving starting index one S2 back" << endmsg;
-          indEndExt -= m_stepSize2;
-          break;
-        }
-        // now that we are sure that there are enough elements 
-        // append m_stepSize2 values to the sample vector
-        for (unsigned iAdd=0; iAdd<m_stepSize2; ++iAdd) { 
-          vect_sample.push_back( *(zValues.begin()+indEndMS+iAdd) );
-        }
-        if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** After Extension ***");
+      assert(indStartMS<zValues.end());
+      assert(indEndMS<=zValues.end());
 
-        numProtoVtxTracks = vect_sample.size();
-        getMeanAndSigma(vect_sample, mean_ext, sigma_ext);
-        debug() << "Extension Mean And Sigma: " << mean_ext << " / " << sigma_ext << endmsg;
+    for (unsigned iExtend=1; iExtend<m_maxNumExtends; ++iExtend){
+      bool AccOK = false;
+      debug() << "====== Extend FWD iteration "<< iExtend << " ======" << endmsg;
+      indEndExt = indEndMS + iExtend*m_stepSize2;
+      debug() << "indEndExt = " << indEndExt-zValues.begin() << endmsg;
+      if (indEndExt+1 >= zValues.end() ) {  // why the +1 ??
+        debug() << "Reached Last Element - Breaking FWD Extension Loop ...\nMoving starting index one S2 back" << endmsg;
+        indEndExt -= m_stepSize2;
+        break;
+      }
+      // now that we are sure that there are enough elements 
+      // append m_stepSize2 values to the sample vector
+      assert( indEndMS >= zValues.begin() );
+      assert( indEndMS+m_stepSize2 <= zValues.end() );
+      vect_sample.insert(vect_sample.end(),  indEndMS, indEndMS+m_stepSize2) ;
+      if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** After Extension ***");
+
+      numProtoVtxTracks = vect_sample.size();
+      getMeanAndSigma(vect_sample, mean_ext, sigma_ext);
+      debug() << "Extension Mean And Sigma: " << mean_ext << " / " << sigma_ext << endmsg;
   
-        if (sigma_ext < sigma_MIN) {
-          debug() << "Setting New sigma_MIN" << endmsg;
-          sigma_MIN = sigma_ext;
-          AccOK = true;
+      if (sigma_ext < sigma_MIN) {
+        debug() << "Setting New sigma_MIN" << endmsg;
+        sigma_MIN = sigma_ext;
+        AccOK = true;
+      } else if (sigma_ext < (sigma_MIN + m_degradationFactor*SIGMA_BAD)) {
+        debug() << "Ext. degrades sigma, but within " << m_degradationFactor*SIGMA_BAD << endmsg;
+        AccOK = true;
+      } else {    
+        debug() << "New sigma not good. Breaking FWD Extenstion Search \nMoving starting index one S2 back" << endmsg;
+        indEndExt -= m_stepSize2;
+        break;
+      }
+
+      //----------------------------------------------------------
+      // Condition to Accept the Event
+      //----------------------------------------------------------
+      debug() << "Currently #tracks in the proto vertex = " << numProtoVtxTracks << endmsg;
+      if (numProtoVtxTracks > m_minTracksToAccept && AccOK) {
+        debug() << "\n\nEVENT ACCEPTED" << endmsg;
+        debug() << "Track Indices of found Peak (first/last) : " << indStartMS-zValues.begin() <<  " / " << indEndExt-zValues.begin() << endmsg;
+        debug() << "Their z positions (1): " << *indStartMS <<  " / " << *indEndExt << endmsg;
+        debug() << "Their z positions (2): " << vect_sample[0] <<  " / " << vect_sample[vect_sample.size()-1] << endmsg;
+
+        // Fill the output_selection. Write down the tracks of the selected z-sample
+        double zSelFirst = vect_sample[0];
+        double zSelLast  = vect_sample[vect_sample.size()-1];
+        double zSelMin =  9999.;
+        double zSelMax = -9999.;
+        // need the following, to handle both the increasing and decreasing sorting
+        if (zSelFirst < zSelLast) { zSelMin = zSelFirst - 1.; zSelMax = zSelLast  + 1.; }
+        else                      { zSelMin = zSelLast  - 1.; zSelMax = zSelFirst + 1.; }
+        const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
+        for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
+            if ((*itT)->hasStateAt(LHCb::State::ClosestToBeam)) {
+                double zOfTrack = (*itT)->stateAt(LHCb::State::ClosestToBeam)->z();
+                if (zOfTrack > zSelMin && zOfTrack < zSelMax) m_trackSelection.output()->push_back( *itT );
+            }
         }
-        else if (sigma_ext < (sigma_MIN + m_degradationFactor*SIGMA_BAD)) {
-          debug() << "Ext. degrades sigma, but within " << m_degradationFactor*SIGMA_BAD << endmsg;
-          AccOK = true;
-        }
-        else {    
-          debug() << "New sigma not good. Breaking FWD Extenstion Search \nMoving starting index one S2 back" << endmsg;
-          indEndExt -= m_stepSize2;
-          break;
-        }
+        debug() << "Filled outputSelection. Size = " << m_trackSelection.output()->size() << endmsg;
+        debug() << "Z Sel Min and Max = " << zSelMin << " / " << zSelMax << endmsg;
 
-        //----------------------------------------------------------
-        // Condition to Accept the Event
-        //----------------------------------------------------------
-        debug() << "Currently #tracks in the proto vertex = " << numProtoVtxTracks << endmsg;
-        if (numProtoVtxTracks > m_minTracksToAccept && AccOK) {
-          debug() << "\n\nEVENT ACCEPTED" << endmsg;
-          debug() << "Track Indeces of found Peak (fisrt/last) : " << indStartMS <<  " / " << indEndExt << endmsg;
-          debug() << "Their z positions (1): " << zValues[indStartMS] <<  " / " << zValues[indEndExt] << endmsg;
-          debug() << "Their z positions (2): " << vect_sample[0] <<  " / " << vect_sample[vect_sample.size()-1] << endmsg;
+        //In order to stop the Main Steps Loop:
+        indEndExt = zValues.end();
+        break; //to skip next extension steps
+      }
 
-	  // Fill the output_selection. Write down the tracks of the selected z-sample
-	  double zSelFirst = vect_sample[0];
-	  double zSelLast  = vect_sample[vect_sample.size()-1];
-	  double zSelMin =  9999.;
-	  double zSelMax = -9999.;
-	  // need the following, to handle both the increasing and decreasing sorting
-	  if (zSelFirst < zSelLast) { zSelMin = zSelFirst - 1.; zSelMax = zSelLast  + 1.; }
-	  else                      { zSelMin = zSelLast  - 1.; zSelMax = zSelFirst + 1.; }
-	  const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
-	  double zOfTrack = -9999.;
-	  for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
-	    if ((*itT)->hasStateAt(LHCb::State::ClosestToBeam)) {
-	      zOfTrack = (*itT)->stateAt(LHCb::State::ClosestToBeam)->z();
-	      if (zOfTrack > zSelMin && zOfTrack < zSelMax) {
-		m_trackSelection.output()->push_back( *itT );
-	      }
-	    }
-	  }
-	  debug() << "Filled outputSelection. Size = " << m_trackSelection.output()->size() << endmsg;
-	  debug() << "Z Sel Min and Max = " << zSelMin << " / " << zSelMax << endmsg;
+    }//END for loop (trying extensions)
 
-          //In order to stop the Main Steps Loop:
-          indEndExt = 998;
-          break; //to skip next extension steps
-        }
+    // After the Extension loop is over set the starting point up to where we reached after the extensions
+    assert(indEndExt>indStartMS); // make sure we go forward and don't hang around forever...
+    indStartMS = indEndExt;
+    indEndMS   = indStartMS + m_stepSize1;
+    debug() << "\nExtension Loop is over. sigma_min / sigma_last = " << sigma_MIN << " / " << sigma_ext << endmsg;
+    debug() << "Index starting position = " << indStartMS-zValues.begin() << " with Last Possible Ind = " << zValues.size()-1 << "\n\n" << endmsg;
 
-      }//END for loop (trying extensions)
-
-      // After the Extension loop is over set the starting point up to where we reached after the extensions
-      indStartMS = indEndExt;
-      indEndMS   = indStartMS + m_stepSize1;
-      debug() << "\nExtension Loop is over. sigma_min / sigma_last = " << sigma_MIN << " / " << sigma_ext << endmsg;
-      debug() << "Index starting position = " << indStartMS << " with Last Possible Ind = " << nTracks-1 << "\n\n" << endmsg;
-
-    }//END else (case when sigma_s1 is good)
 
   }//END while loop
 
@@ -279,9 +279,7 @@ StatusCode BeamGasProtoVertex::execute() {
   for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
     if ((*itT)->hasStateAt(LHCb::State::ClosestToBeam)) {
       const LHCb::State* firstState = (*itT)->stateAt(LHCb::State::ClosestToBeam);
-      if ( passZCuts(firstState->z()) ) {
-	vect3DPos.push_back( firstState->position() );
-      }
+      if ( passZCuts(firstState->z()) ) vect3DPos.push_back( firstState->position() );
     }
   }
 
