@@ -114,6 +114,14 @@ COUNTER   = LoKi.TES.Counter
 ## @see LoKi::Cuts::STAT
 STAT      = LoKi.TES.Stat 
 
+# RecSummary for Sophie Redford & Andy Powell
+
+## @see LoKi::Cuts::HASRECSUMMARY
+HASRECSUMMARY = LoKi.TES.HasRecSummary
+## @see LoKi::Cuts::RECSUMMARY
+RECSUMMARY    = LoKi.TES.RecSummary
+
+
 ## @see LoKi::Cuts::CHECK
 CHECK     = LoKi.Status.Check
 ## @see LoKi::Cuts::ACCEPT 
