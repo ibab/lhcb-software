@@ -57,10 +57,10 @@ def copyStat(src, dst, symlinks=True):
 
 def copyTree(src, dst, symlinks=False, ignore=None):
     """Recursively copy a directory tree using copy2().
-    """    
+    """
     if src[-1] != os.sep:
         src = src + os.sep
-    
+
     errors = []
     if not os.path.exists(dst) :
         os.makedirs(dst)
@@ -105,10 +105,10 @@ def copyTree(src, dst, symlinks=False, ignore=None):
             dirs.remove(d)
 
 def getEmpyFiles(topdir, filterfunc=None, extlist=None):
-    """ 
+    """
     generator function that looks for empty files The filter takes has argument
     the full file name path.
-    @param filterfunc: function that returns True or False. it takes one 
+    @param filterfunc: function that returns True or False. it takes one
     argument which is the full file name path.
     @param extlist: list of files extension to check for
     @return: yields empty files
@@ -134,20 +134,20 @@ def getEmpyFiles(topdir, filterfunc=None, extlist=None):
                         yield fn
 
 def checkEmptyFiles(topdir, filterfunc=None, extlist=None):
-    """ 
+    """
     Checks for empty files. The filter takes has argument
     the full file name path.
-    @param filterfunc: function that returns True or False. it takes one 
+    @param filterfunc: function that returns True or False. it takes one
     argument which is the full file name path.
     @param extlist: list of files extension to check for
-    @return: True if there was no empty file found, otherwise false. 
+    @return: True if there was no empty file found, otherwise false.
     """
     log = logging.getLogger()
     good = True
     for f in getEmpyFiles(topdir, filterfunc, extlist) :
         log.warning("%s is null sized" % f)
         good = False
-                
+
     return good
 
 
@@ -180,7 +180,7 @@ def createMD5File(fname, md5fname, targetname=None):
     """ create a md5 sum file from fname
     @param fname: initial file name to be processed
     @param md5fname: name of the create md5 sum file
-    @param targetname: name of the file to appear in the md5 sum file  
+    @param targetname: name of the file to appear in the md5 sum file
     """
     md5sum = computeMD5Sum(fname)
     if not targetname :
@@ -189,7 +189,7 @@ def createMD5File(fname, md5fname, targetname=None):
     locked_file = AFSLockFile(md5fname, "w", force=False)
     locked_file.write("%s  %s" % (md5sum, targetname))
     locked_file.close()
-    
+
 
 #    lock = AFSLock(md5fname)
 #    lock.lock(force=False)
@@ -204,7 +204,7 @@ def createMD5File(fname, md5fname, targetname=None):
 
 def getMD5Info(md5fname):
     """ return the internal information of a md5 file
-    @param md5fname: the md5 sum file  
+    @param md5fname: the md5 sum file
     @return: the md5 sum and the internal name of the summed up file
     """
     refmd5sum = None
@@ -227,38 +227,39 @@ def checkMD5File(md5fname, fname=None):
     @param md5fname: file containing the checksum and the filename
     @param fname: optional override of the file name in the md5 sum file
     @param checkfilename: if the fname is passed check that the internal name
-    is equal to it 
+    is equal to it
     """
     refmd5sum, iname = getMD5Info(md5fname)
     if not fname:
         fname = iname
     if not os.path.exists(fname) :
         fname = os.path.join(os.path.dirname(md5fname), fname)
-        
+
     return checkMD5Sum(fname, refmd5sum)
-    
+
 def checkMD5Info(md5fname, target_name):
     """ check the md5 file informations. It checks the md5sum and the target
     name as well
     @param md5fname: the md5 sum file to be checked
-    @param target_name: the internal target name  
+    @param target_name: the internal target name
     """
     iname = getMD5Info(md5fname)[1]
     return (checkMD5File(md5fname) and (target_name == iname))
 
 
-def genTemplateFile(tmpl_file, string_dict, output_file):
-    """ generate a file from a template using a dictionary of strings """
+def genTemplate(tmpl_file, string_dict):
     ft = open(tmpl_file)
     txt = ft.read()
     ft.close()
-    
+    return txt % string_dict
+
+def genTemplateFile(tmpl_file, string_dict, output_file):
+    """ generate a file from a template using a dictionary of strings """
     fo = open(output_file, "w")
-    fo.write(txt % string_dict)
+    fo.write(genTemplate(tmpl_file, string_dict))
     fo.close()
-    
-    
-    
-    
-    
-    
+
+
+
+
+

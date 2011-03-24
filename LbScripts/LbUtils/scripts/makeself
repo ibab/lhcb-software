@@ -1,0 +1,113 @@
+#!/usr/bin/env python
+# $Id$
+"""
+Script to create self-extracting scripts\n\n
+
+"""
+
+from LbUtils.Script import Script
+from LbUtils.SelfExtract import createSelfExtractFile, default_template, supported_compression
+
+import logging
+import os
+import sys
+
+class makeSelfScript(Script):
+    _version = "$Id"
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(compression_type="gzip")
+        parser.add_option("--compression-type",
+                          action="store",
+                          dest="compression_type",
+                          choices=supported_compression,
+                          help="select the compression type [default %default]")
+        for c in supported_compression :
+            parser.add_option("--%s" % c ,
+                              action="store_const",
+                              dest="compression_type",
+                              const=c,
+                              help="use %s tar" % c)
+        parser.add_option("--no-compression",
+                          action="store_const",
+                          dest="compression_type",
+                          const="plain",
+                          help="use no compression (plain)")
+
+        parser.set_defaults(target_dir=None)
+        parser.add_option("-t", "--target-dir",
+                          action="store",
+                          dest="target_dir",
+                          help="final destination for the extraction")
+
+        parser.set_defaults(use_temp_dir=True)
+        parser.add_option("--no-tmp",
+                          action="store_false",
+                          dest="use_temp_dir",
+                          help="Prevent the usage of a temporary directory")
+
+        parser.set_defaults(template=default_template)
+        parser.add_option("--template",
+                          action="store",
+                          dest="template",
+                          help="template to be used [default %default]")
+
+        parser.set_defaults(use_md5_check=True)
+        parser.add_option("--no-md5",
+                          action="store_false",
+                          dest="use_md5_check",
+                          help="Prevent the usage of the MD5 sum check")
+
+        parser.set_defaults(use_sha1_check=True)
+        parser.add_option("--no-sha1",
+                          action="store_false",
+                          dest="use_sha1_check",
+                          help="Prevent the usage of the SHA1 sum check")
+
+
+
+    def main(self):
+        log = logging.getLogger()
+        opts = self.options
+        args = self.args
+
+        if len(args)< 3:
+            log.fatal("No enough arguments")
+            return 1
+
+        input_dir = args.pop(0)
+        target_filename = args.pop(0)
+        description = args.pop(0)
+
+        script = None
+        if len(args) :
+            script = args.pop(0)
+
+        script_args = None
+        if len(args) :
+            script_args = " ".join(args)
+
+        status = createSelfExtractFile(input_dir, target_filename, description, script, script_args,
+                                       opts.compression_type, opts.target_dir, opts.use_temp_dir,
+                                       opts.template)
+
+
+        return status
+
+
+if __name__ == '__main__':
+    usage = """%prog [options] input_dir target_filename description [script [args]]
+
+input_dir        : directory to be tarred and compressed
+target_filename  : name of the final output file.
+description      : description of the self-extracting file
+script           : relative path to the script to be run
+args             : arguments to the script to be run
+"""
+
+    s = makeSelfScript(usage=usage)
+    rc = s.run()
+    sys.exit(rc)
+
+

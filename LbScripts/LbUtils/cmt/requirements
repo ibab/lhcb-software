@@ -5,7 +5,7 @@ use LbScriptsPolicy v*
 
 # apply_pattern python_alias script=showCMTProjects
 apply_pattern python_alias script=fixWinCVSRoot
-apply_pattern python_alias script=makeSelfExtractScript
+apply_pattern python_alias script=makeself
 apply_pattern python_alias script=lockdo
 apply_pattern python_alias script=fixDoxygenLinks
 apply_pattern python_alias script=runpy
