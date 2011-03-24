@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-24
+ - Removed unneeded precale factors for StrippingB2D3H.py lines, to be consistent with modifications to that line
+
 ! 2011-03-24 - Thomas Blake
  - Update to configuration dictionaries. Replaced B2twobody copying with an explicit dictionary for B2threebody
 
