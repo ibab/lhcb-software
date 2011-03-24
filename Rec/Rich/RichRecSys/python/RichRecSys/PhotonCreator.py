@@ -134,10 +134,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # Photon Predictor cuts
             # ================================================================
             # No # sigma cut 
-            creator.Predictor.NSigma         = [  30,    25,     25    ]
+            creator.Predictor.NSigma         = [  30,    35,     25    ]
             # Min and max search window for track centre - hit seperation
             creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
-            creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
+            creator.Predictor.MaxTrackROI    = [  540,   90,    165   ]
             # ================================================================
 
             # ================================================================
@@ -147,7 +147,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.MinAllowedCherenkovTheta = [ 0.200, 0.005, 0.005 ]
             creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
             # No # sigma cut
-            creator.NSigma                   = [ 20,    16,   12   ]
+            creator.NSigma                   = [ 20,    25,   12   ]
             # Any probability
             creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
             # ================================================================
