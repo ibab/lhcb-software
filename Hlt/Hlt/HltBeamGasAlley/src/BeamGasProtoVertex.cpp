@@ -220,16 +220,12 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
         debug() << "\n\nEVENT ACCEPTED" << endmsg;
         debug() << "Track Indices of found Peak (first/last) : " << indStartMS-zValues.begin() <<  " / " << indEndExt-zValues.begin() << endmsg;
         debug() << "Their z positions (1): " << *indStartMS <<  " / " << *indEndExt << endmsg;
-        debug() << "Their z positions (2): " << vect_sample[0] <<  " / " << vect_sample[vect_sample.size()-1] << endmsg;
+        debug() << "Their z positions (2): " << vect_sample.front() <<  " / " << vect_sample.back() << endmsg;
 
         // Fill the output_selection. Write down the tracks of the selected z-sample
-        double zSelFirst = vect_sample[0];
-        double zSelLast  = vect_sample[vect_sample.size()-1];
-        double zSelMin =  9999.;
-        double zSelMax = -9999.;
         // need the following, to handle both the increasing and decreasing sorting
-        if (zSelFirst < zSelLast) { zSelMin = zSelFirst - 1.; zSelMax = zSelLast  + 1.; }
-        else                      { zSelMin = zSelLast  - 1.; zSelMax = zSelFirst + 1.; }
+        double zSelMin = std::min( vect_sample.front(), vect_sample.back() ) - 1.;
+        double zSelMax = std::max( vect_sample.front(), vect_sample.back() ) + 1.;
         const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
         for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
             if ((*itT)->hasStateAt(LHCb::State::ClosestToBeam)) {
