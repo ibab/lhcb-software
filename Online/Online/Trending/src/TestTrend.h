@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Trending/ITrendingTool.h"
+#include "Trending/ISimpleTrendWriter.h"
 
 /** @class TestTrend TestTrend.h
  *  
@@ -28,6 +29,7 @@ protected:
 
 private:
   ITrendingTool* m_trend;
+  ISimpleTrendWriter* m_simple;
   int  m_event;
 };
 #endif // TESTTREND_H

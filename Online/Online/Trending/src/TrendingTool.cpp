@@ -67,16 +67,15 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
       }
     }
   }
-  if ( isBad ) return true;
+  if ( isBad ) return false;
   unsigned int maxSize = (unsigned int)(0.1 * DATA_SIZE);
   if ( maxSize < tags.size() ) {
     error() << "Requested to store " << tags.size() << " tags, maximum allowed " << maxSize << endmsg;
     return false;
   }  
 
-  char* prefix = getenv( TREND_AREA );
   std::string fileFullName =  name + ".trend";
-  if ( 0 != prefix ) fileFullName = std::string( prefix ) + fileFullName;
+  if ( name[0] != '/' ) fileFullName = TREND_AREA + name + ".trend";
 
   verbose() << "openWrite file name = " << fileFullName << endmsg;
 
@@ -493,9 +492,8 @@ bool TrendingTool::openRead( std::string name ) {
     return false;
   }
 
-  char* prefix = getenv( TREND_AREA );
   std::string fileFullName =  name + ".trend";
-  if ( 0 != prefix ) fileFullName = std::string( prefix ) + fileFullName;
+  if ( name[0] != '/' ) fileFullName = TREND_AREA + name + ".trend";
 
   verbose() << "openRead file name = " << fileFullName << endmsg;
 
@@ -800,5 +798,12 @@ int TrendingTool::unpackAnEvent ( ) {
     mask = mask>>1;
   }
   return time;
+}
+
+//=========================================================================
+// Return the version of the tags. 
+//=========================================================================
+int TrendingTool::tagVersion ( ) {
+  return m_tagHeader.version;
 }
 //=============================================================================

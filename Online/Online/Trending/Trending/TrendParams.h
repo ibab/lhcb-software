@@ -4,7 +4,7 @@
 
 #define MAX_ENTRY   1000      // number of entries in a directory record
 #define DATA_SIZE  20000      // max size in word of a data record
-#define TREND_AREA "TRENDDIR" // Area where the trend are written
+#define TREND_AREA "/hist/Trending/" // Area where the trend are written
 
 //== Structure for the tag block header
 

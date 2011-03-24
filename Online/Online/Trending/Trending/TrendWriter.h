@@ -132,9 +132,8 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, in
     return false;
   }  
 
-  char* prefix = getenv( TREND_AREA );
   std::string fileFullName =  name + ".trend";
-  if ( 0 != prefix ) fileFullName = std::string( prefix ) + fileFullName;
+  if ( name[0] != '/' ) fileFullName = TREND_AREA + name + ".trend";
 
   //== Try top open an existing file, else create one.
   std::string mode = "r+";

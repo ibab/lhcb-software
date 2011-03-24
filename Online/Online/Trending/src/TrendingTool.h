@@ -47,6 +47,8 @@ public:
 
   std::string timeString( int time );
 
+  int tagVersion();
+
 private:
 
   bool loadTags ( int wantedVersion );

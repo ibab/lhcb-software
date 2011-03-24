@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-03-24 - Olivier Callot
+ - New tool SimpleTrendWriter with interface ISimpleTrendWriter for simple
+   writing, targetted for adders. 
+
+! 2011-03-24 - Olivier Callot
  - New header file TrendWriter.h to be able to write from plain C++ code, without
    the use of a Gaudi Tool. Not nice for maintenance...
  - Rested the buffer pointers on file close, so that re-opening the file will re-

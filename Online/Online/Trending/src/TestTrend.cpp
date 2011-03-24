@@ -85,7 +85,7 @@ StatusCode TestTrend::initialize() {
   tags.push_back( "Var_40" );
   tags.push_back( "Var_41" );
   
-  int status = m_trend->openWrite( "MyTrend.first", tags );
+  int status = m_trend->openWrite( "MyTrend", tags );
   info() << "openWrite returned " << status << endmsg;
   if ( !status ) return StatusCode::FAILURE;
 
@@ -97,6 +97,12 @@ StatusCode TestTrend::initialize() {
   if ( !status ) return StatusCode::FAILURE;
 
   m_event = 0;
+
+  m_simple = tool<ISimpleTrendWriter>( "SimpleTrendWriter" );
+
+  std::string partition = "LHCb";
+  std::string name = "Test";
+  m_simple->setPartitionAndName( partition, name );
   
   return StatusCode::SUCCESS;
 }
@@ -117,6 +123,17 @@ StatusCode TestTrend::execute() {
   int status = m_trend->write( data, time );
   if ( !status) return StatusCode::FAILURE;
   
+  double value = m_event;
+  
+  m_simple->startEvent();
+  m_simple->addEntry( std::string( "Variable 1"), value );
+  m_simple->addEntry( std::string( "Variable 2"), value + 1000. );
+  m_simple->addEntry( std::string( "Variable 3"), value + 2000. );
+  m_simple->addEntry( std::string( "Variable 4"), value + 3000. );
+  m_simple->addEntry( std::string( "Variable 5"), value + 4000. );
+  m_simple->addEntry( std::string( "Variable 6"), value + 5000. );
+  m_simple->saveEvent();
+
   return StatusCode::SUCCESS;
 }
 
@@ -128,8 +145,9 @@ StatusCode TestTrend::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   m_trend->closeFile();
-  
-  int status = m_trend->openRead( "MyTrend.first" );
+  m_simple->close();
+  /*  
+  int status = m_trend->openRead( "MyTrend" );
   if ( !status) return StatusCode::FAILURE;
   
   std::vector<std::string> tags;
@@ -161,6 +179,30 @@ StatusCode TestTrend::finalize() {
     info() << "At '" <<  m_trend->timeString( time ) << "' values[19] " << values[19] << " values[20] " << values[20] << endmsg;
   }
   info() << "Retrieved " << nbVal << " values for tag." << endmsg;
+  */
+
+  int status = m_trend->openRead( "LHCb_Test" );
+  if ( !status) return StatusCode::FAILURE;
+  
+  std::vector<std::string> tags;
+  status = m_trend->tags( tags );
+  if ( !status) return StatusCode::FAILURE;
+
+  info() << "=== Returned " << tags.size() << " tags" << endmsg;
+  for ( std::vector<std::string>::const_iterator itS = tags.begin(); tags.end() != itS; ++itS ) {
+    info() << "Tag " << *itS << endmsg;
+  }
+  
+  status = m_trend->select( 1200095600, 2000000000 );
+  if ( !status) return StatusCode::FAILURE;
+  int nbVal = 0;
+  int time;
+  std::vector<float> values;
+  while ( m_trend->nextEvent( time, values ) ) {
+    nbVal++;
+    info() << "At '" <<  m_trend->timeString( time ) << " nval " << values.size() 
+           << "' values[0] " << values[0] << " values[last] " << values[values.size()-1] << endmsg;
+  }
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

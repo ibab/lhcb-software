@@ -109,5 +109,10 @@ public:
    */
   virtual std::string timeString( int time ) = 0;
 
+  /**
+   * returns the version of the tags currently in use
+   */
+  virtual int tagVersion() = 0;
+
 };
 #endif // TRENDING_ITRENDINGTOOL_H
