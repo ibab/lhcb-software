@@ -13,6 +13,12 @@
 #include <cstdlib>
 #include <iostream>
 #include "GaudiKernel/Timing.h"
+// Gaudi 
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IAlgTool.h"
+#include "Reflex/PluginService.h"
 // local
 #include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
@@ -72,7 +78,12 @@ void ROFarmMonitor::initialize ( ) {
   DimBrowser dbr;
   char* service, *format;
 
+
   m_shifter = new ROShifter();
+  strcpy( m_shiftLeader, m_shifter->getShiftLeader().c_str() );
+  strcpy( m_dataManager, m_shifter->getDataManager().c_str() );
+  strcpy( m_production,  m_shifter->getProduction().c_str() );
+
   char fmt[10] = "C";
   m_dimShiftLeader = new DimService( "FarmMonitor/Shifter/ShiftLeader", fmt, m_shiftLeader, 80 );
   m_dimDataManager = new DimService( "FarmMonitor/Shifter/DataManager", fmt, m_dataManager, 80 );
@@ -162,6 +173,24 @@ void ROFarmMonitor::initialize ( ) {
       myPart->recoNodes.push_back( "mona0919" );
       myPart->recoNodes.push_back( "mona0920" );
     }
+
+    myPart->trendWriter = new TrendWriter();
+
+    std::cout << "== Open trending file == " << std::endl;
+  
+    std::vector<std::string> tags;
+    tags.push_back( "MEP rate" );
+    tags.push_back( "HLT input rate" );
+    tags.push_back( "HLT output rate" );
+    bool status = myPart->trendWriter->openWrite( "/hist/Trending/" + myPart->name + "_FarmMonitor", tags ) ;
+    if ( !status ) std::cerr << "Trend file open error" << std::endl ;
+    
+    std::vector<float> thresholds;
+    thresholds.push_back( -0.01  );   // nominal 90kHz -> error 300/90000 = 3 per mil.
+    thresholds.push_back( -0.003 );  // nominal 1MHz  -> error 1 per mil
+    thresholds.push_back( -0.05  );   // nominal 3kHz  -> error 2%
+    myPart->trendWriter->setThresholds( thresholds );
+
     m_partitions.push_back( myPart );
   }
   
@@ -178,6 +207,7 @@ void ROFarmMonitor::initialize ( ) {
   m_stateName.push_back( "ERROR" );
 
   m_lastTime = System::currentTime( System::microSec );
+
 }
 
 //=========================================================================
@@ -270,7 +300,6 @@ void ROFarmMonitor::nodeInfoHandler(void* tag, void* address, int* size) {
 void ROFarmMonitor::update( )   {
   dim_lock(); // Avoid being interrupted now...
 
-
   //== Check the shift crew
   if ( m_shifter->hasChanged() ) {
     strcpy( m_shiftLeader, m_shifter->getShiftLeader().c_str() );
@@ -282,7 +311,7 @@ void ROFarmMonitor::update( )   {
     
     std::cout << "Shift Leader: " << m_shiftLeader << std::endl;
     std::cout << "DataManager: " << m_dataManager << std::endl;
-    std::cout << "Production: " << m_dataManager << std::endl;
+    std::cout << "Production: " << m_production << std::endl;
   }
 
   longlong now = System::currentTime( System::microSec );
@@ -484,6 +513,13 @@ void ROFarmMonitor::update( )   {
                 << otherTasks.size() << " other." << std::endl;
     }
 
+    //== Fill the trend plot
+    std::vector<float> trend;
+    trend.push_back( sumHlt.mepRate() );
+    trend.push_back( sumHlt.evtRate() );
+    trend.push_back( sumHlt.accRate() );
+    (*itP)->trendWriter->write( trend );
+
     //=============================================================
     //== Update the services for nodes
     //=============================================================
@@ -664,6 +700,7 @@ void ROFarmMonitor::update( )   {
     
     
   }
+
   dim_unlock();
   
   lib_rtl_sleep(m_delay);

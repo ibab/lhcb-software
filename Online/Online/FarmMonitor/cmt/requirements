@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           FarmMonitor
-version           v2r3
+version           v2r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,9 +15,11 @@ branches          cmt doc src
 #============================================================================
 use ROMon        v* Online
 use DIM          v* Online
+use Trending     v* Online
 use GaudiKernel  v*
 use ROOT         v*  LCG_Interfaces
 use Boost        v*  LCG_Interfaces
+
 include_path     none
 #============================================================================
 # Component library building rule

@@ -4,6 +4,9 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2011-03-24 - Olivier Callot
+ - Produces a trend of the MEP, event in and event out rates.
+
 ! 2011-02-17 - Olivier Callot
  - Produce also the name of the Production shifter
 

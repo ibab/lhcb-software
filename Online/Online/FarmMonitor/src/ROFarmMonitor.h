@@ -10,6 +10,7 @@
 #include "ROShifter.h"
 #include "dim/dic.hxx"
 #include "dim/dis.hxx"
+#include "Trending/TrendWriter.h"
 
 // Forward declarations
 class Nodeset;
@@ -52,6 +53,7 @@ public:
     std::vector<RODimLineService*> moniServices;
     std::vector<RODimFsmService*>  fsmServices;
     std::vector<RONodeCounter>     prevCounters;
+    TrendWriter*                   trendWriter;
     PartitionDesc( std::string a ) {
       name        = a;
     }    

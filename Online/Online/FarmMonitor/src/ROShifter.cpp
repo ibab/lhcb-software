@@ -44,7 +44,7 @@ void ROShifter::readWebFile( ) {
   m_shifters.clear() ;
 
   boost::asio::ip::tcp::iostream 
-    web_stream( "shiftdb.lbdaq.cern.ch" , "http" ) ;
+    web_stream( "lbshiftdb.cern.ch" , "http" ) ;
 
   if ( ! web_stream ) {
     std::cerr << "Cannot open shiftdb script via the web" << std::endl ;
@@ -53,10 +53,10 @@ void ROShifter::readWebFile( ) {
   }
 
   // Send HTTP request to web server
-  web_stream << "GET /shiftdb_report.py?format=twiki&"
+  web_stream << "GET /shiftdb_report.php?format=twiki&"
 	     << "sDate=" << boost::gregorian::to_iso_string( m_lastDay ) 
 	     << " HTTP/1.0\r\n" 
-	     << "Host:shiftdb.lbdaq.cern.ch\r\n" 
+	     << "Host:lbshiftdb.cern.ch\r\n" 
 	     << "\r\n" << std::flush ;
 
   std::string line ;
@@ -64,7 +64,7 @@ void ROShifter::readWebFile( ) {
   // Check that the web server answers correctly
   std::getline( web_stream , line ) ;
   if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
-    std::cerr << "ROShifter server does not reply" << std::endl ;
+    std::cerr << "Shiftdb server does not reply" << std::endl ;
     m_open = false ;
     return ;
   }
