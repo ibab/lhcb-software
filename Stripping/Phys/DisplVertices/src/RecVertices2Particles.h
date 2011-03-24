@@ -77,7 +77,7 @@ private:
   void InitialiseGeoInfo();///< Store geometry infos
   bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);///<Point in material region in Left halfbox
   bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);///<Point in material region in Right halfbox
-
+  StatusCode UpdateBeamSpot(); ///< function to update the beam spot positions
   //Geometric tools
   double GetRFromBL( const Gaudi::XYZPoint& );
   void   GetSumPtNbGoodTrks( const LHCb::RecVertex *, double &, int & );
@@ -118,8 +118,11 @@ private:
   std::string m_RCut;         
   bool        m_FromBL;       ///< Set at initialisation acc. to m_RCut
   bool        m_FromUpPV;     ///< Set at initialisation acc. to m_RCut
+  bool        m_FromBeamSpot; ///< Set at initialisation acc. to m_RCut
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
+  double m_beamSpotX;
+  double m_beamSpotY;
   std::vector<const LHCb::RecVertex*> PVs; ///< The PV candidates
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame

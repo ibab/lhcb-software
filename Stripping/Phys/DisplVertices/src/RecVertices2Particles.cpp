@@ -16,6 +16,8 @@
 // local
 #include "RecVertices2Particles.h"
 
+#include "DaVinciUtils/Functions.h"
+
 using namespace Gaudi::Units ;
 using namespace LHCb ;
 using namespace std ;
@@ -38,6 +40,7 @@ RecVertices2Particles::RecVertices2Particles( const std::string& name,
   , pi(3.1415926)
   , m_FromBL(false)
   , m_FromUpPV(false)
+  , m_FromBeamSpot(false)
   , m_GeoInit(false)
   , m_PVnbtrks(10)
   , m_pt(400.)
@@ -99,7 +102,8 @@ StatusCode RecVertices2Particles::initialize() {
   //  m_RCut
   if( !m_RCut.empty() ){
     if( m_RCut.find("FromBeamLine") != string::npos ) m_FromBL = true;    
-    if( m_RCut.find("UpstreamPV") != string::npos ) m_FromUpPV = true; 
+    if( m_RCut.find("UpstreamPV") != string::npos ) m_FromUpPV = true;    
+    if( m_RCut.find("BeamSpot") != string::npos ) m_FromBeamSpot = true; 
   }
   
   if( context() == "Info" ){
@@ -167,6 +171,11 @@ StatusCode RecVertices2Particles::initialize() {
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   } 
 
+  if( m_RCut =="FromBeamSpot" ){
+    registerCondition("/dd/Conditions/Online/Velo/MotionSystem",&RecVertices2Particles::UpdateBeamSpot);
+    this->UpdateBeamSpot();
+  }
+
   if( !m_UsePartFromTES ){
 
     m_protoMap.push_back( ProtoPair( ppSvc()->find( "pi+" ),
@@ -233,6 +242,13 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
     if(msgLevel(MSG::DEBUG))
       debug() <<"Upstream PV position "<< UpPV->position() << endmsg;
+  }
+
+  // Set up the beam spot
+  if( m_FromBeamSpot ){
+    Gaudi::XYZPoint beamSpot( m_beamSpotX,m_beamSpotY,UpPV->position().z());
+    m_BeamLine->setReferencePoint(beamSpot );
+    m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
   }
 
   //Retrieve Reconstructed Vertices
@@ -699,6 +715,9 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
   //always()<<"A new Vertex"<<endreq;
   //Create a particle
   Particle tmpPart = Particle( m_PreyID );
+
+  std::vector<const Particle *> newParticlesPointer ;
+  
     
   if( !m_UsePartFromTES ){
     // Load the ProtoParticles
@@ -714,15 +733,14 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
 	++iVtx;
       }
       if( (*iVtx)->key() == pp->key() ){ 
-	//always()<<"Check it is same track: "<<fabs(pp->track()->p()-(*iVtx)->p())<<endreq;
-	//coutPP+=1;
 	//Make a Particle with best PID 
-	if( !TestTrack( *iVtx ) ) continue;
-	const Particle * part = MakeParticle( pp );
-	tmpVtx.addToOutgoingParticles ( part );
-	tmpPart.addToDaughters( part );
-	mom += part->momentum();
-	continue;
+        if( !TestTrack( *iVtx ) ) continue;
+        const Particle * part = MakeParticle( pp );
+        tmpVtx.addToOutgoingParticles ( part );
+        tmpPart.addToDaughters( part );
+        mom += part->momentum();
+        newParticlesPointer.push_back(part);
+        continue;
       }
     } 
     //always()<<"Ntracks per DV: "<<coutPP<<endreq;
@@ -742,26 +760,31 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
       }
 
       if( (*iVtx)->key() == tk->key() ){ 
-	if( (*iVtx)->key() != endkey ) ++iVtx; 
-	// make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
-	const LHCb::Particle* clonedPart =  (*j )->clone();
-	tmpVtx.addToOutgoingParticles ( clonedPart );
-	tmpPart.addToDaughters( clonedPart );
-	mom += clonedPart->momentum();
-	continue;
+        if( (*iVtx)->key() != endkey ) ++iVtx; 
+        // make sure it is a new pointer so that when the mother is saved on TES we only have new pointers.
+        const LHCb::Particle* clonedPart =  (*j )->clone();
+        tmpVtx.addToOutgoingParticles ( clonedPart );
+        tmpPart.addToDaughters( clonedPart );
+        mom += clonedPart->momentum();
+        newParticlesPointer.push_back(clonedPart);
+        continue;
       }
     }
   }
-
+  
   //Fill momentum and mass estimate
   tmpPart.setMomentum( mom );
   tmpPart.setMeasuredMass( mom.M() );
   tmpPart.setMeasuredMassErr( 0 );
-
+  
   if( !TestMass( tmpPart ) ){
+    for (std::vector<const Particle*>::iterator ip = newParticlesPointer.begin() ; newParticlesPointer.end()!= ip ; ip++){
+      // check that the particle is not in TES
+      if(!DaVinci::Utils::inTES(*ip))delete((*ip));
+    }
     if( msgLevel(MSG::DEBUG) )
       debug() <<"Particle did not passed the mass cut --> disguarded !"
-	      << endmsg;
+              << endmsg;
     return false; 
   }
   Gaudi::SymMatrix4x4 MomCovMatrix = 
@@ -880,3 +903,23 @@ const Particle * RecVertices2Particles::MakeParticle( const ProtoParticle * pp )
   return p.clone();
 }
 
+
+//=============================================================================
+// Update of the beam spot position
+//=============================================================================
+StatusCode RecVertices2Particles::UpdateBeamSpot()
+{
+  if (! exist<Condition>(detSvc(),"/dd/Conditions/Online/Velo/MotionSystem" )){ 
+    Warning( "Unable to locate CONDITION='/dd/Conditions/Online/Velo/MotionSystem'" ) ;
+    return StatusCode::FAILURE;
+  }
+  Condition *myCond =  get<Condition>(detSvc(),"/dd/Conditions/Online/Velo/MotionSystem" );
+  //
+  const double xRC = myCond -> paramAsDouble ( "ResolPosRC" ) ;
+  const double xLA = myCond -> paramAsDouble ( "ResolPosLA" ) ;
+  const double   Y = myCond -> paramAsDouble ( "ResolPosY"  ) ;
+  //
+  m_beamSpotX = ( xRC + xLA ) / 2;
+  m_beamSpotY = Y ;
+  return StatusCode::SUCCESS;
+}

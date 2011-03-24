@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2011-03-24 - Victor Coco
+ - Add the beamspot method using velo resolver position.
+   Fix potential memory leak when new particles are created out of clones
+
 !========================== DisplVertices v7r4 2011-03-10 ====================
 
 ! 2011-02-28 - Victor Coco
