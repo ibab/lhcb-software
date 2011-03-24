@@ -25,8 +25,8 @@ apply_pattern install_more_includes   more=LoKi
 apply_pattern install_python_modules 
  
 # ================ constituents ===============================================
-library            LoKiCoreLib     ../src/*.cpp
-library            LoKiCore        ../src/Components/*.cpp
+library            LoKiCoreLib   -import=RecEvent   ../src/*.cpp
+library            LoKiCore                         ../src/Components/*.cpp
 
 application        NodeGrammarTest  tests/NodeGrammarTest.cpp
 application        TreeGrammarTest  tests/TreeGrammarTest.cpp
@@ -49,6 +49,11 @@ macro_append       CCGrammarTest_dependencies   " LoKiCoreLib "
 apply_pattern      linker_library    library=LoKiCoreLib
 apply_pattern      component_library library=LoKiCore
 apply_pattern      QMTest
+
+# =============================================================================
+private : 
+use                RecEvent v* Event -no_auto_imports
+        
 
 # =============================================================================
 # The END 

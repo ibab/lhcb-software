@@ -18,6 +18,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-24 - Vanya Belyaev
+ - add
+     HASRECSUMMARY & RECSUMMARY symbols for Sophie Redford & Andy Powell
+
 ! 2011-03-18 - Vanya Belyaev
 
  - add protection against the double locking 

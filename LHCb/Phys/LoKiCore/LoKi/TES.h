@@ -18,7 +18,24 @@
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
 // ============================================================================
-// Forward decalations 
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
 // ============================================================================
 namespace LoKi 
 {
@@ -60,6 +77,10 @@ namespace LoKi
       /// get algorithm name 
       const std::string& algName  () const ;
       // ======================================================================
+    protected:
+      // ======================================================================
+      void setLocation ( const std::string& value ) { m_location = value ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
@@ -71,6 +92,8 @@ namespace LoKi
       std::string                     m_location ; // TES location to be tested 
       /// Use 'RootInTes' ?
       bool                            m_useRootInTes ; //     Use 'RootInTes' ?
+      // ======================================================================
+    protected:
       // ======================================================================
       /// the algorithm to be used 
       mutable LoKi::Interface<GaudiAlgorithm> m_algorithm ;  // the algorithm 
@@ -116,6 +139,10 @@ namespace LoKi
       inline bool         useRootInTes () const { return m_useRootInTes ; }
       /// get algorithm name 
       const std::string& algName  () const ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      void setLocation ( const std::string& value ) { m_location = value ; }
       // ======================================================================
     private:
       // ======================================================================
