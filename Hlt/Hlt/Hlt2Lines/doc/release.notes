@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-03-24 - Jibo He
+ - DiProton lines tuned 
+
 !========================== Hlt2Lines v8r3 2011-03-17 ===================
 ! 2011-03-18 - Gerhard Raven
  - move PV3D to the front in Hlt2CharmHadD02HHHHLines -- as it is typically

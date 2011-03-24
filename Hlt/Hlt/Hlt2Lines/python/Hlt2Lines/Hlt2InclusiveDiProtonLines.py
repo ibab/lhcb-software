@@ -17,32 +17,34 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
     
     __slots__ = { 'Prescale'           : {    'Hlt2DiProton'                   : 1.  
                                             , 'Hlt2DiProtonTF'                 : 0.005  # of 200
-                                            , 'Hlt2DiProtonTis'            : 1.  
-                                            , 'Hlt2DiProtonTisTF'          : 0.005  # of 200
+                                            , 'Hlt2DiProtonTis'                : 1.  
+                                            , 'Hlt2DiProtonTisTF'              : 0.005  # of 200
                                             , 'Hlt2DiProtonLowMult'            : 1.
                                             , 'Hlt2DiProtonLowMultTF'          : 0.005     
                                             }
                   
                   ,'Postscale'         : {    'Hlt2DiProton'                   : 1.  
                                             , 'Hlt2DiProtonTF'                 : 1.
-                                            , 'Hlt2DiProtonTis'            : 1.  
-                                            , 'Hlt2DiProtonTisTF'          : 1.                                            
+                                            , 'Hlt2DiProtonTis'                : 1.  
+                                            , 'Hlt2DiProtonTisTF'              : 1.                                            
                                             , 'Hlt2DiProtonLowMult'            : 1.
                                             , 'Hlt2DiProtonLowMultTF'          : 1.
                                             }
                   
-                  , 'SpdMult'            :   900.
-                  , 'DiProton_Hlt1Req'   :  "HLT_PASS('Hlt1DiProtonDecision')"
-                  , 'DiProton_Hlt1TIS'   :  "Hlt1.*Decision%TIS"
+                  , 'SpdMult'            :   300.                                 # w/  dedicated Hlt1 line
+                  , 'DiProton_Hlt1Req'   :  "HLT_PASS('Hlt1DiProtonDecision')"    # w/  dedicated Hlt1 line
+                  
+                  , 'TIS_SpdMult'        :   900.                                 # w/o dedicated Hlt1 line                 
+                  , 'DiProton_Hlt1TIS'   :  "Hlt1.*Decision%TIS"                  # w/o dedicated Hlt1 line, only on Hlt1 TIS
                   # Track Fitted
                   , 'TFProtonPT'         :  1900.   # MeV
                   , 'TFProtonTrkChi2'    :     4.   
-                  , 'TFCombUpperMass'    :  4550.   # MeV, before Vtx fit
-                  , 'TFCombLowerMass'    :  2850.   # MeV, before Vtx fit
-                  , 'TFCombPT'           :  5800.   # MeV, before Vtx fit
-                  , 'TFUpperMass'        :  4500.   # MeV, after Vtx fit
-                  , 'TFLowerMass'        :  2900.   # MeV, after Vtx fit
-                  , 'TFCCbarPT'          :  6000.   # MeV, after Vtx fit 
+                  , 'TFCombUpperMass'    :  4100.   # MeV, before Vtx fit
+                  , 'TFCombLowerMass'    :  2750.   # MeV, before Vtx fit
+                  , 'TFCombPT'           :  6300.   # MeV, before Vtx fit
+                  , 'TFUpperMass'        :  4000.   # MeV, after Vtx fit
+                  , 'TFLowerMass'        :  2800.   # MeV, after Vtx fit
+                  , 'TFCCbarPT'          :  6500.   # MeV, after Vtx fit 
                   , 'TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
                   , 'TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
@@ -53,18 +55,18 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   # Track Fitted
                   , 'LowMult_TFProtonPT'         :   500.   # MeV
                   , 'LowMult_TFProtonTrkChi2'    :     5.   
-                  , 'LowMult_TFCombLowerMass'    :  2850.   # MeV, before Vtx fit
-                  , 'LowMult_TFLowerMass'        :  2900.   # MeV, after Vtx fit
+                  , 'LowMult_TFCombLowerMass'    :  2750.   # MeV, before Vtx fit
+                  , 'LowMult_TFLowerMass'        :  2800.   # MeV, after Vtx fit
                   , 'LowMult_TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
-                  , 'LowMult_TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
-                  , 'LowMult_TFRichProtonPIDpK'    :   5.   # CombDLL(p-K)                
+                  , 'LowMult_TFRichProtonPIDppi'   :   5.   # CombDLL(p-pi)
+                  , 'LowMult_TFRichProtonPIDpK'    :   0.   # CombDLL(p-K)                
                   
                   
                   , 'HltANNSvcID'      : {  'DiProton'                   : 51000
                                            ,'DiProtonTF'                 : 51001
-                                           ,'DiProtonTis'            : 51002
-                                           ,'DiProtonTisTF'          : 51003
+                                           ,'DiProtonTis'                : 51002
+                                           ,'DiProtonTisTF'              : 51003
                                            ,'DiProtonLowMult'            : 51004
                                            ,'DiProtonLowMultTF'          : 51005
                                             }
@@ -345,7 +347,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         line = Hlt2Line('DiProtonTis'
                         , prescale = self.prescale
-                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(TIS_SpdMult)s )" % self.getProps()
                         , algos = [ Hlt1TISProtonsForDiProton
                                     , TFCombine
                                     , Hlt1TISRichProtonsForDiProton
@@ -359,7 +361,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         line = Hlt2Line('DiProtonTisTF'
                         , prescale = self.prescale
-                        , L0DU = "(L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps()
+                        , L0DU = "(L0_DATA('Spd(Mult)') < %(TIS_SpdMult)s )" % self.getProps()
                         , algos = [ Hlt1TISProtonsForDiProton
                                     , TFCombine
                                     ]
