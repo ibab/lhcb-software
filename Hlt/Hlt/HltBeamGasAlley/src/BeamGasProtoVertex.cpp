@@ -132,7 +132,6 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
   //Init
   VectorD::const_iterator indStartMS = zValues.begin();
   assert(m_stepSize1>0);
-  VectorD::const_iterator indEndMS = indStartMS + m_stepSize1;
   VectorD  vect_sample;
   vect_sample.reserve(m_minNumTracks+m_stepSize1);
   bool boolDecision = false;
@@ -142,12 +141,12 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
   //----------------------------------------------------------
   int iloop = 0;
   while (indStartMS + m_minNumTracks <= zValues.end()) { // minNumTracks or minTracksToaccept !!! #2  Note: <= should be < I think...
-      ++iloop; 
-      debug() << " loop # " << iloop << endmsg;
-      assert(indStartMS<zValues.end());
-      assert(indEndMS<=zValues.end());
+    ++iloop; 
+    debug() << " loop # " << iloop << endmsg;
+    assert(indStartMS>=zValues.begin());
+    assert(indStartMS+m_stepSize1<=zValues.end());
 
-    vect_sample.assign( indStartMS, indEndMS);
+    vect_sample.assign( indStartMS, indStartMS+m_stepSize1);
     if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** Main Step ***");
 
     assert(!vect_sample.empty());
@@ -162,7 +161,6 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
     if (sigma_sample > SIGMA_BAD || sigma_sample < -9998.) {
       debug() << "Sigma is too big. Starting new Main Step ..." << endmsg;
       indStartMS += m_stepSize1;
-      indEndMS    = indStartMS + m_stepSize1;
       continue;
     }    
     //----------------------------------------------------------
@@ -175,13 +173,13 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
     VectorD::const_iterator indEndExt = zValues.end();
     unsigned numProtoVtxTracks = 0;
 
-      assert(indStartMS<zValues.end());
-      assert(indEndMS<=zValues.end());
+    assert(indStartMS>=zValues.begin());
+    assert(indStartMS+m_stepSize1<=zValues.end());
 
     for (unsigned iExtend=1; iExtend<m_maxNumExtends; ++iExtend){
       bool AccOK = false;
       debug() << "====== Extend FWD iteration "<< iExtend << " ======" << endmsg;
-      indEndExt = indEndMS + iExtend*m_stepSize2;
+      indEndExt = indStartMS+m_stepSize1 + iExtend*m_stepSize2;
       debug() << "indEndExt = " << indEndExt-zValues.begin() << endmsg;
       if (indEndExt+1 >= zValues.end() ) {  // why the +1 ??
         debug() << "Reached Last Element - Breaking FWD Extension Loop ...\nMoving starting index one S2 back" << endmsg;
@@ -190,9 +188,9 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
       }
       // now that we are sure that there are enough elements 
       // append m_stepSize2 values to the sample vector
-      assert( indEndMS >= zValues.begin() );
-      assert( indEndMS+m_stepSize2 <= zValues.end() );
-      vect_sample.insert(vect_sample.end(),  indEndMS, indEndMS+m_stepSize2) ;
+      assert( indStartMS+m_stepSize1 >= zValues.begin() );
+      assert( indStartMS+m_stepSize1+m_stepSize2 <= zValues.end() );
+      vect_sample.insert(vect_sample.end(),  indStartMS+m_stepSize1, indStartMS+m_stepSize1+m_stepSize2) ;
       if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** After Extension ***");
 
       numProtoVtxTracks = vect_sample.size();
@@ -246,7 +244,6 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
     // After the Extension loop is over set the starting point up to where we reached after the extensions
     assert(indEndExt>indStartMS); // make sure we go forward and don't hang around forever...
     indStartMS = indEndExt;
-    indEndMS   = indStartMS + m_stepSize1;
     debug() << "\nExtension Loop is over. sigma_min / sigma_last = " << sigma_MIN << " / " << sigma_ext << endmsg;
     debug() << "Index starting position = " << indStartMS-zValues.begin() << " with Last Possible Ind = " << zValues.size()-1 << "\n\n" << endmsg;
 
