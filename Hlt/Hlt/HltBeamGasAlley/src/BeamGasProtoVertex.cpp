@@ -83,7 +83,7 @@ StatusCode BeamGasProtoVertex::initialize() {
 //=============================================================================
 
 //### function to get 1D vector out of a vector of XYZ points
-VectorD BeamGasProtoVertex::get1DVector(Vector3DPoints& vect3DPoints, int coord) {
+VectorD BeamGasProtoVertex::get1DVector(const Vector3DPoints& vect3DPoints, int coord) const {
   VectorD vector1D;
   vector1D.reserve( vect3DPoints.size() );
   for( Vector3DPoints::const_iterator pIter=vect3DPoints.begin(); pIter!=vect3DPoints.end(); ++pIter) {
@@ -95,7 +95,7 @@ VectorD BeamGasProtoVertex::get1DVector(Vector3DPoints& vect3DPoints, int coord)
 }
 
 //### function to calculate the mean and sigma of list of z values
-void BeamGasProtoVertex::getMeanAndSigma(VectorD& zValues, double& sMean, double& sSigma) {
+void BeamGasProtoVertex::getMeanAndSigma(const VectorD& zValues, double& sMean, double& sSigma) const {
   double sSize = zValues.size();
   if (!sSize) { debug() << "Function getMeanAndSigma received empty vector" << endmsg; }
   else {
@@ -115,23 +115,23 @@ void BeamGasProtoVertex::getMeanAndSigma(VectorD& zValues, double& sMean, double
 }
 
 //### function to calculate the z-dependent "bad sigma"
-double BeamGasProtoVertex::sigmaBad(double z) {
+double BeamGasProtoVertex::sigmaBad(double z) const {
   return (z < 250) ? (-1*m_sigmaBadSlope*z + m_sigmaBadConst1) : (m_sigmaBadSlope*z + m_sigmaBadConst2) ;
 }
 
 //### function to apply the zMin, zMax and lumi-region exclusion cuts
-bool BeamGasProtoVertex::passZCuts(double z) {
+bool BeamGasProtoVertex::passZCuts(double z) const {
   return ((z > m_zTrMin && z < m_zTrMax) && (z < m_zTrExclLRLow || z > m_zTrExclLRUp)) ? true : false ;
 }
 
-void BeamGasProtoVertex::printVector(VectorD& vectZ, std::string theText) {
+void BeamGasProtoVertex::printVector(const VectorD& vectZ, const std::string& theText) const {
   std::cout << theText << "\nVector Size = " << vectZ.size() << "  Contents:" << std::endl;
   for(unsigned i=0; i<vectZ.size(); ++i) std::cout << "   " << vectZ[i] << std::endl;
   return;
 }
 
 //### function to look for a proto vertex
-bool BeamGasProtoVertex::findProtoVertex(VectorD& zValues) {
+bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
 
   //Init
   unsigned indStartMS = 0;

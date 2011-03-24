@@ -14,17 +14,19 @@ class BeamGasProtoVertex : public HltAlgorithm {
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+ private:
+
   // Member functions
   typedef std::vector<double> VectorD;
   typedef std::vector<Gaudi::XYZPoint> Vector3DPoints;
-  void    getMeanAndSigma(VectorD& zValues, double& sMean, double& sSigma);
-  double  sigmaBad(double z);
-  bool    passZCuts(double z);
-  VectorD get1DVector(Vector3DPoints& p, int coord);
-  bool    findProtoVertex(VectorD& aVector);
-  void    printVector(VectorD& aVector, std::string aText);
+  void    getMeanAndSigma(const VectorD& zValues, double& sMean, double& sSigma) const;
+  double  sigmaBad(double z) const;
+  bool    passZCuts(double z) const;
+  VectorD get1DVector(const Vector3DPoints& p, int coord) const;
+  bool    findProtoVertex(const VectorD& aVector);
+  void    printVector(const VectorD& aVector, const std::string& aText) const;
 
- private:
 
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_trackSelection; // tracks we'll be looking at
   std::string m_outputSelectionName; // track selection name
