@@ -53,7 +53,7 @@ confdict = {
        'SingleDown': 1 ,
        'Double':2
     },
-    'RCutMethod' : 'FromUpstreamPV',
+    'RCutMethod' : 'FromBeamSpot',
     'MinR':{
        'PreselVelo':     0.3*units.mm , 
        'SinglePS': 0.3*units.mm ,

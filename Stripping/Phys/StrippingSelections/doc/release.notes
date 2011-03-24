@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-24 - Victor Coco
+ - StrippingDisplVertices.py
+   Set the default R cut method to FromBeamSpot
+
 ! 2011-03-23 - Anton Poluektov 
  - StrippingB2DX.py
    Added D->4pi mode. Very correlated to other D->4h, no significant effect 
