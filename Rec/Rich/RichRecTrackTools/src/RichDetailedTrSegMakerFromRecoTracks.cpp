@@ -25,7 +25,7 @@ DECLARE_TOOL_FACTORY( DetailedTrSegMakerFromRecoTracks )
 //===============================================================================
 // Standard constructor, initializes variables
 //===============================================================================
-DetailedTrSegMakerFromRecoTracks::
+  DetailedTrSegMakerFromRecoTracks::
 DetailedTrSegMakerFromRecoTracks( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
@@ -236,7 +236,7 @@ constructSegments( const ContainedObject * obj,
                             Rich::Aerogel  == rad ? m_nomZstates[0] :
                             m_nomZstates[1] );
 
-    // Get the track enrty state points
+    // Get the track exit state points
     const LHCb::State * exitPStateRaw = &(track->closestState(zEnd));
     if ( !exitPStateRaw ) { Error( "Problem getting track state" ).ignore(); continue; }
 
@@ -251,6 +251,10 @@ constructSegments( const ContainedObject * obj,
       }
       continue;
     }
+
+    // Check for strange state errors
+    checkStateErrors( entryPStateRaw, rad, "initial entry state" );
+    checkStateErrors( exitPStateRaw,  rad, "initial exit state"  );
 
     // Clone entry state
     LHCb::State * entryPState = entryPStateRaw->clone();
@@ -555,8 +559,8 @@ constructSegments( const ContainedObject * obj,
                                                           exitPState->errTy2(),
                                                           exitPState->errP2() );
     // Check for strange state errors
-    checkStateErrors( entryPState, rad, "entry state" );
-    checkStateErrors( exitPState,  rad, "exit state"  );
+    checkStateErrors( entryPState, rad, "final entry state" );
+    checkStateErrors( exitPState,  rad, "final exit state"  );
 
     // print out final points
     if ( msgLevel(MSG::VERBOSE) )
@@ -869,13 +873,14 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
       // if that fails, try the backup one
       if ( backupExtrapolator()->propagate(*stateToMove,z) )
       {
-        Warning("'"+m_trExt1Name+"' failed -> successfully reverted to '"+
-                m_trExt2Name+"'",StatusCode::SUCCESS).ignore();
-      } else
+        Warning( "'"+m_trExt1Name+"' failed -> successfully reverted to '"+
+                 m_trExt2Name+"'",StatusCode::SUCCESS ).ignore();
+      } 
+      else
       {
         // Both failed ...
-        Warning("Failed to extrapolate state using either '"+
-                m_trExt1Name+"' or '"+m_trExt2Name+"'").ignore();
+        Warning( "Failed to extrapolate state using either '"+
+                 m_trExt1Name+"' or '"+m_trExt2Name+"'" ).ignore();
         return false;
       }
     }
@@ -898,25 +903,28 @@ void DetailedTrSegMakerFromRecoTracks::checkStateErrors( const LHCb::State * sta
                                                          const Rich::RadiatorType rad,
                                                          const std::string& desc ) const
 {
-  if ( state->errX2() < 0 )
+  if ( state )
   {
-    Warning( Rich::text(rad) + " " + desc + " has negative errX^2", StatusCode::SUCCESS ).ignore();
-  }
-  if ( state->errY2() < 0 )
-  {
-    Warning( Rich::text(rad) + " " + desc + " has negative errY^2", StatusCode::SUCCESS ).ignore();
-  }
-  if ( state->errTx2() < 0 )
-  {
-    Warning( Rich::text(rad) + " " + desc + " has negative errTx^2", StatusCode::SUCCESS ).ignore();
-  }
-  if ( state->errTy2() < 0 )
-  {
-    Warning( Rich::text(rad) + " " + desc + " has negative errTy^2", StatusCode::SUCCESS ).ignore();
-  }
-  if ( state->errP2() < 0 )
-  {
-    Warning( Rich::text(rad) + " " + desc + " has negative errP^2", StatusCode::SUCCESS ).ignore();
+    if ( state->errX2() < 0 )
+    {
+      Warning( Rich::text(rad) + " " + desc + " has negative errX^2", StatusCode::SUCCESS ).ignore();
+    }
+    if ( state->errY2() < 0 )
+    {
+      Warning( Rich::text(rad) + " " + desc + " has negative errY^2", StatusCode::SUCCESS ).ignore();
+    }
+    if ( state->errTx2() < 0 )
+    {
+      Warning( Rich::text(rad) + " " + desc + " has negative errTx^2", StatusCode::SUCCESS ).ignore();
+    }
+    if ( state->errTy2() < 0 )
+    {
+      Warning( Rich::text(rad) + " " + desc + " has negative errTy^2", StatusCode::SUCCESS ).ignore();
+    }
+    if ( state->errP2() < 0 )
+    {
+      Warning( Rich::text(rad) + " " + desc + " has negative errP^2", StatusCode::SUCCESS ).ignore();
+    }
   }
 }
 //====================================================================================================

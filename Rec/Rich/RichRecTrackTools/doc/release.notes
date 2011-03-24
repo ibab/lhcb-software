@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-03-24 - Chris Jones
+ - Track Track States errors before as well as after propagating them in
+   DetailedTrSegMakerFromRecoTracks
+
 !========================= RichRecTrackTools v1r26p2 2011-02-28 =========================
 ! 2011-02-25 - Chris Jones
  - Fix icc11 compilation remarks and warnings
