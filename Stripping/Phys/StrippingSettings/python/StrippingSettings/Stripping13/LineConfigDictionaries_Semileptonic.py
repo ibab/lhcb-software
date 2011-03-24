@@ -457,21 +457,25 @@ DForBSemi = {
 
 D0ForBXX = {
     'BUILDERTYPE'	: 'D0forBXXLinesConf',
-    'CONFIG'	: {'D0AMassWin': 100.0,
-                   'D0DIRA': 0.99990000000000001,
-                   'D0DIRAK3Pi': 0.99990000000000001,
-                   'D0IP': 0.20000000000000001,
-                   'D0K3PiIP': 0.20000000000000001,
-                   'D0MassWin': 80.0,
-                   'D0VCHI2DOF': 6.0,
-                   'DDocaChi2Max': 20,
-                   'FDCHI2': 100.0,
-                   'KaonPIDK': 4.0,
-                   'MINIPCHI2': 9.0,
-                   'PT': 300.0,
-                   'PionPIDK': 10.0,
-                   'PreScale': 0.029999999999999999,
-                   'TRCHI2': 5.0},
+    'CONFIG'	: {
+    "PreScale"      : 0.03   # adimensiional        
+    ,"PreScaleRS"   : 1.0    # adimensiional
+    ,"PreScaleWS"   : 0.2    # adimensiional
+    ,"MINIPCHI2"     : 9.0   # adimensiional
+    ,"TRCHI2"        : 5.0   # adimensiional
+    ,"KaonPIDK"      : 4.0   # adimensiional
+    ,"PionPIDK"      : 10.0   # adimensiional
+    ,"PT"            : 300.0  # MeV
+    ,"D0DIRA"        : 0.9999    # adimensiional
+    ,"D0DIRAK3Pi"    : 0.9999    # adimensiional        
+    ,"FDCHI2"        : 100.0   # adimensiional
+    ,"D0AMassWin"    : 100.0   # MeV
+    ,"D0MassWin"     : 80.0  # MeV
+    ,"D0IP"          : 0.2    #mm
+    ,"D0K3PiIP"      : 0.2    #mm        
+    ,"D0VCHI2DOF"    : 6.0   # adimensiional
+    ,"DDocaChi2Max" : 20   #adimensiional
+    },
     'STREAMS' : ['CharmControl'],
     'WGs'    : ['Semileptonic'] 
     }

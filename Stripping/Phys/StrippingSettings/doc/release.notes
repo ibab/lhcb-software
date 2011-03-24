@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-24 - Thomas Blake
+ - Update to configuration dictionaries. Replaced B2twobody copying with an explicit dictionary for B2threebody
+
 ! 2011-03-17 - Greig Cowan
  - Added configuration dictionary for B2KShh lines.
 
