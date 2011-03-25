@@ -1,11 +1,16 @@
-// from Gaudi 
+// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // event model
 #include "Event/Track.h"
+// boost
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/moment.hpp>
+
 // local
 #include "BeamGasProtoVertex.h"
-// for std::accumulate
-#include <numeric>
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BeamGasProtoVertex
@@ -19,7 +24,7 @@ DECLARE_ALGORITHM_FACTORY( BeamGasProtoVertex );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-BeamGasProtoVertex::BeamGasProtoVertex(const std::string& name, ISvcLocator* pSvcLocator) 
+BeamGasProtoVertex::BeamGasProtoVertex(const std::string& name, ISvcLocator* pSvcLocator)
   : HltAlgorithm(name, pSvcLocator, false)
   , m_trackSelection(*this)
 {
@@ -44,11 +49,11 @@ StatusCode BeamGasProtoVertex::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   m_trackSelection.retrieveSelections();
   m_trackSelection.registerSelection();
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm 
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   assert(m_minNumTracks>1);
-  if (msgLevel(MSG::DEBUG)) { 
-          debug() << "==> Initialize\n" << endreq 
+  if (msgLevel(MSG::DEBUG)) {
+          debug() << "==> Initialize\n" << endreq
           << "========== Algorithm parameters ========="   << endreq
           << "zTracksMin      = " << m_zTrMin              << endreq
           << "zTracksMax      = " << m_zTrMax              << endreq
@@ -66,25 +71,19 @@ StatusCode BeamGasProtoVertex::initialize() {
 //=============================================================================
 
 
-namespace {
-    struct m012 {
-        m012(): m0(0),m1(0),m2(0) {}
-        void operator()(double x) { ++m0;m1+=x;m2+=x*x; }
-        double m0,m1,m2;
-    };
-}
-
 //### function to calculate the mean and sigma of list of z values
 template <typename ITER>
 void BeamGasProtoVertex::getMeanAndSigma(ITER begin, ITER end , double& sMean, double& sSigma) const {
-  double sSize = end-begin;
-  if (!sSize) { debug() << "Function getMeanAndSigma received empty vector" << endmsg; }
-  else {
-    m012 moments = std::for_each( begin,end, m012() );
-    sMean  = moments.m1 / moments.m0;
-    sSigma = sqrt( moments.m2/moments.m0 - sMean*sMean );
+  namespace ba = boost::accumulators;
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean, ba::tag::moment<2> > > m012;
+  m012 acc = std::for_each( begin,end, m012() );
+  if (ba::count(acc)!=0) {
+      sMean  = ba::mean(acc);
+      sSigma = sqrt( ba::moment<2>(acc) - sMean*sMean );
+  } else {
+      debug() << "Function getMeanAndSigma received empty vector" << endmsg;
   }
-  debug() << "\nz values properties:"   << "\n   Entries = " << sSize
+  debug() << "\nz values properties:"   << "\n   Entries = " << ba::count(acc)
           << "\n   Mean    = " << sMean << "\n   Sigma   = " << sSigma << "\n" << endmsg;
 }
 
@@ -101,7 +100,7 @@ double BeamGasProtoVertex::sigmaBad(double z) const {
 template <typename ITER>
 void BeamGasProtoVertex::printVector(ITER begin, ITER end, const std::string& theText) const {
   debug() << theText << "\nVector Size = " << end-begin << "  Contents:" << "\n";
-  while (begin!=end)  debug() <<"   " << *begin++ << "\n"; 
+  while (begin!=end)  debug() <<"   " << *begin++ << "\n";
   debug() << endmsg;
 }
 
@@ -115,7 +114,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
   //----------------------------------------------------------
   int iloop = 0;
   while (indStartMS + m_minNumTracks <= end) { // minNumTracks or minTracksToaccept !!! #2  Note: <= should be < I think...
-    ++iloop; 
+    ++iloop;
     debug() << " loop # " << iloop << endmsg;
     assert(indStartMS+stepSize1()<=end);
 
@@ -133,7 +132,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
       debug() << "Sigma is too big. Starting new Main Step ..." << endmsg;
       indStartMS += stepSize1();
       continue;
-    }    
+    }
     //----------------------------------------------------------
     // ### LOOP to look for extension in the FWD direction
     //----------------------------------------------------------
@@ -154,7 +153,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
         indEndExt -= stepSize2();
         break;
       }
-      // now that we are sure that there are enough elements 
+      // now that we are sure that there are enough elements
       // append stepSize2 values to the sample vector
       assert( indEndExt <=end );
       assert( indEndExt > indStartMS );
@@ -162,7 +161,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
 
       getMeanAndSigma(indStartMS,indEndExt, mean_ext, sigma_ext);
       debug() << "Extension Mean And Sigma: " << mean_ext << " / " << sigma_ext << endmsg;
-  
+
       static const double m_degradationFactor = 0.2; // sets how much the variance can degrade during the expansion steps
       if (sigma_ext < sigma_MIN) {
         debug() << "Setting New sigma_MIN" << endmsg;
@@ -171,7 +170,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
       } else if (sigma_ext < (sigma_MIN + m_degradationFactor*SIGMA_BAD)) {
         debug() << "Ext. degrades sigma, but within " << m_degradationFactor*SIGMA_BAD << endmsg;
         AccOK = true;
-      } else {    
+      } else {
         debug() << "New sigma not good. Breaking FWD Extenstion Search \nMoving starting index one S2 back" << endmsg;
         indEndExt -= stepSize2();
         break;
@@ -204,7 +203,6 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
         indEndExt = end;
         break; //to skip next extension steps
       }
-
     }//END for loop (trying extensions)
 
     // After the Extension loop is over set the starting point up to where we reached after the extensions
@@ -229,7 +227,7 @@ StatusCode BeamGasProtoVertex::execute() {
 
   std::vector<double> vectZPos;
   vectZPos.reserve(BGtracks->size());
-  
+
   // Loop over the tracks and fill the vector with the XYZ positions; use the tracks state ClosestToBeam
   // Write down only the tracks which pass the z-position cuts (different for the different lines)
   for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
@@ -250,7 +248,7 @@ StatusCode BeamGasProtoVertex::execute() {
   debug() << " Z vector size = " << vectZPos.size()  << endmsg;
 
   //-------------------------------------------------------------
-  // Execute the proto-vertex searching function twice - 
+  // Execute the proto-vertex searching function twice -
   // once with sorted vector and once with inversly sorted vector
   //-------------------------------------------------------------
 
@@ -264,7 +262,7 @@ StatusCode BeamGasProtoVertex::execute() {
   debug() << "\n\n=================== Running Second Time (descending sort) ===========================" << endmsg;
   findProtoVertex( vectZPos.rbegin(), vectZPos.rend() );
 
-  // Now fill the output selection (tracks) with the 
+  // Now fill the output selection (tracks) with the
 
   /// !!! instead of setting filter passed we need to fill the output selection container !!!, like
 
