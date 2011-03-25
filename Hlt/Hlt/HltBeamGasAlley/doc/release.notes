@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 ! 2011-03-25 Gerhard Raven
  - fix duplicate entries during extension
+ - avoid sorting twice
 
 ! 2011-03-24 Gerhard Raven
  - add a few const to make it easier to understand what is going on...
