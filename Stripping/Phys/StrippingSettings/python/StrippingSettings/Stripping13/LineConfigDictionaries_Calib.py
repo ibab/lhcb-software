@@ -140,7 +140,7 @@ MuIDCalibMicroDST = {
     'BUILDERTYPE' : 'MuIDCalibConf',
     'WGs'         : [ 'ALL' ],
     'STREAMS'     : [ 'Leptonic' ],
-    'CONFIG'      : { 'PromptPrescale'     : 0.3, 
+    'CONFIG'      : { 'PromptPrescale'     : 0.5, 
                   'DetachedPrescale'       : 0.,
                   'DetachedNoMIPPrescale'  : 1., 
                   'DetachedNoMIPHiPPrescale' : 0., 

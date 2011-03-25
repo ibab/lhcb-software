@@ -291,7 +291,7 @@ DstarD02Kpipi0 = {
   	"RSPrescale" : 0.25, 
   	"WSPrescale" : 0.0025
 	},
-    'STREAMS' : [ 'Charm' ],
+    'STREAMS' : [ 'CharmControl' ],
     'WGs' : [ 'GammaFromTrees' ]
 }
 

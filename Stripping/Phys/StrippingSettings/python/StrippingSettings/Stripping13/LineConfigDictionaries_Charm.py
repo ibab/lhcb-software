@@ -391,7 +391,7 @@ DstarD02KKmumu = {
     , 'LinePostscale'  : 1.
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'Charm' ]
     }
     
 
@@ -432,7 +432,7 @@ DstarD02KKpipi = {
     , 'LinePostscale'  : 1.
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'Charm' ]
     }
     
 

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-24 - Greig Cowan
+ - Modified location of some charm lines.
+
 ! 2011-03-24
  - Removed unneeded precale factors for StrippingB2D3H.py lines, to be consistent with modifications to that line
 
