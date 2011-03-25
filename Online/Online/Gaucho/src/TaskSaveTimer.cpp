@@ -1,4 +1,3 @@
-#include "Gaucho/TaskSaveTimer.h"
 //#include "Gaucho/MonSubSys.h"
 #include "Gaucho/ObjService.h"
 #include "stdio.h"
@@ -11,6 +10,7 @@
 #include "Gaucho/RootHists.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/dimhist.h"
+#include "Gaucho/TaskSaveTimer.h"
 
 TaskSaveTimer::TaskSaveTimer(MonSubSys *add, int period) : GenTimer((void*)add,period*1000,TIMER_TYPE_PERIODIC)
 {
@@ -19,16 +19,24 @@ TaskSaveTimer::TaskSaveTimer(MonSubSys *add, int period) : GenTimer((void*)add,p
   m_buffadd = 0;
   m_bsiz = 0;
   m_EOR=false;
-//  printf("==================TSaveTimer Constructor.................%llu\n",m_period);
+  m_prevbuff  = 0;
+  m_prevsiz = 0;
+  m_prevmap = new HISTMAP();
+  m_prevmap->clear();
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
-
 }
 
 TaskSaveTimer::~TaskSaveTimer( )
 {
+  if (m_prevmap != 0)
+  {
+    delete m_prevmap;
+    m_prevmap = 0;
+  }
 }
+
 void TaskSaveTimer::timerHandler ( void )
 {
 //  if (m_subsys->m_inputServicemap.empty()) return;
@@ -48,9 +56,144 @@ void TaskSaveTimer::timerHandler ( void )
     m_bsiz = m_subsys->m_ser->buffersize;
   }
   memcpy(m_buffadd,m_subsys->m_ser->buffer,m_bsiz);
+  m_subsys->Clear();
   m_subsys->unLock();
   SavetoFile(m_buffadd);
 }
+
+//void TaskSaveTimer::fillmap(void *buff, HISTMAP *m)
+//{
+//  void *bend;
+//  m->clear();
+//  SerialHeader *hd = (SerialHeader *)buff;
+//  bend = AddPtr(buff,hd->buffersize);
+//  std::string nam;
+//  while (buff <bend)
+//  {
+//    DimBuffBase *b = (DimBuffBase*)buff;
+//    switch (b->type)
+//    {
+//      case H_1DIM:
+//      case H_2DIM:
+//      case H_PROFILE:
+//      case H_RATE:
+//      {
+//        char *n = (char*)AddPtr(b,b->nameoff);
+//        nam = n;
+//        m->insert(make_pair(nam,b));
+//        break;
+//      }
+//      default:
+//      {
+//        break;
+//      }
+//    }
+//    buff = AddPtr(buff,b->reclen);
+//  }
+//}
+//void TaskSaveTimer::diffblock(void *aa, void *bb, void *a_b)
+//{
+//  memcpy(a_b,aa,((SerialHeader *)aa)->buffersize);
+//
+//
+//
+//
+//
+//  {
+//    double *ps, *ph;
+//    DimHistbuff1 *sumh = (DimHistbuff1*)(a_b);
+//    DimHistbuff1 *a = (DimHistbuff1*)(aa);
+//    DimHistbuff1 *b = (DimHistbuff1*)(bb);
+//    ps = (double*)AddPtr(sumh,sumh->dataoff);
+//    ph = (double*)AddPtr(srch,srch->dataoff);
+//    if (srch->type == (int)C_STATENT)
+//    {
+//#define MIN(X,Y) ((X) < (Y) ?  (X) : (Y))
+//#define MAX(X,Y) ((X) > (Y) ?  (X) : (Y))
+//      DimStatBuff *s=(DimStatBuff*)srch;
+//      DimStatBuff *d=(DimStatBuff*)sumh;
+//      d->nentries += s->nentries;
+//      d->m_sumw += s->m_sumw;
+//      d->m_sumw2 += s->m_sumw2;
+//      d->m_min = MIN(d->m_min,s->m_min);
+//      d->m_min = MAX(d->m_max,s->m_max);
+//      UnLockMap();
+//      continue;
+//    }
+//    sumh->nentries += srch->nentries;
+//    sumh->m_sumw  += srch->m_sumw;
+//    sumh->m_sumw2 += srch->m_sumw2;
+//    sumh->m_sumwx += srch->m_sumwx;
+//    sumh->m_sumwx2  += srch->m_sumwx2;
+//    sumh->m_sumwx3  += srch->m_sumwx3;
+//    sumh->m_sumwx4  += srch->m_sumwx4;
+//    sumh->m_sumwy += srch->m_sumwy;
+//    sumh->m_sumwy2  += srch->m_sumwy2;
+//    sumh->m_sumwy3  += srch->m_sumwy3;
+//    sumh->m_sumwy4  += srch->m_sumwy4;
+//    //printf("Histogram %s Number of Entries %f\n",(char*)AddPtr(sumh,sumh->nameoff),sumh->nentries);
+//    int ndble;
+//    switch(srch->type)
+//    {
+//    case H_1DIM:
+//      {
+//        ndble = 2*(srch->nxbin+2);
+//        break;
+//      }
+//    case H_2DIM:
+//      {
+//        //2*(m_nx+2)*(m_ny+2)
+//        DimHistbuff2 *s = (DimHistbuff2*)srch;
+//        ndble = 2*(s->nxbin+2)*(s->nybin+2);
+//        break;
+//      }
+//    case H_PROFILE:
+//    case H_RATE:
+//      {
+//        ndble = 3*(srch->nxbin+2);
+//        break;
+//      }
+//    default:
+//      {
+//        ndble = 0;
+//        break;
+//      }
+//    }
+//    int icpy;
+//    switch(srch->type)
+//    {
+//    case H_RATE:
+//      {
+//        m_RateBuff = sumh;
+//        for (icpy=0;icpy<5;icpy++)
+//        {
+//          ps[icpy]+=ph[icpy];
+//        }
+//        for (icpy=8;icpy<ndble;icpy++)
+//        {
+//          ps[icpy]+=ph[icpy];
+//        }
+//        break;
+//      }
+//    default:
+//      {
+//        for (icpy=0;icpy<ndble;icpy++)
+//        {
+//          ps[icpy]+=ph[icpy];
+//        }
+//        break;
+//      }
+//    }
+//    UnLockMap();
+//  }
+//
+//
+//
+//
+//
+//
+//
+//}
 void TaskSaveTimer::Stop()
 {
   GenTimer::Stop();
@@ -71,8 +214,8 @@ void TaskSaveTimer::SavetoFile(void *buff)
   buff = AddPtr(buff,sizeof(SerialHeader));
   fdir[0]=0;
   fn[0]=0;
-  if (!m_EOR)
-  {
+//  if (!m_EOR)
+//  {
     timeval ctim;
     struct tm *tstruct;
     gettimeofday(&ctim,NULL);
@@ -96,22 +239,22 @@ void TaskSaveTimer::SavetoFile(void *buff)
         tstruct->tm_year+1900,tstruct->tm_mon+1,tstruct->tm_mday,
         tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
 //    printf("File Saver: Filename %s\n",fn);
-  }
-  else
-  {
-    sprintf(fdir,"%s",m_rootdir.c_str());
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%s",fdir,"ByRun");
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%s",fdir,m_taskname.c_str());
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%d",fdir,(runo/10000)*10000);
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%d",fdir,(runo/1000)*1000);
-    mkdir(fdir,01777);
-    sprintf(fn,"%s/%s-run%d.root",fdir,m_taskname.c_str(),runo);
-//    printf("File Saver: Filename %s\n",fn);
-  }
+//  }
+//  else
+//  {
+//    sprintf(fdir,"%s",m_rootdir.c_str());
+//    mkdir(fdir,01777);
+//    sprintf(fdir,"%s/%s",fdir,"ByRun");
+//    mkdir(fdir,01777);
+//    sprintf(fdir,"%s/%s",fdir,m_taskname.c_str());
+//    mkdir(fdir,01777);
+//    sprintf(fdir,"%s/%d",fdir,(runo/10000)*10000);
+//    mkdir(fdir,01777);
+//    sprintf(fdir,"%s/%d",fdir,(runo/1000)*1000);
+//    mkdir(fdir,01777);
+//    sprintf(fn,"%s/%s-run%d.root",fdir,m_taskname.c_str(),runo);
+////    printf("File Saver: Filename %s\n",fn);
+//  }
   m_subsys->Lock();
   TFile *f = new TFile(fn,"RECREATE");
   m_subsys->unLock();

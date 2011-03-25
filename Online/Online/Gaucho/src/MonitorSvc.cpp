@@ -866,6 +866,7 @@ void MonitorSvc::updateSvc( const std::string& , int runno, const IInterface*  )
      m_savetimer->setRootDir(dir);
      m_savetimer->setTaskName(task);
      m_savetimer->m_filenamesvc = sav;
+     m_savetimer->setMonSys(m_MonSys);
    }
    m_savetimer->Start();
  }
