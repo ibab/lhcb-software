@@ -182,15 +182,14 @@ void ROFarmMonitor::initialize ( ) {
     tags.push_back( "MEP rate" );
     tags.push_back( "HLT input rate" );
     tags.push_back( "HLT output rate" );
-    bool status = myPart->trendWriter->openWrite( "/hist/Trending/" + myPart->name + "_FarmMonitor", tags ) ;
+    bool status = myPart->trendWriter->openWrite( myPart->name + "_FarmMonitor", tags ) ;
     if ( !status ) std::cerr << "Trend file open error" << std::endl ;
-    
-    std::vector<float> thresholds;
-    thresholds.push_back( -0.01  );   // nominal 90kHz -> error 300/90000 = 3 per mil.
-    thresholds.push_back( -0.003 );  // nominal 1MHz  -> error 1 per mil
-    thresholds.push_back( -0.05  );   // nominal 3kHz  -> error 2%
-    myPart->trendWriter->setThresholds( thresholds );
 
+    std::vector<float> thresholds;
+    thresholds.push_back( -0.003 );   // nominal 90kHz -> error 300/90000 = 3 per mil.
+    thresholds.push_back( -0.001 );   // nominal 1MHz  -> error 1 per mil
+    thresholds.push_back( -0.02  );   // nominal 3kHz  -> error 2%
+    myPart->trendWriter->setThresholds( thresholds );
     m_partitions.push_back( myPart );
   }
   
