@@ -177,8 +177,8 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
   int tot_prod[3] = {0,0,0}, num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
   int min_prod[3] = {INT_max,INT_max,INT_max};
 
-  float fspace[3] = {FLT_max,FLT_max,FLT_max};
-  float fslots[3] = {FLT_max,FLT_max,FLT_max};
+  float fsp, fspace[3] = {FLT_max,FLT_max,FLT_max};
+  float fsl, fslots[3] = {FLT_max,FLT_max,FLT_max};
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     bool relay = ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0;
@@ -203,9 +203,11 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
           tot_prod[idx] = ctrl.tot_produced;
           num_cl[idx]   = ncl;
           num_sl[idx]   = ctrl.p_emax - ctrl.i_events;
-          fspace[idx]   = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size));
-          fslots[idx]   = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-          if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
+	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
+          fspace[idx]   = min(fspace[idx],fsp);
+          fslots[idx]   = min(fslots[idx],fsl);
+          if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {
             bad_nodes.insert((*n).name);
           }
           inuse = true;

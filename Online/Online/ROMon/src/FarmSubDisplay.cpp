@@ -187,6 +187,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   int buf_clients[3] = {0,0,0};
   float fspace[3]    = {FLT_max,FLT_max,FLT_max};
   float fslots[3]    = {FLT_max,FLT_max,FLT_max};
+  float fsl, fsp;
   int evt_sent       = INT_max;
   int evt_moore      = INT_max;
   int evt_built      = INT_max;
@@ -215,8 +216,10 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       default:                   continue;
       }
       inuse = true;
-      fspace[idx]       = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
-      fslots[idx]       = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
+      fsp               = float(ctrl.i_space)/float(ctrl.bm_size);
+      fsl               = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+      fspace[idx]       = min(fspace[idx],fsp); 
+      fslots[idx]       = min(fslots[idx],fsl);
       min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
       min_slots[idx]    = min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
       min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
@@ -224,7 +227,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
       free_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
       buf_clients[idx] += ctrl.i_users;
-      if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
+      if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {
         bad_nodes.insert((*n).name);
       }
       const Clients& clients = (*ib).clients;

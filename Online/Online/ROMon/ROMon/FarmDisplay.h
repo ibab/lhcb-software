@@ -167,6 +167,7 @@ namespace ROMon {
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;
     std::auto_ptr<InternalDisplay>   m_bootDisplay;
     std::auto_ptr<InternalDisplay>   m_statsDisplay;
+    std::auto_ptr<InternalDisplay>   m_benchDisplay;
     ScrDisplay*                      m_nodeSelector;
     std::string                      m_partition;
     std::string                      m_match;
@@ -242,6 +243,8 @@ public:
     int showBootWindow();
     /// Show window with boot information of the subfarm
     int showStatsWindow();
+    /// Show window to run Moore bench marks
+    int showBenchmarkWindow();
     /// Show window with node control information
     int showCtrlWindow();
     /// DIM command service callback

@@ -173,7 +173,7 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
 
   string evt_buff = std::string("Events_"+m_partition);
   int numNodes = 0, numBuffs = 0, numClients = 0;
-  float fspace[3] = {FLT_max,FLT_max,FLT_max}, fslots[3] = {FLT_max,FLT_max,FLT_max};
+  float fsp, fsl, fspace[3] = {FLT_max,FLT_max,FLT_max}, fslots[3] = {FLT_max,FLT_max,FLT_max};
   int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
   int   num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
 
@@ -193,9 +193,11 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
           num_cl[idx]   += (*ib).clients.size();
           num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
           min_prod[idx]  = min(min_prod[idx],ctrl.tot_produced);
-          fspace[idx]    = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size));
-          fslots[idx]    = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-          if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) bad_nodes.insert((*n).name);
+	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
+	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+          fspace[idx]    = min(fspace[idx],fsp);
+          fslots[idx]    = min(fslots[idx],fsl);
+          if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) bad_nodes.insert((*n).name);
           inuse = true;
         }
       }

@@ -70,13 +70,19 @@ namespace ROMon {
   InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createBootDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createBenchmarkNodeDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createBenchmarkFarmDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createBenchmarkSubfarmDisplay(InternalDisplay* parent, const string& title);
   InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const string& title);
+
   ClusterDisplay*  createSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }
+
+
 namespace {
   ScrDisplay* swapMouseSelector(Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
     if ( from ) {
@@ -332,6 +338,7 @@ int FarmDisplay::showSubfarm()    {
     m_bootDisplay  = auto_ptr<InternalDisplay>(0);
     m_statsDisplay = auto_ptr<InternalDisplay>(0);
     m_ctrlDisplay  = auto_ptr<CtrlNodeDisplay>(0);
+    m_benchDisplay = auto_ptr<InternalDisplay>(0);
     m_subPosCursor = 8;
   }
   else if ( (d=currentDisplay()) != 0 ) {
@@ -363,7 +370,7 @@ int FarmDisplay::showSubfarm()    {
       m_subfarmDisplay = createRecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
-      const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=28"};
+      const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=31"};
       m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
     }
     else {
@@ -376,6 +383,40 @@ int FarmDisplay::showSubfarm()    {
     m_nodeSelector = swapMouseSelector(this,m_sysDisplay.get(),m_subfarmDisplay);
     IocSensor::instance().send(this,CMD_UPDATE,m_subfarmDisplay);
     m_subPosCursor = SUBFARM_NODE_OFFSET;
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window to run Moore bench marks
+int FarmDisplay::showBenchmarkWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_benchDisplay.get() ) {
+    MouseSensor::instance().remove(this,m_benchDisplay->display());
+    m_benchDisplay = auto_ptr<InternalDisplay>(0);
+  }
+  else if ( m_sysDisplay.get() || m_mbmDisplay.get() || m_ctrlDisplay.get() || m_procDisplay.get() ) {
+    pair<string,string> node = selectedNode();
+    if ( !node.second.empty() ) {
+      m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkNodeDisplay(this,node.second));
+      m_benchDisplay->show(m_anchorY+5,m_anchorX+12);
+      m_benchDisplay->connect();
+      MouseSensor::instance().add(this,m_benchDisplay->display());
+    }
+  }
+  else if ( m_subfarmDisplay ) {
+    string cluster_name = selectedCluster();
+    if ( !cluster_name.empty() ) {
+      m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkSubfarmDisplay(this,cluster_name));
+      m_benchDisplay->show(m_anchorY+5,m_anchorX+12);
+      m_benchDisplay->connect();
+      MouseSensor::instance().add(this,m_benchDisplay->display());
+    }
+  }
+  else {
+    m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkFarmDisplay(this,name()));
+    m_benchDisplay->show(m_anchorY+5,m_anchorX+12);
+    m_benchDisplay->connect();
+    MouseSensor::instance().add(this,m_benchDisplay->display());
   }
   return WT_SUCCESS;
 }
@@ -655,6 +696,9 @@ int FarmDisplay::handleKeyboard(int key)    {
     case KPD_PERIOD:
       IocSensor::instance().send(this,m_sysDisplay.get()?CMD_SHOWCTRL:CMD_SHOWMBM,this);
       break;
+    case CTRL_L:
+      IocSensor::instance().send(this,CMD_SHOWBENCHMARK,this);
+      break;
     case 'p':
     case 'P':
       return showProcessWindow(0);
@@ -829,6 +873,9 @@ void FarmDisplay::handle(const Event& ev) {
     case CMD_SHOWSUBFARM:
       showSubfarm();
       return;
+    case CMD_SHOWBENCHMARK:
+      showBenchmarkWindow();
+      return;
     case CMD_SHOWBOOT:
       showBootWindow();
       return;
@@ -908,6 +955,14 @@ void FarmDisplay::handle(const Event& ev) {
         if ( (d=(*k).second) != ev.data ) d->check(now);
       if ( m_sysDisplay.get() ) m_sysDisplay->update();
       break;
+    }
+    case CMD_NOTIFY: {
+      unsigned char* ptr = (unsigned char*)ev.data;
+      if ( ptr ) {
+	if ( m_benchDisplay.get() ) m_benchDisplay->update(ptr + sizeof(int), *(int*)ptr);
+	delete [] ptr;
+      }
+      return;
     }
     case CMD_DELETE:
       delete this;

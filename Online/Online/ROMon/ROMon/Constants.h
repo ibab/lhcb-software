@@ -19,11 +19,13 @@ namespace ROMon {
     CMD_SHOWPROCS,
     CMD_SHOWBOOT,
     CMD_SHOWSTATS,
+    CMD_SHOWBENCHMARK,
     CMD_SHOWSYS,
     CMD_SHOWHELP,
     CMD_HANDLE_KEY,
     CMD_RUNSTATE,
     CMD_PARTITIONID,
+    CMD_NOTIFY,
 
     CMD_ADD_ALARM,
     CMD_SHOW_ALARM,
@@ -57,7 +59,7 @@ namespace ROMon {
     TASK_FSM_STATE_READY =        'r',
     TASK_FSM_STATE_RUNNING =      'R',
 
-    SUBFARM_HEIGHT =              65,
+    SUBFARM_HEIGHT =              68,
     SUBFARM_WIDTH =              132,
     SUBFARM_NODE_OFFSET =          8,
     SUBFARM_DISP_WIDTH =          48,

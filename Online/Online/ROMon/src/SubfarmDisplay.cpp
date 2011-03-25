@@ -80,15 +80,15 @@ void SubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
   int hdr_height, nodes_height, moores_height;
   cli.getopt("headerheight",  1, hdr_height    =   5);
-  cli.getopt("nodesheight",   1, nodes_height  =  15);
+  cli.getopt("nodesheight",   1, nodes_height  =  31);
   cli.getopt("mooresheight",  1, moores_height =  18);
   cli.getopt("delay",         1, m_delay       = 1000);
   cli.getopt("servicename",   1, m_svcName     = "/hlte07/ROpublish");
 
   setup_window();
   int width    = m_area.width;
-  int eb_width = width/2-6;
-  int pr_width = width/3-3;
+  int eb_width = width/2-10;
+  int pr_width = width/3-1;
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
   m_moores     = 0;
@@ -125,8 +125,8 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   const char* fmt = " %-12s%5d %12d%6d%7d %12d%11d%6d%7d %12d%6d%7d %12d";
   int mep_tot[3] = {0,0,0}, evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, accept_tot=0, cons_tot=0, ntsk_tot=0;
 
-  disp->draw_line_reverse("                     --------- MEP ---------   ------------- EVENT --------------   ------- RESULT --------");
-  disp->draw_line_bold(   " Node        Tasks     Produced Slots  Space     Produced   Consumed Slots  Space     Produced Slots  Space     Accepted");
+  disp->draw_line_reverse("           - MBM -     ------- MEP ---------     ----------- EVENT --------------     ----- RESULT/SEND ---    -- Since last Stop --");
+  disp->draw_line_bold(   " Node      Clients     Produced Slots  Space     Produced   Consumed Slots  Space     Produced Slots  Space    Sent to Storage");
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     int mep_info[3] = {0,0,0}, evt_info[3] = {0,0,0}, res_info[3] = {0,0,0}, out=0, consumed=0, ntsk=0;
@@ -165,6 +165,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
         }
       }
     }
+    ntsk_tot += ntsk;
     disp->draw_line_normal(fmt, (*n).name, ntsk, mep_info[0], mep_info[1], mep_info[2],
                            evt_info[0], consumed, evt_info[1], evt_info[2],
                            res_info[0], res_info[1], res_info[2], out);
@@ -184,10 +185,10 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
   int eb_width = m_area.width/3;
 
   //m_builders->draw_line_reverse (" EVENTBUILDER   Produced [%] MEP       ");
-  m_builders->draw_line_reverse (" EVENTBUILDERS  1/Prod MEP      2/Prod MEP      3/Prod MEP       ");
+  m_builders->draw_line_reverse (" EVENTBUILDER 1/Prod MEP    2/Prod MEP    3/Prod MEP       ");
   //m_holders->draw_line_reverse(" HOLDER          Free                  ");
-  m_holders->draw_line_reverse  (" PRODUCER       Seen   Produced MEP EVT");
-  m_senders->draw_line_reverse  (" SENDER          Sent Pend RES         ");
+  m_holders->draw_line_reverse  (" PRODUCER        Seen   Produced MEP EVT");
+  m_senders->draw_line_reverse  (" SENDER           Sent Pend RES         ");
 
   if ( m_moores ) {
     ::memset(txt,' ',sizeof(txt));
@@ -274,9 +275,8 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
     txt[0] = 0;
     ::sprintf(txt," %-8s  ", builders.size()>0 ? (*n).name : "");
     for(map<string,TaskIO>::const_iterator bb=builders.begin(); bb != builders.end(); ++bb) {
-      //const string& n = (*bb).first;
       const TaskIO& m = (*bb).second;
-      ::sprintf(txt+strlen(txt)-1," %11d %3s ",m.out,sstat[m.st_out]);
+      ::sprintf(txt+strlen(txt)-1,"%10d %3s ",m.out,sstat[m.st_out]);
     }
     m_builders->draw_line_normal(txt);
   }
@@ -313,7 +313,6 @@ void SubfarmDisplay::showHeader(const Nodeset& ns)   {
   draw_line_reverse("         HLT monitoring on %s   [%s]", ns.name, ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
-
 
 /// Number of nodes in the dataset
 size_t SubfarmDisplay::numNodes()  {

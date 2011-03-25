@@ -144,6 +144,11 @@ void InternalDisplay::handle(const Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent: {
     switch(ev.type) {
+    case CMD_NOTIFY: {
+      unsigned char* ptr = (unsigned char*)ev.data;
+      delete [] ptr;
+      break;
+    }
     case CMD_UPDATE: {
       RTL::Lock lock(s_lock);
       Pasteboard* pb = pasteboard();
@@ -156,7 +161,13 @@ void InternalDisplay::handle(const Event& ev)    {
       if ( pb ) ::scrc_end_pasteboard_update(pb);
       if ( parent() ) parent()->set_cursor(this);
       if ( pb ) ::scrc_cursor_on(pb);
-      delete [] ptr;
+
+      if ( parent() )   {
+	IocSensor::instance().send(parent(),CMD_NOTIFY,ptr);
+      }
+      else {
+	delete [] ptr;
+      }
       break;
     }
     case CMD_EXCLUDE: {
