@@ -1,5 +1,5 @@
 
-## @package RichRecQC
+## @package RichPIDQC
 #  RICH PID Calibration and Monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
@@ -27,7 +27,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
     __slots__ = {
          "Context"         : "Offline"  # The context within which to run
         ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
-        ,"Sequencer"   : None    # The sequencer to add the calibration algorithms too
+        ,"Sequencer"    : None      # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
         ,"RunMonitors"  : True
         ,"MCChecks"   : False
@@ -54,8 +54,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
         if self.getProp("RunSelection") :
 
             # STD particles
-            from CommonParticles.StdLooseMuons   import StdLooseMuons
-            stdMuons = DataOnDemand( Location = 'Phys/StdLooseMuons' )
+            from StandardParticles import StdLooseMuons
 
             # J/psi -> mu mu
             JPsiMuMuName               = self.__sel_name__
@@ -71,7 +70,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
             self.setOptions(JPsiMuMu)
             JPsiMuMuSel = Selection( JPsiMuMuName+'Sel',
                                      Algorithm = JPsiMuMu,
-                                     RequiredSelections = [stdMuons] )
+                                     RequiredSelections = [StdLooseMuons] )
 
             # Selection Sequence
             selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = JPsiMuMuSel )

@@ -55,10 +55,7 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
         if self.getProp("RunSelection") : 
 
             # STD particles
-            from CommonParticles.StdNoPIDsPions   import StdNoPIDsPions
-            from CommonParticles.StdNoPIDsProtons import StdNoPIDsProtons
-            stdPions   = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
-            stdProtons = DataOnDemand( Location = 'Phys/StdNoPIDsProtons' )
+            from StandardParticles import StdNoPIDsPions, StdNoPIDsProtons
       
             # Filter Pi Tracks
             pionfilterName = self.__sel_name__+"_PiFilter"
@@ -67,7 +64,7 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
             self.setOptions(pionfilter)
             pionfilterSel = Selection( pionfilterName+'Sel',
                                        Algorithm = pionfilter,
-                                       RequiredSelections = [stdPions] )
+                                       RequiredSelections = [StdNoPIDsPions] )
 
             # Filter Proton Tracks
             protonfilterName = self.__sel_name__+"_PrFilter"
@@ -76,7 +73,7 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
             self.setOptions(protonfilter)
             protonfilterSel = Selection( protonfilterName+'Sel',
                                          Algorithm = protonfilter,
-                                         RequiredSelections = [stdProtons] ) 
+                                         RequiredSelections = [StdNoPIDsProtons] ) 
 
             # Make the Lambda
             lambda2ppi = CombineParticles(self.__sel_name__)

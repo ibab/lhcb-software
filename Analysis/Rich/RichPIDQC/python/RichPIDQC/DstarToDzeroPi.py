@@ -1,5 +1,5 @@
 
-## @package RichRecQC
+## @package RichPIDQC
 #  RICH PID Calibration and Monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
@@ -55,10 +55,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
         if self.getProp("RunSelection") : 
 
             # STD particles
-            from CommonParticles.StdNoPIDsPions   import StdNoPIDsPions
-            from CommonParticles.StdNoPIDsKaons   import StdNoPIDsKaons
-            stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
-            stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
+            from StandardParticles import StdNoPIDsPions,StdNoPIDsKaons
             
             # Filter Pi/K Tracks
             trackfilterName = self.__sel_name__+"_TrackFilter"
@@ -67,7 +64,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
             self.setOptions(trackfilter)
             trackfilterSel = Selection( trackfilterName+'Sel',
                                         Algorithm = trackfilter,
-                                        RequiredSelections = [stdPions,stdKaons] )
+                                        RequiredSelections = [StdNoPIDsPions,StdNoPIDsKaons] )
 
             # Filter Pi Tracks
             pionfilterName = self.__sel_name__+"_PiFilter"
@@ -76,7 +73,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
             self.setOptions(pionfilter)
             pionfilterSel = Selection( pionfilterName+'Sel',
                                        Algorithm = pionfilter,
-                                       RequiredSelections = [stdPions] )
+                                       RequiredSelections = [StdNoPIDsPions] )
 
             # Make the D0
             d02kpiName = self.__sel_name__+"_D0ToKPiSel"

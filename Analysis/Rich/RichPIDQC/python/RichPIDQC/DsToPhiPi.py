@@ -1,5 +1,5 @@
 
-## @package RichRecQC
+## @package RichPIDQC
 #  RICH PID Calibration and Monitoring
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
@@ -25,8 +25,8 @@ class DsToPhiPiConf(RichConfigurableUser) :
     
     ## Steering options
     __slots__ = {
-         "Context"         : "Offline"  # The context within which to run
-        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
+         "Context"      : "Offline"  # The context within which to run
+        ,"OutputLevel"  : INFO  # The output level to set all algorithms and tools to use
         ,"Sequencer"    : None    # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
         ,"RunMonitors"  : True
@@ -34,7 +34,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
         ,"MakeNTuple"   : False
         ,"MakeSelDST"   : False
         ,"DSTPreScaleFraction" : 1.0
-        ,"PlotTools" : [ ]
+        ,"PlotTools"    : [ ]
         }
 
     ## Set general job options
@@ -54,10 +54,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
         if self.getProp("RunSelection") : 
 
             # STD particles
-            from CommonParticles.StdNoPIDsPions   import StdNoPIDsPions
-            from CommonParticles.StdNoPIDsKaons   import StdNoPIDsKaons
-            stdKaons = DataOnDemand( Location = 'Phys/StdNoPIDsKaons' )
-            stdPions = DataOnDemand( Location = 'Phys/StdNoPIDsPions' )
+            from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
         
             # phi -> K+ K-
             Phi2KKName = self.__sel_name__+"_Phi2KK"
@@ -70,7 +67,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
             self.setOptions(Phi2KK)
             Phi2KKSel = Selection( Phi2KKName+'Sel',
                                    Algorithm = Phi2KK,
-                                   RequiredSelections = [stdKaons] )
+                                   RequiredSelections = [StdNoPIDsKaons] )
         
             # Bs -> J/psi phi
             Ds2piPhiName = self.__sel_name__
@@ -85,7 +82,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
             self.setOptions(Ds2piPhi)
             Ds2piPhiSel = Selection( Ds2piPhiName+'Sel',
                                      Algorithm = Ds2piPhi,
-                                     RequiredSelections = [Phi2KKSel,stdPions] )
+                                     RequiredSelections = [Phi2KKSel,StdNoPIDsPions] )
 
             # Selection Sequence
             selSeq = SelectionSequence( self.__sel_name__+'Seq', TopSelection = Ds2piPhiSel )

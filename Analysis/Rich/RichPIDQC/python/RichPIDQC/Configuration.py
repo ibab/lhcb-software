@@ -21,7 +21,7 @@ class RichPIDQCConf(RichConfigurableUser):
                                ('KshortPiPiConf',None),
                                ('LambdaToProtonPionConf',None),
                                ('DstarToDzeroPiConf',None) ]
-
+    
     ## Steering options
     __slots__ = {
          "Context"         : "Offline"  # The context within which to run
