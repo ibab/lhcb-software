@@ -20,7 +20,7 @@ class BeamGasProtoVertex : public HltAlgorithm {
   // Member functions
   typedef std::vector<double> VectorD;
   typedef std::vector<Gaudi::XYZPoint> Vector3DPoints;
-  void    getMeanAndSigma(const VectorD& zValues, double& sMean, double& sSigma) const;
+  void    getMeanAndSigma(VectorD::const_iterator begin, VectorD::const_iterator end, double& sMean, double& sSigma) const;
   double  sigmaBad(double z) const;
   //### function to apply the zMin, zMax and lumi-region exclusion cuts
   bool    passZCuts(double z) const {
@@ -28,7 +28,7 @@ class BeamGasProtoVertex : public HltAlgorithm {
   }
   VectorD get1DVector(const Vector3DPoints& p, int coord) const;
   bool    findProtoVertex(const VectorD& aVector);
-  void    printVector(const VectorD& aVector, const std::string& aText) const;
+  void    printVector(VectorD::const_iterator begin, VectorD::const_iterator end, const std::string& aText) const;
 
 
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_trackSelection; // tracks we'll be looking at

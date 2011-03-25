@@ -3,7 +3,10 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
-! 2011-02-11 Gerhard Raven
+! 2011-03-25 Gerhard Raven
+ - fix duplicate entries during extension
+
+! 2011-03-24 Gerhard Raven
  - add a few const to make it easier to understand what is going on...
  - write findProtoVertex using iterators instead of indices
 

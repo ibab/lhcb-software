@@ -95,16 +95,16 @@ VectorD BeamGasProtoVertex::get1DVector(const Vector3DPoints& vect3DPoints, int 
 }
 
 //### function to calculate the mean and sigma of list of z values
-void BeamGasProtoVertex::getMeanAndSigma(const VectorD& zValues, double& sMean, double& sSigma) const {
-  double sSize = zValues.size();
+void BeamGasProtoVertex::getMeanAndSigma(VectorD::const_iterator begin, VectorD::const_iterator end , double& sMean, double& sSigma) const {
+  double sSize = end-begin;
   if (!sSize) { debug() << "Function getMeanAndSigma received empty vector" << endmsg; }
   else {
     // calculate the sum and the mean
-    double sum_vals = std::accumulate(zValues.begin(), zValues.end(), 0.);
+    double sum_vals = std::accumulate(begin, end, 0.);
     sMean = sum_vals / sSize;
     // calculate the standard deviation
     double sum_distToMeanSquare = 0.;
-    for( VectorD::const_iterator zIter=zValues.begin(); zIter!=zValues.end(); ++zIter) {
+    for( VectorD::const_iterator zIter=begin; zIter!=end; ++zIter) {
       sum_distToMeanSquare += pow((*zIter - sMean),2);
     }
     sSigma = sqrt(sum_distToMeanSquare/sSize);
@@ -120,9 +120,9 @@ double BeamGasProtoVertex::sigmaBad(double z) const {
 }
 
 
-void BeamGasProtoVertex::printVector(const VectorD& vectZ, const std::string& theText) const {
-  debug() << theText << "\nVector Size = " << vectZ.size() << "  Contents:" << "\n";
-  for(unsigned i=0; i<vectZ.size(); ++i) debug() << "   " << vectZ[i] << "\n"; 
+void BeamGasProtoVertex::printVector(VectorD::const_iterator begin, VectorD::const_iterator end, const std::string& theText) const {
+  debug() << theText << "\nVector Size = " << end-begin << "  Contents:" << "\n";
+  while (begin!=end)  debug() <<"   " << *begin++ << "\n"; 
   debug() << endmsg;
 }
 
@@ -132,8 +132,6 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
   //Init
   VectorD::const_iterator indStartMS = zValues.begin();
   assert(m_stepSize1>0);
-  VectorD  vect_sample;
-  vect_sample.reserve(m_minNumTracks+m_stepSize1);
   bool boolDecision = false;
 
   //----------------------------------------------------------
@@ -143,16 +141,13 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
   while (indStartMS + m_minNumTracks <= zValues.end()) { // minNumTracks or minTracksToaccept !!! #2  Note: <= should be < I think...
     ++iloop; 
     debug() << " loop # " << iloop << endmsg;
-    assert(indStartMS>=zValues.begin());
     assert(indStartMS+m_stepSize1<=zValues.end());
 
-    vect_sample.assign( indStartMS, indStartMS+m_stepSize1);
-    if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** Main Step ***");
+    if (msgLevel(MSG::DEBUG)) printVector(indStartMS, indStartMS+m_stepSize1, "*** Main Step ***");
 
-    assert(!vect_sample.empty());
     double   mean_sample  = -9999.;
     double   sigma_sample = -9999.;
-    getMeanAndSigma(vect_sample, mean_sample, sigma_sample);
+    getMeanAndSigma(indStartMS, indStartMS+m_stepSize1, mean_sample, sigma_sample);
     debug() << "Mean And Sigma: " << mean_sample << " / " << sigma_sample << endmsg;
 
     double SIGMA_BAD = sigmaBad(mean_sample);
@@ -171,10 +166,7 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
     double sigma_ext = -9999.;
     double mean_ext  = -9999.;
     VectorD::const_iterator indEndExt = zValues.end();
-    unsigned numProtoVtxTracks = 0;
 
-    assert(indStartMS>=zValues.begin());
-    assert(indStartMS+m_stepSize1<=zValues.end());
 
     for (unsigned iExtend=1; iExtend<m_maxNumExtends; ++iExtend){
       bool AccOK = false;
@@ -188,13 +180,11 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
       }
       // now that we are sure that there are enough elements 
       // append m_stepSize2 values to the sample vector
-      assert( indStartMS+m_stepSize1 >= zValues.begin() );
-      assert( indStartMS+m_stepSize1+m_stepSize2 <= zValues.end() );
-      vect_sample.insert(vect_sample.end(),  indStartMS+m_stepSize1, indStartMS+m_stepSize1+m_stepSize2) ;
-      if (msgLevel(MSG::DEBUG)) printVector(vect_sample, "*** After Extension ***");
+      assert( indEndExt <=zValues.end() );
+      assert( indEndExt > indStartMS );
+      if (msgLevel(MSG::DEBUG)) printVector(indStartMS, indEndExt, "*** After Extension ***");
 
-      numProtoVtxTracks = vect_sample.size();
-      getMeanAndSigma(vect_sample, mean_ext, sigma_ext);
+      getMeanAndSigma(indStartMS,indEndExt, mean_ext, sigma_ext);
       debug() << "Extension Mean And Sigma: " << mean_ext << " / " << sigma_ext << endmsg;
   
       if (sigma_ext < sigma_MIN) {
@@ -213,17 +203,16 @@ bool BeamGasProtoVertex::findProtoVertex(const VectorD& zValues) {
       //----------------------------------------------------------
       // Condition to Accept the Event
       //----------------------------------------------------------
-      debug() << "Currently #tracks in the proto vertex = " << numProtoVtxTracks << endmsg;
-      if (numProtoVtxTracks > m_minTracksToAccept && AccOK) {
+      debug() << "Currently #tracks in the proto vertex = " << indEndExt - indStartMS << endmsg;
+      if ( (indEndExt - indStartMS) > m_minTracksToAccept && AccOK) {
         debug() << "\n\nEVENT ACCEPTED" << endmsg;
         debug() << "Track Indices of found Peak (first/last) : " << indStartMS-zValues.begin() <<  " / " << indEndExt-zValues.begin() << endmsg;
-        debug() << "Their z positions (1): " << *indStartMS <<  " / " << *indEndExt << endmsg;
-        debug() << "Their z positions (2): " << vect_sample.front() <<  " / " << vect_sample.back() << endmsg;
+        debug() << "Their z positions : " << *indStartMS <<  " / " << *indEndExt << endmsg;
 
         // Fill the output_selection. Write down the tracks of the selected z-sample
         // need the following, to handle both the increasing and decreasing sorting
-        double zSelMin = std::min( vect_sample.front(), vect_sample.back() ) - 1.;
-        double zSelMax = std::max( vect_sample.front(), vect_sample.back() ) + 1.;
+        double zSelMin = std::min( *indStartMS, *indEndExt ) - 1.;
+        double zSelMax = std::max( *indStartMS, *indEndExt ) + 1.;
         const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
         for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
             if ((*itT)->hasStateAt(LHCb::State::ClosestToBeam)) {
@@ -300,7 +289,7 @@ StatusCode BeamGasProtoVertex::execute() {
   std::sort(vectZPosDescending.begin(), vectZPosDescending.end(), std::greater<double>());
 
   //for (int i=0; i<v0.size(); ++i){ std::cout << v0[i] << "   " << vs1[i] << "   " << vs2[i] << std::endl; }
-  if (msgLevel(MSG::DEBUG)) { printVector(vectZPosAscending, "======================= All Good Z ============================"); }
+  if (msgLevel(MSG::DEBUG)) { printVector(vectZPosAscending.begin(),vectZPosAscending.end(), "======================= All Good Z ============================"); }
 
   debug() << "\n\n=================== Running First Time (ascending sort) ===========================" << endmsg;
   bool acc1 = findProtoVertex( vectZPosAscending );
