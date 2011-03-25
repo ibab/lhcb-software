@@ -216,9 +216,9 @@ DisplVertices = {
        'SingleDown': 1 ,
        'Double':2
     },
-    'RCutMethod' : 'FromUpstreamPV',
+    'RCutMethod' : 'FromBeamSpot',
     'MinR':{
-       'PreselVelo':     0.3*mm ,
+       'PreselVelo':     0.3*mm , 
        'SinglePS': 0.3*mm ,
        'SingleLowMass': 0.3*mm ,
        'SingleHighMass': 0.3*mm ,
@@ -226,12 +226,12 @@ DisplVertices = {
        'Double': 0.3*mm
     },
     'MinMass':{
-       'PreselVelo':     3.*GeV ,
+       'PreselVelo':     3.*GeV , 
        'SinglePS': 5.*GeV  ,
        'SingleLowMass': 6.8*GeV ,
        'SingleHighMass':  12.*GeV,
        'SingleDown':  3.*GeV,
-       'Double': 3.*GeV
+       'Double': 3.*GeV 
     },
     'MinSumPt':{
        'PreselVelo':     3.*GeV ,
