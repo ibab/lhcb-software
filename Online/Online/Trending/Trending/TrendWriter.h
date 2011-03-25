@@ -362,7 +362,7 @@ bool TrendWriter::write( std::vector<float> data, int now ) {
 //=========================================================================
 //  Write one entry at the current position in the file.
 //=========================================================================
-void TrendWriter::writeEntry ( int now, std::vector<float>& data, bool forceWrite ) {
+void TrendWriter::writeEntry( int now, std::vector<float>& data, bool forceWrite ) {
   if ( 0 != m_dir.entry[m_ptDir].firstTime ) {  // There is some data block...
 
     //== If we don't have enough space, create a new data record.
@@ -449,6 +449,7 @@ void TrendWriter::addDataEntry( int now, std::vector<float>& data, bool forceWri
     if ( forceWrite ) {
       fseek( m_file, m_dataAddressInFile, SEEK_SET );
       fwrite( &m_data, 1, sizeof(DataRecord), m_file );
+      fflush( m_file );
     }
   } else {
     m_ptData = m_ptData - m_nbMask - 1;  // restore the data pointer.
