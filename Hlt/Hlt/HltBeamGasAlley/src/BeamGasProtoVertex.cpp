@@ -94,24 +94,26 @@ VectorD BeamGasProtoVertex::get1DVector(const Vector3DPoints& vect3DPoints, int 
   return vector1D;
 }
 
+
+namespace {
+    struct m012 {
+        m012(): m0(0),m1(0),m2(0) {}
+        void operator()(double x) { ++m0;m1+=x;m2+=x*x; }
+        double m0,m1,m2;
+    };
+}
+
 //### function to calculate the mean and sigma of list of z values
 void BeamGasProtoVertex::getMeanAndSigma(VectorD::const_iterator begin, VectorD::const_iterator end , double& sMean, double& sSigma) const {
   double sSize = end-begin;
   if (!sSize) { debug() << "Function getMeanAndSigma received empty vector" << endmsg; }
   else {
-    // calculate the sum and the mean
-    double sum_vals = std::accumulate(begin, end, 0.);
-    sMean = sum_vals / sSize;
-    // calculate the standard deviation
-    double sum_distToMeanSquare = 0.;
-    for( VectorD::const_iterator zIter=begin; zIter!=end; ++zIter) {
-      sum_distToMeanSquare += pow((*zIter - sMean),2);
-    }
-    sSigma = sqrt(sum_distToMeanSquare/sSize);
+    m012 moments = std::for_each( begin,end, m012() );
+    sMean  = moments.m1 / moments.m0;
+    sSigma = sqrt( moments.m2/moments.m0 - sMean*sMean );
   }
   debug() << "\nz values properties:"   << "\n   Entries = " << sSize
           << "\n   Mean    = " << sMean << "\n   Sigma   = " << sSigma << "\n" << endmsg;
-  return;
 }
 
 //### function to calculate the z-dependent "bad sigma"
