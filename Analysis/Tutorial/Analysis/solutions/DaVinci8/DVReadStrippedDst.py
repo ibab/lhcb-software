@@ -21,7 +21,7 @@ from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
 JpsiSel = AutomaticData(Location = location)
 # Filter the Candidate.  Let's throw away everything above 4 GeV
 from Configurables import FilterDesktop
-_jpsiFilter = FilterDesktop('jpsiFilter', Code = 'MM<4000')
+_jpsiFilter = FilterDesktop('jpsiFilter', Code = '(M>2500*MeV) & (M<4000*MeV)')
 
 # make a Selection
 JpsiFilterSel = Selection(name = 'JpsiFilterSel',
@@ -77,7 +77,7 @@ DaVinci().TupleFile = "Jpsi.root"
 TTree* T = _file0->Get("Jpsi_Tuple/DecayTree")
 T->Show(0)
 T->Draw("J_psi_1S_MM")
-SandB(T,0,"J_psi_1S_MM","J_psi_1SHlt2DiMuonUnbiasedJPsiDecision_TOS","1","J_psi_1S_MM<3500 && J_psi_1S_PT>1000","","Psi_Tos")
+SandB(T,0,"J_psi_1S_MM","J_psi_1SHlt2DiMuonUnbiasedJPsiDecision_TOS","1","J_psi_1S_MM<3500 && J_psi_1S_PT>1000 && J_psi_1S_MM>2500","","Psi_Tos")
 TH1D hh("hh","MuMu Mass",100,2900,3400)
 T->Draw("J_psi_1S_MM >> hh", "J_psi_1S_PT>1000")
 NiceRooPlot(hh,"gp")  // only PK has this...
