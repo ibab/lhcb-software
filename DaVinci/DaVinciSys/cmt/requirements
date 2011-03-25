@@ -1,10 +1,10 @@
 package DaVinciSys
-version v28r1p2
+version v28r1p3
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v28r1p2 Phys
+use  DaVinci                 	v28r1p3 Phys
 use  DaVinciTests               v2r4
 
 # Patches
@@ -13,6 +13,8 @@ use PhysSelPython               v9r2    PhysSel
 use StrippingSettings           v2r1    Phys
 use StrippingSelections         v3r2    Phys
 use MuonID                      v8r0p2  Muon
+use RichPIDQC                   v1r5p3  Rich
+use DaVinciMonitors             v1r14p2 Phys
 
 # Declare this as a container package
 apply_pattern container_package
