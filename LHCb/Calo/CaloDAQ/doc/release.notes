@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-03-23 - Olivier Deschamps
+  - fix compilation warning
+
+! 2011-03-23 - Olivier Deschamps
   - Extend protection against multiple entry in KeyedContainer
   - Fix coverity pb spotted by Gerhard
   - Monitor 'DuplicateEntry' via RawBankReadoutStatus in all DAQ algs

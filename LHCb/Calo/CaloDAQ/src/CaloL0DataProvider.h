@@ -2,6 +2,7 @@
 #ifndef CALOL0DATAPROVIDER_H 
 #define CALOL0DATAPROVIDER_H 1
 
+
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -49,8 +50,8 @@ private:
     }else{
       counter("Duplicate L0ADC found")+=1;
       m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::DuplicateEntry);
-      return temp;
-    }        
+    } 
+    return temp;
   }
   CaloVector<LHCb::L0CaloAdc>    m_adcs;
   unsigned int m_tell1s;
