@@ -14,7 +14,7 @@ from Configurables import MuIDMonitor, CombineParticles, DaVinci
 muonIDm2BSeq_Lam = GaudiSequencer("MuonID2BodyLamSequence")
 
 LambdaMonitor = CombineParticles("LambdaMonitor")
-LambdaMonitor.InputLocations  = [ "StdNoPIDsPions","StdNoPIDsProtons" ]
+LambdaMonitor.Inputs  = [ "Phys/StdNoPIDsPions/Particles","Phys/StdNoPIDsProtons/Particles" ]
 LambdaMonitor.DecayDescriptor = "[Lambda0 -> p+ pi-]cc" ;
 LambdaMonitor.CombinationCut = "(ADAMASS('Lambda0')<20*MeV)"
 LambdaMonitor.DaughtersCuts = { "p+"  :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISLONG) & (MIPCHI2DV(PRIMARY)>9)",
@@ -42,7 +42,7 @@ child2cuts = tag2cuts + " & " + probe1cuts
 muonIDm2BSeq_Jps = GaudiSequencer("MuonID2BodyJpsiSequence")
 
 JpsiMonitor = CombineParticles("JpsiMonitor")
-JpsiMonitor.InputLocations  = [ "StdNoPIDsMuons" ]
+JpsiMonitor.Inputs  = [ "Phys/StdNoPIDsMuons/Particles" ]
 JpsiMonitor.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
 JpsiMonitor.CombinationCut = "(ADAMASS('J/psi(1S)')<300*MeV)"
 
@@ -58,7 +58,7 @@ muonIDm2BSeq_Jps.Members += [ JpsiMonitor ]
 ##################################################################
 
 MuIDLambdaPlot = MuIDMonitor("MuIDLambdaPlot")
-MuIDLambdaPlot.InputLocations = [ "LambdaMonitor" ]
+MuIDLambdaPlot.Inputs = [ "Phys/LambdaMonitor/Particles" ]
 MuIDLambdaPlot.OutputLevel = 6
 
 MuIDLambdaPlot.MassMean = 1115.68
@@ -123,7 +123,7 @@ MuIDLambdaPlot.distMuon  = [0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1
 MuIDLambdaPlot.distPion  = [11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.]
 
 MuIDJpsiPlot = MuIDMonitor("MuIDJpsiPlot")
-MuIDJpsiPlot.InputLocations = [ "JpsiMonitor" ]
+MuIDJpsiPlot.Inputs = [ "Phys/JpsiMonitor/Particles" ]
 MuIDJpsiPlot.OutputLevel = 6
 
 #// MuonID Jpsi Mass Window(MeV/c)

@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-03-25 - Chris Jones
+ - Fixes for the latest DaVInci releases
+
 !========================== DaVinciMonitors v1r14p1 2011-02-20 ===============
 
 ! 2011-02-12 - Chris Jones
