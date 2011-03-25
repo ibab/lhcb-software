@@ -6,7 +6,7 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
-#include <boost/accumulators/statistics/moment.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
 
 // local
 #include "BeamGasProtoVertex.h"
@@ -75,11 +75,11 @@ StatusCode BeamGasProtoVertex::initialize() {
 template <typename ITER>
 void BeamGasProtoVertex::getMeanAndSigma(ITER begin, ITER end , double& sMean, double& sSigma) const {
   namespace ba = boost::accumulators;
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean, ba::tag::moment<2> > > m012;
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean, ba::tag::variance, ba::tag::count> > m012;
   m012 acc = std::for_each( begin,end, m012() );
   if (ba::count(acc)!=0) {
       sMean  = ba::mean(acc);
-      sSigma = sqrt( ba::moment<2>(acc) - sMean*sMean );
+      sSigma = sqrt(ba::variance(acc));
   } else {
       debug() << "Function getMeanAndSigma received empty vector" << endmsg;
   }
@@ -112,7 +112,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
   //----------------------------------------------------------
   // Loop "Main Step" on range until no more steps can be made
   //----------------------------------------------------------
-  int iloop = 0;
+  unsigned iloop = 0;
   while (indStartMS + m_minNumTracks <= end) { // minNumTracks or minTracksToaccept !!! #2  Note: <= should be < I think...
     ++iloop;
     debug() << " loop # " << iloop << endmsg;
