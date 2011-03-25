@@ -15,8 +15,6 @@
 
 DECLARE_ALGORITHM_FACTORY( BeamGasProtoVertex );
 
-typedef std::vector<double> VectorD;
-typedef std::vector<Gaudi::XYZPoint> Vector3DPoints;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -26,7 +24,6 @@ BeamGasProtoVertex::BeamGasProtoVertex(const std::string& name, ISvcLocator* pSv
   , m_trackSelection(*this)
 {
   m_trackSelection.declareProperties();
-  declareProperty( "OutputSelection", m_outputSelectionName = name );
   declareProperty( "zTracksMin", m_zTrMin = -1200.);
   declareProperty( "zTracksMax", m_zTrMax =  1200.);
   declareProperty( "zTracksExcludeLumiRegionLow", m_zTrExclLRLow = 0.);
@@ -49,20 +46,10 @@ StatusCode BeamGasProtoVertex::initialize() {
   m_trackSelection.registerSelection();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm 
 
-  // "stepping" parameters
-  // m_minNumTracks is a property (job-option) to be set externally
-  m_maxNumExtends = 10; //hard fixed
-  // "sigma bad" parameters (hard fixed)
-  m_sigmaBadSlope  = 56.e-3;
-  m_sigmaBadConst1 = 44.;
-  m_sigmaBadConst2 = 16.;
-  m_degradationFactor = 0.2;
-
   assert(m_minNumTracks>1);
   if (msgLevel(MSG::DEBUG)) { 
           debug() << "==> Initialize\n" << endreq 
           << "========== Algorithm parameters ========="   << endreq
-          << "OutputSelection = " << m_outputSelectionName << endreq
           << "zTracksMin      = " << m_zTrMin              << endreq
           << "zTracksMax      = " << m_zTrMax              << endreq
           << "zTracksExcludeLumiRegionLow = " << m_zTrExclLRLow << endreq
@@ -103,6 +90,10 @@ void BeamGasProtoVertex::getMeanAndSigma(ITER begin, ITER end , double& sMean, d
 
 //### function to calculate the z-dependent "bad sigma"
 double BeamGasProtoVertex::sigmaBad(double z) const {
+  // "sigma bad" parameters (hard fixed)
+  static const double m_sigmaBadConst1 = 44.;
+  static const double m_sigmaBadConst2 = 16.;
+  static const double m_sigmaBadSlope  = 56.e-3; // asume straight lines symmetric around z=250mm (sigma(250) = sigmaMin = 30. mm)
   return (z < 250) ? (-1*m_sigmaBadSlope*z + m_sigmaBadConst1) : (m_sigmaBadSlope*z + m_sigmaBadConst2) ;
 }
 
@@ -120,7 +111,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
   //Init
   ITER indStartMS = begin;
   //----------------------------------------------------------
-  // Loop "Main Step" on listZ until no more steps can be made
+  // Loop "Main Step" on range until no more steps can be made
   //----------------------------------------------------------
   int iloop = 0;
   while (indStartMS + m_minNumTracks <= end) { // minNumTracks or minTracksToaccept !!! #2  Note: <= should be < I think...
@@ -152,7 +143,8 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
     double mean_ext  = -9999.;
     ITER indEndExt = end;
 
-    for (unsigned iExtend=1; iExtend<m_maxNumExtends; ++iExtend){
+    static const unsigned maxNumExtends = 10; //hard fixed//max allowed number of extension steps
+    for (unsigned iExtend=1; iExtend<maxNumExtends; ++iExtend){
       bool AccOK = false;
       debug() << "====== Extend FWD iteration "<< iExtend << " ======" << endmsg;
       indEndExt = indStartMS+stepSize1() + iExtend*stepSize2();
@@ -171,6 +163,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
       getMeanAndSigma(indStartMS,indEndExt, mean_ext, sigma_ext);
       debug() << "Extension Mean And Sigma: " << mean_ext << " / " << sigma_ext << endmsg;
   
+      static const double m_degradationFactor = 0.2; // sets how much the variance can degrade during the expansion steps
       if (sigma_ext < sigma_MIN) {
         debug() << "Setting New sigma_MIN" << endmsg;
         sigma_MIN = sigma_ext;
@@ -234,7 +227,7 @@ StatusCode BeamGasProtoVertex::execute() {
   const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
   debug() << "Number of tracks in the BG Tracks Container = " << BGtracks->size() << endmsg;
 
-  VectorD vectZPos;
+  std::vector<double> vectZPos;
   vectZPos.reserve(BGtracks->size());
   
   // Loop over the tracks and fill the vector with the XYZ positions; use the tracks state ClosestToBeam
@@ -261,10 +254,8 @@ StatusCode BeamGasProtoVertex::execute() {
   // once with sorted vector and once with inversly sorted vector
   //-------------------------------------------------------------
 
-  // ascending sort
   std::sort(vectZPos.begin(), vectZPos.end());
 
-  //for (int i=0; i<v0.size(); ++i){ std::cout << v0[i] << "   " << vs1[i] << "   " << vs2[i] << std::endl; }
   if (msgLevel(MSG::DEBUG)) { printVector(vectZPos.begin(),vectZPos.end(), "======================= All Good Z ============================"); }
 
   // OOPS: we fill m_trackSelection.input<1> twice, once in the ascending, and once in the descending case...
