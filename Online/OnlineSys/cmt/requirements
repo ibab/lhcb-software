@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r51
+version v4r52
 
 branches cmt doc
  
@@ -20,10 +20,10 @@ use GaudiObjDesc      v11r11
 use Camera              v1r20    Online
 use Checkpointing       v0r5     Online
 use CondDBServer        v1r4     Online
-use DIM                 v19r15p3 Online
+use DIM                 v19r17   Online
 ####use ExampleGaucho       v3r4     Online
-use FarmMonitor         v2r3     Online
-use Gaucho              v7r5     Online
+use FarmMonitor         v2r5     Online
+use Gaucho              v7r7     Online
 use GaudiCheckpointing  v0r4     Online
 use GaudiOnline         v2r50    Online
 use GaudiRootCnvTests   v1r1     Online
@@ -35,26 +35,26 @@ use HistDBPython        v1r6     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v3r4     Online
-use OnlineBase          v1r8     Online
+use OnlineBase          v1r9     Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB        v7r4     Online
 use OnlineKernel        v2r6     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r36    Online
+use OnlineTasks         v1r37    Online
 ####use Presenter           v2r3     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r10    Online
 use RootCnv             v1r3     Online
-use ROMon               v1r27    Online
+use ROMon               v1r28    Online
 use ROLogger            v0r21    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
-use Trending            v1r3     Online
+use Trending            v1r4     Online
 use UPI                 v1r20    Online
 use UPIR                v1r3     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r33    Online
+use Writer              v1r35    Online
 
 # Declare this as a container package
 apply_pattern container_package

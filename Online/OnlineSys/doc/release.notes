@@ -6,6 +6,20 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v4r52>2010-03-01 OnlineSys v4r52</A></H1>
+<PRE>
+   Based in Gaudi v22r1, 
+   Updated packages are:
+     DIM                 v19r17   Online
+     FarmMonitor         v2r5     Online
+     Gaucho              v7r7     Online
+     OnlineBase          v1r9     Online
+     OnlineTasks         v1r37    Online
+     ROMon               v1r28    Online
+     Trending            v1r4     Online
+     Writer              v1r35    Online
+</PRE>
+
 <H1><A NAME=v4r51>2010-03-01 OnlineSys v4r51</A></H1>
 <PRE>
    Based in Gaudi v22r1, Updates in Gaucho.
