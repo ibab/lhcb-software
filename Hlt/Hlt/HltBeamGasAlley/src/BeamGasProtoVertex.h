@@ -28,8 +28,8 @@ class BeamGasProtoVertex : public HltAlgorithm {
 
 
   unsigned    stepSize1() const { return (m_minNumTracks+1)/2; }   // size of the main steps
-  unsigned    stepSize2() const { return m_minNumTracks/4; }    // size of the extension steps
-  unsigned    minTracksToAccept() const { return m_minNumTracks - stepSize2() ; } // in case of good variance
+  unsigned    stepSize2() const { return (m_minNumTracks-stepSize1()+1)/2; }  // size of the extension step
+  unsigned    minTracksToAccept() const { return stepSize1() + stepSize2(); } // in case of good variance
 
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_trackSelection; // tracks we'll be looking at
   double      m_zTrMin;       // minimal possible z-value (z-list will be trimmed)
@@ -37,5 +37,6 @@ class BeamGasProtoVertex : public HltAlgorithm {
   double      m_zTrExclLRLow; // lower limit of the lumi-region exclusion zone
   double      m_zTrExclLRUp;  // upper limit of the lumi-region exclusion zone
   unsigned    m_minNumTracks; // number a bit higher than the number of tracks needed for a trigger
+  unsigned    m_maxNumOfVeloTracks; //process only events with lowish number of tracks
 };
 #endif // INCLUDE_BEAMGASTRIGPROTOVERTEX_H 

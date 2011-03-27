@@ -3,6 +3,14 @@
 ! Responsible : Plamen Hopchev
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
+
+! 2011-03-27 Plamen Hopchev
+ - simplification of the logic of the search. Now do just one extension in fwd
+   or bkw direction
+ - execute the reverse_iteration only if the fwd iteration was not successful
+ - fill the output track selection only once (either in the fwd or reversed iteration) 
+ - add more protections: stepSizes and max number of executions of the MainStep while-loop
+
 ! 2011-03-25 Gerhard Raven
  - fix duplicate entries during extension
  - avoid sorting twice
