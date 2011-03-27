@@ -93,7 +93,10 @@ bool DeRichSystem::safeMapFill( const SOURCE& source, const TARGET& target, MAP&
             << " OLD=" << map[source] << " NEW=" << target
             << endmsg;
   }
-  return p.second;
+  //return p.second;
+  // For the moment, always return true. 
+  // Some problems with 2010/2009/2008 data to be understood first
+  return true;
 }
 
 //=========================================================================
