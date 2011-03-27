@@ -1078,6 +1078,59 @@ namespace LoKi
       // ======================================================================      
     };
     // ========================================================================
+    /** @class Fetch
+     *  Fetch & evaluate the certain element of the stream 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2011-03-27
+     */
+    template <class TYPE,class TYPE2>
+    class Fetch : public LoKi::Functor<std::vector<TYPE>,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from functor, index and bad-value 
+      Fetch  ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
+               const unsigned int               index ,
+               const TYPE2                      bad   ) 
+        : LoKi::Functor<std::vector<TYPE>,TYPE2> () 
+        , m_fun   ( fun   ) 
+        , m_index ( index )
+        , m_bad   ( bad   ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Fetch() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Fetch* clone() const { return new Fetch ( *this ) ; }
+      /// MANDATORY: 
+      /// MANDATORY: the only one essential method:
+      virtual typename LoKi::Functor<std::vector<TYPE>,TYPE2>::result_type operator()
+        ( typename LoKi::Functor<std::vector<TYPE>,TYPE2>::argument a ) const
+      {
+        if ( a.size() < m_index + 1 ) 
+        {
+          this->Error ( "Input vector is too short, return 'bad'" ) ;
+          return this->m_bad ;
+        }
+        // evaluate the functor:
+        return this->m_fun.fun ( a[ this->m_index] ) ;
+      }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Fetch () ;                         // the default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the functor itself 
+      typename LoKi::Assignable<LoKi::Functor<TYPE,TYPE2> >::Type m_fun ;
+      /// the index 
+      unsigned int m_index ;  // the index 
+      /// bad value 
+      TYPE2        m_bad   ;  // the bad value 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Has
      *  check the presence of good elemements in stream 
      */
@@ -2468,6 +2521,18 @@ namespace LoKi
             const double                      init = 1 ) 
   {
     return LoKi::Functors::Product<TYPE>( fun , cut , init ) ;
+  }
+  // ==========================================================================
+  /** fetch certain element from the vector and evaluate  the function
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   */
+  template <class TYPE, class TYPE2> 
+  LoKi::Functors::Fetch<TYPE,TYPE2>
+  fetch ( const LoKi::Functor<TYPE,TYPE2>& fun      , 
+          const unsigned int               index    , 
+          const TYPE2                      bad      ) 
+  {
+    return LoKi::Functors::Fetch<TYPE,TYPE2> ( fun , index , bad ) ;
   }
   // ==========================================================================
 } //                                                      end of namespace LoKi 

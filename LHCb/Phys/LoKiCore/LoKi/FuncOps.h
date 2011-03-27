@@ -487,6 +487,12 @@ namespace LoKi
       __product__ ( const Func&  fun , 
                     const Cuts&  cut , const double init = 1 )
       { return LoKi::product ( fun , cut , init ) ; }
+      // fetch from the stream 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __fetch__ ( const Func&        fun   , 
+                  const unsigned int index ,  
+                  const double       bad   )
+      { return LoKi::fetch ( fun , index , bad ) ; }
       // ======================================================================
       // statistics 
       // ======================================================================
@@ -673,6 +679,13 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,bool>
       __has__ ( const Cuts& cut ) 
       { return LoKi::has<TYPE2,TYPE,bool> ( cut ) ; }
+      // ======================================================================
+      // fetch from the stream 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,bool>
+      __fetch__ ( const Cuts&        fun   , 
+                  const unsigned int index ,  
+                  const bool         bad   = false )
+      { return LoKi::fetch ( fun , index , bad ) ; }
       // ======================================================================
     public:
       // ======================================================================

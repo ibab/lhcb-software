@@ -18,8 +18,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-27 - Vanya Belyaev
+
+ - add "Fetch" vector-function
+
 ! 2011-03-24 - Vanya Belyaev
+
  - add
+
      HASRECSUMMARY & RECSUMMARY symbols for Sophie Redford & Andy Powell
 
 ! 2011-03-18 - Vanya Belyaev
@@ -29,8 +35,9 @@
 ! 2011-03-15 - Vanya Belyaev
 
  - fix the names for FUnOps:
-     Reflex now ignores the names prependended by single underscore... :-( 
+     Reflex now ignores the names prepended by single underscore... :-( 
      fix it...
+
  - optimize the "set-difference" and "set-intersection"
 
 ! 2011-03-10 - Vanya Belyaev
