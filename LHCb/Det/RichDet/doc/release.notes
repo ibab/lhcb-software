@@ -6,7 +6,7 @@
 
 ! 2011-03-27 - Chris Jones
  - (Temporarily) disabled the aborting of processing when a databse 
-   inconsisteny is found in DeRichSystem::safeMapFill. Need to first 
+   inconsistency is found in DeRichSystem::safeMapFill. Need to first 
    understand some problems with 2010 and older data.
 
 ! 2011-03-23 - Chris Jones
