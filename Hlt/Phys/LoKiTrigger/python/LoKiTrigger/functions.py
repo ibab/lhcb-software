@@ -230,6 +230,14 @@ TC_VXMAKE3     = LoKi.Hlt1.VxMaker3
 TC_VXMAKE4     = LoKi.Hlt1.VxMaker4
 
 # =============================================================================
+## di-tracks makers
+# =============================================================================
+## @see LoKi::Cuts::TC_DITRACKS
+TC_DITRACKS    = LoKi.Hlt1.DiTrackMaker
+## @see LoKi::Cuts::TC_DITRACKS2
+TC_DITRACKS2   = LoKi.Hlt1.DiTrackMaker2
+
+# =============================================================================
 ## end of new stuff ##
 # =============================================================================
 

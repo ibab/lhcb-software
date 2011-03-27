@@ -5,6 +5,21 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-27 - Vanya Belyaev
+
+ - 1. add di-track creator from the stream 
+
+       TC_DITRACKS2 
+
+   2. add interpretation of "track-vector-function (FunVal&CutVal)" 
+      inside TC-stream as corresponding "scalar" functor that needs 
+      to be applied to underlying Hlt::MultiTrack
+
+      e.g. following stream-element filters MULTITRACKS with scalar PT-sum: 
+
+        " ... >>   ( 1 < sum ( TrPT ) >> ... "
+    
+
 ! 2011-03-18 - Vanya Belyaev
  - add protection against double lock 
 

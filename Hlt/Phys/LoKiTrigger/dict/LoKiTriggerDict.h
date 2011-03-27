@@ -212,11 +212,23 @@ namespace LoKi
        ( const Pipe& fun ,
          const LoKi::Functor<const Hlt::Stage*,bool>&  fun2 )
        { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }
+       // __rshift__  for MultiTrack
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+       __rshift__
+       ( const Pipe& fun ,
+         const LoKi::BasicFunctors<const LHCb::Track*>::CutVal&  fun2 )
+       { return fun >> LoKi::Candidates::SlotFilter(fun2) ;  }
        // __rshift__
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
        __rshift__
        ( const Pipe& fun ,
          const LoKi::Functor<const LHCb::Track*,double>&  fun2 )
+       { return fun >> LoKi::Candidates::SlotMap(fun2) ; }
+       // __rshift__ for MultiTrack
+       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+       __rshift__
+       ( const Pipe& fun ,
+         const LoKi::BasicFunctors<const LHCb::Track*>::FunVal&  fun2 )
        { return fun >> LoKi::Candidates::SlotMap(fun2) ; }
        // __rshift__   "sink"
        static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
@@ -437,6 +449,25 @@ namespace LoKi
       ( const Source&                                          fun , 
         const LoKi::Functor<const LHCb::VertexBase*,bool>&     cut )
       { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
+      // __rshift__ for MultiTracks
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source&                                          fun , 
+        const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut )
+      { return fun >> LoKi::Candidates::SlotFilter ( cut ) ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      __rshift__
+      ( const Source& fun ,
+        const LoKi::Functor<const LHCb::Track*,double>&  fun2 )
+      { return fun >> LoKi::Candidates::SlotMap(fun2) ; }
+      // __rshift__ for MultiTrack
+      static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      __rshift__
+      ( const Source& fun ,
+        const LoKi::BasicFunctors<const LHCb::Track*>::FunVal&  fun2 )
+      { return fun >> LoKi::Candidates::SlotMap(fun2) ; }
+      // ===================================================================      
       // __rshift__  "sink"
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 

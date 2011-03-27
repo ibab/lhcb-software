@@ -489,7 +489,7 @@ namespace LoKi
       /// The Key 
       Hlt::IUnit::Key              m_key  ;                     //  The Key
       /// The Cut 
-      LoKi::FunctorFromFunctor<const LHCb::VertexBase*,bool> m_cut  ;                     //  The Cut
+      LoKi::FunctorFromFunctor<const LHCb::VertexBase*,bool> m_cut  ; //  The Cut
       // ======================================================================      
     };   
     // ========================================================================

@@ -616,9 +616,6 @@ LoKi::Hlt1::DiTrackMaker::operator()
   //
   Assert ( 0 != alg() ,  "Invalid setup!" ) ;
   //
-  //
-  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
-  //
   typedef result_type                CANDIDATES ;
   typedef CANDIDATES::const_iterator ITERATOR   ;
   //
@@ -721,87 +718,146 @@ std::ostream& LoKi::Hlt1::DiTrackMaker::fillStream ( std::ostream& s ) const
 
 
 
-  
-  // ============================================================================
-  // LoKi::Hlt1::VxMaker::result_type 
-// LoKi::Hlt1::VxMaker::operator() () const 
-// {
-//   typedef TrSource::result_type      Tracks   ;
-//   typedef LoKi::Combiner_<Tracks>    Combiner ;
-//   typedef Combiner::Range            TRange   ;
-//   typedef LHCb::RecVertex::Container Vertices ;
-//   typedef result_type                Output   ;
-  
-//   Output output ;
-//   output.reserve ( 50 ) ;
-  
-//   if ( 0 == m_alg ) { init() ;} 
-//   Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL!" ) ;
-  
-//   Vertices* overtices = new Vertices() ;
-//   m_alg->put ( overtices , "Hlt1/Vertex/" + m_sink.selName() ) ;
-  
-  
-//   // get the first set of tracks
-//   Tracks track1 = m_track1() ;
-  
-//   // get the second set of tracks
-//   Tracks track2 ;
-//   if ( !m_same ) { track2 = m_track2() ; }
-  
-//   const bool same = m_same || track1 == track2 ;
-  
-//   const TRange range1 ( track1 ) ;
-//   const TRange range2 ( same ? track1 : track2 ) ;
-  
-//   const Hlt::VertexCreator creator ;
-  
-//   /// create the combiner & fill it with data 
-//   Combiner loop ;
-//   loop.add ( range1 ) ;
-//   loop.add ( range2 ) ;
-  
-//   // make the combinations 
-//   for ( ; loop.valid() ; loop.next() ) 
-//   {
-//     // get the current combination 
-//     Tracks tracks ( 2 ) ;
-//     loop.current ( tracks.begin() ) ;
-    
-//     const LHCb::Track* first  = tracks[0] ;
-//     const LHCb::Track* second = tracks[1] ;
-    
-//     // skip invalid 
-//     if ( 0 == first || 0 == second ) { continue ; }              // CONTINUE 
-//     // skip the same  
-//     if ( first == second           ) { continue ; }              // CONTINUE 
-//     // reduce the double count :
-//     if ( same && first >= second   ) { continue ; }              // CONTINUE
 
-//     // chech the overrlap 
-//     if ( HltUtils::matchIDs ( *first , *second ) ) { continue ; }// CONTINUE 
-    
-//     // apply the cuts on the combination of two tracks:
-//     if ( !m_cut2tr_trivial && !m_cut2tr ( *first , *second ) ) { continue ;  }
-    
-//     // create the vertex 
-//     std::auto_ptr<LHCb::RecVertex> vertex ( new LHCb::RecVertex() ) ;
-    
-//     /// fill it with some information 
-//     creator ( *first , *second , *vertex ) ;
-    
-//     // apply cuts on the vertex 
-//     if ( !m_cut4rv_trivial && !m_cut4rv ( *vertex ) ) { continue ; } // CONTINUE
-    
-//     // good vertex! add it to the seelction! 
-//     output.push_back ( vertex.get() ) ;    // "vertex is not valid anymore 
-//     overtices->insert( vertex.release() ); // this is in the TES and assumes ownership
-   
-//   }
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::Hlt1::DiTrackMaker2::DiTrackMaker2 
+( const std::string&                       output  ,   // output selection name/key 
+  const bool                               neutral ,
+  const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration 
+  : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
+  , LoKi::Hlt1::VxMakerBase ( config ) 
+  , m_sink    ( output  ) 
+  , m_neutral ( neutral ) 
+{}
+// ============================================================================
+// MANDATORY: virtual desctructor 
+// ============================================================================
+LoKi::Hlt1::DiTrackMaker2::~DiTrackMaker2 () {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Hlt1::DiTrackMaker2* LoKi::Hlt1::DiTrackMaker2::clone() const 
+{ return new LoKi::Hlt1::DiTrackMaker2 ( *this ) ; }
+// ============================================================================
+// the only one important method 
+// ============================================================================
+LoKi::Hlt1::DiTrackMaker2::result_type 
+LoKi::Hlt1::DiTrackMaker2::operator() 
+  ( LoKi::Hlt1::DiTrackMaker2::argument a ) const 
+{
+  //
+  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
+  //
+  typedef result_type                CANDIDATES ;
+  typedef CANDIDATES::const_iterator ITERATOR   ;
+  //
+  if ( a.empty()  ) { return result_type () ; } // no action for EMPTY input   
+  // 
+  // input selections:
+  const CANDIDATES* arg1 = &a  ;
+  const CANDIDATES* arg2 = &a  ;
+  //
+  // the output selection 
+  CANDIDATES       output ;
+  //
+  for ( ITERATOR icand1 = arg1->begin() ; arg1->end() != icand1 ; ++icand1 ) 
+  {
+    const Hlt::Candidate* cand1 = *icand1 ;
+    if ( 0 == cand1 ) { continue ; }                              // CONTINUE 
+    const LHCb::Track*    trk1  = cand1->get<LHCb::Track> () ;
+    //
+    if ( 0 == trk1  ) { continue ; }                              // CONTINUE
+    //
+    const int  q1    = trk1->charge() ;
+    const bool ok1_1 = track1cut ( trk1 ) ;
+    const bool ok1_2 = track2cut ( trk1 ) ;
+    //
+    if ( !ok1_1 && !ok1_2  ) { continue ; }                       // CONTINUE 
+    //
+    for ( ITERATOR icand2 = icand1 + 1 ; arg2->end() != icand2 ; ++icand2 ) 
+    {
+      const Hlt::Candidate* cand2 = *icand2 ;
+      if ( 0 == cand2 ) { continue ; }                            // CONITNUE 
+      const LHCb::Track*    trk2  = cand2->get<LHCb::Track> () ;
+      if ( 0 == trk2  ) { continue ; }                            // CONTINUE 
+      //
+      const int  q2    = trk2 -> charge() ;
+      //
+      // consider only neutral combinations 
+      if  ( m_neutral && ( 0 <= q1 * q2 ) ) { continue ; }         // CONTINUE 
+      //      
+      const bool ok2_1 = track1cut ( trk2 ) ;
+      const bool ok2_2 = track2cut ( trk2 ) ;
+      //
+      const bool ok = ( ok1_1 && ok2_2 ) || ( ok1_2 && ok2_1 ) ;
+      //
+      if ( !ok ) { continue ; }                                   // CONTINUE 
+      //
+      // check the distance 
+      if ( !checkVertex ( trk1 , trk2 , false ) ) { continue ; }  // CONTINUE 
+      //
+      // start new candidate:
+      Hlt::Candidate* candidate = newCandidate() ;
+      candidate -> addToWorkers ( alg() ) ;
+      //      
+      {
+        //
+        // 1. "initiator" stage - copy the first candidate
+        //
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage     () ;
+        candidate -> addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock ( stage , alg () ) ;
+        //
+        lock.addToHistory ( cand1->workers() ) ;
+        // lock.addToHistory ( myName()         ) ;
+        stage -> set ( cand1->currentStage() ) ;
+      }
+      //
+      {
+        //
+        // 2. "regular" stage - create di-track
+        //
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage     () ;
+        candidate -> addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock ( stage , alg () ) ;
+        // lock.addToHistory ( myName()         ) ;
+        //
+        Hlt::MultiTrack* mtrack = newMultiTrack() ;
+        mtrack -> addToTracks ( trk1 ) ;
+        mtrack -> addToTracks ( trk2 ) ;
+        stage  -> set ( mtrack ) ;
+      }
+      // 
+      // add new candidate to the output:
+      output.push_back ( candidate ) ;
+    } //                                         end of loop over source_2 
+    // ========================================================================
+  } //                                           end of loop over input data
+  // ==========================================================================
+  //
+  // register the selection in Hlt Data Service 
+  return !m_sink ? output : m_sink ( output ) ;                       // RETURN
+  // ==========================================================================
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::Hlt1::DiTrackMaker2::fillStream ( std::ostream& s ) const 
+{
+  return 
+    s << "TC_DITRACKS2("
+      << "'" << output () << "',"
+      << ( m_neutral ? "True," : "False," ) 
+      <<        config () << ")" ;  
+}
+// ============================================================================
 
-//   // use "sink": register object for Hlt Data Service 
-//   return m_sink ( output )  ; // RETURN 
-// }
 
 
 

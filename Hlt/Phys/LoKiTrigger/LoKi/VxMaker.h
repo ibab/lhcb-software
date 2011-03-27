@@ -377,6 +377,53 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class DiTrackMaker2 
+     *  the simple "di-tracks-maker" from the same selection  
+     *  @see LoKi::Cuts::TC_DITRACKS2
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     */
+    class GAUDI_API DiTrackMaker2
+      : public LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe 
+      , public LoKi::Hlt1::VxMakerBase 
+    {
+    private:
+      // ======================================================================
+      /// the actual type of track source
+      typedef LoKi::BasicFunctors<const Hlt::Candidate*>::Source Source ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor 
+      DiTrackMaker2
+      ( const std::string&             output  ,   // output selection name/key 
+        const bool                     neutral ,    // charge-neutral pairs? 
+        const LoKi::Hlt1::VxMakerConf& config  ) ;  //       tool configuration 
+      /// MANTATOY: virtual destructor 
+      virtual ~DiTrackMaker2 () ;      
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DiTrackMaker2* clone() const ; 
+      /// MANDATORY: the only essential method
+      virtual  result_type   operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual  std::ostream&  fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DiTrackMaker2 () ;                 // the default constructor is disabled 
+      // ======================================================================
+      /// the output selection 
+      const std::string& output () const { return m_sink.output() ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      /// 'sink': the functor which register the selection in Hlt Data Svc
+      LoKi::Hlt1::Sink               m_sink    ;  //                      'sink'
+      ///  make only "charge-neutral" combinations ?
+      bool m_neutral ;            //  make only "charge-neutral" combinations ?
+      // ======================================================================
+    };
+    // ========================================================================
   } //                                              end of namespace LoKi::Hlt1
   // ==========================================================================
   namespace Cuts 
@@ -462,6 +509,18 @@ namespace LoKi
      *  @date 2010-12-04
      */
     typedef LoKi::Hlt1::DiTrackMaker                              TC_DITRACKS ;
+    // ========================================================================
+    /** @typedef TC_DITRACKS2
+     *  di-track maker from the same 1-track selections 
+     *  
+     *  @see LHCb::Track
+     *  @see LHCb::RecVertex 
+     *  @see Hlt::MultiTrack
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-03-27
+     */
+    typedef LoKi::Hlt1::DiTrackMaker2                            TC_DITRACKS2 ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

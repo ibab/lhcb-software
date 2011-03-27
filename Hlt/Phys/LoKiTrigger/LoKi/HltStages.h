@@ -597,11 +597,57 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    template <>
+    class Cut_<Hlt::MultiTrack> : 
+      public LoKi::BasicFunctors<const Hlt::Stage*>::Predicate
+    {
+    public:
+      // ==================================================================
+      /// constructor from the "cutval"
+      Cut_
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~Cut_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Cut_* clone() const { return new  Cut_ ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual      LoKi::BasicFunctors<const Hlt::Stage*>::Predicate::result_type 
+      operator() ( LoKi::BasicFunctors<const Hlt::Stage*>::Predicate::argument a )  const 
+      { return filterStage ( a ) ; }
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** perform the actual evaluation 
+       *  @attention predicate is appleid only for VALID stages
+       *  @param stage (INPUT) the input stage 
+       *  @return result of predicate evaluation for VALID stages
+       */
+      bool filterStage ( const Hlt::Stage* stage ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      Cut_ () ;                              // default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      LoKi::Assignable<LoKi::BasicFunctors<const LHCb::Track*>::CutVal>::Type m_cut;
+      // ======================================================================
+    };
+    // ========================================================================
     /// helper function to create the predicate 
     template <class TYPE>
     inline Cut_<TYPE> cut_ 
     ( const LoKi::Functor<const TYPE*,bool>& cut , const int fake )
     { return Cut_<TYPE> ( cut , fake ) ; }
+    /// helper function to create the predicate 
+    inline 
+    Cut_<Hlt::MultiTrack> cut_ 
+    ( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal&    cut     , 
+      const int                                              /* fake */ ) 
+    { return LoKi::Stages::Cut_<Hlt::MultiTrack> ( cut ) ; }      
     // ========================================================================
     /** @class Fun_
      *  Helper class for implementation
@@ -669,11 +715,58 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    template <>
+    class Fun_<Hlt::MultiTrack>: public LoKi::BasicFunctors<const Hlt::Stage*>::Function
+    {
+    public:
+      // ==================================================================
+      /// constructor from the function and "bad"-value 
+      Fun_
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun , 
+        const double                                           bad ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~Fun_() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Fun_* clone() const { return new  Fun_ ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual      LoKi::BasicFunctors<const Hlt::Stage*>::Function::result_type 
+      operator() ( LoKi::BasicFunctors<const Hlt::Stage*>::Function::argument a )  const 
+      { return evalStage ( a ) ; }
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** perform the actual evaluation 
+       *  @attention function is applied only for VALID stages
+       *  @param stage (INPUT) the input stage 
+       *  @return result of predicate evaluation for VALID stages
+       */
+      double evalStage ( const Hlt::Stage* stage ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      Fun_ () ;                              // default constructor is disabled
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the function 
+      LoKi::Assignable<LoKi::BasicFunctors<const LHCb::Track*>::FunVal>::Type m_fun;
+      /// bad-value 
+      double                                        m_bad ; // bad-value 
+      // ======================================================================
+    };
+    // ========================================================================
     /// helper function to create the function 
     template <class TYPE>
     inline Fun_<TYPE> fun_ 
     ( const LoKi::Functor<const TYPE*,double>& fun , const double bad )
     { return LoKi::Stages::Fun_<TYPE> ( fun , bad ) ; }
+    /// helper function to create the function 
+    inline Fun_<Hlt::MultiTrack> fun_ 
+    ( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun , const double bad )
+    { return LoKi::Stages::Fun_<Hlt::MultiTrack> ( fun , bad ) ; }
     // ========================================================================
   } //                                            end of namespace LoKi::Stages 
   // ==========================================================================

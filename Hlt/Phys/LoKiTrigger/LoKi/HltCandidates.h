@@ -263,6 +263,15 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+      SlotFun
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun ,
+        const int    slot = 0 ,
+        const double bad  = 0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
        *     - positive value corresponds to step-back in history
@@ -365,6 +374,16 @@ namespace LoKi
        */
       SlotCut
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut ,
+        const int slot  = 0 ) ;
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *     - 0 corresponds to current stage ,
+       *     - negative value corresponds to initiator stage
+       *     - positive value corresponds to step-back in history
+       */
+      SlotCut
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut ,
         const int slot  = 0 ) ;
       // =====================================================================
       /// MANDATORY: virtual destructor
@@ -502,6 +521,15 @@ namespace LoKi
        */
     	SlotMap
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Function& fun,
+    		const int    slot = 0 ,
+        const double bad  = 0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotMap
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun,
     		const int    slot = 0 ,
         const double bad  = 0 ) ;
       /// constructor

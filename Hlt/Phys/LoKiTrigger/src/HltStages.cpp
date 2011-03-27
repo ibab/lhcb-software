@@ -719,7 +719,104 @@ std::ostream& LoKi::Stages::Cache2::fillStream ( std::ostream& s ) const
 
 
 
+// ==================================================================
+//  constructor from the predicate and the fake integer argument 
+// ==================================================================
+LoKi::Stages::Cut_<Hlt::MultiTrack>::Cut_ 
+( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut )
+  : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
+  , m_cut  ( cut  )
+{}
 
+
+
+// ============================================================================
+/*  perform the actual evaluation 
+ *  @attention predicate is appleid only for VALID stages
+ *  @param stage (INPUT) the input stage 
+ *  @return result of predicate evaluation for VALID stages
+ */
+// ============================================================================
+bool LoKi::Stages::Cut_<Hlt::MultiTrack>::filterStage 
+( const Hlt::Stage* stage ) const 
+{
+  //
+  if ( 0 == stage ) 
+  {
+    Error ( "Invalid Stage, return false" ) ;
+    return false ;                                         // RETURN 
+  }
+  //
+  // get the object from the stage 
+  //
+  const Hlt::MultiTrack* obj = stage->get<Hlt::MultiTrack>() ;
+  //
+  if ( 0 == obj ) 
+  {
+    Error ( "Hlt::Stage is NOT Hlt::MultiTrack, return false" ) ;
+    return false ;                                         // RETURN 
+    
+  }
+  //
+  return m_cut.fun ( LHCb::Track::ConstVector ( obj->tracks().begin() , 
+                                                obj->tracks().end  () ) ) ;
+} 
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& 
+LoKi::Stages::Cut_<Hlt::MultiTrack>::fillStream ( std::ostream& s ) const 
+{ return s << m_cut ; }
+// ============================================================================
+
+// ============================================================================
+// constructor from the function and "bad"-value 
+// ============================================================================
+LoKi::Stages::Fun_<Hlt::MultiTrack>::Fun_
+( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun , 
+  const double                                           bad )
+  : LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
+  , m_fun  ( fun )
+  , m_bad  ( bad )
+{}
+// ============================================================================
+/*  perform the actual evaluation 
+ *  @attention predicate is appleid only for VALID stages
+ *  @param stage (INPUT) the input stage 
+ *  @return result of predicate evaluation for VALID stages
+ */
+// ============================================================================
+double LoKi::Stages::Fun_<Hlt::MultiTrack>::evalStage 
+( const Hlt::Stage* stage ) const 
+{
+  //
+  if ( 0 == stage ) 
+  {
+    Error ( "Invalid Stage, return 'bad'" ) ;
+    return m_bad ;                                         // RETURN 
+  }
+  //
+  // get the object from the stage 
+  //
+  const Hlt::MultiTrack* obj = stage->get<Hlt::MultiTrack>() ;
+  //
+  if ( 0 == obj ) 
+  {
+    Error ( "Hlt::Stage is NOT Hlt::MultiTrack, return 'bad'" ) ;
+    return m_bad ;                                         // RETURN 
+    
+  }
+  //
+  return m_fun.fun ( LHCb::Track::ConstVector ( obj->tracks().begin() , 
+                                                obj->tracks().end  () ) ) ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& 
+LoKi::Stages::Fun_<Hlt::MultiTrack>::fillStream ( std::ostream& s ) const 
+{ return s << m_fun ; }
+// ============================================================================
 
 
 // ============================================================================
