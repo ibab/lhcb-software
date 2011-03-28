@@ -28,8 +28,10 @@ class CreateTrendingHistogramDialog : public TGTransientFrame {
  public:
   /// Standard constructor
   CreateTrendingHistogramDialog( const TGWindow * p , 
-				 const TGWindow * main , 
-				 OnlineHistDB   * histdb ) ;
+                                 const TGWindow * main , 
+                                 OnlineHistDB   * histdb,
+                                 std::string partition,
+                                 std::string& result ) ;
 
   virtual ~CreateTrendingHistogramDialog() ; ///< Destructor
   
@@ -42,18 +44,13 @@ class CreateTrendingHistogramDialog : public TGTransientFrame {
   /// Function called when the window is closed
   void CloseWindow();
 
-  /// Open a file dialog window to choose the name of the trend file
-  void OpenFileDialog() ;
-
-  void UpdateTags();
-
  private:
-  const TGWindow *    m_rootFrame ; ///< Root frame of this window
-  TGTextEntry * m_nameEntry ; ///< Entry for the histo name
-  TGTextEntry * m_fileEntry ; ///< Entry for the file name
-  TGComboBox  * m_tagEntry ;  ///< Entry for the tag name
-
-  OnlineHistDB * m_histdb ; ///< Pointer to histogram DB object
+  const TGWindow* m_rootFrame ; ///< Root frame of this window
+  TGTextEntry *   m_fileEntry ; ///< Entry for the file name
+  OnlineHistDB *  m_histdb ; ///< Pointer to histogram DB object
+  std::string     m_partition;
+  std::string*    m_output;
+  int m_returnCode;
 
   ClassDef( CreateTrendingHistogramDialog , 0 ) 
 };

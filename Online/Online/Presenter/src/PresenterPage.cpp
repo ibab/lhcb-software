@@ -80,7 +80,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
     //== Is it a trend plot ?
  
     if ( myHist->type() == OnlineHistDBEnv::TRE ) {
-      std::string file = myHist->hname();
+      std::string file = myHist->algorithm();
       if ( file.find( ".trend" ) < file.size() ) file = file.substr( 0, file.find( ".trend" ) );
       unsigned indx = file.size();
       unsigned underscore = 0;
@@ -90,7 +90,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
       }
       if ( underscore == 0 ) underscore = indx;
       file = file.substr(0,indx) + partition + "_" + file.substr( underscore );
-      std::string variable = myHist->algorithm();
+      std::string variable = myHist->hname();
       bool existed = false;
       for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
         if ( (*itF).fileName == file ) {

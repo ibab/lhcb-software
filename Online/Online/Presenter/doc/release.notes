@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-28 - Olivier Callot
+ - Improved the creation of trending plots. Change their name convention.
+
 ! 2011-03-23 - Olivier Callot
  - Make trend plot working in history per run mode
  - Make trend plot editable by the select button.

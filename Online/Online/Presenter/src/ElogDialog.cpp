@@ -10,7 +10,6 @@
 #include <TGTextBuffer.h>
 #include <TGLabel.h>
 #include <TObject.h>
-#include <TGMsgBox.h>
 #include <TPad.h>
 #include <TCanvas.h>
 #include <TColor.h>

@@ -685,8 +685,7 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram) {
 //=============================================================================
 // Set history by labels
 //=============================================================================
-void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>&
-                               rootFiles) {
+void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& rootFiles) {
   if (!h) return;
   unsigned int n=h->GetNbinsX();
   if (n != rootFiles.size()) {
@@ -698,22 +697,17 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>&
   int maxnbinUnlabeled = n/4;
   if ( m_presenterInfo->globalHistoryByRun( ) ) {
     int lastrun=0,run;
-    for ( std::vector<boost::filesystem::path>::const_iterator rootFilesIt =
-            rootFiles.begin();
+    for ( std::vector<boost::filesystem::path>::const_iterator rootFilesIt = rootFiles.begin();
           rootFilesIt != rootFiles.end(); ++rootFilesIt ) {
       bin++;
-      TObjArray* fileRunMatchGroup =
-        pres::s_fileRunRegexp.MatchS((*rootFilesIt).leaf());
-      std::istringstream
-        irun((((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data());
+      TObjArray* fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((*rootFilesIt).leaf());
+      std::istringstream irun((((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data());
       irun >> run;
       if ( (run-lastrun) > (bin-lastbin) ||
            (bin-lastbin) > maxnbinUnlabeled ) {
         // add a label
-        h->GetXaxis()->
-          SetBinLabel(bin,
-                      (((TObjString *)fileRunMatchGroup->At(2))->
-                       GetString()).Data() );
+        h->GetXaxis()->SetBinLabel(bin,
+                                   (((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data() );
         lastrun = run;
         lastbin = bin;
       }
@@ -826,7 +820,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
     if ( rootFile -> IsZombie() ) {
       std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
     } else {
-      std::cout << " ++ file " << (*itF).file_string() << " is open. Serach for " << dispHist->rootName() << std::endl;
+      std::cout << " ++ file " << (*itF).file_string() << " is open. Search for " << dispHist->rootName() << std::endl;
       TH1* archiveHisto;
       rootFile -> GetObject( (dispHist->rootName()).c_str(), archiveHisto );
       if (archiveHisto) {

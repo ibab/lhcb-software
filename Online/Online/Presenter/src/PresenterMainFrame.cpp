@@ -2172,6 +2172,7 @@ void PresenterMainFrame::loginToHistogramDB() {
 // logout from histogram database
 //==============================================================================
 void PresenterMainFrame::logoutFromHistogramDB() {
+  /*
   if ( ( 0 != m_histogramDB ) && isConnectedToHistogramDB() &&
        ( pres::Batch != presenterMode() ) ) {
     new TGMsgBox(fClient->GetRoot(), this, "Logout from Database",
@@ -2182,6 +2183,7 @@ void PresenterMainFrame::logoutFromHistogramDB() {
       return;
     }
   }
+  */
   cleanHistogramDB();
 
   m_databaseMode = pres::LoggedOut;
@@ -5596,9 +5598,16 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
 // Display a dialog box to add a trending histo to the database
 //==============================================================================
 void PresenterMainFrame::addTrendingHisto() {
+  std::string message;
   fClient->WaitFor(dynamic_cast< TGWindow * >( new CreateTrendingHistogramDialog( gClient->GetRoot() , 
-                                                                                   GetMainFrame() ,
-                                                                                  m_histogramDB ) ) );
+                                                                                  this,// GetMainFrame() ,
+                                                                                  m_histogramDB, 
+                                                                                  currentPartition(),
+                                                                                  message ) ) );
+  new TGMsgBox( fClient->GetRoot(), this, "Trending creation result",
+                message.c_str(), kMBIconExclamation, kMBOk,
+                &m_msgBoxReturnCode );
+  
 }
 
 //==============================================================================
