@@ -49,6 +49,7 @@ class LHCbProjectBuilder(object):
         self.getpackCommand = 'getpack --no-config --batch -p anonymous'
         self.pythonCommand = 'python '
         self.coverityPath = '/build/axel/Coverity/cov-sa/bin/'
+        #self.coverityPath = '/build/coverity/static-analysis/bin/'
         self.status = 0
 
         from LbConfiguration.Project import project_names as listOfProjectNames
@@ -92,8 +93,21 @@ class LHCbProjectBuilder(object):
         return os.system(cmd + log)
 
     def cleanBuildDir(self, projectName):
+        def _fixPerms(path):
+            """ change file/dir permissions to be able to remove them """
+            try:
+                from stat import S_IWRITE, ST_MODE, S_IMODE, S_IRWXU
+                mode = S_IMODE(os.stat(path)[ST_MODE])
+                if (mode & S_IRWXU) != S_IRWXU:
+                    os.chmod(path, mode | S_IRWXU)
+            except OSError:
+                pass
         if '%CMTCONFIG%' in self.slot._buildDir:
+            _fixPerms((os.sep.join([self.slot.buildDir(), projectName])))
             shutil.rmtree(os.sep.join([self.slot.buildDir(), projectName]), ignore_errors=True)
+            if not os.path.exists(self.slot.buildDir()):
+                os.makedirs(self.slot.buildDir())
+            os.makedirs(os.sep.join([self.slot.buildDir(), projectName]))
 
     def buildProject(self):
         if self.disabled:
@@ -102,21 +116,27 @@ class LHCbProjectBuilder(object):
         print "[LHCb] buildProject: start"
         self.cleanBuildDir(self.project.getName())
         cfgFile = os.path.sep.join([self.slot.releaseDir(), 'configuration.xml'])
-        if not os.path.exists(cfgFile):
+        if self.systemType != 'windows' and not os.path.exists(cfgFile):
             file(cfgFile, 'w').write(self.configContents)
             if os.path.exists(self.configurationHistoryPath):
                 file(os.path.sep.join([self.configurationHistoryPath, "%s.%s.xml" % (self.day, self.slotName)]), 'w').write(self.configContents)
         #TODO: --> should be written to AFS by server, not by client - then clients would do not need AFS access.
         #TODO: --> reload configuration if it's already in the releaseDir
-        self.checkout()
-        self.build()
-        if not self.coverityBuild: self.test()
-        if not self.coverityBuild: self.docs()
-        if not self.coverityBuild: self.install()
+        try:
+            self.checkout()
+            self.build()
+            if not self.coverityBuild: self.test()
+            if not self.coverityBuild: self.docs()
+            if not self.coverityBuild: self.install()
+        except:
+            etype, e, tb = sys.exc_info()
+            if etype is SystemExit:
+                raise
+            print (etype, e, tb)
     # --------------------------------------------------------------------------------
 
     def setupProj(self):
-        """ call this again if any of the (input) parameters change """
+        """ call this again if any of the (input) paramaters change """
 
         print "[LHCb] setupProj"
         pass
@@ -183,12 +203,12 @@ class LHCbProjectBuilder(object):
             if os.path.exists(self.project.getName().upper()):
                 os.symlink(self.project.getName().upper(), self.project.getName())
         # check if checkout is running, or finished on that machine
-        if not os.path.exists(self.generatePath(self.slot, self.project, 'TAG', self.project.getName())):
-            os.makedirs(self.generatePath(self.slot, self.project, 'TAG', self.project.getName().upper()))
+        if not os.path.exists(self.generatePath(self.slot, self.project, 'TAG', self.project.getName(), beforeRename=True)):
+            os.makedirs(self.generatePath(self.slot, self.project, 'TAG', self.project.getName().upper(), beforeRename=True))
             if self.systemType != 'windows':
                 if not os.path.exists(self.project.getName().upper()):
                     os.symlink(self.project.getName(), self.project.getName().upper())
-        os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
+        os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName(), beforeRename=True))
         waitcounter = 0
         while os.path.exists('checkout.working'):
             time.sleep(300)
@@ -209,6 +229,10 @@ class LHCbProjectBuilder(object):
         #    print "renaming from: %s, to: %s" % (self.project.getName().upper(), self.project.getName())
         #    os.rename(self.project.getName().upper(), self.project.getName())
         #    print "renaming from: %s, to: %s - DONE" % (self.project.getName().upper(), self.project.getName())
+
+        if self.project.getRename() is not None:
+            os.chdir(os.path.abspath(os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.project.getName()), '..'])))
+            os.rename(self.project.getTag(),self.project.getRename())
 
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
 
@@ -233,7 +257,10 @@ class LHCbProjectBuilder(object):
             for x in changesBefore.keys(): newChanges[x] = changesBefore[x]    # key: Hat/Package (in config file it must be with HAT from now if the hat exists)
             self.project.setChanges(newChanges)
 
-        if len(self.project.getChanges()) > 0:
+        renameProjectObject = None
+        if self.project.getRename() is not None:
+            renameProjectObject = self.project
+        if len(self.project.getChanges()) > 0 or renameProjectObject is not None:
             # apply changes to the main `requirements` file
             for change in self.project.getChanges().items():
                 #cha = changedPackageName(change[0])
@@ -241,7 +268,7 @@ class LHCbProjectBuilder(object):
                 if cha in sysPackageRF.keys():
                     sysPackageRF[cha][0] = change[1]
                 changesMade[change[0]] = change[1]
-            self.changeRequirementsFile(os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), 'requirements'), sysPackageRF, self.project.getAddons(), self.project.getRemoves())
+            self.changeRequirementsFile(os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), 'requirements'), sysPackageRF, self.project.getAddons(), self.project.getRemoves(), renameProjectObj=renameProjectObject)
 
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
 
@@ -264,7 +291,7 @@ class LHCbProjectBuilder(object):
         # apply changes to current project's 'project.cmt' file according to previous project in the slot and <dependence> entities
         deps = self.project.getDependences()
         projs = {}
-        for p in self.slot.getProjects(hideDisabled=True):
+        for p in self.slot.getProjects(hideDisabled=False): # also apply changes from disabled projects!
             if p.getName().upper() == self.project.getName().upper(): break
             projs[p.getName().upper()] = p.getTag()
         for line in reader:
@@ -322,7 +349,7 @@ class LHCbProjectBuilder(object):
 
     def build(self):
         print "[LHCb] build"
-
+        
         if 'COVERITY' in os.environ.get('CMTEXTRATAGS',''):
             self.coverityBuild = True
             newExtraTags = os.environ.get('CMTEXTRATAGS','').replace('COVERITY','').replace(',,', ',')
@@ -332,7 +359,7 @@ class LHCbProjectBuilder(object):
             derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS'])
         else:
             self.coverityBuild = False
-
+        
         os.environ['CMTCONFIG'] = self.plat
         logdir = os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.projName), 'logs'])
         if not os.path.exists(logdir):
@@ -341,7 +368,7 @@ class LHCbProjectBuilder(object):
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
-
+        
         if '-icc' in os.environ['CMTCONFIG']:
             self.iccSetup()
             os.environ['CMTEXTRATAGS'] = os.environ['CMTEXTRATAGS'].replace('use-distcc,','').replace('use-distcc','')
@@ -392,11 +419,11 @@ class LHCbProjectBuilder(object):
             os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
         else:
             os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-
+            
         if self.coverityBuild is True:
             #make list of derived model files in 'derivedModelsDir':
             if os.path.exists(derivedModelsDir):
-                derivedModelsList = os.listdir(derivedModelsDir)
+                derivedModelsList = [x for x in os.listdir(derivedModelsDir) if x.endswith('.xmldb')]
             else:
                 derivedModelsList = []
             #prepend each with '--derived-model-file ' to add to a command line
@@ -407,8 +434,24 @@ class LHCbProjectBuilder(object):
 
             self.system('echo "(1) ***************************************************"')
             self.system('echo "(1) cov-build --dir %s/INT make -j 20 -l 16"' % (coverityDir))
-            returnCode = self.system('%scov-build --dir %s/INT make -j 20 -l 16' % (self.coverityPath, coverityDir))
-            self.system('echo "(1) RETURN CODE: %s"' % str(returnCode))
+            #########################################
+            ###returnCode = self.system('%scov-build --dir %s/INT make -j 20 -l 16' % (self.coverityPath, coverityDir))
+            ###self.system('echo "(1) RETURN CODE: %s"' % str(returnCode))
+            ### ---> #[WARNING] Build command make -j 20 -l 16 exited with code 2. Please verify that the build completed successfully. --> 0
+            from subprocess import Popen, PIPE
+            p = Popen('%scov-build --dir %s/INT make -j 20 -l 16' % (self.coverityPath, coverityDir), shell = True, stdout = PIPE, stderr = PIPE)
+            #returnCode = p.wait()
+            #p_stdout = ''.join([l for l in p.stdout])
+            #p_stderr = ''.join([l for l in p.stderr])
+            p_stdout, p_stderr = p.communicate()
+            returnCode = p.returncode
+            time.sleep(10)
+            if returnCode == 0:
+                if re.search("Build command.*exited with code [0-9]*. Please verify that the build completed successfully.", p_stdout) is not None or re.search("Build command.*exited with code [0-9]*. Please verify that the build completed successfully.", p_stderr):
+                    returnCode = 1
+            print p_stdout
+            print p_stderr
+            #########################################
             if returnCode == 0:
                 if os.path.exists('../../strip-path.list'):
                     prev = ''.join([x.replace('\n','') for x in file('../../strip-path.list').readlines()])
@@ -421,19 +464,21 @@ class LHCbProjectBuilder(object):
                 self.system('echo "(3) ***************************************************"')
                 self.system('echo "(3) cov-collect-models --dir %s/INT -of %s/%s.xmldb"' % (coverityDir, derivedModelsDir, covName))
                 self.system('%scov-collect-models --dir %s/INT -of %s/%s.xmldb' % (self.coverityPath ,coverityDir, derivedModelsDir, covName))
+                if os.path.exists('%s/%s_trunk.xmldb.lock' % (derivedModelsDir,covName)):
+                    self.system('rm %s/%s_trunk.xmldb.lock' % (derivedModelsDir,covName))
                 self.system('echo "(4) ***************************************************"')
-                pp = file('/afs/cern.ch/user/l/lhcbsoft/private/init').readlines()[0].replace('\n','')
+                pp = open("/afs/cern.ch/user/l/lhcbsoft/private/init").readline().strip()
                 #self.system('echo "(4) export COVERITY_PASSPHRASE=...%s... ; cov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s `cat ../../strip-path.list` `cat %s/INT/c/output/commit-args.txt`"' % (str(len(pp)), covName, coverityDir))
                 #self.system('export COVERITY_PASSPHRASE=%s ; cov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s `cat ../../strip-path.list` `cat %s/INT/c/output/commit-args.txt`"' % (str(len(pp)), covName, coverityDir))
                 if os.path.exists('../../strip-path.list'):
-                    stripPathString = ''.join([x.replace('\n','') for x in file('../../strip-path.list').readlines()])
+                    stripPathString = ' '.join([l.strip() for l in open("../../strip-path.list")])
                 else:
                     stripPathString = ''
                 if os.path.exists('%s/INT/c/output/commit-args.txt' % coverityDir):
-                    commitArgsString = ''.join([x.replace('\n','') for x in file('%s/INT/c/output/commit-args.txt' % coverityDir).readlines()])
+                    commitArgsString = ' '.join([l.strip() for l in open("%s/INT/c/output/commit-args.txt" % coverityDir)])
                 else:
                     commitArgsString = ''
-                self.system('export COVERITY_PASSPHRASE=%s ; cov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s %s %s"' % (pp, covName, stripPathString, commitArgsString))
+                self.system('export COVERITY_PASSPHRASE=%s ; %scov-commit-defects --host lhcb-coverity.cern.ch --port 8080 --user admin --stream %s %s %s' % (pp, self.coverityPath, covName, stripPathString, commitArgsString))
             else:
                 self.system('echo "(1) build finished with errors, Coverity analysis skipped."')
             self.system('echo "(-) ***************************************************"')
@@ -532,41 +577,76 @@ class LHCbProjectBuilder(object):
         self.setCMTEXTRATAGS(self.slotName)
         os.chdir(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName))
 
+        if self.project.getRename() is not None:
+            tagName = self.project.getRename()
+        else:
+            tagName = self.project.getTag()
+
+        if self.systemType == "windows":
+            #writing logs directly to Nightlies server (for Windows):
+            try:
+                import xmlrpclib
+                #TODO: Nightly server host and port - from configuration
+                server = xmlrpclib.Server("http://lxbuild135.cern.ch:61007") #production is: 61007, restart is: 61008
+                # isDone file
+                isDoneFrom = os.path.join(self.slot.buildDir(), 'isDone-'+os.environ['CMTCONFIG'])
+                if os.path.exists(isDoneFrom):
+                    logData = ''.join(file(isDoneFrom, 'r').readlines())
+                    server.saveLog(self.day, self.slot.getName(), tagName, self.plat, 0, logData)
+                # html log file
+                logData = ''.join(file(os.path.join(self.slot.buildDir(), 'www', '%s.%s_%s-%s-log.html' % (self.slot.getName(), self.day, tagName, self.plat)), 'r').readlines())
+                server.saveLog(self.day, self.slot.getName(), tagName, self.plat, 1, logData)
+                # summary
+                logData = ''.join(file(os.path.join(self.slot.buildDir(), 'www', '%s.%s_%s-%s-log.summary' % (self.slot.getName(), self.day, tagName, self.plat)), 'r').readlines())
+                server.saveLog(self.day, self.slot.getName(), tagName, self.plat, 2, logData)
+            except:
+                pass
+        #end of: writing logs directly to Nightlies server (for Windows)
+
         # copying logs
         os.chdir(os.path.join(self.slot.buildDir(), 'www'))
         files = os.listdir(os.getcwd())
-        for f in files:
-            if not os.path.isfile(f): continue
-            shutil.copy2(os.path.join(self.slot.buildDir(), 'www', f), os.path.join(self.slot.wwwDir(), f))
-
+        try:
+            for f in files:
+                if not os.path.isfile(f): continue
+                shutil.copy2(os.path.join(self.slot.buildDir(), 'www', f), os.path.join(self.slot.wwwDir(), f))
+        except IOError: #no AFS token on Windows
+            pass
         releasePath = self.slot.releaseDir()
-        if releasePath != None:
-            #instead of the previous isDone file copying:
-            isDoneFrom = os.path.join(self.slot.buildDir(), 'isDone-'+os.environ['CMTCONFIG'])
-            isDoneTo = os.path.join(self.slot.releaseDir(), 'isDone-'+os.environ['CMTCONFIG'])
-            if os.path.exists(isDoneFrom):
-                shutil.copy2(isDoneFrom, isDoneTo)
-            isStartedTo = os.path.join(self.slot.releaseDir(), 'isStarted-'+os.environ['CMTCONFIG'])
-            if not os.path.exists(isStartedTo): file(isStartedTo, "w").close()
-            if os.path.exists(isDoneTo) and os.path.exists(isStartedTo): os.remove(isStartedTo)
-            if copyNotShared and copyShared:
-                self.copyLocal(
-                               os.path.join(self.slot.buildDir(), self.projName.upper(), self.project.getTag()),
-                               os.path.join(releasePath, self.projName.upper(), self.project.getTag())
-                )
-            elif not copyNotShared and not copyShared:
-                pass
-            else:
-                self.copyLocal(
-                               os.path.join(self.slot.buildDir(), self.projName.upper(), self.project.getTag()),
-                               os.path.join(releasePath, self.projName.upper(), self.project.getTag()),
-                               lambda path: (copyNotShared and pathBinaryMatch(path, self.plat)) or (copyShared and pathSharedMatch(path))
-                )
-
-            if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
+        try:
+            if releasePath != None:
+                if self.project.getRename() is not None:
+                    tagName = self.project.getRename()
+                else:
+                    tagName = self.project.getTag()
+                #instead of the previous isDone file copying:
+                isDoneFrom = os.path.join(self.slot.buildDir(), 'isDone-'+os.environ['CMTCONFIG'])
+                isDoneTo = os.path.join(self.slot.releaseDir(), 'isDone-'+os.environ['CMTCONFIG'])
+                if os.path.exists(isDoneFrom):
+                    shutil.copy2(isDoneFrom, isDoneTo)
+                isStartedTo = os.path.join(self.slot.releaseDir(), 'isStarted-'+os.environ['CMTCONFIG'])
+                if not os.path.exists(isStartedTo): file(isStartedTo, "w").close()
+                if os.path.exists(isDoneTo) and os.path.exists(isStartedTo): os.remove(isStartedTo)
+                if copyNotShared and copyShared:
+                    self.copyLocal(
+                                   os.path.join(self.slot.buildDir(), self.projName.upper(), tagName),
+                                   os.path.join(releasePath, self.projName.upper(), tagName)
+                    )
+                elif not copyNotShared and not copyShared:
+                    pass
+                else:
+                    self.copyLocal(
+                                   os.path.join(self.slot.buildDir(), self.projName.upper(), tagName),
+                                   os.path.join(releasePath, self.projName.upper(), tagName),
+                                   lambda path: (copyNotShared and pathBinaryMatch(path, self.plat)) or (copyShared and pathSharedMatch(path))
+                    )
+    
+                if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
+        except IOError: #no AFS token on Windows
+            pass
         if self.systemType != 'windows' and nWarn + nErr + nMkErr + nCMTErr > 0:
-            self.sendMails(self.slot, self.project, self.plat,"[LHCb Nightlies] %s, %s on %s results of automated build" % (str(self.project.getTag()), str(self.slot.getName()), self.plat),"""
-+++> Errors found in log file for tag """ + self.project.getTag() + """ slot """ + self.slot.getName() + """
+            self.sendMails(self.slot, self.project, self.plat,"[LHCb Nightlies] %s, %s on %s results of automated build" % (str(tagName), str(self.slot.getName()), self.plat),"""
++++> Errors found in log file for tag """ + tagName + """ slot """ + self.slot.getName() + """
      while building for: """ + self.plat + """
          Number  of make errors : """ + str(nMkErr) + """
          Total number of errors : """ + str(nErr + nMkErr + nCMTErr) + """
@@ -578,16 +658,21 @@ class LHCbProjectBuilder(object):
 
     @fork_call
     def test(self):
-        print "[LHCb] test"
-        from checkTestLogs import checkTestLogs
+        from checkTestLogs import checkTestLogs 
         import datetime
+        print "[LHCb] test"
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
         self.changeEnvVariables()
         os.chdir(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName))
 
-        htmlLogDirName = self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest'
+        if self.project.getRename() is not None:
+            tagName = self.project.getRename()
+        else:
+            tagName = self.project.getTag()
+
+        htmlLogDirName = self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + tagName + '-' + os.environ['CMTCONFIG'] + '-qmtest'
         os.environ['GAUDI_QMTEST_HTML_OUTPUT'] = os.path.abspath( os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName),'..','..','logs',htmlLogDirName) )
         os.system('echo "'+ time.strftime('%c', time.localtime()) +'" >> ../../logs/' + os.environ['CMTCONFIG'] + '-qmtest.log')
         os.system('cmt br - cmt TestPackage')
@@ -597,12 +682,12 @@ class LHCbProjectBuilder(object):
 
         #log summary (text file) copying:
         testSummaryFrom = os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), '..', '..', 'logs', os.environ['CMTCONFIG'] + '-qmtest.log')
-        testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest.log')
-        if os.path.exists(testSummaryFrom): shutil.copy2(testSummaryFrom, testSummaryTo)
+        testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + tagName + '-' + os.environ['CMTCONFIG'] + '-qmtest.log')
         #log summary (html) copying:
         if self.systemType != 'windows':
-            testSummaryFrom = os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), '..', '..', 'logs', self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest')
-            testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + self.project.getTag() + '-' + os.environ['CMTCONFIG'] + '-qmtest/')
+            if os.path.exists(testSummaryFrom): shutil.copy2(testSummaryFrom, testSummaryTo)
+            testSummaryFrom = os.path.join(self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName), '..', '..', 'logs', self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + tagName + '-' + os.environ['CMTCONFIG'] + '-qmtest')
+            testSummaryTo = os.path.join(self.slot.wwwDir(), self.slotName + '.' + datetime.date.today().strftime('%a') + '_' + tagName + '-' + os.environ['CMTCONFIG'] + '-qmtest/')
             try:
                 testResults = checkTestLogs(None, None, self.slot, self.project, datetime.date.today().strftime('%a'), os.environ['CMTCONFIG'], False)
                 import sqlite3
@@ -617,26 +702,25 @@ class LHCbProjectBuilder(object):
                 db_time = datetime.datetime.now().strftime('%H:%M:%S.000')
                 db_slot = slotObj.getName()
                 db_plat = platform
-                db_proj = projObj.getTag().split('_')[0]
-                db_testlog = db_slot + "." + datetime.date.today().strftime("%a") + "_" + projObj.getTag() +"-"+platform+"-qmtest/index.html"
-                if os.path.exists('/afs/cern.ch/lhcb/software/nightlies/db/nightlies.results'):
-                    dbconn = sqlite3.connect('/afs/cern.ch/lhcb/software/nightlies/db/nightlies.results')
-                    dbc = dbconn.cursor()
-                    dbc.execute('select count(*) from results where date=? and slot=? and platform=? and project=?', (db_date, db_slot, db_plat, db_proj))
-                    if dbc.fetchall()[0][0] == 0: # no record, so insert the new one
-                        if total is None or noErr is None or noOK is None:
-                            dbc.execute('insert into results (date, time, slot, platform, project, warnings, errors, makeerrors, cmterrors, tests_failed, tests_untested, tests_passed, buildlog, testlog) values (?,?,?,?,?,NULL,NULL,NULL,NULL,?,NULL,?,NULL,?)', (db_date, db_time, db_slot, db_plat, db_proj, noErr, noOK, db_testlog))
-                        else:
-                            dbc.execute('insert into results (date, time, slot, platform, project, warnings, errors, makeerrors, cmterrors, tests_failed, tests_untested, tests_passed, buildlog, testlog) values (?,?,?,?,?,NULL,NULL,NULL,NULL,?,?,?,NULL,?)', (db_date, db_time, db_slot, db_plat, db_proj, noErr, total-noErr-noOK, noOK, db_testlog))
-                        dbconn.commit()
-                        dbc.close()
-                    else: # record is there, so update
-                        if total is None or noErr is None or noOK is None:
-                            dbc.execute('update results set tests_failed=?, tests_passed=?, testlog=? where date=? and slot=? and platform=? and project=?', (noErr, noOK, db_testlog, db_date, db_slot, db_plat, db_proj))
-                        else:
-                            dbc.execute('update results set tests_failed=?, tests_untested=?, tests_passed=?, testlog=? where date=? and slot=? and platform=? and project=?', (noErr, total-noErr-noOK, noOK, db_testlog, db_date, db_slot, db_plat, db_proj))
-                        dbconn.commit()
-                        dbc.close()
+                db_proj = tagName.split('_')[0]
+                db_testlog = db_slot + "." + datetime.date.today().strftime("%a") + "_" + tagName +"-"+platform+"-qmtest/index.html"
+                dbconn = sqlite3.connect('/afs/cern.ch/lhcb/software/nightlies/db/nightlies.results')
+                dbc = dbconn.cursor()
+                dbc.execute('select count(*) from results where date=? and slot=? and platform=? and project=?', (db_date, db_slot, db_plat, db_proj))
+                if dbc.fetchall()[0][0] == 0: # no record, so insert the new one
+                    if total is None or noErr is None or noOK is None:
+                        dbc.execute('insert into results (date, time, slot, platform, project, warnings, errors, makeerrors, cmterrors, tests_failed, tests_untested, tests_passed, buildlog, testlog) values (?,?,?,?,?,NULL,NULL,NULL,NULL,?,NULL,?,NULL,?)', (db_date, db_time, db_slot, db_plat, db_proj, noErr, noOK, db_testlog))
+                    else:
+                        dbc.execute('insert into results (date, time, slot, platform, project, warnings, errors, makeerrors, cmterrors, tests_failed, tests_untested, tests_passed, buildlog, testlog) values (?,?,?,?,?,NULL,NULL,NULL,NULL,?,?,?,NULL,?)', (db_date, db_time, db_slot, db_plat, db_proj, noErr, total-noErr-noOK, noOK, db_testlog))
+                    dbconn.commit()
+                    dbc.close()
+                else: # record is there, so update
+                    if total is None or noErr is None or noOK is None:
+                        dbc.execute('update results set tests_failed=?, tests_passed=?, testlog=? where date=? and slot=? and platform=? and project=?', (noErr, noOK, db_testlog, db_date, db_slot, db_plat, db_proj))
+                    else:
+                        dbc.execute('update results set tests_failed=?, tests_untested=?, tests_passed=?, testlog=? where date=? and slot=? and platform=? and project=?', (noErr, total-noErr-noOK, noOK, db_testlog, db_date, db_slot, db_plat, db_proj))
+                    dbconn.commit()
+                    dbc.close()
             except:
                 pass
             if os.path.exists(testSummaryFrom):
@@ -646,7 +730,7 @@ class LHCbProjectBuilder(object):
         return 0
 
 #=============================== Nightlies/function.py ==============================#
-    def generatePath(self, slot, project, type, projectRealName=None):
+    def generatePath(self, slot, project, type, projectRealName=None, beforeRename=False):
         """ generatePath(slotObject, projectObject, type[, projectRealName]) -> string
 
             <type> can be: "TAG" or "SYSPACKAGECMT".
@@ -654,7 +738,12 @@ class LHCbProjectBuilder(object):
             - TAG:           /build/nightlies/..slot../..day../LHCB/LHCB_v23r4
             - SYSPACKAGECMT: /build/nightlies/..slot../..day../LHCB/LHCB_v23r4/LHCbSys/cmt
         """
-        projectRoot = os.path.join(slot.buildDir(), project.getName(), project.getTag())
+        if project.getRename() is not None and not beforeRename:
+            tagName = project.getRename()
+        else:
+            tagName = project.getTag()
+
+        projectRoot = os.path.join(slot.buildDir(), project.getName(), tagName)
         if type == 'TAG':
             return projectRoot
         elif type == 'SYSPACKAGECMT':
@@ -697,7 +786,7 @@ class LHCbProjectBuilder(object):
         os.chdir(previousDir)
         return values
 
-    def changeRequirementsFile(self, filename, changesDict, addons=None, removes=None):
+    def changeRequirementsFile(self, filename, changesDict, addons=None, removes=None, renameProjectObj=None):
         """ changeRequirementsFile(filename, changesDict[, addons[,removes]])
 
             Function changes the given file, by replacing "use" lines with the ones generated from <changesDict> (result of readReaquirementsFile function).
@@ -709,13 +798,17 @@ class LHCbProjectBuilder(object):
         writer = file(filename,'w')
         for line in reader:
             newline = line
+            # renaming Sys package's requirements file if needed
+            if renameProjectObj is not None and self.generatePath(self.slot, self.project, 'SYSPACKAGECMT', self.projName) in filename:
+                newline = re.sub('^version %s' % renameProjectObj.getTag().split('_')[1], 'version %s' % renameProjectObj.getRename().split('_')[1], newline)
+
             for x in changesDict.keys():
                 nameWithoutHat = self.changedPackageName(x)
                 if changesDict[x][1] != '':
                     addToRE = '\s+'+changesDict[x][1]
                 else:
                     addToRE = ''
-                newline = re.sub(nameWithoutHat+'\s+([Hh][Ee][Aa][Dd]|v[\*0-9]+(?:r[\*0-9]+(?:p[\*0-9]+)?)?)'+addToRE, nameWithoutHat+'  '+changesDict[x][0]+'  '+changesDict[x][1], newline)
+                newline = re.sub('\\b'+nameWithoutHat+'\s+([Hh][Ee][Aa][Dd]|v[\*0-9]+(?:r[\*0-9]+(?:p[\*0-9]+)?)?)'+addToRE, nameWithoutHat+'  '+changesDict[x][0]+'  '+changesDict[x][1], newline)
             # <remove>:
             if removes:
                 pac = re.sub('^\s*use\s+([a-zA-Z0-9_-]+).*$', '\\1', line).replace('\n','')
@@ -903,7 +996,7 @@ class LHCbProjectBuilder(object):
                 os.environ[x] = envChange[x]
             else:
                 os.environ[x] = "%s%s%s" % (envChange[x], os.pathsep, os.environ[x])
-
+            
 
 import BaseServer
 
@@ -917,6 +1010,33 @@ class LHCbServer(BaseServer.Server):
         logging.basicConfig(level='debug')
         self._log = logging.getLogger(__name__)
         self._log.debug('START of LHCb Server Logging')
+    def saveLog(self, day, slot, project, platform, contentType, content):
+        """ contentType is:
+             0) isDone file
+             1) build log, html
+             2) build log, summary
+        """
+        # find a slot object in configuration
+        from configuration import Configuration
+        conf = Configuration()
+        conf.readConf(configFile=None, configContents=self.config) 
+        slotObj = conf.findSlot(slot, conf._slotList)
+
+        # if doesn't exist, create isStarted file
+        isStartedTo = os.path.join(slotObj.releaseDir(), 'isStarted-%s' % platform)
+        if not os.path.exists(isStartedTo): file(isStartedTo, "w").close()
+
+        if contentType == 0: # isDone file
+            logFile = os.path.join(slotObj.releaseDir(), 'isDone-%s' % platform)
+        elif contentType == 1: # html build log
+            logFile = os.path.join(slotObj.wwwDir(), '%s.%s_%s-%s-log.html' % (slot, day, project, platform))
+        elif contentType == 2: # build log summary
+            logFile = os.path.join(slotObj.wwwDir(), '%s.%s_%s-%s-log.summary' % (slot, day, project, platform))
+        else:
+            return
+        if not os.path.exists(logFile):
+            writeTo = file(logFile, 'w')
+            writeTo.write(content)
     def setToday(self):
         "used when reseting server"
         self.unitsTaken = []

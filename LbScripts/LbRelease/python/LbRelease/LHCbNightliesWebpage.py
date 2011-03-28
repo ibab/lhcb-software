@@ -120,14 +120,14 @@ def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
     htmlFile.write( '</title>'+"\n")
 
     htmlFile.write( """
-        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css">
+        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css"> 
+ 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script> 
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script>
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script>
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-
-<script type="text/javascript">
+<script type="text/javascript"> 
 function genrss() {
     $.typ = 'all'
     if ($("input[id='build']:checked").val() == 'build') { $.typ = 'build' }
@@ -151,7 +151,7 @@ $(document).ready(function() {
   $('#left input, #left select, #left radio, #right input, #right select, #right radio').bind('blur keyup change', genrss);
 genrss();
 });
-</script>
+</script> 
 """)
 
     htmlFile.write( '    <META HTTP-EQUIV="expires" CONTENT="Wed, 19 Feb 2003 08:00:00 GMT">'+"\n")
@@ -315,7 +315,7 @@ genrss();
         htmlFile.write( '<a class="header_link_black">Nightlies Status</a>')
         htmlFile.write( '<a class="header_link" href="overview_nightlies.py" target="_blank" >Configuration overview</a>')
         htmlFile.write( '<a class="header_link" href="../editor.html" target="_blank" >Configuration editor</a>')
-        htmlFile.write( '<a class="header_link" href="https://svnweb.cern.ch/trac/lhcb/browser/LHCbNightlyConf/trunk/" target="_blank" >LHCb SVN</a>')
+        htmlFile.write( '<a class="header_link" href="https://svnweb.cern.ch/trac/lhcb/browser/LHCbNightlyConf/trunk/configuration.xml" target="_blank" >Configuration SVN</a>')
         htmlFile.write( '<a class="header_link" href="http://lhcb-coverity.cern.ch:8080" target="_blank" >LHCb Coverity</a>')
         htmlFile.write( '<hr/>')
 
@@ -431,7 +431,9 @@ genrss();
                                 <select name="proj" id="proj" class="select">
                                     <option value="" selected="selected">All available projects</option>
                                     <option value="">- - - - - - - - - - - - - - - - - - - - - - - - - - </option>""")
-    for proj in projList:
+    projListSorted = projList
+    projListSorted.sort()
+    for proj in projListSorted:
         htmlFile.write('        <option value="%s">%s</option>\n' % (proj.upper(), proj))
     htmlFile.write("""
                                 </select>
@@ -469,13 +471,13 @@ genrss();
                     </div>
                     <div id="live-result"></div>""")
 
-#    htmlFile.write("""
+#    htmlFile.write("""        
 #                    <div id="d_clip_button" style="border:1px solid black; padding:1px;">copy</div>
 #                <script language="JavaScript">
 #                        var clip = new ZeroClipboard.Client();
 #                        clip.setHandCursor( true );
 #                        clip.setCSSEffects( true );
-#                        clip.addEventListener( 'mouseDown', function(client) {
+#                        clip.addEventListener( 'mouseDown', function(client) { 
 #                            clip.setText( document.getElementById('live-result').value );
 #                        } );
 #//                        clip.setText( $('#live-result').val() );
@@ -502,6 +504,7 @@ genrss();
     htmlFile.write( '<td bgcolor="'+colour["OK"]  +'"> OK </td> '+" \n")
     htmlFile.write( '<td bgcolor="'+colour["warn"]+'"> warnings </td>'+" \n")
     htmlFile.write( '<td bgcolor="'+colour["err"] +'"> errors </td> '+" \n")
+    htmlFile.write( '<td bgcolor="#D3D3D3"> project disabled (not built, taken from Release Area instead) </td> '+" \n")
     htmlFile.write( '</tr></table>'+" \n")
     htmlFile.write( '</div>'+" \n")
 
@@ -591,17 +594,31 @@ genrss();
                         htmlFile.write( '</td> \n')
             htmlFile.write( '    </tr>\n')
 
-            for proj in slotObj.getProjects(hideDisabled=True):
+            for proj in slotObj.getProjects(hideDisabled=False):
+                if proj.getDisabledFlag() is True:
+                    projDisabled = True
+                else:
+                    projDisabled = False
                 htmlFile.write( "\n<!-- start PROJECT tr for " +day+'_'+slotObj.getName()+'_'+proj.getName()+ " -->\n")
                 htmlFile.write( '    <tr id="'+day+'_'+slotObj.getName()+'_'+proj.getName()+'">'+"\n")
                 # RSS ##########################################################################################################
                 #htmlFile.write( '      <td bgcolor="'+wheat4+'">'+proj.getName()+'</td>\n')
-                htmlFile.write( '      <td bgcolor="'+wheat4+'">')
+                if projDisabled:
+                    htmlFile.write( '      <td bgcolor="#D3D3D3">')
+                else:
+                    htmlFile.write( '      <td bgcolor="'+wheat4+'">')
                 htmlFile.write( proj.getName())
                 htmlFile.write( '&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&proj=%s" target="_blank">%s</a> ' % (slotObj.getName(), proj.getName().upper(), rssHtml))
                 htmlFile.write( '</td>\n')
                 ################################################################################################################
-                htmlFile.write( '      <td bgcolor="'+wheat+'">'+proj.getTag()+'</td>\n')
+                if proj.getRename() is None:
+                    projectTag = proj.getTag()
+                else:
+                    projectTag = proj.getRename()
+                if projDisabled:
+                    htmlFile.write( '      <td bgcolor="#D3D3D3">'+projectTag+'</td>\n')
+                else:
+                    htmlFile.write( '      <td bgcolor="'+wheat+'">'+projectTag+'</td>\n')
                 for platObj in slotObj.getPlatforms():
                     plat = platObj.getName()
                     if (day, slot, plat) in platformsNotReady:
@@ -609,10 +626,13 @@ genrss();
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) == 'FALSE' or not os.path.exists(stampFileNameStarted): continue
                     htmlFile.write( '<td><table border="0" cellpadding="4" cellspacing="1" width="100%">\n<tr>\n')
 
-                    logFileName = slotObj.getName()+'.'+day[:3]+'_'+proj.getTag()+'-'+plat+'-log.html'
-                    nWarn, nErr, nMkErr, nCMTErr = getBuildSummary(slotObj, day[:3], proj.getTag(), plat)
+                    #logFileName = slotObj.getName()+'.'+day[:3]+'_'+proj.getTag()+'-'+plat+'-log.html'
+                    logFileName = slotObj.getName()+'.'+day[:3]+'_'+projectTag+'-'+plat+'-log.html'
+                    nWarn, nErr, nMkErr, nCMTErr = getBuildSummary(slotObj, day[:3], projectTag, plat)
                     noFile = False
                     if (nWarn, nErr, nMkErr, nCMTErr) == (None, None, None, None): noFile = True
+                    if projDisabled:
+                        noFile = True
                     if not noFile:
                         flag = "OK"
                         if int(nWarn) > 0: flag = "warn"
@@ -636,10 +656,16 @@ genrss();
                     else:
                         flag = "err"
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) == 'FALSE':
-                            htmlFile.write( '<td align="center" nowrap bgcolor="'+colour[flag]+'" width="50%">')
+                            if projDisabled:
+                                htmlFile.write( '<td align="center" nowrap bgcolor="#D3D3D3" width="50%">')
+                            else:
+                                htmlFile.write( '<td align="center" nowrap bgcolor="'+colour[flag]+'" width="50%">')
                             htmlFile.write( '---')
                         else:
-                            htmlFile.write( '<td align="center" nowrap bgcolor="white" width="50%">')
+                            if projDisabled:
+                                htmlFile.write( '<td align="center" nowrap bgcolor="#D3D3D3" width="50%">')
+                            else:
+                                htmlFile.write( '<td align="center" nowrap bgcolor="white" width="50%">')
                             htmlFile.write( '&nbsp;')
                         flag = "err"
                     htmlFile.write( '</td>\n')
@@ -679,7 +705,8 @@ genrss();
                     testboxHtml = '" '
                     if len(Status) > 4:
 
-                        divname = 'graph_' + day + '_' + slotObj.getName() + '_' + plat + '_' + proj.getTag()
+                        divname = 'graph_' + day + '_' + slotObj.getName() + '_' + plat + '_' + projectTag
+                        #divname = 'graph_' + day + '_' + slotObj.getName() + '_' + plat + '_' + proj.getTag()
                         #divname = str(proj_id)+'_'+str(plat_id)+'_'+str(slot_id)+'_'+str(day_id)+'_'+projVers
 
                         eventatt =  """onmouseover="tooltip(event,'"""+divname+"""')" """
@@ -713,6 +740,7 @@ genrss();
                     else:
                         logName = Status[0]
                     htmlTestLogName = logName.replace('-qmtest.log', '-qmtest/index.html')
+
                     if logName and (os.path.exists(os.path.join(slotObj.wwwDir(plat), htmlTestLogName)) or (os.path.exists(os.path.join(slotObj.wwwDir(plat), logName))) ):
                         if os.path.exists(os.path.join(slotObj.wwwDir(plat), htmlTestLogName)):
                             #testboxHtml += ' <a href="' + logURL + '/' + htmlTestLogName + '">tests'+errStr+'</a> '
@@ -729,13 +757,22 @@ genrss();
                             testboxHtml += ' <a href="javascript:return true">---</a> '
                             flag="warn"
                             testboxHtml += ' </td> \n'
-                            htmlFile.write(colour[flag])
+                            if projDisabled:
+                                htmlFile.write('#D3D3D3')
+                            else:
+                                htmlFile.write(colour[flag])
                         else:
                             # this a_href and javascript must be here!!!!!!!! it is used for filtering html by nightlies.py script.....
-                            testboxHtml += ' <a href="javascript:return true" style="color: white">---</a> '
+                            if projDisabled:
+                                testboxHtml += ' <a href="javascript:return true" style="color: #D3D3D3">---</a> '
+                            else:
+                                testboxHtml += ' <a href="javascript:return true" style="color: white">---</a> '
                             testboxHtml += ' </td> \n'
                             flag="warn"
-                            htmlFile.write('white')
+                            if projDisabled:
+                                htmlFile.write('#D3D3D3')
+                            else:
+                                htmlFile.write('white')
                         htmlFile.write(testboxHtml)
 
 
@@ -794,8 +831,8 @@ genrss();
 
 
 def getConfigurationContents(svnDate=None):
-    svnPath = 'http://svnweb.cern.ch/guest/lhcb/LHCbNightlyConf/trunk/configuration.xml'
-    svnPathTest = 'http://svnweb.cern.ch/guest/lhcb/LHCbNightlyConf/trunk/configuration-test.xml'
+    svnPath = 'https://svn.cern.ch/reps/lhcb/LHCbNightlyConf/trunk/configuration.xml'
+    svnPathTest = 'https://svn.cern.ch/reps/lhcb/LHCbNightlyConf/trunk/configuration-test.xml'
     from subprocess import Popen, PIPE
     if svnDate is None: # test configuration from now
         confContents = Popen(["svn", "cat", svnPathTest], stdout=PIPE).communicate()[0]
@@ -834,6 +871,7 @@ def generateIndexSVN(resultFileName, svnNow=False):
     global configHistory
     for x in xrange(7): # 0..6
         day = datetime.date.today() - datetime.timedelta(days=x)
+        os.environ['NightliesSummaryHistoryDate'] = day.isoformat()
         from BaseConfiguration import Configuration as tmpConfMod
         configHistory.append(tmpConfMod())
         if not svnNow:
