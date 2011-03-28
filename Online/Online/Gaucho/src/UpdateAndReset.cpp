@@ -291,19 +291,19 @@ StatusCode UpdateAndReset::finalize() {
   {
     return StatusCode::SUCCESS;
   }
-  else if ( 1 == m_saveHistograms )
-  {
-     m_eorNumber=m_runNumber;
-     manageTESHistos(false, false, true, true);
-  }
-  else if ( 0 != m_pGauchoMonitorSvc )
-  {
-    this->m_pGauchoMonitorSvc->Lock();
-    this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
-    this->m_pGauchoMonitorSvc->UnLock();
-    m_pGauchoMonitorSvc->release();
-    m_pGauchoMonitorSvc = 0;
-  }
+//  else if ( 1 == m_saveHistograms )
+//  {
+//     m_eorNumber=m_runNumber;
+//     manageTESHistos(false, false, true, true);
+//  }
+//  else if ( 0 != m_pGauchoMonitorSvc )
+//  {
+//    this->m_pGauchoMonitorSvc->Lock();
+//    this->m_pGauchoMonitorSvc->updateSvc( "this" , m_runNumber,this  );
+//    this->m_pGauchoMonitorSvc->UnLock();
+//    m_pGauchoMonitorSvc->release();
+//    m_pGauchoMonitorSvc = 0;
+//  }
   if (m_dimSvcSaveSetLoc != 0)
   {
     delete m_dimSvcSaveSetLoc;
