@@ -3,6 +3,11 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2011-03-28 - Sajan Easo
+ - Added couple of counters to plot few histograms for analysis and monitoring. This is done in
+   RichG4Counters.h,icpp and cpp.
+ -Added a material name path for future monitoring using pmts. This is not
+  used at the moment. Modification in  RichG4GaussPathNames.h and RichG4MatRadIdentifier.cpp
 ! 2011-02-10 - Sajan Easo
  - Update the gas radiator names to be R2RadiatorGas in addition to be CF4
    and R1RadiatorGas in addition to be C4F10. The old and new names are kept
