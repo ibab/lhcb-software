@@ -1,0 +1,38 @@
+// Rich specific Analysis job options
+
+GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
+//GiGa.StepSeq.Members             += {"CkvG4StepAnalysis9/CkvG4Step9" } ; // for debug
+//GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
+GiGa.EventSeq.Members     += { "CherenkovG4EventAction/RichG4Event" } ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 2 ;
+GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=true;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
+//GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=false;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=false;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=true;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
+GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
+GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
+GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=false;
+GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
+GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=false;
+
+ GiGa.RunSeq.Members           += { "CkvG4RunAction/RichG4Run" } ;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
+// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=true;
+// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
+// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
+//GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
+// to switch on creation of rich debug verbose output convertors uncomment
+// the following three lines
+//GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
+//GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
+//GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";

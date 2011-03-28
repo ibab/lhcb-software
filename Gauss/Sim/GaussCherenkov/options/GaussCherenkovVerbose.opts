@@ -1,0 +1,15 @@
+// Additional or modified Rich specific job options
+// for producing extended information
+GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag=true;
+
+//GiGa.StepSeq.Members  += { "RichG4StepAnalysis4/RichStepAgelExit" } ;
+GiGa.StepSeq.Members  += { "CkvG4StepAnalysis5/RichStepMirrorRefl" } ;
+// The following already in Rich.opts
+//GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" } ;
+
+//GetRichExtendedInfo.convertMCRichExtendedInfo = true;
+
+// now switch on creation of rich debug verbose output convertors.
+//GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
+//GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
+//GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";
