@@ -3,6 +3,11 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+</PRE><H1><A NAME=v2r2>2011-03-29 StrippingSys v2r2 </A></H1><PRE>
+
+ * Development release built on LHCb v32r1p1 and Phys v12r1p1.
+ * Includes stripping13 lines up to 2011-03-30 XXXX.
+
 </PRE><H1><A NAME=v2r1>2011-03-10 StrippingSys v2r1 </A></H1><PRE>
 
  * Development release built on LHCb v32r1p1 and Phys v12r1p1.
