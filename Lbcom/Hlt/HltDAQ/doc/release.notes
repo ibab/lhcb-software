@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-03-28 - Gerhard Raven
+ - HltVertexReportsDecoder: remove windows cr/nl to not confuse me, no other change
+
 ! 2011-03-15 - Gerhard Raven
  - in ConfigTarFileAccessSvc, switch default for CompressOnWrite to true
  - fix a potential out_of_range exception if filename is less than 3 characters

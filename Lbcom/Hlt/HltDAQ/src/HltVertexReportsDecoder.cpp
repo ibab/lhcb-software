@@ -214,4 +214,3 @@ double HltVertexReportsDecoder::doubleFromInt(unsigned int i)
         IntFloat a; a.mInt=i;
         return double(a.mFloat);
 }
-
