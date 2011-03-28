@@ -22,7 +22,8 @@ public:
   long long ser_tim;
   long long run_number;
   int buffersize;
-  SerialHeader & operator = (const SerialHeader &t){memcpy(this,&t, sizeof(SerialHeader));return *this;};
+  SerialHeader() : m_magic(SERIAL_MAGIC),flags(0),version(SERHEADER_Version),comp_version(0),ser_tim(0),run_number(0),buffersize(0){}
+  SerialHeader & operator = (const SerialHeader &t){memcpy(this,&t, sizeof(SerialHeader));return *this;}
 };
 
 #endif /* SERIALHEADER_H_ */

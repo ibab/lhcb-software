@@ -49,7 +49,7 @@ void ObjService::setup()
   m_buffer=0;
   m_buffersize =0;
   m_ser = 0;
-  m_runnr = 0;
+//  m_runnr = 0;
   m_EORservice = false;
 }
 void ObjService::Serialize()

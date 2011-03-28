@@ -20,7 +20,7 @@ protected:
 public:
   //void *p;
   bool m_expandservice;
-  long long m_runnr;
+//  long long m_runnr;
   ObjService ();
   virtual ~ObjService();
   //ObjService (void *h, const char *name, char *format, void *buff, int siz);
