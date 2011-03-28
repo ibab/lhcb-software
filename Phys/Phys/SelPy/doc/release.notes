@@ -4,6 +4,23 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+! 2011-03-28 - Juan Palacios
+ - Add module SelPy.graph
+  . Contains tools to create graphs and pydot.Dot objects from a Selection.
+    Can be used to make plots of selection decay trees.
+
+    Example:
+
+    >>> from SelPy.graph import selectionDot
+
+    >>> from MicroDSTExample.Selections.Bs2Jpsi2MuMuPhi2KK import SelBs2Jpsi2MuMuPhi2KK
+
+    >>> dot = selectionDot(SelBs2Jpsi2MuMuPhi2KK)
+    >>> dot.write('bs2jpsiphi.jpg', prog='dot', format='jpeg')
+ - cmt/requirements
+  . Use pygraphics, needed for pydot.
+  . Increase to v4r2.
+
 !======================== SelPy v4r1 2011-03-01 ==============================
 
 ! 2011-03-01 - Juan Palacios
