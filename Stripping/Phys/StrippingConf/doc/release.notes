@@ -5,6 +5,13 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v4r2 2011-03-28 ====================
+
+! 2011-03-28 - Juan Palacios
+ - StrippingLine
+  . Add selection() method.
+- Increase to v4r2.
+
 !========================== StrippingConf v4r1 2011-03-10 ====================
 
 ! 2011-03-09 - Anton Poluektov 

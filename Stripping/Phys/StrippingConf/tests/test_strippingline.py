@@ -16,6 +16,7 @@ def test_instantiate_empty_line() :
     assert line.subname() == 'EmptyLine'
     assert line.isAppended() == False
     assert line.outputLocation() == None
+    assert line.selection() == None
     
 def test_instantiate_from_Selection_object() :
     selection = AutomaticData(Location = 'Phys/Selection/Particles')
@@ -24,6 +25,8 @@ def test_instantiate_from_Selection_object() :
     assert line.subname() == 'SelectionLine'
     assert line.isAppended() == False
     assert line.outputLocation() == 'Phys/SelectionLine/Particles'
+    assert line.selection() != None
+    assert line.selection().outputLocation() == line.outputLocation()
     
 def test_duplicate_name_raises_ValueError() :
     line0 = StrippingLine('DuplicateLine')

@@ -98,10 +98,13 @@ class bindMembers (object) :
     """
     Simple class to represent a set of StrippingMembers which are bound to a line
     """
-    __slots__ = ('_members', '_outputloc')
+    __slots__ = ('_members', '_outputloc', '_selection')
 
     def outputLocation( self ) : 
         return self._outputloc
+
+    def selection( self ) :
+        return self._selection
 
     def members( self ) :         
         # remove (downstream) duplicates
@@ -143,6 +146,7 @@ class bindMembers (object) :
     def _handleSelectionType(self, line, sel) :
         members = flatAlgorithmList(sel)
         self._members += members
+        self._selection = sel
         loc = sel.outputLocation()
         self._outputloc = loc
 
@@ -183,6 +187,7 @@ class bindMembers (object) :
 
         self._members = []
         self._outputloc = None
+        self._selection = None
         for alg in algos:
             # dispatch according to the type of alg...
             if isConfigurable(alg) :
@@ -353,6 +358,8 @@ class StrippingLine(object):
         #start to contruct the sequence        
 
         self._members = []
+
+        self._selection = None
         
         # if needed, check Primary Vertex before running all algos
         
@@ -394,9 +401,12 @@ class StrippingLine(object):
         _boundMembers    = bindMembers( line, algos )
         self._members   += _boundMembers.members()
         self._outputloc  = _boundMembers.outputLocation()
-
+        self._selection = _boundMembers.selection()
         # register into the local storage of all created Lines
         _add_to_stripping_lines_( self ) 
+
+    def selection(self) :
+        return self._selection
         
     def declareAppended( self ) :
 	self._appended = True 
