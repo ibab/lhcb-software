@@ -11,7 +11,7 @@ import sys
 import os
 
 
-class LbCMTWhichScript(Script):
+class LbWhichScript(Script):
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
@@ -25,6 +25,12 @@ class LbCMTWhichScript(Script):
                           action="store_true",
                           dest="cmt_dir",
                           help="print the path to the cmt directory instead of the base dir")
+
+        parser.set_defaults(with_user_area=True)
+        parser.add_option("--no-user-area",
+                          action="store_false",
+                          dest="with_user_area",
+                          help="Ignore the user release area when looking for projects.")
 
     def main(self):
         log = logging.getLogger()
@@ -43,9 +49,11 @@ class LbCMTWhichScript(Script):
         if len(args) > 2 :
             version = args[2]
 
+
         p = LbCMTWhich(project, package, version,
                        all_occurences=False,
-                       casesense=opts.casesense)
+                       casesense=opts.casesense,
+                       with_user_area=opts.with_usr_area)
 
         if opts.cmt_dir :
             print os.path.join(str(p), "cmt")
@@ -55,5 +63,5 @@ class LbCMTWhichScript(Script):
         return 0
 
 if __name__ == '__main__':
-    s = LbCMTWhichScript(usage="%prog project [version]")
+    s = LbWhichScript(usage="%prog project [version]")
     sys.exit(s.run())

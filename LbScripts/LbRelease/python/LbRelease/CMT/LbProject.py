@@ -4,6 +4,12 @@ from LbPackage import LbPackage
 from LbConfiguration.Project import getProject
 from LbConfiguration.Version import LHCb2CMT
 
+import logging
+
+import os
+
+
+
 class LbProject(Project):
     def __init__(self, projectpath):
         super(LbProject,self).__init__(projectpath)
@@ -21,7 +27,21 @@ class LbProject(Project):
         return self._container
 
 
-def LbCMTWhich(project, package=None, version=None, all_occurences=False, casesense=True):
+def LbCMTWhich(project, package=None, version=None, all_occurences=False,
+               casesense=True, with_user_area=True):
+    log = logging.getLogger()
+
+    if os.environ.has_key("LHCBPROJECTPATH") :
+        log.debug("Using LHCBPROJECTPATH (%s)" % os.environ["LHCBPROJECTPATH"])
+        os.environ["CMTPROJECTPATH"] = os.environ["LHCBPROJECTPATH"]
+    else :
+        log.warning("No LHCBPROJECTPATH")
+        if os.environ.has_key("CMTPROJECTPATH") :
+            log.warning("Trying CMTPROJECTPATH instead")
+        else :
+            log.fatal("Not fallback CMTPROJECTPATH in the environment")
+            return 1
+
     if version :
         proj, ver = LHCb2CMT(project, version)
         result = CMTWhich(proj, package, ver, all_occurences, casesense)

@@ -1,3 +1,11 @@
+2011-03-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/scripts/lbcmtwhich: Removed.
+	* LbRelease/scripts/lbwhich: New file.
+	* LbRelease/python/LbRelease/CMT/LbProject.py:
+	- renamed lbcmtwhich into lbwhich.
+	- added a switch to exclude the user_release_area.
+
 2011-03-28  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/LHCbNightlies.py: changes needed by Nightlies-TagCollector connection;
