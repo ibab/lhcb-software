@@ -1,5 +1,5 @@
 package PhysSys
-version v12r1p1
+version v12r2
 
 branches doc cmt
 
@@ -8,8 +8,8 @@ use  DaVinciUtils               v1r1     Phys    # Juan Palacios
 use  DaVinciKernel              v10r0    Phys    # Juan Palacios
 use  DaVinciMaps                v2r0     Phys    # Juan Palacios
 use  SelectionLine              v1r0p1   Kernel  # Gerhard Raven
-use  SelPy                      v4r1     Phys    # Juan Palacios
-use  PhysSelPython              v9r1     PhysSel # Juan Palacios
+use  SelPy                      v4r2     Phys    # Juan Palacios
+use  PhysSelPython              v9r2     PhysSel # Juan Palacios
 
 #===================================================================
 use  PhysConf                   v1r8     Phys    # Patrick Koppenburg, Juan Palacios
