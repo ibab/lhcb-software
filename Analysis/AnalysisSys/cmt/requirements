@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v6r1
+version v6r2
 
 branches doc cmt
 
@@ -11,10 +11,10 @@ use  DSTWriterTests             v2r3     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  FlavourTagging             v12r4p1  Phys   # Marc Grabalosa
+use  FlavourTagging             v12r4p2  Phys   # Marc Grabalosa
 
-use  DaVinciMonitors            v1r14p1  Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r5p2   Rich   # Chris Jones
+use  DaVinciMonitors            v1r14p2  Phys   # Patrick Koppenburg
+use  RichPIDQC                  v1r5p3   Rich   # Chris Jones
 use  KaliCalo                   v4r9     Phys   # Vanya Belyaev
 ####################################################################
 #use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
@@ -26,7 +26,7 @@ use  DaVinciAssociators         v9r4p1   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p5   Phys   # Juan Palacios
 use  VertexFitCheck             v1r7     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r6p1   Phys   # Marco Musy
+use  FlavourTaggingChecker      v6r6p2   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r4p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r3p1   Phys   # Neal Gueissaz
 use  DecayTreeTuple             v3r13    Phys   # Rob Lambert
@@ -44,9 +44,9 @@ use  MicroDSTAlgorithm   	v5r2    MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10   MicroDST # Juan Palacios
 
 ####################################################################
-use Analysis            	v10r0   Tutorial          # P. Koppenburg
+use Analysis            	v10r1   Tutorial          # P. Koppenburg
 use LoKiExample         	v8r8    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r13p2 Ex                # Juan Palacios
+use MicroDSTExample             v2r14   Ex                # Juan Palacios
 
 # Declare this as a container package
 apply_pattern container_package
