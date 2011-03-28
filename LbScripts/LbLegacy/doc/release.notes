@@ -1,3 +1,8 @@
+2011-03-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed the comparison of the lhcb subdirectory with
+	os.getcwd() by using os.path.abspath. Because this is what os.getcwd() is returning anyway.
+
 2011-03-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added clone of cleanPath (LbUtils.Path) in order

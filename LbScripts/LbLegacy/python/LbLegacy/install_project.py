@@ -1070,7 +1070,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     os.mkdir(pack_ver[2])
                     log.info('mkdir %s in %s ' % (pack_ver[2], pack_ver[3]))
 
-            if os.getcwd() == this_lhcb_dir :
+            if os.getcwd() == os.path.abspath(this_lhcb_dir) :
                 # if binary is requested and InstallArea does not exist : set it
                 if pack_ver[2] :
                     os.chdir(os.path.join(this_lhcb_dir, pack_ver[0], pack_ver[0] + '_' + pack_ver[1]))
