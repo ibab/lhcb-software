@@ -31,7 +31,6 @@ public:
 
 protected:
 
-private:
   void i_dump();
 
   /// Names of the conditions to print
@@ -258,9 +257,34 @@ private:
   GaudiUtils::Map<std::string,Condition*> m_conditions;
 };
 
+/** Test algorithm that triggers the bug #80076
+ *  https://savannah.cern.ch/bugs/?80076
+ */
+class bug_80076: public TestConditionAlg {
+public:
+  /// Constructor.
+  bug_80076(const std::string& name, ISvcLocator* pSvcLocator):
+    TestConditionAlg(name, pSvcLocator) {}
+
+  /// Override the initialize to ensure that the conditions are already loaded
+  /// during the initialize.
+  StatusCode initialize() {
+    StatusCode sc = TestConditionAlg::initialize();
+    if (sc.isFailure()) return sc;
+
+    std::vector<std::string>::const_iterator path;
+    for (path = m_condPaths.begin(); path != m_condPaths.end(); ++path){
+      // this ensures that the objects are loaded in the transient store
+      exist<DataObject>(detSvc(), *path);
+    }
+
+    return sc;
+  }
+};
 
 }
 
 // Declaration of the Algorithm Factory
 DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, TestConditionAlg )
 DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, FinalizationEvtLoop )
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( DetCondTest, bug_80076 )

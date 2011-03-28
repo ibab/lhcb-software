@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2011-03-28 - Marco Clemencic
+ - Added a test to expose bug #80076 (wrong condition used on first event).
+
 !========================= DetCond v12r17 2011-01-31 =========================
 ! 2011-01-28 - Illya Shapoval
  - Configuration machinery is upgraded to load DQFLAGS partition (implemeted in
