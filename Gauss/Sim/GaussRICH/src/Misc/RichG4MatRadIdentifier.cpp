@@ -84,7 +84,7 @@ void RichG4MatRadIdentifier::InitializeRichG4MatRadIdentifier()
       n_mat++;
       m_RichG4MatIndexRadNum[curMatIndex] = Rich2GasQWindowCkvRadiatorNum;
       
-    }else if (curMatName == RichHpdQuartzWindowMaterialName ) {
+    }else if ((curMatName == RichHpdQuartzWindowMaterialName) || (curMatName == RichPmtQWindowMaterialName )) {
       n_mat++;
       m_RichG4MatIndexRadNum[curMatIndex] = RichHpdQuartzWindowCkvRadiatorNum;
       

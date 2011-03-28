@@ -145,5 +145,5 @@ static const G4String Rich2DeStructurePathName = DeRichLocations::Rich2 ;
 static const G4String RichHpdQwDeSubPathName="/Rich1FirstHpdQW";
 static const G4String RichHpdPaCathDeSubPathname="/Rich1FirstHpdPhCathode";
 static const G4String RichHpdSiDetSensDetNamePrefix="HpdSiliconSensDet";
-
+static const G4String RichPmtQWindowMaterialName="/dd/Materials/RichMaterials/RichPMTQuartzMateral";
 #endif // MISC_RICHG4GAUSSPATHNAMES_H
