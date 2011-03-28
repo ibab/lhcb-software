@@ -30,14 +30,12 @@ TH1* OMARebin::exec( const std::vector<TH1*> *sources,
   }
   TH1* H = sources->at(0);
   out = H->Rebin(N,outName.c_str());
+  if (!out) out = (TH1*) H->Clone(outName.c_str()); // in case Rebin fails for some reason
   if (out) {
     out->SetTitle(outTitle.c_str());
     if (existingHisto) {
       existingHisto->Delete();
     }
-  }
-  else {
-    out=H;
   }
   return  out;
 }
