@@ -495,6 +495,8 @@ def decorateFunctionOps ( funcs , opers ) :
     _max_element_     = None
     _min_abs_element_ = None
     _max_abs_element_ = None
+
+    _fetch_           = None
     
     _sum_             = None
     _product_         = None
@@ -1403,6 +1405,21 @@ def decorateFunctionOps ( funcs , opers ) :
             return opers.__max_abs_element__ ( s )
         _max_abs_element_ . __doc__  += opers.__max_abs_element__ . __doc__
 
+    # 'fetch/reduce' 
+    if hasattr ( opers , '__fetch__' ) :
+        def _fetch_ ( s , *a ) :
+            """
+            Fetch/reduce the vector stream : pick up the certain element from
+            the stream and evaluate the scalar function: 
+
+            >>> fun = fetch ( PT , 1 , -1 )
+            
+            
+            Uses:\n
+            """
+            return opers.__fetch__ ( s , *a )
+        _fetch_ . __doc__  += opers.__fetch__ . __doc__
+
     # decorate the functions 
     for fun in funcs :
         
@@ -1469,7 +1486,9 @@ def decorateFunctionOps ( funcs , opers ) :
         
         if _sum_             : fun . __sum__             = _sum_       #
         if _product_         : fun . __product__         = _product_   #
-        
+
+        if _fetch_           : fun . __fetch__           = _fetch_      #
+
         if _mean_            : fun . __mean__            = _mean_       #
         if _meanErr_         : fun . __meanErr__         = _meanErr_    #
         if _rms_             : fun . __rms__             = _rms_        #
@@ -1511,7 +1530,8 @@ def decoratePredicateOps ( cuts , opers ) :
     _difference_      = None
     _sym_difference_  = None
     _includes_        = None
-
+    _fetch_           = None
+    
     _eff_     = None
     _effErr_  = None
 
@@ -1786,6 +1806,22 @@ def decoratePredicateOps ( cuts , opers ) :
             return opers.__includes__ ( s , s2 )
         _includes_ .__doc__ += opers .__includes__ . __doc__ 
 
+    # 'fetch/reduce' 
+    if hasattr ( opers , '__fetch__' ) :
+        def _fetch_ ( s , *a ) :
+            """
+            Fetch/reduce the vector stream : pick up the certain element from
+            the stream and evaluate the scalar predicate 
+
+            >>> fun = fetch ( 1 * GeV < PT , 1 , -1 )
+            
+            
+            Uses:\n
+            """
+            return opers.__fetch__ ( s , *a )
+        _fetch_ . __doc__  += opers.__fetch__ . __doc__
+
+
     # perform the actual decoration 
     for cut in cuts : 
 
@@ -1822,6 +1858,7 @@ def decoratePredicateOps ( cuts , opers ) :
             cut . __sym_difference__  =  _sym_difference_
         
         if _includes_          : cut . __includes__  =  _includes_
+        if _fetch_             : cut . __fetch__     =  _fetch_
 
         if _eff_       : cut .__eff__     =  _eff_
         if _effErr_    : cut .__effErr__  =  _effErr_

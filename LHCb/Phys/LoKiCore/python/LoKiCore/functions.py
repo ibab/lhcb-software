@@ -681,6 +681,32 @@ def count ( cut ) :
     """
     return cut.__count__ ()
 
+# =============================================================================
+## Construct 'fetch/reduce' vector-function from the scalar functor
+#
+#  Usefult in steams:
+# 
+#  @code
+#
+#    " ... >> fetch ( PT , 1 , -1 )  >> ... "  #
+#
+#
+#    " ... >> fetch ( PT > 1 * GeV )  "  # terminate stream 
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-03-28
+def fetch ( s , *args ) :
+    """
+    Construct 'fetch/reduce' vector-function from the scalar functor 
+
+    >>> functor = ...
+    >>> f = fetch ( functor , 1 , -1 )
+         
+    """
+    return s.__fetch__( *args ) 
+
 
 # =============================================================================
 ##  create the 'union' for two streamers

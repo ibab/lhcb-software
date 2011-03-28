@@ -18,6 +18,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-28 - Vanya Belyaev
+
+ - add "fetch" decorator 
+
 ! 2011-03-27 - Vanya Belyaev
 
  - add "Fetch" vector-function
