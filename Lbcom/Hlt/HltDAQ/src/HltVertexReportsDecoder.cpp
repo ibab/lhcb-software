@@ -79,15 +79,6 @@ StatusCode HltVertexReportsDecoder::execute() {
   HltVertexReports* outputSummary = new HltVertexReports();
   put( outputSummary, m_outputHltVertexReportsLocation );
 
-  // get string-to-int selection ID map
-  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  //    std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
-  //    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-
   // ----------------------------------------------------------
   // get the bank from RawEvent
   // ----------------------------------------------------------
@@ -113,6 +104,15 @@ StatusCode HltVertexReportsDecoder::execute() {
     Warning(" HltVertexReports RawBank has unexpected source ID. Will try to decode it anyway." ,  StatusCode::SUCCESS, 20 );
   }
 
+
+  // get string-to-int selection ID map
+  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
+  //    std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
+  //    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
+  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
+  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
+  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
+  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
  
   unsigned int bankSize = (hltvertexReportsRawBank->size()+3)/4; // from bytes to words
 
