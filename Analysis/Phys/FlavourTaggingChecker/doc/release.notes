@@ -6,6 +6,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v6r6p2 2011-03-28 ==========
+
 ! 2011-03-21 - Marc Grabalosa
  - Changed properties names for consistency in FTC/root wrt FT.
  - Added average perf in PerformanceMonitoring.cxx
