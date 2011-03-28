@@ -85,11 +85,11 @@ def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
     i = today
     n = 0
     while n < 7:
-      if (i < 0):
-        i = 6
-      days.append(day_names[i])
-      i = i - 1
-      n = n + 1
+        if (i < 0):
+            i = 6
+        days.append(day_names[i])
+        i = i - 1
+        n = n + 1
 
     slotList = []
     slots = [] #names
