@@ -38,7 +38,7 @@ def getSize():
 
         if res:
             import struct
-            (bufx, bufy, curx, cury, wattr, left, top, right, bottom, maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
+            (_bufx, _bufy, _curx, _cury, _wattr, left, top, right, bottom, _maxx, _maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
             sizex = right - left + 1
             sizey = bottom - top + 1
         else:
