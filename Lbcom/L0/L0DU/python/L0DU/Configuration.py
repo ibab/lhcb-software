@@ -32,7 +32,8 @@ class L0Conf(LHCbConfigurableUser) :
         ,"EnableL0DecodingOnDemand" : False
         ,"FastL0DUDecoding"         : False
         ,"FullL0MuonDecoding"       : False
-        ,"IgnoreL0MuonCondDB"       : False
+        ,"IgnoreL0MuonCondDB"       : None
+        ,"L0MuonUseTCKFromData"     : None
         ,"L0DecodingContext"        : None
         ,"L0EmulatorContext"        : None
         ,"verbose"        : False 
@@ -62,8 +63,10 @@ class L0Conf(LHCbConfigurableUser) :
         ,"EnableL0DecodingOnDemand" : """If True, setup the data on demand service for L0."""
         ,"FastL0DUDecoding"         : """ If True, activate fast decoding for L0DU."""
         ,"FullL0MuonDecoding"       : """ If True, decode all the L0Muon banks. Otherwise, decode only the one with the L0MuonCandidates."""
-        ,"L0DecodingContext"        : "String appended to the default TES location where the results of the decoding are stored." 
-        ,"L0EmulatorContext"        : "String appended to the default TES location where the results of the emulation are stored." 
+        ,"IgnoreL0MuonCondDB"       : """ If True, the L0Muon emulator parameter are not taken from the condition data base.""" 
+        ,"L0MuonUseTCKFromData"     : """ If True, the L0Muon emulator will use the event TCK to get the FOI values.""" 
+        ,"L0DecodingContext"        : """ String appended to the default TES location where the results of the decoding are stored.""" 
+        ,"L0EmulatorContext"        : """ String appended to the default TES location where the results of the emulation are stored.""" 
         ,"verbose"        : """Obsolete"""
         # Sequencers 
         ,"L0Sequencer"    : """ Sequencer filled according to the L0Conf properties."""
@@ -127,9 +130,6 @@ class L0Conf(LHCbConfigurableUser) :
         l0pileup = emulateL0PileUp()
         l0du     = emulateL0DU()
 
-        # CondDB
-        l0muon.IgnoreCondDB = self.getProp("IgnoreL0MuonCondDB")
-        
         # Raw banks
         if writeBanks is not None:
             l0calo.WriteBanks = writeBanks
@@ -163,6 +163,31 @@ class L0Conf(LHCbConfigurableUser) :
         
         return l0monitoringSeq
 
+    def _setAlgTCK(self,alg):
+        """
+        Set the TCK used by the L0 emulators (L0Muon and L0DU).
+        """
+
+        # Set up the TCK to use
+        if self.isPropertySet("TCK"):     # Use L0Conf.TCK if set
+            tck = self.getProp("TCK")
+            if alg.isPropertySet("TCK"):
+                log.warning("%s.TCK and L0Conf().TCK both set, using L0Conf().TCK = %s"%(alg.getName(),tck))
+            alg.TCK = tck
+        else:
+            if alg.isPropertySet("TCK"): # Use already defined TCK
+                log.info("%s.TCK was set independently of L0Conf"%(alg.getName()))
+            else:                         # Use default TCK
+                if self.getProp("DataType").upper() in ["DC06"]:
+                    alg.TCK = "0xFFF8"
+                elif self.getProp("DataType").upper() in ["2009"]:
+                    alg.TCK = "0x1309"
+                elif self.getProp("DataType").upper() in ["2010"]:
+                    alg.TCK = "0x1810"
+                else:
+                    alg.TCK = "0xDC09"
+        log.info("%s will use TCK=%s"%(alg.getFullName(),alg.getProp('TCK')))
+
     def _defineL0Sequencer(self):
         """
         Fill the sequencer given to the L0Sequencer attribute.
@@ -170,27 +195,10 @@ class L0Conf(LHCbConfigurableUser) :
         """
         if self.isPropertySet("L0Sequencer"):
 
+            # Set TCK
             importOptions("$L0TCK/L0DUConfig.opts")
-            # Set up the TCK to use
-            l0du = emulateL0DU()
-            if self.isPropertySet("TCK"):     # Use L0Conf.TCK if set
-                tck = self.getProp("TCK")
-                if l0du.isPropertySet("TCK"):
-                    log.warning("L0DU.TCK and L0Conf().TCK both set, using L0Conf().TCK = %s"%tck)
-                l0du.TCK = tck
-            else:
-                if l0du.isPropertySet("TCK"): # Use already defined TCK
-                    log.info("L0DU.TCK was set independently of L0Conf")
-                else:                         # Use default TCK
-                    if self.getProp("DataType").upper() in ["DC06"]:
-                        l0du.TCK = "0xFFF8"
-                    elif self.getProp("DataType").upper() in ["2009"]:
-                        l0du.TCK = "0x1309"
-                    elif self.getProp("DataType").upper() in ["2010"]:
-                        l0du.TCK = "0x1810"
-                    else:
-                        l0du.TCK = "0xDC09"
-            log.info("L0DUAlg will use TCK=%s"%l0du.getProp('TCK'))
+            self._setAlgTCK( emulateL0DU()   )
+            self._setAlgTCK( emulateL0Muon() )
             
             seq=self.getProp("L0Sequencer")
 
@@ -341,6 +349,18 @@ class L0Conf(LHCbConfigurableUser) :
             l0muon = decodeL0Muon()
             l0muon.DAQMode = 1
 
+        # CondDB usage by L0Muon emulator
+        if self.isPropertySet("IgnoreL0MuonCondDB"):
+            log.info("L0Muon emulator will use the event TCK to get the FOI values : %s"%(self.getProp("IgnoreL0MuonCondDB")))
+            l0muon = emulateL0Muon()
+            l0muon.IgnoreCondDB = self.getProp("IgnoreL0MuonCondDB")
+        
+        # TCK used by the L0Muon emulator    
+        if self.isPropertySet("L0MuonUseTCKFromData"):
+            log.info("L0Muon emulator will use the event TCK to get the FOI values : %s"%(self.getProp("L0MuonUseTCKFromData")))
+            l0muon = emulateL0Muon()
+            l0muon.UseTCKFromData = self.getProp("L0MuonUseTCKFromData")
+            
         # Set l0context for the decoding
         if self.isPropertySet("L0DecodingContext"):
             l0context = self.getProp("L0DecodingContext")
@@ -356,7 +376,7 @@ class L0Conf(LHCbConfigurableUser) :
             emulateL0Calo().L0Context = l0context
             emulateL0Muon().L0Context = l0context
             emulateL0DU().L0Context   = l0context
-        
+
     def _dataOnDemand(self):
         """Configure the DataOnDemand service for L0."""
         if self.getProp("EnableL0DecodingOnDemand"):
