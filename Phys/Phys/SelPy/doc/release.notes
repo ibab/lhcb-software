@@ -4,6 +4,8 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v4r2 2011-03-28 ==============================
+
 ! 2011-03-28 - Juan Palacios
  - Add module SelPy.graph
   . Contains tools to create graphs and pydot.Dot objects from a Selection.
