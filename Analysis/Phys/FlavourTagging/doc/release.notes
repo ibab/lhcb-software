@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v12r4p2 2011-03-28 ================
+
 ! 2011-03-21 - Marc Grabalosa
  - Added warnings in the taggers initialization
  - Modified some properties for consoistency
