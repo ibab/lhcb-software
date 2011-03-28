@@ -278,5 +278,6 @@ void MonSubSys::List()
 void MonSubSys::setRunNo(int runno)
 {
   this->m_runno = runno;
+  this->m_genSrv->setRunNo(runno);
 }
 
