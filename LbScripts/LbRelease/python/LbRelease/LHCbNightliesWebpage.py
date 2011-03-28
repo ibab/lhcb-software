@@ -120,14 +120,14 @@ def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
     htmlFile.write( '</title>'+"\n")
 
     htmlFile.write( """
-        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css"> 
- 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script> 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script> 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script> 
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css">
 
-<script type="text/javascript"> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script>
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script>
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript">
 function genrss() {
     $.typ = 'all'
     if ($("input[id='build']:checked").val() == 'build') { $.typ = 'build' }
@@ -151,7 +151,7 @@ $(document).ready(function() {
   $('#left input, #left select, #left radio, #right input, #right select, #right radio').bind('blur keyup change', genrss);
 genrss();
 });
-</script> 
+</script>
 """)
 
     htmlFile.write( '    <META HTTP-EQUIV="expires" CONTENT="Wed, 19 Feb 2003 08:00:00 GMT">'+"\n")
@@ -284,17 +284,17 @@ genrss();
 
     insert_comma = 0
     for slot in slots:
-      if insert_comma == 1: htmlFile.write(',')
-      htmlFile.write(slot)
-      insert_comma = 1
+        if insert_comma == 1: htmlFile.write(',')
+        htmlFile.write(slot)
+        insert_comma = 1
     htmlFile.write( ' -->'+" \n")
 
     htmlFile.write( '<!-- projects:')
     insert_comma = 0
     for proj in projList:
-      if insert_comma == 1: htmlFile.write(',')
-      htmlFile.write(proj)
-      insert_comma = 1
+        if insert_comma == 1: htmlFile.write(',')
+        htmlFile.write(proj)
+        insert_comma = 1
     htmlFile.write( ' -->'+" \n")
 
     htmlFile.write( '<div align="center">'+" \n")
@@ -343,7 +343,7 @@ genrss();
     htmlFile.write('          <tr><td><input type="checkbox" name="day_cbox_yesterday" value="on"></td><td>yesterday</td></tr>'+" \n")
     htmlFile.write('          <tr><td>&nbsp;</td><td>&nbsp;</td></tr>'+" \n")
     for day in days:
-      htmlFile.write('        <tr><td><input type="checkbox" name="day_cbox_'+day+'" value="on"></td><td>'+day+'</td></tr>'+" \n")
+        htmlFile.write('        <tr><td><input type="checkbox" name="day_cbox_'+day+'" value="on"></td><td>'+day+'</td></tr>'+" \n")
 
     htmlFile.write('      </table>'+" \n")
     htmlFile.write('    </td>'+" \n")
@@ -471,13 +471,13 @@ genrss();
                     </div>
                     <div id="live-result"></div>""")
 
-#    htmlFile.write("""        
+#    htmlFile.write("""
 #                    <div id="d_clip_button" style="border:1px solid black; padding:1px;">copy</div>
 #                <script language="JavaScript">
 #                        var clip = new ZeroClipboard.Client();
 #                        clip.setHandCursor( true );
 #                        clip.setCSSEffects( true );
-#                        clip.addEventListener( 'mouseDown', function(client) { 
+#                        clip.addEventListener( 'mouseDown', function(client) {
 #                            clip.setText( document.getElementById('live-result').value );
 #                        } );
 #//                        clip.setText( $('#live-result').val() );
