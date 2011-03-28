@@ -5,6 +5,10 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+! 2010-10-26 - Marco Clemencic
+ - Fixed bug #80076 (wrong condition used on first event).
+   Force a check of the validity even for conditions just retrieved from the
+   transient store.
 
 !========================= DetDescSvc v3r0 2010-10-26 =========================
 

@@ -58,7 +58,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     log << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
 
     DataObject  *pObj;
-    sc = dp->retrieveObject(path,pObj);
+    sc = dp->retrieveObject(path, pObj);
 
     if (!sc.isSuccess()){
       log << MSG::ERROR << "Cannot retrieve " << path << " from data provider!" << endmsg;
@@ -121,23 +121,24 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         db_path = pAddr->par()[0];
       }
     }
-  } else {
-    if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
-      if (!inInit) { // during initialization we may have a loaded object that doesn't have a valid
-    	             // IOV because of the HeartBeat, so it is actually OK and doesn't need to be updated.
-        log << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
-        sc = vdo->update(); // only if I didn't load it
-        if ( !sc.isSuccess() ) {
-          log << MSG::ERROR << "Cannot update " << path << " from data provider!" << endmsg;
-          return sc;
-        }
-      }
-      // Set also internal pointers (needed here too, because it is needed in a very special case... a test)
-      sc = setPointers(vdo);
+  }
+  if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
+    // Note: this may happen even if we just retrieved the object
+    // (see bug #80076, https://savannah.cern.ch/bugs/?80076)
+    if (!inInit) { // during initialization we may have a loaded object that doesn't have a valid
+                   // IOV because of the HeartBeat, so it is actually OK and doesn't need to be updated.
+      log << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
+      sc = vdo->update(); // only if I didn't load it
       if ( !sc.isSuccess() ) {
-        log << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
+        log << MSG::ERROR << "Cannot update " << path << " from data provider!" << endmsg;
         return sc;
       }
+    }
+    // Set also internal pointers (needed here too, because it is needed in a very special case... a test)
+    sc = setPointers(vdo);
+    if ( !sc.isSuccess() ) {
+      log << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
+      return sc;
     }
   }
   if (vdo != NULL) { // it is a valid data object and should be up-to-date: align validity
