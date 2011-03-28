@@ -136,7 +136,7 @@ StatusCode MonitorSvc::initialize()
   StatusCode sc = Service::initialize();
 
  // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
-  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endmsg;
+//  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endmsg;
 
 
   if ( 0 == m_disableMonRate) {
