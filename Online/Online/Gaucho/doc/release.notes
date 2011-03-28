@@ -3,6 +3,24 @@
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
 
+! 2011-03-28 - Beat Jost, Markus Frank
+
+To properly configure the new MonitorSvc for processes running in the
+MONITORING farm, please ensure that the following options
+are set:
+
+UpdateAndReset.saveHistograms    = 1;
+UpdateAndReset.saverCycle        = 900;
+UpdateAndReset.saveSetDir        = "/hist/Savesets";
+MonitorSvc.ExpandCounterServices = 1;
+MonitorSvc.ExpandNameInfix       = "<part>_x_<program>/";
+MonitorSvc.PartitionName         = @OnlineEnv.PartitionName;
+MonitorSvc.ProgramName           = @OnlineEnv.ProcessNickName;
+
+Please do not set any other "good, old" options, which were present 
+with the old implementation!
+
+
 ! 2011-03-15 - Olivier Callot
  - Dirty patch to allow access to HLT (Adder) histograms from the presenter
 
