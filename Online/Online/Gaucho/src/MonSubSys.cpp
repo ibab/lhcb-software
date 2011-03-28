@@ -183,7 +183,7 @@ void MonSubSys::setup(char *n, bool expandnames)
       }
     }
   }
-  if (m_RPCser == 0) new ObjSerializer(&m_Objmap,m_expandnames);
+  if (m_RPCser == 0) m_RPCser = new ObjSerializer(&m_Objmap,m_expandnames);
   if (m_rpc == 0) m_rpc = new ObjRPC(m_RPCser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/Data";
   if (m_ser == 0) m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
