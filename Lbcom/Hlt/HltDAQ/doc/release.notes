@@ -9,6 +9,7 @@
  - HltVertexReportsDecoder: only ask for ANN once we're about to decode something...
  - HltVertexReportsDecoder: speed up mapping ID to name
  - HltDecReportsDecoder: speed up mapping ID to name
+ - HltSelReportsDecoder: speed up mapping ID to name
 
 ! 2011-03-15 - Gerhard Raven
  - in ConfigTarFileAccessSvc, switch default for CompressOnWrite to true

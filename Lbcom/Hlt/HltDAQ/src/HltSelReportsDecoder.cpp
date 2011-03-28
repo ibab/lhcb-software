@@ -85,8 +85,6 @@ StatusCode HltSelReportsDecoder::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 
-  HltDecReports* hltDecReports(0);  
-
   // get inputs
   if( !exist<RawEvent>(m_inputRawEventLocation) ){    
     return Error(" No RawEvent at "+ m_inputRawEventLocation.value());
@@ -270,15 +268,6 @@ StatusCode HltSelReportsDecoder::execute() {
   }
 
 
-  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items("InfoID"); 
-  // get string-to-int selection ID map
-  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-
-
   // -----------------------------------------------------------------
   // create object summaries
   // -----------------------------------------------------------------
@@ -408,16 +397,11 @@ StatusCode HltSelReportsDecoder::execute() {
           infoPersistent.insert( "0#SelectionID", floatFromInt(stdInfo[0]) );
           if( stdInfo.size()>1 ){
             int id = (int)(  floatFromInt(stdInfo[1])+0.1 );            
-            bool found=false;            
-            for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-             si!=selectionNameToIntMap.end();++si){
-              if( si->second == id ){
-                infoPersistent.insert( "10#" + si->first, floatFromInt(stdInfo[1]) );        
-                found = true;                
-                break;
-              }
-            }
-            if( !found ){
+            boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value("Hlt1SelectionID",id);
+            if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+            if (selName) {
+              infoPersistent.insert( "10#" + selName->first, floatFromInt(stdInfo[1]) );        
+            } else {
               std::ostringstream mess;
               mess << " Did not find string key for PV-selection-ID in trigger selection in storage id=" << id;
               Error( mess.str(),  StatusCode::SUCCESS, 10 ); 
@@ -454,15 +438,10 @@ StatusCode HltSelReportsDecoder::execute() {
       for( HltSelRepRBExtraInfo::ExtraInfo::const_iterator i=extraInfo.begin();
            i!=extraInfo.end(); ++i){
         // convert int to string
-        bool found=false;
-        for( std::vector<IANNSvc::minor_value_type>::const_iterator j= hltinfos.begin();j!=hltinfos.end();++j){
-          if( j->second == i->first  ){
-            infoPersistent.insert( j->first, i->second );
-            found=true;
-            break;
-          }
-        }
-        if( !found ){
+        boost::optional<IANNSvc::minor_value_type> infos = m_hltANNSvc->value("InfoID",i->first); 
+        if ( infos ) {
+          infoPersistent.insert( infos->first, i->second );
+        } else {
           std::ostringstream mess;
           mess << " String key for Extra Info item in storage not found id=" << i->first;
           Warning( mess.str(), StatusCode::SUCCESS, 20 );
@@ -529,48 +508,17 @@ StatusCode HltSelReportsDecoder::execute() {
     HltObjectSummary* & hos = objects[iObj];        
     if( hos->summarizedObjectCLID()!=1 )continue; 
 
-    std::string selName="Dummy";
+    boost::optional<IANNSvc::minor_value_type> selName;
     for( HltObjectSummary::Info::const_iterator i=hos->numericalInfo().begin();
          i!=hos->numericalInfo().end();++i ){
       if( i->first == "0#SelectionID" ){
         int id = (int)(i->second+0.1);
-
-        for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-             si!=selectionNameToIntMap.end();++si){
-          if( si->second == id ){
-            selName = si->first;
-            break;
-          }
-        }
-        if( selName == "Dummy" ){          
-          // ANNSvc is not working; try HltDecReports as alternative to decode
-          if( !hltDecReports ){
-            if( exist<HltDecReports>( m_HltDecReportsLocation ) ){
-              hltDecReports = get<HltDecReports>( m_HltDecReportsLocation );
-            }
-          }
-          if( hltDecReports ){
-            unsigned int idu(id);          
-            for( HltDecReports::Container::const_iterator j=hltDecReports->begin();
-                 j!=hltDecReports->end(); ++j){
-              if( j->second.intDecisionID() == idu ){
-                selName = j->first;
-                break;              
-              }
-            }
-          }
-          if( selName == "Dummy" ){          
-            if( id == 1 ){
-              selName = "Hlt1Global";
-            } else if ( id == 2 ){
-              selName = "Hlt2Global";
-            }
-          }    
-        }        
+        selName = m_hltANNSvc->value("Hlt1SelectionID",id);
+        if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
         break;
       }
     }
-    if( selName != "Dummy" ){
+    if( selName  ){
       
       // clone hos
       HltObjectSummary selSumOut;
@@ -579,8 +527,8 @@ StatusCode HltSelReportsDecoder::execute() {
       selSumOut.setSubstructure( hos->substructure() ); 
 
       // insert selection into the container
-      if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
-          Error( "  Failed to add Hlt selection name " + selName
+      if( outputSummary->insert(selName->first,selSumOut) == StatusCode::FAILURE ){
+          Error( "  Failed to add Hlt selection name " + selName->first
                 + " to its container ", StatusCode::SUCCESS, 10 );
       }
 
