@@ -23,7 +23,7 @@ use CondDBServer        v1r4     Online
 use DIM                 v19r17   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r5     Online
-use Gaucho              v7r7     Online
+use Gaucho              v7r8     Online
 use GaudiCheckpointing  v0r5     Online
 use GaudiOnline         v2r51    Online
 use GaudiRootCnvTests   v1r1     Online
