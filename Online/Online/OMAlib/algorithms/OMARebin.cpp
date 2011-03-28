@@ -32,6 +32,9 @@ TH1* OMARebin::exec( const std::vector<TH1*> *sources,
   out = H->Rebin(N,outName.c_str());
   if (out) {
     out->SetTitle(outTitle.c_str());
+    if (existingHisto) {
+      existingHisto->Delete();
+    }
   }
   else {
     out=H;
