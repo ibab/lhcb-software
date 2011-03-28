@@ -182,7 +182,7 @@ void MonSubSys::setup(char *n, bool expandnames)
       }
     }
   }
-  if (m_rpc == 0) m_rpc = new ObjRPC(m_ser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
+//  if (m_rpc == 0) m_rpc = new ObjRPC(m_ser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/Data";
   if ( m_genSrv == 0) m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);
   if (m_expandnames)
