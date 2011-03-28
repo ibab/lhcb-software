@@ -1,0 +1,60 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
+                           CondDBAccessSvc, CondDBTimeSwitchSvc)
+
+DDDBConf()
+
+ecs = EventClockSvc(InitialTime = (1262304000 + 120 * 60) * 1000000000)
+ecs.addTool(FakeEventTime,"EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = (1262304000 + 10 * 60) * 1000000000
+ecs.EventTimeDecoder.TimeStep = 20 * 60 * 1000000000
+
+HBTEST = CondDBAccessSvc("HBTEST", ConnectionString="sqlite_file:../data/HBTEST.db/HBTEST")
+HBTEST.HeartBeatCondition = "/Conditions/Online/HeartBeatTest/Tick"
+
+CondDB().addAlternative(HBTEST, "/Conditions/Online/HeartBeatTest")
+
+from Configurables import DetCondTest__bug_80076
+alg = DetCondTest__bug_80076("Bug80076")
+alg.Conditions = ["/dd/Conditions/Online/HeartBeatTest/Condition1"]
+ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 3)
+#MessageSvc(OutputLevel = 1)
+
+#from Configurables import UpdateManagerSvc
+#UpdateManagerSvc(DotDumpFile = "ums.dot")
+
+</text></argument>
+<argument name="validator"><text>
+outputlines = [ l.rstrip() for l in stdout.splitlines() ]
+
+## Check that we find the expected lines in the right order
+expected = [
+    '--- /dd/Conditions/Online/HeartBeatTest/Condition1',
+    'Validity: 0.0 -> 1262305200.0',
+    '--- /dd/Conditions/Online/HeartBeatTest/Condition1',
+    'Validity: 1262305200.0 -> 1262306400.0',
+    '--- /dd/Conditions/Online/HeartBeatTest/Condition1',
+    'Validity: 1262306400.0 -> 1262307600.0',
+    ]
+
+regexp = r"^---|^Validity"
+
+# grep
+import re
+exp = re.compile(regexp)
+outputlines = [ l for l in outputlines if exp.match(l) ]
+
+if outputlines != expected:
+    causes.append("output")
+    result["GaudiTest.output.regexp"] = result.Quote(regexp)
+    result["GaudiTest.output.expected"] = result.Quote("\n".join(expected))
+    result["GaudiTest.output.found"] = result.Quote("\n".join(outputlines))
+</text></argument>
+</extension>
