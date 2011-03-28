@@ -93,10 +93,7 @@ bool DeRichSystem::safeMapFill( const SOURCE& source, const TARGET& target, MAP&
             << " OLD=" << map[source] << " NEW=" << target
             << endmsg;
   }
-  // return p.second;
-  // For the moment, always return true. 
-  // Some problems with 2010/2009/2008 data to be understood first
-  return true;
+  return p.second;
 }
 
 //=========================================================================
@@ -151,6 +148,7 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_smartid2L1In.clear();
   m_hardid2L1In.clear();
   m_l0hard2soft.clear();
+  m_l0ToL1.clear();
   m_smartid2copyNumber.clear();
   m_copyNumber2smartid.clear();
   m_inactiveHPDSmartIDs.clear();
@@ -367,12 +365,12 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   } // end loop over conditions data
 
   // Sort HPD lists
-  std::stable_sort( m_activeHPDHardIDs.begin(),    m_activeHPDHardIDs.end()  );
-  std::stable_sort( m_activeHPDSmartIDs.begin(),   m_activeHPDSmartIDs.end() );
+  std::stable_sort( m_activeHPDHardIDs.begin(),    m_activeHPDHardIDs.end()    );
+  std::stable_sort( m_activeHPDSmartIDs.begin(),   m_activeHPDSmartIDs.end()   );
   std::stable_sort( m_inactiveHPDHardIDs.begin(),  m_inactiveHPDHardIDs.end()  );
   std::stable_sort( m_inactiveHPDSmartIDs.begin(), m_inactiveHPDSmartIDs.end() );
-  std::stable_sort( m_allHPDHardIDs.begin(),       m_allHPDHardIDs.end()  );
-  std::stable_sort( m_allHPDSmartIDs.begin(),      m_allHPDSmartIDs.end() );
+  std::stable_sort( m_allHPDHardIDs.begin(),       m_allHPDHardIDs.end()       );
+  std::stable_sort( m_allHPDSmartIDs.begin(),      m_allHPDSmartIDs.end()      );
 
   // L1 mapping
   const std::string L1LogToHardMapName("Level1LogicalToHardwareIDMap");

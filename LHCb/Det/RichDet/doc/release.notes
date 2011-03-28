@@ -4,10 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
-! 2011-03-27 - Chris Jones
- - (Temporarily) disabled the aborting of processing when a databse 
-   inconsistency is found in DeRichSystem::safeMapFill. Need to first 
-   understand some problems with 2010 and older data.
+! 2011-03-28 - Chris Jones
+ - Add missing clear() on L0 to L1 Hardware ID map during 
+   DeRichSystem::buildHPDMappings()
 
 ! 2011-03-23 - Chris Jones
  - Add new method to DeRichSystem to return the Level1 Hardware ID for a 
