@@ -21,7 +21,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
     __slots__ = {  'KaonPT'             : 800      # MeV
                   ,'KaonIPS'            : 6        # dimensionless
                   ,'TrackChi2DOF'       : 5        # dimensionless
-                  ,'PhiMassWin'         : 12       # MeV
+                  ,'PhiMassWin'         : 20       # MeV
                   ,'PhiMassWinSB'       : 30       # MeV
                   ,'PhiPT'              : 1800     # MeV
                   ,'PhiDOCA'            : 0.2      # mm
@@ -77,7 +77,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                        , "TrackCombineSB"
                                        , DecayDescriptors = decayDesc
                                        , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackChi2DOF, KaonPtCut, KaonIpsCut) }
-                                       , CombinationCut =  "%s & %s" % (PhiMassCut, PhiDocaCut)
+                                       , CombinationCut =  "%s & %s" % (PhiMassCutSB, PhiDocaCut)
                                        , MotherCut = "%s & %s" % (PhiPtCut, PhiVchi2Cut)
                                        , Inputs  = [ BiKalmanFittedKaons ]
                                        )
