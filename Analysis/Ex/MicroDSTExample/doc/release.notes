@@ -5,6 +5,13 @@
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
 
+!======================= Ex/MicroDSTExample v2r14 2011-03-28 =================
+
+! 2011-03-28 - Juan Palacios
+ - MicroDSTExample.Selections module.
+  . Update Selections.
+ - Increase to v2r14.
+
 !======================= Ex/MicroDSTExample v2r13p2 2010-08-20 ===============
 
 ! 2010-08-02 - Juan Palacios
