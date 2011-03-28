@@ -75,6 +75,8 @@ print 'inp2 >> sum ( X , X <  0 )    :%s ' % ( inp2 >> sum ( X , X <  0 ) )
 print 'inp2 >> sum ( X , X >= 0 )    :%s ' % ( inp2 >> sum ( X , X >= 0 ) )
 
 
+print 'inp2 >> fetch ( X , 0   , -100 ) :%s ' % ( inp2 >> fetch ( X , 0   , -100 ) )
+
 print 'inp2 >> mean    ( X**3 , X >= 0 ) :%s ' % ( inp2 >> mean    ( X**3 , X >= 0 ) )
 print 'inp2 >> meanErr ( X**3 , X >= 0 ) :%s ' % ( inp2 >> meanErr ( X**3 , X >= 0 ) )
 print 'inp2 >> rms     ( X**3 , X >= 0 ) :%s ' % ( inp2 >> rms     ( X**3 , X >= 0 ) )
