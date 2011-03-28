@@ -107,8 +107,6 @@ StatusCode HltVertexReportsDecoder::execute() {
 
   // get string-to-int selection ID map
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  //    std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
-  //    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
   std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
   std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
@@ -127,19 +125,14 @@ StatusCode HltVertexReportsDecoder::execute() {
     ++iWord;
     
 
-    std::string selName="Dummy";
-    for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-         si!=selectionNameToIntMap.end();++si){
-      if( si->second == intSelID ){
-        selName = si->first;
-        break;
-      }
-    }
-    if( selName != "Dummy" ){
+
+    boost::optional<IANNSvc::minor_value_type> value = m_hltANNSvc->value("Hlt1SelectionID",intSelID);
+    if (!value) value = m_hltANNSvc->value("Hlt2SelectionID",intSelID);
+    if( value ) { 
 
       // create output container for vertices and put it on TES
       VertexBase::Container* verticesOutput = new VertexBase::Container();
-      put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + selName  );
+      put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + value->first  );
 
       SmartRefVector<VertexBase> pVtxs;
 
@@ -171,8 +164,8 @@ StatusCode HltVertexReportsDecoder::execute() {
       }
 
       // insert selection into the container
-      if( outputSummary->insert(selName,pVtxs) == StatusCode::FAILURE ){
-        Error(" Failed to add Hlt vertex selection name " + selName
+      if( outputSummary->insert(value->first,pVtxs) == StatusCode::FAILURE ){
+        Error(" Failed to add Hlt vertex selection name " + value->first
               + " to its container ",StatusCode::SUCCESS, 20 );
       }    
  
