@@ -9,6 +9,7 @@ use  DaVinciTests               v2r4
 
 # Patches
 
+use  SelPy                      v4r2    Phys
 use PhysSelPython               v9r2    PhysSel
 use MuonID                      v8r0p2  Muon
 
