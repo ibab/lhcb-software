@@ -1,3 +1,7 @@
+2011-03-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: fixed a problem with the removal of build stamp files on Windows.
+
 2011-03-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/SelfExtract.py:
