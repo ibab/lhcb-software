@@ -1,3 +1,8 @@
+2011-03-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/SelfExtract.py:
+	* LbUtils/scripts/makeself: added a few needed options to the specifications.
+
 2011-03-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/Path.py: implemented the cleanPath function which removes empty

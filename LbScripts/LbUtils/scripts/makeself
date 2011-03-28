@@ -65,6 +65,17 @@ class makeSelfScript(Script):
                           dest="use_sha1_check",
                           help="Prevent the usage of the SHA1 sum check")
 
+        parser.set_defaults(update_url=None)
+        parser.add_option("--update-url",
+                          action="store",
+                          dest="update_url",
+                          help="URL to perform the self-update of the script")
+
+        parser.set_defaults(script_version=None)
+        parser.add_option("--script-version",
+                          action="store",
+                          dest="script_version",
+                          help="sets the version of the self-extracting script")
 
 
     def main(self):
@@ -90,7 +101,7 @@ class makeSelfScript(Script):
 
         status = createSelfExtractFile(input_dir, target_filename, description, script, script_args,
                                        opts.compression_type, opts.target_dir, opts.use_temp_dir,
-                                       opts.template)
+                                       opts.template, opts.update_url, opts.script_version)
 
 
         return status
