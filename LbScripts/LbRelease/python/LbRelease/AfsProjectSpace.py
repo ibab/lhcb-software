@@ -9,7 +9,7 @@ do make the request of more space
 """
 
 from subprocess import Popen, PIPE
-import re, sys
+import sys
 import logging, logging.handlers
 
 
