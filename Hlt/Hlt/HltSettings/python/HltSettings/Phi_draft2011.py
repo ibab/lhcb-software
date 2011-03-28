@@ -34,7 +34,7 @@ class Phi_draft2011 :
         
         return { Hlt2InclusivePhiLinesConf   : {
              'KaonPT'             : 800      # MeV
-            ,'PhiMassWin'         : 12       # MeV
+            ,'PhiMassWin'         : 20       # MeV
             ,'PhiPT'              : 1800     # MeV
             ,'PhiDOCA'            : 0.2      # mm
             ,'KaonIPS'            : 6        # dimensionless
