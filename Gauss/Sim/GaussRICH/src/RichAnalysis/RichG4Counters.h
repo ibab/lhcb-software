@@ -97,6 +97,9 @@ private:
   std::vector<int> m_NumHitSaturatedPerTrackRich1GasNoHpdRefl;
   std::vector<int> m_NumHitSaturatedPerTrackRich1AgelNoHpdRefl;
   std::vector<int> m_NumHitSaturatedPerTrackRich2GasNoHpdRefl;
+
+  std::vector<int> m_NumHitSaturatedPerTrackRich1GasNoHpdReflHighMom;
+  std::vector<int> m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom;
   
   std::vector<int> m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint;
   std::vector<int> m_NumHitSaturatedPerTrackRich2GasScint;
@@ -130,6 +133,9 @@ private:
   std::vector<int> m_NumHitFullAcceptSatPerTrackR1Gas;
   std::vector<int> m_NumHitFullAcceptSatPerTrackR1Agel;
   std::vector<int> m_NumHitFullAcceptSatPerTrackR2Gas;
+
+  std::vector<int> m_NumSignalHitFullAcceptSatPerTrackR1Gas;
+  std::vector<int> m_NumSignalHitFullAcceptSatPerTrackR2Gas;
 
 public:
 

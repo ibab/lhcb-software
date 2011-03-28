@@ -77,6 +77,9 @@ void RichG4Counters::InitRichEventCounters()
   m_NumHitSaturatedPerTrackRich1WithRlyAgelNoHpdRefl.clear();
   m_NumHitSaturatedPerTrackRich2GasNoHpdRefl.clear();
 
+  m_NumHitSaturatedPerTrackRich1GasNoHpdReflHighMom.clear();
+  m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom.clear();
+
   m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint.clear();
   m_NumHitSaturatedPerTrackRich2GasScint.clear();
   
@@ -101,6 +104,9 @@ void RichG4Counters::InitRichEventCounters()
   m_NumHitFullAcceptSatPerTrackR1Gas.clear();
   m_NumHitFullAcceptSatPerTrackR1Agel.clear();
   m_NumHitFullAcceptSatPerTrackR2Gas.clear();
+
+  m_NumSignalHitFullAcceptSatPerTrackR1Gas.clear();
+  m_NumSignalHitFullAcceptSatPerTrackR2Gas.clear();
 
   m_NumHitTotRich1HpdRefl=0;
   m_NumHitTotRich2HpdRefl=0;

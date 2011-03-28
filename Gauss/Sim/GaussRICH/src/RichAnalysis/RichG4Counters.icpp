@@ -166,6 +166,18 @@ inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdRefl() const
   return  m_NumHitSaturatedPerTrackRich2GasNoHpdRefl;
 }
 
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1GasNoHpdReflHighMom() const
+{
+  return  m_NumHitSaturatedPerTrackRich1GasNoHpdReflHighMom;
+}
+
+inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom() const
+{
+  return  m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom;
+}
+
+
+
 inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint() const
 { return m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint;}
 inline const std::vector<int> & NumHitSaturatedPerTrackRich2GasScint() const
@@ -416,7 +428,16 @@ inline void bumpNumHitSaturatedPerTrackRich2GasNoHpdRefl(int it2)
 {
   ++m_NumHitSaturatedPerTrackRich2GasNoHpdRefl[it2];
 }
-
+inline void setNumHitSaturatedPerTrackRich1GasNoHpdReflHighMom ( const std::vector<int> & aR1SatHit1   ) 
+{
+  m_NumHitSaturatedPerTrackRich1GasNoHpdReflHighMom = aR1SatHit1;
+  
+}
+inline void setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom (const std::vector<int> & aR2SatHit1  ) 
+{
+  m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom = aR2SatHit1;
+  
+}
 inline void setNumHitSaturatedPerTrackRich2GasNoHpdRefl(const std::vector<int> & aGasSatHit2)
 {
   m_NumHitSaturatedPerTrackRich2GasNoHpdRefl=aGasSatHit2;
@@ -497,6 +518,7 @@ inline std::vector<G4ThreeVector> TrackMomFullAcceptRich1Gas() {return m_TrackMo
 inline std::vector<G4ThreeVector> TrackMomFullAcceptRich1Agel() {return m_TrackMomFullAcceptRich1Agel;}
 inline std::vector<G4ThreeVector> TrackMomFullAcceptRich2Gas() {return m_TrackMomFullAcceptRich2Gas;}
 
+
 inline void setNumHitFullAcceptSatPerTrackR1Gas(const std::vector<int> & aNumHitFullAcceptSatPerTrackR1Gas) {
   m_NumHitFullAcceptSatPerTrackR1Gas=aNumHitFullAcceptSatPerTrackR1Gas;
 } 
@@ -507,10 +529,20 @@ inline void setNumHitFullAcceptSatPerTrackR2Gas(const std::vector<int> & aNumHit
   m_NumHitFullAcceptSatPerTrackR2Gas= aNumHitFullAcceptSatPerTrackR2Gas;
 }
 
+inline void setNumSignalHitFullAcceptSatPerTrackR1Gas(const std::vector<int> & aNumSignalHitFullAcceptSatPerTrackR1Gas) {
+  m_NumSignalHitFullAcceptSatPerTrackR1Gas=aNumSignalHitFullAcceptSatPerTrackR1Gas;
+} 
+
+inline void setNumSignalHitFullAcceptSatPerTrackR2Gas(const std::vector<int> & aNumSignalHitFullAcceptSatPerTrackR2Gas) {
+  m_NumSignalHitFullAcceptSatPerTrackR2Gas= aNumSignalHitFullAcceptSatPerTrackR2Gas;
+}
 
 inline  std::vector<int> NumHitFullAcceptSatPerTrackR1Gas() {return m_NumHitFullAcceptSatPerTrackR1Gas;}
 inline  std::vector<int> NumHitFullAcceptSatPerTrackR1Agel() {return m_NumHitFullAcceptSatPerTrackR1Agel;}
 inline  std::vector<int> NumHitFullAcceptSatPerTrackR2Gas() {return m_NumHitFullAcceptSatPerTrackR2Gas;}
+
+inline  std::vector<int> NumSignalHitFullAcceptSatPerTrackR1Gas() {return m_NumSignalHitFullAcceptSatPerTrackR1Gas;}
+inline  std::vector<int> NumSignalHitFullAcceptSatPerTrackR2Gas() {return m_NumSignalHitFullAcceptSatPerTrackR2Gas;}
 
 inline int NumHitTotRich1HpdRefl(){return m_NumHitTotRich1HpdRefl;}
 inline int NumHitTotRich2HpdRefl(){return m_NumHitTotRich2HpdRefl;}
