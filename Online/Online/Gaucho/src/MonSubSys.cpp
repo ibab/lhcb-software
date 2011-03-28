@@ -251,6 +251,11 @@ int MonSubSys::unLock(void)
 {
 //  printf("Monitor Sub System Un-Locking\n");
   int status = 0;
+  if (m_lockcnt == 0)
+  {
+    printf("Illegal Lock/UnLock Cnt\n ");
+    kill(getpid(),SIGSEGV);
+  }
   m_lockcnt--;
   m_unlockcount++;
   while (status != 1)
