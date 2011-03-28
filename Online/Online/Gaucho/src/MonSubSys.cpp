@@ -27,6 +27,7 @@ MonSubSys::MonSubSys(int intv)
   lib_rtl_create_lock(0,&m_lockid);
   m_rpc = 0;
   m_ser = 0;
+  m_RPCser = 0;
   m_genSrv = 0;
   m_EORsvc = 0;
   m_runno = 0;
@@ -59,6 +60,7 @@ MonSubSys::~MonSubSys()
   if (m_EORsvc != 0) {delete m_EORsvc;m_EORsvc=0;}
 
   if (m_ser != 0) {delete m_ser;m_ser=0;}
+  if (m_RPCser != 0){ delete m_RPCser;m_RPCser=0;}
 
   this->unLock();
   MonSys::m_instance().remSubSys(this);
@@ -170,7 +172,6 @@ void MonSubSys::setup(char *n, bool expandnames)
   std::string nodename;
   nodename = RTL::nodeNameShort();
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/HistCommand";
-  if (m_ser == 0) m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
   if (m_expandnames)
   {
     if (m_type == MONSUBSYS_Counter)
@@ -182,8 +183,10 @@ void MonSubSys::setup(char *n, bool expandnames)
       }
     }
   }
-//  if (m_rpc == 0) m_rpc = new ObjRPC(m_ser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
+//  if (m_RPCser == 0) new ObjSerializer(&m_Objmap,m_expandnames);
+//  if (m_rpc == 0) m_rpc = new ObjRPC(m_RPCser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/Data";
+  if (m_ser == 0) m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
   if ( m_genSrv == 0) m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);
   if (m_expandnames)
   {

@@ -38,6 +38,7 @@ public:
   ObjMap m_Objmap;
   ObjRPC *m_rpc;
   ObjSerializer *m_ser;
+  ObjSerializer *m_RPCser;
   bool start_done;
   int m_lockcnt;
   int m_lockcount;
