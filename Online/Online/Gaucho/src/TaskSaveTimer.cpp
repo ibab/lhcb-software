@@ -201,6 +201,11 @@ void TaskSaveTimer::Stop()
 void TaskSaveTimer::SavetoFile(void *buff)
 {
   SerialHeader *hd = (SerialHeader *)buff;
+  if (hd->m_magic != SERIAL_MAGIC)
+  {
+    printf("ERROR: %s Bad Magig Word in buffer while saving to file\n",RTL::processName().c_str());
+    return;
+  }
   char fn[1024];
   char fdir[1024];
   void *bend = AddPtr(buff,hd->buffersize);
