@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!2011-03-28 - Albert Puig
+ - Update Phi_draft2011.py with wider Phi mass window.
+
 ! 2011-03-23 - Victor Coco
  - Update DV_draft2011.py with the BeamSpot method.
 
