@@ -158,25 +158,14 @@ StatusCode HltDecReportsDecoder::execute() {
   //       if not available, go for the value in ODIN ( _not_ guaranteed to be correct! )
   //                      or go for the 'current' (most recent) mapping... (also not guaranteed)
 
-  // get string-to-int selection ID map 
-  // TODO: only need to do this once per TCK...
-  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-
-  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
   // ---------------- loop over decisions in the bank body; insert them into the output container
 
   switch ( hltdecreportsRawBank->version() ) {
     case 0 : this->decodeHDR<v0_v1>( content, hltdecreportsRawBank->end<unsigned int>(), 
-                                     *outputSummary,
-                                     selectionNameToIntMap );
+                                     *outputSummary );
         break;
     case 1 : this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
-                                     *outputSummary,
-                                     selectionNameToIntMap );
+                                     *outputSummary );
         break;
     default : Error(
 " HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE );
@@ -229,8 +218,7 @@ StatusCode HltDecReportsDecoder::execute() {
 template <typename HDRConverter, typename I> 
 void
 HltDecReportsDecoder::decodeHDR(I i, I end,  
-                               HltDecReports& output,
-                               const std::vector<IANNSvc::minor_value_type>& selectionNameToIntMap ) const 
+                               HltDecReports& output ) const 
 {
    HDRConverter converter;
    while (i != end ) {
@@ -239,24 +227,11 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
 
     int id=dec.intDecisionID();
 
-    std::string selName="Dummy";
-    switch(id){
-    case 1: selName="Hlt1Global"; break;      
-    case 2: selName="Hlt2Global"; break;
-    case 3: selName="L0Global"; break;
-    default:
-      for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-           si!=selectionNameToIntMap.end();++si){
-        if( si->second == id ){
-          selName = si->first;
-          break;
-        }
-      }
-    }    
-    static const std::string Dummy("Dummy");
-    if( selName != Dummy ){
-      if( !output.insert( selName, dec ).isSuccess() ) {
-        Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 ).ignore();
+    boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value("Hlt1SelectionID",id);
+    if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+    if( selName ){
+      if( !output.insert( selName->first, dec ).isSuccess() ) {
+        Warning(" Duplicate decision report in storage "+selName->first, StatusCode::SUCCESS, 20 ).ignore();
       }
     } else {
       std::ostringstream mess;
