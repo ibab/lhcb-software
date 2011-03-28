@@ -72,6 +72,12 @@ public:
  
   TGraph* graph() { return m_timeGraph; }
  
+  TObject* myObject();
+
+  void clearOverlap() { m_nOverlap = 0; }
+  void increaseOverlap() { m_nOverlap++; }
+  int nOverlap() { return m_nOverlap; }
+
 protected:
 
 private:
@@ -88,5 +94,6 @@ private:
   TGraph* m_timeGraph;
   double* m_timeArray;
   double* m_valueArray;
+  int     m_nOverlap;
 };
 #endif // DISPLAYHISTOGRAM_H

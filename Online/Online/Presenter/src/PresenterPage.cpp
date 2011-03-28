@@ -9,6 +9,7 @@
 #include "Archive.h"
 #include <TH2D.h>
 #include <TCanvas.h>
+#include <TLegend.h>
 
 #include "Gaucho/HistTask.h"
 
@@ -40,6 +41,7 @@ PresenterPage::PresenterPage( ) {
   m_tasks.clear();
   m_analysis.clear();
   m_trends.clear();
+  m_pads.clear();
 }
 //=============================================================================
 // Destructor
@@ -64,6 +66,7 @@ void PresenterPage::clear ( ) {
     (*itF).histos.clear();
   }
   m_trends.clear();
+  m_pads.clear();
 }
 
 //=========================================================================
@@ -451,18 +454,19 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
       if ( rootHists.size() == (*itA).onlineHistos.size() ) {
         rootH = creator->exec( &rootHists,
                                &(*itA).params,
-                               htitle, //(*itA).displayHisto->histo()->htitle(),
+                               htitle,
                                htitle,
                                NULL,
                                ref );
         if ( !update && refHists.size() == (*itA).onlineHistos.size() ) {
           refH = creator->exec( &refHists,
                                 &(*itA).params,
-                                htitle, //(*itA).displayHisto->histo()->htitle(),
+                                htitle,
                                 htitle,
                                 NULL,
                                 ref );
         }
+        
         std::cout << "Created analysis histogram " << htitle << " pointer " << rootH;
         if ( rootH ) std::cout << " integral " << rootH->Integral();
         std::cout << std::endl;
@@ -605,8 +609,26 @@ void PresenterPage::resetOffsetHistograms ( ) {
 //=========================================================================
 void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool fastHitMapDraw ) {
 
-  for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
-        m_onlineHistosOnPage.end() != itHP; ++itHP ) {
+  // Build the Pad structure, to know the size of the legend if any!
+  std::vector<OnlineHistoOnPage*>::iterator itHP;
+  for ( itHP =  m_onlineHistosOnPage.begin(); m_onlineHistosOnPage.end() != itHP; ++itHP ) {
+    if ( 0 == displayHisto( *itHP )->myObject() ) continue;
+    OnlineHistogram* onlHist = (*itHP)->histo;
+    if ( onlHist->onpage() ) {
+      if ( onlHist->onpage()->isOverlap() ) {
+        OnlineHistoOnPage* mother = onlHist->onpage()->getOverlap();
+        for ( std::vector<OnlineHistoOnPage*>::iterator itPrev =  m_onlineHistosOnPage.begin();
+              m_onlineHistosOnPage.end() != itPrev; ++itPrev ) {
+          if ( *itPrev == mother ) {
+            displayHisto( mother )->increaseOverlap();
+            break;
+          }
+        }
+      }
+    }
+  }
+  
+  for ( itHP =  m_onlineHistosOnPage.begin(); m_onlineHistosOnPage.end() != itHP; ++itHP ) {
 
     TPad* overlayOnPad = NULL;
     OnlineHistogram* onlHist = (*itHP)->histo;
@@ -640,10 +662,40 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
       std::cout << "-- display histo " << dispH->histo()->identifier()
                 << " on pad X "<< xlow << " to "<< xup
                 << "  Y " << ylow << " to " << yup
-                << " overlay " << overlayOnPad << std::endl;
+                << " overlay " << overlayOnPad << " nOverlap " << dispH->nOverlap() << std::endl;
       dispH->draw( editorCanvas, xlow, ylow, xup, yup, analysisLib, fastHitMapDraw, overlayOnPad );
+      bool found = false;
+      for ( std::vector<PadContent>::iterator itP = m_pads.begin(); m_pads.end() != itP; ++itP ) {
+        if ( (*itP).pad == dispH->hostingPad() ) {
+          if ( 0 != dispH->myObject() ) (*itP).objects.push_back( dispH );
+          found = true;
+          break;
+        }
+      }
+      if ( !found ) {
+        if ( 0 != dispH->myObject() ) {
+          PadContent newPad;
+          newPad.pad = dispH->hostingPad();
+          newPad.objects.push_back( dispH );
+          m_pads.push_back( newPad );
+        }
+      }
     }
   }
+  std::cout << "Set the legend" << std::endl;
+  for ( std::vector<PadContent>::iterator itP = m_pads.begin(); m_pads.end() != itP; ++itP ) {
+    if ( 2 > (*itP).objects.size() ) continue;
+    (*itP).pad->cd();
+    float yMin =  1.0 - 0.05 * ( ((*itP).objects.size()+1)/2 );
+    std::cout << "Legend for " << (*itP).objects.size() << " plots, ymin " << yMin << std::endl;
+    TLegend* leg = new TLegend( 0.0, yMin, 1.0, 1.0 );
+    leg->SetNColumns( 2 );
+    for ( std::vector<DisplayHistogram*>::iterator itO = (*itP).objects.begin(); (*itP).objects.end() != itO; ++itO ) {
+      leg->AddEntry( (*itO)->myObject(), (*itO)->shortName().c_str(), "L" );
+    }
+    leg->Draw();
+  }
+
   std::cout << "Update the canvas" << std::endl;
 
   // workaround attempt for ROOT painter objects:

@@ -58,7 +58,8 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_prettyPalette( NULL ),
   m_timeGraph( NULL ),
   m_timeArray( NULL ),
-  m_valueArray( NULL )
+  m_valueArray( NULL ),
+  m_nOverlap( 0 )
 {
   if ( hist->type() == OnlineHistDBEnv::TRE ) {
     m_isTrendPlot = true;
@@ -276,6 +277,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     pad = new TPad( m_onlineHist->identifier().c_str(),
                     TString(""),
                     fabs(xlow), fabs(ylow), fabs(xup), fabs(yup));
+
     float fopt = 0.;
     if ( hasOption( "MARGIN_TOP"    , &fopt ) ) pad->SetTopMargin( fopt ) ;
     if ( hasOption( "MARGIN_BOTTOM" , &fopt ) ) pad->SetBottomMargin( fopt ) ;
@@ -284,6 +286,10 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     pad->SetBit(kNoContextMenu);
     pad->SetFillColor( 10 );
     pad->Draw();
+    if ( 0 < m_nOverlap ) {
+      float topMargin = 0.1 + 0.05 * ( m_nOverlap/2 );
+      pad->SetTopMargin( topMargin );
+    }
   }
   m_hostingPad = pad;
 
@@ -305,10 +311,12 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
                                   m_prettyPalette ); // gWebImagePalette
       m_histogramImage->Draw();
     } else {
+      if ( 0 < m_nOverlap ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
       std::string opt =  m_isOverlap ? "SAME" : "";
       m_rootHistogram->Draw(opt.c_str());
     }
   } else if ( 0 != m_timeGraph ) {
+    if ( 0 < m_nOverlap ) m_timeGraph->SetTitle( "" );
     std::string opt =  m_isOverlap ? "SAME" : "AL";
     m_timeGraph->Draw(opt.c_str());
   }
@@ -439,13 +447,15 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
     TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
     if (titpave) {
       int optTit=1;
-      if(hasOption("NOTITLE", &iopt)) {
+      if(hasOption("NOTITLE", &iopt) ) {
         if ( iopt > 0 ) optTit = 0;    //user requires no title window
       }
-      if( 0 == optTit) {
+      if ( 0 < m_nOverlap ) optTit = 0;
+      if ( 0 == optTit ) {
         // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)
         titpave->SetX1NDC(-2);
         titpave->SetX2NDC(-1);
+        std::cout << "Set title pave aside" << std::endl;
       } else {
         double x1=titpave->GetX1NDC();
         double x2=titpave->GetX2NDC();
@@ -595,7 +605,8 @@ void DisplayHistogram::setDisplayOptions ( ) {
 void DisplayHistogram::fit ( OMAlib* analysisLib ) {
   if ( 0 == m_onlineHist ) return ;
   if ( ( m_onlineHist->hasFitFunction() ) &&
-       ( 0 != m_rootHistogram ) ) {
+       ( 0 != m_rootHistogram ) &&
+       0 < m_rootHistogram->GetEntries() ) {
     std::string Name;
     std::vector<float> initValues;
     gStyle -> SetOptFit( 1111111 ) ;
@@ -744,7 +755,11 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     }
   }
 
-  m_timeGraph->SetTitle( m_shortName.c_str() );
+  if ( 0 < m_nOverlap ) {
+    m_timeGraph->SetTitle( "" );
+  } else {
+    m_timeGraph->SetTitle( m_shortName.c_str() );
+  }
   m_timeGraph->GetXaxis()->SetTimeDisplay( 1 ) ;
   m_timeGraph->GetXaxis()->SetTimeFormat( "#splitline{%d/%m/%y}{%H:%M:%S}" ) ;
   m_timeGraph->GetXaxis()->SetTimeOffset( 0 ) ;
@@ -806,5 +821,18 @@ void DisplayHistogram::copyFrom ( TH1* src) {
       m_rootHistogram->SetBinError(i,   src->GetBinError(i) );
     }
   }
+}
+
+//=========================================================================
+//
+//=========================================================================
+TObject* DisplayHistogram::myObject ( ) {
+  if ( 0 != m_rootHistogram ) {
+    if ( 0 != dynamic_cast<TH1D*>( m_rootHistogram) ) return m_rootHistogram;
+    if ( 0 != dynamic_cast<TH1F*>( m_rootHistogram) ) return m_rootHistogram;
+  } else if ( 0 != m_timeGraph ) {
+    return m_timeGraph;
+  }
+  return 0;
 }
 //=============================================================================

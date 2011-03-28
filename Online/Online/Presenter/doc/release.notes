@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-03-28 - Olivier Callot
+ - Introduce legend for superimposed 1D histo and trend plots.
+
+! 2011-03-28 - Olivier Callot
  - Improved the creation of trending plots. Change their name convention.
 
 ! 2011-03-23 - Olivier Callot

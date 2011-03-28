@@ -35,6 +35,12 @@ struct TrendingFile {
   std::vector<DisplayHistogram> histos;
 };
 
+struct PadContent {
+  TPad* pad;
+  std::vector<DisplayHistogram*> objects;
+};
+  
+
 /** @class PresenterPage PresenterPage.h
  *  This describes the current page in the Presenter
  *
@@ -113,5 +119,6 @@ private:
   std::vector<TaskHistos> m_tasks;
   std::vector<AnalysisHisto> m_analysis;
   std::vector<TrendingFile> m_trends;
+  std::vector<PadContent> m_pads;
 };
 #endif // PRESENTERPAGE_H
