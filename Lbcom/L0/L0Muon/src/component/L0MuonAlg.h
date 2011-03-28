@@ -7,6 +7,8 @@
 #include "ProcessorKernel/Property.h"
 #include "ProcessorKernel/Unit.h"
 
+// Interface
+#include "L0Interfaces/IL0DUConfigProvider.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 
 #include "L0MuonOutputs.h"
@@ -66,7 +68,7 @@ private:
   StatusCode getDigitsFromMuonNZS();///< Get the hits from the muon data (Non Zero supp.)
   StatusCode getDigitsFromL0Muon(); ///< Get the hits from the L0Muon data
   StatusCode fillOLsfromDigits();   ///< Fill the Optical Links before processing
-
+  
   // Emulator input
   std::vector<LHCb::MuonTileID> m_digits; ///< Hits used by the emulator
 
@@ -78,13 +80,21 @@ private:
   std::string m_parameterNameFOIy;    ///< Name of the parameter with FOIy in CondDB  
   std::string m_parameterNameVersion; ///< Name of the parameter with emulator version in CondDB  
 
+  // TCK
+  IL0DUConfigProvider* m_confTool;
+  std::string m_configName;           ///< L0DUConfigProviderName tool name
+  std::string m_configType;           ///< L0DUConfigProviderType tool name
+  std::string m_tck;                  ///< TCK (used to get the FOIs) 
+  int m_itck;                         ///< TCK (used to get the FOIs) 
+  bool m_useTCKFromData;              ///< Flag to take the TCK from data (odin)
+  
   // Emulator running modes
   int m_version;                      ///< Emulator version 
   int m_mode;                         ///< Banks output mode (0=light, 1=standard, 2=full)
   bool m_compression;                 ///< Apply compression when writing banks
 
   // Emulator properties
-  std::vector<int> m_foiXSize;        ///< values of FoI's in X
+  std::vector<int> m_foiXSize;        ///< values of FoI's in X 
   std::vector<int> m_foiYSize;        ///< values of FoI's in Y
   std::string  m_configfile;          ///< Config file name
   bool m_ignoreM1;                    ///< Flag to use M1 or not (not tested)
@@ -121,6 +131,9 @@ private:
 
   /// Call back function to check the FOI condition database content  
   StatusCode updateL0CondFOI() ;
+
+  /// Function to check the FOI in the TCK configuration
+  StatusCode updateL0TCKFOI() ;
 
   static inline int hard2softFOIConversion(int sta) 
   {

@@ -52,21 +52,26 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_foiYSize.push_back(1); // 3-> Yfoi in M4
   m_foiYSize.push_back(1); // 4-> Yfoi in M5
 
-  declareProperty("IgnoreCondDB"         , m_ignoreCondDB         = true);
+  declareProperty( "TCK"                     , m_tck              = "");
+  declareProperty( "UseTCKFromData"          , m_useTCKFromData   = false);
+  declareProperty( "L0DUConfigProviderName"  , m_configName       = "L0DUConfig");
+  declareProperty( "L0DUConfigProviderType"  , m_configType       = "L0DUMultiConfigProvider");
+  
+  declareProperty("IgnoreCondDB"         , m_ignoreCondDB         = false);
   declareProperty("ConditionNameCB"      , m_conditionNameFOI     = "Conditions/Online/L0MUON/Q1/SoftFOI");
   declareProperty("ConditionNamePB"      , m_conditionNameVersion = "Conditions/Online/L0MUON/Q1/Versions");
   declareProperty("ParameterNameFOIx"    , m_parameterNameFOIx    = "SoftFOIX");
   declareProperty("ParameterNameFOIy"    , m_parameterNameFOIy    = "SoftFOIY");
   declareProperty("ParameterNameVersion" , m_parameterNameVersion = "EMUL");
 
-  declareProperty("Version"        , m_version = 3 );
+  declareProperty("Version"        , m_version = 3);
 
   declareProperty("ConfigFile"     , m_configfile= "$PARAMFILESROOT/data/L0MuonKernel.xml")  ;
   declareProperty("IgnoreM1"       , m_ignoreM1 = false );
   declareProperty("ForceM3"        , m_forceM3  = false );
 
-  declareProperty("FoiXSize"       , m_foiXSize);
-  declareProperty("FoiYSize"       , m_foiYSize);
+  declareProperty("FoiXSize"       , m_foiXSize); /// Obsolete (kept for backward compatibility)
+  declareProperty("FoiYSize"       , m_foiYSize); /// Obsolete (kept for backward compatibility)
 
   declareProperty("DebugMode"      , m_debug       = false );
 
@@ -83,6 +88,64 @@ StatusCode L0MuonAlg::initialize()
   StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+  // Instanciate the MuonTrigger Units and Registers
+  L0Muon::RegisterFactory::selectInstance(0);
+  std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
+  info() <<  "XML file = " << xmlFileName << endmsg;
+  L0Muon::L0MuonKernelFromXML(xmlFileName);
+  L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
+  m_muontriggerunit = ufactory->topUnit();
+  if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
+
+  // Set debug mode
+  if (m_debug) {
+    m_muontriggerunit->setDebugMode();
+    info() <<  "MuonTrigger debug mode "<< endmsg;
+  }
+
+  // Set properties
+  // -- FOI : taken from the trigger configuration specified by the L0LTCK 
+  // -- 1) get L0DU config provider tool
+  m_confTool = tool<IL0DUConfigProvider>(m_configType , m_configName );
+  // -- 2) TCK specified in option
+  if (!m_useTCKFromData){
+    // Check validity
+    if(m_tck == ""){
+      error() << "The Trigger Configuration Key is undefined" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    if( "0x" != m_tck.substr( 0, 2 ) ){
+      error() << "The requested TCK value " << m_tck << " MUST be in hexadecimal format '0x" << m_tck << "'" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    //--------------------------------
+    std::istringstream is( m_tck.c_str() );
+    is >> std::hex >> m_itck;
+    // Read config and get FOI
+    sc = updateL0TCKFOI();
+    if( sc.isFailure() ) return Error( "Unable to get the FOI from the TCK" ,StatusCode::FAILURE,50);
+  } else {
+    m_itck = -1 ;
+    info() << "default FOI will be used until first event when the event TCK will be read" << endmsg;
+  }
+  
+  // -- Emulator version is taken from condDB - register the conditions 
+  if ( !m_ignoreCondDB )  {
+    if (this->exist<Condition>(detSvc() , m_conditionNameVersion , false) ) {
+      debug() << "CondDB: accessing "<<m_conditionNameVersion<< endmsg ;
+      registerCondition( m_conditionNameVersion ,
+                         m_l0CondCtrl ,
+                         &L0MuonAlg::updateL0CondVersion ) ;
+    } else {
+      warning() << "CondDB: cannot access "<<m_conditionNameVersion<< endmsg ;
+      warning() << "Emulation will run with the processor version defined in options." << endmsg ;
+    }
+    sc = runUpdate();
+    if ( sc.isFailure() ) return Error( "Unable to register the L0Muon conditions "  ,StatusCode::FAILURE,50);
+  } else {
+    m_muontriggerunit->setProperties(l0MuonProperties()); // called in the updateL0CondVersion if m_ignoreCondDB is false
+  }
+  
   //   IChronoStatSvc * svc = chronoSvc();
   //   svc->chronoStart("L0MuonTrigger Initialize");
 
@@ -108,48 +171,6 @@ StatusCode L0MuonAlg::initialize()
     m_tae_items[ 7] = "Next7/";
   }
 
-  // Instanciate the MuonTrigger Units and Registers
-  L0Muon::RegisterFactory::selectInstance(0);
-  std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
-  info() <<  "XML file = " << xmlFileName << endmsg;
-  L0Muon::L0MuonKernelFromXML(xmlFileName);
-  L0Muon::UnitFactory* ufactory = L0Muon::UnitFactory::instance();
-  m_muontriggerunit = ufactory->topUnit();
-  if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
-
-  // Set debug mode
-  if (m_debug) {
-    m_muontriggerunit->setDebugMode();
-    info() <<  "MuonTrigger debug mode "<< endmsg;
-  }
-
-  // Set properties
-  // Start with default from options
-  m_muontriggerunit->setProperties(l0MuonProperties());
-  if ( !m_ignoreCondDB )  {
-    // Configure CondDB
-    // - processor version 
-    if (this->exist<Condition>(detSvc() , m_conditionNameVersion , false) ) {
-      debug() << "CondDB: accessing "<<m_conditionNameVersion<< endmsg ;
-      registerCondition( m_conditionNameVersion ,
-                         m_l0CondCtrl ,
-                         &L0MuonAlg::updateL0CondVersion ) ;
-    } else {
-      warning() << "CondDB: cannot access "<<m_conditionNameVersion<< endmsg ;
-      warning() << "Emulation will run with the processor version defined in options." << endmsg ;
-    }
-    // - FOI 
-    if (this->exist<Condition>(detSvc() , m_conditionNameFOI , false ) ){
-      debug() << "CondDB : accessing "<<m_conditionNameFOI<< endmsg ;
-      registerCondition( m_conditionNameFOI ,
-                         m_l0CondProc ,
-                         &L0MuonAlg::updateL0CondFOI ) ;
-    } else {
-      warning() << "CondDB: cannot access "<<m_conditionNameFOI<< endmsg ;
-      warning() << "Emulation will run with the FOI defined in options." << endmsg ;
-    }
-  }
-  
   // Initialize
   m_muontriggerunit->initialize();
 
@@ -166,21 +187,45 @@ StatusCode L0MuonAlg::initialize()
   return StatusCode::SUCCESS;
 }
 
-
-
 StatusCode L0MuonAlg::execute()
 {
+
   L0Muon::RegisterFactory::selectInstance(0);
 
   if( msgLevel(MSG::DEBUG) )  {
     debug() << "-----------------------------------------------------------------" << endreq;
     debug() << "-- Start execution:" << endreq;
   }
+  
+  StatusCode sc;
+
+  if (m_useTCKFromData){
+    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,false)) {
+      // read tck from odin
+      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
+      unsigned int odintck = odin->triggerConfigurationKey();
+      int itck = int(odintck&0xFFFF);
+      if (itck != m_itck) { // if it is a new tck
+        int previous_tck = m_itck;
+        m_itck = itck;
+        // update foi from this tck config
+        sc = updateL0TCKFOI();
+        if( sc.isFailure() ) {
+          Error( "Unable to get the FOI from the TCK, will keep current FOI" ,StatusCode::FAILURE,50).ignore();
+          m_itck = previous_tck;
+        } else {
+          // Set the properties of the MuonTriggerUnit
+          m_muontriggerunit->setProperties(l0MuonProperties());
+        }
+      }
+    } else {
+      Error("ODIN not found at "+LHCb::ODINLocation::Default+", unable to get TCK for this event"
+              ,StatusCode::FAILURE,50).ignore();
+    }
+  }
 
   //IChronoStatSvc * svc = chronoSvc();
   //svc->chronoStart("L0MuonTrigger Execute");
-
-  StatusCode sc;
 
   int tae_size = 0;
   if (m_enableTAE) {
@@ -603,6 +648,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     sprintf(buf,"OL_%d_%s",mkey.station(),bufnm);
 
     // Get OL register from the register factory
+    L0Muon::RegisterFactory::selectInstance(0);
     L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
     L0Muon::TileRegister* pReg = rfactory->createTileRegister(buf,0);
     
@@ -626,7 +672,9 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
 
 StatusCode L0MuonAlg::updateL0CondFOI()
 {
-
+  //
+  // OBSOLETE - the FOI should now be taken from the TCK  (24/03/2011)
+  //
   if ( ! m_l0CondProc -> exists( m_parameterNameFOIx ) ) {
     Error(m_parameterNameFOIx+" parameter does not exist in DB").ignore() ;
     Error("Use default FOIX").ignore() ;
@@ -669,9 +717,23 @@ StatusCode L0MuonAlg::updateL0CondVersion()
     std::string s_version = m_l0CondCtrl -> paramAsString( m_parameterNameVersion ) ;
     m_version = int(atof( s_version.c_str() ));
   }
-
   // Set the properties of the MuonTriggerUnit
+  info()<<"updateL0CondVersion: new version in condDB, updating emulator parameters"<<endmsg;
   m_muontriggerunit->setProperties(l0MuonProperties());
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode L0MuonAlg::updateL0TCKFOI()
+{
+  info()<< "Loading configuration for TCK = 0x"<<std::hex << m_itck <<std::dec << endmsg;
+  LHCb::L0DUConfig* l0duconfig  = m_confTool->config( m_itck );
+  if( NULL == l0duconfig){
+    error() << " Unable to load the configuration for TCK = 0x"<<std::hex << m_itck <<std::dec << endmsg;
+    return StatusCode::FAILURE;
+  }
+  m_foiXSize = l0duconfig->muonFOIx();
+  m_foiYSize = l0duconfig->muonFOIy();
   
   return StatusCode::SUCCESS;
 }

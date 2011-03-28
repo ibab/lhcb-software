@@ -3,6 +3,18 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-03-23 - Julien Cogan
+ - L0Muon emulator (L0MuonAlg) : FOI are taken from the TCK (using L0DUConfig). 
+   The TCK 
+   - can be specified via the property TCK (default behaviour), or 
+   - can be picked up from the data (if UseTCKFromData is set to True).
+  This is now the only way to set up the FOI which means that it is mandatory 
+  to import the TCK configuration file (importOptions("$L0TCK/L0DUConfig.opts"))
+  when using the L0Muon emulator. L0Conf configurable in L0/L0DU is modified  
+  to account for this change.
+  - L0MuonAlg : fix a bug which prevented running the emulator from the l0muon
+  data when relying on the data on demand service to perfom the L0Muon decoding.
+
 !========================= L0Muon v9r2 2010-10-25 =========================
 
 ! 2010-10-01 - Julien Cogan
