@@ -244,7 +244,7 @@ int MonSubSys::Lock(void)
   if (m_lockcnt != 0)
   {
     printf("LOCKING %p Illegal Lock/UnLock Cnt %d \n ",(void*)pthread_self(), m_lockcnt);
-    kill(getpid(),SIGSEGV);
+//    kill(getpid(),SIGSEGV);
   }
   m_lockcnt++;
   m_lockcount++;
@@ -262,7 +262,7 @@ int MonSubSys::unLock(void)
   if (m_lockcnt != 1)
   {
     printf("UNLOCKING %p Illegal Lock/UnLock Cnt %d \n ",(void*)pthread_self(), m_lockcnt);
-    kill(getpid(),SIGSEGV);
+//    kill(getpid(),SIGSEGV);
   }
   m_lockcnt--;
   m_unlockcount++;
