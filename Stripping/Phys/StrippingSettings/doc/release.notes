@@ -5,8 +5,15 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-03-29 - Thomas Blake
- - Updated LineConfigDictionaries_RDWG.py
+ - Updated the dictionary for stripping13
+ - Removed duplicate import from makeDB.py and renamed 
+   default to stripping.tmp
+ - Removed duplicate line from line config for semileptonic WG
+ - Removed LineConfigDictionaries.py from python/StrippingSettings/Stripping13
 
+
+! 2011-03-29 - Thomas Blake
+ - Updated LineConfigDictionaries_RDWG.py
 
 ! 2011-03-29 - Greig Cowan
  - Updated a couple of line configuration dictionaries.

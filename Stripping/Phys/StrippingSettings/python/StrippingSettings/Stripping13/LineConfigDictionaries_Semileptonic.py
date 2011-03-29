@@ -5,29 +5,6 @@ Stripping13 definitions.
 Dictionaries have the name of the line builder instance.
 """
 
-Bs2PhiMuMu = {
-   'BUILDERTYPE' : 'Bs2PhiMuMuLinesConf',
-   'CONFIG' : {
-    "MINIPCHI2"      : 4.00   # adimensiional
-    ,"TRCHI2"        : 10.0   # adimensiional
-    ,"KaonPIDK"      : 1e-10  # adimensiional
-    ,"PhiPT"         : 100    # MeV
-    ,"MuonMINIPCHI2" : 2.25   # adimensiional
-    ,"MuonPIDmu"     : -5.0  # adimensiional
-    ,"MuonTRCHI2"    : 10.0   # adimensiional
-    ,"BsMassWin"     : 250.0  # MeV
-    ,"BsVCHI2DOF"    : 8.0   # adimensiional
-    ,"BsDIRA"        : 0.9993  # adimensiional
-    ,"BsFDCHI2"      : 25.0   # adimensiional
-    ,"PionPIDK"      : 10.0   # adimensiional
-    ,"f0MassWin"     : 200.0  # MeV
-    ,"VCHI2"         : 10.0   # adimensiional
-    ,"BsIPCHI2"      : 36.0  # adimensiional
-    ,"DocaChi2Max"   : 20  #mm
-    },
-   'STREAMS' : [ 'Dimuon' ],
-   'WGs' : [ 'Semileptonic' ]
-}
 
 Bd2DstarMuNu = {
     'BUILDERTYPE' : 'Bd2DstarMuNuAllLinesConf',
