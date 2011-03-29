@@ -51,11 +51,22 @@ def buildStream(stripping, streamName = ''):
         _db = stripping
         
     for key in _db.keys():
-        _conf = dict( _db[key] )
+        _conf = _db[key]
         if stream.name() in _conf['STREAMS']:
             _lb = lineBuilders()[_conf['BUILDERTYPE']](key,_conf['CONFIG'])
             stream.appendLines( _lb.lines() )
     return stream
+
+def streamNames(stripping) :
+    from SelPy.utils import flattenList, removeDuplicates
+    from StrippingSettings.Utils import strippingConfiguration
+    if isinstance(stripping, basestring) :
+        _db = strippingConfiguration( stripping )
+    else :
+        _db = stripping
+
+    streams =  [v['STREAMS'] for v in _db.values()]
+    return list(set(flattenList(streams)))
 
 def cloneLinesFromStream(stream, prefix = 'Clone' , prescale = 1.0):
     """

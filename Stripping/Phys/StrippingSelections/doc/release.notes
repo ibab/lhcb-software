@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-29 - Juan Palacios
+ - StrippingSelections.Utils
+  . Add streamNames method, 
+
 ! 2011-03-29 - Jibo He
  - StrippingDiElectronNew.py
    Tighten the cuts of Biased Low Mass DiElectron line and prescaled further 
