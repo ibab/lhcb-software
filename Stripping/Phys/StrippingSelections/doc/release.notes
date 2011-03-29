@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-29 - Jibo He
+ - StrippingDiElectronNew.py
+   Tighten the cuts of Biased Low Mass DiElectron line and prescaled further 
+
 ! 2011-03-24 - Anne Keune
  - StrippingBd2DstarTauNu.py
    Minor cut changes

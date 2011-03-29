@@ -76,14 +76,14 @@ config_default= {
         'BiasedDiElectron_PT'                           : -1000.  ,  # MeV, no cut now 
 
         # BiasedDiElectronLowMass line
-        'BiasedDiElectronLowMass_Prescale'              :     0.1 ,
+        'BiasedDiElectronLowMass_Prescale'              :     0.01 ,
         'BiasedDiElectronLowMass_Postscale'             :     1.  ,
-
+        
         'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
         'BiasedDiElectronLowMass_ElectronP'             : -8000.  ,  # MeV
-        'BiasedDiElectronLowMass_ElectronPIDe'          :    -2.  ,
+        'BiasedDiElectronLowMass_ElectronPIDe'          :     0.  ,
         'BiasedDiElectronLowMass_ElectronMIPCHI2'       :     4.  ,  
-        'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     5.  , 
+        'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     9.  , 
         'BiasedDiElectronLowMass_MinMass'               :    30.  ,  # MeV
         'BiasedDiElectronLowMass_VCHI2PDOF'             :    16.  ,
         'BiasedDiElectronLowMass_PT'                    : -1000.  ,  # MeV, no cut now
@@ -147,12 +147,12 @@ config_microDST= {
         'BiasedDiElectron_PT'                           : -1000.  ,  # MeV, no cut now 
 
         # BiasedDiElectronLowMass line
-        'BiasedDiElectronLowMass_Prescale'              :     1.  ,
+        'BiasedDiElectronLowMass_Prescale'              :     0.1  ,
         'BiasedDiElectronLowMass_Postscale'             :     1.  ,
 
-        'BiasedDiElectronLowMass_ElectronPT'            :   300.  ,  # MeV
+        'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
         'BiasedDiElectronLowMass_ElectronP'             : -8000.  ,  # MeV
-        'BiasedDiElectronLowMass_ElectronPIDe'          :    -2.  ,
+        'BiasedDiElectronLowMass_ElectronPIDe'          :     0.  ,
         'BiasedDiElectronLowMass_ElectronMIPCHI2'       :     4.  ,  
         'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     5.  , 
         'BiasedDiElectronLowMass_MinMass'               :    30.  ,  # MeV
