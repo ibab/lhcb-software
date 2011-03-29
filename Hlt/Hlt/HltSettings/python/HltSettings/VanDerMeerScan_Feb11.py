@@ -22,7 +22,7 @@ class VanDerMeerScan_Feb11 :
 
 
     def __init__(self) :
-        self.NanoBanks =  ['ODIN','HltLumiSummary','HltRoutingBits','DAQ', 'VELO' ]
+        self.NanoBanks =  ['ODIN','HltLumiSummary','HltRoutingBits','DAQ', 'Velo' ]
    
     def L0TCK(self) :
         return '0x1710'
