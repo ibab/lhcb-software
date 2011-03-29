@@ -28,14 +28,16 @@ using namespace Rich::HPDImage;
 //
 // 2011-03-02 : Chris Jones
 //-----------------------------------------------------------------------------
-
-HPDFit::HPDFit() 
+HPDFit::HPDFit()
 { 
-  // reserve space for all pixels in an HPD
-  // Needed to work around some weird memory issues when working 
-  // from GaudiPython ...
-  m_boundaryPixels.reserve( Rich::DAQ::NumPixelColumns * 
-                            Rich::DAQ::NumPixelRows ); 
+  m_boundaryPixels = new Pixel::List();
+  m_boundaryPixels->reserve( Rich::DAQ::NumPixelColumns * 
+                             Rich::DAQ::NumPixelRows ); 
+}
+
+HPDFit::~HPDFit() 
+{
+  delete m_boundaryPixels;
 }
 
 HPDFit::Result HPDFit::fit ( const TH2D& hist,
@@ -45,7 +47,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
   Result result;
 
   // Clear working boundary list
-  Pixel::List & boundary = m_boundaryPixels;
+  Pixel::List & boundary = *m_boundaryPixels;
   boundary.clear();
 
   // Clean the HPD image if requested

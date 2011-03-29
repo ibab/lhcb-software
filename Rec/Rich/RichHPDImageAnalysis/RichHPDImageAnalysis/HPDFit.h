@@ -134,7 +134,7 @@ namespace Rich
       HPDFit();
       
       /// Destructor
-      ~HPDFit() { }
+      ~HPDFit();
       
     public:
 
@@ -143,12 +143,12 @@ namespace Rich
                            const Params& params ) const;
 
       /// Get the boundary pixels (read only access)
-      const Pixel::List & boundaryPixels() const { return m_boundaryPixels; }
+      const Pixel::List & boundaryPixels() const { return *m_boundaryPixels; }
 
     private:
 
       /// List of boundary pixels
-      mutable Pixel::List m_boundaryPixels;
+      mutable Pixel::List * m_boundaryPixels;
 
     };
 

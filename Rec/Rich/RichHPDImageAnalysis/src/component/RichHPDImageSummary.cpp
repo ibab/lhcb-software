@@ -19,10 +19,10 @@ DECLARE_ALGORITHM_FACTORY( Summary )
   Summary::Summary( const std::string& name,
                     ISvcLocator* pSvcLocator )
     : HistoAlgBase ( name , pSvcLocator ) ,
-      m_nEvt       ( 0    )
+      m_nEvt       ( 0    ),
+      m_fitter     ( NULL )
 {
   setProperty( "StatPrint", false );
-  declareProperty( "DisplaySmartIDWarnings" , m_displayWarnings = false );
   declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
   declareProperty( "HPDFitType" ,     m_params.type );
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
@@ -33,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
 //=============================================================================
 // Destructor
 //=============================================================================
-Summary::~Summary() {}
+Summary::~Summary() { }
 
 //=============================================================================
 // Initialization
@@ -50,18 +50,24 @@ StatusCode Summary::initialize()
 
   const LHCb::RichSmartID::Vector & activeHPDs = m_RichSys->activeHPDRichSmartIDs();
 
-  m_histo.clear();
-  for (  LHCb::RichSmartID::Vector::const_iterator iHPD = activeHPDs.begin();
-         iHPD != activeHPDs.end(); ++iHPD )
+  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = activeHPDs.begin();
+        iHPD != activeHPDs.end(); ++iHPD )
   {
     const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( *iHPD );
 
     std::ostringstream name;
     name << "Rich_HPD_" << hpdID.data() << "_Image";
 
-    if ( msgLevel(MSG::DEBUG) ) debug() << " Booking histogram " << name.str() << endmsg ;
-
-    m_histo.insert( std::make_pair(*iHPD,this->create2D(name.str()) ) );
+    if ( m_histo.find(*iHPD) == m_histo.end() )
+    {
+      m_histo[*iHPD] = create2D( name.str() );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Created histogram " << name.str() << " " << m_histo[*iHPD] << endmsg;
+    }
+    else
+    {
+      Warning( "Histogram for " + name.str() + " already exists !!" ).ignore();
+    }
   }
 
   info() << m_params << endmsg;
@@ -78,10 +84,13 @@ StatusCode Summary::execute()
   ++m_nEvt;
 
   LHCb::ODIN* odin = get<LHCb::ODIN*>( LHCb::ODINLocation::Default );
-  if ( odin ) {
+  if ( odin )
+  {
     counter("RICH_EventTime") += odin->gpsTime() ;
-  } else {
-    if ( m_displayWarnings ) Warning(" Unable to retrieve ODIN ").ignore();
+  }
+  else
+  {
+    Warning( "Unable to retrieve ODIN" ).ignore();
   }
 
   // Standard loop over Rich Smart IDs
@@ -108,10 +117,7 @@ StatusCode Summary::execute()
 
         if ( !smartID.isValid() )
         {
-          if ( m_displayWarnings )
-          {
-            Warning(" Invalid Rich Smart ID ").ignore();
-          }
+          Warning("Invalid Rich Smart ID").ignore();
           continue;
         }
 
@@ -119,19 +125,18 @@ StatusCode Summary::execute()
 
         TH2D* hist = m_histo[ smartID ];
 
-        if ( NULL == hist )
+        if ( ! hist )
         {
-          if ( m_displayWarnings )
-          {
-            Warning(" Can not retrieve boundary FCN, invalid hardware ID ").ignore();
-          }
+          Warning( "Cannot retrieve boundary FCN, invalid hardware ID" ).ignore();
           continue;
         }
-
-        for ( LHCb::RichSmartID::Vector::const_iterator iHit = hitIDs.begin();
-              iHit != hitIDs.end(); ++iHit )
+        else
         {
-          hist->Fill( iHit->pixelCol(), iHit->pixelRow() ) ;
+          for ( LHCb::RichSmartID::Vector::const_iterator iHit = hitIDs.begin();
+                iHit != hitIDs.end(); ++iHit )
+          {
+            hist->Fill( iHit->pixelCol(), iHit->pixelRow() ) ;
+          }
         }
 
       }
@@ -142,34 +147,38 @@ StatusCode Summary::execute()
 }
 
 //=============================================================================
-//  Finalize
+// Finalize
 //=============================================================================
 
 StatusCode Summary::finalize()
 {
 
-  if ( msgLevel(MSG::DEBUG) )
+  debug() << "==> Finalize" << endmsg;
+  debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
+
+  // Make summary info
+  verbose() << "Fitting histograms and making summaries" << endmsg;
+  for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
   {
-    debug() << "==> Finalize" << endmsg;
-    debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
+    summaryINFO( it->first, it->second );
   }
 
-  for ( PD2Histo::iterator m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
-  {
-    summaryINFO( m_iter->first, m_iter->second );
-  }
-
+  // Clean out histogram storage
+  verbose() << "Cleaning out histograms" << endmsg;
   if ( !m_keep2Dhistos )
   {
-    for ( PD2Histo::iterator m_iter = m_histo.begin() ; m_iter != m_histo.end() ; ++m_iter )
+    for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
     {
-      delete m_iter->second;
+      delete it->second;
     }
   }
-
   m_histo.clear() ;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Freed map of HPD objects " << endmsg;
+  // delete the fitter
+  verbose() << "Deleting the fitter object" << endmsg;
+  delete m_fitter;
+  m_fitter = NULL;
+  verbose() << " ... Done" << endmsg;
 
   return HistoAlgBase::finalize();  // must be called after all other actions
 }
@@ -232,7 +241,7 @@ void Summary::summaryINFO( const LHCb::RichSmartID id,
   }
 
   // Do the fit
-  const HPDFit::Result result = m_fitter.fit( *hist, m_params );
+  const HPDFit::Result result = fitter()->fit( *hist, m_params );
 
   // if fit failed, don't fill.
   if ( !result.OK() )

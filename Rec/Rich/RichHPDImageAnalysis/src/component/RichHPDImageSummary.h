@@ -90,13 +90,17 @@ namespace Rich
                                     const double x0,
                                     const double y0 ) const ;
 
+      /// Access on demand the HPD image fitter
+      const Rich::HPDImage::HPDFit * fitter() const 
+      {
+        if ( !m_fitter) { m_fitter = new Rich::HPDImage::HPDFit(); }
+        return m_fitter;
+      }
+      
     private:
 
       /// Event Counter
       int m_nEvt ;
-
-      /// Display Smart ID warnings
-      bool m_displayWarnings ;
 
       /// Minimum number of hits required in HPD
       unsigned int m_minOccupancy ;
@@ -126,7 +130,7 @@ namespace Rich
       bool m_keep2Dhistos;
 
       /// HPD Fitter
-      const Rich::HPDImage::HPDFit m_fitter;
+      mutable Rich::HPDImage::HPDFit * m_fitter;
 
     };
 
