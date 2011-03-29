@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2011-Mar-29 - V. Gligorov
+ - Added SemilepD02HMuNu lines to Hlt2.py
+
 ! 2011-Mar-29 - Patrick Spradlin
  - Renamed some new Hlt2Charm configurables to conform with a convention.
    Requires Hlt2Lines r121026.
