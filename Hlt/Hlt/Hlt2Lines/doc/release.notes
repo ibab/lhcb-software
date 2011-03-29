@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-29 - Benoit VIAUD
+ - Tighter cuts in the Hlt2CharmHadTwoMuonForMuMuHad, Hlt2CharmHadD2HmumuLines 
+   and Hlt2CharmHadD02HHmumuLines lines, plus redefinition of the decay modes
+   to include.
+   
+
 ! 2011-Mar-29 - Patrick Spradlin
  - Changed TisTosParticleTagger instances to Hlt2Members in the following:
         Hlt2CharmHadD02HHKsLines.py

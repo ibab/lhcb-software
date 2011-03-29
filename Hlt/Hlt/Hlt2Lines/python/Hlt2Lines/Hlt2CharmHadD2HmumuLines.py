@@ -16,14 +16,14 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
                     , 'TrkPVIPChi2MAX_Hmumu'           : 9.0      # unitless
                     ,  'TrkPtMAX_Hmumu'                 : 1000.0 * MeV
                     , 'TrkChi2_Hmumu'               : 5.0      # unitless
-                    , 'PairMinDoca_Hmumu'           : 0.15 * mm
-                    , 'PairMaxDoca_Hmumu'           : 0.3 * mm
+                    , 'PairMinDoca_Hmumu'           : 0.10 * mm
+                    , 'PairMaxDoca_Hmumu'           : 0.2 * mm
                     , 'VtxPVDispChi2_Hmumu'         : 4.0    # unitless
                     , 'VtxChi2_Hmumu'               : 15.0     # unitless
                     , 'DIPChi2_Hmumu'               : 36.0     # unitless
                     , 'DSumPt_Hmumu'                : 2000.0 * MeV
-                    ,'DDira'              : 0.9993     # adimensional
-                    , 'MCOR_MAX_Hmumu'              : 35000000.0 * MeV
+                    ,'DDira'              : 0.9996     # adimensional
+                    , 'MCOR_MAX_Hmumu'              : 3500.0 * MeV
                     , 'Sig_M_MIN'                   : 1800.0 * MeV
                     , 'Sig_M_MAX'                   : 2000.0 * MeV
                     , 'WideMass_M_MIN'              : 1700.0 * MeV
@@ -32,7 +32,7 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
                     , 'TrkChi2_2MuonForHmumu'       : 5.0      # unitless
                     ## GEC
                     , 'GEC_Filter_NTRACK'        : False       # do or do not
-                    , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                    , 'GEC_NTRACK_MAX'           : 120000        # max number of tracks
                     # prescales
                   , 'Prescale'                  : {
                          'Hlt2CharmHadD2HmumuWideMass'    : 0.1
@@ -130,7 +130,7 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
         masscut = "in_range(%s,  M, %s)" % (massmin, massmax)
 
 
-        combcuts = "(AM<2050*MeV)" \
+        combcuts = "(AM<2100*MeV)" \
                    "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s      * MeV) "  \
                    "& ((APT1+APT2+APT3) > %(DSumPt_Hmumu)s)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_Hmumu)s)" \
@@ -201,7 +201,10 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
         # Make Hmumu 
         CharmHmumuCombine = self.__HmumuCombine ( name = 'CharmHadD2Hmumu'
                                                   , inputSeq = [Hlt2Charm2MuonForHmumu , pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP]
-                                                  , decayDesc = [ "D+ -> J/psi(1S) pi+",  "D+ ->  J/psi(1S) K+" ,  "D- -> J/psi(1S) pi-",  "D- ->  J/psi(1S) K-"] 
+                                                  , decayDesc = [ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-",
+                                                                  "D+ -> J/psi(1S) K+",  "D- -> J/psi(1S) K-",
+                                                                  "D+ -> phi(1020) pi-", "D- -> rho(770)0 pi+",
+                                                                  "D+ -> phi(1020) K-",  "D- -> rho(770)0 K+"]                                                    
                                                  )   
 
         sigMassCut  = "in_range(%s, M, %s)" \

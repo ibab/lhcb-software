@@ -16,14 +16,14 @@ class Hlt2CharmHadD02HHmumuLinesConf(HltLinesConfigurableUser) :
                   , 'TrkPVIPChi2MAX_HHmumu'           : 9.0      # unitless
                   ,  'TrkPtMAX_HHmumu'                 : 1400.0 * MeV
                   , 'TrkChi2_HHmumu'               : 5.0      # unitless
-                  , 'PairMinDoca_HHmumu'           : 0.15 * mm
-                  , 'PairMaxDoca_HHmumu'           : 0.25 * mm
+                  , 'PairMinDoca_HHmumu'           : 0.10 * mm
+                  , 'PairMaxDoca_HHmumu'           : 0.2 * mm
                   , 'VtxPVDispChi2_HHmumu'         : 25.0    # unitless
                   , 'VtxChi2_HHmumu'               : 15.0     # unitless
                   , 'DIPChi2_HHmumu'               : 36.0     # unitless
                   , 'DSumPt_HHmumu'                : 2500.0 * MeV
-                  ,'DDira'              : 0.9993     # adimensional                    
-                  , 'MCOR_MAX_HHmumu'              : 35000000.0 * MeV
+                  , 'DDira'              : 0.9996     # adimensional                    
+                  , 'MCOR_MAX_HHmumu'              : 3500.0 * MeV
                   , 'Sig_M_MIN'                   : 1800.0 * MeV
                   , 'Sig_M_MAX'                   : 2000.0 * MeV
                   , 'WideMass_M_MIN'              : 1700.0 * MeV
@@ -32,7 +32,7 @@ class Hlt2CharmHadD02HHmumuLinesConf(HltLinesConfigurableUser) :
                   , 'TrkChi2_2MuonForHHmumu'       : 5.0      # unitless
                   ## GEC
                   , 'GEC_Filter_NTRACK'        : False       # do or do not
-                  , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
+                  , 'GEC_NTRACK_MAX'           : 120000        # max number of tracks
                   # prescales
                   , 'Prescale'                  : {
                         'Hlt2CharmHadD02HHmumuWideMass'    : 0.1
@@ -130,7 +130,7 @@ class Hlt2CharmHadD02HHmumuLinesConf(HltLinesConfigurableUser) :
         masscut = "in_range(%s,  M, %s)" % (massmin, massmax)
 
 
-        combcuts = "(AM<2050*MeV)" \
+        combcuts = "(AM<2100*MeV)" \
                    "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s      * MeV) "  \
                    "& ((APT1+APT2+APT3+APT4) > %(DSumPt_HHmumu)s)" \
                    "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_HHmumu)s)" \

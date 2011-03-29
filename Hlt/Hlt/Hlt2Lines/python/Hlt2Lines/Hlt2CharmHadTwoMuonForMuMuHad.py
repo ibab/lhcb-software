@@ -29,15 +29,15 @@ class Hlt2CharmHadTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
 
     __slots__ = {
                   ## 2-body Input for 3Body
-                    'Trk_PT_MIN'                :  300.0 * MeV
-                  , 'Trk_P_MIN'                 : 2000.0 * MeV
-                  , 'Trk_MIPCHI2DV_MIN'         :   1.0      # unitless
+                    'Trk_PT_MIN'                :  500.0 * MeV
+                  , 'Trk_P_MIN'                 : 5000.0 * MeV
+                  , 'Trk_MIPCHI2DV_MIN'         :   4.0      # unitless
                   , 'Trk_TRCHI2DOF_MAX'         :    5.0      # unitless
-                  , 'Pair_AMINDOCA_MAX'         :    0.15 * mm
+                  , 'Pair_AMINDOCA_MAX'         :    0.1 * mm
                   , 'Pair_BPVVDCHI2_MIN'        :   25.0      # unitless  
                   , 'Pair_BPVVD_MIN'            :    1.0 * mm
                   , 'Pair_SumAPT_MIN'           : 0.0 * MeV
-                  , 'Pair_BPVCORRM_MAX'         : 3500000.0 * MeV
+                  , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV
                   ##
                   , '__hlt2TwoMuonSeq__'       : None
                 }
@@ -63,7 +63,7 @@ class Hlt2CharmHadTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
                              "& (P> %(Trk_P_MIN)s)" \
                              "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" % self.getProps()
  
-        twoMuonCombCut = "(AM<1900*MeV)" \
+        twoMuonCombCut = "(AM<2100*MeV)" \
                          "& ((APT1+APT2)> %(Pair_SumAPT_MIN)s)" \
                          "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX)s )" \
                          "& (AALLSAMEBPV)" % self.getProps()
@@ -74,7 +74,7 @@ class Hlt2CharmHadTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
         #First stage - Combine 2 Body with pt > 500MeV        
         Charm2MuonCombine = Hlt2Member( CombineParticles
                           , "Combine"
-                          , DecayDescriptors = ["J/psi(1S) -> mu+ mu-","J/psi(1S) -> mu+ mu+", "J/psi(1S) -> mu- mu-"]
+                          , DecayDescriptors = ["J/psi(1S) -> mu+ mu-","phi(1020) -> mu+ mu+", " rho(770)0 -> mu- mu-"]
                           , DaughtersCuts = { "mu+" : twoMuonDaughterCut}
                           , CombinationCut = twoMuonCombCut 
                           , MotherCut = twoMuonMotherCut
