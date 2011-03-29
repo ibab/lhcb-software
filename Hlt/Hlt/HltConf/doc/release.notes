@@ -4,6 +4,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v9r8   2011-03-29 ===================
 ! 2011-Mar-29 - V. Gligorov
  - Added SemilepD02HMuNu lines to Hlt2.py
 
