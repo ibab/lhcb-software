@@ -140,7 +140,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
-    double dR = sqrt(deta*deta+dphi*dphi);
+    //double dR = sqrt(deta*deta+dphi*dphi);
 
     if(deta > m_etacut_kaonS) continue;
     if(dphi > m_phicut_kaonS) continue;

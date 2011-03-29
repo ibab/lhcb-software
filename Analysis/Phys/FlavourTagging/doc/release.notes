@@ -5,7 +5,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-!========================== FlavourTagging v12r4p2 2011-03-28 ================
+!========================== FlavourTagging v12r4p2 2011-03-29 ================
+
+! 2011-03-29 - Juan Palacios
+ - src/TaggerKaonSameTool.cpp
+  . Fix warning.
 
 ! 2011-03-21 - Marc Grabalosa
  - Added warnings in the taggers initialization
