@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-03-29 - Thomas Blake
+ - Added utility functions to Utils.py to print line properties 
+	 from the db.
+
+
+! 2011-03-29 - Thomas Blake
  - Updated the dictionary for stripping13
  - Removed duplicate import from makeDB.py and renamed 
    default to stripping.tmp
