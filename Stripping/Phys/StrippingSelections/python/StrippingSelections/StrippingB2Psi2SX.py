@@ -32,6 +32,7 @@ __all__ = ('B2Psi2SXConf',
            'makeBd2Psi2SKsJpsiPiPi'
            )
 
+
 config_params = {'PionsTRCHI2DOF': 5,
                  'Psi2SJpsiMIPCHI2DV' : 4 ,
                  'Psi2SPiMIPCHI2DV':4 ,
@@ -40,8 +41,9 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'Psi2SAPT': 500,
                  'Psi2SADAMASS': 30,
                  'Psi2SVFASPF': 16,
+                 'PIDpi': 10, # new 10
                  'ChKTRCHI2DOF':5,
-                 'ChKPID':-2,#   
+                 'ChKPID': 0 ,# before -2
                  'PhiWin':20,
                  'PhiPT':500,
                  'PhiVFASPF':16,
@@ -52,10 +54,11 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'KstAPT':500,
                  'KstVFASPF':16,
                  'KstTRCHI2DOF':4,
-                 'KstPIDK': -2,
+                 'KstPIDK': 0, #before -2
+                 'KstPIDpi': 10, #new 10
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.5,
+                 'incl_LinePrescale':0.4,
                  'incl_LinePostscale':1,
                  'BsMassCutDownPre':5000,
                  'BsMassCutUpPre':5650,
@@ -69,10 +72,11 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'K_LinePostscale': 1,
                  'Kstar_LinePrescale': 1,
                  'Kstar_LinePostscale': 1,
+                 'MINTREEPT2' : 1000,
                  'BKsVCHI2PDOF': 10,
                  'Ks_LinePrescale': 1,
                  'Ks_LinePostscale':1
-                 }
+                                  }
 
 
 from Gaudi.Configuration import *
@@ -95,6 +99,7 @@ class B2Psi2SXConf(LineBuilder) :
                               'Psi2SAPT',
                               'Psi2SADAMASS',
                               'Psi2SVFASPF',
+                              'PIDpi',
                               'ChKTRCHI2DOF',
                               'ChKPID',
                               'PhiWin',
@@ -108,6 +113,7 @@ class B2Psi2SXConf(LineBuilder) :
                               'KstVFASPF', 
                               'KstTRCHI2DOF',
                               'KstPIDK',
+                              'KstPIDpi',
                               'KsVFASPF',
                               'KsBPVDLS',
                               'incl_LinePrescale',
@@ -124,6 +130,7 @@ class B2Psi2SXConf(LineBuilder) :
                               'K_LinePostscale',
                               'Kstar_LinePrescale',
                               'Kstar_LinePostscale',
+                              'MINTREEPT2',
                               'BKsVCHI2PDOF',
                               'Ks_LinePrescale',
                               'Ks_LinePostscale'
@@ -158,7 +165,8 @@ class B2Psi2SXConf(LineBuilder) :
                                            Psi2SAM23up = config['Psi2SAM23up'], 
                                            Psi2SAPT = config['Psi2SAPT'] , 
                                            Psi2SADAMASS = config['Psi2SADAMASS'], 
-                                           Psi2SVFASPF = config['Psi2SVFASPF']
+                                           Psi2SVFASPF = config['Psi2SVFASPF'],
+                                           PIDpi = config['PIDpi']
                                            )
         
         self.selChargedK = makeChK(self.name + '_ChKForPsi2SJpsiPiPi',
@@ -181,7 +189,8 @@ class B2Psi2SXConf(LineBuilder) :
                                   KstAPT = config['KstAPT'],
                                   KstVFASPF = config['KstVFASPF'],
                                   KstTRCHI2DOF = config['KstTRCHI2DOF'],
-                                  KstPIDK = config['KstPIDK']
+                                  KstPIDK = config['KstPIDK'],
+                                  KstPIDpi = config['KstPIDpi']
                                   )  
 
         self.selKsLoose = makeKsLoose(self.name + '_KsLooseForPsi2SJpsiPiPi') 
@@ -258,7 +267,8 @@ class B2Psi2SXConf(LineBuilder) :
                                                                   BsMassCutUpPre = config['BsMassCutUpPre'],
                                                                   BsMassCutDownPost = config['BsMassCutDownPost'],
                                                                   BsMassCutUpPost = config['BsMassCutUpPost'],
-                                                                  BsVCHI2PDOF = config['BsVCHI2PDOF']
+                                                                  BsVCHI2PDOF = config['BsVCHI2PDOF'],
+                                                                  MINTREEPT2 = config['MINTREEPT2']
                                                                   )
         
         self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar + "Line",
@@ -331,12 +341,13 @@ def makePsi2S(name,
               Psi2SAM23up, #<800 
               Psi2SAPT, #> 500
               Psi2SADAMASS, #<30
-              Psi2SVFASPF #<16
+              Psi2SVFASPF, #<16
+              PIDpi #10
               ) :
 
     _daughtersCuts = { "J/psi(1S)" : "MIPCHI2DV(PRIMARY) > %(Psi2SJpsiMIPCHI2DV)s" % locals(), "pi+" : "MIPCHI2DV(PRIMARY) > %(Psi2SPiMIPCHI2DV)s" % locals()}
     _preVertexCuts = "(AM23>%(Psi2SAM23down)s*MeV) & (AM23<%(Psi2SAM23up)s*MeV)&(APT>%(Psi2SAPT)s*MeV) & (ADAMASS('psi(2S)') < %(Psi2SADAMASS)s*MeV)" % locals()
-    _motherCuts = "(VFASPF(VCHI2/VDOF) < %(Psi2SVFASPF)s)"  % locals()
+    _motherCuts = "(VFASPF(VCHI2/VDOF) < %(Psi2SVFASPF)s)  & (MINTREE('pi-'==ABSID, PIDK) < %(PIDpi)s) & (MINTREE('pi+'==ABSID, PIDK) < %(PIDpi)s)" % locals()
     _Psi2S = CombineParticles( DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-",
                                DaughtersCuts = _daughtersCuts,
                                CombinationCut = _preVertexCuts,
@@ -387,7 +398,8 @@ def makeKstar(name,
               KstAPT, #>500
               KstVFASPF, #<16
               KstTRCHI2DOF, # 4
-              KstPIDK # -2
+              KstPIDK, # -2
+              KstPIDpi # 10  
               ) :
 
 
@@ -396,7 +408,8 @@ def makeKstar(name,
                         "& (VFASPF(VCHI2) < %(KstVFASPF)s)" \
                         "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(KstTRCHI2DOF)s )" \
                         "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(KstTRCHI2DOF)s )" \
-                        "& (MINTREE('K+'==ABSID, PIDK) > -2)" % locals()
+                        "& (MINTREE('K+'==ABSID, PIDK) > %(KstPIDK)s)" \
+                        "& (MINTREE('pi-'==ABSID, PIDK) < %(KstPIDpi)s)" % locals()
 
     _KstarFilter = FilterDesktop(Code = _code)
 
@@ -518,11 +531,12 @@ def makeBd2Psi2SKstarJpsiPiPi(name,
                               BsMassCutUpPre,
                               BsMassCutDownPost,
                               BsMassCutUpPost,
-                              BsVCHI2PDOF #<10
+                              BsVCHI2PDOF, #<10
+                              MINTREEPT2
                               ) :
 
     _preVertexCuts = "in_range(%(BsMassCutDownPre)s,AM,%(BsMassCutUpPre)s)" % locals()
-    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s)" % locals()
+    _motherCuts = "in_range(%(BsMassCutDownPost)s,M,%(BsMassCutUpPost)s) & (VFASPF(VCHI2PDOF)<%(BsVCHI2PDOF)s) & (MINTREE('K*(892)0'==ABSID, PT)> %(MINTREEPT2)s*MeV)" % locals()
 
 #    print 'makeBd2Psi2SKstarJpsiPiPi', name, 'MotherCuts:', _motherCuts, '_preVertexCuts:', _preVertexCuts
     
