@@ -23,7 +23,8 @@ class GraphEdges(object) :
         return self._edges
     def _getEdges(self, selection) :
         for sel in selection.requiredSelections() :
-            self._edges.append((sel.name(), selection.name()))
+            if (sel.name(), selection.name()) not in self._edges :
+                self._edges.append((sel.name(), selection.name()))
             self._getEdges(sel)
 
 graphEdges = GraphEdges()
