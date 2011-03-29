@@ -198,109 +198,109 @@ B0q2DplusMuX = {
 Bd2DstarTauNu = {
     'BUILDERTYPE' : 'Bd2DstarTauNuAllLinesConf',
     'CONFIG' : { 'Loose' : { 'Prescale'    : 0.1 ,
-                             'Postscale'   : 1.0 ,
-                             #tau: single pi cuts
-                             'SinglePiPT'  : 150 ,
-                             'SinglePiIPChi2' : 0,
-                             #tau: di pi cuts
-                             'DiPiPT'      : 600,
-                             'DiPiLowM'    : 600,
-                             'DiPiHighM'   : 2000,
-                             'DiPiVxChi2'  : 12,
-                             'DiPiDira'    : 0.99,
-                             'DiPiIPChi2'  : 0,
-                             #tau: di pi combi cut
-                             'DiPiMaxIPChi2' : 20,
-                             #tau: tri pi cuts
-                             'TriPiPT'     : 800,
-                             'TriPiLowM'   : 1000,
-                             'TriPiHighM'  : 2400,
-                             'TriPiVxChi2' : 12,
-                             'TriPiDira'   : 0.99,
-                             'TriPiIPChi2' : 0,
-                             #Bd cuts
-                             'BdVxChi2'    : 0,
-                             'BdDira'      : 0.99,
-                             'VxOrder'     : 0,
-                             #Bd combi cuts
-                             'BdLowDM'     : -2279,
-                             'BdHighDM'    : 500,
-                             #kaon parameters
-                             'KPT'         : 350, # 350  # MeV
-                             'KTrChi2'     :  8,  # 10   
-                             'KIPChi2'     :  0,  # 4 already in StdLooseD0
-                             'KTrPID'      : -5,  #-5
-                             'KIP'         :  0,
-                             #pion parameters
-                             'PiPT'        : 350, # MeV
-                             'PiTrChi2'    :  8, # 10   
-                             'PiIPChi2'    :  0, # 4 already in StdLooseD0
-                             'PiIP'        :  0,
-                             #D0-resonance parameters
-                             'D0MassW'     : 60, # 40    # MeV
-                             'D0_BPVVDCHI2': 50,
-                             #Dstar-resonance parameters
-                             'slowPiTrChi2' : 8, # 10 
-                             'Dstar_PT'     : 1250, # 1250 # MeV
-                             'Dstar_VCHI2'  : 25, # 20 # 
-                             'DstarMassW'   : 80, # 50 # MeV
-                             #Bd-resonance parameters
-                             'B0d_VCHI2'    : 10, # 10 # 
-                             'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
-                             'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
-                             },
-                 'Tight'   : {'Prescale'    : 1.0 ,
-                              'Postscale'   : 1.0 ,
-                              #tau: single pi cuts
-                              'SinglePiPT'  : 150 ,
-                              'SinglePiIPChi2' : 4,
-                              #tau: di pi cuts
-                              'DiPiPT'      : 600,
-                              'DiPiLowM'    : 750,
-                              'DiPiHighM'   : 1500,
-                              'DiPiVxChi2'  : 9,
-                              'DiPiDira'    : 0.99,
-                              'DiPiIPChi2'  : 5,
-                              #tau: di pi combi cut
-                              'DiPiMaxIPChi2' : 20,
-                              #tau: tri pi cuts
-                              'TriPiPT'     : 800,
-                              'TriPiLowM'   : 1200,
-                              'TriPiHighM'  : 1780,
-                              'TriPiVxChi2' : 9,
-                              'TriPiDira'   : 0.99,
-                              'TriPiIPChi2' : 5,
-                              #Bd cuts
-                              'BdVxChi2'    : 0,
-                              'BdDira'      : 0.99,
-                              'VxOrder'     : 0,
-                              #Bd combi cuts
-                              'BdLowDM'     : -2279,
-                              'BdHighDM'    : 0,
-                              #kaon parameters
-                              'KPT'         : 350, # MeV
-                              'KTrChi2'     : 8,
-                              'KIPChi2'     : 4,
-                              'KTrPID'      :-5,
-                              'KIP'         : 0.04,
-                              #pion parameters
-                              'PiPT'        : 350, # MeV
-                              'PiTrChi2'    : 8,
-                              'PiIPChi2'    : 4,
-                              'PiIP'        : 0.04,
-                              #D0-resonance parameters
-                              'D0MassW'     : 40, # MeV
-                              'D0_BPVVDCHI2': 50,
-                              #Dstar-resonance parameters
-                              'slowPiTrChi2' : 8, 
-                              'Dstar_PT'     : 1250, #  MeV
-                              'Dstar_VCHI2'  : 20, 
-                              'DstarMassW'   : 50, 
-                              #Bd-resonance parameters
-                              'B0d_VCHI2'    : 10, 
-                              'B0dD0_DeltaZVtx' : -2.5, # mm
-                              'B0dPV_DeltaZVtx' : 0.5 #  mm
-                              }
+                'Postscale'   : 1.0 ,
+                #tau: single pi cuts
+                'SinglePiPT'  : 150 ,
+                'SinglePiIPChi2' : 1.0,
+                #tau: di pi cuts
+                'DiPiPT'      : 600,
+                'DiPiLowM'    : 600,
+                'DiPiHighM'   : 1800,
+                'DiPiVxChi2'  : 9,
+                'DiPiDira'    : 0.99,
+                'DiPiIPChi2'  : 0,
+                #tau: di pi combi cut
+                'DiPiMaxIPChi2' : 20,
+                #tau: tri pi cuts
+                'TriPiPT'     : 800,
+                'TriPiLowM'   : 1000,
+                'TriPiHighM'  : 2000,
+                'TriPiVxChi2' : 9,
+                'TriPiDira'   : 0.99,
+                'TriPiIPChi2' : 0,
+                #Bd cuts
+                'BdVxChi2'    : 0,
+                'BdDira'      : 0.99,
+                'VxOrder'     : -3.0,
+                #Bd combi cuts
+                'BdLowDM'     : -1279,
+                'BdHighDM'    : 500,
+                #kaon parameters
+                'KPT'         : 350, # 350  # MeV
+                'KTrChi2'     :  8,  # 10   
+                'KIPChi2'     :  0,  # 4 already in StdLooseD0
+                'KTrPID'      : -5,  #-5
+                'KIP'         :  0,
+                #pion parameters
+                'PiPT'        : 350, # MeV
+                'PiTrChi2'    :  8, # 10   
+                'PiIPChi2'    :  0, # 4 already in StdLooseD0
+                'PiIP'        :  0,
+                #D0-resonance parameters
+                'D0MassW'     : 60, # 40    # MeV
+                'D0_BPVVDCHI2': 50,
+                #Dstar-resonance parameters
+                'slowPiTrChi2' : 8, # 10 
+                'Dstar_PT'     : 1250, # 1250 # MeV
+                'Dstar_VCHI2'  : 25, # 20 # 
+                'DstarMassW'   : 80, # 50 # MeV
+                #Bd-resonance parameters
+                'B0d_VCHI2'    : 10, # 10 # 
+                'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
+                'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
+                },
+    'Tight'   : {'Prescale'    : 1.0 ,
+                 'Postscale'   : 1.0 ,
+                 #tau: single pi cuts
+                 'SinglePiPT'  : 150 ,
+                 'SinglePiIPChi2' : 4,
+                 #tau: di pi cuts
+                 'DiPiPT'      : 600,
+                 'DiPiLowM'    : 750,
+                 'DiPiHighM'   : 1500,
+                 'DiPiVxChi2'  : 9,
+                 'DiPiDira'    : 0.99,
+                 'DiPiIPChi2'  : 5,
+                 #tau: di pi combi cut
+                 'DiPiMaxIPChi2' : 20,
+                 #tau: tri pi cuts
+                 'TriPiPT'     : 800,
+                 'TriPiLowM'   : 1200,
+                 'TriPiHighM'  : 1780,
+                 'TriPiVxChi2' : 9,
+                 'TriPiDira'   : 0.99,
+                 'TriPiIPChi2' : 5,
+                 #Bd cuts
+                 'BdVxChi2'    : 0,
+                 'BdDira'      : 0.99,
+                 'VxOrder'     : -3.0,
+                 #Bd combi cuts
+                 'BdLowDM'     : -1279,
+                 'BdHighDM'    : 300,
+                 #kaon parameters
+                 'KPT'         : 350, # MeV
+                 'KTrChi2'     : 8,
+                 'KIPChi2'     : 4,
+                 'KTrPID'      :-5,
+                 'KIP'         : 0.04,
+                 #pion parameters
+                 'PiPT'        : 350, # MeV
+                 'PiTrChi2'    : 8,
+                 'PiIPChi2'    : 4,
+                 'PiIP'        : 0.04,
+                 #D0-resonance parameters
+                 'D0MassW'     : 40, # MeV
+                 'D0_BPVVDCHI2': 50,
+                 #Dstar-resonance parameters
+                 'slowPiTrChi2' : 8, 
+                 'Dstar_PT'     : 1250, #  MeV
+                 'Dstar_VCHI2'  : 20, 
+                 'DstarMassW'   : 50, 
+                 #Bd-resonance parameters
+                 'B0d_VCHI2'    : 10, 
+                 'B0dD0_DeltaZVtx' : -3.0, # mm
+                 'B0dPV_DeltaZVtx' : -0.5 #  mm
+                 }
                  },
     'STREAMS' : ['Bhadron'],
     'WGs'    : ['Semileptonic'] 

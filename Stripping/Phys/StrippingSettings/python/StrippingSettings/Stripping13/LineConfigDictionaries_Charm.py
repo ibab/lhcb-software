@@ -113,7 +113,7 @@ D2hh = {
     'TaggedSCSLinePostscale': 1.,
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'CharmCopy' ]
     }
 
 #Micro-DST, Sam Gregson
@@ -258,7 +258,7 @@ D2XMuMu = {
     'D2PiPiPiCalLinePostscale': 1 
     } ,
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'CharmCopy' ]
     }
 
 
@@ -305,7 +305,7 @@ DstarD02xx ={
     ,'prefix'         : '' 
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'CharmCopy' ]
     }
 
 
@@ -334,7 +334,7 @@ DstarPromptWithD02HH = {
     'HHLinePostscale'   : 1.,         ## unitless
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'CharmCopy' ]
     }
 
 # Mat Charles, Micro-DST
@@ -580,7 +580,7 @@ DstarD2KShh = {
     ,'PPDDPostscale'        : 1.0
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'CharmFull' ]
+    'STREAMS' : [ 'CharmCopy' ]
     }
 
 

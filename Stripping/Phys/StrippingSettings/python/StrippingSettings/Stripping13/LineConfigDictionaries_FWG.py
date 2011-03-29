@@ -706,58 +706,74 @@ BuToKX3872 = {
 FullDSTDiElectron = {
     'BUILDERTYPE'	: 'DiElectronConf',
     'CONFIG'	: {
-    'MicroDST'                                      :  False,  
-    'BiasedDiElectronLowMass_ElectronMIPCHI2': 4.0,
-                   'BiasedDiElectronLowMass_ElectronP': -8000.0,
-                   'BiasedDiElectronLowMass_ElectronPIDe': -2.0,
-                   'BiasedDiElectronLowMass_ElectronPT': 500.0,
-                   'BiasedDiElectronLowMass_ElectronTRCHI2DOF': 5.0,
-                   'BiasedDiElectronLowMass_MinMass': 30.0,
-                   'BiasedDiElectronLowMass_PT': -1000.0,
-                   'BiasedDiElectronLowMass_Postscale': 1.0,
-                   'BiasedDiElectronLowMass_Prescale': 1.0,
-                   'BiasedDiElectronLowMass_VCHI2PDOF': 16.0,
-                   'BiasedDiElectron_ElectronMIPCHI2': 4.0,
-                   'BiasedDiElectron_ElectronP': -8000.0,
-                   'BiasedDiElectron_ElectronPIDe': 3.0,
-                   'BiasedDiElectron_ElectronPT': 500.0,
-                   'BiasedDiElectron_ElectronTRCHI2DOF': 5.0,
-                   'BiasedDiElectron_MinMass': 2000.0,
-                   'BiasedDiElectron_PT': -1000.0,
-                   'BiasedDiElectron_Postscale': 1.0,
-                   'BiasedDiElectron_Prescale': 1.0,
-                   'BiasedDiElectron_VCHI2PDOF': 16.0,
-                   'DiElectronLowMass_ElectronP': -8000.0,
-                   'DiElectronLowMass_ElectronPIDe': 4.0,
-                   'DiElectronLowMass_ElectronPT': 1100.0,
-                   'DiElectronLowMass_ElectronTRCHI2DOF': 5.0,
-                   'DiElectronLowMass_MinMass': 30.0,
-                   'DiElectronLowMass_PT': -1000.0,
-                   'DiElectronLowMass_Postscale': 1.0,
-                   'DiElectronLowMass_Prescale': 0.20000000000000001,
-                   'DiElectronLowMass_VCHI2PDOF': 16.0,
-                   'DiElectronLowMass_checkPV': False,
-                   'DiElectron_ElectronP': -8000.0,
-                   'DiElectron_ElectronPIDe': 4.0,
-                   'DiElectron_ElectronPT': 1100.0,
-                   'DiElectron_ElectronTRCHI2DOF': 5.0,
-                   'DiElectron_MinMass': 2000.0,
-                   'DiElectron_PT': -1000.0,
-                   'DiElectron_Postscale': 1.0,
-                   'DiElectron_Prescale': 1.0,
-                   'DiElectron_VCHI2PDOF': 16.0,
-                   'DiElectron_checkPV': False,
-                   'Jpsi2ee_ElectronP': -8000.0,
-                   'Jpsi2ee_ElectronPIDe': 4.0,
-                   'Jpsi2ee_ElectronPT': 1200.0,
-                   'Jpsi2ee_ElectronTRCHI2DOF': 5.0,
-                   'Jpsi2ee_MaxMass': 3800.0,
-                   'Jpsi2ee_MinMass': 2000.0,
-                   'Jpsi2ee_PT': 1500.0,
-                   'Jpsi2ee_Postscale': 1.0,
-                   'Jpsi2ee_Prescale': 1.0,
-                   'Jpsi2ee_VCHI2PDOF': 16.0,
-                   'Jpsi2ee_checkPV': False},
+        'MicroDST'                                      :  False  ,
+        
+        # DiElectron line
+        'DiElectron_Prescale'                           :     1.  ,
+        'DiElectron_Postscale'                          :     1.  ,
+        'DiElectron_checkPV'                            : False   , 
+        
+        'DiElectron_ElectronPT'                         :  1100.  ,  # MeV
+        'DiElectron_ElectronP'                          : -8000.  ,  # MeV, no cut now
+        'DiElectron_ElectronPIDe'                       :     4.  ,  
+        'DiElectron_ElectronTRCHI2DOF'                  :     5.  , 
+        'DiElectron_MinMass'                            :  2000.  ,  # MeV
+        'DiElectron_VCHI2PDOF'                          :    16.  , 
+        'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
+
+        # DiElectronLowMass line
+        'DiElectronLowMass_Prescale'                    :     0.05 ,
+        'DiElectronLowMass_Postscale'                   :     1.  ,
+        'DiElectronLowMass_checkPV'                     : False   ,   
+        
+        'DiElectronLowMass_ElectronPT'                  :  1100.  ,  # MeV
+        'DiElectronLowMass_ElectronP'                   : -8000.  ,  # MeV, no cut now
+        'DiElectronLowMass_ElectronPIDe'                :     4.  , 
+        'DiElectronLowMass_ElectronTRCHI2DOF'           :     5.  , 
+        'DiElectronLowMass_MinMass'                     :    30.  ,  # MeV
+        'DiElectronLowMass_VCHI2PDOF'                   :    16.  ,       
+        'DiElectronLowMass_PT'                          : -1000.  ,  # MeV, no cut now
+        
+        # BiasedDiElectron line
+        'BiasedDiElectron_Prescale'                     :     1.  ,
+        'BiasedDiElectron_Postscale'                    :     1.  ,
+        
+        'BiasedDiElectron_ElectronPT'                   :   500.  ,  # MeV
+        'BiasedDiElectron_ElectronP'                    : -8000.  ,  # MeV, no cut now
+        'BiasedDiElectron_ElectronPIDe'                 :     3.  ,
+        'BiasedDiElectron_ElectronMIPCHI2'              :     4.  , 
+        'BiasedDiElectron_ElectronTRCHI2DOF'            :     5.  , 
+        'BiasedDiElectron_MinMass'                      :  2000.  ,  # MeV
+        'BiasedDiElectron_VCHI2PDOF'                    :    16.  ,
+        'BiasedDiElectron_PT'                           : -1000.  ,  # MeV, no cut now 
+
+        # BiasedDiElectronLowMass line
+        'BiasedDiElectronLowMass_Prescale'              :     0.01 ,
+        'BiasedDiElectronLowMass_Postscale'             :     1.  ,
+        
+        'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
+        'BiasedDiElectronLowMass_ElectronP'             : -8000.  ,  # MeV
+        'BiasedDiElectronLowMass_ElectronPIDe'          :     0.  ,
+        'BiasedDiElectronLowMass_ElectronMIPCHI2'       :     4.  ,  
+        'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     9.  , 
+        'BiasedDiElectronLowMass_MinMass'               :    30.  ,  # MeV
+        'BiasedDiElectronLowMass_VCHI2PDOF'             :    16.  ,
+        'BiasedDiElectronLowMass_PT'                    : -1000.  ,  # MeV, no cut now
+        
+        # Jpsi2ee line
+        'Jpsi2ee_Prescale'                              :     1.  ,
+        'Jpsi2ee_Postscale'                             :     1.  ,
+        'Jpsi2ee_checkPV'                               : False   ,   
+        
+        'Jpsi2ee_ElectronPT'                            :  1200.  ,  # MeV
+        'Jpsi2ee_ElectronP'                             : -8000.  ,  # MeV, no cut now
+        'Jpsi2ee_ElectronPIDe'                          :     4.  ,
+        'Jpsi2ee_ElectronTRCHI2DOF'                     :     5.  , 
+        'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
+        'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
+        'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
+        'Jpsi2ee_PT'                                    :  1500.     # MeV
+        },
     'STREAMS' : [ 'Dielectron' ],
     'WGs'    : [ 'FWG' ]
     }
@@ -765,63 +781,77 @@ FullDSTDiElectron = {
 MicroDSTDiElectron = {
     'BUILDERTYPE'	:	'DiElectronConf',
     'CONFIG'	: {
-    'MicroDST'                                      :  True  ,
-    'BiasedDiElectronLowMass_ElectronMIPCHI2': 4.0,
-                   'BiasedDiElectronLowMass_ElectronP': -8000.0,
-                   'BiasedDiElectronLowMass_ElectronPIDe': -2.0,
-                   'BiasedDiElectronLowMass_ElectronPT': 300.0,
-                   'BiasedDiElectronLowMass_ElectronTRCHI2DOF': 5.0,
-                   'BiasedDiElectronLowMass_MinMass': 30.0,
-                   'BiasedDiElectronLowMass_PT': -1000.0,
-                   'BiasedDiElectronLowMass_Postscale': 1.0,
-                   'BiasedDiElectronLowMass_Prescale': 1.0,
-                   'BiasedDiElectronLowMass_VCHI2PDOF': 16.0,
-                   'BiasedDiElectron_ElectronMIPCHI2': 4.0,
-                   'BiasedDiElectron_ElectronP': -8000.0,
-                   'BiasedDiElectron_ElectronPIDe': 2.0,
-                   'BiasedDiElectron_ElectronPT': 500.0,
-                   'BiasedDiElectron_ElectronTRCHI2DOF': 5.0,
-                   'BiasedDiElectron_MinMass': 2000.0,
-                   'BiasedDiElectron_PT': -1000.0,
-                   'BiasedDiElectron_Postscale': 1.0,
-                   'BiasedDiElectron_Prescale': 1.0,
-                   'BiasedDiElectron_VCHI2PDOF': 16.0,
-                   'DiElectronLowMass_ElectronP': -8000.0,
-                   'DiElectronLowMass_ElectronPIDe': 2.0,
-                   'DiElectronLowMass_ElectronPT': 750.0,
-                   'DiElectronLowMass_ElectronTRCHI2DOF': 5.0,
-                   'DiElectronLowMass_MinMass': 30.0,
-                   'DiElectronLowMass_PT': -1000.0,
-                   'DiElectronLowMass_Postscale': 1.0,
-                   'DiElectronLowMass_Prescale': 1.0,
-                   'DiElectronLowMass_VCHI2PDOF': 16.0,
-                   'DiElectronLowMass_checkPV': True,
-                   'DiElectron_ElectronP': -8000.0,
-                   'DiElectron_ElectronPIDe': 2.0,
-                   'DiElectron_ElectronPT': 1100.0,
-                   'DiElectron_ElectronTRCHI2DOF': 5.0,
-                   'DiElectron_MinMass': 2000.0,
-                   'DiElectron_PT': -1000.0,
-                   'DiElectron_Postscale': 1.0,
-                   'DiElectron_Prescale': 1.0,
-                   'DiElectron_VCHI2PDOF': 16.0,
-                   'DiElectron_checkPV': True,
-                   'Jpsi2ee_ElectronP': -8000.0,
-                   'Jpsi2ee_ElectronPIDe': 4.0,
-                   'Jpsi2ee_ElectronPT': 1200.0,
-                   'Jpsi2ee_ElectronTRCHI2DOF': 5.0,
-                   'Jpsi2ee_MaxMass': 3800.0,
-                   'Jpsi2ee_MinMass': 2000.0,
-                   'Jpsi2ee_PT': -1500.0,
-                   'Jpsi2ee_Postscale': 1.0,
-                   'Jpsi2ee_Prescale': 1.0,
-                   'Jpsi2ee_VCHI2PDOF': 16.0,
-                   'Jpsi2ee_checkPV': True},
+        'MicroDST'                                      :  True   ,
+        
+        # DiElectron line
+        'DiElectron_Prescale'                           :     1.  ,
+        'DiElectron_Postscale'                          :     1.  ,        
+        'DiElectron_checkPV'                            :  True   ,
+        
+        'DiElectron_ElectronPT'                         :  1100.  ,  # MeV
+        'DiElectron_ElectronP'                          : -8000.  ,  # MeV, no cut now
+        'DiElectron_ElectronPIDe'                       :     2.  ,  
+        'DiElectron_ElectronTRCHI2DOF'                  :     5.  , 
+        'DiElectron_MinMass'                            :  2000.  ,  # MeV
+        'DiElectron_VCHI2PDOF'                          :    16.  , 
+        'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
+
+        # DiElectronLowMass line
+        'DiElectronLowMass_Prescale'                    :     1.  ,
+        'DiElectronLowMass_Postscale'                   :     1.  ,
+        'DiElectronLowMass_checkPV'                     :  True   , 
+        
+        'DiElectronLowMass_ElectronPT'                  :   750.  ,  # MeV
+        'DiElectronLowMass_ElectronP'                   : -8000.  ,  # MeV, no cut now
+        'DiElectronLowMass_ElectronPIDe'                :     2.  , 
+        'DiElectronLowMass_ElectronTRCHI2DOF'           :     5.  , 
+        'DiElectronLowMass_MinMass'                     :    30.  ,  # MeV
+        'DiElectronLowMass_VCHI2PDOF'                   :    16.  ,       
+        'DiElectronLowMass_PT'                          : -1000.  ,  # MeV, no cut now
+        
+        # BiasedDiElectron line
+        'BiasedDiElectron_Prescale'                     :     1.  ,
+        'BiasedDiElectron_Postscale'                    :     1.  ,
+        
+        'BiasedDiElectron_ElectronPT'                   :   500.  ,  # MeV
+        'BiasedDiElectron_ElectronP'                    : -8000.  ,  # MeV, no cut now
+        'BiasedDiElectron_ElectronPIDe'                 :     2.  ,
+        'BiasedDiElectron_ElectronMIPCHI2'              :     4.  , 
+        'BiasedDiElectron_ElectronTRCHI2DOF'            :     5.  , 
+        'BiasedDiElectron_MinMass'                      :  2000.  ,  # MeV
+        'BiasedDiElectron_VCHI2PDOF'                    :    16.  ,
+        'BiasedDiElectron_PT'                           : -1000.  ,  # MeV, no cut now 
+
+        # BiasedDiElectronLowMass line
+        'BiasedDiElectronLowMass_Prescale'              :     0.1  ,
+        'BiasedDiElectronLowMass_Postscale'             :     1.  ,
+
+        'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
+        'BiasedDiElectronLowMass_ElectronP'             : -8000.  ,  # MeV
+        'BiasedDiElectronLowMass_ElectronPIDe'          :     0.  ,
+        'BiasedDiElectronLowMass_ElectronMIPCHI2'       :     4.  ,  
+        'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     5.  , 
+        'BiasedDiElectronLowMass_MinMass'               :    30.  ,  # MeV
+        'BiasedDiElectronLowMass_VCHI2PDOF'             :    16.  ,
+        'BiasedDiElectronLowMass_PT'                    :  -1000. ,  # MeV, no cut now
+        
+        # Jpsi2ee line
+        'Jpsi2ee_Prescale'                              :     1.  ,
+        'Jpsi2ee_Postscale'                             :     1.  ,
+        'Jpsi2ee_checkPV'                               :  True   , 
+        
+        'Jpsi2ee_ElectronPT'                            :  1200.  ,  # MeV
+        'Jpsi2ee_ElectronP'                             : -8000.  ,  # MeV, no cut now
+        'Jpsi2ee_ElectronPIDe'                          :     4.  ,
+        'Jpsi2ee_ElectronTRCHI2DOF'                     :     5.  , 
+        'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
+        'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
+        'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
+        'Jpsi2ee_PT'                                    : -1500.0    # MeV
+        },
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'FWG' ]
 }
-
-
 
 
 Ccbar2Ppbar = {
