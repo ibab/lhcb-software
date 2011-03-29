@@ -5,6 +5,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v12r1 2011-03-29 ===================
+
 ! 2011-03-29 - Roel Aaij
  - Align behaviour of MatchTool with the implementations of the interface it
    uses, PatMatchTool in particular. The behaviour exported by the ITrackMatch
