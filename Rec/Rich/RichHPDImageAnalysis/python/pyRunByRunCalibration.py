@@ -279,7 +279,7 @@ def getRunFillData(rootfiles):
             if run in runTimeCache.keys() : res = runTimeCache[run]
 
             if not res['OK'] :
-                from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+                from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
                 nTries = 0
                 while not res['OK'] and nTries < 10:
                     nTries = nTries + 1
@@ -398,7 +398,7 @@ def mergeRootFile(fill,infiles):
 
 def runToFill(run):
     # Database API
-    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+    from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
     res = BookkeepingClient().getRunInformations(int(run))
     fill = 0
     if res['OK'] :
@@ -409,7 +409,7 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def runAll(files='MDMS-RootFiles.txt'):
+def runAll(files='2011-RootFiles.txt'):
 
     calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
     #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
