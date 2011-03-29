@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2001-03-29 Neus Lopez March
+- StrippingB2Psi2SXMuMu.py
+	Tighten cuts to satisfy requirements
 
 ! 2011-03-29 - Juan Palacios
  - StrippingSelections.Utils
