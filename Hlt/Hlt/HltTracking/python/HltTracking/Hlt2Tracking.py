@@ -46,6 +46,7 @@ from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines           import Hlt2CharmSemilepD02HMuNuLinesConf
 from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
 from Hlt2Lines.Hlt2CharmHadTwoMuonForMuMuHad import Hlt2CharmHadTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
@@ -88,6 +89,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf
                              , Hlt2CharmHadD02HHLinesConf
+                             , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2CharmHadD2HHHLinesConf
                              , Hlt2CharmHadD2KS0HLinesConf 
                              , Hlt2CharmHadD02HHKsLinesConf
