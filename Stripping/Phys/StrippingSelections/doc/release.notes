@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2001-03-29 Greig Cowan 
+- Added test script to count lines and print output locations
+
 ! 2001-03-29 Neus Lopez March
 - StrippingB2Psi2SX.py
 	Tighten cuts to satisfy requirements
