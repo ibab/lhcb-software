@@ -121,6 +121,9 @@ class Physics_LowLumi_Mar2011( object ):
         from DV_draft2011 import DV_draft2011
         __update_conf__(thresholds,  DV_draft2011().Thresholds() )
 
+        from CharmLeptonic_draft2011 import CharmLeptonic_draft2011
+        __update_conf__(thresholds, CharmLeptonic_draft2011().Thresholds() )
+ 
         return thresholds
                        
     def ActiveHlt2Lines(self) :
@@ -143,6 +146,9 @@ class Physics_LowLumi_Mar2011( object ):
        
         from DV_draft2011 import DV_draft2011 
         hlt2.extend( DV_draft2011().ActiveHlt2Lines() )
+
+        from CharmLeptonic_draft2011 import CharmLeptonic_draft2011
+        hlt2.extend( CharmLeptonic_draft2011().ActiveHlt2Lines() )
  
         return hlt2
        
@@ -158,7 +164,7 @@ class Physics_LowLumi_Mar2011( object ):
 		  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
 		  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
 		  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-		  , 'Hlt1DiProtonLowMult'
+		  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
 		  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
 		  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
 		  , 'Hlt1MBNoBias' 

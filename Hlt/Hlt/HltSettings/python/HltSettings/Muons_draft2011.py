@@ -57,12 +57,6 @@ class Muons_draft2011 :
             'Hlt2TriMuonDetached',
             'Hlt2TriMuonTau',
       
-            'Hlt2CharmRareDecayD02MuMu',    
-            "Hlt2Dst2PiD02PiPi",            
-            "Hlt2Dst2PiD02KPi",             
-            "Hlt2Dst2PiD02MuMu",            
-            "Hlt2Dst2PiD02KMu",             
-            
             'Hlt2TFBc2JpsiMuX',
             'Hlt2TFBc2JpsiMuXSignal'
             ]
@@ -133,24 +127,6 @@ class Muons_draft2011 :
             }}
                   )
            
-        d.update({Hlt2CharmRareDecayLinesConf : { 
-                          'D02MuMuMinDaughterPt'            : 1.0 # GeV
-                        , 'D02MuMuMinLifeTime'              : 0.1 # ps
-                        , 'D02PiPiForD02MuMuMinLifeTime'    : 0.3 # ps
-                        , 'Prescale'                        : { 
-                            'Hlt2CharmRareDecayD02MuMu'           : 1.0 
-                            }
-            }})
-
-        d.update({Hlt2Dst2D2XXLinesConf : { 
-                    'Prescale'                        : { 
-                        'Hlt2Dst2PiD02PiPi'           : 0.006 
-                        , 'Hlt2Dst2PiD02KPi'          : 0.002
-                        , 'Hlt2Dst2PiD02MuMu'         : 1
-                        , 'Hlt2Dst2PiD02KMu'          : 0.03
-                          }
-            }})
-        
         return d
     
 

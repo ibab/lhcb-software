@@ -183,7 +183,7 @@ class CharmHadronLines :
                           'TrkPt_4Body'                 : 250.0 * MeV
                         , 'TrkP_4Body'                  : 2000.0 * MeV
                         , 'TrkPVIPChi2_4Body'           : 1.7      # unitless
-                        , 'TrkChi2_4Body'               : 3.0      # unitless
+                        , 'TrkChi2_4Body'               : 5.0      # unitless
                         , 'PairMinDoca_4Body'           : 0.10 * mm
                         , 'VtxPVDispChi2_4Body'         : 100.0    # unitless
                         , 'VtxChi2_4Body'               : 20.0     # unitless

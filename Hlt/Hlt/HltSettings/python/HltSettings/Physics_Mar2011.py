@@ -1,21 +1,21 @@
 def __update_conf__( current, extra ) :
-        for (conf,d) in extra.iteritems() :
-            if conf not in current : 
-                current[conf] = d
+    for (conf,d) in extra.iteritems() :
+        if conf not in current : 
+            current[conf] = d
+            continue
+        cur = current[conf]
+        for (k,v) in d.iteritems() :
+            if k not in cur : 
+                cur[k] = v
                 continue
-            cur = current[conf]
-            for (k,v) in d.iteritems() :
-                if k not in cur : 
-                    cur[k] = v
-                    continue
-                print 'Warning: potential collision detected: %s -- %s' % (conf,k)
-                print 'current: %s' % cur[k]
-                print 'request: %s' % v
-                if type(cur[k])==dict :
-                    cur[k].update( v )
-                else :
-                    cur[k] = v
-                print 'result: %s' % cur[k]
+            print 'Warning: potential collision detected: %s -- %s' % (conf,k)
+            print 'current: %s' % cur[k]
+            print 'request: %s' % v
+            if type(cur[k])==dict :
+                cur[k].update( v )
+            else :
+                cur[k] = v
+            print 'result: %s' % cur[k]
 
 class Physics_Mar2011( object ):
     """
@@ -50,11 +50,11 @@ class Physics_Mar2011( object ):
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
-	"""
+        """
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
-	from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
+        from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
                                             ,   'AllL0_P'       : 10000
@@ -98,21 +98,20 @@ class Physics_Mar2011( object ):
                                              ,'MultiMuonNoIP_GT'         :  2.5
                                              ,'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                              'Hlt1MultiMuonNoIP'  : 0.0 }
-					     }
-		       
-		       # micro bias lines switched off for high mu physics running              
-		       , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBiasVelo'             : 0
-							    ,'Hlt1MBMicroBiasTStation'        : 0
-							    ,'Hlt1MBMicroBiasVeloRateLimited'  : 0
-							    ,'Hlt1MBMicroBiasTStationRateLimited' :0 }}
-		       
-		       }
+                         }
+               
+               # micro bias lines switched off for high mu physics running              
+               , Hlt1MBLinesConf : { 'Prescale' : { 'Hlt1MBMicroBiasVelo'             : 0
+                                ,'Hlt1MBMicroBiasTStation'        : 0
+                                ,'Hlt1MBMicroBiasVeloRateLimited'  : 0
+                                ,'Hlt1MBMicroBiasTStationRateLimited' :0 }}
+               
+               }
 
         from Muons_draft2011 import Muons_draft2011
         __update_conf__(thresholds,  Muons_draft2011().Thresholds() )
 
-
-	from Electrons_draft2011 import Electrons_draft2011
+        from Electrons_draft2011 import Electrons_draft2011
         __update_conf__(thresholds,  Electrons_draft2011().Thresholds() )
 
         from Hadrons_draft2011 import Hadrons_draft2011
@@ -120,6 +119,9 @@ class Physics_Mar2011( object ):
 
         from DV_draft2011 import DV_draft2011
         __update_conf__(thresholds,  DV_draft2011().Thresholds() )
+
+        from CharmLeptonic_draft2011 import CharmLeptonic_draft2011
+        __update_conf__(thresholds, CharmLeptonic_draft2011().Thresholds() )
 
         return thresholds
                        
@@ -135,7 +137,7 @@ class Physics_Mar2011( object ):
         from Muons_draft2011 import Muons_draft2011
         hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
 
-	from Electrons_draft2011 import Electrons_draft2011
+        from Electrons_draft2011 import Electrons_draft2011
         hlt2.extend( Electrons_draft2011().ActiveHlt2Lines() )
 
         from Hadrons_draft2011 import Hadrons_draft2011
@@ -143,6 +145,9 @@ class Physics_Mar2011( object ):
        
         from DV_draft2011 import DV_draft2011 
         hlt2.extend( DV_draft2011().ActiveHlt2Lines() )
+
+        from CharmLeptonic_draft2011 import CharmLeptonic_draft2011
+        hlt2.extend( CharmLeptonic_draft2011().ActiveHlt2Lines() )
  
         return hlt2
        
@@ -150,23 +155,23 @@ class Physics_Mar2011( object ):
         """
         Returns a list of active lines
         """
-	lines = [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
-		  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
-		  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
-		  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
-		  , 'Hlt1NoPVPassThrough'
-		  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
-		  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
-		  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-		  , 'Hlt1DiProtonLowMult'
-		  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
-		  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-		  , 'Hlt1MBNoBias' 
-		  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
-		  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
-		  ]
-	lines += [ i + 'RateLimited' for i in lines
-		   if i.startswith('Hlt1MBMicroBias')
-		   or i.startswith('Hlt1L0Any') ]
+        lines = [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
+          , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
+          , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
+          , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
+          , 'Hlt1NoPVPassThrough'
+          , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
+          , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+          , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+          , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
+          , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
+          , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
+            , 'Hlt1MBNoBias' 
+          , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
+          , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
+          ]
+        lines += [ i + 'RateLimited' for i in lines
+           if i.startswith('Hlt1MBMicroBias')
+           or i.startswith('Hlt1L0Any') ]
 
         return lines 
