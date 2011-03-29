@@ -23,7 +23,7 @@ class GraphEdges(object) :
         return self._edges
     def _getEdges(self, selection) :
         for sel in selection.requiredSelections() :
-            self._edges.append((selection.name(), sel.name()))
+            self._edges.append((sel.name(), selection.name()))
             self._getEdges(sel)
 
 graphEdges = GraphEdges()
@@ -32,7 +32,7 @@ def dot(selection) :
     """
     Return a pydot.Dot object made from the edges of selection's graph.
     """
-    return pydot.graph_from_edges(graphEdges(selection))
+    return pydot.graph_from_edges(graphEdges(selection), directed=True)
 
 def view(selection) :
     """
