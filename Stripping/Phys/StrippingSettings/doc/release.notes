@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ======================== StrippingSettings v2r2 2011-03-29 ==================
+
 ! 2011-03-29 - Thomas Blake
  - Added utility functions to Utils.py to print line properties 
 	 from the db.
