@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-29 - V. Gligorov
+ - Move Charm (semi)leptonic lines to CharmLeptonic_draft2011 (new file)
+ - Correct buggy cuts in D02HHHH lines in CharmHadron and CharmHadron_LowLumi
+ - Activate Hlt1DiProton lines  
+
 ! 2011-Mar-29 - Patrick Spradlin
  - Renamed some new Hlt2Charm configurables to conform with a convention.
    Requires Hlt2Lines r121026.
