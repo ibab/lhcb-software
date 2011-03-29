@@ -6,9 +6,12 @@
 ! -----------------------------------------------------------------------------
 !========================== HltConf v9r7p1 2011-03-23 ===================
 
+! 2011-Mar-29 - Patrick Spradlin
+ - Renamed some new Hlt2Charm configurables to conform with a convention.
+   Requires Hlt2Lines r121026.
+
 ! 2011-03-28 - Benoit Viaud
  - New lines Hmumu and HHmumu added to Hlt2.py
-
 
 ! 2011-03-23 - Gerhard Raven
  - protect vertex persistence against configurations without PV3D
