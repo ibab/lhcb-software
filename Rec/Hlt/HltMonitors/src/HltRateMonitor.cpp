@@ -124,10 +124,21 @@ StatusCode HltRateMonitor::execute() {
 
    const ODIN* odin = get< ODIN >( m_ODINLocation );
    if ( m_runNumber != odin->runNumber() ) {
-      if ( msgLevel(MSG::DEBUG) )
-         debug() << "Run number from database and ODIN do not match: " 
-                 << m_runNumber << " " << odin->runNumber() << ", skipping event" << endmsg;
-      return StatusCode::SUCCESS;
+    
+     if ( msgLevel(MSG::DEBUG) ){
+        Gaudi::Time gtime = odin->eventTime();
+        debug() << "Run number from database and ODIN do not match: " 
+                 << m_runNumber << " " << odin->runNumber() << ", skipping event. GPS time: " 
+                 << odin->gpsTime() << " (" 
+                 << gtime.year(false) << "/"
+                 << gtime.month(false)+1 << "/"
+                 << gtime.day(false) << ", "
+                 << gtime.hour(false) << ":"
+                 << gtime.minute(false) << ":"
+                 << gtime.second(false)+gtime.nsecond()/1000000000. << ")"
+                << endmsg;
+     }
+     return Warning("Incorrect run number", StatusCode::SUCCESS, 0); // for statistics
    }
 
    double time = double( odin->gpsTime() - m_startOfRun ) / 1e6;
@@ -187,11 +198,14 @@ StatusCode HltRateMonitor::i_updateConditions()
       error() << "Condition does not contain RunNumber " << endmsg;
       return StatusCode::FAILURE;
    }
+
    //multiply by 1e6
    m_startOfRun = 1000000 * numeric_cast< long long unsigned int >
       ( m_runParameters->param< int >( "RunStartTime" ) );
    m_runNumber = numeric_cast< unsigned int >
       ( m_runParameters->param< int >( "RunNumber" ) );
+
+   if (msgLevel(MSG::DEBUG)) debug()<< "Updated to run " <<  m_runNumber << " starting at " << m_startOfRun << endmsg ;
 
    return StatusCode::SUCCESS;
 }

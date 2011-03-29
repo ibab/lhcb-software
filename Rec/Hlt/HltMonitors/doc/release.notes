@@ -4,6 +4,11 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+! 2011-03-29 - Patrick Koppenburg
+ - Bug 80202
+ - Added some debug printout
+ - Added a non printed Warning to get statistics at end of run
+
 !========================= HltMonitors v1r2 2011-02-28 =========================
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
