@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2011-Mar-29 - Patrick Spradlin
+ - Added TisTosParticleTagger to the Hlt2Line list of recognized outputs.
+
 !========================== HltLine v5r1p4 2011-03-23 ===================
 ! 2010-03-23 - Gerhard Raven
  - recognize SINK and add to list of outputs
