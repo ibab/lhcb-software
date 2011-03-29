@@ -328,7 +328,7 @@ namespace Gaudi
       //
       return 
         covariance ( 0 , 0 ) * _ax * _ax       + 
-        covariance ( 0 , 1 ) * _ay * _ay * 2.0 +
+        covariance ( 0 , 1 ) * _ax * _ay * 2.0 +
         covariance ( 1 , 1 ) * _ay * _ay       ;  
     }
     // ========================================================================
