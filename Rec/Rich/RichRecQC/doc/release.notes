@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-03-29 - Chris Jones
+ - Remove "HPDImageShifts" from list of monitors run by default
+
 ! 2011-03-15 - Chris Jones
  - Extend the Decoding error monitor to make a summary plot for each L1
    board separately, as well as the overall combined summary

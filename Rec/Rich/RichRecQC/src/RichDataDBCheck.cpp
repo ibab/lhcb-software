@@ -125,13 +125,9 @@ StatusCode DataDBCheck::execute()
           L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
           if ( iID != l0Count.end() )
           {
-            // Additional info for the warning message
-            const Level1HardwareID   l1ID = m_RichSys->level1HardwareID(hpdID);
-            const Rich::DetectorType rich = m_RichSys->richDetector(l1ID);
             // Construct and send the warning
             std::ostringstream mess;
-            mess << "HPD L0ID " << l0ID << " appears twice in the data. [ RICH=" << rich
-                 << " L1ID=" << l1ID
+            mess << "HPD L0ID " << l0ID << " appears twice in the data. ["
                  << " L1HardwareID=" << iID->second.l1HardID
                  << " Input=" <<  iID->second.l1Input
                  << " ] and [ L1HardwareID=" <<  l1HardID << " Input=" << l1Input << "]";

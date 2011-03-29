@@ -87,13 +87,13 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "HPDImageShifts", "DataDecodingErrors",
+                                            "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "OfflineExpress" : [ "L1SizeMonitoring", "DBConsistencyCheck",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "HPDImageShifts", "DataDecodingErrors",
+                                            "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "Online"         : [ "DBConsistencyCheck", "DataDecodingErrors",
                                             "PhotonMonitoring", "TracklessRingAngles",
@@ -246,7 +246,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         histoset = self.getProp("Histograms")
 
-        # Add additionsl monitors to the list for this histo set
+        # Add additional monitors to the list for this histo set
         for monitor in self.__added_monitors__ :
             if monitor not in self.Monitors[histoset] : self.Monitors[histoset].append(monitor)
 
