@@ -32,15 +32,8 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  static double doubleFromInt(unsigned int i);
-
-protected:
 
 private:
-
-
   // ----------------------- data members 
 
   /// location of output
@@ -51,7 +44,6 @@ private:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
-
 
 };
 

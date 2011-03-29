@@ -427,11 +427,11 @@ namespace ConfigTarFileAccessSvc_details {
                                               // reads an extra block...
                 // if name ends in .gz, assume it is gzipped.
                 // Strip the name down, and flag as compressed in info.
-                info.compressed = (info.name.compare(info.name.size()-3,3,".gz") == 0 );
+                info.compressed = (info.name.size()>3 && info.name.compare(info.name.size()-3,3,".gz") == 0 );
                 if (info.compressed) info.name = info.name.substr( 0, info.name.size()-3 ) ; 
+
                 return true;
     }
-  
 
     bool TarFile::index(std::streamoff offset) const {
             posix_header header;
