@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-03-28 - Roel Aaij
+ - Added Hlt1ElectronLines.py which contains prototype version for a 
+   SingleElectronNoIP line.
+
 ! 2011-03-24 - Jibo He
  - Hlt1ProtonLines.py
    Unused variables in slot removed 
