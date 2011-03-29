@@ -112,10 +112,10 @@ def groupFromDBase( db, keytype ):
     return lines
             
         
-def printLinesByWG( stripping='stripping13' ):
+def printBuildersByWG( stripping='stripping13' ):
     '''
-    Utility function that prints all lines
-    grouped by WG
+    Utility function that prints all line
+    builders grouped by WG
     '''
     db = strippingConfiguration( stripping )
     lines = groupFromDBase( db,'WGs')
@@ -128,10 +128,10 @@ def printLinesByWG( stripping='stripping13' ):
     return
 
 
-def printLinesByStream( stripping ):
+def printBuildersByStream( stripping ):
     '''
-    Utility function that prints all lines
-    grouped by stream
+    Utility function that prints all line
+    builders grouped by stream
     '''
     db = strippingConfiguration( stripping )
     lines = groupFromDBase( db,'STREAMS')
@@ -145,11 +145,11 @@ def printLinesByStream( stripping ):
 
                         
 
-def printLineProperties( stripping, dbkey ):
+def printBuilderProperties( stripping, dbkey ):
     '''
-    Print the line configuration of a stripping line
+    Print the configuration of a stripping line builder
     Usage:
-    >> printLineProperties("stripping13","B2XGamma")
+    >> printBuilderProperties("stripping13","B2XGamma")
     '''
     db = strippingConfiguration( stripping )
 
