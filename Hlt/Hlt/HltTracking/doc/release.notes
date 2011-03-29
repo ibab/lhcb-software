@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-29 - V. Gligorov
+ - Add SemilepD02HMuNu lines to Hlt2Tracking.py
+
 ! 2011-Mar-29 - Patrick Spradlin
  - Renamed some new Hlt2Charm configurables to conform with a convention.
    Requires Hlt2Lines r121026.
