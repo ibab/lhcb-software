@@ -7,14 +7,14 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-from Hlt2Lines.Hlt2CharmHadD02HHmumuLines   import Hlt2CharmHadD02HHmumuLinesConf
-from Hlt2Lines.Hlt2CharmHadD2HmumuLines   import Hlt2CharmHadD2HmumuLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD2HMuMuLines   import Hlt2CharmSemilepD2HMuMuLinesConf
 
 
 ## Must inherit from HltLinesConfigurableUser for slots to be updated by
 ## HltSettings, even though this configurable does not directly define a
 ## line.
-class Hlt2CharmHadTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
+class Hlt2CharmSemilepTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
     """
     Defines a configurable to create a 2-muon reconstruction that is used
     as a first stage for the D -> Hmumu and D -> HHmumu lines prior to the SecondLoop
@@ -25,7 +25,7 @@ class Hlt2CharmHadTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
     """
 
     ## Must be configured before every configurable that uses it.
-    __used_configurables__ = [ Hlt2CharmHadD02HHmumuLinesConf, Hlt2CharmHadD2HmumuLinesConf]
+    __used_configurables__ = [ Hlt2CharmSemilepD02HHMuMuLinesConf, Hlt2CharmSemilepD2HMuMuLinesConf]
 
     __slots__ = {
                   ## 2-body Input for 3Body
@@ -80,7 +80,7 @@ class Hlt2CharmHadTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoMuonMotherCut
                           , Inputs = [ BiKalmanFittedMuons ])
 
-        twoMuonSeq = bindMembers('CharmHadTwoMuonForMuMuHad', [ BiKalmanFittedMuons, PV3D(), Charm2MuonCombine ])
+        twoMuonSeq = bindMembers('CharmSemilepTwoMuonForMuMuHad', [ BiKalmanFittedMuons, PV3D(), Charm2MuonCombine ])
  
         self.setProp('__hlt2TwoMuonSeq__', twoMuonSeq)
     # }

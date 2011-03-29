@@ -8,11 +8,18 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-29 - Patrick Spradlin
+ - Renamed the following Hlt2Charm configurables to conform to a naming
+   convention:
+        Hlt2CharmHadD2HmumuLines.py   -> Hlt2CharmSemilepD2HMuMuLines.py
+        Hlt2CharmHadD02HHmumuLines.py -> Hlt2CharmSemilepD02HHMuMuLines.py
+        Hlt2CharmHadTwoMuonForMuMuHad.py -> Hlt2CharmSemilepTwoMuonForMuMuHad.py
+        Hlt2D2KS0HLines.py -> Hlt2CharmHadD2KS0HLines.py
+
 ! 2011-Mar-29 - Benoit VIAUD
  - Tighter cuts in the Hlt2CharmHadTwoMuonForMuMuHad, Hlt2CharmHadD2HmumuLines 
    and Hlt2CharmHadD02HHmumuLines lines, plus redefinition of the decay modes
    to include.
-   
 
 ! 2011-Mar-29 - Patrick Spradlin
  - Changed TisTosParticleTagger instances to Hlt2Members in the following:

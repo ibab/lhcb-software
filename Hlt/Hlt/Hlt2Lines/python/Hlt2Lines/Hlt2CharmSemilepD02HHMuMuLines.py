@@ -1,46 +1,46 @@
 __author__  = [ 'Benoit F. Viaud' ]
-__date__    = '$Date: 27/03/2011$'
-__version__ = '$Revision: 0.$'
+__date__    = '$Date: 27-03-2011$'
+__version__ = '$Revision: 0$'
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
+class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
-                 ## Hmumu
-                    'TrkPt_Hmumu'                 : 350.0 * MeV
-                    , 'TrkP_Hmumu'                  : 2500.0 * MeV
-                    , 'TrkPVIPChi2_Hmumu'           : 0.0      # unitless
-                    , 'TrkPVIPChi2MAX_Hmumu'           : 9.0      # unitless
-                    ,  'TrkPtMAX_Hmumu'                 : 1000.0 * MeV
-                    , 'TrkChi2_Hmumu'               : 5.0      # unitless
-                    , 'PairMinDoca_Hmumu'           : 0.10 * mm
-                    , 'PairMaxDoca_Hmumu'           : 0.2 * mm
-                    , 'VtxPVDispChi2_Hmumu'         : 4.0    # unitless
-                    , 'VtxChi2_Hmumu'               : 15.0     # unitless
-                    , 'DIPChi2_Hmumu'               : 36.0     # unitless
-                    , 'DSumPt_Hmumu'                : 2000.0 * MeV
-                    ,'DDira'              : 0.9996     # adimensional
-                    , 'MCOR_MAX_Hmumu'              : 3500.0 * MeV
-                    , 'Sig_M_MIN'                   : 1800.0 * MeV
-                    , 'Sig_M_MAX'                   : 2000.0 * MeV
-                    , 'WideMass_M_MIN'              : 1700.0 * MeV
-                    , 'WideMass_M_MAX'              : 2100.0 * MeV
-                    ## 2-muonInput for Hmumu
-                    , 'TrkChi2_2MuonForHmumu'       : 5.0      # unitless
-                    ## GEC
-                    , 'GEC_Filter_NTRACK'        : False       # do or do not
-                    , 'GEC_NTRACK_MAX'           : 120000        # max number of tracks
-                    # prescales
+                 ## HHmumu
+                    'TrkPt_HHmumu'                 : 350.0 * MeV
+                  , 'TrkP_HHmumu'                  : 2500.0 * MeV
+                  , 'TrkPVIPChi2_HHmumu'           : 0.0      # unitless
+                  , 'TrkPVIPChi2MAX_HHmumu'           : 9.0      # unitless
+                  ,  'TrkPtMAX_HHmumu'                 : 1400.0 * MeV
+                  , 'TrkChi2_HHmumu'               : 5.0      # unitless
+                  , 'PairMinDoca_HHmumu'           : 0.10 * mm
+                  , 'PairMaxDoca_HHmumu'           : 0.2 * mm
+                  , 'VtxPVDispChi2_HHmumu'         : 25.0    # unitless
+                  , 'VtxChi2_HHmumu'               : 15.0     # unitless
+                  , 'DIPChi2_HHmumu'               : 36.0     # unitless
+                  , 'DSumPt_HHmumu'                : 2500.0 * MeV
+                  , 'DDira'              : 0.9996     # adimensional                    
+                  , 'MCOR_MAX_HHmumu'              : 3500.0 * MeV
+                  , 'Sig_M_MIN'                   : 1800.0 * MeV
+                  , 'Sig_M_MAX'                   : 2000.0 * MeV
+                  , 'WideMass_M_MIN'              : 1700.0 * MeV
+                  , 'WideMass_M_MAX'              : 2100.0 * MeV
+                  ## 2-muonInput for HHmumu
+                  , 'TrkChi2_2MuonForHHmumu'       : 5.0      # unitless
+                  ## GEC
+                  , 'GEC_Filter_NTRACK'        : False       # do or do not
+                  , 'GEC_NTRACK_MAX'           : 120000        # max number of tracks
+                  # prescales
                   , 'Prescale'                  : {
-                         'Hlt2CharmHadD2HmumuWideMass'    : 0.1
+                        'Hlt2CharmSemilepD02HHMuMuWideMass'    : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmHad2MuonForD2HmumuDecision' : 60003
-                        , 'Hlt2CharmHadD2HmumuDecision'         : 60004
-                        , 'Hlt2CharmHadD2HmumuWideMassDecision' : 60005
+                          'Hlt2CharmSemilep2MuonForD02HHMuMuDecision' : 60000
+                        , 'Hlt2CharmSemilepD02HHMuMuDecision'         : 60001
+                        , 'Hlt2CharmSemilepD02HHMuMuWideMassDecision' : 60002
                         }
                 }
 
@@ -69,7 +69,7 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
         # }
 
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmHadD2HmumuKillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmSemilepD02HHMuMuKillTooManyInTrkAlg'
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -83,8 +83,8 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
-        incuts = "(TRCHI2DOF< %(TrkChi2_2MuonForHmumu)s )" \
-                 "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_Hmumu)s )" % self.getProps()
+        incuts = "(TRCHI2DOF< %(TrkChi2_2MuonForHHmumu)s )" \
+                 "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_HHmumu)s )" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -97,15 +97,15 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
 
         return filterSeq
 
-    def __InPartFilterHmumu(self, name, inputContainers) :  
+    def __InPartFilterHHmumu(self, name, inputContainers) :  
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
 
-        incuts = "(TRCHI2DOF< %(TrkChi2_Hmumu)s)" \
-                 "& (PT> %(TrkPt_Hmumu)s)" \
-                 "& (P> %(TrkP_Hmumu)s)" \
-                 "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_Hmumu)s)" % self.getProps()
+        incuts = "(TRCHI2DOF< %(TrkChi2_HHmumu)s)" \
+                 "& (PT> %(TrkPt_HHmumu)s)" \
+                 "& (P> %(TrkP_HHmumu)s)" \
+                 "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_HHmumu)s)" % self.getProps()
 
 
         filter = Hlt2Member( FilterDesktop
@@ -119,7 +119,7 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
 
         return filterSeq
 
-    def __HmumuCombine(self, name, inputSeq, decayDesc) :
+    def __HHmumuCombine(self, name, inputSeq, decayDesc) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
@@ -131,28 +131,28 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
 
 
         combcuts = "(AM<2100*MeV)" \
-                   "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s      * MeV) "  \
-                   "& ((APT1+APT2+APT3) > %(DSumPt_Hmumu)s)" \
-                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_Hmumu)s)" \
-                   "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_Hmumu)s)" \
+                   "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s      * MeV) "  \
+                   "& ((APT1+APT2+APT3+APT4) > %(DSumPt_HHmumu)s)" \
+                   "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(PairMinDoca_HHmumu)s)" \
+                   "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(PairMaxDoca_HHmumu)s)" \
                    "& (AALLSAMEBPV)" % self.getProps()
         mothercuts = masscut + \
-                     "& INGENERATION(BPVIPCHI2() > %(TrkPVIPChi2MAX_Hmumu)s, 1 ) "\
-                     "& (VFASPF(VCHI2PDOF) < %(VtxChi2_Hmumu)s) " \
-                     "& (BPVCORRM < %(MCOR_MAX_Hmumu)s)" \
+                     "& INGENERATION(BPVIPCHI2() > %(TrkPVIPChi2MAX_HHmumu)s, 1 ) " \
+                     "& (VFASPF(VCHI2PDOF) < %(VtxChi2_HHmumu)s) " \
+                     "& (BPVCORRM < %(MCOR_MAX_HHmumu)s)" \
                      "& (BPVDIRA                 > %(DDira)s         ) " \
-                     "& (BPVVDCHI2> %(VtxPVDispChi2_Hmumu)s )" \
-                     "& (BPVIPCHI2() < %(DIPChi2_Hmumu)s )" % self.getProps()
-        combineCharmHmumu = Hlt2Member( CombineParticles
+                     "& (BPVVDCHI2> %(VtxPVDispChi2_HHmumu)s )" \
+                     "& (BPVIPCHI2() < %(DIPChi2_HHmumu)s )" % self.getProps()
+        combineCharmHHmumu = Hlt2Member( CombineParticles
                           , "Combine_Stage2"
                           , DecayDescriptors = decayDesc
                           , Inputs = inputSeq 
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmHmumu])
+        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmHHmumu])
 
-    def __HmumuFilter(self, name, inputSeq, extracode = None) :
+    def __HHmumuFilter(self, name, inputSeq, extracode = None) :
 
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
@@ -182,29 +182,26 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
 
         from HltTracking.HltPVs import PV3D
         
-        # Filter pions and kaons with LowIP Cut  
-        KaonsLowIP = self.__InPartFilterLowIP('CharmHmumuInputKaonsLowIP', [ BiKalmanFittedKaons] )
-        PionsLowIP = self.__InPartFilterLowIP('CharmHmumuInputPionsLowIP', [ BiKalmanFittedPions] )
+        # Filter pions and kaons with LowIP Cut
+        KaonsLowIP = self.__InPartFilterLowIP('CharmHHmumuInputKaonsLowIP', [ BiKalmanFittedKaons] )
+        PionsLowIP = self.__InPartFilterLowIP('CharmHHmumuInputPionsLowIP', [ BiKalmanFittedPions] )
          
-        from   Hlt2CharmHadTwoMuonForMuMuHad import  Hlt2CharmHadTwoMuonForMuMuHadConf
+        from   Hlt2CharmSemilepTwoMuonForMuMuHad import  Hlt2CharmSemilepTwoMuonForMuMuHadConf
 
-        Hlt2Charm2MuonForHmumu =  Hlt2CharmHadTwoMuonForMuMuHadConf().twoMuonSequence()
+        Hlt2Charm2MuonForHHmumu =  Hlt2CharmSemilepTwoMuonForMuMuHadConf().twoMuonSequence()
 
         #Second Stage - picks up two low pt tracks too
 
         # Filter low PT pions and kaons 
 
-        pionsForHmumu = self.__InPartFilterHmumu('CharmInputPionsHmumu', [ BiKalmanFittedSecondLoopPions] )
-        kaonsForHmumu = self.__InPartFilterHmumu('CharmInputKaonsHmumu', [ BiKalmanFittedSecondLoopKaons] )
+        pionsForHHmumu = self.__InPartFilterHHmumu('CharmInputPionsHHmumu', [ BiKalmanFittedSecondLoopPions] )
+        kaonsForHHmumu = self.__InPartFilterHHmumu('CharmInputKaonsHHmumu', [ BiKalmanFittedSecondLoopKaons] )
 
  
-        # Make Hmumu 
-        CharmHmumuCombine = self.__HmumuCombine ( name = 'CharmHadD2Hmumu'
-                                                  , inputSeq = [Hlt2Charm2MuonForHmumu , pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP]
-                                                  , decayDesc = [ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-",
-                                                                  "D+ -> J/psi(1S) K+",  "D- -> J/psi(1S) K-",
-                                                                  "D+ -> phi(1020) pi-", "D- -> rho(770)0 pi+",
-                                                                  "D+ -> phi(1020) K-",  "D- -> rho(770)0 K+"]                                                    
+        # Make HHmumu 
+        CharmHHmumuCombine = self.__HHmumuCombine ( name = 'CharmSemilepD02HHMuMu'
+                                                  , inputSeq = [Hlt2Charm2MuonForHHmumu , pionsForHHmumu, kaonsForHHmumu,KaonsLowIP, PionsLowIP]
+                                                  , decayDesc = [ "D0 -> J/psi(1S) pi+ pi-", "D0 -> J/psi(1S)  K+ K-"]
                                                  )   
 
         sigMassCut  = "in_range(%s, M, %s)" \
@@ -214,10 +211,10 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
                       % (self.getProp('WideMass_M_MIN'), \
                          self.getProp('WideMass_M_MAX'))
 
-        # Hmumu line
-        Hlt2CharmHmumu = self.__HmumuFilter ( name = 'CharmHadD2Hmumu', inputSeq = [CharmHmumuCombine], extracode = sigMassCut )
-        # Hmumu WideMass line - with prescale
-        Hlt2CharmHmumuWideMass = self.__HmumuFilter (name = 'CharmHadD2HmumuWideMass', inputSeq = [CharmHmumuCombine], extracode = wideMassCut )
+        # HHmumu line
+        Hlt2CharmHHmumu = self.__HHmumuFilter ( name = 'CharmSemilepD02HHMuMu', inputSeq = [CharmHHmumuCombine], extracode = sigMassCut )
+        # HHmumu WideMass line - with prescale
+        Hlt2CharmHHmumuWideMass = self.__HHmumuFilter (name = 'CharmSemilepD02HHMuMuWideMass', inputSeq = [CharmHHmumuCombine], extracode = wideMassCut )
 
         ###########################################################################
         # Define the Hlt2 Lines
@@ -226,27 +223,27 @@ class Hlt2CharmHadD2HmumuLinesConf(HltLinesConfigurableUser) :
         ##########################################################################
         Hlt2CharmKillTooManyInTrk = self.__seqGEC()
 
-        line = Hlt2Line('CharmHad2MuonForD2Hmumu', prescale = self.prescale
-                        , algos = [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHmumu]
+        line = Hlt2Line('CharmSemilep2MuonForD02HHMuMu', prescale = self.prescale
+                        , algos = [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHHmumu]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHad2MuonForD2HmumuDecision"
+        decName = "Hlt2CharmSemilep2MuonForD02HHMuMuDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
  
-        line = Hlt2Line('CharmHadD2Hmumu', prescale = self.prescale
-                        , algos = [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHmumu, pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHmumu]
+        line = Hlt2Line('CharmSemilepD02HHMuMu', prescale = self.prescale
+                        , algos = [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHHmumu, pionsForHHmumu, kaonsForHHmumu,KaonsLowIP, PionsLowIP, Hlt2CharmHHmumu]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHadD2HmumuDecision"
+        decName = "Hlt2CharmSemilepD02HHMuMuDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
-        line = Hlt2Line('CharmHadD2HmumuWideMass', prescale = self.prescale
-                        , algos =  [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHmumu, pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHmumuWideMass]
+        line = Hlt2Line('CharmSemilepD02HHMuMuWideMass', prescale = self.prescale
+                        , algos =  [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHHmumu, pionsForHHmumu, kaonsForHHmumu,KaonsLowIP, PionsLowIP, Hlt2CharmHHmumuWideMass]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmHadD2HmumuWideMassDecision"
+        decName = "Hlt2CharmSemilepD02HHMuMuWideMassDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
