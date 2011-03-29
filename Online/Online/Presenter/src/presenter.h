@@ -231,7 +231,7 @@ namespace pres
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;
   static const int s_estimatedHistosOnPage = 200;
-  static const int s_pageRefreshRate = 5000;  // 5 seconds...
+  static const int s_pageRefreshRate = 10000;  // 10 seconds...
   static const int s_maxWindowWidth = 32767;
   static const int s_maxWindowHeight = 32767;
   static const int s_maxPageNameLength = 1024;

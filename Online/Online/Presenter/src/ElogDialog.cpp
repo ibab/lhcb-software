@@ -114,19 +114,21 @@ void ElogDialog::build() {
   // List box of all meaningful logbook names.
   m_logbookListBox = new TGComboBox( elogFrame ) ;
 
-  m_logbookListBox -> AddEntry( "Shift"        , 1 ) ;
-  m_logbookListBox -> AddEntry( "VELO"         , 2 ) ;
-  m_logbookListBox -> AddEntry( "ST"           , 3 ) ;
-  m_logbookListBox -> AddEntry( "OT"           , 4 ) ;
-  m_logbookListBox -> AddEntry( "RICH"         , 5 ) ;
-  m_logbookListBox -> AddEntry( "CALO"         , 6 ) ;
-  m_logbookListBox -> AddEntry( "MUON"         , 7 ) ;
-  m_logbookListBox -> AddEntry( "L0 Trigger"   , 8 ) ;
-  m_logbookListBox -> AddEntry( "PileUp"       , 9 ) ;
-  m_logbookListBox -> AddEntry( "HLT Trigger"  , 10 ) ;
-  m_logbookListBox -> AddEntry( "Online"       , 11 ) ;
+  m_logbookListBox -> AddEntry( m_logbook->c_str(), 1 ) ;
+  m_logbookListBox -> AddEntry( "Shift"           , 2 ) ;
+  m_logbookListBox -> AddEntry( "VELO"            , 3 ) ;
+  m_logbookListBox -> AddEntry( "ST"              , 4 ) ;
+  m_logbookListBox -> AddEntry( "OT"              , 5 ) ;
+  m_logbookListBox -> AddEntry( "RICH"            , 6 ) ;
+  m_logbookListBox -> AddEntry( "CALO"            , 7 ) ;
+  m_logbookListBox -> AddEntry( "MUON"            , 8 ) ;
+  m_logbookListBox -> AddEntry( "L0 Trigger"      , 9 ) ;
+  m_logbookListBox -> AddEntry( "PileUp"          , 10 ) ;
+  m_logbookListBox -> AddEntry( "HLT Trigger"     , 11 ) ;
+  m_logbookListBox -> AddEntry( "Online"          , 12 ) ;
+  m_logbookListBox -> AddEntry( "Data Quality"    , 13 ) ;
 
-  m_logbookListBox -> Select( 1 , kFALSE ) ;
+  m_logbookListBox -> Select( 1  , kFALSE ) ;
 
   elogFrame -> AddFrame( m_logbookListBox , layout ) ;
   m_logbookListBox -> MoveResize( xBeg + xSize, yBeg, xInputSize, 22); 

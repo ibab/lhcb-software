@@ -1918,7 +1918,7 @@ void PresenterMainFrame::reportToLog() {
     ElogDialog* elogDialog = new ElogDialog(this, 646, 435 );
     // Default values.
     std::string logbook  = "Shift";
-    std::string username = "Data Manager";
+    std::string username = "?";
     std::string system   = currentPartition() ;
     std::string subject  = "";
     std::string message  = "See attached plot.";
@@ -1948,6 +1948,7 @@ void PresenterMainFrame::reportToLog() {
         username =  shiftdb.getDQPiquet().c_str();
         system   = m_currentPageName.substr( 20 );
         system   = system.substr( 0, system.find( ':' ));
+        logbook  = "Data Quality";
       }
 
       subject = "-none-";

@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-29 - Olivier Callot
+ - Fix the ELog report for offline data quality
+
 ! 2011-03-28 - Olivier Callot
  - Introduce legend for superimposed 1D histo and trend plots.
 
