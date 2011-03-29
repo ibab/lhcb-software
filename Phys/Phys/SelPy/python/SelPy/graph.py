@@ -3,7 +3,8 @@
 
 __all__ = ('graphEdges',
            'GraphEdges',
-           'selectionDot')
+           'dot',
+           'view')
 
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
@@ -27,9 +28,22 @@ class GraphEdges(object) :
 
 graphEdges = GraphEdges()
 
-def selectionDot(selection) :
+def dot(selection) :
     """
     Return a pydot.Dot object made from the edges of selection's graph.
     """
     return pydot.graph_from_edges(graphEdges(selection))
 
+def view(selection) :
+    """
+    View the graph for a Selection type object.
+    Example:
+    sel = Selection ( ... )
+    view(sel)
+    """
+    import os
+    dt = dot(selection)
+    if (dt.write('tmp.jpg', format='jpeg')) :
+        os.system( 'display tmp.jpg &')
+    else :
+        print 'Error producing graph for', selection.name()

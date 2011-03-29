@@ -4,7 +4,14 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
-!======================== SelPy v4r2 2011-03-28 ==============================
+!======================== SelPy v4r2 2011-03-29 ==============================
+
+! 2011-03-29 - Juan Palacios
+ - Add SelPy.graph.view method to view a jpeg of a selection graph.
+   Example:
+
+    sel = Selection ( ... )
+    view(sel)
 
 ! 2011-03-28 - Juan Palacios
  - Add module SelPy.graph
