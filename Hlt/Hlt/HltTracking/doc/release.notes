@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-29 - Patrick Spradlin
+ - Renamed some new Hlt2Charm configurables to conform with a convention.
+   Requires Hlt2Lines r121026.
+
 ! 2011-03-29 - Roel Aaij
  - Add streamer configuration for MatchVeloElectron and remove obsolete
    options for configuration of match tools from Hlt1TrackMatchConf.py
