@@ -1,6 +1,6 @@
 __author__  = 'Grant McGregor'
 __date__    = '$Date: 2011-03-15 13:53:00 $'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -34,8 +34,8 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 ## GEC
                 , 'GEC_Filter_NTRACK'        : False       # do or do not, there is no try...
                 , 'GEC_NTRACK_MAX'           : 350        # max number of tracks
-                , 'TisTosParticleTaggerSpecs': { "Hlt1TrackAllL0Decision%TOS":0,
-                                                 "Hlt1TrackMuonDecision%TOS":0 }	
+                , 'TisTosParticleTaggerSpecs': { "Hlt1TrackAllL0Decision%TOS":1,
+                                                 "Hlt1TrackMuonDecision%TOS":1 }	
 		, 'L0FILTER'                 : "Muon,Hadron"
                 , 'name_prefix'              : 'CharmSemilepD02HMuNu'
                 , 'Prescale'         : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'     : 1.0
