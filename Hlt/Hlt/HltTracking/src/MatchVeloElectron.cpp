@@ -160,8 +160,8 @@ StatusCode Hlt::MatchVeloElectron::match
 ( const LHCb::Track&    track, 
   const Hlt::Candidate& candidate,
   LHCb::Track&          matched, 
-  double&               quality,
-  double&               quality2  ) const 
+  double&            /* quality  */,
+  double&            /* quality2 */  ) const 
 {
    // ==========================================================================
    // get L0Calo from Hlt-candidate 
@@ -218,10 +218,12 @@ StatusCode Hlt::MatchVeloElectron::match
          }
       } // end if chi2 < matchChi2
    } // end loop for -1 and +1 charge
-   quality = matchChi2; //setting the output variables
-   quality2 = 0.;
-   matched.copy( track );
-   return StatusCode::SUCCESS;
+   if ( matchChi2 < m_maxChi2 ) {
+      matched.copy( track );
+      return StatusCode::SUCCESS;
+   } else {
+      return StatusCode::FAILURE;
+   }
 }
 // ============================================================================
 /*  match a track with candidate ("filter-mode")
@@ -234,7 +236,7 @@ StatusCode Hlt::MatchVeloElectron::match
 bool Hlt::MatchVeloElectron::match 
 ( const LHCb::Track*    track       , 
   const Hlt::Candidate* candidate   ,
-  const double          quality     , 
+  const double       /* quality  */ , 
   const double       /* quality2 */ ) const 
 {
    // 
@@ -255,17 +257,12 @@ bool Hlt::MatchVeloElectron::match
    if ( 0 == l0 ) 
    { 
       Error ("HltCandidate is NOT L0Calo!").ignore() ;
-      return false ;                                                   // RETURN 
+      return false ;                                                  // RETURN 
    }
    LHCb::Track matched_track;
    // if everything is fine, do the matching
-   double match_quality = 0., match_quality2 = 0.;
-   StatusCode sc = match( *track, *candidate, matched_track, match_quality, match_quality2 );
-   if ( !sc.isSuccess() ) {
-      Error ( "Attempt to match failed." ).ignore() ;
-      return false ;                                                   // RETURN 
-   }
-   return match_quality < quality;
+   double q1 = 0., q2 = 0.;
+   return match( *track, *candidate, matched_track, q1, q2 );
 }
 // ============================================================================
 //                                                the factory for instantiation 

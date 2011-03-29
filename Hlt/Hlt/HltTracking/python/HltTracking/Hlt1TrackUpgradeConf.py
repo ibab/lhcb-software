@@ -68,7 +68,7 @@ def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
 ## Symbols for streamer users
 # =============================================================================
 def to_name( conf ):
-    return conf.trTool().split( ':' )[ 0 ].split( '/' )[ -1 ]
+    return conf.trTool().split( '/' )[ -1 ].split( '::' )[ -1 ].split( ':' )[ 0 ]
 
 # Match Velo to L0 Muons
 from Configurables import ( GaudiSequencer,

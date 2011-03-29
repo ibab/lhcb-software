@@ -143,11 +143,7 @@ _trUpgrader[ 'IsMuon' ] = IsMuon
 #      const LHCb::Track::Types trType   ,   //                     Track type
 #      const bool               moveIDs  ,   //                 transfer IDs ? 
 #      const bool               moveAncs ,   //           transfer ancestors ? 
-#      const bool               moveInfo ,   //          transfer Extra Info ? 
-#      const std::string&       quality  ,   //               matching quality 
-#      const std::string&       quality2 ,   //              matching quality2 
-#      const double             maxQCut  = 1.e6 ,  // max matching quality cut 
-#      const double             maxQ2Cut = 1.e6 ) ;//max matching quality2 cut  
+#      const bool               moveInfo )   //          transfer Extra Info ? 
 # =============================================================================
 #                                                      ##           "Old name"
 # =============================================================================
@@ -158,30 +154,23 @@ _trUpgrader[ 'IsMuon' ] = IsMuon
 #    LHCb.Track.Long                ,                   ##          "TrackType"
 #    True                           ,                   ##        "TransferIDs"
 #    True                           ,                   ##  "TransferAncestors"
-#    True                           ,                   ##       "TransferInfo"
-#    "chi2_PatMatch"                ,                   ##            "Quality"
-#    ""                             )                   ##           "Quality2"
+#    True                           )                   ##       "TransferInfo"
 # =============================================================================
 VeloL0Muon = LoKi.Hlt1.MatchConf   (
-    "PatMatchL0MuonTool"           ,                   ##               "Tool"
-    "Hlt1/Track/VeloL0Muon"        ,                   ##          "TESOutput"
-    LHCb.Track.Long                ,                   ##          "TrackType"
-    True                           ,                   ##        "TransferIDs"
-    True                           ,                   ##  "TransferAncestors"
-    True                           ,                   ##       "TransferInfo"
-    "chi2_PatMatchL0Muon"          ,                   ##            "Quality"
-    ""                             )                   ##           "Quality2"
+    "PatMatchL0MuonTool"           ,                    ##               "Tool"
+    "Hlt1/Track/VeloL0Muon"        ,                    ##          "TESOutput"
+    LHCb.Track.Long                ,                    ##          "TrackType"
+    True                           ,                    ##        "TransferIDs"
+    True                           ,                    ##  "TransferAncestors"
+    True                           )                    ##       "TransferInfo"
 # =============================================================================
-VeloElectron = LoKi.Hlt1.MatchConf   (
-    "MatchVeloElectron"            ,                   ##               "Tool"
-    "Hlt1/Track/VeloElectron"      ,                   ##          "TESOutput"
-    LHCb.Track.Velo                ,                   ##          "TrackType"
-    False                          ,                   ##        "TransferIDs"
-    False                          ,                   ##  "TransferAncestors"
-    False                          ,                   ##       "TransferInfo"
-    "chi2_VeloElectron"            ,                   ##            "Quality"
-    ""                             ,                   ##           "Quality2"
-    50                             )                   ##        "Quality Cut"
+VeloElectron = LoKi.Hlt1.MatchConf (
+    "Hlt::MatchVeloElectron/VeloElectron",              ##               "Tool"
+    "Hlt1/Track/VeloElectron"      ,                    ##          "TESOutput"
+    LHCb.Track.Velo                ,                    ##          "TrackType"
+    False                          ,                    ##        "TransferIDs"
+    False                          ,                    ##  "TransferAncestors"
+    False                          )                    ##       "TransferInfo"
 # =============================================================================
 
 # =============================================================================
