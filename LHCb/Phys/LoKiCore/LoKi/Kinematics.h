@@ -25,8 +25,16 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
@@ -34,9 +42,6 @@ namespace LoKi
   // ===========================================================================
   /** @namespace LoKi::Kinematics 
    *  collection of few trivial functions for kinematical evaluations
-   *
-   *  @todo uncomment the implementation of 
-   *  "transversity angle" and "forward-backward angle"
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-17
@@ -363,7 +368,7 @@ namespace LoKi
     // ========================================================================
     /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
-     *  the flight direction of the daughter neson, "D",
+     *  the flight direction of the daughter meson, "D",
      *  in the rest frame of "Q" (the parent of "D"), 
      *  with respect to "Q"'s flight direction in "P"'s
      *  (the parent of "Q") rest frame
@@ -399,7 +404,7 @@ namespace LoKi
     // ========================================================================
     /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
-     *  the flight direction of the daughter neson, "D",
+     *  the flight direction of the daughter meson, "D",
      *  in the rest frame of "Q" (the parent of "D"), 
      *  with respect to "Q"'s flight direction in "P"'s
      *  (the parent of "Q") rest frame
@@ -434,7 +439,7 @@ namespace LoKi
     // ========================================================================
     /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
-     *  the flight direction of the daughter neson, "D",
+     *  the flight direction of the daughter meson, "D",
      *  in the rest frame of "M" (the parent of "D"), 
      *  with respect to the boost direction from 
      *  "M"'s rest frame 
@@ -461,7 +466,7 @@ namespace LoKi
     // ========================================================================
     /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
-     *  the flight direction of the daughter neson, "D",
+     *  the flight direction of the daughter meson, "D",
      *  in the rest frame of "M" (the parent of "D"), 
      *  with respect to the boost direction from 
      *  "M"'s rest frame 
@@ -485,7 +490,7 @@ namespace LoKi
     // ========================================================================
     /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
-     *  the flight direction of the daughter neson, "D",
+     *  the flight direction of the daughter meson, "D",
      *  in the rest frame of "M" (the parent of "D"), 
      *  with respect to the boost direction from 
      *  "M"'s rest frame 
@@ -502,53 +507,6 @@ namespace LoKi
     double decayAngle_
     ( const LoKi::LorentzVector& D , 
       const LoKi::LorentzVector& M ) ;
-    // ========================================================================
-    //     /** This routine evaluates the cosine of "transversity angle", 
-    //      *  useful e.g. to disantangle the different partial waves in 
-    //      *  0 -> 1 + 1 decay (e.g. Bs -> J/psi Phi) 
-    //      *  
-    //      *  The code is kindly provided by Gerhard Raven 
-    //      * 
-    //      *  @param l1 4-vector of the first  particle, e.g. mu+
-    //      *  @param l2 4-vector of the second particle, e.g. mu- 
-    //      *  @param p1 4-vector of the third  particle, e.g. K+
-    //      *  @param p2 4-vector of the fourth particle, e.g. K- 
-    //      *  @return the cosine of transversity angle 
-    //      * 
-    //      *  @see LoKi::LorentzVector.h
-    //      *
-    //      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-    //      *  @date 2004-12-03
-    //      */ 
-    //     double transversityAngle 
-    //     ( const LoKi::LorentzVector& l1 , 
-    //       const LoKi::LorentzVector& l2 , 
-    //       const LoKi::LorentzVector& p1 , 
-    //       const LoKi::LorentzVector& p2 ) ;
-    
-    //     /** This routine evaluated the angle theta_FB
-    //      *  used e.g. for evaluation of forward-backward 
-    //      *  asymmetry for decay B -> K* mu+ mu- 
-    //      *  The angle calculated is that 
-    //      *  between between the mu+ and K^*0 momenta 
-    //      *  in the di-muon rest frame
-    //      *  
-    //      *  The code is kindly provided by Helder Lopes 
-    //      *
-    //      *  @param  K  4-momenutm of   "K*"
-    //      *  @param  l1 4-momentum of the first  lepton
-    //      *  @param  l2 4-momentum of the second lepton
-    //      *  @return the cosine of theta_FB 
-    //      * 
-    //      *  @see LoKi::LorentzVector
-    //      *
-    //      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-    //      *  @date 2004-12-03
-    //      */
-    //     double forwardBackwardAngle
-    //     ( const LoKi::LorentzVector& K  , 
-    //       const LoKi::LorentzVector& l1 , 
-    //       const LoKi::LorentzVector& l2 ) ;
     // ========================================================================
     /** simple function which evaluates the magnitude of 3-momentum 
      *  of particle "v" in the rest system of particle "M" 
@@ -870,7 +828,7 @@ namespace LoKi
      *  e.g. for decay  
      *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
      *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
-     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \f$
      * 
      *  The evaluation is performed using the explicit Lorentz-invariant 
      *  expression:
@@ -908,7 +866,7 @@ namespace LoKi
      *  \f$ \cos \phi_{\mathrm{tr}}\f$, e.g. for decay  
      *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
      *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
-     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \f$
      *    
      *  The evaluation is performed using the explicit Lorentz-invariant 
      *  expression as angle between the ``in-plane'' vector \f$q\f$, and 
@@ -939,7 +897,7 @@ namespace LoKi
      *  e.g. for decay  
      *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
      *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
-     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \f$
      *    
      *  The evaluation is performed using the explicit Lorentz-invariant 
      *  expression:
@@ -984,7 +942,7 @@ namespace LoKi
      *  e.g. for decay  
      *  \f$ \mathrm{B}^0_{\mathrm{s}} \to 
      *       \left( \mathrm{J}/\psi \to \mu^+ \mu^-               \right)
-     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \$
+     *       \left( \phi            \to \mathrm{K}^+ \mathrm{K}^- \right) \f$
      *    
      *  The evaluation is performed using the explicit Lorentz-invariant 
      *  expression for \f$ \sin \phi_{\mathrm{tr}} \f$ and 

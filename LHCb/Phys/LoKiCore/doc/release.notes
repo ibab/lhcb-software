@@ -18,6 +18,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-29 - Vanya Belyaev
+
+ - Kinematics.h
+
+   fix LaTeX typos in doxygen comments 
+
 ! 2011-03-28 - Vanya Belyaev
 
  - add "fetch" decorator 

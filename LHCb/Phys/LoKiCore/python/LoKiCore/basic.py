@@ -22,7 +22,7 @@
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
-#  $Revision: 53337 $
+#  $Revision$
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
