@@ -107,7 +107,7 @@ StatusCode HltVertexReportsDecoder::execute() {
   const unsigned int *i   = hltvertexReportsRawBank->begin<unsigned int>();
   const unsigned int *end = hltvertexReportsRawBank->end<unsigned int>();
   int nSel = *i++;
-  while ( i <= end ) { // avoid infinite loop with corrupt/incompatible data... (i.e. do NOT use i!=end)
+  while ( i < end ) { // avoid infinite loop with corrupt/incompatible data... (i.e. do NOT use i!=end)
     --nSel;
     unsigned nVert    = ( ( *i ) & 0xFFFFL ); // can we decode the per vertex size here???
     unsigned intSelID = ( *i++ >> 16 );
@@ -157,7 +157,10 @@ StatusCode HltVertexReportsDecoder::execute() {
     }    
   }
   if (nSel!=0) { 
-     error()  << "Unexpected banksize while decoding.... " << endmsg;
+     error()  << "Unexpected banksize while decoding (case 1).... " << endmsg;
+  }
+  if (i!=end) { 
+     error()  << "Unexpected banksize while decoding (case 2).... " << endmsg;
   }
 
   if ( msgLevel(MSG::VERBOSE) ){
