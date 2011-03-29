@@ -12,8 +12,8 @@ use  StandardParticles           v2r0     Phys   # Juan Palacios
 use  StrippingAlgs               v1r6     Phys   # Anton Poluektov
 use  StrippingUtils              v1r4     Phys   # Juan Palacios
 use  StrippingConf               v4r2     Phys   # Anton Poluektov
-use  StrippingSelections         HEAD     Phys   # Anton Poluektov
-use  StrippingSettings           HEAD     Phys   # Anton Poluektov
+use  StrippingSelections         v3r3     Phys   # Anton Poluektov
+use  StrippingSettings           v2r2     Phys   # Anton Poluektov
 use  DisplVertices 		 v7r5	  Phys	 # Neal Gauvin
 use  HighPtJets			 v1r3     Phys   # Marcin Kucharczyk
 use  StrippingNeuroBayes         v1r3     Phys   # Ulrich Kerzel
