@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-29 - Thomas Blake
+ - Updated LineConfigDictionaries_RDWG.py
+
+
 ! 2011-03-29 - Greig Cowan
  - Updated a couple of line configuration dictionaries.
  - Created stripping13 database, removed stripping13.tmp.
