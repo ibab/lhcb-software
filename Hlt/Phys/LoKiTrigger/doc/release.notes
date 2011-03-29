@@ -5,6 +5,14 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-03-29 - Roel Aaij
+ - Add LoKi.Vertices.BeamSpot functor.
+   This functor handles the required Velo resolver condition and exports
+   the derived position of the beamspot x and y coordinates through functions.
+   The BeamSpotRho function now inherits from it.
+ - Whether the Velo is open is now determined from the distance between it's
+   halves and the their average.
+
 ! 2011-03-27 - Vanya Belyaev
 
  - 1. add di-track creator from the stream 

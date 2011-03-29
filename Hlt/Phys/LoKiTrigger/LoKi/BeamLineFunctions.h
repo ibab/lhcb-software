@@ -52,6 +52,68 @@ namespace LoKi
   namespace Vertices 
   {
     // ========================================================================
+    /** @class BeamSpot LoKi/BeamLineFunctions.h
+     *  
+     *  functor to evaluate the radial distance ("rho") with respect to 
+     *
+     *  @see LoKi::Cuts::BEAMSPOT
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @author Victor COCO   Victor.Coco@cern.ch
+     *  @date   2011-03-10
+     */
+    class GAUDI_API BeamSpot
+      : virtual public LoKi::AuxFunBase
+    {
+    public:
+      // ======================================================================
+      /// Constructor from bound
+      BeamSpot( const double bound );
+      /// Copy constructor  
+      BeamSpot ( const BeamSpot& );
+      /// MANDATORY: virtual destructor 
+      virtual ~BeamSpot();
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// update the condition
+      StatusCode     updateCondition ();
+      double         x()      const { return m_beamSpotX;  }
+      double         y()      const { return m_beamSpotY;  }
+      bool           closed() const { return m_veloClosed; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      // resolver bound
+      double resolverBound() const { return m_resolverBound; }
+    private:
+      // ======================================================================
+      /// register condition 
+      StatusCode   registerCondition ();
+      /// unregister condition 
+      StatusCode unregisterCondition ();
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor
+      BeamSpot();
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// resolver bound for closure
+      double m_resolverBound; 
+      /// velo closed condition
+      bool m_veloClosed ;
+      /// beam spot
+      double m_beamSpotX ;   
+      double m_beamSpotY ;   
+      /// condition name 
+      std::string                m_condName ;
+      /// the condition
+      LoKi::Interface<Condition> m_condition ;              // the condition 
+      // ======================================================================
+    };
+    // ========================================================================
+    // ========================================================================
     /** @class BeamSpotRho LoKi/BeamLineFunctions.h
      *  
      *  functor to evaluate the radial distance ("rho") with respect to 
@@ -62,12 +124,13 @@ namespace LoKi
      *  @date   2011-03-10
      */
     class GAUDI_API BeamSpotRho 
-      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
+       : public BeamSpot,
+         public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
     {
     public:
       // ======================================================================
       /// Constructor from condition name 
-      BeamSpotRho ( const double& bound ) ;
+      BeamSpotRho ( const double bound ) ;
       /// Copy constructor  
       BeamSpotRho ( const BeamSpotRho& ) ;
       /// MANDATORY: virtual destructor 
@@ -79,37 +142,10 @@ namespace LoKi
       /// OPTIONAL: nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /// update the condition
-      StatusCode     updateCondition () ;  
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// register condition 
-      StatusCode   registerCondition () ;
-      /// unregister condition 
-      StatusCode unregisterCondition () ;
-      // ======================================================================
     private:
       // ======================================================================
       /// default constructor is disabled 
       BeamSpotRho () ;                       // default constructor is disabled 
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// resolver bound for closure
-      double m_resolverBound; 
-
-      /// beam spot
-      double m_beamSpotX ;   
-      double m_beamSpotY ;   
-      /// velo closed condition
-      bool m_veloClosed ;
-      /// condition name 
-      std::string                m_condName ;
-      /// the condition
-      LoKi::Interface<Condition> m_condition ;              // the condition 
       // ======================================================================
     };
     // ========================================================================
@@ -126,6 +162,14 @@ namespace LoKi
      */ 
     typedef LoKi::Vertices::BeamSpotRho                        VX_BEAMSPOTRHO ;
     // ========================================================================
+    /** @typedef  BEAMSPOT
+     *  helper functor to obtain the beamspot x and y coordinates from the
+     *  Velo resolver.
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch 
+     *  @author Victor COCO   Victor.Coco@cern.ch
+     *  @date 2011-03-11
+     */ 
+    typedef LoKi::Vertices::BeamSpot                                 BEAMSPOT ;
   }
   // ==========================================================================
 } //                                                      end of namespace LoKi 
