@@ -16,7 +16,7 @@ from LHCbKernel.Configuration import *
 from Configurables import OfflineVertexFitter,ProtoParticleMUONFilter, CombineParticles	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from Configurables import ChargedProtoParticleMaker, NoPIDsParticleMaker, DataOnDemandSvc, UnpackTrack, DelegatingTrackSelector, TrackSelector, CombinedParticleMaker, BestPIDParticleMaker
-from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking, DecodeVeloRawBuffer
+from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking
   
 from StrippingConf.StrippingLine import StrippingLine
 from Configurables import TrackStateInitAlg, TrackEventFitter, TrackPrepareVelo,TrackContainerCopy,TrackMatchVeloSeed, Tf__PatVeloSpaceTool, HltMuonRec

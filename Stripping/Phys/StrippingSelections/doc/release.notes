@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v3r3 2011-03-29 ===============
+
 ! 2001-03-29 Greig Cowan 
 - Added test script to count lines and print output locations
 
