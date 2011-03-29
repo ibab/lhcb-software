@@ -121,14 +121,6 @@ namespace LoKi
       bool               moveAncs () const { return m_config.moveAncs () ; }
       /// transfer extra info? 
       bool               moveInfo () const { return m_config.moveInfo () ; }     
-      /// quality 
-      const std::string& quality  () const { return m_config.quality  () ; }
-      /// quality2 
-      const std::string& quality2 () const { return m_config.quality2 () ; }
-      /// max quality  cut 
-      double maxQualityCut  () const { return m_config.maxQualityCut  () ; } 
-      /// max quality2 cut 
-      double maxQuality2Cut () const { return m_config.maxQuality2Cut () ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -145,10 +137,6 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// ID of "quality"
-      int qualityID  () const { return m_qualityID  ; }
-      /// ID of "quality2"
-      int qualityID2 () const { return m_qualityID2 ; }
       /// 'reco-ID'
       int recoID     () const { return m_recoID     ; }
       // ======================================================================
@@ -160,13 +148,6 @@ namespace LoKi
       // ======================================================================
       /// tool configuration 
       LoKi::Hlt1::MatchConf            m_config  ;  //       tool configuration 
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// ID of "quality"
-      mutable int m_qualityID  ;                 //             ID of "quality"
-      /// ID of "quality2"
-      mutable int m_qualityID2 ;                 //            ID of "quality2"
       // ======================================================================
     private:
       // ======================================================================

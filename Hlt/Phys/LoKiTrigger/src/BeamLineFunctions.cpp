@@ -76,7 +76,9 @@ LoKi::Vertices::BeamSpot::BeamSpot
    m_beamSpotY = Y ;
    //
    m_veloClosed = true;
-   if ( xRC > m_resolverBound || xLA > m_resolverBound ) m_veloClosed = false ;
+   if (    std::abs(xRC - m_beamSpotX) > m_resolverBound 
+        || std::abs(xLA - m_beamSpotX) > m_resolverBound )
+      m_veloClosed = false ;
    //
    m_condition = cond;
    //

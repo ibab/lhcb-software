@@ -6,6 +6,16 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-03-29 - Roel Aaij
+ - Align behaviour of MatchTool with the implementations of the interface it
+   uses, PatMatchTool in particular. The behaviour exported by the ITrackMatch
+   is not interpreted very cleanly. Since the return value is used to signal
+   successful matching and cuts are not on the quality arguments but on
+   internal properties, the quality function arguments are effectively obsolete.
+   A change of interface to remove them should be considerd.
+   Because allow the cuts to be stored as propeties in the TCK.   
+ - Update check for being closed also when functor is created.
+
+! 2011-03-29 - Roel Aaij
  - Add LoKi.Vertices.BeamSpot functor.
    This functor handles the required Velo resolver condition and exports
    the derived position of the beamspot x and y coordinates through functions.

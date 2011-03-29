@@ -49,8 +49,6 @@ LoKi::Hlt1::MatchTool::MatchTool
 ( const LoKi::Hlt1::MatchConf&         config  )   //        tool configuration 
   : LoKi::Hlt1::HelperTool ( 1 ) 
   , m_config     ( config  )
-  , m_qualityID  ( 0       ) 
-  , m_qualityID2 ( 0       )
   , m_match      (         )
   , m_match2     (         )
   , m_recoID     ( 0       )
@@ -58,7 +56,7 @@ LoKi::Hlt1::MatchTool::MatchTool
   , m_invert     ( false   )
 {  
   // retrive the tool 
-  IAlgTool* t = alg()->tool<ITrackMatch> ( mTool() ) ;
+  IAlgTool* t = alg()->tool<IAlgTool> ( mTool() ) ;
   //
   Assert ( 0 != t , "Can't aquire the tool!" );
   //
@@ -79,26 +77,6 @@ LoKi::Hlt1::MatchTool::MatchTool
     Assert( info , " request for unknown Info ID : " + mTool() );
     //
     m_recoID = info->second ;
-  }
-  //
-  m_qualityID = 0 ;
-  if ( !quality().empty() ) 
-  {
-    boost::optional<IANNSvc::minor_value_type> info = 
-      ann->value( "InfoID" , quality() );
-    Assert( info , " request for unknown Info ID : " + quality() );
-    //
-    m_qualityID  = info->second ; 
-  }
-  //
-  m_qualityID2 = 0 ;
-  if ( !quality2().empty() ) 
-  {
-    boost::optional<IANNSvc::minor_value_type> info = 
-      ann->value( "InfoID" , quality2() );
-    Assert( info , " request for unknown Info ID : " + quality2() );
-    //
-    m_qualityID2  = info->second ; 
   }
   // 
 }
@@ -124,31 +102,21 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   StatusCode sc = match() -> match ( *tr1 , *tr2 , *track3 , q1 , q2 ) ;
   if ( sc.isFailure() ) { return 0 ; }                               // RETURN
   //
-  // good matching ?
-  if ( q1 < maxQualityCut() && 
-       q2 < maxQuality2Cut() ) 
+  // move info ? 
+  if ( moveInfo () ) 
   {
-    if ( 0 != qualityID  () ) { track3 -> addInfo ( qualityID  () , q1 ) ; }
-    if ( 0 != qualityID2 () ) { track3 -> addInfo ( qualityID2 () , q2 ) ; }
-    //
-    // move info ? 
-    if ( moveInfo () ) 
-    {
-      Hlt::MergeInfo ( *tr1 , *track3 ) ;
-      Hlt::MergeInfo ( *tr2 , *track3 ) ;          
-    }        
-    ///
-    LHCb::Track* track = track3.release() ;
-    if ( 0 == track->parent() ) 
-    { storedTracks ( address() )->insert ( track ); }
-    //
-    // do not put "bad" match into stream 
-    if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
-    //
-    return track ;                                                // RETURN 
-  }
+     Hlt::MergeInfo ( *tr1 , *track3 ) ;
+     Hlt::MergeInfo ( *tr2 , *track3 ) ;          
+  }        
+  ///
+  LHCb::Track* track = track3.release() ;
+  if ( 0 == track->parent() ) 
+  { storedTracks ( address() )->insert ( track ); }
   //
-  return 0 ;
+  // do not put "bad" match into stream 
+  if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
+  //
+  return track ;                                                // RETURN 
 }
 // ============================================================================
 /*  perform the track matching 
@@ -162,48 +130,37 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   const Hlt::Candidate* cand  ) const 
 {
   //
-  if ( 0 == track || 0 == cand ) { return 0 ; }                   // RETURN
+  if ( 0 == track || 0 == cand ) { return 0 ; }                       // RETURN
   //
   // it is track <--> track match! 
   if ( !m_match2 ) 
   {
     const LHCb::Track* track2  = cand->get<LHCb::Track> () ;
-    if ( 0 == track2  ) { return 0 ; }                            // RETURN
-    return match ( track , track2 ) ;                             // RETURN 
+    if ( 0 == track2  ) { return 0 ; }                                // RETURN
+    return match ( track , track2 ) ;                                 // RETURN 
   }
   //
   /// get new track 
-  std::auto_ptr<LHCb::Track> track3 ( new LHCb::Track() ) ;
+  LHCb::Track* track3 = new LHCb::Track();
   // the actual track matching
   double q1 = 0 ;
   double q2 = 0 ;
   StatusCode sc = match2() -> match ( *track , *cand , *track3 , q1 , q2 ) ;
-  if ( sc.isFailure() ) { return 0 ; }                              // RETURN
+  if ( sc.isFailure() ) { return 0 ; }                                // RETURN
   
-  // good matching ?
-  if ( q1 < maxQualityCut() && 
-       q2 < maxQuality2Cut() ) 
+  // move info ? 
+  if ( moveInfo () ) 
   {
-    if ( 0 != qualityID  () ) { track3 -> addInfo ( qualityID  () , q1 ) ; }
-    if ( 0 != qualityID2 () ) { track3 -> addInfo ( qualityID2 () , q2 ) ; }
-    //
-    // move info ? 
-    if ( moveInfo () ) 
-    {
-      Hlt::MergeInfo ( *track , *track3 ) ;
-    }        
-    ///
-    LHCb::Track* track = track3.release() ;
-    if ( 0 == track->parent() ) 
-    { storedTracks ( address() )->insert ( track ); }
-    //
-    // do not put "bad" match into stream 
-    if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
-    //
-    return track ;                                                // RETURN 
-  }
+     Hlt::MergeInfo ( *track , *track3 ) ;
+  }        
+  ///
+  if ( 0 == track3->parent() ) 
+  { storedTracks ( address() )->insert ( track3 ); }
   //
-  return 0 ;
+  // do not put "bad" match into stream 
+  if ( !m_config ( track3 )  ) { return 0 ; }                         // RETURN
+  //
+  return track3;                                                      // RETURN
   //
 }
 // ============================================================================
@@ -223,10 +180,9 @@ bool LoKi::Hlt1::MatchTool::matched
   Assert ( !(!match2()) , "Invalid setup!" ) ;
   //
   // it is track <--> track match! 
-  return match2() -> match ( track             ,
-                             cand              , 
-                             maxQualityCut  () , 
-                             maxQuality2Cut () ) ;
+  double q1 = 0;
+  double q2 = 0;
+  return match2() -> match ( track, cand, q1, q2 );
   //
 }
 
