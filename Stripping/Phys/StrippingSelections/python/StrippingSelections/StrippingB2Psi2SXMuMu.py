@@ -36,7 +36,7 @@ config_params = {'muPID':0.,
                  'Psi2SADOCACHI2CUT':30.,
                  'Psi2SVFASPF':16,
                  'ChKTRCHI2DOF':5,
-                 'ChKPID':-2,   
+                 'ChKPID':0, #before -2
                  'PhiWin':20,
                  'PhiPT':500,
                  'PhiVFASPF':16,
@@ -47,29 +47,31 @@ config_params = {'muPID':0.,
                  'KstAPT':500,
                  'KstVFASPF':16,
                  'KstTRCHI2DOF':4,
-                 'KstPIDK': -2,
+                 'KstPIDK': 0, # before -2
+                 'KstPIDpi': 10, #new
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.5,
+                 'incl_LinePrescale':0.1,
                  'incl_LinePostscale':1,
                  'BPVLTIME_detatched':0.15,
-                 'incl_DetatchedLinePrescale':1,
+                 'incl_DetatchedLinePrescale':0.5,
                  'incl_DetatchedLinePostscale':1,
-                 'BsMassCutDownPre':5000,
-                 'BsMassCutUpPre':5650,
-                 'BsMassCutDownPost':5100,
-                 'BsMassCutUpPost':5550,
+                 'BsMassCutDownPre':5050, #before 5000
+                 'BsMassCutUpPre':5600,  #before 5650
+                 'BsMassCutDownPost':5150, #before 5100
+                 'BsMassCutUpPost':5500,  #before 5550
                  'BsVCHI2PDOF':10,
                  'sig_PrescaledLinePrescale':1,
                  'sig_PrescaledLinePostscale':1,
                  'sig_DetatchedLinePrescale':1,
                  'sig_DetatchedLinePostscale':1,
                  'BPVLTIME_unbiased': None,
-                 'MINTREEPT':1000,
+                 'MINTREEPT':1000, #before 1000
+                 'MINTREEPT2':1500, #before 1000
                  'sig_UnbiasedLinePrescale':1,
                  'sig_UnbiasedLinePostscale':1,
                  'ChKPT':500,
-                 'K_PrescaledLinePrescale':0.5,
+                 'K_PrescaledLinePrescale':0.3,
                  'K_PrescaledLinePostscale':1,
                  'K_DetatchedLinePrescale':1,
                  'K_DetatchedLinePostscale':1,
@@ -122,6 +124,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               'KstVFASPF', 
                               'KstTRCHI2DOF',
                               'KstPIDK',
+                              'KstPIDpi',
                               'KsVFASPF',
                               'KsBPVDLS',
                               'incl_LinePrescale',
@@ -140,6 +143,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               'sig_DetatchedLinePostscale',
                               'BPVLTIME_unbiased',
                               'MINTREEPT',
+                              'MINTREEPT2',
                               'sig_UnbiasedLinePrescale',
                               'sig_UnbiasedLinePostscale',
                               'ChKPT',
@@ -225,7 +229,8 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                   KstAPT = config['KstAPT'],
                                   KstVFASPF = config['KstVFASPF'],
                                   KstTRCHI2DOF = config['KstTRCHI2DOF'],
-                                  KstPIDK = config['KstPIDK']
+                                  KstPIDK = config['KstPIDK'],
+                                  KstPIDpi = config['KstPIDpi']
                                   ) 
 
         self.selKsLoose = makeKsLoose( self.name + '_KsLooseForPsi2SToMuMu') 
@@ -364,7 +369,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                       BsMassCutUpPost = config['BsMassCutUpPost'],
                                                       BsVCHI2PDOF = config['BsVCHI2PDOF'],
                                                       BPVLTIME = config['BPVLTIME_unbiased'],
-                                                      MINTREEPT = config['MINTREEPT']
+                                                      MINTREEPT2 = config['MINTREEPT2']
                                                       )
         
         self.Bu2Psi2SK_unbiased_line = StrippingLine(K_unbiased_name + "Line",
@@ -419,7 +424,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                               BsMassCutUpPost = config['BsMassCutUpPost'],
                                                               BsVCHI2PDOF = config['BsVCHI2PDOF'],
                                                               BPVLTIME = config['BPVLTIME_unbiased'],
-                                                              MINTREEPT = config['MINTREEPT'],
+                                                              MINTREEPT2 = config['MINTREEPT2'],
                                                               KstarPT = config['KstarPT']
                                                               )
         
@@ -568,7 +573,8 @@ def makeKstar(name,
               KstAPT, #>500
               KstVFASPF, #<16
               KstTRCHI2DOF, # 4
-              KstPIDK # -2
+              KstPIDK, # -2
+              KstPIDpi # -2
               ) :
 
 
@@ -577,7 +583,8 @@ def makeKstar(name,
                         "& (VFASPF(VCHI2) < %(KstVFASPF)s)" \
                         "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(KstTRCHI2DOF)s )" \
                         "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(KstTRCHI2DOF)s )" \
-                        "& (MINTREE('K+'==ABSID, PIDK) > -2)" % locals()
+                        "& (MINTREE('K+'==ABSID, PIDK) > %(KstPIDK)s)" \
+                        "& (MINTREE('pi-'==ABSID, PIDK) < %(KstPIDpi)s)" % locals()
 
     _KstarFilter = FilterDesktop(Code = _code)
 
@@ -683,7 +690,7 @@ def makeBu2Psi2SKMuMu(name,
                       BsMassCutUpPost,
                       BsVCHI2PDOF,
                       BPVLTIME = None,
-                      MINTREEPT = None #1000
+                      MINTREEPT2 = None #1000
                       ) :
 
     _daughtersCuts= {"K+": "(PT > %(ChKPT)s)" % locals()}
@@ -695,8 +702,8 @@ def makeBu2Psi2SKMuMu(name,
 #    print 'makeBu2Psi2SKMuMu first', name, 'MotherCuts:', _motherCuts, 'DaughtersCuts:', _daughtersCuts, 'preVertexCuts:', _preVertexCuts
 
 
-    if MINTREEPT != None :
-        _motherCuts += "& (MINTREE('K+'==ABSID, PT) > %(MINTREEPT)s*MeV)" % locals()
+    if MINTREEPT2 != None :
+        _motherCuts += "& (MINTREE('K+'==ABSID, PT) > %(MINTREEPT2)s*MeV)" % locals()
 #    print 'makeBu2Psi2SKMuMu second', name, 'MotherCuts:', _motherCuts, 'DaughtersCuts:', _daughtersCuts, 'preVertexCuts:', _preVertexCuts
     
     _Bs = CombineParticles( DecayDescriptor = "[B+ -> psi(2S) K+]cc",
@@ -726,7 +733,7 @@ def makeBd2Psi2SKstarMuMu(name,
                           BsMassCutUpPost,
                           BsVCHI2PDOF,
                           BPVLTIME = None,
-                          MINTREEPT = None, #1000
+                          MINTREEPT2 = None, #1000
                           KstarPT = None # > 2
                           ) :
 
@@ -738,8 +745,8 @@ def makeBd2Psi2SKstarMuMu(name,
 #    print 'makeBd2Psi2SKstarMuMu first', name, 'MotherCuts:', _motherCuts,  'preVertexCuts:', _preVertexCuts
 
 
-    if MINTREEPT != None :
-        _motherCuts += "& (PT>%(KstarPT)s*GeV) & (MINTREE('K*(892)0'==ABSID, PT)> %(MINTREEPT)s*MeV)" % locals()
+    if MINTREEPT2 != None :
+        _motherCuts += "& (PT>%(KstarPT)s*GeV) & (MINTREE('K*(892)0'==ABSID, PT)> %(MINTREEPT2)s*MeV)" % locals()
 #    print 'makeBd2Psi2SKstarMuMu second', name, 'MotherCuts:', _motherCuts,  'preVertexCuts:', _preVertexCuts
 
     
