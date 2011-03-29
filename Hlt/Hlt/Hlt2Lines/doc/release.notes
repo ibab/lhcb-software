@@ -12,6 +12,9 @@
  - Changed TisTosParticleTagger instances to Hlt2Members in the following:
         Hlt2CharmHadD02HHKsLines.py
         Hlt2D2KS0HLines.py
+        Hlt2CharmHadD02HHHHLines.py
+        Hlt2CharmHadD2HHHLines.py
+        Hlt2CharmHadD02HHLines.py
 
 ! 2011-03-28 - Albert Puig
  - Bugfix in IncPhiSidebands: not using the IncPhi line mass window anymore.

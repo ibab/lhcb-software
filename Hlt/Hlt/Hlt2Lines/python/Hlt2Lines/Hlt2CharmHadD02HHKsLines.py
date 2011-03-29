@@ -317,9 +317,6 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
     ###################################################################
     ## Filter the input, requiring that they be TOS on Hlt1Track*
     ##
-    ## DANGER: How do we enforce that the name of the filter is globally unique?
-    ##         This is easy for an Hlt2Member, but TisTosParticleTagger is not an Hlt2Member...
-    ##
     def __filterRequiringTOS(self,name,input) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import TisTosParticleTagger

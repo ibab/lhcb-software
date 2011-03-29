@@ -175,12 +175,14 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
 
 
     def __filterHlt1TOS(self, name, input) : # {
-        from HltLine.HltLine import bindMembers
+        from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import TisTosParticleTagger
 
-        filterTOS = TisTosParticleTagger('Hlt2'+name+"Hlt1TOSFilter")
-        filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
-        filterTOS.Inputs = [ input.outputSelection() ]
+        filterTOS = Hlt2Member( TisTosParticleTagger
+                                , 'Hlt1TOSFilter'
+                                , Inputs = [ input.outputSelection() ]
+                                , TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
+                              )
 
         return bindMembers(name, [ input, filterTOS ])
     # }
