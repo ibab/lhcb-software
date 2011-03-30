@@ -5,7 +5,7 @@ import sys
 from StrippingConf.Configuration import StrippingConf
 from StrippingSelections.Utils import buildStreams
 
-allStreams = buildStreams('Stripping.tmp')
+allStreams = buildStreams('Stripping13')
 
 
 def test_stream_locations() :
