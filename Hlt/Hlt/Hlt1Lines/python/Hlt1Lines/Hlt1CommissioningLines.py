@@ -20,7 +20,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Prescale' : { 'Hlt1ODINPhysics'    : 0.000001
                               , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
                               , 'Hlt1Tell1Error'     : 0
-                              , 'Hlt1VeloClosingMicroBias' : 0 
+                              , 'Hlt1VeloClosingMicroBias' : 1 
                               }
                , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
                                , 'Hlt1ErrorEvent'   : 'RATE(1)' 
@@ -30,7 +30,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                                }
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
-               , 'ODINVeloClosing' : 'scale( ODIN_EVTTYP != 0, RATE(10000) )'
+               , 'ODINVeloClosing' : 'scale( ( 2 * ( ODIN_EVTTYP / 2 ) ) != ODIN_EVTTYP, RATE(10000) )'
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
