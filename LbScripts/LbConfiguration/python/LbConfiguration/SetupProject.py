@@ -1404,7 +1404,10 @@ class SetupProject:
                                                for d in new_env[v].split(os.pathsep)
                                                if root_dir_local not in d ])
                 if "LB_NO_STRIP_PATH" not in os.environ:
+                    self._debug("Cleaning variable %s", v)
+                    self._debug("  before: %s", new_env[v])
                     new_env[v] = StripPath(new_env[v])
+                    self._debug("   after: %s", new_env[v])
         # FIXME: I should look for all the variables pointing to the temporary directory
 
         # remove the variables that have the temporary directory in the name

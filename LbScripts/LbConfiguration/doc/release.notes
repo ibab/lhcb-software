@@ -1,3 +1,7 @@
+2011-03-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: added debug printout for the stripping of PATHs
+
 2011-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py:
