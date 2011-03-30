@@ -40,7 +40,12 @@ class Hadrons_draft2011 :
             'Hlt2B2HHPi0_Merged',
             # B2HH
             'Hlt2B2HH',
-            'Hlt2B2HHLTUnbiased'
+            'Hlt2B2HHLTUnbiased',
+            # DiProtons
+            'Hlt2DiProton',
+            'Hlt2DiProtonTF',   
+            'Hlt2DiProtonLowMult',
+            'Hlt2DiProtonLowMultTF'
             ]
 
         # For inclusive phi extend using Albert's new setting
