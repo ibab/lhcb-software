@@ -9,6 +9,8 @@
  - use flyweight pattern for PropCfg
  - listProperties and getProperties use flyweight to only return requested
    items once, even if they appear multiple times in the dependency tree
+ - getProperties now returns an easy to use dictionary
+ - rewrite listProperties in terms of getProperties
 
 !========================== TCKUtils v1r7p1 2011-03-17 ===================
 ! 2011-03-11 - Roel Aaij

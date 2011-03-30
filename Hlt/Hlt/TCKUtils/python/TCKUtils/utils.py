@@ -529,7 +529,7 @@ def listAlgorithms( id, cas = ConfigAccessSvc() ) :
     print getAlgorithms(id,cas)
 
 def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
-    retlist=[]
+    retlist= dict()
     tree = getConfigTree( id, cas )
     import re
     if algname :
@@ -550,40 +550,18 @@ def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
        if not i.leaf or (matchNode and not matchNode(i)) : continue
        if hasattr(i.leaf,sig) : continue
        setattr(i.leaf,sig,True)
-       identLine =  i.leaf.fullyQualifiedName
+       pdict = dict()
        for (k,v) in i.leaf.properties().iteritems() :
           if matchProp and not matchProp(k) : continue
-          retlist.append((identLine, v))
+          pdict[k] = v
+       if pdict : retlist[  i.leaf.name ] = pdict
     return retlist
 
 def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
-    tree = getConfigTree( id, cas ) 
-    import re
-    if algname :
-        reqNode = re.compile(algname)
-        matchNode = lambda x : reqNode.match(x.leaf.name)
-    else :
-        matchNode = None
-    if property :
-        reqProp = re.compile(property)
-        matchProp = lambda x : reqProp.match(x)
-    else :
-        matchProp = None
-    # generate a unique ID for this traversal, so that we do not
-    # repeat leafs...
-    import uuid
-    sig = uuid.uuid4().hex
-    for i in tree :
-       if not i.leaf or (matchNode and not matchNode(i)) : continue
-       if hasattr(i.leaf,sig) : continue
-       setattr(i.leaf,sig,True)
-       first = True
-       for (k,v) in i.leaf.properties().iteritems() :
-          if matchProp and not matchProp(k) : continue
-          if first : 
-            print '\n   Requested Properties for ' + i.leaf.fullyQualifiedName
-            first = False
-          print "      '" + k + "\':" + v
+    for (c,d) in getProperties(id,algname,property,cas).iteritems() :
+         print '\n   Requested Properties for %s' % c
+         for k,v in d.iteritems() :
+            print "      '%s':%s" % (k,v) 
 
 def orphanScan( cas = ConfigAccessSvc() ) :
     return execInSandbox(_orphanScan, cas)
