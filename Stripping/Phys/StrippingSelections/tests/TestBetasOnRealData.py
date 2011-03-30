@@ -25,7 +25,7 @@ BetaSconfigs = [
         ]
 
 for config in BetaSconfigs:
-        stream.appendLines( lineBuilder('stripping13.tmp', config).lines() )
+        stream.appendLines( lineBuilder('stripping.tmp', config).lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
