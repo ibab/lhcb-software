@@ -13,13 +13,14 @@ class VanDerMeerScan_BeamGasConf_Mar11 :
     UseMaxRateLimits = True
     
     def ActiveHlt1Lines(self):
-        ''' Returns a list of Hlt1 BeamGas Lines to be used in the VDM TCK '''
+        ''' Returns a list of Hlt1 Lines to be used in the VDM TCK '''
         
         lines = [ 'Hlt1BeamGasNoBeamBeam1'
                 , 'Hlt1BeamGasNoBeamBeam2'
                 , 'Hlt1BeamGasBeam1'
                 , 'Hlt1BeamGasBeam2'
                 , 'Hlt1BeamGasCrossingForcedReco'
+                , 'Hlt1VeloClosingMicroBias'
                 ]
 
         return lines

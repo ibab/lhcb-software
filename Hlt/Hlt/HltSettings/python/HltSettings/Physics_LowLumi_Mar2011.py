@@ -157,23 +157,24 @@ class Physics_LowLumi_Mar2011( object ):
         """
         Returns a list of active lines
         """
-	lines = [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
-		  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
-		  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
-		  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
-		  , 'Hlt1NoPVPassThrough'
-		  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
-		  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
-		  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-		  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
-		  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
-		  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-		  , 'Hlt1MBNoBias' 
-		  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
-		  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
-		  ]
-	lines += [ i + 'RateLimited' for i in lines
-		   if i.startswith('Hlt1MBMicroBias')
-		   or i.startswith('Hlt1L0Any') ]
+        lines = [ 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
+                , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
+                , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
+                , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
+                , 'Hlt1NoPVPassThrough'
+                , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
+                , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+                , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
+                , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
+                , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
+                , 'Hlt1MBNoBias' 
+                , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
+                , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
+                , 'Hlt1VeloClosingMicroBias'
+                ]
+        lines += [ i + 'RateLimited' for i in lines
+                if i.startswith('Hlt1MBMicroBias')
+                or i.startswith('Hlt1L0Any') ]
 
         return lines 

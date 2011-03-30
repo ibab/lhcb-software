@@ -170,6 +170,7 @@ class Physics_Mar2011( object ):
             , 'Hlt1MBNoBias' 
           , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
           , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
+          , 'Hlt1VeloClosingMicroBias'
           ]
         lines += [ i + 'RateLimited' for i in lines
            if i.startswith('Hlt1MBMicroBias')
