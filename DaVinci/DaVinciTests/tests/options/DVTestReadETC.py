@@ -10,7 +10,7 @@ from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
 from StrippingSelections.Utils import buildStream
-stream = buildStream('Stripping13.tmp', 'Dimuon')
+stream = buildStream('Stripping.tmp', 'Dimuon')
 sc = StrippingConf()
 sc.appendStream( stream )
 

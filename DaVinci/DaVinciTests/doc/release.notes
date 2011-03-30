@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!=========================== DaVinciTests v2r5 2011-03-30 ====================
+
+! 2011-03-30 - Juan Palacios
+ - Tests use Stripping13 instead of Stripping13.tmp.
+ - Increase to v2r5.
+
 !=========================== DaVinciTests v2r4 2011-03-16 ====================
 
 ! 2011-03-17 - Juan Palacios

@@ -18,7 +18,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections.Utils import lineBuilder
-lineBuilder = lineBuilder('Stripping13.tmp', 'BetaS')
+lineBuilder = lineBuilder('Stripping.tmp', 'BetaS')
 line = lineBuilder.lineFromName('StrippingBetaSBd2JpsiKsUnbiasedLine')
 stream = StrippingStream("B2JpsiXTest", Lines = [line])
 sc = StrippingConf()

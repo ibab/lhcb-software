@@ -7,7 +7,7 @@ from Configurables import SelDSTWriter, DaVinci
 from StrippingConf.Configuration import StrippingConf
 from StrippingSelections.Utils import buildStreams
 
-allStreams = buildStreams('Stripping13.tmp')
+allStreams = buildStreams('Stripping.tmp')
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
