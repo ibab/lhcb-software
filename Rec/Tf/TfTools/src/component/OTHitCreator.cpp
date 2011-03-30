@@ -2,6 +2,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/IDetDataSvc.h"
 
 // ITDet
 
@@ -271,7 +272,7 @@ namespace Tf
     }
 
     // get geometry
-    const DeOTDetector* otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+    m_otdetector = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
 
     // set up things for use without drift time (if desired)
     if (m_noDriftTimes) {
@@ -284,7 +285,7 @@ namespace Tf
       // making the drift velocity significantly smaller is not an option,
       // because we then trigger non-convergence of the Newton-Raphson method
       // in RtRelation...
-      const double vdrift = otdet->modules().front()->rtRelation().rmax() /
+      const double vdrift = m_otdetector->modules().front()->rtRelation().rmax() /
 	      (4e-6 * Gaudi::Units::s);
       // need a vector to construct polynomial approximation to the tweaked
       // rt relation; rtrelpoly: t(r) = rtrelpoly[0] + rtrelpoly[1] * r + ...
@@ -294,8 +295,8 @@ namespace Tf
       rtrelpoly.push_back(1. / vdrift);
       // construct new r-t relation - all drift times are mapped to
       // m_forceDriftRadius and the resolution is set to m_forceResolution
-      m_rtrel = new OTDet::RtRelation(otdet->modules().front()->rtRelation().rmax(),
-		      rtrelpoly, m_forceResolution);
+      m_rtrel = new OTDet::RtRelation(m_otdetector->modules().front()->rtRelation().rmax(),
+				      rtrelpoly, m_forceResolution);
       /* if we run without drift times, this should appear in the log */
       info() << "Drift times are not used, drift radius set to " <<
 	      m_forceDriftRadius / Gaudi::Units::mm <<
@@ -309,14 +310,14 @@ namespace Tf
 	 * sure we're aware of what we're doing */
 	debug() << "Drift times are used." << endreq;
     }
-
-    // use geometry and copy the hierarchy to navigate hits. do we
-    // want to delay this till the first event?
-    m_detectordata = new HitCreatorGeom::OTDetector(*this,*otdet) ;
-
+    
+    // we may need to register to the conditions of all modules instead
+    updMgrSvc()->registerCondition( this, const_cast<IGeometryInfo*>(m_otdetector->geometry()),
+				    &OTHitCreator::updateGeometry );
+    
     return sc ;
   }
-
+  
   StatusCode OTHitCreator::finalize()
   {
     if (m_detectordata) m_detectordata->clearEvent();
@@ -326,6 +327,19 @@ namespace Tf
     m_rtrel = 0;
     m_otdecoder.release().ignore() ;
     return GaudiTool::finalize() ;
+  }
+
+  StatusCode OTHitCreator::updateGeometry()
+  { 
+    IDetDataSvc* detDataSvc(0) ;
+    service("DetectorDataSvc",detDataSvc, true).ignore() ;
+    debug() << "In OTHitCreator::updateGeometry() " << detDataSvc->eventTime() << endreq ;
+    if(m_detectordata) {
+      m_detectordata->clearEvent();
+      delete m_detectordata ;
+    }
+    m_detectordata = new HitCreatorGeom::OTDetector(*this,*m_otdetector) ;
+    return StatusCode::SUCCESS ;
   }
 
   void OTHitCreator::handle ( const Incident& incident )

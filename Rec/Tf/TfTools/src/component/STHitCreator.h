@@ -68,6 +68,9 @@ namespace Tf
     /// incident service handle
     virtual void handle( const Incident& incident ) ;
 
+    /// update manager handle
+    virtual StatusCode updateGeometry() ;
+
     // RestUsed flag for all OT hits
     virtual  void resetUsedFlagOfHits() const;
 

@@ -175,9 +175,11 @@ namespace Tf
     if (sc.isFailure()) return Error("Failed to initialize",sc);
 
     // get geometry and copy the hierarchy to navigate hits
-    m_stdet = getDet<DeSTDetector>(m_detectorLocation);
-    m_detectordata = new HitCreatorGeom::STDetector(*m_stdet,m_clusterLocation,*this) ;
-
+    m_stdet = getDet<DeSTDetector>(m_detectorLocation); 
+    // we may need to register to the conditions of all modules instead
+    updMgrSvc()->registerCondition( this,  const_cast<IGeometryInfo*>(m_stdet->geometry()),
+				    &STHitCreator<Trait>::updateGeometry );
+    
     // reset pointer to list of clusters at beginevent
     incSvc()->addListener(this, IncidentType::BeginEvent);
 
@@ -190,6 +192,18 @@ namespace Tf
     if (m_detectordata) m_detectordata->clearEvent();
     delete m_detectordata;
     return GaudiTool::finalize();
+  }
+
+  template<class Trait>
+  StatusCode STHitCreator<Trait>::updateGeometry()
+  {
+    debug() << "In STHitCreator::updateGeometry()" << endreq ;
+    if(m_detectordata) {
+      m_detectordata->clearEvent();
+      delete m_detectordata ;
+    }
+    m_detectordata = new HitCreatorGeom::STDetector(*m_stdet,m_clusterLocation,*this) ;
+    return StatusCode::SUCCESS ;
   }
 
   template<class Trait>

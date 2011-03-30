@@ -70,6 +70,9 @@ namespace Tf
     /// incident service handle
     virtual void handle( const Incident& incident ) ;
 
+    /// update manager handle
+    virtual StatusCode updateGeometry() ;
+
     // RestUsed flag for all OT hits
     virtual  void resetUsedFlagOfHits() const;
 
@@ -137,6 +140,7 @@ namespace Tf
     double m_tmax ;
     //mutable HitCreatorGeom::Detector<HitCreatorGeom::OTRegion>* m_detectordata ;
     //mutable HitCreatorGeom::Detector<HitCreatorGeom::RegionOfModules<HitCreatorGeom::OTModule> > *m_detectordata ;
+    const DeOTDetector* m_otdetector ;
     HitCreatorGeom::OTDetector *m_detectordata ;
 
     bool m_noDriftTimes;
