@@ -1048,7 +1048,20 @@ operator != ( const std::vector<unsigned int>&  vct ,
 { return LoKi::NotEqualToList<TYPE>( fun , vct ) ; }
 // ============================================================================
 
-
+// ============================================================================
+/** inline construction of "modulo" operator
+ *
+ *  @see LoKi::Modulo
+ *
+ *  @author Vanya BELYAEV ibelyaev@cern.ch
+ *  @date 2011-03-30  
+ */
+template <class TYPE>
+inline   LoKi::Modulo<TYPE> 
+operator% ( const LoKi::Functor<TYPE,double>& divident , 
+            const unsigned int                divisor  ) 
+{ return LoKi::Modulo<TYPE> ( divident , divisor ) ; }
+// ============================================================================
 
 // ============================================================================
 // The END 

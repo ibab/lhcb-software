@@ -18,6 +18,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-30 - Vanya Belyaev
+
+ - add "modulo" -operator for functors 
+
+   it acts according to the rule:
+
+     ( f % n )  ( x )  =def=  " LHCb::Math::round ( f ( x ) ) % n " 
+    
+     
+
 ! 2011-03-29 - Vanya Belyaev
 
  - Kinematics.h

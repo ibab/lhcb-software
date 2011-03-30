@@ -459,6 +459,7 @@ def decorateFunctionOps ( funcs , opers ) :
     _rpow_      = None 
 
     _rmod_      = None 
+    _mod_       = None
 
     _sin_       = None 
     _cos_       = None 
@@ -804,6 +805,20 @@ def decorateFunctionOps ( funcs , opers ) :
         _rpow_ . __doc__  += opers.__rpow__ . __doc__
 
             
+    # math: modulo % 
+    if hasattr ( opers , '__mod__' ) :                    
+        def _mod_ (s,a) :
+            """
+            Construct the ``modulo''-function: 
+            
+            >>> fun = ...
+            >>> fun = fun % 2 
+            
+            Uses:\n
+            """
+            return opers.__mod__ (s,a)
+        _mod_ . __doc__  += opers.__mod__ . __doc__
+
     # pseudo-math:  rigth % 
     if hasattr ( opers , '__rmod__' ) :                    
         def _rmod_ (s,a) :
@@ -818,7 +833,7 @@ def decorateFunctionOps ( funcs , opers ) :
             return opers.__rmod__ (s,a)
         _rmod_ . __doc__  += opers.__rmod__ . __doc__
 
-            
+
     # home-made math (just to be coherent)
         
     # math: 'sin'
@@ -1441,7 +1456,8 @@ def decorateFunctionOps ( funcs , opers ) :
         if _neg_             : fun . __neg__     = _neg_       #  
         if _abs_             : fun . __abs__     = _abs_       # 
         if _pow_             : fun . __pow__     = _pow_       # 
-        if _rpow_            : fun . __rpow__            = _rpow_      #
+        if _rpow_            : fun . __rpow__    = _rpow_      #
+        if _mod_             : fun . __mod__     = _mod_       #
         # pseudo-math
         if _rmod_            : fun . __rmod__            = _rmod_      #
         # some other math:

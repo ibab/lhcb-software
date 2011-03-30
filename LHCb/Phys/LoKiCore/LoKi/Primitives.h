@@ -2491,6 +2491,60 @@ namespace LoKi
     // ========================================================================
   };
   // ==========================================================================
+  /** @class Modulo
+   *
+   *  The helper function to implement "modulo"-operation 
+   *  of the function
+   *
+   *  http://en.wikipedia.org/wiki/Modulo_operation
+   *
+   *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+   *  @date   2011-03-30
+   */
+  template<class TYPE> 
+  class Modulo : public LoKi::Functor<TYPE,double>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,double>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,double>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor  
+    Modulo ( const LoKi::Functor<TYPE,double>& divident  , 
+             const unsigned int                divisor   )
+      : LoKi::Functor<TYPE,double>() 
+      , m_divident ( divident  ) 
+      , m_divisor  ( divisor   ) 
+    {} 
+    /// virtual destructor 
+    virtual ~Modulo () {}
+    /// clone method (mandatory)
+    virtual  Modulo* clone() const { return new Modulo ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( argument a ) const 
+    { return LHCb::Math::round ( m_divident.fun ( a ) ) % m_divisor ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " ("  << m_divident << " % "  << m_divisor << ") "; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    Modulo () ;                          // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the divident 
+    LoKi::FunctorFromFunctor<TYPE,double> m_divident ; // the divident 
+    /// the divisor 
+    const unsigned int                    m_divisor  ; // the divisor 
+    // ========================================================================
+  };  
+  // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 //                                           specializations for void-arguments

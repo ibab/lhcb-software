@@ -1818,6 +1818,48 @@ namespace LoKi
     // ========================================================================
   };
   // ==========================================================================
+  template<> 
+  class Modulo<void> : public LoKi::Functor<void,double>
+  {
+  private:
+    // ========================================================================
+    /// result type 
+    typedef LoKi::Functor<void,double>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor  
+    Modulo ( const LoKi::Functor<void,double>& divident  , 
+             const unsigned int                divisor   )
+      : LoKi::Functor<void,double>() 
+      , m_divident ( divident  ) 
+      , m_divisor  ( divisor   ) 
+    {} 
+    /// virtual destructor 
+    virtual ~Modulo () {}
+    /// clone method (mandatory)
+    virtual  Modulo* clone() const { return new Modulo ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( /* argument a */ ) const 
+    { return LHCb::Math::round ( m_divident.fun ( /* a */ ) ) % m_divisor ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " ("  << m_divident << " % "  << m_divisor << ") " ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    Modulo () ;                          // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the divident 
+    LoKi::FunctorFromFunctor<void,double> m_divident ; // the divident 
+    /// the divisor 
+    const unsigned int                    m_divisor  ; // the divisor 
+    // ========================================================================
+  } ;
+  // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
