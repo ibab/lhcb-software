@@ -78,7 +78,7 @@ def _orphanScan(cas = ConfigAccessSvc() ) :
         print k 
         v.printSimple()
         id = v.info['id'] 
-        tree =  execInSandbox( _getConfigTree, id, cas )
+        tree =  getConfigTree( id, cas )
         for node in tree :
            def updateDict( d, id, top ) :
                 if id not in d: d.update({ id: list()})
@@ -152,7 +152,7 @@ def _parseL0setting( setting ) :
     return val
 
 def dumpL0( id, cas  = ConfigAccessSvc() ) :
-    tree  =  execInSandbox( _getConfigTree, id, cas )
+    tree  =  getConfigTree( id, cas )
     l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
     for i in l0s : 
         from pprint import pprint
@@ -165,7 +165,7 @@ def dumpL0( id, cas  = ConfigAccessSvc() ) :
 
 
 def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
-    tree  =  execInSandbox( _getConfigTree, id, cas )
+    tree  =  getConfigTree( id, cas )
     l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
     ret = dict()
     for i in l0s : 
@@ -431,23 +431,33 @@ class Configuration :
             if type(tck) != str : tck = '0x%08x' % tck
             return  '%20s : %10s : %s : %s\n'%(self.info['hlttype'],tck,self.info['id'],self.info['label'])
 
-class PropCfg :
+class PropCfg(object) :
     " A class representing a PropertyConfig "
-    def __init__(self, x) :
-        self.name = x.name()
-        self.type = x.type()
-        self.kind = x.kind()
-        self.fullyQualifiedName = x.fullyQualifiedName()
-        self.digest = x.digest().str()
-        self.props = dict()
-        for i in x.properties() : self.props.update( { i.first: i.second } )
+    #  use flyweight pattern, and use digest to identify objects...
+    import weakref
+    _pool = weakref.WeakValueDictionary()
+    def __new__(cls, x = None) :
+        if not x : return object.__new__(cls) # added to make it possible to recv in parent process...
+        digest = x.digest().str()
+        obj = PropCfg._pool.get( digest )
+        if not obj :
+            obj = object.__new__(cls)
+            obj.name = x.name()
+            obj.type = x.type()
+            obj.kind = x.kind()
+            obj.fullyQualifiedName = x.fullyQualifiedName()
+            obj.digest = digest
+            obj.props = dict()
+            for i in x.properties() : obj.props.update( { i.first: i.second } )
+            PropCfg._pool[digest] = obj
+        return obj
     def properties(self) : return self.props
     def fqn(self) : return  self.fullyQualifiedName + ' ('+self.kind+')'
     def fmt(self) :
         return [  "'"+k+"':"+v+'\n'  for k,v in self.props.iteritems() ]
 
 class Tree(object):
-    def __init__(self, id, parent = None):
+    def __init__(self,id,parent=None ) :
         cache = _TreeNodeCache()
         self.parent = parent
         self.depth = self.parent.depth+1  if self.parent else 0
@@ -501,13 +511,13 @@ def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False
     return execInSandbox( _copy, source, target )
 
 def listComponents( id, cas = ConfigAccessSvc() ) :
-    tree = execInSandbox( _getConfigTree, id, cas )
+    tree = getConfigTree( id, cas )
     for i in tree : 
         if i.leaf : 
           s =  i.depth*3*' ' + i.leaf.name
           print s + (80-len(s))*' ' + str(i.leaf.digest)
 def getAlgorithms( id, cas = ConfigAccessSvc() ) :
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree =  getConfigTree( id, cas )
     x = ''
     for i in tree :
        if i.leaf and i.leaf.kind =='IAlgorithm':
@@ -520,7 +530,7 @@ def listAlgorithms( id, cas = ConfigAccessSvc() ) :
 
 def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
     retlist=[]
-    tree = execInSandbox( _getConfigTree, id, cas )
+    tree = getConfigTree( id, cas )
     import re
     if algname :
         reqNode = re.compile(algname)
@@ -532,8 +542,14 @@ def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
         matchProp = lambda x : reqProp.match(x)
     else :
         matchProp = None
+    # generate a unique ID for this traversal, so that we do not
+    # repeat leafs...
+    import uuid
+    sig = uuid.uuid4().hex
     for i in tree :
        if not i.leaf or (matchNode and not matchNode(i)) : continue
+       if hasattr(i.leaf,sig) : continue
+       setattr(i.leaf,sig,True)
        identLine =  i.leaf.fullyQualifiedName
        for (k,v) in i.leaf.properties().iteritems() :
           if matchProp and not matchProp(k) : continue
@@ -541,7 +557,7 @@ def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
     return retlist
 
 def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
-    tree = execInSandbox( _getConfigTree, id, cas ) 
+    tree = getConfigTree( id, cas ) 
     import re
     if algname :
         reqNode = re.compile(algname)
@@ -553,8 +569,14 @@ def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
         matchProp = lambda x : reqProp.match(x)
     else :
         matchProp = None
+    # generate a unique ID for this traversal, so that we do not
+    # repeat leafs...
+    import uuid
+    sig = uuid.uuid4().hex
     for i in tree :
        if not i.leaf or (matchNode and not matchNode(i)) : continue
+       if hasattr(i.leaf,sig) : continue
+       setattr(i.leaf,sig,True)
        first = True
        for (k,v) in i.leaf.properties().iteritems() :
           if matchProp and not matchProp(k) : continue
@@ -604,7 +626,7 @@ def getRoutingBits( id , cas = ConfigAccessSvc() ) :
 
 ## TODO:  is a string the best thing to return???
 def getAlgorithms( id, cas = ConfigAccessSvc() ) :
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree =  getConfigTree( id, cas )
     tempstr = ''
     for i in tree :
        if i.leaf and i.leaf.kind =='IAlgorithm':
@@ -618,7 +640,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
                      , 'Code', 'InputLocations'
                      , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
                      , 'OutputSelection' ]
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree =  getConfigTree( id, cas )
     def len1(line):
         _i = line.rfind('\n')
         return len(line) if _i<0 else len(line)-(_i+1)

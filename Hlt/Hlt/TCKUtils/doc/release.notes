@@ -5,6 +5,11 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2011-03-30 - Gerhard Raven
+ - use flyweight pattern for PropCfg
+ - listProperties and getProperties use flyweight to only return requested
+   items once, even if they appear multiple times in the dependency tree
+
 !========================== TCKUtils v1r7p1 2011-03-17 ===================
 ! 2011-03-11 - Roel Aaij
  - Update listConfigutions to sort the releases such that the latest
