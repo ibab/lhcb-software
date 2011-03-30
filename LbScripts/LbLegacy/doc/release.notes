@@ -1,3 +1,8 @@
+2011-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed problem with generateLogin if the MYSITEROOT
+	directory has somewhere a link in its path.
+
 2011-03-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed the comparison of the lhcb subdirectory with

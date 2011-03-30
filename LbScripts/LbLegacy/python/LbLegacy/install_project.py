@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '110317'
+script_version = '110330'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r0p1"
@@ -1070,7 +1070,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     os.mkdir(pack_ver[2])
                     log.info('mkdir %s in %s ' % (pack_ver[2], pack_ver[3]))
 
-            if os.getcwd() == os.path.abspath(this_lhcb_dir) :
+            if os.path.realpath(os.getcwd()) == os.path.realpath(this_lhcb_dir) :
                 # if binary is requested and InstallArea does not exist : set it
                 if pack_ver[2] :
                     os.chdir(os.path.join(this_lhcb_dir, pack_ver[0], pack_ver[0] + '_' + pack_ver[1]))
@@ -1655,8 +1655,8 @@ def createBaseDirs(pname, pversion):
     mysiteroot = os.environ["MYSITEROOT"]
 
 
-    mypath = os.path.abspath(mysiteroot.split(os.pathsep)[0])
-    thispwd = os.path.abspath(os.getcwd())
+    mypath = os.path.realpath(mysiteroot.split(os.pathsep)[0])
+    thispwd = os.path.realpath(os.getcwd())
     if sys.platform == 'win32' :
         if mypath.upper() != thispwd.upper() :
             log.warning("Using the directory %s for installation" % mypath)
