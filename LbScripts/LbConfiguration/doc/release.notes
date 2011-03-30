@@ -1,7 +1,9 @@
 2011-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Platform.py: fixed problem on slc6: if the platform has no
-	supported compiler list, it uses the native one.
+	* python/LbConfiguration/Platform.py:
+	- fixed problem on slc6: if the platform has no supported compiler list, it
+	uses the native one.
+	- added gcc44 as supported compiler for slc6
 
 2011-03-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
