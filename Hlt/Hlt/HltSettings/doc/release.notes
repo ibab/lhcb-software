@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-30 - V. Gligorov
+ - Add the Hlt2 DiProton lines to match the Hlt1 DiProton lines.
+
 !========================== HltSettings v5r10 2011-03-29 ===================
 ! 2011-Mar-30 - Gerhard Raven
  - add Hlt1VeloClosingMicroBias, gated on ODIN::eventType 
