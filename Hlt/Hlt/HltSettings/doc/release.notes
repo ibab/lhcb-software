@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-Mar-30 - V. Gligorov
+ - Remove charm lines from Muons_LowLumi to complete what was started
+   with the last commit. 
+
 !========================== HltSettings v5r10 2011-03-29 ===================
 ! 2011-Mar-29 - V. Gligorov
  - Move Charm (semi)leptonic lines to CharmLeptonic_draft2011 (new file)
