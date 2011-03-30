@@ -31,6 +31,9 @@ protected:
 
 private:
 
+  /// enumerate trigger stages 
+  enum TriggerStages {defaultTriggerStage=0,HLT1=defaultTriggerStage,HLT2,L0,NTriggerStages};
+
   /// checks integrity of the particle (skip if fails it)
   bool particleOK( const LHCb::Particle* po );
 
@@ -45,6 +48,12 @@ private:
   bool m_passOnAll;  
   /// flag to disallow using regex in the "InputTrigger" (can make the Tagger faster)
   bool m_noRegex;  
+
+
+  /// Pass Trigger Stage on First Satisfied Spec Flag (affects execuation only if tag-keys are not zero)
+  bool m_SatisfiedOnFirstSpec;
+  /// Pass Trigger Stage on First Satisfied Spec (set always to true if all tag-keys are zero)
+  bool m_fast;
 
   /// name of the TriggerTisTos tool if want to overwrite default (""=default)
   std::string m_TriggerTisTosName;
@@ -64,11 +73,15 @@ private:
 
   /// TisTos tool
   ITriggerTisTos* m_tistostool;
+  ITriggerTisTos* m_tistostoolL0;
+  ITriggerTisTos* m_tistostoolStage[NTriggerStages];
 
   /// pairs of < "InputTrigger", Info Id > (Id=0 do not tag Particles) (derived from m_tistosSpecs)
-  std::map<std::string,int> m_tusSpecs ; 
-  std::map<std::string,int> m_tosSpecs ; 
-  std::map<std::string,int> m_tisSpecs ; 
+  std::map<std::string,int> m_tusSpecs[NTriggerStages]; 
+  std::map<std::string,int> m_tosSpecs[NTriggerStages]; 
+  std::map<std::string,int> m_tisSpecs[NTriggerStages];
+  bool m_NoSpecs[NTriggerStages];
+ 
 
   /// TisTos tool configuration (see ParticleTisTos & TisTos tools)
   bool m_projectTracksToCalo;
