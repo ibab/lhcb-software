@@ -20,6 +20,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-03-30 - Vanya Belyaev
+
+ - add test for 'modulo'-operator
+
+
 ! 2011-03-28 - Vanya Belyaev
 
  - add test for 'fetch'-decorator 
