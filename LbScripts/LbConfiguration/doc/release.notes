@@ -1,3 +1,8 @@
+2011-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: fixed problem on slc6: if the platform has no
+	supported compiler list, it uses the native one.
+
 2011-03-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/Version.py: added function to

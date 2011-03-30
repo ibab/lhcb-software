@@ -502,7 +502,14 @@ class NativeMachine:
         if equiv in flavor_runtime_compatibility :
             for f in flavor_runtime_compatibility[equiv] :
                 for m in arch_runtime_compatiblity[machine] :
-                    for c in supported_compilers[f] :
+                    allcomp = []
+                    if f in supported_compilers :
+                        allcomp += supported_compilers[f]
+                    # add the native compiler
+                    nc = self.nativeCompiler()
+                    if nc :
+                        allcomp.append(nc)
+                    for c in allcomp :
                         n = getConfig(m, f, c, debug=False)
                         if n not in compatibles :
                             compatibles.append(n)
