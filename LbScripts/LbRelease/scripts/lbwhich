@@ -53,7 +53,7 @@ class LbWhichScript(Script):
         p = LbCMTWhich(project, package, version,
                        all_occurences=False,
                        casesense=opts.casesense,
-                       with_user_area=opts.with_usr_area)
+                       with_user_area=opts.with_user_area)
 
         if opts.cmt_dir :
             print os.path.join(str(p), "cmt")

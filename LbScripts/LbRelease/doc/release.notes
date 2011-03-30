@@ -1,3 +1,7 @@
+2011-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/CMT/LbProject.py: fixed usage of the User release area in LbCMTWhich.
+
 2011-03-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbRelease/scripts/lbcmtwhich: Removed.
