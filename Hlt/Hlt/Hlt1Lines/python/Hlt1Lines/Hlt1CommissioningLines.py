@@ -20,14 +20,17 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Prescale' : { 'Hlt1ODINPhysics'    : 0.000001
                               , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
                               , 'Hlt1Tell1Error'     : 0
+                              , 'Hlt1VeloClosingMicroBias' : 0 
                               }
                , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
                                , 'Hlt1ErrorEvent'   : 'RATE(1)' 
                                , 'Hlt1NZSVelo'      : 'RATE(1)'
                                , 'Hlt1GEC.*'        : 'RATE(1)'
+                               , 'Hlt1VeloClosingMicroBias' : 'RATE(500)'
                                }
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
+               , 'ODINVeloClosing' : 'scale( ODIN_EVTTYP != 0, RATE(10000) )'
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
@@ -78,3 +81,17 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
             , HLT = "HLT_COUNT_ERRORBITS_RE('^Hlt1.*',0xffff) > 0" # TODO: just want presence, so want HLT_ERRORBITS(0xffff) would be nice to have...
             , priority = 254
             )
+        from HltTracking.HltReco import MinimalVelo
+        from HltLine.HltLine import Hlt1Member   as Member
+        Line ( 'VeloClosingMicroBias'
+                    , prescale = self.prescale
+                    , ODIN = self.getProp('ODINVeloClosing')
+                    , algos = [ MinimalVelo
+                              , Member( 'Hlt::TrackFilter','All'
+                                      , Code = [ 'TrALL' ]
+                                      , InputSelection = 'TES:%s' % MinimalVelo.outputSelection()
+                                      , OutputSelection = '%Decision'
+                                      ) 
+                              ]
+                    , postscale = self.postscale
+                    ) 

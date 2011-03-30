@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v6r9  2011-03-29 ===================
+! 2011-03-30 - Gerhard Raven
+ - add a Hlt1VeloClosingMicroBias, gated on ODIN eventType, for velo closing
+
 ! 2011-03-28 - Roel Aaij
  - Added Hlt1ElectronLines.py which contains prototype version for a 
    SingleElectronNoIP line.
