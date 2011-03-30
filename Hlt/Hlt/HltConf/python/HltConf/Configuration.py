@@ -346,6 +346,23 @@ class HltConf(LHCbConfigurableUser):
         log.warning( '# added %s decisions to HltANNSvc' % len(missingDecisions)  )
         # TODO: add Hlt2 to this list, and remove the hardwired numbers from the Hlt2 lines...
 
+
+        # prune all Decisions which are not members of Htl1 or Hlt2...
+        def genName( c ) :
+            if type(c) != str : c = c.name()
+            return '%sDecision'%c                  
+
+        hlt1decnames = [  genName(i) for i in Sequence('Hlt1').Members ]
+        hlt2decnames = [  genName(i) for i in Sequence('Hlt2').Members ]
+        # remove 'stale' entries
+        hlt1extradecnames = [ i for i in HltANNSvc().Hlt1SelectionID.keys() if i.endswith('Decision') and i not in hlt1decnames ]
+        hlt2extradecnames = [ i for i in HltANNSvc().Hlt2SelectionID.keys() if i.endswith('Decision') and i not in hlt2decnames ]
+        #print 'stale Hlt1 entries : %s ' % hlt1extradecnames
+        #print 'stale Hlt2 entries : %s ' % hlt2extradecnames
+        for i in hlt1extradecnames : del HltANNSvc().Hlt1SelectionID[i]
+        for i in hlt2extradecnames : del HltANNSvc().Hlt2SelectionID[i]
+
+
         if False :
             from HltLine.HltLine     import hlt1Lines
             for i in hlt1Lines() :
