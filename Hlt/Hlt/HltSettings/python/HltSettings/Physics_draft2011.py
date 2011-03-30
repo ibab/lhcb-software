@@ -8,6 +8,7 @@ def __update_conf__( current, extra ) :
                 if k not in cur : 
                     cur[k] = v
                     continue
+                if cur[k] == v : continue
                 print 'Warning: potential collision detected: %s -- %s' % (conf,k)
                 print 'current: %s' % cur[k]
                 print 'request: %s' % v
