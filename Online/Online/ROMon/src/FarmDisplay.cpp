@@ -70,9 +70,7 @@ namespace ROMon {
   InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const string& title);
   InternalDisplay* createBootDisplay(InternalDisplay* parent, const string& title);
-  InternalDisplay* createBenchmarkNodeDisplay(InternalDisplay* parent, const string& title);
-  InternalDisplay* createBenchmarkFarmDisplay(InternalDisplay* parent, const string& title);
-  InternalDisplay* createBenchmarkSubfarmDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createBenchmarkDisplay(InternalDisplay* parent,int mode, const string& title);
   InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const string& title);
 
   ClusterDisplay*  createSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
@@ -397,7 +395,7 @@ int FarmDisplay::showBenchmarkWindow() {
   else if ( m_sysDisplay.get() || m_mbmDisplay.get() || m_ctrlDisplay.get() || m_procDisplay.get() ) {
     pair<string,string> node = selectedNode();
     if ( !node.second.empty() ) {
-      m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkNodeDisplay(this,node.second));
+      m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkDisplay(this,1,node.second));
       m_benchDisplay->show(m_anchorY+5,m_anchorX+12);
       m_benchDisplay->connect();
       MouseSensor::instance().add(this,m_benchDisplay->display());
@@ -406,14 +404,14 @@ int FarmDisplay::showBenchmarkWindow() {
   else if ( m_subfarmDisplay ) {
     string cluster_name = selectedCluster();
     if ( !cluster_name.empty() ) {
-      m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkSubfarmDisplay(this,cluster_name));
+      m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkDisplay(this,2,cluster_name));
       m_benchDisplay->show(m_anchorY+5,m_anchorX+12);
       m_benchDisplay->connect();
       MouseSensor::instance().add(this,m_benchDisplay->display());
     }
   }
   else {
-    m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkFarmDisplay(this,name()));
+    m_benchDisplay = auto_ptr<InternalDisplay>(createBenchmarkDisplay(this,3,name()));
     m_benchDisplay->show(m_anchorY+5,m_anchorX+12);
     m_benchDisplay->connect();
     MouseSensor::instance().add(this,m_benchDisplay->display());
