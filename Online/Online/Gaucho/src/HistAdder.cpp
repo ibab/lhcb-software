@@ -275,7 +275,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *)
         case H_PROFILE:
         case H_RATE:
           {
-            ndble = 3*(srch->nxbin+2);
+            ndble = 4*(srch->nxbin+2);
             break;
           }
         default:

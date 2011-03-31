@@ -39,10 +39,10 @@ void MonTimer::timerHandler ( void )
     m_Hsys->unLock();
   }
 //  DimLock lock();
-  dim_lock();
+//  dim_lock();
 //  printf("Updating the monitor service\n");
   m_Hsys->m_genSrv->Update();
-  dim_unlock();
+//  dim_unlock();
 //  printf(" timer_handler Monitor Sun System Un-Locking\n");
 //  printf("---------------timer_handler Monitor Sun System Un-LockED\n");
 }

@@ -224,9 +224,9 @@ void MonSubSys::EORUpdate(int runo)
   m_EORsvc->setRunNo(runo);
   m_EORsvc->Serialize();
 //  unLock();
-  dim_lock();
+//  dim_lock();
   m_EORsvc->Update();
-  dim_unlock();
+//  dim_unlock();
 }
 int MonSubSys::Lock(void)
 {
