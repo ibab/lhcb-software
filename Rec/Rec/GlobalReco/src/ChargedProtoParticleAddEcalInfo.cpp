@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddEcalInfo );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddEcalInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables

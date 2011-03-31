@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoParticleRemovePIDInfo
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleRemovePIDInfo.cpp,v 1.1 2010-03-15 17:17:01 jonrob Exp $
- *
  * @author Dmitry Golubkov
  * @date 13/03/2010
  */
@@ -21,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleRemovePIDInfo );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleRemovePIDInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables

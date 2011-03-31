@@ -18,7 +18,7 @@
  *  @author Olivier Deschamps
  */
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( NeutralProtoPAlg );
+DECLARE_ALGORITHM_FACTORY( NeutralProtoPAlg )
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================

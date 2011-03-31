@@ -4,9 +4,6 @@
  *
  * Implementation file for algorithm ChargedProtoParticleAddSpdInfo
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleAddSpdInfo.cpp,v 1.2 2010-03-08 01:46:40 odescham Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
  */
@@ -21,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddSpdInfo );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddSpdInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables

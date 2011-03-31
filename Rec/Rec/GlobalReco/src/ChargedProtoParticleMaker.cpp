@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker )
 
 //=============================================================================
 // Standard constructor, initializes variables

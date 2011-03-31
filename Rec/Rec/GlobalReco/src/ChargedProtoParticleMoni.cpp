@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni );
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables
