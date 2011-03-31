@@ -64,6 +64,7 @@ private:
   int m_desiredDeltaTCycle;// integer because dimTimer can only accept seconds
 
   // MonRate information
+  int m_one;
   int m_runNumber;
   int m_eorNumber;
   unsigned int m_triggerConfigurationKey;

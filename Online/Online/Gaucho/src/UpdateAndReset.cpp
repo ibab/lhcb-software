@@ -93,6 +93,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_pGauchoMonitorSvc = 0;
   EoEInc = 0;
   m_eorNumber = 0;
+  m_one = 1;
 }
 
 
@@ -170,7 +171,7 @@ StatusCode UpdateAndReset::start()
     }
   }
 
-
+  declareInfo("Tasks",m_one,"NumberOfTasks");
   sc = serviceLocator()->service("HistogramDataSvc", m_histogramSvc, true);
 
   if (sc.isFailure()) msg << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
