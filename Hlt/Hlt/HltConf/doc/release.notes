@@ -4,6 +4,16 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2011-03-31 - Gerhard Raven
+ - verify that the Hlt1SelectionID and Hlt2SelectionID do not have overlapping
+   values, as in that case the decoding would use the Hlt1SelectionID...
+   (this is a design mistake -- the fact that Hlt1 and Hlt2 end up in the same
+   rawbank implies that the numbers share a single namespace, but in the configuration
+   in the HltANNSvc they do not share this namespace -- hence the need for an 
+   explicit check. Fortunately, due to the number convention (Hlt2>50000, Hlt1<50000)
+   this problem hasn't happened yet, but there is no code which enforces this 
+   convention)
+
 !========================== HltConf v9r8   2011-03-29 ===================
 ! 2011-Mar-29 - V. Gligorov
  - Added SemilepD02HMuNu lines to Hlt2.py

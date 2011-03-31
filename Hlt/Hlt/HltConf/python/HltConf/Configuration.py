@@ -362,6 +362,15 @@ class HltConf(LHCbConfigurableUser):
         for i in hlt1extradecnames : del HltANNSvc().Hlt1SelectionID[i]
         for i in hlt2extradecnames : del HltANNSvc().Hlt2SelectionID[i]
 
+        # given that both Hlt1 and Hlt2 end up in the same rawbank, and thus
+        # effectively 'share a namespace' we MUST make sure that there is no overlap
+        # between Hlt1SelectionID and Hlt2SelectionID -- because if there is, on
+        # decoding, the Hlt1SelectionID _will_ be used... (as all the decoding knows
+        # is the number, and it first checks Hlt1SelectionID).
+        overlap =  set( HltANNSvc().Hlt1SelectionID.values() ).intersection( HltANNSvc().Hlt2SelectionID.values() )
+        if overlap :
+            raise RuntimeError, ' # Hlt1 and Hlt2 have overlapping ID values: %s -- this will cause problems when decoding the raw bank' % overlap 
+
 
         if False :
             from HltLine.HltLine     import hlt1Lines
