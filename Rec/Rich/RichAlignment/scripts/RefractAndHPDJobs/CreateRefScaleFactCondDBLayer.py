@@ -133,7 +133,7 @@ def getRunTimes(calibrations):
         if run in runTimeCache.keys():
             res = runTimeCache[run]
         else:
-            from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+            from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
             res = BookkeepingClient().getRunInformations(int(run))
             if len(res.keys()) > 0 and res.has_key('OK') :
                 if res['OK']:
