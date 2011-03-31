@@ -343,8 +343,8 @@ void HistAdder::add(void *buff, int siz, MonInfo *)
   }
   if (m_received >= m_expected)
   {
-    printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,m_expected);
-    fflush(stdout);
+//    printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,m_expected);
+//    fflush(stdout);
     if (m_isSaver)
     {
       UnLock();
