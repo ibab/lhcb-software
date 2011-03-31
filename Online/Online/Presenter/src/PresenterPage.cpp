@@ -676,6 +676,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
         if ( 0 != dispH->myObject() ) {
           PadContent newPad;
           newPad.pad = dispH->hostingPad();
+          newPad.hasTitle = dispH->hasTitle();
           newPad.objects.push_back( dispH );
           m_pads.push_back( newPad );
         }
@@ -684,7 +685,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
   }
   std::cout << "Set the legend" << std::endl;
   for ( std::vector<PadContent>::iterator itP = m_pads.begin(); m_pads.end() != itP; ++itP ) {
-    if ( 2 > (*itP).objects.size() ) continue;
+    if ( 2 > (*itP).objects.size() || (*itP).hasTitle ) continue;
     (*itP).pad->cd();
     float yMin =  1.0 - 0.05 * ( ((*itP).objects.size()+1)/2 );
     std::cout << "Legend for " << (*itP).objects.size() << " plots, ymin " << yMin << std::endl;
@@ -772,6 +773,26 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       (*itH).createGraph( values, update );
     }
     PresenterGaudi::trendingTool->closeFile( ) ;
+  }
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void PresenterPage::prepareDisplayHistos ( ) {
+  m_displayHistograms.clear();
+  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+    for ( std::vector<DisplayHistogram>::iterator itDH = (*itT).histos.begin(); (*itT).histos.end() != itDH; ++itDH ) {
+      m_displayHistograms.push_back( &(*itDH) );
+    }
+  }
+  for ( std::vector<AnalysisHisto>::iterator itA = m_analysis.begin(); m_analysis.end() != itA; ++itA ) {
+    m_displayHistograms.push_back( (*itA).displayHisto );
+  }
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+    for ( std::vector<DisplayHistogram>::iterator itDH = (*itF).histos.begin(); (*itF).histos.end() != itDH; ++itDH ) {
+      m_displayHistograms.push_back( &(*itDH) );
+    }
   }
 }
 //=============================================================================

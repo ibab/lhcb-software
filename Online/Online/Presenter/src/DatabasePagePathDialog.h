@@ -16,7 +16,7 @@ class PresenterMainFrame;
 class TGComboBox;
 class TGTextButton;
 class OnlineHistDB;
-class DbRootHist;
+class DisplayHistogram;
 class TGTextBuffer;
 class TGTextEntry;
 class TGTextEdit;
@@ -46,9 +46,6 @@ class DatabasePagePathDialog : public TGTransientFrame
     TGTextEdit*     m_pageDescriptionTextEditor;
     pres::MsgLevel  m_verbosity;
     int             m_msgBoxReturnCode;
-
-    std::vector<DbRootHist*>      m_DbHistosOnPage;
-    std::vector<DbRootHist*>::const_iterator m_DbHistosOnPageIt;
 
     ClassDef(DatabasePagePathDialog, 0)
 };

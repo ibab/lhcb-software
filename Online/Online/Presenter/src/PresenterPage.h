@@ -37,6 +37,7 @@ struct TrendingFile {
 
 struct PadContent {
   TPad* pad;
+  bool  hasTitle;
   std::vector<DisplayHistogram*> objects;
 };
   
@@ -109,6 +110,10 @@ public:
 
   void fillTrendingPlots ( int startTime, int endTime, bool update=false );
 
+  void prepareDisplayHistos();
+  
+  std::vector<DisplayHistogram*>& displayHistos() { return m_displayHistograms; }
+
 protected:
 
 private:
@@ -120,5 +125,6 @@ private:
   std::vector<AnalysisHisto> m_analysis;
   std::vector<TrendingFile> m_trends;
   std::vector<PadContent> m_pads;
+  std::vector<DisplayHistogram*> m_displayHistograms;
 };
 #endif // PRESENTERPAGE_H

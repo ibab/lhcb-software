@@ -295,6 +295,14 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
 
   pad->cd();
 
+  //== Title suppressed if overlapped plots AND no positioning of the title bo
+  m_hasTitle = m_nOverlap == 0;
+  float fopt = 0.;
+  if ( hasOption("HTIT_X_OFFS", &fopt) ) m_hasTitle = true;
+  if ( hasOption("HTIT_X_SIZE", &fopt) ) m_hasTitle = true;
+  if ( hasOption("HTIT_Y_OFFS", &fopt) ) m_hasTitle = true;
+  if ( hasOption("HTIT_Y_SIZE", &fopt) ) m_hasTitle = true;
+  
   if ( 0 != m_rootHistogram ) {
     if (TH2D::Class() == m_rootHistogram->IsA() && fastHitmapDraw ) {
       if (NULL == m_histogramImage) {
@@ -311,12 +319,12 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
                                   m_prettyPalette ); // gWebImagePalette
       m_histogramImage->Draw();
     } else {
-      if ( 0 < m_nOverlap ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
+      if ( !m_hasTitle ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
       std::string opt =  m_isOverlap ? "SAME" : "";
       m_rootHistogram->Draw(opt.c_str());
     }
   } else if ( 0 != m_timeGraph ) {
-    if ( 0 < m_nOverlap ) m_timeGraph->SetTitle( "" );
+    if ( !m_hasTitle ) m_timeGraph->SetTitle( "" );
     std::string opt =  m_isOverlap ? "SAME" : "AL";
     m_timeGraph->Draw(opt.c_str());
   }
@@ -391,32 +399,6 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
   std::string sopt("");
 
   if ( m_isTrendPlot ) { // special settings for trend mode
-    /*
-      m_rootHistogram->SetDrawOption("E1");
-      m_rootHistogram->SetStats(0);
-      TPaveStats* stats = (TPaveStats*) m_rootHistogram->GetListOfFunctions()->FindObject("stats");
-
-      if (stats) stats->Delete();
-      pad->SetLogx(0);
-      pad->SetLogy(0);
-      fopt=.16f;
-      pad->SetBottomMargin( (Float_t) fopt);
-      bool histByRun=false;
-      //if( 0 != m_presenterInfo ) histByRun = m_presenterInfo -> globalHistoryByRun() ;
-
-      if ( histByRun ) {
-      m_rootHistogram->GetXaxis()->SetTitle("run");
-      fopt=1.2f;
-      m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
-      } else {
-      m_rootHistogram->GetXaxis()->SetTitle("time");
-      fopt=1.6f;
-      m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
-      }
-      std::string ylab="Average";
-      if (hasOption("LABEL_X", &sopt)) ylab = ylab + " (" + sopt + ")";
-      m_rootHistogram->SetYTitle (ylab.data());
-    */
   } else {
     int statOpt = 0;
     if( false == hasOption("STATS", &statOpt)) statOpt = pres::s_defStatOptions;
@@ -425,61 +407,57 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
       if (hasOption("STATTRANSP", &iopt)) if ( iopt > 0 ) statStyle=1001;
       gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
       gStyle->SetOptStat( statOpt );
-      TPaveStats* stats = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+      m_statPave = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
 
-      if (stats) {
-        double x1=stats->GetX1NDC();
-        double x2=stats->GetX2NDC();
-        double y1=stats->GetY1NDC();
-        double y2=stats->GetY2NDC();
+      if (m_statPave) {
+        double x1=m_statPave->GetX1NDC();
+        double x2=m_statPave->GetX2NDC();
+        double y1=m_statPave->GetY1NDC();
+        double y2=m_statPave->GetY2NDC();
         if (hasOption("STAT_X_OFFS", &fopt)) x1 = fopt;
         if (hasOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
         if (hasOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
         if (hasOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
 
-        stats->SetX1NDC(x1);
-        stats->SetX2NDC(x2);
-        stats->SetY1NDC(y1);
-        stats->SetY2NDC(y2);
+        m_statPave->SetX1NDC(x1);
+        m_statPave->SetX2NDC(x2);
+        m_statPave->SetY1NDC(y1);
+        m_statPave->SetY2NDC(y2);
       }
     }
     // title pave
-    TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
-    if (titpave) {
+    m_titPave = (TPaveText*) pad->GetPrimitive("title");
+    if (m_titPave) {
       int optTit=1;
       if(hasOption("NOTITLE", &iopt) ) {
         if ( iopt > 0 ) optTit = 0;    //user requires no title window
       }
-      if ( 0 < m_nOverlap ) optTit = 0;
+
       if ( 0 == optTit ) {
         // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)
-        titpave->SetX1NDC(-2);
-        titpave->SetX2NDC(-1);
+        m_titPave->SetX1NDC(-2);
+        m_titPave->SetX2NDC(-1);
         std::cout << "Set title pave aside" << std::endl;
+        pad->SetName( "" );
       } else {
-        double x1=titpave->GetX1NDC();
-        double x2=titpave->GetX2NDC();
-        double y1=titpave->GetY1NDC();
-        double y2=titpave->GetY2NDC();
+        double x1=m_titPave->GetX1NDC();
+        double x2=m_titPave->GetX2NDC();
+        double y1=m_titPave->GetY1NDC();
+        double y2=m_titPave->GetY2NDC();
         if (hasOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
         if (hasOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
         if (hasOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
         if (hasOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
 
-        titpave->SetX1NDC(x1);
-        titpave->SetX2NDC(x2);
-        titpave->SetY1NDC(y1);
-        titpave->SetY2NDC(y2);
+        m_titPave->SetX1NDC(x1);
+        m_titPave->SetX2NDC(x2);
+        m_titPave->SetY1NDC(y1);
+        m_titPave->SetY2NDC(y2);
       }
     }
 
     if (hasOption("DRAWOPTS", &sopt) ) {
       if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
-      //if (m_fitfunction) { // remove HIST option that disables showing the fit
-      //  if (sopt.find("HIST") < sopt.size()) {
-      //    sopt.erase(sopt.find("HIST"), 4);
-      //  }
-      // }
       m_rootHistogram->SetDrawOption(sopt.c_str());
     }
     if (hasOption("LOGX", &iopt)) pad->SetLogx(1);
@@ -834,5 +812,225 @@ TObject* DisplayHistogram::myObject ( ) {
     return m_timeGraph;
   }
   return 0;
+}
+
+//=========================================================================
+//  Save the options for this display histogram
+//=========================================================================
+void DisplayHistogram::saveOptionsToDB ( TPad* pad ) {
+  if ( ( 0 == m_onlineHist ) ||
+       ( ( 0 == m_rootHistogram ) && ( 0 == m_timeGraph ) ) ) return;
+
+  bool out = false;
+
+  int iopt = 0;
+  float fopt = 0.0;
+  std::string sopt("");
+
+  // now title options
+
+  TPaveText* tit = (TPaveText*)pad->GetPrimitive("title");
+  if( tit && m_titPave && tit != m_titPave ) {
+    fopt = float(tit->GetX1NDC());
+    out |= updateDBOption("HTIT_X_OFFS", &fopt,
+                          TMath::Abs(fopt - m_titPave->GetX1NDC())<0.0001);
+    fopt = float(tit->GetX2NDC() - tit->GetX1NDC());
+    out |= updateDBOption("HTIT_X_SIZE", &fopt,
+                          TMath::Abs(fopt - (m_titPave->GetX2NDC()-m_titPave->GetX1NDC())) <0.0001);
+    fopt = float(tit->GetY1NDC());
+    out |= updateDBOption("HTIT_Y_OFFS", &fopt,
+                          TMath::Abs(fopt - m_titPave->GetY1NDC())<0.001);
+    fopt = float(tit->GetY2NDC() - tit->GetY1NDC());
+    out |= updateDBOption("HTIT_Y_SIZE", &fopt,
+                          TMath::Abs(fopt - (m_titPave->GetY2NDC()-m_titPave->GetY1NDC())) <0.0001);
+    delete m_titPave;
+    m_titPave = (TPaveText*) tit->Clone();
+  }
+
+  if ( 0 != m_rootHistogram ) {
+
+    sopt = m_rootHistogram->GetXaxis()->GetTitle();
+    out |= updateDBOption("LABEL_X", &sopt, sopt.empty());
+
+    sopt = m_rootHistogram->GetYaxis()->GetTitle();
+    out |= updateDBOption("LABEL_Y", &sopt, sopt.empty());
+    // note: axis minima and maxima should not be set in this way, but
+    // through the web interface
+
+    TPaveStats* stats = (TPaveStats*)m_rootHistogram->GetListOfFunctions() ->FindObject("stats");
+    // if histogram has not been plotted (or has been plotted without stats),
+    // do nothing
+    if (stats && m_statPave && stats != m_statPave ) {
+      std::cout << "Update state pave " << std::endl;
+      
+      iopt = (int) stats->GetOptStat();
+      // 111110 seems to be hardcoded in root
+      out |= updateDBOption("STATS", &iopt, iopt == 111110 );
+      fopt = float(stats->GetX1NDC());
+      out |= updateDBOption("STAT_X_OFFS", &fopt,
+                            TMath::Abs(fopt - m_statPave->GetX1NDC())<0.001);
+      fopt = float(stats->GetX2NDC() - stats->GetX1NDC());
+      out |= updateDBOption("STAT_X_SIZE", &fopt,
+                            TMath::Abs(fopt - (m_statPave->GetX2NDC()-m_statPave->GetX1NDC())) <0.001);
+      fopt = float(stats->GetY1NDC());
+      out |= updateDBOption("STAT_Y_OFFS", &fopt,
+                            TMath::Abs(fopt - m_statPave->GetY1NDC())<0.001);
+      fopt = float(stats->GetY2NDC() - stats->GetY1NDC());
+      out |= updateDBOption("STAT_Y_SIZE", &fopt,
+                            TMath::Abs(fopt - (m_statPave->GetY2NDC()-m_statPave->GetY1NDC())) <0.001);
+      delete m_statPave;
+      m_statPave = (TPaveStats*)stats->Clone();
+    }
+
+
+    iopt = (int) m_rootHistogram->GetFillStyle();
+    out |= updateDBOption("FILLSTYLE", &iopt,
+                          iopt == (int) gStyle->GetHistFillStyle());
+    iopt = (int) m_rootHistogram->GetFillColor();
+    out |= updateDBOption("FILLCOLOR", &iopt,
+                          iopt == (int) gStyle->GetHistFillColor());
+    iopt = (int) m_rootHistogram->GetLineStyle();
+    out |= updateDBOption("LINESTYLE", &iopt,
+                          iopt == (int) gStyle->GetHistLineStyle());
+    iopt = (int) m_rootHistogram->GetLineColor();
+    out |= updateDBOption("LINECOLOR", &iopt,
+                          iopt == (int) gStyle->GetHistLineColor());
+    iopt = (int) m_rootHistogram->GetLineWidth();
+    out |= updateDBOption("LINEWIDTH", &iopt,
+                          iopt == (int) gStyle->GetHistLineWidth());
+    iopt = (int) m_rootHistogram->GetMarkerStyle();
+    out |= updateDBOption("MARKERSTYLE", &iopt,
+                          iopt == (int) gStyle->GetMarkerStyle());
+    fopt = (float) m_rootHistogram->GetMarkerSize();
+    out |= updateDBOption("MARKERSIZE", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetMarkerSize())<0.00001 );
+    iopt = (int) m_rootHistogram->GetMarkerColor();
+    out |= updateDBOption("MARKERCOLOR", &iopt,
+                          iopt == (int) gStyle->GetMarkerColor());
+
+    sopt = m_rootHistogram->GetDrawOption();
+    if (sopt.empty()) { sopt = m_rootHistogram->GetOption(); }
+    out |= updateDBOption("DRAWOPTS",  &sopt, sopt.empty());
+
+    fopt = m_rootHistogram->GetXaxis()->GetTitleSize();
+    out |= updateDBOption("TIT_X_SIZE", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetTitleSize("X"))<0.0001);
+    fopt = m_rootHistogram->GetXaxis()->GetTitleOffset();
+    out |= updateDBOption("TIT_X_OFFS", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetTitleOffset("X"))<0.0001);
+    fopt = m_rootHistogram->GetXaxis()->GetLabelSize();
+    out |= updateDBOption("LAB_X_SIZE", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetLabelSize("X"))<0.0001);
+    fopt = m_rootHistogram->GetXaxis()->GetLabelOffset();
+    out |= updateDBOption("LAB_X_OFFS", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetLabelOffset("X"))<0.0001);
+    iopt = m_rootHistogram->GetNdivisions("X");
+    out |= updateDBOption("NDIVX", &iopt,
+                          iopt == (int) gStyle->GetNdivisions("X"));
+
+    fopt = m_rootHistogram->GetYaxis()->GetTitleSize();
+    out |= updateDBOption("TIT_Y_SIZE", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetTitleSize("Y"))<0.0001);
+    fopt = m_rootHistogram->GetYaxis()->GetTitleOffset();
+    out |= updateDBOption("TIT_Y_OFFS", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetTitleOffset("Y"))<0.0001);
+    fopt = m_rootHistogram->GetYaxis()->GetLabelSize();
+    out |= updateDBOption("LAB_Y_SIZE", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetLabelSize("Y"))<0.0001);
+    fopt = m_rootHistogram->GetYaxis()->GetLabelOffset();
+    out |= updateDBOption("LAB_Y_OFFS", &fopt,
+                          TMath::Abs(fopt - (float) gStyle->GetLabelOffset("Y"))<0.0001);
+    iopt = m_rootHistogram->GetNdivisions("Y");
+    out |= updateDBOption("NDIVY", &iopt,
+                          iopt == (int) gStyle->GetNdivisions("Y"));
+
+    if (m_onlineHist->dimension() > 1) {
+      sopt = m_rootHistogram->GetZaxis()->GetTitle();
+      out |= updateDBOption("LABEL_Z", &sopt, sopt.empty());
+      fopt = m_rootHistogram->GetZaxis()->GetTitleSize();
+      out |= updateDBOption("TIT_Z_SIZE",  &fopt,
+                            TMath::Abs(fopt - (float) gStyle->GetTitleSize("Z"))<0.0001);
+      fopt = m_rootHistogram->GetZaxis()->GetTitleOffset();
+      out |= updateDBOption("TIT_Z_OFFS",  &fopt,
+                            TMath::Abs(fopt - (float) gStyle->GetTitleOffset("Z"))<0.0001);
+      fopt = m_rootHistogram->GetZaxis()->GetLabelSize();
+      out |= updateDBOption("LAB_Z_SIZE",  &fopt,
+                            TMath::Abs(fopt - (float) gStyle->GetLabelSize("Z"))<0.0001);
+      fopt = m_rootHistogram->GetZaxis()->GetLabelOffset();
+      out |= updateDBOption("LAB_Z_OFFS",  &fopt,
+                            TMath::Abs(fopt - (float) gStyle->GetLabelOffset("Z"))<0.0001);
+    }
+  }
+
+  // now options from Pad ... be sure we are in the right Pad
+  if (pad) {
+    iopt = pad->GetLogx();
+    out |= updateDBOption("LOGX", &iopt, iopt == gStyle->GetOptLogx());
+    iopt = pad->GetLogy();
+    out |= updateDBOption("LOGY", &iopt, iopt == gStyle->GetOptLogy());
+    iopt = pad->GetGridx() ? 1 : 0;
+    out |= updateDBOption("GRIDX", &iopt, (iopt>0) == gStyle->GetPadGridX());
+    iopt = pad->GetGridy() ? 1 : 0;
+    out |= updateDBOption("GRIDY", &iopt, (iopt>0) == gStyle->GetPadGridY());
+    iopt = pad->GetTickx();
+    out |= updateDBOption("TICK_X", &iopt, iopt == gStyle->GetPadTickX());
+    iopt = pad->GetTicky();
+    out |= updateDBOption("TICK_Y", &iopt, iopt == gStyle->GetPadTickY());
+    fopt = (float)pad->GetTopMargin();
+    out |= updateDBOption("MARGIN_TOP", &fopt,
+                          TMath::Abs(fopt - (float)gStyle->GetPadTopMargin())<0.0001);
+    fopt = (float)pad->GetBottomMargin();
+    out |= updateDBOption("MARGIN_BOTTOM", &fopt,
+                          TMath::Abs(fopt - (float)gStyle->GetPadBottomMargin())<0.0001);
+    fopt = (float)pad->GetLeftMargin();
+    out |= updateDBOption("MARGIN_LEFT", &fopt,
+                          TMath::Abs(fopt - (float)gStyle->GetPadLeftMargin())<0.0001);
+    fopt = (float)pad->GetRightMargin();
+    out |= updateDBOption("MARGIN_RIGHT", &fopt,
+                          TMath::Abs(fopt - (float)gStyle->GetPadRightMargin())<0.0001);
+    iopt = pad->GetFillColor();
+    out |= updateDBOption("PADCOLOR", &iopt, iopt == 10 ); // 10 corresponds to GetWhitePixel()
+    //(int)gStyle->GetPadColor() );
+
+    if (m_onlineHist->dimension() > 1) {
+      iopt = pad->GetLogz();
+      out |= updateDBOption("LOGZ", &iopt, iopt == gStyle->GetOptLogz());
+      fopt = (float)pad->GetTheta();
+      // seems to be hardcoded in root:
+      out |= updateDBOption("THETA", &fopt, (int)fopt == 30);
+      fopt = (float)pad->GetPhi();
+      // seems to be hardcoded in root
+      out |= updateDBOption("PHI", &fopt, (int)fopt == 30);
+    }
+  }
+  if (out) m_onlineHist->saveDisplayOptions();
+}
+
+//=========================================================================
+//  Update the option
+//=========================================================================
+bool DisplayHistogram::updateDBOption( std::string opt, void* value, bool isDefault) {
+  if ( 0 == m_onlineHist  ) return false ;
+
+  bool update = false;
+  bool out = false;
+  if ( m_onlineHist->isSetDisplayOption(opt) ) {
+    update = m_onlineHist->changedDisplayOption( opt, value);
+  } else if (!isDefault) {
+    update=true;
+  }
+  if ( update ) {
+    out = m_onlineHist->setDisplayOption(opt, value);
+    std::cout << "Changed option " << opt << " to " << value << std::endl;
+  }
+  return out;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void DisplayHistogram::setOnlineHistogram( OnlineHistogram* hist ) {
+  if ( NULL != m_onlineHist ) delete m_onlineHist; 
+  m_onlineHist = hist;
 }
 //=============================================================================

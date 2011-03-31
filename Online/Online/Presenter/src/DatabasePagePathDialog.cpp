@@ -189,45 +189,44 @@ void DatabasePagePathDialog::ok()
       double xlow, ylow, xup, yup;
 
       // first, save owners of pads (not overlaps)
-      for (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
-           m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
-           m_DbHistosOnPageIt++) {
-        if(TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) {
-          if( (*m_DbHistosOnPageIt)->isOverlap()) {
-            thereAreOverlaps = true;
-          }
-          else {
-            if ((*m_DbHistosOnPageIt)->getHostingPad()) {
-              ((*m_DbHistosOnPageIt)->getHostingPad())->GetPadPar(xlow, ylow, xup, yup);
-              OnlineHistogram* onlineHistogram =  
-                page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
-                                   (float)xlow , (float)ylow, (float)xup, (float)yup);
-              if (0 != onlineHistogram) {
-                (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
-              }
-              padOwner[(*m_DbHistosOnPageIt)->getHostingPad()] = (*m_DbHistosOnPageIt)->onlineHistogram();          
-            }
+
+      m_mainFrame->myPage().prepareDisplayHistos();   // Build the final list of all displayhistograms of the page.
+      
+      std::vector<DisplayHistogram*>::iterator itDH;
+      for ( itDH  = m_mainFrame->myPage().displayHistos().begin();
+            itDH != m_mainFrame->myPage().displayHistos().end();
+            itDH++) {
+        
+        if( 0 < (*itDH)->isOverlap()) {
+          thereAreOverlaps = true;
+        } else {
+          if ( (*itDH)->hostingPad()) {
+             ( (*itDH)->hostingPad() )->GetPadPar(xlow, ylow, xup, yup);
+            OnlineHistogram* onlineHistogram = page->addHistogram( (*itDH)->histo(),
+                                                                   (float)xlow , (float)ylow, (float)xup, (float)yup);
+            //if (0 != onlineHistogram) {
+            //  (*itDH)->setOnlineHistogram(onlineHistogram);
+            //}
+            padOwner[(*itDH)->hostingPad()] = onlineHistogram;          
           }
         }
       }
+
       page->setPatternFile(patternFile);
 
-      if (page->save()) {
+      if ( page->save() ) {
         if (thereAreOverlaps) {
           int iov=0;
           // add definitions of overlapped histograms
-          for (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
-               m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
-               m_DbHistosOnPageIt++) {
-            if( (*m_DbHistosOnPageIt)->isOverlap() &&
-                (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
-              OnlineHistogram* onlineHistogram =
-                page->addOverlapHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
-                                          padOwner[(*m_DbHistosOnPageIt)->getHostingPad()],
-                                          (padOwner[(*m_DbHistosOnPageIt)->getHostingPad()])->instance(),
-                                          iov++);
-              if (0 != onlineHistogram) 
-                (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+          for ( itDH  = m_mainFrame->myPage().displayHistos().begin();
+                itDH != m_mainFrame->myPage().displayHistos().end();
+                itDH++) {
+            if( (*itDH)->isOverlap() ) {
+              OnlineHistogram* onlineHistogram = page->addOverlapHistogram( (*itDH)->histo(),
+                                                                            padOwner[(*itDH)->hostingPad()],
+                                                                            (padOwner[(*itDH)->hostingPad()])->instance(),
+                                                                            iov++ );
+              //if (0 != onlineHistogram) (*itDH)->setOnlineHistogram(onlineHistogram);
             }
           }
           page->save();
@@ -235,14 +234,12 @@ void DatabasePagePathDialog::ok()
 
         // now save current ROOT display options of histograms on page
         
-        for  (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
-              m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
-              m_DbHistosOnPageIt++) {        
-          if( (*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name() &&
-              (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
-
-            (*m_DbHistosOnPageIt)->getHostingPad()->cd();
-            (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->getHostingPad());
+        for ( itDH  = m_mainFrame->myPage().displayHistos().begin();
+              itDH != m_mainFrame->myPage().displayHistos().end();
+              itDH++) {
+          if( (*itDH)->histo()->page() == page->name() ) {
+            (*itDH)->hostingPad()->cd();
+            (*itDH)->saveOptionsToDB( (*itDH)->hostingPad() );
           }
         }
       }
@@ -250,12 +247,13 @@ void DatabasePagePathDialog::ok()
       m_histogramDB->commit();
     } catch (std::string sqlException) {
       m_mainFrame->setStatusBarText(sqlException.c_str(), 0);
-      if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
+      std::cout << sqlException << std::endl;
+      /*
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
           Form("Could save the page to OnlineHistDB:\n\n%s\n",
                sqlException.c_str()),
-          kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+               kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+      */
     }
     CloseWindow();
   }

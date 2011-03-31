@@ -436,6 +436,8 @@ public:
   void setDumpFormat(const std::string & dumpFormat) {
     m_dumpFormat = dumpFormat; } ;
 
+  PresenterPage& myPage() { return m_presenterPage; }
+
  private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;

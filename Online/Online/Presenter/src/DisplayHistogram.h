@@ -10,6 +10,8 @@ class TPad;
 class TImagePalette;
 class TImage;
 class TGraph;
+class TPaveText;
+class TPaveStats;
 
 /** @class DisplayHistogram DisplayHistogram.h
  *  This class contains the information on a histogram, for display
@@ -25,6 +27,7 @@ public:
   virtual ~DisplayHistogram( ); ///< Destructor
 
   OnlineHistogram* histo() { return m_onlineHist; }
+  void setOnlineHistogram( OnlineHistogram* hist );
 
   void setShortName( std::string name ) { m_shortName = name; }
   std::string shortName() { return m_shortName; }
@@ -78,6 +81,12 @@ public:
   void increaseOverlap() { m_nOverlap++; }
   int nOverlap() { return m_nOverlap; }
 
+  void saveOptionsToDB( TPad* pad );
+  bool updateDBOption( std::string opt, void* value, bool isDefault);
+
+  bool isOverlap() { return m_isOverlap; }
+  bool hasTitle() { return m_hasTitle; }
+  
 protected:
 
 private:
@@ -89,11 +98,14 @@ private:
   TH1* m_offsetHistogram; ///< pointer to offset histogram
   TH1* m_referenceHist;   ///< reference histogram
   TPad* m_hostingPad;     ///< TPad for this histogram
+  TPaveText* m_titPave;
+  TPaveStats* m_statPave;
   TImage* m_histogramImage ; ///< histogram image
   TImagePalette* m_prettyPalette ; ///< palette 
   TGraph* m_timeGraph;
   double* m_timeArray;
   double* m_valueArray;
   int     m_nOverlap;
+  bool    m_hasTitle;
 };
 #endif // DISPLAYHISTOGRAM_H

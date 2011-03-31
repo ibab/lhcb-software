@@ -4,6 +4,13 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-03-31 - Olivier Callot
+ - Use TLegend only if the first plot has no title positionned.
+ - Browsing of histograms in Editor Online works, but only with the new monitoring 
+   service
+ - Deleting pages is possible by tree, a second confirmation is needed if one will delete
+   more than one page.
+
 ! 2011-03-29 - Olivier Callot
  - Fix the ELog report for offline data quality
 
