@@ -1,0 +1,19 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltMonitor
+! Responsible : Roel Aaij
+! Purpose     : Offline monitoring of Hlt from raw data
+!-----------------------------------------------------------------------------
+
+! 2011-03-30 - Roel Aaij
+ - Initial import of package
+ - The package contains code which allows the running of some monitoring tasks
+   on the raw data where the input files are split over a number of processes
+   while the main process collects data and fills histograms.
+ - Currently three monitoring "algorithms" are available:
+   - Vertex, creates histograms of filtered and unfiltered PV3D vertices
+   - Rate, creates rate plots for all Hlt lines and routing bits
+   - Mass, creates plots for the number of candidates and their mass for a
+     selected number of Hlt lines
+ - The monitor.py scripts is the main program; use its --help option for more
+   information.
+ - The monitoring currently only works in the online environment.

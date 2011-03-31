@@ -1,0 +1,19 @@
+#============================================================================
+# Created    : 2011-03-30
+# Maintainer : Roel Aaij
+#============================================================================
+package           Hlt/HltMonitor
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package			v1r*    Hat
+use     GaudiKernel             v*
+
+apply_pattern install_python_modules
