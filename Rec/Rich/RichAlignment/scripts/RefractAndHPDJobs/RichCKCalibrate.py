@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v39r0p2' ) )
+                j = Job( application = Brunel( version = 'v39r0p3' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -98,11 +98,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v39r0p2",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v39r0p3",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v39r0p2",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v39r0p3",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -763,15 +763,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v39r0p2",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v39r0p3",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v39r0p2",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v39r0p3",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v39r0p2",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v39r0p3",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -999,8 +999,8 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
 
                 # Full Fitting range
                 if rad == 'Rich1Gas' :
-                    fitMax = xPeak+0.0062
-                    fitMin = xPeak-0.0085
+                    fitMax = xPeak+0.0069
+                    fitMin = xPeak-0.0088
                 else:
                     fitMax = xPeak+0.0036
                     fitMin = xPeak-0.0044

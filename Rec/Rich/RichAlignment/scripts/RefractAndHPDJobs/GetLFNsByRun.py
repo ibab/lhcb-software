@@ -51,66 +51,64 @@ allOK = True
 # Dictionary for LFNs by Run
 RunLFNs = { }
 
-for day in range(startday,endday):
+startDate = getDate(year,month,startday)
+endDate   = getDate(year,month,endday)
 
-  startDate = getDate(year,month,day)
-  endDate   = getDate(year,month,day+1)
+dict = { 'StartDate'        : startDate,
+         'EndDate'          : endDate,
+         'AllowOutsideRuns' : True # Allows run to start inside but finish outside the dates
+         }
+print "Getting Runs with", dict
+resultA = database.getRunsWithAGivenDates(dict)
+
+if not resultA['OK']:
   
-  dict = { 'StartDate'        : startDate,
-           'EndDate'          : endDate,
-           'AllowOutsideRuns' : True # Allows run to start inside but finish outside the dates
-           }
-  print "Getting Runs with", dict
-  resultA = database.getRunsWithAGivenDates(dict)
-
-  if not resultA['OK']:
+  print 'ERROR %s' % (resultA['Message'])
+  exitCode = 2
+  # Return
+  DIRAC.exit(exitCode)
   
-    print 'ERROR %s' % (resultA['Message'])
-    exitCode = 2
-    # Return
-    DIRAC.exit(exitCode)
+else:
+
+  runs = resultA['Value']['Runs']
+  print runs
   
-  else:
-
-    runs = resultA['Value']['Runs']
-    print runs
-    
-    # Sort runs into numerical order
-    runs.sort()
-
-    # Loop over runs
-    for run in runs :
-
-      type = 91000000 # EXPRESS Stream
-      if year == 2009 : type = 90000000 # Use full stream for 2009
-      if run > 77595 and run < 77624 :
-        print "Warning : run", run, "had no EXPRESS stream :( Using FULL instead"
-        type = 90000000 # FULL Stream
+  # Sort runs into numerical order
+  runs.sort()
   
-      # Raw files
-      bkDict = {'ConfigName'           : 'LHCb',
-                'ConfigVersion'        : ConfigV,
-                'ProcessingPass'       : procpass,
-                'FileType'             : 'ALL',
-                'StartRun'             : run,
-                'EndRun'               : run,
-                'EventType'            : type }
-      resultB = database.getFilesWithGivenDataSets(bkDict)
-      if not resultB['OK']:
-        print resultB['Message']
-        allOK = False
+  # Loop over runs
+  for run in runs :
+
+    type = 91000000 # EXPRESS Stream
+    if year == 2009 : type = 90000000 # Use full stream for 2009
+    if run > 77595 and run < 77624 :
+      print "Warning : run", run, "had no EXPRESS stream :( Using FULL instead"
+      type = 90000000 # FULL Stream
+  
+    # Raw files
+    bkDict = {'ConfigName'           : 'LHCb',
+              'ConfigVersion'        : ConfigV,
+              'ProcessingPass'       : procpass,
+              'FileType'             : 'ALL',
+              'StartRun'             : run,
+              'EndRun'               : run,
+              'EventType'            : type }
+    resultB = database.getFilesWithGivenDataSets(bkDict)
+    if not resultB['OK']:
+      print resultB['Message']
+      allOK = False
+    else:
+      tmpLFNList = [ ]
+      for lfn in resultB['Value']:
+        filetype = lfn.split('.')[1]
+        if filetype == 'dst' or filetype == 'raw':
+          tmpLFNList += ["LFN:"+lfn]
+      if len(tmpLFNList) > 0 :
+        RunLFNs[run] = tmpLFNList
+        print "Selected", len(RunLFNs[run]), "LFNs for run", run
       else:
-        tmpLFNList = [ ]
-        for lfn in resultB['Value']:
-          filetype = lfn.split('.')[1]
-          if filetype == 'dst' or filetype == 'raw':
-            tmpLFNList += ["LFN:"+lfn]
-        if len(tmpLFNList) > 0 :
-          RunLFNs[run] = tmpLFNList
-          print "Selected", len(RunLFNs[run]), "LFNs for run", run
-        else:
-          print "No data selected for run", run
-
+        print "No data selected for run", run
+        
 if allOK :
     
   # Pickle the data

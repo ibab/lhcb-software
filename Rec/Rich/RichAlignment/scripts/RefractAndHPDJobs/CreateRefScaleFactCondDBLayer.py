@@ -17,6 +17,11 @@ if len(args) < 1:
     usage()
     DIRAC.exit(2)
 
+def dateString():
+    import datetime
+    now = datetime.datetime.now()
+    return now.strftime("%d%m%Y")
+  
 def genXML(data,run):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
@@ -153,14 +158,19 @@ def getRunTimes(calibrations):
     # Return the Run Time Information
     return times
 
+# ======================================================================================
+
+# Name of calibrations
+rootName = str(args[0])
+
 # Open a new DB
-dbFileName = "NewRichCKRefIndexCalib.db"
+dbFileName = rootName+"-"+dateString()+".db"
 if os.path.exists(dbFileName) : os.remove(dbFileName)
 db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
                       create_new_db=True, readOnly=False )
+print "Opened DB file", dbFileName
 
 # Load the RICH1 and RICH2 calibrations from file
-rootName = str(args[0])
 cali1 = getCalibrationsFromFile('Rich1',rootName)
 cali2 = getCalibrationsFromFile('Rich2',rootName)
 
@@ -174,3 +184,5 @@ fillDB(cali2,db,runsTimes,'Rich2')
 print "Done"
 
 DIRAC.exit(0)
+
+# ======================================================================================

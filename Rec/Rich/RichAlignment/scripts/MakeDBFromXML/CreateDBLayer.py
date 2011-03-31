@@ -55,19 +55,21 @@ def fileMD5(file):
     return m.hexdigest()
 
 # Mirror alignment
-#upAlign    = "/usera/jonesc/NFS/DetDB/CurrentDB/Up"
-#dnAlign    = "/usera/jonesc/NFS/DetDB/CurrentDB/Down"
+#upAlign    = "/usera/jonesc/NFS/DetDB/Mirrors/Up"
+dnAlign    = "/usera/jonesc/NFS/DetDB/TmpMirrors"
 #dbFileName = "NewMirrorHPDAlignFieldPolarity"
+dbFileName = "FixedRICH1Align"
+
+# Mirror alignment
+#upAlign    = "/usera/jonesc/NFS/DetDB/Mirrors/Up"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/Mirrors/Down"
+#dbFileName = "NewMirrorHPDAlignFieldPolarity"
+#dbFileName = "NewMirrorAlign"
 
 # Detector Numbers
 #upAlign = "/usera/jonesc/NFS/DetDB/DetNumbers"
 #dnAlign = "/usera/jonesc/NFS/DetDB/DetNumbers"
 #dbFileName = "NewDetNumbersCondDB"
-
-# Detector Numbers - test
-upAlign = "/usera/jonesc/NFS/DetDB/DetNumbers-tmp"
-dnAlign = "/usera/jonesc/NFS/DetDB/DetNumbers-tmp"
-dbFileName = "NewDetNumbersCondDB-tmp"
 
 # MDMS
 #upAlign = "/usera/jonesc/NFS/DetDB/MDMS"
@@ -80,6 +82,8 @@ dbFileName = "NewDetNumbersCondDB-tmp"
 # Hardcode the field changes. Format is date of change and the new polarity
 field = { }
 #                          Year  Month  Day   Hour   Min  Sec
+
+# 2010
 #field[ datetime.datetime(  2009,  9,     1,    1,     0,   0  ) ] = dnAlign
 #field[ datetime.datetime(  2010,  4,     5,    2,     0,   0  ) ] = upAlign
 #field[ datetime.datetime(  2010,  4,     6,    2,     0,   0  ) ] = dnAlign
@@ -94,6 +98,7 @@ field = { }
 #field[ datetime.datetime(  2010,  9,    22,   16,     0,   0  ) ] = upAlign
 #field[ datetime.datetime(  2010,  10,   24,    9,     0,   0  ) ] = dnAlign
 
+# 2011
 field[ datetime.datetime(  2011,  1,   1,    1,     0,   0  ) ] = dnAlign 
 
 # Open a new DB file
