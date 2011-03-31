@@ -2,10 +2,10 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagDown.py</text>
+    <text>$BRUNELOPTS/COLLISION11-Beam3500GeV-VeloClosed-MagDown.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=200;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="SDST"; Brunel().PackType="MDF"; Brunel().DataType="2011" </text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="SDST"; Brunel().PackType="MDF"</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2011magdown.ref</text></argument>
   <argument name="validator"><text>
