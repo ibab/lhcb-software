@@ -2,7 +2,6 @@
 #ifndef RICHHPDIMAGEANALYSIS_HPDFIT_H
 #define RICHHPDIMAGEANALYSIS_HPDFIT_H 1
 
-#include <iostream>
 #include "RichHPDImageAnalysis/HPDPixel.h"
 #include "TH2D.h"
 #include "RichKernel/RichDAQDefinitions.h"
@@ -143,12 +142,12 @@ namespace Rich
                            const Params& params ) const;
 
       /// Get the boundary pixels (read only access)
-      const Pixel::List & boundaryPixels() const { return *m_boundaryPixels; }
+      const Pixel::List & boundaryPixels() const { return m_boundaryPixels; }
 
     private:
 
       /// List of boundary pixels
-      mutable Pixel::List * m_boundaryPixels;
+      mutable Pixel::List m_boundaryPixels;
 
     };
 

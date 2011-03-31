@@ -28,17 +28,14 @@ using namespace Rich::HPDImage;
 //
 // 2011-03-02 : Chris Jones
 //-----------------------------------------------------------------------------
+
 HPDFit::HPDFit()
 { 
-  m_boundaryPixels = new Pixel::List();
-  m_boundaryPixels->reserve( Rich::DAQ::NumPixelColumns * 
-                             Rich::DAQ::NumPixelRows ); 
+  // m_boundaryPixels.reserve( Rich::DAQ::NumPixelColumns * 
+  //                           Rich::DAQ::NumPixelRows ); 
 }
 
-HPDFit::~HPDFit() 
-{
-  delete m_boundaryPixels;
-}
+HPDFit::~HPDFit() { }
 
 HPDFit::Result HPDFit::fit ( const TH2D& hist,
                              const Params& params ) const
@@ -47,7 +44,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
   Result result;
 
   // Clear working boundary list
-  Pixel::List & boundary = *m_boundaryPixels;
+  Pixel::List & boundary = m_boundaryPixels;
   boundary.clear();
 
   // Clean the HPD image if requested
@@ -169,7 +166,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
       ROOT::Minuit2::MnUserParameters par;
       par.Add ( "Col0",   16.0 , 0.5 );
       par.Add ( "Row0",   16.0 , 0.5 );
-      par.Add ( "Radius", 16.0 , 0.5 );
+      par.Add ( "Radius", 12.5 , 0.5 );
 
       // The function to minimise
       SimpleChi2Fit FCN( hToUse, boundary );
@@ -254,8 +251,8 @@ std::ostream& HPDFit::Params::fillStream ( std::ostream& os ) const
   os << "{" 
      << " Fit Type = " << type
      << " | Max. Image Shift = " << maxImageShift;
-  if ( cleanHistogram ) { os << " | HPD Cleaning"; }
-  else { os << " | No HPD Cleaning"; }
+  if ( cleanHistogram ) { os << " | HPD Cleaning";    }
+  else                  { os << " | No HPD Cleaning"; }
   return os << " }";
 }
 

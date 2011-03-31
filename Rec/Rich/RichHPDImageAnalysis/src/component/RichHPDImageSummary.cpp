@@ -19,8 +19,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
   Summary::Summary( const std::string& name,
                     ISvcLocator* pSvcLocator )
     : HistoAlgBase ( name , pSvcLocator ) ,
-      m_nEvt       ( 0    ),
-      m_fitter     ( NULL )
+      m_nEvt       ( 0    )
 {
   setProperty( "StatPrint", false );
   declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
@@ -174,12 +173,6 @@ StatusCode Summary::finalize()
   }
   m_histo.clear() ;
 
-  // delete the fitter
-  verbose() << "Deleting the fitter object" << endmsg;
-  delete m_fitter;
-  m_fitter = NULL;
-  verbose() << " ... Done" << endmsg;
-
   return HistoAlgBase::finalize();  // must be called after all other actions
 }
 
@@ -241,7 +234,7 @@ void Summary::summaryINFO( const LHCb::RichSmartID id,
   }
 
   // Do the fit
-  const HPDFit::Result result = fitter()->fit( *hist, m_params );
+  const HPDFit::Result result = m_fitter.fit( *hist, m_params );
 
   // if fit failed, don't fill.
   if ( !result.OK() )
