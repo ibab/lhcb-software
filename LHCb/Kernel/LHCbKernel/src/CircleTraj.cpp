@@ -1,4 +1,3 @@
-// $Id: CircleTraj.cpp,v 1.12 2007-10-16 11:50:59 wouter Exp $
 // Include files
 
 // local
@@ -42,7 +41,7 @@ CircleTraj::CircleTraj( const Point& origin,
     m_radius(m_dirStart.r())
 {}
 
-/// Point on the trajectory at arclength from the starting point    
+/// Point on the trajectory at arclength from the starting point
 Trajectory::Point CircleTraj::position( double s ) const
 {
   return m_origin+m_radius*AxisAngle(m_normal,s/m_radius)(m_dirStart);
@@ -55,7 +54,7 @@ Trajectory::Vector CircleTraj::direction( double s ) const
 }
 
 /// Second derivative of the trajectory at arclength from the starting point
-Trajectory::Vector CircleTraj::curvature( double s ) const 
+Trajectory::Vector CircleTraj::curvature( double s ) const
 {
   return (-1.0/m_radius)*AxisAngle(m_normal,s/m_radius)(m_dirStart);
 }
@@ -77,14 +76,14 @@ void CircleTraj::expansion( double s,
 /// given point, and return the corresponding arclength
 double CircleTraj::muEstimate( const Point& point ) const
 {
-  // get vector from origin, to point after projecting it 
+  // get vector from origin, to point after projecting it
   // into the plane of the circle. (i.e. this vector is normal
   // to m_normal)
   Vector r( (point - m_normal.Dot(point-m_origin)*m_normal)-m_origin );
 
   // Determine delta phi angle between arclength=0 angle and angle of r
   double dphi = r.phi() - m_dirStart.phi();
-  
+
   // Check whether angle outside of [-pi/2,+pi/2]
   if( m_dirStart.Dot( r ) < 0) {
     if( dphi > M_PI ) dphi -= 2*M_PI;
@@ -96,7 +95,7 @@ double CircleTraj::muEstimate( const Point& point ) const
 
 /// arclength until deviation of the trajectory from the expansion
 /// reaches the specified tolerance.
-double CircleTraj::distTo1stError( double /*arclen*/, double tolerance, int /*direction*/) const 
+double CircleTraj::distTo1stError( double /*arclen*/, double tolerance, int /*direction*/) const
 {
   // require 2nd order term to be less than tolerance...
   return std::sqrt(2*tolerance*m_radius);

@@ -4,9 +4,6 @@
  *
  *  Header file for vector class LHCb::FastAllocVector
  *
- *  CVS Log :-
- *  $Id: FastAllocVector.h,v 1.3 2010-05-26 09:01:47 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   29/03/2007
  */
@@ -42,7 +39,7 @@
 #endif
 #endif
 #else
-// Not GNUC, so disable allocators 
+// Not GNUC, so disable allocators
 #define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
 #endif
 

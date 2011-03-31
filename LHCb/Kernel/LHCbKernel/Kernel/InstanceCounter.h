@@ -1,5 +1,4 @@
-// $Id: InstanceCounter.h,v 1.3 2004-08-26 15:15:56 ibelyaev Exp $
-#ifndef KERNEL_INSTANCECOUNTER_H 
+#ifndef KERNEL_INSTANCECOUNTER_H
 #define KERNEL_INSTANCECOUNTER_H 1
 
 // Include files
@@ -23,11 +22,11 @@ public:
   InstanceCounter() : m_count(0)   {
   }
   virtual ~InstanceCounter()   {
-    if ( 0 != m_count ) 
+    if ( 0 != m_count )
     {
       std::cout << "Number of objects of type: "
                 << System::typeinfoName(typeid(T))
-                << " created, but not destroyed:" 
+                << " created, but not destroyed:"
                 << m_count
                 << std::endl;
     }

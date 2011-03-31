@@ -1,4 +1,3 @@
-// $Id: AlignTraj.h,v 1.5 2008-12-10 10:07:11 lnicolas Exp $
 #ifndef KERNEL_ALIGNTRAJ_H
 #define KERNEL_ALIGNTRAJ_H 1
 

@@ -1,4 +1,3 @@
-// $Id: LineTraj.cpp,v 1.14 2007-10-16 11:50:59 wouter Exp $
 // Include files
 
 // local
@@ -23,7 +22,7 @@ LineTraj::LineTraj( const Point& begPoint,
   m_dir = m_dir.Unit();
 }
 
-/// Point on the trajectory at arclength from the starting point    
+/// Point on the trajectory at arclength from the starting point
 Trajectory::Point LineTraj::position( double arclength ) const
 {
   return m_pos + arclength * m_dir;
@@ -36,7 +35,7 @@ Trajectory::Vector LineTraj::direction( double /* arclength*/ ) const
 }
 
 /// Second derivative of the trajectory at arclength from the starting point
-Trajectory::Vector LineTraj::curvature( double /* arclength */ ) const 
+Trajectory::Vector LineTraj::curvature( double /* arclength */ ) const
 {
   return Vector(0,0,0);
 }
@@ -61,7 +60,7 @@ double LineTraj::muEstimate( const Point& point ) const
 }
 
 // 1st order approx OK everywhere
-double LineTraj::distTo1stError( double , double , int ) const 
+double LineTraj::distTo1stError( double , double , int ) const
 {
   return 10*Gaudi::Units::km;
 }

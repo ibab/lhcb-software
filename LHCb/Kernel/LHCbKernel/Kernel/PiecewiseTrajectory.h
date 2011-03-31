@@ -1,4 +1,3 @@
-// $Id: PiecewiseTrajectory.h,v 1.3 2008-05-05 13:26:40 graven Exp $
 #ifndef LHCbKernel_PiecewiseTrajectory_H
 #define LHCbKernel_PiecewiseTrajectory_H 1
 
@@ -9,7 +8,7 @@
 
 // from Gaudi
 
-namespace LHCb 
+namespace LHCb
 {
 
   /** @class PiecewiseTrajectory PiecewiseTrajectory.h
@@ -17,7 +16,7 @@ namespace LHCb
    *
    * @author Gerhard Raven
    * @date   20/04/2007
-   * 
+   *
    */
   class PiecewiseTrajectory : public Trajectory {
   public:
@@ -45,7 +44,7 @@ namespace LHCb
     Vector curvature( double mu ) const;
 
     /// Create a parabolic approximation to the trajectory
-    /// at mu 
+    /// at mu
     void expansion( double arclength,
                             Point& p,
                             Vector& dp,
@@ -57,16 +56,16 @@ namespace LHCb
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance.
     double distTo1stError( double arclength,
-                           double tolerance, 
+                           double tolerance,
                            int pathDirection = +1 ) const ;
-    
+
     /// Number of arclengths until deviation of the trajectory from the expansion
     /// reaches the given tolerance.
     double distTo2ndError( double arclength,
-                           double tolerance, 
+                           double tolerance,
                            int pathDirection = +1 ) const;
-     
-    
+
+
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). .
     using Trajectory::arclength;
@@ -74,8 +73,8 @@ namespace LHCb
 
     // functions specific to a PieceWiseTrajectory
     // note: we _will_ assume ownership of the passed Trajectory!
-    void append(Trajectory*); 
-    void prepend(Trajectory*); 
+    void append(Trajectory*);
+    void prepend(Trajectory*);
     unsigned int numberOfPieces() const { return m_traj.size(); }
 
     std::ostream& print(std::ostream&) const;
@@ -96,10 +95,10 @@ namespace LHCb
 
      typedef double (LHCb::Trajectory::*distFun)(double,double,int) const;
 
-     double distToError( double s, double tolerance, int pathDirection, 
+     double distToError( double s, double tolerance, int pathDirection,
                          distFun fun) const;
 
   };
- 
+
 }
 #endif

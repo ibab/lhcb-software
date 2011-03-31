@@ -1,4 +1,3 @@
-// $Id: ParabolaTraj.cpp,v 1.12 2007-10-16 11:50:59 wouter Exp $
 // Include files
 
 // local
@@ -28,20 +27,20 @@ ParabolaTraj::ParabolaTraj( const Point& point,
 {
 }
 
-/// Point on the trajectory at arclength from the starting point    
+/// Point on the trajectory at arclength from the starting point
 Trajectory::Point ParabolaTraj::position( double arclength ) const
 {
   return m_pos + arclength * (m_dir + 0.5 * arclength * m_curv);
 }
 
-/// First derivative of the trajectory at arclength from the starting point   
+/// First derivative of the trajectory at arclength from the starting point
 Trajectory::Vector ParabolaTraj::direction( double arclength ) const
 {
   return m_dir + arclength * m_curv;
 }
 
 /// Second derivative of the trajectory at arclength from the starting point
-Trajectory::Vector ParabolaTraj::curvature( double /* arclength */) const 
+Trajectory::Vector ParabolaTraj::curvature( double /* arclength */) const
 {
   return m_curv;
 }
@@ -84,7 +83,7 @@ double ParabolaTraj::muEstimate( const Point& point ) const
 
 /// arclengths until deviation of the trajectory from the expansion
 /// reaches the given tolerance.
-double ParabolaTraj::distTo1stError( double , double tolerance , int ) const 
+double ParabolaTraj::distTo1stError( double , double tolerance , int ) const
 {
   return std::sqrt(2*tolerance/m_curv.R());
 }
@@ -92,5 +91,5 @@ double ParabolaTraj::distTo1stError( double , double tolerance , int ) const
 /// 2nd order is OK everywhere...
 double ParabolaTraj::distTo2ndError( double , double , int ) const
 {
-  return 10*Gaudi::Units::km;  
+  return 10*Gaudi::Units::km;
 }

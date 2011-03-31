@@ -1,4 +1,3 @@
-// $Id: IInAcceptance.h,v 1.3 2008-01-26 13:31:19 mneedham Exp $
 // ============================================================================
 #ifndef KERNEL_IINACCEPTANCE_H
 #define KERNEL_IINACCEPTANCE_H 1

@@ -3,14 +3,12 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.18 2009-10-25 14:35:33 ibelyaev Exp $
-  *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
   * date:   2003-11-24                                                        *
   ************************************************************************* -->
 
-  <package name='LHCbKernel'>  
+  <package name='LHCbKernel'>
   <class
     name   = "CaloCellID"
     desc   = "Simple class to represent cell identifier for calorimeter devices"
@@ -22,12 +20,12 @@
     *  The class represents the unique cell identifier for all calorimeter devices
     *
     * </desc>
-  
+
     <import name = "set"    std="TRUE"        />
     <import name = "vector" std="TRUE"        />
     <import name = "GaudiKernel/Kernel"       />
     <import name = "Kernel/CaloCellCode"      />
-    
+
   <typedef
     def    = "ContentType"
     type   = "CaloCellCode::ContentType"
@@ -39,7 +37,7 @@
     type   = "std::vector&lt;LHCb::CaloCellID&gt;"
     desc   = "vector of cell IDs"
     access = "PUBLIC" />
-  
+
   <typedef
     def    = "Set"
     type   = "std::set&lt;LHCb::CaloCellID&gt;"
@@ -51,64 +49,64 @@
     desc      = "all significant bits representation of CellID (32bits)"
     dictalias = "unsigned int"
     type      = "ContentType" />
-  
+
   <constructor
     desc     = "Default/empty constructor"
-    initList = "m_all( 0 )" > 
-    <code/> 
+    initList = "m_all( 0 )" >
+    <code/>
   </constructor>
-  
+
 
   <constructor
     desc     = "Explicit constructor from Calo, Area, Row and Column"
     argList  = "unsigned int Calo, unsigned int Area, unsigned int Row, unsigned int Column "
-    initList = "m_all( 0 )"> 
+    initList = "m_all( 0 )">
     <code>
       setCalo ( Calo   ) ;
       setArea ( Area   ) ;
       setRow  ( Row    ) ;
       setCol  ( Column ) ;
-    </code> 
+    </code>
   </constructor>
 
   <constructor
     desc     = "Explicit constructor from Calo, Area, Row and Column"
     argList  = "const std::string&amp; Calo, unsigned int Area, unsigned int Row, unsigned int Column "
-    initList = "m_all( 0 )"> 
+    initList = "m_all( 0 )">
     <code>
       setCalo ( Calo   ) ;
       setArea ( Area   ) ;
       setRow  ( Row    ) ;
       setCol  ( Column ) ;
-    </code> 
+    </code>
   </constructor>
 
   <constructor
     desc     = "Explicit constructor from Calo, Area, Row and Column"
     argList  = "unsigned int Calo, const std::string&amp; Area, unsigned int Row, unsigned int Column "
-    initList = "m_all( 0 )"> 
+    initList = "m_all( 0 )">
     <code>
       setCalo ( Calo   ) ;
       setArea ( calo () , Area   ) ;
       setRow  ( Row    ) ;
       setCol  ( Column ) ;
-    </code> 
+    </code>
   </constructor>
 
 
   <constructor
     desc     = "Explicit constructor from Calo, Area, Row and Column"
     argList  = "const std::string&amp; Calo, const std::string&amp; Area, unsigned int Row, unsigned int Column "
-    initList = "m_all( 0 )"> 
+    initList = "m_all( 0 )">
     <code>
       setCalo ( Calo   ) ;
       setArea ( calo() , Area   ) ;
       setRow  ( Row    ) ;
       setCol  ( Column ) ;
-    </code> 
+    </code>
   </constructor>
 
-  
+
   <constructor
     desc     = "Explicit constructor from 32 bit representation"
     argList  = "ContentType all"
@@ -116,10 +114,10 @@
     explicit = "TRUE">
     <code>
       m_all = all ;
-    </code> 
+    </code>
   </constructor>
-  
-  <copyconstructor/> 
+
+  <copyconstructor/>
 
   <method
     desc   = "Decoding function to extract index"
@@ -128,10 +126,10 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return ( contents() &amp; CaloCellCode::MaskIndex ) &gt;&gt; CaloCellCode::ShiftIndex ; 
+      return ( contents() &amp; CaloCellCode::MaskIndex ) &gt;&gt; CaloCellCode::ShiftIndex ;
     </code>
   </method>
-  
+
   <method
     desc   = "Decoding function to extract calorimeter identifier"
     name   = "calo"
@@ -139,7 +137,7 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return ( contents() &amp; CaloCellCode::MaskCalo ) &gt;&gt; CaloCellCode::ShiftCalo ; 
+      return ( contents() &amp; CaloCellCode::MaskCalo ) &gt;&gt; CaloCellCode::ShiftCalo ;
     </code>
   </method>
 
@@ -150,11 +148,11 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return ( contents() &amp; CaloCellCode::MaskArea ) &gt;&gt; CaloCellCode::ShiftArea ; 
+      return ( contents() &amp; CaloCellCode::MaskArea ) &gt;&gt; CaloCellCode::ShiftArea ;
     </code>
   </method>
-  
-  
+
+
   <method
     desc   = "Decoding function to extract calorimeter row identifier"
     name   = "row"
@@ -162,10 +160,10 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return ( contents() &amp; CaloCellCode::MaskRow  ) &gt;&gt; CaloCellCode::ShiftRow  ; 
+      return ( contents() &amp; CaloCellCode::MaskRow  ) &gt;&gt; CaloCellCode::ShiftRow  ;
     </code>
   </method>
-  
+
   <method
     desc   = "Decoding function to extract calorimeter column identifier"
     name   = "col"
@@ -173,11 +171,11 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return ( contents() &amp; CaloCellCode::MaskCol  ) &gt;&gt; CaloCellCode::ShiftCol  ; 
+      return ( contents() &amp; CaloCellCode::MaskCol  ) &gt;&gt; CaloCellCode::ShiftCol  ;
     </code>
   </method>
-  
-  
+
+
   <method
     desc    = "Comparison operator using 'index()' representation"
     name    = "operator&lt;"
@@ -189,7 +187,7 @@
       return index() &lt; ID.index() ;
     </code>
   </method>
-  
+
   <method
     desc    = "Equality operator using 'contents()' representation"
     name    = "operator=="
@@ -223,7 +221,7 @@
     const     = "TRUE" >
     <arg name = "os" type = "std::ostream" inout = "BOTH" />
   </method>
-  
+
   <method
     desc    = "bit pattern as string"
     name    = "bits"
@@ -232,7 +230,7 @@
     access  = "PUBLIC" >
     <arg name = "del" type = "char" inout = "INPUT" />
   </method>
-  
+
   <method
     desc    = "bit pattern as string"
     name    = "bits"
@@ -243,7 +241,7 @@
       return bits(',');
     </code>
   </method>
-  
+
   <method
     desc      = "Update Calorimeter identifier"
     name      = "setCalo"
@@ -294,7 +292,7 @@
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Row" type = "unsigned int" inout = "INPUT" />
-    <code> 
+    <code>
       return set( Row  , CaloCellCode::ShiftRow , CaloCellCode::MaskRow ) ;
     </code>
   </method>
@@ -323,7 +321,7 @@
       return set( Index  , CaloCellCode::ShiftIndex , CaloCellCode::MaskIndex ) ;
     </code>
   </method>
-  
+
   <method
     desc      = "set the active field"
     name      = "set"
@@ -338,7 +336,7 @@
       return *this;
     </code>
   </method>
-  
+
   <method
     desc   = "Extract 'the rest' - must be 0!"
     name   = "rest"
@@ -346,10 +344,10 @@
     const  = "TRUE"
     access = "PRIVATE" >
     <code>
-      return ( contents() &amp; CaloCellCode::MaskRest  ) &gt;&gt; CaloCellCode::ShiftRest  ; 
+      return ( contents() &amp; CaloCellCode::MaskRest  ) &gt;&gt; CaloCellCode::ShiftRest  ;
     </code>
   </method>
-  
+
   <method
     desc   = "Extract the full content"
     name   = "contents"
@@ -357,10 +355,10 @@
     const  = "TRUE"
     access = "PRIVATE" >
     <code>
-      return m_all ; 
+      return m_all ;
     </code>
   </method>
-  
+
   <method
     desc   = "hash-function for python"
     name   = "__hash__"
@@ -368,7 +366,7 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return hash() ; 
+      return hash() ;
     </code>
   </method>
 
@@ -379,7 +377,7 @@
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
-      return index() ; 
+      return index() ;
     </code>
   </method>
 
@@ -414,7 +412,7 @@
     </code>
   </method>
 
-  
+
   </class>
   </package>
 </gdd>

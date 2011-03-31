@@ -3,17 +3,15 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichTraceMode.xml,v 1.5 2007-08-09 15:30:51 jonrob Exp $
-  *****************************************************************************
-  * XML-description of RichTraceMode class                                      *
+  * XML-description of RichTraceMode class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   ************************************************************************* -->
 
   <package name='LHCbKernel'>
-     <class 
+     <class
         name             = "RichTraceMode"
-        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch"
         desc             = "Helper class used to configure the ray tracing options in the IRichRayTracing tools"
         virtual          = "FALSE" >
 
@@ -24,14 +22,14 @@
           <enumval name="InHPDTube"       value="3"  desc="The ray tracing succeeded and fell into the acceptance of an HPD tube"/>
         </enum>
 
-        <method 
-          name    = "traceWasOK" 
+        <method
+          name    = "traceWasOK"
           desc    = "Tests if the given ray tracing result was successful, within the bounds presented by the configured mode"
-          type    = "bool" 
-          virtual = "FALSE" 
+          type    = "bool"
+          virtual = "FALSE"
           const   = "TRUE">
-          <arg 
-            type = "const LHCb::RichTraceMode::RayTraceResult" 
+          <arg
+            type = "const LHCb::RichTraceMode::RayTraceResult"
             name = "result"/>
           <code>
              return ( (int)result >= (int)detPlaneBound() );
@@ -49,8 +47,8 @@
           <enumval name="RespectHPDTubes"     value="3"  desc="Respect the individual HPD acceptances"/>
         </enum>
 
-        <constructor 
-                 desc     = "Default Constructor" 
+        <constructor
+                 desc     = "Default Constructor"
                  initList = "m_data(0)" >
                 <code>
                   setDetPlaneBound   ( LHCb::RichTraceMode::IgnoreHPDAcceptance );
@@ -58,8 +56,8 @@
                 </code>
         </constructor>
 
-        <constructor 
-                desc     = "Constructor with configuration values" 
+        <constructor
+                desc     = "Constructor with configuration values"
                 explicit = "TRUE"
                 initList = "m_data(0)" >
                 <arg const="TRUE" name="bound"                                     inout="BYVALUE" type="LHCb::RichTraceMode::DetectorPlaneBoundary" />
@@ -82,9 +80,9 @@
                 </code>
         </constructor>
 
-        <attribute 
-           desc = "Bit packed field containing the ray tracing configuration options" 
-           name = "data" 
+        <attribute
+           desc = "Bit packed field containing the ray tracing configuration options"
+           name = "data"
            init = "0"
            type = "bitfield" >
            <bitfield desc="The HPD modelling precision to use"     length="3" name="detPrecision"   type="LHCb::RichTraceMode::DetectorPrecision" />
@@ -92,19 +90,19 @@
            <bitfield desc="Flag to force the side to use in the ray-tracing"            length="1" name="forcedSide" />
            <bitfield desc="Flag to respect the overall outer boundaries of the mirrors" length="1" name="outMirrorBoundary" />
            <bitfield desc="Flag to respect the individual mirror segment boundaries (i.e. the small gaps between them)" length="1" name="mirrorSegBoundary" />
-           <bitfield desc="Flag to turn on rejection of trajectories which intersect the beam pipe inside the RICH detectors" length="1" name="beamPipeIntersects" /> 
+           <bitfield desc="Flag to turn on rejection of trajectories which intersect the beam pipe inside the RICH detectors" length="1" name="beamPipeIntersects" />
            <bitfield desc="Flag to turn on the checking for shadowing by the HPD kapton" length="1" name="hpdKaptonShadowing" />
            <bitfield desc="Flag to turn on the refraction correction at the exit of the Aerogel volume into the Rich1Gas" length="1" name="aeroRefraction" />
         </attribute>
 
-        <method 
-          name    = "fillStream" 
+        <method
+          name    = "fillStream"
           desc    = "Print this RichTraceMode in a human readable way"
-          type    = "std::ostream&amp;" 
-          virtual = "FALSE" 
+          type    = "std::ostream&amp;"
+          virtual = "FALSE"
           const   = "TRUE">
-          <arg 
-            type = "std::ostream" 
+          <arg
+            type = "std::ostream"
             name = "os"/>
         </method>
 

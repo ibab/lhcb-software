@@ -1,7 +1,3 @@
-// $Id: OTChannelID.cpp,v 1.2 2007-07-20 16:06:59 jonrob Exp $
-// Include files
-
-// local
 #include "Kernel/OTChannelID.h"
 
 //-----------------------------------------------------------------------------

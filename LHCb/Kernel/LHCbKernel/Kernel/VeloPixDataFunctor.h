@@ -1,11 +1,10 @@
-// $Id: VeloPixDataFunctor.h,v 1.1 2009-12-04 10:39:42 marcin Exp $
 #ifndef _VeloPixDataFunctor_H_
 #define _VeloPixDataFunctor_H_
 #include <functional>
 #include <numeric>
 #include "Kernel/VeloPixChannelID.h"
 
-// This File contains the declaration of VeloPixDataFunctor namespace 
+// This File contains the declaration of VeloPixDataFunctor namespace
 // C++ code for 'LHCb Tracking package(s)'
 //
 //   Author: M. Kucharczyk
@@ -14,43 +13,43 @@
 namespace VeloPixDataFunctor {
 
 
-// Functors 
+// Functors
 template <class TYPE1, class TYPE2 = TYPE1>
   class Less_by_Channel
-    : public std::binary_function<TYPE1,TYPE2,bool> 
+    : public std::binary_function<TYPE1,TYPE2,bool>
   {
   public:
-    /** Compare the channel of one object with the 
+    /** Compare the channel of one object with the
      *  channel of another object
-     *  @param obj1   first  object 
+     *  @param obj1   first  object
      *  @param obj2   second object
      *  @return  result of the comparision
      */
-    inline bool operator() (TYPE1 obj1, TYPE2 obj2) const 
-    { 
-      return 
-        (!obj1) ? true  : 
-        (!obj2) ? false : obj1->channelID() < obj2->channelID(); 
+    inline bool operator() (TYPE1 obj1, TYPE2 obj2) const
+    {
+      return
+        (!obj1) ? true  :
+        (!obj2) ? false : obj1->channelID() < obj2->channelID();
     }
   };
 
 
 template <class TYPE1, class TYPE2 = TYPE1>
   class Less_by_Key
-    : public std::binary_function<TYPE1,TYPE2,bool> 
+    : public std::binary_function<TYPE1,TYPE2,bool>
   {
   public:
-    /** Compare the channel of one object with the 
+    /** Compare the channel of one object with the
      *  channel of another object
-     *  @param obj1   first  object 
+     *  @param obj1   first  object
      *  @param obj2   second object
      *  @return  result of the comparision
      */
-    inline bool operator() (TYPE1 obj1, TYPE2 obj2) const 
-    { 
-      return 
-        (!obj1) ? true  : 
-        (!obj2) ? false : obj1->key() < obj2->key(); 
+    inline bool operator() (TYPE1 obj1, TYPE2 obj2) const
+    {
+      return
+        (!obj1) ? true  :
+        (!obj2) ? false : obj1->key() < obj2->key();
     }
   };
 

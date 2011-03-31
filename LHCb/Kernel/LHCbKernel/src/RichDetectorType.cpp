@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichDetectorType.cpp
  *
  *  Implementation file for enumeration : Rich::DetectorType
- *
- *  CVS Log :-
- *  $Id: RichDetectorType.cpp,v 1.2 2007-02-01 16:45:22 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10

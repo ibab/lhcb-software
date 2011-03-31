@@ -1,5 +1,3 @@
-// $Id: AlignTraj.cpp,v 1.6 2008-12-09 16:54:07 lnicolas Exp $
-
 #include "Kernel/AlignTraj.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 
@@ -32,10 +30,10 @@ namespace {
     };
 
     // some helper functions for the helper classes to avoid having to explicitly specify types...
-    template <typename T> Column<T> column(T& t,unsigned c) 
+    template <typename T> Column<T> column(T& t,unsigned c)
     { return Column<T>(t,c); }
 
-    template <typename T> Diag<T>   diag(T& t,unsigned begin=0, unsigned end=T::kRows) 
+    template <typename T> Diag<T>   diag(T& t,unsigned begin=0, unsigned end=T::kRows)
     { return Diag<T>(t,begin,end);}
 }
 
@@ -45,7 +43,7 @@ std::auto_ptr<LHCb::Trajectory> AlignTraj::clone() const
 }
 
 
-AlignTraj::Parameters 
+AlignTraj::Parameters
 AlignTraj::parameters() const
 {
     return Parameters(m_trans.X(), m_trans.Y(), m_trans.Z(),
@@ -62,8 +60,8 @@ AlignTraj::operator+=(const Parameters& delta)
     return *this;
 }
 
-AlignTraj::Derivative 
-AlignTraj::derivative( double arclength ) const 
+AlignTraj::Derivative
+AlignTraj::derivative( double arclength ) const
 {
 
     Derivative d;
@@ -77,7 +75,7 @@ AlignTraj::derivative( double arclength ) const
     //       Lorenzo promised to fix this in the next ROOT release (i.e.
     //          once we use post 5.18 releases this can be simplified)
     Vector temp = m_ry(m_rz(v)); temp.SetX(0);
-    column(d,3)=(m_rx*ROOT::Math::RotationX(M_PI_2))(temp); 
+    column(d,3)=(m_rx*ROOT::Math::RotationX(M_PI_2))(temp);
     temp = m_rz(v); temp.SetY(0);
     column(d,4)=m_rx((m_ry*ROOT::Math::RotationY(M_PI_2))(temp));
     temp = v; temp.SetZ(0);
@@ -85,30 +83,30 @@ AlignTraj::derivative( double arclength ) const
     return d;
 }
 
-AlignTraj::Point 
-AlignTraj::position( double s ) const 
+AlignTraj::Point
+AlignTraj::position( double s ) const
 {
     // rotate around pivot, then translate
     return m_pivot + rotate(m_traj->position(s)-m_pivot) + m_trans ;
 }
 
-AlignTraj::Vector 
-AlignTraj::direction( double s ) const 
+AlignTraj::Vector
+AlignTraj::direction( double s ) const
 {
     return rotate(m_traj->direction(s));
 }
 
-AlignTraj::Vector 
-AlignTraj::curvature( double s ) const 
+AlignTraj::Vector
+AlignTraj::curvature( double s ) const
 {
     return rotate(m_traj->curvature(s));
 }
 
-void 
+void
 AlignTraj::expansion( double s,
                       Point &p,
                       Vector &dp,
-                      Vector &ddp) const 
+                      Vector &ddp) const
 {
     m_traj->expansion(s,p,dp,ddp);
     p   = m_pivot + m_trans + rotate(p-m_pivot);
@@ -116,25 +114,25 @@ AlignTraj::expansion( double s,
     ddp = rotate(ddp);
 }
 
-double 
-AlignTraj::muEstimate( const Point& p) const 
+double
+AlignTraj::muEstimate( const Point& p) const
 {
     // apply inverse transformation to Point, and forward...
     return m_traj->arclength( m_pivot + invRotate(p - m_pivot - m_trans) );
 }
 
-double 
+double
 AlignTraj::distTo1stError( double arclength,
-                           double tolerance, 
-                           int pathDirection ) const 
+                           double tolerance,
+                           int pathDirection ) const
 {
-    return m_traj->distTo1stError(arclength,tolerance,pathDirection);    
+    return m_traj->distTo1stError(arclength,tolerance,pathDirection);
 }
 
-double 
+double
 AlignTraj::distTo2ndError( double arclength,
-                           double tolerance, 
-                           int pathDirection ) const 
+                           double tolerance,
+                           int pathDirection ) const
 {
-    return m_traj->distTo2ndError(arclength,tolerance,pathDirection);    
+    return m_traj->distTo2ndError(arclength,tolerance,pathDirection);
 }

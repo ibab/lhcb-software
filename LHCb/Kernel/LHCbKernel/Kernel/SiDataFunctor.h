@@ -1,4 +1,3 @@
-// $Id: SiDataFunctor.h,v 1.3 2009-01-19 10:05:48 dhcroft Exp $
 #ifndef _SiDataFunctor_H_
 #define _SiDataFunctor_H_
 
@@ -7,17 +6,17 @@
 
 
 //
-// This File contains the declaration of STDataFunctor namespace 
+// This File contains the declaration of STDataFunctor namespace
 //   - dumping ground for things that don't fit.
 //
 // C++ code for 'LHCb Tracking package(s)'
 //
 //   Author: M. Needham
-//   Created: 
+//   Created:
 
 namespace SiDataFunctor {
 
-// functors 
+// functors
 template <typename TYPE>
   class CompareByChannel
     : public std::binary_function<const TYPE, const typename TYPE::chan_type, bool> {
@@ -30,37 +29,37 @@ template <typename TYPE>
       return (testID > obj.channelID());
     }
 
-    
+
     inline bool operator() (const comp_type& testID, const TYPE& obj ) const{
       return ( obj.channelID() > testID);
     }
-  }; 
+  };
 
   /// class for accumulating energy
-  template <class TYPE> 
+  template <class TYPE>
     class Accumulate_Charge
     : public std::binary_function<double,TYPE, double>{
   public:
-    inline double  operator() ( double& charge  , TYPE obj ) const { 
+    inline double  operator() ( double& charge  , TYPE obj ) const {
       return ( !obj ) ? charge :  charge+= obj->totalCharge() ; };
     ///
  };
 
   template <class TYPE1, class TYPE2 = TYPE1 >
   class Less_by_Channel
-    : public std::binary_function<TYPE1,TYPE2,bool> 
+    : public std::binary_function<TYPE1,TYPE2,bool>
   {
   public:
-    
-    /** compare the channel of one object with the 
+
+    /** compare the channel of one object with the
      *  channel of another object
-     *  @param obj1   first  object 
+     *  @param obj1   first  object
      *  @param obj2   second object
      *  @return  result of the comparision
      */
-    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const 
-    { 
-      return obj1.channelID() < obj2.channelID() ; 
+    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const
+    {
+      return obj1.channelID() < obj2.channelID() ;
     }
     ///
   };
@@ -68,21 +67,21 @@ template <typename TYPE>
 
  template <class TYPE1, class TYPE2 = TYPE1 >
   class Less_by_Charge
-    : public std::binary_function<TYPE1,TYPE2,bool> 
+    : public std::binary_function<TYPE1,TYPE2,bool>
   {
   public:
 
-    /** compare the dep charge of one object with the 
+    /** compare the dep charge of one object with the
      *  dep Charge  of another object
-     *  @param obj1   first  object 
+     *  @param obj1   first  object
      *  @param obj2   second object
      *  @return  result of the comparision
      */
-    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const 
-    { 
-      return 
-        ( !obj1 ) ? true  : 
-        ( !obj2 ) ? false : obj1->totalCharge() < obj2->totalCharge() ; 
+    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const
+    {
+      return
+        ( !obj1 ) ? true  :
+        ( !obj2 ) ? false : obj1->totalCharge() < obj2->totalCharge() ;
     }
     ///
   };

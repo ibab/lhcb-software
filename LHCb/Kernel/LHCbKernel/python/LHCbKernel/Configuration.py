@@ -4,7 +4,6 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2009-01-28 16:10:59 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -25,7 +24,7 @@ class LHCbConfigurableUser(ConfigurableUser):
         kwargs["name"] = name
         apply(super(LHCbConfigurableUser, self).__init__, (), kwargs)
         self.initialize()
-        
+
     ## @brief Default initialize method
     #  Derived classes can reimplement this method, to run any object
     #  initialisation tasks they wish

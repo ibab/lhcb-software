@@ -1,5 +1,3 @@
-// $Id: STChannelID.cpp,v 1.2 2009-01-22 11:42:40 mneedham Exp $
-
 // local
 #include "Kernel/STChannelID.h"
 #include <sstream>

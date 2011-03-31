@@ -1,4 +1,3 @@
-// $Id: LineTraj.h,v 1.21 2009-05-29 13:26:55 cattanem Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -97,7 +96,7 @@ namespace LHCb
     /// arclength.
     using Trajectory::arclength;
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
-    
+
 #ifndef GOD_NOALLOC
     /// operator new
     static void* operator new ( size_t size )

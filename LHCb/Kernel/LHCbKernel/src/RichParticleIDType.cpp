@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichParticleIDType.cpp
  *
  *  Implementation file for enumeration : Rich::ParticleIDType
- *
- *  CVS Log :-
- *  $Id: RichParticleIDType.cpp,v 1.4 2010-03-09 18:28:03 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
@@ -36,7 +32,7 @@ std::string Rich::text( const Rich::ParticleIDType particle )
 
 const Rich::Particles & Rich::particles()
 {
-  static Rich::Particles pids = 
+  static Rich::Particles pids =
     boost::assign::list_of(Rich::Electron)(Rich::Muon)(Rich::Pion)(Rich::Kaon)(Rich::Proton)(Rich::BelowThreshold);
   return pids;
 }

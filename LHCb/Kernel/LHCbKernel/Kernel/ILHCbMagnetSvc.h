@@ -1,5 +1,4 @@
-// $Id: ILHCbMagnetSvc.h,v 1.4 2010-04-22 08:16:22 smenzeme Exp $
-#ifndef KERNEL_ILHCBMAGNETSVC_H 
+#ifndef KERNEL_ILHCBMAGNETSVC_H
 #define KERNEL_ILHCBMAGNETSVC_H 1
 
 // Include files
@@ -24,7 +23,7 @@ static const InterfaceID IID_ILHCbMagnetSvc ( "ILHCbMagnetSvc", 1, 0 );
  */
 class ILHCbMagnetSvc : virtual public IMagneticFieldSvc {
 
-public: 
+public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ILHCbMagnetSvc; }

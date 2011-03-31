@@ -1,5 +1,4 @@
-// $Id: INormalizeTool.h,v 1.1 2005-09-07 12:16:20 cattanem Exp $
-#ifndef KERNEL_INORMALIZETOOL_H 
+#ifndef KERNEL_INORMALIZETOOL_H
 #define KERNEL_INORMALIZETOOL_H 1
 
 // Include files

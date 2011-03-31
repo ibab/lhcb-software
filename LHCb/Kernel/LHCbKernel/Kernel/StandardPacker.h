@@ -1,4 +1,3 @@
-// $Id: StandardPacker.h,v 1.9 2009-11-10 10:27:14 jonrob Exp $
 #ifndef KERNEL_STANDARDPACKER_H
 #define KERNEL_STANDARDPACKER_H 1
 
@@ -15,7 +14,7 @@
  *  @date   2005-03-15
  */
 
-namespace Packer 
+namespace Packer
 {
   const double ENERGY_SCALE     = 1.0e2;  ///< .01 MeV steps
   const double POSITION_SCALE   = 1.0e4;  ///< 0.1 micron steps
@@ -25,7 +24,7 @@ namespace Packer
   const double DELTALL_SCALE    = 1.0e4;  ///< 0.0001 precision
 }
 
-class StandardPacker 
+class StandardPacker
 {
 
 public:
@@ -36,43 +35,43 @@ public:
   ~StandardPacker( ) {}; ///< Destructor
 
   /** returns an int for a double energy */
-  int energy( const double e ) const 
+  int energy( const double e ) const
   {
     return packDouble( e * Packer::ENERGY_SCALE );
   }
 
   /** returns an int for a double position */
-  int position( const double x ) const 
+  int position( const double x ) const
   {
     return packDouble( x * Packer::POSITION_SCALE );
   }
 
   /** returns an int for a double slope */
-  int slope( const double x ) const 
+  int slope( const double x ) const
   {
     return packDouble( x * Packer::SLOPE_SCALE );
   }
 
   /** returns an short int for a double fraction */
-  short int fraction( const double f ) const 
+  short int fraction( const double f ) const
   {
     return shortPackDouble( f * Packer::FRACTION_SCALE );
   }
 
   /** returns an int for a double time (TOF) value */
-  int time( const double x ) const 
+  int time( const double x ) const
   {
     return packDouble( x * Packer::TIME_SCALE );
   }
 
   /** returns an int for a double delta log likelihood value */
-  int deltaLL( const double x ) const 
+  int deltaLL( const double x ) const
   {
     return packDouble( x * Packer::DELTALL_SCALE );
   }
 
   /** returns an int containing the float value of the double */
-  int fltPacked( const double x  ) const 
+  int fltPacked( const double x  ) const
   {
     union fltInt { int i; float f; } convert;
     convert.f = (float)x;
@@ -84,10 +83,10 @@ public:
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  int reference( DataObject* out, const DataObject* parent, const int key ) const 
+  int reference( DataObject* out, const DataObject* parent, const int key ) const
   {
     LinkManager::Link* myLink = out->linkMgr()->link( parent );
-    if ( NULL == myLink ) 
+    if ( NULL == myLink )
     {
       out->linkMgr()->addLink( parent->registry()->identifier(),
                                parent );
@@ -100,10 +99,10 @@ public:
     return key + myLinkID;
   }
 
-  void hintAndKey( const int data, 
-                   const DataObject* source, 
-                   DataObject* target, 
-                   int& hint, int& key ) const 
+  void hintAndKey( const int data,
+                   const DataObject* source,
+                   DataObject* target,
+                   int& hint, int& key ) const
   {
     const int indx = data >> 28;
     key = data & 0x0FFFFFFF;
@@ -129,7 +128,7 @@ public:
   double deltaLL( const int k )        const { return double(k) / Packer::DELTALL_SCALE; }
 
   /** returns an double from a int containing in fact a float */
-  double fltPacked( const int k  ) const 
+  double fltPacked( const int k  ) const
   {
     union fltInt { int i; float f; } convert;
     convert.i = k;
@@ -139,7 +138,7 @@ public:
 protected:
 
   /// Pack a double to an int
-  int packDouble ( const double val ) const 
+  int packDouble ( const double val ) const
   {
     return ( 2.e9  < val ?  2000000000         : // saturate 31 bits
              -2.e9 > val ? -2000000000         : // idem

@@ -1,5 +1,4 @@
-// $Id: LbAppInit.h,v 1.9 2009-03-05 14:49:58 cattanem Exp $
-#ifndef LBAPPINIT_H 
+#ifndef LBAPPINIT_H
 #define LBAPPINIT_H 1
 
 // Include files
@@ -18,7 +17,7 @@ class IRndmEngine;
 class IRndmGenSvc;
 
 /** @class LbAppInit LbAppInit.h
- *  
+ *
  *  General LHCb Initialisation algorithm
  *
  *  @author Marco Cattaneo
@@ -27,7 +26,7 @@ class IRndmGenSvc;
 
 class LbAppInit : public GaudiAlgorithm {
 
-public: 
+public:
 
   /// Standard constructor
   LbAppInit( const std::string& name, ISvcLocator* pSvcLocator );
@@ -42,8 +41,8 @@ protected:
 
   /// Return number of events processed
   int  eventCounter() const
-  { 
-    return m_eventCounter; 
+  {
+    return m_eventCounter;
   }
 
   /// Return name of application being run
@@ -70,8 +69,8 @@ protected:
    *  @param[in] time (optional) time of the event
    */
   void printEventRun( longlong evt,
-                      int run, 
-                      std::vector<long int> *seeds = 0, 
+                      int run,
+                      std::vector<long int> *seeds = 0,
                       Gaudi::Time time = 0              ) const;
 
   /** Initialize the random number engine with the given seeds
@@ -82,7 +81,7 @@ protected:
 
   /** Get a vector of seeds. First three seeds are built from seed1 and seed2
    *  Last seed is hash including seed1, seed2 and name()
-   *  If m_singleSeed is true, only last seed is returned 
+   *  If m_singleSeed is true, only last seed is returned
    *  @param[in] seed1 First  seed (typically run number)
    *  @param[in] seed2 Second seed (typically event number)
    *  @return    vector of seeds
@@ -118,7 +117,7 @@ private:
 
   /// Property to print also the event time (default is false)
   bool m_printTime;
-  
+
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
   IRndmGenSvc*  m_randSvc;      ///< Pointer to random number service

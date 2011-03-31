@@ -1,12 +1,11 @@
-// $Id: ISiAmplifierResponse.h,v 1.5 2009-03-17 14:51:24 mneedham Exp $
 #ifndef _ISiAMPLIFIERRESPONSE_H
 #define _ISiAMPLIFIERRESPONSE_H
 
 #include "GaudiKernel/IAlgTool.h"
 #include <string>
 
-// Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_ISiAmplifierResponse("ISiAmplifierResponse", 0 , 0); 
+// Declaration of the interface ID ( interface id, major version, minor version)
+static const InterfaceID IID_ISiAmplifierResponse("ISiAmplifierResponse", 0 , 0);
 
 namespace SiAmpliferResponseType{
 
@@ -23,11 +22,11 @@ namespace SiAmpliferResponseType{
  */
 class ISiAmplifierResponse : virtual public IAlgTool {
 
-public: 
+public:
 
   typedef struct {
     double capacitance;
-    unsigned int vfs;  
+    unsigned int vfs;
     std::string type;
   } Info;
 
@@ -35,8 +34,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_ISiAmplifierResponse; }
 
   /** calculate Beetle response
-  * @param  time time in ns 
-  * @return response 
+  * @param  time time in ns
+  * @return response
   */
   virtual double response(const double time) const=0;
 
@@ -45,11 +44,11 @@ public:
   *
   * @return validity info
   */
-  virtual ISiAmplifierResponse::Info validity() const = 0; 
+  virtual ISiAmplifierResponse::Info validity() const = 0;
 
   /** calculate the remainder ie signal left after 25 ns
-  * @param time time of sampling relative to peak [default is zero ]  
-  * @return response 
+  * @param time time of sampling relative to peak [default is zero ]
+  * @return response
   */
   virtual double remainder(double time = 0) const = 0;
 

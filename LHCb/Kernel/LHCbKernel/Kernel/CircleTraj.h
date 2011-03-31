@@ -1,4 +1,3 @@
-// $Id: CircleTraj.h,v 1.15 2009-05-29 13:26:55 cattanem Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 

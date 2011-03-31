@@ -4,9 +4,6 @@
  *
  *  Implementation file for utility class : RichTraceMode
  *
- *  CVS History :-
- *  $Id: RichTraceMode.cpp,v 1.4 2007-08-09 15:30:51 jonrob Exp $
- *
  *  @author Chris Jones Christopher.Rob.Jones@cern.ch
  *  @date   05/08/2006
  */

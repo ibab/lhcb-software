@@ -1,5 +1,4 @@
-// $Id: ICheckTool.h,v 1.1 2005-09-07 12:16:20 cattanem Exp $
-#ifndef KERNEL_ICHECKTOOL_H 
+#ifndef KERNEL_ICHECKTOOL_H
 #define KERNEL_ICHECKTOOL_H 1
 
 // Include files
@@ -8,7 +7,7 @@
 #include "GaudiKernel/IAlgTool.h"
 
 /** @class ICheckTool ICheckTool.h
- *  Interface class for generic checking tools  
+ *  Interface class for generic checking tools
  *
  *  @author Marco Cattaneo
  *  @date   2003-02-24

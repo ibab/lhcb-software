@@ -1,4 +1,3 @@
-// $Id: ParabolaTraj.h,v 1.18 2009-05-29 13:26:55 cattanem Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 

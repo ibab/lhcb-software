@@ -1,4 +1,3 @@
-// $Id: LbAppInit.cpp,v 1.14 2010-05-18 20:45:55 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -145,8 +144,8 @@ void LbAppInit::printEventRun( longlong event, int run,
   if ( this->okToPrint() )
   {
     info() << "Evt " << event << ",  Run " << run;
-    if( m_printTime ) info() << ", UTC time " 
-                             << time.format(false,"%Y-%m-%d %H:%M:%S") 
+    if( m_printTime ) info() << ", UTC time "
+                             << time.format(false,"%Y-%m-%d %H:%M:%S")
                              << "." << time.nanoformat(6);
     info() << ",  Nr. in job = " << m_eventCounter;
     if( 0 != seeds ) info() << " with seeds " << *seeds;
@@ -172,7 +171,7 @@ StatusCode LbAppInit::initRndm( std::vector<long int>& seeds )
   if( sc.isFailure() ) return Error( "Unable to set random number seeds", sc );
 
   // Optionally skip some random numbers
-  if( 0 < m_skipFactor ) 
+  if( 0 < m_skipFactor )
   {
     if ( this->okToPrint() )
     {

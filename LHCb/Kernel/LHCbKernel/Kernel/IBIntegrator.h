@@ -1,5 +1,4 @@
-// $Id: IBIntegrator.h,v 1.3 2006-12-15 14:21:09 cattanem Exp $
-#ifndef KERNEL_IBINTEGRATOR_H 
+#ifndef KERNEL_IBINTEGRATOR_H
 #define KERNEL_IBINTEGRATOR_H 1
 
 // Include files
@@ -19,7 +18,7 @@ static const InterfaceID IID_IBIntegrator ( "IBIntegrator", 2, 0 );
  *  @date   2002-05-28
  */
 class IBIntegrator : virtual public IAlgTool {
-public: 
+public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IBIntegrator; }

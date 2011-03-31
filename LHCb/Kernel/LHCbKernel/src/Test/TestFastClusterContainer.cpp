@@ -1,5 +1,3 @@
-// $Id: TestFastClusterContainer.cpp,v 1.2 2007-08-29 09:35:34 jonrob Exp $
-
 #include "Kernel/FastClusterContainer.h"
 
 namespace ContTests

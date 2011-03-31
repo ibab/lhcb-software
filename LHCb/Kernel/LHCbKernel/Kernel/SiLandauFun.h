@@ -1,11 +1,10 @@
-// $Id: $
-#ifndef SiLandauFun_H 
+#ifndef SiLandauFun_H
 #define SiLandauFun_H 1
 
 #include "GaudiKernel/SystemOfUnits.h"
 #include <algorithm>
 
-/** @file 
+/** @file
  *  All the fun you can have with Landaus in Silicon
  *  Functions for MPV, scale , density effect
  *  @author M Needham
@@ -23,36 +22,36 @@ namespace SiLandauFun {
   double scale( const double beta, const double pathLength ) ;
 
   /** Calculate the density effect (needed to get the MPV of the Landau)
-   * @param x log10(betaGamma)  
+   * @param x log10(betaGamma)
    */
   double densityEffect( const double x ) ;
 
-  /** MPV of the landau 
-  * @param beta v/c  
+  /** MPV of the landau
+  * @param beta v/c
   * @param betaGamma P/m
   * @param pathLength  how much silicon traversed
   */
-  double MPV(const double beta, const double betaGamma, 
+  double MPV(const double beta, const double betaGamma,
              const double pathlength);
 
   /** Calculate the most probable value of a Landau function
-  * This is a CPU optimization of the MPV function if you know the scale 
-  * @param beta v/c  
+  * This is a CPU optimization of the MPV function if you know the scale
+  * @param beta v/c
   * @param betaGamma P/m
   * @param scale
   */
-  double MPVFromScale( const double beta, const double betaGamma, 
+  double MPVFromScale( const double beta, const double betaGamma,
                     const double scale);
 
 }
 
-inline double SiLandauFun::scale(const double beta, 
+inline double SiLandauFun::scale(const double beta,
                                              const double pathLength)
 {
 
   // avoid division by zero at beta = 0
   const double betaTrunc = std::max(beta,0.1);
-  return 0.017825*pathLength*Gaudi::Units::micrometer / 
+  return 0.017825*pathLength*Gaudi::Units::micrometer /
     (betaTrunc*betaTrunc*Gaudi::Units::keV);
 }
 

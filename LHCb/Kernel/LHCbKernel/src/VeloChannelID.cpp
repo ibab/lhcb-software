@@ -1,6 +1,3 @@
-// $Id: VeloChannelID.cpp,v 1.1 2007-07-11 13:33:34 jonrob Exp $
-
-// local
 #include "Kernel/VeloChannelID.h"
 
 //-----------------------------------------------------------------------------

@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichSide.cpp
  *
  *  Implementation file for enumeration : Rich::Side
- *
- *  CVS Log :-
- *  $Id: RichSide.cpp,v 1.6 2010-02-16 19:27:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
