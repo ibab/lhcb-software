@@ -4043,7 +4043,7 @@ void PresenterMainFrame::pickReferenceHistogram() {
   if ( 0 == sel ) return ;
 
   TVirtualPad * padsav = gPad;
-  fClient->WaitFor(new ReferencePicker(this, histogram));
+  //fClient->WaitFor(new ReferencePicker(this, histogram));
   padsav->cd();
 }
 
@@ -4060,7 +4060,7 @@ void PresenterMainFrame::saveSelectedHistogramAsReference() {
                  kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
     switch (m_msgBoxReturnCode) {
     case kMBYes:
-      m_archive -> saveAsReferenceHistogram( sel ) ;
+      //m_archive -> saveAsReferenceHistogram( sel ) ;
       break;
     default:
       break;
@@ -4813,6 +4813,12 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas() {
   if ( referenceOverlay ) enableReferenceOverlay() ;
 }
 
+//=========================================================================
+//  
+//=========================================================================
+DbRootHist* PresenterMainFrame::selectedDbRootHistogram ( ) {
+  return NULL;
+}
 //==============================================================================
 // Retrieve the histogram selected on the page
 //==============================================================================
