@@ -58,7 +58,7 @@ namespace ROMon {
     int m_flag;
   public:
     /// Initializing constructor
-    ProcessDisplay(FarmDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=60,int width=132);
+    ProcessDisplay(InternalDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=60,int width=132);
     /// Standard destructor
     virtual ~ProcessDisplay();
     /// Update display content
@@ -80,7 +80,7 @@ namespace ROMon {
     std::string  m_node;
   public:
     /// Initializing constructor
-    CPUDisplay(FarmDisplay* parent, const std::string& title, const std::string& node, int height=60,int width=132);
+    CPUDisplay(InternalDisplay* parent, const std::string& title, const std::string& node, int height=60,int width=132);
     /// Standard destructor
     virtual ~CPUDisplay();
     /// Update display content
@@ -103,7 +103,7 @@ namespace ROMon {
     int m_node;
   public:
     /// Initializing constructor
-    BufferDisplay(FarmDisplay* parent, const std::string& title);
+    BufferDisplay(InternalDisplay* parent, const std::string& title);
     /// Standard destructor
     virtual ~BufferDisplay() {}
     /// Set the node number for the display
@@ -128,7 +128,7 @@ namespace ROMon {
     std::string m_nodeName;
   public:
     /// Initializing constructor
-    CtrlNodeDisplay(FarmDisplay* parent, const std::string& title);
+    CtrlNodeDisplay(InternalDisplay* parent, const std::string& title);
     /// Standard destructor
     virtual ~CtrlNodeDisplay() {}
     /// Set the node number for the display
@@ -207,6 +207,9 @@ public:
 
     /// Get farm display from cursor position
     InternalDisplay* currentDisplay()  const;
+
+    /// Get farm display name from cursor position
+    std::string currentDisplayName()  const;
 
     /// Accessor to sub-displays of main panel
     SubDisplays& subDisplays() {  return m_farmDisplays; }

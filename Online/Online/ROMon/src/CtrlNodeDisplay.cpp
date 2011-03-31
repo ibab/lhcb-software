@@ -32,7 +32,7 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
-CtrlNodeDisplay::CtrlNodeDisplay(FarmDisplay* parent, const string& title) 
+CtrlNodeDisplay::CtrlNodeDisplay(InternalDisplay* parent, const string& title) 
   : InternalDisplay(parent,title), m_node(0)
 {
   ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"Node Control display for node:");

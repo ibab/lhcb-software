@@ -64,11 +64,11 @@ static void help() {
 }
 
 namespace ROMon {
-  InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const string& title);
-  InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const string& title);
-  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title);
-  InternalDisplay* createMonitoringSubDisplay(FarmDisplay* parent, const string& title);
-  InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const string& title);
+  InternalDisplay* createFarmSubDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createRecFarmSubDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createMonitoringSubDisplay(InternalDisplay* parent, const string& title);
+  InternalDisplay* createStorageSubDisplay(InternalDisplay* parent, const string& title);
   InternalDisplay* createBootDisplay(InternalDisplay* parent, const string& title);
   InternalDisplay* createBenchmarkDisplay(InternalDisplay* parent,int mode, const string& title);
   InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const string& title);
@@ -317,6 +317,12 @@ InternalDisplay* FarmDisplay::currentDisplay()  const {
     }
   }
   return 0;
+}
+
+/// Get farm display name from cursor position
+string FarmDisplay::currentDisplayName()  const {
+  InternalDisplay* d = currentDisplay();
+  return d ? d->name() : string("");
 }
 
 /// Show subfarm display

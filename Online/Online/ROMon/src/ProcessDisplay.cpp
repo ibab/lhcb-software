@@ -30,7 +30,7 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
-ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& node, const string& cluster, int flag, int height, int width)
+ProcessDisplay::ProcessDisplay(InternalDisplay* parent, const string& node, const string& cluster, int flag, int height, int width)
   : InternalDisplay(parent, node), m_flag(flag)
 {
   string svc = svcPrefix()+strlower(cluster);

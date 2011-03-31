@@ -33,7 +33,7 @@ typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
 typedef vector<string>               StringV;
 
-BufferDisplay::BufferDisplay(FarmDisplay* parent, const string& title) 
+BufferDisplay::BufferDisplay(InternalDisplay* parent, const string& title) 
   : InternalDisplay(parent,title), m_node(0)
 {
   ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"MBM Monitor display for node:");

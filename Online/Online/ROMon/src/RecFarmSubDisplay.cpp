@@ -18,16 +18,16 @@ namespace ROMon {
     int               m_totSent;
     bool              m_hasProblems;
   public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Set timeout error
-    void setTimeoutError();
     /// Initializing constructor
-    RecFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
+    RecFarmSubDisplay(InternalDisplay* parent, const std::string& title, bool bad=false);
     /// Standard destructor
     virtual ~RecFarmSubDisplay();
     /// Initialize default display text
     void init(bool bad);
+    /// Access to problem flag
+    bool hasProblems() const { return m_hasProblems; }
+    /// Set timeout error
+    void setTimeoutError();
     /// Update display content
     virtual void update(const void* data);
     /// Check display for errors
@@ -45,7 +45,7 @@ namespace ROMon {
     { this->InternalDisplay::update(data,len); }
   };
 
-  InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const std::string& title) {
+  InternalDisplay* createRecFarmSubDisplay(InternalDisplay* parent, const std::string& title) {
     return new RecFarmSubDisplay(parent,title);
   }
 }
@@ -72,7 +72,7 @@ static const float FLT_max = numeric_limits<float>::max();
 #define UPDATE_TIME_MAX 15
 
 /// Initializing constructor
-RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
+RecFarmSubDisplay::RecFarmSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_evtSent = m_totSent = 0;

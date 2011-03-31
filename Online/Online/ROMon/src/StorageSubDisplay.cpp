@@ -21,16 +21,16 @@ namespace ROMon {
     std::string       m_relayNode;
 
   public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Set timeout error
-    void setTimeoutError();
     /// Initializing constructor
-    StorageSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
+    StorageSubDisplay(InternalDisplay* parent, const std::string& title, bool bad=false);
     /// Standard destructor
     virtual ~StorageSubDisplay();
     /// Initialize default display text
     void init(bool bad);
+    /// Access to problem flag
+    bool hasProblems() const { return m_hasProblems; }
+    /// Set timeout error
+    void setTimeoutError();
     /// Update display content
     virtual void update(const void* data);
     /// Update display content
@@ -48,7 +48,7 @@ namespace ROMon {
     virtual void updateContent(const Nodeset& ns);
   };
 
-  InternalDisplay* createStorageSubDisplay(FarmDisplay* parent, const std::string& title) {
+  InternalDisplay* createStorageSubDisplay(InternalDisplay* parent, const std::string& title) {
     return new StorageSubDisplay(parent,title);
   }
 }
@@ -69,7 +69,7 @@ using namespace std;
 #define UPDATE_TIME_MAX 15
 
 /// Initializing constructor
-StorageSubDisplay::StorageSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
+StorageSubDisplay::StorageSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;

@@ -30,7 +30,7 @@ using namespace SCR;
 using namespace std;
 
 
-CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, const string& node, int height, int width)
+CPUDisplay::CPUDisplay(InternalDisplay* parent, const string& title, const string& node, int height, int width)
   : InternalDisplay(parent, title), m_node(node)
 {
   string svc = svcPrefix();

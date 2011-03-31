@@ -34,16 +34,16 @@ namespace ROMon {
     /// Set of excluded nodes
     StrSet             m_excluded;
   public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Set timeout error
-    void setTimeoutError();
     /// Initializing constructor
-    CtrlFarmSubDisplay(FarmDisplay* parent, const string& title, bool bad=false);
+    CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, bool bad=false);
     /// Standard destructor
     virtual ~CtrlFarmSubDisplay();
     /// Initialize default display text
     void init(bool bad);
+    /// Access to problem flag
+    bool hasProblems() const { return m_hasProblems; }
+    /// Set timeout error
+    void setTimeoutError();
     /// Update display content
     virtual void update(const void* data);
     /// Update display content
@@ -60,7 +60,7 @@ namespace ROMon {
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
   };
-  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title) {
+  InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title) {
     return new CtrlFarmSubDisplay(parent,title);
   }
 }
@@ -72,7 +72,7 @@ namespace ROMon {
 #define COL_ALARM           (RED|BOLD|INVERSE)
 
 /// Initializing constructor
-CtrlFarmSubDisplay::CtrlFarmSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
+CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_lastUpdate = time(0);

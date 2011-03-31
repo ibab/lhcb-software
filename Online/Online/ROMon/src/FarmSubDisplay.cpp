@@ -21,16 +21,16 @@ namespace ROMon {
     bool              m_inUse;
 
   public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Set timeout error
-    void setTimeoutError();
     /// Initializing constructor
-    FarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
+    FarmSubDisplay(InternalDisplay* parent, const std::string& title, bool bad=false);
     /// Standard destructor
     virtual ~FarmSubDisplay();
     /// Initialize default display text
     void init(bool bad);
+    /// Access to problem flag
+    bool hasProblems() const { return m_hasProblems; }
+    /// Set timeout error
+    void setTimeoutError();
     /// Update display content
     virtual void update(const void* data);
     /// Update display content
@@ -48,7 +48,7 @@ namespace ROMon {
     virtual void updateContent(const Nodeset& ns);
   };
 
-  InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const std::string& title) {
+  InternalDisplay* createFarmSubDisplay(InternalDisplay* parent, const std::string& title) {
     return new FarmSubDisplay(parent,title);
   }
 }
@@ -80,7 +80,7 @@ namespace {
 }
 
 /// Initializing constructor
-FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
+FarmSubDisplay::FarmSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
