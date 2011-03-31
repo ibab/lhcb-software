@@ -1,5 +1,4 @@
-// $Id: CondDBCache.h,v 1.9 2008-06-26 14:22:45 marcocle Exp $
-#ifndef COMPONENT_CONDDBCACHE_H 
+#ifndef COMPONENT_CONDDBCACHE_H
 #define COMPONENT_CONDDBCACHE_H 1
 
 // Include files
@@ -24,7 +23,7 @@
 #include "DetCond/ICondDBReader.h"
 
 /** @class CondDBCache CondDBCache.h component/CondDBCache.h
- *  
+ *
  *  Class used to manage in memory conditions.
  *
  *  @author Marco Clemencic
@@ -44,10 +43,15 @@ public:
 
   /// Add a new data object to the cache.
   /// \warning {no check performed}
-  bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0);
+  bool insert(const cool::IFolderPtr &folder,const cool::IObject &obj, const cool::ChannelId &channel = 0);
+
+  /// Shortcut for the regular implementations (for backward compatibility).
+  inline bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0) {
+    return insert(folder, *obj.get(), channel);
+  }
 
   bool addFolder(const std::string &path, const std::string &descr, const cool::IRecordSpecification& spec);
-  bool addFolder(const std::string &path, const std::string &descr, const cool::IRecordSpecification& spec, 
+  bool addFolder(const std::string &path, const std::string &descr, const cool::IRecordSpecification& spec,
                  const std::map<cool::ChannelId,std::string>& ch_names);
   bool addFolderSet(const std::string &path, const std::string &descr);
   bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
@@ -58,7 +62,7 @@ public:
   {
     return addObject(path,since,until,rec,0,iov_before);
   }
-  
+
 
   /// Search an entry in the cache and returns the data string or an empty string if no object is found.
   bool get(const std::string &path, const cool::ValidityKey &when,
@@ -79,29 +83,29 @@ public:
   /// Returns true if the channel name in the folder was found
   bool getChannelId(const std::string &path,const std::string &name,
                     cool::ChannelId &channel) const;
-  
+
   void getSubNodes(const std::string &path, std::vector<std::string> &node_names);
 
   void getSubNodes(const std::string &path, std::vector<std::string> &folders, std::vector<std::string> &foldersets);
 
   /// Remove all entries from the cache;
   inline void clear() {m_cache.clear();}
-  
+
   /// Get the number of items cached.
   inline size_t size() const;
-  
+
   inline void setHighLevel(size_t lvl) { m_highLvl = lvl; }
   inline void setLowLevel(size_t lvl) { m_lowLvl = lvl; }
   inline size_t highLevel() const { return m_highLvl; }
   inline size_t lowLevel() const { return m_lowLvl; }
-  
+
   inline size_t level() const { return m_level; }
-  
+
   void clean_up();
 
   /// Check if the given path is present in the cache.
   inline bool hasPath(const std::string &path) const { return m_cache.count(path) != 0; }
-  
+
   /// Check if the path is a folderset.
   inline bool isFolderSet(const std::string &path) const {
     return hasPath(path) && (m_cache.find(path)->second.spec.get() == 0);
@@ -111,7 +115,7 @@ public:
   inline bool isFolder(const std::string &path) const {
     return hasPath(path) && (m_cache.find(path)->second.spec.get() != 0);
   }
-  
+
   /// Check if the given path,time pair is present in the cache.
   bool hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel = 0) const;
 
@@ -120,7 +124,7 @@ public:
   /// Set the flag to enable the check that the inserted IOVs are not compatible with the latest
   /// requested time (needed to avoid that the cache is modified for the current event).
   /// @return previous value
-  bool setIOVCheck(bool enable) 
+  bool setIOVCheck(bool enable)
   {
     bool old = m_checkLastReqTime;
     m_checkLastReqTime = enable;
@@ -129,6 +133,12 @@ public:
 
   /// Tell if the check on inserted IOVs is enabled.
   bool IOVCheck() { return m_checkLastReqTime; }
+
+  /// Getter for the data member m_silentConflicts.
+  bool silentConflicts() const { return m_silentConflicts; }
+
+  /// Getter for the data member m_silentConflicts.
+  void setSilentConflicts(bool value) { m_silentConflicts = value; }
 
 protected:
 
@@ -141,14 +151,14 @@ private:
   //typedef std::vector<CondItem> ItemListType;
   typedef std::list<CondItem> ItemListType;
   //  typedef std::map<FolderIdType,CondFolder> FolderListType;
-  typedef GaudiUtils::HashMap<FolderIdType,CondFolder> StorageType;  
+  typedef GaudiUtils::HashMap<FolderIdType,CondFolder> StorageType;
 
   /// Internal class used to record IOV+data pairs
   struct CondItem {
     /// Constructor.
-    CondItem(CondFolder *myFolder, const cool::IObjectPtr &obj):
-      folder(myFolder),iov(obj->since(),obj->until()),
-      data(new cool::Record(obj->payload())),score(1.0) {}
+    CondItem(CondFolder *myFolder, const cool::IObject &obj):
+      folder(myFolder),iov(obj.since(),obj.until()),
+      data(new cool::Record(obj.payload())),score(1.0) {}
     CondItem(CondFolder *myFolder, const cool::ValidityKey &since, const cool::ValidityKey &until,
              const cool::IRecord &rec):
       folder(myFolder),iov(since,until), data(new cool::Record(rec)),score(1.0) {}
@@ -167,7 +177,7 @@ private:
 
     typedef GaudiUtils::Map<cool::ChannelId,ItemListType> StorageType;
     typedef GaudiUtils::HashMap<std::string,cool::ChannelId> ChannelNamesMapType;
-    
+
     CondFolder(const cool::IFolderPtr &fld):
       description(fld->description()),
       spec(new cool::RecordSpecification(fld->payloadSpecification())),
@@ -201,7 +211,9 @@ private:
       ItemListType &lst = items[channel];
       ItemListType::iterator i;
       for ( i = lst.begin(); i != lst.end() ; ++i ){
-        if ( ( i->iov.first >= since ? i->iov.first : since ) < ( i->iov.second <= until ? i->iov.second : until ) ) return i;
+        // Given two IOVs a and b, they conflict if the intersection is not empty:
+        //   max(a.s,b.s) < min(a.u,b.u)
+        if ( std::max(i->iov.first, since) < std::min(i->iov.second, until) ) return i;
       }
       return i;
     }
@@ -220,15 +232,15 @@ private:
     inline bool empty() const {
       for (StorageType::const_iterator ch = items.begin(); ch != items.end(); ++ch ) {
         if (! ch->second.empty()) return false;
-      }    
+      }
       return true;
     }
-      
+
   };
 
   /// Actual storage
   StorageType m_cache;
-  
+
   size_t m_highLvl;
   size_t m_lowLvl;
   size_t m_level;
@@ -237,7 +249,9 @@ private:
 
   cool::ValidityKey m_lastRequestedTime;
   bool m_checkLastReqTime;
-  
+
+  // Do not print warning messages in case of conflicts during the insertion
+  bool m_silentConflicts;
 };
 
 inline size_t CondDBCache::size() const {

@@ -1,0 +1,79 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+import GaudiKernel.SystemOfUnits as Units
+Units.hours = Units.s * 3600
+from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
+                           CondDBAccessSvc, CondDBTimeSwitchSvc)
+
+DDDBConf()
+
+ecs = EventClockSvc(InitialTime = (1262304000 + 120 * 60) * 1000000000)
+ecs.addTool(FakeEventTime,"EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = (1262304000 + 10 * 60) * 1000000000
+ecs.EventTimeDecoder.TimeStep = 20 * 60 * 1000000000
+
+HBTEST = CondDBAccessSvc("HBTEST", ConnectionString="sqlite_file:../data/HBTEST.db/HBTEST")
+HBTEST.HeartBeatCondition = "/Conditions/Online/HeartBeatTest/Tick"
+HBTEST.QueryGranularity = 1 * Units.hours
+HBTEST.OutputLevel = DEBUG
+
+MessageSvc().setDebug.append("HBTEST.Cache")
+
+CondDB().addAlternative(HBTEST, "/Conditions/Online/HeartBeatTest")
+CondDB().QueryGranularity = 1 * Units.hours
+
+from Configurables import DetCondTest__TestConditionAlg
+alg = DetCondTest__TestConditionAlg()
+alg.Conditions = ["/dd/Conditions/Online/HeartBeatTest/Condition1","/dd/Conditions/Online/HeartBeatTest/Condition2"]
+alg.LoadDuringInitialize = True
+ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 2)
+#MessageSvc(OutputLevel = 1)
+
+from Configurables import UpdateManagerSvc
+#UpdateManagerSvc(DotDumpFile = "ums.dot")
+
+alg.ConditionsDependencies = ["/dd/Conditions/Online/HeartBeatTest/Condition1 -> /dd/Conditions/Online/HeartBeatTest/Condition2  "]
+UpdateManagerSvc().OutputLevel = DEBUG
+MessageSvc().setDebug += ["UpdateManagerSvc::Item"]
+</text></argument>
+<argument name="exit_code"><integer>0</integer></argument>
+<argument name="validator"><text>
+findReferenceBlock('''
+UpdateManagerSv...  DEBUG Update object Conditions/Online/HeartBeatTest/Condition1 from data provider
+HBTEST.Cache        DEBUG Request Folder '/Conditions/Online/HeartBeatTest/Condition1'  @ 1262304600000000000 channel 0 MISSING
+HBTEST              DEBUG Retrieving conditions in range 1262304000000000000 - 1262307600000000000
+HBTEST.Cache        DEBUG Insert  Folder '/Conditions/Online/HeartBeatTest/Condition1', IOV : 0 - 1262305200000000000, channel : 0
+HBTEST.Cache        DEBUG Insert  Folder '/Conditions/Online/HeartBeatTest/Condition1', IOV : 1262305200000000000 - 1262306400000000000, channel : 0
+HBTEST.Cache        DEBUG Insert  Folder '/Conditions/Online/HeartBeatTest/Condition1', IOV : 1262306400000000000 - 9223372036854775807, channel : 0
+HBTEST.Cache        DEBUG Conflict found: item not inserted
+HBTEST.Cache        DEBUG  IOV : 1262306400000000000 - 9223372036854775807
+HBTEST.Cache        DEBUG Request Folder '/Conditions/Online/HeartBeatTest/Condition1'  @ 1262304600000000000 channel 0 FOUND
+''', signature_offset = 1, id = "first_cond1")
+
+findReferenceBlock('''
+UpdateManagerSv...  DEBUG Update object Conditions/Online/HeartBeatTest/Condition2 from data provider
+HBTEST.Cache        DEBUG Request Folder '/Conditions/Online/HeartBeatTest/Condition2'  @ 1262304600000000000 channel 0 MISSING
+HBTEST              DEBUG Retrieving conditions in range 1262304000000000000 - 1262307600000000000
+HBTEST.Cache        DEBUG Insert  Folder '/Conditions/Online/HeartBeatTest/Condition2', IOV : 0 - 1262305200000000000, channel : 0
+HBTEST.Cache        DEBUG Insert  Folder '/Conditions/Online/HeartBeatTest/Condition2', IOV : 1262305200000000000 - 1262306400000000000, channel : 0
+HBTEST.Cache        DEBUG Insert  Folder '/Conditions/Online/HeartBeatTest/Condition2', IOV : 1262306400000000000 - 1262308800000000000, channel : 0
+HBTEST.Cache        DEBUG Request Folder '/Conditions/Online/HeartBeatTest/Condition2'  @ 1262304600000000000 channel 0 FOUND
+''', signature_offset = 1, id = "first_cond2")
+
+findReferenceBlock('''
+UpdateManagerSv...  DEBUG Update object Conditions/Online/HeartBeatTest/Condition1 from data provider
+HBTEST.Cache        DEBUG Request Folder '/Conditions/Online/HeartBeatTest/Condition1'  @ 1262305800000000000 channel 0 FOUND
+''', signature_offset = 1, id = "second_cond1")
+
+findReferenceBlock('''
+UpdateManagerSv...  DEBUG Update object Conditions/Online/HeartBeatTest/Condition2 from data provider
+HBTEST.Cache        DEBUG Request Folder '/Conditions/Online/HeartBeatTest/Condition2'  @ 1262305800000000000 channel 0 FOUND
+''', signature_offset = 1, id = "second_cond2")
+</text></argument>
+</extension>

@@ -4,6 +4,25 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+ **** requires LHCbKernel > v12r8 ****
+! 2011-03-31 - Marco Clemencic
+ - Modified the interfaces to use the pattern of Gaudi v21.
+ - Fixed a few Eclipse warnings.
+ - Removed CVS keywords.
+ - Added the possibility to fetch condition for a range of times instead of
+   only for the current event time. The CondDBAccessSvc property QueryGranularity
+   can be used to define the width of the time range (around the event time) to
+   use. The boundaries are rounded so that the requested range is stable. For
+   example, with a granularity of one hour, the event times 19:10:00, 19:23:15,
+   19:56:10 will all fetch the same range 19:00:00-20:00:00.
+   The set the QueryGranularity property in a standard configuration:
+
+     import GaudiKernel.SystemOfUnits as Units
+     Units.hours = Units.s * 3600
+
+     from Configurables import CondDB
+     CondDB(QueryGranularity = 2 * Units.hours)
+
 ! 2011-03-28 - Marco Clemencic
  - Added a test to expose bug #80076 (wrong condition used on first event).
 

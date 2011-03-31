@@ -1,5 +1,4 @@
-// $Id: LoadDDDB.h,v 1.1 2008-11-17 11:09:40 cattanem Exp $
-#ifndef LOADDDDB_H 
+#ifndef LOADDDDB_H
 #define LOADDDDB_H 1
 
 // Include files
@@ -8,7 +7,7 @@
 
 
 /** @class LoadDDDB LoadDDDB.h
- *  
+ *
  *  Load entries in the detector transient store using IDataSvc::preLoad().
  *  The node to be loaded is set with the option LoadDDDB.Node.
  *
@@ -16,7 +15,7 @@
  *  @date   2005-10-14
  */
 class LoadDDDB : public GaudiAlgorithm {
-public: 
+public:
   /// Standard constructor
   LoadDDDB( const std::string& name, ISvcLocator* pSvcLocator );
 

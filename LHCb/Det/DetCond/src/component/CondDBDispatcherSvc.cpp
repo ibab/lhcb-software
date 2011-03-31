@@ -1,6 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.9 2009-04-17 13:32:10 cattanem Exp $
 // Include files
-
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
@@ -23,7 +21,7 @@ DECLARE_SERVICE_FACTORY(CondDBDispatcherSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBDispatcherSvc::CondDBDispatcherSvc( const std::string& name, ISvcLocator* svcloc ):
-  Service(name,svcloc),
+  base_class(name,svcloc),
   m_mainDB(0),
   m_alternatives()
 {
@@ -38,36 +36,19 @@ CondDBDispatcherSvc::CondDBDispatcherSvc( const std::string& name, ISvcLocator* 
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBDispatcherSvc::~CondDBDispatcherSvc() {} 
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode CondDBDispatcherSvc::queryInterface(const InterfaceID& riid,
-                                               void** ppvUnknown){
-  if ( IID_ICondDBReader.versionMatch(riid) ) {
-    *ppvUnknown = (ICondDBReader*)this;
-    addRef();
-    return SUCCESS;
-  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
-    *ppvUnknown = (ICondDBInfo*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
+CondDBDispatcherSvc::~CondDBDispatcherSvc() {}
 
 //=============================================================================
 // initialize
 //=============================================================================
 StatusCode CondDBDispatcherSvc::initialize(){
-  StatusCode sc = Service::initialize();
+  StatusCode sc = base_class::initialize();
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
 
   log << MSG::DEBUG << "Initialize" << endmsg;
-  
+
   // locate the main access service
   sc = service(m_mainAccessSvcName,m_mainDB,true);
   if (  !sc.isSuccess() ) {
@@ -80,7 +61,7 @@ StatusCode CondDBDispatcherSvc::initialize(){
   for ( decl = m_alternativesDeclarationMap.begin(); decl != m_alternativesDeclarationMap.end(); ++decl ) {
     const std::string &altPath = decl->first;
     const std::string &svcName = decl->second;
-    
+
     if ( m_alternatives.find(altPath) != m_alternatives.end() ) {
       log << MSG::ERROR << "More than one alternative for path " << altPath << endmsg;
       return StatusCode::FAILURE;
@@ -97,7 +78,7 @@ StatusCode CondDBDispatcherSvc::initialize(){
     log << MSG::DEBUG << "Retrieved '" << svcName << "' (for path '" << altPath << "')" << endmsg;
 
   }
-  
+
   return sc;
 }
 
@@ -119,7 +100,7 @@ StatusCode CondDBDispatcherSvc::finalize(){
   }
   m_alternatives.clear();
 
-  return Service::finalize();
+  return base_class::finalize();
 }
 
 //=========================================================================
@@ -133,7 +114,7 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) cons
     log << MSG::VERBOSE << "Root node: using '" << m_mainAccessSvcName << "'" << endmsg;
     return m_mainDB;
   }
-  
+
   // loop over alternatives
   std::map<std::string,ICondDBReader*>::const_reverse_iterator alt;
   for ( alt = m_alternatives.rbegin(); alt != m_alternatives.rend(); ++alt ) {
@@ -153,7 +134,7 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) cons
         else log << "unknown";
         log << "'" << endmsg;
       }
-      
+
       return alt->second;
     }
   }
@@ -210,12 +191,12 @@ StatusCode CondDBDispatcherSvc::getChildNodes (const std::string &path,
   // clear the destination vectors
   folders.clear();
   foldersets.clear();
-  
+
   // Get the folders and foldersets from the dedicated alternative
   std::vector<std::string> tmpv1,tmpv2;
   StatusCode sc = alternativeFor(path)->getChildNodes(path,tmpv1,tmpv2);
   if (sc.isFailure()) return sc;
-  
+
   // Find alternatives for subfolders of the path.
   std::map<std::string,ICondDBReader*>::reverse_iterator alt;
   std::string::size_type path_size = path.size();
@@ -240,8 +221,8 @@ StatusCode CondDBDispatcherSvc::getChildNodes (const std::string &path,
       }
     }
   }
-  
-  // copy the temporary vectors to the output ones 
+
+  // copy the temporary vectors to the output ones
   folders = tmpv1;
   foldersets = tmpv2;
   return sc;

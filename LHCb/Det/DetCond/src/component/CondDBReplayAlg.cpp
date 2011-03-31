@@ -1,5 +1,4 @@
-// $Id: CondDBReplayAlg.cpp,v 1.3 2008-06-12 18:47:18 marcocle Exp $
-// Include files 
+// Include files
 
 // needed to sleep between two operations
 #include "GaudiKernel/Sleep.h"
@@ -38,7 +37,7 @@ CondDBReplayAlg::CondDBReplayAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBReplayAlg::~CondDBReplayAlg() {} 
+CondDBReplayAlg::~CondDBReplayAlg() {}
 
 //=============================================================================
 // Initialization
@@ -51,7 +50,7 @@ StatusCode CondDBReplayAlg::initialize() {
 
   const bool create = true;
   m_reader = svc<ICondDBReader>(m_readerName,create);
-  
+
   // Open the input file.
   std::auto_ptr<std::istream> logFile(new std::ifstream(m_logFileName.c_str()));
   if ( ! logFile->good() ) {
@@ -66,28 +65,28 @@ StatusCode CondDBReplayAlg::initialize() {
   Gaudi::Time last_time;
   Gaudi::Time::ValueType tmptime;
   while ( ! logFile->eof() ) {
-    
+
     (*logFile) >> opcode;
     if ("GET:" == opcode || "GCN:" == opcode) { // we use this operation...
-      
+
       operation.use_numeric_channel = ("GET:" == opcode);
-      
+
       (*logFile) >> tmptime; operation.time = Gaudi::Time(tmptime);
       (*logFile) >> operation.node;
       (*logFile) >> tmptime; operation.evttime = Gaudi::Time(tmptime);
-      
+
       if (operation.use_numeric_channel) {
         (*logFile) >> operation.channel;
       }
       else {
         (*logFile) >> operation.chn_name;
       }
-      
+
       if ( last_time > operation.time ) {
         error() << "Error in the log file: the operation time is not strictly increasing";
         return StatusCode::FAILURE;
       }
-      
+
       //info() << operation.time.ns() << " " << operation.node << " "  << operation.evttime.ns() << " "  << operation.channel << endmsg;
       last_time = operation.time;
       m_operations.push_back(operation);
@@ -96,7 +95,7 @@ StatusCode CondDBReplayAlg::initialize() {
     std::getline(*logFile,tmp);
   }
   info() << "Found " << m_operations.size() << " operations to replay." << endmsg;
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -107,7 +106,7 @@ StatusCode CondDBReplayAlg::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  info() << "Replaying database operations ..." << endmsg; 
+  info() << "Replaying database operations ..." << endmsg;
   ICondDBReader::DataPtr data;
   std::string descr;
   Gaudi::Time since, until;
@@ -115,9 +114,9 @@ StatusCode CondDBReplayAlg::execute() {
   Gaudi::Time last_optime, last_time;
   bool first = true;
   for(list_t::iterator op = m_operations.begin(); op != m_operations.end(); ++op) {
-    
+
     if ( first ) {
-      // we do not have to wait for the first operation 
+      // we do not have to wait for the first operation
       first = false;
     } else {
       // calculate how much we have to sleep
@@ -128,22 +127,22 @@ StatusCode CondDBReplayAlg::execute() {
     }
 
     last_optime = op->time;
-    
+
     // I have to store the current time before the operation otherwise
     // we to not count the time that the operation takes as already elapsed.
     last_time = Gaudi::Time::current();
-    
-    // Get the object 
+
+    // Get the object
     if (op->use_numeric_channel) {
       m_reader->getObject(op->node,op->evttime,data,descr,since,until,op->channel).ignore();
     }
     else {
       m_reader->getObject(op->node,op->evttime,data,descr,since,until,op->chn_name).ignore();
     }
-    
+
   }
-  info() << "Replay completed." << endmsg; 
-  
+  info() << "Replay completed." << endmsg;
+
   return StatusCode::SUCCESS;
 }
 
@@ -153,7 +152,7 @@ StatusCode CondDBReplayAlg::execute() {
 StatusCode CondDBReplayAlg::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

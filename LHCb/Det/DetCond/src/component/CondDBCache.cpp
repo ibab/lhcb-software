@@ -1,8 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.10 2008-06-26 14:22:45 marcocle Exp $
-// Include files 
-
-
-// local
+// Include files
 #include "CondDBCache.h"
 
 //-----------------------------------------------------------------------------
@@ -15,12 +11,16 @@
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBCache::CondDBCache(const MsgStream& log, size_t highLvl, size_t lowLvl):
-  m_highLvl(highLvl),m_lowLvl(lowLvl),m_level(0),m_log(log),m_lastRequestedTime(0),m_checkLastReqTime(true)
+  m_highLvl(highLvl), m_lowLvl(lowLvl),
+  m_level(0),
+  m_log(log),
+  m_lastRequestedTime(0), m_checkLastReqTime(true),
+  m_silentConflicts(false)
 {
   if ( highLvl == 0 ) {
     m_log << MSG::WARNING << "High level == 0 : forced to 100" << endmsg;
     m_highLvl = 100;
-  }  
+  }
   if ( highLvl <= lowLvl ) {
     m_log << MSG::WARNING << "High level <= low level : low level forced to 0" << endmsg;
     m_lowLvl = 0;
@@ -38,7 +38,7 @@ CondDBCache::~CondDBCache() {
 //=========================================================================
 //  Add a new item to the cache
 //=========================================================================
-bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel) {
+bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObject &obj, const cool::ChannelId &channel) {
   // increment object count and check the limit
   if ( m_level >= highLevel() ){
     // needs clean up
@@ -46,13 +46,13 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
     clean_up();
   }
   m_log << MSG::DEBUG << "Insert  Folder '" << folder->fullPath()
-        << "', IOV : " << obj->since() << " - " << obj->until()
+        << "', IOV : " << obj.since() << " - " << obj.until()
         << ", channel : " << channel << endmsg;
-  
+
   FolderIdType id(folder->fullPath());
   StorageType::iterator f = m_cache.find(id);
   if (f == m_cache.end()){
-    f = m_cache.insert(StorageType::value_type(id,CondFolder(folder))).first;
+    f = m_cache.insert(StorageType::value_type(id, CondFolder(folder))).first;
     // Fill the map of channel names.
     std::map<cool::ChannelId,std::string>::const_iterator p;
     std::map<cool::ChannelId,std::string> ch_names = folder->listChannelsWithNames();
@@ -60,15 +60,18 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
       f->second.channelNames[p->second] = p->first;
     }
   } else {
-    if (f->second.items[channel].end() != f->second.conflict(obj->since(),obj->until(),channel)) {
-      m_log << MSG::WARNING << "Conflict found: item not inserted" << endmsg;
+    if (f->second.items[channel].end() != f->second.conflict(obj.since(), obj.until(), channel)) {
+      const MSG::Level lvl = (m_silentConflicts ? MSG::DEBUG : MSG::WARNING);
+      m_log << lvl << "Conflict found: item not inserted" << endmsg;
+      ItemListType::iterator i = f->second.conflict(obj.since(), obj.until(), channel);
+      m_log << lvl << " IOV : " << i->iov.first << " - " << i->iov.second << endmsg;
       return false;
     }
   }
   // for vectors
   //  f->second.items.push_back(CondItem(&f->second,obj));
   // for lists
-  f->second.items[channel].push_front(CondItem(&f->second,obj));
+  f->second.items[channel].push_front(CondItem(&f->second, obj));
   ++m_level;
   return true;
 }
@@ -85,13 +88,13 @@ bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
   return true;
 }
 bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
-                            const cool::IRecordSpecification& spec, 
+                            const cool::IRecordSpecification& spec,
                             const std::map<cool::ChannelId,std::string>& ch_names) {
   StorageType::iterator f = m_cache.find(path);
   if (f == m_cache.end()){
     f = m_cache.insert(StorageType::value_type(path,CondFolder(descr,spec))).first;
     // Fill the map of channel names.
-    std::map<cool::ChannelId,std::string>::const_iterator p; 
+    std::map<cool::ChannelId,std::string>::const_iterator p;
     for (p = ch_names.begin(); p != ch_names.end(); ++p) {
       f->second.channelNames[p->second] = p->first;
     }
@@ -118,7 +121,7 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
   // new objects cannot be already valid. check it!
   if ( IOVCheck() && (m_lastRequestedTime != 0)
        && ( since <= m_lastRequestedTime && m_lastRequestedTime < until ) ) {
-    m_log << MSG::WARNING
+    m_log << (m_silentConflicts ? MSG::DEBUG : MSG::WARNING)
           << "New item IOV is compatible with last requested time:"
           << " not allowed to avoid inconsistencies" << endmsg;
     return false;
@@ -138,7 +141,7 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
     m_log << MSG::WARNING << '"' << path << '"' << " is a FolderSet: object not added" << endmsg;
     return false;
   }
-  
+
   // when bypassing the DB, the conflicts must be solved
   /*
   if (f->second.conflict(since,until) != f->second.items.end()) {
@@ -177,7 +180,7 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
                       const cool::ChannelId &channel,
                       cool::ValidityKey &since, cool::ValidityKey &until,
                       std::string &descr, ICondDBReader::DataPtr &payload ) {
-  m_log << MSG::DEBUG << "Request Folder '" << path 
+  m_log << MSG::DEBUG << "Request Folder '" << path
         << "'  @ " << when << " channel " << channel;
   m_lastRequestedTime = when;
   StorageType::iterator folder = m_cache.find(path);
@@ -206,7 +209,7 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
   return false;
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 bool CondDBCache::getChannelId(const std::string &path,const std::string &name,
                                cool::ChannelId &channel) const {
@@ -222,7 +225,7 @@ bool CondDBCache::getChannelId(const std::string &path,const std::string &name,
   return false;
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 void CondDBCache::getSubNodes (const std::string &path, std::vector<std::string> &folders, std::vector<std::string> &foldersets) {
 
@@ -246,11 +249,11 @@ void CondDBCache::getSubNodes (const std::string &path, std::vector<std::string>
   }
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 void CondDBCache::getSubNodes (const std::string &path, std::vector<std::string> &node_names) {
   // @todo: could be implemented as getSubNodes(path,node_names,node_names);
-  
+
   node_names.clear();
 
   StorageType::iterator f;
@@ -383,7 +386,7 @@ void CondDBCache::dump() {
       }
     }
   }
-  m_log << MSG::DEBUG << "Cache content dump --------------------- END" << endmsg;  
+  m_log << MSG::DEBUG << "Cache content dump --------------------- END" << endmsg;
 }
 //=============================================================================
 

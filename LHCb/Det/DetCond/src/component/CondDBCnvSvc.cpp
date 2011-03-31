@@ -1,4 +1,3 @@
-//$Id: CondDBCnvSvc.cpp,v 1.16 2009-04-17 13:32:10 cattanem Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -17,7 +16,7 @@ DECLARE_SERVICE_FACTORY(CondDBCnvSvc)
 
 /// Constructor
 CondDBCnvSvc::CondDBCnvSvc( const std::string& name, ISvcLocator* svc)
-  : ConversionSvc ( name, svc, CONDDB_StorageType ),
+  : base_class ( name, svc, CONDDB_StorageType ),
     m_dbReader(0)
 {
   declareProperty( "CondDBReader", m_dbReaderName = "CondDBAccessSvc" );
@@ -35,7 +34,7 @@ StatusCode CondDBCnvSvc::initialize()
 {
 
   // Before anything else, we need to initialise the base class
-  StatusCode sc = ConversionSvc::initialize();
+  StatusCode sc = base_class::initialize();
   if ( !sc.isSuccess() ) return sc;
 
   // Now we can get a handle to the MessageSvc
@@ -49,7 +48,7 @@ StatusCode CondDBCnvSvc::initialize()
     return sc;
   }
   log << MSG::DEBUG << "Retrieved " << m_dbReaderName << endmsg;
-  
+
   log << MSG::DEBUG << "Specific initialization completed" << endmsg;
   return sc;
 }
@@ -62,7 +61,7 @@ StatusCode CondDBCnvSvc::finalize()
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalizing" << endmsg;
   if (m_dbReader) m_dbReader->release();
-  return ConversionSvc::finalize();
+  return base_class::finalize();
 }
 
 //----------------------------------------------------------------------------
@@ -73,33 +72,33 @@ StatusCode CondDBCnvSvc::finalize()
 /// for instance in the case of XML files with more than one element).
 StatusCode CondDBCnvSvc::createAddress( long svc_type,
                                         const CLID& clid,
-                                        const std::string* par, 
+                                        const std::string* par,
                                         const unsigned long* ipar,
                                         IOpaqueAddress*& refpAddress ) {
-  
+
   // First check that requested address is of type CONDDB_StorageType
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "entering createAddress" << endmsg;
   if ( svc_type!= CONDDB_StorageType ) {
-    log << MSG::ERROR 
-        << "Cannot create addresses of type " << (int)svc_type 
-        << " which is different from " << (int)CONDDB_StorageType 
+    log << MSG::ERROR
+        << "Cannot create addresses of type " << (int)svc_type
+        << " which is different from " << (int)CONDDB_StorageType
         << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // Par[0] is folder name in the CondDB.
   std::string folderName = par[0];
 
-  // Par[1] is entry name in the string (which may contain many conditions, 
+  // Par[1] is entry name in the string (which may contain many conditions,
   // for instance in the case of XML files with more than one element).
   std::string entryName = par[1];
 
   // iPar[0] is the cool::ChannelId
   unsigned long channelId = ipar[0];
-  
+
   // Now create the address
-  refpAddress = new GenericAddress( CONDDB_StorageType, 
+  refpAddress = new GenericAddress( CONDDB_StorageType,
                                     clid,
                                     folderName,
                                     entryName,
@@ -119,23 +118,7 @@ IConverter* CondDBCnvSvc::converter(const CLID& clid) {
   }
   else {
     return ConversionSvc::converter(CLID_Any);
-  }  
-}
-
-//----------------------------------------------------------------------------
-// Implementation of IInterface
-StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
-                                        void** ppvUnknown){
-  if ( IID_ICondDBReader.versionMatch(riid) ) {
-    *ppvUnknown = (ICondDBReader*)this;
-    addRef();
-    return SUCCESS;
-  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
-    *ppvUnknown = (ICondDBInfo*)this;
-    addRef();
-    return SUCCESS;
   }
-  return ConversionSvc::queryInterface(riid,ppvUnknown);
 }
 
 //----------------------------------------------------------------------------

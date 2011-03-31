@@ -1,6 +1,5 @@
-// $Id: DetCondDict.h,v 1.6 2008-06-26 16:58:15 marcocle Exp $
 // ============================================================================
-#ifndef DETCOND_DETCONDDICT_H 
+#ifndef DETCOND_DETCONDDICT_H
 #define DETCOND_DETCONDDICT_H 1
 // ============================================================================
 // Hack to get round gccxml parsing problem (SEAL bug 9704)
@@ -15,14 +14,14 @@
 // ============================================================================
 #include "GaudiKernel/Time.h"
 // ============================================================================
-// DetCond 
+// DetCond
 // ============================================================================
 #include "DetCond/ICondDBAccessSvc.h"
 #include "DetCond/ICondDBEditor.h"
 #include "DetCond/ICondDBReader.h"
 #include "DetCond/ICOOLConfSvc.h"
 // ============================================================================
-// CORAL (not available through PyCool) 
+// CORAL (not available through PyCool)
 // ============================================================================
 #include "RelationalAccess/ConnectionService.h"
 #include "RelationalAccess/IConnectionServiceConfiguration.h"

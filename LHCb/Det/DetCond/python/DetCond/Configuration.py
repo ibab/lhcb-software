@@ -1,7 +1,6 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.14 2010-01-12 19:06:28 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables, ConfigurableUser, importOptions, getConfigurable, log
@@ -36,6 +35,7 @@ class CondDB(ConfigurableUser):
                   "IgnoreHeartBeat": False,
                   "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
                   "UseLatestTags" : [],
+                  "QueryGranularity" : 0,
                   }
     _propertyDocDct = {
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
@@ -52,6 +52,7 @@ class CondDB(ConfigurableUser):
                        'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
                        'HeartBeatCondition' : """ Location of the heart-beat condition in the database """,
                        "UseLatestTags" : """ List of the form [DataType, OnlyGlobalTags = False] to turn on the usage of the latest tags """,
+                       "QueryGranularity": """Granularity of the query in the database (in time units)""",
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -321,6 +322,13 @@ class CondDB(ConfigurableUser):
             if p in tags and p != "ONLINE":
                 partition[p].DefaultTAG = tags[p]
                 del tags[p]
+            # Set the query granularity
+            self.propagateProperty("QueryGranularity", partition[p])
+            if type(partition[p]) is CondDBTimeSwitchSvc:
+                for r in partition[p].Readers:
+                    config = allConfigurables[eval(r.split(':')[0]).split("/")[1]]
+                    if isinstance(config, CondDBAccessSvc):
+                        self.propagateProperty("QueryGranularity", config)
 
         if conns:
             log.warning("Cannot override the connection strings of the partitions %r", conns.keys())

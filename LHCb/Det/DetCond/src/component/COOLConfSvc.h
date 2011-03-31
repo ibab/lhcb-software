@@ -1,5 +1,4 @@
-// $Id: COOLConfSvc.h,v 1.3 2008-06-10 16:47:23 marcocle Exp $
-#ifndef COMPONENT_COOLCONFSVC_H 
+#ifndef COMPONENT_COOLCONFSVC_H
 #define COMPONENT_COOLCONFSVC_H 1
 
 // Include files
@@ -19,7 +18,7 @@ namespace coral {
 }
 
 /** @class COOLConfSvc COOLConfSvc.h
- *  
+ *
  *  Class used as interface to LCG COOL library API. It should expose as less as
  *  possible COOL internal details.
  *
@@ -27,37 +26,29 @@ namespace coral {
  *  @date   2005-01-11
  */
 
-class COOLConfSvc: public Service,
-                       public virtual ICOOLConfSvc {
-public: 
-
-  /** Query interfaces of Interface
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
-
-  /// Initilize COOL (CondDB) Configuration Service
+class COOLConfSvc: public extends1<Service, ICOOLConfSvc> {
+public:
+  /// Initialize COOL (CondDB) Configuration Service
   virtual StatusCode initialize();
-  
+
   /// Finalize Service
   virtual StatusCode finalize();
 
   // --------- ICOOLConfSvc implementation
   /// Access to the CORAL connection service used by COOL (if needed).
   virtual coral::IConnectionService& connectionSvc();
-  
+
   /// Get the COOL Database service (used to connect to the databases).
   virtual cool::IDatabaseSvc& databaseSvc();
 
 protected:
   /// Standard constructor
-  COOLConfSvc(const std::string& name, ISvcLocator* svcloc); 
+  COOLConfSvc(const std::string& name, ISvcLocator* svcloc);
 
   virtual ~COOLConfSvc( ); ///< Destructor
 
 private:
-  
+
   inline cool::Application *coolApplication(){
     if (!m_coolApplication.get())
       throw GaudiException("Attempt to access COOL instance before initialization",
@@ -65,11 +56,11 @@ private:
                            StatusCode::FAILURE);
     return m_coolApplication.get();
   }
-  
+
   /// Pointer to a shared instance of the COOL Application
   std::auto_ptr<cool::Application> m_coolApplication;
-  
-  std::auto_ptr<coral::IReplicaSortingAlgorithm> m_replicaSortAlg; 
+
+  std::auto_ptr<coral::IReplicaSortingAlgorithm> m_replicaSortAlg;
 
   /// Flag to turn off/on the CORAL LFCReplicaService (option UseLFCReplicaSvc, default = false).
   /// Setting this option works only if it is set for the first COOLConfSvc initialized
@@ -87,15 +78,15 @@ private:
   /// (option EnableCoralConnectionCleanUp, default = false).
   /// Setting this option works only if it is set for the first COOLConfSvc initialized.
   bool m_coralConnCleanUp;
-  
+
   /// Time between two connection trials (in seconds).
   /// Passed to CORAL when loaded.
   int m_retrialPeriod;
-   
+
   /// How long to keep retrying before giving up (in seconds).
   /// Passed to CORAL when loaded.
   int m_retrialTimeOut;
-  
+
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<COOLConfSvc>;
 

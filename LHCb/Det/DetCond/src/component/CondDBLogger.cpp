@@ -1,6 +1,4 @@
-// $Id: CondDBLogger.cpp,v 1.4 2009-04-17 13:32:10 cattanem Exp $
-// Include files 
-
+// Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
@@ -24,8 +22,8 @@ DECLARE_SERVICE_FACTORY(CondDBLogger)
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBLogger::CondDBLogger( const std::string& name, ISvcLocator* svcloc ):
-  Service(name,svcloc), m_loggedReader(0), m_logFile(0) {
-  
+  base_class(name,svcloc), m_loggedReader(0), m_logFile(0) {
+
   declareProperty("LoggedReader",  m_loggedReaderName = "",
                   "Fully qualified name of the ICondDBReader to which the calls"
                   " have to be forwarded.");
@@ -38,30 +36,13 @@ CondDBLogger::CondDBLogger( const std::string& name, ISvcLocator* svcloc ):
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBLogger::~CondDBLogger() {} 
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode CondDBLogger::queryInterface(const InterfaceID& riid,
-                                               void** ppvUnknown){
-  if ( IID_ICondDBReader.versionMatch(riid) ) {
-    *ppvUnknown = (ICondDBReader*)this;
-    addRef();
-    return SUCCESS;
-  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
-    *ppvUnknown = (ICondDBInfo*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
+CondDBLogger::~CondDBLogger() {}
 
 //=============================================================================
 // initialize
 //=============================================================================
 StatusCode CondDBLogger::initialize(){
-  StatusCode sc = Service::initialize();
+  StatusCode sc = base_class::initialize();
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
@@ -72,7 +53,7 @@ StatusCode CondDBLogger::initialize(){
     log << MSG::ERROR << "Property LoggedReader is not set." << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // locate the CondDBReader
   sc = service(m_loggedReaderName,m_loggedReader,true);
   if (  !sc.isSuccess() ) {
@@ -85,7 +66,7 @@ StatusCode CondDBLogger::initialize(){
   if ( m_logFileName.empty() ){
     m_logFileName = name() + ".log";
     log << MSG::INFO << "Property LogFile not specified, using '"
-                     << m_logFileName << "'" << endmsg; 
+                     << m_logFileName << "'" << endmsg;
   }
 
   // Open the output file and start writing.
@@ -118,7 +99,7 @@ StatusCode CondDBLogger::finalize(){
     m_logFile.reset(0);
   }
 
-  return Service::finalize();
+  return base_class::finalize();
 }
 
 //=========================================================================

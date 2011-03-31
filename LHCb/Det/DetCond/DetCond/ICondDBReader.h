@@ -1,5 +1,4 @@
-// $Id: ICondDBReader.h,v 1.5 2008-06-26 14:22:45 marcocle Exp $
-#ifndef DETCOND_ICONDDBREADER_H 
+#ifndef DETCOND_ICONDDBREADER_H
 #define DETCOND_ICONDDBREADER_H 1
 
 // Include files
@@ -25,21 +24,18 @@ namespace cool {
   class IRecord;
 }
 
-static const InterfaceID IID_ICondDBReader ( "ICondDBReader", 1, 1 );
-
 /** @class ICondDBReader ICondDBReader.h DetCond/ICondDBReader.h
- *  
+ *
  *
  *  @author Marco Clemencic
  *  @date   2006-07-10
  */
 class ICondDBReader : virtual public ICondDBInfo {
-public: 
+public:
+  /// InterfaceID
+  DeclareInterfaceID(ICondDBReader, 2, 0);
 
   typedef boost::shared_ptr<const cool::IRecord> DataPtr;
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ICondDBReader; }
 
   /// Retrieve data from the condition database.
   /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.
@@ -64,13 +60,13 @@ public:
 
   /// Tells if the path is available in the database.
   virtual bool exists(const std::string &path) = 0;
-  
+
   /// Tells if the path (if it exists) is a folder.
   virtual bool isFolder(const std::string &path) = 0;
-  
+
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path) = 0;
-  
+
 protected:
 
 private:

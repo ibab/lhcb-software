@@ -1,5 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.23 2009-04-17 13:32:10 cattanem Exp $
-// Include files 
+// Include files
 #include "RelyConverter.h"
 
 #include "GaudiKernel/IConversionSvc.h"
@@ -114,7 +113,7 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
 {
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "Method updateObj starting" << endmsg;
-      
+
   DataObject* pNewObject; // create a new object and copy it to the old version
   StatusCode sc = i_delegatedCreation(pAddress,pNewObject,CreateObject);
   if (sc.isFailure()){
@@ -133,14 +132,14 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
   ValidDataObject* pNewVDO = dynamic_cast<ValidDataObject*>(pNewObject);
   if ( 0 == pVDO || 0 == pNewVDO ) {
     log << MSG::ERROR
-        << "Cannot update objects other than ValidDataObject: " 
+        << "Cannot update objects other than ValidDataObject: "
         << "update() must be defined!"
         << endmsg;
     return StatusCode::FAILURE;
   }
   // Deep copy the new Condition into the old DataObject
-  pVDO->update( *pNewVDO );  
-  
+  pVDO->update( *pNewVDO );
+
   // Delete the useless Condition
   delete pNewVDO;
 
@@ -196,12 +195,12 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   ICondDBReader::DataPtr data;
   std::string description;
   Gaudi::Time since,until;
-  
+
   log << MSG::DEBUG << "Entering \"i_delegatedCreation\"" << endmsg;
 
   std::string path = pAddress->par()[0];
   std::string data_field_name = "data";
-  
+
   // Extract the COOL field name from the condition path
   std::string::size_type at_pos = path.find('@');
   if ( at_pos != path.npos ) {
@@ -211,7 +210,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     } // if I have "/@", I should use the default ("data")
     // always remove '@' from the path
     path = path.substr(0,slash_pos+1) +  path.substr(at_pos+1);
-  }  
+  }
 
   sc = getObject(path, pAddress->ipar()[0], data, description, since, until);
   if ( !sc.isSuccess() ) return sc;
@@ -220,25 +219,25 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     switch (op) {
     case CreateObject:
       log << MSG::DEBUG << "Path points to a FolderSet: create a directory" << endmsg;
-    
+
       // I hit a FolderSet!!! I handle it here (at least for the moment, since it's the only CondDB real converter)
       pObject = new DataObject();
 
       break;
-      
+
     case FillObjectRefs:
       {
         log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
-        
+
         // find subnodes
         std::vector<std::string> children;
-        
+
         sc = getChildNodes(path,children);
         if ( !sc.isSuccess() ) return sc;
-	
+
         // add registries for the sub folders
         for ( std::vector<std::string>::iterator c = children.begin(); c != children.end(); ++c ) {
-	  
+
           IOpaqueAddress *childAddress;
           std::string par[2];
           // in current implementation, the child folders have a '/' in front.
@@ -251,8 +250,8 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
           }
           par[1] = *c;
           unsigned long ipar[2] = { 0,0 };
-	  
-          log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;      
+
+          log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;
           sc = conversionSvc()->addressCreator()->createAddress(CONDDB_StorageType,
                                                                 CLID_Catalog,
                                                                 par,
@@ -260,19 +259,19 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
                                                                 childAddress);
           if ( !sc.isSuccess() ) return sc;
           log << MSG::VERBOSE << "Address created" << endmsg;
-	  
+
           sc = dataManager()->registerAddress(pAddress->registry(), *c, childAddress);
           if ( !sc.isSuccess() ) return sc;
           log << MSG::VERBOSE << "Address registered" << endmsg;
         }
       }
       break;
-      
+
     case UpdateObjectRefs:
-      log << MSG::DEBUG << "Update references not supported for FolderSet" << endmsg;      
+      log << MSG::DEBUG << "Update references not supported for FolderSet" << endmsg;
       break;
     }
-	  
+
     return StatusCode::SUCCESS;
   }
 
@@ -286,7 +285,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
 
-  // Create temporary address for the relevant type and classID 
+  // Create temporary address for the relevant type and classID
   IOpaqueAddress *tmpAddress;
   std::string xml_data;
   try {
@@ -295,23 +294,23 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     log << MSG::ERROR << "I cannot find the data inside COOL object: " << e.what() << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // for XML string temporary address, I need a way to know which is the originating href
   std::ostringstream src_href;
   src_href <<  "conddb:" << pAddress->par()[0] << ":" << pAddress->ipar()[0];
 
-  const std::string par[3] = { xml_data, 
+  const std::string par[3] = { xml_data,
                                pAddress->par()[1],
                                src_href.str() };
   unsigned long ipar[2] = { 1,0 };
   sc = conversionSvc()->addressCreator()
     ->createAddress( storage_type,pAddress->clID() , par, ipar, tmpAddress );
   if (sc.isFailure()){
-    log << MSG::ERROR 
+    log << MSG::ERROR
         << "Persistency service could not create a new address" << endmsg;
     return sc;
   }
-  
+
   tmpAddress->addRef();
   if ( pAddress->registry() ){
     log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()
@@ -326,7 +325,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   } else {
     log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
   }
-  
+
   switch (op) {
   case CreateObject:
     sc = m_detPersSvc->createObj ( tmpAddress, pObject );
@@ -337,21 +336,21 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   case UpdateObjectRefs:
     sc = m_detPersSvc->updateObjRefs ( tmpAddress, pObject );
   }
-  
+
   tmpAddress->release();
   if ( sc.isFailure() ) {
-    log << MSG::ERROR 
+    log << MSG::ERROR
         << "Persistency service could not create a new object" << endmsg;
     return sc;
   }
-  
+
   if (op == CreateObject){
     log << MSG::DEBUG << "Setting object validity" << endmsg;
     setObjValidity(since,until,pObject);
 
-  } 
+  }
   log << MSG::DEBUG << "New object successfully created" << endmsg;
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -371,12 +370,12 @@ long RelyConverter::getStorageType(const std::string &path, const std::string &d
   std::string::size_type pos_start;
   std::string::size_type pos_end;
   std::string::size_type pos_max;
-  
+
   pos_start = pos_end = pos_max = desc.size();
 
   std::string::size_type tmp_pos = 0;
 
-  while ( pos_start == pos_max || pos_end <= pos_start ){    
+  while ( pos_start == pos_max || pos_end <= pos_start ){
     // find the next occurrence of '<'
     tmp_pos = desc.find(delimiter_begin,tmp_pos);
     if (tmp_pos >= pos_max) break; // not found
@@ -384,32 +383,32 @@ long RelyConverter::getStorageType(const std::string &path, const std::string &d
     // skip spaces
     ++tmp_pos;
     while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
-    
+
     // check for the keyword
     if (desc.compare(tmp_pos, delimiter_keyword.size(), delimiter_keyword) != 0) continue;
 
     // skip spaces
     tmp_pos += delimiter_keyword.size();
     while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
-  
+
     // check for the separator
     if ( desc[tmp_pos] != delimiter_sep ) continue;
-  
+
     // skip spaces
     ++tmp_pos;
     while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
-  
+
     // here should start the "int"
     pos_start = tmp_pos;
-    
+
     // "count" the digits
     while ( desc[tmp_pos] >= '0' && desc[tmp_pos] <= '9' ) ++tmp_pos;
-    
+
     // here should be just after the "int"
     pos_end = tmp_pos;
-    
+
     if ( pos_start == pos_end ) continue; // no number found
-    
+
     // skip spaces
     while ( desc[tmp_pos] == ' ' || desc[tmp_pos] == '\t' ||  desc[tmp_pos] == '\n' ) ++tmp_pos;
 
@@ -420,15 +419,15 @@ long RelyConverter::getStorageType(const std::string &path, const std::string &d
       continue;
     }
   }
-  
+
   if ( pos_start == pos_max || pos_end <= pos_start ) { // not found
     return -1;
   }
 
   std::istringstream i(desc.substr(pos_start, pos_end-pos_start));
-  
+
   long st;
   i >> st;
-  
+
   return st;
 }

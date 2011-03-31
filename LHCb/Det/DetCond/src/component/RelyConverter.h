@@ -1,5 +1,4 @@
-// $Id: RelyConverter.h,v 1.5 2006-12-14 12:56:16 ranjard Exp $
-#ifndef COMPONENT_RELYCONVERTER_H 
+#ifndef COMPONENT_RELYCONVERTER_H
 #define COMPONENT_RELYCONVERTER_H 1
 
 // Include files
@@ -10,7 +9,7 @@ class ISvcLocator;
 template <class TYPE> class CnvFactory;
 
 /** @class RelyConverter RelyConverter.h component/RelyConverter.cpp
- *  
+ *
  *  ConditionsDBCnvSvc rely on the functionalities provided by the XmlCnvSvc.
  *  RelyConverter delegate the creation of the object to the XmlCnvSvc
  *  (via DetectorPersistencySvc).
@@ -23,7 +22,7 @@ class RelyConverter: public CondDBGenericCnv {
   /// Friend needed for instantiation
   friend class CnvFactory<RelyConverter>;
 
-public: 
+public:
 
   /// Operations that can be performed by delegation
   enum Operation {
@@ -37,7 +36,7 @@ public:
    *  @return status depending on the completion of the call
    */
   virtual StatusCode initialize();
-  
+
   /**
    * Finalizes the converter
    *  @return status depending on the completion of the call
@@ -76,7 +75,7 @@ public:
    */
   virtual StatusCode updateObj (IOpaqueAddress *pAddress,
                                 DataObject *pObject);
-  
+
   /**
    * Converts the transient object to the requested representation (not implemented).
    * @param refpAddress the address of the object representation
@@ -85,7 +84,7 @@ public:
    */
   virtual StatusCode createRep (DataObject* pObject,
                                 IOpaqueAddress*& refpAddress);
-  
+
   /**
    * Updates the converted representation of a transient object.
    * @param pAddress the address of the object representation
@@ -98,12 +97,12 @@ public:
   /**
    * Accessor to the type of elements that this converter converts.
    * @return the classID for this type
-   */  
+   */
   static const CLID& classID () { return CLID_Any; }
 
 protected:
   /// Standard constructor
-  RelyConverter(ISvcLocator* svc); 
+  RelyConverter(ISvcLocator* svc);
   virtual ~RelyConverter( ); ///< Destructor
 
 private:

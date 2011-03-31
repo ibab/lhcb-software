@@ -1,5 +1,3 @@
-// $Id: TestConditionAlg.cpp,v 1.2 2010-01-12 19:06:27 marcocle Exp $
-
 // Include files
 #include "GaudiKernel/Map.h"
 #include "GaudiAlg/GaudiAlgorithm.h"

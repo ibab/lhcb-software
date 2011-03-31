@@ -1,6 +1,5 @@
 #ifndef CONDDBREPLAYALG_H_
 #define CONDDBREPLAYALG_H_
-// $Id: CondDBReplayAlg.h,v 1.1 2008-01-26 15:47:28 marcocle Exp $
 
 // Include files
 // from Gaudi
@@ -11,7 +10,7 @@
 class ICondDBReader;
 
 /** @class CondDBReplayAlg CondDBReplayAlg.h
- *  
+ *
  *  Simple algorithm that reads a file in the format produced by CondDBLogger
  *  and re-play the request to the database with the same timing written in the
  *  log file.
@@ -20,7 +19,7 @@ class ICondDBReader;
  *  @date   2008-01-25
  */
 class CondDBReplayAlg : public GaudiAlgorithm {
-public: 
+public:
   /// Standard constructor
   CondDBReplayAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -52,7 +51,7 @@ private:
     std::string chn_name;
   };
   typedef std::list<operation_t> list_t;
-  
+
   /// List of operations to perform
   list_t m_operations;
 

@@ -1,6 +1,4 @@
-// $Id: CondDBSQLiteCopyAccSvc.cpp,v 1.1 2007-04-20 14:41:09 marcocle Exp $
-// Include files 
-
+// Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Property.h"
@@ -47,7 +45,7 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
     log << MSG::ERROR << "Failed to set properties" << endmsg;
     return sc;
   }
-  
+
   // this should be done after getting the properties
   MsgStream log(msgSvc(), name() );
 
@@ -69,7 +67,7 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
   }
 
   try {
-    
+
     // if "force" mode is selected: remove the destination file if it exists
     if ( m_force_copy ) {
       bool file_existed = boost::filesystem::remove( m_dest_path );
@@ -77,7 +75,7 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
         log << MSG::WARNING << "Removed file '" << m_dest_path << "' to replace it" << endmsg;
       }
     }
-    
+
     // copy the source file
     log << MSG::DEBUG << "Copying "
         << m_source_path << " -> "
@@ -89,7 +87,7 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
 
     MSG::Level lvl = MSG::ERROR;
     if ( m_ignore_copy_error ) lvl = MSG::WARNING;
-    
+
     log << lvl << "Problems occurred copying the file" << endmsg;
     log << lvl << e.what() << endmsg;
     if ( ! m_ignore_copy_error )
@@ -117,7 +115,7 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
 
   // Set the connection string to be used (the one from the base class will be ignored).
   m_sqlite_connstring = "sqlite_file:" + m_dest_path + "/" + m_dbname;
-  
+
   // Initialize the base class.
   return CondDBAccessSvc::initialize();
 }

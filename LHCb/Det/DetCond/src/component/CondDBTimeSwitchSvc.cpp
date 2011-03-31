@@ -1,6 +1,4 @@
-// $Id: CondDBTimeSwitchSvc.cpp,v 1.6 2009-01-29 13:45:11 cattanem Exp $
 // Include files
-
 #ifdef WIN32 // Hacks to compile on Windows...
 #define NOMSG
 #define NOGDI
@@ -62,17 +60,17 @@ namespace {
   using namespace std;
   using namespace boost::spirit;
   using namespace Gaudi::Parsers;
-  
-  /// the actual type of position iterator 
+
+  /// the actual type of position iterator
   typedef boost::spirit::position_iterator<string::const_iterator> IteratorT;
-  
-  /// create the position iterator from the inptut 
+
+  /// create the position iterator from the inptut
   inline IteratorT createIterator(const std::string& input){
     return IteratorT(input.begin(), input.end());
   }
   StatusCode parse(pair<long long,long long>& result, const string& input){
     return parse
-    ( createIterator(input), 
+    ( createIterator(input),
         IteratorT(),
         PairGrammar < IntGrammar<long long> , IntGrammar <long long> >()[var(result)=arg1],
         SkipperGrammar()).full;
@@ -84,13 +82,13 @@ namespace {
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBTimeSwitchSvc::CondDBTimeSwitchSvc( const std::string& name, ISvcLocator* svcloc ):
-  Service(name,svcloc),
+  base_class(name,svcloc),
   m_readersDeclatations(),
   m_readers(),
   m_latestReaderRequested(0),
   m_dds(0)
 {
-  
+
   // "'CondDBReader':(since, until)", with since and until doubles
   declareProperty("Readers", m_readersDeclatations);
 
@@ -102,41 +100,25 @@ CondDBTimeSwitchSvc::CondDBTimeSwitchSvc( const std::string& name, ISvcLocator* 
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBTimeSwitchSvc::~CondDBTimeSwitchSvc() {} 
+CondDBTimeSwitchSvc::~CondDBTimeSwitchSvc() {}
 
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode CondDBTimeSwitchSvc::queryInterface(const InterfaceID& riid,
-                                               void** ppvUnknown){
-  if ( IID_ICondDBReader.versionMatch(riid) ) {
-    *ppvUnknown = (ICondDBReader*)this;
-    addRef();
-    return SUCCESS;
-  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
-    *ppvUnknown = (ICondDBInfo*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
 //=============================================================================
 // initialize
 //=============================================================================
 StatusCode CondDBTimeSwitchSvc::initialize(){
-  StatusCode sc = Service::initialize();
+  StatusCode sc = base_class::initialize();
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
 
   log << MSG::DEBUG << "Initialize" << endmsg;
-  
+
   if (m_readersDeclatations.empty()) {
     log << MSG::ERROR << "No CondDBReader has been specified"
                          " (property 'Readers')." << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // decoding the property "Readers"
   std::string reader_name, reader_siov;
   std::pair<long long,long long> reader_iov;
@@ -177,7 +159,7 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
   // we need to reset it because it got corrupted during the
   // check for overlaps
   m_latestReaderRequested = 0;
-  
+
   return sc;
 }
 
@@ -196,8 +178,8 @@ StatusCode CondDBTimeSwitchSvc::finalize(){
   }
   m_readersDeclatations.clear();
   m_latestReaderRequested = 0;
-  
-  return Service::finalize();
+
+  return base_class::finalize();
 }
 
 //=========================================================================
@@ -207,12 +189,12 @@ CondDBTimeSwitchSvc::ReaderInfo *CondDBTimeSwitchSvc::readerFor(const Gaudi::Tim
   MsgStream log(msgSvc(), name());
 
   if (!quiet) log << MSG::VERBOSE << "Get CondDBReader for event time " << when << endmsg;
-  
+
   // TODO: (MCl) if we change service, we may clear the cache of the one
   //       that is not needed.
   if ((!m_latestReaderRequested) || !m_latestReaderRequested->isValidAt(when)){
     // service not valid: search for the correct one
-    
+
     // Find the element with key ("until") greater that the requested one
     ReadersType::iterator reader = m_readers.upper_bound(when);
     if (reader != m_readers.end() && reader->second.isValidAt(when)){
@@ -222,20 +204,20 @@ CondDBTimeSwitchSvc::ReaderInfo *CondDBTimeSwitchSvc::readerFor(const Gaudi::Tim
       if (!quiet) log << MSG::WARNING << "No reader configured for requested event time" << endmsg;
     }
   }
-  
+
   return m_latestReaderRequested;
 }
 
 //=========================================================================
 //  get the current time
 //=========================================================================
-Gaudi::Time CondDBTimeSwitchSvc::getTime() {  
+Gaudi::Time CondDBTimeSwitchSvc::getTime() {
   if (!m_dds) {
     StatusCode sc = service("DetectorDataSvc",m_dds,false);
     if (sc.isFailure()) {
       MsgStream log(msgSvc(), name());
       log << MSG::WARNING << "Cannot find the DetectorDataSvc,"
-                             " using a default event time (0)" << endmsg; 
+                             " using a default event time (0)" << endmsg;
       return Gaudi::Time();
     }
   }
@@ -269,7 +251,7 @@ StatusCode CondDBTimeSwitchSvc::getObject (const std::string &path,
   // get the reader for the requested time
   ReaderInfo *ri = readerFor(when);
   if (!ri) return StatusCode::FAILURE;
-  
+
   StatusCode sc;
   if (m_xmlDirectMapping && isFolderSet(path)) {
     descr = "Catalog generated automatically by " + name();
@@ -292,7 +274,7 @@ StatusCode CondDBTimeSwitchSvc::getObject (const std::string &path,
   // get the reader for the requested time
   ReaderInfo *ri = readerFor(when);
   if (!ri) return StatusCode::FAILURE;
-  
+
   StatusCode sc;
   if (m_xmlDirectMapping && isFolderSet(path)) {
     descr = "Catalog generated automatically by " + name();
@@ -322,8 +304,8 @@ StatusCode CondDBTimeSwitchSvc::getChildNodes (const std::string &path,
   // clear the destination vectors
   folders.clear();
   foldersets.clear();
-  
-  // delegate to the current Reader (hoping that is good enough)  
+
+  // delegate to the current Reader (hoping that is good enough)
   return currentReader()->reader(serviceLocator())->getChildNodes(path,folders,foldersets);
 }
 

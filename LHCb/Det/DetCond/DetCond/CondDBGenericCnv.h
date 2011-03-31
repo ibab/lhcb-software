@@ -1,5 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.15 2007-02-14 16:13:30 marcocle Exp $
-#ifndef DETCOND_CONDDBGENERICCNV_H 
+#ifndef DETCOND_CONDDBGENERICCNV_H
 #define DETCOND_CONDDBGENERICCNV_H 1
 
 // Include files
@@ -22,16 +21,16 @@ class DataObject;
 template <class TYPE> class CnvFactory;
 
 /** @class CondDBGenericCnv CondDBGenericCnv.h DetCond/CondDBGenericCnv.h
- *  
+ *
  *  Generic converter for the CondDBCnvSvc.  This generic converter
- *  provides common functions to access the CondDB in order to make it 
+ *  provides common functions to access the CondDB in order to make it
  *  easier to write specific converters.
  *
  *  @author Marco CLEMENCIC
  *  @date   December 2004
  */
 class CondDBGenericCnv: public Converter {
-public: 
+public:
   /**
    * Initializes the converter.
    * Here the pointers to common services are taken:
@@ -42,7 +41,7 @@ public:
    *  @return status depending on the completion of the call
    */
   virtual StatusCode initialize();
-  
+
   /**
    * Finalizes the converter.
    * It releases the pointers to the taken services.
@@ -69,7 +68,7 @@ public:
 protected:
 
   /// Standard constructor
-  CondDBGenericCnv(ISvcLocator* svc,const CLID& clid); 
+  CondDBGenericCnv(ISvcLocator* svc,const CLID& clid);
 
   virtual ~CondDBGenericCnv( ); ///< Destructor
 
@@ -88,7 +87,7 @@ protected:
   IDetDataSvc         *m_detDataSvc;
   /// Pointer to the ICondDBReader interface;
   ICondDBReader       *m_condDBReader;
-  
+
   /**
    * Get an object from the Conditions DB. It tries all the CondDBReaders
    * known by CondDBCnvSvc before returing a failure code.
@@ -98,7 +97,7 @@ protected:
    * @param[out] descr folder description string (used to know the storage type by RelyConverter)
    * @param[out] since start of the IOV
    * @param[out] until end of the IOV
-   * The IOV is inside the object itself as two cool::ValidityKey, the since and until are 
+   * The IOV is inside the object itself as two cool::ValidityKey, the since and until are
    * used to avoid the conversion outside this method.<BR>
    * If the path point to a FolderSet, channel is ignored and the boost::shared_ptr obj is
    * set to NULL.
@@ -114,7 +113,7 @@ protected:
   {
     return getObject(path,0,obj,descr,since,until);
   }
-  
+
   /// Find the children nodes of a given FolderSet path.
   /// When using multiple databases, only the first one which contains
   /// this folderset is used, so it must have at least dummy entries for each sub-node

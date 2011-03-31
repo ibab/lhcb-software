@@ -1,4 +1,3 @@
-# $Id: requirements,v 1.105 2010-01-12 19:06:26 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v12r17
@@ -41,14 +40,14 @@ macro_append DetCondDict_cppflags "" \
 library       DetCondLib        Lib/*.cpp
 library       DetCond           component/*.cpp ../tests/src/*.cpp
 
-# =========== standard patterns (the order is essential!) ====================== 
-apply_pattern component_library library=DetCond 
-apply_pattern linker_library    library=DetCondLib 
+# =========== standard patterns (the order is essential!) ======================
+apply_pattern component_library library=DetCond
+apply_pattern linker_library    library=DetCondLib
 
 private
-# DetCond Configurable uses the generated configurables 
+# DetCond Configurable uses the generated configurables
 macro_append DetCondGenConfUser_dependencies DetCondConfDbMerge
-# Have to look in local DetCondConf.py, install_python has to come later 
+# Have to look in local DetCondConf.py, install_python has to come later
 path_prepend PYTHONPATH ${DETCONDROOT}/genConf
 end_private
 apply_pattern install_python_modules
@@ -59,7 +58,7 @@ macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_fi
 
 apply_pattern QMTest
 # =====================================
-# Packages needed for tests 
+# Packages needed for tests
 macro DetCond_use_CondDBUI "" QMTest "CondDBUI v* Tools"
 use $(DetCond_use_CondDBUI)
 

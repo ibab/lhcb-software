@@ -1,6 +1,4 @@
-// $Id: CondDBLayeringSvc.cpp,v 1.6 2009-04-17 13:32:10 cattanem Exp $
-// Include files 
-
+// Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
@@ -23,8 +21,8 @@ DECLARE_SERVICE_FACTORY(CondDBLayeringSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBLayeringSvc::CondDBLayeringSvc( const std::string& name, ISvcLocator* svcloc ):
-  Service(name,svcloc) {
-  
+  base_class(name,svcloc) {
+
   declareProperty("Layers",  m_layersNames );
 
   declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
@@ -35,30 +33,13 @@ CondDBLayeringSvc::CondDBLayeringSvc( const std::string& name, ISvcLocator* svcl
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBLayeringSvc::~CondDBLayeringSvc() {} 
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode CondDBLayeringSvc::queryInterface(const InterfaceID& riid,
-                                               void** ppvUnknown){
-  if ( IID_ICondDBReader.versionMatch(riid) ) {
-    *ppvUnknown = (ICondDBReader*)this;
-    addRef();
-    return SUCCESS;
-  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
-    *ppvUnknown = (ICondDBInfo*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
+CondDBLayeringSvc::~CondDBLayeringSvc() {}
 
 //=============================================================================
 // initialize
 //=============================================================================
 StatusCode CondDBLayeringSvc::initialize(){
-  StatusCode sc = Service::initialize();
+  StatusCode sc = base_class::initialize();
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
@@ -68,7 +49,7 @@ StatusCode CondDBLayeringSvc::initialize(){
   // locate all the AccessSvcs layers
   std::vector<std::string>::iterator lname;
   for ( lname = m_layersNames.begin(); lname != m_layersNames.end(); ++lname ) {
-    
+
     ICondDBReader *svcPtr;
     sc = service(*lname,svcPtr,true);
     if (  !sc.isSuccess() ) {
@@ -80,7 +61,7 @@ StatusCode CondDBLayeringSvc::initialize(){
     log << MSG::DEBUG << "Retrieved '" << *lname << "'" << endmsg;
 
   }
-  
+
   return sc;
 }
 
@@ -97,7 +78,7 @@ StatusCode CondDBLayeringSvc::finalize(){
   }
   m_layers.clear();
 
-  return Service::finalize();
+  return base_class::finalize();
 }
 
 //=========================================================================
@@ -176,7 +157,7 @@ StatusCode CondDBLayeringSvc::getChildNodes (const std::string &path,
   // clear the destination vectors
   folders.clear();
   foldersets.clear();
-  
+
   // Get the folders and foldersets from the dedicated alternative
   std::vector<std::string> tmpv1,tmpv2;
   StatusCode sc = StatusCode::FAILURE;

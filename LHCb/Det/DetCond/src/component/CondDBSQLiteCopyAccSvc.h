@@ -1,5 +1,4 @@
-// $Id: CondDBSQLiteCopyAccSvc.h,v 1.1 2007-04-20 14:41:09 marcocle Exp $
-#ifndef COMPONENT_CONDDBSQLITECOPYACCSVC_H 
+#ifndef COMPONENT_CONDDBSQLITECOPYACCSVC_H
 #define COMPONENT_CONDDBSQLITECOPYACCSVC_H 1
 
 // Include files
@@ -27,7 +26,7 @@ public:
 
 protected:
   /// Standard constructor
-  CondDBSQLiteCopyAccSvc( const std::string& name, ISvcLocator* svcloc ); 
+  CondDBSQLiteCopyAccSvc( const std::string& name, ISvcLocator* svcloc );
 
   virtual ~CondDBSQLiteCopyAccSvc( ); ///< Destructor
 
@@ -51,6 +50,6 @@ private:
 
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBSQLiteCopyAccSvc>;
-  
+
 };
 #endif // COMPONENT_CONDDBSQLITECOPYACCSVC_H

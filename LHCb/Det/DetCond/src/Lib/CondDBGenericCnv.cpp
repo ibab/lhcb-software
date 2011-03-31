@@ -1,5 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.15 2009-04-17 13:32:10 cattanem Exp $
-// Include files 
+// Include files
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Time.h"
 #include "GaudiKernel/MsgStream.h"
@@ -43,7 +42,7 @@ CondDBGenericCnv::~CondDBGenericCnv() {}
 StatusCode CondDBGenericCnv::initialize() {
   // Initializes the grand father
   StatusCode sc = Converter::initialize();
-  
+
   // Query the IDetDataSvc interface of the detector data service
   sc = serviceLocator()->service("DetectorDataSvc",m_detDataSvc);
   if( !sc.isSuccess() ) {
@@ -94,11 +93,11 @@ void CondDBGenericCnv::setObjValidity(Gaudi::Time &since, Gaudi::Time &till, Dat
   IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
 
   if ( pValidity != NULL ) { // it has a validity
-  
+
     pValidity->setValidity(since, till);
-  
+
   } else {
-  
+
     // I cannot set the validity range
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::DEBUG

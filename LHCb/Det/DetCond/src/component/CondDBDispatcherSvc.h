@@ -1,5 +1,4 @@
-// $Id: CondDBDispatcherSvc.h,v 1.8 2008-07-23 14:46:24 marcocle Exp $
-#ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
+#ifndef COMPONENT_CONDDBDISPATCHERSVC_H
 #define COMPONENT_CONDDBDISPATCHERSVC_H 1
 
 // Include files
@@ -11,23 +10,15 @@
 template <class TYPE> class SvcFactory;
 
 /** @class CondDBDispatcherSvc CondDBDispatcherSvc.h component/CondDBDispatcherSvc.h
- *  
+ *
  *
  *
  *  @author Marco Clemencic
  *  @date   2006-07-10
  */
-class CondDBDispatcherSvc: public virtual Service,
-                           public virtual ICondDBReader {
-public: 
-
-  /** Query interfaces of Interface
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
-
-  /// Initilize COOL (CondDB) Access Layer Service
+class CondDBDispatcherSvc: public extends1<Service, ICondDBReader> {
+public:
+  /// Initialize COOL (CondDB) Access Layer Service
   virtual StatusCode initialize();
   /// Finalize Service
   virtual StatusCode finalize();
@@ -56,10 +47,10 @@ public:
 
   /// Tells if the path is available in the database.
   virtual bool exists(const std::string &path);
-  
+
   /// Tells if the path (if it exists) is a folder.
   virtual bool isFolder(const std::string &path);
-  
+
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path);
 
@@ -67,13 +58,13 @@ public:
 
   /** Get the current default database tags
    *  @param  tags vector of DB name, tag pairs. Empty if DB not available
-   */ 
+   */
   virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const;
 
 
 protected:
   /// Standard constructor
-  CondDBDispatcherSvc( const std::string& name, ISvcLocator* svcloc ); 
+  CondDBDispatcherSvc( const std::string& name, ISvcLocator* svcloc );
 
   virtual ~CondDBDispatcherSvc( ); ///< Destructor
 
@@ -87,21 +78,21 @@ private:
   /// Property CondDBDispatcherSvc.MainAccessSvc: the AccessSvc instance to use to retrieve all the
   /// objects for which an alternative is not specified (default to "CondDBAccessSvc").
   std::string m_mainAccessSvcName;
-  
+
   /// Property CondDBDispatcherSvc.Alternatives: list of alternative Access Services in the form of
   /// "/path/for/alternative":"ServiceType/ServiceName".
   std::map<std::string,std::string> m_alternativesDeclarationMap;
-  
+
   /// Pointer to the main access service.
   ICondDBReader* m_mainDB;
-  
+
   /// Container fo the alternatives.
   std::map<std::string,ICondDBReader*> m_alternatives;
 
   /// Enable/disable direct mapping from the database structure to the transient
   /// store using XML persistency format (enabled by default).
   bool m_xmlDirectMapping;
-  
+
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBDispatcherSvc>;
 

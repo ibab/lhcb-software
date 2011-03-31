@@ -1,8 +1,7 @@
-// $Id: LoadDDDB.cpp,v 1.1 2008-11-17 11:09:40 cattanem Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include "GaudiKernel/DataStoreItem.h"
 #include "GaudiKernel/MsgStream.h"
@@ -45,7 +44,7 @@ StatusCode LoadDDDB::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;  
+  debug() << "==> Initialize" << endmsg;
 
   std::vector<LHCb::CondDBNameTagPair> tmp;
   svc<ICondDBInfo>("CondDBCnvSvc",true)->defaultTags(tmp);
@@ -85,8 +84,8 @@ StatusCode LoadDDDB::execute() {
   } catch (...) {
     fatal() << "Gaught unknown exception!!" << endmsg;
     return StatusCode::FAILURE;
-  }  
-  
+  }
+
   info() << "done." << endmsg;
 
   return StatusCode::SUCCESS;

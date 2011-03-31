@@ -1,4 +1,3 @@
-// $Id: CondDBAccessSvc.h,v 1.39 2010-01-12 19:06:28 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -40,17 +39,11 @@ namespace cool {
  *  @date   2005-01-11
  */
 
-class CondDBAccessSvc: public Service,
-                       public virtual ICondDBAccessSvc,
-                       public virtual ICondDBReader,
-                       public virtual ICondDBEditor {
+class CondDBAccessSvc: public extends3<Service,
+                                       ICondDBAccessSvc,
+                                       ICondDBReader,
+                                       ICondDBEditor> {
 public:
-
-  /** Query interfaces of Interface
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   /// Initialize COOL (CondDB) Access Layer Service
   virtual StatusCode initialize();
@@ -254,7 +247,7 @@ private:
   /// Latest know update of the database ("since" field of the latest heart-beat condition).
   /// Initialized to 0, if no heart-beat condition is requested, it is set to
   /// cool::ValidityKeyMax, otherwise, during the first access to the DB, the
-  /// object vaild until VAlidityKeyMax is retrieved and its "since" field is
+  /// object valid until ValidityKeyMax is retrieved and its "since" field is
   /// recorded in this variable.
   /// When disconnected from the database, it is reset to 0 to force a re-check.
   cool::ValidityKey m_latestHeartBeat;
@@ -314,12 +307,24 @@ private:
   /// The value is retrieved from the database when requested the first time
   /// in the RUNNING state.
   const cool::ValidityKey &i_latestHeartBeat();
-  
+
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBAccessSvc>;
 
   /// AttributeListSpecification used to sore XML strings
   static std::auto_ptr<cool::RecordSpecification> s_XMLstorageSpec;
+
+  /// Parameter controlling the granularity of the queries to the conditions database (in time units).
+  ///
+  /// When different from 0, instead of retrieving the only condition valid for the requested event time,
+  /// we will retrieve all the conditions valid for a range around the event time, rounded by the
+  /// granularity.
+  ///
+  /// For example, with granularity set to 1h and the event time 16:18:08, all the conditions valid for the
+  /// range 16:00:00 to 17:00:00 will be retrieved.
+  ///
+  /// \b Note: if the cache is not enabled the parameter has no effect.
+  cool::ValidityKey m_queryGranularity;
 
   // -------------------------------------
   // ---------- Time Out Thread ----------

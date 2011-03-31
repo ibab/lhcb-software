@@ -1,4 +1,3 @@
-//$Id: CondDBCnvSvc.h,v 1.11 2008-06-26 14:22:45 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
@@ -19,21 +18,20 @@ class IOpaqueAddress;
     Allows to create and update condition data objects (i.e. DataObjects
     implementing IValidity).
 
-    @author Marco Clemencic 
+    @author Marco Clemencic
     @date November 2004
 *///--------------------------------------------------------------------------
 
-class CondDBCnvSvc : public ConversionSvc,
-                     virtual public ICondDBReader {
-  
+class CondDBCnvSvc : public extends1<ConversionSvc, ICondDBReader> {
+
   /// Only factories can access protected constructors
   friend class SvcFactory<CondDBCnvSvc>;
 
 protected:
-  
+
   /// Constructor
   CondDBCnvSvc( const std::string& name, ISvcLocator* svc );
-  
+
   /// Destructor
   virtual ~CondDBCnvSvc();
 
@@ -43,7 +41,7 @@ public:
 
   /// Initialize the service
   virtual StatusCode initialize();
-  
+
   /// Finalize the service
   virtual StatusCode finalize();
 
@@ -51,7 +49,7 @@ public:
   /// Create an address using explicit arguments to identify a single object.
   virtual StatusCode createAddress (long svc_type,
 				     const CLID& clid,
-				     const std::string* par, 
+				     const std::string* par,
 				     const unsigned long* ip,
 				     IOpaqueAddress*& refpAddress );
 
@@ -59,14 +57,6 @@ public:
 
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
-
-  // --------- IInterface implementation
-  
-  /** Query interfaces of Interface
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   // --------- ICondDBReader implementation
 
@@ -92,10 +82,10 @@ public:
 
   /// Tells if the path is available in the database.
   virtual bool exists(const std::string &path);
-  
+
   /// Tells if the path (if it exists) is a folder.
   virtual bool isFolder(const std::string &path);
-  
+
   /// Tells if the path (if it exists) is a folderset.
   virtual bool isFolderSet(const std::string &path);
 
@@ -103,7 +93,7 @@ public:
 
   /** Get the current default database tags
    *  @param  tags vector of DB name, tag pairs. Empty if DB not available
-   */ 
+   */
   virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const;
 
 private:

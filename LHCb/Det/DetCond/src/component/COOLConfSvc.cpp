@@ -1,5 +1,3 @@
-// $Id: COOLConfSvc.cpp,v 1.5 2008-07-10 16:53:26 marcocle Exp $
-
 #ifdef __INTEL_COMPILER // Disable ICC remark from CORAL MessageStream and Boost
   #pragma warning(disable:2259)
 #endif
@@ -30,14 +28,14 @@
 //#include "boost/random/uniform_smallint.hpp"
 #include "boost/date_time/posix_time/posix_time_types.hpp"
 
-namespace 
+namespace
 {
 
   /** @class ReplicaSortAlg
    *
    * Small class implementing coral::IReplicaSortingAlgorithm interface to allow dynamic sorting of
    * database replicas obtained from LFC.
-   * 
+   *
    * When retrieving the list of DB replicas, LFCReplicaService obtains a list in an arbitrary order.
    * We have to provide to CORAL a class to be used to sort the list of replicas according to our
    * needs. First we want the closest DB, identified by the environment variable LHCBPRODSITE, then
@@ -47,11 +45,11 @@ namespace
    * @author Marco Clemencic
    * @date   2007-05-02
    */
-  class ReplicaSortAlg: virtual public coral::IReplicaSortingAlgorithm 
+  class ReplicaSortAlg: virtual public coral::IReplicaSortingAlgorithm
   {
     typedef coral::IDatabaseServiceDescription dbDesc_t;
     typedef std::vector< const dbDesc_t * > replicaSet_t;
-    
+
     /** @class  ReplicaSortAlg::Comparator
      *
      * Comparison function defining which replica comes before another.
@@ -64,17 +62,17 @@ namespace
     class Comparator: public std::binary_function<const dbDesc_t*,const dbDesc_t*,bool>
     {
       typedef boost::rand48 RandomGenType;
-      typedef RandomGenType::result_type WeightType; 
+      typedef RandomGenType::result_type WeightType;
       typedef std::map<std::string,WeightType> WeightMap;
-      
-      /// Site that have to be used before the others 
+
+      /// Site that have to be used before the others
       std::string site;
       /// Map used to remember the priority of the sites.
       /// the local site has weight -1, the other are randomly chosen the first
-      /// time they are encountered. 
+      /// time they are encountered.
       mutable WeightMap weights;
       /// Random number generator. Using Boost to avoid interactions with the
-      /// random generator services. 
+      /// random generator services.
       mutable RandomGenType gen;
 
       WeightType getWeight(const std::string& key) const {
@@ -93,9 +91,9 @@ namespace
         }
         return i->second;
       }
-      
+
     public:
-      
+
       /// Constructor.
       /// @param theSite the local LHCb Production Site (<i>SITE</i>.<i>country</i>)
       Comparator(const std::string &theSite):
@@ -130,7 +128,7 @@ namespace
     {
       log << MSG::VERBOSE << "Constructor" << endmsg;
     }
-    
+
     /// Destructor.
     virtual ~ReplicaSortAlg()
     {
@@ -138,7 +136,7 @@ namespace
     }
 
     /// Main function
-    virtual void sort (std::vector< const coral::IDatabaseServiceDescription * > &replicaSet) 
+    virtual void sort (std::vector< const coral::IDatabaseServiceDescription * > &replicaSet)
     {
       if ( log.level() <= MSG::VERBOSE ) {
         log << MSG::VERBOSE << "Original list" << endmsg;
@@ -147,7 +145,7 @@ namespace
           log << MSG::VERBOSE << " " << (*i)->serviceParameter((*i)->serverNameParam()) << endmsg;
         }
       }
-      
+
       log << MSG::VERBOSE << "Sorting..." << endmsg;
       std::sort(replicaSet.begin(),replicaSet.end(),Comparator(localSite));
 
@@ -159,9 +157,9 @@ namespace
         }
       }
     }
-    
+
   };
-  
+
 }
 
 // Factory implementation
@@ -171,7 +169,7 @@ DECLARE_SERVICE_FACTORY(COOLConfSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 COOLConfSvc::COOLConfSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_coolApplication(0),m_replicaSortAlg(0)
+  base_class(name,svcloc),m_coolApplication(0),m_replicaSortAlg(0)
 {
   declareProperty("UseLFCReplicaSvc", m_useLFCReplicaSvc = false );
   declareProperty("LocalSite", m_localSite = "",
@@ -203,24 +201,10 @@ coral::IConnectionService& COOLConfSvc::connectionSvc() {
 }
 
 //=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode COOLConfSvc::queryInterface(const InterfaceID& riid,
-                                       void** ppvUnknown){
-  if ( IID_ICOOLConfSvc.versionMatch(riid) )   {
-    *ppvUnknown = (ICOOLConfSvc*)this;
-    addRef();
-    return SUCCESS;
-  }
-
-  return Service::queryInterface(riid,ppvUnknown);
-}
-
-//=============================================================================
 // initialize
 //=============================================================================
 StatusCode COOLConfSvc::initialize(){
-  StatusCode sc = Service::initialize();
+  StatusCode sc = base_class::initialize();
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
@@ -241,7 +225,7 @@ StatusCode COOLConfSvc::initialize(){
       log << MSG::INFO << "Using CORAL LFCReplicaService" << endmsg;
       connSvcConf.setLookupService( "CORAL/Services/LFCReplicaService" );
       connSvcConf.setAuthenticationService( "CORAL/Services/LFCReplicaService" );
-      
+
       if ( m_localSite.empty() ) {
         // if we didn't get a site from options, we try the environment var DIRACSITE
         m_localSite = System::getEnv("DIRACSITE");
@@ -249,13 +233,13 @@ StatusCode COOLConfSvc::initialize(){
           // if DIRACSITE is not defined, we try, for backward compatibility, LHCBPRODSITE
           m_localSite = System::getEnv("LHCBPRODSITE");
           if ( m_localSite.empty() || m_localSite == "UNKNOWN" ) {
-            // if none of the env. vars is set, let's stick to a "sensible" default 
+            // if none of the env. vars is set, let's stick to a "sensible" default
             m_localSite = "CERN.ch";
           }
         }
       }
       log << MSG::INFO << "Using '" << m_localSite << "' as preferred site" << endmsg;
-      
+
       m_replicaSortAlg.reset(new ReplicaSortAlg(m_localSite,msgSvc()));
       connSvcConf.setReplicaSortingAlgorithm(*m_replicaSortAlg);
     }
@@ -266,7 +250,7 @@ StatusCode COOLConfSvc::initialize(){
       connSvcConf.disablePoolAutomaticCleanUp();
       connSvcConf.setConnectionTimeOut( 0 );
 
-    }        
+    }
 
     connSvcConf.setConnectionRetrialPeriod(m_retrialPeriod);
     log << MSG::INFO << "CORAL Connection Retrial Period set to "
@@ -289,5 +273,5 @@ StatusCode COOLConfSvc::finalize(){
   log << MSG::DEBUG << "Finalize" << endmsg;
   m_coolApplication.reset();
   m_replicaSortAlg.reset();
-  return Service::finalize();
+  return base_class::finalize();
 }
