@@ -5,6 +5,28 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-03-31 - Vanya Belyaev
+ - AnalsysisPython/Dir.py
+
+    add "on-demand" option to add also 
+    the locations "known" to DataOnDeman service :
+
+   >>> ls('/Event/Rec', ondemand = False , level = 1 )
+     /Event/Rec                                                             DataObject 
+
+   compare with: 
+
+   >>> ls('/Event/Rec', ondemand = True , level = 1 )
+     /Event/Rec                                                             DataObject 
+    */Event/Rec/Rich                                                        Directory
+    */Event/Rec/Muon                                                        Directory
+    */Event/Rec/Calo                                                        InPrsAcceptanceAlg/InPRS
+    */Event/Rec/Vertex                                                      UnpackTwoProngVertex/UnpackTwoProngVertex
+    */Event/Rec/Track                                                       UnpackTrack/UnpackMuonTracks
+    */Event/Rec/ProtoP                                                      GaudiSequencer/UnpackChargedProtosSeq
+
+
+
 ! 2011-01-23 - Vanya Belyaev
 
  - AnalysiPython/ZipShelvel.py 
