@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-31 - William James Barter
+ - Added new line: ExclusiveDiMuonBackgroundLine. Takes low multiplicity events that passed no bias triggers, in order to study background to exclusive dimuon process.
+
 !========================== StrippingSelections v3r3 2011-03-29 ===============
 
 ! 2001-03-29 Greig Cowan 
