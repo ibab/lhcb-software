@@ -191,8 +191,8 @@ StatusCode DeRichGasRadiator::updateProperties ( )
                               ckvPhotonEnergyHighLimit, ckvPhotonEnergyNumBins );
   if ( !sc ) return sc;
 
-  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, 
-                             m_chkvRefIndexTabProp, 
+  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect,
+                             m_chkvRefIndexTabProp,
                              m_gasParametersCond );
   if ( !sc ) return sc;
 
@@ -229,15 +229,15 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   {
     if ( m_pressureCond )
     { curPressure = m_pressureCond->param<double>("CurrentPressure"); }
-    else 
-    { 
+    else
+    {
       error() << "Old CurrentPressure Condition missing !!" << endmsg;
       return StatusCode::FAILURE;
     }
     if ( m_temperatureCond )
     { curTemp     = m_temperatureCond->param<double>("CurrentTemperature"); }
-    else 
-    { 
+    else
+    {
       error() << "Old CurrentTemperature Condition missing !!" << endmsg;
       return StatusCode::FAILURE;
     }
@@ -260,12 +260,20 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   double RefTemperature(293.0);
   unsigned int numOfGases( 1 );
   Condition* compCond( NULL );
+  std::vector<std::string> gasNames;
   std::vector<double> gasFractions;
 
   if ( hasCondition( "RadiatorComposition" ) )
   {
     compCond = condition( "RadiatorComposition" );
+    if ( !compCond )
+    {
+      error() << "Zero pointer to condition RadiatorComposition" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
     numOfGases = compCond->param<int>("NumberOfGases");
+    gasNames =  compCond->paramVect<std::string>("GasNames");
     gasFractions =  compCond->paramVect<double>("GasFractions");
     if ( numOfGases == 1 )
       gasFractions[0] = 1.0;
@@ -300,6 +308,19 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   { // this check kept for safety.
     curRadMedium=C4F10_Classic;
     RefTemperature = param<double>("C4F10ReferenceTemp");
+  }
+  else if (material()->name().find("R1RadiatorGas")!= std::string::npos )
+  {
+    if ( numOfGases == 1 && gasNames[0] == "C4F10" )
+    {
+      // same as before
+      curRadMedium=C4F10_Classic;
+      RefTemperature = param<double>("C4F10ReferenceTemp");
+    }
+    else
+    {
+      curRadMedium = mixture;
+    }
   }
   else if (material()->name().find("R2RadiatorGas")!= std::string::npos )
   {

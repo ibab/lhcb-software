@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-03-31 - Antonis Papanestis
+ - Chages in DeRichGasRadiator to allow easy change of gas in RICH1
+   Gas mixture is supported only if CO2 parameterisation is used for
+   C4F10 as well (currently not the case).
+
 ! 2011-03-28 - Chris Jones
  - Add missing clear() on L0 to L1 Hardware ID map during 
    DeRichSystem::buildHPDMappings()
