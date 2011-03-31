@@ -22,36 +22,36 @@ __all__ = (
     )
 
 config_default =  {
-        'LinePrescale'     :    1.  ,
+        'LinePrescale'     :    1.   ,
         'LinePostscale'    :    1.   ,
         
         'SpdMult'          :   600.  , # dimensionless, Spd Multiplicy cut 
-        'ProtonPT'         :  1950.  , # MeV
+        'ProtonPT'         :  1900.  , # MeV
         'ProtonP'          :    -2.  , # MeV
-        'ProtonTRCHI2DOF' :     5.  ,
+        'ProtonTRCHI2DOF' :      5.  ,
         'ProtonPIDppi'     :    10.  , # CombDLL(p-pi)
         'ProtonPIDpK'      :     5.  , # CombDLL(p-K)
-        'CombMaxMass'      :  4050.  , # MeV, before Vtx fit
-        'CombMinMass'      :  2850.  , # MeV, before Vtx fit
+        'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
+        'CombMinMass'      :  2750.  , # MeV, before Vtx fit
         'MaxMass'          :  4000.  , # MeV, after Vtx fit
-        'MinMass'          :  2900.  , # MeV, after Vtx fit
+        'MinMass'          :  2800.  , # MeV, after Vtx fit
         'VtxCHI2'          :     9.  , # dimensionless
-        'CCPT'             :    -2.    
+        'CCPT'             :  5000.    
         }
 
 config_exclusive =  {
-        'LinePrescale'     :    1.  ,
-        'LinePostscale'    :    1.   ,
+        'LinePrescale'     :     1.  ,
+        'LinePostscale'    :     1.  ,
         
-        'SpdMult'          :   100.  , # dimensionless, Spd Multiplicy cut 
+        'SpdMult'          :    20.  , # dimensionless, Spd Multiplicy cut 
         'ProtonPT'         :   500.  , # MeV
         'ProtonP'          :    -2.  , # MeV
-        'ProtonTRCHI2DOF' :     5.  ,
+        'ProtonTRCHI2DOF' :      5.  ,
         'ProtonPIDppi'     :    10.  , # CombDLL(p-pi)
         'ProtonPIDpK'      :     5.  , # CombDLL(p-K)
         'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
         'CombMinMass'      :     0.  , # MeV, before Vtx fit
-        'MaxMass'          :  1.0e+6  , # MeV, after Vtx fit
+        'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
         'MinMass'          :     0.  , # MeV, after Vtx fit
         'VtxCHI2'          :     9.  , # dimensionless
         'CCPT'             :    -2.    

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-03-31 - Jibo He
+ - StrippingCcbar2PpbarNew.py
+	 Update cuts to match Hlt2 DiProton lines
+
 ! 2011-03-31 - William James Barter
  - Added new line: ExclusiveDiMuonBackgroundLine. Takes low multiplicity events that passed no bias triggers, in order to study background to exclusive dimuon process.
 
