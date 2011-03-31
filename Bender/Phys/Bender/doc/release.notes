@@ -23,6 +23,10 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+! 2011-03-31 - Vanya Belyaev
+
+ - tiny decoration for ls/dir methods 
+
 
 ! ==================== Phys/Bender v17r0p1 2011-03-01 =========================
 

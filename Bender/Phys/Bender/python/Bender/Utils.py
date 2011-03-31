@@ -218,7 +218,7 @@ def appMgr( *varg , **kwarg ) :
 
 # =============================================================================
 ## define "easy"-function to browse TES
-def ls  ( *args ) :
+def ls  ( *args , **kwargs ) :
     """
     Browse the Transient Store
 
@@ -230,7 +230,8 @@ def ls  ( *args ) :
     """
     _g  = appMgr()
     _es = _g.evtSvc()
-    return _es.ls ( *args ) 
+    
+    return _es.ls ( *args , **kwargs ) 
 
 # =============================================================================
 ## define "easy-get"-function to get data for TES 
