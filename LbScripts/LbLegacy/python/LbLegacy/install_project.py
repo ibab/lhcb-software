@@ -1132,8 +1132,10 @@ def getProjectTar(tar_list, already_present_list=None):
                         elif os.path.isdir(ltg) :
                             shutil.rmtree(ltg, ignore_errors=True)
                         if sys.platform == "win32" :
+                            log.debug("copying %s to %s" % (pack_ver[1], ltg))
                             shutil.copytree(tg_dir, ltg)
                         else :
+                            log.debug("linking %s -> %s" % (ltg, pack_ver[1]))
                             os.symlink(pack_ver[1], ltg)
 
 
@@ -1154,7 +1156,11 @@ def getProjectTar(tar_list, already_present_list=None):
                 if pack_ver[0] == "LBSCRIPTS" :
                     updateLHCbProjectPath(os.environ["MYSITEROOT"])
                     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
-                    genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
+                    if boot_script_loc :
+                        # for debugging
+                        genlogscript = os.path.join(boot_script_loc, "InstallArea", "scripts", "generateLogin")
+                    else :
+                        genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
                     log.info("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
