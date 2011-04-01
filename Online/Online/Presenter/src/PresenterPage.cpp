@@ -238,9 +238,9 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       //== Get the list of services...
       int kk = myHists.Directory( knownNames );
       std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
-      for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
-        std::cout << "      -" << *itS << "-" << std::endl;
-      }
+      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+      //  std::cout << "      -" << *itS << "-" << std::endl;
+      //}
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
