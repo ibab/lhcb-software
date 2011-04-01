@@ -22,7 +22,7 @@ is accessible for each processing cluster.
 <stats-subfarm>
 Cluster statistics display
 
-You can close the cluster display with ENTER (or MOUSE-LEFT double-click).
+You can close the cluster display by typing 'S' [Shift-s] (or MOUSE-LEFT double-click).
 
 </stats-subfarm>
 
@@ -42,6 +42,7 @@ Mouse commands:
 Double-click MOUSE-LEFT:    show/hide the subfarm menu
 Double-click MOUSE-MIDDLE:  show/hide the subfarm menu
 Single-click MOUSE-RIGHT    show/hide this help window
+Note: Closing the subfarm display also closes all dependent displays.
 
 </common>
 

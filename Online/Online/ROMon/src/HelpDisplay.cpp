@@ -52,7 +52,7 @@ void HelpDisplay::_init(const std::string& tag, const std::string& fin)
   string head = m_title + ": " + fin;
   ifstream in(fin.c_str());
 
-  ::scrc_create_display(&m_display,55,132,NORMAL,ON,head.c_str());
+  ::scrc_create_display(&m_display,60,132,NORMAL,ON,head.c_str());
   ::scrc_put_chars(m_display,"Hit CTRL-H to hide the display",BOLD,2,2,1);
   for(int line=3; in.good(); ) {
     getline(in,s);

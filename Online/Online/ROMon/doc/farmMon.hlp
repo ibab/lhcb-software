@@ -171,7 +171,7 @@ Common keyboard commands:
 To be invoked from the extended subfarm display:
 -- To show the MBM monitor         type KPD-PERIOD or .        -- To show the CPU monitor     type c or C
 -- To show the process monitor     type CTRL-P or p or P       -- To show BOOT display        type b or B
--- To show the farm statistics     type s or S
+-- To show the farm statistics     type s or S                 -- Event processing statistics type CTRL-L
 
 </common>
 
@@ -180,6 +180,7 @@ Mouse commands:
 Double-click MOUSE-LEFT:    show/hide the subfarm menu         Double-click MOUSE-MIDDLE:  show/hide the subfarm menu
 Single-click MOUSE-RIGHT    show/hide this help window
 
+Note: Closing the subfarm display also closes all dependent displays.
 </common>
 
 

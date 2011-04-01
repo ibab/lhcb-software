@@ -428,19 +428,25 @@ int FarmDisplay::showBenchmarkWindow() {
 /// Show context dependent help window
 int FarmDisplay::showHelpWindow() {
   DisplayUpdate update(this,true);
+  string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
   if ( m_helpDisplay.get() ) {
     MouseSensor::instance().remove(this,m_helpDisplay->display());
     m_helpDisplay = auto_ptr<HelpDisplay>(0);
   }
   else if ( m_bootDisplay.get() ) {
-    string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
     string fin = input+"/doc/bootMon.hlp";
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","boot-subfarm",fin));
   }
   else if ( m_statsDisplay.get() ) {
-    string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
     string fin = input+"/doc/farmStats.hlp";
-    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","boot-subfarm",fin));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","stats-subfarm",fin));
+  }
+  else if ( m_benchDisplay.get() && !(m_mode == CTRL_MODE || m_mode == RECO_MODE) ) {
+    string fin = input+"/doc/benchmark.hlp";
+    const char* tag = "benchmark-farm";
+    if ( m_mbmDisplay.get() ) tag = "benchmark-node";
+    else if ( m_subfarmDisplay ) tag = "benchmark-subfarm";
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window",tag,fin));
   }
   else if ( m_sysDisplay.get() ) 
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_ctrl"));
@@ -576,7 +582,7 @@ int FarmDisplay::showStatsWindow() {
   }
   if ( !cluster_name.empty() ) {
     m_statsDisplay = auto_ptr<InternalDisplay>(createFarmStatsDisplay(this,cluster_name));
-    m_statsDisplay->show(m_anchorY+5,m_anchorX+12);
+    m_statsDisplay->show(m_anchorY,m_anchorX);
     m_statsDisplay->connect();
     MouseSensor::instance().add(this,m_statsDisplay->display());
   }

@@ -88,7 +88,7 @@ namespace ROMon {
     FarmStatClusterLine* m_line;
   public:
     /// Initializing constructor
-    FarmStatClusterDisplay(InternalDisplay* parent, const std::string& node, int height=60,int width=172);
+    FarmStatClusterDisplay(InternalDisplay* parent, const std::string& node, int height=68,int width=172);
     /// Standard destructor
     virtual ~FarmStatClusterDisplay();
     /// Access display by cluster name
