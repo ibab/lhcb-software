@@ -103,6 +103,8 @@ private:
   TImage* m_histogramImage ; ///< histogram image
   TImagePalette* m_prettyPalette ; ///< palette 
   TGraph* m_timeGraph;
+  TGraph* m_minGraph;
+  TGraph* m_maxGraph;
   double* m_timeArray;
   double* m_valueArray;
   int     m_nOverlap;

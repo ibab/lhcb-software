@@ -57,6 +57,8 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_histogramImage( NULL ),
   m_prettyPalette( NULL ),
   m_timeGraph( NULL ),
+  m_minGraph( NULL ),
+  m_maxGraph( NULL ),
   m_timeArray( NULL ),
   m_valueArray( NULL ),
   m_nOverlap( 0 )
@@ -82,6 +84,10 @@ DisplayHistogram::~DisplayHistogram() {
   m_prettyPalette = NULL;
   if ( NULL != m_timeGraph ) delete m_timeGraph;
   m_timeGraph = NULL;
+  if ( NULL != m_minGraph ) delete m_minGraph;
+  m_minGraph = NULL;
+  if ( NULL != m_maxGraph ) delete m_maxGraph;
+  m_maxGraph = NULL;
   if ( NULL != m_timeArray ) delete m_timeArray;
   m_timeArray = NULL;
   if ( NULL != m_valueArray ) delete m_valueArray;
@@ -302,7 +308,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   if ( hasOption("HTIT_X_SIZE", &fopt) ) m_hasTitle = true;
   if ( hasOption("HTIT_Y_OFFS", &fopt) ) m_hasTitle = true;
   if ( hasOption("HTIT_Y_SIZE", &fopt) ) m_hasTitle = true;
-  
+
   if ( 0 != m_rootHistogram ) {
     if (TH2D::Class() == m_rootHistogram->IsA() && fastHitmapDraw ) {
       if (NULL == m_histogramImage) {
@@ -327,6 +333,8 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     if ( !m_hasTitle ) m_timeGraph->SetTitle( "" );
     std::string opt =  m_isOverlap ? "SAME" : "AL";
     m_timeGraph->Draw(opt.c_str());
+    if ( NULL != m_minGraph ) m_minGraph->Draw( "SAME" );
+    if ( NULL != m_maxGraph ) m_maxGraph->Draw( "SAME" );
   }
 
   setDrawingOptions( pad );
@@ -715,12 +723,30 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
   std::cout << "Create graph size " << size
             << " min " << m_timeArray[0] << " max " << m_timeArray[size-1] << std::endl;
 
+  float fopt=0.;
+  int lineColor = 1;
+  hasOption("LINECOLOR", &lineColor );
+
   if ( !update ) {
-    if ( NULL != m_timeGraph ) {
-      delete m_timeGraph;
-    }
+    if ( NULL != m_timeGraph ) delete m_timeGraph;
+    if ( NULL != m_minGraph  ) delete m_minGraph;
+    if ( NULL != m_maxGraph  ) delete m_maxGraph;
+    m_minGraph = NULL;
+    m_maxGraph = NULL;
     m_timeGraph = new TGraph( size , m_timeArray , m_valueArray ) ;
     m_timeGraph->SetEditable ( kFALSE );
+    if ( hasOption("YMIN", &fopt) ) {
+      m_minGraph = new TGraph( 2, m_timeArray, m_valueArray );
+      m_minGraph->SetDrawOption( "SAME" );
+      m_minGraph->SetLineStyle( 2 );
+      m_minGraph->SetLineColor( lineColor );
+    }
+    if ( hasOption("YMAX", &fopt) ) {
+      m_maxGraph = new TGraph( 2, m_timeArray, m_valueArray );
+      m_maxGraph->SetDrawOption( "SAME" );
+      m_maxGraph->SetLineStyle( 2 );
+      m_maxGraph->SetLineColor( lineColor );
+    }
   } else {
     int nbPrev = m_timeGraph->GetN();
     if ( nbPrev > size ) {
@@ -752,6 +778,35 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
   m_rootHistogram->GetXaxis()->SetLabelOffset( 0.03 );
   m_rootHistogram->GetXaxis()->SetLabelSize( 0.03 );
 
+  double yMin = m_timeGraph->GetMinimum();
+  double yMax = m_timeGraph->GetMaximum();
+  if ( NULL != m_minGraph ) {
+    hasOption("YMIN", &fopt);
+    double xmin[2], ymin[2];
+    xmin[0] = m_timeArray[0];
+    xmin[1] = m_timeArray[size-1];
+    ymin[0] = fopt;
+    ymin[1] = fopt;
+    m_minGraph->RemovePoint( 0 );
+    m_minGraph->RemovePoint( 1 );
+    m_minGraph->SetPoint( 0, xmin[0], ymin[0] );
+    m_minGraph->SetPoint( 1, xmin[1], ymin[1] );
+    if ( yMin > fopt ) yMin = .95 * fopt;
+  }
+  if ( NULL != m_maxGraph ) {
+    hasOption("YMAX", &fopt);
+    double xmax[2], ymax[2];
+    xmax[0] = m_timeArray[0];
+    xmax[1] = m_timeArray[size-1];
+    ymax[0] = fopt;
+    ymax[1] = fopt;
+    m_maxGraph->RemovePoint( 0 );
+    m_maxGraph->RemovePoint( 1 );
+    m_maxGraph->SetPoint( 0, xmax[0], ymax[0] );
+    m_maxGraph->SetPoint( 1, xmax[1], ymax[1] );
+    if ( yMax < fopt ) yMax = 1.05 * fopt;
+  }
+
   //== Set properties...
   setDisplayOptions();
 
@@ -760,6 +815,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
 
   (( TNamed ) (*hax)).Copy( *grax ) ;
   (( TAttAxis ) (*hax)).Copy( *grax ) ;
+  grax -> SetRangeUser( yMin, yMax ) ;
 
   grax = m_timeGraph -> GetXaxis() ;
   hax  = m_rootHistogram -> GetXaxis() ;
@@ -862,7 +918,7 @@ void DisplayHistogram::saveOptionsToDB ( TPad* pad ) {
     // do nothing
     if (stats && m_statPave && stats != m_statPave ) {
       std::cout << "Update state pave " << std::endl;
-      
+
       iopt = (int) stats->GetOptStat();
       // 111110 seems to be hardcoded in root
       out |= updateDBOption("STATS", &iopt, iopt == 111110 );
@@ -1027,10 +1083,10 @@ bool DisplayHistogram::updateDBOption( std::string opt, void* value, bool isDefa
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void DisplayHistogram::setOnlineHistogram( OnlineHistogram* hist ) {
-  if ( NULL != m_onlineHist ) delete m_onlineHist; 
+  if ( NULL != m_onlineHist ) delete m_onlineHist;
   m_onlineHist = hist;
 }
 //=============================================================================
