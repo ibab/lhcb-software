@@ -46,7 +46,8 @@ private:
    void monitorHLT (const LHCb::ODIN*, const LHCb::HltDecReports*);
    void monitorVertices();
    void monitorTrends();
-
+   void monitorResolverpositions();
+   
    template < typename T > T* fetch( const std::string& location )
    {
       T* t = this->exist<T>( location ) ?  this->get<T>( location ) : 0;
@@ -90,6 +91,15 @@ private:
    AIDA::IHistogram2D* m_hlt2AlleysCorrelations;
 
    AIDA::IProfile1D* m_hltTimeVsEvtSize;
+   
+   AIDA::IHistogram1D* m_resolvxr50;
+   AIDA::IHistogram1D* m_resolvxr5;
+   AIDA::IHistogram1D* m_resolvxl50;
+   AIDA::IHistogram1D* m_resolvxl5;
+   AIDA::IHistogram1D* m_resolvxe;
+   AIDA::IHistogram1D* m_resolvy50;
+   AIDA::IHistogram1D* m_resolvy5;
+   AIDA::IHistogram1D* m_resolvye;
 
    // Monitor 3D vertex filter
    Condition* m_veloCondition;
@@ -98,6 +108,10 @@ private:
    HistoMap m_vertexHistos;
    double m_beamSpotX;
    double m_beamSpotY;
+   double m_xRC;
+   double m_xLA;
+   double m_Y;
+   
    typedef std::map< std::string, std::string > LocationMap;
    LocationMap m_vertexLocations;
 

@@ -275,6 +275,19 @@ StatusCode HltGlobalMonitor::initialize()
    // start by kicking ourselves in action -- just in case we don't get one otherwise...
    this->handle(Incident(name(), IncidentType::BeginRun ));
 
+
+
+   //book the resolver position histograms
+   m_resolvxr50       = book1D("Velo Resolver XR-10", "Velo Resolver XR-10", -10.,10., 100 );
+   m_resolvxr5        = book1D("Velo Resolver XR-1", "Velo Resolver XR-1", -1.,1., 100 );
+   m_resolvxl50       = book1D("Velo Resolver XL-10", "Velo Resolver XL-10", -10.,10., 100 );
+   m_resolvxl5        = book1D("Velo Resolver XL-5", "Velo Resolver XL-1", -1.,1., 100 );
+   m_resolvxe        = book1D("Velo Resolver X Entries", "Velo Resolver XL Entries", -1.,1., 100 );
+   m_resolvy50       = book1D("Velo Resolver Y-10", "Velo Resolver Y-10", -10.,10., 100 );
+   m_resolvy5        = book1D("Velo Resolver Y-1", "Velo Resolver Y-1", -1.,1., 100 );
+   m_resolvye        = book1D("Velo Resolver Y Entries", "Velo Resolver Y Entries", -1.,1., 100 );
+   
+   
    // Monitor vertex positions
    std::string condition = "/dd/Conditions/Online/Velo/MotionSystem";
    registerCondition< HltGlobalMonitor >( condition, m_veloCondition,
@@ -287,6 +300,14 @@ StatusCode HltGlobalMonitor::initialize()
    }
 
    updateCondition().ignore();
+   
+   //fill the histograms when the condition is updated
+   m_resolvxr50->fill(m_xRC);
+   m_resolvxr5->fill(m_xRC);
+   m_resolvxl50->fill(m_xLA);
+   m_resolvxl5->fill(m_xLA);
+   m_resolvy50->fill(m_Y);
+   m_resolvy5->fill(m_Y);
 
    // Book the vertex monitoring histograms
    std::vector< double > edges = boost::assign::list_of( 1 )( 10 );
@@ -305,6 +326,9 @@ StatusCode HltGlobalMonitor::initialize()
          }
       }
    }
+   
+
+   
    return StatusCode::SUCCESS;
 }
 
@@ -320,6 +344,7 @@ StatusCode HltGlobalMonitor::execute() {
    monitorHLT(  odin, hlt );
    monitorVertices();
    monitorTrends();
+   monitorResolverpositions();
 
    counter( "#events" )++;
 
@@ -341,7 +366,10 @@ StatusCode HltGlobalMonitor::updateCondition()
   const double xRC = m_veloCondition->paramAsDouble( "ResolPosRC" );
   const double xLA = m_veloCondition->paramAsDouble( "ResolPosLA" );
   const double   Y = m_veloCondition->paramAsDouble( "ResolPosY"  );
-
+  m_xRC=xRC;
+  m_xLA=xLA;
+  m_Y=Y;
+  
   m_beamSpotX = ( xRC + xLA ) / 2;
   m_beamSpotY = Y;
 
@@ -440,6 +468,16 @@ void HltGlobalMonitor::monitorVertices()
 }
 
 //==============================================================================
+
+void HltGlobalMonitor::monitorResolverpositions()
+{
+  m_resolvxe->fill(m_xRC);
+  m_resolvye->fill(m_Y);
+
+}
+
+//==============================================================================
+
 void HltGlobalMonitor::monitorTrends()
 {
 
