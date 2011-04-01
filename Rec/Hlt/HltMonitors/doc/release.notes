@@ -4,6 +4,10 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 
+! 2011-04-01 - Patrick Koppenburg
+ - Change histogram directory to HltMonitors for all algos
+ - New MuMonitor
+
 ! 2011-03-29 - Patrick Koppenburg
  - Bug 80202
  - Added some debug printout

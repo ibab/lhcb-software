@@ -36,7 +36,6 @@ HltMonitorBase::HltMonitorBase( const std::string& name,
                                 ISvcLocator* pSvcLocator )
    : GaudiHistoAlg ( name , pSvcLocator ), m_filledDecisions( false )
 {
-
 }
 
 //=============================================================================
@@ -52,10 +51,11 @@ StatusCode HltMonitorBase::initialize() {
 
    StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
    if ( sc.isFailure() ) return sc;  // error printed already by HltMonitorBase
-
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-   return StatusCode::SUCCESS;
+   setHistoTopDir("HltMonitors/") ;
+
+   return sc;
 }
 
 //=============================================================================

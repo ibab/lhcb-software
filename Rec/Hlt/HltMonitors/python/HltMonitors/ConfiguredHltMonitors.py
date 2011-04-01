@@ -3,7 +3,8 @@ from Gaudi.Configuration import*
 from Configurables import ( GaudiSequencer,
                             HltRateMonitor,
                             HltCompositionMonitor,
-                            HltDecReportsDecoder )
+                            HltDecReportsDecoder,
+                            MuMonitor)
 
 def ConfiguredHltMonitorSequence( Name = "HltMonitorSequence", HistoPrint = False ):
 
@@ -21,5 +22,10 @@ def ConfiguredHltMonitorSequence( Name = "HltMonitorSequence", HistoPrint = Fals
     compMon = HltCompositionMonitor()
     compMon.HistoPrint = HistoPrint
     seq.Members.append( compMon )
+
+    # Mu Monitor 
+    muMon = MuMonitor()
+    muMon.HistoPrint = HistoPrint
+    seq.Members.append( muMon )
 
     return seq
