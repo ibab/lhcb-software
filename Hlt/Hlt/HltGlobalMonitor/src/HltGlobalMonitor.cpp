@@ -278,14 +278,14 @@ StatusCode HltGlobalMonitor::initialize()
 
 
    //book the resolver position histograms
-   m_resolvxr50       = book1D("Velo Resolver XR-10", "Velo Resolver XR-10", -10.,10., 100 );
-   m_resolvxr5        = book1D("Velo Resolver XR-1", "Velo Resolver XR-1", -1.,1., 100 );
-   m_resolvxl50       = book1D("Velo Resolver XL-10", "Velo Resolver XL-10", -10.,10., 100 );
-   m_resolvxl5        = book1D("Velo Resolver XL-5", "Velo Resolver XL-1", -1.,1., 100 );
-   m_resolvxe        = book1D("Velo Resolver X Entries", "Velo Resolver XL Entries", -1.,1., 100 );
-   m_resolvy50       = book1D("Velo Resolver Y-10", "Velo Resolver Y-10", -10.,10., 100 );
-   m_resolvy5        = book1D("Velo Resolver Y-1", "Velo Resolver Y-1", -1.,1., 100 );
-   m_resolvye        = book1D("Velo Resolver Y Entries", "Velo Resolver Y Entries", -1.,1., 100 );
+   m_resolvxr50       = book1D("Velo Resolver XR-50", "Velo Resolver XR-50", -50.,50., 100 );
+   m_resolvxr5        = book1D("Velo Resolver XR-5", "Velo Resolver XR-5", -5.,5., 100 );
+   m_resolvxl50       = book1D("Velo Resolver XL-50", "Velo Resolver XL-50", -50.,50., 100 );
+   m_resolvxl5        = book1D("Velo Resolver XL-5", "Velo Resolver XL-5", -5.,5., 100 );
+   m_resolvxe        = book1D("Velo Resolver X Entries", "Velo Resolver XL Entries", -5.,5., 100 );
+   m_resolvy50       = book1D("Velo Resolver Y-50", "Velo Resolver Y-50", -50.,50., 100 );
+   m_resolvy5        = book1D("Velo Resolver Y-5", "Velo Resolver Y-5", -5.,5., 100 );
+   m_resolvye        = book1D("Velo Resolver Y Entries", "Velo Resolver Y Entries", -5.,5., 100 );
    
    
    // Monitor vertex positions
