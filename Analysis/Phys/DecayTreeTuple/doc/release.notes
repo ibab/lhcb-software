@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-01 - Patrick Koppenburg
+ - Second part of TupleToolDecayTreeFitter : 
+   . Loop over PVs and fill one entry per PV. The best PV always comes first.
+   . TODO : take only PVs related to candidate once task https://savannah.cern.ch/task/?19817
+     is complete
+
+! 2011-04-01 - Patrick Koppenburg
  - TupleToolDecayTreeFitter : 
    . Full re-implementation following suggestion https://savannah.cern.ch/bugs/?80317
    . WARNING: This is bacward-incompatible with previous configurations. Example:

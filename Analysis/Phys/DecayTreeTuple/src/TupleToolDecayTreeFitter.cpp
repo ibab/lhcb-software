@@ -45,6 +45,7 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
   declareProperty("constrainToOriginVertex", m_constrainToOriginVertex = false, 
                   "Do a refit constraining to Origin Vertex (could be PV)");
+  declareProperty("MaxPV", m_maxPV = 10  , "Maximal number of PVs considered");
   declareInterface<IParticleTupleTool>(this);
   
 }
@@ -81,28 +82,95 @@ StatusCode TupleToolDecayTreeFitter::initialize()
 }
 
 //=============================================================================
+//  The fill method implementation
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
+                                           , const LHCb::Particle* P
+                                           , const std::string& head
+                                           , Tuples::Tuple& tuple ){
+
+  if( !P ) return StatusCode::FAILURE;
+  if( P->isBasicParticle() ) {
+    Error("Do not call TupleToolDecayTreeFitter for basic particles. Use Branches. See doxygen.");
+    return StatusCode::FAILURE;
+  }
+  const std::string prefix=fullName(head);
+
+  TupleMap tMap ; // the temporary data map
+  DecayTreeFitter::Fitter* fitter = 0 ;
+
+  // get origin vertices
+  std::vector<const VertexBase*> originVtx;
+  if (m_constrainToOriginVertex){  
+    if (msgLevel(MSG::DEBUG)) debug() << "Constrain the origin vertex" << endmsg; 
+    // check for origin vertex
+    originVtx = originVertex( mother, P ); 
+    if( originVtx.empty() ){
+      Error("Can't get an origin vertex");
+      return StatusCode::FAILURE;
+    }
+    for (std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ; iv != originVtx.end() ; iv++){
+      fitter = new DecayTreeFitter::Fitter(*P, *(*iv));
+      if (!fit(fitter,P,prefix,tMap)) return StatusCode::FAILURE ;
+      delete fitter ;
+    }
+  } else {
+    if (msgLevel(MSG::DEBUG)) debug() << "Do not contrain the origin vertex" << endmsg; 
+    // Get the fitter
+    fitter = new DecayTreeFitter::Fitter(*P);
+    if (!fit(fitter,P,prefix,tMap)) return StatusCode::FAILURE;
+    delete fitter ;
+  }
+  
+  return fillTuple(tMap,tuple,prefix); // the actual filling
+}
+//=============================================================================
+// do filling for a give vertex
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter* fitter, 
+                                         const LHCb::Particle* P,
+                                         const std::string& prefix, 
+                                         TupleMap& tMap) const{  
+  bool test = true ;
+  //add mass contraints
+  if (!m_massConstraintsPids.empty()){
+    for (std::vector<LHCb::ParticleID>::const_iterator iterC = m_massConstraintsPids.begin();  
+         iterC != m_massConstraintsPids.end(); ++iterC) fitter->setMassConstraint(*iterC);
+  }
+  // fit
+  fitter->fit();
+  // fill the fit result
+  fillDecay(fitter,P,prefix,tMap );
+  if (m_constrainToOriginVertex){
+    fillLT(fitter,P,prefix,tMap );
+    test &= fillDaughters(fitter,P,prefix,tMap ); 
+  }
+  return StatusCode(test);
+}
+
+//=============================================================================
 // Fill standard stuff
 //=============================================================================
-StatusCode TupleToolDecayTreeFitter::fill(const DecayTreeFitter::Fitter* fitter, 
+StatusCode TupleToolDecayTreeFitter::fillDecay(const DecayTreeFitter::Fitter* fitter, 
                                           const Particle* P,
                                           const std::string& prefix, 
-                                          const Tuples::Tuple& tuple) const{
+                                          TupleMap& tMap ) const{
    
   bool test = true; 
 
-  test &= tuple->column( prefix+"_status", fitter->status() );
-  test &= tuple->column( prefix+"_nDOF", fitter->nDof() );
-  test &= tuple->column( prefix+"_chi2_B", fitter->chiSquare() );
-  test &= tuple->column( prefix+"_nIter", fitter->nIter() );
+  test &= insert( prefix+"_status", fitter->status(), tMap );
+  test &= insert( prefix+"_nDOF", fitter->nDof(), tMap  );
+  test &= insert( prefix+"_chi2_B", fitter->chiSquare(), tMap  );
+  test &= insert( prefix+"_nIter", fitter->nIter(), tMap  );
      
   //Get the fit parameters
   const Gaudi::Math::ParticleParams* params = fitter->fitParams(P) ;
   Gaudi::Math::LorentzVectorWithError momentum = params->momentum() ; 
       
-  test &= tuple->column( prefix+"_M",  momentum.m().value() );
-  test &= tuple->column( prefix+"_MERR", momentum.m().error());
-  test &= tuple->column( prefix+"_P", momentum.p().value());
-  test &= tuple->column( prefix+"_PERR", momentum.p().error()) ;//MeV
+  test &= insert( prefix+"_M",  momentum.m().value(), tMap  );
+  test &= insert( prefix+"_MERR", momentum.m().error(), tMap );
+  test &= insert( prefix+"_P", momentum.p().value(), tMap );
+  test &= insert( prefix+"_PERR", momentum.p().error(), tMap ) ;//MeV
 
   return StatusCode(test);
 }
@@ -112,17 +180,17 @@ StatusCode TupleToolDecayTreeFitter::fill(const DecayTreeFitter::Fitter* fitter,
 StatusCode TupleToolDecayTreeFitter::fillLT(const DecayTreeFitter::Fitter* fitter, 
                                           const Particle* P,
                                           const std::string& prefix, 
-                                          const Tuples::Tuple& tuple) const{
+                                          TupleMap& tMap ) const{
    
   bool test = true; 
 
   const Gaudi::Math::ParticleParams* tParams = fitter->fitParams(P); 
   Gaudi::Math::ValueWithError decayLength = tParams->decayLength();
   Gaudi::Math::ValueWithError ctau = tParams->ctau();
-  test &= tuple->column( prefix+"_ctau", ctau.value() );
-  test &= tuple->column( prefix+"_ctauErr", ctau.error() );
-  test &= tuple->column( prefix+"_decayLength", decayLength.value() );
-  test &= tuple->column( prefix+"_decayLengthErr", decayLength.error() );
+  test &= insert( prefix+"_ctau", ctau.value(), tMap  );
+  test &= insert( prefix+"_ctauErr", ctau.error(), tMap  );
+  test &= insert( prefix+"_decayLength", decayLength.value(), tMap  );
+  test &= insert( prefix+"_decayLengthErr", decayLength.error(), tMap  );
   
   return StatusCode(test);
 }
@@ -132,7 +200,7 @@ StatusCode TupleToolDecayTreeFitter::fillLT(const DecayTreeFitter::Fitter* fitte
 StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitter* fitter
                                                     ,const LHCb::Particle* P
                                                     ,const std::string& prefix
-                                                    ,const Tuples::Tuple& tuple)const{
+                                                    ,TupleMap& tMap )const{
   bool test = true;
   
   LHCb::Particle::ConstVector daughters = m_particleDescendants->descendants(P);
@@ -143,90 +211,85 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
     if ( particle->isBasicParticle()) continue ;
     unsigned int pid = abs(particle->particleID().pid());
     std::string name = prefix+"_"+getName(pid) ;
-    test &= fillLT(fitter,particle,name,tuple);
+    test &= fillLT(fitter,particle,name,tMap);
   }
   return StatusCode(test);
 }
 
-//=============================================================================
-//  Fill fit inforation for top decay
-//=============================================================================
-StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
-                                           , const LHCb::Particle* P
-                                           , const std::string& head
-                                           , Tuples::Tuple& tuple ){
 
-  const std::string prefix=fullName(head);
-  bool test = true;
-  if( !P ) return StatusCode::FAILURE;
-  
-  // Get the fitter
-  DecayTreeFitter::Fitter* fitter = 0 ;
-
-  if (m_constrainToOriginVertex){  
-    if (msgLevel(MSG::DEBUG)) debug() << "Constrain the origin vertex" << endmsg; 
-    // check for origin 
-    const VertexBase* originVtx = NULL;
-    if (mother != P){
-      originVtx = originVertex( mother, P ); // the origin vertex is somewhere in the decay
-    } else { // the origin vertex is the primary.
-      originVtx = m_dva->bestPV( mother );
-    }
-    if( !originVtx ){
-      Error("Can't get the origin vertex");
-      return StatusCode::FAILURE;
-    }
-    fitter = new DecayTreeFitter::Fitter(*P, *originVtx);
+//=============================================================================
+// append data to TupleMap
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::insert(std::string leaf, double val, TupleMap& tMap)const {
+  TupleMap::iterator l = tMap.find(leaf);
+  if ( l==tMap.end()) {  /// first time this is seen. Create
+    std::vector<double> vals;
+    vals.push_back(val);
+    std::pair<std::string,std::vector<double> > p(leaf,vals);
+    tMap.insert(p);
   } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "Do not contrain the origin vertex" << endmsg; 
-    fitter = new DecayTreeFitter::Fitter(*P); 
+    l->second.push_back(val); /// append a to vector
   }
-
-  //add mass contraints
-  if (!m_massConstraintsPids.empty()){
-    for (std::vector<LHCb::ParticleID>::const_iterator iterC = m_massConstraintsPids.begin();  
-         iterC != m_massConstraintsPids.end(); ++iterC) fitter->setMassConstraint(*iterC);
-  }
-
-  // fit
-  fitter->fit();
-
-
-  // fill the fit result
-  fill(fitter,P,prefix,tuple );
-  if (m_constrainToOriginVertex){
-    fillLT(fitter,P,prefix,tuple );
-    test &= fillDaughters(fitter,P,prefix,tuple );
-  }
-
-  delete fitter ;
-  return StatusCode(test);
+  return StatusCode::SUCCESS ;
 }
 
+//=============================================================================
+// actual filling of the Tuple
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::fillTuple(const TupleMap& tMap, Tuples::Tuple& tuple, std::string prefix)const {
+  bool test = true ;
+  for (TupleMap::const_iterator t = tMap.begin() ; t!=tMap.end() ; ++t){
+    std::string leaf = t->first;
+    std::vector<double> data = t->second;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "Filling leaf ``" << leaf << "'' with vector of size " << data.size() << endmsg ;
+    if (m_maxPV<data.size()) Exception("Seeing data with too many PVs. This should never happen. E-mail P. Koppenburg.");
+    test &= tuple->farray( leaf, data, prefix+"_nPV", m_maxPV);
+  }
+  return StatusCode(test);
+}
 //=============================================================================
 // get origin vertex
 //=============================================================================
-const VertexBase* TupleToolDecayTreeFitter::originVertex( const Particle* top, const Particle* P ) const {
-  if( top == P || P->isBasicParticle() ) return NULL;
-
-  const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
-  if( dau.empty() ) return NULL;
-
-  SmartRefVector< LHCb::Particle >::const_iterator it;
-  for( it = dau.begin(); dau.end()!=it; ++it ){
-    if( P == *it ){
-      return top->endVertex();
+std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* P ) const {
+  std::vector<const VertexBase*> oriVx;
+  if (mother == P){// the origin vertex is the primary.
+    const VertexBase* bpv = m_dva->bestPV( P );
+    oriVx.push_back(bpv);
+    // all the other ones 
+    /// @todo : keep only the related ones
+    for (LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin() ; 
+         pv!=m_dva->primaryVertices().end() ; ++pv){
+      if ( *pv != bpv ) oriVx.push_back(*pv);
+      if (oriVx.size()>=m_maxPV){
+        Warning("Truncated number of PVs",10,StatusCode::FAILURE).ignore();
+        break ;
+      }
     }
-  }
+    Warning("Filled all PVs, including unrelated ones. Fix once https://savannah.cern.ch/task/?19817 is done",
+            1,StatusCode::SUCCESS).ignore();
+  } else {
+    const SmartRefVector< LHCb::Particle >& dau = mother->daughters ();
+    if( dau.empty() ) return oriVx ;
+    
+    for( SmartRefVector< LHCb::Particle >::const_iterator it = dau.begin(); dau.end()!=it; ++it ){
+      if( P == *it ){
+        oriVx.push_back(mother->endVertex());
+        return oriVx ;
+      }
+    }
   
-  // vertex not yet found, get deeper in the decay:
-  for( it = dau.begin(); dau.end()!=it; ++it ){
-    if( P != *it && !(*it)->isBasicParticle() ){
-      const VertexBase* vv = originVertex( *it, P );
-      if( vv ) return vv;
+    // vertex not yet found, get deeper in the decay:
+    for( SmartRefVector< LHCb::Particle >::const_iterator it = dau.begin(); dau.end()!=it; ++it ){
+      if( P != *it && !(*it)->isBasicParticle() ){
+        oriVx = originVertex( *it, P );
+        if( !oriVx.empty() ) {
+          return oriVx ;  // found
+        }
+      }
     }
   }
-  return NULL;
+  return oriVx;
 }
 
 

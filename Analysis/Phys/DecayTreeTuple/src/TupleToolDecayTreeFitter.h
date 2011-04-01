@@ -31,18 +31,18 @@ tuple.ToolList +=  ["TupleToolGeometry",  "TupleToolKinematic", "TupleToolPrimar
 tuple.Branches = { "B"  : "["+bh+"]cc : "+decay.replace("^","") }
 from Configurables import TupleToolDecayTreeFitter
 tuple.B.ToolList +=  [ "TupleToolDecayTreeFitter/Fit",            # just a refit
-                       "TupleToolDecayTreeFitter/PVFit",          # fit with PV constraint
                        "TupleToolDecayTreeFitter/MassFit",        # fit with J/psi mass constraint
+                       "TupleToolDecayTreeFitter/PVFit",          # fit with PV and J/psi constraint
                        "TupleToolDecayTreeFitter/FullFit" ]       # fit with all constraints I can think of
+
+tuple.B.addTool(TupleToolDecayTreeFitter("MassFit"))
+tuple.B.MassFit.constrainToOriginVertex = False
+tuple.B.MassFit.daughtersToConstrain = [ "J/psi(1S)" ]
 
 tuple.B.addTool(TupleToolDecayTreeFitter("PVFit"))
 tuple.B.PVFit.Verbose = True
 tuple.B.PVFit.constrainToOriginVertex = True
 tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)" ]
-
-tuple.B.addTool(TupleToolDecayTreeFitter("MassFit"))
-tuple.B.MassFit.constrainToOriginVertex = False
-tuple.B.MassFit.daughtersToConstrain = [ "J/psi(1S)" ]
 
 tuple.B.addTool(TupleToolDecayTreeFitter("FullFit"))
 tuple.B.FullFit.Verbose = True
@@ -52,11 +52,11 @@ tuple.B.FullFit.daughtersToConstrain = [ bh, "J/psi(1S)" ]
     * 
     * - This will produce the following columns for the B (from this tool):
     *     - B_Fit_status B_Fit_nDOF B_Fit_chi2_B B_Fit_nIter B_Fit_M B_Fit_MERR B_Fit_P B_Fit_PERR 
+    *     - B_MassFit_status B_MassFit_nDOF B_MassFit_chi2_B B_MassFit_nIter B_MassFit_M B_MassFit_MERR B_MassFit_P 
+    *       B_MassFit_PERR B_PVFit_status B_PVFit_nDOF B_PVFit_chi2_B B_PVFit_nIter B_PVFit_M B_PVFit_MERR B_PVFit_P 
     *     - B_PVFit_PERR B_PVFit_ctau B_PVFit_ctauErr B_PVFit_decayLength B_PVFit_decayLengthErr B_PVFit_J_psi_1S_ctau  
     *       B_PVFit_J_psi_1S_ctauErr B_PVFit_J_psi_1S_decayLength B_PVFit_J_psi_1S_decayLengthErr B_PVFit_KS0_ctau  
     *       B_PVFit_KS0_ctauErr B_PVFit_KS0_decayLength B_PVFit_KS0_decayLengthErr
-    *     - B_MassFit_status B_MassFit_nDOF B_MassFit_chi2_B B_MassFit_nIter B_MassFit_M B_MassFit_MERR B_MassFit_P 
-    *       B_MassFit_PERR B_PVFit_status B_PVFit_nDOF B_PVFit_chi2_B B_PVFit_nIter B_PVFit_M B_PVFit_MERR B_PVFit_P 
     *     - B_FullFit_status B_FullFit_nDOF B_FullFit_chi2_B B_FullFit_nIter B_FullFit_M 
     *       B_FullFit_MERR B_FullFit_P B_FullFit_PERR 
     *       B_FullFit_ctau B_FullFit_ctauErr B_FullFit_decayLength B_FullFit_decayLengthErr 
@@ -94,6 +94,7 @@ namespace LHCb{
 namespace DecayTreeFitter{
   class Fitter;
 }
+typedef std::map< std::string, std::vector<double> > TupleMap ; ///< temporary storage of tuple data
 
 class DVAlgorithm;
 /** @class TupleToolDecayTreeFitter TupleToolDecayTreeFitter.h
@@ -123,28 +124,38 @@ public:
   
   
  private:
+  ///  Fill inforation for a given origin vertex
+  StatusCode fit(DecayTreeFitter::Fitter* fitter, 
+                 const LHCb::Particle* P,
+                 const std::string& prefix, 
+                 TupleMap& tMap) const;
+  ///  Fill lifetime information
   ///  Fill fit inforation for top decay
-  StatusCode fill(const DecayTreeFitter::Fitter* fitter, 
-		  const LHCb::Particle* P,
-		  const std::string& prefix, 
-		  const Tuples::Tuple& tuple) const;
+  StatusCode fillDecay(const DecayTreeFitter::Fitter* fitter, 
+                       const LHCb::Particle* P,
+                       const std::string& prefix, 
+                       TupleMap& tMap) const;
   ///  Fill lifetime information
   StatusCode fillLT(const DecayTreeFitter::Fitter* fitter, 
-		  const LHCb::Particle* P,
-		  const std::string& prefix, 
-		  const Tuples::Tuple& tuple) const;
+                    const LHCb::Particle* P,
+                    const std::string& prefix, 
+                    TupleMap& tMap) const;
   
   ///  Fill lifetime information for non stable daughters
   StatusCode fillDaughters( const DecayTreeFitter::Fitter* fitter,
-			    const LHCb::Particle* P,
-			    const std::string& prefix,
-			    const Tuples::Tuple& tuple )const;
+                            const LHCb::Particle* P,
+                            const std::string& prefix,
+                            TupleMap& tMap )const;
+  /// actual filling of tuple
+  StatusCode fillTuple(const TupleMap& tMap, Tuples::Tuple& tuple, std::string prefix)const ;
+  /// insert helper method
+  StatusCode insert(std::string leaf, double val, TupleMap& tMap)const ;
   
   std::string getName(int id) const;  ///< name of particle
   
   ///  origin vertex
-  const LHCb::VertexBase* originVertex( const  LHCb::Particle*
-				   ,const LHCb::Particle* ) const; 
+  std::vector<const LHCb::VertexBase*> originVertex( const  LHCb::Particle*,
+                                                     const LHCb::Particle* ) const; 
   
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
 
@@ -157,6 +168,8 @@ public:
 
   LHCb::IParticlePropertySvc* m_ppSvc ;
   IParticleDescendants* m_particleDescendants;
+
+  unsigned int m_maxPV ;
   
 
  };
