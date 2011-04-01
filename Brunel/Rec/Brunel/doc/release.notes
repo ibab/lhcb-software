@@ -10,6 +10,7 @@ Purpose: LHCb reconstruction program
   . #120956: (RichRecQC) Remove RichHPDImageShifts from default monitoring
   . #230223: (RichRecQC) Extend the decoding errors monitor
   . (DetCond, DetDescSvc) Fix to bug #80076 (wrong condition used on first event)
+  . Adapt to latest LHCBCOND tags from SQLDDDB v6r6
 
 </PRE><H1><A NAME=v39r0p3>2011-03-23 Brunel v39r0p3</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
