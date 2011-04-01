@@ -1,0 +1,99 @@
+<farmMon>
+
+<common>
+Note: Help is context sensitive
+
+You receive different help content depending on the current window:
+-- Help on farm statistics summary window
+-- Help on expanded subfarm statistics.
+
+</common>
+
+<common>
+Event processing statistics display
+
+The displays shows the buffer activity of the different subfarm nodes.
+The activity is given by the mean time of a process to handle one 
+event in the buffer manager. Each measurement consists of 3 columns: 
+- "Events": The number of events the measurement is based on.
+            This time in the following is called "request time".
+- "Mean":   The time in milli-seconds between 2 consecutive event requests.
+- "Sigma":  The error on this value.
+Note: The mean time between 2 consecutive event requests is not exactly the
+      processing time of the event. Only if the CPU-core is 100 % busy and
+      the process is handling events as fast as possible, these number are
+      identical.
+      It may help to verify the CPU load of a subfarm using the farm statistics
+      display (type 'S' [Shift-s]).
+
+</common>
+
+<benchmark-farm>
+Benchmark farm display
+
+This display shows summary statistics for all subfarm participating in the 
+readout activity.
+
+- To the left the subfarm-name is given
+- The second column shows the event builder statistics (MEPRx).
+- The third column shows the producer statistics
+- The third column shows the statistics for the Moore jobs.
+- The forth column show the statistics for the accepted events
+  sent to the storage cluster.
+
+</benchmark-farm>
+
+<benchmark-subfarm>
+Benachmark subfarm display
+
+This display shows summary statistics for one subfarm.
+
+- To the left the node-name is given
+- The second column shows the event builder statistics (MEPRx).
+- The third column shows the producer statistics
+- The third column shows the statistics for the Moore jobs.
+- The forth column show the statistics for the accepted events
+  sent to the storage cluster.
+
+</benchmark-subfarm>
+
+<benchmark-node>
+Benchmark node display
+
+This display shows detailed statistics for one node.
+For each process running, the mean request time and it's error is displayed.
+At the top each connected process is listed seperately.
+At the bottom a summary is shown, which integrated all processes of the same type.
+
+- To the left the process name is given
+- The second column shows the statistics of processes connected to the MEP buffer.
+  Clients are: MEPRx (event builder), EvtProd (producer, MEP->Event converter)
+- The second column shows the statistics of processes connected to the EVENT buffer.
+  Clients are: event producer, GauchoJob (Moore)
+- The second column shows the statistics of processes connected to the SEND or RESULT buffer.
+  These events are sent to the storage cluster.
+  Clients are: DiskWR.
+
+</benchmark-node>
+
+
+<common>
+Common keyboard commands:
+
+-- To CLOSE the display type CTRL-L
+-- To select a subfarm use the arrow keys UP and DOWN
+-- To invoke/hide the help display type CTRL-H or h or H.
+-- To exit the application         type CTRL-E or E
+-- To show/hide the subfarm menu   type ENTER or KPD-ENTER
+
+</common>
+<common>
+Mouse commands:
+Double-click MOUSE-LEFT:    show/hide the subfarm menu
+Double-click MOUSE-MIDDLE:  show/hide the subfarm menu
+Single-click MOUSE-RIGHT    show/hide this help window
+Note: Closing the subfarm display also closes all dependent displays.
+
+</common>
+
+</farmMon>
