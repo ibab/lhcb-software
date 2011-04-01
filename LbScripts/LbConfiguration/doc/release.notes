@@ -1,3 +1,8 @@
+2011-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: added --debug when calling generateLogin
+	* scripts/generateLogin: added debug statements
+
 2011-03-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: added debug printout for the stripping of PATHs

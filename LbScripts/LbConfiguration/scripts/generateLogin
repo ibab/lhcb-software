@@ -27,6 +27,8 @@ from LbConfiguration.Tools import genProjectSetup
 from LbUtils.Path import multiPathJoin, cleanPath
 from optparse import OptionParser
 
+import logging
+
 
 def offSetString(data, offset=0):
     indent = 2
@@ -397,11 +399,13 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
 
 def generateLogin(targetlocation, script, version="", mysiteroot=None, building=False,
                   withoutpython=False, withoutcache=False):
+    log = logging.getLogger()
     # @todo: use template system instead of hardcoding the files
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
     if not shell in knownshells :
         sys.exit("Unknown %s shell" % shell)
+    log.debug("Generating file %s" % script)
     f = open(script, "w")
     if shell == "sh" or shell == "zsh" :
         if mysiteroot :
@@ -523,11 +527,18 @@ def getConfigurationFragment(shell, type="configuration"):
 
 
 def generateGroupLogin(targetlocation, shell, version="", mysiteroot=None, building=False):
-    script = os.path.join(_scripts_dir, "group_login.%s" % shell)
+    log = logging.getLogger()
+    if version and mysiteroot :
+        scrdir = os.path.join(mysiteroot.split(os.pathsep)[0],
+                              "lhcb", "LBSCRIPTS", "LBSCRIPTS_%s" % version, "InstallArea", "scripts")
+    else :
+        scrdir = _scripts_dir
+    script = os.path.join(scrdir, "group_login.%s" % shell)
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     if prodlink :
         prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers2}", "InstallArea")
+    log.debug("Generating file %s" % script)
     f = open(script, "w")
     if shell == "sh" :
         content = """#!/bin/sh
@@ -627,11 +638,18 @@ IF DEFINED HOME (
 #    fixNative(script)
 
 def generateGroupShell(targetlocation, shell, version="", mysiteroot=None, building=False):
-    script = os.path.join(_scripts_dir,"group_shell.%s" % shell)
+    log = logging.getLogger()
+    if version and mysiteroot :
+        scrdir = os.path.join(mysiteroot.split(os.pathsep)[0],
+                              "lhcb", "LBSCRIPTS", "LBSCRIPTS_%s" % version, "InstallArea", "scripts")
+    else :
+        scrdir = _scripts_dir
+    script = os.path.join(scrdir,"group_shell.%s" % shell)
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     if prodlink :
         prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers3}", "InstallArea")
+    log.debug("Generating file %s" % script)
     f = open(script, "w")
     content = getConfigurationFragment(shell, "configuration")
     if shell == "sh" :
@@ -748,7 +766,13 @@ def generateGroupWrappers(targetlocation, shell, version="", mysiteroot=None, bu
     generateGroupShell(targetlocation, shell, version, mysiteroot, building)
 
 def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, building=False):
-    script = os.path.join(_scripts_dir, "LHCb.%s" % shell)
+    log = logging.getLogger()
+    if version and mysiteroot :
+        scrdir = os.path.join(mysiteroot.split(os.pathsep)[0],
+                              "lhcb", "LBSCRIPTS", "LBSCRIPTS_%s" % version, "InstallArea", "scripts")
+    else :
+        scrdir = _scripts_dir
+    script = os.path.join(scrdir, "LHCb.%s" % shell)
     prodlink = getProdLink(targetlocation)
     prodlocation = None
     set_volhcb = None
@@ -759,6 +783,7 @@ def generateMainWrapper(targetlocation, shell, version="", mysiteroot=None, buil
             prodlocation = os.path.join(os.path.dirname(prodlink), "${lbvers}", "InstallArea")
         else :
             prodlocation = os.path.join(os.path.dirname(prodlink), "%lbvers%", "InstallArea")
+    log.debug("Generating file %s" % script)
     f = open(script, "w")
     content = ""
     if shell == "sh" :
@@ -866,13 +891,21 @@ def generateLogins(version, targetlocation=None, scripts=None,
                    mysiteroot=None, building=False,
                    withoutpython=False, withoutcache=False,
                    withoutgwrap=False, withoutmwrap=False):
+    log = logging.getLogger()
     shells = ["csh", "sh", "bat"]
     if not targetlocation :
         targetlocation = os.path.abspath(_base_dir)
+        log.debug("Target location is %s" % targetlocation)
     if not scripts :
         scripts = []
         for u in shells :
-            scripts.append(os.path.join(_scripts_dir, "LbLogin.%s" % u ))
+            if version and mysiteroot :
+                scrdir = os.path.join(mysiteroot.split(os.pathsep)[0],
+                                      "lhcb", "LBSCRIPTS", "LBSCRIPTS_%s" % version, "InstallArea", "scripts")
+            else :
+                scrdir = _scripts_dir
+            tscr = os.path.join(scrdir, "LbLogin.%s" % u )
+            scripts.append(tscr)
     for s in scripts :
         generateLogin(targetlocation, s, version, mysiteroot, building, withoutpython, withoutcache)
     if not withoutgwrap :
@@ -924,8 +957,30 @@ if __name__ == '__main__':
     parser.set_defaults(withoutmainwrapper=False)
     parser.add_option("--no-main-wrapper", dest="withoutmainwrapper", action="store_true",
                       help="prevents the generation of the main wrapper script")
+    parser.set_defaults(debug_flag=False)
+    parser.add_option("--debug", dest="debug_flag", action="store_true",
+                      help="Sets the debug flag")
 
     opts, args = parser.parse_args()
+
+    thelog = logging.getLogger()
+    thelog.setLevel(logging.DEBUG)
+    console = logging.StreamHandler()
+    if sys.version_info[:3] < (2, 5, 1) :
+        console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
+    else :
+        if opts.debug_flag == 1 :
+            console.setFormatter(logging.Formatter("%(levelname)-8s: %(funcName)-25s - %(message)s"))
+        else :
+            console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
+    if opts.debug_flag == 1 :
+        console.setLevel(logging.DEBUG)
+    else :
+        console.setLevel(logging.INFO)
+    thelog.addHandler(console)
+
+    thelog.info(" Beginning of generateLogin ".center(120, "+"))
+    thelog.debug("Command line arguments: %s" % " ".join(sys.argv))
 
     if opts.mysiteroot is not None:
         opts.mysiteroot = cleanPath(opts.mysiteroot)
@@ -934,11 +989,14 @@ if __name__ == '__main__':
     version = opts.login_version
     if len(args) > 0 :
         targetlocation = os.path.abspath(args[0])
+        thelog.debug("Using target location from the command line")
     if len(args) > 1 :
         scripts = args[1:]
+        thelog.debug("Selecting target files from the command line")
 
     generateLogins(version, targetlocation, scripts, opts.mysiteroot, opts.building,
                    opts.withoutpython, opts.withoutcache,
                    opts.withoutgroupwrapper, opts.withoutmainwrapper)
 
+    thelog.info(" End of generateLogin ".center(120,"+"))
 
