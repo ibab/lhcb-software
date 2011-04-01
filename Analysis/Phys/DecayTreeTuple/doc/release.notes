@@ -4,6 +4,52 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-04-01 - Patrick Koppenburg
+ - TupleToolDecayTreeFitter : 
+   . Full re-implementation following suggestion https://savannah.cern.ch/bugs/?80317
+   . WARNING: This is bacward-incompatible with previous configurations. Example:
+
+decay = "B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)"
+bh = 'B0'
+tuple.Decay = decay
+tuple = DecayTreeTuple("MyTuple")
+tuple.ToolList +=  ["TupleToolGeometry",  "TupleToolKinematic", "TupleToolPrimaries", "TupleToolEventInfo" ]
+tuple.Branches = { "B"  : "["+bh+"]cc : "+decay.replace("^","") }
+from Configurables import TupleToolDecayTreeFitter
+tuple.B.ToolList +=  [ "TupleToolDecayTreeFitter/Fit",            # just a refit
+                       "TupleToolDecayTreeFitter/PVFit",          # fit with PV constraint
+                       "TupleToolDecayTreeFitter/MassFit",        # fit with J/psi mass constraint
+                       "TupleToolDecayTreeFitter/FullFit" ]       # fit with all constraints I can think of
+
+tuple.B.addTool(TupleToolDecayTreeFitter("PVFit"))
+tuple.B.PVFit.Verbose = True
+tuple.B.PVFit.constrainToOriginVertex = True
+tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)" ]
+
+tuple.B.addTool(TupleToolDecayTreeFitter("MassFit"))
+tuple.B.MassFit.constrainToOriginVertex = False
+tuple.B.MassFit.daughtersToConstrain = [ "J/psi(1S)" ]
+
+tuple.B.addTool(TupleToolDecayTreeFitter("FullFit"))
+tuple.B.FullFit.Verbose = True
+tuple.B.FullFit.constrainToOriginVertex = True
+tuple.B.FullFit.daughtersToConstrain = [ bh, "J/psi(1S)" ]
+
+   . This will produce the following columns for the B (from this tool):
+       - B_Fit_status B_Fit_nDOF B_Fit_chi2_B B_Fit_nIter B_Fit_M B_Fit_MERR B_Fit_P B_Fit_PERR 
+       - B_PVFit_PERR B_PVFit_ctau B_PVFit_ctauErr B_PVFit_decayLength B_PVFit_decayLengthErr B_PVFit_J_psi_1S_ctau  
+         B_PVFit_J_psi_1S_ctauErr B_PVFit_J_psi_1S_decayLength B_PVFit_J_psi_1S_decayLengthErr B_PVFit_KS0_ctau  
+         B_PVFit_KS0_ctauErr B_PVFit_KS0_decayLength B_PVFit_KS0_decayLengthErr
+       - B_MassFit_status B_MassFit_nDOF B_MassFit_chi2_B B_MassFit_nIter B_MassFit_M B_MassFit_MERR B_MassFit_P 
+         B_MassFit_PERR B_PVFit_status B_PVFit_nDOF B_PVFit_chi2_B B_PVFit_nIter B_PVFit_M B_PVFit_MERR B_PVFit_P 
+       - B_FullFit_status B_FullFit_nDOF B_FullFit_chi2_B B_FullFit_nIter B_FullFit_M 
+         B_FullFit_MERR B_FullFit_P B_FullFit_PERR 
+         B_FullFit_ctau B_FullFit_ctauErr B_FullFit_decayLength B_FullFit_decayLengthErr 
+         B_FullFit_J_psi_1S_ctau B_FullFit_J_psi_1S_ctauErr B_FullFit_J_psi_1S_decayLength B_FullFit_J_psi_1S_decayLengthErr 
+         B_FullFit_KS0_ctau B_FullFit_KS0_ctauErr B_FullFit_KS0_decayLength B_FullFit_KS0_decayLengthErr 
+
+ - src/TupleToolTISTOS.h : remove unsused pointer to IPaticleDescedants tool
+
 !========================== DecayTreeTuple v3r13 2011-03-10 =================
 
 ! 2011-03-09 - Yasmine Amhis 

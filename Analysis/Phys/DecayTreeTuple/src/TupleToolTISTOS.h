@@ -6,7 +6,6 @@
 #include "TupleToolTriggerBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/ITriggerTisTos.h" //
-#include "Kernel/IParticleDescendants.h"
 /** @class TupleToolTISTOS TupleToolTISTOS.h
  *
  *  This is an adaptation of the TISTOS example by Tomasz
@@ -73,7 +72,6 @@ private:
 
   ITriggerTisTos* m_TriggerTisTosTool;
   ITriggerTisTos* m_L0TriggerTisTosTool;
-  IParticleDescendants* m_particleDescendants;
 
   StatusCode fillBasic( const LHCb::Particle* 
                                , const LHCb::Particle* P
