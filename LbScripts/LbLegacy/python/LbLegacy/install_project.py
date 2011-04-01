@@ -14,7 +14,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '110330'
+script_version = '110401'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r0p1"
@@ -1161,8 +1161,13 @@ def getProjectTar(tar_list, already_present_list=None):
                         genlogscript = os.path.join(boot_script_loc, "InstallArea", "scripts", "generateLogin")
                     else :
                         genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
-                    log.info("Running: %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
-                    os.system("python %s --without-python --no-cache -m %s --login-version=%s" % (genlogscript, os.environ["MYSITEROOT"], pack_ver[1]))
+
+                    gencmd = "%s" % genlogscript
+                    if debug_flag :
+                        gencmd += " --debug"
+                    gencmd += " --without-python --no-cache -m %s --login-version=%s %s" % (os.environ["MYSITEROOT"], pack_ver[1], os.path.join(pack_ver[3],"InstallArea"))
+                    log.info("Running: python %s" % gencmd)
+                    os.system("python %s" % gencmd)
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
                     if sys.platform != "win32" :
                         if os.path.exists(prodlink) :
@@ -2297,6 +2302,7 @@ def checkMySiteRoot():
         mysite_parent = os.path.dirname(test_mysiteroot)
         if os.path.basename(test_mysiteroot) == "lib" :
             log.warning("Setting VO_LHCB_SW_DIR to %s" % mysite_parent)
+            os.environ["VO_LHCB_SW_DIR"] = mysite_parent
         else :
             log.debug("Impossible to set VO_LHCB_SW_DIR")
 
