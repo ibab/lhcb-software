@@ -1241,10 +1241,8 @@ void PresenterMainFrame::buildGUI() {
 
     m_runDb = new RunDB( m_rundbConfig ) ;
     m_intervalPickerData = new IntervalPickerData( ) ;
-    partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->
-                                     GetSelected());
     m_prevPresenterMode = presenterMode() ;
-    m_presenterInfo.setPresenterMode( pres::Online ) ;
+    partitionSelectorComboBoxHandler( m_partitionSelectorComboBox->GetSelected() );
 
     SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputPrimaryApplicationModal);
     MapSubwindows();
@@ -1457,8 +1455,7 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     partitionSelectorComboBoxHandler( 1 );
     break;
   case M_PartitionList:
-    partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->
-                                     GetSelected());
+    partitionSelectorComboBoxHandler( m_partitionSelectorComboBox->GetSelected() );
     break;
   case M_AddDBHistoToPage_COMMAND:
     addDbHistoToPage( pres::separate ) ;
@@ -3053,13 +3050,6 @@ void PresenterMainFrame::reconfigureGUI() {
       m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
       m_trendDurationComboBox->SetEnabled(false);
 
-      // hide refreshHistoDBListTree
-      if (( pres::Online == m_prevPresenterMode) &&
-          ( presenterMode() != m_prevPresenterMode)) {
-        m_loadingPage = true;  // avoid reloading page...
-        partitionSelectorComboBoxHandler( 1 ) ;
-        m_loadingPage = false;
-      }
       std::cout << "ReconfigureGUI:: After Offline selector" << std::endl;
 
     } else if (pres::EditorOnline == presenterMode()) {
@@ -3134,9 +3124,11 @@ void PresenterMainFrame::reconfigureGUI() {
             pres::History == m_prevPresenterMode) &&
           presenterMode() != m_prevPresenterMode ) {
         refreshHistogramSvcList(pres::s_withTree);
-        partitionSelectorComboBoxHandler( 1 );
       }
     }
+    m_loadingPage = true;  // avoid reloading page...
+    partitionSelectorComboBoxHandler( 1 ) ;
+    m_loadingPage = false;
   }
 
   if (!m_currentPageName.empty()) {
@@ -3269,7 +3261,6 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
       m_histoSvcBrowserGroupFrame->SetTitle("DIM Histogram Browser");
 
       m_candidateDimServices.clear();
-      m_knownOnlinePartitionList->Delete();
 
       TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
       deleteTreeChildrenItemsUserData(node);
@@ -3433,6 +3424,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
 //==============================================================================
 void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
   if ( 1 == partitionNumber ) {
+    std::cout << "Refresh the partition list, mode " << presenterMode() << std::endl;
     m_partitionSelectorComboBox -> RemoveEntries( 2 , m_partitionSelectorComboBox ->
                                                   GetNumberOfEntries() + 1 ) ;
     bool updateList( false ) ;
@@ -3464,7 +3456,20 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
     } else if ( ( pres::Online == presenterMode() ) ||
                 ( pres::EditorOnline == presenterMode() ) ) {
       updateList = true ;
-      //refreshHistogramSvcList( pres::s_withoutTree ) ;
+      m_knownOnlinePartitionList->Delete();
+
+      std::vector<std::string> knownTasks;
+      HistTask::TaskList( "", knownTasks );
+
+      for ( std::vector<std::string>::iterator itS = knownTasks.begin();
+            knownTasks.end() != itS; ++itS ) {
+        std::string partition = (*itS).substr(0,(*itS).find("_"));
+        if ( !m_knownOnlinePartitionList->FindObject( partition.c_str() ) ) {
+          std::cout << "Found publication for partition " << partition << std::endl;
+          TObjString* partitionName = new TObjString( partition.c_str() );
+          m_knownOnlinePartitionList->Add( partitionName );
+        }
+      }
       partitionIt = m_knownOnlinePartitionList -> MakeIterator() ;
     }
 
@@ -3498,16 +3503,15 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
     }
   } else {
     std::string
-      partition_entry(dynamic_cast<TGTextLBEntry*>(m_partitionSelectorComboBox->
-                                                   GetSelectedEntry())
-                      ->GetText()->GetString() );
+      partition_entry(dynamic_cast<TGTextLBEntry*>(m_partitionSelectorComboBox->GetSelectedEntry()) ->GetText()->GetString() );
     setPartition( partition_entry ) ;
     m_runDb->setPartition( partition_entry );
   }
-  if (isConnectedToHistogramDB() && (false == m_currentPageName.empty()) &&
-      (false == m_loadingPage))
-    loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile,
-                           m_savesetFileName);
+  if ( isConnectedToHistogramDB() && 
+       (false == m_currentPageName.empty()) && 
+       (false == m_loadingPage) ) {
+    loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, m_savesetFileName);
+  }
 }
 
 //==============================================================================

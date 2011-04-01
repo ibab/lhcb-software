@@ -301,7 +301,6 @@ int main(int argc, char* argv[]) {
     }
     presenterMainFrame.setVerbosity(messageLevelCli);
 
-
     if (startupSettings.count("mode")) {
       if ("online" == startupSettings["mode"].as<std::string>()) {
         presenterMainFrame.setPresenterMode( pres::Init ) ;

@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-01 - Olivier Callot
+ - Fix the refresh of the partitionlist. Online we get the list from Online services.
+
 ! 2011-03-31 - Olivier Callot
  - Use TLegend only if the first plot has no title positionned.
  - Browsing of histograms in Editor Online works, but only with the new monitoring 
