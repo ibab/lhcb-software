@@ -101,8 +101,8 @@ int main(int argc, char* argv[]) {
   pres::MsgLevel messageLevelCli;
   std::string histdir("./");
 
-  int windowWidth(1200);
-  int windowHeight(600);
+  int windowWidth;
+  int windowHeight;
 
   const char* histdirEnv = getenv(s_histdir.c_str());
   if (NULL != histdirEnv) {
@@ -142,8 +142,8 @@ int main(int argc, char* argv[]) {
       ("login,l", value<std::string>()->default_value("read-only"),
        "\"no\" when not to login to histogram\n" "database on startup\n"
        "read-only or read-write")
-      ("window-width,W",  value<int>(&windowWidth)->default_value(1500), "window width")
-      ("window-height,H", value<int>(&windowHeight)->default_value(900), "window height")
+      ("window-width,W",  value<int>(&windowWidth)->default_value(1270), "window width")
+      ("window-height,H", value<int>(&windowHeight)->default_value(980), "window height")
       ("verbosity,V", value<std::string>()->default_value("silent"),
        "verbosity level:\n" "silent, verbose or debug")
       ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
@@ -375,6 +375,7 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setCurrentPageName( startupPage ) ;
       presenterMainFrame.loadSelectedPageFromDB( startupPage , pres::s_startupFile, 
 						 savesetFile ) ;
+      presenterMainFrame.startPageRefresh();
     }
     
     if (startupSettings.count("image-path")) {

@@ -40,21 +40,26 @@ void AlarmDisplay::listAlarmsFromHistogramDB() {
 
         OMAMessage* message = new OMAMessage(*alarmMessageIDsIt, *(m_mainFrame->histogramDB()));
         if (false == message->isAbort()) {
-          TGListTreeItem* branch = message->isactive() ? treeRoot : archive;
-          std::string subsys = message->concernedSystem();
-          if (subsys.empty()) subsys = "OTHER";
           TGListTreeItem* thisDet=NULL;
-          for (TGListTreeItem* detroot = branch->GetFirstChild(); detroot != NULL ; detroot=detroot->GetNextSibling()) {
-            if (std::string(detroot->GetText()) == subsys) {
-              thisDet = detroot;
-              break;
+          std::string nodeName(message->msgtext());          
+          if ( !message->isactive() ) {  
+            TGListTreeItem* branch = archive;//message->isactive() ? treeRoot : archive;
+            std::string subsys = message->concernedSystem();
+            if (subsys.empty()) subsys = "OTHER";
+            for (TGListTreeItem* detroot = branch->GetFirstChild(); detroot != NULL ; detroot=detroot->GetNextSibling()) {
+              if (std::string(detroot->GetText()) == subsys) {
+                thisDet = detroot;
+                break;
+              }
             }
-          }
-          if (!thisDet) {
-            thisDet=m_listView->AddItem(branch, subsys.c_str());
+            if (!thisDet) {
+              thisDet=m_listView->AddItem(branch, subsys.c_str());
+            }
+          } else {
+            thisDet = treeRoot;
+            nodeName = std::string(message->concernedSystem()) + ":" + nodeName;
           }
           
-          std::string nodeName(message->msgtext());
           TGListTreeItem* treeNode = m_listView->AddItem(thisDet, nodeName.c_str());
           m_mainFrame->setTreeNodeType(treeNode, message->levelString());
           m_listView->SetCheckBox(treeNode, false);

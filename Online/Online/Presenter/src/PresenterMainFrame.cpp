@@ -783,19 +783,22 @@ void PresenterMainFrame::buildGUI() {
     }
 
 
-    m_toolBarDock->AddFrame(m_toolBar,
-                            new TGLayoutHints(kLHintsTop |
-                                              kLHintsExpandX,
-                                              0, 0, 0, 0));
+    m_toolBarDock->AddFrame(m_toolBar, new TGLayoutHints(kLHintsTop |
+                                                         kLHintsExpandX,
+                                                         0, 0, 0, 0));
 
-    m_mainHorizontalFrame = new TGHorizontalFrame(this, 544, 498,
+    int leftWindowsXSize  = 300;
+    int rightWindowsXSize = 300;
+
+    m_mainHorizontalFrame = new TGHorizontalFrame(this, 800, 498,
                                                   kHorizontalFrame |
                                                   kLHintsExpandX |
                                                   kLHintsExpandY);
 
-    m_leftMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 200, 494,
-                                          kVerticalFrame | kFixedWidth |
-                                          kLHintsExpandX);
+    m_leftMiscFrame = new TGVerticalFrame( m_mainHorizontalFrame, leftWindowsXSize, 494,
+                                           kVerticalFrame | kFixedWidth |
+                                           kLHintsExpandX);
+
 
     TGVSplitter* leftVerticalSplitter =
       new TGVSplitter(m_mainHorizontalFrame, 4, 4);
@@ -805,7 +808,7 @@ void PresenterMainFrame::buildGUI() {
     m_databasePagesDock->SetWindowName("Database Page Browser");
     m_databasePagesDock->EnableUndock(true);
     m_databasePagesDock->EnableHide(true);
-    m_databasePagesDock->Resize(220, 494);
+    m_databasePagesDock->Resize( leftWindowsXSize, 494);
     m_leftMiscFrame->AddFrame(m_databasePagesDock,
                               new TGLayoutHints(kLHintsLeft |
                                                 kLHintsTop |
@@ -822,7 +825,7 @@ void PresenterMainFrame::buildGUI() {
                                                     kLHintsExpandY,
                                                     0, 0, 0, 0));
 
-    TGCanvas* fCanvas652 = new TGCanvas(databasePagesGroupFrame, 220, 243);
+    TGCanvas* fCanvas652 = new TGCanvas(databasePagesGroupFrame, leftWindowsXSize, 243);
     m_pagesFromHistoDBViewPort = fCanvas652->GetViewPort();
 
     // list tree
@@ -872,7 +875,7 @@ void PresenterMainFrame::buildGUI() {
     m_databaseAlarmsDock->SetWindowName("Histogram Alarms");
     m_databaseAlarmsDock->EnableUndock(true);
     m_databaseAlarmsDock->EnableHide(true);
-    m_databaseAlarmsDock->Resize(220, 100); //494);
+    m_databaseAlarmsDock->Resize( leftWindowsXSize, 494);
     m_leftMiscFrame->AddFrame(m_databaseAlarmsDock,
                               new TGLayoutHints(kLHintsLeft |
                                                 kLHintsTop |
@@ -880,10 +883,10 @@ void PresenterMainFrame::buildGUI() {
                                                 kLHintsExpandY,
                                                 0, 0, 0, 0));
 
-    m_leftDatabaseAlarmFrame = new TGVerticalFrame(m_databaseAlarmsDock,
-                                                   220, 100,
-                                                   kVerticalFrame |
-                                                   kFixedWidth);
+    m_leftDatabaseAlarmFrame = new TGVerticalFrame( m_databaseAlarmsDock,
+                                                    leftWindowsXSize, 100,
+                                                    kVerticalFrame |
+                                                    kFixedWidth);
 
     TGGroupFrame* databaseAlarmGroupFrame =
       new TGGroupFrame(m_leftDatabaseAlarmFrame,
@@ -945,7 +948,7 @@ void PresenterMainFrame::buildGUI() {
     m_knownProblemDock -> SetWindowName( "List of known problems" ) ;
     m_knownProblemDock -> EnableUndock( true ) ;
     m_knownProblemDock -> EnableHide( true ) ;
-    m_knownProblemDock -> Resize( 220 , 100 ); //494 ) ;
+    m_knownProblemDock -> Resize( leftWindowsXSize, 494 ) ;
     m_leftMiscFrame -> AddFrame( m_knownProblemDock ,
                                  new TGLayoutHints(kLHintsLeft | kLHintsTop |
                                                    kLHintsExpandX | kLHintsExpandY,
@@ -1037,7 +1040,7 @@ void PresenterMainFrame::buildGUI() {
 
     //====================
 
-    m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 220, 494,
+    m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, rightWindowsXSize, 494,
                                            kVerticalFrame | kFixedWidth |
                                            kLHintsExpandX);
 
@@ -1048,7 +1051,7 @@ void PresenterMainFrame::buildGUI() {
     m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
     m_dimBrowserDock->EnableUndock(true);
     m_dimBrowserDock->EnableHide(false);
-    m_dimBrowserDock->Resize(220, 494);
+    m_dimBrowserDock->Resize( rightWindowsXSize, 494);
     m_rightMiscFrame->AddFrame(m_dimBrowserDock,
                                new TGLayoutHints(kLHintsRight |
                                                  kLHintsTop |
@@ -1066,7 +1069,7 @@ void PresenterMainFrame::buildGUI() {
                                                  0, 0, 0, 0));
 
     m_dimSvcListTreeContainterCanvas = new TGCanvas(m_histoSvcBrowserGroupFrame,
-                                                    220, 100);
+                                                    rightWindowsXSize, 100);
     TGViewPort* fViewPort664 = m_dimSvcListTreeContainterCanvas->GetViewPort();
     m_histoSvcListTree = new TGListTree(m_dimSvcListTreeContainterCanvas,
                                         kHorizontalFrame);
@@ -1105,7 +1108,7 @@ void PresenterMainFrame::buildGUI() {
     m_databaseHistogramsDock->SetWindowName("Histograms in Database");
     m_databaseHistogramsDock->EnableUndock(true);
     m_databaseHistogramsDock->EnableHide(false);
-    m_databaseHistogramsDock->Resize(220, 100);
+    m_databaseHistogramsDock->Resize( rightWindowsXSize, 100);
     m_rightMiscFrame->AddFrame(m_databaseHistogramsDock,
                                new TGLayoutHints(kLHintsRight |
                                                  kLHintsBottom |
@@ -1114,7 +1117,7 @@ void PresenterMainFrame::buildGUI() {
                                                  kFixedWidth,
                                                  0, 0, 0, 0));
     // databaseHistogramFrame
-    TGVerticalFrame* leftDatabaseHistogramFrame = new TGVerticalFrame(m_databaseHistogramsDock, 220, 100,
+    TGVerticalFrame* leftDatabaseHistogramFrame = new TGVerticalFrame(m_databaseHistogramsDock, rightWindowsXSize, 100,
                                                                       kVerticalFrame | kFixedWidth);
     TGGroupFrame* databaseHistogramGroupFrame = new TGGroupFrame(leftDatabaseHistogramFrame,
                                                                  TGString("Histograms in Database"),
@@ -4292,6 +4295,11 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
     TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
+    if ( 0 == node ) {
+      std::cout << "*** loadSelectedPageFromDB: empty node for page " << pageName << std::endl;
+      return;
+    }
+    
     if ( m_groupPages.empty() ) fillGroupPages( node ) ;
     m_loadingPage = true;
     gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
