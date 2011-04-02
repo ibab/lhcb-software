@@ -22,7 +22,7 @@
 #
 # =============================================================================
 package       BenderSys
-version       v17r0p1
+version       v17r1
 
 author        Vanya BELYAEV
 
