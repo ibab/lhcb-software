@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-02 - Sebastian Schleich
+ - fixed Bs2PhiPhi pt cuts
+
 ! ======================== StrippingSettings v2r2 2011-03-29 ==================
 
 ! 2011-03-29 - Thomas Blake

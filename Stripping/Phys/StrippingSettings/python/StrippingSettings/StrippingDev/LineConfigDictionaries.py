@@ -107,9 +107,9 @@ BetaSBs2PhiPhi	= {
 	'WGs'		: ['betas'],
 	'BUILDERTYPE' 	: 'StrippingBs2PhiPhiConf',
 	'CONFIG' 	: {
-                  'KaonPT'              : 500      # MeV/c 
+                  'KaonPT'              : 450      # MeV/c 
                 , 'KaonIPCHI2'          : 3.5      # adimensional
-                , 'PhiPT'               : 900      # MeV/c 
+                , 'PhiPT'               : 950      # MeV/c 
                 , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
                 , 'PhiVertexCHI2pDOF'   : 25       # adimensional
                 , 'PhiMassWindow'       : 25       # MeV/cc
