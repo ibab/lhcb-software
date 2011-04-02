@@ -219,8 +219,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     bool foundTheTask = false;
     std::string taskName = (*itT).name;
-    if ( taskName == "GauchoJob" ) taskName = "Adder";
     taskName = "_" + taskName + "_";
+    if ( taskName == "_GauchoJob_" ) taskName = partition+"_Adder";
 
     for ( std::vector<std::string>::iterator itS = knownTasks.begin();
           knownTasks.end() != itS; ++itS ) {
@@ -703,10 +703,11 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
   // workaround attempt for ROOT painter objects:
   // reliable random crashes when below invoked...
   // via TH painter (timing dependent?)
-  editorCanvas->Update();
+
+  //editorCanvas->Update();
   updateDrawingOptions();
   editorCanvas->Update();
-  std::cout << "Second Update of the canvas" << std::endl;
+  std::cout << "Second Update of the canvas OK" << std::endl;
 }
 
 //=========================================================================

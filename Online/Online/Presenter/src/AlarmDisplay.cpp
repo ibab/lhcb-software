@@ -180,16 +180,14 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
 // called every time a new alarm/warning is published or cleared
 void AlarmDisplay::infoHandler() {  
   if (m_mainFrame->verbosity() >= Verbose) { 
-    std::cout << "List of Analysis Alarms has changed, alarm refreshing enabled=" << 
-      m_enabled <<std::endl;
+    std::cout << "List of Analysis Alarms has changed, alarm refreshing enabled=" << m_enabled <<std::endl;
   }
   if(m_enabled) {
     std::string prevstatusText;
     if (m_mainFrame->displayMode() == Alarm) { // clear page if an alarm was displayed
       m_mainFrame->removeHistogramsFromPage();
       prevstatusText ="List of Analysis Alarms has been updated";
-    }
-    else {
+    } else {
       prevstatusText = m_mainFrame->getStatusBarText(2);
     }
     m_mainFrame->setStatusBarText("Analysis Alarms have changed! reloading them...", 2);

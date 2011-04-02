@@ -12,6 +12,7 @@ class TImage;
 class TGraph;
 class TPaveText;
 class TPaveStats;
+#include <map>
 
 /** @class DisplayHistogram DisplayHistogram.h
  *  This class contains the information on a histogram, for display
@@ -86,6 +87,8 @@ public:
 
   bool isOverlap() { return m_isOverlap; }
   bool hasTitle() { return m_hasTitle; }
+
+  void loadOptions();
   
 protected:
 
@@ -109,5 +112,9 @@ private:
   double* m_valueArray;
   int     m_nOverlap;
   bool    m_hasTitle;
+  bool    m_optionsAreLoaded;
+  std::map<std::string, int>         m_intOptions;
+  std::map<std::string, float>       m_floatOptions;
+  std::map<std::string, std::string> m_stringOptions;
 };
 #endif // DISPLAYHISTOGRAM_H

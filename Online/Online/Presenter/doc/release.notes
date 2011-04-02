@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-02 - Olivier Callot
+ - Fix access to HLT histograms (Adder name is non standard...)
+ - Create 3 maps to store the histogram options, for speeding. Better, but notthat much.
+
 ! 2011-04-01 - Olivier Callot
  - Draw dashed lines on TGraph is YMIN or YMAX are defined. Same color as the graph
 

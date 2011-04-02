@@ -61,7 +61,8 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_maxGraph( NULL ),
   m_timeArray( NULL ),
   m_valueArray( NULL ),
-  m_nOverlap( 0 )
+  m_nOverlap( 0 ),
+  m_optionsAreLoaded( false )
 {
   if ( hist->type() == OnlineHistDBEnv::TRE ) {
     m_isTrendPlot = true;
@@ -345,8 +346,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   if ( !m_isOverlap ) pad->SetName( m_onlineHist->identifier().c_str() );
 
   std::string sopt("");
-  //boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-  if ( /*rootLock && */ 0 != m_onlineHist ) {
+  if ( 0 != m_onlineHist ) {
     if ( hasOption("DRAWPATTERN", &sopt) && false == m_isOverlap) {
 
       std::string drawPatternFile = analysisLib->refRoot() + "/" + m_onlineHist->task() + "/" + sopt;
@@ -406,13 +406,12 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
   float fopt = 0.0;
   std::string sopt("");
 
-  if ( m_isTrendPlot ) { // special settings for trend mode
-  } else {
-    int statOpt = 0;
-    if( false == hasOption("STATS", &statOpt)) statOpt = pres::s_defStatOptions;
+  if ( !m_isTrendPlot ) { // no settings for trend mode
+    int statOpt =  pres::s_defStatOptions;
+    hasOption( "STATS", &statOpt );
     if (0 != statOpt) {
       int statStyle=0;
-      if (hasOption("STATTRANSP", &iopt)) if ( iopt > 0 ) statStyle=1001;
+      if ( hasOption("STATTRANSP", &iopt) ) if ( iopt > 0 ) statStyle=1001;
       gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
       gStyle->SetOptStat( statOpt );
       m_statPave = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
@@ -464,10 +463,7 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
       }
     }
 
-    if (hasOption("DRAWOPTS", &sopt) ) {
-      if(m_isOverlap && sopt.find("SAME") == std::string::npos ) sopt += "SAME";
-      m_rootHistogram->SetDrawOption(sopt.c_str());
-    }
+    if (hasOption("DRAWOPTS", &sopt) ) m_rootHistogram->SetDrawOption(sopt.c_str());
     if (hasOption("LOGX", &iopt)) pad->SetLogx(1);
     if (hasOption("LOGY", &iopt)) {
       if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1) ;
@@ -614,26 +610,32 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
 }
 
 //=========================================================================
-//
+//  Accessor to retrieve the options
 //=========================================================================
 bool DisplayHistogram::hasOption( const char* str, int* iopt ) {
-  if ( !m_onlineHist->getDisplayOption( str, iopt ) ) return false;
-  //std::cout << m_onlineHist->identifier() << " has option " << str
-  //          << " set to value " << *iopt << std::endl;
+  if ( !m_optionsAreLoaded ) loadOptions();
+  std::string name(str);
+  std::map<std::string,int>::iterator it = m_intOptions.find( name );
+  if ( it == m_intOptions.end() ) return false;
+  *iopt = it->second;
   return true;
 }
 
 bool DisplayHistogram::hasOption( const char* str, float* fopt ) {
-  if ( !m_onlineHist->getDisplayOption( str, fopt ) ) return false;
-  //std::cout << m_onlineHist->identifier() << " has option " << str
-  //          << " set to value " << *fopt << std::endl;
+  if ( !m_optionsAreLoaded ) loadOptions();
+  std::string name(str);
+  std::map<std::string,float>::iterator it = m_floatOptions.find( name );
+  if ( it == m_floatOptions.end() ) return false;
+  *fopt = it->second;
   return true;
 }
 
 bool DisplayHistogram::hasOption( const char* str, std::string* sopt ) {
-  if ( !m_onlineHist->getDisplayOption( str, sopt ) ) return false;
-  //std::cout << m_onlineHist->identifier() << " has option " << str
-  //          << " set to value " << *sopt << std::endl;
+  if ( !m_optionsAreLoaded ) loadOptions();
+  std::string name(str);
+  std::map<std::string,std::string>::iterator it = m_stringOptions.find( name );
+  if ( it == m_stringOptions.end() ) return false;
+  *sopt = it->second;
   return true;
 }
 
@@ -1088,5 +1090,17 @@ bool DisplayHistogram::updateDBOption( std::string opt, void* value, bool isDefa
 void DisplayHistogram::setOnlineHistogram( OnlineHistogram* hist ) {
   if ( NULL != m_onlineHist ) delete m_onlineHist;
   m_onlineHist = hist;
+}
+
+//=========================================================================
+//  Set the local copy of the options, by type
+//=========================================================================
+void DisplayHistogram::loadOptions ( ) {
+  m_onlineHist->getIntDisplayOptions( m_intOptions );
+  m_onlineHist->getFloatDisplayOptions( m_floatOptions );
+  m_onlineHist->getStringDisplayOptions( m_stringOptions );  
+  std::cout << "Retrieved " << m_intOptions.size() << " int, " << m_floatOptions.size() 
+            << " float and " << m_stringOptions.size() << " string options." << std::endl;
+  m_optionsAreLoaded = true;
 }
 //=============================================================================
