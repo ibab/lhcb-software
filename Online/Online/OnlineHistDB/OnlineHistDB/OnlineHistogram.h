@@ -7,7 +7,7 @@
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 1/12/2006
  */
-
+#include <map>
 
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 #include "OnlineHistDB/OnlineHistTask.h"
@@ -165,7 +165,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
   virtual bool saveHistoPageDisplayOptions(std::string Page = "_DEFAULT_",
 					   int Instance=-1);
 
-
+  void getIntDisplayOptions( std::map<std::string, int>& buf );
+  void getFloatDisplayOptions( std::map<std::string, float>& buf );
+  void getStringDisplayOptions( std::map<std::string, std::string>& buf );
 
   
   /// initializes display options associated to this histogram with the

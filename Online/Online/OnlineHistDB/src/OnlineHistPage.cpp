@@ -322,6 +322,7 @@ bool OnlineHistPage::save() {
   m_ih=m_h.begin();
   while(m_ih != m_h.end()) {
     hlist << "'" << (*m_ih)->histo->hid() << "'"; 
+
     cx << (*m_ih)->xmin;
     cy << (*m_ih)->ymin;
     sx << (*m_ih)->xmax;

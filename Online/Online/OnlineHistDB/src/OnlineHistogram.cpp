@@ -1786,3 +1786,52 @@ void OnlineHistogramStorage::reloadHistograms() {
     (*ih)->reload();
   }
 }
+
+//=========================================================================
+//  Retrieve all the set options of type int
+//=========================================================================
+void OnlineHistogram::getIntDisplayOptions( std::map<std::string, int>&  buf ) {
+  int iopt;
+  buf.clear();
+  std::vector<OnlineDisplayOption*>::iterator ip;
+  for (ip = m_do.begin();ip != m_do.end(); ++ip) {
+    if ((*ip)->isSet()) {
+      if ( (*ip)->type() == OnlineDisplayOption::INT ) {
+        (*ip)->get(&iopt);
+        buf[(*ip)->name()] = iopt;
+      }
+    }
+  }
+}
+//=========================================================================
+//  Retrieve all the set options of type float
+//=========================================================================
+void OnlineHistogram::getFloatDisplayOptions( std::map<std::string, float>&  buf ) {
+  float fopt;
+  buf.clear();
+  std::vector<OnlineDisplayOption*>::iterator ip;
+  for (ip = m_do.begin();ip != m_do.end(); ++ip) {
+    if ((*ip)->isSet()) {
+      if ( (*ip)->type() == OnlineDisplayOption::FLOAT ) {
+        (*ip)->get(&fopt);
+        buf[(*ip)->name()] = fopt;
+      }
+    }
+  }
+}
+//=========================================================================
+//  Retrieve all the set options of type string
+//=========================================================================
+void OnlineHistogram::getStringDisplayOptions( std::map<std::string, std::string>&  buf ) {
+  std::string sopt;
+  buf.clear();
+  std::vector<OnlineDisplayOption*>::iterator ip;
+  for (ip = m_do.begin();ip != m_do.end(); ++ip) {
+    if ((*ip)->isSet()) {
+      if ( (*ip)->type() == OnlineDisplayOption::STRING ) {
+        (*ip)->get(&sopt);
+        buf[(*ip)->name()] = sopt;
+      }
+    }
+  }
+}
