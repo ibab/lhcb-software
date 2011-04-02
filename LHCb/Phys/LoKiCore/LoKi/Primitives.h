@@ -13,6 +13,7 @@
 // LHCb 
 // ============================================================================
 #include "LHCbMath/LHCbMath.h"
+#include "LHCbMath/Bit.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -2542,6 +2543,200 @@ namespace LoKi
     LoKi::FunctorFromFunctor<TYPE,double> m_divident ; // the divident 
     /// the divisor 
     const unsigned int                    m_divisor  ; // the divisor 
+    // ========================================================================
+  };  
+  // ==========================================================================
+  /** @class Round 
+   *  get the proper rounding for the floating value 
+   *  @see LHCb::Math::round 
+   *  The actual rounding policy is defined by function LHCb::Math::round
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-04-02
+   */
+  template <class TYPE>
+  class Round : public LoKi::Functor<TYPE,double>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,double>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,double>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor and the fake argument  
+    Round ( const LoKi::Functor<TYPE,double>&    fun      , 
+            const unsigned int                /* fake */  )
+      : LoKi::Functor<TYPE,double>() 
+      , m_fun  ( fun ) 
+    {} 
+    /// virtual destructor 
+    virtual ~Round () {}
+    /// clone method (mandatory)
+    virtual  Round* clone() const { return new Round ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( argument a ) const 
+    { return LHCb::Math::round ( this->m_fun.fun ( a ) ) ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " round("  << this->m_fun<< ") "; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    Round () ;                           // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<TYPE,double> m_fun ;                // the functor
+    // ========================================================================
+  };  
+  // ==========================================================================
+  /** @class JBit
+   *  get the jth bit of value.
+   *  The action :  
+   *   - 1. f -> round ( f ) 
+   *   - 2. f -> abs   ( f ) 
+   *   - 3. bit ( f , j )  
+   *  @see Gaudi::Math::bit 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-04-02
+   */
+  template <class TYPE>
+  class JBit : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor 
+    JBit ( const LoKi::Functor<TYPE,double>&    fun ,  
+           const unsigned int                   j   )
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun  ( fun ) 
+      , m_j    ( j   ) 
+    {
+      // 
+      BOOST_STATIC_ASSERT( boost::integer_traits<unsigned long>::is_specialized
+                           && boost::integer_traits<unsigned long>::is_integral 
+                           &&!boost::integer_traits<unsigned long>::is_signed ) ;
+      //
+      this -> Assert ( j < (unsigned long) boost::integer_traits<unsigned long>::digits , 
+                       "Invalid bit index" ) ;
+      //
+    }
+    /// virtual destructor 
+    virtual ~JBit () {}
+    /// clone method (mandatory)
+    virtual  JBit* clone() const { return new JBit ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( argument a ) const 
+    {
+      const unsigned long _ulv = 
+        ::labs ( LHCb::Math::round ( this->m_fun.fun ( a ) ) ) ;
+      //
+      return Gaudi::Math::bit ( _ulv , this->m_j ) ; 
+    }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " jbit("  << this->m_fun << "," << this->m_j << ") "; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    JBit () ;                           // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<TYPE,double> m_fun ;                // the functor
+    /// the index 
+    unsigned int                          m_j   ;                  // the index 
+    // ========================================================================
+  };  
+  // ==========================================================================
+  /** @class JBits
+   *  get the content between j1 andj2  bit of value.
+   *  The action :  
+   *   - 1. f -> round ( f ) 
+   *   - 2. f -> abs   ( f ) 
+   *   - 3. Gaudi::Math::bits ( f , j1, j2  )  
+   *  @see Gaudi::Math::bits  
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-04-02
+   */
+  template <class TYPE>
+  class JBits : public LoKi::Functor<TYPE,double>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,double>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,double>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor 
+    JBits ( const LoKi::Functor<TYPE,double>&    fun ,  
+            const unsigned int                   j1  ,
+            const unsigned int                   j2  )
+      : LoKi::Functor<TYPE,double>() 
+      , m_fun  ( fun )
+      ,  m_j1  ( j1  ) 
+      ,  m_j2  ( j2  ) 
+    {
+      // 
+      BOOST_STATIC_ASSERT( boost::integer_traits<unsigned long>::is_specialized
+                           && boost::integer_traits<unsigned long>::is_integral 
+                           &&!boost::integer_traits<unsigned long>::is_signed ) ;
+      //
+      this -> Assert ( j1 <  (unsigned long) boost::integer_traits<unsigned long>::digits , 
+                       "Invalid bit index-1" ) ;
+      this -> Assert ( j2 <= (unsigned long) boost::integer_traits<unsigned long>::digits , 
+                       "Invalid bit index-2" ) ;
+      this -> Assert ( j1 < j2 , "Invalid bit indices" ) ;
+      //
+    }
+    /// virtual destructor 
+    virtual ~JBits () {}
+    /// clone method (mandatory)
+    virtual  JBits* clone() const { return new JBits ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( argument a ) const 
+    {
+      const unsigned long _ulv = 
+        ::labs ( LHCb::Math::round ( this->m_fun.fun ( a ) ) ) ;
+      //
+      return Gaudi::Math::bits ( _ulv , this->m_j1 , this -> m_j2 ) ; 
+    }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " jbits("  << this->m_fun 
+               << "," << this->m_j1
+               << "," << this->m_j2
+               << ") "               ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    JBits () ;                           // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<TYPE,double> m_fun ;                // the functor
+    /// the index1
+    unsigned int                          m_j1  ;                  // the index 
+    /// the index2
+    unsigned int                          m_j2  ;                  // the index 
     // ========================================================================
   };  
   // ==========================================================================

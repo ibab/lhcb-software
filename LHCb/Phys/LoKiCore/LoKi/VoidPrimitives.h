@@ -1860,6 +1860,167 @@ namespace LoKi
     // ========================================================================
   } ;
   // ==========================================================================
+  template <>
+  class Round<void> : public LoKi::Functor<void,double>
+  {
+  private:
+    // ========================================================================
+    /// result type 
+    typedef LoKi::Functor<void,double>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor and the fake argument  
+    Round ( const LoKi::Functor<void,double>&    fun      , 
+            const unsigned int                /* fake */  )
+      : LoKi::Functor<void,double>() 
+      , m_fun  ( fun ) 
+    {} 
+    /// virtual destructor 
+    virtual ~Round () {}
+    /// clone method (mandatory)
+    virtual  Round* clone() const { return new Round ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( /* argument a */ ) const 
+    { return LHCb::Math::round ( this->m_fun.fun ( /* a */ ) ) ; }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " round("  << this->m_fun<< ") "; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    Round () ;                           // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<void,double> m_fun ;                // the functor
+    // ========================================================================
+  };
+  // ==========================================================================
+  template <>
+  class JBit<void> : public LoKi::Functor<void,bool>
+  {
+  private:
+    // ========================================================================
+    /// result type 
+    typedef LoKi::Functor<void,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor 
+    JBit ( const LoKi::Functor<void,double>&    fun ,  
+           const unsigned int                   j   )
+      : LoKi::Functor<void,bool>() 
+      , m_fun  ( fun ) 
+      , m_j    ( j   ) 
+    {
+      // 
+      BOOST_STATIC_ASSERT( boost::integer_traits<unsigned long>::is_specialized
+                           && boost::integer_traits<unsigned long>::is_integral 
+                           &&!boost::integer_traits<unsigned long>::is_signed ) ;
+      //
+      this -> Assert ( j < (unsigned long) boost::integer_traits<unsigned long>::digits , 
+                       "Invalid bit index" ) ;
+      //
+    }
+    /// virtual destructor 
+    virtual ~JBit () {}
+    /// clone method (mandatory)
+    virtual  JBit* clone() const { return new JBit ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( /* argument a */  ) const 
+    {
+      const unsigned long _ulv = 
+        ::labs ( LHCb::Math::round ( this->m_fun.fun ( /* a */ ) ) ) ;
+      //
+      return Gaudi::Math::bit ( _ulv , this->m_j ) ; 
+    }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " jbit("  << this->m_fun << "," << this->m_j << ") "; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    JBit () ;                           // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<void,double> m_fun ;                // the functor
+    /// the index 
+    unsigned int                          m_j   ;                  // the index 
+    // ========================================================================
+  };
+  // ==========================================================================
+  template <>
+  class JBits<void> : public LoKi::Functor<void,double>
+  {
+  private:
+    // ========================================================================
+    /// result type 
+    typedef LoKi::Functor<void,double>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor from the functor 
+    JBits ( const LoKi::Functor<void,double>&    fun ,  
+            const unsigned int                   j1  ,
+            const unsigned int                   j2  )
+      : LoKi::Functor<void,double>() 
+      , m_fun  ( fun )
+      ,  m_j1  ( j1  ) 
+      ,  m_j2  ( j2  ) 
+    {
+      // 
+      BOOST_STATIC_ASSERT( boost::integer_traits<unsigned long>::is_specialized
+                           && boost::integer_traits<unsigned long>::is_integral 
+                           &&!boost::integer_traits<unsigned long>::is_signed ) ;
+      //
+      this -> Assert ( j1 <  (unsigned long) boost::integer_traits<unsigned long>::digits , 
+                       "Invalid bit index-1" ) ;
+      this -> Assert ( j2 <= (unsigned long) boost::integer_traits<unsigned long>::digits , 
+                       "Invalid bit index-2" ) ;
+      this -> Assert ( j1 < j2 , "Invalid bit indices" ) ;
+      //
+    }
+    /// virtual destructor 
+    virtual ~JBits () {}
+    /// clone method (mandatory)
+    virtual  JBits* clone() const { return new JBits ( *this ) ; }
+    /// the only one essential method ("function")      
+    virtual  result_type operator() ( /* argument a */ ) const 
+    {
+      const unsigned long _ulv = 
+        ::labs ( LHCb::Math::round ( this->m_fun.fun ( /* a */ ) ) ) ;
+      //
+      return Gaudi::Math::bits ( _ulv , this->m_j1 , this -> m_j2 ) ; 
+    }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << " jbits("  << this->m_fun 
+               << "," << this->m_j1
+               << "," << this->m_j2
+               << ") "               ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled
+    JBits () ;                           // the default constrictor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<void,double> m_fun ;                // the functor
+    /// the index1
+    unsigned int                          m_j1  ;                  // the index 
+    /// the index2
+    unsigned int                          m_j2  ;                  // the index 
+    // ========================================================================
+  };  
+  // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 // The END 

@@ -18,6 +18,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-04-02 - Vanya Belyaev
+
+ - add few functors (& corresponding decorators) for 
+
+    - round   ( bases on LHCb::Math::round ) 
+    - jbit    ( based on Gaudi::Math::bit  ) 
+    - jbits   ( based on Gaudi::Math::bits ) 
+
 ! 2011-03-30 - Vanya Belyaev
 
  - add "modulo" -operator for functors 

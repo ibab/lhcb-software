@@ -14,6 +14,14 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#   By usage of this code one clearly states the disagreement 
+#  with the campain of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-07-17
 # =============================================================================
@@ -27,6 +35,10 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the campain of Dr.O.Callot et al.:
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # =============================================================================
@@ -95,6 +107,14 @@ def pow3  ( o ) :
 def pow4  ( o ) :
     if hasattr ( o , "__pow4__"  ) : return o.__pow4__  ()
     return pow(o,4)
+
+
+def round ( o ) :
+    if hasattr ( o , '__round__' ) : return o.__round__()
+    return long ( o )
+
+def jbit  ( o , j )       : return o.__jbit__  ( j       ) 
+def jbits ( o , j1 , j2 ) : return o.__jbits__ ( j1 , j2 ) 
 
 _std_min_ = min 
 def min  ( o , *a ) :

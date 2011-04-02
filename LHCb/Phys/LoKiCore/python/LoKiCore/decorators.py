@@ -460,6 +460,10 @@ def decorateFunctionOps ( funcs , opers ) :
 
     _rmod_      = None 
     _mod_       = None
+    
+    _round_     = None
+    _jbit_      = None
+    _jbits_     = None
 
     _sin_       = None 
     _cos_       = None 
@@ -832,6 +836,50 @@ def decorateFunctionOps ( funcs , opers ) :
             """
             return opers.__rmod__ (s,a)
         _rmod_ . __doc__  += opers.__rmod__ . __doc__
+
+
+    # math: round 
+    if hasattr ( opers , '__round__' ) :                    
+        def _round_ ( s ) :
+            """
+            Construct the ``round''-function: 
+            
+            >>> fun = ...
+            >>> fun = round ( fun ) 
+            
+            Uses:\n
+            """
+            return opers.__round__ (s)
+        _round_ . __doc__  += opers.__round__ . __doc__
+
+
+    # math: get jth bit
+    if hasattr ( opers , '__jbit__' ) :                    
+        def _jbit_ ( s , j ) :
+            """
+            Get j-th bit of the result
+            
+            >>> fun   = ...
+            >>> fun_1 = jbit ( fun , 1 ) 
+            
+            Uses:\n
+            """
+            return opers.__jbit__ ( s , j )
+        _jbit_ . __doc__  += opers.__jbit__ . __doc__
+
+    # math: get j1-j2 bit range 
+    if hasattr ( opers , '__jbits__' ) :                    
+        def _jbits_ ( s , j1 , j2 ) :
+            """
+            Get j1-j2 bits range of the result
+            
+            >>> fun   = ...
+            >>> fun_1 = jbit2 ( fun , 0 , 5  ) 
+            
+            Uses:\n
+            """
+            return opers.__jbits__ ( s , j1 , j2 )
+        _jbits_ . __doc__  += opers.__jbits__ . __doc__
 
 
     # home-made math (just to be coherent)
@@ -1457,6 +1505,11 @@ def decorateFunctionOps ( funcs , opers ) :
         if _abs_             : fun . __abs__     = _abs_       # 
         if _pow_             : fun . __pow__     = _pow_       # 
         if _rpow_            : fun . __rpow__    = _rpow_      #
+
+        if _round_           : fun . __round__   = _round_     #
+        if _jbit_            : fun . __jbit__    = _jbit_      #
+        if _jbits_           : fun . __jbits__   = _jbits_     #
+
         if _mod_             : fun . __mod__     = _mod_       #
         # pseudo-math
         if _rmod_            : fun . __rmod__            = _rmod_      #

@@ -228,6 +228,18 @@ namespace LoKi
                               const unsigned int d )
       { return LoKi::Modulo<TYPE> ( f , d ) ; }
       // ======================================================================
+      // round, jbit, etc.. 
+      // ======================================================================
+      static Fun __round__ ( const Func&        f  ) 
+      { return LoKi::round ( f ) ; }
+      static Cut __jbit__  ( const Func&        f  , 
+                             const unsigned int j  ) 
+      { return LoKi::jbit  ( f , j ) ; }
+      static Fun __jbits__ ( const Func&        f  , 
+                             const unsigned int j1 , 
+                             const unsigned int j2 ) 
+      { return LoKi::jbits ( f , j1 , j2 ) ; }
+      // ======================================================================
       // monitoring 
       // ======================================================================
       // print-monitoring 

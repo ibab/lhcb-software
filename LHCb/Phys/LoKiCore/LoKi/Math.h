@@ -755,6 +755,50 @@ namespace LoKi
           const LoKi::Functor<void,bool>&  sf  ) 
   { return LoKi::XScaler<TYPE>( cut , sf ) ;  }
   // ==========================================================================
+  /** "round" the floating result to integer value 
+   *   @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *   @date 2011-04-02
+   */
+  template <class TYPE>
+  inline LoKi::Round<TYPE>
+  round ( const LoKi::Functor<TYPE, double>& fun ) 
+  { return LoKi::Round<TYPE>( fun , 1.0 ) ;  }
+  // ==========================================================================
+  /** "jbit" the floating result to integer value 
+   *  get the jth bit of value.
+   *  The action :  
+   *   - 1. f -> round ( f ) 
+   *   - 2. f -> abs   ( f ) 
+   *   - 3. Gaudi::Math::bit ( f , j )  
+   *  @see LoKi::JBit
+   *  @see Gaudi::Math::bit
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-04-02
+   */
+  template <class TYPE>
+  inline LoKi::JBit<TYPE>
+  jbit  ( const LoKi::Functor<TYPE, double>& fun , 
+          const unsigned int                 j   ) 
+  { return LoKi::JBit<TYPE>( fun , j ) ;  }
+  // ==========================================================================
+  /** "jbits" the floating result to integer value 
+   *  get the (j1-j2) bits of value.
+   *  The action :  
+   *   - 1. f -> round ( f ) 
+   *   - 2. f -> abs   ( f ) 
+   *   - 3. Gaudi::Math::bits ( f , j1 , j2  )  
+   *  @see LoKi::JBits
+   *  @see Gaudi::Math::bits
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-04-02
+   */
+  template <class TYPE>
+  inline LoKi::JBits<TYPE>
+  jbits ( const LoKi::Functor<TYPE, double>& fun , 
+          const unsigned int                 j1  ,
+          const unsigned int                 j2  ) 
+  { return LoKi::JBits<TYPE>( fun , j1 , j2 ) ;  }
+  // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
