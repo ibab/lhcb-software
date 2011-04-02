@@ -19,9 +19,16 @@
 ! LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 !
 ! By usage of this code one clearly states the disagreement 
-! with the campain of Dr.O.Callot et al.: 
+! with the campaign of Dr.O.Callot et al.: 
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+!
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v17r1 2011-04-02 ===========================
+
+! 2011-04-02 - Vanya Belyaev
+
+ - prepare new version Bender v17r0, based on DaVinci v28r2
 
 ! 2011-03-31 - Vanya Belyaev
 

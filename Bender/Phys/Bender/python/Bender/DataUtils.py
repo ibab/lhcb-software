@@ -16,11 +16,15 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 # @author VanyaBELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2010-02-12
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 Helper module to deal with data
@@ -35,14 +39,14 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-02-12"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
+__version__ = "$Revision$"
 __all__     = ( 'extendfile1' ,
                 'extendfile2' ,
                 'extendfile'  ,

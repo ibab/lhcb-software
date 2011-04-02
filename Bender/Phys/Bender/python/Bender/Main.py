@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file Bender/Main.py
 #  The major Python module for Bender application 
 #
@@ -19,12 +17,13 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @date   2004-07-11
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
+#                    $Revision$
 #  Last modification $Date$
 #                 by $Author$ 
 # =============================================================================
@@ -49,7 +48,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision$' 
+__version__ = '$Revision$' 
 # =============================================================================
 
 import os 

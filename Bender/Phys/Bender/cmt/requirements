@@ -12,7 +12,7 @@
 # LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 # By usage of this code one clearly states the disagreement 
-# with the campain of Dr.O.Callot et al.: 
+# with the campaign of Dr.O.Callot et al.: 
 # ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #                   $Revision$
@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             Bender
-version             v17r0p1
+version             v17r1
 
 # =============================================================================
 branches            cmt doc python scripts 

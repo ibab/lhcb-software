@@ -19,7 +19,7 @@
 #  <b>``C++ ToolKit for Smart and Friendly Physics Analysis''</b>
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software''
 #
 # Usage:
@@ -59,6 +59,7 @@
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
+#                    $Revision$
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
@@ -75,7 +76,7 @@ And it is based on the LoKi project:
  
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
-By usage of this code one clearly states the disagreement with the campain of Dr.O.Callot et al.:
+By usage of this code one clearly states the disagreement with the campaign of Dr.O.Callot et al.:
 
    ``No Vanya's lines are allowed in LHCb/Gaudi software''
 

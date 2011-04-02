@@ -16,11 +16,15 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the campaing of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
 #  @date   2006-10-08
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 This is a trivial startup script for python Bender session
@@ -35,14 +39,14 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV belyaev@physics.syr.edu'
 __date__    = "2006-10-08"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
+__version__ = "$Revision$"
 __all__     = () 
 # =============================================================================
 

@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file Bender/Utils.py
 #
 #  Set of helper functions  for Bender 
@@ -20,7 +18,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @date   2010-09-12
@@ -40,9 +38,9 @@ The project has been designed with the kind help from Pere MATO and Andrey TSARE
 
 And it is based on the LoKi project:
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
-
+   
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the campaign of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
                     $Revision$
@@ -52,7 +50,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-00-12"
-__version__ = 'Version $Revision$'
+__version__ = '$Revision$'
 __all__     = (
     ##
     'run'               , 
