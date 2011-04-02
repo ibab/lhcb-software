@@ -70,7 +70,7 @@ print 'inp2 >> sym_difference ( X > -5 , X < 5 )  :%s ' % ( inp2 >> sym_differen
 print 'inp2 >> includes       ( X > -5 , X > 0 )  :%s ' % ( inp2 >> includes        ( X > -5 , X > 0 ) )
 
 print 'inp2 >> sum ( X          )    :%s ' % ( inp2 >> sum ( X          ) )
-print 'inp2 >> sqrt ( sum ( X**2 ) ) :%s ' % ( inp2 >> sqrt ( sum ( X**2 ) ) )
+print 'inp2 >> sqrt( sum ( X**2 ) ) :%s ' % ( inp2 >> sqrt ( sum ( X**2 ) ) )
 print 'inp2 >> sum ( X , X <  0 )    :%s ' % ( inp2 >> sum ( X , X <  0 ) )
 print 'inp2 >> sum ( X , X >= 0 )    :%s ' % ( inp2 >> sum ( X , X >= 0 ) )
 
@@ -78,6 +78,10 @@ print 'inp2 >> sum ( X , X >= 0 )    :%s ' % ( inp2 >> sum ( X , X >= 0 ) )
 print 'inp2 >>     ( X %% 3 )    :%s ' % ( inp2 >>     ( X % 3 ) )
 print 'inp2 >> sum ( X %% 3 )    :%s ' % ( inp2 >> sum ( X % 3 ) )
 
+
+print 'inp2 >>   round ( sin(X)*5 )          :%s ' % ( inp2 >>   round ( sin(X)*5 ) )
+print 'inp2 >> ( jbit  ( sin(X)*5 , 1     )  :%s ' % ( inp2 >> ( jbit  ( sin(X)*5,1  ) ) )
+print 'inp2 >> ( jbits ( sin(X)*5 , 0 , 1 )  :%s ' % ( inp2 >> ( jbits ( sin(X)*5,0,1) ) )
 
 print 'inp2 >> fetch ( X , 0   , -100 ) :%s ' % ( inp2 >> fetch ( X , 0   , -100 ) )
 
