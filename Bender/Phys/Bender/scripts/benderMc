@@ -19,12 +19,13 @@
 #  <b>``C++ ToolKit for Smart and Friendly Physics Analysis''</b>
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software''
 #
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
+#                    $Revision:$
 #  Last modification $Date: 2010-09-13 13:30:44 $
 #                 by $Author: ibelyaev $
 # =============================================================================
