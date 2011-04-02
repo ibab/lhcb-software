@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-02 - Sebastian Schleich
+ - Bs2PhiPhi pt cuts
+
 ! 2011-03-31 - Jibo He
  - StrippingCcbar2PpbarNew.py
 	 Update cuts to match Hlt2 DiProton lines
