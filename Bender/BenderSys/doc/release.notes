@@ -18,9 +18,17 @@
 ! LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 !
 ! By usage of this code one clearly states the disagreement 
-! with the campain of Dr.O.Callot et al.: 
+! with the semar campaign of Dr.O.Callot et al.: 
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
+</PRE>
+
+<H1>
+<A NAME=v17r1>2011-04-02 Bender v17r1 based on the DaVinci v28r2</A>
+</H1>	
+
+<PRE>		
+The version is based on 2k+11 production candidate of DaVinci v28r2
 </PRE>
 
 <H1>
