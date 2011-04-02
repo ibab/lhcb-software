@@ -21,23 +21,27 @@ use   pyanalysis     v* LCG_Interfaces -no_auto_imports
 use   ROOT           v* LCG_Interfaces 
 
 
-# ================ constituents ===============================================
-library            AnalysisPythonLib  ../src/*.cpp 
-
 # ================ Produce LCG dictionary =====================================
-apply_pattern      reflex_dictionary                                           \
+apply_pattern      reflex_dictionary_src                                       \
                    dictionary=AnalysisPython                                   \
                    headerfiles=$(ANALYSISPYTHONROOT)/dict/AnalysisPythonDict.h \
                    selectionfile=$(ANALYSISPYTHONROOT)/dict/AnalysisPython.xml \
-                   options=" -U__MINGW32__ "
+                   options=" -U__MINGW32__ --split=classdef "                                        
+                   
+# ================ constituents ===============================================
+library            AnalysisPythonLib  ../src/*.cpp  \
+                   ../$(tag)/dict/AnalysisPython/AnalysisPythonDict_dict_classdef.cpp
 
 macro_append       ROOT_linkopts " -lPyROOT " \
                    target-winxp  " libPyROOT.lib " 
 
+macro_append       AnalysisPythonLib_dependencies     " AnalysisPythonGen "
 macro_append       AnalysisPythonDict_dependencies    " AnalysisPythonLib "
 
 # ================ standard pattern ==========================================
 apply_pattern      linker_library        library=AnalysisPythonLib
+apply_pattern      reflex_dictionary_lib dictionary=AnalysisPython
+
 apply_pattern      install_more_includes more=Analysis
 apply_pattern      install_python_modules
 

@@ -34,7 +34,7 @@ namespace Analysis
    *  Last modification $Date$
    *                 by $Author$
    */
-  class Selector : public  TPySelector
+  class GAUDI_API Selector : public  TPySelector
   {
     // ========================================================================
   public:
@@ -46,12 +46,10 @@ namespace Analysis
     /// constructor 
     Selector
     ( TTree*    tree = 0 , 
-      PyObject* self = 0 ) 
-      : TPySelector ( tree, self )
-    {}
+      PyObject* self = 0 ) ;
     // ========================================================================
     /// destructor
-    virtual ~Selector() {} ;
+    virtual ~Selector() ;
     // ========================================================================
   } ;
   // ==========================================================================
@@ -84,7 +82,8 @@ namespace Analysis
      *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
      *  @date   2011-01-21
      */
-    static long process
+    static
+    long process
     ( TTree*             tree      ,
       TSelector*         selector  ) ;
     // ========================================================================

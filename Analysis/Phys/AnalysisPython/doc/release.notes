@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-04-02 - Vanya Belyaev
+
+ - use split form of generation of reflex dictionry for PySelector
+   (many thanks to Roel for pattern in P2VV)
+
 ! 2011-03-31 - Vanya Belyaev
  - AnalsysisPython/Dir.py
 
