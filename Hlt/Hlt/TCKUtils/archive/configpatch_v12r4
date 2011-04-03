@@ -1,0 +1,79 @@
+
+def calibration_variations() :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+
+	ids = { 0x00441710 : 'fcc6808988cbdf85050d8847003ef819' }   # 0.01
+
+    for tck,p in [ ( 0x00421710, 1 ), ( 0x00431710, 0.1 ), ( 0x00451710, 0.001 ), ( 0x00461710, 0.0001 ) ] :
+        patch = { 'id' : ids[0x00441710]
+             , 'updates' : { 'Hlt1MBMicroBiasVeloPreScaler' : { 'AcceptFraction': '%s' % p } }
+             , 'label' : 'Prescale=%s' % p
+             , 'cas'   : cas
+             }
+	    ids[ tck ] = updateProperties( **patch )
+
+	createTCKEntries( ids, cas =  cas )
+
+
+createTCKEntries({0x80960000,'1f65bc13b3e2a968f51fa2299e66b856'},cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True) )
+
+
+def microbias_variations() :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+	ids = { 0x00470032 : 'd2012cdad6547aa73b232526287d519e' }   # Default
+    patch = { 'id' : ids[0x00470032]
+            , 'updates' : { 'Hlt1MBMicroBiasVeloPreScaler' : { 'AcceptFraction': '0.001' }
+                          , 'Hlt1MBMicroBiasVeloRateLimitedPreScaler': { 'AcceptFraction': '1'  }
+                          , 'Hlt1MBMicroBiasTStationPreScaler' : { 'AcceptFraction': '0.001' }
+                          , 'Hlt1MBMicroBiasTStationRateLimitedPreScaler' : { 'AcceptFraction': '1'  }
+                          }
+            , 'label' : 'Enable 500Hz+500Hz MicroBias'
+            , 'cas'   : cas
+            }
+	ids[ 0x00480032 ] = updateProperties( **patch )
+	createTCKEntries( ids, cas =  cas )
+
+
+def microbias_variations2() :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+	ids = { 0x00490033 : '3338070eaa0b791e43bfd7f43670d45f' }   # Default
+    patch = { 'id' : ids[0x00490033]
+            , 'updates' : { 'Hlt1MBMicroBiasVeloPreScaler' : { 'AcceptFraction': '0.001' }
+                          , 'Hlt1MBMicroBiasVeloRateLimitedPreScaler': { 'AcceptFraction': '1'  }
+                          , 'Hlt1MBMicroBiasTStationPreScaler' : { 'AcceptFraction': '0.001' }
+                          , 'Hlt1MBMicroBiasTStationRateLimitedPreScaler' : { 'AcceptFraction': '1'  }
+                          }
+            , 'label' : 'Enable 500Hz+500Hz MicroBias'
+            , 'cas'   : cas
+            }
+	ids[ 0x004a0033 ] = updateProperties( **patch )
+	createTCKEntries( ids, cas =  cas )
+
+
+
+
+def disableBeamGas(id,label) :
+   cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+   #lines = [ 'Hlt1BeamGasNoBeamBeam1PreScaler', 'Hlt1BeamGasNoBeamBeam2PreScaler'
+   #        , 'Hlt1BeamGasBeam1PreScaler', 'Hlt1BeamGasBeam2PreScaler'
+   #        , 'Hlt1BeamGasCrossingEnhancedBeam1PreScaler', 'Hlt1BeamGasCrossingEnhancedBeam2PreScaler'
+   #        , 'Hlt1BeamGasCrossingForcedRecoPreScaler', 'Hlt1BeamGasCrossingParasiticPreScaler'
+   #        ]
+   lines = ['Hlt1BeamGasCrossingParasiticPreScaler' ]
+   patch = { 'id' : id
+           , 'updates' : dict( [ ( l , {  'AcceptFraction': '0' } ) for l in lines ] )
+           , 'label' : label
+           , 'cas'  : cas
+           }
+   return updateProperties( **patch )
+
+ids = {}
+ids[ 0x00510033 ] = disableBeamGas( '3338070eaa0b791e43bfd7f43670d45f','Default, Disable Hlt1BeamGasCrossingParasitic' )
+ids[ 0x00520033 ] = disableBeamGas( '616a85796764ba7e27bd358a5582214e','Enable 500Hz+500Hz MicroBias, Disable Hlt1BeamGasCrossingParasitic' )
+
+ids[ 0x00530032 ]  = disableBeamGas( 'd2012cdad6547aa73b232526287d519e','Default, Disable Hlt1BeamGasCrossingParasitic' )
+ids[ 0x00540032 ]  = disableBeamGas( '9d3dd560cbf57d49fd401173960f0519','Enable 500Hz+500Hz MicroBias, Disable Hlt1BeamGasCrossingParasitic' )
+
+
+cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+createTCKEntries( ids, cas =  cas )
