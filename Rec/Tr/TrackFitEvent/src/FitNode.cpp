@@ -243,48 +243,47 @@ namespace LHCb {
     if(prevnode) {
       const LHCb::State& previousState = prevnode->filteredState(direction) ;
       if( !hasInfoUpstream(direction) ) {
-	// just _copy_ the covariance matrix from upstream, assuming
-	// that this is the seed matrix. (that saves us from copying
-	// the seed matrix to every state from the start.
-	stateCov = previousState.covariance() ;
-	// new: start the backward filter from the forward filter 
-	if( direction==Backward ) 
-	  stateVec = filteredState(Forward).stateVector();
+        // just _copy_ the covariance matrix from upstream, assuming
+        // that this is the seed matrix. (that saves us from copying
+        // the seed matrix to every state from the start.
+        stateCov = previousState.covariance() ;
+        // new: start the backward filter from the forward filter 
+        if( direction==Backward ) 
+          stateVec = filteredState(Forward).stateVector();
       	//std::cout << "no information upstream. copying seed." << index() << std::endl ;
       } else {
-	if(direction==Forward) {
-	  const TrackMatrix& F = transportMatrix() ;
-	  stateVec = F * previousState.stateVector() + transportVector() ;
-	  //similarityAlmostUpperTriangular( F, previousState.covariance() , stateCov , 3 );
-	  //stateCov = Similarity( F,previousState.covariance() ) ;
-	  similarity(F,previousState.covariance() , stateCov) ;
-	  stateCov += this->noiseMatrix();
-	} else {
-	  const TrackMatrix& invF = prevnode->invertTransportMatrix();
-	  static TrackSymMatrix tempCov ;
-	  tempCov = previousState.covariance() + prevnode->noiseMatrix();
-	  stateVec = invF * ( previousState.stateVector() - prevnode->transportVector()) ;
-	  //stateCov = Similarity( invF, tempCov );
-	  //similarityAlmostUpperTriangular( invF, tempCov , stateCov , 3 );
-	  similarity(invF,tempCov,stateCov) ;
-	}
+        if(direction==Forward) {
+          const TrackMatrix& F = transportMatrix() ;
+          stateVec = F * previousState.stateVector() + transportVector() ;
+          //similarityAlmostUpperTriangular( F, previousState.covariance() , stateCov , 3 );
+          //stateCov = Similarity( F,previousState.covariance() ) ;
+          similarity(F,previousState.covariance() , stateCov) ;
+          stateCov += this->noiseMatrix();
+        } else {
+          const TrackMatrix& invF = prevnode->invertTransportMatrix();
+          static TrackSymMatrix tempCov ;
+          tempCov = previousState.covariance() + prevnode->noiseMatrix();
+          stateVec = invF * ( previousState.stateVector() - prevnode->transportVector()) ;
+          //stateCov = Similarity( invF, tempCov );
+          //similarityAlmostUpperTriangular( invF, tempCov , stateCov , 3 );
+          similarity(invF,tempCov,stateCov) ;
+        }
       }
     } else {
-      if( !( stateCov(0,0)>0 ) ) {
-	KalmanFitResult* kfr = this->getParent();
-	if (!kfr->inError())
-	  kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::Initialization ) ;
+      if( !isPositiveDiagonal( stateCov) ) {
+        KalmanFitResult* kfr = this->getParent();
+        if (!kfr->inError())
+          kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::Initialization ) ;
       }
     }
     // update the status flag
     m_filterStatus[ direction ] = Predicted ;
  
-    if ( !(m_predictedState[direction].covariance()(0,0)>0) ) {
-	KalmanFitResult* kfr = this->getParent();
-	if (!kfr->inError())
-	  kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
+    if ( !isPositiveDiagonal(m_predictedState[direction].covariance()) ) {
+      KalmanFitResult* kfr = this->getParent();
+      if (!kfr->inError())
+        kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
     }
-
   } 
   
 
@@ -314,10 +313,10 @@ namespace LHCb {
       double res        = this->refResidual() + ( H * (this->refVector().parameters() - X) ) (0) ;
       double errorRes2  = errorMeas2 + Similarity(H,C)(0,0) ;  
       if( !( std::abs(H(0,0)) + std::abs(H(0,1))>0) ) {
-	KalmanFitResult* kfr = this->getParent();
-	if (!kfr->inError())
-	  kfr->setErrorFlag(direction,KalmanFitResult::Filter ,KalmanFitResult::Initialization ) ;
-	  //std::cout << "Error: projection is not set! " << index() << " " << H << std::endl ;
+        KalmanFitResult* kfr = this->getParent();
+        if (!kfr->inError())
+          kfr->setErrorFlag(direction,KalmanFitResult::Filter ,KalmanFitResult::Initialization ) ;
+        //std::cout << "Error: projection is not set! " << index() << " " << H << std::endl ;
       }
       // calculate gain matrix K
       static SMatrix<double,5,1> CHT, K ;
@@ -344,24 +343,25 @@ namespace LHCb {
       m_deltaChi2[direction] = res*res / errorRes2 ;
     }
     m_filterStatus[direction] = Filtered ;
-
-    if ( !(m_filteredState[direction].covariance()(0,0)>0) ) {
+    
+    if ( !isPositiveDiagonal(m_filteredState[direction].covariance())  ) {
       KalmanFitResult* kfr = this->getParent();
       if (!kfr->inError())
-	kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
-//       std::cout << "ERRRORRR: something goes wrong in the filter."
-// 		<< m_filteredState[direction].covariance() << std::endl 
-// 		<< predictedState(direction) << std::endl ;
+        kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
+      //       std::cout << "ERRRORRR: something goes wrong in the filter."
+      // 		<< m_filteredState[direction].covariance() << std::endl 
+      // 		<< predictedState(direction) << std::endl ;
     }
   }
   
+
+    
   
   //=========================================================================
   // Bi-directional smoother
   //=========================================================================
   void FitNode::computeBiSmoothedState() 
   {
-    //std::cout << "Smoothing node at z=" << z() << " " << index() << " " << type() << std::endl ;
     LHCb::State& state = m_state ;
     if( ! hasInfoUpstream(Forward) ) {
       // last node in backward direction
@@ -409,10 +409,15 @@ namespace LHCb {
       // the following used to be more stable, but isn't any longer, it seems:
       //ROOT::Math::AssignSym::Evaluate(C, -2 * K * C1) ;
       //C += C1 + ROOT::Math::Similarity(K,R) ;
+      
+      //if(!isPositiveDiagonal(C)){
+      //std::cout<<"There is a negative cov in bismooth "<<state.z()<<std::endl;
+      //}
     }
-    
     updateResidual(state) ;
     m_filterStatus[Backward] = Smoothed ;
+
+    
   }
   
   //=========================================================================
@@ -533,18 +538,18 @@ namespace LHCb {
     if ( this->hasMeasurement() ) {
       res = computeResidual( smoothedState, this->type()==LHCb::Node::HitOnTrack ) ;
       if( !(res.covariance() > 0) && !m_parent->inError())
-	m_parent->setErrorFlag(2,KalmanFitResult::ComputeResidual ,KalmanFitResult::Other ) ;
+        m_parent->setErrorFlag(2,KalmanFitResult::ComputeResidual ,KalmanFitResult::Other ) ;
     }
     setResidual(res.value()) ;
     setErrResidual(res.error()) ;
   }
   
-  // inline bool TrackKalmanFilter::isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
-  // {
-  //   unsigned int i = 0u;
-  //   for ( ; i < Gaudi::TrackSymMatrix::kRows && mat(i,i) > 0.0 ; ++i ) {}
-  //   return i == Gaudi::TrackSymMatrix::kRows ;
-  // }
+  inline bool FitNode::isPositiveDiagonal( const Gaudi::TrackSymMatrix& mat ) const 
+  {
+    unsigned int i = 0u;
+    for ( ; i < Gaudi::TrackSymMatrix::kRows && mat(i,i) > 0.0 ; ++i ) {}
+    return i == Gaudi::TrackSymMatrix::kRows ;
+  }
   
   
   int FitNode::index() const

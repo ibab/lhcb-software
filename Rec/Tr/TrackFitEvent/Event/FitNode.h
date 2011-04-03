@@ -299,10 +299,10 @@ namespace LHCb
     }
 #endif
 
-    // protected:
+    protected:
     
     // ! check that the contents of the cov matrix are fine
-    //bool isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
+    bool isPositiveDiagonal( const Gaudi::TrackSymMatrix& mat ) const;
 
   public:
     const FitNode* prevNode( int direction ) const { return direction==Forward ? m_prevNode : m_nextNode ; }

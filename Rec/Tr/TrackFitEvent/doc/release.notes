@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2011-04-03 - Victor Coco
+ - add a check for negative element in the state covariance matrix diagonal in FitNode
+
 !========================= TrackFitEvent v5r7 2011-02-28 =========================
 ! 2011-02-24 - Wouter Hulsbergen
  - bug fix in FitNode: was always putting fit in error mode for classical smoother
