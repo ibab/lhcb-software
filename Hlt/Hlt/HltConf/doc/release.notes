@@ -4,6 +4,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v9r8   2011-04-03 ===================
 ! 2011-03-31 - Gerhard Raven
  - verify that the Hlt1SelectionID and Hlt2SelectionID do not have overlapping
    values, as in that case the decoding would use the Hlt1SelectionID...
@@ -14,7 +15,6 @@
    this problem hasn't happened yet, but there is no code which enforces this 
    convention)
 
-!========================== HltConf v9r8   2011-03-29 ===================
 ! 2011-Mar-29 - V. Gligorov
  - Added SemilepD02HMuNu lines to Hlt2.py
 
