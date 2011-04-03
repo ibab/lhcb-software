@@ -4,7 +4,10 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
-!========================== HltDisplVertices v3r3p1 2011-03-22 ===================
+!========================== HltDisplVertices v3r3p1 2011-04-03 ===================
+! 2011-04-03 - Gerhard Raven
+ - replace 'and' with '&&' to make windows happy
+
 ! 2011-03-23 - Victor Coco
  - fix potential memory leak due to protoparticle not being deleted if particle is 
    deleted because not passing filter
