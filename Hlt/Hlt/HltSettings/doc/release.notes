@@ -4,12 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-04-03 - Gerhard Raven
+ - Add 100 Hz of VeloMicroBias to VanDerMeer_Feb11
 !========================== HltSettings v5r11 2011-04-03 ===================
 ! 2011-Mar-30 - V. Gligorov
  - Add the Hlt2 DiProton lines to match the Hlt1 DiProton lines.
 
 !========================== HltSettings v5r10 2011-03-29 ===================
-! 2011-Mar-30 - Gerhard Raven
+! 2011-03-30 - Gerhard Raven
  - add Hlt1VeloClosingMicroBias, gated on ODIN::eventType 
 
 ! 2011-Mar-30 - V. Gligorov

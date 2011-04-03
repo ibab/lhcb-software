@@ -37,6 +37,7 @@ class VanDerMeerScan_Mar11 :
         lines = [ 'Hlt1Lumi'
                 , 'Hlt1L0CALO'
                 , 'Hlt1L0PU'
+                , 'Hlt1MBMicroBiasVeloRateLimited' 
                 ]              
 
         ### Add the beam-gas Lines
@@ -65,6 +66,9 @@ class VanDerMeerScan_Mar11 :
                                            , 'Prescale'   : { 'Hlt1Lumi' :  1. }
                                            , 'Postscale'  : { 'Hlt1Lumi' :  1. }
                                            }
+                     , Hlt1MBLinesConf : { 'Postscale'  : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(100)' } 
+                                         , 'MicroBiasOdin': 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger, RATE(2000,LoKi.Scalers.RandomPhasePeriodicLimiter) )' 
+                                         }
                      }
         ### Extend the config dictionary with the beam-gas VDM settings
         from VanDerMeerScan_BeamGasConf_Mar11 import VanDerMeerScan_BeamGasConf_Mar11
