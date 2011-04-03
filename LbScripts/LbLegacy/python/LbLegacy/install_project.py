@@ -4,6 +4,13 @@
   Please have a look at the documentation in the release.notes
 """
 #------------------------------------------------------------------------------
+#============================================================================
+# bootstrapping the location of the file
+try:
+    _this_file = __file__
+except NameError :
+    _this_file = None
+
 import sys, os, getopt, time, shutil
 import atexit
 import stat
@@ -1246,6 +1253,9 @@ def getMySelf():
     os.chdir(mysiteroot)
     the_install = "install_project.py"
     new_install = "latest_%s" % the_install
+    if  not os.path.exists(the_install) and _this_file :
+        shutil.copy(_this_file, the_install)
+        log.debug("Copied %s to %s" % (_this_file, the_install) )
     if os.path.exists(new_install) :
         os.remove(new_install)
     inst_loc = url_dist

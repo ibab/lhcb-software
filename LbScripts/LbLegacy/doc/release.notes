@@ -1,3 +1,8 @@
+2011-04-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: copy itself to the first entry of $MYSITEROOT if it is not
+	already there.
+
 2011-04-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: passed debug flag to generateLogin if debug_flag is
