@@ -5,7 +5,6 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-</PRE><H1><A NAME=v13r4>2011-03-31 HltSys v13r4</A></H1><PRE>
 ! 2011-03-31 - Roel Aaij
  - Add package Hlt/HltMonitor
 
