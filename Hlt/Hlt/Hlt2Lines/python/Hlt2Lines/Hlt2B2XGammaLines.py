@@ -36,7 +36,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'B0DirAngle'   : 0.045  #0.999    # Dimensionless
                   # HLT filter
                    #,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
-                   ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV).*Decision')"
+                   ,'HLT1FILTER'   : ""
                    ,'L0FILTER'     : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ) 
                   # Pre- and postscale
                    ,'Prescale'     : { 'Hlt2Bs2PhiGamma$'   : 1.0
@@ -75,12 +75,10 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         # from Hlt2SharedParticles.Kstar import  Kstar2KPi
       
         hltfilter = self.getProp("HLT1FILTER")
-        if hltfilter == "" :
-          hltfilter = None
+        if hltfilter == "" : hltfilter = None
         
         l0filter = self.getProp("L0FILTER")
-        if l0filter == "" :
-          l0filter = None
+        if l0filter == "" : l0filter = None
         
         ############################################################################
         #    Make Phi and Kstar candidates

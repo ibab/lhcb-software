@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-04-03 - Gerhard Raven
+ - move PV3D to front in lines which use it and where it isn't first
+   yet -- as it typically has been done in Hlt1 already...
+
 !========================== Hlt2Lines v8r4 2011-03-29 ===================
 ! 2011-Mar-29 - V. Gligorov
  - Fix mistaken change to tistostagging in SemilepD02HMuNu lines

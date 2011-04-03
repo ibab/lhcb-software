@@ -227,7 +227,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         Hlt2CharmKillTooManyInTrk = self.__seqGEC()
 
         line = Hlt2Line('CharmSemilep2MuonForD2HMuMu', prescale = self.prescale
-                        , algos = [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHmumu]
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep2MuonForD2HMuMuDecision"
@@ -235,7 +235,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
  
         line = Hlt2Line('CharmSemilepD2HMuMu', prescale = self.prescale
-                        , algos = [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHmumu, pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHmumu]
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHmumu]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilepD2HMuMuDecision"
@@ -243,7 +243,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line('CharmSemilepD2HMuMuWideMass', prescale = self.prescale
-                        , algos =  [ Hlt2CharmKillTooManyInTrk, PV3D(), Hlt2Charm2MuonForHmumu, pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHmumuWideMass]
+                        , algos =  [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, pionsForHmumu, kaonsForHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHmumuWideMass]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilepD2HMuMuWideMassDecision"
