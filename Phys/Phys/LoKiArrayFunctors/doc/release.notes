@@ -5,6 +5,8 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiArrayFunctors v10r0 2010-04-04 ================
+
 ! 2011-03-18 - Vanya Belyaev
 
  - add protection against double lock 
