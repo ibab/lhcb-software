@@ -282,7 +282,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
             {
               if (i->first.find("UpdateAndReset") != std::string::npos)
               {
-                printf("[ERROR] Service %s Counter %s value %lld sum now %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_expected, m_received);
+                printf("[ERROR] Service %s Counter %s value %lld sum now %lld %lld %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_reference,current,m_expected, m_received);
                 fflush(stdout);
               }
             }
@@ -360,7 +360,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         ptr = (DimHistbuff1*)i->second;
         long long *dat;
         dat = (long long *)AddPtr(ptr,ptr->dataoff);
-        printf("[ERROR] Updating counter %s with value %lld\n",i->first.c_str(),*dat);
+        printf("[ERROR] Updating counter %s with value %lld %lld\n",i->first.c_str(),*dat,m_reference);
       }
       m_outservice->Serialize();
       m_outservice->Update();
