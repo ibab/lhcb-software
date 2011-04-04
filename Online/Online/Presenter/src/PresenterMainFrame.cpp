@@ -64,8 +64,6 @@
 #include "DatabasePagePathDialog.h"
 #include "HistoPropDialog.h"
 #include "Archive.h"
-#include "ParallelWait.h"
-#include "ReferencePicker.h"
 #include "IntervalPicker.h"
 #include "../icons/presenter32.xpm"
 #include "icons.h"
@@ -79,11 +77,21 @@
 #include "PageDescriptionTextView.h"
 #include "AlarmDisplay.h"
 #include "CreateTrendingHistogramDialog.h"
-#include "TrendingHistogram.h"
 
 PresenterMainFrame* gPresenter = 0;
 
 ClassImp(PresenterMainFrame);
+
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
+// global variables (mutex)
+namespace PresenterMutex {
+  extern boost::mutex           listMutex;
+  extern boost::mutex           archiveMutex;
+  extern boost::recursive_mutex oraMutex;
+  extern boost::recursive_mutex dimMutex;
+  extern boost::recursive_mutex rootMutex;
+};
 
 //==============================================================================
 // Constructor
@@ -145,8 +153,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_folderItemsIt(NULL),
   m_folderItem(NULL),
   m_runDb( 0 ) ,
-  m_intervalPickerData(NULL) ,
-  m_trendingHisto( 0 ) {
+  m_intervalPickerData(NULL)
+{
 
   // only one presenter session allowed: Save in a global variable the current one.
   if (gPresenter) { return; }
@@ -293,8 +301,6 @@ void PresenterMainFrame::buildGUI() {
     m_editAutoLayoutText          = new TGHotString("Automatic Histogram &Layout");
     m_editHistogramPropertiesText = new TGHotString("&Histogram Properties...");
     m_editRemoveHistoText         = new TGHotString("&Delete Histogram from Page");
-    m_editPickReferenceHistogramText = new TGHotString("Set &Reference Histogram...");
-    m_editSaveSelectedHistogramAsReferenceText = new TGHotString("&Save as Reference Histogram");
     m_editPagePropertiesText      = new TGHotString("&Page Properties...");
     m_editAddTrendingHistoText    = new TGHotString("&Create New Trending Histogram...");
 
@@ -375,18 +381,12 @@ void PresenterMainFrame::buildGUI() {
     m_editMenu->AddEntry( m_editHistogramPropertiesText, EDIT_HISTO_COMMAND);
     m_editMenu->AddEntry( m_editRemoveHistoText,
                           REMOVE_HISTO_FROM_CANVAS_COMMAND);
-    m_editMenu->AddEntry( m_editPickReferenceHistogramText,
-                          PICK_REFERENCE_HISTO_COMMAND);
-    m_editMenu->AddEntry( m_editSaveSelectedHistogramAsReferenceText,
-                          SAVE_AS_REFERENCE_HISTO_COMMAND);
     m_editMenu->AddEntry( m_editPagePropertiesText,
                           EDIT_PAGE_PROPERTIES_COMMAND);
     m_editMenu->AddEntry( m_editAddTrendingHistoText ,
                           EDIT_ADD_TRENDINGHISTO_COMMAND ) ;
     m_editMenu->Connect( "Activated(Int_t)", "PresenterMainFrame",
                          this, "handleCommand(Command)");
-    m_editMenu->DisableEntry( PICK_REFERENCE_HISTO_COMMAND);
-    m_editMenu->DisableEntry( SAVE_AS_REFERENCE_HISTO_COMMAND);
     m_editMenu->DisableEntry( EDIT_PAGE_PROPERTIES_COMMAND);
     m_editMenu->DisableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
 
@@ -716,20 +716,6 @@ void PresenterMainFrame::buildGUI() {
     m_toolBar->AddButton(this, m_overlayReferenceHistoButton, 8);
     m_overlayReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
                                            this, "toggleReferenceOverlay()");
-    m_overlayReferenceHistoButton->SetState(kButtonDisabled);
-
-    // Set reference
-    if ( m_editingAllowed ) {
-      const TGPicture* f1_tpic = picpool->GetPicture("f1_t.xpm");
-      m_pickReferenceHistoButton = new TGPictureButton( m_toolBar , f1_tpic ,
-                                                        PICK_REFERENCE_HISTO_COMMAND ) ;
-      m_pickReferenceHistoButton->SetToolTipText("Pick reference histogram");
-      m_pickReferenceHistoButton->AllowStayDown(false);
-      m_toolBar->AddButton(this, m_pickReferenceHistoButton, 0);
-      m_pickReferenceHistoButton->SetState(kButtonDisabled);
-      m_pickReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
-                                          this, "pickReferenceHistogram()");
-    }
 
     // Clone Histo
     const TGPicture* inspectHistogram16pic =
@@ -1249,7 +1235,7 @@ void PresenterMainFrame::buildGUI() {
     MapWindow();
     m_rightMiscFrame->UnmapWindow();
     m_rightVerticalSplitter->UnmapWindow();
-    this->Resize(m_initWidth, m_initHeight);
+    //this->Resize(m_initWidth, m_initHeight);
     DoRedraw();
   }
 }
@@ -1606,9 +1592,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case HELP_ABOUT_COMMAND:
     about();
     break;
-  case PICK_REFERENCE_HISTO_COMMAND:
-    pickReferenceHistogram();
-    break;
   case HISTORY_PLOTS_COMMAND:
     toggleHistoryPlots();
     break;
@@ -1617,9 +1600,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case FAST_HITMAP_DRAW_COMMAND:
     toggleFastHitMapDraw();
-    break;
-  case SAVE_AS_REFERENCE_HISTO_COMMAND:
-    saveSelectedHistogramAsReference();
     break;
   case SET_REFERENCE_COMMAND:
     setReference();
@@ -1718,6 +1698,7 @@ void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode &
 void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
   switch ( pMode ) {
   case pres::Init:
+    std::cout << "buildGUI, mode = " << presenterMode() << std::endl;
     buildGUI();
     break;
   case pres::Batch:
@@ -3003,14 +2984,6 @@ void PresenterMainFrame::reconfigureGUI() {
       m_historyPlotsButton->SetState(kButtonDisabled);
       m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
 
-      m_overlayReferenceHistoButton->SetState(kButtonEngaged);
-      m_overlayReferenceHistoButton->SetState(kButtonUp);
-      m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-
-      if ( m_editingAllowed ) m_pickReferenceHistoButton->SetState(kButtonDisabled);
-      m_viewMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
-      m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
-
       m_historyIntervalComboBox->SetEnabled(false);
       m_trendDurationComboBox->SetEnabled(true);
 
@@ -3041,13 +3014,6 @@ void PresenterMainFrame::reconfigureGUI() {
       m_historyPlotsButton->SetState(kButtonUp);
       m_viewMenu->EnableEntry(HISTORY_PLOTS_COMMAND);
 
-      m_overlayReferenceHistoButton->SetState(kButtonUp);
-      m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-
-      if ( m_editingAllowed ) m_pickReferenceHistoButton->SetState(kButtonDisabled);
-      m_viewMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
-
-      m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
       m_trendDurationComboBox->SetEnabled(false);
 
       std::cout << "ReconfigureGUI:: After Offline selector" << std::endl;
@@ -3085,9 +3051,6 @@ void PresenterMainFrame::reconfigureGUI() {
       m_historyPlotsButton->SetState(kButtonDisabled);
       m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
 
-      m_overlayReferenceHistoButton->SetState(kButtonUp);
-      m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-
       // show refreshHistoDBListTree
     } else if (pres::EditorOffline == presenterMode()) {
       unclearHistosIfNeeded();
@@ -3116,9 +3079,6 @@ void PresenterMainFrame::reconfigureGUI() {
 
       m_historyPlotsButton->SetState(kButtonDisabled);
       m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
-
-      m_overlayReferenceHistoButton->SetState(kButtonUp);
-      m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
 
       if (( pres::Online == m_prevPresenterMode ||
             pres::History == m_prevPresenterMode) &&
@@ -3156,7 +3116,6 @@ void PresenterMainFrame::hideDBTools() {
     m_loginButton->SetState(kButtonUp);
     m_logoutButton->SetState(kButtonDisabled);
     m_savePageToDatabaseButton->SetState(kButtonDisabled);
-    m_pickReferenceHistoButton->SetState(kButtonDisabled);
   }
 
   m_fileMenu->EnableEntry(LOGIN_COMMAND);
@@ -3185,8 +3144,6 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
     m_histoSvcTreeContextMenu->EnableEntry(M_AddHistoToDB_COMMAND);
     if ( m_editingAllowed ) {
       m_savePageToDatabaseButton->SetState(kButtonUp);
-      m_pickReferenceHistoButton->SetState(kButtonUp);
-      m_pickReferenceHistoButton->SetState(kButtonUp);
     }
     m_fileMenu->EnableEntry(SAVE_PAGE_TO_DB_COMMAND);
     m_pagesContextMenu->EnableEntry(M_Move_COMMAND);
@@ -3195,13 +3152,10 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
     m_histoDBContextMenu->EnableEntry(M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->EnableEntry(M_DeleteDBHisto_COMMAND);
 
-    m_editMenu->EnableEntry(PICK_REFERENCE_HISTO_COMMAND);
-    m_editMenu->EnableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
     m_editMenu->EnableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
   } else if ( pres::ReadOnly == databasePermissions) {
     if ( m_editingAllowed ) {
       m_savePageToDatabaseButton->SetState(kButtonDisabled);
-      m_pickReferenceHistoButton->SetState(kButtonDisabled);
     }
     m_fileMenu->DisableEntry(SAVE_PAGE_TO_DB_COMMAND);
     m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToDB_COMMAND);
@@ -3211,8 +3165,6 @@ void PresenterMainFrame::showDBTools(pres::DatabaseMode databasePermissions) {
     m_histoDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->DisableEntry(M_DeleteDBHisto_COMMAND);
 
-    m_editMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
-    m_editMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
     m_editMenu->DisableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
   }
   m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToPage_COMMAND);
@@ -3756,15 +3708,35 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
     dimBrowser = m_dimBrowser;
     if ( ! isConnectedToHistogramDB() ) theCurrentPartition = histogramUrl;
   }
-  DbRootHist* dbRootHist = Presenter::getPageHistogram( &m_presenterInfo ,
-                                                        histogramUrl,
-                                                        theCurrentPartition,
-                                                        2, newHistoInstance,
-                                                        histogramDB,
-                                                        analysisLib(),
-                                                        onlineHistogram,
-                                                        m_verbosity,
-                                                        dimBrowser);
+  std::vector<std::string*> tasksNotRunning;
+  
+  DbRootHist* dbRootHist = new DbRootHist( histogramUrl,
+                                           theCurrentPartition,
+                                           2, newHistoInstance,
+                                           histogramDB,
+                                           analysisLib(),
+                                           onlineHistogram,
+                                           m_verbosity,
+                                           dimBrowser,
+                                           &PresenterMutex::oraMutex,
+                                           &PresenterMutex::dimMutex,
+                                           tasksNotRunning,
+                                           &PresenterMutex::rootMutex);
+    /*
+      Presenter::getPageHistogram( &m_presenterInfo ,
+      histogramUrl,
+      theCurrentPartition,
+      2, newHistoInstance,
+      histogramDB,
+      analysisLib(),
+      onlineHistogram,
+      m_verbosity,
+      dimBrowser);
+    */
+  dbRootHist->setPresenterInfo( &m_presenterInfo );
+  dbRootHist->initHistogram();
+  if ( histogramDB ) dbRootHist->setTH1FromDB() ;
+
   dbRootHist->setOverlapMode(overlapMode);
   if ( (0 != m_archive ) && ( ! m_savesetFileName.empty() ) &&
        ( ( pres::History == presenterMode()) ||
@@ -3982,11 +3954,13 @@ void PresenterMainFrame::toggleReferenceOverlay() {
     m_referencesOverlayed = false;
     disableReferenceOverlay();
   } else {
+    std::cout << "Set reference overlayed" << std::endl;
     m_overlayReferenceHistoButton->SetState(kButtonDown);
     m_referencesOverlayed = true;
     m_viewMenu->CheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
     enableReferenceOverlay();
   }
+  refreshPage();
 }
 
 //==============================================================================
@@ -4041,40 +4015,6 @@ void PresenterMainFrame::toggleShowKnownProblemList() {
     m_globalKnownProblemList -> retrieveListOfProblems( "" ) ;
   }
 }
-
-//==============================================================================
-// Pick reference histogram
-//==============================================================================
-void PresenterMainFrame::pickReferenceHistogram() {
-  DisplayHistogram* sel = selectedDisplayHistogram();
-  if ( 0 == sel ) return ;
-
-  TVirtualPad * padsav = gPad;
-  //fClient->WaitFor(new ReferencePicker(this, histogram));
-  padsav->cd();
-}
-
-//==============================================================================
-// Save selected histogram as reference
-//==============================================================================
-void PresenterMainFrame::saveSelectedHistogramAsReference() {
-  DisplayHistogram* sel = selectedDisplayHistogram();
-  if ( 0 == sel ) return ;
-
-  if ( ( 0 != m_archive ) && ( ! isBatch() ) ) {
-    new TGMsgBox(fClient->GetRoot(), this, "Save as Reference Histogram",
-                 "Are you sure to save selected histogram as a reference?",
-                 kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
-    switch (m_msgBoxReturnCode) {
-    case kMBYes:
-      //m_archive -> saveAsReferenceHistogram( sel ) ;
-      break;
-    default:
-      break;
-    }
-  }
-}
-
 //==============================================================================
 // set the histogram properties in the database
 //==============================================================================
@@ -4402,6 +4342,11 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
              isBatch() ) {
           m_presenterPage.setDimBrowser( m_dimBrowser );
           m_presenterPage.loadFromDIM( partition, false );
+          if ( m_referencesOverlayed ) { 
+            m_presenterPage.uploadReference( m_analysisLib,
+                                             m_presenterInfo.referenceRun(),
+                                             m_presenterInfo.currentTCK() );
+          }
           m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
         } else if (  pres::History       == m_presenterInfo.presenterMode() ||
                      pres::EditorOffline == m_presenterInfo.presenterMode() ) {
@@ -4413,6 +4358,12 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                            m_presenterInfo.globalTimePoint(),
                                            m_presenterInfo.globalPastDuration() );
 
+          if ( m_referencesOverlayed ) { 
+            m_presenterPage.uploadReference( m_analysisLib,
+                                             m_presenterInfo.referenceRun(),
+                                             m_presenterInfo.currentTCK() );
+          }
+          
           m_presenterPage.fillTrendingPlots( m_presenterInfo.startTimeC(),
                                              m_presenterInfo.endTimeC(), false );
         } else {
@@ -5066,10 +5017,9 @@ void PresenterMainFrame::refreshPage() {
   std::cout << "Build analysis histograms " << std::endl;
   m_presenterPage.buildAnalysisHistos( m_analysisLib, true );  // Only after histos are loaded...
 
-  editorCanvas->Update();
+  //editorCanvas->Update();
   m_presenterPage.updateDrawingOptions();
   editorCanvas->Update();
-
 }
 
 //==============================================================================
@@ -5103,12 +5053,7 @@ void PresenterMainFrame::enableReferenceOverlay() {
     stopPageRefresh();
     stopped = true;
   }
-  std::vector<DbRootHist*>::iterator enableRef_dbHistosOnPageIt;
-  for (enableRef_dbHistosOnPageIt = dbHistosOnPage.begin() ;
-       enableRef_dbHistosOnPageIt != dbHistosOnPage.end() ;
-       ++enableRef_dbHistosOnPageIt )
-    (*enableRef_dbHistosOnPageIt)->referenceHistogram( DbRootHist::Show );
-
+  editorCanvas->cd();
   m_presenterPage.uploadReference( m_analysisLib,
                                    m_presenterInfo.referenceRun(),
                                    m_presenterInfo.currentTCK() );
@@ -5121,11 +5066,6 @@ void PresenterMainFrame::enableReferenceOverlay() {
 // Disable reference overlay
 //==============================================================================
 void PresenterMainFrame::disableReferenceOverlay() {
-  std::vector<DbRootHist*>::iterator disableRef_dbHistosOnPageIt;
-  for ( disableRef_dbHistosOnPageIt = dbHistosOnPage.begin() ;
-        disableRef_dbHistosOnPageIt != dbHistosOnPage.end() ;
-        ++disableRef_dbHistosOnPageIt )
-    (*disableRef_dbHistosOnPageIt)->referenceHistogram( DbRootHist::Hide );
 
   m_presenterPage.clearReference(  );
 
@@ -5136,6 +5076,7 @@ void PresenterMainFrame::disableReferenceOverlay() {
 // Enable the page refresh
 //==============================================================================
 void PresenterMainFrame::enablePageRefresh() {
+  /*
   if (false == m_loadingPage) {
     if ( pres::Batch != m_presenterInfo.presenterMode() ) {
       editorCanvas->SetEditable(false);
@@ -5146,6 +5087,7 @@ void PresenterMainFrame::enablePageRefresh() {
           ++enableRefresh_dbHistosOnPageIt )
       (*enableRefresh_dbHistosOnPageIt)->disableEdit();
   }
+  */
 }
 
 //==============================================================================
@@ -5153,6 +5095,7 @@ void PresenterMainFrame::enablePageRefresh() {
 //==============================================================================
 void PresenterMainFrame::disablePageRefresh() {
   m_refreshingPage = false;
+  /*
   if ( ( ! isBatch() ) && ( 0 != editorCanvas ) )
     editorCanvas->SetEditable(true);
 
@@ -5161,6 +5104,7 @@ void PresenterMainFrame::disablePageRefresh() {
         disableRefresh_dbHistosOnPageIt != dbHistosOnPage.end() ;
         ++disableRefresh_dbHistosOnPageIt )
     (*disableRefresh_dbHistosOnPageIt)->enableEdit();
+  */
 }
 
 //==============================================================================
@@ -5437,8 +5381,6 @@ TGListTreeItem * PresenterMainFrame::openHistogramTreeAt( const std::string &
 // Open a web browser (firefox) at the given link
 //==============================================================================
 void PresenterMainFrame::loadWebPage( Int_t item ) {
-  TrendingHistogram * theHisto = m_trendingHisto ;
-  m_trendingHisto = 0 ;
   if ( 1 == item ) return ;
   if ( 2 == item ) {
     if ( m_weblink.empty() ) return ;
@@ -5447,9 +5389,9 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
     bool running = false ;
     FILE * fp ;
     fp = popen( "pgrep -u `whoami` firefox" , "r" ) ;
-    if ( fp == NULL )
+    if ( fp == NULL ) {
       std::cerr << "Could not launch firefox" << std::endl ;
-    else {
+    } else {
       char line[256] ;
       while ( fgets( line , sizeof(line) , fp ) ) {
         running = true ;
@@ -5461,43 +5403,16 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
       if ( 0 == fork() ) {
         execlp( "firefox" , "firefox" , m_weblink.c_str() , NULL ) ;
       }
-    } else
+    } else {
       if ( 0 == fork() ) {
         std::string foxargs( m_weblink ) ;
         foxargs = "openURL(" + foxargs + ")" ;
         execlp( "firefox" , "firefox" , "-remote" , foxargs.c_str()
                 , NULL ) ;
       }
-  } else {
-    switch ( item ) {
-    case 3:
-      theHisto -> setMode( TrendingHistogram::Last5Minutes ) ;
-      break ;
-    case 4:
-      theHisto -> setMode( TrendingHistogram::Last30Minutes ) ;
-      break ;
-    case 5:
-      theHisto -> setMode( TrendingHistogram::Last2Hours ) ;
-      break ;
-    case 6:
-      theHisto -> setMode( TrendingHistogram::LastDay ) ;
-      break ;
-    case 7:
-      theHisto -> setMode( TrendingHistogram::LastWeek ) ;
-      break ;
-    case 8:
-      theHisto -> setMode( TrendingHistogram::LastYear ) ;
-      break ;
-    case 9:
-      theHisto -> setMode( TrendingHistogram::Last10Years ) ;
-      break ;
-    default:
-      break ;
     }
-    theHisto -> refresh() ;
-    if (! gROOT->IsInterrupted()) editorCanvas->Update();
+  } 
 #endif  // end: not _WIN32
-  }
 }
 
 //==============================================================================

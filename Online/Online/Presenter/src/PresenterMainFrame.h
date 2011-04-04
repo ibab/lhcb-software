@@ -20,7 +20,6 @@
 
 #include "PresenterPage.h"
 
-class ParallelWait;
 class TObject;
 class TGDockableFrame;
 class TString;
@@ -67,7 +66,6 @@ class KnownProblemList ;
 class OnlineHistPage ;
 class RunDB ;
 class IntervalPickerData ;
-class TrendingHistogram ;
 
 class PresenterMainFrame : public TGMainFrame {
 public:
@@ -111,8 +109,6 @@ public:
       FAST_HITMAP_DRAW_COMMAND,
       SHOW_ALARM_LIST_COMMAND,
       SHOW_KNOWNPROBLEM_LIST_COMMAND,
-      PICK_REFERENCE_HISTO_COMMAND,
-      SAVE_AS_REFERENCE_HISTO_COMMAND,
       HELP_CONTENTS_COMMAND,
       HELP_ABOUT_COMMAND,
       UNDOCK_PAGE_COMMAND,
@@ -378,8 +374,6 @@ public:
   void moveSelectedInDB();
   void deleteSelectedPageFromDB();
   void createFolderInDB();
-  void pickReferenceHistogram();
-  void saveSelectedHistogramAsReference();
   void toggleReferenceOverlay();
   void enableAlarmDisplay(bool mode);
   void enableEditing( bool mode ) { m_editingAllowed = mode; }
@@ -520,8 +514,6 @@ public:
   TGPopupMenu*  m_editMenu;
   TGHotString*  m_editText;
   TGHotString*  m_editHistogramPropertiesText;
-  TGHotString*  m_editPickReferenceHistogramText;
-  TGHotString*  m_editSaveSelectedHistogramAsReferenceText;
   TGHotString*  m_editAutoLayoutText;
   TGHotString*  m_editPagePropertiesText;
   TGHotString*  m_editAddTrendingHistoText ;
@@ -581,7 +573,6 @@ public:
   TGPictureButton*  m_deleteHistoFromCanvasButton;
   TGPictureButton*  m_overlayReferenceHistoButton;
   TGPictureButton*  m_historyPlotsButton;
-  TGPictureButton*  m_pickReferenceHistoButton;
   TGComboBox*       m_historyIntervalComboBox;
   TGComboBox*       m_trendDurationComboBox;
   TGComboBox*       m_partitionSelectorComboBox;
@@ -706,9 +697,6 @@ public:
   TGPopupMenu * m_histomenu ;
 
   IntervalPickerData * m_intervalPickerData ;
-
-  /// Internal variable to store trending histo
-  TrendingHistogram * m_trendingHisto ;
 
   /// Presenter Information to transfer to other objects
   PresenterInformation m_presenterInfo ;

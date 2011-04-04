@@ -95,7 +95,7 @@ void CreateTrendingHistogramDialog::ok() {
 
       bool result = m_histdb -> commit() ;
 
-      sprintf( message, "Committed %d tags for trending file %s, status %d.", tags.size(), fileName.c_str(), result );
+      sprintf( message, "Committed %d tags for trending file %s, status %d.", (int)tags.size(), fileName.c_str(), result );
       *m_output = std::string( message );
       std::cout << message << std::endl;
     }

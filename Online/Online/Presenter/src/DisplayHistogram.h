@@ -89,7 +89,10 @@ public:
   bool hasTitle() { return m_hasTitle; }
 
   void loadOptions();
-  
+  void setShowReference( bool show );
+
+  bool isDummy() { return m_isDummy; }
+  void setDummy( bool dum ) { m_isDummy = dum; }
 protected:
 
 private:
@@ -113,6 +116,8 @@ private:
   int     m_nOverlap;
   bool    m_hasTitle;
   bool    m_optionsAreLoaded;
+  bool    m_showReference;
+  bool    m_isDummy;
   std::map<std::string, int>         m_intOptions;
   std::map<std::string, float>       m_floatOptions;
   std::map<std::string, std::string> m_stringOptions;

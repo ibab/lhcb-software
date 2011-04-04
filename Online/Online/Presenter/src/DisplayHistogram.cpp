@@ -62,7 +62,9 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_timeArray( NULL ),
   m_valueArray( NULL ),
   m_nOverlap( 0 ),
-  m_optionsAreLoaded( false )
+  m_optionsAreLoaded( false ),
+  m_showReference( false ),
+  m_isDummy( false )
 {
   if ( hist->type() == OnlineHistDBEnv::TRE ) {
     m_isTrendPlot = true;
@@ -267,6 +269,7 @@ void DisplayHistogram::createDummyHisto( ) {
   m_rootHistogram->SetBit(kNoContextMenu);
   m_rootHistogram->AddDirectory(kFALSE);
   m_rootHistogram->SetStats( false ) ;
+  m_isDummy = true;
 }
 //=========================================================================
 //  Draw the histogram
@@ -346,7 +349,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   if ( !m_isOverlap ) pad->SetName( m_onlineHist->identifier().c_str() );
 
   std::string sopt("");
-  if ( 0 != m_onlineHist ) {
+  if ( 0 != m_onlineHist && ! m_isDummy ) {
     if ( hasOption("DRAWPATTERN", &sopt) && false == m_isOverlap) {
 
       std::string drawPatternFile = analysisLib->refRoot() + "/" + m_onlineHist->task() + "/" + sopt;
@@ -737,13 +740,13 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     m_maxGraph = NULL;
     m_timeGraph = new TGraph( size , m_timeArray , m_valueArray ) ;
     m_timeGraph->SetEditable ( kFALSE );
-    if ( hasOption("YMIN", &fopt) ) {
+    if ( m_showReference && hasOption("YMIN", &fopt) ) {
       m_minGraph = new TGraph( 2, m_timeArray, m_valueArray );
       m_minGraph->SetDrawOption( "SAME" );
       m_minGraph->SetLineStyle( 2 );
       m_minGraph->SetLineColor( lineColor );
     }
-    if ( hasOption("YMAX", &fopt) ) {
+    if ( m_showReference && hasOption("YMAX", &fopt) ) {
       m_maxGraph = new TGraph( 2, m_timeArray, m_valueArray );
       m_maxGraph->SetDrawOption( "SAME" );
       m_maxGraph->SetLineStyle( 2 );
@@ -759,6 +762,33 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     for ( int ll = 0 ; size > ll ; ++ll ) {
       m_timeGraph->SetPoint( ll, m_timeArray[ll], m_valueArray[ll] );
     }
+    if ( m_showReference ) {
+      if ( NULL == m_minGraph && hasOption("YMIN", &fopt) ) {
+        m_minGraph = new TGraph( 2, m_timeArray, m_valueArray );
+        m_minGraph->SetDrawOption( "SAME" );
+        m_minGraph->SetLineStyle( 2 );
+        m_minGraph->SetLineColor( lineColor );
+        m_hostingPad->cd( );
+        m_minGraph->Draw( "SAME" );
+      }
+      if ( NULL == m_maxGraph && hasOption("YMAX", &fopt) ) {
+        m_maxGraph = new TGraph( 2, m_timeArray, m_valueArray );
+        m_maxGraph->SetDrawOption( "SAME" );
+        m_maxGraph->SetLineStyle( 2 );
+        m_maxGraph->SetLineColor( lineColor );
+        m_hostingPad->cd( );
+        m_maxGraph->Draw( "SAME" );
+      }
+    } else {
+      if ( NULL != m_minGraph ) {
+        delete m_minGraph;
+        m_minGraph = NULL;
+      }
+      if ( NULL != m_maxGraph ) {
+        delete m_maxGraph;
+        m_maxGraph = NULL;
+      }
+    } 
   }
 
   if ( 0 < m_nOverlap ) {
@@ -780,8 +810,13 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
   m_rootHistogram->GetXaxis()->SetLabelOffset( 0.03 );
   m_rootHistogram->GetXaxis()->SetLabelSize( 0.03 );
 
-  double yMin = m_timeGraph->GetMinimum();
-  double yMax = m_timeGraph->GetMaximum();
+  double yMin =  1.e30;
+  double yMax = -1.e30;
+  for ( int kk = 0; size > kk; ++kk ) {
+    if ( m_valueArray[kk] < yMin ) yMin = m_valueArray[kk];
+    if ( m_valueArray[kk] > yMax ) yMax = m_valueArray[kk];
+  }
+
   if ( NULL != m_minGraph ) {
     hasOption("YMIN", &fopt);
     double xmin[2], ymin[2];
@@ -793,7 +828,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     m_minGraph->RemovePoint( 1 );
     m_minGraph->SetPoint( 0, xmin[0], ymin[0] );
     m_minGraph->SetPoint( 1, xmin[1], ymin[1] );
-    if ( yMin > fopt ) yMin = .95 * fopt;
+    if ( yMin > fopt ) yMin = fopt;
   }
   if ( NULL != m_maxGraph ) {
     hasOption("YMAX", &fopt);
@@ -806,7 +841,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     m_maxGraph->RemovePoint( 1 );
     m_maxGraph->SetPoint( 0, xmax[0], ymax[0] );
     m_maxGraph->SetPoint( 1, xmax[1], ymax[1] );
-    if ( yMax < fopt ) yMax = 1.05 * fopt;
+    if ( yMax < fopt ) yMax = fopt;
   }
 
   //== Set properties...
@@ -817,6 +852,8 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
 
   (( TNamed ) (*hax)).Copy( *grax ) ;
   (( TAttAxis ) (*hax)).Copy( *grax ) ;
+  yMin = 0.95 * yMin;
+  yMax = 1.05 * yMax;
   grax -> SetRangeUser( yMin, yMax ) ;
 
   grax = m_timeGraph -> GetXaxis() ;
@@ -1102,5 +1139,13 @@ void DisplayHistogram::loadOptions ( ) {
   std::cout << "Retrieved " << m_intOptions.size() << " int, " << m_floatOptions.size() 
             << " float and " << m_stringOptions.size() << " string options." << std::endl;
   m_optionsAreLoaded = true;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void DisplayHistogram::setShowReference ( bool show) {
+  m_showReference = show; 
+  std::cout << "ShowReference = " << show << std::endl; 
 }
 //=============================================================================

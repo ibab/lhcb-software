@@ -4,7 +4,6 @@
 #include "PresenterMainFrame.h"
 #include "IntervalPicker.h"
 #include "LoginDialog.h"
-#include "ReferencePicker.h"
 #include "DatabasePagePathDialog.h"
 #include "ElogDialog.h"
 #include "ReferenceDialog.h"

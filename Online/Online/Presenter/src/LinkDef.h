@@ -6,10 +6,8 @@
 
 #pragma link C++ global gPresenter;
 
-//#pragma link C++ class RegexpFrame;
 #pragma link C++ class LoginDialog;
 #pragma link C++ class IntervalPicker;
-#pragma link C++ class ReferencePicker;
 #pragma link C++ class DatabasePagePathDialog;
 #pragma link C++ class PresenterMainFrame;
 #pragma link C++ class HistoPropDialog;

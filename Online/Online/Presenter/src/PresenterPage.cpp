@@ -238,9 +238,9 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       //== Get the list of services...
       int kk = myHists.Directory( knownNames );
       std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
-      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
-      //  std::cout << "      -" << *itS << "-" << std::endl;
-      //}
+      for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+        std::cout << "      -" << *itS << "-" << std::endl;
+      }
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
@@ -344,6 +344,13 @@ void PresenterPage::clearReference ( ) {
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
           (*itT).histos.end() != itH; ++itH ) {
       (*itH).setReferenceHistogram( NULL );
+      (*itH).setShowReference( false );
+    }
+  }
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+    for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin();
+          (*itF).histos.end() != itH; ++itH ) {
+      (*itH).setShowReference( false );
     }
   }
 }
@@ -397,6 +404,7 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
         TH1* tmp = analysisLib->findRootHistogram( (*itH).histo(), f );
         if ( 0 != tmp ) {
           TH1* out = (TH1*)tmp->Clone();
+          (*itH).setShowReference( true );
           (*itH).setReferenceHistogram( out );
           delete tmp;
         }
@@ -404,6 +412,12 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
       std::cout << "*** References are set ***" << std::endl;
       f->Close();
       delete f;
+    }
+  }
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+    for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin();
+          (*itF).histos.end() != itH; ++itH ) {
+      (*itH).setShowReference( true );
     }
   }
 }
@@ -436,6 +450,7 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
       }
       std::vector<TH1*> rootHists;
       std::vector<TH1*> refHists;
+      bool isDummy = false;
       for ( std::vector<OnlineHistogram*>::iterator itOH = (*itA).onlineHistos.begin();
             (*itA).onlineHistos.end() != itOH; ++itOH ) {
         DisplayHistogram* dispH = displayHisto( (*itOH) );
@@ -448,6 +463,7 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
           if ( NULL != dispH->referenceHist() ) {
             refHists.push_back(  dispH->referenceHist() );
           }
+          isDummy = isDummy || dispH->isDummy();
         }
       }
       TH1* rootH = NULL;
@@ -475,11 +491,13 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
       if ( rootH ) {
         if ( update ) {
           (*itA).displayHisto->copyFrom( rootH );
+          (*itA).displayHisto->setDummy( isDummy );
           delete rootH;
          } else {
           (*itA).displayHisto->setRootHist( rootH );
           (*itA).displayHisto->setDisplayOptions( );
           if ( refH ) (*itA).displayHisto->setReferenceHistogram( refH );
+          (*itA).displayHisto->setDummy( isDummy );
         }
       } else {
         std::cout<< "creator algorithm failed!"<<std::endl;
