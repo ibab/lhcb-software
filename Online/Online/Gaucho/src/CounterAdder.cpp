@@ -278,7 +278,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         case C_INT:
           {
             *(long long *)ps += *(long long*)ph;
-//            printf("Counter %s value %lld sum now %lld\n",i->first.c_str(),*(long long*)ph,*(long long *)ps);
+            printf("Counter %s value %lld sum now %lld\n",i->first.c_str(),*(long long*)ph,*(long long *)ps);
             break;
           }
         case C_LONGLONG:
