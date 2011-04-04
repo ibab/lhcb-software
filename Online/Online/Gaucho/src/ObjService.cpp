@@ -74,50 +74,13 @@ void ObjService::Serialize()
 }
 void ObjService::Update()
 {
-  setData(m_serptr,m_sersiz);
-  updateService();
-//  updateService(m_serptr,m_sersiz);
+  updateService(m_serptr,m_sersiz);
   if (this->m_expandservice)
   {
     m_ser->UpdateExpansions();
   }
 }
-/*
-void ObjService::Updater()
-{
-  void* ptr;
-  int  siz;
-  void *pp;
-//  printf("Service Handler...\n");
-  if (!m_extBuffer)
-  {
-    int bs=sizeof(m_hdr);
-    //CCPCHSys &s=CCPCHSys::m_instance();
-    ptr = m_ser->SerializeObj(pp,bs);
-    m_hdr.m_magic = SERIAL_MAGIC;
-    m_hdr.buffersize = bs-sizeof(m_hdr);
-    memcpy(ptr,&m_hdr,sizeof(m_hdr));
-    siz = bs;
-  }
-  else
-  {
-    ptr = *m_buffer;
-    siz = *m_buffersize;
-  }
-  updateService(ptr,siz);
-//  setData(ptr,siz);
-  if (this->m_expandservice)
-  {
-    m_ser->UpdateExpansions();
-  }
-  return;
-}
-*/
 void ObjService::setEORflag(bool val)
 {
   m_EORservice = val;
 }
-//void ObjService::setRunnr(int runo)
-//{
-//   m_runnr= runo;
-//}

@@ -140,7 +140,7 @@ void HistAdder::Configure()
     m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
   }
 }
-void HistAdder::add(void *buff, int siz, MonInfo *)
+void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
   void *p;
   int n1d,n2d,nprof,nrate;
@@ -150,14 +150,14 @@ void HistAdder::add(void *buff, int siz, MonInfo *)
   nrate=0;
   if (siz == 4)
   {
-//    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
   if (((SerialHeader*)buff)->m_magic != SERIAL_MAGIC)
   {
 //    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
-    m_received++;
+    m_received=1;
     return;
   }
   m_expected = m_inputServicemap.size();
