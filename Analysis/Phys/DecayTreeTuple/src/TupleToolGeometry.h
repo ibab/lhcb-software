@@ -10,6 +10,8 @@
 class IDistanceCalculator;
 class DVAlgorithm;
 
+class IPVReFitter;
+
 namespace LHCb {
   class Particle;
   class VertexBase;
@@ -113,5 +115,6 @@ private:
   
   DVAlgorithm* m_dva;
 
+  IPVReFitter* m_pvReFitter;
 };
 #endif // JBOREL_TUPLETOOLGEOMETRY_H

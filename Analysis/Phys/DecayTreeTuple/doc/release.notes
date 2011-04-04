@@ -4,6 +4,13 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-04-04 - Yuehong Xie
+ - TupleToolGeometry:
+   . explicit call the PV refitter when filling variable "_MINIP, _MINIPCHI2,
+      _MINIPNEXTBEST, _MINIPCHI2NEXTBEST". Lack of this feature caused a problem
+     in the B->JpsiX analysis.   
+
+
 ! 2011-04-01 - Patrick Koppenburg
  - Second part of TupleToolDecayTreeFitter : 
    . Loop over PVs and fill one entry per PV. The best PV always comes first.

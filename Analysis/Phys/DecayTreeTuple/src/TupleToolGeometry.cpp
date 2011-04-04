@@ -10,6 +10,7 @@
 #include <Kernel/DVAlgorithm.h>
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
+#include "Kernel/IPVReFitter.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -62,6 +63,13 @@ StatusCode TupleToolGeometry::initialize() {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
+
+  m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
+  if(! m_pvReFitter) {
+    fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -204,8 +212,14 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   if ( !PV.empty() ){
     if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " << P << " PVs:" << PV.size() << endmsg ;
     for ( RecVertex::Range::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv){
+      RecVertex newPV(**pv);
+      StatusCode scfit = m_pvReFitter->remove(P, &newPV);
+      if(!scfit) { err()<<"ReFitter fails!"<<endreq; continue; }
+
       double ip, chi2;
-      StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
+//      StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
+      LHCb::VertexBase* newPVPtr = (LHCb::VertexBase*)&newPV; 
+      StatusCode test2 = m_dist->distance ( P, newPVPtr, ip, chi2 );
       if( test2 ) {
         if ((ip<ipmin) || (ipmin<0.)) 
         {
