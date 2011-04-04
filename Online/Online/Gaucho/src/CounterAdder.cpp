@@ -278,11 +278,14 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         case C_INT:
           {
             *(long long *)ps += *(long long*)ph;
-//            if (i->first.find("UpdateAndReset") != std::string::npos)
-//            {
-//              printf("[ERROR] Service %s Counter %s value %lld sum now %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_expected, m_received);
-//              fflush(stdout);
-//            }
+            if (RTL::nodeNameShort().find("hlta11") != std::string::npos)
+            {
+              if (i->first.find("UpdateAndReset") != std::string::npos)
+              {
+                printf("[ERROR] Service %s Counter %s value %lld sum now %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_expected, m_received);
+                fflush(stdout);
+              }
+            }
             break;
           }
         case C_LONGLONG:
