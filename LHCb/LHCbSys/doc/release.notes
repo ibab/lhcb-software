@@ -5,6 +5,136 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v32r2>2011-04-05 LHCbSys v32r2</A></H1><PRE>
+This version uses Gaudi v22r1 and LCG_60a
+Production version for 2011 data
+
+- Packages modified: CaloDAQ v4r22, DDDB v1r43, DetCond v12r18, DetDesc v18r24,
+    DetDescSvc v3r1, RichDet v16r2, STDet v4r25, DAQEvent v9r5, TrackEvent v5r12,
+    LHCbKernel v13r0, LHCbMath v3r25, Relations v6r0p1, DaVinciTypes v2r4,
+    LoKiCore v11r0, LoKiGen v10r0, LoKiHlt v3r6, LoKiMC v10r0, LoKiNumbers v10r0,
+    RichKernel v7r43, RichRecBase v4r5, PatKernel v2r4, CondDBUI v3r9
+
+- In CaloDAQ v4r22
+  . Extend protection against multiple entry in KeyedContainer
+  . Fix coverity problen
+  . Monitor 'DuplicateEntry' via RawBankReadoutStatus in all DAQ algs
+
+- In DDDB v1r43
+  . Update database tags for SQLDDDB v6r6:
+    o LHCBCOND, 2011, 2010: head-20110331
+
+- In DetCond v12r18
+  . Modified the interfaces to use the pattern of Gaudi v21.
+  . Fixed a few Eclipse warnings.
+  . Removed CVS keywords.
+  . Added the possibility to fetch condition for a range of times instead of
+    only for the current event time. CondDBAccessSvc property QueryGranularity
+    can be used to define the width of the time range (around the event time) to
+    use.
+  . Added a test to expose bug #80076 (wrong condition used on first event).
+
+- In DetDesc v18r24
+  . Fix problem in 3DTransformationFunctions that is due to a bug in
+    compiler optimization in SLC5.
+
+- In DetDescSvc v3r1
+  . Fixed bug #80076 (wrong condition used on first event): force a check of the
+    validity even for conditions just retrieved from the transient store.
+
+- In RichDet v16r2
+  . Changes in DeRichGasRadiator to allow easy change of gas in RICH1 Gas mixture
+    is supported only if CO2 parameterisation is used for C4F10 as well
+    (currently not the case).
+  . Add missing clear() on L0 to L1 Hardware ID map during 
+    DeRichSystem::buildHPDMappings()
+  . Add new method to DeRichSystem to return the Level1 Hardware ID for a
+    given Level0 ID
+  . Add some checks when filling all the various maps, to first see if an entry
+    already exists. If it does a warning is printed and an error returned.
+  . Add missing !HltMode to use of condition("RadiatorComposition") and some
+    basic protection against null pointer dereferencing
+  . Adapt to changes in RichSmartID class.
+
+- In STDet v4r25
+  . Fix uninitialised variables warnings from Coverity report.
+
+- In DAQEvent v9r5
+  . Add new status in RawBankReadoutStatus ('DuplicateEntry')
+
+- In TrackEvent v5r12
+  . Add PatVeloPix History for track
+
+- In LHCbKernel v13r0
+  . Modified the interface ICondDBInfo to use the pattern of Gaudi v21.
+  . Removed CVS keywords.
+  . Only call dumpBits in RichSmartID::fillStream in RICHDEBUG mode
+  . Add VeloPix ID to LHCbID printout
+  . src/Counters.cpp: fix stupid bug (cut-n-paste) with wrong class ID
+  . dict/LHCbKernelDict.h: Add explicit instantiations for two std::pairs
+  . Rewrite the RichSmartID class to support MaPMTs and HPDs, for Upgrade
+    studies. Change redefines the meaning of some bits of the internal word,
+    but has been done in a backwards compatible way, so any RichSmartIDs
+    that have been made persistent (either in data or the CondDB) will be
+    correctly intrepreted. Class is now written outside the G.O.D. framework
+    since it was too complex to write it using it.
+  . Add a small test application to test RichSmartIDs packing and unpacking
+
+- In LHCbMath v3r25
+  . Fix a bug in Gaudi::Math::sigma2pt calculation
+
+- In Relations v6r0p1
+  . Remove extraneous ; to please icc11
+
+- In DaVinciTypes v2r4
+  . TreeCloners.cpp: fix a bug that under certain conditions could result in
+    incorrect cloning
+
+- In LoKiCore v11r0
+  . add few functors (& corresponding decorators) for round, jbit, jbits
+  . add "modulo" -operator for functors. It acts according to the rule:
+     ( f % n )  ( x )  =def=  " LHCb::Math::round ( f ( x ) ) % n "
+  . Kinematics.h: fix LaTeX typos in doxygen comments
+  . Add "fetch" decorator
+  . Add "Fetch" vector-function
+  . Fix the names for FUnOps: 
+    Reflex now ignores names prepended by single underscore... :-(
+  . Optimize the "set-difference" and "set-intersection"
+  . Add more "streamer" functions
+  . Add IUpdateManagerSvc
+  . Fix non proper decorators for streamer functors
+
+- In LoKiCore v11r0, LoKiGen v10r0, LoKiMC v10r0, LoKiNumbers v10r0
+  . Kill the concept of "Element"
+
+- In LoKiCore v11r0, LoKiGen v10r0, LoKiHlt v3r6, LoKiMC v10r0
+  . Add protection against double locking
+
+- In LoKiCore v11r0, LoKiNumbers v10r0
+  . Add HASRECSUMMARY & RECSUMMARY symbols
+
+- In LoKiNumbers v10r0
+  . Add tests for round/jbit/jbits functions
+  . Add test for 'modulo' operator
+  . Add test for 'fetch' decorator
+  . Update for new method names
+
+- In RichKernel v7r43
+  . Add Rich::DAQ::PixelSize and Rich::DAQ::NumPixelRows variables
+    to RichDAQDefinitions.h
+  . Add Rich::DAQ:: variables to python dictionary
+  . More minor fixes to remove icc11 remarks
+
+- In RichRecBase v4r5
+  . Remove a few CVS comments and extend ostream printout
+
+- In PatKernel v2r4
+  . Add IPatTTCounter.h (needed for upgrade)
+  . Remove obsolete file PatKernel_dll.cpp
+
+- In CondDBUI v3r9
+  . CondDB.getTagList method is parallelized (using Python multiprocessing)
+
 </PRE><H1><A NAME=v32r1p1>2011-03-10 LHCbSys v32r1p1</A></H1><PRE>
 This version uses Gaudi v22r1 and LCG_60a
 Production version for 2011 startup
