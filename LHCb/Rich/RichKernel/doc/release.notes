@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r43 2011-04-04 =========================
 ! 2011-03-18 - Chris Jones
  - Add Rich::DAQ::PixelSize and Rich::DAQ::NumPixelRows variables
    to RichDAQDefinitions.h
