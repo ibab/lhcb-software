@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r9 2011-04-04 =========================
 ! 2011-03-03 - Illya Shapoval
  - CondDB.getTagList method is parallelized (using Python multiprocessing).
    That was needed since sequential tags extraction for almost all nodes
