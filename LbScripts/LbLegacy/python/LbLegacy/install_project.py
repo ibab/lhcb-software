@@ -1169,20 +1169,34 @@ def getProjectTar(tar_list, already_present_list=None):
                         tg_dir = exdir
                     if os.path.isdir(tg_dir) :
                         tdir = os.path.dirname(tg_dir)
+                        ltg_list = []
                         if extradir == "TOOLS" :
                             ltg = os.path.join(tdir, "pro")
+                            ltg_list.append(ltg)
                         else :
                             ltg = os.path.join(tdir, "v999r0")
-                        if os.path.islink(ltg) or os.path.isfile(ltg):
-                            os.remove(ltg)
-                        elif os.path.isdir(ltg) :
-                            shutil.rmtree(ltg, ignore_errors=True)
-                        if sys.platform == "win32" :
-                            log.debug("copying %s to %s" % (pack_ver[1], ltg))
-                            shutil.copytree(tg_dir, ltg)
-                        else :
-                            log.debug("linking %s -> %s" % (ltg, pack_ver[1]))
-                            os.symlink(pack_ver[1], ltg)
+                            ltg_list.append(ltg)
+                            try:
+                                import re
+                                vs = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
+                                m = vs.match(pack_ver[1])
+                                if m :
+                                    majv = m.group(1)
+                                    ltg = os.path.join(tdir, "v%sr99" % majv)
+                                    ltg_list.append(ltg)
+                            except :
+                                pass
+                        for lg in ltg_list :
+                            if os.path.islink(lg) or os.path.isfile(lg):
+                                os.remove(lg)
+                            elif os.path.isdir(lg) :
+                                shutil.rmtree(lg, ignore_errors=True)
+                            if sys.platform == "win32" :
+                                log.debug("copying %s to %s" % (pack_ver[1], lg))
+                                shutil.copytree(tg_dir, lg)
+                            else :
+                                log.debug("linking %s -> %s" % (lg, pack_ver[1]))
+                                os.symlink(pack_ver[1], lg)
 
 
                 try :
