@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r5 2011-04-04 =========================
+! 2011-03-15 - Chris Jones
+ - Remove a few CVS comments and extend ostream printout
+
 !========================= RichRecBase v4r4 2011-02-22 =========================
 ! 2011-02-18 - Chris Jones
  - Change some static_cast to C style castes, to avoid ICC remarks
