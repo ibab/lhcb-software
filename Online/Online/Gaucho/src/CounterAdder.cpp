@@ -214,7 +214,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   {
     current = cltime;
   }
-  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
 //  m_RateBuff = 0;
   if (m_reference < current)
   {
@@ -278,11 +278,11 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         case C_INT:
           {
             *(long long *)ps += *(long long*)ph;
-            if (i->first.find("UpdateAndReset") != std::string::npos)
-            {
-              printf("[ERROR] Service %s Counter %s value %lld sum now %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_expected, m_received);
-              fflush(stdout);
-            }
+//            if (i->first.find("UpdateAndReset") != std::string::npos)
+//            {
+//              printf("[ERROR] Service %s Counter %s value %lld sum now %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_expected, m_received);
+//              fflush(stdout);
+//            }
             break;
           }
         case C_LONGLONG:
@@ -362,6 +362,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
       m_outservice->Serialize();
       m_outservice->Update();
     }
+    fflush(stdout);
 //    if (m_expandRate)
 //    {
 //#define MAX_SERVICE_SIZE 128
