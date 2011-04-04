@@ -5,13 +5,13 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v3r1 2011-04-04 =========================
 ! 2010-10-26 - Marco Clemencic
  - Fixed bug #80076 (wrong condition used on first event).
    Force a check of the validity even for conditions just retrieved from the
    transient store.
 
 !========================= DetDescSvc v3r0 2010-10-26 =========================
-
 ! 2010-10-26 - Marco Clemencic
  - Improved fix to bug #74255 (it was exposing again bug #66497).
 
