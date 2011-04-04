@@ -5,6 +5,10 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+!========================= Relations v6r0p1 2011-04-04 =========================
+! 2011-02-22 - Marco Cattaneo
+ - Remove extraneous ; to please icc11
+
 !========================= Relations v6r0 2011-02-01 =========================
 ! 2011-02-01 - Juan Palacios
  - Relations/RelationWeighted.h
