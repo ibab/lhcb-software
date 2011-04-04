@@ -270,7 +270,7 @@ namespace LHCb {
         }
       }
     } else {
-      if( !isPositiveDiagonal( stateCov) ) {
+      if( !( stateCov(0,0)>0 ) ) {
         KalmanFitResult* kfr = this->getParent();
         if (!kfr->inError())
           kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::Initialization ) ;
@@ -279,7 +279,7 @@ namespace LHCb {
     // update the status flag
     m_filterStatus[ direction ] = Predicted ;
  
-    if ( !isPositiveDiagonal(m_predictedState[direction].covariance()) ) {
+    if ( !(m_predictedState[direction].covariance()(0,0)>0) ) {
       KalmanFitResult* kfr = this->getParent();
       if (!kfr->inError())
         kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
@@ -344,7 +344,7 @@ namespace LHCb {
     }
     m_filterStatus[direction] = Filtered ;
     
-    if ( !isPositiveDiagonal(m_filteredState[direction].covariance())  ) {
+    if ( !(m_filteredState[direction].covariance()(0,0)>0)   ) {
       KalmanFitResult* kfr = this->getParent();
       if (!kfr->inError())
         kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
@@ -400,7 +400,7 @@ namespace LHCb {
       invR = C1 + C2 ;
       bool success = invR.InvertChol() ;
       if (!success && !m_parent->inError())
-	m_parent->setErrorFlag(2,KalmanFitResult::Smooth ,KalmanFitResult::MatrixInversion ) ;
+        m_parent->setErrorFlag(2,KalmanFitResult::Smooth ,KalmanFitResult::MatrixInversion ) ;
       // compute the gain matrix:
       static ROOT::Math::SMatrix<double,5,5> K ;
       K = C1 * invR ;
@@ -410,9 +410,9 @@ namespace LHCb {
       //ROOT::Math::AssignSym::Evaluate(C, -2 * K * C1) ;
       //C += C1 + ROOT::Math::Similarity(K,R) ;
       
-      //if(!isPositiveDiagonal(C)){
-      //std::cout<<"There is a negative cov in bismooth "<<state.z()<<std::endl;
-      //}
+    }
+    if(!isPositiveDiagonal(state.covariance())&& !m_parent->inError()){
+      m_parent->setErrorFlag(2,KalmanFitResult::Smooth ,KalmanFitResult::AlgError ) ;
     }
     updateResidual(state) ;
     m_filterStatus[Backward] = Smoothed ;
@@ -435,11 +435,10 @@ namespace LHCb {
       // Get the predicted state from the next node
       const FitNode* nextnode = nextNode(Forward) ;
       if(nextnode == NULL){
-	KalmanFitResult* kfr = this->getParent();
-	if (!kfr->inError())
-	  kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::Other ) ;
+        KalmanFitResult* kfr = this->getParent();
+        if (!kfr->inError())
+          kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::Other ) ;
       }
-
       
       const LHCb::State& nextPredictedState = nextnode->predictedState(Forward) ;
       const TrackVector& nextNodeX    = nextPredictedState.stateVector() ;
@@ -509,6 +508,12 @@ namespace LHCb {
     }
     // now we fill the residual
     updateResidual(state) ;
+
+    if( !isPositiveDiagonal(state.covariance())&& !m_parent->inError() ) {
+      KalmanFitResult* kfr = this->getParent();
+      if (!kfr->inError())
+        kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::AlgError ) ;
+    }
 
     // finally update the _Forward_ state
     m_filterStatus[Forward] = Smoothed ;

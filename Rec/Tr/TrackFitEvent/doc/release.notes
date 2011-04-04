@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2011-04-04 - Victor Coco
+ - put the check for negative element in the state covariance matrix diagonal only
+   in the smoothing step. 
+	 Update the error types of KalmanFitResult accordingly
+
 ! 2011-04-03 - Victor Coco
  - add a check for negative element in the state covariance matrix diagonal in FitNode
 

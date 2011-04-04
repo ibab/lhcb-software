@@ -76,7 +76,8 @@ namespace LHCb
     case Smooth:
       errMsg<<"Error in smooth function: ";
       if( errnum == MatrixInversion )errMsg<<"error in matrix inversion";
-      if( errnum == Other )errMsg<<"problem with HCH.";
+      else if( errnum == AlgError ) errMsg<<"non positive diagonal element in coveriance matrix";
+      else if( errnum == Other    )errMsg<<"problem with HCH.";
       else errMsg<<"unknown error";
       break;
     case ComputeResidual:
