@@ -15,8 +15,7 @@
 ! 2011-03-17 - Wenbin Qian
  - add VeloPix ID cout
 
-! 2011-03-03 - Vanya Belyaev!========================= LHCbKernel v13r0 2011-04-04 =========================
-
+! 2011-03-03 - Vanya Belyaev
  - src/Counters.cpp
     fix stupid bug (cut-n-paste) with wrong class ID
 
