@@ -1,3 +1,9 @@
+2011-04-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: implemented function to fix the $CMTROOT/mgr/setup.{sh,csh}.
+	In these files the CMTROOT is always reset. Now they doesn't try to set it if it is already present
+	in the environment.
+
 2011-04-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: copy itself to the first entry of $MYSITEROOT if it is not

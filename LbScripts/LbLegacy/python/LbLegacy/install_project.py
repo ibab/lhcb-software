@@ -464,6 +464,43 @@ def createDir(here , logname):
 #
 #  install CMT if not there ===============================================
 #
+def fixCMTSetup(cmt_mgr_dir):
+    """ fix the location of CMTROOT to make it re-locatable """
+    log = logging.getLogger()
+    shellext = [ "sh", "csh" ]
+    gard_line = "# FIXED by install_project.py"
+    for s in shellext :
+        sfile = os.path.join(cmt_mgr_dir, "setup.%s" % s)
+        if os.path.isfile(sfile) :
+            sfile_lines = open(sfile).readlines()
+            if gard_line in sfile_lines[0] :
+                log.debug("%s already fixed" % sfile)
+                continue
+            else :
+                log.info("Fixing %s" % sfile)
+                sfile_lines.insert(0, "%s\n" % gard_line)
+                if s == "sh" :
+                    for i,l in zip(range(len(sfile_lines)),sfile_lines) :
+                        if l.startswith("CMTROOT=") :
+                            new_l = 'if [[ ! -n "$CMTROOT" ]]; then\n  %sfi\n' % l
+                            sfile_lines[i] = new_l
+                            break
+                elif s == "csh" :
+                    for i,l in zip(range(len(sfile_lines)),sfile_lines) :
+                        if l.startswith("setenv CMTROOT ") :
+                            new_l = "if ( ! $?CMTROOT ) then\n  %sendif\n" % l
+                            sfile_lines[i] = new_l
+                            break
+                sfile_bak = os.path.join(cmt_mgr_dir, "setup.%s.sav" % s)
+                if os.path.exists(sfile_bak) :
+                    log.debug("Removing %s" % sfile_bak)
+                    os.remove(sfile_bak)
+                shutil.move(sfile, sfile_bak)
+                log.debug("Writing %s" % sfile)
+                nsf = open(sfile, "w")
+                nsf.write("".join(sfile_lines))
+                nsf.close()
+
 def getCMT(version=0):
     log = logging.getLogger()
     log.debug('install CMT if not there')
@@ -537,6 +574,8 @@ def getCMT(version=0):
                 that_contrib_dir = cd
                 break
         os.environ['CMTROOT'] = os.path.join(that_contrib_dir, 'CMT', cmtvers)
+
+    fixCMTSetup(os.path.join(this_contrib_dir, 'CMT', cmtvers, 'mgr'))
 
     newpath = os.path.join(os.getenv('CMTROOT'), cmtbin) + os.pathsep + os.getenv('PATH')
     os.environ['PATH'] = newpath
