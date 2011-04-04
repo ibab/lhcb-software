@@ -278,7 +278,10 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         case C_INT:
           {
             *(long long *)ps += *(long long*)ph;
-            printf("Service %s Counter %s value %lld sum now %lld\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps);
+            if (i->first.find("UpdateAndReset") != std::string::npos)
+            {
+              printf("Service %s Counter %s value %lld sum now %lld %d %d\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps, m_expected, m_received);
+            }
             break;
           }
         case C_LONGLONG:
