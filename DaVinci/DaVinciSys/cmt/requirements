@@ -1,5 +1,5 @@
 package DaVinciSys
-version v28r2
+version v28r3
 
 branches doc cmt
 
@@ -8,10 +8,6 @@ use  DaVinci                 	v28r2   Phys
 use  DaVinciTests               v2r5
 
 # Patches
-
-use  SelPy                      v4r2    Phys
-use PhysSelPython               v9r2    PhysSel
-use MuonID                      v8r0p2  Muon
 
 # Declare this as a container package
 apply_pattern container_package
