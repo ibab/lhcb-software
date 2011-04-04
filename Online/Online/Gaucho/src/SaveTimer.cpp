@@ -52,7 +52,7 @@ void SaveTimer::timerHandler ( void )
   }
   else
   {
-    printf("ERORO !!!!!!!!!!!!!!!!!!!! Bad Logic... running a SaveTimer without an adder lock...\n");
+    printf("ERROR !!!!!!!!!!!!!!!!!!!! Bad Logic... running a SaveTimer without an adder lock...\n");
     return;
   }
   SavetoFile(m_buffadd);

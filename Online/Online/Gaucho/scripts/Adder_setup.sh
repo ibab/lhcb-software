@@ -8,10 +8,10 @@
 #get online version
 
 export CMTCONFIG=$CMTDEB
-SetupOnline v4r49
+SetupOnline v4r53
 
 export UTGID=Adder
 export DIM_DNS_NODE=localhost
 export OPTS=/home/beat/cmtuser/myOnline/Online/Gaucho
 export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/Online/Gaucho/$CMTCONFIG:$LD_LIBRARY_PATH
-#$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline -options=$OPTS/options/Adder.opts -auto
+#$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -options=../options/nodeAdder.opts -main=/sw/lib/lhcb/ONLINE/ONLINE_v4r53/Online/GaudiOnline/options/Main.opts 

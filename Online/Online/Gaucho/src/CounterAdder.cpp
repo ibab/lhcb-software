@@ -48,6 +48,8 @@ CounterAdder::CounterAdder(char * taskname, char *myName, char *serviceName)
 //  m_oldProf = 0;
   m_added = 0;
   m_noRPC = false;
+  m_ser = 0;
+  m_RPCser = 0;
   AdderSys::Instance().gg_AdderList.push_back(this);
   m_type = ADD_COUNTER;
 }
@@ -73,6 +75,10 @@ CounterAdder::~CounterAdder()
   if (m_ser !=0 )
   {
     delete m_ser;
+  }
+  if (m_RPCser !=0 )
+  {
+    delete m_RPCser;
   }
   if (m_rpc !=0 )
   {
@@ -132,7 +138,8 @@ void CounterAdder::Configure()
   m_rpc = 0;
   if (!m_noRPC)
   {
-    m_rpc = new ObjRPC(m_ser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
+    m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
+    m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
   }
 }
 /*

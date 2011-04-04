@@ -47,12 +47,14 @@ class INServiceDescr
 public:
   std::string m_serviceName;
   MonInfo *m_Info;
+  std::string task;
   long long last_update;
-  INServiceDescr(char *name, MonInfo* info)
+  INServiceDescr(char *name, MonInfo* info, std::string tsk)
   {
     m_serviceName = name;
     m_Info = info;
     last_update = -1;
+    task = tsk;
   }
 };
 class OUTServiceDescr
@@ -99,11 +101,12 @@ public:
 typedef std::map<std::string, TaskDescr*> TskMap;
 typedef std::pair<std::string, INServiceDescr*> TskPair;
 typedef TskMap::iterator TskIter;
+typedef std::map<std::string,std::string> TskServiceMap;
 
 class MonAdder
 {
 public:
-  MonMap m_TaskMap;
+  TskServiceMap m_TaskMap;
   int m_type;
   void *CycleCBarg;
   void (*CycleFn)(void*,void*,int, MonMap *, MonAdder *);
@@ -133,6 +136,7 @@ public:
   ObjService *m_outservice;
   ObjRPC *m_rpc;
   ObjSerializer *m_ser;
+  ObjSerializer *m_RPCser;
   std::string m_serviceName;
   bool m_expandRate;
   std::string hist_prefix;
