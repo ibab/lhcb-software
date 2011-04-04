@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= PatKernel v2r4 2011-04-04 =========================
+! 2011-04-04 - Marco Cattaneo
+ - Remove obsolete file PatKernel_dll.cpp
+
 ! 2011-03-11 - Wenbin Qian
  - Add IPatTTCounter.h (needed for upgrade)
 
