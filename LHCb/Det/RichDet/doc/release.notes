@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r2 2011-04-04 =========================
 ! 2011-03-31 - Antonis Papanestis
  - Chages in DeRichGasRadiator to allow easy change of gas in RICH1
    Gas mixture is supported only if CO2 parameterisation is used for
