@@ -3,9 +3,10 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v12r2>2011-03-28 Phys v12r2 </A></H1><PRE>
+</PRE><H1><A NAME=v12r2>2011-04-04 Phys v12r2 </A></H1><PRE>
 
 - Based on LHCb v32r1p1. For 2011 stripping13.
+- Remove "Element" functors from LoKi
 - Extra safety constrains for Selections.
 - SelPy.graph module for making graphs of Selection trees.
 
