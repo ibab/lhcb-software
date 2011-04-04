@@ -4,8 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= PatKernel v2r3p2 2010-10-25 =========================
+!========================= PatKernel v2r4 2011-04-04 =========================
+! 2011-03-11 - Wenbin Qian
+ - Add IPatTTCounter.h (needed for upgrade)
 
+!========================= PatKernel v2r3p2 2010-10-25 =========================
 ! 2010-10-06 - Olivier Callot
  - Change IPatDebugTool interface, add new methods to access the position of 
    a MCParticle specified by key at a specified z position.
