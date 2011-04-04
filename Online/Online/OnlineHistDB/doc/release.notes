@@ -6,10 +6,13 @@
 ! or using makedoc script in this folder
 !
 
+! 20110404 
+ - small bug fix in web interface
+
 ! 2011-04-02 - Olivier Callot
  - Add new methods in OnlineHistogram to retrieve a std::map of teh set option, per type.
 
-! 20101022 
+! 20101022 v7r4
 - OnlineHistPage.cpp: set to 0 integer arrays to avoid unitialized memory problems
 
 ! 20101021

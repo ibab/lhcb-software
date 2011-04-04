@@ -30,7 +30,7 @@ $histo["INSTANCE"]=$instance;
 histo_display($hid,"SHID","display");
 
 ocilogoff($conn);
-echo "<p><a href='Viewpage.php?page=${page}> Back to Page Record $page </a><br>";
+echo "<p><a href='Viewpage.php?page=${page}'> Back to Page Record $page </a><br>";
 ?>
 
 </body>

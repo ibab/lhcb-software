@@ -129,7 +129,7 @@ echo "<p><a href='../Histogram.php?".hidtype($_POST["htype"])."=${id}'> Back to 
 
 if ($page) {
   $getp=toGet($page);
-  echo "<br> <a href='../Viewpage.php?page=${getp}> Back to Page Record $page </a>";
+  echo "<br> <a href='../Viewpage.php?page=${getp}'> Back to Page Record $page </a>";
 }
 
 ?>

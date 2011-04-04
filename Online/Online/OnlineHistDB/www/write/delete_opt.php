@@ -40,6 +40,6 @@ else {
  }
 
 ocilogoff($conn);
-echo "<br> <a href='../Viewpage.php?page=${page}> Back to Page Record $page </a>";
+echo "<br> <a href='../Viewpage.php?page=${page}'> Back to Page Record $page </a>";
 
 ?>

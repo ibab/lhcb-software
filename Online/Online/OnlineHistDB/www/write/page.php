@@ -93,7 +93,7 @@ if ($r) {
 
 ocilogoff($conn);
 $gpage=toGet($fullpage);
-echo "<br> <a href='../Viewpage.php?page=${gpage}> Back to Page Record ${fullpage} </a><br>";
+echo "<br> <a href='../Viewpage.php?page=${gpage}'> Back to Page Record ${fullpage} </a><br>";
 ?>
 
 </body>
