@@ -31,7 +31,7 @@ void HAdderServInfoHandler::infoHandler(void)
   dyn_string *service_list = Strsplit(sinput, (char*) "\n");
   std::string taskname = std::string(itsService->getName());
   taskname = taskname.substr(0, taskname.find("/SERVICE_LIST"));
-  printf("infoHANDLER: TaskName %s input: %s\n",taskname.c_str(),input);
+//  printf("infoHANDLER: TaskName %s input: %s\n",taskname.c_str(),input);
   for (unsigned int j = 0; j < service_list->size(); j++)
   {
     std::string service_line(service_list->at(j));
@@ -51,7 +51,7 @@ void HAdderServInfoHandler::infoHandler(void)
     else
     {
       Adderlist_t::iterator i;
-      printf("Removed Service %s\n",service->at(0).c_str());
+//      printf("Removed Service %s\n",service->at(0).c_str());
       for (i = AdderSys::Instance().gg_AdderList.begin(); i
           != AdderSys::Instance().gg_AdderList.end(); i++)
       {
@@ -83,7 +83,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
     Newe = (input[0] == '+');
     sinput = &input[1];
   }
-  printf("HAdderTaskInfoHandler input %s\n", input);
+//  printf("HAdderTaskInfoHandler input %s\n", input);
   dyn_string *server_list = Strsplit(sinput, (char*) "|");
   dyn_string::iterator i;
   for (i = server_list->begin(); i != server_list->end(); i++)
@@ -119,7 +119,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
               (DimInfoHandler*)shand);
           //            TaskSvcDescr *ts = new TaskSvcDescr(tskname,slist);
           m_TaskMap.insert(TaskPair(tname, slist));
-          printf("Listening to Task %s\n",server.c_str());
+//          printf("Listening to Task %s\n",server.c_str());
         }
         else
         {
