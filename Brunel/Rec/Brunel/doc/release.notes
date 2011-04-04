@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Changes to configuration:
+   . Change ParamFiles dependency to v8r* (was v8r4)
+
 - Add example options for 2011 data and update brunel.brunel2011magdown test
   to use them.
 
