@@ -14,15 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r0 2011-04-04 =========================
 ! 2011-03-18 - Vanya Belyaev
-
  - add protection against double lock
 
 ! 2011-03-10 - Vanya Belyaev
-
  - update for removal of 'Element'-concept
- - cmt/requirements
-     version incrment to v10r0
 
 !========================= LoKiGen v9r6 2011-02-22 =========================
 ! 2011-02-21 - Marco Cattaneo
