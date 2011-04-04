@@ -221,3 +221,13 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
     m_outservice = 0;
   }
 }
+void MonAdder::dumpServices()
+{
+  INServiceMap::iterator i;
+  int k;
+  k=1;
+  for (i=m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
+  {
+    printf("Service %d Name:%s\n",k,i->first.c_str());
+  }
+}
