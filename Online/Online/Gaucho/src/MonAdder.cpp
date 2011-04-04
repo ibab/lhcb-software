@@ -18,6 +18,13 @@ extern "C"
     adder->add(buff, siz,h);
   }
 }
+MonAdder::MonAdder()
+{
+  m_received = 0;
+  m_added = 0;
+  CycleFn = 0;
+  m_IsEOR = false;
+}
 void *MonAdder::Allocate(int siz)
 {
   if (m_buffersize<siz)

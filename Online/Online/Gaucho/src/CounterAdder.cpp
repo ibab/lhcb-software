@@ -214,7 +214,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   {
     current = cltime;
   }
-//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
 //  m_RateBuff = 0;
   if (m_reference < current)
   {
@@ -278,7 +278,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         case C_INT:
           {
             *(long long *)ps += *(long long*)ph;
-            printf("Counter %s value %lld sum now %lld\n",i->first.c_str(),*(long long*)ph,*(long long *)ps);
+            printf("Service %s Counter %s value %lld sum now %lld\n",h->getName(),i->first.c_str(),*(long long*)ph,*(long long *)ps);
             break;
           }
         case C_LONGLONG:
@@ -336,7 +336,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   }
   if (m_received >= m_expected)
   {
-//    printf("Finished one cycle. Updating our service... %d %d\n", m_received,m_expected);
+    printf("Finished one cycle. Updating our service... %d %d\n", m_received,m_expected);
     if (m_isSaver)
     {
       UnLock();

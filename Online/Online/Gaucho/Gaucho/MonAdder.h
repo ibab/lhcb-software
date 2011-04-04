@@ -149,7 +149,7 @@ public:
   lib_rtl_lock_t m_maplock;
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
   bool m_isSaver;
-  MonAdder(){CycleFn = 0;m_IsEOR = false;};
+  MonAdder();
   virtual ~MonAdder(){}
   void *Allocate(int siz);
   void *ReAllocate(int);
