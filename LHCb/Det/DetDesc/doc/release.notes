@@ -5,7 +5,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-
+!========================= DetDesc v18r24 2011-04-04 =========================
 ! 2011-03-14 - Wouter Hulsbergen
  - Fix problem in 3DTransformationFunctions that is due to a bug in
  compilor optimization in SLC5. The bug was already fixed in a similar
