@@ -7,6 +7,7 @@ Purpose             : LHCb physics packages
 
 - Based on LHCb v32r1p1. For 2011 stripping13.
 - Remove "Element" functors from LoKi
+- New TisTosTobbing.
 - Extra safety constrains for Selections.
 - SelPy.graph module for making graphs of Selection trees.
 
