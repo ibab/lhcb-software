@@ -35,16 +35,17 @@ def dot(selection) :
     """
     return pydot.graph_from_edges(graphEdges(selection), directed=True)
 
-def view(selection) :
+def view(selection, command='display') :
     """
     View the graph for a Selection type object.
     Example:
     sel = Selection ( ... )
     view(sel)
+    view(sel, command = 'open -a Preview')
     """
     import os
     dt = dot(selection)
     if (dt.write('tmp.jpg', format='jpeg')) :
-        os.system( 'display tmp.jpg &')
+        os.system( '%s tmp.jpg &' % command)
     else :
         print 'Error producing graph for', selection.name()

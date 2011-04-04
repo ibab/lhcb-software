@@ -4,6 +4,13 @@
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
 
+!======================== SelPy v4r2p1 2011-04-04 ============================
+
+! 2011-04-04 - Juan Palacios
+ - SelPy.graph.view
+  . Add "command" argument, default "display".
+ - Increase to v4r2p1.
+
 !======================== SelPy v4r2 2011-03-29 ==============================
 
 ! 2011-03-29 - Juan Palacios
