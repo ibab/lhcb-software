@@ -3,6 +3,7 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!========================= STDet v4r25 2011-04-04 =========================
 ! 2011-02-24 - Jeroen VAN TILBURG
  - Fix uninitialised variables warnings from Coverity report.
 
