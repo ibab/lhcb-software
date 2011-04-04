@@ -25,14 +25,14 @@ use  PhysDict                   v4r2     Phys    # Juan Palacios
 #===================================================================
 use LoKiUtils                   v1r1p1   Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r3     Phys    # Vanya Belyaev
-use LoKiArrayFunctors           v9r3     Phys    # Vanya Belyaev
-use LoKiPhys                    v9r9     Phys    # Vanya Belyaev
-use LoKiProtoParticles          v1r3     Phys    # Vanya Belyaev
+use LoKiArrayFunctors           v10r0    Phys    # Vanya Belyaev
+use LoKiPhys                    v10r0    Phys    # Vanya Belyaev
+use LoKiProtoParticles          v2r0     Phys    # Vanya Belyaev
 use LoKi                        v9r0     Phys    # Vanya Belyaev
 use KalmanFilter                v1r1     Phys    # Vanya Belyaev
 
 #===================================================================
-use TisTosTobbing		v6r6	 Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v7r0	 Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 use NeuroBayesTools             v1r1p1   Phys    # Ulrich Kerzel
