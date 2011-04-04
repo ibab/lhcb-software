@@ -3,6 +3,10 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-04-04 - Julien Cogan
+ - fix bug occuring when the L0Muon condition is not present (e.g. MC09 
+  configuration) -> do not return an error if the runUpdate fails. 
+
 ! 2011-03-23 - Julien Cogan
  - L0Muon emulator (L0MuonAlg) : FOI are taken from the TCK (using L0DUConfig). 
    The TCK 

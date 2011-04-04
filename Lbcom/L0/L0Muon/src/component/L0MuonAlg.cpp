@@ -141,7 +141,10 @@ StatusCode L0MuonAlg::initialize()
       warning() << "Emulation will run with the processor version defined in options." << endmsg ;
     }
     sc = runUpdate();
-    if ( sc.isFailure() ) return Error( "Unable to register the L0Muon conditions "  ,StatusCode::FAILURE,50);
+    if ( sc.isFailure() ) {
+      Warning( "Unable to register the L0Muon conditions "  ,StatusCode::FAILURE,50).ignore();
+      m_muontriggerunit->setProperties(l0MuonProperties());
+    }
   } else {
     m_muontriggerunit->setProperties(l0MuonProperties()); // called in the updateL0CondVersion if m_ignoreCondDB is false
   }
