@@ -3,13 +3,13 @@
 #include "stdio.h"
 static int empty =-1;
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
-MonInfo::MonInfo(char *targetservice, int period): DIMTYPE(targetservice,period, &empty,4)
+MonInfo::MonInfo(char *targetservice, int period=0): DIMTYPE(targetservice,period, &empty,4)
 {
   m_TargetService = targetservice;
   AdderFn = 0;
   adderobj = 0;
 }
-MonInfo::MonInfo(char *targetservice, void addfn(void*,void*, int, MonInfo *), void *addobj, int period): DIMTYPE(targetservice,period, &empty,4)
+MonInfo::MonInfo(char *targetservice, void addfn(void*,void*, int, MonInfo *), void *addobj, int period=0): DIMTYPE(targetservice,period, &empty,4)
 {
   m_TargetService = targetservice;
   AdderFn = addfn;
