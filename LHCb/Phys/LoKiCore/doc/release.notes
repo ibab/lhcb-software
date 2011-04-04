@@ -11,78 +11,50 @@
 !   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
-! 
-!   By usage of this code one clearly states the disagreement 
-!   with the campain of Dr.O.Callot et al.: 
-!   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
-!
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r0 2011-04-04 =========================
 ! 2011-04-02 - Vanya Belyaev
-
  - add few functors (& corresponding decorators) for 
-
     - round   ( bases on LHCb::Math::round ) 
     - jbit    ( based on Gaudi::Math::bit  ) 
     - jbits   ( based on Gaudi::Math::bits ) 
 
 ! 2011-03-30 - Vanya Belyaev
-
  - add "modulo" -operator for functors 
-
    it acts according to the rule:
-
      ( f % n )  ( x )  =def=  " LHCb::Math::round ( f ( x ) ) % n " 
-    
-     
 
 ! 2011-03-29 - Vanya Belyaev
-
  - Kinematics.h
-
    fix LaTeX typos in doxygen comments 
 
 ! 2011-03-28 - Vanya Belyaev
-
  - add "fetch" decorator 
 
 ! 2011-03-27 - Vanya Belyaev
-
  - add "Fetch" vector-function
 
 ! 2011-03-24 - Vanya Belyaev
-
  - add
-
      HASRECSUMMARY & RECSUMMARY symbols for Sophie Redford & Andy Powell
 
 ! 2011-03-18 - Vanya Belyaev
-
  - add protection against the double locking 
 
 ! 2011-03-15 - Vanya Belyaev
-
  - fix the names for FUnOps:
      Reflex now ignores the names prepended by single underscore... :-( 
      fix it...
-
  - optimize the "set-difference" and "set-intersection"
 
 ! 2011-03-10 - Vanya Belyaev
-
  - Kill the concept of "Element"
  - Add more "streamer" functions 
  - add IUpdateManagerSvc  
- - cmt/requirements 
-     version increment to v11r0
- 
 
 ! 2011-03-02 - Vanya Belyaev
-
  - fix non proper decorators for streamer functors 
-
- - cmt/requirements 
-     version increment to v10r9p1
 
 !========================= LoKiCore v10r9 2011-02-22 =========================
 ! 2011-02-17 - Vanya Belyaev
