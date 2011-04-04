@@ -357,7 +357,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         ptr = (DimHistbuff1*)i->second;
         long long *dat;
         dat = (long long *)AddPtr(ptr,ptr->dataoff);
-        printf("Updating counter %s with value %lld",*dat);
+        printf("Updating counter %s with value %lld",i->first,*dat);
       }
       m_outservice->Serialize();
       m_outservice->Update();
