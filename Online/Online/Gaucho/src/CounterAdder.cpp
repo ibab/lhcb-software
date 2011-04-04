@@ -189,7 +189,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   nrate=0;
   if (siz == 4)
   {
-//    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
@@ -338,7 +338,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   }
   else
   {
-//    printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
+    printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
     m_received++;
   }
   if (m_received >= m_expected)
