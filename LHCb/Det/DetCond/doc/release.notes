@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r18 2011-04-04 =========================
  **** requires LHCbKernel > v12r8 ****
 ! 2011-03-31 - Marco Clemencic
  - Modified the interfaces to use the pattern of Gaudi v21.
