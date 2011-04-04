@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           TisTosTobbing
-version           v6r6
+version           v7r0
 
 #============================================================================
 # Structure, i.e. directories to process. 

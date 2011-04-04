@@ -4,6 +4,8 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+!========================== TisTosTobbing v7r0 2011-04-04 =====================
+
 ! 2011-03-29 - Tomasz Skwarnicki
  - src/TisTosParticleTagger.cpp and .h
    rewrite to take AND between L0, Hlt1 and Hlt2 specs (still OR within the same trigger stage)
