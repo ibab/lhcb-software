@@ -339,10 +339,10 @@ StatusCode MonitorSvc::i_start()
       h->makeCounters();
     }
   }
-  this->m_MonSys->List();
-  this->m_MonSys->start();
+//  this->m_MonSys->List();
   DimServer::autoStartOn();
   DimServer::start();
+  this->m_MonSys->start();
   m_started = true;
   return StatusCode::SUCCESS;
 }
