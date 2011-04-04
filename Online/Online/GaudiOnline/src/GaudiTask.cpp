@@ -411,6 +411,7 @@ int GaudiTask::stopApplication()  {
     if ( m_handle )   {  //&& m_eventThread == false )  {
       ::lib_rtl_join_thread(m_handle);
       m_handle = 0;
+      PythonInterpreter::reinitializeGIL();
     }
     gauditask_task_lock();
     try {
@@ -451,16 +452,17 @@ int GaudiTask::finalizeApplication()  {
   if ( m_subMgr )  {
     try {
       if ( m_handle )  {
-	::lib_rtl_join_thread(m_handle);
-	m_handle = 0;
+        ::lib_rtl_join_thread(m_handle);
+        m_handle = 0;
+        PythonInterpreter::reinitializeGIL();
       }
       gauditask_task_lock();
       // If e.g.Class1 processes are reset() before start(), then the incident service 
       // is still connected, and a later cancel() would access violate.
       // Hence check again if the incident service is still present.
       if ( m_incidentSvc ) {
-	m_incidentSvc->removeListener(this);
-	m_incidentSvc->release();
+        m_incidentSvc->removeListener(this);
+        m_incidentSvc->release();
       }
       m_incidentSvc= 0;
       StatusCode sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
