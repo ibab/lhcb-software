@@ -349,6 +349,16 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     //printf(" %d %d\n", m_received,m_expected);
     if (m_outservice != 0)
     {
+      MonMap::iterator i;
+      i = m_hmap.find("UpdateAndReset/Tasks");
+      if (i != m_hmap.end())
+      {
+        DimHistbuff1 *ptr;
+        ptr = (DimHistbuff1*)i->second;
+        long long *dat;
+        dat = (long long *)AddPtr(ptr,ptr->dataoff);
+        printf("Updating counter %s with value %lld",*dat);
+      }
       m_outservice->Serialize();
       m_outservice->Update();
     }
