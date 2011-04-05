@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v3r5 2011-04-05 =========================
 ! 2011-04-01 Mark Tobin
  - Fixed typo in bunch id plot.
  - Added map of cluster size in each sector
