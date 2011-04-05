@@ -119,8 +119,14 @@ void SaveTimer::SavetoFile(void *buff)
 //    printf("File Saver: Filename %s\n",fn);
   }
   m_Adder->Lock();
-  TFile *f = new TFile(fn,"RECREATE");
+  TFile *f = TFile::Open(fn,"RECREATE");
   m_Adder->UnLock();
+  if (!f || f->IsZombie())
+  {
+    printf("Root File %s cannot be iopened or is Zombie\n",fn);
+    fflush (stdout);
+    return;
+  }
   TH1 *r;
   MonHist h;
   while (buff <bend)
