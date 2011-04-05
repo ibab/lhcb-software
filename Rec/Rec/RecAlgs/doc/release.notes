@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r3 2011-04-05 =========================
+! 2011-04-05 Chris Jones
+ - remove extra ; + add svn:ignore
+
 !========================= RecAlgs v2r2 2011-03-09 =========================
 ! 2011-03-09 - Rob Lambert
  - Modified RecInit.cpp
