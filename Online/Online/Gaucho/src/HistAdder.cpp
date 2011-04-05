@@ -180,7 +180,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   if (m_reference < current)
   {
     m_added++;
-    m_received++;// = 1;
+    m_received = 1;
     if (m_isSaver)
     {
       if (m_received == 1)
