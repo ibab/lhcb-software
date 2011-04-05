@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r8 2011-04-05 =========================
 ! 2011-04-04 - Victor Coco
  - put the check for negative element in the state covariance matrix diagonal only
    in the smoothing step. 
