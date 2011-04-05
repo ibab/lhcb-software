@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r36 2011-04-05 =========================
 ! 2011-03-31 - Chris Jones
  - Get rid of some extra ; (icc11 remarks)
  - Remove some CVS comments.
