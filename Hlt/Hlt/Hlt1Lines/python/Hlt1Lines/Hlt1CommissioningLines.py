@@ -30,7 +30,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                                }
                , 'ODINPhysics'   : '( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger )'
                , 'ODINTechnical' : '( ODIN_TRGTYP == LHCb.ODIN.TechnicalTrigger )'
-               , 'ODINVeloClosing' : 'scale( ( 2 * ( ODIN_EVTTYP / 2 ) ) != ODIN_EVTTYP, RATE(10000) )'
+               , 'ODINVeloClosing' : 'scale( JBIT( ODIN_EVTTYP,0 ) != 0, RATE(10000) )'
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line

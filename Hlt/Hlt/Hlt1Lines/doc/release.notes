@@ -5,7 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
-!========================== Hlt1Lines v6r9  2011-03-29 ===================
+!========================== Hlt1Lines v6r9  2011-04-05 ===================
+! 2011-04-05 - Gerhard Raven
+ - use JBIT in Hlt1VeloClosingMicroBias
+
 ! 2011-03-30 - Gerhard Raven
  - add a Hlt1VeloClosingMicroBias, gated on ODIN eventType, for velo closing
 
