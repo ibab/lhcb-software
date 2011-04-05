@@ -10,6 +10,8 @@ Purpose: LHCb reconstruction program
   to use them.
 
 - Changes to references to reflect changes in Brunel v39r1 output:
+  . #121290: (TrackFitEvent) Check for negative element in state covariance 
+              matrix diagonal, update KalmanFitResult error printing accordingly
   . #120956: (RichRecQC) Remove RichHPDImageShifts from default monitoring
   . #120223: (RichRecQC) Extend the decoding errors monitor
   . #121211: (HltMonitors) Add Mu monitor to Hlt monitoring sequence
