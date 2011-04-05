@@ -123,7 +123,7 @@ void SaveTimer::SavetoFile(void *buff)
   m_Adder->UnLock();
   if (!f || f->IsZombie())
   {
-    printf("Root File %s cannot be iopened or is Zombie\n",fn);
+    printf("Root File %s cannot be opened or is Zombie\n",fn);
     fflush (stdout);
     return;
   }

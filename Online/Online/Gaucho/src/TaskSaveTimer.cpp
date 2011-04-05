@@ -265,7 +265,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   m_subsys->unLock();
   if (!f || f->IsZombie())
   {
-    printf("Root File %s cannot be iopened or is Zombie\n",fn);
+    printf("Root File %s cannot be opened or is Zombie\n",fn);
     fflush (stdout);
     return;
   }
