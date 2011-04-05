@@ -109,6 +109,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
     {
       if (Newe)
       {
+//        printf("New Server %s\n",tname.c_str());
         TaskIter i;
         i = m_TaskMap.find(tname);
         if (i == m_TaskMap.end())
@@ -129,6 +130,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
       else
       {
         TaskIter i;
+//        printf("Removed Server %s\n",tname.c_str());
         i = m_TaskMap.find(tname);
         if (i != m_TaskMap.end())
         {
