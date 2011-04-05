@@ -728,7 +728,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , FilterDiElectron =
                                      {"Code" : "(MINTREE('e+'==ABSID,PT) > %(UnbiasedB2ee_ElecPT)s *MeV)"\
                                       " & (MINTREE('e+'==ABSID,PIDe) > %(UnbiasedB2ee_ElecPIDe)s)"\
-                                      " & (in_range(%(UnbiasedB2ee_MinMass)s *MeV), MM,  %(UnbiasedB2ee_MaxMass)s *MeV))"\
+                                      " & (in_range(%(UnbiasedB2ee_MinMass)s *MeV, MM,  %(UnbiasedB2ee_MaxMass)s *MeV))"\
                                       " & (VFASPF(VCHI2PDOF) < %(UnbiasedB2ee_VtxCHI2)s)"\
                                       " & (PT > %(UnbiasedB2ee_PT)s *MeV)" %self.getProps() 
                                       }
