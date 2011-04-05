@@ -1,5 +1,9 @@
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r11p1
+
+2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: fix wrong spaces in the patterns.
 
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

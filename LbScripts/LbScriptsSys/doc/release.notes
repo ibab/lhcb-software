@@ -1,5 +1,25 @@
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v6r1p1
+
+	LbConfiguration:
+	- add the lbdirac repository (Joel)
+
+	LbLegacy:
+	- fixed the version of LbScripts used in install_project.py to v6r1p1
+
+	LbRelease:
+	- added a modifier to apply a SVN PathChecker to a single file (Marco Cl.)
+	- added a SVN checker to avoid duplicate package names (Marco Cl.)
+
+	LbScriptsPoliciy:
+	* cmt/requirements: fix wrong spaces in the patterns.
+
+	LbUtils:
+	* python/LbUtils/CMT/Project.py: converted message to DEBUG instead of warning.
+
+2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v6r1
 
 	LbConfiguration:

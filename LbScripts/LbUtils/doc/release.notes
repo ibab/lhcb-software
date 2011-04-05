@@ -1,5 +1,9 @@
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v3r1p1
+
+2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbUtils/CMT/Project.py: converted message to DEBUG instead of warning.
 
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
