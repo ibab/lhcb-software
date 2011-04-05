@@ -18,6 +18,7 @@ class HistAdder : public MonAdder
 {
 public:
   DimHistbuff1 *m_RateBuff;
+  bool m_locked;
 //  std::string m_MyName;
 //  std::string m_NamePrefix;
   DimHistbuff1 *m_oldProf;

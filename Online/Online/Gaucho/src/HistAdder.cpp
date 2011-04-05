@@ -139,6 +139,7 @@ void HistAdder::Configure()
     m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
     m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
   }
+  m_locked = false;
 }
 void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
@@ -185,7 +186,8 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     {
       if (m_received == 1)
       {
-        Lock();
+        if (!m_locked) Lock();
+        m_locked = true;
       }
     }
     //printf ("New cycle %s... %d\n",h->m_TargetService.c_str(),m_received);
@@ -354,8 +356,10 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 //    fflush(stdout);
     if (m_isSaver)
     {
-      UnLock();
+      if (m_locked) UnLock();
+      m_locked = false;
     }
+    m_added = 0;
     m_received = 0;
     //printf(" %d %d\n", m_received,m_expected);
     if (m_outservice != 0)
