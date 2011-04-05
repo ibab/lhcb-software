@@ -5,6 +5,109 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v11r3>2011-04-06 RecSys v11r3</A></H1><PRE>
+This version uses Gaudi v22r1 and LHCb v32r2
+
+- This is a production version of Rec, for use with 2011 data.
+
+- Modified packages: MuonID v8r0p2, ChargedProtoANNPID v1r4, GlobalReco v6r36,
+    RecAlgs v2r3, RecoUpgrade v2r1, RecoUpgradeMC v1r2, RichAlignment v1r2,
+    RichHPDImageAnalysis v1r6, RichRecQC v2r49, RichRecSys v4r1,
+    RichRecTrackTools v1r27, TfTools v1r14, PatChecker v3r10, TrackFitEvent v5r8,
+    TrackMonitors v1r32, TrackTools v4r4
+
+- In MuonID v8r0p1, v8r0p2
+  . Fixed memory leak (see https://savannah.cern.ch/bugs/index.php?79569 )
+    which was duplicated 5 times or so in the code.
+  . Move 0-protection check to 1e-30 and ensure consistency
+  . Fixed debug printout, only prepare string if debug is required.
+  . Fixed bug in MuonIDAlg: 
+    Null ProbMu and ProbNonMu in method calcMuonLL_tanhdist_landau
+    Change to low value to avoid log(ProbMu) and log(ProbNonMu) divergence.
+  . Move WARNING message during initialize to INFO
+
+- In ChargedProtoANNPID v1r3p1, v1r4
+  . Add protection against NaN and infinite input variables
+  . Fix icc11 compilation issue with above fix
+
+  . Get rid of some extra ; (icc11 remarks)
+  . Remove some CVS comments.
+
+- In RecoUpgrade v2r1
+  . Add new pattern recognition algorithm for velopix
+
+- In RecoUpgradeMC v1r2
+  . Modifed cheat pat to make real cheat pat
+  . add cluster sort for patlhcbid
+  . add two new counters for efficiency study
+
+- In RichAlignment v1r2
+  . Various improvements to the alignment python scripts.
+
+- In RichHPDImageAnalysis v1r6
+  . Rework the way the pixel list in HPDFit is handled, to try and fix an
+    obscure and intermittent segmentation fault when these objects are deleted
+  . Some minor improvements to the monitor gaudi algorithm
+  . More improvements to the HPD fits
+    o Remove a bias in the HPD boundary finding, that resulted in top/bottom hits
+      being preferred over left/right ones
+    o Add an 'intensity' to each pixel and use this in the fit. Helps the fit to
+      ignore rogue 'boundary' pixels
+    o Add a HPD image cleaner that performs various preprocessing tasks on each
+      image before fitting
+      + Removes hot/dead pixels
+      + removes dead pixel rows and columns
+      + Removes the centre region (IFB area)
+  . Rework the code to separate out the HPD fitting into a separate linker
+    library that is then used by both the component library producing the image
+    summaries and also the python code
+
+- In RichRecQC v2r49
+  . Remove "HPDImageShifts" from list of monitors run by default
+  . Extend the Decoding error monitor to make a summary plot for each L1
+    board separately, as well as the overall combined summary
+  . Add some more internal consistency checks to Rich::DAQ::DataDBCheck
+  . Adapt to change in HPD image monitoring algorithm name
+
+- In RichRecSys v4r1
+  . Increase a bit the size of the photon selection window for Rich1gas when
+    using the "Wide" photon selection criteria.
+
+- In RichRecTrackTools v1r27
+  . Track Track States errors before as well as after propagating them in
+    DetailedTrSegMakerFromRecoTracks
+
+- In TfTools v1r14
+  . Register OT/STHitCreator to detector geometry conditions
+
+- In PatChecker v3r10
+  . Modified PatTTCounter to inherit from a virtual class
+
+- In TrackFitEvent v5r8
+  . Add a check for negative element in the state covariance matrix diagonal in
+    FitNode, in the smoothing step. Update the error types of KalmanFitResult
+    accordingly
+
+- In TrackMonitors v1r32
+  . Add PV cov matrix to Vertex Compare ntuple
+
+- In TrackTools v4r4
+  . Protect TrackSelector::accept against exceptions being thrown from the
+    Track and/or State methods with a try block. If an exception is intercepted
+    a warning is printed and the track rejected.
+  . Included renamed version of Hlt/HltMuon (used in TrackEffVeloMuon), which is
+    not maintained by the HLT-crew anymore. Included to Tr/TrackTools to remove
+    it from Hlt
+
+- In GlobalReco v6r36, RecAlgs v2r3
+  . Fixes for icc remarks (remove extra ;)
+
+- In GlobalReco v6r36
+  . Remove some CVS comments
+
+- In RecAlgs v2r3
+  . Add svn:ignore
+
 </PRE><H1><A NAME=v11r2p1>2011-03-10 RecSys v11r2p1</A></H1><PRE>
 This version uses Gaudi v22r1 and LHCb v32r1p1
 
