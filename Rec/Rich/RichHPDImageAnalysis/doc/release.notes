@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r6 2011-04-05 =========================
 ! 2011-03-29 - Chris Jones
  - Rework the way the pixel list in HPDFit is handled, to try and fix an 
    obscure and intermittent segmentation fault when these objects are deleted
