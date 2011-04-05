@@ -6,6 +6,54 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r2>2011-04-06 LbcomSys v10r2</A></H1><PRE>
+This version uses Gaudi v22r1 and LHCb v32r2
+
+- Production release for 2011 data
+
+- Packages updated: HltDAQ v2r8, L0DU v10r13, L0Muon v9r3, RichDAQ v3r32,
+    RichTools v2r33, STMonitors v3r5, VeloPixDAQ v1r4
+
+- In HltDAQ v2r8
+  . HltVertexReportsDecoder:
+    o speed up decoding by not copying the rawbank into a temporary vector
+    o only ask for ANN once we're about to decode something...
+    o speed up mapping ID to name
+  . HltDecReportsDecoder: speed up mapping ID to name
+  . HltSelReportsDecoder: speed up mapping ID to name
+  . ConfigTarFileAccessSvc: switch default for CompressOnWrite to true
+  . Fix a potential out_of_range exception if filename is less than 3 characters
+
+- In L0DU v10r13
+  . L0Conf : follow the change in the L0Muon emulator which now takes the
+             FOI specified in the TCK (see L0/L0Muon).
+
+- In L0Muon v9r3
+  . L0Muon emulator (L0MuonAlg) : FOI are taken from the TCK (using L0DUConfig).
+    The TCK
+    o can be specified via the property TCK (default behaviour), or
+    o can be picked up from the data (if UseTCKFromData is set to True).
+    This is now the only way to set up the FOI which means that it is mandatory
+    to importOptions("$L0TCK/L0DUConfig.opts") when using the L0Muon emulator.
+    L0Conf configurable in L0/L0DU is modified to account for this change.
+  . L0MuonAlg : fix a bug which prevented running the emulator from the l0muon
+    data when relying on the data on demand service to perfom L0Muon decoding.
+
+- In RichDAQ v3r32
+  . Add new data integrity check to decoding tool. Now checks to see if the L1
+    hardware ID each L0ID is found in in the data, agrees with the value in the
+    Conditions database. If not, no hits are decoded for that HPD.
+
+- In RichTools v2r33
+  . Adapt to changes in RichSmartID class
+
+- In STMonitors v3r5
+  . Fixed typo in bunch id plot.
+  . Added map of cluster size in each sector
+
+- In VeloPixDAQ v1r4
+  . Bug fix for VeloPixRawBankToLiteCluster.cpp
+
 </PRE><H1><A NAME=v10r1p1>2011-02-28 LbcomSys v10r1p1</A></H1><PRE>
 This version uses Gaudi v22r1 and LHCb v32r1p1
 
