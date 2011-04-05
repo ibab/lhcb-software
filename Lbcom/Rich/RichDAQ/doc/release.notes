@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r32 2011-04-05 =========================
 ! 2011-03-23 - Chris Jones
  - Add new data integrity check to decoding tool. Now checks to see if the L1
    hardware ID each L0ID is found in in the data, agrees with the value in the
