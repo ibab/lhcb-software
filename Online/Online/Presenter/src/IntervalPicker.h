@@ -138,6 +138,7 @@ public:
   void ok();
 
   /// Change window according to mode (SingleRun, Time...)
+  void setDestination( int index );
   void SelectMode( ) ;
 
 private:
@@ -182,6 +183,7 @@ private:
   TGNumberEntry*      m_runFillIntervalFromNumberEntry;
   TGLabel*            m_runFillIntervalToLabel;
   TGNumberEntry*      m_runFillIntervalToNumberEntry;
+  TGComboBox*         m_runDestinationComboBox;
   TGComboBox*         m_runFillStepSizeComboBox;
   TGNumberEntry*      m_runFillStepSizeNumberEntry;
   TGCompositeFrame*   m_runFillTabCompositeFrame;

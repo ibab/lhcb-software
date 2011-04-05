@@ -89,7 +89,7 @@ public:
   bool hasTitle() { return m_hasTitle; }
 
   void loadOptions();
-  void setShowReference( bool show );
+  void setShowReference( bool show ) { m_showReference = show; }
 
   bool isDummy() { return m_isDummy; }
   void setDummy( bool dum ) { m_isDummy = dum; }

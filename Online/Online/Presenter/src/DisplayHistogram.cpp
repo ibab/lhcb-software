@@ -126,7 +126,7 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
   }
   if ( 0 != m_referenceHist ) return;
   m_referenceHist = ref;
-
+  
   if ( NULL == m_hostingPad ) return;
   if ( NULL == m_rootHistogram ) return;
   if ( 1 != m_rootHistogram->GetDimension() ) return;
@@ -159,20 +159,18 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
 //=========================================================================
 void DisplayHistogram::normalizeReference ( ) {
   if ( m_referenceHist ) {
-    double normFactor = m_rootHistogram->GetNormFactor();
+    double normFactor = m_referenceHist->GetNormFactor();
 
-    // if GetNormFactor() > 0.1 , histogram is drawn normalized, just use the same normalization
-    if ( normFactor < 0.1 ) {
-      std::string refOption = pres::s_Area;
-      std::string sopt;
-      if ( hasOption("REF", &sopt) ) refOption = sopt;
-      if (pres::s_Entries == refOption) {
-        normFactor = m_rootHistogram->GetEntries();
-        m_referenceHist->SetNormFactor(normFactor);
-      } else if (pres::s_Area == refOption) {
-        normFactor = m_rootHistogram->Integral();
-      }
+    std::string refOption = pres::s_Area;
+    std::string sopt;
+    if ( hasOption("REF", &sopt) ) refOption = sopt;
+    if (pres::s_Entries == refOption) {
+      normFactor = m_rootHistogram->GetEntries();
+      m_referenceHist->SetNormFactor(normFactor);
+    } else if (pres::s_Area == refOption) {
+      normFactor = m_rootHistogram->Integral();
     }
+    
     m_referenceHist->SetNormFactor(normFactor);
     std::cout << "Normalization of reference = " << normFactor << std::endl;
   }
@@ -330,8 +328,29 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       m_histogramImage->Draw();
     } else {
       if ( !m_hasTitle ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
-      std::string opt =  m_isOverlap ? "SAME" : "";
+      std::string opt =  m_isOverlap ? "HISTSAME" : "";
       m_rootHistogram->Draw(opt.c_str());
+      if ( NULL != m_referenceHist ) {
+        m_referenceHist->SetLineStyle(2);
+        m_referenceHist->SetLineColor(2); // red
+        // normalization
+        normalizeReference();
+        //== Set options
+        std::string refdopt="SAME";
+        std::string sopt;
+        if ( hasOption("REFDRAWOPTS", &sopt) ) refdopt += sopt;
+        m_referenceHist->Draw(refdopt.c_str());
+        m_referenceHist->SetStats(0);
+        std::cout << "  ... superimpose reference..." << std::endl;        
+        //== Profile plots?
+        TProfile* p    = dynamic_cast<TProfile*>(m_rootHistogram);
+        TProfile* pref = dynamic_cast<TProfile*>(m_referenceHist);
+        if (p && pref) {
+          // spread display option is not propagated to online TProfile (while works in history mode):
+          // use option for reference also for the online histogram
+          p->SetErrorOption( pref->GetErrorOption() );
+        }
+      }
     }
   } else if ( 0 != m_timeGraph ) {
     if ( !m_hasTitle ) m_timeGraph->SetTitle( "" );
@@ -343,8 +362,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
 
   setDrawingOptions( pad );
 
-  // fit if requested
-  fit( analysisLib );
+  fit( analysisLib );    // fit if requested
 
   if ( !m_isOverlap ) pad->SetName( m_onlineHist->identifier().c_str() );
 
@@ -500,14 +518,10 @@ void DisplayHistogram::setDisplayOptions ( ) {
   if ( ( 0 == m_onlineHist ) || ( 0 == m_rootHistogram ) ) return ;
   m_rootHistogram->SetStats( false );
 
-  //boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
-  //boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-
-  //if ( oraLock && rootLock ) {
   int iopt = 0;
   float fopt = 0.0;
   std::string sopt;
-  if (hasOption("LABEL_X", &sopt))  m_rootHistogram->SetXTitle (sopt.data());
+  if (hasOption("LABEL_X", &sopt)) m_rootHistogram->SetXTitle (sopt.data());
   if (hasOption("LABEL_Y", &sopt)) m_rootHistogram->SetYTitle (sopt.data());
   if (hasOption("LABEL_Z", &sopt)) m_rootHistogram->SetZTitle (sopt.data());
   double bxmin=m_rootHistogram->GetXaxis()->GetXmin();
@@ -616,29 +630,41 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
 //  Accessor to retrieve the options
 //=========================================================================
 bool DisplayHistogram::hasOption( const char* str, int* iopt ) {
+  //if ( !m_onlineHist->getDisplayOption( str, iopt ) ) return false;
+  //return true;
+
   if ( !m_optionsAreLoaded ) loadOptions();
   std::string name(str);
   std::map<std::string,int>::iterator it = m_intOptions.find( name );
   if ( it == m_intOptions.end() ) return false;
   *iopt = it->second;
+  //std::cout << "IOption " << name << " value " << *iopt << std::endl;
   return true;
 }
 
 bool DisplayHistogram::hasOption( const char* str, float* fopt ) {
+  //if ( !m_onlineHist->getDisplayOption( str, fopt ) ) return false;
+  //return true;
+  
   if ( !m_optionsAreLoaded ) loadOptions();
   std::string name(str);
   std::map<std::string,float>::iterator it = m_floatOptions.find( name );
   if ( it == m_floatOptions.end() ) return false;
   *fopt = it->second;
+  //std::cout << "FOption " << name << " value " << *fopt << std::endl;
   return true;
 }
 
 bool DisplayHistogram::hasOption( const char* str, std::string* sopt ) {
+  //if ( !m_onlineHist->getDisplayOption( str, sopt ) ) return false;
+  //return true;
+
   if ( !m_optionsAreLoaded ) loadOptions();
   std::string name(str);
   std::map<std::string,std::string>::iterator it = m_stringOptions.find( name );
   if ( it == m_stringOptions.end() ) return false;
   *sopt = it->second;
+  //std::cout << "SOption " << name << " value " << *sopt << std::endl;
   return true;
 }
 
@@ -894,6 +920,7 @@ void DisplayHistogram::copyFrom ( TH1* src) {
       m_rootHistogram->SetBinError(i,   src->GetBinError(i) );
     }
   }
+  m_rootHistogram->SetEntries( src->GetEntries() );
 }
 
 //=========================================================================
@@ -1141,11 +1168,4 @@ void DisplayHistogram::loadOptions ( ) {
   m_optionsAreLoaded = true;
 }
 
-//=========================================================================
-//  
-//=========================================================================
-void DisplayHistogram::setShowReference ( bool show) {
-  m_showReference = show; 
-  std::cout << "ShowReference = " << show << std::endl; 
-}
 //=============================================================================

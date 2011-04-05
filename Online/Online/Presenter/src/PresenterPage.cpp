@@ -404,8 +404,8 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
         TH1* tmp = analysisLib->findRootHistogram( (*itH).histo(), f );
         if ( 0 != tmp ) {
           TH1* out = (TH1*)tmp->Clone();
-          (*itH).setShowReference( true );
           (*itH).setReferenceHistogram( out );
+          (*itH).setShowReference( true );
           delete tmp;
         }
       }
@@ -421,7 +421,6 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
     }
   }
 }
-
 //=========================================================================
 //  Build the analysis histograms
 //=========================================================================

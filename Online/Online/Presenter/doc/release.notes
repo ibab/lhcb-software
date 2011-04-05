@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-05 - Olivier Callot
+ - Fix TT plots: reference add/remove, and layout of superimposed curves
+  This last fix is black magic, not understood. option HIST forced!
+
 ! 2011-04-04 - Olivier Callot
  - Condition the trend plot min/max lines to the DisplayReference option.
  - Solve problems with refresh and reference interefering for trends.

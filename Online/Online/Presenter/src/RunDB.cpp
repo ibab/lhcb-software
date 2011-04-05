@@ -28,7 +28,7 @@ RunDB::RunDB( std::string address ) :
   m_currentRunEndTime( "" ) ,
   m_currentRunDuration( "" ) ,
   m_partition( "LHCb" ) ,
-  m_destination( "OFFLINE" )
+  m_destination( "" )
 {
   m_address = address;
 }

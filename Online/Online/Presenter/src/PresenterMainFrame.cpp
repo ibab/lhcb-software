@@ -628,7 +628,6 @@ void PresenterMainFrame::buildGUI() {
     m_toolBar->AddFrame(new TGLabel(m_toolBar,"Trend legth: ") , menuBarCenterY );
     m_toolBar->AddFrame(m_trendDurationComboBox , menuBarCenterY );
     m_trendDurationComboBox->SetEnabled(true);
-    // Select history by run
     m_trendDurationComboBox->AddEntry("Last 10 minutes", M_TrendLastTenMinutes ) ;
     m_trendDurationComboBox->AddEntry("Last 2 hours",  M_TrendLastTwoHours ) ;
     m_trendDurationComboBox->AddEntry("Last 24 hours", M_TrendLastDay);
@@ -5006,11 +5005,9 @@ void PresenterMainFrame::refreshPage() {
     m_presenterPage.loadFromDIM( partition, true );
     m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd, true );
   } else if (  pres::History == m_presenterInfo.presenterMode() ) {
-    m_presenterPage.loadFromArchive( m_archive,
-                                     m_presenterInfo.globalTimePoint(),
-                                     m_presenterInfo.globalPastDuration() );
-    m_presenterPage.fillTrendingPlots(  m_presenterInfo.startTimeC(),
-                                        m_presenterInfo.endTimeC(), true );
+    //== Do nothing: Only used in case of adding/removing references...
+    m_presenterPage.fillTrendingPlots( m_presenterInfo.startTimeC(),
+                                       m_presenterInfo.endTimeC(), true );
   } else {
     std::cout << "**** Unsupported presenter mode " <<  m_presenterInfo.presenterMode() << " ****" << std::endl;
   }
@@ -5057,7 +5054,6 @@ void PresenterMainFrame::enableReferenceOverlay() {
   m_presenterPage.uploadReference( m_analysisLib,
                                    m_presenterInfo.referenceRun(),
                                    m_presenterInfo.currentTCK() );
-
   editorCanvas->Update();
   if (stopped) { startPageRefresh(); }
 }
