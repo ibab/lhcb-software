@@ -1,5 +1,5 @@
 package LbScriptsPolicy
-version v2r10
+version v2r11
 
 
 macro install_excludes " -xCVS -x.svn"
@@ -42,11 +42,11 @@ pattern install_python_modules \
     document install_python <package>_python ; \
     apply_pattern install_python_init ; \
     macro_append <package>_python_init_dependencies " <package>_python "
-    
+
 pattern install_custom_python_modules \
     path_remove  PYTHONPATH "" \
          <project>_without_installarea&Unix "/<package>/<source>" \
-         <project>_without_installarea&WIN32 "\<package>\<source>" ; \ 
+         <project>_without_installarea&WIN32 "\<package>\<source>" ; \
     path_prepend PYTHONPATH "" \
          <project>_without_installarea&Unix "$(<package>_root)/<source>" \
          <project>_without_installarea&WIN32 "$(<package>_root)\<source>" ; \
@@ -131,17 +131,17 @@ cmtpath_pattern \
     path_remove_regexp LD_LIBRARY_PATH "" \
          <project>_without_installarea "" \
          <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/.*/lib" \
-    
+
 
 pattern install_scripts \
     path_remove  PATH "" \
           <project>_without_installarea&Unix "/<package>/scripts" \
-          <project>_without_installarea&WIN32 "\<package>\scripts" ; \ 
+          <project>_without_installarea&WIN32 "\<package>\scripts" ; \
     path_prepend PATH "" \
           <project>_without_installarea&Unix "$(<package>_root)/scripts" \
           <project>_without_installarea&WIN32 "$(<package>_root)\scripts" ; \
-    document install_scripts install_scripts 
-    
+    document install_scripts install_scripts
+
 make_fragment install_scripts -header=install_scripts_header
 
 cmtpath_pattern \
@@ -163,12 +163,12 @@ pattern install_script_doc \
           <project>_without_installarea&WIN32 "$(<package>_root)\doc\help" ; \
     macro_append install_excludes " -xhtml " ; \
     document install_doc install_doc
-    
+
 make_fragment install_doc -header=install_doc_header
 
 #-------------------------------------------------------------------
 # Generic cmt template processing
-# take "fichier.tmpl" as input and outputs "fichier" with all 
+# take "fichier.tmpl" as input and outputs "fichier" with all
 # cmt macros expanded. E.g:
 #
 #  document template DoxyTemplate -s=../doc *.tmpl
@@ -181,7 +181,7 @@ make_fragment template -header=template_header -dependencies
 # Generic pattern to call a command.
 # It is driven by macros.
 # E.g:
-# 
+#
 #   macro MyCommandTarget_output  "output.file"
 #   macro MyCommandTarget_deps    "input.file"
 #   macro MyCommandTarget_command "python do_something.py -o $(MyCommandTarget_output) $(MyCommandTarget_deps)"
@@ -219,7 +219,7 @@ setup_script $(nocmtpath_script)
 
 apply_pattern source_shell_alias script=StripPath
 
-macro strip_script "$(LBSCRIPTSPOLICYROOT)/scripts/StripPath" 
+macro strip_script "$(LBSCRIPTSPOLICYROOT)/scripts/StripPath"
 
 cmtpath_pattern \
     setup_script $(strip_script) ;

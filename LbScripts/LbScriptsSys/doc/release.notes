@@ -1,3 +1,98 @@
+2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r1
+
+	LbConfiguration:
+	* python/LbConfiguration/SetupProject.py: added debug printout for
+	the stripping of PATHs (Marco Cl.)
+	* python/LbConfiguration/Platform.py:
+	- fixed problem on slc6: if the platform has no supported compiler list, it
+	uses the native one.
+	- added gcc44 as supported compiler for slc6
+	- added missing i686-slc5-gcc43-opt binary to the supported list.
+	* LbConfiguration/python/LbConfiguration/Version.py:
+	- added function to convert version scheme (LHCB,LHCB_v22r0) <-> (LHCb, v22r0)
+	- moved the generic sorting to LbUtils
+	* scripts/generateLogin:
+	- fixed login shell detection for zsh.
+	- cleanup the initial pathes that have to be replaced (interpolated) in the generated files.
+	- changed realpath into abspath.
+	- made the .noLHCBLoginscript the outermost check
+	- fixed localisation of LBCONFIGURATIONTROOT when the environment is not provided
+	* python/LbConfiguration/Project.py: Removed annoying message about unknow CMTCONFIG.
+	* python/LbConfiguration/LbLogin.py:
+	- cured a few pylint warnings.
+	- speed up the start of the script by using "/usr/bin/python" instead of "/usr/bin/env python".
+	this prevent the loading of the distributed python.
+	- treat the case of ~/cmtuser being a valid or a broken link. If it is a valid link or a directory,
+	then it goes unmolested. If it is a broken link or a file, it is renamed with the "_bak" extension
+	and a directory is created.
+
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:
+	- implemented function to fix the $CMTROOT/mgr/setup.{sh,csh}. In these files the CMTROOT
+	is always reset. Now they doesn't try to set it if it is already present in the environment.
+	- implement the vXr99 link to data packages
+	- copy itself to the first entry of $MYSITEROOT if it is not already there.
+	- passed debug flag to generateLogin if debug_flag is True.
+	- fixed problem with generateLogin if the MYSITEROOT directory has somewhere a link in its path.
+	- fixed the comparison of the lhcb subdirectory with os.getcwd() by using os.path.abspath. Because
+	this is what os.getcwd() is returning anyway.
+	- added clone of cleanPath (LbUtils.Path) in order to clean up the initial MYSITEROOT and VO_LHCB_SW_DIR.
+	Please note that the path is not normalized (os.path.normpath) because it could lead to inconsistencies
+	if there are ".." and links.
+	- fixed unTarFile function. Now an output_path parameter can be passed to the function.
+	- fixed removal of the .html file in overwrite mode.
+	- fixed copy of existing install_project.py into .old. This was breaking when installing
+	remotely (not in the current directory) and when a self update was performed.
+	- added checks for VO_LHCB_SW_DIR. If MYSITEROOT has only one entry, an attempt is made to correct
+	the value of that variable. It will succeed only if $MYSTEROOT==$VO_LHCB_SW_DIR/lib.
+	- added the version of LbScripts in the banner in debug mode.
+	* scripts/mkLHCbtar:
+	- fixed osc_vis dependency extraction. Removed obsolete CVS update for the Gaudi project.
+	- fixed usage of the TempDir class.
+	* scripts/mkproject:
+	- moved the fixLinks function. Now it only applies when locking (-a K) or when creating tarballs.
+	- fixed problem with the --not-parallel option. It was alway active because of the -p option.
+	* scripts/mkLCGCMTtar: fixed typo when calling the CMT
+
+	LbRelease:
+	* python/LbRelease/CMT/LbProject.py:
+	fixed usage of the User release area in LbCMTWhich.
+	- renamed lbcmtwhich into lbwhich.
+	- added a switch to exclude the user_release_area.
+	- implemented the lbwhich command: This command locates the package used by the project.
+	The version is the one of the project if it is a regular project and it is the one of
+	the package for versionless projects like DBASE.
+	syntax: lbwhich Project Package version
+	       lbwhich Project version
+               lbwhich Project Package
+               lbwhich Project
+	* python/LbRelease/LHCbNightlies.py: changes needed by Nightlies-TagCollector connection;
+	try-except in buildProject method; fix in changeRequirementsFile; fix for Coverity;
+	special way of copying logs for Windows (Karol)
+	* python/LbRelease/LHCbNightliesWebpage.py: disabled project shown in grey; configuration
+	for summary generation taken from svn.cern.ch (https) instead of svnweb (http); project
+	list sorted in the "Display criteria"; link to SVN modified to point to configuration
+	file (Karol)
+
+	LbScriptsPolicy:
+	* cmt/fragments/install.py: changed realpath into abspath.
+
+	LbUtils:
+	* data/SelfExtract.tmpl: added meaningful description.
+	* data/Makefile: fixed a problem with the removal of build stamp files on Windows (Marco Cl.).
+	* LbUtils/scripts/makeself: added a few needed options to the specifications.
+	* LbUtils/python/LbUtils/Path.py: implemented the cleanPath function which removes empty
+	entries in the path collection and strip right most os.sep in the path entries.
+	* python/LbUtils/CMT/Project.py: fixed CMTWhich: now handles correctly 3 arguments.
+	* LbUtils/scripts/cmtwhich: added "-d" option to return the cmt directory instead of the main
+	directory of the item.
+	* LbUtils/scripts/cmtwhich: added case insensitive switch.
+	* LbUtils/python/LbUtils/__init__.py: added the generic sorting of version
+	* LbUtils/python/LbUtils/CMT/Project.py: core implementation of the CMTwhich utility.
+
 2011-02-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r0p1

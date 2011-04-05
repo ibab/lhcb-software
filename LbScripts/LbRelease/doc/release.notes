@@ -1,3 +1,7 @@
+2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release ov version v4r1
+
 2011-03-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/CMT/LbProject.py: fixed usage of the User release area in LbCMTWhich.
@@ -28,10 +32,10 @@
 	command locates the package used by the project. The version is the one of the project if
 	it is a regular project and it is the one of the package for versionless projects like
 	DBASE.
-	syntax lbcmtwhich Project Package version
-	       lbcmtwhich Project version
-           lbcmtwhich Project Package
-           lbcmtwhich Project
+	syntax lbwhich Project Package version
+	       lbwhich Project version
+           lbwhich Project Package
+           lbwhich Project
 
 2011-03-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
