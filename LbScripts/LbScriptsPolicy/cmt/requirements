@@ -25,11 +25,11 @@ cmtpath_pattern \
 cmtpath_pattern \
     path_remove_regexp  PYTHONPATH "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/python"\
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/python" \
          <project>_with_installarea&WIN32 "\<project>\.*$(<project>_installarea_prefix)\python" ; \
     path_prepend PYTHONPATH "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/python"\
+         <project>_with_installarea&Unix "<path>/$(<project>_installarea_prefix)/python" \
          <project>_with_installarea&WIN32 "<path>\$(<project>_installarea_prefix)\python"
 
 pattern install_python_modules \
@@ -130,7 +130,7 @@ cmtpath_pattern \
 cmtpath_pattern \
     path_remove_regexp LD_LIBRARY_PATH "" \
          <project>_without_installarea "" \
-         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/.*/lib" \
+         <project>_with_installarea&Unix "/<project>/.*$(<project>_installarea_prefix)/.*/lib"
 
 
 pattern install_scripts \
