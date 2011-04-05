@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+!========================= VeloPixDAQ v1r4 2011-04-05 =========================
 ! 2011-03-17 -Wenbin Qian
  - remove some information output from previous change
 ! 2011-03-17 - Wenbin Qian
