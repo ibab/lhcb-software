@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r1 2011-04-05 =========================
 ! 2011-03-24 - Chris Jones
  - Increase a bit the size of the photon selection window for Rich1gas when 
    using the "Wide" photon selection criteria.
