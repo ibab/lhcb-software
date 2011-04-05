@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r49 2011-04-05 =========================
 ! 2011-03-29 - Chris Jones
  - Remove "HPDImageShifts" from list of monitors run by default
 
