@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfTools v1r14 2011-04-05 =========================
 ! 2011-03-31 - Wouter Hulsbergen
  - register OT/STHitCreator to detector geometry conditions
 
