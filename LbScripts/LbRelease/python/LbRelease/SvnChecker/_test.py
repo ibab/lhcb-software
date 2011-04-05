@@ -264,6 +264,24 @@ class Test(unittest.TestCase):
         for txn, result in self.xml_files:
             self.assertCheckTxn(txn, checker, result)
 
+    def test_050_duplicated_packages(self):
+        checker = LHCbCheckers.uniquePackages
+        for txn, result in [(FakeTransaction({"/": ('M', (-1, None), 'file')},
+                                             files = {"/": "dir"},
+                                             node_properties = {"/" : {"packages": """
+# a comment
+
+Hat1/Pack1 Proj1
+Hat2/Pack1 Proj2
+"""}},), False),
+(FakeTransaction({"/": ('M', (-1, None), 'file')},
+                                             files = {"/": "dir"},
+                                             node_properties = {"/" : {"packages": """
+Hat1/Pack1 Proj1
+Hat2/Pack2 Proj2
+"""}},), True)]:
+            self.assertCheckTxn(txn, checker, result)
+
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

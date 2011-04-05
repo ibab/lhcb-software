@@ -9,8 +9,9 @@ Created on Nov 25, 2010
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 from StdCheckers import *
+from Core import Failure
 
-__all__ = ("validTag", "librarian", "nightlyConf")
+__all__ = ("validTag", "librarian", "nightlyConf", "uniquePackages")
 
 # Standard tag validation policy
 validTag = AllPaths(TagRemoval() + TagIntermediateDirs() + ProjectTag() + PackageTag(),
@@ -21,3 +22,21 @@ librarian = AllowedUsers(["liblhcb"])
 
 # Run the XML checkers on the nightly build configuration.
 nightlyConf = AllPaths(ValidXml(), r".*LHCbNightlyConf/trunk/configuration\.xml$")
+
+# Check that a package name exists only once in the repository (only in the 'packages' property)
+def allUnique(packages):
+    names = set()
+    for l in packages.splitlines():
+        l = l.strip()
+        if (not l) or l.startswith("#"):
+            # Skip empty lines and comments
+            continue
+        pack, _ = l.split() # extract the package name
+        name = pack.rsplit("/",1)[-1] # strip the 'hat'
+        if name in names: # Check if the package name was already found
+            return False
+        else:
+            names.add(name)
+    return True
+uniquePackages = OnPath("/", PropertyChecker("packages", allUnique)) \
+                 + Failure(msg = "Duplicate package name in property 'packages'")

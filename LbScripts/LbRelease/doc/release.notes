@@ -1,3 +1,9 @@
+2011-04-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvcChecker/StdCheckers.py: added a modifier to apply a PathChecker to a single file
+	* python/LbRelease/SvcChecker/LHCbCheckers.py: added a checker to avoid duplicate package names
+	* python/LbRelease/SvcChecker/_test.py: added a test for the new LHCb checker
+
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release ov version v4r1

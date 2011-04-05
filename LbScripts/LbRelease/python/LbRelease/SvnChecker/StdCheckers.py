@@ -123,6 +123,16 @@ def AllPaths(checker, filter = ""):
     """
     return ForeachPath(checker, filter, False)
 
+class OnPath(Checker):
+    """
+    Apply a PathChecker to a single file.
+    """
+    def __init__(self, path, checker):
+        self.checker = checker
+        self.path = path
+    def __call__(self, txn):
+        return self.checker(txn, self.path)
+
 tagsFilter = r".*/tags/.*"
 _versionFormat = r"^((v\d+r\d+(p\d+)?(-pre\d*)?)|(\w+_\d{8}[a-z]?))$"
 
