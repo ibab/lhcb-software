@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r8 2011-04-05 =========================
 ! 2011-03-29 - Gerhard Raven
  - HltVertexReportsDecoder: speed up decoding by not copying the rawbank into a temporary vector
 
