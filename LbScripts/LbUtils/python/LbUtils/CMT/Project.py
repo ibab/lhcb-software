@@ -427,9 +427,9 @@ def hasProjectFile(dirpath):
                             hasfile = True
                             return hasfile
                 except OSError, msg :
-                    log.warning("Cannot open path %s" % msg)
+                    log.debug("Cannot open path %s" % msg)
     except OSError, msg :
-        log.warning("Cannot open path %s" % msg)
+        log.debug("Cannot open path %s" % msg)
     return hasfile
 
 
