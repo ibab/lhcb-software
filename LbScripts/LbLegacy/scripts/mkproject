@@ -95,6 +95,8 @@ def getNumberOfCores():
 #-----------------------------------------------------------------------------------
 def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=True):
     log = logging.getLogger()
+    global fixed_links
+
 
     projconf = getProject(pname)
 
