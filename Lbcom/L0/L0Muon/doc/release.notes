@@ -3,6 +3,7 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Muon v9r3 2011-04-05 =========================
 ! 2011-04-04 - Julien Cogan
  - fix bug occuring when the L0Muon condition is not present (e.g. MC09 
   configuration) -> do not return an error if the runUpdate fails. 
