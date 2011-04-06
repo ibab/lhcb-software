@@ -11,6 +11,8 @@
 #include "string.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/AdderSys.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
+#include "AIDA/IHistogram1D.h"
 typedef std::pair<std::string, void*> HistPair;
 
 
@@ -145,10 +147,12 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
   void *p;
   int n1d,n2d,nprof,nrate;
+  unsigned long long tim;
   n1d=0;
   n2d=0;
   nprof=0;
   nrate=0;
+  tim = gettime();
   if (siz == 4)
   {
     printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
@@ -180,6 +184,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   m_RateBuff = 0;
   if (m_reference < current)
   {
+    m_time0 = tim;
     m_added++;
     m_received = 1;
     if (m_isSaver)
@@ -217,6 +222,14 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   }
   else if (m_reference == current)
   {
+    if (m_histo != 0)
+    {
+      this->m_monsvc->Lock();
+      unsigned long long dtim = tim-m_time0;
+      double ftim = dtim/1000000000;
+      m_histo->fill(ftim);
+      this->m_monsvc->UnLock();
+    }
 //    printf("Adding %s\n",h->m_TargetService.c_str());
     MonMap hmap;
     hmap.clear();

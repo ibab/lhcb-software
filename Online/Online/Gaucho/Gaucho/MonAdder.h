@@ -102,7 +102,11 @@ typedef std::map<std::string, TaskDescr*> TskMap;
 typedef std::pair<std::string, INServiceDescr*> TskPair;
 typedef TskMap::iterator TskIter;
 typedef std::map<std::string,std::string> TskServiceMap;
-
+namespace AIDA
+{
+  class IHistogram1D;
+}
+class IGauchoMonitorSvc;
 class MonAdder
 {
 public:
@@ -143,10 +147,14 @@ public:
   std::string m_outdns;
   bool m_IsEOR;
   bool m_noRPC;
-
+  unsigned long long m_time0;
 public:
   lib_rtl_lock_t m_lockid;
   lib_rtl_lock_t m_maplock;
+  bool m_dohisto;
+  AIDA::IHistogram1D *m_histo;
+  IGauchoMonitorSvc *m_monsvc;
+
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
   bool m_isSaver;
   MonAdder();
@@ -164,6 +172,7 @@ public:
   virtual void NewService(DimInfo *myInfo, std::string &TaskName, std::string &ServiceName);
   virtual void RemovedService(DimInfo *, std::string &TaskName, std::string &ServiceName);
   virtual void TaskDied(std::string & task);
+  unsigned long long gettime();
   void setIsSaver(bool p)
   {
     if (p)

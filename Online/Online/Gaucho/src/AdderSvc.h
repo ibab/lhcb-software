@@ -13,7 +13,7 @@
 #include <set>
 #include "GaudiKernel/IIncidentListener.h"
 #include "Gaucho/AdderSys.h"
-
+#include "AIDA/IHistogram.h"
 // Forward declarations
 class ISvcLocator;
 //class MonObject;
@@ -50,6 +50,8 @@ public:
   }
 };
 class IIncidentSvc;
+class IGauchoMonitorSvc;
+class IHistogramSvc;
 class AdderSvc : public Service, virtual public IIncidentListener
 {
 public:
@@ -64,6 +66,10 @@ public:
   StatusCode stop();
   StatusCode finalize();
   virtual void handle(const Incident&);
+  IGauchoMonitorSvc* m_pGauchoMonitorSvc;
+  IHistogramSvc *m_phistsvc;
+  AIDA::IHistogram1D *m_arrhist;
+  bool m_dohisto;
 private:
   AdderSys *m_AdderSys;
   std::string m_utgid;

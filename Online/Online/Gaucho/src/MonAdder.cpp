@@ -238,3 +238,16 @@ void MonAdder::dumpServices()
     printf("Service %d Name:%s\n",k,i->first.c_str());
   }
 }
+unsigned long long MonAdder::gettime()
+{
+#define onesec_nano (unsigned long long)(1000000000)
+  unsigned long long timstamp;
+  struct timeval tv;
+  struct timezone *tz;
+  tz = 0;
+  gettimeofday(&tv, tz);
+  timstamp  = tv.tv_sec;
+  timstamp *= onesec_nano;
+  timstamp += tv.tv_usec*1000;
+  return timstamp;
+}

@@ -9,6 +9,8 @@
 #include "TApplication.h"
 #include "Gaucho/Utilities.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IHistogramSvc.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 
 
 //DECLARE_SERVICE_FACTORY(AdderSvc)
@@ -41,7 +43,8 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("TaskPattern",m_TaskPattern);
   declareProperty("ServicePattern",m_ServicePattern="");
   declareProperty("AdderType",m_AdderType="node"); //Possible values are
-//  'node' for a node adder,
+  declareProperty("DoHistos",m_dohisto=true);
+//  'node' for a node adder,;
 //  'sf' or 'subfarm' for subfarm adder
 //  'top' or 'part' for top or partition adder
   declareProperty("AdderClass",m_AdderClass="hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
@@ -49,6 +52,9 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   m_started = false;
   m_errh =0;
   m_funcsvc = 0;
+  m_pGauchoMonitorSvc = 0;
+  m_phistsvc=0;
+  m_arrhist = 0;
 }
 AdderSvc::~AdderSvc()
 {
@@ -70,11 +76,37 @@ TApplication *app;
 StatusCode AdderSvc::initialize()
 {
   Service::initialize();
+  StatusCode sc;
+  MsgStream msg( msgSvc(), name() );
+  sc = StatusCode::SUCCESS;
+  if(m_dohisto)
+  {
+    sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
+    if( sc.isSuccess() )
+    {
+      msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
+    }
+    else
+    {
+      msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
+      return StatusCode::FAILURE;
+    }
+    sc = serviceLocator()->service("HistogramSvc",m_phistsvc,false);
+    if( sc.isSuccess() )
+    {
+      msg << MSG::DEBUG << "Found the Histogram Service interface" << endreq;
+    }
+    else
+    {
+      msg << MSG::FATAL << "Unable to locate the Histogram Service interface." << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
   m_adder = 0;
   m_EoRadder = 0;
   m_SaveTimer = 0;
   m_AdderSys = &AdderSys::Instance();
-  StatusCode sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
+  sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
   if( !sc.isSuccess() ) {
     return sc;
   }
@@ -105,6 +137,11 @@ StatusCode AdderSvc::start()
   else if(m_AdderClass == "counter")
   {
     servicename = "Counter";
+  }
+  if (m_dohisto)
+  {
+    m_arrhist = m_phistsvc->book(name()+"/arrivaltime","Adder Packet Arrival Time in seconds",100,0.0,50.0);
+    m_pGauchoMonitorSvc->declareInfo(std::string("ArrivalTimes"),m_arrhist,std::string("Packet Arrival Times"),this);
   }
 // Nodeadders:
 // Source task names:
@@ -197,6 +234,9 @@ StatusCode AdderSvc::start()
   m_adder->m_taskPattern = m_TaskPattern;
   m_adder->m_servicePattern = m_ServicePattern+std::string("Data");
   m_adder->setIsSaver(m_isSaver);
+  m_adder->m_dohisto = m_dohisto;
+  m_adder->m_histo = m_arrhist;
+  m_adder->m_monsvc = m_pGauchoMonitorSvc;
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
   if (m_isSaver)
