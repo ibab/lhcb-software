@@ -26,31 +26,15 @@ def start() :
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
-    #if OnlineEnv.PartitionName == 'FEST' :
-       # Moore().EnableRunChangeHandler = False
-       # Moore().Simulation = True
-       # Moore().DDDBtag   = 'MC09-20090602'
-       # Moore().CondDBtag = 'sim-20090402-vc-md100'
+    ### pick up requested DB tags
+    if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag
+    if hasattr(OnlineEnv,'DDDBTag')   and OnlineEnv.DDDBTag   : Moore().DDDBtag   = OnlineEnv.DDDBTag
 
-    ### pick up requested DB tag 
-    ### use old capitalization
-    if hasattr(OnlineEnv,'condDBTag') and OnlineEnv.condDBTag :
-        Moore().CondDBtag = OnlineEnv.condDBTag
-        #Moore().DDDBtag   = OnlineEnv.condDBTag
-        Moore().UseDBSnapshot = True
-    ### canonical capitalization
-    if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag :
-        Moore().CondDBtag = OnlineEnv.CondDBTag
-        #Moore().DDDBtag   = OnlineEnv.CondDBTag
-        Moore().UseDBSnapshot = True
-	
     from Configurables import MonitorSvc
     MonitorSvc().ExpandCounterServices = 1;
     MonitorSvc().ExpandNameInfix       = "<part>_x_<program>/";
     MonitorSvc().PartitionName         = OnlineEnv.PartitionName;
     MonitorSvc().ProgramName           = "HltExpertMon_00";
-
-	
 	
     from Configurables import UpdateAndReset
     UpdateAndReset().saveHistograms = 1	
