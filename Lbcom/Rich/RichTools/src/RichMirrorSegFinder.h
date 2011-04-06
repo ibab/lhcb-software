@@ -34,6 +34,9 @@
 #include "RichDet/DeRich2.h"
 #include "RichDet/DeRichSphMirror.h"
 
+// boost
+#include "boost/assign/list_of.hpp"
+
 namespace Rich
 {
 
@@ -94,6 +97,9 @@ namespace Rich
 
     /// Get the mirrors compatible with DC06 DDDB
     StatusCode getMirrors_old( );
+
+    /// Update Mirror information on Condition changes
+    StatusCode mirrorUpdate();
     
   private: // classes
 
@@ -112,8 +118,8 @@ namespace Rich
        */
       inline bool operator() ( const DeRichSphMirror* m1, const DeRichSphMirror* m2 ) const
         {
-          return ( pow(m1->mirrorCentre().x(),2) + pow(m1->mirrorCentre().y(),2) <
-                   pow(m2->mirrorCentre().x(),2) + pow(m2->mirrorCentre().y(),2) );
+          return ( std::pow(m1->mirrorCentre().x(),2) + std::pow(m1->mirrorCentre().y(),2) <
+                   std::pow(m2->mirrorCentre().x(),2) + std::pow(m2->mirrorCentre().y(),2) );
         }
     };
 
@@ -139,6 +145,9 @@ namespace Rich
 
     /// Tuning scale factor
     double m_tuneScale;
+
+    /// Flag for the first update
+    bool m_firstUpdate;
 
   };
 

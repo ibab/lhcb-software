@@ -246,7 +246,9 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
   Gaudi::XYZVector tmpDir ( startDir   );
   
   // Correct start point/direction for aerogel refraction, if appropriate
-  if ( mode.aeroRefraction() && Rich::Rich1 == rich )
+  if ( mode.aeroRefraction()            && 
+       rich             == Rich::Rich1  && 
+       trSeg.radiator() == Rich::Aerogel )
   {
     m_snellsLaw->aerogelToGas(tmpPos,tmpDir,trSeg);
   }
@@ -264,7 +266,6 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
                                      const LHCb::RichTraceMode mode,
                                      const Rich::Side forcedSide ) const
 {
-
   // default result is failure
   LHCb::RichTraceMode::RayTraceResult result = LHCb::RichTraceMode::RayTraceFailed;
 

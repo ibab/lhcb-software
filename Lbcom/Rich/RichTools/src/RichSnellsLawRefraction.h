@@ -120,6 +120,9 @@ namespace Rich
       return m_aeroExitPlane;
     }
 
+    /// UMS update for aerogel
+    StatusCode aeroUpdate();
+
   private:
 
     /// Pointer to general refractive index tool

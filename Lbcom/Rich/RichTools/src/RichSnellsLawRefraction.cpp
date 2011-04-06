@@ -22,16 +22,16 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : ToolBase        ( type, name, parent ),
-    m_refIndex      ( NULL  ),
-    m_planeInfoMade ( false ),
-    m_minZaero      ( 0     ),
-    m_radiators     ( Rich::NRadiatorTypes,
-                      (const DeRichRadiator *)(NULL) ),
-    m_hltMode       ( false )
+  SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : ToolBase        ( type, name, parent ),
+      m_refIndex      ( NULL  ),
+      m_planeInfoMade ( false ),
+      m_minZaero      ( 0     ),
+      m_radiators     ( Rich::NRadiatorTypes,
+                        (const DeRichRadiator *)(NULL) ),
+      m_hltMode       ( false )
 {
   // interface
   declareInterface<ISnellsLawRefraction>(this);
@@ -58,8 +58,18 @@ StatusCode SnellsLawRefraction::initialize()
   // get tools
   acquireTool( "RichRefractiveIndex", m_refIndex );
 
+  // UMS
+  updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel,
+                                  &SnellsLawRefraction::aeroUpdate );
+
   // return
   return sc;
+}
+
+StatusCode SnellsLawRefraction::aeroUpdate() 
+{
+  m_planeInfoMade = false; 
+  return StatusCode::SUCCESS;
 }
 
 void SnellsLawRefraction::buildAeroPlaneInfo() const
@@ -110,11 +120,12 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
     Exception( "Track segment is not for aerogel !!"  );
   }
 
-  // photon energy
-  const double photonEnergy = trSeg.avPhotonEnergy();
-  if ( photonEnergy > 0 )
+  if ( startPoint.z() < m_minZaero )
   {
-    if ( startPoint.z() < m_minZaero )
+
+    // photon energy
+    const double photonEnergy = trSeg.avPhotonEnergy();
+    if ( photonEnergy > 0 )
     {
 
       // get the aerogel ref index for the track segment intersections
@@ -124,10 +135,13 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
       // do the correction
       _aerogelToGas( startPoint, dir, photonEnergy, refAero );
 
-    } // start point OK
+    }
+    else
+    {
+      Warning( "aerogelToGas:: photonEnergy = 0" ).ignore();
+    }
 
-  }
-  else { Warning( "aerogelToGas:: photonEnergy = 0" ).ignore(); }
+  } // start point OK
 
 }
 
@@ -135,9 +149,9 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
                                         Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
 {
-  if ( photonEnergy > 0 )
+  if ( startPoint.z() < m_minZaero )
   {
-    if ( startPoint.z() < m_minZaero )
+    if ( photonEnergy > 0 )
     {
 
       // get the average aerogel ref index
@@ -149,8 +163,11 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
       _aerogelToGas( startPoint, dir, photonEnergy, refAero );
 
     }
+    else
+    { 
+      Warning( "aerogelToGas:: photonEnergy = 0" ).ignore();
+    }
   }
-  else { Warning( "aerogelToGas:: photonEnergy = 0" ).ignore(); }
 }
 
 void SnellsLawRefraction::_aerogelToGas( Gaudi::XYZPoint & startPoint,
@@ -202,7 +219,10 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
     _gasToAerogel( dir, photonEnergy, refAero );
 
   }
-  else { Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); }
+  else 
+  {
+    Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); 
+  }
 
 }
 
@@ -221,7 +241,10 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
     _gasToAerogel( dir, photonEnergy, refAero );
 
   }
-  else { Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); }
+  else
+  { 
+    Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); 
+  }
 
 }
 
