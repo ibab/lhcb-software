@@ -123,7 +123,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
   // Loop "Main Step" on range until no more steps can be made
   //----------------------------------------------------------
   unsigned iloop = 0;
-  unsigned maxNumMainSteps = std::distance(begin, end) / stepSize1(); //in initialize() assert that the denominator is > 0 
+  unsigned maxNumMainSteps = std::distance(begin, end) / stepSize1(); //in initialize() checked that the denominator is > 0 
   while (indStartMS + minTracksToAccept() <= end) { // Note: <= should be < I think...
     ++iloop;
     debug() << " loop # " << iloop << "/" << maxNumMainSteps << endmsg;
@@ -243,7 +243,7 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
 
     // make sure we go forward and don't hang around forever...
     debug() << "\n================\nEnd of loop #" << iloop << "\nMain Step Starting index = " << indStartMS-begin << endmsg;
-    assert(indStartMS>begin); 
+    //assert(indStartMS>begin); 
 
   }//END while loop
 
