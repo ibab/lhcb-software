@@ -78,41 +78,18 @@ void *MonAdder::ReAllocate(int incsiz)
 
 void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tgen)
 {
-  tname = "";
-  tgen = "";
-  bool status;
-  printf("Comparing %s with % status...",server.c_str(),this->m_taskPattern.c_str());
-  status = boost::regex_search(server,m_taskexp);
+  bool status = boost::regex_search(server,m_taskexp);
   if (status)
   {
-    printf ("success\n");
-//    printf("Comparing %s with Pattern %s...",server.c_str(),this->m_taskPattern.c_str());
+    ::printf("Comparing %s with %s status...success\n",server.c_str(),m_taskPattern.c_str());
     tname = server;
-//    MonMap::iterator it;
-//    it = m_TaskMap.find(server);
-//    if (it == m_TaskMap.end())
-//    {
-//      m_TaskMap.insert(std::pair<std::string,void*>(server,new INServiceMap()));
-//    }
     tgen = "";
-//    printf ("SUCCESS\n");
+    return;
   }
-  else
-  {
-    printf ("Failed\n");
-
-  }
-  return;
+  tname = "";
+  tgen = "";
 }
-//void MonAdder::ServiceName(std::string server, std::string &svc)
-//{
-//  int atpos = server.find_first_of("@");
-//  if (atpos == -1)
-//  {
-//    atpos = server.length();
-//  }
-//  svc = server.substr(0,atpos)+"/histos/"+m_serviceName;
-//}
+
 INServiceDescr *MonAdder::findINService(std::string servc)
 {
   INServIter i;
@@ -217,29 +194,24 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
     {
       m_TaskMap.erase(k);
     }
-    else
-    {
-//      printf ("Task %s not found in map for removed service %s",TaskName.c_str(),ServiceName.c_str());
-    }
     delete i->second;
   }
   if (m_inputServicemap.size() == 0)
   {
-//    printf ("Last Client removed... Deleting output service %s\n",m_outsvcname.c_str());
-    delete m_outservice;
-    m_outservice = 0;
+    deletePtr(m_outservice);
   }
 }
+
 void MonAdder::dumpServices()
 {
   INServiceMap::iterator i;
-  int k;
-  k=1;
+  int k=1;
   for (i=m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {
     printf("Service %d Name:%s\n",k,i->first.c_str());
   }
 }
+
 unsigned long long MonAdder::gettime()
 {
 #define onesec_nano (unsigned long long)(1000000000)

@@ -92,23 +92,13 @@ void HistAdder::Configure()
   if (nodename != "")
   {
     toLowerCase(nodename);
-    m_name= std::string("MON_");
-    //if (strlen(myName) != 0)
-    {
-      m_name = m_name + std::string(m_MyName);//+ std::string("_");
-    }
-    //else
-    //{
-    //  m_name = m_name + std::string("_");
-    //}
-//    std::string tsknam = m_taskname.substr(m_taskname.find("_")+1);
-//    m_name = m_name + tsknam+ std::string("_0");
+    m_name = "MON_" + m_MyName;
   }
   if (m_srcnode == "")
   {
     if (nodename.find("hlt"))
     {
-      std::string rackrow = nodename.substr(3,1); //size of "hlt"
+      std::string rackrow  = nodename.substr(3,1); //size of "hlt"
       std::string rack_node = nodename.substr(4);
       if (rack_node.size() == 4)
       {
@@ -126,12 +116,10 @@ void HistAdder::Configure()
   }
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
-//  DimServer::setDnsNode(m_outdns.c_str());
+  printf("HistAdder> Patterns - Tasks:%s Svc:%s\n",m_taskPattern.c_str(),m_servicePattern.c_str());
   m_outsvcname = m_name+m_serviceName;
   lib_rtl_create_lock(0,&m_maplock);
-//  printf("================Out Service Name %s %s %s\n",m_name.c_str(),m_taskname.c_str(),m_outsvcname.c_str());
-//  m_outservice = new ObjService(m_outsvcname.c_str(),(char*)"C",(void*)&mpty, 4, &m_buffer, &m_usedSize);
-  std::string nam = m_name+std::string("/Histos/HistCommand");
+  std::string nam = m_name + "/Histos/HistCommand";
   m_ser = new AddSerializer((ObjMap*)&m_hmap);
   m_rpc = 0;
   if (!m_noRPC)

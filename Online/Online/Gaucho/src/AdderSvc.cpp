@@ -1,22 +1,15 @@
 
 #include "AdderSvc.h"
 #include "GaudiKernel/SvcFactory.h"
-
-
-#include "TPad.h"
-#include "TCanvas.h"
-#include "TROOT.h"
-#include "TApplication.h"
-#include "Gaucho/Utilities.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
+
+#include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 
-
-//DECLARE_SERVICE_FACTORY(AdderSvc)
-//DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, AdderSvc)
 DECLARE_SERVICE_FACTORY(AdderSvc)
-extern "C"
+
+namespace
 {
   void EORSaver(void *arg,void* ,int , MonMap *, MonAdder *)
   {
@@ -24,30 +17,23 @@ extern "C"
     tim->timerHandler();
   }
 }
+
 AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_incidentSvc(0)
 {
-//  StatusCode sc = Service::initialize();
-//  printf("AdderSvc... Constructing...\n");
-
-//  declareProperty("SourceTaskPattern", m_TaskName="");
   declareProperty("MyName",m_MyName="");
-  declareProperty("InDNS",m_InputDNS="");
-  declareProperty("OutDNS",m_OutputDNS="");
-//  declareProperty("TopLevel",m_TopLevel=false);
-  declareProperty("SaveRootDir", m_SaveRootDir = "/home/beat/Hist/Savesets");
-  declareProperty("IsSaver", m_isSaver = false);
-  declareProperty("SaveInterval", m_SaveInterval = 900);
-  declareProperty("PartitionName",m_PartitionName="LHCb");
-  declareProperty("SaveSetTaskName",m_SaverTaskName="Moore");
-  declareProperty("ExpandRate",m_ExpandRate=false);
-  declareProperty("TaskPattern",m_TaskPattern);
-  declareProperty("ServicePattern",m_ServicePattern="");
-//  declareProperty("AdderType",m_AdderType="node"); //Possible values are
-  declareProperty("DoHistos",m_dohisto=true);
-//  'node' for a node adder,;
-//  'sf' or 'subfarm' for subfarm adder
-//  'top' or 'part' for top or partition adder
-  declareProperty("AdderClass",m_AdderClass="hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
+  declareProperty("InDNS",           m_InputDNS="");
+  declareProperty("OutDNS",          m_OutputDNS="");
+  declareProperty("SaveRootDir",     m_SaveRootDir = "/home/beat/Hist/Savesets");
+  declareProperty("IsSaver",         m_isSaver = false);
+  declareProperty("SaveInterval",    m_SaveInterval = 900);
+  declareProperty("PartitionName",   m_PartitionName="LHCb");
+  declareProperty("SaveSetTaskName", m_SaverTaskName="Moore");
+  declareProperty("ExpandRate",      m_ExpandRate=false);
+  declareProperty("TaskPattern",     m_TaskPattern);
+  declareProperty("ServicePattern",  m_ServicePattern);
+  declareProperty("DoHistos",        m_dohisto=true);
+  declareProperty("AdderClass",      m_AdderClass="hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
+
   m_SaveTimer = 0;
   m_started = false;
   m_errh =0;
@@ -56,10 +42,11 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   m_phistsvc=0;
   m_arrhist = 0;
 }
+
 AdderSvc::~AdderSvc()
 {
-  return;
 }
+
 StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
   if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
@@ -72,13 +59,25 @@ StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
   addRef();
   return StatusCode::SUCCESS;
 }
-TApplication *app;
+
 StatusCode AdderSvc::initialize()
 {
-  Service::initialize();
-  StatusCode sc;
+  StatusCode sc = Service::initialize();
   MsgStream msg( msgSvc(), name() );
-  sc = StatusCode::SUCCESS;
+  if( !sc.isSuccess() ) 
+  {
+    return sc;
+  }
+  if ( m_TaskPattern.empty() ) 
+  {
+    msg << MSG::FATAL << "The option \"TaskPattern\" MUST be set!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  if ( m_ServicePattern.empty() ) 
+  {
+    msg << MSG::FATAL << "The option \"ServicePattern\" MUST be set!" << endmsg;
+    return StatusCode::FAILURE;
+  }
   if(m_dohisto)
   {
     sc = serviceLocator()->service("MonitorSvc", m_pMonitorSvc, true);
