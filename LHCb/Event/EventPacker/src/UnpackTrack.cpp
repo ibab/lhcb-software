@@ -65,6 +65,12 @@ StatusCode UnpackTrack::execute() {
         dst->end() != itS; ++itS ) {
     const LHCb::PackedTrack& src = (*itS);
 
+    if ( msgLevel( MSG::DEBUG ) ) info() << "Process track " << itS - dst->begin() 
+                                         << " nbLHCbId " << src.lastId - src.firstId
+                                         << " nbStates " << src.lastState - src.firstState
+                                         << " nbExtra  " << src.lastExtra - src.firstExtra << endmsg;
+
+
     LHCb::Track* track = new LHCb::Track( );
     newTracks->insert( track, src.key );
 
@@ -75,9 +81,14 @@ StatusCode UnpackTrack::execute() {
       track->setLikelihood(       pack.fltPacked( src.likelihood ) );
       track->setGhostProbability( pack.fltPacked( src.ghostProba ) );
     }
-    std::vector<LHCb::LHCbID> lhcbids(  src.lastId - src.firstId  ) ;
+
+    int firstId = src.firstId; 
+    int lastId  = src.lastId;
+    if ( lastId < firstId ) lastId += 65536;
+    
+    std::vector<LHCb::LHCbID> lhcbids( lastId - firstId ) ;
     std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;
-    for ( int kId = src.firstId; src.lastId > kId; ++kId, ++lhcbit ) {
+    for ( int kId = firstId; lastId > kId; ++kId, ++lhcbit ) {
       unsigned int id = *(dst->beginIds()+kId);
       *lhcbit = LHCb::LHCbID( id ) ;
     }
@@ -87,7 +98,10 @@ StatusCode UnpackTrack::execute() {
     }
     track->addSortedToLhcbIDs( lhcbids ) ;
 
-    for ( int kSt = src.firstState; src.lastState > kSt; ++kSt ) {
+    int firstState = src.firstState; 
+    int lastState  = src.lastState;
+    if ( lastState < firstState ) lastState += 65536;
+    for ( int kSt = firstState; lastState > kSt; ++kSt ) {
       LHCb::PackedState pSta = *(dst->beginState()+kSt);
       convertState( pSta, track );
     }

@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2011-04-06 - Olivier Callot
+ - Fix the handling of unsigned short as index in the list of LHCbIDs, when it overflows 65k.
+
 !========================= EventPacker v2r7 2011-02-22 =========================
 ! 2011-02-16 - Chris Jones
  - Fix various coverity warnings
