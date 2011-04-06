@@ -109,7 +109,8 @@ DisplayHistogram::~DisplayHistogram() {
 //
 //=========================================================================
 std::string DisplayHistogram::rootName ( ) {
-  return m_onlineHist->rootName();
+  if ( NULL != m_onlineHist ) return m_onlineHist->rootName();
+  return m_identifier;
 }
 
 //=========================================================================

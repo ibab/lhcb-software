@@ -120,8 +120,9 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
         const pres::PresenterMode prevPresenterMode = m_mainFrame->presenterMode();
         m_mainFrame->setPresenterModeVariable(History);
         m_mainFrame->addHistoToPage(message.hIdentifier(), separate);
-        m_mainFrame->autoCanvasLayout();
-        m_mainFrame->setDisplayModeVariable(Alarm);
+        //m_mainFrame->autoCanvasLayout();
+        //m_mainFrame->setDisplayModeVariable(Alarm);
+        m_mainFrame->displaySimpleHistos();
         
         char header[100];
         sprintf( header, "%s message %3d", message.levelString(), msgId );

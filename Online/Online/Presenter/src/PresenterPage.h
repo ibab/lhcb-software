@@ -66,8 +66,8 @@ public:
   //== Reset and clear the page
   void clear();
 
-  //== Add a simple DIM histo on the page
-  void addDimHisto ( std::string dimName );
+  //== Add a simple histo on the page
+  void addSimpleHisto ( std::string dimName, OnlineHistogram* onlH=NULL );
   
   //== Set the DIM browser
   void setDimBrowser( DimBrowser* br )  { m_dimBrowser = br; }

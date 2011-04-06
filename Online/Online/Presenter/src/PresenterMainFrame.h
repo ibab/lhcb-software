@@ -182,9 +182,10 @@ public:
   /// Set the presenter Mode
   void setPresenterMode(const pres::PresenterMode & presenterMode);
 
-  void setDisplayModeVariable(const pres::DisplayMode & displayMode) { 
-    m_displayMode = displayMode;}
-
+  void setDisplayModeVariable(const pres::DisplayMode & displayMode) { m_displayMode = displayMode;}
+  
+  void displaySimpleHistos ( );
+  
   const pres::DisplayMode & displayMode() {return m_displayMode; }
   void setDatabaseMode(const pres::DatabaseMode & databaseMode);
 

@@ -3665,121 +3665,30 @@ void PresenterMainFrame::addHistoToHistoDB() {
 //=========================================================================
 void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
                                          pres::ServicePlotMode overlapMode){
-  HistogramIdentifier histogramID = HistogramIdentifier(histogramUrl);
-  int newHistoInstance = 0;
-
-  m_presenterPage.addDimHisto( histogramUrl );
-  
-  /*
-    OnlineHistogram* onlineHistogram = NULL;
-  DimBrowser* dimBrowser = NULL;
-  std::string theCurrentPartition( currentPartition() ) ;
-  if (isConnectedToHistogramDB() &&
-      ( pres::invisible != overlapMode) ){
-    histogramDB = m_histogramDB;
-    TString dimMon(histogramUrl);
-    if (false == (dimMon.BeginsWith( pres::s_adder.c_str()) &&
-                  dimMon.EndsWith(pres::s_eff_TCK.c_str()))) {
-      onlineHistogram = m_histogramDB->getHistogram(dimMon.Data());
-    }
-  } else {
-    histogramDB = NULL;
-    onlineHistogram = NULL;
+  OnlineHistogram* onlH = NULL;
+  try {
+    onlH = m_histogramDB->getHistogram( histogramUrl );
+  } catch (std::string sqlException) {
+    onlH = NULL;
   }
-  if (( pres::History == presenterMode()) ||
-      (pres::EditorOffline == presenterMode()))
-    dimBrowser = NULL;
-  else if ( ( pres::Online == presenterMode()) ||
-            ( pres::EditorOnline == presenterMode()) || ( isBatch() ) ) {
-    dimBrowser = m_dimBrowser;
-    if ( ! isConnectedToHistogramDB() ) theCurrentPartition = histogramUrl;
-  }
-  std::vector<std::string*> tasksNotRunning;
-  
-  DbRootHist* dbRootHist = new DbRootHist( histogramUrl,
-                                           theCurrentPartition,
-                                           2, newHistoInstance,
-                                           histogramDB,
-                                           analysisLib(),
-                                           onlineHistogram,
-                                           m_verbosity,
-                                           dimBrowser,
-                                           &PresenterMutex::oraMutex,
-                                           &PresenterMutex::dimMutex,
-                                           tasksNotRunning,
-                                           &PresenterMutex::rootMutex);
-  dbRootHist->setPresenterInfo( &m_presenterInfo );
-  dbRootHist->initHistogram();
-  if ( histogramDB ) dbRootHist->setTH1FromDB() ;
-
-  dbRootHist->setOverlapMode(overlapMode);
-  if ( (0 != m_archive ) && ( ! m_savesetFileName.empty() ) &&
-       ( ( pres::History == presenterMode()) ||
-         ( pres::EditorOffline == presenterMode() ) ) )
-    m_archive->fillHistogram(dbRootHist, pres::s_startupFile,
-                             m_savesetFileName);
-
-  if ( ( ! isConnectedToHistogramDB( ) ) &&
-       ( pres::invisible != overlapMode) ) {
-    // Set Properties
-    TString paintDrawXLabel = bulkHistoOptions.m_xLabel;
-    TString paintDrawYLabel = bulkHistoOptions.m_yLabel;
-    int paintLineWidth      = bulkHistoOptions.m_lineWidth;
-    int paintFillColour     = bulkHistoOptions.m_fillColour;
-    int paintFillStyle      = bulkHistoOptions.m_fillStyle;
-    int paintLineStyle      = bulkHistoOptions.m_lineStyle;
-    int paintLineColour     = bulkHistoOptions.m_lineColour;
-    int paintStats          = bulkHistoOptions.m_statsOption;
-    if (dbRootHist && dbRootHist->hasRootHistogram()) {
-      dbRootHist->getRootHistogram()->SetXTitle(paintDrawXLabel.Data());
-      dbRootHist->getRootHistogram()->SetYTitle(paintDrawYLabel.Data());
-      dbRootHist->getRootHistogram()->SetLineWidth(paintLineWidth);
-      dbRootHist->getRootHistogram()->SetFillColor(paintFillColour);
-      dbRootHist->getRootHistogram()->SetFillStyle(paintFillStyle);
-      dbRootHist->getRootHistogram()->SetLineStyle(paintLineStyle);
-      dbRootHist->getRootHistogram()->SetLineColor(paintLineColour);
-      dbRootHist->getRootHistogram()->SetStats(paintStats);
-
-      TString paintDrawOption;
-
-      std::cout << "== addHistosToPage: histogram type " << dbRootHist->histogramType() << std::endl;
-
-      if ( s_pfixMonH1D == dbRootHist->histogramType()) {
-        m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
-        paintDrawOption = TString(m_drawOption + TString(" ") + bulkHistoOptions.m_genericRootDrawOption).Data();
-      } else if ( s_pfixMonProfile == dbRootHist->histogramType() ) {
-        m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
-        paintDrawOption = TString(m_drawOption + TString(" ") + bulkHistoOptions.m_genericRootDrawOption + TString(" E ")).Data();
-      } else if ( s_pfixMonH2D == dbRootHist->histogramType()) {
-        m_drawOption = bulkHistoOptions.m_2DRootDrawOption;
-        paintDrawOption = TString(m_drawOption + TString(" ") + bulkHistoOptions.m_genericRootDrawOption).Data();
-      }
-      dbRootHist->getRootHistogram()->SetOption(paintDrawOption.Data());
-    }
-  }
-  TPad* targetPad = NULL ;
-  DbRootHist* prevDbRootHist = NULL;
-  if ( ( pres::overlap == overlapMode ) && ( ! dbHistosOnPage.empty()) &&
-       ( isConnectedToHistogramDB()) ) {
-    std::vector<DbRootHist*>::iterator pad_dbHistosOnPageIt;
-    pad_dbHistosOnPageIt = dbHistosOnPage.end();
-    pad_dbHistosOnPageIt--;
-    prevDbRootHist = *pad_dbHistosOnPageIt;
-    if ( (0 != prevDbRootHist) && (0 != prevDbRootHist->getHostingPad()) ) {
-      targetPad = prevDbRootHist->getHostingPad();
-      dbRootHist->setHostingPad( targetPad ) ;
-    }
-  }
-  dbHistosOnPage.push_back(dbRootHist);
-  if ( ( ! isBatch() ) && ( pres::invisible != overlapMode) )
-    paintHist(dbRootHist, targetPad);
-  else if ( ( pres::invisible != overlapMode) && ( isBatch() ) ) {
-    dbRootHist->getRootHistogram()->SetLineStyle(1);
-    dbRootHist->getRootHistogram()->SetLineWidth(1);
-  }
-*/
+  m_presenterPage.addSimpleHisto( histogramUrl, onlH );
 }
 
+//=========================================================================
+// Display a list of histograms, with automatic pad assignment 
+//=========================================================================
+void PresenterMainFrame::displaySimpleHistos ( ) {
+  if ( ( pres::EditorOnline  == presenterMode() ) ||
+       ( pres::Online        == presenterMode() )   ) {
+    std::string partition = currentPartition();
+    m_presenterPage.setDimBrowser( m_dimBrowser );
+    m_presenterPage.loadFromDIM( partition, false );
+  } else {
+    m_presenterPage.loadFromArchive( m_archive, pres::s_startupFile, m_savesetFileName );
+  }
+  m_presenterPage.simpleDisplay( editorCanvas );
+  editorCanvas->Update();
+}
 //==============================================================================
 // Add dim histogram to page
 //==============================================================================
@@ -3813,13 +3722,7 @@ void PresenterMainFrame::addDimHistosToPage() {
   m_histoSvcListTree->CheckAllChildren( m_histoSvcListTree->GetFirstItem(),
                                         pres::s_uncheckTreeItems);
 
-  std::string partition = currentPartition();
-  m_presenterPage.setDimBrowser( m_dimBrowser );
-  m_presenterPage.loadFromDIM( partition, false );
-  m_presenterPage.simpleDisplay( editorCanvas );
-
-  editorCanvas->Update();
-  enableAutoCanvasLayoutBtn();
+  displaySimpleHistos();  
 }
 
 //==============================================================================

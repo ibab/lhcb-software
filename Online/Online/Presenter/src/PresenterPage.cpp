@@ -70,17 +70,19 @@ void PresenterPage::clear ( ) {
 }
 
 //=========================================================================
-//  Add a Dim histo to the page
+//  Add a simple histo to the page
 //=========================================================================
-void PresenterPage::addDimHisto ( std::string dimName ) {
+void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH ) {
+  std::cout << "addSimpleHIsto: name " << dimName << std::endl;
   std::string task = dimName.substr( 0, dimName.find( '/' ) );
-  task = task.substr( task.find('_')+1 );
-  task = task.substr( 0, task.find('_') );
+  task = task.substr( task.find('_')+1 );  // remove partition
+  task = task.substr( task.find('_')+1 );  // remove node
+  task = task.substr( 0, task.find('_') ); // remove trailing _00
   
-  std::string ident = dimName.substr( dimName.find('_' )+1 );
+  std::string ident = task + "/" + dimName.substr( dimName.find('/' )+1 );
 
-  DisplayHistogram temp( NULL );
-  temp.setIdentifier( ident );
+  DisplayHistogram temp( onlH );
+  if ( NULL == onlH ) temp.setIdentifier( ident );
 
   bool existed = false;
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {

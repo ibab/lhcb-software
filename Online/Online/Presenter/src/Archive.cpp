@@ -779,6 +779,7 @@ void Archive::setFiles ( const std::string& task,
       } else if ( boost::algorithm::starts_with( filePath.file_string() , "castor:/") ) {
         m_rootFiles.push_back( filePath ) ;
       }
+      std::cout << "Archive::setFiles: File is " << m_rootFiles.back() << std::endl;
     }
   } else {
     m_rootFiles = findSavesets( task, timePoint , pastDuration ) ;
@@ -820,7 +821,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
     if ( rootFile -> IsZombie() ) {
       std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
     } else {
-      std::cout << " ++ file " << (*itF).file_string() << " is open. Search for " << dispHist->rootName() << std::endl;
+      std::cout << " ++ file " << (*itF).file_string() << " OK. Search " << dispHist->rootName() << std::endl;
       TH1* archiveHisto;
       rootFile -> GetObject( (dispHist->rootName()).c_str(), archiveHisto );
       if (archiveHisto) {
@@ -833,6 +834,8 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
           dispHist->setRootHist( (TH1*)( archiveHisto->Clone() ) ) ;
           dispHist->rootHist()->Reset( ) ;
         }
+      } else {
+        std::cout << "Histo not found!" << std::endl;
       }
     }
   }
