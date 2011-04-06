@@ -73,6 +73,7 @@ L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   declareProperty( "CreateHCALLut"   , m_createHCALLut      = false    ) ;
   declareProperty( "UsePSSPD"        , m_usePsSpdOpts       = true     ) ;
   declareProperty( "AddECALToHCAL"   , m_addEcalToHcalOpts  = true     ) ;
+  declareProperty( "UseNewElectron"  , m_newElectron        = false    ) ;
   m_spdMult = std::vector< int >( 16 , 0 ) ;
 }
 
@@ -258,6 +259,43 @@ StatusCode L0CaloAlg::initialize() {
   m_validPrs[14] = 0;
   m_validPrs[15] = 0;
 
+  // PRS validation mask for the Inner part
+  if ( ! m_newElectron ) {
+    m_validPrsInner[0]  = 0;
+    m_validPrsInner[1]  = 1;
+    m_validPrsInner[2]  = 1;
+    m_validPrsInner[3]  = 1;
+    m_validPrsInner[4]  = 1;
+    m_validPrsInner[5]  = 1;
+    m_validPrsInner[6]  = 1;
+    m_validPrsInner[7]  = 0;
+    m_validPrsInner[8]  = 1;
+    m_validPrsInner[9]  = 1;
+    m_validPrsInner[10] = 1;
+    m_validPrsInner[11] = 0;
+    m_validPrsInner[12] = 1;
+    m_validPrsInner[13] = 0;
+    m_validPrsInner[14] = 0;
+    m_validPrsInner[15] = 0;
+  } else {
+    m_validPrsInner[0]  = 0;
+    m_validPrsInner[1]  = 1;
+    m_validPrsInner[2]  = 1;
+    m_validPrsInner[3]  = 1;
+    m_validPrsInner[4]  = 1;
+    m_validPrsInner[5]  = 1;
+    m_validPrsInner[6]  = 1;
+    m_validPrsInner[7]  = 1;
+    m_validPrsInner[8]  = 1;
+    m_validPrsInner[9]  = 1;
+    m_validPrsInner[10] = 1;
+    m_validPrsInner[11] = 1;
+    m_validPrsInner[12] = 1;
+    m_validPrsInner[13] = 1;
+    m_validPrsInner[14] = 1;
+    m_validPrsInner[15] = 1;
+  }
+
   info() << m_ecal->nCards() << " Ecal and "
          << m_hcal->nCards() << " Hcal front end cards." << endreq;
 
@@ -328,7 +366,10 @@ StatusCode L0CaloAlg::execute() {
     // SPD matching Prs => electron
     
     prsMask = m_ecalFe[ eCard ].prsMask() ;
-    okPrs   = m_validPrs[ prsMask ] ;
+    
+    if ( ID.area() == 2 ) okPrs = m_validPrsInner[ prsMask ] ;
+    else okPrs = m_validPrs[ prsMask ] ;
+    
     spdMask = prsMask & m_ecalFe[ eCard ].spdMask() ;
 
     if ( m_usePsSpd ) {

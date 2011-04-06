@@ -96,12 +96,14 @@ private:
   bool        m_addEcalToHcalOpts         ;   ///< Use ECAL in Validation (by options)
 
   bool        m_createHCALLut             ;   ///< Create HCAL LUT Files for validation boards (Set by options)
+  bool        m_newElectron               ;   ///< Use new electron definition in Inner ECAL
   
   // Local variables
   DeCalorimeter *    m_ecal               ; ///< Pointer to Ecal detector element
   DeCalorimeter *    m_hcal               ; ///< Pointer to Hcal detector element
   DeCalorimeter *    m_prs                ; ///< Pointer to Prs detector element
   int                m_validPrs[16]       ; ///< Array for PRS validation: 1 or 2 bits
+  int                m_validPrsInner[16]  ; ///< Array for PRS validation in the outer part.
 
   ICaloTriggerAdcsFromRaw * m_adcsEcal ; ///< Tool to decode trigger adcs.
   ICaloTriggerAdcsFromRaw * m_adcsHcal ; ///< Tool to decode trigger adcs.
