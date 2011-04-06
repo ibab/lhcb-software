@@ -10,7 +10,6 @@
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 #include "Event/RecVertex.h"
-#include "Event/VertexBase.h"
 #include "Event/Particle.h"
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/IParticleDescendants.h"
@@ -111,14 +110,14 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
     }
     for (std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ; iv != originVtx.end() ; iv++){
       fitter = new DecayTreeFitter::Fitter(*P, *(*iv));
-      if (!fit(fitter,P,prefix,tMap)) return StatusCode::FAILURE ;
+      if (!fit(fitter,P,*iv,prefix,tMap)) return StatusCode::FAILURE ;
       delete fitter ;
     }
   } else {
     if (msgLevel(MSG::DEBUG)) debug() << "Do not contrain the origin vertex" << endmsg; 
     // Get the fitter
     fitter = new DecayTreeFitter::Fitter(*P);
-    if (!fit(fitter,P,prefix,tMap)) return StatusCode::FAILURE;
+    if (!fit(fitter,P,0,prefix,tMap)) return StatusCode::FAILURE;
     delete fitter ;
   }
   
@@ -129,6 +128,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
 //=============================================================================
 StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter* fitter, 
                                          const LHCb::Particle* P,
+                                         const LHCb::VertexBase* pv,
                                          const std::string& prefix, 
                                          TupleMap& tMap) const{  
   bool test = true ;
@@ -142,12 +142,29 @@ StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter* fitter,
   // fill the fit result
   fillDecay(fitter,P,prefix,tMap );
   if (m_constrainToOriginVertex){
+    fillPV(pv,prefix,tMap);
     fillLT(fitter,P,prefix,tMap );
     test &= fillDaughters(fitter,P,prefix,tMap ); 
   }
   return StatusCode(test);
 }
-
+//=============================================================================
+// Fill standard stuff
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::fillPV(const LHCb::VertexBase* pv,
+                                          const std::string& prefix, 
+                                          TupleMap& tMap ) const{
+  bool test = true;
+  if (!pv) Exception("Null PVs cannot happen!");
+  test &= insert( prefix+"_PV_key", pv->key(), tMap );
+  if (isVerbose()){
+    test &= insert( prefix+"_PV_X", pv->position().X(), tMap );
+    test &= insert( prefix+"_PV_Y", pv->position().Y(), tMap );
+    test &= insert( prefix+"_PV_Z", pv->position().Z(), tMap );
+    if (pv->isPrimary()) test &= insert( prefix+"_PV_sumPT", sumPT(dynamic_cast<const LHCb::RecVertex*>(pv)), tMap );
+  }
+  return StatusCode(test);
+}
 //=============================================================================
 // Fill standard stuff
 //=============================================================================
@@ -301,3 +318,17 @@ std::string TupleToolDecayTreeFitter::getName(int id) const {
   if (!prop) Exception("Unknown PID");
   return Decays::escape(prop->name());
 }
+//=============================================================================
+// Sum PT
+/// @ todo this should be moved to TupleToolPrimaries
+//=============================================================================
+double TupleToolDecayTreeFitter::sumPT(const LHCb::RecVertex* pv) const {
+  if (!pv) Exception("Not a RecVertex?");
+  double spt = 0 ;
+  for (SmartRefVector< LHCb::Track >::const_iterator t = pv->tracks().begin() ; 
+       t!= pv->tracks().end() ; ++t) {
+    spt += (*t)->pt();
+  }
+  return spt ;
+}
+

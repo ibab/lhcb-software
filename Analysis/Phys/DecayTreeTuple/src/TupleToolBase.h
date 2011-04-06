@@ -41,15 +41,33 @@ public:
   
   virtual ~TupleToolBase( ){}; ///< Destructor
   
-  const std::string& extraName() {return m_extraName;};
-  bool isVerbose() {return m_verbose;};
-  std::string fullName(const std::string head="") 
+  const std::string& extraName()const {return m_extraName;};
+  bool isVerbose()const {return m_verbose;} ;
+  std::string fullName(const std::string head="") const 
   {
     if (m_extraName=="") return head;
     else if(head=="") return (m_extraName+'_');
     else return (head+'_'+m_extraName);
   }
   
+  /// generic templated method to check if a container exists without loading the data on demand service
+  /// (which exist<> would do)
+  /// @author Ivan.Belyaev@nikhef.nl
+  template <class TYPE>
+  bool safeExist  ( const std::string& location ) 
+  {
+    DataObject* obj = 0 ;
+    StatusCode sc = evtSvc()->findObject( location , obj ) ;
+    return sc.isSuccess() && 0 != obj && 0 != dynamic_cast<TYPE*>( obj ) ;
+  }
+  /// generic templated method to extract the number of entries in a given location.
+  /// usage int n = number<LHCb::Particles>('/Event/Phys/MyParts/Particles')
+  template<class CLASS> 
+  int number( const std::string& location){
+    if (safeExist<CLASS>(location)){
+      return (get<CLASS>(location))->size() ;
+    } else return -1 ;
+  }
   
 protected:
   

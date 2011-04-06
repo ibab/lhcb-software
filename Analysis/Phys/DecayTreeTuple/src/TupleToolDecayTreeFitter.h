@@ -1,4 +1,3 @@
-
 /**@class TupleToolDecayTreeFitter 
     * -  History : this tool was written during the study of the b->JpsiX lifetimes. It was not very generic.
     *    This re-implmentation is hopefully more generic, although it requires several instances of the tool
@@ -90,6 +89,7 @@ namespace LHCb{
   class IParticlePropertySvc;
   class VertexBase;
   class Particle;
+  class RecVertex ;
 }
 namespace DecayTreeFitter{
   class Fitter;
@@ -127,6 +127,7 @@ public:
   ///  Fill inforation for a given origin vertex
   StatusCode fit(DecayTreeFitter::Fitter* fitter, 
                  const LHCb::Particle* P,
+                 const LHCb::VertexBase* pv,
                  const std::string& prefix, 
                  TupleMap& tMap) const;
   ///  Fill lifetime information
@@ -138,6 +139,12 @@ public:
   ///  Fill lifetime information
   StatusCode fillLT(const DecayTreeFitter::Fitter* fitter, 
                     const LHCb::Particle* P,
+                    const std::string& prefix, 
+                    TupleMap& tMap) const;
+
+  double sumPT(const LHCb::RecVertex*) const ; ///< sum of pt in pv
+  ///  Fill PV information
+  StatusCode fillPV(const LHCb::VertexBase* pv,
                     const std::string& prefix, 
                     TupleMap& tMap) const;
   

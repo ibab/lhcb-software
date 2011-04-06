@@ -28,7 +28,6 @@ public:
 protected:
 
 private:
-#include "Number.icpp"
 
   std::vector<std::string> m_locations ; ///< Hlt locations to look at
   
