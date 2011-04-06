@@ -47,6 +47,7 @@
 //=============================================================================
 DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_onlineHist( hist ),
+  m_identifier( "?not set?" ),
   m_shortName( "" ),
   m_isOverlap( false ),
   m_isTrendPlot( false ),
@@ -54,6 +55,8 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_offsetHistogram( NULL),
   m_referenceHist( NULL ),
   m_hostingPad( NULL ),
+  m_titPave( NULL),
+  m_statPave( NULL ),
   m_histogramImage( NULL ),
   m_prettyPalette( NULL ),
   m_timeGraph( NULL ),
@@ -62,14 +65,18 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_timeArray( NULL ),
   m_valueArray( NULL ),
   m_nOverlap( 0 ),
+  m_hasTitle( false ),
   m_optionsAreLoaded( false ),
   m_showReference( false ),
   m_isDummy( false )
 {
-  if ( hist->type() == OnlineHistDBEnv::TRE ) {
-    m_isTrendPlot = true;
-    m_shortName = hist->htitle();  // this is in fact the variable name!
-  }
+  if ( NULL != m_onlineHist ) {
+    m_identifier = m_onlineHist->identifier();
+    if ( hist->type() == OnlineHistDBEnv::TRE ) {
+      m_isTrendPlot = true;
+      m_shortName = hist->htitle();  // this is in fact the variable name!
+    }
+  } 
 }
 //=============================================================================
 // Destructor
@@ -246,7 +253,7 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
       m_rootHistogram =  0;
     }
     if ( 0 != m_rootHistogram ) {
-      histoRootName = TString(Form("%s;%i", m_onlineHist->identifier().c_str(), m_onlineHist->instance()) );
+      histoRootName = TString(Form("%s;%i", m_identifier.c_str(), m_onlineHist->instance()) );
       m_rootHistogram->AddDirectory(kFALSE);
       m_rootHistogram->SetName(histoRootName);
       setDisplayOptions();  // Pass the DB flags to the root histogram
@@ -262,8 +269,8 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
 //=========================================================================
 void DisplayHistogram::createDummyHisto( ) {
   if ( NULL != m_rootHistogram ) delete m_rootHistogram;
-  std::string dummyTitle = "ERROR: missing source for " + m_onlineHist->identifier();
-  m_rootHistogram = new TH1F( m_onlineHist->identifier().c_str(), dummyTitle.c_str(), 1, 0., 1.);
+  std::string dummyTitle = "ERROR: missing source for " + m_identifier;
+  m_rootHistogram = new TH1F( m_identifier.c_str(), dummyTitle.c_str(), 1, 0., 1.);
   m_rootHistogram->SetBit(kNoContextMenu);
   m_rootHistogram->AddDirectory(kFALSE);
   m_rootHistogram->SetStats( false ) ;
@@ -282,7 +289,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
   editorCanvas->cd();
 
   if ( !m_isOverlap ) {
-    pad = new TPad( m_onlineHist->identifier().c_str(),
+    pad = new TPad( m_identifier.c_str(),
                     TString(""),
                     fabs(xlow), fabs(ylow), fabs(xup), fabs(yup));
 
@@ -364,7 +371,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
 
   fit( analysisLib );    // fit if requested
 
-  if ( !m_isOverlap ) pad->SetName( m_onlineHist->identifier().c_str() );
+  if ( !m_isOverlap ) pad->SetName( m_identifier.c_str() );
 
   std::string sopt("");
   if ( 0 != m_onlineHist && ! m_isDummy ) {
@@ -388,7 +395,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
         }
         drawPattern -> SetPad( TMath::Abs( xlow ) , TMath::Abs( ylow ) ,
                                TMath::Abs( xup  ) , TMath::Abs( yup  ) ) ;
-        drawPattern -> SetName(  m_onlineHist->identifier().c_str() ) ;
+        drawPattern -> SetName(  m_identifier.c_str() ) ;
 
         drawPattern->SetFillColor( 10 );
 
@@ -611,14 +618,14 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
     gStyle -> SetOptFit( 1111111 ) ;
     m_onlineHist->getFitFunction( Name, &initValues);
 
-    std::cout << "fitting histogram " << m_onlineHist->identifier()
+    std::cout << "fitting histogram " << m_identifier
               << " with function "<< Name << std::endl;
 
     OMAFitFunction* requestedFit =  analysisLib->getFitFunction(Name);
     if ( 0 == requestedFit ) {
       std::cerr << "Unknown fit function: " << Name
                 << " to fit histogram "
-                << m_onlineHist->identifier()
+                << m_identifier
                 << std::endl ;
       return ;
     }
@@ -1160,6 +1167,14 @@ void DisplayHistogram::setOnlineHistogram( OnlineHistogram* hist ) {
 //  Set the local copy of the options, by type
 //=========================================================================
 void DisplayHistogram::loadOptions ( ) {
+  if ( NULL == m_onlineHist ) {
+    m_intOptions.clear();
+    m_floatOptions.clear();
+    m_stringOptions.clear();
+    m_optionsAreLoaded = true;
+    return;
+  }
+  
   m_onlineHist->getIntDisplayOptions( m_intOptions );
   m_onlineHist->getFloatDisplayOptions( m_floatOptions );
   m_onlineHist->getStringDisplayOptions( m_stringOptions );  

@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-06 - Olivier Callot
+ - Allow display of DIM published histograms.
+ - Adder for HLT is now called GauchoJob, no if statement in the code.
+
 ! 2011-04-05 - Olivier Callot
  - Fix TT plots: reference add/remove, and layout of superimposed curves
   This last fix is black magic, not understood. option HIST forced!

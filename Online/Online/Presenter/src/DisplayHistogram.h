@@ -27,6 +27,9 @@ public:
 
   virtual ~DisplayHistogram( ); ///< Destructor
 
+  std::string identifier() { return m_identifier; }
+  void setIdentifier( std::string id ) { m_identifier = id; }
+
   OnlineHistogram* histo() { return m_onlineHist; }
   void setOnlineHistogram( OnlineHistogram* hist );
 
@@ -97,6 +100,7 @@ protected:
 
 private:
   OnlineHistogram* m_onlineHist; ///< the online histogram.
+  std::string m_identifier;
   std::string m_shortName;
   bool m_isOverlap;
   bool m_isTrendPlot;

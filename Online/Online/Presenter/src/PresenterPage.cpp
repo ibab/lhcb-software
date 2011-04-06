@@ -70,6 +70,47 @@ void PresenterPage::clear ( ) {
 }
 
 //=========================================================================
+//  Add a Dim histo to the page
+//=========================================================================
+void PresenterPage::addDimHisto ( std::string dimName ) {
+  std::string task = dimName.substr( 0, dimName.find( '/' ) );
+  task = task.substr( task.find('_')+1 );
+  task = task.substr( 0, task.find('_') );
+  
+  std::string ident = dimName.substr( dimName.find('_' )+1 );
+
+  DisplayHistogram temp( NULL );
+  temp.setIdentifier( ident );
+
+  bool existed = false;
+  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+    if ( (*itT).name == task ) {
+      for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
+            (*itT).histos.end() != itH; ++itH ) {
+        if ( ident == (*itH).identifier() ) {
+          std::cout << "              already existing " << ident << std::endl;
+          existed = true;
+          break;
+        }
+      }
+      if ( !existed ) {  
+        (*itT).histos.push_back( temp );
+        existed = true;
+        std::cout << task << " ++ Histo   " << ident << std::endl;
+        break;
+      }
+    }
+  }
+  if ( !existed ) {
+    TaskHistos newTask;
+    newTask.name = task;
+    newTask.dead = false;
+    newTask.histos.push_back( temp );
+    m_tasks.push_back( newTask );
+    std::cout << task << " ** Histo   " << ident << std::endl;
+  }
+}
+//=========================================================================
 //  Prepare the histogram descriptions for access
 //=========================================================================
 void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition  ) {
@@ -121,7 +162,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         if ( (*itT).name == myHist->task() ) {
           for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
                 (*itT).histos.end() != itH; ++itH ) {
-            if ( (*itH).histo()->identifier() == myHist->identifier() ) {
+            if ( (*itH).identifier() == myHist->identifier() ) {
               std::cout << "              already existing " << myHist->identifier() << std::endl;
               existed = true;
               break;
@@ -172,7 +213,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         if ( (*itT).name == taskName ) {
           for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
                 (*itT).histos.end() != itH; ++itH ) {
-            if ( (*itH).histo()->identifier() == histo->identifier() ) {
+            if ( (*itH).identifier() == histo->identifier() ) {
               std::cout << "              already existing " << histo->identifier() << std::endl;
               existed = true;
               break;
@@ -220,7 +261,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
     bool foundTheTask = false;
     std::string taskName = (*itT).name;
     taskName = "_" + taskName + "_";
-    if ( taskName == "_GauchoJob_" ) taskName = partition+"_Adder";
+    //if ( taskName == "_GauchoJob_" ) taskName = partition+"_Adder";
+    if ( taskName == "_RecAdder_" ) taskName = partition+"_RecAdder";
 
     for ( std::vector<std::string>::iterator itS = knownTasks.begin();
           knownTasks.end() != itS; ++itS ) {
@@ -245,7 +287,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
-        std::string histoName = (*itH).histo()->identifier();
+        std::string histoName = (*itH).identifier();
         unsigned int pos = histoName.find( "/" );   // remove the task name prefix
         if ( pos < histoName.size() ) {
           histoName.erase( 0, pos+1 );
@@ -558,7 +600,7 @@ DisplayHistogram* PresenterPage::displayHisto( OnlineHistogram* onlHist ) {
   }
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     for ( std::vector<DisplayHistogram>::iterator itDH = (*itT).histos.begin(); (*itT).histos.end() != itDH; ++itDH ) {
-      if ( (*itDH).histo()->identifier() == onlHist->identifier() ) return &(*itDH);
+      if ( (*itDH).identifier() == onlHist->identifier() ) return &(*itDH);
     }
   }
   return NULL;
@@ -623,6 +665,43 @@ void PresenterPage::resetOffsetHistograms ( ) {
 }
 
 //=========================================================================
+//  Simple display, with automatic n x m layout
+//=========================================================================
+void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
+  int nbPlots = 0;
+  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+    nbPlots += (*itT).histos.size();
+  }
+  int nCol = 1;
+  while ( nCol < nbPlots/nCol ) nCol += 1;
+  int nRow = nbPlots / nCol;
+  if ( nRow * nCol < nbPlots ) nRow++;
+
+  std::cout << "For " << nbPlots << " plots, nCol " << nCol << " nRow " << nRow << std::endl;
+  editorCanvas->Clear();
+
+  int row = nRow-1;
+  int col = 0;
+  double rSize = 1./nRow;
+  double cSize = 1./nCol;
+  
+  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+    for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin(); (*itT).histos.end() != itH; ++itH ) {
+      double xLow = col * cSize;
+      double xHig = xLow + cSize;
+      double yLow = row * rSize;
+      double yHig = yLow + rSize;
+      (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      col += 1;
+      if ( nCol == col ) {
+        col = 0;
+        row--;
+      }
+    }
+  }
+  editorCanvas->Update();
+}
+//=========================================================================
 //  Draw the full page
 //=========================================================================
 void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool fastHitMapDraw ) {
@@ -677,7 +756,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
 
     DisplayHistogram* dispH =  displayHisto( (*itHP)  );
     if (  dispH ) {
-      std::cout << "-- display histo " << dispH->histo()->identifier()
+      std::cout << "-- display histo " << dispH->identifier()
                 << " on pad X "<< xlow << " to "<< xup
                 << "  Y " << ylow << " to " << yup
                 << " overlay " << overlayOnPad << " nOverlap " << dispH->nOverlap() << std::endl;

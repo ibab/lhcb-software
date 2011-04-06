@@ -220,15 +220,8 @@ void IntervalPicker::build()
                                                 kLHintsExpandX,
                                                 2, 2, 2, 2));
 
-  fHorizontalFrame682->AddFrame(fVerticalFrame684,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsTop,
-                                                  2, 2, 2, 2));
-
-  fVerticalFrame681->AddFrame(fHorizontalFrame682,
-                              new TGLayoutHints(kLHintsLeft |
-                                                kLHintsTop,
-                                                2, 2, 2, 2));
+  fHorizontalFrame682->AddFrame(fVerticalFrame684, ltLayout );
+  fVerticalFrame681->AddFrame(fHorizontalFrame682, ltLayout );
 
   TGHorizontalFrame *fHorizontalFrame722 = new TGHorizontalFrame(fVerticalFrame681,
                                                                  394, 64,
@@ -254,10 +247,7 @@ void IntervalPicker::build()
                                                   kLHintsTop,
                                                   2, 2, 2, 2));
 
-  fHorizontalFrame722->AddFrame(fHorizontalFrame723,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsTop,
-                                                  2, 2, 2, 2));
+  fHorizontalFrame722->AddFrame(fHorizontalFrame723, ltLayout );
 
   TGVerticalFrame *fVerticalFrame726 = new TGVerticalFrame(fHorizontalFrame722,
                                                            365,60,
@@ -370,7 +360,7 @@ void IntervalPicker::build()
   m_runFillTabCompositeFrame->SetLayoutBroken(kTRUE);
 
   TGVerticalFrame *fVerticalFrame766 = new TGVerticalFrame(m_runFillTabCompositeFrame,
-                                                           267, 98,
+                                                           500, 98,
                                                            kVerticalFrame);
 
   // TGHorizontalFrame *fHorizontalFrame767 = new TGHorizontalFrame(fVerticalFrame766,
@@ -454,11 +444,44 @@ void IntervalPicker::build()
   //                                                 kLHintsTop,
   //                                                 2, 2, 2, 2));
 
-  TGHorizontalFrame *fHorizontalFrame783 = new TGHorizontalFrame(fVerticalFrame766,
-                                                                 263, 26,
+  TGHorizontalFrame *fHorizontalFrame767 = new TGHorizontalFrame(fVerticalFrame766,
+                                                                 490, 30,
                                                                  kHorizontalFrame);
-  m_runFillIntervalRadioButton = new TGRadioButton(fHorizontalFrame783,
-                                                   "From");
+
+  m_runDestinationLabel = new TGLabel(fHorizontalFrame767, "     Run destination : ");
+  m_runDestinationLabel->SetTextJustify(36);
+  fHorizontalFrame767->AddFrame(m_runDestinationLabel,
+                                new TGLayoutHints(kLHintsLeft |
+                                                  kLHintsTop |
+                                                  kLHintsCenterY,
+                                                  2, 2, 2, 2));
+  // Destination selection
+  m_runDestinationComboBox = new TGComboBox( fHorizontalFrame767, -1,
+                                             kHorizontalFrame |
+                                             kSunkenFrame |
+                                             kDoubleBorder |
+                                             kOwnBackground);
+  m_runDestinationComboBox->AddEntry( "OFFLINE", 1);
+  m_runDestinationComboBox->AddEntry( "ALL", 2);
+  m_runDestinationComboBox->Resize(100, 22);
+  if ( m_runDb->getDestination() == "OFFLINE" ) {
+    m_runDestinationComboBox->Select(1);
+  } else {
+    m_runDestinationComboBox->Select(2);
+  } 
+  m_runDestinationComboBox->Connect( "Selected(Int_t)", "IntervalPicker",
+                                     this, "setDestination(Int_t)");
+  fHorizontalFrame767->AddFrame( m_runDestinationComboBox, ltLayout );
+  fVerticalFrame766->AddFrame(fHorizontalFrame767,
+                              new TGLayoutHints(kLHintsLeft |
+                                                kLHintsExpandX,
+                                                2, 2, 2, 2));
+
+  //==
+  TGHorizontalFrame *fHorizontalFrame783 = new TGHorizontalFrame(fVerticalFrame766,
+                                                                 490, 26,
+                                                                 kHorizontalFrame);
+  m_runFillIntervalRadioButton = new TGRadioButton( fHorizontalFrame783, "From");
   m_runFillIntervalRadioButton->SetState(kButtonDown);
   m_runFillIntervalRadioButton->Connect("Toggled(Bool_t)", "IntervalPicker",
                                         this, "runFillIntervalRadioButtonToggled(Bool_t)");
@@ -475,13 +498,9 @@ void IntervalPicker::build()
                                              kDoubleBorder |
                                              kOwnBackground);
   m_runFillIntervalComboBox->AddEntry("run", 1);
-  //  fComboBox785->AddEntry("fill", 2);
-  m_runFillIntervalComboBox->Resize(48, 22);
+  m_runFillIntervalComboBox->Resize(60, 22);
   m_runFillIntervalComboBox->Select(1);
-  fHorizontalFrame783->AddFrame(m_runFillIntervalComboBox,
-                                new TGLayoutHints(kLHintsLeft |
-                                                  kLHintsTop,
-                                                  2, 2, 2, 2));
+  fHorizontalFrame783->AddFrame(m_runFillIntervalComboBox, ltLayout );
   m_runFillIntervalFromNumberEntry = new TGNumberEntry(fHorizontalFrame783,
                                                        1, 7, -1,
                                                        TGNumberFormat::kNESInteger,
@@ -500,21 +519,6 @@ void IntervalPicker::build()
                                                      TGNumberFormat::kNEAPositive);
   fHorizontalFrame783->AddFrame(m_runFillIntervalToNumberEntry, ltLayout );
 
-  // Destination selection
-  m_runDestinationComboBox = new TGComboBox( fHorizontalFrame783, -1,
-                                             kHorizontalFrame |
-                                             kSunkenFrame |
-                                             kDoubleBorder |
-                                             kOwnBackground);
-  m_runDestinationComboBox->AddEntry( "OFFLINE", 1);
-  m_runDestinationComboBox->AddEntry( "ALL", 2);
-  m_runDestinationComboBox->Resize(48, 22);
-  m_runDestinationComboBox->Select(1);
-  m_runDestinationComboBox->Connect( "Selected(Int_t)", "IntervalPicker",
-                                     this, "setDestination(Int_t)");
-  fHorizontalFrame783->AddFrame( m_runDestinationComboBox, ltLayout );
-
-  std::cout << "Created RunDestinationComnboBox" << std::endl;
 
   fVerticalFrame766->AddFrame(fHorizontalFrame783,
                               new TGLayoutHints(kLHintsLeft |
@@ -523,7 +527,7 @@ void IntervalPicker::build()
 
   m_runFillTabCompositeFrame->AddFrame(fVerticalFrame766, ltLayout );
 
-  fVerticalFrame766->MoveResize(2, 2, 267, 98);
+  fVerticalFrame766->MoveResize(2, 2, 500, 98);
 
   // "Set navigation step size" group frame
   // TGGroupFrame *fGroupFrame1084 = new TGGroupFrame(m_runFillTabCompositeFrame,
@@ -889,4 +893,6 @@ void IntervalPicker::setDestination( int index ) {
   } else {
     m_runDb->setDestination( "" );
   }
+  int lastrun = m_runDb -> getLastRun( ) ;    
+  m_runFillIntervalFromNumberEntry -> SetIntNumber( lastrun ) ;
 }

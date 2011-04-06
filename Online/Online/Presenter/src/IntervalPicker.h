@@ -184,6 +184,7 @@ private:
   TGLabel*            m_runFillIntervalToLabel;
   TGNumberEntry*      m_runFillIntervalToNumberEntry;
   TGComboBox*         m_runDestinationComboBox;
+  TGLabel*            m_runDestinationLabel;
   TGComboBox*         m_runFillStepSizeComboBox;
   TGNumberEntry*      m_runFillStepSizeNumberEntry;
   TGCompositeFrame*   m_runFillTabCompositeFrame;

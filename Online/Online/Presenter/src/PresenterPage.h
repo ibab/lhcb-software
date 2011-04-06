@@ -66,11 +66,17 @@ public:
   //== Reset and clear the page
   void clear();
 
+  //== Add a simple DIM histo on the page
+  void addDimHisto ( std::string dimName );
+  
   //== Set the DIM browser
   void setDimBrowser( DimBrowser* br )  { m_dimBrowser = br; }
 
   //== OnlineHistograms from DB
   std::vector<OnlineHistoOnPage*>& onlineHistos() { return m_onlineHistosOnPage; }
+  
+  //== Simple display of pages built by AddDimHistos
+  void simpleDisplay (  TCanvas* editorCanvas );
   
   //== Prepare the list of histogram to access
   void prepareAccess( OnlineHistDB* histDB, std::string& partition );
