@@ -950,7 +950,10 @@ class Hlt1Line(object):
                       , 'Prescale'     : _createScalar( prescalerName(line), self._prescale)
                       , 'Postscale'    : _createScalar( postscalerName(line),self._postscale)
                       } )
-        if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN, Preambulo = [ 'from LoKiCore.math import jbit' ] )  } )
+        if ODIN : 
+            odict = { 'Code' : self._ODIN }
+            if 'jbit' in self._ODIN : odict['Preambulo'] =  [ 'from LoKiCore.math import *' ] 
+            mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , **odict ) } )
         if L0DU : 
             from HltDecodeRaw import DecodeL0DU
             _s = GaudiSequencer( l0entryName(line) + 'Sequence'
