@@ -6,13 +6,14 @@
 
 #============================================================================
 package Moore
-version v12r4p1
+version v12r5
 
 branches doc cmt options python
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
 use GaudiKernel        v*
+# use GaudiProfiling        v*
 
 # Packages needed to resolve external dependencies at run time
 use Python              v*      LCG_Interfaces -no_auto_imports
@@ -27,11 +28,6 @@ use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 # Patches
-use MuonID              v8r0p2  Muon
-use LoKiPhys            v9r99   Phys
-use LoKiCore            v10r9p1 Phys
-use HltDisplVertices    v3r3p1  Hlt
-use HltSettings         v5r9    Hlt
 
 
 
@@ -78,7 +74,7 @@ private
 #tag ONLINE_OVERRULE_MOORE_SETUP
 macro Create_RunMooreOnline_output  "../job/runMooreOnline_EFF.sh"
 macro Create_RunMooreOnline_command "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) " \
-        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) Online v4r50" 
+        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateRunMooreOnline_EFF.py $(Create_RunMooreOnline_output) $(version) Online v4r53" 
 apply_pattern CallCommand  target=Create_RunMooreOnline
 
 # copy the TCK manifest for the _current_ release to the install area...
@@ -88,7 +84,6 @@ apply_pattern CallCommand  target=Install_TCK_Manifest
 
 macro_remove cmt_actions_constituents 'runMakeOptions' 
 macro_remove cmt_actions_constituents 'WriteOptions'
-
 
 apply_pattern QMTest
 end_private
