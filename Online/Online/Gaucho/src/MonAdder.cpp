@@ -81,9 +81,11 @@ void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tg
   tname = "";
   tgen = "";
   bool status;
+  printf("Comparing %s with % status...",server.c_str(),this->m_taskPattern.c_str());
   status = boost::regex_search(server,m_taskexp);
   if (status)
   {
+    printf ("success\n");
 //    printf("Comparing %s with Pattern %s...",server.c_str(),this->m_taskPattern.c_str());
     tname = server;
 //    MonMap::iterator it;
@@ -97,7 +99,7 @@ void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tg
   }
   else
   {
-//    printf ("Failed\n");
+    printf ("Failed\n");
 
   }
   return;
