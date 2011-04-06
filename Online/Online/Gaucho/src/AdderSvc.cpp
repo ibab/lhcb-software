@@ -81,7 +81,7 @@ StatusCode AdderSvc::initialize()
   sc = StatusCode::SUCCESS;
   if(m_dohisto)
   {
-    sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
+    sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, true);
     if( sc.isSuccess() )
     {
       msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
@@ -91,7 +91,7 @@ StatusCode AdderSvc::initialize()
       msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
       return StatusCode::FAILURE;
     }
-    sc = serviceLocator()->service("HistogramSvc",m_phistsvc,false);
+    sc = serviceLocator()->service("HistogramSvc",m_phistsvc,true);
     if( sc.isSuccess() )
     {
       msg << MSG::DEBUG << "Found the Histogram Service interface" << endreq;
