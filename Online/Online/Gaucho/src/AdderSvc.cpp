@@ -112,6 +112,12 @@ StatusCode AdderSvc::initialize()
   m_incidentSvc->addListener(this,"APP_INITIALIZED");
   m_incidentSvc->addListener(this,"APP_RUNNING");
   m_incidentSvc->addListener(this,"APP_STOPPED");
+  // Book arrival time histograms
+  if (m_dohisto)
+  {
+    m_arrhist = m_phistsvc->book(name()+"/arrivaltime","Adder Packet Arrival Time in seconds",100,0.0,50.0);
+    m_pMonitorSvc->declareInfo("ArrivalTimes",(const AIDA::IBaseHistogram*)m_arrhist,"",this);
+  }
   return StatusCode::SUCCESS;
 }
 #include "TBrowser.h"
@@ -137,11 +143,6 @@ StatusCode AdderSvc::start()
   else if(m_AdderClass == "counter")
   {
     servicename = "Counter";
-  }
-  if (m_dohisto)
-  {
-    m_arrhist = m_phistsvc->book(name()+"/arrivaltime","Adder Packet Arrival Time in seconds",100,0.0,50.0);
-    m_pMonitorSvc->declareInfo("ArrivalTimes",(const AIDA::IBaseHistogram*)m_arrhist,"",this);
   }
 // Nodeadders:
 // Source task names:
@@ -304,10 +305,16 @@ StatusCode AdderSvc::stop()
 
 StatusCode AdderSvc::finalize()
 {
-  if ( m_incidentSvc ) {
-    m_incidentSvc->removeListener(this);
-    releasePtr(m_incidentSvc);
+  m_arrhist = 0;
+  if ( m_pMonitorSvc )
+  {
+    m_pMonitorSvc->undeclareAll(this);
   }
+  if ( m_incidentSvc ) 
+  {
+    m_incidentSvc->removeListener(this);
+  }
+  releasePtr(m_incidentSvc);
   releasePtr(m_phistsvc);
   releasePtr(m_pMonitorSvc);
   dim_lock();
