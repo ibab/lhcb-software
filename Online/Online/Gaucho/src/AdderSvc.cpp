@@ -167,7 +167,8 @@ StatusCode AdderSvc::start()
   myservicename = m_MyName;
   StringReplace(myservicename, "<part>", m_PartitionName);
   StringReplace(myservicename, "<node>", nodename);
-  std::string ddns= std::string(getenv("$DIM_DNS_NODE"));
+  const char *dnsnode = getenv("DIM_DNS_NODE");
+  std::string ddns(dnsnode ? dnsnode : "");
   StringReplace(m_InputDNS,"<node>",nodename);
   StringReplace(m_InputDNS,"<dns>",ddns);
 
