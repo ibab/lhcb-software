@@ -4,9 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r11 2011-04-06 ===================
 ! 2011-04-03 - Gerhard Raven
  - Add 100 Hz of VeloMicroBias to VanDerMeer_Feb11
-!========================== HltSettings v5r11 2011-04-03 ===================
+
 ! 2011-Mar-30 - V. Gligorov
  - Add the Hlt2 DiProton lines to match the Hlt1 DiProton lines.
 
