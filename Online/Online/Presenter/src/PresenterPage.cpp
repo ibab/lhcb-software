@@ -261,8 +261,6 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
     bool foundTheTask = false;
     std::string taskName = (*itT).name;
     taskName = "_" + taskName + "_";
-    //if ( taskName == "_GauchoJob_" ) taskName = partition+"_Adder";
-    if ( taskName == "_RecAdder_" ) taskName = partition+"_RecAdder";
 
     for ( std::vector<std::string>::iterator itS = knownTasks.begin();
           knownTasks.end() != itS; ++itS ) {
