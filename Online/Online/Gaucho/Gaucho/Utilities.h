@@ -14,11 +14,31 @@
 
 #define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 
-static inline void toLowerCase(std::string &s)
-{
-  for (unsigned int i=0;i<s.size();i++)
+namespace {
+  template<class T> inline void releasePtr(T*& p)
   {
-    s[i] = tolower(s[i]);
+    if ( p )
+    {
+      p->release();
+      p = 0;
+    }
+  }
+
+  template<class T> inline void deletePtr(T*& p)
+  {
+    if ( p )
+    {
+      delete p;
+      p = 0;
+    }
+  }
+
+  inline void toLowerCase(std::string &s)
+  {
+    for (unsigned int i=0;i<s.size();i++)
+    {
+      s[i] = tolower(s[i]);
+    }
   }
 }
 

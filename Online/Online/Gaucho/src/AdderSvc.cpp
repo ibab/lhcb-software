@@ -301,33 +301,27 @@ StatusCode AdderSvc::finalize()
 {
   if ( m_incidentSvc ) {
     m_incidentSvc->removeListener(this);
-    m_incidentSvc->release();
-    m_incidentSvc = 0;
+    releasePtr(m_incidentSvc);
   }
+  releasePtr(m_phistsvc);
+  releasePtr(m_pMonitorSvc);
   dim_lock();
   if (m_SaveTimer != 0)
   {
     m_SaveTimer->Stop();
-    delete m_SaveTimer;
-    m_SaveTimer=0;
+    deletePtr(m_SaveTimer);
   }
   if (m_adder != 0)
   {
     m_AdderSys->Remove(m_adder);
-    delete m_adder;
-    m_adder = 0;
+    deletePtr(m_adder);
   }
   if (m_EoRadder != 0)
   {
     m_AdderSys->Remove(m_EoRadder);
-    delete m_EoRadder;
-    m_EoRadder = 0;
+    deletePtr(m_EoRadder);
   }
-  if (m_funcsvc != 0)
-  {
-    delete m_funcsvc;
-    m_funcsvc = 0;
-  }
+  deletePtr(m_funcsvc);
   dim_unlock();
   return Service::finalize();
 }
