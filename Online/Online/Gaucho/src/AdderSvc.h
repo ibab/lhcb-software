@@ -76,7 +76,7 @@ private:
   std::string m_utgid;
   MonAdder *m_adder;
   MonAdder *m_EoRadder;
-  std::string m_TaskName;
+//  std::string m_TaskName;
   std::string m_PartitionName;
   std::string m_SaverTaskName;
   std::string m_MyName;
@@ -85,9 +85,9 @@ private:
   std::string m_OutputDNS;
   std::string m_TaskPattern;
   std::string m_ServicePattern;
-  std::string m_AdderType;
+//  std::string m_AdderType;
   std::string m_AdderClass;
-  bool m_TopLevel;
+//  bool m_TopLevel;
   bool m_ExpandRate;
   bool m_isSaver;
   bool m_isEOR;

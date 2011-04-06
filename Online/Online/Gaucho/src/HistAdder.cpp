@@ -21,10 +21,9 @@ extern "C"
 {
   void BufferAdder(void *tis, void *buff, int siz, MonInfo *h);
 }
-HistAdder::HistAdder(char * taskname, char *myName, char *serviceName)
+HistAdder::HistAdder(char *myName, char *serviceName)
 {
   std::string svc_prefix("/Histos/");
-  m_taskname = std::string(taskname);
   m_buffersize = 0;
   m_buffer = 0;
   m_usedSize = 0;
@@ -34,7 +33,6 @@ HistAdder::HistAdder(char * taskname, char *myName, char *serviceName)
   m_srcnode = "";
   m_outdns = "localhost";
   m_MyName = myName;
-  m_taskname = taskname;
   m_lockid = 0;
   m_maplock = 0;
   m_IsEOR = false;

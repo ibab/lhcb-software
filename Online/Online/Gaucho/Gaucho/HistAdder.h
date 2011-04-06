@@ -23,7 +23,7 @@ public:
 //  std::string m_NamePrefix;
   DimHistbuff1 *m_oldProf;
   void add(void *buffer, int siz, MonInfo *h);
-  HistAdder(char *taskname, char *myName, char * serviceName/*, bool expand = false*/);
+  HistAdder(char *myName, char * serviceName/*, bool expand = false*/);
   virtual ~HistAdder();
   void Configure(void);
 //  void TaskHandler(char*,int);

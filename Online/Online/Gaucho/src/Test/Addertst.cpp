@@ -112,7 +112,7 @@ int main (int argc, char *argv[])
   {
     nam = argv[1];
   }
-  HistAdder *a=new HistAdder(nam,(char*)"Adder",(char*)"Histos/Data");
+  HistAdder *a=new HistAdder((char*)"Adder",(char*)"Histos/Data");
   a->SetCycleFn(&CycleFn,0);
   app->Run();
   sleep(1000000000);

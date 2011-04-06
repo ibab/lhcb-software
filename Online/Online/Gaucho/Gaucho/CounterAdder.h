@@ -20,7 +20,7 @@ public:
 //    std::string m_NamePrefix;
 //    DimHistbuff1 *m_oldProf;
     void add(void *buffer, int siz, MonInfo *h);
-    CounterAdder(char *taskname, char *myName, char * serviceName/*, bool expand = false*/);
+    CounterAdder(char *myName, char * serviceName/*, bool expand = false*/);
     virtual ~CounterAdder();
     void Configure(void);
 };

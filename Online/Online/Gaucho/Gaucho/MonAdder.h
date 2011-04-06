@@ -125,7 +125,7 @@ public:
   TaskServiceMap m_TaskServiceMap;
   void TaskName(std::string &server, std::string &tname, std::string &tgen);
 //  void ServiceName(std::string server, std::string &svc);
-  std::string m_taskname;
+//  std::string m_taskname;
   std::string m_srcnode;
   std::string m_taskPattern;
   std::string m_servicePattern;

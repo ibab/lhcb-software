@@ -29,11 +29,11 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
 //  StatusCode sc = Service::initialize();
 //  printf("AdderSvc... Constructing...\n");
 
-  declareProperty("SourceTaskPattern", m_TaskName="");
+//  declareProperty("SourceTaskPattern", m_TaskName="");
   declareProperty("MyName",m_MyName="");
   declareProperty("InDNS",m_InputDNS="");
   declareProperty("OutDNS",m_OutputDNS="");
-  declareProperty("TopLevel",m_TopLevel=false);
+//  declareProperty("TopLevel",m_TopLevel=false);
   declareProperty("SaveRootDir", m_SaveRootDir = "/home/beat/Hist/Savesets");
   declareProperty("IsSaver", m_isSaver = false);
   declareProperty("SaveInterval", m_SaveInterval = 900);
@@ -42,7 +42,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("ExpandRate",m_ExpandRate=false);
   declareProperty("TaskPattern",m_TaskPattern);
   declareProperty("ServicePattern",m_ServicePattern="");
-  declareProperty("AdderType",m_AdderType="node"); //Possible values are
+//  declareProperty("AdderType",m_AdderType="node"); //Possible values are
   declareProperty("DoHistos",m_dohisto=true);
 //  'node' for a node adder,;
 //  'sf' or 'subfarm' for subfarm adder
@@ -125,10 +125,11 @@ StatusCode AdderSvc::start()
 //  m_MyName = RTL::processName();
   toLowerCase(m_TaskPattern);
   toLowerCase(m_ServicePattern);
-  toLowerCase(m_AdderType);
+//  toLowerCase(m_AdderType);
   std::string nodename = RTL::nodeNameShort();
   toLowerCase(nodename);
   toLowerCase(m_AdderClass);
+  toLowerCase(m_InputDNS);
   std::string servicename;
   if (m_AdderClass == "hists")
   {
@@ -166,63 +167,67 @@ StatusCode AdderSvc::start()
   myservicename = m_MyName;
   StringReplace(myservicename, "<part>", m_PartitionName);
   StringReplace(myservicename, "<node>", nodename);
-  if (m_AdderType == "node")
-  {
-//    m_MyName = nodename+std::string("_Adder");
-    if (m_ServicePattern == "")
-    {
-      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";
-    }
-    if (m_InputDNS == "")
-    {
-      m_InputDNS = nodename.substr(0,nodename.size()-2);
-    }
-  }
-  else if (m_AdderType == "sf" || m_AdderType == "subfarm")
-  {
-//    m_MyName = nodename+std::string("_Adder");
-    if (m_ServicePattern == "")
-    {
-      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";//+m_ServiceName;
-    }
-    if (m_InputDNS == "")
-    {
-      m_InputDNS = nodename;
-    }
-  }
-  else if (m_AdderType == "top" || m_AdderType == "part")
-  {
-    if (m_ServicePattern != "")
-    {
-      m_ServicePattern +="/"+servicename+"/";
-    }
-    else
-    {
-      m_ServicePattern = "MON_(.*)[a-z][0-9][0-9]_"+ m_PartitionName+ "_Adder(.*)/Histos/";
-    }
-    if (m_InputDNS == "")
-    {
-      m_InputDNS = std::string("hlt01");
-    }
-  }
-  else
-  {
-    printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
-  }
+  std::string ddns= std::string(getenv("$DIM_DNS_NODE"));
+  StringReplace(m_InputDNS,"<node>",nodename);
+  StringReplace(m_InputDNS,"<dns>",ddns);
+
+//  if (m_AdderType == "node")
+//  {
+////    m_MyName = nodename+std::string("_Adder");
+//    if (m_ServicePattern == "")
+//    {
+//      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";
+//    }
+//    if (m_InputDNS == "")
+//    {
+//      m_InputDNS = nodename.substr(0,nodename.size()-2);
+//    }
+//  }
+//  else if (m_AdderType == "sf" || m_AdderType == "subfarm")
+//  {
+////    m_MyName = nodename+std::string("_Adder");
+//    if (m_ServicePattern == "")
+//    {
+//      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";//+m_ServiceName;
+//    }
+//    if (m_InputDNS == "")
+//    {
+//      m_InputDNS = nodename;
+//    }
+//  }
+//  else if (m_AdderType == "top" || m_AdderType == "part")
+//  {
+//    if (m_ServicePattern != "")
+//    {
+//      m_ServicePattern +="/"+servicename+"/";
+//    }
+//    else
+//    {
+//      m_ServicePattern = "MON_(.*)[a-z][0-9][0-9]_"+ m_PartitionName+ "_Adder(.*)/Histos/";
+//    }
+//    if (m_InputDNS == "")
+//    {
+//      m_InputDNS = std::string("hlt01");
+//    }
+//  }
+//  else
+//  {
+//    printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
+//  }
   m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
   if (m_errh != 0) DimClient::addErrorHandler(m_errh);
 //  printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
   DimServer::autoStartOn();
-  DimClient::setDnsNode(m_InputDNS.c_str());
+  if (!m_InputDNS.empty()) DimClient::setDnsNode(m_InputDNS.c_str());
 //  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
   if (m_AdderClass == "hists")
   {
-    m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
+    m_adder = new HistAdder((char*)myservicename.c_str(), (char*)"Data");
   }
   else if (m_AdderClass == "counter")
   {
-    m_adder = new CounterAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"Data");
+    m_adder = new CounterAdder((char*)myservicename.c_str(), (char*)"Data");
   }
 //  m_adder->setOutDNS(m_OutputDNS);
   m_adder->m_IsEOR = false;
@@ -251,11 +256,11 @@ StatusCode AdderSvc::start()
 
   if (m_AdderClass == "hists")
   {
-    m_EoRadder = new HistAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"EOR");
+    m_EoRadder = new HistAdder((char*)myservicename.c_str(), (char*)"EOR");
   }
   else if (m_AdderClass == "counter")
   {
-    m_EoRadder = new CounterAdder((char*)m_TaskName.c_str(), (char*)myservicename.c_str(), (char*)"EOR");
+    m_EoRadder = new CounterAdder((char*)myservicename.c_str(), (char*)"EOR");
   }
   m_EoRadder->setOutDNS(m_OutputDNS);
   m_EoRadder->m_IsEOR = true;
@@ -276,12 +281,12 @@ StatusCode AdderSvc::start()
     m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
   }
   m_funcsvc = 0;
-  if (m_AdderType == "top" || m_AdderType == "part")
-  {
-    m_Function = m_PartitionName+"_"+m_TaskName;
-    m_funcsvc = new DimService((char*)m_Function.c_str(),(char*)m_utgid.c_str());
-    m_funcsvc->updateService();
-  }
+//  if (m_AdderType == "top" || m_AdderType == "part")
+//  {
+//    m_Function = m_PartitionName+"_"+m_TaskName;
+//    m_funcsvc = new DimService((char*)m_Function.c_str(),(char*)m_utgid.c_str());
+//    m_funcsvc->updateService();
+//  }
   m_started = true;
   return StatusCode::SUCCESS;
 }
