@@ -95,7 +95,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
             
             from Configurables import ParticleMonitor
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
             plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
             plotter.PlotTools   = self.getProp("PlotTools") 
@@ -121,7 +121,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
             
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(Ds2piPhiName+"MCPerf")
-            mcPerf.InputLocations = ['Phys/'+self.__sel_name__+'Sel']
+            mcPerf.Inputs = ['Phys/'+self.__sel_name__+'Sel']
             self.setOptions(mcPerf)
             seq.Members += [mcPerf]
                     
@@ -139,7 +139,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
                                         TupleToolVtxIsoln, LoKi__Hybrid__TupleTool )
 
             Tuple = DecayTreeTuple(Ds2piPhiName+"Tuple")
-            Tuple.InputLocations = ["Phys/"+Ds2piPhiName]
+            Tuple.Inputs = ["Phys/"+Ds2piPhiName]
             Tuple.Decay = "[D_s+ -> ^pi+ (^phi(1020) => ^K+ ^K-)]cc";
             Tuple.Branches = {
                 "pion"        : "[D_s+ -> ^pi+ (phi(1020) => K+ K-)]cc"

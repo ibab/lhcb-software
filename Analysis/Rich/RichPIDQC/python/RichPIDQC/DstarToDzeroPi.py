@@ -115,7 +115,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
 
             from Configurables import ParticleMonitor
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.Inputs = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(M-MAXTREE('D0'==ABSID,M)<147.43) "\
                                   "& (M-MAXTREE('D0'==ABSID,M)>143.43) "\
                                   "& (INTREE((ABSID=='D0') & (ADMASS('D0') < 15*MeV) ))"
@@ -145,7 +145,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(dstar2d0piName+"MCPerf")
-            mcPerf.InputLocations = ["Phys/"+dstar2d0piName]
+            mcPerf.Inputs = ["Phys/"+dstar2d0piName]
             self.setOptions(mcPerf)
             seq.Members += [mcPerf]
     

@@ -96,7 +96,7 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
             
             from Configurables import ParticleMonitor
             plotter = ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(ADMASS('Lambda0')<2*MeV)"
             plotter.SideBandCut = "(ADMASS('Lambda0')>2*MeV)"
             plotter.PlotTools   = self.getProp("PlotTools") 
@@ -122,7 +122,7 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(lambda2ppiName+"MCPerf")
-            mcPerf.InputLocations = ["Phys/"+lambda2ppiName]
+            mcPerf.Inputs = ["Phys/"+lambda2ppiName]
             self.setOptions(mcPerf)
             seq.Members += [mcPerf]
                     

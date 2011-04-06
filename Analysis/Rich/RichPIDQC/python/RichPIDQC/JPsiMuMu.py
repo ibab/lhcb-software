@@ -83,7 +83,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
 
             from Configurables import ( ParticleMonitor )
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.InputLocations = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
             plotter.PeakCut     = "(ADMASS('J/psi(1S)')<40*MeV)" # Considering sigma = 13
             plotter.SideBandCut = "(ADMASS('J/psi(1S)')>40*MeV)" # Considering sigma = 13
             plotter.PlotTools   = self.getProp("PlotTools") 
@@ -109,7 +109,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
 
             from Configurables import ParticleEffPurMoni
             mcPerf = ParticleEffPurMoni(JPsiMuMuName+"MCPerf")
-            mcPerf.InputLocations = ['Phys/'+self.__sel_name__+'Sel']
+            mcPerf.Inputs = ['Phys/'+self.__sel_name__+'Sel']
             self.setOptions(mcPerf)
             seq.Members += [mcPerf]
 
@@ -131,7 +131,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
                                         )
             
             JPsiMuMuTree = DecayTreeTuple( JPsiMuMuName + 'Tuple')
-            JPsiMuMuTree.InputLocations = [ 'Phys/'+JPsiMuMuName]
+            JPsiMuMuTree.Inputs = [ 'Phys/'+JPsiMuMuName]
             JPsiMuMuTree.Decay = 'J/psi(1S) ->  ^mu+ ^mu- '
             
             # set some names for ntuple branchs

@@ -114,16 +114,16 @@ class KshortPiPiConf(RichConfigurableUser) :
             from Configurables import ParticleEffPurMoni
 
             #mcPerfPi = ParticleEffPurMoni("StdNoPIDsPionsMCPerf")
-            #mcPerfPi.InputLocations = ["Phys/StdNoPIDsPions"]
+            #mcPerfPi.Inputs = ["Phys/StdNoPIDsPions"]
             #mcPerfPi.OutputLevel = DEBUG
             #seq.Members += [mcPerfPi]
  
             #mcPerfPiFilt = ParticleEffPurMoni(pionFilterName+"MCPerf")
-            #mcPerfPiFilt.InputLocations = ["Phys/"+pionFilterName]
+            #mcPerfPiFilt.Inputs = ["Phys/"+pionFilterName]
             #seq.Members += [mcPerfPiFilt]
              
             mcPerfD = ParticleEffPurMoni(ks02pipiName+"MCPerf")
-            mcPerfD.InputLocations = ["Phys/"+ks02pipiName]
+            mcPerfD.Inputs = ["Phys/"+ks02pipiName]
             self.setOptions(mcPerfD)
             seq.Members += [mcPerfD]
                     
