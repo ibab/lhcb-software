@@ -81,7 +81,7 @@ void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tg
   bool status = boost::regex_search(server,m_taskexp);
   if (status)
   {
-    ::printf("Comparing %s with %s status...success\n",server.c_str(),m_taskPattern.c_str());
+//    ::printf("Comparing %s with %s status...success\n",server.c_str(),m_taskPattern.c_str());
     tname = server;
     tgen = "";
     return;

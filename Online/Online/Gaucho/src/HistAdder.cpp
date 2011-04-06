@@ -116,7 +116,7 @@ void HistAdder::Configure()
   }
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
-  printf("HistAdder> Patterns - Tasks:%s Svc:%s\n",m_taskPattern.c_str(),m_servicePattern.c_str());
+//  printf("HistAdder> Patterns - Tasks:%s Svc:%s\n",m_taskPattern.c_str(),m_servicePattern.c_str());
   m_outsvcname = m_name+m_serviceName;
   lib_rtl_create_lock(0,&m_maplock);
   std::string nam = m_name + "/Histos/HistCommand";
