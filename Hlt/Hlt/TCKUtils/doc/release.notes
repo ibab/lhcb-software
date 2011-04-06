@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2011-04-06 - Gerhard Raven
+ - improve decoration of ConfigTreeNode and PropertyConfig
+   so that given an id or TCK they can be restored...
+
 !========================== TCKUtils v1r8 2011-03-03 ===================
 ! 2011-03-30 - Gerhard Raven
  - use flyweight pattern for PropCfg

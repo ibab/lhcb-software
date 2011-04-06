@@ -9,9 +9,10 @@ from TCKUtils.Sandbox import execInSandbox
 from pprint import pprint
 
 ### add some decoration...
-GaudiPython.gbl.Gaudi.Math.MD5.__str__ = GaudiPython.gbl.Gaudi.Math.MD5.str
+MD5 = GaudiPython.gbl.Gaudi.Math.MD5
+MD5.__str__ = MD5.str
 GaudiPython.gbl.ConfigTreeNodeAlias.alias_type.__str__ = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type.str
-digest = GaudiPython.gbl.Gaudi.Math.MD5.createFromStringRep
+digest = MD5.createFromStringRep
 alias = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type
 topLevelAlias = GaudiPython.gbl.ConfigTreeNodeAlias.createTopLevel
 TCK = GaudiPython.gbl.ConfigTreeNodeAlias.createTCK
@@ -27,32 +28,6 @@ def _appMgr() :
 def _tck(x) :
     if type(x) == str and x[0:2].upper() == '0X' :  return int(x,16)
     return int(x)
-
-def _tck2id(x,cas = ConfigAccessSvc() ) :
-    name = cas.getFullName()
-    appMgr = _appMgr()
-    appMgr.createSvc(name)
-    s = appMgr.service(name,'IConfigAccessSvc')
-    for i in s.configTreeNodeAliases( alias( 'TCK/'  ) ) :
-        if _tck(i.alias().str().split('/')[-1]) == _tck(x) : return i.ref().str()
-    return None
-    #n = s.readConfigTreeNodeAlias( alias( 'TCK/0x%08x'%tck  ) ) 
-    #invalid = GaudiPython.gbl.ConfigTreeNode() 
-    #val =  n.get_value_or( invalid )
-    #return val.digest() if val.digest() != invalid.digest() else None
-
-def tck2id(x,cas) :
-    if type(x) is int : x = '0x%08x' % x 
-    import re
-    if re.compile('^[0-9a-fA-F]{32}$').match(x) :
-        # x is already a configID
-        return x
-    elif re.compile('^0x[0-9a-fA-F]{8}$').match(x) :
-        tck = execInSandbox(_tck2id,x,cas)
-        if not tck : raise KeyError("not a valid TCK: "+str(x))
-        return tck
-    else :
-        raise KeyError("not a valid TCK: "+str(x))
 
 def _orphanScan(cas = ConfigAccessSvc() ) :
     treeNodeDict = dict()
@@ -93,35 +68,10 @@ def _orphanScan(cas = ConfigAccessSvc() ) :
         if not v : print k
 
 
-def _digest(x,cas) :
+def _digest(x) :
     if type(x) == str : x = digest( x )
     return x
 
-class _TreeNodeCache:
-    ncache = None
-    lcache = None
-    svc   = None
-    def __init__(self,svc=None):
-       if type(_TreeNodeCache.ncache) is type(None) :
-         if type(svc) is type(None):
-             raise RuntimeWarning('oops... no svc during singleton creation')
-         _TreeNodeCache.ncache = dict()
-         _TreeNodeCache.lcache = dict()
-         _TreeNodeCache.svc = svc
-       elif svc and svc != TreeNodeCache.svc :
-         raise RuntimeWarning('oops... already have a different svc during singleton access ')
-    def node(self,id):
-       if id not in _TreeNodeCache.ncache : 
-         node = _TreeNodeCache.svc.resolveConfigTreeNode( id ) 
-         _TreeNodeCache.ncache[ id ] = node
-       return _TreeNodeCache.ncache[ id ]
-    def leaf(self,id):
-       if not id.valid() : return None
-       if id not in _TreeNodeCache.lcache :
-          leaf = _TreeNodeCache.svc.resolvePropertyConfig( id )
-          _TreeNodeCache.lcache[ id ] = leaf
-       return _TreeNodeCache.lcache[id]
-       
 # utilities to pack and unpack L0 conditions into Condition property...
 # given the 'Conditions' property of an L0DUCOnfig tool instance, 
 # return a pythonized table of settings
@@ -190,18 +140,18 @@ def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
     l0config = configProvider.getValuedProperties()
     l0config['TCK'] = l0tck
 
-    pc = PropertyConfigSvc( prefetchConfig = [ _digest(id,cas).str() ],
-                            ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(), 
+    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
+    cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName(), 
                             ConfigAccessSvc =  cas.getFullName())
 
     appMgr = _appMgr()
     appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pc.getFullName())
+    appMgr.createSvc(pcs.getFullName())
     cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    pc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
+    pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+    svc = AccessSvcSingleton(pcs = pcs, cas=cas )
     cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
-    id  = _digest(id,cas)
+    id  = _digest(id)
     a = [ i.alias().str() for  i in cas.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
     if len(a) != 1 : 
         print 'something went wrong: no unique toplevel match for ' + str(id)
@@ -209,18 +159,15 @@ def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
     (release,hlttype) = a[0].split('/',3)[1:3]
     mods = vector_string()
     # check L0 config in source config
-    for i in pc.collectLeafRefs( id ) :
-        propConfig = pc.resolvePropertyConfig( i )
+    for cfg in svc.collectLeafRefs( id ) :
         #  check for either a MultiConfigProvider with the right setup,
         #  or for a template with the right TCK in it...
-        if propConfig.name() == 'ToolSvc.L0DUConfig' : 
-            cfg = PropCfg(propConfig)
+        if cfg.name == 'ToolSvc.L0DUConfig' : 
             if cfg.type != 'L0DUConfigProvider':
                 raise KeyError("Can only update configuration which use L0DUConfigProvider, not  %s" % cfg.type )
             #  check that all specified properties exist in cfg
             for (k,v) in l0config.iteritems() :
                 if k not in cfg.props : raise KeyError('Specified property %s not in store'%k)
-                #print 'key: %s  request: %s  persistent: %s ' % ( k, v, cfg.props[k] )
                 mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
     if extra :
         for algname,props in extra.iteritems() :
@@ -250,26 +197,24 @@ def _createTCKEntries(d, cas ) :
              raise KeyError('requested L0 TCK %s is not known'%l0tck) 
         configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
         l0tcks[l0tck] = configProvider.getValuedProperties()
-    pc = PropertyConfigSvc( prefetchConfig = [ _digest(id,cas).str() for (tck,id) in d.iteritems() ],
-                            ConfigAccessSvc = cas.getFullName() )
+    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()
     appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pc.getFullName())
-    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    pc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
+    appMgr.createSvc(pcs.getFullName())
+    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
+    svc = AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+                            , cas = cas )
     for tck,id in d.iteritems() :
-        id  = _digest(id,cas)
+        id  = _digest(id)
         tck = _tck(tck)
         # check whether L0 part of the TCK is specified
         l0tck = tck & 0xffff
         if l0tck : 
             l0tck = '0x%04X'%l0tck
-            for i in pc.collectLeafRefs( id ) :
-                propConfig = pc.resolvePropertyConfig( i )
+            for cfg in svc.collectLeafRefs( id ) : 
                 #  check for either a MultiConfigProvider with the right setup,
                 #  or for a template with the right TCK in it...
-                if propConfig.name() == 'ToolSvc.L0DUConfig' : 
-                    cfg = PropCfg(propConfig)
+                if cfg.name == 'ToolSvc.L0DUConfig' : 
                     if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
                         raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
                     if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
@@ -279,7 +224,7 @@ def _createTCKEntries(d, cas ) :
         print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
         ref = cas.readConfigTreeNode( id )
         alias = TCK( ref.get(), tck )
-        cas.writeConfigTreeNodeAlias(alias)
+        svc.writeConfigTreeNodeAlias(alias)
 
 
 def _getConfigurations( cas = ConfigAccessSvc() ) :
@@ -303,34 +248,60 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
             if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
     return info
 
-def _getConfigTree( configID , cas = ConfigAccessSvc() ) :
-    id = _digest(tck2id(configID,cas),cas)
-    pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
-                            ConfigAccessSvc = cas.getFullName() )
-    name = pc.getFullName()
+class AccessSvcSingleton(object) :
+   _pcs = None
+   _cas = None
+   def __init__(self,pcs=None,cas=None) :
+        if cas : AccessSvcSingleton._cas = cas
+        if pcs : AccessSvcSingleton._pcs = pcs
+   def resolveTCK(self,tck) :
+        tck = _tck(tck)
+        for i in AccessSvcSingleton._cas.configTreeNodeAliases( alias( 'TCK/'  ) ) :
+            if _tck(i.alias().str().split('/')[-1]) == _tck(tck) : return digest(i.ref().str())
+        return None
+   def _2id(self,id) :
+        if type(id) is int : id = '0x%08x' % id 
+        if type(id) is str and len(id)==32 : id = _digest(id)
+        #  if we're not a valid id at this point, maybe we're a TCK... 
+        if type(id) is not MD5 : id = self.resolveTCK(id)
+        return id
+   def resolveConfigTreeNode(self,id) :   
+        if type(id) is not MD5 :
+            id = self._2id(id)
+        return AccessSvcSingleton._pcs.resolveConfigTreeNode(id) if (id and id.valid()) else None
+   def resolvePropertyConfig(self,id) :
+        return AccessSvcSingleton._pcs.resolvePropertyConfig(id) if (id and id.valid()) else None
+   def collectLeafRefs(self,id) :
+        if type(id) is not MD5 :
+            id = self._2id(id)
+        for ids in  AccessSvcSingleton._pcs.collectLeafRefs( id )  :
+            yield PropCfg(ids)
+   def resolveConfigTreeNodeAliases(self, a ) :
+        if type(a) is not type(alias) : a = alias(a)
+        return AccessSvcSingleton._pcs.configTreeNodeAliases( a )
+   def writeConfigTreeNodeAlias(self,alias) :
+        return AccessSvcSingleton._cas.writeConfigTreeNodeAlias(alias)
+
+def _getConfigTree( id , cas = ConfigAccessSvc() ) :
+    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()
-    appMgr.createSvc(name)
-    # init TreeNodeCache singleton
-    _TreeNodeCache( svc = appMgr.service(name,'IPropertyConfigSvc') )
+    appMgr.createSvc(cas.getFullName())
+    appMgr.createSvc(pcs.getFullName())
+    AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+                      , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') )
     return Tree(id)
 
-def _xget( configIDs , cas = ConfigAccessSvc() ) :
-    ids = [ _digest(i,cas) for i in configIDs ]
-    pc = PropertyConfigSvc( prefetchConfig = [ id.str() for id in ids ],
-                            ConfigAccessSvc = cas.getFullName() )
+def _xget( ids , cas = ConfigAccessSvc() ) :
+    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()
-    appMgr.createSvc(pc.getFullName())
-    svc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
+    appMgr.createSvc(cas.getFullName())
+    appMgr.createSvc(pcs.getFullName())
+    svc = AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+                            , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') )
     table = dict()
     for id in ids :
-        table[id.str()] = dict()
-        for i in svc.collectLeafRefs( id ) :
-            propConfig = svc.resolvePropertyConfig( i )
-            if propConfig.name() in table[id.str()].keys() : raise KeyError("Already in list for %s: '%s'"%(id.str(),propConfig.name()))
-            table[id.str()][propConfig.name()] = PropCfg( propConfig )
+        table[id] = dict( [ ( cfg.name, cfg ) for cfg in svc.collectLeafRefs(id) ] )
     return table 
-
-
 
 def _copyTree(svc,nodeRef,prefix) :
     node = svc.readConfigTreeNode(nodeRef)
@@ -356,7 +327,6 @@ def _copy( source , target ) :
             s.writeConfigTreeNodeAlias(i)
     print 'done copying...'
 
-
 def _lookupProperty(table,algname,property) :
     if algname not in table : raise KeyError("no algorithm named %s in specified config"%algname )
     properties = table[algname].properties()
@@ -364,7 +334,6 @@ def _lookupProperty(table,algname,property) :
     return properties[property]
 
 def _getProperty(id,algname,property, cas ) :
-    id = tck2id(id,cas)
     tables = execInSandbox( _xget, [ id ], cas )
     return _lookupProperty(tables[id],algname,property)
 
@@ -372,19 +341,18 @@ def _updateProperties(id, updates, label, cas  ) :
     if not label : 
         print 'please provide a reasonable label for the new configuration'
         return None
-    if type(id) == str: id = digest( id )
-    pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
-                            ConfigAccessSvc = cas.getFullName() )
+    pc = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(),
                             ConfigAccessSvc = cas.getFullName() )
     # run program...
     appMgr = _appMgr()
-    appMgr.createSvc(pc.getFullName())
     cteName = cte.name().split('.')[-1]
     ed = appMgr.toolsvc().create(cteName,interface='IConfigTreeEditor')
     if not ed : raise RuntimeWarning(' could not get tool ' + cteName )
     cf = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
     if not cf : raise RuntimeWarning(' could not get service ' + cas.name() )
+    if type(id) == str: id = _digest( id )
+    if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
     a = [ i.alias().str() for  i in cf.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
     if len(a) != 1 : 
         print 'something went wrong: no unique toplevel match for ' + str(id)
@@ -431,25 +399,40 @@ class Configuration :
             if type(tck) != str : tck = '0x%08x' % tck
             return  '%20s : %10s : %s : %s\n'%(self.info['hlttype'],tck,self.info['id'],self.info['label'])
 
+
+class TreeNode(object) :
+    " A class representing a ConfigTreeNode "
+    #  use flyweight pattern, and use digest to identify objects...
+    import weakref
+    _pool = weakref.WeakValueDictionary()
+    def __new__(cls, id = None) :
+        if not id: return object.__new__(cls)
+        obj = TreeNode._pool.get( id )
+        if not obj :
+            obj = AccessSvcSingleton().resolveConfigTreeNode(id)
+            TreeNode._pool[id] = obj
+        return obj
+
+
 class PropCfg(object) :
     " A class representing a PropertyConfig "
     #  use flyweight pattern, and use digest to identify objects...
     import weakref
     _pool = weakref.WeakValueDictionary()
-    def __new__(cls, x = None) :
-        if not x : return object.__new__(cls) # added to make it possible to recv in parent process...
-        digest = x.digest().str()
-        obj = PropCfg._pool.get( digest )
+    #  TODO: make a singleton svc which we use to resolve IDs if not existent yet...
+    def __new__(cls, id = None) :
+        if not id : return object.__new__(cls) # added to make it possible to recv in parent process...
+        obj = PropCfg._pool.get( id )
         if not obj :
+            x = AccessSvcSingleton().resolvePropertyConfig(id)
             obj = object.__new__(cls)
             obj.name = x.name()
             obj.type = x.type()
             obj.kind = x.kind()
             obj.fullyQualifiedName = x.fullyQualifiedName()
-            obj.digest = digest
-            obj.props = dict()
-            for i in x.properties() : obj.props.update( { i.first: i.second } )
-            PropCfg._pool[digest] = obj
+            obj.digest = id
+            obj.props  = dict( [ (i.first,i.second) for i in x.properties() ] )
+            PropCfg._pool[id] = obj
         return obj
     def properties(self) : return self.props
     def fqn(self) : return  self.fullyQualifiedName + ' ('+self.kind+')'
@@ -458,15 +441,14 @@ class PropCfg(object) :
 
 class Tree(object):
     def __init__(self,id,parent=None ) :
-        cache = _TreeNodeCache()
         self.parent = parent
         self.depth = self.parent.depth+1  if self.parent else 0
-        node = cache.node(id)
+        node = TreeNode(id)
         self.digest = node.digest().str()
         self.label = node.label()
-        leaf = cache.leaf( node.leaf() ) 
-        self.leaf = PropCfg( leaf ) if leaf else None
-        self.nodes = [ Tree(i,self) for i in node.nodes() ]
+        leaf =  node.leaf() 
+        self.leaf = PropCfg( leaf ) if leaf.valid() else None
+        self.nodes = [ Tree(id=id,parent=self) for id in node.nodes() ]
     def prnt(self):
         s = ' --> ' + str(self.leaf.digest) if self.leaf else ''
         indent = self.depth*'   '
@@ -477,11 +459,10 @@ class Tree(object):
         return self._inorder()
     def _inorder(self) :
         yield self
-        for i in self.nodes: 
+        for i in self.nodes:
            for x in i._inorder() : yield x
 
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
-    (lhs,rhs) = (tck2id(lhs,cas),tck2id(rhs,cas))
     table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
     setl = set( table[lhs].keys() )
     setr = set( table[rhs].keys() )
@@ -641,6 +622,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
        print line
 
 def getConfigTree(id, cas = ConfigAccessSvc()):
+    #return  _getConfigTree( id, cas )
     return execInSandbox( _getConfigTree, id, cas )
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
@@ -650,7 +632,6 @@ def getHlt2Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
     return eval(_getProperty(id,'Hlt2','Members',cas))
 def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
-    id = tck2id(id,cas)
     table = execInSandbox( _xget, [ id ], cas )[id]
     lines = eval(_lookupProperty(table,'Hlt1','Members'))
     return [ _lookupProperty(table,i.split('/')[-1],'DecisionName') for i in lines ]
@@ -665,9 +646,6 @@ def _sortConfigs( config ):
     return config[ 'TCK' ] if config[ 'TCK'] else []
 
 def printConfigurations( info ) :
-    #print 'hello world'
-    #for i in info.itervalues() : print i.info
-    #print 'goodbye world'
     for release in sorted(set( [ i['release'] for i in info.itervalues()  ] ), key = _sortReleases ) : 
         print release
         confInRelease = [ i for i in info.itervalues() if i['release']==release ]
