@@ -91,14 +91,14 @@ StatusCode AdderSvc::initialize()
       msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
       return StatusCode::FAILURE;
     }
-    sc = serviceLocator()->service("HistogramSvc",m_phistsvc,true);
+    sc = serviceLocator()->service("HistogramDataSvc",m_phistsvc,true);
     if( sc.isSuccess() )
     {
-      msg << MSG::DEBUG << "Found the Histogram Service interface" << endreq;
+      msg << MSG::DEBUG << "Found the Histogram Data Service interface" << endreq;
     }
     else
     {
-      msg << MSG::FATAL << "Unable to locate the Histogram Service interface." << endreq;
+      msg << MSG::FATAL << "Unable to locate the Histogram Data Service interface." << endreq;
       return StatusCode::FAILURE;
     }
   }
