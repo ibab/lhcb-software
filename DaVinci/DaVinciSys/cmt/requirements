@@ -9,6 +9,8 @@ use  DaVinciTests               v2r5
 
 # Patches
 
+use EventPacker                 v2r8    Event
+
 # Declare this as a container package
 apply_pattern container_package
 
