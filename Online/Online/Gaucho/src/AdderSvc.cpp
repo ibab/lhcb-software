@@ -52,7 +52,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   m_started = false;
   m_errh =0;
   m_funcsvc = 0;
-  m_pGauchoMonitorSvc = 0;
+  m_pMonitorSvc = 0;
   m_phistsvc=0;
   m_arrhist = 0;
 }
@@ -81,10 +81,10 @@ StatusCode AdderSvc::initialize()
   sc = StatusCode::SUCCESS;
   if(m_dohisto)
   {
-    sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, true);
+    sc = serviceLocator()->service("MonitorSvc", m_pMonitorSvc, true);
     if( sc.isSuccess() )
     {
-      msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
+      msg << MSG::DEBUG << "Found the IMonitorSvc interface" << endreq;
     }
     else
     {
@@ -141,7 +141,7 @@ StatusCode AdderSvc::start()
   if (m_dohisto)
   {
     m_arrhist = m_phistsvc->book(name()+"/arrivaltime","Adder Packet Arrival Time in seconds",100,0.0,50.0);
-    m_pGauchoMonitorSvc->declareInfo(std::string("ArrivalTimes"),m_arrhist,std::string("Packet Arrival Times"),this);
+    m_pMonitorSvc->declareInfo(std::string("ArrivalTimes"),m_arrhist,std::string(""),this);
   }
 // Nodeadders:
 // Source task names:
@@ -236,7 +236,7 @@ StatusCode AdderSvc::start()
   m_adder->setIsSaver(m_isSaver);
   m_adder->m_dohisto = m_dohisto;
   m_adder->m_histo = m_arrhist;
-  m_adder->m_monsvc = m_pGauchoMonitorSvc;
+  m_adder->m_monsvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
   if (m_isSaver)

@@ -15,7 +15,8 @@
 #include "Gaucho/AdderSys.h"
 #include "AIDA/IHistogram.h"
 // Forward declarations
-class ISvcLocator;
+//class ISvcLocator;
+class IMonitorSvc;
 //class MonObject;
 //class MonSys;
 //class MonSubSys;
@@ -66,7 +67,7 @@ public:
   StatusCode stop();
   StatusCode finalize();
   virtual void handle(const Incident&);
-  IGauchoMonitorSvc* m_pGauchoMonitorSvc;
+  IMonitorSvc* m_pMonitorSvc;
   IHistogramSvc *m_phistsvc;
   AIDA::IHistogram1D *m_arrhist;
   bool m_dohisto;
