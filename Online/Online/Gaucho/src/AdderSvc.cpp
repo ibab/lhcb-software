@@ -141,7 +141,7 @@ StatusCode AdderSvc::start()
   if (m_dohisto)
   {
     m_arrhist = m_phistsvc->book(name()+"/arrivaltime","Adder Packet Arrival Time in seconds",100,0.0,50.0);
-    m_pMonitorSvc->declareInfo("ArrivalTimes",/*(const AIDA::IBaseHistogram*)*/m_arrhist,"",this);
+    m_pMonitorSvc->declareInfo("ArrivalTimes",(const AIDA::IBaseHistogram*)m_arrhist,"",this);
   }
 // Nodeadders:
 // Source task names:
