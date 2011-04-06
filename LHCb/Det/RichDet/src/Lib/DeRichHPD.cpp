@@ -149,7 +149,7 @@ StatusCode DeRichHPD::initialize ( )
   const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
   if ( pvHPDSMaster->name().find("HPDSMaster") == std::string::npos )
   {
-    fatal() << "Cannot find HPDSMaster volume; " << pvHPDSMaster->name() << endmsg;
+    fatal() << "Cannot find HPDSMaster volume : " << pvHPDSMaster->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -254,10 +254,13 @@ StatusCode DeRichHPD::initialize ( )
     }
   }
 
+  // Update HPD QE values whenever DeRichSystem updates
+  updMgrSvc()->registerCondition( this, deRichSys(), &DeRichHPD::quantumEffUpdateUMS );
+
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() )
   {
-    fatal() << "Demagnification ums update failure" << endmsg;
+    fatal() << "UMS updates failed" << endmsg;
   }
 
   return sc;
@@ -288,6 +291,12 @@ ILHCbMagnetSvc * DeRichHPD::magSvc() const
   return m_magFieldSvc;
 }
 
+StatusCode DeRichHPD::quantumEffUpdateUMS()
+{
+  initHpdQuantumEff();
+  return StatusCode::SUCCESS;
+}
+
 //=========================================================================
 // Initialise the HPD quantum eff function
 //=========================================================================
@@ -301,7 +310,7 @@ void DeRichHPD::initHpdQuantumEff() const
   {
     // convert copy number to smartID
     const LHCb::RichSmartID id = deRichSys()->richSmartID(Rich::DAQ::HPDCopyNumber(m_number));
-    const std::string qePath = deRichSys()->param<std::string>("HpdQuantumEffCommonLoc");
+    const std::string qePath   = deRichSys()->param<std::string>("HpdQuantumEffCommonLoc");
     const std::string hID( deRichSys()->hardwareID(id) );
     SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), qePath+hID );
     if ( !hpdQuantumEffTabProp )
@@ -314,7 +323,6 @@ void DeRichHPD::initHpdQuantumEff() const
     }
     m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
     m_flags[6] = true;
-    //debug() << "HPD:" << id << endmsg;
   }
   else // use copy number to locate QE
   {

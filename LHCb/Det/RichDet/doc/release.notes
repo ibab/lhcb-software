@@ -4,6 +4,14 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-04-06 - Chris Jones
+ - Some more changes to try make sure things are (re)initialised when needed
+
+! 2011-04-05 - Chris Jones
+ - Move all of the initialisation of variables in DeRichSphMirror::initialize()
+   to DeRichSphMirror::updateGeometry(), in order to make sure everything
+   is properly updated on Condition changes.
+
 !========================= RichDet v16r2 2011-04-04 =========================
 ! 2011-03-31 - Antonis Papanestis
  - Chages in DeRichGasRadiator to allow easy change of gas in RICH1

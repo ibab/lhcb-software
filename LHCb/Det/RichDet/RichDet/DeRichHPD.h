@@ -302,9 +302,10 @@ private: // functions
   /// Update the magnification and demagnification information
   StatusCode updateDemagProperties();
 
-  // go from a point on silicon to a point on the photo-cathode with magnet ON
+  /// go from a point on silicon to a point on the photo-cathode with magnet ON
   StatusCode magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
-  // go from a point on silicon to a point on the photo-cathode with magnet OFF
+
+  /// go from a point on silicon to a point on the photo-cathode with magnet OFF
   StatusCode magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint, bool photoCathodeSide ) const;
 
   /// Initialise the interpolators for demagnification (cathode to anode)
@@ -316,6 +317,9 @@ private: // functions
   /// Initialise the HPD quantum eff function
   void initHpdQuantumEff() const;
 
+  /// Update method for HPD QE for UMS
+  StatusCode quantumEffUpdateUMS();
+  
   /// Access magnetic field service on demand
   ILHCbMagnetSvc * magSvc() const;
 

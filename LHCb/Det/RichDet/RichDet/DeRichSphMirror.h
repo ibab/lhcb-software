@@ -158,6 +158,9 @@ private: // methods
    */
   StatusCode updateGeometry();
 
+  /// Cleanup 
+  void cleanUp();
+
 private: // data
 
   /// mirror reflectivity
@@ -180,6 +183,14 @@ private: // data
   /// The plane normal to the normal vector at the centre of the mirror
   Gaudi::Plane3D m_centreNormalPlane;
 
+  /// Flag for first update
+  bool m_firstUpdate;
+
 };
+
+inline void DeRichSphMirror::cleanUp()
+{
+  if ( m_reflectivity ) { delete m_reflectivity; m_reflectivity = NULL; }
+}
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H
