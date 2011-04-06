@@ -20,14 +20,14 @@ def start() :
 
     ### default database setup
     Moore().Simulation = False
-    Moore().DDDBtag    = 'hlt-20100906'
-    Moore().CondDBtag  = 'hlt-20100906'
+    Moore().DDDBtag    = 'head-20110302'
+    Moore().CondDBtag  = 'head-20110318'
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
 
-    if OnlineEnv.PartitionName == 'FEST' :
-       Moore().EnableRunChangeHandler = False
+    #if OnlineEnv.PartitionName == 'FEST' :
+       # Moore().EnableRunChangeHandler = False
        # Moore().Simulation = True
        # Moore().DDDBtag   = 'MC09-20090602'
        # Moore().CondDBtag = 'sim-20090402-vc-md100'
@@ -43,6 +43,14 @@ def start() :
         Moore().CondDBtag = OnlineEnv.CondDBTag
         #Moore().DDDBtag   = OnlineEnv.CondDBTag
         Moore().UseDBSnapshot = True
+	
+    from Configurables import MonitorSvc
+    MonitorSvc().ExpandCounterServices = 1;
+    MonitorSvc().ExpandNameInfix       = "<part>_x_<program>/";
+    MonitorSvc().PartitionName         = OnlineEnv.PartitionName;
+    MonitorSvc().ProgramName           = "HltExpertMon_00";
+
+	
 	
     from Configurables import UpdateAndReset
     UpdateAndReset().saveHistograms = 1	
