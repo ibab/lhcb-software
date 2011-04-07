@@ -23,7 +23,7 @@ void HAdderServInfoHandler::infoHandler(void)
   {
     return;
   }
-  ::lib_rtl_output(LIB_RTL_DEBUG,"New Message from Service List Service %s data:%s\n",
+  ::lib_rtl_output(LIB_RTL_INFO,"New Message from Service List Service %s data:%s\n",
 		   itsService->getName(),input);
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {
@@ -71,7 +71,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
   }
 
   Adderlist_t& l = AdderSys::Instance().gg_AdderList;
-  auto_ptr<dyn_string> server_list(Strsplit(input, (char*) "|"));
+  auto_ptr<dyn_string> server_list(Strsplit(input,"|"));
   for (dyn_string::iterator i = server_list->begin(); i != server_list->end(); i++)
   {
     bool fnd = false;

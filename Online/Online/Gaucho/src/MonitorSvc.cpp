@@ -1,14 +1,13 @@
 // Include files
+#include "MonitorSvc.h"
+
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
-//#include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-//#include "GaudiKernel/SmartIF.h"
 #include "Gaucho/CntrMgr.h"
 #include "Gaucho/MonHist.h"
-#include "MonitorSvc.h"
 #include "Gaucho/MonSys.h"
 #include "Gaucho/MonSubSys.h"
 #include "Gaucho/MonCounter.h"
@@ -358,19 +357,14 @@ void MonitorSvc::addRate(MonSubSys *ss, CntrMgr *cm)
   return;
 }
 
-template<class T> void MonitorSvc::i_declareCounter(const string& name, const T&  var,
+template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T&  var,
                              const string& desc, const IInterface* owner)
 {
+  MsgStream msg(msgSvc(),name());
   string oname = infoOwnerName(owner);
-  if (m_started)
+  if (nam.find("COUNTER_TO_RATE") != string::npos)
   {
-//    printf("Delcare Info called after start for Name %s\n",name.c_str());
-  }
-  if (0 != m_disableDeclareInfoInt) return;
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  if (name.find("COUNTER_TO_RATE") != string::npos)
-  {
-    string newName = extract("COUNTER_TO_RATE", name);
+    string newName = extract("COUNTER_TO_RATE", nam);
     if ( 0 == m_disableMonRate)
     {
       if (m_CntrMgr == 0)
@@ -392,22 +386,22 @@ template<class T> void MonitorSvc::i_declareCounter(const string& name, const T&
     }
     return;
   }
-  MonCounter *cnt = new MonCounter((char*)(oname+"/"+name).c_str(),(char*)desc.c_str(),(T*)&var);
+  MonCounter *cnt = new MonCounter((char*)(oname+"/"+nam).c_str(),(char*)desc.c_str(),(T*)&var);
   if (m_CntrSubSys == 0)
   {
     m_CntrSubSys = new MonSubSys(m_updateInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
   }
-  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
+  m_InfoMap.insert(pair<string,void*>(oname+"/"+nam,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
 
-void MonitorSvc::i_unsupported(const string& name, const type_info& typ, const IInterface* owner)
+void MonitorSvc::i_unsupported(const string& nam, const type_info& typ, const IInterface* owner)
 {
-  MsgStream msg(msgSvc(),"MonitorSvc");
+  MsgStream msg(msgSvc(),name());
   string oname = infoOwnerName(owner);
   string typ_name = System::typeinfoName(typ);
-  msg << MSG::ERROR << "declareInfo(" << typ_name << ") not implemented " << oname << "/" << name << endmsg;
+  msg << MSG::ERROR << "declareInfo(" << typ_name << ") not implemented " << oname << "/" << nam << endmsg;
   return;
 }
 
@@ -415,13 +409,13 @@ void MonitorSvc::i_unsupported(const string& name, const type_info& typ, const I
 void MonitorSvc::declareInfo(const string& name, const int&  var,
                              const string& desc, const IInterface* owner)
 {
-  this->i_declareCounter(name,var,desc,owner);
+  if (0 == m_disableDeclareInfoInt) this->i_declareCounter(name,var,desc,owner);
 }
 
 void MonitorSvc::declareInfo(const string& name, const long&  var,
                              const string& desc, const IInterface* owner)
 {
-  this->i_declareCounter(name,var,desc,owner);
+  if (0 == m_disableDeclareInfoLong) this->i_declareCounter(name,var,desc,owner);
 }
 
 void MonitorSvc::declareInfo(const string& name, const double& var,
@@ -521,17 +515,16 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
   return;
 }
 
-
-void MonitorSvc::declareInfo(const string& name, const AIDA::IBaseHistogram* var,
+void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
                              const string& , const IInterface* owner)
 {
+  MsgStream msg(msgSvc(),name());
   string oname = infoOwnerName(owner);
-  MsgStream msg(msgSvc(),"MonitorSvc");
  // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
 
   if (m_started)
   {
-//    printf("Declare Info (Histogram) called after start for Name %s\n",name.c_str());
+    msg << MSG::DEBUG << "Declare Info (Histogram) called after start for Name " << nam << endmsg;
   }
   if (0 != m_disableDeclareInfoHistos)
   {
@@ -549,7 +542,7 @@ void MonitorSvc::declareInfo(const string& name, const AIDA::IBaseHistogram* var
   }
   else
   {
-    msg << MSG::ERROR << "Unknown histogram type. Source " << name << endmsg;
+    msg << MSG::ERROR << "Unknown histogram type. Source " << nam << endmsg;
     return;
   }
   if (m_HistSubSys == 0)
@@ -563,13 +556,13 @@ void MonitorSvc::declareInfo(const string& name, const AIDA::IBaseHistogram* var
   if (m_disableMonObjectsForHistos == 0)
   {
 //    isMonObject = true;
-    if (name.find(oname) == string::npos)
+    if (nam.find(oname) == string::npos)
     {
-      hnam = oname+"/"+name;
+      hnam = oname+"/"+nam;
     }
     else
     {
-      hnam = name;
+      hnam = nam;
     }
     mhist = new MonHist(msgSvc(),hnam,var);
     m_InfoMap.insert(make_pair(hnam,m_HistSubSys));
