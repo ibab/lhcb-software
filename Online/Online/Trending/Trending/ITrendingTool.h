@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_ITrendingTool ( "ITrendingTool", 1, 0 );
+static const InterfaceID IID_ITrendingTool ( "ITrendingTool", 1, 1 );
 
 /** @class ITrendingTool ITrendingTool.h Trending/ITrendingTool.h
  *  This is the abstract interface for the trending tool.
@@ -113,6 +113,11 @@ public:
    * returns the version of the tags currently in use
    */
   virtual int tagVersion() = 0;
+
+  /**
+   * returns the first time for this tag version
+   */
+  virtual int firstTimeThisTag() = 0;
 
 };
 #endif // TRENDING_ITRENDINGTOOL_H
