@@ -145,6 +145,8 @@ static unsigned int Dis_service_id, Dis_client_id;
 static int Updating_service_list = 0;
 */
 static int Last_client;
+static int Last_n_clients;
+
 
 #ifdef DEBUG
 static int Debug_on = 1;
@@ -1383,6 +1385,10 @@ int execute_service( int req_id )
 	}
 	else if( servp->user_routine != 0 ) 
 	{
+		if(reqp->first_time)
+		{
+			Last_n_clients = dis_get_n_clients(servp->id);
+		}
 		(servp->user_routine)( &servp->tag, &buffp, &size,
 					&reqp->first_time );
 		reqp->first_time = 0;
@@ -1629,6 +1635,7 @@ int do_update_service(unsigned service_id, int *client_ids)
 	int to_delete = 0, more, conn_id;
 	char str[128];
 	int release_request();
+	int n_clients = 0;
 
 	DISABLE_AST
 	if(!service_id)
@@ -1662,11 +1669,15 @@ printf("Updating %s (id = %d, ptr = %08lX) for %s@%s (req_id = %d, req_ptr = %08
 	   Net_conns[reqp->conn_id].task, Net_conns[reqp->conn_id].node, reqp->req_id, (unsigned long)reqp);
 }
 		if(check_client(reqp, client_ids))
+		{
 			reqp->delay_delete = 1;
+			n_clients++;
+		}
 	}
 	ENABLE_AST
 	{
 	DISABLE_AST
+	Last_n_clients = n_clients;
 	reqp = servp->request_head;
 	while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
 		(DLL *) reqp)) ) 
@@ -2828,7 +2839,13 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 				continue;
 			if(servp->registered)
 			{
+/*
 				servp->registered = 2;
+*/
+				if((dnsp->updating_service_list) && (Last_n_clients > 1) && 
+					(servp->registered == 1))
+					continue;
+				servp->registered = Last_n_clients+1;
 				append_service(buff_ptr, servp);
 				buff_ptr += strlen(buff_ptr);
 			}
@@ -2840,7 +2857,10 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 		{
 			if(servp->dnsp != dnsp)
 				continue;
+/*
 			if(servp->registered == 1)
+*/
+			if(servp->registered < (Last_n_clients+1))
 			{
 				if(!done)
 				{
@@ -2850,7 +2870,10 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 				}
 				append_service(buff_ptr, servp);
 				buff_ptr += strlen(buff_ptr);
+/*
 				servp->registered = 2;
+*/
+				servp->registered++;
 			}
 			else if(servp->registered == 0)
 			{

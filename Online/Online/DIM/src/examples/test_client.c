@@ -47,6 +47,12 @@ void got_services( int *tag, char *list, int *size)
 	if(size){}
 	printf("%s",list);
 }
+/*
+void rout_list( int *tag, char *buf, int *size )
+{
+		printf("Received list %d: %s\n",*size, buf);
+}
+*/
 
 void rout( tag, buf, size )
 char *buf;
@@ -123,14 +129,18 @@ int main(int argc, char **argv)
 	dic_info_service( aux, MONITORED, 0, 0, 0, big_rout, 0,
 			  &no_link, 4 );
 */
-
-	sprintf(aux,"%s/TEST_CMD",argv[2]);
+/*
+	sprintf(aux,"%s/SERVICE_LIST",argv[2]);
+	dic_info_service( aux, MONITORED, 0, 0, 0, rout_list, 0,
+			  "DEAD", 5 );
+*/
 /*
 	dic_info_service("DIS_DNS/SERVER_LIST",MONITORED, 0, 0, 0, got_servers, 0,
 		"not there", 10);
 	dic_info_service("xx/SERVICE_LIST",MONITORED, 0, 0, 0, got_services, 0,
 		"not there", 10);
 */
+	sprintf(aux,"%s/TEST_CMD",argv[2]);
 	while(1)
 	{
 		sleep(10);

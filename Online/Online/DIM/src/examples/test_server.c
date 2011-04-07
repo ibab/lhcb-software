@@ -51,7 +51,11 @@ void exit_cmnd(int *code)
 
 int NewData;
 int NewIds[11];
-
+/*
+int more_ids[1024];
+int curr_more_index = 0;
+char more_str[1024][80];
+*/
 int main(int argc, char **argv)
 {
 	int i, id, *ptr;
@@ -136,6 +140,18 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 		sleep(10);
 
 		dis_update_service(id);
+/*
+		if(curr_more_index < 1000)
+		{
+			sprintf(more_str[curr_more_index],"%s/More_Service_%03d",argv[1],curr_more_index);
+			more_ids[curr_more_index] = dis_add_service( more_str[curr_more_index], "C", 
+				more_str[curr_more_index], strlen(more_str[curr_more_index])+1, 
+				(void *)0, 0 );
+printf("Adding service %s\n",more_str[curr_more_index]);
+			dis_start_serving(argv[1]);
+			curr_more_index++;
+		}
+*/
 
 		if(new_dns)
 		{
@@ -162,7 +178,6 @@ printf("DisConnecting New DNS \n");
 				on = 0;
 			}
 		}
-
 	}
 	return 1;
 }
