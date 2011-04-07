@@ -64,10 +64,10 @@ class CharmLeptonic_draft2011 :
 
         d.update({Hlt2Dst2D2XXLinesConf : { 
                     'Prescale'                        : { 
-                        'Hlt2Dst2PiD02PiPi'           : 0.006 
-                        , 'Hlt2Dst2PiD02KPi'          : 0.002
+                        'Hlt2Dst2PiD02PiPi'           : 0.03 
+                        , 'Hlt2Dst2PiD02KPi'          : 0.01
                         , 'Hlt2Dst2PiD02MuMu'         : 1
-                        , 'Hlt2Dst2PiD02KMu'          : 0.03
+                        , 'Hlt2Dst2PiD02KMu'          : 0.15
                           }
             }})
         
