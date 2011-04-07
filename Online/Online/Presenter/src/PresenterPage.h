@@ -67,7 +67,7 @@ public:
   void clear();
 
   //== Add a simple histo on the page
-  void addSimpleHisto ( std::string dimName, OnlineHistogram* onlH=NULL );
+  void addSimpleHisto ( std::string dimName, OnlineHistogram* onlH=NULL, std::string partition="LHCb" );
   
   //== Set the DIM browser
   void setDimBrowser( DimBrowser* br )  { m_dimBrowser = br; }

@@ -72,7 +72,7 @@ void PresenterPage::clear ( ) {
 //=========================================================================
 //  Add a simple histo to the page
 //=========================================================================
-void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH ) {
+void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, std::string partition ) {
   std::cout << "addSimpleHIsto: name " << dimName << std::endl;
   std::string task = dimName.substr( 0, dimName.find( '/' ) );
   task = task.substr( task.find('_')+1 );  // remove partition
@@ -82,8 +82,40 @@ void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH 
   std::string ident = task + "/" + dimName.substr( dimName.find('/' )+1 );
 
   DisplayHistogram temp( onlH );
+  if ( NULL != onlH && onlH->type() == OnlineHistDBEnv::TRE ) {
+    std::string file = onlH->algorithm();
+    if ( file.find( ".trend" ) < file.size() ) file = file.substr( 0, file.find( ".trend" ) );
+    unsigned indx = file.size();
+    unsigned underscore = 0;
+    while ( 0 < indx && file[indx-1] != '/' ) {
+      --indx;
+      if ( file[indx] == '_' ) underscore = indx;
+    }
+    if ( underscore == 0 ) underscore = indx;
+    file = file.substr(0,indx) + partition + "_" + file.substr( underscore );
+    std::string variable = onlH->hname();
+    bool existed = false;
+    for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+      if ( (*itF).fileName == file ) {
+        std::cout << "  ++ add variable " << variable << " to file " << file << std::endl;
+        (*itF).histos.push_back( temp );
+        existed = true;
+        break;
+      }
+    }
+    if ( !existed ) {
+      TrendingFile tFile;
+      tFile.fileName = file;
+      tFile.startTime = 0;
+      tFile.endTime = 0;
+      tFile.histos.push_back( temp );
+      m_trends.push_back( tFile );
+      std::cout << "  ** new variable " << variable << " to file " << file << std::endl;
+    }
+    return;
+  }
+  
   if ( NULL == onlH ) temp.setIdentifier( ident );
-
   bool existed = false;
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     if ( (*itT).name == task ) {
@@ -672,6 +704,9 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     nbPlots += (*itT).histos.size();
   }
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+    nbPlots += (*itF).histos.size();
+  }
   int nCol = 1;
   while ( nCol < nbPlots/nCol ) nCol += 1;
   int nRow = nbPlots / nCol;
@@ -687,6 +722,20 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
   
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin(); (*itT).histos.end() != itH; ++itH ) {
+      double xLow = col * cSize;
+      double xHig = xLow + cSize;
+      double yLow = row * rSize;
+      double yHig = yLow + rSize;
+      (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      col += 1;
+      if ( nCol == col ) {
+        col = 0;
+        row--;
+      }
+    }
+  }
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+    for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin(); (*itF).histos.end() != itH; ++itH ) {
       double xLow = col * cSize;
       double xHig = xLow + cSize;
       double yLow = row * rSize;
@@ -821,7 +870,7 @@ void PresenterPage::updateDrawingOptions ( ) {
 }
 
 //=========================================================================
-//  Fill the tren plots. Start and end time in integer. If endTime is zero, startTime is an offset
+//  Fill the trend plots. Start and end time in integer. If endTime is zero, startTime is an offset
 //=========================================================================
 void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update ) {
   std::cout << "  ++ Trending size " << m_trends.size() << std::endl;
@@ -843,29 +892,50 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       endTime   = (int)::time( 0 );
       startTime = endTime - startTime;
     }
-    std::cout << "Select for time range: " << startTime << " to " << endTime << std::endl;
+    int lastTagVersion   = PresenterGaudi::trendingTool->tagVersion();
+    int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+    std::cout << "Select for time range: " << startTime << " to " << endTime 
+              << " last Tag version " << lastTagVersion << " starts at " << firstTimeThisTag << std::endl;
     
     for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin();
           (*itF).histos.end() != itH; ++itH ) {
-      status = PresenterGaudi::trendingTool->select( startTime , endTime , (*itH).shortName() );
-      if ( ! status ) {
-        std::cerr << "  unknown tag name " << (*itH).shortName() << std::endl ;
-        (*itH).createDummyHisto();
-        continue;
+
+      //== Check that the whole time range is in the current Tag version. Else go down in version.
+      int currVersion = lastTagVersion;
+      if ( firstTimeThisTag > startTime && lastTagVersion > 1 ) {
+        std::vector<std::string> tags;
+        currVersion = lastTagVersion - 1;
+        while( !PresenterGaudi::trendingTool->tags( tags, currVersion ) && 
+               currVersion > 1 ) {
+          --currVersion;
+        }
+        int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
       }
 
-      int theTime ;
-      float theValue ;
+      int theTime = startTime;
       std::vector< std::pair<int,double> > values ;
-      values.push_back( std::pair<int,double>( startTime, 0. ) ) ;
-      // Read the values in the selected time interval and fill a vector
-      while ( PresenterGaudi::trendingTool->nextValue( theTime , theValue ) ) {
-        if ( theTime < startTime ) continue;
-        if ( theTime > endTime   ) continue;
-        values.push_back( std::pair<int,double>( theTime, theValue ) );
-      }
+      while ( currVersion <= lastTagVersion ) {
+        status = PresenterGaudi::trendingTool->select( theTime , endTime , (*itH).shortName() );
+        if ( status ) {
+          float theValue ;
+          // Read the values in the selected time interval and fill a vector
+          while ( PresenterGaudi::trendingTool->nextValue( theTime , theValue ) ) {
+            if ( theTime < startTime ) continue;
+            if ( theTime > endTime   ) continue;
+            values.push_back( std::pair<int,double>( theTime, theValue ) );
+          }
+        }
+
+        //== Increase the version as long as needed
+        while ( currVersion <= lastTagVersion ) {
+          ++currVersion;
+          if ( currVersion > lastTagVersion ) break;
+          std::vector<std::string> tags;
+          if ( PresenterGaudi::trendingTool->tags( tags, currVersion ) ) break;
+        }
+        int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+      }   
       values.push_back( std::pair<int,double>( endTime, values.back().second  ) ) ;
-      values[0].second = values[1].second;
       std::cout << "from " << values[0].first << " to " << values[values.size()-1].first 
                 << " , size " << values.size() << std::endl;
       (*itH).createGraph( values, update );

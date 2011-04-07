@@ -3671,7 +3671,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
   } catch (std::string sqlException) {
     onlH = NULL;
   }
-  m_presenterPage.addSimpleHisto( histogramUrl, onlH );
+  m_presenterPage.addSimpleHisto( histogramUrl, onlH, currentPartition() );
 }
 
 //=========================================================================
@@ -3683,6 +3683,7 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
     std::string partition = currentPartition();
     m_presenterPage.setDimBrowser( m_dimBrowser );
     m_presenterPage.loadFromDIM( partition, false );
+    m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
   } else {
     m_presenterPage.loadFromArchive( m_archive, pres::s_startupFile, m_savesetFileName );
   }
@@ -3729,7 +3730,6 @@ void PresenterMainFrame::addDimHistosToPage() {
 // Add db histogram to the page
 //==============================================================================
 void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode) {
-  disableAutoCanvasLayoutBtn();
   stopPageRefresh();
   try {
     if (0 != m_histogramDB) {
@@ -3737,15 +3737,11 @@ void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode) {
       checkedTreeItems(list, m_databaseHistogramTreeList);
       TGListTreeItem* currentNode = list->GetFirstItem();
       if (0 != currentNode) {
-        addHistoToPage(std::string((*static_cast<TObjString*>
-                                    (currentNode->
-                                     GetUserData())).GetString()),
+        addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()),
                        pres::separate);
         currentNode = currentNode->GetNextSibling();
         while (0 != currentNode) {
-          addHistoToPage(std::string((*static_cast<TObjString*>
-                                      (currentNode->
-                                       GetUserData())).GetString()),
+          addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()),
                          overlapMode);
           currentNode = currentNode->GetNextSibling();
         }
@@ -3766,8 +3762,7 @@ void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode) {
   m_databaseHistogramTreeList->CheckAllChildren(m_databaseHistogramTreeList->
                                                 GetFirstItem(),
                                                 pres::s_uncheckTreeItems);
-  editorCanvas->Update();
-  enableAutoCanvasLayoutBtn();
+  displaySimpleHistos();  
 }
 
 //==============================================================================
@@ -4884,7 +4879,8 @@ void PresenterMainFrame::refreshPage() {
 
   editorCanvas->cd();
 
-  if ( pres::Online == m_presenterInfo.presenterMode() ) {
+  if ( pres::Online       == m_presenterInfo.presenterMode() ||
+       pres::EditorOnline == m_presenterInfo.presenterMode() ) {
     std::string partition = currentPartition();
     m_presenterPage.loadFromDIM( partition, true );
     m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd, true );

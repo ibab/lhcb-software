@@ -133,11 +133,10 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
     return;
   }
   if ( 0 != m_referenceHist ) return;
-  m_referenceHist = ref;
-  
   if ( NULL == m_hostingPad ) return;
   if ( NULL == m_rootHistogram ) return;
   if ( 1 != m_rootHistogram->GetDimension() ) return;
+  m_referenceHist = ref;  
 
   // standard plot style
   m_hostingPad->cd();
