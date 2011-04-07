@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Johannes Albrecht
+- Modify prescales in CharmLeptonic
+
 !========================== HltSettings v5r11 2011-04-06 ===================
 ! 2011-04-03 - Gerhard Raven
  - Add 100 Hz of VeloMicroBias to VanDerMeer_Feb11
