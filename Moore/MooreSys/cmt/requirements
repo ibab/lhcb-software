@@ -1,18 +1,15 @@
 package MooreSys
-version v12r4p1
+version v12r5
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v12r4p1 Hlt
-# patches
-use MuonID              v8r0p2  Muon
-use LoKiPhys            v9r99   Phys
-use LoKiCore            v10r9p1 Phys
-use HltDisplVertices    v3r3p1  Hlt
-use HltSettings         v5r9    Hlt
+use  Moore              v12r5   Hlt
+
+# Patches
+use HltConf             v9r8p1  Hlt
 
 # Declare this as a container package
 apply_pattern container_package
