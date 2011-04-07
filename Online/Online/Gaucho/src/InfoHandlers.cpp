@@ -23,7 +23,7 @@ void HAdderServInfoHandler::infoHandler(void)
   {
     return;
   }
-  ::lib_rtl_output(LIB_RTL_INFO,"New Message from Service List Service %s data:%s\n",
+  ::lib_rtl_output(LIB_RTL_INFO,"New Message from Service List Service %s data:\n%s\n",
 		   itsService->getName(),input);
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {

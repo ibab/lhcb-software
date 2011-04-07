@@ -36,8 +36,7 @@ MonSubSys::MonSubSys(int intv)
 MonSubSys::~MonSubSys()
 {
   delete m_updateTimer;
-  SysIter i;
-  this->Lock();
+  Lock();
   if (m_expandnames)
   {
     if (m_type == MONSUBSYS_Counter)
@@ -49,20 +48,19 @@ MonSubSys::~MonSubSys()
       }
     }
   }
-  for (i =m_Objmap.begin();i!=m_Objmap.end();i++)
+  for (SysIter i =m_Objmap.begin();i!=m_Objmap.end();i++)
   {
     MonObj *h = i->second;
     delete h;
   }
   m_Objmap.clear();
-  if (m_rpc != 0) {delete m_rpc;m_rpc=0;}
-  if ( m_genSrv != 0) {delete m_genSrv;m_genSrv=0;}
-  if (m_EORsvc != 0) {delete m_EORsvc;m_EORsvc=0;}
+  deletePtr(m_rpc);
+  deletePtr(m_genSrv);
+  deletePtr(m_EORsvc);
+  deletePtr(m_ser);
+  deletePtr(m_RPCser);
 
-  if (m_ser != 0) {delete m_ser;m_ser=0;}
-  if (m_RPCser != 0){ delete m_RPCser;m_RPCser=0;}
-
-  this->unLock();
+  unLock();
   MonSys::m_instance().remSubSys(this);
   lib_rtl_delete_lock (m_lockid);
 
@@ -164,11 +162,9 @@ MonObj *MonSubSys::findobj(const char *nam)
 void MonSubSys::setup(char *n, bool expandnames)
 {
   m_expandnames = expandnames;
-  char procname[64];
-  lib_rtl_get_process_name(procname,sizeof(procname));
   std::string nam;
   m_name  = n;
-  m_pname = procname;
+  m_pname = RTL::processName();
   std::string nodename;
   nodename = RTL::nodeNameShort();
   nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/HistCommand";
@@ -185,7 +181,7 @@ void MonSubSys::setup(char *n, bool expandnames)
   }
   if (m_RPCser == 0) m_RPCser = new ObjSerializer(&m_Objmap,m_expandnames);
   if (m_rpc == 0) m_rpc = new ObjRPC(m_RPCser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
-  nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/Data";
+  nam = std::string("MON_")+m_pname+"/"+m_name+"/Data";
   if (m_ser == 0) m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
   if ( m_genSrv == 0) m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);
   if (m_expandnames)
@@ -193,7 +189,7 @@ void MonSubSys::setup(char *n, bool expandnames)
     m_genSrv->m_expandservice = m_expandnames;
   }
   nam = m_name;
-  nam = /*nodename+"_*/std::string("MON_")+m_pname+"/"+m_name+"/EOR";
+  nam = std::string("MON_")+m_pname+"/"+m_name+"/EOR";
   if (m_EORsvc == 0) m_EORsvc = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty,4);
   m_EORsvc->setEORflag(true);
   MonSys::m_instance().addSubSys(this);
