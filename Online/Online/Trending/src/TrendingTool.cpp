@@ -34,6 +34,7 @@ TrendingTool::TrendingTool( const std::string& type,
   , m_requestedTagNumber( -1 )
   , m_maxTime(  0x7fffffff )   // maximum time value...
   , m_lastTime( 0x7fffffff )
+  , m_firstTimeThisTag( 0 )
 {
   declareInterface<ITrendingTool>(this);
 
@@ -89,6 +90,7 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
       error() << "openWrite: Can not create file " << fileFullName << endmsg;
       return false;
     }
+    m_tagHeader.version = 0;
   } else {
     if ( !loadTags( -1 ) ) return false;   // Get the latest tags, return an error if...
   }
@@ -106,11 +108,12 @@ bool TrendingTool::openWrite( std::string name, std::vector<std::string> tags, i
       if ( tags[kk] != m_tags[kk] ) isDifferent = true;
     }
   }
-  if ( 0 >= version && version != m_tagHeader.version ) isDifferent = true;
+  if ( 0 <= version && version != m_tagHeader.version ) isDifferent = true;
 
   if ( !isDifferent ) return true;
 
-  //== Is the requested vesion higher?
+  //== Is the requested version higher?
+  if ( version < 0 ) version = m_tagHeader.version + 1;
   if ( version <= m_tagHeader.version ) {
     error() << "openWrite: The list of tags is incompatible with the one in the file. "
             << "Specify a new version greater than " << m_tagHeader.version << endmsg;
@@ -281,6 +284,8 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
     std::vector< std::vector<float> > savedData;
     m_hasSelection = true;
     m_maxTime = 0x7fffffff;
+    int tempLastTime = m_lastTime;
+    m_lastTime = 0;  // don't create a first event at the requested start time.
     int tTime;
     std::vector<float> tData( m_nbTag );
     while( nextEvent( tTime, tData ) ) {
@@ -288,6 +293,7 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
       savedData.push_back( tData );
     }
     debug() << "Saved " << savedTime.size() << " records after " << now << endmsg;
+    m_lastTime = tempLastTime;
 
     m_dirAddressInFile  = savedDirAdd;
     m_dataAddressInFile = savedDataAdd;
@@ -450,6 +456,15 @@ bool TrendingTool::nextEvent( int& time, std::vector<float>& data ) {
     data.resize( m_lastData.size(), 0. );
   }
 
+  if ( m_lastTime != 0 ) {
+    time  = m_lastTime;
+    for ( unsigned int kk = 0; m_lastData.size() > kk; ++kk ) {
+      data[kk] = m_lastData[kk];
+    }
+    m_lastTime = 0;
+    return true;
+  }
+
   time = m_data.data[m_ptData++].i;
   int ptMask = m_ptData;
   m_ptData  += m_nbMask;
@@ -507,18 +522,13 @@ bool TrendingTool::openRead( std::string name ) {
   if ( !loadTags( -1 ) ) return false;   // Get the latest tags, return an error if...
   m_forWriting = false;
 
-  //== read the first directory record...
-  m_dirAddressInFile = m_firstDirAddress;
-  fseek( m_file, m_dirAddressInFile, SEEK_SET );
-  fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-  
   return true;
 }
 //=========================================================================
 //  Select the first record with the appropriate time, set the end time
 //=========================================================================
 bool TrendingTool::select( int startTime, int endTime, std::string tag ) {
-
+  m_lastTime = 0;
   if ( NULL == m_file ) {
     error() << "select: file not opened!" << endmsg;
     return false;
@@ -552,6 +562,7 @@ bool TrendingTool::select( int startTime, int endTime, std::string tag ) {
   debug() << "Skip until startTime, current data time = " << m_data.data[m_ptData].i << endmsg;
   while ( m_data.data[m_ptData].i < startTime ) unpackAnEvent();  // Skip entries before
 
+  m_lastTime = startTime;
   m_hasSelection = true;
   m_maxTime = endTime;
   return true;
@@ -589,6 +600,13 @@ bool TrendingTool::nextValue( int& time, float& value ) {
     if ( m_maxTime < m_data.data[m_ptData].i ) {
       m_hasSelection = false;
       return false;
+    }
+
+    if ( m_lastTime != 0 ) {
+      time  = m_lastTime;
+      value = m_lastData[m_tagNumber];
+      m_lastTime = 0;
+      return true;
     }
 
     time = m_data.data[m_ptData++].i;
@@ -681,6 +699,12 @@ bool TrendingTool::loadTags( int wantedVersion ) {
   m_nbMask = (m_nbTag/32) + 1;
 
   free( temp );  // release memory...
+
+  //== read the first directory record...
+  m_dirAddressInFile = m_firstDirAddress;
+  fseek( m_file, m_dirAddressInFile, SEEK_SET );
+  fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+  m_firstTimeThisTag = m_dir.entry[0].firstTime;
 
   debug() << "loadTags: Found " << m_tags.size()
           << " tags for version " << m_tagHeader.version << endmsg;
@@ -805,5 +829,12 @@ int TrendingTool::unpackAnEvent ( ) {
 //=========================================================================
 int TrendingTool::tagVersion ( ) {
   return m_tagHeader.version;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+int TrendingTool::firstTimeThisTag( ) {
+  return m_firstTimeThisTag;
 }
 //=============================================================================

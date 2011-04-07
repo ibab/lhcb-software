@@ -4,6 +4,13 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+!============================== 2011-04-07 v1r5 ==============================
+! 2011-04-07 - Olivier Callot
+ - New method of ITrendingTool needed for the presenter, for multi-version access.
+ - Setting version=-1 in openWrite will use the next version number if neecded.
+ - The first event/entry retrieved after a 'select' is teh value at the time of the
+   startTime argument of the select.
+
 ! 2011-03-24 - Olivier Callot
  - New tool SimpleTrendWriter with interface ISimpleTrendWriter for simple
    writing, targetted for adders. 

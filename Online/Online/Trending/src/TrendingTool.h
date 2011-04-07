@@ -49,6 +49,8 @@ public:
 
   int tagVersion();
 
+  int firstTimeThisTag();
+
 private:
 
   bool loadTags ( int wantedVersion );
@@ -87,5 +89,6 @@ private:
   int                      m_maxTime;
   int                      m_tagNumber;
   int                      m_lastTime;
+  int                      m_firstTimeThisTag;
 };
 #endif // TRENDINGTOOL_H
