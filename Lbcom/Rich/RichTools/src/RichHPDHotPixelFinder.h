@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::HPDHotPixelFinder
  *
- *  CVS Log :-
- *  $Id: RichHPDHotPixelFinder.h,v 1.3 2009-10-11 16:05:11 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

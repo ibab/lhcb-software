@@ -79,13 +79,14 @@ namespace Rich
 
   private:
 
+    /// UMS update
+    StatusCode radiatorUpdate();
+
+  private:
+
     typedef std::vector<const DeRichRadiator*> RichRadiators;
     /// Vector of DeRich radiator volumes for each Radiator type
     std::vector<RichRadiators> m_radiators;
-
-    typedef std::vector<Gaudi::Transform3D> Transforms;
-    /// Transforms for each Radiator type
-    std::vector<Transforms> m_transforms;
 
   };
 

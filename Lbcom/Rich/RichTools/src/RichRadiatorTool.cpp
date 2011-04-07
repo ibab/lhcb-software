@@ -31,8 +31,7 @@ Rich::RadiatorTool::RadiatorTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : Rich::ToolBase ( type, name, parent   ),
-    m_radiators    ( Rich::NRadiatorTypes ),
-    m_transforms   ( Rich::NRadiatorTypes )
+    m_radiators    ( Rich::NRadiatorTypes )
 {
   declareInterface<IRadiatorTool>(this);
 }
@@ -48,10 +47,30 @@ Rich::RadiatorTool::~RadiatorTool() {}
 //=============================================================================
 StatusCode Rich::RadiatorTool::initialize ( )
 {
-
   // intialise base class
-  const StatusCode sc = Rich::ToolBase::initialize();
+  StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+
+  // UMS dependencies
+  updMgrSvc()->registerCondition( this, DeRichLocations::Rich1Gas, 
+                                  &Rich::RadiatorTool::radiatorUpdate );
+  updMgrSvc()->registerCondition( this, DeRichLocations::Rich2Gas, 
+                                  &Rich::RadiatorTool::radiatorUpdate );
+  updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel, 
+                                  &Rich::RadiatorTool::radiatorUpdate );
+  
+  // run first update
+  sc = sc && radiatorUpdate();
+
+  return sc;
+}
+
+//=============================================================================
+// initialize
+//=============================================================================
+StatusCode Rich::RadiatorTool::radiatorUpdate()
+{
+  debug() << "Radiator information update" << endmsg;
 
   // RICH1 gas
   m_radiators[Rich::Rich1Gas].clear();
@@ -65,6 +84,7 @@ StatusCode Rich::RadiatorTool::initialize ( )
   const DetectorElement * rich1 = getDet<DetectorElement>(DeRichLocations::Rich1);
 
   // aerogel
+  m_radiators[Rich::Aerogel].clear();
   const IDetectorElement::IDEContainer& detelemsR1 = rich1->childIDetectorElements();
   for ( IDetectorElement::IDEContainer::const_iterator det_it = detelemsR1.begin();
         det_it != detelemsR1.end(); ++det_it )
@@ -76,13 +96,13 @@ StatusCode Rich::RadiatorTool::initialize ( )
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Using the following DeRichRadiators :-" << endmsg;
+    debug() << "Using the following DeRichRadiators :" << endmsg;
     for ( unsigned int i=0; i<m_radiators.size(); ++i )
       for ( unsigned int j=0; j<m_radiators[i].size(); ++j )
         debug() << "  " << m_radiators[i][j]->name() << endmsg;
   }
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

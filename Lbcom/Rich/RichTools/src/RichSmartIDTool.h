@@ -123,7 +123,8 @@ namespace Rich
     /// photodetector for each rich
     RichHPDPanels m_photoDetPanels;
 
-    /// List of active RichSmartIDs
+    /** List of active RichSmartIDs
+     *  @todo Make this get updated as needed */
     mutable LHCb::RichSmartID::Vector m_readoutChannels;
 
     /// RichSystem object

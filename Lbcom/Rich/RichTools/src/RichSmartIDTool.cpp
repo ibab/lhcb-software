@@ -278,7 +278,7 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
   if ( m_readoutChannels.empty() )
   {
 
-    // Reserve size ( RICH1 + RICH2 );
+    // Reserve size ( RICH1 + RICH2 )
     m_readoutChannels.reserve( 400000 );
 
     StatusCode sc = StatusCode::SUCCESS;

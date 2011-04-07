@@ -60,7 +60,6 @@ Rich::RayTracing::~RayTracing() { }
 //=============================================================================
 StatusCode Rich::RayTracing::initialize()
 {
-
   // intialise base class
   const StatusCode sc = Rich::HistoToolBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -80,7 +79,8 @@ StatusCode Rich::RayTracing::initialize()
     {
       m_photoDetPanels[rich][panel] =
         getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
-      debug()<<"Stored photodetector panel "<<m_photoDetPanels[rich][panel]->name()<<endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Stored photodetector panel " << m_photoDetPanels[rich][panel]->name() << endmsg;
     }
   }
 
