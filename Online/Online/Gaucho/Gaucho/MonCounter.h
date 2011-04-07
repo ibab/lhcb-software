@@ -39,6 +39,7 @@ public:
   //HistService *serv;
   int type() const {return (int)m_type;};
   MonCounter(char *name, char *title, int *data );
+  MonCounter(char *name, char *title, long *data );
   MonCounter(char *name, char *title, long long *data );
   MonCounter(char *name, char *title, float *data );
   MonCounter(char *name, char *title, double *data );

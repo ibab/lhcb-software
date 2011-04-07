@@ -347,16 +347,18 @@ void MonitorSvc::setRunNo(int runno)
   m_MonSys->setRunNo(runno);
 }
 
-void MonitorSvc::declareInfo(const string& name, const bool&  ,
-                             const string& , const IInterface* owner)
+void MonitorSvc::addRate(MonSubSys *ss, CntrMgr *cm)
 {
-  string oname = infoOwnerName(owner);
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::ERROR << "declareInfo bool not implemented " << name << endmsg;
+  MonHist *h = (MonHist*)ss->findobj("COUNTERRATE");
+  if (h == 0)
+  {
+    h = new MonHist(msgSvc(),"COUNTERRATE",cm);
+    ss->addObj(h);
+  }
   return;
 }
-//
-void MonitorSvc::declareInfo(const string& name, const int&  var,
+
+template<class T> void MonitorSvc::i_declareCounter(const string& name, const T&  var,
                              const string& desc, const IInterface* owner)
 {
   string oname = infoOwnerName(owner);
@@ -390,7 +392,7 @@ void MonitorSvc::declareInfo(const string& name, const int&  var,
     }
     return;
   }
-  MonCounter *cnt = new MonCounter((char*)(oname+"/"+name).c_str(),(char*)desc.c_str(),(int*)&var);
+  MonCounter *cnt = new MonCounter((char*)(oname+"/"+name).c_str(),(char*)desc.c_str(),(T*)&var);
   if (m_CntrSubSys == 0)
   {
     m_CntrSubSys = new MonSubSys(m_updateInterval);
@@ -398,134 +400,54 @@ void MonitorSvc::declareInfo(const string& name, const int&  var,
   }
   m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
+}
+
+void MonitorSvc::i_unsupported(const string& name, const type_info& typ, const IInterface* owner)
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  string oname = infoOwnerName(owner);
+  string typ_name = System::typeinfoName(typ);
+  msg << MSG::ERROR << "declareInfo(" << typ_name << ") not implemented " << oname << "/" << name << endmsg;
+  return;
+}
+
+//
+void MonitorSvc::declareInfo(const string& name, const int&  var,
+                             const string& desc, const IInterface* owner)
+{
+  this->i_declareCounter(name,var,desc,owner);
 }
 
 void MonitorSvc::declareInfo(const string& name, const long&  var,
                              const string& desc, const IInterface* owner)
 {
-  string oname = infoOwnerName(owner);
-  if (m_started)
-  {
-//    printf("Delcare Info called after start for Name %s\n",name.c_str());
-  }
-  if (0 != m_disableDeclareInfoLong) return;
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  if (name.find("COUNTER_TO_RATE") != string::npos)
-  {
-    string newName = extract("COUNTER_TO_RATE", name);
-    if ( 0 == m_disableMonRate)
-    {
-      if (m_CntrMgr == 0)
-      {
-        m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
-      }
-      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
-      m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
-      if (m_HistSubSys == 0)
-      {
-        m_HistSubSys = new MonSubSys(m_updateInterval);
-        m_HistSubSys->m_type = MONSUBSYS_Histogram;
-//        m_MonSys->addSubSys(m_HistSubSys);
-//        m_HistSubSys->setup((char*)"Histos");
-//        m_HistSubSys->start();
-      }
-      addRate(m_HistSubSys,m_CntrMgr);
-    }
-    else
-    {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
-    }
-    return;
-  }
-
-  MonCounter *cnt = new MonCounter((char*)(oname+"/"+name).c_str(),(char*)desc.c_str(),(long long*)&var);
-  if (m_CntrSubSys == 0)
-  {
-    m_CntrSubSys = new MonSubSys(m_updateInterval);
-    m_CntrSubSys->m_type = MONSUBSYS_Counter;
-//    m_MonSys->addSubSys(m_CntrSubSys);
-//    m_CntrSubSys->setup((char*)"Counter");
-//    m_CntrSubSys->start();
-  }
-  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
-  m_CntrSubSys->addObj(cnt);
+  this->i_declareCounter(name,var,desc,owner);
 }
+
 void MonitorSvc::declareInfo(const string& name, const double& var,
                              const string& desc, const IInterface* owner)
 {
-  if (m_started)
-  {
-//    printf("Delcare Info called after start for Name %s\n",name.c_str());
-  }
-  string oname = infoOwnerName(owner);
-  if (0 != m_disableDeclareInfoDouble) return;
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  if (name.find("COUNTER_TO_RATE") != string::npos)
-  {
-    string newName = extract("COUNTER_TO_RATE", name);
-    if ( 0 == m_disableMonRate)
-    {
-      if (m_CntrMgr == 0)
-      {
-        m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
-      }
-      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
-      m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
-      if (m_HistSubSys == 0)
-      {
-        m_HistSubSys = new MonSubSys(m_updateInterval);
-        m_HistSubSys->m_type = MONSUBSYS_Histogram;
-      }
-      addRate(m_HistSubSys,m_CntrMgr);
-    }
-    else
-    {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
-    }
-    return;
-  }
-  MonCounter *cnt = new MonCounter((char*)(oname+"/"+name).c_str(),(char*)desc.c_str(),(double*)&var);
-  if (m_CntrSubSys == 0)
-  {
-    m_CntrSubSys = new MonSubSys(m_updateInterval);
-    m_CntrSubSys->m_type = MONSUBSYS_Counter;
-  }
-  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
-  m_CntrSubSys->addObj(cnt);
+  this->i_declareCounter(name,var,desc,owner);
 }
-void MonitorSvc::addRate(MonSubSys *ss, CntrMgr *cm)
-{
-//  MsgStream msg(msgS(),"MonitorSvc");
-  MonHist *h = (MonHist*)ss->findobj("COUNTERRATE");
-  if (h == 0)
-  {
-    h = new MonHist(msgSvc(),"COUNTERRATE",cm);
-    ss->addObj(h);
-  }
-  return;
-}
-void MonitorSvc::declareInfo(const string& name, const string& ,
-                             const string& , const IInterface* owner)
-{
-  string oname = infoOwnerName(owner);
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::ERROR << "declareInfo for strings not implemented" + name << endmsg;
-  return;
-}
-void MonitorSvc::declareInfo(const string& name, const pair<double,double>& ,
-                             const string& , const IInterface* owner)
-{
-  string oname = infoOwnerName(owner);
-  if (0 != m_disableDeclareInfoPair) {};
 
-  if (m_started)
-  {
-//    printf("Delcare Info called after start for Name %s\n",name.c_str());
-  }
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring pairs " << name << endmsg;
-  return;
+void MonitorSvc::declareInfo(const string& name, const bool& var,
+                             const string&, const IInterface* owner)
+{
+  this->i_unsupported(name,typeid(var),owner);
 }
+
+void MonitorSvc::declareInfo(const string& name, const string& var,
+                             const string&, const IInterface* owner)
+{
+  this->i_unsupported(name,typeid(var),owner);
+}
+
+void MonitorSvc::declareInfo(const string& name, const pair<double,double>& var,
+                             const string&, const IInterface* owner)
+{
+  this->i_unsupported(name,typeid(var),owner);
+}
+
 //
 void MonitorSvc::declareInfo(const string& name, const string& format, const void * var,
     int size, const string& desc, const IInterface* owner)
@@ -544,9 +466,6 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
   {
     m_CntrSubSys = new MonSubSys(m_updateInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
-//    m_MonSys->addSubSys(m_CntrSubSys);
-//    m_CntrSubSys->setup((char*)"Counter");
-//    m_CntrSubSys->start();
   }
   m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
@@ -694,33 +613,6 @@ string MonitorSvc::extract(const string mascara, string value){
   }
   return value;
 }
-
-
-bool MonitorSvc::registerName(const string& name, const IInterface* owner)
-{
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << "registerName: " << name << endmsg;
-  m_InfoNamesMapIt = m_InfoNamesMap.find(owner);
-  string ownerName = infoOwnerName(owner);
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
-    pair<set<string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
-    if( p.second) {
-      msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endmsg;
-    }
-    else
-    { // Insertion failed: Name already exists
-      msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endmsg;
-      return false;
-    }
-  }
-  else { // Create a new set for this algo and insert name
-    msg << MSG::DEBUG << "registerName: creating new map for owner: "<< ownerName << " name: " << name << endmsg;
-    m_InfoNamesMap[owner]=set<string>();
-    m_InfoNamesMap[owner].insert(name);
-  }
-  return true;
-}
-
 
 string MonitorSvc::infoOwnerName( const IInterface* owner )
 {

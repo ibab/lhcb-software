@@ -71,6 +71,10 @@ MonCounter::MonCounter(char *name, char *title, int *data )
 {
   setup(C_INT,data,name,title);
 }
+MonCounter::MonCounter(char *name, char *title, long *data )
+{
+  setup(C_LONGLONG,data,name,title);
+}
 MonCounter::MonCounter(char *name, char *title, long long *data )
 {
   setup(C_LONGLONG,data,name,title);

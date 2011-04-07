@@ -6,6 +6,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/StatEntity.h"
+#include <typeinfo>
 #include <string>
 #include <map>
 #include <set>
@@ -41,6 +42,10 @@ class MonitorSvc
   virtual public Service
 {
   StatusCode i_start();
+  void i_unsupported(const std::string& name, const std::type_info& typ, const IInterface* owner);
+  template<class T> void i_declareCounter(const std::string& name, const T&  var,
+					  const std::string& desc, const IInterface* owner);
+
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);
   virtual ~MonitorSvc();
@@ -142,18 +147,6 @@ private:
   /// Reference to the IncidentSvc instance
   IIncidentSvc             *m_incidentSvc;
 
-
-//  typedef std::map<std::string, DimServiceMonObject*, std::less<std::string> > DimServiceMonObjectMap;
-//  typedef DimServiceMonObjectMap::iterator DimServiceMonObjectMapIt;
-//  DimServiceMonObjectMap    m_dimMonObjects;
-//  DimServiceMonObjectMapIt  m_dimMonObjectsIt;
-
-//  typedef std::map<std::string, DimService*, std::less<std::string> > DimServiceMap;
-//  typedef DimServiceMap::iterator DimServiceMapIt;
-//  DimServiceMap    m_dimSrv;
-//  DimServiceMapIt  m_dimSrvIt;
-
-  bool registerName( const std::string& name, const IInterface* owner);
   std::pair<std::string, std::string> registerDimSvc(const std::string& name, const std::string& dimPrefix, const IInterface* owner, bool isComment);
   void undeclService(std::string infoName);
   void updateService(std::string infoName, bool endOfRun);
@@ -161,8 +154,6 @@ private:
   std::string infoOwnerName( const IInterface* owner );
   std::string extract(const std::string mascara, std::string value);
 
-  // MonObjetc to convert conters in rates
-//  MonRate  *m_monRate;
   int m_maxNumCountersMonRate;
   bool m_monRateDeclared;
   void addRate(MonSubSys*, CntrMgr*);
