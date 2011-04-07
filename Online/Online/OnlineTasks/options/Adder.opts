@@ -2,27 +2,61 @@
 //==============================================================
 #include "$INFOOPTIONS"
 
-ApplicationMgr.ExtSvc               += { "AdderSvc" };
+ApplicationMgr.ExtSvc               += {"MonitorSvc",
+					"AdderSvc",
+					"AdderSvc/AdderSvcSF",
+					"AdderSvc/GauchoHistAdder",
+					"AdderSvc/GauchoCountAdder",
+					"AdderSvc/MEPrxHistAdder"
+					};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-HistogramPersistencySvc.Warnings     = false;
 
+MessageSvc.fifoPath                = "$LOGFIFO";
+MessageSvc.LoggerOnly              = true;  // Set to false for stdout
+HistogramPersistencySvc.Warnings   = false;
 
-AdderSvc.AdderType          = "top";
-AdderSvc.SourceTaskPattern  = "Adder";
-AdderSvc.MyName             = "<part>_Adder";
-AdderSvc.InDNS              = "hlt01";
-AdderSvc.TopLevel           = false;
-AdderSvc.PartitionName      = @OnlineEnv.PartitionName;
-AdderSvc.ExpandRate         = false;
-AdderSvc.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder(.*)";
-AdderSvc.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_Adder(.*)";
+AdderSvc.MyName                    = "<part>_<node>_Adder_00";
+AdderSvc.PartitionName             = @OnlineEnv.PartitionName;
+AdderSvc.TaskPattern               = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+AdderSvc.ServicePattern            = "MON_<part>_hlt[a-z][0-9][0-9]_Adder/Histos/";
+AdderSvc.AdderClass                = "hists";
+AdderSvc.InDNS                     = "<node>";
 
-AdderSvc.SaveSetTaskName   = "GauchoJob";
-AdderSvc.IsSaver           = true;
-AdderSvc.SaveRootDir       = "/hist/Savesets";
-AdderSvc.SaveInterval      = 120;              // Save snapshot every 2 minutes
+AdderSvcSF.MyName                  = "<part>_<node>_AdderSF_00";
+AdderSvcSF.PartitionName           = @OnlineEnv.PartitionName;
+AdderSvcSF.TaskPattern             = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+AdderSvcSF.ServicePattern          = "MON_hlt[a-z][0-9][0-9]_Adder_01/Histos/";
+AdderSvcSF.AdderClass              = "hists";
+AdderSvcSF.InDNS                   = "<node>";
+
+GauchoHistAdder.MyName             = "<part>_<node>_GauchoJob_00";
+GauchoHistAdder.PartitionName      = @OnlineEnv.PartitionName;
+GauchoHistAdder.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+GauchoHistAdder.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Histos/";
+GauchoHistAdder.AdderClass         = "hists";
+GauchoHistAdder.InDNS              = "<node>";
+
+GauchoHistAdder.SaveSetTaskName    = "GauchoJob";
+GauchoHistAdder.IsSaver            = true;
+GauchoHistAdder.SaveRootDir        = "/hist/Savesets";
+GauchoHistAdder.SaveInterval       = 900; // Save snapshot every 2 minutes
+
+GauchoCountAdder.MyName            = "<part>_<node>_GauchoJob_00";
+GauchoCountAdder.PartitionName     = @OnlineEnv.PartitionName;
+GauchoCountAdder.TaskPattern       = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+GauchoCountAdder.ServicePattern    = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Counter/";
+GauchoCountAdder.AdderClass        = "Counter";
+GauchoCountAdder.InDNS             = "<node>";
+
+MEPrxHistAdder.MyName              = "<part>_<node>_MEPrx_00";
+MEPrxHistAdder.PartitionName       = @OnlineEnv.PartitionName;
+MEPrxHistAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+MEPrxHistAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_MEPrx/Histos/";
+MEPrxHistAdder.AdderClass          = "hists";
+MEPrxHistAdder.InDNS               = "<node>";
+

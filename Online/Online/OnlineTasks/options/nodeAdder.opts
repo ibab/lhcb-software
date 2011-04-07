@@ -2,23 +2,35 @@
 //==============================================================
 #include "$INFOOPTIONS"
 
-ApplicationMgr.ExtSvc               += { "AdderSvc" };
+ApplicationMgr.ExtSvc               += {"MonitorSvc",
+					"AdderSvc/GauchoHistAdder",
+					"AdderSvc/GauchoCountAdder",
+					"AdderSvc/MEPrxHistAdder"
+					};
+
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
-//Runable.Wait                         = 1;  // 1 of running as daemon (Class0 task)
 
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.LoggerOnly                = true;  // Set to false for stdout
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
 
+GauchoHistAdder.MyName            = "<node>_GauchoJob";
+GauchoHistAdder.TaskPattern       = "<node>_GauchoJob_";
+GauchoHistAdder.ServicePattern    = "MON_<node>_GauchoJob_(.*)/Histos/";
+GauchoHistAdder.AdderClass        = "hists";
 
-AdderSvc.AdderType          = "node"; //Possible values are "node","subfarm" and "top" or "part"
-AdderSvc.SourceTaskPattern  = "GAUCHOJOB"; //Process Name (UTGID) of the job to be added without generation _xx and the nodename
-                                         // e.g. "Gauchojob" or "RecBrunel"
-AdderSvc.MyName             = "<node>_Adder";
-AdderSvc.TopLevel           = false;
-AdderSvc.ExpandRate         = false; // should MonRates be expanded into individual services
-AdderSvc.TaskPattern        = "<node>_GauchoJob_";
-AdderSvc.ServicePattern     = "";
+GauchoCountAdder.MyName           = "<node>_GauchoJob";
+GauchoCountAdder.TaskPattern      = "<node>_GauchoJob_";
+GauchoCountAdder.ServicePattern   = "MON_<node>_GauchoJob_(.*)/Counter/";
+GauchoCountAdder.AdderClass       = "Counter";
+
+MEPrxHistAdder.MyName             = "<node>_MEPrx";
+MEPrxHistAdder.ServicePattern     = "MON_<node>_MEPrx_(.*)/Histos/";
+MEPrxHistAdder.TaskPattern        = "<node>_MEPRx_";
+MEPrxHistAdder.AdderClass         = "hists";
+

@@ -60,6 +60,7 @@ export INFOOPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.o
 
 if test -n "${TOP}" ; then 
   #top level adder for this partition
+  export LOGFIFO=/tmp/logGaudi.fifo;
   export DIM_DNS_NODE=mona08
   export DIM_DNS_CLIENT_NODE=hlt01.lbdaq.cern.ch
   if test -n "${DEBUG}" 
@@ -89,12 +90,12 @@ if test -z "${TOP}" ; then
          then exec -a ${UTGID} ${debug_exe} -options=../options/AdderRecFarm.opts  &
 	#in the rec farm, we need to run without loggeronly option else we can't stop it
 	#then exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderRecFarm.opts  &
-      else 
+      else
+        export LOGFIFO=/tmp/logGaudi.fifo;
 	if test -n "${PARENT:7}";
 	  then
 	    ##echo "Exec Node adder..."
 	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/nodeAdder.opts &
-	    ###exec -a ${UTGID} ${CLASS0_TASK} -main=../options/nodeAdder.opts &
           else 
 	    ##echo "Exec subfarm adder..."
 	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/SubfarmAdder.opts &
