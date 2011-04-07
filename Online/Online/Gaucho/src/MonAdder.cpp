@@ -187,14 +187,15 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
   i = m_inputServicemap.find(ServiceName);
   if (i != m_inputServicemap.end())
   {
-    delete i->second->m_Info;
-    m_inputServicemap.erase(i);
-    TskServiceMap::iterator k =m_TaskMap.find(i->second->task);
+    INServiceDescr *sd = i->second;
+    delete sd->m_Info;
+    TskServiceMap::iterator k =m_TaskMap.find(sd->task);
     if (k != m_TaskMap.end())
     {
       m_TaskMap.erase(k);
     }
-    delete i->second;
+    delete sd;
+    m_inputServicemap.erase(i);
   }
   if (m_inputServicemap.size() == 0)
   {
