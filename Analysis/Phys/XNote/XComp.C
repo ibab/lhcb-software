@@ -9,14 +9,14 @@
 
 const int nov = 8;
 
-void XComp(){
+void XComp(float fontsize = 0.04){
 
   TCanvas *c2 = new TCanvas("c2", "c2",10,44,700,500);
   c2->SetGridx();
 
-  Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0, 3874.54 ,0 ,0};
-  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.44 ,0, 0};
-  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.14  , 0, 0};
+  Float_t Values[nov] = { 3871.61, 3871.4, 3868.7, 3871.8, 3872.0, 3871.96 ,0 ,0};
+  Float_t StatErrors[nov]={ 0.16, 0.6, 1.5, 3.1, 0.6, 0.46 ,0, 0};
+  Float_t SystErrors[nov]={ 0.19, 0.1, 0.4, 3.0, 0.5, 0.1  , 0, 0};
   Float_t totErrors[nov]; Float_t Errors[nov];
   int i = 0;
   for (i = 0; i < nov -1 ; ++i ) {
@@ -45,7 +45,7 @@ void XComp(){
 
   char cvalue[100];
   float e = sqrt(1/sumWeight);
-  sprintf(cvalue, "New Average %.2f", avg);
+  sprintf(cvalue, "New average %.2f", avg);
 
   std::string header(cvalue);
 
@@ -75,7 +75,7 @@ void XComp(){
   Values[nov-2]= avg;  
 
   e = sqrt(1/sumWeight);
-  sprintf(cvalue, "Old Average %.2f", avg);
+  sprintf(cvalue, "PDG Average %.2f", avg);
 
   std::string oldheader(cvalue);
 
@@ -89,12 +89,12 @@ void XComp(){
 
   Int_t Colors[nov]={1,1,1,1
                     ,1,1,1,1};
-  char* Labels[nov] = {"CDF", "Babar B^{+}", "Babar B^{0}", "D0", "Belle", "LHCb (blind)", "Avg" , "Avg"};
+  char* Labels[nov] = {"CDF", "BaBar B^{+}", "BaBar B^{0}", "D0", "Belle", "LHCb Preliminary", "Avg" , "Avg"};
   Labels[nov-2] = oldaverageString.c_str(); 
   Labels[nov-1] = averageString.c_str();  
 
-  float MinX = 3858;
-  float MaxX = 3878;
+  float MinX = 3859;
+  float MaxX = 3877;
   float MinY = 0.;
   float MaxY = nov + 1;
 
@@ -106,26 +106,34 @@ void XComp(){
   frame->Draw();
   frame->GetYaxis()->SetNdivisions(0);
   frame->GetXaxis()->SetLabelFont(132);
-  frame->GetXaxis()->SetTitle("X(3872) Mass [MeV/c^{2}]");
+  frame->GetXaxis()->SetTitle("X(3872) mass [MeV/c^{2}]");
   frame->GetXaxis()->SetTitleFont(132);
   frame->GetXaxis()->SetLabelFont(132);
+  frame->GetXaxis()->SetLabelSize(fontsize);  
+  frame->GetYaxis()->SetLabelSize(fontsize);  
+  frame->GetXaxis()->SetTitleSize(fontsize);  
+  frame->GetYaxis()->SetTitleSize(fontsize);  
+  frame->GetXaxis()->SetTitleOffset(0.95);  
 
   //  frame->Draw("axissame");
   TLatex label;
   label.SetTextAlign(22);
   label.SetTextFont(132);
-  label.SetTextSize(0.04);
+  label.SetTextSize(fontsize);
   TBox* pav = new TBox(xMinAvg,MinY,xMaxAvg , MaxY);   
   pav->SetLineColor(0);
   pav->SetFillColor(31);
   pav->Draw();
 
+  float lookup[8] = {0, 1,2, 3, 4, 6, 5, 7};
   
-  for (int i=0;i<nov ;i++){
+  for (int ii=0;ii<nov ;ii++){
+
+    int i = lookup[ii];
      Float_t x1=Values[i]-Errors[i];
      Float_t xc=Values[i];
      Float_t x2=Values[i]+Errors[i];
-     Float_t y=nov-i;
+     Float_t y=nov-ii;
 
      gStyle->SetLineColor(Colors[i]);
      gStyle->SetMarkerColor(Colors[i]);
@@ -144,7 +152,7 @@ void XComp(){
      g1->Draw();
      //     pav->Draw();
      g2->Draw();
-     label.DrawLatex(MinX+(MaxX-MinX)*0.22,y,Labels[i]);
+     label.DrawLatex(MinX+(MaxX-MinX)*0.24,y,Labels[i]);
   }
 
   frame->Draw("axissame");
