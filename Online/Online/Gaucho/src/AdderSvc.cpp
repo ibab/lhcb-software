@@ -64,16 +64,16 @@ StatusCode AdderSvc::initialize()
 {
   StatusCode sc = Service::initialize();
   MsgStream msg( msgSvc(), name() );
-  if( !sc.isSuccess() ) 
+  if( !sc.isSuccess() )
   {
     return sc;
   }
-  if ( m_TaskPattern.empty() ) 
+  if ( m_TaskPattern.empty() )
   {
     msg << MSG::FATAL << "The option \"TaskPattern\" MUST be set!" << endmsg;
     return StatusCode::FAILURE;
   }
-  if ( m_ServicePattern.empty() ) 
+  if ( m_ServicePattern.empty() )
   {
     msg << MSG::FATAL << "The option \"ServicePattern\" MUST be set!" << endmsg;
     return StatusCode::FAILURE;
@@ -294,6 +294,8 @@ StatusCode AdderSvc::start()
 
 StatusCode AdderSvc::stop()
 {
+  IGauchoMonitorSvc* psvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
+  if (psvc) psvc->resetHistos(this);
 
   if (m_isSaver)
   {
@@ -310,7 +312,7 @@ StatusCode AdderSvc::finalize()
   {
     m_pMonitorSvc->undeclareAll(this);
   }
-  if ( m_incidentSvc ) 
+  if ( m_incidentSvc )
   {
     m_incidentSvc->removeListener(this);
   }
