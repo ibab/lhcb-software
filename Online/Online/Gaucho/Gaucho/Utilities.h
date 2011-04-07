@@ -40,6 +40,14 @@ namespace {
       s[i] = tolower(s[i]);
     }
   }
+
+  template <class T> struct ObjectLock {
+    T* m_obj;
+    ObjectLock(T* a) : m_obj(a) { m_obj->Lock(); }
+    ~ObjectLock() { m_obj->UnLock(); }
+  };
+
+
 }
 
 class dyn_string : public std::vector<std::string >

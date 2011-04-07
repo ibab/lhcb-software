@@ -64,8 +64,8 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   return StatusCode::SUCCESS;
 }
 
-MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
-  Service(name, sl)
+MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl)
+: Service(name, sl)
 {
   m_started = false;
   m_MonSys =   &MonSys::m_instance();

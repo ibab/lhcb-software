@@ -15,38 +15,15 @@
 #include "AIDA/IHistogram1D.h"
 typedef std::pair<std::string, void*> HistPair;
 
-
-
-extern "C"
-{
-  void BufferAdder(void *tis, void *buff, int siz, MonInfo *h);
-}
 HistAdder::HistAdder(char *myName, char *serviceName)
 {
-  std::string svc_prefix("/Histos/");
-  m_buffersize = 0;
-  m_buffer = 0;
-  m_usedSize = 0;
-  m_reference =-1;
-  m_serviceName = svc_prefix +std::string(serviceName);
-  m_expandRate = false;
-  m_srcnode = "";
-  m_outdns = "localhost";
-  m_MyName = myName;
-  m_lockid = 0;
-  m_maplock = 0;
-  m_IsEOR = false;
-//  g_DNSInfo = 0;
-//  m_TaskHandler = new HAdderTaskInfoHandler();
-//  m_ServHandler = new HAdderServInfoHandler();
-  m_oldProf = 0;
-  m_added = 0;
-  m_noRPC = false;
-  m_type = ADD_HISTO;
-  m_ser =0;
-  m_RPCser = 0;
+  m_serviceName = std::string("/Histos/") + serviceName;
+  m_MyName      = myName;
+  m_type        = ADD_HISTO;
+  m_oldProf     = 0;
   AdderSys::Instance().gg_AdderList.push_back(this);
 }
+
 HistAdder::~HistAdder()
 {
   Adderlist_t::iterator g=std::find( AdderSys::Instance().gg_AdderList.begin(),AdderSys::Instance().gg_AdderList.end(),this);
@@ -54,119 +31,28 @@ HistAdder::~HistAdder()
   {
     AdderSys::Instance().gg_AdderList.erase(g);
   }
-  for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
-  {
-    delete i->second->m_diminfo;
-    delete i->second;
-  }
-  m_TaskServiceMap.clear();
-  for (INServIter i = m_inputServicemap.begin();i!= m_inputServicemap.end();i++)
-  {
-    delete i->second->m_Info;
-    delete i->second;
-  }
-  m_inputServicemap.clear();
-
-  if (m_outservice  != 0)
-  {
-    delete m_outservice;
-  }
-  if (m_ser !=0 )
-  {
-    delete m_ser;
-  }
-  if (m_RPCser !=0 )
-  {
-    delete m_RPCser;
-  }
-  if (m_rpc !=0 )
-  {
-    delete m_rpc;
-  }
-
 }
-void HistAdder::Configure()
-{
-  std::string nodename;
-  nodename = RTL::nodeNameShort();
-  if (nodename != "")
-  {
-    toLowerCase(nodename);
-    m_name = "MON_" + m_MyName;
-  }
-  if (m_srcnode == "")
-  {
-    if (nodename.find("hlt"))
-    {
-      std::string rackrow  = nodename.substr(3,1); //size of "hlt"
-      std::string rack_node = nodename.substr(4);
-      if (rack_node.size() == 4)
-      {
-        m_srcnode = nodename;
-      }
-      else if (rack_node.size() == 2 )
-      {
-        m_srcnode = nodename;
-      }
-      else
-      {
-        m_srcnode = nodename.substr(0,3);
-      }
-    }
-  }
-  m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
-  m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
-//  printf("HistAdder> Patterns - Tasks:%s Svc:%s\n",m_taskPattern.c_str(),m_servicePattern.c_str());
-  m_outsvcname = m_name+m_serviceName;
-  lib_rtl_create_lock(0,&m_maplock);
-  std::string nam = m_name + "/Histos/HistCommand";
-  m_ser = new AddSerializer((ObjMap*)&m_hmap);
-  m_rpc = 0;
-  if (!m_noRPC)
-  {
-    m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
-    m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
-  }
-  m_locked = false;
-}
+
 void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
   void *p;
-  int n1d,n2d,nprof,nrate;
-  unsigned long long tim;
-  n1d=0;
-  n2d=0;
-  nprof=0;
-  nrate=0;
-  tim = gettime();
+  unsigned long long tim = gettime();
+  SerialHeader* header= ((SerialHeader*)buff);
   if (siz == 4)
   {
     printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
-  if (((SerialHeader*)buff)->m_magic != SERIAL_MAGIC)
+  if (header->m_magic != SERIAL_MAGIC)
   {
 //    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
     m_received=1;
     return;
   }
-  m_expected = m_inputServicemap.size();
-  long long cltime;
-  SerialHeader* header= ((SerialHeader*)buff);
-  cltime = header->ser_tim;
-//  printf("Received size %d Header size %d\n",siz,header->buffersize);
-  long long runno = ((SerialHeader*)buff)->run_number;
-  long long current;
-  if (m_IsEOR)
-  {
-    current = runno;
-  }
-  else
-  {
-    current = cltime;
-  }
-//  printf("%s Last update %lld Client Time %lld run number %lld %d %d\n",h->m_TargetService.c_str(),m_reference,cltime,runno,m_received,m_expected);
+  size_t expected = m_inputServicemap.size();
+  long long current  = (m_IsEOR) ? header->run_number : header->ser_tim;
+
   m_RateBuff = 0;
   if (m_reference < current)
   {
@@ -349,9 +235,9 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 //    printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
     m_received++;
   }
-  if (m_received >= m_expected)
+  if (m_received >= expected)
   {
-//    printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,m_expected);
+//    printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,expected);
 //    fflush(stdout);
     if (m_isSaver)
     {
@@ -360,7 +246,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     }
     m_added = 0;
     m_received = 0;
-    //printf(" %d %d\n", m_received,m_expected);
+    //printf(" %d %d\n", m_received,expected);
     if (m_outservice != 0)
     {
       m_outservice->Serialize();
@@ -372,19 +258,6 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       std::string nnam;
       if (m_RateBuff != 0)
       {
-        MonHist h;
-//        MyTProfile *p;
-//        if (m_isSaver)
-//        {
-//          Lock();
-//        }
-//        p = (MyTProfile*)h.de_serialize(m_RateBuff,"RATE");
-//        if (m_isSaver)
-//        {
-//          UnLock();
-//        }
-//        printf("Array Size %d Block Size %d",p->fN,h.BlockSize());
-//        p->Print("range");
         DimHistbuff1 *pdiff;
 
         if (m_oldProf !=0)

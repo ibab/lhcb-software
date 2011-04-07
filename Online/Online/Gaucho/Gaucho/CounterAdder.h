@@ -1,27 +1,13 @@
-#ifndef COUNTERADDER_H
-#define COUNTERADDER_H
-#include "Gaucho/MonTypes.h"
-#include "Gaucho/MonInfo.h"
-#include "Gaucho/ObjService.h"
-#include <map>
-#include <string>
-#include "Gaucho/AddSerializer.h"
-#include "Gaucho/MonAdder.h"
+#ifndef ONLINE_GAUCHO_COUNTERADDER_H
+#define ONLINE_GAUCHO_COUNTERADDER_H
 
-class MonService;
-//class HistServer;
-class ObjRPC;
+#include "Gaucho/MonAdder.h"
 
 class CounterAdder : public MonAdder
 {
 public:
-//    DimHistbuff1 *m_RateBuff;
-//    std::string m_MyName;
-//    std::string m_NamePrefix;
-//    DimHistbuff1 *m_oldProf;
     void add(void *buffer, int siz, MonInfo *h);
-    CounterAdder(char *myName, char * serviceName/*, bool expand = false*/);
+    CounterAdder(const char *myName, const char * serviceName);
     virtual ~CounterAdder();
-    void Configure(void);
 };
-#endif
+#endif //  ONLINE_GAUCHO_COUNTERADDER_H

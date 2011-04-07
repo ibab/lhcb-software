@@ -35,10 +35,10 @@ Algorithm.Property and returns the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc : public Service,
-  virtual public IMonitorSvc,
-  virtual public IGauchoMonitorSvc,
-  virtual public IIncidentListener
+class MonitorSvc 
+: virtual public IGauchoMonitorSvc,
+  virtual public IIncidentListener,
+  virtual public Service
 {
   StatusCode i_start();
 public:

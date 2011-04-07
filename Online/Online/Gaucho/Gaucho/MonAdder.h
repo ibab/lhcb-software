@@ -1,9 +1,8 @@
-#ifndef MonAdder_H
-#define MonAdder_H
+#ifndef ONLINE_GAUCHO_MonAdder_H
+#define ONLINE_GAUCHO_MonAdder_H
+
 #include "Gaucho/MonTypes.h"
-//#include "MonInfo.h"
 #include "Gaucho/ObjService.h"
-//#include "ObjRPC.h"
 #include <map>
 #include <string>
 #include <boost/regex.hpp>
@@ -124,29 +123,24 @@ public:
   OUTServiceMap m_outputServicemap;
   TaskServiceMap m_TaskServiceMap;
   void TaskName(std::string &server, std::string &tname, std::string &tgen);
-//  void ServiceName(std::string server, std::string &svc);
-//  std::string m_taskname;
-  std::string m_srcnode;
-  std::string m_taskPattern;
-  std::string m_servicePattern;
-  boost::regex m_taskexp;
-  boost::regex m_serviceexp;
-  long long m_reference;
-  MonMap m_hmap;
-  int m_expected;
-  int m_received;
-  int m_added;
-  std::string m_name;
-  ObjService *m_outservice;
-  ObjRPC *m_rpc;
+
+  std::string   m_taskPattern;
+  std::string   m_servicePattern;
+  boost::regex  m_taskexp;
+  boost::regex  m_serviceexp;
+  long long     m_reference;
+  MonMap        m_hmap;
+  size_t        m_received;
+  int           m_added;
+  std::string   m_name;
+  ObjService    *m_outservice;
+  ObjRPC        *m_rpc;
   ObjSerializer *m_ser;
   ObjSerializer *m_RPCser;
-  std::string m_serviceName;
-  bool m_expandRate;
-  std::string hist_prefix;
-  std::string m_outdns;
-  bool m_IsEOR;
-  bool m_noRPC;
+  std::string    m_serviceName;
+  bool           m_expandRate;
+  bool           m_IsEOR;
+  bool           m_noRPC;
   unsigned long long m_time0;
 public:
   lib_rtl_lock_t m_lockid;
@@ -158,15 +152,13 @@ public:
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
   bool m_isSaver;
   MonAdder();
-  virtual ~MonAdder(){}
+  virtual ~MonAdder();
   void *Allocate(int siz);
   void *ReAllocate(int);
   void SetCycleFn(void CycleCB(void*,void*,int, MonMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}
   INServiceDescr *findINService(std::string);
   OUTServiceDescr *findOUTService(std::string servc);
-  void setSrcNode(std::string &src){m_srcnode = src;return;};
-  void setOutDNS(std::string &src){m_outdns = src;return;};
-  virtual void Configure(void)=0;
+  virtual void Configure();
 //  virtual void TaskHandler(char *, int);
 //  virtual void ServiceHandler(DimInfo *, std::string &, char *, int);
   virtual void NewService(DimInfo *myInfo, std::string &TaskName, std::string &ServiceName);
@@ -186,32 +178,21 @@ public:
   {
     if (m_lockid != 0)
     {
-      int status;
-//      printf("HistAdder Locking\n");
-      status = lib_rtl_lock(m_lockid);
-//      printf("HistAdder Locked\n");
+      int status = lib_rtl_lock(m_lockid);
       return status;
     }
-    else
-    {
-      return 0;
-    }
+    return 0;
   };
   int UnLock()
   {
     if (m_lockid != 0)
     {
-      int status;
-//      printf("HistAdder Un-Locking\n");
-      status = lib_rtl_unlock(m_lockid);
-//      printf("HistAdder UnLocked\n");
+      int status = lib_rtl_unlock(m_lockid);
       return status;
     }
-    else
-    {
-      return 0;
-    }
+    return 0;
   };
+
   int LockMap()
   {
     if (m_maplock != 0)

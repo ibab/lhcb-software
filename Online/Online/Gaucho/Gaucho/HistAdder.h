@@ -25,7 +25,6 @@ public:
   void add(void *buffer, int siz, MonInfo *h);
   HistAdder(char *myName, char * serviceName/*, bool expand = false*/);
   virtual ~HistAdder();
-  void Configure(void);
 //  void TaskHandler(char*,int);
 //  void ServiceHandler(DimInfo *,char*,int);
 };

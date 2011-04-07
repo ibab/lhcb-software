@@ -263,7 +263,7 @@ StatusCode AdderSvc::start()
   {
     m_EoRadder = new CounterAdder((char*)myservicename.c_str(), (char*)"EOR");
   }
-  m_EoRadder->setOutDNS(m_OutputDNS);
+  //m_EoRadder->setOutDNS(m_OutputDNS);
   m_EoRadder->m_IsEOR = true;
   m_EoRadder->m_expandRate = false;
   m_EoRadder->m_taskPattern = m_TaskPattern;

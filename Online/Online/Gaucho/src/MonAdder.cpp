@@ -1,13 +1,12 @@
 #include "Gaucho/MonAdder.h"
-//#include "hist_types.h"
-//#include "HistService.h"
-//#include "HistServer.h"
-//#include "HistRPC.h"
 #include "Gaucho/MonTypes.h"
 #include "Gaucho/SerialHeader.h"
 #include "Gaucho/dimhist.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/AdderSys.h"
+#include "Gaucho/AddSerializer.h"
+#include "Gaucho/ObjRPC.h"
+
 static int mpty;
 typedef std::pair<std::string, MonObj*> MonPair;
 extern "C"
@@ -20,11 +19,75 @@ extern "C"
 }
 MonAdder::MonAdder()
 {
-  m_received = 0;
-  m_added = 0;
-  CycleFn = 0;
-  m_IsEOR = false;
+  m_received    = 0;
+  CycleFn       = 0;
+  m_buffersize  = 0;
+  m_buffer      = 0;
+  m_usedSize    = 0;
+  m_reference   = -1;
+  m_expandRate  = false;
+  m_lockid      = 0;
+  m_maplock     = 0;
+  m_IsEOR       = false;
+  m_added       = 0;
+  m_noRPC       = false;
+  m_outservice  = 0;
+  m_RPCser      = 0;
+  m_rpc         = 0;
+  m_ser         = 0;
+  m_RPCser      = 0;
 }
+
+MonAdder::~MonAdder()
+{
+  for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
+  {
+    delete i->second->m_diminfo;
+    delete i->second;
+  }
+  m_TaskServiceMap.clear();
+  for (INServIter i = m_inputServicemap.begin();i!= m_inputServicemap.end();i++)
+  {
+    delete i->second->m_Info;
+    delete i->second;
+  }
+  m_inputServicemap.clear();
+  deletePtr(m_outservice);
+  deletePtr(m_ser);
+  deletePtr(m_RPCser);
+  deletePtr(m_rpc);
+}
+
+void MonAdder::Configure()
+{
+  std::string nodename = RTL::nodeNameShort();
+  if (nodename != "")
+  {
+    toLowerCase(nodename);
+    m_name= "MON_" + m_MyName;
+  }
+  m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
+  m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
+  m_outsvcname = m_name+m_serviceName;
+  lib_rtl_create_lock(0,&m_maplock);
+  m_ser = new AddSerializer((ObjMap*)&m_hmap);
+  m_rpc = 0;
+  if (!m_noRPC)
+  {
+    std::string nam;
+    if ( m_type == ADD_HISTO )
+    {
+      nam = m_name + "/Histos/HistCommand";
+    }
+    else if ( m_type == ADD_COUNTER )
+    {
+      nam = m_name+"/Counter/HistCommand";
+    }
+    m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
+    m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
+  }
+}
+
 void *MonAdder::Allocate(int siz)
 {
   if (m_buffersize<siz)
@@ -81,7 +144,6 @@ void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tg
   bool status = boost::regex_search(server,m_taskexp);
   if (status)
   {
-//    ::printf("Comparing %s with %s status...success\n",server.c_str(),m_taskPattern.c_str());
     tname = server;
     tgen = "";
     return;
@@ -92,48 +154,39 @@ void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tg
 
 INServiceDescr *MonAdder::findINService(std::string servc)
 {
-  INServIter i;
-  i = m_inputServicemap.find(servc);
+  INServIter i = m_inputServicemap.find(servc);
   if (i != m_inputServicemap.end())
   {
     INServiceDescr *sd = i->second;
     return sd;
   }
-  else
-  {
-    return 0;
-  }
+  return 0;
 }
 
 OUTServiceDescr *MonAdder::findOUTService(std::string servc)
 {
-  OUTServIter i;
-  i = m_outputServicemap.find(servc);
+  OUTServIter i = m_outputServicemap.find(servc);
   if (i != m_outputServicemap.end())
   {
     OUTServiceDescr *sd = i->second;
     return sd;
   }
-  else
-  {
-    return 0;
-  }
+  return 0;
 }
 void MonAdder::TaskDied(std::string & task)
 {
-  TskServiceMap::iterator i;
-  i = m_TaskMap.find(task);
+  TskServiceMap::iterator i = m_TaskMap.find(task);
   if (i != m_TaskMap.end())
   {
-    m_TaskMap.erase(i);
-    std::string service;
-    service = i->second;
+    const std::string& service = i->second;
     INServIter k = m_inputServicemap.find(service);
+    m_TaskMap.erase(i);
     if (k != m_inputServicemap.end())
     {
+      INServiceDescr *sd = k->second;
+      delete sd->m_Info;
+      delete sd;
       m_inputServicemap.erase(k);
-      delete k->second->m_Info;
-      delete k->second;
     }
     if (m_inputServicemap.size() == 0)
     {
@@ -169,13 +222,13 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
 //        printf ("Task %s already exists in map to be added for service %s",TaskName.c_str(),ServiceName.c_str());
       }
     }
-    if (m_inputServicemap.size() == 1)
+    //if (m_inputServicemap.size() == 1)
+    if ( 0 == m_outservice )
     {
 //      printf ("First client for adding... Creating our output service...%s\n",m_outsvcname.c_str());
-      m_outservice = new ObjService(m_ser, m_outsvcname.c_str(),
-          (char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
-      DimServer::start();
+      m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
     }
+    DimServer::start();
   }
 }
 void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName)
@@ -206,10 +259,9 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
 void MonAdder::dumpServices()
 {
   INServiceMap::iterator i;
-  int k=1;
   for (i=m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {
-    printf("Service %d Name:%s\n",k,i->first.c_str());
+    printf("Service Name:%s\n",i->first.c_str());
   }
 }
 
