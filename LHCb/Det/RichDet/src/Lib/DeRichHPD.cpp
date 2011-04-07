@@ -61,15 +61,17 @@ DeRichHPD::DeRichHPD ( const std::string & name ) :
   m_magnificationCoef1   ( 0     ),
   m_magnificationCoef2   ( 0     ),
   m_hpdQuantumEffFunc    ( NULL  ),
+  m_ownHPDQEFunc         ( false ),
   m_refactParams         ( 4, 0  ),
   m_UseHpdMagDistortions ( true  ),
   m_UseBFieldTestMap     ( false ),
   m_LongitudinalBField   ( 0     ),
-  m_MDMS_version         ( 0     ),
   m_magFieldSvc          ( NULL  )
 {
-  m_deMagFactor[0] = 0;
-  m_deMagFactor[1] = 0;
+  m_deMagFactor[0]  = 0;
+  m_deMagFactor[1]  = 0;
+  m_MDMS_version[0] = 0;
+  m_MDMS_version[1] = 0;
   for ( unsigned int field = 0; field < 2; ++field )
   {
     m_demagMapR.push_back   ( new Rich::TabulatedFunction1D() );
@@ -100,7 +102,7 @@ void DeRichHPD::cleanUpInterps()
     delete m_magMapR[field];     m_magMapR[field]     = NULL;
     delete m_magMapPhi[field];   m_magMapPhi[field]   = NULL;
   }
-  if ( m_hpdQuantumEffFunc && m_flags[6] )
+  if ( m_hpdQuantumEffFunc && m_ownHPDQEFunc )
   {
     delete m_hpdQuantumEffFunc; m_hpdQuantumEffFunc = NULL;
   }
@@ -119,8 +121,6 @@ const CLID& DeRichHPD::classID()
 //=========================================================================
 StatusCode DeRichHPD::initialize ( )
 {
-  // CRJ : Comment out all debug and verbose messages by default for speed
-
   MsgStream msg( msgSvc(), "DeRichHPD" );
   msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
 
@@ -140,10 +140,200 @@ StatusCode DeRichHPD::initialize ( )
   StatusCode sc = getParameters();
   if ( sc.isFailure() ) return sc;
 
-  //msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
-  //   << m_activeRadius << endmsg;
-  //msg << MSG::DEBUG << "DeMagFactor(0): " << m_deMagFactor[0]
-  //    << " DeMagFactor(1): " << m_deMagFactor[1] << endmsg;
+  // get the pointer to the silicon sensor detector element
+  m_deSiSensor = ( !childIDetectorElements().empty() ?
+                   childIDetectorElements().front() : NULL );
+  if ( !m_deSiSensor )
+  {
+    fatal() << "Cannot find SiSensor detector element" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // register updates for the locally cached geometry information
+  // Probably recalculates more than strictly needed, but easier and safer to
+  // do it all, as it should be a rare thing, so CPU is not a problem.
+  updMgrSvc()->registerCondition( this, geometry(),               
+                                  &DeRichHPD::updateGeometry );
+  updMgrSvc()->registerCondition( this, m_deSiSensor->geometry(), 
+                                  &DeRichHPD::updateGeometry );
+
+  //if(m_UseRandomBField) init_mm();
+  //msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
+  //    << " LongitudinalBField="<<m_LongitudinalBField
+  //<< " UseRandomBField="<<m_UseRandomBField
+  //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
+  //<< endmsg;
+
+  if ( hasCondition("DemagParametersFieldNegative") &&
+       hasCondition("DemagParametersFieldPositive") )
+  {
+    m_demagConds.push_back( condition( "DemagParametersFieldNegative" ));
+    updMgrSvc()->registerCondition(this, m_demagConds[0].path(),
+                                   &DeRichHPD::updateDemagProperties );
+
+    m_demagConds.push_back( condition( "DemagParametersFieldPositive" ));
+    updMgrSvc()->registerCondition(this, m_demagConds[1].path(),
+                                   &DeRichHPD::updateDemagProperties );
+  }
+  else
+  {
+    if ( hasCondition( "DemagParameters" ) )
+    {
+      m_demagConds.push_back( condition("DemagParameters") );
+      m_demagConds.push_back( condition("DemagParameters") );
+      updMgrSvc()->registerCondition( this, m_demagConds[0].path(),
+                                      &DeRichHPD::updateDemagProperties );
+    }
+    else
+    {
+      m_demagConds.push_back( SmartRef<Condition>() );
+      m_demagConds.push_back( SmartRef<Condition>() );
+    }
+  }
+
+  // Update HPD QE values whenever DeRichSystem updates
+  updMgrSvc()->registerCondition( this, deRichSys(), &DeRichHPD::initHpdQuantumEff );
+
+  // Trigger first update
+  sc = updMgrSvc()->update(this);
+  if ( sc.isFailure() ) { fatal() << "UMS updates failed" << endmsg; }
+
+  return sc;
+}
+
+//=========================================================================
+// Access magnetic field service on demand
+//=========================================================================
+ILHCbMagnetSvc * DeRichHPD::magSvc() const
+{
+  if ( !m_magFieldSvc )
+  {
+    // get the magnetic field service
+    ISvcLocator* svcLocator = Gaudi::svcLocator();
+    if ( !svcLocator )
+    {
+      throw GaudiException( "ISvcLocator* points to NULL!",
+                            "DeRichHPD" , StatusCode::FAILURE );
+    }
+    const StatusCode scMag =
+      svcLocator->service("MagneticFieldSvc",m_magFieldSvc);
+    if ( scMag.isFailure() )
+    {
+      throw GaudiException( "Could not locate MagneticFieldSvc",
+                            "DeRichHPD" , StatusCode::FAILURE );
+    }
+  }
+  return m_magFieldSvc;
+}
+
+//=========================================================================
+// Initialise the HPD quantum eff function
+//=========================================================================
+StatusCode DeRichHPD::initHpdQuantumEff()
+{
+  debug() << "Updating Q.E. for HPD:" << m_number << endmsg;
+
+  // If we own the function object, delete it first
+  if ( m_ownHPDQEFunc ) delete m_hpdQuantumEffFunc;
+
+  // get quantum efficiency tabulated property from LHCBCOND if available
+  if ( deRichSys()->exists( "HpdQuantumEffCommonLoc" ) )  // use hardware ID to locate QE
+  {
+    // convert copy number to smartID
+    const LHCb::RichSmartID id = deRichSys()->richSmartID(Rich::DAQ::HPDCopyNumber(m_number));
+    const std::string qePath   = deRichSys()->param<std::string>("HpdQuantumEffCommonLoc");
+    const std::string hID( deRichSys()->hardwareID(id) );
+    SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), qePath+hID );
+    if ( !hpdQuantumEffTabProp )
+    {
+      fatal() << "Could not load HPD's quantum efficiency TabulatedProperty for " << myName()
+              << " from " << qePath+hID << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
+    m_ownHPDQEFunc = true;
+  }
+  else // use copy number to locate QE
+  {
+    if ( !hasCondition("QuantumEffTable") )
+    {
+      // use common QE for all HPDs
+      SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
+      m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
+      m_ownHPDQEFunc = false;
+    }
+    else
+    {
+      // get QE from the CondDB at the location stored in condition QuantumEffTable
+      SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
+      SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(),
+                                                            hpdQuantumEffCond.path() );
+      if ( !hpdQuantumEffTabProp )
+      {
+        fatal() << "Could not load HPD's quantum efficiency TabulatedProperty for " << myName()
+                << " from " << hpdQuantumEffCond.path() << endmsg;
+        return StatusCode::FAILURE;
+      }
+      m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
+      m_ownHPDQEFunc = true;
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  getParameters
+//=========================================================================
+StatusCode DeRichHPD::getParameters()
+{
+  SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
+  if ( !deRich1 )
+  {
+    error() << "Could not load DeRich1" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  m_pixelSize    = deRich1->param<double>("RichHpdPixelXsize");
+  m_activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
+
+  if (deRich1->exists("RefractHPDQrtzWin") )
+    m_refactParams = deRich1->param<std::vector<double> >("RefractHPDQrtzWin");
+  else
+  {
+    warning() << "No parameters for refraction on HPD window! "
+              << "Corrections will not work properly!" << endmsg;
+  }
+
+  m_UseHpdMagDistortions = ( 0 != deRich1->param<int>("UseHpdMagDistortions") );
+  m_UseBFieldTestMap     = ( 0 != deRich1->param<int>("UseBFieldTestMap") );
+  m_LongitudinalBField   = deRich1->param<double>("LongitudinalBField");
+  //m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
+  //m_RandomBFieldMinimum = deRich1->param<double>("RandomBFieldMinimum");
+  //m_RandomBFieldMaximum = deRich1->param<double>("RandomBFieldMaximum");
+
+  // load old demagnification factors
+  SmartDataPtr<TabulatedProperty> HPDdeMag
+    ( dataSvc(), "/dd/Materials/RichMaterialTabProperties/HpdDemagnification" );
+  if ( !HPDdeMag )
+  {
+    fatal() << "Could not load HpdDemagnification" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  const TabulatedProperty::Table & DeMagTable = HPDdeMag->table();
+  m_deMagFactor[0] = DeMagTable[0].second;
+  m_deMagFactor[1] = DeMagTable[1].second;
+
+  return StatusCode::SUCCESS;
+}
+
+
+//=========================================================================
+// update the localy cached transforms
+//=========================================================================
+StatusCode DeRichHPD::updateGeometry()
+{
+  debug() << "Updating geometry transformations for HPD:" << m_number <<endmsg;
 
   // find the subMaster volume, normally the first physical volume
   const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
@@ -160,9 +350,9 @@ StatusCode DeRichHPD::initialize ( )
     pvSilicon = pvHPDSMaster->lvolume()->pvolume(10);
     if ( !pvSilicon || pvSilicon->name().find("pvRichHPDSiDet") == std::string::npos )
     {
-      msg << MSG::FATAL << "Cannot find pvRichHPDSiDet volume ";
-      if ( pvSilicon != NULL ) msg << MSG::FATAL << pvSilicon->name();
-      msg << MSG::FATAL << endmsg;
+      fatal() << "Cannot find pvRichHPDSiDet volume ";
+      if ( pvSilicon != NULL ) fatal() << pvSilicon->name();
+      fatal() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -207,223 +397,7 @@ StatusCode DeRichHPD::initialize ( )
   m_winOutRsq = m_winOutR*m_winOutR;
   //msg << MSG::DEBUG << "winInR = " << m_winInR << " winOutR = " << m_winOutR << endmsg;
 
-  // get the pointer to the silicon sensor detector element
-  m_deSiSensor = ( !childIDetectorElements().empty() ?
-                   childIDetectorElements().front() : NULL );
-  if ( !m_deSiSensor )
-  {
-    error() << "Cannot find SiSensor detector element" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  // register updates for the locally cached geometry information
-  updMgrSvc()->registerCondition(this, geometry(),
-                                 &DeRichHPD::updateTransformations );
-
-  //if(m_UseRandomBField) init_mm();
-  //msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
-  //    << " LongitudinalBField="<<m_LongitudinalBField
-  //<< " UseRandomBField="<<m_UseRandomBField
-  //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
-  //<< endmsg;
-
-  if ( hasCondition( "DemagParametersFieldNegative" ) )
-  {
-    m_demagConds.push_back( condition( "DemagParametersFieldNegative" ));
-    updMgrSvc()->registerCondition(this, m_demagConds[0].path(),
-                                   &DeRichHPD::updateDemagProperties );
-
-    m_demagConds.push_back( condition( "DemagParametersFieldPositive" ));
-    updMgrSvc()->registerCondition(this, m_demagConds[1].path(),
-                                   &DeRichHPD::updateDemagProperties );
-    //msg << MSG::DEBUG << "Found DemagParameters for positive and negative field" << endmsg;
-  }
-  else
-  {
-    if ( hasCondition( "DemagParameters" ) )
-    {
-      m_demagConds.push_back( condition("DemagParameters") );
-      m_demagConds.push_back( condition("DemagParameters") );
-      updMgrSvc()->registerCondition( this, m_demagConds[0].path(),
-                                      &DeRichHPD::updateDemagProperties );
-    }
-    else
-    {
-      m_demagConds.push_back( SmartRef<Condition>() );
-      m_demagConds.push_back( SmartRef<Condition>() );
-    }
-  }
-
-  // Update HPD QE values whenever DeRichSystem updates
-  updMgrSvc()->registerCondition( this, deRichSys(), &DeRichHPD::quantumEffUpdateUMS );
-
-  sc = updMgrSvc()->update(this);
-  if ( sc.isFailure() )
-  {
-    fatal() << "UMS updates failed" << endmsg;
-  }
-
-  return sc;
-}
-
-//=========================================================================
-// Access magnetic field service on demand
-//=========================================================================
-ILHCbMagnetSvc * DeRichHPD::magSvc() const
-{
-  if ( !m_magFieldSvc )
-  {
-    // get the magnetic field service
-    ISvcLocator* svcLocator = Gaudi::svcLocator();
-    if ( !svcLocator )
-    {
-      throw GaudiException( "ISvcLocator* points to NULL!",
-                            "DeRichHPD" , StatusCode::FAILURE );
-    }
-    const StatusCode scMag =
-      svcLocator->service("MagneticFieldSvc",m_magFieldSvc);
-    if ( scMag.isFailure() )
-    {
-      throw GaudiException( "Could not locate MagneticFieldSvc",
-                            "DeRichHPD" , StatusCode::FAILURE );
-    }
-  }
-  return m_magFieldSvc;
-}
-
-StatusCode DeRichHPD::quantumEffUpdateUMS()
-{
-  initHpdQuantumEff();
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-// Initialise the HPD quantum eff function
-//=========================================================================
-void DeRichHPD::initHpdQuantumEff() const
-{
-  delete m_hpdQuantumEffFunc; // just in case
-  m_flags[6] = false;
-
-  // get quantum efficiency tabulated property from LHCBCOND if available
-  if ( deRichSys()->exists( "HpdQuantumEffCommonLoc" ) )  // use hardware ID to locate QE
-  {
-    // convert copy number to smartID
-    const LHCb::RichSmartID id = deRichSys()->richSmartID(Rich::DAQ::HPDCopyNumber(m_number));
-    const std::string qePath   = deRichSys()->param<std::string>("HpdQuantumEffCommonLoc");
-    const std::string hID( deRichSys()->hardwareID(id) );
-    SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), qePath+hID );
-    if ( !hpdQuantumEffTabProp )
-    {
-      std::ostringstream mess;
-      mess << "Could not load HPD's Quantum Efficiency tabproperty for " << myName()
-           << " from " << qePath+hID;
-      throw GaudiException( mess.str(),
-                            "DeRichHPD::initHpdQuantumEff", StatusCode::FAILURE );
-    }
-    m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
-    m_flags[6] = true;
-  }
-  else // use copy number to locate QE
-  {
-    if ( !hasCondition("QuantumEffTable") )
-    {
-      // use common QE for all HPDs
-      SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
-      m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
-    }
-    else
-    {
-      // get QE from the CondDB at the location stored in condition QuantumEffTable
-      SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
-      SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(),
-                                                            hpdQuantumEffCond.path() );
-      if ( !hpdQuantumEffTabProp )
-      {
-        std::ostringstream mess;
-        mess << "Could not load HPD's Quantum Efficiency tabproperty for " << myName();
-        throw GaudiException( mess.str(),
-                              "DeRichHPD::initHpdQuantumEff", StatusCode::FAILURE );
-      }
-      m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
-      m_flags[6] = true;
-    }
-  }
-
-  //msg << MSG::DEBUG << "QE from location: "
-  //    << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
-  //debug() << "QE from location: "
-  //        << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
-  //verbose() << m_hpdQuantumEffFunc->tabProperty() << endmsg;
-
-}
-
-//=========================================================================
-//  getParameters
-//=========================================================================
-StatusCode DeRichHPD::getParameters ( )
-{
-  SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
-  if ( !deRich1 )
-  {
-    error() << "Could not load DeRich1" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  m_pixelSize = deRich1->param<double>("RichHpdPixelXsize");
-  m_activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
-
-  if (deRich1->exists("RefractHPDQrtzWin") )
-    m_refactParams = deRich1->param<std::vector<double> >("RefractHPDQrtzWin");
-  else
-  {
-    warning() << "No parameters for refraction on HPD window! "
-              << "Corrections will not work properly!" << endmsg;
-  }
-
-  m_UseHpdMagDistortions = ( 0 != deRich1->param<int>("UseHpdMagDistortions") );
-  m_UseBFieldTestMap     = ( 0 != deRich1->param<int>("UseBFieldTestMap") );
-  m_LongitudinalBField   = deRich1->param<double>("LongitudinalBField");
-  //m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
-  //m_RandomBFieldMinimum = deRich1->param<double>("RandomBFieldMinimum");
-  //m_RandomBFieldMaximum = deRich1->param<double>("RandomBFieldMaximum");
-
-  // load old demagnification factors
-  SmartDataPtr<TabulatedProperty> HPDdeMag
-    (dataSvc(),"/dd/Materials/RichMaterialTabProperties/HpdDemagnification");
-  if ( !HPDdeMag )
-  {
-    fatal() << "Could not load HpdDemagnification" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  const TabulatedProperty::Table & DeMagTable = HPDdeMag->table();
-  m_deMagFactor[0] = DeMagTable[0].second;
-  m_deMagFactor[1] = DeMagTable[1].second;
-
-  return StatusCode::SUCCESS;
-}
-
-
-//=========================================================================
-// update the localy cached transforms
-//=========================================================================
-StatusCode DeRichHPD::updateTransformations ( )
-{
-  // Do not print message the first time
-  if ( m_flags[2] )
-  {
-    debug() << "Updating geometry transformations for HPD:" << m_number <<endmsg;
-  }
-  // print the message the following times.
-  m_flags[2] = true;
-
-  // find the subMaster volume, normally the first physical volume
-  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
-  if ( pvHPDSMaster->name().find("HPDSMaster") == std::string::npos )
-  {
-    fatal() << "Cannot find HPDSMaster volume; " << pvHPDSMaster->name() << endmsg;
-    return StatusCode::FAILURE;
-  }
+  // get kapton
   const IPVolume * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
 
   // Transformation from HPD window to global coord system
@@ -456,14 +430,7 @@ StatusCode DeRichHPD::updateTransformations ( )
 //=================================================================================
 StatusCode DeRichHPD::updateDemagProperties()
 {
-  // Do not print message the first time
-  if ( m_flags[1] )
-  {
-    debug() << "Updating Demag properties for HPD:" << m_number <<endmsg;
-  }
-
-  // print the message the following times.
-  m_flags[1] = true;
+  debug() << "Updating Demagnification properties for HPD:" << m_number << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
   for ( unsigned int field = 0; field<2; ++field )
@@ -594,8 +561,9 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
   std::ostringstream paraLoc;
   paraLoc << "hpd" << m_number << "_rec";
   const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc.str());
-  m_MDMS_version = ( m_demagConds[field]->exists("version") ?
-                     m_demagConds[field]->param<int>("version") : 0 );
+  m_MDMS_version[field] = ( m_demagConds[field]->exists("version") ?
+                            m_demagConds[field]->param<int>("version") : 0 );
+  debug() << " -> Field " << field << " MDMS version = " << m_MDMS_version[field] << endmsg;
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;
@@ -655,11 +623,11 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
   m_magMapR[field]   -> initInterpolator( tableR   );
   m_magMapPhi[field] -> initInterpolator( tablePhi );
 
-  if ( m_MDMS_version > 0 )
+  if ( m_MDMS_version[field] > 0 )
   {
     if ( coeff_rec.size() < 12 )
     {
-      error() << "MDMS_version = " << m_MDMS_version << "and coeff_rec.size() = "
+      error() << "MDMS_version = " << m_MDMS_version[field] << "and coeff_rec.size() = "
               << coeff_rec.size() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -684,17 +652,17 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
                                                bool photoCathodeSide ) const
 {
-  detectPoint =  ( m_MDMS_version == 0 ?
+  const unsigned int field = ( magSvc()->isDown() ? 0 : 1 );
+
+  detectPoint =  ( m_MDMS_version[field] == 0 ?
                    m_SiSensorToHPDMatrix * detectPoint :
                    detectPoint -= m_MDMSRotCentre );
-
   detectPoint.SetZ(0.0);
 
   const double rAnode = detectPoint.R();
-  const unsigned int field = ( magSvc()->isDown() ? 0 : 1 );
   double rCathode = magnification_RtoR(field)->value( rAnode );
 
-  if ( m_MDMS_version != 0 )
+  if ( m_MDMS_version[field] != 0 )
   {
     detectPoint = m_SiSensorToHPDMatrix * detectPoint;
     detectPoint.SetZ(0.0);
@@ -845,7 +813,7 @@ bool DeRichHPD::testKaptonShadowing( const Gaudi::XYZPoint&  pInPanel,
 }
 
 //=========================================================================
-// Converts a pair to a point in global coordinates.
+// Converts a pair to a point in global coordinates
 //=========================================================================
 StatusCode DeRichHPD::detectionPoint ( const double fracPixelCol,
                                        const double fracPixelRow,
@@ -869,4 +837,3 @@ StatusCode DeRichHPD::detectionPoint ( const double fracPixelCol,
   detectPoint = geometry()->toLocal(detectPoint);
   return sc;
 }
-

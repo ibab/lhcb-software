@@ -31,7 +31,7 @@ DeRichSingleSolidRadiator::DeRichSingleSolidRadiator(const std::string & name)
   : DeRichRadiator ( name ),
     m_solid        ( NULL ),
     m_material     ( NULL )
-{}
+{ }
 
 // Standard Destructor
 DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() { }
@@ -46,7 +46,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 {
   const StatusCode initSC =  DeRichRadiator::initialize();
   if ( initSC.isFailure() ) return initSC;
-
+  
   debug() << "Starting initialisation for DeRichSingleSolidRadiator "
           << name() << endmsg;
 
@@ -90,7 +90,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
     }
   }
 
-  if (!m_refIndexTabProp)
+  if ( !m_refIndexTabProp )
   {
     error() << "Radiator " << name() << " without refractive index"
             << endmsg;

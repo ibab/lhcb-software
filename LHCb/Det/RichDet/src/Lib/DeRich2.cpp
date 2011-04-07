@@ -32,7 +32,7 @@ DeRich2::DeRich2(const std::string & name)
 { setMyName("DeRich2"); }
 
 // Standard Destructor
-DeRich2::~DeRich2() {}
+DeRich2::~DeRich2() { }
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich2::classID()

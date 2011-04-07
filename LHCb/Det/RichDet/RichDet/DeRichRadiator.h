@@ -270,9 +270,6 @@ protected:
   /// pointer to the Tabulated property for the absoption
   const TabulatedProperty* m_absorptionTabProp;
 
-  /// First update flag
-  bool m_firstUpdate;
-
 };
 
 #endif    // RICHDET_DERICHRADIATOR_H

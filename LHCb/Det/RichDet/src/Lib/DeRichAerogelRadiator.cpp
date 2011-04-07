@@ -98,7 +98,6 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   }
 
   msg << MSG::DEBUG << "Initialisation Complete " << myName() << endmsg;
-  m_firstUpdate = false;
 
   // return
   return sc;
@@ -129,8 +128,7 @@ DetectorElement* DeRichAerogelRadiator::deRich1() const
 //=========================================================================
 StatusCode DeRichAerogelRadiator::updateProperties ( )
 {
-  if ( !m_firstUpdate )
-    debug() << "Refractive index update triggered" << endmsg;
+  debug() << "Refractive index update triggered" << endmsg;
 
   // load various parameters
   const double photonEnergyLowLimit     = deRich1()->param<double>("PhotonMinimumEnergyAerogel");

@@ -38,8 +38,7 @@ DeRichRadiator::DeRichRadiator(const std::string & name) :
   m_rayleigh            ( NULL                  ),
   m_rayleighTabProp     ( NULL                  ),
   m_absorption          ( NULL                  ),
-  m_absorptionTabProp   ( NULL                  ),
-  m_firstUpdate         ( true                  )
+  m_absorptionTabProp   ( NULL                  )
 { }
 
 //=========================================================================

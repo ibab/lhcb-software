@@ -52,8 +52,8 @@ DeRich::DeRich(const std::string & name)
 //=============================================================================
 DeRich::~DeRich()
 {
-  if ( m_gasWinRefIndex )       delete m_gasWinRefIndex;
-  if ( m_gasWinAbsLength )      delete m_gasWinAbsLength;
+  if ( m_gasWinRefIndex       ) delete m_gasWinRefIndex;
+  if ( m_gasWinAbsLength      ) delete m_gasWinAbsLength;
   if ( m_nominalHPDQuantumEff ) delete m_nominalHPDQuantumEff;
   if ( m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
   if ( m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;

@@ -260,8 +260,8 @@ private: // methods
   /// Check HPD panel acceptance
   LHCb::RichTraceMode::RayTraceResult checkPanelAcc( const Gaudi::XYZPoint & point ) const;
 
-  /// generate the transforms from the global frame to the local photodetector frame
-  StatusCode generateGlobalToPDPanelTransforms();
+  /// Update cached information on geometry changes
+  StatusCode geometryUpdate();
 
 private: // data
 

@@ -65,178 +65,22 @@ StatusCode DeRichHPDPanel::initialize()
   setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichHPDPanel_NO_NAME" );
 
   MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
-
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
-  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  const Gaudi::XYZPoint centreGlobal(geometry()->toGlobal( zero ));
-
-  SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
-  if ( !deRich1 ) {
-    msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  // Work out what Rich/panel I am
-  if ( name().find("Rich1") != std::string::npos )
-  {
-    m_rich = Rich::Rich1;
-    if ( centreGlobal.y() > 0.0 )
-    {
-      m_side = Rich::top;
-    }
-    else
-    {
-      m_side = Rich::bottom;
-    }
-  }
-  else if ( name().find("Rich2") != std::string::npos )
-  {
-    m_rich = Rich::Rich2;
-    if ( centreGlobal.x() > 0.0 )
-    {
-      m_side = Rich::left;
-    }
-    else
-    {
-      m_side = Rich::right;
-    }
-  }
-  if ( m_rich == Rich::InvalidDetector ||
-       m_side == Rich::InvalidSide )
-  {
-    msg << MSG::ERROR << "Error initializing HPD panel " << name() << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
-      << " Panel" << (int)side() << " -------" << endmsg;
-
-  m_pixelSize      = deRich1->param<double>("RichHpdPixelXsize");
-  m_subPixelSize   = m_pixelSize/8.0;
-  const double activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
-  m_activeRadiusSq = activeRadius*activeRadius;
-
-  m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
-  m_pixelRows    = deRich1->param<int>("RichHpdNumPixelRow");
-
-  msg << MSG::DEBUG << "RichHpdPixelsize: " << m_pixelSize << " ActiveRadius: "
-      << activeRadius << " pixelRows: " << m_pixelRows << " pixelColumns: "
-      << m_pixelColumns << endmsg;
-
-  m_HPDColumns = param<int>("HPDColumns");
-  m_HPDNumInCol = param<int>("HPDNumberInColumn");
-  m_HPDMax = nHPDColumns() * nHPDsPerCol();
-
-  m_HPDPitch = param<double>("HPDPitch");
-  m_HPDColPitch = std::sqrt( 0.75 * m_HPDPitch*m_HPDPitch );
-  msg << MSG::DEBUG << "HPDColumns:" << nHPDColumns() << " HPDNumberInColumns:"
-      << nHPDsPerCol() << endmsg;
-
-  if ( m_HPDColPitch  < activeRadius*2)
-  {
-    msg << MSG::WARNING << "The active area is bigger by:"
-        << (activeRadius*2 - fabs(m_HPDColPitch))/Gaudi::Units::mm
-        << " mm than the column pitch.  There could be loss of photons"
-        << endmsg;
-  }
-
-  // read the position of the 1st HPD in columns 0 and 1
-  std::vector<double> startColPos = param<std::vector<double> >("StartColumnPosition");
-  // work in u,v coordinates: u is across a column, v is along
-  double HPD00u(0.0), HPD00v(0.0),  HPD10v(0.0);
-  if ( m_rich == Rich::Rich1 ) 
-  {
-    HPD00u = startColPos[1];
-    HPD00v = startColPos[0];
-    HPD10v = startColPos[2];
-  }
-  else 
-  {
-    HPD00u = startColPos[0];
-    HPD00v = startColPos[1];
-    HPD10v = startColPos[3];
-  }
-
-  if ( HPD00v > 0.0 ) m_HPDPitch = -m_HPDPitch;
-  if ( HPD00u > 0.0 ) m_HPDColPitch = -m_HPDColPitch;
-  m_panelColumnSideEdge = HPD00u - 0.5*m_HPDColPitch;
-  m_localOffset = fabs( m_panelColumnSideEdge );
-
-  msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
-      << m_panelColumnSideEdge << endmsg;
-
-  m_panelStartColPosEven = HPD00v - 0.5*m_HPDPitch;
-  m_panelStartColPosOdd  = HPD10v - 0.5*m_HPDPitch;
-
-  // use the abs(largest) value as an ovearll panel edge
-  m_panelStartColPos = fabs( m_panelStartColPosEven );
-  if ( fabs( m_panelStartColPosOdd ) > m_panelStartColPos )
-    m_panelStartColPos = fabs( m_panelStartColPosOdd );
-
-  msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
-      << " panelStartColPosOdd:" << m_panelStartColPosOdd
-      << " m_panelStartColPos:" << m_panelStartColPos
-      << endmsg;
-
-  // get the first HPD and follow down to the silicon block
-  const IPVolume* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
-
-  // get subMaster volume
-  const IPVolume* pvHPDSMaster0 = pvHPDMaster0->lvolume()->pvolume(0);
-  if ( pvHPDSMaster0->name().find("HPDSMaster") == std::string::npos )
-  {
-    msg << MSG::FATAL << "Cannot find HPDSMaster volume : " 
-        << pvHPDSMaster0->name() << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  // find pvRichHPDSiDet volume
-  const IPVolume* pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDSiDet");
-  if ( pvSilicon0 == NULL ) // multiple HPD volumes
-  {
-    pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume(10);
-    if ( pvSilicon0 == NULL || 
-         pvSilicon0->name().find("pvRichHPDSiDet") == std::string::npos )
-    {
-      msg << MSG::FATAL << "Cannot find pvRichHPDSiDet volume ";
-      if ( pvSilicon0 != NULL ) msg << MSG::FATAL << pvSilicon0->name();
-      msg << MSG::FATAL << endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
-
-  const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
-  msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
-  const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
-
-  // assume same size for all silicon detectors
-  m_siliconHalfLengthX = siliconBox->xHalfLength();
-  m_siliconHalfLengthY = siliconBox->yHalfLength();
-
-  // get the pv and the solid for the HPD quartz window
-  const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume() ->
-    pvolume("pvRichHPDQuartzWindow");
-  const ISolid* windowSolid0 = pvWindow0->lvolume()->solid();
-  // get the inside radius of the window
-  ISolid::Ticks windowTicks;
-  unsigned int windowTicksSize = windowSolid0 ->
-    intersectionTicks ( Gaudi::XYZPoint  ( 0.0, 0.0, 0.0 ),
-                        Gaudi::XYZVector ( 0.0, 0.0, 1.0 ),
-                        windowTicks );
-  if (windowTicksSize != 2) {
-    msg << MSG::FATAL << "Problem getting window radius" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  const double winR = windowTicks[0];
+  // register UMS dependency on local geometry
+  updMgrSvc()->registerCondition( this, geometry(), &DeRichHPDPanel::geometryUpdate );
 
   // get the HPD and SiSensor detector elements
-  IDetectorElement::IDEContainer detelems = childIDetectorElements();
-  IDetectorElement::IDEContainer::iterator det_it;
-  for (det_it = detelems.begin(); det_it != detelems.end(); ++det_it)
+  m_DeHPDs.clear();
+  m_DeSiSensors.clear();
+  const IDetectorElement::IDEContainer & detelems = childIDetectorElements();
+  for ( IDetectorElement::IDEContainer::const_iterator det_it = detelems.begin(); 
+        det_it != detelems.end(); ++det_it )
   {
     if ( std::string::npos != (*det_it)->name().find("HPD:") ) 
     {
+
+      // get HPD
       SmartDataPtr<DeRichHPD> deHPD( dataSvc(), (*det_it)->name() );
       if ( !deHPD )
       {
@@ -244,51 +88,32 @@ StatusCode DeRichHPDPanel::initialize()
             << (*det_it)->name() << endmsg;
         return StatusCode::FAILURE;
       }
+
+      // save to list of HPDs
       m_DeHPDs.push_back( deHPD );
-      m_DeSiSensors.push_back( deHPD->childIDetectorElements().front() );
+      // register UMS dependency
+      updMgrSvc()->registerCondition( this, deHPD->geometry(), &DeRichHPDPanel::geometryUpdate );
+
+      // get SiSensor
+      if ( !deHPD->childIDetectorElements().empty() )
+      {
+        // save to list of sensors
+        m_DeSiSensors.push_back( deHPD->childIDetectorElements().front() );
+        // register UMS dependency
+        updMgrSvc()->registerCondition( this, 
+                                        deHPD->childIDetectorElements().front()->geometry(), 
+                                        &DeRichHPDPanel::geometryUpdate );
+      }
+      else
+      {
+        msg << MSG::FATAL << "Problem getting SiSensor for HPD " << (*det_it)->name()
+            << endmsg;
+        return StatusCode::FAILURE;
+      }
     }
   }
 
-  msg << MSG::DEBUG << "Centre of HPDPanel : " << geometry()->toGlobal(zero)
-      << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#0 "
-      << geometry()->toLocal(DeHPD(0)->windowCentreInIdeal()) << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol()-1 << " "
-      << geometry()->toLocal(DeHPD(nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol() << " "
-      << geometry()->toLocal(DeHPD(nHPDsPerCol())->windowCentreInIdeal()) << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << 2*nHPDsPerCol()-1 << " "
-      << geometry()->toLocal(DeHPD(2*nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
-
-  // find the top of 3 HPDs to create a detection plane.
-  const Gaudi::XYZPoint pointA( DeHPD(0)->windowCentreInIdeal() );
-  // for second point go to HPD at the end of the column.
-  const Gaudi::XYZPoint pointB( DeHPD(nHPDsPerCol()-1)->windowCentreInIdeal() );
-  // now point C at the other end.
-  const Gaudi::XYZPoint pointC( DeHPD(nHPDs()-nHPDsPerCol()/2)->windowCentreInIdeal() );
-
-  m_detectionPlane = Gaudi::Plane3D(pointA,pointB,pointC);
-  msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
-
-  m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;
-  msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
-  m_localPlaneNormal = m_localPlane.Normal();
-
-  // store the z coordinate of the detection plane
-  m_detPlaneZ = geometry()->toLocal(pointA).z();
-  msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
-
-  // localPlane2 is used when trying to locate the HPD row/column from
-  // a point in the panel.
-  m_localPlaneZdiff = winR - std::sqrt( winR*winR - m_activeRadiusSq );
-  m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
-  msg << MSG::VERBOSE << "Detection plane local2 " << m_localPlane2 << endmsg;
-
-  msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
-
-  // update localy cashed geometry info
-  updMgrSvc()->registerCondition( this, geometry(),
-                                  &DeRichHPDPanel::generateGlobalToPDPanelTransforms );
+  // trigger first UMS update
   const StatusCode update = updMgrSvc()->update(this);
  
   return update;
@@ -646,19 +471,218 @@ const DeRichHPD* DeRichHPDPanel::DeHPD( const unsigned int HPDNumber ) const
 //=========================================================================
 //  generate the transfroms for global <-> local frames
 //=========================================================================
-StatusCode DeRichHPDPanel::generateGlobalToPDPanelTransforms ( ) 
+StatusCode DeRichHPDPanel::geometryUpdate ( ) 
 {
+  MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
 
-  // find the x and y offset of the local frame
-  Gaudi::XYZPoint zeroInGlobal( geometry()->toGlobal( Gaudi::XYZPoint( 0.0, 0.0, 0.0 ) ) );
+  SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
+  if ( !deRich1 ) 
+  {
+    msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
+    return StatusCode::FAILURE;
+  }
 
+  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
+  const Gaudi::XYZPoint centreGlobal(geometry()->toGlobal(zero));
+
+  // Work out what Rich/panel I am
+  if ( name().find("Rich1") != std::string::npos )
+  {
+    m_rich = Rich::Rich1;
+    if ( centreGlobal.y() > 0.0 )
+    {
+      m_side = Rich::top;
+    }
+    else
+    {
+      m_side = Rich::bottom;
+    }
+  }
+  else if ( name().find("Rich2") != std::string::npos )
+  {
+    m_rich = Rich::Rich2;
+    if ( centreGlobal.x() > 0.0 )
+    {
+      m_side = Rich::left;
+    }
+    else
+    {
+      m_side = Rich::right;
+    }
+  }
+  if ( m_rich == Rich::InvalidDetector ||
+       m_side == Rich::InvalidSide )
+  {
+    msg << MSG::ERROR << "Error initializing HPD panel " << name() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
+      << " Panel" << (int)side() << " -------" << endmsg;
+
+  m_pixelSize      = deRich1->param<double>("RichHpdPixelXsize");
+  m_subPixelSize   = m_pixelSize/8.0;
+  const double activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
+  m_activeRadiusSq = activeRadius*activeRadius;
+
+  m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
+  m_pixelRows    = deRich1->param<int>("RichHpdNumPixelRow");
+
+  msg << MSG::DEBUG << "RichHpdPixelsize: " << m_pixelSize << " ActiveRadius: "
+      << activeRadius << " pixelRows: " << m_pixelRows << " pixelColumns: "
+      << m_pixelColumns << endmsg;
+
+  m_HPDColumns  = param<int>("HPDColumns");
+  m_HPDNumInCol = param<int>("HPDNumberInColumn");
+  m_HPDMax      = nHPDColumns() * nHPDsPerCol();
+
+  m_HPDPitch = param<double>("HPDPitch");
+  m_HPDColPitch = std::sqrt( 0.75 * m_HPDPitch*m_HPDPitch );
+  msg << MSG::DEBUG << "HPDColumns:" << nHPDColumns() << " HPDNumberInColumns:"
+      << nHPDsPerCol() << endmsg;
+
+  if ( m_HPDColPitch  < activeRadius*2)
+  {
+    msg << MSG::WARNING << "The active area is bigger by:"
+        << (activeRadius*2 - fabs(m_HPDColPitch))/Gaudi::Units::mm
+        << " mm than the column pitch.  There could be loss of photons"
+        << endmsg;
+  }
+
+  // read the position of the 1st HPD in columns 0 and 1
+  const std::vector<double>& startColPos = param<std::vector<double> >("StartColumnPosition");
+  // work in u,v coordinates: u is across a column, v is along
+  double HPD00u(0.0), HPD00v(0.0),  HPD10v(0.0);
+  if ( m_rich == Rich::Rich1 ) 
+  {
+    HPD00u = startColPos[1];
+    HPD00v = startColPos[0];
+    HPD10v = startColPos[2];
+  }
+  else 
+  {
+    HPD00u = startColPos[0];
+    HPD00v = startColPos[1];
+    HPD10v = startColPos[3];
+  }
+
+  if ( HPD00v > 0.0 ) m_HPDPitch = -m_HPDPitch;
+  if ( HPD00u > 0.0 ) m_HPDColPitch = -m_HPDColPitch;
+  m_panelColumnSideEdge = HPD00u - 0.5*m_HPDColPitch;
+  m_localOffset = fabs( m_panelColumnSideEdge );
+
+  msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
+      << m_panelColumnSideEdge << endmsg;
+
+  m_panelStartColPosEven = HPD00v - 0.5*m_HPDPitch;
+  m_panelStartColPosOdd  = HPD10v - 0.5*m_HPDPitch;
+
+  // use the abs(largest) value as an ovearll panel edge
+  m_panelStartColPos = fabs( m_panelStartColPosEven );
+  if ( fabs( m_panelStartColPosOdd ) > m_panelStartColPos )
+    m_panelStartColPos = fabs( m_panelStartColPosOdd );
+
+  msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
+      << " panelStartColPosOdd:" << m_panelStartColPosOdd
+      << " m_panelStartColPos:" << m_panelStartColPos
+      << endmsg;
+
+  // get the first HPD and follow down to the silicon block
+  const IPVolume* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
+
+  // get subMaster volume
+  const IPVolume* pvHPDSMaster0 = pvHPDMaster0->lvolume()->pvolume(0);
+  if ( pvHPDSMaster0->name().find("HPDSMaster") == std::string::npos )
+  {
+    msg << MSG::FATAL << "Cannot find HPDSMaster volume : " 
+        << pvHPDSMaster0->name() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // find pvRichHPDSiDet volume
+  const IPVolume* pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDSiDet");
+  if ( pvSilicon0 == NULL ) // multiple HPD volumes
+  {
+    pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume(10);
+    if ( pvSilicon0 == NULL || 
+         pvSilicon0->name().find("pvRichHPDSiDet") == std::string::npos )
+    {
+      msg << MSG::FATAL << "Cannot find pvRichHPDSiDet volume ";
+      if ( pvSilicon0 != NULL ) msg << MSG::FATAL << pvSilicon0->name();
+      msg << MSG::FATAL << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
+  msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
+  const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
+
+  // assume same size for all silicon detectors
+  m_siliconHalfLengthX = siliconBox->xHalfLength();
+  m_siliconHalfLengthY = siliconBox->yHalfLength();
+
+  // get the pv and the solid for the HPD quartz window
+  const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume() ->
+    pvolume("pvRichHPDQuartzWindow");
+  const ISolid* windowSolid0 = pvWindow0->lvolume()->solid();
+  // get the inside radius of the window
+  ISolid::Ticks windowTicks;
+  unsigned int windowTicksSize = windowSolid0 ->
+    intersectionTicks ( Gaudi::XYZPoint  ( 0.0, 0.0, 0.0 ),
+                        Gaudi::XYZVector ( 0.0, 0.0, 1.0 ),
+                        windowTicks );
+  if (windowTicksSize != 2) {
+    msg << MSG::FATAL << "Problem getting window radius" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  const double winR = windowTicks[0];
+
+  msg << MSG::DEBUG << "Centre of HPDPanel : " << centreGlobal
+      << endmsg;
+  msg << MSG::VERBOSE << "Ideal local centre of HPD#0 "
+      << geometry()->toLocal(DeHPD(0)->windowCentreInIdeal()) << endmsg;
+  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol()-1 << " "
+      << geometry()->toLocal(DeHPD(nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
+  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol() << " "
+      << geometry()->toLocal(DeHPD(nHPDsPerCol())->windowCentreInIdeal()) << endmsg;
+  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << 2*nHPDsPerCol()-1 << " "
+      << geometry()->toLocal(DeHPD(2*nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
+
+  // find the top of 3 HPDs to create a detection plane.
+  const Gaudi::XYZPoint pointA( DeHPD(0)->windowCentreInIdeal() );
+  // for second point go to HPD at the end of the column.
+  const Gaudi::XYZPoint pointB( DeHPD(nHPDsPerCol()-1)->windowCentreInIdeal() );
+  // now point C at the other end.
+  const Gaudi::XYZPoint pointC( DeHPD(nHPDs()-nHPDsPerCol()/2)->windowCentreInIdeal() );
+
+  m_detectionPlane = Gaudi::Plane3D(pointA,pointB,pointC);
+  msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
+
+  m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;
+  msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
+  m_localPlaneNormal = m_localPlane.Normal();
+
+  // store the z coordinate of the detection plane
+  m_detPlaneZ = geometry()->toLocal(pointA).z();
+  msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
+
+  // localPlane2 is used when trying to locate the HPD row/column from
+  // a point in the panel.
+  m_localPlaneZdiff = winR - std::sqrt( winR*winR - m_activeRadiusSq );
+  m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
+  msg << MSG::VERBOSE << "Detection plane local2 " << m_localPlane2 << endmsg;
+
+  msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
+
+  // update transforms
   // create a transform with an offset to accommodate both detector panels in one histogram
   // and correct the x=0 (Rich1) and y=0 (Rich2) to match (more or less) the global coordinates
   ROOT::Math::Translation3D localTranslation;
   if ( rich() == Rich::Rich1 )
   {
     const int sign = ( side() == Rich::top ? 1 : -1 );
-    localTranslation =  ROOT::Math::Translation3D( zeroInGlobal.x(), 
+    localTranslation =  ROOT::Math::Translation3D( centreGlobal.x(), 
                                                    sign*localOffset(), 
                                                    -detectPlaneZcoord() );
   }
@@ -666,11 +690,10 @@ StatusCode DeRichHPDPanel::generateGlobalToPDPanelTransforms ( )
   {
     const int sign = ( side() == Rich::left ? 1 : -1 );
     localTranslation = ROOT::Math::Translation3D( sign*localOffset(), 
-                                                  zeroInGlobal.y(), 
+                                                  centreGlobal.y(), 
                                                   -detectPlaneZcoord() );
   }
-
-  m_globalToPDPanelTransform = localTranslation*geometry()->toLocalMatrix();
+  m_globalToPDPanelTransform = localTranslation * geometry()->toLocalMatrix();
   m_PDPanelToGlobalTransform = m_globalToPDPanelTransform.Inverse();
 
   return StatusCode::SUCCESS;

@@ -4,8 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
-! 2011-04-06 - Chris Jones
- - Some more changes to try make sure things are (re)initialised when needed
+! 2011-04-07 - Chris Jones
+ - Improve the way various cached information is handled w.r.t. condition
+   updates.
 
 ! 2011-04-05 - Chris Jones
  - Move all of the initialisation of variables in DeRichSphMirror::initialize()

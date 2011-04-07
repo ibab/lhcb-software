@@ -33,7 +33,7 @@ DeRich1::DeRich1(const std::string & name)
 }
 
 // Standard Destructor
-DeRich1::~DeRich1() {}
+DeRich1::~DeRich1() { }
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich1::classID()
@@ -66,8 +66,8 @@ StatusCode DeRich1::initialize()
   std::vector<double> nominalFMirrorPlane;
   nominalFMirrorPlane = param<std::vector<double> >("NominalSecMirrorPlane");
 
-  m_nominalPlaneTop = Gaudi::Plane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
-                                     nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+  m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
+                                        nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
                                         nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
 

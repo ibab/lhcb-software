@@ -24,6 +24,9 @@ using namespace Rich;
 //============================================================================
 TabulatedProperty1D::~TabulatedProperty1D( )
 {
+  // Unregister any UMS dependencies first
+  if ( m_registedUMS ) updMgrSvc()->unregister(this);
+  // clean up interpolators
   clearInterpolator();
   // Following lines cause a crash. ??
   //if (NULL != m_svcLocator) m_svcLocator->release();
@@ -37,41 +40,48 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
                                           const bool registerUMS,
                                           const gsl_interp_type * interType )
   : TabulatedFunction1D ( interType ),
-    m_tabProp     ( tab  ),
-    m_svcLocator  ( NULL ),
-    m_msgSvc      ( NULL ),
-    m_updMgrSvc   ( NULL )
+    m_tabProp     ( tab   ),
+    m_svcLocator  ( NULL  ),
+    m_msgSvc      ( NULL  ),
+    m_updMgrSvc   ( NULL  ),
+    m_registedUMS ( false )
 {
+  // initialise the underlying GSL interpolator
+  m_OK = initInterpolator( tab, registerUMS, interType );
+}
 
-  if ( registerUMS )
+void TabulatedProperty1D::configureUMS( const TabulatedProperty * tab )
+{
+  MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
+  msg << MSG::INFO << "Registering UMS dependency for "
+      << tabProperty()->name() << endmsg;
+
+  try
   {
-    MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
-    msg << MSG::DEBUG << "Registering UMS dependency for "
-        << tabProperty()->name() << endmsg;
+    // Unregister any UMS dependencies first
+    updMgrSvc()->unregister(this);
+    m_registedUMS = false;
+    
+    // try registering updates
+    TabulatedProperty * nonconsttab = const_cast<TabulatedProperty*>(tab);
+    updMgrSvc()->registerCondition( this,
+                                    nonconsttab,
+                                    &TabulatedProperty1D::updateTabProp );
 
-    // register update method
-    try
-    {
-      TabulatedProperty * nonconsttab = const_cast<TabulatedProperty*>(tab);
-      updMgrSvc()->registerCondition( this,
-                                      nonconsttab,
-                                      &TabulatedProperty1D::updateTabProp );
-    }
-    catch ( const GaudiException & excp )
-    {
-      msg << MSG::WARNING
-          << tabProperty()->name() << " '" << excp.message() << "'" << endmsg;
-    }
+    // flag we correctly registered
+    m_registedUMS = true;
 
   }
-
-  // initialise the underlying GSL interpolator
-  m_OK = initInterpolator( tab, interType );
-
+  catch ( const GaudiException & excp )
+  {
+    msg << MSG::WARNING
+        << tabProperty()->name() << " '" << excp.message() << "'" << endmsg;
+  }
 }
 
 bool
 TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
+                                       const bool registerUMS,
                                        const gsl_interp_type * interType )
 {
   // Check the data is valid
@@ -80,6 +90,9 @@ TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
 
   // set interpolator type
   if ( NULL != interType ) m_interType = interType;
+
+  // UMS
+  if ( registerUMS ) configureUMS( tab );
 
   // copy data to internal container
   m_data.clear();

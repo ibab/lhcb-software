@@ -99,8 +99,11 @@ private:
 
   /// Add radiator volumes
   StatusCode addVolumes(const ILVolume* lv,
-                        const std::string volName,
+                        const std::string& volName,
                         const Gaudi::Transform3D& toUpperLevel);
+
+  /// UMS update on geometry changes
+  StatusCode geometryUpdate();
 
 private:
 
@@ -118,6 +121,9 @@ private:
 
   /// The DeRichRadiators that make up this radiator
   DeRichRadiator::Vector m_radiators;
+
+  /// First update flag
+  bool m_firstUpdate;
 
 };
 

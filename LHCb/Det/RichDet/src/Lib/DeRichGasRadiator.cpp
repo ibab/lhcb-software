@@ -41,7 +41,7 @@ DeRichGasRadiator::DeRichGasRadiator(const std::string & name) :
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichGasRadiator::~DeRichGasRadiator() {}
+DeRichGasRadiator::~DeRichGasRadiator() { }
 
 //=========================================================================
 // Retrieve Pointer to class defininition structure
@@ -135,8 +135,7 @@ StatusCode DeRichGasRadiator::initialize ( )
   }
 
   msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
-  m_firstUpdate = false;
-
+ 
   // return
   return StatusCode::SUCCESS;
 }
@@ -156,16 +155,16 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   const unsigned int photonEnergyNumBins  = param<int>("PhotonEnergyNumBins");
   const unsigned int ckvPhotonEnergyNumBins = param<int>("CkvPhotonEnergyNumBins");
 
-  if ( !m_firstUpdate && m_gasParametersCond )
+  if ( m_gasParametersCond )
   {
     const double curPressure = m_gasParametersCond->param<double>("Pressure") * 0.001*Gaudi::Units::bar; //convert to bar
     const double curTemp     = m_gasParametersCond->param<double>("Temperature");
     const double scaleFactor = ( !m_scaleFactorCond ? 1.0 :
                                  m_scaleFactorCond->param<double>("CurrentScaleFactor") );
-    info() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
-           << " bar : Temperature = " << curTemp << " K"
-           << " : (n-1) Scale = " << scaleFactor
-           << endmsg;
+    debug() << "Refractive index update triggered : Pressure = " << curPressure/Gaudi::Units::bar
+            << " bar : Temperature = " << curTemp << " K"
+            << " : (n-1) Scale = " << scaleFactor
+            << endmsg;
   }
 
   if ( (photonEnergyHighLimit < ckvPhotonEnergyHighLimit ) ||

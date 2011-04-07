@@ -43,7 +43,10 @@ DeRichSphMirror::DeRichSphMirror(const std::string & name) :
 { }
 
 // Standard Destructor
-DeRichSphMirror::~DeRichSphMirror() { cleanUp(); }
+DeRichSphMirror::~DeRichSphMirror() 
+{
+  cleanUp(); 
+}
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichSphMirror::classID()
@@ -354,12 +357,6 @@ StatusCode DeRichSphMirror::updateGeometry()
     }
     surf = s;
   }
-
-  // If first update, set dependency on surf
-  // CRJ - Antonis, does this make sense ?
-  //if ( surf && m_firstUpdate && !surfLocation.empty() )
-  //  updMgrSvc()->registerCondition( this, surfLocation, 
-  //                                  &DeRichSphMirror::updateGeometry );
   
   bool foundRefl( false );
   const Surface::Tables & surfTabProp = surf->tabulatedProperties();
