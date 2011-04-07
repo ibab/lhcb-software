@@ -143,7 +143,10 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(fmcLogger(data,h->m_facility));
-  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",h->m_facility));
+  if ( h->name() == "LHCb" ) {
+    f->push_back(fmcLogger("HLT01",h->m_facility));
+    f->push_back(fmcLogger("CALD07",h->m_facility));
+  }
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -189,6 +192,7 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
     n->push_back(txt);
   }
   if ( nam == "LHCb" || nam == "FEST" ) {
+    n->push_back("HLT01");
     n->push_back("MONA09");
     n->push_back("CALD0701");
     for(size_t j=1; j<=20; ++j) {

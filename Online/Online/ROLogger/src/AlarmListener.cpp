@@ -44,7 +44,10 @@ AlarmListener::AlarmListener(Interactor* parent,const string& n, const string& f
   f->push_back(fmcLogger("MONA08",m_facility));
   f->push_back(fmcLogger("MONA09",m_facility));
   f->push_back(fmcLogger("MONA07",m_facility));
-  if ( name() == "LHCb" ) f->push_back(fmcLogger("CALD07",m_facility));
+  if ( name() == "LHCb" ) {
+    f->push_back(fmcLogger("HLT01",m_facility));
+    f->push_back(fmcLogger("CALD07",m_facility));
+  }
   IocSensor::instance().send(m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -63,6 +66,9 @@ void AlarmListener::subFarmHandler(void* tag, void* address, int* size) {
   f->push_back(fmcLogger("MONA08",h->m_facility));
   f->push_back(fmcLogger("MONA09",h->m_facility));
   f->push_back(fmcLogger("MONA07",h->m_facility));
-  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",h->m_facility));
+  if ( h->name() == "LHCb" ) {
+    f->push_back(fmcLogger("HLT01",h->m_facility));
+    f->push_back(fmcLogger("CALD07",h->m_facility));
+  }
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
