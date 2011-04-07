@@ -80,6 +80,7 @@ protected:
 private:
   int                      m_delay;    /// Time delay in milliseconds between 2 updates
   int                      m_print;    /// Print level
+  int                      m_test;     /// Non zero -> testing, no publication
   std::vector<std::string> m_names;    /// List of service names
   std::vector<Descriptor*> m_datas;    /// Variable size data buffer
   std::vector<int>         m_svc;      /// List of Dim services

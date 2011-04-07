@@ -4,6 +4,15 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+!============================== v2r6 2011-04-07 ==============================
+! 2011-04-07 - Olivier Callot
+ - Add task counter to trend plot
+ - If the timeof the erading hasn't changed, don't update the rates.
+
+! 2011-04-03 - Olivier Callot
+ - Add option -test=1 to run without producing neither Trending nor DIM services
+
+!============================== v2r5 2011-03-25 ==============================
 ! 2011-03-24 - Olivier Callot
  - Produces a trend of the MEP, event in and event out rates.
 
