@@ -107,7 +107,7 @@ namespace Rich
     IMessageSvc* msgSvc();
 
     /// Set up the UMS updates for the TabulatedProperty
-    void configureUMS( const TabulatedProperty * tab );
+    bool configureUMS( const TabulatedProperty * tab );
 
   private: // data
 

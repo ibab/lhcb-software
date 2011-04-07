@@ -50,12 +50,8 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
   m_OK = initInterpolator( tab, registerUMS, interType );
 }
 
-void TabulatedProperty1D::configureUMS( const TabulatedProperty * tab )
+bool TabulatedProperty1D::configureUMS( const TabulatedProperty * tab )
 {
-  MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
-  msg << MSG::INFO << "Registering UMS dependency for "
-      << tabProperty()->name() << endmsg;
-
   try
   {
     // Unregister any UMS dependencies first
@@ -74,9 +70,12 @@ void TabulatedProperty1D::configureUMS( const TabulatedProperty * tab )
   }
   catch ( const GaudiException & excp )
   {
+    MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
     msg << MSG::WARNING
         << tabProperty()->name() << " '" << excp.message() << "'" << endmsg;
   }
+
+  return m_registedUMS;
 }
 
 bool
@@ -92,7 +91,8 @@ TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
   if ( NULL != interType ) m_interType = interType;
 
   // UMS
-  if ( registerUMS ) configureUMS( tab );
+  m_OK = ( registerUMS ? configureUMS(tab) : true );
+  if ( !m_OK ) return m_OK;
 
   // copy data to internal container
   m_data.clear();
@@ -103,7 +103,10 @@ TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
   }
 
   // init the underlying GSL interpolator
-  return m_OK = ( this->TabulatedFunction1D::initInterpolator(interType) );
+  m_OK = this->TabulatedFunction1D::initInterpolator(interType);
+
+  // return
+  return m_OK;
 }
 
 StatusCode TabulatedProperty1D::updateTabProp()
