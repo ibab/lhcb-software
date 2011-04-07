@@ -6,7 +6,28 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v4r52>2010-03-01 OnlineSys v4r52</A></H1>
+<H1><A NAME=v4r52>2010-03-01 OnlineSys v4r54</A></H1>
+<PRE>
+   Based in Gaudi v22r1, 
+   Updated packages are:
+     DAQEvent          v9r5     Event
+     DIM                 v19r18   Online
+     FarmMonitor         v2r6     Online
+     Gaucho              v7r10    Online
+     GaudiOnline         v2r52    Online
+     OMAlib              v3r5     Online
+     OnlineHistDB        v7r5     Online
+     OnlineTasks         v1r38    Online
+     ROMon               v1r29    Online
+     ROLogger            v0r22    Online
+     Trending            v1r5     Online
+
+Note: There is a new file Online/GaudiOnline/python/MonitoringTask.py,
+which contains the basic set of functions to be called in order to
+build monitoring tasks using python job options.
+</PRE>
+
+<H1><A NAME=v4r52>2010-03-01 OnlineSys v4r53</A></H1>
 <PRE>
    Based in Gaudi v22r1, 
    Updated packages are:
@@ -20,7 +41,7 @@
      Writer              v1r35    Online
 </PRE>
 
-<H1><A NAME=v4r53>2010-03-28 OnlineSys v4r53</A></H1>
+<H1><A NAME=v4r53>2010-03-28 OnlineSys v4r52</A></H1>
 <PRE>
    Based in Gaudi v22r1, 
    Updated packages are:

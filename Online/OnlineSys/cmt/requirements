@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r53
+version v4r54
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 use MDF               v3r29    DAQ
 use MDF_ROOT          v1r6     DAQ
-use DAQEvent          v9r4     Event
+use DAQEvent          v9r5     Event
 use GaudiObjDesc      v11r12
 #=======================================================
 # LHCb Online packages
@@ -20,12 +20,12 @@ use GaudiObjDesc      v11r12
 use Camera              v1r20    Online
 use Checkpointing       v0r6     Online
 use CondDBServer        v1r4     Online
-use DIM                 v19r17   Online
+use DIM                 v19r18   Online
 ####use ExampleGaucho       v3r4     Online
-use FarmMonitor         v2r5     Online
-use Gaucho              v7r8     Online
+use FarmMonitor         v2r6     Online
+use Gaucho              v7r10    Online
 use GaudiCheckpointing  v0r5     Online
-use GaudiOnline         v2r51    Online
+use GaudiOnline         v2r52    Online
 use GaudiRootCnvTests   v1r1     Online
 use GaudiSerialize      v0r9     Online
 use GaudiUPI            v1r13    Online
@@ -34,23 +34,23 @@ use GaudiUPI            v1r13    Online
 use HistDBPython        v1r6     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
-use OMAlib              v3r4     Online
+use OMAlib              v3r5     Online
 use OnlineBase          v1r9     Online
 #Obsolete: use OnlineDummyReader v1r4     Online
-use OnlineHistDB        v7r4     Online
+use OnlineHistDB        v7r5     Online
 use OnlineKernel        v2r6     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r37    Online
+use OnlineTasks         v1r38    Online
 ####use Presenter           v2r3     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r10    Online
 use RootCnv             v1r3     Online
-use ROMon               v1r28    Online
-use ROLogger            v0r21    Online
+use ROMon               v1r29    Online
+use ROLogger            v0r22    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
-use Trending            v1r4     Online
+use Trending            v1r5     Online
 use UPI                 v1r20    Online
 use UPIR                v1r3     Online
 #Obsolete: use Viewer            v1r5     Online
