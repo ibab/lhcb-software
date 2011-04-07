@@ -2,16 +2,18 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
-#include "GaudiKernel/Service.h"
+//#include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartIF.h"
+//#include "GaudiKernel/SmartIF.h"
 #include "Gaucho/CntrMgr.h"
 #include "Gaucho/MonHist.h"
 #include "MonitorSvc.h"
 #include "Gaucho/MonSys.h"
 #include "Gaucho/MonSubSys.h"
 #include "Gaucho/MonCounter.h"
+#include "Gaucho/Utilities.h"
+
 #include "RTL/rtl.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
@@ -20,28 +22,13 @@
 #include "TH1D.h"
 #include "TProfile.h"
 #include "TH2D.h"
-#include "Gaucho/Utilities.h"
 
-namespace AIDA { class IBaseHistogram; }
+using namespace std;
+
+//namespace AIDA { class IBaseHistogram; }
 
 // Factory for instantiation of service objects
 DECLARE_SERVICE_FACTORY(MonitorSvc)
-
-static std::string makeoname(const IInterface *owner)
-{
-  const IAlgorithm* ia = dynamic_cast<const IAlgorithm*>(owner);
-  if ( ia ) return ia->name();
-
-	const IService* is = dynamic_cast<const IService*>(owner);
-	if ( is ) return is->name();
-
-	const IAlgTool* itool = dynamic_cast<const IAlgTool*>(owner);
-	if ( itool ) return itool->name();
-  return "UnknownComponent";
-}
-// UNIQUE Interface identifiers defined elsewhere
-//! need the next declaration ?  compiler seems to find the static var
-//extern const InterfaceID IID_IPublish;
 
 // Constructor
 //Query interfaces of Interface
@@ -64,14 +51,14 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   return StatusCode::SUCCESS;
 }
 
-MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl)
+MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
 : Service(name, sl)
 {
   m_started = false;
   m_MonSys =   &MonSys::m_instance();
   m_HistSubSys = 0;
   m_savetimer = 0;
-  this->m_CntrSubSys = 0;
+  m_CntrSubSys = 0;
   m_CntrMgr = 0;
   declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
   declareProperty("disableMonRate", m_disableMonRate = 0);
@@ -106,43 +93,25 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl)
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
   m_InfoMap.clear();
-//   declareProperty("teste", m_teste);
-
-//  MsgStream msg(msgSvc(),"MonitorSvc");
 }
 
 
 MonitorSvc::~MonitorSvc()
 {
-  if (m_HistSubSys != 0)
-  {
-    delete m_HistSubSys;
-    m_HistSubSys = 0;
-  }
-  if (m_CntrSubSys!=0)
-  {
-    delete m_CntrSubSys;
-    m_CntrSubSys = 0;
-  }
-  if (m_CntrMgr !=0)
-  {
-    delete m_CntrMgr;
-    this->m_CntrMgr = 0;
-  }
+  deletePtr(m_HistSubSys);
+  deletePtr(m_CntrSubSys);
+  deletePtr(m_CntrMgr);
 }
+
 StatusCode MonitorSvc::initialize()
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
 
- // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
-//  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endmsg;
-
-
-  if ( 0 == m_disableMonRate) {
+  if ( 0 != m_disableMonRate) 
+  {
+    msg << MSG::DEBUG << "MonRate process is disabled." << endmsg;
   }
-  else  msg << MSG::DEBUG << "MonRate process is disabled." << endmsg;
-
   sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
   if( !sc.isSuccess() ) {
     msg << MSG::FATAL << "Service [IncidentSvc] not found" << endmsg;
@@ -150,8 +119,7 @@ StatusCode MonitorSvc::initialize()
   }
   m_incidentSvc->addListener(this,"APP_RUNNING");
   m_incidentSvc->addListener(this,"APP_STOPPED");
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
@@ -163,13 +131,12 @@ void MonitorSvc::handle(const Incident& inc) {
   }
 }
 
-void MonitorSvc::undeclareInfo( const std::string& name, const IInterface*  owner)
+void MonitorSvc::undeclareInfo( const string& name, const IInterface*  owner)
 {
-//  printf("Called undeclareInfo with name %s\n",name.c_str());
-  std::map<std::string,void*>::iterator it;
-  std::string oname = makeoname(owner);
-  std::string newName;
-  if (name.find("COUNTER_TO_RATE") != std::string::npos)
+  map<string,void*>::iterator it;
+  string oname = infoOwnerName(owner);
+  string newName;
+  if (name.find("COUNTER_TO_RATE") != string::npos)
   {
     newName = extract("COUNTER_TO_RATE", name);
     newName = oname+"/"+newName;
@@ -198,10 +165,9 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface*  owne
 */
 void MonitorSvc::undeclareAll( const IInterface*  owner)
 {
-  std::string oname = owner ? makeoname(owner) : "-ALL-";
-//  printf("Called undeclareAll with owner %s\n",oname.c_str());
-  std::vector<std::string> strings;
-  std::string nam;
+  string oname = owner ? infoOwnerName(owner) : "-ALL-";
+  vector<string> strings;
+  string nam;
   strings.clear();
   if (m_CntrMgr != 0)
   {
@@ -209,7 +175,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
         m_CntrMgr->m_counterMapIt++)
     {
       nam = m_CntrMgr->m_counterMapIt->first;
-      if (owner==0 || nam.find(oname.c_str()) != std::string::npos)
+      if (owner==0 || nam.find(oname.c_str()) != string::npos)
       {
         strings.push_back(nam);
       }
@@ -219,17 +185,15 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
       m_CntrMgr->removeCounter(strings[i]);
     }
   }
-  std::vector<MonObj*> v;
-  v.clear();
-  MonObj *o;
+  vector<MonObj*> v;
   if (m_HistSubSys != 0)
   {
     ObjMap::iterator it;
     for (it=m_HistSubSys->m_Objmap.begin();it!=m_HistSubSys->m_Objmap.end();it++)
     {
-      o = it->second;
-      std::string s = o->name();
-      if (0==owner || s.find(oname.c_str()) != std::string::npos)
+      MonObj *o = it->second;
+      string s = o->name();
+      if (0==owner || s.find(oname.c_str()) != string::npos)
       {
         v.push_back(o);;
       }
@@ -246,9 +210,9 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
     ObjMap::iterator it;
     for (it=m_CntrSubSys->m_Objmap.begin();it!=m_CntrSubSys->m_Objmap.end();it++)
     {
-      o = it->second;
-      std::string s = o->name();
-      if (0==owner || s.find(oname.c_str()) != std::string::npos)
+      MonObj *o = it->second;
+      string s = o->name();
+      if (0==owner || s.find(oname.c_str()) != string::npos)
       {
         v.push_back(o);;
       }
@@ -277,11 +241,11 @@ StatusCode MonitorSvc::i_start()
   if (m_CntrMgr != 0)
   {
 //    printf("In STARTS Method... Counter Manager present... Closing it...\n");
-    this->m_CntrMgr->close();
+    m_CntrMgr->close();
   }
   if (m_started)
   {
-    this->m_MonSys->start();
+    m_MonSys->start();
     DimServer::autoStartOn();
     DimServer::start();
     return StatusCode::SUCCESS;
@@ -295,38 +259,24 @@ StatusCode MonitorSvc::i_start()
   {
     m_ProcName = m_utgid;
   }
-  if (this->m_expandCounterServices)
+  if (m_expandCounterServices)
   {
     StringReplace(m_expandInfix,(char*)"<part>",m_partname);
     StringReplace(m_expandInfix,(char*)"<proc>",m_ProcName);
     StringReplace(m_expandInfix,(char*)"<program>",m_ProgName);
-//    if (m_expandInfix.find("<part>") != std::string::npos)
-//    {
-//      m_expandInfix.replace(m_expandInfix.find("<part>"),strlen("<part>"),m_partname);
-//    }
-//    if (m_expandInfix.find("<proc>") != std::string::npos)
-//    {
-//      m_expandInfix.replace(m_expandInfix.find("<proc>"),strlen("<proc>"),m_ProcName);
-//    }
-//    if (m_expandInfix.find("<program>") != std::string::npos)
-//    {
-//      m_expandInfix.replace(m_expandInfix.find("<program>"),strlen("<program>"),m_ProgName);
-//    }
     if (m_CntrSubSys != 0)
     {
       m_CntrSubSys->m_expandInfix = m_expandInfix;
-//      m_CntrSubSys->m_expandnames = true;
     }
   }
   if (m_CntrMgr != 0)
   {
-//    printf("In STARTS Method... Counter Manager present... Closing it...\n");
-    this->m_CntrMgr->close();
+    m_CntrMgr->close();
   }
-  if (m_MonSys != 0) m_MonSys->setup((char*)m_utgid.c_str());
+  if (m_MonSys     != 0) m_MonSys->setup((char*)m_utgid.c_str());
   if (m_CntrSubSys != 0) m_CntrSubSys->setup((char*)"Counter",m_expandCounterServices);
   if (m_HistSubSys != 0) m_HistSubSys->setup((char*)"Histos");
-  if (this->m_HistSubSys != 0)
+  if (m_HistSubSys != 0)
   {
     if (m_CntrMgr != 0)
     {
@@ -339,35 +289,29 @@ StatusCode MonitorSvc::i_start()
       h->makeCounters();
     }
   }
-//  this->m_MonSys->List();
   DimServer::autoStartOn();
   DimServer::start();
-  this->m_MonSys->start();
+  m_MonSys->start();
   m_started = true;
   return StatusCode::SUCCESS;
 }
 StatusCode MonitorSvc::stop()
 {
-//  CALLGRIND_STOP_INSTRUMENTATION
-//  printf("+++++++++++++++++++++++++++ Monitor Service STOP called\n");
-//  m_started = false;
-//  updateSvc("",m_runno,0);
   if (m_CntrMgr != 0)
   {
-    this->m_CntrMgr->open();
+    m_CntrMgr->open();
   }
-  m_MonSys->stop();
-  StatusCode sc = Service::stop();
-//  printf("+++++++++++++++++++++++++++ Monitor Service STOP DONE.......\n");
- return StatusCode::SUCCESS;
+  if ( m_MonSys )  
+  {
+    m_MonSys->stop();
+  }
+  return Service::stop();
 }
 
 //updateSvc and resetHistos methods are for fast run changes
 
 StatusCode MonitorSvc::finalize()
 {
-
-  //dim_lock();
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "MonitorSvc Destructor" << endmsg;
 
@@ -377,74 +321,54 @@ StatusCode MonitorSvc::finalize()
     m_incidentSvc->release();
     m_incidentSvc = 0;
   }
-
   dim_lock();
   if (m_started)
   {
     m_started = false;
-  //  updateSvc("",m_runno,0);
     if (m_CntrMgr != 0)
     {
-      this->m_CntrMgr->open();
+      m_CntrMgr->open();
     }
     m_MonSys->stop();
   }
-  if (m_HistSubSys != 0)
-  {
-    delete m_HistSubSys;
-    m_HistSubSys = 0;
-  }
-  if (m_CntrSubSys!=0)
-  {
-    delete m_CntrSubSys;
-    m_CntrSubSys = 0;
-  }
-  if (m_CntrMgr !=0)
-  {
-    delete m_CntrMgr;
-    this->m_CntrMgr = 0;
-  }
-  if (m_savetimer != 0)
-  {
-    delete m_savetimer;
-    m_savetimer = 0;
-  }
+  deletePtr(m_HistSubSys);
+  deletePtr(m_CntrSubSys);
+  deletePtr(m_CntrMgr);
+  deletePtr(m_savetimer);
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
   dim_unlock();
-  StatusCode sc = Service::finalize();
-  return StatusCode::SUCCESS;
+  return Service::finalize();
 }
 
 void MonitorSvc::setRunNo(int runno)
 {
   m_runno = runno;
-  this->m_MonSys->setRunNo(runno);
-  return;
+  m_MonSys->setRunNo(runno);
 }
 
-void MonitorSvc::declareInfo(const std::string& name, const bool&  ,
-                             const std::string& , const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const bool&  ,
+                             const string& , const IInterface* owner)
 {
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::ERROR << "declareInfo bool not implemented " << name << endmsg;
   return;
 }
 //
-void MonitorSvc::declareInfo(const std::string& name, const int&  var,
-                             const std::string& desc, const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const int&  var,
+                             const string& desc, const IInterface* owner)
 {
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   if (m_started)
   {
 //    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   if (0 != m_disableDeclareInfoInt) return;
   MsgStream msg(msgSvc(),"MonitorSvc");
-  if (name.find("COUNTER_TO_RATE") != std::string::npos)
+  if (name.find("COUNTER_TO_RATE") != string::npos)
   {
-    std::string newName = extract("COUNTER_TO_RATE", name);
+    string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate)
     {
       if (m_CntrMgr == 0)
@@ -452,14 +376,11 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
-      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
+      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       if (m_HistSubSys == 0)
       {
         m_HistSubSys = new MonSubSys(m_updateInterval);
         m_HistSubSys->m_type = MONSUBSYS_Histogram;
-//        m_MonSys->addSubSys(m_HistSubSys);
-//        m_HistSubSys->setup((char*)"Histos");
-//        m_HistSubSys->start();
       }
       addRate(m_HistSubSys,m_CntrMgr);
     }
@@ -474,35 +395,31 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
   {
     m_CntrSubSys = new MonSubSys(m_updateInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
-//    m_MonSys->addSubSys(m_CntrSubSys);
-//    m_CntrSubSys->setup((char*)"Counter");
-//    m_CntrSubSys->start();
-
   }
-  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
+  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
 
-void MonitorSvc::declareInfo(const std::string& name, const long&  var,
-                             const std::string& desc, const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const long&  var,
+                             const string& desc, const IInterface* owner)
 {
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   if (m_started)
   {
 //    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   if (0 != m_disableDeclareInfoLong) return;
   MsgStream msg(msgSvc(),"MonitorSvc");
-  if (name.find("COUNTER_TO_RATE") != std::string::npos)
+  if (name.find("COUNTER_TO_RATE") != string::npos)
   {
-    std::string newName = extract("COUNTER_TO_RATE", name);
+    string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate)
     {
       if (m_CntrMgr == 0)
       {
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
-      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
+      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
       if (m_HistSubSys == 0)
       {
@@ -530,37 +447,34 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
 //    m_CntrSubSys->setup((char*)"Counter");
 //    m_CntrSubSys->start();
   }
-  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
+  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
-void MonitorSvc::declareInfo(const std::string& name, const double& var,
-                             const std::string& desc, const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const double& var,
+                             const string& desc, const IInterface* owner)
 {
   if (m_started)
   {
 //    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   if (0 != m_disableDeclareInfoDouble) return;
   MsgStream msg(msgSvc(),"MonitorSvc");
-  if (name.find("COUNTER_TO_RATE") != std::string::npos)
+  if (name.find("COUNTER_TO_RATE") != string::npos)
   {
-    std::string newName = extract("COUNTER_TO_RATE", name);
+    string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate)
     {
       if (m_CntrMgr == 0)
       {
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
-      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
+      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
       if (m_HistSubSys == 0)
       {
         m_HistSubSys = new MonSubSys(m_updateInterval);
         m_HistSubSys->m_type = MONSUBSYS_Histogram;
-//        m_MonSys->addSubSys(m_HistSubSys);
-//        m_HistSubSys->setup((char*)"Histos");
-//        m_HistSubSys->start();
       }
       addRate(m_HistSubSys,m_CntrMgr);
     }
@@ -575,11 +489,8 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
   {
     m_CntrSubSys = new MonSubSys(m_updateInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
-//    m_MonSys->addSubSys(m_CntrSubSys);
-//    m_CntrSubSys->setup((char*)"Counter");
-//    m_CntrSubSys->start();
   }
-  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
+  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
 }
 void MonitorSvc::addRate(MonSubSys *ss, CntrMgr *cm)
@@ -593,18 +504,18 @@ void MonitorSvc::addRate(MonSubSys *ss, CntrMgr *cm)
   }
   return;
 }
-void MonitorSvc::declareInfo(const std::string& name, const std::string& ,
-                             const std::string& , const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const string& ,
+                             const string& , const IInterface* owner)
 {
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::ERROR << "declareInfo for strings not implemented" + name << endmsg;
   return;
 }
-void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,double>& ,
-                             const std::string& , const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const pair<double,double>& ,
+                             const string& , const IInterface* owner)
 {
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   if (0 != m_disableDeclareInfoPair) {};
 
   if (m_started)
@@ -616,11 +527,11 @@ void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,dou
   return;
 }
 //
-void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void * var,
-    int size, const std::string& desc, const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const string& format, const void * var,
+    int size, const string& desc, const IInterface* owner)
 {
 //  if (0 != m_disableDeclareInfoFormat) return;
-  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
 
   if (m_started)
   {
@@ -637,24 +548,24 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
 //    m_CntrSubSys->setup((char*)"Counter");
 //    m_CntrSubSys->start();
   }
-  m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
+  m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
   return;
 }
 //
-void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
-                             const std::string& desc, const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
+                             const string& desc, const IInterface* owner)
 {
-	  std::string oname = makeoname(owner);
+	  string oname = infoOwnerName(owner);
   if (m_started)
   {
 //    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
    msg << MSG::INFO << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
-  if (name.find("COUNTER_TO_RATE") != std::string::npos)
+  if (name.find("COUNTER_TO_RATE") != string::npos)
   {
-    std::string newName = extract("COUNTER_TO_RATE", name);
+    string newName = extract("COUNTER_TO_RATE", name);
     //make newName unique!
     if ( 0 == m_disableMonRate)
     {
@@ -662,15 +573,12 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
       {
         m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
       }
-      m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
+      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
       m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
       if (m_HistSubSys == 0)
       {
         m_HistSubSys = new MonSubSys(m_updateInterval);
         m_HistSubSys->m_type = MONSUBSYS_Histogram;
-//        m_MonSys->addSubSys(m_HistSubSys);
-//        m_HistSubSys->setup((char*)"Histos");
-//        m_HistSubSys->start();
       }
       addRate(m_HistSubSys,m_CntrMgr);
     }
@@ -686,22 +594,19 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
     {
       m_HistSubSys = new MonSubSys(m_updateInterval);
       m_HistSubSys->m_type = MONSUBSYS_Histogram;
-  //    m_MonSys->addSubSys(m_HistSubSys);
-//      m_HistSubSys->setup((char*)"Histos");
-  //    m_HistSubSys->start();
     }
     MonHist *m = new MonHist(msgSvc(),oname+"/"+name,desc,&var);
-    m_InfoMap.insert(std::pair<std::string,void*>(oname+"/"+name,(void*)m_HistSubSys));
+    m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_HistSubSys));
     m_HistSubSys->addObj(m);
   }
   return;
 }
 
 
-void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram* var,
-                             const std::string& , const IInterface* owner)
+void MonitorSvc::declareInfo(const string& name, const AIDA::IBaseHistogram* var,
+                             const string& , const IInterface* owner)
 {
-	  std::string oname = makeoname(owner);
+  string oname = infoOwnerName(owner);
   MsgStream msg(msgSvc(),"MonitorSvc");
  // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
 
@@ -735,11 +640,11 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
  }
 
   MonHist *mhist;
-  std::string hnam;
+  string hnam;
   if (m_disableMonObjectsForHistos == 0)
   {
 //    isMonObject = true;
-    if (name.find(oname) == std::string::npos)
+    if (name.find(oname) == string::npos)
     {
       hnam = oname+"/"+name;
     }
@@ -748,7 +653,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
       hnam = name;
     }
     mhist = new MonHist(msgSvc(),hnam,var);
-    m_InfoMap.insert(std::make_pair(hnam,m_HistSubSys));
+    m_InfoMap.insert(make_pair(hnam,m_HistSubSys));
     m_HistSubSys->addObj(mhist);
   }
   else
@@ -782,8 +687,8 @@ void MonitorSvc::declareMonRateComplement( int& runNumber, unsigned int& tck, in
 
 }
 
-std::string MonitorSvc::extract(const std::string mascara, std::string value){
-  if (value.find(mascara) != std::string::npos) {
+string MonitorSvc::extract(const string mascara, string value){
+  if (value.find(mascara) != string::npos) {
     value.erase(0, mascara.size()+1);
     value.erase(value.size() - 1, 1);
   }
@@ -791,15 +696,14 @@ std::string MonitorSvc::extract(const std::string mascara, std::string value){
 }
 
 
-bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
+bool MonitorSvc::registerName(const string& name, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-
   msg << MSG::DEBUG << "registerName: " << name << endmsg;
   m_InfoNamesMapIt = m_InfoNamesMap.find(owner);
-  std::string ownerName = infoOwnerName(owner);
+  string ownerName = infoOwnerName(owner);
   if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
-    std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
+    pair<set<string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
     if( p.second) {
       msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endmsg;
     }
@@ -811,14 +715,14 @@ bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
   }
   else { // Create a new set for this algo and insert name
     msg << MSG::DEBUG << "registerName: creating new map for owner: "<< ownerName << " name: " << name << endmsg;
-    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner]=set<string>();
     m_InfoNamesMap[owner].insert(name);
   }
   return true;
 }
 
 
-std::string MonitorSvc::infoOwnerName( const IInterface* owner )
+string MonitorSvc::infoOwnerName( const IInterface* owner )
 {
   const IAlgorithm* ownerAlg = dynamic_cast<const IAlgorithm*>(owner);
   if( 0 != ownerAlg ) // It's an algorithm
@@ -834,46 +738,44 @@ std::string MonitorSvc::infoOwnerName( const IInterface* owner )
 }
 
 
-void MonitorSvc::updateSvc( const std::string& , int runno, const IInterface*  )
+void MonitorSvc::updateSvc( const string& , int runno, const IInterface*  )
 {
-//  printf("Updating EOR service....");
-  this->m_MonSys->EORUpdate(runno);
+  m_MonSys->EORUpdate(runno);
 }
 
- void MonitorSvc::resetHistos( const IInterface*  )
- {
-   this->m_MonSys->Clear();
- }
+void MonitorSvc::resetHistos( const IInterface*  )
+{
+  m_MonSys->Clear();
+}
 
+void MonitorSvc::Lock(void)
+{
+  m_MonSys->Lock();
+}
 
+void MonitorSvc::UnLock(void)
+{
+  m_MonSys->unLock();
+}
 
- void MonitorSvc::Lock(void)
+void MonitorSvc::StartSaving(string &dir, string &part,string &task, int period, DimService *sav)
+{
+  if (m_savetimer == 0)
   {
-//   printf("Monitor System Locking\n");
-    this->m_MonSys->Lock();
+    m_savetimer = new TaskSaveTimer(m_HistSubSys,period);
+    m_savetimer->setPartName(part);
+    m_savetimer->setRootDir(dir);
+    m_savetimer->setTaskName(task);
+    m_savetimer->m_filenamesvc = sav;
+    m_savetimer->setMonSys(m_MonSys);
   }
- void MonitorSvc::UnLock(void)
+  m_savetimer->Start();
+}
+
+void MonitorSvc::StopSaving()
+{
+  if (m_savetimer!= 0)
   {
-//   printf("Monitor System Un-Locking\n");
-    this->m_MonSys->unLock();
+    m_savetimer->Stop();
   }
- void MonitorSvc::StartSaving(std::string &dir, std::string &part, std::string &task, int period, DimService *sav)
- {
-   if (m_savetimer == 0)
-   {
-     m_savetimer = new TaskSaveTimer(this->m_HistSubSys,period);
-     m_savetimer->setPartName(part);
-     m_savetimer->setRootDir(dir);
-     m_savetimer->setTaskName(task);
-     m_savetimer->m_filenamesvc = sav;
-     m_savetimer->setMonSys(m_MonSys);
-   }
-   m_savetimer->Start();
- }
- void MonitorSvc::StopSaving()
- {
-   if (m_savetimer!= 0)
-   {
-     m_savetimer->Stop();
-   }
- }
+}

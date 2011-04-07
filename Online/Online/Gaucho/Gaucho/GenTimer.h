@@ -1,6 +1,6 @@
 #ifndef GENTIMER_H
 #define GENTIMER_H
-#include "pthread.h"
+#include "RTL/rtl.h"
 #define TIMER_PREC_SEC 0
 #define TIMER_PREC_MILLI 1
 #define TIMER_PREC_MICRO 2
@@ -21,7 +21,7 @@ protected:
   unsigned long long m_lastfire;
   unsigned long long m_lastdelta;
   unsigned long long *m_extlastdelta;
-  pthread_t m_thread;
+  lib_rtl_thread_t m_thread;
   int m_type;
   void makeDeltaT(void);
 public:

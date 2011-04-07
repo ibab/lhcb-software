@@ -1,77 +1,71 @@
 #include "Gaucho/GenTimer.h"
-//#include "Gaucho/MonSubSys.h"
-//#include "Gaucho/ObjService.h"
-//#include "RTL/rtl.h"
 #include <cstdio>
 #include <cerrno>
+#include <ctime>
 #ifdef WIN32
 #include "windows.h"
-#define onesec (unsigned long long)(10000000)
+#define onesec      (unsigned long long)(10000000)
 #else
 #include <sys/time.h>
-#define onesec_mu (unsigned long long)(1000000)
+#define onesec_mu   (unsigned long long)(1000000)
 #define onesec_nano (unsigned long long)(1000000000)
 #define onesec_mili (unsigned long long)(1000000)
 #endif
-#include <time.h>
-//#define ONESEC 10*1000*1000
-extern "C"
+
+namespace 
 {
- void* ThreadRoutine_C(void*a)
- {
-   GenTimer *t = (GenTimer*)a;
-   t->ThreadRoutine();
-   pthread_exit(0); }
+  int ThreadRoutine_C(void* arg)
+  {
+    GenTimer *t = (GenTimer*)arg;
+    t->ThreadRoutine();
+    return 1;
+  }
 }
+
 GenTimer::GenTimer(void *arg, int period, int typ)
 {
-  m_arg = arg;
-  m_period = period;
-  m_type = typ;
-  m_dueTime = 0;
-  m_periodic = (typ & TIMER_TYPE_PERIODIC) != 0;
-  m_synched = (typ & TIMER_MODIFYER_SYNCHRONIZED) != 0;
-  m_thread = 0;
+  m_arg          = arg;
+  m_period       = period;
+  m_type         = typ;
+  m_dueTime      = 0;
+  m_periodic     = (typ & TIMER_TYPE_PERIODIC) != 0;
+  m_synched      = (typ & TIMER_MODIFYER_SYNCHRONIZED) != 0;
+  m_thread       = 0;
   m_extlastdelta = 0;
-  m_ForceExit = false;
-
-//  printf("==================GenTimer Constructor.................%llu %d %d\n",m_period, m_periodic, m_synched);
+  m_ForceExit    = false;
 }
 
 GenTimer::~GenTimer( )
 {
   Stop();
 }
-void GenTimer::timerHandler ( void )
+
+void GenTimer::timerHandler()
 {
 }
+
 void GenTimer::Start()
 {
-  int status;
-//  printf("Starting Timer Thread...\n");
   m_ForceExit = false;
-  if (m_thread == 0) status = pthread_create(&m_thread,NULL,ThreadRoutine_C, (void *)this);
-  if (status == 0)
+  if ( m_thread == 0 ) 
   {
-//    printf("Timer Thread Started successfully\n");
-  }
-  else
-  {
-//    printf("Timer Thread NOT Started successfully %d\n", status);
+    int status = ::lib_rtl_start_thread(ThreadRoutine_C,this,&m_thread);
+    if ( !lib_rtl_is_success(status) )
+    {
+      ::lib_rtl_output(LIB_RTL_ERROR,"Timer Thread NOT Started successfully %d\n", status);
+    }
   }
 }
+
 void GenTimer::Stop()
 {
-//  m_Hsys->Lock();
   if (m_thread != 0)
   {
-    void *status;
     m_ForceExit = true;
-    pthread_cancel(m_thread);
-    pthread_join(m_thread,&status);
+    ::lib_rtl_cancel_thread(m_thread);
+    ::lib_rtl_join_thread(m_thread);
     m_thread = 0;
   }
-//  m_Hsys->unLock();
 }
 
 void GenTimer::makeDeltaT()
@@ -146,7 +140,6 @@ unsigned long long GenTimer::getDeltaTime(int incr)
   {
     newtim = timstamp+(((unsigned long long)incr+m_period)*onesec_mili);
   }
-//  printf ("+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_ %d\n",m_period);
   m_dueTime = newtim;
   unsigned long long dtim = (newtim-timstamp);
   if (dtim < 20000000)
@@ -154,12 +147,6 @@ unsigned long long GenTimer::getDeltaTime(int incr)
     dtim += m_period*onesec_mili;
     m_dueTime += m_period*onesec_mili;
   }
-//  time_t nt = (time_t)(newtim/onesec_nano);
-//  char tstamp[26];
-//  char duet[26];
-//  ctime_r(&tv.tv_sec,tstamp);
-//  ctime_r(&nt,duet);
-//  printf("============================%s %s  %llu\n",tstamp,duet,dtim);
   return dtim;
 #endif
 
@@ -169,7 +156,6 @@ void *GenTimer::ThreadRoutine()
   unsigned long long delta;
   struct timespec req;
   int status;
-//    MonTimer *m_timer = (MonTimer*)arg;
   while (1)
   {
     delta = getDeltaTime(0);
@@ -188,13 +174,11 @@ void *GenTimer::ThreadRoutine()
       }
       else if (errno == EINTR)
       {
-        //if (m_ForceExit) return 0;
-        printf("EINTR in nanosleep \n");
+        ::lib_rtl_output(LIB_RTL_WARNING,"EINTR in nanosleep \n");
         continue;
       }
       else
       {
-//        printf("Fatal Return Value from nanosleep %d\n",status);
         break;
       }
     }

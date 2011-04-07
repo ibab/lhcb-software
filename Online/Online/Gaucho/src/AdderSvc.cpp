@@ -1,16 +1,19 @@
-
 #include "AdderSvc.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
+#include "Gaucho/HistAdder.h"
+#include "Gaucho/CounterAdder.h"
+#include "Gaucho/SaveTimer.h"
+#include "Gaucho/AdderSys.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
+#include "AIDA/IHistogram.h"
 
 DECLARE_SERVICE_FACTORY(AdderSvc)
 
-namespace
-{
+namespace    {
   void EORSaver(void *arg,void* ,int , MonMap *, MonAdder *)
   {
     SaveTimer *tim = (SaveTimer*) arg;
@@ -18,29 +21,53 @@ namespace
   }
 }
 
+class MyErrh : public DimErrorHandler
+{
+public:
+  bool m_flag;
+  void errorHandler(int severity, int code, char *msg)
+  {
+    if (m_flag)
+      {
+	::lib_rtl_output(LIB_RTL_INFO,"DIM(AdderSvc): Code %d.%x %s\n",severity,code,msg);
+      }
+    return;
+  }
+  MyErrh () : DimErrorHandler()
+  {
+    m_flag = true;
+  }
+  void start()
+  {
+    m_flag = true;
+  }
+  void stop()
+  {
+    m_flag = false;
+  }
+};
+
 AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_incidentSvc(0)
 {
-  declareProperty("MyName",m_MyName="");
-  declareProperty("InDNS",           m_InputDNS="");
-  declareProperty("OutDNS",          m_OutputDNS="");
-  declareProperty("SaveRootDir",     m_SaveRootDir = "/home/beat/Hist/Savesets");
-  declareProperty("IsSaver",         m_isSaver = false);
+  declareProperty("MyName",          m_MyName       = "");
+  declareProperty("InDNS",           m_InputDNS     = "");
+  declareProperty("SaveRootDir",     m_SaveRootDir  = "/home/beat/Hist/Savesets");
+  declareProperty("IsSaver",         m_isSaver      = false);
   declareProperty("SaveInterval",    m_SaveInterval = 900);
-  declareProperty("PartitionName",   m_PartitionName="LHCb");
-  declareProperty("SaveSetTaskName", m_SaverTaskName="Moore");
-  declareProperty("ExpandRate",      m_ExpandRate=false);
+  declareProperty("PartitionName",   m_PartitionName= "LHCb");
+  declareProperty("SaveSetTaskName", m_SaverTaskName= "Moore");
+  declareProperty("ExpandRate",      m_expandRate   = false);
+  declareProperty("DoHistos",        m_dohisto      = true);
+  declareProperty("AdderClass",      m_AdderClass   = "hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
   declareProperty("TaskPattern",     m_TaskPattern);
   declareProperty("ServicePattern",  m_ServicePattern);
-  declareProperty("DoHistos",        m_dohisto=true);
-  declareProperty("AdderClass",      m_AdderClass="hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
 
-  m_SaveTimer = 0;
-  m_started = false;
-  m_errh =0;
-  m_funcsvc = 0;
+  m_started     = false;
+  m_SaveTimer   = 0;
+  m_errh        = 0;
   m_pMonitorSvc = 0;
-  m_phistsvc=0;
-  m_arrhist = 0;
+  m_phistsvc    = 0;
+  m_arrhist     = 0;
 }
 
 AdderSvc::~AdderSvc()
@@ -49,7 +76,8 @@ AdderSvc::~AdderSvc()
 
 StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
-  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
+  if ( IIncidentListener::interfaceID().versionMatch(riid) ) 
+  {
     *ppvIF = (IIncidentListener*)this;
   }
   else
@@ -120,22 +148,20 @@ StatusCode AdderSvc::initialize()
   }
   return StatusCode::SUCCESS;
 }
-#include "TBrowser.h"
 
 StatusCode AdderSvc::start()
 {
+  std::string servicename;
+  std::string myservicename;
+  std::string nodename = RTL::nodeNameShort();
+
   Service::start();
   if (m_errh == 0) m_errh = new MyErrh();
-  std::string myservicename;
-//  m_MyName = RTL::processName();
   toLowerCase(m_TaskPattern);
   toLowerCase(m_ServicePattern);
-//  toLowerCase(m_AdderType);
-  std::string nodename = RTL::nodeNameShort();
   toLowerCase(nodename);
   toLowerCase(m_AdderClass);
   toLowerCase(m_InputDNS);
-  std::string servicename;
   if (m_AdderClass == "hists")
   {
     servicename = "Histos";
@@ -172,56 +198,13 @@ StatusCode AdderSvc::start()
   StringReplace(m_InputDNS,"<node>",nodename);
   StringReplace(m_InputDNS,"<dns>",ddns);
 
-//  if (m_AdderType == "node")
-//  {
-////    m_MyName = nodename+std::string("_Adder");
-//    if (m_ServicePattern == "")
-//    {
-//      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";
-//    }
-//    if (m_InputDNS == "")
-//    {
-//      m_InputDNS = nodename.substr(0,nodename.size()-2);
-//    }
-//  }
-//  else if (m_AdderType == "sf" || m_AdderType == "subfarm")
-//  {
-////    m_MyName = nodename+std::string("_Adder");
-//    if (m_ServicePattern == "")
-//    {
-//      m_ServicePattern = "MON_"+m_TaskPattern+"/"+servicename+"/";//+m_ServiceName;
-//    }
-//    if (m_InputDNS == "")
-//    {
-//      m_InputDNS = nodename;
-//    }
-//  }
-//  else if (m_AdderType == "top" || m_AdderType == "part")
-//  {
-//    if (m_ServicePattern != "")
-//    {
-//      m_ServicePattern +="/"+servicename+"/";
-//    }
-//    else
-//    {
-//      m_ServicePattern = "MON_(.*)[a-z][0-9][0-9]_"+ m_PartitionName+ "_Adder(.*)/Histos/";
-//    }
-//    if (m_InputDNS == "")
-//    {
-//      m_InputDNS = std::string("hlt01");
-//    }
-//  }
-//  else
-//  {
-//    printf("FATAL... Unknown Adder Type %s\n",m_AdderType.c_str());
-//  }
   m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
   if (m_errh != 0) DimClient::addErrorHandler(m_errh);
-//  printf("=======>AdderSvc Option Summary:\n\tTask Pattern %s\n\tService Pattern %s+Data or EOR\n",m_TaskPattern.c_str(),m_ServicePattern.c_str());
+  ::lib_rtl_output(LIB_RTL_DEBUG,"=======>AdderSvc Option Summary:\tTask Pattern %s\n",m_TaskPattern.c_str());
+  ::lib_rtl_output(LIB_RTL_DEBUG,"        Service Pattern %s+Data or EOR\n",m_ServicePattern.c_str());
   DimServer::autoStartOn();
   if (!m_InputDNS.empty()) DimClient::setDnsNode(m_InputDNS.c_str());
-//  m_adder = new HistAdder((char*)m_TaskName.c_str(), (char*)m_MyName.c_str(), (char*)m_ServiceName.c_str());
   if (m_AdderClass == "hists")
   {
     m_adder = new HistAdder((char*)myservicename.c_str(), (char*)"Data");
@@ -230,10 +213,9 @@ StatusCode AdderSvc::start()
   {
     m_adder = new CounterAdder((char*)myservicename.c_str(), (char*)"Data");
   }
-//  m_adder->setOutDNS(m_OutputDNS);
   m_adder->m_IsEOR = false;
-  m_adder->m_expandRate = m_ExpandRate;
-  if (m_ExpandRate)
+  m_adder->m_expandRate = m_expandRate;
+  if (m_expandRate)
   {
     m_adder->m_NamePrefix = m_PartitionName+"_";
   }
@@ -263,7 +245,6 @@ StatusCode AdderSvc::start()
   {
     m_EoRadder = new CounterAdder((char*)myservicename.c_str(), (char*)"EOR");
   }
-  //m_EoRadder->setOutDNS(m_OutputDNS);
   m_EoRadder->m_IsEOR = true;
   m_EoRadder->m_expandRate = false;
   m_EoRadder->m_taskPattern = m_TaskPattern;
@@ -281,13 +262,6 @@ StatusCode AdderSvc::start()
     m_EoRSaver->setEOR(true);
     m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
   }
-  m_funcsvc = 0;
-//  if (m_AdderType == "top" || m_AdderType == "part")
-//  {
-//    m_Function = m_PartitionName+"_"+m_TaskName;
-//    m_funcsvc = new DimService((char*)m_Function.c_str(),(char*)m_utgid.c_str());
-//    m_funcsvc->updateService();
-//  }
   m_started = true;
   return StatusCode::SUCCESS;
 }
@@ -335,17 +309,13 @@ StatusCode AdderSvc::finalize()
     m_AdderSys->Remove(m_EoRadder);
     deletePtr(m_EoRadder);
   }
-  deletePtr(m_funcsvc);
   dim_unlock();
   return Service::finalize();
 }
 
 void AdderSvc::handle(const Incident& inc)
 {
-  if (inc.type() == "APP_INITIALIZED")
-  {
-  }
-  else if (inc.type() == "APP_RUNNING")
+  if (inc.type() == "APP_RUNNING")
   {
     m_AdderSys->start();
   }
