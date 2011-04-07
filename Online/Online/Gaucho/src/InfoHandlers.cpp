@@ -15,7 +15,7 @@ void HAdderServInfoHandler::infoHandler(void)
   {
     return;
   }
-//  printf("New Message from Service List Service %s data:\n%s\n",itsService->getName(),input);
+  ::lib_rtl_output(LIB_RTL_WARNING,"[WARN] New Message from Service List Service %s data:\n[WARN] %s\n",itsService->getName(),input);
   bool Newe;
   Newe = false;
   char *sinput = input;
