@@ -569,9 +569,12 @@ class LbLoginScript(SourceScript):
         if not os.path.exists(rhostfile) and sys.platform != "win32" :
             self.addEcho("Creating a %s file to use CMT" % rhostfile)
             self.addEcho("Joel.Closier@cern.ch")
-            f = open(rhostfile, "w")
-            f.write("+ %s\n" % username)
-            f.close()
+            try :
+                f = open(rhostfile, "w")
+                f.write("+ %s\n" % username)
+                f.close()
+            except IOError:
+                log.warning("Can't create the file %s" % rhostfile)
         # remove any .cmtrc file stored in the $HOME directory
         cmtrcfile = os.path.join(homedir, ".cmtrc")
         if os.path.exists(cmtrcfile) :
@@ -582,8 +585,11 @@ class LbLoginScript(SourceScript):
         if not os.path.exists(rootrcfile) and opts.cmtsite != "standalone" :
             srcrootrcfile = os.path.join(_lbs_home_dir, "LbConfiguration", "data", ".rootauthrc")
             if os.path.exists(srcrootrcfile) :
-                shutil.copy(srcrootrcfile, rootrcfile)
-                log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile))
+                try :
+                    shutil.copy(srcrootrcfile, rootrcfile)
+                    log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile))
+                except IOError :
+                    log.warning("Failed to copy %s to %s" % (srcrootrcfile, rootrcfile) )
 
         if sys.platform != "win32" and self.targetShell() == "sh" and ev.has_key("HOME"):
             hprof = os.path.join(ev["HOME"], ".bash_profile")
@@ -594,15 +600,20 @@ class LbLoginScript(SourceScript):
             hlist.append(os.path.join(ev["HOME"], ".profile"))
             if not [ x for x in hlist if os.path.exists(x) ] :
                 if os.path.exists(sprof) :
-                    shutil.copy(sprof, hprof)
-                    log.warning("Copying %s to %s" % (sprof, hprof))
+                    try :
+                        shutil.copy(sprof, hprof)
+                        log.warning("Copying %s to %s" % (sprof, hprof))
+                    except IOError :
+                        log.warning("Failed to copy %s to %s" % (sprof, hprof) )
             hbrc = os.path.join(ev["HOME"], ".bashrc")
             sbrc = os.path.join("/etc", "skel", ".bashrc")
             if not os.path.exists(hbrc) :
                 if os.path.exists(sbrc) :
-                    shutil.copy(sbrc, hbrc)
-                    log.warning("Copying %s to %s" % (sbrc, hbrc))
-
+                    try :
+                        shutil.copy(sbrc, hbrc)
+                        log.warning("Copying %s to %s" % (sbrc, hbrc))
+                    except IOError :
+                        log.warning("Failed to copy %s to %s" % (sbrc, hbrc) )
         if not ev.has_key("LD_LIBRARY_PATH") :
             ev["LD_LIBRARY_PATH"] = ""
             log.debug("Setting a default LD_LIBRARY_PATH")
@@ -642,20 +653,32 @@ class LbLoginScript(SourceScript):
                 bak_userarea = opts.userarea + "_bak"
                 if not os.path.exists(bak_userarea) :
                     if os.path.islink(bak_userarea) :
-                        os.remove(bak_userarea) # remove broken link
-                    os.rename(opts.userarea, opts.userarea + "_bak")
-                    log.warning("Renamed %s into %s" % (opts.userarea, opts.userarea + "_bak"))
+                        try :
+                            os.remove(bak_userarea) # remove broken link
+                        except IOError:
+                            log.warning("Can't remove %s" % bak_userarea)
+                    try :
+                        os.rename(opts.userarea, opts.userarea + "_bak")
+                        log.warning("Renamed %s into %s" % (opts.userarea, opts.userarea + "_bak"))
+                    except IOError:
+                        log.warning("Can't rename %s into %s" % (opts.userarea, opts.userarea + "_bak"))
                 else :
                     log.warning("Can't backup %s because %s is in the way" % (opts.userarea, bak_userarea))
                     log.warning("No %s directory created" % opts.userarea)
                     newdir = False
             if newdir :
-                os.makedirs(opts.userarea)
-                self.addEcho(" --- a new cmtuser directory has been created in your HOME directory")
+                try :
+                    os.makedirs(opts.userarea)
+                    self.addEcho(" --- a new cmtuser directory has been created in your HOME directory")
+                except IOError:
+                    log.warning("Can't create %s" % opts.userarea)
             if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
-                    os.system("fs setacl %s system:anyuser l" % opts.userarea)
-                    os.system("fs setacl %s cern:z5 rl" % opts.userarea)
+                    try :
+                        os.system("fs setacl %s system:anyuser l" % opts.userarea)
+                        os.system("fs setacl %s cern:z5 rl" % opts.userarea)
+                    except IOError:
+                        log.warning("Can't change ACL of %s" % opts.userarea)
                     self.addEcho(" --- with LHCb public access (readonly)")
                     self.addEcho(" --- use mkprivate to remove public access to the current directory")
                     self.addEcho(" --- use mkpublic to give public access to the current directory")
