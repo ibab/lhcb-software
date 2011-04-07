@@ -170,6 +170,7 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesDiProtonLowMult'         :10115,
     'VeloBW'                                :10116,
     'ProtoPV3D'                             :10117,
+    'VeloCandidatesDiProton'                :10118,
 
     #
     # 11K - 20K : added automatically by configuration...

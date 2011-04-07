@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v9r8p1   2011-04-03 ===================
+! 2011-04-07 - Gerhard Raven
+ - add VeloCandidatesDiProton to HltInit.py...
+
 !========================== HltConf v9r8   2011-04-03 ===================
 ! 2011-03-31 - Gerhard Raven
  - verify that the Hlt1SelectionID and Hlt2SelectionID do not have overlapping
