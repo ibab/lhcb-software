@@ -66,7 +66,16 @@ StatusCode Rich::RadiatorTool::initialize ( )
 }
 
 //=============================================================================
-// initialize
+// finalize
+//=============================================================================
+StatusCode Rich::RadiatorTool::finalize()
+{
+  updMgrSvc()->unregister(this);
+  return Rich::ToolBase::finalize();
+}
+
+//=============================================================================
+// UMS update
 //=============================================================================
 StatusCode Rich::RadiatorTool::radiatorUpdate()
 {

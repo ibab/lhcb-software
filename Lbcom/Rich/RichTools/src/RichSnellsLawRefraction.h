@@ -60,6 +60,9 @@ namespace Rich
     // Initialization of the tool after creation
     virtual StatusCode initialize();
 
+    // Finalization of the tool
+    virtual StatusCode finalize();
+
   public: // methods (and doxygen comments) inherited from interface
 
     // Correct the direction vector and start point for refraction in going from Aerogel to Rich1Gas

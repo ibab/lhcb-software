@@ -37,15 +37,10 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction )
   declareInterface<ISnellsLawRefraction>(this);
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
 SnellsLawRefraction::~SnellsLawRefraction() {}
-//=============================================================================
 
 //=============================================================================
-// Initialise
-//=============================================================================
+
 StatusCode SnellsLawRefraction::initialize()
 {
   // Initialise base class
@@ -64,6 +59,12 @@ StatusCode SnellsLawRefraction::initialize()
 
   // return
   return sc;
+}
+
+StatusCode SnellsLawRefraction::finalize()
+{
+  updMgrSvc()->unregister(this);
+  return ToolBase::finalize();
 }
 
 StatusCode SnellsLawRefraction::aeroUpdate() 

@@ -328,6 +328,9 @@ StatusCode Rich::MirrorSegFinder::finalize( )
     always() << "Rich2SecondaryMaxDist = " << m_maxDist[Rich::Rich2][sec] << endmsg;
   }
 
+  // unregister from UMS
+  updMgrSvc()->unregister(this);
+
   return Rich::ToolBase::finalize();
 }
 

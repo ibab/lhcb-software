@@ -61,6 +61,11 @@ namespace Rich
     // Initialization of the tool after creation
     virtual StatusCode initialize();
 
+    // Finalization of the tool
+    virtual StatusCode finalize();
+
+  public:
+
     /** @brief Finds the intersections of a given vector from a given point (entry/exit) with radiator.
      *
      * For multiple radiators (e.g. the aerogel tiles) there can be more than one intersections

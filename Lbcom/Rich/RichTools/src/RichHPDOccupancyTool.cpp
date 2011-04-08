@@ -292,6 +292,8 @@ StatusCode HPDOccupancyTool::finalize()
 {
   // Print XML ?
   if ( m_printXML ) createHPDBackXML();
+  // UMS
+  updMgrSvc()->unregister(this);
   // Execute base class method
   return ToolBase::finalize();
 }

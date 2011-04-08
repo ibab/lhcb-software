@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Chris Jones
+ - Add calls to the UpdateManager unregister method as needed.
+
 ! 2011-04-06 - Chris Jones
  - Add some call backs to make sure cached data is updated on condition 
    changes.
