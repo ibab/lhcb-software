@@ -89,6 +89,7 @@ void BTagging::performTagging(const std::string & location)
       if (!sc) {
         err() <<"Tagging Tool returned error."<< endreq;
         delete theTag;
+        return;
       } else tags->insert(theTag);
 
       //--- PRINTOUTS ---
