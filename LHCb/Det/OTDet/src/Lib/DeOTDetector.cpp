@@ -70,7 +70,7 @@ StatusCode DeOTDetector::initialize()
 
   if( sc.isFailure() ) {
     MsgStream msg( msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize DetectorElement" << endreq;
+    msg << MSG::ERROR << "Failed to initialize DetectorElement" << endmsg;
     return sc ;
   }
    
@@ -168,7 +168,7 @@ double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,
   const DeOTModule* aModule = findModule(aChannel);
   if (!aModule) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "DistanceAlongWire requested for module that does not exist " << endreq;
+    msg << MSG::WARNING << "DistanceAlongWire requested for module that does not exist " << endmsg;
     return 0.0;
   }
   

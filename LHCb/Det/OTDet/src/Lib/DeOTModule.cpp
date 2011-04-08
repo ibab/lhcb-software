@@ -322,7 +322,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     } //curling tracks
   } else {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Entry and exit points are not inside module. Failed to generate hits!" << endreq;
+    msg << MSG::DEBUG << "Entry and exit points are not inside module. Failed to generate hits!" << endmsg;
   }
 }
 

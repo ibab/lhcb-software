@@ -3,6 +3,9 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2011-04-08 - Marco Cattaneo
+ - Replace endreq by endmsg
+
 !========================= OTDet v8r5 2010-12-14 =========================
 ! 2010-11-30 - Marco Cattaneo
  - Remove unneccessary public include of boost/assign/list_of.hpp that was 
