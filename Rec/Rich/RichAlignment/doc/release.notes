@@ -4,7 +4,16 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Chris Jones
+ - Bug fixes to the alignment and calibration scripts, to properly handle
+   differences between the CET and GMT timezones.
+
+! 2010-03-31 - Chris Jones
+ - Some improvements to the alignment monitor algorithm, to use the RICH 
+   methods to book and fill histograms.
+
 !========================= RichAlignment v1r2 2011-04-05 =========================
+
 ! 2011-03-10 - Chris Jones
  - Various improvements to the alignment python scripts.
 

@@ -80,11 +80,10 @@ namespace Rich
 
       private: // methods
 
-
         /**Check whether to produce a histogram for this HPD
            @return The HPD identifier
         */
-        int makePlotForHPD ( LHCb::RichSmartID smartID ) const;
+        int makePlotForHPD ( const LHCb::RichSmartID smartID ) const;
 
       private: // data
 

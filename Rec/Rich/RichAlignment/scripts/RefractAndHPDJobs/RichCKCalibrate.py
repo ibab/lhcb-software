@@ -276,7 +276,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     fileNameRoot = rad+"_"+getJobCaliName(jobs[0])
 
     # Start a PDF file
-    globals()["imageFileName"] = fileNameRoot+".pdf"
+    globals()["imageFileName"] = "results/"+fileNameRoot+".pdf"
     printCanvas('[')
 
     # Dictionary to store the calibration data
@@ -328,7 +328,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
             print "        : CK expected   :", fitResultExp['Message']
 
     # Write out calibrations to a pickled python file
-    file = bz2.BZ2File(rad+"_"+getJobCaliName(jobs[0])+".pck.bz2","w")
+    calibfilename = "results/"+rad+"_"+getJobCaliName(jobs[0])+".pck.bz2"
+    print "Writting calibrations to", calibfilename
+    file = bz2.BZ2File(calibfilename,"w")
     pickle.dump(calibrations,file)
     file.close()
 
@@ -341,7 +343,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
                       100, 0.99*minMaxCKRes[0], 1.001*minMaxCKRes[1] )
 
     # Open text file for shifts
-    textFileName = fileNameRoot+".txt"
+    textFileName = "results/"+fileNameRoot+".txt"
     print "Opening text file", textFileName
     textShifts = open(textFileName,'w')
   
@@ -461,7 +463,7 @@ def refractiveIndexControl(jobs,rad='Rich1Gas'):
     from array import array
 
     # Start a PDF file
-    globals()["imageFileName"] = rad+"-RefIndexControl.pdf"
+    globals()["imageFileName"] = "results/"+rad+"-RefIndexControl.pdf"
     printCanvas('[')
 
     x  = array('d')
@@ -515,7 +517,7 @@ def expectedCKTheta(jobs,rad='Rich1Gas'):
     # Parameters
     minEntries = 10000
 
-    globals()["imageFileName"] = rad+"-ExpectCKtheta.pdf"
+    globals()["imageFileName"] = "results/"+rad+"-ExpectCKtheta.pdf"
     printCanvas('[')
 
     runs      = array('d')
@@ -563,7 +565,7 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
     import pickle
 
     # Start a PDF file
-    globals()["imageFileName"] = rad+"-RecoCKtheta.pdf"
+    globals()["imageFileName"] = "results/"+rad+"-RecoCKtheta.pdf"
     printCanvas('[')
 
     runs      = array('d')
@@ -928,7 +930,7 @@ def fitCKForFile(filename,plot='ckResAll'):
     else:
 
         # Start a PDF file
-        globals()["imageFileName"] = "CKFit.pdf"
+        globals()["imageFileName"] = "results/"+"CKFit.pdf"
         printCanvas('[')
 
         fitResult1 = fitCKThetaHistogram(file,0,'Rich1Gas',plot)

@@ -66,7 +66,8 @@ StatusCode AlignmentMonitor::initialize()
   acquireTool( "TrackSelector", m_trSelector, this );
   acquireTool( "RichIsolatedTrack", m_isoTrack     );
 
-  if ( m_useMCTruth ) {
+  if ( m_useMCTruth )
+  {
     acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
     acquireTool( "RichParticleProperties", m_richPartProp );
   }
@@ -86,38 +87,39 @@ StatusCode AlignmentMonitor::initialize()
 
   // prebook histograms
 
-
-  m_sideHistos.push_back( book2D("dThetavphiRecSide0","dTheta v phi "+ Rich::text( rich, Rich::Side(0) ),
-                                 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-  m_sideHistos.push_back( book2D("dThetavphiRecSide1","dTheta v phi "+ Rich::text( rich, Rich::Side(1) ),
-                                 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_sideHistos.push_back( richHisto2D(HID("dThetavphiRecSide0"),"dTheta v phi "+ Rich::text( rich, Rich::Side(0) ),
+                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_sideHistos.push_back( richHisto2D(HID("dThetavphiRecSide1"),"dTheta v phi "+ Rich::text( rich, Rich::Side(1) ),
+                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
 
   if ( m_histoOutputLevel > 0 )
   {
-    book1D( "Un_Amb", "Ambigious/Unambigious photons", -0.5, 1.5, 2 );
-    book1D( "deltaThetaAmb","Ch angle error (Ambiguous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-    book1D( "deltaThetaUnamb","Ch angle error (Unambigous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-    book2D( "dThetavphiRecAll", "dTheta v phi All", 0.0, 2*Gaudi::Units::pi, 20,
-            -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
+    richHisto1D( HID("Un_Amb"), "Ambigious/Unambigious photons", -0.5, 1.5, 2 );
+    richHisto1D( HID("deltaThetaAmb"), "Ch angle error (Ambiguous photons)",
+                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() );
+    richHisto1D( HID("deltaThetaUnamb"),"Ch angle error (Unambigous photons)",
+                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() );
+    richHisto2D( HID("dThetavphiRecAll"), "dTheta v phi All", 0.0, 2*Gaudi::Units::pi, 20,
+                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 );
   }
 
   if ( m_histoOutputLevel > 1 )
   {
-    book2D( "dThetavphiRecIso", "dTheta v phi Isolated", 0.0, 2*Gaudi::Units::pi, 20,
-            -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
-    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide0","dTheta v phi isolated "+ Rich::text( rich, Rich::Side(0) ),
-                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_sideIsolatedHistos.push_back( book2D("dThetavphiRecIsoSide1","dTheta v phi isolated "+ Rich::text( rich, Rich::Side(1) ),
-                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    richHisto2D( HID("dThetavphiRecIso"), "dTheta v phi Isolated", 0.0, 2*Gaudi::Units::pi, 20,
+                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 );
+    m_sideIsolatedHistos.push_back( richHisto2D(HID("dThetavphiRecIsoSide0"),"dTheta v phi isolated "+ Rich::text( rich, Rich::Side(0) ),
+                                                0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_sideIsolatedHistos.push_back( richHisto2D(HID("dThetavphiRecIsoSide1"),"dTheta v phi isolated "+ Rich::text( rich, Rich::Side(1) ),
+                                                0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
     // quarter histos
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart0","dTheta v phi "+ Rich::text( rich, Rich::Side(0) )+" Pos",
-                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart1","dTheta v phi "+ Rich::text( rich, Rich::Side(0) )+" Neg",
-                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart2","dTheta v phi "+ Rich::text( rich, Rich::Side(1) )+" Pos",
-                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
-    m_quarterHistos.push_back( book2D("dThetavphiRecQuart3","dTheta v phi "+ Rich::text( rich, Rich::Side(1) )+" Neg",
-                                      0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( richHisto2D(HID("dThetavphiRecQuart0"),"dTheta v phi "+ Rich::text( rich, Rich::Side(0) )+" Pos",
+                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( richHisto2D(HID("dThetavphiRecQuart1"),"dTheta v phi "+ Rich::text( rich, Rich::Side(0) )+" Neg",
+                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( richHisto2D(HID("dThetavphiRecQuart2"),"dTheta v phi "+ Rich::text( rich, Rich::Side(1) )+" Pos",
+                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+    m_quarterHistos.push_back( richHisto2D(HID("dThetavphiRecQuart3"),"dTheta v phi "+ Rich::text( rich, Rich::Side(1) )+" Neg",
+                                           0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
   }
 
   if ( m_histoOutputLevel > 2 )
@@ -145,22 +147,22 @@ StatusCode AlignmentMonitor::initialize()
 
       std::ostringstream title;
       title << "Alignment Histogram: Sph " << sph << " flat " << flat << " R" << rich+1;
-      book2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-              0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
-              m_deltaThetaHistoRange, 50 );
+      richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
+                   0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                   m_deltaThetaHistoRange, 50 );
       if ( m_useMCTruth )
       {
         // use MC estimate for cherenkov angle
         h_id += "MC";
         title << " MC";
-        book2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-                0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
-                m_deltaThetaHistoRange, 50 );
+        richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
+                     0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                     m_deltaThetaHistoRange, 50 );
         title << " TrueP";
         h_id += "TruP";
-        book2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-                0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
-                m_deltaThetaHistoRange, 50 );
+        richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
+                     0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                     m_deltaThetaHistoRange, 50 );
       }
     }
   }
@@ -182,9 +184,6 @@ StatusCode AlignmentMonitor::execute()
 
   // Check Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
-
-  // Rich Histo ID
-  const Rich::HistoID hid;
 
   // If any containers are empty, form them
   if ( richTracks()->empty() ) {
@@ -224,7 +223,8 @@ StatusCode AlignmentMonitor::execute()
 
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) {
+        iSeg != richSegments()->end(); ++iSeg ) 
+  {
     LHCb::RichRecSegment* segment = *iSeg;
 
     const Rich::DetectorType rich = segment->trackSegment().rich();
@@ -244,17 +244,18 @@ StatusCode AlignmentMonitor::execute()
                                         "momentum", "Momentum of seleceted tracks /GeV", 0.0, 150.0 );
 
     double thetaExpTrue(0.0), thetaExpected(0.0);
-    if ( m_useMCTruth ) {
+    if ( m_useMCTruth ) 
+    {
       // Get true beta from true particle type
       const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
       debug() << "mcType:" << mcType << endmsg;
       if ( Rich::Unknown == mcType ) continue;
       plot( mcType, "mcType", "MC Particle type", -1.5, 5.5, 7 );
-      m_pTypes[mcType]++;
+      ++m_pTypes[mcType];
 
       const double beta =
         m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
-      plot1D(beta, "beta", "Beta of the track (MC)", 0.9, 1.0);
+      richHisto1D( HID("beta"), "Beta of the track (MC)", 0.9, 1.0, nBins1D() )->fill(beta);
 
       // Expected Cherenkov theta angle for true particle type
       thetaExpTrue =  m_ckAngle->avgCherenkovTheta( segment, mcType );
@@ -289,42 +290,43 @@ StatusCode AlignmentMonitor::execute()
 
       double delThetaTrue(0.0);
       bool trueParent( false );
-      if ( m_useMCTruth ) {
+      if ( m_useMCTruth ) 
+      {
         delThetaTrue = thetaRec - thetaExpTrue;
         trueParent = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
       }
 
       const bool unAmbiguousPhoton = photon->geomPhoton().unambiguousPhoton();
 
-      if ( m_histoOutputLevel > 0 ) plot1D(static_cast<int>(unAmbiguousPhoton), "Un_Amb",
-                                           "Ambigious/Unambigious photons",-0.5,1.5,2 );
+      if ( m_histoOutputLevel > 0 )
+        richHisto1D(HID("Un_Amb"))->fill( static_cast<int>(unAmbiguousPhoton) );
 
-      if (m_useMCTruth && trueParent ) {
-        plot1D( delThetaTrue, "deltaThetaTrueAll", "Ch angle error MC ALL",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+      if (m_useMCTruth && trueParent ) 
+      {
+        richHisto1D( HID("deltaThetaTrueAll"), "Ch angle error MC ALL",
+                     -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delThetaTrue);
 
-        if ( unAmbiguousPhoton ) {
-          plot1D( delThetaTrue, "deltaThetaTrueUnamb", "Ch angle error MC Unambiguous",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-          plot1D( delTheta, "deltaThetaUnambTP", "Ch angle error (Tru parent only) Unamb",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        if ( unAmbiguousPhoton ) 
+        {
+          richHisto1D( HID("deltaThetaTrueUnamb"), "Ch angle error MC Unambiguous",
+                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delThetaTrue);
+          richHisto1D( HID("deltaThetaUnambTP"), "Ch angle error (Tru parent only) Unamb",
+                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delTheta);
         }
         else
-          plot1D( delThetaTrue, "deltaThetaTrueAmb", "Ch angle error MC Ambiguous",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        {
+          richHisto1D( HID("deltaThetaTrueAmb"), "Ch angle error MC Ambiguous",
+                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, nBins1D() )->fill(delThetaTrue);
+        }
       }
 
       if ( !unAmbiguousPhoton )
       {
-        if ( m_histoOutputLevel > 0 )
-          plot1D( delTheta, "deltaThetaAmb","Ch angle error (Ambiguous photons)",
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        if ( m_histoOutputLevel > 0 ) richHisto1D(HID("deltaThetaAmb"))->fill(delTheta);
         continue;
       }
 
-      if ( m_histoOutputLevel > 0 )
-        plot1D( delTheta, "deltaThetaUnamb","Ch angle error (Unambigous photons)",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+      if ( m_histoOutputLevel > 0 ) richHisto1D(HID("deltaThetaUnamb"))->fill(delTheta);
 
       int side, side2, quarter;
 
@@ -332,16 +334,16 @@ StatusCode AlignmentMonitor::execute()
       {
         if ( m_histoOutputLevel > 1 )
         {
-          plot1D( sphMirNum, "sphMirR1","Sph Mirror Numbers Rich1",-0.5,3.5,4);
-          plot1D( flatMirNum, "fltMirR1","Flat Mirror Numbers Rich1",-0.5,15.5,16);
-          plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
-                  "sphMirReflR1", "Spherical Mirror Refl point Rich1",
-                  -700, 700, -800, 800, 100, 100);
-          plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
-                  "flatMirReflR1", "Flat Mirror Refl point Rich1",
-                  -700, 700, -1000, 1000, 100, 100);
+          richHisto1D( HID("sphMirR1"),"Sph Mirror Numbers Rich1",-0.5,3.5,4)->fill(sphMirNum);
+          richHisto1D( HID("fltMirR1"),"Flat Mirror Numbers Rich1",-0.5,15.5,16)->fill(flatMirNum);
+          richHisto2D( HID("sphMirReflR1"), "Spherical Mirror Refl point Rich1",
+                       -700, 700, -800, 800, 100, 100 ) 
+            -> fill(gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y());
+          richHisto2D(HID("flatMirReflR1"), "Flat Mirror Refl point Rich1",
+                      -700, 700, -1000, 1000, 100, 100 )
+            -> fill(gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y());
         }
-        side = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
+        side  = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
         side2 = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
         quarter = side*2+side2;
       }
@@ -349,16 +351,16 @@ StatusCode AlignmentMonitor::execute()
       {
         if ( m_histoOutputLevel > 1 )
         {
-          plot1D( sphMirNum, "sphMirR2","Sph Mirror Numbers Rich2",-0.5,55.5,56);
-          plot1D( flatMirNum, "fltMirR2","Flat Mirror Numbers Rich2",-0.5,39.5,40);
-          plot2D( gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y(),
-                  "sphMirReflR2", "Spherical Mirror Refl point Rich2",
-                  -1800, 1800, -1500, 1500, 100, 100);
-          plot2D( gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y(),
-                  "flatMirReflR2", "Flat Mirror Refl point Rich2",
-                  -3000, 3000, -1000, 1000, 100, 100);
+          richHisto1D( HID("sphMirR2"),"Sph Mirror Numbers Rich2",-0.5,55.5,56)->fill(sphMirNum);
+          richHisto1D( HID("fltMirR2"),"Flat Mirror Numbers Rich2",-0.5,39.5,40)->fill(flatMirNum);
+          richHisto2D( HID("sphMirReflR2"), "Spherical Mirror Refl point Rich2",
+                       -1800, 1800, -1500, 1500, 100, 100)
+            ->fill(gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y());
+          richHisto2D( HID("flatMirReflR2"), "Flat Mirror Refl point Rich2",
+                       -3000, 3000, -1000, 1000, 100, 100)
+            ->fill(gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y());
         }
-        side = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
+        side  = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
         side2 = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
         quarter = side*2+side2;
       }
@@ -366,17 +368,15 @@ StatusCode AlignmentMonitor::execute()
       // a separate histogram for each side
       fill( m_sideHistos[side], phiRec, delTheta, 1 );
       if ( m_histoOutputLevel > 0 )
-        plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
-                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+        richHisto2D( HID("dThetavphiRecAll") ) -> fill( phiRec, delTheta );
 
       if ( m_histoOutputLevel > 1 ) fill( m_quarterHistos[quarter], phiRec, delTheta, 1 );
 
       // test for isolation
       const bool isolated = m_isoTrack->isIsolated( segment, m_pType );
-      if ( isolated  && m_histoOutputLevel > 1 )
+      if ( isolated && m_histoOutputLevel > 1 )
       {
-        plot2D( phiRec, delTheta, "dThetavphiRecIso", "dTheta v phi Isolated", 0.0,
-                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+        richHisto2D( HID("dThetavphiRecIso") ) -> fill( phiRec, delTheta );
         fill( m_sideIsolatedHistos[side], phiRec, delTheta, 1 );
       }
 
@@ -388,10 +388,11 @@ StatusCode AlignmentMonitor::execute()
         std::ostringstream title;
         title << RAD << " Alignment Histogram: Sph " << sphMirNum
               << " flat " << flatMirNum << " R" << (rich+1);
-        std::string h_id( "dThetavphiRec" );
+
+        std::ostringstream h_id;
+        h_id << "dThetavphiRec";
 
         std::ostringstream thisCombiNr; // only the 4-digit combination number (string)
-
         if ( sphMirNum > 9 )
           thisCombiNr << sphMirNum;
         else
@@ -404,34 +405,42 @@ StatusCode AlignmentMonitor::execute()
         // depending on options, make plots only for prebooked mirror combimations.
         bool allowMirrorCombi( true );
         if ( m_histoOutputLevel < 5 )
+        {
           // search to see if this mirror combination has been prebooked
           if ( m_preBookHistos.empty() ||
-               std::find( m_preBookHistos.begin(), 
+               std::find( m_preBookHistos.begin(),
                           m_preBookHistos.end(), thisCombiNr.str()) == m_preBookHistos.end() )
             allowMirrorCombi = false;
+        }
 
         if ( allowMirrorCombi )
         {
-          h_id += thisCombiNr.str();
-          plot2D( phiRec, delTheta, hid(rad,h_id), title.str(), 0.0, 2*Gaudi::Units::pi,
-                  -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+          h_id << thisCombiNr.str();
+          richHisto2D( HID(h_id.str(),rad), title.str(), 0.0, 2*Gaudi::Units::pi,
+                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+            ->fill( phiRec, delTheta );
 
           if ( m_histoOutputLevel > 3 && isolated )
-            plot2D( phiRec, delTheta, hid(rad,h_id+"Iso"), title.str()+" Iso", 0.0, 2*Gaudi::Units::pi,
-                    -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
-
-          if ( m_useMCTruth ) {
+            richHisto2D( HID(h_id.str()+"Iso",rad), title.str()+" Iso", 0.0, 2*Gaudi::Units::pi,
+                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+              ->fill( phiRec, delTheta ); 
+          
+          if ( m_useMCTruth ) 
+          {
             // use MC estimate for cherenkov angle
-            h_id += "MC";
+            h_id << "MC";
             title << " MC";
-            plot2D( phiRec, delThetaTrue, hid(rad,h_id), title.str(), 0.0, 2*Gaudi::Units::pi,
-                    -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+            richHisto2D( HID(h_id.str(),rad), title.str(), 0.0, 2*Gaudi::Units::pi,
+                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+              ->fill(phiRec, delThetaTrue);
             // test to see if this photon was emitted from this track
-            if ( trueParent ) {
-              h_id += "TruP";
+            if ( trueParent )
+            {
+              h_id << "TruP";
               title << " TrueP";
-              plot2D( phiRec, delThetaTrue, hid(rad,h_id), title.str(), 0.0, 2*Gaudi::Units::pi,
-                      -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+              richHisto2D( HID(h_id.str(),rad), title.str(), 0.0, 2*Gaudi::Units::pi,
+                           -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+                ->fill(phiRec, delThetaTrue);
             }
           }
         }
@@ -446,8 +455,9 @@ StatusCode AlignmentMonitor::execute()
           {
             std::ostringstream hpd_id;
             hpd_id << "HPD_" << hpd;
-            plot2D( phiRec, delTheta, "HPDs/"+hpd_id.str(), hpd_id.str(), 0.0, 2*Gaudi::Units::pi,
-                    -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
+            richHisto2D( HID("HPDs/"+hpd_id.str()), hpd_id.str(), 0.0, 2*Gaudi::Units::pi,
+                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+              ->fill(phiRec, delTheta);
           }
         }
 
@@ -477,7 +487,8 @@ StatusCode AlignmentMonitor::execute()
 //=============================================================================
 StatusCode AlignmentMonitor::finalize()
 {
-  if ( m_useMCTruth ) {
+  if ( m_useMCTruth ) 
+  {
     info() << "Number of pions:" << m_pTypes[Rich::Pion] << "; Kaons:"
            << m_pTypes[Rich::Kaon] << ";";
     if ( m_pTypes[Rich::Kaon] > 0 )
@@ -492,16 +503,11 @@ StatusCode AlignmentMonitor::finalize()
 //=========================================================================
 //  makePlotForHPD
 //=========================================================================
-int AlignmentMonitor::makePlotForHPD ( LHCb::RichSmartID smartID ) const
+int AlignmentMonitor::makePlotForHPD ( const LHCb::RichSmartID smartID ) const
 {
-  int hpd = Rich::DAQ::HPDIdentifier( smartID ).number();
-
-  if ( m_HPDList.empty() || std::find( m_HPDList.begin(),
-                                       m_HPDList.end(),
-                                       hpd) == m_HPDList.end() )
-    return 0;
-
-  else
-    return hpd;
-
+  const int hpd = Rich::DAQ::HPDIdentifier( smartID ).number();
+  return ( m_HPDList.empty() || std::find( m_HPDList.begin(),
+                                           m_HPDList.end(),
+                                           hpd ) == m_HPDList.end() ?
+           0 : hpd );
 }

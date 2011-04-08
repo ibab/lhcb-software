@@ -11,9 +11,14 @@ def dateString():
     return now.strftime("%d%m%Y")
 
 def getUNIXTime(dtime):
+    # Note dtime must be a date in CET (CERN) time.
     import time
     t = time.mktime(dtime.timetuple())
-    return int( t * 1e9 )
+    zone = time.tzname[0]
+    if zone not in ['GMT','CET'] : raise Exception('Unknown time zone '+zone)
+    offset = 0
+    if time.tzname[0] == 'GMT' : offset = -3600
+    return int( (t+offset) * 1e9 )
 
 def genXML(root,cond):
     file = open(root+cond)
@@ -80,6 +85,7 @@ dbFileName = "FixedRICH1Align"
 # http://marwww.in2p3.fr/~legac/LHCb/
 
 # Hardcode the field changes. Format is date of change and the new polarity
+# Dates are in CET !!
 field = { }
 #                          Year  Month  Day   Hour   Min  Sec
 
