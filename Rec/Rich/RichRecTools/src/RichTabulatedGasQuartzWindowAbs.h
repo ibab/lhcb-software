@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
- *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.13 2008-10-01 14:07:52 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -63,7 +60,7 @@ namespace Rich
                                    const IInterface* parent );
 
       /// Destructor
-      virtual ~TabulatedGasQuartzWindowAbs() {};
+      virtual ~TabulatedGasQuartzWindowAbs();
 
       // Initialize method
       StatusCode initialize();

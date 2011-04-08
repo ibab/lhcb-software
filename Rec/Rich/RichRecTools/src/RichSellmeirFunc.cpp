@@ -47,6 +47,7 @@ StatusCode SellmeirFunc::initialize()
   //updMgrSvc()->registerCondition( this, m_Rich1DE, &SellmeirFunc::umsUpdate );
   // force first updates
   //sc = updMgrSvc()->update(this);
+  // CRJ : UMS does not work because Rich1 has no conditions (yet)
   sc = umsUpdate();
  
   // return

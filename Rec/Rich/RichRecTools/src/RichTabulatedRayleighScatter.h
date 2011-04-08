@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TabulatedRayleighScatter
  *
- *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.15 2008-08-18 19:40:59 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

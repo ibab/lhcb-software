@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::GeomTool
  *
- *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.14 2007-09-04 16:54:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

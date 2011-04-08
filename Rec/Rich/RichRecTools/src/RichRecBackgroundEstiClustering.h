@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::BackgroundEstiClustering
  *
- *  CVS Log :-
- *  $Id: RichRecBackgroundEstiClustering.h,v 1.1 2008-03-27 11:06:01 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */

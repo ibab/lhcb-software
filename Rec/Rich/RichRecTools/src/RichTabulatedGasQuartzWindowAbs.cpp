@@ -32,6 +32,8 @@ TabulatedGasQuartzWindowAbs ( const std::string& type,
   declareInterface<IGasQuartzWindowAbs>(this);
 }
 
+TabulatedGasQuartzWindowAbs::~TabulatedGasQuartzWindowAbs() { }
+
 StatusCode TabulatedGasQuartzWindowAbs::initialize()
 {
   // Sets up various tools and services

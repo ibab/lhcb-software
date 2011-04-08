@@ -28,3 +28,6 @@ PixelCreatorFromRawBuffer( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
   : PixelCreatorBase ( type, name, parent ) { }
+
+// Destructor
+PixelCreatorFromRawBuffer::~PixelCreatorFromRawBuffer() { }

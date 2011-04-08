@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
- *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.16 2009-07-30 11:23:56 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -14,9 +11,6 @@
 
 #ifndef RICHRECTOOLS_RichTabulatedSignalDetectionEff_H
 #define RICHRECTOOLS_RichTabulatedSignalDetectionEff_H 1
-
-// STL
-//#include <memory>
 
 // Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -107,7 +101,6 @@ namespace Rich
        */
       inline const DeRichHPD * deHPD( const LHCb::RichSmartID hpdID ) const
       {
-        //info() << "Getting HPD in " << hpdID.rich() << " " << hpdID.panel() << endmsg;
         return (m_hpdPanels[hpdID.rich()][hpdID.panel()])->deHPD(hpdID);
       }
 
@@ -149,9 +142,10 @@ namespace Rich
       /// Number of ring points per radiator
       std::vector<unsigned int> m_nPoints;
 
-      mutable const LHCb::RichRecSegment * m_last_segment;
-      mutable const LHCb::RichRecRing    * m_last_ring;
-      mutable Rich::ParticleIDType m_last_hypo;
+      // cached variables for speed
+      mutable const LHCb::RichRecSegment * m_last_segment; ///< Last segment looked at
+      mutable const LHCb::RichRecRing    * m_last_ring;    ///< Last ring looked at
+      mutable Rich::ParticleIDType         m_last_hypo;    ///< last mass hypothesis looked at
 
     };
 

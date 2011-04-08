@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::NominalTabulatedSignalDetectionEff
  *
- *  CVS Log :-
- *  $Id: RichNominalTabulatedSignalDetectionEff.h,v 1.1 2008-02-15 10:21:16 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

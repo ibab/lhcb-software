@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PixelCreatorFromRawBuffer
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.12 2007-03-10 13:19:20 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
  */
@@ -45,7 +42,7 @@ namespace Rich
                                  const IInterface* parent );
 
       /// Destructor
-      virtual ~PixelCreatorFromRawBuffer() {}
+      virtual ~PixelCreatorFromRawBuffer();
 
     };
 

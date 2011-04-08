@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
- *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.20 2008-08-15 14:43:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

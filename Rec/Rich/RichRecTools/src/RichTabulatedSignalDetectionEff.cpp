@@ -24,7 +24,7 @@ using namespace Rich::Rec;
 DECLARE_TOOL_FACTORY( TabulatedSignalDetectionEff )
 
 // Standard constructor
-TabulatedSignalDetectionEff::
+  TabulatedSignalDetectionEff::
 TabulatedSignalDetectionEff ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
@@ -66,15 +66,6 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich2,Rich::left));
   m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich2,Rich::right));
 
-  // Quartz window eff
-  const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
-
-  // Digitisation pedestal loss
-  const double pLos = m_riches[Rich::Rich1]->param<double>( "HPDPedestalDigiEff" );
-
-  // store cached value
-  m_qEffPedLoss = qEff * pLos;
-
   // the ray-tracing mode
   LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
                                 ( m_useDetailedHPDsForRayT ?
@@ -88,10 +79,20 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
   debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
+  // Quartz window eff
+  const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
+
+  // Digitisation pedestal loss
+  const double pLos = m_riches[Rich::Rich1]->param<double>( "HPDPedestalDigiEff" );
+
+  // store cached value
+  m_qEffPedLoss = qEff * pLos;
+
   // Informational Printout
   debug() << " HPD quartz window efficiency = " << qEff << endmsg
           << " Digitisation pedestal eff.   = " << pLos << endmsg;
 
+  // return  
   return sc;
 }
 
@@ -115,8 +116,8 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
   if ( ckTheta > 0 )
   {
     // make a ring object
-    newRing = new LHCb::RichRecRing( segment, 
-                                     (LHCb::RichRecRing::FloatType)(ckTheta), 
+    newRing = new LHCb::RichRecRing( segment,
+                                     (LHCb::RichRecRing::FloatType)(ckTheta),
                                      hypo );
 
     // set ring type info
