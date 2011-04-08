@@ -96,12 +96,13 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
   const std::string prefix=fullName(head);
 
   TupleMap tMap ; // the temporary data map
-  DecayTreeFitter::Fitter* fitter = 0 ;
 
   // get origin vertices
   std::vector<const VertexBase*> originVtx;
   if (m_constrainToOriginVertex){  
-    if (msgLevel(MSG::DEBUG)) debug() << "Constrain the origin vertex" << endmsg; 
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Constrain the origin vertex" << endmsg; 
+    }
     // check for origin vertex
     originVtx = originVertex( mother, P ); 
     if( originVtx.empty() ){
@@ -109,16 +110,14 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
       return StatusCode::FAILURE;
     }
     for (std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ; iv != originVtx.end() ; iv++){
-      fitter = new DecayTreeFitter::Fitter(*P, *(*iv));
-      if (!fit(fitter,P,*iv,prefix,tMap)) return StatusCode::FAILURE ;
-      delete fitter ;
+      DecayTreeFitter::Fitter fitter(*P, *(*iv));
+      if (!fit(fitter, P, *iv, prefix, tMap)) return StatusCode::FAILURE ;
     }
   } else {
     if (msgLevel(MSG::DEBUG)) debug() << "Do not contrain the origin vertex" << endmsg; 
     // Get the fitter
-    fitter = new DecayTreeFitter::Fitter(*P);
-    if (!fit(fitter,P,0,prefix,tMap)) return StatusCode::FAILURE;
-    delete fitter ;
+    DecayTreeFitter::Fitter fitter(*P);
+    if (!fit(fitter, P, 0, prefix, tMap)) return StatusCode::FAILURE;
   }
   
   return fillTuple(tMap,tuple,prefix); // the actual filling
@@ -126,7 +125,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
 //=============================================================================
 // do filling for a give vertex
 //=============================================================================
-StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter* fitter, 
+StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter& fitter, 
                                          const LHCb::Particle* P,
                                          const LHCb::VertexBase* pv,
                                          const std::string& prefix, 
@@ -135,10 +134,10 @@ StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter* fitter,
   //add mass contraints
   if (!m_massConstraintsPids.empty()){
     for (std::vector<LHCb::ParticleID>::const_iterator iterC = m_massConstraintsPids.begin();  
-         iterC != m_massConstraintsPids.end(); ++iterC) fitter->setMassConstraint(*iterC);
+         iterC != m_massConstraintsPids.end(); ++iterC) fitter.setMassConstraint(*iterC);
   }
   // fit
-  fitter->fit();
+  fitter.fit();
   // fill the fit result
   fillDecay(fitter,P,prefix,tMap );
   if (m_constrainToOriginVertex){
@@ -168,20 +167,20 @@ StatusCode TupleToolDecayTreeFitter::fillPV(const LHCb::VertexBase* pv,
 //=============================================================================
 // Fill standard stuff
 //=============================================================================
-StatusCode TupleToolDecayTreeFitter::fillDecay(const DecayTreeFitter::Fitter* fitter, 
+StatusCode TupleToolDecayTreeFitter::fillDecay(const DecayTreeFitter::Fitter& fitter, 
                                           const Particle* P,
                                           const std::string& prefix, 
                                           TupleMap& tMap ) const{
    
   bool test = true; 
 
-  test &= insert( prefix+"_status", fitter->status(), tMap );
-  test &= insert( prefix+"_nDOF", fitter->nDof(), tMap  );
-  test &= insert( prefix+"_chi2_B", fitter->chiSquare(), tMap  );
-  test &= insert( prefix+"_nIter", fitter->nIter(), tMap  );
+  test &= insert( prefix+"_status", fitter.status(), tMap );
+  test &= insert( prefix+"_nDOF", fitter.nDof(), tMap  );
+  test &= insert( prefix+"_chi2_B", fitter.chiSquare(), tMap  );
+  test &= insert( prefix+"_nIter", fitter.nIter(), tMap  );
      
   //Get the fit parameters
-  const Gaudi::Math::ParticleParams* params = fitter->fitParams(P) ;
+  const Gaudi::Math::ParticleParams* params = fitter.fitParams(P) ;
   Gaudi::Math::LorentzVectorWithError momentum = params->momentum() ; 
       
   test &= insert( prefix+"_M",  momentum.m().value(), tMap  );
@@ -194,14 +193,14 @@ StatusCode TupleToolDecayTreeFitter::fillDecay(const DecayTreeFitter::Fitter* fi
 //=============================================================================
 // Fill lifetime stuff
 //=============================================================================
-StatusCode TupleToolDecayTreeFitter::fillLT(const DecayTreeFitter::Fitter* fitter, 
-                                          const Particle* P,
-                                          const std::string& prefix, 
-                                          TupleMap& tMap ) const{
+StatusCode TupleToolDecayTreeFitter::fillLT(const DecayTreeFitter::Fitter& fitter, 
+                                            const Particle* P,
+                                            const std::string& prefix, 
+                                            TupleMap& tMap ) const{
    
   bool test = true; 
 
-  const Gaudi::Math::ParticleParams* tParams = fitter->fitParams(P); 
+  const Gaudi::Math::ParticleParams* tParams = fitter.fitParams(P); 
   Gaudi::Math::ValueWithError decayLength = tParams->decayLength();
   Gaudi::Math::ValueWithError ctau = tParams->ctau();
   test &= insert( prefix+"_ctau", ctau.value(), tMap  );
@@ -214,7 +213,7 @@ StatusCode TupleToolDecayTreeFitter::fillLT(const DecayTreeFitter::Fitter* fitte
 //=============================================================================
 // Fill lifetime information for non stable daughters
 //=============================================================================
-StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitter* fitter
+StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitter& fitter
                                                     ,const LHCb::Particle* P
                                                     ,const std::string& prefix
                                                     ,TupleMap& tMap )const{

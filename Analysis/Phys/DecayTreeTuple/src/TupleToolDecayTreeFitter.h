@@ -117,7 +117,7 @@ public:
 
 
   virtual StatusCode fill( const LHCb::Particle*
-			   , const LHCb::Particle*
+                           , const LHCb::Particle*
                            , const std::string&
                            , Tuples::Tuple& );
 
@@ -125,19 +125,19 @@ public:
   
  private:
   ///  Fill inforation for a given origin vertex
-  StatusCode fit(DecayTreeFitter::Fitter* fitter, 
+  StatusCode fit(DecayTreeFitter::Fitter& fitter, 
                  const LHCb::Particle* P,
                  const LHCb::VertexBase* pv,
                  const std::string& prefix, 
                  TupleMap& tMap) const;
   ///  Fill lifetime information
   ///  Fill fit inforation for top decay
-  StatusCode fillDecay(const DecayTreeFitter::Fitter* fitter, 
+  StatusCode fillDecay(const DecayTreeFitter::Fitter& fitter, 
                        const LHCb::Particle* P,
                        const std::string& prefix, 
                        TupleMap& tMap) const;
   ///  Fill lifetime information
-  StatusCode fillLT(const DecayTreeFitter::Fitter* fitter, 
+  StatusCode fillLT(const DecayTreeFitter::Fitter& fitter, 
                     const LHCb::Particle* P,
                     const std::string& prefix, 
                     TupleMap& tMap) const;
@@ -149,14 +149,18 @@ public:
                     TupleMap& tMap) const;
   
   ///  Fill lifetime information for non stable daughters
-  StatusCode fillDaughters( const DecayTreeFitter::Fitter* fitter,
+  StatusCode fillDaughters( const DecayTreeFitter::Fitter& fitter,
                             const LHCb::Particle* P,
                             const std::string& prefix,
                             TupleMap& tMap )const;
   /// actual filling of tuple
-  StatusCode fillTuple(const TupleMap& tMap, Tuples::Tuple& tuple, std::string prefix)const ;
+  StatusCode fillTuple(const TupleMap& tMap, 
+                       Tuples::Tuple& tuple, 
+                       std::string prefix)const ;
   /// insert helper method
-  StatusCode insert(std::string leaf, double val, TupleMap& tMap)const ;
+  StatusCode insert(std::string leaf, 
+                    double val, 
+                    TupleMap& tMap)const ;
   
   std::string getName(int id) const;  ///< name of particle
   

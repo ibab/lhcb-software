@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Juan Palacios
+ - TupleToolDecayTreeTuple
+  . Fix memory leaks, avoid some newed pointers.
+
 ! 2011-04-06 - Patrick Koppenburg
  - TupleToolDecayTreeTuple : add PV key and coordinates wehn isVerbose() is on
  - TupleToolBase : inline methods should be const
