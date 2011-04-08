@@ -185,6 +185,8 @@ def doxyTagsToDBM(tag, output, overwrite = False, python = False):
     @param overwrite: if set to True, force the creation of a new DB (default is append)
     @param python: if set to True, modify the class names to use '.' instead of '::'
     """
+    if "LHCBDOC_TESTING" in os.environ:
+        return
     import anydbm, xml.parsers.expat
     _log = logging.getLogger("doxyTagsToDBM")
     # Open (and create) the database
@@ -436,6 +438,16 @@ class Doc(object):
         # The project must not be included
         if self.getVersion(project) is not None:
             return False
+        # Other special case: LHCbDirac cannot go in the same doc dir as Gaudi.
+        # If at least one the projects to be added (project+deps) is in the
+        # conflicting list (first intersection), ensure that the one are not
+        # (second intersection) among the others (difference).
+        conflicts = set(["GAUDI", "LHCBDIRAC"])
+        to_add = set([p.upper() for p,_ in deps])
+        to_add.add(project.upper())
+        if conflicts.intersection(to_add):
+            if conflicts.difference(to_add).intersection(self.projects.keys()):
+                return False
         # Each dependency must be already present with the right version or
         # not present and there must be projects in the dependencies that are
         # already in the doc
@@ -1151,7 +1163,7 @@ def findProjects(exclude = None):
     releases = os.environ["LHCBRELEASES"]
     logging.debug("Looking for projects in '%s'", releases)
     if exclude is None: # default exclusion
-        exclude = set([ "GANGA", "DIRAC", "LHCBDIRAC", "LHCBGRID", "CURIE", "GEANT4", "COMPAT" ])
+        exclude = set([ "GANGA", "DIRAC", "LHCBGRID", "CURIE", "GEANT4", "COMPAT" ])
     else:
         exclude = set([ p.upper() for p in exclude ])
     projects = []
