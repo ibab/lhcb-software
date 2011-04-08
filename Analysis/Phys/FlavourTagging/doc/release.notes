@@ -5,6 +5,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Juan Palacios
+ - src/BTagging.cpp
+  . Fix memory leak.
+ - Increase to v12r4p3.
+
 !========================== FlavourTagging v12r4p2 2011-03-29 ================
 
 ! 2011-03-29 - Juan Palacios

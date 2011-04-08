@@ -137,7 +137,13 @@ void BTagging::performTagging(const std::string & location)
   //   ///Output to TES (for backward compatibility)
   const std::string tagLocation = location+"/"+m_TagLocation;
   verbose() << "Putting FlavourTags in " << tagLocation << endmsg;
-  if(! (tags->empty()) ) put(tags, tagLocation);
+  if(! (tags->empty()) ) {
+    put(tags, tagLocation);
+  } else {
+    delete tags;
+  }
+  
+  
 
 }
 
