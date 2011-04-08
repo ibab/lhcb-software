@@ -184,12 +184,18 @@ def getIntInfo(filename,type):
     return int(run.split('.')[0])
 
 def getUNIXTime(dtime):
+    # Note dtime must be a date in CET (CERN) time.
     import time
     t = time.mktime(dtime.timetuple())
-    return int( t * 1e9 )
+    zone = time.tzname[0]
+    if zone not in ['GMT','CET'] : raise Exception('Unknown time zone '+zone)
+    offset = 0
+    if time.tzname[0] == 'GMT' : offset = -3600
+    return int( (t+offset) * 1e9 )
 
 def correctStartTime(time):
-    startTimeOffset = int( 5 * 1e9 )
+    startTimeOffset = 0
+    #startTimeOffset = int( 5 * 1e9 )
     return time - startTimeOffset
 
 def stringsMD5(strings):
@@ -409,13 +415,13 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def runAll(files='2011-RootFiles.txt'):
+def runAll(files='MDMS-RootFiles.txt'):
 
     calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
     #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
     #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
 
-    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
+    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
     #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
     #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
 

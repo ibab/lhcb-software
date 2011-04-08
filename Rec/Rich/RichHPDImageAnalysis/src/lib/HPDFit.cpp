@@ -31,8 +31,9 @@ using namespace Rich::HPDImage;
 
 HPDFit::HPDFit()
 { 
-  // m_boundaryPixels.reserve( Rich::DAQ::NumPixelColumns * 
-  //                           Rich::DAQ::NumPixelRows ); 
+  // Helps prevent some strange crashes when running in python ....
+  m_boundaryPixels.reserve( Rich::DAQ::NumPixelColumns * 
+                            Rich::DAQ::NumPixelRows ); 
 }
 
 HPDFit::~HPDFit() { }
