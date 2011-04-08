@@ -5,6 +5,10 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2011-04-08 - Marco Cattaneo
+ - Add some checks on rotation matrices to recover precision when elements
+   should be zero.
+
 !========================= DetDesc v18r24 2011-04-04 =========================
 ! 2011-03-14 - Wouter Hulsbergen
  - Fix problem in 3DTransformationFunctions that is due to a bug in

@@ -265,7 +265,11 @@ Gaudi::Transform3D GeometryInfoPlus::ownMatrix() const
 //=============================================================================
 Gaudi::XYZPoint GeometryInfoPlus::toLocal( const Gaudi::XYZPoint& globalPoint ) const
 {
-  return ( toLocalMatrix() * globalPoint );
+  Gaudi::XYZPoint localPoint = toLocalMatrix() * globalPoint;
+  // Due to LHCb geometry, many measurements have Z=0 in local frame
+  // Next line recovers precision lost in transformations, particularly on 32-bit
+  if( fabs(localPoint.Z()) < 1.e-10 ) localPoint.SetZ(0.);
+  return ( localPoint );
 }
 //=============================================================================
 Gaudi::XYZPoint GeometryInfoPlus::toGlobal( const Gaudi::XYZPoint& localPoint  ) const
@@ -384,7 +388,40 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
                                            )
                         );
 
+  // Recover precision in cases of rotations by pi or halfpi
+  double xx, xy, xz, dx, yx, yy, yz, dy, zx, zy, zz, dz;
+  m_matrix->GetComponents( xx, xy, xz, dx, yx, yy, yz, dy, zx, zy, zz, dz );
+  if( fabs(xx) < 1.e-15 ) xx = 0.;
+  if( fabs(xy) < 1.e-15 ) xy = 0.;
+  if( fabs(xz) < 1.e-15 ) xz = 0.;
+  if( fabs(dx) < 1.e-12 ) dx = 0.;
+  if( fabs(yx) < 1.e-15 ) yx = 0.;
+  if( fabs(yy) < 1.e-15 ) yy = 0.;
+  if( fabs(yz) < 1.e-15 ) yz = 0.;
+  if( fabs(dy) < 1.e-12 ) dy = 0.;
+  if( fabs(zx) < 1.e-15 ) zx = 0.;
+  if( fabs(zy) < 1.e-15 ) zy = 0.;
+  if( fabs(zz) < 1.e-15 ) zz = 0.;
+  if( fabs(dz) < 1.e-12 ) dz = 0.;
+  m_matrix->SetComponents( xx, xy, xz, dx, yx, yy, yz, dy, zx, zy, zz, dz );
+  
   m_matrixInv=new Gaudi::Transform3D( toLocalMatrix().Inverse() );
+
+  // Recover precision
+  m_matrixInv->GetComponents( xx, xy, xz, dx, yx, yy, yz, dy, zx, zy, zz, dz );
+  if( fabs(xx) < 1.e-15 ) xx = 0.;
+  if( fabs(xy) < 1.e-15 ) xy = 0.;
+  if( fabs(xz) < 1.e-15 ) xz = 0.;
+  if( fabs(dx) < 1.e-12 ) dx = 0.;
+  if( fabs(yx) < 1.e-15 ) yx = 0.;
+  if( fabs(yy) < 1.e-15 ) yy = 0.;
+  if( fabs(yz) < 1.e-15 ) yz = 0.;
+  if( fabs(dy) < 1.e-12 ) dy = 0.;
+  if( fabs(zx) < 1.e-15 ) zx = 0.;
+  if( fabs(zy) < 1.e-15 ) zy = 0.;
+  if( fabs(zz) < 1.e-15 ) zz = 0.;
+  if( fabs(dz) < 1.e-12 ) dz = 0.;
+  m_matrixInv->SetComponents( xx, xy, xz, dx, yx, yy, yz, dy, zx, zy, zz, dz );
 
   log() << MSG::VERBOSE << "calculated full matrices" << endmsg;
 

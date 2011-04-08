@@ -284,7 +284,7 @@ const ILVolume* PVolume::lvolume () const
 
 // ============================================================================
 /** get the inverse transformation matrix
- *  @return reference to inverse transformationmatrix 
+ *  @return reference to inverse transformation matrix 
  */
 // ============================================================================
 const Gaudi::Transform3D&  PVolume::matrixInv  () const 
@@ -302,7 +302,11 @@ const Gaudi::Transform3D&  PVolume::matrixInv  () const
 // ============================================================================
 Gaudi::XYZPoint PVolume::toLocal 
 ( const Gaudi::XYZPoint& PointInMother ) const 
-{ return m_matrix * PointInMother ; }
+{ Gaudi::XYZPoint localPoint = m_matrix * PointInMother ;
+  // Due to LHCb geometry, many measurements have Z=0 in local frame
+  // Next line recovers precision lost in transformations, particularly on 32-bit
+  if( fabs(localPoint.Z()) < 1.e-10 ) localPoint.SetZ(0.);
+  return localPoint ; }
 // ============================================================================
 
 // ============================================================================

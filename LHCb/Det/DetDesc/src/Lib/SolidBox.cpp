@@ -216,7 +216,7 @@ bool SolidBox::isInside( const Gaudi::RhoZPhiPoint   & point ) const
 // ============================================================================
 template <class aPoint>
 bool SolidBox::isInsideImpl( const aPoint& point ) const
-{ 
+{
   return (fabs(point.z()) < zHalfLength() &&
           fabs(point.y()) < yHalfLength() && 
           fabs(point.x()) < xHalfLength()); 
