@@ -2,6 +2,10 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2011-04-08 - Marco Cattaneo
+ - Add some VERBOSE debug in MCOTDepositCreator
+ - Remove obsolete file OTSimulation_dll.cpp
+
 !====================== OTSimulation v5r0 2010-03-01 ======================
 ! 2010-02-26 - Nicola Serra
  - Changed 3D path length in the cell efficiency

@@ -225,6 +225,7 @@ void MCOTDepositCreator::makeDeposits() const
       // found spill - create some digitizations and add them to deposits
       for (MCHits::const_iterator iHit = otMCHits->begin(), iHitEnd = otMCHits->end(); iHit != iHitEnd; ++iHit) {
         MCHit* aMCHit = (*iHit);
+        if (msgLevel(MSG::VERBOSE)) verbose() << "MCHit " << *aMCHit << endmsg;
         
         // time offset
         const double tTimeOffset = aMCHit->time() + m_spillTimes[iSpill];
@@ -232,7 +233,10 @@ void MCOTDepositCreator::makeDeposits() const
         // make deposits
         std::vector<std::pair<OTChannelID, double> > chanAndDist;
         const DeOTModule* module = m_tracker->findModule(aMCHit->midPoint());
+        if (msgLevel(MSG::VERBOSE)) verbose() << " module " << module << endmsg;
         if ( module ) {
+          if (msgLevel(MSG::VERBOSE)) verbose() << "MCHit entry: " << aMCHit->entry()
+                                                << " MCHit exit: " << aMCHit->exit() << endmsg;
           module->calculateHits(aMCHit->entry(), aMCHit->exit(), chanAndDist);
         } else continue;
                 
@@ -245,6 +249,7 @@ void MCOTDepositCreator::makeDeposits() const
             const int amb                = (dist < 0.0) ? -1 : 1;
             /// create deposit
             MCOTDeposit* deposit = new MCOTDeposit(MCOTDeposit::Signal, aMCHit, iT->first, tTimeOffset, std::abs(dist), amb);
+            if (msgLevel(MSG::VERBOSE)) verbose() << *deposit << endmsg;
             /// Apply single cell efficiency cut
             /// Currently per station; but I can imagine we want to do it per module or straw
             bool accept = false;
@@ -252,6 +257,10 @@ void MCOTDepositCreator::makeDeposits() const
             // Calculate the path through a cell in 3D, using the slope
             Gaudi::XYZVector slopes = module->geometry()->toLocal(Gaudi::XYZVector(aMCHit->dxdz(),
                                                                                   aMCHit->dydz(), 1.0));
+
+            if (msgLevel(MSG::VERBOSE)) verbose() << "Slopes " << aMCHit->dxdz()
+                                                  << " " << aMCHit->dydz() 
+                                                  << " " << slopes << endmsg;
 
             m_singleCellEffVector[toolIndex]->calculate( deposit, (slopes.y()/slopes.z()), accept );
 
