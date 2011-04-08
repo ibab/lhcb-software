@@ -87,7 +87,11 @@ StatusCode MCPrimVertexMaker::execute() {
       m_vis++;
       LHCb::RecVertex* newPV = new LHCb::RecVertex;
       StatusCode sc = makePV(*ipv,newPV);
-      if (!sc) return sc;
+      if (!sc) {
+        delete primaries;
+        return sc;  
+      }
+      
       primaries->insert(newPV);
     } 
   }
