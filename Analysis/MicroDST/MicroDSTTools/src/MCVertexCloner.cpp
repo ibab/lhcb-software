@@ -69,8 +69,11 @@ void MCVertexCloner::cloneDecayProducts(const SmartRefVector<LHCb::MCParticle>& 
        iProd != products.end();
        ++iProd) {
     LHCb::MCParticle* productClone = (*m_particleCloner)(*iProd);
-    productClone->setOriginVertex( clonedVertex );
-    if (productClone) clonedVertex->addToProducts(productClone );
+    if (productClone) {
+      productClone->setOriginVertex( clonedVertex );
+      clonedVertex->addToProducts(productClone );
+    }
+    
   }
 }
 //=============================================================================
