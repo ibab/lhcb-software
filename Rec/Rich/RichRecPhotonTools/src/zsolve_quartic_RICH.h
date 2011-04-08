@@ -12,9 +12,6 @@
  *
  *  @see gsl_poly_complex_solve_quartic
  *
- *  CVS Log :-
- *  $Id: zsolve_quartic_RICH.h,v 1.1.1.1 2007-11-26 17:25:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-14
  */
@@ -88,7 +85,6 @@ inline double solve_quartic_RICH ( const double a,
   }
 
   return GSL_REAL(w1) + GSL_REAL(w2) + GSL_REAL(w3) - (r4*a);
-
 }
 
 #endif // RICHTOOLS_ZSOLVE_QUARTIC_RICH_H

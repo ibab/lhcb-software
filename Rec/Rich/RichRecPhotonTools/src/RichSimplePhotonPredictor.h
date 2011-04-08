@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::SimplePhotonPredictor
  *
- *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.h,v 1.1.1.1 2007-11-26 17:25:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

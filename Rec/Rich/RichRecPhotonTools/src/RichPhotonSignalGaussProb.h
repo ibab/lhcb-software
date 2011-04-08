@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonSignalGaussProb
  *
- *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.h,v 1.3 2008-06-05 06:59:43 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

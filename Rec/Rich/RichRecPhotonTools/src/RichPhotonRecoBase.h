@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonRecoBase
  *
- *  CVS Log :-
- *  $Id: RichPhotonRecoBase.h,v 1.1 2008-02-18 14:53:00 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
  *  @date   2003-11-14

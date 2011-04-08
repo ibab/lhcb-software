@@ -35,7 +35,6 @@ PhotonRecoBase( const std::string& type,
   m_checkPhotCrossSides[Rich::Rich2Gas] = true;
   declareProperty( "CheckSideCrossing", m_checkPhotCrossSides );
   declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
-
 }
 
 //=============================================================================
