@@ -50,6 +50,6 @@ MuonMeasurement::MuonMeasurement( const LHCbID& lhcbID,
 
 /// Copy constructor
 MuonMeasurement::MuonMeasurement( const MuonMeasurement& other ) 
-  : Measurement(other) {
+  : Measurement(other),m_position(other.m_position),m_muonProjection(other.m_muonProjection) {
 
 }

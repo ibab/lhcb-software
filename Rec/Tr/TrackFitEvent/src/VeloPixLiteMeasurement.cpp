@@ -89,7 +89,7 @@ void VeloPixLiteMeasurement::init( const DeVeloPix& det, const IVeloPixClusterPo
 
 /// Copy constructor
 VeloPixLiteMeasurement::VeloPixLiteMeasurement( const VeloPixLiteMeasurement& other ) 
-  : Measurement(other) {
+  : Measurement(other),m_veloPixProjection(other.m_veloPixProjection), m_cluster(other.m_cluster) {
 }
 
 

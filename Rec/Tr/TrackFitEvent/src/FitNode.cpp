@@ -69,7 +69,8 @@ namespace LHCb {
     m_refResidual(0),
     m_doca(0),
     m_prevNode(0),
-    m_nextNode(0)
+    m_nextNode(0),
+    m_parent(0)
   {
     // FitNode default constructor
     m_filterStatus[Forward] = m_filterStatus[Backward] = Uninitialized ;
@@ -84,7 +85,8 @@ namespace LHCb {
     m_refResidual(0),
     m_doca(0),
     m_prevNode(0),
-    m_nextNode(0)
+    m_nextNode(0),
+    m_parent(0)
   {
     m_filterStatus[Forward] = m_filterStatus[Backward] = Uninitialized ;
     m_hasInfoUpstream[Forward] = m_hasInfoUpstream[Backward] = Unknown ;
@@ -100,7 +102,8 @@ namespace LHCb {
     m_refResidual(0),
     m_doca(0),
     m_prevNode(0),
-    m_nextNode(0)
+    m_nextNode(0),
+    m_parent(0)
   {
     m_filterStatus[Forward] = m_filterStatus[Backward] = Uninitialized ;
     m_hasInfoUpstream[Forward] = m_hasInfoUpstream[Backward] = Unknown ;

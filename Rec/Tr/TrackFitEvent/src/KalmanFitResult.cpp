@@ -18,7 +18,7 @@ namespace LHCb
   
   // copy from TrackFitResult
   KalmanFitResult::KalmanFitResult(const TrackFitResult& rhs) 
-    : TrackFitResult(rhs) {}
+    : TrackFitResult(rhs),m_nTrackParameters(5), m_chi2CacheValid(false),m_errorFlag(0x00),m_bidirectionalSmoother(true) {}
 		    
   // destructor
   KalmanFitResult::~KalmanFitResult() {}
