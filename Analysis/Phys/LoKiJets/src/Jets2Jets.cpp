@@ -95,7 +95,7 @@ const IJets2Jets::Table LoKi::Jets2Jets::makeRelation( const IJets2Jets::Jets& S
   typedef std::vector<const LHCb::Particle*> Parts;
 
   // create the relation table and register it into TES 
-  IJets2Jets::Table* table = new IJets2Jets::Table() ;
+  IJets2Jets::Table table;
   // select
   for( LHCb::Particles::const_iterator secjet =StdSecondaryJets.begin() ; StdSecondaryJets.end()!= secjet ; secjet++ )
   { 
@@ -154,11 +154,11 @@ const IJets2Jets::Table LoKi::Jets2Jets::makeRelation( const IJets2Jets::Jets& S
           }
         }
       }
-      if(weight_jetsec_jetprim>0) table->relate(*primjet,*secjet,weight_jetsec_jetprim);
+      if(weight_jetsec_jetprim>0) table.relate(*primjet,*secjet,weight_jetsec_jetprim);
     }
   }
   
-  return (*table) ;
+  return table ;
 }
 
 

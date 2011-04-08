@@ -142,7 +142,7 @@ const IJets2Jets::Table LoKi::PartonicJets2HepMCJets::makeRelation
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
  
-  IJets2Jets::Table* table = new IJets2Jets::Table();
+  IJets2Jets::Table table ;
   
   typedef std::vector<const LHCb::Particle*> ConstVectPart;
  	typedef LHCb::Relation2D< LHCb::Particle,HepMC::GenParticle* >  Table2DHepMC2Part ;
@@ -228,11 +228,11 @@ const IJets2Jets::Table LoKi::PartonicJets2HepMCJets::makeRelation
       }
     }
     if(theclothestJet!=NULL) {
-      table->relate(*partonjet,theclothestJet,1.);
+      table.relate(*partonjet,theclothestJet,1.);
       ehepMC.push_back(E(theclothestJet));
     }
   }
-  return (*table);
+  return table;
   
 }
 

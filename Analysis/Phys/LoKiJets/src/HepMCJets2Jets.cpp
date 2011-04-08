@@ -152,6 +152,9 @@ StatusCode LoKi::HepMCJets2Jets::initialize()
 
   // create the new matcher 
   m_matcher = new LoKi::MCMatchObj( "P2MCRelator" , m_reporter ) ;
+
+  if (0==m_matcher) return StatusCode::FAILURE;
+  
   // increment the reference counter 
   m_matcher->addRef() ;
 
@@ -199,7 +202,7 @@ const IJets2Jets::Table LoKi::HepMCJets2Jets::makeRelation( const IJets2Jets::Je
 	typedef LHCb::Relation2D<LHCb::Particle,HepMC::GenParticle*>  Table2DHepMC2Part ;
 
   // create the relation table and register it into TES 
-  IJets2Jets::Table* table = new IJets2Jets::Table() ;
+  IJets2Jets::Table table;
   
 
   LHCb::HepMC2MC2D* tableHepMC2MC = 
@@ -249,11 +252,11 @@ const IJets2Jets::Table LoKi::HepMCJets2Jets::makeRelation( const IJets2Jets::Je
         }
       }
       
-      if(weight_jetsec_jetprim>0) table->relate(*primjet,*secjet,weight_jetsec_jetprim);
+      if(weight_jetsec_jetprim>0) table.relate(*primjet,*secjet,weight_jetsec_jetprim);
     }
   }
 
-  return (*table) ;
+  return table ;
 }
 void LoKi::HepMCJets2Jets::addTables(LoKi::MCMatchObj* matcher) const 
 {

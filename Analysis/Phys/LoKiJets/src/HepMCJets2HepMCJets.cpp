@@ -45,7 +45,8 @@ namespace LoKi
     // ========================================================================
     /// standard initialization of the tool
     StatusCode initialize() ;
-    const IJets2Jets::Table makeRelation( const IJets2Jets::Jets& StdPrimaryJets  , const IJets2Jets::Jets& StdSecondaryJets ) const ;
+    const IJets2Jets::Table makeRelation( const IJets2Jets::Jets& StdPrimaryJets  , 
+                                          const IJets2Jets::Jets& StdSecondaryJets ) const ;
   protected:
     // ========================================================================
     /// standard constructor
@@ -94,7 +95,8 @@ StatusCode LoKi::HepMCJets2HepMCJets::initialize()
 }
 
 
-const IJets2Jets::Table LoKi::HepMCJets2HepMCJets::makeRelation( const IJets2Jets::Jets& StdPrimaryJets  , const IJets2Jets::Jets& StdSecondaryJets ) const 
+const IJets2Jets::Table LoKi::HepMCJets2HepMCJets::makeRelation( const IJets2Jets::Jets& StdPrimaryJets  , 
+                                                                 const IJets2Jets::Jets& StdSecondaryJets ) const 
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
@@ -102,7 +104,7 @@ const IJets2Jets::Table LoKi::HepMCJets2HepMCJets::makeRelation( const IJets2Jet
   typedef std::vector<const LHCb::Particle*> Parts;
 
   // create the relation table and register it into TES 
-  IJets2Jets::Table* table = new IJets2Jets::Table() ;
+  IJets2Jets::Table table;
   // select
   for( LHCb::Particles::const_iterator secjet =StdSecondaryJets.begin() ; StdSecondaryJets.end()!= secjet ; secjet++ )
   { 
@@ -125,11 +127,11 @@ const IJets2Jets::Table LoKi::HepMCJets2HepMCJets::makeRelation( const IJets2Jet
           }
         }
       }
-      if(weight_jetsec_jetprim>0) table->relate(*primjet,*secjet,weight_jetsec_jetprim);
+      if(weight_jetsec_jetprim>0) table.relate(*primjet,*secjet,weight_jetsec_jetprim);
     }
   }
   
-  return (*table) ;
+  return table ;
 }
 
 

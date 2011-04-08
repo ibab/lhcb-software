@@ -7,6 +7,15 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-04-08 - Juan Palacios
+ - src/HepMCJets2HepMCJets.cpp
+ - src/Jets2Jets.cpp
+ - src/HepMCJets2Jets.cpp
+ - src/PartonicJets2HepMCJets.cpp
+  . Fix memory leaks.
+ - cmt/requirements
+  . Increase to v5r5.
+
 !================== LoKiJets v5r4 2011-02-20 ===============================
 
 ! 2011-02-08 - Juan Palacios
