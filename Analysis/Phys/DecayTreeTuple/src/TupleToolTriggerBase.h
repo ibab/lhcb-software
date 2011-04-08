@@ -63,10 +63,6 @@ protected:
   bool m_verboseHlt2;   ///< get details on Hlt2
   
   
-  bool m_collateTriggerList;      ///<print a list of all found triggers
-  
-  
-  
   // do not allow trigger names to mutate from event-to-event
   std::vector<std::string> m_l0;
   std::vector<std::string> m_hlt1;

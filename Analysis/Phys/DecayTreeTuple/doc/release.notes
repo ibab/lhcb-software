@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-08 - Juan Palacios
+ - TupleToolTriggerbase
+  . Remove unused data member.
  - TupleToolDecayTreeTuple
   . Fix memory leaks, avoid some newed pointers.
 
