@@ -56,6 +56,7 @@ class VanDerMeerScan_Mar11 :
         
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf
+        from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         
         thresholds = {
                        Hlt1L0LinesConf  : { 'Prescale'   : { 'Hlt1L0CALO' : 1.
