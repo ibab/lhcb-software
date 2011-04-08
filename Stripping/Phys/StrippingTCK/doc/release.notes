@@ -1,0 +1,53 @@
+!-----------------------------------------------------------------------------
+! Package     : Stripping/StrippingTCK
+! Responsible : Anton Poluektov
+! Purpose     : python shell to query stripping TCK,
+                and database of stripping configuration. 
+                Based on TCKsh by Gerhard Raven
+!-----------------------------------------------------------------------------
+
+! 2011-04-08 - Anton Poluektov
+ - Initial commit. 
+
+   Contents of the package: 
+     ./scripts/STCKsh - stripping TCK shell
+     ./config.tar     - stripping configuration database
+     ./python/*.py    - python library for stripping TCK shell
+     
+   Examples of usage: 
+
+     # run stripping TCK shell from the command line
+     > $STRIPPINGTCKROOT/scripts/STCKsh
+
+     # Query list of stripping TCKs
+     >>> listConfigurations()
+     v1r1
+         Stripping
+            0x00000001 : 99a7d7a45ff34475ba6c4f5533221a5f : Test
+
+     # Query list of lines for a TCK 0x00000001
+     >>> listLines(0x00000001)
+     StrippingB2DXWithD2KPiPi0ResolvedWSLine                                         
+     StrippingB2DXWithD2KshLine                                                      
+     StrippingB2DXWithD2KshhWSLine                                                   
+     StrippingB2DXWithD2KPiPi0MergedLine                                             
+     StrippingB2DXWithD2hhhWSLine                                                    
+     StrippingB2DXWithD2hhLine                                                       
+     StrippingB2DXWithD2hhhhWSLine                                                   
+
+     # Query properties of line 'StrippingB2DXWithD2KshLine' in TCK 0x00000001
+     >>> listLineProperties(0x00000001, 'StrippingB2DXWithD2KshLine')
+     Properties for line StrippingB2DXWithD2KshLine
+        Prescale       : 1
+        Filter members : [ 'LoKi::VoidFilter/StrippingB2DXWithD2KshLineVOIDFilter' , 'CheckPV/checkPVmin1' , 'GaudiSequencer/SeqB2DXWithD2KshMerged' , 'FilterDesktop/B2DXWithD2KshLine' ]
+        Postscale      : 1
+        Output location: 'Phys/B2DXWithD2KshLine/Particles'
+        
+     # Query all properties of algorithm matching regexp
+     >>> listProperties(0x00000001, 'B2DXWithD2KshLine')
+     ...
+     ...
+
+     # Set TCK for a new configuration (experts only!)
+     >>> createTCKEntries( { 0x00000001 : '99a7d7a45ff34475ba6c4f5533221a5f'}, cas = ConfigTarFileAccessSvc(File = '$STRIPPINGTCKROOT/config.tar', Mode = 'ReadWrite') )
+     creating mapping TCK: 0x00000001 -> ID: 99a7d7a45ff34475ba6c4f5533221a5f

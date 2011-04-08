@@ -1,0 +1,5 @@
+#!/bin/sh
+echo "invoking" `which python` 
+echo "and loading utils"
+
+exec `which python` -i -c 'from utils import *'

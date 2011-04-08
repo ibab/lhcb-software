@@ -1,0 +1,21 @@
+#============================================================================
+# Created    : 2011-04-08
+# Maintainer : Anton Poluektov
+#============================================================================
+package           StrippingTCK
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python scripts
+#============================================================================
+# Actual dependencies
+#============================================================================
+use   GaudiPolicy v*
+use   Python      v*  LCG_Interfaces
+# use   HltCommon      v*  Hlt
+
+apply_pattern install_python_modules
+apply_pattern install_scripts
+
