@@ -225,6 +225,8 @@ void ROFarmMonitor::initialize ( ) {
   m_stateName.push_back( "ERROR" );
 
   m_lastTime = System::currentTime( System::microSec );
+  m_offsetTime = m_lastTime / 100000000;
+  m_offsetTime = 100 * m_offsetTime;
   std::cout << "Initialized OK," << m_partitions.size() << " partitions" << std::endl;
 }
 
@@ -336,7 +338,9 @@ void ROFarmMonitor::update( )   {
   longlong now = System::currentTime( System::microSec );
   float dt = float( .000001 * ( now - m_lastTime ) );
   m_lastTime = now;
-  if ( 1 < m_print ) std::cout << "dt " << dt << std::endl;
+  int tagTime = now/1000000 - m_offsetTime;
+
+  std::cout << "Time " << tagTime <<  "  dt " << dt << std::endl;
 
   const char* fmt = " %-12s   Mep%10d Evt%10d (Con%10d) Snd%10d (Acc%10d) Tsk%5d \n";
 
@@ -386,7 +390,7 @@ void ROFarmMonitor::update( )   {
           if ( !isHlt && !isCalib && !isMoni && ! isReco ) continue;
           if ( 1 < m_print ) std::cout << "Part " << (*itP)->name << " node " << (*n).name << std::endl;
 
-          double newTime = double( (*n).time -1236100000 ) + double( (*n).millitm ) * 0.001;
+          double newTime = double( (*n).time - m_offsetTime ) + double( (*n).millitm ) * 0.001;
           if ( 2 < m_print ) std::cout << "   Update time " << newTime << std::endl;
 
           if ( isHlt || isCalib ) {
@@ -438,7 +442,15 @@ void ROFarmMonitor::update( )   {
               //== Compute rates
               std::vector<RONodeCounter>::iterator itN;
               for ( itN = prevCounters.begin(); prevCounters.end() != itN; ++itN ) {
-                if ( (*itN).name() == cntr.name() ) cntr.increment( *itN, newTime );
+                if ( (*itN).name() == cntr.name() ) {
+                  if ( (*itN).lastTime() == newTime ) {
+                    if ( 0 < m_test ) std::cout << "Node " << (*itN).name() 
+                                                 << " has not updated, last time " <<  int(newTime) << std::endl;
+                    cntr = *itN;
+                  } else {
+                    cntr.increment( *itN, newTime );
+                  }
+                }
               }
 
               if ( isHlt ) {

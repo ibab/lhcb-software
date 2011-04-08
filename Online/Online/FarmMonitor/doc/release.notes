@@ -4,10 +4,13 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Olivier Callot
+ - Fix properly the case where a node doesn't send updated information.
+
 !============================== v2r6 2011-04-07 ==============================
 ! 2011-04-07 - Olivier Callot
  - Add task counter to trend plot
- - If the timeof the erading hasn't changed, don't update the rates.
+ - If the time of the reading hasn't changed, don't update the rates.
 
 ! 2011-04-03 - Olivier Callot
  - Add option -test=1 to run without producing neither Trending nor DIM services

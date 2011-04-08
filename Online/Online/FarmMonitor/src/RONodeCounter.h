@@ -71,7 +71,6 @@ public:
 
   void increment( RONodeCounter& cnt, double newTime ) {
     float invTime = 0.;
-    if ( newTime == cnt.lastTime() ) return;
     if ( cnt.lastTime() < newTime ) invTime = float( 1. / (newTime - cnt.lastTime() ) );
     m_lastTime = newTime;
     m_mepRate = invTime * ( m_mep - cnt.mep() );

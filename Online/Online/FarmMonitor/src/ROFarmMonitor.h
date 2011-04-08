@@ -86,6 +86,7 @@ private:
   std::vector<int>         m_svc;      /// List of Dim services
   std::vector<std::string> m_stateName; /// Name of FSM states
   longlong                 m_lastTime;  /// time of the last update
+  int                      m_offsetTime; /// Offset to make time readable.
  
   DimServer*                   m_dimServer;
   std::vector<PartitionDesc*>  m_partitions;  /// list of partitions
