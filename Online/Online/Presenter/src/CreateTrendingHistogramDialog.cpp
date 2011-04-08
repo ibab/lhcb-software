@@ -70,6 +70,8 @@ void CreateTrendingHistogramDialog::ok() {
   std::string fileNamePart = m_partition + "_" + fileName;
   result = PresenterGaudi::trendingTool -> openRead( fileNamePart ) ;
 
+  std::string ratio ( m_tagEntry->GetText() );
+
   if ( ! result ) {
     std::cout << "Error opening file " << fileNamePart << std::endl;
     *m_output = "The selected file '"+fileNamePart+"' gave error in TrendingTool::openRead";
@@ -87,15 +89,27 @@ void CreateTrendingHistogramDialog::ok() {
       while ( fileName.find( "/" ) != std::string::npos ) {
         fileName = fileName.substr( fileName.find("/")+1 );
       }
+      bool ratioFound = false;
       std::vector< std::string >::iterator it ;
       for ( it = tags.begin() ; it != tags.end() ; ++it ) {
         std::string tagName = *it;
         m_histdb->declareTrendingHistogram( tagName, fileName, tagName );
+        if ( ratio != "" && tagName == ratio ) ratioFound = true;
       }
-
+      int nbRatio = 0;
+      if ( ratioFound ) {
+        for ( it = tags.begin() ; it != tags.end() ; ++it ) {
+          if ( ratio != *it ) {
+            std::string newTag = *it + "|" + ratio;
+            m_histdb->declareTrendingHistogram( newTag, fileName, newTag );           
+            nbRatio++;
+          }
+        }
+      }
       bool result = m_histdb -> commit() ;
 
-      sprintf( message, "Committed %d tags for trending file %s, status %d.", (int)tags.size(), fileName.c_str(), result );
+      sprintf( message, "Committed %d tags + %d ratios for trending file %s, status %d.", 
+               (int)tags.size(), nbRatio, fileName.c_str(), result );
       *m_output = std::string( message );
       std::cout << message << std::endl;
     }
@@ -156,6 +170,22 @@ void CreateTrendingHistogramDialog::build() {
     fMainFrame->AddFrame(fileLabel2, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
     fileLabel2->MoveResize( 420 , 65 , 50 , 20 ) ;
 
+
+    // Ration name
+    std::string title2 = "Create ratios of trends to variable (blank = not) ";
+    TGLabel *fileLabel3 = new TGLabel(fMainFrame, title2.c_str());
+    fileLabel3->SetTextJustify(33);
+    fMainFrame->AddFrame(fileLabel3, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+    fileLabel3->MoveResize( 15 , 105 , 250 , 20 ) ;
+
+    // File entry
+    m_tagEntry = new TGTextEntry(fMainFrame, new TGTextBuffer(15));
+    m_tagEntry->SetMaxLength(80);
+    m_tagEntry->SetAlignment(kTextLeft);
+    m_tagEntry->SetText("");
+    m_tagEntry->Resize(150,m_tagEntry->GetDefaultHeight());
+    fMainFrame->AddFrame(m_tagEntry, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+    m_tagEntry->MoveResize(310,105,150,22);
 
     // OK button
     TGTextButton *OKButton = new TGTextButton(fMainFrame,"OK");

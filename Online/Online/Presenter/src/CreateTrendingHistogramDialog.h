@@ -47,6 +47,7 @@ class CreateTrendingHistogramDialog : public TGTransientFrame {
  private:
   const TGWindow* m_rootFrame ; ///< Root frame of this window
   TGTextEntry *   m_fileEntry ; ///< Entry for the file name
+  TGTextEntry *   m_tagEntry ; ///< Entry for the file name
   OnlineHistDB *  m_histdb ; ///< Pointer to histogram DB object
   std::string     m_partition;
   std::string*    m_output;

@@ -74,7 +74,8 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
     m_identifier = m_onlineHist->identifier();
     if ( hist->type() == OnlineHistDBEnv::TRE ) {
       m_isTrendPlot = true;
-      m_shortName = hist->htitle();  // this is in fact the variable name!
+      m_shortName = hist->doc();
+      if ( "" == m_shortName ) m_shortName = hist->htitle();  // this is in fact the variable name!
     }
   } 
 }

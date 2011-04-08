@@ -892,6 +892,9 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       endTime   = (int)::time( 0 );
       startTime = endTime - startTime;
     }
+    std::vector<std::string> tags;
+    PresenterGaudi::trendingTool->tags( tags );
+    
     int lastTagVersion   = PresenterGaudi::trendingTool->tagVersion();
     int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
     std::cout << "Select for time range: " << startTime << " to " << endTime 
@@ -903,28 +906,63 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       //== Check that the whole time range is in the current Tag version. Else go down in version.
       int currVersion = lastTagVersion;
       if ( firstTimeThisTag > startTime && lastTagVersion > 1 ) {
-        std::vector<std::string> tags;
         currVersion = lastTagVersion - 1;
         while( !PresenterGaudi::trendingTool->tags( tags, currVersion ) && 
                currVersion > 1 ) {
           --currVersion;
         }
-        int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+        firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
       }
 
       int theTime = startTime;
       std::vector< std::pair<int,double> > values ;
-      while ( currVersion <= lastTagVersion ) {
-        status = PresenterGaudi::trendingTool->select( theTime , endTime , (*itH).shortName() );
-        if ( status ) {
-          float theValue ;
-          // Read the values in the selected time interval and fill a vector
-          while ( PresenterGaudi::trendingTool->nextValue( theTime , theValue ) ) {
-            if ( theTime < startTime ) continue;
-            if ( theTime > endTime   ) continue;
-            values.push_back( std::pair<int,double>( theTime, theValue ) );
-          }
+
+      //== Handle ratios: The tag name is a pair, separated by a '/'
+      std::string myTag   = (*itH).shortName();
+      std::string myRatio = "";
+      if ( std::find( tags.begin(), tags.end(), myTag ) == tags.end() ) {
+        std::cout << "Tag not found : " << myTag << " try to split." << std::endl;
+        int barIndx = myTag.find( "|" );
+        if ( barIndx < myTag.size() ) {
+          myRatio = myTag.substr( barIndx+1 );
+          myTag   = myTag.substr( 0, barIndx );
+          std::cout << "  num " << myTag << " den " << myRatio << std::endl;
         }
+      }
+      
+      while ( currVersion <= lastTagVersion ) {
+        if ( "" == myRatio ) {
+          status = PresenterGaudi::trendingTool->select( theTime , endTime , (*itH).shortName() );
+          if ( status ) {
+            float theValue ;
+            // Read the values in the selected time interval and fill a vector
+            while ( PresenterGaudi::trendingTool->nextValue( theTime , theValue ) ) {
+              if ( theTime < startTime ) continue;
+              if ( theTime > endTime   ) continue;
+              values.push_back( std::pair<int,double>( theTime, theValue ) );
+            }
+          }
+        } else {
+          unsigned int indxNum = 0;
+          unsigned int indxDen = 0;
+          for ( unsigned int kk = 0; tags.size() > kk ; ++kk ) {
+            if ( tags[kk] == myTag ) indxNum = kk;
+            if ( tags[kk] == myRatio ) indxDen = kk;
+          }
+          std::cout << "IndxNum " << indxNum << " indxDen " << indxDen << std::endl;
+          status = PresenterGaudi::trendingTool->select( theTime , endTime );
+          if ( status ) {
+            std::vector<float> theValues ;
+            // Read the values in the selected time interval and fill a vector
+            while ( PresenterGaudi::trendingTool->nextEvent( theTime , theValues ) ) {
+              if ( theTime < startTime ) continue;
+              if ( theTime > endTime   ) continue;
+              double theValue = 0.;
+              if ( fabs( theValues[indxDen] ) > 0.0001 ) theValue = theValues[indxNum] / theValues[indxDen];
+              values.push_back( std::pair<int,double>( theTime, theValue ) );
+            }
+          }
+        }        
 
         //== Increase the version as long as needed
         while ( currVersion <= lastTagVersion ) {
@@ -933,11 +971,17 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
           std::vector<std::string> tags;
           if ( PresenterGaudi::trendingTool->tags( tags, currVersion ) ) break;
         }
-        int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
-      }   
-      values.push_back( std::pair<int,double>( endTime, values.back().second  ) ) ;
-      std::cout << "from " << values[0].first << " to " << values[values.size()-1].first 
-                << " , size " << values.size() << std::endl;
+        firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+      }
+      if ( values.size() > 0 ) {  
+        values.push_back( std::pair<int,double>( endTime, values.back().second  ) ) ;
+        std::cout << "from " << values[0].first << " to " << values[values.size()-1].first 
+                  << " , size " << values.size() << std::endl;
+      } else {
+        values.push_back( std::pair<int,double>( startTime, 0. ) );
+        values.push_back( std::pair<int,double>( endTime, 0. ) );
+        std::cout << "For tag " << (*itH).shortName() << " no data found" << std::endl;
+      }
       (*itH).createGraph( values, update );
     }
     PresenterGaudi::trendingTool->closeFile( ) ;
