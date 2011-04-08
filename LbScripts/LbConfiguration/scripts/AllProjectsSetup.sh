@@ -6,4 +6,6 @@ if [ "$AllProjectsSetupStatus" = 0 ]; then
 fi
 rm -f $tmp2dffile
 unset tmp2dffile
-unset AllProjectsSetupStatus
+
+$(exit $AllProjectsSetupStatus)
+

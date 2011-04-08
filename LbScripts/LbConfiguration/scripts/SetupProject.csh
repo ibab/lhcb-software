@@ -7,3 +7,4 @@ endif
 rm -f $SetupProject_tmpfile
 unset SetupProject_tmpfile
 
+exit $SetupProjectStatus

@@ -432,6 +432,14 @@ rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
 
 """
+        content += getConfigurationFragment(shell, "login_postscript")
+
+        content += """
+
+$(exit $LbLoginStatus)
+
+"""
+
     elif shell == "csh" or shell == "tcsh" :
         if mysiteroot :
             if withoutcache :
@@ -457,6 +465,14 @@ rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
 
 """
+        content += getConfigurationFragment(shell, "login_postscript")
+
+        content += """
+
+exit $LbLoginStatus
+
+"""
+
     elif shell == "bat" :
         prefix = """ @echo off
 
@@ -490,7 +506,7 @@ set LbLogin_tmpfile=
 
 """
 
-    content += getConfigurationFragment(shell, "login_postscript")
+        content += getConfigurationFragment(shell, "login_postscript")
 
 
     f.write(content)
