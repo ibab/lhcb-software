@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::BaseTrSegMakerFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichBaseTrSegMakerFromRecoTracks.h,v 1.2 2008-05-06 19:15:33 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */

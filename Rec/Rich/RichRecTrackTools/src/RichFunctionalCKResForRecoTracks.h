@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.3 2010-02-11 20:08:22 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
  */

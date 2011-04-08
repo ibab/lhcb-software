@@ -27,6 +27,7 @@ SegmentCreator::SegmentCreator ( const std::string& type,
                                  const IInterface* parent )
   : ToolBase        ( type, name, parent      ),
     m_signal        ( NULL                    ),
+    m_detParams     ( NULL                    ),
     m_segments      ( 0                       ),
     m_richRecSegmentLocation ( LHCb::RichRecSegmentLocation::Default ),
     m_binsEn        ( Rich::NRadiatorTypes, 5 ),
@@ -57,22 +58,13 @@ StatusCode SegmentCreator::initialize()
     debug() << "RichRecSegment location : " << m_richRecSegmentLocation << endmsg;
   }
 
+  // tools
   acquireTool( "RichExpectedTrackSignal", m_signal );
+  acquireTool( "RichDetParameters",    m_detParams );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
-
-  // Get the max/min photon energies
-  const IDetParameters * detParams;
-  acquireTool( "RichDetParameters", detParams );
-  m_maxPhotEn[Rich::Aerogel]  = detParams->maxPhotonEnergy( Rich::Aerogel  );
-  m_maxPhotEn[Rich::Rich1Gas] = detParams->maxPhotonEnergy( Rich::Rich1Gas );
-  m_maxPhotEn[Rich::Rich2Gas] = detParams->maxPhotonEnergy( Rich::Rich2Gas );
-  m_minPhotEn[Rich::Aerogel]  = detParams->minPhotonEnergy( Rich::Aerogel  );
-  m_minPhotEn[Rich::Rich1Gas] = detParams->minPhotonEnergy( Rich::Rich1Gas );
-  m_minPhotEn[Rich::Rich2Gas] = detParams->minPhotonEnergy( Rich::Rich2Gas );
-  releaseTool(detParams);
 
   return sc;
 }
@@ -128,11 +120,13 @@ SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
   LHCb::RichRecSegment * seg(NULL);
   if ( segment )
   {
-    seg = new LHCb::RichRecSegment ( segment,
-                                     pTrk,
-                                     m_binsEn[segment->radiator()],
-                                     (LHCb::RichRecSegment::FloatType)(m_minPhotEn[segment->radiator()]),
-                                     (LHCb::RichRecSegment::FloatType)(m_maxPhotEn[segment->radiator()]) );
+    seg = new LHCb::RichRecSegment 
+      ( segment,
+        pTrk,
+        m_binsEn[segment->radiator()],
+        (LHCb::RichRecSegment::FloatType)(m_detParams->minPhotonEnergy(segment->radiator())),
+        (LHCb::RichRecSegment::FloatType)(m_detParams->maxPhotonEnergy(segment->radiator())) 
+        );
     // Set the average photon energy
     segment->setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(seg) );
   }

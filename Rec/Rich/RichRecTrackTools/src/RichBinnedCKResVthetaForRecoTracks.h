@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.2 2009-01-20 15:49:30 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

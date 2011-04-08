@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.3 2008-10-29 14:41:38 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

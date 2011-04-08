@@ -252,9 +252,9 @@ constructSegments( const ContainedObject * obj,
       continue;
     }
 
-    // Check for strange state errors
-    checkStateErrors( entryPStateRaw, rad, "initial entry state" );
-    checkStateErrors( exitPStateRaw,  rad, "initial exit state"  );
+    // Check for strange states
+    checkState( entryPStateRaw, rad, "initial entry state" );
+    checkState( exitPStateRaw,  rad, "initial exit state"  );
 
     // Clone entry state
     LHCb::State * entryPState = entryPStateRaw->clone();
@@ -558,9 +558,9 @@ constructSegments( const ContainedObject * obj,
                                                           exitPState->errTx2(),
                                                           exitPState->errTy2(),
                                                           exitPState->errP2() );
-    // Check for strange state errors
-    checkStateErrors( entryPState, rad, "final entry state" );
-    checkStateErrors( exitPState,  rad, "final exit state"  );
+    // Check for strange states
+    checkState( entryPState, rad, "final entry state" );
+    checkState( exitPState,  rad, "final exit state"  );
 
     // print out final points
     if ( msgLevel(MSG::VERBOSE) )
@@ -899,9 +899,9 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
 //====================================================================================================
 
 //====================================================================================================
-void DetailedTrSegMakerFromRecoTracks::checkStateErrors( const LHCb::State * state,
-                                                         const Rich::RadiatorType rad,
-                                                         const std::string& desc ) const
+void DetailedTrSegMakerFromRecoTracks::checkState( const LHCb::State * state,
+                                                   const Rich::RadiatorType rad,
+                                                   const std::string& desc ) const
 {
   if ( state )
   {

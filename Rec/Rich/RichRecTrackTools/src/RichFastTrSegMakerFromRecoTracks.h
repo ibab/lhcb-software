@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
- *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.2 2007-12-11 14:17:42 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
  */

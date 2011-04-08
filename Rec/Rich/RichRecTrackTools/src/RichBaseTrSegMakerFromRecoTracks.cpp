@@ -4,9 +4,6 @@
  *
  * Implementation file for class : Rich::Rec::BaseTrSegMakerFromRecoTracks
  *
- * CVS Log :-
- * $Id: RichBaseTrSegMakerFromRecoTracks.cpp,v 1.4 2009-07-30 11:25:33 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
