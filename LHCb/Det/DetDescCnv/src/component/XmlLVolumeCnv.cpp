@@ -1925,6 +1925,20 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotXYZ (xercesc::DOMElement* element)
     Gaudi::RotationY(ry) *
     Gaudi::RotationZ(rz);
 
+  // Recover precision in cases when rotation is by halfpi or pi
+  double xx, xy, xz, yx, yy, yz, zx, zy, zz;
+  result.GetComponents( xx, xy, xz, yx, yy, yz, zx, zy, zz );
+  if( fabs(xx) < 1.e-15 ) xx = 0.;
+  if( fabs(xy) < 1.e-15 ) xy = 0.;
+  if( fabs(xz) < 1.e-15 ) xz = 0.;
+  if( fabs(yx) < 1.e-15 ) yx = 0.;
+  if( fabs(yy) < 1.e-15 ) yy = 0.;
+  if( fabs(yz) < 1.e-15 ) yz = 0.;
+  if( fabs(zx) < 1.e-15 ) zx = 0.;
+  if( fabs(zy) < 1.e-15 ) zy = 0.;
+  if( fabs(zz) < 1.e-15 ) zz = 0.;
+  result.SetComponents( xx, xy, xz, yx, yy, yz, zx, zy, zz );
+
   return new Gaudi::Transform3D(result);
 } // end dealWithRotXYZ
 
@@ -1970,7 +1984,7 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element
   Gaudi::XYZVector axis( sin(axTheta)*cos(axPhi),
                          sin(axTheta)*sin(axPhi),
                          cos(axTheta)             );
-  
+
   return new Gaudi::Transform3D(Gaudi::AxisAngle(axis, angle), 
                                 Gaudi::XYZVector());
 

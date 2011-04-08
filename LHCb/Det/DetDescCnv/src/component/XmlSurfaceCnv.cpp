@@ -14,7 +14,6 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/TabulatedProperty.h"
 #include "XmlTools/IXmlSvc.h"
