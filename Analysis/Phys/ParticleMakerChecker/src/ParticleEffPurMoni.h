@@ -572,9 +572,6 @@ private: // data
   /// Particle/Proto map
   mutable ParticleProtoMap m_partProtoMap;
 
-  /// Recursion count
-  mutable unsigned int m_recurCount;
-
   /// Track selector tool
   ITrackSelector * m_trSel;
 
@@ -650,9 +647,6 @@ private: // data
 
   /// Max tree size
   unsigned int m_maxMCTreeSize;
-
-  /// Minimum momentum for plots
-  double m_minP;
 
 };
 
