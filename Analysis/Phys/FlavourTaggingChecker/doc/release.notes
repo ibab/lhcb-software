@@ -6,6 +6,11 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Juan Palacios
+ - src/BTaggingAnalysis.cpp
+  . Attempt to fix memory leaks.
+ - Increase to v6r6p3.
+
 !========================== FlavourTaggingChecker v6r6p2 2011-03-28 ==========
 
 ! 2011-03-21 - Marc Grabalosa

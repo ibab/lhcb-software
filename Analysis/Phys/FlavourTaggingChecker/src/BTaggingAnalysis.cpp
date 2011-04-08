@@ -821,32 +821,42 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
   ProtoParticle::ConstVector partsInSV(0);
 
   bool foundb = false;
-  FlavourTags*  tags = new FlavourTags;
-  FlavourTag* theTag = new FlavourTag;
+  FlavourTags*  tags = 0;
+  FlavourTag* theTag = 0;
+
   if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
     tags = get<FlavourTags>(m_TagLocation);
-    if(tags->size()>1) info()<<"FlavourTag objects in TES:"<<tags->size()
-                             <<"  Search for the highest pT B.."<<endreq;
-    FlavourTags::const_iterator ti;
-    for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
-      if((*ti)->taggedB() == AXBS) {
-        theTag = (*ti);
-        foundb = true;
-        debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
+    if (0!=tags) {
+      
+      if(tags->size()>1) {
+        info()<<"FlavourTag objects in TES:"<<tags->size()
+              <<"  Search for the highest pT B.."<<endreq;
       }
+    
+      FlavourTags::const_iterator ti;
+      for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
+        if((*ti)->taggedB() == AXBS) {
+          theTag = (*ti);
+          foundb = true;
+          debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
+        }
+      }
+      if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
     }
-    if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
+    
   } 
 
   if(!foundb ){
     info()<<"Will tag the B hypo now."<<endreq;
+    theTag = new FlavourTag;
     StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
     if (!sc) {
       err() <<"Tagging Tool returned error."<< endreq;
       delete theTag;
       return partsInSV;
-    } 
+    }
     if(!exist<FlavourTags>(m_TagLocation)){
+      tags = new FlavourTags;
       tags->insert(theTag);
       put(tags, m_TagLocation);
       debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
