@@ -57,6 +57,9 @@ StatusCode MCMatchObjP2MCRelator::initialize()
 
   // create the new matcher 
   m_matcher = new LoKi::MCMatchObj( "P2MCRelator" , m_reporter ) ;
+
+  if (0==m_matcher) return StatusCode::SUCCESS;
+
   // increment the reference counter 
   m_matcher->addRef() ;
 

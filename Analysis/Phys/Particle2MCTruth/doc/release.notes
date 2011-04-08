@@ -6,6 +6,12 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2011-04-08 - Juan Palacios
+ - src/MCMatchObjP2MCRelator.cpp
+  . Check matcher poitner before dereferencing.
+ - cmt/requirements
+  . Increase to v2r3p6
+
 ! ======================== Particle2MCTruth v2r3p5 2010-05-28 ===============
 
 ! 2010-05-28 - Juan Palacios
