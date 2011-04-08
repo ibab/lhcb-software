@@ -37,6 +37,6 @@ private:
 private:
   std::string m_mcTable ;
   std::string m_test;
-  double m_dummy;
+
 };
 #endif // NEUTRALPP2MC_H
