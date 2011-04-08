@@ -171,6 +171,7 @@ namespace Rich
       /// Returns a pointer to the ray tracing tool
       const Rich::IRayTracing * rayTraceTool() const
       {
+        if ( !m_rayTrace ) { acquireTool( "RichRayTracing",  m_rayTrace ); }
         return m_rayTrace;
       }
 
@@ -192,7 +193,7 @@ namespace Rich
       const Rich::ISmartIDTool * m_smartIDTool;
 
       /// Pointer to the detector ray tracing tool
-      const Rich::IRayTracing * m_rayTrace;
+      mutable const Rich::IRayTracing * m_rayTrace;
 
       /// Pointer to RichRecTracks
       mutable LHCb::RichRecTracks * m_tracks;

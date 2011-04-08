@@ -68,7 +68,6 @@ namespace Rich
 
       // tools
       acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
-      acquireTool( "RichRayTracing",  m_rayTrace             );
       acquireTool( "TrackSelector", m_trSelector, this       );
 
       // Setup incident services
@@ -240,7 +239,6 @@ namespace Rich
       const Gaudi::XYZPoint  & trackPtn = trSeg.bestPoint();
 
       // Get primary PD panel impact point
-      //Gaudi::XYZPoint hitPoint;
       LHCb::RichGeomPhoton photon;
       const Gaudi::XYZPoint & hitPoint = photon.detectionPoint();
       LHCb::RichTraceMode::RayTraceResult result

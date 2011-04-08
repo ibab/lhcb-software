@@ -1,14 +1,14 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichGeomPhoton.h
  *
  *  Header file for RICH utility class : LHCb::RichGeomPhoton
- *
- *  $Id: RichGeomPhoton.h,v 1.7 2008-06-03 14:39:11 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-05-30
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHGEOMPHOTON_H
 #define RICHKERNEL_RICHGEOMPHOTON_H 1
