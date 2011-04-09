@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-09  Steve Blusk
+- B2D3H: increase mass window on B-->DD
+
+
 ! 2011-04-02 - Sebastian Schleich
  - Bs2PhiPhi pt cuts
 
