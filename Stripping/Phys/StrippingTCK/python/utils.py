@@ -530,23 +530,50 @@ def getAlgorithms( id, cas = defaultCas ) :
 def listAlgorithms( id, cas = defaultCas ) :
     print getAlgorithms(id,cas)
 
-def getLines( id, cas = defaultCas ) :
+def getStreams( id, cas = defaultCas ) : 
     tree =  execInSandbox( _getConfigTree, id, cas )
     x = ''
+    stream_prefix = 'StrippingSequenceStream'
     for i in tree :
-       if i.leaf and i.leaf.type == 'StrippingAlg' and i.depth == 3 :
-          s = i.leaf.name
-          x = x + s + (80-len(s))*' ' + '\n'
+       if hasattr(i,'leaf') and i.leaf : 
+          if i.leaf.type == 'GaudiSequencer' : 
+             if i.leaf.name.startswith(stream_prefix) : 
+                stream_name = i.leaf.name[len(stream_prefix):]
+                x = x + '   ' + stream_name + '\n'
     return x
 
-def listLines( id, cas = defaultCas ) :
-    print getLines(id,cas)
+def listStreams( id, cas = defaultCas ) :
+    print getStreams(id,cas)
+
+def getLines( id, stream = None, cas = defaultCas) :
+    tree =  execInSandbox( _getConfigTree, id, cas )
+    x = ''
+    stream_prefix = 'StrippingSequenceStream'
+    stream_lines = []
+    stream_name = ''
+    for i in tree :
+       if hasattr(i,'leaf') and i.leaf : 
+          if i.leaf.type == 'GaudiSequencer' : 
+             if i.leaf.name.startswith(stream_prefix) : 
+                stream_name = i.leaf.name[len(stream_prefix):]
+                if not stream or stream_name == stream : 
+                   x = x + 'Stream ' + stream_name + '\n'
+                   stream_lines = []
+          if ( not stream or stream == stream_name ) and i.leaf.type == 'StrippingAlg' :
+             if not i.leaf.name.startswith('StrippingStream'+ stream_name) and i.leaf.name not in stream_lines : 
+                s = i.leaf.name
+                x = x + '   ' + s + (80-len(s))*' ' + '\n'
+                stream_lines.append(i.leaf.name)
+    return x
+
+def listLines( id, stream = None, cas = defaultCas ) :
+    print getLines(id, stream, cas)
 
 def getLineProperties( id, linename='', cas = defaultCas ) : 
     tree =  execInSandbox( _getConfigTree, id, cas )
     matchleaf = None
     for i in tree :
-       if i.leaf and i.leaf.type == 'StrippingAlg' and i.depth == 3 :
+       if i.leaf and i.leaf.type == 'StrippingAlg' :
           if i.leaf.name == linename : 
               matchleaf = i.leaf
     if matchleaf : 

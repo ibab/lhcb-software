@@ -6,6 +6,29 @@
                 Based on TCKsh by Gerhard Raven
 !-----------------------------------------------------------------------------
 
+! 2011-04-09 - Anton Poluektov 
+
+ - config.tar with the configuration of Stripping12b (DaVinci v26r3p2)
+   STCK is 0x26320012 (encoded DaVinci version and stripping number)
+
+ - Changes in utils.py: 
+
+     * added command 'listStreams(STCK)': 
+   >>> listStreams(0x26320012)
+      Calibration
+      Bhadron
+      Dielectron
+      Dimuon
+      ...
+
+     * 'listLines' can take stream name as an optional argument, e.g.: 
+   >>> listLines(0x26320012, 'Charm')
+   Stream Charm
+      StrippingD02hhNoPIDLine                                                         
+      StrippingD02hhPIDLine                                                           
+      StrippingD02hhControlLine                                                       
+      ...
+
 ! 2011-04-08 - Anton Poluektov
  - Initial commit. 
 
