@@ -183,6 +183,21 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
+    // cut-vals 
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context context code fragment to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&    pycode       ,
+      LoKi::Types::GCutVal& func         , 
+      const std::string&    context = "" )  = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
     // sources 
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -209,13 +224,14 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    // virtual & protecte destructor 
-    virtual ~IGenHybridFactory( ); ///< Destructor
+    /// virtual & protecte destructor 
+    virtual ~IGenHybridFactory( ); // Destructor
     // ========================================================================
   } ;
-} // end of namespace LoKi
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_IGENHYBRIDFACTORY_H
 // ============================================================================

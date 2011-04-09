@@ -28,7 +28,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -203,6 +203,21 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // cut-vals
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&    pycode  , 
+        LoKi::Types::GCutVal& func    , 
+        const std::string&    context ) 
+      { return _get ( pycode , m_gcutval  , func , context ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // sources
       // ======================================================================
       /** "Factory": get the the object form python code 
@@ -284,6 +299,14 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // cutvals
+      // ======================================================================
+      /// set the C++ "cut-val" for HepMC::GenParticle
+      virtual void set ( const LoKi::Types::GCutVals&   cut ) 
+      { LoKi::Hybrid::Base::_set ( m_gcutval  , cut ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // sources
       // ======================================================================
       /// set the C++ "source" for HepMC::GenParticle
@@ -342,6 +365,8 @@ namespace LoKi
       // fun-vals: 
       LoKi::Types::GFunVals*   m_gfunval    ;    
       LoKi::Types::GVFunVals*  m_gvfunval   ;    
+      // cut-vals: 
+      LoKi::Types::GCutVals*   m_gcutval    ;    
       // sources:
       LoKi::Types::GSources*    m_gsource   ;    
       LoKi::Types::GVSources*   m_gvsource  ;    
@@ -410,6 +435,8 @@ LoKi::Hybrid::GenTool::GenTool
   // fun-vals:
   , m_gfunval     ( 0 )
   , m_gvfunval    ( 0 )
+  // cut-vals:
+  , m_gcutval     ( 0 )
   // sources
   , m_gsource     ( 0 )
   , m_gvsource    ( 0 )
@@ -462,6 +489,8 @@ StatusCode LoKi::Hybrid::GenTool::finalize  ()
   // funvals:
   if ( 0 != m_gfunval   ) { delete m_gfunval   ; m_gfunval   = 0  ; }
   if ( 0 != m_gvfunval  ) { delete m_gvfunval  ; m_gvfunval  = 0  ; }
+  // cutvals:
+  if ( 0 != m_gcutval   ) { delete m_gcutval   ; m_gcutval   = 0  ; }
   // sources:
   if ( 0 != m_gsource   ) { delete m_gsource   ; m_gsource   = 0  ; }
   if ( 0 != m_gvsource  ) { delete m_gvsource  ; m_gvsource  = 0  ; }

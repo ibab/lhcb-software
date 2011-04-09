@@ -33,14 +33,21 @@ namespace LoKi
    *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
+   *  By usage of this code one clearly states the disagreement 
+   *  with the smear campaign of Dr.O.Callot et al.: 
+   *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+   *
+   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2004-06-29
    */
   class IGenHybridTool : public virtual IAlgTool 
   {
   public:
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
     // ========================================================================
     // predicates:
@@ -88,6 +95,13 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
+    // cut-vals
+    // ========================================================================
+    /// set the C++ function for HepMC::GenParticle 
+    virtual void set ( const LoKi::Types::GCutVals&   cut ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
     // sources
     // ========================================================================
     /// set the C++ function for HepMC::GenParticle 
@@ -97,14 +111,14 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    // destructor : virtual and protected 
-    virtual ~IGenHybridTool() ; ///< destructor : virtual and protected 
+    /// destructor : virtual and protected 
+    virtual ~IGenHybridTool() ;          // destructor : virtual and protected 
     // ========================================================================
   };
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_IGENHYBRIDTOOL_H
 // ============================================================================

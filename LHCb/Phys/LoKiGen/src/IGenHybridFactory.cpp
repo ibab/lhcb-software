@@ -36,7 +36,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IGenHybridFactory( "LoKi::IGenHybridFactory" , 3 , 0 ) ;
+  const InterfaceID IID_IGenHybridFactory( "LoKi::IGenHybridFactory" , 4 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID

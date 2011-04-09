@@ -23,7 +23,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @date 2004-06-29 
@@ -181,6 +181,14 @@ StatusCode LoKi::Hybrid::GenEngineActor::process
 StatusCode LoKi::Hybrid::GenEngineActor::process
 ( const std::string&            name , 
   const LoKi::Types::GVFunVals& func ) const { return _add ( name , func ) ; }
+// ============================================================================
+// cut-vals
+// ============================================================================
+// propagate the cut-val to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::GenEngineActor::process
+( const std::string&            name , 
+  const LoKi::Types::GCutVals&  func ) const { return _add ( name , func ) ; }
 // ============================================================================
 // sources
 // ============================================================================

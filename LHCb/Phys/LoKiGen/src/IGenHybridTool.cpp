@@ -23,7 +23,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @date 2004-06-29 
@@ -36,7 +36,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IGenHybridTool ( "LoKi::IGenHybridTool" , 3 , 0 ) ;
+  const InterfaceID IID_IGenHybridTool ( "LoKi::IGenHybridTool" , 4 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID

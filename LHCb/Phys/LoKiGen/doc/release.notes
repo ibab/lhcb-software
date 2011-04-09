@@ -14,6 +14,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-04-09 - Vanya Belyaev
+
+ - add missing "cutvals" into Tool/Factory interface 
+   they are needed for generic cut-tool in Gauss 
+
+ - cmt/requirements 
+   version increment to v10r1 
+
 !========================= LoKiGen v10r0 2011-04-04 =========================
 ! 2011-03-18 - Vanya Belyaev
  - add protection against double lock
