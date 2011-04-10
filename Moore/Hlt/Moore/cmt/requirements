@@ -29,6 +29,7 @@ use AppConfig           v3r*                -no_auto_imports
 
 # Patches
 use HltConf             v9r8p1  Hlt
+use HltSettings         v5r11p1 Hlt
 
 
 
