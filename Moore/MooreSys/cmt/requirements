@@ -10,6 +10,7 @@ use  Moore              v12r5   Hlt
 
 # Patches
 use HltConf             v9r8p1  Hlt
+use HltSettings         v5r11p1 Hlt
 
 # Declare this as a container package
 apply_pattern container_package
