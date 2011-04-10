@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-04-10 - Roel Aaij
+ - updated documentation of BeamLineFunctions.h
+
+! 2011-04-10 - Roel Aaij
  - Add TrFilter.{h,cpp} which contains FilterTracks; a functor for track
    filtering in Hlt1 streamers using ITrackSelector tools. This functor
    prevents double work. Python symbol:

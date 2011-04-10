@@ -55,6 +55,7 @@ namespace LoKi
     /** @class BeamSpot LoKi/BeamLineFunctions.h
      *  
      *  functor to evaluate the radial distance ("rho") with respect to 
+     *  the middle of Velo as measured by the X and Y resolvers
      *
      *  @see LoKi::Cuts::BEAMSPOT
      *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
@@ -117,6 +118,7 @@ namespace LoKi
     /** @class BeamSpotRho LoKi/BeamLineFunctions.h
      *  
      *  functor to evaluate the radial distance ("rho") with respect to 
+     *  the middle of Velo as measured by the X and Y resolvers
      *
      *  @see LoKi::Cuts::VX_BEAMSPOTRHO
      *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
@@ -156,6 +158,7 @@ namespace LoKi
     // ========================================================================
     /** @typedef  VX_BEAMSPOTRHO 
      *  functor to evaluate the radial distance ("rho") with respect to 
+     *  the middle of Velo as measured by the X and Y resolvers
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch 
      *  @author Victor COCO   Victor.Coco@cern.ch
      *  @date 2011-03-11
