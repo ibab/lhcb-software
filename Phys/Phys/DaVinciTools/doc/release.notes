@@ -4,6 +4,11 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-04-10 - Juan Palacios
+ - src/recparser.ypp, src/recparser.icpp
+  . Patch by Olivier Dormond, fixing potential memory leak.
+ - Increase to v22r4p2
+
 !========================== DaVinciTools v22r4p1 2011-03-09 =================
 
 ! 2011-03-09 - Juan Palacios

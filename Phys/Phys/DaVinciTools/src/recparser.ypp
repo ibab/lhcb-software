@@ -240,11 +240,11 @@ top_decay: PP ARROW daughters_set {{ $$ = $3; Descriptor *a = $3;
                                  }}
 ;
 
-decay: LBRACK decay_list CCONJ  {{ Descriptor *a = $2, *last = NULL;
+decay: LBRACK decay_list CCONJ  {{ Descriptor *a = $2, *last = NULL; $$ = NULL;
                                    while( a ) {
                                       Descriptor *cc = new Descriptor(*a);
                                       cc->conjugate();
-                                      if( last == NULL ) last = cc;
+                                      if( $$ == NULL ) $$ = cc;
                                       else last->setAlternate(cc);
                                       cc->setAlternate(a);
                                       last = a;

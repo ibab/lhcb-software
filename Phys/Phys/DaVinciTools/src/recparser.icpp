@@ -934,11 +934,11 @@ case 74:
                                  }}
 break;
 case 75:
-{{ Descriptor *a = yyvsp[-1].desc, *last = NULL;
+{{ Descriptor *a = yyvsp[-1].desc, *last = NULL; yyval.desc = NULL;
                                    while( a ) {
                                       Descriptor *cc = new Descriptor(*a);
                                       cc->conjugate();
-                                      if( last == NULL ) last = cc;
+                                      if( yyval.desc == NULL ) yyval.desc = cc;
                                       else last->setAlternate(cc);
                                       cc->setAlternate(a);
                                       last = a;
