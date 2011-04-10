@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2011-04-10 - Roel Aaij
+ - Add FastTTValidationTool/ValidateWithTT to HltInit.py
+
 !========================== HltConf v9r8p1   2011-04-03 ===================
 ! 2011-04-07 - Gerhard Raven
  - add VeloCandidatesDiProton to HltInit.py...
