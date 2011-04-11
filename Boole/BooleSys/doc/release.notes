@@ -3,6 +3,40 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v22r1>2011-04-11 Boole v22r1</A></H1><PRE>
+This version uses projects LCGCMT 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+Development release for 2011 simulation.
+Output data requires GaudiPoolDB v5r11 (i.e. Gaudi v22r1) to read
+
+- Changes to supported platforms:
+  . slc4_ia32_gcc34(_dbg), win32_vc71_dbg no longer supported
+  . support added for i686-slc5-gcc43-{opt,dbg}
+  . support in prepration for i686-winxp-vc9-dbg and x86_64-slc5-icc11-{opt,dbg}
+
+- Persistency changes:
+  . Backward incompatible persistency change in Root 5.28.00a, data produced
+    with this release requires GaudiPoolDB v5r11 or later to read
+
+- Changes to configuration:
+  . Change ParamFiles dependency to v8r* (was v8r3)
+  . Get L0Muon emulator FOI from TCK (L0Muon v9r3, L0DU v10r13, L0TCK v4r*)
+
+- New functionality
+  . Add support for DiMuonProd L0 line (L0DU v10r12, L0Event v19r2)
+  . Added support for 2011 Rich gas mixture (RichDet v16r0,v16r2) 
+  . Added support for lists of active and inactive HPDs (RichDet v15r3)
+  . Backwards compatible rewrite the RichSmartID class to support MaPMTs and 
+    HPDs, for Upgrade studies (LHCbKernel v13r0)
+
+- Monitoring changes
+  . Suppress Warning "Ingress/ODIN Event ID checks are disabled" (RichDAQ v3r30)
+   
+- Bug fixes
+  . Various fixes for coverity defects and icc warnings and remarks
+  . Fixes to hasvelopix, sort clusters for Upgrade MC (BooleUMC v1r3)
+  . Fix to make barycenter id == cluster id for Upgrade (VeloPixAlgorithms v2r1)
 
 </PRE><H1><A NAME=v22r0>2010-12-21 Boole v22r0</A></H1><PRE>
 This version uses projects LCGCMT 58f, Gaudi v21r11, LHCb v31r8, Lbcom v9r9
