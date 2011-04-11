@@ -1,3 +1,7 @@
+2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added a workaround if no g++ version is installed.
+
 2011-04-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/AllProjectsSetup.csh:

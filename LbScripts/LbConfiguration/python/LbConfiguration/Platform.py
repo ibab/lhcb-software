@@ -111,25 +111,39 @@ def getArchitecture(cmtconfig):
 def getConfig(architecture, platformtype, compiler, debug=False):
     cmtconfig = None
     if platformtype.startswith("win") :
-        cmtconfig = "_".join([platformtype, compiler])
-        if compiler.startswith("vc9") :
-            if architecture == "ia32" :
-                architecture = "i686"
-            elif architecture == "amd64" :
-                architecture = "x86_64"
-            cmtconfig = "-".join([architecture, "winxp", compiler, "opt"])
+        if compiler :
+            cmtconfig = "_".join([platformtype, compiler])
+            if compiler.startswith("vc9") :
+                if architecture == "ia32" :
+                    architecture = "i686"
+                elif architecture == "amd64" :
+                    architecture = "x86_64"
+                cmtconfig = "-".join([architecture, "winxp", compiler, "opt"])
+        else :
+            cmtconfig = platformtype
+
     else :
         if architecture == "ia32" :
             architecture = "i686"
         elif architecture == "amd64" :
             architecture = "x86_64"
-        cmtconfig = "-".join([architecture, platformtype, compiler, "opt"])
-        if platformtype == "slc4" or platformtype == "slc3" or platformtype == "osx105":
-            if architecture in arch_runtime_compatiblity["ia32"] :
-                architecture = "ia32"
-            elif architecture == "x86_64" :
-                architecture = "amd64"
-            cmtconfig = "_".join([platformtype, architecture, compiler])
+        if compiler :
+            cmtconfig = "-".join([architecture, platformtype, compiler, "opt"])
+            if platformtype == "slc4" or platformtype == "slc3" or platformtype == "osx105":
+                if architecture in arch_runtime_compatiblity["ia32"] :
+                    architecture = "ia32"
+                elif architecture == "x86_64" :
+                    architecture = "amd64"
+                cmtconfig = "_".join([platformtype, architecture, compiler])
+        else :
+            cmtconfig = "-".join([architecture, platformtype, "opt"])
+            if platformtype == "slc4" or platformtype == "slc3" or platformtype == "osx105":
+                if architecture in arch_runtime_compatiblity["ia32"] :
+                    architecture = "ia32"
+                elif architecture == "x86_64" :
+                    architecture = "amd64"
+                cmtconfig = "_".join([platformtype, architecture])
+
 
     if debug :
         cmtconfig = getBinaryDbg(cmtconfig)
@@ -421,8 +435,10 @@ class NativeMachine:
         ncv = self._compversion
 
         if position :
-            ncv = ".".join(self._compversion.split(".")[:position])
-
+            try :
+                ncv = ".".join(self._compversion.split(".")[:position])
+            except AttributeError:
+                ncv = None
         return ncv
 
     def nativeCompiler(self):
@@ -430,12 +446,15 @@ class NativeMachine:
             if self._ostype == "Windows" :
                 self._compiler = self.nativeCompilerVersion()
             else :
-                cvers = [int(c) for c in self.nativeCompilerVersion(position=2).split(".")]
-                self._compiler = "gcc%d%d" % (cvers[0], cvers[1])
-                if cvers[0] == 3 and cvers[1] < 4 :
-                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
-                if self._ostype == "Darwin" and self.OSVersion(position=2) == "10.5" :
-                    self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
+                try :
+                    cvers = [int(c) for c in self.nativeCompilerVersion(position=2).split(".")]
+                    self._compiler = "gcc%d%d" % (cvers[0], cvers[1])
+                    if cvers[0] == 3 and cvers[1] < 4 :
+                        self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
+                    if self._ostype == "Darwin" and self.OSVersion(position=2) == "10.5" :
+                        self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
+                except :
+                    self._compiler = None
         return self._compiler
     # CMT derived informations
     def CMTArchitecture(self):
