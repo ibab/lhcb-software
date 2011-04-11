@@ -1,3 +1,21 @@
+2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r1p3
+
+	LbConfiguration:
+	* scripts/AllProjectsSetup.csh: fixed the return value.
+	* scripts/generateLogin: removed string method not available in python 2.3 (slc4)
+	* python/LbConfiguration/Platform.py: added a workaround if no g++ version is installed.
+	* scripts/SetupProject.sh: return proper exit code.
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py: reload the Platform module in order to have the latest CMTCONFIGs
+	* scripts/mkproject: removed dead comments.
+
+	LbRelease:
+	* python/LbRelease/LHCbDoc.py: added automatic generation of doxygen docs for LHCbDirac.
+
+
 2011-04-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r1p2

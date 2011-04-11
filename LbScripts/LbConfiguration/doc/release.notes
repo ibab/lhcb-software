@@ -1,5 +1,9 @@
 2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v6r1p3
+
+2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/AllProjectsSetup.csh: fixed the return value.
 	* scripts/generateLogin: removed string method not available in python 2.3 (slc4)
 	* python/LbConfiguration/Platform.py: added a workaround if no g++ version is installed.
