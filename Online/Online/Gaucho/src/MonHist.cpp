@@ -677,6 +677,7 @@ int MonHist::serialize(void* &ptr)
       pp->nentries = ((TH2D*)m_rootobj)->GetEntries();
       memcpy(ntries,m_hentries,m_blocksize);
       memcpy(errp,m_hsumw2,m_blocksize);
+      cpyBinLabels(ytits,m_Ylabels,m_ny);
       status  = 0;
       break;
     }

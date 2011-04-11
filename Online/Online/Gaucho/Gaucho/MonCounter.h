@@ -9,6 +9,14 @@
 //#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
 
+class CntrDescr
+{
+public:
+  std::string name;
+  int type;
+  long long data;
+};
+
 class MonCounter : public MonObj
 {
 //friend class HistService;
@@ -65,7 +73,7 @@ public:
   int hdrlen();
   int serialize(void* &ptr);
   void List();
-  void *de_serialize(void *, char *nam=0){nam=nam;return 0;};
+  static void *de_serialize(void *, char *);
   void SetExpand(bool expand){this->m_expandService = expand;return;};
   void create_OutputService(std::string);
   void delete_OutputService();

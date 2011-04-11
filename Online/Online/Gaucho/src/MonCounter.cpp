@@ -370,4 +370,50 @@ DimService *MonCounter::getDimService()
 {
   return this->m_service;
 }
+void *MonCounter::de_serialize(void *ptr, char *nam)
+{
+  DimBuffBase *p = (DimBuffBase*)ptr;
+//  this->m_type = (MONTYPE)p->type;
+  if (nam == 0)
+  {
+    nam = (char*)AddPtr(p,p->nameoff);
+  }
+  CntrDescr *h = new CntrDescr;
+  h->data = 0;
+  void * dat = AddPtr(p,p->dataoff);
+  switch (p->type)
+  {
+    case C_INT:
+    {
+      h->name = nam;
+      h->type = p->type;
+      h->data = *(int*)dat;
+      break;
+    }
+    case C_LONGLONG:
+    {
+      h->name = nam;
+      h->type = p->type;
+      h->data = *(long long*)dat;
+      break;
+    }
+    case C_FLOAT:
+    {
+      h->name = nam;
+      h->type = p->type;
+      float *a = (float*)&h->data;
+      *a = *(float*)dat;
+      break;
+    }
+    case C_DOUBLE:
+    {
+      h->name = nam;
+      h->type = p->type;
+      double *a = (double*)&h->data;
+      *a = *(double*)dat;
+      break;
+    }
+  }
+  return h;
+}
 
