@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-11 - Jeroen Van Tilburg
+ - TrackEffMuonTT.py: switch off clone killing in MuonCombRec.
+
 ! 2011-04-09  Steve Blusk
 - B2D3H: increase mass window on B-->DD
 

@@ -485,7 +485,7 @@ def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjPar
     MakeMuonTT.ToolName = "MuonCombRec"
     MakeMuonTT.addTool( MuonCombRec )
     MakeMuonTT.MuonCombRec.MeasureTime = True
-    MakeMuonTT.MuonCombRec.CloneKiller = True
+    MakeMuonTT.MuonCombRec.CloneKiller = False
     MakeMuonTT.MuonCombRec.SkipStation = -1 # -1=no skip, 0=M1, 1=M2, 2=M3, 3=M4, 4=M5
     MakeMuonTT.MuonCombRec.DecodingTool = "MuonHitDecode"
     MakeMuonTT.MuonCombRec.PadRecTool = "MuonPadRec"
@@ -493,7 +493,7 @@ def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjPar
     MakeMuonTT.MuonCombRec.PhysicsTiming = True
     MakeMuonTT.MuonCombRec.AssumeCosmics = False
     MakeMuonTT.MuonCombRec.AssumePhysics = True
-    MakeMuonTT.MuonCombRec.StrongCloneKiller = True 
+    MakeMuonTT.MuonCombRec.StrongCloneKiller = False 
     MakeMuonTT.MuonCombRec.SeedStation = 2 # default seet station is M5
     # #############################################################
     MakeMuonTT.addTool( PatAddTTCoord )
