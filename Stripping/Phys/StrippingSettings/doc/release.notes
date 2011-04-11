@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-11 - Thomas Blake
+ - Temporary removal of MuonTT efficiency lines from the line config
+	 dictionary and dbase. 
+
 ! 2011-04-02 - Sebastian Schleich
  - fixed Bs2PhiPhi pt cuts
 
