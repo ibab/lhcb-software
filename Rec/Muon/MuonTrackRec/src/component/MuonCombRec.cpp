@@ -323,9 +323,7 @@ StatusCode MuonCombRec::initialize() {
   setAssumePhysics(m_assumePhysics);
   setSeedStation(m_optSeedStation);
   setSkipStation(m_optSkipStation); // WARNING ! this resets m_recDone to "false"
-  m_cloneKiller = m_optCloneKiller;
-  m_strongCloneKiller = m_optStrongCloneKiller;
-
+  
   return StatusCode::SUCCESS;
 };
 
@@ -657,7 +655,7 @@ StatusCode MuonCombRec::muonSearch() {
       if(nextStat == m_skipStation) {
         nextStat = is-2;
       }
-
+      if( nextStat < 0 ) continue; // no need to extrapolate beyond M1
       
       debug()<<"Extrapolate station: M"<<is+1<<" from station: M"
              <<prevStat+1<<" to station: M"<<nextStat+1<<" skip station: M"
@@ -830,9 +828,9 @@ StatusCode MuonCombRec::cloneKiller()
   std::vector<MuonTrack*>::iterator it2;
   std::vector<MuonHit*>::iterator iht1;
   std::vector<MuonHit*>::iterator iht2;
-  bool sameM[5]={0,0,0,0,0};
 
   for(it1 = m_tracks.begin(); it1 != m_tracks.end(); it1++){ // 1stloop over tracks
+    bool sameM[5]={0,0,0,0,0};
     std::vector<MuonHit*> hitsT1 = (*it1)->getHits(); // get hits of 1st track
 
     for(it2 = it1+1; it2 != m_tracks.end(); it2++){ // 2nd loop over tracks
@@ -841,7 +839,7 @@ StatusCode MuonCombRec::cloneKiller()
       for(iht1 = hitsT1.begin(); iht1 != hitsT1.end(); iht1++){ // loop over hits of 1st trk
         
         int st1 = (*iht1)->station();
-        if(st1 == M5 || st1 == M1) continue; // look only in M2,M3,M4
+        if(st1 != M2 && st1 != M3 && st1 != M4) continue;//look only in M2,M3,M4
         
 
         for(iht2 = hitsT2.begin(); iht2 != hitsT2.end(); iht2++){ // loop over hits of 2nd trk
@@ -897,9 +895,9 @@ StatusCode MuonCombRec::strongCloneKiller()
   std::vector<MuonTrack*>::iterator it2;
   std::vector<MuonHit*>::iterator iht1;
   std::vector<MuonHit*>::iterator iht2;
-  bool sameM[5]={0,0,0,0,0};
 
   for(it1 = m_tracks.begin(); it1 != m_tracks.end(); it1++){ // 1stloop over tracks
+    bool sameM[5]={0,0,0,0,0};
     std::vector<MuonHit*> hitsT1 = (*it1)->getHits(); // get hits of 1st track
 
     for(it2 = it1+1; it2 != m_tracks.end(); it2++){ // 2nd loop over tracks
@@ -908,7 +906,7 @@ StatusCode MuonCombRec::strongCloneKiller()
       for(iht1 = hitsT1.begin(); iht1 != hitsT1.end(); iht1++){ // loop over hits of 1st trk
         
         int st1 = (*iht1)->station();
-        if(st1 > M3 || st1 == M1) continue; // look only in M2,M3
+        if(st1 != M2 && st1 != M3) continue; // look only in M2,M3
 
         for(iht2 = hitsT2.begin(); iht2 != hitsT2.end(); iht2++){ // loop over hits of 2nd trk
         
@@ -922,7 +920,6 @@ StatusCode MuonCombRec::strongCloneKiller()
 
         double zslope = (m_zStations[M5]-m_zStations[M3])/
                         (m_zStations[M2]-m_zStations[M3]);
-
 
         double x_extra5=zslope*((*it1)->bestCandidate()[M2]->x() -
                                 (*it1)->bestCandidate()[M3]->x()) + 

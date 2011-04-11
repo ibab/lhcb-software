@@ -84,6 +84,14 @@ public:
       m_recDone = false; // reset the recDone flag to allow a new track reconstruction
       m_cloneKiller = m_optCloneKiller;
       m_strongCloneKiller = m_optStrongCloneKiller;
+      if( m_strongCloneKiller ) m_cloneKiller = false; // don't run both
+
+      // In case the seed station is M5 the clone killing does not work
+      // FIXME: Make the clone killing more flexible
+      if( m_seedStation != M5 ) {
+        m_cloneKiller = false;
+        m_strongCloneKiller = false;
+      }
     }
   }
   virtual StatusCode copyToLHCbTracks();
