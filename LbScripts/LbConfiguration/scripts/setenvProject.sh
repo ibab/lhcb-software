@@ -6,3 +6,5 @@ if [ "$SetupProjectStatus" = 0 ]; then
 fi
 rm -f $SetupProject_tmpfile
 unset SetupProject_tmpfile
+
+$(exit $SetupProjectStatus)

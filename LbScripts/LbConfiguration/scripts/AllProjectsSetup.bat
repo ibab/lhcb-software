@@ -12,5 +12,6 @@ if %AllProjectsSetupStatus% EQU 0 (
 
 if exist %AllProjectSetup_tmpfile% del %AllProjectSetup_tmpfile%
 set AllProjectSetup_tmpfile=
-set AllProjectsSetupStatus=
+
+exit /b %AllProjectsSetupStatus%
 

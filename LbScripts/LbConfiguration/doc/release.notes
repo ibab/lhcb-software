@@ -1,5 +1,17 @@
 2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/AllProjectsSetup.bat: added exit code
+	* scripts/generateLogin: added exit code to LbLogin.bat
+	* scripts/setenvProject.bat: added exit code
+	* scripts/setenvProject.csh: added exit code
+	* scripts/setenvProject.sh: added exit code
+	* scripts/SetupProject.bat: added exit code
+	* python/LbConfiguration/Platform.py: check if there is a native compiler in the PATH
+	first (Marco Cl.)
+
+
+2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v6r1p3
 
 2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

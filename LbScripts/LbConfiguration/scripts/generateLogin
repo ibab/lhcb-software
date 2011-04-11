@@ -508,6 +508,12 @@ set LbLogin_tmpfile=
 
         content += getConfigurationFragment(shell, "login_postscript")
 
+        content += """
+
+exit /b %LbLoginStatus%
+
+"""
+
 
     f.write(content)
     f.close()
