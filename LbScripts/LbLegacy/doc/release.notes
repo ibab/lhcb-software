@@ -1,3 +1,8 @@
+2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: reload the Platform module in order to have the latest CMTCONFIGs
+	* scripts/mkproject: removed dead comments.
+
 2011-04-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r1p2

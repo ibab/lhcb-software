@@ -746,6 +746,11 @@ def getPackVer(fname):
     # get the binary if any
     if fname.find("LBSCRIPTS") == -1 :
         import LbConfiguration.Platform
+        if LbConfiguration in sys.modules.values() :
+            reload(LbConfiguration)
+        if LbConfiguration.Platform in sys.modules.values() :
+            reload(LbConfiguration.Platform)
+
         binary_list = LbConfiguration.Platform.binary_dbg_list + LbConfiguration.Platform.binary_opt_list
         if extra_binary :
             binary_list.append(extra_binary)
