@@ -3,6 +3,53 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v39r1>2011-04-12 Brunel v39r1</A></H1><PRE>
+This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2,
+ Rec v11r3 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version for first 2011 reprocessing
+
+- New functionality
+  . Add new pattern recognition algorithm for velopix
+    (RecoUpgrade v2r1, TrackEvent v5r12)
+  . Add support for MaPMTs and HPDs in RichSmartID class, for upgrade studies.
+    (LHCbKernel v13r0)
+
+- Changes to configuration:
+  . Change ParamFiles dependency to v8r* (was v8r4)
+
+- New tuning
+  . Improvements in HPD analysis (RichHPDImageAnalysis v1r6)
+  . Use latest LHCBCOND tags from SQLDDDB v6r6 by default (DDDB
+  . New data integrity checks:
+    o In Rich decoding tool, if hardware ID in data disagrees with database 
+      value, no hits are decoded for that HPD (RichDAQ v3r32)
+    o In Calo decoding extend protection against multiple entry in KeyedContainer
+      (CaloDAQ v4r22, DAQEvent v9r5)
+
+- Bug fixes
+  . Fix to bug #80076 (wrong condition used on first event)
+    (DetCond v12r18, DetDescSvc v3r1)
+  . Register OT/STHitCreator to detector geometry conditions, previously was
+    ignoring any conditions update after initialisation (TfTools v1r14)
+  . Check for negative element in state covariance matrix diagonal, update
+    KalmanFitResult error printing accordingly (TrackFitEvent v5r8)
+  . Bug fix for VeloPixRawBankToLiteCluster.cpp (VeloPixDAQ v1r4)
+
+- Monitoring changes
+  . Remove RichHPDImageShifts from default monitoring (RichRecQC v2r49)
+  . Extend the decoding errors monitor (RichRecQC v2r49)
+  . Fixed typo in bunch id plot (STMonitors v3r5)
+  . Added map of cluster size in each sector (expert moni) (STMonitors v3r5) 
+  . Add Mu monitor to Hlt monitoring sequence (HltMonitors v1r3)
+
+- Changes to example options and tests
+  . Add example options for 2011 data and update brunel.brunel2011magdown test
+    to use them.
+
+- Packaging changes:
+  . Change ParamFiles dependency to v8r* (was v8r4)
+
 </PRE><H1><A NAME=v39r0p3>2011-03-23 Brunel v39r0p3</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r1p1, Lbcom v10r1p1,
  Rec v11r2p1 and SQLDDDB v6r4, ParamFiles v8r4, FieldMap v5r5, AppConfig v3r*
