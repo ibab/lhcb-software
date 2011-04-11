@@ -56,6 +56,7 @@ class Physics_draft2011( object ):
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
+        from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
 
         thresholds = { Hlt1TrackLinesConf : {   'AllL0_PT'      : 1700
                                             ,   'AllL0_P'       : 10000
@@ -74,6 +75,16 @@ class Physics_draft2011( object ):
                                             ,   'Photon_TrChi2' : 2.5
                                             ,   'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                 }
+
+                     , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'      : 20000
+						,'SingleElectronNoIP_PT'     : 10000
+						,'SingleElectronNoIP_TrChi2'  :    4
+						,'SingleElectronNoIP_TrNTHits'   : 0 #OFF
+						,'SingleElectronNoIP_Velo_NHits' : 0 #OFF
+						,'SingleElectronNoIP_Velo_Qcut'  : 999 #OFF
+						,'L0Channels'               : { 'SingleElectronNoIP'   : ( 'Electron', ) } 
+					       }
+
                      , Hlt1MuonLinesConf : { 'SingleMuonHighPT_P'        : 8000
                                              ,'SingleMuonHighPT_PT'      : 4800
                                              ,'SingleMuonHighPT_TrChi2'  :    4
@@ -157,6 +168,7 @@ class Physics_draft2011( object ):
 		        , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                 , 'Hlt1DiProtonLowMult'
+                , 'Hlt1SingleElectronNoIP'
                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
                 , 'Hlt1MBNoBias' , 'Hlt1MBMicroBiasVelo', 'Hlt1MBMicroBiasTStation'
