@@ -3,8 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Changes to configuration:
-   . Change ParamFiles dependency to v8r* (was v8r4)
+</PRE><H1><A NAME=v39r1>2011-04-12 Brunel v39r1</A></H1><PRE>
+This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2,
+ Rec v11r3 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version for first 2011 reprocessing
+
+- Changes to configuration:
+  . Change ParamFiles dependency to v8r* (was v8r4)
 
 - Add example options for 2011 data and update brunel.brunel2011magdown test
   to use them.
