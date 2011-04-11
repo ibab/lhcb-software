@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-04-11 - Mariusz Witek
+ - Include SingleElectronNoIP in Hlt1.py
+
 ! 2011-04-10 - Roel Aaij
  - Add FastTTValidationTool/ValidateWithTT to HltInit.py
 
