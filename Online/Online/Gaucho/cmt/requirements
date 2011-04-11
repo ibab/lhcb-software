@@ -37,4 +37,7 @@ macro_append  RPCTest_dependencies    " Gaucho "
 application HistTest ../src/Test/HistTest.cpp
 macro_append  HistTest_dependencies    " Gaucho "
 
+application CounterTest ../src/Test/CounterTest.cpp
+macro_append  CounterTest_dependencies    " Gaucho "
+
 macro_append Gaucho_shlibflags " -pthread " WIN32 ""

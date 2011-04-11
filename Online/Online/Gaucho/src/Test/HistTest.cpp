@@ -40,6 +40,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
   {
     printf ("%s\n",hists[i].c_str());
   }
+  printf("Number of Histograms for Task %s %d\n",task.c_str(),(int)hists.size());
   std::vector<std::string> hsts;
   printf("Trying to retrieve the following histograms\n ");
   for (unsigned int i=0;i<3;i++)
