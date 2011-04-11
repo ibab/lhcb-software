@@ -16,7 +16,7 @@ from HltLine.HltLine import Hlt1Tool
 def to_name( conf ):
     return conf.mTool().split( '/' )[ -1 ].split( '::' )[ -1 ].split( ':' )[ 0 ]
 
-def ConfiguredMVE( parent, name = None, chi2 = 25 ):
+def ConfiguredMVE( parent, name = None, chi2 = 9 ):
     if name == None: name = Hlt__MatchVeloElectron.__name__
     return Hlt1Tool( Hlt__MatchVeloElectron
                      , name
@@ -24,7 +24,7 @@ def ConfiguredMVE( parent, name = None, chi2 = 25 ):
 
 ## Configure tool, set the match chi2
 import Hlt1StreamerConf as Conf
-ConfiguredMVE( ToolSvc(), to_name( Conf.VeloElectron ), 25 )
+ConfiguredMVE( ToolSvc(), to_name( Conf.VeloElectron ), 9 )
 
 ## L0Calo -> Candidate
 cc = Hlt__L0Calo2Candidate( 'Hlt1L0CaloCandidates' )

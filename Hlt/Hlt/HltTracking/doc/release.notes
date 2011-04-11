@@ -5,6 +5,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-04-11 - Mariusz Witek
+ - Modify MatchVeloElectron.cpp to accept only L0Electrons with high PT
+   for SingleElectronNoIP line (Z->ee dedicated)
+ - Change matching chi2 from 25 to 9 in Hlt1TrackMatchConf.py
+
 ! 2011-04-10 - Roel Aaij
  - Add configuration of FastTTValidationTool to Hlt1TrackFilterConf.py
 

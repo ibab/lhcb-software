@@ -105,6 +105,7 @@ private:
 private:
    // Properties
    double m_maxChi2;
+   double m_minL0ElectronET;
 } ; 
    // ==========================================================================
 } // end of namespace Hlt
@@ -122,6 +123,7 @@ Hlt::MatchVeloElectron::MatchVeloElectron
    : base_class ( type , name , parent ) 
 {
    declareProperty( "MaxMatchChi2", m_maxChi2 = 50 );
+   declareProperty( "MinL0ElectronET", m_minL0ElectronET = 5090. );
 }  
 // ============================================================================
 // protected and virtual destructor 
@@ -168,6 +170,11 @@ StatusCode Hlt::MatchVeloElectron::match
    const LHCb::L0CaloCandidate* l0 = candidate.get<LHCb::L0CaloCandidate>() ;
    if ( 0 == l0 ) 
    { return Error ("HltCandidate is NOT L0Calo!") ; }
+   // take only L0Electron 
+   if ( 2 != l0->id().calo() )          return StatusCode::FAILURE;
+   if ( 0 != l0->type() )               return StatusCode::FAILURE;
+   if ( m_minL0ElectronET > l0->et() )  return StatusCode::FAILURE;
+
    // ==========================================================================)
       
    //variables used later [from HltVeloEcalMatch constructor]
