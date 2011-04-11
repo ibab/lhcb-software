@@ -5,8 +5,8 @@
 # $Id: requirements,v 1.49 2010-02-12 07:35:51 jonrob Exp $
 #============================================================================
 
-package RichReadout
-version v2r12p2
+package           RichReadout
+version           v2r13
 
 # ================ structure =================================================
 branches cmt doc src Event xml
