@@ -6,7 +6,6 @@ if ( ! $AllProjectsSetupStatus ) then
 endif
 rm -f $tmp2dffile
 unset tmp2dffile
-unset AllProjectsSetupStatus
 
 exit $AllProjectsSetupStatus
 

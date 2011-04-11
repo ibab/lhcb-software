@@ -995,7 +995,7 @@ if __name__ == '__main__':
         console.setLevel(logging.INFO)
     thelog.addHandler(console)
 
-    thelog.info(" Beginning of generateLogin ".center(120, "+"))
+    thelog.info(" Beginning of generateLogin ".center(120))
     thelog.debug("Command line arguments: %s" % " ".join(sys.argv))
 
     if opts.mysiteroot is not None:
@@ -1014,5 +1014,5 @@ if __name__ == '__main__':
                    opts.withoutpython, opts.withoutcache,
                    opts.withoutgroupwrapper, opts.withoutmainwrapper)
 
-    thelog.info(" End of generateLogin ".center(120,"+"))
+    thelog.info(" End of generateLogin ".center(120))
 
