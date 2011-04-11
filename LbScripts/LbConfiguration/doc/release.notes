@@ -1,5 +1,6 @@
 2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: corrected the manifest to display more useful informations
 	* scripts/AllProjectsSetup.bat: added exit code
 	* scripts/generateLogin: added exit code to LbLogin.bat
 	* scripts/setenvProject.bat: added exit code

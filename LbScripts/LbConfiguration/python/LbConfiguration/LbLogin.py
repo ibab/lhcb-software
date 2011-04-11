@@ -976,23 +976,22 @@ class LbLoginScript(SourceScript):
             else :
                 self.addEcho("*" + "---- LHCb Login ----".center(78) + "*")
             if self.binary :
-                self.addEcho("*" + ("Building with %s on %s %s system" % (self.compdef, self.platform, self.binary)).center(78) + "*")
+                self.addEcho("*" + ("Building with %s on %s %s system (%s)" % (self.compdef, self.platform, self.binary, ev["CMTCONFIG"])).center(78) + "*")
             else : # for windows
-                self.addEcho("*" + ("Building with %s on %s system" % (self.compdef, self.platform)).center(78) + "*")
+                self.addEcho("*" + ("Building with %s on %s system (%s)" % (self.compdef, self.platform, ev["CMTCONFIG"])).center(78) + "*")
             self.addEcho("*" * 80)
-            self.addEcho(" --- CMTROOT is set to %s " % ev["CMTROOT"])
-            self.addEcho(" --- CMTCONFIG is set to %s " % ev["CMTCONFIG"])
-            if debug :
-                self.addEcho(" --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake")
             if ev.has_key("CMTPATH") :
                 self.addEcho(" --- CMTPATH is set to %s" % ev["CMTPATH"])
             else :
                 if ev.has_key("User_release_area") :
                     self.addEcho(" --- User_release_area is set to %s" % ev["User_release_area"])
-                    self.addEcho(" --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
-                else :
-                    self.addEcho(" --- CMTPROJECTPATH is set to $LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
-                self.addEcho(" --- projects will be searched in $CMTPROJECTPATH ")
+                if ev.has_key("LHCBPROJECTPATH") :
+                    self.addEcho(" --- LHCBPROJECTPATH is set to:")
+                    for p in ev["LHCBPROJECTPATH"].split(os.pathsep) :
+                        if p :
+                            self.addEcho("    %s" % p)
+
+
             self.addEcho("-" * 80)
 
 
