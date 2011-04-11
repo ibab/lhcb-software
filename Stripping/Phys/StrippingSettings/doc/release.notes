@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ======================== StrippingSettings v2r2p1 2011-04-11 ================
+
 ! 2011-04-11 - Thomas Blake
  - Temporary removal of MuonTT efficiency lines from the line config
 	 dictionary and dbase. 
