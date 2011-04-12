@@ -6,6 +6,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-12 - Neal Gauvin
+ - Added new features for SaveTuple. 
+ - Added new cut : BackToBack = dphi to request for at least one pair of
+   candidates that are back to back (azimuthal angle > dphi) with respect to 
+   the upstream PVs. 
+
+! 2011-04-12 - Neal Gauvin
  - Corrected insignifant bugs to satisfy lhcb-coverity.
 
 ! ======================= DisplVerticesMC v1r3p1 2011-02-20 ==================

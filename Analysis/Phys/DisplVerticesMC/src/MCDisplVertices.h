@@ -180,10 +180,12 @@ private:
   double GetRecMass( const LHCb::Particle::ConstVector &, double & );
   double GetPt( const LHCb::RecVertex* RV );
   double GetPt( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
+  double GetDeltaPhi( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   double GetDeltaR( const LHCb::Particle *, const LHCb::Particle * );
   double GetR( const Gaudi::XYZPoint & );
   double GetMCMass( LHCb::MCParticle::ConstVector & );
   double GetRFromBL( const Gaudi::XYZPoint& );  
+  void GetMassFromLongTracks( const LHCb::Particle *, double &, int & );
   void GetUpstreamPV(); ///< Get the Upstream PV
   void GetPVs(); ///< Get the PV candidates
   void GetPartsFromRecVtx(const LHCb::RecVertex*, 
@@ -195,7 +197,7 @@ private:
   StatusCode SaveTrigInfinTuple( Tuple & );
   StatusCode SaveL0RawInfos( Tuple & );
   StatusCode fillHeader( Tuple & );
-  StatusCode ReconstructMother( LHCb::Particle::ConstVector & );
+  StatusCode BackToBack( LHCb::Particle::ConstVector & );
 
   /***************************************************************//**
    * the type of radial (R) cut to be applied 
@@ -258,6 +260,7 @@ private:
   double m_DetDist;           ///< Min distance to det material 
   ///<Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
+  double m_Backtoback;
 
   Gaudi::Transform3D m_toVeloLFrame; ///< to transform to local velo L frame
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
