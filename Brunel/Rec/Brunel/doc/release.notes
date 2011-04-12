@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes in Brunel v39r2 output:
+  . #121606 etc.: (RichDet) Make sure things are updated when conditions change
+  . #121762 etc.: (DetDesc) Recover precision in matrices
+  . Adapt to latest LHCBCOND tags from SQLDDDB v6r7 
+
 </PRE><H1><A NAME=v39r1>2011-04-12 Brunel v39r1</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2,
  Rec v11r3 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
