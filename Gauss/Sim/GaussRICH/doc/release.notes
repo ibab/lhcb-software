@@ -3,6 +3,9 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2011-04-12 - Sajan Easo
+  - Added a few histograms to the RichAnalysis and updated the Counters used 
+    histograms
 !2011-03-28 - Sajan Easo
  - Added couple of counters to plot few histograms for analysis and monitoring. This is done in
    RichG4Counters.h,icpp and cpp.
