@@ -65,7 +65,7 @@ public:
   bool nameeq(char *nam, int namlen);
   int namelength(void) const
   {
-    return m_namelen;
+    return m_namelen+1;
   }
   void *cpyName(void *ptr);
   int datasize();
