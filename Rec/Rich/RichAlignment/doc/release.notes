@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-04-12 - Chris Jones
+ - Fix some bugs in the order of arguments passed to richHisto2D
+
 ! 2011-04-08 - Chris Jones
  - Bug fixes to the alignment and calibration scripts, to properly handle
    differences between the CET and GMT timezones.

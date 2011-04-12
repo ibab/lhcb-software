@@ -337,10 +337,10 @@ StatusCode AlignmentMonitor::execute()
           richHisto1D( HID("sphMirR1"),"Sph Mirror Numbers Rich1",-0.5,3.5,4)->fill(sphMirNum);
           richHisto1D( HID("fltMirR1"),"Flat Mirror Numbers Rich1",-0.5,15.5,16)->fill(flatMirNum);
           richHisto2D( HID("sphMirReflR1"), "Spherical Mirror Refl point Rich1",
-                       -700, 700, -800, 800, 100, 100 ) 
+                       -700, 700, 100, -800, 800, 100 ) 
             -> fill(gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y());
           richHisto2D(HID("flatMirReflR1"), "Flat Mirror Refl point Rich1",
-                      -700, 700, -1000, 1000, 100, 100 )
+                      -700, 700, 100, -1000, 1000, 100 )
             -> fill(gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y());
         }
         side  = ( gPhoton.flatMirReflectionPoint().y() > 0.0 ? 0 : 1 );
@@ -354,10 +354,10 @@ StatusCode AlignmentMonitor::execute()
           richHisto1D( HID("sphMirR2"),"Sph Mirror Numbers Rich2",-0.5,55.5,56)->fill(sphMirNum);
           richHisto1D( HID("fltMirR2"),"Flat Mirror Numbers Rich2",-0.5,39.5,40)->fill(flatMirNum);
           richHisto2D( HID("sphMirReflR2"), "Spherical Mirror Refl point Rich2",
-                       -1800, 1800, -1500, 1500, 100, 100)
+                       -1800, 1800, 100, -1500, 1500, 100)
             ->fill(gPhoton.sphMirReflectionPoint().x(),gPhoton.sphMirReflectionPoint().y());
           richHisto2D( HID("flatMirReflR2"), "Flat Mirror Refl point Rich2",
-                       -3000, 3000, -1000, 1000, 100, 100)
+                       -3000, 3000, 100, -1000, 1000, 100)
             ->fill(gPhoton.flatMirReflectionPoint().x(),gPhoton.flatMirReflectionPoint().y());
         }
         side  = ( gPhoton.flatMirReflectionPoint().x() > 0.0 ? 0 : 1 );
@@ -416,13 +416,15 @@ StatusCode AlignmentMonitor::execute()
         if ( allowMirrorCombi )
         {
           h_id << thisCombiNr.str();
-          richHisto2D( HID(h_id.str(),rad), title.str(), 0.0, 2*Gaudi::Units::pi,
-                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+          richHisto2D( HID(h_id.str(),rad), title.str(), 
+                       0.0, 2*Gaudi::Units::pi, 20,
+                       -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
             ->fill( phiRec, delTheta );
 
           if ( m_histoOutputLevel > 3 && isolated )
-            richHisto2D( HID(h_id.str()+"Iso",rad), title.str()+" Iso", 0.0, 2*Gaudi::Units::pi,
-                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+            richHisto2D( HID(h_id.str()+"Iso",rad), title.str()+" Iso", 
+                         0.0, 2*Gaudi::Units::pi, 20,
+                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill( phiRec, delTheta ); 
           
           if ( m_useMCTruth ) 
@@ -430,16 +432,18 @@ StatusCode AlignmentMonitor::execute()
             // use MC estimate for cherenkov angle
             h_id << "MC";
             title << " MC";
-            richHisto2D( HID(h_id.str(),rad), title.str(), 0.0, 2*Gaudi::Units::pi,
-                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+            richHisto2D( HID(h_id.str(),rad), title.str(), 
+                         0.0, 2*Gaudi::Units::pi, 20,
+                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill(phiRec, delThetaTrue);
             // test to see if this photon was emitted from this track
             if ( trueParent )
             {
               h_id << "TruP";
               title << " TrueP";
-              richHisto2D( HID(h_id.str(),rad), title.str(), 0.0, 2*Gaudi::Units::pi,
-                           -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+              richHisto2D( HID(h_id.str(),rad), title.str(), 
+                           0.0, 2*Gaudi::Units::pi, 20,
+                           -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
                 ->fill(phiRec, delThetaTrue);
             }
           }
@@ -455,8 +459,9 @@ StatusCode AlignmentMonitor::execute()
           {
             std::ostringstream hpd_id;
             hpd_id << "HPD_" << hpd;
-            richHisto2D( HID("HPDs/"+hpd_id.str()), hpd_id.str(), 0.0, 2*Gaudi::Units::pi,
-                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 )
+            richHisto2D( HID("HPDs/"+hpd_id.str()), hpd_id.str(), 
+                         0.0, 2*Gaudi::Units::pi, 20,
+                         -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill(phiRec, delTheta);
           }
         }
