@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2011-04-12 - Neal Gauvin
+ - Corrected insignifant bugs to satisfy lhcb-coverity.
+
 ! ======================= DisplVerticesMC v1r3p1 2011-02-20 ==================
 
 ! 2011-02-13 - Chris Jones

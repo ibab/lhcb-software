@@ -1864,7 +1864,6 @@ void MCDisplVertices::GetMCStable( const LHCb::MCVertex * vtx , int & nb,
 				 Gaudi::LorentzVector & mass ){
 
   info()<<"This function is not to be used"<< endmsg;
-  return;
 
   for( SmartRefVector<LHCb::MCParticle>::const_iterator p = 
 	 vtx->products().begin(); p != vtx->products().end(); ++p ){
@@ -2328,7 +2327,8 @@ void MCDisplVertices::SaveGenPartinTuple( const HepMC::GenEvent* evt ){
        p!= evt->particles_end();++p){
 
     //Save infos about the Prey
-    if( (*p)->pdg_id() == m_PreyPID ){ 
+    unsigned int pid = abs( (*p)->pdg_id() );
+    if( pid == m_PreyID.abspid() ){ 
       keta.push_back( (*p)->momentum().eta() );
       kphi.push_back( (*p)->momentum().phi() );
 
@@ -2538,16 +2538,15 @@ bool MCDisplVertices::IsitFromaPrey( HepMC::GenParticle * p ) {
   if( p->production_vertex() ){
     HepMC::GenVertex * vtx = p->production_vertex();
     //Loop on incoming particle
-    HepMC::GenVertex::particles_in_const_iterator pin;
+    HepMC::GenVertex::particles_in_const_iterator pin = 
+      vtx->particles_in_const_begin();
     HepMC::GenVertex::particles_in_const_iterator pend = 
       vtx->particles_in_const_end();
-    for( pin = vtx->particles_in_const_begin(); 
-	 pin !=  pend; ++pin){
-      if( (*pin)->pdg_id() == abs(m_PreyPID) ) {
+    for( ; pin !=  pend; ++pin){
+      unsigned int pid = abs( (*pin)->pdg_id() );
+      if( pid == m_PreyID.abspid() ){
 	return true;
-      } else {
-	return IsitFromaPrey( *pin );
-      }
+      } 
     }
   }
   return false;
@@ -2593,8 +2592,8 @@ bool MCDisplVertices::IsNeutrino( const MCParticle * p ){
 
   int id = p->particleID().pid();
   if( id == 12 || id == 14 || id == 16 ) {
+    //debug() << "Found a Neutrino !" << endmsg;
     return true ;
-    debug() << "Found a Neutrino !" << endmsg;
   } else {
     return false;
   }
@@ -3598,9 +3597,9 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
    * Beware : it seems that HltDecReport writes only on TES algos that fired
    *****************************/
   if (!exist<HltDecReports>( HltDecReportsLocation::Default ) ){
+//     warning()<<"No HltDecReports at "
+// 	     << HltDecReportsLocation::Default << endmsg;
     return true;
-    warning()<<"No HltDecReports at "
-	     << HltDecReportsLocation::Default << endmsg;
   }
   const HltDecReports* decReports = get<HltDecReports>
     ( HltDecReportsLocation::Default );

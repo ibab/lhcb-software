@@ -206,7 +206,6 @@ private:
   std::string m_RCut;         
   std::string m_BLLoc;        ///< Location in TES of Beam line
   LHCb::Particle * m_BeamLine;
-  bool   m_ok ;               // Ok if at least one 95% pure khi is reco.
   bool   m_SaveTuple;         ///<Save prey properties in a tuple 
   bool   m_SaveTrigInfos ;    ///<Save trigger infos in a tuple
   bool   m_SaveonTES;         ///<Save Event on TES if fires
@@ -217,9 +216,7 @@ private:
    * of flying particles with air of beam pipe.
    ******************************************************************/
   bool   m_RemVtxFromAir;  
-  int    m_nEvents ;          // number of events
   const double pi ;
-  double m_purity ;           ///< Purity of reconstructed neuts
   ///Proportion of preys in different purity areas
   std::vector<double> m_purities;
   double m_maxunpure ;
@@ -275,7 +272,6 @@ private:
 
   std::string m_Prey ;        ///< LHCb Name of the prey
   LHCb::ParticleID m_PreyID;  // PDG ID of this particle
-  int    m_PreyPID ;          ///< PID of the prey (for MC and Gen use)
   std::string m_MotherPrey ;  ///< LHCb Name of the mother of the prey
   LHCb::ParticleID m_MotherPreyID;  // PDG ID of this particle
   bool   m_IsPreyFromMother ;       ///< Is the Prey from the given Mother ?
@@ -288,6 +284,7 @@ private:
 
   struct sortPVdz {
     double refz; 
+    sortPVdz(){ refz = 0.; };
     bool operator() ( const LHCb::RecVertex* first, 
 		      const LHCb::RecVertex* second ) { 
       
