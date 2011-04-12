@@ -83,6 +83,7 @@ DisplVertices::DisplVertices( const std::string& name,
   declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
   declareProperty("BeamLineLocation", 
 		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
+  declareProperty("Backtoback", m_Backtoback = -1 );
 }
 
 //=============================================================================
@@ -141,6 +142,8 @@ StatusCode DisplVertices::initialize() {
     m_SaveTuple = false;
   }
 
+  if( m_Backtoback > 0 && m_NbCands < 2 ) m_NbCands = 2;
+
 
   if( context() == "Info" ){
     info()<<"--------------------------------------------------------"<<endmsg;
@@ -194,8 +197,11 @@ StatusCode DisplVertices::initialize() {
     }
     info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
     info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
-    //info() << "DisplVertices will also try to reconstruct "<< m_MotherPrey 
-    // <<" into two "<< m_Prey <<" decay."<< endmsg;
+    if( m_Backtoback > 0 ){
+      info() << "MCDisplVertices will also try to reconstruct "<< m_MotherPrey 
+	     <<" from two "<< m_Prey <<" decaying back to back with |dphi| "
+	     << m_Backtoback <<" angle wrst the upstream PVs"<< endmsg;
+    }
     info()<<"--------------------------------------------------------"<<endmsg;
   }
   
@@ -296,12 +302,11 @@ StatusCode DisplVertices::execute(){
     return StatusCode::SUCCESS;
   }
 
-  //always()<<"tag2"<<endreq;
-  vector<int>  nboftracks;
-  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets, recqs;
-  int nbCands(0);
+  vector<int>  nboftracks, nboftracksl;
+  vector<double> chindof, px, py, pz, e, x, y, z, errx, erry, errz, sumpts, muons, indets, recqs, massls;
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"--------Reconstructed Displ. Vertices --------------"<< endmsg;
+  Particle::ConstVector Cands;
   Particle::ConstVector::const_iterator iend = preys.end();
   for( Particle::ConstVector::const_iterator is = preys.begin(); 
        is < iend; ++is ){
@@ -377,25 +382,30 @@ StatusCode DisplVertices::execute(){
       if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
       if( p->info(51,-1000.)>-900 ) indet += 1000;
       indets.push_back( indet ); 
+      if(true){
+	double mlong = 0.; int nbtlong = 0;
+	GetMassFromLongTracks( p, mlong, nbtlong );
+	nboftracksl.push_back( nbtlong );
+	massls.push_back( mlong );
+      }
     }
     Particle clone = Particle( *p );
     clone.setParticleID( m_PreyID );
-    this->markTree(&clone);
-    nbCands++;
+    Cands.push_back( this->markTree(&clone) );
   }//  <--- end of Prey loop
 
   
-  if((unsigned int) nbCands < m_NbCands ){
+  if( Cands.size() < m_NbCands ){
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Insufficent number of candidates !"<< endmsg;
     return StatusCode::SUCCESS;
   }
   //always()<<"There should be candidate"<<endreq;
   setFilterPassed(true); 
-  counter("Nb of candidates") += nbCands;
+  counter("Nb of candidates") += Cands.size();
 
   if( msgLevel( MSG::DEBUG ) )
-    debug() << "Nb of " << m_Prey <<" candidates "<< nbCands << endmsg;
+    debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
 
   
   //Save nTuples
@@ -423,6 +433,12 @@ StatusCode DisplVertices::execute(){
 		   "NbPrey", NbPreyMax );
     tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
 		   "NbPrey", NbPreyMax );
+    if( massls.size() != 0 ){
+      tuple->farray( "PreyMLongs", massls.begin(), massls.end(), 
+		     "NbPrey", NbPreyMax );
+      tuple->farray( "PreyNbofLongTracks", nboftracksl.begin(), 
+		     nboftracksl.end(), "NbPrey", NbPreyMax );
+    }
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
     tuple->column( "BLY", m_BeamLine->referencePoint().y() );
     tuple->column( "BLZ", m_BeamLine->referencePoint().z() );
@@ -438,10 +454,10 @@ StatusCode DisplVertices::execute(){
 
 
   //--------------Mother Reconstruction------------------  
-  //if( false && Cands.size() >= 2 ){
-  //  if( ReconstructMother( Cands ).isFailure() )
-  //     Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
-  // }
+  if( m_Backtoback > 0 && Cands.size() >= 2 ){
+    if( BackToBack( Cands ).isFailure() )
+      Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -807,6 +823,29 @@ double DisplVertices::ImpactParam( const Gaudi::XYZPoint & V,
 
 }
 
+//============================================================================
+// Compute mass and nb of tracks from Long tracks only
+//============================================================================
+void DisplVertices::GetMassFromLongTracks( const Particle * p, 
+					   double & mlong, int & nbtlong ){
+  
+  Gaudi::LorentzVector mom;
+  
+  //Loop on the daughters.  
+  SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
+  for( SmartRefVector<Particle>::const_iterator i = 
+	 p->daughters().begin(); i != iend; ++i ){
+    const Particle * d = (*i);
+    if( d->proto() == NULL ) continue;
+    if( d->proto()->track() == NULL ) continue;
+    const Track * tk = d->proto()->track();
+    if( !tk->checkType(Track::Long) ) continue;
+    ++nbtlong;
+    mom += d->momentum();
+  }
+  mlong = mom.M();
+}
+
 //=============================================================================
 // Return a mass estimate from a vector of Particles
 //=============================================================================
@@ -833,6 +872,18 @@ double DisplVertices::GetRecMass( const Particle::ConstVector & RecParts,
   }
   recpt = mom.Pt();
   return mom.M();
+}
+
+//=============================================================================
+// Compute azimuthal angle between the 2 candidates
+//=============================================================================
+double DisplVertices::GetDeltaPhi( const Gaudi::XYZPoint & v1, 
+				     const Gaudi::XYZPoint & v2 ){
+  
+  double dphi = v1.Phi() - v2.Phi();
+  if( dphi >= pi ) dphi -= 2*pi;
+  if( dphi < -pi ) dphi += 2*pi;
+  return dphi;
 }
 
 //=============================================================================
@@ -1257,7 +1308,7 @@ StatusCode DisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
 //   //Get topological trigger decision with TisTosTools
 //   m_tisTos->setOfflineInput();
 //   m_tisTos->setTriggerInput(); // reset trigger names
-//   m_tisTos->setTriggerInput("Hlt2Topo.*YesDecision");//addToTriggerInput
+//   m_tisTos->setTriggerInput("Hlt2Topo.*Decision");//addToTriggerInput
 //   bool TopoDec = m_tisTos->triggerTisTos().decision();
 //   if( msgLevel(MSG::DEBUG) )
 //     debug()<<"Hlt2Topo{2,3,4}Decision      : "<< TopoDec << endmsg;
@@ -1379,18 +1430,42 @@ StatusCode DisplVertices::fillHeader( Tuple& tuple ){
 //============================================================================
 // Mother Reconstruction
 //============================================================================
-StatusCode DisplVertices::ReconstructMother( Particle::ConstVector & Cands ){
+StatusCode DisplVertices::BackToBack( Particle::ConstVector & Cands ){
 
-  ++counter("Nb of mothers");
-  Gaudi::LorentzVector Mother; 
-  Mother = (Cands.at(0)->momentum())+(Cands.at(1)->momentum());
-  debug()<< m_MotherPrey <<" momentum " << Mother 
-	 << " Mass " << Mother.M() << endmsg;
-  if( context() == "Info" ){
-    plot( Mother.M()/1000., "RecMotherMass", 0., 160. );
-    plot( (Cands.at(0)->measuredMass())/1000.,"PreyMassfromMother", 0., 70.);
-    plot( (Cands.at(1)->measuredMass())/1000.,"PreyMassfromMother", 0., 70.);
+  setFilterPassed(false);   
+  GetPVs();
+  if( PVs.empty() ) return StatusCode::SUCCESS ;
+
+  //Loop on candidates
+  Particle::ConstVector::const_iterator iend = Cands.end();
+  for( Particle::ConstVector::const_iterator i1 = Cands.begin(); 
+       i1 < iend; ++i1 ){
+    const Particle * p1 = (*i1);
+    Particle::ConstVector::const_iterator i2 = i1; ++i2;
+    for( ; i2 < iend; ++i2 ){
+      const Particle * p2 = (*i2);
+
+      //Loop on PVs
+      for ( RecVertex::Range::const_iterator i = PVs.begin(); 
+            i != PVs.end() ; ++i ){
+        const RecVertex* pv = *i;
+        //check that no candidate comes before the pv.
+        const Gaudi::XYZPoint & pospv = pv->position();
+        const Gaudi::XYZPoint & pos1 = p1->endVertex()->position();
+        const Gaudi::XYZPoint & pos2 = p2->endVertex()->position();
+        if( pos1.z() < pospv.z() || pos2.z() < pospv.z() ) break;
+        
+        Gaudi::XYZPoint v1 = Minus( pos1, pospv);
+        Gaudi::XYZPoint v2 = Minus( pos2, pospv);
+        //compute azimuthal angle between the 2 candidates
+        double dphi = GetDeltaPhi( v1, v2 );
+        if( dphi > m_Backtoback ){
+          ++counter("Nb of mothers");
+          setFilterPassed(true);  
+          return StatusCode::SUCCESS;
+        }        
+      }
+    }    
   }
-
-  return StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS;
 }
