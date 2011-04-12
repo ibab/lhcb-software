@@ -160,7 +160,7 @@ void *MonCounter::cpyName(void *p)
   strncpy(ptr,m_name,this->m_namelen);
   ptr[m_namelen] = 0;
   ptr = (char*)ptr+m_namelen;
-  return p;
+  return ptr;
 }
 void MonCounter::clear(void)
 {

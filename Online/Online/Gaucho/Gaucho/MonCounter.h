@@ -73,7 +73,7 @@ public:
   int hdrlen();
   int serialize(void* &ptr);
   void List();
-  static void *de_serialize(void *, char *);
+  static void *de_serialize(void *, char *nam = 0);
   void SetExpand(bool expand){this->m_expandService = expand;return;};
   void create_OutputService(std::string);
   void delete_OutputService();
