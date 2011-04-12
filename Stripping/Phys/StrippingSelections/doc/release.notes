@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-12 - Paul Seyfert
+ - TrackEffVeloMuon: switch on velo decoding
+
 ! 2011-04-11 - Jeroen Van Tilburg
  - TrackEffMuonTT.py: switch off clone killing in MuonCombRec.
 

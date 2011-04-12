@@ -330,7 +330,8 @@ def trackingPreFilter(name, prefilter):
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
                          #Members = [Jpsi_already_there,
                          #           jpsidotracking],
-                         Members = [ Tf__PatVeloRTracking(name+"VeloR"), Tf__PatVeloSpaceTracking(name+"VeloSpace"),
+                         Members = [ DecodeVeloRawBuffer(name+"VeloDecoding"),
+                                 Tf__PatVeloRTracking(name+"VeloR"), Tf__PatVeloSpaceTracking(name+"VeloSpace"),
 				 Tf__PatVeloGeneralTracking(name+"VeloGen"), preve,vefit, 
 				 HltMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
 
