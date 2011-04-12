@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-04-12 - Plamen Hopchev
+ - BeamGasLines : downscale the events with high-rho primary vertex
+
 !========================== Hlt1Lines v6r9  2011-04-05 ===================
 ! 2011-04-05 - Gerhard Raven
  - use JBIT in Hlt1VeloClosingMicroBias

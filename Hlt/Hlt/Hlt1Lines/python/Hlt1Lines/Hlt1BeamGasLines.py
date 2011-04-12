@@ -75,6 +75,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 ### PV3D vertex cuts  
                 , 'VertexMinNTracks'        :    '9'
                 , 'VertexMaxChi2PerDoF'     : '9999.'
+                , 'HighRhoCut'              : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
+                , 'HighRhoPrescale'         : 'SCALE(0.07)' #e.g. 'SCALE(0.1)' / 'RATE(0.5)'  ### --> select only part of the vertices with 'high' rho
                   
                 ### Input Prescales  
                 , 'Prescale'                : { 'Hlt1BeamGasNoBeamBeam1'           : 1.
@@ -175,15 +177,21 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %(VertexMaxChi2PerDoF)s)" % self.getProps()
         vtxCut_minNTracks     = "(NTRACKS > %(VertexMinNTracks)s)" % self.getProps()
         #!!!! Add a cut on the track asymmetry? --> this can help us in the case of pp collisions in ee, be or eb crossings
-        #!!!! Add a cut on transverse positions - to get rid of secondary interction in the VELO
-        #       - check the distribution of #vertices vs r to choose the cut
         #!!!! Add a cut on z_vtx to get rid of Offest Collisions at +/- 75 cm 
         vtxCut_zPosMin        = "(VZ > %s*mm)" % zMin
         vtxCut_zPosMax        = "(VZ < %s*mm)" % zMax
         vtxCut_excludeLumiReg = "((VZ < %s*mm) | (VZ > %s*mm))" %(self.getProp("BGVtxExclRangeMin"), self.getProp("BGVtxExclRangeMax"))
+        #Add a cut on transverse positions (get rid of interctions in the VELO)
+        #for the NoBeamBeam1(2) and EnhancedBeam1(2) reject ALL high-rho vertices
+        if 'NoBeam' in lineName or 'Enhanced' in lineName:
+            vtxCut_transvPos  =  self.getProp('HighRhoCut')
+        #for the Beam1(2), Forced & Parasitic lines accept small fraction of high-rho vertices
+        else:    
+            vtxCut_transvPos = "switch( %(HighRhoCut)s, VALL, scale( VALL, %(HighRhoPrescale)s ) )" % self.getProps()
         vtxSink               = "~VEMPTY"
 
-        listCuts = [ vtxSource, vtxCut_maxChi2PerDoF, vtxCut_minNTracks, vtxCut_zPosMin, vtxCut_zPosMax, vtxSink ]
+        listCuts = [ vtxSource, vtxCut_maxChi2PerDoF, vtxCut_minNTracks, vtxCut_zPosMin, vtxCut_zPosMax, vtxCut_transvPos, vtxSink ]
+
         #in case of a bb line add the cut that vetoes the Lumi Region
         if "Cross" in lineName: listCuts.insert(-1, vtxCut_excludeLumiReg)
 
