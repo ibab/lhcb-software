@@ -45,11 +45,13 @@ def createSelfExtractFile(input_dir, target_filename, description, script=None, 
 
     tmpl_dict = {}
     tmpl_dict["script"] = script
+
     tarball = TempFile()
     createTarBall(tarball.name, input_dir)
     tmpl_dict["tarball"] = encode(open(tarball.name, "r").read())
     del tarball
-    tmpl_file = os.path.join(os.environ["LBUTILSROOT"], "data", "SelfExtract-header.tmpl")
-    genTemplateFile(tmpl_file, tmpl_dict, target_filename)
+
+
+    genTemplateFile(template, tmpl_dict, target_filename)
 
     return status
