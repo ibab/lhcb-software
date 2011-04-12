@@ -841,6 +841,11 @@ void *MonHist::de_serialize(void *ptr, char *nam)
       double *errp = (double*)AddPtr(ents,mblocksize);
       memcpy(mhentries,ents,mblocksize);
       memcpy(mhsumw2,errp,mblocksize);
+      if (b->xlablen > 0)
+      {
+        char *xl = (char*)AddPtr(b,b->xlaboff);
+        SetBinLabels(&h->fXaxis,xl);
+      }
       if (b->ylablen > 0)
       {
         char *xl = (char*)AddPtr(b,b->ylaboff);
