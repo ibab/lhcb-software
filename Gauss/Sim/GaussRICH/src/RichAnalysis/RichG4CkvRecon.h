@@ -96,7 +96,7 @@ public:
     m_curReflPt = aReflPt;
   }
 
-  Gaudi::XYZPoint ReconPhCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord);
+  Gaudi::XYZPoint ReconPhCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr );
   Gaudi::XYZPoint ReconReflectionPointOnSPhMirror(const Gaudi::XYZPoint & aDetectionPoint,
                                              const Gaudi::XYZPoint & aEmissionPoint , const Gaudi::XYZPoint & aQwPoint,
                                              int aRichDetNum, int aFlatMirrNum  );
@@ -171,6 +171,8 @@ public:
   {
     return m_PhDetTransforms[aSect];
   }
+
+  Gaudi::XYZPoint   ApplyQwRefrCorrAndGetGlobalPos(const Gaudi::XYZPoint & aPhCathPoint );
   
 protected:
 

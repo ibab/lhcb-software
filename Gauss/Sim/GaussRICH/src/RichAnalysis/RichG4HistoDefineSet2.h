@@ -41,6 +41,7 @@ private:
   IHistogram1D*         m_hNumHitC4F10Prim;
   IHistogram1D*         m_hNumHitC4F10Sat;
   IHistogram1D*         m_hNumHitC4F10SatNoRefl;
+  IHistogram1D*         m_hNumHitC4F10SatNoReflHighMom;
   IHistogram1D*         m_hNumTotHitCF4Rich2;
   IHistogram1D*         m_hNumTotHitCF4NonScintRich2;
   IHistogram1D*         m_hNumTotHitCF4ScintRich2;
@@ -51,6 +52,7 @@ private:
   IHistogram1D*          m_hNumHitCF4Prim;
   IHistogram1D*          m_hNumHitCF4Sat;
   IHistogram1D*          m_hNumHitCF4SatNoRefl;
+  IHistogram1D*          m_hNumHitCF4SatNoReflNoScintHighMom;
   IHistogram1D*          m_hNumHitCF4SatNoReflNoScint;
   IHistogram1D*          m_hNumHitCF4SatScin;
   IHistogram1D*         m_hNumTotHitRich1Large;

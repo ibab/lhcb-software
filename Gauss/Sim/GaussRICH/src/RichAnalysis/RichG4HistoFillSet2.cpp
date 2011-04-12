@@ -475,6 +475,10 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
   SmartDataPtr<IHistogram1D>hNumTotHitC4F10SatNoRefl(CurrentHistoSvc,
                                                "RICHG4HISTOSET2/160");
 
+  SmartDataPtr<IHistogram1D>hNumTotHitC4F10SatNoReflHighMom(CurrentHistoSvc,
+                                               "RICHG4HISTOSET2/158");
+
+
   SmartDataPtr<IHistogram1D>hNumTotHitCF4Sat(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/179");;
 
@@ -485,6 +489,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
   SmartDataPtr<IHistogram1D>hNumTotHitCF4SatScint(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/182");
 
+  SmartDataPtr<IHistogram1D>hNumTotHitCF4SatNoReflNoScintHighMom(CurrentHistoSvc,
+                                             "RICHG4HISTOSET2/178");
 
   RichG4Counters* aRichCounter = RichG4Counters::getInstance();
 
@@ -493,6 +499,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
 
   const std::vector<int> & NumRich1GasSatHitNoRefl =
     aRichCounter->NumHitSaturatedPerTrackRich1GasNoHpdRefl();
+
+  const std::vector<int> & NumRich1GasSatHitNoReflHighMom =
+    aRichCounter->NumHitSaturatedPerTrackRich1GasNoHpdReflHighMom();
 
   const std::vector<int> & NumRich1AgelSatHit =
     aRichCounter->NumHitSaturatedPerTrackRich1Agel();
@@ -516,6 +525,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
   const std::vector<int> & NumRich2GasSatHitNoRefl =
     aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdRefl();
 
+ const std::vector<int> & NumRich2GasSatHitNoReflNoScintHighMom =
+    aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom();
+
   int NumSatTrajRich1Gas =  (int) NumRich1GasSatHit.size();
   int  NumSatTrajRich1Agel = (int) NumRich1AgelSatHit.size();
   //int  NumSatTrajRich1WithRlyAgel = (int) NumRich1AgelSatWithRlyHit.size();
@@ -537,6 +549,12 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
     int nhita1 =  NumRich1GasSatHitNoRefl[ihtra];
     if( nhita > 0) {
       if(hNumTotHitC4F10SatNoRefl) hNumTotHitC4F10SatNoRefl->fill(nhita1,1.0);
+    }
+
+    int nhita4 =  NumRich1GasSatHitNoReflHighMom[ihtra];
+    if( nhita4 > 0) {
+      if(hNumTotHitC4F10SatNoReflHighMom) hNumTotHitC4F10SatNoReflHighMom->
+            fill(nhita4,1.0);
     }
 
   }
@@ -580,6 +598,11 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
       if(hNumTotHitCF4SatScint) hNumTotHitCF4SatScint->fill(nhitc3,1.0);
     }
 
+    int nhitc4 =  NumRich2GasSatHitNoReflNoScintHighMom[ihtrc];
+    if( nhitc4 > 0) {
+      if(hNumTotHitCF4SatNoReflNoScintHighMom) hNumTotHitCF4SatNoReflNoScintHighMom->
+                  fill(nhitc4,1.0);
+    }
     
   }
 

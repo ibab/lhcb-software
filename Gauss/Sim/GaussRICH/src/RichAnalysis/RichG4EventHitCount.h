@@ -67,6 +67,8 @@ private:
   G4double   m_Rich2InitSlopeYMin;
   G4double   m_Rich2InitSlopeYMax;
   G4double   m_MinTkPtRich2FiducialRegion;
+  G4double m_MinC4F10HighMomCutForYield;
+  G4double m_MinCF4HighMomCutForYield;
 
 
 };

@@ -282,8 +282,29 @@ Gaudi::XYZPoint RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
   return  Gaudi::XYZPoint(xhit,yhit,zhitc);
 }
 
+Gaudi::XYZPoint RichG4CkvRecon::ApplyQwRefrCorrAndGetGlobalPos(const Gaudi::XYZPoint & aPhCathPoint ){
+
+
+  Gaudi::XYZPoint acurGlobalHitPhCath (0.0,0.0,0.0);    
+     
+  Gaudi::XYZPoint aLocalPointWithCorr= m_RichG4ReconHpd->GetLocalPointWithQwCorr(aPhCathPoint);
+
+
+  RichG4ReconTransformHpd* CurHpdTransform =
+        m_HpdTransforms[m_CurrentRichDetNum] [m_CurrentHpdNum];
+  if(CurHpdTransform) {
+         Gaudi::Transform3D HpdtoGlobalTransform = CurHpdTransform->HpdLocalToGlobal();
+
+          acurGlobalHitPhCath = HpdtoGlobalTransform *  aLocalPointWithCorr ;
+          
+  }
+
+  return acurGlobalHitPhCath;
+        
+}
+
 Gaudi::XYZPoint  
-RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord )
+RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr )
 {
 
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -321,7 +342,7 @@ RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoo
     RichG4ReconHpd* aRichG4ReconHpd = m_RichG4ReconHpd;
 
     Gaudi::XYZPoint curLocalHitPhCath =
-      aRichG4ReconHpd->ReconHitOnPhCathFromLocalHitCoord(m_curLocalHitCoord);
+      aRichG4ReconHpd->ReconHitOnPhCathFromLocalHitCoord(m_curLocalHitCoord, applyQwRefCorr );
 
 
     //    RichG4CkvReconlog << MSG::INFO

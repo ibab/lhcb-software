@@ -23,10 +23,12 @@ public:
 
   virtual ~RichG4ReconHpd( ); ///< Destructor
 
-  Gaudi::XYZPoint ReconHitOnPhCathFromLocalHitCoord( const Gaudi::XYZPoint & aLocalHitCoord);
+  Gaudi::XYZPoint ReconHitOnPhCathFromLocalHitCoord( const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr);
   
   Gaudi::XYZPoint ConvertLocalHitToHpdSystem(const Gaudi::XYZPoint & aLocalHit);
   double ConvertHpdSiliconZToHpdSystem(double aZcoord );
+  double GetCorrectionForQwRefraction( double RCathode  );
+  Gaudi::XYZPoint GetLocalPointWithQwCorr(const Gaudi::XYZPoint & aPhCathPoint  );
   
 protected:
 
@@ -51,7 +53,10 @@ private:
 
   //  double m_HpdPixelXNumCol;
   // double m_HpdPixelXNumRow;
-
+  int m_NumParamHpdQwRefractCorr;
+  std::vector<double> m_HpdQwRefractCorr;
+  double m_HpdQwOuterRadius;
+  
 };
 
 inline double RichG4ReconHpd::ConvertHpdSiliconZToHpdSystem(double aZcoord ) 

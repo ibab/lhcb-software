@@ -45,6 +45,25 @@ public:
 
   inline double ckvAngleD3E3() const { return  m_ckvAngleD3E3; }
 
+  inline double ckvAngleD4E1() const { return  m_ckvAngleD4E1; }
+  inline double ckvAngleD4E3() const { return  m_ckvAngleD4E3; }
+
+  inline double ckvAngleD4E2() const { return  m_ckvAngleD4E2; }
+  inline double ckvAngleD4E4() const { return  m_ckvAngleD4E4; }
+
+
+  inline double ckvAngleD5E4() const  {  return m_ckvAngleD5E4;}
+  inline double ckvAngleD5E1() const  {  return m_ckvAngleD5E1;}
+  inline double ckvAngleD6E1() const  {  return m_ckvAngleD6E1;}
+  inline double ckvAngleD7E1() const  {  return m_ckvAngleD7E1;}
+  
+  inline double ckvAngleD5E3() const  {  return m_ckvAngleD5E3;}
+  inline double ckvAngleD6E3() const  {  return m_ckvAngleD6E3;}
+  inline double ckvAngleD7E3() const  {  return m_ckvAngleD7E3;}
+
+
+  
+
   void setradiatorForCkv( const int aRadiator)
   {
     m_radiatorForCkv= aRadiator;
@@ -100,6 +119,41 @@ public:
     m_ckvAngleD3E3= ackvD3E3;
   }
 
+  void setckvAngleD4E1( const double ackvD4E1)
+  {
+    m_ckvAngleD4E1= ackvD4E1;
+  }
+  void setckvAngleD4E3( const double ackvD4E3)
+  {
+    m_ckvAngleD4E3= ackvD4E3;
+  }
+
+  void setckvAngleD4E2( const double ackvD4E2)
+  {
+    m_ckvAngleD4E2= ackvD4E2;
+  }
+  void setckvAngleD4E4( const double ackvD4E4)
+  {
+    m_ckvAngleD4E4= ackvD4E4;
+  }
+
+  void setckvAngleD5E4(const double ackvD5E4) 
+  {m_ckvAngleD5E4=ackvD5E4;}
+  void setckvAngleD5E1(const double ackvD5E1) 
+  {m_ckvAngleD5E1=ackvD5E1;}
+  void setckvAngleD6E1(const double ackvD6E1) 
+  {m_ckvAngleD6E1=ackvD6E1;}
+  void setckvAngleD7E1(const double ackvD7E1) 
+  {m_ckvAngleD7E1=ackvD7E1;}
+    
+  void setckvAngleD5E3(const double ackvD5E3) 
+  {m_ckvAngleD5E3=ackvD5E3;}
+  void setckvAngleD6E3(const double ackvD6E3) 
+  {m_ckvAngleD6E3=ackvD6E3;}
+  void setckvAngleD7E3(const double ackvD7E3) 
+  {m_ckvAngleD7E3=ackvD7E3;}
+
+
 protected:
 
 private:
@@ -118,8 +172,24 @@ private:
   double m_ckvAngleD2E3;
   double m_ckvAngleD3E3;
 
-  // D1,D2,D3 refer to the detection point determined from
-  // pixelnum, true hit coord, global phcathode coord respectively.
+  double m_ckvAngleD4E1;
+  double m_ckvAngleD4E3;
+  double m_ckvAngleD4E2;
+  double m_ckvAngleD4E4;
+
+  double  m_ckvAngleD5E4;
+  double  m_ckvAngleD5E1;
+  double  m_ckvAngleD6E1;
+  double  m_ckvAngleD7E1;
+  
+  double  m_ckvAngleD5E3;
+  double  m_ckvAngleD6E3;
+  double  m_ckvAngleD7E3;
+
+  // D1,D2,D3,D4 refer to the detection point determined from
+  // pixelnum, true hit coord, global phcathode QwExt coord respectively.
+  // D5 D6 D7 refer to the hit coord from pixel num, true hit and ph cat hit all with
+  // the refraction correction applied.
   // E1, E2, E3 refer to the emission point which is the
   // true emission point, mid point of radiator, aerogel exit
   //  point respctively.

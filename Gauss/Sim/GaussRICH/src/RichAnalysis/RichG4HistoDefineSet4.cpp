@@ -49,56 +49,134 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
   
   IHistogramSvc* CurHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
 
-    std::string title = 
-         "Cherenkov angle D3E1 reconstruted from Rich1 Gas radiator";
+  std::string title = 
+         "Cherenkov angle D3E1 reconstructed from Rich1 Gas radiator";
   
     m_hCkvRich1GasD3E1 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1500",
-                      title,1000,0.0,0.1);
+                      title,200,0.04,0.06);
+     title = 
+         "Cherenkov angle D4E1 reconstructed from Rich1 Gas radiator";
+  
+    m_hCkvRich1GasD4E1 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1512",
+                      title,200,0.04,0.06);
+
 
     title = 
-         "Cherenkov angle D1E4 reconstruted from Rich1 Gas radiator";
+         "Cherenkov angle D5E4 reconstructed from Rich1 Gas radiator";
+  
+    m_hCkvRich1GasD5E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1515",
+                      title,200,0.04,0.06);
+
+
+    title = 
+         "Cherenkov angle D1E4 reconstructed from Rich1 Gas radiator";
   
     m_hCkvRich1GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1501",
-                      title,1000,0.0,0.1);
+                      title,200,0.04,0.06);
+
+    title = 
+      "Cherenkov angle diff QW - PhCath from Rich1 Gas Radiator ";
+    
+
+      m_hCkvRich1GasQw = CurHistoSvc->book(m_RichG4HistoPathSet4+"1513",
+					   title, 400,-0.005, 0.005);
+
+    title = 
+      "Cherenkov angle diff QW - PhCathWithCorr from Rich1 Gas Radiator ";
+    
+
+      m_hCkvRich1GasQwPh = CurHistoSvc->book(m_RichG4HistoPathSet4+"1514",
+					   title, 200,-0.002, 0.002);
 
    title = 
          "Cherenkov angle generated in Rich1 Gas radiator";
   
     m_hCkvRich1GasGen = CurHistoSvc->book(m_RichG4HistoPathSet4+"1504",
-                      title,1000,0.0,0.1);
+                      title,200,0.04,0.06);
 
        
   
-    title = "Cherenkov angle D3E3 reconstruted from Rich1 Aerogel radiator";
+    title = "Cherenkov angle D3E3 reconstructed from Rich1 Aerogel radiator";
     
 
      m_hCkvRich1AgelD3E3 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1600",
-                      title,10000,0.15,0.35);
+                      title,1000,0.2,0.3);
 
-    title = "Cherenkov angle D1E4 reconstruted from Rich1 Aerogel radiator";
+    title = "Cherenkov angle D4E3 reconstructed from Rich1 Aerogel radiator";    
+
+     m_hCkvRich1AgelD4E3 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1612",
+                      title,1000,0.2,0.3);
+
+    title = "Cherenkov angle D1E4 reconstructed from Rich1 Aerogel radiator";
      m_hCkvRich1AgelD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1601",
-                      title,10000,0.15,0.35);
+                      title,1000,0.2,0.3);
+
+
+    title = "Cherenkov angle D5E4 reconstructed from Rich1 Aerogel radiator";
+     m_hCkvRich1AgelD5E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1615",
+                      title,1000,0.2,0.3);
 
     title = "Cherenkov angle generated in Rich1 Aerogel radiator";
     
 
      m_hCkvRich1AgelGen= CurHistoSvc->book(m_RichG4HistoPathSet4+"1604",
-                      title,10000,0.15,0.35);
+                      title,1000,0.2,0.3);
 
-     title = "Cherenkov angle D3E1 reconstruted from Rich2 Gas radiator";
+
+   title = 
+     "Cherenkov angle diff QW - PhCath from Aerogel Radiator ";
+   
+
+     m_hCkvRich1AgelQw = CurHistoSvc->book(m_RichG4HistoPathSet4+"1613",
+					   title, 200,-0.005, 0.005);
+
+   title = 
+     "Cherenkov angle diff QW - PhCath withCorr from Aerogel Radiator ";
+   
+
+     m_hCkvRich1AgelQwPh = CurHistoSvc->book(m_RichG4HistoPathSet4+"1614",
+					   title, 200,-0.005, 0.005);
+
+
+     title = "Cherenkov angle D3E1 reconstructed from Rich2 Gas radiator";
      
     m_hCkvRich2GasD3E1 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1700",
-                      title,1000,0.0,0.05);
+                      title,200,0.02,0.04);
 
-     title = "Cherenkov angle D1E4 reconstruted from Rich2 Gas radiator";
+     title = "Cherenkov angle D4E1 reconstructed from Rich2 Gas radiator";
+     
+    m_hCkvRich2GasD4E1 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1712",
+                      title,200,0.02,0.04);
+
+     title = "Cherenkov angle D1E4 reconstructed from Rich2 Gas radiator";
      
     m_hCkvRich2GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1701",
-                      title,1000,0.0,0.05);
+                      title,200,0.02,0.04);
+
+     title = "Cherenkov angle D5E4 reconstructed from Rich2 Gas radiator";
+     
+    m_hCkvRich2GasD5E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1715",
+                      title,200,0.02,0.04);
 
      title = "Cherenkov angle generated in Rich2 Gas radiator";
      
     m_hCkvRich2GasGen= CurHistoSvc->book(m_RichG4HistoPathSet4+"1704",
-                      title,1000,0.0,0.05);
+                      title,200,0.02,0.04);
+
+
+  title = 
+    "Cherenkov angle diff QW - PhCath from Rich2 Gas Radiator ";
+  
+
+      m_hCkvRich2GasQw = CurHistoSvc->book(m_RichG4HistoPathSet4+"1713",
+					   title, 200,-0.002, 0.002);
+
+  title = 
+    "Cherenkov angle diff QW - PhCath wiht Corrfrom Rich2 Gas Radiator ";
+  
+
+      m_hCkvRich2GasQwPh = CurHistoSvc->book(m_RichG4HistoPathSet4+"1714",
+					   title, 200,-0.002, 0.002);
 
     title="Rich1Gas ReconsD3E1- generated ckv angle";
     
@@ -109,15 +187,15 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
     title="Rich1Gas ReconsD3E1- const generated ckv angle";
     
      m_hCkvRich1GasResConst = CurHistoSvc->book(m_RichG4HistoPathSet4+"1511",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.005,0.005);
      title="Rich1Agel ReconsD3E3- generated ckv angle";
      
      m_hCkvRich1AgelRes = CurHistoSvc->book(m_RichG4HistoPathSet4+"1610",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.005,0.005);
      title="Rich1Agel ReconsD3E3- const generated ckv angle";
      
      m_hCkvRich1AgelResConst = CurHistoSvc->book(m_RichG4HistoPathSet4+"1611",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.01,0.01);
    
      title="Rich2Gas Recons D3E1- generated ckv angle";
      
@@ -126,7 +204,7 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
      title="Rich2Gas Recons D3E1- const generated ckv angle";
      
      m_hCkvRich2GasResConst = CurHistoSvc->book(m_RichG4HistoPathSet4+"1711",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.002,0.002);
 
      title="Rich1Gas Ckvdiff vs Generated Phi";
      
@@ -158,26 +236,29 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
 
       // now for emission point error
 
-      title="Rich1Gas ReconsD3E4- Recons D3E1 Emiss error";
+      // title="Rich1Gas ReconsD3E4- Recons D3E1 Emiss error";
+      title="Rich1Gas ReconsD4E4- Recons D4E1 Emiss error";
     
      m_hCkvRich1GasResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1530",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.003,0.003);
 
-      title="Rich1Agel ReconsD3E4 - Recons D3E3 Emiss error";
+     // title="Rich1Agel ReconsD3E4 - Recons D3E3 Emiss error";
+      title="Rich1Agel ReconsD4E4 - Recons D4E3 Emiss error";
     
       m_hCkvRich1AgelResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1630",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.003,0.003);
 
-       title="Rich2Gas ReconsD3E4- Recons D3E1 Emiss error";
+      //  title="Rich2Gas ReconsD3E4- Recons D3E1 Emiss error";
+       title="Rich2Gas ReconsD4E4- Recons D4E1 Emiss error";
     
       m_hCkvRich2GasResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1730",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.003,0.003);
       // agel exit refraction error
 
       title="Rich1Agel ReconsD3E1 - Recons D3E3 AgelExitRef error";
     
       m_hCkvRich1AgelExitResRefraction = CurHistoSvc->book(m_RichG4HistoPathSet4+"1635",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.001,0.001);
 
  
       // now for pixel error
@@ -190,12 +271,12 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
       title="Rich1Agel ReconsD1E3- Recons D2E3 Pixel error";
     
       m_hCkvRich1AgelResPixel = CurHistoSvc->book(m_RichG4HistoPathSet4+"1640",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.005,0.005);
 
       title="Rich2Gas ReconsD1E1- Recons D2E1 Pixel error";
     
       m_hCkvRich2GasResPixel = CurHistoSvc->book(m_RichG4HistoPathSet4+"1740",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.005,0.005);
 
       // now for any PSF type error.
 
@@ -203,31 +284,31 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
       title="Rich1Gas ReconsD2E1- Recons D3E1 psf error";
     
       m_hCkvRich1GasResPsf = CurHistoSvc->book(m_RichG4HistoPathSet4+"1550",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.005,0.005);
       title="Rich1Agel ReconsD2E3- Recons D3E3 psf error";
     
       m_hCkvRich1AgelResPsf = CurHistoSvc->book(m_RichG4HistoPathSet4+"1650",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.005,0.005);
 
       title="Rich2Gas ReconsD2E1- Recons D3E1 psf error";
     
       m_hCkvRich2GasResPsf = CurHistoSvc->book(m_RichG4HistoPathSet4+"1750",
-                                           title, 1000,-0.01,0.01);
+                                           title, 500,-0.005,0.005);
 
       //  total error
 
 
       title="Rich1Gas ReconsD1E4- generated ckv angle total error";
       m_hCkvRich1GasResTotal = CurHistoSvc->book(m_RichG4HistoPathSet4+"1560",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.005,0.005);
 
       title="Rich1Agel ReconsD1E4- generated ckv angle total error";
       m_hCkvRich1AgelResTotal = CurHistoSvc->book(m_RichG4HistoPathSet4+"1660",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.005,0.005);
 
       title="Rich2Gas ReconsD1E4- generated ckv angle total error";
       m_hCkvRich2GasResTotal = CurHistoSvc->book(m_RichG4HistoPathSet4+"1760",
-                                           title, 1000,-0.01,0.01);
+                                           title, 200,-0.005,0.005);
 
      
 

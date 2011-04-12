@@ -81,6 +81,8 @@ RichG4EventHitCount::RichG4EventHitCount(  ) {
   m_Rich2InitSlopeYMin = 0.05*rad;
   m_Rich2InitSlopeYMax=  0.20*rad;
   m_MinTkPtRich2FiducialRegion= 1;
+  m_MinC4F10HighMomCutForYield= 60.0*GeV;
+  m_MinCF4HighMomCutForYield= 60.0*GeV;
 
 }
 RichG4EventHitCount::~RichG4EventHitCount(  ) {
@@ -1224,6 +1226,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     std::vector<int>TrajSatNumHitGasRich2NoHpdRefl( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2Scint( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich2NoHpdReflNoScint( NumTrajR2,0);
+    std::vector<int>TrajSatNumHitGasRich1NoHpdReflHighMom( NumTrajR1,0);
+    std::vector<int>TrajSatNumHitGasRich2NoHpdReflNoScintHighMom( NumTrajR2,0);
     
 
     
@@ -1341,6 +1345,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
                   TrajSatNumHitGasRich1[itr1g]++;
                   if(!areflectedInHpd) TrajSatNumHitGasRich1NoHpdRefl[itr1g]++;
+                  if(aChTrackTotMom >  m_MinC4F10HighMomCutForYield ) {
+                    if(!areflectedInHpd)  TrajSatNumHitGasRich1NoHpdReflHighMom[itr1g]++;
+                  }
 
                   //                }
 
@@ -1378,7 +1385,11 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
                   if(!areflectedInHpd) TrajSatNumHitGasRich2NoHpdRefl[it2]++;
                   if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitGasRich2NoHpdReflNoScint[it2]++;
                   if(aPhotSource == 2 )TrajSatNumHitGasRich2Scint[it2]++;
-                  
+                   if(aChTrackTotMom > m_MinCF4HighMomCutForYield ) {
+                     
+                    if(( !areflectedInHpd) && (aPhotSource != 2)) TrajSatNumHitGasRich2NoHpdReflNoScintHighMom[it2]++; 
+                  }
+                 
                   //  }
 
                 }
@@ -1435,6 +1446,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     aRichCounter-> setNumHitSaturatedPerTrackRich2GasNoHpdRefl(TrajSatNumHitGasRich2NoHpdRefl);
     aRichCounter-> setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScint(TrajSatNumHitGasRich2NoHpdReflNoScint);
     aRichCounter-> setNumHitSaturatedPerTrackRich2GasScint(TrajSatNumHitGasRich2Scint);
+    aRichCounter->  setNumHitSaturatedPerTrackRich1GasNoHpdReflHighMom( TrajSatNumHitGasRich1NoHpdReflHighMom );
+    aRichCounter->  setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom(TrajSatNumHitGasRich2NoHpdReflNoScintHighMom);
     
 
     // now to test the procedure

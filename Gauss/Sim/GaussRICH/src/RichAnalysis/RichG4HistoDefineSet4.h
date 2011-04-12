@@ -40,13 +40,27 @@ private:
   std::string m_RichG4HistoPathSet4; ///< Histo path
   ISvcLocator* m_svcLocSet3;
   IHistogram1D* m_hCkvRich1GasD3E1;
+  IHistogram1D* m_hCkvRich1GasD4E1;
   IHistogram1D* m_hCkvRich1GasD1E4;
+  IHistogram1D* m_hCkvRich1GasD5E4;
+  IHistogram1D*  m_hCkvRich1GasQw;
+  IHistogram1D*  m_hCkvRich1GasQwPh;
+   
   IHistogram1D* m_hCkvRich1GasGen;
   IHistogram1D* m_hCkvRich1AgelD3E3;
+  IHistogram1D* m_hCkvRich1AgelD4E3;
   IHistogram1D* m_hCkvRich1AgelD1E4;
+  IHistogram1D* m_hCkvRich1AgelD5E4;
+  IHistogram1D* m_hCkvRich1AgelQw;
+  IHistogram1D* m_hCkvRich1AgelQwPh;
   IHistogram1D* m_hCkvRich1AgelGen;
   IHistogram1D* m_hCkvRich2GasD3E1;
+  IHistogram1D* m_hCkvRich2GasD4E1;
   IHistogram1D* m_hCkvRich2GasD1E4;
+  IHistogram1D* m_hCkvRich2GasD5E4;
+  IHistogram1D*  m_hCkvRich2GasQw;
+  IHistogram1D*  m_hCkvRich2GasQwPh;
+
   IHistogram1D* m_hCkvRich2GasGen;
   IHistogram1D* m_hCkvRich1GasRes;
   IHistogram1D* m_hCkvRich1GasResConst;
