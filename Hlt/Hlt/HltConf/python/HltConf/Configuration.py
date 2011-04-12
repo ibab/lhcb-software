@@ -217,7 +217,7 @@ class HltConf(LHCbConfigurableUser):
                       , 37 : "HLT_PASS_RE('Hlt1(?!BeamGas).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global # full stream
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
-                      , 40 : "HLT_PASS_RE('Hlt1.*Velo.*Decision')"  # bit (to be) used by the Velo (closing) monitoring
+                      , 40 : "HLT_PASS_RE('Hlt1(Velo|MB|BeamGas).*Decision')"  # bit (to be) used by the Velo (closing) monitoring
                       , 41 : "HLT_PASS_RE('Hlt1(Single|Track)Muon.*Decision')"
                       , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
