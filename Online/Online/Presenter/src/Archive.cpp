@@ -28,7 +28,6 @@
 //#include "Gaucho/MonObject.h"
 
 // Local
-#include "DbRootHist.h"
 #include "PresenterInformation.h"
 #include "DisplayHistogram.h"
 
@@ -95,167 +94,6 @@ void Archive::refreshDirectory(const DirectoryType & directoryType ,
   default:
     break;
   }
-}
-
-//==============================================================================
-// Fill Histogram
-//==============================================================================
-void Archive::fillHistogram(DbRootHist* histogram,
-                            const std::string & timePoint,
-                            const std::string & pastDuration) {
-  bool singleSaveset=false;
-
-  if (m_verbosity >= pres::Verbose)
-    std::cout << "Histogram to seek: " << histogram->identifier()
-              << " timePoint " << timePoint
-              << " pastDuration " << pastDuration << std::endl;
-
-  if ( ! (histogram->isAnaHist()) ) {
-    // fill HistogramIdentifier from history mode
-    std::string fakeDimName = "MonH1D/" + histogram->identifier();
-    histogram->setIdentifiersFromDim(fakeDimName);
-    if (m_verbosity >= pres::Debug)
-      std::cout << " Task       = " << histogram->taskName()
-                << " RootName   = " << histogram->rootName()
-                << " full HName = " << histogram->histogramFullName()
-                << std::endl ;
-
-    histogram -> beRegularHisto() ;
-    std::vector< boost::filesystem::path > foundRootFiles ;
-    std::vector< boost::filesystem::path > goodRootFiles  ;
-
-    if ( m_presenterInfo -> globalHistoryByRun() )
-      foundRootFiles = findSavesetsByRun( histogram -> taskName() ,
-                                          timePoint , pastDuration ) ;
-    else if ( pres::s_startupFile == timePoint) {
-      singleSaveset = true;
-      boost::filesystem::path filePath(pastDuration) ;
-
-      if (pres::s_rootFileExtension == extension(filePath) ) {
-        if (exists(filePath)) foundRootFiles.push_back(filePath);
-        else if (exists(m_savesetPath/filePath))
-          foundRootFiles.push_back(m_savesetPath/filePath);
-        else if ( boost::algorithm::starts_with( filePath.file_string() ,
-                                                 "castor:/") )
-          foundRootFiles.push_back( filePath ) ;
-      }
-    } else {
-      foundRootFiles = findSavesets( histogram -> taskName() ,
-                                     timePoint , pastDuration ) ;
-    }
-
-    if ( !foundRootFiles.empty() ) {
-      if ( m_presenterInfo -> globalHistoryByRun() )
-        std::sort(foundRootFiles.begin(), foundRootFiles.end());
-      else
-        std::sort(foundRootFiles.begin(), foundRootFiles.end(),
-                  ArchiveSpace::datecomp);
-
-      if (m_verbosity >= pres::Verbose)
-        std::cout << "Merging " << foundRootFiles.size() << " file(s)"
-                  << std::endl;
-
-      std::vector< boost::filesystem::path >::const_iterator foundRootFilesIt ;
-      foundRootFilesIt = foundRootFiles.begin() ;
-
-      histogram -> deleteRootHistogram( ) ;
-
-      TList* list = new TList;
-      while ( foundRootFilesIt != foundRootFiles.end( ) ) {
-        std::cout << "++ Opening root file " << (*foundRootFilesIt).file_string().c_str() << std::endl;
-        TFile * rootFile = TFile::Open( (*foundRootFilesIt).file_string().c_str() ) ;
-        if ( 0 == rootFile ) {
-          std::cout << "Error reading file " << (*foundRootFilesIt).file_string()
-                    << std::endl
-                    << "History not available !"
-                    << std::endl ;
-          break ;
-        }
-
-        if ( rootFile -> IsZombie() )
-          std::cout << "Error opening Root file: "
-                    << (*foundRootFilesIt).file_string() << std::endl;
-        else {
-          std::cout << " ++ file is open" << std::endl;
-          TH1* archiveHisto;
-          rootFile -> GetObject((histogram->rootName()).c_str(),
-                                archiveHisto);
-          if (!archiveHisto) // try w/o algorithm name (to be bkwd compat.)
-            rootFile -> GetObject((histogram->histogramFullName()).c_str(),
-                                  archiveHisto);
-
-          if (archiveHisto) {
-            list->Add(archiveHisto);
-            goodRootFiles.push_back(*foundRootFilesIt);
-
-            std::cout << "found histogram " << histogram->rootName().c_str() << std::endl;
-            
-            if ( ! histogram -> hasRootHistogram( ) ) {
-              histogram -> setRootHistogram((TH1*)( archiveHisto->Clone() ) ) ;
-              histogram -> rootHistogramReset( ) ;
-            }
-          }
-        }
-        ++foundRootFilesIt;
-      }
-
-      if ( histogram -> hasRootHistogram() ) {
-        // at least one source is available
-        if ( ( ! m_presenterInfo -> isHistoryTrendPlotMode() ) ||
-             ( histogram->getRootHistogram()->GetDimension() > 1  ) ||
-             ( singleSaveset ) )
-          histogram->getRootHistogram()->Merge(list);
-        else {
-          // do a trend plot of mean and rms
-          std::string histogramTitle("History plot for ");
-          histogramTitle += histogram -> getTitle();
-          TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
-                               list->GetSize(), 0.5,  list->GetSize() +0.5);
-          newh->Sumw2();
-          for (int i=0 ; i<list->GetSize(); i++) {
-            newh->SetBinContent(i+1, ((TH1*)list->At(i))->GetMean() );
-            newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
-          }
-          setHistoryLabels(newh, goodRootFiles);
-          histogram -> setHistoryTrendPlotMode(true);
-          histogram -> deleteRootHistogram( ) ;
-          histogram -> setRootHistogram( newh ) ;
-        }
-      }
-      else histogram->beEmptyHisto();
-
-      TH1* histo;
-      TIter next(list);
-      while ( (histo = (TH1 *) next())) {
-        list->Remove(histo);
-        delete histo;
-      }
-      delete list;
-
-      if ( ! histogram->hasRootHistogram() ) histogram->beEmptyHisto();
-    } else histogram->beEmptyHisto();
-  } else {
-    //analysis histogram
-    if (m_analysisLib) {
-      unsigned int ns= (histogram->anaSources())->size();
-      std::vector<TH1*> sources(ns);
-      bool sourcesOk = true;
-      for (unsigned int i=0; i< ns ; ++i) {
-        fillHistogram((histogram->anaSources())->at(i),
-                      timePoint, pastDuration);
-        sources[i]= ((histogram->anaSources())->at(i))->getRootHistogram();
-        if ( ( ( histogram->anaSources())->at(i))->isEmptyHisto() ||
-             ( NULL == sources[i] ) ) sourcesOk = false;
-      }
-      if (sourcesOk) histogram->makeVirtualHistogram(sources);
-      else histogram->beEmptyHisto();
-
-      if ( m_presenterInfo -> isHistoryTrendPlotMode() )
-        histogram->setHistoryTrendPlotMode(true);
-    }
-    if ( ! histogram->hasRootHistogram() ) histogram->beEmptyHisto();
-  }
-  histogram->setTH1FromDB();
 }
 
 //=============================================================================
@@ -642,47 +480,6 @@ Archive::findSavesetsByRun(const std::string & taskname,
 }
 
 //=============================================================================
-// Save the histogram as reference histogram
-//=============================================================================
-void Archive::saveAsReferenceHistogram(DbRootHist* histogram) {
-  boost::filesystem::path
-    referenceFilePath( m_referencePath/histogram->taskName() ) ;
-  bool out(false);
-  try {
-    create_directories( referenceFilePath ) ;
-  } catch ( const boost::filesystem::filesystem_error & error ) {
-    std::cout << "exception: " << error.what() << std::endl ;
-  }
-
-  std::stringstream refFile;
-  refFile << referenceFilePath.file_string() << pres::s_slash
-          << "default" << pres::s_savesetToken
-          << "1" << pres::s_rootFileExtension ;
-
-  TH1* m_reference = (TH1*) ( histogram -> getRootHistogram( ) ) ->
-    Clone( histogram->onlineHistogram()->hname().c_str() ) ;
-
-  TFile* f = new TFile(refFile.str().c_str(), "UPDATE");
-  if (f) {
-    if (false == f->IsZombie() ) {
-      m_reference->Write();
-      f->Write();
-      f->Close();
-      out = true;
-    }
-    delete f;
-    f = NULL;
-  }
-  m_reference->SetDirectory(0);
-
-  if ( !out ) {
-    std::cout << "ERROR in DbRootHist::setReference : "
-              << "could not save reference into file "
-              << refFile.str() << std::endl;
-  }
-}
-
-//=============================================================================
 // Set history by labels
 //=============================================================================
 void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& rootFiles) {
@@ -874,6 +671,5 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
   }
   delete list;
   
-  //if ( ! dispHist->hasRootHistogram() ) dispHist->beEmptyHisto();
 }
 //=========================================================================

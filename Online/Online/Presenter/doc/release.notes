@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-12 - Olivier Callot
+ - Fix problem with 2D analysis histograms using references
+ - Better icons for navigating the trees
+
 ! 2011-04-06 - Olivier Callot
  - Allow display of DIM published histograms.
  - Adder for HLT is now called GauchoJob, no if statement in the code.

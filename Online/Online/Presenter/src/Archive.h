@@ -9,7 +9,6 @@
 #include "presenter.h"
 
 // forward declaration
-class DbRootHist;
 class OnlineHistDB;
 class OMAlib;
 class OnlineHistogram;
@@ -57,14 +56,6 @@ public:
 
   /// set pointer to analysis library object
   void setAnalysisLib(OMAlib* analib) { m_analysisLib = analib; }
-
-  /// Fill histogram for archive presenter mode
-  void fillHistogram(DbRootHist* histogram,
-                     const std::string & timePoint,
-                     const std::string & pastDuration) ;
-
-  /// Save as reference histogram 
-  void saveAsReferenceHistogram(DbRootHist* histogram);
 
   /// Get task name from a file
   std::string taskNameFromFile(const std::string & fileName) const ;

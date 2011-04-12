@@ -48,7 +48,6 @@ class TGHSplitter;
 class TObjArray;
 class TGTextView ;
 
-class DbRootHist;
 class TDirectory;
 
 class DimBrowser;
@@ -103,7 +102,6 @@ public:
       INSPECT_PAGE_COMMAND,
       START_COMMAND,
       STOP_COMMAND,
-      AUTO_LAYOUT_COMMAND,
       HISTORY_PLOTS_COMMAND,
       OVERLAY_REFERENCE_HISTO_COMMAND,
       FAST_HITMAP_DRAW_COMMAND,
@@ -230,7 +228,6 @@ public:
   void savePageToFile();
   void savePageToHistogramDB();
   void reportToLog();
-  void autoCanvasLayout();
   void loginToHistogramDB();
   bool connectToHistogramDB(const std::string & dbPassword,
                             const std::string & dbUsername,
@@ -255,7 +252,6 @@ public:
   void loadPreviousPage();
   void nextInterval();
   void previousInterval();
-  bool threadSafePage();
   void refreshPage();
   void refreshClock();
   void listHistogramsFromHistogramDB(TGListTree* listView,
@@ -294,9 +290,6 @@ public:
 
   void setReference();
 
-  void enableAutoCanvasLayoutBtn();
-  void disableAutoCanvasLayoutBtn();
-
   TRootEmbeddedCanvas* mainEmbCanvas;
   TCanvas*             mainCanvas;
 
@@ -315,14 +308,8 @@ public:
   void showDBTools(pres::DatabaseMode databasePermissions);
   void reconfigureGUI();
 
-  void enableHistogramClearing();
-  void disableHistogramClearing();
-
   void enableReferenceOverlay();
   void disableReferenceOverlay();
-
-  void enablePageRefresh();
-  void disablePageRefresh();
 
   /// Enable page undocking
   void enablePageUndocking()  ;
@@ -335,8 +322,6 @@ public:
 
   void deleteSelectedHistoFromCanvas();
   void addTrendingHisto() ;
-
-  DbRootHist* selectedDbRootHistogram();
 
   DisplayHistogram* selectedDisplayHistogram();
 
@@ -384,8 +369,6 @@ public:
   void toggleShowKnownProblemList() ;
   void toggleFastHitMapDraw();
   void toggleHistoryPlots();
-  void paintHist(DbRootHist* histogram, TPad* overlayOnPad);
-
 
   void removeHistogramsFromPage();
   void EventInfo(int event, int px, int py, TObject *selected);
@@ -398,8 +381,6 @@ public:
   TCanvas* editorCanvas;
   TRootEmbeddedCanvas* editorEmbCanvas;
 
-  std::vector<DbRootHist*>  dbHistosOnPage;
-  
   /// Load a web page 
   void loadWebPage( Int_t item ) ;
 
@@ -515,7 +496,6 @@ public:
   TGPopupMenu*  m_editMenu;
   TGHotString*  m_editText;
   TGHotString*  m_editHistogramPropertiesText;
-  TGHotString*  m_editAutoLayoutText;
   TGHotString*  m_editPagePropertiesText;
   TGHotString*  m_editAddTrendingHistoText ;
   TGHotString*  m_editRemoveHistoText;
@@ -570,7 +550,6 @@ public:
   TGPictureButton*  m_inspectHistoButton;
   TGPictureButton*  m_histogramDescriptionButton;
   TGPictureButton*  m_editHistoButton;
-  TGPictureButton*  m_autoCanvasLayoutButton;
   TGPictureButton*  m_deleteHistoFromCanvasButton;
   TGPictureButton*  m_overlayReferenceHistoButton;
   TGPictureButton*  m_historyPlotsButton;
@@ -600,6 +579,7 @@ public:
   const TGPicture*  m_iconWarning;
   const TGPicture*  m_iconInfo;
   const TGPicture*  m_iconAnalysisAlarm;
+  const TGPicture*  m_iconTrend;
 
   TGVerticalFrame* m_rightMiscFrame;
   TGVerticalFrame* m_leftMiscFrame;

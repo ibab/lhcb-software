@@ -1,0 +1,25 @@
+/* XPM */
+const char *trendIcon[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 3 1",
+"   c White",    
+".  c black",
+"X  c red",
+/* pixels */
+" .              ",
+" .              ",
+" .              ",
+" . X            ",
+" .X X X         ",
+" .   X X X      ",
+" .      X X  X  ",
+" .          X   ",
+" .         X    ",
+" .              ",
+" .............  ",
+"                ",
+"          ...   ",
+"           .    ",
+"           .    ",
+"           .    "
+};

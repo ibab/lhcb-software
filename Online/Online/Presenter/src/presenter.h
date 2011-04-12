@@ -159,6 +159,7 @@ namespace pres
   static const std::string s_ALARM("ALARM");
   static const std::string s_WARNING("WARNING");
   static const std::string s_INFO("INFO");
+  static const std::string s_TREND("TRE");
   
   static const std::string s_adder("Adder");
   static const std::string s_eff_monRate("monRate");

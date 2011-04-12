@@ -35,5 +35,8 @@
 //#include "../icons/applications-system16.xpm" // task
 //#include "../icons/algorithm16.xpm" // algo
 #include "../icons/reference.xpm"
-#include "../icons/tree_t.xpm"
+#include "../icons/elog.xpm"
+#include "../icons/trend.xpm"
+#include "../icons/set.xpm"
+#include "../icons/alg.xpm"
 #endif /*ICONS_H_*/

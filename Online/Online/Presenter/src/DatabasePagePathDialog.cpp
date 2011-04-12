@@ -24,7 +24,6 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 
 // Local
-#include "DbRootHist.h"
 #include "PresenterMainFrame.h"
 #include "DatabasePagePathDialog.h"
 
@@ -204,9 +203,7 @@ void DatabasePagePathDialog::ok()
              ( (*itDH)->hostingPad() )->GetPadPar(xlow, ylow, xup, yup);
             OnlineHistogram* onlineHistogram = page->addHistogram( (*itDH)->histo(),
                                                                    (float)xlow , (float)ylow, (float)xup, (float)yup);
-            //if (0 != onlineHistogram) {
-            //  (*itDH)->setOnlineHistogram(onlineHistogram);
-            //}
+            if (0 != onlineHistogram) (*itDH)->setOnlineHistogram(onlineHistogram);
             padOwner[(*itDH)->hostingPad()] = onlineHistogram;          
           }
         }
@@ -226,7 +223,7 @@ void DatabasePagePathDialog::ok()
                                                                             padOwner[(*itDH)->hostingPad()],
                                                                             (padOwner[(*itDH)->hostingPad()])->instance(),
                                                                             iov++ );
-              //if (0 != onlineHistogram) (*itDH)->setOnlineHistogram(onlineHistogram);
+              if (0 != onlineHistogram) (*itDH)->setOnlineHistogram(onlineHistogram);
             }
           }
           page->save();

@@ -96,12 +96,16 @@ public:
 
   bool isDummy() { return m_isDummy; }
   void setDummy( bool dum ) { m_isDummy = dum; }
+
+  std::string title() { if ( "" != m_title ) return m_title; return m_shortName; }
+
 protected:
 
 private:
   OnlineHistogram* m_onlineHist; ///< the online histogram.
   std::string m_identifier;
   std::string m_shortName;
+  std::string m_title;
   bool m_isOverlap;
   bool m_isTrendPlot;
   TH1* m_rootHistogram;   ///< pointer to the underlying ROOT histogram

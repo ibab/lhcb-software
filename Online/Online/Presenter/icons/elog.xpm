@@ -1,0 +1,25 @@
+/* XPM */
+const char *elogIcon[] = {
+/* columns rows colors chars-per-pixel */
+"23 16 3 1",
+"   c Yellow",
+".  c black",
+"X  c red",
+/* pixels */
+"                       ",
+"                       ",
+" XXXXXX                ",
+" X      .              ",
+" X      .              ",
+" X      .    ..   ..   ",
+" XXXX   .   .  . .  .  ",
+" X      .   .  . .  .  ",
+" X      .   .  . .  .  ",
+" X      .   .  . .  .  ",
+" XXXXXX ...  ..   ...  ",
+"                     . ",
+"                     . ",
+"                 .   . ",
+"                  ...  ",
+"                       "
+};

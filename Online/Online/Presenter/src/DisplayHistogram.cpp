@@ -49,6 +49,7 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_onlineHist( hist ),
   m_identifier( "?not set?" ),
   m_shortName( "" ),
+  m_title( "" ),
   m_isOverlap( false ),
   m_isTrendPlot( false ),
   m_rootHistogram( NULL ),
@@ -74,8 +75,9 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
     m_identifier = m_onlineHist->identifier();
     if ( hist->type() == OnlineHistDBEnv::TRE ) {
       m_isTrendPlot = true;
-      m_shortName = hist->doc();
-      if ( "" == m_shortName ) m_shortName = hist->htitle();  // this is in fact the variable name!
+      m_shortName = hist->htitle();  // this is in fact the variable name!
+      hist->getDisplayOption( "SHOWTITLE", &m_title );
+      if ( "" == m_title ) m_title = m_shortName;
     }
   } 
 }
@@ -134,10 +136,10 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
     return;
   }
   if ( 0 != m_referenceHist ) return;
+  m_referenceHist = ref;  // needed for 2D analysis plots even if not displayed
   if ( NULL == m_hostingPad ) return;
   if ( NULL == m_rootHistogram ) return;
   if ( 1 != m_rootHistogram->GetDimension() ) return;
-  m_referenceHist = ref;  
 
   // standard plot style
   m_hostingPad->cd();
@@ -333,10 +335,12 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
                                   ((TH2D*)m_rootHistogram)->GetNbinsX() + 2,
                                   ((TH2D*)m_rootHistogram)->GetNbinsY() + 2,
                                   m_prettyPalette ); // gWebImagePalette
+      std::cout << "Draw by image" << std::endl;
       m_histogramImage->Draw();
     } else {
       if ( !m_hasTitle ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
       std::string opt =  m_isOverlap ? "HISTSAME" : "";
+      std::cout << "Draw with option '" << opt << "'" << std::endl;
       m_rootHistogram->Draw(opt.c_str());
       if ( NULL != m_referenceHist ) {
         m_referenceHist->SetLineStyle(2);
@@ -366,6 +370,8 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     m_timeGraph->Draw(opt.c_str());
     if ( NULL != m_minGraph ) m_minGraph->Draw( "SAME" );
     if ( NULL != m_maxGraph ) m_maxGraph->Draw( "SAME" );
+  } else {
+    std::cout << "??? No root nor TGraph to draw!" << std::endl;
   }
 
   setDrawingOptions( pad );
@@ -638,9 +644,6 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
 //  Accessor to retrieve the options
 //=========================================================================
 bool DisplayHistogram::hasOption( const char* str, int* iopt ) {
-  //if ( !m_onlineHist->getDisplayOption( str, iopt ) ) return false;
-  //return true;
-
   if ( !m_optionsAreLoaded ) loadOptions();
   std::string name(str);
   std::map<std::string,int>::iterator it = m_intOptions.find( name );
@@ -651,9 +654,6 @@ bool DisplayHistogram::hasOption( const char* str, int* iopt ) {
 }
 
 bool DisplayHistogram::hasOption( const char* str, float* fopt ) {
-  //if ( !m_onlineHist->getDisplayOption( str, fopt ) ) return false;
-  //return true;
-  
   if ( !m_optionsAreLoaded ) loadOptions();
   std::string name(str);
   std::map<std::string,float>::iterator it = m_floatOptions.find( name );
@@ -664,9 +664,6 @@ bool DisplayHistogram::hasOption( const char* str, float* fopt ) {
 }
 
 bool DisplayHistogram::hasOption( const char* str, std::string* sopt ) {
-  //if ( !m_onlineHist->getDisplayOption( str, sopt ) ) return false;
-  //return true;
-
   if ( !m_optionsAreLoaded ) loadOptions();
   std::string name(str);
   std::map<std::string,std::string>::iterator it = m_stringOptions.find( name );
@@ -828,7 +825,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
   if ( 0 < m_nOverlap ) {
     m_timeGraph->SetTitle( "" );
   } else {
-    m_timeGraph->SetTitle( m_shortName.c_str() );
+    m_timeGraph->SetTitle( m_title.c_str() );
   }
   m_timeGraph->GetXaxis()->SetTimeDisplay( 1 ) ;
   m_timeGraph->GetXaxis()->SetTimeFormat( "#splitline{%d/%m/%y}{%H:%M:%S}" ) ;

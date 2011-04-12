@@ -286,6 +286,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
   HistTask::TaskList( "", knownTasks );
 
   std::cout << "Found " << knownTasks.size() << " tasks with 2011 publication." << std::endl;
+  
+  std::sort( knownTasks.begin(), knownTasks.end() );
   for ( std::vector<std::string>::iterator itS = knownTasks.begin();
         knownTasks.end() != itS; ++itS ) {
     std::cout << "   " << (*itS ) << std::endl;
@@ -312,9 +314,9 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       //== Get the list of services...
       int kk = myHists.Directory( knownNames );
       std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
-      for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
-        std::cout << "      -" << *itS << "-" << std::endl;
-      }
+      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+      //  std::cout << "      -" << *itS << "-" << std::endl;
+      //}
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
@@ -481,6 +483,9 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
           (*itH).setReferenceHistogram( out );
           (*itH).setShowReference( true );
           delete tmp;
+          //std::cout << "Reference set for " << (*itH).shortName() << " pointer " << &(*itH) << std::endl;
+        } else {
+          std::cout << "No reference for " << (*itH).shortName() << std::endl;
         }
       }
       std::cout << "*** References are set ***" << std::endl;
@@ -529,7 +534,9 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
         DisplayHistogram* dispH = displayHisto( (*itOH) );
         std::cout << "  get OnlineHistogram " << itOH-(*itA).onlineHistos.begin()
                   << " hname " << (*itOH)->hname()
-                  << " pointer " << dispH << std::endl;
+                  << " pointer " << dispH ;
+        if ( 0 != dispH ) std::cout << "  Reference pointer " << dispH->referenceHist();
+        std::cout << std::endl;
 
         if ( NULL != dispH ) {
           rootHists.push_back( dispH->rootHist() );
@@ -557,8 +564,9 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
                                 ref );
         }
         
-        std::cout << "Created analysis histogram " << htitle << " pointer " << rootH;
+        std::cout << "Created analysis histogram " << htitle << " pointer " << rootH << " dummy " << isDummy;
         if ( rootH ) std::cout << " integral " << rootH->Integral();
+        if ( refH ) std::cout << " and reference";
         std::cout << std::endl;
       }
       if ( rootH ) {
@@ -838,21 +846,15 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
     TLegend* leg = new TLegend( 0.0, yMin, 1.0, 1.0 );
     leg->SetNColumns( 2 );
     for ( std::vector<DisplayHistogram*>::iterator itO = (*itP).objects.begin(); (*itP).objects.end() != itO; ++itO ) {
-      leg->AddEntry( (*itO)->myObject(), (*itO)->shortName().c_str(), "L" );
+      leg->AddEntry( (*itO)->myObject(), (*itO)->title().c_str(), "L" );
     }
     leg->Draw();
   }
 
-  std::cout << "Update the canvas" << std::endl;
-
-  // workaround attempt for ROOT painter objects:
-  // reliable random crashes when below invoked...
-  // via TH painter (timing dependent?)
-
-  //editorCanvas->Update();
+  std::cout << "Update the drawing options" << std::endl;
   updateDrawingOptions();
   editorCanvas->Update();
-  std::cout << "Second Update of the canvas OK" << std::endl;
+  std::cout << "Update of the canvas OK" << std::endl;
 }
 
 //=========================================================================
@@ -923,7 +925,7 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       if ( std::find( tags.begin(), tags.end(), myTag ) == tags.end() ) {
         std::cout << "Tag not found : " << myTag << " try to split." << std::endl;
         int barIndx = myTag.find( "|" );
-        if ( barIndx < myTag.size() ) {
+        if ( barIndx != std::string::npos ) {
           myRatio = myTag.substr( barIndx+1 );
           myTag   = myTag.substr( 0, barIndx );
           std::cout << "  num " << myTag << " den " << myRatio << std::endl;
