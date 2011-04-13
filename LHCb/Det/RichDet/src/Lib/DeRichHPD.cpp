@@ -164,16 +164,17 @@ StatusCode DeRichHPD::initialize ( )
   //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
   //<< endmsg;
 
+  m_demagConds.clear();
   if ( hasCondition("DemagParametersFieldNegative") &&
        hasCondition("DemagParametersFieldPositive") )
   {
     m_demagConds.push_back( condition( "DemagParametersFieldNegative" ));
-    updMgrSvc()->registerCondition(this, m_demagConds[0].path(),
-                                   &DeRichHPD::updateDemagProperties );
+    updMgrSvc()->registerCondition( this, m_demagConds[0].path(),
+                                    &DeRichHPD::updateDemagProperties );
 
     m_demagConds.push_back( condition( "DemagParametersFieldPositive" ));
-    updMgrSvc()->registerCondition(this, m_demagConds[1].path(),
-                                   &DeRichHPD::updateDemagProperties );
+    updMgrSvc()->registerCondition( this, m_demagConds[1].path(),
+                                    &DeRichHPD::updateDemagProperties );
   }
   else
   {
