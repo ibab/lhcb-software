@@ -53,6 +53,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_Velo_NHits' : 9 
                     ,   'Photon_Velo_Qcut'  : 4 
                     ,   'Photon_L0Channels' : "Photon,Electron"
+                    ,   'Prescale'          : {'Hlt1TrackForwardPassThrough'      : 0,
+                                               'Hlt1TrackForwardPassThroughLoose' : 0}
                 }
 
     def localise_props( self, prefix ):
@@ -131,6 +133,37 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from HltTracking.HltPVs import PV3D
         return [ PV3D(), hlt1TrackNonMuon_Unit ]
 
+    def hlt1TrackForwardPassThrough_Streamer( self, name, props ) : 
+        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
+        from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
+        props['forward'] = 'LooseForward' if name.find('Loose') > -1 else 'TightForward'
+
+        gec = Hlt1GECLooseStreamer()
+        props['gec'] = gec.split('=',1)[0]
+
+        lineCode = """ 
+        %(gec)s * VeloCandidates
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
+        >>  %(forward)s 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
+        >> SINK( 'Hlt1%(name)sDecision' )
+        >> ~TC_EMPTY
+        """ % props
+        hlt1TrackForwardPassThrough_Unit = HltUnit(
+            'Hlt1'+name+'Unit',
+            ##OutputLevel = 1 ,
+            Preambulo = self.hlt1Track_Preambulo( name )+[gec],
+            Code = lineCode
+            )
+        from HltTracking.HltPVs import PV3D
+        return [ PV3D(), hlt1TrackForwardPassThrough_Unit ]
+
     def hlt1TrackMuon_Streamer(self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
         from Configurables import LoKi__HltUnit as HltUnit
@@ -201,4 +234,19 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in PhotonTrackL0Channels ] )
              , algos = self.hlt1TrackNonMuon_Streamer( "TrackPhoton", self.localise_props( "Photon" ) )
              )    
+        # Pass through lines for forward reco in swimming
+        # These are Prescaled to ZERO for running in the pit!!!
+        Line ( 'TrackForwardPassThrough'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS"
+             , algos = self.hlt1TrackForwardPassThrough_Streamer( "TrackForwardPassThrough", self.localise_props( "AllL0" ) )
+               ) 
+        Line ( 'TrackForwardPassThroughLoose'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS"
+             , algos = self.hlt1TrackForwardPassThrough_Streamer( "TrackForwardPassThroughLoose", self.localise_props( "AllL0" ) )
+               ) 
+
 
