@@ -20,10 +20,10 @@ using namespace Rich::MC::Digi;
 DECLARE_ALGORITHM_FACTORY( SimpleFrontEndResponse )
 
 // Standard constructor, initializes variables
-SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
-                                                        ISvcLocator* pSvcLocator )
-  : Rich::AlgBase ( name, pSvcLocator ),
-    m_AdcCut      ( 85 )
+  SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
+                                                  ISvcLocator* pSvcLocator )
+    : Rich::AlgBase ( name, pSvcLocator ),
+      m_AdcCut      ( 85 )
 {
 
   // job opts
@@ -40,7 +40,7 @@ SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
 
 SimpleFrontEndResponse::~SimpleFrontEndResponse () { }
 
-StatusCode SimpleFrontEndResponse::initialize() 
+StatusCode SimpleFrontEndResponse::initialize()
 {
   // Initialize base class
   const StatusCode sc = Rich::AlgBase::initialize();
@@ -59,7 +59,7 @@ StatusCode SimpleFrontEndResponse::initialize()
   return sc;
 }
 
-StatusCode SimpleFrontEndResponse::finalize() 
+StatusCode SimpleFrontEndResponse::finalize()
 {
   // finalize randomn number generator
   m_gaussRndm.finalize();
@@ -68,7 +68,7 @@ StatusCode SimpleFrontEndResponse::finalize()
   return Rich::AlgBase::finalize();
 }
 
-StatusCode SimpleFrontEndResponse::execute() 
+StatusCode SimpleFrontEndResponse::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -82,7 +82,7 @@ StatusCode SimpleFrontEndResponse::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimpleFrontEndResponse::Simple() 
+StatusCode SimpleFrontEndResponse::Simple()
 {
 
   // make new mcrichdigits
@@ -92,7 +92,7 @@ StatusCode SimpleFrontEndResponse::Simple()
   for ( LHCb::MCRichSummedDeposits::const_iterator iSumDep = SummedDeposits->begin();
         iSumDep != SummedDeposits->end(); ++iSumDep ) {
 
-    RichPixelProperties* props = 
+    RichPixelProperties* props =
       actual_base->DecodeUniqueID( (*iSumDep)->key() );
     if ( props ) {
 
@@ -103,12 +103,12 @@ StatusCode SimpleFrontEndResponse::Simple()
       LHCb::MCRichDigitHit::Vector hitVect;
       for ( SmartRefVector<LHCb::MCRichDeposit>::const_iterator deposit =
               (*iSumDep)->deposits().begin();
-            deposit != (*iSumDep)->deposits().end(); ++deposit ) 
+            deposit != (*iSumDep)->deposits().end(); ++deposit )
       {
         if ( (*deposit)->time() > 0.0 &&
              (*deposit)->time() < 25.0 ) {
           summedEnergy += (*deposit)->energy();
-          hitVect.push_back( LHCb::MCRichDigitHit( *((*deposit)->parentHit()), 
+          hitVect.push_back( LHCb::MCRichDigitHit( *((*deposit)->parentHit()),
                                                    (*deposit)->history() ) );
         }
       }
@@ -120,11 +120,11 @@ StatusCode SimpleFrontEndResponse::Simple()
       newDigit->setHistory( (*iSumDep)->history() );
 
       int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
-      if ( !newDigit->hits().empty() && value >= m_AdcCut ) 
+      if ( !newDigit->hits().empty() && value >= m_AdcCut )
       {
         mcRichDigits->insert( newDigit, (*iSumDep)->key() );
-      } 
-      else 
+      }
+      else
       {
         delete newDigit;
       }
