@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-13 - Thomas Blake
+ - Temporary removal of tracking eff lines
+
 ! ======================== StrippingSettings v2r2p1 2011-04-11 ================
 
 ! 2011-04-11 - Thomas Blake
