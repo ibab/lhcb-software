@@ -163,6 +163,7 @@ class Physics_LowLumi_Mar2011( object ):
                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
                 , 'Hlt1NoPVPassThrough'
                 , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
+                , 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
                 , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                 , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
