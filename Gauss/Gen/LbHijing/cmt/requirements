@@ -37,4 +37,5 @@ apply_pattern library_stamps    library=LbHijingLib
 private
 macro_append fflags "" \
       target-gcc3   " -fno-second-underscore "
-             
+
+end_private

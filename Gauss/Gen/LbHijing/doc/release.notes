@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v6r0 2011-04-13 ==========================
 ! 2011-03-22 - Gloria CORTI
  - Introduce "-fno-second-underscore" for gcc3 to test if rebuild version of
    library in GENSER would work
