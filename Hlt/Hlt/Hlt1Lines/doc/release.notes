@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-04-13 - V. Gligorov
+ - Hlt1TrackLines : add forward pass through versions, prescaled to zero.
+
 ! 2011-04-12 - Plamen Hopchev
  - BeamGasLines : downscale the events with high-rho primary vertex
 
