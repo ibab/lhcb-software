@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-13 - Olivier Callot
+ - Faster change mode, no multiple rescan of the databases
+ - 2D references were still displayed
+
 ! 2011-04-12 - Olivier Callot
  - Fix problem with 2D analysis histograms using references
  - Better icons for navigating the trees

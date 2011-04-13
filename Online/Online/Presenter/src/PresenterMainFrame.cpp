@@ -1140,8 +1140,6 @@ void PresenterMainFrame::buildGUI() {
     m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
     m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page",
                                    M_AddDBHistoToPage_COMMAND);
-    m_histoDBContextMenu->AddEntry("Add checked to Page in overlap",
-                                   M_AddDBHistoToPageAsOne_COMMAND);
     m_histoDBContextMenu->AddEntry("Set properties of checked histogram(s)",
                                    M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->AddEntry("Delete checked histogram(s)",
@@ -1216,7 +1214,7 @@ void PresenterMainFrame::buildGUI() {
     MapWindow();
     m_rightMiscFrame->UnmapWindow();
     m_rightVerticalSplitter->UnmapWindow();
-    //this->Resize(m_initWidth, m_initHeight);
+    this->Resize(m_initWidth, m_initHeight);
     DoRedraw();
   }
 }
@@ -1422,10 +1420,7 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     partitionSelectorComboBoxHandler( m_partitionSelectorComboBox->GetSelected() );
     break;
   case M_AddDBHistoToPage_COMMAND:
-    addDbHistoToPage( pres::separate ) ;
-    break;
-  case M_AddDBHistoToPageAsOne_COMMAND:
-    addDbHistoToPage( pres::overlap ) ;
+    addDbHistoToPage( ) ;
     break;
   case M_DBHistoCollapseAllChildren_COMMAND:
     dbHistoCollapseAllChildren();
@@ -2009,8 +2004,7 @@ void PresenterMainFrame::setStartupHistograms(const std::vector< std::string > &
       m_historyIntervalComboBox -> Select( M_Last_File , false ) ;
     } else {
       HistogramIdentifier histogram = HistogramIdentifier( *histogramListIt ) ;
-      if (histogram.isDimFormat())
-        addHistoToPage(*histogramListIt, pres::separate);
+      if (histogram.isDimFormat()) addHistoToPage( *histogramListIt );
     }
   }
 
@@ -2096,7 +2090,7 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
     }
   }
 
-  reconfigureGUI();
+  //reconfigureGUI();
   return isConnectedToHistogramDB();
 }
 
@@ -2107,9 +2101,6 @@ void PresenterMainFrame::loginToHistogramDB() {
   if ( pres::Batch != presenterMode()) {
     fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
                                      m_knownDatabases, m_knownDbCredentials));
-
-    //reconfigureGUI();
-    //removeHistogramsFromPage();
   }
 }
 
@@ -2117,28 +2108,12 @@ void PresenterMainFrame::loginToHistogramDB() {
 // logout from histogram database
 //==============================================================================
 void PresenterMainFrame::logoutFromHistogramDB() {
-  /*
-    if ( ( 0 != m_histogramDB ) && isConnectedToHistogramDB() &&
-    ( pres::Batch != presenterMode() ) ) {
-    new TGMsgBox(fClient->GetRoot(), this, "Logout from Database",
-    "Do you really want to logout from Database?",
-    kMBIconQuestion, kMBYes | kMBNo, &m_msgBoxReturnCode);
-    switch (m_msgBoxReturnCode) {
-    case kMBNo:
-    return;
-    }
-    }
-  */
   cleanHistogramDB();
 
   m_databaseMode = pres::LoggedOut;
 
   m_message = "Disconnected from histogramDB";
-  if ( pres::Batch != presenterMode()) {
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
-    //reconfigureGUI();
-    //removeHistogramsFromPage();
-  }
+  if ( pres::Batch != presenterMode()) m_mainStatusBar->SetText(m_message.c_str(), 2);
   if (m_verbosity >= pres::Verbose) std::cout << m_message << std::endl;
 }
 
@@ -3003,7 +2978,7 @@ void PresenterMainFrame::reconfigureGUI() {
       if (( pres::Online  == m_prevPresenterMode ||
             pres::History == m_prevPresenterMode) &&
           presenterMode() != m_prevPresenterMode ) refreshHistogramSvcList(pres::s_withTree);
-
+      
       if (isConnectedToHistogramDB()) refreshHistoDBListTree() ;
 
       m_startRefreshButton->SetState(kButtonUp);
@@ -3046,12 +3021,13 @@ void PresenterMainFrame::reconfigureGUI() {
 
       m_historyPlotsButton->SetState(kButtonDisabled);
       m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
-
+      /*
       if (( pres::Online == m_prevPresenterMode ||
             pres::History == m_prevPresenterMode) &&
           presenterMode() != m_prevPresenterMode ) {
         refreshHistogramSvcList(pres::s_withTree);
       }
+      */
     }
     m_loadingPage = true;  // avoid reloading page...
     partitionSelectorComboBoxHandler( 1 ) ;
@@ -3672,8 +3648,7 @@ void PresenterMainFrame::addHistoToHistoDB() {
 //=========================================================================
 //
 //=========================================================================
-void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl,
-                                         pres::ServicePlotMode /*overlapMode*/ ){
+void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl){
   OnlineHistogram* onlH = NULL;
   try {
     onlH = m_histogramDB->getHistogram( histogramUrl );
@@ -3720,7 +3695,7 @@ void PresenterMainFrame::addDimHistosToPage() {
   while (0 != currentNode) {
     TString histoID((*static_cast<TObjString*> (currentNode->GetUserData())).GetString());
     if (histoID.BeginsWith( pres::s_FILE_URI ) ) histoID.Remove(0, pres::s_FILE_URI.length( ) ) ;
-    addHistoToPage( std::string(histoID), pres::separate );
+    addHistoToPage( std::string(histoID) );
     currentNode = currentNode->GetNextSibling();
   }
   list->Delete();
@@ -3736,7 +3711,7 @@ void PresenterMainFrame::addDimHistosToPage() {
 //==============================================================================
 // Add db histogram to the page
 //==============================================================================
-void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode) {
+void PresenterMainFrame::addDbHistoToPage() {
   stopPageRefresh();
   try {
     if (0 != m_histogramDB) {
@@ -3744,12 +3719,10 @@ void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode) {
       checkedTreeItems(list, m_databaseHistogramTreeList);
       TGListTreeItem* currentNode = list->GetFirstItem();
       if (0 != currentNode) {
-        addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()),
-                       pres::separate);
+        addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()) );
         currentNode = currentNode->GetNextSibling();
         while (0 != currentNode) {
-          addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()),
-                         overlapMode);
+          addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()) );
           currentNode = currentNode->GetNextSibling();
         }
       }

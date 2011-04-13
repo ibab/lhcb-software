@@ -109,8 +109,7 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
       OMAMessage message(msgId, *(m_mainFrame->histogramDB()));
       if (message.isAbort()) {
         error=true;
-      }
-      else {
+      } else {
         std::string previousSaveset = m_mainFrame->savesetFileName();
         m_mainFrame->setSavesetFileName(message.saveSet());
         bool globalHistoryByRunFlag =  m_presenterInfo-> globalHistoryByRun();
@@ -119,7 +118,7 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
         m_mainFrame->setStatusBarText(message.saveSet().c_str(),2);
         const pres::PresenterMode prevPresenterMode = m_mainFrame->presenterMode();
         m_mainFrame->setPresenterModeVariable(History);
-        m_mainFrame->addHistoToPage(message.hIdentifier(), separate);
+        m_mainFrame->addHistoToPage( message.hIdentifier() );
         //m_mainFrame->autoCanvasLayout();
         //m_mainFrame->setDisplayModeVariable(Alarm);
         m_mainFrame->displaySimpleHistos();
@@ -180,9 +179,8 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
 
 // called every time a new alarm/warning is published or cleared
 void AlarmDisplay::infoHandler() {  
-  if (m_mainFrame->verbosity() >= Verbose) { 
-    std::cout << "List of Analysis Alarms has changed, alarm refreshing enabled=" << m_enabled <<std::endl;
-  }
+  std::cout << "List of Analysis Alarms has changed, alarm refreshing enabled=" << m_enabled <<std::endl;
+  
   if(m_enabled) {
     std::string prevstatusText;
     if (m_mainFrame->displayMode() == Alarm) { // clear page if an alarm was displayed

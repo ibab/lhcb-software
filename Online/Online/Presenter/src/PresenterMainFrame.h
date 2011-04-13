@@ -117,7 +117,6 @@ public:
       PAGE_EDITOR_OFFLINE_MODE_COMMAND,
       M_AddHistoToDB_COMMAND,
       M_AddHistoToPage_COMMAND,
-      M_AddDBHistoToPageAsOne_COMMAND,
       M_AddDBHistoToPage_COMMAND,
       M_SetDimSourceFromTree,
       M_SetDimSourceFromQuickButton,
@@ -342,8 +341,8 @@ public:
 
   void addHistoToHistoDB();
   void addDimHistosToPage();
-  void addDbHistoToPage(pres::ServicePlotMode overlapMode);
-  void addHistoToPage(const std::string& histogramUrl, pres::ServicePlotMode overlapMode);
+  void addDbHistoToPage();
+  void addHistoToPage( const std::string& histogramUrl );
 
   void dimCollapseAllChildren();
 

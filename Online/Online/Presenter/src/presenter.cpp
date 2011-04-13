@@ -329,6 +329,7 @@ int main(int argc, char* argv[]) {
     if (startupSettings.count("partition")) 
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
 
+    //== Database mode
     if (startupSettings.count("login") &&
         ("batch" != startupSettings["mode"].as<std::string>())) {
       if ("no" == startupSettings["login"].as<std::string>()) {
@@ -341,9 +342,12 @@ int main(int argc, char* argv[]) {
         std::cout << "warning: invalid database login setting, defaulting to ReadOnly" << std::endl;
         presenterMainFrame.setDatabaseMode( pres::ReadOnly ) ;
       }
-    } else if ("batch" != startupSettings["mode"].as<std::string>())
+    } else if ("batch" != startupSettings["mode"].as<std::string>()) {
       presenterMainFrame.setDatabaseMode( pres::ReadOnly ) ;
-    else presenterMainFrame.setDatabaseMode( pres::LoggedOut ) ;
+    } else {
+      presenterMainFrame.setDatabaseMode( pres::LoggedOut ) ;
+    }
+    presenterMainFrame.reconfigureGUI(); // reconfigure as we have the database information.
 
     if (startupSettings.count("logbook-settings"))
       presenterMainFrame.setLogbookConfig(startupSettings["logbook-settings"].as<std::string>());

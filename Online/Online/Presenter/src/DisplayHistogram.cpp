@@ -340,9 +340,8 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     } else {
       if ( !m_hasTitle ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
       std::string opt =  m_isOverlap ? "HISTSAME" : "";
-      std::cout << "Draw with option '" << opt << "'" << std::endl;
       m_rootHistogram->Draw(opt.c_str());
-      if ( NULL != m_referenceHist ) {
+      if ( NULL != m_referenceHist && 1 == m_rootHistogram->GetDimension() ){
         m_referenceHist->SetLineStyle(2);
         m_referenceHist->SetLineColor(2); // red
         // normalization
@@ -521,7 +520,8 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
 
     if(hasOption("TICK_X", &iopt)) pad->SetTickx(iopt);
     if(hasOption("TICK_Y", &iopt)) pad->SetTicky(iopt);
-    if(hasOption("PADCOLOR", &iopt)) pad->SetFillColor(iopt);
+    if(hasOption("PADCOLOR", &iopt)) { pad->SetFillColor(iopt); std::cout << "set PADCOLOR=" << iopt << std::endl; }
+    
   }
 }
 
@@ -545,7 +545,7 @@ void DisplayHistogram::setDisplayOptions ( ) {
   if (hasOption("XMAX", &fopt)) { bxmax=fopt; }
   m_rootHistogram->GetXaxis()->SetRangeUser(bxmin,bxmax);
 
-  if (m_onlineHist->dimension() <2) { // 1d histograms
+  if (m_onlineHist->dimension() < 2) { // 1d histograms
     if (hasOption("YMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
     if (hasOption("YMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
   } else {  // 2d histograms
@@ -554,8 +554,8 @@ void DisplayHistogram::setDisplayOptions ( ) {
     if (hasOption("YMIN", &fopt)) { bymin=fopt; }
     if (hasOption("YMAX", &fopt)) { bymax=fopt; }
     m_rootHistogram->GetYaxis()->SetRangeUser(bymin, bymax);
-    if (hasOption("ZMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
-    if (hasOption("ZMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
+    if (hasOption("ZMIN", &fopt)) { m_rootHistogram->SetMinimum(fopt); std::cout << "ZMIN set to " << fopt << std::endl; }
+    if (hasOption("ZMAX", &fopt)) { m_rootHistogram->SetMaximum(fopt); std::cout << "ZMAX set to " << fopt << std::endl; }
   }
   if (hasOption("STATS", &iopt)) m_rootHistogram->SetStats(0 != iopt);
 
