@@ -4,23 +4,150 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
-</PRE><H1><A NAME="v39r2">2011-03-17 - GaussSys v39r2</A></H1><PRE>
-<H2><A NAME="Note">Release for MC10 production. 
+</PRE><H1><A NAME="v40r0">2011-04-13 - GaussSys v40r0</A></H1><PRE>
+<H2><A NAME="Note">Release for DEVELOPMENT in 2011. 
    </A></H2>
 <H3><A NAME="Use">This version uses:
-   <b>LHCb v31r7 (and Gaudi v21r11)</b>
+   <b>LHCb v32r2 (and Gaudi v22r1)</b>
    AppConfig v3r*,
    <b>DecFiles v23r*</b>, 
    ParamFiles v8r3, 
    SQLDDDB v5r*, FieldMap v5r*,
-   <b>pythia6 424.2</b>, photos 215.4, lhapdf 5.7.1 
+   pythia6 424.2, photos 215.4, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   Geant4 v92r4 (based on geant4.9.2.p04) and Geant4Files v92r0
+   XmlVis v1r12,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   <b>hijing 1.386bs.2</b> (via LCG_GeneratorsInterfaces),
+   pythia8 145 (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+! 2011-04-13 - Gloria Corti
+ - Remove GaudiConf as necessary version is already in LHCb v32r2
+
+!========================= Gauss v40r0 2011-04-13 ============================
+! 2011-04-13 - Gloria Corti
+ - New options for Gauss-MC10.py with standard options as in production.
+ - Modify options in Gauss-DEV.py to pick up 2011 tags.
+
+!========================= LbHidValley v2r4 2011-04-13 ========================
+! 2011-03-12 - Vanya Belyaev
+ - resurrect standalone application
+   (Add few empty dummy functions)
+ - cmt/requirements
+   version increment to v2r4
+
+!========================== EvtGen v12r0 2011-04-13 ==========================
+! 2011-02-28 - John Back
+ - EvtDDalitz.cpp: Added the D -> KKPi mode.
+
+! 2011-01-05 - John Back
+ - EvtPythia.cpp: Use mkstemp instead of tmpnam for temp Pythia data file
+ - EvtTensor4C.cpp: Correction to EvtTensor4C::cont() from Anders Ryd
+ - EvtParticle.cpp: Removed assert from generateMassTree()
+
+! 2010-12-09 - John Back
+ Below is a summary of the merge between the latest BaBar & LHCb EvtGen code.
+ - EvtCPUtil.cpp: Class interface changed to use static instance and not
+   static functions. There are now two OtherB functions for coherent and
+   incoherent B pairs (set to incoherent by default for LHCb).
+ - EvtGen.cpp: Added extra integer argument in constructor to choose
+   EvtCPUtil OtherB function type. Default is set to incoherent B pairs.
+   Removed CLHEP includes.
+ - All CP violation model classes: changes for new EvtCPUtil::OtherB()
+   interface.
+ - EvtLASSAmp.cpp: Added two sub-amplitude types LASS_ELASTIC and
+   LASS_RESONANT. The constructor takes an additional string to specify
+   what amplitude is used (default is set to LASS, the original version).
+ - Added EvtBaryonPCR and EvtBaryonPCRFF models for baryonic semileptonic
+   decays using more realistic dynamics.
+ - EvtModelReg.cpp: Added EvtBaryonPCR model.
+ - Added EvtSemiLeptonicBaryonAmp.cpp for the above baryon models.
+ - EvtSemiLeptonicFF.hh: Added getdiracff() and getraritaff() methods for
+   the new baryon models. Since other semileptonic models (ModelNameFF.cpp)
+   use this class, they also need to implement these new methods (which
+   actually do no extra calculations).
+ - Changed EvtWilsonCoeficients to EvtWilsonCoefficients, used in
+   EvtGenModels/EvtLb2Lll.hh.
+
+!======================== EvtGenExtras v2r6 2011-04-13 ========================
+! 2011-22-02 - Nikolai Nikitin
+ - Minor bug fix: optimization of the function for the maximum probability
+   calculation
+
+!========================= LbHijing v6r0 2011-04-13 ==========================
+! 2011-03-22 - Gloria CORTI
+ - Introduce "-fno-second-underscore" for gcc3 to test if rebuild version of
+   library in GENSER would work
+
+! 2011-02-11 - Patrick Robbe
+ - Adapt code to use ALICE hijing version from GENSER
+
+! 2011-01-31 - Gloria Corti
+ - Newer version of Hijing needs to link against pythia_hijing library to
+   resolve all symbols
+
+!========================== GENSER v9r0 2011-04-12 ===========================
+! 2011-02-11 - Patrick Robbe
+ - requirements: move use hijing in GENSER to force preloading of the
+   HIJING data blocks
+
+! 2011-01-31 - Gloria CORTI
+ - Put back changes in requirements and hijing directory (see entry of
+   2010-09-14 and 2010-09-17) to commission the use of Hijing 1.36.a.2
+   from the LCG release area
+
+!========================= GaussRICH v11r3 2011-04-13 ========================
+!2011-04-12 - Sajan Easo
+  - Added a few histograms to the RichAnalysis and updated the Counters used
+    histograms
+!2011-03-28 - Sajan Easo
+ - Added couple of counters to plot few histograms for analysis and monitoring. This is done in
+   RichG4Counters.h,icpp and cpp.
+ -Added a material name path for future monitoring using pmts. This is not
+  used at the moment. Modification in  RichG4GaussPathNames.h and RichG4MatRadIdentifier.cpp
+! 2011-02-10 - Sajan Easo
+ - Update the gas radiator names to be R2RadiatorGas in addition to be CF4
+   and R1RadiatorGas in addition to be C4F10. The old and new names are kept
+   active for backward compatibility with older versions of the DDDB database.
+   The CF4 Scintillation process is also activated when the gas in RICH2 is R2RadiatorGas,
+   but the amount of effective scintillation depends onthe gas mixture. This amount of
+   scintilation can be changed using the options file parameter in Rich.opts, namely
+   GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor
+
+ - Update the RichHpdProperties.cpp in order to account for the disabled HPDs in DB. The
+   update uses the full list of HPDs (instead of the active HPD list) so that the
+   effect of all the HPDs are simulated. When copying the output hits to MCHit, only the
+   hits from the active HPDs are copied.
+
+
+! 2011-02-09 - Chris Jones
+ - Adapt to removal of typedef RichAlgBase -> Use Rich::AlgBase
+
+! 2010-12-15 - Chris Jones
+ - Update GetMCRichHitsAlg to specifically check with DeRichSystem if the HPD
+   associated to each hit is active, and only to make persistent hits for those
+   which are.
+
+!=============================================================================
+</PRE><H1><A NAME="v39r2">2011-03-17 - GaussSys v39r2</A></H1><PRE>
+<H2><A NAME="Note">Release for MC10 production. 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v31r7 (and Gaudi v21r11)
+   AppConfig v3r*,
+   DecFiles v23r*, 
+   ParamFiles v8r3, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   pythia6 424.2, photos 215.4, lhapdf 5.7.1 
    (via LCG_GeneratorsInterfaces)
    HepMC 2.03.11 (via LCG_Interfaces)
    Geant4 v92r4 (based on geant4.9.2.p04) and Geant4Files v92r0
    XmlVis v1r12,
    herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
-   <b>pythia8 145</b>
+   pythia8 145
 </A></H3>
 
 ! 2011-02-07 - Silvia Miglioranzi
@@ -66,19 +193,19 @@ Purpose: LHCb Simulation program
 <H2><A NAME="Note">Release for MC10 production. 
    </A></H2>
 <H3><A NAME="Use">This version uses:
-   <b>LHCb v31r7 (and Gaudi v21r11)</b>
+   LHCb v31r7 (and Gaudi v21r11)
    AppConfig v3r*,
-   <b>DecFiles v23r*</b>, 
+   DecFiles v23r*, 
    ParamFiles v8r3, 
    SQLDDDB v5r*, FieldMap v5r*,
-   <b>pythia6 424.2</b>, photos 215.4, lhapdf 5.7.1 
+   pythia6 424.2, photos 215.4, lhapdf 5.7.1 
    (via LCG_GeneratorsInterfaces)
    HepMC 2.03.11 (via LCG_Interfaces)
    Geant4 v92r4 (based on geant4.9.2.p04) and Geant4Files v92r0
    XmlVis v1r12,
    herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
-   <b>pythia8 145</b>
+   pythia8 145
 </A></H3>
 
 
@@ -131,7 +258,7 @@ Purpose: LHCb Simulation program
 <H3><A NAME="Use">This version uses:
    <b>LHCb v31r7 (and Gaudi v21r11)</b>
    AppConfig v3r*,
-   <b>DecFiles v23r*</b>, 
+   DecFiles v23r*, 
    ParamFiles v8r3, 
    SQLDDDB v5r*, FieldMap v5r*,
    <b>pythia6 424.2</b>, photos 215.4, lhapdf 5.7.1 
