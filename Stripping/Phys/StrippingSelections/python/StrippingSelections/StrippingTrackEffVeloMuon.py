@@ -41,6 +41,7 @@ from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
 from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 #from Configurables import TrackCloneFinder
+from Configurables import DecodeVeloRawBuffer
 
 from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
@@ -145,8 +146,8 @@ def selMuonPParts(name, trackingSeq):
    unpacker.OutputName="Rec/VeloMuon/Tracks"
 
    veloprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
-   veloprotos.InputTrackLocation = ["Rec/VeloMuon/Tracks"]
-   veloprotos.OutputProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
+   veloprotos.Inputs = ["Rec/VeloMuon/Tracks"]
+   veloprotos.Output = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    veloprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
    tracktypes = [ "Long" ]
    #veloprotos.OutputLevel =0

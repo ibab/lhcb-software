@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-13 - Paul Seyfert
+ - TrackEff????Muon: Adapting change of names of ChargedProtoParticleMaker's Properties
+ - TrackEffVeloMuon: bugfix to bug I introduced yesterday
+
 ! 2011-04-12 - Paul Seyfert
  - TrackEffVeloMuon: switch on velo decoding
 

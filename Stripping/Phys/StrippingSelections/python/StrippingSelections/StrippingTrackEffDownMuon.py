@@ -138,8 +138,8 @@ def selMuonPParts(name, DataType, downstreamSeq):
 
    downprotoseq = GaudiSequencer(name+"ProtoPSeq")
    downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
-   downprotos.InputTrackLocation = ["Rec/Downstream/FittedTracks"]
-   downprotos.OutputProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
+   downprotos.Inputs = ["Rec/Downstream/FittedTracks"]
+   downprotos.Output = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
    #tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed …
    tracktypes = ["Downstream"]
