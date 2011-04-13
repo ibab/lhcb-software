@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v9r0 2011-04-12 ===========================
 ! 2011-02-11 - Patrick Robbe
  - requirements: move use hijing in GENSER to force preloading of the
    HIJING data blocks
