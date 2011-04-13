@@ -1,4 +1,4 @@
-// $Id: StompSensor.h,v 1.3 2010-09-22 13:06:48 frankb Exp $
+// $Id: StompSensor.h,v 1.3 2010/09/22 13:06:48 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/StompSensor.h,v 1.3 2010-09-22 13:06:48 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/Stomp/StompSensor.h,v 1.3 2010/09/22 13:06:48 frankb Exp $
 #ifndef STOMP_STOMSERVICE_H
 #define STOMP_STOMSERVICE_H
 

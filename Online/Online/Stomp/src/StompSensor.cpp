@@ -1,4 +1,4 @@
-// $Id: StompSensor.cpp,v 1.5 2010-09-22 13:06:48 frankb Exp $
+// $Id: StompSensor.cpp,v 1.5 2010/09/22 13:06:48 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.5 2010-09-22 13:06:48 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.5 2010/09/22 13:06:48 frankb Exp $
 
 //#include <cstdint>
 #define INT64_C(c)      c ## L

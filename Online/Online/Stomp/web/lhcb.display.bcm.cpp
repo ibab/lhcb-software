@@ -1,2 +1,484 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('1C(\'l.R.2n.19\');1C(\'l.R.2G.19\');1C(\'l.R.4Z.19\');1C(\'4Y.4X.19\');4W(\'l.R.4V\',\'4U\');9 4T=1P;E(!l.w){l.w=F 4S();l.w.1X=p(I){9 17=\'\';9 f=F 15();9 1i=I.4R();9 z=N(\'L.2T.2S\'+I,a,\'%7.3f\');E(I==\'2P\')17=\' [%]\';z.Q=\'1v 1O (\'+1i+\') \'+17;z.J=a;f[0]=z;z=N(\'L.2T.2Q\'+I,a,\'%7.3f\');z.Q=\'1v 16 (\'+1i+\') \'+17;z.J=a;f[1]=z;z=N(\'L.2R.2S\'+I,a,\'%7.3f\');z.Q=\'1u 1O (\'+1i+\') \'+17;z.J=a;f[2]=z;z=N(\'L.2R.2Q\'+I,a,\'%7.3f\');z.Q=\'1u 16 (\'+1i+\') \'+17;z.J=a;f[3]=z;f.u=p(t){H(9 i=0;i<6.T;++i)6[i].u(t);y 6};y f};l.w.1S=p(){y l.w.1X(\'2P\')};l.w.2N=p(){y l.w.1X(\'2O\')};l.w.1T=p(1B,I){9 m=F 15();m[0]=N(\'L.1W\'+1B+\'.\'+I+\'.1U.1V\',a,\'%7.3f\');m[1]=N(\'L.1W\'+1B+\'.\'+I+\'.16.1V\',a,\'%7.3f\');m[2]=N(\'L.1W\'+1B+\'.\'+I+\'.2O.1V\',a,\'%7.3f\');m[0].k.B=\'11%\';m[1].k.B=\'11%\';m[2].k.B=\'10%\';m.u=p(t){H(9 i=0;i<6.T;++i)6[i].u(t);y 6};y m};l.w.2j=p(){9 c,g,x,4,b=e.h(\'n\');g=e.h(\'1f\');b.G=g.G=\'1h\';b.f=l.w.1S();b.1A=l.w.2N();b.1z=N(\'L.2M.4Q.4P\',a,a);b.1z.1g=2;b.1y=N(\'L.2M.4O\',a,a);b.1y.1g=2;4=e.h(\'4\');4.5(c=o(\'4N:\',2,\'C\'));c.1g=2;c.k.1x=\'#1w\';4.5(b.1z);4.5(c=o(\'4M 4L:\',2,\'C\'));c.1g=2;c.k.1x=\'#1w\';4.5(b.1y);g.5(4);4=e.h(\'4\');4.5(c=o(\'4K 2e 4J 4I 1r \'+\'1G 4H 2L 4G % O 2w 2v 4F\',8,\'C\'));c.k.1x=\'#1w\';g.5(4);4=e.h(\'4\');H(9 i=0;i<2;++i){H(9 j=0;j<2;++j){4.5(c=o(b.f[2*i+j].Q,a,\'C\'));c.k.B=\'18%\';4.5(c=b.f[2*i+j]);c.k.B=\'7%\'}}g.5(4);4=e.h(\'4\');H(9 i=0;i<2;++i){H(9 j=0;j<2;++j){4.5(c=o(b.1A[2*i+j].Q,a,\'C\'));c.k.B=\'18%\';4.5(c=b.1A[2*i+j]);c.k.B=\'7%\'}}g.5(4);b.5(g);b.u=p(t){6.f.u(t);6.1A.u(t);6.1z.u(t);6.1y.u(t);y 6};y b};l.w.2i=p(){9 c,g,x,4,b=e.h(\'n\');g=e.h(\'1f\');b.G=\'1h\';g.G=\'1h\';4=e.h(\'4\');4.5(c=o(\'4E 2L 1r 4D 4C\',8,\'C\'));c.k.1x=\'#1w\';g.5(4);4=e.h(\'4\');4.5(c=o(\'2K/2J\',a,\'C\'));c.k.B=\'18%\';4.5(o(\'1U\',a,\'C\'));4.5(o(\'16\',a,\'C\'));4.5(o(\'2I\',a,\'C\'));4.5(c=o(\'2K/2J\',a,\'C\'));c.k.B=\'18%\';4.5(o(\'1U\',a,\'C\'));4.5(o(\'16\',a,\'C\'));4.5(o(\'2I\',a,\'C\'));g.5(4);b.m=F 15();9 m=F 15(\'4B\',\'4A\',\'4z\',\'4y\',\'4x\',\'4w\',\'4v\',\'4u\');H(9 i=0;i<m.T;++i){4=e.h(\'4\');9 s=l.w.1T(\'1v\',m[i]);b.m[2*i]=s;4.5(c=o(\'1v:\'+m[i],a,\'C\'));4.5(s[0]);4.5(s[1]);4.5(s[2]);s=l.w.1T(\'1u\',m[i]);b.m[2*i+1]=s;4.5(c=o(\'1u:\'+m[i],a,\'C\'));4.5(s[0]);4.5(s[1]);4.5(s[2]);g.5(4)}b.5(g);b.u=p(t){H(9 i=0;i<6.m.T;++i)6.m[i].u(t);y 6};y b};l.w.2g=p(){9 D,g,x,4,b=e.h(\'n\');9 j;g=e.h(\'1f\');b.G=\'1h\';g.G=\'1h\';b.f=l.w.1S();b.1R=p(P){9 d=6.1N;E(d.T>2H)d.4t(0,d.T-2H);d.4s([(F 1M()).4r(),P]);6.1c.4q().4p(d);6.1c.1m();y P};4=e.h(\'4\');H(j=0;j<2;++j){x=e.h(\'x\');D=e.h(\'4o\');D.4n=l.2G.4m()+\'/l.r.4l\';D.V=\'2E\'+j;D.4k=\'#4j\';D.k.B=\'1t\';D.k.1d=\'1t\';D.4i=\'4h\';D.4g=1;D.4f=1;x.5(D);x.k.B=\'1t\';x.k.1d=\'1t\';x.k.4e=\'4d\';x.G=\'4c\';4.5(x);b[D.V]=D;b.f[2*j].2F=b.1R;b.f[2*j+1].2F=b.1R}g.5(4);b.5(g);y b}};9 26=p(1a,r,m){9 4,x,g,b;n=e.h(\'n\');n.q=e.h(\'1f\');n.27=1a;n.t=a;n.1k=a;n.Z=r;n.m=m;n.1Q=p(){4=e.h(\'4\');x=e.h(\'x\');x.4b(\'1g\',2);4.5(x);6.q.5(4);y x};n.G=n.q.G=\'4a\';n.q.49=0;n.q.48=0;n.R=n.1Q();n.1F=n.1Q();n.5(n.q);n.25=p(){9 c=6.X.J;9 f=c.U.f;H(9 j=0;j<2;++j){9 V=\'2E\'+j;9 D=e.1n(V);9 d=D.47.e;9 r=d.1n("r");9 2y={2a:{W:"#2D",2C:"",46:0.0,45:a,2B:{2A:1s,W:"#2z"}},44:{W:"#2D",2C:"43 1r 42 41",2B:{2A:1s,W:"#2z"},40:r.3Z({3Y:"3X:3W:3V"})},3U:{W:"#2u",3T:0,3S:1s},3R:1P,3Q:1s,3P:\'3O\',3N:1P};9 P,3M,K,14=r.3L(r.V,2y);r.k.B=\'2x\';r.k.1d=\'2x\';r.r=14;14.3K(\'3J O 2w 2v 1r S\'+j+\' 1O/16  [%]\');K=r.2t(r.2s(P=F 15()),{2r:f[2*j].Q,W:"#2u"});14.2q(K);K.1m();f[2*j].1L=r;f[2*j].1N=P;f[2*j].1c=K;K=r.2t(r.2s(P=F 15()),{2r:f[2*j+1].Q,W:"#3I"});14.2q(K);K.1m();f[2*j+1].1L=r;f[2*j+1].1N=P;f[2*j+1].1c=K}E(c.U)f.u(c.t);E(c.12)c.12.u(c.t);c.1p.u(c.t);y 6};n.u=p(){9 c=6.X.J;E(c.U)c.U.f.u(c.t);E(c.12)c.12.u(c.t);c.1p.u(c.t);y 6};n.1Y=p(){9 b=e.h(\'n\');9 g=e.h(\'1f\');9 4,x,c,d=F 1M();b.G=g.G=\'3H\';6.13=e.h(\'4\');9 1q=o(3G()+\'&3F;1b 1G 24\',2,\'3E\');1q.k.2p=\'3D\';1q.k.B=\'2o\';6.13.5(1q);6.1e=o(d.2l(),1,\'2d\');6.1e.2p=\'3C\';6.1e.V=\'2m\';6.1e.k.B=\'2o\';6.13.5(6.1e);6.13.2f=p(){e.3B="3A://l.3z.14"};2n.3y(6.13,\'1b z 3x<3w>3v O 3u O 1b 3t 3s\');g.5(6.13);6.2k=p(){e.1n(\'2m\').29=(F 1M()).2l()};3r(6.2k,3q);4=e.h(\'4\');4.5(c=o(\'\',3,a));g.5(4);c.k.1d=\'2h\';4=e.h(\'4\');4.5(6.1o=o(\'\',3,a));6.1p=l.w.2j();6.1o.5(6.1p);g.5(4);E(6.m){4=e.h(\'4\');4.5(6.1o=o(\'\',3,a));6.12=l.w.2i();6.1o.5(6.12);g.5(4)}E(6.Z){4=e.h(\'4\');4.5(c=o(\'\',3,a));g.5(4);c.k.1d=\'2h\';4=e.h(\'4\');4.5(6.Z=o(\'\',3,a));6.U=l.w.2g();6.Z.5(6.U);g.5(4)}4=e.h(\'4\');E(6.Z){4.5(c=o(\'1K O 28 Y-1J\',a,\'3p\'));c.V=\'2b\';c.1I=1;c.2f=2c}1E{4.5(c=o(\'\',a,a))}c.k.B=\'20%\';4.5(c=o(\'\',a,a));c.k.B=\'35%\';4.5(c=o(\'3o 2e 3n O M.3m 3l/1b\',1,\'2d\'));g.5(4);b.5(g);6.R.5(b);y 6};y n};9 2c=p(){9 1l=e.1n(\'2b\');9 q=e.1D(\'q\')[0];9 f=q.X.J.U.f;9 v=1l.1I;H(9 i=0;i<f.T;i+=2){f[i].1L.r.2a.3k(0.,v?3j.:a);f[i].1c.1m()}1l.29=v?\'1K O 3i Y-1J\':\'1K O 28 Y-1J\';1l.1I=v?0:1};9 3h=p(){3g()};9 3e=p(){9 1a=1H[\'27\'];9 r=1H[\'Z\'];9 m=1H[\'m\'];9 q=e.1D(\'q\')[0];9 3d=3c(q);9 A;A=26(1a,r,m);q.5(A);q.X=p(){};q.1j=r?A.25:A.u;q.X.J=A;q.G=\'3b\';3a(\'1b 1G 24\');E(1a>0)A.1k=F 23(A.1F,39,22,\'21\');1E A.1k=F 23(A.1F,-1,22,\'21\');A.t=F 38(A.1k);A.t.1Z=\'/1Z/37\';A.1Y();A.t.36();E(34()){q.X=q.1j;q.1j.J=A}1E{33(p(){e.1D(\'q\')[0].1j()},32)}q.k.31=\'30\'};E(2Z)2Y(\'2X l.R.2W.19 2V 2U\');',62,310,'||||tr|appendChild|this|||var|null|tab|||document|bcms|tb|createElement|||style|lhcb|sensors|table|Cell|function|body|chart||provider|subscribe||widgets|td|return|bcm|selector|width|MonitorDataHeader|fr|if|new|className|for|typ|client|series|lbWeb||StyledItem|to|data|nice_name|display||length|bcm_charts|id|color|onload||charts|||bcm_sensors|heading|ch|Array|RS32|post||cpp|msg|LHCb|c_series|height|head_date|tbody|colSpan|MonitorPage|low|onload1|logger|obj|reload|getElementById|variables|bcm_summary|cell|of|true|430px|S1|S0|FFAAAA|backgroundColor|bcm_fsm|bcm_ok|bcms_sum|station|_loadScript|getElementsByTagName|else|logDisplay|BCM|the_displayObject|checked|scale|Switch|c_chart|Date|c_data|RS2|false|add|handle_data|BCM_rel_datapoints|BCM_station_datapoints|RS1|flux|BCM_DP_|BCM_datapoints|build|topic||StatusLogger|LOG_INFO|OutputLogger|Status|start_charts|BcmStatus|messages|fixed|innerHTML|axis_left|scale_floating_toggle|toggle_floating_scale|MonitorTinyHeader|and|onclick|BCM_rel_charts|20px|BCM_sensors|BCM_summary|timerHandler|toString|current_time|tooltips|360px|textAlign|addSeries|title|createArrayDataHandler|createLineSeries|F00|dump|beam|400px|attrs|0F0|show|crosshair|caption|000|frame_chart_|conversion|constants|100|Sum|Sensor|Station|readings|BCM_Interface|BCM_sum_datapoints|SUM|REL|RS32_|BCM_DP_S1|RS2_|BCM_DP_S0|successfully|loaded|detstatus|Script|alert|_debugLoading|default|cursor|4000|setTimeout|_isInternetExplorer||start|status|DataProvider|200|setWindowTitle|MainBody|init_tooltips|tips|bcm_body||dataProviderReset|bcm_unload|floating|115|setExtremes|CERN|Frank|suggestions|Comments|DisplayButton|2000|setInterval|page|home|go|Click|br|summary|set|cern|http|location|right|left|MonitorBigHeader|nbsp|lhcb_online_picture|MonitorInnerFrame|00F|Threshold|setTitle|createChart|handler|show_messages|minimized|legend_state|show_legend|auto_resize|includeTitle|opacity|background|SS|NN|HH|format_string|dateFormatter|formatter|day|the|Time|axis_bottom|max_extreme|min_extreme|contentWindow|cellspacing|cellpadding|MonitorOuterFrame|setAttribute|MonitorData|none|border|marginHeight|marginWidth|auto|scrolling|CCCCCC|bgcolor|htm|lhcb_comet_url|src|iframe|setArray|getDataHandler|getTime|push|splice|SENSOR_7|SENSOR_6|SENSOR_5|SENSOR_4|SENSOR_3|SENSOR_2|SENSOR_1|SENSOR_0|stations|individual|Flux|threshold|in|sensor|sums|absolute|Relative|state|FSM|Operational|FSMStatus|getStatus|BcmOK|toLowerCase|Object|_body_onloaded|css|general|_loadFile|print|dom|items'.split('|'),0,{}))
-;
+_loadScript('lhcb.display.tooltips.cpp');
+_loadScript('lhcb.display.constants.cpp');
+_loadScript('lhcb.display.items.cpp');
+_loadScript('dom.print.cpp');
+_loadFile('lhcb.display.general','css');
+
+var _body_onloaded = false;
+
+if ( !lhcb.widgets ) {
+
+  lhcb.widgets = new Object();
+
+  /** Build table with BCM summary information
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.BCM_datapoints = function(typ) {
+    var post = '';
+    var bcms = new Array();
+    var low = typ.toLowerCase();
+    var bcm = StyledItem('lbWeb.BCM_DP_S0.RS2_SUM.'+typ, null, '%7.3f');
+    if (typ == 'REL' ) post = ' [%]';
+    bcm.nice_name = 'S0 RS2 ('+low+') '+post;
+    bcm.client = null;
+    bcms[0] = bcm;
+    bcm = StyledItem('lbWeb.BCM_DP_S0.RS32_SUM.'+typ, null, '%7.3f');
+    bcm.nice_name = 'S0 RS32 ('+low+') '+post;
+    bcm.client = null;
+    bcms[1] = bcm;
+    bcm = StyledItem('lbWeb.BCM_DP_S1.RS2_SUM.'+typ, null, '%7.3f');
+    bcm.nice_name = 'S1 RS2 ('+low+') '+post;
+    bcm.client = null;
+    bcms[2] = bcm;
+    bcm = StyledItem('lbWeb.BCM_DP_S1.RS32_SUM.'+typ, null, '%7.3f');
+    bcm.nice_name = 'S1 RS32 ('+low+') '+post;
+    bcm.client = null;
+    bcms[3] = bcm;
+
+    bcms.subscribe = function(provider) {
+      for(var i=0; i<this.length; ++i)
+	this[i].subscribe(provider);
+      return this;
+    };
+    return bcms;
+  };
+
+  lhcb.widgets.BCM_rel_datapoints = function() { return lhcb.widgets.BCM_datapoints('fluxrel'); };
+  lhcb.widgets.BCM_sum_datapoints = function() { return lhcb.widgets.BCM_datapoints('flux');    };
+
+  lhcb.widgets.BCM_station_datapoints = function(station,typ) {
+    var sensors = new Array();
+    sensors[0] = StyledItem('lbWeb.BCM_DP_'+station+'.'+typ+'.RS1.flux', null, '%7.3f');
+    //sensors[1] = StyledItem('lbWeb.BCM_DP_'+station+'.'+typ+'.RS2.flux', null, '%7.3f');
+    sensors[1] = StyledItem('lbWeb.BCM_DP_'+station+'.'+typ+'.RS32.flux', null, '%7.3f');
+    sensors[2] = StyledItem('lbWeb.BCM_DP_'+station+'.'+typ+'.SUM.flux', null, '%7.3f');
+    sensors[0].style.width='11%';
+    sensors[1].style.width='11%';
+    sensors[2].style.width='10%';
+    sensors.subscribe = function(provider) {
+      for(var i=0; i<this.length; ++i)
+	this[i].subscribe(provider);
+      return this;
+    };
+    return sensors;
+  };
+
+  /** Build table with BCM summary information
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.BCM_summary = function() {
+
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+
+    tab.className = tb.className  = 'MonitorPage';
+    //tab.height    = '60px';
+    tab.bcms       = lhcb.widgets.BCM_rel_datapoints();
+    tab.bcms_sum   = lhcb.widgets.BCM_sum_datapoints();
+
+    tab.bcm_ok  = StyledItem('lbWeb.BCM_Interface.BcmOK.getStatus', null, null);
+    tab.bcm_ok.colSpan = 2;
+    tab.bcm_fsm = StyledItem('lbWeb.BCM_Interface.FSMStatus', null, null);
+    tab.bcm_fsm.colSpan = 2;
+
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Operational:',2,'MonitorDataHeader'));
+    c.colSpan = 2;
+    c.style.backgroundColor = '#FFAAAA';
+    tr.appendChild(tab.bcm_ok);
+    tr.appendChild(c=Cell('FSM state:',2,'MonitorDataHeader'));
+    c.colSpan = 2;
+    c.style.backgroundColor = '#FFAAAA';
+    tr.appendChild(tab.bcm_fsm);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Relative and absolute sums of '+
+			  'BCM sensor readings in % to beam dump threshold',
+			  8,'MonitorDataHeader'));
+    c.style.backgroundColor = '#FFAAAA';
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    for(var i=0; i<2; ++i) {
+      for(var j=0; j<2; ++j) {
+	tr.appendChild(c=Cell(tab.bcms[2*i+j].nice_name,null,'MonitorDataHeader'));
+	c.style.width='18%';
+	tr.appendChild(c=tab.bcms[2*i+j]);
+	c.style.width='7%';
+      }
+    }
+    tb.appendChild(tr);
+    tr = document.createElement('tr');
+    for(var i=0; i<2; ++i) {
+      for(var j=0; j<2; ++j) {
+	tr.appendChild(c=Cell(tab.bcms_sum[2*i+j].nice_name,null,'MonitorDataHeader'));
+	c.style.width='18%';
+	tr.appendChild(c=tab.bcms_sum[2*i+j]);
+	c.style.width='7%';
+      }
+    }
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      this.bcms.subscribe(provider);
+      this.bcms_sum.subscribe(provider);
+      this.bcm_ok.subscribe(provider);
+      this.bcm_fsm.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+
+  /** Build table with BCM summary information
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.BCM_sensors = function() {
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+
+    tab.className = 'MonitorPage';
+    tb.className  = 'MonitorPage';
+
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Flux readings of individual stations',8,'MonitorDataHeader'));
+    c.style.backgroundColor = '#FFAAAA';
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Station/Sensor',null,'MonitorDataHeader'));
+    c.style.width='18%';
+    tr.appendChild(Cell('RS1',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('RS32',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Sum',null,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('Station/Sensor',null,'MonitorDataHeader'));
+    c.style.width='18%';
+    tr.appendChild(Cell('RS1',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('RS32',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Sum',null,'MonitorDataHeader'));
+    tb.appendChild(tr);
+
+    tab.sensors= new Array();
+    var sensors = new Array('SENSOR_0','SENSOR_1','SENSOR_2','SENSOR_3','SENSOR_4','SENSOR_5','SENSOR_6','SENSOR_7');
+    for(var i=0; i<sensors.length; ++i) {
+      tr = document.createElement('tr');
+      var s = lhcb.widgets.BCM_station_datapoints('S0',sensors[i]);
+      tab.sensors[2*i] = s;
+      tr.appendChild(c=Cell('S0:'+sensors[i],null,'MonitorDataHeader'));
+      tr.appendChild(s[0]);
+      tr.appendChild(s[1]);
+      tr.appendChild(s[2]);
+      s = lhcb.widgets.BCM_station_datapoints('S1',sensors[i]);
+      tab.sensors[2*i+1] = s;
+      tr.appendChild(c=Cell('S1:'+sensors[i],null,'MonitorDataHeader'));
+      tr.appendChild(s[0]);
+      tr.appendChild(s[1]);
+      tr.appendChild(s[2]);
+      tb.appendChild(tr);
+    }
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      for( var i=0; i<this.sensors.length;++i)
+      this.sensors[i].subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+
+  lhcb.widgets.BCM_rel_charts = function() {
+    var fr, tb, td, tr, tab = document.createElement('table');
+    var j;
+    tb = document.createElement('tbody');
+
+    tab.className         = 'MonitorPage';
+    tb.className          = 'MonitorPage';
+    tab.bcms              = lhcb.widgets.BCM_rel_datapoints();
+
+    tab.handle_data = function(data) {
+      //var c = this.c_chart;
+      var d = this.c_data;
+      if ( d.length>100 ) d.splice(0,d.length-100);
+      d.push([(new Date()).getTime(),data]);
+      this.c_series.getDataHandler().setArray(d);
+      this.c_series.reload();
+      return data;
+    };
+    tr = document.createElement('tr');
+    for(j=0; j<2; ++j) {
+      td = document.createElement('td');
+      fr = document.createElement('iframe');
+      fr.src = lhcb.constants.lhcb_comet_url()+'/lhcb.chart.htm';
+      fr.id           = 'frame_chart_'+j;
+      fr.bgcolor      = '#CCCCCC';
+      fr.style.width  = '430px';
+      fr.style.height = '430px';
+      fr.scrolling    = 'auto';
+      fr.marginWidth  = 1;
+      fr.marginHeight = 1;
+      td.appendChild(fr);
+      
+      td.style.width  = '430px';
+      td.style.height = '430px';
+      td.style.border = 'none';
+      td.className    = 'MonitorData';
+      tr.appendChild(td);
+      tab[fr.id] = fr;
+      tab.bcms[2*j].conversion = tab.handle_data;
+      tab.bcms[2*j+1].conversion = tab.handle_data;
+    }
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+    return tab;
+  }
+};
+
+/**
+ */
+var BcmStatus = function(msg,chart,sensors)   {
+  var tr, td, tb, tab;
+  table           = document.createElement('table');
+  table.body      = document.createElement('tbody');
+  table.messages  = msg;
+  table.provider  = null;
+  table.logger    = null;
+  table.charts    = chart;
+  table.sensors   = sensors;
+
+  table.add = function() {
+    tr = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('colSpan',2);
+    tr.appendChild(td);
+    this.body.appendChild(tr);
+    return td;
+  };
+
+  table.className = table.body.className = 'MonitorOuterFrame';
+  table.body.cellpadding = 0;
+  table.body.cellspacing = 0;
+  table.display    = table.add();
+  table.logDisplay = table.add();
+  table.appendChild(table.body);
+
+  /**
+   */
+  table.start_charts = function() {
+    var c = this.onload.client;
+    var bcms = c.bcm_charts.bcms;
+
+    //alert('All elements are loaded:'+c);
+    for(var j = 0; j < 2; ++j )    {
+      var id = 'frame_chart_'+j;
+      var fr = document.getElementById(id);
+      var d = fr.contentWindow.document;
+      var chart = d.getElementById("chart");
+      var attrs = 	{ 
+	  axis_left: 
+	  {
+	    color: "#000", 
+	    caption: "",
+	    min_extreme: 0.0,
+	    max_extreme: null,
+	    //grid: {color: "#000", show:true },
+	    crosshair: {show: true, color: "#0F0" }
+	  },
+	  axis_bottom: 
+	  {
+	    color: "#000",
+	    caption: "Time of the day",
+	    //grid: {color: "#000", show: true },
+	    crosshair: {show: true, color: "#0F0" },
+	    formatter: chart.dateFormatter({format_string:"HH:NN:SS"})
+	  },
+	  background:  { color: "#F00", opacity:0, includeTitle: true },
+	  auto_resize: false,
+	  show_legend: true,
+	  legend_state: 'minimized',
+	  show_messages: false
+      };
+      var data, handler, series, ch = chart.createChart(chart.id,attrs);
+
+      chart.style.width='400px';
+      chart.style.height='400px';
+      chart.chart = ch;
+      ch.setTitle('Threshold to beam dump of S'+j+' RS2/RS32  [%]');
+
+      series = chart.createLineSeries(chart.createArrayDataHandler(data=new Array()),
+	  {title: bcms[2*j].nice_name,
+	   color: "#F00"
+	  });
+      ch.addSeries(series);
+      series.reload();
+      bcms[2*j].c_chart  = chart;
+      bcms[2*j].c_data   = data;
+      bcms[2*j].c_series = series;
+
+      series  = chart.createLineSeries(chart.createArrayDataHandler(data=new Array()),
+	  {title: bcms[2*j+1].nice_name,
+	   color: "#00F"
+	  });
+      ch.addSeries(series);
+      series.reload();
+      bcms[2*j+1].c_chart  = chart;
+      bcms[2*j+1].c_data   = data;
+      bcms[2*j+1].c_series = series;
+    }
+    if ( c.bcm_charts  ) bcms.subscribe(c.provider);
+    if ( c.bcm_sensors ) c.bcm_sensors.subscribe(c.provider);
+    c.bcm_summary.subscribe(c.provider);
+    return this;
+  };
+
+  table.subscribe = function() {
+    var c = this.onload.client;
+    if ( c.bcm_charts  ) c.bcm_charts.bcms.subscribe(c.provider);
+    if ( c.bcm_sensors ) c.bcm_sensors.subscribe(c.provider);
+    c.bcm_summary.subscribe(c.provider);
+    return this;
+  };
+
+  table.build = function() {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr, td, c, d = new Date();
+
+    tab.className = tb.className = 'MonitorInnerFrame';
+
+    this.heading = document.createElement('tr');
+    var cell = Cell(lhcb_online_picture()+'&nbsp;LHCb BCM Status',2,'MonitorBigHeader');
+    cell.style.textAlign = 'left';
+    cell.style.width = '360px';
+    this.heading.appendChild(cell);
+    this.head_date = Cell(d.toString(),1,'MonitorTinyHeader');
+    this.head_date.textAlign = 'right';
+    this.head_date.id = 'current_time';
+    this.head_date.style.width = '360px';
+    this.heading.appendChild(this.head_date);
+    this.heading.onclick = function() { document.location = "http://lhcb.cern.ch";};
+    tooltips.set(this.heading,'LHCb bcm summary<br>Click to go to LHCb home page');
+    tb.appendChild(this.heading);
+
+    this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); };
+    setInterval(this.timerHandler,2000);
+
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('',3,null));
+    tb.appendChild(tr);
+    c.style.height='20px';
+
+    tr = document.createElement('tr');
+    tr.appendChild(this.variables=Cell('',3,null));
+    this.bcm_summary = lhcb.widgets.BCM_summary();
+    this.variables.appendChild(this.bcm_summary);
+    tb.appendChild(tr);
+
+    if ( this.sensors ) {
+      tr = document.createElement('tr');
+      tr.appendChild(this.variables=Cell('',3,null));
+      this.bcm_sensors = lhcb.widgets.BCM_sensors();
+      this.variables.appendChild(this.bcm_sensors);
+      tb.appendChild(tr);
+    }
+
+    if ( this.charts ) {
+      tr = document.createElement('tr');
+      tr.appendChild(c=Cell('',3,null));
+      tb.appendChild(tr);
+      c.style.height='20px';
+      
+      tr = document.createElement('tr');
+      tr.appendChild(this.charts=Cell('',3,null));
+      this.bcm_charts = lhcb.widgets.BCM_rel_charts();
+      this.charts.appendChild(this.bcm_charts);
+      tb.appendChild(tr);
+    }
+
+    // Finally add suggestions text
+    tr = document.createElement('tr');
+    if ( this.charts ) {
+      tr.appendChild(c=Cell('Switch to fixed Y-scale',null,'DisplayButton'));
+      c.id = 'scale_floating_toggle';
+      c.checked = 1;
+      c.onclick = toggle_floating_scale;
+    }
+    else {
+      tr.appendChild(c=Cell('',null,null));
+    }
+    c.style.width = '20%';
+    tr.appendChild(c=Cell('',null,null));
+    c.style.width='35%';
+    tr.appendChild(c=Cell('Comments and suggestions to M.Frank CERN/LHCb',1,'MonitorTinyHeader'));
+    
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+    this.display.appendChild(tab);
+    return this;
+  };
+  return table;
+};
+
+var toggle_floating_scale = function() {
+  var obj  = document.getElementById('scale_floating_toggle');
+  var body = document.getElementsByTagName('body')[0];
+  var bcms = body.onload.client.bcm_charts.bcms;
+  var v = obj.checked;
+  for(var i=0; i<bcms.length; i+= 2) {
+    bcms[i].c_chart.chart.axis_left.setExtremes(0.,v ? 115. : null);
+    bcms[i].c_series.reload();
+    //bcms[i].c_chart.chart.axis_left.show();
+  }
+  obj.innerHTML = v ? 'Switch to floating Y-scale' : 'Switch to fixed Y-scale';
+  obj.checked = v ? 0 : 1;
+};
+
+var bcm_unload = function()  {
+  dataProviderReset();
+};
+
+var bcm_body = function()  {
+  var msg  = the_displayObject['messages'];
+  var chart= the_displayObject['charts'];
+  var sensors= the_displayObject['sensors'];
+  var body = document.getElementsByTagName('body')[0];
+  var tips = init_tooltips(body);
+  var selector;
+
+  selector = BcmStatus(msg,chart,sensors);
+  body.appendChild(selector);
+  body.onload = function() {};
+  body.onload1 = chart ? selector.start_charts : selector.subscribe;
+  body.onload.client = selector;
+  body.className = 'MainBody';
+  setWindowTitle('LHCb BCM Status');
+  if ( msg > 0 )
+    selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
+  else
+    selector.logger   = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+  selector.provider = new DataProvider(selector.logger);
+  selector.provider.topic = '/topic/status';
+  selector.build();
+  selector.provider.start();
+  if ( _isInternetExplorer() )  {
+    body.onload = body.onload1;
+    body.onload1.client = selector;
+  }
+  else {
+    setTimeout(function(){document.getElementsByTagName('body')[0].onload1(); },4000);
+  }
+  body.style.cursor = 'default';
+};
+if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

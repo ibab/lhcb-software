@@ -21,20 +21,20 @@ if ( !lhcb.widgets ) {
     var post = '';
     var bcms = new Array();
     var low = typ.toLowerCase();
-    var bcm = StyledItem('lbWeb.BCM_DP_S0.RS2_'+typ, null, '%7.3f');
+    var bcm = StyledItem('lbWeb.BCM_DP_S0.RS2_SUM.'+typ, null, '%7.3f');
     if (typ == 'REL' ) post = ' [%]';
     bcm.nice_name = 'S0 RS2 ('+low+') '+post;
     bcm.client = null;
     bcms[0] = bcm;
-    bcm = StyledItem('lbWeb.BCM_DP_S0.RS32_'+typ, null, '%7.3f');
+    bcm = StyledItem('lbWeb.BCM_DP_S0.RS32_SUM.'+typ, null, '%7.3f');
     bcm.nice_name = 'S0 RS32 ('+low+') '+post;
     bcm.client = null;
     bcms[1] = bcm;
-    bcm = StyledItem('lbWeb.BCM_DP_S1.RS2_'+typ, null, '%7.3f');
+    bcm = StyledItem('lbWeb.BCM_DP_S1.RS2_SUM.'+typ, null, '%7.3f');
     bcm.nice_name = 'S1 RS2 ('+low+') '+post;
     bcm.client = null;
     bcms[2] = bcm;
-    bcm = StyledItem('lbWeb.BCM_DP_S1.RS32_'+typ, null, '%7.3f');
+    bcm = StyledItem('lbWeb.BCM_DP_S1.RS32_SUM.'+typ, null, '%7.3f');
     bcm.nice_name = 'S1 RS32 ('+low+') '+post;
     bcm.client = null;
     bcms[3] = bcm;
@@ -47,8 +47,8 @@ if ( !lhcb.widgets ) {
     return bcms;
   };
 
-  lhcb.widgets.BCM_rel_datapoints = function() {    return lhcb.widgets.BCM_datapoints('REL'); };
-  lhcb.widgets.BCM_sum_datapoints = function() {    return lhcb.widgets.BCM_datapoints('SUM'); };
+  lhcb.widgets.BCM_rel_datapoints = function() { return lhcb.widgets.BCM_datapoints('fluxrel'); };
+  lhcb.widgets.BCM_sum_datapoints = function() { return lhcb.widgets.BCM_datapoints('flux');    };
 
   lhcb.widgets.BCM_station_datapoints = function(station,typ) {
     var sensors = new Array();
@@ -81,7 +81,7 @@ if ( !lhcb.widgets ) {
 
     tab.className = tb.className  = 'MonitorPage';
     //tab.height    = '60px';
-    tab.bcms      = lhcb.widgets.BCM_rel_datapoints();
+    tab.bcms       = lhcb.widgets.BCM_rel_datapoints();
     tab.bcms_sum   = lhcb.widgets.BCM_sum_datapoints();
 
     tab.bcm_ok  = StyledItem('lbWeb.BCM_Interface.BcmOK.getStatus', null, null);

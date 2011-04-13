@@ -1,4 +1,4 @@
-// $Id: DeliveryHandler.h,v 1.1 2009-07-03 18:10:07 frankb Exp $
+// $Id: DeliveryHandler.h,v 1.1 2009/07/03 18:10:07 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/DeliveryHandler.h,v 1.1 2009-07-03 18:10:07 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/Stomp/DeliveryHandler.h,v 1.1 2009/07/03 18:10:07 frankb Exp $
 #ifndef STOMP_DELIVERYHANDLER_H
 #define STOMP_DELIVERYHANDLER_H 1
 

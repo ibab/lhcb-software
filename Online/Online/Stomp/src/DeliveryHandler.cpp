@@ -1,4 +1,4 @@
-// $Id: DeliveryHandler.cpp,v 1.2 2009-11-27 16:39:45 frankb Exp $
+// $Id: DeliveryHandler.cpp,v 1.2 2009/11/27 16:39:45 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/DeliveryHandler.cpp,v 1.2 2009-11-27 16:39:45 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/src/DeliveryHandler.cpp,v 1.2 2009/11/27 16:39:45 frankb Exp $
 #include "Stomp/DeliveryHandler.h"
 #include "Stomp/StompSensor.h"
 #include "Stomp/Connector.h"

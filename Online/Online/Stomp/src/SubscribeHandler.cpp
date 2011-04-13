@@ -1,4 +1,4 @@
-// $Id: SubscribeHandler.cpp,v 1.2 2009-11-27 16:39:47 frankb Exp $
+// $Id: SubscribeHandler.cpp,v 1.2 2009/11/27 16:39:47 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/SubscribeHandler.cpp,v 1.2 2009-11-27 16:39:47 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/src/SubscribeHandler.cpp,v 1.2 2009/11/27 16:39:47 frankb Exp $
 #include "Stomp/SubscribeHandler.h"
 #include "Stomp/Connector.h"
 #include "Stomp/Commands.h"

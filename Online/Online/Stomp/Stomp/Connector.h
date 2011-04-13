@@ -1,4 +1,4 @@
-// $Id: Connector.h,v 1.1 2009-07-03 18:10:07 frankb Exp $
+// $Id: Connector.h,v 1.1 2009/07/03 18:10:07 frankb Exp $
 //====================================================================
 //  Stomp
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/Connector.h,v 1.1 2009-07-03 18:10:07 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/Stomp/Connector.h,v 1.1 2009/07/03 18:10:07 frankb Exp $
 #ifndef STOMP_CONNECTOR_H
 #define STOMP_CONNECTOR_H 1
 

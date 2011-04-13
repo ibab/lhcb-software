@@ -1,4 +1,4 @@
-// $Id: Connector.cpp,v 1.4 2010-09-22 18:42:29 frankb Exp $
+// $Id: Connector.cpp,v 1.4 2010/09/22 18:42:29 frankb Exp $
 //====================================================================
 //  Stomp
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/Connector.cpp,v 1.4 2010-09-22 18:42:29 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/src/Connector.cpp,v 1.4 2010/09/22 18:42:29 frankb Exp $
 
 #include "Stomp/Commands.h"
 #include "Stomp/Connector.h"

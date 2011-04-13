@@ -1,4 +1,4 @@
-// $Id: Config.h,v 1.2 2009-07-28 20:44:43 frankb Exp $
+// $Id: Config.h,v 1.2 2009/07/28 20:44:43 frankb Exp $
 //====================================================================
 //  Stomp
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/Config.h,v 1.2 2009-07-28 20:44:43 frankb Exp $
+// $Header: /local/reps/lhcb/Online/Stomp/Stomp/Config.h,v 1.2 2009/07/28 20:44:43 frankb Exp $
 #ifndef STOMP_CONFIG_H
 #define STOMP_CONFIG_H 1
 
