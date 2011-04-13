@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-04-13 - Paul Seyfert
+ - VeloMuonBuilder: - info on the muon chamber as extra info on the track
+                    - initialisation of track type before track fit
+ 
 !========================= TrackTools v4r4 2011-04-05 =========================
 ! 2011-03-22 - Chris Jones
  - Protect TrackSelector::accept against exceptions being thrown from the

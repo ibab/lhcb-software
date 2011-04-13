@@ -177,6 +177,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
     //go through the velos
     float minweight=std::numeric_limits<float>::infinity(); 
     float mindist=std::numeric_limits<float>::infinity();
+    float minreg = -1;
     for (veloIter = veloTracks.begin(); veloIter != veloTracks.end() ; ++veloIter) {
       if ((*veloIter)->history() != LHCb::Track::PatVelo &&
 	  (*veloIter)->history() != LHCb::Track::PatVeloGeneral &&
@@ -278,6 +279,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 	aCopy->setFitResult(result);
 
 
+        aCopy->setType(LHCb::Track::Long);
 	sc = m_tracksFitter->fit(*aCopy,LHCb::ParticleID(13));
 	if (sc.isFailure()) {delete aCopy; aCopy=NULL;continue;}
 
@@ -294,6 +296,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 	if (goodCopy) delete goodCopy;                        
 	minweight=weight;
 	mindist = weighteddistance;
+	minreg = reg;
 //	minchi2 = float(aCopy->chi2());
 	goodCopy=aCopy;
 	
@@ -304,9 +307,9 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
       continue; // -- nothing was found
     }
 
-    goodCopy->setType(LHCb::Track::Long);
     goodCopy->addInfo(4444,1);
     goodCopy->addInfo(4445,mindist);
+    goodCopy->addInfo(4446,minreg);
     trackvector->add(goodCopy);
     goodCopy=NULL; // clean up
   }
