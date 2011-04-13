@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v12r0 2011-04-13 ==========================
 ! 2011-02-28 - John Back
  - EvtDDalitz.cpp: Added the D -> KKPi mode. 
 
@@ -12,7 +13,6 @@
  - EvtTensor4C.cpp: Correction to EvtTensor4C::cont() from Anders Ryd
  - EvtParticle.cpp: Removed assert from generateMassTree()
 
-!========================= EvtGen v12r0 2010-12-09 ==========================
 ! 2010-12-09 - John Back
  Below is a summary of the merge between the latest BaBar & LHCb EvtGen code.
  - EvtCPUtil.cpp: Class interface changed to use static instance and not
