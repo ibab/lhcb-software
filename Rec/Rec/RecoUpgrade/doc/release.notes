@@ -3,6 +3,8 @@
 ! Responsible : Victor Coco
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
+!2011-04-12  -Wenbin Qian
+-  modify covariance matrix
 
 !========================= RecoUpgrade v2r1 2011-04-05 =========================
 ! 2011-03-17 -Wenbin Qian

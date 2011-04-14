@@ -135,6 +135,10 @@ public:
     return m_chi2;
   }
   int getHitsNum() const {return m_hits.size();}
+  double x0() {return m_x0;}
+  double y0() {return m_y0;}
+  double tx() {return m_tx;}
+  double ty() {return m_ty;}
   double xAtz( double z ) {return m_x0 + m_tx * z;}
   double yAtz( double z ) {return m_y0 + m_ty * z;}
   double zBeam () {return -( m_x0 * m_tx + m_y0 * m_ty )/( m_tx * m_tx + m_ty * m_ty);}
@@ -169,9 +173,9 @@ public:
     Gaudi::TrackSymMatrix cov;
     cov(0,0) = 6.e-5 + 0*z;
     cov(1,1) = 6.e-5;
-    cov(2,2) = 6.e-5;
-    cov(3,3) = 6.e-5;
-    cov(4,4) = 6.e-5;
+    cov(2,2) = 6.e-8;
+    cov(3,3) = 6.e-8;
+    cov(4,4) = 6.e-8;
     return cov;
   }
     

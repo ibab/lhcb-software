@@ -144,8 +144,8 @@ def RecoTrackingUpgrade(exclude=[]):
        patLHCbID2MCP.LinkOT = False
        patLHCbID2MCP.LinkVELOPIX = True
        
-#       cheatPat = CheatedVeloPixPat("CheatedPatVeloPixTracking")
-#       cheatPat.MinimalMCHitForTrack = 2
+ #      cheatPat = CheatedVeloPixPat("CheatedPatVeloPixTracking")
+ #      cheatPat.MinimalMCHitForTrack = 2
 
    ######### Definition/Replacement of Tracking
    track = ProcessPhase("Track")
@@ -172,6 +172,8 @@ def RecoTrackingUpgrade(exclude=[]):
        ## Modify the Forward Pattern reco
        if "ForwardPat" in  track.DetectorList :
            PatForward("PatForward").InputTracksName = "/Event/Rec/Track/VeloPix"
+#           PatForward.maxITHits = 30000
+#           PatForward.maxOTHits = 100000
        ## Modify the Forward fit
        if "ForwardFit" in track.DetectorList :
            ConfigureTrackStateInitTool("InitForwardFit")          
@@ -195,7 +197,7 @@ def RecoTrackingUpgrade(exclude=[]):
            trmatchVSeed = TrackMatchVeloSeed("TrackMatch")
            ConfigVeloPixProvider(trmatchVSeed)
            trmatchVSeed.InputVeloTracks =  "/Event/Rec/Track/VeloPix"
-           
+           trmatchVSeed.DiscardChi2  =  10          
       ## Modify the MatchFit
        if "MatchFit" in track.DetectorList :
            ConfigureTrackStateInitTool("InitMatchFit")

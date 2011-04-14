@@ -38,7 +38,6 @@ VeloPixPatLinear::VeloPixPatLinear( const std::string& name,
   declareProperty("FractionForMerge", m_fractionForMerge= 0.60   );
   declareProperty("StateAtBeam",               m_stateAtBeam    = true );  
   declareProperty("TimingMeasurement", m_doTiming = true);
-  
 }
 //=============================================================================
 // Destructor
@@ -71,7 +70,6 @@ StatusCode VeloPixPatLinear::initialize() {
     m_timerTool->decreaseIndent();
   }
   
-
   return StatusCode::SUCCESS;
 }
 
@@ -465,6 +463,7 @@ if( newtrack.getChi2()>(4*newtrack.getHitsNum()+9) ){
     else {
       (*itbest)->addused();
       newtrack.addXHit(&(*(*itbest)));
+      newtrack.UpdateYHits();
     }
     sens0 = sens0 + sign * 2;
     inside =((sens0 > 0) && (sens0 < m_sensor));
@@ -503,8 +502,8 @@ void VeloPixPatLinear::makeLHCbTracks( LHCb::Tracks* outputTracks)
       LHCb::Track *newtrack = new LHCb::Track();
       newtrack->setType( LHCb::Track::Velo );
       newtrack->setHistory( LHCb::Track::PatVeloPix );
-      newtrack->setPatRecStatus( LHCb::Track::PatRecIDs );
-      
+      newtrack->setPatRecStatus( LHCb::Track::PatRecIDs );     
+ 
       double zMin = 1.e9;
       double zMax = -1.e9;
 
@@ -538,8 +537,7 @@ void VeloPixPatLinear::makeLHCbTracks( LHCb::Tracks* outputTracks)
         state.setCovariance( (*itT).covariance( zMax ));
         newtrack->addToStates( state );
       }
-      
-      outputTracks->insert( newtrack );  
+        outputTracks->insert( newtrack );  
     }
   }
 }

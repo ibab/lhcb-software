@@ -42,10 +42,10 @@ private:
     std::string m_clusterLocation;
     std::string m_outputTracksLocation;
     LHCb::VeloPixLiteCluster::VeloPixLiteClusters* m_clusters;
+    int m_sensor;
     double m_chi2;
     VeloPixTracks m_tracks;
     std::vector<VeloPixHits> m_hits;
-    int m_sensor;
     double m_dist;	
     int m_maxMissed;
     bool m_stateAtBeam;
