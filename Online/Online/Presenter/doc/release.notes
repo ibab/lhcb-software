@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-14 - Olivier Callot
+ - Fix the ZMIN/ZMAX option for 2D plots
+
 ! 2011-04-13 - Olivier Callot
  - Faster change mode, no multiple rescan of the databases
  - 2D references were still displayed

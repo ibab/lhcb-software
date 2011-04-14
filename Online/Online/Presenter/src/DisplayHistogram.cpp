@@ -545,7 +545,7 @@ void DisplayHistogram::setDisplayOptions ( ) {
   if (hasOption("XMAX", &fopt)) { bxmax=fopt; }
   m_rootHistogram->GetXaxis()->SetRangeUser(bxmin,bxmax);
 
-  if (m_onlineHist->dimension() < 2) { // 1d histograms
+  if (m_rootHistogram->GetDimension() < 2) { // 1d histograms
     if (hasOption("YMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
     if (hasOption("YMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
   } else {  // 2d histograms
@@ -554,8 +554,8 @@ void DisplayHistogram::setDisplayOptions ( ) {
     if (hasOption("YMIN", &fopt)) { bymin=fopt; }
     if (hasOption("YMAX", &fopt)) { bymax=fopt; }
     m_rootHistogram->GetYaxis()->SetRangeUser(bymin, bymax);
-    if (hasOption("ZMIN", &fopt)) { m_rootHistogram->SetMinimum(fopt); std::cout << "ZMIN set to " << fopt << std::endl; }
-    if (hasOption("ZMAX", &fopt)) { m_rootHistogram->SetMaximum(fopt); std::cout << "ZMAX set to " << fopt << std::endl; }
+    if (hasOption("ZMIN", &fopt)) m_rootHistogram->SetMinimum(fopt);
+    if (hasOption("ZMAX", &fopt)) m_rootHistogram->SetMaximum(fopt);
   }
   if (hasOption("STATS", &iopt)) m_rootHistogram->SetStats(0 != iopt);
 
