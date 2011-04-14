@@ -25,7 +25,7 @@ use CLHEP         v*  LCG_Interfaces
 #============================================================================
 application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp $(PRESENTERROOT)/Gaucho/*.cpp *.cpp "
 
-document rootcint cintBootstrap cintBootstrap.h
+document rootcint cintBootstrap LinkDef.h cintBootstrap.h
 
 macro_append includes " -I$(PRESENTERROOT) -I$(PRESENTERROOT)/src" \
   WIN32               " -I$(PRESENTERROOT) -I$(PRESENTERROOT)/src"

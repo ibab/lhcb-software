@@ -355,7 +355,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
           if ( (*itH).shortName() == histNames[indx] ) {            
             if ( 0 != results[indx] ) {
               found = true;
-              if ( update && 
+              if ( !update ) (*itH).setRootHist( NULL );
+              if ( ( update || NULL != (*itH).rootHist() ) && 
                    ( (*itH).rootHist()->GetNbinsX() == ((TH1*)results[indx])->GetNbinsX() ) ) {
                 std::cout << "++ upd histo " << histNames[indx] << std::endl;
                 (*itH).copyFrom(  (TH1*)results[indx] );
@@ -1008,5 +1009,17 @@ void PresenterPage::prepareDisplayHistos ( ) {
       m_displayHistograms.push_back( &(*itDH) );
     }
   }
+}
+
+//=========================================================================
+//  Check that all DisplayHistos have an OnlineHisto
+//=========================================================================
+bool PresenterPage::okForSave ( ) {
+  bool ok = true;
+  prepareDisplayHistos();
+  for ( DisplayHistograms::iterator itH = m_displayHistograms.begin(); m_displayHistograms.end() != itH ; ++itH ) {
+    if ( NULL == (*itH)->histo() ) ok = false;
+  }
+  return ok;
 }
 //=============================================================================

@@ -1714,8 +1714,7 @@ void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
 //=============================================================================
 void PresenterMainFrame::setKnownDatabases(const std::string & databasesCfg,
                                            const std::string & dbcredentials) {
-  TObjArray*
-    databaseItems(TString(databasesCfg.c_str()).Tokenize(s_configToken));
+  TObjArray* databaseItems(TString(databasesCfg.c_str()).Tokenize(s_configToken));
   TIterator* databaseItemsIt = databaseItems->MakeIterator();
   TObject*   databaseItem;
   while ((databaseItem = databaseItemsIt->Next())) {
@@ -1724,12 +1723,9 @@ void PresenterMainFrame::setKnownDatabases(const std::string & databasesCfg,
   }
   databaseItems->Delete();
   delete databaseItemsIt;
-  databaseItemsIt = NULL;
   delete databaseItems;
-  databaseItems = NULL;
 
-  TObjArray*
-    dbLoginPairItems(TString(dbcredentials.c_str()).Tokenize(s_configToken));
+  TObjArray* dbLoginPairItems(TString(dbcredentials.c_str()).Tokenize(s_configToken));
   TIterator* dbLoginPairItemsIt = dbLoginPairItems->MakeIterator();
   TObject*   dbLoginItem;
   while ((dbLoginItem = dbLoginPairItemsIt->Next())) {
@@ -1745,21 +1741,15 @@ void PresenterMainFrame::setKnownDatabases(const std::string & databasesCfg,
     if ((dbLoginElement = loginElementIt->Next())) {
       password = new std::string(dbLoginElement->GetName());
     }
-    if (login && password) {
-      m_knownDbCredentials[login] = password;
-    }
+    if (login && password) m_knownDbCredentials[login] = password;
 
     loginElementItems->Delete();
     delete loginElementIt;
-    loginElementIt = NULL;
     delete loginElementItems;
-    loginElementItems = NULL;
   }
   dbLoginPairItems->Delete();
   delete dbLoginPairItemsIt;
-  dbLoginPairItemsIt = NULL;
   delete dbLoginPairItems;
-  dbLoginPairItemsIt = NULL;
 }
 
 //==============================================================================
@@ -1810,7 +1800,7 @@ void PresenterMainFrame::savePageToFile() {
 
 
   static TString dir(m_imagePath); //HomeDirectory(const char* userName = 0)
-  static Int_t typeidx = 0;
+  static Int_t typeidx = 7;
   static Bool_t overwr = kFALSE;
   TGFileInfo fi;
   fi.fFileTypes   = gSaveAsTypes;
@@ -1844,8 +1834,14 @@ void PresenterMainFrame::savePageToFile() {
 
 void PresenterMainFrame::savePageToHistogramDB() {
   if (pres::ReadWrite == m_databaseMode) {
-    fClient->WaitFor(new DatabasePagePathDialog(this, 493, 339, m_verbosity));
-    refreshPagesDBListTree();
+    if ( m_presenterPage.okForSave() ) {  //== Check: Should have all histogram as OnlineHistos, not form DIM
+      fClient->WaitFor(new DatabasePagePathDialog(this, 493, 339, m_verbosity));
+      refreshPagesDBListTree();
+    } else {
+      new TGMsgBox( fClient->GetRoot(), this, "Can't save to database",
+                    "Page can't be saved: It contains pure DIM histograms", 
+                    kMBIconExclamation, kMBOk, &m_msgBoxReturnCode );
+    }
   }
 }
 void PresenterMainFrame::reportToLog() {
@@ -2831,8 +2827,9 @@ void PresenterMainFrame::histogramDescription() {
     std::stringstream currentPageHistogramHelp;
 
     DisplayHistogram* histogram = selectedDisplayHistogram();
-    if (0 != histogram) {
-      OnlineHistogram* myOnlH = histogram->histo();
+    OnlineHistogram* myOnlH = NULL;
+    if ( NULL != histogram) myOnlH = histogram->histo();
+    if ( NULL != myOnlH ) {
       currentPageHistogramHelp
         << "Title:\t\t"   << myOnlH->htitle() << std::endl << std::endl
         << "Name:\t\t"    <<  myOnlH->hname() << std::endl
@@ -2853,7 +2850,7 @@ void PresenterMainFrame::histogramDescription() {
   } else {
     if ( ! isBatch() )
       new TGMsgBox(fClient->GetRoot(), this, "Description Unavailable",
-                   "Description Unavailable, not logged in!",
+                   "Description Unavailable, not logged in or DIM only histogram!",
                    kMBIconExclamation, kMBClose, &m_msgBoxReturnCode);
   }
 }
@@ -3682,10 +3679,6 @@ void PresenterMainFrame::addDimHistosToPage() {
   stopPageRefresh();
   unclearHistosIfNeeded();
   if (m_referencesOverlayed) { toggleReferenceOverlay(); }
-
-  //fClient-> WaitFor(dynamic_cast<TGWindow*>( new HistoPropDialog(this, 646, 435, m_verbosity)));
-
-  m_presenterPage.clear();  
 
   TGListTree* list = new TGListTree();
   checkedTreeItems(list, m_histoSvcListTree);

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-14 - Olivier Callot
+ - Fix the saving of a new page to the database. 
+
+! 2011-04-14 - Olivier Callot
  - Fix the ZMIN/ZMAX option for 2D plots
 
 ! 2011-04-13 - Olivier Callot

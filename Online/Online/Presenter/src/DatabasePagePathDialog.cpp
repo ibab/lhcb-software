@@ -179,19 +179,19 @@ void DatabasePagePathDialog::ok()
     m_pageName = m_pageNameTextEntry->GetText();
     std::string patternFile = m_patternFileTextEntry->GetText();
     std::string pageDescription = ((dynamic_cast<TGTextView*>(m_pageDescriptionTextEditor)->GetText())->AsString()).Data();
-
+    std::string fullPageName = s_slash+m_folderName+s_slash+m_pageName;
     try {
-      OnlineHistPage* page = m_histogramDB->getPage(s_slash+m_folderName+s_slash+m_pageName);
+      OnlineHistPage* page = m_histogramDB->getPage( fullPageName );
       std::map<TPad*,OnlineHistogram*> padOwner;
       bool thereAreOverlaps = false;
       page->removeAllHistograms();
       double xlow, ylow, xup, yup;
-
+      std::cout << "Currently, the page has " << page->nh() << " histograms." << std::endl;
       // first, save owners of pads (not overlaps)
 
       m_mainFrame->myPage().prepareDisplayHistos();   // Build the final list of all displayhistograms of the page.
       
-      std::vector<DisplayHistogram*>::iterator itDH;
+      DisplayHistograms::iterator itDH;
       for ( itDH  = m_mainFrame->myPage().displayHistos().begin();
             itDH != m_mainFrame->myPage().displayHistos().end();
             itDH++) {
@@ -199,16 +199,17 @@ void DatabasePagePathDialog::ok()
         if( 0 < (*itDH)->isOverlap()) {
           thereAreOverlaps = true;
         } else {
-          if ( (*itDH)->hostingPad()) {
-             ( (*itDH)->hostingPad() )->GetPadPar(xlow, ylow, xup, yup);
+          if ( (*itDH)->hostingPad() ) {
+            (*itDH)->hostingPad()->GetPadPar(xlow, ylow, xup, yup);
+            std::cout << "Store histo id '" << (*itDH)->histo()->hid() << "'" << std::endl;
             OnlineHistogram* onlineHistogram = page->addHistogram( (*itDH)->histo(),
                                                                    (float)xlow , (float)ylow, (float)xup, (float)yup);
-            if (0 != onlineHistogram) (*itDH)->setOnlineHistogram(onlineHistogram);
+            if (0 != onlineHistogram) (*itDH)->setOnlineHistogram( onlineHistogram );
             padOwner[(*itDH)->hostingPad()] = onlineHistogram;          
           }
         }
       }
-
+      
       page->setPatternFile(patternFile);
 
       if ( page->save() ) {

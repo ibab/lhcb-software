@@ -130,4 +130,5 @@ private:
   std::map<std::string, float>       m_floatOptions;
   std::map<std::string, std::string> m_stringOptions;
 };
+typedef std::vector<DisplayHistogram*> DisplayHistograms;
 #endif // DISPLAYHISTOGRAM_H

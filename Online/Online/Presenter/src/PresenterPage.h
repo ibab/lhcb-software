@@ -120,6 +120,8 @@ public:
   
   std::vector<DisplayHistogram*>& displayHistos() { return m_displayHistograms; }
 
+  bool okForSave(); /// All histograms properly defined.
+
 protected:
 
 private:

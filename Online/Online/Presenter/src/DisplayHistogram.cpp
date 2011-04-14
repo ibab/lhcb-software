@@ -1157,7 +1157,8 @@ bool DisplayHistogram::updateDBOption( std::string opt, void* value, bool isDefa
 //
 //=========================================================================
 void DisplayHistogram::setOnlineHistogram( OnlineHistogram* hist ) {
-  if ( NULL != m_onlineHist ) delete m_onlineHist;
+  if ( NULL != m_onlineHist &&
+       hist != m_onlineHist ) delete m_onlineHist;
   m_onlineHist = hist;
 }
 
