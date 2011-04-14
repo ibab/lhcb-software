@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-04-14 - Chris Jones
+ - Remove some obsolete DC06 compatibility hacks
+
 ! 2011-04-07 - Chris Jones
  - Improve the way various cached information is handled w.r.t. condition
    updates.
