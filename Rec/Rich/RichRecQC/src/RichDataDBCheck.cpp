@@ -130,7 +130,7 @@ StatusCode DataDBCheck::execute()
             mess << "HPD L0ID " << l0ID << " appears twice in the data. ["
                  << " L1HardwareID=" << iID->second.l1HardID
                  << " Input=" <<  iID->second.l1Input
-                 << " ] and [ L1HardwareID=" <<  l1HardID << " Input=" << l1Input << "]";
+                 << " ] and [ L1HardwareID=" <<  l1HardID << " Input=" << l1Input << " ]";
             Warning( mess.str(), StatusCode::FAILURE, m_nErrorMess ).ignore();
           }
           else

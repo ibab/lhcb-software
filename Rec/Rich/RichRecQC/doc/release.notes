@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-04-14 - Chris Jones
+ - Revert a small hack in Pixel QC algorithm for DC06 compatibility
+
 !========================= RichRecQC v2r49 2011-04-05 =========================
 ! 2011-03-29 - Chris Jones
  - Remove "HPDImageShifts" from list of monitors run by default

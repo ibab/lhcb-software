@@ -231,9 +231,7 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
   for ( Summaries::const_iterator iS = summaries.begin();
         iS != summaries.end(); ++iS )
   {
-    // CRJ should use isBackground here, but not compatible with DC06
-    // so stick with !isSignal (not quite the same) for the time being
-    if ( !(*iS)->history().isSignal() )
+    if ( (*iS)->history().isBackground() )
     {
       flags.isBkg = true;
       if ( (*iS)->history().hpdQuartzCK()      ) { flags.isHPDQCK        = true; }
