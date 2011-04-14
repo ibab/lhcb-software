@@ -139,20 +139,7 @@ const std::string &
 Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
                                const Rich::Side         panel ) const
 {
-  if ( m_rich[rich]->exists("HPDPanelDetElemLocations") )
-  {
-    return (m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
-  }
-  else
-  {
-    // Backwards compat for DC06
-    const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { &DeRichLocations::Rich1Panel0,
-            &DeRichLocations::Rich1Panel1 },
-          { &DeRichLocations::Rich2Panel0,
-            &DeRichLocations::Rich2Panel1 } };
-    return *dc06Names[rich][panel];
-  }
+  return (m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
 }
 
 //=============================================================================

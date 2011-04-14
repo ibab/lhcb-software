@@ -95,11 +95,20 @@ namespace Rich
                                           const Rich::Side side,
                                           const Gaudi::XYZPoint& reflPoint ) const;
 
-    /// Get the mirrors compatible with DC06 DDDB
-    StatusCode getMirrors_old( );
-
     /// Update Mirror information on Condition changes
     StatusCode mirrorUpdate();
+
+    /// Load mirrors for the given RICH detector
+    StatusCode loadMirrors( const Rich::DetectorType rich );
+
+    /// Returns the side for a given mirror and Rich Detector
+    inline Rich::Side side ( const DeRichSphMirror * mirror, 
+                             const Rich::DetectorType rich ) const
+    {
+      return ( Rich::Rich1 == rich ? 
+               mirror->mirrorCentre().y() > 0.0 ? Rich::top  : Rich::bottom :
+               mirror->mirrorCentre().x() > 0.0 ? Rich::left : Rich::right  );
+    }
     
   private: // classes
 

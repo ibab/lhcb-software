@@ -228,10 +228,7 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
           iSum != (*iEn).second.end(); ++iSum )
     {
       // returns true if hit is only background (no signal contribution)
-      // CRJ : Should use hasSignal here, but not compatible with DC06
-      //       so stick with isSignal (not quite the same) for the time being
-      //if ( (*iSum)->history().hasSignal() ) return false;
-      if ( (*iSum)->history().isSignal() ) return false;
+      if ( (*iSum)->history().hasSignal() ) return false;
     }
   }
   else if ( msgLevel(MSG::DEBUG) )
@@ -337,10 +334,7 @@ MCTruthTool::isCherenkovRadiation( const LHCb::RichSmartID id,
           iSum != (*iEn).second.end(); ++iSum )
     {
       const LHCb::MCRichDigitHistoryCode & code = (*iSum)->history();
-      // CRJ : Should use hasSignal here, but not compatible with DC06
-      //       so stick with isSignal (not quite the same) for the time being
-      //if ( code.hasSignal() )
-      if ( code.isSignal() )
+      if ( code.hasSignal() )
       {
         if      ( Rich::Aerogel == rad && code.aerogelHit() ) { return true; }
         else if ( Rich::C4F10   == rad && code.c4f10Hit()   ) { return true; }

@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-04-13 - Chris Jones
+ - Clean up the mirror segment finder tool. 
+ - Remove some DC06 specific hacks.
+
 ! 2011-04-08 - Chris Jones
  - Add calls to the UpdateManager unregister method as needed.
 

@@ -20,12 +20,12 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::SmartIDTool::SmartIDTool( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-  : Rich::ToolBase   ( type, name, parent ),
-    m_photoDetPanels ( Rich::NRiches, 
-                       HPDPanelsPerRich(Rich::NHPDPanelsPerRICH,NULL) )
+  Rich::SmartIDTool::SmartIDTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+    : Rich::ToolBase   ( type, name, parent ),
+      m_photoDetPanels ( Rich::NRiches,
+                         HPDPanelsPerRich(Rich::NHPDPanelsPerRICH,NULL) )
 {
   // Interface
   declareInterface<ISmartIDTool>(this);
@@ -198,7 +198,7 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
 {
 
   // check to see if the smartID is set, and if HPD is active
-  if ( smartid.pdIsSet() && 
+  if ( smartid.pdIsSet() &&
        !m_richS->hpdIsActive(smartid) )
     return StatusCode::FAILURE;
 
@@ -330,25 +330,13 @@ Rich::SmartIDTool::pdPanelName( const Rich::DetectorType rich,
   static DetectorElement* deRich[Rich::NRiches] =
     { getDet<DetectorElement>(DeRichLocations::Rich1),
       getDet<DetectorElement>(DeRichLocations::Rich2) };
-
-  if ( deRich[rich]->exists("HPDPanelDetElemLocations") )
+  
+  const std::vector< std::string > & locs
+    = deRich[rich]->paramVect<std::string>("HPDPanelDetElemLocations");
+  if ( locs.size() != Rich::NHPDPanelsPerRICH )
   {
-    const std::vector< std::string > & locs
-      = deRich[rich]->paramVect<std::string>("HPDPanelDetElemLocations");
-    if ( locs.size() != Rich::NHPDPanelsPerRICH )
-    {
-      Exception( "Wrong number of HPDPanelDetElemLocations" );
-    }
-    return locs[panel];
+    Exception( "Wrong number of HPDPanelDetElemLocations" );
   }
-  else
-  {
-    // Backwards compat for DC06
-    const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { &DeRichLocations::Rich1Panel0,
-            &DeRichLocations::Rich1Panel1 },
-          { &DeRichLocations::Rich2Panel0,
-            &DeRichLocations::Rich2Panel1 } };
-    return *dc06Names[rich][panel];
-  }
+  
+  return locs[panel];
 }

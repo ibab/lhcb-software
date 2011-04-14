@@ -4,7 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
-!========================= RichMCTools v3r15 2011-02-25 =========================
+! 2011-04-14 - Chris Jones
+ - Remove some DC06 specific hacks
+
+!====================== RichMCTools v3r15 2011-02-25 =========================
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings
 
