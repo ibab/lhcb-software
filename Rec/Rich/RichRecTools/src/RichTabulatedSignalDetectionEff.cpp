@@ -272,18 +272,5 @@ const std::string &
 TabulatedSignalDetectionEff::pdPanelName( const Rich::DetectorType rich,
                                           const Rich::Side         panel ) const
 {
-  if ( m_riches[rich]->exists("HPDPanelDetElemLocations") )
-  {
-    return (m_riches[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
-  }
-  else
-  {
-    // Backwards compat for DC06
-    const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { &DeRichLocations::Rich1Panel0,
-            &DeRichLocations::Rich1Panel1 },
-          { &DeRichLocations::Rich2Panel0,
-            &DeRichLocations::Rich2Panel1 } };
-    return *dc06Names[rich][panel];
-  }
+  return (m_riches[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
 }
