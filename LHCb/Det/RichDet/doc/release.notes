@@ -6,6 +6,8 @@
 
 ! 2011-04-14 - Chris Jones
  - Remove some obsolete DC06 compatibility hacks
+ - Return StatusCode FAILURE from DeRichSystem::initialize() if initial 
+   update fails.
 
 ! 2011-04-07 - Chris Jones
  - Improve the way various cached information is handled w.r.t. condition

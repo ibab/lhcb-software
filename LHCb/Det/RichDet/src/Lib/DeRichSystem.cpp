@@ -60,7 +60,7 @@ const CLID& DeRichSystem::classID()
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRichSystem::initialize ( )
+StatusCode DeRichSystem::initialize()
 {
   setMyName("DeRichSystem");
 
@@ -71,10 +71,12 @@ StatusCode DeRichSystem::initialize ( )
   SmartRef<Condition> rich2numbers = condition( m_condDBLocs[Rich::Rich2] );
   updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
   updMgrSvc()->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
-  if ( updMgrSvc()->update(this).isFailure() )
-    error() << "Failed to update mappings" << endmsg;
 
-  return StatusCode::SUCCESS;
+  // Run first update
+  const StatusCode sc = updMgrSvc()->update(this);
+  if ( sc.isFailure() ) error() << "Failed to update mappings" << endmsg;
+
+  return sc;
 }
 
 //=========================================================================
@@ -103,24 +105,8 @@ DetectorElement * DeRichSystem::deRich( const Rich::DetectorType rich ) const
 {
   if ( !m_deRich[rich] )
   {
-    if      ( Rich::Rich1 == rich )
-    {
-      SmartDataPtr<DetectorElement> deR(dataSvc(),DeRichLocations::Rich1);
-      m_deRich[rich] = deR;
-    }
-    else if ( Rich::Rich2 == rich )
-    {
-      SmartDataPtr<DetectorElement> deR(dataSvc(),DeRichLocations::Rich2);
-      m_deRich[rich] = deR;
-    }
-    else
-    {
-      std::ostringstream mess;
-      mess << "Cannot load detector element for RICH " << rich;
-      throw GaudiException( mess.str(),
-                            "DeRichSystem::deRich",
-                            StatusCode::FAILURE );
-    }
+    SmartDataPtr<DetectorElement> deR( dataSvc(), DeRichLocations::location(rich) );
+    m_deRich[rich] = deR;
   }
   return m_deRich[rich];
 }
@@ -158,17 +144,11 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_L1HardIDAndInputToHPDHardID.clear();
   m_firstL1CopyN = 0;
 
-  // NB : Currently updating both RICH1 and RICH2 if either changes ...
-  //      Could considering doing this separately, probably not a big issue though
+  // Fill the maps for each RICH
+  const StatusCode sc = ( fillMaps ( Rich::Rich1 ) && 
+                          fillMaps ( Rich::Rich2 ) );
 
-  // RICH1
-  StatusCode sc = fillMaps( Rich::Rich1 );
-  if ( sc.isFailure() ) return sc;
-
-  // RICH2
-  sc            = fillMaps( Rich::Rich2 );
-  if ( sc.isFailure() ) return sc;
-
+  // return
   return sc;
 }
 
@@ -198,7 +178,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   // vector of HPD Level1 input numbers
   const CondData & l1Ins   = numbers->paramVect<int>("HPDLevel1InputNums");
   // vector of HPD Copy numbers
-  const CondData & copyNs   = numbers->paramVect<int>("HPDCopyNumbers");
+  const CondData & copyNs  = numbers->paramVect<int>("HPDCopyNumbers");
   // inactive HPDs
   CondData inacts;
   bool inactiveHPDListInSmartIDs( false );
@@ -209,17 +189,13 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     const CondData& inactsHuman = numbers->paramVect<int>("InactiveHPDListInSmartIDs");
     inactiveHPDListInSmartIDs = true;
     inacts.reserve(inactsHuman.size());
-    for ( unsigned int inHpd = 0; inHpd<inactsHuman.size(); ++inHpd )
+    for ( CondData::const_iterator inHpd = inactsHuman.begin(); inHpd != inactsHuman.end(); ++inHpd )
     {
-      LHCb::RichSmartID myID( Rich::DAQ::HPDIdentifier(inactsHuman[inHpd]).smartID() );
-      if ( myID.isValid() ) 
-      {
-        inacts.push_back( myID );
-      }
+      const LHCb::RichSmartID ID( Rich::DAQ::HPDIdentifier(*inHpd).smartID() );
+      if ( ID.isValid() ) { inacts.push_back( ID ); }
       else
       {
-        error() << "Invalid smartID in the list of inactive HPDs "
-                << inactsHuman[inHpd] << endmsg;
+        error() << "Invalid smartID in the list of inactive HPDs " << *inHpd << endmsg;
       }
     }
   }
