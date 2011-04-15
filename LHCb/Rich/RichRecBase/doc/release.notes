@@ -6,8 +6,8 @@
 
 ! 2011-04-15 - Chris Jones
  - Suppress finalize() warnings about no pixels or photons being created.
-   Can happen in the HLT and is it really a problem. Instead just print info 
-   messages as normal.   
+   Can happen in the HLT and it is not really a problem. 
+   Instead just print info messages as normal.   
 
 !========================= RichRecBase v4r5 2011-04-04 =========================
 ! 2011-03-15 - Chris Jones

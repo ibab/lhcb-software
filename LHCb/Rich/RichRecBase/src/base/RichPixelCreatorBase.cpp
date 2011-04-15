@@ -139,7 +139,6 @@ namespace Rich
         info() << " Rejected         :  RICH1 = " << occ(m_hitCount[Rich::Rich1].rejectedPixels,m_Nevts)
                << "  RICH2 = " << occ(m_hitCount[Rich::Rich2].rejectedPixels,m_Nevts)
                << " HPD pixels / event" << endmsg;
-
         info() << lines << endmsg;
       }
     }
