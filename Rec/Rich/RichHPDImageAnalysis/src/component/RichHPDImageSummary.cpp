@@ -27,7 +27,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms", m_keep2Dhistos = false );
-  declareProperty( "FinalHPDFit", m_finalFit = true );
+  declareProperty( "FinalHPDFit",      m_finalFit = false );
 }
 
 //=============================================================================
