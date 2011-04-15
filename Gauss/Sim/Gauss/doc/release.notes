@@ -4,7 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================= Gauss v40r0 2011-04-13 ============================
+!========================= Gauss v40r0 2011-04-15 ============================
+! 2011-04-15 - Gloria Corti
+ - Fix error in Gauss-DEV.py that was picking up DDDB tag for 2010 instead of
+   2011.
+
 ! 2011-04-13 - Gloria Corti
  - New options for Gauss-MC10.py with standard options as in production.
  - Modify options in Gauss-DEV.py to pick up 2011 tags.
