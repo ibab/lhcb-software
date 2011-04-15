@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-15 - Olivier Callot
+ - fix access to DIM histograms with no database
+ - Display the database title in the legend of superimposed histos
+
 ! 2011-04-14 - Olivier Callot
  - Fix the saving of a new page to the database. 
 

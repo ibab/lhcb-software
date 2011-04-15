@@ -706,6 +706,8 @@ public:
   /// is in batch mode
   bool isBatch( ) const { return ( pres::Batch == presenterMode() ) ; } ;
 
+  void setDimDns();
+
   ClassDef(PresenterMainFrame, 0) // main editor window
 };
 

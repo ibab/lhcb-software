@@ -420,6 +420,8 @@ void PresenterMainFrame::buildGUI() {
     // Mode menu
     m_toolMenu = new TGPopupMenu(fClient->GetRoot());
     if ( m_editingAllowed ) {
+      m_toolMenu->AddEntry(m_toolSetDimDnsText, SET_DIM_DNS_COMMAND);
+      m_toolMenu->UnCheckEntry( SET_DIM_DNS_COMMAND);
       m_toolMenu->AddEntry(m_toolPageEditorOnline,
                            PAGE_EDITOR_ONLINE_MODE_COMMAND);
       m_toolMenu->CheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
@@ -1387,6 +1389,9 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break ;
   case UNDOCK_PAGE_COMMAND:
     m_pageDock->UndockContainer();
+    break;
+  case SET_DIM_DNS_COMMAND:
+    setDimDns( ) ;
     break;
   case OFFLINE_MODE_COMMAND:
     setPresenterMode( pres::History ) ;
@@ -3168,8 +3173,11 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
       std::cout << "Found " << knownTasks.size() << " tasks with 2011 publication." << std::endl;
       for ( std::vector<std::string>::iterator itS = knownTasks.begin();
             knownTasks.end() != itS; ++itS ) {
-        if ( (*itS).find( currentPartition() ) != 0 ) continue;
-        std::string taskName = (*itS).substr( (*itS).find("_")+1 );  // remove partition
+        std::string taskName = (*itS);
+        if ( "" != currentPartition() ) {
+          if ( taskName.find( currentPartition() ) != 0 ) continue;
+          taskName = taskName.substr( (*itS).find("_")+1 );  // remove partition
+        }
         taskName = taskName.substr( taskName.find("_")+1 );          // remove node name
         taskName = taskName.substr( 0, taskName.find("_") );       // remove the "_00"
         std::cout << "  Task " << (*itS ) << "-> node " << taskName << std::endl;
@@ -3648,7 +3656,7 @@ void PresenterMainFrame::addHistoToHistoDB() {
 void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl){
   OnlineHistogram* onlH = NULL;
   try {
-    onlH = m_histogramDB->getHistogram( histogramUrl );
+    if ( NULL != m_histogramDB ) onlH = m_histogramDB->getHistogram( histogramUrl );
   } catch (std::string sqlException) {
     onlH = NULL;
   }
@@ -5073,4 +5081,14 @@ void PresenterMainFrame::enablePageLoading() {
   m_pagesContextMenu->EnableEntry(M_LoadPage_COMMAND) ;
 }
 
+//=========================================================================
+//  
+//=========================================================================
+void PresenterMainFrame::setDimDns ( ) {
+  //setSystemEnvironment( "DIM_DNS_NODE", "hlta01" );
+  if (0 != m_dimBrowser) delete m_dimBrowser;
+  m_dimBrowser = new DimBrowser();
+  m_presenterInfo.setPartition( "" );
+  refreshPage();
+}
 

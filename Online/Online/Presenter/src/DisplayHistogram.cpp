@@ -71,14 +71,14 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_showReference( false ),
   m_isDummy( false )
 {
-  if ( NULL != m_onlineHist ) {
+  if ( NULL != hist ) {
     m_identifier = m_onlineHist->identifier();
     if ( hist->type() == OnlineHistDBEnv::TRE ) {
       m_isTrendPlot = true;
       m_shortName = hist->htitle();  // this is in fact the variable name!
-      hist->getDisplayOption( "SHOWTITLE", &m_title );
-      if ( "" == m_title ) m_title = m_shortName;
     }
+    hist->getDisplayOption( "SHOWTITLE", &m_title );
+    if ( "" == m_title ) m_title = m_shortName;
   } 
 }
 //=============================================================================
