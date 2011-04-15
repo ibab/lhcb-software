@@ -30,7 +30,8 @@ DECLARE_ALGORITHM_FACTORY( PatLHCbIDUp2MCHit );
 //=============================================================================
 PatLHCbIDUp2MCHit::PatLHCbIDUp2MCHit( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+  m_level1(0)
 {
   m_targetName = "Pat/LHCbIDMCHit";
   declareProperty( "TargetName", m_targetName );

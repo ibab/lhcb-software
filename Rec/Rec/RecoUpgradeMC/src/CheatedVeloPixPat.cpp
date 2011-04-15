@@ -147,20 +147,21 @@ StatusCode CheatedVeloPixPat::execute() {
       if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
       double dy = pixSize.second*clusInfo.fractionalError.second;
       
-      VeloPixHit* hit = new VeloPixHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,int(clusInfo.pixel.sensor()));
-      hit->setLHCbID(temp);
+      VeloPixHit *hit = new VeloPixHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,int(clusInfo.pixel.sensor()));
       
+      hit->setLHCbID(temp);
       if (prevSensor != clusInfo.pixel.sensor()){
         prevSensor= clusInfo.pixel.sensor();         
         newtrack.addXHit(hit);
-        countHits ++ ;
       }
+      else delete hit; 
+      countHits = newtrack.getHitsNum();
     }
     VeloPixTracks refittracks;
     VeloPixHits bhits = newtrack.hits();
     if(bhits.size()>2){
-      double m_dist = 0.13;
-      double m_chi2 = 0.0001;
+      double m_dist = 0.052;
+//      double m_chi2 = 0.0001;
       for(VeloPixHits::iterator itH = bhits.begin(); (itH+2) != bhits.end(); itH++){
         if((*itH)->getused()) continue;        
         if((*(itH+1))->getused()) continue;
@@ -176,14 +177,14 @@ StatusCode CheatedVeloPixPat::execute() {
           if(refittrack.getHitsNum()>1){
             if(fabs((*itH1)->x()-refittrack.xAtz((*itH1)->z())) > m_dist ) continue;
             refittrack.addXHit(&(*(*itH1))); 
-            //           if( refittrack.getChi2()>(33+2*refittrack.getHitsNum())) {
-            if( refittrack.probChi2(refittrack.getChi2(),refittrack.getHitsNum()-2) < m_chi2 ) {
+                       if( refittrack.getChi2()>(13+2*refittrack.getHitsNum())) {
+           // if( refittrack.probChi2(refittrack.getChi2(),refittrack.getHitsNum()-2) < m_chi2 ) {
               refittrack.removeXHit(&(*(*itH1)));
               continue;
             }
             refittrack.UpdateYHits();
-            if( refittrack.probChi2(refittrack.getChi2(),2*(refittrack.getHitsNum()-2)) < m_chi2 ) {
-            // if( refittrack.getChi2()>(4*refittrack.getHitsNum()+29)) {
+//            if( refittrack.probChi2(refittrack.getChi2(),2*(refittrack.getHitsNum()-2)) < m_chi2 ) {
+             if( refittrack.getChi2()>(4*refittrack.getHitsNum()+9)) {
               refittrack.removeXHit(&(*(*itH1)));
               continue;
             }
@@ -280,6 +281,9 @@ StatusCode CheatedVeloPixPat::execute() {
         }
         outputTracks->insert(newTrack);
       }
+    }
+    for(VeloPixHits::iterator itH = bhits.begin(); itH != bhits.end(); itH++){
+      delete *itH;      
     }
   }
     

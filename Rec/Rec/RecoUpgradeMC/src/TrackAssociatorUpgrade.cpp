@@ -43,8 +43,10 @@ DECLARE_ALGORITHM_FACTORY( TrackAssociatorUpgrade );
 TrackAssociatorUpgrade::TrackAssociatorUpgrade( const std::string& name,
                                   ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm( name, pSvcLocator ),
+  m_debugLevel(0),
   m_fractionOK(0.),
   m_nTotVelo(0.),
+  m_nTotVeloPix(0.),
   m_nTotTT1(0.),
   m_nTotSeed(0.),
   m_nTotMuon(0.),

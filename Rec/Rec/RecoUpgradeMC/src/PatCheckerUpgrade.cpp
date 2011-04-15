@@ -29,7 +29,10 @@ DECLARE_ALGORITHM_FACTORY( PatCheckerUpgrade );
 //=============================================================================
 PatCheckerUpgrade::PatCheckerUpgrade( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+  m_level1(0),
+  m_initTime(0),
+  m_partTime(0)
 {
   declareProperty( "CheckMissedVeloPix",   m_checkMissedVeloPix    = false );
   declareProperty( "CheckMissedForward",   m_checkMissedForward    = false );
