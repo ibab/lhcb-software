@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-04-15 - Marco Cattaneo
+ - Remove obsolete files ETC.opts, ETCSeq.opts, ReadETC.opts, WriteETC.opts
+
 !========================= L0DU v10r13 2011-04-05 =========================
 ! 2011-03-23 - Julien Cogan
  - L0Conf : follow up the change in the L0Muon emulator which now takes the  
