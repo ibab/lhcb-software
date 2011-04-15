@@ -373,8 +373,6 @@ class Brunel(LHCbConfigurableUser):
         if dstType in [ "XDST", "DST", "RDST", "SDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
-            # Do not pack DC06 DSTs, for consistency with existing productions
-            if self.getProp("DataType") == "DC06": packType = "NONE"
 
             # event output
             dstWriter = OutputStream( writerName )
