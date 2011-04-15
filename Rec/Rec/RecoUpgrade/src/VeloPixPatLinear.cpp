@@ -29,7 +29,14 @@ DECLARE_ALGORITHM_FACTORY( VeloPixPatLinear )
 VeloPixPatLinear::VeloPixPatLinear( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_sensor(48)
+    m_sensor(48),
+    m_timeTotal(0),  
+    m_timePrepare(0),
+    m_timeFind4(0),
+    m_timeFind3(0),
+    m_timeCross(0),
+    m_timeMerge(0),
+    m_timeFinal(0)
 {
   declareProperty("outputTracksLocation",      m_outputTracksLocation = LHCb::TrackLocation::VeloPix);
   declareProperty("TrackChi2LimitePerNDOF",    m_chi2 = 0.00001);
