@@ -137,8 +137,7 @@ class FillDatabase(object):
                                                        f.GetName       () )
 
             ## fill the histograms 
-            histos,lambdas = self.fillHistos ( FillSelector ,
-                                               tree         ,
+            histos,lambdas = self.fillHistos ( tree         ,
                                                histos       ,
                                                lambdas      ,
                                                cellFunc     ,

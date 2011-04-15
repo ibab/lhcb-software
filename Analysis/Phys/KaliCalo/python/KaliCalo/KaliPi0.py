@@ -41,6 +41,8 @@ from   KaliCalo.Configuration    import firstPass, secondPass
 import KaliCalo.Kali             as Kali 
 import KaliCalo.ZipShelve        as ZipShelve 
 
+#importOptions('validationFMDST.py')
+
 ##kali = firstPass (
 ##    ## ``Physics''
 ##    PtGamma          = 250 * MeV ,
@@ -64,7 +66,7 @@ kali = secondPass (
     ## general 
     DataType         = '2010',
     PrintFreq        =  1000 ,
-    EvtMax           =  -1
+    EvtMax           =  100
     )
 
 # =============================================================================
@@ -83,11 +85,19 @@ if '__main__' == __name__ :
     from GaudiPython.Bindings import AppMgr    
     gaudi = AppMgr()
     
+    ## === run with test fmDSTs as an input
     evtSel = gaudi.evtSel()
     castor   =  'castor:/castor/cern.ch/user/d/dsavrina/1759/'
     pattern  =  '%d/outputdata/KaliPi0_2010test.fmDST'
     evtSel.open ( [ castor+pattern%i for i in range(0,3) ] )
-    gaudi.run(-1)
+
+    ## === OR with test SDSTs 
+    #from Configurables import DaVinci
+    #DaVinci().InputType = 'SDST'                            # use SDSTs as an input
+    ### SDSTs for Stripping tests, 2010 data, mu = 2.7
+    #importOptions('$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py')
+
+    gaudi.run(100)
     
     from   KaliCalo.FitUtils import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 

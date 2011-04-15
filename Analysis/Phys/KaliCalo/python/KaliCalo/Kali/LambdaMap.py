@@ -12,6 +12,9 @@ __date__ = "$Date$"
 __version__ = "$Revision$"
 
 # =============================================================================    
+import KaliCalo.Cells   as Cells
+Zones = Cells.Zones
+# =============================================================================    
 ## Helper class to hold the map of { cellID : lambdas }
 class LambdaMap(object) :
     """
