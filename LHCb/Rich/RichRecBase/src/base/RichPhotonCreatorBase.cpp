@@ -194,11 +194,7 @@ void PhotonCreatorBase::handle ( const Incident & incident )
 
 void PhotonCreatorBase::printStats() const
 {
-
-  if ( nEvents() > 0
-       && !( m_photCount[Rich::Aerogel]  == 0 &&
-             m_photCount[Rich::Rich1Gas] == 0 &&
-             m_photCount[Rich::Rich2Gas] == 0  ) )
+  if ( nEvents() > 0 )
   {
 
     // statistical tool
@@ -216,11 +212,6 @@ void PhotonCreatorBase::printStats() const
            << "=================================================================" << endmsg;
 
   }
-  else
-  {
-    Warning( "No photon candidates produced", StatusCode::SUCCESS );
-  }
-
 }
 
 StatusCode PhotonCreatorBase::reconstructPhotons() const
