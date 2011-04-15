@@ -1,8 +1,0 @@
-#pragma print on
-// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-// The file $STDOPTS/DC06Conditions.opts is obsolete
-// Please include $DDDBROOT/options/DC06.opts instead
-// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-#pragma print off
-#include "$DDDBROOT/options/DC06.opts"
-

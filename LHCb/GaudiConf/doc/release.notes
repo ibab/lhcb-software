@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-04-15 - Marco Cattaneo
+ - Remove obsolete options files DC06Conditions.opts, DetDesc.opts
+
 !========================= GaudiConf v13r9 2011-02-22 =========================
 ! 2011-02-16 - Illya Shapoval
  - 'DQFLAGStag' property added to the LHCbApp configurable. Default one is

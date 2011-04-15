@@ -1,7 +1,0 @@
-#pragma print on
-// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-// The file $STDOPTS/DetDesc.opts is obsolete
-// Please include $DDDBROOT/options/DDDB.opts instead
-// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
-#pragma print off
-#include "$DDDBROOT/options/DDDB.opts"
