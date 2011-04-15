@@ -21,7 +21,7 @@ class DDDBConf(ConfigurableUser):
                    }
     _propertyDocDct = {
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2011", "2010", "2009","2008","MC09","DC06","Upgrade"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2011", "2010", "2009","2008","MC09","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
 
@@ -87,7 +87,7 @@ class DDDBConf(ConfigurableUser):
             raise ValueError("Invalid value %r for property DetDesc().DataType."
                              " (allowed: %r)"% (dataType,
                                                 self.__data_types_handlers__.keys()))
-        if dataType in [ "DC06", "MC09", "Upgrade" ]:
+        if dataType in [ "MC09", "Upgrade" ]:
             sim = self.getProp("Simulation")
             if not sim:
                 log.info("%s data is _always_ simulation", dataType )
@@ -165,36 +165,9 @@ class DDDBConf(ConfigurableUser):
         # Need also to change connection string to DDDB
         CondDB().PartitionConnectionString = { "DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
 
-    def __DC06_conf__(self):
-        """
-        Default configuration for DC06 MonteCarlo production and analysis
-        """
-        # Set the tags
-        self.__set_tag__(["DDDB"],     "DC06-20090902")
-        self.__set_tag__(["LHCBCOND"], "DC06-20081002")
-
-        # Specials for DC06
-
-        # The configuration of the database is like the one for real data (no SIMCOND)
-        CondDB().Simulation = False
-
-        # Force negative polarity (i.e. don't take it from ONLINE)
-        from Configurables import MagneticFieldSvc
-        MagneticFieldSvc(ForceToUseDownMap = True,
-                         OutputLevel = ERROR)
-
-        # Set initial event time to something close to 0 to avoid to use the current
-        # time (causes failures when the ONLINE snapshots are updated).
-        from Configurables import EventClockSvc
-        EventClockSvc(InitialTime = 1)
-
-        # Backward compatibility Dll to read HepMC 1 record
-        ApplicationMgr().Dlls += [ "HepMCBack" ]
-
     __data_types_handlers__ =  { "2011": __2011_conf__,
                                  "2010": __2010_conf__,
                                  "2009": __2009_conf__,
                                  "2008": __2008_conf__,
                                  "MC09": __MC09_conf__,
-                                 "Upgrade": __Upgrade_conf__,
-                                 "DC06": __DC06_conf__ }
+                                 "Upgrade": __Upgrade_conf__ }

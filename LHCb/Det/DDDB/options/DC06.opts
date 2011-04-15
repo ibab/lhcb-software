@@ -1,9 +1,0 @@
-// Defines standard conditions for DC06 production data
-
-// DC06 database tags
-DDDB.DefaultTAG = "DC06-20081002";
-LHCBCOND.DefaultTAG = "DC06-20081002";
-
-// Force negative polarity (i.e. don't take it from ONLINE)
-MagneticFieldSvc.Polarity = -1;
-MagneticFieldSvc.OutputLevel = 5;
