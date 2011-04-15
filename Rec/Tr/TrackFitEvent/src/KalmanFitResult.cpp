@@ -10,15 +10,17 @@ namespace LHCb
   
   // copy constructor
   KalmanFitResult::KalmanFitResult(const KalmanFitResult& rhs) 
-    : TrackFitResult(rhs), m_seedCovariance(rhs.m_seedCovariance),
-      m_nTrackParameters(rhs.m_nTrackParameters), m_chi2CacheValid(false),m_errorFlag(0x00),m_bidirectionalSmoother(true)
+    : TrackFitResult(rhs), m_seedCovariance(rhs.m_seedCovariance),m_nTrackParameters(rhs.m_nTrackParameters)
+    , m_chi2CacheValid(rhs.m_chi2CacheValid),m_errorFlag(rhs.m_errorFlag)
+    ,m_bidirectionalSmoother(rhs.m_bidirectionalSmoother)
   {
     establishNodeLinks() ;
   }
   
   // copy from TrackFitResult
   KalmanFitResult::KalmanFitResult(const TrackFitResult& rhs) 
-    : TrackFitResult(rhs),m_nTrackParameters(5), m_chi2CacheValid(false),m_errorFlag(0x00),m_bidirectionalSmoother(true) {}
+    : TrackFitResult(rhs),m_nTrackParameters(5), m_chi2CacheValid(false)
+    ,m_errorFlag(0x00),m_bidirectionalSmoother(true) {}
 		    
   // destructor
   KalmanFitResult::~KalmanFitResult() {}
