@@ -6,12 +6,14 @@
     <text>-v</text>
     <text>../../options/LoadDDDB.py</text>
   </set></argument>
+<argument name="timeout"><integer>1200</integer></argument>
 <argument name="options"><text>
 from Gaudi.Configuration import *
 from Configurables import DDDBConf, CondDB
 
-DDDBConf(DataType = "DC06")
-CondDB().useLatestTags(DataType = "DC06")
+DDDBConf(DataType = "2010")
+CondDB().Simulation = True
+CondDB().UseLatestTags = ["MC10"]
 </text></argument>
 <argument name="validator"><text>
 countErrorLines()

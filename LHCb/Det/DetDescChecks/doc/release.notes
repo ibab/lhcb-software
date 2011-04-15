@@ -7,6 +7,10 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2011-04-15 - Marco Cattaneo
+ - Remove test loaddddb.qmt, was testing DC06, no longer supported
+ - Add test loadddddb-sim-mc10.qmt
+
 !========================= DetDescChecks v5r5 2011-02-22 =========================
 ! 2011-02-01 - Illya Shapoval
  -  Added tests 'loaddddb2011.qmt','loaddddb-sim-2011.qmt'.
