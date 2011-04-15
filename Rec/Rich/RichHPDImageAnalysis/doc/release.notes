@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2011-04-15 - Chris Jones
+ - Fix a seg. fault in the HPD imge fitting algorithm
+
 ! 2011-04-08 - Chris Jones
  - Bug fixes to the alignment and calibration scripts to handle CET and GMT
    time zones correctly.

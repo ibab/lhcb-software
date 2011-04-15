@@ -27,6 +27,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms", m_keep2Dhistos = false );
+  declareProperty( "FinalHPDFit", m_finalFit = true );
 }
 
 //=============================================================================
@@ -47,10 +48,10 @@ StatusCode Summary::initialize()
 
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
 
-  const LHCb::RichSmartID::Vector & activeHPDs = m_RichSys->activeHPDRichSmartIDs();
+  const LHCb::RichSmartID::Vector & allHPDs = m_RichSys->allHPDRichSmartIDs();
 
-  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = activeHPDs.begin();
-        iHPD != activeHPDs.end(); ++iHPD )
+  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = allHPDs.begin();
+        iHPD != allHPDs.end(); ++iHPD )
   {
     const Rich::DAQ::HPDCopyNumber hpdID = m_RichSys->copyNumber( *iHPD );
 
@@ -61,7 +62,7 @@ StatusCode Summary::initialize()
     {
       m_histo[*iHPD] = create2D( name.str() );
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Created histogram " << name.str() << " " << m_histo[*iHPD] << endmsg;
+        verbose() << "Created image histogram for " << *iHPD << endmsg;
     }
     else
     {
@@ -104,37 +105,34 @@ StatusCode Summary::execute()
           iIngress != mapIngress.end(); ++iIngress )
     {
 
-      const Rich::DAQ::HPDMap& mapHPD = (iIngress->second).hpdData() ;
+      const Rich::DAQ::HPDMap & mapHPD = (iIngress->second).hpdData();
 
       for ( Rich::DAQ::HPDMap::const_iterator iHPD = mapHPD.begin();
             iHPD != mapHPD.end(); ++iHPD )
       {
-        const LHCb::RichSmartID &smartID = (iHPD->second).hpdID();
+        const LHCb::RichSmartID smartID = (iHPD->second).hpdID();
 
         // Skip inhibited HPDs
-        if ( (iHPD->second).header().inhibit() ) continue;
+        if ( (iHPD->second).header().inhibit() ) { continue; }
+        // skip bad HPD IDs
+        if ( !smartID.isValid() ) { continue; }
 
-        if ( !smartID.isValid() )
+        // Find an fill histogram image plot
+        PD2Histo::iterator iHist = m_histo.find(smartID);
+        if ( iHist == m_histo.end() )
         {
-          Warning("Invalid Rich Smart ID").ignore();
-          continue;
-        }
-
-        const LHCb::RichSmartID::Vector& hitIDs = (iHPD->second).smartIDs() ;
-
-        TH2D* hist = m_histo[ smartID ];
-
-        if ( ! hist )
-        {
-          Warning( "Cannot retrieve boundary FCN, invalid hardware ID" ).ignore();
+          std::ostringstream mess;
+          mess << "No HPD Image histogram for " << smartID;
+          Warning( mess.str() ).ignore();
           continue;
         }
         else
         {
+          const LHCb::RichSmartID::Vector & hitIDs = (iHPD->second).smartIDs() ;
           for ( LHCb::RichSmartID::Vector::const_iterator iHit = hitIDs.begin();
                 iHit != hitIDs.end(); ++iHit )
           {
-            hist->Fill( iHit->pixelCol(), iHit->pixelRow() ) ;
+            iHist->second->Fill( iHit->pixelCol(), iHit->pixelRow() );
           }
         }
 
@@ -156,16 +154,19 @@ StatusCode Summary::finalize()
   debug() << "    Algorithm has seen " << m_nEvt << " events" << endmsg;
 
   // Make summary info
-  verbose() << "Fitting histograms and making summaries" << endmsg;
-  for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
+  if ( m_finalFit )
   {
-    summaryINFO( it->first, it->second );
+    verbose() << "Fitting histograms and making summaries" << endmsg;
+    for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
+    {
+      summaryINFO( it->first, it->second );
+    }
   }
 
   // Clean out histogram storage
-  verbose() << "Cleaning out histograms" << endmsg;
   if ( !m_keep2Dhistos )
   {
+    verbose() << "Cleaning out histograms" << endmsg;
     for ( PD2Histo::iterator it = m_histo.begin(); it != m_histo.end(); ++it )
     {
       delete it->second;
@@ -229,7 +230,8 @@ void Summary::summaryINFO( const LHCb::RichSmartID id,
   const unsigned int nPix = (unsigned int) (hist->Integral());
   if ( nPix < m_minOccupancy )
   {
-    debug() << "Fit for HPD " << copyNumber << " ABORTED -> Too few hits (" << nPix << ")" << endmsg;
+    debug() << "Fit for HPD " << copyNumber
+            << " ABORTED -> Too few hits (" << nPix << ")" << endmsg;
     return;
   }
 

@@ -119,8 +119,11 @@ namespace Rich
       /// Maximum allowed movement before triggering the update
       double m_maxMovement;
 
-      /// Flag to turn on the saving of 2D histograms
+      /// Flag to turn on/off the saving of 2D histograms
       bool m_keep2Dhistos;
+
+      /// Flag to turn on/off the final HPD fitting and summary histograms
+      bool m_finalFit;
 
       /// HPD Fitter
       mutable Rich::HPDImage::HPDFit m_fitter;
