@@ -5,6 +5,7 @@
 // STD & STL
 // ============================================================================
 #include <set>
+#include <memory>
 // ============================================================================
 // Event
 // ============================================================================
@@ -472,7 +473,9 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     _p1.SetPx ( -_p1.Px () ) ;
     _p1.SetPy ( -_p1.Py () ) ;
     const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
-    LHCb::Particle * fakePi0 = pi0.particle()->clone() ;
+    
+    // create the fake pi0 
+    std::auto_ptr<LHCb::Particle> fakePi0 ( pi0.particle()->clone() ) ;
     fakePi0->setMomentum(fake) ;
     
     bool good    =             ( m12      < 335 * MeV ) ;
@@ -508,8 +511,8 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     
     /// apply pi0-cut:
     //if  ( !m_pi0Cut ( pi0 ) ) { continue ; }               // CONTINUE
-    good    = good    && m_pi0Cut ( pi0 )     ;
-    goodBkg = goodBkg && m_pi0Cut ( fakePi0 ) ;
+    good    = good    && m_pi0Cut ( pi0           ) ;
+    goodBkg = goodBkg && m_pi0Cut ( fakePi0.get() ) ;
     if ( (!good) && (!goodBkg) ) { continue ; }            // CONTINUE
     
     const Gaudi::LorentzVector mom1 = g1->momentum() ;

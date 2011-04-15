@@ -7,6 +7,16 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2011-04-15 - Vanya Belyaev
+
+ - Pi0.cpp :
+   fix a memory leak problem: cloned fakePi0 is never deleted.
+   many thanks to Marco Cattaneo 
+
+ - cmt/requirements 
+
+   version increase to v4r9p1.
+
 !========================== KaliCalo v4r9 2011-03-10 ==========================
 
 ! 2011-02-24 - Daria Savrina
