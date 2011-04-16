@@ -17,6 +17,13 @@
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
+#include "Event/ProtoParticle.h"
+#include "Event/Track.h"
+#include "Event/State.h"
+#include "Event/CaloHypo.h"
+
 // local
 #include "DaVinciInit.h"
 
@@ -27,7 +34,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DaVinciInit );
+DECLARE_ALGORITHM_FACTORY( DaVinciInit )
 
 
 //=============================================================================
@@ -96,6 +103,15 @@ StatusCode DaVinciInit::execute() {
              << " in last " << m_increment << " events" << endmsg ;
     }
     m_lastMem = mem ;
+
+    // CRJ : Test releasing memory pools
+    boost::singleton_pool<LHCb::Particle,sizeof(LHCb::Particle)>::release_memory();
+    boost::singleton_pool<LHCb::Vertex,sizeof(LHCb::Vertex)>::release_memory();
+    boost::singleton_pool<LHCb::ProtoParticle,sizeof(LHCb::ProtoParticle)>::release_memory();
+    boost::singleton_pool<LHCb::Track,sizeof(LHCb::Track)>::release_memory();
+    boost::singleton_pool<LHCb::State,sizeof(LHCb::State)>::release_memory();
+    boost::singleton_pool<LHCb::CaloHypo,sizeof(LHCb::CaloHypo)>::release_memory();
+ 
   }
   
   return StatusCode::SUCCESS;
