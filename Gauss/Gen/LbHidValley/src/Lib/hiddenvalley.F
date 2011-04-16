@@ -71,6 +71,7 @@ C... Remember To Recompile When Changing This File!!!
       WRITE(*,*)" PIMASS: ", PIMASS
       WRITE(*,*)" PIZLIF " , PIZLIF
       WRITE(*,*)" PIPLIF " , PIPLIF
+      WRITE(*,*)" EBEAM "  , BEAMENE
       
       IF (PIMASS.LT.25.D0) THEN ! Error control
         WRITE (*,*) ""

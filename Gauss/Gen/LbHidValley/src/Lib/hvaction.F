@@ -49,18 +49,17 @@ C ======================================================================
       INTEGER I,IDUMMY
 C ======================================================================
       
-      DO I = 5,9                ! skip the initial protons and the parent partons
+      DO I = 5,9  ! skip the initial protons and the parent partons
         
-        QEE(I-4) = PYP(I,4)     ! store four-momenta
-        QPX(I-4) = PYP(I,1)     ! 
-        QPY(I-4) = PYP(I,2)
-        QPZ(I-4) = PYP(I,3)
-        QMS(I-4) = PYP(I,5)     ! and mass [need the Z'* mass]
-        IQTYP(I-4) = K(I,2)     ! and particle type
+        QEE   ( I-4 ) = PYP(I,4)   ! store four-momenta
+        QPX   ( I-4 ) = PYP(I,1)   ! 
+        QPY   ( I-4 ) = PYP(I,2)
+        QPZ   ( I-4 ) = PYP(I,3)
+        QMS   ( I-4 ) = PYP(I,5)   ! and mass [need the Z'* mass]
+        IQTYP ( I-4 ) = K(I,2)     ! and particle type
         
       ENDDO 
-      
-      
+            
 C - At this point compute boost and rotation of the final state
       
       QQVX = QPX(3)/QEE(3)

@@ -58,7 +58,7 @@ C ======================================================================
       
 C...Scale factor for converting from QCD to vQCD is the ratio
 C... of the V-pion mass PIMASS to the ordinary pion mass 135 MeV
-      
+
       VQSCALE=PIMASS/0.135D0
       
       ECMHAT = HVACTION ( IDUMMY )
@@ -69,7 +69,7 @@ C... of the V-pion mass PIMASS to the ordinary pion mass 135 MeV
 C - Set up "brute-force" low-mass q-qbar system and hadronize it.
       ECM = ECMHAT/VQSCALE      ! v-quark pair invt mass is Z'* mass
                                 ! scale the energy down by VQSCALE
-      
+
 C*    modify the decay:
       DO I = 1, 500
         

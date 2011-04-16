@@ -58,6 +58,8 @@ C ======================================================================
         HVGETPAR = PIZLIF 
       ELSEIF ( 'PIPLIF' .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
         HVGETPAR = PIPLIF 
+      ELSEIF ( 'EBEAM'  .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
+        HVGETPAR = BEAMENE 
       ELSE 
         WRITE(*,*) 'INVALID NAME:"' , TITLE(1:LENOCCHV(TITLE)), '"'
       ENDIF 

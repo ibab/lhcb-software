@@ -72,18 +72,20 @@ int main(int argc, char* argv[] )
      "Produce help message and exit") 
     ("nevents,n" , po::value<int>()->default_value(_nEvents),
      "Number of events to produce") 
-    ("output,o"  , po::value<std::string>()->default_value(_oFile) ,
+    ("output,o" , po::value<std::string>()->default_value(_oFile) ,
      "Name of output file (in LHE format)") 
-    ("seed,s"  , po::value<int>() ,
+    ("seed,s"   , po::value<int>() ,
      "Random seed (MRPY(1))") 
-    ("zpmass"  , po::value<double>()->default_value(3000) , 
+    ("zpmass"   , po::value<double>() -> default_value(3000) , 
      "Z'* mass in GeV") 
-    ("pimass"  , po::value<double>()->default_value(35) , 
+    ("pimass"   , po::value<double>() -> default_value(35) , 
      "piv mass in GeV") 
-    ("pizlif"  , po::value<double>()->default_value(80) , 
+    ("pizlif"   , po::value<double>() -> default_value(80) , 
      "piv0 lifetime ") 
-    ("piplif"  , po::value<double>()->default_value(-1) , 
+    ("piplif"   , po::value<double>() -> default_value(-1) , 
      "piv+ lifetime " )
+    ("ebeam"    , po::value<double>() -> default_value( 3.5e+3 ) , 
+     "beam energy in GeV" )
     ;
   
   po::positional_options_description pos ;
@@ -125,6 +127,7 @@ int main(int argc, char* argv[] )
   const double pimass = values["pimass"].as<double>() ;
   const double pizlif = values["pizlif"].as<double>() ;
   const double piplif = values["piplif"].as<double>() ;
+  const double ebeam  = values["ebeam" ].as<double>() ;
   
   if      ( !HidValley::setPar ( "ZPMASS" , zpmass ) ) 
   {
@@ -144,6 +147,11 @@ int main(int argc, char* argv[] )
   else if ( !HidValley::setPar ( "PIPLIF" , piplif ) ) 
   {
     std::cerr << "Could not set parameter PIPLIF" << std::endl ;
+    exit(1) ;  
+  }
+  else if ( !HidValley::setPar ( "EBEAM"  , ebeam ) ) 
+  {
+    std::cerr << "Could not set parameter EBEAM" << std::endl ;
     exit(1) ;  
   }
   

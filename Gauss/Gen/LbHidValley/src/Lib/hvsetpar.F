@@ -63,6 +63,9 @@ C ======================================================================
       ELSEIF ( 'PIPLIF' .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
         PIPLIF   = VALUE 
         HVSETPAR = PIPLIF 
+      ELSEIF ( 'EBEAM'  .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
+        BEAMENE  = VALUE 
+        HVSETPAR = BEAMENE
       ELSE 
         WRITE(*,*) 'INVALID TITLE:"' , TITLE(1:LENOCCHV(TITLE)) , '"'
       ENDIF 

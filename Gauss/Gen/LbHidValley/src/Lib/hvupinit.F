@@ -49,8 +49,8 @@ C ======================================================================
 C ======================================================================
       INTEGER IIISET 
       LOGICAL FIRST
-      DATA FIRST /.TRUE./
-      SAVE FIRST 
+      DATA    FIRST /.TRUE./
+      SAVE    FIRST 
 C ======================================================================
       IF ( FIRST  ) THEN 
         WRITE(*,*)'LbHidValley: HIDDEN VALLEY UPINIT'
@@ -61,14 +61,19 @@ C
       
       IDBMUP (1) = 2212 
       IDBMUP (2) = 2212 
-      EBMUP  (1) = 7.0E+03 
-      EBMUP  (2) = 7.0E+03 
-      PDFGUP (1) = 4 
-      PDFGUP (2) = 4 
+      
+C      EBMUP  (1) = 7.0E+03 
+C      EBMUP  (2) = 7.0E+03 
+      
+      EBMUP  (1) = BEAMENE 
+      EBMUP  (2) = BEAMENE 
+      
+      PDFGUP (1) =  4 
+      PDFGUP (2) =  4 
       PDFSUP (1) = 46 
       PDFSUP (2) = 46
-      IDWTUP     = 1 
-      NPRUP      = 1 
+      IDWTUP     =  1 
+      NPRUP      =  1 
       
       XSECUP (1) = 1.0
       XERRUP (1) = 1.0 

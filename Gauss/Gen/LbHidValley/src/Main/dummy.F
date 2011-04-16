@@ -8,6 +8,8 @@ C ============================================================================
       END
       SUBROUTINE lheupinit
       END
+      SUBROUTINE oniapairs_upinit
+      END
 C ============================================================================
       SUBROUTINE acermc_upevnt
       END
@@ -16,6 +18,8 @@ C ============================================================================
       SUBROUTINE alpgen_upevnt
       END
       SUBROUTINE lheupevnt
+      END
+      SUBROUTINE oniapairs_upevnt
       END
 C ============================================================================
 C The END 

@@ -11,7 +11,7 @@
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/ToolFactory.h" 
-#include "GaudiKernel/ParticleProperty.h" 
+#include "GaudiKernel/SystemOfUnits.h" 
 // ============================================================================
 // Event
 // ============================================================================
@@ -35,6 +35,10 @@
 // ============================================================================
 #include "LbHidValley/HidValley.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/static_assert.hpp"
+// ============================================================================
 /** @class HidValleyProduction
  *  the first attempt to perform 
  *  the Hidden Valley production embedded into Gauss.
@@ -43,16 +47,21 @@
  */
 class HidValleyProduction : public PythiaProduction 
 {
+  // ==========================================================================
   // friend factory for instantiation 
   friend class ToolFactory<HidValleyProduction> ;
+  // ==========================================================================
 public:
-  /// initilize the production tool 
+  // ==========================================================================
+  /// initialize the production tool 
   virtual StatusCode initialize() ;
   /// generate the event
   virtual StatusCode generateEvent
   ( HepMC::GenEvent*    theEvent     , 
     LHCb::GenCollision* theCollision ) ;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /** standard constructor 
    *  @param type   tool type (?)
    *  @param name   tool name 
@@ -63,15 +72,22 @@ protected:
     const std::string& name   , 
     const IInterface*  parent ) 
     : PythiaProduction ( type , name , parent ) 
+    , m_beamene        ( 7.0 * Gaudi::Units::TeV ) 
   {
     PythiaProduction::m_defaultSettings.clear() ;
-    /// postpone the PyInit initialization 
-    setProperty ( "PostponePyInit" , true ) ;
-    setProperty ( "ValidateHEPEVT" , true ) ;
+    //
+    // postpone the PyInit initialization 
+    Assert ( setProperty ( "ValidateHEPEVT" , true ).isSuccess () , 
+             "Unable to set property 'ValidateHEPEVT'" ) ;
+    declareProperty 
+      ( "BeamEnergy" , 
+        m_beamene    , 
+        "Beam energy for Hidden-Valley production" ) ;
+    
   } 
   /// virtual and protected desctructor 
   virtual ~HidValleyProduction() {}
-  
+  // ==========================================================================  
 private:
   // ==========================================================================
   /// default constructor is disabled 
@@ -83,8 +99,7 @@ private:
   // ==========================================================================
 private:
   // ==========================================================================
-  typedef std::set<std::string> Stable ;
-  Stable m_stable ;
+  double m_beamene ;
   // ==========================================================================
 } ;
 // ============================================================================
@@ -92,15 +107,18 @@ private:
 // ============================================================================
 StatusCode HidValleyProduction::initialize() 
 {
-  //return GaudiTool::initialize() ;
-  //return PythiaProduction::initialize () ;
+  // return GaudiTool::initialize() ;
+  // return PythiaProduction::initialize () ;
   StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
-
+  
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
-  HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
-  HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
-  HepMC::HEPEVT_Wrapper::set_max_number_entries( 10000 ) ; 
+  BOOST_STATIC_ASSERT( 4 == sizeof (    int ) ) ;
+  BOOST_STATIC_ASSERT( 8 == sizeof ( double ) ) ;
+  //
+  HepMC::HEPEVT_Wrapper::set_sizeof_int         (     4 ) ;
+  HepMC::HEPEVT_Wrapper::set_sizeof_real        (     8 ) ;
+  HepMC::HEPEVT_Wrapper::set_max_number_entries ( 10000 ) ; 
   
   // use PYGIVE commands (if any) (as THE LAST action)
   for ( CommandVector::const_iterator item = 
@@ -131,21 +149,27 @@ StatusCode HidValleyProduction::generateEvent
   const double zpmass = Pythia::pydat2().pmas (32,1) /* 3000 */ ;
   if ( !HidValley::setPar ( "ZPMASS" , zpmass  ) ) 
   { return Error ( " Could not set parameter 'ZPMASS' " ) ; }
+  //
   const double pimass = Pythia::pydat2().pmas (35,1) /* 35 */   ;
   if ( !HidValley::setPar ( "PIMASS" , pimass  ) ) 
   { return Error ( " Could not set parameter 'PIMASS' " ) ; }
+  //
   const double pizlif = Pythia::pydat2().pmas (35,4) /* 80 */   ;
   if ( !HidValley::setPar ( "PIZLIF" , pizlif ) ) 
   { return Error ( " Could not set parameter 'PIZLIF' " ) ; }
+  //
   const double piplif = Pythia::pydat2().pmas (36,4) /* 80 */   ;
-  if ( !HidValley::setPar ( "PIPLIF" , piplif ) ) 
+  if ( !HidValley::setPar ( "PIPLIF" , piplif    ) ) 
   { return Error ( " Could not set parameter 'PIPLIF' " ) ; }
+  //
+  if ( !HidValley::setPar ( "EBEAM"  , m_beamene / Gaudi::Units::GeV ) ) 
+  { return Error ( " Could not set parameter 'EBEAM'  " ) ; }
   //
   Pythia::SetUserProcess ( 4 ) ;
   // Generate Event
   const bool OK = HidValley::hvEvent () ;
   if ( !OK ) { return Error ( "Error from HidValley::hvEvent" ) ; }
-
+  
   StatusCode sc = toHepMC ( theEvent , theCollision ) ;
   
   if ( msgLevel ( MSG::VERBOSE ) ) 

@@ -40,6 +40,10 @@ C ======================================================================
 C- Include Files
 C ======================================================================
 #include "Pythia.inc"
+C ======================================================================
+C Pythia/GENSER 
+C ======================================================================
+#include "HepXUP.inc"
 C =====================================================================
 C Local 
 C =====================================================================
@@ -77,6 +81,7 @@ C...
       DO I = 1,500
         MSUB(I) = 0             ! switch OFF *ALL* processes 
       ENDDO 
+
       MSUB(141)=1               ! drell yan to Z' with interference
       PMAS(32,1) = ZPMASS       ! set zprime mass
       CKIN(1) = ZPMASS/1.5D0    ! set minimum energy of d-y pair not too low
@@ -135,27 +140,37 @@ c      MSTP(71)=0   ! NO FSR
       MSTP(61)=0                ! NO ISR  !!!!!See caution above
       MSTP(71)=0                ! NO FSR  !!!!!See caution above
 c      MSTP(81)=0   ! NO UE
- 
-       ECM = 14000.D0 
+      
+      ECM = 14000.D0 
+
+      ECM = 2*BEAMENE
+
+C
       ITMP1 = MSTU(12)
       ITMP2 = MSTP(122) 
+      
       MSTU(12)  = 12345
       MSTP(122) = 0
-
-      CALL PYINIT('CMS','p','p',ECM)
+      
+      CALL PYINIT ( 'CMS' , 'p' , 'p' , ECM )
       
       MSTU(12)  = ITMP1
       MSTP(122) = ITMP2
-
- 
+      
 C...Final Les Houches Event File, obtained by combining above two.
       IF ( FIRST ) THEN 
+        
+        CALL HVUPINIT 
+
         FIRST = .FALSE.  
-        WRITE(*,*)" Hidden Valley Production : parameters to be used: "
-        WRITE(*,*)" ZPMASS: " , ZPMASS
-        WRITE(*,*)" PIMASS: " , PIMASS
-        WRITE(*,*)" PIZLIF: " , PIZLIF
-        WRITE(*,*)" PIPLIF: " , PIPLIF
+        
+        WRITE(*,*) " Hidden Valley Production : parameters to be used: "
+        WRITE(*,*) " ZPMASS: " , ZPMASS
+        WRITE(*,*) " PIMASS: " , PIMASS
+        WRITE(*,*) " PIZLIF: " , PIZLIF
+        WRITE(*,*) " PIPLIF: " , PIPLIF
+        WRITE(*,*) " EBEAM : " , BEAMENE
+        
         LUN = MSTP(163) 
         IF ( 0 .LT. LUN ) THEN 
           WRITE(LUN,'(A)',ERR=900) '<LesHouchesEvents version="1.0">'
@@ -165,9 +180,31 @@ C...Final Les Houches Event File, obtained by combining above two.
           WRITE(LUN,'(A)',ERR=900) '-->'       
           
           WRITE(LUN,'(A)',ERR=900) '<init>'       
-          WRITE(LUN,'(A)',ERR=900)
-     &      '2212 2212 7.0E+03 7.0E+03 4 4 46 46 1 1'
-          WRITE(LUN,'(A)',ERR=900) '1.0 1.0 1.0 661'
+
+C          WRITE(LUN,'(A)',ERR=900)
+C     &      '2212 2212 7.0E+03 7.0E+03 4 4 46 46 1 1'
+C          WRITE(LUN,'(A)',ERR=900) 
+C          WRITE(LUN,'(I5 I5 G10.3 G10.3 I3 I3 I3 I3 I3 I3)',ERR=900) 
+          WRITE(LUN, 770 ,ERR=900) 
+     &      IDBMUP ( 1 ) , 
+     &      IDBMUP ( 2 ) , 
+     &      EBMUP  ( 1 ) , 
+     &      EBMUP  ( 2 ) , 
+     &      PDFGUP ( 1 ) , 
+     &      PDFGUP ( 2 ) , 
+     &      PDFSUP ( 1 ) , 
+     &      PDFSUP ( 2 ) , 
+     &      IDWTUP       , 
+     &      NPRUP
+     
+C &      '2212 2212 7.0E+03 7.0E+03 4 4 46 46 1 1'
+          
+          WRITE(LUN,771,ERR=900)
+     &     XSECUP  ( 1 ) ,
+     &     XERRUP  ( 1 ) ,
+     &     XMAXUP  ( 1 ) ,
+     &     LPRUP   ( 1 ) 
+
           WRITE(LUN,'(A)',ERR=900) '</init>'       
         ENDIF 
       ENDIF 
@@ -177,7 +214,7 @@ C ======================================================================
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCC STAGE ONE : MAKE PARTON-LEVEL q qbar --> Z'(*) --> e+ e- EVENTS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      
+
       CALL PYEVNT 
 
       hvstep1 = SUCCESS 
@@ -188,6 +225,10 @@ C ======================================================================
  999  CONTINUE
       hvstep1 = FAILURE
       RETURN
+
+
+ 770  FORMAT(2I6,2G12.3,6I5)
+ 771  FORMAT(3G12.3,I6)
       END
 C ======================================================================
 
