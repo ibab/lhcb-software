@@ -9,6 +9,8 @@
    TES location
  - Add a work around to the insert call in ChargedProtoParticleMaker that
    could potentially fail if more than one Track location is used.
+ - Update ChargedProtoParticleMoni to no longer rely on the assumption that
+   a ProtoParticle will always have the same key as its parent Track
 
 !======================== GlobalReco v6r36 2011-04-05 ========================
 ! 2011-03-31 - Chris Jones

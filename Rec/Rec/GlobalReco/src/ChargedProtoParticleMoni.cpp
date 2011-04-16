@@ -20,10 +20,10 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoParticleMoni::ChargedProtoParticleMoni( const std::string& name,
-                                                    ISvcLocator* pSvcLocator )
-  : GaudiHistoAlg  ( name , pSvcLocator ),
-    m_nEvts        ( 0 )
+  ChargedProtoParticleMoni::ChargedProtoParticleMoni( const std::string& name,
+                                                      ISvcLocator* pSvcLocator )
+    : GaudiHistoAlg  ( name , pSvcLocator ),
+      m_nEvts        ( 0 )
 {
   // histo base dir
   setProperty ( "HistoTopDir", "PROTO/" );
@@ -90,10 +90,8 @@ StatusCode ChargedProtoParticleMoni::execute()
     // count all tracks
     ++tally.totTracks;
 
-    // Does this track have a proto (uses same key convention) ?
-    const LHCb::ProtoParticle * proto = protos->object((*iTrack)->key());
-    // double check with the SmartRef
-    if ( proto && proto->track() != *iTrack ) proto = NULL;
+    // Does this track have a proto ?
+    const LHCb::ProtoParticle * proto = getProto( tracks, protos, *iTrack );
 
     // Track Type
     std::ostringstream type;
@@ -176,6 +174,43 @@ StatusCode ChargedProtoParticleMoni::execute()
 }
 
 //=============================================================================
+
+//=============================================================================
+// Find the ProtoParticle created from a given Track
+//=============================================================================
+const LHCb::ProtoParticle *
+ChargedProtoParticleMoni::getProto( const LHCb::Tracks * tracks,
+                                    const LHCb::ProtoParticles * protos,
+                                    const LHCb::Track * track ) const
+{
+  const LHCb::ProtoParticle * proto = NULL;
+
+  // Check Track pointer is OK
+  if ( track )
+  {
+
+    // First try using same track key convention
+    const LHCb::ProtoParticle * proto = protos->object(track->key());
+    if ( ! (proto && proto->track() == track) ) 
+    {
+
+      // Key convention failed, so try direct search
+      for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
+            iP != protos->end(); ++iP )
+      {
+        if ( (*iP)->track() == track )
+        {
+          proto = *iP;
+          break;
+        }
+      }
+
+    }
+
+  }
+
+  return proto;
+}
 
 //=============================================================================
 // Print Stats
