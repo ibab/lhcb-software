@@ -12,9 +12,9 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "NeutralProtoPAlg.h"
 // ============================================================================
-/** @file 
+/** @file
  *  Implementation file for class NeutralProtoPAlg
- *  @date 2006-06-09 
+ *  @date 2006-06-09
  *  @author Olivier Deschamps
  */
 // Declaration of the Algorithm Factory
@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( NeutralProtoPAlg )
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-NeutralProtoPAlg::NeutralProtoPAlg
+  NeutralProtoPAlg::NeutralProtoPAlg
 ( const std::string& name,
   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
@@ -34,13 +34,13 @@ NeutralProtoPAlg::NeutralProtoPAlg
   , m_photonID_bad      ( -1.e+6 )
   , m_light_mode        ( false )
   , m_first(true){
-  
+
   // declare the properties
   declareProperty ( "HyposLocations"        , m_hyposLocations   ) ;
   declareProperty ( "ProtoParticleLocation" ,  m_protoLocation   ) ;
-  declareProperty ( "LightMode"      , m_light_mode , 
-                    "Use 'light' mode and do not collect all information. Useful for Calibration." ) ;  
-  
+  declareProperty ( "LightMode"      , m_light_mode ,
+                    "Use 'light' mode and do not collect all information. Useful for Calibration." ) ;
+
   // default location from context()
   using namespace LHCb::CaloHypoLocation;
   m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( context() , Photons      ) ) ;
@@ -59,12 +59,12 @@ NeutralProtoPAlg::~NeutralProtoPAlg() {}
 StatusCode NeutralProtoPAlg::initialize(){
   const StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
+
   debug() << "==> Initialize" << endmsg;
-  
+
   for ( std::vector<std::string>::const_iterator loc = m_hyposLocations.begin() ; m_hyposLocations.end() != loc ; ++loc )
     info() << " Hypothesis loaded from " << *loc << endmsg;
-  
+
   //
   if ( lightMode() )
     info() << "Neutral protoparticles will be created in 'Light' Mode" << endmsg ;
@@ -82,7 +82,7 @@ StatusCode NeutralProtoPAlg::initialize(){
 // Main execution
 // ============================================================================
 StatusCode NeutralProtoPAlg::execute(){
-  
+
   // create and register the output container
   LHCb::ProtoParticles* protos = NULL;
   if ( !lightMode() && exist<LHCb::ProtoParticles>(m_protoLocation) ){
@@ -92,20 +92,22 @@ StatusCode NeutralProtoPAlg::execute(){
     }
     counter("Replaced Proto")+=1;
     protos = get<LHCb::ProtoParticles>(m_protoLocation);
+    for ( LHCb::ProtoParticles::iterator iP = protos->begin();
+          iP != protos->end(); ++iP ) { delete *iP; }
     protos->clear();
   }
   else{
     protos = new LHCb::ProtoParticles();
     put( protos , m_protoLocation ) ;
   }
-  
+
 
   if( NULL == protos )return Warning("NeutralProto container points to NULL ",StatusCode::SUCCESS);
 
-  
+
   //------ loop over all caloHypos and create the protoparticles
   for ( std::vector<std::string>::const_iterator loc = m_hyposLocations.begin() ; m_hyposLocations.end() != loc ; ++loc ) {
-    
+
     // Load the CaloHypo objects if the container exists
     if ( !exist<LHCb::CaloHypos>( *loc )){
       Warning ( "No CaloHypo at '" + (*loc) + "'",StatusCode::SUCCESS).ignore() ;
@@ -122,7 +124,7 @@ StatusCode NeutralProtoPAlg::execute(){
       count++;
       LHCb::ProtoParticle* proto = new LHCb::ProtoParticle() ;
       protos->insert( proto ) ;
-      
+
       // fill protoparticle
       proto-> addToCalo( hypo ) ;
       if ( !lightMode() ){
@@ -130,7 +132,7 @@ StatusCode NeutralProtoPAlg::execute(){
         type << hypo->hypothesis();
         std::string hypothesis = type.str();
         using namespace CaloDataType;
-        proto -> addInfo ( LHCb::ProtoParticle::CaloTrMatch     ,  m_estimator->data(hypo, ClusterMatch, m_caloTrMatch_bad )) ; 
+        proto -> addInfo ( LHCb::ProtoParticle::CaloTrMatch     ,  m_estimator->data(hypo, ClusterMatch, m_caloTrMatch_bad )) ;
         proto -> addInfo ( LHCb::ProtoParticle::PhotonID        ,  m_estimator->data(hypo, NeutralID   , m_photonID_bad    )) ;
         double dep = (m_estimator->data(hypo,  ToSpdM ) > 0) ? -1. : +1.;
         dep *= m_estimator->data(hypo,  ToPrsE, m_caloDepositID_bad );
@@ -155,7 +157,7 @@ StatusCode NeutralProtoPAlg::execute(){
         counter("NeutralHcal2Ecal   for '" +hypothesis+"'") += proto->info(LHCb::ProtoParticle::CaloNeutralHcal2Ecal, 0.  );
         counter("NeutralE49   for '" +hypothesis+"'") += proto->info(LHCb::ProtoParticle::CaloNeutralE49, 0.  );
       }
-      
+
       if ( msgLevel(MSG::VERBOSE) ){
         MsgStream& log = verbose() ;
         log << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endmsg;
@@ -175,7 +177,7 @@ StatusCode NeutralProtoPAlg::execute(){
     } // loop over CaloHypos
     counter( *loc + "=>" + m_protoLocation) += count;
   } // loop over HyposLocations
-  
+
   if ( msgLevel(MSG::DEBUG) )debug() << "# Neutral ProtoParticles created : " << protos -> size() << endmsg;
 
   counter ("#protos in " + m_protoLocation) += protos->size() ;
@@ -186,8 +188,8 @@ StatusCode NeutralProtoPAlg::execute(){
 // ============================================================================
 StatusCode NeutralProtoPAlg::finalize(){
   //
-  if ( lightMode() ) 
-  { info() << "Neutral protoparticles have been created in 'Light' Mode" << endmsg ; }  
-  
+  if ( lightMode() )
+  { info() << "Neutral protoparticles have been created in 'Light' Mode" << endmsg ; }
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

@@ -11,6 +11,8 @@
    could potentially fail if more than one Track location is used.
  - Update ChargedProtoParticleMoni to no longer rely on the assumption that
    a ProtoParticle will always have the same key as its parent Track
+ - Delete ProtoParticles before calling clear() on a container to reuse it
+   in NeutralProtoPAlg
 
 !======================== GlobalReco v6r36 2011-04-05 ========================
 ! 2011-03-31 - Chris Jones
