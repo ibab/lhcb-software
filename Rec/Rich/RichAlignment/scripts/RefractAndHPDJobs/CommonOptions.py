@@ -3,14 +3,14 @@ from Configurables import Brunel, LHCbApp
 
 # For 2010 data
 #importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
-#importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
-#LHCbApp().DDDBtag   = "head-20101026"
-#LHCbApp().CondDBtag = "head-20101112"
+importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
+LHCbApp().DDDBtag   = "head-20110303"
+LHCbApp().CondDBtag = "head-20110407"
 
 # For 2011 data
-importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
-LHCbApp().DDDBtag   = "head-20110302" 
-LHCbApp().CondDBtag = "head-20110321"
+#importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
+#LHCbApp().DDDBtag   = "head-20110302" 
+#LHCbApp().CondDBtag = "head-20110321"
 
 # No output files
 Brunel().OutputType = "None"
@@ -50,6 +50,7 @@ aConf.HPDList = [ [], [0], [0] ]
 
 # Save all histograms from image analysis
 rMoni.addMonitor("HPDImageShifts")
-from Configurables import Rich__Mon__RichHPDImageSummary
-imageSummary = Rich__Mon__RichHPDImageSummary("RichHPDImageSummary")
+from Configurables import Rich__HPDImage__Summary
+imageSummary = Rich__HPDImage__Summary("RichHPDImageSummary")
 imageSummary.Keep2DHistograms = True
+imageSummary.FinalHPDFit = False

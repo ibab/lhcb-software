@@ -7,5 +7,5 @@ importOptions("/usera/jonesc/MyDataOptions/Collisions10/Raw/RUN_76997_RealData_9
 
 from Configurables import Brunel
 
-Brunel().EvtMax    = 100
-Brunel().PrintFreq = 10
+Brunel().EvtMax    = 10
+Brunel().PrintFreq = 1

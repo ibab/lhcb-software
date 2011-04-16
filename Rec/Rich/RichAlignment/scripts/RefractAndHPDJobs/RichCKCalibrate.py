@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v39r0p3' ) )
+                j = Job( application = Brunel( version = 'v39r1' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -98,11 +98,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v39r0p3",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v39r1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v39r0p3",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v39r1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -147,6 +147,8 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # Custom DB slices for both job types (calibration and verification)
     dbFiles  = [ ]
     dbFiles += ["NewMDMSCondDB-28022011"]
+    dbFiles += ["MDMS-RootFiles-RunAligned-Sobel-Smoothed3hours-05042011"] 
+    dbFiles += ["New2010MirrorAlign-15042011"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -765,15 +767,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v39r0p3",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v39r1",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v39r0p3",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v39r1",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v39r0p3",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v39r1",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
