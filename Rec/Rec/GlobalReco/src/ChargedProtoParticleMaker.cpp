@@ -22,12 +22,12 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
-                                                      ISvcLocator* pSvcLocator )
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_protoPath_(""),
-    m_protoPath(""),
-    m_trSel        ( NULL )
+  ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
+                                                        ISvcLocator* pSvcLocator )
+    : GaudiAlgorithm ( name , pSvcLocator ),
+      m_protoPath_(""),
+      m_protoPath(""),
+      m_trSel        ( NULL )
 {
 
   // context specific locations
@@ -72,7 +72,7 @@ StatusCode ChargedProtoParticleMaker::initialize()
     m_protoPath=m_protoPath_;
     m_protoPath_="";
   }
-  
+
   if ( (!m_tracksPath_.empty()) ) {
     Warning("You are using deprecated InputTrackLocation property. Use Inputs instead.").ignore();
     if (!m_tracksPath.empty())  {
@@ -94,7 +94,7 @@ StatusCode ChargedProtoParticleMaker::initialize()
     if (m_protoPath=="") {
       m_protoPath  = LHCb::ProtoParticleLocation::Charged;
     }
-     if (m_trSelType=="") m_trSelType  = "DelegatingTrackSelector";
+    if (m_trSelType=="") m_trSelType  = "DelegatingTrackSelector";
   }
 
 
@@ -102,7 +102,7 @@ StatusCode ChargedProtoParticleMaker::initialize()
     verbose() << "Inputs = " << m_tracksPath << endmsg;
     verbose() << "Output = " << m_protoPath << endmsg;
   }
-  
+
 
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( m_trSelType, "TrackSelector", this );
@@ -116,22 +116,17 @@ StatusCode ChargedProtoParticleMaker::initialize()
 StatusCode ChargedProtoParticleMaker::execute()
 {
 
-  // ProtoParticle container
-  LHCb::ProtoParticles * protos = NULL;
+  // check if output data already exists
   if ( exist<LHCb::ProtoParticles>(m_protoPath) )
   {
     // Get existing container, clear, and reuse
-    Warning( "Existing ProtoParticle container at " + m_protoPath +
-             " found -> Will replace", StatusCode::SUCCESS ).ignore();
-    protos = get<LHCb::ProtoParticles>(m_protoPath);
-    protos->clear();
+    return Warning( "Existing ProtoParticle container at " + m_protoPath +
+                    " found -> Will do nothing" );
   }
-  else
-  {
-    // make new container and give to Gaudi
-    protos = new LHCb::ProtoParticles();
-    put ( protos, m_protoPath );
-  }
+
+  // make new container and give to Gaudi
+  LHCb::ProtoParticles * protos = new LHCb::ProtoParticles();
+  put ( protos, m_protoPath );
 
   // Loop over tracks container
   setFilterPassed(false);
@@ -149,10 +144,10 @@ StatusCode ChargedProtoParticleMaker::execute()
     }
 
     setFilterPassed(true);
-    const LHCb::Tracks * tracks = get<LHCb::Tracks>( loc  );
-    if ( msgLevel(MSG::DEBUG) ) 
-      debug() << "Successfully loaded " << tracks->size() << " Tracks from " << loc << endmsg;  
-    
+    const LHCb::Tracks * tracks = get<LHCb::Tracks>( loc );
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Successfully loaded " << tracks->size() << " Tracks from " << loc << endmsg;
+
     int count = 0;
     // Loop over tracks
     for ( LHCb::Tracks::const_iterator iTrack = tracks->begin();
@@ -170,16 +165,24 @@ StatusCode ChargedProtoParticleMaker::execute()
         verbose() << " -> Track flag " << (*iTrack)->flag() << endmsg;
         verbose() << " -> Track charge " << (*iTrack)->charge() << endmsg;
       }
-      
+
       // Make a proto-particle
       LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
-      
-      // Insert into container, with same key as Track
-      protos->insert( proto, (*iTrack)->key() );
-      
+
+      if ( m_tracksPath.size() == 1 )
+      {
+        // Insert into container, with same key as Track
+        protos->insert( proto, (*iTrack)->key() );
+      }
+      else
+      {
+        // If more than one Track container, cannot use Track key
+        protos->insert( proto );
+      }
+
       // Set track reference
       proto->setTrack( *iTrack );
-      
+
       // Add minimal track info
       proto->addInfo( LHCb::ProtoParticle::TrackChi2PerDof, (*iTrack)->chi2PerDoF() );
       proto->addInfo( LHCb::ProtoParticle::TrackNumDof,     (*iTrack)->nDoF()       );
@@ -187,7 +190,7 @@ StatusCode ChargedProtoParticleMaker::execute()
       proto->addInfo( LHCb::ProtoParticle::TrackType,       (*iTrack)->type()       );
       proto->addInfo( LHCb::ProtoParticle::TrackP,          (*iTrack)->p()          );
       proto->addInfo( LHCb::ProtoParticle::TrackPt,         (*iTrack)->pt()         );
-      
+
       if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << " -> Created ProtoParticle : " << *proto << endmsg;
