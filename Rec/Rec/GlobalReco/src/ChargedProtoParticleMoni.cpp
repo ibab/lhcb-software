@@ -91,7 +91,7 @@ StatusCode ChargedProtoParticleMoni::execute()
     ++tally.totTracks;
 
     // Does this track have a proto ?
-    const LHCb::ProtoParticle * proto = getProto( tracks, protos, *iTrack );
+    const LHCb::ProtoParticle * proto = getProto( protos, *iTrack );
 
     // Track Type
     std::ostringstream type;
@@ -179,8 +179,7 @@ StatusCode ChargedProtoParticleMoni::execute()
 // Find the ProtoParticle created from a given Track
 //=============================================================================
 const LHCb::ProtoParticle *
-ChargedProtoParticleMoni::getProto( const LHCb::Tracks * tracks,
-                                    const LHCb::ProtoParticles * protos,
+ChargedProtoParticleMoni::getProto( const LHCb::ProtoParticles * protos,
                                     const LHCb::Track * track ) const
 {
   const LHCb::ProtoParticle * proto = NULL;
@@ -190,7 +189,7 @@ ChargedProtoParticleMoni::getProto( const LHCb::Tracks * tracks,
   {
 
     // First try using same track key convention
-    const LHCb::ProtoParticle * proto = protos->object(track->key());
+    proto = protos->object(track->key());
     if ( ! (proto && proto->track() == track) ) 
     {
 

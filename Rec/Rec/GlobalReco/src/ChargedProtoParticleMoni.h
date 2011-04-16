@@ -95,8 +95,7 @@ private:
   void printStats( const MSG::Level level = MSG::INFO ) const;
 
   /// Find the ProtoParticle created from a given Track
-  const LHCb::ProtoParticle * getProto( const LHCb::Tracks * tracks,
-                                        const LHCb::ProtoParticles * protos,
+  const LHCb::ProtoParticle * getProto( const LHCb::ProtoParticles * protos,
                                         const LHCb::Track * track ) const;
 
 private:
