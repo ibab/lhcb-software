@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-04-16 - Chris Jones
+ - Fix a memory leak in VeloMuonBuilder
+
 ! 2011-04-13 - Paul Seyfert
  - VeloMuonBuilder: - info on the muon chamber as extra info on the track
                     - initialisation of track type before track fit

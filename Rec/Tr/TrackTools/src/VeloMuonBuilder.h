@@ -1,6 +1,8 @@
 #ifndef VELOMUONBUILDER_H
 #define VELOMUONBUILDER_H 1
 
+#include <memory>
+
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiAlg/Tuples.h"
 #include <string>
@@ -15,9 +17,9 @@
 #include "TrackInterfaces/ITrackFitter.h"
 
 /** @class VeloMuonBuilder VeloMuonBuilder.h
- *  
+ *
  * \brief  Make a ValoMuonTrack: match velo and muon tracks. afterwards apply kalman fit.
- * 
+ *
  * Parameters:
  * - MuonLocation: where the muon stubs come from
  * -  VeloLocation: where the velo tracks come from
@@ -33,14 +35,14 @@
  * -  cut: if the hard coded distancecut shall be scaled
  * -  MaxVeloTracks: if there are more velo tracks, don't do anything (saving cpu time in hopeless events)
  * -  MaxMuonTracks: if there are more muon tracks, don't do anything (saving cpu time in hopeless events)
- * 
+ *
  *  @author Paul Seyfert
  *  @date   2010-09-16
  */
 
 class VeloMuonBuilder : public GaudiTupleAlg {
-  
- public:
+
+public:
   VeloMuonBuilder(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~VeloMuonBuilder();
   virtual StatusCode initialize();
@@ -50,7 +52,7 @@ class VeloMuonBuilder : public GaudiTupleAlg {
   LHCb::Tracks* buildVeloMuon(LHCb::Tracks& veloTracks, LHCb::Tracks& muonTracks);
   LHCb::Tracks buildVeloMuon(LHCb::Tracks* veloTracks, LHCb::Tracks* muonTracks);
 
- private:
+private:
   //  Gaudi::XYZPoint VeloMuonBuilder::autoextra(LHCb::Track* muontrack);
 
 

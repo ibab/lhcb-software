@@ -107,11 +107,11 @@ StatusCode VeloMuonBuilder::execute() {
 
   //  tracks = buildVeloMuon(*m_velotracks, *m_muontracks, &veloLink);
   buildVeloMuon(*m_velotracks, *m_muontracks, tracks);
-  
+
   if (!existed) {
     put(tracks,m_output);
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -137,7 +137,7 @@ Tracks* VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks) {
   sc = buildVeloMuon(veloTracks, muonTracks, trackvector);
   if (sc.isSuccess())
     return trackvector;
-  else 
+  else
     return NULL;
 }
 
@@ -175,33 +175,33 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
     int reg = tileM2.region();
 
     //go through the velos
-    float minweight=std::numeric_limits<float>::infinity(); 
+    float minweight=std::numeric_limits<float>::infinity();
     float mindist=std::numeric_limits<float>::infinity();
     float minreg = -1;
     for (veloIter = veloTracks.begin(); veloIter != veloTracks.end() ; ++veloIter) {
       if ((*veloIter)->history() != LHCb::Track::PatVelo &&
-	  (*veloIter)->history() != LHCb::Track::PatVeloGeneral &&
-	  (*veloIter)->history() != LHCb::Track::PatFastVelo) continue;
+          (*veloIter)->history() != LHCb::Track::PatVeloGeneral &&
+          (*veloIter)->history() != LHCb::Track::PatFastVelo) continue;
 
       Gaudi::XYZPoint velopunktx,velopunkty;
       sc = m_linearextrapolator->position(*(*veloIter),m_zmagnet,velopunktx,LHCb::ParticleID(13));
       if (sc.isFailure()) continue;
-      if (m_chamberhit)	{
-	sc = m_linearextrapolator->position(*(*veloIter),chamber.z(),velopunkty,LHCb::ParticleID(13));
+      if (m_chamberhit) {
+        sc = m_linearextrapolator->position(*(*veloIter),chamber.z(),velopunkty,LHCb::ParticleID(13));
       } else {
-	sc = m_linearextrapolator->position(*(*veloIter),m_zmatch,velopunkty,LHCb::ParticleID(13));
+        sc = m_linearextrapolator->position(*(*veloIter),m_zmatch,velopunkty,LHCb::ParticleID(13));
       }
       if (sc.isFailure()) continue;
 
 
       if (reg == 0)
-	m_xscale = 0.06;
+        m_xscale = 0.06;
       if (reg == 1)
-	m_xscale = 0.1;
+        m_xscale = 0.1;
       if (reg == 2)
-	m_xscale = 0.15;
+        m_xscale = 0.15;
       if (reg == 3)
-	m_xscale = 0.15;
+        m_xscale = 0.15;
 
 
       // now calculate distance
@@ -210,99 +210,98 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
       // -- hard coded after determination on private ntuple
       if (reg == 0)
-	m_distancecut = 30*30;//100;
+        m_distancecut = 30*30;//100;
       if (reg == 1)
-	m_distancecut = 60*60;//200;
+        m_distancecut = 60*60;//200;
       if (reg == 2)
-	m_distancecut = 110*110;//9000;
+        m_distancecut = 110*110;//9000;
       if (reg == 3)
-	m_distancecut = 200*200;//38000;
+        m_distancecut = 200*200;//38000;
 
       m_distancecut*=m_distcutmultiplyer;
       if (weighteddistance>m_distancecut) continue;
 
 
-      
+
       {
 
-	State* monitorstate = ((*veloIter)->firstState()).clone();
-	float xkick = (float)(chamber.x() - monitorstate->x());//jstefaniak used interpolated value here
-	float m_ptkickConstant = 1265;
-	float qp = float(xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet));
-	qp = -qp * m_fieldfactor;
-	aCopy = new LHCb::Track();
-	aCopy->addToAncestors(*veloIter);
-	aCopy->addToAncestors(*muonIter);
-	std::vector< LHCb::State* > velostates = (*veloIter)->states();
-	std::vector< LHCb::State* > copiedstates;
-	for (std::vector<LHCb::State*>::iterator stateiter = velostates.begin(); stateiter != velostates.end(); ++stateiter) {
-	  copiedstates.push_back((*stateiter)->clone());
-	  copiedstates.back()->setQOverP(qp);
-	  Gaudi::TrackSymMatrix cov;
-	  cov(0,0) = 1;
-	  cov(1,1) = 1;
-	  cov(2,2) = 1;
-	  cov(3,3) = 1;
-	  cov(4,4) = qp*qp*0.15*0.15;
-	  copiedstates.back()->setCovariance(cov);
-	}
-	aCopy->addToStates(copiedstates);
-	aCopy->addToLhcbIDs((*veloIter)->lhcbIDs());
-	std::vector< LHCb::State* > muonstates = (*muonIter)->states();
-	copiedstates.clear();
-	for (std::vector<LHCb::State*>::iterator stateiter = muonstates.begin(); stateiter != muonstates.end(); ++stateiter) {
-	  copiedstates.push_back((*stateiter)->clone());
-	  copiedstates.back()->setQOverP(qp);
-	  Gaudi::TrackSymMatrix cov;
-	  cov(0,0) = 1;
-	  cov(1,1) = 1;
-	  cov(2,2) = 1;
-	  cov(3,3) = 1;
-	  cov(4,4) = qp*qp*0.15*0.15;
-	  copiedstates.back()->setCovariance(cov);
-	}
+        std::auto_ptr<State> monitorstate( ((*veloIter)->firstState()).clone() );
+        float xkick = (float)(chamber.x() - monitorstate->x());//jstefaniak used interpolated value here
+        float m_ptkickConstant = 1265;
+        float qp = float(xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet));
+        qp = -qp * m_fieldfactor;
+        aCopy = new LHCb::Track();
+        aCopy->addToAncestors(*veloIter);
+        aCopy->addToAncestors(*muonIter);
+        std::vector< LHCb::State* > velostates = (*veloIter)->states();
+        std::vector< LHCb::State* > copiedstates;
+        for (std::vector<LHCb::State*>::iterator stateiter = velostates.begin(); stateiter != velostates.end(); ++stateiter) {
+          copiedstates.push_back((*stateiter)->clone());
+          copiedstates.back()->setQOverP(qp);
+          Gaudi::TrackSymMatrix cov;
+          cov(0,0) = 1;
+          cov(1,1) = 1;
+          cov(2,2) = 1;
+          cov(3,3) = 1;
+          cov(4,4) = qp*qp*0.15*0.15;
+          copiedstates.back()->setCovariance(cov);
+        }
+        aCopy->addToStates(copiedstates);
+        aCopy->addToLhcbIDs((*veloIter)->lhcbIDs());
+        std::vector< LHCb::State* > muonstates = (*muonIter)->states();
+        copiedstates.clear();
+        for (std::vector<LHCb::State*>::iterator stateiter = muonstates.begin(); stateiter != muonstates.end(); ++stateiter) {
+          copiedstates.push_back((*stateiter)->clone());
+          copiedstates.back()->setQOverP(qp);
+          Gaudi::TrackSymMatrix cov;
+          cov(0,0) = 1;
+          cov(1,1) = 1;
+          cov(2,2) = 1;
+          cov(3,3) = 1;
+          cov(4,4) = qp*qp*0.15*0.15;
+          copiedstates.back()->setCovariance(cov);
+        }
 
-	aCopy->addToStates(copiedstates);
-	std::vector< LHCb::LHCbID > muonids = (*muonIter)->lhcbIDs();                        // pointers to the other ids
-	aCopy->addToLhcbIDs(muonids);                                                        // to insert them here
-	if (sc.isFailure()) {delete aCopy; aCopy=NULL; continue;}
-//	m_linearextrapolator->propagate(*monitorstate, chamber.z(),LHCb::ParticleID(13));
-	
-	aCopy->firstState().setQOverP(qp);
+        aCopy->addToStates(copiedstates);
+        std::vector< LHCb::LHCbID > muonids = (*muonIter)->lhcbIDs();                        // pointers to the other ids
+        aCopy->addToLhcbIDs(muonids);                                                        // to insert them here
+        if (sc.isFailure()) {delete aCopy; aCopy=NULL; continue;}
+        // m_linearextrapolator->propagate(*monitorstate, chamber.z(),LHCb::ParticleID(13));
 
-	aCopy->setFitStatus(LHCb::Track::FitStatusUnknown);
-	aCopy->setFitHistory(LHCb::Track::FitUnknown);
+        aCopy->firstState().setQOverP(qp);
 
-	TrackFitResult * result = new TrackFitResult();
-	result->setPScatter(1/qp); // -- needed in fitter
+        aCopy->setFitStatus(LHCb::Track::FitStatusUnknown);
+        aCopy->setFitHistory(LHCb::Track::FitUnknown);
 
-	aCopy->setFitResult(result);
+        TrackFitResult * result = new TrackFitResult();
+        result->setPScatter(1/qp); // -- needed in fitter
+
+        aCopy->setFitResult(result);
 
 
         aCopy->setType(LHCb::Track::Long);
-	sc = m_tracksFitter->fit(*aCopy,LHCb::ParticleID(13));
-	if (sc.isFailure()) {delete aCopy; aCopy=NULL;continue;}
+        sc = m_tracksFitter->fit(*aCopy,LHCb::ParticleID(13));
+        if (sc.isFailure()) {delete aCopy; aCopy=NULL;continue;}
 
-	if (monitorstate) delete monitorstate;
-	aCopy->clearAncestors();
-	// -- unfortunately this will not be stored on DST :(
-	aCopy->addToAncestors(*veloIter);
-	aCopy->addToAncestors(*muonIter);
+        aCopy->clearAncestors();
+        // -- unfortunately this will not be stored on DST :(
+        aCopy->addToAncestors(*veloIter);
+        aCopy->addToAncestors(*muonIter);
       }
 
       float weight = float(weighteddistance * (1-m_chiweight) + m_chiweight * aCopy->chi2());
       if (weight<minweight) {
-	// -- if we created a Track and want to use another one. then we should delete the old one
-	if (goodCopy) delete goodCopy;                        
-	minweight=weight;
-	mindist = weighteddistance;
-	minreg = reg;
-//	minchi2 = float(aCopy->chi2());
-	goodCopy=aCopy;
-	
+        // -- if we created a Track and want to use another one. then we should delete the old one
+        if (goodCopy) delete goodCopy;
+        minweight=weight;
+        mindist = weighteddistance;
+        minreg = reg;
+        // minchi2 = float(aCopy->chi2());
+        goodCopy=aCopy;
+
       }
-      if (aCopy && aCopy != goodCopy) {delete aCopy;aCopy=NULL;}          // clean up      
-    } 
+      if (aCopy && aCopy != goodCopy) {delete aCopy;aCopy=NULL;}          // clean up
+    }
     if (minweight==std::numeric_limits<float>::infinity()) {
       continue; // -- nothing was found
     }
