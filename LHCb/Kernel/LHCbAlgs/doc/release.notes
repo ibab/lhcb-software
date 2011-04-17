@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-04-17 - Marco Cattaneo
+ - Remove EventNodeKiller, moved to Gaudi (needs Gaudi v22r2)
+
 !========================= LHCbAlgs v2r37 2011-02-22 =========================
 ! 2011-02-03 - Victor Coco
 - In TrajPoca, set the maximum warning to 0 to avoid printouts.
