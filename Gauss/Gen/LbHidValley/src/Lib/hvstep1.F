@@ -83,7 +83,9 @@ C...
       ENDDO 
 
       MSUB(141)=1               ! drell yan to Z' with interference
+      
       PMAS(32,1) = ZPMASS       ! set zprime mass
+      
       CKIN(1) = ZPMASS/1.5D0    ! set minimum energy of d-y pair not too low
       
       
@@ -150,9 +152,8 @@ C
       ITMP2 = MSTP(122) 
       
       MSTU(12)  = 12345
-      MSTP(122) = 0
-      
-      CALL PYINIT ( 'CMS' , 'p' , 'p' , ECM )
+      MSTP(122) = 0            
+      CALL PYINIT ( 'CMS' , 'p+' , 'p+' , ECM )
       
       MSTU(12)  = ITMP1
       MSTP(122) = ITMP2
@@ -160,8 +161,8 @@ C
 C...Final Les Houches Event File, obtained by combining above two.
       IF ( FIRST ) THEN 
         
-        CALL HVUPINIT 
-
+C**        CALL HVUPINIT 
+        
         FIRST = .FALSE.  
         
         WRITE(*,*) " Hidden Valley Production : parameters to be used: "
@@ -214,7 +215,10 @@ C ======================================================================
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCC STAGE ONE : MAKE PARTON-LEVEL q qbar --> Z'(*) --> e+ e- EVENTS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-
+      
+      IF ( 1 .EQ. MSTP( 171 ) )THEN
+        PARP(171)  = 1.0 
+      ENDIF 
       CALL PYEVNT 
 
       hvstep1 = SUCCESS 

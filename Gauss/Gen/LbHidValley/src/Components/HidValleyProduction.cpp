@@ -54,7 +54,9 @@ class HidValleyProduction : public PythiaProduction
 public:
   // ==========================================================================
   /// initialize the production tool 
-  virtual StatusCode initialize() ;
+  virtual StatusCode initialize          ( ) ;
+  /// initiailze the generator 
+  /// virtual StatusCode initializeGenerator ( ) ;
   /// generate the event
   virtual StatusCode generateEvent
   ( HepMC::GenEvent*    theEvent     , 
@@ -72,7 +74,7 @@ protected:
     const std::string& name   , 
     const IInterface*  parent ) 
     : PythiaProduction ( type , name , parent ) 
-    , m_beamene        ( 7.0 * Gaudi::Units::TeV ) 
+    , m_beamene        ( 3.5 * Gaudi::Units::TeV ) 
   {
     PythiaProduction::m_defaultSettings.clear() ;
     //
@@ -83,7 +85,13 @@ protected:
       ( "BeamEnergy" , 
         m_beamene    , 
         "Beam energy for Hidden-Valley production" ) ;
-    
+    //
+    PythiaProduction::m_frame          = "CMS" ;
+    PythiaProduction::m_beam           = "p+"  ;
+    PythiaProduction::m_target         = "p+"  ;
+    PythiaProduction::m_win            = 7.0 * Gaudi::Units::TeV ;
+    PythiaProduction::m_userProcess    = 4 ;
+      
   } 
   /// virtual and protected desctructor 
   virtual ~HidValleyProduction() {}
@@ -108,8 +116,8 @@ private:
 StatusCode HidValleyProduction::initialize() 
 {
   // return GaudiTool::initialize() ;
-  // return PythiaProduction::initialize () ;
-  StatusCode sc = GaudiTool::initialize( ) ;
+  StatusCode sc = PythiaProduction::initialize () ;
+  // StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
   
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
@@ -125,7 +133,8 @@ StatusCode HidValleyProduction::initialize()
           m_pygive.begin() ; m_pygive.end() != item ; ++item ) 
   {
     // use FORTRAN PYGIVE routine
-    debug() << " CALL PYGIVE(' " << (*item) << "')" << endreq ;
+    debug  () << " CALL PYGIVE(' " << (*item) << "')" << endreq ;
+    always () << " CALL PYGIVE(' " << (*item) << "')" << endreq ;
     const int mstu_13 = Pythia::pydat1().mstu(13) ;
     Pythia::pydat1().mstu(13) =1   ;
     Pythia::PyGive( *item ) ;
@@ -133,7 +142,7 @@ StatusCode HidValleyProduction::initialize()
   }  
   // Reset forced fragmentation flag
   Pythia::pydat1().mstu( 150 ) = 0 ;
-
+  
   Pythia::SetUserProcess ( 4 ) ;
   
   return StatusCode::SUCCESS ;

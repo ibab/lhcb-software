@@ -79,10 +79,10 @@ C - or turn off all but fermion decays for H0
 C...Set PDF's of incoming beams: CTEQ 5L.
 C...Note that Pythia will not look at PDFG and PDFS.  
 C... !!!!!!!!!!!!!!!!!!!! This Needs Checking!!!
-      PDFGUP(1)=4
-      PDFSUP(1)=46
-      PDFGUP(2)=PDFGUP(1)
-      PDFSUP(2)=PDFSUP(1)
+      PDFGUP(1) = 4
+      PDFSUP(1) = 46
+      PDFGUP(2) = PDFGUP(1)
+      PDFSUP(2) = PDFSUP(1)
       
 C...Decide on weighting strategy: unweighted on input.
       IDWTUP=1
@@ -103,7 +103,7 @@ C...All these settings will be used by upinit
       MSTP(122) = ITMP2 
       
       CALL PYEVNT
-      
+
 C ======================================================================
       hvstep3 = SUCCESS 
       RETURN

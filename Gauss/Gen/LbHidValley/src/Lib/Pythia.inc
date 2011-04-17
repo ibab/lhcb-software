@@ -45,10 +45,14 @@ C...Parameters.
       INTEGER MSTP,MSTI
       DOUBLE PRECISION PARP,PARI
       COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
+
+      INTEGER MINT
+      DOUBLE  PRECISION VINT 
+      COMMON/PYINT1/MINT(400),VINT(400)
+           
       
 C...EXTERNAL statement links PYDATA on most machines.
-      EXTERNAL PYDATA
-
+      EXTERNAL PYDATA      
       
       INTEGER  PYCOMP 
       EXTERNAL PYCOMP 
