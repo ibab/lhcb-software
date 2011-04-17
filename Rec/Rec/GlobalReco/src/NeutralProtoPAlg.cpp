@@ -92,8 +92,6 @@ StatusCode NeutralProtoPAlg::execute(){
     }
     counter("Replaced Proto")+=1;
     protos = get<LHCb::ProtoParticles>(m_protoLocation);
-    for ( LHCb::ProtoParticles::iterator iP = protos->begin();
-          iP != protos->end(); ++iP ) { delete *iP; }
     protos->clear();
   }
   else{
