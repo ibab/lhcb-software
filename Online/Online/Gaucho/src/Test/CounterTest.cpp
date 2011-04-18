@@ -37,7 +37,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
   printf("Number of Histograms for Task %s %d\n",task.c_str(),(int)hists.size());
   std::vector<std::string> hsts;
   printf("Trying to retrieve the following Counters\n ");
-  for (unsigned int i=0;i<3;i++)
+  for (unsigned int i=0;i<hists.size();i++)
   {
     hsts.push_back(hists[i]);
     printf("%s\n",hsts[i].c_str());
@@ -47,7 +47,36 @@ int main(int , char *argv[]) // Taskname, DNS Node
   printf ("Retrieved %d Histograms\n", (int)objs.size());
   for (unsigned int i=0;i<objs.size();i++)
   {
-    printf ("Histogram %s at address %llx\n",hsts[i].c_str(), (long long unsigned int)objs[i]);
+    printf ("Histogram %s at address %llx data ",hsts[i].c_str(), (long long unsigned int)objs[i]);
+    switch (objs[i]->type)
+    {
+      case   C_INT:
+      {
+        printf ("%d\n",(int)objs[i]->data);
+        break;
+      }
+      case C_LONGLONG:
+      {
+        printf ("%lld\n",(long long int)objs[i]->data);
+        break;
+
+      }
+      case C_FLOAT:
+      {
+        printf ("%f\n",(float)objs[i]->data);
+        break;
+      }
+      case C_DOUBLE:
+      {
+        printf ("%f\n",(float)objs[i]->data);
+        break;
+      }
+      case C_RATE:
+      {
+        printf ("%f Hz\n",(double)objs[i]->data);
+        break;
+      }
+    }
   }
   return 0;
 }

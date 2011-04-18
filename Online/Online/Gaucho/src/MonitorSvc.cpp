@@ -348,6 +348,7 @@ StatusCode MonitorSvc::finalize()
   }
   deletePtr(m_HistSubSys);
   deletePtr(m_CntrSubSys);
+  deletePtr(m_RateMgr);
   deletePtr(m_CntrMgr);
   deletePtr(m_savetimer);
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
