@@ -2398,6 +2398,7 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
   for (m_histogramIt = histogramList->begin();
        m_histogramIt != histogramList->end();
        ++m_histogramIt, ++m_histogramType) {
+    std::cout << "Histogram Name: " << *m_histogramIt << std::endl;
     HistogramIdentifier histogramIdentifier = HistogramIdentifier(*m_histogramIt);
     m_taskNode = node;
     // Taskname
@@ -2413,65 +2414,52 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
 
     // Algorithm name
     m_algorithmNode = m_taskNode;
-    if (listView->
-        FindChildByName(m_algorithmNode,
-                        histogramIdentifier.algorithmName().c_str())) {
-      m_algorithmNode =
-        listView->FindChildByName(m_algorithmNode,
-                                  histogramIdentifier.algorithmName().c_str());
+    std::string algName = histogramIdentifier.algorithmName();
+    std::cout << "  Alg " << algName << std::endl;
+    if (listView->FindChildByName( m_algorithmNode, algName.c_str())) {
+      m_algorithmNode = listView->FindChildByName( m_algorithmNode, algName.c_str() );
     } else {
-      m_algorithmNode =
-        listView->AddItem(m_algorithmNode,
-                          histogramIdentifier.algorithmName().c_str());
+      m_algorithmNode = listView->AddItem(m_algorithmNode, algName.c_str() );
       setTreeNodeType(m_algorithmNode, pres::s_ALGORITHM);
     }
     listView->SetCheckBox(m_algorithmNode, true);
     listView->CheckItem(m_algorithmNode, false);
     m_algorithmNode->SetUserData(0);
-    // Histogramset name
+    // Histogram set name
     m_histogramSetNode = m_algorithmNode;
-    if (histogramIdentifier.isFromHistogramSet()) {
-      if (listView->
-          FindChildByName(m_histogramSetNode,
-                          histogramIdentifier.histogramSetName().c_str())) {
-        m_histogramSetNode =
-          listView->
-          FindChildByName(m_histogramSetNode,
-                          histogramIdentifier.histogramSetName().c_str());
+    std::string setName = histogramIdentifier.histogramSetName();
+    if ( histogramIdentifier.isFromHistogramSet() ) {
+      std::cout << "    Set " << setName << std::endl;
+      if (listView-> FindChildByName( m_histogramSetNode, setName.c_str() ) ) {
+        m_histogramSetNode = listView-> FindChildByName( m_histogramSetNode, setName.c_str() );
       } else {
-        m_histogramSetNode =
-          listView->AddItem(m_histogramSetNode,
-                            histogramIdentifier.histogramSetName().c_str());
+        m_histogramSetNode = listView->AddItem(m_histogramSetNode, setName.c_str() );
         setTreeNodeType(m_histogramSetNode, pres::s_SET);
       }
       listView->SetCheckBox(m_histogramSetNode, true);
       listView->CheckItem(m_histogramSetNode, false);
       m_histogramSetNode->SetUserData(0);
+      std::cout << "      Remaning name " << histogramIdentifier.histogramName() << std::endl;
     }
     // Histogram name
     m_histogramNode = m_histogramSetNode;
     m_histogramIdItems = TString(histogramIdentifier.histogramName()).Tokenize(pres::s_slash);
     m_histogramIdItemsIt = m_histogramIdItems->MakeIterator();
 
-    while ((m_histogramIdItem = m_histogramIdItemsIt->Next())) {
-      if (m_histogramIdItem != m_histogramIdItems->Last()) {
-        if ((listView->FindChildByName(m_histogramNode,
-                                       m_histogramIdItem->GetName()))) {
-          m_histogramNode =
-            listView->FindChildByName(m_histogramNode,
-                                      m_histogramIdItem->GetName());
-        } else
-          m_histogramNode = listView->AddItem(m_histogramNode,
-                                              m_histogramIdItem->GetName());
-
+    while ( (m_histogramIdItem = m_histogramIdItemsIt->Next()) ) {
+      std::cout << "      Item " <<  m_histogramIdItem->GetName() << std::endl;
+      if ( m_histogramIdItem != m_histogramIdItems->Last()) {
+        if ( (listView->FindChildByName(m_histogramNode, m_histogramIdItem->GetName()))) {
+          m_histogramNode = listView->FindChildByName(m_histogramNode, m_histogramIdItem->GetName());
+        } else {
+          m_histogramNode = listView->AddItem( m_histogramNode, m_histogramIdItem->GetName());
+        }
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
         m_histogramNode->SetUserData(0);
         setTreeNodeType(m_histogramNode, pres::s_LEVEL);
-      }
-      if (m_histogramIdItem == m_histogramIdItems->Last()) {
-        m_histogramNode = listView->AddItem(m_histogramNode,
-                                            m_histogramIdItem->GetName());
+      } else {
+        m_histogramNode = listView->AddItem( m_histogramNode, m_histogramIdItem->GetName());
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
         setTreeNodeType(m_histogramNode, *m_histogramType);
@@ -2491,10 +2479,8 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
 // List histograms from a ROOT file
 //==============================================================================
 void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
-                                                std::vector<std::string> &
-                                                histogramList,
-                                                std::vector<std::string> &
-                                                histogramTypes,
+                                                std::vector<std::string>& histogramList,
+                                                std::vector<std::string>& histogramTypes,
                                                 std::string& taskName,
                                                 pres::SavesetType savesetType) {
 
@@ -2572,7 +2558,7 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
       }
       histogramTypes.push_back(type);
       histogramList.push_back(histogramID);
-      if (m_verbosity >= pres::Verbose) std::cout << "Found: " << histogramID << std::endl;
+      std::cout << "Found: " << type << " name '" << histogramID << "'" << std::endl;
     }
     histogramIDStream.str("");
   }
@@ -3029,13 +3015,7 @@ void PresenterMainFrame::reconfigureGUI() {
 
       m_historyPlotsButton->SetState(kButtonDisabled);
       m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
-      /*
-      if (( pres::Online == m_prevPresenterMode ||
-            pres::History == m_prevPresenterMode) &&
-          presenterMode() != m_prevPresenterMode ) {
-        refreshHistogramSvcList(pres::s_withTree);
-      }
-      */
+      refreshHistogramSvcList(pres::s_withTree);
     }
     m_loadingPage = true;  // avoid reloading page...
     partitionSelectorComboBoxHandler( 1 ) ;
@@ -3268,8 +3248,9 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
                              m_histoSvcListTree->GetFirstItem());
       fClient->NeedRedraw( m_histoSvcListTree);
 
-    } else if (pres::EditorOffline == presenterMode()) {
-      if (pres::s_withTree == tree && !m_savesetFileName.empty()) {
+    } else if ( pres::EditorOffline == presenterMode() ||
+                pres::History       == presenterMode()    ) {
+      if ( pres::s_withTree == tree && !m_savesetFileName.empty()) {
 
         m_dimBrowserDock->SetWindowName("ROOT Histogram Browser");
         m_histoSvcBrowserGroupFrame->SetTitle("ROOT Histogram Browser");
@@ -3277,19 +3258,18 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
         TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
         m_histoSvcListTree->RenameItem(node, m_savesetFileName.c_str());
 
-        (m_histoSvcListTree->GetFirstItem())->SetPictures(m_iconROOT,
-                                                          m_iconROOT);
+        (m_histoSvcListTree->GetFirstItem())->SetPictures( m_iconROOT, m_iconROOT);
 
         deleteTreeChildrenItemsUserData(node);
         m_histoSvcListTree->DeleteChildren(node);
 
         TFile rootFile(m_savesetFileName.c_str());
 
-        if (rootFile.IsZombie() && ( ! isBatch() ) )
+        if (rootFile.IsZombie() && ( ! isBatch() ) ) {
           new TGMsgBox(fClient->GetRoot(), this, "File Error",
                        "Sorry, file specified not found", kMBIconExclamation,
                        kMBOk, &m_msgBoxReturnCode);
-        else {
+        } else {
           std::string taskName( m_archive->taskNameFromFile(std::string(rootFile.GetName())));
           if (taskName.empty()) {
             m_message = "ERROR: could not get guess the taskname from your saveset name";
@@ -3299,8 +3279,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
             pres::SavesetType savesetType = pres::OfflineFile;
             TObjArray* fileNameMatchGroup = 0;
 
-            fileNameMatchGroup =
-              pres::s_fileDateRegexp.MatchS(rootFile.GetName());
+            fileNameMatchGroup = pres::s_fileDateRegexp.MatchS(rootFile.GetName());
             if ( ! fileNameMatchGroup->IsEmpty()) {
               savesetType = pres::OnlineFile;
               if (fileNameMatchGroup) {
@@ -3339,9 +3318,9 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
                 }
               }
             }
-            listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile),
-                                   m_knownHistogramServices, m_histogramTypes,
-                                   taskName, savesetType);
+            listRootHistogramsFrom( dynamic_cast<TDirectory*>(&rootFile),
+                                    m_knownHistogramServices, m_histogramTypes,
+                                    taskName, savesetType);
           }
         }
         rootFile.Close();

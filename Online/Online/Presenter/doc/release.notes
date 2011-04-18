@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-18 - Olivier Callot
+ - Fix display of the list of histogram in Editor Offline mode.
+
+! 2011-04-18 - Olivier Callot
  - fix access to old savesets, where histos didn't have algorithm name prefixed.
 
 ! 2011-04-15 - Olivier Callot

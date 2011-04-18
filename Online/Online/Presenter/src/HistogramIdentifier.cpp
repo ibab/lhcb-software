@@ -116,7 +116,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     if (s_setSwitch == setSwitch) {
       m_isFromHistogramSet = true;
       m_setName = (((TObjString *)histogramHnameMatchGroup->At(1))->GetString()).Data();
-      m_histogramName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
+      m_histogramName = (((TObjString *)histogramHnameMatchGroup->At(3))->GetString()).Data();
     } else if ("" == setSwitch) {
       m_isFromHistogramSet = false;
       m_setName = "";
