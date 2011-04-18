@@ -48,6 +48,7 @@ template <typename T> inline void MonRate<T>::makeRate(unsigned long long dt)
 {
   m_rate = (double)*m_ptr;
   m_rate = (m_rate - m_lastCount)/dt;
+  m_rate = m_rate*1.0e9;
   m_lastCount = *m_ptr;
 }
 
