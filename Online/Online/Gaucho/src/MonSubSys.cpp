@@ -6,6 +6,7 @@
 #include "Gaucho/MonObj.h"
 #include "Gaucho/MonSys.h"
 #include "Gaucho/MonCounter.h"
+#include "Gaucho/RateMgr.h"
 //static int mpty;
 typedef std::pair<std::string, MonObj*> SysPair;
 typedef ObjMap::iterator SysIter;
@@ -31,6 +32,7 @@ MonSubSys::MonSubSys(int intv)
   m_genSrv = 0;
   m_EORsvc = 0;
   m_runno = 0;
+  m_RateMgr = 0;
 
 }
 MonSubSys::~MonSubSys()
@@ -64,6 +66,13 @@ MonSubSys::~MonSubSys()
   MonSys::m_instance().remSubSys(this);
   lib_rtl_delete_lock (m_lockid);
 
+}
+void MonSubSys::makeRates()
+{
+  if (m_RateMgr != 0)
+  {
+    m_RateMgr->makeRates();
+  }
 }
 void MonSubSys::start()
 {
@@ -279,4 +288,8 @@ void MonSubSys::setRunNo(int runno)
   this->m_runno = runno;
   this->m_genSrv->setRunNo(runno);
 }
-
+void MonSubSys::addRateMgr(RateMgr* m)
+{
+  m_RateMgr = m;
+  this->m_updateTimer->setExtLastDelta(&m_RateMgr->m_deltaT);
+}

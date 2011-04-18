@@ -27,7 +27,7 @@ public:
   bool m_newcounter;
   bool m_AllowAdd;
   std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> > m_counterMap;
-  std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> >::iterator m_counterMapIt;
+  typedef std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> >::iterator counterMapIt;
   CntrMgr(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~CntrMgr();
 
@@ -97,18 +97,20 @@ public:
   }
   void removeCounter (std::string &name)
   {
-    m_counterMapIt = m_counterMap.find(name);
-    if (m_counterMapIt != m_counterMap.end())
+    counterMapIt it;
+    it = m_counterMap.find(name);
+    if (it != m_counterMap.end())
     {
-      m_counterMap.erase(m_counterMapIt);
-      delete (m_counterMapIt->second.first);
+      m_counterMap.erase(it);
+      delete (it->second.first);
     }
   }
   void removeCounterAll ()
   {
-    for (m_counterMapIt = m_counterMap.begin();m_counterMapIt!= m_counterMap.end();m_counterMapIt++)
+    counterMapIt it;
+    for (it = m_counterMap.begin();it!= m_counterMap.end();it++)
     {
-      delete (m_counterMapIt->second.first);
+      delete (it->second.first);
     }
     m_counterMap.clear();
   }

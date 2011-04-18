@@ -341,6 +341,7 @@ void MonCounter::create_OutputService(std::string infix)
       break;
     }
     case C_DOUBLE:
+    case C_RATE:
     {
       this->m_service = new DimService(nam.c_str(),*(double*)m_contents);
       break;
@@ -406,6 +407,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
       break;
     }
     case C_DOUBLE:
+    case C_RATE:
     {
       h->name = nam;
       h->type = p->type;

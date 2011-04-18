@@ -170,7 +170,7 @@ void *ObjSerializer::SerializeDir(void *&ptr, int &siz)
   {
     //printf("%s\n",i->first.c_str());
     MonObj *h = (MonObj *)i->second;
-    bs += h->namelength()/*+1*/+sizeof(int);
+    bs += h->namelength()+sizeof(int);
   }
   ptr = Allocate(bs);
   pp = ptr;

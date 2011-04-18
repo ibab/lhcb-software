@@ -16,6 +16,7 @@ void MonTimer::timerHandler ( void )
   m_Hsys->Lock();
   m_Hsys->m_genSrv->setRunNo(m_Hsys->m_runno);
   m_Hsys->m_genSrv->setTime(m_dueTime);
+  m_Hsys->makeRates();
   m_Hsys->m_genSrv->Serialize();
   m_Hsys->unLock();
 

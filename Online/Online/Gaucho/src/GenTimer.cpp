@@ -12,7 +12,7 @@
 #define onesec_mili (unsigned long long)(1000000)
 #endif
 
-namespace 
+namespace
 {
   int ThreadRoutine_C(void* arg)
   {
@@ -40,14 +40,14 @@ GenTimer::~GenTimer( )
   Stop();
 }
 
-void GenTimer::timerHandler()
-{
-}
+//void GenTimer::timerHandler()
+//{
+//}
 
 void GenTimer::Start()
 {
   m_ForceExit = false;
-  if ( m_thread == 0 ) 
+  if ( m_thread == 0 )
   {
     int status = ::lib_rtl_start_thread(ThreadRoutine_C,this,&m_thread);
     if ( !lib_rtl_is_success(status) )

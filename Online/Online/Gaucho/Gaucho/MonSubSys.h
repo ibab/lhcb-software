@@ -25,6 +25,7 @@ enum
 };
 typedef std::map<std::string,MonObj*> ObjMap;
 
+class RateMgr;
 class MonSubSys
 {
 public:
@@ -44,6 +45,7 @@ public:
   int m_lockcount;
   int m_unlockcount;
 public:
+  RateMgr *m_RateMgr;
   int m_type;
   std::string m_expandInfix;
   MonSubSys(int intv = 10);
@@ -70,6 +72,8 @@ public:
   int m_runno;
   bool m_expandnames;
   void removeAll();
+  void makeRates();
+  void addRateMgr(RateMgr*);
 };
 
 #endif

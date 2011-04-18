@@ -19,6 +19,7 @@ class MonObject;
 class MonSys;
 class MonSubSys;
 class CntrMgr;
+class RateMgr;
 
 namespace AIDA { class IBaseHistogram; }
 
@@ -36,7 +37,7 @@ Algorithm.Property and returns the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc 
+class MonitorSvc
 : virtual public IGauchoMonitorSvc,
   virtual public IIncidentListener,
   virtual public Service
@@ -134,6 +135,7 @@ private:
   MonSubSys *m_HistSubSys;
   MonSubSys *m_CntrSubSys;
   CntrMgr *m_CntrMgr;
+  RateMgr *m_RateMgr;
   std::string m_utgid;
   std::string m_expandInfix;
   std::string m_partname;

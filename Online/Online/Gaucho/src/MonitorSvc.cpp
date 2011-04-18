@@ -21,6 +21,8 @@
 #include "TH1D.h"
 #include "TProfile.h"
 #include "TH2D.h"
+#include "Gaucho/MonRate.h"
+#include "Gaucho/RateMgr.h"
 
 using namespace std;
 
@@ -107,7 +109,7 @@ StatusCode MonitorSvc::initialize()
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
 
-  if ( 0 != m_disableMonRate) 
+  if ( 0 != m_disableMonRate)
   {
     msg << MSG::DEBUG << "MonRate process is disabled." << endmsg;
   }
@@ -145,6 +147,14 @@ void MonitorSvc::undeclareInfo( const string& name, const IInterface*  owner)
        CntrMgr* cm = (CntrMgr*)it->second;
        cm->removeCounter(newName);
     }
+    newName = extract("COUNTER_TO_RATE", name);
+    newName = oname+"/R"+newName;
+    it = m_InfoMap.find(newName);
+    if (it != m_InfoMap.end())
+    {
+       RateMgr* rm = (RateMgr*)it->second;
+       rm->removeRate(newName);
+    }
     return;
   }
   newName = oname +"/"+name;
@@ -170,10 +180,11 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
   strings.clear();
   if (m_CntrMgr != 0)
   {
-    for (m_CntrMgr->m_counterMapIt = m_CntrMgr->m_counterMap.begin();m_CntrMgr->m_counterMapIt != m_CntrMgr->m_counterMap.end();
-        m_CntrMgr->m_counterMapIt++)
+    CntrMgr::counterMapIt it;
+    for (it = m_CntrMgr->m_counterMap.begin();it != m_CntrMgr->m_counterMap.end();
+        it++)
     {
-      nam = m_CntrMgr->m_counterMapIt->first;
+      nam = it->first;
       if (owner==0 || nam.find(oname.c_str()) != string::npos)
       {
         strings.push_back(nam);
@@ -183,6 +194,11 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
     {
       m_CntrMgr->removeCounter(strings[i]);
     }
+  }
+  strings.clear();
+  if (m_RateMgr != 0)
+  {
+    m_RateMgr->removeRateAll();
   }
   vector<MonObj*> v;
   if (m_HistSubSys != 0)
@@ -300,7 +316,7 @@ StatusCode MonitorSvc::stop()
   {
     m_CntrMgr->open();
   }
-  if ( m_MonSys )  
+  if ( m_MonSys )
   {
     m_MonSys->stop();
   }
@@ -379,6 +395,22 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
         m_HistSubSys->m_type = MONSUBSYS_Histogram;
       }
       addRate(m_HistSubSys,m_CntrMgr);
+
+
+      if (m_RateMgr == 0)
+      {
+        m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
+      }
+      MonRate<T> *mr = new MonRate<T>("R"+newName,desc,var);
+      m_RateMgr->addRate(oname+"/R"+newName,desc,*mr);
+      m_InfoMap.insert(pair<string,void*>(oname+"/R"+newName,(void*)m_RateMgr));
+      if (m_CntrSubSys == 0)
+      {
+        m_CntrSubSys = new MonSubSys(m_updateInterval);
+        m_CntrSubSys->m_type = MONSUBSYS_Counter;
+      }
+      m_CntrSubSys->addRateMgr(m_RateMgr);
+      m_CntrSubSys->addObj(mr);
     }
     else
     {
@@ -392,8 +424,8 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
     m_CntrSubSys = new MonSubSys(m_updateInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
   }
-  m_InfoMap.insert(pair<string,void*>(oname+"/"+nam,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
+  m_InfoMap.insert(pair<string,void*>(oname+"/"+nam,(void*)m_CntrSubSys));
 }
 
 void MonitorSvc::i_unsupported(const string& nam, const type_info& typ, const IInterface* owner)

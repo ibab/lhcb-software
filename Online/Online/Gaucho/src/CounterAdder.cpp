@@ -115,6 +115,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
             break;
           }
         case C_DOUBLE:
+        case C_RATE:
           {
             *(double*)ps += *(double*)ph;
             break;

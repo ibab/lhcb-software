@@ -22,7 +22,8 @@
 #include <GaudiUtils/Aida2ROOT.h>
 #include "Gaucho/dimhist.h"
 #include "Gaucho/CntrMgr.h"
-#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
+#include "Gaucho/Utilities.h"
+//#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
 
 //#include "AIDA/IProfile1D.h"
@@ -100,10 +101,11 @@ void MonHist::makeCounters()
   {
     if (m_cntrmgr->m_newcounter)
     {
-      if (m_rootobj != 0)
-      {
-        delete m_rootobj;
-      }
+      deletePtr(m_rootobj);
+//      if (m_rootobj != 0)
+//      {
+//        delete m_rootobj;
+//      }
       m_rootobj = tp = new TProfile("COUNTER_TO_RATE", "Counter to rate Profile",
           m_cntrmgr->m_counterMap.size()+8,0.0,m_cntrmgr->m_counterMap.size()+8);
     }
@@ -134,39 +136,40 @@ void MonHist::makeCounters()
     tp->Fill(7.50, (double) (m_cntrmgr->deltaT()), 1.00);
 
     int i = 9;
-    for (m_cntrmgr->m_counterMapIt = m_cntrmgr->m_counterMap.begin(); m_cntrmgr->m_counterMapIt != m_cntrmgr->m_counterMap.end(); m_cntrmgr->m_counterMapIt++)
+    CntrMgr::counterMapIt it;
+    for (it= m_cntrmgr->m_counterMap.begin(); it != m_cntrmgr->m_counterMap.end(); it++)
     {
-       if (m_cntrmgr->m_counterMapIt->second.second.first.compare("int") ==0 )
+       if (it->second.second.first.compare("int") ==0 )
        {
 //         printf("%s %s %s\n","Counter :", m_cntrmgr->m_counterMapIt->first.c_str(), " is int ");
-         tp->Fill((double)i - 0.5, (*(int*)(m_cntrmgr->m_counterMapIt->second.second.second)), 1.00);
+         tp->Fill((double)i - 0.5, (*(int*)(it->second.second.second)), 1.00);
        }
-       else if (m_cntrmgr->m_counterMapIt->second.second.first.compare("double") ==0 )
+       else if (it->second.second.first.compare("double") ==0 )
        {
 //         printf("%s %s %s\n","Counter :", m_cntrmgr->m_counterMapIt->first.c_str(), " is double ");
 //         msg <<MSG::DEBUG<<"Counter :" << m_cntrmgr->m_counterMapIt->first << " is double "<< endreq;
 //   msg <<MSG::DEBUG<<"Counter :" << (*(double*)(m_cntrmgr->m_counterMapIt->second.second.second)) << endreq;
-         tp->Fill((double)i - 0.5, (*(double*)(m_cntrmgr->m_counterMapIt->second.second.second)), 1.00);
+         tp->Fill((double)i - 0.5, (*(double*)(it->second.second.second)), 1.00);
        }
-       else if (m_cntrmgr->m_counterMapIt->second.second.first.compare("long") ==0 )
+       else if (it->second.second.first.compare("long") ==0 )
        {
 //         printf("%s %s %s\n","Counter :", m_cntrmgr->m_counterMapIt->first.c_str(), " is long ");
 //         msg <<MSG::DEBUG<<"Counter :" << m_cntrmgr->m_counterMapIt->first << " is long  "<< endreq;
-         tp->Fill((double)i - 0.5, (*(long*)(m_cntrmgr->m_counterMapIt->second.second.second)), 1.00);
+         tp->Fill((double)i - 0.5, (*(long*)(it->second.second.second)), 1.00);
        }
-       else if (m_cntrmgr->m_counterMapIt->second.second.first.compare("StatEntityflag") ==0 )
+       else if (it->second.second.first.compare("StatEntityflag") ==0 )
        {
 //         printf("%s %s %s\n","Counter :", m_cntrmgr->m_counterMapIt->first.c_str(), " is  StatEntity (flag) ");
 //         msg <<MSG::DEBUG<<"Counter :" << m_counterMapIt->first << " is StatEntity (flag) "<< endreq;
-         StatEntity counter = (*(StatEntity*) m_cntrmgr->m_counterMapIt->second.second.second);
+         StatEntity counter = (*(StatEntity*) it->second.second.second);
          tp->Fill((double)i - 0.5, counter.flag(), 1.00);
 //         msg <<MSG::DEBUG<<"Counter :" << counter.flag() << endreq;
        }
-       else if (m_cntrmgr->m_counterMapIt->second.second.first.compare("StatEntitynEntries") ==0 )
+       else if (it->second.second.first.compare("StatEntitynEntries") ==0 )
        {
 //         printf("%s %s %s\n","Counter :", m_cntrmgr->m_counterMapIt->first.c_str(), " is  StatEntity (nEntries) ");
 //         msg <<MSG::DEBUG<<"Counter :" << m_counterMapIt->first << " is StatEntity (nEntries) "<< endreq;
-         StatEntity counter = (*(StatEntity*) m_cntrmgr->m_counterMapIt->second.second.second);
+         StatEntity counter = (*(StatEntity*) it->second.second.second);
          tp->Fill((double)i - 0.5, counter.nEntries(), 1.00);
 //         msg <<MSG::DEBUG<<"Counter :" << counter.nEntries() << endreq;
        }
@@ -189,11 +192,11 @@ void MonHist::makeCounters()
        ax->SetBinLabel(8, "deltaT");
 
        i = 9;
-       for (m_cntrmgr->m_counterMapIt = m_cntrmgr->m_counterMap.begin(); m_cntrmgr->m_counterMapIt != m_cntrmgr->m_counterMap.end(); m_cntrmgr->m_counterMapIt++)
+       for (it = m_cntrmgr->m_counterMap.begin(); it != m_cntrmgr->m_counterMap.end(); it++)
        {
-  //       msg <<MSG::DEBUG<<"label description: " << (*(m_cntrmgr->m_counterMapIt->second.first)).c_str() << endreq;
-         ax->SetBinLabel(i, (*(m_cntrmgr->m_counterMapIt->second.first)).c_str());
-  //       printf("Rate Axis Label for bin %d %s\n",i, (*(m_cntrmgr->m_counterMapIt->second.first)).c_str());
+  //       msg <<MSG::DEBUG<<"label description: " << (*(it->second.first)).c_str() << endreq;
+         ax->SetBinLabel(i, (*(it->second.first)).c_str());
+  //       printf("Rate Axis Label for bin %d %s\n",i, (*(it->second.first)).c_str());
          i++;
        }
      }
