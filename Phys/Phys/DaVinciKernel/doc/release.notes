@@ -4,6 +4,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-04-18 - Juan Palacios
+ - DaVinciFun
+  - DaVinci::Utils::findDecayTree
+   . Bug fix. Too many secondary vertices were being copied to local store.
+ - Increase to v10r0p1.
+
 !======================== DaVinciKernel v10r0 2011-02-20 ====================
 
 ! 2011-02-11 - Juan Palacios

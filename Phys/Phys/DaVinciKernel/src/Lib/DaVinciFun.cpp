@@ -67,7 +67,7 @@ namespace DaVinci
       }
       //
       if ( 0 != head->endVertex() 
-           && vertices.end() == std::find ( vertices.end() , 
+           && vertices.end() == std::find ( vertices.begin() , 
                                             vertices.end() , 
                                             head->endVertex() ) ) {
         vertices.push_back( head->endVertex() ); // save Vertex
