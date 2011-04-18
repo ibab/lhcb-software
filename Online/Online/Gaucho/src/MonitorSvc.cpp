@@ -526,6 +526,22 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
         m_HistSubSys->m_type = MONSUBSYS_Histogram;
       }
       addRate(m_HistSubSys,m_CntrMgr);
+
+
+      if (m_RateMgr == 0)
+      {
+        m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
+      }
+      MonRate<StatEntity> *mr = new MonRate<StatEntity>("R"+newName,desc,var);
+      m_RateMgr->addRate(oname+"/R"+newName,desc,*mr);
+      m_InfoMap.insert(pair<string,void*>(oname+"/R"+newName,(void*)m_RateMgr));
+      if (m_CntrSubSys == 0)
+      {
+        m_CntrSubSys = new MonSubSys(m_updateInterval);
+        m_CntrSubSys->m_type = MONSUBSYS_Counter;
+      }
+      m_CntrSubSys->addRateMgr(m_RateMgr);
+      m_CntrSubSys->addObj(mr);
     }
     else
     {
