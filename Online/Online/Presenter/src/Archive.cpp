@@ -621,6 +621,12 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
       std::cout << " ++ file " << (*itF).file_string() << " OK. Search " << dispHist->rootName() << std::endl;
       TH1* archiveHisto;
       rootFile -> GetObject( (dispHist->rootName()).c_str(), archiveHisto );
+      if (!archiveHisto) {
+        std::string name = dispHist->rootName();
+        name = name.substr( name.find("/")+1);
+        std::cout << "  .. try with " << name << std::endl;
+        rootFile -> GetObject( name.c_str(), archiveHisto );
+      }
       if (archiveHisto) {
         list->Add(archiveHisto);
         goodRootFiles.push_back(*itF);

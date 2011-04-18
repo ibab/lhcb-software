@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <ctime>
 
 // ROOT include
 #include <TApplication.h>
@@ -1638,8 +1639,7 @@ void PresenterMainFrame::setVerbosity(const pres::MsgLevel & verbosity) {
 //==============================================================================
 // Set the database mode
 //==============================================================================
-void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode &
-                                         databaseMode) {
+void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode & databaseMode) {
   switch (databaseMode) {
   case pres::LoggedOut:
     logoutFromHistogramDB();
@@ -1660,7 +1660,7 @@ void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode &
     break;
   case pres::ReadWrite:
     logoutFromHistogramDB();
-    loginToHistogramDB();
+    loginToHistogramDB( true );
     break;
   default:
     if (m_verbosity >= pres::Debug)
@@ -2098,10 +2098,15 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
 //==============================================================================
 // Login to the histogram database
 //==============================================================================
-void PresenterMainFrame::loginToHistogramDB() {
+void PresenterMainFrame::loginToHistogramDB( bool write) {
   if ( pres::Batch != presenterMode()) {
-    fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
-                                     m_knownDatabases, m_knownDbCredentials));
+    if ( write ) {
+      fClient->WaitFor(new LoginDialog(this, 350, 310, pres::ReadWrite,
+                                       m_knownDatabases, m_knownDbCredentials));
+    } else {
+      fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
+                                       m_knownDatabases, m_knownDbCredentials));
+    }
   }
 }
 
@@ -3010,6 +3015,7 @@ void PresenterMainFrame::reconfigureGUI() {
 
       m_previousIntervalButton->SetState(kButtonDisabled);
       m_nextIntervalButton->SetState(kButtonDisabled);
+
       m_rightMiscFrame->MapWindow();
       m_rightVerticalSplitter->MapWindow();
       m_startRefreshButton->SetState(kButtonDisabled);
@@ -4082,7 +4088,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
                                                 const std::string & pastDuration ) {
 
-  std::cout << "Enter loadSelectedPageFromDB" << std::endl;
+  std::cout << timeStamp()
+            << "Enter loadSelectedPageFromDB" << std::endl;
 
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
     TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
@@ -4697,7 +4704,7 @@ void PresenterMainFrame::nextInterval() {
 //==============================================================================
 void PresenterMainFrame::refreshPage() {
 
-  std::cout << "refreshing..." << std::endl;
+  std::cout << timeStamp() << " refreshing..." << std::endl;
 
   editorCanvas->cd();
 
@@ -5092,3 +5099,15 @@ void PresenterMainFrame::setDimDns ( ) {
   refreshPage();
 }
 
+//=========================================================================
+//  Return a timestamp string
+//=========================================================================
+std::string PresenterMainFrame::timeStamp ( ) {
+  char buf[40];
+  time_t now = ::time(0);
+  ::strftime( buf, 40, "%Y-%m-%d %H:%M:%S ", ::localtime(&now) );
+  std::cout << std::endl
+            << "=========================================================================="
+            << std::endl;
+  return std::string( buf );
+}

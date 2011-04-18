@@ -287,12 +287,14 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
 
   std::cout << "Found " << knownTasks.size() << " tasks with 2011 publication." << std::endl;
   
+  /*
   std::sort( knownTasks.begin(), knownTasks.end() );
   for ( std::vector<std::string>::iterator itS = knownTasks.begin();
         knownTasks.end() != itS; ++itS ) {
     std::cout << "   " << (*itS ) << std::endl;
   }
-  
+  */
+
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     bool foundTheTask = false;
     std::string taskName = (*itT).name;
@@ -321,6 +323,10 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
+        if ( !update && NULL != (*itH).rootHist() ) {   // cleanup before access...
+          delete (*itH).rootHist();
+          (*itH).setRootHist( NULL );
+        }
         std::string histoName = (*itH).identifier();
         unsigned int pos = histoName.find( "/" );   // remove the task name prefix
         if ( pos < histoName.size() ) {
@@ -329,7 +335,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
         
         (*itH).setShortName( histoName );
         if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
-          std::cout << "  ++ Search for '" << histoName << "'" << std::endl;
+          std::cout << "  ++ Existing service '" << histoName << "'" << std::endl;
           histNames.push_back( histoName );
         } else {
           std::cout << "  -- Not found '" << histoName << "'" << std::endl;

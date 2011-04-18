@@ -227,7 +227,7 @@ public:
   void savePageToFile();
   void savePageToHistogramDB();
   void reportToLog();
-  void loginToHistogramDB();
+  void loginToHistogramDB( bool write = false );
   bool connectToHistogramDB(const std::string & dbPassword,
                             const std::string & dbUsername,
                             const std::string & dbName);
@@ -707,6 +707,8 @@ public:
   bool isBatch( ) const { return ( pres::Batch == presenterMode() ) ; } ;
 
   void setDimDns();
+
+  std::string timeStamp();
 
   ClassDef(PresenterMainFrame, 0) // main editor window
 };
