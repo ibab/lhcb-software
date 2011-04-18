@@ -5,6 +5,8 @@
 !----------------------------------------------------------------------------- 
 
 !========================= GaussCherenkov v1r0 2011-03-03 ========================
+!2011-04-18 - Sajan Easo
+ - Added a few histograms on occupancy for monitoring.
 ! 2011-03-03 - Sajan EASO
  - First version 
  - Uses MAPMT as the photodetector
