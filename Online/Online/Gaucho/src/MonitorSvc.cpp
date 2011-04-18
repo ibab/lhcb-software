@@ -61,6 +61,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   m_savetimer = 0;
   m_CntrSubSys = 0;
   m_CntrMgr = 0;
+  m_RateMgr = 0;
   declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
   declareProperty("disableMonRate", m_disableMonRate = 0);
   declareProperty("disableDimPropServer", m_disableDimPropServer = 0);
