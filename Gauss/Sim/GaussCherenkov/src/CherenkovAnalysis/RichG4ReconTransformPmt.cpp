@@ -248,6 +248,11 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
                   apvbTransInv* apvcTransInv*
                   apvdTransInv* apvfTransInv*apvgTransInv;
 
+                m_PmtPhDetPanelToLocal=apvgTrans*apvfTrans* apvdTrans;
+                m_PmtLocalToPmtPhDetPanel=apvdTransInv* apvfTransInv*apvgTransInv;
+                
+
+
               }
 
               }
@@ -378,6 +383,12 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
             m_PmtLocalToGlobal =
               aRich2MasterTransInv*bpvaTransInv*
               bpvbTransInv *  bpvcTransInv * bpvfTransInv*bpvgTransInv;
+
+
+            m_PmtPhDetPanelToLocal=bpvgTrans*bpvfTrans* bpvcTrans;
+            m_PmtLocalToPmtPhDetPanel=bpvcTransInv * bpvfTransInv*bpvgTransInv;
+             
+
 
             //      Gaudi::XYZPoint testkall(0.0,0.0,0.0);
             //  RichG4ReconTransformPmtlog<<MSG::INFO<<"test Kall  "<<testkall<<"   "<<m_PmtGlobalToLocal *testkall<<endreq;

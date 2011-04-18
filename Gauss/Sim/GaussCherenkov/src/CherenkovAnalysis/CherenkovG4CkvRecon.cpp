@@ -350,8 +350,47 @@ Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
   return  Gaudi::XYZPoint(xhit,yhit,zhitc);
 }
 
-Gaudi::XYZPoint  
-CherenkovG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord )
+Gaudi::XYZPoint  CherenkovG4CkvRecon::GetCoordInPhDelPanelPlane(const Gaudi::XYZPoint & aLocalHitCoord ){
+  
+  IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();
+  MsgStream CherenkovG4CkvReconlog( msgSvc,"CherenkovG4CkvRecon");
+  Gaudi::XYZPoint aPhDetCoordPoint(0.0,0.0,0.0);
+  
+  if(aLocalHitCoord.x() == -10000.0 ||
+     aLocalHitCoord.y() == -10000.0 ||
+     aLocalHitCoord.z() == -10000.0 ) {
+    
+    CherenkovG4CkvReconlog << MSG::ERROR
+                      <<" For Pmt occupancy Pmt local Hit coord not set "
+                      <<endreq;
+    
+  }else {
+
+    Gaudi::XYZPoint curLocalHitPhCath =
+      m_RichG4ReconPmt->ReconHitOnPhCathFromLocalHitCoord(aLocalHitCoord);
+   if( m_CurrentRichDetNum >=0 &&  m_CurrentPmtNum >=0 ) {
+
+      //  RichG4ReconTransformPmt* CurPmtTransform =
+      //  m_PmtTransforms[m_CurrentRichDetNum] [m_CurrentPmtNum];
+
+      RichG4ReconTransformPmt* CurPmtTransformB = 
+        (m_CurrentRichDetNum ==0) ? m_Rich1_PmtTransforms[m_CurrentPmtNum]: m_Rich2_PmtTransforms[m_CurrentPmtNum];   
+                    
+      if(CurPmtTransformB) {
+        Gaudi::Transform3D PmttoPhDetTransform = CurPmtTransformB -> PmtLocalToPmtPhDetPanel();
+        aPhDetCoordPoint  = PmttoPhDetTransform * curLocalHitPhCath;
+      }
+      
+   }
+  }
+  
+  return   aPhDetCoordPoint;
+  
+}
+
+  
+
+Gaudi::XYZPoint CherenkovG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord )
 {
 
   IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();

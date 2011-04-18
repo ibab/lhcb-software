@@ -211,7 +211,9 @@ G4int CkvG4GeomProp::PixelPosFinder(G4double Xc,
   //      <<"  "<< aBound[5] <<"  "<< aBound[6] <<"  "
   //      << aBound[7] <<"  "<< aBound[8] <<G4endl;
   
-  if(Xc < aBound[0] || Xc > aBound[aBound.size()-1] )
+  //  if(Xc < aBound[0] || Xc > aBound[aBound.size()-1] )
+  // a tolerence of 0.001 is used to avoid machine precision issues.
+  if( (Xc- aBound[0])< (-0.001) || (Xc- aBound[aBound.size()-1])> (0.001) )
   {
     G4cout << " RichGeomProp: Pixel coord outside PmtAnode "
            <<" Coord and Pixel bounds =  "

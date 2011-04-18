@@ -13,6 +13,7 @@
 #include "CherenkovG4HistoFillSet2.h"
 #include "RichG4HistoFillSet3.h"
 #include "CherenkovG4HistoFillSet4.h"
+#include "CherenkovG4HistoFillSet5.h"
 #include "RichG4HistoFillTimer.h"
 #include "CkvG4EventHitCount.h"
 #include "CherenkovG4HitRecon.h"
@@ -71,6 +72,10 @@ public:
   CherenkovG4HistoFillSet4* GetRichG4HistoFillSet4() 
   {
     return m_RichG4HistoFillSet4;
+  }
+  CherenkovG4HistoFillSet5* GetCherenkovG4HistoFillSet5() 
+  {
+    return m_CherenkovG4HistoFillSet5;
   }
 
 
@@ -158,6 +163,7 @@ private:
   CherenkovG4HistoFillSet2* m_RichG4HistoFillSet2;
   RichG4HistoFillSet3* m_RichG4HistoFillSet3;
   CherenkovG4HistoFillSet4* m_RichG4HistoFillSet4;
+  CherenkovG4HistoFillSet5* m_CherenkovG4HistoFillSet5;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
   CkvG4EventHitCount* m_RichG4EventHitCounter;
   CherenkovG4HitRecon* m_RichG4HitRecon;
@@ -169,6 +175,7 @@ private:
   bool m_RichEventActionHistoFillActivateSet2;
   bool m_RichEventActionHistoFillActivateSet3;
   bool m_RichEventActionHistoFillActivateSet4;
+  bool m_RichEventActionHistoFillActivateSet5;
   bool m_RichEventActionHistoFillActivateTimer;
   bool m_RichG4EventHitActivateCount;
   bool m_RichG4EventActivateCkvRecon;

@@ -49,6 +49,7 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
     m_RichG4HistoFillSet2(0),
     m_RichG4HistoFillSet3(0),
     m_RichG4HistoFillSet4(0),
+    m_CherenkovG4HistoFillSet5(0),    
     m_RichG4HistoFillTimer(0),
     m_RichG4EventHitCounter(0),
     m_RichG4HitRecon(0),
@@ -58,6 +59,7 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
     m_RichEventActionHistoFillActivateSet2(false),
     m_RichEventActionHistoFillActivateSet3(false),
     m_RichEventActionHistoFillActivateSet4(false),
+    m_RichEventActionHistoFillActivateSet5(false),
     m_RichEventActionHistoFillActivateTimer(false),
     m_RichG4EventHitActivateCount(false),
     m_RichG4EventActivateCkvRecon(false),
@@ -79,6 +81,8 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
                    m_RichEventActionHistoFillActivateSet3);
   declareProperty( "RichEventActionHistoFillSet4",
                    m_RichEventActionHistoFillActivateSet4);
+  declareProperty( "RichEventActionHistoFillSet5",
+                   m_RichEventActionHistoFillActivateSet5);
   declareProperty( "RichEventActionHistoFillTimer",
                    m_RichEventActionHistoFillActivateTimer);
 
@@ -152,6 +156,7 @@ CherenkovG4EventAction::~CherenkovG4EventAction( ){
   delPointer( m_RichG4HistoFillSet2 );
   delPointer( m_RichG4HistoFillSet3 );
   delPointer( m_RichG4HistoFillSet4 );
+  delPointer( m_CherenkovG4HistoFillSet5 );
   delPointer( m_RichG4HistoFillTimer );
   delPointer( m_RichG4EventHitCounter );
   delPointer( m_RichG4InputMon);
@@ -194,6 +199,14 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     }
   
   }
+
+  // now for filling the occupancies
+    if(m_RichEventActionHistoFillActivateSet5) {
+      m_CherenkovG4HistoFillSet5= new CherenkovG4HistoFillSet5();
+      m_CherenkovG4HistoFillSet5->InitCherenkovG4HistoFillSet5();
+      m_RichG4HitRecon -> setCherenkovG4HistoFillSet5Occp(  m_CherenkovG4HistoFillSet5);
+    }
+    
 
   // now for the reconstruction for test.
 
@@ -318,13 +331,19 @@ void CherenkovG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event 
 
   }
 
+    if(m_RichEventActionHistoFillActivateSet5) {
+      m_RichG4HitRecon -> RichG4GetOccupancies(anEvent,
+                              m_NumRichColl, m_RichG4CollectionID);
+      
+      m_CherenkovG4HistoFillSet5->FillRichG4HistoSet5NumH();
+    }
+
   if(m_RichG4EventActivateCkvRecon) {
 
     if( m_RichG4HitRecon != 0 ) {
      
       m_RichG4HitRecon->RichG4ReconstructCherenkovAngle(anEvent,
                               m_NumRichColl, m_RichG4CollectionID);
-
 
     }
 

@@ -7,6 +7,7 @@
 #include "CherenkovG4CkvRecon.h"
 #include "RichG4ReconFlatMirr.h"
 #include "CherenkovG4HistoFillSet4.h"
+#include "CherenkovG4HistoFillSet5.h"
 #include "RichG4HitCoordResult.h"
 
 #include "G4Event.hh"
@@ -28,6 +29,10 @@ public:
   void RichG4ReconstructCherenkovAngle(const G4Event* anEvent,
                                        int NumRichColl, 
                                        const std::vector<int> & RichG4CollectionID ) ;
+
+
+  void RichG4GetOccupancies(const G4Event* anEvent,int NumRichColl,
+                            const std::vector<int> & RichG4CollectionID ) ;
 
   void setRichG4CkvRec ();
   CherenkovG4CkvRecon* getRichG4CkvRec()
@@ -58,6 +63,11 @@ public:
   void setRichG4HistoFillSet4Ckv(CherenkovG4HistoFillSet4* aRichG4HistoFillSet4 )
   {
     m_RichG4HistoFillSet4Ckv = aRichG4HistoFillSet4;
+
+  }
+  void setCherenkovG4HistoFillSet5Occp(CherenkovG4HistoFillSet5* aRichG4HistoFillSet5Occp )
+  {
+   m_CherenkovG4HistoFillSet5Occp = aRichG4HistoFillSet5Occp ;
 
   }
 
@@ -92,6 +102,7 @@ private:
   CherenkovG4CkvRecon* m_RichG4CkvRec;
   RichG4ReconFlatMirr* m_RichG4ReconFlatMirr;
   CherenkovG4HistoFillSet4* m_RichG4HistoFillSet4Ckv;
+  CherenkovG4HistoFillSet5* m_CherenkovG4HistoFillSet5Occp;
   RichG4ReconResult* m_RichG4ReconResult;
   RichG4HitCoordResult* m_RichG4HitCoordResult;
   

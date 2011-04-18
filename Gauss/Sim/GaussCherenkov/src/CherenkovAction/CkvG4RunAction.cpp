@@ -13,10 +13,12 @@
 #include "CherenkovG4HistoDefineSet2.h"
 #include "RichG4HistoDefineSet3.h"
 #include "CherenkovG4HistoDefineSet4.h"
+#include "CherenkovG4HistoDefineSet5.h"
 #include "RichG4HistoDefineTimer.h"
 #include "RichG4Counters.h"
 #include "RichG4GaussPathNames.h"
 #include "RichG4MatRadIdentifier.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CkvG4RunAction
@@ -43,6 +45,7 @@ CkvG4RunAction::CkvG4RunAction
   , m_defineRichG4HistoSet2(false)
   , m_defineRichG4HistoSet3(false)
   , m_defineRichG4HistoSet4(false)
+  , m_defineRichG4HistoSet5(false)
   , m_defineRichG4HistoTimer(false)
   , m_aRichG4HistoSet1(0)
   , m_aRichG4HistoSet2(0)
@@ -58,6 +61,7 @@ CkvG4RunAction::CkvG4RunAction
   declareProperty("DefineRichG4HistoSet2", m_defineRichG4HistoSet2);
   declareProperty("DefineRichG4HistoSet3", m_defineRichG4HistoSet3);
   declareProperty("DefineRichG4HistoSet4", m_defineRichG4HistoSet4);
+  declareProperty("DefineRichG4HistoSet5", m_defineRichG4HistoSet5);
   declareProperty("DefineRichG4HistoTimer",  m_defineRichG4HistoTimer);
 
 
@@ -121,6 +125,10 @@ void CkvG4RunAction::BeginOfRunAction( const G4Run* run )
     m_aRichG4HistoSet4 = new CherenkovG4HistoDefineSet4();
   }
 
+  if(m_defineRichG4HistoSet5) {
+
+    m_aRichG4HistoSet5 = new CherenkovG4HistoDefineSet5();
+  }
 
   if(m_defineRichG4HistoTimer) {
 
@@ -145,6 +153,8 @@ void CkvG4RunAction::EndOfRunAction( const G4Run* run )
 {
   if( 0 == run )
   { Warning("EndOfRunAction:: G4Run* points to NULL!") ; }
+  //  info()<<" Now in CkvG4RunAction End of run action "<<endreq;
+  
   // the part for the interactive running of G4 commented out.
   /// get Geant4 UI manager
   //  G4UImanager* ui = G4UImanager::GetUIpointer() ;
@@ -160,6 +170,12 @@ void CkvG4RunAction::EndOfRunAction( const G4Run* run )
   //        ui->ApplyCommand( *iCmd );
   //      }
   //  }
+  // if(m_defineRichG4HistoSet5) {
+  //  m_aRichG4HistoSet5->FillPmtOccpHisto();
+  //  
+  //  
+  // }
+  
 }
 
 

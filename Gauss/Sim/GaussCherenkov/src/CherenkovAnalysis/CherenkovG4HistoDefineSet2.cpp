@@ -76,7 +76,7 @@ void CherenkovG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
-  title="Total number of Rich1 Hits in Gas in large events per event ";
+  title="Total number of Rich1 Hits in Gas per event in all events ";
 
   m_hNumTotHitGasRich1Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"153",
                               title,1000,0.0,8000.0);
@@ -86,10 +86,10 @@ void CherenkovG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   }
 
 
-  title="Total number of Rich2 Hits in large events per event ";
+  title="Total number of Rich2 Hits per event in all events ";
 
   m_hNumTotHitRich2Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"173",
-                              title,1000,0.0,4000.0);
+                              title,1000,0.0,8000.0);
   if(! m_hNumTotHitRich2Large) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -426,6 +426,7 @@ void CherenkovG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   }
 
 
+  
 }
 
 

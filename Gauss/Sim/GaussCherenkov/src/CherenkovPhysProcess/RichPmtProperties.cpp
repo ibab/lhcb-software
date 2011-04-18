@@ -11,6 +11,7 @@
 #include "boost/lexical_cast.hpp"
 #include "RichG4SvcLocator.h"
 #include "G4Material.hh"
+#include "CherenkovG4Counters.h"
 
 #include "RichDet/DeRichSystem.h"
 #include "RichDet/DeRichHPD.h"
@@ -133,9 +134,14 @@ void RichPmtProperties::InitializePmtProperties( ) {
     RichPmtlog << MSG::INFO
                << "Total Number of pmts in Rich2 = "
                << m_numPmtTotRich[1]<<endreq;
-
+    
   }
-
+  
+  CherenkovG4Counters* aCherenkovG4Counters=  CherenkovG4Counters:: getInstance();
+  aCherenkovG4Counters-> setNumPmtsRich(m_numPmtTotRich[0],m_numPmtTotRich[1]);
+  aCherenkovG4Counters->InitCherenkovG4Counters();
+  
+  
   // to resize the vectors. Just test on the size of one of the vectorlists
   // and adjust all the three vectorlists.
   for (int ird=0; ird<m_numberOfRichDetectors; ird++ ) {

@@ -98,7 +98,11 @@ public:
     m_curReflPt = aReflPt;
   }
 
+  Gaudi::XYZPoint GetCoordInPhDelPanelPlane( const Gaudi::XYZPoint & aLocalHitCoordA);
+
   Gaudi::XYZPoint ReconPhCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord);
+
+
   Gaudi::XYZPoint ReconReflectionPointOnSPhMirror(const Gaudi::XYZPoint & aDetectionPoint,
                                              const Gaudi::XYZPoint & aEmissionPoint , const Gaudi::XYZPoint & aQwPoint,
                                              int aRichDetNum, int aFlatMirrNum  );
@@ -174,7 +178,8 @@ public:
   {
     return m_PhDetTransforms[aSect];
   }
-  
+ 
+   
 protected:
 
 private:

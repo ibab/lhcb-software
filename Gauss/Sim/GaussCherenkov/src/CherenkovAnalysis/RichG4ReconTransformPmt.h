@@ -36,7 +36,13 @@ public:
   {
     return m_PmtGlobalToLocal;
   }
-
+  const Gaudi::Transform3D & PmtPhDetPanelToLocal() 
+  {  return m_PmtPhDetPanelToLocal;}
+  const Gaudi::Transform3D & PmtLocalToPmtPhDetPanel()
+  {   return m_PmtLocalToPmtPhDetPanel;}
+  
+    
+  
   void initialise();
 protected:
 
@@ -46,6 +52,10 @@ private:
 
   Gaudi::Transform3D m_PmtGlobalToLocal;
 
+
+  Gaudi::Transform3D m_PmtPhDetPanelToLocal;
+  Gaudi::Transform3D m_PmtLocalToPmtPhDetPanel;
+  
   int   m_Rich1SubMasterPvIndex;
 
   std::string   m_Rich1MagShPvName0;
