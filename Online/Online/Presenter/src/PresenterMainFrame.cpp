@@ -2398,7 +2398,6 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
   for (m_histogramIt = histogramList->begin();
        m_histogramIt != histogramList->end();
        ++m_histogramIt, ++m_histogramType) {
-    std::cout << "Histogram Name: " << *m_histogramIt << std::endl;
     HistogramIdentifier histogramIdentifier = HistogramIdentifier(*m_histogramIt);
     m_taskNode = node;
     // Taskname
@@ -2415,7 +2414,6 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
     // Algorithm name
     m_algorithmNode = m_taskNode;
     std::string algName = histogramIdentifier.algorithmName();
-    std::cout << "  Alg " << algName << std::endl;
     if (listView->FindChildByName( m_algorithmNode, algName.c_str())) {
       m_algorithmNode = listView->FindChildByName( m_algorithmNode, algName.c_str() );
     } else {
@@ -2429,7 +2427,6 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
     m_histogramSetNode = m_algorithmNode;
     std::string setName = histogramIdentifier.histogramSetName();
     if ( histogramIdentifier.isFromHistogramSet() ) {
-      std::cout << "    Set " << setName << std::endl;
       if (listView-> FindChildByName( m_histogramSetNode, setName.c_str() ) ) {
         m_histogramSetNode = listView-> FindChildByName( m_histogramSetNode, setName.c_str() );
       } else {
@@ -2439,7 +2436,6 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
       listView->SetCheckBox(m_histogramSetNode, true);
       listView->CheckItem(m_histogramSetNode, false);
       m_histogramSetNode->SetUserData(0);
-      std::cout << "      Remaning name " << histogramIdentifier.histogramName() << std::endl;
     }
     // Histogram name
     m_histogramNode = m_histogramSetNode;
@@ -2447,7 +2443,6 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
     m_histogramIdItemsIt = m_histogramIdItems->MakeIterator();
 
     while ( (m_histogramIdItem = m_histogramIdItemsIt->Next()) ) {
-      std::cout << "      Item " <<  m_histogramIdItem->GetName() << std::endl;
       if ( m_histogramIdItem != m_histogramIdItems->Last()) {
         if ( (listView->FindChildByName(m_histogramNode, m_histogramIdItem->GetName()))) {
           m_histogramNode = listView->FindChildByName(m_histogramNode, m_histogramIdItem->GetName());
@@ -2558,7 +2553,6 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
       }
       histogramTypes.push_back(type);
       histogramList.push_back(histogramID);
-      std::cout << "Found: " << type << " name '" << histogramID << "'" << std::endl;
     }
     histogramIDStream.str("");
   }
