@@ -323,6 +323,11 @@ void MonCounter::create_OutputService(std::string infix)
   std::string nam;
   if (m_service != 0) return;
   nam = m_srvcprefix+infix+std::string(m_name);
+  if (nam.length()>128 /* maximum length of a DIM service Name*/)
+  {
+    m_service = 0;
+    return;
+  }
   switch(m_type)
   {
     case C_INT:

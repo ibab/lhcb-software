@@ -43,4 +43,7 @@ macro_append  HistHammer_dependencies    " Gaucho "
 application CounterTest ../src/Test/CounterTest.cpp
 macro_append  CounterTest_dependencies    " Gaucho "
 
+application Cycler ../src/Test/Cycler.cpp
+macro_append  Cycler_dependencies    " Gaucho "
+
 macro_append Gaucho_shlibflags " -pthread " WIN32 ""
