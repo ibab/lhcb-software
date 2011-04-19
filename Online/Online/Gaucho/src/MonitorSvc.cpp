@@ -321,6 +321,7 @@ StatusCode MonitorSvc::stop()
   {
     m_MonSys->stop();
   }
+  StopSaving();
   return Service::stop();
 }
 
