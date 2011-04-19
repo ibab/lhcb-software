@@ -349,14 +349,14 @@ void WritePackedDst::storeInBlob( PackedBank& pBnk, const void* data, unsigned i
   while ( MAXBANK < len ) {
     LHCb::RawBank* bank = m_dst->createBank( m_blobNumber++, LHCb::RawBank::DstData,
                                              0, MAXBANK, start );
-    m_dst->addBank( bank );
+    m_dst->adoptBank( bank, true );
     start = start + MAXBANK/4;
     len  -= MAXBANK;
   }
   if ( 0 < len ) {
     LHCb::RawBank* bank = m_dst->createBank( m_blobNumber++, LHCb::RawBank::DstData,
                                              0, len, start );
-    m_dst->addBank( bank );
+    m_dst->adoptBank( bank, true );
   }
 }
 

@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2011-04-19 - Olivier Callot
+ - Fix the ownership (memory leak) in WritePackedDst::storeInBlob
+
 !========================= EventPacker v2r8 2011-04-06 =========================
 ! 2011-04-06 - Olivier Callot
  - Fix the handling of unsigned short as index in the list of LHCbIDs, when it overflows 65k.
