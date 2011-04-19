@@ -464,13 +464,13 @@ int MonHist::xmitbuffersize()
 void *MonHist::cpyName(void *ptr)  const
 {
   ::memcpy(ptr,m_name.c_str(),m_name.length()+1);
-  return ptr;
+  return AddPtr(ptr,m_name.length());
 }
 
 void *MonHist::cpytitle(void *ptr)  const
 {
   ::memcpy(ptr,m_title.c_str(),m_title.length()+1);
-  return ptr;
+  return AddPtr(ptr,m_title.length());
 }
 
 void MonHist::clear()

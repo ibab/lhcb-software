@@ -104,7 +104,7 @@ void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, co
 void *MonCounter::cpyName(void *p) const
 {
   ::memcpy(p, m_name.c_str(), m_name.length()+1);
-  return p;
+  return AddPtr(p,m_name.length());
 }
 
 void MonCounter::clear(void)
@@ -136,7 +136,7 @@ int MonCounter::xmitbuffersize()
 void *MonCounter::cpytitle(void *p) const
 {
   memcpy(p,m_title.c_str(),m_title.length()+1);
-  return p;
+  return AddPtr(p,m_title.length());
 }
 
 int MonCounter::serialize(void* &ptr)
