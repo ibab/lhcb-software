@@ -42,6 +42,9 @@ L0MuonFromRawTrans::L0MuonFromRawTrans( const std::string& name,
   declareProperty( "ConfigFile" , m_configfile="$PARAMFILESROOT/data/L0MuonKernel.xml" );
   declareProperty( "DumpErrors"  , m_dumpError=false      );
 
+  m_version=0;
+  m_l0EventNumber=-1;
+  m_l0_B_Id=-1;
   
 }
 //=============================================================================

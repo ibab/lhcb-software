@@ -36,6 +36,13 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
 
   // Default for HLT :
   declareProperty( "DAQMode"        , m_mode = 0 );
+
+  m_totEvent = 0;
+  m_totBx = 0;
+  m_errorEvent = 0;
+  m_enableTAE = false;
+  m_procVersion = 0;
+  
 }
 
 

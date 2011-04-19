@@ -80,6 +80,9 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("DAQMode"        , m_mode        = 1 );
   declareProperty("Compression"    , m_compression = true );
 
+  m_totEvent = 0;
+  m_totBx = 0;
+  m_itck = -1 ;
 }
 
 

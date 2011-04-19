@@ -3,6 +3,14 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-04-19 - Julien Cogan
+ - fix "bugs" found by Coverity (variables were initialised in the initialize methode)
+	  - L0MuonAlg.cpp : initialize m_totEvent,m_totBx,m_itck in constructor
+    - L0MuonCandidatesFromRaw.cpp : initialize m_totEvent,m_totBx,m_errorEvent,
+			m_enableTAE,m_procVersion in constructor
+    - L0MuonFromRawTrans.cpp : initialize m_version,m_l0EventNumber,m_l0_B_Id
+      in constructor
+
 !========================= L0Muon v9r3 2011-04-05 =========================
 ! 2011-04-04 - Julien Cogan
  - fix bug occuring when the L0Muon condition is not present (e.g. MC09 
