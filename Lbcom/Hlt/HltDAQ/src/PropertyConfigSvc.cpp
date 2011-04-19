@@ -120,6 +120,7 @@ namespace {
 PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
   , m_joboptionsSvc(0)
+  , m_toolSvc(0)
   , m_algMgr(0)
   , m_appMgrUI(0)
   , m_accessSvc(0)

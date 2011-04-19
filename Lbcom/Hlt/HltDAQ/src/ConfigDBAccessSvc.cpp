@@ -232,7 +232,8 @@ DECLARE_SERVICE_FACTORY(ConfigDBAccessSvc)
 //=============================================================================
 ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
-  ,m_coolConfSvc(0)
+  , m_session(0)
+  , m_coolConfSvc(0)
 {
   std::string def( System::getEnv("HLTTCKROOT") );
   if (!def.empty()) def = std::string("sqlite_file:") + def + "/db/config.db";
