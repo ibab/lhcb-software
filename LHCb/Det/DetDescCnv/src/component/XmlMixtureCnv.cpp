@@ -69,6 +69,7 @@ XmlMixtureCnv::XmlMixtureCnv (ISvcLocator* svc) :
   nameString = xercesc::XMLString::transcode("name");
   natomsString = xercesc::XMLString::transcode("natoms");
   fractionmassString = xercesc::XMLString::transcode("fractionmass");
+  m_mixMode = MM_undefined;
 }
 
 

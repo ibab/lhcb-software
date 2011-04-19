@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2011-04-19 - Marco Cattaneo
+ - Fix defect 16169, UNINIT_CTOR in XmlMixtureCnv.cpp
+
 ! 2011-04-08 - Marco Cattaneo
  - Recover precision in rotation matrix in case of rotation by pi or halfpi
 
