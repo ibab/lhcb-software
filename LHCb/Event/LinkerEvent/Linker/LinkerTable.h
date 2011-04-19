@@ -18,7 +18,7 @@ public:
   typedef typename LinkerRange<SOURCE,TARGET>::iterator iterator;
 
   /// Standard constructor
-  LinkerTable( ) {}; 
+  LinkerTable( ) : m_links(NULL) {}; 
 
   virtual ~LinkerTable( ) {}; ///< Destructor
 
