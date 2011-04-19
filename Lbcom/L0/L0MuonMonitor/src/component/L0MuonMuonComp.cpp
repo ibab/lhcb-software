@@ -42,6 +42,8 @@ L0MuonMuonComp::L0MuonMuonComp( const std::string& name,
   declareProperty( "PrintOutSplashes",m_splash=false);
   declareProperty( "TAE_ignore_border",m_tae_ignore_border=false);
   declareProperty( "Use_central_finetime",m_use_central_finetime=false);
+  m_event_counter=0;
+
 }
 
 //=============================================================================

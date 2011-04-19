@@ -33,7 +33,9 @@ L0MuonAlgComparison::L0MuonAlgComparison( const std::string& name,
 {
   declareProperty("Extension0"     , m_extension_0 = ""  );
   declareProperty("Extension1"     , m_extension_1 = ""  );
-
+  m_diff = false;
+  for (int i=0; i<NCounters; ++i) m_counters[i]=0;
+  
 }
 //=============================================================================
 // Destructor
