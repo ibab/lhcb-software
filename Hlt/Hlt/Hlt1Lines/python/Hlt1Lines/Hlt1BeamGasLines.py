@@ -3,7 +3,7 @@
 #  Configuration of BeamGas Lines
 #  @author Jaap Panman jaap.panman@cern.ch
 #  @date 2009-02-25
-#  @author Plamen Hopcheb phopchev@cern.ch
+#  @author Plamen Hopchev phopchev@cern.ch
 #  @date 2011-03-01
 # =============================================================================
 """
@@ -75,8 +75,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 ### PV3D vertex cuts  
                 , 'VertexMinNTracks'        :    '9'
                 , 'VertexMaxChi2PerDoF'     : '9999.'
-                , 'HighRhoCut'              : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
-                , 'HighRhoPrescale'         : 'SCALE(0.07)' #e.g. 'SCALE(0.1)' / 'RATE(0.5)'  ### --> select only part of the vertices with 'high' rho
+                , 'VertexCutRho'            : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
+                , 'PrescaleHighRho'         : 'RATE(0.5)' #e.g. 'SCALE(0.1)' / 'RATE(0.5)'  ### --> select only part of the events with high-rho vertices
                   
                 ### Input Prescales  
                 , 'Prescale'                : { 'Hlt1BeamGasNoBeamBeam1'           : 1.
@@ -170,35 +170,45 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
     def GetVertexFilterAlg(self, lineName, InpVerticesName):
         ''' Create filters for the vertices produced by PV3D '''
-        #!!! zMin, zMax = self.HelperBeamsZRange(whichBeam)
-        zMin, zMax = -9999., 9999.
-        from Configurables import LoKi__VoidFilter
-        vtxSource             = "VSOURCE('%s')" % InpVerticesName
-        vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %(VertexMaxChi2PerDoF)s)" % self.getProps()
-        vtxCut_minNTracks     = "(NTRACKS > %(VertexMinNTracks)s)" % self.getProps()
-        #!!!! Add a cut on the track asymmetry? --> this can help us in the case of pp collisions in ee, be or eb crossings
-        #!!!! Add a cut on z_vtx to get rid of Offest Collisions at +/- 75 cm 
-        vtxCut_zPosMin        = "(VZ > %s*mm)" % zMin
-        vtxCut_zPosMax        = "(VZ < %s*mm)" % zMax
+        ### To Do:
+        #!!! Add a cut on the track asymmetry? --> this can help us in the case of pp collisions in ee, be or eb crossings
+        #!!! Add a cut on z_vtx to get rid of Offest Collisions at +/- 75 cm 
+
+        if   'Beam1' in lineName: zMin, zMax = self.HelperBeamsZRange('Beam1')
+        elif 'Beam2' in lineName: zMin, zMax = self.HelperBeamsZRange('Beam2')
+        else:                     zMin, zMax = self.HelperBeamsZRange('')
+
+        ### One object cuts ###
+        vtxCut_zPos           = "in_range(%s*mm, VZ, %s*mm)" %(zMin, zMax)
+        vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %s)"% self.getProp("VertexMaxChi2PerDoF")
+        vtxCut_minNTracks     = "(NTRACKS > %s)"  % self.getProp("VertexMinNTracks")
         vtxCut_excludeLumiReg = "((VZ < %s*mm) | (VZ > %s*mm))" %(self.getProp("BGVtxExclRangeMin"), self.getProp("BGVtxExclRangeMax"))
-        #Add a cut on transverse positions (get rid of interctions in the VELO)
-        #for the NoBeamBeam1(2) and EnhancedBeam1(2) reject ALL high-rho vertices
-        if 'NoBeam' in lineName or 'Enhanced' in lineName:
-            vtxCut_transvPos  =  self.getProp('HighRhoCut')
-        #for the Beam1(2), Forced & Parasitic lines accept small fraction of high-rho vertices
-        else:    
-            vtxCut_transvPos = "switch( %(HighRhoCut)s, VALL, scale( VALL, %(HighRhoPrescale)s ) )" % self.getProps()
-        vtxSink               = "~VEMPTY"
 
-        listCuts = [ vtxSource, vtxCut_maxChi2PerDoF, vtxCut_minNTracks, vtxCut_zPosMin, vtxCut_zPosMax, vtxCut_transvPos, vtxSink ]
-
+        listOneObjectCuts = [ vtxCut_zPos, vtxCut_maxChi2PerDoF, vtxCut_minNTracks ]
         #in case of a bb line add the cut that vetoes the Lumi Region
-        if "Cross" in lineName: listCuts.insert(-1, vtxCut_excludeLumiReg)
+        if "Cross" in lineName: listOneObjectCuts.append(vtxCut_excludeLumiReg)
+
+        ### Cut on the vertices transverse positions. Implement as "Stream cut"
+        ### (needed to scale down the number of events and not the number of vertices)
+        ### for the NoBeamBeam1(2) and EnhancedBeam1(2) reject ALL high-rho vertices
+        ### for the Beam1(2), Forced & Parasitic lines accept small fraction of high-rho vertices
+        vtxCut_smallRho = self.getProp('VertexCutRho')
+        if 'NoBeam' in lineName or 'Enhanced' in lineName:
+            vtxCut_transvPos = vtxCut_smallRho + " >> ~VEMPTY"
+        else:    
+            vtxCut_transvPos = "switch( has%s, ~VEMPTY, scale(~VEMPTY, %s) )" %(vtxCut_smallRho, self.getProp('PrescaleHighRho'))
+
+        ### The LoKi filter
+        ### First : the part with the one-object cuts (embed in the VSOURCE statement)
+        codeLoKiFilter = "VSOURCE('%s', %s)" %(InpVerticesName, " & ".join(listOneObjectCuts))
+        ### Second : the stream part
+        codeLoKiFilter += " >> "+vtxCut_transvPos
 
         ### The last algorithm should have name of line, plus 'Decision'
+        from Configurables import LoKi__VoidFilter
         return LoKi__VoidFilter( 'Hlt1%sDecision' % lineName
                                , Preambulo = ['from LoKiPhys.decorators import *']
-                               , Code = " >> ".join( listCuts )
+                               , Code = codeLoKiFilter
                                )
 
     ############################################################################
