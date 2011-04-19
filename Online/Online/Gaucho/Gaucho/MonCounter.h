@@ -33,36 +33,34 @@ public:
   DimService *m_service;
   std::string m_srvcprefix;
   std::string m_fmt;
-  //HistService *serv;
+
   int type() const {return (int)m_type;};
-  MonCounter(const char *name, const char *title, const int *data );
-  MonCounter(const char *name, const char *title, const long *data );
-  MonCounter(const char *name, const char *title, const long long *data );
-  MonCounter(const char *name, const char *title, const float *data );
-  MonCounter(const char *name, const char *title, const double *data );
-  MonCounter(const char *name, const char *title, const std::string& fmt, const void *data , int size);
+  MonCounter(const std::string& name, const std::string& title, const int *data );
+  MonCounter(const std::string& name, const std::string& title, const long *data );
+  MonCounter(const std::string& name, const std::string& title, const long long *data );
+  MonCounter(const std::string& name, const std::string& title, const float *data );
+  MonCounter(const std::string& name, const std::string& title, const double *data );
+  MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size);
   MonCounter();
-  void setup(MONTYPE typ, const void *ext, const char *name, const char *title);
+  void setup(MONTYPE typ, const void *ext, const std::string& name, const std::string& title);
   virtual ~MonCounter();
-  //int setname (const char* name);
   void clear(void);
-  int titlen();
-  int namelen();
-  void *cpytitle(void *ptr);
-  //int Init(const char *title);
-  void *getextid (void);
-  int namelength(void) const  {    return m_name.length()+1;  }
-  void *cpyName(void *ptr);
-  int datasize();
+  void *cpytitle(void *ptr) const;
+  void *getextid(void);
+  int titlen() const      {    return m_title.length()+1; }
+  int namelen() const     {    return m_name.length()+1;  }
+  int namelength() const  {    return m_name.length()+1;  }
+  int datasize()   const  {    return buffersize;         }
+  void *cpyName(void *ptr) const;
   int xmitbuffersize();
-  int hdrlen();
+  int hdrlen() const;
   int serialize(void* &ptr);
   void List();
   static void *de_serialize(void *, char *nam = 0);
   void SetExpand(bool expand){this->m_expandService = expand;return;};
   void create_OutputService(std::string);
   void delete_OutputService();
-  DimService *getDimService();
+  DimService *getDimService() const;
 };
 
 #endif

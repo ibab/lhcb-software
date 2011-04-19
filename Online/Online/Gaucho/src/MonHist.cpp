@@ -11,11 +11,7 @@
 #include "GaudiKernel/StatEntity.h"
 #include "TObject.h"
 #include "Gaucho/RootHists.h"
-/*
-#include "TProfile.h"
-#include "TH1D.h"
-#include "TH2D.h"
-*/
+
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
@@ -26,7 +22,6 @@
 //#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 
 
-//#include "AIDA/IProfile1D.h"
 void MonHist::_clear()
 {
  m_type = H_ILLEGAL;
@@ -115,17 +110,6 @@ void MonHist::makeCounters()
       return;
     }
     tp->Reset();
-
-//    printf("makeCounters: m_cntrmgr->offsetTimeFirstEvInRun() = %X %f\n",m_cntrmgr->m_offsetTimeFirstEvInRun,m_cntrmgr->offsetTimeFirstEvInRun());
-//    printf("makeCounters: m_cntrmgr->offsetTimeLastEvInCycle() = %X %f\n",m_cntrmgr->m_offsetTimeLastEvInCycle,m_cntrmgr->offsetTimeLastEvInCycle());
-//    printf("makeCounters: m_cntrmgr->offsetGpsTimeLastEvInCycle() = %X %f\n",m_cntrmgr->m_offsetGpsTimeLastEvInCycle,m_cntrmgr->offsetGpsTimeLastEvInCycle());
-//    printf("makeCounters: m_cntrmgr->runNumber() = %X %d\n",m_cntrmgr->m_runNumber,m_cntrmgr->runNumber());
-//    printf("makeCounters: m_cntrmgr->triggerConfigurationKey() = %X %x\n",m_cntrmgr->m_triggerConfigurationKey,m_cntrmgr->triggerConfigurationKey());
-//    printf("makeCounters: m_cntrmgr->cycleNumber() = %X %d\n",m_cntrmgr->m_cycleNumber,m_cntrmgr->cycleNumber());
-//    printf("makeCounters: m_cntrmgr->deltaT() = %X %f\n",m_cntrmgr->m_deltaT,m_cntrmgr->deltaT());
-
-
-
     tp->Fill(0.50, m_cntrmgr->offsetTimeFirstEvInRun(), 1.00);
     tp->Fill(1.50, m_cntrmgr->offsetTimeLastEvInCycle(), 1.00);
     tp->Fill(2.50, m_cntrmgr->offsetGpsTimeLastEvInCycle(), 1.00);
@@ -210,36 +194,36 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IB
   m_rootdeser = 0;
   m_rootobj = 0;
   if( 0 != dynamic_cast<const AIDA::IProfile1D* >(aidahist) )
-	{
-
-		m_type = H_PROFILE;
-		MyTProfile *rhist = (MyTProfile*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D* >(aidahist)));
-		rhist->SetName(source.c_str());
-	  m_rootobj = rhist;
-	}
-	else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(aidahist) )
-	{
-		m_type = H_1DIM;
-		MyTH1D *rhist = (MyTH1D*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D* >(aidahist)));
-    rhist->SetName(source.c_str());
-    m_rootobj = rhist;
-	}
-	else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(aidahist) )
-	{
-		m_type = H_2DIM;
-		MyTH2D *rhist = (MyTH2D*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D* >(aidahist)));
-    rhist->SetName(source.c_str());
-    m_rootobj = rhist;
-	}
-	else
-	{
-	  msg << MSG::ERROR << "Unknown histogram type. Source " << source << endreq;
-	  m_rootobj = 0;
-	  return;
-	}
+    {
+      
+      m_type = H_PROFILE;
+      MyTProfile *rhist = (MyTProfile*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D* >(aidahist)));
+      rhist->SetName(source.c_str());
+      m_rootobj = rhist;
+    }
+  else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(aidahist) )
+    {
+      m_type = H_1DIM;
+      MyTH1D *rhist = (MyTH1D*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D* >(aidahist)));
+      rhist->SetName(source.c_str());
+      m_rootobj = rhist;
+    }
+  else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(aidahist) )
+    {
+      m_type = H_2DIM;
+      MyTH2D *rhist = (MyTH2D*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D* >(aidahist)));
+      rhist->SetName(source.c_str());
+      m_rootobj = rhist;
+    }
+  else
+    {
+      msg << MSG::ERROR << "Unknown histogram type. Source " << source << endreq;
+      m_rootobj = 0;
+      return;
+    }
   setup(msgs);
-	return;
 }
+
 void MonHist::setup(IMessageSvc* msgs, const std::string& source, const std::string &desc, const StatEntity *se)
 {
   MsgStream msg(msgs,"MonitorSvc");
@@ -253,7 +237,7 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const std::str
   m_hsumw = 0;
   m_name = source;
   m_namelen = m_name.length();
-  m_title = desc;
+  m_title  = desc;
   m_titlen = m_title.length();
   m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
   m_hdrlen = (m_hdrlen + 7)&~7;
@@ -270,18 +254,6 @@ void MonHist::resetup(void)
 {
   switch(m_type)
   {
-    case H_RATE:
-    case C_INT:
-    case C_LONGLONG:
-    case C_FLOAT:
-    case C_DOUBLE:
-    case C_STATENT:
-    case H_ILLEGAL:
-    case C_VOIDSTAR:
-    {
-      return;
-      break;
-    }
     case H_1DIM:
     case H_2DIM:
     case H_PROFILE:
@@ -298,8 +270,18 @@ void MonHist::resetup(void)
       }
       m_xlablen = 0;
       m_ylablen = 0;
-      setup(this->m_msgsvc);
+      setup(m_msgsvc);
     }
+    case H_RATE:
+    case C_INT:
+    case C_LONGLONG:
+    case C_FLOAT:
+    case C_DOUBLE:
+    case C_STATENT:
+    case H_ILLEGAL:
+    case C_VOIDSTAR:
+    default:
+      break;
   }
 }
 
@@ -466,76 +448,72 @@ int MonHist::GetBinLabels(TAxis *ax, char ***labs)
 }
 void MonHist::SetBinLabels(TAxis *ax, char *labs)
 {
-  int i;
   int nbin=ax->GetNbins();
   char *lab = labs;
-  for (i = 1; i < (nbin+1) ; ++i)
+  for (int i = 1; i < (nbin+1) ; ++i)
   {
     ax->SetBinLabel(i,lab);
     lab = (char*)AddPtr(lab,strlen(lab)+1);
   }
 }
+
 int MonHist::xmitbuffersize()
 {
   resetup();
   return m_xmitbuffersize;
 }
 
-void *MonHist::cpyName(void *ptr)
+void *MonHist::cpyName(void *ptr)  const
 {
-  strncpy((char*)ptr,m_name.c_str(),this->m_namelen);
-  ((char*)ptr)[m_namelen]=0;
-  ptr = (char*)ptr+m_namelen;
+  ::memcpy(ptr,m_name.c_str(),m_name.length()+1);
   return ptr;
 }
 
-void *MonHist::cpytitle(void *ptr)
+void *MonHist::cpytitle(void *ptr)  const
 {
-  memcpy((char*)ptr,m_title.c_str(),m_titlen);
-  ((char*)ptr)[m_titlen] = 0;
-  ptr = (char*)ptr+m_titlen;
+  ::memcpy(ptr,m_title.c_str(),m_title.length()+1);
   return ptr;
 }
 
 void MonHist::clear()
 {
   if (m_rootobj == 0) return;
-	switch(m_type)
-	{
-		case H_1DIM:
-		{
-			((TH1D*)m_rootobj)->Reset();
-			break;
-		}
-		case H_2DIM:
-		{
-			((TH2D*)m_rootobj)->Reset();
-			break;
-		}
-		case H_PROFILE:
-		case H_RATE:
-		{
-			((TProfile*) m_rootobj)->Reset();
-			break;
-		}
-		case C_STATENT:
-		{
-		  ((StatEntity*)m_rootobj)->reset();
-		  break;
-		}
-		default:
-		{
-		  break;
-		}
-	}
+  switch(m_type)
+    {
+    case H_1DIM:
+      {
+	((TH1D*)m_rootobj)->Reset();
+	break;
+      }
+    case H_2DIM:
+      {
+	((TH2D*)m_rootobj)->Reset();
+	break;
+      }
+    case H_PROFILE:
+    case H_RATE:
+      {
+	((TProfile*) m_rootobj)->Reset();
+	break;
+      }
+    case C_STATENT:
+      {
+	((StatEntity*)m_rootobj)->reset();
+	break;
+      }
+    default:
+      {
+	break;
+      }
+    }
 }
+
 int MonHist::serialize(void* &ptr)
 {
   int siz;
   int status;
   if (m_type == H_RATE)
   {
-//    printf("Serializing a RATE... calling makeCounters\n");
     this->makeCounters();
     if (this->m_rootobj == 0)
     {

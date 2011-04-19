@@ -14,27 +14,27 @@ MonCounter::MonCounter()
 {
   setup(H_ILLEGAL,0,0,0);
 }
-MonCounter::MonCounter(const char *name, const char *title, const int *data )
+MonCounter::MonCounter(const std::string& name, const std::string& title, const int *data )
 {
   setup(C_INT,data,name,title);
 }
-MonCounter::MonCounter(const char *name, const char *title, const long *data )
+MonCounter::MonCounter(const std::string& name, const std::string& title, const long *data )
 {
   setup(C_LONGLONG,data,name,title);
 }
-MonCounter::MonCounter(const char *name, const char *title, const long long *data )
+MonCounter::MonCounter(const std::string& name, const std::string& title, const long long *data )
 {
   setup(C_LONGLONG,data,name,title);
 }
-MonCounter::MonCounter(const char *name, const char *title, const float *data )
+MonCounter::MonCounter(const std::string& name, const std::string& title, const float *data )
 {
   setup(C_FLOAT,data,name,title);
 }
-MonCounter::MonCounter(const char *name, const char *title, const double *data )
+MonCounter::MonCounter(const std::string& name, const std::string& title, const double *data )
 {
   setup(C_DOUBLE,data,name,title);
 }
-MonCounter::MonCounter(const char *name, const char *title, const std::string& fmt, const void *data , int size)
+MonCounter::MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size)
 {
   setup(C_VOIDSTAR,data,name,title);
   m_fmt = fmt;
@@ -47,7 +47,7 @@ MonCounter::~MonCounter()
   deletePtr(m_service);
 }
 
-void MonCounter::setup(MONTYPE typ, const void *data,const char *name, const char *title)
+void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title)
 {
   m_type  = typ;
   m_title = "";
@@ -101,11 +101,12 @@ void MonCounter::setup(MONTYPE typ, const void *data,const char *name, const cha
   return;
 }
 
-void *MonCounter::cpyName(void *p)
+void *MonCounter::cpyName(void *p) const
 {
   ::memcpy(p, m_name.c_str(), m_name.length()+1);
   return p;
 }
+
 void MonCounter::clear(void)
 {
   if (m_contents)
@@ -113,16 +114,14 @@ void MonCounter::clear(void)
     ::memset((void*)m_contents,0,m_contsiz);
   }
 }
-int MonCounter::datasize()
-{
-  return buffersize;
-}
-int MonCounter::hdrlen()
+
+int MonCounter::hdrlen()  const
 {
   int s = sizeof(DimBuffBase)+titlen()+1+namelen()+1;
   s = (s + 7)&~7;   //align to 8-byte boundary...
   return s;
 }
+
 int MonCounter::xmitbuffersize()
 {
   if (m_type == C_VOIDSTAR)
@@ -134,21 +133,12 @@ int MonCounter::xmitbuffersize()
   return s;
 }
 
-int MonCounter::titlen(void)
-{
-  return (m_title.length()+1);//+3)&(~3); //align to 32-bits
-}
-
-int MonCounter::namelen(void)
-{
-  return m_name.length()+1;
-}
-
-void *MonCounter::cpytitle(void *p)
+void *MonCounter::cpytitle(void *p) const
 {
   memcpy(p,m_title.c_str(),m_title.length()+1);
   return p;
 }
+
 int MonCounter::serialize(void* &ptr)
 {
   if (m_type == C_VOIDSTAR)
@@ -294,18 +284,17 @@ void MonCounter::create_OutputService(std::string infix)
   }
   return;
 }
+
 void MonCounter::delete_OutputService()
 {
-  if (m_service != 0)
-  {
-    delete m_service;
-    m_service = 0;
-  }
+  deletePtr(m_service);
 }
-DimService *MonCounter::getDimService()
+
+DimService *MonCounter::getDimService()  const
 {
-  return this->m_service;
+  return m_service;
 }
+
 void *MonCounter::de_serialize(void *ptr, char *nam)
 {
   DimBuffBase *p = (DimBuffBase*)ptr;
