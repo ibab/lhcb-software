@@ -6,11 +6,11 @@
 class IMessageSvc;
 class CntrMgr
 {
-
 public:
-//  std::map<const std::string, std::pair<void*, std::string*>, std::less<std::string> > m_counterMap;
-//  std::map<const std::string, std::pair<void*, std::string*>, std::less<std::string> >::iterator m_counterMapIt;
+  typedef std::map<std::string, std::pair<std::string,std::pair<std::string, const void*> > > CounterMap;
+  typedef CounterMap::iterator counterMapIt;
 
+protected:
   int           *m_runNumber;       // Maybe we have to use double
   int           *m_cycleNumber;
   unsigned int  *m_triggerConfigurationKey;
@@ -19,99 +19,44 @@ public:
   double        *m_offsetTimeLastEvInCycle;
   double        *m_offsetGpsTimeLastEvInCycle;
 
-  int m_maxNumCounters;
-  int m_numCounters;
-
+  bool m_AllowAdd;
 
 public:
   bool m_newcounter;
-  bool m_AllowAdd;
-  std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> > m_counterMap;
-  typedef std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> >::iterator counterMapIt;
+  CounterMap m_counterMap;
+
   CntrMgr(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~CntrMgr();
 
+  void i_addCounter(const std::string& nam, const std::string& descr, const std::string& type, const void* count);
+
   void addCounter(const std::string& countName, const std::string& countDescription, const double& count)
   {
-    if (m_AllowAdd)
-    {
-      std::string* descr = new std::string(countDescription);
-      //m_counterMap[countName] = std::pair<void*, std::string*> ((void*) const_cast<double *>(&count), descr);
-      m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("double", (void*) const_cast<double *>(&count)));
-      m_newcounter = true;
-    }
-    else
-    {
-//      printf("Counter Manager: Adding Counters not allowed anymore...\n");
-    }
+    i_addCounter(countName,countDescription,"double",&count);
   }
-
   void addCounter(const std::string& countName, const std::string& countDescription, const int& count)
   {
-
-    if (m_AllowAdd)
-    {
-      std::string* descr = new std::string(countDescription);
-      //m_counterMap[countName] = std::pair<void*, std::string*> ((void*) (const_cast<int *>(&count)), descr);
-      //m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, ("int", (void*) const_cast<double *>(&count)));
-      m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("int", (void*) const_cast<int *>(&count)));
-      m_newcounter = true;
-    }
-    else
-    {
-//      printf("Counter Manager: Adding Counters not allowed anymore...\n");
-    }
+    i_addCounter(countName,countDescription,"int",&count);
   }
   void addCounter(const std::string& countName, const std::string& countDescription, const long& count)
   {
-
-    if (m_AllowAdd)
-    {
-      std::string* descr = new std::string(countDescription);
-      //m_counterMap[countName] = std::pair<void*, std::string*> ((void*) (const_cast<int *>(&count)), descr);
-      //m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, ("int", (void*) const_cast<double *>(&count)));
-      m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("long", (void*) const_cast<long *>(&count)));
-      m_newcounter = true;
-    }
-    else
-    {
-//      printf("Counter Manager: Adding Counters not allowed anymore...\n");
-    }
+    i_addCounter(countName,countDescription,"long",&count);
   }
-
   void addCounter(const std::string& countName, const std::string& countDescription, const StatEntity& count)
   {
-    //we only make rates of flag() and nEntries()
-    if (m_AllowAdd)
-    {
-      std::string* descr1 = new std::string(countDescription+"-flag");
-      std::string* descr2 = new std::string(countDescription+"-nEntries");
-      m_counterMap[countName+"-flag"] = std::pair<std::string*, std::pair<std::string, void*> >(descr1,std::pair<std::string,void*>("StatEntityflag",(void*) const_cast<StatEntity *>(&count)));
-      m_counterMap[countName+"-nEntries"] = std::pair<std::string*, std::pair<std::string, void*> >(descr2,std::pair<std::string,void*>("StatEntitynEntries",(void*) const_cast<StatEntity *>(&count)));
-      m_newcounter = true;
-    }
-    else
-    {
-//      printf("Counter Manager: Adding Counters not allowed anymore...\n");
-    }
+    i_addCounter(countName+"-flag",countDescription+"-flag","StatEntityflag",&count);
+    i_addCounter(countName+"-nEntries",countDescription+"-nEntries","StatEntitynEntries",&count);
   }
   void removeCounter (std::string &name)
   {
-    counterMapIt it;
-    it = m_counterMap.find(name);
+    counterMapIt it = m_counterMap.find(name);
     if (it != m_counterMap.end())
     {
       m_counterMap.erase(it);
-      delete (it->second.first);
     }
   }
-  void removeCounterAll ()
+  void removeCounterAll()
   {
-    counterMapIt it;
-    for (it = m_counterMap.begin();it!= m_counterMap.end();it++)
-    {
-      delete (it->second.first);
-    }
     m_counterMap.clear();
   }
 
@@ -126,22 +71,15 @@ public:
     m_offsetGpsTimeLastEvInCycle = offsetGpsTimeLastEvInCycle;
   }
 
-//  std::map<const std::string, std::pair<void*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
-  std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> > counterMap(){return m_counterMap;}
-  void setMaxNumCounters(int maxNumCounters) {m_maxNumCounters = maxNumCounters;}
-  int numCounters(){return m_numCounters;}
-  void setNumCounters(int numCounters){m_numCounters = numCounters;}
-  void clearNewCounter(void ){m_newcounter = false;return;};
-//private:
-  double offsetTimeFirstEvInRun() {return (m_offsetTimeFirstEvInRun!=0 ? *m_offsetTimeFirstEvInRun : 0);}
-  double offsetTimeLastEvInCycle() {return (m_offsetTimeLastEvInCycle != 0 ? *m_offsetTimeLastEvInCycle : 0);}
-  double offsetGpsTimeLastEvInCycle() {return (m_offsetGpsTimeLastEvInCycle != 0 ? *m_offsetGpsTimeLastEvInCycle : 0);}
-  int runNumber() {return (m_runNumber != 0 ? *m_runNumber : 0);}
-  unsigned int triggerConfigurationKey() {return (m_triggerConfigurationKey != 0 ? *m_triggerConfigurationKey : 0);}
-  int cycleNumber() {return (m_cycleNumber != 0 ? *m_cycleNumber : 0);}
-  double deltaT() {return (m_deltaT != 0 ? (double)*(unsigned long long *)m_deltaT : 0);}
-  void open(){m_AllowAdd = true;return;}
-  void close(){m_AllowAdd = false;return;}
+  double offsetTimeFirstEvInRun()  const       { return (m_offsetTimeFirstEvInRun!=0 ? *m_offsetTimeFirstEvInRun : 0);}
+  double offsetTimeLastEvInCycle() const       { return (m_offsetTimeLastEvInCycle != 0 ? *m_offsetTimeLastEvInCycle : 0);}
+  double offsetGpsTimeLastEvInCycle() const    { return (m_offsetGpsTimeLastEvInCycle != 0 ? *m_offsetGpsTimeLastEvInCycle : 0);}
+  int runNumber() const                        { return (m_runNumber != 0 ? *m_runNumber : 0);}
+  unsigned int triggerConfigurationKey() const { return (m_triggerConfigurationKey != 0 ? *m_triggerConfigurationKey : 0);}
+  int cycleNumber() const                      { return (m_cycleNumber != 0 ? *m_cycleNumber : 0);}
+  double deltaT()  const                       { return (m_deltaT != 0 ? (double)*(unsigned long long *)m_deltaT : 0);}
+  void open()                                  { m_AllowAdd = true;return;}
+  void close()                                 { m_AllowAdd = false;return;}
 };
 
 #endif //GAUCHO_CNTRMGR_H

@@ -139,7 +139,7 @@ void MonHist::makeCounters()
     CntrMgr::counterMapIt it;
     for (it= m_cntrmgr->m_counterMap.begin(); it != m_cntrmgr->m_counterMap.end(); it++)
     {
-       if (it->second.second.first.compare("int") ==0 )
+       if (it->second.second.first == "int" )
        {
 //         printf("%s %s %s\n","Counter :", m_cntrmgr->m_counterMapIt->first.c_str(), " is int ");
          tp->Fill((double)i - 0.5, (*(int*)(it->second.second.second)), 1.00);
@@ -195,7 +195,7 @@ void MonHist::makeCounters()
        for (it = m_cntrmgr->m_counterMap.begin(); it != m_cntrmgr->m_counterMap.end(); it++)
        {
   //       msg <<MSG::DEBUG<<"label description: " << (*(it->second.first)).c_str() << endreq;
-         ax->SetBinLabel(i, (*(it->second.first)).c_str());
+         ax->SetBinLabel(i, it->second.first.c_str());
   //       printf("Rate Axis Label for bin %d %s\n",i, (*(it->second.first)).c_str());
          i++;
        }

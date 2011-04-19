@@ -317,7 +317,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
               sname = m_NamePrefix+nams;
               if (sname.size() < MAX_SERVICE_SIZE)
               {
-                s= new RateService(sname.c_str(),(char*)"D:2;C");
+                s= new RateService(sname.c_str(),"D:2;C");
                 outs = new OUTServiceDescr((char*)nams.c_str(),(void*)s);
                 this->m_outputServicemap.insert(OUTServicePair(nams,outs));
               }
