@@ -397,8 +397,6 @@ void MonHist::setup(IMessageSvc* msgs)
   return;
 }
 
-
-
 MonHist::~MonHist()
 {
   if (m_Xlabels != 0)
@@ -625,14 +623,8 @@ int MonHist::serialize(void* &ptr)
       pp->xlaboff = pp->titoff+pp->titlen;
       nam = (char*)AddPtr(pp,pp->nameoff);
       tit = (char*)AddPtr(pp,pp->titoff);
-//      errp  = (double*)AddPtr(ntries,m_blocksize);
       xtits = (char*)AddPtr(pp,pp->xlaboff);
       pp->dim = 1;
-//      if (m_type == H_RATE)
-//      {
-//        printf ("Array Size %d Blocksize = %d ",((TProfile*)m_rootobj)->fN,m_blocksize);
-//        ((TProfile*)m_rootobj)->Print("range");
-//      }
      break;
     }
     default:
@@ -682,24 +674,8 @@ int MonHist::serialize(void* &ptr)
       memcpy(sum2,hsum2,m_blocksize);
       memcpy(bsum2,hbinsum2,m_blocksize);
 
-
-
-
-
       pp->yminval = ((MyTProfile*)m_rootobj)->fYmin;
       pp->ymaxval = ((MyTProfile*)m_rootobj)->fYmax;
-//      if (m_type == H_RATE)
-//      {
-//        MyTProfile *hh = (MyTProfile*)m_rootobj;
-//        hh->Dump();
-//        MyTArrayD* a;
-//        a = (MyTArrayD*)&(hh->fBinEntries);
-//        a->Dump((char*)"fBinEntries");
-//        a = (MyTArrayD*)&(hh->fSumw2);
-//        a->Dump((char*)"fSumw2");
-//        a = (MyTArrayD*)&(hh->fBinSumw2);
-//        a->Dump((char*)"fBinSumw2");
-//      }
       status  = 0;
       break;
     }
