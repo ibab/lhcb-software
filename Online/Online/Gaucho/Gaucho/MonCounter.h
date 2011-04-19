@@ -6,9 +6,6 @@
 #include <string>
 #include "dim/dis.hxx"
 #include "Utilities.h"
-//#include "Gaucho/RateMgr.h"
-//#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
-
 
 class CntrDescr
 {
@@ -23,51 +20,38 @@ class MonCounter : public MonObj
 //friend class HistService;
 protected:
   MONTYPE m_type;
-  void *m_contents;
-  int m_namelen;
-  char *m_title;      /** Pointer to Histogram Title **/
-  int m_titlen;       /* Allocated length in Bytes for the title */
+  const void *m_contents;
+  std::string m_name;
+  std::string m_title;
   int buffersize;     /* buffer size of the data if serialized*/
   unsigned int m_contsiz;      /* Allocated length in Bytes for the bin contents */
   int m_addoff;
 
-
-  // Methods
-
-  //void CopyData(int*,int*);
-  //void CopyData(long long *,long long*);
-  //void CopyData(float*,float*);
-  //void CopyData(double*,double*);
 public:
-  char* m_name;    /** Name of the histogram **/
-  const char *name() const;
+  const char *name() const { return m_name.c_str(); }
   bool m_expandService;
   DimService *m_service;
   std::string m_srvcprefix;
   std::string m_fmt;
   //HistService *serv;
   int type() const {return (int)m_type;};
-  MonCounter(char *name, char *title, int *data );
-  MonCounter(char *name, char *title, long *data );
-  MonCounter(char *name, char *title, long long *data );
-  MonCounter(char *name, char *title, float *data );
-  MonCounter(char *name, char *title, double *data );
-  MonCounter(char *name, char *title, std::string fmt, void *data , int size);
+  MonCounter(const char *name, const char *title, const int *data );
+  MonCounter(const char *name, const char *title, const long *data );
+  MonCounter(const char *name, const char *title, const long long *data );
+  MonCounter(const char *name, const char *title, const float *data );
+  MonCounter(const char *name, const char *title, const double *data );
+  MonCounter(const char *name, const char *title, const std::string& fmt, const void *data , int size);
   MonCounter();
-  void setup(MONTYPE typ, void *ext, char *name, char *title);
+  void setup(MONTYPE typ, const void *ext, const char *name, const char *title);
   virtual ~MonCounter();
-  int setname ( char* name);
+  //int setname (const char* name);
   void clear(void);
   int titlen();
   int namelen();
   void *cpytitle(void *ptr);
-  int Init(char *title);
+  //int Init(const char *title);
   void *getextid (void);
-  bool nameeq(char *nam, int namlen);
-  int namelength(void) const
-  {
-    return m_namelen+1;
-  }
+  int namelength(void) const  {    return m_name.length()+1;  }
   void *cpyName(void *ptr);
   int datasize();
   int xmitbuffersize();
@@ -80,11 +64,5 @@ public:
   void delete_OutputService();
   DimService *getDimService();
 };
-//#ifdef __cplusplus
-//extern "C"{
-//#endif
-//  void *cccpc_init(char* n);
-//#ifdef __cplusplus
-//}
-//#endif
+
 #endif

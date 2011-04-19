@@ -1,12 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "Gaucho/dimhist.h"
-//#include "Gaucho/MonSubSys.h"
 #include "Gaucho/MonCounter.h"
-#define dimtype double
-//#include "CCPCHist.h"
-//#include "Gaucho/ObjService.h"
-//#include "Gaucho/MonServer.h"
 
 #include <math.h>
 #include <iterator>
@@ -14,46 +9,88 @@
 #define MIN( x , y)  =   (( (x) < (y) ) ? (x) : (y) )
 #define MAX( x , y)  =   (( (x) > (y) ) ? (x) : (y) )
 
-//static DimHistbuff1 dumbuf1;
-//static DimHistbuff2 dumbuf2;
 
-void MonCounter::setup(MONTYPE typ, void *data,char *name, char *title)
+MonCounter::MonCounter()
+{
+  setup(H_ILLEGAL,0,0,0);
+}
+MonCounter::MonCounter(const char *name, const char *title, const int *data )
+{
+  setup(C_INT,data,name,title);
+}
+MonCounter::MonCounter(const char *name, const char *title, const long *data )
+{
+  setup(C_LONGLONG,data,name,title);
+}
+MonCounter::MonCounter(const char *name, const char *title, const long long *data )
+{
+  setup(C_LONGLONG,data,name,title);
+}
+MonCounter::MonCounter(const char *name, const char *title, const float *data )
+{
+  setup(C_FLOAT,data,name,title);
+}
+MonCounter::MonCounter(const char *name, const char *title, const double *data )
+{
+  setup(C_DOUBLE,data,name,title);
+}
+MonCounter::MonCounter(const char *name, const char *title, const std::string& fmt, const void *data , int size)
+{
+  setup(C_VOIDSTAR,data,name,title);
+  m_fmt = fmt;
+  m_contsiz = size;
+  buffersize = 0;
+}
+
+MonCounter::~MonCounter()
+{
+  deletePtr(m_service);
+}
+
+void MonCounter::setup(MONTYPE typ, const void *data,const char *name, const char *title)
 {
   m_type  = typ;
-  m_titlen = 0;
-  m_title = 0;
+  m_title = "";
   m_contsiz    = 0;
   m_addoff = 0;
   m_contents = data;
   m_service = 0;
-  setname(name);
-  Init(title);
-  m_srvcprefix = std::string("");
+  m_name = name;
+  m_title = title;
+  m_srvcprefix = "";
   switch (m_type)
   {
   case   C_INT:
     {
+      m_contsiz    = 4;
+      buffersize = 8;
 //      m_srvcprefix = std::string("MonI/");
       break;
     }
   case   C_LONGLONG:
     {
+      m_contsiz    = 8;
+      buffersize = 8;
 //      m_srvcprefix = std::string("MonL/");
       break;
     }
   case   C_FLOAT:
     {
+      m_contsiz    = 4;
+      buffersize = 8;
 //      m_srvcprefix = std::string("MonF/");
       break;
     }
   case   C_DOUBLE:
     {
+      m_contsiz    = 8;
+      buffersize = 8;
 //      m_srvcprefix = std::string("MonD/");
       break;
     }
   case   C_VOIDSTAR:
     {
-      m_srvcprefix = std::string("");
+      m_srvcprefix = "";
       break;
     }
   default:
@@ -63,112 +100,18 @@ void MonCounter::setup(MONTYPE typ, void *data,char *name, char *title)
   }
   return;
 }
-MonCounter::MonCounter()
-{
-  setup(H_ILLEGAL,0,0,0);
-}
-MonCounter::MonCounter(char *name, char *title, int *data )
-{
-  setup(C_INT,data,name,title);
-}
-MonCounter::MonCounter(char *name, char *title, long *data )
-{
-  setup(C_LONGLONG,data,name,title);
-}
-MonCounter::MonCounter(char *name, char *title, long long *data )
-{
-  setup(C_LONGLONG,data,name,title);
-}
-MonCounter::MonCounter(char *name, char *title, float *data )
-{
-  setup(C_FLOAT,data,name,title);
-}
-MonCounter::MonCounter(char *name, char *title, double *data )
-{
-  setup(C_DOUBLE,data,name,title);
-}
-MonCounter::MonCounter(char *name, char *title, std::string fmt, void *data , int size)
-{
-  setup(C_VOIDSTAR,data,name,title);
-  m_fmt = fmt;
-  m_contsiz = size;
-  buffersize = 0;
-}
-int MonCounter::Init(char *title)
-{
-  m_titlen = strlen(title);
-  m_title = (char*)malloc(m_titlen+1);
-  strcpy(m_title,title);
-  m_title[m_titlen]  = 0;
-  if (m_type == C_INT)
-  {
-    m_contsiz    = 4;
-    buffersize = 8;
-  }
-  else if (m_type == C_LONGLONG)
-  {
-    m_contsiz    = 8;
-    buffersize = 8;
-  }
-  else if (m_type == C_FLOAT)
-  {
-    m_contsiz    = 4;
-    buffersize = 8;
-  }
-  else if (m_type == C_DOUBLE)
-  {
-    m_contsiz    = 8;
-    buffersize = 8;
-  }
-  return 0;
-}
-MonCounter::~MonCounter()
-{
-  if (m_titlen != 0)
-  {
-    free(m_title);
-    m_titlen  = 0;
-  }
-  if (m_namelen != 0)
-  {
-    free(m_name);
-    m_namelen = 0;
-  }
-  if (this->m_service != 0)
-  {
-    delete m_service;
-    m_service = 0;
-  }
-}
-int MonCounter::setname ( char* name)
-{
-  int allocsiz = strlen(name)+1;
-  m_name = (char*)malloc(allocsiz);
-//  memset(m_name,0,allocsiz);
-  strcpy(m_name,name);
-  m_namelen = strlen(name);
-  m_name[m_namelen]=0;
-  return 0;
-}
-const char *MonCounter::name() const
-{
-  return m_name;
-}
+
 void *MonCounter::cpyName(void *p)
 {
-  char *ptr = (char*)p;
-  strncpy(ptr,m_name,this->m_namelen);
-  ptr[m_namelen] = 0;
-  ptr = (char*)ptr+m_namelen;
-  return ptr;
+  ::memcpy(p, m_name.c_str(), m_name.length()+1);
+  return p;
 }
 void MonCounter::clear(void)
 {
-  if (m_contents != 0)
+  if (m_contents)
   {
-    memset(m_contents,0,m_contsiz);
+    ::memset((void*)m_contents,0,m_contsiz);
   }
-  return;
 }
 int MonCounter::datasize()
 {
@@ -176,8 +119,7 @@ int MonCounter::datasize()
 }
 int MonCounter::hdrlen()
 {
-  int s;
-  s = sizeof(DimBuffBase)+titlen()+1+namelen()+1;
+  int s = sizeof(DimBuffBase)+titlen()+1+namelen()+1;
   s = (s + 7)&~7;   //align to 8-byte boundary...
   return s;
 }
@@ -187,25 +129,25 @@ int MonCounter::xmitbuffersize()
   {
     return 0;
   }
-  int s;
-  s = hdrlen();
+  int s = hdrlen();
   s += datasize();
   return s;
 }
+
 int MonCounter::titlen(void)
 {
-  return (m_titlen+1);//+3)&(~3); //align to 32-bits
+  return (m_title.length()+1);//+3)&(~3); //align to 32-bits
 }
+
 int MonCounter::namelen(void)
 {
-  return (m_namelen+1);//+3)&(~3); //align to 32 bits
+  return m_name.length()+1;
 }
+
 void *MonCounter::cpytitle(void *p)
 {
-  char *ptr = (char*)p;
-  memcpy(ptr,m_title,m_titlen);
-  ptr[m_titlen] = 0;
-  return ptr;
+  memcpy(p,m_title.c_str(),m_title.length()+1);
+  return p;
 }
 int MonCounter::serialize(void* &ptr)
 {
@@ -213,11 +155,10 @@ int MonCounter::serialize(void* &ptr)
   {
     return 0;
   }
-  int siz;
   int titl = titlen();
   int naml = namelen();
   int hdrl = hdrlen();
-  siz = hdrl+datasize();//2*(p->m_nx+2)*sizeof(dimtype);
+  int siz = hdrl+datasize();
   DimBuffBase *pp = (DimBuffBase*)ptr;
   pp->dataoff = hdrl;
   pp->addoffset = m_addoff;
@@ -267,52 +208,41 @@ int MonCounter::serialize(void* &ptr)
   ptr = (void*)((char*)ptr+siz);
   return siz;
 }
-bool MonCounter::nameeq(char *nam, int namlen)
-{
-  bool r;
-  r = (namlen == m_namelen);
-  r = r && (strcmp(m_name,nam) == 0);
-  return r;
-}
+
 void MonCounter::List()
 {
-  m_srvcprefix = std::string("");
+  m_srvcprefix = "";
   std::string typ;
   switch (m_type)
   {
   case   C_INT:
     {
-      typ = std::string("C_INT");
-//      m_srvcprefix = std::string("MonI/");
+      typ = "C_INT";
       break;
     }
   case   C_LONGLONG:
     {
-      typ = std::string("C_LONGLONG");
-//      m_srvcprefix = std::string("MonL/");
+      typ = "C_LONGLONG";
       break;
     }
   case   C_FLOAT:
     {
-      typ = std::string("C_FLOAT");
-//      m_srvcprefix = std::string("MonF/");
+      typ = "C_FLOAT";
       break;
     }
   case   C_DOUBLE:
     {
-      typ = std::string("C_DOUBLE");
-//      m_srvcprefix = std::string("MonD/");
+      typ = "C_DOUBLE";
       break;
     }
   case   C_VOIDSTAR:
     {
-      typ = std::string("C_VOIDSTAR");
-//      m_srvcprefix = std::string("");
+      typ = "C_VOIDSTAR";
       break;
     }
   default:
     {
-//      typ = std::string("UNKNOWN");
+//      typ = "UNKNOWN";
       break;
     }
   }
@@ -353,7 +283,7 @@ void MonCounter::create_OutputService(std::string infix)
     }
     case C_VOIDSTAR:
     {
-      this->m_service = new DimService(nam.c_str(),(char*)m_fmt.c_str(),m_contents, m_contsiz);
+      this->m_service = new DimService(nam.c_str(),(char*)m_fmt.c_str(),(void*)m_contents, m_contsiz);
       break;
     }
     default:

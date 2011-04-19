@@ -3,8 +3,9 @@
 #include "Gaucho/MonObj.h"
 #include "Gaucho/dimhist.h"
 #include "Gaucho/MonTypes.h"
+#include "dis.hxx"
+
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
-//#include "iCCPCHist.h"
 
 ObjSerializer::ObjSerializer(void)
 {
@@ -13,6 +14,7 @@ ObjSerializer::ObjSerializer(void)
   m_objmap = 0;
   this->m_expandservices = false;
 }
+
 ObjSerializer::ObjSerializer(ObjMap *m, bool expand)
 {
   buffer = 0;
@@ -24,6 +26,7 @@ ObjSerializer::ObjSerializer(ObjMap *m, bool expand)
 ObjSerializer::~ObjSerializer(void)
 {
 }
+
 void *ObjSerializer::SerializeObj(void *&ptr, int &siz, bool clear)
 {
   //std::vector <int>::size_type i;
