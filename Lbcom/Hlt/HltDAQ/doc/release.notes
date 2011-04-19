@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-04-19 - Gerhard Raven
+ - funnel all file access in ConfigTarFileAccessSvc through a single member
+   function in order to prepare for closing/opening the file 'on demand'
+
 !========================= HltDAQ v2r8 2011-04-05 =========================
 ! 2011-03-29 - Gerhard Raven
  - HltVertexReportsDecoder: speed up decoding by not copying the rawbank into a temporary vector

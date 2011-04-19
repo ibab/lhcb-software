@@ -487,6 +487,7 @@ DECLARE_SERVICE_FACTORY(ConfigTarFileAccessSvc)
 //=============================================================================
   ConfigTarFileAccessSvc::ConfigTarFileAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
     : Service ( name , pSvcLocator )
+    , m_tarfile(0)
 {
   std::string def( System::getEnv("HLTTCKROOT") );
   if (!def.empty()) def += "/config.tar";
@@ -521,32 +522,35 @@ StatusCode ConfigTarFileAccessSvc::initialize() {
   StatusCode status = Service::initialize();
   if ( !status.isSuccess() )   return status;
   status = setProperties();
-
-  if (m_mode!="ReadOnly"&&m_mode!="ReadWrite"&&m_mode!="Truncate") {
-    error() << "invalid mode: " << m_mode << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  ios::openmode mode =  (m_mode == "ReadWrite") ? ( ios::in | ios::out | ios::ate   )
-    :                   (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
-    :                                               ios::in ;
-
-  info() << " opening " << m_name << " in mode " << m_mode << endmsg;
-  m_file.reset( new TarFile(m_name,mode,m_compress) );
-  if (!m_file->good()) {
-    error() << " Failed to open " << m_name << " in mode " << m_mode << endmsg;
-    // refuse to continue...
-    return StatusCode::FAILURE;
-  }
-
   return status;
+}
+
+ConfigTarFileAccessSvc_details::TarFile* ConfigTarFileAccessSvc::file() const {
+  if (m_tarfile.get()==0) { 
+
+      if (m_mode!="ReadOnly"&&m_mode!="ReadWrite"&&m_mode!="Truncate") {
+        error() << "invalid mode: " << m_mode << endmsg;
+        return 0;
+      }
+
+      ios::openmode mode =  (m_mode == "ReadWrite") ? ( ios::in | ios::out | ios::ate   )
+        :                   (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
+        :                                               ios::in ;
+
+      info() << " opening " << m_name << " in mode " << m_mode << endmsg;
+      m_tarfile.reset( new TarFile(m_name,mode,m_compress) );
+      if (!m_tarfile->good()) {
+        error() << " Failed to open " << m_name << " in mode " << m_mode << endmsg;
+      }
+  }
+  return m_tarfile.get();
 }
 
 //=============================================================================
 // Finalization
 //=============================================================================
 StatusCode ConfigTarFileAccessSvc::finalize() {
-  m_file.reset(0);  // (TarFile*)0); // close file...
+  m_tarfile.reset(0);  // (TarFile*)0); // close file if still open
   return Service::finalize();
 }
 
@@ -572,7 +576,7 @@ boost::optional<T>
 ConfigTarFileAccessSvc::read(const std::string& path) const {
   stringstream content(stringstream::in | stringstream::out);
   debug() << "trying to read " << path << endmsg;
-  if (!m_file->dump(path,content)) {
+  if (file()==0 || !file()->dump(path,content)) {
     debug() << "file " << path << " not found" << endmsg;
     return boost::optional<T>();
   }
@@ -596,7 +600,7 @@ ConfigTarFileAccessSvc::write(const std::string& path,const T& object) const {
     return false;
   }
   std::stringstream s; s << object;
-  return m_file->append( path, s );
+  return file()!=0 && file()->append( path, s );
 }
 
 boost::optional<PropertyConfig>
@@ -613,7 +617,7 @@ boost::optional<ConfigTreeNode>
 ConfigTarFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
   stringstream content(stringstream::in | stringstream::out);
   std::string fnam = configTreeNodeAliasPath(alias);
-  if (!m_file->dump(fnam,content)) {
+  if (file()==0 || !file()->dump(fnam,content)) {
     debug() << "file " << fnam << " does not exist" << endmsg;
     return boost::optional<ConfigTreeNode>();
   }
@@ -633,14 +637,15 @@ ConfigTarFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_t
   std::vector<ConfigTreeNodeAlias> x;
 
   std::string basename("Aliases");
-  std::vector<std::string> aliases = m_file->files( PrefixFilenameSelector(basename+"/"+alias.major()) );
+  if (file()==0) { return x ; }
+  std::vector<std::string> aliases = file()->files( PrefixFilenameSelector(basename+"/"+alias.major()) );
 
   for (std::vector<std::string>::const_iterator i  = aliases.begin(); i!=aliases.end(); ++i ) {
     //TODO: this can be more efficient...
     debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
     std::string ref;
     stringstream content(stringstream::in | stringstream::out);
-    m_file->dump(*i,content);
+    file()->dump(*i,content);
     content >> ref;
     std::string _alias = i->substr( basename.size()+1 );
     std::stringstream str;
@@ -689,7 +694,8 @@ ConfigTarFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alia
   boost::optional<string> x = read<string>(fnam.string());
   if (!x) {
     std::stringstream s; s << alias.ref();
-    m_file->append(fnam.string(),s);
+    if (file()==0) return ConfigTreeNodeAlias::alias_type();
+    file()->append(fnam.string(),s);
     info() << " created " << fnam.string() << endmsg;
     return alias.alias();
   } else {
