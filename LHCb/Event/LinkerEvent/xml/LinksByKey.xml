@@ -64,6 +64,8 @@ m_weight    = weight;
 m_keyIndex.reserve(1000);
 m_linkReference.reserve(1000);
 m_increasing = false;
+m_targetClassID = 0;
+m_sourceClassID = 0;
         </code>
       </constructor>
 
