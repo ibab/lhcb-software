@@ -49,9 +49,18 @@ VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_veloDet ( 0 ),
+    m_thresholdADC(0.),
+    m_threshold(0.),
+    m_thresholdADCSingle(0.),
+    m_thresholdSingle(0.),
+    m_noiseTailProb(0.),
+    m_noiseTailProbSingle(0.),
+    m_baseDiffuseSigma(0.),
     m_totalFEs( 0 ),
     m_killedFEsRandom( 0 ),
-    m_killedFEsBadStrips( 0 )
+    m_killedFEsBadStrips( 0 ),
+    m_isDebug(false),
+    m_isVerbose(false)
 {
   declareProperty("InputContainers", m_inputContainers );
   declareProperty("InputContainerToLink", m_MCHitContainerToLinkName );
