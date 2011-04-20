@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-04-20 - Marco Cattaneo
+ - Add IEventTupleTool interface, previously in DaVinciInterfaces
+
 !========================= LHCbKernel v13r0 2011-04-04 =========================
 ! 2011-03-31 - Marco Clemencic
  - Modified the interface ICondDBInfo to use the pattern of Gaudi v21.

@@ -32,6 +32,7 @@
   <class name = "IBIntegrator"         />
   <class name = "ICheckTool"           />
   <class name = "ICondDBInfo"          />
+  <class name = "IEventTupleTool"      />
   <class name = "IEvtTypeSvc"          />
   <class name = "IInAcceptance"        />
   <class name = "ILHCbMagnetSvc"       />
