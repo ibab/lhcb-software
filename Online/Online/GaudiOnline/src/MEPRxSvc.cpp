@@ -434,8 +434,6 @@ int MEPRx::spaceAction() {
   m_parent->m_complTimeSock->fill(1.0 * (m_hdrrxtim - m_firsthdrrxtim), 1.0);
   m_parent->m_L0IDDiff->fill(1.0 * m_l0ID-m_prevL0ID, 1.0); //XXX JC
   m_prevL0ID=m_l0ID;
-  //m_monSvc->updateAll(false);
-
   return sc;
 }
 
@@ -793,8 +791,9 @@ StatusCode MEPRxSvc::run() {
 	if ( upda ) {
 	  upda->update(0).ignore();
 	}
-        for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w)
+	for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); w=m_workDsc.begin()) {
           forceEvent(w);
+	}
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
       }
