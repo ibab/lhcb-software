@@ -462,7 +462,7 @@ void IntervalPicker::build()
                                              kDoubleBorder |
                                              kOwnBackground);
   m_runDestinationComboBox->AddEntry( "OFFLINE", 1);
-  m_runDestinationComboBox->AddEntry( "ALL", 2);
+  m_runDestinationComboBox->AddEntry( "any", 2);
   m_runDestinationComboBox->Resize(100, 22);
   if ( m_runDb->getDestination() == "OFFLINE" ) {
     m_runDestinationComboBox->Select(1);

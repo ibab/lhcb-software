@@ -2458,7 +2458,7 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
         setTreeNodeType(m_histogramNode, *m_histogramType);
-        m_histogramNode->SetUserData(new TObjString((*m_histogramIt).c_str()));
+        m_histogramNode->SetUserData(new TObjString( histogramIdentifier.histogramIdentifier().c_str()));
       }
     }
     m_histogramIdItems->Delete();
@@ -3112,6 +3112,8 @@ void PresenterMainFrame::refreshHistoDBListTree() {
 // refresh pages list from DB
 //==============================================================================
 void PresenterMainFrame::refreshPagesDBListTree() {
+
+  removeHistogramsFromPage();
   listHistogramsFromHistogramDB(m_pagesFromHistoDBListTree, FoldersAndPages,
                                 pres::s_withoutHistograms);
   openHistogramTreeAt( "" ) ;
@@ -3656,7 +3658,6 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
     m_presenterPage.loadFromArchive( m_archive, pres::s_startupFile, m_savesetFileName );
   }
   m_presenterPage.simpleDisplay( editorCanvas );
-  editorCanvas->Update();
 }
 //==============================================================================
 // Add dim histogram to page
@@ -4061,8 +4062,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & timePoint,
                                                 const std::string & pastDuration ) {
 
-  std::cout << timeStamp()
-            << "Enter loadSelectedPageFromDB" << std::endl;
+  std::cout << timeStamp() << "Enter loadSelectedPageFromDB for " << pageName << std::endl;
 
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
     TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
@@ -4149,7 +4149,6 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
     try {
       removeHistogramsFromPage();
-      m_onlineHistosOnPage.clear();
       OnlineHistPage* page = m_histogramDB -> getPage( pageName ) ;
       if (m_verbosity >= pres::Verbose) std::cout << "Loading page: "  << m_currentPageName << std::endl;
 

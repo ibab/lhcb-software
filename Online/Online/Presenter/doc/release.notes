@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-20 - Olivier Callot
+ - clear page and screen when the list of database pages is refreshed.
+
 ! 2011-04-18 - Olivier Callot
  - Fix display of the list of histogram in Editor Offline mode.
 

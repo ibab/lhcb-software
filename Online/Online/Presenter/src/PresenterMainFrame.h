@@ -665,9 +665,6 @@ public:
   std::vector<int>              m_alarmPages;
   std::vector<int>::const_iterator m_alarmPagesIt;
 
-  std::vector<OnlineHistoOnPage*>      m_onlineHistosOnPage;
-  std::vector<OnlineHistoOnPage*>::const_iterator m_onlineHistosOnPageIt;
-
   TList*  m_knownOnlinePartitionList;
   TList*  m_knownHistoryPartitionList;
   TList*  m_knownMonitoringNodeList;

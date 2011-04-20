@@ -599,6 +599,7 @@ void Archive::setFiles ( const std::string& task,
 void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
 
   dispHist -> deleteRootHist( ) ;
+  
   std::vector<boost::filesystem::path> goodRootFiles;
 
   TList* list = new TList;
@@ -648,6 +649,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
          ( dispHist->rootHist()->GetDimension() > 1  ) ||
          ( 2 > m_rootFiles.size() ) ) {
       dispHist->rootHist()->Merge(list);
+      std::cout << "Merged histso in " << dispHist->rootHist() << std::endl;
     } else {
       // do a trend plot of mean and rms
       std::string histogramTitle("History plot for ");
@@ -672,6 +674,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
   TH1* histo;
   TIter next(list);
   while ( (histo = (TH1 *) next())) {
+    std::cout << "delete histo " << histo << std::endl;
     list->Remove(histo);
     delete histo;
   }

@@ -612,11 +612,12 @@ void PresenterPage::loadFromArchive( Archive* archive,
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
           (*itT).histos.end() != itH; ++itH ) {
       archive->fillHistogramFromFiles( &(*itH) );
+      (*itH).rootHist()->SetStats( false );
       (*itH).setDisplayOptions();
       (*itH).prepareForDisplay();
     }
   }
-  std::cout << "Archive loaded" << std::endl;
+  std::cout << "Loaded from Archive" << std::endl;
 }
 
 //=========================================================================

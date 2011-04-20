@@ -426,6 +426,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       rootFile.Close();
     }
   }
+  std::cout << "Draw: rootHist " << m_rootHistogram << std::endl;
 }
 
 //=========================================================================
