@@ -642,6 +642,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
         std::cout << "Histo not found!" << std::endl;
       }
     }
+    rootFile->Close();
   }
   
   if ( NULL != dispHist->rootHist() ) {  // at least one source is available
@@ -653,7 +654,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
     } else {
       // do a trend plot of mean and rms
       std::string histogramTitle("History plot for ");
-      //histogramTitle += dispHist -> getTitle();
+      histogramTitle += dispHist->shortName();
       TH1* newh = new TH1F( histogramTitle.c_str(), histogramTitle.c_str(),
                             list->GetSize(), 0.5,  list->GetSize() +0.5);
       newh->Sumw2();
