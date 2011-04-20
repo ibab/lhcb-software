@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-04-20 - Cedric Potterat
+ - New implementation of IJetMaker and IJets2Jets
+
 ! 2011-04-20 - Marco Cattaneo
  - Remove IEventTupleTool interface, moved to LHCbKernel
 

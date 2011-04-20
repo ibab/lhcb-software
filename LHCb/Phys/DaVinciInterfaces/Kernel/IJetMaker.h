@@ -19,6 +19,7 @@
 // forward decalrations 
 // ============================================================================
 #include "Event/Particle.h"
+#include "Event/RecVertex.h"
 // ============================================================================
 /** @class IJetMaker IJetMaker.h Kernel/IJetMaker.h
  *
@@ -107,7 +108,7 @@ public:
    *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
    *
    *  // get input data 
-   *  const Particles* ps = get<Particle::Range> ( ... ) ;
+   *  const Particles* ps = get<Particles> ( ... ) ;
    * 
    *  // output jets 
    *  IJetMaker::Jets  jets ;
@@ -171,8 +172,60 @@ public:
     PARTICLE last  , 
     Jets&    jets  ) const 
   { return makeJets ( Input( first , last )  , jets ) ; }
+  // ========================================================================== 
+public:
   // ==========================================================================  
-protected:
+  /** The main method: jet-finding procedure 
+   * 
+   *  @code 
+   *
+   *  // get the tool
+   *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+   *
+   *  // input particles 
+   *  IJetMaker::Inputs input = ... 
+   *  // 1) 
+   *  // const Particles* particles = .... ;
+   *  // // create the input container 
+   *  // IJetMaker::Inputs input( particles->begin() , particles->end() ) ;
+   *  // 2) 
+   *  // LHCb::Particle::ConstVector particles = .... ;
+   *  // // create the input container 
+   *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+   *  // 3) 
+   *  // LoKi::Range particles = .... ;
+   *  // // create the input container 
+   *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+   *
+   *  // placeholder for "output" jets 
+   *  IJetMaker::Jets   jets ;
+   *
+   *  // find the jets! 
+   *  StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+   *
+   *  // make  a loop over jets:
+   *  for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+   *        jets.end() != iJet ; ++iJet ) 
+   *    {
+   *        // get the jet 
+   *        LHCb::Particle* jet = *iJet ;
+   *    }
+   *
+   *  @endcode 
+   *
+   *  @attention It is a responsibility of users (e.g. the algorithm) 
+   *             to take care about the ownership of jets *AND* their 
+   *             vertices). The tool is not intended to do it! 
+   *  
+   * 
+   *  @param input contaainer of input particles 
+   *  @param jets  container of  output jets 
+   *  @return status code 
+   */
+  virtual StatusCode makeJets 
+    ( const Input& input , const LHCb::RecVertex& vtx ,Jets& jets ) const = 0 ;
+  // ========================================================================== 
+ protected:
   // ==========================================================================
   /// virtual and protected destructor 
   virtual ~IJetMaker();                     // virtual and protected destructor 

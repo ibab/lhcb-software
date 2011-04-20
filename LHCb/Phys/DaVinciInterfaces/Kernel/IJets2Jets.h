@@ -43,13 +43,13 @@ public:
 public:
   // ==========================================================================
   /// the actual type of  container of jets 
-  typedef LHCb::Particle::Vector        Jets   ;  
+  typedef LHCb::Particle::ConstVector        Jets   ;  
   // ==========================================================================
   /// the actual type of relation table between jets
-  typedef LHCb::RelationWeighted1D< LHCb::Particle,LHCb::Particle, double >  Table ;
+  typedef LHCb::RelationWeighted1D< LHCb::Particle , LHCb::Particle , double >  Table ;
 
   /// the main method: making relation weighted between two sets of jets
-  virtual const Table makeRelation( const  Jets & jets1 , const  Jets & jets2) const = 0;
+  virtual void makeRelation( const  Jets & jets1 , const  Jets & jets2 , Table& table ) const = 0;
 };
 // ============================================================================
 // The END 
