@@ -14,7 +14,7 @@ MonTimer::~MonTimer( )
 void MonTimer::timerHandler ( void )
 {
   {
-    MonSubSys::Lock l(m_Hsys);
+    MonSubSys::_Lock l(m_Hsys);
 //  m_Hsys->Lock();
     m_Hsys->m_genSrv->setRunNo(m_Hsys->m_runno);
     m_Hsys->m_genSrv->setTime(m_dueTime);
