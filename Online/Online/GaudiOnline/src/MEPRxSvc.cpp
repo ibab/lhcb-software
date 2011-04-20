@@ -126,7 +126,8 @@ namespace LHCb  {
   public:
     MEPRx(const std::string &nam, MEPRxSvc *parent);
     virtual ~MEPRx();
-    static void release(MEPRx* p)               {      delete p;            }
+    static void release(MEPRx* p)               {      delete p;              }
+    static void cancelReq(MEPRx* p)             {      if ( p ) ::mbm_cancel_request(p->m_bmid);  }
     static bool cmpL0ID(MEPRx *r, u_int32_t id) {  
         return r->m_l0ID < id;   
     }
@@ -771,7 +772,10 @@ StatusCode MEPRxSvc::run() {
   lasttsc = MEPRxSys::rdtsc();
   lastrxtim = 0xffffffff; // infinite
   for (;;) {
-    int n = MEPRxSys::rx_select(m_dataSock, m_MEPRecvTimeout);  
+    int n = 0;
+    if (m_ebState == RUNNING) {
+      n = MEPRxSys::rx_select(m_dataSock, m_MEPRecvTimeout);  
+    }
     if (n ==  -1) {
       ERRMSG(log,"select");
       continue;
@@ -1241,6 +1245,9 @@ void  MEPRxSvc::handle(const Incident& inc)    {
   log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL")  {
     m_ebState = STOPPED;
+    std::for_each(m_freeDsc.begin(), m_freeDsc.end(), MEPRx::cancelReq);
+    std::for_each(m_usedDsc.begin(), m_usedDsc.end(), MEPRx::cancelReq);
+    std::for_each(m_workDsc.begin(), m_workDsc.end(), MEPRx::cancelReq);
   }
   else if (inc.type() == "DAQ_ENABLE")  {
     m_ebState = RUNNING;
