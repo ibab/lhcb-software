@@ -24,13 +24,13 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   SerialHeader* header = ((SerialHeader*)buff);
   if (siz == 4)
   {
-    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    //printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
   if ( header->m_magic != SERIAL_MAGIC)
   {
-    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
+    //printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
@@ -46,11 +46,11 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     {
       if (m_received == 1)
       {
-        printf("Counter Adder: Locking \n");
+        //printf("Counter Adder: Locking \n");
         Lock();
       }
     }
-    //printf ("New cycle %s... %d\n",h->m_TargetService.c_str(),m_received);
+    ////printf ("New cycle %s... %d\n",h->m_TargetService.c_str(),m_received);
     p = Allocate(siz);
     m_reference = current;
     memset(m_buffer,0,m_buffersize);
@@ -63,10 +63,10 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     while (pp<bend)
     {
       char *nam = (char*)AddPtr(pp,pp->nameoff);
-      printf("Counter Adder: Locking MAP\n");
+      //printf("Counter Adder: Locking MAP\n");
       LockMap();
       m_hmap.insert(std::make_pair(nam,pp));
-      printf("Counter Adder: UNLocking MAP\n");
+      //printf("Counter Adder: UNLocking MAP\n");
       UnLockMap();
       pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
     }
@@ -75,13 +75,13 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   {
     if (m_histo != 0)
     {
-      printf("Counter Adder: Locking MonitorSvc\n");
+      //printf("Counter Adder: Locking MonitorSvc\n");
       ObjectLock<IGauchoMonitorSvc> lock(m_monsvc);
       unsigned long long dtim = tim-m_time0;
       double ftim = dtim/1000000000;
       m_histo->fill(ftim);
     }
-    printf("Counter Adder: UNLocking MonitorSvc\n");
+    //printf("Counter Adder: UNLocking MonitorSvc\n");
     MonMap hmap;
     void *bend   = AddPtr(buff,siz);
     void *hstart = AddPtr(buff,sizeof(SerialHeader));
@@ -97,7 +97,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
       MonIter j = m_hmap.find(i->first);
       if (j!=m_hmap.end())
       {
-        printf("Counter Adder: Locking MAP\n");
+        //printf("Counter Adder: Locking MAP\n");
         LockMap();
         DimHistbuff1 *sumh = (DimHistbuff1*)(j->second);
         DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
@@ -131,7 +131,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
             break;
           }
         }
-        printf("Counter Adder: UNLocking MAP\n");
+        //printf("Counter Adder: UNLocking MAP\n");
         UnLockMap();
       }
       else
@@ -139,7 +139,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
         int csiz = m_usedSize;
         int hsiz = srch->reclen;
-        printf("Counter Adder: Locking MAP\n");
+        //printf("Counter Adder: Locking MAP\n");
         LockMap();
         p = ReAllocate(hsiz);
         if (p!=0)
@@ -150,29 +150,29 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
           char *nam = (char*)AddPtr(srch,srch->nameoff);
           m_hmap.insert(std::make_pair(nam,p));
         }
-        printf("Counter Adder: UNLocking MAP\n");
+        //printf("Counter Adder: UNLocking MAP\n");
         UnLockMap();
       }
     }
     m_received++;
     m_added++;
-    //printf ("New Source %s... %d\n",h->m_TargetService.c_str(),m_received);
+    ////printf ("New Source %s... %d\n",h->m_TargetService.c_str(),m_received);
   }
   else
   {
-    //    printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
+    //    //printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
     m_received++;
   }
   if (m_received >= expected)
   {
-    //    printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
+    //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
     if (m_isSaver)
     {
-      printf("Counter Adder: UNLocking\n");
+      //printf("Counter Adder: UNLocking\n");
       UnLock();
     }
     m_received = 0;
-    //printf(" %d %d\n", m_received,expected);
+    ////printf(" %d %d\n", m_received,expected);
     if (m_outservice != 0)
     {
       m_outservice->Serialize();

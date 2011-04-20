@@ -259,7 +259,7 @@ StatusCode MonitorSvc::i_start()
   DimServer::autoStartOff();
   if (m_CntrMgr != 0)
   {
-//    printf("In STARTS Method... Counter Manager present... Closing it...\n");
+//    //printf("In STARTS Method... Counter Manager present... Closing it...\n");
     m_CntrMgr->close();
   }
   if (m_started)
@@ -342,7 +342,7 @@ StatusCode MonitorSvc::finalize()
     m_incidentSvc->release();
     m_incidentSvc = 0;
   }
-  printf("MonitorSvc: Locking DIM\n");
+  //printf("MonitorSvc: Locking DIM\n");
   dim_lock();
   if (m_started)
   {
@@ -360,7 +360,7 @@ StatusCode MonitorSvc::finalize()
   deletePtr(m_savetimer);
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
-  printf("MonitorSvc: UNLocking DIM\n");
+  //printf("MonitorSvc: UNLocking DIM\n");
   dim_unlock();
   return Service::finalize();
 }
@@ -492,7 +492,7 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
 
   if (m_started)
   {
-//    printf("Delcare Info called after start for Name %s\n",name.c_str());
+//    //printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   if (0 != m_disableDeclareInfoFormat) return;
   MsgStream msg(msgSvc(),"MonitorSvc");
@@ -513,7 +513,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
 	  string oname = infoOwnerName(owner);
   if (m_started)
   {
-//    printf("Delcare Info called after start for Name %s\n",name.c_str());
+//    //printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
    msg << MSG::INFO << "=========================== DeclareInfo for StatEntity "<< name << endmsg;

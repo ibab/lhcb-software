@@ -40,13 +40,13 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   SerialHeader* header= ((SerialHeader*)buff);
   if (siz == 4)
   {
-    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    //printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     return;
   }
   if (header->m_magic != SERIAL_MAGIC)
   {
-//    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
+//    //printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
     m_received=1;
     return;
   }
@@ -65,13 +65,13 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       {
         if (!m_locked)
         {
-          Printf("HistAdder Locking\n");
+          //printf("HistAdder Locking\n");
           Lock();
         }
         m_locked = true;
       }
     }
-    //printf ("New cycle %s... %d\n",h->m_TargetService.c_str(),m_received);
+    ////printf ("New cycle %s... %d\n",h->m_TargetService.c_str(),m_received);
     p = Allocate(siz);
     m_reference = current;
     memset(m_buffer,0,m_buffersize);
@@ -84,12 +84,12 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     while (pp<bend)
     {
       char *nam = (char*)AddPtr(pp,pp->nameoff);
-//      printf("Histogram Name: %s\n",nam);
+//      //printf("Histogram Name: %s\n",nam);
       std::string nams =nam;
-      Printf("HistAdder Locking MAP\n");
+      //printf("HistAdder Locking MAP\n");
       LockMap();
       m_hmap.insert(HistPair(nams,pp));
-      Printf("HistAdder UNLocking MAP\n");
+      //printf("HistAdder UNLocking MAP\n");
       UnLockMap();
       if ((MONTYPE)pp->type == H_RATE)
       {
@@ -102,15 +102,15 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   {
     if (m_histo != 0)
     {
-      Printf("HistAdder Locking MonitorSvc\n");
+      //printf("HistAdder Locking MonitorSvc\n");
       this->m_monsvc->Lock();
       unsigned long long dtim = tim-m_time0;
       double ftim = dtim/1000000000;
       m_histo->fill(ftim);
-      Printf("HistAdder UNLocking MonitorSvc\n");
+      //printf("HistAdder UNLocking MonitorSvc\n");
       this->m_monsvc->UnLock();
     }
-//    printf("Adding %s\n",h->m_TargetService.c_str());
+//    //printf("Adding %s\n",h->m_TargetService.c_str());
     MonMap hmap;
     hmap.clear();
     void *bend = AddPtr(buff,siz);
@@ -127,7 +127,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       MonIter j = m_hmap.find(i->first);
       if (j!=m_hmap.end())
       {
-        Printf("HistAdder Locking MAP\n");
+        //printf("HistAdder Locking MAP\n");
         LockMap();
         double *ps, *ph;
         DimHistbuff1 *sumh = (DimHistbuff1*)(j->second);
@@ -145,7 +145,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
           d->m_sumw2 += s->m_sumw2;
           d->m_min = MIN(d->m_min,s->m_min);
           d->m_min = MAX(d->m_max,s->m_max);
-          Printf("HistAdder UNLocking MAP\n");
+          //printf("HistAdder UNLocking MAP\n");
           UnLockMap();
           continue;
         }
@@ -160,7 +160,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
         sumh->m_sumwy2  += srch->m_sumwy2;
         sumh->m_sumwy3  += srch->m_sumwy3;
         sumh->m_sumwy4  += srch->m_sumwy4;
-        //printf("Histogram %s Number of Entries %f\n",(char*)AddPtr(sumh,sumh->nameoff),sumh->nentries);
+        ////printf("Histogram %s Number of Entries %f\n",(char*)AddPtr(sumh,sumh->nameoff),sumh->nentries);
         int ndble;
         switch(srch->type)
         {
@@ -213,18 +213,18 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
             break;
           }
         }
-        Printf("HistAdder UNLocking MAP\n");
+        //printf("HistAdder UNLocking MAP\n");
         UnLockMap();
       }
       else
       {
-//        printf("New Histogram... re-allocating...\n");
+//        //printf("New Histogram... re-allocating...\n");
         int csiz = m_usedSize;
         int hsiz;
         DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
         void *p;
         hsiz = srch->reclen;
-        Printf("HistAdder Locking MAP\n");
+        //printf("HistAdder Locking MAP\n");
         LockMap();
         p = ReAllocate(hsiz);
         if (p!=0)
@@ -235,35 +235,35 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
           char *nam = (char*)AddPtr(srch,srch->nameoff);
           m_hmap.insert(HistPair(std::string(nam),p));
         }
-        Printf("HistAdder UNLocking MAP\n");
+        //printf("HistAdder UNLocking MAP\n");
         UnLockMap();
       }
     }
     m_received++;
     m_added++;
-    //printf ("New Source %s... %d\n",h->m_TargetService.c_str(),m_received);
+    ////printf ("New Source %s... %d\n",h->m_TargetService.c_str(),m_received);
   }
   else
   {
-//    printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
+//    //printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
     m_received++;
   }
   if (m_received >= expected)
   {
-//    printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,expected);
+//    //printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,expected);
 //    fflush(stdout);
     if (m_isSaver)
     {
       if (m_locked)
       {
-        Printf("HistAdder UNLocking\n");
+        //printf("HistAdder UNLocking\n");
         UnLock();
       }
       m_locked = false;
     }
     m_added = 0;
     m_received = 0;
-    //printf(" %d %d\n", m_received,expected);
+    ////printf(" %d %d\n", m_received,expected);
     if (m_outservice != 0)
     {
       m_outservice->Serialize();
@@ -305,7 +305,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
           {
             dbincont[i] = nbincont[i]-obincont[i];
             dcont[i] = ncont[i]-ocont[i];
-//            printf("%d\t%f = %f - %f\n\t%f = %f - %f\n",i,dbincont[i], nbincont[i], obincont[i],dcont[i], ncont[i], ocont[i]);
+//            //printf("%d\t%f = %f - %f\n\t%f = %f - %f\n",i,dbincont[i], nbincont[i], obincont[i],dcont[i], ncont[i], ocont[i]);
           }
           OUTServiceDescr *outs;
           std::string nams;
@@ -313,7 +313,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
           int dim;
           double rate;
           double denom;
-//          printf("Time Bin %f\n",p->GetBinContent(8));
+//          //printf("Time Bin %f\n",p->GetBinContent(8));
 //          denom  = p->GetBinContent(8)/1.0e09;
 //          denom = dbincont[8] == 0 ? 0 : dcont[8]/dbincont[8]/1.0e09;
           denom = ncont[8]/m_added/1.0e09;
@@ -346,7 +346,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 //            rate = dbincont[i] == 0 ? 0 : dcont[i]/dbincont[i]/denom;
             double c = dcont[i];
             rate = c/denom;
-//            printf("%d %d %s %f %f\n",dim,i,nams.c_str(), pdiff->GetBinContent(i),rate);
+//            //printf("%d %d %s %f %f\n",dim,i,nams.c_str(), pdiff->GetBinContent(i),rate);
             s->m_data.d1 = rate;
             s->m_data.d2 = c;
             int upsiz = 2*sizeof(s->m_data.d1)+strlen(s->m_data.c);
