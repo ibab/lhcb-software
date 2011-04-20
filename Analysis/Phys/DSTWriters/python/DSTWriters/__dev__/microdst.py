@@ -47,13 +47,13 @@ def microDSTElements() :
             GlobalEventCounters(configGenerator=_gecConfig),
             ClonePVs(),
             CloneParticleTrees(copyProtoParticles = True),
-            ClonePVRelations("Particle2VertexRelations",True)]
+            ClonePVRelations("Particle2VertexRelations",True),
+            CloneRawBanks( banks = [ 'ODIN'] ) ]
 
 def microDSTStreamConf() :
     return OutputStreamConf(streamType = OutputStream,
                             fileExtension = '.mdst',
-                            extraItems = ['/Event/DAQ/ODIN#1',
-                                          '/Event/Rec/Header#1'])
+                            extraItems = ['/Event/Rec/Header#1'])
 
 def stripMicroDSTElements() :
     return [CloneRecHeader(),
@@ -65,7 +65,8 @@ def stripMicroDSTElements() :
             ClonePVRelations("Particle2VertexRelations", True),
             CloneLHCbIDs(fullDecayTree = True),
             ReFitAndClonePVs(),
-            CloneRawBanks( banks = [ 'HltSelReports' ,
+            CloneRawBanks( banks = [ 'ODIN',
+                                     'HltSelReports' ,
                                      'HltDecReports',
                                      'L0Calo',
                                      'L0CaloFull',
@@ -77,7 +78,6 @@ def stripMicroDSTElements() :
 def stripMicroDSTStreamConf() :
     return OutputStreamConf(streamType = OutputStream,
                             fileExtension = '.mdst',
-                            extraItems = ['/Event/DAQ/ODIN#1',
-                                          '/Event/Rec/Header#1',
+                            extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
                                           '/Event/Strip/Phys/DecReports#1' ])

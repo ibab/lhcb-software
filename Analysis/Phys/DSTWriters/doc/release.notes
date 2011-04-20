@@ -4,6 +4,14 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-04-20 - Juan Palacios
+ - DSTWriters.__dev__.microdst
+  . stripping MicroDST, standard MicroDST configurations no longer copy ODIN
+    to default location. Instead, the ODIN raw bank is copied to 
+    /Event/<sequence name>/RawEvent. A copy of the ODIN bank is kept under
+    /Event/<sequence name>/DAQ/ODIN for backwards compatibility.
+ - Increase to v2r1.
+
 ! ======================== DSTWriters v2r0 2011-02-21 =======================
 
 ! 2011-02-21 - Juan Palacios
