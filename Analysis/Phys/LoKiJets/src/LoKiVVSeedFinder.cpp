@@ -89,14 +89,33 @@ StatusCode LoKi::VVSeedFinder::initialize ()
 // find seeds
 // ===========================================================================
 StatusCode LoKi::VVSeedFinder::makeJets 
-( const IJetMaker::Input& input_ , IJetMaker::Jets& jets_ ) const 
-{
+( const IJetMaker::Input& input_ ,IJetMaker::Jets& jets_ ) const 
+{ 
 
-  //Select evt with only 1 PV !
-  const LHCb::RecVertex::Container* verts = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
+ const LHCb::RecVertex::Container* verts = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
   if(verts->size()!=1) return StatusCode::SUCCESS;
   LHCb::RecVertex::Container::const_iterator iv =verts->begin() ;
-  LHCb::VertexBase* RecVert = (*iv)->clone();
+  const LHCb::RecVertex vtx = **iv ;
+  makeJets(input_,  vtx, jets_ );
+  return StatusCode::SUCCESS ;
+
+}
+
+
+StatusCode LoKi::VVSeedFinder::makeJets 
+( const IJetMaker::Input& input_ , const LHCb::RecVertex& RecVert_  , IJetMaker::Jets& jets_ ) const 
+{
+
+  const LHCb::RecVertex::Container* verts = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
+  LHCb::RecVertex::Container::const_iterator iv  ;
+  LHCb::VertexBase* RecVert =  RecVert_.clone();
+
+  std::vector<LHCb::VertexBase*> PVs;
+
+  for(iv = verts->begin() ; iv != verts->end() ; iv++)
+    if((*iv)->position() != RecVert->position()) PVs.push_back((*iv)->clone());
+
+
 
   IJetMaker::Jets Seeds; 
   double ipl, chi2l;
@@ -109,8 +128,10 @@ StatusCode LoKi::VVSeedFinder::makeJets
   std::vector<Gaudi::XYZVector> Slopes_flag;
 
 
+
+  LHCb::Particle::ConstVector  PartIPK0Sub;
   LHCb::Particle::ConstVector  PartIP;
-  LHCb::Particle::ConstVector all;
+  LHCb::Particle::ConstVector  all;
   LHCb::Particle::ConstVector  KsDau;
 
 
@@ -209,11 +230,23 @@ StatusCode LoKi::VVSeedFinder::makeJets
     // save all the charge, with a good Pt    //
     // and a good IP/IPE as the input         //
     // particles for the Cone Jet Algo        //
-    //----------------------------------------// 
+    //----------------------------------------//
+
+
     PartIP.push_back(p);
   }
   
   
+  //----------------------------------------//
+  // discard the trk coming any VTX         //
+  //----------------------------------------// 
+  
+  if(m_PVveto)
+    for(iv = verts->begin() ; iv != verts->end() ; iv++) 
+      RemoveTracks( PartIP, **iv);
+  
+
+
   
   debug()  << "nb of ghost (LiH)             : "<< testLiHi << endmsg;
   debug()  << "nb of clone                   : "<< testClone << endmsg;
@@ -228,109 +261,135 @@ StatusCode LoKi::VVSeedFinder::makeJets
   int cntK0 = 0;
 
 
+ //=============================================================================
+  // COMBINEPIPIMINK0: GET RIF OF K0S
+  //============================================================================= 	
+  for (  LHCb::Particle::ConstVector::const_iterator ip = PartIP.begin() ; 
+	 PartIP.end() != ip ; ++ip )     {
+    const LHCb::Particle* p = *ip ;
+    bool testK = false;
+    
+    for (  LHCb::Particle::ConstVector::const_iterator kp = KsDau.begin() ; 
+	   KsDau.end() != kp ; ++kp ) if(*ip == *kp){testK = true; break;}
+    
+    if(!testK)
+      for (  LHCb::Particle::ConstVector::const_iterator ip2 = ip+1 ; 
+	     PartIP.end() != ip2 ; ++ip2 )     {
+	const LHCb::Particle* p2 = *ip2 ;
+	
+	sc = m_dist->distance((p), (p2), dca12, dcae12);
+	if(!sc) {  warning()  << "can't mesure the dist "<< endmsg;}
+	if ( dca12 > m_DtrakMax) continue; // dca too large bwt the tracks
+	
+	Gaudi::LorentzVector sum = (p)->momentum() + (p2)->momentum();	
+	
+	//=============================================================================
+	// COMBINEPIPIMINK0: GET RIF OF K0S
+	//============================================================================= 	
+	if((p)->particleID().abspid() == 211
+	   &&  (p2)->particleID().abspid() == 211
+	   && ((p)->charge()) * ((p2)->charge()) < 0 ) 
+	  if ( fabs(sum.M()-MK0)<m_DMK0 ) {
+	    cntK0++;
+	    testK = true;
+	    
+	    KsDau.push_back(p);
+	    KsDau.push_back(p2);
+	    
+	  }
+      }
+    
+    if(testK) continue;    
+    PartIPK0Sub.push_back(p);
+  }
+  
+  debug()  << "nb K0                         : "<<  cntK0 << endmsg;
+  debug()  << "Particle INPUT for JET no K0  : "<< PartIPK0Sub.size() << endmsg;
+
+
+
+  if(PartIPK0Sub.size() <2){
+    Warning ( "Not enough good part for seeding") ;
+    return StatusCode::SUCCESS ;
+  }
+  
+  Gaudi::XYZPoint  BL_P =  Gaudi::XYZPoint(0,0,0);
+  Gaudi::LorentzVector BL_M = Gaudi::LorentzVector (0,0,1,0);	
+
+  if( exist<LHCb::Particle::Range>("/Event/BeamLine") ){
+    const LHCb::Particle::Range BL = get<LHCb::Particle::Range>( "/Event/BeamLine" );      
+    const LHCb::Particle* tmp = *(BL.begin());
+    BL_P =  Gaudi::XYZPoint( tmp->referencePoint() );
+    BL_M  = Gaudi::LorentzVector (tmp->momentum() );
+    //   m_BeamLine->setMomentum( tmp->momentum() );
+    if( msgLevel(MSG::DEBUG) )
+      debug()<<"Beam line position "<<  BL_P
+	     <<" direction " << BL_M << endmsg;
+  } else {
+    debug()<<"No Beam line found at "<< "/Event/BeamLine" << endmsg;
+    
+    BL_P = Gaudi::XYZPoint( RecVert->position() );
+
+    if( msgLevel(MSG::DEBUG) )
+      debug()<<"Beam line position "<<  BL_P
+	     <<" direction " << BL_M << endmsg;
+  }
+  
+
+  //COMBIN PART
+
   LHCb::Particle::ConstVector::const_iterator jp, kp, ksp, lp;
-  for ( jp =  PartIP.begin(); jp != PartIP.end(); jp++ ) { 
-    if(KsDau.size() != 0)   
-      for(ksp = KsDau.begin(); ksp!= KsDau.end(); ksp++)
-	if(*ksp == *jp)	  continue;
-    for ( kp = (jp+1) ; kp != PartIP.end(); kp++ ) {
-      if(KsDau.size() != 0)     
-	for(ksp = KsDau.begin(); ksp!= KsDau.end(); ksp++)
-	  if(*ksp == *kp)    continue;
+  for ( jp =  PartIPK0Sub.begin(); jp != PartIPK0Sub.end(); jp++ ) { 
+    for ( kp = jp+1; kp != PartIPK0Sub.end(); kp++ ) { 
       
       sc = m_dist->distance((*jp), (*kp), dca12, dcae12);
       if(!sc) {  warning()  << "can't mesure the dist "<< endmsg;}
       if ( dca12 > m_DtrakMax) continue; // dca too large bwt the tracks
-
+      
       Gaudi::LorentzVector sum = (*jp)->momentum() + (*kp)->momentum();	
 
-      //=============================================================================
-      // COMBINEPIPIMINK0: GET RIF OF K0S
-      //============================================================================= 	
-      if((*jp)->particleID().abspid() == 211
-	 &&  (*kp)->particleID().abspid() == 211
-	 && ((*jp)->charge()) * ((*kp)->charge()) < 0 ) 
-	if ( fabs(sum.M()-MK0)<m_DMK0 ) {
-	  KsDau.push_back(*kp);
-	  KsDau.push_back(*jp);
-	  cntK0++;
-	  continue; 
-	}      
       
-
-      if(!m_Triplets || (int) PartIP.size()>80 ){
-	//2-tracks Seed otpion (if 3-trk is requested but more than 80 trk can be used -> 2-trk)
-	StatusCode scvtx = m_fitter->fit( vtx, **jp, **kp );      
-	if( scvtx.isFailure() ){warning()<< "VTX Fit failed"<< endmsg;continue;}
+      if( m_Triplets){
 	
-	double mydz= -1;
-	if (scvtx) mydz = vtx.position().z() -  RecVert->position().z();      
-	if (mydz<0) continue;
-	// the vtx is before the PV
-
-	Gaudi::XYZPoint  dv =   Gaudi::XYZPoint(vtx.position() - RecVert->position());
-	double dr = sqrt(dv.x()*dv.x() + dv.y()*dv.y());
-	if (dr < m_DRmin || dr > m_DRmax) continue;
-	// the vtx is too close or to far from the beam direction
-
-	
-	//---------------------------
-	//Seed level cuts -----------
-	//---------------------------
-	LHCb::VertexBase* PPvtx2 = vtx.clone();   
-	m_dist->distance(PPvtx2,RecVert, tof, tofe);     
-	if (tof< m_TseedVtxMin || tof> m_TseedVtxMax) continue;  
-	// the vtx is too close or to far from the PV (~time of flight)
-	if(sum.Pt() <   m_PtSeedsMin) continue;
-	//Pt too soft
-	
-	
-	LHCb::Particle              pSeed ;
-	LHCb::Particle::ConstVector daughters ;
-	LHCb::Vertex                vSeed      ;
-	daughters.push_back ( *jp );
-	daughters.push_back ( *kp );
-	
-	pSeed.setParticleID     (LHCb::ParticleID( m_seedID )) ;      
-	pSeed.setReferencePoint ( vtx.position() ) ;    
-	pSeed.setMomentum ( sum  ) ;             
-	StatusCode sc = m_combiner->combine ( daughters , pSeed , vSeed ) ;
-	//save the trks as the daugthers
-
-	if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;      
-	Seeds.push_back(pSeed.clone());
-	
-      }else{
-	//3-tracks Seed otpion (if 3-trk is requested but more than 80 trk can be used -> 2-trk)
-	for ( lp = (kp+1) ; lp != PartIP.end(); lp++ ) {
-	  if(KsDau.size() != 0)     
-	    for(ksp = KsDau.begin(); ksp!= KsDau.end(); ksp++)
-	      if(*ksp == *lp)    continue;
+	//add Try 3-tracks Seed otpion 
+	for ( lp = (kp+1) ; lp != PartIPK0Sub.end(); lp++ ) {
 	  
+
 	  double dca13, dcae13;
 	  m_dist->distance((*jp), (*lp), dca13, dcae13);
-	  if ( dca13> m_DtrakMax) continue;  
-	  // dca too large btw the trks
-	  
+	  if ( dca13> m_DtrakMax) continue;                 // dca too large btw the trks
+	 	  
 	  double dca23, dcae23;
 	  m_dist->distance((*lp), (*kp), dca23, dcae23);
-	  if ( dca23> m_DtrakMax) continue;     
-	  // dca too large btw the trks
-	  
-
-	  
+	  if ( dca23> m_DtrakMax) continue;                 // dca too large btw the trks	  	  
+	  	  
 	  StatusCode scvtx = m_fitter->fit( vtx, **jp, **kp, **lp );      
-	  if( scvtx.isFailure() ){warning()<< "VTX Fit failed"<< endmsg;continue;}
-
+	  if( scvtx.isFailure() ){warning()<< "VTX Fit failed"<< endmsg;continue;}	  
+	  
+	  if(vtx.chi2PerDoF() > m_SeedsMaxChi2DoF) continue;
+	  //cut on chi2
 	  double mydz= -1;
 	  if (scvtx) mydz = vtx.position().z() -  RecVert->position().z();      
 	  if (mydz<0) continue;
 	  // the vtx is before the PV
-	  Gaudi::XYZPoint  dv =   Gaudi::XYZPoint(vtx.position() - RecVert->position());
-	  double dr = sqrt(dv.x()*dv.x() + dv.y()*dv.y());
+	  
+	  //intersection of the beam line with the XY plane, 
+	  //find the lambda parameter of the line.
+	  double lambda = (vtx.position().z() -  BL_P.z()) /
+	    BL_M.z();
+	  
+	  //find x and y of intersection point
+	  double x = BL_P.x() 
+	    + lambda *  BL_M.x();
+	  double y = BL_P.y() 
+	    + lambda * BL_M.y();
+	  
+	  x -= vtx.position().x(); y -= vtx.position().y();
+	  
+	  double dr = sqrt(x*x + y*y);
 	  if (dr < m_DRmin || dr > m_DRmax) continue;
+	  
 	  // the vtx is too close or to far from the beam direction
-
 	  
 	  //---------------------------
 	  //Seed level cuts -----------
@@ -339,28 +398,116 @@ StatusCode LoKi::VVSeedFinder::makeJets
 	  m_dist->distance(PPvtx2,RecVert, tof, tofe);     
 	  if (tof< m_TseedVtxMin || tof> m_TseedVtxMax) continue;  
 	  // the vtx is too close or to far from the PV (~time of flight)
-
+	  bool PVveto = false;
+	  if(m_PVveto)
+	    for( std::vector<LHCb::VertexBase*>::iterator pv = PVs.begin(); pv!=PVs.end(); pv++ ){
+	      m_dist->distance(PPvtx2,*pv, tof, tofe);     
+	      if (tof< m_TseedVtxMinAnyPV){PVveto=true; break;}
+	    }
+	  if(PVveto) continue;
+	  
 	  Gaudi::LorentzVector sum2 = sum + (*lp)->momentum();
-	  if(sum2.Pt() <   m_PtSeedsMin) continue;
+	  if(sum2.Pt() <   m_PtSeedsMin) continue;   
 	  //Pt too soft
 	  
-      	  LHCb::Particle              pSeed ;
-	  LHCb::Particle::ConstVector daughters ;
-	  LHCb::Vertex                vSeed      ;
-	  daughters.push_back ( *jp );
-	  daughters.push_back ( *kp );
-	  daughters.push_back ( *lp );	
-	  pSeed.setParticleID     (LHCb::ParticleID( m_seedID )) ;      
-	  pSeed.setReferencePoint ( vtx.position() ) ;    
-	  pSeed.setMomentum ( sum  ) ;             
-	  StatusCode sc = m_combiner->combine ( daughters , pSeed , vSeed ) ;
+	  LHCb::Particle::ConstVector daughters2 ;
+	  LHCb::Particle              pSeed2 ;
+	  LHCb::Vertex                vSeed2 ;
+
+	  daughters2.push_back ( *lp );
+	  daughters2.push_back ( *kp );
+	  daughters2.push_back ( *jp );
+	  pSeed2.setParticleID     (LHCb::ParticleID( m_seedID )) ;  
+	  pSeed2.setReferencePoint ( RecVert->position() ) ;    
+	  pSeed2.setMomentum ( sum2  ) ;   
+	  
+	  StatusCode sc = m_combiner->combine ( daughters2 , pSeed2 , vSeed2 ) ;
+	  
+	  pSeed2.setEndVertex (  vtx.clone() ) ;
 	  //save the trks as the daugthers
+	  //remove
 	  if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;      
-	  Seeds.push_back(pSeed.clone());
-	}
+	  Seeds.push_back(pSeed2.clone());
+	  //remove lp to test another part
+	  
+	  
+	}//end loop lp
       }
+      
+      //2-seed
+      LHCb::Particle              pSeed ;
+      LHCb::Particle::ConstVector daughters ;
+      LHCb::Vertex                vSeed ;
+
+
+      StatusCode scvtx = m_fitter->fit( vtx, **jp, **kp );
+	
+      if( scvtx.isFailure() ){warning()<< "VTX Fit failed"<< endmsg;continue;}
+
+      if(vtx.chi2PerDoF() > m_SeedsMaxChi2DoF) continue;
+
+      double mydz= -1;
+      if (scvtx) mydz = vtx.position().z() -  RecVert->position().z();      
+      if (mydz<0) continue;
+      // the vtx is before the PV
+
+      //	Gaudi::XYZPoint  dv =   Gaudi::XYZPoint(vtx.position() - m_BeamLine->referencePoint().position());
+	
+      //intersection of the beam line with the XY plane, 
+      //find the lambda parameter of the line.
+      double lambda = (vtx.position().z() -  BL_P.z()) /
+	BL_M.z();
+	
+      //find x and y of intersection point
+      double x = BL_P.x() 
+	+ lambda *  BL_M.x();
+      double y = BL_P.y() 
+	+ lambda * BL_M.y();
+	
+      x -= vtx.position().x(); y -= vtx.position().y();
+	
+      double dr = sqrt(x*x + y*y);
+      if (dr < m_DRmin || dr > m_DRmax) continue;
+      // the vtx is too close or to far from the beam direction
+
+      //---------------------------
+      //Seed level cuts -----------
+      //---------------------------
+      LHCb::VertexBase* PPvtx2 = vtx.clone();   
+      m_dist->distance(PPvtx2,RecVert, tof, tofe);     
+      if (tof< m_TseedVtxMin || tof> m_TseedVtxMax) continue;  
+      // the vtx is too close or to far from the PV (~time of flight)
+
+      bool PVveto = false;
+      if(m_PVveto)
+	for( std::vector<LHCb::VertexBase*>::iterator pv = PVs.begin(); pv!=PVs.end(); pv++ ){
+	  m_dist->distance(PPvtx2,*pv, tof, tofe);     
+	  if (tof< m_TseedVtxMinAnyPV){PVveto=true; break;}
+	}
+      if(PVveto) continue;
+	  
+      if(sum.Pt() <  m_PtSeedsMin) continue;   
+      //Pt too soft
+      
+      daughters.push_back ( *jp );
+      daughters.push_back ( *kp );
+
+      pSeed.setParticleID     (LHCb::ParticleID( m_seedID )) ;      
+      pSeed.setReferencePoint ( RecVert->position() ) ;    
+      pSeed.setMomentum ( sum  ) ;             
+      StatusCode sc = m_combiner->combine ( daughters , pSeed , vSeed ) ;
+      //save the trks as the daugthers
+      pSeed.setEndVertex ( vtx.clone() ) ;
+      if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;      
+      Seeds.push_back(pSeed.clone());
+      
+      
+
     }//end loop kp
   }//end loop jp
+
+ 
+
 
 
   if ( Seeds.empty() ) {
@@ -743,6 +890,42 @@ double LoKi::VVSeedFinder::getDeltaR(LHCb::Particle *p1, LHCb::Particle *p2) con
 
 }
 
+//=============================================================================
+// Remove trks form a PV
+//=============================================================================
+
+
+
+
+
+
+
+void LoKi::VVSeedFinder::RemoveTracks(LHCb::Particle::ConstVector & particles, 
+			    const LHCb::RecVertex PV ) const{
+
+  //Remove all tracks from the PV
+  LHCb::Particle::ConstVector tmp;
+  SmartRefVector< LHCb::Track >::const_iterator iPV = PV.tracks().begin();
+  int endkey = PV.tracks().back()->key();
+
+  for (  LHCb::Particle::ConstVector::const_iterator i = particles.begin();
+	 i != particles.end();++i) {
+    if( (*i)->proto()->track() == NULL ) continue; 
+    const LHCb::Track * tk = (*i)->proto()->track();
+
+    while( ((*iPV)->key() < tk->key()) && (*iPV)->key() != endkey ){
+      iPV++;
+    }
+    if( (*iPV)->key() == tk->key() ){ 
+      if( (*iPV)->key() != endkey ) iPV++; 
+      continue;
+    }
+    tmp.push_back( *i );
+  }
+  //Copy back tmp to particles
+  particles = tmp;
+
+}
 
 
 // ============================================================================

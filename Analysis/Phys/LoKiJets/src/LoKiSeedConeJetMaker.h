@@ -101,6 +101,8 @@ namespace LoKi
      */
     virtual StatusCode makeJets 
       ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
+    virtual StatusCode makeJets 
+    ( const IJetMaker::Input& input , const LHCb::RecVertex& vtx , IJetMaker::Jets& jets ) const ;
     // ========================================================================
   protected:  
     /** the standard constructor
@@ -128,8 +130,9 @@ namespace LoKi
 	, m_combinerName ( "MomentumCombiner"  )
 	, m_combiner     ( 0   )
 
-	, m_seedFinderName ( "SeedFinder"  )
+	, m_seedFinderName ( "LoKi__SeedFinder"  )
 	, m_seedFinder     ( 0   )
+	, m_uniquetrk     ( false )
 
 	{ 
 	  //
@@ -140,7 +143,7 @@ namespace LoKi
 	      m_jetID          ,
 	      "Particle ID for the Jet") ;
 	  declareProperty ( "RParameter"     , m_r      ) ;
-	  declareProperty ( "PtJetMin"          , m_ptmin  ) ;
+	  declareProperty ( "PtMin"          , m_ptmin  ) ;
 	  //
 	  declareProperty 
 	    ( "SortJet"             , 
@@ -154,6 +157,9 @@ namespace LoKi
 	  // define momentum combiner
 	  declareProperty ( "ParticleCombiner", m_combinerName ) ;
 	  declareProperty ( "SeedFinder",m_seedFinderName, "VVSeedFinder, UBSeedFinder, ..." );
+
+	  declareProperty ( "ConeUniqueTrk", m_uniquetrk   , "Cone With unique trk ON/OFF" );
+
 	} 
       /// destructor
       virtual ~SeedConeJetMaker( ){}
@@ -201,6 +207,9 @@ namespace LoKi
       std::string                m_seedFinderName ;
       mutable IJetMaker*       m_seedFinder ; ///< combiner to be used 
 
+      bool m_uniquetrk   ;
+
+
       ITupleTool *m_tuple;
 
 
@@ -209,7 +218,9 @@ namespace LoKi
 			       IJetMaker::Jets &seeds,
 			       const IJetMaker::Input &inputs) const;
 
-
+      IJetMaker::Jets JetConePurged( const  double &Rmax,
+			       IJetMaker::Jets &seeds,
+			       const IJetMaker::Input &inputs) const;
 
   
     

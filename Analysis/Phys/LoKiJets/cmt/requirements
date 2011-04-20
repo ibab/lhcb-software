@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.14 2010-04-16 14:48:07 jpalac Exp $ 
+	# $Id: requirements,v 1.14 2010-04-16 14:48:07 jpalac Exp $ 
 # =============================================================================
 # Created    : 2006-09-06
 # Maintainer : Victor COCO victor.coco@cern.ch
 # =============================================================================
 package           LoKiJets
-version           v5r5
+version           v6r0
 
 # =============== structure ===================================================
 branches          cmt doc python src
@@ -12,9 +12,6 @@ branches          cmt doc python src
 # =============== dependencies ================================================
 use               LoKiAlgo         v* Phys 
 use               fastjet          v* LCG_Interfaces 
-use               LoKiGenMC        v* Phys
-use               LoKiPhysMC       v* Phys
-use               LoKiAlgoMC       v* Phys
 use               LHCbMath         v* Kernel 
 # =============== exported include directories ================================
 include_path      none

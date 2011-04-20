@@ -84,6 +84,8 @@ namespace LoKi
      */
     virtual StatusCode makeJets 
     ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
+    virtual StatusCode makeJets 
+    ( const IJetMaker::Input& input, const LHCb::RecVertex& vtx  , IJetMaker::Jets& jets ) const ;
     // ========================================================================
   protected:  
     /** the standard constructor
@@ -196,6 +198,21 @@ namespace LoKi
 // ============================================================================
 // find the jets 
 // ===========================================================================
+
+
+StatusCode LoKi::FastJetWithAreaMaker::makeJets 
+( const IJetMaker::Input& input_ , const LHCb::RecVertex& vtx_ ,  IJetMaker::Jets& jets_ ) const 
+{ 
+  debug()<<" could not be used with a vtx"<<endmsg;
+  debug()<<" vtx: "<<vtx_<<endmsg;
+  makeJets(input_, jets_);
+  return StatusCode::SUCCESS ;
+
+
+}
+
+
+
 StatusCode LoKi::FastJetWithAreaMaker::makeJets 
 ( const IJetMaker::Input& input_ , IJetMaker::Jets& jets_ ) const 
 {

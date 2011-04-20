@@ -104,6 +104,8 @@ namespace LoKi
      */
     virtual StatusCode makeJets 
       ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
+    virtual StatusCode makeJets 
+      ( const IJetMaker::Input& input , const LHCb::RecVertex& vtx , IJetMaker::Jets& jets ) const ;
     // ========================================================================
   protected:  
     /** the standard constructor
@@ -131,15 +133,18 @@ namespace LoKi
 	,   m_combiner         ( 0      )
 	,   m_dist             ( 0      )
 	,   m_fitter           ( 0      )
-	,   m_PtTrackMin       ( 1000.0 )
+	,   m_PtTrackMin       ( 600.0 )
+	,   m_PTrackMin        ( 1000.0)
 	,   m_IPmin            ( 0.1    )
 	,   m_Signif           ( 2.5    )  	
 	,   m_DMK0             ( 10.0   )   	
 	,   m_TseedVtxMin      ( 1.0    ) 	
-	,   m_TseedVtxMax      ( 200.0  )	
+	,   m_TseedVtxMax      ( 200.0  )
+	,   m_TseedVtxMinAnyPV ( 0.1    ) 
 	,   m_DtrakMax         ( 0.5    )     	
-	,   m_PtSeedsMin       ( 1000   )  
-	,   m_PtMergedSeedsMin ( 1000   )  
+	,   m_PtSeedsMin       ( 1000.   )  
+	,   m_PtMergedSeedsMin ( 1000.   ) 
+	,   m_SeedsMaxChi2DoF  ( 50.    ) 
 	,   m_Triplets         ( false  )   
 	,   m_DRmin            ( 0.1    )   
 	,   m_DRmax            ( 10.    )  
@@ -147,7 +152,7 @@ namespace LoKi
 	,   m_DeltaRSeeds      ( 0.5    )
 	,   m_preFilter        ( true   )   
 	,   m_jetFilter        ( true   )   
-	
+	,   m_PVveto           ( true   )   
 	{ 
 	  //
 	  declareInterface <IJetMaker> ( this ) ;
@@ -166,9 +171,12 @@ namespace LoKi
 	  declareProperty("SeedSignif"        ,   m_Signif           , "signif oft he track used for Vertexing");  	
 	  declareProperty("SeedDMK0"          ,   m_DMK0          ,"mass window for Ks"  );   	
 	  declareProperty("SeedTseedVtxMin"   ,   m_TseedVtxMin     , "min distance btw PV and the  vtx" ); 	
-	  declareProperty("SeedTseedVtxMax"   ,   m_TseedVtxMax     , "max distance btw PV and the  vtx" );	
+	  declareProperty("SeedTseedVtxMax"   ,   m_TseedVtxMax     , "max distance btw PV and the  vtx" );
+	  declareProperty("SeedTseedVtxMinAnyPV"   ,   m_TseedVtxMinAnyPV     , "min distance btw any PV and the  vtx" ); 	
+
 	  declareProperty("SeedDtrakMax"      ,   m_DtrakMax         ,"dca window for vtx" );     	
 	  declareProperty("SeedPtSeedsMin"    ,   m_PtSeedsMin     ,"min pt of the seeds" );  
+	  declareProperty ( "SeedVtxMaxChi2PerDoF" , m_SeedsMaxChi2DoF     ,"max chi2 per dof for the vtx fit of the seed" );   
 	  declareProperty("PtMergedSeedsMin"    ,   m_PtMergedSeedsMin     ,"min pt of the merged seeds" );  	
 
 	  declareProperty("SeedTriplets"      ,   m_Triplets      ,"built Vtx with 3 tracks"  );
@@ -178,7 +186,7 @@ namespace LoKi
 	  declareProperty("SeedsDeltaR" ,   m_DeltaRSeeds    , "min DR btw 2 seeds otherwise:merge"  ); 
 	  declareProperty("SeedpreFilter"    ,   m_preFilter    ,"pre filter the protoseeds"      );
 	  declareProperty("SeedFilter"    ,   m_jetFilter    ,"filter the protoseeds"     ); 
-
+	  declareProperty("vetoPV"    ,   m_PVveto ,"exclude vertex near to any PV with distance fixe by 'SeedTseedVtxMinAnyPV' and exclude the trk associated to any PV to construct a secondary vtx"     ); 
 
 	} 
       /// destructor
@@ -226,16 +234,18 @@ namespace LoKi
 
       
       double   m_Rmax           ;
-      double   m_PTrackMin     ;
       double   m_PtTrackMin     ;
+      double   m_PTrackMin     ;
       double   m_IPmin          ;
       double   m_Signif         ;  	
       double   m_DMK0           ;   	
       double   m_TseedVtxMin    ; 	
-      double   m_TseedVtxMax    ;	
+      double   m_TseedVtxMax    ;
+      double   m_TseedVtxMinAnyPV   ;
       double   m_DtrakMax       ;     	
       double   m_PtSeedsMin     ;  
       double   m_PtMergedSeedsMin;
+      double   m_SeedsMaxChi2DoF ;
       bool     m_Triplets ;
       double   m_DRmin    ;	
       double   m_DRmax   ;	
@@ -243,6 +253,7 @@ namespace LoKi
       double   m_DeltaRSeeds;
       bool     m_preFilter;
       bool     m_jetFilter;
+      bool     m_PVveto;
 
 
 
@@ -258,7 +269,8 @@ namespace LoKi
 
       double getDeltaR(LHCb::Particle *p1,LHCb::Particle *p2) const;
 
-    
+      void RemoveTracks(LHCb::Particle::ConstVector & particles, 
+			const LHCb::RecVertex PV ) const;
   };       
 }
  

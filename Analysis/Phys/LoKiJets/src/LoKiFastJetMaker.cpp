@@ -97,6 +97,19 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
 // ===========================================================================
 // find the jets 
 // ===========================================================================
+
+StatusCode LoKi::FastJetMaker::makeJets 
+( const IJetMaker::Input& input_ , const LHCb::RecVertex& vtx_ ,  IJetMaker::Jets& jets_ ) const 
+{ 
+  debug()<<" could not be used with a vtx"<<endmsg;
+  debug()<<" vtx: "<<vtx_<<endmsg;
+  makeJets(input_, jets_);
+  return StatusCode::SUCCESS ;
+
+}
+
+
+
 StatusCode LoKi::FastJetMaker::makeJets 
 ( const IJetMaker::Input& input_ , IJetMaker::Jets& jets_ ) const 
 {
@@ -151,9 +164,27 @@ StatusCode LoKi::FastJetMaker::makeJets
   output.reserve( jets.size() ) ;
   
   LoKi::Point3D    point  = LoKi::Point3D( 0 , 0 , 0 ) ;
+
+  std::string p2vtx = "/Event/Phys/StdNoPIDsPions/Particle2VertexRelations";
+
+  bool tableEx = false;
+  if(exist<Table>(p2vtx)) tableEx = true;
+  Table *  table (0);
+
+  if(tableEx)  table = get<Table>(p2vtx);
+
   
+   // WTable *  wtable = get<WTable>(p2vtx);
+
+
+
+  const LHCb::RecVertex::Container* verts = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
+
+
   for ( Jets_::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet ) 
   {
+
+
     const Jet& jet = *ijet ;
     const Constituents& constituents = clusters->constituents ( jet ) ;
     if ( constituents.empty() ) { Warning ( "Jet is 'empty'!" ) ; }
@@ -164,26 +195,93 @@ StatusCode LoKi::FastJetMaker::makeJets
     
     pJet.setParticleID     (  LHCb::ParticleID( m_jetID )) ;
     
-    pJet.setReferencePoint ( point         ) ;
     
+
+    LHCb::VertexBase::Vector RelatedPV;
+    std::vector<int> vtxcnt;
+
+    vtxcnt.reserve(verts->size());
+    for(int i = 0; i< (int)verts->size(); i++) vtxcnt[i] = 1;
+    
+
     for ( Constituents::const_iterator ic = constituents.begin() ; 
           constituents.end() != ic ; ++ic ) 
-    {
-      const Jet& c = *ic ;
-      // find the appropriate input particle 
-      const int index = from_user_index ( c.user_index() ) ;
-      if ( 0 > index || (int) inputs.size() <= index ) 
-      { Warning ( "Invalid index for a constituent!" ) ; continue ; } // CONTINUE 
-      // get the appropriate particle:
-      const LHCb::Particle* p = input_[index] ;
-      // add the particle into the vertex
-      daughters.push_back ( p ) ;
-    }
+      {
+	const Jet& c = *ic ;
+	// find the appropriate input particle 
+	const int index = from_user_index ( c.user_index() ) ;
+	if ( 0 > index || (int) inputs.size() <= index ) 
+	  { Warning ( "Invalid index for a constituent!" ) ; continue ; } // CONTINUE 
+	// get the appropriate particle:
+	const LHCb::Particle* p = input_[index] ;
+	// add the particle into the vertex
+	daughters.push_back ( p ) ;
+	
+
+
+
+	if(tableEx && m_PVa) {
+	
+	Table::Range jettable = table->relations(p);
+
+	
+	LHCb::VertexBase* vtx (0);
+	bool alreadyFired = false;
+
+	if(jettable.size() != 0 ){
+
+	  Table::Range::iterator itable = jettable.begin(); 
+
+	  vtx =  itable->to();
+	  if(vtx == NULL) continue;
+
+	  int mvtx  = 0;
+	  for(LHCb::VertexBase::Vector::iterator ipv = RelatedPV.begin(); 
+	      ipv!=RelatedPV.end(); ipv++ ){
+
+	    if(*ipv == vtx) {
+	      vtxcnt[mvtx] +=1 ;
+	      alreadyFired = true;
+	    }
+
+	    mvtx++;
+	  }
+
+	  
+	}
+	
+	if(alreadyFired || vtx == NULL) continue;
+	
+	RelatedPV.push_back(vtx);
+
+
+	
+      }
+      }
     if ( daughters.empty() ) 
-    {
-      Warning ("Empty list of of daughter particles, skip it") ;
-      continue ;
+      {
+	Warning ("Empty list of of daughter particles, skip it") ;
+	continue ;
+      }
+    
+
+    int myI=0;
+    int mycnt=0;
+    if(m_PVa){
+      for(int i = 0; i<(int)verts->size(); i++){
+
+      if(mycnt < vtxcnt[i]){
+	myI =i;
+	mycnt =  vtxcnt[i];
+      }
+
     }
+    }
+    if((int) RelatedPV.size() != 0 && m_PVa)
+      pJet.setReferencePoint (  RelatedPV.at(myI)->position()  ) ;
+    else
+      pJet.setReferencePoint ( point ) ;
+    
     // use the tool 
     StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
     if ( sc.isFailure() ) 
@@ -192,6 +290,8 @@ StatusCode LoKi::FastJetMaker::makeJets
       continue ;
     }
     // redefine the momentum 
+
+
     pJet.setMomentum 
       ( Gaudi::LorentzVector ( jet.px () , 
                                jet.py () , 

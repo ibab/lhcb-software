@@ -14,6 +14,12 @@
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/IJetMaker.h"
+#include "Relations/RelationWeighted.h"
+#include "Relations/RelationWeighted1D.h"
+#include "Relations/Relation.h"
+#include "Relations/Relation1D.h"
+#include "Event/VertexBase.h"
+
 // ============================================================================
 // Event 
 // ============================================================================
@@ -101,6 +107,8 @@ namespace LoKi
      */
     virtual StatusCode makeJets 
     ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
+    virtual StatusCode makeJets 
+    ( const IJetMaker::Input& input ,  const LHCb::RecVertex& vtx , IJetMaker::Jets& jets ) const ;
     // ========================================================================
   protected:  
     /** the standard constructor
@@ -129,6 +137,7 @@ namespace LoKi
       // 
       , m_combinerName ( "MomentumCombiner"  )
       , m_combiner     ( 0   )
+      , m_PVa (false)
     { 
       //
       declareInterface <IJetMaker> ( this ) ;
@@ -159,6 +168,8 @@ namespace LoKi
           "JetFinding strategy, see fastjet::Strategy " ) ;
       // define momentum combiner
       declareProperty ( "ParticleCombiner", m_combinerName ) ;
+      declareProperty ( "AssociatePV2Jet", m_PVa ) ;
+
     } 
     /// destructor
     virtual ~FastJetMaker( ){}
@@ -268,6 +279,18 @@ namespace LoKi
     // combiner 
     std::string                m_combinerName ;
     mutable IParticleCombiner* m_combiner ; ///< combiner to be used 
+
+    bool m_PVa;
+            
+  typedef double                                          WeightType ;
+  typedef LHCb::RelationWeighted1D<LHCb::Particle, 
+                                   LHCb::VertexBase,
+                                   WeightType>            WTable      ;
+
+  typedef LHCb::Relation1D<LHCb::Particle, 
+                           LHCb::VertexBase>              Table      ;
+
+
   };
   // ==========================================================================
   typedef fastjet::PseudoJet       Jet          ;

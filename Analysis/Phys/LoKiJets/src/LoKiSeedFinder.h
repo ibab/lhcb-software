@@ -102,6 +102,8 @@ namespace LoKi
      */ 
     virtual StatusCode makeJets 
       ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
+    virtual StatusCode makeJets 
+    ( const IJetMaker::Input& input ,  const LHCb::RecVertex& vtx , IJetMaker::Jets& jets ) const ;
     // ========================================================================
   protected:  
     /** the standard constructor
@@ -116,49 +118,56 @@ namespace LoKi
 	const std::string& name   ,
 	const IInterface*  parent ) 
       : GaudiTool ( type , name , parent )
-	,   m_seedID         ( 20097  )
-	,   m_r              ( 0.15   )
-	,   m_sort           ( 1      )
-	,   m_combinerName   ( "MomentumCombiner"  )
-	,   m_combiner       ( 0      )
-	,   m_dist           ( 0      )
-	,   m_fitter         ( 0      )
-	,   m_PtTrackMin     ( 1000.0 )
-	,   m_IPmin          ( 0.1    )
-	,   m_Signif         ( 2.5    )  	
-	,   m_DMK0           ( 10.0   )   	
-	,   m_DtrakMaxK0     ( 0.5    )	
-	,   m_TseedVtxMin    ( 1.0    ) 	
-	,   m_TseedVtxMax    ( 200.0  )	
-	,   m_DtrakMax       ( 0.5    )     	
-	,   m_PtSeedsMin     ( 1000   )  
-	,   m_Triplets       ( false  )   
-	,   m_DRmin          ( 0.1    )   
-	,   m_DRmax          ( 50.    )  
-	,   m_TrkChi2DoF     ( 2.5    )
+	,   m_seedID           ( 20097  )
+	,   m_r                ( 0.15   )
+	,   m_sort             ( 4     )
+	,   m_combinerName     ( "MomentumCombiner"  )
+	,   m_combiner         ( 0      )
+	,   m_dist             ( 0      )
+	,   m_fitter           ( 0      )
+	,   m_PtTrackMin       ( 600.0 )
+	,   m_PTrackMin        ( 1000.0 )
+	,   m_IPmin            ( 0.1    )
+	,   m_Signif           ( 2.5    )  	
+	,   m_DMK0             ( 10.0   )   	
+	,   m_DtrakMaxK0       ( 0.5    )	
+	,   m_TseedVtxMin      ( 1.0    ) 	
+	,   m_TseedVtxMax      ( 200.0  )
+	,   m_TseedVtxMinAnyPV ( 0.1    ) 
+	,   m_DtrakMax         ( 0.5    )     	
+	,   m_PtSeedsMin       ( 1000   )
+	,   m_SeedsMaxChi2DoF  ( 50.)
+	,   m_Triplets         ( true   )   
+	,   m_DRmin            ( 0.1    )   
+	,   m_DRmax            ( 50.    )  
+	,   m_TrkChi2DoF       ( 2.5    )
+	,   m_PVveto           ( true   )   
+	//	,   m_dirAng   ( 5.)   
 	
 	{ 
 	  declareInterface <IJetMaker> ( this ) ;
-	  declareProperty ( "SeedID"            , m_seedID ,  "Particle ID for the Seed") ;
-	  declareProperty ( "SeedRParameter"    , m_r      ) ;
-	  declareProperty ( "Sort"              , m_sort , "Sorting Criteria for jets [0:none,1:pt,2:E,3:eta, default:Pt]" ) ;
-	  declareProperty ( "ParticleCombiner"  , m_combinerName ) ;
-	  declareProperty ( "SeedPtTrackMin"    , m_PtTrackMin      , "pt of the track used for Vertexing" );
-	  declareProperty ( "SeedPTrackMin"     , m_PTrackMin      , "p of the track used for Vertexing" );
-	  declareProperty ( "SeedIPmin"         , m_IPmin           , "ip of the track used for Vertexing");
-	  declareProperty ( "SeedSignif"        , m_Signif           , "signif oft he track used for Vertexing");  	
-	  declareProperty ( "SeedDMK0"          , m_DMK0          ,"mass window for Ks"  );   	
-	  declareProperty ( "SeedDtrakMaxK0"    , m_DtrakMaxK0      ,"dca window for Ks" );	
-	  declareProperty ( "SeedTseedVtxMin"   , m_TseedVtxMin     , "min distance btw PV and the  vtx" ); 	  
-	  declareProperty ( "SeedTseedVtxMax"   , m_TseedVtxMax     , "max distance btw PV and the  vtx" );	
-	  declareProperty ( "SeedDtrakMax"      , m_DtrakMax         ,"dca window for vtx" );     	
-	  declareProperty ( "SeedPtSeedsMin"    , m_PtSeedsMin     ,"min pt of the seeds" );  	  
-	  declareProperty ( "SeedTriplets"      , m_Triplets      ,"built Vtx with 3 tracks"  );
-	  declareProperty ( "SeedDRmin"         , m_DRmin         , "min positon in R of the vtx"  );   
-	  declareProperty ( "SeedDRmax"         , m_DRmax          , "max positon in R of the vtx"  ); 
-	  declareProperty ( "SeedTrkChi2PerDoF" , m_TrkChi2DoF     , "max chi2PerDoF for the track used for the vtx"  ); 
-	  
-
+	  declareProperty ( "SeedID"               , m_seedID ,  "Particle ID for the Seed") ;
+	  declareProperty ( "SeedRParameter"       , m_r      ) ;
+	  declareProperty ( "Sort"                 , m_sort , "Sorting Criteria for jets [0:none,1:pt,2:E,3:eta, default:Pt]" ) ;
+	  declareProperty ( "ParticleCombiner"     , m_combinerName ) ;
+	  declareProperty ( "SeedPtTrackMin"       , m_PtTrackMin      , "pt of the track used for Vertexing" );
+	  declareProperty ( "SeedPTrackMin"        , m_PTrackMin      , "p of the track used for Vertexing" );
+	  declareProperty ( "SeedIPmin"            , m_IPmin           , "ip of the track used for Vertexing");
+	  declareProperty ( "SeedSignif"           , m_Signif           , "signif oft he track used for Vertexing");  	
+	  declareProperty ( "SeedDMK0"             , m_DMK0          ,"mass window for Ks"  );   	
+	  declareProperty ( "SeedDtrakMaxK0"       , m_DtrakMaxK0      ,"dca window for Ks" );	
+	  declareProperty ( "SeedTseedVtxMin"      , m_TseedVtxMin     , "min distance btw PV and the  vtx" ); 	  
+	  declareProperty ( "SeedTseedVtxMinAnyPV" , m_TseedVtxMinAnyPV     , "min distance btw any PV and the  vtx" ); 
+	  declareProperty ( "SeedTseedVtxMax"      , m_TseedVtxMax     , "max distance btw PV and the  vtx" );	
+	  declareProperty ( "SeedDtrakMax"         , m_DtrakMax         ,"dca window for vtx" );     	
+	  declareProperty ( "SeedPtSeedsMin"       , m_PtSeedsMin     ,"min pt of the seeds" );  
+	  declareProperty ( "SeedVtxMaxChi2PerDoF" , m_SeedsMaxChi2DoF     ,"max chi2 per dof for the vtx fit of the seed" );  
+	  declareProperty ( "SeedTriplets"         , m_Triplets      ,"built Vtx with 3 tracks"  );
+	  declareProperty ( "SeedDRmin"            , m_DRmin         , "min positon in R of the vtx"  );   
+	  declareProperty ( "SeedDRmax"            , m_DRmax          , "max positon in R of the vtx"  ); 
+	  declareProperty ( "SeedTrkChi2PerDoF"    , m_TrkChi2DoF     , "max chi2PerDoF for the track used for the vtx"  ); 
+	  declareProperty ( "vetoPV"               , m_PVveto ,"exclude vertex near to any PV with distance fixe by 'SeedTseedVtxMinAnyPV' and exclude the trk associated to any PV to construct a secondary vtx"     ); 
+	  //	  declareProperty ( "SeedMaxDirAngle"         , m_dirAng          , "Max direction angle btw the seed momentum and the direction vtx-> seed"  ); 
 
 	} 
       /// destructor
@@ -207,25 +216,122 @@ namespace LoKi
       IVertexFit          *m_fitter;
       
       double   m_Rmax           ;
-      double   m_PTrackMin      ;
       double   m_PtTrackMin     ;
+      double   m_PTrackMin      ;
       double   m_IPmin          ;
       double   m_Signif         ;  	
       double   m_DMK0           ;   	
       double   m_DtrakMaxK0     ;	
       double   m_TseedVtxMin    ; 	
-      double   m_TseedVtxMax    ;	
+      double   m_TseedVtxMax    ;
+      double   m_TseedVtxMinAnyPV   ;
       double   m_DtrakMax       ;     	
       double   m_PtSeedsMin     ;  
+      double  m_SeedsMaxChi2DoF ;
       bool     m_Triplets       ;
       double   m_DRmin          ;	
       double   m_DRmax          ;	
       double   m_TrkChi2DoF     ;
+      bool     m_PVveto;
+      double   m_dirAng;
 
-    
+
+
+ void RemoveTracks(LHCb::Particle::ConstVector & particles, 
+			const LHCb::RecVertex PV ) const;
+
+
+      double getDeltaR(LHCb::Particle *p1,LHCb::Particle *p2) const;
+
+
+
   };       
 }
  
+
+
+
+
+class sortDauPt {
+ public:
+  inline bool operator() ( LHCb::Particle* obj1 ,
+			   LHCb::Particle* obj2) {
+    if(obj1->weight() == obj2->weight())
+      if(obj1->daughtersVector().size() == obj2->daughtersVector().size())
+	return obj1->pt() > obj2->pt() ;
+      else
+	return obj1->daughtersVector().size() > obj2->daughtersVector().size();
+    else
+      return obj1->weight() > obj2->weight();  
+  }
+};
+
+
+
+class sortCHi2NDoF {
+ public:
+  inline bool operator() ( LHCb::Particle* obj1 ,
+			   LHCb::Particle* obj2) {
+    
+    if(obj1->daughtersVector().size() == obj2->daughtersVector().size())
+      return obj1->endVertex()->chi2PerDoF() < obj2->endVertex()->chi2PerDoF();  
+    else
+      return obj1->daughtersVector().size() > obj2->daughtersVector().size();
+    
+  }
+};
+
+
+class sortDirAng {
+ public:
+  inline bool operator() ( LHCb::Particle* obj1 ,
+			   LHCb::Particle* obj2) {
+    
+    Gaudi::XYZVector seedd1 = Gaudi::XYZVector(
+					       Gaudi::XYZPoint(obj1->endVertex()->position()) -
+					       Gaudi::XYZPoint(obj1->referencePoint())
+					       );
+    Gaudi::XYZVector seedd2 = Gaudi::XYZVector(
+					       Gaudi::XYZPoint(obj2->endVertex()->position()) -
+					       Gaudi::XYZPoint(obj2->referencePoint())
+					       );
+    
+    double dotprod1 = std::fabs( std::acos(seedd1.Unit().Dot(obj1->momentum().Vect().Unit())));
+    double dotprod2 = std::fabs( std::acos(seedd2.Unit().Dot(obj2->momentum().Vect().Unit())));
+
+    return dotprod1 < dotprod2;
+    
+  }
+};
+
+
+class sortCOMBO {
+ public:
+  inline bool operator() ( LHCb::Particle* obj1 ,
+			   LHCb::Particle* obj2) {
+    
+    Gaudi::XYZVector seedd1 = Gaudi::XYZVector(
+					       Gaudi::XYZPoint(obj1->endVertex()->position()) -
+					       Gaudi::XYZPoint(obj1->referencePoint())
+					       );
+    Gaudi::XYZVector seedd2 = Gaudi::XYZVector(
+					       Gaudi::XYZPoint(obj2->endVertex()->position()) -
+					       Gaudi::XYZPoint(obj2->referencePoint())
+					       );
+    
+    double dotprod1 = std::fabs( std::acos(seedd1.Unit().Dot(obj1->momentum().Vect().Unit())));
+    double dotprod2 = std::fabs( std::acos(seedd2.Unit().Dot(obj2->momentum().Vect().Unit())));
+    
+
+    double combo1 = 1000*1000*(dotprod1 * obj1->endVertex()->chi2PerDoF())/(obj1->daughtersVector().size()*obj1->pt()*obj1->pt());
+    double combo2 = 1000*1000*(dotprod2 * obj2->endVertex()->chi2PerDoF())/(obj2->daughtersVector().size()*obj2->pt()*obj2->pt());
+
+    return combo1 < combo2;
+    
+  }
+};
+
+
 
 class sortE {
  public:

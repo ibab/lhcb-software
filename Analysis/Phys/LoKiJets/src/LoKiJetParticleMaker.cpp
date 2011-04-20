@@ -128,7 +128,7 @@ StatusCode LoKi::JetParticleMaker::makeParticles
   
   // prepare the container for output jets 
   IJetMaker::Jets jets ;
-  jets.reserve ( 20 ) ;
+  jets.reserve ( 100 ) ;
   
   // use Jet Maker tool:
   StatusCode sc = m_jetMaker -> makeJets ( inputs ,  jets ) ;

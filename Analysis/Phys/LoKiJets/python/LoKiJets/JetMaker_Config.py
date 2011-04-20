@@ -1,14 +1,14 @@
 ## @package LoKiJets
 #  Base configurables for the jet reconstruction and energy correction
-#  @author Victor Coco  (Victor.Coco@cern.ch)
+#  @author Victor Coco  (Victor.Coco@cern.ch), Cedric Potterat (Cedric.Potterat@cern.ch)
 #  @date   15/08/2008
 
 __version__ = "$Id: JetMaker_Config.py,v 1.1 2010-02-04 12:37:55 cocov Exp $"
-__author__  = "Victor Coco <Victor.Coco@cern.ch>"
+__author__  = "Victor Coco <Victor.Coco@cern.ch>, Cedric Potterat <Cedric.Potterat@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables            import ( LoKi__JetMaker ,LoKi__FastJetMaker )
+from Configurables import ( LoKi__JetMaker ,LoKi__FastJetMaker, LoKi__SeedConeJetMaker, LoKi__SeedFinder, LoKi__VVSeedFinder, LoKi__FastJetWithAreaMaker )
 
 __all__   = ( 'updateDoD',
               'JetMaker_Configuration'
@@ -42,7 +42,7 @@ def updateDoD ( alg , hat = 'Phys/' ) :
 class JetMaker_Configuration(LHCbConfigurableUser):
     ## Options
     __slots__ = { 
-                  "JetsInputSequencer" : None    # The sequencer to make the jets input
+                   'JetsInputSequencer' : None    # The sequencer to make the jets input
                   ,'JetSeeder'  :  None
                   ,'JetMaker'   : 'anti_kt'
                   ,'RParameter' : 0.75
@@ -51,12 +51,12 @@ class JetMaker_Configuration(LHCbConfigurableUser):
                   ,'JetEnergyScale'   : None
                   ,'JetCalibration'   : None
                   ,'InputLocation'    : None
-                  ,'ToolConf'         : None
+                  ,'ToolConf'         : ''
                   
                   }
-
-    JetMakerFromFastJet = ['anti_kt','kt','cambridge','siscone']
-
+    
+   
+    
     ## Configure the jet maker
     def setupJetMaker(self , name):
         ## set the algorithm
@@ -65,7 +65,7 @@ class JetMaker_Configuration(LHCbConfigurableUser):
         jet_maker = ''
         ### take the jetmaker_Type from the slots
         jetmaker_Type = self.getProp('JetMaker')
-        
+        JetMakerFromFastJet = ['anti_kt','kt','cambridge','siscone']
         ### Jet Algorithm from FastJet package Phys. Lett. B641 (2006) [hep-ph/0512210]
         if jetmaker_Type in JetMakerFromFastJet :
             # select the jet maker
@@ -73,18 +73,31 @@ class JetMaker_Configuration(LHCbConfigurableUser):
                 jet_maker = 'LoKi__FastJetWithAreaMaker'
                 algorithm.JetMaker = jet_maker
                 algorithm.addTool ( LoKi__FastJetWithAreaMaker )
+                
             else :
                 jet_maker = 'LoKi__FastJetMaker'
                 algorithm.JetMaker = jet_maker
                 algorithm.addTool ( LoKi__FastJetMaker )
+                    
+        ### Jet Algorithm SeedFinder as jet
+        elif jetmaker_Type == 'SeedFinder':
+            jet_maker = 'LoKi__SeedFinder'
+            algorithm.JetMaker = jet_maker
+            algorithm.addTool ( LoKi__SeedFinder )
 
-        ### Jet Algorithm ala Milano Cone
-        elif jetmaker_Type == 'lhcb_milano_cone':
-                raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
-        ### Jet Algorithm ala Lausanne Cone
-        elif jetmaker_Type == 'lhcb_lausanne_cone':
-                raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
-        ### Jet Algorithm UNKNOWN
+        ### Jet Algorithm VVSeedFinder as jet
+        elif jetmaker_Type == 'VVSeedFinder':
+            jet_maker = 'LoKi__VVSeedFinder'
+            algorithm.JetMaker = jet_maker
+            algorithm.addTool ( LoKi__VVSeedFinder )
+    
+             ### Jet Algorithm SeedCone
+        elif jetmaker_Type == 'SeedCone':
+            jet_maker = 'LoKi__SeedConeJetMaker'
+            algorithm.JetMaker = jet_maker
+            algorithm.addTool ( LoKi__SeedConeJetMaker )
+
+            
         else : 
             raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm does not exist")
 
@@ -103,13 +116,9 @@ class JetMaker_Configuration(LHCbConfigurableUser):
             setattr(tool,'Type',1)
         elif jetmaker_Type == 'anti_kt' :
             setattr(tool,'Type',2)
-        ### Jet Algorithm ala Milano Cone
-        elif jetmaker_Type == 'lhcb_milano_cone':
-                raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
-        ### Jet Algorithm ala Lausanne Cone
-        elif jetmaker_Type == 'lhcb_lausanne_cone':
-                raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
-        ### Jet Algorithm UNKNOWN
+        ### Jet Algorithm seedcone
+        elif jetmaker_Type == 'SeedCone':
+             setattr(tool,'SeedFinder',self.getProp('JetSeeder'))
         else : 
             raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
         setattr(tool,'RParameter',self.getProp('RParameter'))
