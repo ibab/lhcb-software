@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TestRecVertexHolder );
+DECLARE_ALGORITHM_FACTORY( TestRecVertexHolder )
 
 
 //=============================================================================
@@ -145,21 +145,20 @@ void TestRecVertexHolder::testRecVertexHolder(const LHCb::RecVertexHolder pvHold
 {
 
   // test cast to LHCb::RecVertex.
-
   info() << "Test cast to RecVertex*" << endmsg;
   const LHCb::RecVertex* pv = pvHolder;
-
-  assert(pv == pvHolder.vertex());
+  if( pv )  // Hack to avoid unused variable warning when NDEBUG is set
+    assert(pv == pvHolder.vertex());
+  else
+    assert(pv == pvHolder.vertex());
   
 
   // test -> operator
   info() << "Test operator ->" << endmsg;
-  bool isPV = pvHolder->isPrimary();
-  assert(isPV == pvHolder.vertex()->isPrimary());
+  assert(pvHolder->isPrimary() == pvHolder.vertex()->isPrimary());
   
   info() << "Test null ptr and operator!()" << endmsg;
-  const LHCb::RecVertex::RecVertexType& pvType = pvHolder->technique();
-  assert(pvType == pvHolder.vertex()->technique());
+  assert(pvHolder->technique() == pvHolder.vertex()->technique());
 
   assert (!LHCb::RecVertexHolder());
   

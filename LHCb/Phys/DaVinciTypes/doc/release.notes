@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2011-04-20 - Marco Cattaneo
+ - Fix unused variable compilation warnings when NDEBUG is set
+
 !========================= DaVinciTypes v2r4 2011-04-04 =========================
 ! 2011-03-14 - Vanya Belyaev
  - TreeCloners.cpp 
