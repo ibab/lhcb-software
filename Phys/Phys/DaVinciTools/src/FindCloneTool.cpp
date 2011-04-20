@@ -4,9 +4,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // local
 #include "FindCloneTool.h"
 
@@ -384,8 +384,8 @@ StatusCode  FindCloneTool::addOrigins( const LHCb::Particle* part,
   }
   else //there's some error
   {
-    if ( 0==m_ppSvc) m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-    ParticleProperty *pp = m_ppSvc->findByPythiaID(part->particleID().pid());
+    if ( 0==m_ppSvc) m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
+    const LHCb::ParticleProperty *pp = m_ppSvc->find(part->particleID());
     if (0!=pp) Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
                        StatusCode::SUCCESS) ;
     else err() << "Particle with unknown PID " << part->particleID().pid() << " has no endVertex. " 

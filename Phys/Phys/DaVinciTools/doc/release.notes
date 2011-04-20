@@ -4,6 +4,12 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-04-20 - Juan Palacios
+
+ - FindCloneTool, CheckOverlap, NeutralCCChangePIDTool, FindCloneTool
+  . Use new ParticleProperty service.
+ - Increase to v22r5.
+
 ! 2011-04-10 - Juan Palacios
  - src/recparser.ypp, src/recparser.icpp
   . Patch by Olivier Dormond, fixing potential memory leak.

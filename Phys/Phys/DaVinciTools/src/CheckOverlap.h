@@ -16,7 +16,9 @@
 // from DaVinci
 #include "Kernel/ICheckOverlap.h"
 
-class IParticlePropertySvc ;
+namespace LHCb {  
+  class IParticlePropertySvc ;
+}
 
 /** @class CheckOverlap CheckOverlap.h
  *  
@@ -100,7 +102,7 @@ private:
 private:
 
   /// Accessor for ParticlePropertySvc
-  IParticlePropertySvc* m_ppSvc ;
+  LHCb::IParticlePropertySvc* m_ppSvc ;
   
 }; // End of class header. 
 

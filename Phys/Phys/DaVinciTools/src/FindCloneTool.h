@@ -16,7 +16,9 @@
 // from DaVinci
 #include "Kernel/ICheckOverlap.h"
 
-class IParticlePropertySvc ;
+namespace LHCb {  
+  class IParticlePropertySvc ;
+}
 
 /** @class FindCloneTool FindCloneTool.h
  *  
@@ -130,7 +132,7 @@ protected:
 private:
 
   /// Accessor for ParticlePropertySvc
-  IParticlePropertySvc* m_ppSvc ;
+  LHCb::IParticlePropertySvc* m_ppSvc ;
   
 }; // End of class header. 
 

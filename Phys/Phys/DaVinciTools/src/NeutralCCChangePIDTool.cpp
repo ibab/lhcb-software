@@ -46,7 +46,7 @@ StatusCode NeutralCCChangePIDTool::initialize()
     return Warning( "Failed to initialize base class GaudiTool", sc );
 
   /// Get reference to the ParticlePropertySvc
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
 
   return StatusCode::SUCCESS;
 }
@@ -62,14 +62,14 @@ StatusCode NeutralCCChangePIDTool::initialize()
 //=============================================================================
 LHCb::Particle NeutralCCChangePIDTool::changePID( const LHCb::Particle &oldpart )
 {
-  int oldpid = oldpart.particleID().pid();
-  const ParticleProperty *oldpp = m_ppSvc->findByPythiaID( oldpid );
+
+  const LHCb::ParticleProperty *oldpp = m_ppSvc->find( oldpart.particleID() );
 
   /// Test for validity of ParticleProperty and for charge neutrality
   if( isNeutralPP(oldpp) )
   {
     /// Retrieve anti-particle ParticleProperty
-    const ParticleProperty *newpp = oldpp->antiParticle();
+    const LHCb::ParticleProperty *newpp = oldpp->antiParticle();
 
     /// Test for validity of ParticleProperty and for non-self-conjugate
     if( newpp && newpp != oldpp )

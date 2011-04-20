@@ -5,8 +5,9 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+//from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "Kernel/IChangePIDTool.h"            // Interface
 
 
@@ -45,12 +46,12 @@ public:
 protected:
 
   /// Test for charge neutrality of a ParticleProperty
-  inline bool isNeutralPP( const ParticleProperty *aPP ) const
+  inline bool isNeutralPP( const LHCb::ParticleProperty *aPP ) const
   { return aPP && (floor(3.0*(aPP->charge()) + 0.5) == 0); }
 
 private:
 
-  mutable IParticlePropertySvc *m_ppSvc;    ///< Ref to ParticlePropertySvc
+  mutable LHCb::IParticlePropertySvc *m_ppSvc;    ///< Ref to ParticlePropertySvc
 
 };
 #endif // NEUTRALCCCHANGEPIDTOOL_H

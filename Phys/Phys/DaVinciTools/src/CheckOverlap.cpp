@@ -4,8 +4,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+// from LHCb
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 
 // local
 #include "CheckOverlap.h"
@@ -204,8 +205,8 @@ bool CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts,
     }
     else
     {
-      if ( 0==m_ppSvc ) m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-      const ParticleProperty *pp = m_ppSvc->findByPythiaID((*c)->particleID().pid());
+      if ( 0==m_ppSvc ) m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
+      const LHCb::ParticleProperty *pp = m_ppSvc->find((*c)->particleID());
       if (0!=pp) { Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.",10,
                            StatusCode::SUCCESS).ignore() ; }
       else { err() << "Particle with unknown PID " << (*c)->particleID().pid() << " has no endVertex. "
