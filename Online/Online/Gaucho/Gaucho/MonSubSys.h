@@ -30,13 +30,13 @@ class MonSubSys
 {
 public:
 
-  struct Lock {
+  struct _Lock {
     MonSubSys* m_sys;
-    Lock(MonSubSys* sys) : m_sys(sys) 
+    _Lock(MonSubSys* sys) : m_sys(sys) 
     {
       m_sys->Lock();
     }
-    ~Lock() 
+    ~_Lock() 
     {
       m_sys->unLock();
     }
