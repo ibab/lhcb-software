@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-04-20 - Marco Cattaneo
+ - Remove unneccessary dependencies on DaVinciInterfaces, LoKiCore, RecEvent
+
 !======================== MCAssociators v1r0 2010-02-12 ======================
 ! 2010-02-09 - Vladimir Gligorov
  - Create new package Associators/MCAssociators to hold the

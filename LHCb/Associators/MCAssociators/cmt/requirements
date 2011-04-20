@@ -14,12 +14,10 @@ branches          cmt doc dict Kernel
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use  PhysEvent           v*  Event
-use  GenEvent            v*  Event
 use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
-use  RecEvent            v*  Event
-use  DaVinciInterfaces   v*  Phys
-use  LoKiCore            v*  Phys
+use  GaudiAlg            v*
+use  GaudiKernel         v*
 
 # Exported header files
 #============================================================================
