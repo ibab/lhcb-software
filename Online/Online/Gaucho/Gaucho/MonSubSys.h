@@ -29,6 +29,19 @@ class RateMgr;
 class MonSubSys
 {
 public:
+
+  struct Lock {
+    MonSubSys* m_sys;
+    Lock(MonSubSys* sys) : m_sys(sys) 
+    {
+      m_sys->Lock();
+    }
+    ~Lock() 
+    {
+      m_sys->unLock();
+    }
+  };
+
   std::string m_name;
   std::string m_pname;
 //  int bufsiz;
