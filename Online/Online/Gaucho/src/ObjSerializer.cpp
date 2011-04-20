@@ -3,6 +3,7 @@
 #include "Gaucho/MonObj.h"
 #include "Gaucho/dimhist.h"
 #include "Gaucho/MonTypes.h"
+#include <stdexcept>
 #include "dis.hxx"
 
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
@@ -57,8 +58,7 @@ void *ObjSerializer::SerializeObj(void *&ptr, int &siz, bool clear)
 //    p1 = AddPtr(ptr,bs);
     if (pp > p1)
     {
-      printf("!!!!!!!!!!!!!!! BUFFER OVERFLOW serializing Histogram %s ...\n",h->name());
-      throw;
+      throw std::runtime_error("!!!!!!!!!!!!!!! BUFFER OVERFLOW serializing Histogram "+std::string(h->name()));
     }
     if (clear)
     {
