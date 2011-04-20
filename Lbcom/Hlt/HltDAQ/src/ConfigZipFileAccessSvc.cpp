@@ -157,14 +157,14 @@ namespace ConfigZipFileAccessSvc_details {
           m_file->seekg(0,ios::end);
           ios::streampos filesize = m_file->tellg();
           m_file->seekg(-sizeEndCentDir,ios::end);
-          ios::streamoff header_position = m_file->tellg();
+          ios::streampos header_position = m_file->tellg();
           if (get<uint32_t>(*m_file) != 0x06054B50) {
               // Check whether there is an 'archive comment' at the end of this file...
               // The comment is up to 64K in size, and we assume it does NOT contain
               // the signature of an 'ecd' record...
-              for (  header_position  = filesize-streamsize(sizeEndCentDir); 
+              for (  header_position  =     filesize                   -streamsize(sizeEndCentDir); 
                      header_position >= max(filesize-streamsize(0xffff)-streamsize(sizeEndCentDir),ios::streampos(0));
-                   --header_position ) {
+                     header_position -= 1 ) {
                     m_file->seekg( header_position, ios::beg );
                     if ( get<uint8_t>( *m_file ) == 0x50 && get<uint8_t>( *m_file) == 0x4b  &&
                          get<uint8_t>( *m_file ) == 0x05 && get<uint8_t>( *m_file) == 0x06 ) {
@@ -181,7 +181,7 @@ namespace ConfigZipFileAccessSvc_details {
           m_file->seekg(2+2+2+2, ios::cur); 
           uint32_t header_size   = get<uint32_t>(*m_file);
           uint32_t header_offset = get<uint32_t>(*m_file);
-          uint32_t arc_offset    = header_position - header_offset - header_size;
+          uint32_t arc_offset    = ios::streamoff(header_position) - header_offset - header_size;
           header_offset += arc_offset;
 
           // pick up trailing comment if here...
@@ -268,12 +268,11 @@ StatusCode ConfigZipFileAccessSvc::initialize() {
 
 ConfigZipFileAccessSvc_details::ZipFile* ConfigZipFileAccessSvc::file() const {
   if (m_zipfile.get()==0) { 
-
-
       info() << " opening " << m_name << endmsg;
       m_zipfile.reset( new ZipFile(m_name) );
       if (!m_zipfile->good()) {
         error() << " Failed to open " << m_name << endmsg;
+        return 0;
       }
   }
   return m_zipfile.get();
