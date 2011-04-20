@@ -8,7 +8,9 @@
 
 class IMCParticleArrayFilter;
 class IPrintMCDecayTreeTool;
-class IParticlePropertySvc;
+namespace LHCb {  
+  class IParticlePropertySvc;
+}
 
 /** @class MCParticleArrayFilterAlg MCParticleArrayFilterAlg.h
  *  
@@ -56,7 +58,7 @@ private:
   std::string m_filterType;
   std::string m_inputLocation;
   std::string m_outputLocation;
-  IParticlePropertySvc* m_ppSvc;
+  LHCb::IParticlePropertySvc* m_ppSvc;
 
 };
 #endif // MCPARTICLEARRAYFILTERALG_H

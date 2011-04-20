@@ -5,12 +5,14 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+
 #include "Event/Particle.h"
+
 #include "Kernel/IBackgroundCategory.h"          // Interface
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IParticle2MCWeightedAssociator.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "CaloInterfaces/ICalo2MCTool.h"
 #include "Kernel/IPrintDecay.h"
 
@@ -103,7 +105,7 @@ private:
   int areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVector);
 
 private:
-  IParticlePropertySvc* m_ppSvc;
+  LHCb::IParticlePropertySvc* m_ppSvc;
   IParticleDescendants* m_particleDescendants;
   IParticle2MCWeightedAssociator* m_smartAssociator;
   IPrintDecay* m_printDecay ;

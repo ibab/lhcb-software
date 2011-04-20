@@ -29,11 +29,12 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/ParticleProperty.h"
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
@@ -126,7 +127,7 @@ StatusCode MCParticleMaker::initialize()
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
   debug() << "Looking for Particle Property Service." << endmsg;
   
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true);
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true);
    
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
   
@@ -159,15 +160,15 @@ StatusCode MCParticleMaker::initialize()
   std::vector<std::string>::const_iterator iName;
   for ( iName = m_particleNames.begin(); 
         iName != m_particleNames.end(); ++iName ) {
-    ParticleProperty* partProp = m_ppSvc->find( *iName );
+    const LHCb::ParticleProperty* partProp = m_ppSvc->find( *iName );
     if ( 0 == partProp )   {
       err() << "Cannot retrieve properties for particle \"" 
             << *iName << "\" " << endmsg;
       return StatusCode::FAILURE;
     }
-    m_ids.push_back(partProp->jetsetID());
+    m_ids.push_back(partProp->particleID().pid());
     debug() << " Particle Requested: Name = " << (*iName) 
-            << " PID = " << partProp->jetsetID() << endmsg;
+            << " PID = " << partProp->particleID().pid() << endmsg;
   }
   
   debug()<< "Correlation matrix rho "<< rho() <<endmsg;

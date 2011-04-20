@@ -12,7 +12,10 @@
 
 
 // Forward declarations
-class IParticlePropertySvc;
+namespace LHCb {
+  class IParticlePropertySvc;
+}
+
 class MsgStream;
 
 /** @class PrintDecayTreeTool PrintDecayTreeTool.h
@@ -112,7 +115,7 @@ private:
                        MsgStream &log );
   
   
-  IParticlePropertySvc* m_ppSvc; ///< Reference to particle property service
+  LHCb::IParticlePropertySvc* m_ppSvc; ///< Reference to particle property service
   int m_depth;         ///< Depth of printing for tree
   int m_treeWidth;     ///< width of the tree drawing
   int m_fWidth;        ///< width of the data fields

@@ -1033,7 +1033,7 @@ bool BackgroundCategory::isTheMotherCorrectlyIdentified(const LHCb::Particle* re
 {
   bool carryon;
 
-  if (m_ppSvc->findByStdHepID(m_commonMother->particleID().pid())->charge() == 0) 
+  if (m_ppSvc->find(m_commonMother->particleID())->charge() == 0) 
     carryon = ( m_commonMother->particleID().abspid() == reconstructed_mother->particleID().abspid() );
   else
     carryon = ( m_commonMother->particleID().pid() == reconstructed_mother->particleID().pid() );
@@ -1058,7 +1058,7 @@ bool BackgroundCategory::checkLowMassBackground(const LHCb::Particle* candidate)
   bool carryon = false;
   
   if ( (m_commonMother->virtualMass() - m_lowMassCut) < 
-       (m_ppSvc->findByStdHepID(candidate->particleID().pid())->mass()) ) carryon = true;
+       (m_ppSvc->find(candidate->particleID())->mass()) ) carryon = true;
 
   return carryon;
 }
@@ -1504,7 +1504,7 @@ StatusCode BackgroundCategory::initialize(){
   if (!sc) return sc;
 
   m_ppSvc = 0;
-  sc = service("ParticlePropertySvc", m_ppSvc);
+  sc = service("LHCb::ParticlePropertySvc", m_ppSvc);
   if (!sc) return sc;
 
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);

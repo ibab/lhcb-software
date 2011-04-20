@@ -4,6 +4,18 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+ - src/MCParticleMaker.h
+ - src/MCParticleArrayFilterAlg.cpp
+ - src/BackgroundCategory.cpp
+ - src/IsBEvent.cpp
+ - src/PrintDecayTreeTool.h
+ - src/MCParticleMaker.cpp
+ - src/PrintDecayTreeTool.cpp
+ - src/MCParticleArrayFilterAlg.h
+ - src/BackgroundCategory.h
+  . Use new ParticleProperty service.
+ - Increase to v9r29.
+
 ! 2011-04-08 - Juan Palacios
  - src/MCPrimVertexMaker.cpp
   . Fix memory leak

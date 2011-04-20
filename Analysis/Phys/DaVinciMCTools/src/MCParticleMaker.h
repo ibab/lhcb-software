@@ -38,7 +38,11 @@
 // ============================================================================
 #include "Kernel/MCParticleMakerBase.h"
 // Forward declarations
-class IParticlePropertySvc;
+namespace LHCb 
+{
+  class IParticlePropertySvc;
+}
+
 class IRndmGenSvc;
 class IMCDecayFinder;
 class IMCReconstructible ;
@@ -135,7 +139,7 @@ public:
  
 protected:
   /// The Particle property service.
-  IParticlePropertySvc* ppSvc() const;
+  const LHCb::IParticlePropertySvc* ppSvc() const;
   std::vector<const LHCb::MCParticle*> getFinalState(const LHCb::MCParticle& m);
   
 private:
@@ -149,7 +153,7 @@ private:
   bool    m_onlyReconstructed;               ///< flag to use only Reconstruced MCparticles
   bool    m_useReconstructedCovariance;      ///< flag to use only Reconstructed Covariance matrix
 
-  IParticlePropertySvc* m_ppSvc;  ///<  Reference to Particle Property Service
+  LHCb::IParticlePropertySvc* m_ppSvc;  ///<  Reference to Particle Property Service
   IMCDecayFinder* m_pMCDecFinder;
   
   /// internal method

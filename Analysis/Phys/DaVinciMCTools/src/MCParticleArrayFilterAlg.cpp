@@ -2,9 +2,9 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/AlgFactory.h"
 // from LHCb
+#include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/IMCParticleArrayFilter.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include "Event/MCParticle.h"
@@ -54,7 +54,7 @@ StatusCode MCParticleArrayFilterAlg::initialize() {
 
   m_filter = tool<IMCParticleArrayFilter>(m_filterType, this);
 
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
 
   return  (0!=m_filter || 0!= m_ppSvc) 
     ? StatusCode::SUCCESS : StatusCode::FAILURE;

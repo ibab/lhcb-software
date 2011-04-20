@@ -5,8 +5,10 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // from Event
 #include "Event/MCParticle.h"
@@ -66,10 +68,10 @@ StatusCode PrintDecayTreeTool::initialize( void ){
   if (!sc) return sc;
 
   if( serviceLocator() ) {
-    sc = service("ParticlePropertySvc",m_ppSvc);
+    sc = service("LHCb::ParticlePropertySvc",m_ppSvc);
   }
   if( !m_ppSvc ) {
-    throw GaudiException( "ParticlePropertySvc not found",
+    throw GaudiException( "LHCb::ParticlePropertySvc not found",
                           "DebugException",
                           StatusCode::FAILURE );
   }
@@ -270,7 +272,7 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
                                     Particle2MCLinker* assoc, 
                                     MsgStream& log )
 {
-  ParticleProperty* p = m_ppSvc->findByStdHepID( part->particleID().pid() );
+  const LHCb::ParticleProperty* p = m_ppSvc->find( part->particleID() );
   const LHCb::MCVertex *origin = part->originVertex();
 
   std::vector<InfoKeys>::iterator i;
@@ -373,7 +375,7 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
         switch( *i ) {
         case Name:
           {
-            p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
+            p = m_ppSvc->find( reco->particleID() );
             std::string p_name = p ? p->particle() : "N/A";
             int p_len = p_name.length();
             if( p_len > m_fWidth-1 )
@@ -473,7 +475,7 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
                                     Particle2MCLinker* assoc, 
                                     MsgStream& log )
 {
-  ParticleProperty* p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
+  const LHCb::ParticleProperty* p = m_ppSvc->find( reco->particleID() );
   std::vector<InfoKeys>::iterator i;
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
@@ -573,7 +575,7 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
         switch( *i ) {
         case Name:
           {
-            p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
+            p = m_ppSvc->find( reco->particleID() );
             std::string p_name = p ? p->particle() : "N/A";
             int p_len = p_name.length();
             if( p_len > m_fWidth-1 )

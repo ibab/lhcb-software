@@ -3,8 +3,9 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // local
 #include "IsBEvent.h"
 
@@ -46,7 +47,7 @@ StatusCode IsBEvent::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // get particle codes
-  IParticlePropertySvc *ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  const LHCb::IParticlePropertySvc *ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
   if( !ppSvc ) {
     fatal() << "Unable to locate Particle Property Service" << endmsg;
     return sc;
@@ -57,12 +58,12 @@ StatusCode IsBEvent::initialize() {
     else if ( *PN == "c" ) m_particles.push_back(4); // c
     else if ( *PN == "t" ) m_particles.push_back(6); // top
     else {
-      ParticleProperty *pp = ppSvc->find(*PN);
+      const LHCb::ParticleProperty *pp = ppSvc->find(*PN);
       if (!pp) {
         fatal() << " Unable to retrieve particle property for " << *PN << endmsg;
         return StatusCode::FAILURE;
       }
-      int pid = pp->jetsetID();
+      int pid = pp->particleID().pid();
       m_particles.push_back(pid);
     }
   }  
