@@ -129,7 +129,10 @@ void MonitorSvc::handle(const Incident& inc) {
   MsgStream log(msgSvc(),name());
   log << MSG::INFO << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
   if ( inc.type() == "APP_RUNNING" ) {
-    i_start();
+    i_start().ignore();
+  }
+  else if ( inc.type() == "APP_STOPPED" ) {
+    i_stop().ignore();
   }
 }
 
@@ -311,7 +314,8 @@ StatusCode MonitorSvc::i_start()
   m_started = true;
   return StatusCode::SUCCESS;
 }
-StatusCode MonitorSvc::stop()
+
+StatusCode MonitorSvc::i_stop()
 {
   if (m_CntrMgr != 0)
   {
@@ -322,7 +326,7 @@ StatusCode MonitorSvc::stop()
     m_MonSys->stop();
   }
   StopSaving();
-  return Service::stop();
+  return StatusCode::SUCCESS;
 }
 
 //updateSvc and resetHistos methods are for fast run changes

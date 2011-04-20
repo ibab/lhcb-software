@@ -43,6 +43,8 @@ class MonitorSvc
   virtual public Service
 {
   StatusCode i_start();
+  StatusCode i_stop();
+
   void i_unsupported(const std::string& name, const std::type_info& typ, const IInterface* owner);
   template<class T> void i_declareCounter(const std::string& name, const T&  var,
 					  const std::string& desc, const IInterface* owner);
@@ -55,7 +57,6 @@ public:
   // Service pure virtual member functions
   virtual StatusCode initialize();
   virtual StatusCode start();
-  virtual StatusCode stop();
   virtual StatusCode finalize();
   void Lock(void);
   void UnLock(void);
