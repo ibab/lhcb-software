@@ -89,6 +89,8 @@ public:
                                           startTimeIsoString,
                                           const std::string & deltaTimeString);
 
+  void closeFiles();
+  
 private:
   /// List available ROOT files in the given directory
   std::vector<boost::filesystem::path> 
@@ -132,5 +134,6 @@ private:
   /// List of references
   std::vector<boost::filesystem::path> m_foundReferences; 
   std::vector< boost::filesystem::path > m_rootFiles ;
+  std::vector<TFile*> m_openFiles;
 };
 #endif /*PRESENTER_ARCHIVE_H*/

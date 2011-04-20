@@ -608,6 +608,14 @@ void PresenterPage::loadFromArchive( Archive* archive,
   std::cout << "Load from Archive, time  Point " << timePoint
             << " pastDuration " << pastDuration << std::endl;
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+    for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
+          (*itT).histos.end() != itH; ++itH ) {
+      (*itH).deleteRootHist( );
+    }
+  }
+  archive->closeFiles();
+  
+  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     archive->setFiles( (*itT).name, timePoint, pastDuration );
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
           (*itT).histos.end() != itH; ++itH ) {
@@ -932,7 +940,7 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       std::string myRatio = "";
       if ( std::find( tags.begin(), tags.end(), myTag ) == tags.end() ) {
         std::cout << "Tag not found : " << myTag << " try to split." << std::endl;
-        int barIndx = myTag.find( "|" );
+        unsigned int barIndx = myTag.find( "|" );
         if ( barIndx != std::string::npos ) {
           myRatio = myTag.substr( barIndx+1 );
           myTag   = myTag.substr( 0, barIndx );

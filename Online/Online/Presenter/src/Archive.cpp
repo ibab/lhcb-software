@@ -594,12 +594,20 @@ void Archive::setFiles ( const std::string& task,
 }
 
 //=========================================================================
+//  
+//=========================================================================
+void Archive::closeFiles( ) {
+  std::cout << "Closing " << m_openFiles.size() << " files " << std::endl;
+  for ( std::vector<TFile*>::iterator itF = m_openFiles.begin(); m_openFiles.end() != itF; ++itF ) {
+    (*itF)->Close();
+  }
+  m_openFiles.clear();
+}
+//=========================================================================
 //  Load histogram from (list of) files previously created
 //=========================================================================
 void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
 
-  dispHist -> deleteRootHist( ) ;
-  
   std::vector<boost::filesystem::path> goodRootFiles;
 
   TList* list = new TList;
@@ -619,6 +627,9 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
     if ( rootFile -> IsZombie() ) {
       std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
     } else {
+      if ( std::find( m_openFiles.begin(), m_openFiles.end(), rootFile ) == m_openFiles.end() ) {
+        m_openFiles.push_back( rootFile );
+      }
       std::cout << " ++ file " << (*itF).file_string() << " OK. Search " << dispHist->rootName() << std::endl;
       TH1* archiveHisto;
       rootFile -> GetObject( (dispHist->rootName()).c_str(), archiveHisto );
@@ -642,7 +653,6 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
         std::cout << "Histo not found!" << std::endl;
       }
     }
-    rootFile->Close();
   }
   
   if ( NULL != dispHist->rootHist() ) {  // at least one source is available
@@ -680,6 +690,5 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
     delete histo;
   }
   delete list;
-  
 }
 //=========================================================================
