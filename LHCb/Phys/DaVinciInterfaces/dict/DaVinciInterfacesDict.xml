@@ -13,7 +13,6 @@
   <class name = "IDirectionFit"/>
   <class name = "IDistanceCalculator"/>
   <class name = "IDVAlgorithm"/>
-  <class name = "IEventTupleTool"/>
   <class name = "IFilterParticles"/>
   <class name = "IJetMaker"/>
   <class name = "ILifetimeFitter"/>

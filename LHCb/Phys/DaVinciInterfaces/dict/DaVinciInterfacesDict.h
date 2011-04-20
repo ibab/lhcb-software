@@ -24,7 +24,6 @@
 #include "Kernel/IDecodeSimpleDecayString.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IDVAlgorithm.h"
-#include "Kernel/IEventTupleTool.h"
 #include "Kernel/IFilterParticles.h"
 #include "Kernel/IJetMaker.h"
 #include "Kernel/ILifetimeFitter.h"

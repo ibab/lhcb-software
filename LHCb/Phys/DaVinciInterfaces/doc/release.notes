@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-04-20 - Marco Cattaneo
+ - Remove IEventTupleTool interface, moved to LHCbKernel
+
 ! 2011-02-23 - Juan Palacios
  - Kernel/IVertexFit.h, Kernel/IJetMaker.h
   . Fix doxygen comments: get<Particles> -> get<Particle::Range>
