@@ -1,0 +1,33 @@
+# $Id: requirements,v 1.14 2010-04-16 14:48:07 jpalac Exp $ 
+# =============================================================================
+# Created    : 2011-04-01
+# Maintainer : Victor COCO victor.coco@cern.ch
+# =============================================================================
+package           JetAccessoriesMC
+version           v1r0
+
+# =============== structure ===================================================
+branches          cmt doc python src
+
+# =============== dependencies ================================================
+use               fastjet          v* LCG_Interfaces 
+use               LoKiGenMC        v* Phys
+use               LoKiPhysMC       v* Phys
+use               LoKiAlgoMC       v* Phys
+use               LHCbMath         v* Kernel 
+
+# =============== exported include directories ================================
+include_path      none
+
+#apply_pattern 
+apply_pattern install_python_modules 
+
+# =============== constituents ================================================
+library           JetAccessoriesMC    ../src/*.cpp 
+
+# =============== standard patterns ===========================================
+apply_pattern     component_library library=JetAccessoriesMC
+
+# =============================================================================
+# The END 
+# =============================================================================
