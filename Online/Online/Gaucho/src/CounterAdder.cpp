@@ -46,6 +46,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     {
       if (m_received == 1)
       {
+        printf("Counter Adder: Locking \n");
         Lock();
       }
     }
@@ -62,8 +63,10 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     while (pp<bend)
     {
       char *nam = (char*)AddPtr(pp,pp->nameoff);
+      printf("Counter Adder: Locking MAP\n");
       LockMap();
       m_hmap.insert(std::make_pair(nam,pp));
+      printf("Counter Adder: UNLocking MAP\n");
       UnLockMap();
       pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
     }
@@ -72,11 +75,13 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
   {
     if (m_histo != 0)
     {
+      printf("Counter Adder: Locking MonitorSvc\n");
       ObjectLock<IGauchoMonitorSvc> lock(m_monsvc);
       unsigned long long dtim = tim-m_time0;
       double ftim = dtim/1000000000;
       m_histo->fill(ftim);
     }
+    printf("Counter Adder: UNLocking MonitorSvc\n");
     MonMap hmap;
     void *bend   = AddPtr(buff,siz);
     void *hstart = AddPtr(buff,sizeof(SerialHeader));
@@ -92,6 +97,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
       MonIter j = m_hmap.find(i->first);
       if (j!=m_hmap.end())
       {
+        printf("Counter Adder: Locking MAP\n");
         LockMap();
         DimHistbuff1 *sumh = (DimHistbuff1*)(j->second);
         DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
@@ -125,6 +131,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
             break;
           }
         }
+        printf("Counter Adder: UNLocking MAP\n");
         UnLockMap();
       }
       else
@@ -132,6 +139,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
         DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
         int csiz = m_usedSize;
         int hsiz = srch->reclen;
+        printf("Counter Adder: Locking MAP\n");
         LockMap();
         p = ReAllocate(hsiz);
         if (p!=0)
@@ -142,6 +150,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
           char *nam = (char*)AddPtr(srch,srch->nameoff);
           m_hmap.insert(std::make_pair(nam,p));
         }
+        printf("Counter Adder: UNLocking MAP\n");
         UnLockMap();
       }
     }
@@ -159,6 +168,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
     //    printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
     if (m_isSaver)
     {
+      printf("Counter Adder: UNLocking\n");
       UnLock();
     }
     m_received = 0;

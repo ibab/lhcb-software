@@ -76,7 +76,7 @@ AdderSvc::~AdderSvc()
 
 StatusCode AdderSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
-  if ( IIncidentListener::interfaceID().versionMatch(riid) ) 
+  if ( IIncidentListener::interfaceID().versionMatch(riid) )
   {
     *ppvIF = (IIncidentListener*)this;
   }
@@ -293,6 +293,7 @@ StatusCode AdderSvc::finalize()
   releasePtr(m_incidentSvc);
   releasePtr(m_phistsvc);
   releasePtr(m_pMonitorSvc);
+  printf("AdderSvc: Locking DIM\n");
   dim_lock();
   if (m_SaveTimer != 0)
   {
@@ -309,6 +310,7 @@ StatusCode AdderSvc::finalize()
     m_AdderSys->Remove(m_EoRadder);
     deletePtr(m_EoRadder);
   }
+  printf("AdderSvc: UNLocking DIM\n");
   dim_unlock();
   return Service::finalize();
 }

@@ -342,6 +342,7 @@ StatusCode MonitorSvc::finalize()
     m_incidentSvc->release();
     m_incidentSvc = 0;
   }
+  printf("MonitorSvc: Locking DIM\n");
   dim_lock();
   if (m_started)
   {
@@ -359,6 +360,7 @@ StatusCode MonitorSvc::finalize()
   deletePtr(m_savetimer);
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
+  printf("MonitorSvc: UNLocking DIM\n");
   dim_unlock();
   return Service::finalize();
 }
