@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2011-04-20 - Juan Palacios
+ - Use new ParticleProperty ervice.
+ - Increase to v3r10.
+
 !====================== DaVinciTransporter v3r9p2 2010-09-29 ==================
 
 ! 2010-09-20 - Patrick Koppenburg

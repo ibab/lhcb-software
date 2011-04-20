@@ -10,7 +10,10 @@
 
 class ITrackExtrapolator;
 class IParticleStuffer;
-class IParticlePropertySvc ;
+namespace LHCb {
+  class IParticlePropertySvc ;
+}
+
 /** @class ParticleTransporter ParticleTransporter.h
  *  
  *  Tool to transport an LHCb::Particle to a new Z position.
@@ -116,7 +119,7 @@ private:
   std::string m_trackExtrapolatorName;            ///< Type of Track extrapolator for particles from tracks
   
   /// Accessor for ParticlePropertySvc
-  IParticlePropertySvc* m_ppSvc ;
+  LHCb::IParticlePropertySvc* m_ppSvc ;
   
   /// Particle to state convertion tool
   IParticle2State* m_particle2State ;

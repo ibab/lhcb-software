@@ -3,9 +3,12 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiAlg/CheckForNaN.h" // lfin
+
+// from LHCb
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+
 
 #include "Event/TrackTypes.h" /// @todo temporary
 #include "TrackInterfaces/ITrackExtrapolator.h"        // TrackExtrapolator
@@ -59,13 +62,13 @@ StatusCode ParticleTransporter::initialize()
   } 
   else { warning() << "No TrackExtrapolator given for tracks" << endmsg ; }
 
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
 
   m_particle2State = tool<IParticle2State>("Particle2State"); // not private
 
   // a complicated way of getting 11
-  const ParticleProperty * pe = m_ppSvc->find("e-");
-  m_eID = abs(pe->jetsetID());
+  const LHCb::ParticleProperty * pe = m_ppSvc->find("e-");
+  m_eID = abs(pe->particleID().pid());
 
   return sc;
 }
@@ -210,7 +213,7 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
   if (P->charge()!=0 && P->isBasicParticle()){
     // Particles from MCParticles
     if (0==P->proto()){
-      ParticleProperty *pp = m_ppSvc->findByPythiaID(P->particleID().pid());
+      const LHCb::ParticleProperty *pp = m_ppSvc->find(P->particleID());
       if (0!=pp) { Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
                            StatusCode::SUCCESS) ;
       }
