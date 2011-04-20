@@ -4,6 +4,17 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-04-20 - Andrey Golutvin & Vanya Belyaev 
+
+ - StrippingSelections/StrippingHyperCPX.py
+
+    new file with  stripping configuration for HyperCP-X 
+    see the details through __doc__ attribute 
+
+ - tests/test_HyperCPX.py
+ 
+   libe builder tester 
+
 ! 2011-04-13 - Paul Seyfert
  - TrackEff????Muon: Adapting change of names of ChargedProtoParticleMaker's Properties
  - TrackEffVeloMuon: bugfix to bug I introduced yesterday

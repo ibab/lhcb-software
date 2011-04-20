@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StrippingTriMuons.py,v 1.3 2010-08-24 11:05:43 ibelyaev Exp $
+# $Id$
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -67,9 +67,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date   2010-08-10
 # 
-# $Revision: 1.3 $
-# Last modification $Date: 2010-08-24 11:05:43 $
-#                by $Author: ibelyaev $
+# $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """
 Strip three-muon events: 
@@ -126,14 +126,14 @@ Strip three-muon events:
      stream.addLined ( StrippingTriMuonsConf ( {} ).lines() )
 
 
-$Revision: 1.3 $
-Last modification $Date: 2010-08-24 11:05:43 $
-               by $Author: ibelyaev $
+$Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = '2010-08-08'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision$'
 # =============================================================================
 
 
