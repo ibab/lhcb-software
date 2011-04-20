@@ -449,8 +449,17 @@ StatusCode GetLumiParameters::processDB() {
   
   // take the colliding bunches from the online unless undefined or bad
   m_onlineCollidingBunches = m_calibCollidingBunches;
-  if (m_B1WrongBucketFlag == 0 && m_B2WrongBucketFlag == 0) {
-    m_onlineCollidingBunches = m_NCollidingBunches;
+  if (m_calibCollidingBunches < 0) {
+    if (m_B1WrongBucketFlag == 0 && m_B2WrongBucketFlag == 0) {
+      m_onlineCollidingBunches = m_NCollidingBunches;
+    } else {
+      // period with flagging problems but bunch count OK
+      ulonglong t0 = 1300000000000000;
+      ulonglong t1 = 1303300000000000;
+      if ( xtfound > Gaudi::Time( t0*1000 ) && xtfound < Gaudi::Time( t1*1000 ) ) {
+	m_onlineCollidingBunches = m_NCollidingBunches;
+      }
+    }
   }
   debug() << "nBunches          : "      << m_onlineCollidingBunches << endmsg;
 
