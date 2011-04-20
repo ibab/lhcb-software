@@ -14,7 +14,6 @@ use               LoKiNumbers       v* Phys
 use               DAQEvent          v* Event 
 use               L0Event           v* Event 
 use               HltEvent          v* Event 
-use               DaVinciInterfaces v* Phys 
 use               HltInterfaces     v* Kernel
 
 private
