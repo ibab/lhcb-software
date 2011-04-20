@@ -63,7 +63,11 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     {
       if (m_received == 1)
       {
-        if (!m_locked) Lock();
+        if (!m_locked)
+        {
+          Printf("HistAdder Locking\n");
+          Lock();
+        }
         m_locked = true;
       }
     }
@@ -82,8 +86,10 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       char *nam = (char*)AddPtr(pp,pp->nameoff);
 //      printf("Histogram Name: %s\n",nam);
       std::string nams =nam;
+      Printf("HistAdder Locking MAP\n");
       LockMap();
       m_hmap.insert(HistPair(nams,pp));
+      Printf("HistAdder UNLocking MAP\n");
       UnLockMap();
       if ((MONTYPE)pp->type == H_RATE)
       {
@@ -96,10 +102,12 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   {
     if (m_histo != 0)
     {
+      Printf("HistAdder Locking MonitorSvc\n");
       this->m_monsvc->Lock();
       unsigned long long dtim = tim-m_time0;
       double ftim = dtim/1000000000;
       m_histo->fill(ftim);
+      Printf("HistAdder UNLocking MonitorSvc\n");
       this->m_monsvc->UnLock();
     }
 //    printf("Adding %s\n",h->m_TargetService.c_str());
@@ -119,6 +127,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
       MonIter j = m_hmap.find(i->first);
       if (j!=m_hmap.end())
       {
+        Printf("HistAdder Locking MAP\n");
         LockMap();
         double *ps, *ph;
         DimHistbuff1 *sumh = (DimHistbuff1*)(j->second);
@@ -136,6 +145,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
           d->m_sumw2 += s->m_sumw2;
           d->m_min = MIN(d->m_min,s->m_min);
           d->m_min = MAX(d->m_max,s->m_max);
+          Printf("HistAdder UNLocking MAP\n");
           UnLockMap();
           continue;
         }
@@ -203,6 +213,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
             break;
           }
         }
+        Printf("HistAdder UNLocking MAP\n");
         UnLockMap();
       }
       else
@@ -213,6 +224,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
         DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
         void *p;
         hsiz = srch->reclen;
+        Printf("HistAdder Locking MAP\n");
         LockMap();
         p = ReAllocate(hsiz);
         if (p!=0)
@@ -223,6 +235,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
           char *nam = (char*)AddPtr(srch,srch->nameoff);
           m_hmap.insert(HistPair(std::string(nam),p));
         }
+        Printf("HistAdder UNLocking MAP\n");
         UnLockMap();
       }
     }
@@ -241,7 +254,11 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 //    fflush(stdout);
     if (m_isSaver)
     {
-      if (m_locked) UnLock();
+      if (m_locked)
+      {
+        Printf("HistAdder UNLocking\n");
+        UnLock();
+      }
       m_locked = false;
     }
     m_added = 0;
