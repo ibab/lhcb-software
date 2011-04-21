@@ -155,7 +155,7 @@ namespace ConfigZipFileAccessSvc_details {
           // in which case the 'end of central directory' structure
           // is the last thing in the file
           m_file->seekg(0,ios::end);
-          ios::streampos filesize = m_file->tellg();
+          ios::streamoff filesize = m_file->tellg();
           m_file->seekg(-sizeEndCentDir,ios::end);
           ios::streampos header_position = m_file->tellg();
           if (get<uint32_t>(*m_file) != 0x06054B50) {
@@ -163,7 +163,7 @@ namespace ConfigZipFileAccessSvc_details {
               // The comment is up to 64K in size, and we assume it does NOT contain
               // the signature of an 'ecd' record...
               for (  header_position  =     filesize                   -streamsize(sizeEndCentDir); 
-                     header_position >= max(filesize-streamsize(0xffff)-streamsize(sizeEndCentDir),ios::streampos(0));
+                     header_position >= max(filesize-streamsize(0xffff)-streamsize(sizeEndCentDir),ios::streamoff(0));
                      header_position -= 1 ) {
                     m_file->seekg( header_position, ios::beg );
                     if ( get<uint8_t>( *m_file ) == 0x50 && get<uint8_t>( *m_file) == 0x4b  &&
