@@ -196,6 +196,7 @@ void AlarmDisplay::infoHandler() {
     m_mainFrame->histogramDB()->refresh();
     m_mainFrame->clearAlarmPages();
     m_mainFrame->setStatusBarText(prevstatusText.c_str(),2);
+    m_mainFrame->reAccessPage();
   }
   std::cout << "AlarmDisplay::InforHandler teminated." << std::endl;
 }

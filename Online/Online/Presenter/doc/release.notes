@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-21 - Olivier Callot
+ - Fix the startup in history mode.
+
+! 2011-04-21 - Olivier Callot
  - Inform the user when DIM (HistTask) access failed, and stop refresh
 
 ! 2011-04-20 - Olivier Callot

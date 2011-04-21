@@ -412,7 +412,9 @@ public:
     m_dumpFormat = dumpFormat; } ;
 
   PresenterPage& myPage() { return m_presenterPage; }
-
+  
+  void reAccessPage();  // After an alarm, if refresh, reload from database.
+  
  private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;

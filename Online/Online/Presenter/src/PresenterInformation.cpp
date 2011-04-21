@@ -7,7 +7,7 @@
 // Constructor
 //====================================================================
 PresenterInformation::PresenterInformation( ) : 
-  m_presenterMode( pres::History ) , 
+  m_presenterMode( pres::Init ) , 
   m_globalHistoryByRun( false ) , 
   m_currentTCK( "default" ),
   m_referenceRun( 1 ),

@@ -280,11 +280,12 @@ void PresenterMainFrame::cleanHistogramDB() {
 //  Build the graphical interface. A lot of ROOT calls !!!
 //==============================================================================
 void PresenterMainFrame::buildGUI() {
+  /*
   if ( ( pres::EditorOnline  == presenterMode() ) ||
        ( pres::EditorOffline == presenterMode() ) ||
        ( pres::Online        == presenterMode() ) ||
        ( pres::History       == presenterMode() ) ) {
-
+  */
     SetCleanup(kDeepCleanup);
     TGPicturePool* picpool = gClient->GetResourcePool()->GetPicturePool();
     SetIconPixmap((char**)presenter32);
@@ -1219,7 +1220,9 @@ void PresenterMainFrame::buildGUI() {
     m_rightVerticalSplitter->UnmapWindow();
     this->Resize(m_initWidth, m_initHeight);
     DoRedraw();
-  }
+    
+    //}
+    
 }
 
 //==============================================================================
@@ -1676,9 +1679,8 @@ void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode & databaseMode
 void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
   switch ( pMode ) {
   case pres::Init:
-    std::cout << "buildGUI, mode = " << presenterMode() << std::endl;
     buildGUI();
-    break;
+    return;
   case pres::Batch:
     gROOT->SetBatch() ;
     m_presenterInfo.setPresenterMode( pres::Batch ) ;
@@ -5102,3 +5104,17 @@ std::string PresenterMainFrame::timeStamp ( ) {
             << std::endl;
   return std::string( buf );
 }
+
+//=========================================================================
+//  
+//=========================================================================
+void PresenterMainFrame::reAccessPage( ) {
+  if ( m_refreshingPage ) {
+    std::string name = m_presenterPage.name();
+    std::string timePoint = m_presenterInfo.rwTimePoint();
+    std::string pastDuration = m_presenterInfo.rwPastDuration();
+    std::cout << "** Force reload page " << name << " time " << timePoint << " duration " << pastDuration << std::endl;    
+    loadSelectedPageFromDB( name, timePoint, pastDuration );
+  }
+}
+//=========================================================================
