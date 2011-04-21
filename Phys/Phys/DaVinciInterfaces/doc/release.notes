@@ -1,0 +1,301 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciInterfaces
+! Responsible : Juan Palacios
+! Purpose     : Tool interfaces and dictionaries for DaVinci
+!-----------------------------------------------------------------------------
+
+! 2011-04-20 - Cedric Potterat
+ - New implementation of IJetMaker and IJets2Jets
+
+! 2011-04-20 - Marco Cattaneo
+ - Remove IEventTupleTool interface, moved to LHCbKernel
+
+! 2011-02-23 - Juan Palacios
+ - Kernel/IVertexFit.h, Kernel/IJetMaker.h
+  . Fix doxygen comments: get<Particles> -> get<Particle::Range>
+ - Increase to v2r9p1.
+
+!========================= DaVinciInterfaces v2r9 2011-02-22 =========================
+! 2011-02-15 - Vanya Belyaev
+ - add extend_interfaces* pattern into dictionries 
+
+!========================= DaVinciInterfaces v2r8 2011-01-31 =========================
+! 2011-01-24 - Juan Palacios
+ - IDecayFinder
+  . Add templated methods hasDecay and findDecay acting on iterators of
+    LHCb::Particle containers.
+ - IChangePID
+  . Add templated method changePID.
+
+! 2011-01-24 - Juan Palacios
+ - Remove IPhysDesktop.
+
+! 2011-01-17 - Marco Cattaneo
+ - Fix ICC remarks
+
+!========================= DaVinciInterfaces v2r7 2010-12-14 =========================
+! 2010-12-03 - Vanya Belyaev
+ - IDistanceCalculator:
+    add methods to calculate the impact parameter & 
+       distance of closest approach for tracks 
+
+- cmt/requirements 
+    version increment to v2r7  
+
+!========================= DaVinciInterfaces v2r6 2010-11-27 =========================
+! 2010-11-20 - Vanya Belyaev
+ - IDistanceCalculator:
+    add methods to calculate the impact parameter vector
+     - requested by Tagging 
+    actually I am a bit skeptical about the expected improvement
+
+- cmt/requirements 
+    version increment to v2r6 
+
+!===================== DaVinciInterfaces v2r5 2010-07-26 =====================
+
+! 2010-07-22 - Tomasz Skwarnicki
+ - fix window compilation warnings in changes from yesterday
+
+! 2010-07-21 - Tomasz Skwarnicki
+ - Kernel/ITisTos.h IParticleTisTos.h new, ITrigger(Selection)TisTos modified
+   needed for rewritten Phys/TisTosTobbing
+
+!===================== DaVinciInterfaces v2r4 2010-06-20 =====================
+! 2010-06-20 - Vanya Belyaev
+ - Kernel/ICheckOverlap.h   
+    1. remove foundOverlap  method with two vectors
+    2. remove removeOverlap method with LHCb::Particle::Vector
+
+! 2010-06-09 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Remove keep(const Vertex*) method.
+
+! 2010-06-08 - Vanya Belyaev
+ - IDecayTreeFit:
+     add methods to extract chi2 and nDoF 
+
+! 2010-06-03 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Update doxygen.
+
+! 2010-06-02 - Juan Palacios
+ - Remove IFilterCriterion and IGeomDispCalculator.
+
+! 2010-05-29 - Vanya Belyaev
+ - IDVAlgorithm 
+     add accessor to decay tree fitter 
+ - IDecayTreeFit 
+    improve Doxygen comments 
+
+! 2010-05-24 - Vanya Belyaev
+ - add new (simplified) interface for decay tree fitter 
+
+!===================== DaVinciInterfaces v2r3 2010-05-21 =====================
+! 2010-05-16 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Finally remove method primaryVertices().
+
+! 2010-05-14 - Vanya Belyaev
+ - IDVAlgorithm :
+      add various accessors to the tools  
+
+ - IFilterCriterion: 
+      add the inheritance from (new,light) IParticleFilter 
+      add "const"-attributes 
+      remove "reference-to-piointer" qualifier 
+      
+ - new files : Kernel/GetIDVAlgorith.h, src/GetIDVAlgorithm.
+       hooks to extract IDVAlgoritm fro the context 
+
+! 2010-05-12 - Juan Palacios
+ - Kernel/IRelatedPVFinder.h
+  . Now understands LHCb::RecVertex::Range.
+ - Kernel/IPhysDesktop.h
+  . IPhysDesktop::primaryVertices() returns const LHCb::RecVertex::Range,
+    matching IDVAlgorithm interface.
+
+! 2010-05-12 - Juan Palacios
+ - Kernel/IParticleFilter
+  . New, clean interface with single method
+    virtual bool operator()( const LHCb::Particle* ) const = 0;
+    plus non-const version.
+ - cmt/requirements
+  . Increase version to v2r3.
+
+!===================== DaVinciInterfaces v2r2 2010-03-18 =====================
+! 2010-03-18 - Juan Palacios
+ - Add dictionaries for ITrackIsolation
+
+! 2010-03-18 - Simone Bifani
+ - Kernel/ITrackIsolation.h
+  . Created the abstract Interface of the Track Isolation tools
+
+!===================== DaVinciInterfaces v2r1p1 2010-03-17 ===================
+
+! 2010-03-17 - Giampiero Mancinelli
+ - Kernel/IIsolation.h
+  . removed
+
+! 2010-03-17 - Giampiero Mancinelli
+ - src/DavinciInterfaces.cpp
+  . reverted changes for the particle isolation tool interface.
+
+! 2010-03-16 - Vanya Belyaev
+ - Kernel/IDistanceCalculator.h fix LaTeX/doxygen 
+
+! 2010-03-10 - Giampiero Mancinelli
+ - Kernel/IIsolation.h
+  . Added an interface for particle isolation tools.
+
+! 2010-03-10 - Giampiero Mancinelli
+ - src/DavinciInterfaces.cpp
+  . Changes for the particle isolation tool interface.
+
+!===================== DaVinciInterfaces v2r1 2010-02-24 =====================
+! 2010-02-20 - Marco Cattaneo
+ - Remove it also from dict and src files.....
+
+! 2010-02-19 - Juan Palacios
+ - Kernel/IMassVertexFit.h
+  . Removed. Not implemented and not needed.
+ - cmt/requirements
+  . Increase to v2r1
+
+!===================== DaVinciInterfaces v2r0 2010-01-20 =====================
+! 2010-01-20 - Juan Palacios
+ - Kernel/IDVAlgorithm.h
+  . Change Particle and RecVertex accessors to Particle::Range and RecVertex::Range.
+
+! 2010-01-18 - Juan Palacios
+ - Kernel/IDVAlgorithm.h
+  . Make a INamedInterface. Fix some doxygen.
+
+! 2010-01-16 - Juan PALACIOS
+ - dict/DaVinciInterfacesDict.xml
+  . Fix typo
+
+! 2010-01-14 - Juan PALACIOS
+ - Kernel/IPhysDesktop
+  . Add back relatedVertex and primaryVertices methods.
+
+! 2010-01-14 - Juan PALACIOS
+ - Kernel/IDVAlgorithm
+  . primaryVertices() back to original behaviour.
+ - Kernel/IPhysDesktop
+  . Remove relatedVertex and primaryVertices methods.
+  . revert previous behaviour of primaryVertices().
+
+! 2010-01-14 - Patrick Koppenburg
+ - Restore IDecodeSimpleDecayString.h
+
+! 2010-01-14 - Juan PALACIOS
+ - src/DavinciInterfaces.cpp
+  . Remove references to IDecodeSimpleDecayString.h
+ - Kernel/IPhysDesktop
+  . primaryVertices() now returns LHCb::RecVertex::ConstVector&
+ - Kernel/IDVAlgorithm
+  . primaryVertices() now returns LHCb::RecVertex::ConstVector*
+
+! 2010-01-13 - Patrick Koppenburg
+ - task #12929: Remove all obsolete algorithms and tools :
+   . Removed IBestParticles.h, IContextTool.h, IDecodeSimpleDecayString.h, IFilterCriteriaTESTool.h
+ - v2r0
+
+! 2010-01-12 - Juan PALACIOS
+ - Add Kernel/IDVAlgorithm.h
+  . IInterface exporting a few useful methods from DVAlgorithm.
+ - dict/DaVinciInterfaces[.h, .xml]
+  . Add IDVAlgorithm dictionaries.
+ - Increase version to v1r4
+
+!===================== DaVinciInterfaces v1r3p1 2009-12-11 ===================
+! 2009-12-01 - Patrick Koppenburg
+ - Add doxygen description of chi in IDistanceCalculator
+
+!===================== DaVinciInterfaces v1r3 2009-11-13 =====================
+! 2009-11-10 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Add void setOutputLocation(const std::string&)
+
+! 2009-11-10 - Victor Coco
+ - Add interface for Jet to Jet matching: IJets2Jets
+
+! 2009-11-05 - Patrick Koppenburg
+ - Fix dxygen for IVertexFit.h
+
+! 2009-11-03 - Juan PALACIOS
+ - Kernel/IPhysDesktop.h
+  . Add const and non-const methods Particle2Vertex::Map& Particle2VertexMap()
+
+! 2009-10-30 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r3
+ - Kernel/IPhysDesktop.h
+  . Remove virtual const IRelatedPVFinder* relatedPVFinder() const method.
+
+!===================== DaVinciInterfaces v1r2 2009-10-16 =====================
+! 2009-09-14 - Juan PALACIOS
+ - Kernel/IPhysDesktop.h
+  . Add new methods to control use of P->PV relation tables.
+
+!===================== DaVinciInterfaces v1r1 2009-09-02 =====================
+! 2009-08-31 - Juan Palacios
+ - IPhysDesktop now uses unweighted P->PV tables
+ - Adapt to changes in Particle2Vertex typedefs.
+
+! 2009-08-19 - Vanya BELYAEV
+
+ - IVertexFit.h
+
+    to resolve the ambiguities for python uage of IVertexFit interface
+
+    the signature of methods has been changed:
+
+    1. for all methods, WIHTOUT creation of "mother" particle, 
+       the vertex os the first argument ( "fit vertex" ) 
+    2. for all methdos with creaton of "mother" particle, 
+       the mother particle is the last argument , after vertex 
+    
+
+! 2009-08-16 - Juan Palacios
+ - Kernel/IRelatedPVFinder.h
+  . Fix typos
+ - dict/DaVinciInterfacesDict.h, .xml
+  . Remove IRelatedPV.h
+
+! 2009-08-14 - Juan Palacios
+ - Kernel/IRelatedPVFinder.h
+  . Add methods returning single "best" related VertexBase for a given 
+    particle.
+! 2009-08-13 -  Vanya BELYAEV
+
+ - Kernel/IOnOffLine.h 
+
+    add method  "particleCombinerType" to get the default (contetx-dependent)
+    type for IParticleCombiner tool, 
+    the tool whcihis responsible to creation of composed particles 
+
+
+! 2009-08-04 - Juan Palacios
+ - Remove IRelatedPV.
+  . Obsolete for a while.
+ - All interfaces now use GAUDI_API.
+ - Remove all src/Lib/*.cpp files 
+ - Move Kernel/Particle2Vertex.h to Phys/DaVinciTypes/Kernel
+ - cmt/requirements
+  . Use Phys/DaVinciTypes
+  . Increase version to v1r1
+
+!===================== DaVinciInterfaces v1r0 2009-07-29 =====================
+! 2009-07-29 - Marco Cattaneo
+ - Kernel/ISecondaryVertexTool.h, Kernel/ITagger.h
+   . Add missing includes following removal of DVAlgorithm.h... 
+
+! 2009-07-28 - Juan Palacios
+ - Kernel/ISecondaryVertexTool.h, Kernel/ITagger.h
+  . Remove Kernel/DVAlgorithm.h include. No idea why it was there.
+ - Import Kernel/Particle2Vertex.h from Phys/DaVinciKernel.
+
+! 2009-07-22 - Juan Palacios
+ - First import. Take all IAlgTools and IInterfaces from DaVinciKernel
