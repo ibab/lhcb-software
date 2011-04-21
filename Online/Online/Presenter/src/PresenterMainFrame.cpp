@@ -4974,7 +4974,7 @@ TGListTreeItem * PresenterMainFrame::openHistogramTreeAt( const std::string &
                                                           pageName ) {
   TGListTreeItem * node = 0 ;
 
-  std::string path = "/HISTDB" ;
+  std::string path = m_dbName;
   node = m_pagesFromHistoDBListTree -> FindItemByPathname( path.c_str() ) ;
   m_pagesFromHistoDBListTree -> OpenItem( node ) ;
 
@@ -4996,7 +4996,7 @@ TGListTreeItem * PresenterMainFrame::openHistogramTreeAt( const std::string &
     m_pagesFromHistoDBListTree -> ClearHighlighted() ;
 
     node = m_pagesFromHistoDBListTree ->
-      FindItemByPathname( ("/HISTDB" + pageName).c_str() ) ;
+      FindItemByPathname( ( m_dbName + pageName).c_str() ) ;
     m_pagesFromHistoDBListTree -> HighlightItem( node ) ;
   }
 
