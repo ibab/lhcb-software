@@ -1,0 +1,82 @@
+!$Id: release.notes,v 1.9 2010-06-18 16:40:23 cattanem Exp $
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciTypes
+! Responsible : Juan Palacios
+! Purpose     : Package containing useful typedefs for Phys
+!-----------------------------------------------------------------------------
+
+! 2011-04-20 - Marco Cattaneo
+ - Fix unused variable compilation warnings when NDEBUG is set
+
+!========================= DaVinciTypes v2r4 2011-04-04 =========================
+! 2011-03-14 - Vanya Belyaev
+ - TreeCloners.cpp 
+    fix a bug, that under certain conditions could result in incorrect cloning 
+
+!========================= DaVinciTypes v2r3 2011-01-31 =========================
+! 2011-01-16 - Vanya Belyaev
+ - TreeCloners.cpp 
+    fix a bug, that under certains condition could result 
+    in double deletion
+
+! 2011-01-14 - Vanya Belyaev
+ - add Reflex dictionary
+
+! 2011-01-13 - Vanya Belyaev
+ - LHCb::RecVertexHolder 
+      add missing method 
+ - Increase version to v2r3.
+ 
+!========================= DaVinciTypes v2r2 2010-12-08 =========================
+! 2010-12-07 - Vanya Belyaev    
+ - fix stupid bug in RecVertexHolder desrcructor 
+
+! 2010-12-06 - Juan Palacios
+ - Add tests for RecVertexHolder.
+ - Add QM test davincitypes.test_recvertexholder.
+ - Increase version to v2r2.
+
+!========================= DaVinciTypes v2r1 2010-12-06 =========================
+! 2010-12-03 - Vanya Belyaev
+ - LHCb::RecVertexHolder
+    reasonable "return"-value for vertexfitters/refitters    
+
+ - cmt/requirements 
+    version increment to v2r1
+
+!======================== DaVinciTypes v2r0 2010-06-18 =======================
+! 2010-06-09 - Vanya Belyaev
+ - TreeClonetrs.h 
+     add functiion to clone/delete trees 
+
+! 2010-06-09 - Vanya Belyaev
+ - DecayTree::cloneMap
+    fix in cloneTree method 
+    add the counter for the proper clone/delete     
+
+! 2010-05-24 - Vanya Belyaev
+ - LHCb::DecayTree
+    add the default constructor (invalid tree) 
+
+! 2010-05-24 - Vanya Belyaev
+ - add LHCb::DecayTree from DaVinciKernel to allow the usage of this class 
+   in Phys/DaVinciInterfaces 
+ - cmt/requirements 
+    version increment to v2r0
+
+!======================== DaVinciTypes v1r1 2009-11-13 =======================
+! 2009-11-03 - Juan Palacios
+ - Kernel/Particle2Vertex.h
+  . Add type Map, for GaudiUtils::GaudiHashMap<const Particle*, const VertexBase*>
+ - cmt/requirements
+  . Increase version to v1r1
+
+!======================== DaVinciTypes v1r0 2009-09-02 =======================
+! 2009-08-31 - Juan Palacios
+ - Kernel/Particle2Vertex.h
+  . Weighted and unweighted tables. Remove some typedefs.
+
+! 2009-08-04 - Juan Palacios
+ - First import of package, includes Kernel/Particle2Vertex.h, imported from
+   DaVinciInterfaces/Kernel
+
