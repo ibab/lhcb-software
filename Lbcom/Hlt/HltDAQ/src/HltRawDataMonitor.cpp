@@ -1,4 +1,3 @@
-// $Id: HltRawDataMonitor.cpp,v 1.3 2010-03-03 03:56:04 tskwarni Exp $
 // Include files 
 
 // from Gaudi

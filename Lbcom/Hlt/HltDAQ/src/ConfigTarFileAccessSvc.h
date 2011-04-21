@@ -23,7 +23,7 @@
 
 namespace ConfigTarFileAccessSvc_details  {
    class TarFile;
-};
+}
 
 class ConfigTarFileAccessSvc : public Service,
                             virtual public IConfigAccessSvc {

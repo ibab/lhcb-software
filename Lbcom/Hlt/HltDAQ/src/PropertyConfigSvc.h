@@ -71,8 +71,15 @@ public:
   // preload a configuration
   StatusCode loadConfig(const ConfigTreeNode::digest_type& nodeRef);
   // resolve the ID to get a list of  configurations, then use them to configure
+#ifdef __INTEL_COMPILER
+  #pragma warning(disable:1125) // virtual function override intended?
+  #pragma warning(push)
+#endif
   StatusCode configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const;
   StatusCode configure(const ConfigTreeNodeAlias::alias_type& alias, bool callSetProperties) const;
+#ifdef __INTEL_COMPILER
+  #pragma warning(pop)
+#endif
   // reconfigure: first configure, then call sysReinitialize on the top algorithm
   StatusCode reconfigure(const ConfigTreeNode::digest_type& top) const; 
 
@@ -163,6 +170,7 @@ private:
                          std::back_insert_iterator<std::vector<const PropertyConfig*> > components) const;
   void createGraphVizFile(const PropertyConfig::digest_type& ref, const std::string& fname) const;
   ConfigTreeNode::digest_type resolveAlias(const ConfigTreeNodeAlias::alias_type& alias) const;
-  StatusCode outOfSyncConfigs(const ConfigTreeNode::digest_type& top, std::back_insert_iterator<std::vector<const PropertyConfig*> >  ) const;
+  StatusCode outOfSyncConfigs(const ConfigTreeNode::digest_type& top, 
+                              std::back_insert_iterator<std::vector<const PropertyConfig*> >  ) const;
 };
 #endif // PROPERTYCONFIGSVC_H

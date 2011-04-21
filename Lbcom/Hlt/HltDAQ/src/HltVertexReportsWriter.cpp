@@ -1,4 +1,3 @@
-// $Id: HltVertexReportsWriter.cpp,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -34,8 +33,7 @@ unsigned int doubleToInt(double d)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltVertexReportsWriter );
-
+DECLARE_ALGORITHM_FACTORY( HltVertexReportsWriter )
 
 //=============================================================================
 // Standard constructor, initializes variables

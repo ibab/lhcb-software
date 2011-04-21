@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-04-21 - Marco Cattaneo
+ - Disable ICC warnings (see also Savannah task 20188)
+
 ! 2011-04-19 - Gerhard Raven
  - funnel all file access in ConfigTarFileAccessSvc through a single member
    function in order to prepare for closing/opening the file 'on demand'

@@ -1,4 +1,3 @@
-// $Id: PropertyConfigSvc.cpp,v 1.1 2010-05-05 13:20:44 graven Exp $
 // Include files 
 
 #include <map>
@@ -6,7 +5,9 @@
 
 class StatusCode;
 namespace Gaudi { namespace Parsers {
-StatusCode parse(std::map<std::string, std::map<std::string, std::map< std::string, std::string> > >& result , const std::string& input ) ;
+StatusCode parse(std::map<std::string, std::map<std::string,
+                 std::map< std::string, std::string> > >& result,
+                 const std::string& input ) ;
 } }
 #include <sstream>
 #include <algorithm>
@@ -55,7 +56,7 @@ namespace {
     class property2jos  : public std::iterator<std::output_iterator_tag,const PropertyConfig::Prop> {
          public:
             property2jos& operator++()   { return *this; }
-            property2jos operator++(int) { return *this; }
+//            property2jos operator++(int) { return *this; } // Not yet implemented
             property2jos& operator*()    { return *this; }
             property2jos(IJobOptionsSvc* jos,const string& name, ostream* os=0) :
                 m_jos(jos),m_name(name),m_properties(jos->getProperties(name)),m_out(os) { assert(m_jos!=0); }
@@ -788,7 +789,9 @@ PropertyConfigSvc::Transformer::operator()(const PropertyConfig::Prop& in) {
 
 namespace Gaudi { namespace Parsers {
 
-StatusCode parse(std::map<std::string, std::map<std::string, std::map< std::string, std::string> > >& result , const std::string& input ) 
+StatusCode parse(std::map<std::string, std::map<std::string, 
+                 std::map< std::string, std::string> > >& result,
+                 const std::string& input ) 
 {
 
     typedef  MapGrammar<StringGrammar,StringGrammar>  G1 ;
