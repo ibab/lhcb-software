@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+- Packages removed: Phys/DaVinciInterfaces: moved to Phys project
+                    Phys/DaVinciTypes:      moved to Phys project
+
 </PRE><H1><A NAME=v32r2>2011-04-05 LHCbSys v32r2</A></H1><PRE>
 This version uses Gaudi v22r1 and LCG_60a
 Production version for 2011 data

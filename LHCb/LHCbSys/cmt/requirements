@@ -106,8 +106,6 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
 use OTDAQ                 v7r9    OT      # Wouter Hulsbergen
 
-use DaVinciInterfaces     v2r9    Phys    # Juan Palacios
-use DaVinciTypes          v2r4    Phys    # Juan Palacios
 use LoKiCore              v11r0   Phys    # Ivan Belyaev
 use LoKiGen               v10r0   Phys    # Ivan Belyaev
 use LoKiHlt               v3r6    Phys    # Ivan Belyaev
