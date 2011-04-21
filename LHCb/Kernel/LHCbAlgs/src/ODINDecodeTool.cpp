@@ -135,6 +135,7 @@ void ODINDecodeTool::execute() {
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
     if (exist<LHCb::RawEvent>(*p)){
       rawEvent = get<LHCb::RawEvent>(*p);
+      break;
     }
   }
   if (!rawEvent) {
