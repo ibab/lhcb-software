@@ -240,9 +240,18 @@ void TaskSaveTimer::SavetoFile(void *buff)
     mkdir(fdir,01777);
     sprintf(fdir,"%s/%02d",fdir,tstruct->tm_mday);
     mkdir(fdir,01777);
+    if (!m_EOR)
+    {
     sprintf(fn,"%s/%s-%d-%4d%02d%02dT%02d%02d%02d.root",fdir,m_taskname.c_str(),runo,
         tstruct->tm_year+1900,tstruct->tm_mon+1,tstruct->tm_mday,
         tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
+    }
+    else
+    {
+      sprintf(fn,"%s/%s-%d-%4d%02d%02dT%02d%02d%02d-EOR.root",fdir,m_taskname.c_str(),runo,
+          tstruct->tm_year+1900,tstruct->tm_mon+1,tstruct->tm_mday,
+          tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
+    }
 //    printf("File Saver: Filename %s\n",fn);
 //  }
 //  else
