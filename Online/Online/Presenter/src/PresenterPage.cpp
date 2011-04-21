@@ -229,7 +229,16 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
   for ( std::vector<OnlineHistogram*>::iterator itOH = anaHistos.begin(); anaHistos.end() != itOH; ++itOH ) {
     AnalysisHisto myAna;
     myAna.displayHisto = new DisplayHistogram( *itOH );
-    (*itOH)->getCreationDirections( myAna.algorithm, myAna.histoNames, myAna.params );
+
+    try {
+      (*itOH)->getCreationDirections( myAna.algorithm, myAna.histoNames, myAna.params );
+    } catch ( std::string sqlException ) {
+      std::cout << "SQL error, unknown algorithm  = " << myAna.algorithm << std::endl;
+      myAna.algorithm = "Scale";
+      myAna.histoNames.clear();
+      myAna.params.clear();
+    }
+
     for (unsigned int i=0; i< myAna.histoNames.size(); ++i) {
       OnlineHistogram* histo = histDB->getHistogram( myAna.histoNames[i] );
       std::string taskName = histo->task();

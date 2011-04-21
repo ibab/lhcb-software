@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-21 - Olivier Callot
+ - Protect unknown analysis algorithm
+
+! 2011-04-21 - Olivier Callot
  - Fix the startup in history mode.
 
 ! 2011-04-21 - Olivier Callot
