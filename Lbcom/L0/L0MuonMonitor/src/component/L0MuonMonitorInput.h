@@ -45,6 +45,7 @@ private:
   bool m_enableTAE;         ///< Enable TAE mode
   bool m_useNZS;            ///< Use muon NZS banks
   std::vector<std::string> m_forcedOL; // List of optical links force to 1
+  std::vector<std::string> m_maskedCh; // List of channels that should not be checked
 
   // Histogram
   AIDA::IHistogram1D * m_summary;
@@ -66,6 +67,7 @@ private:
   std::map<int,std::string> m_tae_items;    // Definitions of tae slots
   std::vector<LHCb::MuonTileID> m_optlinks; // List of optical links in error 
   std::vector<LHCb::MuonTileID> m_optlinksForced; // List of optical links forced to 1
+  std::vector<LHCb::MuonTileID> m_channelsMasked; // List of channels that should not be checked
 
   IMuonRawBuffer*      m_muonBuffer;  // Muon decoding tool
   IL0MuonInputTool *   m_inputTool;   // L0Muon hits tool

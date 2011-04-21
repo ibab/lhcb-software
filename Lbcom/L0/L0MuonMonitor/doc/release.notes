@@ -4,8 +4,10 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2011-04-21 - Julien Cogan
+ - L0MuonMonitorInput : allow to mask some channels in the comparison with muon data
+
 ! 2011-04-19 - Julien Cogan
- - L0MuonMonitorInput : allow to mask some channels in the comparison (defined by option)
  - fix "bugs" found by Coverity (variables were initialised in the initialize methode)
    - L0MuonMuonComp.cpp : initialize m_event_counter in the constructor 
    - L0MuonAlgComparison.cpp : initialize m_diff and m_counters in the constructor 
