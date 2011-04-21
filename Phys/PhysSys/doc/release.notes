@@ -3,9 +3,14 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v12r3>2011-04-21 Phys v12r3 </A></H1><PRE>
+
+- Based on LHCb v32r2. Stripping13 compatible patches.
+- Small bug and memory leak fixes.
+
 </PRE><H1><A NAME=v12r2>2011-04-04 Phys v12r2 </A></H1><PRE>
 
-- Based on LHCb v32r1p1. For 2011 stripping13.
+- Based on LHCb v32r2. For 2011 stripping13.
 - Remove "Element" functors from LoKi
 - New TisTosTobbing.
 - Extra safety constrains for Selections.
