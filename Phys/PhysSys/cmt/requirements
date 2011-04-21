@@ -4,6 +4,8 @@ version v12r3
 branches doc cmt
 
 ####################################################################
+use  DaVinciInterfaces          v2r9     Phys    # Juan Palacios
+use  DaVinciTypes               v2r4     Phys    # Juan Palacios
 use  DaVinciUtils               v1r1     Phys    # Juan Palacios
 use  DaVinciKernel              v10r0p1  Phys    # Juan Palacios
 use  DaVinciMaps                v2r0     Phys    # Juan Palacios

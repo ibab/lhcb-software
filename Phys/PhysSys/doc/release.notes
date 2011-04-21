@@ -3,6 +3,8 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+- Added Phys/DaVinciInterfaces and Phys/DaVinciTypes, previously in LHCb project
+
 </PRE><H1><A NAME=v12r3>2011-04-21 Phys v12r3 </A></H1><PRE>
 
 - Based on LHCb v32r2. Stripping13 compatible patches.
