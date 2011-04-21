@@ -2150,7 +2150,7 @@ void PresenterMainFrame::startPageRefresh() {
 void PresenterMainFrame::stopPageRefresh() {
   if (0 != m_pageRefreshTimer) {
     m_message = "Refresh stopped.";
-    if (m_verbosity >= pres::Verbose) std::cout << m_message << std::endl;
+    std::cout << m_message << std::endl;
     if ( pres::History != presenterMode()) {
       m_mainStatusBar->SetText(m_message.c_str(), 2);
       m_startRefreshButton->SetState(kButtonUp);
@@ -3652,7 +3652,12 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
        ( pres::Online        == presenterMode() )   ) {
     std::string partition = currentPartition();
     m_presenterPage.setDimBrowser( m_dimBrowser );
-    m_presenterPage.loadFromDIM( partition, false );
+    std::string message ("" );
+    m_presenterPage.loadFromDIM( partition, false, message );
+    if ( "" != message && !isBatch() ) {
+      new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
+                 kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
+    }
     m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
   } else {
     m_presenterPage.loadFromArchive( m_archive, pres::s_startupFile, m_savesetFileName );
@@ -4166,7 +4171,12 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
              pres::EditorOnline == m_presenterInfo.presenterMode() ||
              isBatch() ) {
           m_presenterPage.setDimBrowser( m_dimBrowser );
-          m_presenterPage.loadFromDIM( partition, false );
+          std::string message ("" );
+          m_presenterPage.loadFromDIM( partition, false, message );
+          if ( "" != message && !isBatch() ) {
+            new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
+                         kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
+          }
           if ( m_referencesOverlayed ) { 
             m_presenterPage.uploadReference( m_analysisLib,
                                              m_presenterInfo.referenceRun(),
@@ -4677,13 +4687,15 @@ void PresenterMainFrame::nextInterval() {
 void PresenterMainFrame::refreshPage() {
 
   std::cout << timeStamp() << " refreshing..." << std::endl;
-
+  if ( !m_refreshingPage ) return;
+  
   editorCanvas->cd();
 
+  std::string message ("" );
   if ( pres::Online       == m_presenterInfo.presenterMode() ||
        pres::EditorOnline == m_presenterInfo.presenterMode() ) {
     std::string partition = currentPartition();
-    m_presenterPage.loadFromDIM( partition, true );
+    m_presenterPage.loadFromDIM( partition, true, message );
     m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd, true );
   } else if (  pres::History == m_presenterInfo.presenterMode() ) {
     //== Do nothing: Only used in case of adding/removing references...
@@ -4695,9 +4707,16 @@ void PresenterMainFrame::refreshPage() {
   std::cout << "Build analysis histograms " << std::endl;
   m_presenterPage.buildAnalysisHistos( m_analysisLib, true );  // Only after histos are loaded...
 
-  //editorCanvas->Update();
   m_presenterPage.updateDrawingOptions();
   editorCanvas->Update();
+
+  if ( "" != message && !isBatch() ) {
+    m_pageRefreshTimer->TurnOff();
+    m_refreshingPage = false;
+    new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
+                 kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
+    stopPageRefresh();
+  }
 }
 
 //==============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-21 - Olivier Callot
+ - Inform the user when DIM (HistTask) access failed, and stop refresh
+
 ! 2011-04-20 - Olivier Callot
  - Close the files in history mode. May solve crashes of the offline presenter.
 

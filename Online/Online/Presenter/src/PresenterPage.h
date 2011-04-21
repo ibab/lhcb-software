@@ -82,7 +82,7 @@ public:
   void prepareAccess( OnlineHistDB* histDB, std::string& partition );
 
   //== Load the histograms from DIM services
-  void loadFromDIM( std::string& partition, bool update );
+  void loadFromDIM( std::string& partition, bool update, std::string& message );
 
   //== Set reference plots
   void uploadReference( OMAlib* analysisLib, int startRun, std::string tck );
@@ -134,5 +134,6 @@ private:
   std::vector<TrendingFile> m_trends;
   std::vector<PadContent> m_pads;
   std::vector<DisplayHistogram*> m_displayHistograms;
+  int m_msgBoxReturnCode;
 };
 #endif // PRESENTERPAGE_H

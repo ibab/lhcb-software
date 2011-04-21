@@ -279,7 +279,8 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
 //=========================================================================
 //  Load from the monitoring service
 //=========================================================================
-void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
+void PresenterPage::loadFromDIM( std::string& partition, bool update, std::string& message ) {
+  message = "";
   if ( m_tasks.size() == 0 ) return;
   
   std::vector<std::string> knownTasks;
@@ -352,6 +353,11 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
           results.pop_back();
         }
         while ( results.size() < histNames.size() ) results.push_back( 0 );
+        //== Try to inform the operator
+        message +=  "Failure to access the histograms of task " + (*itT).location
+          + "\n If task is not consuming events (see farm monitoring display), restart the task."
+          + "\n If the problem persists, try to restart the Presenter."
+          + "\n If this si not enough, restart the task. \n";
       }
       
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
@@ -405,8 +411,10 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update ) {
         foundTask = true;
         break;
       }
-      if ( !foundTask ) std::cout << "  --- no services for task " << (*itT).name << std::endl;
-
+      if ( !foundTask ) {
+        std::cout << "  --- no services for task " << (*itT).name << std::endl;
+        message += "\nFound no DIM service for task " + (*itT).name + ", is it running ?";
+      }
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
         if ( foundTask ) {
@@ -941,7 +949,7 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       if ( std::find( tags.begin(), tags.end(), myTag ) == tags.end() ) {
         std::cout << "Tag not found : " << myTag << " try to split." << std::endl;
         unsigned int barIndx = myTag.find( "|" );
-        if ( barIndx != std::string::npos ) {
+        if ( barIndx < myTag.size() ) {
           myRatio = myTag.substr( barIndx+1 );
           myTag   = myTag.substr( 0, barIndx );
           std::cout << "  num " << myTag << " den " << myRatio << std::endl;
