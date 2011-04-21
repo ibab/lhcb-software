@@ -77,8 +77,6 @@ void SaveTimer::SavetoFile(void *buff)
   buff = AddPtr(buff,sizeof(SerialHeader));
   fdir[0]=0;
   fn[0]=0;
-  if (!m_EOR)
-  {
     timeval ctim;
     struct tm *tstruct;
     gettimeofday(&ctim,NULL);
@@ -98,26 +96,20 @@ void SaveTimer::SavetoFile(void *buff)
     mkdir(fdir,01777);
     sprintf(fdir,"%s/%02d",fdir,tstruct->tm_mday);
     mkdir(fdir,01777);
-    sprintf(fn,"%s/%s-%d-%4d%02d%02dT%02d%02d%02d.root",fdir,m_taskname.c_str(),runo,
-        tstruct->tm_year+1900,tstruct->tm_mon+1,tstruct->tm_mday,
-        tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
+    if (!m_EOR)
+    {
+      sprintf(fn,"%s/%s-%d-%4d%02d%02dT%02d%02d%02d.root",fdir,m_taskname.c_str(),runo,
+          tstruct->tm_year+1900,tstruct->tm_mon+1,tstruct->tm_mday,
+          tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
+    }
+    else
+    {
+      sprintf(fn,"%s/%s-%d-%4d%02d%02dT%02d%02d%02d-EOR.root",fdir,m_taskname.c_str(),runo,
+          tstruct->tm_year+1900,tstruct->tm_mon+1,tstruct->tm_mday,
+          tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
+    }
+
 //    printf("File Saver: Filename %s\n",fn);
-  }
-  else
-  {
-    sprintf(fdir,"%s",m_rootdir.c_str());
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%s",fdir,"ByRun");
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%s",fdir,m_taskname.c_str());
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%d",fdir,(runo/10000)*10000);
-    mkdir(fdir,01777);
-    sprintf(fdir,"%s/%d",fdir,(runo/1000)*1000);
-    mkdir(fdir,01777);
-    sprintf(fn,"%s/%s-run%d.root",fdir,m_taskname.c_str(),runo);
-//    printf("File Saver: Filename %s\n",fn);
-  }
   m_Adder->Lock();
   TFile *f = TFile::Open(fn,"RECREATE");
   m_Adder->UnLock();
