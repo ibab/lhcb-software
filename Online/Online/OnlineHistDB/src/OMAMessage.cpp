@@ -145,6 +145,8 @@ void OMAMessage::load() {
         m_isAbort=false;
         if (!m_anaid_null)
           getAnaComment(m_anaid);
+        else
+          m_anaid=0;
       }
     }
     releaseOCITaggedStatement(stmt, "MSGLOAD");
@@ -298,11 +300,12 @@ void OMAMessage::enable() {
 
 
 void OMAMessage::dump(std::ostream *out) {
-  if (m_anaid && m_ID)
-    *out << "----- ANALYSIS ID "<<m_anaid<< "  MESSAGE ID "<<m_ID<<" ---- STATUS="<<
-      (m_active ? "ACTIVE" : "NOT ACTIVE") << std::endl;
+  if (m_anaid)
+    *out << "----- ANALYSIS ID "<<m_anaid<< "  MESSAGE ID "<<m_ID;
   else
-    *out << "----------------------------------------------------------------------"<<std::endl<<std::endl;
+    *out << "----- MESSAGE ID "<<m_ID<< " FROM CUSTOM ANALYSIS";
+
+  *out << " ---- STATUS="<< (m_active ? "ACTIVE" : "NOT ACTIVE") << std::endl;
   *out << "********  created on   "<<humanTime();
   *out << levelString() <<" from analysis Task "<<m_anaTaskName<< "  in analysis "<< m_ananame <<std::endl;
   *out << " related to system "<<concernedSystem()<<std::endl;

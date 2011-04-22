@@ -210,6 +210,26 @@ begin
  close vsh;
  return npages;
 end HistogramPages;
+-----------------------
+
+function HistogramDepVirt(theHID IN HISTOGRAM.HID%TYPE, theSet IN HISTOGRAMSET.HSID%TYPE, theNHS IN int, VHnames OUT varchar2) return number is
+ nv int :=0;
+ cursor hcs is select HCID from HCREATOR where SOURCEH1=theHID or  SOURCEH2=theHID or  SOURCEH3=theHID or SOURCEH4=theHID or SOURCEH5=theHID or SOURCEH6=theHID or SOURCEH7=theHID or SOURCEH8=theHID or (SOURCESET=theSet and theNHS=1);
+ myhcid HISTOGRAM.HID%TYPE;
+ begin
+ VHnames :=' ';
+ open hcs;
+ LOOP
+  fetch hcs into myhcid;
+  EXIT WHEN hcs%NOTFOUND;
+  nv := nv+1;
+  if ((LENGTH(VHnames)+LENGTH(myhcid)+2) < 800) then
+    VHnames := VHnames || myhcid || ' , ';
+  end if;
+ end LOOP;
+ close hcs;
+ return nv;
+end HistogramDepVirt;
 
 --------------------------
 --PUBLIC FUNCTIONS:
@@ -2140,7 +2160,9 @@ function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number is
  cursor vh is SELECT HID from HISTOGRAM where HSET=theSet;
  myhid HISTOGRAM.HID%TYPE;
  pagenames varchar2(800);
+ vhnames varchar2(800);
  np int;
+ ndep int;
  nd int;
 begin
  savepoint beforeDHSdelete;
@@ -2152,14 +2174,16 @@ begin
   if (np > 0) then
    raise_application_error(-20005,'Histogram '||GetName(myhid)||' is on pages --'||PageNames||'-- and cannot be removed');
   end if;
+  ndep := HistogramDepVirt(myhid, theSet, 1, vhnames); -- check if histogram is needed as source by a virtual histogram
+  if (ndep > 0) then
+   raise_application_error(-20005,'Histogram '||GetName(myhid)||' is needed by virtual histograms --'||vhnames||'-- that must be removed first');
+  end if;
  end LOOP;
  close vh;
  delete from DISPLAYOPTIONS where DOID in (select HSDISPLAY from histogramset where hsid=theSet);
  delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HSET=theSet);
  delete from histogramset where hsid=theSet;
  nd := SQL%ROWCOUNT;
- -- in case an analysis hist was deleted in cascade
- delete from histogram where isanalysishist=1 and hid not in (select HCID from hcreator);
  return nd; -- returns the number of deleted objects (0 or 1)
 EXCEPTION
  when OTHERS then
@@ -2171,7 +2195,9 @@ end DeleteHistogramSet;
 function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number is
  cursor vh is SELECT HSID,NHS,IHS from VIEWHISTOGRAM WHERE HID=theHID;
  np int;
+ ndep int;
  pagenames varchar2(800);
+ vhnames varchar2(800);
  myhsid HISTOGRAMSET.HSID%TYPE;
  mynhs HISTOGRAMSET.NHS%TYPE;
  myihs HISTOGRAM.IHS%TYPE;
@@ -2185,7 +2211,11 @@ begin
  else
   np := HistogramPages(theHID, PageNames); -- check if histogram is on a page
   if (np > 0) then
-   raise_application_error(-20005,'Histogram '||GetName(theHID)||' is on pages --'||PageNames||'-- and cannot be removed');
+   raise_application_error(-20005,'Histogram '||GetName(theHID)||' is on pages --'||PageNames||'-- and should first be removed from them');
+  end if;
+  ndep := HistogramDepVirt(theHID, myhsid, mynhs, vhnames); -- check if histogram is needed as source by a virtual histogram
+  if (ndep > 0) then
+   raise_application_error(-20005,'Histogram '||GetName(theHID)||' is needed by virtual histograms --'||vhnames||'-- that must be removed first');
   end if;
   delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HID=theHID);
   if (mynhs = 1) then
@@ -2194,8 +2224,6 @@ begin
    update HISTOGRAMSET set NHS=NHS-1 where HSID=myhsid;
    delete from histogram where HID=theHID;
    nd := SQL%ROWCOUNT;
-   -- in case an analysis hist was deleted in cascade
-   delete from histogram where isanalysishist=1 and hid not in (select HCID from hcreator);
    return nd; -- returns the number of deleted objects (0 or 1)
   end if;
  end if;
@@ -2205,6 +2233,7 @@ EXCEPTION
   ROLLBACK TO beforeDHdelete;
   raise_application_error(-20050,SQLERRM); 
 end DeleteHistogram;
+
 
 -----------------------------------
 
