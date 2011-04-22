@@ -66,14 +66,14 @@ L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   : L0AlgBase( name , pSvcLocator )
   , m_usePsSpd( true )
   , m_addEcalToHcal( true )
-  , m_rawOutput  ( 2 )
-  , m_bankVersion( 1 ) 
-  , m_nbValidation( 0 )
-  , m_l0Cond( 0 ) 
   , m_validPrs()
+  , m_validPrsInner()
+  , m_rawOutput  ( 2 )
   , m_totRawSize(0)
   , m_nbEvents(0)
-  , m_validPrsInner(){
+  , m_bankVersion( 1 ) 
+  , m_nbValidation( 0 )
+  , m_l0Cond( 0 ) {
   declareProperty( "CreateHCALLut"   , m_createHCALLut      = false    ) ;
   declareProperty( "UsePSSPD"        , m_usePsSpdOpts       = true     ) ;
   declareProperty( "AddECALToHCAL"   , m_addEcalToHcalOpts  = true     ) ;

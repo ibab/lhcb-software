@@ -258,6 +258,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
               } else {
                 warning() << "Hadron candidate already filled !" << endreq ;
                 delete myL0Cand ;
+                myL0Cand = 0;
                 readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted ) ;
               }
             } else { 
@@ -289,6 +290,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
                   delete old ;
                 } else {
                   delete myL0Cand ;
+                  myL0Cand = 0;
                 }
               }
             }
@@ -321,6 +323,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
                         << endreq ;
               readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Corrupted ) ;
               delete myL0Cand ;
+              myL0Cand = 0;
             }
           }
         }
