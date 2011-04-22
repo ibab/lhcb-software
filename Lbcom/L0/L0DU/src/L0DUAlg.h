@@ -60,7 +60,6 @@ private:
   IL0DUEmulatorTool*   m_emulator;
   
   // PGA3 block building
-  long m_muonWord[3];
   std::map<std::string,double> m_muonMap;
 };
 #endif // L0DUAlg_H

@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-01-24 - Olivier Deschamps
+ - fix coverity (non) problems
+
 ! 2011-04-15 - Marco Cattaneo
  - Remove obsolete files ETC.opts, ETCSeq.opts, ReadETC.opts, WriteETC.opts
 

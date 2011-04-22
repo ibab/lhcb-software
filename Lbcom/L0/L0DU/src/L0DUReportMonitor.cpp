@@ -37,6 +37,7 @@ L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
     m_decCntMap(),
     m_evtCntMap(),
     m_evtCnt(0),
+    m_prevTCK(-1),
     m_swap(true)
 {
   declareProperty( "ReportLocation"    , m_reportLocation =  LHCb::L0DUReportLocation::Default );

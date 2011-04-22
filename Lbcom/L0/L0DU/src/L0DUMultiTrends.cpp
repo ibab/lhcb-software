@@ -34,6 +34,7 @@ L0DUMultiTrends::L0DUMultiTrends( const std::string& name,
     m_book(true),
     m_hasOrigin(false),
     m_bin(2),
+    m_origin(0),
     m_count(0)
 {
   declareProperty( "L0DUEmulatorTool"  , m_emulatorTool= "L0DUEmulatorTool");

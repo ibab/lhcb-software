@@ -25,8 +25,8 @@ DECLARE_ALGORITHM_FACTORY( L0DURawBankMonitor )
 //=============================================================================
 L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : Calo2Dview ( name , pSvcLocator )
-{
+  : Calo2Dview ( name , pSvcLocator ),
+    m_first(true){
 
   declareProperty( "L0DUFromRawTool"   , m_fromRawTool = "L0DUFromRawTool" );  
   declareProperty( "EmulatorTool"      , m_emulatorTool= "L0DUEmulatorTool");
