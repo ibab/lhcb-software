@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-04-24 - Olivier Deschamps
+  - L0DUReport.xml : fix coverity (non) problem
+
 !========================= L0Event v19r2 2011-02-22 =========================
 ! 2011-01-24 - Olivier Deschamps
   - L0DUBase   : update according to the latest firmware update (new data DiMuonProd + condition number changes)

@@ -78,6 +78,7 @@
           m_configuration = 0;
           m_valid = true;
           m_bcid  = 0;
+          m_bankVersion=-1;
           m_dataMap.clear();
         </code>
       </method>
