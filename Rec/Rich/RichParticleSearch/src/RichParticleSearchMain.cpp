@@ -1,5 +1,3 @@
-
-// $Id: $
 // Include files
 
 // From Gaudi
@@ -12,7 +10,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "Kernel/IOnOffline.h"
 #include "Event/RecVertex.h"
 #include "GaudiAlg/GaudiTool.h"
 
@@ -50,8 +47,10 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
   declareProperty( "HistoOutputLevel", m_histoOutputLevel = 0 );
   //declareProperty( "ParticleType",     m_particleType = 2 ); // pion
   //               (Aerogel) (R1Gas) (R2Gas)
-  declareProperty( "MinIsolationCut",     m_IsoCut       = boost::assign::list_of (150) (100) (100), "IsolationCuts for each Radiator in mm");
-  declareProperty( "MaxBeta",       m_maxBetaCut   = boost::assign::list_of (0.99985)(0.99985)(0.99985),"beta cut");
+  declareProperty( "MinIsolationCut",
+                   m_IsoCut = boost::assign::list_of (150) (100) (100),
+                   "IsolationCuts for each Radiator in mm");
+  declareProperty( "MaxBeta", m_maxBetaCut = boost::assign::list_of (0.99985)(0.99985)(0.99985),"beta cut");
 
   //Cut on Histograms and NTuples
   declareProperty( "MassDevCut",    m_massDevCut = boost::assign::list_of (0.6) (0.6) (0.6),"MassDevCut");
