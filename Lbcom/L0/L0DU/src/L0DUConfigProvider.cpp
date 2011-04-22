@@ -1184,7 +1184,7 @@ bool L0DUConfigProvider::conditionCheck(LHCb::L0DUElementaryCondition* condition
     if( elData->type() != LHCb::L0DUElementaryData::Predefined )continue;
     dataID = elData->id();    
 
-    if( dataID <0 || dataID > (int)NumberOf::Data){
+    if( dataID <0 || dataID >= (int)NumberOf::Data){
       warning() << "data ID not correct : " << dataID << endmsg;
       return false; 
     }    
