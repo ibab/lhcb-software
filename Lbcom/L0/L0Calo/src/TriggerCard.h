@@ -22,6 +22,7 @@ public:
   TriggerCard( int num, DeCalorimeter* det ) { 
     m_number  = num;
     m_detElem = det;
+    reset();
   };
 
   ~TriggerCard() {};

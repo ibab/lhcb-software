@@ -30,7 +30,8 @@ DECLARE_ALGORITHM_FACTORY( L0CaloMonit );
 //=============================================================================
 L0CaloMonit::L0CaloMonit( const std::string& name, 
 				ISvcLocator* pSvcLocator ) : 
-  Calo2Dview ( name , pSvcLocator ) { 
+  Calo2Dview ( name , pSvcLocator ),
+  m_nEvents(0){ 
   declareProperty( "FullMonitoring"      , m_fullMonitoring  = false ) ;  
   declareProperty( "InputDataSuffix"     , m_inputDataSuffix = ""    ) ;  
   declareProperty( "UpdateFrequency"     , m_updateFrequency = -1    ) ;  
