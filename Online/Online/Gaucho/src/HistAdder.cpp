@@ -21,6 +21,7 @@ HistAdder::HistAdder(char *myName, char *serviceName)
   m_MyName      = myName;
   m_type        = ADD_HISTO;
   m_oldProf     = 0;
+  m_updated = false;
   AdderSys::Instance().gg_AdderList.push_back(this);
 }
 
@@ -42,20 +43,31 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   {
     //printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
+    Update();
     return;
   }
   if (header->m_magic != SERIAL_MAGIC)
   {
-//    //printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
-    m_received=1;
+    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
+    m_received++;
+    Update();
     return;
   }
-  size_t expected = m_inputServicemap.size();
+  m_expected = m_inputServicemap.size();
   long long current  = (m_IsEOR) ? header->run_number : header->ser_tim;
 
   m_RateBuff = 0;
   if (m_reference < current)
   {
+    if ((m_reference != -1) && !m_updated)
+    {
+      if (m_outservice != 0)
+      {
+        m_outservice->Serialize();
+        m_outservice->Update();
+        m_updated = false;
+      }
+    }
     m_time0 = tim;
     m_added++;
     m_received = 1;
@@ -245,12 +257,16 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
   }
   else
   {
-//    //printf("late update from %s\n expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
+    printf("late update from %s\n m_expected %lli received %lli\n",h->m_TargetService.c_str(),m_reference,current);
     m_received++;
   }
-  if (m_received >= expected)
+  Update();
+}
+void HistAdder::Update()
+{
+  if (m_received >= m_expected)
   {
-//    //printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,expected);
+//    //printf("[ERROR] %s Finished one cycle. Updating our service... %d %d\n", RTL::processName().c_str(),m_received,m_m_expected);
 //    fflush(stdout);
     if (m_isSaver)
     {
@@ -263,11 +279,12 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
     }
     m_added = 0;
     m_received = 0;
-    ////printf(" %d %d\n", m_received,expected);
+    ////printf(" %d %d\n", m_received,m_m_expected);
     if (m_outservice != 0)
     {
       m_outservice->Serialize();
       m_outservice->Update();
+      m_updated = true;
     }
     if (m_expandRate)
     {
@@ -334,7 +351,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
               sname = m_NamePrefix+nams;
               if (sname.size() < MAX_SERVICE_SIZE)
               {
-                s= new RateService(sname.c_str(),"D:2;C");
+                s= new RateService(sname.c_str(),(char*)"D:2;C");
                 outs = new OUTServiceDescr((char*)nams.c_str(),(void*)s);
                 this->m_outputServicemap.insert(OUTServicePair(nams,outs));
               }

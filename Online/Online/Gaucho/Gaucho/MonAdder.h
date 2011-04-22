@@ -111,6 +111,8 @@ class MonAdder
 public:
   TskServiceMap m_TaskMap;
   int m_type;
+  bool m_updated;
+  size_t m_expected;
   void *CycleCBarg;
   void (*CycleFn)(void*,void*,int, MonMap *, MonAdder *);
   void *m_buffer;

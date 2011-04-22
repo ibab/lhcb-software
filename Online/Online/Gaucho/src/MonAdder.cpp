@@ -36,6 +36,7 @@ MonAdder::MonAdder()
   m_rpc         = 0;
   m_ser         = 0;
   m_RPCser      = 0;
+  m_updated     = false;
 }
 
 MonAdder::~MonAdder()
