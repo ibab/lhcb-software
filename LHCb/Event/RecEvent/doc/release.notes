@@ -5,6 +5,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-04-22 - Olivier Deschamps
+   - CaloDataFunctor : fix coverity problems
+
 !========================= RecEvent v2r36 2011-03-09 =========================
 ! 2011-03-09 - Rob Lambert
  - Add rawID to RecHeader. A std::string.

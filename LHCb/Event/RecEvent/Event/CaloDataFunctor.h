@@ -67,6 +67,7 @@ namespace LHCb
       public std::unary_function<const TYPE*,LHCb::CaloCellID>
     {
     public:
+      CellID(): m_eval(){};
       LHCb::CaloCellID operator() ( const TYPE* obj ) const
       { return 0 == obj ? LHCb::CaloCellID() : m_eval( *obj ) ; };
     private:
@@ -900,6 +901,7 @@ namespace LHCb
     class Calo : public std::unary_function<const TYPE,int>
     {
     public:
+      Calo(): m_cellID(){};
       int operator() ( const TYPE& obj ) const
       { return m_cellID( obj ).calo() ; }
     private:
@@ -949,6 +951,7 @@ namespace LHCb
     class CaloArea : public std::unary_function<const TYPE,int>
     {
     public:
+      CaloArea(): m_cellID(){};
       int operator() ( const TYPE& obj ) const
       { return m_cellID( obj ).area() ; }
     private:
@@ -994,6 +997,7 @@ namespace LHCb
     class CaloRow : public std::unary_function<const TYPE,int>
     {
     public:
+      CaloRow(): m_cellID(){};
       int operator() ( const TYPE& obj ) const
       { return m_cellID( obj ).row() ; }
     private:
@@ -1037,6 +1041,7 @@ namespace LHCb
     class CaloColumn : public std::unary_function<const TYPE,int>
     {
     public:
+      CaloColumn(): m_cellID(){};
       int operator() ( const TYPE& obj ) const
       { return m_cellID( obj ).col() ; }
     private:
