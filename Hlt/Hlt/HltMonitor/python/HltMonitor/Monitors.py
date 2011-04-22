@@ -157,3 +157,42 @@ class Mass( Monitor ):
 
     def config( self ):
         return { 'histograms' : self._histo_def }
+
+class MassVsOccupancy( Monitor ):
+    def __init__( self, config ):
+        from Tasks import MassVsOccupancyMonitor
+        self._child_type = MassVsOccupancyMonitor
+
+        self._runnr = config[ 'Run' ]
+        from Utils import run_info, run_time
+        info = run_info( self._runnr )
+        self._first, self._last = run_time( info )
+        print 'Run %d from %s to %s ' % ( self._runnr, self._first, self._last )
+
+        self._histo_def = { ( 'OT', 'Hlt2DiMuonJPsi' ) : ( [ 0, 10000, 200 ], [ 3000., 3200., 100 ] )  }
+        self._histograms = {}
+        self._occupancies = {}
+        for axes, bins in self._histo_def.iteritems():
+            histo_name = '%s_%s' % axes
+            occ_bins = bins[ 0 ]
+            mass_bins = bins[ 1 ]
+            histo = TH2F(histo_name,'%s Mass vs. %s occupancy' % axes,
+                         occ_bins[ 2 ],  occ_bins[ 0 ],   occ_bins[ 1 ],
+                         mass_bins[ 2 ], mass_bins[ 0 ], mass_bins[ 1 ] )
+            self._histograms[ histo_name ] = histo
+
+    def fill( self, info ) :
+        masses = info[ 'Mass' ]
+        occupancies = info[ 'Occupancy' ]
+
+        for axes, bins in self._histo_def.iteritems():
+            if axes[ 1 ] not in masses:
+                continue
+            histo_name = '%s_%s' % axes
+            histo = self._histograms[ histo_name ]
+            occupancy = occupancies[ axes[ 0 ] ]
+            for cand in masses[ axes[ 1 ] ]:
+                histo.Fill( occupancy, cand )
+
+    def config( self ):
+        return { 'histograms' : self._histo_def }

@@ -57,7 +57,10 @@ class Monitor( Task ):
 
     def _pre_init( self ):
         pass
-    
+
+    def _post_init( self ):
+        self._filter = self._appMgr.algorithm( 'PhysFilter' )._ialg
+
     def initialize( self ):
         # Configure the app by instantiating the AppMgr
         self._appMgr = AppMgr()
@@ -68,8 +71,8 @@ class Monitor( Task ):
         # Initialize
         self._pre_init()
         self._appMgr.initialize() 
-        self._filter = self._appMgr.algorithm( 'PhysFilter' )._ialg
-
+        self._post_init()
+        
         self._condition.acquire()
         self._condition.notify()
         self._condition.release()
@@ -176,7 +179,10 @@ class CombinedMonitor( Monitor ):
             mon._pre_init()
 
         self._appMgr.initialize() 
-        self._filter = self._appMgr.algorithm( 'PhysFilter' )._ialg
+
+        for sub in self._monitors.values():
+            mon = sub.monitor()
+            mon._post_init()
 
         self._condition.acquire()
         self._condition.notify()
@@ -388,5 +394,38 @@ class MassMonitor( Monitor ):
                 m.append( cand.numericalInfo()[ "1#Particle.measuredMass" ] )
             masses[ i ] = m
         info[ 'Mass' ] = masses
+
+        return info
+
+class MassVsOccupancyMonitor( Monitor ):
+    def _post_init( self ):
+        self._filter = self._appMgr.algorithm( 'PhysFilter' )._ialg
+        self._OT_tool = self._appMgr.toolsvc().create( 'OTRawBankDecoder',
+                                                       interface = 'IOTRawBankDecoder' )
+        self._occupancy_sources = {}
+        self._occupancy_sources[ 'OT' ] = self._OT_tool.totalNumberOfHits
+        
+    def make_info( self ):
+        info = {}
+        
+        hsr = self._evtSvc[ 'Hlt/SelReports' ]
+        masses = {}
+        sources = set()
+        for o, i in self._config[ 'histograms' ]:
+            report = hsr.selReport( i + "Decision" )
+            if not report or not report.substructure():
+                continue
+            m = []
+            for cand in report.substructure() :  
+                m.append( cand.numericalInfo()[ "1#Particle.measuredMass" ] )
+            masses[ i ] = m
+            sources.add( o )
+        info[ 'Mass' ] = masses
+
+        occupancies = {}
+        for o in sources:
+            ##if o not in self._occupancy_sources: continue
+            occupancies[ o ] = self._occupancy_sources[ o ]()
+        info[ 'Occupancy' ] = occupancies
 
         return info

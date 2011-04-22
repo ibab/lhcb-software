@@ -4,6 +4,10 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+! 2011-04-22 - Roel Aaij
+ - Add MassVsOccupancy class
+   Only the OT occupancy is available for now.
+
 ! 2011-03-30 - Roel Aaij
  - Initial import of package
  - The package contains code which allows the running of some monitoring tasks
