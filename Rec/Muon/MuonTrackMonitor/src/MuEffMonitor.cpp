@@ -19,7 +19,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuEffMonitor );
+DECLARE_ALGORITHM_FACTORY( MuEffMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -130,13 +130,12 @@ StatusCode MuEffMonitor::initialize() {
   m_RegionsEff_den = book1D("m_RegionsEff_den","selected tracks",-0.5,21.5,22); 
   m_RegionsEff_num = book1D("m_RegionsEff_num","selected tracks with hits ",-0.5,21.5,22);
 
-  if (m_DoTrigger) {   
-    // TisTos Trigger Tool
-    m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this );
-    if (!m_TriggerTisTosTool){
-      err()<<"error retrieving the TriggerTisTos Tool"<<endreq;
-      return StatusCode::FAILURE;
-    } 
+  if (m_DoTrigger) {
+    Error("DoTrigger no longer supports trigger TIS TOS!!", StatusCode::FAILURE).ignore();
+
+// MC 2011-04-22: TisTos Trigger Tool code disabled, not available in REC
+//    m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this );
+//    if (!m_TriggerTisTosTool) return Error( "error retrieving the TriggerTisTos Tool", StatusCode::FAILURE);
   }
   
   
@@ -277,15 +276,14 @@ StatusCode MuEffMonitor::execute() {
       m_TrSly0 = m_stateP0->ty();
 
       if ((m_DoTrigger) && (m_HLTMuon >= 1)) {
-       
-        m_TriggerTisTosTool->setOfflineInput();
+//        m_TriggerTisTosTool->setOfflineInput();
         if (MuoneCan) {
-          m_TriggerTisTosTool->setOfflineInput(*pTrack);
-          m_TriggerTisTosTool->addToOfflineInput(m_seleids);
+//          m_TriggerTisTosTool->setOfflineInput(*pTrack);
+//          m_TriggerTisTosTool->addToOfflineInput(m_seleids);
           bool SeleDec = false;
           bool SeleTIS = false;
           bool SeleTOS = false;
-          m_TriggerTisTosTool->triggerTisTos("Hlt1.*Mu.*",SeleDec,SeleTIS,SeleTOS);
+//          m_TriggerTisTosTool->triggerTisTos("Hlt1.*Mu.*",SeleDec,SeleTIS,SeleTOS);
           m_SeleTIS = (int)SeleTIS;
           m_SeleTOS = (int)SeleTOS;
           m_SeleTOB = (int)( SeleDec && !SeleTIS && !SeleTOS );
@@ -415,11 +413,12 @@ StatusCode MuEffMonitor::DoTrigger(){
     return StatusCode::SUCCESS;
   }
 
-  bool hlt1dec, dummyTis, dummyTos;
-  m_TriggerTisTosTool->setOfflineInput();
-  m_TriggerTisTosTool->triggerTisTos("Hlt1.*Mu.*",hlt1dec,dummyTis,dummyTos);
-  
-  m_HLTMuon    = (int)hlt1dec;
+//  bool hlt1dec, dummyTis, dummyTos;
+//  m_TriggerTisTosTool->setOfflineInput();
+//  m_TriggerTisTosTool->triggerTisTos("Hlt1.*Mu.*",hlt1dec,dummyTis,dummyTos);
+//  
+//  m_HLTMuon    = (int)hlt1dec;
+  m_HLTMuon = 0; // Added MC 2011-04-22, TIS TOS not supported
 
   return StatusCode::SUCCESS;
 }

@@ -27,7 +27,7 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile2D.h"
 
-#include "Kernel/ITriggerTisTos.h"
+//#include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IANNSvc.h"
 #include "Kernel/ReadRoutingBits.h"
 
@@ -262,7 +262,7 @@ private:
   // outer is [station* m_NRegion + region ]
   std::vector<std::vector<coordExtent_> > m_coordPos;
 
-  ITriggerTisTos* m_TriggerTisTosTool;
+  //  ITriggerTisTos* m_TriggerTisTosTool;
 
   // LHCbID hits associated to the Selected Track
   std::vector< LHCb::LHCbID > m_seleids;

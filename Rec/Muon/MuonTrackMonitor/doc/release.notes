@@ -4,6 +4,14 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-04-22 - Marco Cattaneo
+ - Disable use of TisTosTool in MuEffMonitor when DoTrigger property is True.
+   This is a temporary hack to allow this code to compile following move of
+   DaVinciInterfaces to PHYS project. In any case this code could never have
+   run in Brunel (TisTosTool implementation is in PHYS). A solution has to be
+   found for the trigger dependent efficiency monitoring that could have been
+   done in DaVinci
+
 !========================= MuonTrackMonitor v2r1p1 2011-02-28 =========================
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
