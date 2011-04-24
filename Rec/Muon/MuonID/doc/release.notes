@@ -2,6 +2,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-04-23 - Helder Lopes
+ - Implemented reading of new dll tuning (DLL_flag == 4) from database.
+   Fixed small bugs.
+
 !========================= MuonID v8r0p2 2011-03-17 =========================
 ! 2011-03-17 - Rob Lambert
  - Fixed the same memory leak which was duplicated 5 times or so in the code.

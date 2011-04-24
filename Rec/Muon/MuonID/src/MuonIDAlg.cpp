@@ -290,6 +290,419 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "tanhCumulHistoNonMuonR4_4", m_tanhCumulHistoNonMuonR4_4);
   declareProperty( "tanhCumulHistoNonMuonR4_5", m_tanhCumulHistoNonMuonR4_5);
 
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+MuonIDAlg::~MuonIDAlg() {};
+
+//=============================================================================
+// Initialisation. Check parameters
+//=============================================================================
+StatusCode MuonIDAlg::initialize() {
+
+  // Sets up various tools and services
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) { return sc; }
+
+  info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
+  info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
+
+  // Check the presence of global MuonID parameters in the loaded conditions database
+  if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/PreSelMomentum" )){
+    if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Conditions database with muon ID info found"  << endmsg;
+
+    if(m_OverrideDB){  // Keep values from options file. Ignore database data
+      info() << "Initialise: OverrideDB=true. Data from Conditions database will be ignored." << endmsg;
+      info() << "Initialise:                  Using values read from options file" << endmsg;
+    }
+    else {  // Use database values instead of options file ones.
+      // THE CONDITIONS AND THEIR REGISTERING SHOULD BE DONE AFTER GaudiAlgorithm::initialize() !!
+      
+      //Global Muon ParticleID Conditions from database
+      Condition * PreSelMomentum;
+      Condition * MomentumCuts;
+      Condition * XFOIParameters;
+      Condition * YFOIParameters;
+      Condition * FOIfactor;
+      Condition * Weight_flag;
+      Condition * DLL_flag;
+
+      // Register condition and read parameters values
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/PreSelMomentum", PreSelMomentum);
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MomentumCuts", MomentumCuts);
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/XFOIParameters", XFOIParameters);
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/YFOIParameters", YFOIParameters);
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/FOIfactor", FOIfactor);
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/Weight_flag", Weight_flag);
+      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/DLL_flag", DLL_flag);
+
+      // perform an update without waiting the next BeginEvent incident.
+      // Needed before the param values can be read
+      StatusCode scupdMgr = runUpdate();
+      if ( scupdMgr.isFailure() ) return Error(" Unable to update global conditions from database ",scupdMgr);
+
+
+      // Now read parameters values
+      if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading global parameters from conditions database:"  << endmsg;
+      m_PreSelMomentum = PreSelMomentum->param<double>("PreSelMomentum");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> PreSelMomentum:" << m_PreSelMomentum << endmsg;
+
+      // Different depths of stations considered in different momentum ranges
+      m_MomentumCuts = MomentumCuts->paramVect<double>("MomentumCuts");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> MomentumCuts:" << m_MomentumCuts << endmsg;
+
+      // function that defines the field of interest size
+      // here momentum is scaled to Gaudi::Units::GeV....
+      // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
+      m_xfoiParam1 = XFOIParameters->paramVect<double>("XFOIParameters1");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> XFOIParameters1:" << m_xfoiParam1 << endmsg;
+      m_xfoiParam2 = XFOIParameters->paramVect<double>("XFOIParameters2");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> XFOIParameters2:" << m_xfoiParam2 << endmsg;
+      m_xfoiParam3 = XFOIParameters->paramVect<double>("XFOIParameters3");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> XFOIParameters3:" << m_xfoiParam3 << endmsg;
+
+      m_yfoiParam1 = YFOIParameters->paramVect<double>("YFOIParameters1");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> YFOIParameters1:" << m_yfoiParam1 << endmsg;
+      m_yfoiParam2 = YFOIParameters->paramVect<double>("YFOIParameters2");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> YFOIParameters2:" << m_yfoiParam2 << endmsg;
+      m_yfoiParam3 = YFOIParameters->paramVect<double>("YFOIParameters3");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> YFOIParameters3:" << m_yfoiParam3 << endmsg;
+
+      m_foifactor = FOIfactor->param<double>("FOIfactor");
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> FOIfactor:" << m_foifactor << endmsg;
+
+      //flag to introduce weights in IsMuon/IsMuonLoose:
+      m_weightFlag = ( (Weight_flag->param<int>("Weight_flag"))!=0 );
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug()  << endmsg;
+
+      int dllFlag  = DLL_flag->param<int>("DLL_flag");
+      if(dllFlag != m_dllFlag) info() << "Initialise: OverrideDB=false but dllFlag in options file (="
+                                         << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag 
+					 << "). Using dllFlag from options file" << endmsg;
+      //m_dllFlag = dllFlag;
+      if (msgLevel(MSG::DEBUG) ) debug()  << "==> DLL_flag:" << m_dllFlag << endmsg;
+
+      if(1 == m_dllFlag){
+      
+      // Check the presence of a MuonID parameters for dllFlag==1 in the loaded conditions database
+      if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/MuLandauParameterR1" )){
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Conditions database with muon ID info for  DLL_flag == 1 found"  << endmsg;
+    
+      // Muon ParticleID Conditions for DLL_flag = 1 from database
+        Condition * nMupBins;
+        Condition * MupBins;
+
+        Condition * MuLandauParameterR1;
+        Condition * MuLandauParameterR2;
+        Condition * MuLandauParameterR3;
+        Condition * MuLandauParameterR4;
+
+        Condition * NonMuLandauParameterR1;
+        Condition * NonMuLandauParameterR2;
+        Condition * NonMuLandauParameterR3;
+        Condition * NonMuLandauParameterR4;
+
+        Condition * step;
+        Condition * nMax_bin;
+
+        // Register condition and read parameters values
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMupBins", nMupBins);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MupBins", MupBins);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR1", MuLandauParameterR1);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR2", MuLandauParameterR2);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR3", MuLandauParameterR3);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR4", MuLandauParameterR4);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR1",NonMuLandauParameterR1);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR2",NonMuLandauParameterR2);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR3",NonMuLandauParameterR3);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR4",NonMuLandauParameterR4);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/step", step);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMax_bin", nMax_bin);
+
+        // perform an update without waiting the next BeginEvent incident.
+        // Needed before the param values can be read
+        scupdMgr = runUpdate();
+        if ( scupdMgr.isFailure() )
+          return Error(" Unable to update DLL_flag = 1 conditions from database ",scupdMgr);
+
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=1 mode from conditions database:"  << endmsg;
+        m_nMupBinsR1 = nMupBins->param<int>("nMupBinsR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
+        m_nMupBinsR2 = nMupBins->param<int>("nMupBinsR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR2:" << m_nMupBinsR2 << endmsg;
+        m_nMupBinsR3 = nMupBins->param<int>("nMupBinsR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR3:" << m_nMupBinsR3 << endmsg;
+        m_nMupBinsR4 = nMupBins->param<int>("nMupBinsR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR4:" << m_nMupBinsR4 << endmsg;
+
+        m_MupBinsR1 = MupBins->paramVect<double>("MupBinsR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR1:" << m_MupBinsR1 << endmsg;
+        m_MupBinsR2 = MupBins->paramVect<double>("MupBinsR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR2:" << m_MupBinsR2 << endmsg;
+        m_MupBinsR3 = MupBins->paramVect<double>("MupBinsR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR3:" << m_MupBinsR3 << endmsg;
+        m_MupBinsR4 = MupBins->paramVect<double>("MupBinsR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
+
+        // Muons - Region1:
+        m_MuLanParR1_1 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_1:" << m_MuLanParR1_1 << endmsg;
+        m_MuLanParR1_2 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_2:" << m_MuLanParR1_2 << endmsg;
+        m_MuLanParR1_3 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_3:" << m_MuLanParR1_3 << endmsg;
+        m_MuLanParR1_4 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_4:" << m_MuLanParR1_4 << endmsg;
+        m_MuLanParR1_5 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_5:" << m_MuLanParR1_5 << endmsg;
+        m_MuLanParR1_6 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_6");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_6:" << m_MuLanParR1_6 << endmsg;
+        m_MuLanParR1_7 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_7");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_7:" << m_MuLanParR1_7 << endmsg;
+
+        // Muons - Region2:
+        m_MuLanParR2_1 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_1:" << m_MuLanParR2_1 << endmsg;
+        m_MuLanParR2_2 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_2:" << m_MuLanParR2_2 << endmsg;
+        m_MuLanParR2_3 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_3:" << m_MuLanParR2_3 << endmsg;
+        m_MuLanParR2_4 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_4:" << m_MuLanParR2_4 << endmsg;
+        m_MuLanParR2_5 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_5:" << m_MuLanParR2_5 << endmsg;
+
+        // Muons - Region3:
+        m_MuLanParR3_1 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_1:" << m_MuLanParR3_1 << endmsg;
+        m_MuLanParR3_2 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_2:" << m_MuLanParR3_2 << endmsg;
+        m_MuLanParR3_3 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_3:" << m_MuLanParR3_3 << endmsg;
+        m_MuLanParR3_4 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_4:" << m_MuLanParR3_4 << endmsg;
+        m_MuLanParR3_5 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_5:" << m_MuLanParR3_5 << endmsg;
+
+        // Muons - Region4:
+        m_MuLanParR4_1 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_1:" << m_MuLanParR4_1 << endmsg;
+        m_MuLanParR4_2 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_2:" << m_MuLanParR4_2 << endmsg;
+        m_MuLanParR4_3 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_3:" << m_MuLanParR4_3 << endmsg;
+        m_MuLanParR4_4 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_4:" << m_MuLanParR4_4 << endmsg;
+        m_MuLanParR4_5 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_5:" << m_MuLanParR4_5 << endmsg;
+
+
+        // Non-Muons - Region 1-2-3-4:
+        m_NonMuLanParR1 = NonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR1:" << m_NonMuLanParR1 << endmsg;
+        m_NonMuLanParR2 = NonMuLandauParameterR2->paramVect<double>("NonMuLandauParameterR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR2:" << m_NonMuLanParR2 << endmsg;
+        m_NonMuLanParR3 = NonMuLandauParameterR3->paramVect<double>("NonMuLandauParameterR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR3:" << m_NonMuLanParR3 << endmsg;
+        m_NonMuLanParR4 = NonMuLandauParameterR4->paramVect<double>("NonMuLandauParameterR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR4:" << m_NonMuLanParR4 << endmsg;
+
+        // step for the integral
+        m_x = step->param<double>("step");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> step:" << m_x << endmsg;
+
+        // number of steps
+        m_nMax = nMax_bin->param<int>("nMax_bin");
+        if (msgLevel(MSG::DEBUG) ) {
+          debug()  << "==> nMax_bin:" << m_nMax << endmsg;
+          debug()  << endmsg;
+	}
+      }
+      else {  
+        warning()  << "Initialise: Parameters for dllFlag==1 not found in Conditions database."
+                   << " Using values from options file"  << endmsg;
+      }	
+      }
+      else if(4 == m_dllFlag){
+      // Muon ParticleID Conditions for DLL_flag = 4 from database
+
+      // Check the presence of a MuonID parameters for dllFlag==4 in the loaded conditions database
+      if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/tanhScaleFactors" )){
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Conditions database with muon ID info for dllFlag==4 (ProbMu from tanh(dist) ) found"  << endmsg;
+        Condition *  nMupBins;
+        Condition *  MupBins;     
+
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMupBins", nMupBins);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MupBins", MupBins);
+	
+        Condition *  tanhScaleFactors;
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/tanhScaleFactors", tanhScaleFactors);
+
+        Condition *  tanhCumulHistoMuonR1;
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR1", tanhCumulHistoMuonR1);
+	
+        Condition *  tanhCumulHistoMuonR2;
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR2", tanhCumulHistoMuonR2);
+
+        Condition *  tanhCumulHistoMuonR3;
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR3", tanhCumulHistoMuonR3);
+
+        Condition *  tanhCumulHistoMuonR4;	
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/tanhCumulHistoMuonR4", tanhCumulHistoMuonR4);
+	
+        // perform an update without waiting the next BeginEvent incident.
+        // Needed before the param values can be read
+        scupdMgr = runUpdate();
+        if ( scupdMgr.isFailure() )
+          return Error(" Unable to update DLL_flag = 4 tanh conditions from database ",scupdMgr);
+
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=4 mode from conditions database:"  << endmsg;
+        m_nMupBinsR1 = nMupBins->param<int>("nMupBinsR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
+        m_nMupBinsR2 = nMupBins->param<int>("nMupBinsR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR2:" << m_nMupBinsR2 << endmsg;
+        m_nMupBinsR3 = nMupBins->param<int>("nMupBinsR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR3:" << m_nMupBinsR3 << endmsg;
+        m_nMupBinsR4 = nMupBins->param<int>("nMupBinsR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR4:" << m_nMupBinsR4 << endmsg;
+
+        m_MupBinsR1 = MupBins->paramVect<double>("MupBinsR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR1:" << m_MupBinsR1 << endmsg;
+        m_MupBinsR2 = MupBins->paramVect<double>("MupBinsR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR2:" << m_MupBinsR2 << endmsg;
+        m_MupBinsR3 = MupBins->paramVect<double>("MupBinsR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR3:" << m_MupBinsR3 << endmsg;
+        m_MupBinsR4 = MupBins->paramVect<double>("MupBinsR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
+	
+	m_tanhScaleFactorsR1 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR1:" << m_tanhScaleFactorsR1 << endmsg;
+	m_tanhScaleFactorsR2 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR2:" << m_tanhScaleFactorsR2 << endmsg;
+	m_tanhScaleFactorsR3 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR3:" << m_tanhScaleFactorsR3 << endmsg;
+	m_tanhScaleFactorsR4 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR4:" << m_tanhScaleFactorsR4 << endmsg;
+	
+	m_tanhCumulHistoMuonR1_1 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_1:" << m_tanhCumulHistoMuonR1_1 << endmsg;
+	m_tanhCumulHistoMuonR1_2 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_2:" << m_tanhCumulHistoMuonR1_2 << endmsg;
+	m_tanhCumulHistoMuonR1_3 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_3:" << m_tanhCumulHistoMuonR1_3 << endmsg;
+	m_tanhCumulHistoMuonR1_4 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_4:" << m_tanhCumulHistoMuonR1_4 << endmsg;
+	m_tanhCumulHistoMuonR1_5 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_5:" << m_tanhCumulHistoMuonR1_5 << endmsg;
+	m_tanhCumulHistoMuonR1_6 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_6");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_6:" << m_tanhCumulHistoMuonR1_6 << endmsg;
+	m_tanhCumulHistoMuonR1_7 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_7");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_7:" << m_tanhCumulHistoMuonR1_7 << endmsg;
+
+	m_tanhCumulHistoMuonR2_1 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_1:" << m_tanhCumulHistoMuonR2_1 << endmsg;
+	m_tanhCumulHistoMuonR2_2 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_2:" << m_tanhCumulHistoMuonR2_2 << endmsg;
+	m_tanhCumulHistoMuonR2_3 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_3:" << m_tanhCumulHistoMuonR2_3 << endmsg;
+	m_tanhCumulHistoMuonR2_4 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_4:" << m_tanhCumulHistoMuonR2_4 << endmsg;
+	m_tanhCumulHistoMuonR2_5 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_5:" << m_tanhCumulHistoMuonR2_5 << endmsg;
+
+	m_tanhCumulHistoMuonR3_1 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_1:" << m_tanhCumulHistoMuonR3_1 << endmsg;
+	m_tanhCumulHistoMuonR3_2 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_2:" << m_tanhCumulHistoMuonR3_2 << endmsg;
+	m_tanhCumulHistoMuonR3_3 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_3:" << m_tanhCumulHistoMuonR3_3 << endmsg;
+	m_tanhCumulHistoMuonR3_4 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_4:" << m_tanhCumulHistoMuonR3_4 << endmsg;
+	m_tanhCumulHistoMuonR3_5 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_5:" << m_tanhCumulHistoMuonR3_5 << endmsg;
+
+	m_tanhCumulHistoMuonR4_1 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_1:" << m_tanhCumulHistoMuonR4_1 << endmsg;
+	m_tanhCumulHistoMuonR4_2 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_2:" << m_tanhCumulHistoMuonR4_2 << endmsg;
+	m_tanhCumulHistoMuonR4_3 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_3:" << m_tanhCumulHistoMuonR4_3 << endmsg;
+	m_tanhCumulHistoMuonR4_4 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_4:" << m_tanhCumulHistoMuonR4_4 << endmsg;
+	m_tanhCumulHistoMuonR4_5 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_5");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_5:" << m_tanhCumulHistoMuonR4_5 << endmsg;
+        }
+        else {  
+          warning()  << "Initialise: Parameters for dllFlag==4 MuonProb not found in Conditions database."
+                     << " Using values from options file"  << endmsg;
+        }	
+	
+	// For the non-muon hypothesis, use the previous Landau fitings, as in dllFlag==1
+        // Check the presence of a MuonID parameters for dllFlag==1 in the loaded conditions database
+        if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/NonMuLandauParameterR1" )){
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Conditions database with muon ID info (ProbNonMu from previous Landau fits ) found"  << endmsg;
+	
+        Condition * NonMuLandauParameterR1;
+        Condition * NonMuLandauParameterR2;
+        Condition * NonMuLandauParameterR3;
+        Condition * NonMuLandauParameterR4;
+
+        Condition * step;
+        Condition * nMax_bin;
+
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR1",NonMuLandauParameterR1);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR2",NonMuLandauParameterR2);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR3",NonMuLandauParameterR3);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR4",NonMuLandauParameterR4);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/step", step);
+        registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMax_bin", nMax_bin);
+
+        // perform an update without waiting the next BeginEvent incident.
+        // Needed before the param values can be read
+        scupdMgr = runUpdate();
+        if ( scupdMgr.isFailure() )
+          return Error(" Unable to update DLL_flag = 4  conditions from database ",scupdMgr);
+	  
+        // Non-Muons - Region 1-2-3-4:
+        m_NonMuLanParR1 = NonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR1:" << m_NonMuLanParR1 << endmsg;
+        m_NonMuLanParR2 = NonMuLandauParameterR2->paramVect<double>("NonMuLandauParameterR2");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR2:" << m_NonMuLanParR2 << endmsg;
+        m_NonMuLanParR3 = NonMuLandauParameterR3->paramVect<double>("NonMuLandauParameterR3");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR3:" << m_NonMuLanParR3 << endmsg;
+        m_NonMuLanParR4 = NonMuLandauParameterR4->paramVect<double>("NonMuLandauParameterR4");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR4:" << m_NonMuLanParR4 << endmsg;
+
+        // step for the integral
+        m_x = step->param<double>("step");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> step:" << m_x << endmsg;
+
+        // number of steps
+        m_nMax = nMax_bin->param<int>("nMax_bin");
+        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMax_bin:" << m_nMax << endmsg;
+        debug()  << endmsg;
+        }
+        else {  
+          warning()  << "Initialise: Parameters for dllFlag==4 NonMuonProb not found in Conditions database."
+                     << " Using values from options file"  << endmsg;
+        }	
+	
+      }
+      else {
+        error() << "Initialise: OverrideDB=False but no parameters in database for dllFlag = " << m_dllFlag << endmsg;
+        return Error("Initialise: Failed to configure MuonID dll parameters");
+      }
+    }
+  }
+  else {
+    warning()  << "Initialise: Conditions database with muon ID info not found."
+               << " Using values from options file"  << endmsg;
+  }
+
+// Associate tanh parameters with more generic containers
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR1);
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR2);
   m_tanhScaleFactors.push_back(&m_tanhScaleFactorsR3);
@@ -357,233 +770,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR3);
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR4);
 
-}
 
-//=============================================================================
-// Destructor
-//=============================================================================
-MuonIDAlg::~MuonIDAlg() {};
-
-//=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode MuonIDAlg::initialize() {
-
-  // Sets up various tools and services
-  const StatusCode sc = GaudiAlgorithm::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
-  info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
-
-  // Check the presence of MuonID parameters in the loaded conditions database
-  if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/PreSelMomentum" )){
-    debug()  << "Initialise: Conditions database with muon ID info found"  << endmsg;
-
-    if(m_OverrideDB){  // Keep values from options file. Ignore database data
-      info() << "Initialise: OverrideDB=true. Data from Conditions database will be ignored." << endmsg;
-      info() << "Initialise: Using values read from options file" << endmsg;
-    }
-    else {  // Use database values instead of options file ones.
-      // THE CONDITIONS AND THEIR REGISTERING SHOULD BE DONE AFTER GaudiAlgorithm::initialize() !!
-      //Global Muon ParticleID Conditions from database
-      Condition * PreSelMomentum;
-      Condition * MomentumCuts;
-      Condition * XFOIParameters;
-      Condition * YFOIParameters;
-      Condition * FOIfactor;
-      Condition * Weight_flag;
-      Condition * DLL_flag;
-
-      // Register condition and read parameters values
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/PreSelMomentum", PreSelMomentum);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MomentumCuts", MomentumCuts);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/XFOIParameters", XFOIParameters);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/YFOIParameters", YFOIParameters);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/FOIfactor", FOIfactor);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/Weight_flag", Weight_flag);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/DLL_flag", DLL_flag);
-
-      // perform an update without waiting the next BeginEvent incident.
-      // Needed before the param values can be read
-      StatusCode scupdMgr = runUpdate();
-      if ( scupdMgr.isFailure() ) return Error(" Unable to update global conditions from database ",scupdMgr);
-
-
-      // Now read parameters values
-      debug()  << "Initialise: Reading global parameters from conditions database:"  << endmsg;
-      m_PreSelMomentum = PreSelMomentum->param<double>("PreSelMomentum");
-      debug()  << "==> PreSelMomentum:" << m_PreSelMomentum << endmsg;
-
-      // Different depths of stations considered in different momentum ranges
-      m_MomentumCuts = MomentumCuts->paramVect<double>("MomentumCuts");
-      debug()  << "==> MomentumCuts:" << m_MomentumCuts << endmsg;
-
-      // function that defines the field of interest size
-      // here momentum is scaled to Gaudi::Units::GeV....
-      // new formula: p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
-      m_xfoiParam1 = XFOIParameters->paramVect<double>("XFOIParameters1");
-      debug()  << "==> XFOIParameters1:" << m_xfoiParam1 << endmsg;
-      m_xfoiParam2 = XFOIParameters->paramVect<double>("XFOIParameters2");
-      debug()  << "==> XFOIParameters2:" << m_xfoiParam2 << endmsg;
-      m_xfoiParam3 = XFOIParameters->paramVect<double>("XFOIParameters3");
-      debug()  << "==> XFOIParameters3:" << m_xfoiParam3 << endmsg;
-
-      m_yfoiParam1 = YFOIParameters->paramVect<double>("YFOIParameters1");
-      debug()  << "==> YFOIParameters1:" << m_yfoiParam1 << endmsg;
-      m_yfoiParam2 = YFOIParameters->paramVect<double>("YFOIParameters2");
-      debug()  << "==> YFOIParameters2:" << m_yfoiParam2 << endmsg;
-      m_yfoiParam3 = YFOIParameters->paramVect<double>("YFOIParameters3");
-      debug()  << "==> YFOIParameters3:" << m_yfoiParam3 << endmsg;
-
-      m_foifactor = FOIfactor->param<double>("FOIfactor");
-      debug()  << "==> FOIfactor:" << m_foifactor << endmsg;
-
-      //flag to introduce weights in IsMuon/IsMuonLoose:
-      m_weightFlag = ( (Weight_flag->param<int>("Weight_flag"))!=0 );
-      debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
-      debug()  << endmsg;
-
-      int dllFlag  = DLL_flag->param<int>("DLL_flag");
-      if(dllFlag != m_dllFlag) warning() << "Initialise: OverrideDB=false but dllFlag in options cards (="
-                                         << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag << "). Using database value" << endmsg;
-      m_dllFlag = dllFlag;
-      debug()  << "==> DLL_flag:" << m_dllFlag << endmsg;
-
-      // Muon ParticleID Conditions for DLL_flag = 1 from database
-      Condition * nMupBins;
-      Condition * MupBins;
-
-      Condition * MuLandauParameterR1;
-      Condition * MuLandauParameterR2;
-      Condition * MuLandauParameterR3;
-      Condition * MuLandauParameterR4;
-
-      Condition * NonMuLandauParameterR1;
-      Condition * NonMuLandauParameterR2;
-      Condition * NonMuLandauParameterR3;
-      Condition * NonMuLandauParameterR4;
-
-      Condition * step;
-      Condition * nMax_bin;
-
-      // Register condition and read parameters values
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMupBins", nMupBins);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MupBins", MupBins);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR1", MuLandauParameterR1);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR2", MuLandauParameterR2);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR3", MuLandauParameterR3);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MuLandauParameterR4", MuLandauParameterR4);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR1",NonMuLandauParameterR1);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR2",NonMuLandauParameterR2);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR3",NonMuLandauParameterR3);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/NonMuLandauParameterR4",NonMuLandauParameterR4);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/step", step);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMax_bin", nMax_bin);
-
-      // perform an update without waiting the next BeginEvent incident.
-      // Needed before the param values can be read
-      scupdMgr = runUpdate();
-      if ( scupdMgr.isFailure() )
-        return Error(" Unable to update DLL_flag = 1 conditions from database ",scupdMgr);
-
-      debug()  << "Initialise: Reading parameters for DLL_flag=1 mode from conditions database:"  << endmsg;
-      m_nMupBinsR1 = nMupBins->param<int>("nMupBinsR1");
-      debug()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
-      m_nMupBinsR2 = nMupBins->param<int>("nMupBinsR2");
-      debug()  << "==> nMupBinsR2:" << m_nMupBinsR2 << endmsg;
-      m_nMupBinsR3 = nMupBins->param<int>("nMupBinsR3");
-      debug()  << "==> nMupBinsR3:" << m_nMupBinsR3 << endmsg;
-      m_nMupBinsR4 = nMupBins->param<int>("nMupBinsR4");
-      debug()  << "==> nMupBinsR4:" << m_nMupBinsR4 << endmsg;
-
-      m_MupBinsR1 = MupBins->paramVect<double>("MupBinsR1");
-      debug()  << "==> MupBinsR1:" << m_MupBinsR1 << endmsg;
-      m_MupBinsR2 = MupBins->paramVect<double>("MupBinsR2");
-      debug()  << "==> MupBinsR2:" << m_MupBinsR2 << endmsg;
-      m_MupBinsR3 = MupBins->paramVect<double>("MupBinsR3");
-      debug()  << "==> MupBinsR3:" << m_MupBinsR3 << endmsg;
-      m_MupBinsR4 = MupBins->paramVect<double>("MupBinsR4");
-      debug()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
-
-      // Muons - Region1:
-      m_MuLanParR1_1 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_1");
-      debug()  << "==> MuLandauParameterR1_1:" << m_MuLanParR1_1 << endmsg;
-      m_MuLanParR1_2 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_2");
-      debug()  << "==> MuLandauParameterR1_2:" << m_MuLanParR1_2 << endmsg;
-      m_MuLanParR1_3 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_3");
-      debug()  << "==> MuLandauParameterR1_3:" << m_MuLanParR1_3 << endmsg;
-      m_MuLanParR1_4 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_4");
-      debug()  << "==> MuLandauParameterR1_4:" << m_MuLanParR1_4 << endmsg;
-      m_MuLanParR1_5 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_5");
-      debug()  << "==> MuLandauParameterR1_5:" << m_MuLanParR1_5 << endmsg;
-      m_MuLanParR1_6 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_6");
-      debug()  << "==> MuLandauParameterR1_6:" << m_MuLanParR1_6 << endmsg;
-      m_MuLanParR1_7 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_7");
-      debug()  << "==> MuLandauParameterR1_7:" << m_MuLanParR1_7 << endmsg;
-
-      // Muons - Region2:
-      m_MuLanParR2_1 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_1");
-      debug()  << "==> MuLandauParameterR2_1:" << m_MuLanParR2_1 << endmsg;
-      m_MuLanParR2_2 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_2");
-      debug()  << "==> MuLandauParameterR2_2:" << m_MuLanParR2_2 << endmsg;
-      m_MuLanParR2_3 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_3");
-      debug()  << "==> MuLandauParameterR2_3:" << m_MuLanParR2_3 << endmsg;
-      m_MuLanParR2_4 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_4");
-      debug()  << "==> MuLandauParameterR2_4:" << m_MuLanParR2_4 << endmsg;
-      m_MuLanParR2_5 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_5");
-      debug()  << "==> MuLandauParameterR2_5:" << m_MuLanParR2_5 << endmsg;
-
-      // Muons - Region3:
-      m_MuLanParR3_1 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_1");
-      debug()  << "==> MuLandauParameterR3_1:" << m_MuLanParR3_1 << endmsg;
-      m_MuLanParR3_2 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_2");
-      debug()  << "==> MuLandauParameterR3_2:" << m_MuLanParR3_2 << endmsg;
-      m_MuLanParR3_3 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_3");
-      debug()  << "==> MuLandauParameterR3_3:" << m_MuLanParR3_3 << endmsg;
-      m_MuLanParR3_4 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_4");
-      debug()  << "==> MuLandauParameterR3_4:" << m_MuLanParR3_4 << endmsg;
-      m_MuLanParR3_5 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_5");
-      debug()  << "==> MuLandauParameterR3_5:" << m_MuLanParR3_5 << endmsg;
-
-      // Muons - Region4:
-      m_MuLanParR4_1 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_1");
-      debug()  << "==> MuLandauParameterR4_1:" << m_MuLanParR4_1 << endmsg;
-      m_MuLanParR4_2 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_2");
-      debug()  << "==> MuLandauParameterR4_2:" << m_MuLanParR4_2 << endmsg;
-      m_MuLanParR4_3 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_3");
-      debug()  << "==> MuLandauParameterR4_3:" << m_MuLanParR4_3 << endmsg;
-      m_MuLanParR4_4 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_4");
-      debug()  << "==> MuLandauParameterR4_4:" << m_MuLanParR4_4 << endmsg;
-      m_MuLanParR4_5 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_5");
-      debug()  << "==> MuLandauParameterR4_5:" << m_MuLanParR4_5 << endmsg;
-
-
-      // Non-Muons - Region 1-2-3-4:
-      m_NonMuLanParR1 = NonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
-      debug()  << "==> NonMuLandauParameterR1:" << m_NonMuLanParR1 << endmsg;
-      m_NonMuLanParR2 = NonMuLandauParameterR2->paramVect<double>("NonMuLandauParameterR2");
-      debug()  << "==> NonMuLandauParameterR2:" << m_NonMuLanParR2 << endmsg;
-      m_NonMuLanParR3 = NonMuLandauParameterR3->paramVect<double>("NonMuLandauParameterR3");
-      debug()  << "==> NonMuLandauParameterR3:" << m_NonMuLanParR3 << endmsg;
-      m_NonMuLanParR4 = NonMuLandauParameterR4->paramVect<double>("NonMuLandauParameterR4");
-      debug()  << "==> NonMuLandauParameterR4:" << m_NonMuLanParR4 << endmsg;
-
-      // step for the integral
-      m_x = step->param<double>("step");
-      debug()  << "==> step:" << m_x << endmsg;
-
-      // number of steps
-      m_nMax = nMax_bin->param<int>("nMax_bin");
-      debug()  << "==> nMax_bin:" << m_nMax << endmsg;
-      debug()  << endmsg;
-
-    }
-  }
-  else {
-    warning()  << "Initialise: Conditions database with muon ID info not found."
-               << " Using values from options file"  << endmsg;
-  }
 
   m_ntotmu=0;
   m_mullfail=0;
@@ -595,7 +782,7 @@ StatusCode MuonIDAlg::initialize() {
   int i=0;
   while(i<m_NStation){
     m_stationNames.push_back(basegeometry.getStationName(i));
-    // debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
+    // if (msgLevel(MSG::DEBUG) ) debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
     i++;
   }
 
@@ -719,7 +906,7 @@ StatusCode MuonIDAlg::initialize() {
   if (m_dllFlag==4) info() << " dllFlag=4 -----> DLL with muLL tuned on 2010 data (hyperbolic tangent mapping) and previous nonMuLL (Landau fittings 2009)" << endmsg;
 
   if (m_dllFlag<0 || m_dllFlag>4 || m_dllFlag==2)
-    return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated, 3=hyperbolic tangent mapping");
+    return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated, 3=hyperbolic tangent mapping, 4=new mu prob tuned on 2010 data");
     
   if(3 == m_dllFlag) warning() << "dllFlag = 3 cannot be used with datatype 2010 or 2011. Check that this is not the case." << endmsg;
 
@@ -733,22 +920,23 @@ StatusCode MuonIDAlg::initialize() {
 
   // Print tanh(dist2) parameters
   if((4 == m_dllFlag || 3 == m_dllFlag) && msgLevel(MSG::DEBUG)){
-    debug() << "Initialize: tahn(dist2) parameters set by options:" << endmsg;
+    debug() << "Initialize: tanh(dist2) parameters:" << endmsg;
     debug() << "Initialize: m_nMupBinsR1: " << m_nMupBinsR1 << endmsg;
     for(int iR=0;iR<4;++iR){
       int npBins=m_tanhScaleFactors[iR]->size();
       debug() << "Region " << iR+1 <<  " npBins: " << npBins << endmsg;
       for(int ipBin=0;ipBin<npBins;++ipBin){
         debug() << "    ipBin+1:  " << ipBin+1 << " tanhScaleFactor: "
-                << (*m_tanhScaleFactors[iR])[ipBin] << " tanh(dist2) bin contents:" << endmsg;
-        debug() << "\tMuons: ";
+                << (*m_tanhScaleFactors[iR])[ipBin] << " Muon prob tanh(dist2) bin contents:" << endmsg;
+        debug() << "\t";
 	int nDistBins = (*(*m_tanhCumulHistoMuon[iR])[ipBin]).size();
         for(int idBin=0;idBin<nDistBins;++idBin){
           debug() << (*(*m_tanhCumulHistoMuon[iR])[ipBin])[idBin] << " ";
         }
         debug() << endmsg;
 	if(4 == m_dllFlag) continue;
-        debug() << "\tNonMuons: ";
+        debug() <<  " Non Muon prob tanh(dist2) bin contents:" << endmsg;
+        debug() << "\t";
 	nDistBins = (*(*m_tanhCumulHistoNonMuon[iR])[ipBin]).size();
         for(int idBin=0;idBin<nDistBins;++idBin){
           debug() << (*(*m_tanhCumulHistoNonMuon[iR])[ipBin])[idBin] << " ";
@@ -825,17 +1013,17 @@ StatusCode MuonIDAlg::execute() {
         Warning(" doID failed for track ",StatusCode::SUCCESS,0).ignore();
         if (msgLevel(MSG::DEBUG) ) debug()<< " doID failed for track " << *iTrack << endmsg;
       }
-      
+
       pMuids->insert( pMuid, (*iTrack)->key() );
       LHCb::Track* mutrack = 0;
-      
+
       // Build mutrack if IsMuonLoose is 1
       if (pMuid->IsMuonLoose()) {
         mutrack = makeMuonTrack(*pMuid);
         pMuid->setMuonTrack( mutrack );
         mutracks->insert( mutrack, (*iTrack)->key() );
       }
-      
+
       // If required, save all tracks. If tracks already created, simply clone them
       if (m_DoAllMuonTracks) {
         LHCb::Track* mutrack_all;
@@ -843,7 +1031,7 @@ StatusCode MuonIDAlg::execute() {
         else mutrack_all = makeMuonTrack(*pMuid);
         mutracks_all->insert( mutrack_all, (*iTrack)->key() );
       }
-      
+
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
         Warning(" calcSharedHits failed for track ",StatusCode::SUCCESS,0).ignore();
@@ -1383,6 +1571,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   // date:    13/10/09
   //=============================================================================
 
+  static const double atanh05 = gsl_atanh(0.5);
+  
   pMuid->setMuonLLMu(-10000.);
   pMuid->setMuonLLBg(-10000.);
 
@@ -1417,7 +1607,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   int pBin=GetPbin(p, region);
   double tanhdist;
   // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^ÅØ1(0.5)
-  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*gsl_atanh(0.5));
+  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
 
   // Calculate Prob(mu) and Prob(non-mu) for a given track;
   ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
@@ -1450,6 +1640,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   // authors: J. Helder Lopes
   // date:    16/02/2011
   //=============================================================================
+
+  static const double atanh05 = gsl_atanh(0.5);
 
   pMuid->setMuonLLMu(-10000.);
   pMuid->setMuonLLBg(-10000.);
@@ -1495,7 +1687,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   int pBin=GetPbin(p, region);
   double tanhdist;
   // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^ÅØ1(0.5)
-  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*gsl_atanh(0.5));
+  tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
 
   // Calculate Prob(mu)  for a given track using tanh(dist);
   ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
@@ -1514,7 +1706,6 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
     if (msgLevel(MSG::DEBUG) ) debug() << "calcMuonLL_tanhdist_landau: Found null ProbNonMu: " << ProbNonMu << endmsg;
     ProbNonMu = 1.e-30;
   }
-
 
   // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
   pMuid->setMuonLLMu(log(ProbMu));
@@ -2042,11 +2233,11 @@ int MuonIDAlg::GetPbin(double p, int region){
   case 3:{ pBins = &m_MupBinsR3; break;}
   case 4:{ pBins = &m_MupBinsR4; break;}
   }
-  debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " << pBins << endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " << pBins << endmsg;
   if(0 == pBins)
     Warning("GetPbin: No match to a pBins vector. Null pBins pointer",StatusCode::SUCCESS).ignore();
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
-    debug() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
     if(p < (*pBins)[iBin]) return iBin;
   }
   return pBins->size();  // last bin. npBins goes from 0 to (Gaias npBin)+1
@@ -2055,9 +2246,9 @@ int MuonIDAlg::GetPbin(double p, int region){
 //=====================================================================
 double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region){
   int nDistBins = (*(*m_tanhCumulHistoMuon[region])[pBin]).size();
-  int itanhdist=int(tanhdist0*nDistBins)+1;
-  if(itanhdist>=nDistBins)itanhdist--;
-  debug() << "calc_ProbMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
+  int itanhdist=int(tanhdist0*nDistBins);
+  if(itanhdist>nDistBins)itanhdist--;
+  if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
           << " itanhdist " << itanhdist << " ProbMu " << (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist] << endmsg;
   return (*((*(m_tanhCumulHistoMuon[region]))[pBin]))[itanhdist];
 }
@@ -2065,9 +2256,9 @@ double MuonIDAlg::calc_ProbMu_tanh(const double& tanhdist0, int pBin, int region
 //=====================================================================
 double MuonIDAlg::calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int region){
   int nDistBins = (*(*m_tanhCumulHistoNonMuon[region])[pBin]).size();
-  int itanhdist=int(tanhdist0*nDistBins)+1;
-  if(itanhdist>=nDistBins)itanhdist--;
-  debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
+  int itanhdist=int(tanhdist0*nDistBins);
+  if(itanhdist>nDistBins)itanhdist--;
+  if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " << tanhdist0
           << " itanhdist " << itanhdist << " ProbNonMu " << (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist] << endmsg;
   return (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist];
 }
@@ -2081,7 +2272,7 @@ double MuonIDAlg::calc_ProbMu(const double& dist0, const double *parMu){
   //=====================================================================
 
   double ProbMu=0;
-  TF1  myF("myF",land2,0,m_x*m_nMax,5);
+  TF1 myF("myF",land2,0,m_x*m_nMax,5);
   myF.SetParameters(parMu[0],parMu[1],parMu[2],parMu[3],parMu[4]);
   ProbMu = myF.Integral(0,dist0);
 
@@ -2296,7 +2487,7 @@ double MuonIDAlg::calcNorm(double *par){
   TF1 myF("myF",land2,0,m_x*m_nMax,5);
   myF.SetParameters(par[0],par[1],par[2],par[3],par[4]);
   Norm = myF.Integral(0,m_x*m_nMax);
-  
+
   return Norm;
 }
 
