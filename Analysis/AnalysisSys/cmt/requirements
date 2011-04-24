@@ -30,7 +30,9 @@ use  FlavourTaggingChecker      v6r6p2   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r4p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r3p1   Phys   # Neal Gueissaz
 use  DecayTreeTuple             v3r13    Phys   # Rob Lambert
-use  LoKiJets                   v5r4     Phys   # Victor Coco
+use  LoKiJets                   v5r4     Phys   # Victor Coco, Cedric Potterat
+use  JetAccessories		v*	 Phys   # Victor Coco, Cedric Potterat
+use  JetAccessoriesMC		v*	 Phys   # Victor Coco, Cedric Potterat
 ####################################################################
 #
 use AnalysisPython              v1r6     Phys
