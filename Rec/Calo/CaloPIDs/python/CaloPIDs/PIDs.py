@@ -117,7 +117,7 @@ def inEcalAcc ( context , enableRecoOnDemand, trackLocations = [] ) :
 
 ## ============================================================================
 ## define the minimal track match sequnce for photon recontruction
-def trackMatch ( context , enableRecoOnDemand, trackLocations = [] ) :
+def trackMatch ( context , enableRecoOnDemand, trackLocations = [] , fastReco = False , external = '' ) :
     """
 
     Define the minimal track match sequnce for photon reconstruction
@@ -135,6 +135,9 @@ def trackMatch ( context , enableRecoOnDemand, trackLocations = [] ) :
                           context                 ,
                           'Rec/Calo/ClusterMatch' ,
                           enableRecoOnDemand      )
+
+    if external != '' :
+        clmatch.Calos =[ external ]
     
 
 #    log.info(" ========= trackLocations = " + str(trackLocations) ) 
@@ -159,7 +162,8 @@ def trackMatch ( context , enableRecoOnDemand, trackLocations = [] ) :
 
 # =================================================================================
 ## define various Calo PIDs evaluation
-def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , skipNeutrals = False , skipCharged = False , name = ''  ) :
+def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , skipNeutrals = False , skipCharged = False ,
+               fastPID = False , external = '', name = '') :
     """
     Define various Calo PIDs evaluation
     """
@@ -258,6 +262,12 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
                              context                  ,
                              'Rec/Calo/BremMatch'     ,
                              enableRecoOnDemand       )
+
+        if external != '' :
+            electron.Calos = [ external ]
+            brem.Calos = [ external ]
+
+
         match.Members = [
             cluster  , 
             electron ,

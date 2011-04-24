@@ -60,6 +60,8 @@ class CaloPIDsConf(LHCbConfigurableUser):
         , 'TrackLocations'     : []          # track locations to be used (default use CaloAlgUtils default)
         , 'SkipNeutrals'       : False       # skip neutralID (already run in CaloRecoConf by default)
         , 'SkipCharged'        : False       # skip chargedID 
+        , 'FastPID'            : False       # speed-up PID (lighter sequence)
+        , 'ExternalClusters'   : ''          # use non-default cluster container
         }
     
     ## Configure recontruction of Calo Charged  PIDs  
@@ -83,7 +85,9 @@ class CaloPIDsConf(LHCbConfigurableUser):
                          self.getProp('PIDList'),
                          _elocs  ,
                          self.getProp('SkipNeutrals'),
-                         self.getProp('SkipCharged')
+                         self.getProp('SkipCharged'),
+                         self.getProp('FastPID'),
+                         self.getProp('ExternalClusters')
                          ) 
 
 

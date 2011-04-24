@@ -5,6 +5,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2011-04-24 - Olivier Deschamps
+  - update CaloProcessor configurable with 'ExternalClusters' slot
+
 !========================== CaloPIDs v5r8 2010-09-24 ========================
 ! 2010-09-20 - Olivier Deschamps
   - CaloPhotonIdALg :  fix unchecked StatusCode
