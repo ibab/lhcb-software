@@ -8,6 +8,12 @@
 ! 2011-04-24 - Olivier Deschamps
   - update CaloProcessor configurable with 'ExternalClusters' slot
 
+!========================= CaloReco v5r8p1 2011-01-28 ========================
+
+! 2011-02-23 - Olivier Deschamps
+ - CaloCorrectionBase : add missing protection
+ - remove obsolete CellularAutomaton.cpp
+
 ! 2011-02-17 - Olivier Deschamps
  - clean CaloClusterisationTool
  - remove obsolete CellularAutomaton.cpp
@@ -22,7 +28,7 @@
 	- CaloECorrection : cluster energy offset via CaloDAQ/ICaloDigitFilterTool
 	- Add : digit masking/offset in Cluster sequence (Brunel.opts/Reconstruction.py)
 	- Add : Et threshold in cluster selection for hypo building
-	- few protections here and therrequirements : add dpencency on CaloUtils
+	- few protections here and ther requirements : add depencency on CaloUtils
 
 !========================= CaloReco v5r8 2011-01-17 ========================
 
