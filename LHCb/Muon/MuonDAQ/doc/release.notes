@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-04-24 - Alessia Satta
+ - Few patches in the checking ofthe max number of muon Tell1 banks
+
 !========================== MuonDAQ v4r8 2010-03-17 ==========================
 ! 2010-03-17 - Marco Cattaneo
  - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
