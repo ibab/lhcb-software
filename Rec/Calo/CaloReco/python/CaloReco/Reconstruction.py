@@ -57,7 +57,7 @@ def digitsReco  ( context            ,
 
 ## ============================================================================
 ## define the recontruction of Ecal clusters
-def clusterReco ( context , enableRecoOnDemand ) :
+def clusterReco ( context , enableRecoOnDemand , fastReco = False , external = '') :
     """
     Define the recontruction of Ecal Clusters
     """
@@ -70,22 +70,42 @@ def clusterReco ( context , enableRecoOnDemand ) :
 
     # cluster TES  is 'almost' context-independent : single HLT TES whatever the HLT-type else 'offline' TES
     ## Warning MUST be synchronous with CaloAlgUtils TES settings
-    _cont = context
-    if '' != context and 'OFFLINE' != _cont.upper() and _cont.upper().find( 'HLT' ) != -1 :
-        context = 'Hlt'
-    else :
-        context = ''
+    ### Exception when external clusters location is given
+
+    if external == '' :
+        _cont = context
+        if '' != context and 'OFFLINE' != _cont.upper() and _cont.upper().find( 'HLT' ) != -1 :
+            context = 'Hlt'
+        else :
+            context = ''
     
 
     ## Define the context-dependent sequencer
     seq   = getAlgo ( GaudiSequencer           , "ClusterReco", context , "Rec/Calo/EcalClusters" , enableRecoOnDemand )
+
     filter= getAlgo ( CaloDigitFilterAlg       , "CaloDigitFilter",context)
     clust = getAlgo ( CellularAutomatonAlg     , "EcalClust"  , context )
     share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )  
     covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context ) 
-    seq.Members = [ filter, clust , share , covar ]
-    setTheProperty ( seq , 'Context' , context )
 
+    if external == '' :
+        seq.Members += [ filter, clust ]
+    else :
+        share.InputData = external
+        covar.InputData = external
+
+    if fastReco :
+        from Configurables import CaloClusterizationTool
+        clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
+        clust.CaloClusterizationTool.ETcut = 300.*MeV  ## 'fast' thresholds to be centralized
+        clust.CaloClusterizationTool.withET = True
+    else : 
+        seq.Members += [ share  ]
+
+    seq.Members += [  covar ]
+                
+
+    setTheProperty ( seq , 'Context' , context )
 
 
     ## setup onDemand for SplitClusters
@@ -103,7 +123,8 @@ def clusterReco ( context , enableRecoOnDemand ) :
 
 # ============================================================================
 ## define the recontruction of  Single Photons
-def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False, usePrs = False , trackLocations = [], neutralID = True) :
+def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False, usePrs = False , trackLocations = [], neutralID = True,
+                 fastReco = False, external = '') :
     """
     Define the recontruction of Single Photon Hypo
     """
@@ -131,19 +152,23 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     # 1/ PhotonMatch from CaloPIDs (if tracking is requested)
     if useTracks : 
         from CaloPIDs.PIDs import trackMatch
-        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations )
+        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations , fastReco, external)
         addAlgs ( seq , tm ) 
     
 
     ##2/ SinglePhotonRec alg
     alg = getAlgo ( CaloSinglePhotonAlg, "SinglePhotonRec" , context )
     alg.PropertiesPrint = False
+    if external != '' :
+        alg.InputData = external
     
     # cluster selection tools:
     ### a/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster  , "PhotonCluster" )
     alg.SelectionTools = [ alg.PhotonCluster ]
     alg.PhotonCluster.MinEnergy = 150.*MeV
+    if fastReco :
+        alg.PhotonCluster.MinEnergy = 300.*MeV  # to be centralized
     
     ### b/ Neutral cluster (track-based and/or Spd/Prs-based)    
     if   useTracks     :
@@ -214,7 +239,8 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
 
 # ============================================================================
 ## define the recontruction of Electorn Hypos
-def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = True, usePrsE = True, trackLocations = [] ) :
+def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = True, usePrsE = True, trackLocations = [] ,
+                   fastReco = False, external = '' ) :
     """
     Define the reconstruction of
     """
@@ -241,19 +267,23 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     # 1/ ElectronMatch from CaloPIDs (if useTracks)
     if useTracksE :
         from CaloPIDs.PIDs import trackMatch
-        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations )
+        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations , fastReco , external)
         addAlgs ( seq , tm ) 
 
     ## 2/ Electron Rec alg
     alg = getAlgo ( CaloElectronAlg ,  'SingleElectronRec', context  ) 
     alg.PropertiesPrint = False
-
+    if external != '' :
+        alg.InputData = external
+        
     # cluster selection tools:
 
     ## 1/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster               , "ElectronCluster" )
     alg.SelectionTools = [ alg.ElectronCluster ]
     alg.ElectronCluster.MinEnergy = 150.*MeV
+    if fastReco :
+        alg.ElectronCluster.MinEnergy = 300.*MeV  # to be centralized
 
     ## 2/  hits in Spd
     if useSpdE : 
@@ -319,7 +349,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     
 # =============================================================================
 ## define the reconstruction of Merged Pi0s Hypos 
-def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True) :
+def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True, fastReco = False, external = '') :
     """
     Define the recontruction of Merged Pi0s
     """
@@ -346,6 +376,9 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     else :
         pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
 
+
+    if external  != '' :
+        pi0.InputData = external
 
     pi0.PropertiesPrint = False
     

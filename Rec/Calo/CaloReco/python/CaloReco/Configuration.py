@@ -78,6 +78,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'NeutralID'           : False      # Apply neutralID (CaloPIDs is in charge + problems with onDemand to be fixed)
         , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand (only for components on RecList)
         , 'TrackLocations'      : []         # Track locations (Neutral/Charged cluster selection with UseTrack(E) )
+        , 'ExternalClusters'    : ''         # Start the reconstruction sequence from an external cluster container (HLT)
+        , 'FastReco'            : False      # faster reconstruction (HLT)
         , 'SkipNeutrals'        : False
         , 'SkipCharged'         : False
         , 'ForceOnDemand'       : False      # force DoD for ALL components (incl. those not in RecList)
@@ -108,6 +110,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'SkipNeutrals'       : """ Skip Neutral reco components in RecList""" 
         , 'SkipCharged'        : """ Skip Charged reco components in RecList"""
         , 'ForceOnDemand'      : """ force DoD for ALL components"""
+        , 'FastReco'           : """ Speed-up reconstruction """
+        , 'ExternalClusters'   : """ Start the reconstruction sequence from an external cluster container (HLT)"""
         ##
     }
     
@@ -143,7 +147,10 @@ class CaloRecoConf(LHCbConfigurableUser):
         Configure reconstruction of Ecal Clusters
         """
         cmp = clusterReco   ( self.getProp('Context')             ,
-                              self.getProp('EnableRecoOnDemand' ) )
+                              self.getProp('EnableRecoOnDemand' ) ,
+                              self.getProp('FastReco')            ,
+                              self.getProp('ExternalClusters')
+                              )
         
         if self.getProp ( 'ForceDigits' ) :
             ## insert digits into Cluster Sequence
@@ -182,7 +189,9 @@ class CaloRecoConf(LHCbConfigurableUser):
                              uSpd,
                              uPrs,
                              _elocs,
-                            self.getProp ( 'NeutralID'         ) 
+                             self.getProp ( 'NeutralID' ) ,
+                             self.getProp('FastReco')            ,
+                             self.getProp('ExternalClusters')     
                              )
         _log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
         ##
@@ -218,7 +227,11 @@ class CaloRecoConf(LHCbConfigurableUser):
                              uTracks,
                              uSpd,
                              uPrs,
-                             _elocs )
+                             _elocs ,
+                             self.getProp('FastReco')            ,
+                             self.getProp('ExternalClusters')
+                             )
+
 
         _log.info ('Configured Electron Hypos Reco : %s ' % cmp.name()  )
         ##
@@ -239,8 +252,11 @@ class CaloRecoConf(LHCbConfigurableUser):
                               self.getProp ( 'EnableRecoOnDemand' ) ,
                               False ,
                               self.getProp ( 'NeutralID'         )  ,
-                              uTracks
+                              uTracks,
+                              self.getProp('FastReco')            ,
+                              self.getProp('ExternalClusters')
                               )
+        
 
         _log.info ('Configured Merged Pi0     Reco : %s ' % cmp.name()  )
         ##
@@ -410,6 +426,8 @@ class CaloProcessor( CaloRecoConf ):
                          _elocs,
                          self.getProp('SkipNeutrals'),
                          self.getProp('SkipCharged'),
+                         self.getProp('FastReco'),
+                         self.getProp('ExternalClusters'),
                          self.getName()
                          ) 
         referencePIDs( self.getProp('DataType') )
@@ -607,7 +625,7 @@ class CaloProcessor( CaloRecoConf ):
             comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
 
             # ChargedProtoP Maker on demand (not in any sequencer)
-            maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , dod )
+            maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , True ) # force onDemand
             if cloc != '' :
                 maker.OutputProtoParticleLocation = cloc
 
