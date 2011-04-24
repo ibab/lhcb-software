@@ -174,7 +174,8 @@ StatusCode MuonRawBuffer::finalize() {
   if(print_errors){
     for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
       if(m_tell1_header_error[i]>0){
-        info()<<" in Tell1 "<<i<<" error inside Tell1 "<<m_tell1_header_error[i]<<endreq;
+//commented out waiting for a proper Tell1 firmware 2011-04-24      
+//        info()<<" in Tell1 "<<i<<" error inside Tell1 "<<m_tell1_header_error[i]<<endreq;
         
       }
       
@@ -183,10 +184,10 @@ StatusCode MuonRawBuffer::finalize() {
         info()<<" in Tell1 "<<i<<" ODE reported error "<<m_tell1_header_ORODE_error[i]<<endreq;
       }
       
-      
+//commented out waiting for a proper Tell1 firmware 2011-04-24      
       if( m_tell1_header_SYNCH_data_error[i]>0){
-        info()<<" in Tell1 "<<i<<" SYNCH data consistency  error "
-               <<m_tell1_header_SYNCH_data_error[i]<<endreq;
+        //info()<<" in Tell1 "<<i<<" SYNCH data consistency  error "
+        //       <<m_tell1_header_SYNCH_data_error[i]<<endreq;
       }
       
       if(m_tell1_header_SYNCH_BC_error[i]>0){ 
