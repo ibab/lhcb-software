@@ -5,9 +5,8 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-!========================= CaloReco v5r8p1 2011-02-28 =========================
-! 2011-02-23 - Olivier Deschamps
- - CaloCorrectionBase : add missing protection
+! 2011-04-24 - Olivier Deschamps
+  - update CaloProcessor configurable with 'ExternalClusters' slot
 
 ! 2011-02-17 - Olivier Deschamps
  - clean CaloClusterisationTool
