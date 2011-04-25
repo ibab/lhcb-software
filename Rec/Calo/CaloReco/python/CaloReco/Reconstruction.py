@@ -57,7 +57,7 @@ def digitsReco  ( context            ,
 
 ## ============================================================================
 ## define the recontruction of Ecal clusters
-def clusterReco ( context , enableRecoOnDemand , fastReco = False , external = '') :
+def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = False , external = '', makeTag=False) :
     """
     Define the recontruction of Ecal Clusters
     """
@@ -78,6 +78,8 @@ def clusterReco ( context , enableRecoOnDemand , fastReco = False , external = '
             context = 'Hlt'
         else :
             context = ''
+    elif makeTag != '':
+        context = makeTag
     
 
     ## Define the context-dependent sequencer
@@ -88,23 +90,23 @@ def clusterReco ( context , enableRecoOnDemand , fastReco = False , external = '
     share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )  
     covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context ) 
 
-    if external == '' :
-        seq.Members += [ filter, clust ]
-    else :
+    if external != '' :                  # use non-default clusters 
         share.InputData = external
         covar.InputData = external
+        if makeTag != '' :               # make the non-default clusters
+            seq.Members += [ filter, clust ]
+            clust.OutputData = external
+    else :
+        seq.Members += [ filter, clust ]        # make default clusters
 
-    if fastReco :
+
+    if clusterPt > 0 :
         from Configurables import CaloClusterizationTool
         clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
-        clust.CaloClusterizationTool.ETcut = 300.*MeV  ## 'fast' thresholds to be centralized
+        clust.CaloClusterizationTool.ETcut = clusterPt
         clust.CaloClusterizationTool.withET = True
-    else : 
-        seq.Members += [ share  ]
 
-    seq.Members += [  covar ]
-                
-
+    seq.Members += [ share , covar ]
     setTheProperty ( seq , 'Context' , context )
 
 
@@ -124,7 +126,7 @@ def clusterReco ( context , enableRecoOnDemand , fastReco = False , external = '
 # ============================================================================
 ## define the recontruction of  Single Photons
 def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False, usePrs = False , trackLocations = [], neutralID = True,
-                 fastReco = False, external = '') :
+                 photonPt=150.*MeV, fastReco = False, external = '') :
     """
     Define the recontruction of Single Photon Hypo
     """
@@ -166,9 +168,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     ### a/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster  , "PhotonCluster" )
     alg.SelectionTools = [ alg.PhotonCluster ]
-    alg.PhotonCluster.MinEnergy = 150.*MeV
-    if fastReco :
-        alg.PhotonCluster.MinEnergy = 300.*MeV  # to be centralized
+    alg.PhotonCluster.MinEnergy = photonPt
     
     ### b/ Neutral cluster (track-based and/or Spd/Prs-based)    
     if   useTracks     :
@@ -240,7 +240,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
 # ============================================================================
 ## define the recontruction of Electorn Hypos
 def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = True, usePrsE = True, trackLocations = [] ,
-                   fastReco = False, external = '' ) :
+                   electronPt=150.*MeV , fastReco = False, external = '' ) :
     """
     Define the reconstruction of
     """
@@ -281,9 +281,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     ## 1/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster               , "ElectronCluster" )
     alg.SelectionTools = [ alg.ElectronCluster ]
-    alg.ElectronCluster.MinEnergy = 150.*MeV
-    if fastReco :
-        alg.ElectronCluster.MinEnergy = 300.*MeV  # to be centralized
+    alg.ElectronCluster.MinEnergy = electronPt
 
     ## 2/  hits in Spd
     if useSpdE : 
@@ -349,7 +347,8 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     
 # =============================================================================
 ## define the reconstruction of Merged Pi0s Hypos 
-def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True, fastReco = False, external = '') :
+def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True,
+                    mergedPi0Pt = 2.* GeV ,fastReco = False, external = '') :
     """
     Define the recontruction of Merged Pi0s
     """
@@ -382,7 +381,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
 
     pi0.PropertiesPrint = False
     
-    pi0.EtCut    = 2. * GeV;
+    pi0.EtCut    = mergedPi0Pt
     # default setting (possibly updated from condDB)
     pi0.addTool( CaloCorrectionBase, 'ShowerProfile')
     pi0.addTool( CaloCorrectionBase, 'Pi0SCorrection')

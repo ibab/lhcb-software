@@ -22,6 +22,7 @@ __all__ = (
 from LHCbKernel.Configuration import *
 
 
+from GaudiKernel.SystemOfUnits import MeV, GeV
 from CaloKernel.ConfUtils     import ( addAlgs        ,
                                        printOnDemand  ,
                                        prntCmp        ,
@@ -37,6 +38,7 @@ from Reconstruction           import ( clusterReco    ,
 from Configurables            import CaloDigitConf
 from Configurables            import CaloPIDsConf
 from Configurables            import GaudiSequencer
+
 
 import logging
 _log = logging.getLogger ('CaloReco')
@@ -83,6 +85,11 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'SkipNeutrals'        : False
         , 'SkipCharged'         : False
         , 'ForceOnDemand'       : False      # force DoD for ALL components (incl. those not in RecList)
+        , 'PhotonPt'            : 150.*MeV
+        , 'ElectronPt'          : 150.*MeV
+        , 'MergedPi0Pt'         : 2.*GeV
+        , 'ClusterPt'           : 0.
+        , 'MakeExternalClustersWithTag': ''
         ##
         }
     ## documentation lines 
@@ -110,8 +117,13 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'SkipNeutrals'       : """ Skip Neutral reco components in RecList""" 
         , 'SkipCharged'        : """ Skip Charged reco components in RecList"""
         , 'ForceOnDemand'      : """ force DoD for ALL components"""
-        , 'FastReco'           : """ Speed-up reconstruction """
+        , 'FastReco'           : """ Speed-up reconstruction (empty so far)"""
         , 'ExternalClusters'   : """ Start the reconstruction sequence from an external cluster container (HLT)"""
+        , 'PhotonPt'           : """ Photon Hypo Pt cut """ 
+        , 'ElectronPt'         : """ Electron Hypo Pt cut """
+        , 'MergedPi0Pt'        : """ MergedPi0 Pt cut """
+        , 'ClusterPt'          : """ Cluster Pt """
+        , 'MakeExternalClustersWithTag'   :""" Build tagged external clusters in the sequence (only if ExternalClusters != '')"""
         ##
     }
     
@@ -148,9 +160,11 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         cmp = clusterReco   ( self.getProp('Context')             ,
                               self.getProp('EnableRecoOnDemand' ) ,
+                              self.getProp('ClusterPt')           ,
                               self.getProp('FastReco')            ,
-                              self.getProp('ExternalClusters')
-                              )
+                              self.getProp('ExternalClusters')    ,
+                              self.getProp('MakeExternalClustersWithTag')
+                             )
         
         if self.getProp ( 'ForceDigits' ) :
             ## insert digits into Cluster Sequence
@@ -190,6 +204,7 @@ class CaloRecoConf(LHCbConfigurableUser):
                              uPrs,
                              _elocs,
                              self.getProp ( 'NeutralID' ) ,
+                             self.getProp('PhotonPt')            ,
                              self.getProp('FastReco')            ,
                              self.getProp('ExternalClusters')     
                              )
@@ -228,6 +243,7 @@ class CaloRecoConf(LHCbConfigurableUser):
                              uSpd,
                              uPrs,
                              _elocs ,
+                             self.getProp('ElectronPt')          ,
                              self.getProp('FastReco')            ,
                              self.getProp('ExternalClusters')
                              )
@@ -253,6 +269,7 @@ class CaloRecoConf(LHCbConfigurableUser):
                               False ,
                               self.getProp ( 'NeutralID'         )  ,
                               uTracks,
+                              self.getProp('MergedPi0Pt')         ,
                               self.getProp('FastReco')            ,
                               self.getProp('ExternalClusters')
                               )

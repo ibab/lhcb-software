@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-04-24 - Olivier Deschamps
+  - update CaloProcessor configurable with 'MakeExternalClustersWithTag' slot
+
+! 2011-04-24 - Olivier Deschamps
   - update CaloProcessor configurable with 'ExternalClusters' slot
 
 !========================= CaloReco v5r8p1 2011-01-28 ========================
