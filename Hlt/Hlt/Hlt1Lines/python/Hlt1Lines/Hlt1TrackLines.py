@@ -36,6 +36,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'AllL0_TrNTHits'    : 16
                     ,   'AllL0_Velo_NHits'  : 9
                     ,   'AllL0_Velo_Qcut'   : 3
+                    ,   'AllL0_GEC'         : 'Loose'
                     ,   'Muon_PT'           : 800.
                     ,   'Muon_P'            : 8000.
                     ,   'Muon_IP'           : 0.100
@@ -44,6 +45,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_TrNTHits'     : 0 #OFF
                     ,   'Muon_Velo_NHits'   : 0 #OFF
                     ,   'Muon_Velo_Qcut'    : 999 #OFF
+                    ,   'Muon_GEC'          : 'Loose'
                     ,   'Photon_PT'         : 1200.
                     ,   'Photon_P'          : 10000.
                     ,   'Photon_IP'         : 0.100
@@ -53,13 +55,15 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_Velo_NHits' : 9 
                     ,   'Photon_Velo_Qcut'  : 4 
                     ,   'Photon_L0Channels' : "Photon,Electron"
+                    ,   'Photon_GEC'        : 'Loose'
                     ,   'Prescale'          : {'Hlt1TrackForwardPassThrough'      : 0,
                                                'Hlt1TrackForwardPassThroughLoose' : 0}
                 }
 
     def localise_props( self, prefix ):
         ps = self.getProps()
-        lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2", "Velo_NHits", "Velo_Qcut", "TrNTHits" ) )
+        lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2",
+                    "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC" ) )
         return dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
@@ -91,16 +95,13 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         return unit
 
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
 
-        gec = Hlt1GECLooseStreamer()
-        props['gec'] = gec.split('=',1)[0]
-
         lineCode = """ 
-        %(gec)s * VeloCandidates
+        VeloCandidates
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
         ( TrNVELOMISS < %(Velo_Qcut)s ) & \
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
@@ -127,23 +128,20 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         hlt1TrackNonMuon_Unit = HltUnit(
             'Hlt1'+name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name )+[gec],
+            Preambulo = self.hlt1Track_Preambulo( name ),
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
-        return [ PV3D(), hlt1TrackNonMuon_Unit ]
+        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackNonMuon_Unit ]
 
     def hlt1TrackForwardPassThrough_Streamer( self, name, props ) : 
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Loose') > -1 else 'TightForward'
 
-        gec = Hlt1GECLooseStreamer()
-        props['gec'] = gec.split('=',1)[0]
-
         lineCode = """ 
-        %(gec)s * VeloCandidates
+        VeloCandidates
         >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
         >>  %(forward)s 
@@ -158,22 +156,19 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         hlt1TrackForwardPassThrough_Unit = HltUnit(
             'Hlt1'+name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name )+[gec],
+            Preambulo = self.hlt1Track_Preambulo( name ),
             Code = lineCode
             )
         from HltTracking.HltPVs import PV3D
-        return [ PV3D(), hlt1TrackForwardPassThrough_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D(), hlt1TrackForwardPassThrough_Unit ]
 
     def hlt1TrackMuon_Streamer(self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
-        gec = Hlt1GECLooseStreamer()
-        props['gec'] = gec.split('=',1)[0]
-
 
         lineCode = """ 
-        %(gec)s * VeloCandidates
+        VeloCandidates
         >>  MatchVeloMuon
         >>  tee  ( monitor( TC_SIZE > 0, '# pass MatchVeloMuon', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nMatchVeloMuon' , LoKi.Monitoring.ContextSvc ) )
@@ -206,11 +201,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         hlt1TrackMuon_Unit = HltUnit(
             'Hlt1'+name+'Unit',
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ) + [ gec ],
+            Preambulo = self.hlt1Track_Preambulo( name ),
             Code = lineCode
             )    
         from HltTracking.HltPVs import PV3D
-        return [ PV3D(), hlt1TrackMuon_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D(), hlt1TrackMuon_Unit ]
     
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line   as Line

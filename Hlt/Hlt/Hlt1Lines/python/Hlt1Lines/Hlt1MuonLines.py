@@ -13,12 +13,14 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         ,'SingleMuonHighPT_TrNTHits'   : 0 #OFF
         ,'SingleMuonHighPT_Velo_NHits' : 0 #OFF
         ,'SingleMuonHighPT_Velo_Qcut'  : 999 #OFF
+        ,'SingleMuonHighPT_GEC'     : 'Loose'
         ,'SingleMuonNoIP_P'         : 6000
         ,'SingleMuonNoIP_PT'        : 1300
         ,'SingleMuonNoIP_TrChi2'    :    4
         ,'SingleMuonNoIP_TrNTHits'   : 16
         ,'SingleMuonNoIP_Velo_NHits' : 9
         ,'SingleMuonNoIP_Velo_Qcut'  : 3
+        ,'SingleMuonNoIP_GEC'       : 'Loose'
         ,'DiMuonLowMass_VxDOCA'     :  0.2
         ,'DiMuonLowMass_VxChi2'     :   25
         ,'DiMuonLowMass_P'          : 6000
@@ -26,16 +28,19 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         ,'DiMuonLowMass_TrChi2'     :    4
         ,'DiMuonLowMass_M'          : 1000
         ,'DiMuonLowMass_IPChi2'     :    9
+        ,'DiMuonLowMass_GEC'        : 'Loose'
         ,'DiMuonHighMass_VxDOCA'    :  0.2
         ,'DiMuonHighMass_VxChi2'    :   25
         ,'DiMuonHighMass_P'         : 6000
         ,'DiMuonHighMass_PT'        :  500
         ,'DiMuonHighMass_TrChi2'    :    4
         ,'DiMuonHighMass_M'         : 2900
+        ,'DiMuonHighMass_GEC'       : 'Loose'
         ,'MultiMuonNoIP_P'          : 6000
         ,'MultiMuonNoIP_PT'         :  500
         ,'MultiMuonNoIP_TrChi2'     :    4
         ,'MultiMuonNoIP_GT'         :  2.5
+        ,'MultiMuonNoIP_GEC'        : 'Loose'
         ,'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
                                         'SingleMuonNoIP'   : ( 'Muon', ),
                                         'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
@@ -72,20 +77,12 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         unit.Code = code
         return unit
 
-    def add_gec( self, unit ):
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
-        gec = Hlt1GECLooseStreamer().split( '=', 1 )[ 0 ]
-        unit.Code = unit.Code.replace( 'VeloCandidates', '%s * VeloCandidates' % gec ) 
-        return unit
-
     def singleMuon_preambulo( self, properties ):
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
                                                        MatchVeloMuon, IsMuon,
                                                        LooseForward, FitTrack )
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
         ## define some "common" preambulo 
-        preambulo = [ Hlt1GECLooseStreamer(),
-                      VeloCandidates( properties[ 'name' ] ),
+        preambulo = [ VeloCandidates( properties[ 'name' ] ),
                       MatchVeloMuon,
                       LooseForward,
                       FitTrack,
@@ -94,6 +91,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
 
 
     def singleMuon_streamer( self, properties ):
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
@@ -122,7 +120,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         from HltTracking.HltReco import Velo
-        return [ Velo, self.add_gec( unit ) ]
+        gec = properties[ 'GEC' ]
+        return [ Hlt1GECUnit( gec ), Velo, unit ]
 
     def diMuon_preambulo( self, properties ):
         ## define some "common" preambulo 
@@ -133,6 +132,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         return preambulo
 
     def diMuon_streamer( self, properties ):
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.HltReco import Velo
         unit = HltUnit(
@@ -165,9 +165,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return [ Velo, self.add_gec( unit ) ]
+        gec = properties[ 'GEC' ]
+        return [ Hlt1GECUnit( gec ), Velo, unit ]
 
     def diMuonDetached_streamer( self, properties ):
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.HltPVs import PV3D
         unit = HltUnit(
@@ -200,9 +202,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        return [ PV3D(), self.add_gec( unit ) ]
+        gec = properties[ 'GEC' ]
+        return [ Hlt1GECUnit( gec ), PV3D(), unit ]
 
     def multiMuon_streamer( self, properties ):
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.HltReco import Velo
         unit = HltUnit(
@@ -229,7 +233,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  TC_SIZE > %(GT)s
             """ % properties
             )
-        return [ Velo, self.add_gec( unit ) ]
+        gec = properties[ 'GEC' ]
+        return [ Hlt1GECUnit( gec ), Velo, unit ]
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
