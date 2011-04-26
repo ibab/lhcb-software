@@ -46,8 +46,8 @@ DaVinciInit::DaVinciInit( const std::string& name,
     , m_lastMem(0)
 {
   declareProperty("PrintEvent", m_print =  false, "Print Event and Run Number");
-  declareProperty("Increment", m_increment = 100, "Number of events to measure memory");
-  
+  declareProperty("Increment", m_increment = 100, 
+                  "Number of events to measure memory. This is aligned with PrintFreq in DaVinci");  
 }
 //=============================================================================
 // Destructor
@@ -97,9 +97,9 @@ StatusCode DaVinciInit::execute() {
   
   if ( 0 == m_lastMem ) m_lastMem = mem ;
   else if ( 0 == nev%m_increment) {
-    if ( m_lastMem < mem ){
-      info() << "Memory has increased from " << m_lastMem << " to " << mem << "  KB" 
-             << " (+" << 100.*(mem-m_lastMem)/mem << "%)" 
+    if ( m_lastMem != mem ){
+      info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
+             << " (" << mem-m_lastMem << "KB, " << 100.*(mem-m_lastMem)/mem << "%)" 
              << " in last " << m_increment << " events" << endmsg ;
     }
     m_lastMem = mem ;
