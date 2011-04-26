@@ -8,8 +8,7 @@ def Hlt1GECStreamer( gec = 'Loose', accept = True ):
     from Configurables import Hlt__GEC
     from HltLine.HltDecodeRaw import DecodeIT,DecodeVELO
     from HltLine.HltLine import bindMembers
-    cuts = gecs[ gec ]
-    tool = Hlt__GEC("ActualGECs", **cuts )
+    tool = Hlt__GEC( "%sGECs" % gec, **gecs[ gec ] )
     code = "ACCEPT( '%s' )" % tool.getFullName()
     if not accept: code = '~' + code
     bm = bindMembers( None, [ DecodeIT, DecodeVELO ] )

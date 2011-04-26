@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-26 - Roel Aaij
+ - Ensure unique instantiation of the tools which implements the GECs for 
+   different sets of cuts.
+
+! 2011-04-26 - Roel Aaij
  - Reorder application of GEC to always be before the Velo reconstruction in:
    - Hlt1TrackLines
    - Hlt1MuonLines
