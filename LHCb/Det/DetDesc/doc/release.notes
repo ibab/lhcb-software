@@ -5,6 +5,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!========================= DetDesc v18r25 2011-04-26 =========================
 ! 2011-04-08 - Marco Cattaneo
  - Add some checks on rotation matrices to recover precision when elements
    should be zero.
