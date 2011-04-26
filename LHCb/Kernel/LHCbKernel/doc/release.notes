@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r1 2011-04-26 =========================
 ! 2011-04-20 - Marco Cattaneo
  - Add IEventTupleTool interface, previously in DaVinciInterfaces
 
