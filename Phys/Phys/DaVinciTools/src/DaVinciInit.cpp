@@ -96,21 +96,13 @@ StatusCode DaVinciInit::execute() {
   if (msgLevel(MSG::DEBUG)) debug() << nev << " memory: " << mem << " KB" << endmsg ;
   
   if ( 0 == m_lastMem ) m_lastMem = mem ;
-  else if ( 0 == nev%m_increment) {
+  else if ( m_increment>0 && 0 == nev%m_increment) {
     if ( m_lastMem != mem ){
       info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
              << " (" << mem-m_lastMem << "KB, " << 100.*(mem-m_lastMem)/mem << "%)" 
              << " in last " << m_increment << " events" << endmsg ;
     }
     m_lastMem = mem ;
-
-    // CRJ : Test releasing memory pools
-    boost::singleton_pool<LHCb::Particle,sizeof(LHCb::Particle)>::release_memory();
-    boost::singleton_pool<LHCb::Vertex,sizeof(LHCb::Vertex)>::release_memory();
-    boost::singleton_pool<LHCb::ProtoParticle,sizeof(LHCb::ProtoParticle)>::release_memory();
-    boost::singleton_pool<LHCb::Track,sizeof(LHCb::Track)>::release_memory();
-    boost::singleton_pool<LHCb::State,sizeof(LHCb::State)>::release_memory();
-    boost::singleton_pool<LHCb::CaloHypo,sizeof(LHCb::CaloHypo)>::release_memory();
  
   }
   

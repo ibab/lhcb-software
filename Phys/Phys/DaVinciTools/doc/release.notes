@@ -5,6 +5,10 @@
 !============================================================================
 
 ! 2011-04-26 - Patrick Koppenburg
+ - DaVinciInit: Foresee the case of -1 PrintFreq.
+   . Remove boost signleton stuff added by Chris.
+
+! 2011-04-26 - Patrick Koppenburg
  - DaVinciInit: Task 20122
 
 !========================== DaVinciTools v22r5 2011-04-21 ===================
