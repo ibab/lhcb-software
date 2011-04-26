@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r44 2011-04-26 =========================
 ! 2011-04-15 - Marco Cattaneo
  - Remove configuration for DC06, no longer supported
 
