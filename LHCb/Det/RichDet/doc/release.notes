@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r3 2011-04-26 =========================
 ! 2011-04-14 - Chris Jones
  - Remove some obsolete DC06 compatibility hacks
  - Return StatusCode FAILURE from DeRichSystem::initialize() if initial 
