@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r6 2011-04-26 =========================
 ! 2011-04-15 - Chris Jones
  - Suppress finalize() warnings about no pixels or photons being created.
    Can happen in the HLT and it is not really a problem. 
