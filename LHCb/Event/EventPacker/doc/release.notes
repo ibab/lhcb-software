@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r9 2011-04-26 =========================
 ! 2011-04-19 - Olivier Callot
  - Fix the ownership (memory leak) in WritePackedDst::storeInBlob
 
