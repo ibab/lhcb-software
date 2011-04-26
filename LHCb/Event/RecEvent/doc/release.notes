@@ -5,6 +5,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r37 2011-04-26 =========================
 ! 2011-04-22 - Olivier Deschamps
    - CaloDataFunctor : fix coverity problems
 
