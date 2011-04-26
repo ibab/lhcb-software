@@ -178,7 +178,7 @@ class DaVinci(LHCbConfigurableUser) :
         from Configurables import (DaVinciInit,
                                    MemoryTool)
         
-        di = DaVinciInit('DaVinciInitAlg')
+        di = DaVinciInit('DaVinciInitAlg', Increment=self.getProp("PrintFreq"))
         di.addTool(MemoryTool)
         di.MemoryTool.HistoSize = 5000
         return di
