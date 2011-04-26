@@ -3,10 +3,12 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
+! 2011-04-26 - Jaap Panman
+ - make previous fix 32-bit compliant
+
 ! 2011-04-20 - Jaap Panman
  - update logic in GetLumiParameters to accept nBunches from online database 
    even if wrongBucketFlag is on (for limited period beginning 2011 run)
-
 
 !========================= LumiAlgs v5r0p1 2011-03-09 =========================
 ! 2011-03-08 - Gerhard Raven

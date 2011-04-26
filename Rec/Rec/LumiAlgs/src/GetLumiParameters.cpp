@@ -454,9 +454,12 @@ StatusCode GetLumiParameters::processDB() {
       m_onlineCollidingBunches = m_NCollidingBunches;
     } else {
       // period with flagging problems but bunch count OK
-      ulonglong t0 = 1300000000000000;
-      ulonglong t1 = 1303300000000000;
-      if ( xtfound > Gaudi::Time( t0*1000 ) && xtfound < Gaudi::Time( t1*1000 ) ) {
+      //ulonglong t0 = 1300000000000000;
+      //ulonglong t1 = 1303300000000000;
+      //if ( xtfound > Gaudi::Time( t0*1000 ) && xtfound < Gaudi::Time( t1*1000 ) ) {
+      ulonglong t0sec = 1300000000;
+      ulonglong t1sec = 1303300000;
+      if ( xtfound > Gaudi::Time( t0sec, 0 ) && xtfound < Gaudi::Time( t1sec, 0 ) ) {
 	m_onlineCollidingBunches = m_NCollidingBunches;
       }
     }
