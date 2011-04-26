@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.199 2010-01-11 17:52:38 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v13r10 2011-04-26 =========================
 ! 2011-04-15 - Marco Cattaneo
  - Remove obsolete options files DC06Conditions.opts, DetDesc.opts
 
