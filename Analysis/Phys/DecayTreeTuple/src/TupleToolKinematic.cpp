@@ -105,8 +105,8 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
 double TupleToolKinematic::preFitMass(const LHCb::Particle* p) const {
   
   Gaudi::LorentzVector Mom ;
-  for ( LHCb::Particle::ConstVector::const_iterator d = p->daughtersVector().begin();
-        d != p->daughtersVector().end() ; ++d){
+  for ( SmartRefVector< LHCb::Particle >::const_iterator d = p->daughters().begin();
+        d != p->daughters().end() ; ++d){
     Mom += (*d)->momentum();
   }
   return Mom.M() ;

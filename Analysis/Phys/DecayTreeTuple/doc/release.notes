@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-04-26 - Patrick Koppenburg
+ - TupleToolKinematic::preFitMass: fix bug 81455
+
+! 2011-04-14 - Patrick Koppenburg
+ - TupleToolDecayTreeTuple : pass reference to fitter
+
 ! 2011-04-08 - Juan Palacios
  - TupleToolTriggerbase
   . Remove unused data member.
