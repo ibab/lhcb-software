@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r38 2011-04-26 =========================
 ! 2011-04-21 - Thomas Blake
  - Added 'break' in loop over RawEvent locations in ODINDecodeTool.cpp
 
