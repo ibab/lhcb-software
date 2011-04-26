@@ -5,8 +5,94 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v32r3>2011-04-27 LHCbSys v32r3</A></H1><PRE>
+This version uses Gaudi v22r2 and LCG_60a
+Development version for 2011 data
+
 - Packages removed: Phys/DaVinciInterfaces: moved to Phys project
                     Phys/DaVinciTypes:      moved to Phys project
+- Packages modified: MCAssociators v1r1, DDDB v1r44, DetDesc v18r25,
+    DetDescChecks v5r6, DetDescCnv v4r13, OTDet v8r5p1, RichDet v16r3,
+    EventPacker v2r9, L0Event v19r3, LinkerEvent v3r8, RecEvent v2r37,
+    GaudiConf v13r10, LHCbAlgs v2r38, LHCbKernel v13r1, MuonDAQ v4r9,
+    LoKiGen v10r1, LoKiHlt v3r7, RichRecBase v4r6
+
+- In MCAssociators v1r1
+  . Remove unneccessary dependencies on DaVinciInterfaces, LoKiCore, RecEvent
+
+- In DDDB v1r44
+  . Remove configuration for DC06, no longer supported
+  . Update database tags for SQLDDDB v6r7:
+    o LHCBCOND, 2011, 2010: head-20110407
+
+- In DetDesc v18r25
+  . Add some checks on rotation matrices to recover precision when elements
+    should be zero.
+
+- In DetDescChecks v5r6
+  . Remove test loaddddb.qmt, was testing DC06, no longer supported
+  . Add test loadddddb-sim-mc10.qmt
+
+- In DetDescCnv v4r13
+  . Fix defect 16169, UNINIT_CTOR in XmlMixtureCnv.cpp
+  . Recover precision in rotation matrix in case of rotation by pi or halfpi
+
+- In OTDet v8r5p1
+  . Replace endreq by endmsg
+
+- In RichDet v16r3
+  . Remove some obsolete DC06 compatibility hacks
+  . Return StatusCode FAILURE from DeRichSystem::initialize() if initial
+    update fails.
+  . Improve the way various cached information is handled w.r.t. condition 
+    updates.
+  . Move all of the initialisation of variables in DeRichSphMirror::initialize()
+    to DeRichSphMirror::updateGeometry(), in order to make sure everything
+    is properly updated on Condition changes.
+
+- In EventPacker v2r9, v2r8
+  . Fix defect 15762, memory leak in WritePackedDst::storeInBlob
+  . Fix the handling of unsigned short as index in the list of LHCbIDs, 
+    when it overflows 65k.
+
+- In L0Event v19r3
+  . Fix defect 16216, UNINIT_CTOR in L0DUReport.xml
+
+- In LinkerEvent v3r8
+  . Fix a warning for Coverity in LinkerTable, uninitialized variable.
+  . Fix defect 16217, UNINIT_CTOR in LinksByKey
+
+- In RecEvent v2r37
+  . CaloDataFunctor : fix coverity problems
+
+- In GaudiConf v13r10
+  . Remove obsolete options files DC06Conditions.opts, DetDesc.opts
+
+- In LHCbAlgs v2r38
+  . Fix bug #81362: added missing 'break' in loop over RawEvent locations in 
+    ODINDecodeTool.cpp
+  . Remove EventNodeKiller, moved to Gaudi
+
+- In LHCbKernel v13r1
+  . Add IEventTupleTool interface, previously in DaVinciInterfaces
+
+- In MuonDAQ v4r9
+  . Fix an error message due to a mismatch of the IDE and Tell1 firmware
+  . Fix defects 10737, 10738, 10739, 10740, OVERRRUN_STATIC in the checking of
+    the max number of muon Tell1 banks
+
+- In LoKiGen v10r1
+  . Add missing "cutvals" into Tool/Factory interface, needed for generic 
+    cut-tool in Gauss
+
+- In LoKiHlt v3r7
+  . Remove dependency on DaVinciInterfaces, no longer needed because
+    IEventTupleTool.h has been moved to LHCbKernel
+
+- In RichRecBase v4r6
+  . Suppress finalize() warnings about no pixels or photons being created.
+    Can happen in the HLT and it is not really a problem. Instead just print info
+    messages as normal.
 
 </PRE><H1><A NAME=v32r2>2011-04-05 LHCbSys v32r2</A></H1><PRE>
 This version uses Gaudi v22r1 and LCG_60a
