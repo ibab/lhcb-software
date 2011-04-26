@@ -8,6 +8,11 @@ Purpose: LHCb reconstruction program
   . #121762 etc.: (DetDesc) Recover precision in matrices
   . Adapt to latest LHCBCOND tags from SQLDDDB v6r7 
   . #122070: (RichRecBase) Suppress finalize() warnings about no pixels created
+  . #122399: (MuonDAQ) Fix an error message due to a mismatch of the IDE and 
+             Tell1 firmware
+  . #122401: (MuonID) Reading of new dll tuning (DLL_flag == 4) from database,
+             issue Warning if not in database, for backward compatibility.
+  . #122401: (MuonID) Small bug fixes 
 
 - Remove all DC06 tests and example options, no longer supported
 
