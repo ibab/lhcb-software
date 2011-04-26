@@ -22,6 +22,7 @@ class StatEntity;
 class MonHist : public MonObj
 {
 private:
+  static std::string optsep;
   MONTYPE m_type;
   TObject *m_rootobj;
   TObject *m_rootdeser;
@@ -30,6 +31,7 @@ private:
   int m_hdrlen;
   int m_buffersize;
   std::string m_name;
+  std::string m_bookopts;
   int m_namelen;
   std::string m_title;      /** Pointer to Histogram Title **/
   int m_titlen;
@@ -40,7 +42,7 @@ private:
   double m_ymin;     /* Minimum y */
   double m_ymax;     /* Maximum y */
   int m_addoff;
-  
+
   double *m_hentries;
   double *m_hsumw2;
   double *m_hsumw;
@@ -83,6 +85,6 @@ public:
   void resetup(void);
   void FreeDeser(){if (m_rootdeser != 0){delete m_rootdeser; m_rootdeser=0;};};
   int BlockSize(void){return m_blocksize;};
-  
+
 };
 #endif /* MONHIST_H_ */

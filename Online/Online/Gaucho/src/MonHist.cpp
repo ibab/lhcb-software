@@ -20,6 +20,8 @@
 #include "Gaucho/CntrMgr.h"
 #include "Gaucho/Utilities.h"
 //#define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
+std::string MonHist::optsep="/:/:/:";
+
 
 
 void MonHist::_clear()
@@ -195,7 +197,7 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IB
   m_rootobj = 0;
   if( 0 != dynamic_cast<const AIDA::IProfile1D* >(aidahist) )
     {
-      
+
       m_type = H_PROFILE;
       MyTProfile *rhist = (MyTProfile*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D* >(aidahist)));
       rhist->SetName(source.c_str());
@@ -304,6 +306,8 @@ void MonHist::setup(IMessageSvc* msgs)
       m_name = rhist->GetName();
       m_namelen = m_name.length();
       m_title = rhist->GetTitle();
+      m_bookopts = std::string(rhist->GetOption());
+      m_title = m_title+MonHist::optsep+m_bookopts;
       m_titlen = m_title.length();
       m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
       m_hdrlen = (m_hdrlen + 7)&~7;
@@ -321,6 +325,8 @@ void MonHist::setup(IMessageSvc* msgs)
       m_name = rhist->GetName();
       m_namelen = m_name.length();
       m_title = rhist->GetTitle();
+      m_bookopts = std::string(rhist->GetOption());
+      m_title = m_title+"/:/:/:"+m_bookopts;
       m_titlen = m_title.length();
       m_blocksize = rhist->fN*sizeof(double);
       m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
@@ -336,8 +342,11 @@ void MonHist::setup(IMessageSvc* msgs)
       m_name = rhist->GetName();
       m_namelen = m_name.length();
       m_title = rhist->GetTitle();
+      m_bookopts = std::string(rhist->GetOption());
 //      printf("+++++++++++++++++++++++++++++++2Dim Histogram. Name %s, Title %s \n",m_name, m_title);
+      m_title = m_title+"/:/:/:"+m_bookopts;
       m_titlen = m_title.length();
+      m_titlen = m_title.length()+strlen("/:/:/:")+m_bookopts.length();
       m_Xaxis =  rhist->GetXaxis();
       m_Yaxis = rhist->GetYaxis();
       m_blocksize = rhist->fN*sizeof(double);
@@ -759,7 +768,14 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //        delete m_rootdeser;
 //        m_rootdeser = 0;
 //      }
-      MyTH1D *h = (MyTH1D*)new TH1D(nam,tit,b->nxbin,b->xmin,b->xmax);
+      std::string titopt = tit;
+      std::string bopt;
+      if (int seppos=titopt.find(MonHist::optsep) != std::string::npos)
+      {
+        bopt = titopt.substr(seppos+MonHist::optsep.length());
+        titopt.erase(seppos);
+      }
+      MyTH1D *h = (MyTH1D*)new TH1D(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax);
 //      this->m_rootdeser = h;
       mhentries = h->GetEntryArr();
       mhsumw2 = h->GetSumw2Arr();
@@ -787,7 +803,14 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //        delete m_rootdeser;
 //        m_rootdeser = 0;
 //      }
-      MyTH2D *h = (MyTH2D*)new TH2D(nam,tit,b->nxbin,b->xmin,b->xmax,b->nybin,b->ymin,b->ymax);
+      std::string titopt = tit;
+      std::string bopt;
+      if (int seppos=titopt.find(MonHist::optsep) != std::string::npos)
+      {
+        bopt = titopt.substr(seppos+MonHist::optsep.length());
+        titopt.erase(seppos);
+      }
+      MyTH2D *h = (MyTH2D*)new TH2D(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax,b->nybin,b->ymin,b->ymax);
 //      this->m_rootdeser  = h;
       mhentries = h->GetEntryArr();
       mhsumw2 = h->GetSumw2Arr();
@@ -821,7 +844,14 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //        delete m_rootdeser;
 //        m_rootdeser = 0;
 //      }
-      MyTProfile *h = (MyTProfile*)new TProfile(nam,tit,b->nxbin,b->xmin,b->xmax);
+      std::string titopt = tit;
+      std::string bopt;
+      if (int seppos=titopt.find(MonHist::optsep) != std::string::npos)
+      {
+        bopt = titopt.substr(seppos+MonHist::optsep.length());
+        titopt.erase(seppos);
+      }
+      MyTProfile *h = (MyTProfile*)new TProfile(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax,bopt.c_str());
 //      this->m_rootdeser  = h;
       mblocksize = (b->nxbin+2)*sizeof(double);
       double *ents = (double*)AddPtr(b,b->dataoff); //0
