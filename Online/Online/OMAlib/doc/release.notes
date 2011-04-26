@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.63 2010-10-22 10:54:27 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 2011-04-26 - Marco Cattaneo
+ - Change name of a variable from "error" to "err" to avoid nightlies log file
+   parser getting confused due to an icc remark
 
 ! ======== v3r5 ===============
 ! 20110407

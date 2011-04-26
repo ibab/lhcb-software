@@ -78,9 +78,9 @@ TH1* OMAEfficiency::exec(TH1* okH,
           // use the score confidence interval Agresti-Coull formula for more reasonable binomial errors  
           // (but include naif interval and constrain to [0-1])
           Float_t pstar= (c+2.)/(n+4.);
-          Float_t error = sqrt(pstar*(1-pstar)/(n+4.));
-          *(eyl+i) = TMath::Min(central,   TMath::Max(enaif,central-(pstar-error)) );
-          *(eyh+i) = TMath::Min(1-central, TMath::Max(enaif,(pstar+error)-central) );
+          Float_t err  = sqrt(pstar*(1-pstar)/(n+4.));
+          *(eyl+i) = TMath::Min(central,   TMath::Max(enaif,central-(pstar-err)) );
+          *(eyh+i) = TMath::Min(1-central, TMath::Max(enaif,(pstar+err)-central) );
         }
         *(y+i)=(float) central;
         outHist->SetBinContent(i+1,central);
