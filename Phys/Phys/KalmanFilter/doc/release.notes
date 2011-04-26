@@ -5,6 +5,12 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2011-04-26 - Marco Cattaneo
+ - Add missing dependency on DaVinciInterfaces. Needed to get right build order
+   now that DaVincInterfaces is in same project as this package
+ - Remove unacceptable disclaimer from all header files
+ - Remove CVS keywords from header files, not working with SVN
+
 !========================== KalmanFilter v1r1 2011-01-18 ===================
 
 ! 2011-01-14 - Vanya Belyaev

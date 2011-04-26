@@ -1,4 +1,3 @@
-// $Id: TrackKalmanFilter.cpp 114343 2010-12-03 11:16:31Z ibelyaev $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,17 +35,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *   By usage of this code one clearly states the disagreement 
- *    with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV ibelyaev@cern.ch
  *  @date   2010-12-02
- *  
- *                    $Revision: 114343 $
- *  Last modification $Date: 2010-12-03 12:16:31 +0100 (Fri, 03 Dec 2010) $
- *                 by $Author: ibelyaev $
- * 
  */
 // ============================================================================
 // make one step of Kalman filter 

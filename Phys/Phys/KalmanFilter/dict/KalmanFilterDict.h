@@ -1,4 +1,3 @@
-// $Id: $
 // ============================================================================
 #ifndef DICT_KALMANFILTERDICT_H 
 #define DICT_KALMANFILTERDICT_H 1
@@ -26,17 +25,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *   By usage of this code one clearly states the disagreement 
- *    with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
  *  @date   2011-01-13
- *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
- * 
  */
 // ============================================================================
 namespace

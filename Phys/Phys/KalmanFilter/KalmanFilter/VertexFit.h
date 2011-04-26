@@ -1,4 +1,3 @@
-// $Id: KalmanFilter.h 114335 2010-12-03 09:13:51Z ibelyaev $
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -43,17 +42,8 @@ class IParticleTransporter ;
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *   By usage of this code one clearly states the disagreement 
- *    with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-04-12
- *  
- *                    $Revision: 114335 $
- *  Last modification $Date: 2010-12-03 10:13:51 +0100 (Fri, 03 Dec 2010) $
- *                 by $Author: ibelyaev $
- * 
  */
 // ============================================================================
 namespace LoKi 
