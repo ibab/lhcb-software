@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+!========================= RichAlignment v1r3 2011-04-27 =========================
 ! 2011-04-12 - Chris Jones
  - Fix some bugs in the order of arguments passed to richHisto2D
 
