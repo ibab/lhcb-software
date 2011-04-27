@@ -4105,12 +4105,16 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("08:00:00") ) ;
+        m_presenterInfo.setGlobalTimePoint( pres::s_Now ) ;
+        m_presenterInfo.setGlobalPastDuration( std::string("08:00:00") ) ;
         m_presenterInfo.setTimeC( pres::s_Now, std::string("08:00:00") );
         m_message = "History for last 8 hours";
       } else if ( "last 1 hour" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
         m_presenterInfo.setRwPastDuration( std::string("01:00:00") ) ;
+        m_presenterInfo.setGlobalTimePoint( pres::s_Now ) ;
+        m_presenterInfo.setGlobalPastDuration( std::string("01:00:00") ) ;
         m_presenterInfo.setTimeC( pres::s_Now, std::string("01:00:00") );
         m_message = "History for last hour";
       } else if ( "preset file" == history_entry ) {
@@ -4940,10 +4944,6 @@ void PresenterMainFrame::displayStatusAndComments( OnlineHistPage * page ) {
        ( "/OfflineDataQuality" == page -> folder() ) ) {
     m_pageDescriptionView -> retrieveListOfProblems( page->name() ,
                                                      m_savesetFileName ) ;
-  std::cout << "** after retrieve list of problems: onlineHistos.size " << m_presenterPage.onlineHistos().size() 
-            << " Last histo " 
-            << m_presenterPage.onlineHistos()[m_presenterPage.onlineHistos().size()-1]->histo << std::endl;
-
   }
   m_pageDescriptionView->LoadBuffer( page->doc().c_str());
   m_pageDescriptionView->DataChanged() ;

@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-27 - Olivier Callot
+ - fix a crash when teh pageis empty in a debug statement
+ - History by 1 hour and by 8 hours now working.
+
+! 2011-04-27 - Olivier Callot
  - reload the page if the doc is non blank before any use of it. 
  - No page reload after alarm list update if we are loading a page.
 
