@@ -1,7 +1,9 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
-
+! 2011-04-27 - Tomasz Szumlak
+ - fixed uninitialized fields signalled by the coverity tool
+ 
 !========================= VeloAlgorithms v5r3 2010-12-07 =======================
 ! 2010-12-06 - Tomasz Szumlak
  - fixed Win warning - changed type of m_hitSigmas and m_incSigmas

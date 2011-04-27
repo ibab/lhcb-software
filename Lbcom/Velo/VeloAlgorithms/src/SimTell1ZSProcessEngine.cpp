@@ -41,6 +41,7 @@ void SimTell1ZSProcessEngine::initTableMembers()
   std::memset((m_sumThresholds),0,sizeof(VeloTELL1::SumThresholds));
   std::memset((m_clusters), 0, sizeof(VeloTELL1::TELL1Cluster));
   std::memset((m_adcs), 0, sizeof(VeloTELL1::TELL1ADC));
+  m_boundaryStrips = 0;  
 }
 //=============================================================================
 int SimTell1ZSProcessEngine::velo_zs_process(int zs_enable,

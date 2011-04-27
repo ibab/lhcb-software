@@ -29,7 +29,10 @@ DECLARE_ALGORITHM_FACTORY( VeloClusterMaker );
 //=============================================================================
 VeloClusterMaker::VeloClusterMaker( const std::string& name,
                                     ISvcLocator* pSvcLocator) 
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_sensor ( 0 ),
+    m_isDebug ( false ),
+    m_isVerbose ( false )
 {
   declareProperty( "InputData",  m_inputContainer  = 
 		   LHCb::VeloDigitLocation::Default );

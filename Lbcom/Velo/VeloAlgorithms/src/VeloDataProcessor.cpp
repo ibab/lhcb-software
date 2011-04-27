@@ -27,7 +27,8 @@ VeloDataProcessor::VeloDataProcessor( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_inputContainer ( LHCb::MCVeloFELocation::Default ),
-    m_outputVeloDigit ( LHCb::VeloDigitLocation::Default )
+    m_outputVeloDigit ( LHCb::VeloDigitLocation::Default ),
+    m_tanh0 ( 0. )
   {
   declareProperty("InputContainer", m_inputContainer);
   declareProperty("NonLinear", m_nonLinear = true );

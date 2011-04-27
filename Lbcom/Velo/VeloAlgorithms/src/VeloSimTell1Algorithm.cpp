@@ -51,6 +51,7 @@ VeloSimTell1Algorithm::VeloSimTell1Algorithm( const std::string& name,
     m_procInfos ( 0 ),
     m_procInfosLoc ( VeloProcessInfoLocation::Default ),
     m_algorithmType ( ),
+    m_tell1Process ( 0 ),
     m_isEnable ( false ),
     m_isInitialized ( false )
 {
