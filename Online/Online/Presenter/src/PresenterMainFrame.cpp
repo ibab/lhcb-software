@@ -4158,11 +4158,9 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     try {
       removeHistogramsFromPage();
       OnlineHistPage* page = m_histogramDB -> getPage( pageName ) ;
-      if (m_verbosity >= pres::Verbose) std::cout << "Loading page: "  << m_currentPageName << std::endl;
-
-      if (m_verbosity >= pres::Debug) page->dump();
 
       if (0 != page) {
+        if ( "" != page->doc() ) page->load(); //== Update the comments -> force a complete re-read...
         std::string partition = currentPartition();
         m_presenterPage.clear();
         m_presenterPage.setName( page->name() );
@@ -5116,7 +5114,7 @@ std::string PresenterMainFrame::timeStamp ( ) {
 //  
 //=========================================================================
 void PresenterMainFrame::reAccessPage( ) {
-  if ( m_refreshingPage ) {
+  if ( m_refreshingPage && !m_loadingPage ) {
     std::string name = m_presenterPage.name();
     std::string timePoint = m_presenterInfo.rwTimePoint();
     std::string pastDuration = m_presenterInfo.rwPastDuration();

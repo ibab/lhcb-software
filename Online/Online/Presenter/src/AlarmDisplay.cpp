@@ -178,7 +178,7 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
 
 // called every time a new alarm/warning is published or cleared
 void AlarmDisplay::infoHandler() {  
-  std::cout << "AlarmDisplay::InfoHandler: List of Analysis Alarms has changed, alarm refreshing enabled=" 
+  std::cout << "$$AlarmDisplay::InfoHandler: List of Analysis Alarms has changed, alarm refreshing enabled=" 
             << m_enabled <<std::endl;
   
   if(m_enabled) {
@@ -190,13 +190,13 @@ void AlarmDisplay::infoHandler() {
       prevstatusText = m_mainFrame->getStatusBarText(2);
     }
     m_mainFrame->setStatusBarText("Analysis Alarms have changed! reloading them...", 2);
-    sleep(3); // give time to analysis to end
+    //sleep(3); // give time to analysis to end
     listAlarmsFromHistogramDB();
     m_mainFrame->histogramDB()->refresh();
     m_mainFrame->clearAlarmPages();
     m_mainFrame->setStatusBarText(prevstatusText.c_str(),2);
     m_mainFrame->reAccessPage();
   }
-  std::cout << "AlarmDisplay::InforHandler teminated." << std::endl;
+  std::cout << "$$AlarmDisplay::InforHandler teminated." << std::endl;
 }
 
