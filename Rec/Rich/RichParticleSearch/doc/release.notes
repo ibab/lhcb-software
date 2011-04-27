@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r1 2011-04-27 =========================
 ! 2011-04-22 - Marco Cattaneo
  - Remove unneccessary DaVinciInterfaces include
 
