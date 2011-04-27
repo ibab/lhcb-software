@@ -29,9 +29,13 @@ typedef std::map<unsigned int, ITPair> SECTORS;
 SmartVeloErrorBankDecoder::SmartVeloErrorBankDecoder( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_isDebug ( false ),
     m_rawEvent ( 0 ),
     m_errorBank ( 0 ),
-    m_bankLength ( )
+    m_bankLength ( ),
+    m_bankVersion ( 0 ),
+    m_bankType ( 0 ),
+    m_magicPattern ( 0 )
 {
   declareProperty("PrintBankHeader", m_printBankHeader=0);
   declareProperty("RawEventLocation",
