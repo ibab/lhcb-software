@@ -3,9 +3,9 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+!========================= L0Calo v11r3 2011-04-27 =========================
 ! 2011-04-22 - Olivier Deschamps
   - fix coverity (non) problems
-
 
 ! 2011-04-06 - Patrick Robbe
  - Change definition of L0Photon and L0Electron in the L0Calo trigger, 
