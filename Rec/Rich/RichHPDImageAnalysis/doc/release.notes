@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r7 2011-04-27 =========================
 ! 2011-04-15 - Chris Jones
  - Fix a seg. fault in the HPD imge fitting algorithm
 
