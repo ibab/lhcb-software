@@ -10,22 +10,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 
-#include "OTDAQ/IOTRawBankDecoder.h"
-#include "L0Interfaces/IL0DUFromRawTool.h"
-#include "Kernel/LHCbID.h"
-#include "LoKi/select.h"
-#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
-#include "Kernel/ICountContainedObjects.h"
-
-#include "Event/RawEvent.h"
-#include "Event/RawBank.h"
 #include "Event/ODIN.h"
-#include "Event/STCluster.h"
-#include "Event/VeloCluster.h"
-#include "Event/Track.h"
-
-//for velo count
-#include "boost/bind.hpp"
+#include "Event/RecSummary.h"
 
 class ISequencerTimerTool ;
 
@@ -51,14 +37,10 @@ public:
 
 private:
 
-  ISequencerTimerTool* m_timerTool ; ///< timer tool
+  ISequencerTimerTool* m_timerTool; ///< timer tool
   int m_timer ; ///< timer index
-  const IOTRawBankDecoder* m_rawBankDecoder;
-  std::string m_fromRawTool;
-  IL0DUFromRawTool* m_l0BankDecoder;
-  unsigned int m_evtCounter ;
-  const Rich::DAQ::IRawBufferToSmartIDsTool* m_richTool ;
-  const ICountContainedObjects* m_countVeloTracks;
+  unsigned long int m_evtCounter;
+  std::string m_recSummaryLoc;
 
 private:
 
@@ -68,46 +50,6 @@ private:
     if (msgLevel(MSG::VERBOSE)) 
       verbose() << "Filling " << var << " with " << number << endmsg ;
     tuple->column( var , number );
-  }
-
-  template <class TYPE>
-  bool safeExist  ( const std::string& location )
-  {
-    DataObject* obj = 0 ;
-    const StatusCode sc = evtSvc()->findObject( location , obj ) ;
-    return sc.isSuccess() && 0 != obj && 0 != dynamic_cast<TYPE*>( obj ) ;
-  }
-
-  /// generic templated method to extract the number of entries in a given location.
-  /// usage int n = number<LHCb::Particles>('/Event/Phys/MyParts/Particles')
-  template<class CLASS>
-  inline int number( const std::string& location)
-  {
-    return ( safeExist<CLASS>(location) ? (get<CLASS>(location))->size() : -1 ) ;
-  }
-
-  // velo count from Matthew David Needham
-  inline bool inCloneContainer(const std::vector<LHCb::Track*>& keepCont,
-                               const std::vector<LHCb::LHCbID>& vids) 
-  {
-
-    if (msgLevel(MSG::VERBOSE)) verbose() << "inClone " << vids.size() << endmsg ;
-
-    bool keep = true;
-    std::vector<LHCb::Track*>::const_iterator iter = keepCont.begin();
-    for (;iter != keepCont.end(); ++iter )
-    {
-      const std::vector<LHCb::LHCbID>& vids2 = (*iter)->lhcbIDs();
-      std::vector<LHCb::LHCbID> veloHits2; veloHits2.reserve(vids.size());
-      LoKi::select( vids2.begin(), vids2.end(), 
-                    std::back_inserter(veloHits2),boost::bind(&LHCb::LHCbID::isVelo,_1) );
-      if (std::equal(vids.begin(), vids.end(), veloHits2.begin()))
-      {
-        keep = false;
-        break;
-      }
-    }
-    return keep;
   }
 
 };

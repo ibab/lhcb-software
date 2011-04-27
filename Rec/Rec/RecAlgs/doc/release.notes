@@ -4,8 +4,12 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-04-27 - Chris Jones
+ - Update TimingTuple to use information from RecSummary, instead of 
+   recomputing it from scratch.
+
 !========================= RecAlgs v2r3 2011-04-05 =========================
-! 2011-04-05 Chris Jones
+! 2011-04-05 - Chris Jones
  - remove extra ; + add svn:ignore
 
 !========================= RecAlgs v2r2 2011-03-09 =========================
