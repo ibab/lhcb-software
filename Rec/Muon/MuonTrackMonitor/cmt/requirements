@@ -1,5 +1,5 @@
 package MuonTrackMonitor
-version           v2r1p1
+version           v2r2
 
 branches src cmt doc options python
 include_path none
