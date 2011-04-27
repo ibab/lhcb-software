@@ -4070,6 +4070,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                                 const std::string & pastDuration ) {
 
   std::cout << timeStamp() << "Enter loadSelectedPageFromDB for " << pageName << std::endl;
+  std::string message ("" );
 
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
     TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
@@ -4173,12 +4174,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
              pres::EditorOnline == m_presenterInfo.presenterMode() ||
              isBatch() ) {
           m_presenterPage.setDimBrowser( m_dimBrowser );
-          std::string message ("" );
           m_presenterPage.loadFromDIM( partition, false, message );
-          if ( "" != message && !isBatch() ) {
-            new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
-                         kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
-          }
           if ( m_referencesOverlayed ) { 
             m_presenterPage.uploadReference( m_analysisLib,
                                              m_presenterInfo.referenceRun(),
@@ -4236,6 +4232,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
     m_loadingPage = false;
     if ( m_resumePageRefreshAfterLoading &&
+         "" == message && 
          ( pres::Online == m_presenterInfo.presenterMode())) startPageRefresh() ;
 
     gVirtualX->SetCursor(GetId(),
@@ -4245,6 +4242,12 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
   else disableReferenceOverlay();
 
   m_displayMode = pres::Page;
+  std::cout << "  ==== Page has been loaded and displayed." << std::endl;
+  if ( "" != message && !isBatch() ) {
+    std::cout << "Display TGMsgBox with " << message << std::endl;
+    new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
+                 kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
+  }
 }
 
 //==============================================================================
@@ -4715,10 +4718,12 @@ void PresenterMainFrame::refreshPage() {
   if ( "" != message && !isBatch() ) {
     m_pageRefreshTimer->TurnOff();
     m_refreshingPage = false;
+    std::cout << "Error message : " << message << std::endl;
     new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
                  kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
     stopPageRefresh();
   }
+  std::cout << "=== Page refreshed." << std::endl;
 }
 
 //==============================================================================
@@ -4931,6 +4936,8 @@ void PresenterMainFrame::displayStatusAndComments( OnlineHistPage * page ) {
   // Update the page name in the status bar.
   if ( ! isBatch() ) m_statusBarTop -> SetText( page->name().c_str(), 1 ) ;
 
+  // Reload page in db in case of automatic changes (in the comments for example)
+  page -> load() ;
   m_pageDescriptionView->Clear();
 
   // If this is a Shift page, prepend to the page description

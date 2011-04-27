@@ -227,7 +227,7 @@ namespace pres
 //  Brunel_FULL_45055_00004636_00001229_1_Hist.root
 
 //  static TPRegexp s_offlineJobRegexp("^([^_]+)_(Ex)?_?(\\d+)_(\\d+)_?(\\d+)?_?(\\d+)?_?(Hist)?\\.root$");
-  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci|Boole|Gauss)(_.+|)\\.root$"); 
+  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci|Boole|Gauss|BrunelDaVinci)(_.+|)\\.root$"); 
 
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;

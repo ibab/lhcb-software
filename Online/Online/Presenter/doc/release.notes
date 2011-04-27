@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-27 - Olivier Callot
+ - Allow access to offline files (Editor) with name starting by BrunelDaVinci
+ - Reload the page comments from the database when loading a page.
+
 ! 2011-04-21 - Olivier Callot
  - Protect unknown analysis algorithm
 
