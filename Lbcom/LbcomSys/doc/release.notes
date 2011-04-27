@@ -6,6 +6,45 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r3>2011-04-29 LbcomSys v10r3</A></H1><PRE>
+This version uses Gaudi v22r2 and LHCb v32r3
+
+- Development release for 2011 data
+
+- Packages updated: HltDAQ v2r9, L0Calo v11r3, L0DU v10r14, L0Muon v9r4,
+    L0MuonMonitor v2r2, RichMCTools v3r16, RichTools v2r34, VeloSimulation v3r9
+
+- In HltDAQ v2r9
+  . Disable ICC warnings (see also Savannah task 20188)
+  . Funnel all file access in ConfigTarFileAccessSvc through a single member
+    function in order to prepare for closing/opening the file 'on demand'
+  . Add ConfigZipFileAccessSvc
+  . Silence coverity warnings in ConfigDBAccessSvc and PropertyConfigSvc
+    (neither of which is an actual bug)
+
+- In L0Calo v11r3
+  . Change definition of L0Photon and L0Electron in the L0Calo trigger,
+    is set by option for the moment (UseNewElectron, false by default)
+
+- In L0DU v10r14
+  . Remove obsolete files ETC.opts, ETCSeq.opts, ReadETC.opts, WriteETC.opts
+
+- In L0MuonMonitor v2r2
+  . L0MuonMonitorInput : allow to mask some channels in the comparison with
+                         muon data
+
+- In RichMCTools v3r16, RichTools v2r34
+  . Remove some DC06 specific hacks
+
+- In RichTools v2r34
+  . Clean up the mirror segment finder tool.
+  . Add calls to the UpdateManager unregister method as needed.
+  . Add some call backs to make sure cached data is updated on condition changes.
+
+- In L0Calo v11r3, L0DU v10r14, L0Muon v9r4, L0MuonMonitor v2r2,
+     VeloSimulation v3r9
+  . Fix UNINIT_CTOR warnings from coverity
+
 </PRE><H1><A NAME=v10r2>2011-04-06 LbcomSys v10r2</A></H1><PRE>
 This version uses Gaudi v22r1 and LHCb v32r2
 
