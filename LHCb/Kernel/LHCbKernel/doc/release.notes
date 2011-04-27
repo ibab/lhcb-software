@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-04-27 - Chris Jones
+ - Add LHCb::RichSmartID::Vector to python dictionary
+
 !========================= LHCbKernel v13r1 2011-04-26 =========================
 ! 2011-04-20 - Marco Cattaneo
  - Add IEventTupleTool interface, previously in DaVinciInterfaces

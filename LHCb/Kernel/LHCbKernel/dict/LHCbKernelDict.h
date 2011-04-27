@@ -88,9 +88,9 @@ namespace {
     Rich::Particles                                     m_RICH_Particles;
     Rich::RichSideVector                                m_RICH_Side_V;
     Rich::Sides                                         m_RICH_Sides;
-    //
-    std::pair<std::string,double>     m_pair_1 ;
-    std::pair<std::string,StatEntity> m_pair_2 ;
+    LHCb::RichSmartID::Vector                           m_RICH_SmartID_V;
+    std::pair<std::string,double>                       m_pair_1 ;
+    std::pair<std::string,StatEntity>                   m_pair_2 ;
     // end instantiations
   };
 }

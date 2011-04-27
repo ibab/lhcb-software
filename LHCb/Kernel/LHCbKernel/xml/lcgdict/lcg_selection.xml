@@ -81,6 +81,7 @@
   <function pattern="Rich::text*" />
 
   <class name="LHCb::RichSmartID"/>
+  <class name="LHCb::RichSmartID::Vector"/>
 
 <!-- Counters in TES --> 
 
