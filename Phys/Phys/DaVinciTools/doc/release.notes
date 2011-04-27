@@ -4,6 +4,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-04-27 - Patrick Koppenburg
+ - DaVinciInit: adapt to bug fix #80947 (unsigned long memory)
+
 ! 2011-04-26 - Patrick Koppenburg
  - DaVinciInit: Foresee the case of -1 PrintFreq.
    . Remove boost signleton stuff added by Chris.

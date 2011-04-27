@@ -33,6 +33,6 @@ private:
   IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
   bool m_print ; ///< Print event and run
   unsigned int m_increment ; ///< Number of events to measure memory on
-  int m_lastMem ; ///< Last memory
+  unsigned long m_lastMem ; ///< Last memory
 };
 #endif // DAVINCIINIT_H

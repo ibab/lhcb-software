@@ -91,7 +91,7 @@ StatusCode DaVinciInit::execute() {
   
   counter("Events")++ ;
   unsigned int nev = counter("Events").nEntries() ;
-  int mem = System::virtualMemory();
+  unsigned long mem = System::virtualMemory();
 
   if (msgLevel(MSG::DEBUG)) debug() << nev << " memory: " << mem << " KB" << endmsg ;
   
