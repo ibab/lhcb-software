@@ -205,7 +205,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
           if ( !existed ) {  
             (*itT).histos.push_back( DisplayHistogram( myHist ) );
             existed = true;
-            std::cout << myHist->task() << " ++ Histo   " << myHist->identifier() << std::endl;
+            std::cout << myHist->task() << " ++ Histo   " << myHist->identifier() << " myHist " << myHist << std::endl;
             break;
           }
           
@@ -217,7 +217,7 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
         newTask.dead = false;
         newTask.histos.push_back( DisplayHistogram( myHist ) );
         m_tasks.push_back( newTask );
-        std::cout << myHist->task() << " ** Histo   " << myHist->identifier() << std::endl;
+        std::cout << myHist->task() << " ** Histo   " << myHist->identifier() << " myHist " << myHist << std::endl;
       }
     } else {    //== Analysis histograms: Get the source histograns
       anaHistos.push_back( myHist );
@@ -613,6 +613,7 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
       (*itA).displayHisto->createDummyHisto();
     }
   }
+  std::cout << "Analysis prepared, size " << m_analysis.size() << std::endl;
   return true;
 }
 

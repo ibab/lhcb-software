@@ -4210,11 +4210,9 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                            m_presenterInfo.currentTCK() );
           m_presenterPage.buildAnalysisHistos( m_analysisLib, false );
         }
-        std::cout << "Analysis prepared" << std::endl;
 
         // Display status bar and comments
         displayStatusAndComments( page ) ;
-
         std::cout << "  Status page displayed." << std::endl;
 
         m_presenterPage.drawPage( editorCanvas, m_analysisLib, m_fastHitMapDraw );
@@ -4690,9 +4688,9 @@ void PresenterMainFrame::nextInterval() {
 // Refresh pages in refresh mode
 //==============================================================================
 void PresenterMainFrame::refreshPage() {
+  if ( !m_refreshingPage ) return;
 
   std::cout << timeStamp() << " refreshing..." << std::endl;
-  if ( !m_refreshingPage ) return;
   
   editorCanvas->cd();
 
@@ -4936,8 +4934,6 @@ void PresenterMainFrame::displayStatusAndComments( OnlineHistPage * page ) {
   // Update the page name in the status bar.
   if ( ! isBatch() ) m_statusBarTop -> SetText( page->name().c_str(), 1 ) ;
 
-  // Reload page in db in case of automatic changes (in the comments for example)
-  page -> load() ;
   m_pageDescriptionView->Clear();
 
   // If this is a Shift page, prepend to the page description
@@ -4946,6 +4942,10 @@ void PresenterMainFrame::displayStatusAndComments( OnlineHistPage * page ) {
        ( "/OfflineDataQuality" == page -> folder() ) ) {
     m_pageDescriptionView -> retrieveListOfProblems( page->name() ,
                                                      m_savesetFileName ) ;
+  std::cout << "** after retrieve list of problems: onlineHistos.size " << m_presenterPage.onlineHistos().size() 
+            << " Last histo " 
+            << m_presenterPage.onlineHistos()[m_presenterPage.onlineHistos().size()-1]->histo << std::endl;
+
   }
   m_pageDescriptionView->LoadBuffer( page->doc().c_str());
   m_pageDescriptionView->DataChanged() ;

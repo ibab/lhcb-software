@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-04-27 - Olivier Callot
+ - remove the page reload.: It destroys the page description...
+
+! 2011-04-27 - Olivier Callot
  - Allow access to offline files (Editor) with name starting by BrunelDaVinci
  - Reload the page comments from the database when loading a page.
 
