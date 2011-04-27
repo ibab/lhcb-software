@@ -5,6 +5,91 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v11r4>2011-04-29 RecSys v11r4</A></H1><PRE>
+This version uses Gaudi v22r2 and LHCb v32r3
+
+- This is a development version of Rec, for use with 2011 data.
+
+- Modified packages: CaloPIDs v5r9, CaloReco v5r9, MuonID v8r1, 
+    MuonTrackMonitor v2r2, MuonTrackRec v3r5, GlobalReco v6r37, LumiAlgs v5r1,
+    RecoUpgrade v2r2, RecoUpgradeMC v1r3, RichAlignment v1r3,
+    RichHPDImageAnalysis v1r7, RichParticleSearch v1r1, RichRecQC v2r50,
+    RichRecTools v4r16, RichRecTrackTools v1r28, TrackFitEvent v5r9, 
+    TrackTools v4r5
+
+- In CaloPIDs v5r9
+  . Update CaloProcessor configurable with 'ExternalClusters' slot
+
+- In CaloReco v5r9
+  . update CaloProcessor configurable with 'MakeExternalClustersWithTag' and
+    'ExternalClusters' slots
+
+- In MuonID v8r1
+  . Implemented reading of new dll tuning (DLL_flag == 4) from database.
+  . Fixed small bugs.
+
+- In MuonTrackMonitor v2r2
+  . Disable use of TisTosTool in MuEffMonitor when DoTrigger property is True.
+
+- In MuonTrackRec v3r5
+  . Switch off clone killing when seed station is not M5.
+  . Reset shared hit list ("sameM") for each track in clone killing stage.
+  . Stop extrapolating beyond M1.
+  . When using strong clone killing, switch off normal clone killing.
+
+- In GlobalReco v6r37
+  . Remove from ChargedProtoParticleMaker the option to reuse an existing
+    TES location
+  . Add a work around to the insert call in ChargedProtoParticleMaker that
+    could potentially fail if more than one Track location is used.
+  . Update ChargedProtoParticleMoni to no longer rely on the assumption that
+    a ProtoParticle will always have the same key as its parent Track
+
+- In LumiAlgs v5r1
+  . update logic in GetLumiParameters to accept nBunches from online database
+    even if wrongBucketFlag is on (for limited period beginning 2011 run)
+
+- In RecoUpgrade v2r2
+  . modify covariance matrix
+
+- In RecoUpgradeMC v1r3
+  . Add initial and delete created class
+
+- In RichAlignment v1r3
+  . Fix some bugs in the order of arguments passed to richHisto2D
+  . Bug fixes to the alignment and calibration scripts, to properly handle
+    differences between the CET and GMT timezones.
+  . Some improvements to the alignment monitor algorithm, to use the RICH
+    methods to book and fill histograms.
+
+- In RichHPDImageAnalysis v1r7
+  . Fix a seg. fault in the HPD imge fitting algorithm
+  . Bug fixes to the alignment and calibration scripts to handle CET and GMT
+    time zones correctly.
+
+- In RichParticleSearch v1r1
+  . Remove unneccessary DaVinciInterfaces include
+
+- In RichRecQC v2r50
+  . Revert a small hack in Pixel QC algorithm for DC06 compatibility
+
+- In RichRecTools v4r16
+  . Remove some DC06 specific hacks.
+
+- In RichRecTrackTools v1r28
+  . minor cleanups (remove CVS comments)
+  . Remove the caching of some variables in the segment creator tool
+
+- In TrackFitEvent v5r9
+  . Fix KalmanFitResult copy constructor from a KalmanFitResult
+  . Fix some initialised variables in constructor of FitNode, KalmanFitResult,
+    MuonMeasurements and VeloPixMeasurements
+
+- In TrackTools v4r5
+  . VeloMuonBuilder: o info on the muon chamber as extra info on the track
+                     o initialisation of track type before track fit
+                     o Fix a memory leak
+
 </PRE><H1><A NAME=v11r3>2011-04-06 RecSys v11r3</A></H1><PRE>
 This version uses Gaudi v22r1 and LHCb v32r2
 
