@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r34 2011-04-27 =========================
 ! 2011-04-13 - Chris Jones
  - Clean up the mirror segment finder tool. 
  - Remove some DC06 specific hacks.
