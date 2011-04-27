@@ -4,6 +4,8 @@
 ! Purpose     : Package for the reconstruction with truth in upgraded detector
 !               classes
 !-----------------------------------------------------------------------------
+
+!========================= RecoUpgradeMC v1r2 2011-04-27 =========================
 ! 2011-04-15 Wenbin Qian
 - add initial and delete created class
 
@@ -12,7 +14,6 @@
  - add cluster sort for patlhcbid
  - add two new counters for efficiency study
  
-
 !========================== RecoUpgradeMC v1r1 2010-09-24 =====================
 ! 2010-10-01 - Rob Lambert
  - Fix windows warnings, converting double to float, this in initializers
