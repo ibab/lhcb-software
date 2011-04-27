@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r50 2011-04-27 =========================
 ! 2011-04-14 - Chris Jones
  - Revert a small hack in Pixel QC algorithm for DC06 compatibility
 
