@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2011-04-27 - Patrick Koppenburg
+ - Remove obsolete FilterCriterionResult. Completes Task #12929.
+
 !========================= PhysEvent v11r13 2011-01-31 =========================
 ! 2011-01-13 - Marco Cattaneo
  - Fix icc warnings
