@@ -9,6 +9,7 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+!========================= MuonTrackRec v3r5 2011-04-27 =========================
 ! 2011-04-11 - Jeroen Van Tilburg
  - Switch off clone killing when seed station is not M5.
  - Reset shared hit list ("sameM") for each track in clone killing stage.
