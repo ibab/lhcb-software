@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= VeloSimulation v3r9 2011-04-27 =========================
 ! 2011-04-19 - David Hutchcroft
  - Added explicit setting of variables in VeloSim::VeloSim to remove Coventry
    defect 17434 (the variables were set before use so no change in output)
