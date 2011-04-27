@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r37 2011-04-27 =========================
 ! 2011-04-16 - Chris Jones
  - Remove from ChargedProtoParticleMaker the option to reuse an existing
    TES location
