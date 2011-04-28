@@ -770,7 +770,9 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //      }
       std::string titopt = tit;
       std::string bopt;
-      if (int seppos=titopt.find(MonHist::optsep) != std::string::npos)
+      size_t seppos;
+      seppos = titopt.find(MonHist::optsep);
+      if (seppos != std::string::npos)
       {
         bopt = titopt.substr(seppos+MonHist::optsep.length());
         titopt.erase(seppos);
@@ -805,7 +807,9 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //      }
       std::string titopt = tit;
       std::string bopt;
-      if (int seppos=titopt.find(MonHist::optsep) != std::string::npos)
+      size_t seppos;
+      seppos = titopt.find(MonHist::optsep);
+      if (seppos != std::string::npos)
       {
         bopt = titopt.substr(seppos+MonHist::optsep.length());
         titopt.erase(seppos);
@@ -846,7 +850,9 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //      }
       std::string titopt = tit;
       std::string bopt;
-      if (int seppos=titopt.find(MonHist::optsep) != std::string::npos)
+      size_t seppos;
+      seppos = titopt.find(MonHist::optsep);
+      if (seppos != std::string::npos)
       {
         bopt = titopt.substr(seppos+MonHist::optsep.length());
         titopt.erase(seppos);
