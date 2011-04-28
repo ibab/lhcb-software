@@ -2,7 +2,8 @@
 
 	* python/LbRelease/rcs.py: moved the generation of Eclipse configuration to GetPack
 	* python/LbRelease/GetPack.py: added option to disable the Eclipse configuration (keep Eclipse-friendly check out),
-	added option '-C' to use a different directory as base for the check out.
+	added option '-C' to use a different directory as base for the check out
+	added options to list packages, projects and versions in plain text or XML
 
 2011-04-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

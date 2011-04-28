@@ -10,6 +10,7 @@ from LbConfiguration.Repository import repositories as __repositories__, SVNRepo
 import rcs
 
 import __builtin__
+from LbConfiguration.Project import isProject
 if "set" not in dir(__builtin__):
     # pylint: disable-msg=W0622
     from sets import Set as set
@@ -390,6 +391,12 @@ class GetPack(Script):
                                help = "usable only in conjunction with --project to check out a project global tag/branch")
         self.parser.add_option("-C", "--directory", action = "store",
                                help = "directory from where to start the checkout (default: current directory)")
+        self.parser.add_option("--xml", action = "store_true",
+                               help = "enable XML output for the list option")
+        self.parser.add_option("--list", action = "store_true",
+                               help = "print the list of known packages/projects/versions; alone prints the list "
+                               "of packages, while with a package name prints the list of versions of that package; "
+                               "adding --project prints informations about projects instead of packages")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
@@ -442,20 +449,36 @@ class GetPack(Script):
         else:
             self.log.warning("Cannot find requirements file, 'cmt config' skipped.")
 
+    def _getModuleRepo(self, module, isProject = False):
+        """
+        Return the repository containing the package/project, asking the user if
+        it is in more than one repository.
+        """
+        try:
+            if isProject:
+                kind = "Project"
+                reps = self.projects[module]
+            else:
+                kind = "Package"
+                reps = self.packages[module]
+
+            if len(reps) > 1:
+                if self.options.batch:
+                    # never ask for a repository in batch mode
+                    raise Skip
+                lst = []
+                for k in reps:
+                    lst.append('%s (%s)' % (k, self.repositories[k]))
+                idx = selectFromList("%s '%s' in more than one repository, choose the repository." % (kind, module),
+                                     lst)
+            else:
+                idx = 0
+            return self.repositories[reps[idx]]
+        except KeyError:
+            return None
+
     def checkout(self, package, version = "trunk"):
-        reps = self.packages[package]
-        if len(reps) > 1:
-            if self.options.batch:
-                # never ask for a repository in batch mode
-                raise Skip
-            lst = []
-            for k in reps:
-                lst.append('%s (%s)' % (k, self.repositories[k]))
-            idx = selectFromList("Package '%s' in more than one repository, choose the repository." % package,
-                                 lst)
-        else:
-            idx = 0
-        rep = self.repositories[reps[idx]]
+        rep = self._getModuleRepo(package, isProject = False)
         if version.lower() not in ["trunk", "head"]: # head is always valid
             versions = rep.listVersions(package)
             if not versions:
@@ -506,15 +529,7 @@ class GetPack(Script):
         return (package, version, pkgdir)
 
     def checkoutProject(self, project, version):
-        reps = self.projects[project]
-        if len(reps) > 1:
-            lst = []
-            for k in reps:
-                lst.append('%s (%s)' % (k, self.repositories[k]))
-            idx = selectFromList("Project '%s' in more than one repository, choose the repository." % project, lst)
-        else:
-            idx = 0
-        rep = self.repositories[reps[idx]]
+        rep = self._getModuleRepo(project, isProject = True)
         if version.lower() != "head": # head is always valid
             versions = rep.listVersions(project, isProject = True)
             if not versions:
@@ -682,6 +697,8 @@ class GetPack(Script):
         if self.options.interactive:
             if self.options.project:
                 self.parser.error("Options '-i' and '--project' cannot be used at the same time")
+            if self.options.list:
+                self.parser.error("Options '-i' and '--list' cannot be used at the same time")
             # getpack.py -i [repos [hat]]
             self.selected_repository = None
             self.selected_hat = None
@@ -701,7 +718,7 @@ class GetPack(Script):
                     self.project_version = self.args.pop(0)
                 if self.args:
                     self.parser.error("requires maximum 2 arguments")
-            else:
+            elif not self.options.list:
                 self.parser.error("project name is required")
             # I want to use the bare version number and not the conventional one
             if self.project_version and self.project_version.startswith(self.project_name.upper() + "_"):
@@ -714,8 +731,8 @@ class GetPack(Script):
                     self.requested_package_version = self.args.pop(0)
                 if self.args:
                     self.parser.error("requires maximum 2 arguments")
-            else:
-                self.parser.error("package name is required unless '-i' is used")
+            elif not self.options.list:
+                self.parser.error("package name is required unless '-i' or '--list' is used")
 
         if (self.project_version or self.requested_package_version or "").endswith('b'):
             # version ending with 'b' implies --branches
@@ -827,19 +844,17 @@ class GetPack(Script):
             for p in pkgs:
                 print "\t%s\t%s" % (p, skipped_packages[p])
 
+    def _fixProjectNameCase(self, name):
+        # Check if the project is known using a case insensitive comparison
+        for known_proj in self.projects:
+            if name.upper() == known_proj.upper():
+                # ensure that we use the right case when talking to the repository
+                return known_proj
+        self.log.error("Unknown project '%s'!", name)
+        return None
+
     def getproject(self):
-        if self.project_name:
-            # Check if the project is known using a case insensitive comparison
-            found = False
-            for known_proj in self.projects:
-                if self.project_name.upper() == known_proj.upper():
-                    # ensure that we use the right case when talking to the repository
-                    self.project_name = known_proj
-                    found = True
-                    break # no reason to continue looping
-            if not found:
-                self.log.error("Unknown project '%s'!", self.project_name)
-                self.project_name = None
+        self.project_name = self._fixProjectNameCase(self.project_name)
         if self.project_name is None:
             self.project_name = self.askProject()
 
@@ -876,13 +891,169 @@ class GetPack(Script):
                 self.log.error("Problems opening the 'project.cmt' file. %s", x)
         print "Checked out project %s %s in '%s'" % proj
 
+    def _makeListXML(self, doPackages = False):
+        """
+        Create the DOM document for the list of projects/packages.
+        """
+        import xml.dom
+        impl = xml.dom.getDOMImplementation()
+        doc = impl.createDocument(None, "projects", None)
+
+        def nestedAdd(dict, path, value = None):
+            """
+            Add an entry to a nested dictionary.
+            """
+            if value is None:
+                value = path
+            if "/" in path:
+                parent, child = path.split("/", 1)
+                # ensure that we have a dictionary to pass to the recursion
+                # (needed if a hat appears as a package too)
+                if parent not in dict or not hasattr(dict[parent], "__setitem__"):
+                    dict[parent] = {}
+                nestedAdd(dict[parent], child, value)
+            else:
+                if not path in dict: # do not overwrite
+                    dict[path] = value
+
+        def dict2tree(parent, dct, top = True):
+            """
+            Create nested elements from a nested dictionary.
+            """
+            for k in sorted(dct.keys()):
+                if type(dct[k]) is str:
+                    el = doc.createElement("package")
+                    el.setAttribute("fullname", dct[k])
+                else:
+                    el = doc.createElement(top and "project" or "hat")
+                    dict2tree(el, dct[k], top = False)
+                el.setAttribute("name", k)
+                parent.appendChild(el)
+
+        if doPackages:
+            # get the list of packages in the known repositories
+            packages = {}
+            for r in self.repositories.values():
+                if hasattr(r, "modules"):
+                    packages.update(r.modules)
+            # prepare the list of packages as:
+            # { "Proj1":
+            #    { "Hat1":
+            #      { "Hat2":
+            #        { "Package": "Hat1/Hat2/Package" }
+            #      }
+            #    }
+            # }
+            projects = {}
+            for pack in packages:
+                proj = packages[pack]
+                nestedAdd(projects, "%s/%s" % (proj, pack), pack)
+        else:
+            projects = {}
+            for p in self.projects:
+                projects[p] = {}
+
+        # create the XML structure
+        dict2tree(doc.documentElement, projects)
+        return doc.toprettyxml()
+
+    def _list_packages(self):
+        """
+        List function specialized in packages.
+        """
+        if self.requested_package:
+            package = self.requested_package
+            # in this case we need to print the versions of the package
+            rep = self._getModuleRepo(package, isProject = False)
+            if rep:
+                versions = rep.listVersions(package)
+                default = guessDefaultVersion(package)
+                if not self.options.xml:
+                    for v in versions:
+                        if v == default:
+                            print v, "(default)"
+                        else:
+                            print v
+                else:
+                    # @todo: factor out the generation of XML for versions
+                    import xml.dom
+                    impl = xml.dom.getDOMImplementation()
+                    doc = impl.createDocument(None, "package", None)
+                    top = doc.documentElement
+                    top.setAttribute("name", package.rsplit("/", 1)[-1])
+                    top.setAttribute("fullname", package)
+                    vers = doc.createElement("versions")
+                    for v in versions:
+                        el = doc.createElement("version")
+                        if v == default:
+                            el.setAttribute("default", "true")
+                        el.appendChild(doc.createTextNode(v))
+                        vers.appendChild(el)
+                    top.appendChild(vers)
+                    print doc.toprettyxml()
+            else:
+                self.log.error("Unknown package '%s'!", self.requested_package)
+        else:
+            if not self.options.xml:
+                for p in self.packages:
+                    print p
+            else:
+                print self._makeListXML(doPackages = True)
+
+    def _list_projects(self):
+        """
+        List function specialized in packages.
+        """
+        if self.project_name:
+            # in this case we need to print the versions of the project
+            project = self._fixProjectNameCase(self.project_name)
+            if not project:
+                return
+            # no need to check the repository because it is implicit in the previous check
+            rep = self._getModuleRepo(project, isProject = True)
+            versions = rep.listVersions(project, isProject = True)
+            if not self.options.xml:
+                for v in versions:
+                    print v
+            else:
+                # @todo: factor out the generation of XML for versions
+                import xml.dom
+                impl = xml.dom.getDOMImplementation()
+                doc = impl.createDocument(None, "project", None)
+                top = doc.documentElement
+                top.setAttribute("name", project)
+                vers = doc.createElement("versions")
+                for v in versions:
+                    el = doc.createElement("version")
+                    el.appendChild(doc.createTextNode(v))
+                    vers.appendChild(el)
+                top.appendChild(vers)
+                print doc.toprettyxml()
+        else:
+            if not self.options.xml:
+                for p in self.projects:
+                    print p
+            else:
+                print self._makeListXML(doPackages = False)
+
+    def list(self):
+        """
+        Produce the list of packages/projects/versions in plain text or XML.
+        """
+        if self.options.project:
+            self._list_projects()
+        else:
+            self._list_packages()
+
     def main(self):
         try:
             # Switch to the working directory
             if self.options.directory:
                 self.log.debug("Switching to directory '%s'", self.options.directory)
                 os.chdir(self.options.directory)
-            if self.options.project:
+            if self.options.list:
+                self.list()
+            elif self.options.project:
                 self.getproject()
             else:
                 self.getpack()
