@@ -110,14 +110,18 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
       if (message.isAbort()) {
         error=true;
       } else {
-        std::string previousSaveset = m_mainFrame->savesetFileName();
-        m_mainFrame->setSavesetFileName(message.saveSet());
+        //== save context
         bool globalHistoryByRunFlag =  m_presenterInfo-> globalHistoryByRun();
-        m_presenterInfo->setGlobalHistoryByRun(false) ;
-
-        m_mainFrame->setStatusBarText(message.saveSet().c_str(),2);
+        std::string previousSaveset = m_mainFrame->savesetFileName();
         const pres::PresenterMode prevPresenterMode = m_mainFrame->presenterMode();
+
+        //== Set access parameters
+        m_presenterInfo->setGlobalHistoryByRun(false) ;
         m_mainFrame->setPresenterModeVariable(History);
+        m_mainFrame->setSavesetFileName(message.saveSet());
+        m_mainFrame->setStatusBarText(message.saveSet().c_str(),2);
+
+        //== Display it
         m_mainFrame->addHistoToPage( message.hIdentifier() );
         m_mainFrame->setDisplayModeVariable(Alarm);
         m_mainFrame->displaySimpleHistos();
@@ -125,7 +129,8 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
         char header[100];
         sprintf( header, "%s message %3d", message.levelString(), msgId );
         m_mainFrame->setTopStatusBarText( header, 1);
-        
+
+        //== restore access parameters
         m_mainFrame->setPresenterModeVariable(prevPresenterMode);
         m_mainFrame->setSavesetFileName(previousSaveset); 
         m_presenterInfo->setGlobalHistoryByRun(globalHistoryByRunFlag) ;
