@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-28 - Olivier Callot
+ - Protect intereference between page display and alarm list update
+
 ! 2011-04-27 - Olivier Callot
  - fix a crash when teh pageis empty in a debug statement
  - History by 1 hour and by 8 hours now working.

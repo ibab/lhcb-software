@@ -190,10 +190,8 @@ void AlarmDisplay::infoHandler() {
       prevstatusText = m_mainFrame->getStatusBarText(2);
     }
     m_mainFrame->setStatusBarText("Analysis Alarms have changed! reloading them...", 2);
-    //sleep(3); // give time to analysis to end
+    sleep(3); // give time to analysis to end
     listAlarmsFromHistogramDB();
-    m_mainFrame->histogramDB()->refresh();
-    m_mainFrame->clearAlarmPages();
     m_mainFrame->setStatusBarText(prevstatusText.c_str(),2);
     m_mainFrame->reAccessPage();
   }

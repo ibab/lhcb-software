@@ -153,7 +153,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_folderItemsIt(NULL),
   m_folderItem(NULL),
   m_runDb( 0 ) ,
-  m_intervalPickerData(NULL)
+  m_intervalPickerData(NULL),
+  m_reAccess( false )
 {
 
   // only one presenter session allowed: Save in a global variable the current one.
@@ -1303,6 +1304,8 @@ void PresenterMainFrame::CloseWindow() {
 
   // delete RunDB interface object
   if ( m_runDb ) delete m_runDb ;
+
+  std::cout << timeStamp() << "Closing main window. Bye." << std::endl;
 
   gApplication->Terminate( 0 );
 }
@@ -4234,7 +4237,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     if ( m_resumePageRefreshAfterLoading &&
          "" == message && 
          ( pres::Online == m_presenterInfo.presenterMode())) startPageRefresh() ;
-
+    if ( m_reAccess ) reAccessPage();
     gVirtualX->SetCursor(GetId(),
                          gClient->GetResourcePool()->GetDefaultCursor());
   }
@@ -5111,15 +5114,23 @@ std::string PresenterMainFrame::timeStamp ( ) {
 }
 
 //=========================================================================
-//  
+//  Complete the alarm handling: Immediately, or delayed if refreshing
 //=========================================================================
 void PresenterMainFrame::reAccessPage( ) {
-  if ( m_refreshingPage && !m_loadingPage ) {
-    std::string name = m_presenterPage.name();
-    std::string timePoint = m_presenterInfo.rwTimePoint();
-    std::string pastDuration = m_presenterInfo.rwPastDuration();
-    std::cout << "** Force reload page " << name << " time " << timePoint << " duration " << pastDuration << std::endl;    
-    loadSelectedPageFromDB( name, timePoint, pastDuration );
-  }
+  if ( !m_loadingPage ) {
+    std::cout << "$$reAccess: refresh histDb" << std::cout;
+    histogramDB()->refresh();
+    clearAlarmPages();
+    m_reAccess = false;
+    if ( m_refreshingPage ) {
+      std::string name = m_presenterPage.name();
+      std::string timePoint = m_presenterInfo.rwTimePoint();
+      std::string pastDuration = m_presenterInfo.rwPastDuration();
+      std::cout << "** Force reload page " << name << " time " << timePoint << " duration " << pastDuration << std::endl;    
+      loadSelectedPageFromDB( name, timePoint, pastDuration );
+    } 
+  } else {
+    m_reAccess = true;
+  }     
 }
 //=========================================================================

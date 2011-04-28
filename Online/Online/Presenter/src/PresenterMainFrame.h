@@ -683,6 +683,7 @@ public:
   PresenterPage m_presenterPage;  ///< Contains the current page description and contents
   int m_trendDuration;
   int m_trendEnd;
+  bool m_reAccess;
 
   /// Display page name in status bar and load comments
   void displayStatusAndComments( OnlineHistPage * page ) ;
