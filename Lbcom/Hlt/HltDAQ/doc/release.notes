@@ -3,6 +3,8 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
+! 2011-04-28 - Gerhard Raven
+ - fix windows compile error in ConfigZipFileAccessSvc
 
 !========================= HltDAQ v2r9 2011-04-27 =========================
 ! 2011-04-21 - Marco Cattaneo
