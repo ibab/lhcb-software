@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-04-28 - Silvia Miglioranzi
+ - Tool to calulate the material budget was added:
+   RadLengthColl.cpp
+   RadLengthColl.h	   
+
 !======================== GaussTools v15r4 2009-11-04 ========================
 ! 2009-10-21 - Silvia Miglioranzi
  - Fix the warning message text (see previous entry in releases.notes) in order 
