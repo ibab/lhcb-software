@@ -8,7 +8,9 @@
 #include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/copy.hpp"
 #include "boost/iostreams/filter/zlib.hpp"
+#ifndef _WIN32
 #include "boost/iostreams/filter/bzip2.hpp"
+#endif
 #include "boost/iostreams/filtering_stream.hpp"
 #include "boost/iostreams/device/back_inserter.hpp"
 #include "boost/regex.hpp"
@@ -116,9 +118,11 @@ namespace ConfigZipFileAccessSvc_details {
                       s->push(io::zlib_decompressor(params));
                     }
                     break;
+#ifndef _WIN32
                 case 12 : 
                     s->push(io::bzip2_decompressor());
                     break;
+#endif
                 default:
                     cerr << " unknown compression algorithm " << i->second.compress << endl;
                     delete s;
