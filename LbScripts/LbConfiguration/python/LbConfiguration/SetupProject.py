@@ -1287,23 +1287,8 @@ class SetupProject:
 
         # prepare temporary requirements file
         req = open(os.path.join(tmp_dir,"requirements"),"w")
-        if not self.external_only and self.project_info.sys:
-            # if we were not asked only for external and the Sys package exists,
-            # we use it
-            req.write("use %s *\n" % self.project_info.sys)
 
-        # add user specified tags
-        for t in self.tag_add:
-            req.write("apply_tag %s\n"%t)
-
-        # prepare use statementes for externals (with default version)
-        # version override have to happen later
-        for e in self.args + self.ext_versions.keys() + self.site_externals:
-            # @todo:I do not like too much this few lines
-            if e != 'CASTOR' or not self.disable_CASTOR: # skip CASTOR
-                req.write("use %s v* LCG_Interfaces\n"%e)
-
-        # prepare use statementes for user packages
+        # prepare use statementes for user-requested packages
         use_hats = { 'XmlDDDB':'Det',
                      'XmlConditions':'Det',
                      'DecFiles':'Gen',
@@ -1325,6 +1310,22 @@ class SetupProject:
                 req.write("use %s %s %s\n"%(pack,ver,hat))
             else: # for any other case, just use the provided string
                 req.write("use %s\n"%u)
+
+        if not self.external_only and self.project_info.sys:
+            # if we were not asked only for external and the Sys package exists,
+            # we use it
+            req.write("use %s *\n" % self.project_info.sys)
+
+        # add user specified tags
+        for t in self.tag_add:
+            req.write("apply_tag %s\n"%t)
+
+        # prepare use statementes for externals (with default version)
+        # version override have to happen later
+        for e in self.args + self.ext_versions.keys() + self.site_externals:
+            # @todo:I do not like too much this few lines
+            if e != 'CASTOR' or not self.disable_CASTOR: # skip CASTOR
+                req.write("use %s v* LCG_Interfaces\n"%e)
 
         # set config versions
         # (the override of the versions have to be done after the package:
