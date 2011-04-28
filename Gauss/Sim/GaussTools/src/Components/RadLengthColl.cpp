@@ -1,0 +1,266 @@
+// $Id: $
+// Include files
+
+#include "CLHEP/Geometry/Point3D.h"
+///
+#include "G4Step.hh"
+#include "G4OpticalPhoton.hh"
+#include "G4Electron.hh"
+#include "G4Positron.hh"
+#include "G4Gamma.hh"
+#include "G4Timer.hh"
+///
+#include "GaudiKernel/MsgStream.h"
+//
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/NTuple.h"
+
+#include "GaudiKernel/INTupleSvc.h"
+
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IAuditorSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IConversionSvc.h"
+#include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/Chrono.h" 
+#include "GaudiKernel/Stat.h" 
+
+#include "GaudiKernel/GaudiException.h"
+/// stream
+#include <fstream>
+#include <cstdlib>
+#include <vector>
+// local
+#include "RadLengthColl.h"
+
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : RadLengthColl
+//
+// 2005-07-19 : Yasmine Sarah Amhis
+// 2009-05-29 : Silvia Migliranzi
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RadLengthColl );
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+RadLengthColl::RadLengthColl( const std::string& name, const std::string& type, const IInterface*  parent )
+  :GiGaStepActionBase( name , type, parent ){};
+
+
+//=============================================================================
+// Destructor
+//=============================================================================
+RadLengthColl::~RadLengthColl() {};
+
+
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode RadLengthColl::initialize()  {
+
+  debug() << "==> Initialize" << endmsg;
+  StatusCode scb = GiGaStepActionBase::initialize();
+  if( scb.isFailure() ) {
+    err() << "Error initializng base class" << endmsg;
+    return scb;
+  }
+
+  INTupleSvc* ntupleSvc = 0;
+  StatusCode sc= svcLoc()->service( "NTupleSvc" , ntupleSvc , true );
+  if( sc.isFailure()   ) 
+    { return Error("Unable to locate Ntuple Service ", sc ); }
+  
+  ntname = "/NTUPLES/FILE2";
+  info() << "ntupleSvc = " << ntupleSvc << endmsg;
+  NTupleFilePtr ntfile(ntupleSvc, ntname); 
+  if( !ntfile ) {
+    err() << "Could not access" << ntname << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  StatusCode status = StatusCode::SUCCESS;
+  ntname += "/RadLengthColl/100";
+  NTuplePtr m_matScan_PlaneDatas(ntupleSvc, ntname);
+  if ( !m_matScan_PlaneDatas ) {
+    m_matScan_PlaneDatas = ntupleSvc->book(ntname, CLID_ColumnWiseTuple, "RadL");
+    if ( 0!=m_matScan_PlaneDatas ) {
+      status = m_matScan_PlaneDatas->addItem ("Item",m_ntrk,0,100);
+      status = m_matScan_PlaneDatas->addIndexedItem ("ID",m_ntrk,m_planeID);  
+      status = m_matScan_PlaneDatas->addIndexedItem ("Xpos",m_ntrk,m_Xpos);
+      status = m_matScan_PlaneDatas->addIndexedItem ("Ypos",m_ntrk,m_Ypos);
+      status = m_matScan_PlaneDatas->addIndexedItem ("Zpos",m_ntrk,m_Zpos);
+      status = m_matScan_PlaneDatas->addIndexedItem ("eta",m_ntrk,m_eta);
+      status = m_matScan_PlaneDatas->addIndexedItem ("phi",m_ntrk,m_phi);
+      status = m_matScan_PlaneDatas->addIndexedItem ("cumradlgh",m_ntrk,m_cumradlgh);
+      status = m_matScan_PlaneDatas->addIndexedItem ("p2pradlgh",m_ntrk,m_p2pradlgh);
+      if( !status.isSuccess() ) {
+	err() << "Failure booking ntuples" << endmsg;
+	return StatusCode::FAILURE;
+      }
+    } else {
+      err() << "Ntuple already exist" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+
+
+  // Initialize ntuple variables:    
+  m_ntrk      = 0;
+  for (m_ntrk = 0; m_ntrk < 100; ++m_ntrk) 
+  {
+  m_planeID[m_ntrk]= 0;
+  m_Xpos[m_ntrk] = -9999.0;
+  m_Ypos[m_ntrk] = -9999.0;
+  m_Zpos[m_ntrk] = -9999.0;
+  m_eta[m_ntrk] = -9999.0;
+  m_phi[m_ntrk] = -9999.0;
+  m_cumradlgh[m_ntrk] = -9999.0;
+  m_p2pradlgh[m_ntrk] = -9999.0;
+  }
+  
+  
+  debug() << "==> Initialize successful" << endmsg;
+  return StatusCode::SUCCESS;
+};
+
+
+//=============================================================================
+// Scan Stepping Action
+//=============================================================================
+void RadLengthColl::UserSteppingAction ( const G4Step* theStep ) 
+{
+  
+  track = theStep->GetTrack();
+  partdef=track->GetDefinition();
+  ParticleName = partdef->GetParticleName();
+  thePreStepPoint = theStep->GetPreStepPoint();
+  Vol=thePreStepPoint->GetPhysicalVolume();
+  VOL=Vol->GetLogicalVolume();
+  initial_position = thePreStepPoint->GetPosition();
+  // initialize the counters at the origin of the track
+  if(initial_position[0] == 0 && initial_position[1] == 0 & initial_position[2] == 0 ){
+    theRadLength=0;
+    theCumulatedRadLength=0;
+    thePlane2PlaneRadLength=0;
+    index =0;
+    m_ntrk=0;
+  }
+  //
+  MaterialRadiationLength =VOL->GetMaterial()->GetRadlen();
+  StepLength = theStep->GetStepLength();
+  theRadLength = StepLength/MaterialRadiationLength;
+  theCumulatedRadLength += theRadLength;
+  thePlane2PlaneRadLength += theRadLength;
+  // searching for the dummy volumes where to fill RadLenght ntuple 
+  VolName = (std::string) Vol->GetName();
+  //info() << "*** - VolName - *** = " << VolName << endmsg;
+  //info() << "*** - theRadLength  - *** = " << theRadLength << endmsg;
+  std::string c4[1];
+  std::string c14[1];
+  c4[0] = VolName[4];
+  c14[0] = VolName[14];
+  // get the Volume Name
+  // returns the position of the found string or string::npos if not found.      
+  if(c4[0]=="G")
+  {
+    std::string::size_type i1=VolName.find("/",13);
+    VolumeName=VolName.substr(13,i1-13);
+    if(VolumeName=="Tracker")
+    {
+      std::string::size_type i1b=VolName.find("/",i1+1);
+      VolumeName=VolName.substr(13,i1b-13);
+    }
+  } 
+  else if(c4[0]=="S")
+  {
+    if(c14[0]=="F"){
+      std::string::size_type i2=VolName.find("#",23);
+      VolumeName=VolName.substr(22,i2-23);
+      IDPlane=VolName.substr(32,i2-32);
+      IDP = atoi(IDPlane.c_str());  
+      //info() << "IDPlane = " << IDPlane<<" IDP "<<IDP<<endmsg;
+    }
+    else{
+      std::string::size_type i2=VolName.find("#",20);
+      VolumeName=VolName.substr(19,i2-19);
+    }
+    
+  }
+  else if(VolName=="Universe")
+  {
+    VolumeName="Universe";
+  }
+  if(VolumeName=="OT")
+  {
+    VolumeName="Tracker/OT";
+  }
+  //info() << "VolumeName = " << VolumeName<< endmsg;
+  if(VolumeName=="Fake_Plane") // == if the volume is a dummy scorer plane
+  {
+    index++;
+    m_planeID[m_ntrk]=IDP;
+    m_Xpos[m_ntrk]= thePreStepPoint->GetPosition().x();
+    m_Ypos[m_ntrk]= thePreStepPoint->GetPosition().y();
+    m_Zpos[m_ntrk]= thePreStepPoint->GetPosition().z();
+    m_eta[m_ntrk]= thePreStepPoint->GetPosition().eta();
+    m_phi[m_ntrk]= thePreStepPoint->GetPosition().phi();
+    m_cumradlgh[m_ntrk]=theCumulatedRadLength;
+    m_p2pradlgh[m_ntrk]=thePlane2PlaneRadLength;
+    // reinitialize the value of the plane 2 plane radlength to 0 
+    thePlane2PlaneRadLength=0;
+    //info() << "idplane= "<<m_planeID[m_ntrk]<<endmsg;
+    //info() << "cumradlength and p2prad = "<< m_cumradlgh[m_ntrk]<<" "<<m_p2pradlgh[m_ntrk]<<endmsg; 
+    //info() <<"m_ntrk, m_planeID[m_ntrk] "<<m_ntrk<<" "<<m_planeID[m_ntrk]<<endmsg;
+    //info() <<"m_Xpos[m_ntrk], m_Ypos[m_ntrk]"<<m_Xpos[m_ntrk]<<" "<<m_Ypos[m_ntrk]<<endmsg;
+    //info() <<"m_Zpos[m_ntrk], cum e p2p"<<m_Zpos[m_ntrk]<<m_cumradlgh[m_ntrk]<<m_p2pradlgh[m_ntrk]<<endmsg;
+    //info() <<"m_eta[m_ntrk], phi"<<m_eta[m_ntrk]<<m_phi[m_ntrk]<<endmsg;
+    m_ntrk++;
+        
+    if(m_ntrk>=m_ntrk->range().distance())
+    {
+      return;
+      debug()<<"Array overflow!----- !=>>|rewritting|"<<endmsg;
+      getchar();	  
+      m_ntrk=0;	  
+    }
+    //
+    writestatus = ntupleSvc()->writeRecord(ntname);
+    if(! writestatus.isSuccess() )
+    {
+      debug() <<"CANNOT Write m_matScan_Plane"<<endmsg  ;
+      return;
+    }
+  }
+  
+  return;
+};
+
+
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode RadLengthColl::finalize() {
+  
+  debug() << "==> Finalize" << endmsg;
+  return GiGaStepActionBase::finalize();
+};
+
+
+
+//=============================================================================
