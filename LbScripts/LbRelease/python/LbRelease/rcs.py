@@ -987,18 +987,6 @@ class SubversionCmd(RevisionControlSystem):
             # create version.cmt file
             self._create_vers_cmt(join(dest, module), version)
 
-        if eclipse:
-            if not project:
-                # add package-specific configuration
-                from LbConfiguration import eclipseConfigurationAddPackage
-                eclipseConfigurationAddPackage(abspath(dest), module)
-            else:
-                # add project-specific configuration
-                from LbConfiguration import createEclipseConfiguration
-                createEclipseConfiguration(abspath(dst),
-                                           os.environ.get("CMTPROJECTPATH",""))
-
-
     def tag(self, module, version, isProject = False):
         """
         Create a tag for the given module.

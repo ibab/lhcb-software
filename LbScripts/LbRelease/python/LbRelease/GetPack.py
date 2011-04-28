@@ -5,7 +5,7 @@ import os, sys, re
 from subprocess import Popen, PIPE
 
 from LbUtils.Script import Script
-from LbConfiguration import createProjectMakefile
+from LbConfiguration import createProjectMakefile, eclipseConfigurationAddPackage, createEclipseConfiguration
 from LbConfiguration.Repository import repositories as __repositories__, SVNReposInfo, CVSReposInfo
 import rcs
 
@@ -380,11 +380,16 @@ class GetPack(Script):
                                       "instead of the curses version")
         self.parser.add_option("--eclipse", action = "store_true",
                                help = "enable eclipse-friendly check-out and configuration")
+        self.parser.add_option("--no-eclipse-config", action = "store_false",
+                               dest = "eclipse_config",
+                               help = "skip the modification of eclipse configurations")
         self.parser.add_option("--branches", action = "store_true",
                                help = "look for versions also in the branches directories "
                                       "(false by default, but implied if the version name ends with 'b')")
         self.parser.add_option("--global-tag", action = "store_true",
                                help = "usable only in conjunction with --project to check out a project global tag/branch")
+        self.parser.add_option("-C", "--directory", action = "store",
+                               help = "directory from where to start the checkout (default: current directory)")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
@@ -392,6 +397,7 @@ class GetPack(Script):
                                  no_pre = False,
                                  no_curses = False,
                                  exclude = [],
+                                 eclipse_config = True,
                                  )
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
@@ -490,6 +496,9 @@ class GetPack(Script):
             pkgdir = os.path.join(package, version, "cmt")
         else:
             pkgdir = os.path.join(package, "cmt")
+        if self.options.eclipse and self.options.eclipse_config:
+            # add package-specific configuration
+            eclipseConfigurationAddPackage(os.getcwd(), package)
         if not self.options.no_config:
             self._doCMTConfig(cwd = pkgdir)
         # return the path to the cmt directory of the package to be able to call
@@ -541,7 +550,11 @@ class GetPack(Script):
         rep.checkout(project, version, vers_dir = True, project = True,
                      eclipse = self.options.eclipse, global_tag = self.options.global_tag)
         project = project.upper()
-        pkgdir =  os.path.join(project, "%s_%s" % (project, version))
+        pkgdir =  os.path.abspath(os.path.join(project, "%s_%s" % (project, version)))
+        if self.options.eclipse and self.options.eclipse_config:
+            # add project-specific configuration
+            createEclipseConfiguration(pkgdir,
+                                       os.environ.get("CMTPROJECTPATH",""))
         return (project, version, pkgdir)
 
     ## Prepare the repository access objects according to options
@@ -865,6 +878,10 @@ class GetPack(Script):
 
     def main(self):
         try:
+            # Switch to the working directory
+            if self.options.directory:
+                self.log.debug("Switching to directory '%s'", self.options.directory)
+                os.chdir(self.options.directory)
             if self.options.project:
                 self.getproject()
             else:
