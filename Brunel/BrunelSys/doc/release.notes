@@ -3,6 +3,35 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v39r2>2011-04-29 Brunel v39r2</A></H1><PRE>
+This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
+ Rec v11r4 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version for first 2011 reprocessing
+
+- Changes in functionality
+  . Drop all support for DC06. This DataType is no longer recognised
+  . Muon ID DLL runing now read from database by default (MuonID v8r1)
+
+- New tuning
+  . New MuonID tuning (DLL_flag == 4) picked up by default for old databases
+    (MuonID v8r1)  
+  . Turn off by default the final HPD fitting (RichHPDImageAnalysis v1r7)
+
+- Bug fixes
+  . Fix bug #80947 (access system-memory information, if process memory is > 4GB)
+    (GaudiKernel v27r14)
+  . Fixes to GaudiMP to work with Brunel (GaudiMP v1r1)
+  . Recover precision in matrices for rotations through pi or halfpi
+    (DetDesc v18r25, DetDescCnv v4r13)
+  . Fixes to ensure cached conditions are updated when conditions change
+    (RichDet v16r3, RichTools v2r34)
+  . Fix memory leak in WritePackedDst (EventPacker v2r9)
+  . Various fixes to uninitialised variables in constructors
+
+- Monitoring changes
+  . Ignore errors due to (known) mismatch of IDE and Tell1 firmware (MuonDAQ
+
 </PRE><H1><A NAME=v39r1>2011-04-12 Brunel v39r1</A></H1><PRE>
 This version uses projects LCG 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2,
  Rec v11r3 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
