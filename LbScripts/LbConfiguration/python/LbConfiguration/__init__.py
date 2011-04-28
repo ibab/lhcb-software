@@ -8,8 +8,9 @@ import Project
 #  @param filename: the name of the destination file
 #  @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
 def createProjectMakefile(dest, overwrite = False):
-    import os
+    import os, logging
     if overwrite or not os.path.exists(dest):
+        logging.debug("Creating project Makefile in '%s'", dest)
         f = open(dest, "w")
         f.write("include ${LBCONFIGURATIONROOT}/data/Makefile\n")
         f.close()
@@ -18,7 +19,7 @@ def createEclipseConfiguration(dest, projectpath):
     """Create the configuration files for an Eclipse project in the directory
     'dest', setting CMTPROJECTPATH to projectpath.
     """
-    import os, time, sys
+    import os, time, sys, logging
     from os import environ
     from os.path import join, exists, basename
     # data to inject in the templates
@@ -31,6 +32,7 @@ def createEclipseConfiguration(dest, projectpath):
             }
     # create the templates
     try:
+        logging.debug("Creating Eclipse project configuration in '%s'", dest)
         if not exists(join(dest, ".settings")):
             os.mkdir(join(dest, ".settings"))
         for f, t in [(".project", "cdt_project_template.xml"),
@@ -50,6 +52,7 @@ def eclipseConfigurationAddPackage(dest, package):
     """Add package-specific configuration details to an already existing Eclipse
     (CDT) project.
     """
+    import logging
     from os.path import join, exists
     from xml.etree.ElementTree import parse, SubElement, tostring
     def addTarget(element, name, path, cmd = None, args = None, target = None, stopOnError = True, allBuilders = True):
@@ -67,6 +70,7 @@ def eclipseConfigurationAddPackage(dest, package):
         SubElement(t, "runAllBuilders").text = str(allBuilders).lower()
 
     try:
+        logging.debug("Add package-specific configuration for %s to Eclipse project in %s", package, dest)
         conf = parse(join(dest, ".cproject"))
         # loop over all the configurations builders
         for cc in conf.findall("storageModule/cconfiguration"):
