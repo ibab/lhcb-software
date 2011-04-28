@@ -31,7 +31,7 @@ using namespace Rich::Rec;
 DECLARE_TOOL_FACTORY( FunctionalCKResForRecoTracks )
 
 // Standard constructor
-FunctionalCKResForRecoTracks::
+  FunctionalCKResForRecoTracks::
 FunctionalCKResForRecoTracks ( const std::string& type,
                                const std::string& name,
                                const IInterface* parent )
@@ -147,26 +147,33 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       // multiple scattering
       //-------------------------------------------------------------------------------
       double scattErr(0), effectiveLength(0);
-      if ( m_useLastMP[rad] )
+      try
       {
-        Gaudi::XYZPoint startPoint;
-        const bool ok = findLastMeasuredPoint( segment, startPoint );
-        effectiveLength = 
-          transSvc()->distanceInRadUnits( (ok ? startPoint : tkSeg.entryPoint()), 
-                                          tkSeg.exitPoint() );
+        if ( m_useLastMP[rad] )
+        {
+          Gaudi::XYZPoint startPoint;
+          const bool ok = findLastMeasuredPoint( segment, startPoint );
+          effectiveLength =
+            transSvc()->distanceInRadUnits( (ok ? startPoint : tkSeg.entryPoint()),
+                                            tkSeg.exitPoint() );
+        }
+        else
+        {
+          effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
+                                                            tkSeg.exitPoint() );
+        }
+        if ( effectiveLength > 0 )
+        {
+          const double multScattCoeff = ( m_scatt * std::sqrt(effectiveLength) *
+                                          (1+0.038*std::log(effectiveLength)) );
+          scattErr                    = 2.0 * gsl_pow_2(multScattCoeff/ptot);
+        }
+        res2 += scattErr;
       }
-      else
+      catch ( const TransportSvcException & excpt )
       {
-        effectiveLength = transSvc()->distanceInRadUnits( tkSeg.entryPoint(),
-                                                          tkSeg.exitPoint() );
+        Warning( "Problem computing radiation length" + excpt.message() ).ignore();
       }
-      if ( effectiveLength > 0 )
-      {
-        const double multScattCoeff = ( m_scatt * std::sqrt(effectiveLength) * 
-                                        (1+0.038*std::log(effectiveLength)) );
-        scattErr                    = 2.0 * gsl_pow_2(multScattCoeff/ptot);
-      }
-      res2 += scattErr;
       //-------------------------------------------------------------------------------
 
       //-------------------------------------------------------------------------------
@@ -174,7 +181,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       //-------------------------------------------------------------------------------
       const double curvErr =
         ( Rich::Aerogel == rad ? 0 :
-          gsl_pow_2( Rich::Geom::AngleBetween( tkSeg.entryMomentum(), 
+          gsl_pow_2( Rich::Geom::AngleBetween( tkSeg.entryMomentum(),
                                                tkSeg.exitMomentum() ) / 4.0 ) );
       res2 += curvErr;
       //-------------------------------------------------------------------------------
@@ -203,7 +210,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
           // chromatic error
           //-------------------------------------------------------------------------------
           const double index      = m_refIndex->refractiveIndex(segment);
-          const double chromFact  = ( index>0 ? 
+          const double chromFact  = ( index>0 ?
                                       m_detParams->refIndexSD(rad)/index : 0 );
           const double chromatErr = gsl_pow_2( chromFact / tanCkExp );
           hypo_res2 += chromatErr;

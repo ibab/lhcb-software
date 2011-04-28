@@ -25,6 +25,7 @@
 
 // DetDesc
 #include "DetDesc/ITransportSvc.h"
+#include "DetDesc/TransportSvcException.h"
 
 // GSL
 #include "gsl/gsl_math.h"

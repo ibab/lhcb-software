@@ -4,17 +4,21 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-!========================= RichRecTrackTools v1r28 2011-04-27 =========================
+! 2011-04-28 - Chris Jones
+ - Add protection to FunctionalCKResForRecoTracks to catch exceptions from the
+   TransportSvc to prevent them from terminating the job execution.  
+
+!===================== RichRecTrackTools v1r28 2011-04-27 ====================
 ! 2011-04-08 - Chris Jones
  - minor cleanups (remove CVS comments)
  - Remove the caching of some variables in the segment creator tool
 
-!========================= RichRecTrackTools v1r27 2011-04-05 =========================
+!===================== RichRecTrackTools v1r27 2011-04-05 ====================
 ! 2011-03-24 - Chris Jones
  - Track Track States errors before as well as after propagating them in
    DetailedTrSegMakerFromRecoTracks
 
-!========================= RichRecTrackTools v1r26p2 2011-02-28 =========================
+!===================== RichRecTrackTools v1r26p2 2011-02-28 ==================
 ! 2011-02-25 - Chris Jones
  - Fix icc11 compilation remarks and warnings
 
