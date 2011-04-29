@@ -25,7 +25,7 @@ protected:
   RPCRec *m_RPC;
   int Histos(std::vector<std::string> &hists);
 public:
-  HistTask(const std::string &task,const std::string &dns="");
+  HistTask(const std::string &task,const std::string &dns="",int tmo = 3);
   virtual ~HistTask(){}
   int Directory(std::vector<std::string> &hists);
   int Histos(std::vector<std::string> &hists,std::vector<TObject*> &histos);
