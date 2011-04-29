@@ -7,6 +7,7 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================== JetAccessories v1r0 2011-04-29 ==================
 ! 2011-04-19 - Cédric Potterat
  - Introduction of src/TagJetsWithSeedFinder algorithm
  - Introduction of src/HighPtIsoLeptonAndTagPV algorithm
