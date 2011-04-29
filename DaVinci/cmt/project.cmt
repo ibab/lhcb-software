@@ -1,9 +1,9 @@
 project DAVINCI
 
-use HLT       HLT_v13r3
-use ANALYSIS  ANALYSIS_v6r2
-use STRIPPING STRIPPING_v2r2
-use LBCOM     LBCOM_v10r1p1
+use HLT       HLT_HEAD
+use ANALYSIS  ANALYSIS_v6r4
+use STRIPPING STRIPPING_v2r3
+use LBCOM     LBCOM_v10r3
 
 build_strategy with_installarea
 setup_strategy root
