@@ -3,6 +3,11 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v6r4>2011-04-29 Analysis v6r4 </A></H1><PRE>
+
+ *** Based on Phys v12r4. Patch release for Stripping13.
+  * Many patches and memory leak fixes.
+
 </PRE><H1><A NAME=v6r2>2011-03-28 Analysis v6r2 </A></H1><PRE>
 
  *** Based on Phys v12r1p1. Patch release for Stripping13.
