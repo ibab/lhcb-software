@@ -154,7 +154,7 @@ LoKi::Vertices::VertexDistance::chi2
   //
   if ( sc.isFailure() ) 
   { Error ( "Evaluation is invalid, return " + 
-            Gaudi::Utils::toString ( _chi2 ) , sc ) ; }
+            Gaudi::Utils::toString ( _chi2 ) , sc, 0 ) ; }
   //
   return _chi2 ;
 }
