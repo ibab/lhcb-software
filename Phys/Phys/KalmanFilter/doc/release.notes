@@ -5,6 +5,7 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+!========================== KalmanFilter v1r2 2011-04-29 ===================
 ! 2011-04-26 - Marco Cattaneo
  - Add missing dependency on DaVinciInterfaces. Needed to get right build order
    now that DaVincInterfaces is in same project as this package
