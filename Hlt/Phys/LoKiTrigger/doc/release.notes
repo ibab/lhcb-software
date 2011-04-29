@@ -7,6 +7,8 @@
 
 ! 2011-04-29 - Roel Aaij
  - Fix L0CaloCut wrongly flagged as never having a threshold.
+ - Set instant suppression for Error and Warning in Hlt1 track upgrade
+   functors.
 
 ! 2011-04-10 - Roel Aaij
  - updated documentation of BeamLineFunctions.h

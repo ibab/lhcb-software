@@ -148,7 +148,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
   OUTPUT out ;
   StatusCode sc = m_upgrade->tracksFromTrack ( *seed , out ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Error from ITrackFromTrack tool '" + m_upgrade->name()+  "'" , sc ) ; }
+  { return Error ( "Error from ITrackFromTrack tool '" + m_upgrade->name()+  "'" , sc, 0 ) ; }
   // post action:
   for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout ) 
   {
@@ -210,7 +210,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
     if ( 0 == seed ) { continue ; }                                  // CONTINUE 
     StatusCode sc = iupgrade ( seed , output , otracks ) ;
     if ( sc.isFailure () ) 
-    { Error ( "Error from iupgrade, skip track", sc ) ; continue ; } // CONTINUE 
+    { Error ( "Error from iupgrade, skip track", sc, 0 ) ; continue ; }
     // ========================================================================
   } // end of the loop over input tracks 
   // ==========================================================================
@@ -238,7 +238,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   LHCb::Track::Container* otracks = storedTracks ( address() ) ;
   //
   StatusCode sc = iupgrade ( itrack , output , otracks ) ;
-  if ( sc.isFailure() ) { return Error ( "upgrade: error from iupgrade" , sc ) ; }
+  if ( sc.isFailure() ) { return Error ( "upgrade: error from iupgrade" , sc, 0 ) ; }
   //
   // sort tracks ? 
   if ( ptOrder() ) 
@@ -261,7 +261,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
     // recontruct it!!!
     StatusCode sc = reco ( seed , output , otracks ) ;
     if ( sc.isFailure () ) 
-    { return Error ( "Failure from ITrackFromTrack tool, skip track", sc ) ; }
+    { return Error ( "Failure from ITrackFromTrack tool, skip track", sc, 0 ) ; }
   }
   // Previous reco failed, we're done
   else if ( 0 == info ) { return StatusCode::SUCCESS; }
@@ -309,7 +309,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeTracks
         output      , 
         otracks     ) ;
     //
-    if ( sc.isFailure() ) { Error ( "Error from i_upgrade_1track", sc ) ; }
+    if ( sc.isFailure() ) { Error ( "Error from i_upgrade_1track", sc, 0 ) ; }
     //
   } //
   //
@@ -352,7 +352,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
         output        , 
         otracks       ) ;
     //
-    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc ) ; }
+    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc, 0 ) ; }
     //
   } //                                      end of the loop over new candidates 
   //
@@ -397,7 +397,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
         output        , 
         otracks       ) ;
     //
-    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc ) ; }
+    if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc, 0 ) ; }
     //
   } //                                      end of the loop over new candidates 
   //
@@ -438,7 +438,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeAll
         ( candidate   , 
           output      , 
           otracks     ) ;
-      if ( sc.isFailure() ) { Warning( "Error from i_uprgade_track", sc ) ; }
+      if ( sc.isFailure() ) { Warning( "Error from i_uprgade_track", sc, 0 ) ; }
     }
     else if ( stage->is<Hlt::MultiTrack>() ) 
     {
@@ -446,7 +446,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeAll
         ( candidate     , 
           output        , 
           otracks       ) ;
-      if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc ) ; }
+      if ( sc.isFailure() ) { Warning( "Error from i_uprgade_multi_track", sc, 0 ) ; }
     }
     else { Warning("Invalid type for track-upgrade!") ; }
     // ========================================================================
@@ -478,7 +478,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
   LHCb::Track::ConstVector out ;
   StatusCode sc = iupgrade ( seed , out , otracks ) ;              // USE TOOL 
   if ( sc.isFailure () ) 
-  { return Error ( "Error from iupgrade, skip track", sc ) ; }     // RETURN 
+  { return Error ( "Error from iupgrade, skip track", sc, 0 ) ; }    // RETURN 
   //
   // Process output tracks, create a new candidate for tracks beyond the first
   for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ;
@@ -555,9 +555,9 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     LHCb::Track::ConstVector out ;
     StatusCode sc = iupgrade ( *itrack , out , otracks ) ;
     if ( sc.isFailure() ) 
-    { Error    ( "Error from iupgrade", sc ) ; OK = false ; break ; } // BREAK
+    { Error    ( "Error from iupgrade", sc, 0 ); OK = false; break; } // BREAK
     if ( out.empty()    ) 
-    { Warning  ( "No tracks")                ; OK = false ; break ; } // BREAK 
+    { Warning  ( "No tracks", sc, 0)           ; OK = false; break; } // BREAK 
     //
     if ( 1 != out.size() ) { split = true ; }
     // 
@@ -565,7 +565,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   }
   //
   if ( !OK || tracks.size() != outs.size() ) 
-  { return Error ( "Upgrade failure" ) ; }                            // RETURN 
+  { return Error ( "Upgrade failure", StatusCode::FAILURE, 0 ) ; }   // RETURN 
   //
   if ( !split ) 
   {
@@ -675,8 +675,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
   // upgrade it!
   LHCb::Track::ConstVector out ;
   StatusCode sc = iupgrade ( track , out , otracks ) ;
-  if ( sc.isFailure() ) { return Error    ( "Error from iupgrade", sc ) ; } 
-  if ( out.empty()    ) { return Warning  ( "No tracks" )               ; }
+  if ( sc.isFailure() ) { return Error    ( "Error from iupgrade", sc, 0 ) ; } 
+  if ( out.empty()    ) { return Warning  ( "No tracks", sc, 0 )           ; }
   //
   
   for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ; 

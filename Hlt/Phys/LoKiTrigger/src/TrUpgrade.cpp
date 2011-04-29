@@ -106,7 +106,7 @@ LoKi::Hlt1::Upgrade::operator()
   {
     // StatusCode sc = upgrade ( a , output ) ;
     StatusCode sc = upgradeAll ( a , output ) ;
-    if ( sc.isFailure() ) { Error(" error from upgrade" , sc ) ; }
+    if ( sc.isFailure() ) { Error(" error from upgrade" , sc, 0 ) ; }
   }
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
@@ -164,7 +164,7 @@ LoKi::Hlt1::UpgradeTracks::operator()
   {
     // NB: upgrade tracks only!!!
     StatusCode sc = upgradeTracks ( a , output ) ;
-    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
+    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc, 0 ) ; }
   }
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
@@ -232,7 +232,7 @@ LoKi::Hlt1::UpgradeMultiTracks::operator()
       m_index < 0 ?  
       upgradeMultiTracks ( a ,           output ) : 
       upgradeMultiTracks ( a , m_index , output ) ;
-    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc ) ; }
+    if ( sc.isFailure() ) { Error ( "Error from upgrade" , sc, 0 ) ; }
   }
   // register the selection 
   return !m_sink ? output : m_sink ( output ) ;
