@@ -173,6 +173,8 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesDiProton'                :10118,
     'VeloCandidatesSingleElectionNoIP'      :10119,
     'CaloCandidatesSingleElectionNoIP'      :10120,
+    'VeloCandidatesTrackForwardPassThrough' :10121,
+    'VeloCandidatesTrackForwardPassThroughLoose' :10122,
 
     #
     # 11K - 20K : added automatically by configuration...
