@@ -45,9 +45,11 @@ namespace LHCb  {
     typedef const std::string&            CSTR;
     typedef std::vector<RawBank*>         Banks;
     typedef std::map<std::string, void*>  FileMap;
+
     FileMap::iterator      m_current;
     /// Mapping of accesed files
     FileMap                m_fileMap;
+
     bool                   m_wrFlag;
     /// Streambuffer to hold uncompressed data
     StreamBuffer           m_data;
@@ -78,6 +80,9 @@ namespace LHCb  {
 
     /// Close MDF file
     virtual StatusCode closeIO(void* ioDesc) const;
+
+    /// Close all files disconnected from the IO manager
+    virtual void closeDisconnected();
 
     /// Commit output to buffer manager
     virtual StatusCode commitDescriptors(void* ioDesc);

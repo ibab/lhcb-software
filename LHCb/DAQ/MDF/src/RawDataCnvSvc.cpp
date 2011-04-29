@@ -161,6 +161,7 @@ StatusCode RawDataCnvSvc::connectOutput(CSTR outputFile,CSTR openMode)  {
   m_current = m_fileMap.find(outputFile);
   if ( m_current == m_fileMap.end() )   {
     void* entry = openIO(outputFile, openMode);
+    closeDisconnected();
     if ( entry ) {
       m_fileMap.insert(make_pair(outputFile,entry));
       m_current = m_fileMap.find(outputFile);
@@ -176,6 +177,7 @@ StatusCode RawDataCnvSvc::connectInput(CSTR fname, void*& iodesc)   {
   FileMap::const_iterator it = m_fileMap.find(fname);
   if ( it == m_fileMap.end() )   {
     iodesc = openIO(fname, "READ");
+    closeDisconnected();
     if ( iodesc ) {
       m_fileMap.insert(make_pair(fname,iodesc));
       return StatusCode::SUCCESS;
@@ -508,6 +510,21 @@ StatusCode RawDataCnvSvc::createAddress(long typ,
   return StatusCode::SUCCESS;
 }
 
+/// Close all files disconnected from the IO manager
+void RawDataCnvSvc::closeDisconnected()   {
+  for(FileMap::iterator i=m_fileMap.begin(); i != m_fileMap.end(); )  {
+    MDFMapEntry* e = (MDFMapEntry*)(*i).second;
+    if ( e && e->connection && !e->connection->isConnected() ) {
+      closeIO(e).ignore();
+      m_fileMap.erase(i);
+      i = m_fileMap.begin();
+      continue;
+    }
+    ++i;
+  }
+}      
+
+/// Open MDF file
 void* RawDataCnvSvc::openIO(CSTR fname, CSTR mode) const    {
   MsgStream log(msgSvc(), name());
   MDFMapEntry* ent = new MDFMapEntry;
@@ -533,13 +550,16 @@ void* RawDataCnvSvc::openIO(CSTR fname, CSTR mode) const    {
   return 0;
 }
 
+/// Close MDF file
 StatusCode RawDataCnvSvc::closeIO(void* ioDesc)  const {
   MDFMapEntry* ent = (MDFMapEntry*)ioDesc;
   if ( ent )  {
-    m_ioMgr->disconnect(ent->connection).ignore();
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "Closed MDF stream:" << ent->name
-        << " ID:" << (void*)ent << endmsg;
+    bool connected = ent->connection->isConnected();
+    m_ioMgr->disconnect(ent->connection).ignore();
+    log << MSG::INFO << (connected ? "Closed " : "Removed dis") 
+	<< "connected MDF stream:" << ent->name
+	<< " ID:" << (void*)ent << endmsg;
     delete ent;
   }
   return StatusCode::SUCCESS;
