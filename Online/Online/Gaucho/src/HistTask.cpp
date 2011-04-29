@@ -35,7 +35,7 @@
 //    }
 //  }
 //}
-HistTask::HistTask(const std::string &task,const std::string &dns)
+HistTask::HistTask(const std::string &task,const std::string &dns, int tmo)
 : m_DNS(dns),m_task(task),m_RPC(0)
 {
   if (m_DNS == "")
@@ -48,7 +48,7 @@ HistTask::HistTask(const std::string &task,const std::string &dns)
   int nservcs = b.getServices((m_service+"*").c_str());
   if (nservcs != 0)
   {
-    m_RPC = new RPCRec((char*)m_service.c_str(),3,true);
+    m_RPC = new RPCRec((char*)m_service.c_str(),tmo,true);
   }
 }
 int HistTask::Directory(std::vector<std::string> &hists)
