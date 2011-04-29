@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+- bug fix: VertexResidualTool was using the wrong particlepropsvc
+
 !========================= TAlignment v5r4 2011-03-15 =========================
 ! 2011-03-12 - Wouter Hulsbergen
  - adapt to changes in trackfit
