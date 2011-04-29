@@ -305,6 +305,18 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
           log() << "No valid Records " << m_recordName << " present in:" << pc->fid() << endmsg;
         }
       }
+      // If we are not in shared mode, we can remove retired connections, which are no longer used....
+      if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
+	IIODataManager::Connections cons = m_ioMgr->connections(this);
+	for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
+	  if ( !(*i)->isConnected() )  {
+	    log() << MSG::INFO << "Disconnected data IO:" << (*i)->fid()
+		  << "[" << (*i)->pfn() << "]"
+		  << endmsg;
+	    m_ioMgr->disconnect(*i);
+	  }
+        }
+      }
       return S_OK;
     }
     m_incidentSvc->fireIncident(Incident(dataset,IncidentType::FailOutputFile));
