@@ -309,11 +309,11 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
 	IIODataManager::Connections cons = m_ioMgr->connections(this);
 	for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
-	  if ( !(*i)->isConnected() )  {
-	    log() << MSG::INFO << "Disconnected data IO:" << (*i)->fid()
-		  << "[" << (*i)->pfn() << "]"
-		  << endmsg;
-	    m_ioMgr->disconnect(*i);
+	  c = (*i);
+	  if ( !c->isConnected() )  {
+	    log() << MSG::INFO << "Removed disconnected IO  stream:" << c->fid() << endmsg;
+	    m_ioMgr->disconnect(c);
+	    delete c;
 	  }
         }
       }
