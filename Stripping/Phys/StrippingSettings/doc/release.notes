@@ -4,9 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! ======================== StrippingSettings v2r3 2011-04-29 ================
 ! 2011-04-20 - Vanya Belyaev
 
- - add HyperCPX-strripping atthe end of  StrippingDev 
+ - add HyperCPX-strripping at the end of  StrippingDev 
 
 
 ! ======================== StrippingSettings v2r2p2 2011-04-14 ================
