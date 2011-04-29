@@ -23,7 +23,7 @@
 namespace Hlt
 {
 // ==========================================================================
-/** @class MatchVeloElectron 
+/** @class MatchVeloL0Calo 
  *  
  *  @see LHCb::Track
  *  @see LHCb::L0CaloCandidate 
@@ -34,12 +34,12 @@ namespace Hlt
  *  @author Mariusz Witek Mariusz.Witek@cern.ch
  *  @date 2011-02-11
  */
-class MatchVeloElectron 
+class MatchVeloL0Calo 
    : virtual public extends1<GaudiTool,Hlt::ITrack2CandidateMatch>
 {
    // ========================================================================
    /// friend factory for instantiation 
-   friend class ToolFactory<Hlt::MatchVeloElectron> ;
+   friend class ToolFactory<Hlt::MatchVeloL0Calo> ;
    // ========================================================================
 public:  // ITrack2CandidateMatch
    // ========================================================================
@@ -86,26 +86,25 @@ protected: // AlgTool technicalities
     *  @param name   tool instance name 
     *  @param parent tool parent 
     */
-   MatchVeloElectron 
+   MatchVeloL0Calo 
    ( const std::string& type   ,   // tool type ?
      const std::string& name   ,   // tool instance name 
      const IInterface*  parent ) ; // the parent 
    /// protected and virtual destructor 
-   virtual ~MatchVeloElectron () ;
+   virtual ~MatchVeloL0Calo () ;
    // ========================================================================    
 private:
    // ========================================================================    
    /// the default constructor is disabled 
-   MatchVeloElectron () ;
+   MatchVeloL0Calo () ;
    /// copy constructor is disabled 
-   MatchVeloElectron           ( const MatchVeloElectron& ) ;
+   MatchVeloL0Calo           ( const MatchVeloL0Calo& ) ;
    /// assignement operator is disabled 
-   MatchVeloElectron& operator=( const MatchVeloElectron& ) ;
+   MatchVeloL0Calo& operator=( const MatchVeloL0Calo& ) ;
    // ========================================================================    
 private:
    // Properties
    double m_maxChi2;
-   double m_minL0ElectronET;
 } ; 
    // ==========================================================================
 } // end of namespace Hlt
@@ -116,33 +115,32 @@ private:
  *  @param parent tool parent 
  */
 // ============================================================================
-Hlt::MatchVeloElectron::MatchVeloElectron 
+Hlt::MatchVeloL0Calo::MatchVeloL0Calo 
 ( const std::string& type   ,   // tool type ?
   const std::string& name   ,   // tool instance name 
   const IInterface*  parent )   // the parent 
    : base_class ( type , name , parent ) 
 {
    declareProperty( "MaxMatchChi2", m_maxChi2 = 50 );
-   declareProperty( "MinL0ElectronET", m_minL0ElectronET = 5090. );
 }  
 // ============================================================================
 // protected and virtual destructor 
 // ============================================================================
-Hlt::MatchVeloElectron::~MatchVeloElectron()
+Hlt::MatchVeloL0Calo::~MatchVeloL0Calo()
 {
 
 }
 // ============================================================================
 // the standard tool initialization 
 // ============================================================================
-StatusCode Hlt::MatchVeloElectron::initialize () 
+StatusCode Hlt::MatchVeloL0Calo::initialize () 
 {
    return GaudiTool::initialize();
 }
 // ============================================================================
 // the standard tool finalization 
 // ============================================================================
-StatusCode Hlt::MatchVeloElectron::finalize   () 
+StatusCode Hlt::MatchVeloL0Calo::finalize   () 
 {
    return GaudiTool::finalize();
 }
@@ -158,7 +156,7 @@ StatusCode Hlt::MatchVeloElectron::finalize   ()
  *  @return status code 
  */ 
 // ============================================================================
-StatusCode Hlt::MatchVeloElectron::match 
+StatusCode Hlt::MatchVeloL0Calo::match 
 ( const LHCb::Track&    track, 
   const Hlt::Candidate& candidate,
   LHCb::Track&          matched, 
@@ -170,13 +168,7 @@ StatusCode Hlt::MatchVeloElectron::match
    const LHCb::L0CaloCandidate* l0 = candidate.get<LHCb::L0CaloCandidate>() ;
    if ( 0 == l0 ) 
    { return Error ("HltCandidate is NOT L0Calo!") ; }
-   // take only L0Electron 
-   if ( 2 != l0->id().calo() )          return StatusCode::FAILURE;
-   if ( 0 != l0->type() )               return StatusCode::FAILURE;
-   if ( m_minL0ElectronET > l0->et() )  return StatusCode::FAILURE;
 
-   // ==========================================================================)
-      
    //variables used later [from HltVeloEcalMatch constructor]
    double m_ptkickConstant = 1.263;
    double m_zKick    = 525.00;
@@ -240,7 +232,7 @@ StatusCode Hlt::MatchVeloElectron::match
  *  @return true if track and candidate are "matched"
  */ 
 // ============================================================================
-bool Hlt::MatchVeloElectron::match 
+bool Hlt::MatchVeloL0Calo::match 
 ( const LHCb::Track*    track       , 
   const Hlt::Candidate* candidate   ,
   const double       /* quality  */ , 
@@ -274,7 +266,7 @@ bool Hlt::MatchVeloElectron::match
 // ============================================================================
 //                                                the factory for instantiation 
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(Hlt,MatchVeloElectron)
+DECLARE_NAMESPACE_TOOL_FACTORY(Hlt,MatchVeloL0Calo)
 // ============================================================================
   
 // ============================================================================

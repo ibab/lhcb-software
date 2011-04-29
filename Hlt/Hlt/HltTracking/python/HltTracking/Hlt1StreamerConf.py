@@ -164,13 +164,13 @@ VeloL0Muon = LoKi.Hlt1.MatchConf   (
     True                           ,                    ##  "TransferAncestors"
     True                           )                    ##       "TransferInfo"
 # =============================================================================
-VeloElectron = LoKi.Hlt1.MatchConf (
-    "Hlt::MatchVeloElectron/VeloElectron",              ##               "Tool"
-    "Hlt1/Track/VeloElectron"      ,                    ##          "TESOutput"
-    LHCb.Track.Velo                ,                    ##          "TrackType"
-    False                          ,                    ##        "TransferIDs"
-    False                          ,                    ##  "TransferAncestors"
-    False                          )                    ##       "TransferInfo"
+VeloL0Calo = LoKi.Hlt1.MatchConf     (
+    "Hlt::MatchVeloL0Calo/VeloL0Calo",                  ##               "Tool"
+    "Hlt1/Track/VeloL0Calo"          ,                  ##          "TESOutput"
+    LHCb.Track.Velo                  ,                  ##          "TrackType"
+    False                            ,                  ##        "TransferIDs"
+    False                            ,                  ##  "TransferAncestors"
+    False                            )                  ##       "TransferInfo"
 # =============================================================================
 
 # =============================================================================

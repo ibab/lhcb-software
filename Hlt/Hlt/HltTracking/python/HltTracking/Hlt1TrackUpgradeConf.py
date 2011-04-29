@@ -143,3 +143,18 @@ def VeloCandidates( lineName ):
     bm = bindMembers ( None , [ MinimalVelo, tracks ] )
     return "VeloCandidates = execute( %s ) * SELECTION( '%s' )" % \
                 ( [ m.getFullName() for m in bm.members() ], selection )
+
+# ==============================================================================
+# L0CaloCandidates as Hlt::Candidates
+# ==============================================================================
+from Configurables import Hlt__L0Calo2Candidate
+def L0CaloCandidates( lineName ):
+    ## L0Calo -> Candidate
+    selection = 'CaloCandidates%s' % lineName
+    caloCandidates = Hlt__L0Calo2Candidate(
+        'L0Calo2Candidates%s' % lineName,
+        OutputSelection = selection )
+    from HltLine.HltDecodeRaw import DecodeL0CALO
+    bm = bindMembers ( None , [ DecodeL0CALO, caloCandidates ] )
+    return "L0CaloCandidates = execute( %s ) * SELECTION( '%s' )" % \
+           ( [ m.getFullName() for m in bm.members() ], selection )

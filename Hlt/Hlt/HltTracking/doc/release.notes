@@ -5,6 +5,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-04-29 - Roel Aaij
+ - Rename MatchVeloElectron -> MatchVeloL0Calo since the tool is more general
+   and add configuration for the tool.
+ - Add cloned Hlt::Candidates for L0CaloCandidates.
+
 ! 2011-04-11 - Mariusz Witek
  - Modify MatchVeloElectron.cpp to accept only L0Electrons with high PT
    for SingleElectronNoIP line (Z->ee dedicated)
