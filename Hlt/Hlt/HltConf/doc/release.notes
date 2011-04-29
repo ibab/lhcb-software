@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2011-04-29 - Roel Aaij
+ - Add intermediate selections for SingleElectronNoIP to HltInit.py.
+
 ! 2011-04-19 - Grant McGregor
  - Charm semileptonic D02HMuNu line was included twice, so removed one.
 
