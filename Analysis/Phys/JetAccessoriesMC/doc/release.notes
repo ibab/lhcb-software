@@ -7,6 +7,7 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================== JetAccessoriesMC v1r0 2011-04-29 ==================
 ! 2011-04-19 - Victor Coco, Cédric Potterat
  - Introduction of ZPlusJetHepMCSelector algorithm 
  - move from LoKiJets : src/HepMCJets2HepMCJets.cpp, src/HepMCJets2Jets.cpp, src/LoKiMCPartBHadronSeed.{cpp,h}, src/LoKiParticleMakerAlg.cpp and src/PartonicJets2HepMCJets.cpp
