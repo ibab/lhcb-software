@@ -3,8 +3,12 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+</PRE><H1><A NAME=v2r3>2011-04-29 StrippingSys v2r4 </A></H1><PRE>
 ! 2011-04-08 - Anton Poluektov 
  - Add Phys/StrippingTCK package: python shell to query stripping configuration. 
+ - Some other small changes. 
+ - Tracking lines still excluded.
+
 
 </PRE><H1><A NAME=v2r2>2011-03-29 StrippingSys v2r2 </A></H1><PRE>
 
