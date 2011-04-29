@@ -5,7 +5,8 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "LHCbMath/MatrixInversion.h"
 #include "Event/Node.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 class ITrackExtrapolator ;
 namespace LHCb {
@@ -59,7 +60,7 @@ namespace Al
   private:
     ToolHandle<ITrackResidualTool> m_trackresidualtool ;
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
-    IParticlePropertySvc* m_propertysvc ;
+    LHCb::IParticlePropertySvc* m_propertysvc ;
     double m_chiSquarePerDofCut ;
     bool   m_computeCorrelations ;
     size_t m_maxHitsPerTrackForCorrelations ;
@@ -125,7 +126,7 @@ namespace Al
     m_extrapolator.retrieve().ignore() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
     
-    m_propertysvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
+    m_propertysvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
     for (std::vector<std::string>::const_iterator iterS = m_daughterNames.begin(); iterS != m_daughterNames.end() ; ++iterS){
       const double tmass = m_propertysvc->find(*iterS)->mass() ;
       m_daughterMass.push_back(tmass);
@@ -188,8 +189,9 @@ namespace Al
     const Al::MultiTrackResiduals* rc(0) ;
     TrackResidualContainer trackresiduals ;
     MassConstraint mconstraint ;
-    mconstraint.mothermass = m_propertysvc->find( p.particleID().pid() )->mass() ;
-    
+    mconstraint.mothermass = m_propertysvc->find( p.particleID() )->mass() ;
+    //info() << "Mothermass: " << mconstraint.mothermass << endreq ;
+
     bool success(true) ;
     BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters()) {
       if( daughter->proto() && daughter->proto()->track()) {
@@ -197,7 +199,15 @@ namespace Al
 	const Al::TrackResiduals* trackres = m_trackresidualtool->get( *track ) ;
 	if( trackres ) {
 	  trackresiduals.push_back( trackres ) ;
-	  mconstraint.daughtermasses.push_back(  m_propertysvc->find( p.particleID().pid() )->mass() ) ;
+	  const LHCb::ParticleProperty* pp = m_propertysvc->find( daughter->particleID() ) ;
+	  if( !pp ) {
+	    warning() << "Cannot find property for particle: " << daughter->particleID() << " "
+		      << daughter->particleID().pid() << endreq ;
+	    mconstraint.daughtermasses.push_back( daughter->momentum().M() ) ;
+	  } else {
+	    mconstraint.daughtermasses.push_back( pp->mass() ) ;
+	  }
+	  //info() << "daughtermass: " << mconstraint.daughtermasses.back() << endreq ;
 	} else {
 	  warning() << "No residuals returned by trackresidualtool!" << endreq ;
 	  success = false ;
@@ -210,7 +220,7 @@ namespace Al
     }
     
     if(success) {
-      rc = compute( trackresiduals, p.endVertex()->position(), &mconstraint ) ;
+      rc = compute( trackresiduals, p.referencePoint(), &mconstraint ) ;
       if(rc) m_residuals.push_back(rc) ;
     }
     return rc ;
@@ -277,7 +287,6 @@ namespace Al
       double vchi2orig = vertex.chi2() ; // cache it, because I know it is slow
       
       if(fitstatus == LHCb::TrackStateVertex::FitSuccess && mconstraint ) {
-	assert( nacceptedtracks == 2 ) ;
 	//	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
 	debug() << "mass before constraint: "
 		<< vertex.mass(mconstraint->daughtermasses) 
