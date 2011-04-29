@@ -9,8 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v28r3 2011-04-29 =========================
 ! 2011-04-26 - Patrick Koppenburg
- - Configuration.py : Align DaVinciInit increment with printfreq (Task task #20122).
+ - Configuration.py : Align DaVinciInit increment with printfreq (Task #20122).
 
 !========================== DaVinci v28r2 2011-03-28 =========================
 
