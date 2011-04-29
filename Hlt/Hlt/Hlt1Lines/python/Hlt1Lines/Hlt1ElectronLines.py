@@ -6,14 +6,16 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
     # steering variables
     __slots__ = { 
         #  Electron Lines
-        'DoTiming'                    : False
-        ,'SingleElectronNoIP_P'       : 8000
-        ,'SingleElectronNoIP_PT'      : 4800
-        ,'SingleElectronNoIP_TrChi2'  :    4
-        ,'SingleElectronNoIP_TrNTHits'   : 0 #OFF
-        ,'SingleElectronNoIP_Velo_NHits' : 0 #OFF
-        ,'SingleElectronNoIP_Velo_Qcut'  : 999 #OFF
-        ,'L0Channels'               : { 'SingleElectronNoIP'   : ( 'Electron', ) }
+        'DoTiming'                                 : False
+        ,'SingleElectronNoIP_L0ElectronThreshold'  :   254
+        ,'SingleElectronNoIP_P'                    :  8000
+        ,'SingleElectronNoIP_PT'                   :  4800
+        ,'SingleElectronNoIP_TrChi2'               :     4
+        ,'SingleElectronNoIP_TrNTHits'             :     0 #OFF
+        ,'SingleElectronNoIP_Velo_NHits'           :     0 #OFF
+        ,'SingleElectronNoIP_Velo_Qcut'            :   999 #OFF
+        ,'SingleElectronNoIP_GEC'                  : 'Loose'
+        ,'L0Channels'                              : { 'SingleElectronNoIP'   : ( 'Electron', ) }
         }
     
     def localise_props( self, prefix ):
@@ -40,35 +42,44 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
         unit.Code = code
         return unit
 
-    def add_gec( self, unit ):
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
-        gec = Hlt1GECLooseStreamer().split( '=', 1 )[ 0 ]
-        unit.Code = unit.Code.replace( 'VeloCandidates', '%s * VeloCandidates' % gec ) 
-        return unit
-
     def singleElectron_preambulo( self, properties ):
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
                                                        TightForward, FitTrack )
-        from HltTracking.Hlt1TrackMatchConf import MatchVeloElectron
-        from Hlt1Lines.Hlt1GECs import Hlt1GECLooseStreamer
-        ## define some "common" preambulo 
-        preambulo = [ Hlt1GECLooseStreamer(),
-                      VeloCandidates( properties[ 'name' ] ),
-                      MatchVeloElectron,
+        from HltTracking.Hlt1TrackMatchConf import MatchVeloL0Calo
+        from Configurables import Hlt__L0Calo2Candidate
+
+        ## define the preambulo 
+        preambulo = [ VeloCandidates( properties[ 'name' ] ),
+                      MatchVeloL0Calo( properties[ 'CaloCandidates' ] ),
                       TightForward,
                       FitTrack ]
         return preambulo
 
-
     def singleElectron_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
-        unit = HltUnit(
-            'Hlt1%(name)sStreamer' % properties,
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from HltTracking.Hlt1TrackUpgradeConf import L0CaloCandidates
+        properties[ 'CaloCandidates' ] = 'ElectronCandidates'
+        caloUnit = HltUnit(
+            'Hlt1%(name)sL0CaloStreamer' % properties,
+            Preambulo = [ L0CaloCandidates( properties[ 'name' ] ) ],
+            Code = """
+            L0CaloCandidates
+            >>  TC_CUT( LoKi.L0.L0CaloCut( 0, %(L0ElectronThreshold)s ), 0 )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass L0CaloCut', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nCaloCandidates' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( '%(CaloCandidates)s' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+
+        trackUnit = HltUnit(
+            'Hlt1%(name)sTrackStreamer' % properties,
             ##OutputLevel = 1 ,
             Preambulo = self.singleElectron_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  MatchVeloElectron
+            >>  MatchVeloL0Calo
             >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )  )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -86,7 +97,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         from HltTracking.HltReco import Velo
-        return [ Velo, self.add_gec( unit ) ]
+        return [ Hlt1GECUnit( properties[ 'GEC' ] ), Velo, caloUnit, trackUnit ]
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line

@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-04-29 - Roel Aaij
+ - Update/fix Hlt1ElectronLines to use an explicit cut on the L0CaloCandidate
+   type and ET.
+
 ! 2011-04-26 - Roel Aaij
  - Ensure unique instantiation of the tools which implements the GECs for 
    different sets of cuts.
