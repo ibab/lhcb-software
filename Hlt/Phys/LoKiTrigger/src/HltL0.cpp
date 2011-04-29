@@ -54,7 +54,7 @@ LoKi::L0::L0CaloCut::L0CaloCut
   const int                      threshold ) 
   : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
   , m_type         ( type      )
-  , m_hasThreshold ( false     )
+  , m_hasThreshold ( true      )
   , m_threshold    ( threshold ) 
 {}
 // ============================================================================

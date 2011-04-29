@@ -5,6 +5,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-04-29 - Roel Aaij
+ - Fix L0CaloCut wrongly flagged as never having a threshold.
+
 ! 2011-04-10 - Roel Aaij
  - updated documentation of BeamLineFunctions.h
 
