@@ -4696,6 +4696,7 @@ void PresenterMainFrame::refreshPage() {
   if ( !m_refreshingPage ) return;
 
   std::cout << timeStamp() << " refreshing..." << std::endl;
+  m_loadingPage = true;
   
   editorCanvas->cd();
 
@@ -4726,6 +4727,7 @@ void PresenterMainFrame::refreshPage() {
                  kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
     stopPageRefresh();
   }
+  m_loadingPage = false;
   std::cout << "=== Page refreshed." << std::endl;
 }
 
@@ -5118,7 +5120,7 @@ std::string PresenterMainFrame::timeStamp ( ) {
 //=========================================================================
 void PresenterMainFrame::reAccessPage( ) {
   if ( !m_loadingPage ) {
-    std::cout << "$$reAccess: refresh histDb" << std::cout;
+    std::cout << "$$reAccess: refresh histDb" << std::endl;
     histogramDB()->refresh();
     clearAlarmPages();
     m_reAccess = false;
