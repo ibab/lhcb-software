@@ -67,6 +67,7 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   //=== Initialize all other data members
   m_moment     = 0.;
   m_chisq      = 0.;
+  m_slopeXCand = m_slopeX;
 
   m_curvature  = 1.7e-5 * ( m_state->tx() - m_slopeX );
 }
