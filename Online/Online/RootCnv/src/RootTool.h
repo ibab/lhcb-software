@@ -20,7 +20,7 @@ namespace Gaudi {
     /// Access data branch by name: Get existing branch in read only mode
     virtual TBranch* getBranch(CSTR section, CSTR branch_name) {
       std::string n = branch_name+".";
-      for(int i=0, m=n.length(); i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
+      for(int i=0, m=n.length()-1; i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
       TTree* t = c->getSection(section);
       TBranch* b = t ? t->GetBranch(n.c_str()) : 0;
       if ( !b ) b = t ? t->GetBranch(branch_name.c_str()) : 0;

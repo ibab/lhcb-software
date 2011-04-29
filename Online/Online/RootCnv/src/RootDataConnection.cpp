@@ -349,7 +349,7 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
 // Access data branch by name: Get existing branch in write mode
 TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* cl) {
   string n = branch_name+".";
-  for(int i=0, m=n.length(); i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
+  for(int i=0, m=n.length()-1; i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && cl && m_file->IsWritable() ) {
