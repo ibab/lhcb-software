@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-04-29 - Olivier Callot
+ - Fix poor access by increased timeout to HistTask
+
 ! 2011-04-28 - Olivier Callot
  - Protect intereference between page display and alarm list update
 

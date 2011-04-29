@@ -319,16 +319,19 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
       break;
     }
     if ( foundTheTask ) {
-      std::cout << "Search for services of task " << (*itT).location << std::endl;
-      HistTask myHists( (*itT).location );
-      
-      std::vector<std::string> knownNames;
-      //== Get the list of services...
-      int kk = myHists.Directory( knownNames );
-      std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
-      //for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
-      //  std::cout << "      -" << *itS << "-" << std::endl;
-      //}
+      int timeout = 0.1 * (*itT).histos.size();
+      if ( 3 > timeout ) timeout = 3;
+      std::cout << "Search for services of task " << (*itT).location << " with timeout " << timeout << std::endl;
+      HistTask myHists( (*itT).location, "", timeout );
+      /*
+        std::vector<std::string> knownNames;
+        //== Get the list of services...
+        int kk = myHists.Directory( knownNames );
+        std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
+        for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
+          std::cout << "      -" << *itS << "-" << std::endl;
+        }
+      */
 
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
@@ -344,12 +347,12 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         }
         
         (*itH).setShortName( histoName );
-        if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
-          std::cout << "  ++ Existing service '" << histoName << "'" << std::endl;
+        //if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
+          std::cout << "  ++ ask for histo '" << histoName << "'" << std::endl;
           histNames.push_back( histoName );
-        } else {
-          std::cout << "  -- Not found '" << histoName << "'" << std::endl;
-        }
+          //} else {
+          //std::cout << "  -- Not found '" << histoName << "'" << std::endl;
+          //}
       }
       std::vector<TObject*> results;
       std::cout << "before calling Histos, size " << histNames.size() << std::endl;
