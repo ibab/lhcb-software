@@ -86,6 +86,7 @@ m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
   declareProperty("EnableIncident",   m_incidentEnabled     = false);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
 
+  declareProperty("CacheSize",        m_setup->basketSize   = 40000000);
   declareProperty("CacheSize",        m_setup->cacheSize    = 10000000);
   declareProperty("AutoFlush",        m_setup->autoFlush    = 100);
   declareProperty("LearnEntries",     m_setup->learnEntries = 10);
@@ -333,10 +334,13 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
     if ( b ) {
       Long64_t evt = b->GetEntries();
       b->GetTree()->SetEntries(evt);
+      if ( evt == 1 )  {
+	b->GetTree()->OptimizeBaskets(m_setup->basketSize,1.1,"");
+      }
       if ( evt > 0 && (evt%m_setup->autoFlush)==0 ) {
         if ( evt == m_setup->autoFlush ) {
           b->GetTree()->SetAutoFlush(m_setup->autoFlush);
-          b->GetTree()->OptimizeBaskets(40000000,1.,"");
+          b->GetTree()->OptimizeBaskets(m_setup->basketSize,1.,"");
         }
         else   {
           b->GetTree()->FlushBaskets();

@@ -347,12 +347,17 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
 }
 
 // Access data branch by name: Get existing branch in write mode
-TBranch* RootDataConnection::getBranch(CSTR section, CSTR n, TClass* cl) {
+TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* cl) {
+  string n = branch_name+".";
+  for(int i=0, m=n.length(); i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && cl && m_file->IsWritable() ) {
     void* ptr = 0;
     b = t->Branch(n.c_str(),cl->GetName(),&ptr);
+  }
+  if ( !b ) {
+    b = t->GetBranch(branch_name.c_str());
   }
   if ( b )   {
     b->SetAutoDelete(kFALSE);

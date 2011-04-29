@@ -62,6 +62,8 @@ namespace Gaudi  {
     int          learnEntries;
     /// RootCnvSvc Property: AutoFlush parameter for ROOT TTree (Number of events between auto flushes)
     int          autoFlush;
+    /// RootCnvSvc Property: Basket optimization parameter for ROOT TTree (total basket size)
+    int          basketSize;
 
     /// Standard constructor
     RootConnectionSetup();
