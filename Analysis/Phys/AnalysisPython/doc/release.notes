@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-04-30 - Vanya Belyaev
+
+ - add python module for python selector 
+
 !======================= Phys/AnalysisPython v2r0 2011-04-29 =================
 ! 2011-04-02 - Vanya Belyaev
 
