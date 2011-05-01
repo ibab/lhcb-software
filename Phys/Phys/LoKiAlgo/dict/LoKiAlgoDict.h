@@ -1,4 +1,4 @@
-// $Id: LoKiAlgoDict.h,v 1.6 2008-06-12 08:28:54 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1

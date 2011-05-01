@@ -1,4 +1,4 @@
-// $Id: AlgoDecorator.h,v 1.2 2007-06-04 20:22:21 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ALGODECORATOR_H 
 #define LOKI_ALGODECORATOR_H 1

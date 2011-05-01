@@ -1,4 +1,4 @@
-// $Id: GetLoKiAlgo.h,v 1.2 2008-12-05 10:42:17 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GETLOKIALGO_H 
 #define LOKI_GETLOKIALGO_H 1

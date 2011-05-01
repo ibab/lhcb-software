@@ -1,4 +1,4 @@
-// $Id: LoopChild.h,v 1.5 2008-04-30 05:39:20 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOOPCHILD_H 
 #define LOKI_LOOPCHILD_H 1

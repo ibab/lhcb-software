@@ -1,4 +1,4 @@
-// $Id: TupleDicts.h,v 1.1 2008-06-12 08:28:54 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TUPLEDICTS_H 
 #define LOKI_TUPLEDICTS_H 1

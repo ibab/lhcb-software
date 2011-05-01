@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.2 2007-12-03 11:14:51 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file   LoKiAlgo/tests.py
 #  The file is a part of LoKi and Bender projects

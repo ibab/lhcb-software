@@ -1,4 +1,4 @@
-// $Id: LoopObj.cpp,v 1.14 2010-05-14 15:08:55 ibelyaev Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -33,8 +33,16 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-19
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 //  default constructor 
@@ -89,29 +97,33 @@ LoKi::LoopObj::~LoopObj()
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::next      ()
 {
-  // advance the combiner at least once 
-  ++m_combiner ;
-  // combiner is over ? 
-  if (  m_combiner.end    () ) 
-  { resetCache() ; m_valid = false ; return *this ; }
-  // combiner is still valid? 
-  if ( !m_combiner.valid  () ) { return next () ; }
-  // unique heap combination ? 
-  if ( !m_combiner.unique () ) { return next () ; }
-  // check for clones 
-  if ( !clonesOrdered     () ) { return next () ; }
-  // local check 
-  if ( !isValid()            ) { return next () ; }
+  while ( !m_combiner.end()  ) 
+    {
+      // advance the combiner 
+      ++m_combiner ;
+      //
+      if ( m_combiner.valid  () && 
+	   m_combiner.unique () &&
+	   clonesOrdered     ()  ) 
+	{
+	  // clear all temporaries 
+	  resetCache();
+	  // set validity flag
+	  m_valid        = true ;
+	  m_combination  = LHCb::Particle::ConstVector( current().size() ) ;
+	  // fill the combination from the combiner 
+	  m_combiner.current ( m_combination.begin() ) ;
+	  // return 
+	  return *this ;
+	}
+    }
   //
-  // clear all temporaries 
-  resetCache();
-  // set validity flag
-  m_valid        = true ;
-  m_combination  = LHCb::Particle::ConstVector( current().size() ) ;
-  // fill the combination from the combiner 
-  m_combiner.current ( m_combination.begin() ) ;
-  // return 
-  return *this ;
+  // combiner is over ? 
+  resetCache ()     ; 
+  m_valid   = false ; 
+  //
+  return *this      ; 
+  //
 }
 // ============================================================================
 //  backup the current state of the loop 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.14 2010-04-06 20:21:02 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file decorators.py LoKiAlgo/decorators.py
 #  The set of basic decorator for objects from LoKiAlgo library

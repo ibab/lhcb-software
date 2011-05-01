@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.62 2010-06-13 13:43:47 ibelyaev Exp $ 
+! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2011-0501 Vanya Belyaev 
+
+  - LoopObj.cpp
+
+     LoKi::LoopObj::next: 
+     Rewrite the method to reduce the recursion depth. 
+
+     Under certain condition it causes the segmentaiton fault. The problem
+     has been reported by Victor Coco and Nikolai Nikitin
+ 
+ - cmt/requirements 
+
+    version increment to v9r3p1 
 
 !========================== LoKiAlgo v9r3 2011-01-18 ==========================
 

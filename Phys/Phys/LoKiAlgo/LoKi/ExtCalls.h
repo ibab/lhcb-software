@@ -1,4 +1,4 @@
-// $Id: ExtCalls.h,v 1.6 2010-06-02 15:47:46 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_EXTCALLS_H 
 #define LOKI_EXTCALLS_H 1

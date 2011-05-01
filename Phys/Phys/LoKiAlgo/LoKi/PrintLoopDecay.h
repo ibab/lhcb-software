@@ -1,4 +1,4 @@
-// $Id: PrintLoopDecay.h,v 1.4 2008-05-28 14:53:55 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PRINTLOOPDECAY_H 
 #define LOKI_PRINTLOOPDECAY_H 1

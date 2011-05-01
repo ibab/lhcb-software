@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.2 2007-12-03 11:14:51 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file  LoKiAlgo/__init__.py
 #  Helper file to manage LoKiAlgo package

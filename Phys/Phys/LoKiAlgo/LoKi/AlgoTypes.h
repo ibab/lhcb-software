@@ -1,4 +1,4 @@
-// $Id: AlgoTypes.h,v 1.4 2010-04-06 20:21:02 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_ALGOTYPES_H 
 #define LOKI_ALGOTYPES_H 1

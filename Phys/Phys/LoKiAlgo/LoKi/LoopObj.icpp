@@ -1,4 +1,4 @@
-// $Id: LoopObj.icpp,v 1.6 2008-02-24 19:43:06 ibelyaev Exp $ 
+// $Id$ 
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_ICPP
 #define LOKI_LOOPOBJ_ICPP 1

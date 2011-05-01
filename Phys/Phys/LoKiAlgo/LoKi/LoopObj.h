@@ -1,4 +1,4 @@
-// $Id: LoopObj.h,v 1.13 2008-12-05 10:42:17 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_H 
 #define LOKI_LOOPOBJ_H 1

@@ -1,4 +1,4 @@
-// $Id: LoopDecorator.h,v 1.4 2008-12-05 10:42:17 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOOPDICT_H 
 #define LOKI_LOOPDICT_H 1
