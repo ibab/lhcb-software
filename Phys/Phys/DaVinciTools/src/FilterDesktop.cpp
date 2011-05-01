@@ -380,8 +380,10 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   //  LHCb::Particle::Range saved = saveInTES ( accepted ) ;
   
   // make the filter decision
-  setFilterPassed ( (!i_markedParticles().empty()) && 
-                    (i_markedParticles().size()==m_accepted.size()) );
+  // setFilterPassed ( (!i_markedParticles().empty()) && 
+  //                    (i_markedParticles().size()==m_accepted.size()) );
+  // make the filter decision
+  setFilterPassed ( !i_markedParticles().empty() ) ;
 
   // some statistics 
   counter ( "#passed" ) += i_markedParticles().size();

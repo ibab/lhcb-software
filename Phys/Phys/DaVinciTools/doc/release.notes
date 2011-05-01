@@ -4,6 +4,12 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-05-01 - Vanya Belyaev
+
+ - FilterDesktop.cpp
+   change the formal decision of the algorothm. It does not 
+   affect FilterDesktop itself, bu tit is much suitabel for FilterInTrees algorithm 
+
 ! 2011-04-27 - Patrick Koppenburg
  - DaVinciInit: adapt to bug fix #80947 (unsigned long memory)
 
