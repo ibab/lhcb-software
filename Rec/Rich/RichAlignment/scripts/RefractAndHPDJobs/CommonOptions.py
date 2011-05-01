@@ -10,7 +10,7 @@ LHCbApp().CondDBtag = "head-20110407"
 # For 2011 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
 #LHCbApp().DDDBtag   = "head-20110302" 
-#LHCbApp().CondDBtag = "head-20110321"
+#LHCbApp().CondDBtag = "head-20110407"
 
 # No output files
 Brunel().OutputType = "None"

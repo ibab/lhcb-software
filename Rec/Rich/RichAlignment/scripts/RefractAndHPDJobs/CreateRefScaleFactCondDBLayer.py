@@ -100,7 +100,8 @@ def fillDB(calibration,db,runsTimes,rad):
     # Run IOV
     dStartTime = runsTimes["RunTimes"][run]["Start"]
     #dStopTime  = runsTimes["RunTimes"][run]["Stop"]
-    dStopTime  = runsTimes["GlobalStopTime"]
+    #dStopTime  = runsTimes["GlobalStopTime"]
+    dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
     #stopTime  = getUNIXTime( dStopTime  )

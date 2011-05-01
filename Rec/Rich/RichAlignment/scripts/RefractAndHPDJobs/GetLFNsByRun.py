@@ -4,7 +4,7 @@ import pickle, bz2
 import DIRAC
 
 def usage():
-  print 'Usage: %s <year> <month> <firstday> <lastday>' %(Script.scriptName)
+  print 'Usage: %s <year> <startmonth> <startday> <lastmonth> <lastday>' %(Script.scriptName)
   
 def getDate(year,month,day):
   return str(year)+'-'+str(month)+'-'+str(day)
@@ -12,7 +12,7 @@ def getDate(year,month,day):
 from DIRAC.Core.Base import Script
 Script.parseCommandLine()
 args = Script.getPositionalArgs()
-if len(args) < 4: 
+if len(args) < 5: 
   usage()
   DIRAC.exit(2)
 
@@ -25,10 +25,11 @@ exitCode = 0
 # Processing pass
 procpass = 'Real Data'
 
-year     = int(args[0])
-month    = int(args[1])
-startday = int(args[2])
-endday   = int(args[3])
+year          = int(args[0])
+startmonth    = int(args[1])
+startday      = int(args[2])
+lastmonth     = int(args[3])
+lastday       = int(args[4])
 
 if 2009 == year :
   ConfigV = 'Collision09'
@@ -42,18 +43,13 @@ else:
   print 'Unknown year', year
   DIRAC.exit(2)
 
-firstDate = getDate(year,month,startday)
-lastDate  = getDate(year,month,endday)
-print "Creating run list for period",firstDate,"to",lastDate
-
 allOK = True
 
 # Dictionary for LFNs by Run
 RunLFNs = { }
 
-startDate = getDate(year,month,startday)
-endDate   = getDate(year,month,endday)
-
+startDate = getDate(year,startmonth,startday)
+endDate   = getDate(year,lastmonth,lastday)
 dict = { 'StartDate'        : startDate,
          'EndDate'          : endDate,
          'AllowOutsideRuns' : True # Allows run to start inside but finish outside the dates
@@ -105,15 +101,15 @@ else:
           tmpLFNList += ["LFN:"+lfn]
       if len(tmpLFNList) > 0 :
         RunLFNs[run] = tmpLFNList
-        print "Selected", len(RunLFNs[run]), "LFNs for run", run
+        print "Selected", len(RunLFNs[run]), "LFNs for run", run, ConfigV
       else:
-        print "No data selected for run", run
+        print "No data selected for run", run, ConfigV
         
 if allOK :
     
   # Pickle the data
   if len(RunLFNs.keys()) > 0:
-    filename = "RunData/RunLFNs_"+firstDate+"_"+lastDate+".pck.bz2"
+    filename = "RunData/RunLFNs_"+startDate+"_"+endDate+".pck.bz2"
     file = bz2.BZ2File(filename,"w")
     pickle.dump(RunLFNs,file)
     file.close()

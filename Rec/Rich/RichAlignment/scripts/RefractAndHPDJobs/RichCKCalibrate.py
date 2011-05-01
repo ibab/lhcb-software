@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v39r1' ) )
+                j = Job( application = Brunel( version = 'v39r2' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -98,11 +98,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v39r1",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v39r2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v39r1",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v39r2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -147,7 +147,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # Custom DB slices for both job types (calibration and verification)
     dbFiles  = [ ]
     dbFiles += ["NewMDMSCondDB-28022011"]
-    dbFiles += ["MDMS-RootFiles-RunAligned-Sobel-Smoothed3hours-05042011"] 
+    dbFiles += ["MDMS-RootFiles-RunAligned-Sobel-Smoothed3hours-21042011"] 
     dbFiles += ["New2010MirrorAlign-15042011"]
 
     # Only for Calibration jobs only
@@ -157,7 +157,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        dbFiles += ["NewRichCKRefIndexCalib"]
+        dbFiles += ["RefInCalib-New-2010-Calib-V1_BR-v39r1-21042011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -287,9 +287,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # Keep tabs on min and max values (for plots)
     minMaxScale = [999.0,-999.0]
     if 'Rich1Gas' == rad :
-        minMaxCKRes = (0.0013,0.0028)
+        minMaxCKRes = (0.0013,0.0020)
     else:
-        minMaxCKRes = (0.00065,0.0009)
+        minMaxCKRes = (0.00065,0.00075)
 
     # Raw mean and sigma
     ckmeans  = { }
@@ -767,15 +767,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v39r1",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v39r2",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v39r1",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v39r2",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v39r1",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v39r2",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -820,7 +820,7 @@ def getRootFile(j):
     filename = getRootFilePath(j)
     if filename != "" :
         if os.path.exists(filename):
-            print "Opening file", filename
+            #print "Opening file", filename
             file = TFile( filename )
         else:
             print "ERROR :", filename, "does not exist"
