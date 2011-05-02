@@ -11,6 +11,8 @@ namespace LHCb
   // copy constructor
   KalmanFitResult::KalmanFitResult(const KalmanFitResult& rhs) 
     : TrackFitResult(rhs), m_seedCovariance(rhs.m_seedCovariance),m_nTrackParameters(rhs.m_nTrackParameters)
+    , m_chi2(rhs.m_chi2),m_chi2Velo(rhs.m_chi2Velo),m_chi2VeloTT(rhs.m_chi2VeloTT)
+    , m_chi2VeloTTT(rhs.m_chi2VeloTTT),m_chi2MuonT(rhs.m_chi2MuonT),m_chi2Muon(rhs.m_chi2Muon)
     , m_chi2CacheValid(rhs.m_chi2CacheValid),m_errorFlag(rhs.m_errorFlag)
     ,m_bidirectionalSmoother(rhs.m_bidirectionalSmoother)
   {
