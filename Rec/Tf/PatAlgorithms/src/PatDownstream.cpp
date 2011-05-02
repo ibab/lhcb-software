@@ -45,7 +45,10 @@ DECLARE_ALGORITHM_FACTORY( PatDownstream )
 //=============================================================================
 PatDownstream::PatDownstream( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_downTime( 0 ),
+    m_printing( false ),
+    m_magnetOff( false )
 {
   declareProperty( "InputLocation" , m_inputLocation  = ""    );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::TrackLocation::Downstream );

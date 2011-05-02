@@ -36,6 +36,8 @@ class IOTRawBankDecoder;
     bool acceptTrack(const LHCb::Track& track);
     
   private:
+    int              m_fwdTime;
+
     std::string      m_inputTracksName;
     std::string      m_outputTracksName;
     std::string      m_trackSelectorName;  
@@ -59,7 +61,6 @@ class IOTRawBankDecoder;
     ITrackSelector*      m_trackSelector;
     IPatForwardTool*     m_forwardTool;
     ISequencerTimerTool* m_timerTool;
-    int              m_fwdTime;
     bool             m_writeNNVariables; // switch on or off NN var. writing
   };
 #endif // PATFORWARD_H

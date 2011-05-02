@@ -4,6 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2011-05-02 - Victor Coco
+ - Fix coverity defect 17680: UNINIT_CTOR in PatDownstream, m_clusterFilter,
+   m_maxDist removed from header (unused)
+ - Fix coverity defect 17681: UNINIT_CTOR in PatForward
+ - Fix coverity defect 17684: UNINIT_CTOR in PatSeeding
+
 ! 2011-04-29 - Marco Cattaneo
  - Fix coverity defect 17679: UNINIT_CTOR in PatDownTrack, was causing FPE in
    QMTests on i686-slc5-gcc43-dbg platform

@@ -70,6 +70,10 @@ protected:
     
   
 private:
+  int           m_downTime;
+  bool          m_printing; 
+  bool          m_magnetOff;
+
   std::string   m_inputLocation;
   std::string   m_outputLocation;
   double        m_deltaP;
@@ -81,13 +85,10 @@ private:
   double        m_maxDistance;
   double        m_maxWindow;
   double        m_maxChisq;
-  bool          m_clusterFilter;
   bool          m_removeUsed;
   bool          m_removeAll;
-  bool          m_magnetOff;
     
   double        m_longChi2;
-  double        m_maxDist;
     
 
   double        m_minTTx;
@@ -121,10 +122,8 @@ private:
   PatTTHits m_uvHits;
     
   int   m_seedKey;
-  bool  m_printing; 
 
   ISequencerTimerTool* m_timerTool;
-  int  m_downTime;
   bool m_doTiming; 
 };
 #endif // PATKSHORT_H
