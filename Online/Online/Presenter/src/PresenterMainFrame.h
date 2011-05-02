@@ -251,6 +251,7 @@ public:
   void loadPreviousPage();
   void nextInterval();
   void previousInterval();
+  void refreshPageForced();
   void refreshPage();
   void refreshClock();
   void listHistogramsFromHistogramDB(TGListTree* listView,

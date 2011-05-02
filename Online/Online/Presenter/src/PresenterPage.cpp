@@ -320,7 +320,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
     }
     if ( foundTheTask ) {
       int timeout = 0.1 * (*itT).histos.size();
-      if ( 3 > timeout ) timeout = 3;
+      if ( 4 > timeout ) timeout = 4;
       std::cout << "Search for services of task " << (*itT).location << " with timeout " << timeout << std::endl;
       HistTask myHists( (*itT).location, "", timeout );
       /*

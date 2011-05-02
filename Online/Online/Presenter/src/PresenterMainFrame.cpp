@@ -1592,37 +1592,37 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case M_TrendLastTenMinutes:
     m_trendDuration = 600;
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
   case M_TrendLastTwoHours:
     m_trendDuration = 2*3600;
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
   case M_TrendLastDay:
     m_trendDuration = 24*3600;
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
   case M_TrendLastWeek:
     m_trendDuration = 7*24*3600;
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
   case M_TrendLastMonth:
     m_trendDuration = 30*24*3600;
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
   case M_TrendLastYear:
     m_trendDuration = 365*24*3600;
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
   case M_TrendAll:
     m_trendDuration = 10*365*24*3600;  // take 10 years...
     m_trendEnd      = 0;
-    refreshPage();
+    refreshPageForced();
     break;
 
   default:
@@ -4692,9 +4692,14 @@ void PresenterMainFrame::nextInterval() {
 //==============================================================================
 // Refresh pages in refresh mode
 //==============================================================================
-void PresenterMainFrame::refreshPage() {
-  if ( !m_refreshingPage ) return;
+void PresenterMainFrame::refreshPage( ) {
+  if ( m_refreshingPage ) refreshPageForced();
+}
 
+//=========================================================================
+//  Refresh the page, in case of change of duration...
+//=========================================================================
+void PresenterMainFrame::refreshPageForced() {
   std::cout << timeStamp() << " refreshing..." << std::endl;
   m_loadingPage = true;
   
