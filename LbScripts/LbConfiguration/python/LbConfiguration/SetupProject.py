@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.36 2010-03-05 11:51:52 marcocle Exp $"
-
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
@@ -12,8 +10,8 @@ from tempfile import mkstemp
 from LbConfiguration import createProjectMakefile, createEclipseConfiguration
 from LbUtils.CVS import CVS2Version
 from LbUtils.Temporary import TempDir
-
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.36 $")
+from LbConfiguration.Version import ParseSvnVersion
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 
 try:
     from LbScriptsPolicy.PathStripper import StripPath

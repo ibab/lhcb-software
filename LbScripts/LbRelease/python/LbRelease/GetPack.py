@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.19 2010-01-26 19:40:25 marcocle Exp $
+# $Id$
 
 import os, sys, re
 from subprocess import Popen, PIPE
@@ -303,11 +303,12 @@ except ImportError:
 
 selectFromList = selectFromListCurses
 
+from LbConfiguration.Version import ParseSvnVersion
 
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.19 2010-01-26 19:40:25 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = ParseSvnVersion("$Id$", "$URL$")
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"

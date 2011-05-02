@@ -1,5 +1,9 @@
 2011-04-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* python/LbRelease/GetPack.py: use the SVN keywords for the version of the script.
+
+2011-04-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* python/LbRelease/rcs.py: moved the generation of Eclipse configuration to GetPack
 	* python/LbRelease/GetPack.py: added option to disable the Eclipse configuration (keep Eclipse-friendly check out),
 	added option '-C' to use a different directory as base for the check out

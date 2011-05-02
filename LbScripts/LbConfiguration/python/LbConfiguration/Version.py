@@ -170,3 +170,22 @@ def CMT2LHCb(project, version):
     lbvers = None
 
     return (lbproj, lbvers)
+
+def ParseSvnVersion(id, url = ""):
+    """
+    Translate the SVN url of the file to a version number, if possible;
+    return the id otherwise.
+    Tipical usage:
+
+    __version__ = ParseSvnVersion("$"""'Id'"""$", "$"""'URL'"""$")
+
+    Remember to set the property 'svn:keywords' to 'Id URL' for the files that need it.
+
+    Note: The URL must be of the approximate format ".*/tags.*/v\\d+r\\d+(p\\d+)?/.*".
+    """
+    import re
+    m = re.search(r"\$[^$]*/tags.*/(v\d+r\d+(p\d+)?)/[^$]* \$", url)
+    if not m:
+        return id
+    else:
+        return m.group(1)

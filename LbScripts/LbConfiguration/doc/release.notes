@@ -1,5 +1,10 @@
 2011-04-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* python/LbConfiguration/Version.py: Added function to parse SVN Id and URL keywords.
+	* python/LbConfiguration/SetupProject.py: use SVN keywords for the script version.
+
+2011-04-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* python/LbConfiguration/__init__.py: added debug messages to Eclipse configuration functions
 	* python/LbConfiguration/SetupProject.py: change the order of "use" statements in the generated
 	requirements file, because the user requested packages must appear before the container package.
