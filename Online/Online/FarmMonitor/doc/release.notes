@@ -4,10 +4,11 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
-!============================== v2r6 2011-04-07 ==============================
+!============================== v2r7 2011-05-02 ==============================
 ! 2011-04-08 - Olivier Callot
  - Fix properly the case where a node doesn't send updated information.
 
+!============================== v2r6 2011-04-07 ==============================
 ! 2011-04-07 - Olivier Callot
  - Add task counter to trend plot
  - If the time of the reading hasn't changed, don't update the rates.
