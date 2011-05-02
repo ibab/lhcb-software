@@ -1,3 +1,7 @@
+2011-05-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkMCGentar: fixed usage of the TempDir class.
+
 2011-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r1p4

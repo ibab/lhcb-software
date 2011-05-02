@@ -104,7 +104,7 @@ def get_tar_files(packages_versions,binary_dir):
     md5file = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.md5')
     MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators','distribution')
 
-    os.chdir(tmpdir)
+    os.chdir(tmpdir.getName())
     if not os.path.exists('MCGenerators'): os.mkdir('MCGenerators')
     os.chdir('MCGenerators')
     print 'get_tar_files -', os.getcwd()
@@ -136,12 +136,12 @@ def get_tar_files(packages_versions,binary_dir):
                         print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
                 os.remove(file)
 
-    os.chdir(tmpdir)
+    os.chdir(tmpdir.getName())
     str = 'tar zcf '+tarfile+' MCGenerators'
     rc = os.system(str)
     if rc == 0:
-        os.system('rm -fr %s' % os.path.join(tmpdir, "MCGenerators"))
-        logfile.write('%s tar file for %s has been written and relevant %s directory removed '%(GENSER_vers, binary_dir, os.path.join(tmpdir, "MCGenerators"))+'\n')
+        os.system('rm -fr %s' % os.path.join(tmpdir.getName(), "MCGenerators"))
+        logfile.write('%s tar file for %s has been written and relevant %s directory removed '%(GENSER_vers, binary_dir, os.path.join(tmpdir.getName(), "MCGenerators"))+'\n')
         md5sum = calculateMD5(tarfile)
         mdf = open(md5file,"w")
         mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
