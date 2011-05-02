@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-05-02 - Plamen Hopchev
+ - add 'Tight' GEC in all BeamGas Lines
+
 ! 2011-04-29 - Roel Aaij
  - Update/fix Hlt1ElectronLines to use an explicit cut on the L0CaloCandidate
    type and ET.

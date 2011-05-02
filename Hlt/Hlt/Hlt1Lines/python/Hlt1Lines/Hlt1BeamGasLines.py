@@ -78,6 +78,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'VertexCutRho'            : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
                 , 'PrescaleHighRho'         : 'RATE(0.5)' #e.g. 'SCALE(0.1)' / 'RATE(0.5)'  ### --> select only part of the events with high-rho vertices
                   
+                ### Global Event Cuts
+                , 'UseGEC'                  : 'Tight' # False / 'Loose' / 'Tight' (if not False: use the ones defined in Hlt1GECs.py)
+
                 ### Input Prescales  
                 , 'Prescale'                : { 'Hlt1BeamGasNoBeamBeam1'           : 1.
                                               , 'Hlt1BeamGasNoBeamBeam2'           : 1.
@@ -102,6 +105,15 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                 } 
 
 
+    def GetGEC(self):
+        ''' Get the GEC Algorithm. Need to return a list! '''
+        reqGEC = self.getProp('UseGEC')
+        if reqGEC in ['Loose', 'Tight']:
+            from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+            return [ Hlt1GECUnit( gec=reqGEC ) ]
+        else:
+            if reqGEC: print "\nError : Unknown Value of property 'UseGEC'. No GEC will be set ...\n"
+            return []
 
     def GetTrackingAlg(self, OutTracksName):
         ''' creates common FastVelo instance '''
@@ -269,6 +281,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "@"*100, "\n"
         '''
 
+        ### Get the Global Event Cuts
+        algGEC = self.GetGEC()
+
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
@@ -278,7 +293,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                       , prescale = self.prescale
                       , ODIN  = odin
                       , L0DU  = 'scale( %s, RATE(%s) )' % (l0du, L0RateLimit) if L0RateLimit else l0du
-                      , algos = [ DecodeVELO ] + algTracking + [ algPV3D, algVertexFilter ]
+                      , algos = algGEC + [ DecodeVELO ] + algTracking + [ algPV3D, algVertexFilter ]
                       , postscale = self.postscale
                       )
  
@@ -338,6 +353,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         print "%"*100, "\n"
         '''
 
+        ### Get the Global Event Cuts
+        algGEC = self.GetGEC()
+
         ### Finally, create the Hlt1Line
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
@@ -346,7 +364,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
                       , prescale = self.prescale
                       , ODIN  = odin
                       , L0DU  = 'scale( %s, RATE(%s) )' % (l0du, L0RateLimit) if L0RateLimit else l0du
-                      , algos = [ DecodeVELO, algCheckTracks, algProtoVertex ] + algTracking + [ algPV3D, algVertexFilter ]
+                      , algos = algGEC + [ DecodeVELO, algCheckTracks, algProtoVertex ] + algTracking + [ algPV3D, algVertexFilter ]
                       , postscale = self.postscale
                       )
  
