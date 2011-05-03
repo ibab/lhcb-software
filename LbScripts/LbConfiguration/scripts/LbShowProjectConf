@@ -5,9 +5,9 @@
 from LbConfiguration.Project import getProject, project_list
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 __author__ = "hmd"
 
 class LbShowProjectConfScript(Script):
@@ -16,12 +16,12 @@ class LbShowProjectConfScript(Script):
     def defineOpts(self):
         parser = self.parser
         parser.set_defaults(name=False)
-        parser.add_option("-n", "--name", 
+        parser.add_option("-n", "--name",
                           dest="name",
                           action="store_true",
                           help="show the original name of the project")
         parser.set_defaults(release_area=False)
-        parser.add_option("-r", "--release-area", 
+        parser.add_option("-r", "--release-area",
                           dest="release_area",
                           action="store_true",
                           help="show the release area of the project")
@@ -35,14 +35,14 @@ class LbShowProjectConfScript(Script):
                           dest="all",
                           action="store_true",
                           help="show all infos for the project")
-        
+
     def main(self):
         opts = self.options
         if self.args :
             plist = self.args
         else :
             plist = project_list
-        for a in plist : 
+        for a in plist :
             p = getProject(a)
             if opts.name :
                 print p.Name()

@@ -4,31 +4,31 @@
 
 from LbLegacy.ProjectLinks import fixLinks
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 __author__ = "hmd"
 
 class FixProjectLinksScript(Script):
     _version = __version__
     _description = __doc__
     def defineOpts(self):
-        parser = self.parser 
+        parser = self.parser
     parser.set_defaults(showmode=False)
     parser.add_option("-s", "--show",
-                      action="store_true", 
+                      action="store_true",
                       dest="showmode",
                       help="only shows links")
-    
+
     parser.set_defaults(dryrunmode=False)
     parser.add_option("--dry-run",
-                      action="store_true", 
+                      action="store_true",
                       dest="dryrunmode",
                       help="simulate action")
-    
+
     parser.set_defaults(absolutemode=False)
     parser.add_option("-a", "--absolute",
-                      action="store_true", 
+                      action="store_true",
                       dest="absolutemode",
                       help="create absolute links")
     def main(self):
@@ -44,11 +44,11 @@ if __name__ == '__main__':
     %prog --dry-run [dir1 [dir2 ...]]
     %prog [--show|-s] [dir1 [dir2 ...]]
     %prog [-q|-v] [-a] [dir1 [dir2 ...]]
-    """        
+    """
     s = FixProjectLinksScript(usage=usage)
     s.run()
 
-        
-        
 
-    
+
+
+

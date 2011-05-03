@@ -183,7 +183,6 @@ def ParseSvnVersion(id, url = ""):
 
     Note: The URL must be of the approximate format ".*/tags.*/v\\d+r\\d+(p\\d+)?/.*".
     """
-    import re
     m = re.search(r"\$[^$]*/tags.*/(v\d+r\d+(p\d+)?)/[^$]* \$", url)
     if not m:
         return id

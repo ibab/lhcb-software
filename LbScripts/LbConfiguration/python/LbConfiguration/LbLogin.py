@@ -51,15 +51,14 @@ from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
 from LbConfiguration.Platform import isBinaryDbg, NativeMachine
 from LbConfiguration.External import CMT_version
-from LbConfiguration.Version import sortStrings
+from LbConfiguration.Version import sortStrings, ParseSvnVersion
 from LbUtils.Script import SourceScript
-from LbUtils.CVS import CVS2Version
 from LbUtils.Path import multiPathGet, multiPathGetFirst, multiPathJoin
 from LbUtils.Path import envPathPrepend, pathAdd
 import logging
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.75 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 #-----------------------------------------------------------------------------------
 # Helper functions
 

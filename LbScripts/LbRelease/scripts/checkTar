@@ -4,15 +4,15 @@
 
 from LbRelease.TarBall import checkTar
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
 import logging
 import sys
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 
 class CheckTarScript(Script):
-    _version = __version__    
+    _version = __version__
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
@@ -43,7 +43,7 @@ class CheckTarScript(Script):
             if len(args) > 1 :
                 version = args[1]
 
-        if not checkTar(project, version, opts.cmtconfig, opts.input_dir, 
+        if not checkTar(project, version, opts.cmtconfig, opts.input_dir,
                         opts.keep_going) :
             return 1
 

@@ -1,3 +1,14 @@
+2011-05-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbConfiguration/python/LbConfiguration/AllProjectsSetup.py:
+	* LbConfiguration/python/LbConfiguration/LbLogin.py:
+	* LbConfiguration/python/LbConfiguration/SetupProject.py:
+	* LbConfiguration/python/LbConfiguration/Version.py:
+	* LbConfiguration/scripts/CreateBatAliases:
+	* LbConfiguration/scripts/genProjectSetup:
+	* LbConfiguration/scripts/getExtVersion:
+	* LbConfiguration/scripts/LbShowProjectConf: replaces CVS2Version with Marco's parseSvnVersion.
+
 2011-04-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/Version.py: Added function to parse SVN Id and URL keywords.

@@ -3,41 +3,41 @@
 """ Don't forget the description of this script """
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 __author__ = "gcorti"
 
 import sys, os, time, stat, shutil
 
 
-def archiveRelease(project, version):    
+def archiveRelease(project, version):
     print 'Making archive documentation for', project, version
-    
+
     docDir = os.path.join(os.environ['LHCBDOC'],project,'releases')
     relDir = os.path.join(docDir,version)
     arcDir = os.path.join(docDir,'archive',version)
     print docDir
     print relDir
     print arcDir
-    
+
     arcVers = os.listdir(os.path.join(docDir,'archive'))
     if version in arcVers:
         message = 'Archive directory already exists '+arcDir+' - Check it - STOP'
         raise Exception(message)
-    
+
     message = 'Create archive directory '+arcDir
     print message
     os.mkdir(arcDir)
-    
+
     print 'Copying description file'
     shutil.copyfile(os.path.join(relDir,'description.html'),os.path.join(arcDir,'description.html'))
-    
+
     arcDate = time.strftime("%Y-%m-%d",time.localtime())
     dateFile = file(os.path.join(arcDir,'arcdate.txt'),'w')
     dateFile.write(arcDate+'\n')
     dateFile.close()
-    
+
     relFile = os.path.join(relDir,'release.notes')
     relDate = time.strftime("%Y-%m-%d",time.localtime(os.stat(relFile)[stat.ST_MTIME]))
     relFile = file(os.path.join(arcDir,'reldate.txt'),'w')

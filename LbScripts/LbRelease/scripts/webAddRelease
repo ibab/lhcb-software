@@ -3,9 +3,9 @@
 """ This scripts adds the needed links for a new release in the $LHCBDOC directory """
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 __author__ = "hmd"
 
 from LbConfiguration.Version import sortVersions, version_style
@@ -20,28 +20,28 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
         lhcbreleases = os.environ["LHCBRELEASES"]
     else :
         lhcbreleases = releases_dir
-    
+
     if not doc_dir :
         lhcbdoc = os.environ["LHCBDOC"]
     else :
         lhcbdoc = doc_dir
-        
+
     if not os.path.exists(lhcbdoc) :
         os.mkdir(lhcbdoc)
         log.info("Created %s directory" % lhcbdoc)
-    
-    
+
+
     lhcbsitelocation = os.path.join(lhcbdoc, projectname.lower())
     if not os.path.exists(lhcbsitelocation) :
         os.mkdir(lhcbsitelocation)
         log.info("Created %s directory" % lhcbsitelocation)
-        
+
     log.info((" %s %s " % (projectname.lower(),projectversion.lower())).center(80, "-"))
-    
+
     projectdir = lhcbreleases
-    
+
     # obtain path to project location and checking for errors (existing of the project, version and SysPackage)
-    
+
     syspkgdir = ""
     projectroot = ""
     relprojectdir = ""
@@ -69,18 +69,18 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
     if error != "":
         log.error(error)
         raise SystemExit
-    
+
     # remove all files in releases/[version] except file description.html
-    
+
     try:
         for filename in os.listdir(os.path.join(lhcbsitelocation, "releases", projectversion)):
             if filename != "description.html":
                 os.remove(os.path.join(lhcbsitelocation, "releases", projectversion, filename))
     except os.error, err:
         err
-    
+
     # recreate projectroot link
-    
+
     try:
         os.remove(os.path.join(lhcbsitelocation, "projectroot") )
     except os.error, err:
@@ -89,16 +89,16 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
         os.symlink(projectroot, os.path.join(lhcbsitelocation, "projectroot"))
     except os.error, err:
         err
-    
+
     # create links in releases/[version]
-    
+
     log.info( "LINKS:")
     try:
         os.mkdir(os.path.join(lhcbsitelocation, "releases"))
         os.symlink("../scripts/releases.php", os.path.join(lhcbsitelocation, "releases", "index.php"))
     except os.error, err:
         err
-    
+
     try:
         try:
             os.mkdir(os.path.join(lhcbsitelocation, "releases", projectversion))
@@ -112,7 +112,7 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
         log.info( "  requirements.php -> " + "../../scripts/requirements_wrapper.php")
     except os.error, err:
         err
-    
+
     try:
         os.symlink("../../projectroot/" + relsyspkgdir + "doc/html", os.path.join(lhcbsitelocation, "releases", projectversion, "doxygen"))
         log.info( "  doxygen -> " + "../../projectroot/" + relsyspkgdir + "doc/html" )
@@ -128,7 +128,7 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
             log.info( "  description.html -> ../../projectroot/" + relprojectdir + "description.html")
     except os.error, err:
         err
-    
+
     try:
         for filename in os.listdir(syspkgdir + "doc"):
             if filename.find("release") != -1 and filename.find( "notes") != -1:
@@ -139,9 +139,9 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
                     err
     except os.error, err:
         err
-    
+
     # create packages structure for current version of project
-    
+
     log.info( "PACKAGES:")
     try:
         os.mkdir(os.path.join(lhcbsitelocation, "packages"))
@@ -172,9 +172,9 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
                                 except os.error, err:
                                     err
                                 log.info( "  " + pkg1 + "/" + pkg2)
-    
+
     # create latest link in releases directory
-    
+
     try:
         os.remove(os.path.join(lhcbsitelocation, "releases","latest"))
     except os.error, err:
@@ -182,15 +182,15 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
 
     versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases")), safe=True)
     versions.reverse()
-    
+
     try:
         os.remove(os.path.join(lhcbsitelocation, "releases", "latest"))
     except os.error, err:
         err
     os.symlink(versions[0], os.path.join(lhcbsitelocation, "releases", "latest"))
-    
+
     # if branch is specified create latest link in releases/[branch] directory
-    
+
     if branch :
         try:
             os.mkdir(os.path.join(lhcbsitelocation, "releases", branch))
@@ -201,7 +201,7 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
             os.symlink("../" + projectversion, os.path.join(lhcbsitelocation, "releases", branch, projectversion))
         except os.error, err:
             err
-    
+
         versions = []
         versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases", branch)), safe=True)
         versions.reverse()
@@ -210,7 +210,7 @@ def addRelease(projectname, projectversion, branch=None, releases_dir=None, doc_
         except os.error, err:
             err
         os.symlink(versions[0], os.path.join(lhcbsitelocation, "releases", branch, "latest"))
-    
+
     log.info((" Release %s added. " % projectversion).center(80,"-"))
 
 
@@ -222,12 +222,12 @@ class WebAddReleaseScript(Script):
         parser.set_defaults(release_dir=None)
         parser.add_option("-r", "--releases-dir",
                           dest="releases_dir",
-                          help="set the LHCb releases directory", 
+                          help="set the LHCb releases directory",
                           fallback_env="LHCBRELEASES")
         parser.set_defaults(doc_dir=None)
         parser.add_option("-d", "--doc-dir",
                           dest="doc_dir",
-                          help="set the web doc directory", 
+                          help="set the web doc directory",
                           fallback_env="LHCBDOC")
     def main(self):
         opts = self.options
@@ -240,9 +240,9 @@ class WebAddReleaseScript(Script):
         branch = None
         if len(args) > 2 :
             branch = args[2]
-        
+
         addRelease(projectname, projectversion, branch, opts.releases_dir, opts.doc_dir)
-        
+
         return 0
 
 

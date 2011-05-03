@@ -1,3 +1,7 @@
+2011-05-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbLegacy/scripts/FixProjectLinks: replaces CVS2Version with Marco's parseSvnVersion.
+
 2011-05-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkMCGentar: fixed usage of the TempDir class.

@@ -8,8 +8,8 @@ from fnmatch import fnmatch
 from tempfile import mkstemp
 
 from LbConfiguration import createProjectMakefile, createEclipseConfiguration
-from LbUtils.CVS import CVS2Version
 from LbUtils.Temporary import TempDir
+
 from LbConfiguration.Version import ParseSvnVersion
 __version__ = ParseSvnVersion("$Id$", "$URL$")
 

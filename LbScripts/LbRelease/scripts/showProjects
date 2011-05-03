@@ -3,35 +3,35 @@
 
 from LbRelease.CMT import LbGraph
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 
 class showProjScript(Script):
     _version = __version__
-    def defineOpts(self): 
+    def defineOpts(self):
         parser = self.parser
         parser.set_defaults(casesensitive=False)
 
         parser.add_option("-s", "--case-sensitive",
-                          action="store_true", 
+                          action="store_true",
                           dest="casesensitive",
                           help="matching of the project name in case sensitive mode "
                           "[default: %default]")
         parser.add_option("-i", "--case-insensitive",
-                          action="store_false", 
+                          action="store_false",
                           dest="casesensitive",
                           help="matching of the project name in case insensitive mode")
-    
+
         parser.add_option("-P", "--project-path",
                           dest="cmtprojectpath",
-                          help="set CMTPROJECTPATH", 
+                          help="set CMTPROJECTPATH",
                           fallback_env="CMTPROJECTPATH")
-        
+
         parser.add_option("-S", "--select",
                           dest = "selection",
                           help = "filter project path according to the selection")
-        
+
         parser.set_defaults(dependencies=False)
         parser.add_option("-d", "--dependencies",
                           action = "store_true",
@@ -50,7 +50,7 @@ class showProjScript(Script):
                           dest = "afsinfo",
                           help = "Show AFS volume informations if any")
 
-        
+
         parser.add_option("-t", "--tags",
                           dest="tags",
                           help="set CMT extra tags" )
@@ -62,25 +62,25 @@ class showProjScript(Script):
                           help = "directory to look for projects")
 
 
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
 
     def main(self):
-        if self.env.has_key("CMTPATH"): 
+        if self.env.has_key("CMTPATH"):
             del self.env["CMTPATH"]
-    
+
         name = None
         if len(self.args) > 0:
             name = self.args[0]
-        
+
         version = None
         if len(self.args) > 1:
             version = self.args[1]
-        
+
         options = self.options
-        
+
         g=LbGraph(options.cmtprojectpath)
-    
-        g.getStartProjectsFromDir(directory=options.directory, 
+
+        g.getStartProjectsFromDir(directory=options.directory,
                                   name=name, version=version,
                                   casesense=options.casesensitive,
                                   select=options.selection)
@@ -88,11 +88,11 @@ class showProjScript(Script):
         if options.dependencies is not None:
             g.dependencies()
         g.show(options.packages, options.afsinfo)
-        
-#------------------------------------------------------------------------------ 
+
+#------------------------------------------------------------------------------
 if __name__ == '__main__':
 
     s = showProjScript(usage="%prog [options] projectname version")
     s.run()
-    
+
 

@@ -5,14 +5,14 @@
 from LbConfiguration.External import getExternalVersion
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
 import sys
 
-__version__ = CVS2Version("$Name: $", "$Revision: $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 
 class GetExtVersionScript(Script):
-    _version = __version__    
+    _version = __version__
     _description = __doc__
 
     def defineOpts(self):

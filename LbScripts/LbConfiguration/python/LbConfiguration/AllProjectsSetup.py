@@ -2,11 +2,12 @@
 # $Id: AllProjectsSetup.py,v 1.3 2010-02-09 18:09:44 hmdegaud Exp $
 
 from LbUtils.Script import SourceScript
-from LbUtils.CVS import CVS2Version
 from LbConfiguration.Project import project_list
+from LbConfiguration.Version import ParseSvnVersion
+
 import sys
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 
 
 class AllProjectsSetupScript(SourceScript):

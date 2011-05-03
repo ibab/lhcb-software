@@ -1,3 +1,13 @@
+2011-05-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/scripts/buildLCGTar:
+	* LbRelease/scripts/buildTar:
+	* LbRelease/scripts/checkTar:
+	* LbRelease/scripts/showProjects:
+	* LbRelease/scripts/webAddRelease:
+	* LbRelease/scripts/webArchiveRelease:
+	* LbRelease/scripts/webRemoveRelease: replaces CVS2Version with Marco's parseSvnVersion.
+
 2011-04-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: use the SVN keywords for the version of the script.

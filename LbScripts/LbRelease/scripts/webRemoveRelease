@@ -3,9 +3,9 @@
 """ This scripts removes the links of a release in the $LHCBDOC directory"""
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
+from LbConfiguration.Version import ParseSvnVersion
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = ParseSvnVersion("$Id$", "$URL$")
 __author__ = "hmd"
 
 from LbConfiguration.Version import sortVersions, version_style
@@ -17,9 +17,9 @@ from stat import *
 
 
 def removeRelease(projectname, projectversion, branch=None):
-    
+
     lhcbreleases = os.environ["LHCBRELEASES"]
-    
+
     projectname = sys.argv[1]
     projectversion = sys.argv[2]
     lhcbsitelocation = ""
@@ -32,14 +32,14 @@ def removeRelease(projectname, projectversion, branch=None):
     else:
         lhcbsitelocation = lhcbsitelocation;
     lhcbsitelocation = lhcbsitelocation + projectname.lower() + "/"
-    
+
     print
     print " -- Project " + projectname.lower() + " " + projectversion.lower() + "--"
-    
+
     # recreate latest links
-    
+
     # try to find branch for this version and remove it from branch and recreate latest link
-    
+
     for dir in os.listdir(lhcbsitelocation + "releases"):
         if version_style.match(dir) == None:
             try:
@@ -53,7 +53,7 @@ def removeRelease(projectname, projectversion, branch=None):
                             os.remove(lhcbsitelocation + "releases/" + dir + "/latest")
                         except os.error, err:
                             err
-    
+
                         versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases", dir)), safe=True)
                         versions.reverse()
                         os.symlink(versions[0], lhcbsitelocation + "releases/" + dir + "/latest")
@@ -61,27 +61,27 @@ def removeRelease(projectname, projectversion, branch=None):
                     err
             except os.error, err:
                 err
-    
+
     # if remove from branch - exit
-    
+
     if branch != "":
         print " :: Release " + projectversion + " removed from branch " + branch + "."
         print
         raise SystemExit
-    
+
     # if no - remove version and recreate latest link
-    
+
     shutil.rmtree(lhcbsitelocation + "releases/" + projectversion)
-    
+
     try:
         os.remove(lhcbsitelocation + "releases/latest")
     except os.error, err:
         err
-    
+
     versions = sortVersions(os.listdir(os.path.join(lhcbsitelocation, "releases")), safe=True)
     versions.reverse()
     os.symlink(versions[0], lhcbsitelocation + "releases/latest")
-    
+
     print " :: Release " + projectversion + " removed."
     print
 
