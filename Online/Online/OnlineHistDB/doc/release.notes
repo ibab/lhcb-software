@@ -6,6 +6,7 @@
 ! or using makedoc script in this folder
 !
 
+!========================= 2011-05-03 v7r6 ====================================
 ! 20110422 GG
  - aesthetical fix to message dump output 
  - protection against deletion of an histogram needed by a virtual one (virtual histogram must be deleted first)
