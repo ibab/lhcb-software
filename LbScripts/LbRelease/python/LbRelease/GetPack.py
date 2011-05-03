@@ -728,14 +728,15 @@ class GetPack(Script):
             if self.options.file:
                 self.parser.error("Option '--file' cannot be used together with '--project'")
             # getpack.py --project project [version]
-            if self.args:
-                self.project_name = self.args.pop(0)
+            if not self.options.list:
                 if self.args:
-                    self.project_version = self.args.pop(0)
-                if self.args:
-                    self.parser.error("requires maximum 2 arguments")
-            elif not self.options.list:
-                self.parser.error("project name is required")
+                    self.project_name = self.args.pop(0)
+                    if self.args:
+                        self.project_version = self.args.pop(0)
+                    if self.args:
+                        self.parser.error("requires maximum 2 arguments")
+                else:
+                    self.parser.error("project name is required")
             # I want to use the bare version number and not the conventional one
             if self.project_version and self.project_version.startswith(self.project_name.upper() + "_"):
                 self.project_version = self.project_version[len(self.project_name)+1:]
@@ -743,18 +744,17 @@ class GetPack(Script):
             if self.args:
                 self.parser.error("You cannot specify packages with both '--file' and on the command line")
             self.options.batch = True
-        elif self.options.list:
-            pass # nothing special to check, just skip the 'else' clause
         else:
             # getpack.py [-u] package [version]
-            if self.args:
-                self.requested_package = self.args.pop(0)
+            if not self.options.list:
                 if self.args:
-                    self.requested_package_version = self.args.pop(0)
-                if self.args:
-                    self.parser.error("requires maximum 2 arguments")
-            elif not self.options.list:
-                self.parser.error("package name is required unless '-i' or '--list' is used")
+                    self.requested_package = self.args.pop(0)
+                    if self.args:
+                        self.requested_package_version = self.args.pop(0)
+                    if self.args:
+                        self.parser.error("requires maximum 2 arguments")
+                else:
+                    self.parser.error("package name is required unless '-i' or '--list' is used")
 
         if (self.project_version or self.requested_package_version or "").endswith('b'):
             # version ending with 'b' implies --branches
@@ -1006,6 +1006,7 @@ class GetPack(Script):
         List function specialized in packages.
         """
         if self.args:
+            self.log.debug("Requested versions for packages %r", self.args)
             # we got a list of packages, so we need to print their versions
             # first collect the data as {"package": (["v1","v2",...], "default")}
             versions = {}
@@ -1014,11 +1015,10 @@ class GetPack(Script):
                 if rep:
                     versions[package] = (rep.listVersions(package),
                                          guessDefaultVersion(package))
-                    self.log.debug(repr(versions[package]))
                 else:
                     self.log.warning("Unknown package '%s'!", package)
             if not self.options.xml:
-                for package in sorted(versions.keys()):
+                for package in sorted(versions):
                     print package
                     packvers, default = versions[package]
                     for v in packvers:
@@ -1028,7 +1028,7 @@ class GetPack(Script):
                 import xml.dom
                 impl = xml.dom.getDOMImplementation()
                 doc = impl.createDocument(None, "packages", None)
-                for package in sorted(versions.keys()):
+                for package in sorted(versions):
                     pack = doc.createElement("package")
                     pack.setAttribute("name", package.rsplit("/", 1)[-1])
                     pack.setAttribute("fullname", package)
@@ -1044,6 +1044,7 @@ class GetPack(Script):
                     doc.documentElement.appendChild(pack)
                 print doc.toprettyxml()
         else:
+            self.log.debug("Preparing list of packages")
             if not self.options.xml:
                 for p in sorted(self.packages):
                     print p
@@ -1054,34 +1055,42 @@ class GetPack(Script):
         """
         List function specialized in packages.
         """
-        if self.project_name:
-            # in this case we need to print the versions of the project
-            project = self._fixProjectNameCase(self.project_name)
-            if not project:
-                return
-            # no need to check the repository because it is implicit in the previous check
-            rep = self._getModuleRepo(project, isProject = True)
-            versions = rep.listVersions(project, isProject = True)
+        if self.args:
+            self.log.debug("Requested versions for projects %r", self.args)
+            # in this case we need to print the versions of the projects
+            projects = filter(None, map(self._fixProjectNameCase, self.args))
+            # prepares the structure for the versions (as in _list_packages)
+            versions = {}
+            for project in projects:
+                # no need to check the repository because it is implicit in the previous check
+                # (self._fixProjectNameCase)
+                rep = self._getModuleRepo(project, isProject = True)
+                versions[project] = rep.listVersions(project, isProject = True)
             if not self.options.xml:
-                for v in versions:
-                    print v
+                for project in sorted(versions):
+                    print project
+                    for v in versions[project]:
+                        print "  %s" % v
             else:
                 # @todo: factor out the generation of XML for versions
                 import xml.dom
                 impl = xml.dom.getDOMImplementation()
-                doc = impl.createDocument(None, "project", None)
-                top = doc.documentElement
-                top.setAttribute("name", project)
-                vers = doc.createElement("versions")
-                for v in versions:
-                    el = doc.createElement("version")
-                    el.appendChild(doc.createTextNode(v))
-                    vers.appendChild(el)
-                top.appendChild(vers)
+                doc = impl.createDocument(None, "projects", None)
+                for project in sorted(versions):
+                    proj = doc.createElement("project")
+                    proj.setAttribute("name", project)
+                    vers = doc.createElement("versions")
+                    for v in versions[project]:
+                        el = doc.createElement("version")
+                        el.appendChild(doc.createTextNode(v))
+                        vers.appendChild(el)
+                    proj.appendChild(vers)
+                    doc.documentElement.append(proj)
                 print doc.toprettyxml()
         else:
+            self.log.debug("Preparing list of projects")
             if not self.options.xml:
-                for p in self.projects:
+                for p in sorted(self.projects):
                     print p
             else:
                 print self._makeListXML(doPackages = False)
