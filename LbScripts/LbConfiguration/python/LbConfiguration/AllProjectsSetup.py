@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: AllProjectsSetup.py,v 1.3 2010-02-09 18:09:44 hmdegaud Exp $
+# $Id$
 
 from LbUtils.Script import SourceScript
 from LbConfiguration.Project import project_list

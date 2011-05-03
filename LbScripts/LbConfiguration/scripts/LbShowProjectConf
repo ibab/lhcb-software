@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: LbShowProjectConf,v 1.2 2009-08-11 16:19:23 hmdegaud Exp $
+# $Id$
 """ Show the LHCb project configuration """
 
 from LbConfiguration.Project import getProject, project_list

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: FixProjectLinks,v 1.2 2009-05-26 17:53:50 hmdegaud Exp $
+# $Id$
 """ Fix the dangling AFS link in the local installation """
 
 from LbLegacy.ProjectLinks import fixLinks

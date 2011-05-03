@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: webRemoveRelease,v 1.1 2009-12-15 15:57:23 hmdegaud Exp $
+# $Id$
 """ This scripts removes the links of a release in the $LHCBDOC directory"""
 
 from LbUtils.Script import Script

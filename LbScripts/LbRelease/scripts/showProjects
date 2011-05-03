@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: showProjects,v 1.1 2009-01-13 13:32:17 hmdegaud Exp $
+# $Id$
 
 from LbRelease.CMT import LbGraph
 from LbUtils.Script import Script
