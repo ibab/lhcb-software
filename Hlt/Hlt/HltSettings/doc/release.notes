@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-05-03 - Johannes Albrecht
+ - Add Low mult lines to Physics_May2011
+ - remove Hlt2DiMuonNoPV (according to D. Morgan now duplicate) 
+
 ! 2011-04-29 - Roel Aaij
  - Add Physics_May2011, a draft of the configuration for running after May's
    technical stop.

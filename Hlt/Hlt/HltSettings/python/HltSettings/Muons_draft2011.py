@@ -41,7 +41,7 @@ class Muons_draft2011 :
             'Hlt2DiMuonDetachedJPsi',
             'Hlt2DiMuonDetachedHeavy',
 
-            'Hlt2DiMuonNoPV',
+            #'Hlt2DiMuonNoPV',#remove on request buy Dermot Morgan, May3, 2011
 
             # control rate via: prescale
             'Hlt2DiMuonDY1',

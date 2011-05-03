@@ -147,7 +147,12 @@ class Physics_May2011( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent']
+        hlt2 = ['Hlt2PassThrough','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
+                'Hlt2diPhotonDiMuon',
+                'Hlt2LowMultMuon',
+                'Hlt2LowMultHadron',
+                'Hlt2LowMultPhoton',
+                'Hlt2LowMultElectron']
 
         from Express_Hlt2_Sep10 import Express_Hlt2_Sep10
         hlt2.extend( Express_Hlt2_Sep10().ActiveHlt2Lines() )
