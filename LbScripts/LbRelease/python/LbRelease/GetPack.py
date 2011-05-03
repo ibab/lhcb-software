@@ -330,6 +330,9 @@ class GetPack(Script):
 
         self.show_uses_regexp = re.compile(r"# (?P<spaces> *)use (?P<package>[^ ]+) (?P<version>[^ ]+) (?P<hat>[^ ]*)")
 
+        # Return code of the script
+        self.retval = 0
+
     def defineOpts(self):
         """ User options -- has to be overridden """
         self.parser.set_conflict_handler("resolve")
@@ -398,6 +401,12 @@ class GetPack(Script):
                                help = "print the list of known packages/projects/versions; alone prints the list "
                                "of packages, while with a package name prints the list of versions of that package; "
                                "adding --project prints informations about projects instead of packages")
+        self.parser.add_option("-F", "--file", action = "store",
+                               help = "take the list of packages and versions to check out from a file. "
+                               "Each line of the file has to be of the format 'package version' "
+                               "('#' is interpreted as a comment and empty lines are skipped). "
+                               "If the file name is '-' the list is taken from the standard input. "
+                               "Note: it implies '--batch' and cannot be used for projects.")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False,
                                  user_svn = [],
@@ -689,12 +698,16 @@ class GetPack(Script):
                                  "disappear in a future version. Use '%s' instead.",
                                  old, new)
                 args[args.index(old)] = new
+
         Script.parseOpts(self, args)
+
         # Set the default versions if --recursive-head is requested
         if self.options.recursive_head:
             self.project_version = "head"
             self.requested_package_version = "head"
+
         # Validate and parse positional arguments
+        # Here we have to treat the options that change the meaning of the arguments
         if self.options.interactive:
             if self.options.project:
                 self.parser.error("Options '-i' and '--project' cannot be used at the same time")
@@ -712,6 +725,8 @@ class GetPack(Script):
             if self.args:
                 self.parser.error("Option '-i' requires maximum 2 arguments")
         elif self.options.project:
+            if self.options.file:
+                self.parser.error("Option '--file' cannot be used together with '--project'")
             # getpack.py --project project [version]
             if self.args:
                 self.project_name = self.args.pop(0)
@@ -724,6 +739,10 @@ class GetPack(Script):
             # I want to use the bare version number and not the conventional one
             if self.project_version and self.project_version.startswith(self.project_name.upper() + "_"):
                 self.project_version = self.project_version[len(self.project_name)+1:]
+        elif self.options.file:
+            if self.args:
+                self.parser.error("You cannot specify packages with both '--file' and on the command line")
+            self.options.batch = True
         else:
             # getpack.py [-u] package [version]
             if self.args:
@@ -799,16 +818,38 @@ class GetPack(Script):
         return required
 
     def getpack(self):
-        if self.requested_package and self.requested_package not in self.packages:
-            self.log.error("Unknown package '%s'!", self.requested_package)
-            self.requested_package = None
-        if self.requested_package is None:
-            self.requested_package = self.askPackage()
-
         # Dictionaries (pkg->version) of done, skipped and to-do packages
         done_packages = {}
         skipped_packages = {}
-        todo_packages = { self.requested_package: self.requested_package_version }
+
+        if not self.options.file:
+            if self.requested_package and self.requested_package not in self.packages:
+                self.log.error("Unknown package '%s'!", self.requested_package)
+                self.requested_package = None
+            if self.requested_package is None:
+                self.requested_package = self.askPackage()
+            todo_packages = { self.requested_package: self.requested_package_version }
+        else:
+            # read the list of packages+versions from the file
+            if self.options.file == '-':
+                f = sys.stdin
+            else:
+                f = open(self.options.file)
+            import string
+            # remove comments and whitespaces from a line
+            stripLine = lambda l: string.strip(l[:l.find('#')])
+            try:
+                todo_packages = dict( # make a dictionary
+                                     map(string.split, # of all the whitespace-separated pairs
+                                         filter(None, map(stripLine, f)) # in the non-empty lines
+                                         )
+                                     )
+            except Exception, x:
+                self.log.error("Problems reading the list of packages: (%s) %s",
+                               x.__class__.__name__,
+                               x)
+                self.retval = 1
+                return
 
         self.log.debug("Starting processing loop")
         # process the list of pending packages
@@ -1060,9 +1101,11 @@ class GetPack(Script):
                 self.getpack()
         except Skip:
             print "Stopped!"
+            self.retval = 1
         except Quit:
             print "Quit!"
+            self.retval = 1
 
         #from pprint import pprint
         #pprint(packages)
-        return 0
+        return self.retval
