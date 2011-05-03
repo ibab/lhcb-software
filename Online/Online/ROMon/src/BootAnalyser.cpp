@@ -549,6 +549,8 @@ int BootMonitor::start() {
       dnam = CLUSTERLOGS_FARMS;
       dnam += "/";
       dnam += entry;
+      dnam += "/";
+      dnam += entry;
       if ( 0 == ::stat(dnam.c_str(),&statbuff) ) {
         if ( S_ISDIR(statbuff.st_mode) ) {
           ::lib_rtl_output(LIB_RTL_DEBUG,"Loading subfarm boot status of %s.",entry);

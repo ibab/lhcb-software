@@ -181,12 +181,12 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   static const float FLT_max = numeric_limits<float>::max();
 
   char txt[128], text[128];
-  int evt_prod[3]    = {0,0,0}, min_prod[3]  = {INT_max,INT_max,INT_max};
-  int free_space[3]  = {0,0,0}, min_space[3] = {INT_max,INT_max,INT_max};
-  int free_slots[3]  = {0,0,0}, min_slots[3] = {INT_max,INT_max,INT_max};
-  int buf_clients[3] = {0,0,0};
-  float fspace[3]    = {FLT_max,FLT_max,FLT_max};
-  float fslots[3]    = {FLT_max,FLT_max,FLT_max};
+  int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
+  int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
+  int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
+  int buf_clients[4] = {0,0,0,0};
+  float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
+  float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
   int evt_sent       = INT_max;
   int evt_moore      = INT_max;
@@ -211,9 +211,9 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       switch(b) {
       case MEP_BUFFER:        idx = 0; break;
       case EVT_BUFFER:        idx = 1; break;
-      case RES_BUFFER:
-      case SND_BUFFER:        idx = 2; break;
-      default:                   continue;
+      case RES_BUFFER:        idx = 2; break;
+      case SND_BUFFER:        idx = 3; break;
+      default:                continue;
       }
       inuse = true;
       fsp               = float(ctrl.i_space)/float(ctrl.bm_size);
@@ -273,6 +273,22 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     m_lastUpdate = t1;
   }
   m_hasProblems = true;
+  // If Result buffer is not in use
+  if ( buf_clients[3] != 0 && buf_clients[2] == 0 )  {
+    buf_clients[2] = buf_clients[3];
+    fspace[2]      = fspace[2];
+    fslots[2]      = fslots[2];
+    min_space[2]   = min_space[2];
+    min_slots[2]   = min_slots[2];
+    min_prod[2]    = min_prod[2];
+    evt_prod[2]    = evt_prod[2];
+    free_space[2]  = free_space[2];
+    free_slots[2]  = free_slots[2];
+  }
+
+  bool slots_min = fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN;
+  bool space_min = fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN;
+
   if ( prev_update-m_lastUpdate > UPDATE_TIME_MAX ) {
     setTimeoutError();
   }
@@ -283,26 +299,6 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   else if ( !inuse ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," Subfarm not used by any partition....",NORMAL|INVERSE|GREEN,4,1,1);
-  }
-  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
-    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
-    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
   else if ( evt_built <= m_evtBuilt && evt_prod[0]<m_totBuilt ) {
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
@@ -328,6 +324,26 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   else if ( evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
+  }
+  else if ( slots_min  ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::sprintf(txt," SLOTS at limit:");
+    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
+    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
+    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
+    ::strcat(txt,text);
+    ::scrc_put_chars(m_display,txt,BOLD|MAGENTA,4,1,1);
+  }
+  else if ( space_min  ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::sprintf(txt," SPACE at limit:");
+    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
+    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
+    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
+    ::strcat(txt,text);
+    ::scrc_put_chars(m_display,txt,BOLD|MAGENTA,4,1,1);
   }
   else {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
