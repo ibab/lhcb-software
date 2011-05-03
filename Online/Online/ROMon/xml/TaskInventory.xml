@@ -89,7 +89,9 @@
 </TaskList>
 
 <TaskList name="ControlsPC">
+ <Task name="pcSrv_u"/>
  <Task name="ROpublish"/>
+ <Task name="ROcollect"/>
  <Task name="TaskSupervisor"/>
 </TaskList>
 
@@ -269,7 +271,9 @@
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
+<!--
   <Task name="MBMMON_0"/>
+-->
   <ConnectionList name="Standard"/>
   <ConnectionList name="StorageWorker"/>
 </NodeType>
@@ -278,6 +282,8 @@
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
+  <Task name="LogDef"/>
+  <Task name="LogSumDefSrv"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
   <Task name="LogRecoSumSrv"/>
@@ -304,7 +310,9 @@
 <NodeType name="HLTWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
+<!--
   <Task name="MBMMON_0"/>
+-->
   <ConnectionList name="Standard"/>
   <ConnectionList name="StorageReceiver"/>
 </NodeType>
@@ -325,7 +333,9 @@
 <NodeType name="CALWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
+<!--
   <Task name="MBMMON_0"/>
+-->
   <ConnectionList name="Standard"/>
 </NodeType>
 
@@ -396,16 +406,20 @@
   <TaskList name="FMC"/>
   <TaskList name="ControlsPC"/>
   <Task name="TANServ"/>
-  <Task name="ROcollect"/>
+  <Task name="ROBridge_0"/>
+  <Task name="BootMonSrv_0"/>
+  <Task name="FarmStatSrv_0"/>
+  <Task name="FarmStatSrv_1"/>
 <!--
   <Task name="FarmMon_0"/>
   <Task name="FarmStomp"/>
--->
-  <Task name="StatusStomp"/>
-  <Task name="OrbitedSrv_0"/>
   <Task name="OrbitedSrv_1"/>
   <Task name="OrbitedSrv_2"/>
-  <Task name="ActiveMQ"/>
+-->
+  <Task name="StatusStomp_0"/>
+  <Task name="OrbitedSrv_0"/>
+  <Task name="ActiveMQ_0"/>
+  <Task name="AMQWatch_0"/>
   <Task name="ElogPublish"/>
   <Task name="ElogExtract"/>
 <!--
@@ -421,10 +435,7 @@
 <NodeType name="ECS04Node">
   <TaskList name="FMC"/>
   <TaskList name="ControlsPC"/>
-  <TaskList name="ControlsPC"/>
-  <Task name="pcSrv_u"/>
   <Task name="TANServ"/>
-  <Task name="ROcollect"/>
   <Task name="TaskSupervisor"/>
   <Task name="condDBServerLOG"/>
   <Task name="condDBServer"/>
