@@ -102,6 +102,10 @@ namespace LHCb  {
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
     /// IService implementation: initialize the service
     virtual StatusCode initialize();
+    /// IService implementation: start the service
+    virtual StatusCode start();
+    /// IService implementation: stop the service
+    virtual StatusCode stop();
     /// IService implementation: finalize the service
     virtual StatusCode finalize();
     /// Incident handler implemenentation: Inform that a new incident has occured

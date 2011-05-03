@@ -83,6 +83,21 @@ StatusCode EventServerRunable::initialize()   {
   if ( !sc.isSuccess() )  {
     return error("Failed to initialize service base class.");
   }
+  string self = RTL::dataInterfaceName()+"::"+RTL::processName();
+  m_netPlug = net_init(self);
+  net_subscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT,handle_req,handle_death);
+  incidentSvc()->addListener(this,"DAQ_CANCEL");
+  declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
+  m_reqActive = false;
+  return sc;
+}
+
+// IService implementation: start the service
+StatusCode EventServerRunable::start()   {
+  StatusCode sc = OnlineService::start();
+  if ( !sc.isSuccess() )  {
+    return error("Failed to start service base class.");
+  }
   if ( !(sc=service(m_mepMgrName,m_mepMgr)).isSuccess() )  {
     return error("Failed to access MEP manager service.");
   }
@@ -90,15 +105,24 @@ StatusCode EventServerRunable::initialize()   {
   if ( i == m_mepMgr->buffers().end() ) {
     return error("Failed to access Input buffer:"+m_input+".");
   }
-  m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m_mepMgr->partitionID());
   m_request.parse(m_req);
+  m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m_mepMgr->partitionID());
   m_consState = WAIT_REQ;
-  string self = RTL::dataInterfaceName()+"::"+RTL::processName();
-  m_netPlug = net_init(self);
-  net_subscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT,handle_req,handle_death);
-  incidentSvc()->addListener(this,"DAQ_CANCEL");
-  declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
-  m_reqActive = false;
+  restartRequests();
+  return sc;
+}
+
+// IService implementation: stop the service
+StatusCode EventServerRunable::stop()   {
+  StatusCode sc = OnlineService::stop();
+  if ( !sc.isSuccess() )  {
+    return error("Failed to stop service base class.");
+  }
+  if ( m_consumer ) {
+    delete m_consumer;
+  }
+  m_consumer = 0;
+  releaseInterface(m_mepMgr);
   return sc;
 }
 
@@ -133,7 +157,7 @@ void EventServerRunable::handle(const Incident& inc)    {
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_consState = DONE;
     if ( !m_mepMgrName.empty() )  {
-      if ( 0 == m_mepMgr ) {
+      if ( 0 == m_mepMgr && FSMState() == Gaudi::StateMachine::RUNNING ) {
         error("Got incident:"+inc.source()+
               " -- Internal error:"+m_mepMgrName+" is not assigned.");
       }
@@ -188,7 +212,8 @@ void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hd
 #else
       m_recipients.push_back(make_pair(src,make_pair(*r,e)));
 #endif
-      restartRequests();
+      if ( FSMState() == Gaudi::StateMachine::RUNNING ) restartRequests();
+      else if ( m_consumer )  restartRequests();
     }
     catch(...) {
       info("Exception in handleEventRequest from "+src);
@@ -212,7 +237,7 @@ void EventServerRunable::restartRequests()  {
     }
   }
   if ( m_reqActive ) {
-    m_consumer->delRequest(old);
+    if ( m_consumer ) m_consumer->delRequest(old);
     m_reqActive = false;
   }
   if ( m_recipients.empty() )  {
@@ -254,6 +279,7 @@ StatusCode EventServerRunable::sendEvent()  {
     }
     ++i;
   }
+  m_consumer->freeEvent();
   return cnt>0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
