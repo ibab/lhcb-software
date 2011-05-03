@@ -102,9 +102,6 @@ class OMAFitHLTjpsi: public OMAFitFunction {
   }
   virtual void fit(TH1* histo, std::vector<float>* initValues);
 private:
-  TF1 m1;
-  TF1 m2;
-  TF1 m3;
 };
 
 
