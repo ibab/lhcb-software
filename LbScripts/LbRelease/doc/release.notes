@@ -2,6 +2,7 @@
 
 	* python/LbRelease/GetPack.py: added the possibility to specify a list of packages
 	to check out from a file or standard input.
+	Allow to list the version of several packages in one call.
 
 2011-05-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

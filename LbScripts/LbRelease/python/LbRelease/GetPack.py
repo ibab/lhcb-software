@@ -743,6 +743,8 @@ class GetPack(Script):
             if self.args:
                 self.parser.error("You cannot specify packages with both '--file' and on the command line")
             self.options.batch = True
+        elif self.options.list:
+            pass # nothing special to check, just skip the 'else' clause
         else:
             # getpack.py [-u] package [version]
             if self.args:
@@ -1003,41 +1005,47 @@ class GetPack(Script):
         """
         List function specialized in packages.
         """
-        if self.requested_package:
-            package = self.requested_package
-            # in this case we need to print the versions of the package
-            rep = self._getModuleRepo(package, isProject = False)
-            if rep:
-                versions = rep.listVersions(package)
-                default = guessDefaultVersion(package)
-                if not self.options.xml:
-                    for v in versions:
-                        if v == default:
-                            print v, "(default)"
-                        else:
-                            print v
+        if self.args:
+            # we got a list of packages, so we need to print their versions
+            # first collect the data as {"package": (["v1","v2",...], "default")}
+            versions = {}
+            for package in self.args:
+                rep = self._getModuleRepo(package, isProject = False)
+                if rep:
+                    versions[package] = (rep.listVersions(package),
+                                         guessDefaultVersion(package))
+                    self.log.debug(repr(versions[package]))
                 else:
-                    # @todo: factor out the generation of XML for versions
-                    import xml.dom
-                    impl = xml.dom.getDOMImplementation()
-                    doc = impl.createDocument(None, "package", None)
-                    top = doc.documentElement
-                    top.setAttribute("name", package.rsplit("/", 1)[-1])
-                    top.setAttribute("fullname", package)
+                    self.log.warning("Unknown package '%s'!", package)
+            if not self.options.xml:
+                for package in sorted(versions.keys()):
+                    print package
+                    packvers, default = versions[package]
+                    for v in packvers:
+                        print "  %s%s" % (v, (v == default) and " (default)" or "")
+            else:
+                # @todo: factor out the generation of XML for versions
+                import xml.dom
+                impl = xml.dom.getDOMImplementation()
+                doc = impl.createDocument(None, "packages", None)
+                for package in sorted(versions.keys()):
+                    pack = doc.createElement("package")
+                    pack.setAttribute("name", package.rsplit("/", 1)[-1])
+                    pack.setAttribute("fullname", package)
                     vers = doc.createElement("versions")
-                    for v in versions:
+                    packvers, default = versions[package]
+                    for v in packvers:
                         el = doc.createElement("version")
                         if v == default:
                             el.setAttribute("default", "true")
                         el.appendChild(doc.createTextNode(v))
                         vers.appendChild(el)
-                    top.appendChild(vers)
-                    print doc.toprettyxml()
-            else:
-                self.log.error("Unknown package '%s'!", self.requested_package)
+                    pack.appendChild(vers)
+                    doc.documentElement.appendChild(pack)
+                print doc.toprettyxml()
         else:
             if not self.options.xml:
-                for p in self.packages:
+                for p in sorted(self.packages):
                     print p
             else:
                 print self._makeListXML(doPackages = True)
