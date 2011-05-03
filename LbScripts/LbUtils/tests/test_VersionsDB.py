@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # pylint: disable-msg=W0212
-# $Id: test_VersionsDB.py,v 1.9 2008-10-29 17:43:40 hmdegaud Exp $
+# $Id$
 
 import unittest
 from LbUtils import VersionsDB
-from LbUtils.CVS import CVS2Version
 
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.9 $")
+__version__ = "$Id$"
 
 class VersionsDBTest(unittest.TestCase):
     def _prepareXML(self, data):
@@ -26,12 +25,12 @@ class VersionsDBTest(unittest.TestCase):
         return xml
     def _fillDB(self,data):
         VersionsDB.loadString(self._prepareXML(data))
-    
+
     def setUp(self):
         VersionsDB.clean()
     def tearDown(self):
         VersionsDB.clean()
-    
+
     def test_001_version_class(self):
         from LbUtils.VersionsDB import Version
         # parse string, evaluate representation and convert to string
@@ -68,7 +67,7 @@ class VersionsDBTest(unittest.TestCase):
         l.sort()
         res = [ str(v) for v in l ]
         self.assertEquals(res,sl)
-        
+
     def test_010_create_release(self):
         ra = VersionsDB.Release("ReleaseA")
         rb = VersionsDB.Release("ReleaseB",base="ReleaseA")
@@ -88,7 +87,7 @@ class VersionsDBTest(unittest.TestCase):
         r["Project2"] = "v2r0"
         r = VersionsDB.Release("ReleaseB",base="ReleaseA")
         r["Project2"] = "v2r1"
-        
+
         r = VersionsDB.getRelease("ReleaseA")
         self.assertEquals(r["Project1"].version,"v1r0")
         self.assertEquals(r["Project2"].version,"v2r0")
@@ -101,7 +100,7 @@ class VersionsDBTest(unittest.TestCase):
         r["Project2"] = "v2r0"
         self.assert_("Project3" not in r)
         self.assert_(not ("Project3" in r))
-        
+
     def test_110_basic_parse(self):
         """Basic parsing"""
         data = [("ReleaseName",None,[("Proj%d"%i,"v%dr0"%i) for i in range(3)])]
@@ -118,7 +117,7 @@ class VersionsDBTest(unittest.TestCase):
         self.assertRaises(VersionsDB.DuplicatedProjectError,
                           VersionsDB.loadString,
                           self._prepareXML(data))
-        
+
     def test_200_findReleases(self):
         data = [("R1",None,[("P1","v1r0"),("P2","v1r0"),("P3","v1r0")]),
                 ("R2",None,[("P1","v1r0"),("P2","v2r0"),("P3","v1r0")]),
@@ -152,23 +151,23 @@ class VersionsDBTest(unittest.TestCase):
                 ("R6",None,[("P1","v5r0"),("P2","v2r0"),("P3","v4r0"),("P4","v3r0")]),
                 ]
         self._fillDB(data)
-        
+
         self.assertEquals(VersionsDB.getCompatibleVersions("P3","v2r0",
                                                            "P4",
                                                            "P1"),["v1r0","v2r0"])
-        
+
         self.assertEquals(VersionsDB.getCompatibleVersions("P3","v3r0",
                                                            "P4",
                                                            "P1"),["v2r0"])
-        
+
         self.assertEquals(VersionsDB.getCompatibleVersions("P4","v1r0",
                                                            "P3",
                                                            "P1"),["v1r0","v2r0"])
-                
+
         self.assertEquals(VersionsDB.getCompatibleVersions("P2","v2r0",
                                                            "P3",
                                                            "P1"),["v1r0","v2r0","v3r0","v4r0"])
-        
+
         self.assertEquals(VersionsDB.getCompatibleVersions("P3","v3r0",
                                                            "P4",
                                                            "P2"),["v1r0","v2r0","v3r0"])
@@ -182,7 +181,7 @@ class VersionsDBTest(unittest.TestCase):
         self.assertEquals(VersionsDB.getCompatibleVersions("P3","v3r0",
                                                            "P4",
                                                            "P5"),[])
-        
+
     def _prepareDBWithDeps(self):
         r = VersionsDB.Release("r1")
         for i in range(1,8):
@@ -201,29 +200,29 @@ class VersionsDBTest(unittest.TestCase):
         r["p5"] = "v1r1"
         r["p5"].addRunTimeDep("p4")
         r["p5"].addRunTimeDep("z10")
-        
+
     def test_400_dependencies(self):
         self._prepareDBWithDeps()
         r = VersionsDB.getRelease("r1")
-        
+
         deps = r.expandBuildTimeDeps("p6")
         deps.sort()
         self.assertEquals(deps,["p1","p3"])
-        
+
         deps = r.expandRunTimeDeps("p6")
         deps.sort()
         self.assertEquals(deps,["p2","p4","p5"])
     def test_410_sort_projects(self):
         self._prepareDBWithDeps()
-        
+
         r = VersionsDB.getRelease("r1")
         projs = [ p.name for p in r.allProjects() ]
         self.assertEquals(projs,['p1', 'p2', 'p4', 'p3', 'p5', 'p7', 'p6'])
-        
+
         r = VersionsDB.getRelease("r2")
         projs = [ p.name for p in r.allProjects() ]
         self.assertEquals(projs,['p1', 'z10', 'p2', 'p4', 'p3', 'p5', 'p7', 'p6'])
-        
+
         projs = [ p.name for p in r.values() ]
         self.assertEquals(projs,['z10', 'p5'])
     def test_420_dependencies_loop(self):
@@ -231,11 +230,11 @@ class VersionsDBTest(unittest.TestCase):
         r["a"] = "v1r0"
         r["b"] = "v1r0"
         r["c"] = "v1r0"
-        
+
         r["b"].addBuildTimeDep("a")
         r["c"].addBuildTimeDep("b")
         r["a"].addBuildTimeDep("c")
-        
+
         self.assertRaises(VersionsDB.DependencyLoopError,VersionsDB._sortProjects,[r['a'],r['b'],r['c']])
     def test_500_unversioned_projects(self):
         r = VersionsDB.Release("r1")
@@ -244,19 +243,19 @@ class VersionsDBTest(unittest.TestCase):
         r["c"] = "v1r0"
         VersionsDB.addUnversionedProject("u1")
         VersionsDB.addUnversionedProject("u2").addRunTimeDep("u1")
-        
+
         r["b"].addRunTimeDep("u2")
         r["c"].addRunTimeDep("b")
-        
+
         rtd = r.expandRunTimeDeps("c")
         rtd.sort()
         self.assertEquals(rtd,["b","u1","u2"])
-        
+
         expected = [ ("b","v1r0"), ("u1",""), ("u2","") ]
         rtv = VersionsDB.getRuntimeVersions("c","v1r0","a")
         rtv.sort()
         self.assertEquals(rtv,expected)
-        
+
         self.assertEquals([p.name for p in r.allProjects()],["a","u1","u2","b","c"])
     def test_600_release_date(self):
         def test(self):
@@ -268,13 +267,13 @@ class VersionsDBTest(unittest.TestCase):
         # prepare db
         VersionsDB.Release("R1")
         VersionsDB.Release("R2", date = (2008,5,7))
-        
+
         test(self)
-        
-        # check XML generation 
+
+        # check XML generation
         xml = VersionsDB.generateXML()
         VersionsDB.loadString(xml)
-        
+
         test(self)
 
     def test_610_project_version_tag(self):
@@ -287,15 +286,15 @@ class VersionsDBTest(unittest.TestCase):
         r = VersionsDB.Release("R1")
         r.add(VersionsDB.Project("p1", "v1r0"))
         r.add(VersionsDB.Project("p2", "v1r0", tag = "DC06"))
-        
+
         test(self)
-        
-        # check XML generation 
+
+        # check XML generation
         xml = VersionsDB.generateXML()
         VersionsDB.loadString(xml)
-        
+
         test(self)
-        
+
     def test_900_generateXML(self):
         data = [("R1",None,[("P1","v1r0"),("P2","v1r0"),("P3","v1r0"),("P4","v1r0")]),
                 ("R2",None,[("P1","v2r0"),("P2","v2r0"),("P3","v1r0"),("P4","v1r0")]),
@@ -314,11 +313,11 @@ class VersionsDBTest(unittest.TestCase):
 
     def test_910_generateXML_deps(self):
         self._prepareDBWithDeps()
-        
+
         xml = VersionsDB.generateXML()
         #print repr(xml)
         VersionsDB.loadString(xml)
         self.assertEquals(xml,VersionsDB.generateXML())
-        
+
 if __name__ == "__main__":
     unittest.main()

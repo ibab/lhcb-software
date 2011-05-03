@@ -5,6 +5,7 @@ Script to create self-extracting scripts\n\n
 
 """
 
+
 from LbUtils.Script import Script
 from LbUtils.SelfExtract import createSelfExtractFile, default_template, supported_compression
 

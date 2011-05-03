@@ -3,10 +3,9 @@
 """ Script to fix absolute links """
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
 from LbUtils.Links import fixLinks
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = "$Id$"
 __author__ = "hmd"
 
 class FixLinksScript(Script):

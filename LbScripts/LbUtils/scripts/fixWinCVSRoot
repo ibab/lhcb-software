@@ -6,7 +6,7 @@ from LbUtils.CVS import fixRoot, CVS2Version
 
 import os, logging
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = "$Id$"
 
 
 def dryRunCallBack(option, opt_str, value, parser):

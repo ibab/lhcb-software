@@ -3,12 +3,11 @@
 """ This script is made for removing the write access of an AFS directory """
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
 from LbUtils.afs.directory import Directory
 
 import sys
 
-__version__ = CVS2Version("$Name: $", "$Revision: $")
+__version__ = "$Id$"
 
 class LockAFSDirScript(Script):
     _version = __version__

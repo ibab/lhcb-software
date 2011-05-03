@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: testafs.py,v 1.4 2008-10-29 17:43:40 hmdegaud Exp $
+# $Id$
 """ test file for the AFS module """
 
 from os import environ, sep
@@ -7,9 +7,8 @@ from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName
 from LbUtils.afs.directory import getParentMountPoint, NotInAFS
 from LbUtils.afs.directory import isMountPoint, Directory
 from LbUtils.afs.volume import Volume
-from LbUtils.CVS import CVS2Version
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
+__version__ = "$Id$"
 
 
 if __name__ == '__main__':
@@ -44,12 +43,12 @@ if __name__ == '__main__':
         h.getACL()
     except NotInAFS:
         pass
-    
+
     try :
         v = Volume(dirname=environ["HOME"])
     except NotInAFS:
         pass
-    
+
     v2 = Volume(dirname="/afs/cern.ch/user/h/hmd/scratch0")
     print v2.name()
     print v2.quota("B")

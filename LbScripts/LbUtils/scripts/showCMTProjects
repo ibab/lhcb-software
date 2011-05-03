@@ -4,9 +4,8 @@
 
 
 from LbUtils.CMT import showCMTProjScript
-from LbUtils.CVS import CVS2Version
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = "$Id$"
 
 if __name__ == '__main__':
 

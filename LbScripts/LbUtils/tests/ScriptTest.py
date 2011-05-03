@@ -1,23 +1,22 @@
 #!/usr/bin/env python
-# $Id: ScriptTest.py,v 1.2 2009-11-09 10:37:32 hmdegaud Exp $
+# $Id$
 """ Don't forget about the description """
 
-from LbUtils.Script import ConfigScript as Script 
-from LbUtils.CVS import CVS2Version
+from LbUtils.Script import ConfigScript as Script
 
 import logging
 import os
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__version__ = "$Id$"
 
 class ScriptTest(Script):
-    _version = __version__    
+    _version = __version__
     _description = __doc__
     def defineOpts(self):
         parser = self.parser
         parser.set_defaults(toto_val="bla")
         parser.add_option("-t", "--toto-val", help="set toto value [default %default]")
-        
+
     def main(self):
         log = logging.getLogger()
         log.debug("This is a debug message")

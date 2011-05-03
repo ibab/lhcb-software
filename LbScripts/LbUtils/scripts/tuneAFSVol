@@ -3,12 +3,11 @@
 """ This script is made to tune the AFS volume settings """
 
 from LbUtils.Script import Script
-from LbUtils.CVS import CVS2Version
 from LbUtils.afs.volume import Volume
 
 import sys
 
-__version__ = CVS2Version("$Name: $", "$Revision: $")
+__version__ = "$Id$"
 
 class TuneAFSVolScript(Script):
     _version = __version__
