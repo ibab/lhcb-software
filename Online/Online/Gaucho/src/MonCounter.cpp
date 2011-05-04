@@ -36,7 +36,8 @@ MonCounter::MonCounter(const std::string& name, const std::string& title, const 
 }
 MonCounter::MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size)
 {
-  char fch = *fmt.c_str();
+  setup(m_type,data,name,title,size);
+  char fch = fmt[0];
   fch = tolower(fch);
   switch (fch)
   {
@@ -76,7 +77,6 @@ MonCounter::MonCounter(const std::string& name, const std::string& title, const 
       break;
     }
   }
-  setup(m_type,data,name,title,size);
   m_fmt = fmt;
 }
 
