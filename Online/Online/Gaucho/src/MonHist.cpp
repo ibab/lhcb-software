@@ -181,7 +181,14 @@ void MonHist::makeCounters()
        for (it = m_cntrmgr->m_counterMap.begin(); it != m_cntrmgr->m_counterMap.end(); it++)
        {
   //       msg <<MSG::DEBUG<<"label description: " << (*(it->second.first)).c_str() << endreq;
-         ax->SetBinLabel(i, it->second.first.c_str());
+         if (it->second.first.c_str() != 0)
+         {
+           ax->SetBinLabel(i, it->second.first.c_str());
+         }
+         else
+         {
+           ax->SetBinLabel(i,"Bad label");
+         }
   //       printf("Rate Axis Label for bin %d %s\n",i, (*(it->second.first)).c_str());
          i++;
        }
