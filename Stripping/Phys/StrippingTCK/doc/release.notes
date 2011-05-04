@@ -6,6 +6,11 @@
                 Based on TCKsh by Gerhard Raven
 !-----------------------------------------------------------------------------
 
+! 2011-05-04 - Anton Poluektov 
+
+ - Configuration database updated with the configuration of Stripping13 (DaVinci v28r2p2)
+   STCK is 0x28220013
+
 ! ======================== StrippingTCK v1r0 2011-04-29 ================
 ! 2011-04-09 - Anton Poluektov 
 
