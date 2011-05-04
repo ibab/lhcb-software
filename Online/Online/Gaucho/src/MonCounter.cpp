@@ -166,7 +166,7 @@ int MonCounter::hdrlen()  const
 
 int MonCounter::xmitbuffersize()
 {
-  if (m_type == C_VOIDSTAR)
+  if (m_type == C_VOIDSTAR|| m_type == H_ILLEGAL)
   {
     return 0;
   }
