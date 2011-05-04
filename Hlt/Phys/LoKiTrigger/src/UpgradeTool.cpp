@@ -153,11 +153,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
   for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout ) 
   {
     LHCb::Track* trk = *iout ;
-    trk->setType ( m_config.trType () ) ;
+    if ( owner    () ) { trk->setType ( m_config.trType () )     ; }
     if ( moveIDs  () ) { ::moveIDs ( seed , trk )                ; }
     if ( moveAncs () ) { trk->addToAncestors ( seed )            ; }
     if ( moveInfo () ) { trk->setExtraInfo ( seed->extraInfo() ) ; }
-    trk->addInfo ( recoID() , seed->key() ) ;
   }
   //
   // This is nasty... use the size to indicate success or failure

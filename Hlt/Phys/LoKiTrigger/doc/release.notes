@@ -5,6 +5,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-05-04 - Roel Aaij
+ - Fix a bug in UpgradeTool where the extraInfo field for the recoID on a seed
+   would be it's key instead of the number of resulting output tracks if the 
+   underlying tool does not modify the track but returns the track itself.
+
 ! 2011-04-29 - Roel Aaij
  - Fix L0CaloCut wrongly flagged as never having a threshold.
  - Set instant suppression for Error and Warning in Hlt1 track upgrade
