@@ -359,7 +359,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   }
   if (m_reference < current)
   {
-    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
+//    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
     if(this->m_rectmo >0) this->m_timer->Start();
     if ((m_reference != -1) && !m_updated)
     {
