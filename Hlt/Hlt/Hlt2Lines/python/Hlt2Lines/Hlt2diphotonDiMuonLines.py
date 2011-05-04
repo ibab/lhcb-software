@@ -30,13 +30,12 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
         from Hlt2SharedParticles.BasicParticles import Photons    
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop
         from Configurables import LoKi__VoidFilter as VoidFilter
 
         #-------------------------------------------
 
-        velotracks = Hlt2UnfittedForwardTracking().hlt2VeloTracking()
+        velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
         FilterNumVeloTracks = VoidFilter('Hlt2LowMultMuonFilterNumVeloTracks', Code="CONTAINS('" + velotracks.outputSelection() + "')<4")
                    
         

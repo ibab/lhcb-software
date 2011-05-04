@@ -8,6 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-05-04 - Gerhard Raven
+ - replace remaining use of Unfitted tracks by BiKalman tracks
+
+! 2011-04-?? author D.Moran
+   -  update Hlt2 diphoton dimuon selection
+
+
 !========================== Hlt2Lines v8r4 2011-04-04 ===================
 ! 2011-04-03 - Gerhard Raven
  - move PV3D to front in lines which use it and where it isn't first
