@@ -61,7 +61,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("AdderClass",      m_AdderClass   = "hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
   declareProperty("TaskPattern",     m_TaskPattern);
   declareProperty("ServicePattern",  m_ServicePattern);
-  declareProperty("ReceiveTimeout",  m_recvtmo=10);
+  declareProperty("ReceiveTimeout",  m_recvtmo=0);
 
   m_started     = false;
   m_SaveTimer   = 0;
