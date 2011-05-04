@@ -46,7 +46,7 @@ void *ObjSerializer::SerializeObj(void *&ptr, int &siz, bool clear)
     numh++;
   }
   //printf("Number of Histos %d\n",numh);
-  printf("Object Serializer: Buffer size: %s\n",bs);
+  printf("Object Serializer: Buffer size: %d\n",bs);
   ptr = Allocate(bs);
   pp = ptr;
   p1 = AddPtr(pp,bs);
