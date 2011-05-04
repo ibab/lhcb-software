@@ -37,6 +37,7 @@ private:
   MonAdder  *m_EoRadder;
   SaveTimer *m_SaveTimer;
   SaveTimer *m_EoRSaver;
+  int m_recvtmo;
   MyErrh *m_errh;
   /// Reference to the IncidentSvc instance
   IIncidentSvc             *m_incidentSvc;

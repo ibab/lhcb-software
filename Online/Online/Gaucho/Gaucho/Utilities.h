@@ -10,7 +10,9 @@
 #include <string>
 #include <vector>
 #include <ctype.h>
+extern "C" {
 #include "dim.h"
+}
 
 #define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 
@@ -24,6 +26,14 @@ namespace {
     }
   }
 
+  template<class T> inline void deallocPtr(T*& p)
+  {
+    if ( p )
+    {
+      free( p);
+      p = 0;
+    }
+  }
   template<class T> inline void deletePtr(T*& p)
   {
     if ( p )
@@ -58,7 +68,8 @@ public:
   {
   }
 };
-namespace {
+namespace
+{
   class DimLock {
   public:
     DimLock()   { dim_lock();   }
@@ -72,5 +83,4 @@ dyn_string *Strsplit(const char *s, char *del);
 dyn_string *Strsplit(char *s, const char *del);
 dyn_string *Strsplit(const char *s, const char *del);
 void StringReplace(std::string &in, const char *patt, std::string &repl);
-
 #endif /* UTILITIES_H_ */

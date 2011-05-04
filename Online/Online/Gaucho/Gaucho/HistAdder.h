@@ -17,12 +17,8 @@ class MyTProfile;
 class HistAdder : public MonAdder
 {
 public:
-  DimHistbuff1 *m_RateBuff;
-  bool m_locked;
-//  std::string m_MyName;
-//  std::string m_NamePrefix;
-  DimHistbuff1 *m_oldProf;
   void add(void *buffer, int siz, MonInfo *h);
+  void addBuffer(void *buffer, int siz, MonInfo *h);
   void Update();
   HistAdder(char *myName, char * serviceName/*, bool expand = false*/);
   virtual ~HistAdder();

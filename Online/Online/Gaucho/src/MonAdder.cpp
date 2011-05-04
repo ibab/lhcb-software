@@ -6,7 +6,9 @@
 #include "Gaucho/AdderSys.h"
 #include "Gaucho/AddSerializer.h"
 #include "Gaucho/ObjRPC.h"
-
+#include "Gaucho/AddTimer.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
+#include "AIDA/IHistogram1D.h"
 static int mpty;
 typedef std::pair<std::string, MonObj*> MonPair;
 extern "C"
@@ -14,7 +16,7 @@ extern "C"
   void BufferAdder(void *tis, void *buff, int siz, MonInfo *h)
   {
     MonAdder *adder = (MonAdder*)tis;
-    adder->add(buff, siz,h);
+    adder->basicAdd(buff, siz,h);
   }
 }
 MonAdder::MonAdder()
@@ -37,6 +39,7 @@ MonAdder::MonAdder()
   m_ser         = 0;
   m_RPCser      = 0;
   m_updated     = false;
+  m_timer = 0;
 }
 
 MonAdder::~MonAdder()
@@ -67,6 +70,7 @@ void MonAdder::Configure()
     toLowerCase(nodename);
     m_name= "MON_" + m_MyName;
   }
+  m_timer = new AddTimer(this);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
   m_outsvcname = m_name+m_serviceName;
@@ -278,4 +282,145 @@ unsigned long long MonAdder::gettime()
   timstamp *= onesec_nano;
   timstamp += tv.tv_usec*1000;
   return timstamp;
+}
+void MonAdder::start()
+{
+  if (m_timer != 0)
+  {
+    m_timer->Start();
+  }
+}
+void MonAdder::stop()
+{
+  if (m_timer != 0)
+  {
+    m_timer->Stop();
+  }
+}
+void MonAdder::TimeoutHandler()
+{
+  INServIter i;
+  for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
+  {
+    INServiceDescr *d = i->second;
+    if (d->last_update != this->m_reference)
+    {
+      printf ("Timeout from source %s expected %lli last received %lli\n",d->m_Info->m_TargetService.c_str(),
+          m_reference,d->last_update);
+      add(d->m_buffer,d->m_bufsiz,d->m_Info);
+      Update();
+    }
+  }
+}
+void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
+{
+  unsigned long long tim = gettime();
+  SerialHeader* header= ((SerialHeader*)buff);
+  if (siz == 4)
+  {
+    //printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    m_received++;
+    Update();
+    return;
+  }
+  if (header->m_magic != SERIAL_MAGIC)
+  {
+    printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
+    m_received++;
+    Update();
+    return;
+  }
+  INServiceDescr *isvcd;
+  INServIter it= m_inputServicemap.find(h->m_TargetService);
+  if (it == m_inputServicemap.end())
+  {
+    printf("!!!!!Logic Error Adder add method called with service that's not in the input service map %s\n",h->m_TargetService.c_str());
+    return;
+  }
+  isvcd = it->second;
+  if (buff != isvcd->m_buffer)
+  {
+    buff = isvcd->CpyBuffer(buff,siz);
+  }
+  m_expected = m_inputServicemap.size();
+  long long current  = (m_IsEOR) ? header->run_number : header->ser_tim;
+  isvcd->last_update = current;
+
+  m_RateBuff = 0;
+  if (m_histo != 0)
+  {
+    //printf("HistAdder Locking MonitorSvc\n");
+    this->m_monsvc->Lock();
+    unsigned long long dtim = tim-m_time0;
+    double ftim = dtim/1000000000;
+    m_histo->fill(ftim);
+    //printf("HistAdder UNLocking MonitorSvc\n");
+    this->m_monsvc->UnLock();
+  }
+  if (m_reference < current)
+  {
+    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
+    if(this->m_rectmo >0) this->m_timer->Start();
+    if ((m_reference != -1) && !m_updated)
+    {
+      if (m_outservice != 0)
+      {
+        m_outservice->Serialize();
+        m_outservice->Update();
+        m_updated = false;
+      }
+    }
+    m_time0 = tim;
+    m_added++;
+    m_received = 1;
+    if (m_isSaver)
+    {
+      if (m_received == 1)
+      {
+        if (!m_locked)
+        {
+          //printf("HistAdder Locking\n");
+          Lock();
+        }
+        m_locked = true;
+      }
+    }
+    ////printf ("New cycle %s... %d\n",h->m_TargetService.c_str(),m_received);
+    void *p = Allocate(siz);
+    m_reference = current;
+    memset(m_buffer,0,m_buffersize);
+    m_hmap.clear();
+    memcpy(p,buff,siz);
+    m_usedSize = siz;
+    void *bend = AddPtr(p,siz);
+    void *hstart = AddPtr(p,sizeof(SerialHeader));
+    DimBuffBase *pp = (DimBuffBase*)hstart;
+    while (pp<bend)
+    {
+      char *nam = (char*)AddPtr(pp,pp->nameoff);
+//      //printf("Histogram Name: %s\n",nam);
+      std::string nams =nam;
+      //printf("HistAdder Locking MAP\n");
+      LockMap();
+      m_hmap.insert(std::make_pair(nams,pp));
+      //printf("HistAdder UNLocking MAP\n");
+      UnLockMap();
+      if ((MONTYPE)pp->type == H_RATE)
+      {
+        m_RateBuff = pp;
+      }
+      pp=(DimBuffBase*)AddPtr(pp,pp->reclen);
+    }
+  }
+  else if (m_reference == current)
+  {
+    add(buff, siz, h);
+  }
+  else
+  {
+    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
+    add(buff,siz,h);
+    m_received++;
+  }
+  Update();
 }

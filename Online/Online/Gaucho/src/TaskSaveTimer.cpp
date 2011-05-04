@@ -369,9 +369,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   m_subsys->unLock();
   if (m_filenamesvc != 0)
   {
-    dim_lock();
+    DimLock l;
     m_filenamesvc->updateService(fn);
-    dim_unlock();
   }
-
 }

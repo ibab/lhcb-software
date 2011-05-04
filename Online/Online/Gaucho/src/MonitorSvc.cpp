@@ -82,7 +82,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   declareProperty("disableDeclareInfoDouble", m_disableDeclareInfoDouble = 0);
   declareProperty("disableDeclareInfoString", m_disableDeclareInfoString = 1);
   declareProperty("disableDeclareInfoPair", m_disableDeclareInfoPair = 1);
-  declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 1);
+  declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
   declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 1000);
   declareProperty("DimUpdateInterval", m_updateInterval = 20);

@@ -28,22 +28,22 @@ apply_pattern generate_rootmap  library=Gaucho
 apply_pattern generate_configurables library=Gaucho
 
 private
-application Addertst ../src/Test/Addertst.cpp
+application Addertst group=tests ../src/Test/Addertst.cpp
 macro_append  Addertst_dependencies   " Gaucho "
 
-application RPCTest ../src/Test/RPCTest.cpp
+application RPCTest group=tests ../src/Test/RPCTest.cpp
 macro_append  RPCTest_dependencies    " Gaucho "
 
-application HistTest ../src/Test/HistTest.cpp
+application HistTest group=tests ../src/Test/HistTest.cpp
 macro_append  HistTest_dependencies    " Gaucho "
 
-application HistHammer ../src/Test/HistHammer.cpp
+application HistHammer group=tests ../src/Test/HistHammer.cpp
 macro_append  HistHammer_dependencies    " Gaucho "
 
-application CounterTest ../src/Test/CounterTest.cpp
+application CounterTest group=tests ../src/Test/CounterTest.cpp
 macro_append  CounterTest_dependencies    " Gaucho "
 
-application Cycler ../src/Test/Cycler.cpp
+application Cycler group=tests ../src/Test/Cycler.cpp
 macro_append  Cycler_dependencies    " Gaucho "
 
 macro_append Gaucho_shlibflags " -pthread " WIN32 ""

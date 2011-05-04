@@ -61,6 +61,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("AdderClass",      m_AdderClass   = "hists"); //Possible values are 'hists' for histigrams or 'counter' for counters.
   declareProperty("TaskPattern",     m_TaskPattern);
   declareProperty("ServicePattern",  m_ServicePattern);
+  declareProperty("ReceiveTimeout",  m_recvtmo=10);
 
   m_started     = false;
   m_SaveTimer   = 0;
@@ -224,6 +225,7 @@ StatusCode AdderSvc::start()
   m_adder->setIsSaver(m_isSaver);
   m_adder->m_dohisto = m_dohisto;
   m_adder->m_histo = m_arrhist;
+  m_adder->m_rectmo = m_recvtmo;
   m_adder->m_monsvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
@@ -251,6 +253,7 @@ StatusCode AdderSvc::start()
   m_EoRadder->m_servicePattern = m_ServicePattern+std::string("EOR");
   m_EoRadder->m_noRPC = true;
   m_EoRadder->setIsSaver(m_isSaver);
+  m_adder->m_rectmo = 5*m_recvtmo;
   m_EoRadder->Configure();
   m_AdderSys->Add(m_EoRadder);
   if (m_isSaver)
@@ -294,7 +297,7 @@ StatusCode AdderSvc::finalize()
   releasePtr(m_phistsvc);
   releasePtr(m_pMonitorSvc);
   //printf("AdderSvc: Locking DIM\n");
-  dim_lock();
+  DimLock l;
   if (m_SaveTimer != 0)
   {
     m_SaveTimer->Stop();
@@ -311,7 +314,6 @@ StatusCode AdderSvc::finalize()
     deletePtr(m_EoRadder);
   }
   //printf("AdderSvc: UNLocking DIM\n");
-  dim_unlock();
   return Service::finalize();
 }
 

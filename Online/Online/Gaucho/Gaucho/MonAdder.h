@@ -9,6 +9,8 @@
 #include "dic.hxx"
 #include "Gaucho/MonInfo.h"
 #include "RTL/rtl.h"
+#include "Gaucho/Utilities.h"
+#include "Gaucho/AddTimer.h"
 #define ADD_HISTO 1
 #define ADD_COUNTER 2
 
@@ -24,6 +26,7 @@ class HistServer;
 class ObjRPC;
 class MonInfo;
 class DimInfo;
+//class AddTimer;
 
 //static int empty=-1;
 
@@ -48,12 +51,34 @@ public:
   MonInfo *m_Info;
   std::string task;
   long long last_update;
+  void *m_buffer;
+  int m_bufsiz;
   INServiceDescr(char *name, MonInfo* info, std::string tsk)
   {
     m_serviceName = name;
     m_Info = info;
     last_update = -1;
     task = tsk;
+    m_buffer = 0;
+    m_bufsiz = 0;
+  }
+  void *CpyBuffer(void *buff, int siz)
+  {
+    if (m_bufsiz < siz)
+    {
+      deallocPtr(m_buffer);
+      m_buffer = malloc(siz);
+      if (m_buffer != 0)
+      {
+        m_bufsiz = siz;
+        memcpy(m_buffer,buff,siz);
+      }
+    }
+    else
+    {
+      memcpy(m_buffer,buff,siz);
+    }
+    return m_buffer;
   }
 };
 class OUTServiceDescr
@@ -109,6 +134,8 @@ class IGauchoMonitorSvc;
 class MonAdder
 {
 public:
+  long long m_rectmo;
+  AddTimer *m_timer;
   TskServiceMap m_TaskMap;
   int m_type;
   bool m_updated;
@@ -144,6 +171,11 @@ public:
   bool           m_IsEOR;
   bool           m_noRPC;
   unsigned long long m_time0;
+  DimBuffBase *m_RateBuff;
+  bool m_locked;
+//  std::string m_MyName;
+//  std::string m_NamePrefix;
+  DimBuffBase *m_oldProf;
 public:
   lib_rtl_lock_t m_lockid;
   lib_rtl_lock_t m_maplock;
@@ -152,6 +184,8 @@ public:
   IGauchoMonitorSvc *m_monsvc;
 
   virtual void add(void *buffer, int siz, MonInfo *h)=0;
+  virtual void basicAdd(void *buffer, int siz, MonInfo *h);
+  virtual void addBuffer(void *buffer, int siz, MonInfo *h)=0;
   bool m_isSaver;
   MonAdder();
   virtual ~MonAdder();
@@ -167,6 +201,7 @@ public:
   virtual void RemovedService(DimInfo *, std::string &TaskName, std::string &ServiceName);
   virtual void TaskDied(std::string & task);
   unsigned long long gettime();
+  virtual void TimeoutHandler();
   void setIsSaver(bool p)
   {
     if (p)
@@ -222,5 +257,8 @@ public:
     }
   };
   void dumpServices();
+  void start();
+  void stop();
+  virtual void Update(){};
 };
 #endif

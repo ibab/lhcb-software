@@ -36,17 +36,59 @@ MonCounter::MonCounter(const std::string& name, const std::string& title, const 
 }
 MonCounter::MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size)
 {
-  setup(C_VOIDSTAR,data,name,title);
+  char fch = *fmt.c_str();
+  fch = tolower(fch);
+  switch (fch)
+  {
+    case 'x':
+    {
+      m_type = C_LONGSTAR;
+      m_contsiz = size;
+      buffersize = size;
+      break;
+    }
+    case 'i':
+    {
+      m_type = C_INTSTAR;
+      m_contsiz = size;
+      buffersize = size;
+      break;
+    }
+    case 'f':
+    {
+      m_type = C_FLOATSTAR;
+      m_contsiz = size;
+      buffersize = size;
+      break;
+    }
+    case 'd':
+    {
+      m_type = C_DOUBLESTAR;
+      m_contsiz = size;
+      buffersize = size;
+      break;
+    }
+    default:
+    {
+      m_type = H_ILLEGAL;
+      m_contsiz = 0;
+      buffersize = 0;
+      break;
+    }
+  }
+  setup(m_type,data,name,title,size);
   m_fmt = fmt;
-  m_contsiz = size;
-  buffersize = 0;
 }
 
 MonCounter::~MonCounter()
 {
   deletePtr(m_service);
 }
+void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title,int size)
+{
+  setup(typ,data,name,title);
 
+}
 void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title)
 {
   m_type  = typ;
@@ -141,7 +183,7 @@ void *MonCounter::cpytitle(void *p) const
 
 int MonCounter::serialize(void* &ptr)
 {
-  if (m_type == C_VOIDSTAR)
+  if (m_type == C_VOIDSTAR || m_type == H_ILLEGAL)
   {
     return 0;
   }
@@ -190,6 +232,14 @@ int MonCounter::serialize(void* &ptr)
       *dst = *(double*)m_contents;
       break;
     }
+  case C_INTSTAR:
+  case C_LONGSTAR:
+  case C_FLOATSTAR:
+  case C_DOUBLESTAR:
+  {
+    void *dst = AddPtr(pp,pp->dataoff);
+    memcpy(dst,m_contents,this->m_contsiz);
+  }
   default:
     {
       break;

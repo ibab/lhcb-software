@@ -43,6 +43,7 @@ public:
   MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size);
   MonCounter();
   void setup(MONTYPE typ, const void *ext, const std::string& name, const std::string& title);
+  void setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title,int size);
   virtual ~MonCounter();
   void clear(void);
   void *cpytitle(void *ptr) const;

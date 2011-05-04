@@ -260,16 +260,18 @@ void MonHist::resetup(void)
     case H_2DIM:
     case H_PROFILE:
     {
-      if (m_Xlabels != 0)
-      {
-        free (m_Xlabels);
-        m_Xlabels = 0;
-      }
-      if (m_Ylabels != 0)
-      {
-        free (m_Ylabels);
-        m_Ylabels = 0;
-      }
+      deallocPtr(m_Xlabels);
+//      if (m_Xlabels != 0)
+//      {
+//        free (m_Xlabels);
+//        m_Xlabels = 0;
+//      }
+      deallocPtr(m_Ylabels);
+//      if (m_Ylabels != 0)
+//      {
+//        free (m_Ylabels);
+//        m_Ylabels = 0;
+//      }
       m_xlablen = 0;
       m_ylablen = 0;
       setup(m_msgsvc);
