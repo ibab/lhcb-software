@@ -61,8 +61,8 @@ void OnlineHistPage::load() {
         int INSTANCE[Nfetch];
         int SHID[Nfetch];
         int MOTHERH[Nfetch];
-	for (int k = 0 ; k < Nfetch ; ++k ) 
-	  MOTHERH[ k ] = 0 ;
+        for (int k = 0 ; k < Nfetch ; ++k ) 
+          MOTHERH[ k ] = 0 ;
         int IOVERLAP[Nfetch];
         myOCIDefineString(lstmt, 1, NAME[0]  ,VSIZE_NAME);
         myOCIDefineFloat (lstmt, 2, PADMIN_X[0]);
@@ -107,6 +107,24 @@ void OnlineHistPage::load() {
 }
 
 
+
+void OnlineHistPage::loadDoc() {
+  m_StmtMethod = "OnlineHistPage::loadDoc";
+  OCIStmt *lstmt=NULL;
+  if ( OCI_SUCCESS == prepareOCITaggedStatement
+       (lstmt, "SELECT PAGEDOC FROM PAGE WHERE PAGENAME=:1", "LOADPAGEDOC") ) {
+    myOCIBindString(lstmt,":1"  , m_name);
+    if (OCI_SUCCESS == myOCISelectExecute(lstmt) ) {
+      text theDoc[VSIZE_PAGEDOC]="";
+      myOCIDefineString(lstmt, 1, theDoc ,VSIZE_PAGEDOC, &m_doc_null);
+      if (myOCIFetch(lstmt, 1) > 0) {
+        m_doc = m_doc_null ? "" : std::string((const char *) theDoc);
+      }
+      myOCIFetch(lstmt, 0);
+    }
+    releaseOCITaggedStatement(lstmt, "LOADPAGEDOC");
+  }  
+}
 
 
 OnlineHistPage::~OnlineHistPage()

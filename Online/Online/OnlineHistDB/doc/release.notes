@@ -6,6 +6,9 @@
 ! or using makedoc script in this folder
 !
 
+! 20110504 GG
+ - add OnlineHistPage::loadDoc method to update the page doc field without reloading the full page
+
 !========================= 2011-05-03 v7r6 ====================================
 ! 20110422 GG
  - aesthetical fix to message dump output 

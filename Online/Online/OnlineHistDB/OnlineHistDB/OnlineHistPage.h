@@ -86,6 +86,8 @@ class OnlineHistPage : public OnlineHistDBEnv
   void dump();
   // load the page from DB
   void load();
+  /// update only the doc field from the DB 
+  void loadDoc();
 private:
   // private dummy copy constructor and assignment operator 
   OnlineHistPage(const OnlineHistPage&) : OnlineHistDBEnv() {}
