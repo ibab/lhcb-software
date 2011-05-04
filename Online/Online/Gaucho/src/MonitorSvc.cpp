@@ -489,6 +489,7 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
 {
 //  if (0 != m_disableDeclareInfoFormat) return;
   string oname = infoOwnerName(owner);
+  if (format.empty() || (size == 0)) return;
 
   if (m_started)
   {
