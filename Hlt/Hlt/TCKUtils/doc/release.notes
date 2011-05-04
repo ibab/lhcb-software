@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2011-05-04 - Gerhard Raven
+ - fix http://savannah.cern.ch/bugs/?81790
+
 !========================== TCKUtils v1r8 2011-04-06 ===================
 ! 2011-04-06 - Gerhard Raven
  - improve decoration of ConfigTreeNode and PropertyConfig

@@ -468,11 +468,11 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
     setr = set( table[rhs].keys() )
     onlyInLhs = setl - setr
     if len(onlyInLhs)>0 : 
-        print 'only in ' + lhs + ': '
+        print 'only in %s: ' % lhs
         for i in onlyInLhs : print '   ' + i
     onlyInRhs = setr - setl
     if len(onlyInRhs)>0 : 
-        print 'only in ' + rhs + ': ' 
+        print 'only in %s:'  % rhs
         for i in onlyInRhs : print '   ' + i
     for i in setl & setr :
         (l,r) = ( table[lhs][i], table[rhs][i] )
