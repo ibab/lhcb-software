@@ -12,7 +12,7 @@ public:
     char c[MAX_C+1];
   };
   DATA m_data;
-  RateService (const char *name, char *format);
+  RateService (const char *name, const char *format);
   virtual ~RateService();
   void Updater(int dsize);
 };
