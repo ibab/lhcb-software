@@ -16,7 +16,8 @@ namespace
 {
   int ThreadRoutine_C(void* arg)
   {
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS);
+    int dum;
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,&dum);
     GenTimer *t = (GenTimer*)arg;
     t->ThreadRoutine();
     return 1;
