@@ -18,7 +18,7 @@ The helper class for parallel fitting using GaudiMP.Parallel
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-27 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $ , version $Revision$ "
 __all__     = (
     "FitTask"   ,
     "fitHistos"

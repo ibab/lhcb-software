@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0_1.py,v 1.2 2010-08-10 09:44:32 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -32,7 +32,7 @@ Or even:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2010-08-07 "
-__version__ = " $Revision: 1.2 $"
+__version__ = " $Revision$"
 # =============================================================================
 ## the basic import
 from   Gaudi.Configuration       import *

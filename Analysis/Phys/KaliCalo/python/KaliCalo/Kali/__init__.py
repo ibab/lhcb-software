@@ -14,7 +14,7 @@ for ``iterative pi0'' Ecal calibration
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-17 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision$ "
 # ======================================================================
 
 __all__ = [ 'Counter' , 'VE' , 'HistosBase', 'HistoMapBase' , 'HistoMap' , 'LambdaMap' , 'pi0Mass' ]

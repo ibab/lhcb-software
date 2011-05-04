@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -6,6 +6,14 @@
 // ============================================================================
 #include <set>
 #include <memory>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/SmartDataPtr.h"
+// ============================================================================
+//  LHCbKrrnel
+// ============================================================================
+#include "Kernel/Counters.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -81,6 +89,8 @@ namespace Kali
       , m_mirror        ( false )
       , m_veto_dm       ( -1 * Gaudi::Units::MeV )
       , m_veto_chi2     ( -1  )
+      , m_numbers       ( "Counters/Kali" ) 
+      , m_counters      () 
       , m_pi0CutExp     ( "PT > 200*MeV*(7-ETA)" )
       , m_pi0Cut        ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( false ) )
       , m_spdDigitsTool (  0  )
@@ -112,6 +122,26 @@ namespace Kali
         ( "Pi0Cut"   ,
           m_pi0CutExp ,
           "Predicate for Pi0 (LoKi/Bender expression)" ) ;
+      //
+      declareProperty
+        ( "CounterTES"   ,
+          m_numbers      ,
+          "TES location of Gaudi::Numbers object for global event actovity" ) ;
+      //
+      m_counters.push_back ( "nSpd"          ) ;
+      m_counters.push_back ( "nVelo"         ) ;
+      m_counters.push_back ( "nLong"         ) ;
+      m_counters.push_back ( "nPV"           ) ;
+      m_counters.push_back ( "nOT"           ) ;
+      m_counters.push_back ( "nITClusters"   ) ;
+      m_counters.push_back ( "nTTClusters"   ) ;
+      m_counters.push_back ( "nVeloClusters" ) ;
+      m_counters.push_back ( "nEcalClusters" ) ;
+      m_counters.push_back ( "nEcalDigits"   ) ;
+      declareProperty
+        ( "Counters"    ,
+          m_counters    ,
+          "List of counters" ) ;
       //
       Property* histos = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
       Assert ( 0 != histos , "Unable to get property 'HistoProduce'" ) ;
@@ -175,11 +205,14 @@ namespace Kali
   private:
     // ========================================================================
     /// use Albert's trick?
-    bool  m_mirror     ;                                // use Albert's trick?
+    bool  m_mirror     ;                                 // use Albert's trick?
     /// Delta-mass for pi0-veto
-    double m_veto_dm   ;                               // Delta-mass for pi0-veto
+    double m_veto_dm   ;                             // Delta-mass for pi0-veto
     /// chi2       for pi0-veto
-    double m_veto_chi2 ;                               // Delta-mass for pi0-veto
+    double m_veto_chi2 ;                             // Delta-mass for pi0-veto
+    /// TES-location of counters for Global Event Activity
+    std::string              m_numbers  ; // counters for Global Event Activity
+    std::vector<std::string> m_counters ; // names for the counters 
     /// pi0-Cut functor
     std::string       m_pi0CutExp ;                    //       Pi0-Cut functor
     /// pi0-Cut functor expression 
@@ -444,7 +477,7 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   
   counter ( "#gamma_all") += all   . size () ;
   counter ( "#gamma"    ) += gamma . size () ;
-  
+
   Tuple tuple = nTuple ( "Pi0-Tuple" ) ;
   
   const bool make_tuples = produceNTuples() ;
@@ -453,143 +486,175 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
   
   typedef std::set<const LHCb::Particle*> Photons ;
   Photons                                 photons ;
-
+  
+  const Gaudi::Numbers* numbers = 0 ;
+  if ( exist<Gaudi::Numbers>( m_numbers ) )  { numbers = get <Gaudi::Numbers>( m_numbers ) ; }
+  //
+  // global event activity: 
+  //
+  typedef std::map<std::string,double> GecMap ;
+  GecMap gec ;
+  for ( std::vector<std::string>::const_iterator item = m_counters.begin() ;
+	m_counters.end() != item ; ++item ) 
+    {
+      gec [ *item ] = -1 ;
+      if ( 0 == numbers  ) { continue ; } 
+      //
+      const Gaudi::Numbers::Map& m = numbers->numbers() ;
+      Gaudi::Numbers::Map::const_iterator ifind = m.find ( *item ) ;
+      if ( m.end() == ifind )
+	{ 
+	  Warning ( "Gaudi::Numbers does nto contain item: " + (*item ) ) . ignore () ;
+	  continue ;
+	} 
+      gec [ *item ] = ifind->second ;
+    }
+  //
+  // statistics:
+  for ( GecMap::const_iterator igec = gec.begin() ; gec.end() != igec ; ++igec ) 
+    { counter ( igec->first ) += igec->second ;  }
+  //
+  // the major loop
+  //
   for ( Loop pi0 = loop( "g g" , "pi0" ) ; pi0 ; ++pi0 )
-  {
-    
-    const double              m12 = pi0->mass ( 1 , 2 ) ;
-    const LoKi::LorentzVector p12 = pi0->p    ( 1 , 2 ) ;
-    
-    const LHCb::Particle* g1 = pi0(1) ;
-    if ( 0 == g1         ) { continue ; }  // CONTINUE
-    
-    const LHCb::Particle* g2 = pi0(2) ;
-    if ( 0 == g2         ) { continue ; }  // CONTINUE
-    
-    // trick with "mirror-background" by Albert Puig
-    
-    // invert the first photon :
-    Gaudi::LorentzVector _p1 = g1->momentum() ;
-    _p1.SetPx ( -_p1.Px () ) ;
-    _p1.SetPy ( -_p1.Py () ) ;
-    const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
-    
-    // create the fake pi0 
-    std::auto_ptr<LHCb::Particle> fakePi0 ( pi0.particle()->clone() ) ;
-    fakePi0->setMomentum(fake) ;
-    
-    bool good    =             ( m12      < 335 * MeV ) ;
-    bool goodBkg = m_mirror && ( fake.M() < 335 * MeV ) ;
-    
-    if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
-    
-    double spd1e = seedEnergyFrom ( g1 , spd ) ;
-    if ( 0 < spd1e ) { continue ; }                // CONTINUE  
-    
-    double spd2e = seedEnergyFrom ( g2 , spd ) ;
-    if ( 0 < spd2e ) { continue ; }                // CONITUNE 
-    
-    // order the photons according energy in preshower
-    double prs1e = energyFrom ( g1 , prs ) ;
-    double prs2e = energyFrom ( g2 , prs ) ;
-    if ( prs1e > prs2e )
     {
-      std::swap ( g1    , g2    ) ;
-      std::swap ( prs1e , prs2e ) ;
-      std::swap ( spd1e , spd2e ) ;
+      
+      const double              m12 = pi0->mass ( 1 , 2 ) ;
+      const LoKi::LorentzVector p12 = pi0->p    ( 1 , 2 ) ;
+      
+      const LHCb::Particle* g1 = pi0(1) ;
+      if ( 0 == g1         ) { continue ; }  // CONTINUE
+      
+      const LHCb::Particle* g2 = pi0(2) ;
+      if ( 0 == g2         ) { continue ; }  // CONTINUE
+      
+      // trick with "mirror-background" by Albert Puig
+      
+      // invert the first photon :
+      Gaudi::LorentzVector _p1 = g1->momentum() ;
+      _p1.SetPx ( -_p1.Px () ) ;
+      _p1.SetPy ( -_p1.Py () ) ;
+      const Gaudi::LorentzVector fake = ( _p1 + g2->momentum() ) ;
+      
+      // create the fake pi0 
+      std::auto_ptr<LHCb::Particle> fakePi0 ( pi0.particle()->clone() ) ;
+      fakePi0->setMomentum(fake) ;
+      
+      bool good    =             ( m12      < 335 * MeV ) ;
+      bool goodBkg = m_mirror && ( fake.M() < 335 * MeV ) ;
+      
+      if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
+      
+      double spd1e = seedEnergyFrom ( g1 , spd ) ;
+      if ( 0 < spd1e ) { continue ; }                // CONTINUE  
+      
+      double spd2e = seedEnergyFrom ( g2 , spd ) ;
+      if ( 0 < spd2e ) { continue ; }                // CONITUNE 
+      
+      // order the photons according energy in preshower
+      double prs1e = energyFrom ( g1 , prs ) ;
+      double prs2e = energyFrom ( g2 , prs ) ;
+      if ( prs1e > prs2e )
+	{
+	  std::swap ( g1    , g2    ) ;
+	  std::swap ( prs1e , prs2e ) ;
+	  std::swap ( spd1e , spd2e ) ;
+	}
+      
+      const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
+      if ( 0 == hypo1 ) { continue ; }                       // CONTINUE 
+      const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
+      if ( 0 == hypo2 ) { continue ; }                       // CONTINUE 
+      
+      const LHCb::CaloCluster* cluster1 = cluster ( g1 )  ;
+      if ( 0 == cluster1 ) { continue ; }                    // CONITNUE 
+      const LHCb::CaloCluster* cluster2 = cluster ( g2 )  ;
+      if ( 0 == cluster2 ) { continue ; }                    // CONTINUE
+      
+      /// apply pi0-cut:
+      //if  ( !m_pi0Cut ( pi0 ) ) { continue ; }               // CONTINUE
+      good    = good    && m_pi0Cut ( pi0           ) ;
+      goodBkg = goodBkg && m_pi0Cut ( fakePi0.get() ) ;
+      if ( (!good) && (!goodBkg) ) { continue ; }            // CONTINUE
+      
+      const Gaudi::LorentzVector mom1 = g1->momentum() ;
+      const Gaudi::LorentzVector mom2 = g2->momentum() ;
+      
+      const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
+      const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
+      
+      // apply cut on 3x3 SPD
+      if ( spdCut < spd1e3x3 ) { continue ; }                 // CONTINUE 
+      if ( spdCut < spd2e3x3 ) { continue ; }                 // CONTINUE 
+      
+      // pi0-veto ?
+      bool veto = true ;
+      if ( 0 < m_veto_dm || 0 < m_veto_chi2 ) 
+	{ veto = pi0Veto ( g1 , g2 , all   , m_veto_dm , m_veto_chi2 ) ; }
+      if ( !veto ) { continue ; }                                           // CONTINUE
+      
+      
+      if ( good && m12 < 250 * MeV )
+	{
+	  if ( 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
+	  if ( 0 != m_h2 && prs2e < 10 * MeV                     ) { m_h2 -> fill ( m12 ) ; }
+	  if ( 0 != m_h3 && prs1e < 10 * MeV && prs2e > 10 * MeV ) { m_h3 -> fill ( m12 ) ; }
+	  if ( 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
+	}
+      
+      // finally save good photons:
+      photons.insert  ( g1 ) ;
+      photons.insert  ( g2 ) ;
+      
+      if  ( !make_tuples ) { continue ; }                      // CONTINUE 
+      
+      const LHCb::CaloCellID cell1 = cellID( g1 ) ;
+      const LHCb::CaloCellID cell2 = cellID( g2 ) ;
+      
+      
+      Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
+			       hypo1->position()->y() ,
+			       hypo1->position()->z() );
+      //
+      if ( good || goodBkg ) 
+	{
+	  for ( GecMap::const_iterator igec = gec.begin() ; gec.end() != igec ; ++igec ) 
+	    { tuple->column ( igec->first , igec->second ) ; }
+	}
+      // fill N-tuples
+      if  ( good )
+	{
+	  const LHCb::CaloPosition* p2 = hypo2->position() ;
+	  const Gaudi::XYZPoint point2 ( p2 -> x () ,
+					 p2 -> y () ,
+					 p2 -> z () );
+	  fillTuple ( tuple , mom1 , mom2 , p12 , prs1e , prs2e ,
+		      spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2 ,
+		      cluster1 , cluster2 , 0 ) ;
+	}
+      if ( goodBkg )
+	{
+	  const LHCb::CaloPosition* p2 = hypo2->position() ;
+	  const Gaudi::XYZPoint point2Sym ( - p2 -> x () , - p2 -> y () , p2 -> z () );
+	  fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e ,
+		     spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym ,
+		     cluster1 , cluster2 , 1 ) ;
+	}
+      //
     }
-    
-    const LHCb::CaloHypo* hypo1 = hypo ( g1 )  ;
-    if ( 0 == hypo1 ) { continue ; }                       // CONTINUE 
-    const LHCb::CaloHypo* hypo2 = hypo ( g2 )  ;
-    if ( 0 == hypo2 ) { continue ; }                       // CONTINUE 
-    
-    const LHCb::CaloCluster* cluster1 = cluster ( g1 )  ;
-    if ( 0 == cluster1 ) { continue ; }                    // CONITNUE 
-    const LHCb::CaloCluster* cluster2 = cluster ( g2 )  ;
-    if ( 0 == cluster2 ) { continue ; }                    // CONTINUE
-    
-    /// apply pi0-cut:
-    //if  ( !m_pi0Cut ( pi0 ) ) { continue ; }               // CONTINUE
-    good    = good    && m_pi0Cut ( pi0           ) ;
-    goodBkg = goodBkg && m_pi0Cut ( fakePi0.get() ) ;
-    if ( (!good) && (!goodBkg) ) { continue ; }            // CONTINUE
-    
-    const Gaudi::LorentzVector mom1 = g1->momentum() ;
-    const Gaudi::LorentzVector mom2 = g2->momentum() ;
-    
-    const double spd1e3x3 = caloEnergy4Photon ( g1 -> momentum () ) ;
-    const double spd2e3x3 = caloEnergy4Photon ( g2 -> momentum () ) ;
-
-    // apply cut on 3x3 SPD
-    if ( spdCut < spd1e3x3 ) { continue ; }                 // CONTINUE 
-    if ( spdCut < spd2e3x3 ) { continue ; }                 // CONTINUE 
-    
-    // pi0-veto ?
-    bool veto = true ;
-    if ( 0 < m_veto_dm || 0 < m_veto_chi2 ) 
-    { veto = pi0Veto ( g1 , g2 , all   , m_veto_dm , m_veto_chi2 ) ; }
-    if ( !veto ) { continue ; }                                           // CONTINUE
-    
-
-    if ( good && m12 < 250 * MeV )
-    {
-      if ( 0 != m_h1                                         ) { m_h1 -> fill ( m12 ) ; }
-      if ( 0 != m_h2 && prs2e < 10 * MeV                     ) { m_h2 -> fill ( m12 ) ; }
-      if ( 0 != m_h3 && prs1e < 10 * MeV && prs2e > 10 * MeV ) { m_h3 -> fill ( m12 ) ; }
-      if ( 0 != m_h4 &&                     prs1e > 10 * MeV ) { m_h4 -> fill ( m12 ) ; }
-    }
-    
-    // finally save good photons:
-    photons.insert  ( g1 ) ;
-    photons.insert  ( g2 ) ;
-    
-    if  ( !make_tuples ) { continue ; }                      // CONTINUE 
-    
-    const LHCb::CaloCellID cell1 = cellID( g1 ) ;
-    const LHCb::CaloCellID cell2 = cellID( g2 ) ;
-    
-
-    Gaudi::XYZPoint point1 ( hypo1->position()->x() ,
-                             hypo1->position()->y() ,
-                             hypo1->position()->z() );
-    
-
-    // fill N-tuples
-    if  ( good )
-    {
-      const LHCb::CaloPosition* p2 = hypo2->position() ;
-      const Gaudi::XYZPoint point2 ( p2 -> x () ,
-                                     p2 -> y () ,
-                                     p2 -> z () );
-      fillTuple ( tuple , mom1 , mom2 , p12 , prs1e , prs2e ,
-                  spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2 ,
-                  cluster1 , cluster2 , 0 ) ;
-    }
-    if ( goodBkg )
-    {
-      const LHCb::CaloPosition* p2 = hypo2->position() ;
-      const Gaudi::XYZPoint point2Sym ( - p2 -> x () , - p2 -> y () , p2 -> z () );
-      fillTuple( tuple , mom1 , mom2 , fake , prs1e , prs2e ,
-                 spd1e3x3 , spd2e3x3 , cell1 , cell2 , point1 , point2Sym ,
-                 cluster1 , cluster2 , 1 ) ;
-    }
-    
-    //
-  }
   
   for ( Photons::const_iterator iphoton = photons.begin() ;
         photons.end() != iphoton ; ++iphoton )
-  {
-    // keep these photons
-    LHCb::Particle ph (**iphoton) ;
-    this->markTree( &ph  ) ;
-  }
+    {
+      // keep these photons
+      LHCb::Particle ph (**iphoton) ;
+      this->markTree( &ph  ) ;
+    }
   
   counter ( "#photons" ) += photons .size  () ;
-
+  
   setFilterPassed ( !photons.empty() ) ;
-
+  
   return StatusCode::SUCCESS ;
 }
 // ============================================================================

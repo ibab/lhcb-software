@@ -11,7 +11,7 @@
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-04-28 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision$ "
 # ======================================================================
 from KaliCalo.Cells import CellID, GlobalRow, GlobalCol
 import math

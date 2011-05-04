@@ -25,7 +25,7 @@ pi0mas is the dictionary of the pi0 mass histograms, cell IDs are used as the
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-02-?? "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 import ROOT, math 
 c1 = ROOT.TCanvas()

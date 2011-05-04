@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.15 2010-04-26 11:42:38 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -32,7 +32,7 @@ Or even:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-17 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $"
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 ## the basic import
 from   Gaudi.Configuration       import *

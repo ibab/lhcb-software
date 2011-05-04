@@ -15,7 +15,7 @@ Helper script to extract list of Ecal cell IDs
 # =============================================================================
 __author__   = " Vanya BELYAEV Ivan.Belyaev@itep.ru   "
 __date__     = " 2010-03-18 "
-__version__  = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__  = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 from   GaudiPython.Bindings import gbl as cpp
 import CaloUtils.CellID

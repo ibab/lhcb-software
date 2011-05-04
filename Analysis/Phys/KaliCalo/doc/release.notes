@@ -1,11 +1,40 @@
-! $Id: release.notes,v 1.60 2010-09-06 21:28:21 jpalac Exp $ 
+! $Id$ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.60 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
+
+
+! 2011-05-03 - Vanya Belyaev
+ 
+ - add information to fmDST about Global Event Activity 
+
+   1) LoKi::CounterAlg  runs af the first-pass, creates and fills Gaudi::Numbers 
+                        object with various GEA-information
+   2) TES-location for new object is "/Event/Counters/Kali"
+   3) This information is read by Kali::Pi0 algorithm and added to the n-tuple
+      the information is read eithe frmo TES (for first pass) or for fmDST 
+     (for the second pass)
+
+      Kali::Pi0 algorithm gets two new properties:  
+         - "CountersTES" - the TES location of GAE-counters
+                           e.g. it can be "standard" objects filled for microDST
+         - "Counters" - the list of counter to be copied from Gaudi::Numbers to n-tuple.
+             the default list is:
+            [ "nSpd", "nVelo" , "nLong" , "nPV" , "nOT" , 
+              "nITClusters"   , "nTTClusters"   ,
+              "nVeloClusters" , "nEcalClusters" , 
+              "nEcalDigits"   ] 
+
+ 
+
+ - cmt/requirements 
+   version increase to v4r11
+
+
 
 !========================== KaliCalo v4r10 2011-04-29 ==========================
 ! 2011-04-15 - Daria Savrina

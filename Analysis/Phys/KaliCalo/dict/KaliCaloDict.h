@@ -1,4 +1,4 @@
-// $Id: KaliCaloDict.h,v 1.1 2010-03-25 11:03:54 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef KALI_KALICALODICT_H 
 #define KALI_KALICALODICT_H 1

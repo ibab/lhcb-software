@@ -11,7 +11,7 @@ Utilities for cells
 # ======================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2010-04-29 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $ , version $Revision$ "
 __all__     = (
     'CellID'     , 
     'GlobalRow'  ,

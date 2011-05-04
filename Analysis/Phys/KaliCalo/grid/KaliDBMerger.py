@@ -12,7 +12,7 @@ Helper merger script for to merge Kali-databases
 # =============================================================================
 __author__  = " Vanya BELYAEV  Ivan.Belyaev@itep.ru "
 __date__    = " 2010-03-25 "
-__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 __all__     = (
     'mergefiles',

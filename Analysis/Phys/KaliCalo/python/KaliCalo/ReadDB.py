@@ -11,7 +11,7 @@ helper module to read local ``Kali'' data base
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-17 "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 import ROOT
 import shelve 

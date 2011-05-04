@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.21 2010-08-08 18:04:38 ibelyaev Exp $
+# $Id$
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 #
@@ -90,7 +90,7 @@ Or one can rely on helper functions:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
 __date__    = " 2009-09-28 "
-__version__ = " version $Revision: 1.21 $ "
+__version__ = " version $Revision$ "
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -484,7 +484,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             "/Event/Rec/Track#1"       ,
             "/Event/Rec/Track/Best#1"  ,
             # event header for time decoder
-            "/Event/Rec/Header#1"
+            "/Event/Rec/Header#1"      ,
+            ## GEC counters 
+            "/Event/Counters#1"        , 
+            "/Event/Counters/Kali#1"   
             ] ,
             # 
             Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')
@@ -544,7 +547,28 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             kaliSeq.Members += [ kaliReco ] 
             GlobalRecoConf ( TrackTypes    = [ 'Long'] ,
                              RecoSequencer = kaliReco  )
-            
+
+        if self.getProp ( 'FirstPass') :
+            from Configurables import LoKi__CounterAlg as CounterAlg
+            cnt = CounterAlg( 
+                'KaliCounters'   , 
+                Location  = "Counters/Kali" , 
+                Preambulo = [ "from LoKiTracks.decorators import *"],
+                Variables = {
+                    "nSpd"          : "CONTAINS ( 'Raw/Spd/Digits' )                " ,
+                    "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO       ) " ,
+                    "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG       ) " ,
+                    "nPV"           : "CONTAINS ( 'Rec/Vertex/Primary'    ) "         ,
+                    "nOT"           : "CONTAINS ( 'Raw/OT/Times'          ) "         ,
+                    "nITClusters"   : "CONTAINS ( 'Raw/IT/Clusters'       ) "         ,
+                    "nTTClusters"   : "CONTAINS ( 'Raw/TT/Clusters'       ) "         ,
+                    "nVeloClusters" : "CONTAINS ( 'Raw/Velo/Clusters'     ) "         ,
+                    "nEcalClusters" : "CONTAINS ( 'Rec/Calo/EcalClusters' ) "         ,
+                    "nEcalDigits"   : "CONTAINS ( 'Raw/Ecal/Digits'       ) "         ,
+                    }
+                )
+            kaliSeq.Members += [ cnt ] 
+
         if not not proto   : kaliSeq.Members += [ proto  ]
         if not not photon  : kaliSeq.Members += [ photon ]
 
