@@ -361,15 +361,15 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   {
 //    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
     if(this->m_rectmo >0) this->m_timer->Start();
-    if ((m_reference != -1) && !m_updated)
-    {
-      if (m_outservice != 0)
-      {
-        m_outservice->Serialize();
-        m_outservice->Update();
-        m_updated = false;
-      }
-    }
+//    if ((m_reference != -1) && !m_updated)
+//    {
+//      if (m_outservice != 0)
+//      {
+//        m_outservice->Serialize();
+//        m_outservice->Update();
+//        m_updated = false;
+//      }
+//    }
     m_time0 = tim;
     m_added++;
     m_received = 1;
