@@ -4,6 +4,7 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+!========================== HltMonitor v1r0 2011-05-04 ==================
 ! 2011-04-22 - Roel Aaij
  - Add MassVsOccupancy class
    Only the OT occupancy is available for now.
