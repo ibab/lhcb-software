@@ -161,7 +161,10 @@ void EventServerRunable::handle(const Incident& inc)    {
         error("Got incident:"+inc.source()+
               " -- Internal error:"+m_mepMgrName+" is not assigned.");
       }
-      else {
+      else if ( m_consumer ) {
+        m_consumer->cancel();
+      }
+      else if ( m_mepMgr ) {
         m_mepMgr->cancel();
       }
     }
