@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import CondDBUI
-from PyCool import cool
+#from PyCool import cool
 import os
 import datetime
 
@@ -17,7 +17,7 @@ def getUNIXTime(dtime):
     zone = time.tzname[0]
     if zone not in ['GMT','CET'] : raise Exception('Unknown time zone '+zone)
     offset = 0
-    if time.tzname[0] == 'GMT' : offset = -3600
+    if zone == 'GMT' : offset = -3600
     return int( (t+offset) * 1e9 )
 
 def genXML(root,cond):
@@ -31,9 +31,10 @@ def genXML(root,cond):
     file.close()
     return data
 
-def addToDB(startTime,rootToFiles,condPath,db):
+def addToDB(startTime,stopTime,rootToFiles,condPath,db):
     start = getUNIXTime(startTime) 
-    stop  = cool.ValidityKeyMax
+    #stop  = cool.ValidityKeyMax
+    stop = getUNIXTime(stopTime)
     print " -> Condition", condPath, "updated"
     db.storeXMLString( condPath, genXML(rootToFiles,condPath), start, stop )
 
@@ -59,17 +60,15 @@ def fileMD5(file):
     m.update(content)
     return m.hexdigest()
 
-# Mirror alignment
-#upAlign    = "/usera/jonesc/NFS/DetDB/Mirrors/Up"
-dnAlign    = "/usera/jonesc/NFS/DetDB/TmpMirrors"
-#dbFileName = "NewMirrorHPDAlignFieldPolarity"
-dbFileName = "FixedRICH1Align"
+# Tracking Updates
+upAlign = "/usera/jonesc/NFS/DetDB/Tracking2011-v5.3"
+dnAlign = "/usera/jonesc/NFS/DetDB/Tracking2011-v5.3"
+dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
 #upAlign    = "/usera/jonesc/NFS/DetDB/Mirrors/Up"
 #dnAlign    = "/usera/jonesc/NFS/DetDB/Mirrors/Down"
-#dbFileName = "NewMirrorHPDAlignFieldPolarity"
-#dbFileName = "NewMirrorAlign"
+#dbFileName = "New2010MirrorAlign"
 
 # Detector Numbers
 #upAlign = "/usera/jonesc/NFS/DetDB/DetNumbers"
@@ -83,29 +82,37 @@ dbFileName = "FixedRICH1Align"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
+# http://lbtriggerreport.cern.ch/reports/last_report_2011_3500_fill.html
 
 # Hardcode the field changes. Format is date of change and the new polarity
 # Dates are in CET !!
 field = { }
-#                          Year  Month  Day   Hour   Min  Sec
 
-# 2010
-#field[ datetime.datetime(  2009,  9,     1,    1,     0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2010,  4,     5,    2,     0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2010,  4,     6,    2,     0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2010,  5,     8,   22,     0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2010,  5,    14,   12,     0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2010,  5,    15,   16,     0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2010,  5,    19,    5,     0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2010,  7,    13,    4,     0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2010,  7,    28,   21,     0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2010,  8,    18,    8,     0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2010,  8,    29,   17,     0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2010,  9,    22,   16,     0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2010,  10,   24,    9,     0,   0  ) ] = dnAlign
+# 2010                     Year  Month  Day   Hour  Min  Sec
+#field[ datetime.datetime(  2009,   9,    1,    1,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   4,    5,    1,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   4,    6,    2,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   5,    2,   18,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   5,    3,   01,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   5,    8,   20,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   5,   14,   11,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   5,   15,   15,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   5,   19,    4,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   7,   13,    3,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   7,   28,   20,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   8,   18,    7,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   8,   29,   16,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   9,   22,   15,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  10,   24,    8,    0,   0  ) ] = dnAlign
+# End of 2010
+#stop = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
 
-# 2011
-field[ datetime.datetime(  2011,  1,   1,    1,     0,   0  ) ] = dnAlign 
+# 2011                     Year  Month  Day   Hour  Min  Sec
+field[ datetime.datetime(  2011,   3,    1,    1,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2011,   4,   15,    1,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2011,   4,   26,    5,    0,   0  ) ] = dnAlign
+# End of 2011
+stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
 
 # Open a new DB file
 fulDBname = dbFileName + "-" + dateString() + ".db"
@@ -143,7 +150,7 @@ for start in sorted(field.keys()):
 
         # Check if update is needed
         if md != lastMDsums[condName] :
-            addToDB(start,align,condName,db)
+            addToDB(start,stop,align,condName,db)
             lastMDsums[condName] = md
         else:
             print " -> Condition", condName, "same as previous. No update needed"

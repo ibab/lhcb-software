@@ -146,9 +146,16 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # Custom DB slices for both job types (calibration and verification)
     dbFiles  = [ ]
+
+    # All years
     dbFiles += ["NewMDMSCondDB-28022011"]
-    dbFiles += ["MDMS-RootFiles-RunAligned-Sobel-Smoothed3hours-21042011"] 
-    dbFiles += ["New2010MirrorAlign-15042011"]
+
+    # 2010 data only
+    #dbFiles += ["MDMS-RootFiles-RunAligned-Sobel-Smoothed3hours-21042011"] 
+    #dbFiles += ["New2010MirrorAlign-15042011"]
+
+    # Only for 2011 data IOVs cover everywhere
+    dbFiles += ["Tracking-2011-v5.3-03052011"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -247,11 +254,10 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
                     # Dirac backend
                     j.backend = Dirac()
-                    # maxCPUlimit = 50000
-                    # j.backend = Dirac( settings = {'CPUTime':maxCPUlimit} )
-
+                    # j.backend = Dirac( settings = {'CPUTime':50000} )
+                    
                     # Force jobs to go to CERN only
-                    j.backend.settings['Destination'] = 'LCG.CERN.ch'
+                    #j.backend.settings['Destination'] = 'LCG.CERN.ch'
 
                     # Optional input files
                     j.inputsandbox             = mySandBox
@@ -263,7 +269,12 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     # Submit !!
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
                     print " -> Using", nFiles, "data file(s), max", nFilesPerJob, "file(s) per subjob,", nEventsPerJob, "events per job"
-                    j.submit()
+                    for f in j.inputdata.files : print "  ->", f.name
+                    if checkInputDataReplicas(j.inputdata.files) :
+                        j.submit()
+                    else:
+                        print "ERROR : Problem with input LFNs. Job not submitted."
+                        j.remove()
 
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
@@ -695,16 +706,35 @@ def saveRunInfoCache():
     pickleDict(cachename,globals()["runInfoCache"])
 
 def queryBKDB(run):
+    
     print "Getting information for run", run, "from BK API... Be patient..."
+    
     from Ganga.GPI import diracAPI
+    import time
+    
     cmd = ( "from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
             "result = BookkeepingClient().getRunInformations("+str(run)+")" )
-    res = diracAPI(cmd)
-    print res
-    # cached info
-    runInfoCache = loadRunInfoCache()
-    # Save
-    saveBKQuery(run,res,runInfoCache)
+
+    res = { 'OK' : False }
+    nTries = 0
+    while not res['OK'] and nTries < 10:
+        nTries = nTries + 1
+        
+        # Get information from Dirac
+        res = diracAPI(cmd)
+        print res
+
+        if not res['OK'] :
+            print " -> Problem querying DB - Will try again after 5 secs ..."
+            time.sleep(5)
+
+    if res['OK'] :
+        
+        # cached info
+        runInfoCache = loadRunInfoCache()
+        # Save
+        saveBKQuery(run,res,runInfoCache)
+        
     # return result
     return res
 
@@ -1179,5 +1209,14 @@ def deleteJobsWithBadRootFile(cjobs,rad='Rich1Gas'):
     print "Jobs to delete", djobs
 
     for j in djobs : j.remove()
+
+def checkInputDataReplicas(lfns):
+    OK = True
+    for lfn in lfns :
+        res = lfn.getReplicas()
+        if len(res) == 0 :
+            print "ERROR : LFN", lfn.name, "has no replicas"
+            OK = False
+    return OK
 
 #=============================================================================================

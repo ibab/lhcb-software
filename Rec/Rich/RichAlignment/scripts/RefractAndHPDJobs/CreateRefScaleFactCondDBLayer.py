@@ -42,7 +42,7 @@ def getUNIXTime(dtime):
   zone = time.tzname[0]
   if zone not in ['GMT','CET'] : raise Exception('Unknown time zone '+zone)
   offset = 0
-  if time.tzname[0] == 'GMT' : offset = -3600
+  if zone == 'GMT' : offset = -3600
   return int( (t+offset) * 1e9 )
 
 def getCalibrationsFromFile(rad,rootName):
@@ -104,14 +104,14 @@ def fillDB(calibration,db,runsTimes,rad):
     dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
-    #stopTime  = getUNIXTime( dStopTime  )
-    stopTime  = cool.ValidityKeyMax
+    stopTime  = getUNIXTime( dStopTime  )
+    #stopTime  = cool.ValidityKeyMax
 
     # Scale factor
     scale = '%g' % scaleF[0]
 
     # Store in the DB
-    print " -> Setting", rad, "(n-1) Scale", scale, "from", dStartTime, "to", dStopTime
+    print " -> Setting", rad, "(n-1) Scale", scale, "for", run, dStartTime, "to", dStopTime
     db.storeXMLString( path, genXML(scale,run), startTime, stopTime )
 
 def getRunTimes(calibrations):
