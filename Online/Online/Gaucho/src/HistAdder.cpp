@@ -48,6 +48,7 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *)
   {
     char *nam = (char*)AddPtr(pp,pp->nameoff);
     hmap.insert(HistPair(std::string(nam),pp));
+    if (pp->reclen == 0) break;
     pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
   }
   for (MonIter i=hmap.begin();i!=hmap.end();i++)
