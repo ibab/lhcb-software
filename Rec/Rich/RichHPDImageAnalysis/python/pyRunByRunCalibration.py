@@ -83,7 +83,7 @@ def loadRichDet():
     iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel1"]
     richSystem()
     
-def rootFileListFromTextFile(rootFileList='RootFileNames.txt'):
+def rootFileListFromTextFile(rootFileList):
 
     # Open the text file
     files = open(rootFileList,'r')
@@ -190,7 +190,7 @@ def getUNIXTime(dtime):
     zone = time.tzname[0]
     if zone not in ['GMT','CET'] : raise Exception('Unknown time zone '+zone)
     offset = 0
-    if time.tzname[0] == 'GMT' : offset = -3600
+    if zone == 'GMT' : offset = -3600
     return int( (t+offset) * 1e9 )
 
 def correctStartTime(time):
@@ -415,29 +415,19 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def runAll(files='MDMS-RootFiles.txt'):
+def runAll(files='2010RootFiles.txt'):
+    
+    calibrationByRuns(rootfiles=files,followType="Smoothed",
+                      fitType='Sobel',smoothSigmaHours=3)
 
-    calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='Sobel')
-    #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    #calibrationByRuns(rootfiles=files,followType="Smoothed",fitType='CppFit')
-
-    calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='Sobel')
-    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    #calibrationByRuns(rootfiles=files,followType="FittedPol",fitType='CppFit')
-
-    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='Sobel')
-    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='SimpleChi2')
-    #calibrationByFills(rootfiles=files,followType="Smoothed",fitType='CppFit')
-
-    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='Sobel')
-    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='SimpleChi2')
-    #calibrationByFills(rootfiles=files,followType="FittedPol",fitType='CppFit')
+    #calibrationByRuns(rootfiles=files,followType="Smoothed",
+    #                  fitType='Sobel',smoothSigmaHours=1)
  
-def calibrationByRuns(rootfiles='RootFileNames.txt',
+def calibrationByRuns(rootfiles='2010RootFiles.txt',
                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=3):
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours)
 
-def calibrationByFills(rootfiles='RootFileNames.txt',
+def calibrationByFills(rootfiles='2010RootFiles.txt',
                        fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=12):
     return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours)
 
@@ -958,6 +948,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
+        # End of 2010
+        #stopTime = getUNIXTime( datetime.datetime( 2010, 12, 31, 23, 59, 59 ) )
 
         # Loop over XML files in the fitted DB
         for xmlpath in alignments.keys() :

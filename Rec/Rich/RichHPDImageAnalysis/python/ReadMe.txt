@@ -1,7 +1,7 @@
 
 Use the following environment
 
-> SetupProject Brunel v37r7 pytools --use LCG_Interfaces/COOL --tag_add NEEDS_PYCOOL --runtime LHCbDirac --use LHCbDiracSys
+> SetupProject Brunel v39r1 pytools --use LCG_Interfaces/COOL --tag_add NEEDS_PYCOOL --runtime LHCbDirac --use LHCbDiracSys
 
 or
 
