@@ -15,18 +15,18 @@ void AddTimer::timerHandler ( void )
 {
   DimLock l;
 //  dim_lock();
-  try
-  {
+//  try
+//  {
     m_owner->TimeoutHandler();
-  }
-  catch(const std::exception& e)
-  {
-    ::printf("AddTimer: Exception:%s\n",e.what());
-  }
-  catch(...)
-  {
-    printf("AddTimer: Unknown Exception.\n");
-  }
+//  }
+//  catch(const std::exception& e)
+//  {
+//    ::printf("AddTimer: Exception:%s\n",e.what());
+//  }
+//  catch(...)
+//  {
+//    printf("AddTimer: Unknown Exception.\n");
+//  }
 //  dim_unlock();
 }
 
