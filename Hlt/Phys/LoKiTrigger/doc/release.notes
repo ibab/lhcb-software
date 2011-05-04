@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v12r2 2011-05-04 ===================
 ! 2011-05-04 - Roel Aaij
  - Fix a bug in UpgradeTool where the extraInfo field for the recoID on a seed
    would be it's key instead of the number of resulting output tracks if the 
