@@ -22,7 +22,10 @@ def start() :
     Moore().UseDBSnapshot = True
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
+    Moore().PartitionName = OnlineEnv.PartitionName
+    Moore().InitialTCK = OnlineEnv.InitialTCK
 
+    ## TODO: is this still needed???
     if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False
 
     ### pick up requested DB tags

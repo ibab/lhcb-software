@@ -84,6 +84,7 @@ class Moore(LHCbConfigurableUser):
         , "RunMonitoringFarm" : False
         , "UseDBSnapshot"     : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
+        , "PartitionName" : "LHCb"
         , 'IgnoreDBHeartBeat'  : False
         , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
         , 'TimeOutBits'       : 0x200
@@ -265,8 +266,7 @@ class Moore(LHCbConfigurableUser):
         conddb.IgnoreHeartBeat = self.getProp('IgnoreDBHeartBeat') 
 
         if self.getProp('EnableRunChangeHandler') : 
-            import OnlineEnv 
-            online_xml = '%s/%s/online_%%d.xml' % (baseloc, OnlineEnv.PartitionName )
+            online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName') )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
             rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
@@ -519,7 +519,7 @@ class Moore(LHCbConfigurableUser):
                 self.setProp('InitialTCK',OnlineEnv.InitialTCK)
                 self.setProp('CheckOdin',True)
             # determine the partition we run in, and adapt settings accordingly...
-            if OnlineEnv.PartitionName == 'FEST' or OnlineEnv.PartitionName == 'LHCb' :
+            if self.getProp('PartitionName') in [ 'FEST', 'LHCb' ] : 
                 self.setProp('InitialTCK',OnlineEnv.InitialTCK)
                 self.setProp('CheckOdin',True)
 

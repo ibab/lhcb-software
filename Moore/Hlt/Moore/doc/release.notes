@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2011-05-05 - Gerhard Raven
+ - move online dependency in runchangehandler setup around so
+   that the runchangehandler can be used without importing OnlineEnv
+
 !========================== Moore v12r5 2011-04-06 =================
 ! 2011-04-06 - Gerhard Raven
  - update requirements
