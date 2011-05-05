@@ -118,16 +118,17 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         
         #######################################################################
-        # Eventually get primary vertices
+        # Get the primary vertices and run the Hlt2 Velo Tracking
         DVSeq = []
-        DVSeq.append( PV3D() )
+        hlt2VeloTracking = Hlt2BiKalmanFittedForwardTracking.hlt2VeloTracking()
+        DVSeq.extend( [ PV3D(), hlt2VeloTracking ] )
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
         Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
         DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
-        Hlt2PatPV3D.PVOfflineTool.InputTracks = [(Hlt2BiKalmanFittedForwardTracking.hlt2VeloTracking()).outputSelection()]
+        Hlt2PatPV3D.PVOfflineTool.InputTracks = [ hlt2VeloTracking.outputSelection() ]
         Hlt2PatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
         Hlt2PatPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         Hlt2PatPV3D.PVOfflineTool.addTool(PVSeed3DTool)
