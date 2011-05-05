@@ -50,13 +50,13 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-RootDBase.open    SUCCESS taePOOL.dat File version:52600
+RootDBase.open    SUCCESS taePOOL.dat File version:52800
 PoolRootTreeEvt...   INFO No Records /FileRecords present in:26FE952B-F81E-DE11-B1D8-000423D6B700
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-RawDataCnvSvc        INFO Opened(READ) MDF stream:1823C7F6-BC1E-DE11-BDC3-000423D9A21A ID:0xa9390e0
+RawDataCnvSvc        INFO Opened(READ) MDF stream:1823C7F6-BC1E-DE11-BDC3-000423D9A21A ID:0x344ca10
 R__unzip: too small target
 RawDataCnvSvc        INFO Retry with increased buffer space of 185208 bytes.
-Explorer             INFO ========= /Event[0xa751220@EventDataSvc]:
+Explorer             INFO ========= /Event[0x336b8c0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -108,7 +108,7 @@ EventLoopMgr         INFO No more events in event selection
 +-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
-RawDataCnvSvc        INFO Closed MDF stream:1823C7F6-BC1E-DE11-BDC3-000423D9A21A ID:0xa9390e0
+RawDataCnvSvc        INFO Closed connected MDF stream:1823C7F6-BC1E-DE11-BDC3-000423D9A21A ID:0x344ca10
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 PoolRootTreeEvt...   INFO Disconnected data IO:26FE952B-F81E-DE11-B1D8-000423D6B700[taePOOL.dat]
