@@ -4,6 +4,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2011-05-05 - Tomasz Skwarnicki
+ - src/L0SelReportsMaker.cpp add support for Muon12 condition 
+   used in new DiMuon trigger (2011 data)
+
 !========================== TisTosTobbing v7r0 2011-04-04 =====================
 
 ! 2011-03-29 - Tomasz Skwarnicki

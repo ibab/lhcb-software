@@ -54,6 +54,7 @@ L0SelReportsMaker::L0SelReportsMaker( const std::string& name,
   m_selectionConditions.push_back( "LocalPi0(Et)" );
   m_selectionConditions.push_back( "GlobalPi0(Et)" );
   m_selectionConditions.push_back( "DiMuon(Pt)" );
+  m_selectionConditions.push_back( "Muon12(Pt)" );
 
 }
 
@@ -246,6 +247,30 @@ StatusCode L0SelReportsMaker::execute() {
                   if( pHos2->summarizedObjectCLID() != L0MuonCandidate::classID() )continue;
                   int pt2=dynamic_cast<const L0MuonCandidate*>( pHos2->summarizedObject() )->encodedPt()&0x7F;
                   if( pt1+pt2 <= cut )continue;
+                  HltObjectSummary* hos = new HltObjectSummary();
+                  hos->setSummarizedObjectCLID( 0 ); // we are not summarizing any existing object
+                  //              hos->setSummarizedObject(object);
+                  hos->addToSubstructure( pHos1 );
+                  hos->addToSubstructure( pHos2 );
+                  hos->addToInfo("0#L0Type",-2.0);                  
+                  m_objectSummaries->push_back(hos);
+                  subSelections[nSubSel].push_back( SmartRef<HltObjectSummary>(hos) );
+                }
+              }
+            } else if ( cond.substr(0,6)=="Muon12" ){
+              //  2011 DiMuon based on product
+              for( HltObjectSummary::Container::const_iterator ppHos1=m_objectSummaries->begin();
+                   ppHos1!=m_objectSummaries->end();++ppHos1){
+                const HltObjectSummary* pHos1=*ppHos1;    
+                if( pHos1->summarizedObjectCLID() != L0MuonCandidate::classID() )continue;
+                int pt1=dynamic_cast<const L0MuonCandidate*>( pHos1->summarizedObject() )->encodedPt()&0x7F;
+                for( HltObjectSummary::Container::const_iterator ppHos2=ppHos1;
+                     ppHos2!=m_objectSummaries->end();++ppHos2){
+                  if( ppHos1 == ppHos2 )continue;                
+                  const HltObjectSummary* pHos2=*ppHos2;    
+                  if( pHos2->summarizedObjectCLID() != L0MuonCandidate::classID() )continue;
+                  int pt2=dynamic_cast<const L0MuonCandidate*>( pHos2->summarizedObject() )->encodedPt()&0x7F;
+                  if( pt1*pt2 <= cut )continue;
                   HltObjectSummary* hos = new HltObjectSummary();
                   hos->setSummarizedObjectCLID( 0 ); // we are not summarizing any existing object
                   //              hos->setSummarizedObject(object);
