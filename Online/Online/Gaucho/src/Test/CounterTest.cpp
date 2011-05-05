@@ -76,6 +76,46 @@ int main(int , char *argv[]) // Taskname, DNS Node
         printf ("%f Hz\n",(double)objs[i]->data);
         break;
       }
+      case C_INTSTAR:
+      {
+        int *p = (int*)objs[i]->ptr;
+        int nel = objs[i]->nel;
+        for (int j=0;j<nel;j++)
+        {
+          printf("index %d value %d\n",j,p[j]);
+        }
+        break;
+      }
+      case C_LONGSTAR:
+      {
+        long *p = (long*)objs[i]->ptr;
+        int nel = objs[i]->nel;
+        for (int j=0;j<nel;j++)
+        {
+          printf("index %d value %lli\n",j,p[j]);
+        }
+        break;
+      }
+      case C_FLOATSTAR:
+      {
+        float *p = (float*)objs[i]->ptr;
+        int nel = objs[i]->nel;
+        for (int j=0;j<nel;j++)
+        {
+          printf("index %d value %f\n",j,p[j]);
+        }
+        break;
+      }
+      case C_DOUBLESTAR:
+      {
+        double *p = (double*)objs[i]->ptr;
+        int nel = objs[i]->nel;
+        for (int j=0;j<nel;j++)
+        {
+          printf("index %d value %f\n",j,p[j]);
+        }
+        break;
+      }
     }
   }
   return 0;

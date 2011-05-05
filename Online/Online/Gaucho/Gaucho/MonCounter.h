@@ -10,9 +10,13 @@
 class CntrDescr
 {
 public:
+  CntrDescr(){ptr = 0;}
+  ~CntrDescr(){deallocPtr(ptr);}
   std::string name;
   int type;
   long long data;
+  void *ptr;
+  int nel;
 };
 
 class MonCounter : public MonObj

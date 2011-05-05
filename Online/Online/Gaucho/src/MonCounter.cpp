@@ -84,7 +84,7 @@ MonCounter::~MonCounter()
 {
   deletePtr(m_service);
 }
-void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title,int size)
+void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title,int )
 {
   setup(typ,data,name,title);
 
@@ -356,6 +356,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
   CntrDescr *h = new CntrDescr;
   h->data = 0;
   void * dat = AddPtr(p,p->dataoff);
+  h->type = p->type;
   switch (p->type)
   {
     case C_INT:
@@ -389,7 +390,42 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
       *a = *(double*)dat;
       break;
     }
+    case C_INTSTAR:
+    {
+      void *pp = AddPtr(p,p->dataoff);
+      int bsiz = p->reclen - p->dataoff;
+      h->nel = bsiz/sizeof(int);
+      h->ptr = malloc(bsiz);
+      memcpy(h->ptr,pp,bsiz);
+      break;
+    }
+    case C_LONGSTAR:
+    {
+      void *pp = AddPtr(p,p->dataoff);
+      int bsiz = p->reclen - p->dataoff;
+      h->nel = (bsiz)/sizeof(long);
+      h->ptr = malloc(bsiz);
+      memcpy(h->ptr,pp,bsiz);
+      break;
+    }
+    case C_FLOATSTAR:
+    {
+      void *pp = AddPtr(p,p->dataoff);
+      int bsiz = p->reclen - p->dataoff;
+      h->nel = (bsiz)/sizeof(float);
+      h->ptr = malloc(bsiz);
+      memcpy(h->ptr,pp,bsiz);
+      break;
+    }
+    case C_DOUBLESTAR:
+    {
+      void *pp = AddPtr(p,p->dataoff);
+      int bsiz = p->reclen - p->dataoff;
+      h->nel = (bsiz)/sizeof(double);
+      h->ptr = malloc(bsiz);
+      memcpy(h->ptr,pp,bsiz);
+      break;
+    }
   }
   return h;
 }
-
