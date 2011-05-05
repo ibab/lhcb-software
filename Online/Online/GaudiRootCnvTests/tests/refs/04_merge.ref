@@ -26,34 +26,34 @@ Tree:Event 0
 +++ Created new Tree Event.
 Tree:FileRecords 0
 +++ Created new Tree FileRecords.
-+++ section ['/Event'][0]                                           Start:       0 ...      500 [500 entries]
-+++ section ['/Event#R'][0]                                         Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_0'][0]                               Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_0#R'][0]                             Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_0/MyVertices'][0]                    Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_0/MyVertices#R'][0]                  Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_1'][0]                               Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_1#R'][0]                             Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_2'][0]                               Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Collision_2#R'][0]                             Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Header'][0]                                    Start:       0 ...      500 [500 entries]
-+++ section ['/Event/Header#R'][0]                                  Start:       0 ...      500 [500 entries]
-+++ section ['/Event/MyTracks'][0]                                  Start:       0 ...      500 [500 entries]
-+++ section ['/FileRecords'][0]                                     Start:       0 ...        1 [1 entries]
-+++ section ['/FileRecords#R'][0]                                   Start:       0 ...        1 [1 entries]
-+++ section ['/FileRecords/EvtCount'][0]                            Start:       0 ...        1 [1 entries]
-+++ section ['/FileRecords/EvtCount#R'][0]                          Start:       0 ...        1 [1 entries]
-+++ section ['/FileRecords/SumCount'][0]                            Start:       0 ...        1 [1 entries]
 +++ section ['Containers'][0]                                       Start:       0 ...        8 [8 entries]
 +++ section ['Databases'][0]                                        Start:       0 ...        1 [1 entries]
 +++ section ['Links'][0]                                            Start:       0 ...       14 [14 entries]
-+++ Added 22 Sections entries with 873 bytes in total.
++++ section ['_Event.'][0]                                          Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_0.'][0]                              Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_0_MyVertices.'][0]                   Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_0_MyVertices_R.'][0]                 Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_0_R.'][0]                            Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_1.'][0]                              Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_1_R.'][0]                            Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_2.'][0]                              Start:       0 ...      500 [500 entries]
++++ section ['_Event_Collision_2_R.'][0]                            Start:       0 ...      500 [500 entries]
++++ section ['_Event_Header.'][0]                                   Start:       0 ...      500 [500 entries]
++++ section ['_Event_Header_R.'][0]                                 Start:       0 ...      500 [500 entries]
++++ section ['_Event_MyTracks.'][0]                                 Start:       0 ...      500 [500 entries]
++++ section ['_Event_R.'][0]                                        Start:       0 ...      500 [500 entries]
++++ section ['_FileRecords.'][0]                                    Start:       0 ...        1 [1 entries]
++++ section ['_FileRecords_EvtCount.'][0]                           Start:       0 ...        1 [1 entries]
++++ section ['_FileRecords_EvtCount_R.'][0]                         Start:       0 ...        1 [1 entries]
++++ section ['_FileRecords_R.'][0]                                  Start:       0 ...        1 [1 entries]
++++ section ['_FileRecords_SumCount.'][0]                           Start:       0 ...        1 [1 entries]
++++ Added 22 Sections entries with 891 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x107df410
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x107df630
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x109c7450
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x10abd3f0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x19ab3510
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x19ab6af0
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x19ca1700
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x19d9a740
   KEY: TTree	Event;2	Root data for Gaudi
   KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
@@ -64,34 +64,34 @@ Tree:Event 0
 +++ Merged tree: Event res=1
 Tree:FileRecords 0
 +++ Merged tree: FileRecords res=1
-+++ section ['/Event'][0]                                           Start:     500 ...     1000 [500 entries]
-+++ section ['/Event#R'][0]                                         Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_0'][0]                               Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_0#R'][0]                             Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_0/MyVertices'][0]                    Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_0/MyVertices#R'][0]                  Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_1'][0]                               Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_1#R'][0]                             Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_2'][0]                               Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Collision_2#R'][0]                             Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Header'][0]                                    Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/Header#R'][0]                                  Start:     500 ...     1000 [500 entries]
-+++ section ['/Event/MyTracks'][0]                                  Start:     500 ...     1000 [500 entries]
-+++ section ['/FileRecords'][0]                                     Start:       1 ...        2 [1 entries]
-+++ section ['/FileRecords#R'][0]                                   Start:       1 ...        2 [1 entries]
-+++ section ['/FileRecords/EvtCount'][0]                            Start:       1 ...        2 [1 entries]
-+++ section ['/FileRecords/EvtCount#R'][0]                          Start:       1 ...        2 [1 entries]
-+++ section ['/FileRecords/SumCount'][0]                            Start:       1 ...        2 [1 entries]
 +++ section ['Containers'][0]                                       Start:       8 ...       16 [8 entries]
 +++ section ['Databases'][0]                                        Start:       1 ...        2 [1 entries]
 +++ section ['Links'][0]                                            Start:      14 ...       28 [14 entries]
-+++ Added 22 Sections entries with 900 bytes in total.
++++ section ['_Event.'][0]                                          Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_0.'][0]                              Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_0_MyVertices.'][0]                   Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_0_MyVertices_R.'][0]                 Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_0_R.'][0]                            Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_1.'][0]                              Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_1_R.'][0]                            Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_2.'][0]                              Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Collision_2_R.'][0]                            Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Header.'][0]                                   Start:     500 ...     1000 [500 entries]
++++ section ['_Event_Header_R.'][0]                                 Start:     500 ...     1000 [500 entries]
++++ section ['_Event_MyTracks.'][0]                                 Start:     500 ...     1000 [500 entries]
++++ section ['_Event_R.'][0]                                        Start:     500 ...     1000 [500 entries]
++++ section ['_FileRecords.'][0]                                    Start:       1 ...        2 [1 entries]
++++ section ['_FileRecords_EvtCount.'][0]                           Start:       1 ...        2 [1 entries]
++++ section ['_FileRecords_EvtCount_R.'][0]                         Start:       1 ...        2 [1 entries]
++++ section ['_FileRecords_R.'][0]                                  Start:       1 ...        2 [1 entries]
++++ section ['_FileRecords_SumCount.'][0]                           Start:       1 ...        2 [1 entries]
++++ Added 22 Sections entries with 918 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x10af9ff0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x10a9f970
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x10a9a750
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1092d6e0
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x19de0f90
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x19e09710
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x19e05860
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x19ca4f50
   KEY: TTree	Event;3	Root data for Gaudi
   KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
@@ -102,35 +102,35 @@ Tree:Event 0
 +++ Merged tree: Event res=1
 Tree:FileRecords 0
 +++ Merged tree: FileRecords res=1
-+++ section ['/Event'][0]                                           Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event#R'][0]                                         Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_0'][0]                               Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_0#R'][0]                             Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_0/MyVertices'][0]                    Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_0/MyVertices#R'][0]                  Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_1'][0]                               Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_1#R'][0]                             Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_2'][0]                               Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Collision_2#R'][0]                             Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Header'][0]                                    Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/Header#R'][0]                                  Start:    1000 ...     1500 [500 entries]
-+++ section ['/Event/MyTracks'][0]                                  Start:    1000 ...     1500 [500 entries]
-+++ section ['/FileRecords'][0]                                     Start:       2 ...        3 [1 entries]
-+++ section ['/FileRecords#R'][0]                                   Start:       2 ...        3 [1 entries]
-+++ section ['/FileRecords/EvtCount'][0]                            Start:       2 ...        3 [1 entries]
-+++ section ['/FileRecords/EvtCount#R'][0]                          Start:       2 ...        3 [1 entries]
-+++ section ['/FileRecords/SumCount'][0]                            Start:       2 ...        3 [1 entries]
 +++ section ['Containers'][0]                                       Start:      16 ...       24 [8 entries]
 +++ section ['Databases'][0]                                        Start:       2 ...        3 [1 entries]
 +++ section ['Links'][0]                                            Start:      28 ...       42 [14 entries]
-+++ Added new GUID FID=12307486-2DE5-11E0-9797-37048A89BEEF to merge file.
-+++ Added 22 Sections entries with 914 bytes in total.
++++ section ['_Event.'][0]                                          Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_0.'][0]                              Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_0_MyVertices.'][0]                   Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_0_MyVertices_R.'][0]                 Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_0_R.'][0]                            Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_1.'][0]                              Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_1_R.'][0]                            Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_2.'][0]                              Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Collision_2_R.'][0]                            Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Header.'][0]                                   Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_Header_R.'][0]                                 Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_MyTracks.'][0]                                 Start:    1000 ...     1500 [500 entries]
++++ section ['_Event_R.'][0]                                        Start:    1000 ...     1500 [500 entries]
++++ section ['_FileRecords.'][0]                                    Start:       2 ...        3 [1 entries]
++++ section ['_FileRecords_EvtCount.'][0]                           Start:       2 ...        3 [1 entries]
++++ section ['_FileRecords_EvtCount_R.'][0]                         Start:       2 ...        3 [1 entries]
++++ section ['_FileRecords_R.'][0]                                  Start:       2 ...        3 [1 entries]
++++ section ['_FileRecords_SumCount.'][0]                           Start:       2 ...        3 [1 entries]
++++ Added new GUID FID=73ACB670-7737-11E0-9797-0815800ABEEF to merge file.
++++ Added 22 Sections entries with 932 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x10b1d2c0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x10b1b150
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x10b3f3a0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x10ac5bf0
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x19e2e350
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x19e1c5f0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x19d62470
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x19ca4f50
   KEY: TTree	Event;4	Root data for Gaudi
   KEY: TTree	FileRecords;4	Root data for Gaudi
   KEY: TTree	Refs;7	Root Section data
