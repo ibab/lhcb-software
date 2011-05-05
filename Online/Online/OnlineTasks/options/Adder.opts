@@ -7,7 +7,8 @@ ApplicationMgr.ExtSvc               += {"MonitorSvc",
 					"AdderSvc/AdderSvcSF",
 					"AdderSvc/GauchoHistAdder",
 					"AdderSvc/GauchoCountAdder",
-					"AdderSvc/MEPrxHistAdder"
+					"AdderSvc/MEPrxHistAdder",
+					"AdderSvc/MEPrxCountAdder"
 					};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -40,7 +41,7 @@ GauchoHistAdder.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder_(.*)";
 GauchoHistAdder.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Histos/";
 GauchoHistAdder.AdderClass         = "hists";
 GauchoHistAdder.InDNS              = "<node>";
-
+GauchoHistAdder.ExpandRate         = true;
 GauchoHistAdder.SaveSetTaskName    = "GauchoJob";
 GauchoHistAdder.IsSaver            = true;
 GauchoHistAdder.SaveRootDir        = "/hist/Savesets";
@@ -59,4 +60,16 @@ MEPrxHistAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
 MEPrxHistAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_MEPrx/Histos/";
 MEPrxHistAdder.AdderClass          = "hists";
 MEPrxHistAdder.InDNS               = "<node>";
+
+MEPrxCountAdder.MyName              = "<part>_<node>_MEPrx_00";
+MEPrxCountAdder.PartitionName       = @OnlineEnv.PartitionName;
+MEPrxCountAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+MEPrxCountAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_MEPrx/Counter/";
+MEPrxCountAdder.AdderClass          = "Counter";
+MEPrxCountAdder.InDNS               = "<node>";
+
+MEPrxCountAdder.ReceiveTimeout     = 12;
+GauchoHistAdder.ReceiveTimeout     = 12;
+GauchoCountAdder.ReceiveTimeout    = 12;
+MEPrxHistAdder.ReceiveTimeout      = 12;
 

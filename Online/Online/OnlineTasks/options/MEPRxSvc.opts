@@ -27,5 +27,5 @@ Runable.MEPBufSize       = 4000000; // Test to check whether overall farm usage 
 Runable.refCount         = 2;
 //Runable.RTTCCompat       = false;       // for RTTC backward compatibility
 Runable.sockBuf           = 30000000;     // receive socket size
-Runable.maxEventAge=1000;
+Runable.maxEventAge=100000;
 #include "$ONLINETASKSROOT/options/EBSetup.opts"
