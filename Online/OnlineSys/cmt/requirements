@@ -22,10 +22,10 @@ use Checkpointing       v0r6     Online
 use CondDBServer        v1r4     Online
 use DIM                 v19r18   Online
 ####use ExampleGaucho       v3r4     Online
-use FarmMonitor         v2r6     Online
-use Gaucho              v7r10    Online
+use FarmMonitor         v2r7     Online
+use Gaucho              v7r14    Online
 use GaudiCheckpointing  v0r5     Online
-use GaudiOnline         v2r52    Online
+use GaudiOnline         v2r53    Online
 use GaudiRootCnvTests   v1r1     Online
 use GaudiSerialize      v0r9     Online
 use GaudiUPI            v1r13    Online
@@ -40,17 +40,17 @@ use OnlineBase          v1r9     Online
 use OnlineHistDB        v7r6     Online
 use OnlineKernel        v2r6     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r38    Online
+use OnlineTasks         v1r39    Online
 ####use Presenter           v2r3     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r10    Online
-use RootCnv             v1r3     Online
-use ROMon               v1r29    Online
+use RootCnv             v1r4     Online
+use ROMon               v1r30    Online
 use ROLogger            v0r22    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
-use Trending            v1r5     Online
+use Trending            v1r6     Online
 use UPI                 v1r20    Online
 use UPIR                v1r3     Online
 #Obsolete: use Viewer            v1r5     Online

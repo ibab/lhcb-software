@@ -6,7 +6,22 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v4r52>2010-03-01 OnlineSys v4r54</A></H1>
+<H1><A NAME=v4r55>2010-03-01 OnlineSys v4r55</A></H1>
+<PRE>
+   Based in Gaudi v22r2, 
+   Updated packages are:
+     OMAlib              v3r6     Online
+     FarmMonitor         v2r7     Online
+     Gaucho              v7r14    Online
+     GaudiOnline         v2r53    Online
+     OnlineHistDB        v7r6     Online
+     OnlineTasks         v1r39    Online
+     RootCnv             v1r4     Online
+     ROMon               v1r30    Online
+     Trending            v1r6     Online
+</PRE>
+
+<H1><A NAME=v4r54>2010-03-01 OnlineSys v4r54</A></H1>
 <PRE>
    Based in Gaudi v22r1, 
    Updated packages are:
@@ -27,7 +42,7 @@ which contains the basic set of functions to be called in order to
 build monitoring tasks using python job options.
 </PRE>
 
-<H1><A NAME=v4r52>2010-03-01 OnlineSys v4r53</A></H1>
+<H1><A NAME=v4r53>2010-03-01 OnlineSys v4r53</A></H1>
 <PRE>
    Based in Gaudi v22r1, 
    Updated packages are:
@@ -41,7 +56,7 @@ build monitoring tasks using python job options.
      Writer              v1r35    Online
 </PRE>
 
-<H1><A NAME=v4r53>2010-03-28 OnlineSys v4r52</A></H1>
+<H1><A NAME=v4r52>2010-03-28 OnlineSys v4r52</A></H1>
 <PRE>
    Based in Gaudi v22r1, 
    Updated packages are:
