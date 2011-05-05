@@ -223,18 +223,19 @@ StatusCode L0SelReportsMaker::execute() {
 
       for( LHCb::L0DUElementaryCondition::Map::const_iterator ic = it->second->elementaryConditions().begin();
            ic != it->second->elementaryConditions().end(); ++ic){
-        //        if ( msgLevel(MSG::VERBOSE) ) verbose() << "        " << ic->first << endmsg; 
+        //->                if ( msgLevel(MSG::VERBOSE) ) verbose() << "        " << ic->first << endmsg; 
         const std::string & conditionName = ic->first;
         for( std::vector< std::string >::const_iterator 
                icond=m_selectionConditions.begin();icond!=m_selectionConditions.end();++icond){
           const std::string & cond = *icond;
           if( conditionName.find(cond) == 0 ){
-            // if ( msgLevel(MSG::VERBOSE) ) 
-            //  verbose() << " cut string " << conditionName.substr( cond.length()+1,conditionName.length()-cond.length()-1 ) << endmsg;
+            //->             if ( msgLevel(MSG::VERBOSE) ) 
+            //->             verbose() << " cut string " << conditionName.substr( cond.length()+1,conditionName.length()-cond.length()-1 ) << endmsg;
             int cut = atoi( conditionName.substr( cond.length()+1,conditionName.length()-cond.length()-1 ).c_str() );          
-            // if ( msgLevel(MSG::VERBOSE) ) verbose() << " cut value " << cut << endmsg;
-            if ( cond.substr(0,1)=="D" ){
-              //  DiMuon
+            //->             if ( msgLevel(MSG::VERBOSE) ) verbose() << " cut value " << cut << endmsg;
+            bool disum(  cond.substr(0,1)=="D" );            
+            if ( disum || ( cond.find("Muon12")==0 ) ){
+              std::vector<HltObjectSummary*> tmpHosBuffer;              
               for( HltObjectSummary::Container::const_iterator ppHos1=m_objectSummaries->begin();
                    ppHos1!=m_objectSummaries->end();++ppHos1){
                 const HltObjectSummary* pHos1=*ppHos1;    
@@ -246,41 +247,28 @@ StatusCode L0SelReportsMaker::execute() {
                   const HltObjectSummary* pHos2=*ppHos2;    
                   if( pHos2->summarizedObjectCLID() != L0MuonCandidate::classID() )continue;
                   int pt2=dynamic_cast<const L0MuonCandidate*>( pHos2->summarizedObject() )->encodedPt()&0x7F;
-                  if( pt1+pt2 <= cut )continue;
+                  if( disum ){
+                    // old DC06 dimuon based on a sum of PTs
+                    if( pt1+pt2 <= cut )continue;
+                  } else {
+                    // new 2011 dimuon based on a product of PTs
+                    if( pt1*pt2 <= cut )continue;
+                    // ps: 2010 dimuon is based on Muon1 x Muon2 (nSub=2) and is handled below
+                  }                  
                   HltObjectSummary* hos = new HltObjectSummary();
                   hos->setSummarizedObjectCLID( 0 ); // we are not summarizing any existing object
                   //              hos->setSummarizedObject(object);
                   hos->addToSubstructure( pHos1 );
                   hos->addToSubstructure( pHos2 );
                   hos->addToInfo("0#L0Type",-2.0);                  
-                  m_objectSummaries->push_back(hos);
-                  subSelections[nSubSel].push_back( SmartRef<HltObjectSummary>(hos) );
+                  tmpHosBuffer.push_back(hos);                  
                 }
               }
-            } else if ( cond.substr(0,6)=="Muon12" ){
-              //  2011 DiMuon based on product
-              for( HltObjectSummary::Container::const_iterator ppHos1=m_objectSummaries->begin();
-                   ppHos1!=m_objectSummaries->end();++ppHos1){
-                const HltObjectSummary* pHos1=*ppHos1;    
-                if( pHos1->summarizedObjectCLID() != L0MuonCandidate::classID() )continue;
-                int pt1=dynamic_cast<const L0MuonCandidate*>( pHos1->summarizedObject() )->encodedPt()&0x7F;
-                for( HltObjectSummary::Container::const_iterator ppHos2=ppHos1;
-                     ppHos2!=m_objectSummaries->end();++ppHos2){
-                  if( ppHos1 == ppHos2 )continue;                
-                  const HltObjectSummary* pHos2=*ppHos2;    
-                  if( pHos2->summarizedObjectCLID() != L0MuonCandidate::classID() )continue;
-                  int pt2=dynamic_cast<const L0MuonCandidate*>( pHos2->summarizedObject() )->encodedPt()&0x7F;
-                  if( pt1*pt2 <= cut )continue;
-                  HltObjectSummary* hos = new HltObjectSummary();
-                  hos->setSummarizedObjectCLID( 0 ); // we are not summarizing any existing object
-                  //              hos->setSummarizedObject(object);
-                  hos->addToSubstructure( pHos1 );
-                  hos->addToSubstructure( pHos2 );
-                  hos->addToInfo("0#L0Type",-2.0);                  
-                  m_objectSummaries->push_back(hos);
-                  subSelections[nSubSel].push_back( SmartRef<HltObjectSummary>(hos) );
-                }
-              }
+              for( std::vector<HltObjectSummary*>::iterator ppHos = tmpHosBuffer.begin();
+                   ppHos != tmpHosBuffer.end(); ++ppHos ){                
+                   m_objectSummaries->push_back(*ppHos);
+                   subSelections[nSubSel].push_back( SmartRef<HltObjectSummary>(*ppHos) );
+              }              
             } else {              
               for( HltObjectSummary::Container::const_iterator ppHos=m_objectSummaries->begin();
                    ppHos!=m_objectSummaries->end();++ppHos){
