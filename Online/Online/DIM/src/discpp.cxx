@@ -509,7 +509,7 @@ void DimServer::stop()
 	dis_stop_serving();
 	if(itsName)
 	{
-		delete(itsName);
+		delete[] itsName;
 		itsName = 0;
 	}
 }

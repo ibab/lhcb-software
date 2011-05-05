@@ -1588,7 +1588,7 @@ void service_init()
   int i;
 
 	for( i = 0; i < MAX_HASH_ENTRIES; i++ ) {
-		Service_hash_table[i] = (RED_DNS_SERVICE *) malloc(8);
+		Service_hash_table[i] = (RED_DNS_SERVICE *) malloc(sizeof(RED_DNS_SERVICE));
 		dll_init((DLL *) Service_hash_table[i]);
 	}
 }

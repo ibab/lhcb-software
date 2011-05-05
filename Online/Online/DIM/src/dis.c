@@ -2860,7 +2860,14 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 /*
 			if(servp->registered == 1)
 */
-			if(servp->registered < (Last_n_clients+1))
+			if(servp->registered == 0)
+			{
+				strcat(buff_ptr, "-");
+				buff_ptr += strlen(buff_ptr);
+				append_service(buff_ptr, servp);
+				buff_ptr += strlen(buff_ptr);
+			}
+			else if(servp->registered < (Last_n_clients+1))
 			{
 				if(!done)
 				{
@@ -2874,13 +2881,6 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 				servp->registered = 2;
 */
 				servp->registered++;
-			}
-			else if(servp->registered == 0)
-			{
-				strcat(buff_ptr, "-");
-				buff_ptr += strlen(buff_ptr);
-				append_service(buff_ptr, servp);
-				buff_ptr += strlen(buff_ptr);
 			}
 		}
 	}
@@ -3040,7 +3040,7 @@ int dis_hash_service_init()
   {
 	for( i = 0; i < MAX_HASH_ENTRIES; i++ ) 
 	{
-		Service_hash_table[i] = (SERVICE *) malloc(8);
+		Service_hash_table[i] = (SERVICE *) malloc(sizeof(SERVICE));
 		dll_init((DLL *) Service_hash_table[i]);
 		Service_new_entries[i] = 0;
 	}

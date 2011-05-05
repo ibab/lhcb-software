@@ -112,7 +112,6 @@ int main(int argc, char **argv)
 	dic_get_id(aux);
 	printf("%s\n",aux);
 	strcpy(client_str,argv[1]);
-
 	for(i = 0; i< 10; i++)
 	{
 		sprintf(str,"%s/Service_%03d",argv[2],i);
@@ -130,6 +129,9 @@ int main(int argc, char **argv)
 			  &no_link, 4 );
 */
 /*
+	sprintf(aux,"DIS_DNS/SERVER_LIST");
+	dic_info_service( aux, MONITORED, 0, 0, 0, rout_list, 0,
+			  "DEAD", 5 );
 	sprintf(aux,"%s/SERVICE_LIST",argv[2]);
 	dic_info_service( aux, MONITORED, 0, 0, 0, rout_list, 0,
 			  "DEAD", 5 );
@@ -144,7 +146,6 @@ int main(int argc, char **argv)
 	while(1)
 	{
 		sleep(10);
-
 		printf("Sending Command, size = %d, i = %d\n",(int)sizeof(t), t.i);
 		dic_cmnd_service(aux,&t,(int)sizeof(t));
 	}

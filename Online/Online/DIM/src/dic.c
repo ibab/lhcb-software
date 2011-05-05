@@ -943,6 +943,8 @@ int dic_get_timestamp( unsigned serv_id, int *secs, int *milisecs )
 	register DIC_SERVICE *servp;
 
 	DISABLE_AST
+	*secs = 0;
+	*milisecs = 0;
 	if( serv_id == 0 )
 	{
 		if(Current_server)
@@ -969,8 +971,10 @@ int dic_get_timestamp( unsigned serv_id, int *secs, int *milisecs )
 	}
 	else
 	{
+/*
 		*secs = 0;
 		*milisecs = 0;
+*/
 		return(0);
 	}
 }

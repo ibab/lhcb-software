@@ -51,10 +51,14 @@ void exit_cmnd(int *code)
 
 int NewData;
 int NewIds[11];
-/*
+
 int more_ids[1024];
 int curr_more_index = 0;
 char more_str[1024][80];
+
+/*
+int atlas_ids[210];
+float atlas_arr[10];
 */
 int main(int argc, char **argv)
 {
@@ -70,6 +74,16 @@ int main(int argc, char **argv)
 */
 /*
 dis_set_debug_on();
+*/
+/*
+	int status;
+	regex_t re;
+
+	if(regcomp(&re, "abc*",REG_EXTENDED|REG_NOSUB) != 0)
+		printf("regcomp error\n");
+	status = regexec(&re,"abcdef", (size_t)0, NULL, 0);
+	regfree(&re);
+	printf("result = %d\n", status); 
 */
 	if(argc){}
 	new_dns = dim_get_env_var("EXTRA_DNS_NODE", extra_dns, sizeof(extra_dns));
@@ -116,13 +130,20 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 			(void *)0, 0 );
 	}
 */
+/*
+	for(i = 1; i <= 200; i++)
+	{
+		sprintf(aux,"%s/ATLAS_Service%d",argv[1],i);
+		atlas_ids[i] = dis_add_service( aux, "F", atlas_arr, 10*sizeof(float), 
+			(void *)0, 0 );
+	}
+*/
 	dis_start_serving( argv[1] );
 
 	if(dis_get_client(name))
 	{
 		printf("client %s\n",name);
 	}
-	
 	while(1)
 	{
 /*
@@ -138,21 +159,29 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 		pause();
 		*/
 		sleep(10);
-
 		dis_update_service(id);
+/*		
+		for(i = 1; i <= 200; i++)
+		{
+			dis_update_service(atlas_ids[i]);
+		}
+*/
 /*
 		if(curr_more_index < 1000)
 		{
-			sprintf(more_str[curr_more_index],"%s/More_Service_%03d",argv[1],curr_more_index);
-			more_ids[curr_more_index] = dis_add_service( more_str[curr_more_index], "C", 
-				more_str[curr_more_index], strlen(more_str[curr_more_index])+1, 
-				(void *)0, 0 );
+			for(i = 1; i <= 10; i++)
+			{
+				sprintf(more_str[curr_more_index],"%s/More_Service_%03d",argv[1],curr_more_index);
+				more_ids[curr_more_index] = dis_add_service( more_str[curr_more_index], "C", 
+					more_str[curr_more_index], strlen(more_str[curr_more_index])+1, 
+					(void *)0, 0 );
 printf("Adding service %s\n",more_str[curr_more_index]);
-			dis_start_serving(argv[1]);
-			curr_more_index++;
+				curr_more_index++;
+				dis_start_serving(argv[1]);
+				dis_start_serving(argv[1]);
+			}
 		}
 */
-
 		if(new_dns)
 		{
 			if(!on)
