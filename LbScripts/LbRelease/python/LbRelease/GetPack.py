@@ -854,38 +854,41 @@ class GetPack(Script):
                 return
 
         self.log.debug("Starting processing loop")
+        current_count = 0
         # process the list of pending packages
         while todo_packages:
             # get an item
             pkg, vers = todo_packages.popitem()
-            # Check if we can process it
-            if pkg in skipped_packages or pkg in done_packages:
-                # Already processed
-                continue
-            elif pkg not in self.packages:
-                # Not found
-                skipped_packages[pkg] = vers
-                continue
             try:
+                # Check if we can process it
+                if pkg in skipped_packages or pkg in done_packages:
+                    # Already processed
+                    continue
+                elif pkg not in self.packages:
+                    # Not found
+                    raise Skip
                 # Check out the package
                 done_packages[pkg] = self.checkout(pkg, vers)
                 pkgdir = done_packages[pkg][2]
                 # See if we need to check out something else
                 todo_packages.update(self._getNeededPackages(pkgdir))
+                # Progress report
+                current_count += 1
+                total_count = current_count + len(todo_packages)
+                print "Checked out package %s %s (%d/%d)" % (pkg, vers,
+                                                             current_count,
+                                                             total_count)
             except Skip:
                 skipped_packages[pkg] = vers
+                self.log.warning("Skipped package %s %s", pkg, vers)
 
         print "Processed packages:"
-        pkgs = done_packages.keys()
-        pkgs.sort()
-        for p in pkgs:
+        for p in sorted(done_packages):
             print "\t%s\t%s" % done_packages[p][:2]
 
         if skipped_packages:
             print "Skipped packages (not in the repositories):"
-            pkgs = skipped_packages.keys()
-            pkgs.sort()
-            for p in pkgs:
+            for p in sorted(skipped_packages):
                 print "\t%s\t%s" % (p, skipped_packages[p])
 
     def _fixProjectNameCase(self, name):

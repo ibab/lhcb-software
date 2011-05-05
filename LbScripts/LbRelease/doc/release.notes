@@ -1,3 +1,8 @@
+2011-05-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: added a parsable print out after the check out of each
+	package for better progress reporting.
+
 2011-05-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added the possibility to specify a list of packages
