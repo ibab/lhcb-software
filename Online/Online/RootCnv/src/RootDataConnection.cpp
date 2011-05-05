@@ -475,7 +475,7 @@ RootDataConnection::getMergeSection(const string& container, int entry) const {
       }
     }
   }
-  msgSvc() << MSG::ERROR << "Return INVALID MergeSection for:" << container 
+  msgSvc() << MSG::DEBUG << "Return INVALID MergeSection for:" << container 
     << "  [" << entry << "]" << endmsg
     << "FID:" << m_fid << " -> PFN:" << m_pfn << endmsg;
   return make_pair((const RootRef*)0,(const ContainerSection*)0);
