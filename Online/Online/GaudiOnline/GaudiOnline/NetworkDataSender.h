@@ -110,6 +110,8 @@ namespace LHCb  {
     bool                m_useEventRequests;
     /// Property: [Producer] Allow suspending Event selector
     bool                m_allowSuspend;
+    /// Property: [Sender] Delay before resending after failure
+    int                 m_sendErrorDelay;
     /// Monitoring item: Total number of items sent to receiver(s)
     int                 m_sendReq;
     /// Monitoring item: Total number of send errors to receiver(s)

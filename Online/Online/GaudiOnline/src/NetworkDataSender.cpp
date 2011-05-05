@@ -27,6 +27,7 @@ NetworkDataSender::NetworkDataSender(const string& nam, ISvcLocator* pSvc)
   declareProperty("DataSink",         m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
   declareProperty("AllowSuspend",     m_allowSuspend=true);
+  declareProperty("SendErrorDelay",   m_sendErrorDelay=1000);
   lib_rtl_create_lock(0,&m_lock);
 }
 
@@ -217,6 +218,7 @@ StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* 
   if ( !sendData(recipient, data, len).isSuccess() )   {
     MsgStream output(msgSvc(),name());
     output << MSG::ERROR << "Failed to send MDF to " << recipient.name << "." << endmsg;
+    ::lib_rtl_sleep(m_sendErrorDelay);
     ++m_sendError;
     return StatusCode::FAILURE;
   }
