@@ -1,6 +1,7 @@
 // $Id: OTRawBankDecoder.cpp,v 1.26 2010-03-02 12:02:03 akozlins Exp $
 // Include files
 #include <algorithm>
+#include <numeric>
 #include <sstream>
 
 // from Gaudi
@@ -38,16 +39,17 @@
 
 namespace OTRawBankDecoderHelpers
 {
-
+  
 
   class Module
   {
   public:
-    Module() : m_detelement(0), m_isdecoded(false), m_size(0), m_data(0),
-	m_bankversion(OTBankVersion::UNDEFINED) { m_ottimes.reserve(16) ; }
-    void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; }
-    void setData( unsigned int size, const unsigned short* data, int bankversion) { 
-      m_size = size ;  m_data = data ; m_bankversion = bankversion ; }
+    Module() : m_detelement(0), m_channelmap(0), m_data(0), m_tdcconversion(0), m_size(0),
+	m_bankversion(OTBankVersion::UNDEFINED), m_isdecoded(false) 
+    { m_ottimes.reserve(16) ; }
+    void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; m_tdcconversion = 0; }
+    void setData( unsigned int size, const unsigned short* data, int bankversion, double tdcconversion, const std::pair<double,double>& window) { 
+      m_size = size ;  m_data = data ; m_bankversion = bankversion ; m_tdcconversion = tdcconversion; m_window = window;}
     bool isDecoded() const { return m_isdecoded ; }
     void setIsDecoded(bool b=true) { m_isdecoded = b ; }
     const unsigned short* data() const { return m_data ; }
@@ -56,27 +58,34 @@ namespace OTRawBankDecoderHelpers
     LHCb::OTLiteTimeRange ottimes() const { return LHCb::OTLiteTimeRange(m_ottimes.begin(),m_ottimes.end()) ; }
     void setDetElement( const DeOTModule& e ) ;
     void setChannelMap( const OTDAQ::ChannelMap::Module& map ) { m_channelmap = &map ; }
+    void setTimeWindow( double tmin, double tmax ) { m_window.first = tmin; m_window.second = tmax; }
     const DeOTModule& detelement() const { return *m_detelement ; }
     
-    size_t decodeDC06(double tdcconversion) ;
-    size_t decodeV3(double tdcconversion) ;
-    size_t decode(double tdcconversion) ;
+    inline bool isHitInWindow(unsigned short data) const;
+    size_t decodeDC06() ;
+    size_t countHitsInWindowDC06() const;
+    size_t decodeV3() ;
+    size_t countHitsInWindowV3() const;
+    size_t decode() ;
+    size_t countHitsInWindow() const;
     const DeOTModule& detElement() const { return *m_detelement ; }
   private:
-    void addHit(unsigned short data, double tdcconversion) ;
+    void addHit(unsigned short data ) ;
    
+    // optimize layout wrt. memory alignment requirements
     const DeOTModule* m_detelement ;
     const OTDAQ::ChannelMap::Module* m_channelmap ;
+    const unsigned short* m_data ;
+    std::pair<double,double> m_window;
+    double m_tdcconversion;
     unsigned int m_station ;
     unsigned int m_layer ;
     unsigned int m_quarter ;
     unsigned int m_module ;
-    
-    bool m_isdecoded ;
     unsigned int m_size ;
-    const unsigned short* m_data ;
     int m_bankversion ;
     LHCb::OTLiteTimeContainer m_ottimes ;
+    bool m_isdecoded ;
   } ;
   
   void Module::setDetElement( const DeOTModule& e) 
@@ -90,17 +99,44 @@ namespace OTRawBankDecoderHelpers
     m_module  = moduleid.module() ;
   }
   
-  inline void Module::addHit(unsigned short data, double tdcconversion) 
+  inline bool Module::isHitInWindow(unsigned short data) const
+  { 
+    OTDAQ::RawHit hit(data) ;
+    unsigned int straw = m_channelmap->straw( hit.channel() ) ;
+    double t = hit.time()*m_tdcconversion - m_detelement->strawT0( straw );
+    return m_window.first < t && t < m_window.second;
+  } 
+
+  inline void Module::addHit(unsigned short data ) 
   { 
     OTDAQ::RawHit hit(data) ;
     unsigned int straw = m_channelmap->straw( hit.channel() ) ;
     unsigned int tdctime = hit.time() ;
-    LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
     double t0 = m_detelement->strawT0( straw ) ;
-    m_ottimes.push_back( LHCb::OTLiteTime( channelid, tdctime * tdcconversion - t0) );
+    double t = tdctime * m_tdcconversion - t0 ;
+    if (m_window.second<m_window.first || (  m_window.first < t && t < m_window.second ) ) {
+        LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
+        m_ottimes.push_back( LHCb::OTLiteTime( channelid, t ) );
+    }
   } 
+
+  inline size_t Module::countHitsInWindowDC06()  const
+  {
+        if (m_isdecoded) return m_ottimes.size();
+        if (m_window.second<m_window.first) return size();
+        // now, DC06 has a padding problem: The padded hits appears before the last 
+        // hit. So, we need to fix that. 
+        bool haspaddinghit = m_data[m_size-2] == 0 ;
+        const unsigned short* begin = m_data ;
+        const unsigned short* end   = begin + (haspaddinghit ? m_size -2 : m_size) ;
+        size_t n(0);
+        for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
+          if (isHitInWindow(*ihit)) ++n;
+        if(haspaddinghit && isHitInWindow(m_data[m_size-1])) ++n;
+        return n;
+  }
   
-  inline size_t Module::decodeDC06(double tdcconversion) 
+  inline size_t Module::decodeDC06() 
   {
     if(!m_isdecoded) {
       if( m_size != 0 ) {
@@ -111,46 +147,81 @@ namespace OTRawBankDecoderHelpers
         const unsigned short* end   = begin + (haspaddinghit ? m_size -2 : m_size) ;
         m_ottimes.reserve( m_size ) ;
         for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
-          addHit(*ihit,tdcconversion) ;
-        if(haspaddinghit) addHit(m_data[m_size-1],tdcconversion) ;
+          addHit(*ihit) ;
+        if(haspaddinghit) addHit(m_data[m_size-1]) ;
       }
       m_isdecoded = true ;
     }
     return m_ottimes.size() ;
   }
 
-  inline size_t Module::decodeV3(double tdcconversion) 
+  inline size_t Module::countHitsInWindowV3() const
+  {
+    if (m_isdecoded) return m_ottimes.size();
+    if (m_window.second<m_window.first) return size();
+    const unsigned short* begin = m_data ;
+    const unsigned short* end   = begin + m_size ;
+    size_t n(0);
+    for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)  
+        if (isHitInWindow(*ihit) ) ++n;
+    return n;
+  }
+
+  inline size_t Module::decodeV3() 
   {
     if(!m_isdecoded) {
       if( m_size != 0 ) {
         const unsigned short* begin = m_data ;
         const unsigned short* end   = begin + m_size ;
         m_ottimes.reserve( m_size ) ;
-        for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
-          addHit(*ihit,tdcconversion) ;
+        for( const unsigned short* ihit = begin ; ihit != end ; ++ihit) addHit(*ihit) ;
       }
       m_isdecoded = true ;
     }
     return m_ottimes.size() ;
   }
   
-  inline size_t Module::decode(double tdcconversion)
+  inline size_t Module::decode()
   {
     size_t rc(0) ;
     switch(m_bankversion) {
       case OTBankVersion::DC06: 
-        rc = decodeDC06(tdcconversion) ;
+        rc = decodeDC06() ;
         break;
         // Note: SIM and v3 currently (22/07/2008) uses same decoding.
         //       If SIM changes w.r.t. to the real decoding then we'll need
         //       to change it here. 
       case OTBankVersion::SIM:
       case OTBankVersion::v3:
-        rc = decodeV3(tdcconversion) ;
+        rc = decodeV3() ;
         break;
     }
     return rc ;
   }
+  inline size_t Module::countHitsInWindow() const
+  {
+    size_t rc(0) ;
+    switch(m_bankversion) {
+      case OTBankVersion::DC06: 
+        rc = countHitsInWindowDC06() ;
+        break;
+        // Note: SIM and v3 currently (22/07/2008) uses same decoding.
+        //       If SIM changes w.r.t. to the real decoding then we'll need
+        //       to change it here. 
+      case OTBankVersion::SIM:
+      case OTBankVersion::v3:
+        rc = countHitsInWindowV3() ;
+        break;
+    }
+    return rc ;
+  }
+
+  struct add { 
+      inline size_t operator()(size_t c, const Module& x) { return c+x.size(); } 
+  };
+  struct addInWindow{ 
+      inline size_t operator()(size_t c, const Module& x) { return c+x.countHitsInWindow(); } 
+  };
   
   class Detector : public OTDAQ::IndexedModuleDataHolder<Module>
   {
@@ -168,18 +239,22 @@ namespace OTRawBankDecoderHelpers
     
     void clearevent() {
       m_event = 0 ;
-      for(iterator imod = begin(); imod!= end(); ++imod)
-        imod->clearevent() ;
+      for(iterator imod = begin(); imod!= end(); ++imod) imod->clearevent() ;
     }
     
     const LHCb::RawEvent* rawEvent() const { return m_event ; }
     void setRawEvent( const LHCb::RawEvent* ev) { m_event = ev ; }
     bool golHeadersLoaded() const { return m_event != 0 ; }
+    
+    size_t totalNumberOfHits() const { 
+        //size_t ntot = std::accumulate( begin(), end(), size_t(0), add() ); 
+        size_t nwin = totalNumberOfHitsInWindow(); // ns...
+        //std::cout << " ntot = " << ntot << " nInWindow = " << nwin << std::endl;
+        return nwin;
 
-    size_t totalNumberOfHits() const {
-      size_t rc(0) ;
-      for(const_iterator imod = begin() ; imod != end(); ++imod) rc += imod->size() ;
-      return rc ;
+    }
+    size_t totalNumberOfHitsInWindow() const {
+        return std::accumulate( begin(), end(), size_t(0), addInWindow() ); 
     }
     
   private: 
@@ -201,13 +276,14 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_detectordata(0),
+    m_otdet(0),
     m_countsPerBX(64),
     m_numberOfBX(3),
     m_timePerBX(25*Gaudi::Units::ns),
     m_forcebankversion(OTBankVersion::UNDEFINED),
-    m_otdet(0),
     m_nsPerTdcCount(m_timePerBX/m_countsPerBX),
-    m_detectordata(0)
+    m_timewindow(999,-999) 
 {
   declareInterface<IOTRawBankDecoder>(this);
   declareProperty("countsPerBX", m_countsPerBX );
@@ -215,6 +291,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   declareProperty("timePerBX", m_timePerBX );
   declareProperty("ForceBankVersion", m_forcebankversion = OTBankVersion::UNDEFINED );
   declareProperty("RawEventLocation", m_rawEventLocation = LHCb::RawEventLocation::Default );
+  declareProperty("TimeWindow", m_timewindow );
 }
 //=============================================================================
 // Destructor
@@ -256,10 +333,13 @@ StatusCode OTRawBankDecoder::initialize()
     warning() << "Forcing bank version to be " << m_forcebankversion << endreq ;
   }
   
-  info() << " countsPerBX = " << m_countsPerBX << endmsg;
-  info() << " numberOfBX  = " << m_numberOfBX << endmsg;
-  info() << " timePerBX = " << m_timePerBX << endmsg;
-  info() << " ForceBankVersion = " << m_forcebankversion << endmsg;
+  info() << " countsPerBX = " << m_countsPerBX 
+         << " numberOfBX  = " << m_numberOfBX 
+         << " timePerBX = " << m_timePerBX 
+         << " ForceBankVersion = " << m_forcebankversion ;
+  if (m_timewindow.first<m_timewindow.second) 
+         info() << " require window [" << m_timewindow.first <<","<<m_timewindow.second << "]";
+  info() << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -316,7 +396,7 @@ StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const LHCb::RawBank& bank, int
         decodingerror = true ;
       } else {
         const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-        m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
+        m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion,m_nsPerTdcCount,m_timewindow) ; 
         if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
       }
       idata += golHeader.hitBufferSize() ;
@@ -346,8 +426,8 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
   }
  
   // The data starts at the next 4byte
-  const unsigned int* begin = bank.data() + 1 ;
-  const unsigned int* end   = bank.data() + bank.size()/4 ;
+  const unsigned int* begin = bank.begin<unsigned int>()+1;
+  const unsigned int* end   = bank.end<unsigned int>();
   const unsigned int* idata ;
   unsigned int station,layer,quarter,module,numhits,numgols(0) ;
   for( idata = begin ; idata < end; ++idata) {
@@ -367,7 +447,7 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const LHCb::RawBank& bank, int b
       decodingerror = true ;
     } else {
       const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-      m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
+      m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion,m_nsPerTdcCount,m_timewindow) ; 
       if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
     }
     // skip the actual hits
@@ -478,7 +558,7 @@ size_t OTRawBankDecoder::totalNumberOfHits() const
 size_t OTRawBankDecoder::decodeModule( OTRawBankDecoderHelpers::Module& moduledata ) const 
 {
   if( !m_detectordata->golHeadersLoaded() ) decodeGolHeaders().ignore() ;
-  if( !moduledata.isDecoded() ) moduledata.decode( m_nsPerTdcCount ) ;
+  if( !moduledata.isDecoded() ) moduledata.decode( ) ;
   return moduledata.ottimes().size() ;
 }
 
@@ -540,8 +620,8 @@ StatusCode OTRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent ) const
     otspecificbank.gols().reserve( otspecificbank.header().numberOfGOLs()) ;
     
     // The data starts at the next 4byte
-    const unsigned int* begin = idata + 1 ;
-    const unsigned int* end   = idata + (*ibank)->size()/4 ;
+    const unsigned int* begin = (*ibank)->begin<unsigned int>()+1;
+    const unsigned int* end   = (*ibank)->end<unsigned int>();
     size_t numgols(0) ;
     for( idata = begin ; idata < end; ++idata) {
       // decode the header

@@ -93,17 +93,18 @@ protected:
   
 private:
   // data
-  std::vector<double> m_startReadOutGate;   ///< Start of readout gate
-  int  m_countsPerBX;                       ///< Counts per BX
-  int  m_numberOfBX;                        ///< Number of BX
-  double m_timePerBX;                       ///< Time Per BX
-  int m_forcebankversion;                   ///< Overwrite bank version in bank header
+  mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data
   DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
   IOTChannelMapTool* m_channelmaptool ;     ///< Pointer to IOTChannelMapTool
-  double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns
+  std::vector<double> m_startReadOutGate;   ///< Start of readout gate
   std::string m_rawEventLocation;           ///< Location where we get the RawEvent
+  std::pair<double,double> m_timewindow;    ///< ignore hits outside of this window, only if first < second; if not, use all
+  double m_timePerBX;                       ///< Time Per BX
+  int  m_countsPerBX;                       ///< Counts per BX
+  int  m_numberOfBX;                        ///< Number of BX
+  int  m_forcebankversion;                  ///< Overwrite bank version in bank header
+  double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns (initialization uses m_countPerBx and m_timePerBx)
   
-  mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data
 };
 
 #endif // OTRAWBANKDECODER_H

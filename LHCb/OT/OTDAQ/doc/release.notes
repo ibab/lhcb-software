@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+! 2010-05-05 - Gerhard Raven
+ - Add possibility to apply a fiducial time window in OTRawBankDecoder.
+   Default behaviour is backwards compatible.
+
 !========================= OTDAQ v7r9 2011-01-31 =========================
 ! 2011-01-28 - Alexandr Kozlinskiy
  - Initialize OTRawBankDecoder as public tool in OTTimeCreator.
