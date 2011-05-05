@@ -14,36 +14,39 @@ use DAQEvent v* Event
 use MDF      v* DAQ
 use OnlineKernel v* Online
 
-#macro_append Boost_linkopts " $(Boost_linkopts_serialization) "
 macro_append ROOT_linkopts ' -lHist' WIN32 " libHist.lib "
 
 apply_pattern install_more_includes more=Gaucho
-
-# build a component library
-library Gaucho  ../src/*.cpp
+# linker library
+library GauchoLib *.cpp
+apply_pattern linker_library library=GauchoLib
+# component library
+library Gaucho components/*.cpp
+apply_pattern component_library library=Gaucho
+macro_append  Gaucho_dependencies  " GauchoLib "
 
 # define component library link options
-apply_pattern linker_library library="Gaucho"
-apply_pattern generate_rootmap  library=Gaucho
-apply_pattern generate_configurables library=Gaucho
+#apply_pattern linker_library library="Gaucho"
+#apply_pattern generate_rootmap  library=Gaucho
+#apply_pattern generate_configurables library=Gaucho
 
 private
 application Addertst group=tests ../src/Test/Addertst.cpp
-macro_append  Addertst_dependencies   " Gaucho "
+macro_append  Addertst_dependencies   " GauchoLib "
 
 application RPCTest group=tests ../src/Test/RPCTest.cpp
-macro_append  RPCTest_dependencies    " Gaucho "
+macro_append  RPCTest_dependencies    " GauchoLib "
 
 application HistTest group=tests ../src/Test/HistTest.cpp
-macro_append  HistTest_dependencies    " Gaucho "
+macro_append  HistTest_dependencies    " GauchoLib "
 
 application HistHammer group=tests ../src/Test/HistHammer.cpp
-macro_append  HistHammer_dependencies    " Gaucho "
+macro_append  HistHammer_dependencies    " GauchoLib "
 
 application CounterTest group=tests ../src/Test/CounterTest.cpp
-macro_append  CounterTest_dependencies    " Gaucho "
+macro_append  CounterTest_dependencies    " GauchoLib "
 
 application Cycler group=tests ../src/Test/Cycler.cpp
-macro_append  Cycler_dependencies    " Gaucho "
+macro_append  Cycler_dependencies    " GauchoLib "
 
-macro_append Gaucho_shlibflags " -pthread " WIN32 ""
+##macro_append Gaucho_shlibflags " -pthread " WIN32 ""
