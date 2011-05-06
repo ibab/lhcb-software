@@ -30,6 +30,7 @@ use AppConfig           v3r*                -no_auto_imports
 # Patches
 use HltConf             v9r9p1  Hlt
 use Hlt2SharedParticles v6r2    Hlt
+use OTDAQ               v7r10   OT
 
 
 # The rest are needed only to set up environment variables for job options
