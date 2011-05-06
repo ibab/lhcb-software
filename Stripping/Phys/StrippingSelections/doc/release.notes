@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-06 - Jibo He
+ - StrippingCcbar2Baryons
+  + Added Stripping line for Charmonium -> Lambda Lambda
+
 ! 2011-05-06 - Thomas Blake
  - Added test script for 2011 data along with new file catalogs.
 
