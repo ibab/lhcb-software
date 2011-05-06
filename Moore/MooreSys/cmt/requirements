@@ -9,6 +9,8 @@ branches doc cmt
 use  Moore              v12r6   Hlt
 
 # Patches
+use HltConf             v9r9p1  Hlt
+use Hlt2SharedParticles v6r2    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
