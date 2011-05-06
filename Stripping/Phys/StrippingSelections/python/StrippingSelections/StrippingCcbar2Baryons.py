@@ -34,7 +34,7 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-from StandardParticles import StdNoPIDsProtons, StdNoPIDsPions
+from StandardParticles import StdNoPIDsProtons, StdNoPIDsPions, StdNoPIDsDownPions
 
 class Ccbar2BaryonsConf(LineBuilder):
     
@@ -75,11 +75,21 @@ class Ccbar2BaryonsConf(LineBuilder):
                                                  RequiredSelections =  [ self.LambdaLLForJpsi, 
                                                                          self.LambdaDDForJpsi, 
                                                                          ])
-        
-        
 
-        self.makeJpsi2DiLambda()
+        self.XiList = self.createCombinationSel( OutputList = "XiFor" + self.name,
+                                                 DaughterLists = [ self.LambdaForJpsiList, StdNoPIDsPions, StdNoPIDsDownPions ],
+                                                 DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
+                                                 DaughterCuts = { "pi-"  : "(PT>0.1*GeV) & (P>2.*GeV)"\
+                                                                  " & (TRCHI2DOF < %(TRCHI2DOF)s )" % self.config
+                                                                  },
+                                                 PreVertexCuts = "(ADAMASS('Xi-')<50*MeV) & (ADOCACHI2CUT(40, ''))",
+                                                 PostVertexCuts = "(VFASPF(VCHI2/VDOF)<16)"\
+                                                 " & (ADMASS('Xi-')<20*MeV)"
+                                                 )
+
         
+        self.makeJpsi2DiLambda()
+        self.makeJpsi2DiXi()
 
     def createSubSel( self, OutputList, InputList, Cuts ) :
         '''create a selection using a FilterDesktop'''
@@ -118,3 +128,17 @@ class Ccbar2BaryonsConf(LineBuilder):
                                            algos = [ Jpsi2DiLambda ] )
         
         self.registerLine(Jpsi2DiLambdaLine)
+
+
+    def makeJpsi2DiXi(self):
+        Jpsi2DiXi = self.createCombinationSel( OutputList = "Jpsi2DiXi" + self.name,
+                                               DecayDescriptor = " J/psi(1S) -> Xi~+  Xi-", 
+                                               DaughterLists = [ self.XiList ], 
+                                               DaughterCuts  = { "Xi-": "(PT>0.5*GeV)" },
+                                               PreVertexCuts = "(in_range( %(CombMinMass)s *MeV, AM, %(CombMaxMass)s *MeV))" % self.config,
+                                               PostVertexCuts = "(in_range( %(MinMass)s *MeV, MM, %(MaxMass)s *MeV)) & (VFASPF(VCHI2PDOF) < 16 )" %self.config )
+        
+        Jpsi2DiXiLine = StrippingLine( self.name + "Jpsi2DiXiLine",
+                                           algos = [ Jpsi2DiXi ] )
+        
+        self.registerLine(Jpsi2DiXiLine)

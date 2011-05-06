@@ -6,6 +6,10 @@
 
 ! 2011-05-06 - Jibo He
  - StrippingCcbar2Baryons
+  + Added Stripping line for Charmonium -> Xi Xi 
+
+! 2011-05-06 - Jibo He
+ - StrippingCcbar2Baryons
   + Added Stripping line for Charmonium -> Lambda Lambda
 
 ! 2011-05-06 - Thomas Blake
