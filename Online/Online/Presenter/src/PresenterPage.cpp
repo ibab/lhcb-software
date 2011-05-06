@@ -1099,6 +1099,15 @@ void PresenterPage::updateBanner ( std::string source ) {
       source = source.substr(0,source.size()-1) + " " + today;
     }
     std::cout << "Update banner as " << today << std::endl;
+  } else {
+    while ( source.size() > 80 ) {
+      unsigned int kk = source.find("/");
+      if ( kk < source.size() ) {
+        source = source.substr( source.find("/")+1 );
+      } else {
+        break;
+      }
+    }
   }
   
   m_bannerPad->cd();
