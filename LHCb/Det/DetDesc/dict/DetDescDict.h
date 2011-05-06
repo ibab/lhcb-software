@@ -94,6 +94,7 @@ namespace DetDescPython
     SmartRef<Condition> sref_inst1;
     std::pair<double,SmartRef<Element> > sref_inst2;
     std::pair<double,SmartRef<Isotope> > sref_inst3;
+    SmartRef<AlignmentCondition> sref_inst4;
   };
   
 }

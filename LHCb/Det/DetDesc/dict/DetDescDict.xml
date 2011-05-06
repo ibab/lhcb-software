@@ -27,6 +27,8 @@
   <class name="LAssembly"        />
 
   <class pattern="*Condition"        />
+  <class name="SmartRef&lt;Condition&gt;"  />
+  <class name="SmartRef&lt;AlignmentCondition&gt;"  />
   <class name="Surface"              />
   <class name="DetectorElement"      />
   <class name="TabulatedProperty"    />
@@ -72,4 +74,5 @@
     <function name="DetDesc::print" />
     <function name="DetDesc::services" />
   </exclusion>
+
 </lcgdict>
