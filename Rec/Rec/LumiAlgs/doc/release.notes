@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+
+! 2011-05-06 - Yasmine Amhis 
+  - Remove warning messages triggered by LumiIntegrateFSR.cpp 
 !========================= LumiAlgs v5r1 2011-04-27 =========================
 ! 2011-04-26 - Jaap Panman
  - make previous fix 32-bit compliant
