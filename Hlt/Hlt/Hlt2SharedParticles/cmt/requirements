@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.30 2010-09-05 18:42:43 fsoomro Exp $
+# $Id$
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
 package           Hlt2SharedParticles
-version           v6r1
+version           v6r2
 
 # ============================================================================
 # ======= the structure ======================================================
