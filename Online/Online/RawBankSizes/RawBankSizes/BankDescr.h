@@ -1,11 +1,11 @@
 #ifdef RAWSIZE_BANKDESCR_H
 #else
 #define RAWSIZE_BANKDESCR_H
-namespace LHCb 
+namespace LHCb
 {
 #define HISTPERHIST 3
-std::string titqual[HISTPERHIST]={" (all Triggers)"," (nonLumi)"," (Lumi)"};
-std::string namqual[HISTPERHIST]={"(all)","(nonLumi)","(Lumi)"};
+std::string titqual[HISTPERHIST]={" (all Triggers)"," (HLTAccept)"," (HLT-Pass)"};
+std::string namqual[HISTPERHIST]={"(all)","(HLTAccept)","(HLT-Pass)"};
 // titqual[0] = " (all Triggers)";
 // titqual[1] = " (nonLumi)";
 // titqual[2] = " (Lumi)";
@@ -47,7 +47,7 @@ std::string namqual[HISTPERHIST]={"(all)","(nonLumi)","(Lumi)"};
         h_name[i] = "h"+name+namqual[i];
         p_name[i] = "p"+name+namqual[i];
       }
-      
+
     };
     void init(int bn, bool noprof)
     {
@@ -60,13 +60,13 @@ std::string namqual[HISTPERHIST]={"(all)","(nonLumi)","(Lumi)"};
           rootbankidx=LHCb::RawBank::IT;
           break;
         }
-      case LHCb::RawBank::TTError:  
+      case LHCb::RawBank::TTError:
         {
           isError = true;
           rootbankidx=LHCb::RawBank::TT;
           break;
         }
-      case LHCb::RawBank::VeloError:   
+      case LHCb::RawBank::VeloError:
         {
           isError = true;
           rootbankidx=LHCb::RawBank::Velo;

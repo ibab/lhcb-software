@@ -1,5 +1,5 @@
 // $Id: RawBankSizes.cpp,v 1.18 2010-09-25 21:31:08 frankb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include <vector>
@@ -84,23 +84,23 @@ RawBankSizes::RawBankSizes( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RawBankSizes::~RawBankSizes() 
+RawBankSizes::~RawBankSizes()
 {
-} 
+}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-// StatusCode RawBankSizes::initialize() 
+// StatusCode RawBankSizes::initialize()
 // {
 //   int i;
 //   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
 //   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
-// 
+//
 //   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-// 
+//
 // //   Banks = new BankDescr[(int) LHCb::RawBank::LastType];
-// 
+//
 //   // convert bankNames to bankTypes
 //   for(std::vector<std::string>::iterator it = m_bankNames.begin();it!=m_bankNames.end();it++)
 //   {
@@ -116,7 +116,7 @@ RawBankSizes::~RawBankSizes()
 //     }
 //     if( !found) warning() << "Requested bank '" << *it << "' is not a valid name" << endreq;
 //   }
-//   
+//
 //    for(i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
 //    {
 // //     printf("%s %s\n",LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i).c_str(),
@@ -148,7 +148,7 @@ RawBankSizes::~RawBankSizes()
 //         printf("Binwidth for %s not a multiple of 4. %f\n",Banks[i].name.c_str(),binw);
 //        }
 //        Banks[i].nbin = m_hparams[i].n_bin;
-//        
+//
 //        Banks[i].h[0]  = histoSvc()->book( Banks[i].h_name[0],Banks[i].name+" Size in Bytes (all Triggers)",m_hparams[i].n_bin+2,
 //         m_hparams[i].xmin-binw,m_hparams[i].xmax+binw);
 //        declareInfo(Banks[i].h_name[0], Banks[i].h[0],Banks[i].name+" Size in Bytes (all Triggers)");
@@ -199,10 +199,10 @@ RawBankSizes::~RawBankSizes()
 //    for (dethmiter j=m_dethparams.begin();j!=m_dethparams.end();j++)
 //    {
 //       detbmiter bd = m_detectors.find(j->first);
-//       bd->second->xmin = j->second->xmin; 
-//       bd->second->xmax = j->second->xmax; 
-//       bd->second->nbin = j->second->n_bin; 
-//       bd->second->binw = (j->second->xmax-j->second->xmin)/j->second->n_bin; 
+//       bd->second->xmin = j->second->xmin;
+//       bd->second->xmax = j->second->xmax;
+//       bd->second->nbin = j->second->n_bin;
+//       bd->second->binw = (j->second->xmax-j->second->xmin)/j->second->n_bin;
 //       if (((int)bd->second->binw % 4) != 0)
 //       {
 //        printf("Binwidth for %s not a multiple of 4. %f\n",Banks[i].name.c_str(),bd->second->binw);
@@ -219,11 +219,11 @@ RawBankSizes::~RawBankSizes()
 //   return StatusCode::SUCCESS;
 // }
 
-StatusCode RawBankSizes::initialize() 
+StatusCode RawBankSizes::initialize()
 {
   int i;
   int hindx;
-  
+
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
@@ -246,7 +246,7 @@ StatusCode RawBankSizes::initialize()
     }
     if( !found) warning() << "Requested bank '" << *it << "' is not a valid name" << endreq;
   }
-  
+
    for(i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
    {
 //     printf("%s %s\n",LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i).c_str(),
@@ -328,10 +328,10 @@ StatusCode RawBankSizes::initialize()
    for (dethmiter j=m_dethparams.begin();j!=m_dethparams.end();j++)
    {
       detbmiter bd = m_detectors.find(j->first);
-      bd->second->xmin = j->second->xmin; 
-      bd->second->xmax = j->second->xmax; 
-      bd->second->nbin = j->second->n_bin; 
-      bd->second->binw = (j->second->xmax-j->second->xmin)/j->second->n_bin; 
+      bd->second->xmin = j->second->xmin;
+      bd->second->xmax = j->second->xmax;
+      bd->second->nbin = j->second->n_bin;
+      bd->second->binw = (j->second->xmax-j->second->xmin)/j->second->n_bin;
       if (((int)bd->second->binw % 4) != 0)
       {
         // Beat: This is wrong and was Banks[i], which clearly accesses bad memory!
@@ -353,17 +353,17 @@ StatusCode RawBankSizes::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RawBankSizes::execute() 
+StatusCode RawBankSizes::execute()
 {
 //  int bsize[LHCb::RawBank::LastType];
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  
+
   // get RawEvent
   if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) )
   {
     m_rawEvt= get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   }
-  else  
+  else
   {
     Warning( "rawEvent not found at location '" + rootInTES() + LHCb::RawEventLocation::Default ).ignore();
     return StatusCode::SUCCESS;
@@ -380,7 +380,7 @@ StatusCode RawBankSizes::execute()
 
   for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++)
   {
-    
+
 //    std::string bname = LHCb::RawBank::typeName( *it );
     Banks[*it].siz = 0.0;
   }
@@ -394,14 +394,14 @@ StatusCode RawBankSizes::execute()
       MDFHeader *h = b->begin<MDFHeader>();
       const unsigned int *trMask=h->subHeader().H1->triggerMask();
 //      printf("Trigger Mask %0x %0x %0x %0x\n",trMask[0],trMask[1],trMask[2],trMask[3]);
-      if ((trMask[1] & 0x4) == 0)
+      if ((trMask[1] & 0x1<<(39-32)) != 0)
       {
         nolumi = false;
       }
       break;
     }
   }
-  
+
   for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++)
   {
     const std::vector<LHCb::RawBank*>* banks= &m_rawEvt->banks(  *it );
@@ -467,7 +467,7 @@ StatusCode RawBankSizes::execute()
   {
     std::string d = m_hparams[*it].det;
     detbmiter j = m_detectors.find(d);
-    j->second->sum += Banks[*it].siz; 
+    j->second->sum += Banks[*it].siz;
   }
   for (detbmiter j=m_detectors.begin();j!=m_detectors.end();j++)
   {
@@ -496,7 +496,7 @@ StatusCode RawBankSizes::execute()
     }
   }
 
-  
+
   double total = tots;
   if (total >0)
   {
@@ -522,7 +522,7 @@ StatusCode RawBankSizes::execute()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RawBankSizes::finalize() 
+StatusCode RawBankSizes::finalize()
 {
   printf("Number of Events Seen %d\n",n_ev);
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
