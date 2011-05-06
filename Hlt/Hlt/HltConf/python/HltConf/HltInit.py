@@ -171,8 +171,8 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloBW'                                :10116,
     'ProtoPV3D'                             :10117,
     'VeloCandidatesDiProton'                :10118,
-    'VeloCandidatesSingleElectionNoIP'      :10119,
-    'CaloCandidatesSingleElectionNoIP'      :10120,
+    'VeloCandidatesSingleElectronNoIP'      :10119,
+    'CaloCandidatesSingleElectronNoIP'      :10120,
     'VeloCandidatesTrackForwardPassThrough' :10121,
     'VeloCandidatesTrackForwardPassThroughLoose' :10122,
 

@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+!========================== HltConf v9r9p1 2011-05-06 ===================
+! 2011-05-06 - Gerhard Raven
+ - fix typo in intermediate selection names
 
 !========================== HltConf v9r9 2011-05-04 ===================
 ! 2011-04-29 - Roel Aaij
