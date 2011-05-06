@@ -22,6 +22,10 @@
 
 #include <string>
 
+
+// HepMC
+//#include "HepMC/GenEvent.h"
+
 class SignalGenerator 
 : public BaseGenerator
 , virtual public MINT::IEventGenerator<IDalitzEvent>{
@@ -49,6 +53,19 @@ class SignalGenerator
 
   virtual bool exhausted() const{return false;}
 
+  void MattTest()
+  {
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+	  std::cout << "############# Matt's Test #############" << std::endl;
+
+  }
   virtual bool ensureFreshEvents();
 };
 
