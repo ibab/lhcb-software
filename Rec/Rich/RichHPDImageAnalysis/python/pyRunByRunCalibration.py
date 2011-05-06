@@ -32,8 +32,11 @@ def initialise():
         # Initialise a few things
         from Configurables import DDDBConf, CondDB, LHCbApp
         DDDBConf(DataType = "2010")
-        LHCbApp().DDDBtag   = "head-20101026"
-        LHCbApp().CondDBtag = "head-20101112"
+        LHCbApp().DDDBtag   = "head-20110303"
+        LHCbApp().CondDBtag = "head-20110407"
+        #DDDBConf(DataType = "2011")
+        #LHCbApp().DDDBtag   = "head-20110302"
+        #LHCbApp().CondDBtag = "head-20110407"
         CondDB()
 
         # Set message level to warnings and above only
@@ -154,6 +157,16 @@ def siliconAlignmentFilePath(copyNumber):
     smartID = richSystem().richSmartID(copyNumber)
     
     return "/Conditions/"+rich[smartID.rich()]+"/Alignment/SiSensorsP"+str(smartID.panel())+".xml"
+
+def getHPDmagCond(polarity,copyNumber):
+
+    hpd = getHPD(copyNumber)
+
+    name = ""
+    if polarity == "MagUp"   : name = "DemagParametersFieldNegative"
+    if polarity == "MagDown" : name = "DemagParametersFieldPositive"
+
+    return hpd.condition(name)
 
 def xmlHeader(type,flag):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
@@ -287,10 +300,11 @@ def getRunFillData(rootfiles):
             if not res['OK'] :
                 from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
                 nTries = 0
+                print "  -> Need to query the Bookkeeping DB ..."
                 while not res['OK'] and nTries < 10:
                     nTries = nTries + 1
                     if nTries > 1 :
-                        print " -> Problem querying DB - Will try again after 5 secs ..."
+                        print "   -> Problem querying DB -> Will try again after 5 secs ..."
                         import time
                         time.sleep(5)
                     res = BookkeepingClient().getRunInformations(int(run))
@@ -677,9 +691,6 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
             if fl >= minMaxFillForFit[0] and fl <= minMaxFillForFit[1] :
 
-                #if fl < minMaxFlag[0] : minMaxFlag[0] = fl
-                #if fl > minMaxFlag[1] : minMaxFlag[1] = fl
-
                 # Average time for run/fill
                 avTime = ( getUNIXTime(runFillData[type+"Data"][fl]["Start"]) +
                            getUNIXTime(runFillData[type+"Data"][fl]["Stop"]) ) / 2e9
@@ -847,8 +858,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                 # ======================================================================================
 
                 # Save fit results
-                avTrendFit[polarity][hpd] = [FitX,FitY]
-                smoothers[polarity][hpd]  = [smootherX,smootherY]
+                avTrendFit[polarity][hpd] = [FitX,FitY,FitRad]
+                smoothers[polarity][hpd]  = [smootherX,smootherY,smootherRad]
 
     # Close the PDF 
     printCanvas(']')
@@ -894,7 +905,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
         avTime = ( unixStartTime + unixStopTime ) / 2e9
 
         # Set UMS to the start time for this run/fill
-        iDetDataSvc().setEventTime( gbl.Gaudi.Time(unixStartTime) )
+        iDetDataSvc().setEventTime( gbl.Gaudi.Time((unixStartTime+unixStopTime)/2) )
         umsSvc().newEvent()
 
         # Loop over HPDs
@@ -912,18 +923,22 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             if   followType == "FollowMovements" and values["FitOK"]:
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
+                magF = magFromRadius(values["ShiftR"][0])
             elif followType == "FittedPol" and hpdID in avTrendFit[polarity].keys():
                 xOff = avTrendFit[polarity][hpdID][0].Eval(avTime)
                 yOff = avTrendFit[polarity][hpdID][1].Eval(avTime)
+                magF = magFromRadius(avTrendFit[polarity][hpdID][2].Eval(avTime))
             elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
                 xOff = smoothers[polarity][hpdID][0].Eval(avTime,3600*smoothSigmaHours)
                 yOff = smoothers[polarity][hpdID][1].Eval(avTime,3600*smoothSigmaHours)
+                magF = magFromRadius(smoothers[polarity][hpdID][2].Eval(avTime,3600*smoothSigmaHours))
             else:
                 xOff = values["DBShiftX"]
                 yOff = values["DBShiftY"]
                 text = "From original DB"
  
             # Update the Si alignment with the image movement data
+            # ====================================================
             paramName = "dPosXYZ"
             vect = siAlign.paramAsDoubleVect(paramName)
             vect[0] = xOff
@@ -945,11 +960,15 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             alignments[alignPath] += hpdXMLComment(copyNumber,text)
             alignments[alignPath] += siAlign.toXml()  + '\n'
 
+            # MDMS image magnification factors for RICH2
+
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
-        stopTime  = cool.ValidityKeyMax
+        #stopTime  = cool.ValidityKeyMax
         # End of 2010
         #stopTime = getUNIXTime( datetime.datetime( 2010, 12, 31, 23, 59, 59 ) )
+        # End of 2011
+        stopTime = getUNIXTime( datetime.datetime( 2011, 12, 31, 23, 59, 59 ) )
 
         # Loop over XML files in the fitted DB
         for xmlpath in alignments.keys() :
@@ -976,6 +995,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                 print "  -> Alignment for", xmlpath, "same as previous -> No update"
 
     print "Done ..."
+
+def magFromRadius(radius):
+    return 36.0 / radius
 
 def createDBFile(name):
     import CondDBUI
