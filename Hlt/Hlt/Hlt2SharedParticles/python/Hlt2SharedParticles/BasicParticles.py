@@ -22,20 +22,20 @@ from GaudiKernel.SystemOfUnits import MeV
 # No RICH info can be added until the fast-fit is done
 # For particles with RICH info see TrackFittedBasicParticles
 #
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+tracking =  Hlt2BiKalmanFittedForwardTracking()
 ##########################################################################
 #
 # Charged protoparticles -> pulls all the pid
 #
-caloProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedCaloProtos( )
-muonProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedMuonProtos( )
-hadronProtos 	= Hlt2UnfittedForwardTracking.hlt2ChargedNoPIDsProtos( )
+caloProtos 	= tracking.hlt2ChargedCaloProtos( )
+muonProtos 	= tracking.hlt2ChargedMuonProtos( )
+hadronProtos 	= tracking.hlt2ChargedNoPIDsProtos( )
 ##########################################################################
 #
 # Neutral protoparticles
 #
-neutralProtos 	= Hlt2UnfittedForwardTracking.hlt2NeutralProtos()
+neutralProtos 	= tracking.hlt2NeutralProtos()
 ##########################################################################
 # Make the pions
 #
