@@ -21,6 +21,11 @@ use GaudiAlg          v*
 use ROOT              v*  LCG_Interfaces  -no_auto_imports
 use Boost             v*  LCG_Interfaces
 
+
+# For HepMC stuff
+#use           Generators       v*    Gen
+#use           pythia8          v*    LCG_GeneratorsInterfaces
+
 include_path      none
 #===========================================================================
 # Component library building rule
@@ -57,7 +62,8 @@ library          Mint    ../src/Mint/Events/src/*.C           \
                          ../src/Mojito/stuff/src/*.C \
                          ../src/Mojito/Zemach/src/*.C \
                          ../src/Mojito/Symmetries/src/*.C \
-                         ../src/Mojito/SpinFactors/src/*.C 
+                         ../src/Mojito/SpinFactors/src/*.C \
+                         ../src/Users/Matt/Test/*.cpp
 
 #============================================================================
 # define component library link options
