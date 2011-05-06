@@ -278,12 +278,12 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_detectordata(0),
     m_otdet(0),
+    m_timewindow(999,-999),
+    m_timePerBX(25*Gaudi::Units::ns),
     m_countsPerBX(64),
     m_numberOfBX(3),
-    m_timePerBX(25*Gaudi::Units::ns),
     m_forcebankversion(OTBankVersion::UNDEFINED),
-    m_nsPerTdcCount(m_timePerBX/m_countsPerBX),
-    m_timewindow(999,-999) 
+    m_nsPerTdcCount(m_timePerBX/m_countsPerBX)
 {
   declareInterface<IOTRawBankDecoder>(this);
   declareProperty("countsPerBX", m_countsPerBX );
