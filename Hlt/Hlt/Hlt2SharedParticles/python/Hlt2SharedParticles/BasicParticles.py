@@ -82,10 +82,13 @@ Hlt2Electrons.WriteP2PVRelations = False
 Hlt2Photons = PhotonMakerAlg("Hlt2Photons")
 Hlt2Photons.addTool(PhotonMaker)
 Hlt2Photons.PhotonMaker.Input = neutralProtos.outputSelection()
+Hlt2Photons.Inputs = [] # set explicitly, otherwise it goes for the default /Rec/Proto/Charged!
+Hlt2Photons.Input = 'PleaseIgnore' # set explicitly, otherwise it goes for the default /Rec/Proto/Charged!
 Hlt2Photons.Output = 'Hlt2/Hlt2Photons/Particles'
 Hlt2Photons.PhotonMaker.ConvertedPhotons = True  
 Hlt2Photons.PhotonMaker.UnconvertedPhotons = True  
 Hlt2Photons.PhotonMaker.PtCut = 200.* MeV 
+Hlt2Photons.WriteP2PVRelations = False
 ##########################################################################
 #
 # 
