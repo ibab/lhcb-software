@@ -10,6 +10,7 @@
 #include <TH2D.h>
 #include <TCanvas.h>
 #include <TLegend.h>
+#include <TText.h>
 
 #include "Gaucho/HistTask.h"
 
@@ -33,7 +34,11 @@ namespace PresenterGaudi {
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PresenterPage::PresenterPage( ) {
+PresenterPage::PresenterPage( ) :
+  m_bannerPad( NULL),
+  m_bannerPageName(NULL),
+  m_bannerSource( NULL )
+{
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   m_dimBrowser = NULL;
@@ -73,7 +78,7 @@ void PresenterPage::clear ( ) {
 //  Add a simple histo to the page
 //=========================================================================
 void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, std::string partition ) {
-  std::cout << "addSimpleHIsto: name " << dimName << std::endl;
+  std::cout << "addSimpleHisto: name " << dimName << std::endl;
   std::string task = dimName.substr( 0, dimName.find( '/' ) );
   task = task.substr( task.find('_')+1 );  // remove partition
   task = task.substr( task.find('_')+1 );  // remove node
@@ -849,6 +854,10 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
     }
 
     DisplayHistogram* dispH =  displayHisto( (*itHP)  );
+    if ( NULL != m_bannerPad ) {
+      ylow = 0.95 * ylow;
+      yup  = 0.95 * yup;
+    }
     if (  dispH ) {
       std::cout << "-- display histo " << dispH->identifier()
                 << " on pad X "<< xlow << " to "<< xup
@@ -1057,5 +1066,48 @@ bool PresenterPage::okForSave ( ) {
     if ( NULL == (*itH)->histo() ) ok = false;
   }
   return ok;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void PresenterPage::drawBanner ( std::string name, std::string source ) {
+  m_bannerPad = new TPad( "Banner", TString(""), 0.00, 0.95, 1.00, 1.00, 10 );
+  m_bannerPad->Draw();
+  m_bannerPad->cd();
+  m_bannerPageName = new TText(  0.02, 0.5, name.c_str() );
+  m_bannerPageName->SetTextAlign( 12 );
+  m_bannerPageName->SetTextFont(  42 );
+  m_bannerPageName->SetTextSize( 0.5 ); 
+  m_bannerPageName->Draw();
+
+  updateBanner( source );
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void PresenterPage::updateBanner ( std::string source ) {
+  if ( "" == source || source.find("&") == source.size()-1 ) {
+    char buf[40];
+    time_t now = ::time(0);
+    ::strftime( buf, 40, "%d %B %Y %H:%M:%S", ::localtime(&now) );
+    std::string today( buf );
+    if ( "" == source ) {
+      source = today + " Online";
+    } else {
+      source = source.substr(0,source.size()-1) + " " + today;
+    }
+    std::cout << "Update banner as " << today << std::endl;
+  }
+  
+  m_bannerPad->cd();
+  if ( NULL != m_bannerSource ) delete m_bannerSource;
+  m_bannerSource = new TText(  0.98, 0.5, source.c_str() );
+  m_bannerSource->SetTextAlign( 32 );
+  m_bannerSource->SetTextFont(  42 );
+  m_bannerSource->SetTextSize( 0.5 );
+  m_bannerSource->Draw();
+  m_bannerPad->Update();
 }
 //=============================================================================

@@ -430,13 +430,11 @@ Archive::findSavesetsByRun(const std::string & taskname,
     startRun = endRun-ArchiveSpace::maxRunInterval;
   }
 
-  if (m_verbosity >= pres::Verbose)
-    std::cout << "Archive::findSavesetsByRun: task " << taskname
-              << " startRun " << startRun
-              << " endRun " << endRun << std::endl;
+  std::cout << "Archive::findSavesetsByRun: task " << taskname
+            << " startRun " << startRun
+            << " endRun " << endRun << std::endl;
 
-  std::string aggrSvsPath = m_savesetPath.string() + pres::s_slash +
-    pres::s_byRunDir + pres::s_slash + taskname;
+  std::string aggrSvsPath = m_savesetPath.string() + pres::s_slash + pres::s_byRunDir + pres::s_slash + taskname;
 
   int th = startRun / 1000 * 1000;
 
@@ -446,9 +444,7 @@ Archive::findSavesetsByRun(const std::string & taskname,
     dirLocation << aggrSvsPath << pres::s_slash << dth << pres::s_slash << th;
     boost::filesystem::path runPath(dirLocation.str());
     boost::filesystem::directory_iterator end_itr;
-    if (m_verbosity >= pres::Verbose) {
-      std::cout << "inspecting folder: " << dirLocation.str() << std::endl;
-    }
+    std::cout << "inspecting folder: " << dirLocation.str() << std::endl;
     if (exists(runPath)) {
       for ( boost::filesystem::directory_iterator itr(runPath);
             itr != end_itr; ++itr) {
@@ -562,6 +558,7 @@ std::string Archive::createIsoTimeString(const int& year, const int& month,
 void Archive::setFiles ( const std::string& task,  
                          const std::string& timePoint,
                          const std::string& pastDuration  ) {
+  std::cout << "globalHistoryByRun flag " << m_presenterInfo -> globalHistoryByRun() << std::endl;
   m_rootFiles.clear();
   if ( m_presenterInfo -> globalHistoryByRun() ) {
     m_rootFiles = findSavesetsByRun( task, timePoint , pastDuration ) ;

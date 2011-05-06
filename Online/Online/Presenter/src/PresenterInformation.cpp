@@ -56,12 +56,16 @@ void PresenterInformation::setTimeC( std::string endTime, std::string duration, 
   std::tm time = boost::posix_time::to_tm( t );
   m_endTimeC   = std::mktime( &time );
   std::cout << "Before duration : " << duration << std::endl;
-  boost::posix_time::time_duration d = boost::posix_time::duration_from_string( duration ) ;
-  std::cout << "After duration d=" << d << std::endl;
-  if ( add ) {
-    t = t + d;
+  if ( duration.find( "-" ) != std::string::npos ) {  // duration is in fact an end time
+    t = boost::posix_time::time_from_string( duration );
   } else {
-    t = t - d;
+    boost::posix_time::time_duration d = boost::posix_time::duration_from_string( duration ) ;
+    std::cout << "After duration d=" << d << std::endl;
+    if ( add ) {
+      t = t + d;
+    } else {
+      t = t - d;
+    }
   }
   time = boost::posix_time::to_tm( t );
   m_startTimeC = std::mktime( &time );

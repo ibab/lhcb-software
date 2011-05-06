@@ -10,6 +10,7 @@ class OMAlib;
 class Archive;
 class DimBrowser;
 class TCanvas;
+class TText;
 
 #include "DisplayHistogram.h"
 
@@ -122,6 +123,10 @@ public:
 
   bool okForSave(); /// All histograms properly defined.
 
+  void drawBanner( std::string name, std::string source );
+  
+  void updateBanner( std::string source="" );
+  
 protected:
 
 private:
@@ -135,5 +140,8 @@ private:
   std::vector<PadContent> m_pads;
   std::vector<DisplayHistogram*> m_displayHistograms;
   int m_msgBoxReturnCode;
+  TPad* m_bannerPad;
+  TText* m_bannerPageName;
+  TText* m_bannerSource;
 };
 #endif // PRESENTERPAGE_H

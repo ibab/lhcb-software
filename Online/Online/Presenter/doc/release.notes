@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-05-06 - Olivier Callot
+ - Create a banner on top of the page with page name and source of information
+
+! 2011-05-05 - Olivier Callot
+ - Update the documentation of the page from the new method loadDoc() of OnlineHistPage
+
 ! 2011-05-02 - Olivier Callot
  - increase timeout. Fix refresh when changing trend length
 

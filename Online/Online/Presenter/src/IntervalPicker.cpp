@@ -861,10 +861,11 @@ const char* IntervalPickerData::getEndTimeString() {
 //============================================================================
 void IntervalPicker::SelectMode( ) {
   // Select the interesting tab
+  int lastrun = m_runDb -> getCurrentRunNumber() ;
+  if ( 0 == lastrun ) lastrun = m_runDb -> getLastRun( ) ;
+  m_runFillIntervalFromNumberEntry -> SetIntNumber( lastrun ) ;
+  m_runFillIntervalToNumberEntry -> SetIntNumber( lastrun ) ;
   if ( IntervalPickerData::SingleRun == m_intData -> getMode() ) {
-    int lastrun = m_runDb -> getCurrentRunNumber() ;
-    if ( 0 == lastrun ) lastrun = m_runDb -> getLastRun( ) ;
-
     SetWindowName( "History run selection" ) ;
     m_mainTab -> GetTabTab( "Time" ) -> SetEnabled( kFALSE ) ;
     m_mainTab -> SetTab( "Run" , kFALSE ) ;
@@ -873,12 +874,12 @@ void IntervalPicker::SelectMode( ) {
     m_runFillIntervalToLabel -> Disable() ;
     m_runFillIntervalToNumberEntry -> SetState( kFALSE ) ;
 
-    m_runFillIntervalFromNumberEntry -> SetIntNumber( lastrun ) ;
   } else {
     SetWindowName("History interval selection");
 
     m_mainTab -> GetTabTab( "Time" ) -> SetEnabled( kTRUE ) ;
-    m_mainTab -> SetTab( "Time" , kFALSE ) ;
+    m_mainTab -> SetTab( "Run" , kFALSE ) ;
+    m_runFillIntervalRadioButton -> SetState( kButtonDown , kTRUE ) ;
     m_runFillIntervalToLabel -> Enable() ;
     m_runFillIntervalToNumberEntry -> SetState( kTRUE ) ;
   }

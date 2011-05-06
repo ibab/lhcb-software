@@ -4074,6 +4074,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
 
   std::cout << timeStamp() << "Enter loadSelectedPageFromDB for " << pageName << std::endl;
   std::string message ("" );
+  std::string bannerText( "" );
 
   if ( isConnectedToHistogramDB() && ! m_loadingPage ) {
     TGListTreeItem * node = openHistogramTreeAt( pageName ) ;
@@ -4111,7 +4112,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterInfo.setGlobalTimePoint( pres::s_Now ) ;
         m_presenterInfo.setGlobalPastDuration( std::string("08:00:00") ) ;
         m_presenterInfo.setTimeC( pres::s_Now, std::string("08:00:00") );
-        m_message = "History for last 8 hours";
+        bannerText = "Last 8 hours before &";
       } else if ( "last 1 hour" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
@@ -4119,47 +4120,56 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterInfo.setGlobalTimePoint( pres::s_Now ) ;
         m_presenterInfo.setGlobalPastDuration( std::string("01:00:00") ) ;
         m_presenterInfo.setTimeC( pres::s_Now, std::string("01:00:00") );
-        m_message = "History for last hour";
+        bannerText = "Last hour before &";
       } else if ( "preset file" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setRwPastDuration( pastDuration ) ;
         m_presenterInfo.setGlobalTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setGlobalPastDuration( pastDuration ) ;
-        m_message = m_savesetFileName;
+        bannerText = m_savesetFileName;
       } else if ( "set file" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setRwPastDuration( pastDuration ) ;
         m_presenterInfo.setGlobalTimePoint( pres::s_startupFile ) ;
         m_presenterInfo.setGlobalPastDuration( pastDuration ) ;
-        m_message = m_savesetFileName;
+        bannerText = m_savesetFileName;
       } else {
         m_presenterInfo.setRwTimePoint( m_presenterInfo.globalTimePoint() ) ;
         m_presenterInfo.setRwPastDuration(m_presenterInfo.globalPastDuration());
         if ( m_presenterInfo.globalHistoryByRun() ) {
           if ( m_presenterInfo.globalPastDuration() == "0" ) {
-            m_message = Form( "History from run %d, start time: %s, duration: %s" ,
+            bannerText = Form( "Run %d, started %s, duration: %s" ,
                               m_intervalPickerData->startRun() ,
                               m_runDb -> getCurrentStartTime().c_str() ,
                               m_runDb -> getCurrentRunDuration().c_str() ) ;
             m_presenterInfo.setTimeC( m_runDb -> getCurrentStartTime(),  m_runDb -> getCurrentRunDuration(), true );
           } else {
-            m_message = Form("History from run %d to %d",
+            bannerText = Form( "Run %d to %d",
                              m_intervalPickerData->startRun(),
                              m_intervalPickerData->endRun());
+            std::string oldDest = m_runDb->getDestination();
+            m_runDb->setDestination( "" );
+            m_runDb->checkRun( m_intervalPickerData->startRun() );
+            std::string startTime =  m_runDb -> getCurrentStartTime();
+            m_runDb->checkRun( m_intervalPickerData->endRun() );
+            m_runDb->setDestination( oldDest );
+            m_presenterInfo.setTimeC( startTime,  m_runDb -> getCurrentEndTime() );
           }
         } else {
-          m_message = Form("History from %s to %s",
+          bannerText = Form("From %s to %s",
                            m_intervalPickerData->getStartTimeString(),
                            m_intervalPickerData->getEndTimeString());
+          m_presenterInfo.setTimeC( m_intervalPickerData->getStartTimeString(),
+                                    m_intervalPickerData->getEndTimeString() );
         }
       }
       if (m_verbosity >= pres::Verbose)
-        std::cout << m_message << std::endl
+        std::cout << bannerText << std::endl
                   << "Navigation step size "
                   << m_presenterInfo.globalStepSize() << std::endl;
-      m_mainStatusBar->SetText(m_message.c_str(), 2);
+      m_mainStatusBar->SetText(bannerText.c_str(), 2);
     }
 
     try {
@@ -4167,7 +4177,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
       OnlineHistPage* page = m_histogramDB -> getPage( pageName ) ;
 
       if (0 != page) {
-        if ( "" != page->doc() ) page->load(); //== Update the comments -> force a complete re-read...
+        page->loadDoc();  //== Update the comments unconditionally.
         std::string partition = currentPartition();
         m_presenterPage.clear();
         m_presenterPage.setName( page->name() );
@@ -4220,6 +4230,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         displayStatusAndComments( page ) ;
         std::cout << "  Status page displayed." << std::endl;
 
+        m_presenterPage.drawBanner( pageName, bannerText );
         m_presenterPage.drawPage( editorCanvas, m_analysisLib, m_fastHitMapDraw );
       }
 
@@ -4720,7 +4731,7 @@ void PresenterMainFrame::refreshPageForced() {
   }
   std::cout << "Build analysis histograms " << std::endl;
   m_presenterPage.buildAnalysisHistos( m_analysisLib, true );  // Only after histos are loaded...
-
+  m_presenterPage.updateBanner();
   m_presenterPage.updateDrawingOptions();
   editorCanvas->Update();
 
