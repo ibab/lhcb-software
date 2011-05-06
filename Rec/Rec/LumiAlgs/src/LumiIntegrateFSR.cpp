@@ -388,7 +388,7 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
       error() << "ERROR updating luminosity constants from DB " << endmsg;
     }
   }    
-  runUpdate();
+
   
   // look at the new DB parameters
   if ( msgLevel(MSG::DEBUG) ) {
