@@ -63,6 +63,11 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool
   virtual void retrievePartonEvent( HepMC::GenEvent * theEvent ) ;
 
   virtual void printRunningConditions( ) ;
+  
+  /// debugging methods for HepMC checking
+  StatusCode writeEvent(HepMC::GenEvent * theEvent);
+  StatusCode printEvent(HepMC::GenEvent * theEvent);
+  StatusCode readEvent(HepMC::GenEvent * theEvent);
 
   virtual bool isSpecialParticle( const ParticleProperty * thePP ) const ;
 

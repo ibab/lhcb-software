@@ -33,6 +33,7 @@
 
 // HepMC
 #include "HepMC/GenEvent.h"
+#include "HepMC/IO_GenEvent.h"
 
 // local
 #include "HerwigppProduction.h"
@@ -267,6 +268,51 @@ StatusCode HerwigppProduction::generateEvent( HepMC::GenEvent* theEvent,
 }
 
 //=============================================================================
+// write the HEPMC container (for debugging purposes)
+//=============================================================================
+StatusCode HerwigppProduction::writeEvent(HepMC::GenEvent* theEvent)
+{
+  HepMC::IO_GenEvent hepmcio("herwigpp.data",std::ios::out);
+  hepmcio << theEvent;
+  
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// print the HEPMC container (for debugging purposes)
+//=============================================================================
+StatusCode HerwigppProduction::printEvent(HepMC::GenEvent* theEvent)
+{
+  // loop over the particles
+  for (HepMC::GenEvent::particle_iterator p = theEvent->particles_begin();
+       p != theEvent->particles_end(); p++)
+    {
+      (*p)->print();
+    }
+  
+  // loop over the vertices
+  for (HepMC::GenEvent::vertex_iterator v = theEvent->vertices_begin();
+       v != theEvent->vertices_end(); v++)
+    {
+      (*v)->print();
+    }
+  return StatusCode::SUCCESS;
+}
+
+
+//=============================================================================
+// fill the HEPMC container from a file (for debugging purposes)
+//=============================================================================
+StatusCode HerwigppProduction::readEvent(HepMC::GenEvent* theEvent)
+{
+  std::ifstream file("herwigpp.dat");
+  HepMC::IO_GenEvent hepmcio(file);
+  hepmcio.fill_next_event(theEvent);
+  return StatusCode::SUCCESS;
+}
+
+
+//=============================================================================
 // fill the HEPMC container from the Herwig++ event pointer
 //=============================================================================
 StatusCode HerwigppProduction::toHepMC(HepMC::GenEvent* theEvent)
@@ -278,11 +324,37 @@ StatusCode HerwigppProduction::toHepMC(HepMC::GenEvent* theEvent)
 						   ThePEG::millimeter);
   debug() << "Herwig++ converted event to HepMC"  << endmsg;
 
-  // get random seeds
-  std::vector<long> seeds(static_cast<long>(m_seed));
-  debug() << "Random seed: " << seeds[0] << endmsg;
-  theEvent->set_random_states(seeds);
+  // fix vertex positions
+  debug() << "Herwig++ fixing HepMC vertex positions" << endmsg;
+  std::vector<HepMC::GenVertex*> vertices;
+  for (HepMC::GenEvent::vertex_iterator v = theEvent->vertices_begin();
+       v != theEvent->vertices_end(); v++)
+    {
+      vertices.push_back(*v);
+    }
+  for (unsigned int vertex = vertices.size() - 1; vertex > 0; vertex--)
+    {
+      if (vertices[vertex]->position().t() < 
+	  vertices[vertex - 1]->position().t())
+	vertices[vertex - 1]->set_position(vertices[vertex]->position());
+    }
+
+  // fix particle codes
+  debug() << "Herwig++ fixing HepMC particle status codes" << endmsg;
+  for (HepMC::GenEvent::particle_iterator p = theEvent->particles_begin();
+       p != theEvent->particles_end(); p++)
+    {
+      // set generator specific particles to status 3
+      if ((*p)->pdg_id() > 80 && (*p)->pdg_id() < 101) (*p)->set_status(3);
+      // set all other non-stable particles to status 2
+      else if ((*p)->status() != 1) (*p)->set_status(2);
+    }
   
+  // get random seeds
+  debug() << "Herwig++ recording random seeds to HepMC" << endmsg;
+  std::vector<long> seeds(1,static_cast<long>(m_seed));
+  theEvent->set_random_states(seeds);
+
   // manually add PDF to event record
   debug() << "Herwig++ adding PDF info to HepMC"  << endmsg;
   
