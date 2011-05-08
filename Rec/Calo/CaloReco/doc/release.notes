@@ -5,6 +5,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-05-09 -  Roel Aaij
+ - Add check for Hlt context before adding to DoD in CaloProcessor.
+
 !========================= CaloReco v5r9 2011-04-27 =========================
 ! 2011-04-24 - Olivier Deschamps
   - update CaloProcessor configurable with 'MakeExternalClustersWithTag' slot
