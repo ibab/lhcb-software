@@ -53,7 +53,6 @@ from Hlt2Lines.Hlt2MuNTrackLines import Hlt2MuNTrackLinesConf
 #
 from HltTracking.Hlt2Tracking import Hlt2Tracking
 #
-from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedLongTracking 
@@ -70,7 +69,6 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedLongTracking")
-                             , (Hlt2Tracking, "Hlt2UnfittedForwardTracking")
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2CharmHadD02HHLinesConf
@@ -109,7 +107,6 @@ class Hlt2Conf(LHCbConfigurableUser):
                              ]
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
-                , "WithMC"                     : False 
                 , "DefaultVoidFilter"          : ''
                 , "Hlt2ForwardMaxVelo"         : 350
                 }
@@ -161,9 +158,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                            , Hlt2BiKalmanFittedForwardTracking()
                            , Hlt2BiKalmanFittedLongTracking() 
                            , Hlt2BiKalmanFittedRichForProtonsForwardTracking()
-                           , Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking()
-                           , Hlt2UnfittedForwardTracking() ]
-
+                           , Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking() ]
 
         # And now we have to, for each of the configurables we just created, 
         # tell it the data type and tell it to use all the Hlt2 lines...
@@ -172,31 +167,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         for thistracking in definedTrackings :
             setDataTypeForTracking(thistracking,self.getProp("DataType"))
             if self.getProp('Hlt2ForwardMaxVelo') : thistracking.Hlt2ForwardMaxVelo = self.getProp("Hlt2ForwardMaxVelo")
-###################################################################################
-#
-# MC
-#
-    def withMC(self):
-        """
-        MC options for DaVinci 
-        """
-        from Configurables import DataOnDemandSvc, TrackAssociator
-
-        # TODO: fix hardcoding!
-        m  = { "HltTrackAssociator": "Hlt2/Track/Unfitted/Forward"
-             , "HltMuonAssociator": "Hlt2/Track/Unfitted/Forward/PID/MuonSegments"
-             , "HltSeedAssociator": "Hlt2/Track/Unfitted/SeedTT"  
-             , "HltTFAssociator": "Hlt2/Track/BiKalmanFitted/Forward" }
-
-        for (i,j) in m.iteritems() :
-              DataOnDemandSvc().AlgMap.update( { 'Link/'+j : TrackAssociator(i, TracksInContainer = j ).getFullName() } )
-
-
-        from Configurables import CaloClusterMCTruth, ChargedPP2MC
-        DataOnDemandSvc().AlgMap['/Event/Relations/Hlt2/ProtoP/Unfitted/Forward/Charged' ] = ChargedPP2MC()
-        
-        # TODO: fix MC truth for neutrals, broken right now
-        #DataOnDemandSvc().AlgMap['/Event/Relations/Hlt/Calo/Clusters' ] = CaloClusterMCTruth("CaloClusterMCTruthForHlt", Context = 'Hlt')
         
 ###################################################################################
 #
@@ -214,5 +184,3 @@ class Hlt2Conf(LHCbConfigurableUser):
             from HltLine.HltLine import Hlt2Line  
             Hlt2Line.setDefaultVoidFilter( self.getProp("DefaultVoidFilter") )
         self.hlt2Lines(Hlt2)
-        # reco
-        if self.getProp('WithMC'): self.withMC()

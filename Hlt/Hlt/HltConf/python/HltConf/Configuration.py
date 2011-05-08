@@ -43,7 +43,6 @@ class HltConf(LHCbConfigurableUser):
                 , 'SkipHltRawBankOnRejectedEvents' : False
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
-                , "WithMC"                         : False
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
                 , "ExpressStreamRateLimit"         : 5         # Hz
@@ -154,7 +153,6 @@ class HltConf(LHCbConfigurableUser):
         Hlt2Conf()
         self.setOtherProps(Hlt2Conf(),[ "DataType" ])
         Hlt2Conf().ThresholdSettings = ThresholdSettings
-        Hlt2Conf().WithMC = self.getProp("WithMC")
         if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
             Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 
@@ -297,23 +295,24 @@ class HltConf(LHCbConfigurableUser):
         # Note : if no Hlt2 lines are run, this is meaningless since the Hlt1 muons are
         #        handled differently, so we pass some empty "default" location instead
              
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2UnfittedForwardTracking
-        Hlt2UnfittedForwardTracking = Hlt2UnfittedForwardTracking()
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         # We need to get the "extra" piece of the Muon stubs location compared to the track location
         tracking = 0
         try :
-            tracking = Hlt2UnfittedForwardTracking.hlt2PrepareTracks()
+            tracking = Hlt2BiKalmanFittedForwardTracking.hlt2PrepareTracks()
         except :
             # Nobody configured the tracking so no meaningful Hlt2 was run
             # so just pass some default value
             HltSelReportsMaker().MuonIDSuffix = "/PID/MuonSegments"
         if tracking :
             trackLoc    = tracking.outputSelection()
-            muonStubLoc	= Hlt2UnfittedForwardTracking._trackifiedMuonIDLocation() 	 
+            muonStubLoc	= Hlt2BiKalmanFittedForwardTracking._trackifiedMuonIDLocation() 	 
             HltSelReportsMaker().MuonIDSuffix = "/" + muonStubLoc.strip(trackLoc)
 
         veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
-               , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Unfitted/Forward', 'TES:Hlt2/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
+               , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Forward',
+                 'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
                , 'TES:Hlt/Vertex/PV3D' 
                , 'TES:Hlt/Track/MuonSegmentForL0Single'
                , 'RZVeloBW'
