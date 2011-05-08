@@ -10,31 +10,41 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
 # Import your stripping lines. Replace the lines below appropriately.
-
 from StrippingSelections.StrippingB2XMuMu import B2XMuMuConf as builder
-
+    
 config_params =  {
-    'BVXCHI2NDOF'        : 4.0         
-    , 'BIPCHI2'            : 9.0       
-    , 'BDIRA'              : 0.999968  
-    , 'BFDCHI2'            : 100.0     
-    , 'KpiMINIPCHI2'       : 9.0       
-    , 'KpiTRACKCHI2'       : 4.0       
-    , 'KpiVXCHI2NDOF'      : 9.0       
-    , 'MuonMINIPCHI2'      : 16.0      
-    , 'MuonTRACKCHI2'      : 4.0       
-    , 'MuonPID'            : 0.0       
-    , 'DimuonVXCHI2NDOF'   : 9.0       
-    , 'DimuonUPPERMASS'    : 5050.0    
-    , 'Pi0MINPT'           : 800.0     
-    , 'DplusLOWERMASS'     : 1600.0    
-    , 'DplusUPPERMASS'     : 2300.0    
-    , 'KstarplusWINDOW'    : 300.0     
+    'BVXCHI2NDOF'        : 4.0
+    , 'BIPCHI2'            : 9.0
+    , 'BDIRA'              : 0.999968
+    , 'BFDCHI2'            : 100.0
+    , 'KpiMINIPCHI2'       : 9.0
+    , 'KpiTRACKCHI2'       : 4.0
+    , 'KpiVXCHI2NDOF'      : 9.0
+    , 'MuonMINIPCHI2'      : 16.0
+    , 'MuonTRACKCHI2'      : 4.0
+    , 'MuonPID'            : 0.0
+    , 'DimuonVXCHI2NDOF'   : 9.0
+    , 'DimuonUPPERMASS'    : 5050.0
+    , 'Pi0MINPT'           : 800.0
+    , 'DplusLOWERMASS'     : 1600.0
+    , 'DplusUPPERMASS'     : 2300.0
+    , 'KstarplusWINDOW'    : 300.0
     }
 
-lb = builder('B2XMuMu',config_params)
+xb = builder('B2XMuMu',config_params)
 
-stream.appendLines( lb.lines() )
+stream.appendLines( xb.lines() )
+
+
+#from StrippingSelections.StrippingB2SameChargeMuon import StrippingB2SameChargeMuonConf as builder
+
+#config_params =  {
+#    'LinePrescale'        : 1.0
+#    , 'LinePostscale'            : 1.0
+#}
+#lb = builder('B2SameChargeMuon',config_params)
+
+#stream.appendLines( lb.lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
