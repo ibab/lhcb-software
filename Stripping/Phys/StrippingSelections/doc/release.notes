@@ -3,7 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-05-06 -Wenbin Qian
 
+Add Stripping for same charge muon + D
 ! 2011-05-06 - Jibo He
  - StrippingCcbar2Baryons
   + Added Stripping line for Charmonium -> Xi Xi 
