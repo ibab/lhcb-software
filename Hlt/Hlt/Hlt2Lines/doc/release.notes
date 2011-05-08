@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-05-08 - Gerhard Raven
+ - in Hlt2diphotonDiMuonLines, replace Photons by BiKalmanFittedPhotons
+
 ! 2011-05-05 - Roel Aaij
  - Fix ordering bug in Hlt2DisplVerticesLines.
 

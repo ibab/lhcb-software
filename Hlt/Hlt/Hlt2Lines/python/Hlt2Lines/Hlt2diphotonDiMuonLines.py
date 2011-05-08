@@ -28,7 +28,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
-        from Hlt2SharedParticles.BasicParticles import Photons    
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons    
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop
         from Configurables import LoKi__VoidFilter as VoidFilter
@@ -78,7 +78,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                             , MotherCut = "ALL"  
                             , InputPrimaryVertices = "None"
                             , UseP2PVRelations = False
-                            , Inputs  = [ Photons ]
+                            , Inputs  = [ BiKalmanFittedPhotons ]
                             )
 
 
@@ -122,7 +122,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Photon,lowMult')|L0_CHANNEL('DiEM,lowMult')"
-                       , algos = [ Photons,FilterPh ]  
+                       , algos = [ BiKalmanFittedPhotons,FilterPh ]  
                        , postscale = self.postscale
                        )
         line = Hlt2Line( 'LowMultElectron'
