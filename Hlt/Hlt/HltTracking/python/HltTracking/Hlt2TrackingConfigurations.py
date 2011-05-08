@@ -3,7 +3,7 @@
 #
 __author__  =  "V. Gligorov vladimir.gligorov@cern.ch"
 from Hlt2Tracking  import Hlt2Tracking
-from HltTrackNames import Hlt2TracksPrefix, HltUnfittedTracksSuffix, Hlt2ForwardTracksName
+from HltTrackNames import Hlt2TracksPrefix, Hlt2ForwardTracksName
 from HltTrackNames import HltBiDirectionalKalmanFitSuffix,Hlt2DownstreamTracksName 
 from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix 
 #
@@ -12,14 +12,6 @@ from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix
 # FIRST THE UNFITTED TRACKS, SHOULD NOT BE USED BY SELECTIONS
 # EVENTUALLY THIS SHOULD JUST BE REMOVED
 #
-def Hlt2UnfittedForwardTracking() :
-     return Hlt2Tracking("Hlt2UnfittedForwardTracking",        
-                                                                                 Prefix                  = Hlt2TracksPrefix, 
-                                                                                 FastFitType             = HltUnfittedTracksSuffix,
-                                                                                 Hlt2Tracks              = Hlt2ForwardTracksName,
-                                                                                 DoFastFit               = False,
-                                                                                 DoSeeding               = False
-                                    )
 # With bidirectional track fitting, no seeding
 #
 def Hlt2BiKalmanFittedForwardTracking() :
