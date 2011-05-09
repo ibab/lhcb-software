@@ -90,7 +90,7 @@ namespace LHCb
     /// Set the ID type
     inline void setIDType( const LHCb:: RichSmartID::IDType type )
     {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
       checkRange(type,MaxIDType,"IDType");
 #endif
       setData( type, ShiftIDType, MaskIDType );
@@ -356,14 +356,14 @@ namespace LHCb
     {
       if ( HPDID == idType() )
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( rich, HPD::MaxRich, "RICH" );
 #endif
         setData( rich, HPD::ShiftRich,   HPD::MaskRich,   HPD::MaskRichIsSet   );
       }
       else // assume only two ID types ...
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( rich, MaPMT::MaxRich, "RICH" );
 #endif
         setData( rich, MaPMT::ShiftRich, MaPMT::MaskRich, MaPMT::MaskRichIsSet );
@@ -375,14 +375,14 @@ namespace LHCb
     {
       if ( HPDID == idType() )
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( panel, HPD::MaxPanel, "Panel" );
 #endif
         setData( panel, HPD::ShiftPanel,   HPD::MaskPanel,   HPD::MaskPanelIsSet   );
       }
       else // assume only two ID types ...
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( panel, MaPMT::MaxPanel, "Panel" );
 #endif
         setData( panel, MaPMT::ShiftPanel, MaPMT::MaskPanel, MaPMT::MaskPanelIsSet );
@@ -394,7 +394,7 @@ namespace LHCb
     {
       if ( HPDID == idType() )
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange ( col,    HPD::MaxPDCol,      "PDColumn"   );
         checkRange ( nInCol, HPD::MaxPDNumInCol, "PDNumInCol" );
 #endif
@@ -403,7 +403,7 @@ namespace LHCb
       }
       else // assume only two ID types ...
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange ( col,    MaPMT::MaxPDCol,      "PDColumn"   );
         checkRange ( nInCol, MaPMT::MaxPDNumInCol, "PDNumInCol" );
 #endif
@@ -417,14 +417,14 @@ namespace LHCb
     {
       if ( HPDID == idType() )
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( row, HPD::MaxPixelRow, "PixelRow" );
 #endif
         setData( row, HPD::ShiftPixelRow,   HPD::MaskPixelRow,   HPD::MaskPixelRowIsSet   );
       }
       else
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( row, MaPMT::MaxPixelRow, "PixelRow" );
 #endif
         setData( row, MaPMT::ShiftPixelRow, MaPMT::MaskPixelRow, MaPMT::MaskPixelRowIsSet );
@@ -436,14 +436,14 @@ namespace LHCb
     {
       if ( HPDID == idType() )
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( col, HPD::MaxPixelCol, "PixelColumn" );
 #endif
         setData( col, HPD::ShiftPixelCol,   HPD::MaskPixelCol,   HPD::MaskPixelColIsSet   );
       }
       else
       {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
         checkRange( col, MaPMT::MaxPixelCol, "PixelColumn" );
 #endif
         setData( col, MaPMT::ShiftPixelCol, MaPMT::MaskPixelCol, MaPMT::MaskPixelColIsSet );

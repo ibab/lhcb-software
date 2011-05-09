@@ -45,9 +45,6 @@ apply_pattern god_dictionary files=../xml/*.xml
 library LHCbKernel     *.cpp          -import=GaudiAlg
 apply_pattern linker_library    library=LHCbKernel
 
-# Debug flag for RichSmartID
-macro_append LHCbKernel_cppflags "" \
-                   Linux&debug " -DRICHDEBUG "
 # propagate GOD_NOALLOC to all compilations
 macro_remove cppflags -DGOD_NOALLOC
 macro_append LHCbKernel_cppflags "" \

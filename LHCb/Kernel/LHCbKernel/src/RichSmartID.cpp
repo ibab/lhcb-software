@@ -30,7 +30,7 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
   s << "{";
 
   // Dump the bits in DEBUG mode
-#ifdef RICHDEBUG
+#ifndef NDEBUG
   s << " "; dumpBits(s);
 #endif
 
@@ -101,7 +101,7 @@ void LHCb::RichSmartID::setPixelSubRow( const int pixelSubRow )
 {
   if ( HPDID == idType() )
   {
-#ifdef RICHDEBUG
+#ifndef NDEBUG
     checkRange( pixelSubRow, HPD::MaxPixelSubRow, "PixelSubRow" );
 #endif
     setData( pixelSubRow, HPD::ShiftPixelSubRow, HPD::MaskPixelSubRow, HPD::MaskPixelSubRowIsSet );

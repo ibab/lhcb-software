@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-05-09 - Chris Jones
+ - Remove RICHDEBUG preprocessor directive. Use Gaudi NDEBUG instead.
+
 ! 2011-04-27 - Chris Jones
  - Add LHCb::RichSmartID::Vector to python dictionary
 
