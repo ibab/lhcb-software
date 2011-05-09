@@ -641,12 +641,10 @@ class CaloProcessor( CaloRecoConf ):
             spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
             comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
 
-            ## ChargedProtoP Maker on demand (not in any sequencer)
-            if not hltContext( self.getProp( 'Context' ) ):
-                maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context,
-                                 cloc , True ) # force onDemand
-                if cloc != '' :
-                    maker.Output = cloc
+            # ChargedProtoP Maker on demand (not in any sequencer)
+            maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , dod )
+            if cloc != '' :
+                maker.Output = cloc
 
         ## confuse configurable on purpose 
             _locs = self.getProp ( 'TrackLocations'    )

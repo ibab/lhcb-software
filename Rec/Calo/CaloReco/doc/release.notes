@@ -5,6 +5,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-05-09 -  Gerhard Raven
+ - do not check Hlt context, but honour the EnableOnDemand property of the
+   Configurable instead (i.e. as it was in v5r8!)
+
 ! 2011-05-09 -  Roel Aaij
  - Add check for Hlt context before adding to DoD in CaloProcessor.
 
