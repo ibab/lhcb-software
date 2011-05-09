@@ -294,7 +294,7 @@ StatusCode HltSelReportsDecoder::execute() {
       {
       case LHCb::CLID_Track:
         {      
-          if( stdInfo.size()==6 ){
+          if( stdInfo.size()>=6 ){
 
             infoPersistent.insert( "0#Track.firstState.z", floatFromInt(stdInfo[0]) ); 
             infoPersistent.insert( "1#Track.firstState.x", floatFromInt(stdInfo[1]) ); 
@@ -319,7 +319,7 @@ StatusCode HltSelReportsDecoder::execute() {
         break;
       case LHCb::CLID_RecVertex:
         {  
-          if( stdInfo.size()==3 ){    
+          if( stdInfo.size()>=3 ){    
  
             infoPersistent.insert( "0#RecVertex.position.x", floatFromInt(stdInfo[0]) ); 
             infoPersistent.insert( "1#RecVertex.position.y", floatFromInt(stdInfo[1]) ); 
@@ -342,7 +342,7 @@ StatusCode HltSelReportsDecoder::execute() {
 	break;
       case LHCb::CLID_Particle:
         {      
-          if( stdInfo.size()==8 ){    
+          if( stdInfo.size()>=8 ){    
             
             infoPersistent.insert( "0#Particle.particleID.pid", floatFromInt(stdInfo[0]) ); 
             infoPersistent.insert( "1#Particle.measuredMass", floatFromInt(stdInfo[1]) ); 
@@ -371,7 +371,7 @@ StatusCode HltSelReportsDecoder::execute() {
       case LHCb::CLID_CaloCluster:
         {      
           
-          if( stdInfo.size()==4 ){    
+          if( stdInfo.size()>=4 ){    
  
             infoPersistent.insert( "0#CaloCluster.e", floatFromInt(stdInfo[0]) );
             infoPersistent.insert( "1#CaloCluster.position.x", floatFromInt(stdInfo[1]) );

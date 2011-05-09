@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
+! 2011-05-09 - Gerhard Raven
+ - make HltSelReports decoder forward compatible for the case of adding additional
+   data words (i.e. new data is a pure superset of old data).
+
 ! 2011-04-28 - Gerhard Raven
  - fix windows compile error in ConfigZipFileAccessSvc
  - make bzip2 conditional on 'not being on windows' in ConfigZipFileAccessSvc
