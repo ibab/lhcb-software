@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version v12r6
+version v12r6p1
 
 branches doc cmt options python
 
@@ -30,7 +30,9 @@ use AppConfig           v3r*                -no_auto_imports
 # Patches
 use HltConf             v9r9p1  Hlt
 use Hlt2SharedParticles v6r2    Hlt
+use Hlt2Lines           v8r5p1  Hlt
 use OTDAQ               v7r10   OT
+use CaloReco            v5r9p1  Calo
 
 
 # The rest are needed only to set up environment variables for job options
