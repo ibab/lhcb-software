@@ -110,6 +110,7 @@ StatusCode MonitorSvc::initialize()
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
+  if (m_CounterInterval == 0) m_CounterInterval = m_updateInterval;
 
   if ( 0 != m_disableMonRate)
   {
@@ -258,7 +259,6 @@ StatusCode MonitorSvc::i_start()
   msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
 //  setProperties();
   DimServer::autoStartOff();
-  if (m_CounterInterval == 0) m_CounterInterval = m_updateInterval;
   if (m_CntrMgr != 0)
   {
 //    //printf("In STARTS Method... Counter Manager present... Closing it...\n");
