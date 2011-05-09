@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2011-05-09 - Michel De Cian
+ - Fix several small memory leaks in MuonTTTrack
 
 !========================= TrackTools v4r5 2011-04-27 =========================
 ! 2011-04-16 - Chris Jones

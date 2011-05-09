@@ -123,6 +123,7 @@ StatusCode MuonTTTrack::execute() {
     sc = iterateToPV(track, muonState, PVPos, (*it)->qOverP() ); // -- This is the function that iterates
     if(!sc){
       if(msgLevel(MSG::WARNING)) warning() << "==> Could not iterate to PV!" << endmsg;
+      delete track;
       continue;
     }
 
@@ -130,6 +131,7 @@ StatusCode MuonTTTrack::execute() {
     sc = m_extrapolator->propagate( veloState, PVPos[2]); 
     if(!sc){
       if(msgLevel(MSG::WARNING)) warning() << "==> Could not propagate state to VELO!" << endmsg;
+      delete track;
       continue;
     }
     veloState.setLocation( LHCb::State::Vertex );
@@ -144,7 +146,12 @@ StatusCode MuonTTTrack::execute() {
       if(msgLevel(MSG::DEBUG) ) debug() << "Found " << ttHits.size() << " TT hits to add" << endmsg;
       
       // -- Skip if not enough TT hits were found
-      if( ttHits.size() < m_minNumberTTHits ) continue;
+      if( ttHits.size() < m_minNumberTTHits ){
+        if(msgLevel(MSG::WARNING)) warning() << "==> Not enough hits in TT found" << endmsg;
+        delete track;
+        continue;
+      }
+      
 
       // -- Add the TT hits
       for(PatTTHits::iterator itHit = ttHits.begin(); itHit != ttHits.end(); ++itHit){
