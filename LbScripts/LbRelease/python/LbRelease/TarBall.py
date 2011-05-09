@@ -803,9 +803,9 @@ def generateLCGTar(project, version=None, cmtconfig=None,
 
 
 def buildLCGTar(project, version=None, cmtconfig=None,
-             top_dir=None, output_dir=None,
-             overwrite=False, update=False,
-             md5=True, html=True):
+                top_dir=None, output_dir=None,
+                overwrite=False, update=False,
+                md5=True, html=True):
     log = logging.getLogger()
     status = 0
     if Project.isProject(project) :
