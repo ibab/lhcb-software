@@ -69,7 +69,7 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
         return SelectedMuon
     
     def _KaonFilter( self ):
-        Kaoncut = "(TRCHI2DOF < 5.0) & (PIDK > 6.0)  & (MIPCHI2DV(PRIMARY) > 8.0)  & (PT > 300*MeV)"
+        Kaoncut = "(TRCHI2DOF < 5.0) & (PIDK > 2.0)  & (MIPCHI2DV(PRIMARY) > 4.0)  & (PT > 300*MeV)"
         kaonfilter = FilterDesktop("kaonfilter",Code = Kaoncut)
         SelectedKaon = Selection("SelKaon",
                                  Algorithm = kaonfilter,
@@ -78,7 +78,7 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
         return SelectedKaon
     
     def _PionFilter( self ):
-        Pioncut = "(TRCHI2DOF < 5.0) & (PIDK < 2.0)  & (MIPCHI2DV(PRIMARY) > 8.0)   & (PT > 300*MeV)"
+        Pioncut = "(TRCHI2DOF < 5.0) & (PIDK < 6.0)  & (MIPCHI2DV(PRIMARY) > 4.0)  & (PT > 300*MeV)"
         pionfilter = FilterDesktop("pionfilter",Code = Pioncut)
         SelectedPion = Selection("SelPion",
                                  Algorithm = pionfilter,
