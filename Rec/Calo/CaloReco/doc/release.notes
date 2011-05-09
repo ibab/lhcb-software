@@ -5,6 +5,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-05-09 - Olivier Deschamps
+  - fix protoP maker DoD in CaloProcessor (no DoD setting by default)
+
 !========================= CaloReco v5r9p1 2011-05-09 =========================
 ! 2011-05-09 -  Gerhard Raven
  - do not check Hlt context, but honour the EnableOnDemand property of the

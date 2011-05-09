@@ -397,6 +397,7 @@ class CaloProcessor( CaloRecoConf ):
         'CaloReco'           : True , ## process CaloReco part
         'CaloPIDs'           : True , ## process CaloPID part
         'EnableOnDemand'     : False, ## overwrite EnableRecoOnDemand & EnablePIDsOnDemand
+        'ProtoOnDemand'      : False,
         'NeutralProtoLocation':'',
         'ChargedProtoLocation':'',
         'CaloSequencer'       : None,
@@ -545,6 +546,10 @@ class CaloProcessor( CaloRecoConf ):
 
         # overwrite Reco & PID onDemand
         dod = self.getProp('EnableOnDemand')
+        pdod = self.getProp('ProtoOnDemand')
+
+        if dod :
+            pdod = dod            
         self.setProp('EnableRecoOnDemand',dod)
 
         ## define the calo sequence
@@ -642,7 +647,9 @@ class CaloProcessor( CaloRecoConf ):
             comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
 
             # ChargedProtoP Maker on demand (not in any sequencer)
-            maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , dod )
+            maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , pdod )
+
+
             if cloc != '' :
                 maker.Output = cloc
 
