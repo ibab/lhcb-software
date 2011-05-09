@@ -86,6 +86,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 1000);
   declareProperty("DimUpdateInterval", m_updateInterval = 20);
+  declareProperty("CounterUpdateInterval", m_CounterInterval =0);
   declareProperty("ExpandCounterServices",m_expandCounterServices=0);
   declareProperty("ExpandNameInfix",m_expandInfix="");
   declareProperty("PartitionName",m_partname="LHcb");
@@ -257,6 +258,7 @@ StatusCode MonitorSvc::i_start()
   msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
 //  setProperties();
   DimServer::autoStartOff();
+  if (m_CounterInterval == 0) m_CounterInterval = m_updateInterval;
   if (m_CntrMgr != 0)
   {
 //    //printf("In STARTS Method... Counter Manager present... Closing it...\n");
@@ -416,7 +418,7 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
       m_InfoMap.insert(pair<string,void*>(oname+"/R"+newName,(void*)m_RateMgr));
       if (m_CntrSubSys == 0)
       {
-        m_CntrSubSys = new MonSubSys(m_updateInterval);
+        m_CntrSubSys = new MonSubSys(m_CounterInterval);
         m_CntrSubSys->m_type = MONSUBSYS_Counter;
       }
       m_CntrSubSys->addRateMgr(m_RateMgr);
@@ -431,7 +433,7 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
   MonCounter *cnt = new MonCounter((char*)(oname+"/"+nam).c_str(),(char*)desc.c_str(),(T*)&var);
   if (m_CntrSubSys == 0)
   {
-    m_CntrSubSys = new MonSubSys(m_updateInterval);
+    m_CntrSubSys = new MonSubSys(m_CounterInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
   }
   m_CntrSubSys->addObj(cnt);
@@ -501,7 +503,7 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
   MonCounter *cnt = new MonCounter((char*)(oname+"/"+name).c_str(),(char*)desc.c_str(),format, (void*)var,size);
   if (m_CntrSubSys == 0)
   {
-    m_CntrSubSys = new MonSubSys(m_updateInterval);
+    m_CntrSubSys = new MonSubSys(m_CounterInterval);
     m_CntrSubSys->m_type = MONSUBSYS_Counter;
   }
   m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
@@ -548,7 +550,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
       m_InfoMap.insert(pair<string,void*>(oname+"/R"+newName,(void*)m_RateMgr));
       if (m_CntrSubSys == 0)
       {
-        m_CntrSubSys = new MonSubSys(m_updateInterval);
+        m_CntrSubSys = new MonSubSys(m_CounterInterval);
         m_CntrSubSys->m_type = MONSUBSYS_Counter;
       }
       m_CntrSubSys->addRateMgr(m_RateMgr);

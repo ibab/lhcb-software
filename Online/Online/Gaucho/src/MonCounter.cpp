@@ -403,7 +403,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
     {
       void *pp = AddPtr(p,p->dataoff);
       int bsiz = p->reclen - p->dataoff;
-      h->nel = (bsiz)/sizeof(long);
+      h->nel = (bsiz)/sizeof(long long);
       h->ptr = malloc(bsiz);
       memcpy(h->ptr,pp,bsiz);
       break;
