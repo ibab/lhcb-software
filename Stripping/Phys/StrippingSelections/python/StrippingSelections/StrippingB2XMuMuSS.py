@@ -5,30 +5,30 @@ __version__ = '$Revision: 1.4 $'
 
 """
 B -> X mu mu , X=pi/K channels
+modified by Wenbin Qian to remove mass constraints on dimuon mass
 """
 
 config_params =  {'MuonP'         : 3000. ,    #MeV
-                  'MuonPT'        : 500.  ,    #MeV
-                  #'MuonPIDK'      : -5.   ,    #adimensional
-                  #'MuonPIDmu'     : -5.   ,    #adimensional
-                  #'MuonPIDp'      : -5.   ,    #adimensional
+                  'MuonPT'        : 300.  ,    #MeV
+                  'MuonPIDmu'     :  0.   ,    #adimensional
                   'MuonMINIPCHI2' : 4     ,    #adminensional
                   
                   'PionP'         : 2000. ,    #MeV
-                  'PionPT'        : 500.  ,    #MeV
+                  'PionPT'        : 300.  ,    #MeV
+                  'PionPIDK'      : 2.   ,    #adimensional 
                   'PionMINIPCHI2' : 4     ,    #adminensional
                   
                   'KaonP'         : 2000. ,    #MeV
-                  'KaonPT'        : 500.  ,    #MeV
-                  #'KaonPIDK'      : -1.   ,    #adimensional
+                  'KaonPT'        : 300.  ,    #MeV
+                  'KaonPIDK'      : 6.   ,    #adimensional
                   'KaonMINIPCHI2' : 4     ,    #adminensional
                   
-                  'DimuonMass'    : 250.  ,    #MeV
-                  'BVCHI2DOF'     : 7    ,    #adminensional                              
+                  #'DimuonMass'    : 250.  ,    #MeV
+                  'BVCHI2DOF'     :  6    ,    #adminensional                              
                   #'BFDCHI2'       : 9     ,    #adimensional
-                  'BDIRA'         : 0.9995 ,    #adimensional
-                  'BIPCHI2'       : 30    ,    #adimensional
-                  'BMassWin'      : 400.  ,    #MeV, mass window
+                  'BDIRA'         : 0.9999 ,    #adimensional
+                  'BIPCHI2'       : 10    ,    #adimensional
+                  'BMassWin'      : 300.  ,    #MeV, mass window
                   
                   'B2PiMuMuOSLinePrescale'  : 1 ,
                   'B2PiMuMuOSLinePostscale' : 1 ,
@@ -62,21 +62,19 @@ class B2XMuMuSSConf(LineBuilder) :
         
     __configuration_keys__ = ('MuonP'
                               , 'MuonPT'
-                              #, 'MuonPIDK'
-                              #, 'MuonPIDmu'
-                              #, 'MuonPIDp'
+                              , 'MuonPIDmu'
                               , 'MuonMINIPCHI2'
                               
                               , 'PionP'
                               , 'PionPT'
+                              , 'PionPIDK'
                               , 'PionMINIPCHI2'
         
                               , 'KaonP'
                               , 'KaonPT'
-                              #, 'KaonPIDK'
+                              , 'KaonPIDK'
                               , 'KaonMINIPCHI2'
                               
-                              , 'DimuonMass'
                               , 'BVCHI2DOF'
                               #, 'BFDCHI2'
                               , 'BIPCHI2'
@@ -105,18 +103,21 @@ class B2XMuMuSSConf(LineBuilder) :
         selKaons = makeKaons(name="KaonsFor"+name
                              , KaonP = config['KaonP']
                              , KaonPT = config['KaonPT']
+                             , KaonPIDK = config['KaonPIDK']
                              , KaonMINIPCHI2 = config['KaonMINIPCHI2'])
 
         # 2 : Make pions
         selPions = makePions(name="PionsFor"+name
                              , PionP = config['PionP']
                              , PionPT = config['PionPT']
+                             , PionPIDK = config['PionPIDK']
                              , PionMINIPCHI2 = config['PionMINIPCHI2'])
                                                         
         # 3 : Make muons
         selMuons = makeMuons(name="MuonsFor"+name
                              , MuonP = config['MuonP']
                              , MuonPT = config['MuonPT']
+                             , MuonPIDmu = config['MuonPIDmu']
                              , MuonMINIPCHI2 = config['MuonMINIPCHI2'])
                                         
         # 4 : Combine
@@ -184,8 +185,7 @@ class B2XMuMuSSConf(LineBuilder) :
                               , BVCHI2DOF = config['BVCHI2DOF']
                               , BDIRA = config['BDIRA']
                               , BIPCHI2 = config['BIPCHI2']
-                              , BMassWin = config['BMassWin']
-                              , DimuonMass = config['DimuonMass'])
+                              , BMassWin = config['BMassWin'])
 
 #####################################################
     def _makeB2PiMuMuSS(self, name, pionSel, muonSel, config):
@@ -198,8 +198,7 @@ class B2XMuMuSSConf(LineBuilder) :
                               , BVCHI2DOF = config['BVCHI2DOF']
                               , BDIRA = config['BDIRA']
                               , BIPCHI2 = config['BIPCHI2']
-                              , BMassWin = config['BMassWin']
-                              , DimuonMass = config['DimuonMass'])
+                              , BMassWin = config['BMassWin'])
 
 #####################################################
     def _makeB2KMuMuOS(self, name, kaonSel, muonSel, config):
@@ -212,8 +211,7 @@ class B2XMuMuSSConf(LineBuilder) :
                              , BVCHI2DOF = config['BVCHI2DOF']
                              , BDIRA = config['BDIRA']
                              , BIPCHI2 = config['BIPCHI2']
-                             , BMassWin = config['BMassWin']
-                             , DimuonMass = config['DimuonMass'])
+                             , BMassWin = config['BMassWin'])
 
 #####################################################
     def _makeB2KMuMuSS(self, name, kaonSel, muonSel, config):
@@ -226,18 +224,16 @@ class B2XMuMuSSConf(LineBuilder) :
                              , BVCHI2DOF = config['BVCHI2DOF']
                              , BDIRA = config['BDIRA']
                              , BIPCHI2 = config['BIPCHI2']
-                             , BMassWin = config['BMassWin']
-                             , DimuonMass = config['DimuonMass'])
+                             , BMassWin = config['BMassWin'])
 #
 # Out of class
 #####################################################
-def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
     """
     Makes the B+ -> pi+ mu+ mu- 
     """
 
-    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
-               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) " % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -252,13 +248,12 @@ def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPC
                      RequiredSelections = [ pionSel, muonSel ] )
 
 #####################################################
-def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
     """
     Makes the B- -> pi+ mu- mu-
     """
     
-    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
-               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) " % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -273,13 +268,12 @@ def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPC
                      RequiredSelections = [ pionSel, muonSel ] )
 
 #####################################################
-def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
     """
     Makes the B+ -> K+ mu+ mu-
     """
     
-    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
-               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) " % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -294,13 +288,12 @@ def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCH
                      RequiredSelections = [ kaonSel, muonSel ] )
 
 #####################################################
-def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
     """
     Makes the B- -> K+ mu- mu-
     """
     
-    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
-               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) " % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -315,12 +308,13 @@ def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, DimuonMass, BVCHI2DOF, BIPCH
                      RequiredSelections = [ kaonSel, muonSel ] )
                     
 #####################################################
-def makeKaons(name, KaonP, KaonPT, KaonMINIPCHI2):
+def makeKaons(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2):
     """
     Kaon selection
     """
     _code = "(P > %(KaonP)s *MeV) & "\
             "(PT > %(KaonPT)s *MeV) &"\
+            "(PIDK > %(KaonPIDK)s) &"\
             "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)
@@ -330,12 +324,13 @@ def makeKaons(name, KaonP, KaonPT, KaonMINIPCHI2):
                      RequiredSelections = [ StdLooseKaons ] )
 
 #####################################################
-def makePions(name, PionP, PionPT, PionMINIPCHI2):
+def makePions(name, PionP, PionPT, PionPIDK, PionMINIPCHI2):
     """
     Pion selection
     """
     _code = "(P > %(PionP)s *MeV) & "\
             "(PT > %(PionPT)s *MeV) & "\
+            "(PIDK < %(PionPIDK)s) &"\
             "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)
@@ -345,12 +340,13 @@ def makePions(name, PionP, PionPT, PionMINIPCHI2):
                      RequiredSelections = [ StdLoosePions ] )
                     
 #####################################################
-def makeMuons(name, MuonP, MuonPT, MuonMINIPCHI2):
+def makeMuons(name, MuonP, MuonPT, MuonPIDmu, MuonMINIPCHI2):
     """
     Muon selection
     """
     _code = "(P > %(MuonP)s *MeV) & "\
             "(PT > %(MuonPT)s* MeV) & "\
+            "(PIDmu > %(MuonPIDmu)s) &"\
             "(MIPCHI2DV(PRIMARY) > %(MuonMINIPCHI2)s)" % locals()
 
     _Filter = FilterDesktop(Code = _code)
