@@ -170,8 +170,8 @@ StatusCode HerwigppProduction::initializeGenerator( )
 {
   debug() << "Entered initializeGenerator()"  << endmsg;
   // FIX ME - should not hard code verions but ENV variables are not set!!!!
-  std::string herwigppVersion = "2.4.2";
-  std::string thepegVersion = "1.6.1";
+  std::string herwigppVersion = "2.5.0";
+  std::string thepegVersion = "1.7.0";
 
   // pull the module and repository paths from system environment
   std::string lcgExternal = System::getEnv("LCG_external_area");
@@ -184,10 +184,16 @@ StatusCode HerwigppProduction::initializeGenerator( )
     +herwigppVersion+"/"+cmtConfig+"/share/Herwig++/HerwigDefaults.rpo";
 
   // include herwig++ and thepeg module directories
-  ThePEG::DynamicLoader::appendPath(herwigppModules);
-  ThePEG::DynamicLoader::appendPath(thepegModules);
-  debug() << "Num search paths = " << ThePEG::DynamicLoader::allPaths().size()
-  	  << endmsg;
+  ThePEG::DynamicLoader::prependPath(herwigppModules);
+  ThePEG::DynamicLoader::prependPath(thepegModules);
+  debug() << "Num search paths = " 
+	  << ThePEG::DynamicLoader::allPaths().size() << endmsg;
+  for (std::vector<std::string>::const_iterator path = 
+	 ThePEG::DynamicLoader::allPaths().begin(); path !=
+	 ThePEG::DynamicLoader::allPaths().end(); path++)
+    {
+      debug() << "Using path: " << *path << endmsg;
+    }
   
   // load the default herwig++ repository
   debug() << "Loading Herwig++ repo from " << herwigppRepo << endmsg;
@@ -219,7 +225,9 @@ StatusCode HerwigppProduction::initializeGenerator( )
 
   // create herwig++ generator
   debug() << "Getting generator from ThePEG."  << endmsg;
-  ThePEG::EGPtr tmpEG = ThePEG::Repository::GetObject<ThePEG::EGPtr>("/Herwig/Generators/LHCGenerator");
+  ThePEG::EGPtr tmpEG = 
+    ThePEG::Repository::GetObject<ThePEG::EGPtr>
+    ("/Herwig/Generators/LHCGenerator");
   try
     {
       debug() << "Reducing repository to single LHC generator run"  << endmsg;
@@ -251,7 +259,9 @@ StatusCode HerwigppProduction::generateEvent( HepMC::GenEvent* theEvent,
 					      /*theCollision*/ ) 
 {
   // set the random seed
-  std::string rnd = "set /Herwig/Generators/LHCGenerator:RandomNumberGenerator:Seed " + double2string(m_random.shoot());
+  std::string rnd = 
+    "set /Herwig/Generators/LHCGenerator:RandomNumberGenerator:Seed "
+    + double2string(m_random.shoot());
   debug() << rnd << endmsg;
   ThePEG::Repository::exec(rnd, std::cout);
   

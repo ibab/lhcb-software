@@ -13,14 +13,14 @@ branches      LbHerwigpp doc cmt src
 #============================================================================
 include_dirs  $(LBHERWIGPPROOT)
 
+# Set native versions of new required software
+#============================================================================
+macro herwig++_native_version "2.5.0"
+macro thepeg_native_version   "1.7.0"
+
 # For some reason the ThePEG include path is not set correctly
 #============================================================================
 include_dirs $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/include
-
-# Set native versions of new required software
-#============================================================================
-macro herwig++_native_version "2.4.2"
-macro thepeg_native_version   "1.6.1"
 
 # Used packages.
 #============================================================================
@@ -44,4 +44,4 @@ set HERWIGPPREPO $(LCG_external)/MCGenerators/herwig++/$(herwig++_native_version
 
 # load library path
 #============================================================================
-path_append LD_LIBRARY_PATH /afs/cern.ch/sw/lcg/external/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/lib/ThePEG
+path_append LD_LIBRARY_PATH $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/lib/ThePEG
