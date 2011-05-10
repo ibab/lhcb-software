@@ -273,8 +273,11 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
   // theRichPmtPhotoElectricProcess->setUsePmtMagDistortions( (G4bool) m_UseHpdMagDistortions);
   //  theRichPmtPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
   theRichPmtPhotoElectricProcess->setPmtQEUsingNominalTable(m_PmtQEUseNominalTable);
-  theRichPmtPhotoElectricProcess->setPmtPhElecParam();  
-  
+  theRichPmtPhotoElectricProcess->SetPmtQESourceTable(m_PmtQESource);
+  theRichPmtPhotoElectricProcess->setPmtPhElecParam();
+
+ 
+  msg << MSG::INFO <<"Current PMT QE source "<<m_PmtQESource<<endreq;
 
   //  G4int MaxNumPhotons = 300;
   // The following is now input from options file. SE 2-2-2004
@@ -314,7 +317,6 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
   theCerenkovProcess->
     SetMaxPhotonPerRadiatorFlag((G4bool) m_ApplyMaxPhotCkvLimitPerRadiator);  
 
-  theRichPmtPhotoElectricProcess->SetPmtQESourceTable(m_PmtQESource);
   
   
   if( m_activateRICHCF4Scintillation ) {

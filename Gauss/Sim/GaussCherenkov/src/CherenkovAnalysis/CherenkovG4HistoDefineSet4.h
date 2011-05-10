@@ -41,14 +41,21 @@ private:
   ISvcLocator* m_svcLocSet3;
   IHistogram1D* m_hCkvRich1GasD3E1;
   IHistogram1D* m_hCkvRich1GasD3E1A;
+  IHistogram1D* m_hCkvRich1GasD4E1;
   IHistogram1D* m_hCkvRich1GasD1E4;
+  IHistogram1D*  m_hCkvRich1GasQwPh;
+
+
   IHistogram1D* m_hCkvRich1GasGen;
   IHistogram1D* m_hCkvRich1AgelD3E3;
   IHistogram1D* m_hCkvRich1AgelD1E4;
   IHistogram1D* m_hCkvRich1AgelGen;
   IHistogram1D* m_hCkvRich2GasD3E1;
   IHistogram1D* m_hCkvRich2GasD3E1A;
+  IHistogram1D* m_hCkvRich2GasD4E1;
   IHistogram1D* m_hCkvRich2GasD1E4;
+  IHistogram1D*  m_hCkvRich2GasQwPh;
+
   IHistogram1D* m_hCkvRich2GasGen;
   IHistogram1D* m_hCkvRich1GasRes;
   IHistogram1D* m_hCkvRich1GasResConst;

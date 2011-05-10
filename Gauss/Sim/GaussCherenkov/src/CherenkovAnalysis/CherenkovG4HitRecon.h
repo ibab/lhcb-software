@@ -95,7 +95,12 @@ public:
   void setuseOnlyStdRadiatorHits( bool afl ) {
     m_useOnlyStdRadiatorHits= afl;
   }
-protected:
+  void setuseOnlySignalHitsInRecon(bool arf) {
+   m_useOnlySignalHitsInRecon=arf;
+  }
+   void setactivateMinMomForTrackRecon(bool ah ) 
+  {m_activateMinMomForTrackRecon=ah;  }
+ protected:
 
 private:
 
@@ -116,6 +121,10 @@ private:
   bool m_useMidRadiatorZEmisPt;
   double m_chtkBetaSaturatedCut;
   bool m_useOnlyStdRadiatorHits;
-
+  bool m_useOnlySignalHitsInRecon;
+  bool m_activateMinMomForTrackRecon;
+  double m_minMomTracksForReconR1Gas;
+  double m_minMomTracksForReconR2Gas;
+ 
 };
 #endif // RICHANALYSIS_CHERENKOVG4HITRECON_H

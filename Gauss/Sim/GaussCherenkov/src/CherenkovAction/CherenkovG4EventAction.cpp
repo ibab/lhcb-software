@@ -68,7 +68,9 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
     m_RichG4HitReconUseStdRadHit(true),
     m_RichG4HitReconUseMidRadiator(false),
     m_RichG4InputMonActivate(false),
-    m_IsRichG4FirstEvent(true)
+    m_IsRichG4FirstEvent(true),
+    m_CkvG4HitReconUseOnlySignalHit(false),
+    m_CkvG4HitReconUseOnlyHighMom(false)
 {
   declareProperty( "RichEventActionVerbose",
                    m_RichEventActionVerboseLevel );
@@ -107,6 +109,12 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
   declareProperty("RichG4InputMonitorActivate",
 		  m_RichG4InputMonActivate);
 
+  declareProperty("RichG4HitReconUseSignalHit",   
+             m_CkvG4HitReconUseOnlySignalHit);
+
+
+  declareProperty("RichG4HitReconUseHighMomTk",
+                  m_CkvG4HitReconUseOnlyHighMom);
 
   m_RichHitCName= new RichG4HitCollName();
   m_NumRichColl=m_RichHitCName->RichHCSize();
@@ -205,6 +213,8 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
       m_CherenkovG4HistoFillSet5= new CherenkovG4HistoFillSet5();
       m_CherenkovG4HistoFillSet5->InitCherenkovG4HistoFillSet5();
       m_RichG4HitRecon -> setCherenkovG4HistoFillSet5Occp(  m_CherenkovG4HistoFillSet5);
+      m_RichG4HitRecon -> setuseOnlySignalHitsInRecon(m_CkvG4HitReconUseOnlySignalHit);
+      m_RichG4HitRecon -> setactivateMinMomForTrackRecon(m_CkvG4HitReconUseOnlyHighMom);
     }
     
 
@@ -215,6 +225,8 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     m_RichG4HitRecon ->setSatHitUse( m_RichG4HitReconUseSatHit);
     m_RichG4HitRecon ->setMidRadiatorUse(m_RichG4HitReconUseMidRadiator);
     m_RichG4HitRecon ->setuseOnlyStdRadiatorHits(m_RichG4HitReconUseStdRadHit);
+
+
     if(m_RichEventActionHistoFillActivateSet4) {
       m_RichG4HistoFillSet4= new CherenkovG4HistoFillSet4();
       m_RichG4HitRecon->setRichG4HistoFillSet4Ckv( m_RichG4HistoFillSet4 );

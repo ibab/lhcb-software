@@ -188,6 +188,11 @@ private:
   bool m_RichG4InputMonActivate;
   
   bool m_IsRichG4FirstEvent;
+
+  bool m_CkvG4HitReconUseOnlySignalHit;
+  bool m_CkvG4HitReconUseOnlyHighMom;
+
+
 };
 
 #endif  // end of CherenkovG4EventAction_H

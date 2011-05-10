@@ -23,8 +23,8 @@ static const G4String LogVolPmtSMasterNameAnalysis =
 static const G4String LogVolPmtSMasterNameAnalysisStrPrefix =
                       "/dd/Geometry/BeforeMagnetRegion/Rich1/";
 static const G4String LogVolPmtSMasterNameAnalysisListStrPrefix [] =
-                     {"/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDSMaster",
-                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichHPDSMaster"};
+                     {"/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTSMaster",
+                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTSMaster"};
 static const G4String LogVolPmtQWindowNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTQuartz";
 static const G4String LogVolPmtAnodeNameAnalysis =
