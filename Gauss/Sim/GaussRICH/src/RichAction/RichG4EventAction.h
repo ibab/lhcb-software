@@ -180,6 +180,9 @@ private:
   bool m_RichG4InputMonActivate;
   
   bool m_IsRichG4FirstEvent;
+  bool m_RichG4HitReconUseOnlySignalHit;
+  bool m_RichG4HitReconUseOnlyHighMom;
+  
 };
 
 #endif  // end of RichG4EventAction_H

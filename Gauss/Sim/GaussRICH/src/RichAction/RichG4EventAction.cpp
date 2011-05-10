@@ -66,7 +66,9 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichG4HitReconUseStdRadHit(true),
     m_RichG4HitReconUseMidRadiator(false),
     m_RichG4InputMonActivate(false),
-    m_IsRichG4FirstEvent(true)
+    m_IsRichG4FirstEvent(true),
+    m_RichG4HitReconUseOnlySignalHit(false),
+    m_RichG4HitReconUseOnlyHighMom(false)
 {
   declareProperty( "RichEventActionVerbose",
                    m_RichEventActionVerboseLevel );
@@ -84,6 +86,7 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
 
   declareProperty("RichG4EventActivateCounting" ,
                   m_RichG4EventHitActivateCount);
+
 
   declareProperty("RichG4EventActivateCkvReconstruction",
                   m_RichG4EventActivateCkvRecon);
@@ -103,7 +106,13 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
   declareProperty("RichG4InputMonitorActivate",
 		  m_RichG4InputMonActivate);
 
+  declareProperty("RichG4HitReconUseSignalHit",   
+             m_RichG4HitReconUseOnlySignalHit);
 
+
+  declareProperty("RichG4HitReconUseHighMomTk",
+                  m_RichG4HitReconUseOnlyHighMom);
+  
   m_RichHitCName= new RichG4HitCollName();
   m_NumRichColl=m_RichHitCName->RichHCSize();
   m_RichG4CollectionID.reserve(m_NumRichColl);
@@ -201,6 +210,9 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     m_RichG4HitRecon ->setSatHitUse( m_RichG4HitReconUseSatHit);
     m_RichG4HitRecon ->setMidRadiatorUse(m_RichG4HitReconUseMidRadiator);
     m_RichG4HitRecon ->setuseOnlyStdRadiatorHits(m_RichG4HitReconUseStdRadHit);
+    m_RichG4HitRecon -> setuseOnlySignalHitsInRecon(m_RichG4HitReconUseOnlySignalHit);
+    m_RichG4HitRecon -> setactivateMinMomForTrackRecon(m_RichG4HitReconUseOnlyHighMom);
+    
     if(m_RichEventActionHistoFillActivateSet4) {
       m_RichG4HistoFillSet4= new RichG4HistoFillSet4();
       m_RichG4HitRecon->setRichG4HistoFillSet4Ckv( m_RichG4HistoFillSet4 );
