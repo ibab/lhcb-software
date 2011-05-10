@@ -22,13 +22,14 @@ public:
   std::string det;
 };
 
-class DetData_T : public std::map<std::string,long>
+template <typename T> class DetData_T : public std::map<std::string,T>
 {
 public:
+  static const char* format();
   void Zero()
   {
-    DetData_T::iterator i;
-    for (i = begin();i!=end();i++)
+    typename DetData_T<T>::iterator i;
+    for (i = this->begin();i!=this->end();i++)
     {
       i->second = 0;
     }
@@ -54,10 +55,13 @@ public:
 //    return out;
 //  }
 };
-DetData_T operator-(const DetData_T &a,const DetData_T &b)
+template <> const char* DetData_T<long>::format()  { return "%12li"; }
+template <> const char* DetData_T<double>::format()  { return "%12.2f"; }
+
+template <typename T> DetData_T<T> operator-(const DetData_T<T> &a,const DetData_T<T> &b)
 {
-  DetData_T out;
-  DetData_T::const_iterator i,j;
+  DetData_T<T> out;
+  typename DetData_T<T>::const_iterator i,j;
   for (i = b.begin();i!=b.end();i++)
   {
     std::string nam = i->first;
@@ -67,52 +71,83 @@ DetData_T operator-(const DetData_T &a,const DetData_T &b)
   return out;
 }
 
-class DetMap_T : public std::map<std::string,DetData_T>
+template <typename T>class DetMap_T : public std::map<std::string,DetData_T<T> >
 {
 public:
   void dump()
   {
-    DetMap_T::iterator i;
-    DetData_T::iterator k;
-    i = begin();
+    typename DetMap_T<T>::iterator i;
+    typename DetData_T<T>::iterator k;
+    i = this->begin();
     printf("Detector ");
     for (k=i->second.begin();k!=i->second.end();k++)
     {
       printf("%12s ",k->first.c_str());
     }
     printf("\n");
-    for (i=begin();i!=end();i++)
+    for (i=this->begin();i!=this->end();i++)
     {
       printf("%8s ",i->first.c_str());
       for (k=i->second.begin();k!=i->second.end();k++)
       {
-        printf("%12li ",k->second);
+        printf(DetData_T<T>::format(),(long)k->second);
       }
       printf("\n");
     }
   }
   void Zero()
   {
-    DetMap_T::iterator i;
-    for (i=begin();i!=end();i++)
+    typename DetMap_T::iterator i;
+    for (i=this->begin();i!=this->end();i++)
     {
       i->second.Zero();
     }
   }
 };
 
-DetMap_T operator-(const DetMap_T &a,const DetMap_T &b)
+template <typename T> DetMap_T<T> operator-(const DetMap_T<T> &a,const DetMap_T<T> &b)
 {
-  DetMap_T out;
-  for (DetMap_T::const_iterator i= b.begin();i!= b.end();i++)
+  DetMap_T<T> out;
+  typename DetMap_T<T>::const_iterator i;
+  for (i= b.begin();i!= b.end();i++)
   {
     std::string nam = i->first;
-    DetMap_T::const_iterator k = a.find(nam);
+    typename DetMap_T<T>::const_iterator k = a.find(nam);
     out[nam] = k->second -i->second;
   }
   return out;
 }
+DetMap_T<double> operator/(const DetMap_T<long> &a,long l)
+{
+  DetMap_T<double> out;
+  DetData_T<double>::iterator k;
+  DetData_T<long>::iterator ii;
+  DetMap_T<double>::iterator j;
+  DetMap_T<long>::const_iterator i;
+  for (i = a.begin();i!=a.end();i++)
+  {
+    j = out.find(i->first);
+    if (j != out.end())
+    {
+      DetData_T<long> q=i->second;
+//      DetData_T<double> oo;
+      for (ii=q.begin();ii!=q.end();ii++)
+      {
+        k = j->second.find(ii->first);
+        if (k != j->second.end())
+        {
+          long a = ii->second;
+          double o;
+          o = double(a)/l;
+          o = o*1.0e9;
+          k->second = o;
+        }
+      }
+    }
+  }
+  return out;
 
+}
 
 //typedef std::map<std::string,long> DetData_T;
 typedef std::map<int,TellDesc> TellMap_T;
@@ -130,9 +165,9 @@ public:
   StatusCode finalize();
   virtual void handle(const Incident&);
   TellMap_T m_TellMap;
-  DetMap_T m_DetMap;
-  DetMap_T m_DetMap_old;
-  DetMap_T m_DetMap_diff;
+  DetMap_T<long> m_DetMap;
+  DetMap_T<long> m_DetMap_old;
+  DetMap_T<long> m_DetMap_diff;
 
 //  DetData_T m_DetData;
 //  DetData_T m_DetData_diff;
@@ -169,5 +204,6 @@ private:
   bool m_isEOR;
   bool m_started;
   int  m_SaveInterval; //in seconds
+  unsigned long long m_prevupdate;
 };
 #endif // ONLINE_GAUCHO_PUBSVC_H

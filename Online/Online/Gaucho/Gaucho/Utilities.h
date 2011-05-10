@@ -16,7 +16,8 @@ extern "C" {
 
 #define AddPtr(ptr,offs) (void*)((char *)ptr +offs)
 
-namespace {
+namespace
+{
   template<class T> inline void releasePtr(T*& p)
   {
     if ( p )
@@ -57,8 +58,8 @@ namespace {
     ~ObjectLock() { m_obj->UnLock(); }
   };
 
-
 }
+unsigned long long GetTime();
 
 class dyn_string : public std::vector<std::string >
 {

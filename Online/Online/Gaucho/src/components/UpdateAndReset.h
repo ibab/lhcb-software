@@ -41,7 +41,7 @@ public:
   std::pair<int, bool> currentCycleNumber(ulonglong currentTime);
   unsigned int currentTCK();
   ulonglong gpsTime();
-
+  IIncidentSvc *m_incs;
   bool m_stopdone;
   void verifyAndProcessRunChange();
   void verifyAndProcessCycleChange(bool isFromTimerHandler);
@@ -80,6 +80,7 @@ private:
   double m_gpsTimeLastEvInCycle;
   double m_offsetGpsTimeLastEvInCycle;
   double m_deltaTCycle;
+  bool m_abortRetroEvents;
 
   // For Testing RunNumber generator
   int m_deltaTRunTest;

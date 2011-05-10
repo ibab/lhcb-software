@@ -42,3 +42,17 @@ void StringReplace(std::string &in, const char *patt, std::string &repl)
   }
 
 }
+unsigned long long GetTime()
+{
+#define onesec_nano (unsigned long long)(1000000000)
+  unsigned long long timstamp;
+  struct timeval tv;
+  struct timezone *tz;
+  tz = 0;
+  gettimeofday(&tv, tz);
+  timstamp  = tv.tv_sec;
+  timstamp *= onesec_nano;
+  timstamp += tv.tv_usec*1000;
+  return timstamp;
+}
+

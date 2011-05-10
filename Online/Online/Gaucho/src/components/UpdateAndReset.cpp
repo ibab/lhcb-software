@@ -25,6 +25,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 #include "AIDA/IHistogram.h"
 #include "AIDA/IProfile1D.h"
@@ -72,6 +73,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("saveSetDir", m_saveSetDir = "/hist/Savesets");
   declareProperty("saverCycle", m_saverCycle = 900);
   declareProperty("resetHistosAfterSave", m_resetHistosAfterSave = 0);
+  declareProperty("abortRetroEvents",m_abortRetroEvents = true);
 
   declareProperty("teste", m_teste = 100000);
   declareProperty("MyName",m_MyName=""); //partition_TaskName
@@ -92,6 +94,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   m_dimSvcSaveSetLoc = 0;
   m_pGauchoMonitorSvc = 0;
   EoEInc = 0;
+  m_incs = 0;
   m_eorNumber = 0;
   m_one = 1;
 }
@@ -107,6 +110,7 @@ StatusCode UpdateAndReset::initialize() {
     msg << MSG::FATAL << "GaudiAlgorithm not Initialized" << endreq;
     return StatusCode::FAILURE;
   }
+  serviceLocator()->service("IncidentSvc",m_incs,true);
   EoEInc = new EoEIncidentListener("",serviceLocator(),-1);
   m_stopdone = false;
   //const std::string& utgid = RTL::processName();
@@ -236,7 +240,7 @@ StatusCode UpdateAndReset::execute()
     m_pGauchoMonitorSvc->setRunNo(runno);
 
   }
-  if (runno != m_runNumber)
+  if (runno > m_runNumber)
   {
 //    printf("+_+_+_+_+_+_+_+_+_+_+_++_+_+_ Different Run!!! \n");
     m_pGauchoMonitorSvc->updateSvc("this",m_runNumber,this);
@@ -252,6 +256,15 @@ StatusCode UpdateAndReset::execute()
     m_pGauchoMonitorSvc->setRunNo(runno);
     m_runNumber = runno;
   }
+  else if (runno < m_runNumber)
+  {
+    if (m_abortRetroEvents)
+    {
+      m_incs->fireIncident(Incident(name(),IncidentType::AbortEvent));
+      return StatusCode::SUCCESS;
+    }
+  }
+
   m_gpsTimeLastEvInCycle = (double)gps;
 //  printf("GPS Time %f\n",m_gpsTimeLastEvInCycle);
 //  m_pGauchoMonitorSvc->UnLock();

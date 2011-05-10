@@ -66,8 +66,8 @@ void PubSvc::filldata(const std::string &cnam,MonMap *mmap)
       TellMap_T::iterator t=m_TellMap.find(i);
       if (t != m_TellMap.end())
       {
-        DetData_T& d= m_DetMap.find(t->second.det)->second;
-        DetData_T::iterator k = d.find(cnam);
+        DetData_T<long>& d= m_DetMap.find(t->second.det)->second;
+        DetData_T<long>::iterator k = d.find(cnam);
         if (k != d.end())
         {
           k->second += p[i];
@@ -83,6 +83,13 @@ void PubSvc::filldata(const std::string &cnam,MonMap *mmap)
 
 void PubSvc::analyze(void *, int ,MonMap* mmap)
 {
+  unsigned long long tim = GetTime();
+  unsigned long long delta;
+  if (m_prevupdate == 0) delta = 5000000000;
+  else
+  {
+    delta = tim - m_prevupdate;
+  }
   m_DetMap.Zero();
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
@@ -92,6 +99,8 @@ void PubSvc::analyze(void *, int ,MonMap* mmap)
 //  m_DetMap_old.dump();
   m_DetMap_diff = m_DetMap - m_DetMap_old;
   m_DetMap_old = m_DetMap;
+  DetMap_T<double> rat = m_DetMap_diff/delta;
+  rat.dump();
   dump();
 }
 
@@ -238,7 +247,7 @@ void PubSvc::fillTellMap()
     m_TellMap.insert(std::make_pair(i/3,TellDesc(nam,j==s_nammap.end() ? "UNKNOWN" : (*j).second)));
   }
 
-  DetData_T a;
+  DetData_T<long> a;
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
     a[s_counterTypes[i]] = 0;
