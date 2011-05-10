@@ -72,7 +72,6 @@ void MoveDataObject::executeLocation(const std::string& objectLocation)
     
   } else if ( pObj)  {
 
-    pObj->addRef();
     sc = eventSvc()->unregisterObject(pObj);
 
     if ( sc.isSuccess() )  {

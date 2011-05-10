@@ -4,6 +4,10 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2011-05-10 - Thomas Blake
+ - Removed addRef from MoveDataObject, this is done in unregisterObject 
+   . See Savannah bug #82051.
+
 !========================== MicroDSTAlgorithm v5r2 2011-02-20 ===============
 
 ! 2011-02-14 - Juan Palacios
