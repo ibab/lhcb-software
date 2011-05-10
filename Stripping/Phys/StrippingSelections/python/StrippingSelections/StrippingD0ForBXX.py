@@ -17,6 +17,7 @@ name = 'confD0forBXX'
 
 __all__ = ('D0forBXXConf',
            'makeDst2D0Pi',
+           'TOSFilter',
            'confdict')
 
 confdict =  {
@@ -92,6 +93,14 @@ class D0forBXXLinesConf(LineBuilder):
         self.seldstws = makeDst2D0Pi("DstWSwD0K2Pi" + name,
                                      DecayDescriptor = '[D*(2010)- -> D0 pi-]cc',
                                      DaughterLists = [ self.seld02k2pi, StdLoosePions ])
+                                     
+        self.seldstrs_tos = TOSFilter( "DstRSwD0K2Pi_TOS" + name,
+                                     self.seldstrs,
+                                     "Hlt2Global")
+
+        self.seldstws_tos = TOSFilter( "DstWSwD0K2Pi_TOS" + name,
+                                     self.seldstws,
+                                     "Hlt2Global")        
         
         self.D02KPiLine = StrippingLine('D02KPi' + name + 'Line'
                                         , prescale = config['PreScale']
@@ -104,12 +113,12 @@ class D0forBXXLinesConf(LineBuilder):
 
         self.DstRSLine = StrippingLine('DstRSwD02K2Pi' + name + 'Line'
                                        , prescale = config['PreScaleRS']
-                                       , selection = self.seldstrs
+                                       , selection = self.seldstrs_tos
                                        )
         
         self.DstWSLine = StrippingLine('DstWSwD02K2Pi' + name + 'Line'
                                        , prescale = config['PreScaleWS']
-                                       , selection = self.seldstws
+                                       , selection = self.seldstws_tos
                                        )        
         
         self.registerLine(self.D02KPiLine)
@@ -130,14 +139,14 @@ class D0forBXXLinesConf(LineBuilder):
                                 MotherCut = _motherCut,
                                 )
     def _D02K2Pi( self ):
-        _decayDescriptor = '[D0 -> pi+ pi- K-]cc'
-        _combinationCut = "(AM>1.4*GeV) & (AM<1.7*GeV) & (AM12>575.5*MeV) & (AM12<975.5*MeV) & (APT > 3000*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _decayDescriptors = ['[D0 -> pi+ pi- K-]cc', '[D0 -> pi+ pi+ K-]cc']
+        _combinationCut = "(AM>1.4*GeV) & (AM<1.7*GeV) & (AM12>375.5*MeV) & (AM12<975.5*MeV) & (APT > 3000*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = {  "pi+" : "(TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > 400 *MeV)"\
                      "& (MIPCHI2DV(PRIMARY)> 4.0) &  (PIDK< %(PionPIDK)s) & (PIDmu< 10)" % self.__confdict__,
                             "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > 400 *MeV) & (P>2.0*GeV) "\
                     "& (MIPCHI2DV(PRIMARY)> 4.0)  &  (PIDK> %(KaonPIDK)s)" % self.__confdict__  }
         _motherCut = "(VFASPF(VCHI2/VDOF)<6.0) & (BPVVDCHI2>100) & (BPVDIRA>0.999) & (BPVIPCHI2()<25.)"
-        return CombineParticles(DecayDescriptor = _decayDescriptor,
+        return CombineParticles(DecayDescriptors = _decayDescriptors,
                                 DaughtersCuts = _daughtersCuts,
                                 CombinationCut = _combinationCut,
                                 MotherCut = _motherCut,
@@ -175,3 +184,15 @@ def makeDst2D0Pi(name,
                      RequiredSelections = DaughterLists)
 
     
+def TOSFilter( name = None, sel = None, trigger = None ):
+    """
+    Function to return a selection object, filtering for TOS candidates from input selection
+    """
+    from Configurables import TisTosParticleTagger
+
+    _filter = TisTosParticleTagger(name+"_TriggerTos")
+    _filter.TisTosSpecs = { trigger+"%TOS" : 0 }
+    _filter.NoRegex = True
+
+    _sel = Selection("Sel" + name + "_TriggerTos", RequiredSelections = [ sel ], Algorithm = _filter )
+    return _sel

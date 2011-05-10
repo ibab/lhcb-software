@@ -6,6 +6,10 @@
 ! 2011-05-09 WenbinQian
 modified criteria for B2XMuMuSS to remove mass constrain on dimuon mass
 
+! 2011-05-10 - Liming Zhang
+ - partially reconstruct D0->K3pi lines in StrippingD0ForBXX.py
+  + Add D0->Kpi+pi+ combination, and Hlt2Global%TOS to reduce the rate
+
 ! 2011-05-06 -Wenbin Qian
 
 Add Stripping for same charge muon + D
