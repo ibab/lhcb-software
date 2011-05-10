@@ -19,7 +19,7 @@ from Configurables import ChargedProtoParticleMaker, NoPIDsParticleMaker, DataOn
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking
   
 from StrippingConf.StrippingLine import StrippingLine
-from Configurables import TrackStateInitAlg, TrackEventFitter, TrackPrepareVelo,TrackContainerCopy,TrackMatchVeloSeed, Tf__PatVeloSpaceTool, HltMuonRec
+from Configurables import TrackStateInitAlg, TrackEventFitter, TrackPrepareVelo,TrackContainerCopy,TrackMatchVeloSeed, Tf__PatVeloSpaceTool, StandaloneMuonRec
 from Configurables import TrackCloneFinder
 from Configurables import ChargedProtoParticleAddMuonInfo, MuonIDAlg, ChargedProtoCombineDLLsAlg
 from MuonID import ConfiguredMuonIDs
@@ -326,7 +326,7 @@ def trackingPreFilter(name, prefilter):
    Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
    #Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").OutputLevel = 0;
 	
-#	algos = [tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi, Tf__PatVeloRTracking(), Tf__PatVeloSpaceTracking(),Tf__PatVeloGeneralTracking(), preve,vefit, HltMuonRec(), VeloMuonBuilder1]
+#	algos = [tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi, Tf__PatVeloRTracking(), Tf__PatVeloSpaceTracking(),Tf__PatVeloGeneralTracking(), preve,vefit, StandaloneMuonRec(), VeloMuonBuilder1]
 #	
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
                          #Members = [Jpsi_already_there,
@@ -334,7 +334,7 @@ def trackingPreFilter(name, prefilter):
                          Members = [ DecodeVeloRawBuffer(name+"VeloDecoding"),
                                  Tf__PatVeloRTracking(name+"VeloR"), Tf__PatVeloSpaceTracking(name+"VeloSpace"),
 				 Tf__PatVeloGeneralTracking(name+"VeloGen"), preve,vefit, 
-				 HltMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
+				 StandaloneMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
 
    return GSWrapper(name="WrappedVeloMuonTracking",
                      sequencer=alg,
