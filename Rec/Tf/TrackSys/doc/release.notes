@@ -4,6 +4,7 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!========================= TrackSys v6r2 2011-05-10 =========================
 ! 2011-05-10 - Marco Cattaneo
  - Add switch to apply fiducial time window in OTRawBankDecoder. Default is to
    apply window of -8.0*ns to 56.0*ns. Switched off by setting
