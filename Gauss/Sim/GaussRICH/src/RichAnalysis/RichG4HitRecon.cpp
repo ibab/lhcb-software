@@ -42,7 +42,11 @@ RichG4HitRecon::RichG4HitRecon( ):  m_RichG4CkvRec (0) ,
   m_agelnominalrefindex = 1.03;
   m_c4f10nominalrefindex = 1.0014;
   m_chtkBetaSaturatedCut =0.9999;
-
+  m_activateMinMomForTrackRecon=false;
+  //  m_minMomTracksForReconR1Gas=10000.0;
+  m_minMomTracksForReconR1Gas=30000.0;
+  m_minMomTracksForReconR2Gas=30000.0;
+  
   m_MidRich1GasZ = (C4F10ZBeginAnalysis+C4F10ZEndAnalysis)*0.5;
 
   m_MidRich1AgelZ  = (AgelZBeginAnalysis+AgelZEndAnalysis)*0.5;
@@ -54,7 +58,7 @@ RichG4HitRecon::RichG4HitRecon( ):  m_RichG4CkvRec (0) ,
   m_useOnlyStdRadiatorHits = true;
   m_RichG4ReconResult= new RichG4ReconResult();
   m_RichG4HitCoordResult = new RichG4HitCoordResult();
-  
+  m_useOnlySignalHitsInRecon=false; 
 
 }
 RichG4HitRecon::~RichG4HitRecon(  ) {
@@ -207,11 +211,21 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
           const Gaudi::XYZPoint CurLocalPeOriginPoint= 
             Gaudi::XYZPoint(CurLocalPeOrigin.x(), CurLocalPeOrigin.y(),CurLocalPeOrigin.z());
           
+          G4int aPhotSource = aHit->PhotonSourceProcessInfo();
+          std::vector<bool> aHpdRefl = aHit->DecodeRichHpdReflectionFlag();
+          bool areflectedInHpd= aHit->ElectronBackScatterFlag(); //plot without any bsc or refl
+             for(int ii=0; ii<(int)aHpdRefl.size() ; ++ii)
+             {
+                  if( aHpdRefl [ii]) areflectedInHpd=true;
+             }
+
+          
 
           // in case saturated hits are needed, first
           // check if the current hit is a saturated hit.
 
           bool SelectThisHit = false;
+
           if(!(m_useOnlySaturatedHits) ) {
          	    if( ! m_useOnlyStdRadiatorHits ) {
                 SelectThisHit= true;
@@ -259,8 +273,14 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
               if( TkIdVectRich1Gas[itr1s] ==  ChtkId ) {
 
                 if( ChTkBeta >   m_chtkBetaSaturatedCut ) {
-                  SelectThisHit= true;
 
+                 
+                  SelectThisHit= true;
+                  if(m_activateMinMomForTrackRecon ) {
+                    if( aChTrackTotMom <  m_minMomTracksForReconR1Gas )  SelectThisHit= false;
+                    
+                  }
+                  
                 }
 
                 // skip out
@@ -281,6 +301,11 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
                 if( ChTkBeta >   m_chtkBetaSaturatedCut ) {
                   SelectThisHit= true;
+                  
+                  if(m_activateMinMomForTrackRecon ) {
+                    if( aChTrackTotMom <  m_minMomTracksForReconR2Gas )  SelectThisHit= false;
+                    
+                  }
 
                 }
 
@@ -303,6 +328,9 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
           if( aPrimaryMirrCopyInfo < 0 || aSecMirrCopyInfo < 0 ) {
             SelectThisHit=false;
             
+          }
+          if(m_useOnlySignalHitsInRecon) {
+              if(areflectedInHpd || (aPhotSource == 2 ) ) SelectThisHit =false;
           }
           
 

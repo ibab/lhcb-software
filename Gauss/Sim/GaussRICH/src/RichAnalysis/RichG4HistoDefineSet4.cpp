@@ -172,7 +172,7 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
 					   title, 200,-0.002, 0.002);
 
   title = 
-    "Cherenkov angle diff QW - PhCath wiht Corrfrom Rich2 Gas Radiator ";
+    "Cherenkov angle diff QW - PhCath with Corr from Rich2 Gas Radiator ";
   
 
       m_hCkvRich2GasQwPh = CurHistoSvc->book(m_RichG4HistoPathSet4+"1714",
