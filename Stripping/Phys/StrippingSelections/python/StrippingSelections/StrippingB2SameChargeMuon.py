@@ -52,13 +52,13 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
 
         self.DsList = self._DsMaker([self.KaonList,self.PionList])
 
-        self._makeB2JpsiKPiPi([self.KaonList,self.PionList,self.JpsiList])
+        self._makeB2JpsiKPiPi([self.JpsiList,self.KaonList,self.PionList])
 
-        self._makeB2D0MuMuPi([self.MuonList,self.PionList,self.D0List])
+        self._makeB2D0MuMuPi([self.D0List,self.MuonList,self.PionList])
 
-        self._makeB2DpMuMu([self.MuonList,self.DpList])
+        self._makeB2DpMuMu([self.DpList,self.MuonList])
 
-        self._makeB2DsMuMu([self.MuonList,self.DsList])
+        self._makeB2DsMuMu([self.DsList,self.MuonList])
     
     def _MuonFilter( self ):       
         Muoncut = "(TRCHI2DOF < 5.0) & (PIDmu > 0.0)  & (MIPCHI2DV(PRIMARY) > 4.0) & (PT > 300*MeV)"
