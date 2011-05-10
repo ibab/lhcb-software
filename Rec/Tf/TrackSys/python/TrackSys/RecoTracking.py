@@ -120,6 +120,11 @@ def RecoTracking(exclude=[]):
    if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
       from Configurables import (Tf__OTHitCreator)
       Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
+
+   if "disableOTTimeWindow" not in TrackSys().getProp("ExpertTracking"):
+      from Configurables import OTRawBankDecoder
+      from GaudiKernel.SystemOfUnits import ns
+      OTRawBankDecoder().TimeWindow = ( -8.0*ns, 56.0*ns )                     
       
    # Get the fitters
    from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed
