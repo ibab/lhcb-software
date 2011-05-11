@@ -106,7 +106,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')"
-                       , algos = [  BiKalmanFittedMuons,FilterMu,FilterNumVeloTracks ]
+                       , algos = [ velotracks, FilterNumVeloTracks, BiKalmanFittedMuons,FilterMu ]
                        , postscale = self.postscale
                        )
         
