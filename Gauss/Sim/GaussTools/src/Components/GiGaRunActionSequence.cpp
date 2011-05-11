@@ -118,7 +118,8 @@ void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
        m_actions.end() != iaction ; ++iaction )
     {
       IGiGaRunAction* action = *iaction ;
-      if( 0 != action ) { action->BeginOfRunAction( run ) ; }
+      //   if( 0 != action ) { action->BeginOfRunAction( run ) ; }
+      if( 0 != action ) { action->EndOfRunAction( run ) ; }
     }
 };
 // ============================================================================

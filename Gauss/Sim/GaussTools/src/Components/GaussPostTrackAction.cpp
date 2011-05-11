@@ -290,9 +290,12 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   if( m_rejectRICHphe ) {
     const G4VProcess* process  = track->GetCreatorProcess() ;
     if ( 0 != process ) {
-      if ( "RichHpdPhotoelectricProcess" ==   process->GetProcessName() ||
-         ( "RichHpdSiEnergyLossProcess"  ==   process->GetProcessName()  )  ) {
-        Warning ( "RichHpdPhotoelectricProcess or RichHpdSiEnergyLossProcess  particles not kept", 
+      if ( ("RichHpdPhotoelectricProcess" ==   process->GetProcessName()) ||
+         ( "RichHpdSiEnergyLossProcess"  ==   process->GetProcessName()) ||
+         ( "RichPmtPhotoelectricProcess" ==   process->GetProcessName()) ||
+         ( "RichPmtSiEnergyLossProcess"  ==   process->GetProcessName())  ) {
+        Warning ( 
+        "RichHpd/PmtPhotoelectricProcess  RichHpd/PmtSiEnergyLossProcess particles not kept",
                   StatusCode::SUCCESS, 0 );
         return;
       }
