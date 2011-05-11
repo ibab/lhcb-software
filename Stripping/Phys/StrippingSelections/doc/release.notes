@@ -5,7 +5,7 @@
 ! -----------------------------------------------------------------------------
 !2011-05-10 Wenbin Qian
 modifed input sequence for B2SameCharge to fastern the process
-
+remove PID cuts from B2XMuMuSS	
 ! 2011-05-10 WenbinQian
 modified criteria for B2XMuMuSS to remove mass constrain on dimuon mass
 
