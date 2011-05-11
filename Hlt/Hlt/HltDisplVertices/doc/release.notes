@@ -3,6 +3,9 @@
 ! Responsible : Neal Gauvin (Gueissaz)
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
+!========================== HltDisplVertices v3r3p2 2011-05-11 ===================
+! 2011-05-11 - Victor Coco 
+ - remove fragments and options directories
 
 !========================== HltDisplVertices v3r3p1 2011-04-03 ===================
 ! 2011-04-03 - Gerhard Raven
