@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-11 - Thomas Blake
+ - Added Stripping13Calib to contain all Calibration stream lines including 
+   the tracking effciency lines for Reco10-Stripping13. 
+ 
 ! ======================== StrippingSettings v2r3 2011-04-29 ================
 ! 2011-04-20 - Vanya Belyaev
 
