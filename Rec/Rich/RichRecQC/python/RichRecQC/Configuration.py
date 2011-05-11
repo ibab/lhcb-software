@@ -269,8 +269,9 @@ class RichRecQCConf(RichConfigurableUser):
         ## Sanity checks
         self.sanityChecks()
 
-        # Sequence to add minotrs to
+        # Sequence to add mintors to
         sequence = self.getProp("MoniSequencer")
+        sequence.IgnoreFilterPassed = True
 
         # Set context
         sequence.Context = self.getProp("Context")
@@ -588,9 +589,16 @@ class RichRecQCConf(RichConfigurableUser):
 
         check = "HPDHitPlots"
         if check in checks :
-            from Configurables import Rich__Rec__HPDHitsMoni
-            seq = self.newSeq(sequence,check)
-            seq.Members += [Rich__Rec__HPDHitsMoni("HPDHitsMoni")]
+            from Configurables import ( Rich__Rec__HPDHitsMoni, GaudiSequencer, 
+                                        LoKi__HDRFilter, HltDecReportsDecoder )
+            seq  = self.newSeq(sequence,check)
+            lSeq = self.newSeq(sequence,check+"L0")
+            lSeq.ReturnOK = True
+            seq.IgnoreFilterPassed = True
+            lSeq.Members += [ HltDecReportsDecoder(),
+                              LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
+                              Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
+            seq.Members  += [ Rich__Rec__HPDHitsMoni("HPDHitsMoni"), lSeq ]
 
         check = "RichTrackGeometry"
         if check in checks :

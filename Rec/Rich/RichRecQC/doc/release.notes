@@ -4,6 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-05-11 - Chris Jones
+ - Extend HPDHits monitors to run a monitor on un biased L0 selected events
+
+! 2011-05-07 - Chris Jones
+ - Remove assumption in TrackSelEff that RichRecTrack always has the same key 
+   as its associated Track object
+
 ! 2011-05-06 - Chris Jones
  - Small changes to the HPD plots made by HPDHitsMoni
 

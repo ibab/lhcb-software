@@ -2,7 +2,8 @@
 //-------------------------------------------------------------------------------
 /** @file RichTrackSelEffMoni.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
+ *  Implementation file for RICH reconstruction monitoring algorithm :
+ *  Rich::Rec::MC::TrackSelEff
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -23,11 +24,11 @@ using namespace Rich::Rec::MC;
 DECLARE_ALGORITHM_FACTORY( TrackSelEff )
 
 // Standard constructor, initializes variables
-TrackSelEff::TrackSelEff( const std::string& name,
-                          ISvcLocator* pSvcLocator )
-  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth        ( NULL ),
-    m_trSelector            ( NULL )
+  TrackSelEff::TrackSelEff( const std::string& name,
+                            ISvcLocator* pSvcLocator )
+    : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
+      m_richRecMCTruth        ( NULL ),
+      m_trSelector            ( NULL )
 {
   // JOs
   declareProperty( "MCParticleAssocWeight", m_mcAssocWeight = 0.75 );
@@ -191,15 +192,32 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
 
 const LHCb::RichRecTrack * TrackSelEff::getRichTrack( const LHCb::Track * track ) const
 {
-  // Get the RichRecTrack for the given Track
-  const LHCb::RichRecTrack * rT = richTracks()->object(track->key());
+  const LHCb::RichRecTrack * rT = NULL;
 
-  // Double check the smart ref from this RichRecTrack points back to the correct track ...
-  if ( rT && dynamic_cast<const LHCb::Track*>(rT->parentTrack()) != track )
+  // Check Track pointer is OK
+  if ( track )
   {
-    Warning( "RichRecTrack found but wrong Track SmartRef !!" ).ignore();
-    rT = NULL;
-  }
+
+    // First try using same track key convention
+    rT = richTracks()->object(track->key());
+    if ( !rT || dynamic_cast<const LHCb::Track*>(rT->parentTrack()) != track )
+    {
+
+      // Key convention failed, so try direct search
+      rT = NULL;
+      for ( LHCb::RichRecTracks::const_iterator iRT = richTracks()->begin();
+            iRT != richTracks()->end(); ++iRT )
+      {
+        if ( dynamic_cast<const LHCb::Track*>((*iRT)->parentTrack()) == track )
+        {
+          rT = *iRT;
+          break;
+        }
+      }
+
+    } // key search failed
+
+  } // track OK
 
   // return the RichRecTrack pointer
   return rT;
