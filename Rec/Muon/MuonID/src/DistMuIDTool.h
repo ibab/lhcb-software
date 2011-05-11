@@ -25,10 +25,13 @@ public:
 
   virtual ~DistMuIDTool( ); ///< Destructor
 
-  StatusCode muonQuality(LHCb::Track& muTrack, double& Quality);
+  StatusCode muonQuality(LHCb::Track& muTrack, double& Quality);  
 
 protected:
-  StatusCode computeDistance(const LHCb::Track& muTrack,double& dist);
+  StatusCode computeDistance(const LHCb::Track& muTrack,double& dist, 
+                             const std::vector<int>& sts_used );
+
+  bool m_applyIsmuonHits;
 
 private:
 

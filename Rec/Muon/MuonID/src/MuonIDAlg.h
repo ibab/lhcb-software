@@ -17,7 +17,11 @@
 #include "Event/MuonCoord.h"
 
 #include "MuonDet/DeMuonDetector.h"
+
 #include "ImuIDTool.h"
+#include "IIsMuonCandidateC.h"
+#include "INShared.h"
+
 #include "TMath.h"
 #include "TRandom1.h"
 
@@ -106,13 +110,44 @@ private:
 
   LHCb::Track* makeMuonTrack(const LHCb::MuonPID& pMuid);
 
-  /// Load ImuIDTool on demand (avoid loading always in initialize())
-  inline ImuIDTool* Chi2MuIDTool() 
+  /// Load ImuIDTool on demand (avoid loading always in initialize())  
+  inline ImuIDTool* myMuIDTool() 
   {
-    if ( !m_Chi2MuIDTool ) m_Chi2MuIDTool = tool<ImuIDTool>(m_myMuIDTool,"myMuIDTool",this);
-    return m_Chi2MuIDTool;
+    if ( !m_myMuIDTool ) m_myMuIDTool = tool<ImuIDTool>(m_myMuIDToolName,"myMuIDTool",this);
+    return m_myMuIDTool;
   }
   
+  /// Load ImuIDTool on demand (avoid loading always in initialize())
+  inline ImuIDTool* DistMuIDTool() 
+  {
+    if ( !m_DistMuIDTool ) m_DistMuIDTool = tool<ImuIDTool>("DistMuIDTool","DistMuIDTool",this);
+    return m_DistMuIDTool;
+  }
+  
+  /// Load NShared on demand (avoid loading always in initialize())
+  inline INShared* NSharedTool() 
+  {
+    if ( !m_NSharedTool ) m_NSharedTool = tool<INShared>("NShared","NSharedTool",this);
+    return m_NSharedTool;
+  }
+
+
+  /// Load IsMuonTool on demand (avoid loading always in initialize())
+  inline IIsMuonCandidateC* IsMuonTool() 
+  {
+    if ( !m_IsMuonTool ) m_IsMuonTool = tool<IIsMuonCandidateC>("IsMuonCandidateC","IsMuonTool",this);
+    return m_IsMuonTool;
+  }
+
+  /// Load IsMuonLooseTool on demand (avoid loading always in initialize())
+  inline IIsMuonCandidateC* IsMuonLooseTool() 
+  {
+    if ( !m_IsMuonLooseTool ) m_IsMuonLooseTool = tool<IIsMuonCandidateC>("IsMuonCandidateC","IsMuonLooseTool",this);
+    return m_IsMuonLooseTool;
+  }
+
+
+
   // Properties
 
   /// TES path of the tracks to analyse
@@ -132,6 +167,12 @@ private:
   /// Ignore MuonID info from conditions database.
   bool m_OverrideDB;
 
+  /// use dist as muon quality (track extra info)
+  bool m_use_dist;
+
+  // Use or not uncrossed logical channels in the non-pad detector areas
+  bool m_use_uncrossed;
+
   /// Preselection momentum (no attempt to ID below this)
   double m_PreSelMomentum;
 
@@ -141,11 +182,16 @@ private:
   /// muon and pion distributions
   std::vector<double> m_distPion;
   std::vector<double> m_distMuon;
-
+  
+  // muon track for KalmanFoI
+  LHCb::Track m_mutrack;
 
   // GL&SF:
   bool m_weightFlag;// flag to introduce weights in IsMuon/IsMuonLoose
   int m_dllFlag;  // flag to discriminate among the different DLLs
+
+  // Use KalmanFoi?
+  bool m_kalman_foi;
 
   /// GL&SF: Calculate weights:
   void P_weights(const double& p, bool *w);
@@ -155,8 +201,8 @@ private:
 
   /// GL&SF: Get closest hit per station
   StatusCode get_closest(LHCb::MuonPID *pMuid, double *closest_x, double *closest_y, double *closest_region);
-  /// GL&SF: Find the region in a given station of teh extrapolated track
-  int findTrackRegion(const int sta);
+  /// GL&SF&XCV: Find the region in a given station of teh extrapolated track
+  std::vector<int> findTrackRegions();
   /// GL&SF: Calculate closest distance
   double calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double *closest_region);
   /// GL&SF: Find parameters for hypothesis test
@@ -319,7 +365,7 @@ private:
   bool m_DoAllMuonTracks;
 
   //Which MuIDTool should be used
-  std::string m_myMuIDTool;
+  std::string m_myMuIDToolName;
 
   // function that defines the field of interest size
   // formula is p(1) + p(2)*exp(-p(3)*momentum)
@@ -347,8 +393,20 @@ private:
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
 
-  // muonIDtool
-  ImuIDTool* m_Chi2MuIDTool;
+  // myMuIDtool
+  ImuIDTool* m_myMuIDTool;
+  
+  // DistMuonIDtool
+  ImuIDTool* m_DistMuIDTool;
+
+  // NSharedtool
+  INShared* m_NSharedTool;
+
+  // IsMuonTool
+  IIsMuonCandidateC* m_IsMuonTool;
+
+  // IsMuonLooseTool
+  IIsMuonCandidateC* m_IsMuonLooseTool;
 
   // local array of pad sizes in mm
   // all std::vectors here are indexed: [station * m_NRegion + region]

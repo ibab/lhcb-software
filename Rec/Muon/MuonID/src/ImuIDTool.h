@@ -11,6 +11,8 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Track.h"
 
+
+
 static const InterfaceID IID_ImuIDTool ( "ImuIDTool", 1, 0 );
 
 /** @class ImuIDTool ImuIDTool.h
@@ -30,11 +32,15 @@ public:
   
   virtual StatusCode isGoodSeed(const LHCb::Track& seed)=0;
   
+  virtual bool isTrackInAcceptance(const LHCb::Track& seed)=0;
+
+  virtual StatusCode findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion) = 0;
+
   virtual StatusCode muonCandidate(const LHCb::Track& seed, LHCb::Track& muTrack,
                                    bool isMuonCandidate,
                                    const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>()) = 0;
-  
-  virtual StatusCode muonQuality(LHCb::Track&  muTrack, double& Quality)=0;
+
+  virtual StatusCode muonQuality(LHCb::Track& muTrack, double& Quality) = 0;
   
   virtual StatusCode muonArrival(LHCb::Track& muTrack, double& Arrival)=0;
   

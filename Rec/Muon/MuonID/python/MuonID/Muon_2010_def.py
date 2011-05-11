@@ -26,7 +26,8 @@ AllMuonTracks = False
 FindQuality = True
 
 ## Override data from conditions database, keeping the values from this option file
-OverrideDB = False;
+OverrideDB = False
+UseUncrossed = True
 
 ## Set which DLL is input to MuonPID
 DLL_flag = 4  #0=old; 1=DLL new; 3=hyperbolic tangent mapping (Do not use it for data type 2010 and 2011)

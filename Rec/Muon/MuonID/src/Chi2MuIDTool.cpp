@@ -49,6 +49,16 @@ Chi2MuIDTool::Chi2MuIDTool( const std::string& type,
   //Min momentum to accept hits in station 4
   declareProperty("MinMomSt4",m_3hits = 4500);   
 
+  //Use chi2cut when selecting candidates?
+  declareProperty("Chi2Cut",m_chi2cut=0.);
+
+  // Pre-selection momentum
+  declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
+
+  // Different depths of stations considered in different momentum ranges
+  declareProperty( "MomentumCuts", m_MomentumCuts );
+
+
 }
 
 
@@ -56,13 +66,16 @@ StatusCode Chi2MuIDTool::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
 
   m_fitter = tool<ITrackFitter>("TrackMasterFitter","fitter",this); 
-  m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
+  m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","extrapol",this);
   m_measProvider = tool<IMeasurementProvider>("MuonMeasurementProvider",this);  
   m_mySeedState=0;
 
+  MuonBasicGeometry basegeometry( detSvc(),msgSvc());
+  m_NStation= basegeometry.getStations();
+
   m_mudet = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   //Find z of mu stations
-  for (int i=0;i<5;i++) 
+  for (int i=0;i<m_NStation;i++) 
   {
     m_zstations.push_back(m_mudet->getStationZ(i));
     //m_muonProviderInRange.push_back(MeasPairList());
@@ -75,14 +88,22 @@ StatusCode Chi2MuIDTool::initialize() {
   
   m_IsMuonTool = tool<IIsMuonCandidateC>("IsMuonCandidateC","IsMuonCandidateC",this);
   
-
-  // Find min momentum to accept any track
-  m_minmom=m_CLQuality->minRange();
-  
   // Find inside which stations must be the track to be in acceptance
   m_stations_acceptance.push_back(0);
   m_stations_acceptance.push_back(4);
 
+  if ( msgLevel(MSG::DEBUG)){
+    debug()<<"INITIAL VALUES:"<<endmsg;
+    debug()<<"NSigmas="<<m_nsigmas<<endmsg;
+    debug()<<"DiscrValue="<<m_discrval<<endmsg;
+    debug()<<"UseBkg="<<m_useBkg<<endmsg;
+    debug()<<"MinMomSt3="<<m_2hits<<endmsg;
+    debug()<<"MinMomSt4="<<m_3hits<<endmsg;
+    debug()<<"Chi2Cut="<<m_chi2cut<<endmsg;
+    debug()<<"PreSelMomentum="<<m_PreSelMomentum<<endmsg;
+    debug()<<"MomentumCuts="<<m_MomentumCuts<<endmsg;
+  }
+  
   return sc;
 }
 
@@ -94,9 +115,9 @@ StatusCode Chi2MuIDTool::isGoodSeed(const LHCb::Track& seed)
   
   StatusCode sc = StatusCode::SUCCESS;
   //track below min momentum
-  if (seed.p()<m_minmom)
+  if (seed.p()<m_PreSelMomentum)
   {
-    if ( msgLevel(MSG::DEBUG)) debug() << "Track mom below momentum threshold of "<<m_minmom<<endmsg;
+    if ( msgLevel(MSG::DEBUG)) debug() << "Track mom below momentum threshold of "<<m_PreSelMomentum<<endmsg;
     sc.setCode(101); return sc;
   }
   
@@ -157,8 +178,8 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
 
       //from LHCbID, get xmeas and ymeas
       if (msgLevel(MSG::DEBUG) ) {
-	debug()<<"istation="<<istation<<endmsg;
-	debug()<<"channelID="<<id.channelID()<<endmsg;
+        debug()<<"istation="<<istation<<endmsg;
+        debug()<<"channelID="<<id.channelID()<<endmsg;
       }
       if (!id.isMuon()) {
         Warning("NON MUON ID!").ignore();
@@ -170,8 +191,8 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
       //debug()<<"xmeas="<<(*xmeas)<<endmsg;
       //debug()<<"ymeas="<<(*ymeas)<<endmsg;
       if (msgLevel(MSG::DEBUG) ) {
-	debug()<<"channelID after measprovider="<<xmeas->lhcbID().channelID()<<endmsg;
-	debug()<<"xmeas before smmp="<<xmeas<<endmsg;
+        debug()<<"channelID after measprovider="<<xmeas->lhcbID().channelID()<<endmsg;
+        debug()<<"xmeas before smmp="<<xmeas<<endmsg;
       }
 
       if (msgLevel(MSG::DEBUG) ) debug()<<"m_muonProvider->atStation("<<istation
@@ -186,20 +207,51 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
   
   // get hits in FOI (nsigmas). Run IsMuon
   sc = search(seed, muTrack);
+  
+  //add seed track to muon track ancestors
+  muTrack.addToAncestors(seed);
+  
   if (msgLevel(MSG::DEBUG) ) debug()<<"muTrack with seeds on it"<<endmsg;
-  if (sc.isFailure()) 
+  if (sc.isFailure())
   {
     if (msgLevel(MSG::DEBUG) ) debug()<< "No new track built"<<endmsg;
     if (sc.getCode()==203) isMuonCandidate=false;
-    else if ((sc.getCode()!=204) && (m_applyIsMuon))  
+    else if (m_applyIsMuon)  
       Warning( "No available info about IsMuon",StatusCode::SUCCESS).ignore();
     if (del_muonprov) delete m_muonProvider;
     return sc;
   }
   else isMuonCandidate=true;
 
-  //add seed track to muon track ancestors
-  muTrack.addToAncestors(seed) ;
+  // if chi2cut required, perform fit with muonquality
+  if (m_chi2cut>0.){
+    if (msgLevel(MSG::DEBUG) ) debug()<< "Applying chi2cut"<<endmsg;
+    //create copy of the track
+    LHCb::Track muTrack_par;
+    muTrack_par.copy(muTrack);
+    double myquality;
+
+    sc = muonQuality(muTrack_par, myquality);
+    if (sc.isFailure())
+    {
+      if (msgLevel(MSG::DEBUG) ) debug()<< "muonCandidate: fit failed"<<endmsg;
+      if (del_muonprov) delete m_muonProvider;
+      isMuonCandidate=false;
+      sc.setCode(203);
+      return sc;
+    }
+    else{
+      if (msgLevel(MSG::DEBUG) ) debug()<< "muonCandidate: myquality="<<myquality<<endmsg;
+      if (myquality<m_chi2cut) isMuonCandidate=true;
+      else{
+        isMuonCandidate=false;
+        sc.setCode(203);
+        return sc;
+      }
+      
+    }
+  }
+
 
   if (del_muonprov) delete m_muonProvider;
   return sc;
@@ -377,8 +429,16 @@ bool Chi2MuIDTool::isTrackInsideStation(const int& istation)
   if (xcond && ycond) outcond=true;
   else
   {
-    if (xcond && (fabs(pos.y())<m_mudet->getOuterY(istation))) outcond=true;
-    if (ycond && (fabs(pos.x())<m_mudet->getOuterX(istation))) outcond=true;
+    if (xcond && (fabs(pos.y())<m_mudet->getOuterY(istation))) {
+      if (msgLevel(MSG::DEBUG) ) debug()<<"xcond and y inside station"<<endmsg;
+      outcond=true;
+    }
+    
+    if (ycond && (fabs(pos.x())<m_mudet->getOuterX(istation))) {
+      outcond=true;
+      if (msgLevel(MSG::DEBUG) ) debug()<<"ycond and x inside station"<<endmsg;
+
+    }
   }
 
   return outcond;
@@ -424,7 +484,36 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
     debug()<<"x="<<muState->x()<<",y="<<muState->y()<<",z="<<muState->z()<<endmsg;
   }
 
-  if (m_mySeedState==muState) return sc;
+  //to be refined: even if the pointer is the same, it may happen that is is 
+  //pointing really to different states (from the previous event), 
+  //so the extrapolation would not be the correct. To avoid that, extrapolate 
+  //to one station and check if the momentum coincides  
+  if (m_mySeedState==muState) {
+    
+    if (msgLevel(MSG::DEBUG) ) debug()<<
+      "m_mySeedState and muState same pointer. Checking first state"<<endmsg;
+    
+    int i=0;
+    bool cond=true;
+    for (std::vector<double>::const_iterator it = m_zstations.begin();
+         it != m_zstations.end(); ++it) {
+      double z = *it;
+      LHCb::State muStateC(*muState);
+      StatusCode code= m_extrapolator->propagate(muStateC,z);
+      if (code.isSuccess())
+      {
+        if (muStateC.p() != m_states[i].p()) cond=false;
+        if (msgLevel(MSG::DEBUG) ) debug()<<"muStateC.p()="<<muStateC.p()
+                                          << ",m_states["<<i<<"].p()="
+                                          <<m_states[i].p()<<",cond="<<cond<<endmsg;
+        
+        break;
+      }
+      i++;
+    }
+    if (cond) return sc;    
+  }
+
   else m_mySeedState=muState;
   
   
@@ -441,12 +530,13 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
     // LHCb::State* muStateC = muState.clone();
 
     LHCb::State muStateC(*muState);
-    if (msgLevel(MSG::DEBUG) ) debug()<< " seed first state clone"<< muStateC;
+    //if (msgLevel(MSG::DEBUG) ) debug()<< " seed first state clone"<< muStateC;
     StatusCode code= m_extrapolator->propagate(muStateC,z);
     if (msgLevel(MSG::DEBUG) ) debug() << " makeState: state at " << z << " = " << muStateC << endmsg;
     if (code.isFailure()) 
       {
-        return Error("EXTRAPOLATION OF STATES FAILED AT STATION",sc);
+        if (msgLevel(MSG::DEBUG) ) debug() << "EXTRAPOLATION OF STATES FAILED AT STATION "<< ist<< endmsg;
+        return code;
       }
     m_states.push_back(muStateC);
     ist++;
@@ -542,6 +632,33 @@ StatusCode Chi2MuIDTool::search(const LHCb::Track& seed, LHCb::Track& muTrack) {
   
   return StatusCode::SUCCESS;
 }
+
+
+
+StatusCode Chi2MuIDTool::findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion)
+{
+  
+  StatusCode sc = StatusCode::SUCCESS;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"z_stations="<<m_zstations<<endmsg;
+      
+  sc=makeStates(muTrack);
+  if (sc.isFailure()) 
+  {
+    sc.setCode(303);
+    return sc;
+  }
+  
+  for (int sta=0;sta<m_NStation; sta++){
+    int chnum = -1;
+    int regnum = -1;
+    double x = m_states[sta].position().x();
+    double y = m_states[sta].position().y();
+    m_mudet->Pos2StChamberNumber(x,y,sta,chnum,regnum).ignore();  
+    trackRegion[sta]=regnum;
+  }
+  return sc;
+}
+
 
 
 //=============================================================================

@@ -22,6 +22,7 @@
 //#include "MuonID/MuonMeasurementProvider.h"
 #include "SmartMuonMeasProvider.h"
 
+
 /** @class Chi2MuIDTool Chi2MuIDTool.h
  *  
  *
@@ -47,9 +48,9 @@ public:
   StatusCode muonCandidate(const LHCb::Track& seed, LHCb::Track& muTrack,
                            bool isMuonCandidate,
                            const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>());
-  
+
   virtual StatusCode muonQuality(LHCb::Track& muTrack, double& Quality);
-  
+
   StatusCode muonArrival(LHCb::Track& muTrack, double& Arrival);
   
   StatusCode muonDLL(LHCb::Track& muTrack, const double& Quality, double& CLQuality, 
@@ -75,6 +76,8 @@ public:
   
   StatusCode search(const LHCb::Track& seed, LHCb::Track& muTrack);
 
+  StatusCode findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion);
+
   StatusCode finalize();
 
   
@@ -94,6 +97,8 @@ protected:
   double m_nsigmas;
   double m_nsigmasUsed;
   int m_discrval;
+  int m_NStation;
+
   bool m_useBkg;
 
   LHCb::State* m_mySeedState;
@@ -101,8 +106,16 @@ protected:
   double m_minmom;
   double m_2hits;
   double m_3hits;
-
+  double m_chi2cut;
+  
   bool m_arrivalCuts;
+
+  /// Preselection momentum (no attempt to ID below this)
+  double m_PreSelMomentum;
+
+  /// Momentum ranges: different treatement of M4/M5 in each
+  std::vector<double> m_MomentumCuts; // vector of momentum ranges
+
   bool m_applyIsMuon;
 
 

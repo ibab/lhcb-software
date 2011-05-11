@@ -6,6 +6,8 @@
 
 // local
 #include "DistMuIDTool.h"
+//boost
+#include <boost/assign/list_of.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DistMuIDTool
@@ -25,14 +27,15 @@ DistMuIDTool::DistMuIDTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
   :  Chi2MuIDTool( type, name , parent )
-{}
+{
+  declareProperty( "ApplyIsmuonHits", m_applyIsmuonHits=false );
+}
+
 
 StatusCode DistMuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
 {
   
   StatusCode sc;
-
-
   if (muTrack.states().size()>1) warning()<<"MUTRACK WITH MORE THAN ONE SEED STATE ON IT"<<endmsg;
   else if (muTrack.states().size()<1) 
   {
@@ -41,15 +44,26 @@ StatusCode DistMuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
     return Error("MUTRACK WITHOUT ANY SEED STATE ON IT",sc);
   }
   
-  
   if (muTrack.lhcbIDs().size()<1) 
   {
     sc.setCode(302);
     Quality=0;
     return Error("NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY",sc);
   }
+
+  double p = muTrack.ancestors().at(0).target()->p();
+  std::vector<int> sts_used  = boost::assign::list_of(1)(1)(1)(1);
+  if (m_applyIsmuonHits){  
+    if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){
+      //M2 &&M3 && M4
+      sts_used  = boost::assign::list_of(1)(1)(1)(0);
+    }
+  }
+  if (msgLevel(MSG::DEBUG) ) debug()<< "applyIsMuonHits"<< m_applyIsmuonHits 
+                                    <<", sts_used="<<sts_used<<endmsg;
+
   
-  sc=computeDistance(muTrack,Quality);
+  sc=computeDistance(muTrack,Quality,sts_used);
   if (sc.isFailure()) 
   {
     Quality=0;
@@ -57,27 +71,22 @@ StatusCode DistMuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   }
   
   return StatusCode::SUCCESS;
-  
-
 }
 
 
-
-
-
-StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dist)
+StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dist, const std::vector<int>& sts_used)
 {
   
   StatusCode sc;
   if (msgLevel(MSG::DEBUG) ) debug()<<"z_stations="<<m_zstations<<endmsg;
-      
+ 
   sc=makeStates(muTrack);
   if (sc.isFailure()) 
   {
     sc.setCode(303);
     return sc;
   }
-
+  
   if (msgLevel(MSG::DEBUG) ) debug()<<"states ready"<<endmsg;
   MeasPair mym;
   std::vector<LHCb::LHCbID> lhcbIDs=muTrack.lhcbIDs();
@@ -97,9 +106,11 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
       debug()<<"mym.first="<<mym.first<<endmsg;
       debug()<<"mym.second="<<mym.second<<endmsg;
     }
-
+    
     int ist=id.muonID().station();
-    if (msgLevel(MSG::DEBUG) ) debug()<<"NUMBER OF STATION IS="<<ist<<endmsg;
+    if (sts_used[ist-1]==0) continue;
+    
+    if (msgLevel(MSG::DEBUG) ) debug()<<"Number of station is="<<ist<<endmsg;
     //calculate geom distances and pads
     double dist_parx2=pow(m_muonProvider->distx(mym, m_states[ist]),2);
     double dist_pary2=pow(m_muonProvider->disty(mym, m_states[ist]),2);
@@ -127,6 +138,7 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
   dist= dist2/nsts;
   return StatusCode::SUCCESS;
 }
+
 
 //=============================================================================
 // Destructor

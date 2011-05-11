@@ -28,6 +28,8 @@ MakeMuonMeasurements::MakeMuonMeasurements( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
+  // Use or not uncrossed logical channels in the non-pad detector areas
+  declareProperty("UseUncrossed",m_use_uncrossed=true);
 
 }
 //=============================================================================
@@ -45,6 +47,9 @@ StatusCode MakeMuonMeasurements::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_measProvider = tool<IMeasurementProvider>("MeasurementProvider",this);  
+  m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
+
+  if (msgLevel(MSG::DEBUG) ) debug()<<"m_use_uncrossed="<<m_use_uncrossed<<endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -58,15 +63,25 @@ StatusCode MakeMuonMeasurements::execute() {
   SmartMuonMeasProvider* muprov = new SmartMuonMeasProvider();
   put(muprov,"Rec/Muon/SmartMuonMeasProvider");
 
-  LHCb::MuonCoords* coords = get<LHCb::MuonCoords>("Raw/Muon/Coords");
+  LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
     
   if ( msgLevel(MSG::DEBUG) ) debug()<<"cleared m_muonProvider"<<endmsg;
   for (LHCb::MuonCoords::iterator it = coords->begin();
        it != coords->end(); ++it){
 
-    LHCb::MuonCoord& tile = **it;
-     if ( msgLevel(MSG::DEBUG) ) debug() << " MuonCoord " << tile << endmsg;
-    LHCb::LHCbID id = LHCb::LHCbID(tile.key());
+    const LHCb::MuonCoord& coord = **it;
+    const LHCb::MuonTileID tile = coord.key();
+    
+    if ( msgLevel(MSG::DEBUG) ) debug() << " MuonCoord " << tile << endmsg;
+
+    if ((m_mudet->mapInRegion(tile.station(),tile.region() ) != 1)
+        &&  (coord.uncrossed()) && (!m_use_uncrossed)) {
+
+        if (msgLevel(MSG::DEBUG) ) debug()<<"skipping hit!"<<endmsg;
+        continue;
+    }
+    
+    LHCb::LHCbID id = LHCb::LHCbID(tile);
 
     int istation = id.muonID().station();
     if (istation == 0) continue;

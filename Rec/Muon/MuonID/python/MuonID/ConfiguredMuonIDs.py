@@ -6,14 +6,13 @@
  =============================================================
 """
 
-import os
-import sys
+import os,sys,copy
 
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 
 from Configurables import MuonIDAlg,Chi2MuIDTool,DistMuIDTool
-from Configurables import TrackMasterFitter,IsMuonCandidateC,MakeMuonMeasurements, CLTool, GetArrival
+from Configurables import TrackMasterFitter,TrackMasterExtrapolator, SimplifiedMaterialLocator, IsMuonCandidateC, MakeMuonMeasurements, CLTool, GetArrival, NShared
 from Configurables import GaudiSequencer
 from TrackFitter.ConfiguredFitters import *
 
@@ -24,7 +23,6 @@ class ConfiguredMuonIDs():
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
     self.debug=debug
-    if self.debug: print "# CONFIGUREDMUONIDs v7r10"
     if self.debug: print "# INITIALIZING"
 
     self.specialData=specialData
@@ -53,6 +51,25 @@ class ConfiguredMuonIDs():
     self.info=info
     self.info.DEBUG = debug
     self.initializeAll = True
+
+    ## use KalmanFoi or Standard
+    if "KalmanFoI" in dir(self.info): self.kalman_foi = info.KalmanFoI
+    else: self.kalman_foi = False
+    if self.debug: print "# FOI KALMAN = ",self.kalman_foi
+
+
+    ## fast extrapolator/fitter
+    if "FastKalman" in dir(self.info): self.fast=info.FastKalman
+    else: self.fast = True
+    if self.debug: print "# FAST=",self.fast
+
+
+    ## use dist/chi2
+    if "UseDist" in dir(self.info): self.use_dist=info.UseDist
+    else: self.use_dist = False
+    if self.debug: print "# USE_DIST=",self.use_dist
+
+
     
   def configureFitter(self,fitter):
     """
@@ -62,7 +79,9 @@ class ConfiguredMuonIDs():
     if self.debug: print "# CONFIGURING FITTER"
     ## check if input is already an instance or this must be created
     if isinstance(fitter,TrackMasterFitter): myfitter=fitter
-    else: myfitter=ConfiguredMasterFitter( Name = str(fitter) )
+    else: 
+      if self.fast: myfitter=ConfiguredMasterFitter( Name = str(fitter),SimplifiedGeometry = True)
+      else: myfitter=ConfiguredMasterFitter( Name = str(fitter) )
     
     myfitter.UseSeedStateErrors = self.info.UseSeedStateErrors
     myfitter.FitUpstream = self.info.FitUpstream
@@ -115,11 +134,13 @@ class ConfiguredMuonIDs():
     return mygeta
 
 
-  def configureCLTool(self, cltool, use_dist=False):
+  def configureCLTool(self, cltool, use_dist=-1):
     """
     configure cltool used to get dll from chi2 or distance.
     Use of chi2 or dist histos as input.
     """
+
+    if isinstance(use_dist,int): use_dist = self.use_dist
 
     if self.debug: print "# CONFIGURING CLTOOL"
     ## check if input is already an instance or this must be created
@@ -148,7 +169,7 @@ class ConfiguredMuonIDs():
     return mycltool
     
 
-  def configureMuIDTool(self,muidtool,use_dist=False):
+  def configureMuIDTool(self,muidtool):
     """
     configure either chiMuIDtool or DistMuIDTool with all subdependent tools.
     If one of the two instances is input, ignore use_dist.
@@ -159,13 +180,13 @@ class ConfiguredMuonIDs():
 
     ## check if input is already an instance or this must be created.
     ## also set use_dist1, to be used when configuring CLQuality tool
-    use_dist1 = use_dist
+    use_dist1 = self.use_dist
     mymuidtool = muidtool
     
     if isinstance(muidtool,Chi2MuIDTool): use_dist1 = False
     elif isinstance(muidtool,DistMuIDTool): use_dist1 = True
     else:
-      if use_dist: mymuidtool=DistMuIDTool(str(muidtool))
+      if self.use_dist: mymuidtool=DistMuIDTool(str(muidtool))
       else: mymuidtool=Chi2MuIDTool(str(muidtool))
 
     if self.debug: print "# \tCONFIGURING MUIDTOOL: use_dist1 = ",use_dist1
@@ -174,17 +195,47 @@ class ConfiguredMuonIDs():
     mymuidtool.NSigmas = self.info.NSigmas
     mymuidtool.DiscrValue = self.info.DiscrValue
     mymuidtool.UseBkg = self.info.UseBkg
-    mymuidtool.MinMomSt3 = self.info.MinMomSt3
-    mymuidtool.MinMomSt4 = self.info.MinMomSt4
+    ## until Arrival Probability is not calibrated, don't apply mimomstation cuts!
 
-    ## add and configure fitter to be used for finding chi2
+    ## add values for ismuon cuts: same as in muidalg
+    mymuidtool.PreSelMomentum = self.info.PreSelMomentum
+    mymuidtool.MomentumCuts  = self.info.MomentumCuts
+    if use_dist1 and ("ApplyIsmuonHits" in dir(self.info)): mymuidtool.ApplyIsmuonHits = self.info.ApplyIsmuonHits
+
+    if self.kalman_foi:
+      mymuidtool.MinMomSt3 = 0
+      mymuidtool.MinMomSt4 = 0
+      if use_dist1: mymuidtool.ApplyIsmuonHits = True
+
+    else:
+      mymuidtool.MinMomSt3 = self.info.MinMomSt3
+      mymuidtool.MinMomSt4 = self.info.MinMomSt4
+
+    ## add and configure fitter and extrapolator to be used for finding chi2
     if self.debug: print "# \tCONFIGURING MUIDTOOL: adding tools"
-    mymuidtool.addTool(TrackMasterFitter, name='fitter') 
-    ConfiguredMasterFitter( Name = mymuidtool.fitter )
-    self.configureFitter(mymuidtool.fitter)
+
+    
+    ## configure fast extrapolator
+    if self.fast:
+      mymuidtool.addTool(TrackMasterExtrapolator, name='extrapol')
+      mymuidtool.extrapol.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+
+    if not use_dist1:
+      mymuidtool.addTool(TrackMasterFitter, name='fitter')
+      ## configure fast fitter
+      if self.fast: ConfiguredMasterFitter( Name = mymuidtool.fitter, SimplifiedGeometry = True)        
+      else: ConfiguredMasterFitter( Name = mymuidtool.fitter )
+      self.configureFitter(mymuidtool.fitter)
+
+    if self.kalman_foi or self.initializeAll:
+      ## add and configure ismuoncandidatec tool
+      mymuidtool.addTool(IsMuonCandidateC(), name='IsMuonCandidateC')
+      out=self.configureIsMuonCandidateC(mymuidtool.IsMuonCandidateC)
+
 
     ## for MuonIDAlg, can stop here (no use or extra subtools)
     if self.initializeAll:
+      
       if self.debug: print "# \tCONFIGURING MUIDTOOL: initializeAll=True"
       ## add and configure ismuoncandidatec tool
       mymuidtool.addTool(IsMuonCandidateC(), name='IsMuonCandidateC')
@@ -199,9 +250,19 @@ class ConfiguredMuonIDs():
       out=self.configureCLTool(mymuidtool.CLQuality,use_dist1)
 
       return mymuidtool
-    
 
-  def configureMuonIDAlg (self,muonid,use_dist=False):
+    
+  def configureMakeMuonMeasurements(self,mmm):
+    ## check if input is already an instance or this must be created
+    if isinstance(mmm,MakeMuonMeasurements): mymmm=mmm
+    else: mymmm=MakeMuonMeasurements(str(mmm))
+    
+    if "UseUncrossed" in dir(self.info): mymmm.UseUncrossed = self.info.UseUncrossed
+
+    return mymmm
+
+
+  def configureMuonIDAlg (self,muonid):
     """
     general configuration of MuonIDAlg. Equivalent to old MuonID.py
     Also configures muonIDtool used as extra_info. This can either be chi2 or dist.
@@ -216,10 +277,13 @@ class ConfiguredMuonIDs():
 
     ## general MuonIDAlg properties
     mymuid.OverrideDB = self.info.OverrideDB
+
+    if "UseUncrossed" in dir(self.info): mymuid.UseUncrossed = self.info.UseUncrossed
     
     mymuid.MomentumCuts  = self.info.MomentumCuts
     mymuid.AllMuonTracks = self.info.AllMuonTracks
     mymuid.FindQuality = self.info.FindQuality
+    mymuid.KalmanFoI   = self.kalman_foi
     if "cosmics" in self.specialData:
       print "# MuonID WARNING: MuonTrack Fit disabled for SpecialData = cosmics"
       mymuid.FindQuality=False
@@ -238,8 +302,13 @@ class ConfiguredMuonIDs():
     mymuid.distMuon= self.info.distMuon
     mymuid.distPion= self.info.distPion
 
-    ## GL & SF:
-    if "DLL_flag" in dir(self.info): mymuid.DLL_flag= self.info.DLL_flag
+    ## GL & SF & XCV:
+    if "DLL_flag" in dir(self.info):
+      mymuid.DLL_flag= self.info.DLL_flag
+      if self.kalman_foi and self.info.DLL_flag==0:
+        print "# MuonID WARNING: KalmanFoi incompatible DLL_flag 0. Setting DLL_flag to 1"
+        mymuid.DLL_flag = 1
+
     if "Weight_flag" in dir(self.info): mymuid.Weight_flag= self.info.Weight_flag
     if "step" in dir(self.info): mymuid.step=self.info.step
     if "nMax_bin" in dir(self.info): mymuid.nMax_bin=self.info.nMax_bin
@@ -353,11 +422,36 @@ class ConfiguredMuonIDs():
     ## no need to initialize all sub tools there
     prev = self.initializeAll
     self.initializeAll = False
-    if use_dist: mymuid.addTool(DistMuIDTool(), name='myMuIDTool')
+    if self.use_dist: mymuid.addTool(DistMuIDTool(), name='myMuIDTool')
     else: mymuid.addTool(Chi2MuIDTool(), name='myMuIDTool')
   
-    out = self.configureMuIDTool(mymuid.myMuIDTool,use_dist)
+    out = self.configureMuIDTool(mymuid.myMuIDTool)
     self.initializeAll = prev
+
+    if self.kalman_foi:
+
+      mom_cuts=copy.copy(self.info.MomentumCuts)
+      mom_cuts.insert(0,self.info.PreSelMomentum)
+
+      mymuid.addTool(IsMuonCandidateC(), name='IsMuonTool')
+      out=self.configureIsMuonCandidateC(mymuid.IsMuonTool)
+      mymuid.IsMuonTool.IsMuonOpt = 3
+      mymuid.IsMuonTool.MomRangeIsMuon = mom_cuts
+
+
+      mymuid.addTool(IsMuonCandidateC(), name='IsMuonLooseTool')
+      out=self.configureIsMuonCandidateC(mymuid.IsMuonLooseTool)
+      mymuid.IsMuonLooseTool.IsMuonOpt = 2
+      mymuid.IsMuonLooseTool.MomRangeIsMuon = mom_cuts
+
+      
+      mymuid.addTool(DistMuIDTool(), name='DistMuIDTool')
+      prev = self.initializeAll
+      self.initializeAll = False
+      out = self.configureMuIDTool(mymuid.DistMuIDTool)
+      self.initializeAll = prev
+
+      mymuid.addTool(NShared(), name='NSharedTool')
 
     return mymuid
 
@@ -376,6 +470,13 @@ class ConfiguredMuonIDs():
     ## create and configure MuonIDAlg instance
     muid = MuonIDAlg()
     self.configureMuonIDAlg(muid)
+
+    ## if kalman_foi: add the algorithm that looks for muon hits
+    if self.kalman_foi:
+      mmm = MakeMuonMeasurements()
+      self.configureMakeMuonMeasurements(mmm)
+      myg.Members.append(mmm)
+
     ## add to gaudi sequencer and return
     myg.Members.append(muid)
     return myg

@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "MuonDet/DeMuonDetector.h"
 
 /** @class MakeMuonMeasurements MakeMuonMeasurements.h
  *  
@@ -28,6 +29,8 @@ public:
 protected:
 
   IMeasurementProvider*  m_measProvider;
+  DeMuonDetector*  m_mudet;
+  bool m_use_uncrossed;
 
 private:
 
