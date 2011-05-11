@@ -192,9 +192,9 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
         ### One object cuts ###
         vtxCut_zPos           = "in_range(%s*mm, VZ, %s*mm)" %(zMin, zMax)
-        vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %s)"% self.getProp("VertexMaxChi2PerDoF")
-        vtxCut_minNTracks     = "(NTRACKS > %s)"  % self.getProp("VertexMinNTracks")
-        vtxCut_excludeLumiReg = "((VZ < %s*mm) | (VZ > %s*mm))" %(self.getProp("BGVtxExclRangeMin"), self.getProp("BGVtxExclRangeMax"))
+        vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %s)"% self.getProp("VertexMaxChi2PerDoF") if self.getProp("VertexMaxChi2PerDoF") < 998 else ""
+        vtxCut_minNTracks     = "(NTRACKS > %s)"  % self.getProp("VertexMinNTracks") if self.getProp("VertexMinNTracks") > 0 else ""
+        vtxCut_excludeLumiReg = "~in_range(%s*mm, VZ, %s*mm)" %(self.getProp("BGVtxExclRangeMin"), self.getProp("BGVtxExclRangeMax"))
 
         listOneObjectCuts = [ vtxCut_zPos, vtxCut_maxChi2PerDoF, vtxCut_minNTracks ]
         #in case of a bb line add the cut that vetoes the Lumi Region
@@ -206,20 +206,20 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### for the Beam1(2), Forced & Parasitic lines accept small fraction of high-rho vertices
         vtxCut_smallRho = self.getProp('VertexCutRho')
         if 'NoBeam' in lineName or 'Enhanced' in lineName:
-            vtxCut_transvPos = vtxCut_smallRho + " >> ~VEMPTY"
+            listOneObjectCuts += [ vtxCut_smallRho ]
+            vtxCut_transvPos = "~VEMPTY"
         else:    
             vtxCut_transvPos = "switch( has%s, ~VEMPTY, scale(~VEMPTY, %s) )" %(vtxCut_smallRho, self.getProp('PrescaleHighRho'))
 
         ### The LoKi filter
         ### First : the part with the one-object cuts (embed in the VSOURCE statement)
-        codeLoKiFilter = "VSOURCE('%s', %s)" %(InpVerticesName, " & ".join(listOneObjectCuts))
         ### Second : the stream part
-        codeLoKiFilter += " >> "+vtxCut_transvPos
+        codeLoKiFilter = "VSOURCE('%s', %s) >> %s" %(InpVerticesName, " & ".join([ i for i in listOneObjectCuts if i ]), vtxCut_transvPos)
 
         ### The last algorithm should have name of line, plus 'Decision'
         from Configurables import LoKi__VoidFilter
         return LoKi__VoidFilter( 'Hlt1%sDecision' % lineName
-                               , Preambulo = ['from LoKiPhys.decorators import *']
+                               , Preambulo = ['from LoKiPhys.decorators import *','from LoKiCore.functions import *']
                                , Code = codeLoKiFilter
                                )
 

@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r10p1  2011-05-11 =================
+! 2011-04-11 - Gerhard Raven
+ - add LoKiCore.functions to list of modules in BeamGas lines
+
 !========================== Hlt1Lines v6r10  2011-05-04 ===================
 ! 2011-05-02 - Plamen Hopchev
  - add 'Tight' GEC in all BeamGas Lines
