@@ -2,7 +2,7 @@ package		HltL0Conf
 version 	v3r0 
 
 # ================ structure =============================================
-branches	src cmt doc options
+branches	src cmt doc 
 include_path none
 
 # ================ options ===============================================
