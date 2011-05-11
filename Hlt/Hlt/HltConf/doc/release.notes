@@ -5,10 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r9p1 2011-05-11 ===================
 ! 2011-05-08 -  Roel Aaij
  - Remove any references to Hlt2UnfittedForwardTracking.
 
-!========================== HltConf v9r9p1 2011-05-06 ===================
 ! 2011-05-06 - Gerhard Raven
  - fix typo in intermediate selection names
 
