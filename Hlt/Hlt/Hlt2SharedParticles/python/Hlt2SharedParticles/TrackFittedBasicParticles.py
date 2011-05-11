@@ -247,6 +247,7 @@ Hlt2BiKalmanFittedPhotons.PhotonMaker.Input = BiKalmanFittedNeutralProtoMaker.ou
 Hlt2BiKalmanFittedPhotons.PhotonMaker.ConvertedPhotons = True  
 Hlt2BiKalmanFittedPhotons.PhotonMaker.UnconvertedPhotons = True  
 Hlt2BiKalmanFittedPhotons.PhotonMaker.PtCut = 200.* MeV 
+Hlt2BiKalmanFittedPhotons.WriteP2PVRelations = False
 ##########################################################################
 #
 # define exported symbols -- these are for available
