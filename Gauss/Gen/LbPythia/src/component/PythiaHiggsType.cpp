@@ -39,48 +39,49 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
     m_ptMin            ( 10 * Gaudi::Units::GeV   ) ,
     m_leptonFromMother ( true       ) ,
     m_motheroflepton   ( ) ,
+    m_MinMass          (-1.),
     m_nbbquarks        ( 1          ) ,
     m_motherofb_id     ( "H_10" ) 
-    {
-	declareInterface< IGenCutTool >( this ) ;
+{
+  declareInterface< IGenCutTool >( this ) ;
 
-	// default properties are set for Higgs production with the 2b 
+  // default properties are set for Higgs production with the 2b 
   // in the acceptance and a Lepton with pt>10GeV from WZ
 
-	//Rough definition of the acceptance
-	declareProperty( "ThetaMax" , m_thetaMax) ; //default=400 * mrad
+  //Rough definition of the acceptance
+  declareProperty( "ThetaMax" , m_thetaMax) ; //default=400 * mrad
 
-	//Number of leptons requiered to be in the acceptance
-	declareProperty( "NumberOfLepton" , m_nbLepton) ; //max 2 leptons -- 
+  //Number of leptons requiered to be in the acceptance
+  declareProperty( "NumberOfLepton" , m_nbLepton) ; //max 2 leptons -- 
                                                     //0 - 1 - 2 default=1
   m_TypeLepton.push_back ( "e+"  ) ;
   m_TypeLepton.push_back ( "mu+" ) ;                                                 
-	//Type of leptons requiered to be in the acceptance // default e and mu
-	declareProperty( "TypeOfLepton" , m_TypeLepton) ; 
+  //Type of leptons requiered to be in the acceptance // default e and mu
+  declareProperty( "TypeOfLepton" , m_TypeLepton) ; 
 
   //LeptonPtMin is the minimum value the pt of lepton can have
-	declareProperty( "LeptonPtMin" , m_ptMin) ; //default=10*GeV
+  declareProperty( "LeptonPtMin" , m_ptMin) ; //default=10*GeV
 	
   //LeptonIsFromMother enabled will requiered that the lepton comes from a specific mother
-	declareProperty( "LeptonIsFromMother" , m_leptonFromMother) ; //default=true
+  declareProperty( "LeptonIsFromMother" , m_leptonFromMother) ; //default=true
 
   m_motheroflepton.push_back ( "W+"  ) ;
   m_motheroflepton.push_back ( "Z0" ) ; 
   //MotherOfLepton is the list of particles from which the lepton comes
-	declareProperty( "MotherOfLepton" , m_motheroflepton) ; //default W and Z
-	
+  declareProperty( "MotherOfLepton" , m_motheroflepton) ; //default W and Z
+  declareProperty( "MotherOfLeptonMinMass" , m_MinMass) ;	//use for Z/gamma*
   //Number of b quarks required to be in the acceptance
-	declareProperty( "NumberOfbquarks" , m_nbbquarks ) ; //max 2 b quarks -- 
+  declareProperty( "NumberOfbquarks" , m_nbbquarks ) ; //max 2 b quarks -- 
   // 0(only with pzb>0), 1, 2  and -1(desactivated) default=1
-	// BECAREFULL NumberOfbquarks=0 will search b comming from mother 
+  // BECAREFULL NumberOfbquarks=0 will search b comming from mother 
   // with pz>0 if you don't want b (ex: Z->mumu) put -1.
 
-	// MotherOfThebquarks define the mother of the b quarks
-	declareProperty( "MotherOfThebquarks" , m_motherofb_id) ; //default=Higgs H_10
+  // MotherOfThebquarks define the mother of the b quarks
+  declareProperty( "MotherOfThebquarks" , m_motherofb_id) ; //default=Higgs H_10
 
   //You should be able to substitute the b by another particle in this program.
   //For example a mu
-	declareProperty( "SubstitutebBy" , m_subb = "No" );
+  declareProperty( "SubstitutebBy" , m_subb = "No" );
 
 }
 
@@ -96,24 +97,24 @@ StatusCode PythiaHiggsType::initialize() {
   StatusCode sc = GaudiTool::initialize() ;
   if ( ! sc.isSuccess() ) return sc ;
   
-	if ( ( "t" == m_motherofb_id ) && ( 2 == m_nbbquarks ) ) { // remplacer ici par les fonction de PID
-		info() << "You want to have both b in the acceptance, " 
+  if ( ( "t" == m_motherofb_id ) && ( 2 == m_nbbquarks ) ) { // remplacer ici par les fonction de PID
+    info() << "You want to have both b in the acceptance, " 
            << "check in pythia commands that you ask both top to decay in b" 
            << endmsg;
-	}
+  }
 
-	if ( ( 1 != m_nbLepton ) && ( 2 != m_nbLepton ) && ( 0 != m_nbLepton ) ) {
-		fatal() << "The only choices for NumberOfLepton property are 0, 1 or 2" 
+  if ( ( 1 != m_nbLepton ) && ( 2 != m_nbLepton ) && ( 0 != m_nbLepton ) ) {
+    fatal() << "The only choices for NumberOfLepton property are 0, 1 or 2" 
             << endmsg;
-		return StatusCode::FAILURE;
-	}
+    return StatusCode::FAILURE;
+  }
 
-	if ( ( 1 != m_nbbquarks ) && ( 2 != m_nbbquarks ) && ( 0 != m_nbbquarks ) && 
+  if ( ( 1 != m_nbbquarks ) && ( 2 != m_nbbquarks ) && ( 0 != m_nbbquarks ) && 
        ( -1 != m_nbbquarks ) ) {
-		fatal() << "The only choices for NumberOfbquarks property are -1,0,1 or 2"
+    fatal() << "The only choices for NumberOfbquarks property are -1,0,1 or 2"
             << endmsg;
-		return StatusCode::FAILURE;
-	}
+    return StatusCode::FAILURE;
+  }
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   m_motherofb_pid = abs( m_ppSvc->find( m_motherofb_id )->pdgID() );
   if( m_subb == "No" ){
@@ -122,7 +123,7 @@ StatusCode PythiaHiggsType::initialize() {
     m_b_pid = abs( m_ppSvc->find( m_subb )->pdgID() );
   }
 
-	return sc ;
+  return sc ;
 }
 
 //=============================================================================
@@ -130,14 +131,14 @@ StatusCode PythiaHiggsType::initialize() {
 //=============================================================================
 bool PythiaHiggsType::Isb( const HepMC::GenParticle * p) const {
   if ( abs(p->pdg_id())== m_b_pid ) {
-		HepMC::GenVertex * thePV =  p->production_vertex() ;
-		HepMC::GenVertex::particle_iterator iter ;
-		for(iter = thePV->particles_begin( HepMC::parents);
+    HepMC::GenVertex * thePV =  p->production_vertex() ;
+    HepMC::GenVertex::particle_iterator iter ;
+    for(iter = thePV->particles_begin( HepMC::parents);
         iter != thePV->particles_end(HepMC::parents); ++iter){
-			if( abs( m_motherofb_pid ) == abs( (*iter)->pdg_id() )  ) return true;
-		}
-	}
-	return false;
+      if( abs( m_motherofb_pid ) == abs( (*iter)->pdg_id() )  ) return true;
+    }
+  }
+  return false;
 }
 
 //=============================================================================
@@ -146,98 +147,100 @@ bool PythiaHiggsType::Isb( const HepMC::GenParticle * p) const {
 bool PythiaHiggsType::IsLepton( const HepMC::GenParticle * p ) const {
   bool isalepton = false ;
   for ( std::vector< std::string >::const_iterator iPart = m_TypeLepton.begin();
-              iPart != m_TypeLepton.end(); ++iPart ){
+	iPart != m_TypeLepton.end(); ++iPart ){
     std::string thepid = *iPart;
     if ( abs(p->pdg_id()) == abs (m_ppSvc->find(thepid)->pdgID())) isalepton = true;
   }
   if( isalepton == true ){
-		if ( ! m_leptonFromMother ) return true ;
-		else {
-			HepMC::GenVertex * thePV =  p -> production_vertex() ;
-			HepMC::GenVertex::particle_iterator iter ;
-			for(iter = thePV -> particles_begin( HepMC::parents);
+    if ( ! m_leptonFromMother ) return true ;
+    else {
+      HepMC::GenVertex * thePV =  p -> production_vertex() ;
+      HepMC::GenVertex::particle_iterator iter ;
+      for(iter = thePV -> particles_begin( HepMC::parents);
           iter != thePV -> particles_end(HepMC::parents); ++iter){
         for ( std::vector< std::string >::const_iterator iPart = m_motheroflepton.begin();
               iPart != m_motheroflepton.end(); ++iPart )
-        {
-          std::string thepid = *iPart;
-          if(  abs( m_ppSvc->find(thepid)->pdgID() ) == abs( (*iter)->pdg_id() ) ) return true;
-        }
-			}
-		}
-	}
-	return false;
+	  {
+	    std::string thepid = *iPart;
+	    if(  abs( m_ppSvc->find(thepid)->pdgID() ) == abs( (*iter)->pdg_id() ) )
+	      if( (*iter)->momentum().m() > m_MinMass )
+		return true;
+	  }
+      }
+    }
+  }
+  return false;
 }
 
 //=============================================================================
 // Accept function
 //=============================================================================
 bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
-                            const HepMC::GenEvent * theEvent ,
-                            const LHCb::GenCollision * /* theCollision */ )
+				const HepMC::GenEvent * theEvent ,
+				const LHCb::GenCollision * /* theCollision */ )
   const {
-	// Selection of the b quarks
-	std::list< const HepMC::GenParticle * > bList ;
-	for(HepMC::GenEvent::particle_const_iterator iterall = 
+  // Selection of the b quarks
+  std::list< const HepMC::GenParticle * > bList ;
+  for(HepMC::GenEvent::particle_const_iterator iterall = 
         theEvent -> particles_begin() ;
       iterall!= theEvent -> particles_end();iterall++) {
     if ( Isb( *(iterall) ) ) bList.push_back( *(iterall) ) ;
-	}
+  }
   
   
-	const HepMC::GenParticle * theb1(0), *theb2(0);
-	std::list<const HepMC::GenParticle * >::iterator iterb = bList.begin() ;
-	if( 2<= bList.size() ) {
+  const HepMC::GenParticle * theb1(0), *theb2(0);
+  std::list<const HepMC::GenParticle * >::iterator iterb = bList.begin() ;
+  if( 2<= bList.size() ) {
     theb1 = *(iterb); 
-		theb2 = *(++iterb);
-	}
+    theb2 = *(++iterb);
+  }
 
-	if ( ( 1 == bList.size() ) && ( m_motherofb_id != "t" ) ) {
+  if ( ( 1 == bList.size() ) && ( m_motherofb_id != "t" ) ) {
     Warning( "No b pairs in this event!" ) ;
-  //can occure in ttbar event when one top decay on another mode than bW
+    //can occure in ttbar event when one top decay on another mode than bW
     return false ;
   }
 	
   if( ( 1 == bList.size() ) && ( m_motherofb_id=="t" ) ) {  // remplacer ici par les fonction de PID
-		theb1 = *(iterb);
-		theb2 = *(iterb);
-	}
+    theb1 = *(iterb);
+    theb2 = *(iterb);
+  }
   
-	if( ( 0== bList.size() ) && ( m_nbbquarks != -1 ) ) {
+  if( ( 0== bList.size() ) && ( m_nbbquarks != -1 ) ) {
     Warning( "No b in this event!" ) ;
     return false ;
   }
 
-	double pzb1,thetab1;
-	double pzb2,thetab2;
-	if( ( m_nbbquarks != -1 ) && ( bList.size() > 0 ) ) {
- 		pzb1 = theb1->momentum().pz() * Gaudi::Units::GeV ;
+  double pzb1,thetab1;
+  double pzb2,thetab2;
+  if( ( m_nbbquarks != -1 ) && ( bList.size() > 0 ) ) {
+    pzb1 = theb1->momentum().pz() * Gaudi::Units::GeV ;
     thetab1 = theb1->momentum().theta();
- 		pzb2 = theb2->momentum().pz() * Gaudi::Units::GeV ;
+    pzb2 = theb2->momentum().pz() * Gaudi::Units::GeV ;
     thetab2 = theb2->momentum().theta();
-	}
+  }
 
-	if( ( 1== bList.size() ) && ( m_motherofb_id== "t" ) ) { 
+  if( ( 1== bList.size() ) && ( m_motherofb_id== "t" ) ) { 
     // necessary in order to avoid case where we ask 2b in ttbar event 
     // and that only one top decay in b in the acceptance
-		pzb2=-1000;
-		thetab2=1000000;
-	}
+    pzb2=-1000;
+    thetab2=1000000;
+  }
 
-	if( 0 == bList.size() ) {
-		pzb2=-1000;
-		thetab2=1000000;
-		pzb1=-1000;
-		thetab1=1000000;
-	}
+  if( 0 == bList.size() ) {
+    pzb2=-1000;
+    thetab2=1000000;
+    pzb1=-1000;
+    thetab1=1000000;
+  }
 
-	// Selection of the lepton
-	std::vector< const HepMC::GenParticle * > LeptonList ;
-	for ( HepMC::GenEvent::particle_const_iterator iterall = 
+  // Selection of the lepton
+  std::vector< const HepMC::GenParticle * > LeptonList ;
+  for ( HepMC::GenEvent::particle_const_iterator iterall = 
           theEvent -> particles_begin() ;
         iterall!= theEvent -> particles_end() ; iterall++ ) {
     if ( IsLepton( *(iterall) ) ) LeptonList.push_back( *(iterall) ) ;
-	}
+  }
 
   if( ( 0 == LeptonList.size() ) ) {
     if( msgLevel( MSG::DEBUG ) ){
@@ -249,49 +252,49 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
     return false ;
   }
 
-	double pzl1,ptl1,thetal1;
-	double pzl2,ptl2,thetal2;
-	if ( m_nbLepton <= ( int ) LeptonList.size() ) {
-		const HepMC::GenParticle * theLepton1(0), *theLepton2(0);
-		std::vector<const HepMC::GenParticle * >::iterator iterLepton = 
+  double pzl1,ptl1,thetal1;
+  double pzl2,ptl2,thetal2;
+  if ( m_nbLepton <= ( int ) LeptonList.size() ) {
+    const HepMC::GenParticle * theLepton1(0), *theLepton2(0);
+    std::vector<const HepMC::GenParticle * >::iterator iterLepton = 
       LeptonList.begin() ;
-		if ( 2 <= LeptonList.size() ) {
-			theLepton1 = *(iterLepton);
-			theLepton2 = *(++iterLepton);
-		}
-		if( 1== LeptonList.size() ) {
-			theLepton1 = *(iterLepton);
-			theLepton2 = *(iterLepton);
-		}
+    if ( 2 <= LeptonList.size() ) {
+      theLepton1 = *(iterLepton);
+      theLepton2 = *(++iterLepton);
+    }
+    if( 1== LeptonList.size() ) {
+      theLepton1 = *(iterLepton);
+      theLepton2 = *(iterLepton);
+    }
 
 
 
- 		pzl1 = theLepton1->momentum().pz() ;
+    pzl1 = theLepton1->momentum().pz() ;
     thetal1 = theLepton1->momentum().theta();
     ptl1 = theLepton1->momentum().perp();
- 		pzl2 = theLepton2->momentum().pz() ;
+    pzl2 = theLepton2->momentum().pz() ;
     thetal2 = theLepton2->momentum().theta();
     ptl2 = theLepton2->momentum().perp();
 
-		if ( 1 == LeptonList.size() ) {
-			thetal2= 100000;
-			ptl2=-1000;
-			pzl2=-1000;
-		}
-	} else {
-		thetal1= 100000;
-		ptl1=-1000;
-		pzl1=-1000;
-		thetal2= 100000;
-		ptl2=-1000;
-		pzl2=-1000;
-	}
+    if ( 1 == LeptonList.size() ) {
+      thetal2= 100000;
+      ptl2=-1000;
+      pzl2=-1000;
+    }
+  } else {
+    thetal1= 100000;
+    ptl1=-1000;
+    pzl1=-1000;
+    thetal2= 100000;
+    ptl2=-1000;
+    pzl2=-1000;
+  }
 
-	if((m_nbbquarks==-1 &&  m_nbLepton ==0)// no cut
-		||(m_nbbquarks==-1 &&  m_nbLepton ==1 && 
-       ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && ( ptl1 >= m_ptMin ) )
-         || ( ( thetal2 <= m_thetaMax ) && ( pzl2 >= 0. )  && 
-              ( ptl2 >= m_ptMin ) ) ) )// no b cut on 1 lepton
+  if((m_nbbquarks==-1 &&  m_nbLepton ==0)// no cut
+     ||(m_nbbquarks==-1 &&  m_nbLepton ==1 && 
+	( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && ( ptl1 >= m_ptMin ) )
+	  || ( ( thetal2 <= m_thetaMax ) && ( pzl2 >= 0. )  && 
+	       ( ptl2 >= m_ptMin ) ) ) )// no b cut on 1 lepton
      ||(m_nbbquarks==-1 &&  m_nbLepton ==2 && 
         ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && 
             ( ptl1 >= m_ptMin ) )&& ( ( thetal2 <= m_thetaMax ) && 
@@ -361,7 +364,7 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
           && ( ( thetal2 <= m_thetaMax ) && ( pzl2 >= 0. )  && 
                ( ptl2 >= m_ptMin ) ) ) )// cut on 2b and 2 lepton
      ) {
-		if( msgLevel( MSG::DEBUG ) ){
+    if( msgLevel( MSG::DEBUG ) ){
       debug()  << "Event passed with requierement of "
                << m_nbLepton << " lepton and " 
                << m_nbbquarks <<" bquarks" << endmsg ;
@@ -372,9 +375,9 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
                << thetal2 << "] [pzl2 = " << pzl2 << "] [ptl2 = " << ptl2 
                << "]" << endmsg ;
     }
-		return true;
+    return true;
 
-	} else {
+  } else {
     if( msgLevel( MSG::DEBUG ) ){
       debug() << "Event rejected with requierement of "<< m_nbLepton
               << " lepton and " << m_nbbquarks << " bquarks" << endmsg ;
@@ -385,9 +388,9 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
               << thetal2 << "] [pzl2 = "<< pzl2 << "] [ptl2 = "<< ptl2 << "]" 
               << endmsg ;
     }
-		return false;
-	}
-	return false ;
+    return false;
+  }
+  return false ;
 }
 
 

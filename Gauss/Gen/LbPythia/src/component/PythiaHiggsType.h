@@ -62,6 +62,10 @@ private:
   /// List of mother of the lepton
   std::vector< std::string > m_motheroflepton;
 
+  /// Minimum mass of the Mother of the lepton
+  double m_MinMass ;
+
+
   /// Number of quarks required to be in the acceptance
   int m_nbbquarks;
 
