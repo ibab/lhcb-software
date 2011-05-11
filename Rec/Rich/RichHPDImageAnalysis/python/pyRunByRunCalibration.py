@@ -30,17 +30,24 @@ def initialise():
         import GaudiPython
     
         # Initialise a few things
-        from Configurables import DDDBConf, CondDB, LHCbApp
-        DDDBConf(DataType = "2010")
-        LHCbApp().DDDBtag   = "head-20110303"
-        LHCbApp().CondDBtag = "head-20110407"
-        #DDDBConf(DataType = "2011")
-        #LHCbApp().DDDBtag   = "head-20110302"
-        #LHCbApp().CondDBtag = "head-20110407"
-        CondDB()
+        from Configurables import DDDBConf, CondDB, LHCbApp, CondDBAccessSvc
+        cDB = CondDB()
+        
+        #DDDBConf(DataType = "2010")
+        #LHCbApp().DDDBtag   = "head-20110303"
+        #LHCbApp().CondDBtag = "head-20110505"
+        
+        DDDBConf(DataType = "2011")
+        LHCbApp().DDDBtag   = "head-20110302"
+        LHCbApp().CondDBtag = "head-20110505"
 
-        # Set message level to warnings and above only
-        msgSvc().setOutputLevel(4)
+        # Move HPD Occs
+        cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
+                                     ConnectionString="sqlite_file:/usera/jonesc/cmtuser/Rec_HEAD/Rich/RichAlignment/scripts/RefractAndHPDJobs/databases/MoveHPDOccs-11052011.db/LHCBCOND",
+                                     DefaultTAG="HEAD"))
+
+        # Set message level to info and above only
+        msgSvc().setOutputLevel(3)
 
         # Finally, initialize GaudiPython
         GaudiPython.AppMgr().initialize()
@@ -131,13 +138,11 @@ def getAlignment(copyNumber,type):
 
     from GaudiPython import gbl
 
-    rich = ["Rich1","Rich2"]
-
     # Get RichSmartID from copy number
     smartID = richSystem().richSmartID(copyNumber)
 
     # Path to alignment condition
-    alignLoc = "/dd/Conditions/Alignment/"+rich[smartID.rich()]+"/"+type+str(copyNumber.data())+"_Align"
+    alignLoc = "/dd/Conditions/Alignment/"+rich(smartID)+"/"+type+str(copyNumber.data())+"_Align"
 
     # get the alignment condition
     align = iDataSvc()[alignLoc]
@@ -151,29 +156,33 @@ def getAlignment(copyNumber,type):
 
 def siliconAlignmentFilePath(copyNumber):
 
-    rich = ["Rich1","Rich2"]
-
     # RichSmartID
     smartID = richSystem().richSmartID(copyNumber)
     
-    return "/Conditions/"+rich[smartID.rich()]+"/Alignment/SiSensorsP"+str(smartID.panel())+".xml"
+    return "/Conditions/"+rich(smartID)+"/Alignment/SiSensors"+panel(smartID)+".xml"
 
 def getHPDmagCond(polarity,copyNumber):
 
     hpd = getHPD(copyNumber)
 
     name = ""
-    if polarity == "MagUp"   : name = "DemagParametersFieldNegative"
-    if polarity == "MagDown" : name = "DemagParametersFieldPositive"
+    if polarity == "MagDown" : name = "DemagParametersFieldNegative"
+    if polarity == "MagUp"   : name = "DemagParametersFieldPositive"
 
     return hpd.condition(name)
 
-def xmlHeader(type,flag):
+def rich(hpd):
+    _rich = ["Rich1","Rich2"]
+    return _rich[hpd.rich()]
+
+def panel(hpd):
+    return "P"+str(hpd.panel())
+
+def xmlHeader():
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 """
-#<!-- HPD Image alignment for """ + str(type) + """ """ + str(flag) + """ -->
 
 def xmlFooter():
     return """
@@ -405,7 +414,7 @@ def mergeRootFile(fill,infiles):
     hash = stringsMD5(infiles)
 
     # merged ROOT file for given fill data
-    mergedfile = globals()["tempDir"]+"/HPDAlign_Fill-"+str(fill)+"_"+stringsMD5(infiles)+".root"
+    mergedfile = globals()["tempDir"]+"/HPDAlign_Fill-"+str(fill)+"_"+hash+".root"
 
     # Make if not there
     if not os.path.exists(mergedfile) : 
@@ -429,23 +438,29 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def runAll(files='2010RootFiles.txt'):
-    
+def runAll(files='2011RootFiles.txt'):
+
     calibrationByRuns(rootfiles=files,followType="Smoothed",
-                      fitType='Sobel',smoothSigmaHours=3)
+                      fitType='Sobel',smoothSigmaHours=3,
+                      createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
 
-    #calibrationByRuns(rootfiles=files,followType="Smoothed",
-    #                  fitType='Sobel',smoothSigmaHours=1)
+    calibrationByFills(rootfiles=files,followType="Smoothed",
+                      fitType='Sobel',smoothSigmaHours=12,
+                      createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
  
-def calibrationByRuns(rootfiles='2010RootFiles.txt',
-                      fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=3):
-    return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours)
+def calibrationByRuns(rootfiles='2011RootFiles.txt',
+                      fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=3,
+                      createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
+    return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours,
+                       createShiftUpdate,createMagUpdate,createHPDOccUpdate)
 
-def calibrationByFills(rootfiles='2010RootFiles.txt',
-                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=12):
-    return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours)
+def calibrationByFills(rootfiles='2011RootFiles.txt',
+                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=12,
+                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
+    return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours,
+                       createShiftUpdate,createMagUpdate,createHPDOccUpdate)
 
-def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
+def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShiftUpdate,createMagUpdate,createHPDOccUpdate):
 
     from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3, TH2D, TH1D
     import GaudiPython
@@ -454,9 +469,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     from PyCool import cool
     from math import sqrt
 
-    initialise()
+    #initialise()
 
-    if followType not in ["FittedPol","FollowMovements","Smoothed"]:
+    if followType not in ["Average","FollowMovements","Smoothed"]:
         raise Exception("Unknown Follow Mode "+followType)
 
     if fitType not in ["Sobel","SimpleChi2","FastRingFit","CppFit"]:
@@ -522,56 +537,76 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             # Make sure this HPD has an entry
             if hpdID not in plotData.keys() : plotData[hpdID] = { }
 
-            # Special case for CppFit ....
-            if fitType == "CppFit" :
+            # Default HPD info summary is failed
+            plotData[hpdID][flag] = { "FitOK" : False }
+
+            # HPD image fit
+            if createShiftUpdate :
+                
+                if fitType == "CppFit" :
               
-                import pyHistoParsingUtils
+                    import pyHistoParsingUtils
 
-                # Get the offsets. Use try to catch errors
-                try:
+                    # Get the offsets. Use try to catch errors
+                    try:
 
-                    res = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries)
-                    xOff = res["Result"]["ShiftX"]
-                    yOff = res["Result"]["ShiftX"]
-                    rad  = res["Result"]["Radius"]
-                    plotData[hpdID][flag] = { "FitOK"   : res['OK'],
-                                              "ShiftR"  : rFromXY(xOff,yOff),
-                                              "ShiftX"  : xOff,
-                                              "ShiftY"  : yOff,
-                                              "Radius"  : rad }
-                    
-                except Exception,e:
-
-                    plotData[hpdID][flag] = { "FitOK" : False }
-
-            else:
-                # Python based fits
-
-                # Default status failed
-                plotData[hpdID][flag] = { "FitOK" : False }
-
-                # Get the histogram for this HPD
-                image = file.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdID)+'_Image')
-                if image != None :
-                    
-                    if image.GetEntries() >= minHPDEntries :
-                        
-                        # Setup the fit object
-                        params      = gbl.Rich.HPDImage.HPDFit.Params()
-                        params.type = fitType
-                        
-                        # Do the fit
-                        result = hpdfitter().fit(image,params)
-                        
-                        # Get the results
-                        xOff   = (result.x(),result.xErr())
-                        yOff   = (result.y(),result.yErr())
-                        rad    = (result.radInMM(),result.radErrInMM())
-                        plotData[hpdID][flag] = { "FitOK"   : result.OK(),
+                        res = pyHistoParsingUtils.hpdLocalOffset(file,hpdID,minHPDEntries)
+                        xOff = res["Result"]["ShiftX"]
+                        yOff = res["Result"]["ShiftX"]
+                        rad  = res["Result"]["Radius"]
+                        plotData[hpdID][flag] = { "FitOK"   : res['OK'],
                                                   "ShiftR"  : rFromXY(xOff,yOff),
                                                   "ShiftX"  : xOff,
                                                   "ShiftY"  : yOff,
                                                   "Radius"  : rad }
+                    
+                    except Exception,e:
+
+                        plotData[hpdID][flag] = { "FitOK" : False }
+
+                else:
+                    # Python based HPD image fits
+
+                    # Get the histogram for this HPD
+                    image = file.Get('RICH/RichHPDImageSummary/Rich_HPD_'+str(hpdID)+'_Image')
+                    if image != None :
+                    
+                        if image.GetEntries() >= minHPDEntries :
+                        
+                            # Setup the fit object
+                            params      = gbl.Rich.HPDImage.HPDFit.Params()
+                            params.type = fitType
+                        
+                            # Do the fit
+                            result = hpdfitter().fit(image,params)
+                        
+                            # Get the results
+                            xOff   = (result.x(),result.xErr())
+                            yOff   = (result.y(),result.yErr())
+                            rad    = (result.radInMM(),result.radErrInMM())
+                            plotData[hpdID][flag] = { "FitOK"   : result.OK(),
+                                                      "ShiftR"  : rFromXY(xOff,yOff),
+                                                      "ShiftX"  : xOff,
+                                                      "ShiftY"  : yOff,
+                                                      "Radius"  : rad }
+            else:
+
+                # No fitting so fake it
+                plotData[hpdID][flag] = { "FitOK"   : True,
+                                          "ShiftR"  : (0,0),
+                                          "ShiftX"  : (0,0),
+                                          "ShiftY"  : (0,0),
+                                          "Radius"  : (0,0) }                
+
+            # HPD occupancy info
+            occ    = 0
+            occErr = 0
+            if createHPDOccUpdate :
+                occPlot = file.Get('RICH/HPDHitsMoni/NumHits_HPDCopyN_'+str(hpdID))
+                if occPlot :
+                    occ    = occPlot.GetMean()
+                    occErr = occPlot.GetMeanError()
+            plotData[hpdID][flag]["Occupancy"] = (occ,occErr)
 
             # Save the DB values for plotting
             dbShift = siAlign.paramAsDoubleVect("dPosXYZ")
@@ -594,6 +629,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     avTrendFit['MagDown'] = { }
     avTrendFit['MagUp']   = { }
     avTrendFit['MagOff']  = { }
+    
     # Smoothers
     smoothers = { }
     smoothers['MagDown'] = { }
@@ -602,8 +638,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     
     # base name
     basename = rootfiles.split(".")[0]+"-"+type+"Aligned-"+fitType+"-"+followType
-    if followType == "FittedPol" : basename += str(pol)
+    if followType == "Average"   : basename += "Pol"+str(pol)
     if followType == "Smoothed"  : basename += str(smoothSigmaHours)+"hours"
+    if createShiftUpdate  : basename += "-HPDAlign"
+    if createMagUpdate    : basename += "-HPDDeMag"
+    if createHPDOccUpdate : basename += "-HPDOcc"
     basename += "-"+dateString()
 
     # Set output PDF name
@@ -612,7 +651,6 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
     # Run range for including in the fitted data
     minMaxFillForFit = [0,9999999]  # All fills/runs
-    #minMaxFillForFit = [952, 1430] # Range used by Matt for Mirror alignment 28/10/2010
 
     for hpd,data in plotData.iteritems():
 
@@ -643,6 +681,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
         vTimeErr   = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
         vRadius    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
         vRadErr    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vOcc       = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vOccErr    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
 
         dataColor   = 1
         splineColor = 2
@@ -652,9 +692,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
         xPlots  = { }
         yPlots  = { }
         rPlots  = { }
+        oPlots  = { }
         xPlotsS = { }
         yPlotsS = { }
         rPlotsS = { }
+        oPlotsS = { }
         for polarity in ['MagDown','MagUp','MagOff']:
             xPlots[polarity] = TH1D( polarity+"-XShifts"+str(hpd),
                                      polarity+" X-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
@@ -671,6 +713,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             rPlots[polarity].GetXaxis().SetTitle("Image Radius / mm")
             rPlots[polarity].SetMarkerColor(dataColor)
             rPlots[polarity].SetLineColor(dataColor)
+            oPlots[polarity] = TH1D( polarity+"-Occupancy"+str(hpd),
+                                     polarity+" Occupancy : Copy Number "+idS, 101, -0.5, 100.5 )
+            oPlots[polarity].GetXaxis().SetTitle("HPD Occupancy")
+            oPlots[polarity].SetMarkerColor(dataColor)
+            oPlots[polarity].SetLineColor(dataColor)
             xPlotsS[polarity] = TH1D( polarity+"-XShiftsSmooth"+str(hpd),
                                      polarity+" Smoothed X-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
             xPlotsS[polarity].GetXaxis().SetTitle("X Shifts / mm")
@@ -686,6 +733,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
             rPlotsS[polarity].GetXaxis().SetTitle("Image Radius / mm")
             rPlotsS[polarity].SetMarkerColor(smoothColor)
             rPlotsS[polarity].SetLineColor(smoothColor)
+            oPlotsS[polarity] = TH1D( polarity+"-OccupancySmooth"+str(hpd),
+                                      polarity+" Occupancy : Copy Number "+idS, 101, -0.5, 100.5 )
+            oPlotsS[polarity].GetXaxis().SetTitle("HPD Occupancy")
+            oPlotsS[polarity].SetMarkerColor(dataColor)
+            oPlotsS[polarity].SetLineColor(dataColor)
 
         for fl in sorted(data.keys()):
 
@@ -720,11 +772,14 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                     vTimeErr[polarity].append(0.0)
                     vRadius[polarity].append(values['Radius'][0])
                     vRadErr[polarity].append(values['Radius'][1])
+                    vOcc[polarity].append(values['Occupancy'][0])
+                    vOccErr[polarity].append(values['Occupancy'][1])
 
                     # Fill plots
                     xPlots[polarity].Fill( values['ShiftX'][0] )
                     yPlots[polarity].Fill( values['ShiftY'][0] )
                     rPlots[polarity].Fill( values['Radius'][0] )
+                    oPlots[polarity].Fill( values['Occupancy'][0] )
                         
             else :
 
@@ -776,7 +831,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                 else:
                     xPlotsS[polarity].Draw()
                     xPlots[polarity].Draw('SAME')
-                printCanvas() 
+                if createShiftUpdate : printCanvas() 
                 # ======================================================================================
 
                 # ======================================================================================
@@ -815,7 +870,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                 else:
                     yPlotsS[polarity].Draw()
                     yPlots[polarity].Draw('SAME')
-                printCanvas()
+                if createShiftUpdate : printCanvas()
                 # ======================================================================================
 
                 # ======================================================================================
@@ -840,7 +895,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                                                                vRadErr[polarity] )
                 smoothedRad = array('d')
                 for t in vTime[polarity] :
-                    val =smootherRad.Eval(t,3600*smoothSigmaHours) 
+                    val = smootherRad.Eval(t,3600*smoothSigmaHours) 
                     smoothedRad.append( val )
                     rPlotsS[polarity].Fill(val)
                 plotSmoothedRad = TGraph( len(vTime[polarity]), vTime[polarity], smoothedRad )
@@ -854,12 +909,51 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
                 else:
                     rPlotsS[polarity].Draw()
                     rPlots[polarity].Draw('SAME')
-                printCanvas()
+                if createShiftUpdate : printCanvas()
+                # ======================================================================================
+
+                # ======================================================================================
+                canvas.cd(1)
+                plotOcc = TGraphErrors( len(vTime[polarity]), vTime[polarity],
+                                        vOcc[polarity], vTimeErr[polarity], vOccErr[polarity] )
+                plotOcc.SetTitle( polarity+" HPD Occupancy : Copy Number "+idS )
+                plotOcc.GetXaxis().SetTitle(type+" Average time (secs since UNIX epoch)")
+                plotOcc.GetYaxis().SetTitle("Occupancy")
+                plotOcc.SetMarkerColor(dataColor)
+                plotOcc.SetLineColor(dataColor)
+                FitOcc = TF1("AverageHPDOcc"+polarity+idS,"pol"+str(pol),minMaxAvTime[0],minMaxAvTime[1])
+                FitOcc.SetParName(0,"Fitted Occupancy / mm")
+                FitOcc.SetLineColor(dataColor)
+                plotOcc.Fit(FitOcc,"QRS")
+                plotOcc.Draw("ALP")
+                labelDataDB(polarity,dataColor,smoothColor)
+                smootherOcc = gbl.Rich.HPDImage.GraphSmoother( len(vTime[polarity]),
+                                                               vTime[polarity],
+                                                               vOcc[polarity],
+                                                               vTimeErr[polarity],
+                                                               vOccErr[polarity] )
+                smoothedOcc = array('d')
+                for t in vTime[polarity] :
+                    val = smootherOcc.Eval(t,3600*smoothSigmaHours) 
+                    smoothedOcc.append( val )
+                    oPlotsS[polarity].Fill(val)
+                plotSmoothedOcc = TGraph( len(vTime[polarity]), vTime[polarity], smoothedOcc )
+                plotSmoothedOcc.SetMarkerColor(smoothColor)
+                plotSmoothedOcc.SetLineColor(smoothColor)
+                plotSmoothedOcc.Draw("LP")
+                canvas.cd(2)
+                if oPlots[polarity].GetMaximum() > oPlotsS[polarity].GetMaximum():
+                    oPlots[polarity].Draw()
+                    oPlotsS[polarity].Draw('SAME')
+                else:
+                    oPlotsS[polarity].Draw()
+                    oPlots[polarity].Draw('SAME')
+                if createHPDOccUpdate : printCanvas()
                 # ======================================================================================
 
                 # Save fit results
-                avTrendFit[polarity][hpd] = [FitX,FitY,FitRad]
-                smoothers[polarity][hpd]  = [smootherX,smootherY,smootherRad]
+                avTrendFit[polarity][hpd] = [FitX,FitY,FitRad,FitOcc]
+                smoothers[polarity][hpd]  = [smootherX,smootherY,smootherRad,smootherOcc]
 
     # Close the PDF 
     printCanvas(']')
@@ -880,7 +974,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
     # Save MD5 sums for each alignment string
     alignMDsums = { }
-
+ 
     # Finally, loop over the data to create DB updates per HPD
     nflag = 0
     for flag in sorted(alignData.keys()):
@@ -908,67 +1002,117 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
         iDetDataSvc().setEventTime( gbl.Gaudi.Time((unixStartTime+unixStopTime)/2) )
         umsSvc().newEvent()
 
+        # MDMS conditions
+        mdmsConds = { }
+        #for pol in ["MagDown","MagUp","MagOff"]:
+        for pol in ["MagDown","MagUp"]:
+            mdmsConds[pol] = { }
+            for r in ["Rich1","Rich2"] :
+                mdmsConds[pol][r] = { }
+                for p in ["P0","P1"] : mdmsConds[pol][r][p] = { }
+            for copyN in [0,100,210,351]:
+                hpd = richSystem().richSmartID( gbl.Rich.DAQ.HPDCopyNumber(copyN) )
+                mdmsConds[pol][rich(hpd)][panel(hpd)] = getHPDmagCond(pol,gbl.Rich.DAQ.HPDCopyNumber(copyN))
+
+        # HPD Occupancies
+        hpdOccs = { }
+        hpdOccs["Rich1"] = { }
+        hpdOccs["Rich2"] = { }
+        
         # Loop over HPDs
         for hpdID in sorted(alignData[flag].keys()):
             values = alignData[flag][hpdID]
 
             # HPD copy number
             copyNumber = gbl.Rich.DAQ.HPDCopyNumber(hpdID)
+            # SmartID
+            smartID = richSystem().richSmartID(copyNumber)
+            # RICH
+            R = rich(smartID)
         
             # Get the alignment condition
             siAlign = getSiSensorAlignment(copyNumber)
 
             # Get the offsets
             text = basename
+            haveupdate = True
             if   followType == "FollowMovements" and values["FitOK"]:
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
-                magF = magFromRadius(values["ShiftR"][0])
-            elif followType == "FittedPol" and hpdID in avTrendFit[polarity].keys():
+                radF = values["Radius"][0]
+                occ  = values["Occupancy"][0]
+            elif followType == "Average" and hpdID in avTrendFit[polarity].keys():
                 xOff = avTrendFit[polarity][hpdID][0].Eval(avTime)
                 yOff = avTrendFit[polarity][hpdID][1].Eval(avTime)
-                magF = magFromRadius(avTrendFit[polarity][hpdID][2].Eval(avTime))
+                radF = avTrendFit[polarity][hpdID][2].Eval(avTime)
+                occ  = avTrendFit[polarity][hpdID][3].Eval(avTime)
             elif followType == "Smoothed" and hpdID in smoothers[polarity].keys():
                 xOff = smoothers[polarity][hpdID][0].Eval(avTime,3600*smoothSigmaHours)
                 yOff = smoothers[polarity][hpdID][1].Eval(avTime,3600*smoothSigmaHours)
-                magF = magFromRadius(smoothers[polarity][hpdID][2].Eval(avTime,3600*smoothSigmaHours))
+                radF = smoothers[polarity][hpdID][2].Eval(avTime,3600*smoothSigmaHours)
+                occ  = smoothers[polarity][hpdID][3].Eval(avTime,3600*smoothSigmaHours)
             else:
                 xOff = values["DBShiftX"]
                 yOff = values["DBShiftY"]
+                occ  = 0
                 text = "From original DB"
+                haveupdate = False
  
             # Update the Si alignment with the image movement data
-            # ====================================================
-            paramName = "dPosXYZ"
-            vect = siAlign.paramAsDoubleVect(paramName)
-            vect[0] = xOff
-            vect[1] = yOff
-            vect[2] = 0
-            siAlign.addParam( paramName, vect, "" )
-            vect = siAlign.paramAsDoubleVect(paramName)
-            # Double check update is correct
-            if vect[0] != xOff or vect[1] != yOff :
-                print "Warning :  Update mismatch ", xOff, yOff, ":", vect[0], vect[1]
+            if createShiftUpdate :
+                paramName = "dPosXYZ"
+                vect = siAlign.paramAsDoubleVect(paramName)
+                vect[0] = xOff
+                vect[1] = yOff
+                vect[2] = 0
+                siAlign.addParam( paramName, vect, "" )
+                vect = siAlign.paramAsDoubleVect(paramName)
             
-            # The alignment path for the HPD silicon
-            alignPath = siliconAlignmentFilePath(copyNumber)
+                # The alignment path for the HPD silicon
+                alignPath = siliconAlignmentFilePath(copyNumber)
         
-            # Get alignment XML file
-            if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader(type,flag)
+                # Get alignment XML file
+                if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader()
         
-            # Add alignments for this HPD
-            alignments[alignPath] += hpdXMLComment(copyNumber,text)
-            alignments[alignPath] += siAlign.toXml()  + '\n'
+                # Add alignments for this HPD
+                alignments[alignPath] += hpdXMLComment(copyNumber,text)
+                alignments[alignPath] += siAlign.toXml() + '\n'
 
-            # MDMS image magnification factors for RICH2
+            # update MDMS image magnification factors for given HPD
+            if ( createMagUpdate and haveupdate and polarity != "MagOff" and
+                 R == "Rich2" and radF > 0.1 ) :
+                pName = "hpd"+str(hpdID)+"_rec"
+                cond = mdmsConds[polarity][rich(smartID)][panel(smartID)]
+                vect = cond.paramAsDoubleVect(pName)
+                vect[1] = magFromRadius(radF)
+                cond.addParam( pName, vect, "" )
 
+            # HPD Occ
+            hpdOccs[R][smartID.key()] = occ
+
+        # Create HPD.xml updates (RICH2 demag)
+        if createMagUpdate :
+            for R in ["Rich2"] :
+                XmlPath = "/Conditions/"+R+"/Environment/HPD.xml"
+                if XmlPath not in alignments.keys() : alignments[XmlPath] = xmlHeader() + '\n'
+                for pol in ["MagDown","MagUp"]:
+                    for P in ["P0","P1"] : 
+                        alignments[XmlPath] += mdmsConds[pol][R][P].toXml() + '\n\n'
+
+        # Create HPDOccupancies.xml
+        if createHPDOccUpdate :
+            for R in ["Rich1","Rich2"] :
+                XmlPath = "/Conditions/"+R+"/Environment/HPDOccupancies.xml"
+                if XmlPath not in alignments.keys() : alignments[XmlPath] = xmlHeader() + '\n'
+                alignments[XmlPath] += xmlHPDOccs(hpdOccs[R])
+                
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
-        #stopTime  = cool.ValidityKeyMax
+        stopTime  = cool.ValidityKeyMax
         # End of 2010
         #stopTime = getUNIXTime( datetime.datetime( 2010, 12, 31, 23, 59, 59 ) )
         # End of 2011
-        stopTime = getUNIXTime( datetime.datetime( 2011, 12, 31, 23, 59, 59 ) )
+        #stopTime = getUNIXTime( datetime.datetime( 2011, 12, 31, 23, 59, 59 ) )
 
         # Loop over XML files in the fitted DB
         for xmlpath in alignments.keys() :
@@ -980,6 +1124,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
 
             # First time, create the paths in the DB
             if xmlpath not in createdPaths:
+                print "  -> Creating DB path", xmlpath 
                 db.createNode(xmlpath)
                 createdPaths += [xmlpath]
 
@@ -997,7 +1142,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours):
     print "Done ..."
 
 def magFromRadius(radius):
-    return 36.0 / radius
+    if radius == 0 :
+        #print "WARNING : radius = 0, using default 6.48"
+        return 36.0 / 6.48
+    else:
+        return 36.0 / radius
 
 def createDBFile(name):
     import CondDBUI
@@ -1040,3 +1189,24 @@ def rootCanvas():
         rootStyle.applyRootStyle()
         globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",1050,750)
     return globals()["canvas"]
+
+def xmlHPDOccs(hpdOccs):
+    occS = ""
+    for hpd in sorted(hpdOccs.keys()) :
+        if occS != "" : occS += " "
+        occS += str(int32(hpd)) + "/" + str( '%g' % hpdOccs[hpd] )
+    return """<condition classID="5" name="AverageHPDOccupancies">
+<paramVector name="Occupancies" type="std::string" comment="Average HPD occupancy">""" + occS + """</paramVector>
+</condition>
+"""
+
+def int32(x):
+    if x>0xFFFFFFFF:
+        raise OverflowError
+    if x>0x7FFFFFFF:
+        x=int(0x100000000-x)
+        if x<2147483648:
+            return -x
+        else:
+            return -2147483648
+    return x

@@ -3,6 +3,7 @@
 #define RICHHPDIMAGEANALYSIS_GRAPHSMOOTHER_H 1
 
 #include <vector>
+#include <ostream>
 
 namespace Rich
 {
@@ -32,8 +33,17 @@ namespace Rich
                const double _ex = -1,
                const double _ey = -1 ) : x(_x),y(_y),ex(_ex),ey(_ey) { }
       public:
+        /// Overload output to ostream
+        friend inline std::ostream& operator << ( std::ostream& os1, const Point & p )
+        { 
+          return os1 << "[ x=" << p.x << "+-" << p.ex 
+                     << " y="  << p.y << "+-" << p.ey << " ]";
+        }
+      public:
         double x,y,ex,ey;
       };
+
+    public:
 
       /// Type for data container
       typedef std::vector<Point> Data;
@@ -66,6 +76,28 @@ namespace Rich
        */
       double Eval( const double x,
                    const double sigma = 25 ) const;
+
+    public:
+
+      /// read access to the data points
+      const Data & data() const { return m_data; }
+
+    public:
+
+      
+      /// Overload output to ostream
+      friend inline std::ostream& operator << ( std::ostream& os, const GraphSmoother & s )
+      { 
+        os << " { Data points :";
+        for ( GraphSmoother::Data::const_iterator d = s.data().begin(); d != s.data().end(); ++d )
+        {
+          os << " " << *d;
+        }
+        return os << " }";
+      }
+
+      /// Print itself to a string object (useful for python printing)
+      std::string text() const;
 
     private:
 

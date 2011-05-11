@@ -1,5 +1,6 @@
 
 #include <cmath>
+#include <sstream>
 
 // local
 #include "RichHPDImageAnalysis/GraphSmoother.h"
@@ -49,4 +50,11 @@ double GraphSmoother::Eval( const double x,
   }
   
   return (double) ( sum > 0 ? y/sum : 0 );
+}
+
+std::string GraphSmoother::text() const
+{
+  std::ostringstream m;
+  m << *this;
+  return m.str();
 }
