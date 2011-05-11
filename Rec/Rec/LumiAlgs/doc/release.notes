@@ -4,6 +4,8 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-05-11 - Jaap Panman
+ - update unittests
 
 ! 2011-05-06 - Yasmine Amhis 
   - Remove warning messages triggered by LumiIntegrateFSR.cpp 
