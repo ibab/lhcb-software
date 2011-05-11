@@ -5,10 +5,10 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v6r2  2011-05-11 ===================
 ! 2011-05-06 Gerhard Raven
  - skip P2PV relations for photon protoparticles
 
-!========================== Hlt2SharedParticles v6r2  2011-05-06 ===================
 ! 2011-05-06 Gerhard Raven
  - in BasicParticles, replace use of Hlt2UnfittedForwardTracking by 
    Hlt2BiKalmanFittedForwardTracking
