@@ -89,7 +89,9 @@ void PubSvc::analyze(void *, int ,MonMap* mmap)
   else
   {
     delta = tim - m_prevupdate;
+
   }
+  m_prevupdate = tim;
   m_DetMap.Zero();
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
@@ -100,8 +102,8 @@ void PubSvc::analyze(void *, int ,MonMap* mmap)
   m_DetMap_diff = m_DetMap - m_DetMap_old;
   m_DetMap_old = m_DetMap;
   DetMap_T<double> rat = m_DetMap_diff/delta;
-  rat.dump();
   dump();
+  rat.dump();
 }
 
 void PubSvc::dump()

@@ -10,7 +10,7 @@ class myInfo : public DimInfo
 {
 public:
   std::string sName;
-  myInfo(const char * nam, const std::string &snam, char *nlink = "DEAD") : DimInfo(nam,nlink)
+  myInfo(const char * nam, const std::string &snam, const char *nlink = "DEAD") : DimInfo(nam,(char*)nlink)
   {
     sName = snam;
   }
@@ -39,7 +39,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
   DimClient::setDnsNode(DNS);
   std::string rserv = tsk;
   rserv+="/status";
-  myInfo info(rserv.c_str(),tsk);
+  myInfo info((char*)rserv.c_str(),tsk);
   sleep(100000000);
   return 0;
 }

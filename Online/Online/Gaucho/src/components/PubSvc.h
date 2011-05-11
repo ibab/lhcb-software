@@ -26,6 +26,7 @@ template <typename T> class DetData_T : public std::map<std::string,T>
 {
 public:
   static const char* format();
+//  DetData_T<double> operator=(DetData_T<long >&a);
   void Zero()
   {
     typename DetData_T<T>::iterator i;
@@ -57,6 +58,16 @@ public:
 };
 template <> const char* DetData_T<long>::format()  { return "%12li"; }
 template <> const char* DetData_T<double>::format()  { return "%12.2f"; }
+
+void convert(const DetData_T<long> &a, DetData_T<double> &b)
+{
+  DetData_T<long>::const_iterator i;
+  b.clear();
+  for (i=a.begin();i!=a.end();i++)
+  {
+    b[i->first] = (double)i->second;
+  }
+}
 
 template <typename T> DetData_T<T> operator-(const DetData_T<T> &a,const DetData_T<T> &b)
 {
@@ -104,6 +115,15 @@ public:
     }
   }
 };
+void convert(const DetMap_T<long> &a, DetMap_T<double> &b)
+{
+  b.clear();
+  DetMap_T<long>::const_iterator i;
+  for (i=a.begin();i!=a.end();i++)
+  {
+    convert(i->second,b[i->first]);
+  }
+}
 
 template <typename T> DetMap_T<T> operator-(const DetMap_T<T> &a,const DetMap_T<T> &b)
 {
@@ -119,11 +139,12 @@ template <typename T> DetMap_T<T> operator-(const DetMap_T<T> &a,const DetMap_T<
 }
 DetMap_T<double> operator/(const DetMap_T<long> &a,long l)
 {
-  DetMap_T<double> out;
+  DetMap_T<double> out;// = (DetMap_T<long>)a;
   DetData_T<double>::iterator k;
   DetData_T<long>::iterator ii;
   DetMap_T<double>::iterator j;
   DetMap_T<long>::const_iterator i;
+  convert(a,out);
   for (i = a.begin();i!=a.end();i++)
   {
     j = out.find(i->first);
@@ -138,15 +159,15 @@ DetMap_T<double> operator/(const DetMap_T<long> &a,long l)
         {
           long a = ii->second;
           double o;
-          o = double(a)/l;
+          o = ((double)a)/l;
           o = o*1.0e9;
           k->second = o;
         }
       }
     }
   }
+//  out.dump();
   return out;
-
 }
 
 //typedef std::map<std::string,long> DetData_T;

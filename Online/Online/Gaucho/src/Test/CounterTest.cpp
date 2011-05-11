@@ -92,7 +92,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
         int nel = objs[i]->nel;
         for (int j=0;j<nel;j++)
         {
-          printf("index %d value %lli\n",j,p[j]);
+          printf("index %d value %li\n",j,p[j]);
         }
         break;
       }
