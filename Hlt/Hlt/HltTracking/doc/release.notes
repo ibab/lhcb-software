@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltTracking v9r8p1 2011-05-11 ===================
+! 2011-05-11 -  Gerhard Raven
+ - add fiducial OT time window: [-8,56] ns
+
 ! 2011-05-08 -  Roel Aaij
  - Remove Hlt2UnfittedForwardTracking
 

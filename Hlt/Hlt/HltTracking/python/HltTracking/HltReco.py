@@ -75,6 +75,10 @@ STPos.APE = 0.0758
 STOfflinePosition().ErrorVec = [0.257, 0.245, 0.277, 0.208]
 STOfflinePosition().APE = 0.197
 
+from Configurables import OTRawBankDecoder
+OTRawBankDecoder().TimeWindow = ( -8.0, 56.0 ) # add units: ns!!
+
+
 #############################################################################################
 # Configure pattern recognition algorithms
 #############################################################################################
