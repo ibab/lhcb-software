@@ -78,12 +78,18 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         """
         Wrapper for line construction that also registers it to the HltANNSvc.
         """
-        lclAlgos = []
         ## Prepend a filter on the number of tracks, if required.
         Hlt2CharmKillTooManyInTrk = self.__seqGEC()
         lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
         l0filter = self.getProp("L0FILTER").split(',')
+        #  move PV3D upfront in case it is present
+        #  note that any duplication gets automatically removed, so we 
+        #  keep the original 'as is'
+        from HltTracking.HltPVs import PV3D
+        pv = PV3D()
+        if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) : 
+            lclAlgos.insert( 0, pv )
 
         from HltLine.HltLine import Hlt2Line
         line = Hlt2Line(lineName

@@ -10,6 +10,8 @@
 !========================== Hlt2Lines v8r5p1 2011-05-11 ===================
 ! 2011-05-11 - Gerhard Raven
  - in Hlt2diphotonDiMuonLines, fix TISTOS warning
+ - in Hlt2CharmSemilepD02HMuNuLines, Hlt2CharmHadD02HHKsLines, if PV3D present,
+   move it to the front
 
 ! 2011-05-08 - Gerhard Raven
  - in Hlt2diphotonDiMuonLines, replace Photons by BiKalmanFittedPhotons

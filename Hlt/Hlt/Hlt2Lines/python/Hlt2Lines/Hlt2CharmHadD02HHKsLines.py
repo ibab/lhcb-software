@@ -90,6 +90,13 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         Hlt2CharmKillTooManyInTrk = self.__seqGEC()
         lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
         lclAlgos.extend(algos)
+        #  move PV3D upfront in case it is present
+        #  note that any duplication gets automatically removed, so we 
+        #  keep the original 'as is'
+        from HltTracking.HltPVs import PV3D
+        pv = PV3D()
+        if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) : 
+            lclAlgos.insert( 0, pv )
 
         hlt = self.getProp("HLT1FILTER")
         if not hlt : hlt = None
