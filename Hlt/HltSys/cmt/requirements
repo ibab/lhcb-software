@@ -22,7 +22,7 @@ use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r0   Hlt   # Patrick Koppenburg
 use HltSettings         v5r12   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r8    Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r8p1  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r8p1  Hlt   # Gerhard Raven
 use HltMonitor          v1r0    Hlt   # Roel Aaij
 use LoKiTrigger         v12r2   Phys  # Vanya Belyaev
