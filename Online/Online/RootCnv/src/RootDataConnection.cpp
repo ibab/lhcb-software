@@ -404,14 +404,13 @@ RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fi
   if ( b ) {
     Long64_t evt = b->GetEntries();
     if ( fill_missing ) {
-      //if ( 0 == evt && fill_missing ) {
       Long64_t num, nevt = b->GetTree()->GetEntries();
       if ( nevt > evt )   {
         void* p = 0;
         b->SetAddress(&p);
-	num = nevt - b->GetEntries() - 1;
+	num = nevt - b->GetEntries() - 1; // There is another fill after the loop!
 	while( num > 0 ) { b->Fill(); --num; }
-        msgSvc() << MSG::INFO << "Added " << long(nevt-evt) 
+        msgSvc() << MSG::DEBUG << "Added " << long(nevt-evt) 
 		 << " / Tree: " << nevt << " / Branch: " << b->GetEntries()+1
 		 << " NULL entries to:" << cnt << endmsg;
       }

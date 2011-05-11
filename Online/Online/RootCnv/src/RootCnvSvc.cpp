@@ -328,22 +328,25 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
       Long64_t evt = b->GetEntries();
       TTree* t = b->GetTree();
       TObjArray* a = t->GetListOfBranches();
-      for(Int_t i=0, n=a->GetSize(); i<n; ++i) {
-	TBranch* br = (TBranch*)a->At(i);
-	Long64_t br_evt = b->GetEntries();
+      Int_t nb = a->GetEntriesFast();
+      log() << MSG::DEBUG;
+      /// Fill NULL pointers to all branches, which have less entries than the section branch
+      for(Int_t i=0; i<nb; ++i) {
+	TBranch* br_ptr = (TBranch*)a->UncheckedAt(i);
+	Long64_t br_evt = br_ptr->GetEntries();
 	if ( br_evt < evt ) {
 	  void* p = 0;
 	  Long64_t num = evt-br_evt;
-	  br->SetAddress(&p);
-	  while(num>0) { b->Fill(); --num; }
-	  log() << MSG::INFO << "commit: Added " << long(evt-br_evt) 
-		<< " / " << evt << " / " << b->GetEntries()
-		<< " NULL entries to:" << b->GetName() << endmsg;
+	  br_ptr->SetAddress(&p);
+	  while(num>0) { br_ptr->Fill(); --num; }
+	  log() << "commit: Added " << long(evt-br_evt) 
+		<< " Section: " << evt << " Branch: " << br_ptr->GetEntries()
+		<< " RefNo: " << br_ptr->GetEntries()-1 
+		<< " NULL entries to:" << br_ptr->GetName() << endmsg;
 	}
       }
 
       b->GetTree()->SetEntries(evt);
-
       if ( evt == 1 )  {
 	b->GetTree()->OptimizeBaskets(m_setup->basketSize,1.1,"");
       }
@@ -397,7 +400,7 @@ StatusCode RootCnvSvc::createNullRef(const std::string& path) {
   size_t len = path.find('/',1);
   string section = path.substr(1,len==string::npos ? string::npos : len-1);
   pair<int,unsigned long> ret = m_current->save(section,path+"#R",0,refs);
-  log() << MSG::DEBUG << "Writing object:" << path << " " 
+  log() << MSG::VERBOSE << "Writing object:" << path << " " 
     << ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
   return S_OK;
 }
