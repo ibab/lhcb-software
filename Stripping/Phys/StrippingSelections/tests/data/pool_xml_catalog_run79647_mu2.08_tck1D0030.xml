@@ -6,7 +6,7 @@
 
   <File ID="a3db154e-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000090.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000090.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000090.raw"/>
@@ -15,7 +15,7 @@
 
   <File ID="a756c888-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000030.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000030.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000030.raw"/>
@@ -24,7 +24,7 @@
 
   <File ID="4893283c-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000129.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000129.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000129.raw"/>
@@ -33,7 +33,7 @@
 
   <File ID="104bd762-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000016.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000016.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000016.raw"/>
@@ -42,7 +42,7 @@
 
   <File ID="20DC4173-BEC7-DF11-A027-003048CBA51A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000914_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000914_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000914_1.sdst"/>
@@ -51,7 +51,7 @@
 
   <File ID="e13d5cd0-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000100.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000100.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000100.raw"/>
@@ -60,7 +60,7 @@
 
   <File ID="DAD5F74E-BFC7-DF11-A969-003048F1CA1A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000941_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000941_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000941_1.sdst"/>
@@ -69,7 +69,7 @@
 
   <File ID="9c659cea-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000070.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000070.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000070.raw"/>
@@ -78,7 +78,7 @@
 
   <File ID="668d6052-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000087.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000087.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000087.raw"/>
@@ -87,7 +87,7 @@
 
   <File ID="4b02b64c-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000107.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000107.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000107.raw"/>
@@ -96,7 +96,7 @@
 
   <File ID="54C73CD6-BEC7-DF11-869B-003048945644">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000934_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000934_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000934_1.sdst"/>
@@ -105,7 +105,7 @@
 
   <File ID="a756048e-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000029.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000029.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000029.raw"/>
@@ -114,7 +114,7 @@
 
   <File ID="39359fc6-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000062.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000062.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000062.raw"/>
@@ -123,7 +123,7 @@
 
   <File ID="6f111d38-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000047.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000047.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000047.raw"/>
@@ -132,7 +132,7 @@
 
   <File ID="058ef802-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000057.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000057.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000057.raw"/>
@@ -141,7 +141,7 @@
 
   <File ID="988E075A-BFC7-DF11-BFBC-003048D374EC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000937_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000937_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000937_1.sdst"/>
@@ -150,7 +150,7 @@
 
   <File ID="9C888F70-B9C7-DF11-80B4-003048C9BF16">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000845_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000845_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000845_1.sdst"/>
@@ -159,7 +159,7 @@
 
   <File ID="05903db6-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000060.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000060.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000060.raw"/>
@@ -168,7 +168,7 @@
 
   <File ID="42694c48-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000023.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000023.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000023.raw"/>
@@ -177,7 +177,7 @@
 
   <File ID="EE156D3C-B8C7-DF11-8AE3-003048F16B98">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000834_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000834_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000834_1.sdst"/>
@@ -186,7 +186,7 @@
 
   <File ID="0dcde222-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000039.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000039.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000039.raw"/>
@@ -195,7 +195,7 @@
 
   <File ID="604045DF-C3C7-DF11-86E5-003048F16B9A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000962_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000962_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000962_1.sdst"/>
@@ -204,7 +204,7 @@
 
   <File ID="C67B6527-BAC7-DF11-9934-003048F01182">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000835_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000835_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000835_1.sdst"/>
@@ -213,7 +213,7 @@
 
   <File ID="58951BE3-BAC7-DF11-96B6-0030487A1EDC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000875_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000875_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000875_1.sdst"/>
@@ -222,7 +222,7 @@
 
   <File ID="104d08ee-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000018.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000018.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000018.raw"/>
@@ -231,7 +231,7 @@
 
   <File ID="4ABD1A72-BDC7-DF11-995A-0030487C5D04">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000893_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000893_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000893_1.sdst"/>
@@ -240,7 +240,7 @@
 
   <File ID="6f121d1e-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000046.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000046.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000046.raw"/>
@@ -249,7 +249,7 @@
 
   <File ID="8A838C6D-B8C7-DF11-BC82-003048F23FC4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000862_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000862_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000862_1.sdst"/>
@@ -258,7 +258,7 @@
 
   <File ID="DE9BF1F5-B8C7-DF11-85E7-003048CBAF30">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000849_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000849_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000849_1.sdst"/>
@@ -267,7 +267,7 @@
 
   <File ID="7ed47744-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000113.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000113.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000113.raw"/>
@@ -276,7 +276,7 @@
 
   <File ID="52AF5514-BEC7-DF11-A4BB-003048CF9EAC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000917_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000917_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000917_1.sdst"/>
@@ -285,7 +285,7 @@
 
   <File ID="7ed22e8a-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000111.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000111.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000111.raw"/>
@@ -294,7 +294,7 @@
 
   <File ID="b050b9fa-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000097.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000097.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000097.raw"/>
@@ -303,7 +303,7 @@
 
   <File ID="9c669f28-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000071.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000071.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000071.raw"/>
@@ -312,7 +312,7 @@
 
   <File ID="7441acb0-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000025.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000025.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000025.raw"/>
@@ -321,7 +321,7 @@
 
   <File ID="369817CC-BDC7-DF11-8978-0030489453C2">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000903_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000903_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000903_1.sdst"/>
@@ -330,7 +330,7 @@
 
   <File ID="0A8FED89-BEC7-DF11-B7A7-003048F23882">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000928_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000928_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000928_1.sdst"/>
@@ -339,7 +339,7 @@
 
   <File ID="F0CE123C-BCC7-DF11-BE78-003048F1C56C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000860_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000860_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000860_1.sdst"/>
@@ -348,7 +348,7 @@
 
   <File ID="12E8D941-BEC7-DF11-A4DF-003048CBAED2">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000910_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000910_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000910_1.sdst"/>
@@ -357,7 +357,7 @@
 
   <File ID="7c339a46-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000135.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000135.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000135.raw"/>
@@ -366,7 +366,7 @@
 
   <File ID="BE8CF143-BDC7-DF11-95E0-003048F1C46A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000881_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000881_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000881_1.sdst"/>
@@ -375,7 +375,7 @@
 
   <File ID="d9298706-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000034.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000034.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000034.raw"/>
@@ -384,7 +384,7 @@
 
   <File ID="1C6524E8-BEC7-DF11-8B75-003048CFB590">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000939_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000939_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000939_1.sdst"/>
@@ -393,7 +393,7 @@
 
   <File ID="104e95ec-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000017.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000017.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000017.raw"/>
@@ -402,7 +402,7 @@
 
   <File ID="12C31896-BEC7-DF11-90A8-003048C9C50C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000926_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000926_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000926_1.sdst"/>
@@ -411,7 +411,7 @@
 
   <File ID="fffa4116-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000077.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000077.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000077.raw"/>
@@ -420,7 +420,7 @@
 
   <File ID="4012A6C8-C2C7-DF11-BCDC-003048F1BF76">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000959_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000959_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000959_1.sdst"/>
@@ -429,7 +429,7 @@
 
   <File ID="12BCC905-BEC7-DF11-B9EF-003048F1CA38">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000921_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000921_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000921_1.sdst"/>
@@ -438,7 +438,7 @@
 
   <File ID="a08da700-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000051.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000051.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000051.raw"/>
@@ -447,7 +447,7 @@
 
   <File ID="50A11C87-BCC7-DF11-9429-003048CF9B2C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000877_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000877_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000877_1.sdst"/>
@@ -456,7 +456,7 @@
 
   <File ID="EEF240AE-C2C7-DF11-9AA5-0030487CD76C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000960_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000960_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000960_1.sdst"/>
@@ -465,7 +465,7 @@
 
   <File ID="abdf6a64-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000011.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000011.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000011.raw"/>
@@ -474,7 +474,7 @@
 
   <File ID="d4034068-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000054.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000054.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000054.raw"/>
@@ -483,7 +483,7 @@
 
   <File ID="668e2e88-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000086.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000086.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000086.raw"/>
@@ -492,7 +492,7 @@
 
   <File ID="104d9dae-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000019.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000019.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000019.raw"/>
@@ -501,7 +501,7 @@
 
   <File ID="0E23415B-C0C7-DF11-B08B-003048CBA51C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000954_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000954_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000954_1.sdst"/>
@@ -510,7 +510,7 @@
 
   <File ID="de98b30c-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000015.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000015.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000015.raw"/>
@@ -519,7 +519,7 @@
 
   <File ID="64781C63-C3C7-DF11-80DD-003048F1BEBA">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000969_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000969_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000969_1.sdst"/>
@@ -528,7 +528,7 @@
 
   <File ID="3E4C46B3-BEC7-DF11-BA67-0030489452CE">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000930_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000930_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000930_1.sdst"/>
@@ -537,7 +537,7 @@
 
   <File ID="C44CC1D5-BDC7-DF11-881F-003048F1C1B8">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000894_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000894_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000894_1.sdst"/>
@@ -546,7 +546,7 @@
 
   <File ID="af19d2fe-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000137.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000137.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000137.raw"/>
@@ -555,7 +555,7 @@
 
   <File ID="39391354-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000063.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000063.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000063.raw"/>
@@ -564,7 +564,7 @@
 
   <File ID="a3dd8bee-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000092.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000092.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000092.raw"/>
@@ -573,7 +573,7 @@
 
   <File ID="163f4f14-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000127.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000127.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000127.raw"/>
@@ -582,7 +582,7 @@
 
   <File ID="cebd1ab0-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000073.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000073.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000073.raw"/>
@@ -591,7 +591,7 @@
 
   <File ID="163debb0-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000125.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000125.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000125.raw"/>
@@ -600,7 +600,7 @@
 
   <File ID="0b7a983a-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000038.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000038.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000038.raw"/>
@@ -609,7 +609,7 @@
 
   <File ID="96C8983B-BFC7-DF11-974E-003048F11D54">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000932_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000932_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000932_1.sdst"/>
@@ -618,7 +618,7 @@
 
   <File ID="DE125EA2-BAC7-DF11-B4FC-003048F23776">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000869_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000869_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000869_1.sdst"/>
@@ -627,7 +627,7 @@
 
   <File ID="14B13964-BCC7-DF11-A2EE-003048F00532">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000843_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000843_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000843_1.sdst"/>
@@ -636,7 +636,7 @@
 
   <File ID="7c36b906-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000133.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000133.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000133.raw"/>
@@ -645,7 +645,7 @@
 
   <File ID="e13c835a-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000101.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000101.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000101.raw"/>
@@ -654,7 +654,7 @@
 
   <File ID="18f14f42-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000103.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000103.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000103.raw"/>
@@ -663,7 +663,7 @@
 
   <File ID="a3dc709c-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000093.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000093.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000093.raw"/>
@@ -672,7 +672,7 @@
 
   <File ID="403E5060-BEC7-DF11-9838-003048F237E8">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000922_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000922_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000922_1.sdst"/>
@@ -681,7 +681,7 @@
 
   <File ID="243AB067-BDC7-DF11-952B-003048CF8C4A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000902_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000902_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000902_1.sdst"/>
@@ -690,7 +690,7 @@
 
   <File ID="881AB977-BFC7-DF11-97D2-003048F0E1BA">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000882_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000882_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000882_1.sdst"/>
@@ -699,7 +699,7 @@
 
   <File ID="CC0342D0-BFC7-DF11-B232-003048C9B97C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000955_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000955_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000955_1.sdst"/>
@@ -708,7 +708,7 @@
 
   <File ID="abde49ae-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000008.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000008.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000008.raw"/>
@@ -717,7 +717,7 @@
 
   <File ID="6C95B6E5-BDC7-DF11-8F19-003048D2BBCC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000906_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000906_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000906_1.sdst"/>
@@ -726,7 +726,7 @@
 
   <File ID="0078D25D-B8C7-DF11-A9BF-003048F1CA18">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000842_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000842_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000842_1.sdst"/>
@@ -735,7 +735,7 @@
 
   <File ID="3d680b34-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000042.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000042.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000042.raw"/>
@@ -744,7 +744,7 @@
 
   <File ID="16406a70-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000126.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000126.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000126.raw"/>
@@ -753,7 +753,7 @@
 
   <File ID="0EE5A2D9-BEC7-DF11-892E-003048D374E6">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000913_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000913_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000913_1.sdst"/>
@@ -762,7 +762,7 @@
 
   <File ID="d405ebb0-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000056.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000056.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000056.raw"/>
@@ -771,7 +771,7 @@
 
   <File ID="af1b4300-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000136.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000136.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000136.raw"/>
@@ -780,7 +780,7 @@
 
   <File ID="1A658BB6-B8C7-DF11-BFAC-003048945298">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000838_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000838_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000838_1.sdst"/>
@@ -789,7 +789,7 @@
 
   <File ID="6ac0eae6-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000065.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000065.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000065.raw"/>
@@ -798,7 +798,7 @@
 
   <File ID="4E367333-BDC7-DF11-B5CC-003048F1191E">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000886_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000886_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000886_1.sdst"/>
@@ -807,7 +807,7 @@
 
   <File ID="2A601E6E-B8C7-DF11-8365-003048F11C5A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000853_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000853_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000853_1.sdst"/>
@@ -816,7 +816,7 @@
 
   <File ID="80CD1EF9-C3C7-DF11-9B06-003048F1C556">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000950_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000950_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000950_1.sdst"/>
@@ -825,7 +825,7 @@
 
   <File ID="D802EE85-C1C7-DF11-8D6F-003048F179B4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000957_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000957_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000957_1.sdst"/>
@@ -834,7 +834,7 @@
 
   <File ID="d92b271e-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000032.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000032.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000032.raw"/>
@@ -843,7 +843,7 @@
 
   <File ID="e13a6638-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000099.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000099.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000099.raw"/>
@@ -852,7 +852,7 @@
 
   <File ID="AEF41134-BEC7-DF11-97C4-003048CBA6E6">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000909_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000909_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000909_1.sdst"/>
@@ -861,7 +861,7 @@
 
   <File ID="fffb08c6-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000080.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000080.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000080.raw"/>
@@ -870,7 +870,7 @@
 
   <File ID="C6F5EF5B-B8C7-DF11-B041-003048F1BF76">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000844_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000844_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000844_1.sdst"/>
@@ -879,7 +879,7 @@
 
   <File ID="0436EB8B-C3C7-DF11-B165-003048947108">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000967_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000967_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000967_1.sdst"/>
@@ -888,7 +888,7 @@
 
   <File ID="C63EF89C-C1C7-DF11-8643-003048F23840">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000958_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000958_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000958_1.sdst"/>
@@ -897,7 +897,7 @@
 
   <File ID="d92d0eda-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000035.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000035.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000035.raw"/>
@@ -906,7 +906,7 @@
 
   <File ID="089948E6-BDC7-DF11-BE59-0030487CD77C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000888_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000888_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000888_1.sdst"/>
@@ -915,7 +915,7 @@
 
   <File ID="42650c32-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000021.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000021.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000021.raw"/>
@@ -924,7 +924,7 @@
 
   <File ID="e51d6f1e-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000142.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000142.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000142.raw"/>
@@ -933,7 +933,7 @@
 
   <File ID="1CE3344A-BFC7-DF11-B58D-003048CBAED6">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000946_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000946_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000946_1.sdst"/>
@@ -942,7 +942,7 @@
 
   <File ID="e3870976-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000145.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000145.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000145.raw"/>
@@ -951,7 +951,7 @@
 
   <File ID="7CB93225-BAC7-DF11-8515-003048F23FC4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000837_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000837_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000837_1.sdst"/>
@@ -960,7 +960,7 @@
 
   <File ID="abe027c4-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000010.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000010.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000010.raw"/>
@@ -969,7 +969,7 @@
 
   <File ID="668f8f76-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000088.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000088.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000088.raw"/>
@@ -978,7 +978,7 @@
 
   <File ID="E60BBE4D-BDC7-DF11-A2CE-003048F16B98">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000898_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000898_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000898_1.sdst"/>
@@ -987,7 +987,7 @@
 
   <File ID="3297f140-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000083.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000083.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000083.raw"/>
@@ -996,7 +996,7 @@
 
   <File ID="6A8C1A3A-BBC7-DF11-99A7-0030489454DC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000865_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000865_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000865_1.sdst"/>
@@ -1005,7 +1005,7 @@
 
   <File ID="9c63c6c2-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000069.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000069.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000069.raw"/>
@@ -1014,7 +1014,7 @@
 
   <File ID="BCAD7090-BEC7-DF11-BBB9-003048CF5F9A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000897_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000897_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000897_1.sdst"/>
@@ -1023,7 +1023,7 @@
 
   <File ID="42361AD9-BDC7-DF11-B17C-00304879F95C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000905_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000905_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000905_1.sdst"/>
@@ -1032,7 +1032,7 @@
 
   <File ID="ec10b972-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000102.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000102.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000102.raw"/>
@@ -1041,7 +1041,7 @@
 
   <File ID="d1181c88-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000076.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000076.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000076.raw"/>
@@ -1050,7 +1050,7 @@
 
   <File ID="3EA6E8BF-BFC7-DF11-8F20-003048C9C46A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000956_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000956_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000956_1.sdst"/>
@@ -1059,7 +1059,7 @@
 
   <File ID="4891b696-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000130.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000130.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000130.raw"/>
@@ -1068,7 +1068,7 @@
 
   <File ID="5C857FF1-BDC7-DF11-9DBF-003048CF9E54">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000911_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000911_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000911_1.sdst"/>
@@ -1077,7 +1077,7 @@
 
   <File ID="05919e2c-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000059.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000059.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000059.raw"/>
@@ -1086,7 +1086,7 @@
 
   <File ID="A67DED3A-BAC7-DF11-9030-0030487C90E4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000858_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000858_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000858_1.sdst"/>
@@ -1095,7 +1095,7 @@
 
   <File ID="a757fe92-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000031.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000031.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000031.raw"/>
@@ -1104,7 +1104,7 @@
 
   <File ID="B8567497-C3C7-DF11-8223-003048F23882">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000970_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000970_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000970_1.sdst"/>
@@ -1113,7 +1113,7 @@
 
   <File ID="B258B65E-C3C7-DF11-B6EF-003048CF9384">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000968_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000968_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000968_1.sdst"/>
@@ -1122,7 +1122,7 @@
 
   <File ID="4266b2a8-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000020.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000020.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000020.raw"/>
@@ -1131,7 +1131,7 @@
 
   <File ID="7637a0d4-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000001.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000001.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000001.raw"/>
@@ -1140,7 +1140,7 @@
 
   <File ID="7f277e30-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000005.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000005.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000005.raw"/>
@@ -1149,7 +1149,7 @@
 
   <File ID="FCF9A36D-B8C7-DF11-A679-003048D3732A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000854_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000854_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000854_1.sdst"/>
@@ -1158,7 +1158,7 @@
 
   <File ID="9E66B9AB-BAC7-DF11-A895-003048F16B98">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000863_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000863_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000863_1.sdst"/>
@@ -1167,7 +1167,7 @@
 
   <File ID="3d672804-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000040.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000040.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000040.raw"/>
@@ -1176,7 +1176,7 @@
 
   <File ID="de94cb16-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000013.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000013.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000013.raw"/>
@@ -1185,7 +1185,7 @@
 
   <File ID="b043e3a6-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000096.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000096.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000096.raw"/>
@@ -1194,7 +1194,7 @@
 
   <File ID="6ac1c5c4-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000067.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000067.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000067.raw"/>
@@ -1203,7 +1203,7 @@
 
   <File ID="7ed3126e-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000112.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000112.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000112.raw"/>
@@ -1212,7 +1212,7 @@
 
   <File ID="a0906242-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000050.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000050.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000050.raw"/>
@@ -1221,7 +1221,7 @@
 
   <File ID="de95ef6e-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000012.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000012.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000012.raw"/>
@@ -1230,7 +1230,7 @@
 
   <File ID="e29ba806-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000121.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000121.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000121.raw"/>
@@ -1239,7 +1239,7 @@
 
   <File ID="A8D91AA1-BEC7-DF11-AFE7-003048F24358">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000935_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000935_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000935_1.sdst"/>
@@ -1248,7 +1248,7 @@
 
   <File ID="DC921966-C2C7-DF11-B6AE-003048945356">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000936_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000936_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000936_1.sdst"/>
@@ -1257,7 +1257,7 @@
 
   <File ID="059117cc-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000058.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000058.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000058.raw"/>
@@ -1266,7 +1266,7 @@
 
   <File ID="FA03225A-B9C7-DF11-9F5B-00304879F93E">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000833_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000833_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000833_1.sdst"/>
@@ -1275,7 +1275,7 @@
 
   <File ID="6f100524-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000045.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000045.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000045.raw"/>
@@ -1284,7 +1284,7 @@
 
   <File ID="80DC0FEB-BDC7-DF11-BD85-003048F1BF16">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000908_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000908_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000908_1.sdst"/>
@@ -1293,7 +1293,7 @@
 
   <File ID="a08e68e8-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000052.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000052.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000052.raw"/>
@@ -1302,7 +1302,7 @@
 
   <File ID="cebefb28-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000075.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000075.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000075.raw"/>
@@ -1311,7 +1311,7 @@
 
   <File ID="C2A4619D-BEC7-DF11-BD38-003048F01188">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000923_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000923_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000923_1.sdst"/>
@@ -1320,7 +1320,7 @@
 
   <File ID="8453F4CF-32C8-DF11-AEBE-003048F23882">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00002547_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00002547_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00002547_1.sdst"/>
@@ -1329,7 +1329,7 @@
 
   <File ID="6ac2d5d6-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000066.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000066.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000066.raw"/>
@@ -1338,7 +1338,7 @@
 
   <File ID="CA5DEEDE-BBC7-DF11-BFD8-003048976DCC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000880_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000880_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000880_1.sdst"/>
@@ -1347,7 +1347,7 @@
 
   <File ID="b01769ac-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000095.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000095.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000095.raw"/>
@@ -1356,7 +1356,7 @@
 
   <File ID="b1149464-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000119.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000119.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000119.raw"/>
@@ -1365,7 +1365,7 @@
 
   <File ID="b112eba0-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000116.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000116.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000116.raw"/>
@@ -1374,7 +1374,7 @@
 
   <File ID="74411110-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000026.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000026.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000026.raw"/>
@@ -1383,7 +1383,7 @@
 
   <File ID="6ac3f95c-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000068.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000068.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000068.raw"/>
@@ -1392,7 +1392,7 @@
 
   <File ID="3937d2a0-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000061.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000061.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000061.raw"/>
@@ -1401,7 +1401,7 @@
 
   <File ID="DE2F6E68-BDC7-DF11-A3A5-0030487C91B0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000899_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000899_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000899_1.sdst"/>
@@ -1410,7 +1410,7 @@
 
   <File ID="3E374D7B-B9C7-DF11-BE47-003048F11D54">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000847_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000847_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000847_1.sdst"/>
@@ -1419,7 +1419,7 @@
 
   <File ID="329a55e8-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000085.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000085.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000085.raw"/>
@@ -1428,7 +1428,7 @@
 
   <File ID="660A6A8A-BAC7-DF11-A276-003048CF9384">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000850_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000850_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000850_1.sdst"/>
@@ -1437,7 +1437,7 @@
 
   <File ID="b1138290-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000118.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000118.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000118.raw"/>
@@ -1446,7 +1446,7 @@
 
   <File ID="2A29CA4E-BDC7-DF11-86D3-003048F009A2">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000900_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000900_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000900_1.sdst"/>
@@ -1455,7 +1455,7 @@
 
   <File ID="22517CB7-C3C7-DF11-B833-003048F17958">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000966_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000966_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000966_1.sdst"/>
@@ -1464,7 +1464,7 @@
 
   <File ID="e4587538-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000144.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000144.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000144.raw"/>
@@ -1473,7 +1473,7 @@
 
   <File ID="345AA767-C3C7-DF11-B927-0030487A1874">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000942_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000942_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000942_1.sdst"/>
@@ -1482,7 +1482,7 @@
 
   <File ID="641D1EB2-BEC7-DF11-B3A7-003048CBA8D6">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000943_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000943_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000943_1.sdst"/>
@@ -1491,7 +1491,7 @@
 
   <File ID="806508B6-BCC7-DF11-9362-0030487CD762">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000887_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000887_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000887_1.sdst"/>
@@ -1500,7 +1500,7 @@
 
   <File ID="329babc8-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000084.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000084.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000084.raw"/>
@@ -1509,7 +1509,7 @@
 
   <File ID="ECDD9ACA-BDC7-DF11-841D-003048CFB1A0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000904_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000904_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000904_1.sdst"/>
@@ -1518,7 +1518,7 @@
 
   <File ID="b111fc2c-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000117.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000117.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000117.raw"/>
@@ -1527,7 +1527,7 @@
 
   <File ID="de977f78-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000014.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000014.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000014.raw"/>
@@ -1536,7 +1536,7 @@
 
   <File ID="E86DFE75-BEC7-DF11-82FD-003048F1B862">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000919_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000919_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000919_1.sdst"/>
@@ -1545,7 +1545,7 @@
 
   <File ID="B2E5D9CC-C2C7-DF11-AD62-003048F16FA6">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000951_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000951_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000951_1.sdst"/>
@@ -1554,7 +1554,7 @@
 
   <File ID="0A6121A8-C2C7-DF11-9CEE-0030487CD762">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000963_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000963_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000963_1.sdst"/>
@@ -1563,7 +1563,7 @@
 
   <File ID="e29acf76-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000122.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000122.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000122.raw"/>
@@ -1572,7 +1572,7 @@
 
   <File ID="6C08B8A2-BEC7-DF11-A7E8-003048F1C5C0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000925_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000925_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000925_1.sdst"/>
@@ -1581,7 +1581,7 @@
 
   <File ID="447990C7-C3C7-DF11-B720-003048F1C7D4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000961_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000961_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000961_1.sdst"/>
@@ -1590,7 +1590,7 @@
 
   <File ID="e29a2b2a-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000120.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000120.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000120.raw"/>
@@ -1599,7 +1599,7 @@
 
   <File ID="7c35d644-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000134.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000134.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000134.raw"/>
@@ -1608,7 +1608,7 @@
 
   <File ID="e126ba1e-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000143.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000143.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000143.raw"/>
@@ -1617,7 +1617,7 @@
 
   <File ID="1C5C80BF-BCC7-DF11-90FA-00304879F228">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000885_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000885_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000885_1.sdst"/>
@@ -1626,7 +1626,7 @@
 
   <File ID="4b01f09a-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000110.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000110.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000110.raw"/>
@@ -1635,7 +1635,7 @@
 
   <File ID="163cc334-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000124.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000124.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000124.raw"/>
@@ -1644,7 +1644,7 @@
 
   <File ID="abdcf0ae-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000009.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000009.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000009.raw"/>
@@ -1653,7 +1653,7 @@
 
   <File ID="74426f6a-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000027.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000027.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000027.raw"/>
@@ -1662,7 +1662,7 @@
 
   <File ID="384CD7BF-C2C7-DF11-AA1F-003048F17CA0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000965_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000965_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000965_1.sdst"/>
@@ -1671,7 +1671,7 @@
 
   <File ID="78E92913-B8C7-DF11-89C2-003048F01182">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000840_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000840_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000840_1.sdst"/>
@@ -1680,7 +1680,7 @@
 
   <File ID="18ef1b64-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000104.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000104.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000104.raw"/>
@@ -1689,7 +1689,7 @@
 
   <File ID="744329be-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000024.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000024.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000024.raw"/>
@@ -1698,7 +1698,7 @@
 
   <File ID="6f12a928-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000048.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000048.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000048.raw"/>
@@ -1707,7 +1707,7 @@
 
   <File ID="C0424177-BEC7-DF11-AF64-003048F17CA0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000924_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000924_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000924_1.sdst"/>
@@ -1716,7 +1716,7 @@
 
   <File ID="F2B3185D-B8C7-DF11-BE2D-003048F0105E">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000846_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000846_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000846_1.sdst"/>
@@ -1725,7 +1725,7 @@
 
   <File ID="B67C16D7-BDC7-DF11-BFDC-0030489470E0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000901_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000901_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000901_1.sdst"/>
@@ -1734,7 +1734,7 @@
 
   <File ID="4CDDEF6E-BAC7-DF11-AA30-003048F2370C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000857_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000857_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000857_1.sdst"/>
@@ -1743,7 +1743,7 @@
 
   <File ID="9c6777ea-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000072.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000072.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000072.raw"/>
@@ -1752,7 +1752,7 @@
 
   <File ID="1C07C76E-BCC7-DF11-B994-003048C9C500">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000878_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000878_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000878_1.sdst"/>
@@ -1761,7 +1761,7 @@
 
   <File ID="2E80F10A-BBC7-DF11-8D57-003048F23856">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000870_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000870_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000870_1.sdst"/>
@@ -1770,7 +1770,7 @@
 
   <File ID="54CF0BBA-BDC7-DF11-A493-0030487C6356">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000896_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000896_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000896_1.sdst"/>
@@ -1779,7 +1779,7 @@
 
   <File ID="7c347772-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000132.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000132.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000132.raw"/>
@@ -1788,7 +1788,7 @@
 
   <File ID="fffd4a0a-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000079.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000079.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000079.raw"/>
@@ -1797,7 +1797,7 @@
 
   <File ID="04454BA2-BBC7-DF11-B4D4-003048F1CA5C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000872_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000872_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000872_1.sdst"/>
@@ -1806,7 +1806,7 @@
 
   <File ID="e13ba99e-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000098.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000098.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000098.raw"/>
@@ -1815,7 +1815,7 @@
 
   <File ID="af1ab7dc-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000138.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000138.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000138.raw"/>
@@ -1824,7 +1824,7 @@
 
   <File ID="68B55D53-BFC7-DF11-B907-003048C9C46A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000945_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000945_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000945_1.sdst"/>
@@ -1833,7 +1833,7 @@
 
   <File ID="393687f6-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000064.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000064.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000064.raw"/>
@@ -1842,7 +1842,7 @@
 
   <File ID="e0bf4834-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000140.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000140.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000140.raw"/>
@@ -1851,7 +1851,7 @@
 
   <File ID="DC9130E8-BBC7-DF11-BBA5-0030489453F0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000879_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000879_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000879_1.sdst"/>
@@ -1860,7 +1860,7 @@
 
   <File ID="F6D92F08-C2C7-DF11-8F53-003048F1C9F8">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000947_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000947_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000947_1.sdst"/>
@@ -1869,7 +1869,7 @@
 
   <File ID="BA62F23E-BDC7-DF11-AE1E-003048F1C1BA">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000876_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000876_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000876_1.sdst"/>
@@ -1878,7 +1878,7 @@
 
   <File ID="7cfeabba-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000004.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000004.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000004.raw"/>
@@ -1887,7 +1887,7 @@
 
   <File ID="34FBC0E9-BDC7-DF11-8156-003048CFAE14">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000916_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000916_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000916_1.sdst"/>
@@ -1896,7 +1896,7 @@
 
   <File ID="BC173DB5-BDC7-DF11-9E78-00304879FA34">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000895_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000895_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000895_1.sdst"/>
@@ -1905,7 +1905,7 @@
 
   <File ID="e29d1740-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000123.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000123.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000123.raw"/>
@@ -1914,7 +1914,7 @@
 
   <File ID="148E39AD-BEC7-DF11-92AB-003048C9CC68">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000931_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000931_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000931_1.sdst"/>
@@ -1923,7 +1923,7 @@
 
   <File ID="AC55094B-BFC7-DF11-9855-003048CBA640">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000948_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000948_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000948_1.sdst"/>
@@ -1932,7 +1932,7 @@
 
   <File ID="B6CBA3A5-BDC7-DF11-A186-003048CBA51A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000907_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000907_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000907_1.sdst"/>
@@ -1941,7 +1941,7 @@
 
   <File ID="d401f618-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000053.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000053.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000053.raw"/>
@@ -1950,7 +1950,7 @@
 
   <File ID="18E7EC5C-B8C7-DF11-8495-003048CBA640">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000864_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000864_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000864_1.sdst"/>
@@ -1959,7 +1959,7 @@
 
   <File ID="5A01DECE-BCC7-DF11-A288-003048F17CA0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000883_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000883_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000883_1.sdst"/>
@@ -1968,7 +1968,7 @@
 
   <File ID="EAD0409E-BCC7-DF11-A3E1-003048F0094E">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000852_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000852_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000852_1.sdst"/>
@@ -1977,7 +1977,7 @@
 
   <File ID="18f2822c-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000106.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000106.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000106.raw"/>
@@ -1986,7 +1986,7 @@
 
   <File ID="800B705C-B8C7-DF11-B869-003048CBA516">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000851_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000851_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000851_1.sdst"/>
@@ -1995,7 +1995,7 @@
 
   <File ID="0b791e6a-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000036.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000036.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000036.raw"/>
@@ -2004,7 +2004,7 @@
 
   <File ID="2257B93C-BFC7-DF11-8D62-003048F1191E">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000938_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000938_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000938_1.sdst"/>
@@ -2013,7 +2013,7 @@
 
   <File ID="1EC8DA1D-BEC7-DF11-B39F-0030487C5C54">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000912_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000912_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000912_1.sdst"/>
@@ -2022,7 +2022,7 @@
 
   <File ID="3d6a7a5e-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000043.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000043.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000043.raw"/>
@@ -2031,7 +2031,7 @@
 
   <File ID="4b00830e-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000109.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000109.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000109.raw"/>
@@ -2040,7 +2040,7 @@
 
   <File ID="fffbe30e-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000078.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000078.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000078.raw"/>
@@ -2049,7 +2049,7 @@
 
   <File ID="0E27CEF4-B8C7-DF11-8FFC-003048F009CE">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000836_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000836_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000836_1.sdst"/>
@@ -2058,7 +2058,7 @@
 
   <File ID="cebdfcaa-c741-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000074.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000074.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000074.raw"/>
@@ -2067,7 +2067,7 @@
 
   <File ID="881C496E-BEC7-DF11-BB8A-003048C9C2BC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000927_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000927_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000927_1.sdst"/>
@@ -2076,7 +2076,7 @@
 
   <File ID="18f081ca-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000105.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000105.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000105.raw"/>
@@ -2085,7 +2085,7 @@
 
   <File ID="48943916-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000131.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000131.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000131.raw"/>
@@ -2094,7 +2094,7 @@
 
   <File ID="e0c0ded8-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000141.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000141.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000141.raw"/>
@@ -2103,7 +2103,7 @@
 
   <File ID="2822ACD3-BEC7-DF11-AA21-0030489453DA">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000944_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000944_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000944_1.sdst"/>
@@ -2112,7 +2112,7 @@
 
   <File ID="940D0D5E-B8C7-DF11-93B9-003048CFAE14">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000848_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000848_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000848_1.sdst"/>
@@ -2121,7 +2121,7 @@
 
   <File ID="CC0A818F-BFC7-DF11-BF14-003048F1BEBA">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000949_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000949_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000949_1.sdst"/>
@@ -2130,7 +2130,7 @@
 
   <File ID="E4873052-B8C7-DF11-8194-003048F236F4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000874_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000874_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000874_1.sdst"/>
@@ -2139,7 +2139,7 @@
 
   <File ID="1C548593-C3C7-DF11-BF09-003048D37522">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000940_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000940_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000940_1.sdst"/>
@@ -2148,7 +2148,7 @@
 
   <File ID="3C6C1D6B-BCC7-DF11-BB81-003048F16B8E">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000884_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000884_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000884_1.sdst"/>
@@ -2157,7 +2157,7 @@
 
   <File ID="423C0E6C-BDC7-DF11-8BBD-003048F01182">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000871_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000871_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000871_1.sdst"/>
@@ -2166,7 +2166,7 @@
 
   <File ID="AA0A2277-B8C7-DF11-B1BD-003048CFB1A0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000861_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000861_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000861_1.sdst"/>
@@ -2175,7 +2175,7 @@
 
   <File ID="a3de973c-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000091.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000091.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000091.raw"/>
@@ -2184,7 +2184,7 @@
 
   <File ID="60553A12-BEC7-DF11-8D02-0030487CAECC">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000866_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000866_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000866_1.sdst"/>
@@ -2193,7 +2193,7 @@
 
   <File ID="74115F8B-BEC7-DF11-BBE8-003048F17970">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000920_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000920_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000920_1.sdst"/>
@@ -2202,7 +2202,7 @@
 
   <File ID="6813BCC7-BBC7-DF11-8FD5-0030487C8CE0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000859_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000859_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000859_1.sdst"/>
@@ -2211,7 +2211,7 @@
 
   <File ID="781e247c-c73e-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000003.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000003.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000003.raw"/>
@@ -2220,7 +2220,7 @@
 
   <File ID="7CC66A41-BDC7-DF11-9F06-003048CFB394">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000892_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000892_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000892_1.sdst"/>
@@ -2229,7 +2229,7 @@
 
   <File ID="FE3E8D47-BDC7-DF11-8DD6-0030487CD734">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000889_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000889_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000889_1.sdst"/>
@@ -2238,7 +2238,7 @@
 
   <File ID="d4043b08-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000055.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000055.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000055.raw"/>
@@ -2247,7 +2247,7 @@
 
   <File ID="F4BF8EA9-BFC7-DF11-8F96-003048F1C54C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000952_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000952_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000952_1.sdst"/>
@@ -2256,7 +2256,7 @@
 
   <File ID="EC3DCFE5-B8C7-DF11-AE45-003048CBAED4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000839_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000839_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000839_1.sdst"/>
@@ -2265,7 +2265,7 @@
 
   <File ID="48C027B8-C3C7-DF11-8EEB-003048F1C7C2">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000964_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000964_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000964_1.sdst"/>
@@ -2274,7 +2274,7 @@
 
   <File ID="1A760D7C-BAC7-DF11-B3EF-003048F1C5C4">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000855_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000855_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000855_1.sdst"/>
@@ -2283,7 +2283,7 @@
 
   <File ID="48926f5a-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000128.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000128.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000128.raw"/>
@@ -2292,7 +2292,7 @@
 
   <File ID="0b789c38-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000037.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000037.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000037.raw"/>
@@ -2301,7 +2301,7 @@
 
   <File ID="3C5222A6-BEC7-DF11-9109-003048F23BB2">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000915_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000915_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000915_1.sdst"/>
@@ -2310,7 +2310,7 @@
 
   <File ID="af1c1334-c744-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000139.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000139.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000139.raw"/>
@@ -2319,7 +2319,7 @@
 
   <File ID="d92b63be-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000033.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000033.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000033.raw"/>
@@ -2328,7 +2328,7 @@
 
   <File ID="3d68a13e-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000041.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000041.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000041.raw"/>
@@ -2337,7 +2337,7 @@
 
   <File ID="FEA3DE5E-BDC7-DF11-835A-003048CFB590">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000890_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000890_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000890_1.sdst"/>
@@ -2346,7 +2346,7 @@
 
   <File ID="66910b26-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000089.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000089.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000089.raw"/>
@@ -2355,7 +2355,7 @@
 
   <File ID="CAB67FA6-BEC7-DF11-9337-003048CFAF78">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000933_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000933_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000933_1.sdst"/>
@@ -2364,7 +2364,7 @@
 
   <File ID="58073861-B8C7-DF11-8AE4-003048CFAE00">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000856_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000856_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000856_1.sdst"/>
@@ -2373,7 +2373,7 @@
 
   <File ID="22C47892-BAC7-DF11-A220-003048F1C1BA">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000867_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000867_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000867_1.sdst"/>
@@ -2382,7 +2382,7 @@
 
   <File ID="C06A4D34-BEC7-DF11-A86C-003048F1C41A">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000918_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000918_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000918_1.sdst"/>
@@ -2391,7 +2391,7 @@
 
   <File ID="a08fd7b4-c740-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000049.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000049.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000049.raw"/>
@@ -2400,7 +2400,7 @@
 
   <File ID="08D04390-B9C7-DF11-A275-0030487CD91C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000841_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000841_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000841_1.sdst"/>
@@ -2409,7 +2409,7 @@
 
   <File ID="6E024096-BAC7-DF11-826B-003048F24332">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000868_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000868_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000868_1.sdst"/>
@@ -2418,7 +2418,7 @@
 
   <File ID="E04727A8-BEC7-DF11-A378-0030489453F0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000929_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000929_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000929_1.sdst"/>
@@ -2427,7 +2427,7 @@
 
   <File ID="819bd86e-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000114.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000114.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000114.raw"/>
@@ -2436,7 +2436,7 @@
 
   <File ID="42680676-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000022.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000022.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000022.raw"/>
@@ -2445,7 +2445,7 @@
 
   <File ID="B62D0860-C4C7-DF11-8C80-0030487CD91C">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000953_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000953_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000953_1.sdst"/>
@@ -2454,7 +2454,7 @@
 
   <File ID="329918a4-c742-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000082.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000082.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000082.raw"/>
@@ -2463,7 +2463,7 @@
 
   <File ID="48E1CC32-BAC7-DF11-BF76-003048F1C9D0">
      <physical>
-       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000873_1.sdst?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="ROOT_All" name="rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/SDST/00007951/0000/00007951_00000873_1.sdst?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/SDST/00007951/0000/00007951_00000873_1.sdst"/>
@@ -2472,7 +2472,7 @@
 
   <File ID="4afff614-c743-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000108.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000108.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000108.raw"/>
@@ -2481,7 +2481,7 @@
 
   <File ID="a754deb0-c73f-11df-8bc5-00188b856c33">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000028.raw?svcClass=lhcbrdst&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000028.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/79647/079647_0000000028.raw"/>

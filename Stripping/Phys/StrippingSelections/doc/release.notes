@@ -3,11 +3,18 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-05-11 - Jibo He
+ - tests/data/xmlfiles*
+   Following P. Charpentier, replace "lhcbdst", "lhcbdata" or lhcbmdst" with "lhcbdisk";
+   replace "lhcbraw" or "lhcbrdst" with "lhcbtape"
+   
 !2011-05-10 Wenbin Qian
-modifed input sequence for B2SameCharge to fastern the process
-remove PID cuts from B2XMuMuSS	
+  modifed input sequence for B2SameCharge to fastern the process
+  remove PID cuts from B2XMuMuSS	
+
 ! 2011-05-10 WenbinQian
-modified criteria for B2XMuMuSS to remove mass constrain on dimuon mass
+  modified criteria for B2XMuMuSS to remove mass constrain on dimuon mass
 
 ! 2011-05-10 - Liming Zhang
  - partially reconstruct D0->K3pi lines in StrippingD0ForBXX.py
