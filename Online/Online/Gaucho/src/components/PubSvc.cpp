@@ -60,14 +60,14 @@ void PubSvc::filldata(const std::string &cnam,MonMap *mmap)
   if ( it != mmap->end() )
   {
     CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(it->second);
-    long *p = (long*)h->ptr;
+    long long *p = (long long*)h->ptr;
     for (int i=0;i<h->nel;i++)
     {
       TellMap_T::iterator t=m_TellMap.find(i);
       if (t != m_TellMap.end())
       {
-        DetData_T<long>& d= m_DetMap.find(t->second.det)->second;
-        DetData_T<long>::iterator k = d.find(cnam);
+        DetData_T<long long>& d= m_DetMap.find(t->second.det)->second;
+        DetData_T<long long>::iterator k = d.find(cnam);
         if (k != d.end())
         {
           k->second += p[i];
@@ -249,7 +249,7 @@ void PubSvc::fillTellMap()
     m_TellMap.insert(std::make_pair(i/3,TellDesc(nam,j==s_nammap.end() ? "UNKNOWN" : (*j).second)));
   }
 
-  DetData_T<long> a;
+  DetData_T<long long> a;
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
     a[s_counterTypes[i]] = 0;
