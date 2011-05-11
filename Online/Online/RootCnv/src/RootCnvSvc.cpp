@@ -326,7 +326,24 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
     TBranch* b = m_current->getBranch(section, m_currSection);
     if ( b ) {
       Long64_t evt = b->GetEntries();
+      TTree* t = b->GetTree();
+      TObjArray* a = t->GetListOfBranches();
+      for(Int_t i=0, n=a->GetSize(); i<n; ++i) {
+	TBranch* br = (TBranch*)a->At(i);
+	Long64_t br_evt = b->GetEntries();
+	if ( br_evt < evt ) {
+	  void* p = 0;
+	  Long64_t num = evt-br_evt;
+	  br->SetAddress(&p);
+	  while(num>0) { b->Fill(); --num; }
+	  log() << MSG::INFO << "commit: Added " << long(evt-br_evt) 
+		<< " / " << evt << " / " << b->GetEntries()
+		<< " NULL entries to:" << b->GetName() << endmsg;
+	}
+      }
+
       b->GetTree()->SetEntries(evt);
+
       if ( evt == 1 )  {
 	b->GetTree()->OptimizeBaskets(m_setup->basketSize,1.1,"");
       }
@@ -460,6 +477,10 @@ StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
       string section = par[1].substr(1,len==string::npos ? string::npos : len-1);
 
       int nb = con->loadObj(section,par[1],ipar[1],pObj);
+      bool accept = nb>1;
+      if ( !accept ) accept |= (nb == 1 && pObj->clID() == CLID_DataObject);
+      if ( !accept ) accept |= (nb == 0 && pObj->clID() == CLID_DataObject);
+
       if ( nb > 1 || (nb == 1 && pObj->clID() == CLID_DataObject) ) {
         refpObj = pObj;
         return S_OK;

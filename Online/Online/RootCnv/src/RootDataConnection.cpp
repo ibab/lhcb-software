@@ -403,16 +403,17 @@ RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fi
   TBranch* b = getBranch(section, cnt, cl);
   if ( b ) {
     Long64_t evt = b->GetEntries();
-    if ( 0 == evt && fill_missing ) {
-      Long64_t nevt = b->GetTree()->GetEntries();
-      if ( nevt > evt ) {
+    if ( fill_missing ) {
+      //if ( 0 == evt && fill_missing ) {
+      Long64_t num, nevt = b->GetTree()->GetEntries();
+      if ( nevt > evt )   {
         void* p = 0;
         b->SetAddress(&p);
-        for(Long64_t i=0; i<nevt; ++i) {
-          b->Fill();
-        }
-        msgSvc() << MSG::INFO << "Added " << long(b->GetEntries()) 
-          << " NULL entries to:" << cnt << endmsg;
+	num = nevt - b->GetEntries() - 1;
+	while( num > 0 ) { b->Fill(); --num; }
+        msgSvc() << MSG::INFO << "Added " << long(nevt-evt) 
+		 << " / Tree: " << nevt << " / Branch: " << b->GetEntries()+1
+		 << " NULL entries to:" << cnt << endmsg;
       }
     }
     b->SetAddress(&pObj);
@@ -445,6 +446,14 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
         msgSvc() << "Load [" << entry << "] --> " << section 
           << ":" << cnt << "  " << nb << " bytes." 
           << endmsg;
+      }
+      if ( nb == 0 && pObj->clID() == CLID_DataObject) {
+	TFile* f = b->GetFile();
+	if ( f->GetVersion() < 52400 ) {
+	  // For Gaudi v21r5 (ROOT 5.24.00b) DataObject::m_version was not written!
+	  // Still this call be well be successful.
+	  nb = 1;
+	}
       }
       return nb;
     }

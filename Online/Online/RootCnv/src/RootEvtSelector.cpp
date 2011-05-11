@@ -45,6 +45,8 @@ namespace Gaudi {
     long                          m_entry;
     /// Reference to the top level branch (typically /Event) used to iterate
     TBranch*                      m_branch;
+    /// Connection fid
+    std::string                   m_fid;
   public:
     /// Standard constructor with initialization
     RootEvtSelectorContext(const RootEvtSelector* s) : m_sel(s),m_entry(-1),m_branch(0){}
@@ -67,6 +69,10 @@ namespace Gaudi {
     long entry() const                               { return m_entry;        }
     /// Set current event entry number
     void setEntry(long e)                            { m_entry = e;           }
+    /// Set connection FID
+    void setFID(const std::string& fid)              { m_fid = fid;           }
+    /// Access connection fid
+    const std::string& fid() const                   { return m_fid;          }
     /// Access to the top level branch (typically /Event) used to iterate
     TBranch* branch() const                          { return m_branch;       }
     /// Set the top level branch (typically /Event) used to iterate
@@ -167,6 +173,7 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
           string section = m_rootName[0] == '/' ? m_rootName.substr(1) : m_rootName;
           b = con->getBranch(section,m_rootName);
           if ( b ) {
+	    pCtxt->setFID(con->fid());
             pCtxt->setBranch(b);
             return next(ctxt);
           }
@@ -187,6 +194,7 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
     pCtxt->setFileIterator(++fit);
     pCtxt->setEntry(-1);
     pCtxt->setBranch(0);
+    pCtxt->setFID("");
     return next(ctxt);
   }
   return StatusCode::FAILURE;
@@ -234,6 +242,7 @@ StatusCode RootEvtSelector::rewind(Context& ctxt) const   {
       string input = *fileit;
       m_dbMgr->disconnect(input).ignore();
     }
+    pCtxt->setFID("");
     pCtxt->setEntry(-1);
     pCtxt->setBranch(0);
     pCtxt->setFileIterator(pCtxt->files().begin());
@@ -251,7 +260,7 @@ RootEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
     if ( ent >= 0 )  {
       RootEvtSelectorContext::Files::const_iterator fileit = pctxt->fileIterator();
       if ( fileit != pctxt->files().end() ) {
-        const string par[2] = {*fileit, m_rootName};
+        const string par[2] = {pctxt->fid(), m_rootName};
         const unsigned long ipar[2] = {0,ent};
         return m_dbMgr->createAddress(m_dbMgr->repSvcType(),m_rootCLID,&par[0],&ipar[0],pAddr);
       }
