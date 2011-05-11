@@ -101,7 +101,8 @@ def fillDB(calibration,db,runsTimes,rad):
     dStartTime = runsTimes["RunTimes"][run]["Start"]
     #dStopTime  = runsTimes["RunTimes"][run]["Stop"]
     #dStopTime  = runsTimes["GlobalStopTime"]
-    dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
+    #dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
+    dStopTime  = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
     stopTime  = getUNIXTime( dStopTime  )
@@ -111,7 +112,7 @@ def fillDB(calibration,db,runsTimes,rad):
     scale = '%g' % scaleF[0]
 
     # Store in the DB
-    print " -> Setting", rad, "(n-1) Scale", scale, "for", run, dStartTime, "to", dStopTime
+    print " -> Setting", rad, "(n-1) Scale", scale, "for run", run, dStartTime, "to", dStopTime
     db.storeXMLString( path, genXML(scale,run), startTime, stopTime )
 
 def getRunTimes(calibrations):

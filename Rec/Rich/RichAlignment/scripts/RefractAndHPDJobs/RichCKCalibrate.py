@@ -20,7 +20,6 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
     # Number of target events to process
     nEventsTotal    = 250000
     nFilesMax       = 10000
-    nFilesPerJobMax = 2
 
     RunLFNs = getRunLFNData(pickedRuns)
 
@@ -32,9 +31,8 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
         if len(lfns)>0 :
 
             nFiles = len(lfns)
-            nFilesPerJob = nFilesPerJobMax
-            if nFilesPerJob > nFiles : nFilesPerJob = nFiles
             if nFiles > nFilesMax : nFiles = nFilesMax
+            nFilesPerJob = nJobs(nFiles)
             nEventsPerJob = nFilesPerJob * nEventsTotal / nFiles
             print "Using", nFiles, "data file(s),", nEventsPerJob, "events per job"
 
@@ -118,11 +116,9 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     if jobType == "RefInCalib" :
         nEventsTotal    = 500000
         nFilesMax       = 150
-        nFilesPerJobMax = 3
     else:
         nEventsTotal    = 500000
         nFilesMax       = 150
-        nFilesPerJobMax = 3
 
     # Base Job Name
     basejobname = jobType
@@ -148,14 +144,16 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     dbFiles  = [ ]
 
     # All years
-    dbFiles += ["NewMDMSCondDB-28022011"]
+    #dbFiles += ["NewMDMSCondDB-28022011"]
 
     # 2010 data only
-    #dbFiles += ["MDMS-RootFiles-RunAligned-Sobel-Smoothed3hours-21042011"] 
-    #dbFiles += ["New2010MirrorAlign-15042011"]
+    dbFiles += ["New2010MirrorAlign-15042011"]
+    dbFiles += ["2010RootFiles-RunAligned-Sobel-Smoothed3hours-XYShiftsOnly-06052011"]
 
     # Only for 2011 data IOVs cover everywhere
-    dbFiles += ["Tracking-2011-v5.3-03052011"]
+    #dbFiles += ["Tracking-2011-v5.3-03052011"]
+    #dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed3hours-XYShiftsOnly-09052011"]
+    #dbFiles += ["2011MirrorAlign-09052011"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -210,8 +208,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     # Configure number of files and events per file
                     nFiles = len(lfns)
                     if nFiles > nFilesMax : nFiles = nFilesMax
-                    nFilesPerJob = nFilesPerJobMax
-                    if nFilesPerJob > nFiles : nFilesPerJob = nFiles
+                    nFilesPerJob = nJobs(nFiles)
                     nEventsPerJob = nFilesPerJob * nEventsTotal / nFiles
           
                     # Make a job object
@@ -268,12 +265,13 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
                     # Submit !!
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
-                    print " -> Using", nFiles, "data file(s), max", nFilesPerJob, "file(s) per subjob,", nEventsPerJob, "events per job"
+                    print " -> Using", nFiles, "data file(s), max", nFilesPerJob, \
+                          "file(s) per subjob,", nEventsPerJob, "events per job"
                     for f in j.inputdata.files : print "  ->", f.name
-                    if checkInputDataReplicas(j.inputdata.files) :
+                    try:
                         j.submit()
-                    else:
-                        print "ERROR : Problem with input LFNs. Job not submitted."
+                    except Exception,e:
+                        print "WARNING : Job not submitted"
                         j.remove()
 
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
@@ -655,7 +653,7 @@ def addToJobTree(j,dir):
     fulldir = "/RichCalibration/"+dir
     if not jobtree.exists(fulldir) : jobtree.mkdir(fulldir)
     jobtree.cd(fulldir)
-    jobtree.add(j)
+    jobtree.add(j,fulldir)
     
 def jobExists(jobname):
     from Ganga.GPI import jobs
@@ -1027,6 +1025,12 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
                 preFitFType = "gaus"
                 preFitF = TF1(rad+"PreFitF",preFitFType,fitMin,fitMax)
                 preFitF.SetLineColor(preFitColor)
+                # Starting params
+                preFitF.SetParameter(1,0)
+                if rad == 'Rich1Gas' :
+                    preFitF.SetParameter(2,0.0015)
+                else:
+                    preFitF.SetParameter(2,0.0007)
  
                 # Do the pre fit with just a Gaussian
                 hist.Fit(preFitF,"QRS0")
@@ -1105,7 +1109,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
                     result = { 'Message' : "Fit OK",
                                'OK'      : True,
                                'Mean'    : [bestFitF.GetParameter(1),bestFitF.GetParError(1)],
-                               'Sigma'   : [bestFitF.GetParameter(2),bestFitF.GetParError(2)]
+                               'Sigma'   : [abs(bestFitF.GetParameter(2)),bestFitF.GetParError(2)]
                                }
                 else:
                     result['Message'] = "Histogram Fit Failed"
@@ -1218,5 +1222,22 @@ def checkInputDataReplicas(lfns):
             print "ERROR : LFN", lfn.name, "has no replicas"
             OK = False
     return OK
+
+def nJobs(nFiles):
+    if nFiles == 1 : return 1
+    if nFiles == 2 : return 1
+    if nFiles == 3 : return 2
+    if nFiles == 4 : return 2
+    if nFiles == 5 : return 2
+    if nFiles < 20 : return 3
+    return 5
+
+def removeCalibrationDataSet(name,BrunelVer="v39r2"):
+    from Ganga.GPI import jobtree
+    js = getCalibrationJobList(name,statuscodes=['completed','running','submitted','failed'])
+    for j in js : j.remove()
+    path = '/RichCalibration/RefInCalib-'+name+'_BR-'+BrunelVer
+    if jobtree.exists(path) : jobtree.rm(path)
+    jobtree.cd('/RichCalibration')
 
 #=============================================================================================

@@ -10,14 +10,14 @@ It runs under the LHCbDirac environment, so
  > SetupProject LHCbDirac
  > lhcb-proxy-init
 
-It requires 4 arguments, e.g.
+It requires 6 arguments, e.g.
 
  > ./GetLFNsByRun.py
-Usage: GetLFNsByRun.py <year> <month> <firstday> <lastday>
+Usage: GetLFNsByRun <year> <startmonth> <startday> <lastmonth> <lastday>
 
 So for example
 
- > ./GetLFNsByRun.py 2010 5 1 31
+ > ./GetLFNsByRun.py 2011 1 1 5 8
 
 This script will produce output bzipped and pickled python files in the RunData 
 sub-directory. Note that files for each full month are stored in SVN, so you
