@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v13r5>2011-05-10 HltSys v13r5p1</A></H1><PRE>
+! 2011-05-10 - Gerhard Raven
+ - Minor bug fixes and tweaks 
+
 </PRE><H1><A NAME=v13r5>2011-05-04 HltSys v13r5</A></H1><PRE>
 ! 2011-05-04 - Gerhard Raven
  - update to Gaudi v22r2 stack, optimize Hlt1, add a few new
