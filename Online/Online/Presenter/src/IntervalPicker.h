@@ -46,11 +46,14 @@ class IntervalPickerData {
   /// Destructor
   virtual ~IntervalPickerData( ) { ; } ;
 
-  /// Start time as a string
-  const char * getStartTimeString( ) ;
+  /// duration as a string
+  const char * durationString( ) ;
 
   /// End time as a string
-  const char * getEndTimeString( ) ;
+  const char * startTimeString( ) ;
+
+  /// End time as a string
+  const char * endTimeString( ) ;
 
   /// Set start run
   void setStartRun( const int run ) { m_startRun = run ; } ;

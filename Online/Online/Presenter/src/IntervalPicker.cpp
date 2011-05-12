@@ -755,31 +755,47 @@ void IntervalPicker::ok() {
     if (m_lastMinutesRadioButton->IsDown()) {
       if (m_presInfo->currentTime() ) {
         m_presInfo->currentTime() ->Set();
-        year = m_presInfo->currentTime()->GetYear();
+        year  = m_presInfo->currentTime()->GetYear();
         month = m_presInfo->currentTime()->GetMonth();
-        day = m_presInfo->currentTime()->GetDay();
-        hour = m_presInfo->currentTime()->GetHour();
-        min = m_presInfo->currentTime()->GetMinute();
-        sec = m_presInfo->currentTime()->GetSecond();
+        day   = m_presInfo->currentTime()->GetDay();
+        hour  = m_presInfo->currentTime()->GetHour();
+        min   = m_presInfo->currentTime()->GetMinute();
+        sec   = m_presInfo->currentTime()->GetSecond();
 
         m_presInfo-> setGlobalTimePoint( m_archive -> createIsoTimeString(year, month, day,
                                                                           hour, min, sec) ) ;
+        m_intData -> setEndTime( year , month , day , hour , min , sec ) ;
+        std::cout << "  end date : " << year << "/" << month << "/" << day << " " << hour << ":" << min << std::endl;
       }
-
-      m_minutesEntry->GetTime(hour, min, sec);
+      int dHour, dMin, dSec;
+      m_minutesEntry->GetTime(dHour, dMin, dSec);
       std::stringstream pastDurationStringStream;
-      pastDurationStringStream << std::setfill('0') << std::setw(2) << hour << ":" <<
-        std::setfill('0') << std::setw(2) << min << ":" <<
-        std::setfill('0') << std::setw(2) << sec;
+      pastDurationStringStream << std::setfill('0') << std::setw(2) << dHour << ":" <<
+        std::setfill('0') << std::setw(2) << dMin << ":" <<
+        std::setfill('0') << std::setw(2) << dSec;
       m_presInfo -> setGlobalPastDuration( pastDurationStringStream.str() ) ;
+      hour -= dHour;
+      min  -= dMin;
+      if ( min < 0 ) {
+        min += 60;
+        hour -= 1;
+      }
+      if ( hour < 0 ) {
+        hour += 24;
+        day  -= 1;
+      }
+      m_intData -> setStartTime( year , month , day , hour , min , sec ) ;
+      std::cout << "start date : " << year << "/" << month << "/" << day << " " << hour << ":" << min << std::endl;
 
     } else if (m_timeIntervalRadioButton->IsDown()) {
       m_startDateNumberEntry->GetDate(year, month, day);
       m_startTimeNumberEntry->GetTime(hour, min, sec);
+      m_intData -> setStartTime( year , month , day , hour , min , sec ) ;
       std::string startTimeIsoString = m_archive -> createIsoTimeString(year, month, day,
                                                                         hour, min, sec);
       m_endDateNumberEntry->GetDate(year, month, day);
       m_endTimeNumberEntry->GetTime(hour, min, sec);
+      m_intData -> setEndTime( year , month , day , hour , min , sec ) ;
       std::string  endTimeIsoString = m_archive->createIsoTimeString(year, month, day,
                                                                      hour, min, sec);
 
@@ -794,7 +810,8 @@ void IntervalPicker::ok() {
       std::setfill('0') << std::setw(2) << min << ":" <<
       std::setfill('0') << std::setw(2) << sec;
     m_presInfo -> setGlobalStepSize( stepTimeStringStream.str() ) ;
-  } else if (1 == m_mainTab->GetCurrent()) {
+
+  } else if (1 == m_mainTab->GetCurrent()) {  // run
     if (m_runFillIntervalRadioButton->IsDown()) {
       m_presInfo -> setGlobalHistoryByRun( true ) ;
       if ( IntervalPickerData::SingleRun != m_intData -> getMode() ) {
@@ -828,32 +845,43 @@ void IntervalPicker::ok() {
     }
   }
 
-  Int_t year , month, day, hour, min, sec;
-  m_startDateNumberEntry -> GetDate(year, month, day) ;
-  m_startTimeNumberEntry -> GetTime(hour, min, sec)   ;
-  m_intData -> setStartTime( year , month , day , hour , min , sec ) ;
-
-  m_endDateNumberEntry->GetDate(year, month, day);
-  m_endTimeNumberEntry->GetTime(hour, min, sec);
-  m_intData -> setEndTime( year , month , day , hour , min , sec ) ;
-
   CloseWindow();
 }
 
 //===========================================================================
 // Get start time as a string
 //===========================================================================
-const char* IntervalPickerData::getStartTimeString() {
-  return Form("%d/%d/%d %2d:%2d" , m_startDay , m_startMonth ,
-              m_startYear , m_startHour , m_startMin ) ;
+const char* IntervalPickerData::startTimeString() {
+  return Form("%d-%02d-%02d %02d:%02d" ,  m_startYear, m_startMonth, m_startDay,
+              m_startHour , m_startMin ) ;
+}
+
+//===========================================================================
+// Get end time as a string
+//===========================================================================
+const char* IntervalPickerData::endTimeString() {
+  return Form("%d-%02d-%02d %02d:%02d" ,  m_endYear, m_endMonth, m_endDay,
+              m_endHour , m_endMin ) ;
 }
 
 //============================================================================
-// Get end time as a string
+// Get duration as a string
 //============================================================================
-const char* IntervalPickerData::getEndTimeString() {
-  return Form("%d/%d/%d %02d:%02d" , m_endDay , m_endMonth ,
-              m_endYear , m_endHour , m_endMin ) ;
+const char* IntervalPickerData::durationString() {
+  int dMin  = m_endMin   - m_startMin;
+  int dHour = m_endHour  - m_startHour;
+  int dDay  = m_endDay   - m_startDay;
+  int dMon  = m_endMonth - m_startMonth;
+  int dYear = m_endYear  - m_startYear;
+  if ( dMin < 0 ) {
+    dMin += 60;
+    dHour -= 1;
+  }
+  dDay  += 365 * dYear;
+  dDay  +=  30 * dMon;
+  dHour +=  24 * dDay;
+  
+  return Form("%02d:%02d", dHour, dMin ) ;
 }
 
 //============================================================================

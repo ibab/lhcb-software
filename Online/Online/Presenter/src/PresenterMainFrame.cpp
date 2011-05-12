@@ -4159,10 +4159,10 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           }
         } else {
           bannerText = Form("From %s to %s",
-                           m_intervalPickerData->getStartTimeString(),
-                           m_intervalPickerData->getEndTimeString());
-          m_presenterInfo.setTimeC( m_intervalPickerData->getStartTimeString(),
-                                    m_intervalPickerData->getEndTimeString() );
+                           m_intervalPickerData->startTimeString(),
+                           m_intervalPickerData->endTimeString());
+          m_presenterInfo.setTimeC( m_intervalPickerData->startTimeString(),
+                                    m_intervalPickerData->durationString(), true );
         }
       }
       if (m_verbosity >= pres::Verbose)

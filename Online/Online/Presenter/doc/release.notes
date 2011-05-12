@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-05-12 - Olivier Callot
+ - Fix the handling of the time interval in history mode.
+
 ! 2011-05-06 - Olivier Callot
  - Create a banner on top of the page with page name and source of information
 
