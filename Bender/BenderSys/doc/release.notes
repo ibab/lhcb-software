@@ -24,7 +24,16 @@
 </PRE>
 
 <H1>
-<A NAME=v17r1p1>2011-05-02 Bender v17r1p2 based on the DaVinci v28r2p2</A>
+<A NAME=v17r1p3>2011-05-02 Bender v17r1p3 based on the DaVinci v28r2p2</A>
+</H1>	
+
+<PRE>		
+The version is very similar to v17r1p2, but it is adapted to the new 
+structure of LHCb Castor pools
+</PRE>
+
+<H1>
+<A NAME=v17r1p2>2011-05-02 Bender v17r1p2 based on the DaVinci v28r2p2</A>
 </H1>	
 
 <PRE>		
