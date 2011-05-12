@@ -73,14 +73,28 @@ def extendfile1 ( filename ) :
     ## 
     if   0 == filename.find ( '/castor/cern.ch/grid/lhcb/user/' ) :
         filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbuser' % filename
-    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/data/' ) :
-        filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbmdst' % filename
+
+    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/data/' )                or \
+            0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision10' )  or \
+            0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision11' )  :
+        
+        _len = len(filename) 
+        if   _len - 4  == filename.find ( '.raw'  ) :
+            filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbtape' % filename
+        elif _len - 5  == filename.find ( '.rdst' ) :
+            filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbtape' % filename
+        else:
+            filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbdisk' % filename
+
     elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/MC/'   ) :
-        filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbdata' % filename
+        filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbdisk' % filename
+
     elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/'      ) :
         filename = 'PFN:root://castorlhcb.cern.ch/%s'                   % filename
+
     elif 0 == filename.find ( '/castor/cern.ch'                 ) :
         filename = 'PFN:castor:' + filename
+
     elif 0 == filename.find ( '//castor'    ) : return extendfile1 ( filename[1:] ) ## RECURSION!
     elif os.path.exists ( filename )          : filename = 'PFN:' + filename 
     elif 0 == filename.find ( '/lhcb/data/' ) or \
