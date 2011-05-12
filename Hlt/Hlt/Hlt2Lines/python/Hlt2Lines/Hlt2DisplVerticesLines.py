@@ -285,7 +285,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
         from Configurables    import PatSeeding,PatSeedingTool
         recoSeeding = PatSeeding('DVSeeding', OutputTracksName = seedTrackOutputLocation)
+        from HltTracking.HltReco import MaxOTHits
         recoSeeding.addTool(PatSeedingTool, name="PatSeedingTool")
+        recoSeeding.PatSeedingTool.MaxOTHits = MaxOTHits
         recoSeeding.PatSeedingTool.UseForward        = True
         recoSeeding.PatSeedingTool.UseForwardTracks  = False
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True

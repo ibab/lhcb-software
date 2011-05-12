@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 !========================== Hlt2Lines v8r5p1 2011-05-11 ===================
+! 2011-05-12 - Gerhard Raven
+ - in Hlt2DisplVerticesLines use the centrally defined MaxOTHits for seeding
+
 ! 2011-05-11 - Gerhard Raven
  - in Hlt2diphotonDiMuonLines, fix TISTOS warning
  - in Hlt2CharmSemilepD02HMuNuLines, Hlt2CharmHadD02HHKsLines, if PV3D present,
