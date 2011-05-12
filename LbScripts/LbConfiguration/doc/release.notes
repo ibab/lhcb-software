@@ -1,3 +1,8 @@
+2011-05-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: reduced project checks on CVMFS (it should reduce the
+	number of catalogs needed)
+
 2011-05-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/AllProjectsSetup.py:

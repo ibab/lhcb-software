@@ -9,6 +9,7 @@ from tempfile import mkstemp
 
 from LbConfiguration import createProjectMakefile, createEclipseConfiguration
 from LbUtils.Temporary import TempDir
+from LbUtils.Path import isCVMFS
 
 from LbConfiguration.Version import ParseSvnVersion
 __version__ = ParseSvnVersion("$Id$", "$URL$")
@@ -260,10 +261,21 @@ def _sync_dicts(src, dest):
     for k in src:
         dest[k] = src[k]
 
-def isProject(path, ignore_not_ready = False):
+def isProject(path, ignore_not_ready = False, cvmfs = False):
     # It is a project directory if it contains cmt/project.cmt and it doesn't
     # contain NOT_READY (unless we are told to ignore that flag).
     # NOT_READY -> projects that are being released
+    if cvmfs:
+        # On CVMFS it's too heavy to look for the project.cmt file, so we rely on
+        # the naming convention (path/to/PROJECT/PROJECT_vXrY).
+        try:
+            # take the last two elements of the path
+            p, v = path.rsplit(os.path.sep, 2)[-2:]
+            # check that they are like PROJECT and PROJECT_vXrY
+            return v.startswith(p + "_") and lhcb_style_version.match(v[len(p)+1:])
+        except:
+            return False
+    # on other filesystems we use a better check
     return os.path.isfile(os.path.join(path,'cmt','project.cmt')) and \
            (ignore_not_ready
             or not os.path.exists(os.path.join(path, 'NOT_READY')))
@@ -297,7 +309,7 @@ def FindProjectVersions(project, search_path, user_area = None,
     if user_area and os.path.isdir(user_area):
         user_projects = [d for d in os.listdir(user_area)
                          if isProject(os.path.join(user_area,d),
-                                      ignore_not_ready)]
+                                      ignore_not_ready, False)] # User area never on CVMFS
         # look for projects with names starting with <project>
         candidates = [d for d in user_projects
                       if d.startswith(project)]
@@ -320,9 +332,10 @@ def FindProjectVersions(project, search_path, user_area = None,
     PROJECT = project.upper()
     # search_path = os.environ["CMTPROJECTPATH"].split(os.path.pathsep)
     for d in search_path:
+        cvmfs = isCVMFS(d) # let's assume that we do not have mount points inside a CVMFS
         p = os.path.join(d,PROJECT)
         if os.path.isdir(p):
-            if isProject(p, ignore_not_ready):
+            if isProject(p, ignore_not_ready, cvmfs):
                 # project without version
                 versions.append((project, None, PROJECT, d))
             else:
@@ -330,7 +343,7 @@ def FindProjectVersions(project, search_path, user_area = None,
                 versions += [ (project, _extract_version(PROJECT,v),
                                os.path.join(PROJECT,v), d)
                                for v in os.listdir(p)
-                               if isProject(os.path.join(p,v), ignore_not_ready) ]
+                               if isProject(os.path.join(p,v), ignore_not_ready, cvmfs) ]
     return versions
 
 def SortVersions(versions, reverse = False):
