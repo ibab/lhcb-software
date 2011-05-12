@@ -112,6 +112,8 @@ confdict =  {
         "B2DDAll_Postscale"             : 1.0,
         "B2DStarDAll_Prescale"          : 1.0,
         "B2DStarDAll_Postscale"         : 1.0,
+        "B2DStarDKAll_Prescale"          : 1.0,
+        "B2DStarDKAll_Postscale"         : 1.0,
         "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
         "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
         "WSB2D3H_Prescale"              : 0.1,
@@ -250,7 +252,9 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                               "UnbiasedB2DPiPiPiAll_Prescale",
                               "UnbiasedB2DPiPiPiAll_Postscale",
                               "WSB2D3H_Prescale",
-                              "WSB2D3H_Postscale"
+                              "WSB2D3H_Postscale",
+                              "B2DStarDKAll_Prescale",
+                              "B2DStarDKAll_Postscale"
                               )
 
 
@@ -501,6 +505,12 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                         DZVtxSep = config['DZVtxSep'],
                                         DDRPV = config['DDRPV']      
                                         )
+
+        # Make X(cc) -> D*+D-
+        self.selXcc = makeXccMeson('ForB2XccK'+name,self.selDStar,self.selDch)
+
+        # Make WS X(cc) -> D*+D-
+        self.selXccWS = makeXccWSMeson('ForB2XccK'+name,self.selDStar,self.selDch)
 
         # Make B- --> D~0 (pipipi)+
         name1 = 'B2D0PiPiPi' + name
@@ -763,6 +773,24 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                    decayDesc = "[Lambda_b0 -> Lambda_c+ Xi_c~-]cc",
                                    parentB = "Lambda_b0")
 
+        # Make B+ --> D*- D+ K+
+        theName = 'B2DStarDK' + name
+        self.B2DStarDK = makeB2D3H(theName,
+                                   dSel = self.selXcc,
+                                   hhhSel = self.selKaons,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[B+ -> eta_c(1S) K+]cc",
+                                   parentB = "B+")
         
 
         # ----------------------------------
@@ -965,12 +993,30 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                    decayDesc = "[Lambda_b0 -> Lambda_c+ Xi_c+]cc",
                                    parentB = "Lambda_b0")
 
+        # Make WS B+ --> D*+ D+ K+
+        theName = 'WSB2DStarDK' + name
+        self.WSB2DStarDK = makeB2D3H(theName,
+                                     dSel = self.selXccWS,
+                                     hhhSel = self.selKaons,
+                                     BMassWindow = config['BMassWindow'],
+                                     BMinPT = config['BMinPT'],
+                                     MinPT = config['MinPT'],
+                                     BIP2PV = config['BIP2PV'],
+                                     BIPChisq2PV = config['BIPChisq2PV'],
+                                     BVtxChisq = config['BVtxChisq'],
+                                     BVtxSepChisq = config['BVtxSepChisq'],
+                                     BDiraPV = config['BDiraPV'],
+                                     BZVtxSep = config['BZVtxSep'],
+                                     BDZVtxSep = config['BDZVtxSep'],
+                                     BDRPV = config['BDRPV'],      
+                                     decayDesc = "[B+ -> eta_c(1S) K+]cc",
+                                     parentB = "B+")
 
 
         # Now create stripping lines...
         
         # These are for the full mass region with sidebands.
-        # These lines should be prescaled forst, if necessary.
+        # These lines should be prescaled first, if necessary.
 
         #---------------------------
         # Right-Sign Stripping Lines
@@ -1080,6 +1126,13 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                                     FILTER = self.EventFilter
                                                     )
 
+        self.StrippingAllB2DStarDKLine = StrippingLine('AllB2DStarDKLine'+name,
+                                                       prescale = config['B2DStarDKAll_Prescale'],
+                                                       postscale = config['B2DStarDKAll_Postscale'],
+                                                       selection = self.B2DStarDK, 
+                                                       FILTER = self.EventFilter
+                                                       )
+
         #---------------------------
         # Wrong-Sign Stripping Lines
         #---------------------------
@@ -1165,6 +1218,12 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                                                      FILTER = self.EventFilter
                                                                    )
 
+        self.StrippingAllWSB2DStarDKLine = StrippingLine('AllWSB2DStarDKLine'+name,
+                                                         prescale = config['WSB2D3H_Prescale'],
+                                                         postscale = config['WSB2D3H_Postscale'],
+                                                         selection = self.WSB2DStarDK, 
+                                                         FILTER = self.EventFilter
+                                                         )
         
 
 
@@ -1182,7 +1241,8 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.registerLine ( self.StrippingAllLambdaB2LambdaCPiPiPiLine )	#might be an error in line                
         self.registerLine ( self.StrippingAllLambdaB2LambdaCKPiPiLine )                       
         self.registerLine ( self.StrippingAllLambdaB2LambdaCPPbarPiLine )
-        self.registerLine ( self.StrippingAllLambdaB2LambdaCPPbarKLine )	
+        self.registerLine ( self.StrippingAllLambdaB2LambdaCPPbarKLine )
+        self.registerLine ( self.StrippingAllB2DStarDKLine )
         self.registerLine ( self.StrippingAllWSB2DPiPiPiLine )                       
         self.registerLine ( self.StrippingAllWSB2DKPiPiLine )                      
         self.registerLine ( self.StrippingAllWSB2DStarPiPiPiLine )                       
@@ -1192,7 +1252,8 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPiPiPiLine )                      
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCKPiPiLine )                      
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarPiLine )
-        self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarKLine )	
+        self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarKLine )
+        self.registerLine ( self.StrippingAllWSB2DStarDKLine )
         
 def MyEventFilter(name, MaxTracks):
     """
@@ -1772,6 +1833,19 @@ def makeLambdaC(name,
 
     return LambdaC2PKPiSelection
 
+def makeXccMeson(name,dstarSel,dSel):
+    '''Creates and returns the X(cc) hybrid meson selection object from D* and D selection objects.'''
+    alg = CombineParticles(name='DstarD'+name,DecayDescriptor="[eta_c(1S) -> D*(2010)+ D-]cc")
+    alg.CombinationCut = 'AM < 6000*MeV'
+    alg.MotherCut = 'M < 6000*MeV'
+    return Selection('XccSel'+name,Algorithm=alg,RequiredSelections=[dstarSel,dSel])
+
+def makeXccWSMeson(name,dstarSel,dSel):
+    '''Creates and returns the WS X(cc) hybrid meson selection object from D* and D selection objects.'''
+    alg = CombineParticles(name='DstarDWS'+name,DecayDescriptor="[eta_c(1S) -> D*(2010)+ D+]cc")
+    alg.CombinationCut = 'AM < 6000*MeV'
+    alg.MotherCut = 'M < 6000*MeV'
+    return Selection('XccWSSel'+name,Algorithm=alg,RequiredSelections=[dstarSel,dSel])
 
 def makeB2D3H( name,
                dSel,
