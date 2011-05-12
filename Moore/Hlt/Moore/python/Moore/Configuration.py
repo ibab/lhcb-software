@@ -497,6 +497,17 @@ class Moore(LHCbConfigurableUser):
                             , skipDisabled               = self.getProp('SkipDisabledL0Channels')
                             , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') 
                             )
+            # TODO: nasty hack to insure all L0 algorithms request the right type of config provider...
+            #       should extend the L0 configurable to support this explicitly
+            if self.getProp('ForceSingleL0Configuration') :
+                    def _fixL0DUConfigProviderTypes() :
+                        from Gaudi.Configuration import allConfigurables
+                        for c in allConfigurables.values() :
+                            if hasattr(c,'L0DUConfigProviderType') : c.L0DUConfigProviderType = 'L0DUConfigProvider' 
+                
+                    from Gaudi.Configuration import appendPostConfigAction
+                    appendPostConfigAction( _fixL0DUConfigProviderTypes )
+
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
