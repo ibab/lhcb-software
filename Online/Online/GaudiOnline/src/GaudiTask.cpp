@@ -26,6 +26,7 @@ extern "C" void _PyGILState_Fini();
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
 
 using namespace LHCb;
+using namespace std;
 
 static    lib_rtl_lock_t  s_lock = 0;
 
@@ -43,9 +44,9 @@ int gauditask_task_unlock() {
   return ::lib_rtl_unlock(s_lock);
 }
 
-static std::string loadScript(const std::string& fname) {
-  std::ifstream file(fname.c_str());
-  std::stringstream str;
+static string loadScript(const string& fname) {
+  ifstream file(fname.c_str());
+  stringstream str;
   if( file ) {
     char ch;
     while( file.get(ch) ) str.put(ch);
@@ -78,7 +79,7 @@ void GaudiTask::PythonInterpreter::reinitializeGIL() {
 
 /// Static thread routine to execute a Gaudi runable
 int GaudiTask::execRunable(void* arg)  {
-  std::pair<IRunable*,GaudiTask*>* p = (std::pair<IRunable*,GaudiTask*>*)arg;
+  pair<IRunable*,GaudiTask*>* p = (pair<IRunable*,GaudiTask*>*)arg;
   try {
     IRunable*  r = p->first;
     GaudiTask* t = p->second;
@@ -90,7 +91,7 @@ int GaudiTask::execRunable(void* arg)  {
     return ret;
   }
   catch(...) {
-    std::cout << "Exception while running main thread." << std::endl;
+    cout << "Exception while running main thread." << endl;
   }
   p->second->setEventThread(false);
   delete p;
@@ -148,16 +149,16 @@ StatusCode GaudiTask::run()  {
       }
       m_appMgr = ui;
       if ( m_autostart == 1 )  {
-	std::cout << "Commencing checkpoint sequence..." << std::endl;
+	cout << "Commencing checkpoint sequence..." << endl;
 	IOCSENSOR.send(this,CONFIGURE);
       }
       else if ( m_autostart == 2 )  {
-	std::cout << "Commencing autostart sequence..." << std::endl;
+	cout << "Commencing autostart sequence..." << endl;
 	IOCSENSOR.send(this,CONFIGURE);
 	IOCSENSOR.send(this,INITIALIZE);
       }
       else if ( m_autostart == 3 )  {
-	std::cout << "Commencing autostart sequence..." << std::endl;
+	cout << "Commencing autostart sequence..." << endl;
 	IOCSENSOR.send(this,CONFIGURE);
 	IOCSENSOR.send(this,INITIALIZE);
 	IOCSENSOR.send(this,START);
@@ -177,8 +178,13 @@ void GaudiTask::output(int level, const char* s)  {
   log << MSG::Level(level) << s << endmsg;
 }
 
+void GaudiTask::output(int level, const string& s)  {
+  MsgStream log(msgSvc(), name());
+  log << MSG::Level(level) << s << endmsg;
+}
+
 StatusCode GaudiTask::unload()  {
-  m_python = std::auto_ptr<PythonInterpreter>(0);
+  m_python = auto_ptr<PythonInterpreter>(0);
   m_appMgr->stop();
   m_appMgr->finalize();
   m_appMgr->terminate();
@@ -241,7 +247,7 @@ StatusCode GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
 
 StatusCode GaudiTask::startRunable(IRunable* runable)   {
   MsgStream log(msgSvc(), name());
-  std::pair<IRunable*,GaudiTask*>* p = new std::pair<IRunable*,GaudiTask*>(runable,this);
+  pair<IRunable*,GaudiTask*>* p = new pair<IRunable*,GaudiTask*>(runable,this);
   m_eventThread = true;
   int sc = lib_rtl_start_thread(execRunable, p, &m_handle);
   if ( lib_rtl_is_success(sc) )  {
@@ -277,7 +283,7 @@ int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
   m_eventThread = false;
-  if (m_optOptions.find(".opts") != std::string::npos)
+  if (m_optOptions.find(".opts") != string::npos)
     sc = configSubManager();
   else
     sc = configPythonSubManager();
@@ -348,7 +354,7 @@ int GaudiTask::initApplication()  {
 int GaudiTask::startApplication()  {
   MsgStream log(msgSvc(), name());
   if ( 0 != m_subMgr )  {
-    std::string nam, runable_name;
+    string nam, runable_name;
     SmartIF<IProperty>   ip(m_subMgr);
     SmartIF<ISvcLocator> loc(m_subMgr);
 
@@ -434,7 +440,7 @@ int GaudiTask::stopApplication()  {
 	m_incidentSvc->fireIncident(incident);
       }
     }
-    catch(const std::exception& e) {
+    catch(const exception& e) {
       MsgStream log(msgSvc(), name());
       log << MSG::ERROR << "Crash while stopping 2nd.Layer:" << e.what() << endmsg;
     }
@@ -451,35 +457,47 @@ int GaudiTask::stopApplication()  {
 int GaudiTask::finalizeApplication()  {
   if ( m_subMgr )  {
     try {
+      StatusCode sc = StatusCode::SUCCESS;
       if ( m_handle )  {
         ::lib_rtl_join_thread(m_handle);
         m_handle = 0;
         PythonInterpreter::reinitializeGIL();
       }
       gauditask_task_lock();
+      // First check if the process is still in state 'RUNNING'
+      // If yes. call first 'stop'
+      SmartIF<IService> isvc(m_subMgr);
+      if ( isvc.get() ) {
+	if ( isvc->FSMState() == Gaudi::StateMachine::RUNNING ) {
+	  output(MSG::ALWAYS,"Attemp to call finalize before stop: will take corrective action....");
+	  sc = isvc->stop();
+	  if ( !sc.isSuccess() )   {
+	    output(MSG::ERROR,"Failed to stop the application");
+	    gauditask_task_unlock();
+	    return 0;
+	  }
+	}
+      }
       // If e.g.Class1 processes are reset() before start(), then the incident service 
       // is still connected, and a later cancel() would access violate.
       // Hence check again if the incident service is still present.
       if ( m_incidentSvc ) {
-        m_incidentSvc->removeListener(this);
-        m_incidentSvc->release();
+	m_incidentSvc->removeListener(this);
+	m_incidentSvc->release();
       }
       m_incidentSvc= 0;
-      StatusCode sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
+      sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
-	MsgStream log(msgSvc(), name());
-	log << MSG::ERROR << "Failed to finalize the application" << endmsg;
+	output(MSG::ERROR,"Failed to finalize the application.");
 	gauditask_task_unlock();
 	return 0;
       }
     }
-    catch(const std::exception& e) {
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << "Crash while finalizing 2nd.Layer:" << e.what() << endmsg;
+    catch(const exception& e) {
+      output(MSG::ERROR,string("Crash while finalizing 2nd.Layer:")+e.what());
     }
     catch(...) {
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << "Unknown crash finalizing 2nd.Layer." << endmsg;
+      output(MSG::ERROR,"Unknown crash finalizing 2nd.Layer.");
     }
     gauditask_task_unlock();
   }
@@ -500,7 +518,7 @@ int GaudiTask::terminateApplication()  {
 	// Release is called by Gaudi::setInstance; danger of releasing twice?
 	// m_subMgr->release();
 	m_subMgr = 0;
-	m_python = std::auto_ptr<PythonInterpreter>(0);
+	m_python = auto_ptr<PythonInterpreter>(0);
 	Gaudi::setInstance(m_appMgr);
 	return 1;
       }
@@ -508,7 +526,7 @@ int GaudiTask::terminateApplication()  {
       log << MSG::ERROR << "Failed to terminate the application" << endmsg;
       return 0;
     }
-    catch(const std::exception& e) {
+    catch(const exception& e) {
       MsgStream log(msgSvc(), name());
       log << MSG::ERROR << "Crash while terminating 2nd.Layer:" << e.what() << endmsg;
     }
@@ -571,15 +589,15 @@ StatusCode GaudiTask::configSubManager() {
 /// Configure Python based second level application manager
 StatusCode GaudiTask::configPythonSubManager() {
   MsgStream log(msgSvc(), name());
-  m_python = std::auto_ptr<PythonInterpreter>(new PythonInterpreter());
+  m_python = auto_ptr<PythonInterpreter>(new PythonInterpreter());
   m_subMgr = 0;
   Gaudi::setInstance((IAppMgrUI*)0);
   Gaudi::setInstance((ISvcLocator*)0);
   log << MSG::DEBUG << "Python setup:" << m_optOptions << endmsg;
-  std::string cmd = (strncasecmp(m_optOptions.c_str(),"command=",8)==0) 
+  string cmd = (strncasecmp(m_optOptions.c_str(),"command=",8)==0) 
     ? m_optOptions.substr(8) : loadScript(m_optOptions);
   if( !cmd.empty() ) {
-    std::string vsn = Py_GetVersion();
+    string vsn = Py_GetVersion();
     log << MSG::INFO << "Starting python initialization. Python version: [" << vsn << "]" << endmsg;
     m_subMgr = Gaudi::createApplicationMgr("GaudiSvc", "ApplicationMgr");
     Gaudi::setInstance(m_subMgr);
@@ -593,7 +611,7 @@ StatusCode GaudiTask::configPythonSubManager() {
       ::PyErr_Print(); 
       ::PyErr_Clear();
       log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
-      m_python = std::auto_ptr<PythonInterpreter>(0);
+      m_python = auto_ptr<PythonInterpreter>(0);
       if ( m_subMgr ) {
 	m_subMgr->release();
 	m_subMgr = 0;
@@ -606,6 +624,6 @@ StatusCode GaudiTask::configPythonSubManager() {
     return StatusCode::SUCCESS;
   }
   log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
-  m_python = std::auto_ptr<PythonInterpreter>(0);
+  m_python = auto_ptr<PythonInterpreter>(0);
   return StatusCode::FAILURE;
 }

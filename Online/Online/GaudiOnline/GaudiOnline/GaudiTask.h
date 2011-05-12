@@ -69,6 +69,8 @@ namespace LHCb  {
     IMessageSvc* msgSvc();
     /// Print overload
     virtual void output(int level, const char* s);
+    /// Print overload
+    virtual void output(int level, const std::string& s);
     /// Set properties of application manager instance
     StatusCode setInstanceProperties(IAppMgrUI* inst);
     /// Start 2nd layer runable
