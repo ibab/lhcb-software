@@ -6,12 +6,9 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v12r6   Hlt
+use  Moore              v12r6p1 Hlt
 
 # Patches
-use HltConf             v9r9p1  Hlt
-use Hlt2Lines           v8r5p1  Hlt
-use Hlt2SharedParticles v6r2    Hlt
 use OTDAQ               v7r10   OT
 use CaloReco            v5r9p1  Calo
 
