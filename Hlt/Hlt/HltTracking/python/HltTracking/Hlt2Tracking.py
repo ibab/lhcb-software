@@ -1043,13 +1043,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables    import PatForward
         from Configurables      import PatForwardTool
         from HltLine.HltLine    import bindMembers
+        from HltTracking.HltReco import MaxOTHits
         #        from Hlt1Lines.HltConfigurePR import ConfiguredPR
         
         forwardTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2ForwardTracksName) 
     
-        recoForward           = PatForward( self.getProp("Prefix")+'RecoForward'
-                                   , InputTracksName  = self.__hlt2VeloTracking().outputSelection() 
-                                    , OutputTracksName = forwardTrackOutputLocation )
+        recoForward = PatForward( self.getProp("Prefix")+'RecoForward'
+                                , InputTracksName  = self.__hlt2VeloTracking().outputSelection() 
+                                , OutputTracksName = forwardTrackOutputLocation 
+                                , maxOTHits = MaxOTHits
+                                )
 
         if self.getProp('Hlt2ForwardMaxVelo') > 0 :
             recoForward.MaxNVelo = self.getProp('Hlt2ForwardMaxVelo')
@@ -1102,8 +1105,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         forwardTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2ForwardSecondLoopTracksName)
 
+        from HltTracking.HltReco import MaxOTHits
         recoForwardSecondLoop      = PatForward( self.getProp("Prefix")+'RecoForwardSecondLoop'
                                                 , InputTracksName  = self.__hlt2VeloTracking().outputSelection()
+                                                , maxOTHits = MaxOTHits
                                                 , UnusedVeloSeeds  = True
                                                 , VeloVetoTracksName   = self.__hlt2ForwardTracking().outputSelection()
                                                 , OutputTracksName = forwardTrackOutputLocation )
@@ -1160,6 +1165,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoSeeding.PatSeedingTool.ForwardCloneMergeSeg = True
         recoSeeding.PatSeedingTool.InputTracksName    = fwdtracks.outputSelection()
         recoSeeding.PatSeedingTool.MinMomentum = 2500 
+        from HltTracking.HltReco import MaxOTHits
+        recoSeeding.PatSeedingTool.MaxOTHits = MaxOTHits
  
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data

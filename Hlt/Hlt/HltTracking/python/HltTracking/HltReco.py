@@ -35,7 +35,9 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
 	  , 'Hlt1Seeding'
           , 'VeloCandidates'
+          , 'MaxOTHits'
           )
+MaxOTHits = 10000
 ############################################################################################
 # Option to decide which pattern to use
 ############################################################################################
@@ -119,11 +121,12 @@ Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( '
 
 
 # ==============================================================================
-# Hlt1Seeding, FIXME: convert to new framework; needed by MicroBias
+# Hlt1Seeding, used by MicroBias
 # ==============================================================================
-from Configurables import PatSeeding
+from Configurables import PatSeeding, PatSeedingTool
 from HltLine.HltDecodeRaw import DecodeIT
-Hlt1Seeding = bindMembers( None, [ DecodeIT,
-                                   PatSeeding('Hlt1MBSeeding'
-                                              ,OutputTracksName = _baseTrackLocation(Hlt1TracksPrefix,Hlt1SeedingTracksName))
-                                   ] )
+ps = PatSeeding('Hlt1MBSeeding' , OutputTracksName = _baseTrackLocation(Hlt1TracksPrefix,Hlt1SeedingTracksName))
+ps.addTool(PatSeedingTool, name="PatSeedingTool")
+ps.PatSeedingTool.MaxOTHits = MaxOTHits
+
+Hlt1Seeding = bindMembers( None, [ DecodeIT, ps ] )
