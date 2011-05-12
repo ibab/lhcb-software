@@ -77,7 +77,7 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
       // This is the implementation of a proprosal by Tjeerd: assign
       // error based on the driftdistance
       OTDet::RadiusWithError radiusWithError = meas.driftRadiusWithError( m_sMeas  ) ;
-      m_errMeasure = std::sqrt( radiusWithError.val * radiusWithError.val / 3.0 +
+      m_errMeasure = std::sqrt( radiusWithError.val * radiusWithError.val +
 				radiusWithError.err * radiusWithError.err ) ;
       }
     } else if(m_fitDriftTime) {
