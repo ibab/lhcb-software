@@ -1086,6 +1086,10 @@ class SetupProject:
                                "Note: the directories are searched in the "+
                                "order specified on the command line.")
 
+        parser.add_option("--user-area", action="store",
+                          help="Use the specified path as User_release_area instead of "
+                               "the value of the environment variable.")
+
         def external_version_option(_option, opt_str, value, parser):
             if len(parser.largs) < 2:
                 raise OptionValueError("%s must be preceded by the name of the external"%opt_str)
@@ -1527,6 +1531,8 @@ class SetupProject:
         #------------- set user area
         if self.opts.no_user_area:
             self.user_area = None
+        elif self.opts.user_area:
+            self.user_area = self.opts.user_area
         else:
             self.user_area = self.environment.get('User_release_area', None)
 

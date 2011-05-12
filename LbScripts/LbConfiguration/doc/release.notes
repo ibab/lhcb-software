@@ -2,6 +2,7 @@
 
 	* python/LbConfiguration/SetupProject.py: reduced project checks on CVMFS (it should reduce the
 	number of catalogs needed)
+	Added the possibility of specifying the User_release_area on the command line.
 
 2011-05-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
