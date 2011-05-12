@@ -28,9 +28,6 @@ use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
 
 # Patches
-use HltConf             v9r9p1  Hlt
-use Hlt2SharedParticles v6r2    Hlt
-use Hlt2Lines           v8r5p1  Hlt
 use OTDAQ               v7r10   OT
 use CaloReco            v5r9p1  Calo
 
