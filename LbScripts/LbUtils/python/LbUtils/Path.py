@@ -3,6 +3,7 @@
 
 import os
 import sys
+from subprocess import Popen, PIPE
 
 class Path(object):
     def __init__(self, varname=None):
@@ -185,3 +186,18 @@ def multiPathGet(path, subdir, alloccurences=False):
                 result.append(sd)
     return result
 
+def _FSType(path):
+    try:
+        p = Popen(["df", "--print-type", "--portability", path], stdout = PIPE, stderr = PIPE)
+        out, _ = p.communicate()
+        fstype = out.splitlines()[-1].split()[1]
+    except:
+        fstype = "Unknown"
+    return fstype
+
+def isCVMFS(path):
+    """
+    Tells if a path is on a CVMFS mount.
+    It works only on Linux, for other OSs it returns always false.
+    """
+    return _FSType(path) == "cvmfs"

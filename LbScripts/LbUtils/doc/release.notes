@@ -1,3 +1,7 @@
+2011-05-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/Path.py: Added a function to check if a path is on CVMFS (isCVMFS)
+
 2011-04-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r1p1
