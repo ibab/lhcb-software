@@ -6,7 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v6r10p1  2011-05-11 =================
-! 2011-04-11 - Gerhard Raven
+! 2011-05-12 - Gerhard Raven
+ - use centrally defined MaxOTHits in the GEC filters
+
+! 2011-05-11 - Gerhard Raven
  - add LoKiCore.functions to list of modules in BeamGas lines
 
 !========================== Hlt1Lines v6r10  2011-05-04 ===================
