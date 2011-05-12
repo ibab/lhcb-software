@@ -494,6 +494,9 @@ class bindMembers (object) :
             if m not in members : members += [ m ]
         return members
 
+    def __iter__( self ) :
+        for i in self.members() : yield i
+
     def ignoreOutputSelection( self ) :
         return self.setOutputSelection(None)
 
@@ -562,7 +565,6 @@ class bindMembers (object) :
                 self._outputsel = alg.MatchOutput 
         elif type(alg) is LoKi__HltUnit and hasattr( alg, 'Code' ) :
             ex = r"SINK\( *'(\w+)' *\)"
-            # TODO: use re.finditer to get _all_ matches in order, and pick the last one...
             import re
             for s in re.finditer(ex,getattr(alg,'Code')) :
                  self._outputsel =  s.group(1) 

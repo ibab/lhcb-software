@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+ 
+! 2011-05-12 - Gerhard Raven
+ - add generator for bindmember members
 
 !========================== HltLine v5r1p5 2011-03-29 ===================
 ! 2011-Mar-29 - Patrick Spradlin
