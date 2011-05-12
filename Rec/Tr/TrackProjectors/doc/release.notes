@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2011-05-12 Wouter Hulsbergen
+ - small bug fix in error assigned to OT hits in ambiguity fit ('prefit')
+
 !========================= TrackProjectors v2r29 2011-02-28 =========================
 ! 2011-02-18 Wouter Hulsbergen
  - Call node.updateProjection tomake sure it properly resets kalman filer status.
