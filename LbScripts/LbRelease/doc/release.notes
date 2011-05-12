@@ -1,3 +1,8 @@
+2011-05-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/buildLCGTar: added extra arguments as platforms to build. This is unambiguous for
+	this script (unlike buildTar) since there is no shared tarball.
+
 2011-05-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added a parsable print out after the check out of each

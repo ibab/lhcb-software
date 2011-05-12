@@ -73,6 +73,8 @@ class BuildLCGTarScript(Script):
             project   = args[0]
             if len(args) > 1 :
                 version   = args[1]
+            if len(args) > 2 :
+                opts.cmtconfig.extend(args[2:])
         if opts.output_dir :
             opts.output_dir = os.path.abspath(opts.output_dir)
             if not os.path.exists(opts.output_dir) :
