@@ -306,7 +306,8 @@ struct BootDataProcessor : public DataFile::DataProcessor {
 
 /// Initializing constructor
 SubfarmBootStatus::SubfarmBootStatus(const string& n, BootMonitor* parent) 
-  : m_parent(parent), m_status(0), m_name(n), m_file("/clusterlogs/farm/"+n+"/messages"), 
+  : m_parent(parent), m_status(0), m_name(n), 
+    m_file(string(CLUSTERLOGS_FARMS)+"/"+n+"/"+n+"/messages"), 
     m_id(0), m_tsID(0)
 {}
 
