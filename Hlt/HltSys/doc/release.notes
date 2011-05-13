@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v13r6>2011-05-13 HltSys v13r6</A></H1><PRE>
+
+Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010 restripping.
+
 </PRE><H1><A NAME=v13r5>2011-05-10 HltSys v13r5p1</A></H1><PRE>
 ! 2011-05-10 - Gerhard Raven
  - Minor bug fixes and tweaks 
