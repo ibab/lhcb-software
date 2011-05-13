@@ -6,6 +6,29 @@
 
 ! 2011-05-13 - Vanya Belyaev
 
+ - FilterDecays.h,.cpp
+
+   New algorithm to filter decays and(or) decay components:
+
+   from Configurables import FilterDecays 
+ 
+   myAlg1 = FilterDecays ( 
+      ...                                                 , 
+      Code          = " [B_s0 -> J/psi(1S) phi(1020)]CC"  , 
+      ...                                                 ,
+      Inputs        = ...
+      ) 
+     
+   myAlg2 = FilterDecays ( 
+      ...                                                 , 
+      Code          = " [B_s0 -> ^J/psi(1S) phi(1020)]CC" , 
+      ...                                                 ,
+      Inputs        = ...
+      ) 
+     
+
+! 2011-05-13 - Vanya Belyaev
+
  - FitDecayTrees.cpp
    Fix the signature of virtual method 
 

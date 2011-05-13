@@ -11,18 +11,13 @@
 // ============================================================================
 #include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
-// LoKi
-// ============================================================================
-#include "LoKi/IDecay.h"
-#include "LoKi/Decays.h"
-// ============================================================================
 // DecatTreeFitter 
 // ============================================================================
 #include "DecayTreeFitter/Fitter.h"
 // ============================================================================
 // local
 // ============================================================================
-#include "FilterDesktop.h"
+#include "FilterDecays.h"
 // ============================================================================
 /** @class FitDecayTrees 
  *  Simple algorithm to perform the decay tree fit for 'good' particles
@@ -92,7 +87,7 @@
  *  @author Vanya BELYAEV   Ivan.Belyaev@nikhef.nl
  *  @date 2010-07-09
  */
-class FitDecayTrees : public FilterDesktop 
+class FitDecayTrees : public FilterDecays
 {
   // ==========================================================================
   /// friend factory for instantiation 
@@ -103,16 +98,16 @@ public:
   /// intialize the algorithm 
   virtual StatusCode initialize () 
   {
-    StatusCode sc = FilterDesktop::initialize () ;
+    StatusCode sc = FilterDecays::initialize () ;
     if ( sc.isFailure() ) { return sc ; }
     //
-    if ( cloneFilteredParticles() ) 
-    {
-      warning() 
-        << "The property 'CloneFilteredParticles' reset to be True"
-        << endmsg ;
-      setCloneFilteredParticles ( true ) ;
-    }
+    if ( !cloneFilteredParticles() ) 
+      {
+	warning() 
+	  << "The property 'CloneFilteredParticles' reset to be True"
+	  << endmsg ;
+	setCloneFilteredParticles ( true ) ;
+      }
     /// decode mass-constraints 
     return decodeConstraints () ;
   }
@@ -133,16 +128,14 @@ protected:
   FitDecayTrees                                // standard contructor 
   ( const std::string& name ,                  // the algorithm instance name 
     ISvcLocator*       pSvc )                  // pointer to Service Locator
-    : FilterDesktop ( name , pSvc ) 
-  // invalid decay finder 
-    , m_finder   ( Decays::Trees::Types_<const LHCb::Particle*>::Invalid() ) 
-  // chi2 cut for decay tree fit  
+    : FilterDecays ( name , pSvc ) 
+      // chi2 cut for decay tree fit  
     , m_chi2cut  ( 10 )
-  // list of mass-constraints to be applied 
+      // list of mass-constraints to be applied 
     , m_mc_1 () 
-  // list of mass-constraints to be applied 
+      // list of mass-constraints to be applied 
     , m_mc_2 ()
-  // use PV-constraint ? 
+      // use PV-constraint ? 
     , m_use_PV_Constraint ( false ) 
   {
     //
@@ -168,7 +161,7 @@ protected:
     {
       Property* p = Gaudi::Utils::getProperty ( this , "CloneFilteredParticles" ) ;
       if ( 0 != p && 0 == p->updateCallBack() ) 
-      { p -> declareUpdateHandler ( &FitDecayTrees::updateCloneProp , this ) ; }
+	{ p -> declareUpdateHandler ( &FitDecayTrees::updateCloneProp , this ) ; }
     }
   }
   // ==========================================================================
@@ -185,9 +178,6 @@ public:
   virtual StatusCode filter 
   ( const LHCb::Particle::ConstVector& input    , 
     LHCb::Particle::ConstVector&       filtered ) const ;
-  // ==========================================================================
-  /// decode the code
-  virtual StatusCode decodeCode () ;
   // ==========================================================================
   void updateConstraints ( Property& /* p */ )      // update the constraints 
   {
@@ -225,8 +215,6 @@ private:
   // ==========================================================================
 private:
   // ==========================================================================
-  /// the decay finder 
-  Decays::IDecay::Finder m_finder  ;     //                    the decay finder 
   /// the chi2-cut for the decay tree fit 
   double         m_chi2cut ;             // the chi2-cut for the decay tree fit 
   /// the list of mass-constraints to be applied 
@@ -252,51 +240,51 @@ StatusCode FitDecayTrees::filter
   typedef DecayTreeFitter::Fitter Fitter ;
   //
   LHCb::Particle::ConstVector good ;
-  m_finder.findDecay ( input , good ) ;
+  finder().findDecay ( input , good ) ;
   if ( good.empty() ) { return StatusCode::SUCCESS ; }
   //
   for ( LHCb::Particle::ConstVector::const_iterator ip = good.begin() ; 
         good.end() != ip ; ++ip ) 
-  {
-    //
-    const LHCb::Particle* p = *ip ;
-    if ( 0 == p ) { continue ; }
-    //
-    const LHCb::VertexBase* pv = 0 ;
-    if ( m_use_PV_Constraint ) 
     {
-      pv = bestVertex ( p ) ; 
-      if ( 0 == pv ) 
-      {
-        Warning ("No bestVertex is found!", StatusCode::FAILURE , 1 ).ignore() ;
-        continue ;
-      }
+      //
+      const LHCb::Particle* p = *ip ;
+      if ( 0 == p ) { continue ; }
+      //
+      const LHCb::VertexBase* pv = 0 ;
+      if ( m_use_PV_Constraint ) 
+	{
+	  pv = bestVertex ( p ) ; 
+	  if ( 0 == pv ) 
+	    {
+	      Warning ("No bestVertex is found!", StatusCode::FAILURE , 1 ).ignore() ;
+	      continue ;
+	    }
+	}
+      /// initialize fitter 
+      std::auto_ptr<Fitter>  fitter ;
+      /// instantiate the fitter 
+      fitter.reset ( 0 == pv ? new Fitter ( *p ) : new Fitter ( *p , *pv ) ) ;
+      /// apply mass-constraints (if needed) 
+      for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ; 
+	    m_mc_2.end() != ipid ; ++ipid ) 
+	{ fitter->setMassConstraint ( *ipid )  ; }
+      /// fit! 
+      fitter->fit() ;
+      // get the status
+      Fitter::FitStatus status = fitter->status() ;
+      if ( Fitter::Success != status ) 
+	{ 
+	  Warning ( "Error from fitter, status" , 110 + status , 1 ) ; 
+	  continue ;
+	}
+      /// apply chi2/nDoF cut: 
+      if ( fitter->chiSquare() > m_chi2cut * fitter->nDof() ) { continue ; }  
+      /// finally get the refitted tree from the fitter
+      LHCb::DecayTree tree = fitter->getFittedTree() ;
+      if ( !tree ) { continue ; }
+      //
+      filtered.push_back ( tree.release() ) ;
     }
-    /// initialize fitter 
-    std::auto_ptr<Fitter>  fitter ;
-    /// instantiate the fitter 
-    fitter.reset ( 0 == pv ? new Fitter ( *p ) : new Fitter ( *p , *pv ) ) ;
-    /// apply mass-constraints (if needed) 
-    for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ; 
-          m_mc_2.end() != ipid ; ++ipid ) 
-    { fitter->setMassConstraint ( *ipid )  ; }
-    /// fit! 
-    fitter->fit() ;
-    // get the status
-    Fitter::FitStatus status = fitter->status() ;
-    if ( Fitter::Success != status ) 
-    { 
-      Warning ( "Error from fitter, status" , 110 + status , 1 ) ; 
-      continue ;
-    }
-    /// apply chi2/nDoF cut: 
-    if ( fitter->chiSquare() > m_chi2cut * fitter->nDof() ) { continue ; }  
-    /// finally get the refitted tree from the fitter
-    LHCb::DecayTree tree = fitter->getFittedTree() ;
-    if ( !tree ) { continue ; }
-    //
-    filtered.push_back ( tree.release() ) ;
-  }
   //
   return StatusCode::SUCCESS ;
 }
@@ -308,11 +296,11 @@ StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
   m_mc_2.clear() ;
   //
   if ( m_mc_1.empty() ) 
-  {
-    MsgStream& log = debug() ;
-    log << " No Mass-Constraints will be applied " << endreq ;
-    return StatusCode::SUCCESS ;
-  }
+    {
+      MsgStream& log = debug() ;
+      log << " No Mass-Constraints will be applied " << endreq ;
+      return StatusCode::SUCCESS ;
+    }
   ///
   const LHCb::IParticlePropertySvc* ppsvc = 
     svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc" ) ;
@@ -320,11 +308,11 @@ StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
   std::set<LHCb::ParticleID> pids ;
   for ( std::vector<std::string>::const_iterator ic = m_mc_1.begin() ;
         m_mc_1.end() != ic ; ++ic ) 
-  {
-    const LHCb::ParticleProperty* pp = ppsvc->find ( *ic ) ;
-    if ( 0 == pp ) { return Error ( "Unable to find particle '" + (*ic) + "'") ; }
-    pids.insert ( LHCb::ParticleID ( pp->pid().abspid() ) ) ;
-  }  
+    {
+      const LHCb::ParticleProperty* pp = ppsvc->find ( *ic ) ;
+      if ( 0 == pp ) { return Error ( "Unable to find particle '" + (*ic) + "'") ; }
+      pids.insert ( LHCb::ParticleID ( pp->pid().abspid() ) ) ;
+    }  
   //
   m_mc_2.insert ( m_mc_2.end() , pids.begin() , pids.end() ) ;
   //
@@ -332,59 +320,15 @@ StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
   std::set<std::string> parts ;
   for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ;
         m_mc_2.end() != ipid ; ++ipid ) 
-  {
-    const LHCb::ParticleProperty* pp = ppsvc->find ( *ipid ) ;
-    if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
-  }
+    {
+      const LHCb::ParticleProperty* pp = ppsvc->find ( *ipid ) ;
+      if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
+    }
   log << " Mass Constraints will be applied for : " <<
     Gaudi::Utils::toString ( parts ) << endreq ;
   //
   release ( ppsvc ) ;
   //
-  return StatusCode::SUCCESS ;
-}
-// ============================================================================
-// decode the code
-// ============================================================================
-StatusCode FitDecayTrees::decodeCode () 
-{
-  /// get the factory
-  Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" , this ) ;
-  
-  /// construct the tree 
-  Decays::IDecay::Tree tree = factory->tree ( code () ) ;
-  
-  /// check the validity 
-  if ( !tree ) 
-  {
-    StatusCode sc = tree.validate ( ppSvc() ) ;
-    if ( sc.isFailure() ) 
-    {
-      return Error ( "Uable to validate the tree '" + 
-                     tree.toString() + "' built from the descriptor '"
-                     + code() + "'" , sc ) ;
-    }
-  }
-  //
-  if ( !tree ) 
-  {
-    return Error ( "Invalid tree '" + 
-                   tree.toString()  + 
-                   "' built from the descriptor '"
-                   + code() + "'" ) ;
-  }
-  // reser the finder 
-  m_finder = Decays::IDecay::Finder ( tree ) ;
-  if ( !m_finder ) 
-  {
-    return Error ( "Invalid finder '" + 
-                   m_finder.tree().toString()  + 
-                   "' built from the descriptor '"
-                   + code() + "'" ) ;
-  }  
-  /// release the factory ( not needed anymore) 
-  release ( factory ) ;
-  ///
   return StatusCode::SUCCESS ;
 }
 // ===========================================================================
