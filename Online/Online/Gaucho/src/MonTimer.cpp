@@ -14,8 +14,9 @@ MonTimer::~MonTimer( )
 void MonTimer::timerHandler ( void )
 {
   {
+    bool need_return = false;
     MonSubSys::_Lock l(m_Hsys);
-//  m_Hsys->Lock();
+
     m_Hsys->m_genSrv->setRunNo(m_Hsys->m_runno);
     m_Hsys->m_genSrv->setTime(m_dueTime);
     try
@@ -26,15 +27,17 @@ void MonTimer::timerHandler ( void )
     catch(const std::exception& e)
     {
       ::printf("MonTimer: Exception:%s\n",e.what());
+      need_return = true;
     }
     catch(...)
     {
       printf("MonTimer: Unknown Exception.\n");
+      need_return = true;
+    }
+    if ( need_return ) {
       return;
     }
-//  m_Hsys->unLock();
   }
-
   m_Hsys->m_genSrv->Update();
 }
 
