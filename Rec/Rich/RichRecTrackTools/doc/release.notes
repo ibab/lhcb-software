@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r29 2011-05-13 =========================
 ! 2011-04-28 - Chris Jones
  - Add protection to FunctionalCKResForRecoTracks to catch exceptions from the
    TransportSvc to prevent them from terminating the job execution.  
