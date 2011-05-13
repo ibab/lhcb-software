@@ -1,6 +1,6 @@
 project HLT
 
-use PHYS PHYS_v12r4
+use PHYS PHYS_v12r4p1
 
 container      HltSys
 build_strategy with_installarea
