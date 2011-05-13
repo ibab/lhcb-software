@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-05-12 - Georg Alexander Krocker
+ - Updated trigger decision names in ZooTriggerDecisions to comply with 2011
+   data TCKs 0x360032, 0x480032, 0x4a0033, 0x5a0032, 0x5b0032, 0x5d0032
+
 ! 2011-03-09 - Georg Alexander Krocker
  - Added Doxyfile to build doxygen documentation
  - Added some doxy documentation to the sources
