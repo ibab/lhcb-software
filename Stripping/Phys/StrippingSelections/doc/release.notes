@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-13 S. Blusk
+ - Update StrippingB2D3H.py to include B- -->D0D-
+ - Also M. Williams added B-->D*DK
+
+
 ! 2011-05-11 - Jibo He
  - tests/data/xmlfiles*
    Following P. Charpentier, replace "lhcbdst", "lhcbdata" or lhcbmdst" with "lhcbdisk";

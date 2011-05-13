@@ -78,7 +78,7 @@ CondDB().IgnoreHeartBeat = True
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 25000   #Originally 200k
+DaVinci().EvtMax = 50000   #Originally 200k
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

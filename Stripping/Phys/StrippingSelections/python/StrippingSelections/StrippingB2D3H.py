@@ -112,12 +112,12 @@ confdict =  {
         "B2DDAll_Postscale"             : 1.0,
         "B2DStarDAll_Prescale"          : 1.0,
         "B2DStarDAll_Postscale"         : 1.0,
-        "B2DStarDKAll_Prescale"          : 1.0,
-        "B2DStarDKAll_Postscale"         : 1.0,
         "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
         "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
         "WSB2D3H_Prescale"              : 0.1,
-        "WSB2D3H_Postscale"             : 1.0
+        "WSB2D3H_Postscale"             : 1.0,
+        "B2DStarDKAll_Prescale"          : 1.0,
+        "B2DStarDKAll_Postscale"         : 1.0
         }
 
 """
@@ -791,6 +791,23 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                    BDRPV = config['BDRPV'],      
                                    decayDesc = "[B+ -> eta_c(1S) K+]cc",
                                    parentB = "B+")
+        name13 = 'B2D0D' + name
+        self.B2D0D = makeB2D3H(name13,
+                                   dSel = self.selD0,
+                                   hhhSel = self.selDch,
+                                   BMassWindow = config['BMassWindow'],
+                                   BMinPT = config['BMinPT'],
+                                   MinPT = config['MinPT'],
+                                   BIP2PV = config['BIP2PV'],
+                                   BIPChisq2PV = config['BIPChisq2PV'],
+                                   BVtxChisq = config['BVtxChisq'],
+                                   BVtxSepChisq = config['BVtxSepChisq'],
+                                   BDiraPV = config['BDiraPV'],
+                                   BZVtxSep = config['BZVtxSep'],
+                                   BDZVtxSep = config['BDZVtxSep'],
+                                   BDRPV = config['BDRPV'],      
+                                   decayDesc = "[B- -> D0 D-]cc",
+                                   parentB = "B+")
         
 
         # ----------------------------------
@@ -1132,6 +1149,12 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                                        selection = self.B2DStarDK, 
                                                        FILTER = self.EventFilter
                                                        )
+        self.StrippingAllB2D0DLine = StrippingLine('AllB2D0DLine'+name,
+                                                   prescale = config['B2DDAll_Prescale'],
+                                                   postscale = config['B2DDAll_Postscale'],
+                                                   selection = self.B2D0D, 
+                                                   FILTER = self.EventFilter
+                                                   )
 
         #---------------------------
         # Wrong-Sign Stripping Lines
@@ -1227,8 +1250,6 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         
 
 
-#ADDED (CHANGED self.lines = ---> self.registerLine
-#might have to register each line separately
         self.registerLine ( self.StrippingAllB2D0PiPiPiLine )	
         self.registerLine ( self.StrippingAllB2D0KPiPiLine )
         self.registerLine ( self.StrippingAllUnbiasedB2DPiPiPiLine )                       
@@ -1254,6 +1275,7 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarPiLine )
         self.registerLine ( self.StrippingAllWSLambdaB2LambdaCPPbarKLine )
         self.registerLine ( self.StrippingAllWSB2DStarDKLine )
+        self.registerLine ( self.StrippingAllB2D0DLine )                       
         
 def MyEventFilter(name, MaxTracks):
     """
