@@ -38,7 +38,7 @@ class RichRecQCConf(RichConfigurableUser):
     __default_histo_set__ = "OfflineFull"
 
     ## List of all known monitors. For sanity checks
-    __known_monitors__ = [ "ODIN", "DBConsistencyCheck",
+    __known_monitors__ = [ "ODIN", "DBConsistencyCheck","L1SizeMonitoring",
                            "HotPixelFinder", "PidMonitoring",
                            "PixelMonitoring", "TrackMonitoring",
                            "PhotonMonitoring", "TracklessRingAngles",
