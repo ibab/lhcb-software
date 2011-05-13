@@ -4,6 +4,11 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-05-13 - Vanya Belyaev
+
+ - FitDecayTrees.cpp
+   Fix the signature of virtual method 
+
 ! 2011-05-01 - Vanya Belyaev
 
  - FilterDesktop.cpp

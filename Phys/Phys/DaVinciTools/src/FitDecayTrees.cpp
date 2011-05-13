@@ -183,8 +183,8 @@ public:
    *  @return Status code 
    */
   virtual StatusCode filter 
-  ( const LHCb::Particle::Range& input    , 
-    LHCb::Particle::ConstVector& filtered ) const ;
+  ( const LHCb::Particle::ConstVector& input    , 
+    LHCb::Particle::ConstVector&       filtered ) const ;
   // ==========================================================================
   /// decode the code
   virtual StatusCode decodeCode () ;
@@ -245,8 +245,8 @@ private:
  */
 // ============================================================================  
 StatusCode FitDecayTrees::filter 
-( const LHCb::Particle::Range& input    , 
-  LHCb::Particle::ConstVector& filtered ) const 
+( const LHCb::Particle::ConstVector& input    , 
+  LHCb::Particle::ConstVector&       filtered ) const 
 {
   //
   typedef DecayTreeFitter::Fitter Fitter ;
