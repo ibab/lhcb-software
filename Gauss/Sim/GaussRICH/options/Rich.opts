@@ -69,9 +69,14 @@ GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" 
 // Use of Magnetic field distortions in Hpd: default is set to false, which means not used.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=false; 
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=true; 
-GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=true;
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=true;
+// With improved alignemtn the hit smearing is switched off, which is the default.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=false;
 GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true;
-GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=2.0;
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=2.0;
+// reduced scintillation for 2011 data. So the scale factor is set to small value 
+// corresponding to about 1/10 of the normal scintillation.
+GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
 
 // Use of PreDc06 PSF parametrization. If true it keeps the PSF as set in the beginning of Dc06.
 // The Default is set to false, which gives slightly worse resolution than that assumed at the beginning of dc06.
