@@ -25,6 +25,21 @@ public:
 template <typename T> class DetData_T : public std::map<std::string,T>
 {
 public:
+  DetData_T()
+  {
+    m_buffer = 0;
+    m_service = 0;
+    m_TBuffer.clear();
+  }
+  int bsiz();
+  std::string m_servicename;
+  DimService *m_service;
+  std::vector<T> m_TBuffer;
+  void *m_buffer;
+  int m_bsiz;
+  void Update();
+  void FillDim(void *buff,int &siz);
+  DimService* makeService(std::string nam);
   static const char* format();
 //  DetData_T<double> operator=(DetData_T<long long >&a);
   void Zero()
@@ -35,29 +50,88 @@ public:
       i->second = 0;
     }
   }
-//  DetData_T operator=(DetData_T&rhs)
-//  {
-//    DetData_T out;
-//    DetData_T::iterator i;
-//    for (i = rhs.begin();i!=rhs.end();i++)
-//    {
-//      out[i->first] = i->second;
-//    }
-//    return out;
-//  }
-//  DetData_T operator-(DetData_T&rhs)
-//  {
-//    DetData_T out;
-//    DetData_T::iterator i;
-//    for (i = rhs.begin();i!=rhs.end();i++)
-//    {
-//      out[i->first] = out[i->first]-i->second;
-//    }
-//    return out;
-//  }
 };
-template <> const char* DetData_T<long long>::format()  { return "%12li"; }
-template <> const char* DetData_T<double>::format()  { return "%12.2f"; }
+template <> void DetData_T<long long>::FillDim(void *buff, int &siz)
+{
+  size_t i;
+  int indx=0;
+  unsigned int *b = (unsigned int*)buff;
+  for (i=0;i<m_TBuffer.size();i++)
+  {
+    b[indx++] = (unsigned int)(m_TBuffer[i] & 0xffffffff);
+    b[indx++] = (unsigned int)(m_TBuffer[i]>>32);
+  }
+  siz = 2*m_TBuffer.size()*sizeof(unsigned int);
+}
+
+template <> int DetData_T<double>::bsiz()
+{
+  return m_TBuffer.size()*sizeof(float);
+}
+template <> int DetData_T<long long>::bsiz()
+{
+  return 2*m_TBuffer.size()*sizeof(unsigned int);
+}
+
+template <> void DetData_T<double>::FillDim(void *buff, int &siz)
+{
+  size_t i;
+  int indx=0;
+  float *b = (float*)buff;
+  for (i=0;i<m_TBuffer.size();i++)
+  {
+    b[indx++] = (float)m_TBuffer[i];
+  }
+  siz = m_TBuffer.size()*sizeof(float);
+}
+
+template <> DimService* DetData_T<long long>::makeService(std::string nam)
+{
+    DimServer::autoStartOn();
+    std::string snam = nam;
+    return new DimService((char*)snam.c_str(),"I",0,0);
+}
+template <> DimService* DetData_T<double>::makeService(std::string nam)
+{
+    DimServer::autoStartOn();
+    std::string snam = nam;
+    return new DimService((char*)snam.c_str(),"F",0,0);
+}
+
+template <> void DetData_T<long long>::Update()
+{
+  int nel = this->size();
+  m_bsiz = 2*nel*sizeof(unsigned int);
+  void *m_buffer = malloc(m_bsiz);
+  int *buffer = (int*)m_buffer;
+  DetData_T<long long>::iterator i;
+  int indx=0;
+  for (i=begin();i!= end();i++)
+  {
+    buffer[indx++] = (unsigned int)(i->second &0xffffffff);
+    buffer[indx++] = (unsigned int)(i->second >> 32);
+  }
+//  makeService();
+  m_service->updateService(buffer,2*nel*sizeof(unsigned int));
+}
+template <> void DetData_T<double>::Update()
+{
+  int nel = this->size();
+  m_bsiz = nel*sizeof(float);
+  void *m_buffer = malloc(m_bsiz);
+  float *buffer = (float*)m_buffer;
+  DetData_T<double>::iterator i;
+  int indx=0;
+  for (i=begin();i!= end();i++)
+  {
+    buffer[indx++] = (float)i->second;;
+  }
+//  makeService();
+  m_service->updateService(buffer,2*nel*sizeof(unsigned int));
+
+}
+template <> const char* DetData_T<long long>::format()  { return "%12li "; }
+template <> const char* DetData_T<double>::format()  { return "%12.0f "; }
 
 void convert(const DetData_T<long long> &a, DetData_T<double> &b)
 {
@@ -84,7 +158,39 @@ template <typename T> DetData_T<T> operator-(const DetData_T<T> &a,const DetData
 
 template <typename T>class DetMap_T : public std::map<std::string,DetData_T<T> >
 {
+typedef DetMap_T<T> MyType;
 public:
+  DetMap_T()
+  {
+    m_buffer = 0;
+    m_service = 0;
+  }
+  std::map<std::string,DimService*> m_svcmap;
+  std::string m_servicename;
+  DimService *m_service;
+  char *m_buffer;
+  int m_bsiz;
+  void divide(DetMap_T<double> &b, long long l); // b=this/l
+  void setServiceName(std::string n)
+  {
+    m_servicename = n;
+    typename DetMap_T<T>::iterator i;
+    for (i=this->begin();i!=this->end();i++)
+    {
+      i->second.m_servicename = n;
+    }
+  }
+  void Update();
+//  {
+//    typename MyType::const_iterator i;
+//    m_bsiz = 0;
+//
+//    for (i=this->begin();i!=this->end();i++)
+//    {
+//      m_bsiz += (i->first.size());
+//      m_bsiz++;
+//    }
+//  }
   void dump()
   {
     typename DetMap_T<T>::iterator i;
@@ -98,12 +204,44 @@ public:
     printf("\n");
     for (i=this->begin();i!=this->end();i++)
     {
+      if (i->first == "LHCb") continue;
       printf("%8s ",i->first.c_str());
       for (k=i->second.begin();k!=i->second.end();k++)
       {
-        printf(DetData_T<T>::format(),(long long)k->second);
+        printf(DetData_T<T>::format(),k->second);
       }
       printf("\n");
+    }
+
+    i = this->find("LHCb");
+    printf("%8s ",i->first.c_str());
+    for (k=i->second.begin();k!=i->second.end();k++)
+    {
+      printf(DetData_T<T>::format(),k->second);
+    }
+    printf("\n");
+  }
+  void FillDim()
+  {
+    typename DetMap_T<T>::iterator i;
+    typename DetMap_T<T>::iterator ii;
+    typename DetData_T<T>::iterator k;
+    typename DetData_T<T>::iterator kk;
+    ii = this->begin();
+    for (k=ii->second.begin();k!=ii->second.end();k++)
+    {
+      DetData_T<T> &q=ii->second;
+      q.m_TBuffer.clear();
+      for (i=this->begin();i!=this->end();i++)
+      {
+        kk = i->second.find(k->first);
+        q.m_TBuffer.push_back(kk->second);
+      }
+      int siz = q.bsiz();
+      void *ptr= malloc(siz);
+      q.FillDim(ptr,siz);
+      m_svcmap[k->first]->updateService(ptr,siz);
+      free(ptr);
     }
   }
   void Zero()
@@ -115,6 +253,51 @@ public:
     }
   }
 };
+template <typename T> void DetMap_T<T>::Update()
+{
+  typename MyType::iterator i;
+  int bsiz = 0;
+
+  for (i=this->begin();i!=this->end();i++)
+  {
+    bsiz += (i->first.size());
+    bsiz++;
+  }
+  if (m_buffer == 0)
+  {
+    m_bsiz = bsiz;
+    m_buffer = (char*)malloc(m_bsiz);
+  }
+  int indx = 0;
+  for (i=this->begin();i!=this->end();i++)
+  {
+    strcpy(&m_buffer[indx],i->first.c_str());
+    indx += i->first.size();
+    m_buffer[indx] = 0;
+    indx++;
+  }
+  if(m_service == 0)
+  {
+    DimServer::autoStartOn();
+    m_service = new DimService((char*)(m_servicename+"/Detector").c_str(),"C",m_buffer,m_bsiz);
+    i = this->begin();
+    typename DetData_T<T>::iterator k;
+    for (k=i->second.begin();k!=i->second.end();k++)
+    {
+//      printf("%s\n",k->first.c_str());
+      m_svcmap[k->first] = i->second.makeService(m_servicename+"/"+k->first);
+  //    i->second.makeService(k->first);
+    }
+//    for (i=this->begin();i!=this->end();i++)
+//    {
+//      i->second
+//    }
+  }
+  m_service->updateService(m_buffer,m_bsiz);
+  FillDim();
+//  i->second.Update();
+}
+
 void convert(const DetMap_T<long long> &a, DetMap_T<double> &b)
 {
   b.clear();
@@ -137,38 +320,29 @@ template <typename T> DetMap_T<T> operator-(const DetMap_T<T> &a,const DetMap_T<
   }
   return out;
 }
-DetMap_T<double> operator/(const DetMap_T<long long> &a,long long l)
+
+template <typename T> void DetMap_T<T>::divide(DetMap_T<double> &b, long long l)
 {
-  DetMap_T<double> out;// = (DetMap_T<long long>)a;
   DetData_T<double>::iterator k;
   DetData_T<long long>::iterator ii;
   DetMap_T<double>::iterator j;
   DetMap_T<long long>::const_iterator i;
-  convert(a,out);
-  for (i = a.begin();i!=a.end();i++)
+  convert(*this,b);
+  for (i = this->begin();i!=this->end();i++)
   {
-    j = out.find(i->first);
-    if (j != out.end())
-    {
       DetData_T<long long> q=i->second;
 //      DetData_T<double> oo;
       for (ii=q.begin();ii!=q.end();ii++)
       {
-        k = j->second.find(ii->first);
-        if (k != j->second.end())
-        {
           long long a = ii->second;
           double o;
           o = ((double)a)/l;
           o = o*1.0e9;
-          out[i->first][ii->first]=o;
-          k->second = o;
-        }
+          b[i->first][ii->first]=o;
       }
-    }
   }
 //  out.dump();
-  return out;
+//  return *this;
 }
 
 //typedef std::map<std::string,long long> DetData_T;
@@ -190,6 +364,7 @@ public:
   DetMap_T<long long> m_DetMap;
   DetMap_T<long long> m_DetMap_old;
   DetMap_T<long long> m_DetMap_diff;
+  DetMap_T<double> m_DetMap_rate;
 
 //  DetData_T m_DetData;
 //  DetData_T m_DetData_diff;
@@ -197,6 +372,7 @@ public:
   void analyze(void *buff, int siz,MonMap* mmap);
   void filldata(const std::string &cnam,MonMap *mmap);
   void dump();
+  void fillsums();
 private:
   IMonitorSvc        *m_pMonitorSvc;
   IHistogramSvc      *m_phistsvc;

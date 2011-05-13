@@ -30,6 +30,7 @@ void MonTimer::timerHandler ( void )
     catch(...)
     {
       printf("MonTimer: Unknown Exception.\n");
+      return;
     }
 //  m_Hsys->unLock();
   }

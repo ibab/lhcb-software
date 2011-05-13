@@ -40,6 +40,7 @@ MonAdder::MonAdder()
   m_RPCser      = 0;
   m_updated     = false;
   m_timer = 0;
+  m_disableOutput = false;
 }
 
 MonAdder::~MonAdder()
@@ -231,7 +232,10 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
     if ( 0 == m_outservice )
     {
 //      printf ("First client for adding... Creating our output service...%s\n",m_outsvcname.c_str());
-      m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
+      if (!m_disableOutput)
+      {
+        m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
+      }
     }
     DimServer::start();
   }

@@ -642,12 +642,8 @@ void MonitorSvc::declareMonRateComplement( int& runNumber, unsigned int& tck, in
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "Inside declareMonRateComplement" << endmsg;
 
-  if ( 0 == m_disableMonRate)
+  if ( 0 == m_disableMonRate && 0!=m_CntrMgr)
   {
-    if (m_CntrMgr == 0)
-    {
-      m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
-    }
     m_CntrMgr->addComplement(&runNumber, &tck, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &offsetGpsTimeLastEvInCycle);
     if (m_HistSubSys == 0)
     {
