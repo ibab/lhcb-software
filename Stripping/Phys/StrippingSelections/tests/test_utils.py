@@ -2,7 +2,7 @@
 from py.test import raises
 
 def test_checkConfig_raises_KeyError_for_missing_parameter() :
-    from StrippingSelections.Utils import checkConfig
+    from StrippingUtils.Utils import checkConfig
     
     ref_params = ('A', 'B', 'C', 'D')
 
@@ -11,7 +11,7 @@ def test_checkConfig_raises_KeyError_for_missing_parameter() :
     raises(KeyError, checkConfig, ref_params, config)
 
 def test_checkConfig_raises_KeyError_for_too_many_parameters() :
-    from StrippingSelections.Utils import checkConfig
+    from StrippingUtils.Utils import checkConfig
     
     ref_params = ('A', 'B', 'C', 'D')
 
