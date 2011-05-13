@@ -3,6 +3,13 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v6r4p1>2011-05-13 Analysis v6r4p1 </A></H1><PRE>
+
+Based on Phys v12r4p1, patch for the 2010 restripping and 2011 reprocessing.
+
+Minor changes in analysis, for more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Analysis&version=v6r4p1
+
 </PRE><H1><A NAME=v6r4>2011-04-29 Analysis v6r4 </A></H1><PRE>
 
  *** Based on Phys v12r4. Patch release for Stripping13.

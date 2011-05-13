@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v6r4
+version           v6r4p1
 
 branches doc cmt
 
