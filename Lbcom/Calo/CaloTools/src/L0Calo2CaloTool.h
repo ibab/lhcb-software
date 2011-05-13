@@ -254,7 +254,7 @@ private:
   bool                 m_sort;
   bool                 m_sortET;
   bool                 m_decodeFullEcal;
-
+  bool                 m_clusOnTES;
   mutable std::set<int>  m_decodedSources;
 };
 #endif // L0CALO2CALOTOOL_H

@@ -38,6 +38,8 @@ L0Calo2CaloTool::L0Calo2CaloTool(const std::string& type,
                   "if Sort: sort the clusters due to transverse energy");
   declareProperty("DecodeFullEcal",         m_decodeFullEcal         = false,
                   "false = decode only the Tell1s around the L0CaloCandidate cellID");
+
+  declareProperty("ClusterOnTES",m_clusOnTES=false);
 }
 // ==========================================================================
 StatusCode L0Calo2CaloTool::initialize()
@@ -107,15 +109,10 @@ StatusCode L0Calo2CaloTool::makeClusters
   clusters.clear();
 
   StatusCode sc;
-  if ( level > 0 ){
-    std::vector<LHCb::CaloCellID> seeds;
-    seeds.clear();
-    seeds.push_back( cellID );
-    sc = m_clusterizationTool->clusterize(clusters, digits, m_calo, seeds, level);
-  }
-  else {
-    sc = m_clusterizationTool->clusterize(clusters, digits, m_calo);
-  }
+  std::vector<LHCb::CaloCellID> seeds;
+  seeds.clear();
+  seeds.push_back( cellID );
+  sc = m_clusterizationTool->clusterize(clusters, digits, m_calo, seeds, level);
   
   // TODO : use level with list of seeds
   if ( sc.isFailure() ) return Error(" Failure from the CaloClusterizationTool!" , sc);
@@ -153,6 +150,11 @@ StatusCode L0Calo2CaloTool::makeClusters
 // ==========================================================================
 StatusCode L0Calo2CaloTool::putClustersOnTES( std::vector<LHCb::CaloCluster*>& clusters ) const
 {
+
+
+  if( !m_clusOnTES )return StatusCode::SUCCESS;
+  
+
   LHCb::CaloClusters* output = getOrCreate<LHCb::CaloClusters, LHCb::CaloClusters>( m_clusterLocation );
   output -> setVersion( 2 ); // update the version number (needed for serialization)
   if ( msgLevel(MSG::DEBUG) )

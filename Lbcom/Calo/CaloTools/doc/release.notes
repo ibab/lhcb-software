@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2011-05-13 - Olivier Deschamps
+ - L0Calo2Calo tool : allow for managing the cluster on TES externally (new default)
+
 !========================= CaloTools v6r1 2011-02-01 =========================
 ! 2011-01-21 - Olivier Deschamps
  - Fix Calo2MCTool initialization
