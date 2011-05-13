@@ -1,5 +1,5 @@
 package StrippingSys
-version v2r3
+version           v2r3p1
 
 branches doc cmt tests
 
@@ -13,8 +13,8 @@ use  StrippingAlgs               v1r6     Phys   # Anton Poluektov
 use  StrippingUtils              v1r4     Phys   # Juan Palacios
 use  StrippingConf               v4r2     Phys   # Anton Poluektov
 use  StrippingSelections         v3r4     Phys   # Tom Blake, Jibo He
-use  StrippingSettings           v2r3     Phys   # Tom Blake, Jibo He
-use  StrippingTCK                v1r0     Phys   # Anton Poluektov
+use  StrippingSettings           v2r3p1   Phys   # Tom Blake, Jibo He
+use  StrippingTCK                v1r1     Phys   # Anton Poluektov
 use  DisplVertices 		 v7r5	  Phys	 # Neal Gauvin
 use  HighPtJets			 v1r3     Phys   # Marcin Kucharczyk
 use  StrippingNeuroBayes         v1r3     Phys   # Ulrich Kerzel

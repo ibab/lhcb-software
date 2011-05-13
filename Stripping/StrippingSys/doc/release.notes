@@ -3,7 +3,16 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
-</PRE><H1><A NAME=v2r3>2011-04-29 StrippingSys v2r4 </A></H1><PRE>
+</PRE><H1><A NAME=v2r3p1>2011-05-13 StrippingSys v2r3p1 </A></H1><PRE>
+
+Stripping for 2010 restripping and 2011 reprocessing.
+
+Same as stripping 13 except picks up new Phys and fixes for tracking lines.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v2r3p1
+
+</PRE><H1><A NAME=v2r3>2011-04-29 StrippingSys v2r3 </A></H1><PRE>
 ! 2011-04-08 - Anton Poluektov 
  - Add Phys/StrippingTCK package: python shell to query stripping configuration. 
  - Some other small changes. 
