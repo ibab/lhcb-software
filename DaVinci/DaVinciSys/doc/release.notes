@@ -17,6 +17,8 @@ Packages from Rec/LHCb included in DaVinci for this release:
   . Tf/TrackSys v6r2
   . Tr/TrackTools v4r6
 
+EventPacker v2r8 no longer required since it is in LHCb v32r3 picked up through Rec v11r4.
+
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r3
 

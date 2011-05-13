@@ -15,8 +15,6 @@ use TrackSys v6r2 Tf
 use TrackTools v4r6 Tr
 
 
-use EventPacker                 v2r8    Event
-
 # Declare this as a container package
 apply_pattern container_package
 
