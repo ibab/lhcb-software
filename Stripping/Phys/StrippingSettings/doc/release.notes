@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2011-05-13 T. Blake
+ - Reverted change below (2011-05-13 S.Blusk)
+
 ! 2011-05-13 S. Blusk
  - Added prescale & postscale to new lines in StrippingB2D3H module, in Stripping13
 
