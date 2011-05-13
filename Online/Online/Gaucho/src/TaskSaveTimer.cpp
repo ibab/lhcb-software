@@ -40,6 +40,9 @@ TaskSaveTimer::~TaskSaveTimer( )
 void TaskSaveTimer::timerHandler ( void )
 {
   if ( m_subsys ) {
+    // Need protection against m_subsys==0:
+    // If the save time runs, but no histograms were
+    // ever published, m_subsys (histograms) is NULL!
     m_subsys->Lock();
     if (m_subsys->m_ser->buffersize == 0)
     {
