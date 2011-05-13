@@ -7,6 +7,13 @@
 
 ! 2011-0501 Vanya Belyaev 
 
+  - Loop:
+    add access to   "vector"      ( LHCb::Particle::ConstVector) 
+               and  "combination" ( LoKi::Types::Range) 
+                        
+
+! 2011-0501 Vanya Belyaev 
+
   - LoopObj.cpp
 
      LoKi::LoopObj::next: 

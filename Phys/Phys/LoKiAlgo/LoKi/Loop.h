@@ -41,13 +41,16 @@ namespace LoKi
   class Loop : public LoKi::Interface<LoKi::LoopObj>
   {
   public:
+    // ========================================================================
     /// constructor from LoKi::LoopObj
     Loop ( const LoKi::LoopObj* object ) ;
     /// copy constructor
     Loop ( const Loop&          object ) ;
     /// vitual destructor
     virtual ~Loop() ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// conversion operator to LoKi::LoopObj
     operator       LoKi::LoopObj*    () const { return getObject() ; }
     /// conversion to bool value 
@@ -61,11 +64,15 @@ namespace LoKi
     { return child( index ) ; }
     /// "check-validity" operator
     bool                  operator! () const { return ! valid() ; }
+    // ======================================================================
   public:
+    // ========================================================================
     const Loop& operator++ ()      const 
     { if ( validPointer() ) { getObject()->next() ; } ; return *this ; };
     const Loop& operator++ ( int ) const { return ++(*this) ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// valid object??
     bool valid() const { return validPointer() && getObject()->valid() ; }
     /// conversion operator to const LHCb::Particle*    
@@ -74,10 +81,14 @@ namespace LoKi
     const LHCb::Vertex*     vertex   () const ;    
     /// get child of the loop object 
     const LHCb::Particle*   child ( const size_t index ) const ;
+    // ========================================================================
   private:
-    // the default constructior is disabled
-    Loop();
+    // ========================================================================
+    /// the default constructior is disabled
+    Loop(); // the default constructior is disabled
+    // ========================================================================
   };
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END

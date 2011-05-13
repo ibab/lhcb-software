@@ -55,6 +55,9 @@ namespace
   /// invalid PID name 
   const std::string s_pidName = "<Invalid Loop/Particle>" ;
   // ==========================================================================
+  /// invalid particle vector 
+  const LHCb::Particle::ConstVector s_Vector ;
+  // ==========================================================================
 }
 // ============================================================================
 // get the effective formula of the loop, see LoKi::LoopObj::formula
@@ -351,7 +354,22 @@ const LoKi::Loop& LoKi::Dicts::DictsLoop::restore ( const LoKi::Loop& l )
   return l ; 
 } 
 // ============================================================================
-
+// access to the combination 
+// ============================================================================
+const LHCb::Particle::ConstVector& 
+LoKi::Dicts::DictsLoop::combination ( const LoKi::Loop& l ) 
+{
+  if ( l ) { return l->combination() ; }
+  return s_Vector ;
+}
+// ============================================================================
+// access to the combination 
+// ============================================================================
+LHCb::Particle::Range LoKi::Dicts::DictsLoop::comb  ( const LoKi::Loop& l ) 
+{
+  if ( l ) { return l->comb() ; }
+  return LHCb::Particle::Range () ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

@@ -163,6 +163,11 @@ namespace LoKi
       static const LoKi::Loop& backup  ( const LoKi::Loop& l ) ;
       /// restore the loop from the last backup state
       static const LoKi::Loop& restore ( const LoKi::Loop& l ) ;
+      /// access to the combination 
+      static const LHCb::Particle::ConstVector& 
+	combination ( const LoKi::Loop& l ) ; 
+      /// access to the combination 
+      static LHCb::Particle::Range comb  ( const LoKi::Loop& l ) ; 
       // ======================================================================
     } ; //                                  end of class LoKi::Dicts::LoopDicts 
     // ========================================================================

@@ -102,6 +102,8 @@ namespace LoKi
     /// get the access to the combination
     const LHCb::Particle::ConstVector& combination() const 
     { return m_combination ; }
+    /// get the access to the combination 
+    LHCb::Particle::Range comb () const { return combination () ; }
     /** get  particle/daughter particle from the current combination.
      *  It is an alias to the previouse method 
      *  @attention <c>index==0</c> corresponds to the particle itself
