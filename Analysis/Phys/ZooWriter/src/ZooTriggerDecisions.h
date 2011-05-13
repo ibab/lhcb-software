@@ -134,6 +134,164 @@ MakeTriggerDec(L0SPD40,					0, 0x00020000, "SPD40")
 //HLT1 Lines
 
 
+MakeTriggerDec(Hlt1DiMuonHighMass                      ,1,0x00000001,"Hlt1DiMuonHighMassDecision");
+MakeTriggerDec(Hlt1DiMuonLowMass                       ,1,0x00000002,"Hlt1DiMuonLowMassDecision");
+MakeTriggerDec(Hlt1SingleMuonNoIP                      ,1,0x00000004,"Hlt1SingleMuonNoIPDecision");
+MakeTriggerDec(Hlt1SingleMuonHighPT                    ,1,0x00000008,"Hlt1SingleMuonHighPTDecision");
+MakeTriggerDec(Hlt1TrackAllL0                          ,1,0x00000010,"Hlt1TrackAllL0Decision");
+MakeTriggerDec(Hlt1TrackMuon                           ,1,0x00000020,"Hlt1TrackMuonDecision");
+MakeTriggerDec(Hlt1TrackPhoton                         ,1,0x00000040,"Hlt1TrackPhotonDecision");
+MakeTriggerDec(Hlt1Lumi                                ,1,0x00000080,"Hlt1LumiDecision");
+MakeTriggerDec(Hlt1LumiMidBeamCrossing                 ,1,0x00000100,"Hlt1LumiMidBeamCrossingDecision");
+MakeTriggerDec(Hlt1MBNoBias                            ,1,0x00000200,"Hlt1MBNoBiasDecision");
+MakeTriggerDec(Hlt1L0Any                               ,1,0x00000400,"Hlt1L0AnyDecision");
+MakeTriggerDec(Hlt1L0AnyRateLimited                    ,1,0x00000800,"Hlt1L0AnyRateLimitedDecision");
+MakeTriggerDec(Hlt1L0AnyNoSPD                          ,1,0x00001000,"Hlt1L0AnyNoSPDDecision");
+MakeTriggerDec(Hlt1L0AnyNoSPDRateLimited               ,1,0x00002000,"Hlt1L0AnyNoSPDRateLimitedDecision");
+MakeTriggerDec(Hlt1NoPVPassThrough                     ,1,0x00004000,"Hlt1NoPVPassThroughDecision");
+MakeTriggerDec(Hlt1DiProtonLowMult                     ,1,0x00008000,"Hlt1DiProtonLowMultDecision");
+MakeTriggerDec(Hlt1BeamGasNoBeamBeam1                  ,1,0x00010000,"Hlt1BeamGasNoBeamBeam1Decision");
+MakeTriggerDec(Hlt1BeamGasNoBeamBeam2                  ,1,0x00020000,"Hlt1BeamGasNoBeamBeam2Decision");
+MakeTriggerDec(Hlt1BeamGasBeam1                        ,1,0x00040000,"Hlt1BeamGasBeam1Decision");
+MakeTriggerDec(Hlt1BeamGasBeam2                        ,1,0x00080000,"Hlt1BeamGasBeam2Decision");
+MakeTriggerDec(Hlt1BeamGasCrossingEnhancedBeam1        ,1,0x00100000,"Hlt1BeamGasCrossingEnhancedBeam1Decision");
+MakeTriggerDec(Hlt1BeamGasCrossingEnhancedBeam2        ,1,0x00200000,"Hlt1BeamGasCrossingEnhancedBeam2Decision");
+MakeTriggerDec(Hlt1BeamGasCrossingForcedReco           ,1,0x00400000,"Hlt1BeamGasCrossingForcedRecoDecision");
+MakeTriggerDec(Hlt1ODINTechnical                       ,1,0x00800000,"Hlt1ODINTechnicalDecision");
+MakeTriggerDec(Hlt1Tell1Error                          ,1,0x01000000,"Hlt1Tell1ErrorDecision");
+MakeTriggerDec(Hlt1BeamGasCrossingParasitic            ,1,0x02000000,"Hlt1BeamGasCrossingParasiticDecision");
+MakeTriggerDec(Hlt1ErrorEvent                          ,1,0x04000000,"Hlt1ErrorEventDecision");
+MakeTriggerDec(Hlt1Global                              ,1,0x08000000,"Hlt1Global");
+MakeTriggerDec(Hlt1MBMicroBiasVelo                     ,1,0x10000000,"Hlt1MBMicroBiasVeloDecision");
+MakeTriggerDec(Hlt1MBMicroBiasVeloRateLimited          ,1,0x20000000,"Hlt1MBMicroBiasVeloRateLimitedDecision");
+MakeTriggerDec(Hlt1MBMicroBiasTStation                 ,1,0x40000000,"Hlt1MBMicroBiasTStationDecision");
+MakeTriggerDec(Hlt1MBMicroBiasTStationRateLimited      ,1,0x80000000,"Hlt1MBMicroBiasTStationRateLimitedDecision");
+
+
+MakeTriggerDec(Hlt1DiProton                            ,2,0x00000001,"Hlt1DiProtonDecision");
+MakeTriggerDec(Hlt1VeloClosingMicroBias                ,2,0x00000002,"Hlt1VeloClosingMicroBiasDecision");
+
+//HLT2 Lines
+
+
+MakeTriggerDec(Hlt2SingleElectronTFLowPt               ,3,0x00000001,"Hlt2SingleElectronTFLowPtDecision");
+MakeTriggerDec(Hlt2SingleElectronTFHighPt              ,3,0x00000002,"Hlt2SingleElectronTFHighPtDecision");
+MakeTriggerDec(Hlt2DiElectronHighMass                  ,3,0x00000004,"Hlt2DiElectronHighMassDecision");
+MakeTriggerDec(Hlt2DiElectronB                         ,3,0x00000008,"Hlt2DiElectronBDecision");
+MakeTriggerDec(Hlt2Topo2BodySimple                     ,3,0x00000010,"Hlt2Topo2BodySimpleDecision");
+MakeTriggerDec(Hlt2Topo3BodySimple                     ,3,0x00000020,"Hlt2Topo3BodySimpleDecision");
+MakeTriggerDec(Hlt2Topo4BodySimple                     ,3,0x00000040,"Hlt2Topo4BodySimpleDecision");
+MakeTriggerDec(Hlt2Topo2BodyBBDT                       ,3,0x00000080,"Hlt2Topo2BodyBBDTDecision");
+MakeTriggerDec(Hlt2Topo3BodyBBDT                       ,3,0x00000100,"Hlt2Topo3BodyBBDTDecision");
+MakeTriggerDec(Hlt2Topo4BodyBBDT                       ,3,0x00000200,"Hlt2Topo4BodyBBDTDecision");
+MakeTriggerDec(Hlt2TopoMu2BodyBBDT                     ,3,0x00000400,"Hlt2TopoMu2BodyBBDTDecision");
+MakeTriggerDec(Hlt2TopoMu3BodyBBDT                     ,3,0x00000800,"Hlt2TopoMu3BodyBBDTDecision");
+MakeTriggerDec(Hlt2TopoMu4BodyBBDT                     ,3,0x00001000,"Hlt2TopoMu4BodyBBDTDecision");
+MakeTriggerDec(Hlt2TopoE2BodyBBDT                      ,3,0x00002000,"Hlt2TopoE2BodyBBDTDecision");
+MakeTriggerDec(Hlt2TopoE3BodyBBDT                      ,3,0x00004000,"Hlt2TopoE3BodyBBDTDecision");
+MakeTriggerDec(Hlt2TopoE4BodyBBDT                      ,3,0x00008000,"Hlt2TopoE4BodyBBDTDecision");
+MakeTriggerDec(Hlt2IncPhi                              ,3,0x00010000,"Hlt2IncPhiDecision");
+MakeTriggerDec(Hlt2IncPhiSidebands                     ,3,0x00020000,"Hlt2IncPhiSidebandsDecision");
+MakeTriggerDec(Hlt2CharmHadD02HHKsLL                   ,3,0x00040000,"Hlt2CharmHadD02HHKsLLDecision");
+MakeTriggerDec(Hlt2Dst2PiD02PiPi                       ,3,0x00080000,"Hlt2Dst2PiD02PiPiDecision");
+MakeTriggerDec(Hlt2Dst2PiD02MuMu                       ,3,0x00100000,"Hlt2Dst2PiD02MuMuDecision");
+MakeTriggerDec(Hlt2Dst2PiD02KMu                        ,3,0x00200000,"Hlt2Dst2PiD02KMuDecision");
+MakeTriggerDec(Hlt2Dst2PiD02KPi                        ,3,0x00400000,"Hlt2Dst2PiD02KPiDecision");
+MakeTriggerDec(Hlt2PassThrough                         ,3,0x00800000,"Hlt2PassThroughDecision");
+MakeTriggerDec(Hlt2Transparent                         ,3,0x01000000,"Hlt2TransparentDecision");
+MakeTriggerDec(Hlt2Forward                             ,3,0x02000000,"Hlt2ForwardDecision");
+MakeTriggerDec(Hlt2DebugEvent                          ,3,0x04000000,"Hlt2DebugEventDecision");
+MakeTriggerDec(Hlt2CharmHadD02KK                       ,3,0x08000000,"Hlt2CharmHadD02KKDecision");
+MakeTriggerDec(Hlt2CharmHadD02KKWideMass               ,3,0x10000000,"Hlt2CharmHadD02KKWideMassDecision");
+MakeTriggerDec(Hlt2CharmHadD02KPi                      ,3,0x20000000,"Hlt2CharmHadD02KPiDecision");
+MakeTriggerDec(Hlt2CharmHadD02KPiWideMass              ,3,0x40000000,"Hlt2CharmHadD02KPiWideMassDecision");
+MakeTriggerDec(Hlt2CharmHadD02PiPi                     ,3,0x80000000,"Hlt2CharmHadD02PiPiDecision");
+
+
+MakeTriggerDec(Hlt2CharmHadD02PiPiWideMass             ,4,0x00000001,"Hlt2CharmHadD02PiPiWideMassDecision");
+MakeTriggerDec(Hlt2ExpressJPsi                         ,4,0x00000002,"Hlt2ExpressJPsiDecision");
+MakeTriggerDec(Hlt2ExpressJPsiTagProbe                 ,4,0x00000004,"Hlt2ExpressJPsiTagProbeDecision");
+MakeTriggerDec(Hlt2ExpressLambda                       ,4,0x00000008,"Hlt2ExpressLambdaDecision");
+MakeTriggerDec(Hlt2ExpressKS                           ,4,0x00000010,"Hlt2ExpressKSDecision");
+MakeTriggerDec(Hlt2ExpressDs2PhiPi                     ,4,0x00000020,"Hlt2ExpressDs2PhiPiDecision");
+MakeTriggerDec(Hlt2ExpressBeamHalo                     ,4,0x00000040,"Hlt2ExpressBeamHaloDecision");
+MakeTriggerDec(Hlt2ExpressDStar2D0Pi                   ,4,0x00000080,"Hlt2ExpressDStar2D0PiDecision");
+MakeTriggerDec(Hlt2ExpressHLT1Physics                  ,4,0x00000100,"Hlt2ExpressHLT1PhysicsDecision");
+MakeTriggerDec(Hlt2Bs2PhiGamma                         ,4,0x00000200,"Hlt2Bs2PhiGammaDecision");
+MakeTriggerDec(Hlt2Bs2PhiGammaWideBMass                ,4,0x00000400,"Hlt2Bs2PhiGammaWideBMassDecision");
+MakeTriggerDec(Hlt2Bd2KstGamma                         ,4,0x00000800,"Hlt2Bd2KstGammaDecision");
+MakeTriggerDec(Hlt2Bd2KstGammaWideKMass                ,4,0x00001000,"Hlt2Bd2KstGammaWideKMassDecision");
+MakeTriggerDec(Hlt2Bd2KstGammaWideBMass                ,4,0x00002000,"Hlt2Bd2KstGammaWideBMassDecision");
+MakeTriggerDec(Hlt2CharmHadD2KS0Pi                     ,4,0x00004000,"Hlt2CharmHadD2KS0PiDecision");
+MakeTriggerDec(Hlt2CharmHadD2KS0K                      ,4,0x00008000,"Hlt2CharmHadD2KS0KDecision");
+MakeTriggerDec(Hlt2CharmRareDecayD02MuMu               ,4,0x00010000,"Hlt2CharmRareDecayD02MuMuDecision");
+MakeTriggerDec(Hlt2B2HH                                ,4,0x00020000,"Hlt2B2HHDecision");
+MakeTriggerDec(Hlt2MuonFromHLT1                        ,4,0x00040000,"Hlt2MuonFromHLT1Decision");
+MakeTriggerDec(Hlt2SingleMuon                          ,4,0x00080000,"Hlt2SingleMuonDecision");
+MakeTriggerDec(Hlt2SingleMuonHighPT                    ,4,0x00100000,"Hlt2SingleMuonHighPTDecision");
+MakeTriggerDec(Hlt2SingleMuonLowPT                     ,4,0x00200000,"Hlt2SingleMuonLowPTDecision");
+MakeTriggerDec(Hlt2TFBc2JpsiMuX                        ,4,0x00400000,"Hlt2TFBc2JpsiMuXDecision");
+MakeTriggerDec(Hlt2TFBc2JpsiMuXSignal                  ,4,0x00800000,"Hlt2TFBc2JpsiMuXSignalDecision");
+MakeTriggerDec(Hlt2DisplVerticesLowMassSingle          ,4,0x01000000,"Hlt2DisplVerticesLowMassSingleDecision");
+MakeTriggerDec(Hlt2DisplVerticesHighMassSingle         ,4,0x02000000,"Hlt2DisplVerticesHighMassSingleDecision");
+MakeTriggerDec(Hlt2DisplVerticesDouble                 ,4,0x04000000,"Hlt2DisplVerticesDoubleDecision");
+MakeTriggerDec(Hlt2DisplVerticesSinglePostScaled       ,4,0x08000000,"Hlt2DisplVerticesSinglePostScaledDecision");
+MakeTriggerDec(Hlt2DisplVerticesHighFDSingle           ,4,0x10000000,"Hlt2DisplVerticesHighFDSingleDecision");
+MakeTriggerDec(Hlt2DisplVerticesSingleDown             ,4,0x20000000,"Hlt2DisplVerticesSingleDownDecision");
+MakeTriggerDec(Hlt2B2HHPi0_Merged                      ,4,0x40000000,"Hlt2B2HHPi0_MergedDecision");
+MakeTriggerDec(Hlt2CharmHadD2HHH                       ,4,0x80000000,"Hlt2CharmHadD2HHHDecision");
+
+
+MakeTriggerDec(Hlt2CharmHadD2HHHWideMass               ,5,0x00000001,"Hlt2CharmHadD2HHHWideMassDecision");
+MakeTriggerDec(Hlt2DiMuon                              ,5,0x00000002,"Hlt2DiMuonDecision");
+MakeTriggerDec(Hlt2DiMuonLowMass                       ,5,0x00000004,"Hlt2DiMuonLowMassDecision");
+MakeTriggerDec(Hlt2DiMuonJPsi                          ,5,0x00000008,"Hlt2DiMuonJPsiDecision");
+MakeTriggerDec(Hlt2DiMuonJPsiHighPT                    ,5,0x00000010,"Hlt2DiMuonJPsiHighPTDecision");
+MakeTriggerDec(Hlt2DiMuonPsi2S                         ,5,0x00000020,"Hlt2DiMuonPsi2SDecision");
+MakeTriggerDec(Hlt2DiMuonB                             ,5,0x00000040,"Hlt2DiMuonBDecision");
+MakeTriggerDec(Hlt2DiMuonZ                             ,5,0x00000080,"Hlt2DiMuonZDecision");
+MakeTriggerDec(Hlt2DiMuonDY1                           ,5,0x00000100,"Hlt2DiMuonDY1Decision");
+MakeTriggerDec(Hlt2DiMuonDY2                           ,5,0x00000200,"Hlt2DiMuonDY2Decision");
+MakeTriggerDec(Hlt2DiMuonDY3                           ,5,0x00000400,"Hlt2DiMuonDY3Decision");
+MakeTriggerDec(Hlt2DiMuonDY4                           ,5,0x00000800,"Hlt2DiMuonDY4Decision");
+MakeTriggerDec(Hlt2DiMuonDetached                      ,5,0x00001000,"Hlt2DiMuonDetachedDecision");
+MakeTriggerDec(Hlt2DiMuonDetachedHeavy                 ,5,0x00002000,"Hlt2DiMuonDetachedHeavyDecision");
+MakeTriggerDec(Hlt2DiMuonDetachedJPsi                  ,5,0x00004000,"Hlt2DiMuonDetachedJPsiDecision");
+MakeTriggerDec(Hlt2DiMuonNoPV                          ,5,0x00008000,"Hlt2DiMuonNoPVDecision");
+MakeTriggerDec(Hlt2TriMuonDetached                     ,5,0x00010000,"Hlt2TriMuonDetachedDecision");
+MakeTriggerDec(Hlt2TriMuonTau                          ,5,0x00020000,"Hlt2TriMuonTauDecision");
+MakeTriggerDec(Hlt2CharmHadD02HHHH                     ,5,0x00040000,"Hlt2CharmHadD02HHHHDecision");
+MakeTriggerDec(Hlt2CharmHadD02HHHHWideMass             ,5,0x00080000,"Hlt2CharmHadD02HHHHWideMassDecision");
+MakeTriggerDec(Hlt2ErrorEvent                          ,5,0x00100000,"Hlt2ErrorEventDecision");
+MakeTriggerDec(Hlt2Global                              ,5,0x00200000,"Hlt2Global");
+MakeTriggerDec(Hlt2B2HHLTUnbiased                      ,5,0x00400000,"Hlt2B2HHLTUnbiasedDecision");
+MakeTriggerDec(Hlt2CharmHadD02HH_D02PiPi               ,5,0x00800000,"Hlt2CharmHadD02HH_D02PiPiDecision");
+MakeTriggerDec(Hlt2CharmHadD02HH_D02PiPiWideMass       ,5,0x01000000,"Hlt2CharmHadD02HH_D02PiPiWideMassDecision");
+MakeTriggerDec(Hlt2CharmHadD02HH_D02KK                 ,5,0x02000000,"Hlt2CharmHadD02HH_D02KKDecision");
+MakeTriggerDec(Hlt2CharmHadD02HH_D02KKWideMass         ,5,0x04000000,"Hlt2CharmHadD02HH_D02KKWideMassDecision");
+MakeTriggerDec(Hlt2CharmHadD02HH_D02KPi                ,5,0x08000000,"Hlt2CharmHadD02HH_D02KPiDecision");
+MakeTriggerDec(Hlt2CharmHadD02HH_D02KPiWideMass        ,5,0x10000000,"Hlt2CharmHadD02HH_D02KPiWideMassDecision");
+MakeTriggerDec(Hlt2CharmHadD2KS0H_D2KS0Pi              ,5,0x20000000,"Hlt2CharmHadD2KS0H_D2KS0PiDecision");
+MakeTriggerDec(Hlt2CharmHadD2KS0H_D2KS0K               ,5,0x40000000,"Hlt2CharmHadD2KS0H_D2KS0KDecision");
+MakeTriggerDec(Hlt2DiProton                            ,5,0x80000000,"Hlt2DiProtonDecision");
+
+
+MakeTriggerDec(Hlt2DiProtonTF                          ,6,0x00000001,"Hlt2DiProtonTFDecision");
+MakeTriggerDec(Hlt2DiProtonLowMult                     ,6,0x00000002,"Hlt2DiProtonLowMultDecision");
+MakeTriggerDec(Hlt2DiProtonLowMultTF                   ,6,0x00000004,"Hlt2DiProtonLowMultTFDecision");
+MakeTriggerDec(Hlt2CharmSemilepD02HMuNu_D02KMuNuWS     ,6,0x00000008,"Hlt2CharmSemilepD02HMuNu_D02KMuNuWSDecision");
+MakeTriggerDec(Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS    ,6,0x00000010,"Hlt2CharmSemilepD02HMuNu_D02PiMuNuWSDecision");
+MakeTriggerDec(Hlt2CharmSemilepD02HMuNu_D02KMuNu       ,6,0x00000020,"Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision");
+MakeTriggerDec(Hlt2CharmSemilepD02HMuNu_D02PiMuNu      ,6,0x00000040,"Hlt2CharmSemilepD02HMuNu_D02PiMuNuDecision");
+MakeTriggerDec(Hlt2CharmSemilepD2HMuMu                 ,6,0x00000080,"Hlt2CharmSemilepD2HMuMuDecision");
+MakeTriggerDec(Hlt2CharmSemilepD2HMuMuWideMass         ,6,0x00000100,"Hlt2CharmSemilepD2HMuMuWideMassDecision");
+MakeTriggerDec(Hlt2CharmSemilepD02HHMuMu               ,6,0x00000200,"Hlt2CharmSemilepD02HHMuMuDecision");
+MakeTriggerDec(Hlt2CharmSemilepD02HHMuMuWideMass       ,6,0x00000400,"Hlt2CharmSemilepD02HHMuMuWideMassDecision");
+
+/*
+//HLT1 Lines
+
+
 MakeTriggerDec(Hlt1BeamGasBeam1                        ,1,0x00000001,"Hlt1BeamGasBeam1Decision");
 MakeTriggerDec(Hlt1BeamGasCrossingLonelyBeam1          ,1,0x00000002,"Hlt1BeamGasCrossingLonelyBeam1Decision");
 MakeTriggerDec(Hlt1BeamGasBeam2                        ,1,0x00000004,"Hlt1BeamGasBeam2Decision");
@@ -373,7 +531,7 @@ MakeTriggerDec(Hlt2B2D2hhBachelorBroadMWMonitor        ,8,0x00004000,"Hlt2B2D2hh
 
 
 /////2010 Data
-/*
+
 // Word 1 - HLT1 Global and Muon decisions
 MakeTriggerDec(Hlt1Global,						1,0x00000001,"Hlt1Global");
 MakeTriggerDec(Hlt1SingleMuonNoIPL0,					1,0x00000002,"Hlt1SingleMuonNoIPL0Decision");
