@@ -3,7 +3,7 @@
 # Maintainer : Anton Poluektov
 #============================================================================
 package           StrippingTCK
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
