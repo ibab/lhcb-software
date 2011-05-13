@@ -39,26 +39,27 @@ TaskSaveTimer::~TaskSaveTimer( )
 
 void TaskSaveTimer::timerHandler ( void )
 {
-//  if (m_subsys->m_inputServicemap.empty()) return;
-  m_subsys->Lock();
-  if (m_subsys->m_ser->buffersize == 0)
-  {
-    m_subsys->unLock();
-    return;
-  }
-  if (m_bsiz < m_subsys->m_ser->buffersize)
-  {
-    if (m_buffadd != 0)
+  if ( m_subsys ) {
+    m_subsys->Lock();
+    if (m_subsys->m_ser->buffersize == 0)
     {
-      free (m_buffadd);
+      m_subsys->unLock();
+      return;
     }
-    m_buffadd = malloc(m_subsys->m_ser->buffersize);
-    m_bsiz = m_subsys->m_ser->buffersize;
+    if (m_bsiz < m_subsys->m_ser->buffersize)
+    {
+      if (m_buffadd != 0)
+      {
+	free (m_buffadd);
+      }
+      m_buffadd = malloc(m_subsys->m_ser->buffersize);
+      m_bsiz = m_subsys->m_ser->buffersize;
+    }
+    memcpy(m_buffadd,m_subsys->m_ser->buffer,m_bsiz);
+    m_subsys->Clear();
+    m_subsys->unLock();
+    SavetoFile(m_buffadd);
   }
-  memcpy(m_buffadd,m_subsys->m_ser->buffer,m_bsiz);
-  m_subsys->Clear();
-  m_subsys->unLock();
-  SavetoFile(m_buffadd);
 }
 
 //void TaskSaveTimer::fillmap(void *buff, HISTMAP *m)
