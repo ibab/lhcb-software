@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-13 S. Blusk
+ - Added prescale & postscale to new lines in StrippingB2D3H module, in Stripping13
+
 ! 2011-05-11 - Thomas Blake
  - Added Stripping13Calib to contain all Calibration stream lines including 
    the tracking effciency lines for Reco10-Stripping13. 

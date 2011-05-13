@@ -373,7 +373,9 @@ B2D3H = {
         "UnbiasedB2DPiPiPiAll_Prescale"         : 0.3,
         "UnbiasedB2DPiPiPiAll_Postscale"        : 1.0,
         "WSB2D3H_Prescale"              : 0.1,
-        "WSB2D3H_Postscale"             : 1.0
+        "WSB2D3H_Postscale"             : 1.0,
+        "B2DStarDKAll_Prescale"          : 1.0,
+        "B2DStarDKAll_Postscale"         : 1.0
         }, 
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
