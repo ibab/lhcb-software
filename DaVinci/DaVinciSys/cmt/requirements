@@ -7,7 +7,13 @@ branches doc cmt
 use  DaVinci                 	v28r3   Phys
 use  DaVinciTests               v2r5
 
-# Patches
+# Patches from other projects
+# from Rec, to be removed with next Rec release.
+use OTDAQ v7r10 OT
+use LumiAlgs v5r2 Rec
+use TrackSys v6r2 Tf
+use TrackTools v4r6 Tr
+
 
 use EventPacker                 v2r8    Event
 
