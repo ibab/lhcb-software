@@ -37,7 +37,7 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'VeloCandidates'
           , 'MaxOTHits'
           )
-MaxOTHits = 10000
+MaxOTHits = 15000
 ############################################################################################
 # Option to decide which pattern to use
 ############################################################################################

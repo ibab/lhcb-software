@@ -8,7 +8,7 @@
 !========================== HltTracking v9r8p1 2011-05-11 ===================
 ! 2011-05-12 -  Gerhard Raven
  - add a central place which defines MaxOTHits for use in PatForward, PatSeeding
-   and GEC, and use it.
+   and GEC, and use it. Default value is 15k
 
 ! 2011-05-11 -  Gerhard Raven
  - add fiducial OT time window: [-8,56] ns
