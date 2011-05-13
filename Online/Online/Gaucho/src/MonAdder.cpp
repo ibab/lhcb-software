@@ -309,8 +309,8 @@ void MonAdder::TimeoutHandler()
     INServiceDescr *d = i->second;
     if (d->last_update != this->m_reference)
     {
-      printf ("Timeout from source %s expected %lli last received %lli\n",d->m_Info->m_TargetService.c_str(),
-          m_reference,d->last_update);
+//      printf ("Timeout from source %s expected %lli last received %lli\n",d->m_Info->m_TargetService.c_str(),
+//          m_reference,d->last_update);
       add(d->m_buffer,d->m_bufsiz,d->m_Info);
       Update();
     }
@@ -422,7 +422,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   }
   else
   {
-    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
+//    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
     add(buff,siz,h);
     m_received++;
   }
