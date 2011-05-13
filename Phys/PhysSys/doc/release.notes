@@ -3,6 +3,19 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v12r4p1>2011-05-13 Phys v12r4p1 </A></H1><PRE>
+- Based on LHCb v32r3. Stripping13 compatible patches.
+
+Version for 2010 restripping and 2011 reprocessing.
+
+highlights:
+  . In Phys/TisTosTobbing: 
+     add support for new L0 DiMuon trigger to L0SelReportsMaker (needed for 2011 data)
+  . In Phys/LoKiPhys:
+     Set instant suppression to VertexDistance::chi2 error message.
+
+Other minor changes, for details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Phys&version=v12r4p1
 
 </PRE><H1><A NAME=v12r4>2011-04-21 Phys v12r4 </A></H1><PRE>
 - Based on LHCb v32r3. Stripping13 compatible patches.
