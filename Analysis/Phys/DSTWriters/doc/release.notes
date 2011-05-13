@@ -4,6 +4,7 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v2r2 2011-05-13 =========================
 ! 2011-04-20 - Juan Palacios
  - DSTWriters.__dev__.microdst
   . stripping MicroDST, standard MicroDST configurations no longer copy ODIN
