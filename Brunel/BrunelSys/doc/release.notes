@@ -3,6 +3,24 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v39r4>2011-05-14 Brunel v39r4</A></H1><PRE>
+This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
+ Rec v11r4 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+ and additional packages OTDAQ v7r10, TrackSys v6r2, RichRecTrackTools v1r29,
+   RichRecQC v2r51
+
+Bug fix version for first 2011 reprocessing (Reco10)
+
+- Bug fixes
+  . Add protection to FunctionalCKResForRecoTracks to catch exceptions from the
+    TransportSvc to prevent them from terminating the job execution.
+    Fixes problem reported in http://lblogbook.cern.ch/Operations/5474
+    (RichRecTrackTools v1r29)
+  . Remove "L1SizeMonitoring" from the default list of monitors, as it does not
+    support changes to the L1 IDs between initialize() and the first event.
+    Fixes problem reported in http://lblogbook.cern.ch/Operations/5701
+    (RichRecQC v2r51)
+
 </PRE><H1><A NAME=v39r3>2011-05-11 Brunel v39r3</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
  Rec v11r4 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

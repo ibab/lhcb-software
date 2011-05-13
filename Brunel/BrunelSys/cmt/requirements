@@ -1,5 +1,5 @@
 package BrunelSys
-version           v39r3
+version           v39r4
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v39r3   Rec
+use Brunel v39r4   Rec
 
 # Add here any component libraries to be added as patches
 
@@ -22,5 +22,7 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use OTDAQ    v7r10 OT
-use TrackSys v6r2  Tf
+use OTDAQ             v7r10 OT
+use TrackSys          v6r2  Tf
+use RichRecTrackTools v1r29 Rich
+use RichRecQC         v2r51 Rich
