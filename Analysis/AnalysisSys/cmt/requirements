@@ -6,7 +6,7 @@ branches doc cmt
 
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v2r0     Phys   # Juan Palacios
+use  DSTWriters                 v2r2     Phys   # Juan Palacios
 use  DSTWriterTests             v2r3     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
@@ -14,8 +14,8 @@ use  DSTWriterTests             v2r3     Phys   # Juan Palacios
 use  FlavourTagging             v12r4p3  Phys   # Marc Grabalosa
 
 use  DaVinciMonitors            v1r14p2  Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r5p3   Rich   # Chris Jones
-use  KaliCalo                   v4r10    Phys   # Vanya Belyaev
+use  RichPIDQC                  v1r6     Rich   # Chris Jones
+use  KaliCalo                   v4r11    Phys   # Vanya Belyaev
 ####################################################################
 #use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
 use  DaVinciMCTools     	v9r29    Phys   # Juan Palacios
@@ -42,7 +42,7 @@ use PyAna                       v1r3     Analysis
 use  MicroDSTBase        	v3r1p1  MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r6    MicroDST # Juan Palacios
 use  MicroDSTTools      	v2r1p2  MicroDST # Juan Palacios
-use  MicroDSTAlgorithm   	v5r2    MicroDST # Juan Palacios
+use  MicroDSTAlgorithm   	v5r3    MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10   MicroDST # Juan Palacios
 
 ####################################################################
