@@ -38,7 +38,7 @@ class RichRecQCConf(RichConfigurableUser):
     __default_histo_set__ = "OfflineFull"
 
     ## List of all known monitors. For sanity checks
-    __known_monitors__ = [ "ODIN", "DBConsistencyCheck","L1SizeMonitoring",
+    __known_monitors__ = [ "ODIN", "DBConsistencyCheck", "L1SizeMonitoring",
                            "HotPixelFinder", "PidMonitoring",
                            "PixelMonitoring", "TrackMonitoring",
                            "PhotonMonitoring", "TracklessRingAngles",
@@ -67,7 +67,7 @@ class RichRecQCConf(RichConfigurableUser):
         "Context"  : "Offline"  # The context within which to run
        ,"DataType" : "2010"     # Data type, can be ['DC06','2008',2009','2010']
        ,"MoniSequencer" : None  # The sequencer to add the RICH monitoring algorithms to
-       ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck",
+       ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "ODIN",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
@@ -83,19 +83,20 @@ class RichRecQCConf(RichConfigurableUser):
                                             "RichPhotonTrajectory", "RichStereoFitterTests"
                                             #,"RichRayTracingTests","RichDataObjectChecks","RichRecoTiming"
                                             ],
-                       "OfflineFull"    : [ "DBConsistencyCheck",
+                       "OfflineFull"    : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
-                       "OfflineExpress" : [ "DBConsistencyCheck",
+                       "OfflineExpress" : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
-                       "Online"         : [ "DBConsistencyCheck", "DataDecodingErrors",
+                       "Online"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
+                                            "DataDecodingErrors",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "AlignmentMonitoring" ],
                        "None"           : [ ]

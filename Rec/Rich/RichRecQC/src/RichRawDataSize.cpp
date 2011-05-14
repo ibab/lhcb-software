@@ -33,7 +33,7 @@ RawDataSize::RawDataSize( const std::string& name,
     m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents   );
-  declareProperty( "FillHPDPlots", m_hpdPlots = false );
+  declareProperty( "FillDetailedPlots", m_detailedPlots = false );
   setProperty( "HistoPrint", false );
 }
 
@@ -61,27 +61,15 @@ StatusCode RawDataSize::initialize()
 
 StatusCode RawDataSize::prebookHistograms()
 {
-
-  const Rich::DAQ::Level1HardwareIDs & l1IDs = m_RichSys->level1HardwareIDs();
-  for ( Rich::DAQ::Level1HardwareIDs::const_iterator iL = l1IDs.begin();
-        iL != l1IDs.end(); ++iL )
-  {
-    std::ostringstream title, ID;
-    title << "Data Size (32bit words) : L1HardwareID " << *iL;
-    ID << "L1s/L1HardwareID" << *iL;
-    richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 );
-  }
-
+  const unsigned int nL1sMax = 30;
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
                  "Average Size (32bit words) V L1 Copy Number",
-                 -0.5, l1IDs.size() - 0.5, l1IDs.size() );
+                 -0.5, nL1sMax - 0.5, nL1sMax );
 
-  const LHCb::RichSmartID::Vector & hpds   = m_RichSys->activeHPDRichSmartIDs();
-  const LHCb::RichSmartID::Vector & inhpds = m_RichSys->inactiveHPDRichSmartIDs();
-  const unsigned int nTotHPDs = hpds.size() + inhpds.size();
+  const LHCb::RichSmartID::Vector & hpds = m_RichSys->allHPDRichSmartIDs();
   richProfile1D( HID("hpds/SizeVHPDCopyNumber"),
                  "Average Size (32bit words) V HPD Copy Number",
-                 -0.5, nTotHPDs - 0.5, nTotHPDs );
+                 -0.5, hpds.size() - 0.5, hpds.size() );
   
   return StatusCode::SUCCESS;
 }
@@ -194,10 +182,14 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
       } // loop over ingresses
 
-      std::ostringstream ID;
-      ID << "L1s/L1HardwareID" << l1HardID;
-      richHisto1D( ID.str() ) -> fill ( nL1Words );
       richProfile1D( HID("L1s/SizeVL1CopyNumber") ) -> fill ( l1CopyN.data(), nL1Words );
+      if ( m_detailedPlots )
+      {
+        std::ostringstream ID, title;
+        ID << "L1s/L1HardwareID" << l1HardID;
+        title << "Data Size (32bit words) : L1HardwareID " << l1HardID;
+        richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 ) -> fill ( nL1Words );
+      }
 
     } // loop over L1 boards
 
@@ -211,7 +203,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
         const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(iHPD->first);
         // fill plots
         richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),iHPD->second);
-        if ( m_hpdPlots )
+        if ( m_detailedPlots )
         {
           const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
           const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(iHPD->first);

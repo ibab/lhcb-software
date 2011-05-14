@@ -4,7 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecQC v2r51 2011-05-13 =========================
+! 2011-05-14 - Chris Jones
+ - Reinstate the "L1SizeMonitoring" monitor in the list of default monitors to
+   run, after fixing problems with L1 board changes between initialize() and
+   the first event.
+
+!======================== RichRecQC v2r51 2011-05-13 =========================
 ! 2011-05-13 - Chris Jones
  - remove "L1SizeMonitoring" from the default list of monitors, as it does not
    support changes to the L1 IDs between initialize() and the first event.
