@@ -9,6 +9,9 @@ Stripping for 2010 restripping and 2011 reprocessing.
 
 Same as stripping 13 except picks up new Phys and fixes for tracking lines.
 
+Only modification to StrippingSelections:
+ .  StrippingTrackEffVeloMuon.py change of Muon Configurable name
+
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v2r3p1
 
