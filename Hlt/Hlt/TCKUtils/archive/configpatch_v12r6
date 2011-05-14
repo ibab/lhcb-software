@@ -1,0 +1,52 @@
+
+def ot_variations() :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+	ids = { 0x006a0032 : '91a5aaecfa7e5697357816db33b90993' }   # Default
+    patch = { 'id' : ids[0x006a0032]
+            , 'updates' : { 'Hlt2RecoForward'           : { 'maxOTHits': '10000' }
+                          , 'Hlt2RecoForwardSecondLoop' : { 'maxOTHits': '10000' }
+                          , 'DVSeeding.PatSeedingTool'  : { 'MaxOTHits' : '10000' }
+                          , 'Hlt1MBSeeding.PatSeedingTool' : { 'MaxOTHits' : '10000' }
+                          , 'ToolSvc.LooseGECs' : { 'MaxOTHits' : '10000' }
+                          , 'ToolSvc.TightGECs' : { 'MaxOTHits' : '10000' }
+                          }
+            , 'label' : 'Default, MaxOTHits=10000'
+            , 'cas'   : cas
+            }
+	ids[ 0x006b0032 ] = updateProperties( **patch )
+	createTCKEntries( ids, cas =  cas )
+
+
+def microbias_variations() :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+	ids = { 0x006a0032 : '91a5aaecfa7e5697357816db33b90993' }   # Default
+    patch = { 'id' : ids[0x006a0032]
+            , 'updates' : { 'Hlt1MBMicroBiasVeloPreScaler' : { 'AcceptFraction': '0.001' }
+                          , 'Hlt1MBMicroBiasVeloRateLimitedPreScaler': { 'AcceptFraction': '1'  }
+                          , 'Hlt1MBMicroBiasTStationPreScaler' : { 'AcceptFraction': '0.001' }
+                          , 'Hlt1MBMicroBiasTStationRateLimitedPreScaler' : { 'AcceptFraction': '1'  }
+                          }
+            , 'label' : 'Enable 500Hz+500Hz MicroBias, MaxOTHits=15000'
+            , 'cas'   : cas
+            }
+	ids[ 0x006c0032 ] = updateProperties( **patch )
+	createTCKEntries( ids, cas =  cas )
+
+
+def prescale_lowmult(id,label,tck) :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+    patch = { 'id' : id
+            , 'updates' : { 'Hlt2LowMultHadronPreScaler' :{ 'AcceptFraction': '0.1'  } }
+            , 'label' : '%s, Hlt2LowMultHadron=0.1' % label
+            , 'cas'   : cas
+            }
+	ids = { tck:  updateProperties( **patch ) }
+	createTCKEntries( ids, cas =  cas )
+
+cfg = [ ( 0x006a0032, '91a5aaecfa7e5697357816db33b90993', 'Default, MaxOTHits=15000')
+      , ( 0x006b0032, '9678b044a873c47db97c0ecf0573b657', 'Default, MaxOTHits=10000')
+      , ( 0x006c0032, 'dcc16783839a08a65acc2050cc082a70', 'Enable 500Hz+500Hz MicroBias, MaxOTHits=15000')
+      ]
+
+for (tck,id,label) in cfg :
+        prescale_lowmult(id,label,tck+0x00030000)
