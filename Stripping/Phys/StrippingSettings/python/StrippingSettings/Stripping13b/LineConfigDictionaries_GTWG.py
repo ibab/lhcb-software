@@ -96,7 +96,7 @@ B2DX = {
 	      "MaxDauMIPChi2": 40.,          # IP chi2 for at least one track
 	      "DIRAMin"	     : 0.9,          # minimum D DIRA
 	      "DOCAMax"      : 0.6,          # maximum DOCA of track combinations (mm)
-	      "IPChi2Min"    : 9.,           # Minimum IP chi2
+	      "IPChi2Min"    : 0.,           # Minimum IP chi2
     	    }, 
     	    "D2hhhhCuts" : {                 # D->hhhh cuts
     	      "DauChi2Max"   : 4.,           # maximum track chi2
@@ -143,7 +143,7 @@ B2DX = {
     	      "VDChi2Min"    : 36.,          # D flight distance chi2
 	      "PtMin"        : 1500.,        # Minimum Pt of the D (MeV)
 	      "DIRAMin"	     : 0.9,          # minimum D DIRA 
-	      "IPChi2Min"    : 9.,           # Minimum IP chi2
+	      "IPChi2Min"    : 0.,           # Minimum IP chi2
     	    }, 
     	    "D2KPiPi0Cuts" : {               # D->Kpipi0 cuts
     	      "DauChi2Max"   : 4.,           # maximum track chi2

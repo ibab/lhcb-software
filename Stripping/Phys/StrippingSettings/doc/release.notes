@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-15 - Anton Poluektov 
+ - Removed the IP chi2 cut in StrippingB2DX config dictionary in Stripping13b
+   for D->hhh and D->Ksh selections. Needed for lifetime-unbiased B0->D(hhh)Pi line. 
+   Effect on StrippingB2DX retention is 2.42% -> 2.57% 
+   (30000 events on 2011 test sample)
+
 ! 2011-05-15 - Thomas Blake
  - Added copy of Stripping13 as Stripping13b. 
 
