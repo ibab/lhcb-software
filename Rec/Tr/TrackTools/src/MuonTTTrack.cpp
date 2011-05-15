@@ -147,7 +147,7 @@ StatusCode MuonTTTrack::execute() {
       
       // -- Skip if not enough TT hits were found
       if( ttHits.size() < m_minNumberTTHits ){
-        if(msgLevel(MSG::WARNING)) warning() << "==> Not enough hits in TT found" << endmsg;
+        if(msgLevel(MSG::DEBUG)) debug() << "==> Not enough hits in TT found" << endmsg;
         delete track;
         continue;
       }
