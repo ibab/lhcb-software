@@ -2,17 +2,23 @@
 package IOExample
 version v3r5
 
-branches doc options cmt
+branches doc cmt tests python
 include_path none
+
+use GaudiConf  v*
+use LHCbKernel v* Kernel
 
 # Uses only needed to set up run time environment
 private
   use GaudiSvc            v*              -no_auto_imports
   use GaudiPoolDb         v*              -no_auto_imports
   use GaudiConf           v*              -no_auto_imports
-  use EventSys            v* Event        -no_auto_imports
   use EventPacker         v* Event        -no_auto_imports
+  use RootCnv             v* Online       -no_auto_imports
   macro CASTOR_use "" QMTest "CASTOR v* LCG_Interfaces"
   use $(CASTOR_use)
   apply_pattern QMTest
 end_private
+
+# ========================= Install configurable ============================
+apply_pattern install_python_modules

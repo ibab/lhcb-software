@@ -4,6 +4,13 @@
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
 
+! 2011-05-16 - Marco Cattaneo
+ - Major reorganisation of package:
+   . Added configurable for tests
+   . Options directory removed, all examples are now in tests/options
+   . Tests updated for I/O in both POOL and ROOT persistency format
+     (needs RootCnv)
+
 !====================== IOExample v3r5 2010-09-27 ==============================
 ! 2010-09-07 - Marco Cattaneo
  - Test rfio protocol when reading sim file, rootd protocol when reading digi 

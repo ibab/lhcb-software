@@ -1,9 +1,0 @@
-// Write the test DST produced by WriteDst.opts
-#include "$IOEXAMPLEROOT/options/ReadMin.opts"
-
-// Check that tracks were properly written (tests also SMatrix persistency)
-ApplicationMgr.TopAlg += { "DumpTracks" };
-DumpTracks.OutputLevel = 2;
-
-ApplicationMgr.EvtMax = 5;
-EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};
