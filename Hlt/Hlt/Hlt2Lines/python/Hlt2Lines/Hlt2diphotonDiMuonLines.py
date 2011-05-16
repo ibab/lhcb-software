@@ -16,7 +16,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  'Prescale'                  : {  'Hlt2diPhotonDiMuon'    :  1.0 
                                                    ,'Hlt2LowMultMuon'       :  0.1
-                                                   ,'Hlt2LowMultHadron'     :  1.0
+                                                   ,'Hlt2LowMultHadron'     :  0.1
                                                    ,'Hlt2LowMultPhoton'     :  1.0
                                                    ,'Hlt2LowMultElectron'   :  1.0
                                                  }

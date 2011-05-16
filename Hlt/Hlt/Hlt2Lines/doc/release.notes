@@ -7,6 +7,9 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2011-05-16 - Gerhard Raven
+ - in Hlt2diphotonDiMuonLines, prescale Hlt2LowMultHadron by 0.1
+
 !========================== Hlt2Lines v8r5p1 2011-05-11 ===================
 ! 2011-05-12 - Gerhard Raven
  - in Hlt2DisplVerticesLines use the centrally defined MaxOTHits for seeding
