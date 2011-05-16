@@ -139,6 +139,8 @@ private:
   bool m_ActivateRICHOpticalPhysProc;
   bool m_activateRICHCF4Scintillation;
   // bool m_activateRICHCF4ScintillationHisto;
+  bool m_RichApplyScintillationYieldScaleFactor;
+  double m_RichScintillationYieldScaleFactor;
   int m_PmtQESource;
   
   

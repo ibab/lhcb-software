@@ -45,8 +45,11 @@ CherenkovG4HitRecon::CherenkovG4HitRecon( ):  m_RichG4CkvRec (0) ,
   m_chtkBetaSaturatedCut =0.9999;
   m_activateMinMomForTrackRecon=false;
   // m_minMomTracksForReconR1Gas=10000.0;
-  m_minMomTracksForReconR1Gas=30000.0;
-  m_minMomTracksForReconR2Gas=30000.0;
+  //  m_minMomTracksForReconR1Gas=30000.0;
+  // m_minMomTracksForReconR2Gas=30000.0;
+  // for test use 5 GeV or above.
+  m_minMomTracksForReconR1Gas=5000.0;
+  m_minMomTracksForReconR2Gas=5000.0;
 
   m_MidRich1GasZ = (C4F10ZBeginAnalysis+C4F10ZEndAnalysis)*0.5;
 

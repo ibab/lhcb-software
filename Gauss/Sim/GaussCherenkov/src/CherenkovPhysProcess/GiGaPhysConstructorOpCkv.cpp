@@ -68,6 +68,8 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
     m_PmtQEUseNominalTable(true),
     m_ActivateRICHOpticalPhysProc(true),
     m_activateRICHCF4Scintillation(true),
+    m_RichApplyScintillationYieldScaleFactor(true),
+    m_RichScintillationYieldScaleFactor(1.0),
     m_PmtQESource(0)
 {
   // in the above 3 is for the three radiators.
@@ -89,6 +91,9 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
   declareProperty("RichOpticalPhysicsProcessActivate", m_ActivateRICHOpticalPhysProc);
 
   declareProperty("RichActivateCF4Scintillation",  m_activateRICHCF4Scintillation);
+  declareProperty("RichApplyScintillationYieldScaleFactor", 
+                                          m_RichApplyScintillationYieldScaleFactor);
+  declareProperty("RichScintillationYieldScaleFactor", m_RichScintillationYieldScaleFactor);
 
   //  declareProperty("RichActivateCF4ScintHisto" , m_activateRICHCF4ScintillationHisto);
   
@@ -260,6 +265,11 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
     
     theRichScintillationProcess = new RichG4Scintillation("RichG4Scintillation",fOptical);
     theRichScintillationProcess->SetVerboseLevel(0);
+    if(m_RichApplyScintillationYieldScaleFactor) {
+      
+      theRichScintillationProcess-> 
+        SetScintillationYieldFactor(m_RichScintillationYieldScaleFactor);
+    }
     
   }
   
