@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+- Packages added:   Online/RootCnv: supports ROOT persistency. Also released as
+                                    part of ONLINE project
+
 </PRE><H1><A NAME=v32r3>2011-04-27 LHCbSys v32r3</A></H1><PRE>
 This version uses Gaudi v22r2 and LCG_60a
 Development version for 2011 data

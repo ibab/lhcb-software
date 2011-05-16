@@ -104,6 +104,8 @@ use MuonDAQ               v4r9    Muon    # Alessia Satta
 use MuonInterfaces        v1r2p1  Muon    # Alessia Satta
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
+use RootCnv               v1r4    Online  # Markus Frank (also in ONLINE project)
+
 use OTDAQ                 v7r9    OT      # Wouter Hulsbergen
 
 use LoKiCore              v11r0   Phys    # Ivan Belyaev
