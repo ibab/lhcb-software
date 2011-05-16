@@ -15,7 +15,7 @@
 //=============================================================================
 GetMCCkvInfoBase::GetMCCkvInfoBase( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : RichAlgBase               ( name , pSvcLocator )
+  : Rich::AlgBase               ( name , pSvcLocator )
   , m_gigaSvc                 ( NULL )
   , m_gigaKineCnvSvc          ( NULL )
   , m_RichG4HitCollectionName ( NULL )
@@ -33,7 +33,7 @@ GetMCCkvInfoBase::GetMCCkvInfoBase( const std::string& name,
 //=============================================================================
 StatusCode GetMCCkvInfoBase::initialize()
 {
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
 
   // initialise
@@ -94,7 +94,7 @@ StatusCode GetMCCkvInfoBase::sysExecute()
   // reset pointers
   m_relationTable = NULL;
   // execute
-  return RichAlgBase::sysExecute();
+  return Rich::AlgBase::sysExecute();
 } 
 
 //=============================================================================
@@ -105,7 +105,7 @@ StatusCode GetMCCkvInfoBase::finalize()
   // clean up
   delete m_RichG4HitCollectionName;
   // return
-  return RichAlgBase::finalize();
+  return Rich::AlgBase::finalize();
 }
 
 //=============================================================================

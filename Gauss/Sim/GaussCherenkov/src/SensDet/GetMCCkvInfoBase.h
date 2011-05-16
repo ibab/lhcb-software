@@ -38,6 +38,9 @@
 // Relations
 #include "Relations/Relation1D.h"
 //#include "Relations/RelationWeighted1D.h"
+// RichDet
+#include "RichDet/DeRichSystem.h"
+
 
 // local
 #include "RichG4HitCollName.h"
@@ -51,8 +54,8 @@
  *  @date   2011-03-06
  */
 
-class GetMCCkvInfoBase : public RichAlgBase
-{
+class GetMCCkvInfoBase : public Rich::AlgBase
+{ 
 
 public:
 
