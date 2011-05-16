@@ -324,11 +324,12 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
       break;
     }
     if ( foundTheTask ) {
-      int timeout = 0.1 * (*itT).histos.size();
-      if ( 4 > timeout ) timeout = 4;
+      int timeout = 10 + 0.1 * (*itT).histos.size();
       std::cout << "Search for services of task " << (*itT).location << " with timeout " << timeout << std::endl;
       HistTask myHists( (*itT).location, "", timeout );
-      /*
+      
+      bool debugExist = false;
+      if ( debugExist ) {  
         std::vector<std::string> knownNames;
         //== Get the list of services...
         int kk = myHists.Directory( knownNames );
@@ -336,8 +337,21 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
           std::cout << "      -" << *itS << "-" << std::endl;
         }
-      */
-
+        for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
+              (*itT).histos.end() != itH; ++itH ) {
+          std::string histoName = (*itH).identifier();
+          unsigned int pos = histoName.find( "/" );   // remove the task name prefix
+          if ( pos < histoName.size() ) {
+          histoName.erase( 0, pos+1 );
+          }
+          if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
+            std::cout << "  ++ ask for histo '" << histoName << "'" << std::endl;
+          } else {
+            std::cout << "  -- Not found '" << histoName << "'" << std::endl;
+          }
+        }  
+      }
+      
       std::vector<std::string> histNames;
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
@@ -349,20 +363,19 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         unsigned int pos = histoName.find( "/" );   // remove the task name prefix
         if ( pos < histoName.size() ) {
           histoName.erase( 0, pos+1 );
-        }
-        
+        }        
         (*itH).setShortName( histoName );
-        //if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
-          std::cout << "  ++ ask for histo '" << histoName << "'" << std::endl;
-          histNames.push_back( histoName );
-          //} else {
-          //std::cout << "  -- Not found '" << histoName << "'" << std::endl;
-          //}
+        histNames.push_back( histoName );
       }
       std::vector<TObject*> results;
       std::cout << "before calling Histos, size " << histNames.size() << std::endl;
       int status = myHists.Histos( histNames, results );
       std::cout << "Load result  = " << status << " result size " << results.size() << std::endl;
+      if ( 0 != status ) {
+        std::cout << "  => Retry once" << std::endl;
+        status = myHists.Histos( histNames, results );
+      }
+      
       if ( results.size() != histNames.size() ) {
         std::cout << "*** Some histograms missing: Got " << results.size() << " for " << histNames.size() << std::endl;
         while ( 0 < results.size() ) {   // Delete all temporary results
@@ -374,7 +387,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         message +=  "Failure to access the histograms of task " + (*itT).location
           + "\n If task is not consuming events (see farm monitoring display), restart the task."
           + "\n If the problem persists, try to restart the Presenter."
-          + "\n If this si not enough, restart the task. \n";
+          + "\n If this is not enough, restart the task. \n";
       }
       
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
@@ -429,8 +442,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         break;
       }
       if ( !foundTask ) {
-        std::cout << "  --- no services for task " << (*itT).name << std::endl;
-        message += "\nFound no DIM service for task " + (*itT).name + ", is it running ?";
+        std::cout << "  ***** No services for task " << (*itT).name << " *****" << std::endl;
+        //message += "\nFound no DIM service for task " + (*itT).name + ", is it running ?";
       }
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {

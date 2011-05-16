@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-05-16 - Olivier Callot
+ - retry if acces by DIM failed. No message if task is missing.
+
 ! 2011-05-12 - Olivier Callot
  - Fix the handling of the time interval in history mode.
 
