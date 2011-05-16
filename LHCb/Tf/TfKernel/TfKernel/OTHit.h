@@ -81,7 +81,7 @@ namespace Tf
         wire. The velocity has been corrected for sign and direction */
     inline double propagationTime( const double globaly ) const 
     {
-      return (yReadout()- globaly)/module().propagationVelocityY(); 
+      return module().propagationTimeFromY(m_rawhit.channel(), globaly);
     }
 
     /** The drift time after correction for propagation time */

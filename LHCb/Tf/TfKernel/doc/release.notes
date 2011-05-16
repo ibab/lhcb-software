@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2011-05-16 - Alexandr Kozlinskiy
+ - Change OTHit::propagationTime to use DeOTModule::propagationTime
+
 !========================= TfKernel v2r20 2011-02-22 =========================
 ! 2011-02-16 - Chris Jones
  - Fully initialise EnvelopeBase in default constructor
