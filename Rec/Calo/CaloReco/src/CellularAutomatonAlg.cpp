@@ -122,18 +122,15 @@ StatusCode CellularAutomatonAlg::execute()
   // clusterization tool which return the vector of pointers for CaloClusters
 
   StatusCode sc;
-  if( m_neig_level> 0)
-  {
+  if( m_neig_level> 0){
     std::vector<LHCb::CaloCellID> seeds;
     seeds.clear();
     sc= m_tool->clusterize(clusters, digits, m_detector, seeds, m_neig_level) ;
   }
-  else
-  {
+  else{
     sc = m_tool->clusterize(clusters, digits, m_detector) ;
   }
   
-  // TODO : use level with list of seeds
   
   if ( sc.isFailure() )
   { return Error(" Failure from the tool, no clusterization!" , sc ); }

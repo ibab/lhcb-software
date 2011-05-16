@@ -5,6 +5,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-05-16 - Olivier Deschamps
+  - CaloClusterizationTool : fix interfacing with L0Calo2CaloTool
+
 ! 2011-05-09 - Olivier Deschamps
   - fix protoP maker DoD in CaloProcessor (no DoD setting by default)
 

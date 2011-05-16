@@ -185,8 +185,18 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
   LHCb::CaloCellID::Set out_cells;
   std::vector<LHCb::CaloCellID> cell_list;
 
+
+  /*
+
+  _cell_list.empty()  && level > 0   ->  All local maxima + neighborhood(level)
+  _cell_list.empty()  && level = 0   ->  All data (default)
+  !_cell_list.empty() && level > 0   ->  seed lis + neighborhood(level)
+  !_cell_list.empty() && level = 0   ->  seed list 
+  */
+
+
   // fill with data if level >0 and no predefined seed list
-  if( cell_list.empty() && m_neig_level>0){
+  if( _cell_list.empty() && m_neig_level>0){
     useData = true;
 
     typename TYPE::const_iterator it;
@@ -210,6 +220,8 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     cell_list = _cell_list;
   }
 
+
+  //  info() << "Cell list " << _cell_list << " level = " << m_neig_level  << endmsg;
 
   // if list of "seed" is not empty
   if( !cell_list.empty() ){
@@ -383,20 +395,20 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     };
 
     if( setEXYCluster ( cluster, m_detector ).isSuccess() ){
-
       cluster->setType( LHCb::CaloCluster::CellularAutomaton ) ;
       cluster->position().setZ( zPosition( cluster )  );
-
       //  put cluster to the output
       clusters.push_back( cluster );
+      counter("Cluster size")+= cluster->entries().size();
     }else{
       delete cluster;
     }
-
-
     itTagClustered1 = itTagClustered2;
     itTagSeed++;
   }
+
+
+
 
   // clear local storages
   taggedCellsSeq    .clear () ;
