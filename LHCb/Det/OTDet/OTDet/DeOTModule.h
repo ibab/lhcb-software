@@ -15,6 +15,7 @@
 
 /// OTDet
 #include "OTDet/RtRelation.h"
+#include "OTDet/WalkRelation.h"
 
 namespace LHCb
 {
@@ -485,6 +486,21 @@ private :
   std::string           m_statusName;           ///< Name of calibration condition
   SmartRef< Condition > m_status;               ///< Status condition
   unsigned char m_strawStatus[MAXNUMCHAN] ;     ///< vector of channel statuses
+private:
+  OTDet::WalkRelation m_walkrelation ;          ///< walk-relation
+public:
+  /**
+   * Set the walk-relation for all straws in this module.
+   */
+  StatusCode setWalkRelation(const OTDet::WalkRelation& walkRelation);
+
+  /**
+   * Walk-relation for all straws in this module.
+   */
+  const OTDet::WalkRelation& walkRelation() const;
+
+  double propagationTime(const LHCb::OTChannelID& channel, double arclen) const;
+  double propagationTimeFromY(const LHCb::OTChannelID& channel, double globalY) const;
 };
 
 // -----------------------------------------------------------------------------
@@ -796,6 +812,10 @@ inline const Condition* DeOTModule::calibrationCondition() const {
 
 inline const Condition* DeOTModule::statusCondition() const {
   return hasCondition( m_statusName ) ? m_status.target() : static_cast< const Condition* >( 0 );
+}
+
+inline const OTDet::WalkRelation& DeOTModule::walkRelation() const {
+  return m_walkrelation;
 }
 
 #endif  // OTDET_DEOTMODULE_H

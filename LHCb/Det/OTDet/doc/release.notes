@@ -3,6 +3,11 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2011-05-16 - Alexandr Kozlinskiy
+ - Fixed bug with usage of calibration instead of status for channel status
+ - Added walk parameterization which describes propagation time correction
+ - Added reading of walk parameters from database.
+
 !========================= OTDet v8r5p1 2011-04-26 =========================
 ! 2011-04-08 - Marco Cattaneo
  - Replace endreq by endmsg

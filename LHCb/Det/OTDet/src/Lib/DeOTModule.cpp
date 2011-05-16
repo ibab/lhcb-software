@@ -518,6 +518,26 @@ StatusCode DeOTModule::calibrationCallback() {
     // Maybe add the number of bins to the conditions
     m_rtrelation = OTDet::RtRelation( m_cellRadius, trParameters, sigmaTParameters ) ;
 
+//    double propagationVelocity = 1.0 / (4.0 * Gaudi::Units::ns/Gaudi::Units::m);
+//    if(m_calibration->exists("PropagationVelocity")) propagationVelocity = m_calibration->param<double>("PropagationVelocity");
+//    m_propagationVelocity = propagationVelocity;
+//    m_propagationVelocityY = m_propagationVelocity * m_dir.y();
+
+    if(m_calibration->exists("WalkParameters"))
+    {
+      const std::vector<double>& walkParameters = m_calibration->param< std::vector<double> >("WalkParameters");
+      if(walkParameters.size() == 4)
+      {
+        m_walkrelation = OTDet::WalkRelation(walkParameters[0], walkParameters[1], walkParameters[2], walkParameters[3]);
+      }
+      else
+      {
+        m_walkrelation = OTDet::WalkRelation();
+        msg << MSG::ERROR << "There should be 4 walk parameters: " << walkParameters.size() << " provided" << endmsg;
+      }
+    }
+    else m_walkrelation = OTDet::WalkRelation();
+
     // how we set the straw t0 depends on the size of the vector.  we
     // allow that the calibration sets either every connected channel,
     // or for all channels
@@ -626,8 +646,8 @@ StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags )
 const std::vector<int>&  DeOTModule::strawStatus() const
 {
   const std::vector<int> *rc(0) ;
-  if ( hasCondition( m_calibrationName ) ) {
-    rc =&( m_calibration->param< std::vector<int> >( "ChannelStatus" )) ;
+  if ( hasCondition( m_statusName ) ) {
+    rc =&( m_status->param< std::vector<int> >( "ChannelStatus" )) ;
   } else {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Condition " << m_statusName << " doesn't exist for " << this->name() << "!" << endmsg;
@@ -710,6 +730,7 @@ void DeOTModule::fallbackDefaults() {
   std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
   // Since everything is so simple, we need just two bins in the table
   m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;
+  m_walkrelation = OTDet::WalkRelation();
   // Now the T0s
   const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
   double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
@@ -728,3 +749,45 @@ void DeOTModule::fallbackDefaults() {
 
 }
 
+StatusCode DeOTModule::setWalkRelation(const OTDet::WalkRelation& walkRelation) {
+  if(!hasCondition(m_calibrationName))
+  {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Condition " << m_calibrationName << " doesn't exist for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  std::vector<double> walkParameters;
+  walkParameters.push_back(walkRelation.getOff());
+  walkParameters.push_back(walkRelation.getAmp());
+  walkParameters.push_back(walkRelation.getTau());
+  walkParameters.push_back(walkRelation.getDpt());
+  if(m_calibration->exists("WalkParameters")) m_calibration->param< std::vector<double> >("WalkParameters") = walkParameters;
+  else m_calibration->addParam("WalkParameters", walkParameters, "Walk parameters");
+
+  updMgrSvc()->invalidate( m_calibration.target() );
+  StatusCode sc = updMgrSvc()->update( this );
+
+  if(!sc.isSuccess())
+  {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Failed to update walk conditions for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+double DeOTModule::propagationTime(const LHCb::OTChannelID& channel, double arclen) const
+{
+  double dist2readout = trajectory(channel)->endRange() - arclen;
+  double dist2strawend = wireLength(channel) - dist2readout;
+  return dist2readout / propagationVelocity() + walkRelation().walk(dist2strawend);
+}
+
+double DeOTModule::propagationTimeFromY(const LHCb::OTChannelID& channel, double globalY) const
+{
+  double dist2readout = (trajectory(channel)->endPoint().y() - globalY) / m_dir.y();
+  double dist2strawend = wireLength(channel) - dist2readout;
+  return dist2readout / propagationVelocity() + walkRelation().walk(dist2strawend);
+}
