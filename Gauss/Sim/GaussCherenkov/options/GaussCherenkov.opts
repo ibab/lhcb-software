@@ -14,6 +14,11 @@ GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichApplyMaxNumCkvPhotPerStepPerRadiator
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichMaxPhotonsPerCherenkovStepInRich1Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichMaxNumPhotPerCherenkovStep=40;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
+// used reduced scintillation assuming CO2 is added to CF4. So the scale factor is set to small value 
+// corresponding to about 1/10 of the normal scintillation.
+
 
 // By setting the following option to false allows to switch off the Scintilation process in CF4 in RICH2,
 // to get a backward compatible version. By default this Scintillation process is switched on 
@@ -73,6 +78,12 @@ GiGa.TrackSeq.Members      += { "CkvG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 // set to true the nominal table from the sqldddb-materials-richmaterialtabproperty.xml is read. This
 // nominal table/
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichPmtUseNominalQETable= false;
+//  option to use different QE tables. 0= borosilcate QE(default) , 1= UV glass QE, 2= HPD-like QE
+
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=2;
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=1;
+GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=0;
+
 
 // To print RICH hits on the screen, uncomment the line with RichG4EventAction/RichG4Event
 // and the line with RichEventActionVerbose=3
@@ -87,5 +98,5 @@ GiGa.TrackSeq.Members      += { "CkvG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 // software for resolution studies. The RichAnalysis.opts is not needed
 // for for any standard MC production runs. It is also not needed for any production 
 // runs with 'extended output info'.
-#include "$GAUSSCHERENKOVROOT/options/GaussCherenkovAnalysis.opts"
+//#include "$GAUSSCHERENKOVROOT/options/GaussCherenkovAnalysis.opts"
 
