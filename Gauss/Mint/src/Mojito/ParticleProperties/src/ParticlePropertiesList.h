@@ -53,6 +53,8 @@ class ParticlePropertiesList{ // a singleton - ensures everyone
   
   void print(std::ostream& out=std::cout) const;
 
+  void fillDirList(std::string MINTdir);
+
 
   // fast fuss-free access:
   static double mass(const std::string& name);

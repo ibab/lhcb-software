@@ -88,8 +88,12 @@ void ParticlePropertiesList::fillDirList(){
   _dirList.push_back("./ParticleProperties/src/");
   _dirList.push_back("../");
   _dirList.push_back("../../");
+  _dirList.push_back("/afs/cern.ch/user/m/mcoombes/cmtuser/Gauss_v40r0/Mint/src/Mojito/ParticleProperties/src/"); // Need to change this
 }
-
+void ParticlePropertiesList::fillDirList(std::string MINTdir){
+	std::string dir = MINTdir + "src/Mojito/ParticleProperties/src/";
+	_dirList.push_back(dir);
+}
 
 FILE* ParticlePropertiesList::findFiles(){
   static int i=0;
