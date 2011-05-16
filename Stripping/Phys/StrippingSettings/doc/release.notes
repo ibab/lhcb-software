@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-16 - Jibo He
+ - Commit of Stripping1Point4TeV definition
+
 ! ======================== StrippingSettings v2r3p1 2011-05-15 ==============
 ! 2011-05-15 - Thomas Blake
  - Commit of Stripping13b dbase with B2DX modification
