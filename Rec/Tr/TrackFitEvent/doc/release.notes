@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2011-05-16 - Alexandr Kozlinskiy
+ - Change OTMeasurement::driftTime and OTMeasurement::driftTimeFromY
+   to use DeOTModule::propagationTime and DeOTModule::propagationTimeFromY
+
 ! 2011-05-02 - Wouter Hulsbergen
  - Fix remaining missing fields in KalmanFitResult copy constructor
 

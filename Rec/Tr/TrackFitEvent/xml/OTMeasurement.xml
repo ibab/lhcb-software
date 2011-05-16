@@ -137,7 +137,7 @@
 	const = 'TRUE'> 
 	<arg type='double' name='arclen' />
         <code> 
-        double propagationTime = ( trajectory().endRange() - arclen ) / module().propagationVelocity() ;
+        double propagationTime = module().propagationTime(channel(), arclen);
         return calibratedTime() - deltaTimeOfFlight() - propagationTime ;
         </code>
       </method>
@@ -149,7 +149,7 @@
 	const = 'TRUE'> 
 	<arg type='double' name='globalY' />
         <code>
-        double propagationTime = ( trajectory().endPoint().y() - globalY ) / module().propagationVelocityY() ;
+        double propagationTime = module().propagationTimeFromY(channel(), globalY);
         return calibratedTime() - deltaTimeOfFlight() - propagationTime ;
         </code>
       </method>

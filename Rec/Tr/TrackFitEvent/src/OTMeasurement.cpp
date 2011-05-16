@@ -75,9 +75,7 @@ OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double g
 
 double LHCb::OTMeasurement::propagationTimeFromY( double globalY ) const
 {
-  // Get the distance to the readout
-  double deltaY = trajectory().endPoint().y() - globalY ;
-  return deltaY / module().propagationVelocityY() ;
+  return module().propagationTimeFromY(channel(), globalY);
 }
 
 void LHCb::OTMeasurement::setTimeOfFlight(double tof)
