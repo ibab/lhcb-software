@@ -339,7 +339,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       m_histogramImage->Draw();
     } else {
       if ( !m_hasTitle ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
-      std::string opt =  m_isOverlap ? "HISTSAME" : "";
+      std::string opt =  m_isOverlap ? "SAME" : "";
       m_rootHistogram->Draw(opt.c_str());
       if ( NULL != m_referenceHist && 1 == m_rootHistogram->GetDimension() ){
         m_referenceHist->SetLineStyle(2);
