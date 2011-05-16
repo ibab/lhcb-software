@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-16 - Marco Cattaneo
+ - Add IOConf.py, configures I/O persistency for POOL and ROOT
+
 !========================= GaudiConf v13r10 2011-04-26 =========================
 ! 2011-04-15 - Marco Cattaneo
  - Remove obsolete options files DC06Conditions.opts, DetDesc.opts
