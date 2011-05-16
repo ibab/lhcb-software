@@ -30,8 +30,8 @@ L0Calo2CaloTool::L0Calo2CaloTool(const std::string& type,
   declareProperty("CaloDataProviderTool",   m_dataProviderToolName   = "CaloDataProvider");
   declareProperty("CaloDigitLocation",      m_digitLocation          = LHCb::CaloDigitLocation::Hlt1Ecal);
   declareProperty("CaloClusterLocation",    m_clusterLocation        = LHCb::CaloClusterLocation::EcalHlt1);  
-  declareProperty("NeighbourLevel",         m_neighbourLevel         = 0,
-                  "Level parameter for the CaloClusterizationTool, search clusters in (2+Level)x(2+Level) region around the seed cell");
+  declareProperty("NeighbourLevel",         m_neighbourLevel         = 1,
+                  "Level parameter for the CaloClusterizationTool, search clusters in (2+2*Level)x(2+2*Level) region around the seed cell");
   declareProperty("Sort",                   m_sort                   = false,
                   "sort the clusters due to energy");
   declareProperty("SortET",                 m_sortET                 = false,
@@ -66,8 +66,21 @@ StatusCode L0Calo2CaloTool::clusterize
   const LHCb::CaloDigits* digits = makeDigits( cellID, level );
   if ( 0 == digits ) return Error(" Failure to (re)make CaloDigits!", StatusCode::FAILURE );
 
+  // Select the right seed :
+  LHCb::CaloCellID seedID = cellID;
+  unsigned int area = cellID.area();
+  unsigned int row  = cellID.row();
+  unsigned int col  = cellID.col();
+  double dig = m_dataProviderTool->digit( cellID );
+  LHCb::CaloCellID ul(m_ecalCaloNum, area, row+1, col  );
+  if( m_dataProviderTool->digit( ul ) > dig ){ dig = m_dataProviderTool->digit( ul ); seedID = ul;}
+  LHCb::CaloCellID ur(m_ecalCaloNum, area, row+1, col+1);
+  if( m_dataProviderTool->digit( ur ) > dig ){ dig = m_dataProviderTool->digit( ur ); seedID = ur;}
+  LHCb::CaloCellID dr(m_ecalCaloNum, area, row  , col+1);
+  if( m_dataProviderTool->digit( dr ) > dig ){ dig = m_dataProviderTool->digit( dr ); seedID = dr;}
+
   // Invoke the CaloClusterizationTool
-  StatusCode sc = makeClusters( clusters, digits, cellID, level );
+  StatusCode sc = makeClusters( clusters, digits, seedID, level );
   if ( sc.isFailure() ) return Error(" Failure from the CaloClusterizationTool!", sc );
 
   return putClustersOnTES( clusters );
@@ -114,7 +127,6 @@ StatusCode L0Calo2CaloTool::makeClusters
   seeds.push_back( cellID );
   sc = m_clusterizationTool->clusterize(clusters, digits, m_calo, seeds, level);
   
-  // TODO : use level with list of seeds
   if ( sc.isFailure() ) return Error(" Failure from the CaloClusterizationTool!" , sc);
 
    /** sort the sequence to simplify the comparison 
