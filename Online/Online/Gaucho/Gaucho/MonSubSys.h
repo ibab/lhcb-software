@@ -32,11 +32,11 @@ public:
 
   struct _Lock {
     MonSubSys* m_sys;
-    _Lock(MonSubSys* sys) : m_sys(sys) 
+    _Lock(MonSubSys* sys) : m_sys(sys)
     {
       m_sys->Lock();
     }
-    ~_Lock() 
+    ~_Lock()
     {
       m_sys->unLock();
     }
@@ -60,6 +60,7 @@ public:
 public:
   RateMgr *m_RateMgr;
   int m_type;
+  bool m_dontclear;
   std::string m_expandInfix;
   MonSubSys(int intv = 10);
   virtual ~MonSubSys();

@@ -92,6 +92,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   declareProperty("PartitionName",m_partname="LHcb");
   declareProperty("ProcessName",m_ProcName="");
   declareProperty("ProgramName",m_ProgName="");
+  declareProperty("DontResetCountersonRunChange",m_DontResetCountersonRunChange=false);
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
@@ -274,6 +275,7 @@ StatusCode MonitorSvc::i_start()
   if (m_CntrSubSys != 0)
   {
     m_CntrSubSys->m_expandnames = m_expandCounterServices;
+    m_CntrSubSys->m_dontclear = m_DontResetCountersonRunChange;
   }
   m_utgid = RTL::processName();
   if (m_ProcName == "")

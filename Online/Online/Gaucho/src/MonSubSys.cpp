@@ -33,6 +33,7 @@ MonSubSys::MonSubSys(int intv)
   m_EORsvc = 0;
   m_runno = 0;
   m_RateMgr = 0;
+  m_dontclear = false;
 
 }
 MonSubSys::~MonSubSys()
@@ -208,6 +209,7 @@ void MonSubSys::setup(char *n, bool expandnames)
 
 void MonSubSys::Clear(char *name)
 {
+  if (m_dontclear) return;
   MonObj *h =findobj(name);
   if (h != 0)
   {

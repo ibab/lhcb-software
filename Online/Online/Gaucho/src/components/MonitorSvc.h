@@ -189,6 +189,7 @@ public:
   int m_disableDeclareInfoPair;
   int m_disableDeclareInfoFormat;
   int m_disableDeclareInfoHistos;
+  bool m_DontResetCountersonRunChange;
   TaskSaveTimer *m_savetimer;
 
   void enableMonObjectsForBool() {m_disableMonObjectsForBool = 0;}
