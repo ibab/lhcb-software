@@ -8,7 +8,7 @@ version           v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src src/Mint
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -16,10 +16,11 @@ branches          cmt doc src
 # use   Package      v1r*    Hat
 
 #use ROOT	v*	LCG_Interfaces  -no_auto_imports
-use GaudiPolicy       v*
-use GaudiAlg          v*
+#use GaudiPolicy       v*
+#use GaudiAlg          v*
 use ROOT              v*  LCG_Interfaces  -no_auto_imports
-use Boost             v*  LCG_Interfaces
+#use Boost             v*  LCG_Interfaces
+use Generators       v*    Gen
 
 
 # For HepMC stuff
@@ -63,7 +64,7 @@ library          Mint    ../src/Mint/Events/src/*.C           \
                          ../src/Mojito/Zemach/src/*.C \
                          ../src/Mojito/Symmetries/src/*.C \
                          ../src/Mojito/SpinFactors/src/*.C \
-                         ../src/Users/Matt/Test/*.cpp
+                         ../src/Users/MattsCode/JackTest/*.C
 
 #============================================================================
 # define component library link options
