@@ -347,14 +347,13 @@ TTree* RootDataConnection::getSection(CSTR section, bool create) {
 }
 
 // Access data branch by name: Get existing branch in write mode
-TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* cl) {
+TBranch* RootDataConnection::getBranch(CSTR section, CSTR branch_name, TClass* cl, void* ptr) {
   string n = branch_name+".";
   for(int i=0, m=n.length()-1; i<m; ++i) if ( !isalnum(n[i]) ) n[i]='_';
   TTree* t = getSection(section,true);
   TBranch* b = t->GetBranch(n.c_str());
   if ( !b && cl && m_file->IsWritable() ) {
-    void* ptr = 0;
-    b = t->Branch(n.c_str(),cl->GetName(),&ptr);
+    b = t->Branch(n.c_str(),cl->GetName(),(void*)(ptr ? &ptr : 0));
   }
   if ( !b ) {
     b = t->GetBranch(branch_name.c_str());
@@ -400,14 +399,13 @@ RootDataConnection::saveObj(CSTR section, CSTR cnt, TClass* cl, DataObject* pObj
 // Save object of a given class to section and container
 pair<int,unsigned long> 
 RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fill_missing) {
-  TBranch* b = getBranch(section, cnt, cl);
+  TBranch* b = getBranch(section, cnt, cl, (void*)(pObj ? &pObj : 0));
   if ( b ) {
     Long64_t evt = b->GetEntries();
     if ( fill_missing ) {
       Long64_t num, nevt = b->GetTree()->GetEntries();
       if ( nevt > evt )   {
-        void* p = 0;
-        b->SetAddress(&p);
+        b->SetAddress(0);
 	num = nevt - b->GetEntries() - 1; // There is another fill after the loop!
 	while( num > 0 ) { b->Fill(); --num; }
         msgSvc() << MSG::DEBUG << "Added " << long(nevt-evt) 
@@ -430,28 +428,35 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
   if ( b ) {
     TClass* cl = gROOT->GetClass(b->GetClassName(),kTRUE);
     if ( cl ) {
+      int nb = -1;
       pObj = (DataObject*)cl->New();
-      DataObjectPush push(pObj);
-      b->SetAddress(&pObj);
-      if ( section == m_setup->loadSection ) {
-        TTree* t = b->GetTree();
-        if ( Long64_t(entry) != t->GetReadEntry() ) {
-          t->LoadTree(Long64_t(entry));
-        }
-      }
-      int nb = b->GetEntry(entry);
-      msgSvc() << MSG::VERBOSE;
-      if ( msgSvc().isActive() ) {
-        msgSvc() << "Load [" << entry << "] --> " << section 
-          << ":" << cnt << "  " << nb << " bytes." 
-          << endmsg;
-      }
-      if ( nb == 0 && pObj->clID() == CLID_DataObject) {
-	TFile* f = b->GetFile();
-	if ( f->GetVersion() < 52400 ) {
-	  // For Gaudi v21r5 (ROOT 5.24.00b) DataObject::m_version was not written!
-	  // Still this call be well be successful.
-	  nb = 1;
+      {
+	DataObjectPush push(pObj);
+	b->SetAddress(&pObj);
+	if ( section == m_setup->loadSection ) {
+	  TTree* t = b->GetTree();
+	  if ( Long64_t(entry) != t->GetReadEntry() ) {
+	    t->LoadTree(Long64_t(entry));
+	  }
+	}
+	nb = b->GetEntry(entry);
+	msgSvc() << MSG::VERBOSE;
+	if ( msgSvc().isActive() ) {
+	  msgSvc() << "Load [" << entry << "] --> " << section 
+		   << ":" << cnt << "  " << nb << " bytes." 
+		   << endmsg;
+	}
+	if ( nb == 0 && pObj->clID() == CLID_DataObject) {
+	  TFile* f = b->GetFile();
+	  if ( f->GetVersion() < 52400 ) {
+	    // For Gaudi v21r5 (ROOT 5.24.00b) DataObject::m_version was not written!
+	    // Still this call be well be successful.
+	    nb = 1;
+	  }
+	}
+	if ( nb < 0 ) {
+	  delete pObj;
+	  pObj = 0;
 	}
       }
       return nb;

@@ -335,9 +335,8 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
 	TBranch* br_ptr = (TBranch*)a->UncheckedAt(i);
 	Long64_t br_evt = br_ptr->GetEntries();
 	if ( br_evt < evt ) {
-	  void* p = 0;
 	  Long64_t num = evt-br_evt;
-	  br_ptr->SetAddress(&p);
+	  br_ptr->SetAddress(0);
 	  while(num>0) { br_ptr->Fill(); --num; }
 	  log() << "commit: Added " << long(evt-br_evt) 
 		<< " Section: " << evt << " Branch: " << br_ptr->GetEntries()

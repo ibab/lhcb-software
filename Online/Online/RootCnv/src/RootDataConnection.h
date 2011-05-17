@@ -280,7 +280,7 @@ namespace Gaudi  {
     TBranch* getBranch(const std::string& section,const std::string& branch_name) 
     { return m_tool->getBranch(section,branch_name); }
     /// Access data branch by name: Get existing branch in write mode
-    TBranch* getBranch(const std::string& section, const std::string& branch_name, TClass* cl);
+    TBranch* getBranch(const std::string& section, const std::string& branch_name, TClass* cl, void* ptr);
 
     /// Create reference object from registry entry
     void makeRef(IRegistry* pA, RootRef& ref);
