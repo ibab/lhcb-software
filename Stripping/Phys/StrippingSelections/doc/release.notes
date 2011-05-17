@@ -6,6 +6,11 @@
 ! 2011-05-17 - Grant McGregor
  - Update of charm semileptonic stripping to match D02KMuNu HLT2 line
 
+! 2011-05-17 - Francesco Dettori
+ - Update StrippingDstarD02xx.py to include lines for trigger efficiency 
+   estimation requireing Hlt1MB or Hlt1L0Any triggers
+ - Update StrippingJpsippForD0MuMu, change in invariant mass window
+
 ! 2011-05-13 S. Blusk
  - Update StrippingB2D3H.py to include B- -->D0D-
  - Also M. Williams added B-->D*DK

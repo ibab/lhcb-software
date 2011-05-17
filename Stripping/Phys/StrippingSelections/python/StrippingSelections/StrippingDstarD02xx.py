@@ -15,6 +15,47 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
 
+# Default values
+
+config_default ={'PrescalepipiBox'     : 0.5
+                 , 'PrescalemumuBox'     : 1.
+                 , 'PrescaleKpiBox'    : 0.3
+                 , 'PrescaleemuBox'    : 1.
+                 , 'PrescaleeKBox'    : 1.
+                 , 'PrescaleepiBox'    : 1.
+                 , 'PrescalepimuBox'    : 1.
+                 , 'PrescaleKmuBox'    : 1.
+                 , 'Prescalepipi_untagged_Box'     : 0.2
+                 , 'Prescalemumu_untagged_Box'     : 1.
+                 , 'PrescaleKpi_untagged_Box'    : 0.2
+                 , 'Prescalepimu_untagged_Box'    : 1.
+                 , 'PrescaleKmu_untagged_Box'    : 0.2
+                 , 'PrescaleKpi_untagged_BoxMB' : 1
+                 , 'Prescalepipi_untagged_BoxMB':1
+                 ,'DMassWin'           : 70.       # MeV
+                 ,'DMassWinMuMu'       : 300       #MeV
+                 ,'DMassWinEMu'        : 300
+                 ,'doca'               : 0.1        # mm
+                 ,'XminPT'             : 750.       # MeV
+                 ,'XmaxPT'             : 1100.      # MeV
+                 ,'XminP'              : 4000.      # MeV
+                 ,'XTrackChi2'         : 5.        # adimensional
+                 ,'XTrackChi2Pi'         : 7.        # adimensional
+                 ,'XminIPChi2'         : 3        # adimensional
+                 ,'XmaxIPChi2'         : 8        # adimensional
+                 ,'DMinFlightChi2'    :  20.
+                 ,'DDira'              : 0.9997     # adimensional
+                 ,'D0MinPT'            : 1800.      # MeV
+                 ,'DMaxIPChi2'        :15.
+                 ,'DVChi2'            :10. 
+                 ,'PiMinPT'            : 110.       # MeV
+                 ,'PiMaxIPCHI2'        : 10.         # adimensional
+                 ,'DstMassWin'         : 110.       # MeV
+                 ,'DstD0DMWin'         : 10.        # MeV
+                 ,'DstD0DMWinMuMu'      : 30.        # MeV  
+                 ,'RequireHlt'         : 1          # 
+                 ,'prefix'         : '' 
+                 }
 
 
 default_name = "DstarD02xx"
@@ -36,6 +77,8 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  , 'PrescaleKpi_untagged_Box'
                                  , 'Prescalepimu_untagged_Box'
                                  , 'PrescaleKmu_untagged_Box'
+                                 , 'PrescaleKpi_untagged_BoxMB'
+                                 , 'Prescalepipi_untagged_BoxMB'
                                  ,'DMassWin'
                                  ,'DMassWinMuMu'
                                  ,'DMassWinEMu' 
@@ -60,44 +103,8 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  ,'RequireHlt'
                                  ,'prefix'
                                  )
-    config_default ={'PrescalepipiBox'     : 0.5
-                     , 'PrescalemumuBox'     : 1.
-                     , 'PrescaleKpiBox'    : 0.3
-                     , 'PrescaleemuBox'    : 1.
-                     , 'PrescaleeKBox'    : 1.
-                     , 'PrescaleepiBox'    : 1.
-                     , 'PrescalepimuBox'    : 1.
-                     , 'PrescaleKmuBox'    : 1.
-                     , 'Prescalepipi_untagged_Box'     : 0.2
-                     , 'Prescalemumu_untagged_Box'     : 1.
-                     , 'PrescaleKpi_untagged_Box'    : 0.2
-                     , 'Prescalepimu_untagged_Box'    : 1.
-                     , 'PrescaleKmu_untagged_Box'    : 0.2  
-                     ,'DMassWin'           : 70.       # MeV
-                     ,'DMassWinMuMu'       : 300       #MeV
-                     ,'DMassWinEMu'        : 300
-                     ,'doca'               : 0.1        # mm
-                     ,'XminPT'             : 750.       # MeV
-                     ,'XmaxPT'             : 1100.      # MeV
-                     ,'XminP'              : 4000.      # MeV
-                     ,'XTrackChi2'         : 5.        # adimensional
-                     ,'XTrackChi2Pi'         : 7.        # adimensional
-                     ,'XminIPChi2'         : 3        # adimensional
-                     ,'XmaxIPChi2'         : 8        # adimensional
-                     ,'DMinFlightChi2'    :  20.
-                     ,'DDira'              : 0.9997     # adimensional
-                     ,'D0MinPT'            : 1800.      # MeV
-                     ,'DMaxIPChi2'        :15.
-                     ,'DVChi2'            :10. 
-                     ,'PiMinPT'            : 110.       # MeV
-                     ,'PiMaxIPCHI2'        : 10.         # adimensional
-                     ,'DstMassWin'         : 110.       # MeV
-                     ,'DstD0DMWin'         : 10.        # MeV
-                     ,'DstD0DMWinMuMu'      : 30.        # MeV  
-                     ,'RequireHlt'         : 1          # 
-                     ,'prefix'         : '' 
-                     }
-
+    
+    
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
         
@@ -198,25 +205,31 @@ class StrippingDstarD02xxConf(LineBuilder):
         
         return line_box
     
-    def baseLine_untagged(self, name, config, xplus, xminus) :
+    def baseLine_untagged(self, name, config, xplus, xminus, minbias) :
         """
         Returns the stripping line for the untagged decay
         D0->xx
         """
         from StrippingConf.StrippingLine import bindMembers
         from StrippingConf.StrippingLine import StrippingLine
-        xxCombSel= self.combinetwobody(name, config,xplus, xminus)
+        suffix = ""
+        if minbias == True : suffix = "MB"
+        xxCombSel= self.combinetwobody(name+suffix, config,xplus, xminus)
         combname = xplus+xminus
         pres = "Prescale"+combname+"_untagged_Box"
         # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
         Xplus  = xplus[0].upper() + xplus[1:]    
         Xminus = xminus[0].upper() + xminus[1:]
         hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
-
         
-        line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_Box",
-                                          HLT = "HLT_PASS_RE('"+hltname+"')",
-                                          algos = [ xxCombSel ], prescale = config[ pres ])
+        if(minbias==True):
+            line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMB",
+                                              HLT = "HLT_PASS_RE('Hlt1(MB|L0).*Decision')",
+                                              algos = [ xxCombSel ], prescale = config[ pres+"MB" ])
+        else :
+            line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_Box",
+                                              HLT = "HLT_PASS_RE('"+hltname+"')",
+                                              algos = [ xxCombSel ], prescale = config[ pres ])
 
         return line_untagged_box    
     
@@ -224,12 +237,8 @@ class StrippingDstarD02xxConf(LineBuilder):
         """
         Builds all of the lines
         """
-#        from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
-#        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-#        from CommonParticles.StdNoPIDsMuons import StdNoPIDsMuons
-#        from CommonParticles.StdNoPIDsKaons import StdNoPIDsKaons
-#        from CommonParticles.StdNoPIDsElectrons import StdNoPIDsElectrons
-        
+
+        # Untagged lines
        
         line_pipi_box = self.baseLine(name,config,"pi", "pi")
         line_mumu_box = self.baseLine(name,config,"mu", "mu")
@@ -239,14 +248,24 @@ class StrippingDstarD02xxConf(LineBuilder):
         line_mue_box  = self.baseLine(name,config,"e",  "mu")
         #line_pimu_box = self.baseLine(name,config,"pi", "mu")
         line_Kmu_box  = self.baseLine(name,config,"K",  "mu")
-        line_mumu_untagged_box  = self.baseLine_untagged(name,config,"mu",  "mu")
-        line_Kmu_untagged_box  = self.baseLine_untagged(name,config,"K",  "mu")
-        line_pipi_untagged_box  = self.baseLine_untagged(name,config,"pi",  "pi")
-        line_Kpi_untagged_box  = self.baseLine_untagged(name,config,"K",  "pi")
+
+
+        # Tagged lines
+        
+        line_mumu_untagged_box  = self.baseLine_untagged(name,config,"mu",  "mu", False)
+        line_Kmu_untagged_box  = self.baseLine_untagged(name,config,"K",  "mu" ,  False)
+        line_pipi_untagged_box  = self.baseLine_untagged(name,config,"pi",  "pi", False)
+        line_Kpi_untagged_box  = self.baseLine_untagged(name,config,"K",  "pi",   False)
         #line_pimu_untagged_box = self.baseLine_untagged(name,config,"pi", "mu")
+
+
+        # Untagged minimum bias lines for trigger efficiency estimate
         
+        line_Kpi_minbias =  self.baseLine_untagged(name,config,"K",  "pi", True)
+        line_pipi_minbias =  self.baseLine_untagged(name,config,"pi",  "pi",True)
+
         
-        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_mue_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box]
+        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_mue_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias, line_pipi_minbias]
         
         return lines
     

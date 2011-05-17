@@ -2,7 +2,7 @@
 Jpsi line for D0mumu
 '''
 
-__author__=['Walter Bonivento']
+__author__=['Walter Bonivento', 'Francesco Dettori']
 __date__ = '22/10/2010'
 __version__= '$Revision: 1.0 $'
 
@@ -20,8 +20,8 @@ config_default= {
         'Jpsi2MuMuForD0mumu_MuonP'                 : 5000.    ,
         'Jpsi2MuMuForD0mumu_MuonTRCHI2DOF'         :   5.     ,
         'Jpsi2MuMuForD0mumu_MuonBPVIPCHI2'         :   3.     ,
-        'Jpsi2MuMuForD0mumu_MinMass'               : 3040     , 
-        'Jpsi2MuMuForD0mumu_MaxMass'               : 3140     ,
+        'Jpsi2MuMuForD0mumu_MinMass'               : 3000     , 
+        'Jpsi2MuMuForD0mumu_MaxMass'               : 3180     ,
         'Jpsi2MuMuForD0mumu_VCHI2PDOF'             :  10.     ,
         'Jpsi2MuMuForD0mumu_PT'                    : 1800.    , 
         'Jpsi2MuMuForD0mumu_BPVVDCHI2'             :   20.    ,
