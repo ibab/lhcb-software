@@ -411,6 +411,7 @@ RootDataConnection::save(CSTR section, CSTR cnt, TClass* cl, void* pObj, bool fi
         msgSvc() << MSG::DEBUG << "Added " << long(nevt-evt) 
 		 << " / Tree: " << nevt << " / Branch: " << b->GetEntries()+1
 		 << " NULL entries to:" << cnt << endmsg;
+	evt = b->GetEntries();
       }
     }
     b->SetAddress(&pObj);

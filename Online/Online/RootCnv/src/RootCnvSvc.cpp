@@ -411,12 +411,11 @@ StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)
     CLID       clid = pObj->clID();
     IRegistry* pR   = pObj->registry();
     string     p[2] = {m_current->fid(), pR->identifier()};
-    TClass*    cl   = (pObj->clID() == CLID_DataObject) ? m_classDO : getClass(pObj);
+    TClass*    cl   = (clid == CLID_DataObject) ? m_classDO : getClass(pObj);
     size_t     len  = p[1].find('/',1);
     string     sect = p[1].substr(1,len==string::npos ? string::npos : len-1);
-    bool       fill = sect==m_setup->loadSection;
-    pair<int,unsigned long> ret = m_current->saveObj(sect,p[1],cl,pObj,fill);
-    if ( ret.first > 1 || (pObj->clID() == CLID_DataObject && ret.first==1) ) {
+    pair<int,unsigned long> ret = m_current->saveObj(sect,p[1],cl,pObj,true);
+    if ( ret.first > 1 || (clid == CLID_DataObject && ret.first==1) ) {
       unsigned long ip[2] = {0,ret.second};
       if ( m_currSection.empty() ) m_currSection = p[1];
       return createAddress(repSvcType(),clid,p,ip,refpAddr);
@@ -439,7 +438,6 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
       const string& id    = pR->identifier();
       size_t        len   = id.find('/',1);
       string        sect  = id.substr(1,len==string::npos ? string::npos : len-1);
-      bool          fill  = sect==m_setup->loadSection;
       LinkManager* pLinks = pObj->linkMgr();
       for(Leaves::iterator i=leaves.begin(), iend=leaves.end(); i != iend; ++i)  {
         if ( (*i)->address() ) {
@@ -453,7 +451,7 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
         int link_id = m_current->makeLink(lnk->path());
         refs.links.push_back(link_id);
       }
-      pair<int,unsigned long> ret = m_current->save(sect,id+"#R",m_classRefs,&refs,fill);
+      pair<int,unsigned long> ret = m_current->save(sect,id+"#R",m_classRefs,&refs,true);
       if ( ret.first > 1 ) {
         log() << MSG::DEBUG << "Writing object:" << id << " " 
           << ret.first << " " << hex << ret.second << dec << endmsg;
