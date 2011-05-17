@@ -2,7 +2,8 @@
 //--------------------------------------------------------------------------
 /** @file RichGlobalPIDTrTrackSelUsingPIDs.cpp
  *
- *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSelUsingPIDs
+ *  Implementation file for RICH Global PID algorithm class : 
+ *  Rich::Rec::GlobalPID::TrackSelUsingPIDs
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   10/12/2007
@@ -64,11 +65,25 @@ StatusCode TrackSelUsingPIDs::eventInit()
 bool TrackSelUsingPIDs::trackSelection( LHCb::RichRecTrack * track ) const
 {
   // first run base class selection
-  if ( !TrackSel::trackSelection(track) ) return false;
+  if ( !track || !TrackSel::trackSelection(track) ) return false;
+
+  // Pointer to parent Track
+  const LHCb::Track * pTrack = 
+    dynamic_cast<const LHCb::Track*>(track->parentTrack());
+  if ( !pTrack ) return false;
 
   // Do RichPID selection
   if ( !richPIDs() ) return false;
   const LHCb::RichPID * pid = richPIDs()->object( track->key() );
+  if ( !pid || pid->track() != pTrack )
+  {
+    pid = NULL;
+    for ( LHCb::RichPIDs::const_iterator iPID = richPIDs()->begin();
+          iPID != richPIDs()->end(); ++iPID )
+    {
+      if ( (*iPID)->track() == pTrack ) { pid = *iPID; break; }
+    }
+  }
 
   // Did we find a pid object
   if ( !pid ) return false;

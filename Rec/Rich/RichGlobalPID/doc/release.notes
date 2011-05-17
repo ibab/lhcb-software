@@ -4,7 +4,12 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
-!========================= RichGlobalPID v3r14p3 2011-02-28 =========================
+! 2011-05-07 - Chris Jones
+ - Update MultiStepTool to not rely on RichGlobalPID to Track mapping via key.
+ - Update TrackSelUsingPIDs to not rely on RichRecTrack to RichPID mapping
+   via key
+
+!======================= RichGlobalPID v3r14p3 2011-02-28 ====================
 ! 2011-02-25 - Chris Jones
  - Appease icc11 by replacing boost lexical cast to string with 
    std::ostringstream
@@ -12,14 +17,14 @@
 ! 2011-02-10 - Chris Jones
  - Fix various icc warnings
 
-!======================= RichGlobalPID v3r14p2 2010-08-25 =====================
+!======================= RichGlobalPID v3r14p2 2010-08-25 ====================
 ! 2010-08-02 - Chris Jones
  - Small CPU optimisation suggestion from Marco Ca.
 
 ! 2010-07-27 - Chris Jones
  - Tidy up a little the previous commit.
 
-!======================= RichGlobalPID v3r14p1 2010-07-26 =====================
+!======================= RichGlobalPID v3r14p1 2010-07-26 ====================
 ! 2010-07-25 - Chris Jones
  - Add a fast approximate log(exp(x)-1) expression.
 

@@ -78,7 +78,7 @@ StatusCode MultiStepTool::initialize()
 const LHCb::RichPID * MultiStepTool::pid( const LHCb::Track * track ) const
 {
   // do we already have a GPID object for this track
-  LHCb::RichGlobalPID * gpid = gpidPIDs()->object(track->key());
+  LHCb::RichGlobalPID * gpid = findGPID(track);
   if ( gpid && gpid->track() == track )
   {
     debug() << "Found pre-existing PID object for track " << track->key() << endmsg;
@@ -109,7 +109,7 @@ void MultiStepTool::pids( const LHCb::Track::ConstVector & tracks,
         iT != tracks.end(); ++iT )
   {
     // do we already have a GPID object for this track
-    LHCb::RichGlobalPID * gpid = gpidPIDs()->object((*iT)->key());
+    LHCb::RichGlobalPID * gpid = findGPID(*iT);
     if ( gpid && gpid->track() == *iT )
     {
       debug() << "Found pre-existing PID object for track " << (*iT)->key() << endmsg;
@@ -218,6 +218,34 @@ void MultiStepTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) cons
     }
 
   }
+}
+
+//=============================================================================
+
+LHCb::RichGlobalPID * MultiStepTool::findGPID( const LHCb::Track * track ) const
+{
+  LHCb::RichGlobalPID * gpid = NULL;
+
+  if ( track )
+  {
+    // First try using same track key convention
+    gpid = gpidPIDs()->object(track->key());
+    if ( !gpid || gpid->track() != track )
+    {
+      
+      // Key convention failed, so try direct search
+      gpid = NULL;
+      for ( LHCb::RichGlobalPIDs::const_iterator iPID = gpidPIDs()->begin();
+            iPID != gpidPIDs()->end(); ++iPID )
+      {
+        if ( (*iPID)->track() == track ) { gpid = *iPID; break; }
+      }
+
+    } // not found via key
+
+  } // track OK
+
+  return gpid;
 }
 
 //=============================================================================

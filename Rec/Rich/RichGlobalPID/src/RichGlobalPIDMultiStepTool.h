@@ -78,6 +78,11 @@ namespace Rich
         // Create the RichGlobalPID data objects for the given Tracks
         virtual void pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) const;
 
+      private:
+
+        /// Find the RichGlobalPID object for the given track
+        LHCb::RichGlobalPID * findGPID( const LHCb::Track * track ) const;
+
       private:  // Private data members
         
         /// RichGlobalPIDTrack creator
