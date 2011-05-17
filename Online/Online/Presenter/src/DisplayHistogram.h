@@ -43,7 +43,7 @@ public:
 
   void deleteRootHist();
 
-  void createDummyHisto( );
+  void createDummyHisto( std::string extra= "Not found" );
 
   TH1* referenceHist() { return m_referenceHist; }
   void setReferenceHistogram( TH1* ref );

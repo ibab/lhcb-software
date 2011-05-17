@@ -156,6 +156,20 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
   std::cout << "** Preparing access for " << m_onlineHistosOnPage.size() << " online histos on page" << std::endl;
   std::vector<OnlineHistogram*> anaHistos;
   anaHistos.reserve( 100 ); // avoid relocation
+
+  int order = 0;
+  std::vector<OnlineHistoOnPage*> temp;
+  while ( temp.size() < m_onlineHistosOnPage.size() ) {
+    for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
+          m_onlineHistosOnPage.end() != itHP; ++itHP ) {
+      int myIndex;
+      (*itHP)->getOverlap( &myIndex );
+      if ( order == myIndex ) temp.push_back( *itHP );
+    }
+    ++order;
+  }
+  m_onlineHistosOnPage = temp;
+
   for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
     OnlineHistogram* myHist = (*itHP)->histo;
@@ -328,28 +342,15 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
       std::cout << "Search for services of task " << (*itT).location << " with timeout " << timeout << std::endl;
       HistTask myHists( (*itT).location, "", timeout );
       
+      std::vector<std::string> knownNames;
+      //== Get the list of services...
+      int kk = myHists.Directory( knownNames );
       bool debugExist = false;
       if ( debugExist ) {  
-        std::vector<std::string> knownNames;
-        //== Get the list of services...
-        int kk = myHists.Directory( knownNames );
         std::cout << "Directory returned status " << kk << " with " << knownNames.size() << " histograms" << std::endl;
         for ( std::vector<std::string>::iterator itS = knownNames.begin(); knownNames.end() != itS  ; ++itS ) {
           std::cout << "      -" << *itS << "-" << std::endl;
         }
-        for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
-              (*itT).histos.end() != itH; ++itH ) {
-          std::string histoName = (*itH).identifier();
-          unsigned int pos = histoName.find( "/" );   // remove the task name prefix
-          if ( pos < histoName.size() ) {
-          histoName.erase( 0, pos+1 );
-          }
-          if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
-            std::cout << "  ++ ask for histo '" << histoName << "'" << std::endl;
-          } else {
-            std::cout << "  -- Not found '" << histoName << "'" << std::endl;
-          }
-        }  
       }
       
       std::vector<std::string> histNames;
@@ -363,10 +364,16 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         unsigned int pos = histoName.find( "/" );   // remove the task name prefix
         if ( pos < histoName.size() ) {
           histoName.erase( 0, pos+1 );
-        }        
+        }
         (*itH).setShortName( histoName );
-        histNames.push_back( histoName );
+        if ( std::find( knownNames.begin(), knownNames.end(), histoName ) != knownNames.end() ) {
+          std::cout << "  ++ ask for histo '" << histoName << "'" << std::endl;
+          histNames.push_back( histoName );
+        } else {
+          std::cout << "  -- Not found '" << histoName << "'" << std::endl;
+        }
       }
+      
       std::vector<TObject*> results;
       std::cout << "before calling Histos, size " << histNames.size() << std::endl;
       int status = myHists.Histos( histNames, results );
@@ -450,7 +457,13 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         if ( foundTask ) {
           (*itH).loadFromMonObject( (*itT).location, update );
         } else {
-          (*itH).createDummyHisto();
+          std::string histoName = (*itH).identifier();
+          unsigned int pos = histoName.find( "/" );   // remove the task name prefix
+          if ( pos < histoName.size() ) {
+            histoName.erase( 0, pos+1 );
+          }
+          (*itH).setShortName( histoName );
+          (*itH).createDummyHisto( "Task not found" );
         }
       }
     }

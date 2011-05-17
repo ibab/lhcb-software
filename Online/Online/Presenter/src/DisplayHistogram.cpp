@@ -270,9 +270,9 @@ void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) 
 //=========================================================================
 //  Creata a dummy histogram...
 //=========================================================================
-void DisplayHistogram::createDummyHisto( ) {
+void DisplayHistogram::createDummyHisto( std::string title ) {
   if ( NULL != m_rootHistogram ) delete m_rootHistogram;
-  std::string dummyTitle = "ERROR: missing source for " + m_identifier;
+  std::string dummyTitle = "** " + title + " ** " + m_shortName;
   m_rootHistogram = new TH1F( m_identifier.c_str(), dummyTitle.c_str(), 1, 0., 1.);
   m_rootHistogram->SetBit(kNoContextMenu);
   m_rootHistogram->AddDirectory(kFALSE);
@@ -339,7 +339,9 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
       m_histogramImage->Draw();
     } else {
       if ( !m_hasTitle ) m_rootHistogram->SetBit( TH1::kNoTitle, true );
-      std::string opt =  m_isOverlap ? "SAME" : "";
+      std::string opt = m_isOverlap ? "SAME" : "";
+      std::string sopt("");
+      if (hasOption("DRAWOPTS", &sopt) ) opt += sopt;
       m_rootHistogram->Draw(opt.c_str());
       if ( NULL != m_referenceHist && 1 == m_rootHistogram->GetDimension() ){
         m_referenceHist->SetLineStyle(2);

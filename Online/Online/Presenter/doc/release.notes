@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-05-17 - Olivier Callot
+ - Fix order in overlap according to database. Use drawing option for superimposed.
+
 ! 2011-05-16 - Olivier Callot
  - remove forced HIST mode for superimposed plots.
 
