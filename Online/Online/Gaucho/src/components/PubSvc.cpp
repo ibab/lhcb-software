@@ -133,9 +133,9 @@ void PubSvc::analyze(void *, int ,MonMap* mmap)
   m_DetMap_old = m_DetMap;
   m_DetMap_diff.divide(m_DetMap_rate,delta);
 //  dump();
-  m_DetMap.dump();
-  printf("Rate Dump (delta-T = %f seconds)\n",(double)delta/1.0e9);
-  m_DetMap_rate.dump();
+//  m_DetMap.dump();
+//  printf("Rate Dump (delta-T = %f seconds)\n",(double)delta/1.0e9);
+//  m_DetMap_rate.dump();
   m_DetMap.Update();
   m_DetMap_rate.Update();
 }
