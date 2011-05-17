@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-05-17 - Grant McGregor
+ - Update of charm semileptonic stripping to match D02KMuNu HLT2 line
 
 ! 2011-05-13 S. Blusk
  - Update StrippingB2D3H.py to include B- -->D0D-

@@ -34,6 +34,26 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseMuons, StdLooseKaons, StdLoosePions
 
+default_config = {'TRACK_Chi2' : 3.,
+    'KAON_PIDK' : 5.,
+    'KAON_MinPT' : 600.,
+    'MUON_MinPT' : 800.,
+    'PION_PIDmu' : -1.,
+    'PION_MaxP' : 25000.,
+    'D0_MassMax' : 1950.,
+    'D0_DOCA' : 0.07,
+    'D0_MinP' : 18000.,
+    'D0_BPVVDZ' : 0.,
+    'D0_VtxChi2' : 9.,
+    'Dstar_MassMin' : 800.,
+    'Dstar_DOCA' : 0.4,
+    'Dstar_VtxChi2' : 9.,
+    'Dstar_DeltaMass' : 200.,
+    'PrescaledLinePrescale' : 1.0,
+    'PrescaledLinePostscale' : 1.0
+                              }
+
+
 name = "DstarD02KMuNu"
 
 class DstarD02KMuNuConf(LineBuilder) :
@@ -66,23 +86,16 @@ class DstarD02KMuNuConf(LineBuilder) :
     """
 
     __configuration_keys__ = ('TRACK_Chi2',
-                              'TRACK_MinIPChi2',
                               'KAON_PIDK',
                               'KAON_MinPT',
-                              'KAON_MinP',
                               'MUON_MinPT',
 			      'PION_PIDmu',
 			      'PION_MaxP',
-			      'PION_IPMin',
 			      'D0_MassMax',
-			      'D0_MassMin',
-			      'D0_MinPT',
 			      'D0_DOCA',
 			      'D0_MinP',
 			      'D0_BPVVDZ',
 			      'D0_VtxChi2',
-			      'D0_DIRA',
-			      'D0_MIP',
 			      'Dstar_MassMin',
 			      'Dstar_DOCA',
 			      'Dstar_VtxChi2',
@@ -99,47 +112,35 @@ class DstarD02KMuNuConf(LineBuilder) :
 
         self.selMuons = makeMuons( 'MuonsFor'+prescaled_name, 
                                      TRACK_Chi2 = config['TRACK_Chi2'],
-                                     TRACK_MinIPChi2 = config['TRACK_MinIPChi2'],
 				     MUON_MinPT = config['MUON_MinPT'] )
 
         self.selKaons = makeKaons( 'KaonsFor'+prescaled_name, 
                                      TRACK_Chi2 = config['TRACK_Chi2'],
-                                     TRACK_MinIPChi2 = config['TRACK_MinIPChi2'],
 				     KAON_PIDK = config['KAON_PIDK'], 
-				     KAON_MinPT = config['KAON_MinPT'],
-				     KAON_MinP = config['KAON_MinP'] )
+				     KAON_MinPT = config['KAON_MinPT'])
 
         self.selPions = makePions( 'PionsFor'+prescaled_name, 
                                      TRACK_Chi2 = config['TRACK_Chi2'],
 				     PION_PIDmu = config['PION_PIDmu'], 
-				     PION_MaxP = config['PION_MaxP'],
-				     PION_IPMin = config['PION_IPMin'])
+				     PION_MaxP = config['PION_MaxP'])
 
         self.selD02KMuNuRS = makeD02KMuNuRS('D0RSFor'+prescaled_name,  
                                             muonSel = self.selMuons, 
                                             kaonSel = self.selKaons,
                                             D0_MassMax = config['D0_MassMax'],
-                                            D0_MassMin = config['D0_MassMin'],
-                                            D0_MinPT = config['D0_MinPT'],
                                             D0_DOCA = config['D0_DOCA'],
                                             D0_MinP = config['D0_MinP'],
                                             D0_BPVVDZ = config['D0_BPVVDZ'],
-                                            D0_VtxChi2 = config['D0_VtxChi2'],
-                                            D0_DIRA = config['D0_DIRA'],
-                                            D0_MIP = config['D0_MIP'])
+                                            D0_VtxChi2 = config['D0_VtxChi2'])
 
         self.selD02KMuNuWS = makeD02KMuNuWS('D0WSFor'+prescaled_name,  
                                             muonSel = self.selMuons, 
                                             kaonSel = self.selKaons,
                                             D0_MassMax = config['D0_MassMax'],
-                                            D0_MassMin = config['D0_MassMin'],
-                                            D0_MinPT = config['D0_MinPT'],
                                             D0_DOCA = config['D0_DOCA'],
                                             D0_MinP = config['D0_MinP'],
                                             D0_BPVVDZ = config['D0_BPVVDZ'],
-                                            D0_VtxChi2 = config['D0_VtxChi2'],
-                                            D0_DIRA = config['D0_DIRA'],
-                                            D0_MIP = config['D0_MIP'])
+                                            D0_VtxChi2 = config['D0_VtxChi2'])
 
 
         self.selDstarD02KMuNuRS = makeDstarD02KMuNuRS('DstarRSFor'+prescaled_name,  
@@ -158,30 +159,31 @@ class DstarD02KMuNuConf(LineBuilder) :
                                             Dstar_VtxChi2 = config['Dstar_VtxChi2'],
                                             Dstar_DeltaMass = config['Dstar_DeltaMass'])
 
-        self.prescaled_lineRS = StrippingLine(prescaled_name+"RSLine",
-                                            prescale = config['PrescaledLinePrescale'],
-                                            postscale = config['PrescaledLinePostscale'],
-                                            selection = self.selDstarD02KMuNuRS
-                                            )
-        self.prescaled_lineWS = StrippingLine(prescaled_name+"WSLine",
-                                            prescale = config['PrescaledLinePrescale'],
-                                            postscale = config['PrescaledLinePostscale'],
-                                            selection = self.selDstarD02KMuNuWS
-                                            )
+	self.prescaled_lineRS = StrippingLine(prescaled_name+"RSLine",
+		prescale = config['PrescaledLinePrescale'],
+		postscale = config['PrescaledLinePostscale'],
+		HLT = "HLT_PASS('Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision')",
+		selection = self.selDstarD02KMuNuRS
+		)
+	self.prescaled_lineWS = StrippingLine(prescaled_name+"WSLine",
+		prescale = config['PrescaledLinePrescale'],
+		postscale = config['PrescaledLinePostscale'],
+		HLT = "HLT_PASS('Hlt2CharmSemilepD02HMuNu_D02KMuNuWSDecision')",
+		selection = self.selDstarD02KMuNuWS
+		)
 
-        self.registerLine(self.prescaled_lineRS)
-        self.registerLine(self.prescaled_lineWS)
+    self.registerLine(self.prescaled_lineRS)
+    self.registerLine(self.prescaled_lineWS)
 
-def makeMuons(name, 
+    def makeMuons(name, 
           TRACK_Chi2, 
-	  TRACK_MinIPChi2, 
 	  MUON_MinPT) :
     """
     Create muons for D0->KMuNu
     Starts from StandardParticles/StdLooseMuons
     name     : name of the Selection.
     """
-    _code = " ( 'mu+'  == ABSID ) & ISMUON & (TRCHI2DOF < %(TRACK_Chi2)s ) & ( %(TRACK_MinIPChi2)s < MIPCHI2DV() ) & (PT > %(MUON_MinPT)s *MeV)" % locals()
+    _code = " ( 'mu+'  == ABSID ) & ISMUON & (TRCHI2DOF < %(TRACK_Chi2)s ) &  (PT > %(MUON_MinPT)s *MeV)" % locals()
     _muonFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _muonFilter,
@@ -189,17 +191,15 @@ def makeMuons(name,
 
 def makeKaons(name, 
           TRACK_Chi2, 
-	  TRACK_MinIPChi2, 
 	  KAON_PIDK,
-	  KAON_MinPT,
-	  KAON_MinP) :
+	  KAON_MinPT) :
     """
     Create kaons for D0->KMuNu
     Starts from StandardParticles/StdLooseKaons
     name     : name of the Selection.
     """
-    _code = " ( 'K+'  == ABSID ) & (TRCHI2DOF < %(TRACK_Chi2)s ) & ( %(TRACK_MinIPChi2)s < MIPCHI2DV() ) &  "\
-    "( %(KAON_PIDK)s < PIDK - PIDpi) & (PT > %(KAON_MinPT)s *MeV) & (P > %(KAON_MinP)s *MeV)" % locals()
+    _code = " ( 'K+'  == ABSID ) & (TRCHI2DOF < %(TRACK_Chi2)s ) &  "\
+    "( %(KAON_PIDK)s < PIDK - PIDpi) & (PT > %(KAON_MinPT)s *MeV) " % locals()
     _kaonFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _kaonFilter,
@@ -208,15 +208,13 @@ def makeKaons(name,
 def makePions(name, 
           TRACK_Chi2, 
 	  PION_PIDmu, 
-	  PION_MaxP,
-	  PION_IPMin) :
+	  PION_MaxP) :
     """
     Create pions for D*->D0 pi
     Starts from StandardParticles/StdLoosePions
     name     : name of the Selection.
     """
-    _code = "(TRCHI2DOF < %(TRACK_Chi2)s ) & ( %(PION_PIDmu)s < PIDpi - PIDmu) & (P < %(PION_MaxP)s *MeV) "\
-    " & ( MIPCHI2DV(PRIMARY)< %(PION_IPMin)s)" % locals()
+    _code = "(TRCHI2DOF < %(TRACK_Chi2)s ) & ( %(PION_PIDmu)s < PIDpi - PIDmu) & (P < %(PION_MaxP)s *MeV) " % locals()
     _pionFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _pionFilter,
@@ -226,28 +224,20 @@ def makeD02KMuNuRS(name,
                    muonSel,
 		   kaonSel,
 		   D0_MassMax,
-		   D0_MassMin,
-		   D0_MinPT,
 		   D0_DOCA,
 		   D0_MinP,
 		   D0_BPVVDZ,
-		   D0_VtxChi2,
-		   D0_DIRA,
-		   D0_MIP) :
+		   D0_VtxChi2) :
     """
     Create and return a RS D0 -> KMuNu selection object.
     Arguments:
     name             : name of the Selection.
     """
-    _combinationCuts = "(AM > %(D0_MassMin)s *MeV) "\
-    "& (AM < %(D0_MassMax)s *MeV) "\
-    "& (APT > %(D0_MinPT)s *MeV ) "\
+    _combinationCuts = "(AM < %(D0_MassMax)s *MeV) "\
     "& (AMAXDOCA('') < %(D0_DOCA)s *mm )" % locals()
     _motherCuts = "(P > %(D0_MinP)s *MeV)  "\
     "& (BPVVDZ > %(D0_BPVVDZ)s *mm) "\
-    "& (VFASPF(VCHI2/VDOF)<%(D0_VtxChi2)s)  "\
-    "& (BPVDIRA > %(D0_DIRA)s) "\
-    "& (MIPDV(PRIMARY) < %(D0_MIP)s *mm) " % locals()
+    "& (VFASPF(VCHI2/VDOF)<%(D0_VtxChi2)s) " % locals()
     _D02KMuNuRS = CombineParticles( DecayDescriptor = "[D0 -> mu+ K-]cc",
                             MotherCut = _motherCuts,
 			    CombinationCut = _combinationCuts )
@@ -260,28 +250,20 @@ def makeD02KMuNuWS(name,
                    muonSel,
 		   kaonSel,
 		   D0_MassMax,
-		   D0_MassMin,
-		   D0_MinPT,
 		   D0_DOCA,
 		   D0_MinP,
 		   D0_BPVVDZ,
-		   D0_VtxChi2,
-		   D0_DIRA,
-		   D0_MIP) :
+		   D0_VtxChi2) :
     """
     Create and return a wrong sign D0 -> KMuNu selection object.
     Arguments:
     name             : name of the Selection.
     """
-    _combinationCuts = "(AM > %(D0_MassMin)s *MeV) "\
-    "& (AM < %(D0_MassMax)s *MeV) "\
-    "& (APT > %(D0_MinPT)s *MeV ) "\
+    _combinationCuts = "(AM < %(D0_MassMax)s *MeV) "\
     "& (AMAXDOCA('') < %(D0_DOCA)s *mm )" % locals()
     _motherCuts = "(P > %(D0_MinP)s *MeV)  "\
     "& (BPVVDZ > %(D0_BPVVDZ)s *mm) "\
-    "& (VFASPF(VCHI2/VDOF)<%(D0_VtxChi2)s)  "\
-    "& (BPVDIRA > %(D0_DIRA)s) "\
-    "& (MIPDV(PRIMARY) < %(D0_MIP)s *mm) " % locals()
+    "& (VFASPF(VCHI2/VDOF)<%(D0_VtxChi2)s)  " % locals()
     _D02KMuNuWS = CombineParticles( DecayDescriptor = "[D0 -> mu+ K+]cc",
                             MotherCut = _motherCuts,
 			    CombinationCut = _combinationCuts )
