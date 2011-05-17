@@ -1,7 +1,7 @@
 # Test to copy a POOL dst file to a POOL dst file
 from Configurables import IOTest, IOConf
 
-IOTest( EvtMax = 5 )
+IOTest( EvtMax = 5, DataType = 'MC09' )
 
 IOConf( InputPersistency  = 'POOL',
         OutputPersistency = 'POOL',

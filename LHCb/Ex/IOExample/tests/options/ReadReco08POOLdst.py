@@ -1,8 +1,8 @@
 # Test to read a POOL dst
 from Configurables import IOTest, IOConf
 
-IOTest( EvtMax = 5, LoadAll = True, DataType = 'MC09' )
+IOTest( EvtMax = 5, LoadAll = True )
 
 IOConf( InputPersistency  = 'POOL',
-        InputFiles        = ['PFN:POOL.dst']
+        InputFiles        = ['PFN:POOL-Reco08.dst']
         )

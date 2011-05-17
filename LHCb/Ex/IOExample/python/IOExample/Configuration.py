@@ -14,6 +14,7 @@ class IOTest(LHCbConfigurableUser):
        ,"DataContent"       : "DST"
        ,"WithMC"            : False
        ,"LoadAll"           : False
+       ,"DataType"          : "2011"
         }
 
     _propertyDocDct = {
@@ -21,6 +22,7 @@ class IOTest(LHCbConfigurableUser):
        ,'DataContent'       : """ Content of dataset (SIM, DIGI, RAW, DST, ...) """
        ,'WithMC'            : """ Flag to enable processing with MC Truth """
        ,'LoadAll'           : """ Load all leaves of input file with StoreExplorerAlg """
+       ,'DataType'          : """ Data type, steers year dependent test configuraton """
        }
 
     __used_configurables__ = [ SimConf, DigiConf, DstConf ]
@@ -31,7 +33,6 @@ class IOTest(LHCbConfigurableUser):
         EventSelector().PrintFreq = 1
 
     def _defineMonitors(self):
-        ApplicationMgr().Dlls += [ "HepMCBack" ]
         ApplicationMgr().TopAlg += [ "PrintHeader" ]
         ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 
@@ -53,6 +54,10 @@ class IOTest(LHCbConfigurableUser):
 
         if self.getProp( "DataContent" ).upper() == "SIM":
             ApplicationMgr().TopAlg += [ "DumpHepMC" ]
+
+        if self.getProp( "DataType" ).upper() == "MC09":
+            ApplicationMgr().Dlls += [ "HepMCBack" ]
+
 
     def __apply_configuration__(self):
         self._defineEvents()

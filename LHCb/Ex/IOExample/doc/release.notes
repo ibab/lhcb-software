@@ -4,6 +4,10 @@
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
 
+! 2011-05-17 - Marco Cattaneo
+ - Add DataType slot to IOTest configurable, used to switch on HepMCBack DLL
+   in case of MC09 data
+
 ! 2011-05-16 - Marco Cattaneo
  - Major reorganisation of package:
    . Added configurable for tests
