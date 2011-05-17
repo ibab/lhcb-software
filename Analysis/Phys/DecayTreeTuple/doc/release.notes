@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-05-17 - Albert Bursche
+ - Added TuplToolJetsBase and transferred much of the funtionality from TupleToolWZJets to it.
+   This is done in order to ease adding of more Jet related TupleTools in the near future.
+
 !========================== DecayTreeTuple v3r14 2011-04-29 =================
 ! 2011-04-26 - Patrick Koppenburg
  - TupleToolKinematic::preFitMass: fix bug 81455

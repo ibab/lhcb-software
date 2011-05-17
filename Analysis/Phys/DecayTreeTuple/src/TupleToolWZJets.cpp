@@ -25,19 +25,12 @@ DECLARE_TOOL_FACTORY( TupleToolWZJets )
 TupleToolWZJets::TupleToolWZJets( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : TupleToolBase ( type, name , parent ),
-    m_ppSvc(NULL),
-    m_magic(528),
-    charge(LoKi::Cuts::ONE),
-    positiveParticles(LoKi::Cuts::ONE ),
-    negativeParticles(LoKi::Cuts::ONE ),
-    neutralParticles(LoKi::Cuts::ONE ),
-    maxPT(LoKi::Cuts::ONE ),
-    m_M(LoKi::Cuts::ONE ),
-    m_MM(LoKi::Cuts::ONE ),
-    m_DPHI(LoKi::Cuts::ONE ),
-    m_DETA(LoKi::Cuts::ONE ),
-    m_DR2(LoKi::Cuts::ONE )
+: TupleToolJetsBase ( type, name , parent ),
+  m_ppSvc(NULL),
+  m_magic(528),
+  m_DPHI(LoKi::Cuts::ONE ),
+  m_DETA(LoKi::Cuts::ONE ),
+  m_DR2(LoKi::Cuts::ONE )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "BaseName", m_BaseName = "jet",
@@ -62,13 +55,6 @@ StatusCode TupleToolWZJets::initialize()
   m_IsoJetMaker = tool<IJetMaker>( "LoKi::FastJetMaker","IsoJetMaker", this );
   m_LokiAddJetFilter = tool<IParticleFilter>("LoKi::Hybrid::FilterCriterion","AdditionalJetsFilter",this);
   m_LokiIsoJetFilter = tool<IParticleFilter>("LoKi::Hybrid::FilterCriterion","IsolationJetsFilter",this);
-  charge = LoKi::Cuts::SUMTREE (LoKi::Cuts::Q, LoKi::Cuts::ALL, 0.0 ) ;
-  positiveParticles = LoKi::Cuts::NINTREE (  LoKi::Cuts::Q > 0 );
-  negativeParticles = LoKi::Cuts::NINTREE (  LoKi::Cuts::Q < 0 );
-  neutralParticles  = LoKi::Cuts::NINTREE (  LoKi::Cuts::Q == 0 );
-  maxPT = LoKi::Cuts::MAXTREE(LoKi::Cuts::PT,LoKi::Cuts::BASIC,-1);
-  m_M = LoKi::Particles::Mass();
-  m_MM = LoKi::Particles::MeasuredMass();
   return StatusCode::SUCCESS ;
 }
 StatusCode TupleToolWZJets::fill( const LHCb::Particle *top,
@@ -177,77 +163,6 @@ bool TupleToolWZJets::isParticleInDecay(const LHCb::Particle* part){
   }
   return isInDecay;
 }
-
-#define SAVEPOINT(POINT,FUN)                    \
-  (POINT?POINT->FUN:-1.0)
-
-bool TupleToolWZJets::WriteJetToTuple(const LHCb::Particle*jet,std::string prefix)
-{
-  //filter plus and minus signs out to the prefix
-  std::map<std::string,std::string> replacements ;
-  replacements["+"]="plus";
-  replacements["-"]="minus";
-  for (std::map<std::string,std::string>::iterator it = replacements.begin();it != replacements.end();++it)
-  {
-    size_t point = 0;
-    while((point = prefix.find(it->first))!=std::string::npos)
-      prefix = prefix.replace(point,it->second.size(),it->second);
-  }
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << (jet?"Filling jet object ":"Filling dummy jet object ") << prefix << endmsg;
-  //std::cout << prefix << std::endl;
-  bool result = true;
-  result &= (*m_tuple)->column( prefix+"_PX",  SAVEPOINT(jet,momentum().Px()));
-  result &= (*m_tuple)->column( prefix+"_PY",  SAVEPOINT(jet,momentum().Py()));
-  result &= (*m_tuple)->column( prefix+"_PZ",  SAVEPOINT(jet,momentum().Pz()));
-  result &= (*m_tuple)->column( prefix+"_PE",  SAVEPOINT(jet,momentum().e()));
-  result &= (*m_tuple)->column( prefix+"_PT",  SAVEPOINT(jet,momentum().Pt()));
-  result &= (*m_tuple)->column( prefix+"_P",   SAVEPOINT(jet,momentum().P()));
-  result &= (*m_tuple)->column( prefix+"_Eta", SAVEPOINT(jet,momentum().Eta()));
-  result &= (*m_tuple)->column( prefix+"_Phi", SAVEPOINT(jet,momentum().Phi()));
-  result &= (*m_tuple)->column( prefix+"_M", SAVEPOINT(jet,momentum().mass()));
-  result &= (*m_tuple)->column( prefix+"_MLoKi",jet?m_M(jet):-99.0);
-  result &= (*m_tuple)->column( prefix+"_MMLoKi", jet?m_MM(jet):-99.0);
-  if (m_verbose)
-    {
-      result &= (*m_tuple)->column( prefix+"_ParticleMultiplicity",  SAVEPOINT(jet,daughters().size()));
-      result &= (*m_tuple)->column( prefix+"_Charge", jet?charge(jet):-1.0);
-      result &= (*m_tuple)->column( prefix+"_positiveParticleMultiplicity", jet?positiveParticles(jet):-1.0);
-      result &= (*m_tuple)->column( prefix+"_negativeParticleMultiplicity", jet?negativeParticles(jet):-1.0);
-      result &= (*m_tuple)->column( prefix+"_neutralParticleMultiplicity", jet?neutralParticles(jet):-1.0);
-      result &= (*m_tuple)->column( prefix+"_chargedParticleMultiplicity", jet?positiveParticles(jet)+negativeParticles(jet):-1.0);
-      result &= (*m_tuple)->column( prefix+"_maxPT", jet?maxPT(jet):-1.0);
-      result &= (*m_tuple)->column( prefix+"_DETA", jet?m_DETA(jet):-10.0);
-      result &= (*m_tuple)->column( prefix+"_DPHI", jet?m_DPHI(jet):-10.0);
-      result &= (*m_tuple)->column( prefix+"_DR", jet?sqrt(m_DR2(jet)):-1.0);
-      SmartRefVector< LHCb::Particle > SortedDaughters; 
-      //buffer to store intermediate result to speed things up a bit
-      result &= (*m_tuple)->column( prefix+"_PT2",  jet?MaxSumNPart(jet,2, LoKi::Cuts::PT,&SortedDaughters):-1.0);
-      result &= (*m_tuple)->column( prefix+"_PT3",  jet?MaxSumNPart(jet,3, LoKi::Cuts::PT,&SortedDaughters):-1.0);
-      result &= (*m_tuple)->column( prefix+"_PT4",  jet?MaxSumNPart(jet,4, LoKi::Cuts::PT,&SortedDaughters):-1.0);
-      result &= (*m_tuple)->column( prefix+"_PT5",  jet?MaxSumNPart(jet,5, LoKi::Cuts::PT,&SortedDaughters):-1.0);
-      result &= (*m_tuple)->column( prefix+"_PT10", jet?MaxSumNPart(jet,10,LoKi::Cuts::PT,&SortedDaughters):-1.0);
-      result &= (*m_tuple)->column( prefix+"_PT15", jet?MaxSumNPart(jet,15,LoKi::Cuts::PT,&SortedDaughters):-1.0);
-      result &= (*m_tuple)->column( prefix+"_PT25", jet?MaxSumNPart(jet,25,LoKi::Cuts::PT,&SortedDaughters):-1.0);
-    }
-  return result;
-}
-
-double TupleToolWZJets::MaxSumNPart(const LHCb::Particle* jet,unsigned int n,const LoKi::Types::Fun& fun,SmartRefVector< LHCb::Particle >* SortedDaughters)
-{
-  //  fun == LoKi::Cuts::ONE;
-  if (jet->daughters().size() <= n)
-    return LoKi::Cuts::SUMTREE ( LoKi::Cuts::BASIC, fun)(jet);
-  if (SortedDaughters&&SortedDaughters->size()) // Vector given and filled
-    return LoKi::Cuts::ASUM (fun)(LHCb::Particle::ConstVector(SortedDaughters->begin(),SortedDaughters->begin()+n));
-  SmartRefVector< LHCb::Particle > daughters; //empty vector to take address of in case SortedDaughters == NULL
-  if (!SortedDaughters)  
-    SortedDaughters = &daughters;
-  SortedDaughters->assign(jet->daughters().begin(),jet->daughters().end()); 
-  sort(SortedDaughters->begin(),SortedDaughters->end(),Comperator<const LHCb::Particle*,const LHCb::Particle*>(fun));
-  return LoKi::Cuts::ASUM (fun)(LHCb::Particle::ConstVector(SortedDaughters->begin(),SortedDaughters->begin()+n));
-}
-
 LHCb::Particles& TupleToolWZJets::GetParticles()
 {
   // -- Get all particles in the event to cluster jets
@@ -306,12 +221,12 @@ bool TupleToolWZJets::StoreAdditionalJets(const IJetMaker::Jets& AddJets)
       {
 	numJets = numJets+1;
 	if (numJets <=  m_MaxJets)
-        test &= WriteJetToTuple(*iJet,m_prefix+"_Jet"+ boost::lexical_cast<std::string>(numJets));
+        test &= WriteJetComparisonToTuple(*iJet,m_prefix+"_Jet"+ boost::lexical_cast<std::string>(numJets));
       }
     else
       if ( msgLevel(MSG::DEBUG) ) debug() << "Jet number " << std::distance( (IJetMaker::Jets::const_iterator) AddJets.begin(),iJet)  << " failed selection."<< endmsg;
     for(unsigned int i = numJets+1;i<=m_MaxJets;i++)// fill remaining jets slots in tuple with dummys
-      test &= WriteJetToTuple(NULL,m_prefix+"_Jet"+ boost::lexical_cast<std::string>(i));
+      test &= WriteJetComparisonToTuple(NULL,m_prefix+"_Jet"+ boost::lexical_cast<std::string>(i));
     test &= (*m_tuple)->column( m_prefix+"_NumJets", numJets);
     return test;
 }
@@ -335,9 +250,9 @@ bool TupleToolWZJets::MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets)
 	       (*m_LokiIsoJetFilter)(*iJet))
 	      {
 		if (m_IsoJetAbsID)
-		  test &= WriteJetToTuple(*iJet,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()))->name());
+		  test &= WriteJetComparisonToTuple(*iJet,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()))->name());
 		else
-		  test &= WriteJetToTuple(*iJet,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID()))->name());
+		  test &= WriteJetComparisonToTuple(*iJet,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID()))->name());
 		if ((*ThisIsoJetFound)&&msgLevel(MSG::WARNING))
 		  warning() << "Found more than one IsoJet!" << endmsg;
 		*ThisIsoJetFound = true;
@@ -353,12 +268,34 @@ bool TupleToolWZJets::MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets)
       if (!*ThisIsoJetFound++)//write default value to tuple
       {
         if (m_IsoJetAbsID)
-          test &= WriteJetToTuple(NULL,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()))->name());
+          test &= WriteJetComparisonToTuple(NULL,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID().abspid()))->name());
         else
-          test &= WriteJetToTuple(NULL,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID()))->name());
+          test &= WriteJetComparisonToTuple(NULL,m_BaseName+"IsoJet"+m_ppSvc->find((LHCb::ParticleID)((*DecProduct)->particleID()))->name());
         if(msgLevel(MSG::DEBUG))
           debug() << "IsoJet missing!" << endmsg;
       }
   }
   return test;
+}
+bool TupleToolWZJets::WriteJetComparisonToTuple(const LHCb::Particle*jet,std::string prefix)
+{    
+  //filter plus and minus signs out to the prefix (dublicated in TuplToolJetsBase)
+  std::map<std::string,std::string> replacements ;
+  replacements["+"]="plus";
+  replacements["-"]="minus";
+  for (std::map<std::string,std::string>::iterator it = replacements.begin();it != replacements.end();++it)
+  {
+    size_t point = 0;
+    while((point = prefix.find(it->first))!=std::string::npos)
+      prefix = prefix.replace(point,it->second.size(),it->second);
+  }
+
+  bool result = true;
+   if (m_verbose)
+     {
+       result &= (*m_tuple)->column( prefix+"_DETA", jet?m_DETA(jet):-10.0);
+       result &= (*m_tuple)->column( prefix+"_DPHI", jet?m_DPHI(jet):-10.0);
+       result &= (*m_tuple)->column( prefix+"_DR", jet?sqrt(m_DR2(jet)):-1.0);
+     }
+   return result&=WriteJetToTuple(jet,prefix);
 }

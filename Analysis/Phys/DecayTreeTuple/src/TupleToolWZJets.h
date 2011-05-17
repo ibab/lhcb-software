@@ -1,7 +1,7 @@
-#ifndef TUPLETOOLJETS_H
-#define TUPLETOOLJETS_H 1
+#ifndef TUPLETOOLWZJETS_H
+#define TUPLETOOLWZJETS_H 1
 #include "LoKi/LoKi.h"
-#include "TupleToolBase.h"
+#include "TupleToolJetsBase.h"
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IParticlePropertySvc.h"
@@ -11,7 +11,7 @@
 #include "Kernel/IJetMaker.h"
 
 //autor: Albert Bursche
-class TupleToolWZJets : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolWZJets : public TupleToolJetsBase {
 public:
   /// Standard constructor
   TupleToolWZJets( const std::string& type,
@@ -48,37 +48,17 @@ private:
   const IParticleFilter* m_LokiAddJetFilter;
   const IParticleFilter* m_LokiIsoJetFilter;
   const LHCb::IParticlePropertySvc* m_ppSvc;
-  //  virtual bool AdditionalFilter()//slot that can be overwritten in derrived classes
-  //  {return true;}
-  unsigned int m_magic;
-  //  LoKi::Cuts::SUMTREE* charge;
-  LoKi::Types::Fun charge;
-  LoKi::Types::Fun positiveParticles;
-  LoKi::Types::Fun negativeParticles;
-  LoKi::Types::Fun neutralParticles;
-  LoKi::Types::Fun maxPT;
-  LoKi::Types::Fun m_M;
-  LoKi::Types::Fun m_MM;
+  unsigned int m_magic; // magic number to identify the decay products in the jet
+
   LoKi::Types::Fun m_DPHI;
   LoKi::Types::Fun m_DETA;
   LoKi::Types::Fun m_DR2;
-  bool WriteJetToTuple(const LHCb::Particle*,std::string prefix);
-  double MaxSumNPart(const LHCb::Particle* jet,unsigned int n,const LoKi::Types::Fun& fun = LoKi::Cuts::PT,SmartRefVector< LHCb::Particle >* SortedDaughters = NULL);
-  template <class T1,class T2>
-  class Comperator
-  {
-    const LoKi::Types::Fun & m_fun;
-  public:
-    Comperator(const LoKi::Types::Fun &fun)
-      :m_fun(fun)
-    {}
-    bool operator()(T1 t1,T2 t2)
-    {return m_fun(t1)>m_fun(t2);}
-  };
+  
   LHCb::Particles& GetParticles();
   void AddDecProducts(LHCb::Particles&);
   bool StoreAdditionalJets(const IJetMaker::Jets& AddJets);
   bool MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets);
+  bool WriteJetComparisonToTuple(const LHCb::Particle*jet,std::string prefix);
 };
 
-#endif // TUPLETOOLJETS_H
+#endif // TUPLETOOLWZJETS_H
