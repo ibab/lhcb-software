@@ -394,7 +394,8 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
         message +=  "Failure to access the histograms of task " + (*itT).location
           + "\n If task is not consuming events (see farm monitoring display), restart the task."
           + "\n If the problem persists, try to restart the Presenter."
-          + "\n If this is not enough, restart the task. \n";
+          + "\n If this is not enough, restart the task."
+          + "\n REFRESH is stopped. You have to ask again for a page, and turn refresh ON if wanted\n";
       }
       
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
