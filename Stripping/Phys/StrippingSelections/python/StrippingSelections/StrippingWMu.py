@@ -3,10 +3,11 @@
 #Adaptation of lines (to use line builders) originally written by James Keaveney by Will Barter
 
 # Lines needed:
-# W prescaled 0.1. normal cut. stdloosemuons
+
 # W prescaled 0.1. normal cut. stdveryloosemuons
-# W prescaled 0.1. tight cut. stdnopids muons. Unlikely to be run in 2011.
-# W not prescaled. tight cut. stdloosemuons
+# W prescaled 0.1. low pT window. stdloosemuons.
+# W prescaled 0.1. very tight cut. stdnopids muons.
+# W not prescaled. normal cut. stdloosemuons
 # W not prescaled. tight cut. stdveryloosemuons
 # no prescale, low pt cut, used to study background. Ensure absence of bias by only taking events that trigger min bias in HLT.
 
@@ -18,11 +19,14 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdVeryLooseMuons, StdNoPIDsMuons, StdLooseMuons
 
 confdict_WMu={
+    
     'WMuLinePrescale_ps'    : .1
+    ,  'WMuLinePrescale_hps': .05
     ,  'WMuLinePrescale'    : 1.0 
     ,  'WMuLinePostscale'   : 1.0
     ,  'mucuttight' : 20.
     ,  'mucut' : 15.
+    ,  'mucut_hps' : 10. 
     ,  'mucutlow' : 5.
     ,  'trkpchi2' : 0.001
  }
@@ -33,6 +37,8 @@ class WMuConf(LineBuilder) :
 
     __configuration_keys__ = ('mucuttight',
                               'mucut',
+                              'mucut_hps',
+                              'WMuLinePrescale_hps',
                               'mucutlow',
                               'trkpchi2',
                               'WMuLinePrescale_ps',
@@ -50,19 +56,23 @@ class WMuConf(LineBuilder) :
         _mucuttight = '(PT>%(mucuttight)s*GeV)'%config
         _mucutverytight = '(PT>%(mucuttight)s*GeV)&(TRPCHI2>%(trkpchi2)s)'%config
         _mucutlow='(PT>%(mucutlow)s*GeV)'%config
+        _mucuthps = '(PT>%(mucut_hps)s*GeV)'%config
 
         # First Make the PrescaledLines
 
-        # Prescaled Line, StdLooseMuons, Cut at 15GeV
-        self.selWMu_ps = makeWMu(self._myname+'WMu_ps', _mucut)
+
+        # StdLooseMuons, Between 10 GeV and 15GeV
+        # will prescale to keep rate low...
+        self.selWMu_hps = makeWMu(self._myname+'WMu_hps', 
+                                  _mucuthps)
      
-        self.WMu_lineps = StrippingLine(self._myname+"Line_ps",
-                                        prescale = config['WMuLinePrescale_ps'],
-                                        postscale = config['WMuLinePostscale'],
-                                        checkPV = False,
-                                        selection = self.selWMu_ps
-                                            )
-        self.registerLine(self.WMu_lineps)
+        self.WMu_linehps = StrippingLine(self._myname+"LowPTLine",
+                                             prescale = config['WMuLinePrescale_hps'],
+                                             postscale = config['WMuLinePostscale'],
+                                             checkPV = False,
+                                             selection = self.selWMu_hps
+                                             )
+        self.registerLine(self.WMu_linehps)
 
         # Prescaled Line, StdVeryLooseMuons, Cut at 15GeV
         self.selWMu_looseps = makeWMuLoose(self._myname+'WMu_looseps', 
@@ -76,7 +86,7 @@ class WMuConf(LineBuilder) :
                                              )
         self.registerLine(self.WMu_linelooseps)
 
-        # Prescaled Line, StdNoPIDsMuons, Cut at 20GeV. Unlikely to use this line in 2011
+        # Prescaled Line, StdNoPIDsMuons, Cut at 20GeV. 
         self.selWMu_NoPIDsps = makeWMuNoPIDs(self._myname+'WMu_NoPIDsps', 
                                              _mucutverytight)
      
@@ -89,11 +99,13 @@ class WMuConf(LineBuilder) :
         self.registerLine(self.WMu_lineNoPIDsps)
 
 
-        # Now the tighter, non pre-scaled lines
 
-        # StdLooseMuons, Cut at 20GeV
+
+
+        # Now the tighter, non pre-scaled lines
+        # StdLooseMuons, Cut at 15GeV
         self.selWMu = makeWMu(self._myname+'WMu', 
-                              _mucuttight)
+                              _mucut)
      
         self.WMu_line = StrippingLine(self._myname+"Line",
                                       prescale = config['WMuLinePrescale'],
@@ -114,8 +126,9 @@ class WMuConf(LineBuilder) :
                                            selection = self.selWMu_loose
                                            )
         self.registerLine(self.WMu_lineloose)
-        
-        #new line, require minbias triggers to have fired.
+
+
+        #background line, require minbias triggers to have fired.
         self.selNoPIDsPTCut = makeNoPIDs(self._myname+'NoPIDs', 
                                          _mucutlow)  
         self.line_SingleTrackNoBias = StrippingLine(self._myname+"SingleTrackNoBias",
