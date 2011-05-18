@@ -202,7 +202,12 @@ if '__main__' == __name__ :
     ## start the actual action:
     #
 
-    from Bender.Main         import *
+    
+    if options.Simulation : 
+        from Bender.MainMC   import *
+    else                  : 
+        from Bender.Main     import *
+    
     from Gaudi.Configuration import * 
     from Configurables       import DaVinci
     
