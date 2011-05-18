@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.572 2010-08-25 16:30:34 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
-!========================= DaVinciTools v22r6 2011-05-13 =========================
+! 2011-05-18 - Marco Cattaneo
+ - Change dependency from Phys/DaVinciMaps to Event/MicroDst. Needs LHCB >= v32r4
+
+!========================= DaVinciTools v22r6 2011-05-13 ====================
 ! 2011-05-13 - Vanya Belyaev
 
  - FilterDecays.h,.cpp

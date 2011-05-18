@@ -1,9 +1,5 @@
-# $Id: requirements,v 1.154 2010-08-25 16:30:00 jpalac Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
 version           v22r6
@@ -17,7 +13,7 @@ branches          cmt doc src python
 use  Boost                 v* LCG_Interfaces
 use  GaudiConfUtils        v* -no_auto_imports
 use  DaVinciKernel         v* Phys
-use  DaVinciMaps           v* Phys
+use  MicroDst              v* Event
 use  LHCbMath              v* Kernel
 use  CaloUtils             v* Calo
 use  LoKiPhys              v* Phys
