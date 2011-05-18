@@ -61,7 +61,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
             JPsiMuMu                   = CombineParticles(JPsiMuMuName)
             JPsiMuMu.DecayDescriptor   = "J/psi(1S) -> mu+ mu- "
             JPsiMuMu.CombinationCut    = "(ADAMASS('J/psi(1S)') < 150*MeV)"
-            JPsiMuMu.MotherCut         = "(ADMASS('J/psi(1S)') < 130*MeV) & (VFASPF(VCHI2/VDOF)<6)"
+            JPsiMuMu.MotherCut         = "(ADMASS('J/psi(1S)') < 130*MeV) & (VFASPF(VCHI2/VDOF)<6) & (PT > 2500*MeV)"
             JPsiMuMu.DaughtersCuts     = {"mu+" : "(PT>1400*MeV)"\
                                           "& (P>5*GeV)"\
                                           "& (TRCHI2DOF<2.0)"\
@@ -84,8 +84,8 @@ class JPsiMuMuConf(RichConfigurableUser) :
             from Configurables import ( ParticleMonitor )
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
             plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
-            plotter.PeakCut     = "(ADMASS('J/psi(1S)')<40*MeV)" # Considering sigma = 13
-            plotter.SideBandCut = "(ADMASS('J/psi(1S)')>40*MeV)" # Considering sigma = 13
+            plotter.PeakCut     = "(ADMASS('J/psi(1S)')<20*MeV)" # Considering sigma = 13
+            plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)" # Considering sigma = 13
             plotter.PlotTools   = self.getProp("PlotTools") 
             self.setOptions(plotter)
             seq.Members += [plotter]
