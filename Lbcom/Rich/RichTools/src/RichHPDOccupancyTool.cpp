@@ -108,13 +108,13 @@ StatusCode HPDOccupancyTool::initOccMap()
     if ( m_whichRICH == "RICH1" || m_whichRICH == "RICH1andRICH2" )
     {
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
-                                      &HPDOccupancyTool::umsUpdate );
+                                      &HPDOccupancyTool::umsUpdateRICH1 );
     }
     if ( m_whichRICH == "RICH2" || m_whichRICH == "RICH1andRICH2" )
     {
       // Register RICH2
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich2],
-                                      &HPDOccupancyTool::umsUpdate );
+                                      &HPDOccupancyTool::umsUpdateRICH2 );
     }
     // force first updates
     sc = updMgrSvc()->update(this);
@@ -129,20 +129,24 @@ StatusCode HPDOccupancyTool::initOccMap()
   return sc;
 }
 
-StatusCode HPDOccupancyTool::umsUpdate()
+StatusCode HPDOccupancyTool::umsUpdateRICH1()
 {
-  // clear the map
-  m_occMap.clear();
-  // (re)initalise from DB
-  return ( initOccMap( Rich::Rich1 ) &&
-           initOccMap( Rich::Rich2 ) );
+  return initOccMap( Rich::Rich1 );
+}
+
+StatusCode HPDOccupancyTool::umsUpdateRICH2()
+{
+  return initOccMap( Rich::Rich2 );
 }
 
 StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Update triggered for " << rich 
-            << " HPD average occupancies" << endmsg;
+    verbose() << "Update triggered for " << rich 
+              << " HPD average occupancies" << endmsg;
+
+  // clear the map
+  m_occMap[rich].clear();
   
   // read data from conditions
   const Condition * data = getDet<Condition>(m_condBDLocs[rich]);
@@ -163,7 +167,7 @@ StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
     {
       verbose() << " -> Updating " << HPD << " occupancy to " << occ << endmsg;
     }
-    m_occMap[HPD] = HPDData( m_minFills+1 , occ );
+    (m_occMap[rich])[HPD] = HPDData( m_minFills+1 , occ );
   }
 
   return StatusCode::SUCCESS;
@@ -265,28 +269,32 @@ HPDOccupancyTool::updateOccupancies() const
 void
 HPDOccupancyTool::findHpdData( const LHCb::RichSmartID hpdID ) const
 {
-  m_currentData = &(m_occMap[hpdID]);
+  m_currentData = &((m_occMap[hpdID.rich()])[hpdID]);
   m_lastHPD     = hpdID;
 }
 
 StatusCode HPDOccupancyTool::finalize()
 {
   // Print XML ?
-  if ( m_printXML ) createHPDBackXML();
+  if ( m_printXML ) 
+  {
+    createHPDBackXML( Rich::Rich1 );
+    createHPDBackXML( Rich::Rich2 );
+  }
   // UMS
   updMgrSvc()->unregister(this);
   // Execute base class method
   return ToolBase::finalize();
 }
 
-void HPDOccupancyTool::createHPDBackXML() const
+void HPDOccupancyTool::createHPDBackXML( const Rich::DetectorType rich ) const
 {
 
   // Vectors for conditions entries
-  std::vector<std::string> entries[Rich::NRiches];
+  std::vector<std::string> entries;
 
   // loop over final occupancies
-  for ( OccMap::const_iterator iS = m_occMap.begin(); iS != m_occMap.end(); ++iS )
+  for ( OccMap::const_iterator iS = m_occMap[rich].begin(); iS != m_occMap[rich].end(); ++iS )
   {
     const HPDData & d = (*iS).second;
     const Rich::DAQ::HPDHardwareID hID = m_richSys->hardwareID( (*iS).first );
@@ -303,20 +311,14 @@ void HPDOccupancyTool::createHPDBackXML() const
     {
       std::ostringstream entry;
       entry << (*iS).first.key() << "/" << occ;
-      entries[(*iS).first.rich()].push_back( entry.str() );
+      entries.push_back( entry.str() );
     }
   }
 
   // Rich1 Condition
-  Condition newCond1;
-  newCond1.addParam( "HPDAvOccupancies",
-                     entries[Rich::Rich1], "Average occupancy of RICH1 HPDs" );
-  always() << newCond1.toXml() << endmsg;
-
-  // RICH2 condition
-  Condition newCond2;
-  newCond2.addParam( "HPDAvOccupancies",
-                     entries[Rich::Rich2], "Average occupancy of RICH2 HPDs" );
-  always() << newCond2.toXml() << endmsg;
+  Condition newCond;
+  newCond.addParam( "HPDAvOccupancies",
+                    entries, "Average occupancy of HPDs " + Rich::text(rich) );
+  always() << newCond.toXml() << endmsg;
 
 }

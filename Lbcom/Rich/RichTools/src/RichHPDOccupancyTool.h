@@ -90,7 +90,7 @@ namespace Rich
   private: // private methods
 
     /// Print out the XML entries for the background conditions
-    void createHPDBackXML() const;
+    void createHPDBackXML( const Rich::DetectorType rich ) const;
 
     /// Initialise occupancy map
     StatusCode initOccMap( );
@@ -98,8 +98,11 @@ namespace Rich
     /// Initialise occupancy map for given RICH
     StatusCode initOccMap( const Rich::DetectorType rich );
 
-    /// UMS method
-    StatusCode umsUpdate();
+    /// UMS method for RICH1
+    StatusCode umsUpdateRICH1();
+
+    /// UMS method for RICH2
+    StatusCode umsUpdateRICH2();
 
     /// Find HPD data for given HPD RichSmartID
     void findHpdData( const LHCb::RichSmartID hpdID ) const;
@@ -155,7 +158,8 @@ namespace Rich
 
     /// Occupancy map
     typedef Rich::HashMap< const LHCb::RichSmartID, HPDData > OccMap;
-    mutable OccMap m_occMap;
+    typedef Rich::Map< Rich::DetectorType, OccMap >           RichOccMap;
+    mutable RichOccMap m_occMap;
 
     /// Memory fraction
     double m_memory;
