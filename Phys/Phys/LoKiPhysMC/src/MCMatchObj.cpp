@@ -10,6 +10,15 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <functional>
+#include <algorithm>
+// ============================================================================
+// LoKiPhys 
+// ============================================================================
+#include "LoKi/PhysExtract.h"
+// ============================================================================
 // LoKiMC 
 // ============================================================================
 #include "LoKi/MCExtract.h"
@@ -19,19 +28,44 @@
 // ============================================================================
 /** @file
  *
- * Implementation file for class LoKi::MCMatchObj
+ *  Implementation file for class LoKi::MCMatchObj
  *
  *  This file is a part of LoKi project - 
- *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *  ``C++ ToolKit  for Smart and Friendly Physics Analysis''
  *
  *  The package has been designed with the kind help from
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly disagrees with 
+ *  the smear campaign of Dr.O.Callot et al.:
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-10
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  struct BasicP : public std::unary_function<const LHCb::Particle*,bool>
+  {
+    inline bool operator() ( const LHCb::Particle* p ) const 
+    {
+      return
+	0 != p                   && 
+	p -> isBasicParticle()   &&
+	p -> daughters().empty() &&
+	0 == p->endVertex()     ;
+    }
+  };
+  // ==========================================================================
+}
 // ============================================================================
 /* Standard constructor
  *  @param name object name 
@@ -121,21 +155,42 @@ bool LoKi::MCMatchObj::match
   LoKi::MCChild::daughters ( mcparticle , children ) ;
   
   // the further action differ for composed and basic particles:
+  BasicP basic ;
   
-  if ( particle->isBasicParticle() ) 
-  {
-    //   A) For *BASIC* particles: 
-    // match a particle with at least one MCParticle from the expanded MC-tree 
-    return children.end() != match ( particle          , 
-                                     children.begin () , 
-                                     children.end   () ) ;
-  }
+  if ( basic ( particle ) )  
+    {
+      //   A) For *BASIC* particles: 
+      // match a particle with at least one MCParticle from the expanded MC-tree 
+      return children.end() != match ( particle          , 
+				       children.begin () , 
+				       children.end   () ) ;
+    }
   //     B) For *COMPOSED* Particles: 
   // require that *ALL* daughters are matched 
-  return match ( particle->daughters() .begin () , 
-                 particle->daughters() .end   () , 
-                 children              .begin () , 
-                 children              .end   () ) ;
+  if ( match ( particle->daughters() .begin () , 
+	       particle->daughters() .end   () , 
+	       children              .begin () , 
+	       children              .end   () ) ) { return true ; }
+  //
+  //     B') the last check for nontrivial structure 
+  // the case has been pointed by Steve Blusk 
+  //
+  if  ( particle->daughters().size() != 
+	std::count_if ( particle->daughters().begin () , 
+			particle->daughters().end   () , BasicP() ) ) 
+    {
+      LHCb::Particle::ConstVector vct ;
+      vct.reserve ( 16 ) ;
+      LoKi::Extract::particles ( particle , std::back_inserter( vct ) , BasicP() ) ;
+      //
+      return  match ( particle->daughters() .begin () , 
+		      particle->daughters() .end   () , 
+		      children              .begin () , 
+		      children              .end   () ) ;     // RETURN 
+      
+    }
+  //
+  return false ;
 } 
 // ============================================================================
 // clear the internal storage
