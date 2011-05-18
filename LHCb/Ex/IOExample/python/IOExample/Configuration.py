@@ -37,9 +37,10 @@ class IOTest(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 
         if self.getProp( "LoadAll" ):
-            from Configurables import StoreExplorerAlg
+            from Configurables import StoreExplorerAlg, TESFingerPrint
             storeExp = StoreExplorerAlg( Load = True, PrintFreq = 1, ExploreRelations = 1 )
-            ApplicationMgr().TopAlg += [ storeExp ]
+            fingerPrint = TESFingerPrint( HeuristicsLevel = "Medium", OutputLevel = 1 )
+            ApplicationMgr().TopAlg += [ storeExp, fingerPrint ]
         
         if self.getProp( "DataContent" ).upper() == "DST":
             from Configurables import DumpTracks

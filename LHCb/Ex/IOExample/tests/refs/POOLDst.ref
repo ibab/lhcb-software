@@ -10,6 +10,7 @@
 # \----- (End of User IOConf/IOConf) -----------------------------------------------------------------
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
+# |-DataType    = 'MC09'  (default: '2011')
 # |-LoadAll     = True  (default: False)
 # |-DataContent = 'DST'
 # |-WithMC      = False
@@ -47,11 +48,53 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Fri May 13 17:41:34 2011
+                                          running on lxbuild163.cern.ch on Wed May 18 15:11:37 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
+TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
+TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditExecute':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint      DEBUG ==> Initialize
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -97,12 +140,13 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 RootDBase.open    SUCCESS POOL.dst File version:52800
 PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:74AF0B29-617D-E011-8415-003048C9CD62
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader          INFO Run 182001, Event 1
-StoreExplorerAlg     INFO ========= /Event[0x19873e00@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x856f560@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -168,6 +212,7 @@ StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x20
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x50]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x3a]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 80 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -357,7 +402,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader          INFO Run 182001, Event 2
-StoreExplorerAlg     INFO ========= /Event[0x1a477a40@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x9171f30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -424,6 +469,7 @@ StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x20
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x66]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x3a]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 102 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -613,7 +659,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader          INFO Run 182001, Event 3
-StoreExplorerAlg     INFO ========= /Event[0x19ebba90@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8fff2c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -680,6 +726,7 @@ StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x20
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x43]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x22]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 67 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -869,7 +916,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader          INFO Run 182001, Event 4
-StoreExplorerAlg     INFO ========= /Event[0x1a26ae90@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x896cbe0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -934,6 +981,7 @@ StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x20
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x42]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x22]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 66 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -1123,7 +1171,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader          INFO Run 182001, Event 5
-StoreExplorerAlg     INFO ========= /Event[0x1a0b4a00@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8756e60@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -1184,6 +1232,7 @@ StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x20
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x109]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x7c]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 265 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -1371,9 +1420,16 @@ DumpTracks          DEBUG *** Track ***
    -8.8032e-09-1.13531e-08-2.26206e-10-1.06273e-10 3.01088e-11 ]
 
 
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 PrintHeader          INFO Filtered 5 events
+TESFingerPrint      DEBUG ==> Finalize
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/DAQ: 5, /Event/DAQ/ODIN: 5, /Event/DAQ/RawEvent: 5, /Event/Gen: 5, /Event/Gen/Collisions: 5, /Event/Gen/Header: 5, /Event/Gen/HepMCEvents: 5, /Event/Link: 5, /Event/Link/MC: 5, /Event/Link/Raw: 5, /Event/Link/Raw/Ecal: 5, /Event/Link/Raw/Ecal/Digits: 5, /Event/Link/Raw/IT: 5, /Event/Link/Raw/IT/Clusters: 5, /Event/Link/Raw/Muon: 5, /Event/Link/Raw/Muon/Digits: 5, /Event/Link/Raw/OT: 5, /Event/Link/Raw/OT/Times: 5, /Event/Link/Raw/TT: 5, /Event/Link/Raw/TT/Clusters: 5, /Event/Link/Raw/Velo: 5, /Event/Link/Raw/Velo/Clusters: 5, /Event/Link/Rec: 5, /Event/Link/Rec/Track: 5, /Event/Link/Rec/Track/Best: 5, /Event/Link/Trig: 5, /Event/Link/Trig/L0: 5, /Event/Link/Trig/L0/FullCalo: 5, /Event/MC: 5, /Event/MC/DigiHeader: 5, /Event/MC/Header: 5, /Event/MC/Muon: 5, /Event/MC/Muon/DigitsInfo: 5, /Event/MC/Rich: 5, /Event/MC/Rich/DigitSummaries: 5, /Event/MC/TrackInfo: 5, /Event/Next: 3, /Event/Next/MC: 3, /Event/Next/MC/Header: 3, /Event/Prev: 5, /Event/Prev/MC: 5, /Event/Prev/MC/Header: 2, /Event/PrevPrev: 3, /Event/PrevPrev/MC: 3, /Event/PrevPrev/MC/Header: 3, /Event/Rec: 5, /Event/Rec/Calo: 5, /Event/Rec/Calo/Electrons: 5, /Event/Rec/Calo/MergedPi0s: 5, /Event/Rec/Calo/Photons: 5, /Event/Rec/Calo/SplitPhotons: 5, /Event/Rec/Header: 5, /Event/Rec/ProtoP: 5, /Event/Rec/ProtoP/Charged: 5, /Event/Rec/ProtoP/Neutrals: 5, /Event/Rec/Rich: 5, /Event/Rec/Rich/RichOfflineSummaryTracks: 5, /Event/Rec/Status: 5, /Event/Rec/Track: 5, /Event/Rec/Track/Best: 5, /Event/Rec/Track/Muon: 5, /Event/Rec/Vertex: 5, /Event/Rec/Vertex/Primary: 5, /Event/pSim: 5, /Event/pSim/MCParticles: 5, /Event/pSim/MCVertices: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Gen/Collisions: {1: 3, 2: 2}, /Event/Gen/HepMCEvents: {1: 3, 2: 2}, /Event/MC/Rich/DigitSummaries: {1240: 1, 1463: 1, 1756: 1, 3900: 1, 4313: 1}, /Event/Rec/Calo/Electrons: {10: 1, 11: 1, 13: 1, 17: 1, 44: 1}, /Event/Rec/Calo/MergedPi0s: {2: 1, 5: 1, 9: 1, 10: 1, 19: 1}, /Event/Rec/Calo/Photons: {19: 1, 28: 2, 31: 1, 67: 1}, /Event/Rec/Calo/SplitPhotons: {4: 1, 10: 1, 18: 1, 20: 1, 38: 1}, /Event/Rec/ProtoP/Charged: {66: 1, 67: 1, 80: 1, 102: 1, 265: 1}, /Event/Rec/ProtoP/Neutrals: {34: 2, 58: 2, 124: 1}, /Event/Rec/Rich/RichOfflineSummaryTracks: {23: 1, 33: 1, 44: 1, 45: 1, 93: 1}, /Event/Rec/Track/Best: {66: 1, 67: 1, 80: 1, 102: 1, 265: 1}, /Event/Rec/Track/Muon: {1: 1, 2: 3, 3: 1}, /Event/Rec/Vertex/Primary: {1: 4, 2: 1}}
+TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
+TESFingerPrint      DEBUG Tools to release :
+TESFingerPrint      DEBUG Services to release :
 DumpTracks          DEBUG Finalize base class GaudiAlgorithm
 DumpTracks          DEBUG Tools to release :
 DumpTracks          DEBUG Services to release :

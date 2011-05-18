@@ -10,6 +10,7 @@
 # \----- (End of User IOConf/IOConf) -----------------------------------------------------------------
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
+# |-DataType    = '2011'
 # |-LoadAll     = True  (default: False)
 # |-DataContent = 'DIGI'  (default: 'DST')
 # |-WithMC      = True  (default: False)
@@ -22,21 +23,64 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Fri May 13 17:58:57 2011
+                                          running on lxbuild163.cern.ch on Wed May 18 15:14:25 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
+TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
+TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditExecute':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint      DEBUG ==> Initialize
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:POOL.digi' TYP='POOL_ROOT' OPT='READ'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 RootDBase.open    SUCCESS POOL.digi File version:52800
 PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:9491E8CB-707D-E011-A691-003048C9CD62
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x16ef2370@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1eb65be0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -80,6 +124,7 @@ StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x200]
 StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x200]  LHCb::PackedMCVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
+TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 72, 695130229, 0]
 applicationName :	Gauss
@@ -94,7 +139,7 @@ DumpMCEventAlg       INFO There are 1208 Vertices:
 DumpMCEventAlg       INFO There are 1195 Particles:
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17943fc0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1f5bac80@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -137,6 +182,7 @@ StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x200]
 StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x200]  LHCb::PackedMCVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
+TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 73, 1360340929, 0]
 applicationName :	Gauss
@@ -151,7 +197,7 @@ DumpMCEventAlg       INFO There are 1992 Vertices:
 DumpMCEventAlg       INFO There are 2042 Particles:
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17b10ab0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1f22b1d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -194,6 +240,7 @@ StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x200]
 StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x200]  LHCb::PackedMCVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
+TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 74, 2049830586, 0]
 applicationName :	Gauss
@@ -208,7 +255,7 @@ DumpMCEventAlg       INFO There are 1092 Vertices:
 DumpMCEventAlg       INFO There are 1190 Particles:
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17f7be90@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1f7eb360@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -251,6 +298,7 @@ StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x200]
 StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x200]  LHCb::PackedMCVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
+TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 75, 1149207390, 0]
 applicationName :	Gauss
@@ -265,7 +313,7 @@ DumpMCEventAlg       INFO There are 718 Vertices:
 DumpMCEventAlg       INFO There are 764 Particles:
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x176b78f0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1f22af00@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x200]  LHCb::GenHeader
@@ -308,6 +356,7 @@ StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x200]
 StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x200]  LHCb::PackedMCVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
+TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 76, 1453533093, 0]
 applicationName :	Gauss
@@ -320,10 +369,17 @@ evtTime :	212100
 DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
 DumpMCEventAlg       INFO There are 79 Vertices:
 DumpMCEventAlg       INFO There are 101 Particles:
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 ApplicationMgr       INFO Application Manager Stopped successfully
 PrintHeader          INFO Filtered 5 events
 PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
+TESFingerPrint      DEBUG ==> Finalize
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/DAQ: 5, /Event/DAQ/RawEvent: 5, /Event/Gen: 5, /Event/Gen/Collisions: 5, /Event/Gen/Header: 5, /Event/Gen/HepMCEvents: 5, /Event/Link: 5, /Event/Link/Raw: 5, /Event/Link/Raw/Ecal: 5, /Event/Link/Raw/Ecal/Digits: 5, /Event/Link/Raw/Hcal: 5, /Event/Link/Raw/Hcal/Digits: 5, /Event/Link/Raw/IT: 5, /Event/Link/Raw/IT/Clusters: 5, /Event/Link/Raw/IT/Clusters2MCHits: 5, /Event/Link/Raw/Muon: 5, /Event/Link/Raw/Muon/Digits: 5, /Event/Link/Raw/OT: 5, /Event/Link/Raw/OT/Times: 5, /Event/Link/Raw/OT/Times2MCHits: 5, /Event/Link/Raw/TT: 5, /Event/Link/Raw/TT/Clusters: 5, /Event/Link/Raw/TT/Clusters2MCHits: 5, /Event/Link/Raw/Velo: 5, /Event/Link/Raw/Velo/Clusters: 5, /Event/Link/Raw/Velo/Clusters2MCHits: 5, /Event/Link/Trig: 5, /Event/Link/Trig/L0: 5, /Event/Link/Trig/L0/Calo: 5, /Event/Link/Trig/L0/FullCalo: 5, /Event/MC: 5, /Event/MC/DigiHeader: 5, /Event/MC/Header: 5, /Event/MC/Muon: 5, /Event/MC/Muon/DigitsInfo: 5, /Event/MC/Rich: 5, /Event/MC/Rich/DigitSummaries: 5, /Event/MC/TrackInfo: 5, /Event/pSim: 5, /Event/pSim/MCParticles: 5, /Event/pSim/MCVertices: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Gen/Collisions: {1: 1, 2: 3, 3: 1}, /Event/Gen/HepMCEvents: {1: 1, 2: 3, 3: 1}, /Event/MC/Rich/DigitSummaries: {89: 1, 758: 1, 1285: 1, 2208: 1, 3703: 1}}
+TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
+TESFingerPrint      DEBUG Tools to release :
+TESFingerPrint      DEBUG Services to release :
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/15(Alg/Node/Total).

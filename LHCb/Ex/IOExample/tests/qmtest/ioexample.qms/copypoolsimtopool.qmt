@@ -7,6 +7,7 @@
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 preprocessor = LHCbPreprocessor + \
   LineSkipper(["StoreExplorerAlg     INFO"]) + \
+  LineSkipper(["TESFingerPrint"]) + \
   LineSkipper(["InputCopyStream      INFO"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc"]) + \
   LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE"])

@@ -48,10 +48,52 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Wed May 18 07:56:22 2011
+                                          running on lxbuild163.cern.ch on Wed May 18 15:14:05 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
+TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
+TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditExecute':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint      DEBUG ==> Initialize
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -97,12 +139,13 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 RootDBase.open    SUCCESS POOL-Reco09.dst File version:52800
 PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:52573488-1381-E011-918F-003048C9CD62
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x10938400@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x6c3b310@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -186,6 +229,7 @@ StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x
 StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 205 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -485,7 +529,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x11aa3c40@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x7d3e2b0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -560,6 +604,7 @@ StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x
 StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 33 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -859,7 +904,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x11a21b10@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x94b3240@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -975,6 +1020,7 @@ StoreExplorerAlg     INFO   | |   +--> /_RefitPVs [Address: CLID=0x6272e Type=0x
 StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x4]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 160 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -1274,7 +1320,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x12aa3100@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8ddbe90@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -1354,6 +1400,7 @@ StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x
 StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 332 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -1653,7 +1700,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x127bdfb0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x87a82a0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -1743,6 +1790,7 @@ StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x
 StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 207 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -2040,6 +2088,7 @@ DumpTracks          DEBUG *** Track ***
    4.45453e-10 1.21129e-09 5.43151e-13-1.37478e-12 6.40703e-14 ]
 
 
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 UnpackTrack       SUCCESS Number of counters : 1
@@ -2048,6 +2097,12 @@ UnpackTrack       SUCCESS Number of counters : 1
 PrintHeader          INFO Filtered 5 events
 PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
+TESFingerPrint      DEBUG ==> Finalize
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/DAQ: 5, /Event/DAQ/RawEvent: 5, /Event/Dimuon: 5, /Event/Dimuon/Phys: 5, /Event/Dimuon/Phys/B2MuMuMuMuLinesLine: 5, /Event/Dimuon/Phys/B2MuMuMuMuLinesLine/Particles: 5, /Event/Dimuon/Phys/B2XMuMuSS_KOSLine: 1, /Event/Dimuon/Phys/B2XMuMuSS_KOSLine/Particles: 1, /Event/Dimuon/Phys/B2XMuMuSS_KSSLine: 1, /Event/Dimuon/Phys/B2XMuMuSS_KSSLine/Particles: 1, /Event/Dimuon/Phys/B2XMuMuSS_PiOSLine: 1, /Event/Dimuon/Phys/B2XMuMuSS_PiOSLine/Particles: 1, /Event/Dimuon/Phys/B2XMuMuSS_PiSSLine: 1, /Event/Dimuon/Phys/B2XMuMuSS_PiSSLine/Particles: 1, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine: 5, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/Particle2VertexRelations: 1, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/Particles: 5, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/_RefitPVs: 1, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/decayVertices: 1, /Event/Dimuon/Phys/Bc2JpsiHLine: 2, /Event/Dimuon/Phys/Bc2JpsiHLine/Particles: 2, /Event/Dimuon/Phys/Bc2JpsiMuLine: 2, /Event/Dimuon/Phys/Bc2JpsiMuLine/Particles: 2, /Event/Dimuon/Phys/Bd2JpsiKstarBetaS: 1, /Event/Dimuon/Phys/Bd2JpsiKstarBetaS/_RefitPVs: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKsPrescaledLine: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKsPrescaledLine/Particles: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKstarDetachedLine: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKstarDetachedLine/Particles: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKstarUnbiasedLine: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKstarUnbiasedLine/Particle2VertexRelations: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKstarUnbiasedLine/Particles: 1, /Event/Dimuon/Phys/BetaSBd2JpsiKstarUnbiasedLine/decayVertices: 1, /Event/Dimuon/Phys/BetaSBs2JpsiKstarLine: 1, /Event/Dimuon/Phys/BetaSBs2JpsiKstarLine/Particles: 1, /Event/Dimuon/Phys/BetaSBs2JpsiPhiDetachedLine: 1, /Event/Dimuon/Phys/BetaSBs2JpsiPhiDetachedLine/Particles: 1, /Event/Dimuon/Phys/BetaSBs2JpsiPhiUnbiasedLine: 1, /Event/Dimuon/Phys/BetaSBs2JpsiPhiUnbiasedLine/Particles: 1, /Event/Dimuon/Phys/BetaSBs2Jpsif0Line: 2, /Event/Dimuon/Phys/BetaSBs2Jpsif0Line/Particles: 2, /Event/Dimuon/Phys/BetaSBu2JpsiKDetachedLine: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKDetachedLine/Particles: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKNoPIDDetachedLine: 2, /Event/Dimuon/Phys/BetaSBu2JpsiKNoPIDDetachedLine/Particles: 2, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/Particle2VertexRelations: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/Particles: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/_RefitPVs: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/decayVertices: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKUnbiasedLine: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKUnbiasedLine/Particle2VertexRelations: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKUnbiasedLine/Particles: 1, /Event/Dimuon/Phys/BetaSBu2JpsiKUnbiasedLine/decayVertices: 1, /Event/Dimuon/Phys/BetaSJpsi2MuMuDetachedLine: 3, /Event/Dimuon/Phys/BetaSJpsi2MuMuDetachedLine/Particles: 3, /Event/Dimuon/Phys/BetaSJpsi2MuMuLine: 1, /Event/Dimuon/Phys/BetaSJpsi2MuMuLine/Particles: 1, /Event/Dimuon/Phys/BetaSLambdab2JpsiLambdaUnbiasedLine: 1, /Event/Dimuon/Phys/BetaSLambdab2JpsiLambdaUnbiasedLine/Particles: 1, /Event/Dimuon/Phys/Bs2MuMuLinesDetachedJPsiLine: 5, /Event/Dimuon/Phys/Bs2MuMuLinesDetachedJPsiLine/Particles: 5, /Event/Dimuon/Phys/Bs2MuMuLinesDetachedJPsiLooseLine: 1, /Event/Dimuon/Phys/Bs2MuMuLinesDetachedJPsiLooseLine/Particles: 1, /Event/Dimuon/Phys/Bs2MuMuLinesNoMuIDLine: 5, /Event/Dimuon/Phys/Bs2MuMuLinesNoMuIDLine/Particles: 5, /Event/Dimuon/Phys/Bs2MuMuLinesWideMassLine: 5, /Event/Dimuon/Phys/Bs2MuMuLinesWideMassLine/Particles: 5, /Event/Dimuon/Phys/Bs2MuMuPhiLine: 2, /Event/Dimuon/Phys/Bs2MuMuPhiLine/Particles: 2, /Event/Dimuon/Phys/Bs2PhiMuMuBs2PhiMuMuLine: 1, /Event/Dimuon/Phys/Bs2PhiMuMuBs2PhiMuMuLine/Particles: 1, /Event/Dimuon/Phys/Bs2f0MuMuBs2PhiMuMuLine: 1, /Event/Dimuon/Phys/Bs2f0MuMuBs2PhiMuMuLine/Particles: 1, /Event/Dimuon/Phys/Bu2JpsiKBetaS: 1, /Event/Dimuon/Phys/Bu2JpsiKBetaS/_RefitPVs: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKPsi2SLine: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKPsi2SLine/Particles: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKPsi2SLooseLine: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKPsi2SLooseLine/Particles: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKX3872Line: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKX3872Line/Particles: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKX3872LooseLine: 1, /Event/Dimuon/Phys/BuToKX3872_BuToKX3872LooseLine/Particles: 1, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonDetachedLine: 5, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonDetachedLine/Particles: 5, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonExclusiveLine: 5, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonExclusiveLine/Particles: 5, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonHighMassLine: 5, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonHighMassLine/Particles: 5, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonHighMassSameSignLine: 2, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonHighMassSameSignLine/Particles: 2, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine: 5, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine/Particle2VertexRelations: 1, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine/Particles: 5, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine/decayVertices: 1, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuLine: 5, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuLine/Particle2VertexRelations: 2, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuLine/Particles: 5, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuLine/decayVertices: 2, /Event/Dimuon/Phys/FullDSTDiMuonPsi2MuMuLine: 5, /Event/Dimuon/Phys/FullDSTDiMuonPsi2MuMuLine/Particles: 5, /Event/Dimuon/Phys/Jpsi2MuMuForBc2JpsiHDetached_SelP2MuMu: 1, /Event/Dimuon/Phys/Jpsi2MuMuForBc2JpsiHDetached_SelP2MuMu/Particles: 1, /Event/Dimuon/Phys/Jpsi2MuMuForBc2JpsiHDetached_SelP2MuMu/decayVertices: 1, /Event/Dimuon/Phys/JpsiMuMuforD0MuMuLine: 5, /Event/Dimuon/Phys/JpsiMuMuforD0MuMuLine/Particles: 5, /Event/Dimuon/Phys/KaonsForBetaSBetaS: 1, /Event/Dimuon/Phys/KaonsForBetaSBetaS/Particles: 1, /Event/Dimuon/Phys/Kstar2KpiForBetaSBetaS: 1, /Event/Dimuon/Phys/Kstar2KpiForBetaSBetaS/Particles: 1, /Event/Dimuon/Phys/Kstar2KpiForBetaSBetaS/decayVertices: 1, /Event/Dimuon/Phys/NeuroBayesMuMuJPsiNBLine: 3, /Event/Dimuon/Phys/NeuroBayesMuMuJPsiNBLine/Particle2VertexRelations: 2, /Event/Dimuon/Phys/NeuroBayesMuMuJPsiNBLine/Particles: 3, /Event/Dimuon/Phys/NeuroBayesMuMuJPsi_DiMuonSel: 2, /Event/Dimuon/Phys/NeuroBayesMuMuJPsi_DiMuonSel/decayVertices: 2, /Event/Dimuon/Phys/NeuroBayesMuMuJPsi_MuonSel: 2, /Event/Dimuon/Phys/NeuroBayesMuMuJPsi_MuonSel/Particles: 2, /Event/Dimuon/Phys/NeuroBayesMuMuMuMuNBLine: 5, /Event/Dimuon/Phys/NeuroBayesMuMuMuMuNBLine/Particles: 5, /Event/Dimuon/Phys/StdLooseKaons: 1, /Event/Dimuon/Phys/StdLooseKaons/Particles: 1, /Event/Dimuon/Phys/StdLooseMuons: 4, /Event/Dimuon/Phys/StdLooseMuons/Particles: 4, /Event/Dimuon/Phys/StdLoosePions: 1, /Event/Dimuon/Phys/StdLoosePions/Particles: 1, /Event/Dimuon/Phys/StdMassConstrainedJpsi2MuMu: 1, /Event/Dimuon/Phys/StdMassConstrainedJpsi2MuMu/Particles: 1, /Event/Dimuon/Phys/StdMassConstrainedJpsi2MuMu/decayVertices: 1, /Event/Dimuon/Phys/StdNoPIDsPions: 1, /Event/Dimuon/Phys/StdNoPIDsPions/Particles: 1, /Event/Dimuon/Rec: 5, /Event/Dimuon/Rec/Vertex: 5, /Event/Dimuon/Rec/Vertex/Primary: 5, /Event/Rec: 5, /Event/Rec/Header: 5, /Event/Rec/Status: 5, /Event/Rec/Summary: 5, /Event/Strip: 5, /Event/Strip/Phys: 5, /Event/Strip/Phys/DecReports: 5, /Event/pRec: 5, /Event/pRec/Calo: 5, /Event/pRec/Calo/Electrons: 5, /Event/pRec/Calo/MergedPi0s: 5, /Event/pRec/Calo/Photons: 5, /Event/pRec/Calo/SplitPhotons: 5, /Event/pRec/Muon: 5, /Event/pRec/Muon/MuonPID: 5, /Event/pRec/ProtoP: 5, /Event/pRec/ProtoP/Charged: 5, /Event/pRec/ProtoP/Neutrals: 5, /Event/pRec/Rich: 5, /Event/pRec/Rich/PIDs: 5, /Event/pRec/Track: 5, /Event/pRec/Track/Best: 5, /Event/pRec/Track/Muon: 5, /Event/pRec/Vertex: 5, /Event/pRec/Vertex/Primary: 5, /Event/pRec/Vertex/V0: 5, /Event/pRec/Vertex/Weights: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Dimuon/Phys/B2MuMuMuMuLinesLine/Particles: {0: 5}, /Event/Dimuon/Phys/B2XMuMuSS_KOSLine/Particles: {0: 1}, /Event/Dimuon/Phys/B2XMuMuSS_KSSLine/Particles: {0: 1}, /Event/Dimuon/Phys/B2XMuMuSS_PiOSLine/Particles: {0: 1}, /Event/Dimuon/Phys/B2XMuMuSS_PiSSLine/Particles: {0: 1}, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/Particles: {0: 4, 2: 1}, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/_RefitPVs: {2: 1}, /Event/Dimuon/Phys/Bc2JpsiHDetachedLine/decayVertices: {2: 1}, /Event/Dimuon/Phys/Bc2JpsiHLine/Particles: {0: 2}, /Event/Dimuon/Phys/Bc2JpsiMuLine/Particles: {0: 2}, /Event/Dimuon/Phys/Bd2JpsiKstarBetaS/_RefitPVs: {3: 1}, /Event/Dimuon/Phys/BetaSBd2JpsiKsPrescaledLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSBd2JpsiKstarDetachedLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSBd2JpsiKstarUnbiasedLine/Particles: {1: 1}, /Event/Dimuon/Phys/BetaSBd2JpsiKstarUnbiasedLine/decayVertices: {1: 1}, /Event/Dimuon/Phys/BetaSBs2JpsiKstarLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSBs2JpsiPhiDetachedLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSBs2JpsiPhiUnbiasedLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSBs2Jpsif0Line/Particles: {0: 2}, /Event/Dimuon/Phys/BetaSBu2JpsiKDetachedLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSBu2JpsiKNoPIDDetachedLine/Particles: {0: 2}, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/Particles: {1: 1}, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/_RefitPVs: {1: 1}, /Event/Dimuon/Phys/BetaSBu2JpsiKPrescaledLine/decayVertices: {1: 1}, /Event/Dimuon/Phys/BetaSBu2JpsiKUnbiasedLine/Particles: {1: 1}, /Event/Dimuon/Phys/BetaSBu2JpsiKUnbiasedLine/decayVertices: {1: 1}, /Event/Dimuon/Phys/BetaSJpsi2MuMuDetachedLine/Particles: {0: 3}, /Event/Dimuon/Phys/BetaSJpsi2MuMuLine/Particles: {0: 1}, /Event/Dimuon/Phys/BetaSLambdab2JpsiLambdaUnbiasedLine/Particles: {0: 1}, /Event/Dimuon/Phys/Bs2MuMuLinesDetachedJPsiLine/Particles: {0: 5}, /Event/Dimuon/Phys/Bs2MuMuLinesDetachedJPsiLooseLine/Particles: {0: 1}, /Event/Dimuon/Phys/Bs2MuMuLinesNoMuIDLine/Particles: {0: 5}, /Event/Dimuon/Phys/Bs2MuMuLinesWideMassLine/Particles: {0: 5}, /Event/Dimuon/Phys/Bs2MuMuPhiLine/Particles: {0: 2}, /Event/Dimuon/Phys/Bs2PhiMuMuBs2PhiMuMuLine/Particles: {0: 1}, /Event/Dimuon/Phys/Bs2f0MuMuBs2PhiMuMuLine/Particles: {0: 1}, /Event/Dimuon/Phys/Bu2JpsiKBetaS/_RefitPVs: {1: 1}, /Event/Dimuon/Phys/BuToKX3872_BuToKPsi2SLine/Particles: {0: 1}, /Event/Dimuon/Phys/BuToKX3872_BuToKPsi2SLooseLine/Particles: {0: 1}, /Event/Dimuon/Phys/BuToKX3872_BuToKX3872Line/Particles: {0: 1}, /Event/Dimuon/Phys/BuToKX3872_BuToKX3872LooseLine/Particles: {0: 1}, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonDetachedLine/Particles: {0: 5}, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonExclusiveLine/Particles: {0: 5}, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonHighMassLine/Particles: {0: 5}, /Event/Dimuon/Phys/FullDSTDiMuonDiMuonHighMassSameSignLine/Particles: {0: 2}, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine/Particles: {0: 4, 1: 1}, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine/decayVertices: {1: 1}, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuLine/Particles: {0: 3, 1: 2}, /Event/Dimuon/Phys/FullDSTDiMuonJpsi2MuMuLine/decayVertices: {1: 2}, /Event/Dimuon/Phys/FullDSTDiMuonPsi2MuMuLine/Particles: {0: 5}, /Event/Dimuon/Phys/Jpsi2MuMuForBc2JpsiHDetached_SelP2MuMu/Particles: {1: 1}, /Event/Dimuon/Phys/Jpsi2MuMuForBc2JpsiHDetached_SelP2MuMu/decayVertices: {1: 1}, /Event/Dimuon/Phys/JpsiMuMuforD0MuMuLine/Particles: {0: 5}, /Event/Dimuon/Phys/KaonsForBetaSBetaS/Particles: {1: 1}, /Event/Dimuon/Phys/Kstar2KpiForBetaSBetaS/Particles: {1: 1}, /Event/Dimuon/Phys/Kstar2KpiForBetaSBetaS/decayVertices: {1: 1}, /Event/Dimuon/Phys/NeuroBayesMuMuJPsiNBLine/Particles: {0: 1, 1: 2}, /Event/Dimuon/Phys/NeuroBayesMuMuJPsi_DiMuonSel/decayVertices: {1: 2}, /Event/Dimuon/Phys/NeuroBayesMuMuJPsi_MuonSel/Particles: {2: 2}, /Event/Dimuon/Phys/NeuroBayesMuMuMuMuNBLine/Particles: {0: 5}, /Event/Dimuon/Phys/StdLooseKaons/Particles: {1: 1}, /Event/Dimuon/Phys/StdLooseMuons/Particles: {2: 4}, /Event/Dimuon/Phys/StdLoosePions/Particles: {1: 1}, /Event/Dimuon/Phys/StdMassConstrainedJpsi2MuMu/Particles: {1: 1}, /Event/Dimuon/Phys/StdMassConstrainedJpsi2MuMu/decayVertices: {1: 1}, /Event/Dimuon/Phys/StdNoPIDsPions/Particles: {2: 1}, /Event/Dimuon/Rec/Vertex/Primary: {1: 1, 2: 3, 4: 1}}
+TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
+TESFingerPrint      DEBUG Tools to release :
+TESFingerPrint      DEBUG Services to release :
 DumpTracks          DEBUG Finalize base class GaudiAlgorithm
 DumpTracks          DEBUG Tools to release :
 DumpTracks          DEBUG Services to release :

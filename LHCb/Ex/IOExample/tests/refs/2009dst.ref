@@ -48,10 +48,52 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Tue May 17 11:46:19 2011
+                                          running on lxbuild163.cern.ch on Wed May 18 15:11:03 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
+TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
+TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditExecute':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint      DEBUG ==> Initialize
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -97,12 +139,13 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 RootDBase.open    SUCCESS POOL-2009.dst File version:52800
 PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:4024D767-6380-E011-AD7B-003048C9CD62
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x9f004a0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x219ab900@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -132,6 +175,7 @@ StoreExplorerAlg     INFO   | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x7]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0xa]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 7 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -321,7 +365,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa0b3a70@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x21b5f5f0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -351,11 +395,12 @@ StoreExplorerAlg     INFO   | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 0 tracks in Rec/Track/Best
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa897f70@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x21b5f310@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -385,6 +430,7 @@ StoreExplorerAlg     INFO   | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x2]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x1]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 2 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -463,7 +509,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa897f70@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x21a46900@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -493,6 +539,7 @@ StoreExplorerAlg     INFO   | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x4]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x5]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 4 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -645,7 +692,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa897f70@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x21b6ddd0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
@@ -675,6 +722,7 @@ StoreExplorerAlg     INFO   | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x2]
 StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x2]
+TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 2 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
@@ -751,11 +799,18 @@ DumpTracks          DEBUG *** Track ***
    1.14087e-06 1.17692e-05 2.88163e-09 1.10284e-08 9.92267e-10 ]
 
 
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 PrintHeader          INFO Filtered 5 events
 PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
+TESFingerPrint      DEBUG ==> Finalize
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/DAQ: 5, /Event/DAQ/RawEvent: 5, /Event/Rec: 5, /Event/Rec/Calo: 5, /Event/Rec/Calo/Electrons: 5, /Event/Rec/Calo/MergedPi0s: 5, /Event/Rec/Calo/Photons: 5, /Event/Rec/Calo/SplitPhotons: 5, /Event/Rec/Header: 5, /Event/Rec/Muon: 5, /Event/Rec/Muon/MuonPID: 5, /Event/Rec/ProtoP: 5, /Event/Rec/ProtoP/Charged: 5, /Event/Rec/ProtoP/Neutrals: 5, /Event/Rec/Rich: 5, /Event/Rec/Rich/PIDs: 5, /Event/Rec/Status: 5, /Event/Rec/Track: 5, /Event/Rec/Track/Best: 5, /Event/Rec/Track/Downstream: 5, /Event/Rec/Track/Forward: 5, /Event/Rec/Track/Match: 5, /Event/Rec/Track/Muon: 5, /Event/Rec/Track/Seed: 5, /Event/Rec/Track/Velo: 5, /Event/Rec/Vertex: 5, /Event/Rec/Vertex/Primary: 5, /Event/Rec/Vertex/V0: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Rec/Calo/Electrons: {0: 1, 1: 2, 3: 1, 5: 1}, /Event/Rec/Calo/MergedPi0s: {0: 5}, /Event/Rec/Calo/Photons: {0: 1, 1: 1, 2: 1, 5: 1, 10: 1}, /Event/Rec/Calo/SplitPhotons: {0: 5}, /Event/Rec/Muon/MuonPID: {0: 1, 2: 2, 4: 1, 7: 1}, /Event/Rec/ProtoP/Charged: {0: 1, 2: 2, 4: 1, 7: 1}, /Event/Rec/ProtoP/Neutrals: {0: 1, 1: 1, 2: 1, 5: 1, 10: 1}, /Event/Rec/Rich/PIDs: {0: 2, 1: 3}, /Event/Rec/Track/Best: {0: 1, 2: 2, 4: 1, 7: 1}, /Event/Rec/Track/Downstream: {0: 5}, /Event/Rec/Track/Forward: {0: 5}, /Event/Rec/Track/Match: {0: 5}, /Event/Rec/Track/Muon: {0: 5}, /Event/Rec/Track/Seed: {0: 1, 2: 2, 4: 1, 7: 1}, /Event/Rec/Track/Velo: {0: 5}, /Event/Rec/Vertex/Primary: {0: 5}, /Event/Rec/Vertex/V0: {0: 5}}
+TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
+TESFingerPrint      DEBUG Tools to release :
+TESFingerPrint      DEBUG Services to release :
 DumpTracks          DEBUG Finalize base class GaudiAlgorithm
 DumpTracks          DEBUG Tools to release :
 DumpTracks          DEBUG Services to release :

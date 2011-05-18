@@ -7,6 +7,7 @@
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 preprocessor = LHCbPreprocessor + \
   LineSkipper(["StoreExplorerAlg     INFO"]) + \
+  LineSkipper(["TESFingerPrint"]) + \
   LineSkipper(["InputCopyStream      INFO"]) + \
   LineSkipper(["PoolRootEvtCnvSvc    INFO Records token:[DB=00000000-0000-0000-0000-000000000000]"]) + \
   LineSkipper(["PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:00000000-0000-0000-0000-000000000000"]) + \
