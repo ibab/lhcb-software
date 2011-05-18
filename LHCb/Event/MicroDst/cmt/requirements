@@ -1,0 +1,25 @@
+#============================================================================
+# Created    : 2010-08-20 (migrated from Phys/DaVinciMaps)
+# Maintainer : ??
+#============================================================================
+package           MicroDst
+version           v1r0
+
+branches          cmt doc src Kernel python
+
+use   PhysEvent      v*    Event
+use   GaudiKernel    v*
+use   GaudiPython    v*
+
+apply_pattern install_more_includes more=Kernel
+
+library          MicroDstLib    ../src/*.cpp
+apply_pattern linker_library    library=MicroDstLib
+
+apply_pattern reflex_dictionary                                             \
+              dictionary=MicroDst                                      \
+              headerfiles=$(MICRODSTROOT)/dict/MicroDstDict.h     \
+              selectionfile=$(MICRODSTROOT)/dict/MicroDstDict.xml \
+              options="-U__MINGW32__"
+
+apply_pattern install_python_modules
