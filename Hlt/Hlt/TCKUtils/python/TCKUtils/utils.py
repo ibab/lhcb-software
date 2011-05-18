@@ -608,10 +608,10 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
         code.translate(None,'\n')
         return ('\n' + (_tab+25+18)*' ' + '>> ' ).join( [ i.strip() for i in code.split('>>') ] )
 
-    def prettyPrintDaughtersCuts(code) :
+    def prettyPrintDict(code,trItem) :
         try :
             cuts = eval(code) # should be a dict
-            return "{ "+ ('\n' + (_tab+25+18)*' ' + ', ' ).join(  [ "'%s' : '%s'"%(k,v) for (k,v) in cuts.iteritems() ] ) + '\n'+(_tab+25+18)*' '+"}"
+            return "{ "+ ('\n' + (_tab+25+18)*' ' + ', ' ).join(  [ trItem(k,v) for (k,v) in cuts.iteritems() ] ) + '\n'+(_tab+25+18)*' '+"}"
         except : 
             return code
 
@@ -626,10 +626,11 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
             return code
 
     trtable = { 'Code' : prettyPrintStreamer
-              , 'DaughtersCuts' : prettyPrintDaughtersCuts
+              , 'DaughtersCuts' : lambda x : prettyPrintDict(x, lambda k,v : "'%s' : '%s'"%(k,v) )
               , 'Inputs' : prettyPrintList
               , 'Preambulo' : prettyPrintList
               , 'FilterDescriptor' : lambda x : prettyPrintList(x,lambda y : "'%s'"%y)
+              , 'RoutingBits' : lambda x : prettyPrintDict(x, lambda k,v : "%2d : '%s'"%(k,v) )
               }
 
     import re
