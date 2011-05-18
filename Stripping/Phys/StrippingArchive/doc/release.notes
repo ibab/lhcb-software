@@ -1,0 +1,14 @@
+! -----------------------------------------------------------------------------
+! Package     : Phys/StrippingArchive
+! Responsible : Thomas Blake, Rob Lambert
+! Purpose     : Archiving stripping selections
+! -----------------------------------------------------------------------------
+
+! 2011-05-18 - Rob Lambert
+ - Creation of package, purpose, to hold the linebuilders 
+   for stripping 13, it makes sure the strippings can, in priciple, be run
+   with any DaVinci version
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

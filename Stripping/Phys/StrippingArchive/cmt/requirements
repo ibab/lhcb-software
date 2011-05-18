@@ -1,0 +1,34 @@
+# Created    : 15/05/2009
+# Maintainer : T. Blake, R. Lambert
+
+package           StrippingArchive
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python
+include_path      none
+
+# Used packages. 
+#============================================================================
+use DaVinciKernel        v*     Phys
+use LoKiCore             v*     Phys
+use GaudiConfUtils       v*     -no_auto_imports
+use StrippingUtils       v*     Phys
+use StrippingConf        v*     Phys
+use StrippingSettings    v*     Phys
+use PhysSelPython        v*     PhysSel
+use TisTosTobbing	 v*	Phys
+
+private
+use LHCbAlgs             v*     Kernel  
+end_private
+
+# Component library building rule
+#============================================================================
+
+# standard patterns
+#============================================================================
+apply_pattern install_python_modules
+#============================================================================
+#apply_pattern QMTest
