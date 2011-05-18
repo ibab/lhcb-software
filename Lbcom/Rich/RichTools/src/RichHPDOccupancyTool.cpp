@@ -102,27 +102,19 @@ StatusCode HPDOccupancyTool::initOccMap()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  // Initialise map for all valid HPDs with null entries
-  const LHCb::RichSmartID::Vector & smartIDs = m_richSys->activeHPDRichSmartIDs();
-  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = smartIDs.begin();
-        iHPD != smartIDs.end(); ++iHPD )
-  {
-    m_occMap[ *iHPD ] = HPDData( 0, 0 );
-  }
-
   if ( m_readFromCondDB )
   {
     // Register RICH1
     if ( m_whichRICH == "RICH1" || m_whichRICH == "RICH1andRICH2" )
     {
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
-                                      &HPDOccupancyTool::umsUpdateRICH1 );
+                                      &HPDOccupancyTool::umsUpdate );
     }
     if ( m_whichRICH == "RICH2" || m_whichRICH == "RICH1andRICH2" )
     {
       // Register RICH2
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich2],
-                                      &HPDOccupancyTool::umsUpdateRICH2 );
+                                      &HPDOccupancyTool::umsUpdate );
     }
     // force first updates
     sc = updMgrSvc()->update(this);
@@ -137,14 +129,13 @@ StatusCode HPDOccupancyTool::initOccMap()
   return sc;
 }
 
-StatusCode HPDOccupancyTool::umsUpdateRICH1()
+StatusCode HPDOccupancyTool::umsUpdate()
 {
-  return initOccMap( Rich::Rich1 );
-}
-
-StatusCode HPDOccupancyTool::umsUpdateRICH2()
-{
-  return initOccMap( Rich::Rich2 );
+  // clear the map
+  m_occMap.clear();
+  // (re)initalise from DB
+  return ( initOccMap( Rich::Rich1 ) &&
+           initOccMap( Rich::Rich2 ) );
 }
 
 StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
@@ -170,7 +161,7 @@ StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
     // update local data map
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Updating HPD " << HPD << " occupancy to " << occ << endmsg;
+      verbose() << " -> Updating " << HPD << " occupancy to " << occ << endmsg;
     }
     m_occMap[HPD] = HPDData( m_minFills+1 , occ );
   }
@@ -274,18 +265,8 @@ HPDOccupancyTool::updateOccupancies() const
 void
 HPDOccupancyTool::findHpdData( const LHCb::RichSmartID hpdID ) const
 {
-  // get data for this HPD
-  OccMap::iterator iD = m_occMap.find(hpdID);
-  if ( iD == m_occMap.end() )
-  {
-    std::ostringstream mess;
-    mess << "Unknown HPD RichSmartID " << hpdID;
-    throw GaudiException( mess.str(),
-                          "Rich::HPDOccupancyTool",
-                          StatusCode::FAILURE );
-  }
-  m_currentData = &(*iD).second;
-  m_lastHPD = hpdID;
+  m_currentData = &(m_occMap[hpdID]);
+  m_lastHPD     = hpdID;
 }
 
 StatusCode HPDOccupancyTool::finalize()

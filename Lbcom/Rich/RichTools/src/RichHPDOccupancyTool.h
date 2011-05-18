@@ -98,11 +98,8 @@ namespace Rich
     /// Initialise occupancy map for given RICH
     StatusCode initOccMap( const Rich::DetectorType rich );
 
-    /// UMS method for RICH1
-    StatusCode umsUpdateRICH1();
-
-    /// UMS method for RICH2
-    StatusCode umsUpdateRICH2();
+    /// UMS method
+    StatusCode umsUpdate();
 
     /// Find HPD data for given HPD RichSmartID
     void findHpdData( const LHCb::RichSmartID hpdID ) const;
@@ -140,6 +137,12 @@ namespace Rich
       inline long unsigned fillCount() const  { return this->first;  }
       /// Const Access the occupancy for the HPD
       inline double avOcc() const             { return this->second; }
+    public:
+      /// Overload output to ostream
+      friend inline std::ostream& operator << ( std::ostream& os, const HPDData & data )
+      {
+        return os << "[ fillCount=" << data.fillCount() << " avOcc=" << data.avOcc() << " ]"; 
+      }
     };
 
     /// Returns occupancy data object for given HPD identifier

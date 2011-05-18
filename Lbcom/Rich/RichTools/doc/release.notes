@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-05-18 - Chris Jones
+ - Some improvements to the HPD occupancy tool. Remove possibility of some
+   problem with the occupancy data causing an exception to be thrown and the
+   processing aborted. Instead, empty entries are created on the fly in the
+   occupancy map.
+
 !========================= RichTools v2r34 2011-04-27 =========================
 ! 2011-04-13 - Chris Jones
  - Clean up the mirror segment finder tool. 
