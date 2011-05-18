@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.66 2010-08-26 09:52:41 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
-!========================= TisTosTobbing v7r2 2011-05-13 =========================
+! 2011-05-18 - Marco Cattaneo
+ - Change dependency from Phys/DaVinciMaps to Event/MicroDst. Needs LHCB >= v32r4
+
+!========================= TisTosTobbing v7r2 2011-05-13 ======================
 ! 2011-05-05 - Tomasz Skwarnicki
  - src/L0SelReportsMaker.cpp add support for Muon12 condition 
    used in new DiMuon trigger (2011 data)
