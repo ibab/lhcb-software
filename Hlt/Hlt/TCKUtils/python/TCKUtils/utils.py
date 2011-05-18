@@ -615,10 +615,12 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
         except : 
             return code
 
-    def prettyPrintList(code) :
+    def prettyPrintList(code,trItem = None) :
         try :
             l = eval(code)
             if len(l)<2 : return code
+            if trItem :
+                l = [ trItem(i) for i in l ]
             return "[ "+('\n' + (_tab+25+18)*' ' + ', ' ).join( l )+'\n'+(_tab+25+18)*' '+']'
         except :
             return code
@@ -627,7 +629,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
               , 'DaughtersCuts' : prettyPrintDaughtersCuts
               , 'Inputs' : prettyPrintList
               , 'Preambulo' : prettyPrintList
-              # , 'FilterDescriptor' : prettyPrintList
+              , 'FilterDescriptor' : lambda x : prettyPrintList(x,lambda y : "'%s'"%y)
               }
 
     import re
