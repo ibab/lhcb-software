@@ -50,3 +50,21 @@ cfg = [ ( 0x006a0032, '91a5aaecfa7e5697357816db33b90993', 'Default, MaxOTHits=15
 
 for (tck,id,label) in cfg :
         prescale_lowmult(id,label,tck+0x00030000)
+
+
+
+
+def prescale_l0anynospd(id,label,tck) :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+    f = '0.00001'
+    patch = { 'id' : id
+            , 'updates' : { 'Hlt1L0AnyNoSPDPreScaler' :{ 'AcceptFraction': f  } }
+            , 'label' : '%s, Hlt1L0AnyNoSPD=%s' % (label,f)
+            , 'cas'   : cas
+            }
+	ids = { tck:  updateProperties( **patch ) }
+	createTCKEntries( ids, cas =  cas )
+
+
+prescale_l0anynospd('9166f3c8cbdb4b99c92423f55c60e156','Default, MaxOTHits=15000, Hlt2LowMultHadron=0.1, L0NoSPD=1',0x00700034) 
+
