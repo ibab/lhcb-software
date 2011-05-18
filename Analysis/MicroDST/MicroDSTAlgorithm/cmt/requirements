@@ -11,7 +11,6 @@ branches src cmt doc
 # USE
 #############################################################
 use DaVinciKernel      v*  Phys
-use DaVinciMaps        v*  Phys
 use DaVinciMCKernel    v*  Phys
 use MCEvent            v*  Event
 use PhysEvent          v*  Event
@@ -19,6 +18,7 @@ use LinkerEvent        v*  Event
 use RecEvent           v*  Event
 use DAQEvent           v*  Event
 use HltEvent           v*  Event
+use MicroDst           v*  Event
 
 use MicroDSTInterfaces v*  MicroDST
 use MicroDSTTools      v*  MicroDST
