@@ -630,7 +630,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
               , 'Inputs' : prettyPrintList
               , 'Preambulo' : prettyPrintList
               , 'FilterDescriptor' : lambda x : prettyPrintList(x,lambda y : "'%s'"%y)
-              , 'RoutingBits' : lambda x : prettyPrintDict(x, lambda k,v : "%2d : '%s'"%(k,v) )
+              , 'RoutingBits' : lambda x : prettyPrintDict(x, lambda k,v : "%2d : \"%s\""%(k,v) )
               }
 
     import re
