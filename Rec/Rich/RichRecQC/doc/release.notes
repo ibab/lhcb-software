@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-05-18 - Chris Jones
+ - Some small changes to the HPD hit map plots
+
 ! 2011-05-14 - Chris Jones
  - Reinstate the "L1SizeMonitoring" monitor in the list of default monitors to
    run, after fixing problems with L1 board changes between initialize() and
