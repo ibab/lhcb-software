@@ -25,7 +25,7 @@ namespace
     const DeCalorimeter*        detector ) 
   {
     if ( 0 == detector ) { return false ; }                           // RETURN   
-    if ( 0 == level    ) { return true  ; }                           // RETURN 
+    if ( 0 >= level    ) { return true  ; }                           // RETURN 
     if ( cells.empty() ) { return true  ; }                           // RETURN 
     // local copy:
     std::set<LHCb::CaloCellID> local ( cells ) ;

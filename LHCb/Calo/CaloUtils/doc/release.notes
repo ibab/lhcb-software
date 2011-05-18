@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+
+! 2011-05-15 - Olivier Deschamps
+  - src/CaloNeighbours::_neighbours : fix infinite loop when level < 0
+
 !========================== CaloUtils v9r0 2010-09-27 =========================
 ! 2010-08-31 - Olivier Deschamps
   - fix compilation warning on slc4
