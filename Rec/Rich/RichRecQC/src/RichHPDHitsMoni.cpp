@@ -79,7 +79,6 @@ StatusCode HPDHitsMoni::execute()
         const LHCb::RichSmartID hpd     = (*iHPD).second.hpdID();
         const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
         const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
-        const Rich::DetectorType rich   = hpd.rich();
         const DAQ::HPDCopyNumber copyN  = m_richSys->copyNumber(hpd);
 
         // Vector of SmartIDs
@@ -87,8 +86,10 @@ StatusCode HPDHitsMoni::execute()
 
         // create histo title
         std::ostringstream HPD1,HPD2,hpd1,hpd2;
-        HPD1 << "Number hits in HPD " << hpd << " CopyN=" << copyN << " L0ID=" << l0ID << " hardID=" << hardID;
-        HPD2 << "Hit Map for HPD "    << hpd << " CopyN=" << copyN << " L0ID=" << l0ID << " hardID=" << hardID;
+        HPD1 << "Number hits in HPD " << hpd 
+             << " CopyN=" << copyN << " L0ID=" << l0ID << " hardID=" << hardID;
+        HPD2 << "Hit Map for HPD "    << hpd 
+             << " CopyN=" << copyN << " L0ID=" << l0ID << " hardID=" << hardID;
         hpd1 << "NumHits_HPDCopyN_" << copyN;
         hpd2 << "HitMaps_HPDCopyN_" << copyN;
 
@@ -97,7 +98,7 @@ StatusCode HPDHitsMoni::execute()
                                Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
 
         // number of hits plot
-        richHisto1D( HID(hpd1.str(),rich), HPD1.str(),
+        richHisto1D( HID(hpd1.str()), HPD1.str(),
                      -0.5,100.5,101 ) -> fill( (double)rawIDs.size() );
 
         // Loop over raw RichSmartIDs
@@ -111,7 +112,7 @@ StatusCode HPDHitsMoni::execute()
                             (*iR).pixelRow() );
 
           // HPD hit map
-          richHisto2D( HID(hpd2.str(),rich), HPD2.str(),
+          richHisto2D( HID(hpd2.str()), HPD2.str(),
                        -0.5,Rich::DAQ::NumPixelColumns-0.5,
                        Rich::DAQ::NumPixelColumns,
                        -0.5,nPixRows-0.5,
