@@ -57,7 +57,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1;
 //GiGaGetHitsAlg.RichTracks         = "";
 
 
-
+GiGa.StepSeq.Members  += { "CherenkovG4StepAnalysis6/RichStepPmtRefl" } ;
 GiGa.TrackSeq.Members      += { "CkvG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 
 
