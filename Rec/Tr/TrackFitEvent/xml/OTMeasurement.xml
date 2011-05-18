@@ -136,9 +136,12 @@
 	desc = 'Retrieve the drift time'
 	const = 'TRUE'> 
 	<arg type='double' name='arclen' />
-        <code> 
-        double propagationTime = module().propagationTime(channel(), arclen);
-        return calibratedTime() - deltaTimeOfFlight() - propagationTime ;
+        <code>
+        double dist2readout = trajectory().endRange() - arclen;
+        double propTime = dist2readout / module().propagationVelocity();
+        double dist2strawend = module().wireLength(channel()) - dist2readout;
+        propTime += module().walkRelation().walk(dist2strawend);
+        return calibratedTime() - deltaTimeOfFlight() - propTime ;
         </code>
       </method>
 
@@ -149,8 +152,10 @@
 	const = 'TRUE'> 
 	<arg type='double' name='globalY' />
         <code>
-        double propagationTime = module().propagationTimeFromY(channel(), globalY);
-        return calibratedTime() - deltaTimeOfFlight() - propagationTime ;
+        double propTime = (trajectory().endPoint().y() - globalY) / module().propagationVelocityY();
+        double dist2strawend = module().wireLength(channel()) - propTime * module().propagationVelocity();
+        propTime += module().walkRelation().walk(dist2strawend);
+        return calibratedTime() - deltaTimeOfFlight() - propTime ;
         </code>
       </method>
 
