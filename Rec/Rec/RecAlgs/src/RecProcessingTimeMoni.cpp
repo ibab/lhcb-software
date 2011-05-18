@@ -61,7 +61,11 @@ StatusCode RecProcessingTimeMoni::execute()
   for ( AlgorithmNames::const_iterator name = m_algNames.begin();
         name != m_algNames.end(); ++name )
   {
-    time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
+    const double alg_time = 
+      chronoSvc()->chronoDelta((*name)+":Execute",IChronoStatSvc::ELAPSED)/1000;
+    time += alg_time;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << *name << " " << alg_time << endmsg;
   }
 
   // only fill if algorithm(s) ran (time>0)
