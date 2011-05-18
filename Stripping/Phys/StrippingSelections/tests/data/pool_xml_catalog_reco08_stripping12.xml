@@ -462,4 +462,18 @@
     <logical/>
   </File>
 
+  <File ID="70C678D4-C47F-E011-9492-003048F0DFBC">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.AllStreams.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="A2B430E3-C47F-E011-9492-003048F0DFBC">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Physics.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

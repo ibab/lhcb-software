@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-18 - Jibo He
+ - Fix the indent of StrippingDstarD02KMuNu.py
+
 ! 2011-05-18 - William Barter
  - Update of StrippingDY2MuMu.py (change of prescales on lines that require HLT to have fired.)
  - Update of StrippingWMu.py: implementation of a new line, requiring a muon with pT>10GeV - heavily prescaled. Previous line with stdloosemuon pT > 20GeV extended to pT > 10GeV, to allow Z02TauTau Analysis and checks on W->MuNu.

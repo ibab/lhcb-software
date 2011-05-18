@@ -175,9 +175,10 @@ class DstarD02KMuNuConf(LineBuilder) :
     self.registerLine(self.prescaled_lineRS)
     self.registerLine(self.prescaled_lineWS)
 
-    def makeMuons(name, 
-          TRACK_Chi2, 
-	  MUON_MinPT) :
+
+def makeMuons(name, 
+              TRACK_Chi2, 
+              MUON_MinPT) :
     """
     Create muons for D0->KMuNu
     Starts from StandardParticles/StdLooseMuons
