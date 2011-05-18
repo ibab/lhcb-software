@@ -7,7 +7,7 @@
 ! 2011-05-17 - Marco Cattaneo
  - Add DataType slot to IOTest configurable, used to switch on HepMCBack DLL
    in case of MC09 data
- - Add tests for 2009, Reco08, Reco09 and MC10 data.
+ - Add tests for 2009, Reco08 (dst+mdst), Reco09 (dst+mdst) and MC10 data.
 
 ! 2011-05-16 - Marco Cattaneo
  - Major reorganisation of package:
