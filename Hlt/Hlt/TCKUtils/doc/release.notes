@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2011-05-18 - Gerhard Raven
+ - add pretty printing infrastructure to 'dump', and add some
+   pretty printing transformations...
+
 !========================== TCKUtils v1r8p1 2011-05-04 ===================
 ! 2011-05-04 - Gerhard Raven
  - fix http://savannah.cern.ch/bugs/?81790

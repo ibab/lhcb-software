@@ -596,13 +596,37 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
 def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
     if not properties : 
         properties = [ 'RoutingBits', 'AcceptFraction', 'FilterDescriptor'
-                     , 'Code', 'InputLocations'
+                     , 'Code', 'InputLocations','Input','Inputs'
                      , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
-                     , 'OutputSelection' ]
+                     , 'OutputSelection', 'Output' ]
     tree =  getConfigTree( id, cas )
     def len1(line):
         _i = line.rfind('\n')
         return len(line) if _i<0 else len(line)-(_i+1)
+
+    def prettyPrintCode(code) :
+        code.translate(None,'\n').strip()
+        return ('\n' + (_tab+25+18)*' ' + '>> ' ).join( code.split('>>') )
+
+    def prettyPrintDaughtersCuts(code) :
+        try :
+            cuts = eval(code) # should be a dict
+            return "{ "+ ('\n' + (_tab+25+18)*' ' + ', ' ).join(  [ "'%s' : '%s'"%(k,v) for (k,v) in cuts.iteritems() ] ) + '\n'+(_tab+25+18)*' '+"}"
+        except : 
+            return code
+
+    def prettyPrintInputs(code) :
+        try :
+            l = eval(code)
+            if len(l)<2 : return code
+            return "[ "+('\n' + (_tab+25+18)*' ' + ', ' ).join( l )+'\n'+(_tab+25+18)*' '+']'
+        except :
+            return code
+
+    trtable = { 'Code' : prettyPrintCode
+              , 'DaughtersCuts' : prettyPrintDaughtersCuts
+              , 'Inputs' : prettyPrintInputs
+              }
 
     import re
     show = not lines
@@ -618,6 +642,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
        line +=  '%-25.25s'%i.leaf.type
        for k,v in [ (k,v) for k,v in i.leaf.props.iteritems() if k in properties and v ]:
            if _tab+25 < len1(line) : line+= '\n'+(_tab+25)*' '
+           if k in trtable.keys() : v = trtable[k](v)
            line += '%-15s : %s' % ( k, v)
        print line
 
