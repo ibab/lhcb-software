@@ -604,9 +604,9 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
         _i = line.rfind('\n')
         return len(line) if _i<0 else len(line)-(_i+1)
 
-    def prettyPrintCode(code) :
-        code.translate(None,'\n').strip()
-        return ('\n' + (_tab+25+18)*' ' + '>> ' ).join( code.split('>>') )
+    def prettyPrintStreamer(code) :
+        code.translate(None,'\n')
+        return ('\n' + (_tab+25+18)*' ' + '>> ' ).join( [ i.strip() for i in code.split('>>') ] )
 
     def prettyPrintDaughtersCuts(code) :
         try :
@@ -623,10 +623,11 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
         except :
             return code
 
-    trtable = { 'Code' : prettyPrintCode
+    trtable = { 'Code' : prettyPrintStreamer
               , 'DaughtersCuts' : prettyPrintDaughtersCuts
               , 'Inputs' : prettyPrintList
               , 'Preambulo' : prettyPrintList
+              # , 'FilterDescriptor' : prettyPrintList
               }
 
     import re
