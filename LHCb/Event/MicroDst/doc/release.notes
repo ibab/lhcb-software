@@ -6,6 +6,9 @@
 
 ! 2011-05-18 - Marco Cattaneo
  - Moved to LHCB and changed name of package to Event/MicroDst
+ - Changed python subdirectory from DaVinciMaps to MicroDst
+ - Event model classes remain in DaVinci::Maps namespace since persistent
+   versions already exist on Stripping12 and Stripping13 MDSTs
 
 !======================== DaVinciMaps v2r0 2011-02-04 ========================
 
