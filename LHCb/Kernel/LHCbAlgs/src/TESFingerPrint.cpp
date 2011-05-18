@@ -104,10 +104,18 @@ StatusCode TESFingerPrint::finalize() {
   using namespace GaudiUtils;
   // Write low level TES statistics
   tes_finger_print << m_stat_map << "\n";
-
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "==> TES DataObject statistics: " << m_stat_map << endmsg;
+  }
+  
   // Write medium level TES statistics
-  if (m_heur_level == "Medium") tes_finger_print << m_cont_stat_map << "\n";
-
+  if (m_heur_level == "Medium") {
+    tes_finger_print << m_cont_stat_map << "\n";
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "==> TES Container sizes: " << m_cont_stat_map << endmsg;
+    }
+  }
+  
   tes_finger_print.close();
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
