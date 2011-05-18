@@ -596,7 +596,7 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
 def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
     if not properties : 
         properties = [ 'RoutingBits', 'AcceptFraction', 'FilterDescriptor'
-                     , 'Code', 'InputLocations','Input','Inputs'
+                     , 'Preambulo', 'Code', 'InputLocations','Input','Inputs'
                      , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
                      , 'OutputSelection', 'Output' ]
     tree =  getConfigTree( id, cas )
@@ -615,7 +615,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
         except : 
             return code
 
-    def prettyPrintInputs(code) :
+    def prettyPrintList(code) :
         try :
             l = eval(code)
             if len(l)<2 : return code
@@ -625,7 +625,8 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
 
     trtable = { 'Code' : prettyPrintCode
               , 'DaughtersCuts' : prettyPrintDaughtersCuts
-              , 'Inputs' : prettyPrintInputs
+              , 'Inputs' : prettyPrintList
+              , 'Preambulo' : prettyPrintList
               }
 
     import re
