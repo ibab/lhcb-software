@@ -183,10 +183,10 @@ bool LoKi::MCMatchObj::match
       vct.reserve ( 16 ) ;
       LoKi::Extract::particles ( particle , std::back_inserter( vct ) , BasicP() ) ;
       //
-      return  match ( particle->daughters() .begin () , 
-		      particle->daughters() .end   () , 
-		      children              .begin () , 
-		      children              .end   () ) ;     // RETURN 
+      return  match ( vct       . begin () , 
+		      vct       . end   () , 
+		      children  .begin  () , 
+		      children  .end    () ) ;     // RETURN 
       
     }
   //

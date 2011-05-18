@@ -8,6 +8,11 @@
 ! 2011-05-18 - Vanya Belyaev
 
  - MCMatchObj.cpp
+   minor fix in logic 
+
+! 2011-05-18 - Vanya Belyaev
+
+ - MCMatchObj.cpp
    see bug report #82409
    release a bit the matching criteria for composed particles :-( 
    finally the final state matches is enough... 
