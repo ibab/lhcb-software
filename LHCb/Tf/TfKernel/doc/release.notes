@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2011-05-18 - Alexandr Kozlinskiy
+ - Move code from DeOTModule::propagationTime to OTHit::propagationTime to
+   improve performance
+
 ! 2011-05-16 - Alexandr Kozlinskiy
  - Change OTHit::propagationTime to use DeOTModule::propagationTime
 
