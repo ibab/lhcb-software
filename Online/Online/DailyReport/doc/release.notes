@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/DailyReport
+! Responsible : Olivier Callot
+! Purpose     : Produce an HTML file every day with a summary of the run
+!-----------------------------------------------------------------------------
+
+! 2011-05-18 - Olivier Callot
+ - First full version, with luminosity and extracts from teh logbook
+
+! 2011-05-02 - Olivier Callot
+ - Fix the format of the date of the Problem Datatabase
