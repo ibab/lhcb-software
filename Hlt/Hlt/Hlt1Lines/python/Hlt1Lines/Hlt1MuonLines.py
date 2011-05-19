@@ -119,7 +119,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        from HltTracking.HltReco import Velo
         gec = properties[ 'GEC' ]
         return [ Hlt1GECUnit( gec ), Velo, unit ]
 
@@ -134,7 +133,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     def diMuon_streamer( self, properties ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
-        from HltTracking.HltReco import Velo
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -208,7 +206,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
     def multiMuon_streamer( self, properties ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
-        from HltTracking.HltReco import Velo
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -234,7 +231,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         gec = properties[ 'GEC' ]
-        return [ Hlt1GECUnit( gec ), Velo, unit ]
+        return [ Hlt1GECUnit( gec ), unit ]
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
