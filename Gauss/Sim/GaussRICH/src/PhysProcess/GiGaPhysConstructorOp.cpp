@@ -26,7 +26,7 @@
 #include "RichPhotoElectron.h"
 #include "G4Electron.hh"
 #include "G4Transportation.hh"
-#include "G4MultipleScattering.hh"
+//#include "G4MultipleScattering.hh"
 #include "G4ProcessVector.hh"
 #include "G4LossTableManager.hh"
 #include <vector>
