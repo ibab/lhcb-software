@@ -1,0 +1,65 @@
+Nameserver Publishing area successfully initialized!
+ Starting ams test task (Reader) READER_0 for 5000 turns
+ Starting ams test task (Sender) SENDER_0 for 5000 turns
+ task READER_0: size 555
+READER_0 5200 / 4800 -- Last msg from:SENDER_0
+SENDER_0 5200 / 4800 -- Last msg from:READER_0
+READER_0 5400 / 4600 -- Last msg from:SENDER_0
+SENDER_0 5400 / 4600 -- Last msg from:READER_0
+READER_0 5600 / 4400 -- Last msg from:SENDER_0
+SENDER_0 5600 / 4400 -- Last msg from:READER_0
+READER_0 5800 / 4200 -- Last msg from:SENDER_0
+SENDER_0 5800 / 4200 -- Last msg from:READER_0
+READER_0 6000 / 4000 -- Last msg from:SENDER_0
+SENDER_0 6000 / 4000 -- Last msg from:READER_0
+READER_0 6200 / 3800 -- Last msg from:SENDER_0
+SENDER_0 6200 / 3800 -- Last msg from:READER_0
+READER_0 6400 / 3600 -- Last msg from:SENDER_0
+SENDER_0 6400 / 3600 -- Last msg from:READER_0
+READER_0 6600 / 3400 -- Last msg from:SENDER_0
+SENDER_0 6600 / 3400 -- Last msg from:READER_0
+READER_0 6800 / 3200 -- Last msg from:SENDER_0
+SENDER_0 6800 / 3200 -- Last msg from:READER_0
+READER_0 7000 / 3000 -- Last msg from:SENDER_0
+SENDER_0 7000 / 3000 -- Last msg from:READER_0
+READER_0 7200 / 2800 -- Last msg from:SENDER_0
+SENDER_0 7200 / 2800 -- Last msg from:READER_0
+READER_0 7400 / 2600 -- Last msg from:SENDER_0
+SENDER_0 7400 / 2600 -- Last msg from:READER_0
+READER_0 7600 / 2400 -- Last msg from:SENDER_0
+SENDER_0 7600 / 2400 -- Last msg from:READER_0
+READER_0 7800 / 2200 -- Last msg from:SENDER_0
+SENDER_0 7800 / 2200 -- Last msg from:READER_0
+READER_0 8000 / 2000 -- Last msg from:SENDER_0
+SENDER_0 8000 / 2000 -- Last msg from:READER_0
+READER_0 8200 / 1800 -- Last msg from:SENDER_0
+SENDER_0 8200 / 1800 -- Last msg from:READER_0
+READER_0 8400 / 1600 -- Last msg from:SENDER_0
+SENDER_0 8400 / 1600 -- Last msg from:READER_0
+READER_0 8600 / 1400 -- Last msg from:SENDER_0
+SENDER_0 8600 / 1400 -- Last msg from:READER_0
+READER_0 8800 / 1200 -- Last msg from:SENDER_0
+SENDER_0 8800 / 1200 -- Last msg from:READER_0
+READER_0 9000 / 1000 -- Last msg from:SENDER_0
+SENDER_0 9000 / 1000 -- Last msg from:READER_0
+READER_0 9200 / 800 -- Last msg from:SENDER_0
+SENDER_0 9200 / 800 -- Last msg from:READER_0
+READER_0 9400 / 600 -- Last msg from:SENDER_0
+SENDER_0 9400 / 600 -- Last msg from:READER_0
+READER_0 9600 / 400 -- Last msg from:SENDER_0
+SENDER_0 9600 / 400 -- Last msg from:READER_0
+READER_0 9800 / 200 -- Last msg from:SENDER_0
+SENDER_0 9800 / 200 -- Last msg from:READER_0
+READER_0 10000 / 0 -- Last msg from:SENDER_0
+READER_0 AMS Test successfully ended.
+READER_0 Exiting....
+SENDER_0 10000 / 0 -- Last msg from:READER_0
+SENDER_0 AMS Test successfully ended.
+SENDER_0 Exiting....
+RTL:       32 : Broken pipe
+                AMS: send error [LXPLUS257::READER_0] size:276/0/276 errno=32
+READER_0 Shutdown done....
+SENDER_0 Shutdown done....
++======================================================================+
+|                  TAN NAMESERVER SHUTDOWN requested.                  |
++======================================================================+

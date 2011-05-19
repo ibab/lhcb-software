@@ -15,6 +15,7 @@ static void help()  {
 }
 #define KByte 1024
 
+
 extern "C" int mbm_buffer_scan(int argc , char ** argv) {
   int tot, last;
   string buffer;

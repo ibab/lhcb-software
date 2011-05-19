@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "RTL/rtl.h"
 #include "RTL/ProcessGroup.h"
+#include "MBM/bmdef.h"
 #include <iostream>
 
 using namespace std;
@@ -34,6 +35,7 @@ extern "C" int mep_test(int argc, char** /* argv */)  {
   const char *a13[]={"mep_prod_a",  "-name=Mep_0",    "-count=1000",0};
   const char *a14[]={"mbm_summary",0};
 
+  ::mbm_qmtest_check_start();
   ::lib_rtl_signal_log(0);
   Process::setDebug(true);  
   pg1.add(p[0]=new Process("Install_0", command(),a1, output));

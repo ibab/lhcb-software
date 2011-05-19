@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "RTL/rtl.h"
 #include "RTL/ProcessGroup.h"
+#include "MBM/bmdef.h"
 #include <iostream>
 
 using namespace std;
@@ -25,6 +26,7 @@ extern "C" int mbm_simple_test(int argc, char** /* argv */)  {
   const char *a8[]={"mbm_prod","-name=prod_0","-m=50000","-s=3500",0};
   const char *a9[]={"mbm_summary",0};
 
+  ::mbm_qmtest_check_start();
   Process::setDebug(true);
   pg.add(p[0]=new Process("Installer",command(),a1,output));
   pg.start();
@@ -71,6 +73,7 @@ extern "C" int mbm_full_test(int argc, char** /* argv */)  {
   const char *a8[]={"mbm_prod","-name=prod_0","-m=10000","-s=3500",0};
   const char *a9[]={"mbm_summary",0};
 
+  ::mbm_qmtest_check_start();
   Process::setDebug(true);
   pg.add(p[0]=new Process("Install", command(),a1,output));
   pg.start();

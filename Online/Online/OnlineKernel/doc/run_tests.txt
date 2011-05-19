@@ -2,4 +2,3 @@ dir=`cmt run echo \$ONLINEKERNELROOT`/tests/log
 mkdir ${dir}
 export GAUDI_QMTEST_HTML_OUTPUT=${dir}
 cmt qmtest_run onlinekernel.rtl_testsemaphore
- 
