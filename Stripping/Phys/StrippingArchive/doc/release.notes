@@ -4,9 +4,13 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-19 - Rob Lambert
+ - Implemented Utils and __init__.py after StrippingSelections example
+   Stripping 13 archive imported
+
 ! 2011-05-18 - Rob Lambert
  - Creation of package, purpose, to hold the linebuilders 
-   for stripping 13, it makes sure the strippings can, in priciple, be run
+   for stripping 13, it makes sure the strippings can, in principle, be run
    with any DaVinci version
 
 ! -----------------------------------------------------------------------------
