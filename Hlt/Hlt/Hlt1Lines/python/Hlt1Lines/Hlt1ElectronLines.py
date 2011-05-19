@@ -96,8 +96,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
             >> ~TC_EMPTY
             """ % properties
             )
-        from HltTracking.HltReco import Velo
-        return [ Hlt1GECUnit( properties[ 'GEC' ] ), Velo, caloUnit, trackUnit ]
+        return [ Hlt1GECUnit( properties[ 'GEC' ] ), caloUnit, trackUnit ]
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line

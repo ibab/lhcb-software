@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 ! 2011-05-19 - Gerhard Raven
  - remove redundancy in Hlt1DiProtonLowMult lines
+ - remove redundancy in Hlt1Electron lines
 
 !========================== Hlt1Lines v6r10p1  2011-05-11 =================
 ! 2011-05-12 - Gerhard Raven
