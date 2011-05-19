@@ -3,6 +3,9 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2011-5-24 - Sajan Easo
+- Removed couple of redundant include statements in GiGaPhysConstructorOp and 
+  GiGaPhysConstructorHpd
 !2011-5-10 - Sajan Easo
 - The options in Rich.opts set to deactivate the data smearing and to set the
   scintillation to 10% of of the normal scintillation data produced. This is to
