@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-May-19 - Patrick Spradlin
+ - StrippingDstarPromptWithD02HH.py:  Fixed an error in the KPi decay
+   descriptor.  Moved the unit conversions out of the cut strings and into
+   the configuration dictionary.
+
 ! 2011-05-19 - Thomas Blake
  - Added import statements for B2SameChargeMuon and HyperCPX 
 	 in __init__.py

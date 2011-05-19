@@ -48,18 +48,21 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-default_config = { 'DaugPt'            : 0.9,        ## GeV
-                   'DaugP'             : 5.,         ## GeV
+default_config = { 'DaugPt'            : 0.9 * GeV,
+                   'DaugP'             : 5. * GeV,
                    'DaugTrkChi2'       : 5.,         ## unitless
-                   'D0Pt'              : 3.3,       ## GeV
-                   'D0MassWindowCentre': 1.865,     ## GeV
-                   'D0MassWindowWidth' : 0.075,     ## GeV 
+                   'D0Pt'              : 3.3 * GeV,
+                   'D0MassWindowCentre': 1.865 * GeV,
+                   'D0MassWindowWidth' : 0.075 * GeV,
                    'D0VtxChi2Ndof'     : 13,         ## unitless
-                   'D0PVDisp'          : 0.9,        ## mm
-                   'SlowPiPt'          : 0.260,      ## GeV
-                   'DstarPt'           : 3.6,        ## GeV
+                   'D0PVDisp'          : 0.9 * mm,
+                   'SlowPiPt'          : 0.260 * GeV,
+                   'DstarPt'           : 3.6 * GeV,
                    'DstarVtxChi2Ndof'  : 13,         ## unitless
+                   'Pi_negPIDK_MIN'    : 5.0,        ## unitless
+                   'K_PIDK_MIN'        : 8.0,        ## unitless
                    'RSLinePrescale'    : 1.,         ## unitless
                    'RSLinePostscale'   : 1.,         ## unitless
                    'WSLinePrescale'    : 1.,         ## unitless
@@ -81,6 +84,8 @@ class StrippingDstarPromptWithD02HHConf(LineBuilder) :
                   	      'SlowPiPt',         
                   	      'DstarPt',          
                   	      'DstarVtxChi2Ndof',            
+                              'Pi_negPIDK_MIN',
+                              'K_PIDK_MIN',
                   	      'RSLinePrescale',
                	              'RSLinePostscale',
                	              'WSLinePrescale',
@@ -98,15 +103,9 @@ class StrippingDstarPromptWithD02HHConf(LineBuilder) :
         stdNoPIDsPions = StdNoPIDsPions
         #---------------------------------------
         # D0 -> hh' selections
-        self.selD0RS = makeD2hh( name + 'D02RSKPi',
+        self.selD0KPi = makeD2hh( name + 'D02RSKPi',
 			         config,
-				 DecayDescriptor = 'D0 -> K- pi+',
-			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
-			        )
-
-        self.selD0WS = makeD2hh( name + 'D02WSKPi',  
-			         config,
-				 DecayDescriptor = 'D0 -> K+ pi-',
+				 DecayDescriptor = '[D0 -> K- pi+]cc',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
@@ -126,13 +125,13 @@ class StrippingDstarPromptWithD02HHConf(LineBuilder) :
 	self.selDstRS = makeDstar2D0Pi( name + 'DstarWithD02RSKPi',
 				        config,
                                         '[D*(2010)+ -> D0 pi+]cc',
-                                        inputSel = [self.selD0RS, stdNoPIDsPions]
+                                        inputSel = [self.selD0KPi, stdNoPIDsPions]
                                        )
 
 	self.selDstWS = makeDstar2D0Pi( name + 'DstarWithD02WSKPi',
 				        config,
-                                        '[D*(2010)+ -> D0 pi+]cc',
-                                        inputSel = [self.selD0WS, stdNoPIDsPions]
+                                        '[D*(2010)- -> D0 pi-]cc',
+                                        inputSel = [self.selD0KPi, stdNoPIDsPions]
                                        )
 
 	self.selDstKK = makeDstar2D0Pi( name + 'DstarWithD02KK',
@@ -193,11 +192,19 @@ def makeD2hh(name,
     inputSel    : input selections
     """
 
-    _PiCuts ="(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDpi-PIDK>5)" %locals()['config']
-    _KCuts  ="(PT>%(DaugPt)s*GeV) & (P>%(DaugP)s*GeV) & (TRCHI2DOF<%(DaugTrkChi2)s) & ( PIDK-PIDpi>8)" %locals()['config']
+    _PiCuts ="(PT>%(DaugPt)s)" \
+             "& (P>%(DaugP)s)" \
+             "& (TRCHI2DOF<%(DaugTrkChi2)s)" \
+             "& (PIDpi-PIDK>%(Pi_negPIDK_MIN)s)" %locals()['config']
+    _KCuts  ="(PT>%(DaugPt)s)" \
+             "& (P>%(DaugP)s)" \
+             "& (TRCHI2DOF<%(DaugTrkChi2)s)" \
+             "& (PIDK-PIDpi>%(K_PIDK_MIN)s)" %locals()['config']
     _daughterCuts = { 'pi+' : _PiCuts, 'K-' : _KCuts }
-    _combCuts = " (ADAMASS(%(D0MassWindowCentre)s* GeV) < %(D0MassWindowWidth)s* GeV)"  % locals()['config']
-    _motherCuts = "(PT>%(D0Pt)s*GeV) & (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s) & (BPVVD>%(D0PVDisp)s)" % locals()['config']
+    _combCuts = "(ADAMASS(%(D0MassWindowCentre)s) < %(D0MassWindowWidth)s)"  % locals()['config']
+    _motherCuts = "(PT>%(D0Pt)s)" \
+                  "& (VFASPF(VCHI2PDOF)<%(D0VtxChi2Ndof)s)" \
+                  "& (BPVVD>%(D0PVDisp)s)" % locals()['config']
 
     _D0 = CombineParticles( DecayDescriptor = DecayDescriptor,
                             MotherCut = _motherCuts,
@@ -223,10 +230,12 @@ def makeDstar2D0Pi( name
     inputSel    : input selections
     """
 
-    slowPiCuts = "(PT>%(SlowPiPt)s*GeV)" % locals()['config']
+    slowPiCuts = "(PT>%(SlowPiPt)s)" % locals()['config']
     d0Cuts =     "(ALL)"
-    combCuts =  "(APT>%(DstarPt)s*GeV) & (ADAMASS('D*(2010)+')<90*MeV)" % locals()['config']
-    dstarCuts = "(VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)s) & (M-MAXTREE('D0'==ABSID,M)<(145.5+15)*MeV)" % locals()['config']
+    combCuts =  "(APT>%(DstarPt)s)" \
+                "& (ADAMASS('D*(2010)+')<90*MeV)" % locals()['config']
+    dstarCuts = "(VFASPF(VCHI2PDOF)<%(DstarVtxChi2Ndof)s)" \
+                "& (M-MAXTREE('D0'==ABSID,M)<(145.5+15)*MeV)" % locals()['config']
 
     _Dstar = CombineParticles( DecayDescriptor = DecayDescriptor
                              , DaughtersCuts = { 'pi+' : slowPiCuts, 'D0' : d0Cuts }
