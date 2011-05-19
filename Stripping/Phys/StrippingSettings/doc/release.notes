@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-19 - Thomas Blake
+ - Added Stripping14 dictionaries for 2010 re-stripping 
+
 ! 2011-05-16 - Jibo He
  - Commit of Stripping1Point4TeV definition
 
