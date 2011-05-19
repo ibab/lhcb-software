@@ -7,6 +7,12 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2011-05-19 - Jibo He
+ - Hlt2InclusiveDiProtonLines.py
+   Remove PIDp-PIDK cut in LowMult DiProton line according to that LowPTProton 
+   changed to 2 RichHypos 
+
 ! 2011-05-16 - Gerhard Raven
  - in Hlt2diphotonDiMuonLines, prescale Hlt2LowMultHadron by 0.1
 

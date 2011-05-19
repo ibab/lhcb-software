@@ -120,7 +120,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         # Track Fitted & RichPID
         #------------------------------------
-        TFRichProtonPID = "((PIDp-PIDpi) > %(TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(TFRichProtonPIDpK)s)" % self.getProps()   
+        TFRichProtonPID = "(PIDp > %(TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(TFRichProtonPIDpK)s)" % self.getProps()   
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichProtons
         TFRichCombine = Hlt2Member( CombineParticles
@@ -206,7 +206,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
         #------------------------------------
         # Track Fitted & RichPID
         #------------------------------------
-        TFRichProtonPID = "((PIDp-PIDpi) > %(LowMult_TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(LowMult_TFRichProtonPIDpK)s)" % self.getProps()   
+        #TFRichProtonPID = "((PIDp-PIDpi) > %(LowMult_TFRichProtonPIDppi)s) & ((PIDp-PIDK) > %(LowMult_TFRichProtonPIDpK)s)" % self.getProps()   
+        TFRichProtonPID = "(PIDp> %(LowMult_TFRichProtonPIDppi)s)" % self.getProps()
         
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichLowPTProtons
         TFRichCombine = Hlt2Member( CombineParticles
