@@ -11,10 +11,7 @@ Purpose: LHCb reconstruction program
     (TrackFitEvent)
   . Fix error assigned to OT hits in 'prefit' (TrackProjectors)
   . Major changes to MuonID (MuonID)
-  . Changes to allow correction of signal propagation time due to reflections
-    (OTDet)
   . Update clusterization counters (CaloReco) 
-
 
 </PRE><H1><A NAME=v39r4>2011-05-14 Brunel v39r4</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
