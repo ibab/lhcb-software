@@ -71,7 +71,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
 
   // receive some messages and bounce them
   int  wsize =  length;
-  int mx_loop = loop;
+  int mx_loop = (fanout) ? loop : loop;
   if (fanout)  {
     srand(length);
     fill (wmessage, wsize);
@@ -94,7 +94,8 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       if (ams_status != AMS_SUCCESS)
         err_print (ams_status);
     } while (ams_status != AMS_SUCCESS && !fanout);
-    if (fanout)   {
+    --mx_loop;
+    if (fanout && mx_loop != 0)   {
       check (rmessage, wmessage, rsize, wsize);
       wsize =  length;
       fill (wmessage, wsize);
@@ -108,10 +109,10 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       char* p = source, *q = source;
       while ( (p=strchr(p,':')) ) *p++ = 0, q = p; 
       if ( 0 == q ) q = source;
-      ::printf("%s %d -- Last msg from:%s\n", amsname.c_str(), loop, q);
+      ::printf("%s %d / %d -- Last msg from:%s\n", amsname.c_str(), loop, mx_loop, q);
       ::fflush(stdout);
     }
-    if (--mx_loop == 0 ) {
+    if (mx_loop == 0 ) {
       ::printf ("%s AMS Test successfully ended.\n", amsname.c_str());
       ::printf ("%s Exiting....\n", amsname.c_str());
       ::fflush(stdout);
