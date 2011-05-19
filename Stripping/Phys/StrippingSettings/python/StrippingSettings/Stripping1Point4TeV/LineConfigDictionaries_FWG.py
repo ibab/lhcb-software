@@ -1,13 +1,13 @@
 """
 Line config dictionaries for the FWG
 
-Stripping1Point4 definitions.
+Stripping1Point4TeV definitions.
 Dictionaries have the name of the line builder instance.
 """
 #######
 # FWG #
 #######
-MicroDSTDiMuon = {
+FullDSTDiMuon = {
     'BUILDERTYPE' : 'DiMuonConf',
     'CONFIG' : {
         'MicroDST'                                 :   True   ,
@@ -127,6 +127,6 @@ MicroDSTDiMuon = {
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
         'Jpsi2MuMuDetached_DLS'                            :     3. 
         }, 
-    'STREAMS' : [ 'Physics' ] ,
+    'STREAMS' : [ 'AllStreams' ] ,
     'WGs'    : [ 'FWG' ]
     }

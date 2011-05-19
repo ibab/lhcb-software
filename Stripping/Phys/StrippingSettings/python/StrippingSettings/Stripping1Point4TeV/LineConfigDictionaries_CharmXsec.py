@@ -1,7 +1,7 @@
 """
 Line config dictionaries for the Charm WG
 
-Stripping13 definitions.
+Stripping1Point4TeV definitions.
 Dictionaries have the name of the line builder instance.
 """
 
@@ -46,8 +46,8 @@ D02K3PiForXSec = {
                     }
     ,'CheckPV' : {'Tagged' : True 
                   ,'Untagged' : True }
-    ,'Prescale' : {'Tagged' : 0.1
-                   ,'Untagged' : 0.1 }
+    ,'Prescale' : {'Tagged' : 1.
+                   ,'Untagged' : 1. }
     ,'Postscale' : {'Tagged' : 1
                     ,'Untagged' : 1 }
     ,'ApplyGECs' : {'Tagged' : False
@@ -83,8 +83,8 @@ D02KPiGeoForXSec = {
     , 'Dstar_VCHI2VDOF_MAX' : 100.0
     , 'Dstar_MDiff_MAX'     : 155.0 * MeV
     , 'HltFilter'           : None 
-    , 'PrescaleD02HH'             :   0.1
-    , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+    , 'PrescaleD02HH'             :   1.0
+    , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
     , 'PostscaleD02HH'            :   1.0
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -109,8 +109,8 @@ Dstar2D0Pi_D02KPiForXSec = {
     , 'Dstar_VCHI2VDOF_MAX'       : 100.0
     , 'Dstar_MDiff_MAX'           : 155.0 * MeV
     , 'HltFilter'                 : None 
-    , 'PrescaleD02HH'             :   0.1
-    , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+    , 'PrescaleD02HH'             :   1.0
+    , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
     , 'PostscaleD02HH'            :   1.0
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -139,7 +139,7 @@ Lambdac2PKPiForXSec = {
      , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
      , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
      , 'HltFilter'             : None
-     , 'PrescaleLambdac2PKPi'  :    0.1
+     , 'PrescaleLambdac2PKPi'  :    1.0
      , 'PostscaleLambdac2PKPi' :    1.0
     },
     'WGs'          : ['Charm'],
@@ -163,7 +163,7 @@ D2PhiPiForXSec = {
     , 'D_BPVVDCHI2_MIN'           :   30.0
     , 'D_VCHI2VDOF_MAX'           :   10.0
     , 'HltFilter'                 :   None
-    , 'PrescaleD2PhiPi'           :    0.1
+    , 'PrescaleD2PhiPi'           :    1.0
     , 'PostscaleD2PhiPi'          :    1.0
     },
     'WGs' : [ 'Charm' ],
@@ -193,8 +193,8 @@ D2HHHForXSec = {
     , 'D_BPVDIRA_MIN' : 0.9999
     , 'D_BPVVDCHI2_MIN' : 60.0
     , 'HltFilter'          :  None
-    , 'PrescaleD2KPP' : 0.1
-    , 'PrescaleD2KKP' : 0.1
+    , 'PrescaleD2KPP' : 1.0
+    , 'PrescaleD2KKP' : 1.0
     , 'PrescaleD2KKK' : 1.0
     , 'PrescaleD2PPP' : 1.0
     , 'PrescaleD2KPPDCS' : 1.0
@@ -223,8 +223,8 @@ D02HHForXSec = {
      , 'Dstar_MDiff_MAX'           : 155.0*MeV
      , 'Dstar_VCHI2VDOF_MAX'       : 100.0
      , 'HltFilter'                 : None
-     , 'PrescaleD02HH'             :   0.1
-     , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+     , 'PrescaleD02HH'             :   1.0
+     , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
      , 'PostscaleD02HH'            :   1.0
      , 'PostscaleDstar2D0Pi_D02HH' :   1.0
      },
