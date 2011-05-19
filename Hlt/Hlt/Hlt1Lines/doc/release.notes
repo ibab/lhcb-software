@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2011-05-19 - Gerhard Raven
+ - remove redundancy in Hlt1DiProtonLowMult lines
 
 !========================== Hlt1Lines v6r10p1  2011-05-11 =================
 ! 2011-05-12 - Gerhard Raven

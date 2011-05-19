@@ -141,7 +141,6 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
     
     def __apply_configuration__( self ) : 
         from HltLine.HltLine import Hlt1Line
-        from HltTracking.HltReco import Velo
         Hlt1Line(
             'DiProton',
             ##
@@ -149,7 +148,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             postscale = self.postscale,
             L0DU = "L0_CHANNEL( 'Hadron' ) & ( L0_DATA('Spd(Mult)') < %(DiProton_SpdMult)s )" % self.getProps(),   
             ##
-            algos     = [ Velo, self.DiProton_streamer() ] 
+            algos     = [ self.DiProton_streamer() ] 
             )
 
         
@@ -160,5 +159,5 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             postscale = self.postscale,
             L0DU = "( L0_DATA('Spd(Mult)') < %(DiProtonLowMult_SpdMult)s )" % self.getProps(),   
             ##
-            algos     = [ Velo, self.DiProtonLowMult_streamer() ] 
+            algos     = [ self.DiProtonLowMult_streamer() ] 
             )
