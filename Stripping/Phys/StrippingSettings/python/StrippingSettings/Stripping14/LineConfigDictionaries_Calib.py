@@ -38,28 +38,28 @@ D02KPiPi0 = {
 
 NoPIDDstarWithD02RSKPi = {
     'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
-    'CONFIG' : {'DaugPt'             : 250       ## MeV
-                , 'DaugP'            : 2000      ## MeV
-                , 'DaugIPChi2'       : 16        ## unitless
-                , 'DaugTrkChi2'      : 5         ## unitless
-                , 'D0MassWin'        : 75        ## MeV
-                , 'D0Pt'             : 1500      ## MeV
-                , 'D0VtxChi2Ndof'    : 13        ## unitless
-                , 'D0FDChi2'         : 49        ## unitless
-                , 'D0BPVDira'        : 0.9999    ## unitless
-                , 'D0IPChi2'         : 30        ## unit
-                , 'SlowPiPt'         : 150       ## MeV
-                , 'SlowPiTrkChi2'    : 5         ## unitless
-                , 'DstarPt'          : 2200      ## MeV
-                , 'DstarVtxChi2Ndof' : 13        ## unitless
-                , 'DeltaM_Min'       : 130       ## MeV
-                , 'DeltaM_Max'       : 155       ## MeV
-                , 'DCS_WrongMass'    : 25        ## MeV (3 sigma veto)
-                , 'KK_WrongMass'     : 25        ## MeV (3 sigma veto)
-                , 'PiPi_WrongMass'   : 25        ## MeV (3 sigma veto)
-                , 'Prescale'         : 0.45      ## unitless
-                , 'Postscale'        : 1.0       ## unitless
-                , 'Monitor'          : None      ## Monitoring?
+    'CONFIG' : {'DaugPt'           : 250 * MeV      ## GeV
+                , 'DaugP'            : 2.0 * GeV      ## GeV
+                , 'DaugIPChi2'       : 16             ## unitless
+                , 'DaugTrkChi2'      : 5              ## unitless
+                , 'D0MassWin'        : 75 * MeV       ## MeV
+                , 'D0Pt'             : 1.5 * GeV      ## GeV
+                , 'D0VtxChi2Ndof'    : 13             ## unitless
+                , 'D0FDChi2'         : 49             ## unitless
+                , 'D0BPVDira'        : 0.9999         ## unitless
+                , 'D0IPChi2'         : 30             ## unit
+                , 'SlowPiPt'         : 150 * MeV      ## MeV
+                , 'SlowPiTrkChi2'    : 5              ## unitless
+                , 'DstarPt'          : 2.2 * GeV      ## GeV
+                , 'DstarVtxChi2Ndof' : 13             ## unitless
+                , 'DeltaM_Min'       : 130 * MeV      ## MeV
+                , 'DeltaM_Max'       : 155 * MeV      ## MeV
+                , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
+                , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
+                , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
+                , 'Prescale'         : 0.45           ## unitless
+                , 'Postscale'        : 1.0            ## unitless
+                , 'Monitor'          : None           ## Activate the monitoring?
                 },
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
@@ -100,25 +100,27 @@ V0ForPID = {
 
 Jpsi2eeForElectronID = {
     'BUILDERTYPE'	: 'ElectronIDConf',
-    'CONFIG'	: {'Both_MIPCHI2': 9.0,
-                   'Both_P': 3000.0,
-                   'Both_PT': 500.0,
-                   'Both_TRCHI2DOF': 5.0,
-                   'LinePostscale': 1.0,
-                   'LinePrescale': 0.40000000000000002,
-                   'Probe_MIPCHI2': 9.0,
-                   'Probe_P': 3000.0,
-                   'Probe_PT': 500.0,
-                   'Tag_MIPCHI2': 9.0,
-                   'Tag_P': 6000.0,
-                   'Tag_PIDe': 5.0,
-                   'Tag_PT': 1500.0,
-                   'eeCombMaxMass': 4300.0,
-                   'eeCombMinMass': 2100.0,
-                   'eeFDCHI2': 225.0,
-                   'eeMaxMass': 4200.0,
-                   'eeMinMass': 2200.0,
-                   'eeVCHI2PDOF': 9.0},
+    'CONFIG'	: {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        'Both_PT'                 :  500.   ,  # MeV
+        'Both_P'                  : 3000.   ,  # MeV
+        'Both_TRCHI2DOF'          :    5.   ,
+        'Both_MIPCHI2'            :    9.   ,
+        'Tag_PT'                  : 1500.   ,  # MeV
+        'Tag_P'                   : 6000.   ,  # MeV
+        'Tag_PIDe'                :    5.   ,
+        'Tag_MIPCHI2'             :    9.   ,
+        'Probe_PT'                :  500.   ,  # MeV
+        'Probe_P'                 : 3000.   ,  # MeV
+        'Probe_MIPCHI2'           :    9.   ,
+        'eeCombMinMass'           : 2100.   ,  # MeV         
+        'eeCombMaxMass'           : 4300.   ,  # MeV   
+        'eeVCHI2PDOF'             :    9.   ,  
+        'eeMinMass'               : 2200.   ,  # MeV 
+        'eeMaxMass'               : 4200.   ,  # MeV               
+        'eeFDCHI2'                :  400.    
+        },
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }
@@ -140,44 +142,42 @@ TrackEffDownMuon = {
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
-    'CONFIG' : {
-    'MuMom':                1000.   
-    ,       'MuTMom':               100.
-    ,       'TrChi2':               10. 
-    ,       'MassPreComb':          2000.
-    ,       'MassPostComb':         200. 
-    ,       'Doca':                 5.   
-    ,       'VertChi2':             25.  
-    ,       'DataType':             '2010'
-    ,       'NominalLinePrescale':  1.
-    ,       'NominalLinePostscale': 1.
-    ,       'ValidationLinePrescale': 0.5
-    ,       'ValidationLinePostscale': 1.,
-    'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-    ,	'HLT1PassOnAll': True
-    ,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-    ,	'HLT2PassOnAll': False
-    } 
+    'CONFIG' : {'MuMom':                1000.
+               ,       'MuTMom':               100.
+               ,       'TrChi2':               10.
+               ,       'MassPreComb':          2000.
+               ,       'MassPostComb':         200.
+               ,       'Doca':                 5.
+               ,       'VertChi2':             25.
+               ,       'DataType':             '2010'
+               ,       'NominalLinePrescale':  1.
+               ,       'NominalLinePostscale': 1.
+               ,       'ValidationLinePrescale': 0.5
+               ,       'ValidationLinePostscale': 1.
+               ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
+               ,       'HLT1PassOnAll': False
+               ,       'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0}
+               ,       'HLT2PassOnAll': False
+                } 
     }
 
 TrackEffVeloMuon = { 
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
-    'CONFIG' : {
-    "TrChi2Mu":             10.     # adimensional
-    ,       "JpsiPt":               0.5     # GeV
-    ,       "TrPt":                 100.    # MeV
-    ,       "VertChi2":             25.     # adimensional
-    ,       "MassPreComb":          1000.   # MeV
-    ,       "MassPostComb":         400.    # MeV
-    ,       "Prescale":             1.      # MeV
-    ,       "Postscale":            1.      # MeV
-    ,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-    ,	'HLT1PassOnAll': True
-    ,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-    ,	'HLT2PassOnAll': False
-    }
+    'CONFIG' : {"TrChi2Mu":             10.
+                ,       "JpsiPt":               0.5
+                ,       "TrPt":                 100.
+                ,       "VertChi2":             25.
+                ,       "MassPreComb":          1000.
+                ,       "MassPostComb":         400.
+                ,       "Prescale":             1.
+                ,       "Postscale":            1.
+                ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
+                ,       'HLT1PassOnAll': False
+                ,       'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0}
+                ,       'HLT2PassOnAll': False
+                }
     }
 
 TrackEffMuonTT = {

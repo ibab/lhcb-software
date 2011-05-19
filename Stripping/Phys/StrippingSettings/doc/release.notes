@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-05-19 - Jibo He
+ - Stripping1Point4TeV finalized, dbase updated  
+ - Stripping14
+   + Added lines for BetaS, Gamma with Tree/Loop, FWG, EW  
+  
+! 2011-05-19 - Jibo He
  - Stripping1Point4TeV definition reviewed 
  - Added first draft of dbase
 

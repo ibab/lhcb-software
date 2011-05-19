@@ -5,6 +5,8 @@ Stripping1Point4TeV definitions.
 Dictionaries have the name of the line builder instance.
 """
 
+from GaudiKernel.SystemOfUnits import *
+
 BeamGas = {
    'BUILDERTYPE' : 'BeamGasConf',
    'CONFIG' : {'Prescale' : 0.05, 'Postscale' : 1.0},
@@ -38,25 +40,25 @@ D02KPiPi0 = {
 
 NoPIDDstarWithD02RSKPi = {
     'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
-    'CONFIG' : { 'DaugPt'             : 250            ## MeV
-                 , 'DaugP'            : 2000           ## MeV
+    'CONFIG' : { 'DaugPt'             : 250 * MeV      ## GeV
+                 , 'DaugP'            : 2.0 * GeV      ## GeV
                  , 'DaugIPChi2'       : 16             ## unitless
                  , 'DaugTrkChi2'      : 5              ## unitless
-                 , 'D0MassWin'        : 75             ## MeV
-                 , 'D0Pt'             : 15000          ## GeV
+                 , 'D0MassWin'        : 75 * MeV       ## MeV
+                 , 'D0Pt'             : 1.5 * GeV      ## GeV
                  , 'D0VtxChi2Ndof'    : 13             ## unitless
                  , 'D0FDChi2'         : 49             ## unitless
                  , 'D0BPVDira'        : 0.9999         ## unitless
                  , 'D0IPChi2'         : 30             ## unit
-                 , 'SlowPiPt'         : 150            ## MeV
+                 , 'SlowPiPt'         : 150 * MeV      ## MeV
                  , 'SlowPiTrkChi2'    : 5              ## unitless
-                 , 'DstarPt'          : 2200           ## MeV
+                 , 'DstarPt'          : 2.2 * GeV      ## GeV
                  , 'DstarVtxChi2Ndof' : 13             ## unitless
-                 , 'DeltaM_Min'       : 130            ## MeV
-                 , 'DeltaM_Max'       : 155            ## MeV
-                 , 'DCS_WrongMass'    : 25             ## MeV (3 sigma veto)
-                 , 'KK_WrongMass'     : 25             ## MeV (3 sigma veto)
-                 , 'PiPi_WrongMass'   : 25             ## MeV (3 sigma veto)
+                 , 'DeltaM_Min'       : 130 * MeV      ## MeV
+                 , 'DeltaM_Max'       : 155 * MeV      ## MeV
+                 , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
+                 , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
+                 , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
                  , 'Prescale'         : 1.0            ## unitless
                  , 'Postscale'        : 1.0            ## unitless
                  , 'Monitor'          : None           ## Activate the monitoring?
