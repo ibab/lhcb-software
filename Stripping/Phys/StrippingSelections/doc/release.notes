@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-19 - Thomas Blake
+ - Added import statements for B2SameChargeMuon and HyperCPX 
+	 in __init__.py
+ - Renamed name global to default_name in D02KMuNu
+
+
+
 ! 2011-05-19 - Grant McGregor
  - Change to HLT_PASS for D02KMuNu line. 
 

@@ -109,6 +109,10 @@ import StrippingD02HHForXSec
 import StrippingBu3hFrom2h
 import StrippingB2HHPi0
 
+import StrippingB2SameChargeMuon
+import StrippingHyperCPX
+
+
 # Calibration
 import StrippingTrackEffDownMuon
 import StrippingTrackEffVeloMuon
@@ -116,6 +120,8 @@ import StrippingTrackEffMuonTT
 import StrippingMuIDCalib
 import StrippingD02KPiPi0
 import StrippingBeamGas
+
+
 
 from sys import modules as _modules
 _this = _modules[__name__]

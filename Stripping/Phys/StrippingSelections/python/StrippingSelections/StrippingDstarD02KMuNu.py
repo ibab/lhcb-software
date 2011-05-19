@@ -57,7 +57,7 @@ default_config = {'TRACK_Chi2' : 3.,
                               }
 
 
-name = "DstarD02KMuNu"
+default_name = "DstarD02KMuNu"
 
 class DstarD02KMuNuConf(LineBuilder) :
     """
