@@ -71,7 +71,7 @@ def Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking() :
                          DoFastFit              = True,
                          DoSeeding              = False,
                          DoCloneKilling         = False,
-                         RichHypos              = ["pion","proton","kaon"],
+                         RichHypos              = ["pion","proton"],
                          RichTrackCuts          = {"Forward":{ "Chi2Cut" : [0,16], "PCut" : [2,100], "PtCut" : [0.5,100], "Likelihood" : [-999999,999999] }  }
                          )
 

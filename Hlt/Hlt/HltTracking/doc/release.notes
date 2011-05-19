@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-05-19 - Jibo He
+ - python/HltTracking/Hlt2TrackingConfigurations.py
+   Change RichHypos of LowPTProton to two to avoid outputlocation overwrite 
+
 !========================== HltTracking v9r8p1 2011-05-11 ===================
 ! 2011-05-12 -  Gerhard Raven
  - add a central place which defines MaxOTHits for use in PatForward, PatSeeding
