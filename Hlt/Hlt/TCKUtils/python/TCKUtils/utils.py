@@ -615,9 +615,10 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
         except : 
             return code
 
-    def prettyPrintList(code,trItem = None) :
+    def prettyPrintList(code,trItem = None, skipEmpty = True) :
         try :
             l = eval(code)
+            if skipEmpty and not l : return ''
             if len(l)<2 : return code
             if trItem :
                 l = [ trItem(i) for i in l ]
@@ -628,8 +629,9 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
     trtable = { 'Code' : prettyPrintStreamer
               , 'DaughtersCuts' : lambda x : prettyPrintDict(x, lambda k,v : "'%s' : '%s'"%(k,v) )
               , 'Inputs' : prettyPrintList
+              , 'InputLocations' : prettyPrintList
               , 'Preambulo' : prettyPrintList
-              , 'FilterDescriptor' : lambda x : prettyPrintList(x,lambda y : "'%s'"%y)
+              , 'FilterDescriptor' : lambda x : prettyPrintList(x,lambda y : "'%s'"%y, True)
               , 'RoutingBits' : lambda x : prettyPrintDict(x, lambda k,v : "%2d : \"%s\""%(k,v) )
               }
 
@@ -648,7 +650,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
        for k,v in [ (k,v) for k,v in i.leaf.props.iteritems() if k in properties and v ]:
            if _tab+25 < len1(line) : line+= '\n'+(_tab+25)*' '
            if k in trtable.keys() : v = trtable[k](v)
-           line += '%-15s : %s' % ( k, v)
+           if v : line += '%-15s : %s' % ( k, v)
        print line
 
 def getConfigTree(id, cas = ConfigAccessSvc()):
