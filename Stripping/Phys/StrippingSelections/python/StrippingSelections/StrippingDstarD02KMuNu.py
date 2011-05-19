@@ -49,6 +49,9 @@ default_config = {'TRACK_Chi2' : 3.,
     'Dstar_DOCA' : 0.4,
     'Dstar_VtxChi2' : 9.,
     'Dstar_DeltaMass' : 200.,
+    # Trigger
+    'HLT'          : " HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision') " ,
+    #Pre and postscale
     'PrescaledLinePrescale' : 1.0,
     'PrescaledLinePostscale' : 1.0
                               }
@@ -84,7 +87,6 @@ class DstarD02KMuNuConf(LineBuilder) :
     Exports as class data member:
     DstarD02KMuNuConf.__configuration_keys__ : List of required configuration parameters.
     """
-
     __configuration_keys__ = ('TRACK_Chi2',
                               'KAON_PIDK',
                               'KAON_MinPT',
@@ -100,6 +102,7 @@ class DstarD02KMuNuConf(LineBuilder) :
 			      'Dstar_DOCA',
 			      'Dstar_VtxChi2',
 			      'Dstar_DeltaMass',
+			      'HLT',
                               'PrescaledLinePrescale',
                               'PrescaledLinePostscale'
                               )
@@ -160,20 +163,20 @@ class DstarD02KMuNuConf(LineBuilder) :
                                             Dstar_DeltaMass = config['Dstar_DeltaMass'])
 
 	self.prescaled_lineRS = StrippingLine(prescaled_name+"RSLine",
+		HLT      = config['HLT'],
 		prescale = config['PrescaledLinePrescale'],
 		postscale = config['PrescaledLinePostscale'],
-		HLT = "HLT_PASS('Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision')",
 		selection = self.selDstarD02KMuNuRS
 		)
 	self.prescaled_lineWS = StrippingLine(prescaled_name+"WSLine",
+		HLT      = config['HLT'],
 		prescale = config['PrescaledLinePrescale'],
 		postscale = config['PrescaledLinePostscale'],
-		HLT = "HLT_PASS('Hlt2CharmSemilepD02HMuNu_D02KMuNuWSDecision')",
 		selection = self.selDstarD02KMuNuWS
 		)
 
-    self.registerLine(self.prescaled_lineRS)
-    self.registerLine(self.prescaled_lineWS)
+        self.registerLine(self.prescaled_lineRS)
+        self.registerLine(self.prescaled_lineWS)
 
 
 def makeMuons(name, 

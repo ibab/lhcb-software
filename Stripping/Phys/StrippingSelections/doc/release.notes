@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-19 - Grant McGregor
+ - Change to HLT_PASS for D02KMuNu line. 
+
 ! 2011-05-18 - Jibo He
  - Fix the indent of StrippingDstarD02KMuNu.py
 
