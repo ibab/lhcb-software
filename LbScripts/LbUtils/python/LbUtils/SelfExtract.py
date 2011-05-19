@@ -8,12 +8,15 @@ from LbUtils.Tar import createTarBall
 from LbUtils.Temporary import TempFile
 from LbUtils.File import genTemplateFile
 
+import logging
+
 try:
     from base64 import standard_b64encode as encode
     from base64 import standard_b64decode as decode
 except ImportError:
     from base64 import encode
     from base64 import decode
+
 
 import os
 
@@ -39,11 +42,19 @@ def createSelfExtractFile(input_dir, target_filename, description, script=None, 
     @param update_url: url to self update the self extracting script
     @param script_version: sets the version of the self extracting script
     """
+
+    log = logging.getLogger()
+
     status = 0
     if not template :
         template = default_template
 
     tmpl_dict = {}
+
+    if not os.path.exists(os.path.join(input_dir, script)) :
+        status = 1
+        log.error("The file %s doesn't exist in the %s directory" % (script, input_dir))
+        return status
     tmpl_dict["script"] = script
 
     tarball = TempFile()
@@ -51,6 +62,7 @@ def createSelfExtractFile(input_dir, target_filename, description, script=None, 
     tmpl_dict["tarball"] = encode(open(tarball.name, "r").read())
     del tarball
 
+    tmpl_dict["description"] = description
 
     genTemplateFile(template, tmpl_dict, target_filename)
 
