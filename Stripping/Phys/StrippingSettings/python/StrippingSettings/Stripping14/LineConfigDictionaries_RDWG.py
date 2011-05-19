@@ -20,7 +20,7 @@ B2XMuMuSS = {
                   'KaonPT'        : 500.  ,    #MeV
                   'KaonMINIPCHI2' : 4     ,    #adminensional
 
-                  'DimuonMass'    : 250.  ,    #MeV
+                  #'DimuonMass'    : 250.  ,    #MeV
                   'BVCHI2DOF'     : 7    ,    #adminensional                              
                   'BDIRA'         : 0.9995 ,    #adimensional
                   'BIPCHI2'       : 30    ,    #adimensional

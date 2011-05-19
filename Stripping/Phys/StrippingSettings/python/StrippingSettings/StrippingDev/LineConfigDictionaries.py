@@ -3,6 +3,7 @@ Place holder for stripping dictionary configurations under development.
 These will not be used for production, only for testing.
 Dictionaries have the name of the line builder instance.
 """
+from GaudiKernel.SystemOfUnits import *
 
 # standard Bs->Jpsi/Phi prescaled and detatched lines
 Bs2JpsiPhiPrescaledAndDetatched = {
