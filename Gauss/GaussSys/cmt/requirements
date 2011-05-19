@@ -63,7 +63,7 @@ use ClhepTools          v2r1p1    Tools
 use GaussKine           v4r0      Sim
 use GaussAlgs		v3r4      Sim
 use GaussTools          v15r4     Sim
-#use GaussRICH		v11r3     Sim
+use GaussRICH		v11r3     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r3	  Sim
 use GaussPhysics	v6r5	  Sim
