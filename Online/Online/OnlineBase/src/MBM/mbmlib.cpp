@@ -285,6 +285,30 @@ BMDESCRIPT::BMDESCRIPT() : qentry_t(0,0) {
   lastVar = 0;
 }
 
+int mbm_qmtest_check_no_active_buffers(int, char**)   {
+  lib_rtl_gbl_t handle = 0;
+  int res = ::mbm_map_global_buffer_info(&handle,true);
+  if ( lib_rtl_is_success(res) ) {
+    BUFFERS* buffers = (BUFFERS*)handle->address;
+    time_t start = ::time(0);
+  rescan:
+    for (int i = 0; i < buffers->p_bmax; ++i)  {
+      if ( buffers->buffers[i].used == 1 )  {
+	time_t now = ::time(0);
+	if ( now - start > 400 ) {
+	  _mbm_printf("MBM: Buffers are still not released after 400 seconds!\n");
+	  ::mbm_unmap_global_buffer_info(handle,false);
+	  ::exit(1);
+	}
+	goto rescan;
+      }
+    }
+    res = 1;
+  }
+  ::mbm_unmap_global_buffer_info(handle,false);
+  return res;
+}
+
 BMID mbm_map_memory(const char* bm_name)  {
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
   ::strncpy(bm->bm_name,bm_name,sizeof(bm->bm_name));

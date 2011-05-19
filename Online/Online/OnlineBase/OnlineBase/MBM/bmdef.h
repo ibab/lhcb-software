@@ -52,6 +52,7 @@ typedef void* CONTROL;
 extern "C"  {
 #endif
   struct BUFFERS;
+  int  mbm_qmtest_check_no_active_buffers(int, char**);
   int  mbm_install(int argc , char** argv);
   int  mbm_deinstall(int argc , char** argv);
   int  mbm_dump(int argc , char** argv);
