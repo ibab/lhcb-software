@@ -164,7 +164,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         gec = properties[ 'GEC' ]
-        return [ Hlt1GECUnit( gec ), Velo, unit ]
+        return [ Hlt1GECUnit( gec ), unit ]
 
     def diMuonDetached_streamer( self, properties ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
