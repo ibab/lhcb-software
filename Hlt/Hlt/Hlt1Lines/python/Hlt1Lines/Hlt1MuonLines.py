@@ -120,7 +120,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         gec = properties[ 'GEC' ]
-        return [ Hlt1GECUnit( gec ), Velo, unit ]
+        return [ Hlt1GECUnit( gec ), unit ]
 
     def diMuon_preambulo( self, properties ):
         ## define some "common" preambulo 
