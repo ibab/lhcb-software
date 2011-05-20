@@ -1,3 +1,11 @@
+'''
+Line Config Dictionaries for Beta_S WG
+
+
+Stripping 14: 2010 re-stripping
+'''
+
+
 # Quasi two-body (Fred Blanc)
 BetaSQ2B = {
     'WGs'               : ['betas'],

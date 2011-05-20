@@ -1,3 +1,11 @@
+'''
+ Line Config Dictionary for RD WG:
+
+ Stripping 14 : 2010 re-stripping
+'''
+
+
+
 from GaudiKernel.SystemOfUnits             import mm, micrometer, MeV 
 
 # B2XMuMu lines for Majorana searches

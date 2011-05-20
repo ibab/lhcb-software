@@ -5,6 +5,7 @@ Stripping15 definitions.
 Dictionaries have the name of the line builder instance.
 """
 
+from GaudiKernel.SystemOfUnits import *
 
 #WMu
 WMu = {    
@@ -120,42 +121,42 @@ DisplVertices = {
     },
     'RCutMethod' : 'FromBeamSpot',
     'MinR':{
-       'PreselVelo':     0.3*units.mm , 
-       'SinglePS': 0.3*units.mm ,
-       'SingleLowMass': 0.3*units.mm ,
-       'SingleHighMass': 0.3*units.mm ,
-       'SingleDown': 0.3*units.mm ,
-       'Double': 0.3*units.mm
+       'PreselVelo':     0.3*mm , 
+       'SinglePS': 0.3*mm ,
+       'SingleLowMass': 0.3*mm ,
+       'SingleHighMass': 0.3*mm ,
+       'SingleDown': 0.3*mm ,
+       'Double': 0.3*mm
     },
     'MinMass':{
-       'PreselVelo':     3.*units.GeV , 
-       'SinglePS': 5.*units.GeV  ,
-       'SingleLowMass': 6.8*units.GeV ,
-       'SingleHighMass':  12.*units.GeV,
-       'SingleDown':  3.*units.GeV,
-       'Double': 3.*units.GeV 
+       'PreselVelo':     3.*GeV , 
+       'SinglePS': 5.*GeV  ,
+       'SingleLowMass': 6.8*GeV ,
+       'SingleHighMass':  12.*GeV,
+       'SingleDown':  3.*GeV,
+       'Double': 3.*GeV 
     },
     'MinSumPt':{
-       'PreselVelo':     3.*units.GeV ,
-       'SinglePS': 5.*units.GeV  ,
-       'SingleLowMass': 6.*units.GeV ,
-       'SingleHighMass':  6.*units.GeV,
-       'SingleDown':  3.5*units.GeV,
-       'Double': 3.*units.GeV
+       'PreselVelo':     3.*GeV ,
+       'SinglePS': 5.*GeV  ,
+       'SingleLowMass': 6.*GeV ,
+       'SingleHighMass':  6.*GeV,
+       'SingleDown':  3.5*GeV,
+       'Double': 3.*GeV
     },
     'MaxMass':{
-       'SinglePS': 14*units.TeV ,
-       'SingleLowMass': 12.*units.GeV,
-       'SingleHighMass':  14*units.TeV ,
-       'SingleDown':  14*units.TeV,
-       'Double': 14*units.TeV
+       'SinglePS': 14*TeV ,
+       'SingleLowMass': 12.*GeV,
+       'SingleHighMass':  14*TeV ,
+       'SingleDown':  14*TeV,
+       'Double': 14*TeV
     },
     'MaxSumPt':{
-       'SinglePS': 14*units.TeV ,
-       'SingleLowMass': 14*units.TeV,
-       'SingleHighMass':  14*units.TeV ,
-       'SingleDown':  14*units.TeV ,
-       'Double': 14*units.TeV
+       'SinglePS': 14*TeV ,
+       'SingleLowMass': 14*TeV,
+       'SingleHighMass':  14*TeV ,
+       'SingleDown':  14*TeV ,
+       'Double': 14*TeV
     },
     'NTracks':{
        'PreselVelo':     4,
@@ -166,11 +167,11 @@ DisplVertices = {
        'Double': 4
     },
     'MinZ':{
-       'SinglePS': -10*units.m,
-       'SingleLowMass':  -10*units.m,
-       'SingleHighMass':   -10*units.m ,
-       'SingleDown': 100*units.mm  ,
-       'Double': -10*units.m
+       'SinglePS': -10*m,
+       'SingleLowMass':  -10*m,
+       'SingleHighMass':   -10*m ,
+       'SingleDown': 100*mm  ,
+       'Double': -10*m
     },
     'MaterialVeto':{
        'PreselVelo':     5 ,

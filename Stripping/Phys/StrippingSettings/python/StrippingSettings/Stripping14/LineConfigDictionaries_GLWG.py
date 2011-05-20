@@ -1,7 +1,7 @@
 """
 Line config dictionaries for Gamma from loops WG.
 
-Stripping13 definitions.
+Stripping14 definitions: 2010 re-stripping
 Dictionaries have the name of the line builder instance.
 """
 

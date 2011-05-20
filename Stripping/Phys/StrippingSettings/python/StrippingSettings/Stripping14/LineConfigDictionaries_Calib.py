@@ -1,9 +1,11 @@
 """
 Line config dictionaries for Calibration stream
 
-Stripping15 definitions.
+Stripping14 definitions.
 Dictionaries have the name of the line builder instance.
 """
+
+from GaudiKernel.SystemOfUnits import MeV, GeV
 
 BeamGas = {
    'BUILDERTYPE' : 'BeamGasConf',

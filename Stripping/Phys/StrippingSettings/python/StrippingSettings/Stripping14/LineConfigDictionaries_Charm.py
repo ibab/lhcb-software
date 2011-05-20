@@ -1,7 +1,7 @@
 """
 Line config dictionaries for Charm WG
 
-Stripping15 definitions.
+Stripping14 definitions: 2010 re-stripping
 Dictionaries have the name of the line builder instance.
 """
 

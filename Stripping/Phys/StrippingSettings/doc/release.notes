@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-19 - Thomas Blake
+ - Fixed GaudiKernel.SystemOfUnits imports for Stripping14
+
 ! 2011-05-20 - Jibo He
  - Stripping1Point4TeV, fix the trigger requirement in StrippingTrackEffVeloMuon
    dbase updated
