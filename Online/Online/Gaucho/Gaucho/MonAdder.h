@@ -81,24 +81,24 @@ public:
     return m_buffer;
   }
 };
-class OUTServiceDescr
-{
-public:
-  std::string m_serviceName;
-  long long last_update;
-  void *m_svc;
-  void *m_buffer;
-  int m_buffersize;
-  OUTServiceDescr(char *name, void *srvc)
-  {
-    m_serviceName = std::string(name);
-    m_svc = srvc;//new ObjService(m_serviceName.c_str(),(char*)"C",&empty,4,&m_buffer,&m_buffersize);
-  }
-  ~OUTServiceDescr()
-  {
-//    delete m_svc;
-  }
-};
+//class OUTServiceDescr
+//{
+//public:
+//  std::string m_serviceName;
+//  long long last_update;
+//  void *m_svc;
+//  void *m_buffer;
+//  int m_buffersize;
+//  OUTServiceDescr(char *name, void *srvc)
+//  {
+//    m_serviceName = std::string(name);
+//    m_svc = srvc;//new ObjService(m_serviceName.c_str(),(char*)"C",&empty,4,&m_buffer,&m_buffersize);
+//  }
+//  ~OUTServiceDescr()
+//  {
+////    delete m_svc;
+//  }
+//};
 typedef std::map<std::string, TaskSvcDescr*> TaskServiceMap;
 typedef std::pair<std::string, TaskSvcDescr*> TaskServicePair;
 typedef TaskServiceMap::iterator TaskServIter;
@@ -107,9 +107,9 @@ typedef std::map<std::string, INServiceDescr*> INServiceMap;
 typedef std::pair<std::string, INServiceDescr*> INServicePair;
 typedef INServiceMap::iterator INServIter;
 
-typedef std::map<std::string, OUTServiceDescr*> OUTServiceMap;
-typedef std::pair<std::string, OUTServiceDescr*> OUTServicePair;
-typedef OUTServiceMap::iterator OUTServIter;
+//typedef std::map<std::string, OUTServiceDescr*> OUTServiceMap;
+//typedef std::pair<std::string, OUTServiceDescr*> OUTServicePair;
+//typedef OUTServiceMap::iterator OUTServIter;
 
 class TaskDescr
 {
@@ -150,7 +150,7 @@ public:
   std::string m_NamePrefix;
   std::string m_outsvcname;
   INServiceMap m_inputServicemap;
-  OUTServiceMap m_outputServicemap;
+//  OUTServiceMap m_outputServicemap;
   TaskServiceMap m_TaskServiceMap;
   void TaskName(std::string &server, std::string &tname, std::string &tgen);
 
@@ -194,7 +194,7 @@ public:
   void *ReAllocate(int);
   void SetCycleFn(void CycleCB(void*,void*,int, MonMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}
   INServiceDescr *findINService(std::string);
-  OUTServiceDescr *findOUTService(std::string servc);
+//  OUTServiceDescr *findOUTService(std::string servc);
   virtual void Configure();
 //  virtual void TaskHandler(char *, int);
 //  virtual void ServiceHandler(DimInfo *, std::string &, char *, int);

@@ -170,16 +170,16 @@ INServiceDescr *MonAdder::findINService(std::string servc)
   return 0;
 }
 
-OUTServiceDescr *MonAdder::findOUTService(std::string servc)
-{
-  OUTServIter i = m_outputServicemap.find(servc);
-  if (i != m_outputServicemap.end())
-  {
-    OUTServiceDescr *sd = i->second;
-    return sd;
-  }
-  return 0;
-}
+//OUTServiceDescr *MonAdder::findOUTService(std::string servc)
+//{
+//  OUTServIter i = m_outputServicemap.find(servc);
+//  if (i != m_outputServicemap.end())
+//  {
+//    OUTServiceDescr *sd = i->second;
+//    return sd;
+//  }
+//  return 0;
+//}
 void MonAdder::TaskDied(std::string & task)
 {
   TskServiceMap::iterator i = m_TaskMap.find(task);
