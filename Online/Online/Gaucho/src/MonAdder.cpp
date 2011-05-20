@@ -41,7 +41,7 @@ MonAdder::MonAdder()
   m_updated     = false;
   m_timer = 0;
   m_disableOutput = false;
-  m_histo = false;
+  m_histo = 0;
 }
 
 MonAdder::~MonAdder()

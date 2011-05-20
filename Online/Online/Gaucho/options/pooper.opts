@@ -3,7 +3,7 @@
 #include "$INFOOPTIONS"
 #include "/group/online/dataflow/options/LHCb/LHCb_Tell1Boards.opts"
 ApplicationMgr.ExtSvc               += {
-					"PubSvc/MEPrxCountPub"
+					"MEPSvc/MEPrxCountPub"
 					};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";

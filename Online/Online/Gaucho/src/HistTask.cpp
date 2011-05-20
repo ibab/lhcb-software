@@ -35,6 +35,10 @@
 //    }
 //  }
 //}
+HistTask::~HistTask()
+{
+  deletePtr(m_RPC);
+}
 HistTask::HistTask(const std::string &task,const std::string &dns, int tmo)
 : m_DNS(dns),m_task(task),m_RPC(0)
 {
