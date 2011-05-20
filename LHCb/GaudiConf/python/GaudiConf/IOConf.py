@@ -18,6 +18,8 @@ class IOConf(LHCbConfigurableUser):
        , 'OutputPersistency' : "ROOT"
        , 'InputFiles'        : []
        , 'OutputFile'        : ""
+       , 'Writer'            : "" 
+       , 'WriteFSR'          : True 
          }
 
     _propertyDocDct = { 
@@ -25,6 +27,8 @@ class IOConf(LHCbConfigurableUser):
        ,'OutputPersistency' : """ Technology of output persistency, can be ['MDF','ROOT','POOL'] """
        ,'InputFiles'        : """ Connection strings of input files """
        ,'OutputFile'        : """ Connection string of output file. Must be given if output wanted """
+       ,'Writer'            : """ Name of OutputStream writing the output. If not given, use InputCopyStream """
+       ,'WriteFSR'          : """ Flags whether to write out an FSR """
        }
 
     InputSvcTypDict = { 'ROOT' : "SVC='Gaudi::RootEvtSelector'",
@@ -32,7 +36,7 @@ class IOConf(LHCbConfigurableUser):
                         }
 
     OutputSvcTypDict = { 'ROOT' : "SVC='RootCnvSvc'",
-                         'POOL' : "TYP='POOL_ROOT'"
+                         'POOL' : "TYP='POOL_ROOTTREE'"
                        }
 
     def _checkSlots(self):
@@ -119,11 +123,31 @@ class IOConf(LHCbConfigurableUser):
 
         # Set up output file
         if self.getProp( "OutputFile" ) != "":
-            outStream = InputCopyStream()
-            datafile = "DATAFILE='" + self.getProp( "OutputFile" ) + "' " + self.svcTypString( 'O' ) + " OPT='REC'"
-            log.info( "Output file: %s"%datafile )
-            outStream.Output = datafile
+            writer = self.getProp("Writer")
+            if writer == "":
+                outStream = InputCopyStream()
+            else:
+                outStream = OutputStream( writer )
+                
+            if not outStream.isPropertySet("Output"):
+                datafile = "DATAFILE='" + self.getProp( "OutputFile" ) + "' " + self.svcTypString( 'O' ) + " OPT='REC'"
+                log.info( "Output file: %s"%datafile )
+                outStream.Output = datafile
+            else:
+                datafile = outStream.getProp("Output")
             ApplicationMgr().OutStream += [ outStream ]
+
+            # Add the FSRWriter to the same output file
+            if self.getProp("WriteFSR"):
+                FSRWriter = RecordStream( "FSRWriter",
+                                          ItemList = [ "/FileRecords#999" ],
+                                          EvtDataSvc = "FileRecordDataSvc",
+                                          EvtConversionSvc = "FileRecordPersistencySvc" )
+                # Write the FSRs to the same file as the events
+                if FSRWriter.isPropertySet( "Output" ):
+                    log.warning("Ignoring FSRWriter.Output option, FSRs will be written to same file as the events")
+                FSRWriter.Output = datafile
+                ApplicationMgr().OutStream.append(FSRWriter)
 
     def svcTypString(self,IO):
         # Return SVC/TYP for file IO definition
