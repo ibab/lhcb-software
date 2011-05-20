@@ -59,6 +59,21 @@ lb = builder('Test',config_default)
 stream.appendLines( lb.lines() )
 
 
+#from StrippingSelections.StrippingD2HHLTUnbiased import StrippingD2HHLTUnbiasedConf as builderhh
+#from StrippingSelections.StrippingD2HHLTUnbiased import default_config as config_paramshh
+
+
+#lbhh = builderhh('Pippo',config_paramshh)
+
+#stream.appendLines( lbhh.lines() )
+
+
+
+
+
+
+
+
 #from StrippingSelections.StrippingB2SameChargeMuon import StrippingB2SameChargeMuonConf as builder
 
 #config_params =  {
@@ -104,7 +119,7 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100000
+DaVinci().EvtMax = 10000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
