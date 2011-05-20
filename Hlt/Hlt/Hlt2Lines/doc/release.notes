@@ -7,6 +7,8 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2011-05-20 - Grant McGregor
+ - Hlt2CharmSemilepD02HMuNu changes to reduce q2 biases on selection. Reduced number of cuts.
 
 ! 2011-05-19 - Jibo He
  - Hlt2InclusiveDiProtonLines.py

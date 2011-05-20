@@ -1,6 +1,6 @@
 __author__  = 'Grant McGregor'
 __date__    = '$Date: 2011-03-15 13:53:00 $'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -16,26 +16,22 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
     #------------------------
     __slots__ = {
                 ## Cut values for D0 -> KMuNu, PiMuNu
-                  'Muon_PT_MIN'               : 600.0 * MeV
-                , 'Hadron_PT_MIN'             : 800.0 * MeV  
-                , 'Muon_P_MIN'                : 3.6  * GeV
-                , 'Trk_MIPCHI2DV_MIN'         : 5.0        # no units
-                , 'Trk_TRCHI2DOF_MAX'         : 3.0        # no units
-                , 'Pair_AMAXDOCA_MAX'         : 0.08 * mm
-                , 'Pair_Mass_MAX'             : 2000.0 * MeV
-                , 'Pair_SumAPT_MIN'           : 2000.0 * MeV  #2800.0
-                , 'D0_BPVDIRA_MIN'            : 0.9995    # 
+                  'Muon_PT_MIN'               : 800.0 * MeV
+                , 'Hadron_PT_MIN'             : 600.0 * MeV  
+                , 'Trk_TRCHI2DOF_MAX'         : 3.0        # neuter
+                , 'Pair_AMAXDOCA_MAX'         : 0.07 * mm
+                , 'Pair_Mass_MAX'             : 1900.0 * MeV
+                , 'Pair_SumAPT_MIN'           : 2800.0 * MeV  
                 , 'D0_VCHI2PDOF_MAX'          : 10.0       # neuter
-		, 'D0_MIPDV_MAX'              : 0.2 * mm  
-                , 'D0_P_MIN'                  : 18.0 * GeV
+		, 'D0_FD_MIN'                 : 4.0 * mm
+                , 'D0_P_MIN'                  : 20.0 * GeV
                 , 'D0_MCORR_MIN'              : 1400.0 * MeV
                 , 'D0_MCORR_MAX'              : 2700.0 * MeV 
                 , 'D0_BPVVDZ_MIN'             : 0.0 * mm    
                 ## GEC
                 , 'GEC_Filter_NTRACK'        : False       # do or do not, there is no try...
                 , 'GEC_NTRACK_MAX'           : 350        # max number of tracks
-                , 'TisTosParticleTaggerSpecs': { "Hlt1TrackAllL0Decision%TOS":0,
-                                                 "Hlt1TrackMuonDecision%TOS":0 }	
+                , 'TisTosParticleTaggerSpecs': {"Hlt1TrackMuonDecision%TOS":0 }	
 		, 'L0FILTER'                 : "Muon,Hadron"
                 , 'name_prefix'              : 'CharmSemilepD02HMuNu'
                 , 'Prescale'         : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'     : 1.0
@@ -78,18 +74,18 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         """
         Wrapper for line construction that also registers it to the HltANNSvc.
         """
-        ## Prepend a filter on the number of tracks, if required.
-        Hlt2CharmKillTooManyInTrk = self.__seqGEC()
-        lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
-        lclAlgos.extend(algos)
-        l0filter = self.getProp("L0FILTER").split(',')
-        #  move PV3D upfront in case it is present
-        #  note that any duplication gets automatically removed, so we 
-        #  keep the original 'as is'
-        from HltTracking.HltPVs import PV3D
-        pv = PV3D()
-        if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) : 
-            lclAlgos.insert( 0, pv )
+	## Prepend a filter on the number of tracks, if required.
+	Hlt2CharmKillTooManyInTrk = self.__seqGEC()
+	lclAlgos = [ Hlt2CharmKillTooManyInTrk ]
+	lclAlgos.extend(algos)
+	l0filter = self.getProp("L0FILTER").split(',')
+	#  move PV3D upfront in case it is present
+	#  note that any duplication gets automatically removed, so we
+	#  keep the original 'as is'
+	from HltTracking.HltPVs import PV3D
+	pv = PV3D()
+	if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) :
+	    lclAlgos.insert( 0, pv )
 
         from HltLine.HltLine import Hlt2Line
         line = Hlt2Line(lineName
@@ -120,8 +116,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 
         # Construct a cut string for the vertexed combination.
         parentcuts = "(in_range(%(D0_MCORR_MIN)s,BPVCORRM,%(D0_MCORR_MAX)s))" \
-		     "& (MIPDV(PRIMARY) > %(D0_MIPDV_MAX)s )"\
-          	     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )" \
+		     "& (BPVVD > %(D0_FD_MIN)s )" \
                      "& (VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
                      "& (BPVVDZ> %(D0_BPVVDZ_MIN)s )" \
                      % self.getProps()
@@ -141,26 +136,25 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         return combSeq
     # }
 
-
     def __filter(self, name, inputSeq, extracode = None) : # {
-        "Filter combinatorics.  Returns a bindMembers."
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltLine.Hlt2Monitoring import Hlt2Monitor
+	    "Filter combinatorics.  Returns a bindMembers."
+	    from HltLine.HltLine import Hlt2Member, bindMembers
+	    from Configurables import FilterDesktop, CombineParticles
+	    from HltLine.Hlt2Monitoring import Hlt2Monitor
 
-        codestr = "(ALL)"
-        
-        if extracode :
-          codestr = extracode + '&' + codestr
-        filter = Hlt2Member( FilterDesktop
-                             , 'Filter'
-                             , Inputs = inputSeq
-                             , Code = codestr
-                             , PreMonitor  =  Hlt2Monitor( "M","M(K#mu)",1400.,500,'M_in',nbins=101) 
-                             , PostMonitor =  Hlt2Monitor( "M","M(K#mu)",1400.,500,'M_out',nbins=101)   
-                           )
-        filterSeq = bindMembers( name, inputSeq + [ filter ] )
-        return filterSeq
+	    codestr = "(ALL)"
+
+	    if extracode :
+		codestr = extracode + '&' + codestr
+	    filter = Hlt2Member( FilterDesktop
+		    , 'Filter'
+		    , Inputs  = inputSeq
+		    , Code=codestr
+		    ,PreMonitor=Hlt2Monitor("M","M(K#mu)",1400.,500,'M_in',nbins=101)
+		    ,PostMonitor=Hlt2Monitor("M","M(K#mu)",1400.,500,'M_out',nbins=101)  
+		    )
+	    filterSeq = bindMembers( name, inputSeq + [ filter] )
+	    return filterSeq
     # }
 
     def __filterHlt1TOS(self, name, input) : # {
@@ -172,7 +166,6 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 	filterTOS.Inputs = [ input.outputSelection() ]
 	return bindMembers(name, [ input, filterTOS ])
 # }
-
 
     def __seqGEC(self) : # {
         """
@@ -212,13 +205,10 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
  
         if forMuon:
             incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
-	             "& ISMUON & (PT> %(Muon_PT_MIN)s)" \
-		     "& (P> %(Muon_P_MIN)s)" \
-                     "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" % self.getProps()
+	             "& ISMUON & (PT> %(Muon_PT_MIN)s)"  % self.getProps()
         else:
             incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
-	             "& (PT> %(Hadron_PT_MIN)s)" \
-                     "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s )" % self.getProps()
+	             "& (PT> %(Hadron_PT_MIN)s)" % self.getProps()
 
         filter = Hlt2Member( FilterDesktop
                             , 'Filter'
@@ -266,13 +256,11 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                                 , decayDesc = [ decayModes[mode]['descriptor'] ]
                            )
             d02HMuNuTOS = self.__filterHlt1TOS(modeName, d02HMuNuComb)
-
-            ## Signal window filter
-            d02HMuNuSigSeq = self.__filter( name = modeName
-                                     , inputSeq = [ d02HMuNuTOS ]
-                                     , extracode = ""
-                           )
-
+	    ## Signal window filter
+	    d02HMuNuSigSeq = self.__filter( name = modeName
+		    , inputSeq = [ d02HMuNuTOS ]
+		    , extracode = ""
+		    )
             ## Signal window line
             d02HMuNuSigLine = self.__makeLine(modeName, algos = [ d02HMuNuSigSeq ])
 
