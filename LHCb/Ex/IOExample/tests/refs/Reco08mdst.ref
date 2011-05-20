@@ -1,13 +1,5 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadReco08POOLmdst.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadReco08POOLmdst.py'
-# applying configuration of IOConf
-# Input file: DATAFILE='PFN:POOL-Reco08.mdst' TYP='POOL_ROOT' OPT='READ'
-# /***** User IOConf/IOConf **************************************************************************
-# |-OutputFile        = ''
-# |-InputPersistency  = 'POOL'  (default: 'POOL')
-# |-InputFiles        = ['PFN:POOL-Reco08.mdst']  (default: [])
-# |-OutputPersistency = 'ROOT'
-# \----- (End of User IOConf/IOConf) -----------------------------------------------------------------
+# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadReco08POOLmdst.py'
+# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadReco08POOLmdst.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -20,11 +12,21 @@
 # skipping configuration of DigiConf
 # skipping configuration of CaloDstPackConf
 # skipping configuration of SimConf
+# applying configuration of IOConf
+# Input file: DATAFILE='PFN:POOL-Reco08.mdst' TYP='POOL_ROOT' OPT='READ'
+# /***** User IOConf/IOConf **************************************************************************
+# |-OutputFile        = ''
+# |-Writer            = ''
+# |-InputPersistency  = 'POOL'  (default: 'POOL')
+# |-WriteFSR          = True
+# |-OutputPersistency = 'ROOT'
+# |-InputFiles        = ['PFN:POOL-Reco08.mdst']  (default: [])
+# \----- (End of User IOConf/IOConf) -----------------------------------------------------------------
 # skipping configuration of CaloDstUnPackConf
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Wed May 18 15:12:25 2011
+                                          running on lxbuild163.cern.ch on Fri May 20 16:19:48 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
@@ -78,332 +80,332 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 RootDBase.open    SUCCESS POOL-Reco08.mdst File version:52800
-PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:B29ADA09-1681-E011-910C-003048C9CD62
+PoolRootEvtCnvSvc    INFO Records token:[DB=7436C5F3-AF82-E011-8352-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000065-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 PrintHeader          INFO Run 80845, Event 71425568
-StoreExplorerAlg     INFO ========= /Event[0x1b9cc060@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x200]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x200]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x200]  KeyedContainer<LHCb::WeightsVect [0x1]
-StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x3]
-StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x200]  KeyedContainer<LHCb::Track,Conta [0x3]
-StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x200]  KeyedContainer<LHCb::RichPID,Con [0x3]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]  KeyedContainer<LHCb::MuonPID,Con [0x3]
-StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Photons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
-StoreExplorerAlg     INFO   | |   +--> /Electrons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
-StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D02HHForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /SelBasicMesonsForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x2]
-StoreExplorerAlg     INFO   | | +--> /DstarForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | +--> /PreSelD02HHForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KPPos [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhh_inc [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | |   +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x200]  DaVinci::Map::Particle2LHCbIDs
+StoreExplorerAlg     INFO ========= /Event[0x17d357d0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x202]  KeyedContainer<LHCb::WeightsVect [0x1]
+StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x3]
+StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x3]
+StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x202]  KeyedContainer<LHCb::RichPID,Con [0x3]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x202]  KeyedContainer<LHCb::MuonPID,Con [0x3]
+StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
+StoreExplorerAlg     INFO   | |   +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
+StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D02HHForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelBasicMesonsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /DstarForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | +--> /PreSelD02HHForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KPPos [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhh_inc [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | |   +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x202]  DaVinci::Map::Particle2LHCbIDs
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader          INFO Run 80845, Event 71457874
-StoreExplorerAlg     INFO ========= /Event[0x1a92e210@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x200]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x200]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x200]  KeyedContainer<LHCb::WeightsVect [0x1]
-StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x2]
-StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x200]  KeyedContainer<LHCb::Track,Conta [0x2]
-StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x200]  KeyedContainer<LHCb::RichPID,Con [0x2]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]  KeyedContainer<LHCb::MuonPID,Con [0x2]
-StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x2]
-StoreExplorerAlg     INFO   | | +--> /D02HHForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /SelBasicMesonsForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x2]
-StoreExplorerAlg     INFO   | | +--> /DstarForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /LambdaCForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x200]  DaVinci::Map::Particle2LHCbIDs
+StoreExplorerAlg     INFO ========= /Event[0x17e99390@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x202]  KeyedContainer<LHCb::WeightsVect [0x1]
+StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x2]
+StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x2]
+StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x202]  KeyedContainer<LHCb::RichPID,Con [0x2]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /MuonPID [Address: CLID=0x62b2a Type=0x202]  KeyedContainer<LHCb::MuonPID,Con [0x2]
+StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /D02HHForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelBasicMesonsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /DstarForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /LambdaCForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x202]  DaVinci::Map::Particle2LHCbIDs
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader          INFO Run 80845, Event 71441314
-StoreExplorerAlg     INFO ========= /Event[0x1cd36d20@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x200]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x200]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x3]
-StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x200]  KeyedContainer<LHCb::WeightsVect [0x3]
-StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x7]
-StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x200]  KeyedContainer<LHCb::Track,Conta [0x7]
-StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x200]  KeyedContainer<LHCb::RichPID,Con [0x7]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]  KeyedContainer<LHCb::MuonPID,Con [0x7]
-StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Electrons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x4]
-StoreExplorerAlg     INFO   | |   +--> /Photons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x6]
-StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x4]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x4]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x4]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x6]
-StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KPPos [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x200]  DaVinci::Map::Particle2LHCbIDs
+StoreExplorerAlg     INFO ========= /Event[0x16bf10a0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x3]
+StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x202]  KeyedContainer<LHCb::WeightsVect [0x3]
+StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x7]
+StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x7]
+StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x202]  KeyedContainer<LHCb::RichPID,Con [0x7]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x202]  KeyedContainer<LHCb::MuonPID,Con [0x7]
+StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x4]
+StoreExplorerAlg     INFO   | |   +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x6]
+StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x4]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x4]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x6]
+StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KPPos [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x202]  DaVinci::Map::Particle2LHCbIDs
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader          INFO Run 80845, Event 71496385
-StoreExplorerAlg     INFO ========= /Event[0x1c9c4c20@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x200]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x200]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x3]
-StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x200]  KeyedContainer<LHCb::WeightsVect [0x3]
-StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x2]
-StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x200]  KeyedContainer<LHCb::Track,Conta [0x2]
-StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x200]  KeyedContainer<LHCb::RichPID,Con [0x2]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]  KeyedContainer<LHCb::MuonPID,Con [0x2]
-StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Electrons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x2]
-StoreExplorerAlg     INFO   | |   +--> /Photons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
-StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x1]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x1]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x2]
-StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x200]  DaVinci::Map::Particle2LHCbIDs
+StoreExplorerAlg     INFO ========= /Event[0x16bf10a0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x3]
+StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x202]  KeyedContainer<LHCb::WeightsVect [0x3]
+StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x2]
+StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x2]
+StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x202]  KeyedContainer<LHCb::RichPID,Con [0x2]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x202]  KeyedContainer<LHCb::MuonPID,Con [0x2]
+StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x2]
+StoreExplorerAlg     INFO   | |   +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
+StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x202]  DaVinci::Map::Particle2LHCbIDs
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader          INFO Run 80845, Event 71490736
-StoreExplorerAlg     INFO ========= /Event[0x1ce1bb30@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x200]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x200]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x200]  LHCb::RecHeader
-StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x2]
-StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x200]  KeyedContainer<LHCb::WeightsVect [0x2]
-StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x200]  KeyedContainer<LHCb::ProtoPartic [0x8]
-StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x200]  KeyedContainer<LHCb::Track,Conta [0x8]
-StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x200]  KeyedContainer<LHCb::RichPID,Con [0x8]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x200]  KeyedContainer<LHCb::MuonPID,Con [0x8]
-StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Electrons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x5]
-StoreExplorerAlg     INFO   | |   +--> /Photons [Address: CLID=0x607d4 Type=0x200]  KeyedContainer<LHCb::CaloHypo,Co [0x7]
-StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x200]  LHCb::ODIN
-StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x200]  LHCb::RawEvent
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /LambdaCForPromptCharm [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x3]
-StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x200]  KeyedContainer<LHCb::Vertex,Cont [0x3]
-StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x200]  KeyedContainer<LHCb::RecVertex,C [0x3]
-StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x200]  LHCb::Relation1D<LHCb::Particle,
-StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0x8]
-StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x200]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x200]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x200]  DaVinci::Map::Particle2LHCbIDs
+StoreExplorerAlg     INFO ========= /Event[0x18d30230@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Charm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO   | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x2]
+StoreExplorerAlg     INFO   | | | +--> /Weights [Address: CLID=0x6272f Type=0x202]  KeyedContainer<LHCb::WeightsVect [0x2]
+StoreExplorerAlg     INFO   | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x8]
+StoreExplorerAlg     INFO   | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x8]
+StoreExplorerAlg     INFO   | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /PIDs [Address: CLID=0x63072 Type=0x202]  KeyedContainer<LHCb::RichPID,Con [0x8]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /MuonPID [Address: CLID=0x62b2a Type=0x202]  KeyedContainer<LHCb::MuonPID,Con [0x8]
+StoreExplorerAlg     INFO   | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x5]
+StoreExplorerAlg     INFO   | |   +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x7]
+StoreExplorerAlg     INFO   | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /ODIN [Address: CLID=0x3ed Type=0x202]  LHCb::ODIN
+StoreExplorerAlg     INFO   | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /D02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /LambdaCForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2PPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x3]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x3]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | | +--> /ReFitPvs_Charm_PVs [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x3]
+StoreExplorerAlg     INFO   | | | +--> /BestPV_Charm_P2PV [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x8]
+StoreExplorerAlg     INFO   | | +--> /D2KKP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KKK [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KPP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type=0x202]  DaVinci::Map::Particle2LHCbIDs
 TESFingerPrint      DEBUG ==> Execute
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 ApplicationMgr       INFO Application Manager Stopped successfully
@@ -416,8 +418,8 @@ TESFingerPrint      DEBUG Tools to release :
 TESFingerPrint      DEBUG Services to release :
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:B29ADA09-1681-E011-910C-003048C9CD62[POOL-Reco08.mdst]
+PoolRootEvtCnvSvc    INFO Disconnected data IO:7436C5F3-AF82-E011-8352-003048C9CD62[POOL-Reco08.mdst]
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
