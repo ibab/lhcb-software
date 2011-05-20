@@ -4,11 +4,13 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r14p1 2011-05-20 =========================
 ! 2011-05-20 - Rob Lambert
  - Revert bad behaviour of TupleToolGeometry with respect to refitting PVs.
-	 Introduces in previous version "2011-04-04 - Yuehong Xie"
+	 Introduced in previous version "2011-04-04 - Yuehong Xie"
+   bug #82482
    Broke TupleToolGeometry on MicroDSTs and falls outside the established
-   refitting framework.
+         refitting framework.
    For the moment only refit if an option is set to true.
    In the future this should be linked with Juan's refitting framework.
    
