@@ -106,7 +106,7 @@ StatusCode RootCnvSvc::initialize()  {
     return error("Unable to localize interface from service:IncidentSvc");
   if ( !(status=service("EventDataSvc",pSvc)).isSuccess() )
     return error("Failed to get data provider.");
-  setDataProvider(pSvc);
+  setDataProvider(pSvc).ignore();
   m_setup->setMessageSvc(new MsgStream(msgSvc(),name()));
   GaudiRoot::patchStreamers(log());
 
