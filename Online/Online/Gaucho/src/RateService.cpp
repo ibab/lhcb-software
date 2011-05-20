@@ -1,6 +1,6 @@
 #include "Gaucho/RateService.h"
 
-RateService::RateService (const char *name, const char *format):DimService((char*)name, format, (void*)&m_data, sizeof(m_data))
+RateService::RateService (const char *name, const char *format):DimService((char*)name, (char*)format, (void*)&m_data, sizeof(m_data))
 {
 }
 
