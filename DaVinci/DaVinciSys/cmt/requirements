@@ -1,10 +1,10 @@
 package DaVinciSys
-version v28r3
+version           v28r3p1
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v28r3   Phys
+use  DaVinci                 	v28r3p1   Phys
 use  DaVinciTests               v2r5
 
 # Patches from other projects
@@ -13,6 +13,7 @@ use OTDAQ v7r10 OT
 use LumiAlgs v5r2 Rec
 use TrackSys v6r2 Tf
 use TrackTools v4r6 Tr
+use DecayTreeTuple v3r14p1 Phys
 
 
 # Declare this as a container package

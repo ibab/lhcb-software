@@ -3,6 +3,24 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v28r3p1>2011-05-20 DaVinci v28r3p1</A></H1><PRE>
+
+Production version for 2011 processing of 1.4 TeV data.
+Stripping 13 compatible. 
+Stripping v2r3p2, Analysis v6r4p1, Hlt v13r6, Phys v12r4p1
+
+Based on LHCb v32r2 stack. 
+
+Packages from Rec/LHCb included in DaVinci for this release:
+  . OT/OTDAQ v7r10
+  . Rec/LumiAlgs v5r2
+  . Tf/TrackSys v6r2
+  . Tr/TrackTools v4r6
+  . Phys/DecayTreeTuple v3r14p1
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r3p1
+
 </PRE><H1><A NAME=v28r3>2011-05-13 DaVinci v28r3</A></H1><PRE>
 
 Production version for 2011 reprocessing and 2010 restripping.
