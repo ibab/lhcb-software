@@ -127,7 +127,7 @@ TrackEffDownMuon = {
                 ,       'NominalLinePostscale': 1.
                 ,       'ValidationLinePrescale':  1.
                 ,       'ValidationLinePostscale': 1.
-                ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+                ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
                 ,       'HLT1PassOnAll': True
                 ,       'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
                 ,       'HLT2PassOnAll': False
