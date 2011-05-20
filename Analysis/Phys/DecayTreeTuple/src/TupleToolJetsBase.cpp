@@ -28,8 +28,8 @@ bool TupleToolJetsBase::WriteJetToTuple(const LHCb::Particle*jet,std::string pre
       prefix = prefix.replace(point,it->second.size(),it->second);
   }
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << (jet?"Filling jet object ":"Filling dummy jet object ") << prefix << endmsg;
-  //std::cout << prefix << std::endl;
+  if ( msgLevel(MSG::DEBUG) ) debug() << (jet?"Filling jet object ":"Filling dummy jet object ") << jet << " " << prefix << " in tuple at address "<<m_tuple<< endmsg;
+  
   bool result = true;
   result &= (*m_tuple)->column( prefix+"_PX",  SAVEPOINT(jet,momentum().Px()));
   result &= (*m_tuple)->column( prefix+"_PY",  SAVEPOINT(jet,momentum().Py()));
@@ -51,9 +51,6 @@ bool TupleToolJetsBase::WriteJetToTuple(const LHCb::Particle*jet,std::string pre
       result &= (*m_tuple)->column( prefix+"_neutralParticleMultiplicity", jet?neutralParticles(jet):-1.0);
       result &= (*m_tuple)->column( prefix+"_chargedParticleMultiplicity", jet?positiveParticles(jet)+negativeParticles(jet):-1.0);
       result &= (*m_tuple)->column( prefix+"_maxPT", jet?maxPT(jet):-1.0);
-      //      result &= (*m_tuple)->column( prefix+"_DETA", jet?m_DETA(jet):-10.0);
-      //      result &= (*m_tuple)->column( prefix+"_DPHI", jet?m_DPHI(jet):-10.0);
-      //      result &= (*m_tuple)->column( prefix+"_DR", jet?sqrt(m_DR2(jet)):-1.0);
       SmartRefVector< LHCb::Particle > SortedDaughters; 
       //buffer to store intermediate result to speed things up a bit
       result &= (*m_tuple)->column( prefix+"_PT2",  jet?MaxSumNPart(jet,2, LoKi::Cuts::PT,&SortedDaughters):-1.0);
@@ -70,13 +67,7 @@ StatusCode TupleToolJetsBase::initialize()
 {
   if( ! TupleToolBase::initialize() )
     return StatusCode::FAILURE;
-  // PP Svc
-  //  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
   //get LoKi objects
-  //  m_AdditionalJetMaker = tool<IJetMaker>( "LoKi::FastJetMaker","AdditionalJetMaker", this );
-  //  m_IsoJetMaker = tool<IJetMaker>( "LoKi::FastJetMaker","IsoJetMaker", this );
-  //  m_LokiAddJetFilter = tool<IParticleFilter>("LoKi::Hybrid::FilterCriterion","AdditionalJetsFilter",this);
-  //  m_LokiIsoJetFilter = tool<IParticleFilter>("LoKi::Hybrid::FilterCriterion","IsolationJetsFilter",this);
   charge = LoKi::Cuts::SUMTREE (LoKi::Cuts::Q, LoKi::Cuts::ALL, 0.0 ) ;
   positiveParticles = LoKi::Cuts::NINTREE (  LoKi::Cuts::Q > 0 );
   negativeParticles = LoKi::Cuts::NINTREE (  LoKi::Cuts::Q < 0 );

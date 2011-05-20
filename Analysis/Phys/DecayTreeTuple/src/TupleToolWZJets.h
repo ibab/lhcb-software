@@ -11,7 +11,7 @@
 #include "Kernel/IJetMaker.h"
 
 //autor: Albert Bursche
-class TupleToolWZJets : public TupleToolJetsBase {
+class TupleToolWZJets : public TupleToolJetsBase, virtual public IParticleTupleTool  {
 public:
   /// Standard constructor
   TupleToolWZJets( const std::string& type,
@@ -41,7 +41,7 @@ private:
   bool m_reqOverlap;
   bool m_remOverlap;
   bool m_IsoJetAbsID;
-  Tuples::Tuple* m_tuple;
+  //  Tuples::Tuple* m_tuple;
   std::string m_prefix;
   const IJetMaker* m_AdditionalJetMaker;
   const IJetMaker* m_IsoJetMaker;

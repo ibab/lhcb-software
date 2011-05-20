@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-05-20 - Albert Bursche
+ - Added TuplToolJetRelations and fixed segfault in TupleToolWZJets 
+   which was due to shadowing of m_Tuple variable in TupleToolJetsBase.
+
+
 !========================= DecayTreeTuple v3r14p1 2011-05-20 =========================
 ! 2011-05-20 - Rob Lambert
  - Revert bad behaviour of TupleToolGeometry with respect to refitting PVs.
