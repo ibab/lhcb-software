@@ -14,12 +14,18 @@ from ROOT import ( TFile, TH1F )
 from datetime import timedelta, datetime, tzinfo
 from calendar import timegm
 
+dst = { 2010 : { 'start' : datetime( 2010, 3, 28 ),
+                 'end'   : datetime( 2010, 10, 31) },
+        2011 : { 'start' : datetime( 2011, 3, 27 ),
+                 'end'   : datetime( 2011, 10, 30) }
+        }
+
 class GMT1( tzinfo ):
-    def __init__( self ):         # DST starts last Sunday in March
-        d = datetime( 2010, 4, 1 )   # ends last Sunday in October
-        self.dston = d - timedelta( days = d.weekday() + 1 )
-        d = datetime( 2010, 11, 1)
-        self.dstoff = d - timedelta( days = d.weekday() + 1 )
+    def __init__( self, year ):
+        on =  dst[ year ][ 'start' ] # DST starts last Sunday in March
+        self.dston = on - timedelta( days = on.weekday() + 1 )
+        off = dst[ year ][ 'end'   ] # DST ends last Sunday in October
+        self.dstoff = off - timedelta( days = off.weekday() + 1 )
     def utcoffset( self, dt ):
         return timedelta( hours = 1 ) + self.dst( dt )
     def dst( self, dt ):
@@ -31,8 +37,9 @@ class GMT1( tzinfo ):
         return "GMT +1"
 
 def convert_time( run_time ):
-    tz = datetime( 2011, 01, 01, tzinfo = GMT1() )
-    dt = tz.strptime( run_time, "%Y-%m-%d %H:%M:%S.0000" ).replace( tzinfo = GMT1() )
+    tz = datetime( 2011, 01, 01 )
+    tz = tz.strptime( run_time, "%Y-%m-%d %H:%M:%S.0000" )
+    dt = tz.replace( tzinfo = GMT1( tz.year ) )
     return dt
 
 def dt_to_seconds( dt ):

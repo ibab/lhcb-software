@@ -18,11 +18,17 @@ def fmt(name) :
            }
     return _fmt[ os.path.splitext( name )[ -1 ].lstrip( '.' ).upper() ] % name
 
-def configureInput( run_info, n_processes ) :
-    run_info[ 'year' ] = run_info[ 'startTime' ].split( '-' )[ 0 ]
-    dirname = '/castorfs/cern.ch/grid/lhcb/data/%(year)s/RAW/FULL/LHCb/%(runType)s/%(runID)s' % run_info
-    files = os.listdir( dirname )
-    files.sort()
+def configureInput( run_info, n_processes, options ) :
+    ## run_info[ 'year' ] = run_info[ 'startTime' ].split( '-' )[ 0 ]
+    ## dirname = prefix + '/lhcb/data/%(year)s/RAW/FULL/LHCb/%(runType)s/%(runID)s' % run_info
+
+    # Run on raw files from castor or daqarea
+    prefix = { 'daqarea' : '/daqarea/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11',
+               'castor'  : '/castorfs/cern.ch/grid/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11',
+               'calib'  : '/calib/hlt/spillover' }
+
+    dirname = prefix[ options.source ] + '/%(runID)s' % run_info
+    files = sorted( os.listdir( dirname ) )[ : options.NFiles ]
     n_files = len( files )
     min_length = ( n_files - n_files % n_processes ) / n_processes
     lists = []
@@ -46,7 +52,8 @@ def run( options, args ):
     n_processes = options.Processes
 
     run_info = Utils.run_info( run_nr )
-    input_lists = configureInput( run_info, n_processes )
+
+    input_lists = configureInput( run_info, n_processes, options )
 
     evtMax = -1
     if options.EvtMax != -1:
@@ -115,31 +122,32 @@ def run( options, args ):
         ready = None
         try:
             ( ready, [], [] ) = select.select( running.values(), [], [] )
+
+            for wrapper in ready:
+                info = wrapper.getData( False )
+                if type( info ) == type( '' ):
+                    # Message
+                    if info == 'DONE':
+                        key = wrapper.key()
+                        print "Process %d is done" % key
+                        running.pop( key )
+                        continue
+                    
+                n_evt += 1
+                counter += 1
+                # "Decode" the received info
+                monitor.fill( info )
+
+                if counter >= 10000:
+                    print "Received event %d" % n_evt
+                    counter = 0
+
+            if len( running ) == 0:
+                print "Done; processed %d events" % n_evt
+                break
+
         except select.error:
             continue
-
-        for wrapper in ready:
-            info = wrapper.getData( False )
-            if type( info ) == type( '' ):
-                # Message
-                if info == 'DONE':
-                    key = wrapper.key()
-                    print "Process %d is done" % key
-                    running.pop( key )
-                    continue
-                
-            n_evt += 1
-            counter += 1
-            # "Decode" the received info
-            monitor.fill( info )
-
-            if counter >= 10000:
-                print "Received event %d" % n_evt
-                counter = 0
-
-        if len( running ) == 0:
-            print "Done; processed %d events" % n_evt
-            break
         
     # join all the processes
     for wrapper in wrappers:
@@ -172,8 +180,12 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
 """
     
     parser = optparse.OptionParser( usage = usage )
+    parser.add_option( "-s", "--source", action="store", dest="source", 
+                       default="daqarea", help="Data source, daqarea or castor.")
     parser.add_option( "-d", "--datatype", action="store", dest="DataType", 
                        default="2011", help="DataType to run on.")
+    parser.add_option( "--nfiles", action = "store", type = 'int',
+                       dest = "NFiles", default = -1, help = "Total number of files to run." )
     parser.add_option( "-n", action = "store", type = 'int',
                        dest = "EvtMax", default = -1, help = "Total number of events to run" )
     parser.add_option( "--dddbtag", action="store", dest="DDDBtag",
@@ -187,6 +199,9 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
 
     # Parse the command line arguments
     (options, args) = parser.parse_args()
+
+    if options.source not in [ 'daqarea', 'castor', 'calib' ]:
+        print "Invalid data source: %s" % options.source
 
     if len( args ) != 2:
         print parser.usage

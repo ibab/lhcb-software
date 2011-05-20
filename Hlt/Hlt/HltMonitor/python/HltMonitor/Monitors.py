@@ -130,7 +130,8 @@ class Mass( Monitor ):
                             "Hlt2B2HHLTUnbiased" : [5000.,5900.,300],
                             "Hlt2Topo2BodyBBDT" : [1000.,7000.,1200],
                             "Hlt2Topo3BodyBBDT" : [1000.,7000.,1200],
-                            "Hlt2Topo4BodyBBDT" : [1000.,7000.,1200]
+                            "Hlt2Topo4BodyBBDT" : [1000.,7000.,1200],
+                            "Hlt2DiMuonJPsi"    : [3000.,3200.,200]
                             }
         self._histograms = {}
         for name, bins in self._histo_def.iteritems():
@@ -183,6 +184,7 @@ class MassVsOccupancy( Monitor ):
 
     def fill( self, info ) :
         masses = info[ 'Mass' ]
+        slopes = info[ 'Slopes' ]
         occupancies = info[ 'Occupancy' ]
 
         for axes, bins in self._histo_def.iteritems():
@@ -191,8 +193,11 @@ class MassVsOccupancy( Monitor ):
             histo_name = '%s_%s' % axes
             histo = self._histograms[ histo_name ]
             occupancy = occupancies[ axes[ 0 ] ]
-            for cand in masses[ axes[ 1 ] ]:
-                histo.Fill( occupancy, cand )
+            m = masses[ axes[ 1 ] ]
+            s = slopes[ axes[ 1 ] ]
+            for i, cand in enumerate( m ):
+                ## Use only candidates which are outside the IT
+                if s[ i ] > ( 0.5 / 8. ): histo.Fill( occupancy, cand )
 
     def config( self ):
         return { 'histograms' : self._histo_def }

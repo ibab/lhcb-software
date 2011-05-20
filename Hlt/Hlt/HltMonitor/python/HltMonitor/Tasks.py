@@ -102,6 +102,13 @@ class Monitor( Task ):
             else:
                 ## self._condition.wait()
                 self._condition.release()
+            try:
+                message = self._inQueue.get( False )
+                if message == "BREAK":
+                    self._condition.release()
+                    break
+            except Queue.Empty:
+                pass
 
     def make_info( self ):
         pass
@@ -229,6 +236,15 @@ class CombinedMonitor( Monitor ):
             else:
                 ## self._condition.wait()
                 self._condition.release()
+            try:
+                message = self._inQueue.get( False )
+                if message == "BREAK":
+                    for sub in self._monitors.itervalues():
+                        sub.inQueue().put( message )
+                self._condition.release()
+                break
+            except Queue.Empty:
+                pass
 
 class RateMonitor( Monitor ):
 
@@ -410,17 +426,23 @@ class MassVsOccupancyMonitor( Monitor ):
         
         hsr = self._evtSvc[ 'Hlt/SelReports' ]
         masses = {}
+        slopes = {}
         sources = set()
         for o, i in self._config[ 'histograms' ]:
             report = hsr.selReport( i + "Decision" )
             if not report or not report.substructure():
                 continue
             m = []
+            s = []
             for cand in report.substructure() :  
-                m.append( cand.numericalInfo()[ "1#Particle.measuredMass" ] )
+                numInfo = cand.numericalInfo()
+                m.append( numInfo[ "1#Particle.measuredMass" ] )
+                s.append( numInfo[ "6#Particle.slopes.y" ] )
             masses[ i ] = m
+            slopes[ i ] = s
             sources.add( o )
         info[ 'Mass' ] = masses
+        info[ 'Slopes' ] = slopes
 
         occupancies = {}
         for o in sources:
