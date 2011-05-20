@@ -43,6 +43,9 @@ TupleToolGeometry::TupleToolGeometry( const std::string& type,
   , m_dva(0)
 {
   declareInterface<IParticleTupleTool>(this);
+  declareProperty("RefitPVs",m_refitPVs=false,
+                  "Refit PVs when doing next best PV checks");
+  
   //declareProperty("FillMother",m_fillMother=true,
   //                "Turn false if the mother is expected to be NULL, will not fill mother PV info");
   // replaced by Verbose
@@ -209,18 +212,27 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
 
 
   const RecVertex::Range PV = m_dva->primaryVertices();
-  if ( !PV.empty() ){
+  if ( !PV.empty() )
+  {
     if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " << P << " PVs:" << PV.size() << endmsg ;
-    for ( RecVertex::Range::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv){
+    
+    for ( RecVertex::Range::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv)
+    {
       RecVertex newPV(**pv);
-      StatusCode scfit = m_pvReFitter->remove(P, &newPV);
-      if(!scfit) { err()<<"ReFitter fails!"<<endreq; continue; }
-
+      if (m_refitPVs)
+      {
+        
+        StatusCode scfit = m_pvReFitter->remove(P, &newPV);
+        if(!scfit) { Warning("ReFitter fails!",StatusCode::SUCCESS,10).ignore(); continue; }
+      }
+      
       double ip, chi2;
-//      StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
+      //StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
+      
       LHCb::VertexBase* newPVPtr = (LHCb::VertexBase*)&newPV; 
       StatusCode test2 = m_dist->distance ( P, newPVPtr, ip, chi2 );
-      if( test2 ) {
+      if( test2 ) 
+      {
         if ((ip<ipmin) || (ipmin<0.)) 
         {
           ipminnextbest = ipmin;

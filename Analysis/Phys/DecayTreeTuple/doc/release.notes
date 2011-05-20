@@ -4,6 +4,15 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-05-20 - Rob Lambert
+ - Revert bad behaviour of TupleToolGeometry with respect to refitting PVs.
+	 Introduces in previous version "2011-04-04 - Yuehong Xie"
+   Broke TupleToolGeometry on MicroDSTs and falls outside the established
+   refitting framework.
+   For the moment only refit if an option is set to true.
+   In the future this should be linked with Juan's refitting framework.
+   
+
 ! 2011-05-17 - Albert Bursche
  - Added TuplToolJetsBase and transferred much of the funtionality from TupleToolWZJets to it.
    This is done in order to ease adding of more Jet related TupleTools in the near future.
