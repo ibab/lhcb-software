@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r3p2 2011-05-22 =========================
 ! 2011-05-19 - Thomas Blake
  - Fixed GaudiKernel.SystemOfUnits imports for Stripping14
 
