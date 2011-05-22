@@ -41,6 +41,9 @@
  *
  *  @author Vanya BELYAEV   Ivan.Belyaev@cern.ch
  *  @date 2011-05-13
+ *                    $Revision$
+ *  Last modification $Date$
+ *                by  $Author$
  */
 class FilterDecays : public FilterDesktop 
 {
@@ -68,14 +71,14 @@ protected:
    *  @param name the algorithm instance name 
    *  @param pSvc pointer to Service Locator 
    */
-  FilterDecays                                           // standard contructor 
-    ( const std::string& name ,                  // the algorithm instance name 
-      ISvcLocator*       pSvc ) ;                 // pointer to Service Locator
+  FilterDecays                                 //        standard constructor 
+  ( const std::string& name ,                  // the algorithm instance name 
+    ISvcLocator*       pSvc ) ;                //  pointer to Service Locator
   // ==========================================================================
   /// virtual & protected destructor 
   virtual ~FilterDecays () ;                  // virtual & protected destructor  
   // ==========================================================================
- public:
+public:
   // ==========================================================================
   /** the major method for filter input particles 
    *  @param input    (INPUT) the input  container of particles
@@ -83,8 +86,8 @@ protected:
    *  @return Status code 
    */
   virtual StatusCode filter 
-    ( const LHCb::Particle::ConstVector& input    , 
-      LHCb::Particle::ConstVector&       filtered ) const ;
+  ( const LHCb::Particle::ConstVector& input    , 
+    LHCb::Particle::ConstVector&       filtered ) ;
   // ==========================================================================
   /// decode the code
   virtual StatusCode decodeCode () ;
@@ -98,11 +101,11 @@ private:
   /// assignement operator is disabled 
   FilterDecays& operator=( const FilterDecays& ) ;            // no assignement
   // ==========================================================================
- protected:
+protected:
   // ==========================================================================
   const Decays::IDecay::Finder& finder() const { return m_finder ; }
   // ==========================================================================
- private:
+private:
   // ==========================================================================
   /// the decay finder 
   Decays::IDecay::Finder m_finder  ;     //                    the decay finder 

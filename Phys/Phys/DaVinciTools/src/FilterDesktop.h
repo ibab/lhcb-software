@@ -132,10 +132,11 @@ public:
    *  @param input    (INPUT) the input  container of particles
    *  @param filtered (OUPUT) the output container of particles
    *  @return Status code 
+   *  @attention mark for particles/tree must be done inside this method
    */
   virtual StatusCode filter 
   ( const LHCb::Particle::ConstVector& input    , 
-    LHCb::Particle::ConstVector&       filtered ) const ;
+    LHCb::Particle::ConstVector&       filtered ) ;
   // ==========================================================================
 public:
   // ==========================================================================
@@ -227,6 +228,7 @@ private:
   std::vector<std::string> m_preambulo ; // the preambulo 
   /// the code for the functor/predicate 
   std::string m_code    ; // the code for the functor/predicate
+  // ==========================================================================
   /// the predicate itself 
   LoKi::BasicFunctors<const LHCb::Particle*>::PredicateFromPredicate m_cut ;
   //
@@ -283,6 +285,8 @@ private:
   bool m_cloneFilteredParticles;                    // CloneFilteredParticles ? 
   // ==========================================================================
 };
+// ============================================================================
+
 // ============================================================================ 
 // The END 
 // ============================================================================

@@ -3,6 +3,49 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-05-22 - Vanya Belyaev
+
+ - add new algorithm SubstitutePID 
+
+ *  alg = SubstitutePID ( 
+ *        'MakeUpsilon'  , 
+ *        Code = " DECTREE('Jpsi(1S) -> mu+ mu-') & ( M > 9 * GeV ) " ,
+ *        Substitute = {
+ *            'J/psi(1S) -> mu+ mu-' : "Upsilon(1S)"
+ *         }
+ *        )
+
+ *  alg = SubstitutePID ( 
+ *        'MakeDsK'  , 
+ *        Code = " DECTREE('[Beauty -> D+ X-]CC') " ,
+ *        Substitute = {
+ *            ' Beauty -> ^( Charm & X+ ) X- '    : 'D_s+'  ,
+ *            ' Beauty -> ^( Charm & X- ) X+ '    : 'D_s-'  ,
+ *            ' Beauty ->  Charm ^pi-'            : 'K-'    ,
+ *            ' Beauty ->  Charm ^pi+'            : 'K+'    ,
+ *            ' B0     ->  Charm  X-'             : 'B_s0'  ,
+ *            ' Beauty ->  Charm  X+'             : 'B_s~0'  
+ *         }
+ *        )
+
+ - reshuffle  a bit (to minimize the code) the dependencies  
+   between variosu algorithms, derived from FilterDesktop 
+
+    FilterDesktop
+    FilterInTrees 
+    FilterDecays 
+    FitDecayTrees 
+    SubstitutePIDs 
+
+ - the meaning of "Code" property forFitDecayTrees algorithm is changed
+   not it is any "Particle"-functor instead of decay deascriptor
+   the adapration of existing algorithms is trivial:
+
+      " Code = 'A -> B C' "  ===> " Code = DECTREE(' A -> B C') "  
+   
+
+ - version increment to v22r7 
+
 ! 2011-05-18 - Marco Cattaneo
  - Change dependency from Phys/DaVinciMaps to Event/MicroDst. Needs LHCB >= v32r4
 

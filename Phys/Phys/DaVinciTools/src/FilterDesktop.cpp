@@ -361,9 +361,11 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // 
   // Filter particles!!  - the most important line :-) 
   StatusCode sc = filter ( particles , m_accepted ) ;
-
+  
   // store particles in DVAlgorithm local container
-  this->markParticles(m_accepted);
+  // thi ssection has been moved into "filter"-method 
+  // this -> markParticles ( m_accepted ) ;
+  // this -> markTrees     ( m_accepted ) ;
   
   // make the final plots 
   if ( produceHistos () && 0 != m_outputPlots ) 
@@ -376,15 +378,9 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // monitor output (if required) 
   if ( monitor() && !m_postMonitorCode.empty() ) { m_postMonitor ( i_markedParticles() ) ; }
   
-  // save (clone if needed) accepted particles in TES 
-  //  LHCb::Particle::Range saved = saveInTES ( accepted ) ;
-  
-  // make the filter decision
-  // setFilterPassed ( (!i_markedParticles().empty()) && 
-  //                    (i_markedParticles().size()==m_accepted.size()) );
   // make the filter decision
   setFilterPassed ( !i_markedParticles().empty() ) ;
-
+  
   // some statistics 
   counter ( "#passed" ) += i_markedParticles().size();
   
@@ -400,12 +396,15 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
 // ============================================================================
 StatusCode FilterDesktop::filter 
 ( const LHCb::Particle::ConstVector& input    , 
-  LHCb::Particle::ConstVector&       filtered ) const 
+  LHCb::Particle::ConstVector&       filtered )  
 {
   // Filter particles!!  - the most important line :-) 
   LoKi::select ( input.begin () , 
                  input.end   () , 
                  std::back_inserter ( filtered ) , m_cut ) ;
+  //
+  // mark & store filtered particles in DVAlgorithm local container 
+  markParticles ( filtered ) ;
   // 
   // some countings 
   StatEntity& cnt = counter ( "efficiency" ) ;
@@ -419,22 +418,23 @@ StatusCode FilterDesktop::filter
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
+// save (clone if needed) selected particles in TES
+// ============================================================================
 template <class PARTICLES, class VERTICES, class CLONER>
 StatusCode FilterDesktop::_save ( ) const 
 {
-
   //
   PARTICLES*              p_tes = new PARTICLES () ;
   VERTICES*               v_tes = new VERTICES  () ;
   //
-  put ( p_tes , particleOutputLocation()        ) ;
-  put ( v_tes , decayVertexOutputLocation() ) ;
+  put ( p_tes ,    particleOutputLocation () ) ;
+  put ( v_tes , decayVertexOutputLocation () ) ;
   //
   CLONER cloner ;
   //
-  LHCb::Particle::Range::iterator ip = i_markedParticles().begin ();
-  LHCb::Particle::Range::iterator ipEnd = i_markedParticles().end ();
-
+  LHCb::Particle::Range::iterator ip    = i_markedParticles().begin () ;
+  LHCb::Particle::Range::iterator ipEnd = i_markedParticles().end   () ;
+  
   for (  ; ip != ipEnd ; ++ip ) 
   {
     //
@@ -443,24 +443,32 @@ StatusCode FilterDesktop::_save ( ) const
     
     // clone if needeed 
     LHCb::Particle* p_cloned = cloner ( p ) ;
-    p_tes ->insert ( p_cloned ) ;
+    p_tes -> insert ( p_cloned ) ;
     //
-    this->cloneP2PVRelation ( p , p_cloned ) ;
+    this  -> cloneP2PVRelation ( p , p_cloned ) ;
     //
     const LHCb::Vertex* v = p->endVertex() ;
     if ( 0 != v ) 
     {
       LHCb::Vertex* v_cloned = cloner ( v ) ;
-      p_cloned->setEndVertex ( v_cloned ) ;
-      v_tes->insert( v_cloned ) ;
+      p_cloned -> setEndVertex ( v_cloned ) ;
+      v_tes    -> insert( v_cloned ) ;
     }
   }
-
   //
-
-  return (i_markedParticles().size() != p_tes->size() ) ? StatusCode::FAILURE 
-    : StatusCode::SUCCESS;
-
+  // check that the decay trees are fully in the TES
+  //
+  for ( typename PARTICLES::const_iterator ip = p_tes->begin() ;
+        p_tes->end () != ip ; ++ip ) 
+  {
+    if (! DaVinci::Utils::decayTreeInTES( *ip ) ) 
+    {
+      return Error ( "FilterDesktop::_save Element of saved decay tree not in TES. Likely memory leak!");
+    }    
+  }
+  //
+  return (i_markedParticles().size() != p_tes->size() ) ? 
+    StatusCode::FAILURE : StatusCode::SUCCESS; 
 }
 // ============================================================================
 namespace 
@@ -479,17 +487,17 @@ namespace
     T* operator() ( const T* a ) const { return const_cast<T*> ( a ) ; }  
   };
   // ==========================================================================
-}
-// ===========================================================================
-StatusCode FilterDesktop::_saveInTES 
-( )
+} // end of anonymous namespace
+// ============================================================================
+StatusCode FilterDesktop::_saveInTES ()
 {
-  if (msgLevel(MSG::VERBOSE)) {
+  if (msgLevel(MSG::VERBOSE)) 
+  {
     verbose() << "FilterDesktop::_saveInTES " << i_markedParticles().size() << " Particles" << endmsg;
   }
   return m_cloneFilteredParticles ? 
-    this->_save<LHCb::Particle::Container,LHCb::Vertex::Container,_Cloner>( ): 
-    this->_save<LHCb::Particle::Selection,LHCb::Vertex::Selection,_Caster>( );
+    this -> _save<LHCb::Particle::Container,LHCb::Vertex::Container,_Cloner> (): 
+    this -> _save<LHCb::Particle::Selection,LHCb::Vertex::Selection,_Caster> ();
 }
 // ============================================================================
 void FilterDesktop::cloneP2PVRelation 

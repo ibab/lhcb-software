@@ -58,13 +58,17 @@ public:
    */
   virtual StatusCode filter 
   ( const LHCb::Particle::ConstVector& input    , 
-    LHCb::Particle::ConstVector&       filtered ) const 
+    LHCb::Particle::ConstVector&       filtered ) 
   {
     //
     LoKi::Extract::particles ( input.begin () , 
                                input.end   () , 
                                std::back_inserter ( filtered ) , 
                                predicate   () ) ;
+    //
+    // mark & store filtered particles in DVAlgorithm local container 
+    //
+    markParticles ( filtered ) ;
     //
     return StatusCode::SUCCESS ;
   }
