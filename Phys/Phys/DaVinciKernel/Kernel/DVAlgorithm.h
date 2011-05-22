@@ -832,6 +832,8 @@ private:
   /// PV and relation table entry when applicable.
   StatusCode saveInTES();
 
+protected:
+  
   /// Save all marked local particles not already in the TES.
   /// Saves decay tree elements not already in TES
   /// This method can be overwritten if special TES saving actions are 

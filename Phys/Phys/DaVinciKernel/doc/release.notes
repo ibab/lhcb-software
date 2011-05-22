@@ -4,6 +4,15 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+
+! 2011-05-22 - Vanya Belyaev
+
+ - DVAlgorithm
+
+    move _saveInTES from private to protected section 
+
+ - Increase to v10r1
+
 !======================== DaVinciKernel v10r0p1 2011-04-21 ==================
 
 ! 2011-04-18 - Juan Palacios
