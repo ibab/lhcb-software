@@ -58,14 +58,13 @@ namespace
     inline bool operator() ( const LHCb::Particle* p ) const 
     {
       return
-	0 != p                   && 
-	p -> isBasicParticle()   &&
-	p -> daughters().empty() &&
-	0 == p->endVertex()     ;
-    }
+        0 != p                   && 
+        ( p -> isBasicParticle() || 
+          ( p -> daughters().empty() && 0 == p->endVertex() ) ) ;
+    }  
   };
   // ==========================================================================
-}
+} // end of anonymous namespace 
 // ============================================================================
 /* Standard constructor
  *  @param name object name 
@@ -158,39 +157,55 @@ bool LoKi::MCMatchObj::match
   BasicP basic ;
   
   if ( basic ( particle ) )  
-    {
-      //   A) For *BASIC* particles: 
-      // match a particle with at least one MCParticle from the expanded MC-tree 
-      return children.end() != match ( particle          , 
-				       children.begin () , 
-				       children.end   () ) ;
-    }
+  {
+    //   A) For *BASIC* particles: 
+    // match a particle with at least one MCParticle from the expanded MC-tree 
+    return children.end() != match ( particle          , 
+                                     children.begin () , 
+                                     children.end   () ) ;
+  }
+  //
   //     B) For *COMPOSED* Particles: 
   // require that *ALL* daughters are matched 
-  if ( match ( particle->daughters() .begin () , 
-	       particle->daughters() .end   () , 
-	       children              .begin () , 
-	       children              .end   () ) ) { return true ; }
+  // if ( match ( particle->daughters() .begin () , 
+  // particle->daughters() .end   () , 
+  //              children              .begin () , 
+  //              children              .end   () ) ) { return true ; }
+  //
+  //     B') try also 1D-step
+  //
+  const LHCb::MCParticle** mcp_1 = &mcparticle ;
+  const LHCb::MCParticle** mcp_2 = mcp_1 + 1   ;
+  //
+  return 
+    match ( particle -> daughters () . begin () , 
+            particle -> daughters () . end   () , 
+            mcp_1 , mcp_2 ) 
+    || 
+    children.end() != match ( particle          , 
+                              children.begin () , 
+                              children.end   () ) ;
   //
   //     B') the last check for nontrivial structure 
   // the case has been pointed by Steve Blusk 
   //
-  if  ( particle->daughters().size() != 
-	std::count_if ( particle->daughters().begin () , 
-			particle->daughters().end   () , BasicP() ) ) 
-    {
-      LHCb::Particle::ConstVector vct ;
-      vct.reserve ( 16 ) ;
-      LoKi::Extract::particles ( particle , std::back_inserter( vct ) , BasicP() ) ;
-      //
-      return  match ( vct       . begin () , 
-		      vct       . end   () , 
-		      children  .begin  () , 
-		      children  .end    () ) ;     // RETURN 
-      
-    }
+  //   if  ( particle->daughters().size() != 
+  //         std::count_if ( particle->daughters().begin () , 
+  //                         particle->daughters().end   () , BasicP() ) ) 
+  //   {
+  //     LHCb::Particle::ConstVector vct ;
+  //     vct.reserve ( 16 ) ;
+  //     LoKi::Extract::particles ( particle , std::back_inserter( vct ) , BasicP() ) ;
+  //     //
+  //     return  match ( vct       . begin () , 
+  //                     vct       . end   () , 
+  //                     children  .begin  () , 
+  //                     children  .end    () ) ;     // RETURN 
   //
-  return false ;
+  //   }
+  //   //
+  //   return false ;
+  
 } 
 // ============================================================================
 // clear the internal storage
