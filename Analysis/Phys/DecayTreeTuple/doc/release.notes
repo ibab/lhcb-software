@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-05-23 - Albert Bursche
+ - Fixed segfault in TuplToolJetRelations. 
+   Dummy entries were not properly named.
+
 ! 2011-05-20 - Albert Bursche
  - Added TuplToolJetRelations and fixed segfault in TupleToolWZJets 
    which was due to shadowing of m_Tuple variable in TupleToolJetsBase.

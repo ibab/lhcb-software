@@ -61,9 +61,9 @@ StatusCode TupleToolJetRelations::fill( const LHCb::Particle* /* top */,
 	{
 	  if(m_Reverse)
 	    {
-	      IJets2Jets::Table::Range::reverse_iterator it = r.rend();
+	      IJets2Jets::Table::Range::reverse_iterator it = r.rbegin();
 	      for (;numMatches<m_MaxMatches;numMatches++)
-		if(it!=r.rbegin())
+		if(it!=r.rend())
 		  fill(numMatches,&*it++);
 		else
 		  fill(numMatches,0);
@@ -79,8 +79,8 @@ StatusCode TupleToolJetRelations::fill( const LHCb::Particle* /* top */,
 	    }
 	}
       else 
-	for(unsigned int i=0;i<m_MaxMatches;i++)
-	  fill(numMatches,0);// fill dummies
+	for (;numMatches<m_MaxMatches;numMatches++)
+	  fill(numMatches,0);
       if (m_Invert)
 	delete m_Table; 
 
