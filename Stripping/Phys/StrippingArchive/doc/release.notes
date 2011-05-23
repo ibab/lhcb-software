@@ -4,6 +4,12 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-23 - Rob Lambert
+ - Added descriptions for each of the strippings
+ - Added duplicate strippings which also run Stripping13 lines
+ - Added a basic test that all line builders can still be instantiated
+   within the current DaVinci
+
 !========================= StrippingArchive v1r0 2011-05-20 =========================
 ! 2011-05-19 - Rob Lambert
  - Implemented Utils and __init__.py after StrippingSelections example
@@ -11,7 +17,7 @@
 
 ! 2011-05-18 - Rob Lambert
  - Creation of package, purpose, to hold the linebuilders 
-   for stripping 13, it makes sure the strippings can, in principle, be run
+   for strippings >= 13, it makes sure the strippings can, in principle, be run
    with any DaVinci version
 
 ! -----------------------------------------------------------------------------

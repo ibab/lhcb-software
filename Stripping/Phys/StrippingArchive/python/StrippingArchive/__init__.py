@@ -1,13 +1,24 @@
 """
 Module with all former stripping selection line builder modules.
-All line builders available via function lineBuilders(stripping).
+All line builders available via function lineBuilders(stripping) in StrippingArchive.Utils.
 """
 
-__author__ = 'Juan Palacios palacios@physik.uzh.ch'
+__author__ = 'Rob Lambert'
+__all__ = ['strippingArchive', 'strippingDescription']
 
 #import known strippings
 import Stripping13
 
+#give a dictionary of strippings which use the same line builders
+_duplicate_strippings={ "Stripping13b"        : "Stripping13",
+                        "Stripping1Point4Tev" : "Stripping13" }
+
+
+#give a dictionary to describe what each stripping was for
+_stripping_help={"Stripping13"  : "2011 data taking, processing during the first half of 2011",
+                 "Stripping13b" : "2011 data reprocessing, of the data in the first half of 2011",
+                 "Stripping1Point4Tev" : "2011 data reprocessing, for data in 2011 taken at 1.4 TeV"
+                 }
 
 #compile dictionary of all known strippings
 from sys import modules as _modules
@@ -21,5 +32,36 @@ _strippingKeys = filter ( lambda x : x[:9]=='Stripping',
 for _k in _strippingKeys:
     _strippings[_k] = getattr(_this, _k)
 
-def strippingArchive():
-    return dict(_strippings)
+#add the duplicated strippings
+for _k in _duplicate_strippings:
+    if _k in _strippingKeys:
+        raise KeyError, _k+' already defined as a StippingArchive. check _duplicate_strippings'
+    if _duplicate_strippings[_k] not in _strippingKeys:
+        raise KeyError, _duplicate_strippings[_k]+' is not defined as a StippingArchive. check _duplicate_strippings'
+    _strippings[_k]=_strippings[_duplicate_strippings[_k]]
+
+#check the descriptions
+for _k in _strippings:
+    if _k not in _stripping_help:
+        raise KeyError, _k+' has not been provided a description. check _stripping_help'
+
+#the only two functions to be exported to the end user
+def strippingArchive(stripping=None):
+    '''Return the archived stripping line builders.
+    strippingArchive(): return all line builder modules in a dictionary {stripping:module}.
+    strippingArchive(stripping): return the line builder module for that stripping'''
+    if stripping is None:
+        return dict(_strippings)
+    if stripping not in _strippings:
+        raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
+    return _strippings[stripping]
+
+def strippingDescription(stripping=None):
+    '''Return the description of the stripping pass
+    strippingDescription(): return all descriptions in a dictionary {stripping:module}.
+    strippingDescription(stripping): return the description for that stripping'''
+    if stripping is None:
+        return dict(_stripping_help)
+    if stripping not in _strippings:
+        raise KeyError, stripping + ' is not known, call strippingDescription() with no arguement to get the full dictionary'
+    return _stripping_help[stripping]

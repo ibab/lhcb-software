@@ -6,7 +6,7 @@ version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc python
+branches          cmt doc python tests
 include_path      none
 
 # Used packages. 
@@ -31,4 +31,4 @@ end_private
 #============================================================================
 apply_pattern install_python_modules
 #============================================================================
-#apply_pattern QMTest
+apply_pattern QMTest
