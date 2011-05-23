@@ -24,12 +24,21 @@
 !
 ! -----------------------------------------------------------------------------
 
+
+
+! ==================== Phys/Bender v17r2 2011-05-23 ===========================
+
+! 2011-05-23 - Vanya Belyaev
+  
+  - cmt/requirements 
+    version increment to v17r2
+
 ! 2011-05-12 - Vanya Belyaev
+
 
   - DstExplorer.py :  Load Bender.MainMC for "Simulation" type
 
   - cmt/requirements 
-
     version increment to v17r1p4 
  
 ! ==================== Phys/Bender v17r1p3 2011-05-12 =========================
