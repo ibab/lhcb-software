@@ -1,5 +1,15 @@
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadPOOLdigi.py'
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadPOOLdigi.py'
+# --> Including file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/ReadPOOLdigi.py'
+# <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/ReadPOOLdigi.py'
+# applying configuration of IOConf
+# Input file: DATAFILE='PFN:POOL.digi' TYP='POOL_ROOT' OPT='READ'
+# /***** User IOConf/IOConf **************************************************************************
+# |-OutputFile        = ''
+# |-Writer            = ''
+# |-InputPersistency  = 'POOL'  (default: 'POOL')
+# |-WriteFSR          = True
+# |-OutputPersistency = 'ROOT'
+# |-InputFiles        = ['PFN:POOL.digi']  (default: [])
+# \----- (End of User IOConf/IOConf) -----------------------------------------------------------------
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -15,7 +25,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Fri May 20 16:18:49 2011
+                                          running on lxplus408.cern.ch on Mon May 23 08:11:19 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
@@ -69,11 +79,11 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 RootDBase.open    SUCCESS POOL.digi File version:52800
-PoolRootEvtCnvSvc    INFO Records token:[DB=942E1965-AF82-E011-813B-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000003C-00000000]
+PoolRootEvtCnvSvc    INFO Records token:[DB=0CB4DE51-0285-E011-BD9A-003048F0E7D4][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000003C-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xc528320@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x11b253c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -131,7 +141,7 @@ DumpMCEventAlg       INFO There are 1208 Vertices:
 DumpMCEventAlg       INFO There are 1195 Particles:
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xcf80a70@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1257db40@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -189,7 +199,7 @@ DumpMCEventAlg       INFO There are 1992 Vertices:
 DumpMCEventAlg       INFO There are 2042 Particles:
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xd1dd130@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x127da200@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -247,7 +257,7 @@ DumpMCEventAlg       INFO There are 1092 Vertices:
 DumpMCEventAlg       INFO There are 1190 Particles:
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xd61ef30@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x11ff4800@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -305,7 +315,7 @@ DumpMCEventAlg       INFO There are 718 Vertices:
 DumpMCEventAlg       INFO There are 764 Particles:
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xd689430@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1257dd20@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -374,8 +384,8 @@ TESFingerPrint      DEBUG Tools to release :
 TESFingerPrint      DEBUG Services to release :
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:942E1965-AF82-E011-813B-003048C9CD62[POOL.digi]
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/15(Alg/Node/Total).
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+PoolRootEvtCnvSvc    INFO Disconnected data IO:0CB4DE51-0285-E011-BD9A-003048F0E7D4[POOL.digi]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

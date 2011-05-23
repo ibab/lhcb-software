@@ -1,5 +1,15 @@
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadReco08POOLdst.py'
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/ReadReco08POOLdst.py'
+# --> Including file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/ReadReco08POOLdst.py'
+# <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/ReadReco08POOLdst.py'
+# applying configuration of IOConf
+# Input file: DATAFILE='PFN:POOL-Reco08.dst' TYP='POOL_ROOT' OPT='READ'
+# /***** User IOConf/IOConf **************************************************************************
+# |-OutputFile        = ''
+# |-Writer            = ''
+# |-InputPersistency  = 'POOL'  (default: 'POOL')
+# |-WriteFSR          = True
+# |-OutputPersistency = 'ROOT'
+# |-InputFiles        = ['PFN:POOL-Reco08.dst']  (default: [])
+# \----- (End of User IOConf/IOConf) -----------------------------------------------------------------
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -40,7 +50,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Fri May 20 16:19:33 2011
+                                          running on lxplus408.cern.ch on Mon May 23 08:10:29 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' ]
@@ -134,11 +144,11 @@ ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 RootDBase.open    SUCCESS POOL-Reco08.dst File version:52800
-PoolRootEvtCnvSvc    INFO Records token:[DB=D0BA16EA-AF82-E011-88D1-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=000000A6-00000000]
+PoolRootEvtCnvSvc    INFO Records token:[DB=A0713D60-0285-E011-92A3-003048F0E7D4][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=000000A6-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17bc3e20@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xdfc3220@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
@@ -554,7 +564,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17c629a0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xe061dc0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
@@ -954,7 +964,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x192adb00@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xf6ace90@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
@@ -1344,7 +1354,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x17e0b800@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xe20ac30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
@@ -1748,7 +1758,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x19409f90@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xfbe7650@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
@@ -2171,8 +2181,8 @@ DumpTracks          DEBUG Tools to release :
 DumpTracks          DEBUG Services to release :
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:D0BA16EA-AF82-E011-88D1-003048C9CD62[POOL-Reco08.dst]
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/15(Alg/Node/Total).
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+PoolRootEvtCnvSvc    INFO Disconnected data IO:A0713D60-0285-E011-92A3-003048F0E7D4[POOL-Reco08.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
