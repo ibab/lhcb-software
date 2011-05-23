@@ -10,7 +10,7 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','David Dossett','Jussara Miranda']
-__date__ = '16/03/2011'
+__date__ = '23/05/2011'
 __version__ = '$Revision: 1.1 $'
 
 __all__ = 'B2KShhConf'
@@ -178,7 +178,7 @@ class B2KShhConf(LineBuilder) :
         """
 
 	_massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-	_massCutHigh    = "(AM>(5279+%s)*MeV)"               % config['B_Mhigh']
+	_massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
 	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
 	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
 	_hhDocaCut      = "(ADOCA(1,2)<%s)"                  % config['hh_DOCA']
@@ -213,7 +213,7 @@ class B2KShhConf(LineBuilder) :
         """
 
 	_massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-	_massCutHigh    = "(AM>(5279+%s)*MeV)"               % config['B_Mhigh']
+	_massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
 	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
 	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
 	_hhDocaCut      = "(ADOCA(1,2)<%s)"                  % config['hh_DOCA']
