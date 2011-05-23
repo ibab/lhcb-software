@@ -24,6 +24,15 @@
 </PRE>
 
 <H1>
+<A NAME=v17r2>2011-05-23 Bender v17r2 based on the DaVinci v28r3</A>
+</H1>	
+
+<PRE>		
+The version is very similar to v17r1p3, but it is based on new Davinci v28r3.
+There is small enhancement in Dst-Explorer for Simulation data type.
+</PRE>
+
+<H1>
 <A NAME=v17r1p3>2011-05-02 Bender v17r1p3 based on the DaVinci v28r2p2</A>
 </H1>	
 
@@ -31,6 +40,7 @@
 The version is very similar to v17r1p2, but it is adapted to the new 
 structure of LHCb Castor pools
 </PRE>
+
 
 <H1>
 <A NAME=v17r1p2>2011-05-02 Bender v17r1p2 based on the DaVinci v28r2p2</A>
