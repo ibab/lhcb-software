@@ -40,10 +40,6 @@
 // FTFP hadrons
 #include "HadronPhysicsFTFP_BERT.hh"
 
-// QGSC hadrons
-#include "HadronPhysicsQGSC.hh"
-#include "HadronPhysicsQGSC_EFLOW.hh"
-
 // The DECLARE_NAMED_TOOL_FACTORY macro should be added to Gaudi
 #ifndef DECLARE_NAMED_TOOL_FACTORY
 #define DECLARE_NAMED_TOOL_FACTORY(x,n) PLUGINSVC_FACTORY_WITH_ID(x, std::string(#n), IAlgTool*(std::string, std::string, const IInterface*))
@@ -89,10 +85,6 @@ DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
 typedef GiGaExtPhysics< HadronPhysicsFTFP_BERT > HadPhysFTFP_BERTFactory;
 DECLARE_TOOL_FACTORY( HadPhysFTFP_BERTFactory );
 
-typedef GiGaExtPhysics< HadronPhysicsQGSC > HadPhysQGSCFactory;
-DECLARE_TOOL_FACTORY( HadPhysQGSCFactory );
-typedef GiGaExtPhysics< HadronPhysicsQGSC_EFLOW > HadPhysQGSC_EFLOWFactory;
-DECLARE_TOOL_FACTORY( HadPhysQGSC_EFLOWFactory );
 
 // =========== Specialized extensions to GiGaExtPhysics ===========
 
@@ -193,7 +185,7 @@ public:
     tool->declareProperty("QuasiElastic", m_quasiElastic = true,
                           "Parameter 'quasiElastic' for the constructor of HadronPhysicsQGSP");
   }
-  inline HadronPhysicsQGSP *newInstance(const std::string &name, int verbosity) const {
+  inline HadronPhysicsQGSP *newInstance(const std::string &name, int /*verbosity*/) const {
     return new HadronPhysicsQGSP(name, m_quasiElastic);
   }
 private:
@@ -207,7 +199,7 @@ public:
     tool->declareProperty("QuasiElastic", m_quasiElastic = true,
                           "Parameter 'quasiElastic' for the constructor of HadronPhysicsQGSP_BERT");
   }
-  inline HadronPhysicsQGSP_BERT *newInstance(const std::string &name, int verbosity) const {
+  inline HadronPhysicsQGSP_BERT *newInstance(const std::string &name, int /*verbosity*/) const {
     return new HadronPhysicsQGSP_BERT(name, m_quasiElastic);
   }
 private:
@@ -221,7 +213,7 @@ public:
     tool->declareProperty("QuasiElastic", m_quasiElastic = true,
                           "Parameter 'quasiElastic' for the constructor of HadronPhysicsQGSP_BERT_HP");
   }
-  inline HadronPhysicsQGSP_BERT_HP *newInstance(const std::string &name, int verbosity) const {
+  inline HadronPhysicsQGSP_BERT_HP *newInstance(const std::string &name, int /*verbosity*/) const {
     return new HadronPhysicsQGSP_BERT_HP(name, m_quasiElastic);
   }
 private:
@@ -235,7 +227,7 @@ public:
     tool->declareProperty("QuasiElastic", m_quasiElastic = false,
                           "Parameter 'quasiElastic' for the constructor of HadronPhysicsFTFP_BERT");
   }
-  inline HadronPhysicsFTFP_BERT *newInstance(const std::string &name, int verbosity) const {
+  inline HadronPhysicsFTFP_BERT *newInstance(const std::string &name, int /*verbosity*/) const {
     return new HadronPhysicsFTFP_BERT(name, m_quasiElastic);
   }
 private:
