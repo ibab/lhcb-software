@@ -4,7 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!========================= RichKernel v7r43 2011-04-04 =========================
+! 2011-05-23 - Chris Jones
+ - Add a workaround to RichConfigurableUser to deal with the fact that
+   _context_defaults_ is a singleton between all instances.
+
+!==================== RichKernel v7r43 2011-04-04 ======================
 ! 2011-03-18 - Chris Jones
  - Add Rich::DAQ::PixelSize and Rich::DAQ::NumPixelRows variables
    to RichDAQDefinitions.h

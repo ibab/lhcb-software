@@ -17,11 +17,15 @@ from LHCbKernel.Configuration import *
 #  @date   15/08/2008
 class RichConfigurableUser(LHCbConfigurableUser):
     
-    ## Default options are empty
+    ## Context specific default values for each property
     __slots__ = { }
-    
-    ## Context specific defaultvalues for each property
+
+    ## Context specific defaults
     _context_defaults_ = { }
+
+    ## Get the context defaults 
+    def contextDefaults(self):
+        return self._context_defaults_
 
     ## @brief Create and return an instance of the RichTools() Configurable for the current Context
     #  @return the RichTools object
@@ -49,7 +53,8 @@ class RichConfigurableUser(LHCbConfigurableUser):
     #  @param context The processig context
     #  @param value   The default value to set
     def setRichDefault(self,option,context,value):
-        self._context_defaults_[context+":"+option] = value
+        key = self.name() + ":" + context + ":" + option
+        self.contextDefaults()[key] = value
 
     ## @brief Sets the default value for the given properties and contexts
     #  @param option  The option name to set
@@ -70,9 +75,9 @@ class RichConfigurableUser(LHCbConfigurableUser):
             context = LHCbConfigurableUser.getProp(self,"Context").upper()
             if context.find("HLT")     != -1 : key = "HLT"
             if context.find("OFFLINE") != -1 : key = "Offline"
-            key = key+":"+option
-            if self._context_defaults_.has_key(key) :
-                value = self._context_defaults_[key]
+            key = self.name() + ":" + key + ":" + option
+            if self.contextDefaults().has_key(key) :
+                value = self.contextDefaults()[key]
             else:
                 value = LHCbConfigurableUser.getProp(self,option)
         return value
