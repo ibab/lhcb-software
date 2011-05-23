@@ -354,7 +354,7 @@ public:
   DetMap_T<long long> m_DetMap_diff;
   DetMap_T<double> m_DetMap_rate;
   DimService *m_LHCbDataRate;
-  double m_DataRate;
+  float m_DataRate;
   StatusCode start();
 //  DetData_T m_DetData;
 //  DetData_T m_DetData_diff;

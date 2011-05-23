@@ -159,7 +159,7 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
     DetData_T<double>::iterator jj = ii->second.find("rxOct");
     if (jj!=ii->second.end())
     {
-      m_DataRate = jj->second;
+      m_DataRate = (float)jj->second;
       if (m_LHCbDataRate == 0)
       {
         m_LHCbDataRate = new DimService((char*)(m_PartitionName+"_DataRate").c_str(),m_DataRate);
