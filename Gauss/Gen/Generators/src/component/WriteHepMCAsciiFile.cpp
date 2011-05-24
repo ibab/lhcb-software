@@ -3,6 +3,10 @@
 // CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+//
+// Revision 1.3 2011/05/24 00:21:23  agrecu
+// vxry - replace HepMC::IO_Ascii with HepMC::IO_GenEvent
+//
 // Revision 1.2  2007/01/12 15:17:47  ranjard
 // v7r0 - use GAUDI v19r0
 //
@@ -28,7 +32,7 @@
 // ============================================================================
 // HepMC 
 // ============================================================================
-#include "HepMC/IO_Ascii.h"
+#include "HepMC/IO_GenEvent.h"
 // ============================================================================
 // Generators 
 // ============================================================================
@@ -37,8 +41,8 @@
 /** @class WriteHepMCAsciiFile WriteHepMCAsciiFile.cpp
  *
  *  Simple class to dump generators events in plain 
- *  output file in HepMC Ascii format. It coudl be used for portable 
- *  cross-transitions of events inbetween different degerators 
+ *  output file in HepMC Ascii format. It could be used for portable 
+ *  cross-transitions of events inbetween different generators 
  *
  *   The algorithm has 3 properties:
  * 
@@ -68,13 +72,13 @@ public:
     if ( m_output.empty() ) 
     { return Error ( "Output file name is not specified!" ) ; }
     // open the file 
-    m_file = new HepMC::IO_Ascii 
+    m_file = new HepMC::IO_GenEvent 
       ( m_output.c_str() , std::ios::out | std::ios::trunc ) ;
     //  
     if ( 0 == m_file || m_file->rdstate() == std::ios::failbit ) 
     { return Error ( "Failure to open the file '"+m_output+"'" ) ; }
     //
-    m_file->write_comment( "Written by WriteHepMCAsciiFile/"+name() );
+    //m_file->write_comment( "Written by WriteHepMCAsciiFile/"+name() );
     //
     return StatusCode::SUCCESS ;
   } ;
@@ -128,7 +132,7 @@ private:
   // rescale event from LHCb to Pythia units ?
   bool             m_rescale ; ///< rescale event from LHCb units ?  
   // the output file ;
-  HepMC::IO_Ascii* m_file   ; ///< the output file ;
+  HepMC::IO_GenEvent* m_file   ; ///< the output file ;
 } ;
 // ===========================================================================
 /// Declaration of the Algorithm Factory
@@ -158,8 +162,9 @@ StatusCode WriteHepMCAsciiFile::execute    ()
     { GeneratorUtils::scale ( evt , 1./Gaudi::Units::GeV , 
                               Gaudi::Units::c_light / Gaudi::Units::mm ) ; }
     
-    // write event to the file:
-    *m_file << evt ;                                       // HERE !
+    // write event to ascii file
+    m_file->write_event(evt); 	//also writes HeavyIon and PdfInfo!
+    //*m_file << evt ;          //old code; alternative?!
     
     // rescale back if needed (convert to LHCb units) 
     if ( m_rescale ) 
@@ -170,7 +175,6 @@ StatusCode WriteHepMCAsciiFile::execute    ()
   return StatusCode::SUCCESS ;
 } ;
 // ===========================================================================
-
 
 // ===========================================================================
 // The END 

@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== Generators v10r10 2011-03-17 =========================
+! 2011-05-23 - Alex T. Grecu
+ - Replace HepMC::IO_Ascii with HepMC::IO_GenEvent in WriteHepMCAsciiFile 
+   algorithm. This way Gauss may be used as MC generator for rivet analyses.
+
 ! 2011-03-16 - Alex Shires
  - Rename tool from DaughtersInLHCbAcceptance to DaughtersInLHCbAndWithMinP
 
