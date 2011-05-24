@@ -4,7 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================== StrippingSelections v3r4p1 2011-05-24 =============
+!========================== StrippingSelections v3r4p2 2011-05-24 =============
 
 ! 2011-05-24 - Thomas Blake
  - Updated qmtests for stream instantiation and line locations
