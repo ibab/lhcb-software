@@ -1,10 +1,10 @@
 # Test to copy a POOL dst file to a ROOT mdst file
-from Configurables import IOTest, IOConf
+from Configurables import IOTest
+from GaudiConf.IOHelper import IOHelper
 
 IOTest( EvtMax = 5, DataContent = 'MDST' )
 
-IOConf( InputPersistency  = 'POOL',
-        OutputPersistency = 'ROOT',
-        InputFiles        = ['PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/data/2010/CHARM.MDST/00008397/0000/00008397_00000939_1.charm.mdst?svcClass=lhcbdisk' ],
-        OutputFile        = 'PFN:ROOT-Reco08.mdst'
-        )
+ioh = IOHelper('POOL','ROOT')
+ioh.setupServices()
+ioh.inputFiles(['PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/data/2010/CHARM.MDST/00008397/0000/00008397_00000939_1.charm.mdst?svcClass=lhcbdisk'])
+ioh.outStream('PFN:ROOT-Reco08.mdst',"InputCopyStream")

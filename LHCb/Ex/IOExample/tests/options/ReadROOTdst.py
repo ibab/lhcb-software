@@ -1,7 +1,8 @@
-from Configurables import IOTest, IOConf
+from Configurables import IOTest
+from GaudiConf.IOHelper import IOHelper
 
 IOTest( EvtMax = 5, LoadAll = True, DataType = 'MC09' )
 
-IOConf( InputPersistency  = 'ROOT',
-        InputFiles        = ['PFN:ROOT.dst']
-        )
+ioh = IOHelper('ROOT')
+ioh.setupServices()
+ioh.inputFiles(['PFN:ROOT.dst'])

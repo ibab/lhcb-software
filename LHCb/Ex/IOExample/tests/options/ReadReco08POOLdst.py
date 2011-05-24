@@ -1,8 +1,9 @@
 # Test to read a POOL dst
-from Configurables import IOTest, IOConf
+from Configurables import IOTest
+from GaudiConf.IOHelper import IOHelper
 
 IOTest( EvtMax = 5, LoadAll = True )
 
-IOConf( InputPersistency  = 'POOL',
-        InputFiles        = ['PFN:POOL-Reco08.dst']
-        )
+ioh = IOHelper('POOL')
+ioh.setupServices()
+ioh.inputFiles(['PFN:POOL-Reco08.dst'])

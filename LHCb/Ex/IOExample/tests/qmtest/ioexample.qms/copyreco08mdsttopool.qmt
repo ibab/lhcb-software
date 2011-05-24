@@ -10,7 +10,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["StoreExplorerAlg     INFO"]) + \
   LineSkipper(["TESFingerPrint"]) + \
   LineSkipper(["InputCopyStream      INFO"]) + \
-  LineSkipper(["FSRWriter            INFO "]) + \
+  LineSkipper(["FSRWriterInputC...   INFO "]) + \
   LineSkipper(["FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc"]) + \

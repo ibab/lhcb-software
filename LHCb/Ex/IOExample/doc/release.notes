@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2011-05-24 - Marco Cattaneo
+ - Adapt to use IOHelper instead of IOConf
+
 ! 2011-05-20 - Marco Cattaneo
  - Follow changes in IOConf, tests also FileRecords
 

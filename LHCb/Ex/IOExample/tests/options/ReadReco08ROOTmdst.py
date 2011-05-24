@@ -1,8 +1,9 @@
 # Test to read a ROOT mdst
-from Configurables import IOTest, IOConf
+from Configurables import IOTest
+from GaudiConf.IOHelper import IOHelper
 
 IOTest( EvtMax = 5, LoadAll = True, DataContent = 'MDST' )
 
-IOConf( InputPersistency  = 'ROOT',
-        InputFiles        = ['PFN:ROOT-Reco08.mdst']
-        )
+ioh = IOHelper('ROOT')
+ioh.setupServices()
+ioh.inputFiles(['PFN:ROOT-Reco08.mdst'])

@@ -1,8 +1,9 @@
 # Test to read a POOL digi file
-from Configurables import IOTest, IOConf
+from Configurables import IOTest
+from GaudiConf.IOHelper import IOHelper
 
 IOTest( EvtMax = 5, DataContent = "DIGI", WithMC = True, LoadAll = True )
 
-IOConf( InputPersistency  = 'POOL',
-        InputFiles        = ['PFN:POOL.digi']
-        )
+ioh = IOHelper('POOL')
+ioh.setupServices()
+ioh.inputFiles(['PFN:POOL.digi'])
