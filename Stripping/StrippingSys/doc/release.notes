@@ -3,15 +3,21 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
-</PRE><H1><A NAME=v2r3p1>2011-05-13 StrippingSys v2r3p1 </A></H1><PRE>
+</PRE><H1><A NAME=v2r3p2>2011-05-24 StrippingSys v2r3p2 </A></H1><PRE>
 
-Stripping for 2011 1.4 TeV processing.
+Stripping for 2011 1.4 TeV processing (stripping1point4tev)
+Stripping for 2010 reprocessing (stripping14)
 
-Same as Stripping 13 except picks up new StrippingSettings.
+Stripping 1.4TeV is the same as Stripping 13 except picks up new StrippingSettings.
+
+Stripping 14 has changes in a few line builders and several cuts. It is a stripped-down version of stripping 13, with some extra post-stripping 13 lines and bugfixes.
 
 New Package: StrippingArchive: Holds the line builders from previous strippings.
                                Starting with Stripping13 the archive will ensure
                                all future DaVinci versions can run Stripping13+
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v2r3p2
 
 </PRE><H1><A NAME=v2r3p1>2011-05-13 StrippingSys v2r3p1 </A></H1><PRE>
 
