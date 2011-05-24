@@ -25,6 +25,7 @@ class MCHit;
 class VeloChannelID;
 class ISiAmpliferResponse;
 class ISiDepositedCharge;
+class IRadDamageTool;
 
 /** @class VeloSim VeloSim.h VeloAlgs/MCVeloSim.h
  *
@@ -198,7 +199,9 @@ private:
   /// make a VeloFE for every strip (default false)
   bool m_makeNonZeroSuppressedData; 
   double m_noiseScale;          ///< Scale factor to apply to noise from db
-
+  /// Scale factor to apply to Gaussian flucuations in charge at points
+  double m_scaleFluctuations;   
+  
 
   std::string m_SiTimeToolType; ///< normally "SiAmpliferResponse" from STTools
   ISiAmplifierResponse* m_SiTimeTool;
@@ -210,6 +213,10 @@ private:
   unsigned int m_totalFEs; ///< Number of FEs created
   unsigned int m_killedFEsRandom; ///< Number of FEs removed by random kills
   unsigned int m_killedFEsBadStrips; ///< Number of FEs removed by bad strips
+
+  /// the type of tool to use for rad damage
+  std::string m_radToolType;
+  IRadDamageTool* m_radTool;
 
   bool m_isDebug; ///< debug level for output
   bool m_isVerbose; ///< debug level for output

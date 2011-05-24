@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-05-24 - David Hutchcroft
+ - Added a variable response verse radius to match data and later to 
+   simulate radiation damage
+ - Will give warnings until new db released
+
 !========================= VeloSimulation v3r9 2011-04-27 =========================
 ! 2011-04-19 - David Hutchcroft
  - Added explicit setting of variables in VeloSim::VeloSim to remove Coventry

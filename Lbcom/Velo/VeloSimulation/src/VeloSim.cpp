@@ -1,4 +1,3 @@
-// $Id: VeloSim.cpp,v 1.34 2010-03-05 16:29:55 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -16,6 +15,7 @@
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/VeloEventFunctor.h"
 #include "Kernel/ISiAmplifierResponse.h"
+#include "IRadDamageTool.h"
 
 // from MCEvent
 #include "Event/MCHit.h"
@@ -93,12 +93,15 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty("PedestalConst", m_pedestalConst=512);
   declareProperty("PedestalVariation", m_pedestalVariation=0.05);
   declareProperty("DepChargeTool", 
-		  m_depChargeToolType = "SiGeantDepositedCharge");
+		  m_depChargeToolType = "SiDepositedCharge");
   declareProperty("UseDepTool", m_useDepTool = true);
   declareProperty("SiAmplifierResponse",     
 		  m_SiTimeToolType = "SiAmplifierResponse");
   declareProperty("PulseShapePeakTime",m_pulseShapePeakTime=30.7848);
   declareProperty("NoiseScale" , m_noiseScale =1.);
+  declareProperty("FluctuationsScale" , m_scaleFluctuations = 1. );
+
+  declareProperty("RadDamageToolName", m_radToolType="VeloRadDamageTool" );
 
 
   Rndm::Numbers m_gaussDist;
@@ -169,6 +172,9 @@ StatusCode VeloSim::initialize() {
     error() << "Random number init failure" << endmsg;
     return sc3;
   }
+
+  m_radTool =   // make the radiation tools required
+    tool<IRadDamageTool>(m_radToolType,"RadDamage",this);
 
   return StatusCode::SUCCESS;
 };
@@ -348,6 +354,10 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
   }else{
     charge = (hit->energy()/Gaudi::Units::eV)/m_eVPerElectron;
   }
+
+  // sim radiation damage
+  charge *= m_radTool->chargeFrac(*hit);
+
   if(m_isVerbose) verbose()
     << "Number of electron-hole pairs: " << charge <<endmsg;
   
@@ -375,12 +385,16 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
     << " charge for equal allocation " << chargeEqual <<endmsg;
   // divide equally
   double chargeEqualN=chargeEqual/static_cast<double>(Spoints.size());
-  double fluctuate=0.;
   std::vector<double>::iterator iPoint;
   for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
     // gaussian fluctuations
-    if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(fabs(chargeEqualN));
-    *iPoint = chargeEqualN+fluctuate;
+    if (m_inhomogeneousCharge) {
+      // formula is normal distribution * sqrt(charge on point) 
+      double fluctuate = m_gaussDist()*sqrt(fabs(chargeEqualN));
+      // to scale this set m_scaleFluctions > 1
+      fluctuate *= m_scaleFluctuations;
+      *iPoint = chargeEqualN+fluctuate;
+    }
     if(m_isVerbose) verbose()<< "charge for pt" << iPoint-Spoints.begin() 
 			     << " is " << *iPoint << endmsg;
   }
@@ -845,12 +859,14 @@ void VeloSim::noiseSim(){
   // summary - sigma of noise from constant + term prop to strip cap.
 
   // loop through already allocated hits adding noise (if none already added)
-  // should be capacitance of each strip, currently just typical value
+  // values measured from NZS data to match real detector
   for(LHCb::MCVeloFEs::iterator FEIt = m_FEs->begin() ;
       m_FEs->end() != FEIt ; FEIt++ ){
     if((*FEIt)->addedNoise()==0){
       const DeVeloSensor* sens=m_veloDet->sensor((*FEIt)->sensor());
-      double noise=noiseValue(sens->stripNoise((*FEIt)->strip()));
+      double sNoise = sens->stripNoise((*FEIt)->strip());
+      double noise=0.;
+      if(sNoise > 0.) noise = noiseValue(sNoise); // NaN protection for zero noise
       (*FEIt)->setAddedNoise(noise);
       //
       if(m_isVerbose) verbose()<< " noise added to existing strip "
