@@ -336,9 +336,6 @@ class Brunel(LHCbConfigurableUser):
         Tune initialisation according to input type
         """
 
-        # POOL Persistency
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-
         # By default, Brunel only needs to open one input file at a time
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
@@ -358,10 +355,6 @@ class Brunel(LHCbConfigurableUser):
             # Allow navigation to ancestor file
             IODataManager().AgeLimit += 1
 
-        if inputType in [ "MDF", "RDST", "SDST" ]:
-            # In case raw data resides in MDF file
-            EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
-
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
@@ -379,29 +372,16 @@ class Brunel(LHCbConfigurableUser):
             dstWriter.AcceptAlgs += ["Reco"] # Write only if Rec phase completed
             if handleLumi and self.getProp( "WriteLumi" ):
                 dstWriter.AcceptAlgs += ["LumiSeq"] # Write also if Lumi sequence completed
-            # Set a default output file name if not already defined in the user job options
-            if not dstWriter.isPropertySet( "Output" ):
-                outputFile = self.outputName()
-                outputFile = outputFile + '.' + self.getProp("OutputType").lower()
-                dstWriter.Output = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
-            if self.getProp( "ProductionMode" ) and not dstWriter.isPropertySet( "OutputLevel" ):
-                dstWriter.OutputLevel = INFO
-
-            # FSR output stream
+            # set verbosity
+            if self.getProp( "ProductionMode" ):
+                if not dstWriter.isPropertySet( "OutputLevel" ):
+                    dstWriter.OutputLevel = INFO
+                if self.getProp("WriteFSR"):
+                    FSRWriter = RecordStream( "FSRWriterOutputStream")
+                    if not FSRWriter.isPropertySet( "OutputLevel" ):
+                        FSRWriter.OutputLevel = INFO
+            # Suppress spurious error when reading POOL files without run records
             if self.getProp("WriteFSR"):
-                FSRWriter = RecordStream( "FSRWriter",
-                                          ItemList = [ "/FileRecords#999" ],
-                                          EvtDataSvc = "FileRecordDataSvc",
-                                          EvtConversionSvc = "FileRecordPersistencySvc" )
-                # Write the FSRs to the same file as the events
-                if FSRWriter.isPropertySet( "Output" ):
-                    log.warning("Ignoring FSRWriter.Output option, FSRs will be written to same file as the events")
-                FSRWriter.Output = dstWriter.getProp("Output")
-
-                ApplicationMgr().OutStream.append(FSRWriter)
-                if self.getProp( "ProductionMode" ) and not FSRWriter.isPropertySet( "OutputLevel" ):
-                    FSRWriter.OutputLevel = INFO
-                # Suppress spurious error when reading POOL files without run records
                 if self.getProp( "InputType" ).upper() not in [ "MDF" ]:
                     from Configurables import FileRecordDataSvc
                     FileRecordDataSvc().OutputLevel = FATAL
