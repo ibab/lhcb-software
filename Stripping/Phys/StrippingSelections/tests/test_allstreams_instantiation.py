@@ -13,7 +13,7 @@ def test_instantiate_StrippingConf_with_all_streams() :
     from StrippingConf.Configuration import StrippingConf
     from StrippingSelections.Utils import buildStreams
 
-    streams = buildStreams('stripping13')
+    streams = buildStreams('strippingdev')
 
     sc = StrippingConf (Streams = streams)
 

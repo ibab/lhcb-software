@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-24 - Thomas Blake
+ - Updated qmtests for stream instantiation and line locations
+
 ! 2011-05-23 - Thomas Latham
  - Fixed bug in StrippingB2KShh B mass combination cut
 

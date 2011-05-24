@@ -113,6 +113,8 @@ import StrippingB2SameChargeMuon
 import StrippingHyperCPX
 import StrippingExclusiveDiMuon
 
+import StrippingCcbar2Baryons
+
 # Calibration
 import StrippingTrackEffDownMuon
 import StrippingTrackEffVeloMuon
