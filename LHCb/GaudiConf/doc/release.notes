@@ -3,7 +3,12 @@
 !----------------------------------------------------------------------------
 
 ! 2011-05-24 - Marco Cattaneo
- - Fix syntax warnings in IOHelper.py
+ - Fixes to IOHelper:
+   . Fix syntax warnings
+   . Fix examples
+   . Fix argument parsing and protect against incompatible input and output
+     technologies
+ - Remove IOConf, superseded by IOHelper
 
 ! 2011-05-23 - Rob Lambert
  - Add IOHelper module and class, to replace IO Conf

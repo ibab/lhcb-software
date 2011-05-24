@@ -9,6 +9,7 @@ class IOHelper(object):
     '''
     IOHelper class, for simpler configuration of input/output
 
+    from GaudiConf.IOHelper import IOHelper
     ioh = IOHelper(Input=None,Output=None)
 
     "ioh" is now an instance of the helper which can be used in many places
@@ -29,7 +30,7 @@ class IOHelper(object):
         ioh.outStream(filename)
       
     4) adding a named special output stream to the OutputStream of Application Manager
-        ioh.outputStream(filename,"LHCbInputCopyStream/mystream")
+        ioh.outStream(filename,"LHCbInputCopyStream/mystream")
       
     5) creating output algorithms to add to your sequence
         MySequence+=ioh.outputAlgs(filename,"InputCopyStream/mySelection")
@@ -85,7 +86,20 @@ class IOHelper(object):
         if Output is not None:
             if Output.upper() not in self._outputSvcTypDict:
                 raise ValueError, Output+' output persistency not known'
-            self._inputPersistency=Output.upper()
+            self._outputPersistency=Output.upper()
+
+        if self._outputPersistency == 'POOL':
+            if self._inputPersistency == 'ROOT':
+                if Output is not None:
+                    raise TypeError( "Cannot write POOL file when reading with RootCnv" )
+                else:
+                    print "# ROOT input requested. Forcing ROOT output"
+                    self._outputPersistency = 'ROOT'
+                    
+        if self._outputPersistency == 'ROOT':
+            if self._inputPersistency == 'POOL':
+                print "# ROOT output file requested. Forcing reading of POOL input files with RootCnv" 
+                self._inputPersistency = 'ROOT'
     
     def __chooseIO(self,IO):
         '''IO = starts with one of r, w, i or o
