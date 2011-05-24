@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-24 - Marco Cattaneo
+ - Fix syntax warnings in IOHelper.py
+
 ! 2011-05-23 - Rob Lambert
  - Add IOHelper module and class, to replace IO Conf
 	 Several examples written.

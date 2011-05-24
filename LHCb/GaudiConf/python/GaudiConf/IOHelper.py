@@ -3,6 +3,8 @@ Configure IO persistency and TES
 """
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
+from Gaudi.Configuration import *
+
 class IOHelper(object):
     '''
     IOHelper class, for simpler configuration of input/output
@@ -120,7 +122,6 @@ class IOHelper(object):
     
     def setupServices(self):
         '''Setup the pool/Root services, to be done by LHCbApp'''
-        from Gaudi.Configuration import *
     
         # Set up the TES
         EventDataSvc( ForceLeaves        = True,
@@ -197,7 +198,6 @@ class IOHelper(object):
         '''
         
         if eventSelector is None:
-            from Gaudi.Configuration import *
             eventSelector=EventSelector()
         
         eventSelector.Input=self.convertConnectionStrings(eventSelector.Input, "I")
@@ -218,7 +218,6 @@ class IOHelper(object):
         '''
         
         if eventSelector is None:
-            from Gaudi.Configuration import *
             eventSelector=EventSelector()
 
         if clear is True:
@@ -247,7 +246,6 @@ class IOHelper(object):
         #find the writer
         wclass=None
         winstance=None
-        from Gaudi.Configuration import *
 
         #if it's in Gaudi.Configuration
         if writer.split('/')[0] in locals():
@@ -286,8 +284,6 @@ class IOHelper(object):
 
         Adds these streams directly to the Application manager OutStream
         '''
-        
-        from Gaudi.Configuration import *
         
         algs=self.outputAlgs(filename,writer,writeFSR)
         
