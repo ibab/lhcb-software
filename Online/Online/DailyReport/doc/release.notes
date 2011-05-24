@@ -4,8 +4,17 @@
 ! Purpose     : Produce an HTML file every day with a summary of the run
 !-----------------------------------------------------------------------------
 
+! 2011-05-24 - Olivier Callot
+ - Detect http links in the report and make them as link
+ - Add Calo piquet report.
+
+! 2011-05-19 - Olivier Callot
+ - Added the Production shifter. 
+ - Fixed the logbook display if no logbook file for today.
+ - Protected efficiencies if partial luminosity are null.
+
 ! 2011-05-18 - Olivier Callot
- - First full version, with luminosity and extracts from teh logbook
+ - First full version, with luminosity and extracts from the logbook
 
 ! 2011-05-02 - Olivier Callot
  - Fix the format of the date of the Problem Datatabase

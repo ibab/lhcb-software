@@ -152,9 +152,10 @@ void RunDB::fillInformation ( int fillNb ) {
 void RunDB::publish( FILE* web ) {
   fprintf( web, "\n<H3>Luminosity and inefficiencies</H3>");
   fprintf( web, "<TABLE width=70%% cellspacing=1 cellpading=200 border=5 align=center><FONT size=+2>" );
-  fprintf( web, "\n<TR><TH>Fill</TH><TH>Delivered</TH><TH>Logged</TH><THH>Inefficiency</TH><TH>HV off</TH>");
+  fprintf( web, "\n<TR><TH>Fill</TH><TH>Delivered</TH><TH>Logged</TH><TH>Inefficiency</TH><TH>HV off</TH>");
   fprintf( web, "<TH>Velo not IN</TH><TH>DAQ not running</TH><TH>Dead time</TH></TR>");
   for ( unsigned int kk = 0 ; kk < m_fills.size() ; ++kk ) {
+    if ( 0.000001 > m_fills[kk].lumiTot ) continue;
     if( 0 != m_fills[kk].number ) {
       fprintf( web, "\n<TR><TD align=center>%d</TD>",  m_fills[kk].number );
     } else {
@@ -164,9 +165,9 @@ void RunDB::publish( FILE* web ) {
              m_fills[kk].lumiTot, m_fills[kk].lumiLogged );
     double effT = 100. * (1. - m_fills[kk].lumiLogged  / m_fills[kk].lumiTot );
     double effH = 100. * (1. - m_fills[kk].lumiHV      / m_fills[kk].lumiTot );
-    double effV = 100. * (1. - m_fills[kk].lumiVelo    / m_fills[kk].lumiHV );
-    double effR = 100. * (1. - m_fills[kk].lumiRunning / m_fills[kk].lumiVelo );
-    double effL = 100. * (1. - m_fills[kk].lumiLogged  / m_fills[kk].lumiRunning );
+    double effV = 100. * (1. - m_fills[kk].lumiVelo    / (m_fills[kk].lumiHV      + 0.000001) );
+    double effR = 100. * (1. - m_fills[kk].lumiRunning / (m_fills[kk].lumiVelo    + 0.000001));
+    double effL = 100. * (1. - m_fills[kk].lumiLogged  / (m_fills[kk].lumiRunning + 0.000001) );
     std::string option("align=center width=14%%");
     const char* opt = option.c_str();
     fprintf( web, "<TD %s>%6.2f %%</TD><TD %s>%6.2f %%</TD><TD %s>%6.2f %%</TD>", opt, effT, opt, effH, opt, effV );

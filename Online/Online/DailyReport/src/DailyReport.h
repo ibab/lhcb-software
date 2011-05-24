@@ -41,7 +41,7 @@ private:
   FILE*   m_web;
   HistogramAlarms* m_histAlarms;
   char*   m_rdPtr;
-  char    m_html[5000];
+  char    m_html[50000];
   bool    m_firstSummary;
   std::string m_logbook;
   std::string m_logYesterday;

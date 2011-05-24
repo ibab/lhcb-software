@@ -50,7 +50,7 @@ void DailyReport::build ( int argc ) {
   int minHour  = start->tm_hour;
 
   std::cout << "start : " << minYear << " " << minMonth << " " << minDay << " " << minHour << std::endl;
-  
+
   ::strftime( buf, 20, "%Y%m%d", ::localtime(&before) );
   std::string yesterday( buf );
   ::strftime( buf, 20, "%d %B %Y", ::localtime(&before) );
@@ -89,32 +89,33 @@ void DailyReport::build ( int argc ) {
   m_tomorrow = new Shifts();
   m_tomorrow->loadFromWeb( tomorrow );
 
-  ::strftime( buf, 40, "%d %B %Y", ::localtime( &now ) );
+  ::strftime( buf, 40, "%d %B %Y %H:%M", ::localtime( &now ) );
 
   std::string s_SL = "Shift Leader";
   std::string s_DM = "Data Manager";
+  std::string s_PR = "Production";
 
   fprintf( m_web, "<!DOCTYPE HTML PUBLIC ""-//IETF//DTD//HTML 2.0//EN> <HTML>" );
-  fprintf( m_web, "<HEAD><TITLE>Daily Report %s</TITLE></HEAD><BODY>", buf );
+  fprintf( m_web, "<HEAD><TITLE>Daily Report</TITLE></HEAD><BODY>" );
 
   fprintf( m_web, "<TABLE width=90%% align=center><TR><TD align = left><A href=""./%s.html"">%s</A></TD>",
            yesterday.c_str(), yesterdayNice.c_str() );
-  fprintf( m_web, "<TD align=center><FONT size=+4 color=blue >LHCb Daily Report, %s</FONT></TD>", buf );
+  fprintf( m_web, "<TD align=center><FONT size=+3 color=blue >LHCb Daily Report, %s</FONT></TD>", buf );
   fprintf( m_web, "<TD align=right><A href=""./%s.html"">%s</A></TD></TR></TABLE>",
            tomorrow.c_str(), tomorrowNice.c_str() );
 
-  fprintf( m_web, "<TABLE width=50%% cellspacing=5 cellpading=2 border=2 align=center><FONT size=+2>" );
-  fprintf( m_web, "<tr><th/><th>%-20s</th><th>%-20s</th></tr>", s_SL.c_str(), s_DM.c_str() );
-  fprintf( m_web, "<tr><td>Yesterday night</td><td>%-20s</td><td>%-20s</td></tr>",
-           m_yesterday->name( s_SL, 2 ), m_yesterday->name( s_DM, 2 ));
-  fprintf( m_web,"<tr><td>Today morning</td><td>%-20s</td><td>%-20s</td></tr>",
-           m_shift->name( s_SL, 0 ), m_shift->name( s_DM, 0 ) );
-  fprintf( m_web,"<tr><td>Today afternoon</td><td>%-20s</td><td>%-20s</td></tr>",
-           m_shift->name( s_SL, 1 ), m_shift->name( s_DM, 1 ) );
-  fprintf( m_web,"<tr><td>Today night</td><td>%-20s</td><td>%-20s</td></tr>",
-           m_shift->name( s_SL, 2 ), m_shift->name( s_DM, 2 ) );
-  fprintf( m_web,"<tr><td>Tomorrow morning</td><td>%-20s</td><td>%-20s</td></tr>",
-           m_tomorrow->name( s_SL, 0 ), m_tomorrow->name( s_DM, 0 ) );
+  fprintf( m_web, "<TABLE width=70%% cellspacing=5 cellpading=2 border=2 align=center><FONT size=+2>" );
+  fprintf( m_web, "<tr><th/><th>%-20s</th><th>%-20s</th><th>%-20s</th></tr>", s_SL.c_str(), s_DM.c_str(), s_PR.c_str() );
+  fprintf( m_web, "<tr><td>Yesterday night</td><td>%-20s</td><td>%-20s</td><td>%-20s</td></tr>",
+           m_yesterday->name( s_SL, 2 ), m_yesterday->name( s_DM, 2 ), m_yesterday->name( s_PR, 2) );
+  fprintf( m_web,"<tr><td>Today morning</td><td>%-20s</td><td>%-20s</td><td>%-20s</td></tr>",
+           m_shift->name( s_SL, 0 ), m_shift->name( s_DM, 0 ), m_shift->name( s_PR, 0 ) );
+  fprintf( m_web,"<tr><td>Today afternoon</td><td>%-20s</td><td>%-20s</td><td>%-20s</td></tr>",
+           m_shift->name( s_SL, 1 ), m_shift->name( s_DM, 1 ), m_shift->name( s_PR, 1 ) );
+  fprintf( m_web,"<tr><td>Today night</td><td>%-20s</td><td>%-20s</td><td>%-20s</td></tr>",
+           m_shift->name( s_SL, 2 ), m_shift->name( s_DM, 2 ), m_shift->name( s_PR, 2 ) );
+  fprintf( m_web,"<tr><td>Tomorrow morning</td><td>%-20s</td><td>%-20s</td><td>%-20s</td></tr>",
+           m_tomorrow->name( s_SL, 0 ), m_tomorrow->name( s_DM, 0 ), m_tomorrow->name( s_PR, 0 ) );
   fprintf( m_web, "</TABLE></FONT><HR>" );
 
   std::string aa( "reader" );
@@ -134,7 +135,7 @@ void DailyReport::build ( int argc ) {
   myRunDb->fillInformation( -1 );
   myRunDb->publish( m_web );
 
-  extractFromElog( "Shift", "Shift Summary", true );  
+  extractFromElog( "Shift", "Shift Summary", true );
 
   listOnePiquet( "Run Chief" );
   listOnePiquet( "VELO Piquet" );
@@ -148,6 +149,7 @@ void DailyReport::build ( int argc ) {
   listOnePiquet( "Online Piquet" );
   listOnePiquet( "DQ Piquet" );
   listOnePiquet( "VELO DQ Piquet" );
+  listOnePiquet( "Production" );
 
   fprintf( m_web, "</body></html>" );
 
@@ -178,7 +180,19 @@ void DailyReport::listOnePiquet ( std::string name ) {
     } else {
       piquet = piquetDay + " (night: " + piquetNxt + ")";
     }
+  } else if ( name == "Production" ) {
+    std::string after( m_shift->name( name, 1 ) );
+    std::string afterY( m_yesterday->name( name, 1 ) );
+    if ( after != "" ) {
+      if ( piquet != "" ) piquet += ", ";
+      piquet += after;
+    }
+    if ( afterY != "" ) {
+      if ( before != "" ) before += ", ";
+      before += afterY;
+    }
   }
+
   piquet = html( piquet );
   if ( piquet != before ) piquet = std::string( html( before ) ) + " &rarr; " + piquet;
   fprintf( m_web, "<H3>%s : %s </H3>", name.c_str(), piquet.c_str() );
@@ -198,18 +212,19 @@ void DailyReport::listOnePiquet ( std::string name ) {
     m_histAlarms->retrieveAlarms( histAlarms, "IT" );
     m_histAlarms->retrieveAlarms( histAlarms, "TT" );
     extractFromElog( "ST", "ST | Piquet Report" );
-    
+
   } else if ( name == "OT Piquet" ) {
     pbdb.getListOfProblems( problems, "OT" );
     m_histAlarms->retrieveAlarms( histAlarms, "OT" );
-    
+    extractFromElog( "OT", "Piquet Report" );
+
   } else if ( name == "RICH Piquet" ) {
     pbdb.getListOfProblems( problems, "RICH1" );
     pbdb.getListOfProblems( problems, "RICH2" );
     m_histAlarms->retrieveAlarms( histAlarms, "RICH1" );
     m_histAlarms->retrieveAlarms( histAlarms, "RICH2" );
     extractFromElog( "RICH", "RICH | Checklist" );
-    
+
   } else if ( name == "Calo Piquet" ) {
     pbdb.getListOfProblems( problems, "SPD" );
     pbdb.getListOfProblems( problems, "PRS" );
@@ -220,12 +235,13 @@ void DailyReport::listOnePiquet ( std::string name ) {
     m_histAlarms->retrieveAlarms( histAlarms, "ECAL" );
     m_histAlarms->retrieveAlarms( histAlarms, "HCAL" );
     m_histAlarms->retrieveAlarms( histAlarms, "CALO" );
-    
+    extractFromElog( "CALO", "Piquet Report" );
+
   } else if ( name == "Muon Piquet" ) {
     pbdb.getListOfProblems( problems, "MUON" );
     m_histAlarms->retrieveAlarms( histAlarms, "MUON" );
     extractFromElog( "MUON", "Piquet report" );
-    
+
   } else if ( name == "L0 Piquet" ) {
     pbdb.getListOfProblems( problems, "L0" );
     m_histAlarms->retrieveAlarms( histAlarms, "L0" );
@@ -242,8 +258,12 @@ void DailyReport::listOnePiquet ( std::string name ) {
     pbdb.getListOfProblems( problems, "Calibration" );
     pbdb.getListOfProblems( problems, "Offline" );
     extractFromElog( "Data Quality", "Piquet Report" );
-    
+
+  } else if ( name == "Production" ) {
+    extractFromElog( "Operations", "Shift report" );
+
   }
+
   if ( problems.size() > 0 ) {
     fprintf( m_web, "<UL>" );
     for ( std::vector<std::vector<std::string> >::iterator pbIt = problems.begin(); problems.end() != pbIt; ++pbIt  ) {
@@ -268,62 +288,63 @@ void DailyReport::listOnePiquet ( std::string name ) {
 //=========================================================================
 void DailyReport::scanElog( std::string file, std::string system, bool today, bool addHeader ) {
   FILE* logbook = fopen( file.c_str(), "r" );
-  if ( 0 == logbook ) return;
-  char buffer[5000];
-  int size = 0;
-  char* inPtr = &buffer[0];
-  std::string itemString( "start" );
-  m_rdPtr = &buffer[0];
-  buffer[0] = 0;
-  while ( NULL != m_rdPtr ) {
-    strcpy( &buffer[0], m_rdPtr );
-    inPtr = &buffer[strlen( &buffer[0] )];
-    if ( !feof( logbook ) ) {
-      int free = &buffer[5000] - inPtr - 1;
-      size = fread( inPtr, 1, free, logbook );
-      *(inPtr+size) = 0;  // terminate the string!
-    }
+  if ( 0 != logbook ) {
+    char buffer[50000];
+    int size = 0;
+    char* inPtr = &buffer[0];
+    std::string itemString( "start" );
     m_rdPtr = &buffer[0];
-    std::string itemString = getLogbookTagValue( "$@MID@$:", true );
-    std::cout << "Item " << itemString << std::endl;
-    std::string date = getLogbookTagValue( "Date:" );
-    std::cout << "Date : '" << date << "'";
-    date = date.substr( 5, 6 ) + date.substr( 16, 9);
-    std::cout << "-> '" << date << "'" << std::endl;
-    if ( today || atoi( date.substr(7,2).c_str() ) > 6 ) {  // exclude reports before 7 AM yesterday.
-      std::string systemName = getLogbookTagValue( "System:" );
-      std::cout << "System '" << systemName << "'" << std::endl;
-      if ( system  == systemName ) {
-        std::cout << "Found a wanted entry " << itemString << " at '" << date << "'" << std::endl;
-        std::string author = getLogbookTagValue( "Author:" );
-        std::string text("") ;
-        char* begText = strstr( m_rdPtr, "=====\n" );
-        if ( 0 == begText ) {
-          std::cout << "Begin text not found " << std::endl;
-        } else {
-          begText += 6;
-          char* endText = strstr( m_rdPtr, "$@MID@$:" );
-          if ( 0 != endText ) {
-            text = std::string( begText, endText - begText );
-          } else {
-            text = std::string( begText );
-          }
-        }
-        text = html( text );
-        std::cout << "Text : '" << text << "'" << std::endl;
-        if ( m_firstSummary ) {
-          if ( addHeader ) fprintf( m_web, "<H3>%s entries in the logbook</H3>", system.c_str() );
-          fprintf( m_web, "<TABLE width = 90%% cellspacing=5 cellpading=2 border=2 align=center>" );
-          m_firstSummary = false;
-        }
-        fprintf( m_web, "<TR><TD width=10%% valign=top><a href=""http://lblogbook.cern.ch/%s/%s"">%s</a></TD>",
-                 m_logbook.c_str(),itemString.c_str(), date.c_str() );
-        fprintf( m_web, "<TD width=15%% valign=top>%s</TD><TD>%s</TD></TR>", author.c_str(), text.c_str() );
+    buffer[0] = 0;
+    while ( NULL != m_rdPtr ) {
+      strcpy( &buffer[0], m_rdPtr );
+      inPtr = &buffer[strlen( &buffer[0] )];
+      if ( !feof( logbook ) ) {
+        int free = &buffer[50000] - inPtr - 1;
+        size = fread( inPtr, 1, free, logbook );
+        *(inPtr+size) = 0;  // terminate the string!
       }
+      m_rdPtr = &buffer[0];
+      std::string itemString = getLogbookTagValue( "$@MID@$:", true );
+      std::cout << "Item " << itemString << std::endl;
+      std::string date = getLogbookTagValue( "Date:" );
+      std::cout << "Date : '" << date << "'";
+      date = date.substr( 5, 6 ) + date.substr( 16, 9);
+      std::cout << "-> '" << date << "'" << std::endl;
+      if ( today || atoi( date.substr(7,2).c_str() ) > 6 ) {  // exclude reports before 7 AM yesterday.
+        std::string systemName = getLogbookTagValue( "System:" );
+        std::cout << "System '" << systemName << "'" << std::endl;
+        if ( system  == systemName ) {
+          std::cout << "Found a wanted entry " << itemString << " at '" << date << "'" << std::endl;
+          std::string author = getLogbookTagValue( "Author:" );
+          std::string text("") ;
+          char* begText = strstr( m_rdPtr, "=====\n" );
+          if ( 0 == begText ) {
+            std::cout << "Begin text not found " << std::endl;
+          } else {
+            begText += 6;
+            char* endText = strstr( m_rdPtr, "$@MID@$:" );
+            if ( 0 != endText ) {
+              text = std::string( begText, endText - begText );
+            } else {
+              text = std::string( begText );
+            }
+          }
+          text = html( text );
+          std::cout << "Text : '" << text << "'" << std::endl;
+          if ( m_firstSummary ) {
+            if ( addHeader ) fprintf( m_web, "<H3>%s entries in the logbook</H3>", system.c_str() );
+            fprintf( m_web, "<TABLE width = 90%% cellspacing=5 cellpading=2 border=2 align=center>" );
+            m_firstSummary = false;
+          }
+          fprintf( m_web, "<TR><TD width=10%% valign=top><a href=""http://lblogbook.cern.ch/%s/%s"">%s</a></TD>",
+                   m_logbook.c_str(),itemString.c_str(), date.c_str() );
+          fprintf( m_web, "<TD width=15%% valign=top>%s</TD><TD>%s</TD></TR>", author.c_str(), text.c_str() );
+        }
+      }
+      m_rdPtr = strstr( m_rdPtr, "$@MID@$:" );
     }
-    m_rdPtr = strstr( m_rdPtr, "$@MID@$:" );
+    fclose( logbook );
   }
-  fclose( logbook );
   if ( !m_firstSummary && today ) {
     fprintf( m_web, "</TABLE>" );
     if ( addHeader ) fprintf( m_web, "<HR>" );
@@ -348,26 +369,40 @@ std::string DailyReport::getLogbookTagValue ( std::string tag, bool advance ) {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
-char* DailyReport::html ( std::string src ) {
+char* DailyReport::html( std::string src ) {
   const char* in  = src.c_str();
   char* out = &m_html[0];
   char tmp;
   while ( 0 != (tmp = *in++) ) {
     if ( tmp == 10 )       out = strcpy( out, "<br>" ) + 4;
     else if ( tmp == 13 )  ;
-    else if ( tmp == '"' ) out = strcpy( out, "&quot;" ) + 6; 
+    else if ( tmp == '"' ) out = strcpy( out, "&quot;" ) + 6;
     else if ( tmp == '<' ) out = strcpy( out, "&lt;" ) + 4;
     else if ( tmp == '>' ) out = strcpy( out, "&gt;" ) + 4;
     else if ( tmp == '&' ) out = strcpy( out, "&amp;" ) + 5;
+    else if ( tmp == 'h' ) {
+      std::cout << "Test link " << *in << *(in+1) << *(in+2) << *(in+3) << *(in+4) << *(in+5) << std::endl;
+      if ( 0 == strncmp( in, "ttp://", 6 ) ) { /// link!
+        std::cout << "Found link" << in << std::endl;
+        size_t len = strcspn( in, " ,;)\n" );
+        std::string link( in-1, in+len );
+        link = "<a href=""" + link + ">"+link+"</a>";
+        strcpy( out, link.c_str() );
+        out += link.size();
+        in += len;
+      } else {
+        *out++ = tmp;
+      }
+    }
     else *out++ = tmp;
   }
   *out = 0;
   return &m_html[0];
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 void DailyReport::extractFromElog ( std::string logbook, std::string system, bool addHeader ) {
   m_logbook = logbook;
