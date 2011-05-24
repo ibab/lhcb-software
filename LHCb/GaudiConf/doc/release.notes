@@ -2,6 +2,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-24 - Rob Lambert
+ - Remove from Gaudi.Configuration import *, instead import
+   only the required modules, when they are required.
+ - Change inputFiles() such that clean is not the default.
+   with clean not the default, existing files are first converted
+
 ! 2011-05-24 - Marco Cattaneo
  - Fixes to IOHelper:
    . Fix syntax warnings

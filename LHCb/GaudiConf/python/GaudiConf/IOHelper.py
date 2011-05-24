@@ -3,7 +3,7 @@ Configure IO persistency and TES
 """
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from Gaudi.Configuration import *
+#from Gaudi.Configuration import *
 
 class IOHelper(object):
     '''
@@ -49,7 +49,7 @@ class IOHelper(object):
     
     b) Brunel.          Pass type to LHCbApp if it is an MDF.
                         Use ioh.outStream to define the single output file
-
+                        
     c) DaVinci.         BaseDSTWriter will use ioh.outputAlgs for each output file
     
     d) Stand-alone user. Needs to create the file list to be passed to IOHelper.
@@ -116,6 +116,7 @@ class IOHelper(object):
     def _doConfFileRecords(self,fileSvc):
         ''' create the file records service, should always be done.
         '''
+        from Gaudi.Configuration import (FileRecordDataSvc, ApplicationMgr, PersistencySvc)
         # Set up the FileRecordDataSvc
         FileRecordDataSvc( ForceLeaves        = "YES",
                            EnableFaultHandler = True,
@@ -136,7 +137,7 @@ class IOHelper(object):
     
     def setupServices(self):
         '''Setup the pool/Root services, to be done by LHCbApp'''
-    
+        from Gaudi.Configuration import (EventDataSvc, ApplicationMgr, EventPersistencySvc)
         # Set up the TES
         EventDataSvc( ForceLeaves        = True,
                       RootCLID           =    1,
@@ -212,13 +213,14 @@ class IOHelper(object):
         '''
         
         if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
         
         eventSelector.Input=self.convertConnectionStrings(eventSelector.Input, "I")
         
         return eventSelector
     
-    def inputFiles(self,files,clear=True, eventSelector=None):
+    def inputFiles(self,files,clear=False, eventSelector=None):
         '''Edit the content of EventSelector and fill the Inputs with 
         Go from a list of connection strings or file names to a new list of connection strings
 
@@ -232,10 +234,14 @@ class IOHelper(object):
         '''
         
         if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
 
-        if clear is True:
+        if clear:
             eventSelector.Input=[]
+        
+        if not clear:
+            self.convertSelector(eventSelector)
         
         for file in files:
             eventSelector.Input += [ self.dressFile(file,'I') ]
@@ -262,8 +268,10 @@ class IOHelper(object):
         winstance=None
 
         #if it's in Gaudi.Configuration
-        if writer.split('/')[0] in locals():
-            wclass = locals()[writer.split('/')[0]]
+        import Gaudi.Configuration as GaudiConfigurables
+        
+        if hasattr(GaudiConfigurables, writer.split('/')[0]):
+            wclass = getattr(GaudiConfigurables,writer.split('/')[0])
         else:
             import Configurables
             wclass = getattr(Configurables,writer.split('/')[0])
@@ -279,13 +287,13 @@ class IOHelper(object):
 
         if not writeFSR: return [winstance]
         
-        FSRWriter = RecordStream( "FSRWriter"+writer.replace('/',''),
-                                  ItemList = [ "/FileRecords#999" ],
-                                  EvtDataSvc = "FileRecordDataSvc",
-                                  EvtConversionSvc = "FileRecordPersistencySvc" )
+        FSRWriter = GaudiConfigurables.RecordStream( "FSRWriter"+writer.replace('/',''),
+                                                     ItemList = [ "/FileRecords#999" ],
+                                                     EvtDataSvc = "FileRecordDataSvc",
+                                                     EvtConversionSvc = "FileRecordPersistencySvc" )
         
         FSRWriter.Output = filename
-
+        
         return [winstance, FSRWriter]
 
     def outStream(self,filename,writer="OutputStream",writeFSR=True):
@@ -298,6 +306,7 @@ class IOHelper(object):
 
         Adds these streams directly to the Application manager OutStream
         '''
+        from Gaudi.Configuration import ApplicationMgr
         
         algs=self.outputAlgs(filename,writer,writeFSR)
         
