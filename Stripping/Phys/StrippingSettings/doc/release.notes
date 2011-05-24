@@ -5,6 +5,12 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSettings v2r3p2 2011-05-22 =========================
+! 2011-05-24 - Thomas Blake
+ - Removed lines from StrippingDev
+
+! 2011-05-23 - Thomas Blake
+ - Upadted muon-TT cut dictionary for Stripping 14
+
 ! 2011-05-19 - Thomas Blake
  - Fixed GaudiKernel.SystemOfUnits imports for Stripping14
 
