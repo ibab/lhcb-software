@@ -61,11 +61,6 @@ class LHCbApp(LHCbConfigurableUser):
             CondDB().Tags [ "DQFLAGS" ] = self.getProp("DQFLAGStag")
 
     def defineEvents(self):
-        # Set up transient store and data on demand service
-        EventDataSvc( ForceLeaves        = True,
-                      RootCLID           =    1,
-                      EnableFaultHandler = True )
-
         SkipEvents = self.getProp("SkipEvents")
         if SkipEvents > 0 :
             if hasattr(EventSelector(),"FirstEvent"):
@@ -134,3 +129,6 @@ class LHCbApp(LHCbConfigurableUser):
         self.defineMonitors()
         self.defineXMLSum()
         self.defineOutput()
+        # Set up TES and I/O services
+        from GaudiConf.IOHelper import IOHelper
+        IOHelper().setupServices()

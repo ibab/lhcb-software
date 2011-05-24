@@ -63,11 +63,13 @@ class IOHelper(object):
     _outputPersistency="POOL"
     
     _inputSvcTypDict = { 'ROOT' : "SVC='Gaudi::RootEvtSelector'",
-                         'POOL' : "TYP='POOL_ROOT'"
+                         'POOL' : "TYP='POOL_ROOT'",
+                         'MDF'  : "SVC='LHCb::MDFSelector'"
                          }
     
     _outputSvcTypDict = { 'ROOT' : "SVC='RootCnvSvc'",
-                          'POOL' : "TYP='POOL_ROOTTREE'"
+                          'POOL' : "TYP='POOL_ROOTTREE'",
+                          'MDF'  : "SVC='LHCb::MDFSelector'"
                           }
     
     def __init__(self,Input=None,Output=None):
@@ -171,6 +173,8 @@ class IOHelper(object):
             ApplicationMgr().ExtSvc += [ cacheSvc, evtSvc, keySvc, treeSvc ]
             fileSvc = PoolDbCnvSvc( "FileRecordCnvSvc", DbType = "POOL_ROOTTREE" )
             self._doConfFileRecords(fileSvc)
+        # Always enable reading/writing of MDF
+        EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
         
     def dressFile(self,filename,IO):
         '''Go from file name to connection string'''
@@ -294,7 +298,7 @@ class IOHelper(object):
         
         FSRWriter.Output = filename
         
-        return [winstance, FSRWriter]
+        return [FSRWriter, winstance]
 
     def outStream(self,filename,writer="OutputStream",writeFSR=True):
         '''Create a output stream and FSR writing algorithm instance

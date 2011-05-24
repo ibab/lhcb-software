@@ -176,13 +176,20 @@ class DstConf(LHCbConfigurableUser):
         Write a DST (or RDST, SDST, XDST) in POOL format
         """
         writer = OutputStream( self.getProp("Writer") )
-        ApplicationMgr().OutStream.append( writer )
         writer.Preload = False
         writer.ItemList += items
         writer.OptItemList += optItems
         log.info( "%s.ItemList=%s"%(self.getProp("Writer"),writer.ItemList) )
         log.info( "%s.OptItemList=%s"%(self.getProp("Writer"),writer.OptItemList) )
-        
+        from GaudiConf.IOHelper import IOHelper
+        # Set a default file name if not already set
+        if not writer.isPropertySet("Output") :
+            outputFile = self.getProp("OutputName")
+            outputFile = "PFN:"+outputFile + '.' + self.getProp("DstType").lower()
+        else:
+            outputFile = IOHelper().undressFile( writer.getProp("Output") )
+        # Add to the ApplicationMgr
+        IOHelper().outStream( outputFile, "OutputStream/"+self.getProp("Writer") )        
 
     def _doWriteMDF( self, items ):
         """

@@ -2,6 +2,13 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-24 - Marco Cattaneo
+ - In IOHelper:
+   . Add support for MDF persistency. RawDataCnvSvc is always created
+   . Add FSRWriter to ApplicationMgr in correct order
+ - In LHCbApp: call IOHelper().setupServices()
+ - In DstConf: use IOHelper to create the DstWriter and set default output file
+
 ! 2011-05-24 - Rob Lambert
  - Remove from Gaudi.Configuration import *, instead import
    only the required modules, when they are required.
