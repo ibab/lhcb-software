@@ -8,6 +8,7 @@ __all__ = ['strippingArchive', 'strippingDescription']
 
 #import known strippings
 import Stripping13
+import Stripping14
 
 #give a dictionary of strippings which use the same line builders
 _duplicate_strippings={ "Stripping13b"        : "Stripping13",
@@ -17,7 +18,8 @@ _duplicate_strippings={ "Stripping13b"        : "Stripping13",
 #give a dictionary to describe what each stripping was for
 _stripping_help={"Stripping13"  : "2011 data taking, processing during the first half of 2011",
                  "Stripping13b" : "2011 data reprocessing, of the data in the first half of 2011",
-                 "Stripping1Point4Tev" : "2011 data reprocessing, for data in 2011 taken at 1.4 TeV"
+                 "Stripping1Point4Tev" : "2011 data reprocessing, for data in 2011 taken at 1.4 TeV",
+                 "Stripping14" : "2010 data reprocessing, reprocessed in early 2011 with the 2010 dataset"
                  }
 
 #compile dictionary of all known strippings
