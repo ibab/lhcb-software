@@ -326,12 +326,16 @@ StatusCode MonitorSvc::i_stop()
   {
     m_CntrMgr->open();
   }
+  StopUpdate();
+  return StatusCode::SUCCESS;
+}
+void MonitorSvc::StopUpdate()
+{
   if ( m_MonSys )
   {
     m_MonSys->stop();
   }
   StopSaving();
-  return StatusCode::SUCCESS;
 }
 
 //updateSvc and resetHistos methods are for fast run changes
@@ -577,7 +581,6 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
   }
   return;
 }
-
 void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
                              const string& , const IInterface* owner)
 {

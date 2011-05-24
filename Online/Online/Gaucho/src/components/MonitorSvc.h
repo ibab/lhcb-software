@@ -160,7 +160,7 @@ private:
   int m_maxNumCountersMonRate;
   bool m_monRateDeclared;
   void addRate(MonSubSys*, CntrMgr*);
-
+  void StopUpdate();
 
 public:
    void declareMonRateComplement( int& runNumber, unsigned int& triggerConfigurationKey, int& cycleNumber,

@@ -44,6 +44,7 @@ public:
   virtual void setRunNo(int runno) = 0;
   virtual void StartSaving(std::string &dir, std::string &part, std::string &task, int period, DimService *sav=0)=0;
   virtual void StopSaving()=0;
+  virtual void StopUpdate()=0;
 };
 #endif // KERNEL_IGAUCHOMONITORSVC_H
 
