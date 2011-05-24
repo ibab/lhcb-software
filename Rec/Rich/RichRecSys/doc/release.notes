@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2011-05-24 - Chris Jones
+ - Small changes to the track selector cuts
+  + Synchronises the cuts between various places.
+  + Extend the max P cut to a very large (effectively +inf) value
+
 !========================= RichRecSys v4r1 2011-04-05 =========================
 ! 2011-03-24 - Chris Jones
  - Increase a bit the size of the photon selection window for Rich1gas when 
