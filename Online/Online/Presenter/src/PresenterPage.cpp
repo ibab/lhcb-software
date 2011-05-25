@@ -37,7 +37,10 @@ namespace PresenterGaudi {
 PresenterPage::PresenterPage( ) :
   m_bannerPad( NULL),
   m_bannerPageName(NULL),
-  m_bannerSource( NULL )
+  m_bannerSource( NULL ),
+  m_lastName(""),
+  m_lastTimePoint(""),
+  m_lastDuration("")
 {
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
@@ -636,10 +639,22 @@ void PresenterPage::loadFromArchive( Archive* archive,
       (*itH).deleteRootHist( );
     }
   }
-  archive->closeFiles();
+  bool keepOpen = ( m_tasks.size()          == 1 && 
+                    (*m_tasks.begin()).name == m_lastName &&
+                    timePoint               == m_lastTimePoint &&
+                    pastDuration            == m_lastDuration );
+  if ( m_tasks.size() > 0 ) {
+    m_lastName  =  (*m_tasks.begin()).name;
+  } else {
+    m_lastName = "";
+  }
+  m_lastTimePoint = timePoint;
+  m_lastDuration  = pastDuration;
+  
+  if ( !keepOpen ) archive->closeFiles();
   
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-    archive->setFiles( (*itT).name, timePoint, pastDuration );
+    if ( !keepOpen ) archive->setFiles( (*itT).name, timePoint, pastDuration );
     archive->fillHistogramsFromFiles( (*itT).histos );
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
           (*itT).histos.end() != itH; ++itH ) {

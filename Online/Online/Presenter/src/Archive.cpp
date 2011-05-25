@@ -324,9 +324,9 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
       (boost::posix_time::from_iso_string(endTimeIsoString));
 
   //if (m_verbosity >= pres::Verbose)
-    std::cout << "Archive::findSavesets: " << taskname
-              << " timePoint " << to_iso_string(endTime)
-              << " pastDuration " << durationTimeString << std::endl;
+  std::cout << "Archive::findSavesets: " << taskname
+            << " timePoint " << to_iso_string(endTime)
+            << " pastDuration " << durationTimeString << std::endl;
 
   boost::posix_time::time_duration
     timeDuration(boost::posix_time::duration_from_string(durationTimeString));
@@ -373,8 +373,8 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
         if (acceptSvs) {
           if ( ( fileTime <= endTime ) && ( fileTime >= startTime ) ) {
             //if (m_verbosity >= pres::Verbose)
-              std::cout << "using file: " << (*foundSavesetsIt).leaf()
-                        << std::endl ;
+            std::cout << "using file: " << (*foundSavesetsIt).leaf()
+                      << std::endl ;
             foundRootFiles.push_back(*foundSavesetsIt);
           } else if (fileTime < startTime) {
             if (fileDateMatchGroup) {
@@ -414,7 +414,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
   irunDuration >> startRun; startRun=endRun-startRun;
   if (endRun < startRun) {
     std::cout << "Invalid run interval "<<startRun << " - "<<endRun
-              << "  converted to "<<endRun << " - "<<endRun<< std::endl; 
+              << "  converted to "<<endRun << " - "<<endRun<< std::endl;
     startRun = endRun;
   }
   if ((endRun - startRun) > ArchiveSpace::maxRunInterval) {
@@ -450,7 +450,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
       }
     }
     return foundRootFiles;
-  }  
+  }
 
   std::string aggrSvsPath = m_savesetPath.string() + pres::s_slash + pres::s_byRunDir + pres::s_slash + taskname;
 
@@ -460,7 +460,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
     int dth = th / 10000 * 10000;
     std::stringstream  dirLocation;
     dirLocation << aggrSvsPath << pres::s_slash << dth << pres::s_slash << th;
-   
+
     boost::filesystem::path runPath(dirLocation.str());
     boost::filesystem::directory_iterator end_itr;
     std::cout << "inspecting folder: " << dirLocation.str() << std::endl;
@@ -572,9 +572,9 @@ std::string Archive::createIsoTimeString(const int& year, const int& month,
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
-void Archive::setFiles ( const std::string& task,  
+void Archive::setFiles ( const std::string& task,
                          const std::string& timePoint,
                          const std::string& pastDuration  ) {
   std::cout << "globalHistoryByRun flag " << m_presenterInfo -> globalHistoryByRun() << std::endl;
@@ -604,13 +604,13 @@ void Archive::setFiles ( const std::string& task,
     } else {
       std::sort( m_rootFiles.begin(), m_rootFiles.end(), ArchiveSpace::datecomp);
     }
-    
+
     std::cout << "Merging " << m_rootFiles.size() << " file(s)" << std::endl;
   }
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void Archive::closeFiles( ) {
   std::cout << "Closing " << m_openFiles.size() << " files " << std::endl;
@@ -631,53 +631,58 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
 
   for ( std::vector< boost::filesystem::path >::const_iterator itF = m_rootFiles.begin();
         m_rootFiles.end() != itF; ++itF ) {
-    std::cout << "++ Opening root file " << (*itF).file_string().c_str() << std::endl;
-    TFile * rootFile = TFile::Open( (*itF).file_string().c_str() ) ;
-    if ( 0 == rootFile ) {
-      std::cout << "Error reading file " << (*itF).file_string()
-                << std::endl
-                << "History not available !"
-                << std::endl ;
-      for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
-      break ;
+    TFile* rootFile;
+    std::vector<TFile*>::iterator itOF = std::find( m_openFiles.begin(), m_openFiles.end(), rootFile );
+    if ( itOF == m_openFiles.end() ) {
+      std::cout << "++ Opening root file " << (*itF).file_string().c_str() << std::endl;
+      rootFile = TFile::Open( (*itF).file_string().c_str() ) ;
+      if ( 0 == rootFile ) {
+        std::cout << "Error reading file " << (*itF).file_string()
+                  << std::endl
+                  << "History not available !"
+                  << std::endl ;
+        for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
+        break ;
+      }
+      
+      if ( rootFile -> IsZombie() ) {
+        std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
+        continue;
+      }
+      m_openFiles.push_back( rootFile );
+    } else {
+      rootFile = *itOF;
     }
     
-    if ( rootFile -> IsZombie() ) {
-      std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
-    } else {
-      if ( std::find( m_openFiles.begin(), m_openFiles.end(), rootFile ) == m_openFiles.end() ) {
-        m_openFiles.push_back( rootFile );
-      }
-      std::cout << " ++ file " << (*itF).file_string() << " OK." << std::endl;
+    std::cout << " ++ file " << (*itF).file_string() << " is open." << std::endl;
 
-      //== Loop over histograms
+    //== Loop over histograms
 
-      bool first = true;
-      for ( unsigned int kk = 0; histos.size() > kk; ++kk ) {
-        TH1* archiveHisto;
-        std::string name = histos[kk].rootName();
+    bool first = true;
+    for ( unsigned int kk = 0; histos.size() > kk; ++kk ) {
+      TH1* archiveHisto;
+      std::string name = histos[kk].rootName();
+      rootFile -> GetObject( name.c_str(), archiveHisto );
+      if (!archiveHisto) {
+        name = name.substr( name.find("/")+1);
+        std::cout << "  .. try with " << name << std::endl;
         rootFile -> GetObject( name.c_str(), archiveHisto );
-        if (!archiveHisto) {
-          name = name.substr( name.find("/")+1);
-          std::cout << "  .. try with " << name << std::endl;
-          rootFile -> GetObject( name.c_str(), archiveHisto );
+      }
+      if (archiveHisto) {
+        list[kk]->Add(archiveHisto);
+        if ( first ) {
+          goodRootFiles.push_back(*itF);
+          first = false;
         }
-        if (archiveHisto) {
-          list[kk]->Add(archiveHisto);
-          if ( first ) {
-            goodRootFiles.push_back(*itF);
-            first = false;
-          }        
-          std::cout << "found histogram " << histos[kk].rootName().c_str() << std::endl;
-        
-          if ( !histos[kk].rootHist( ) ) {
-            std::cout << "Create a clean root hist" << std::endl;
-            histos[kk].setRootHist( (TH1*)( archiveHisto->Clone() ) ) ;
-            histos[kk].rootHist()->Reset( ) ;
-          }
-        } else {
-          std::cout << "Histo not found!" << std::endl;
+        std::cout << "found histogram " << histos[kk].rootName().c_str() << std::endl;
+
+        if ( !histos[kk].rootHist( ) ) {
+          std::cout << "Create a clean root hist" << std::endl;
+          histos[kk].setRootHist( (TH1*)( archiveHisto->Clone() ) ) ;
+          histos[kk].rootHist()->Reset( ) ;
         }
+      } else {
+        std::cout << "Histo not found!" << std::endl;
       }
     }
   }
@@ -686,7 +691,7 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
     for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
     return;
   }
-  
+
   for ( unsigned int kk = 0; histos.size() > kk; ++kk ) {
     if ( NULL != histos[kk].rootHist() ) {  // at least one source is available
       if ( ( ! m_presenterInfo -> isHistoryTrendPlotMode() ) ||
@@ -712,13 +717,6 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
       }
     } else {
       histos[kk].createDummyHisto();
-    }
-  
-    TH1* histo;
-    TIter next(list[kk]);
-    while ( (histo = (TH1 *) next())) {
-      list[kk]->Remove(histo);
-      delete histo;
     }
     delete list[kk];
   }

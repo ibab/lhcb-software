@@ -91,10 +91,15 @@ void CreateTrendingHistogramDialog::ok() {
       }
       bool ratioFound = false;
       std::vector< std::string >::iterator it ;
+      int nbDeclared = 0;
       for ( it = tags.begin() ; it != tags.end() ; ++it ) {
         std::string tagName = *it;
-        m_histdb->declareTrendingHistogram( tagName, fileName, tagName );
-        if ( ratio != "" && tagName == ratio ) ratioFound = true;
+        if ( tagName.size() < 80 ) {
+          std::cout << ".. declaring '" << tagName << "' for " << fileName << std::endl;
+          m_histdb->declareTrendingHistogram( tagName, fileName, tagName );
+          if ( ratio != "" && tagName == ratio ) ratioFound = true;
+          nbDeclared++;
+        }
       }
       int nbRatio = 0;
       if ( ratioFound ) {
@@ -108,8 +113,8 @@ void CreateTrendingHistogramDialog::ok() {
       }
       bool result = m_histdb -> commit() ;
 
-      sprintf( message, "Committed %d tags + %d ratios for trending file %s, status %d.", 
-               (int)tags.size(), nbRatio, fileName.c_str(), result );
+      sprintf( message, "Committed %d for %d tags + %d ratios for trending file %s, status %d.", 
+               nbDeclared, (int)tags.size(), nbRatio, fileName.c_str(), result );
       *m_output = std::string( message );
       std::cout << message << std::endl;
     }

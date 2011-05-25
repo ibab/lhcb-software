@@ -143,5 +143,8 @@ private:
   TPad* m_bannerPad;
   TText* m_bannerPageName;
   TText* m_bannerSource;
+  std::string m_lastName;
+  std::string m_lastTimePoint;
+  std::string m_lastDuration;
 };
 #endif // PRESENTERPAGE_H
