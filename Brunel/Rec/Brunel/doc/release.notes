@@ -15,6 +15,8 @@ Purpose: LHCb reconstruction program
   . Fix error assigned to OT hits in 'prefit' (TrackProjectors)
   . Major changes to MuonID (MuonID)
   . Update clusterization counters (CaloReco) 
+  . Small changes to Rich track selection cuts so they are noe the same
+    everywhere and extend max P cut to effectively +inf value (RichRecSys)
 
 </PRE><H1><A NAME=v39r4>2011-05-14 Brunel v39r4</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
