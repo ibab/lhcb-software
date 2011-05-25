@@ -14,10 +14,13 @@
 #   c) ``multi-muon''-lines:
 #        - at least three muons iwth high pt ad high chi2(ip)
 #        - at least two dimuons 
-#        - dimuon and muon iwth high-pt high chi2(ip) or
-#                              muon and detached dimuon
-#        - tau -> 3mu 
-#        
+#        - dimuon and muon with high-pt high chi2(ip) or
+#                               muon and detached dimuon
+#        - tau -> 3mu
+#
+#   c') ``di-muon+(non-muon)''-lines
+#        - dimuon + high-pt gamma
+#        - dimuon + prompt charm 
 #
 #  @author J. Albrecht, Leandro de Paula, Antonio Perez-Calero
 #  @date 2009-02-13
@@ -41,7 +44,12 @@
         - at leats two dimuons 
         - dimuon and muon iwth high-pt high chi2(ip) or
                               muon and detached dimuon
-        - tau -> 3mu 
+        - tau -> 3mu
+        
+   c') ``dimuon + X ''-lines :
+   
+        - dimuon + high-pt photon 
+        - dimuon + prompt charm 
    
 """
 # =============================================================================
@@ -151,27 +159,53 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    # For "MuAndDiMu"-line
                    #       - 'MultiMu_DiMuon_DLS'
                    #       - 'MultiMu_TightMuon_Chi2_IP'
-                   #       - 'MultiMu_TightMuon_PT' 
+                   #       - 'MultiMu_TightMuon_PT'
+                   # For "DiMu&Gamma"-line
+                   #       - 'DiMuonGamma_Gamma_PT'
+                   # For "DiMu&Charm"-lines:
+                   #       - 'DiMuonCharm_Pion_Chi2_IP'   
+                   #       - 'DiMuonCharm_Kaon_Chi2_IP'  
+                   #       - 'DiMuonCharm_Proton_Chi2_IP' 
+                   #       - 'DiMuonCharm_Charm_PT'       
+                   #       - 'DiMuonCharm_D0_MassWindow'  
+                   #       - 'DiMuonCharm_D_MassWindow'   
+                   #       - 'DiMuonCharm_Ds_MassWindow'  
+                   #       - 'DiMuonCharm_Lc_MassWindow'  
                    # ==========================================================
-                   ## chi2(IP) for ``good-muons''    ## [  4 ->  9 ]
+                   ## chi2(IP) for ``good-muons''      ## [  4 ->  9 ]
                    'MultiMu_GoodMuon_Chi2_IP'   :   4         ,
-                   ## PT for ``tight'' muons         ## [ 1.2 GeV -> 1.4 GeV ]
+                   ## PT for ``tight'' muons           ## [ 1.2 GeV -> 1.4 GeV ]
                    'MultiMu_TightMuon_PT'       :   1.25 * GeV ,
-                   ## chi2(IP) for ``tight-muons''   ## [ 25 -> 36 ]                   
+                   ## chi2(IP) for ``tight-muons''     ## [ 25 -> 36 ]                   
                    'MultiMu_TightMuon_Chi2_IP'  :  25         ,
-                   ## chi2(VX) for ``dimuons''       ## [ 16 ->  9 ]
+                   ## chi2(VX) for ``dimuons''         ## [ 16 ->  9 ]
                    'MultiMu_DiMuon_Chi2_VX'     :  16         ,
                    ## Decay flight significance for detached dimuon ## [ 5 -> 7 ]
                    'MultiMu_DiMuon_DLS'         :   5         ,
-                   ## (half)mass-window for J/psi    ## [ 125 MeV -> 110 MeV ]
+                   ## (half)mass-window for J/psi      ## [ 125 MeV -> 110 MeV ]
                    'MultiMu_Psi1S_MassWindow'   : 125   * MeV ,
-                   ## (half)mass-window for psi(2S)  ## [ 125 MeV -> 110 MeV ]
+                   ## (half)mass-window for psi(2S)    ## [ 125 MeV -> 110 MeV ]
                    'MultiMu_Psi2S_MassWindow'   : 125   * MeV ,
-                   ## (half)mass-window for tau->3mu ## [ 350 MeV -> 200 MeV ]
+                   ## (half)mass-window for tau->3mu   ## [ 350 MeV -> 200 MeV ]
                    'MultiMu_Tau3Mu_MassWindow'  : 350   * MeV ,
-                   ## max(PT) for 1-muon from tau    ## [ 1 GeV   -> 1.4 GeV ]
-                   'MultiMu_Tau3Mu_max_PT'      :   1   * GeV
+                   ## max(PT) for 1-muon from tau      ## [ 1 GeV   -> 1.4 GeV ]
+                   'MultiMu_Tau3Mu_max_PT'      :   1   * GeV ,
+                   ## pt(Gamma) for dimuon+gamma line  ## [ 2 GeV   -> 5   GeV ]
+                   'DiMuonGamma_Gamma_PT'       :   2   * GeV , 
+                   ## chi2(IP) for good pions, kaons and protons ## [ 9 -> 16 ]
+                   'DiMuonCharm_Pion_Chi2_IP'   :   9 ,
+                   'DiMuonCharm_Kaon_Chi2_IP'   :   9 ,
+                   'DiMuonCharm_Proton_Chi2_IP' :   9 ,
+                   ## PT of charm particle                [ 1.5 GeV -> 3.0 GeV ] 
+                   'DiMuonCharm_Charm_PT'       :   2 * GeV ,
+                   ## (half) mass-windows for D0, D+, Ds+ , Lambda_c+ ## [ 75 MeV -> 55 MeV ]
+                   'DiMuonCharm_D0_MassWindow'  :  75 * MeV ,
+                   'DiMuonCharm_D_MassWindow'   :  75 * MeV ,
+                   'DiMuonCharm_Ds_MassWindow'  :  75 * MeV ,
+                   'DiMuonCharm_Lc_MassWindow'  :  75 * MeV ,
                    }
+
+    
     
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
@@ -676,7 +710,24 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         - MultiMu_Psi2S_MassWindow   : default  150 * MeV 
         - MultiMu_Tau3Mu_MassWindow  : default  350 * MeV 
         - MultiMu_Tau3Mu_max_PT      : default    1 * GeV 
+
+        In addition, ``dimuon+X''-lines:
+
+        - dimuon + high-pt gamma
+        - set of dimuon + prompt charm
+
+        The parameters:
         
+        - DiMuonGamma_Gamma_PT        : default  2 * GeV 
+        - DiMuonCharm_Pion_Chi2_IP    : default  9 
+        - DiMuonCharm_Kaon_Chi2_IP    : default  9 
+        - DiMuonCharm_Proton_Chi2_IP  : default  9 
+        - DiMuonCharm_Charm_PT        : default  2 * GeV 
+        - DiMuonCharm_D0_MassWindow   : default 75 * MeV 
+        - DiMuonCharm_D_MassWindow    : default 75 * MeV 
+        - DiMuonCharm_Ds_MassWindow   : default 75 * MeV 
+        - DiMuonCharm_Lc_MassWindow   : default 75 * MeV 
+
         """
         
         #
@@ -691,9 +742,13 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         #
         ## get main symbols: Muons & DiMuons 
         # 
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons as Muons
-        from Hlt2SharedParticles.TrackFittedDiMuon         import TrackFittedDiMuon   as DiMuons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons   as Muons
+        from Hlt2SharedParticles.TrackFittedDiMuon         import TrackFittedDiMuon     as DiMuons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons as Photons 
         
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions   as Pions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons   as Kaons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedProtons as Protons
         
         Preambulo0 = [
             "from LoKiCore.functions           import *" 
@@ -702,7 +757,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         Preambulo  = Preambulo0 + [
             "goodTrack = TRCHI2DOF < 6 " , 
             "goodMuon  = goodTrack                                     & ( BPVIPCHI2() > %(MultiMu_GoodMuon_Chi2_IP)g  ) " ,
-            "tightMuon = goodTrack & ( PT > %(MultiMu_TightMuon_PT)g ) & ( BPVIPCHI2() > %(MultiMu_TightMuon_Chi2_IP)g ) " ,
+            "tightMuon = goodTrack & ( PT > %(MultiMu_TightMuon_PT)g ) & ( BPVIPCHI2() > %(MultiMu_TightMuon_Chi2_IP)g ) " ,            
             # related to tau->3mu 
             "ctau      = BPVLTIME ( ) * c_light   " ,
             "chi2vx    = VFASPF(VCHI2) "            , 
@@ -712,7 +767,14 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             "psi_prime       = ADMASS (   'psi(2S)' ) < %(MultiMu_Psi2S_MassWindow)g "           ,
             "dimuon_mass     = psi | psi_prime | ( M > 5 * GeV ) "                               ,
             "dimuon          = dimuon_mass & ( VFASPF ( VCHI2 ) < %(MultiMu_DiMuon_Chi2_VX)g ) " ,            
-            "detached_dimuon = dimuon & ( BPVDLS > %(MultiMu_DiMuon_DLS)g ) " 
+            "detached_dimuon = dimuon & ( BPVDLS > %(MultiMu_DiMuon_DLS)g ) "                    ,
+            # related to dimuon+gamma
+            "good_photons    = ( 'gamma' == ID ) & ( PT > %(DiMuonGamma_Gamma_PT)g ) "           ,
+            # related to dimuon+charm
+            "good_pions   = goodTrack & ( BPVIPCHI2() > %(DiMuonCharm_Pion_Chi2_IP)g   ) " ,
+            "good_kaons   = goodTrack & ( BPVIPCHI2() > %(DiMuonCharm_Kaon_Chi2_IP)g   ) " ,
+            "good_protons = goodTrack & ( BPVIPCHI2() > %(DiMuonCharm_Proton_Chi2_IP)g ) " ,
+            "ctau_charm   = BPVLTIME ( 16 ) * c_light   "                                  ,
             ]
         
         Preambulo = [ p % self.getProps() for p in Preambulo ]
@@ -748,6 +810,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             Preambulo = Preambulo0 , 
             Code      = " 3.9 < CONTAINS ( '%s' ) " % Muons.outputSelection()
             )
+        
         #
         ## select 'good' muons 
         GoodMuons = bindMembers (
@@ -780,6 +843,30 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             'MultiMu:' ,
             DiMuons.members()    + _filter_ ( Inputs =   DiMuons , Code =    'dimuon' , name =    'DiMuons' ) 
             )
+        
+        ## select 'good' photons 
+        GoodPhotons = bindMembers (
+            'DiMuonGamma:'  , 
+            Photons.members()    + _filter_ ( Inputs =   Photons  , Code =  'good_photons' , name =  'GoodPhotons' )
+            )
+
+        ## select 'good' pions 
+        GoodPions = bindMembers (
+            'DiMuonCharm:'  , 
+            Pions.members()    + _filter_ ( Inputs =   Pions  , Code =  'good_pions' , name =  'GoodPions' )
+            )
+        ## select 'good' kaons 
+        GoodKaons = bindMembers (
+            'DiMuonCharm:'  , 
+            Kaons.members()    + _filter_ ( Inputs =   Kaons  , Code =  'good_kaons' , name =  'GoodKaons' )
+            )
+        
+        ## select 'good' protons 
+        GoodProtons = bindMembers (
+            'DiMuonCharm:'  , 
+            Protons.members()  + _filter_ ( Inputs =  Protons , Code =  'good_protons' , name =  'GoodProtons' )
+            )
+        
         #
         ## check the presense of at least two dimuons 
         check_2dimu    = Counter (
@@ -821,6 +908,93 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             """,
             MotherCut       = " ALL  " 
             )
+        
+        ## maker of dimu plus photon cominations 
+        mu_and_gamma        = Hlt2Member (
+            CombineParticles ,
+            'Combine'        ,
+            Inputs            = [ DiMuons , GoodPhotons ]        , 
+            Preambulo         = Preambulo                        ,
+            DecayDescriptor   = "chi_b2(1P) -> J/psi(1S) gamma " , 
+            DaughtersCuts     = {
+            'J/psi(1S)' : 'dimuon  & ( chi2vx < 10 ) ' ,
+            'gamma'     : 'good_photons'                
+            } ,
+            ## ??
+            # ParticleCombiners = { '' : 'MomentumCombiner' } ,
+            CombinationCut    = " AALL " ,
+            MotherCut         = "  ALL " 
+            )
+        
+        ## Maker of D0 -> K- pi+ candidates 
+        d0_2kpi = Hlt2Member (
+            CombineParticles , 
+            'CharmCombine'   , 
+            Inputs          = [ GoodKaons, GoodPions ]    , 
+            Preambulo       = Preambulo                   ,
+            DecayDescriptor = '[D0 -> K- pi+]cc' , 
+            CombinationCut  = """
+            ( APT           > %(DiMuonCharm_Charm_PT)g      ) &             
+            ( ADAMASS('D0') < %(DiMuonCharm_D0_MassWindow)g ) 
+            """ % self.getProps() ,
+            MotherCut       = " ( chi2vx < 30 ) & ( ctau_charm > 100 * um ) "
+            )
+        
+        ## Maker of D+ -> K- pi+ pi+ candidates 
+        dp_2kpipi = Hlt2Member (
+            CombineParticles , 
+            'CharmCombine'   , 
+            Inputs          = [ GoodKaons, GoodPions ]    , 
+            Preambulo       = Preambulo                   ,
+            DecayDescriptor = '[D+ -> K- pi+ pi+]cc' , 
+            CombinationCut  = """
+            ( APT           > %(DiMuonCharm_Charm_PT)g      ) &             
+            ( ADAMASS('D+') < %(DiMuonCharm_D_MassWindow)g ) 
+            """ % self.getProps() ,
+            MotherCut       = " ( chi2vx < 30 ) & ( ctau_charm > 100 * um ) "
+            )
+        #
+        
+        ## Maker of Ds+ -> K- K+ pi+ pi+candidates 
+        ds_2kkpi = Hlt2Member (
+            CombineParticles , 
+            'CharmCombine'   , 
+            Inputs          = [ GoodKaons , GoodPions ]   , 
+            Preambulo       = Preambulo                   ,
+            DecayDescriptor = '[D_s+ -> K- K+ pi+]cc' , 
+            CombinationCut  = """
+            ( APT           > %(DiMuonCharm_Charm_PT)g      ) &
+            ( AM12          < 1040 * MeV  )                   & 
+            in_range ( PDGM('D+') - %(DiMuonCharm_D_MassWindow)g , AM , PDGM('D_s+') - %(DiMuonCharm_D_MassWindow)g )
+            """ % self.getProps() ,
+            MotherCut       = " ( chi2vx < 30 ) & ( ctau_charm > 100 * um ) "
+            )
+        #
+        
+        ## Maker of Lambda_c+ -> p K- pi+ pi+candidates 
+        lc_2pkpi = Hlt2Member (
+            CombineParticles , 
+            'CharmCombine'   , 
+            Inputs          = [ GoodKaons, GoodProtons , GoodPions ]    , 
+            Preambulo       = Preambulo                   ,
+            DecayDescriptor = '[Lambda_c+ -> p+ K- pi+]cc' , 
+            CombinationCut  = """
+            ( APT           > %(DiMuonCharm_Charm_PT)g      ) &
+            ( ADAMASS('D+') < %(DiMuonCharm_Lc_MassWindow)g ) 
+            """ % self.getProps() ,
+            MotherCut       = " ( chi2vx < 30 ) & ( ctau_charm > 100 * um ) "
+            )
+        
+        ## make dimuon + charm combinations
+        def dimu_charm_ ( charm , decay ) :
+            return Hlt2Member (
+                CombineParticles ,
+                'DiMuCharm'      ,
+                Inputs            = [ DiMuons , charm ] , 
+                DecayDescriptor   = decay               ,
+                CombinationCut    = " AALL "            ,
+                MotherCut         = "  ALL " 
+                )
         
         # =====================================================================
         # three generic detached high-pt muons 
@@ -897,16 +1071,128 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             tau_3mu          ## check for tau->3mu candidates 
             ] , 
             )
+
+        # =====================================================================
+        # dimuon + high-pt gamma
+        # =====================================================================        
+        dimuon_and_photon = Hlt2Line (
+            "DiMuonAndGamma" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            #
+            Muons          ,  ## get muons 
+            DiMuons        ,  ## get dimuons
+            GoodPhotons    ,  ## get photons
+            mu_and_gamma      ## good "dimu+photon" combinations 
+            ], 
+            )
+        
+        # =====================================================================
+        # dimuon + D0 
+        # =====================================================================        
+        dimuon_and_D0 = Hlt2Line (
+            "DiMuonAndD0" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            #
+            Muons          ,  ## get muons 
+            DiMuons        ,  ## get dimuons
+            GoodKaons      ,  ## get kaons
+            GoodPions      ,  ## get pions
+            d0_2kpi        ,  ## make D0 -> K- pi+
+            ## make dimuon + charm combinations 
+            dimu_charm_ ( d0_2kpi , '[ chi_b2(1P) -> J/psi(1S) D0 ]cc' ) 
+            ]
+            )
+        # =====================================================================
+        # dimuon + D+
+        # =====================================================================        
+        dimuon_and_Dplus = Hlt2Line (
+            "DiMuonAndDp" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            #
+            Muons          ,  ## get muons 
+            DiMuons        ,  ## get dimuons
+            GoodKaons      ,  ## get kaons
+            GoodPions      ,  ## get pions
+            dp_2kpipi      ,  ## make D+ -> K- pi+ pi+
+            ## make dimuon + charm combinations 
+            dimu_charm_ ( dp_2kpipi , '[ chi_b2(2P) -> J/psi(1S) D+ ]cc' ) 
+            ]
+            )
+        
+        # =====================================================================
+        # dimuon + Ds+
+        # =====================================================================        
+        dimuon_and_Ds = Hlt2Line (
+            "DiMuonAndDs" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            #
+            Muons          ,  ## get muons 
+            DiMuons        ,  ## get dimuons
+            GoodKaons      ,  ## get kaons
+            GoodPions      ,  ## get pions
+            ds_2kkpi       ,  ## make Ds+ -> K- K+ pi+
+            ## make dimuon + charm combinations 
+            dimu_charm_ ( ds_2kkpi , '[ chi_b2(2P) -> J/psi(1S) D_s+ ]cc' ) 
+            ]
+            )        
+
+        # =====================================================================
+        # dimuon + Lc+
+        # =====================================================================        
+        dimuon_and_Lc = Hlt2Line (
+            "DiMuonAndLc" ,
+            #
+            prescale  = self.prescale  ,  ## prescale 
+            postscale = self.postscale ,  ## postscale 
+            # the main structure 
+            algos     = [
+            #
+            Muons          ,  ## get muons 
+            DiMuons        ,  ## get dimuons
+            GoodKaons      ,  ## get kaons
+            GoodProtons    ,  ## get protons
+            GoodPions      ,  ## get pions
+            lc_2pkpi       ,  ## make Lc+ -> p K- pi+
+            ## make dimuon + charm combinations 
+            dimu_charm_ ( lc_2pkpi , '[ chi_b2(2P) -> J/psi(1S) Lambda_c+ ]cc' ) 
+            ]
+            )
         
         # =====================================================================
         # define unique IDs
         # =====================================================================
         
         HltANNSvc().Hlt2SelectionID.update (
-            { "Hlt2TriMuonDetachedDecision"   : 50214 ,
-              "Hlt2DiMuonAndMuonDecision"      : 50215 ,
-              "Hlt2DoubleDiMuonDecision"       : 50216 , 
-              "Hlt2TriMuonTauDecision"        : 50217 }
+            {
+            ## multi-muon lines 
+            "Hlt2TriMuonDetachedDecision"   : 50214 ,
+            "Hlt2DiMuonAndMuonDecision"     : 50215 ,
+            "Hlt2DoubleDiMuonDecision"      : 50216 , 
+            "Hlt2TriMuonTauDecision"        : 50217 ,
+            ## dimuon + gamma
+            "Hlt2DiMuonAndGammaDecision"       : 50218 ,
+            ## dimuon + charm
+            "Hlt2DiMuonAndD0Decision"          : 50219 ,
+            "Hlt2DiMuonAndDpDecision"          : 50220 ,
+            "Hlt2DiMuonAndDsDecision"          : 50221 ,
+            "Hlt2DiMuonAndLcDecision"          : 50222 ,
+            }
             )
         
         
