@@ -199,6 +199,7 @@ StatusCode DeRichHPD::initialize ( )
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() ) { fatal() << "UMS updates failed" << endmsg; }
 
+  // finally return
   return sc;
 }
 

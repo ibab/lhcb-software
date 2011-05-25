@@ -28,7 +28,7 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-#include <bitset>
+// STL
 #include <cmath>
 
 // External declarations
@@ -74,6 +74,8 @@ public:
    * terminate
    */
   virtual StatusCode initialize();
+
+public:
 
   /**
    * Get the point on the centre of the HPD window on the inside surface

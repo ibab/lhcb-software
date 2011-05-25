@@ -617,6 +617,11 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
   msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
+  if ( !siliconBox )
+  {
+    error() << "Failed to cast to SolidBox" << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // assume same size for all silicon detectors
   m_siliconHalfLengthX = siliconBox->xHalfLength();

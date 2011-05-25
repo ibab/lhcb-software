@@ -66,11 +66,13 @@ StatusCode DeRichSystem::initialize()
 
   debug() << "Initialize " << name() << endmsg;
 
-  // register condition for updates
-  SmartRef<Condition> rich1numbers = condition( m_condDBLocs[Rich::Rich1] );
-  SmartRef<Condition> rich2numbers = condition( m_condDBLocs[Rich::Rich2] );
-  updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
-  updMgrSvc()->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
+  // register for condition updates
+  updMgrSvc()->registerCondition( this, 
+                                  condition(m_condDBLocs[Rich::Rich1]).path(),
+                                  &DeRichSystem::buildHPDMappings );
+  updMgrSvc()->registerCondition( this, 
+                                  condition(m_condDBLocs[Rich::Rich2]).path(),
+                                  &DeRichSystem::buildHPDMappings );
 
   // Run first update
   const StatusCode sc = updMgrSvc()->update(this);
@@ -189,7 +191,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     const CondData& inactsHuman = numbers->paramVect<int>("InactiveHPDListInSmartIDs");
     inactiveHPDListInSmartIDs = true;
     inacts.reserve(inactsHuman.size());
-    for ( CondData::const_iterator inHpd = inactsHuman.begin(); inHpd != inactsHuman.end(); ++inHpd )
+    for ( CondData::const_iterator inHpd = inactsHuman.begin(); 
+          inHpd != inactsHuman.end(); ++inHpd )
     {
       const LHCb::RichSmartID ID( Rich::DAQ::HPDIdentifier(*inHpd).smartID() );
       if ( ID.isValid() ) { inacts.push_back( ID ); }
@@ -762,30 +765,33 @@ DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const
 //=========================================================================
 std::string DeRichSystem::getDeHPDLocation ( const LHCb::RichSmartID smartID ) const
 {
-  const Rich::DAQ::HPDCopyNumber cNumber = copyNumber( smartID );
   std::string loc;
 
   if ( deRich(smartID.rich())->exists("HPDPanelDetElemLocations") )
   {
-    const std::vector<std::string>& panelLoc = deRich(smartID.rich())->
-      paramVect<std::string>("HPDPanelDetElemLocations");
+    const std::vector<std::string>& panelLoc = 
+      deRich(smartID.rich())->paramVect<std::string>("HPDPanelDetElemLocations");
     loc = panelLoc[smartID.panel()];
   }
   else
   {
     if( smartID.rich() == Rich::Rich1 )
+    {
       if( smartID.panel() == Rich::top )
         loc = DeRichLocations::Rich1Panel0;
       else
         loc = DeRichLocations::Rich1Panel1;
+    }
     else
+    {
       if( smartID.panel() == Rich::left )
         loc = DeRichLocations::Rich2Panel0;
       else
         loc = DeRichLocations::Rich2Panel1;
+    }
   }
 
-  loc = loc + "/HPD:"+std::string(cNumber);
-  return loc;
+  const Rich::DAQ::HPDCopyNumber cNumber = copyNumber( smartID );
+  return loc + "/HPD:" + std::string(cNumber);
 }
 //===========================================================================

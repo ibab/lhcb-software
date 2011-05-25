@@ -108,14 +108,10 @@ protected:
   /// Access DeRichSystem on demand
   DeRichSystem * deRichSys() const;
 
-  /// Access Service locator
-  
-
 private:
 
   mutable std::string m_myname;    ///< The name of this detector element
   mutable MsgStream * m_msgStream; ///< Message Stream Object
-
   mutable DeRichSystem* m_deRichS; ///< Pointer to the overall RICH system object
 
 };
