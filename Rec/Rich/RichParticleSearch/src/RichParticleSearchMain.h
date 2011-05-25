@@ -25,6 +25,7 @@
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichIsolatedTrack.h"
 #include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
 
 // RichDet
 #include "RichDet/DeRichSphMirror.h"
@@ -83,13 +84,6 @@ namespace Rich
         // set to know to stop all MC Truth
         bool m_useMCTruth;
 
-        // particle type when fixed
-       // int m_particleType;
-       // Rich::ParticleIDType m_pType;
-
-        // keep totals of particle types
-        // std::vector<int> m_pTypes;
-
         // histogram output level
         int m_histoOutputLevel;
 
@@ -101,9 +95,13 @@ namespace Rich
         const IIsolatedTrack * m_isoTrack; ///< Pointer to isolated track tool
         const ITrackEffectiveRefractiveIndex * m_tkIndex;
         IMuonInformation* m_MuonInformation;
-
+        const IExpectedTrackSignal * m_signal;
         //Isolation cuts for each radiator
         std::vector<double> m_IsoCut;
+
+        // particle type when fixed
+        int m_particleType;
+        Rich::ParticleIDType m_pType;
 
         //Beta cuts
         std::vector<double> m_maxBetaCut;
@@ -122,17 +120,13 @@ namespace Rich
         //whether to use Muon information
         bool m_useMuonInfo;
 
-       // std::string m_tracksInContainer;
-      //  mutable LHCb::MuonPID m_pid;
-
-        // mcoombes event counter
+        //  event counter
         int EvtNum;
 
         int m_tkTotal;
       };
 
-      // Get an interger value for each RICH radiator
-      // 0 Aerogel; 1 Rich1Gas; 2 Rich2Gas
+
       inline int RichParticleSearchMain::GetRichInt(){
         return (int) m_radiator;
       }
