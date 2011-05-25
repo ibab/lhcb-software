@@ -1,3 +1,34 @@
+2011-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r2
+
+	LbConfiguration:
+	* python/LbConfiguration/SetupProject.py (Marco Cl.):
+	- reduced project checks on CVMFS (it should reduce the number of catalogs needed)
+	- Added the possibility of specifying the User_release_area on the command line.
+	* python/LbConfiguration/Version.py: Added function to parse SVN Id and URL keywords (Marco Cl.).
+	* multiple: replaces CVS2Version with Marco's parseSvnVersion.
+	* python/LbConfiguration/__init__.py: added debug messages to Eclipse configuration functions (Marco Cl.)
+	* python/LbConfiguration/SetupProject.py: change the order of "use" statements in the generated
+	requirements file, because the user requested packages must appear before the container package (Marco Cl.).
+
+	LbRelease:
+	* scripts/buildLCGTar: added extra arguments as platforms to build. This is unambiguous for
+	this script (unlike buildTar) since there is no shared tarball.
+	* python/LbRelease/GetPack.py: added a parsable print out after the check out of each
+	package for better progress reporting (Marco Cl.).
+	* python/LbRelease/GetPack.py (Marco Cl.):
+	- added the possibility to specify a list of packages to check out from a file or standard input.
+	- Allow to list the version of several packages or projects in one call.
+	* python/LbRelease/rcs.py: moved the generation of Eclipse configuration to GetPack (Marco Cl.)
+	* python/LbRelease/GetPack.py (Marco Cl.):
+	- added option to disable the Eclipse configuration (keep Eclipse-friendly check out),
+	- added option '-C' to use a different directory as base for the check out
+	- added options to list packages, projects and versions in plain text or XML
+
+	LbUtils:
+	* python/LbUtils/Path.py: Added a function to check if a path is on CVMFS (isCVMFS) (Marco Cl.)
+
 2011-04-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r1p4

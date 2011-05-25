@@ -1,3 +1,7 @@
+2011-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v4r2
+
 2011-05-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/buildLCGTar: added extra arguments as platforms to build. This is unambiguous for
