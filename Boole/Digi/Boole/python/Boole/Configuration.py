@@ -639,9 +639,6 @@ class Boole(LHCbConfigurableUser):
                 raise RuntimeError("Unknown Boole().Outputs value '%s'"%option)
             outputs.append( option )
 
-        # POOL Persistency
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-
         if "DIGI" in outputs:
             seq = GaudiSequencer("PrepareDIGI")
             ApplicationMgr().TopAlg += [ seq ]
@@ -680,8 +677,6 @@ class Boole(LHCbConfigurableUser):
                 MyWriter.OutputLevel = INFO
 
         if "MDF" in outputs:
-            # Set up the MDF persistency
-            importOptions("$STDOPTS/RawDataIO.opts")
             # Make sure that file will have no knowledge of other nodes
             from Configurables import EventNodeKiller
             nodeKiller = EventNodeKiller("MDFKiller")

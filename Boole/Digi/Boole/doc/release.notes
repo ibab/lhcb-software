@@ -3,6 +3,16 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configurable:
+   . No longer initialize persistency services, now done in LHCbApp
+
+ - Changes to references to reflect changes in Boole v22r2 output:
+   . Added variable response with radius, to match data (VeloSim)
+   . Add capability to vary response according to radiation damage (VeloSim)
+
+ - Changes to tests:
+   . Remove all slc4_ia32 specific references and exclusions
+
 </PRE><H1><A NAME=v22r1>2011-04-11 Boole v22r1</A></H1><PRE>
 This version uses projects LCGCMT 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
