@@ -4,9 +4,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-05-25 - Julien Cogan
+ - Fix an other bug found by Coverity (affecting only debug output)
+
+! 2011-05-25 - Julien Cogan
  - Try to fix "bugs" found by Coverity (local variable exceed allowed stack space).
    Faulty variables are now using pointers so that the used memory is taken from 
-   the heap.
+   the heap. 
 
 !========================= L0Muon v9r4 2011-04-27 =========================
 ! 2011-04-19 - Julien Cogan

@@ -1058,8 +1058,10 @@ void L0MuonOutputs::errors(MsgStream & msg) const{
       bool error=false;
       if (m_ctrlCand[i]->inError(ii)) error=true;
       for (int ib=0; ib<12; ++ib){
-        if (m_ctrlCand[i]->inError(ii,ib)) error=true;
-        break;
+        if (m_ctrlCand[i]->inError(ii,ib)) {
+          error=true;
+          break;
+        }
       }
       if ( (!error) && (msg.level()!=MSG::VERBOSE) ) continue;
       
