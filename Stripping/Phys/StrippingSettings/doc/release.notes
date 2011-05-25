@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-25 - Jibo He
+ - Merge MB stream into AllStreams for Stripping1Point4TeV
+
 !========================= StrippingSettings v2r3p2 2011-05-25 =========================
 ! 2011-05-25 - Jibo He
  - Update MB dict for Stripping1Point4TeV, dbase updated as well
