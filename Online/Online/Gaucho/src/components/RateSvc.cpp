@@ -12,7 +12,11 @@
 #include "AIDA/IHistogram.h"
 #include "Gaucho/MonCounter.h"
 #include "Gaucho/RateService.h"
+#include "Trending/ITrendingTool.h"
+#include "Trending/ISimpleTrendWriter.h"
+
 DECLARE_SERVICE_FACTORY(RateSvc)
+
 namespace RATESVC
 {
   void Analyze(void *arg, void* buff ,int siz, MonMap *mmap, MonAdder *)
@@ -103,6 +107,7 @@ void RateSvc::makerate(MonMap* mmap)
           lab = (char*)AddPtr(lab,strlen(lab)+1);
         }
       }
+      m_trender->startEvent();
       for (int i = 9;i<ndble;i++)
       {
         dbincont[i] = nbincont[i]-obincont[i];
@@ -152,8 +157,11 @@ void RateSvc::makerate(MonMap* mmap)
         s->m_data.d1 = rate;
         s->m_data.d2 = c;
         int upsiz = 2*sizeof(s->m_data.d1)+strlen(s->m_data.c);
+
         s->Updater(upsiz);
+        m_trender->addEntry(nams,c);
       }
+      m_trender->saveEvent();
       delete pdiff;
     }
     else
@@ -170,7 +178,18 @@ void RateSvc::makerate(MonMap* mmap)
 RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
 {
 
-
+  m_trender = 0;
+  // load trending tool
+  IService * isvc ;
+  sl->getService( "ToolSvc" , isvc ) ;
+//  printf("%x\n",isvc);
+  const IInterface *a3( isvc ) ;
+//  printf("%x\n",a3);
+  const std::string & nam( "SimpleTrendWriter" ) ;
+  IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
+//  printf("%x\n",intf);
+  m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
+  m_oldProf = 0;
 }
 OUTServiceDescr *RateSvc::findOUTService(std::string servc)
 {
@@ -220,3 +239,21 @@ StatusCode RateSvc::start()
 //    m_AdderSys->stop();
 //  }
 //}
+StatusCode RateSvc::initialize()
+{
+
+
+
+//  ToolSvc()->retrieveTool ( “SimpleTrendWriter”, m_trender, 0, true   );
+//  m_trender=tool<ISimpleTrendWriter>("SimpleTrendWriter");
+  PubSvc::initialize();
+  std::string syst = "HLT";
+  m_trender->initialize();
+  m_trender->setPartitionAndName(this->m_PartitionName,syst);
+  return StatusCode::SUCCESS;
+}
+StatusCode RateSvc::finalize()
+{
+  m_trender->close();
+  return StatusCode::SUCCESS;
+}

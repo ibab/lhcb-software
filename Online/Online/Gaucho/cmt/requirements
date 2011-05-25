@@ -13,6 +13,7 @@ use ROOT v* LCG_Interfaces
 use DAQEvent v* Event
 use MDF      v* DAQ
 use OnlineKernel v* Online
+use Trending v* Online
 
 macro_append ROOT_linkopts ' -lHist' WIN32 " libHist.lib "
 

@@ -34,6 +34,7 @@ public:
 typedef std::map<std::string, OUTServiceDescr*> OUTServiceMap;
 typedef std::pair<std::string, OUTServiceDescr*> OUTServicePair;
 typedef OUTServiceMap::iterator OUTServIter;
+class ISimpleTrendWriter;
 class RateSvc : public PubSvc
 {
 public:
@@ -47,6 +48,9 @@ public:
   OUTServiceMap m_outputServicemap;
   OUTServiceDescr *findOUTService(std::string servc);
   std::string m_NamePrefix;
+  virtual StatusCode initialize();
+  virtual StatusCode finalize();
+  ISimpleTrendWriter* m_trender;
 private:
   MyErrh *m_errh;
 
