@@ -285,11 +285,17 @@ StatusCode AlgorithmCorrelations::printTable(void) {
 
   if (msgLevel(MSG::DEBUG)) debug() << nalgow << " columns find something " << endmsg ;
 
-  const unsigned int nl = 4+9+decimals+m_longestName+(6+decimals)*nalgow ;
+  const unsigned int nl = 4 + 9 + decimals + m_longestName + ( 6 + decimals )*nalgow ;
   const unsigned int namelength =  name().length() ;
   const double halflength = ((double)nl - namelength )/2. ;
-  const unsigned int nlh = int(halflength);
-  if (msgLevel(MSG::DEBUG)) debug() << name() << " " << name().length() << " " << namelength << " " << halflength << endmsg ;
+  const unsigned int nlh = (halflength>0 ? int(halflength) : 0 );
+  if (msgLevel(MSG::VERBOSE)) verbose() << name() << " namelength: " << namelength 
+                                        << " decimals: " << decimals 
+                                        << " longest: " << m_longestName
+                                        << " nl: " << nl 
+                                        << " halflength: " << halflength 
+                                        << " nlh: " << nlh 
+                                        << endmsg ;
   std::string halfspace = "";
   if ( nlh > 0 ) halfspace = std::string(nlh,' ');
   if (msgLevel(MSG::DEBUG)) debug() << "Will print table with " << nl << " " << nlh << endmsg ;
