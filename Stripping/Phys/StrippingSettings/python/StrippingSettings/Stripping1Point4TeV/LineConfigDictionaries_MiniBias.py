@@ -12,7 +12,7 @@ MiniBias = {
     'L0AnyLine_Prescale': 1.,
     'L0AnyLine_RE': "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
     'NoBiasLine_Prescale': 1.,
-    'NoBiasLine_RE': "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))"
+    'NoBiasLine_RE': "(HLT_PASS_RE('Hlt1MB.*Bias.*Decision'))"
     },
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'MiniBias' ]
