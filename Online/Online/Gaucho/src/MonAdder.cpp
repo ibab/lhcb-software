@@ -313,6 +313,7 @@ void MonAdder::TimeoutHandler()
 //      printf ("Timeout from source %s expected %lli last received %lli\n",d->m_Info->m_TargetService.c_str(),
 //          m_reference,d->last_update);
       add(d->m_buffer,d->m_bufsiz,d->m_Info);
+      this->m_received++;
       Update();
     }
   }
