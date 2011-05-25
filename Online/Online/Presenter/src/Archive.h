@@ -60,13 +60,13 @@ public:
   /// Get task name from a file
   std::string taskNameFromFile(const std::string & fileName) const ;
 
-  /// Set the file list fo rteh sepcified task
+  /// Set the file list for the specified task
   void setFiles(  const std::string& task,  
                   const std::string& timePoint,
                   const std::string& pastDuration  );
 
-  /// Fill an histogram form the files previously found.
-  void fillHistogramFromFiles ( DisplayHistogram* dispHist);
+  /// Fill histograms from the files previously found.
+  void fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos );
   
   /// Utility function to create ISO time string  
   static std::string createIsoTimeString(const int& year, const int& month, 
@@ -135,5 +135,6 @@ private:
   std::vector<boost::filesystem::path> m_foundReferences; 
   std::vector< boost::filesystem::path > m_rootFiles ;
   std::vector<TFile*> m_openFiles;
+  std::vector<int> m_runNumbers;
 };
 #endif /*PRESENTER_ARCHIVE_H*/

@@ -71,7 +71,6 @@
 #include "ElogDialog.h"
 #include "ReferenceDialog.h"
 #include "ShiftDB.h"
-#include "KnownProblemList.h"
 #include "ProblemDB.h"
 #include "RunDB.h"
 #include "PageDescriptionTextView.h"
@@ -311,7 +310,6 @@ void PresenterMainFrame::buildGUI() {
     m_viewToggleReferenceOverlayText = new TGHotString("&Overlay reference");
     m_viewToggleFastHitMapDrawText = new TGHotString("&Fast hitmap draw");
     m_viewAlarmListText            = new TGHotString("Show &alarm list");
-    m_viewKnownProblemListText     = new TGHotString( "Show &known problems" );
     m_viewInspectHistoText         = new TGHotString("&Inspect histogram");
     m_viewHistogramDescriptionText = new TGHotString("Histogram &description");
     m_viewInspectPageText          = new TGHotString("Inspect &page");
@@ -411,8 +409,6 @@ void PresenterMainFrame::buildGUI() {
     m_viewMenu->AddSeparator();
     m_viewMenu->AddEntry(m_viewAlarmListText, SHOW_ALARM_LIST_COMMAND);
     m_viewMenu->CheckEntry(SHOW_ALARM_LIST_COMMAND);
-    m_viewMenu->AddEntry(m_viewKnownProblemListText, SHOW_KNOWNPROBLEM_LIST_COMMAND);
-    m_viewMenu->CheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
     m_viewMenu->AddEntry(m_viewUnDockPageText, UNDOCK_PAGE_COMMAND);
     m_viewMenu->AddEntry(m_viewDockAllText, DOCK_ALL_COMMAND);
     m_viewMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
@@ -680,14 +676,11 @@ void PresenterMainFrame::buildGUI() {
     m_toolBar->AddFrame(m_historyIntervalComboBox , menuBarCenterY );
     m_historyIntervalComboBox->SetEnabled(false);
     // Select history by run
+    m_historyIntervalComboBox->AddEntry("Recent data", M_RecentHistory);
     m_historyIntervalComboBox->AddEntry("set run number", M_IntervalPickerRun ) ;
     m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
     m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
-    m_historyIntervalComboBox->AddEntry("last 1 hour", M_LAST_1_HOURS);
-    m_historyIntervalComboBox->Select(M_LAST_1_HOURS, false);
-    m_historyIntervalComboBox->AddEntry("last 8 hours", M_LAST_8_HOURS);
-    m_historyIntervalComboBox->AddEntry("preset file", M_Last_File);
-    m_historyIntervalComboBox->AddEntry("preset interval", M_Last_Interval);
+    m_historyIntervalComboBox->Select(M_RecentHistory, false);
 
     m_historyIntervalComboBox->Resize(112,22);
     m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
@@ -913,25 +906,6 @@ void PresenterMainFrame::buildGUI() {
     if(m_alarmDisplayEnabled) {
       m_alarmDisplay = new AlarmDisplay( this , &m_presenterInfo, m_alarmHistogramTreeList ) ;
     }
-    //=========================================================================
-    // List of known problems
-
-    m_knownProblemDock = new TGDockableFrame( m_leftMiscFrame ) ;
-    m_knownProblemDock -> SetWindowName( "List of known problems" ) ;
-    m_knownProblemDock -> EnableUndock( true ) ;
-    m_knownProblemDock -> EnableHide( true ) ;
-    m_knownProblemDock -> Resize( leftWindowsXSize, 494 ) ;
-    m_leftMiscFrame -> AddFrame( m_knownProblemDock ,
-                                 new TGLayoutHints(kLHintsLeft | kLHintsTop |
-                                                   kLHintsExpandX | kLHintsExpandY,
-                                                   0, 0, 0, 0 ) ) ;
-    m_globalKnownProblemList = new KnownProblemList( m_knownProblemDock ,
-                                                     m_pbdbConfig,
-                                                     m_rundbConfig ) ;
-    m_knownProblemDock -> AddFrame( m_globalKnownProblemList ,
-                                    new TGLayoutHints( kLHintsLeft | kLHintsBottom |
-                                                       kLHintsExpandX | kLHintsExpandY,
-                                                       0, 0, 0, 0 ) ) ;
     // -------------------------
     m_pageDock = new TGDockableFrame(m_mainHorizontalFrame, -1,
                                      kVerticalFrame | kFixedWidth );
@@ -1321,7 +1295,6 @@ void PresenterMainFrame::dockAllFrames() {
   m_dimBrowserDock->DockContainer();
   m_databasePagesDock->DockContainer();
   m_databaseAlarmsDock->DockContainer();
-  m_knownProblemDock -> DockContainer () ;
 }
 
 //==============================================================================
@@ -1349,9 +1322,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
   case SHOW_ALARM_LIST_COMMAND:
     toggleShowAlarmList();
     break;
-  case SHOW_KNOWNPROBLEM_LIST_COMMAND:
-    toggleShowKnownProblemList() ;
-    break ;
   case CLEAR_PAGE_COMMAND:
     removeHistogramsFromPage();
     break;
@@ -1497,18 +1467,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
                               m_presenterInfo.globalTimePoint() ,
                               m_presenterInfo.globalPastDuration() ) ;
     break ;
-  case M_Last_Interval:
-    m_previousIntervalButton->SetState(kButtonEngaged);
-    m_previousIntervalButton->SetState(kButtonUp);
-    m_nextIntervalButton->SetState(kButtonEngaged);
-    m_nextIntervalButton->SetState(kButtonUp);
-    //      m_currentPageName = selectedPageFromDbTree();
-    if (!m_currentPageName.empty() && ( ! m_loadingPage)) {
-      loadSelectedPageFromDB(m_currentPageName,
-                             m_presenterInfo.globalTimePoint(),
-                             m_presenterInfo.globalPastDuration() );
-    }
-    break;
   case LOAD_NEXT_PAGE_COMMAND:
     loadNextPage();
     break;
@@ -1516,15 +1474,10 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     loadPreviousPage();
     break;
   case M_LoadPage_COMMAND:
-  case M_LAST_1_HOURS:
-  case M_LAST_8_HOURS:
-  case M_Last_File:
-    m_previousIntervalButton->SetState(kButtonDisabled);
-    m_nextIntervalButton->SetState(kButtonDisabled);
-    m_currentPageName = selectedPageFromDbTree();
-    if (!m_currentPageName.empty() && ( ! m_loadingPage ) )
-      loadSelectedPageFromDB( m_currentPageName , pres::s_startupFile ,
-                              m_savesetFileName ) ;
+  case M_RecentHistory:
+    loadSelectedPageFromDB( m_currentPageName,  
+                            m_presenterInfo.globalTimePoint() ,
+                            m_presenterInfo.globalPastDuration() ) ;
     break;
   case M_File_Picker:
     {
@@ -2007,7 +1960,6 @@ void PresenterMainFrame::setStartupHistograms(const std::vector< std::string > &
     if ( inputParamTS.EndsWith( pres::s_rootFileExtension.c_str() ) ) {
       m_savesetFileName = *histogramListIt ;
       setStatusBarText( m_savesetFileName.c_str() , 2 ) ;
-      m_historyIntervalComboBox -> Select( M_Last_File , false ) ;
     } else {
       HistogramIdentifier histogram = HistogramIdentifier( *histogramListIt ) ;
       if (histogram.isDimFormat()) addHistoToPage( *histogramListIt );
@@ -2919,7 +2871,6 @@ void PresenterMainFrame::reconfigureGUI() {
       m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
 
       m_historyIntervalComboBox->SetEnabled(false);
-      m_trendDurationComboBox->SetEnabled(true);
 
     } else if ( pres::History == presenterMode()) {
       m_toolMenu->CheckEntry(OFFLINE_MODE_COMMAND);
@@ -2947,8 +2898,6 @@ void PresenterMainFrame::reconfigureGUI() {
       m_historyIntervalComboBox->SetEnabled(true);
       m_historyPlotsButton->SetState(kButtonUp);
       m_viewMenu->EnableEntry(HISTORY_PLOTS_COMMAND);
-
-      m_trendDurationComboBox->SetEnabled(false);
 
       std::cout << "ReconfigureGUI:: After Offline selector" << std::endl;
 
@@ -3852,19 +3801,6 @@ void PresenterMainFrame::toggleShowAlarmList() {
 }
 
 //==============================================================================
-// Display window listing already known problems
-//==============================================================================
-void PresenterMainFrame::toggleShowKnownProblemList() {
-  if (m_viewMenu->IsEntryChecked(SHOW_KNOWNPROBLEM_LIST_COMMAND)) {
-    m_viewMenu->UnCheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
-    m_leftMiscFrame->HideFrame(m_knownProblemDock);
-  } else {
-    m_viewMenu->CheckEntry(SHOW_KNOWNPROBLEM_LIST_COMMAND);
-    m_leftMiscFrame->ShowFrame(m_knownProblemDock);
-    m_globalKnownProblemList -> retrieveListOfProblems( "" ) ;
-  }
-}
-//==============================================================================
 // set the histogram properties in the database
 //==============================================================================
 void PresenterMainFrame::setHistogramPropertiesInDB() {
@@ -4105,29 +4041,20 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     if ( ( 0 != m_archive ) &&
          ( ( pres::History       == m_presenterInfo.presenterMode()) ||
            ( pres::EditorOffline == m_presenterInfo.presenterMode()))) {
-      if ( "last 8 hours" == history_entry ) {
+      if ( "Recent data" == history_entry ) {
+        char tmp[40];
+        sprintf( &tmp[0], "%d:%02d:%02d", m_trendDuration/3600, (m_trendDuration/60)%60, m_trendDuration%60 );
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
-        m_presenterInfo.setRwPastDuration( std::string("08:00:00") ) ;
+        m_presenterInfo.setRwPastDuration( std::string(tmp) ) ;
         m_presenterInfo.setGlobalTimePoint( pres::s_Now ) ;
-        m_presenterInfo.setGlobalPastDuration( std::string("08:00:00") ) ;
-        m_presenterInfo.setTimeC( pres::s_Now, std::string("08:00:00") );
-        bannerText = "Last 8 hours before &";
-      } else if ( "last 1 hour" == history_entry ) {
-        m_presenterInfo.setGlobalHistoryByRun(false);
-        m_presenterInfo.setRwTimePoint( pres::s_Now ) ;
-        m_presenterInfo.setRwPastDuration( std::string("01:00:00") ) ;
-        m_presenterInfo.setGlobalTimePoint( pres::s_Now ) ;
-        m_presenterInfo.setGlobalPastDuration( std::string("01:00:00") ) ;
-        m_presenterInfo.setTimeC( pres::s_Now, std::string("01:00:00") );
-        bannerText = "Last hour before &";
-      } else if ( "preset file" == history_entry ) {
-        m_presenterInfo.setGlobalHistoryByRun(false);
-        m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
-        m_presenterInfo.setRwPastDuration( pastDuration ) ;
-        m_presenterInfo.setGlobalTimePoint( pres::s_startupFile ) ;
-        m_presenterInfo.setGlobalPastDuration( pastDuration ) ;
-        bannerText = m_savesetFileName;
+        m_presenterInfo.setGlobalPastDuration( std::string(tmp) ) ;
+        m_presenterInfo.setTimeC( pres::s_Now, std::string(tmp) );
+        char buf[40];
+        time_t now = ::time(0);
+        ::strftime( buf, 40, "%d %B %Y %H:%M:%S", ::localtime(&now) );
+        std::string today( buf );
+        bannerText = "Last " + std::string(tmp) + " before " + std::string(buf);
       } else if ( "set file" == history_entry ) {
         m_presenterInfo.setGlobalHistoryByRun(false);
         m_presenterInfo.setRwTimePoint( pres::s_startupFile ) ;
@@ -4140,10 +4067,16 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         m_presenterInfo.setRwPastDuration(m_presenterInfo.globalPastDuration());
         if ( m_presenterInfo.globalHistoryByRun() ) {
           if ( m_presenterInfo.globalPastDuration() == "0" ) {
-            bannerText = Form( "Run %d, started %s, duration: %s" ,
-                              m_intervalPickerData->startRun() ,
-                              m_runDb -> getCurrentStartTime().c_str() ,
-                              m_runDb -> getCurrentRunDuration().c_str() ) ;
+            if ( m_presenterInfo.offlineContext() ) {
+              bannerText = Form( "Run %d, %s, %s", m_intervalPickerData->startRun() ,
+                                 m_presenterInfo.processing().c_str(),
+                                 m_presenterInfo.eventType().c_str() );
+            } else {
+              bannerText = Form( "Run %d, started %s, duration: %s" ,
+                                 m_intervalPickerData->startRun() ,
+                                 m_runDb -> getCurrentStartTime().c_str() ,
+                                 m_runDb -> getCurrentRunDuration().c_str() ) ;
+            }
             m_presenterInfo.setTimeC( m_runDb -> getCurrentStartTime(),  m_runDb -> getCurrentRunDuration(), true );
           } else {
             bannerText = Form( "Run %d to %d",
@@ -4158,9 +4091,9 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
             m_presenterInfo.setTimeC( startTime,  m_runDb -> getCurrentEndTime() );
           }
         } else {
-          bannerText = Form("From %s to %s",
+          bannerText = Form("From %s for %s",
                            m_intervalPickerData->startTimeString(),
-                           m_intervalPickerData->endTimeString());
+                           m_intervalPickerData->durationString());
           m_presenterInfo.setTimeC( m_intervalPickerData->startTimeString(),
                                     m_intervalPickerData->durationString(), true );
         }
@@ -4584,9 +4517,6 @@ void PresenterMainFrame::previousInterval() {
 
     boost::posix_time::ptime startTime =
       boost::posix_time::from_iso_string( m_presenterInfo.globalTimePoint() ) ;
-    boost::posix_time::time_duration duration =
-      boost::posix_time::duration_from_string(m_presenterInfo.globalStepSize());
-    boost::posix_time::ptime endTime = startTime + duration ;
 
     m_intervalPickerData -> setStartTime( startTime.date().year(),
                                           startTime.date().month() ,
@@ -4594,13 +4524,6 @@ void PresenterMainFrame::previousInterval() {
                                           startTime.time_of_day().hours() ,
                                           startTime.time_of_day().minutes() ,
                                           startTime.time_of_day().seconds() ) ;
-
-    m_intervalPickerData -> setEndTime( endTime.date().year(),
-                                        endTime.date().month() ,
-                                        endTime.date().day() ,
-                                        endTime.time_of_day().hours() ,
-                                        endTime.time_of_day().minutes() ,
-                                        endTime.time_of_day().seconds() ) ;
 
     if (!m_currentPageName.empty())
       loadSelectedPageFromDB(m_currentPageName,
@@ -4653,9 +4576,6 @@ void PresenterMainFrame::nextInterval() {
 
     boost::posix_time::ptime startTime =
       boost::posix_time::from_iso_string( m_presenterInfo.globalTimePoint() ) ;
-    boost::posix_time::time_duration duration =
-      boost::posix_time::duration_from_string(m_presenterInfo.globalStepSize());
-    boost::posix_time::ptime endTime = startTime + duration ;
 
     m_intervalPickerData -> setStartTime( startTime.date().year(),
                                           startTime.date().month() ,
@@ -4663,13 +4583,6 @@ void PresenterMainFrame::nextInterval() {
                                           startTime.time_of_day().hours() ,
                                           startTime.time_of_day().minutes() ,
                                           startTime.time_of_day().seconds() ) ;
-
-    m_intervalPickerData -> setEndTime( endTime.date().year(),
-                                        endTime.date().month() ,
-                                        endTime.date().day() ,
-                                        endTime.time_of_day().hours() ,
-                                        endTime.time_of_day().minutes() ,
-                                        endTime.time_of_day().seconds() ) ;
 
     if ( ! m_currentPageName.empty() )
       loadSelectedPageFromDB( m_currentPageName ,
@@ -4711,6 +4624,14 @@ void PresenterMainFrame::refreshPage( ) {
 //  Refresh the page, in case of change of duration...
 //=========================================================================
 void PresenterMainFrame::refreshPageForced() {
+  if ( presenterMode() != pres::Online    &&
+       presenterMode() != pres::EditorOnline ) {
+    loadSelectedPageFromDB( m_currentPageName,  
+                            m_presenterInfo.globalTimePoint() ,
+                            m_presenterInfo.globalPastDuration() ) ;    
+    return;
+  }
+  
   std::cout << timeStamp() << " refreshing..." << std::endl;
   m_loadingPage = true;
   
@@ -4982,11 +4903,11 @@ void PresenterMainFrame::switchToRunNavigation( bool ok ) {
     m_textNavigation         -> LoadBuffer    ( Form( "%d" ,
                                                       m_runDb -> getCurrentRunNumber() ) ) ;
   } else {
-    m_previousIntervalButton -> SetToolTipText( "Previous interval" ) ;
-    m_nextIntervalButton     -> SetToolTipText( "Next interval" ) ;
+    m_previousIntervalButton -> SetToolTipText( "Before" ) ;
+    m_nextIntervalButton     -> SetToolTipText( "After" ) ;
     m_toolBarLabel           -> SetText       ( "Time: " ) ;
     m_textNavigation         -> Clear         ( ) ;
-    m_textNavigation         -> LoadBuffer    ( "" ) ;
+    m_textNavigation         -> LoadBuffer    ( "time interval" ) ;
   }
 }
 
@@ -5076,7 +4997,7 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
 void PresenterMainFrame::addTrendingHisto() {
   std::string message;
   fClient->WaitFor(dynamic_cast< TGWindow * >( new CreateTrendingHistogramDialog( gClient->GetRoot() ,
-                                                                                  this,// GetMainFrame() ,
+                                                                                  this,
                                                                                   m_histogramDB,
                                                                                   currentPartition(),
                                                                                   message ) ) );
@@ -5149,6 +5070,7 @@ void PresenterMainFrame::reAccessPage( ) {
     } 
   } else {
     m_reAccess = true;
+    std::cout << "Will reAccess the page later" << std::endl;
   }     
 }
 //=========================================================================

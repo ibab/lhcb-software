@@ -26,11 +26,6 @@
 
 #include "OnlineHistDB/OnlineHistogram.h"
 #include "OMAlib/OMAlib.h"
-#include "Gaucho/DimInfoMonObject.h"
-#include "Gaucho/MonProfile.h"
-#include "Gaucho/MonH1D.h"
-#include "Gaucho/MonH2D.h"
-
 // local
 #include "DisplayHistogram.h"
 #include "presenter.h"
@@ -185,94 +180,20 @@ void DisplayHistogram::normalizeReference ( ) {
     std::cout << "Normalization of reference = " << normFactor << std::endl;
   }
 }
-
-//=========================================================================
-//  Load the histogram using monObject (2010 version)
-//=========================================================================
-void DisplayHistogram::loadFromMonObject ( std::string& location, bool update ) {
-  std::string dimService = m_onlineHist->dimServiceName();
-  HistogramIdentifier hid( dimService );
-  dimService.erase( 0, dimService.find( "_" ) ); //== erase to first underscore
-  dimService.erase( 0, dimService.find( "/" ) ); //== erase to first slash after
-  dimService = hid.histogramType() + "/" + location + dimService;
-  std::cout << " .. DIM service : " << dimService << std::endl;
-
-  DimInfoMonObject myDimObj( dimService.c_str(), 5, "Presenter");
-
-  if ( myDimObj.createMonObject() ) {
-    TString histoRootName;
-    TString histoRootTitle;
-
-    if (s_pfixMonH1D == hid.histogramType() ) {
-      MonH1D* monTH1D = static_cast<MonH1D*>( myDimObj.monObject() );
-      if (NULL != monTH1D) {
-        histoRootName = TString(Form("%s__instance__%i", monTH1D->histName().c_str(), m_onlineHist->instance()) );
-        histoRootTitle = TString(Form("%s", monTH1D->histTitle().c_str()));
-        monTH1D->createObject(histoRootName.Data());
-        monTH1D->hist()->SetTitle(histoRootTitle);
-        if ( update ) {
-          m_rootHistogram->Reset();
-          m_rootHistogram->Add( monTH1D->hist() );
-          prepareForDisplay();
-          if ( NULL != m_hostingPad ) m_hostingPad->Modified();
-        } else {
-          m_rootHistogram = (TH1*)monTH1D->hist()->Clone();
-        }
-      }
-    } else if ( s_pfixMonH2D == hid.histogramType() ) {
-      MonH2D* monTH2D = static_cast<MonH2D*>( myDimObj.monObject() );
-      if (NULL != monTH2D) {
-        histoRootName = TString(Form("%s__instance__%i", monTH2D->histName().c_str(), m_onlineHist->instance()) );
-        histoRootTitle = TString(Form("%s", monTH2D->histTitle().c_str()) );
-        monTH2D->createObject(histoRootName.Data());
-        monTH2D->hist()->SetTitle(histoRootTitle);
-        if ( update ) {
-          m_rootHistogram->Reset();
-          m_rootHistogram->Add( monTH2D->hist() );
-          prepareForDisplay();
-          if ( NULL != m_hostingPad ) m_hostingPad->Modified();
-        } else {
-          m_rootHistogram = (TH1*)monTH2D->hist()->Clone();
-        }
-      }
-    } else if (s_pfixMonProfile == hid.histogramType() ){
-      MonProfile* monProfile = static_cast<MonProfile*>(myDimObj.monObject());
-      if (NULL != monProfile) {
-        histoRootName = TString(Form("%s__instance__%i", monProfile->profileName().c_str(), m_onlineHist->instance()) );
-        histoRootTitle = TString(Form("%s", monProfile->profileTitle().c_str()) );
-        monProfile->createObject(histoRootName.Data());
-        monProfile->profile()->SetTitle(histoRootTitle);
-        if ( update ) {
-          m_rootHistogram->Reset();
-          m_rootHistogram->Add( monProfile->profile() );
-          prepareForDisplay();
-          if ( NULL != m_hostingPad ) m_hostingPad->Modified();
-        } else {
-          m_rootHistogram = (TH1*)monProfile->profile()->Clone();
-        }
-      }
-    } else {
-      std::cout << "MonObject not included in the Presenter: " << hid.histogramType() << std::endl;
-      m_rootHistogram =  0;
-    }
-    if ( 0 != m_rootHistogram ) {
-      histoRootName = TString(Form("%s;%i", m_identifier.c_str(), m_onlineHist->instance()) );
-      m_rootHistogram->AddDirectory(kFALSE);
-      m_rootHistogram->SetName(histoRootName);
-      setDisplayOptions();  // Pass the DB flags to the root histogram
-    }
-    delete myDimObj.monObject();
-  } else {
-    std::cout << "Failed to load " << dimService << std::endl;
-    createDummyHisto();
-  }
-}
 //=========================================================================
 //  Creata a dummy histogram...
 //=========================================================================
 void DisplayHistogram::createDummyHisto( std::string title ) {
   if ( NULL != m_rootHistogram ) delete m_rootHistogram;
+
+  std::string histoName = m_identifier;
+  unsigned int pos = histoName.find( "/" );   // remove the task name prefix
+  if ( pos < histoName.size() ) {
+    histoName.erase( 0, pos+1 );
+  }
+  if ( !m_isTrendPlot ) m_shortName = histoName;  // as we create a temporary dummy histo for trending!
   std::string dummyTitle = "** " + title + " ** " + m_shortName;
+
   m_rootHistogram = new TH1F( m_identifier.c_str(), dummyTitle.c_str(), 1, 0., 1.);
   m_rootHistogram->SetBit(kNoContextMenu);
   m_rootHistogram->AddDirectory(kFALSE);

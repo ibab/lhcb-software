@@ -89,7 +89,7 @@ int RunDB::getLastRun( ) {
       // Now parse each line (there should be actually only one line
       // in the server answer, otherwise it is over-written
       std::istringstream is( line ) ;
-
+      std::cout << "RVC: " << line << std::endl;
       try {
         boost::property_tree::json_parser::read_json( is , run_tree ) ;
 
@@ -118,6 +118,11 @@ int RunDB::getLastRun( ) {
         return lastRun ;
       }
     }
+  }
+  //== Protect: If this run has a zero duration, take teh previous one
+  if ( "00:00:00" == m_currentRunDuration  ) {
+    std::cout << "Run " << lastRun << " has 00:00:00 duration. Take previous one" << std::endl;
+    lastRun = getPreviousRun();
   }
 
   return lastRun ;
@@ -230,6 +235,8 @@ int RunDB::getNextRun( ) {
       // in the server answer, otherwise it is over-written
       std::istringstream is( line ) ;
 
+      std::cout << "RVC: " << line << std::endl;
+
       try {
         boost::property_tree::json_parser::read_json( is , run_tree ) ;
 
@@ -316,6 +323,7 @@ int RunDB::getPreviousRun( ) {
       // Now parse each line (there should be actually only one line
       // in the server answer, otherwise it is over-written
       std::istringstream is( line ) ;
+      std::cout << "RVC: " << line << std::endl;
 
       try {
         boost::property_tree::json_parser::read_json( is , run_tree ) ;
@@ -407,6 +415,7 @@ bool RunDB::checkRun( int runNumber ) {
       // Now parse each line (there should be actually only one line
       // in the server answer, otherwise it is over-written
       std::istringstream is( line ) ;
+      std::cout << "RVC: " << line << std::endl;
 
       try {
         boost::property_tree::json_parser::read_json( is , run_tree ) ;

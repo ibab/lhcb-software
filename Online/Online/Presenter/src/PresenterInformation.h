@@ -22,19 +22,16 @@ class PresenterInformation
   virtual ~PresenterInformation( ) ; ///< Destructor
   
   /// Return presenter mode
-  const pres::PresenterMode & presenterMode( ) const { 
-    return m_presenterMode ; } ;
+  const pres::PresenterMode & presenterMode( ) const { return m_presenterMode ; } ;
 
   /// Set presenter mode
-  void setPresenterMode( const pres::PresenterMode & presenterMode ) { 
-    m_presenterMode = presenterMode ; } ;
+  void setPresenterMode( const pres::PresenterMode & presenterMode ) { m_presenterMode = presenterMode ; } ;
 
   /// Global history by run
   bool globalHistoryByRun( ) const { return m_globalHistoryByRun ; } ;
 
   /// Set global history by run
-  void setGlobalHistoryByRun( const bool flag ) { 
-    m_globalHistoryByRun = flag ; } ;
+  void setGlobalHistoryByRun( const bool flag ) { m_globalHistoryByRun = flag ; } ;
 
   /// Get time point
   std::string rwTimePoint( ) const { return m_rwTimePoint ; } ; 
@@ -64,30 +61,25 @@ class PresenterInformation
   std::string currentPartition( ) const { return m_currentPartition ; } ;
 
   /// Set current partition
-  void setPartition( const std::string & partition ) { 
-    m_currentPartition = partition ; 
-  };
+  void setPartition( const std::string & partition ) { m_currentPartition = partition; };
 
   /// Get current time
   TDatime * currentTime() const { return m_currentTime ; } ;
 
   /// Set global time point
-  void setGlobalTimePoint( const std::string & tp ) {
-    m_globalTimePoint = tp ; } ;
+  void setGlobalTimePoint( const std::string & tp ) { m_globalTimePoint = tp ; } ;
 
   /// Get global time point
   std::string globalTimePoint() const { return m_globalTimePoint ; } ;
 
   /// Set past duration
-  void setGlobalPastDuration( const std::string & tp ) {
-    m_globalPastDuration = tp ; } ;
+  void setGlobalPastDuration( const std::string & tp ) { m_globalPastDuration = tp ; } ;
 
   /// Get past duration
   std::string globalPastDuration( ) const { return m_globalPastDuration ; } ;
 
   /// Set global step size
-  void setGlobalStepSize( const std::string & tp ) { 
-    m_globalStepSize = tp ; } ;
+  void setGlobalStepSize( const std::string & tp ) {  m_globalStepSize = tp ; } ;
 
   /// Get global step size
   std::string globalStepSize( ) const { return m_globalStepSize ; } ; 
@@ -107,6 +99,15 @@ class PresenterInformation
   std::time_t startTimeC() const { return m_startTimeC; }
   std::time_t endTimeC()   const { return m_endTimeC;   }
 
+  void setOfflineContext( bool ctxt ) { m_offlineContext = ctxt; }
+  bool offlineContext()               { return m_offlineContext; }
+
+  void setEventType( std::string type ) { m_eventType = type; }
+  std::string eventType()               { return m_eventType; }
+
+  void setProcessing( std::string proc ) { m_processing = proc; }
+  std::string processing()               { return m_processing; }
+
   void setTimeC( std::string endTime, std::string duration, bool add=false );
 
  private:
@@ -125,6 +126,9 @@ class PresenterInformation
   bool                m_historyMode ;        ///< history mode
   std::time_t         m_startTimeC;
   std::time_t         m_endTimeC;
+  bool                m_offlineContext;      ///< Running in offline context, for run file access
+  std::string         m_processing;
+  std::string         m_eventType;
 }; 
 
 #endif /*PRESENTER_PRESENTERINFORMATION_H_*/

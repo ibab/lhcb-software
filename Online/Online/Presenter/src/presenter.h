@@ -31,16 +31,11 @@ static const std::string s_histReader("HIST_READER");
 static const std::string s_histWriter("HIST_WRITER");
 static const std::string s_histReaderPair("HIST_READER:reader");
 
-static const std::string s_histdir("HISTDIR");
-static const std::string s_referencePath("HISTREFPATH");
-static const std::string s_savesetPath("HISTSAVESETSPATH");
 static const std::string s_dimDnsNodeEnv("DIM_DNS_NODE");
-static const std::string s_Dim_Dns_Version_Number("DIS_DNS/VERSION_NUMBER");
 static const std::string s_tnsAdminEnv("TNS_ADMIN");
 
 // 4 slots+signals: cint hates namespaces
-enum FilterCriteria
-{
+enum FilterCriteria {
   FoldersAndPages = 0,
   Tasks = 1,
   Subsystems = 2,
@@ -50,10 +45,8 @@ enum FilterCriteria
 };
  
 
-namespace pres
-{
-  enum MsgLevel
-  {
+namespace pres {
+  enum MsgLevel {
     Silent  = 0,
     Verbose = 1,
     Debug   = 2

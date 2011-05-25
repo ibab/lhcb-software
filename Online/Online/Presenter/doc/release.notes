@@ -4,6 +4,14 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-05-25 - Olivier Callot
+ - Removal of the old DIM access (2010 monitoring service)
+ - Redesign of the selection by run and by interval in history mode.
+   Cleanup of obsolete implementations.
+ - Support for offline access by run: processing and event type selected from menu
+        Run type and configuration to be obtained from the run database.
+   This includes history trends with proper labels.
+
 ! 2011-05-17 - Olivier Callot
  - Fix order in overlap according to database. Use drawing option for superimposed.
 

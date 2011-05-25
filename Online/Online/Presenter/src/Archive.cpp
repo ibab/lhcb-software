@@ -182,8 +182,7 @@ std::vector<std::string> Archive::listPartitions() {
 //=============================================================================
 // Find a file
 //=============================================================================
-boost::filesystem::path Archive::findFile(const boost::filesystem::path &
-                                          dirPath,
+boost::filesystem::path Archive::findFile(const boost::filesystem::path & dirPath,
                                           const std::string & fileName) {
   boost::filesystem::path foundFile( "" ) ;
   if (exists(dirPath)) {
@@ -309,10 +308,9 @@ std::string Archive::taskNameFromFile(const std::string & fileName) const {
 //=============================================================================
 // Find savesets
 //=============================================================================
-std::vector< boost::filesystem::path>
-Archive::findSavesets(const std::string & taskname,
-                      const std::string & endTimeIsoString,
-                      const std::string & durationTimeString) {
+std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & taskname,
+                                                            const std::string & endTimeIsoString,
+                                                            const std::string & durationTimeString) {
   std::vector< boost::filesystem::path > foundRootFiles;
   boost::posix_time::ptime endTime;
   bool isEFF = (taskname == pres::s_efftask);
@@ -402,37 +400,57 @@ Archive::findSavesets(const std::string & taskname,
 //=============================================================================
 // Find savesets by run number
 //=============================================================================
-std::vector< boost::filesystem::path>
-Archive::findSavesetsByRun(const std::string & taskname,
-                           const std::string & string_endRun,
-                           const std::string & string_runDuration) {
+std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::string & taskname,
+                                                                 const std::string & string_endRun,
+                                                                 const std::string & string_runDuration) {
   std::vector< boost::filesystem::path > foundRootFiles;
   std::istringstream iendRun(string_endRun);
   std::istringstream irunDuration(string_runDuration);
   int startRun,endRun;
   std::string partition(m_presenterInfo->currentPartition());
+  m_runNumbers.clear();
 
   iendRun >> endRun;
   irunDuration >> startRun; startRun=endRun-startRun;
   if (endRun < startRun) {
-    if (m_verbosity >= pres::Silent)
-      std::cout << "Invalid run interval "<<startRun << " - "<<endRun
-                << "  converted to "<<endRun << " - "<<endRun<< std::endl;
-
+    std::cout << "Invalid run interval "<<startRun << " - "<<endRun
+              << "  converted to "<<endRun << " - "<<endRun<< std::endl; 
     startRun = endRun;
   }
   if ((endRun - startRun) > ArchiveSpace::maxRunInterval) {
-    if (m_verbosity >= pres::Silent)
-      std::cout << "Too large interval "<<startRun << " - "<<endRun
-                << "  converted to "<<endRun-ArchiveSpace::maxRunInterval
-                << " - "<<endRun<< std::endl;
-
+    std::cout << "Too large interval "<<startRun << " - "<<endRun
+              << "  converted to "<<endRun-ArchiveSpace::maxRunInterval
+              << " - "<<endRun<< std::endl;
     startRun = endRun-ArchiveSpace::maxRunInterval;
   }
 
   std::cout << "Archive::findSavesetsByRun: task " << taskname
             << " startRun " << startRun
             << " endRun " << endRun << std::endl;
+
+  if ( m_presenterInfo->offlineContext() ) {
+    std::string rootDir = m_savesetPath.string() + "/Collision11/Beam3500GeV-VeloClosed-MagDown/";
+    for ( int kRun = startRun; endRun >= kRun; ++kRun ) {
+      std::stringstream  dirLocation;
+      dirLocation << rootDir << kRun << "/" << m_presenterInfo->processing() << "/";
+      if ( m_presenterInfo->eventType() == "EXPRESS" ) {
+        dirLocation << "91000000";
+      } else {
+        dirLocation << "90000000";
+      }
+      boost::filesystem::path runPath(dirLocation.str());
+      boost::filesystem::directory_iterator end_itr;
+      std::cout << "inspecting folder: " << dirLocation.str() << std::endl;
+      if ( exists( runPath ) ) {
+        for ( boost::filesystem::directory_iterator itr(runPath); itr != end_itr; ++itr) {
+          std::cout << "Found file " << itr->path() << std::endl;
+          foundRootFiles.push_back(itr->path());
+        }
+        m_runNumbers.push_back( kRun );
+      }
+    }
+    return foundRootFiles;
+  }  
 
   std::string aggrSvsPath = m_savesetPath.string() + pres::s_slash + pres::s_byRunDir + pres::s_slash + taskname;
 
@@ -442,29 +460,26 @@ Archive::findSavesetsByRun(const std::string & taskname,
     int dth = th / 10000 * 10000;
     std::stringstream  dirLocation;
     dirLocation << aggrSvsPath << pres::s_slash << dth << pres::s_slash << th;
+   
     boost::filesystem::path runPath(dirLocation.str());
     boost::filesystem::directory_iterator end_itr;
     std::cout << "inspecting folder: " << dirLocation.str() << std::endl;
     if (exists(runPath)) {
       for ( boost::filesystem::directory_iterator itr(runPath);
             itr != end_itr; ++itr) {
-        if (is_regular(itr->path()) &&
-            pres::s_rootFileExtension == extension(itr->path()) ) {
+        std::cout << "Checking file " << itr->path() << std::endl;
+        if ( is_regular(itr->path()) &&
+             pres::s_rootFileExtension == extension(itr->path()) ) {
           TObjArray* fileRunMatchGroup = 0;
-          fileRunMatchGroup =
-            pres::s_fileRunRegexp.MatchS((itr->path()).leaf());
+          fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((itr->path()).leaf());
           if (fileRunMatchGroup->GetSize() > 2) {
-            std::istringstream
-              icurRun((((TObjString *)(fileRunMatchGroup->At(2)))->
-                       GetString()).Data());
+            std::istringstream icurRun((((TObjString *)(fileRunMatchGroup->At(2)))->GetString()).Data());
             int curRun;
             icurRun >> curRun;
             if (curRun >=  startRun && curRun <= endRun) {
               foundRootFiles.push_back(itr->path());
-              if (m_verbosity >= pres::Verbose) {
-                std::cout << "using file: " << (itr->path()).leaf()
-                          << std::endl;
-              }
+              std::cout << "using file: " << (itr->path()).leaf() << std::endl;
+              m_runNumbers.push_back( curRun );
             }
           }
         }
@@ -493,14 +508,18 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& roo
     for ( std::vector<boost::filesystem::path>::const_iterator rootFilesIt = rootFiles.begin();
           rootFilesIt != rootFiles.end(); ++rootFilesIt ) {
       bin++;
-      TObjArray* fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((*rootFilesIt).leaf());
-      std::istringstream irun((((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data());
-      irun >> run;
+      if ( m_presenterInfo->offlineContext() ) {
+        run = m_runNumbers[rootFilesIt-rootFiles.begin()];
+      } else {
+        TObjArray* fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((*rootFilesIt).leaf());
+        std::istringstream irun((((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data());
+        irun >> run;
+      }
+      char runString[40];
+      sprintf(runString, "%d", run );
       if ( (run-lastrun) > (bin-lastbin) ||
-           (bin-lastbin) > maxnbinUnlabeled ) {
-        // add a label
-        h->GetXaxis()->SetBinLabel(bin,
-                                   (((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data() );
+           (bin-lastbin) > maxnbinUnlabeled ) {  // add a label
+        h->GetXaxis()->SetBinLabel(bin, runString);
         lastrun = run;
         lastbin = bin;
       }
@@ -601,13 +620,15 @@ void Archive::closeFiles( ) {
   m_openFiles.clear();
 }
 //=========================================================================
-//  Load histogram from (list of) files previously created
+//  Load histograms from (list of) files previously created
 //=========================================================================
-void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
+void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) {
 
   std::vector<boost::filesystem::path> goodRootFiles;
 
-  TList* list = new TList;
+  std::vector<TList*> list;
+  while ( histos.size() > list.size() ) list.push_back( new TList );
+
   for ( std::vector< boost::filesystem::path >::const_iterator itF = m_rootFiles.begin();
         m_rootFiles.end() != itF; ++itF ) {
     std::cout << "++ Opening root file " << (*itF).file_string().c_str() << std::endl;
@@ -617,7 +638,7 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
                 << std::endl
                 << "History not available !"
                 << std::endl ;
-      dispHist->createDummyHisto();
+      for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
       break ;
     }
     
@@ -627,65 +648,79 @@ void Archive::fillHistogramFromFiles ( DisplayHistogram* dispHist) {
       if ( std::find( m_openFiles.begin(), m_openFiles.end(), rootFile ) == m_openFiles.end() ) {
         m_openFiles.push_back( rootFile );
       }
-      std::cout << " ++ file " << (*itF).file_string() << " OK. Search " << dispHist->rootName() << std::endl;
-      TH1* archiveHisto;
-      rootFile -> GetObject( (dispHist->rootName()).c_str(), archiveHisto );
-      if (!archiveHisto) {
-        std::string name = dispHist->rootName();
-        name = name.substr( name.find("/")+1);
-        std::cout << "  .. try with " << name << std::endl;
+      std::cout << " ++ file " << (*itF).file_string() << " OK." << std::endl;
+
+      //== Loop over histograms
+
+      bool first = true;
+      for ( unsigned int kk = 0; histos.size() > kk; ++kk ) {
+        TH1* archiveHisto;
+        std::string name = histos[kk].rootName();
         rootFile -> GetObject( name.c_str(), archiveHisto );
-      }
-      if (archiveHisto) {
-        list->Add(archiveHisto);
-        goodRootFiles.push_back(*itF);
-        
-        std::cout << "found histogram " << dispHist->rootName().c_str() << std::endl;
-        
-        if ( !dispHist->rootHist( ) ) {
-          dispHist->setRootHist( (TH1*)( archiveHisto->Clone() ) ) ;
-          dispHist->rootHist()->Reset( ) ;
+        if (!archiveHisto) {
+          name = name.substr( name.find("/")+1);
+          std::cout << "  .. try with " << name << std::endl;
+          rootFile -> GetObject( name.c_str(), archiveHisto );
         }
+        if (archiveHisto) {
+          list[kk]->Add(archiveHisto);
+          if ( first ) {
+            goodRootFiles.push_back(*itF);
+            first = false;
+          }        
+          std::cout << "found histogram " << histos[kk].rootName().c_str() << std::endl;
+        
+          if ( !histos[kk].rootHist( ) ) {
+            std::cout << "Create a clean root hist" << std::endl;
+            histos[kk].setRootHist( (TH1*)( archiveHisto->Clone() ) ) ;
+            histos[kk].rootHist()->Reset( ) ;
+          }
+        } else {
+          std::cout << "Histo not found!" << std::endl;
+        }
+      }
+    }
+  }
+  //== If no file found, close properly.
+  if ( goodRootFiles.size() == 0 ) {
+    for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
+    return;
+  }
+  
+  for ( unsigned int kk = 0; histos.size() > kk; ++kk ) {
+    if ( NULL != histos[kk].rootHist() ) {  // at least one source is available
+      if ( ( ! m_presenterInfo -> isHistoryTrendPlotMode() ) ||
+           ( histos[kk].rootHist()->GetDimension() > 1  ) ||
+           ( 2 > m_rootFiles.size() ) ) {
+        std::cout << "Merge histos in " << histos[kk].rootHist() << std::endl;
+        histos[kk].rootHist()->Merge(list[kk]);
       } else {
-        std::cout << "Histo not found!" << std::endl;
+        // do a trend plot of mean and rms
+        std::string histogramTitle("History plot for ");
+        histogramTitle += histos[kk].identifier();
+        TH1* newh = new TH1F( histogramTitle.c_str(), histogramTitle.c_str(),
+                              list[kk]->GetSize(), 0.5,  list[kk]->GetSize() +0.5);
+        newh->Sumw2();
+        for (int i=0 ; i<list[kk]->GetSize(); i++) {
+          newh->SetBinContent(i+1, ((TH1*)list[kk]->At(i))->GetMean() );
+          newh->SetBinError(i+1, ((TH1*)list[kk]->At(i))->GetMeanError() );
+        }
+        setHistoryLabels(newh, goodRootFiles);
+        //dispHist -> setHistoryTrendPlotMode(true);
+        histos[kk].deleteRootHist( ) ;
+        histos[kk].setRootHist( newh ) ;
       }
-    }
-  }
-  
-  if ( NULL != dispHist->rootHist() ) {  // at least one source is available
-    if ( ( ! m_presenterInfo -> isHistoryTrendPlotMode() ) ||
-         ( dispHist->rootHist()->GetDimension() > 1  ) ||
-         ( 2 > m_rootFiles.size() ) ) {
-      dispHist->rootHist()->Merge(list);
-      std::cout << "Merged histso in " << dispHist->rootHist() << std::endl;
     } else {
-      // do a trend plot of mean and rms
-      std::string histogramTitle("History plot for ");
-      histogramTitle += dispHist->shortName();
-      TH1* newh = new TH1F( histogramTitle.c_str(), histogramTitle.c_str(),
-                            list->GetSize(), 0.5,  list->GetSize() +0.5);
-      newh->Sumw2();
-      for (int i=0 ; i<list->GetSize(); i++) {
-        newh->SetBinContent(i+1, ((TH1*)list->At(i))->GetMean() );
-        newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
-      }
-      setHistoryLabels(newh, goodRootFiles);
-      //dispHist -> setHistoryTrendPlotMode(true);
-      dispHist -> deleteRootHist( ) ;
-      dispHist -> setRootHist( newh ) ;
+      histos[kk].createDummyHisto();
     }
-  } else {
-    dispHist->createDummyHisto();
-  }
   
-  
-  TH1* histo;
-  TIter next(list);
-  while ( (histo = (TH1 *) next())) {
-    std::cout << "delete histo " << histo << std::endl;
-    list->Remove(histo);
-    delete histo;
+    TH1* histo;
+    TIter next(list[kk]);
+    while ( (histo = (TH1 *) next())) {
+      list[kk]->Remove(histo);
+      delete histo;
+    }
+    delete list[kk];
   }
-  delete list;
 }
 //=========================================================================

@@ -50,8 +50,6 @@ public:
   
   void normalizeReference();
 
-  void loadFromMonObject( std::string& location, bool update );
-
   void draw( TCanvas * editorCanvas , double xlow , double ylow , 
              double xup , double yup , OMAlib* analysisLib,
              bool fastHitMapDraw , TPad* overlayOnPad = NULL ) ;

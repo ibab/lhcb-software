@@ -18,7 +18,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
-// Gaudi 
+// Gaudi
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -85,8 +85,8 @@ int main(int argc, char* argv[]) {
   iface -> getService( "ToolSvc" , isvc ) ;
   const IInterface * a3( isvc ) ;
   const std::string & name( "TrendingTool" ) ;
-  IAlgTool * intf = 
-    ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name , 
+  IAlgTool * intf =
+    ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name ,
                                                       name , a3 ) ;
   PresenterGaudi::trendingTool = dynamic_cast< ITrendingTool * >( intf ) ;
 
@@ -104,28 +104,28 @@ int main(int argc, char* argv[]) {
   int windowWidth;
   int windowHeight;
 
-  const char* histdirEnv = getenv(s_histdir.c_str());
+  const char* histdirEnv = getenv( "HISTDIR" );
   if (NULL != histdirEnv) {
     histdir = histdirEnv;
     if (!histdir.empty()) histdir.append( pres::s_slash ) ;
   }
 
   std::string referencePath(histdir+OnlineHistDBEnv_constants::StdRefRoot);
-  std::string savesetPath(histdir+OnlineHistDBEnv_constants::StdSavesetsRoot);
+  std::string savesetPath(  histdir+OnlineHistDBEnv_constants::StdSavesetsRoot);
   std::string savesetFile( "" ) ;
   std::string startupPage( "" ) ;
 
-  const char* referencePathEnv = getenv(s_referencePath.c_str());
+  const char* referencePathEnv = getenv( "HISTREFPATH" );
   if (NULL != referencePathEnv) {
     referencePath = histdir + referencePathEnv;
     if (!referencePath.empty()) referencePath.append( pres::s_slash ) ;
-  } 
+  }
 
-  const char* savesetPathEnv = getenv(s_savesetPath.c_str());
+  const char* savesetPathEnv = getenv( "HISTSAVESETSPATH" );
   if (NULL != savesetPathEnv) {
     savesetPath = histdir + savesetPathEnv;
     if (!savesetPath.empty()) savesetPath.append( pres::s_slash );
-  } 
+  }
 
   try {
     // cli
@@ -149,8 +149,7 @@ int main(int argc, char* argv[]) {
       ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
       ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
       ("saveset-path,S", value<std::string>()->default_value(savesetPath), "saveset path")
-      // To open a ROOT file at startup. Set also mode to history to load histo
-      // from files.
+      // To open a ROOT file at startup. Set also mode to history to load histo from files.
       ("saveset-file,f", value<std::string>()->default_value("") , "saveset file to open" )
       ("tnsnames-path,O", value<std::string>(), "tnsnames.ora file")
       ("databases,d", value<std::string>()->default_value(s_histdb),"known databases")
@@ -161,16 +160,18 @@ int main(int argc, char* argv[]) {
       ("rundb-settings,r", value<std::string>() , "Run Database configuration" )
       ("enable-alarm-display,a", value<bool>()->default_value(true), "enable alarm display")
       ("hide-alarm-list", value<bool>(), "hide alarm list")
-      ("hide-problem-list", value<bool>(), "hide problem list")
       ("config-file,C", value<std::string>(), "configuration file")
       ("key-file,K", value<std::string>(), "TCK list file")
-      ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), 
+      ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()),
        "image dump directory")
-      ("partition,P", value<std::string>()->default_value( pres::s_lhcbPartitionName.Data()), 
+      ("partition,P", value<std::string>()->default_value( pres::s_lhcbPartitionName.Data()),
        "partition name")
       ("dump-format,F", value<std::string>()->default_value("png"), "dump format")
       ("startup-page,p" , value<std::string>()->default_value(""), "page to display at startup" )
       ("editing-allowed,E", value<bool>()->default_value( true ), "Allow editing of database" )
+      ("offline-context,K", value<bool>()->default_value( false ), "Running in offline context, for file access" )
+      ("offline-event-type,Z", value<std::string>()->default_value( "EXPRESS" ), "Event type offline" )
+      ("offline-processing,W", value<std::string>()->default_value( "Reco10" ), "Processing version" )
       ;
 
     // program argument -> histo list
@@ -216,8 +217,8 @@ int main(int argc, char* argv[]) {
       std::cout << "LHCb Presenter version: " << s_presenterVersion << std::endl
                 << "Histogram Database version: " << OnlineHistDBEnv_constants::version << std::endl
                 << "Analysis Library version: " << OMAconstants::version << std::endl
-                << "Histogram Database schema: " << OnlineHistDBEnv_constants::DBschema 
-		<< std::endl;
+                << "Histogram Database schema: " << OnlineHistDBEnv_constants::DBschema
+                << std::endl;
       exit(EXIT_SUCCESS);
     }
 
@@ -228,13 +229,13 @@ int main(int argc, char* argv[]) {
       exit(EXIT_FAILURE);
     }
 
-    if (startupSettings.count( "startup-page" ) ) 
-      startupPage = startupSettings["startup-page"].as<std::string>(); 
+    if (startupSettings.count( "startup-page" ) )
+      startupPage = startupSettings["startup-page"].as<std::string>();
 
     if (startupSettings.count( "saveset-file" ) ) {
       savesetFile = startupSettings["saveset-file"].as< std::string >() ;
-      if ( ( "" != savesetFile ) && ( ! exists( path( savesetFile ) ) ) ) 
-	std::cout << "Error: saveset-file doesn't exist" << std::endl ;
+      if ( ( "" != savesetFile ) && ( ! exists( path( savesetFile ) ) ) )
+        std::cout << "Error: saveset-file doesn't exist" << std::endl ;
     }
 
     if (startupSettings.count("reference-path"))
@@ -244,7 +245,7 @@ int main(int argc, char* argv[]) {
       exit(EXIT_FAILURE);
     }
 
-    if (startupSettings.count("tnsnames-path")) 
+    if (startupSettings.count("tnsnames-path"))
       setSystemEnvironment(s_tnsAdminEnv.c_str(),
                            startupSettings["tnsnames-path"].as<std::string>().c_str());
 
@@ -263,7 +264,7 @@ int main(int argc, char* argv[]) {
     if (startupSettings.count("window-height")) {
       windowHeight = startupSettings["window-height"].as<int>();
     }
-      
+
     PresenterMainFrame presenterMainFrame("LHCb Online Presenter",
                                           savesetPath,
                                           referencePath,
@@ -287,7 +288,14 @@ int main(int argc, char* argv[]) {
       std::cout << "Set editing-allowed to " << startupSettings["editing-allowed"].as<bool>() << std::endl;
       presenterMainFrame.enableEditing(startupSettings["editing-allowed"].as<bool>());
     }
-
+    if ( startupSettings.count( "offline-context" ) ) {
+      bool offline = startupSettings["offline-context"].as<bool>();
+      std::string processing = startupSettings["offline-processing"].as<std::string>();
+      std::string eventType  = startupSettings["offline-event-type"].as<std::string>();
+      
+      presenterMainFrame.setOfflineContext( offline, processing, eventType );
+    }
+    
     if (startupSettings.count("verbosity")) {
       if ("silent" == startupSettings["verbosity"].as<std::string>()) {
         messageLevelCli = pres::Silent;
@@ -327,7 +335,7 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setPresenterMode( pres::Online ) ;
     }
 
-    if (startupSettings.count("partition")) 
+    if (startupSettings.count("partition"))
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
 
     //== Database mode
@@ -360,11 +368,7 @@ int main(int argc, char* argv[]) {
     if (startupSettings.count("enable-alarm-display") )
       presenterMainFrame.enableAlarmDisplay(startupSettings["enable-alarm-display"].as<bool>());
 
-    if (startupSettings.count("hide-problem-list") &&
-        ( true == startupSettings[ "hide-problem-list" ].as< bool >() ) ) 
-      presenterMainFrame.toggleShowKnownProblemList() ;
-
-    if (startupSettings.count("startup-histograms")) 
+    if (startupSettings.count("startup-histograms"))
       presenterMainFrame.setStartupHistograms(startupSettings["startup-histograms"].as< std::vector<std::string> >());
 
     if ( savesetFile != "" ) {
@@ -373,20 +377,20 @@ int main(int argc, char* argv[]) {
       startupHistograms.push_back( savesetFile ) ;
       presenterMainFrame.setStartupHistograms( startupHistograms ) ;
       presenterMainFrame.refreshHistogramSvcList( pres::s_withTree ) ;
-    } 
+    }
 
     if ( ! startupPage.empty() ) {
       presenterMainFrame.setCurrentPageName( startupPage ) ;
-      presenterMainFrame.loadSelectedPageFromDB( startupPage , pres::s_startupFile, 
-						 savesetFile ) ;
+      presenterMainFrame.loadSelectedPageFromDB( startupPage , pres::s_startupFile,
+                                                 savesetFile ) ;
       presenterMainFrame.startPageRefresh();
     }
-    
+
     if (startupSettings.count("image-path")) {
       if (!exists(path( startupSettings["image-path"].as<std::string>() ))) {
         std::cout << "error: image-path doesn't exist" << std::endl;
         exit(EXIT_FAILURE);
-      } else 
+      } else
         presenterMainFrame.setImagePath(startupSettings["image-path"].as<std::string>());
     }
 

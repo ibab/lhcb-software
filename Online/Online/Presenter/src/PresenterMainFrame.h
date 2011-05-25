@@ -61,7 +61,6 @@ class TGLabel ;
 
 class stringstream;
 
-class KnownProblemList ;
 class OnlineHistPage ;
 class RunDB ;
 class IntervalPickerData ;
@@ -106,7 +105,6 @@ public:
       OVERLAY_REFERENCE_HISTO_COMMAND,
       FAST_HITMAP_DRAW_COMMAND,
       SHOW_ALARM_LIST_COMMAND,
-      SHOW_KNOWNPROBLEM_LIST_COMMAND,
       HELP_CONTENTS_COMMAND,
       HELP_ABOUT_COMMAND,
       UNDOCK_PAGE_COMMAND,
@@ -132,11 +130,8 @@ public:
       M_Move_COMMAND,
       M_DeletePage_COMMAND,
       M_CreateFolder_COMMAND,
-      M_LAST_1_HOURS,
-      M_LAST_8_HOURS,
-      M_Last_File,
+      M_RecentHistory,
       M_File_Picker,
-      M_Last_Interval,
       M_IntervalPicker,
       M_IntervalPickerRun ,
       M_UtgidPicker,
@@ -365,8 +360,6 @@ public:
   void enableEditing( bool mode ) { m_editingAllowed = mode; }
   void toggleShowAlarmList();
 
-  /// Show panel with list of known problems
-  void toggleShowKnownProblemList() ;
   void toggleFastHitMapDraw();
   void toggleHistoryPlots();
 
@@ -415,7 +408,13 @@ public:
   PresenterPage& myPage() { return m_presenterPage; }
   
   void reAccessPage();  // After an alarm, if refresh, reload from database.
-  
+
+  void setOfflineContext( bool ctxt, std::string processing, std::string eventType )  { 
+    m_presenterInfo.setOfflineContext( ctxt ); 
+    m_presenterInfo.setProcessing( processing ); 
+    m_presenterInfo.setEventType( eventType ); 
+  }
+
  private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;
@@ -462,8 +461,6 @@ public:
   TGDockableFrame*  m_toolBarDock;
   TGDockableFrame*  m_databaseHistogramsDock;
   TGDockableFrame*  m_databaseAlarmsDock;
-  /// Frame to contain list of known problems
-  TGDockableFrame * m_knownProblemDock ;
   TGDockableFrame*  m_pageDock;
   TGDockableFrame*  m_mainCanvasInfoDock;
   TPad*             m_drawPattern;
@@ -510,8 +507,6 @@ public:
   TGHotString*  m_viewToggleReferenceOverlayText;
   TGHotString*  m_viewToggleFastHitMapDrawText;
   TGHotString*  m_viewAlarmListText;
-  /// Menu for known problems list
-  TGHotString * m_viewKnownProblemListText ;
   TGHotString*  m_viewInspectHistoText;
   TGHotString*  m_viewHistogramDescriptionText;
   TGHotString*  m_viewInspectPageText;
@@ -655,11 +650,7 @@ public:
   TGComboBox*          m_histoDBFilterComboBox;
   TGComboBox*          m_alarmDBFilterComboBox;
 
-  /// Window with list of known problems
-  KnownProblemList *   m_globalKnownProblemList ;
-
   std::vector<std::string>      m_knownHistogramServices;
-
   std::vector<std::string>      m_candidateDimServices;
   std::vector<std::string>::const_iterator m_candidateDimServicesIt;
 

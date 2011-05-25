@@ -432,40 +432,10 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
           (*itH).createDummyHisto();
         }
       }
-      //=== Try the 2010 implementation...
     } else {
-      (*itT).location = "";
-      std::string dimServiceQuery = "*/" + partition + "_*_" + (*itT).name + "_*";
-      m_dimBrowser->getServices( dimServiceQuery.c_str() );
-      char* dimService;
-      char* dimFormat;
-      bool foundTask = false;
-      while( m_dimBrowser->getNextService(dimService, dimFormat) ) {
-        std::string task( dimService );
-        task = task.substr( task.find( "/")+1 );
-        task = task.substr( 0, task.find( "/" ) );
-        (*itT).location = task;
-        std::cout << "Found task " << (*itT).name << " as " << (*itT).location << std::endl;
-        foundTask = true;
-        break;
-      }
-      if ( !foundTask ) {
-        std::cout << "  ***** No services for task " << (*itT).name << " *****" << std::endl;
-        //message += "\nFound no DIM service for task " + (*itT).name + ", is it running ?";
-      }
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
-        if ( foundTask ) {
-          (*itH).loadFromMonObject( (*itT).location, update );
-        } else {
-          std::string histoName = (*itH).identifier();
-          unsigned int pos = histoName.find( "/" );   // remove the task name prefix
-          if ( pos < histoName.size() ) {
-            histoName.erase( 0, pos+1 );
-          }
-          (*itH).setShortName( histoName );
-          (*itH).createDummyHisto( "Task not found" );
-        }
+        (*itH).createDummyHisto( "Task not found" );
       }
     }
   }
@@ -670,9 +640,9 @@ void PresenterPage::loadFromArchive( Archive* archive,
   
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     archive->setFiles( (*itT).name, timePoint, pastDuration );
+    archive->fillHistogramsFromFiles( (*itT).histos );
     for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
           (*itT).histos.end() != itH; ++itH ) {
-      archive->fillHistogramFromFiles( &(*itH) );
       (*itH).rootHist()->SetStats( false );
       (*itH).setDisplayOptions();
       (*itH).prepareForDisplay();

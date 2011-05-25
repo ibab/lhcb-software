@@ -1,6 +1,7 @@
 // $Id: IntervalPicker.h,v 1.11 2010-08-12 15:43:00 robbep Exp $
 #ifndef INTERVALPICKER_H_
 #define INTERVALPICKER_H_
+#include <string>
 
 #ifdef WIN32
 #pragma warning( push )
@@ -17,6 +18,7 @@ class PresenterInformation;
 class Archive;
 class TGVerticalFrame;
 class TGTextButton;
+class TGTextEntry;
 class TGRadioButton;
 class TGLabel;
 class TGTab;
@@ -29,19 +31,21 @@ class RunDB ;
 
 /** @class IntervalPickerData IntervalPicker.h
  *
- *  Data class to choose time or run for history mode 
+ *  Data class to choose time or run for history mode
  */
 class IntervalPickerData {
- public:
+public:
   /// mode of picker
-  enum PickerMode { 
-    TimeInterval , 
-    SingleRun 
+  enum PickerMode {
+    TimeInterval ,
+    SingleRun
   } ;
 
   /// Contructor
   IntervalPickerData( ) : m_mode( TimeInterval ) , m_startRun( 0 ) ,
-    m_endRun( 0 ) { } ;
+                          m_endRun( 0 ),
+                          m_startDay(0), m_startMonth(0), m_startYear(0), 
+                          m_startHour(0), m_startMin(0), m_startSec(0) { } ;
 
   /// Destructor
   virtual ~IntervalPickerData( ) { ; } ;
@@ -52,9 +56,6 @@ class IntervalPickerData {
   /// End time as a string
   const char * startTimeString( ) ;
 
-  /// End time as a string
-  const char * endTimeString( ) ;
-
   /// Set start run
   void setStartRun( const int run ) { m_startRun = run ; } ;
 
@@ -63,7 +64,7 @@ class IntervalPickerData {
 
   /// Get start run
   int startRun( ) const { return m_startRun ; } ;
-  
+
   /// Get end run
   int endRun( ) const { return m_endRun ; } ;
 
@@ -71,24 +72,19 @@ class IntervalPickerData {
   /// Set mode
   void setMode( const PickerMode mode ) { m_mode = mode ; } ;
 
-  /// get mode 
+  /// get mode
   PickerMode getMode( ) const { return m_mode ; } ;
 
   /// Set start time
   void setStartTime( int year , int month , int day , int hour , int min ,
-		     int sec ) { 
-    m_startYear  = year ; m_startMonth = month ; m_startDay = day ; 
+                     int sec ) {
+    m_startYear  = year ; m_startMonth = month ; m_startDay = day ;
     m_startHour = hour , m_startMin = min ; m_startSec = sec ;
-  } 
+  } ;
 
-  /// Set end time
-  void setEndTime( int year , int month , int day , int hour , int min ,
-		   int sec ) { 
-    m_endYear  = year ; m_endMonth = month ; m_endDay = day ; 
-    m_endHour = hour , m_endMin = min ; m_endSec = sec ;
-  } 
+  void setDuration( int h, int m ) { m_durationHour = h; m_durationMinute = m; } ;
 
- private:
+private:
   /// Picker mode
   PickerMode m_mode ;
 
@@ -102,25 +98,23 @@ class IntervalPickerData {
   int m_startDay , m_startMonth , m_startYear , m_startHour,
     m_startMin , m_startSec ;
 
-  /// End time information
-  int m_endDay , m_endMonth , m_endYear , m_endHour , m_endMin , 
-    m_endSec ;
+  int m_durationHour;
+  int m_durationMinute;
 };
 
 /** @class IntervalPicker IntervalPicker.h
  *
- *  Dialog window: choose time or run for history mode 
+ *  Dialog window: choose time or run for history mode
  */
-class IntervalPicker : public TGTransientFrame
-{
+class IntervalPicker : public TGTransientFrame {
 public:
   /// Constructor
-  IntervalPicker( PresenterInformation * presInfo , 
-		  const TGWindow * main ,
-		  Archive * archive , 
-		  pres::MsgLevel verbosity ,
-		  RunDB * runDb , 
-		  IntervalPickerData * intData ) ;
+  IntervalPicker( PresenterInformation * presInfo ,
+                  const TGWindow * main ,
+                  Archive * archive ,
+                  pres::MsgLevel verbosity ,
+                  RunDB * runDb ,
+                  IntervalPickerData * intData ) ;
 
   /// Destructor
   virtual ~IntervalPicker();
@@ -130,14 +124,11 @@ public:
 
   /// close window call back
   void CloseWindow();
-  
+
   // Slots
-  void lastMinutesRadioButtonToggled(bool on);
+  //  void lastMinutesRadioButtonToggled(bool on);
   void timeIntervalRadioButtonToggled(bool on);
-  void lastRunRadioButtonToggled(bool on);
-  void lastFillRadioButtonToggled(bool on);
-  void runFillIntervalRadioButtonToggled(bool on);
-  void nowButton();
+  void runIntervalRadioButtonToggled(bool on);
   void ok();
 
   /// Change window according to mode (SingleRun, Time...)
@@ -148,7 +139,7 @@ private:
   PresenterInformation * m_presInfo; ///< presenter information
   Archive*             m_archive;   ///< archive object
   pres::MsgLevel       m_verbosity; ///< verbosity from presenter
-  
+
   TGVerticalFrame*    m_mainVerticalFrame;
   TGTextButton*       m_okButton;
   TGTextButton*       m_cancelButton;
@@ -156,8 +147,6 @@ private:
   TGTab*              m_mainTab;
   TGCompositeFrame*   m_timeTabCompositeFrame;
   TGVerticalFrame*    m_intervalTypeRadioBtnGrpVerticalFrame;
-  TGHorizontalFrame*  m_lastMinutesGrpHorizontalFr;
-  TGRadioButton*      m_lastMinutesRadioButton;
   TGLabel*            m_fromTimeIntervalLabel;
   TGNumberEntry*      m_startTimeNumberEntry;
   TGNumberEntry*      m_startDateNumberEntry;
@@ -165,32 +154,24 @@ private:
   TGNumberEntry*      m_endDateNumberEntry;
   TGNumberEntry*      m_stepTimeNumberEntry;
   TGLabel*            m_fromTimeIntervalDateLabel;
-  TGHorizontalFrame*  m_minutesHorizontalFrame;
-  TGNumberEntry*      m_minutesEntry;
-  TGLabel*            m_minutesLabel;
   TGNumberEntry*      m_hoursNumberEntry;
   TGLabel*            m_hoursLabel;
   TGLabel*            m_toLabel;
-  TGTextButton*       m_nowTextButton;
   TGLabel*            m_timeLabel;
   TGLabel*            m_dateLabel;
   TGRadioButton*      m_timeIntervalRadioButton;
-  TGRadioButton*      m_lastRunRadioButton;
-  TGLabel*            m_lastRunLabel;
   TGNumberEntry*      m_lastRunNumberEntry;
-  TGRadioButton*      m_lastFillRadioButton;
-  TGNumberEntry*      m_lastFillNumberEntry;
-  TGLabel*            m_lastFillLabel;
-  TGRadioButton*      m_runFillIntervalRadioButton;
-  TGComboBox*         m_runFillIntervalComboBox;
-  TGNumberEntry*      m_runFillIntervalFromNumberEntry;
-  TGLabel*            m_runFillIntervalToLabel;
-  TGNumberEntry*      m_runFillIntervalToNumberEntry;
+
+  TGRadioButton*      m_runIntervalRadioButton;
+  TGComboBox*         m_runIntervalComboBox;
+  TGNumberEntry*      m_runIntervalFromNumberEntry;
+  TGLabel*            m_runIntervalToLabel;
+  TGNumberEntry*      m_runIntervalToNumberEntry;
   TGComboBox*         m_runDestinationComboBox;
   TGLabel*            m_runDestinationLabel;
-  TGComboBox*         m_runFillStepSizeComboBox;
-  TGNumberEntry*      m_runFillStepSizeNumberEntry;
-  TGCompositeFrame*   m_runFillTabCompositeFrame;
+
+  TGComboBox*         m_eventTypeComboBox;
+  TGTextEntry*        m_processingTextEntry;
 
   /// Link to RunDB interface object
   RunDB              *m_runDb ;
@@ -198,7 +179,7 @@ private:
   /// Link to interval data object
   IntervalPickerData *m_intData ;
 
-  ClassDef(IntervalPicker, 0) 
+  ClassDef(IntervalPicker, 0)
 };
 
 #endif /*INTERVALPICKER_H_*/

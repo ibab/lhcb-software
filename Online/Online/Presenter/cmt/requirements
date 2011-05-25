@@ -23,9 +23,9 @@ use CLHEP         v*  LCG_Interfaces
 
 # Application building rule
 #============================================================================
-application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp $(PRESENTERROOT)/Gaucho/*.cpp *.cpp "
-
 document rootcint cintBootstrap cintBootstrap.h
+
+application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp  *.cpp "
 
 macro_append includes " -I$(PRESENTERROOT) -I$(PRESENTERROOT)/src" \
   WIN32               " -I$(PRESENTERROOT) -I$(PRESENTERROOT)/src"
