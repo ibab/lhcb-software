@@ -47,7 +47,9 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 files = [ "DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOTTREE'  OPT='REC' " ]
 #-- input options
 ApplicationMgr().EvtMax =  1000
-importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+# not needed any longer, exists in LHCbApp()
+#importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+
 EventSelector( OutputLevel  = INFO, 
                PrintFreq    = 1000,
                FirstEvent   = 1,

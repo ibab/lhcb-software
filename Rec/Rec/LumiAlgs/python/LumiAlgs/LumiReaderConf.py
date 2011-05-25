@@ -23,11 +23,13 @@ import GaudiKernel.ProcessJobOptions
 def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
 def _file(f) :
-    extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
-                   'MDF' : "' SVC='LHCb::MDFSelector'",
-                   'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
     if f.lstrip().startswith('DATAFILE'): return f
-    else: return "DATAFILE='PFN:"+ f + extensions[ _ext(f).upper() ] 
+    from GaudiConf.IOHelper import IOHelper
+    if _ext(f).upper() in ["RAW","MDF"]:
+        
+        return IOHelper(Input="MDF").dressFile(f,IO="I")
+    
+    return IOHelper().dressFile(f,IO="I")
 
 def _sequenceAppender( seq ) :
     return lambda x : seq.Members.append( x )
@@ -67,7 +69,7 @@ class LumiReaderConf(LHCbConfigurableUser):
     # select only the right Trigger Type
     readLumiSequence( ODINFilter ( 'OdinTriggerTypes',
                                    Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
-
+    
     # decode lumi
     readLumiSequence( HltLumiSummaryDecoder( 'LumiDecoder' ) ) 
     # add filter to check if this was L0 triggered
@@ -104,7 +106,8 @@ class LumiReaderConf(LHCbConfigurableUser):
   def __apply_configuration__(self):
 
     GaudiKernel.ProcessJobOptions.PrintOff()
-    EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+    # not required now in LHCb App
+    # EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
 
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )

@@ -25,11 +25,14 @@ import GaudiKernel.ProcessJobOptions
 def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
 def _file(f) :
-    extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
-                   'MDF' : "' SVC='LHCb::MDFSelector'",
-                   'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
     if f.lstrip().startswith('DATAFILE'): return f
-    else: return "DATAFILE='PFN:"+ f + extensions[ _ext(f).upper() ] 
+    from GaudiConf.IOHelper import IOHelper
+    
+    if _ext(f).upper()  in ["RAW","MDF"]:
+        
+        return IOHelper(Input="MDF").dressFile(f,IO="I")
+    
+    return IOHelper().dressFile(f,IO="I")
 
 def _sequenceAppender( seq ) :
     return lambda x : seq.Members.append( x )
@@ -94,9 +97,10 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     # only configure the writer - use it where applicable
     outputFile = self.getProp('outputFile')
     if not outputFile : return
-
+    
     # POOL Persistency
-    importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+    # no longer required, now in LHCbApp
+    #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
     # event output
     from Configurables import OutputStream
     writerName = "DstWriter"
@@ -105,18 +109,20 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
                               Output   = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'",
                               )
     ApplicationMgr().OutStream.append(dstWriter)
-
+    
     # TES setup
-    FileRecordDataSvc().ForceLeaves         = True
-    FileRecordDataSvc().RootCLID            = 1
-    FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
+    # note required, now in LHCbApp
+    #FileRecordDataSvc().ForceLeaves         = True
+    #FileRecordDataSvc().RootCLID            = 1
+    #FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
 
     # Persistency service setup
-    ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
-                                              DbType = "POOL_ROOTTREE",
-                                              ShareFiles = "YES"
-                                              )
-                                 ]
+    # no longer required, now in LHCbApp
+    #ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
+    #                                          DbType = "POOL_ROOTTREE",
+    #                                          ShareFiles = "YES"
+    #                                          )
+    #                             ]
 
     # FSR output stream
     from Configurables import RecordStream
@@ -132,7 +138,8 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
   def __apply_configuration__(self):
 
     GaudiKernel.ProcessJobOptions.PrintOff()
-    EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+    # no longer required, now in LHCbApp
+    # EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
 
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )

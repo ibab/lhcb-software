@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-05-25 - Rob Lambert
+ - Update configurables and job options for new Persistency.
+ - Persistency is now set up in LHCbApp
+ - I have not yet moved completely to the IOHelper class for writing
+   That is next.
+
 !========================= LumiAlgs v5r2 2011-05-13 =========================
 ! 2011-05-11 - Jaap Panman
  - update unittests

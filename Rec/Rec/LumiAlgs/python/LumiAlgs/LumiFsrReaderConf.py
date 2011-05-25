@@ -19,11 +19,14 @@ import GaudiKernel.ProcessJobOptions
 def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
 def _file(f) :
-    extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
-                   'MDF' : "' SVC='LHCb::MDFSelector'",
-                   'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
     if f.lstrip().startswith('DATAFILE'): return f
-    else: return "DATAFILE='PFN:"+ f + extensions[ _ext(f).upper() ] 
+    from GaudiConf.IOHelper import IOHelper
+    
+    if _ext(f).upper() in ["RAW","MDF"]:
+        
+        return IOHelper(Input="MDF").dressFile(f,IO="I")
+    
+    return IOHelper().dressFile(f,IO="I")
 
 def _sequenceAppender( seq ) :
     return lambda x : seq.Members.append( x )
@@ -58,22 +61,23 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
 
   def _configureInput(self):
     # POOL Persistency
-    importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+    # not required now in LHCb App
+    #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
     files = self.getProp('inputFiles')
     if len(files) > 0 :
         EventSelector().Input = [ _file(f) for f in files ]
 
   def __apply_configuration__(self):
-
+    
     GaudiKernel.ProcessJobOptions.PrintOff()
-
+    
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )
-
+    
     # instantiate the sequencer
     mainSeq = GaudiSequencer("LumiSeq")
-
+    
     # activate the sequence
     appMgr=ApplicationMgr(TopAlg=[],
                           HistogramPersistency='NONE',
@@ -84,7 +88,7 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     if self.getProp("userAlgorithms"):
         for userAlg in self.getProp("userAlgorithms"):
             ApplicationMgr().TopAlg += [ userAlg ]
-
+            
     # input
     self._configureInput()
 

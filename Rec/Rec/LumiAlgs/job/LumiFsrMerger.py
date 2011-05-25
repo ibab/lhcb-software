@@ -36,7 +36,8 @@ files = [
   ]
 #-- input options
 ApplicationMgr().EvtMax =  -1
-importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+# not needed any longer, exists in LHCbApp()
+# importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 EventSelector( OutputLevel  = INFO, 
                PrintFreq    = 1000,
                Input        = files

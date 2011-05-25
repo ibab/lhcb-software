@@ -43,7 +43,8 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     if not outputFile : return
 
     # POOL Persistency
-    importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+    #no longer required, done by LHCbApp
+    #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
     # event output
     from Configurables import OutputStream
     writerName = "DstWriter"
@@ -54,17 +55,19 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     ApplicationMgr().OutStream.append(dstWriter)
 
     # TES setup
-    FileRecordDataSvc().ForceLeaves         = True
-    FileRecordDataSvc().RootCLID            = 1
-    FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
-
+    # no longer required, done by LHCbApp
+    #FileRecordDataSvc().ForceLeaves         = True
+    #FileRecordDataSvc().RootCLID            = 1
+    #FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
+    
     # Persistency service setup
-    ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
-                                              DbType = "POOL_ROOTTREE",
-                                              ShareFiles = "YES"
-                                              )
-                                 ]
-
+    # no longer required, done by LHCbApp
+    #ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
+    #                                          DbType = "POOL_ROOTTREE",
+    #                                          ShareFiles = "YES"
+    #                                          )
+    #                             ]
+    
     # FSR output stream
     from Configurables import RecordStream
     fsrWriter = RecordStream( "FsrWriter",
