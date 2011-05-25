@@ -46,7 +46,7 @@ public:
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
 
-  void setDecodingMode(){for (int i=0; i<4; ++i) m_procCand[i].setDecodingMode();}
+  void setDecodingMode(){for (int i=0; i<4; ++i) m_procCand[i]->setDecodingMode();}
   
   /// Configure the emulator version in one go
   void setVersion(int version, int mode, bool compression){
@@ -160,9 +160,9 @@ private:
   LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand);
   
   /// Converters for the L0Muon banks
-  L0Muon::CtrlCandCnv  m_ctrlCand[2]; /// Converters for the L0MuonCtrlCand Banks
-  L0Muon::ProcCandCnv  m_procCand[4]; /// Converters for the L0MuonProcCand Banks
-  L0Muon::ProcDataCnv  m_procData[4]; /// Converters for the L0MuonProcData Banks
+  L0Muon::CtrlCandCnv*  m_ctrlCand[2]; /// Converters for the L0MuonCtrlCand Banks
+  L0Muon::ProcCandCnv*  m_procCand[4]; /// Converters for the L0MuonProcCand Banks
+  L0Muon::ProcDataCnv*  m_procData[4]; /// Converters for the L0MuonProcData Banks
 
   int m_l0EventNumber;  /// Current event number (12 bits) 
   int m_l0_B_Id;        /// Current l0_B_Id (12 bits)
