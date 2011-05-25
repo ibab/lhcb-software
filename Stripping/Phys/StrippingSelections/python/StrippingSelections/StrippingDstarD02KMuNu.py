@@ -50,7 +50,7 @@ default_config = {'TRACK_Chi2' : 3.,
     'Dstar_VtxChi2' : 9.,
     'Dstar_DeltaMass' : 200.,
     # Trigger
-    'HLT'          : " HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision') " ,
+    'HLT'          : " HLT_PASS_RE('Hlt2CharmSemilepD02HMuNu.*Decision') " ,
     #Pre and postscale
     'PrescaledLinePrescale' : 1.0,
     'PrescaledLinePostscale' : 1.0
