@@ -248,6 +248,12 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
             if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
     return info
 
+# TODO: move AccessSvcSingleton into a seperate process, and 
+#       have it run a gaudi job and keep it going for as long
+#       as needed....
+# TODO: Make AccessSvcSingle a proxy for a remote Gaudi process, 
+#       make it possible to sent the remote
+#       a callable, and receive the result...
 class AccessSvcSingleton(object) :
    _pcs = None
    _cas = None
@@ -282,6 +288,11 @@ class AccessSvcSingleton(object) :
    def writeConfigTreeNodeAlias(self,alias) :
         return AccessSvcSingleton._cas.writeConfigTreeNodeAlias(alias)
 
+# TODO: move AccessSvcSingleton into a seperate process, and 
+#       have it run a gaudi job and keep it going for as long
+#       as needed.... 
+# TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
+#       a callable (involving _pcs callable members), and receive the result...
 def _getConfigTree( id , cas = ConfigAccessSvc() ) :
     pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()

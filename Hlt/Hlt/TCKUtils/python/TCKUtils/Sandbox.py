@@ -18,4 +18,6 @@ def execInSandbox(fun,*args,**kwargs) :
         raise result
     # check if child exited OK..    .
     return result
-    
+
+# TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
+#       a callable, and receive the result...
