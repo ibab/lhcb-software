@@ -5,6 +5,13 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - Anton Poluektov 
+ - StrippingReport: 
+   * Changed ':execute' to ':Execute' in ChronoAuditor query to fix the timing 
+     problem with new Gaudi. 
+   * Report shown every N 'good events' rather than every N events. 
+     Otherwise it was not show if Nth event was not 'good' (did not pass prefilter)
+
 !======================== StrippngAlgs v1r6 2011-02-21 ========================
 
 ! 2010-11-11 - Anton Poluektov 

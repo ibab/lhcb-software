@@ -255,8 +255,10 @@ StatusCode StrippingReport::execute() {
         }
         
         if (m_chronoSvc) {
-    	  const ChronoEntity* chrono = m_chronoSvc->chrono(i->name + ":execute");
+          verbose() << "Chrono service found" << endmsg;
+    	  const ChronoEntity* chrono = m_chronoSvc->chrono(i->name + ":Execute");
     	  if (chrono) {
+    	    verbose() << "ChronoSvc returned execute for " << i->name << endmsg;
     	    i->avgtime = chrono->uMeanTime()/1.e3;
           } 
         } 
@@ -296,7 +298,7 @@ StatusCode StrippingReport::execute() {
   
   m_goodEvent++;
   
-  if (m_reportFreq > 0 && (m_event % m_reportFreq == 0) ) { 
+  if (m_reportFreq > 0 && (m_goodEvent % m_reportFreq == 0) ) { 
     if (m_latex) {
       reportLatex(m_onlyPositive);
     } else { 
