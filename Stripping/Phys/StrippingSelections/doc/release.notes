@@ -3,6 +3,55 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-05-26 - Vanya Belyaev
+
+ - StrippingCharmAssociative.py 
+
+   The attempt for coherent stripping of various ``charm''? associative production
+
+    - dimuon + dimuon 
+    - dimuon + high-pt gamma 
+    - dimuon + charm 
+    - charm  + anti-charm
+    - charm  + charm 
+
+  The performance with Reco09-Stripping13_SDSTs.py
+  +-----------------------------------------+----------------+
+  |    Stripping Line                       |    Rate, [%]   |
+  +-----------------------------------------+----------------+
+  | StrippingDiCharmForPromptCharm          | 0.0174+-0.0087 |       
+  | StrippingDiMuonAndCharmForPromptCharm   | 0.0305+-0.0115 | 
+  | StrippingDoubleDiMuonForPromptCharm     | 0.0305+-0.0115 |        
+  | StrippingDiMuonAndGammaForPromptCharm   | 0.3004+-0.0361 |
+  +-----------------------------------------+----------------+
+  | Total                                   | 0.3787+-0.0405 |
+  +-----------------------------------------+----------------+
+  | Unique with respect to FullDSTDiMuon    | 0.1350+-0.0242 |
+  +-----------------------------------------+----------------+
+
+  Note that only (0.1350+-0.0242)% of rate are unique
+  with respect to FullDSTDiMion lines,
+  that corresponds to 2.6% (relative) increment of FullDSTDiMuon lines 
+
+ - StrippingPromptCharm.py
+   reshulffle a bit the code 
+   rename CharmAndDiMuon -> DiMuonAndCharm 
+   update documentaion:
+
+   The performance with Reco09-Stripping13_SDSTs.py
+   +--------------------------------+----------------+
+   |  Stripping Line                |    Rate, [%]   |
+   +--------------------------------+----------------+
+   | StrippingD02HHForPromptCharm   | 2.891 +- 0.111 |
+   | StrippingDstarForPromptCharm   | 0.614 +- 0.052 | 
+   | StrippingDsForPromptCharm      | 0.231 +- 0.032 |
+   | StrippingDForPromptCharm       | 1.132 +- 0.070 | 
+   | StrippingLambdaCForPromptCharm | 0.135 +- 0.024 | 
+   +--------------------------------+----------------+
+   | Total                          | 4.375 +- 0.135 | 
+   +--------------------------------+----------------+
+ 
 ! 2011-05-26 - Marco Gersabeck
  - Prescaled untagged D->Kpi line in StrippingD2hh by 0.2
 
