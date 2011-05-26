@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-05-26 - Marco Gersabeck
+ - Prescaled untagged D->Kpi line in StrippingD2hh by 0.2
+
 ! 2011-05-26 - Grant McGregor
  - Addition of a few cuts to DStarD02KMuNu line to reduce rate.
 
