@@ -79,8 +79,8 @@ private:
   
   LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand, int procVersion);
 
-  L0Muon::CtrlRawCnv  m_ctrlRaw[2];
-  L0Muon::ProcRawCnv  m_procRaw[4];
+  L0Muon::CtrlRawCnv*  m_ctrlRaw[2];
+  L0Muon::ProcRawCnv*  m_procRaw[4];
     
 };
  

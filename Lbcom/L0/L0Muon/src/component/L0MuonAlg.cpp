@@ -446,7 +446,7 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
   // xFOI
   prop="";
   for (std::vector<int>::iterator ifoi =  m_foiXSize.begin();ifoi!= m_foiXSize.end();ifoi++) {
-    sprintf(buf,"%d",(*ifoi));
+    sprintf(buf,"%2d",(*ifoi));
     prop+=buf;
     ifoi++;
     if( ifoi!=  m_foiXSize.end()) prop+=",";
@@ -457,7 +457,7 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
   // yFOI
   prop="";
   for (std::vector<int>::iterator ifoi =  m_foiYSize.begin();ifoi!= m_foiYSize.end();ifoi++) {
-    sprintf(buf,"%d",(*ifoi));
+    sprintf(buf,"%2d",(*ifoi));
     prop+=buf;
     ifoi++;
     if( ifoi!=  m_foiYSize.end()) prop+=",";
@@ -469,7 +469,7 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
   properties["ignoreM1"]       = m_ignoreM1 ? L0Muon::Property("1") : L0Muon::Property("0");
 
   // ProcVersion
-  sprintf(buf,"%d",m_version);
+  sprintf(buf,"%3d",m_version);
   prop=buf;
   properties["procVersion"]    = L0Muon::Property(prop);;
 

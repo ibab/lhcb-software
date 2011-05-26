@@ -50,7 +50,16 @@ L0MuonFromRawTrans::L0MuonFromRawTrans( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0MuonFromRawTrans::~L0MuonFromRawTrans() {} 
+L0MuonFromRawTrans::~L0MuonFromRawTrans() {
+  // Converters for the banks of the 2 TELL1s connected to the controller boards
+  for (int i= 0; i<2; ++i) {
+    delete m_ctrlRaw[i];
+ }
+  // Converters for the banks of the 4 TELL1s connected to the processing boards
+  for (int i= 0; i<4; ++i) {
+    delete m_procRaw[i];
+  }  
+} 
 
 //=============================================================================
 // Initialization
@@ -68,12 +77,13 @@ StatusCode L0MuonFromRawTrans::initialize() {
 
   // Converters for the banks of the 2 TELL1s connected to the controller boards
   for (int i= 0; i<2; ++i) {
-    m_ctrlRaw[i] =  L0Muon::CtrlRawCnv(i);
+    m_ctrlRaw[i] =  new L0Muon::CtrlRawCnv(i);
   }
   // Converters for the banks of the 4 TELL1s connected to the processing boards
   for (int i= 0; i<4; ++i) {
-    m_procRaw[i] = L0Muon::ProcRawCnv(i);
-  }  m_version=0;
+    m_procRaw[i] = new L0Muon::ProcRawCnv(i);
+  }  
+  m_version=0;
   
   return StatusCode::SUCCESS;
 }
@@ -140,16 +150,16 @@ StatusCode L0MuonFromRawTrans::finalize() {
         errorCounters+="Side C : ";
         break;
       }
-      errorCounters+=(boost::format("%3d banks decoded : ") % m_ctrlRaw[i].numberOfDecodedBanks()).str();
-      if (m_ctrlRaw[i].numberOfDecodedBanks()>0 ) {
-        m_ctrlRaw[i].dumpErrorCounters(errorCounters);
+      errorCounters+=(boost::format("%3d banks decoded : ") % m_ctrlRaw[i]->numberOfDecodedBanks()).str();
+      if (m_ctrlRaw[i]->numberOfDecodedBanks()>0 ) {
+        m_ctrlRaw[i]->dumpErrorCounters(errorCounters);
       } else errorCounters+="\n";
     }
 
     for (int i= 0; i<4; ++i) {
-      errorCounters+=(boost::format("Q%d : %3d banks decoded : ") % (i+1) % m_procRaw[i].numberOfDecodedBanks()).str();
-      if (m_procRaw[i].numberOfDecodedBanks()>0 ) {
-        m_procRaw[i].dumpErrorCounters(errorCounters);
+      errorCounters+=(boost::format("Q%d : %3d banks decoded : ") % (i+1) % m_procRaw[i]->numberOfDecodedBanks()).str();
+      if (m_procRaw[i]->numberOfDecodedBanks()>0 ) {
+        m_procRaw[i]->dumpErrorCounters(errorCounters);
       } else errorCounters+="\n";
     }
     errorCounters+="--- End of L0Muon decoding error summary\n";
@@ -192,68 +202,68 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
         data.push_back( *body++ );
       }
       if (srcID==0) {
-        m_ctrlRaw[1].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
+        m_ctrlRaw[1]->decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
         if (m_dumpError) {
           for (int ii= 0; ii<2; ++ii) {
-            if (m_ctrlRaw[1].decodingError(ii)) {
+            if (m_ctrlRaw[1]->decodingError(ii)) {
               info() << "decodeRawBanks: L0Muon bank (version "<< bankVersion <<" ) found"
                       <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
-              m_ctrlRaw[1].dump(data);
+              m_ctrlRaw[1]->dump(data);
               break;
             }
           }
         }
       }
       if (srcID==5) {
-        m_ctrlRaw[0].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
+        m_ctrlRaw[0]->decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
         if (m_dumpError) {
           for (int ii= 0; ii<2; ++ii) {
-            if (m_ctrlRaw[0].decodingError(ii)) {
-              m_ctrlRaw[0].dump(data);
+            if (m_ctrlRaw[0]->decodingError(ii)) {
+              m_ctrlRaw[0]->dump(data);
               break;
             }
           }
         }
       }
        if (srcID==3){
-        m_procRaw[0].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
+        m_procRaw[0]->decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
         if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
-            if (m_procRaw[0].decodingError(ib)) {
-              m_procRaw[0].dump(data);
+            if (m_procRaw[0]->decodingError(ib)) {
+              m_procRaw[0]->dump(data);
               break;
             }
           }
         }
       }
        if (srcID==4){
-        m_procRaw[1].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
+        m_procRaw[1]->decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
         if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
-            if (m_procRaw[1].decodingError(ib)) {
-              m_procRaw[1].dump(data);
+            if (m_procRaw[1]->decodingError(ib)) {
+              m_procRaw[1]->dump(data);
               break;
             }
           }
         }
       }
       if (srcID==2) {
-        m_procRaw[2].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);      
+        m_procRaw[2]->decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);      
         if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
-            if (m_procRaw[2].decodingError(ib)) {
-              m_procRaw[2].dump(data);
+            if (m_procRaw[2]->decodingError(ib)) {
+              m_procRaw[2]->dump(data);
               break;
             }
           }
         }
       }
        if (srcID==1){
-        m_procRaw[3].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
+        m_procRaw[3]->decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
         if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
-            if (m_procRaw[3].decodingError(ib)) {
-              m_procRaw[3].dump(data);
+            if (m_procRaw[3]->decodingError(ib)) {
+              m_procRaw[3]->dump(data);
               break;
             }
           }
@@ -280,7 +290,7 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
   for (int i= 0; i<2; ++i) {// Loop over sides 
     for (int ii= 0; ii<2; ++ii) {// Loop over quarters in side
       int iq=i*2+ii;
-      if (m_ctrlRaw[i].decodingError(ii) || m_ctrlRaw[i].inError(ii)) {
+      if (m_ctrlRaw[i]->decodingError(ii) || m_ctrlRaw[i]->inError(ii)) {
         quarter_in_error[iq]=true;
         continue;
       }
@@ -289,7 +299,7 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
   
   for (int iq=0; iq<4; ++iq) { // Loop over quarters
     for (int ib=0; ib<12; ++ib) { // Loop over processing boards
-      if (m_procRaw[iq].decodingError(ib) || m_procRaw[iq].inError(ib)) {
+      if (m_procRaw[iq]->decodingError(ib) || m_procRaw[iq]->inError(ib)) {
         quarter_in_error[iq]=true;
         break;
       }
@@ -306,11 +316,11 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
         int iq=i*2+ii;
         if (!quarter_in_error[iq]) continue;
         std::cout<<boost::format("** L0Muon Error report for quarter Q%1d") % (iq+1)<<std::endl;
-        m_ctrlRaw[i].dumpErrorHeader(ii,"\t");
-        m_ctrlRaw[i].dumpErrorField(ii,"\t");
-        m_procRaw[iq].dumpErrorHeader(0,"\t     ");      
+        m_ctrlRaw[i]->dumpErrorHeader(ii,"\t");
+        m_ctrlRaw[i]->dumpErrorField(ii,"\t");
+        m_procRaw[iq]->dumpErrorHeader(0,"\t     ");      
         for (int ib= 0; ib<12; ++ib) {
-          m_procRaw[iq].dumpErrorField(ib,(boost::format("\tPB%2d ") % (ib)).str());      
+          m_procRaw[iq]->dumpErrorField(ib,(boost::format("\tPB%2d ") % (ib)).str());      
         }
       } // End of loop over quarters in side
     } // End of loop over sides
@@ -341,8 +351,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
     debug() << "writeOnTES at "<< location << endreq;
   }
   for (int i= 0; i<2; ++i) {
-    if (!m_ctrlRaw[i].isActiv()) continue;
-    cands = m_ctrlRaw[i].muonCandidates();
+    if (!m_ctrlRaw[i]->isActiv()) continue;
+    cands = m_ctrlRaw[i]->muonCandidates();
     if (msgLevel( MSG::DEBUG )) {
       debug() << "writeOnTES: side "<<i<< endreq;
       debug() << "writeOnTES: => "<<cands.size()<<" candidates found"<< endreq;
@@ -367,8 +377,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
     debug() << "writeOnTES at "<< location << endreq;
   }
   for (int i= 0; i<2; ++i) {
-    if (!m_ctrlRaw[i].isActiv()) continue;
-    cands = m_ctrlRaw[i].muonCandidatesBCSU();
+    if (!m_ctrlRaw[i]->isActiv()) continue;
+    cands = m_ctrlRaw[i]->muonCandidatesBCSU();
 //     if (msgLevel( MSG::DEBUG )) {
 //       debug() << "writeOnTES: side "<<i<< endreq;
 //       debug() << "writeOnTES: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
@@ -393,8 +403,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
 //     debug() << "writeOnTES at "<< location << endreq;
 //   }
   for (int i= 0; i<4; ++i) {      
-    if (!m_procRaw[i].isActiv()) continue;
-    cands = m_procRaw[i].muonCandidatesBCSU();
+    if (!m_procRaw[i]->isActiv()) continue;
+    cands = m_procRaw[i]->muonCandidatesBCSU();
 //     if (msgLevel( MSG::DEBUG )) {
 //       debug() << "writeOnTES: quarter "<<i<< endreq;
 //       debug() << "writeOnTES: => "<<cands.size()<<" candidates found (PU)"<< endreq;
@@ -419,8 +429,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
 //     debug() << "writeOnTES at "<< location << endreq;
 //   }
   for (int i= 0; i<4; ++i) {      
-    if (!m_procRaw[i].isActiv()) continue;
-    cands = m_procRaw[i].muonCandidatesPU();
+    if (!m_procRaw[i]->isActiv()) continue;
+    cands = m_procRaw[i]->muonCandidatesPU();
 //     if (msgLevel( MSG::DEBUG )) {
 //       debug() << "writeOnTES: quarter "<<i<< endreq;
 //       debug() << "writeOnTES: => "<<cands.size()<<" candidates found (PU)"<< endreq;
@@ -446,15 +456,15 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
 //     debug() << "writeOnTES at "<< location << endreq;
 //   }
   for (int i= 0; i<4; ++i) {
-    if (!m_procRaw[i].isActiv()) continue;
+    if (!m_procRaw[i]->isActiv()) continue;
     if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: "<<rootInTES()<<" Q"<<(i+1)<< endreq;
-    std::vector<LHCb::MuonTileID>  pus = m_procRaw[i].pus();   
+    std::vector<LHCb::MuonTileID>  pus = m_procRaw[i]->pus();   
     if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: "<<rootInTES()<<" #of pus "<<pus.size()<< endreq;
     for (std::vector<LHCb::MuonTileID>::iterator itpu=pus.begin(); itpu!=pus.end(); ++itpu){
       debug() << "writeOnTES:  "<<rootInTES()<<"---- pu = "<<itpu->toString()<< endreq;
-      std::vector<LHCb::MuonTileID> ols = m_procRaw[i].ols(*itpu);
+      std::vector<LHCb::MuonTileID> ols = m_procRaw[i]->ols(*itpu);
       debug() << "writeOnTES:  "<<rootInTES()<<"ols length = "<<ols.size()<< endreq;
-      std::vector<LHCb::MuonTileID> neighs = m_procRaw[i].neighs(*itpu);
+      std::vector<LHCb::MuonTileID> neighs = m_procRaw[i]->neighs(*itpu);
       debug() << "writeOnTES:  "<<rootInTES()<<"neighs length = "<<neighs.size()<< endreq;
       debug() << "writeOnTES:  "<<rootInTES()<<"---- end pu "<< endreq;
       LHCb::L0MuonData *l0muondata = new LHCb::L0MuonData(*itpu, ols, neighs);
@@ -480,13 +490,13 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
 //     debug() << "writeOnTES at "<< location << endreq;
 //   }
   for (int i= 0; i<2; ++i) {
-    if (!m_ctrlRaw[i].isActiv()) continue;
+    if (!m_ctrlRaw[i]->isActiv()) continue;
     for (int ii=0; ii<2; ++ii){
       int quarter = i*2+ii;
       LHCb::L0MuonCtrlError * l0mctrlerror = new LHCb::L0MuonCtrlError(quarter);
       // Fill errors
-      if (m_ctrlRaw[i].decodingError(ii) ) l0mctrlerror->setHeader(4);
-      else if (m_ctrlRaw[i].inError(ii) ) l0mctrlerror->setHeader(2);
+      if (m_ctrlRaw[i]->decodingError(ii) ) l0mctrlerror->setHeader(4);
+      else if (m_ctrlRaw[i]->inError(ii) ) l0mctrlerror->setHeader(2);
       else l0mctrlerror->setHeader(1);
       pl0mctrlerrors->insert(l0mctrlerror);
     }
@@ -500,12 +510,12 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
 //     debug() << "writeOnTES at "<< location << endreq;
 //   }
   for (int iq= 0; iq<4; ++iq) {
-    if (!m_procRaw[iq].isActiv()) continue;
+    if (!m_procRaw[iq]->isActiv()) continue;
     for (int ib=0; ib<12; ++ib){
-      LHCb::L0MuonProcError * l0mprocerror = new LHCb::L0MuonProcError(m_procRaw[iq].mid_BCSU(ib),ib);
+      LHCb::L0MuonProcError * l0mprocerror = new LHCb::L0MuonProcError(m_procRaw[iq]->mid_BCSU(ib),ib);
       // Fill errors
-      if (m_procRaw[iq].decodingError(ib) ) l0mprocerror->setHeader(4);
-      else if (m_procRaw[iq].inError(ib) ) l0mprocerror->setHeader(2);
+      if (m_procRaw[iq]->decodingError(ib) ) l0mprocerror->setHeader(4);
+      else if (m_procRaw[iq]->inError(ib) ) l0mprocerror->setHeader(2);
       else l0mprocerror->setHeader(1);
       pl0mprocerrors->insert(l0mprocerror);
     }
@@ -516,8 +526,8 @@ StatusCode L0MuonFromRawTrans::writeOnTES(){
 
 StatusCode L0MuonFromRawTrans::releaseRegisters(){
 
-  for (int i= 0; i<2; ++i) m_ctrlRaw[i].release();
-  for (int i= 0; i<4; ++i) m_procRaw[i].release();
+  for (int i= 0; i<2; ++i) m_ctrlRaw[i]->release();
+  for (int i= 0; i<4; ++i) m_procRaw[i]->release();
 
   return StatusCode::SUCCESS;
 }
