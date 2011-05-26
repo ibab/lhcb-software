@@ -291,6 +291,17 @@ def _getConfigTree( id , cas = ConfigAccessSvc() ) :
                       , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') )
     return Tree(id)
 
+# TODO: caching should be done seperately for each cas instance...
+def xget( ids , cas = ConfigAccessSvc() ) :
+    if 'forest' not in dir(xget) : xget.forest = dict()
+    fetch = [ id for id in ids if id not in xget.forest.keys() ]
+    if fetch :
+        xget.forest.update( execInSandbox( _xget, fetch, cas ) )
+    forest = dict()
+    for id in ids : forest[id] = xget.forest[id]
+    return forest
+
+# TODO: deprecate the use of _xget in favour of _getConfigTree...
 def _xget( ids , cas = ConfigAccessSvc() ) :
     pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     appMgr = _appMgr()
@@ -334,7 +345,7 @@ def _lookupProperty(table,algname,property) :
     return properties[property]
 
 def _getProperty(id,algname,property, cas ) :
-    tables = execInSandbox( _xget, [ id ], cas )
+    tables = xget( [ id ], cas )
     return _lookupProperty(tables[id],algname,property)
 
 def _updateProperties(id, updates, label, cas  ) :
@@ -449,6 +460,7 @@ class Tree(object):
         leaf =  node.leaf() 
         self.leaf = PropCfg( leaf ) if leaf.valid() else None
         self.nodes = [ Tree(id=id,parent=self) for id in node.nodes() ]
+        #TODO: add direct access to leafs 'in' this tree by name
     def prnt(self):
         s = ' --> ' + str(self.leaf.digest) if self.leaf else ''
         indent = self.depth*'   '
@@ -461,9 +473,11 @@ class Tree(object):
         yield self
         for i in self.nodes:
            for x in i._inorder() : yield x
+    #TODO: add direct access to leafs 'in' this tree by name
+    # and use it to implement an efficient __contains__
 
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
-    table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
+    table = xget( [ lhs, rhs ] , cas ) 
     setl = set( table[lhs].keys() )
     setr = set( table[rhs].keys() )
     onlyInLhs = setl - setr
@@ -653,9 +667,12 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
            if v : line += '%-15s : %s' % ( k, v)
        print line
 
+# TODO: caching should be done seperately for each cas instance...
 def getConfigTree(id, cas = ConfigAccessSvc()):
-    #return  _getConfigTree( id, cas )
-    return execInSandbox( _getConfigTree, id, cas )
+    if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict()
+    if id not in getConfigTree.forest :
+        getConfigTree.forest[id] = execInSandbox( _getConfigTree, id, cas )
+    return getConfigTree.forest[id]
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
@@ -664,7 +681,7 @@ def getHlt2Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
     return eval(_getProperty(id,'Hlt2','Members',cas))
 def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
-    table = execInSandbox( _xget, [ id ], cas )[id]
+    table = xget( [ id ], cas )[id]
     lines = eval(_lookupProperty(table,'Hlt1','Members'))
     return [ _lookupProperty(table,i.split('/')[-1],'DecisionName') for i in lines ]
 

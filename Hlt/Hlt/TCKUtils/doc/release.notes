@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2011-05-26 - Gerhard Raven
+ - implement simpleminded caching in getConfigTree and xget
+
 ! 2011-05-18 - Gerhard Raven
  - add pretty printing infrastructure to 'dump', and add some
    pretty printing transformations...
