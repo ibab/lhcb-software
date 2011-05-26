@@ -12,10 +12,14 @@ Exported symbols are
    -makeDp2KmPipPip
    -makePromptD02KPi
    -makePromptTracks
+It can be executed as
+from StrippingSelections.StrippingCharmedAndCharmedStrangeSpectroscopy import CharmedAndCharmedStrangeSpectroscopyConf as builder
+from StrippingSelections.StrippingCharmedAndCharmedStrangeSpectroscopy import config_params as config_params
+lb = builder( 'CharmedAndCharmedStrangeSpectroscopy', config_params )
  '''
 __author__  = [ 'Diego Milanes', 'Marco Pappagallo' ]
 __date__    = '23/02/2011'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 __all__     = ('CharmedAndCharmedStrangeSpectroscopyConf',
                'CombineDandTrack',
@@ -26,6 +30,14 @@ __all__     = ('CharmedAndCharmedStrangeSpectroscopyConf',
                'makePromptD02KPi',
                'makePromptTracks'
                )
+
+config_params = { 'DpKs_prescale'      : 1,
+                  'DstarpKs_prescale'  : 1,
+                  'D0K_prescale'       : 1,
+                  'DpPim_prescale'     : 1,
+                  'D0Pip_prescale'     : 1,
+                  'DstarpPim_prescale' : 1
+                  } 
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -39,7 +51,7 @@ modules =  CoreFactory('CoreFactory').Modules
 for i in [ 'LoKiTrigger.decorators' ] :
     if i not in modules : modules.append(i)
 
-name = 'CharmedAndCharmedStrangeSpectroscopyConf'
+default_name = 'CharmedAndCharmedStrangeSpectroscopyConf'
 class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
     '''    
     Builder of pre-scaled Dsj and Dj stripping Selection and StrippingLine.
@@ -113,15 +125,6 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         '''
         Here we construct the stripping lines
         '''
-        #Ghost Lines to separate overhead from DataOnDemand
-        #self.Ks_line     = StrippingLine( "SL_Ks"    , prescale = 1, selection = self.sel_KS0 )
-        #self.Dp_line     = StrippingLine( "SL_Dp"    , prescale = 1, selection = self.sel_Dp2KmPipPip)
-        #self.Dstarp_line = StrippingLine( "SL_Dstarp", prescale = 1, selection = self.sel_Dstarp)
-        #self.D0_line     = StrippingLine( "SL_D0"    , prescale = 1, selection = self.sel_D0)
-        #self.K_line      = StrippingLine( "SL_K"     , prescale = 1, selection = self.sel_K)
-        #self.Pi_line     = StrippingLine( "SL_Pi"    , prescale = 1, selection = self.sel_Pi)
-
-        #Real lines
         #TrkFilter = "(TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < 150))"
         self.DpKs_line      = StrippingLine( name_DpKs_line     , prescale = config[ 'DpKs_prescale' ]     , selection = self.DpKs      )#, FILTER = TrkFilter )
         self.DstarpKs_line  = StrippingLine( name_DstarpKs_line , prescale = config[ 'DstarpKs_prescale' ] , selection = self.DstarpKs  )#, FILTER = TrkFilter )
@@ -133,13 +136,7 @@ class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
         '''
         register stripping lines
         '''
-        #self.registerLine( self.Ks_line )      #Ghost line
-        #self.registerLine( self.Dp_line )      #Ghost line
-        #self.registerLine( self.Dstarp_line )  #Ghost line
-        #self.registerLine( self.D0_line )      #Ghost line
-        #self.registerLine( self.K_line )       #Ghost line 
-        #self.registerLine( self.Pi_line )      #Ghost line
-
+      
         self.registerLine( self.DpKs_line )
         self.registerLine( self.DstarpKs_line )
         self.registerLine( self.D0K_line )
@@ -170,7 +167,7 @@ def CombineDandTrack( name,
 
     D = CombineParticles( DecayDescriptor = decay,
                           #CombinationCut  = "AALLSAMEBPV",
-                          MotherCut       = Cut_Ds)
+                          MotherCut       = Cut_Ds )
     return Selection( name,
                       Algorithm = D,
                       RequiredSelections = [DSel, KPiSel] )
