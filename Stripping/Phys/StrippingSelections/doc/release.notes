@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ - tightened cuts on inclusive 4pi line for decays of type B->(pipi)(pipi)
+ - added an inclusive 3pi line for decays of type B->(pipi)pi
+
 ! 2011-05-26 - Vanya Belyaev
 
  - StrippingCharmAssociative.py 
