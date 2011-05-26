@@ -310,7 +310,7 @@ void MonAdder::TimeoutHandler()
     INServiceDescr *d = i->second;
     if (d->last_update < this->m_reference)
     {
-      ::lib_rtl_output(LIB_RTL_ERROR,"Timeout from source %s expected %lli last received %lli\n",
+      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
           d->m_Info->m_TargetService.c_str(), m_reference,d->last_update);
       if (d->m_buffer != 0)
       {
