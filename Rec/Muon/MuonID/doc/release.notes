@@ -2,6 +2,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-05-26 X. Cid Vidal
+ - Protect SmartMuonMeasProvider against states where pz=0. Correct some other small bugs in Chi2MuIDTool and MuonIDAlg
+
 ! 2011-05-10 X. Cid Vidal
  - Implement the use of KalmanFoI in MuonIDAlg. This implies the use of MuIDTool and some other independent tools, also for distance calculation. New tool introduced for NShared calculation. Default behaviour left as before, with possibility to switch with a flag.
  - Introduction of UseUncrossed hits option. Default true. If false, in regions where both crossed logical channels are present, force the presence of both to accept a hit for MuonID.

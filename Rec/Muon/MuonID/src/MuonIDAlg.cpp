@@ -1045,22 +1045,23 @@ StatusCode MuonIDAlg::execute() {
       m_mutrack=LHCb::Track();
       
       if(m_kalman_foi){
-        const LHCb::State * state1 = &((*iTrack)->firstState());
-        // get state closest to M1 for extrapolation
-        const LHCb::State * state = &((*iTrack)->closestState(9450.));
-        
-        if(state1) m_Momentum = state->p();
-        else {
-          Warning(" Failed to get 1st state from track ").ignore();
-          m_Momentum = state->p();
-        }
-        
-        if(state) m_MomentumPre = state1->p();
-        else{
-          Warning(" Failed to get state from track ").ignore();
-          m_MomentumPre = 0;
-        }
+        //get first state
+         const LHCb::State * state1 = &((*iTrack)->firstState());
+         if(state1) m_MomentumPre = state1->p();
+         else{
+           Warning(" Failed to get 1st state from track ").ignore();
+           m_MomentumPre = 0;
+         }
+         
+         // get state closest to M1 for extrapolation
+         const LHCb::State * state = &((*iTrack)->closestState(9450.));
+         if(state) m_Momentum = state->p();
+         else {
+           Warning(" Failed to get state from track ").ignore();
+           m_Momentum = 0;
+         }
       }
+      
 
       //XCV: if kalman foi, this will be done by DistMuonIDTool
       else{

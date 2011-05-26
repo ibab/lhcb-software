@@ -6,6 +6,7 @@
 #include <iostream>
 
 
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : SmartMuonMeasurementProvider
 //
@@ -136,11 +137,19 @@ int SmartMuonMeasProvider::findClosestStation(double z)
 std::vector<double> SmartMuonMeasProvider::linearExtrapolator(const LHCb::State& state,const double z)
 {
   std::vector<double> xy;
-  double z0=state.position().z();
-  double sx=state.momentum().x()/state.momentum().z();
-  double sy=state.momentum().y()/state.momentum().z();
-  xy.push_back(state.position().x()+sx*(z-z0));
-  xy.push_back(state.position().y()+sy*(z-z0));
+  double z0 = state.position().z();
+  double pz = state.momentum().z();
+  if (pz==0) {
+    xy.push_back(double(10e5));
+    xy.push_back(double(10e5));
+  }
+  else {
+    double sx=state.momentum().x()/pz;
+    double sy=state.momentum().y()/pz;
+    xy.push_back(state.position().x()+sx*(z-z0));
+    xy.push_back(state.position().y()+sy*(z-z0));
+  }
+  
   return xy;
 }
 

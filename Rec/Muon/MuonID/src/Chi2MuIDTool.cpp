@@ -144,14 +144,14 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
 
   if (ids_init.size()==0)
   {
-    // access muon hits info from TES
-    m_muonProvider = get<SmartMuonMeasProvider>("Rec/Muon/SmartMuonMeasProvider");
-    m_nsigmasUsed=m_nsigmas;
-    if (m_muonProvider==NULL) 
+    if ( !exist<SmartMuonMeasProvider>("Rec/Muon/SmartMuonMeasProvider") )
     {
       sc.setCode(201);
       return Error("SmartMuonMeasProvider not in TES, please load",sc);
-    }    
+    }
+    // access muon hits info from TES
+    m_muonProvider = get<SmartMuonMeasProvider>("Rec/Muon/SmartMuonMeasProvider");
+    m_nsigmasUsed=m_nsigmas;
   }
   
   else
@@ -559,6 +559,10 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
       debug()<<"m_nsigmasUsed="<<m_nsigmasUsed<<endmsg;
       debug()<<"Z of states="<<m_states[i].position().z()<<endmsg;
     }
+    if (m_states[i].momentum().z()==0 ){
+      Warning("idsInRange-> pz=0: Local slope won't be calculated and hit won't be used").ignore();
+    }
+    
     std::vector<LHCb::LHCbID> ids = 
       m_muonProvider->idsInRange(m_states[i],m_nsigmasUsed,m_discrval);
     
