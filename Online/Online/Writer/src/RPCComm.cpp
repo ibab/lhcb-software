@@ -40,7 +40,10 @@ void RPCComm::confirmFile(char *fileName, //still
 
   char adler32String[9];
   char md5CharString[33];
-
+  
+  bzero(md5CharString,33);
+  bzero(adler32String,9);
+ 
   /* We need to send this as a string because it's not very clear how the
    * XMLRPC library handles unsigned values.
    */

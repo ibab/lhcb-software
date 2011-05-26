@@ -124,6 +124,7 @@ File::File(const std::string& fileName, unsigned int runNumber, bool enableMD5) 
 void File::init(const std::string& fileName, unsigned int runNumber, bool enableMD5) {
   static int s_seqNo = 0;
   char txt[32];
+  bzero(txt,32);
   m_mon = &m_monBuffer;
   m_mon->m_seqNum = 0;
   m_mon->m_runNumber = runNumber;
@@ -1163,6 +1164,7 @@ inline bool MDFWriterNet::checkForPhysStat(MDFHeader *mHeader, size_t) {
 std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
 {
   char buf[MAX_FILE_NAME];
+  bzero(buf,MAX_FILE_NAME);
   static unsigned long random = 0;
   random++;
   sprintf(buf, "/daqarea/lhcb/data/2008/RAW/TEST/%s/%u/%s%09u.%02u%06lu.%s",
@@ -1254,6 +1256,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     }
     catch(RetryException &e) {
       char md5buf[33];
+      bzero(md5buf,33);
       unsigned char *md5sum = pdu->md5_sum;
       sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
@@ -1286,6 +1289,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     }
     catch (std::exception &e) {
       char md5buf[33];
+      bzero(md5buf,33);
       unsigned char *md5sum = pdu->md5_sum;
       sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
@@ -1319,6 +1323,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     }
     catch(RetryException &e) {
       char md5buf[33];
+      bzero(md5buf,33);
       unsigned char *md5sum = pdu->md5_sum;
       sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
@@ -1351,6 +1356,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     }
     catch (std::exception &e) {
       char md5buf[33];
+      bzero(md5buf,33);
       unsigned char *md5sum = pdu->md5_sum;
       sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 	        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
