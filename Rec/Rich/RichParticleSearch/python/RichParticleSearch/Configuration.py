@@ -27,7 +27,11 @@ class RichParticleSearchConf(RichConfigurableUser):
         ,"WithMC"           : False     # set to True to use MC truth
         ,"MinTrackMomentum" : [ 0.0, 0.0, 0.0 ] # momentum cut in GeV, use -1 for default
        # ,"HPDList"          : [ [], [], [] ] # list of HPDs for histograms
-       # ,"MinIsolationCuts"  : [20,20,20] #Track isolation Cut
+        ,"MinIsolationCuts" : [20.0,20.0,20.0] #Track isolation Cut
+        ,"MaxCK_Sig"        : [1.0,1.0,1.0]
+        ,"CKDevCut"         : [0.5, 0.5, 0.5]
+        ,"UseMuonInfo"      : False
+        ,"PlotPhotons"      : False
         }
 
 
@@ -70,6 +74,13 @@ class RichParticleSearchConf(RichConfigurableUser):
             RichPartSearchAerogel.HistoProduce  = self.getProp("Histograms") != "None"
 
             RichPartSearchAerogel.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+            
+            RichPartSearchAerogel.MinIsolationCut = self.getProp("MinIsolationCuts")[0]
+            RichPartSearchAerogel.MaxCK_Sig = self.getProp("MaxCK_Sig")[0] 
+            RichPartSearchAerogel.CKDevCut = self.getProp("CKDevCut")[0] 
+            RichPartSearchAerogel.UseMuonInfo = self.getProp("UseMuonInfo")
+            RichPartSearchAerogel.PlotPhotons = self.getProp("PlotPhotons")
+
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
             
@@ -98,6 +109,13 @@ class RichParticleSearchConf(RichConfigurableUser):
             RichPartSearchR1.HistoProduce  = self.getProp("Histograms") != "None"
 
             RichPartSearchR1.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+            
+            RichPartSearchR1.MinIsolationCut = self.getProp("MinIsolationCuts")[1]
+            RichPartSearchR1.MaxCK_Sig = self.getProp("MaxCK_Sig")[1] 
+            RichPartSearchR1.CKDevCut = self.getProp("CKDevCut")[1] 
+            
+            RichPartSearchR1.UseMuonInfo = self.getProp("UseMuonInfo")
+            RichPartSearchR1.PlotPhotons = self.getProp("PlotPhotons")
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
            
@@ -126,6 +144,13 @@ class RichParticleSearchConf(RichConfigurableUser):
             RichPartSearchR2.HistoProduce  = self.getProp("Histograms") != "None"
 
             RichPartSearchR2.HistoOutputLevel = histoLevel[self.getProp("Histograms")]
+            
+            RichPartSearchR2.MinIsolationCut = self.getProp("MinIsolationCuts")[2]
+            RichPartSearchR2.MaxCK_Sig = self.getProp("MaxCK_Sig")[2] 
+            RichPartSearchR2.CKDevCut = self.getProp("CKDevCut")[2] 
+
+            RichPartSearchR2.UseMuonInfo = self.getProp("UseMuonInfo")
+            RichPartSearchR2.PlotPhotons = self.getProp("PlotPhotons")
 
       #      RichAlignMoniR2.HPDList = self.getProp("HPDList")[2]
 

@@ -3,6 +3,12 @@
 ! Responsible : Matt Coombes
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
+!========================= RichParticleSearch v1r3 2011-05-25 =========================
+! 2011-05-26 - Matt Coombes
+ - Major changes to configurations. now make more sense. Set the cuts as an array in 
+   form [Aerogel,R1Gas,R2Gas].
+ - Removed Beta cut and replaced with maximum CK angle. Cut given in terms of standard 
+   deviation. i.e number of resolutions from the saturated limit
 
 !========================= RichParticleSearch v1r2 2011-05-25 =========================
 ! 2011-05-25 - Matt Coombes

@@ -97,23 +97,23 @@ namespace Rich
         IMuonInformation* m_MuonInformation;
         const IExpectedTrackSignal * m_signal;
         //Isolation cuts for each radiator
-        std::vector<double> m_IsoCut;
+        double m_IsoCut;
 
         // particle type when fixed
         int m_particleType;
         Rich::ParticleIDType m_pType;
 
         //Beta cuts
-        std::vector<double> m_maxBetaCut;
+        double m_maxCKcut;
 
         //Mass Deviation from mean cut
-        std::vector<double> m_massDevCut;
+        double m_massDevCut;
 
         //CK Deviation from mean Cut
-        std::vector<double> m_CKDevCut;
+        double m_CKDevCut;
 
         //Minimum cut on CK angle
-        std::vector<double> m_minCK;
+        double m_minCK;
 
         //Plot Per Photon
         bool m_plotPerPhoton;

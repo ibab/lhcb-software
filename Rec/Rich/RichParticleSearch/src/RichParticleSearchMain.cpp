@@ -50,13 +50,12 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
   declareProperty( "Radiator",   m_radTemp = 2 ); // default is Rich2
   declareProperty( "HistoOutputLevel", m_histoOutputLevel = 0 );
   //               (Aerogel) (R1Gas) (R2Gas)
-  declareProperty( "MinIsolationCut",     m_IsoCut       = boost::assign::list_of (150) (100) (100), "IsolationCuts for each Radiator in mm");
-  declareProperty( "MaxBeta",       m_maxBetaCut   = boost::assign::list_of (0.99985)(0.99985)(0.99985),"beta cut");
+  declareProperty( "MinIsolationCut",     m_IsoCut       = 100, "IsolationCuts for each Radiator in mm");
+  declareProperty( "MaxCK_Sig",       m_maxCKcut   = 1,"How many sigma larger than resolution allowed");
 
   //Cut on Histograms and NTuples
-  declareProperty( "MassDevCut",    m_massDevCut = boost::assign::list_of (0.6) (0.6) (0.6),"MassDevCut");
-  declareProperty( "CKDevCut",    m_CKDevCut = boost::assign::list_of (0.5) (0.5) (0.5), "CK Standard Deviation Cut" );
-  declareProperty( "MinCK",     m_minCK = boost::assign::list_of (0.054)(0.0)(0.0), "Minimum CK agnle for each radiator");
+  declareProperty( "CKDevCut",    m_CKDevCut = 0.5, "CK Standard Deviation Cut" );
+  declareProperty( "MinCK",     m_minCK = 0.0, "Minimum CK agnle for each radiator");
   declareProperty("PlotPhotons",    m_plotPerPhoton =false, "Enter second photon loop");
   //Use Muon Information
   declareProperty("UseMuonInfo",   m_useMuonInfo = false, "Use Muon PID information");
@@ -166,6 +165,14 @@ StatusCode RichParticleSearchMain::execute() {
   //Get int for RICH; 0 Aerogel; 1 RICH1Gas; 2 Rich2Gas
   const int RICHint = GetRichInt();
 
+  // Resolution for RICH radiators in mrads
+  std::vector<double> RichRes;
+  RichRes.push_back(3.1);
+  RichRes.push_back(1.66);
+  RichRes.push_back(0.68);
+
+
+
   EvtNum++;
   // =========================================================================//
   // Iterate over segments
@@ -176,6 +183,13 @@ StatusCode RichParticleSearchMain::execute() {
     debug()<< "Event "<<EvtNum<<endmsg;
     debug()<< "trackCounter "<<trackCounter<<endmsg;
 
+
+    // Saturated CK angle for segment
+    double SatCK = m_ckAngle->saturatedCherenkovTheta(segment);
+    info()<< "Saturated angle: " << SatCK << std::endl;
+
+    // Maximum allowed angle
+    double maxCK = SatCK + RichRes[RICHint]*m_maxCKcut;
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
@@ -228,7 +242,7 @@ StatusCode RichParticleSearchMain::execute() {
 
     // Separation or isolation of tracks
     double MinimumTrackSeperation = this->MinimumTrackSeparation(segment);
-    if (MinimumTrackSeperation>m_IsoCut[RICHint])
+    if (MinimumTrackSeperation>m_IsoCut)
     {
 
       // Loop over photons to make photon Cut of maximum number of photons per track etc
@@ -253,7 +267,7 @@ StatusCode RichParticleSearchMain::execute() {
 
         const double thetaRec2 = gPhoton2.CherenkovTheta();
         double beta2 = 1.0/(std::cos(thetaRec2)*refIndx);
-        if (beta2 <= m_maxBetaCut[RICHint] && beta2 >=1.0/refIndx && thetaRec2 > m_minCK[RICHint]){
+        if (thetaRec2 <= maxCK && beta2 >=1.0/refIndx && thetaRec2 > m_minCK){
           PhotonCounter++;
           CKTheta.push_back(thetaRec2);
           thetaRecSum = thetaRecSum+thetaRec2;
@@ -293,7 +307,7 @@ StatusCode RichParticleSearchMain::execute() {
       {
     	  double AvThetaRec = thetaRecSum/PhotonCounter; // Average CK per track
 
-    	  if (AvThetaRec > m_minCK[RICHint]) //  lower cut on average CK
+    	  if (AvThetaRec > m_minCK) //  lower cut on average CK
     	  {
     		  double CKVariance = 0.0;
     		  for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
@@ -308,7 +322,7 @@ StatusCode RichParticleSearchMain::execute() {
 			  double stdDevCK = std::pow(CKVariance/(PhotonCounter-1), 0.5);
 
 
-        	  if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut[RICHint] )
+        	  if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut )
         	  { // Cut on CK standard Deviation weighted by mean CK per track
 
 				  if ( m_histoOutputLevel > 1 )
@@ -399,7 +413,7 @@ StatusCode RichParticleSearchMain::execute() {
 								// Mass from photon track pair
 								double mass = momentum * std::sqrt((1/(std::pow(beta,2)))-1.0);
 
-								if (beta <= m_maxBetaCut[RICHint] && beta >=1.0/refIndx && thetaRec > m_minCK[RICHint]){ // Make sure these are same cuts as in first photon loop
+								if (thetaRec <= maxCK && beta >=1.0/refIndx && thetaRec > m_minCK){ // Make sure these are same cuts as in first photon loop
 
 									if ( m_histoOutputLevel > 1 ){
 										  //Make Plots per track
