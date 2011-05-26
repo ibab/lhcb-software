@@ -308,18 +308,19 @@ void MonAdder::TimeoutHandler()
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {
     INServiceDescr *d = i->second;
-    if (d->last_update != this->m_reference)
+    if (d->last_update < this->m_reference)
     {
-//      printf ("Timeout from source %s expected %lli last received %lli\n",d->m_Info->m_TargetService.c_str(),
-//          m_reference,d->last_update);
+      ::lib_rtl_output(LIB_RTL_DEBUG,"Timeout from source %s expected %lli last received %lli\n",
+          d->m_Info->m_TargetService.c_str(), m_reference,d->last_update);
       if (d->m_buffer != 0)
       {
+        DimLock l;
         add(d->m_buffer,d->m_bufsiz,d->m_Info);
       }
-      m_received++;
-      Update();
+//      m_received++;
     }
   }
+  Update();
 }
 void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
 {
