@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-05-26 - Grant McGregor
+ - Addition of a few cuts to DStarD02KMuNu line to reduce rate.
+
 ! 2011-05-25 - Grant McGregor
  - Modified HLT requirement for D02KMuNu line to allow all Hlt2CharmSemilepD02HMuNu.
 
