@@ -317,7 +317,11 @@ void MonAdder::TimeoutHandler()
         DimLock l;
         add(d->m_buffer,d->m_bufsiz,d->m_Info);
       }
-//      m_received++;
+      else
+      {
+        DimLock l;
+        m_received++;
+      }
     }
   }
   Update();
