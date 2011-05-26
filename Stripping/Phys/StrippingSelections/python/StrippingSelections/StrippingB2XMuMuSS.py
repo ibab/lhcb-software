@@ -1,5 +1,5 @@
 
-__author__ = ['Phillip Urquijo','Sophie Redford']
+__author__ = ['Sophie Redford','Wenbin Qian']
 __date__ = '21/05/2010'
 __version__ = '$Revision: 1.4 $'
 
@@ -12,21 +12,21 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   #'MuonPIDK'      : -5.   ,    #adimensional
                   #'MuonPIDmu'     : -5.   ,    #adimensional
                   #'MuonPIDp'      : -5.   ,    #adimensional
-                  'MuonMINIPCHI2' : 5     ,    #adminensional
+                  'MuonMINIPCHI2' : 4     ,    #adminensional
                   
                   'PionP'         : 2000. ,    #MeV
                   'PionPT'        : 500.  ,    #MeV
-                  'PionMINIPCHI2' : 5     ,    #adminensional
+                  'PionMINIPCHI2' : 4     ,    #adminensional
                   
                   'KaonP'         : 2000. ,    #MeV
                   'KaonPT'        : 500.  ,    #MeV
                   #'KaonPIDK'      : -1.   ,    #adimensional
-                  'KaonMINIPCHI2' : 5     ,    #adminensional
+                  'KaonMINIPCHI2' : 4     ,    #adminensional
                   
-#                  'DimuonMass'    : 250.  ,    #MeV
+                  'DimuonMass'    : 0.  ,    #MeV
                   'BVCHI2DOF'     : 7    ,    #adminensional                              
                   #'BFDCHI2'       : 9     ,    #adimensional
-                  'BDIRA'         : 0.9999 ,    #adimensional
+                  'BDIRA'         : 0.9995 ,    #adimensional
                   'BIPCHI2'       : 30    ,    #adimensional
                   'BMassWin'      : 400.  ,    #MeV, mass window
                   
@@ -76,7 +76,7 @@ class B2XMuMuSSConf(LineBuilder) :
                               #, 'KaonPIDK'
                               , 'KaonMINIPCHI2'
                               
- #                             , 'DimuonMass'
+                              , 'DimuonMass'
                               , 'BVCHI2DOF'
                               #, 'BFDCHI2'
                               , 'BIPCHI2'
@@ -184,8 +184,8 @@ class B2XMuMuSSConf(LineBuilder) :
                               , BVCHI2DOF = config['BVCHI2DOF']
                               , BDIRA = config['BDIRA']
                               , BIPCHI2 = config['BIPCHI2']
-                              , BMassWin = config['BMassWin'])
-#                              , DimuonMass = config['DimuonMass'])
+                              , BMassWin = config['BMassWin']
+                              , DimuonMass = config['DimuonMass'])
 
 #####################################################
     def _makeB2PiMuMuSS(self, name, pionSel, muonSel, config):
@@ -198,8 +198,8 @@ class B2XMuMuSSConf(LineBuilder) :
                               , BVCHI2DOF = config['BVCHI2DOF']
                               , BDIRA = config['BDIRA']
                               , BIPCHI2 = config['BIPCHI2']
-                              , BMassWin = config['BMassWin'])
-#                              , DimuonMass = config['DimuonMass'])
+                              , BMassWin = config['BMassWin']
+                              , DimuonMass = config['DimuonMass'])
 
 #####################################################
     def _makeB2KMuMuOS(self, name, kaonSel, muonSel, config):
@@ -212,8 +212,8 @@ class B2XMuMuSSConf(LineBuilder) :
                              , BVCHI2DOF = config['BVCHI2DOF']
                              , BDIRA = config['BDIRA']
                              , BIPCHI2 = config['BIPCHI2']
-                             , BMassWin = config['BMassWin'])
-#                             , DimuonMass = config['DimuonMass'])
+                             , BMassWin = config['BMassWin']
+                             , DimuonMass = config['DimuonMass'])
 
 #####################################################
     def _makeB2KMuMuSS(self, name, kaonSel, muonSel, config):
@@ -226,8 +226,8 @@ class B2XMuMuSSConf(LineBuilder) :
                              , BVCHI2DOF = config['BVCHI2DOF']
                              , BDIRA = config['BDIRA']
                              , BIPCHI2 = config['BIPCHI2']
-                             , BMassWin = config['BMassWin'])
-#                             , DimuonMass = config['DimuonMass'])
+                             , BMassWin = config['BMassWin']
+                             , DimuonMass = config['DimuonMass'])
 #
 # Out of class
 #####################################################

@@ -6,6 +6,9 @@
 ! 2011-05-25 - Grant McGregor
  - Modified HLT requirement for D02KMuNu line to allow all Hlt2CharmSemilepD02HMuNu.
 
+! 2011-05-26 - Sophie Redford
+ - B2XMuMuSS line: Set dimuon mass cut to zero. Reverted to previous config, no increase in rate seen. 
+
 !========================== StrippingSelections v3r4p2 2011-05-24 =============
 
 ! 2011-05-24 - Thomas Blake
