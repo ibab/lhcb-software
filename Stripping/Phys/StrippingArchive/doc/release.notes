@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingArchive v1r1 2011-05-24 =========================
+! 2011-05-26 - Rob Lambert
+ - Update for modification of 1.4TeV streaming, now only one stream.
+
 ! 2011-05-24 - Rob Lambert
  - Added Stripping14 to qmtest
 
