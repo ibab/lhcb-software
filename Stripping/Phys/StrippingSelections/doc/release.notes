@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - V. Gligorov
+ - StrippingB2XTau.py 
+ - Stripping lines for B->TauTau and B->TauMu with control modes DD and DMu
+
 ! 2011-05-27 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  - tightened cuts on inclusive 4pi line for decays of type B->(pipi)(pipi)
