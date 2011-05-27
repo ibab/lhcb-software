@@ -4,28 +4,27 @@ Tag-And-Probe line for lifetime biased Jpsi->ee
 
 To include it:
 
-from StrippingSelections.StrippingElectronID import ElectronIDConf
-StrippingElectronIDConf =  ElectronIDConf( name = 'Jpsi2eeForElectronID', config = ElectronIDConf.config_default )
+from StrippingSelections.StrippingDownElectronID import DownElectronIDConf
+StrippingDownElectronIDConf =  DownElectronIDConf( name = 'Jpsi2eeForDownElectronID', config = DownElectronIDConf.config_default )
 stream.appendLines( [
-    StrippingElectronIDConf.line
+    StrippingDownElectronIDConf.line
     ])
 '''
 
 __author__=['Jibo He']
-__date__ = '03/10/2010'
+__date__ = '23/05/2011'
 __version__= '$Revision: 1.2 $'
 
 
 __all__ = (
-    'ElectronIDConf',
+    'DownElectronIDConf',
     'makeEE'
     )
-
 
 config_default =  {
         'LinePrescale'            :    1.   ,
         'LinePostscale'           :    1.   ,
-        'HltFilter'               : None    ,
+        'HltFilter'               :  "(HLT_PASS_RE('Hlt1MB.*Bias.*Decision'))",
 
         'Both_PT'                 :  500.   ,  # MeV
         'Both_P'                  : 3000.   ,  # MeV
@@ -41,44 +40,14 @@ config_default =  {
         'Probe_P'                 : 3000.   ,  # MeV
         'Probe_MIPCHI2'           :    9.   ,
 
-        'eeCombMinMass'           : 2100.   ,  # MeV         
-        'eeCombMaxMass'           : 4300.   ,  # MeV   
-        'eeVCHI2PDOF'             :    9.   ,  
-        'eeMinMass'               : 2200.   ,  # MeV 
-        'eeMaxMass'               : 4200.   ,  # MeV
-                
-        'eeFDCHI2'                :  400.   ,
-        'eeVZ'                    : -1.0e+9    # mm   
-        }
-
-
-config_convertedPhoton =  {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        'HltFilter'               :  "(HLT_PASS_RE('Hlt1MB.*Bias.*Decision'))",
-        
-        'Both_PT'                 :  500.   ,  # MeV
-        'Both_P'                  : 3000.   ,  # MeV
-        'Both_TRCHI2DOF'          :    5.   ,
-        'Both_MIPCHI2'            :    9.   ,
-        
-        'Tag_PT'                  :  500.   ,  # MeV
-        'Tag_P'                   : 3000.   ,  # MeV
-        'Tag_PIDe'                :    5.   ,
-        'Tag_MIPCHI2'             :    9.   ,
-
-        'Probe_PT'                :  500.   ,  # MeV
-        'Probe_P'                 : 3000.   ,  # MeV
-        'Probe_MIPCHI2'           :    9.   ,
-
         'eeCombMinMass'           :    0.   ,  # MeV         
         'eeCombMaxMass'           :   70.   ,  # MeV   
         'eeVCHI2PDOF'             :    9.   ,  
         'eeMinMass'               :    0.   ,  # MeV 
         'eeMaxMass'               :   50.   ,  # MeV
                 
-        'eeFDCHI2'                :   16.   ,  
-        'eeVZ'                    : 1100.      # mm 
+        'eeFDCHI2'                :  400.   ,
+        'eeVZ'                    : 1100.      # mm  
         }
 
 
@@ -89,7 +58,7 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-class ElectronIDConf(LineBuilder):
+class DownElectronIDConf(LineBuilder):
     
     __configuration_keys__ = (
         'LinePrescale',
@@ -187,8 +156,8 @@ def makeEE( name,
             eeFDCHI2,
             eeVZ
             ):
-    
-    from StandardParticles import StdNoPIDsElectrons as NoPIDsElectronsForElectronID
+
+    _StdNoPIDsDownElectrons = DataOnDemand( Location = 'Phys/StdNoPIDsDownElectrons/Particles' )
     
     InAccCuts = "(0.5<PPINFO(LHCb.ProtoParticle.InAccEcal,-1))"
 
@@ -224,5 +193,5 @@ def makeEE( name,
     
     return Selection( name,
                       Algorithm = _EE,
-                      RequiredSelections = [ NoPIDsElectronsForElectronID ]
+                      RequiredSelections = [ _StdNoPIDsDownElectrons ]
                       )    

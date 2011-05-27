@@ -106,7 +106,7 @@ import StrippingD2PhiPiForXSec
 import StrippingD2HHHForXSec
 import StrippingD02HHForXSec
 
-import StrippingBu3hFrom2h
+#import StrippingBu3hFrom2h
 import StrippingB2HHPi0
 
 import StrippingB2SameChargeMuon

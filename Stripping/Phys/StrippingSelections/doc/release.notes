@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - Jibo He
+ - Removed not-found 'StrippingBu3hFrom2h' from __init__.py
+ - Added StrippingDownElectronID for downstream ElectronPID 
+ - Updated  StrippingElectronID
+
 !2011-05-27 - Benoit Viaud
 
  - StrippingD2XMuMuSS.py: Added new lines for hhmumu modes, plus D->(h)hhh lines 
