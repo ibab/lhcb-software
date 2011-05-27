@@ -3,15 +3,79 @@
 # the study of J/psi(1S) -> mu+ mu-
 ## #####################################################################
 
-__author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'MuID Team' ]
-__date__    = '02/14/2011'
-__version__ = '$Revision: 1.2 $'
+'''
+This line can be invoked by doing:
+
+from StrippingSelections.StrippingMuIDCalib import MuIDCalibConf as builder
+from StrippingSelections.StrippingMuIDCalib import config_params as config_params
+lb = builder( 'MuIDCalib', config_params )
+
+First set of config_params (the commented one) are for mDST and second one for fullDST.
+The stripping report with config_params as full DST is:
+
+StrippingReport                                                INFO Event 100000, Good event 48215
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |  0.5081|       245|       |        |       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.5081|       245|       |        |       |       |       |
+ |!StrippingMuIDCalib_JpsiNoPID                      |  0.1203|        58|  1.034|        |      0|      0|     11|
+ |!StrippingMuIDCalib_JpsiFromBNoPID                 |  0.1514|        73|  1.000|        |      0|      0|    141|
+ |!StrippingMuIDCalib_JpsiFromBNoPIDNoMip            |  0.1493|        72|  1.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiFromBNoPIDNoMipHiP         |  0.0892|        43|  1.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiKFromBNoPIDNoMip           |  0.0436|        21|  1.095|        |      0|      0|      0|
+ |!StrippingMuIDCalib_FromLambdacDecay               |  0.0871|        42|  1.048|        |      0|      0|      0|
+ |!StrippingMuIDCalib_PiFromLambdacDecay             |  0.0041|         2|  1.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_KFromLambdacDecay              |  0.0062|         3|  1.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_PFromLambdacDecay              |  0.0145|         7|  1.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_PiISMUONFromLambdacDecay       |  0.0000|         0|  0.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_KISMUONFromLambdacDecay        |  0.0000|         0|  0.000|        |      0|      0|      0|
+ |!StrippingMuIDCalib_PISMUONFromLambdacDecay        |  0.0021|         1|  1.000|        |      0|      0|      0|
+'''
+
+
+__author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'D.Milanes', 'MuID Team' ]
+__date__    = '25/05/2011'
+__version__ = '$Revision: 1.3 $'
+
+
+#config_params = {     #for mDST
+#    'PromptPrescale'           : 0.5,
+#    'DetachedPrescale'         : 0.,
+#    'DetachedNoMIPPrescale'    : 1.,
+#    'DetachedNoMIPHiPPrescale' : 0., 
+#    'DetachedNoMIPKPrescale'   : 0.,
+#    'FromLambdacPrescale'      : 0.,
+#    'KFromLambdacPrescale'     : 0.,
+#    'PiFromLambdacPrescale'    : 0.,
+#    'PFromLambdacPrescale'     : 0.,
+#    'KISMUONFromLambdacPrescale' : 0.,
+#    'PiISMUONFromLambdacPrescale': 0.,
+#    'PISMUONFromLambdacPrescale' : 0.
+#    }
+
+config_params = {      #for fullDST
+    'PromptPrescale'           : 0.08,
+    'DetachedPrescale'         : 1.,
+    'DetachedNoMIPPrescale'    : 0.3,
+    'DetachedNoMIPHiPPrescale' : 1., 
+    'DetachedNoMIPKPrescale'   : 1.,
+    'FromLambdacPrescale'      : 1.,
+    'KFromLambdacPrescale'     : 1.,
+    'PiFromLambdacPrescale'    : 1.,
+    'PFromLambdacPrescale'     : 1.,
+    'KISMUONFromLambdacPrescale' : 1.,
+    'PiISMUONFromLambdacPrescale': 1.,
+    'PISMUONFromLambdacPrescale' : 1.
+    }
+
+
 __all__     = ( 'MuIDCalibConf',
                 'makePromptSelection',
                 'makeDetachedSelection',
                 'makeDetachedNoMIPSelection', 
+                'makeDetachedNoMIPNoPCutSelection', 
                 'makeDetachedNoMIPHiPSelection', 
-                'makeDetachedNoMIPKSelection'
+                'makeDetachedNoMIPKSelection',
+                'makeLambdacSelection'
                 )
 
 from Gaudi.Configuration import *
@@ -21,7 +85,9 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence, M
 from Configurables import LoKi__VoidFilter as VoidFilter
 from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsKaons, StdNoPIDsMuons
+from StandardParticles import StdNoPIDsKaons, StdNoPIDsMuons, StdNoPIDsPions, StdNoPIDsProtons
+from StandardParticles import StdTightKaons, StdTightPions, StdTightProtons
+
 
 default_name = 'MuIDCalib'
 class MuIDCalibConf( LineBuilder ):
@@ -30,18 +96,27 @@ class MuIDCalibConf( LineBuilder ):
                               'DetachedNoMIPPrescale',    #0.25  #1.
                               'DetachedNoMIPHiPPrescale', #1.    #0.
                               'DetachedNoMIPKPrescale',   #1.    #0.
+                              'FromLambdacPrescale',            #1.    #0.
+                              'KFromLambdacPrescale',            #1.    #0.
+                              'PiFromLambdacPrescale',          #1.    #0.
+                              'PFromLambdacPrescale',            #1.    #0.
+                              'KISMUONFromLambdacPrescale',            #1.    #0.
+                              'PiISMUONFromLambdacPrescale',          #1.    #0.
+                              'PISMUONFromLambdacPrescale'            #1.    #0.
                               )
 
     def __init__( self, name, config ) :
         LineBuilder.__init__( self, name, config )
 
 
-        self.selStdNoPIDMuons = StdNoPIDsMuons #DataOnDemand( Location = "Phys/StdNoPIDsMuons" )
-        self.selStdNoPIDKaons = StdNoPIDsKaons #DataOnDemand( Location = "Phys/StdNoPIDsKaons" )
+        self.selStdNoPIDMuons   = StdNoPIDsMuons 
+        self.selStdNoPIDKaons   = StdNoPIDsKaons 
+        self.selStdNoPIDPions   = StdNoPIDsPions
+        self.selStdNoPIDProtons = StdNoPIDsProtons
 
-        #GhostLines to isolate cpu time
-        #self.line_mu = StrippingLine( 'Mu', prescale = 1, selection = self.selStdNoPIDMuons ) 
-        #self.line_K  = StrippingLine( 'K' , prescale = 1, selection = self.selStdNoPIDKaons ) 
+        #self.selStdTightPions   = StdTightPions 
+        #self.selStdTightKaons   = StdTightKaons 
+        #self.selStdTightProtons = StdTightProtons 
 
 
         self.sel_Prompt  = makePromptSelection( name + "_Combine", self.selStdNoPIDMuons )
@@ -52,23 +127,56 @@ class MuIDCalibConf( LineBuilder ):
 
         self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( name + "_FromBNoMipCombine", self.selStdNoPIDMuons )
         self.line_DetachedNoMIP = StrippingLine( name + '_JpsiFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPPrescale' ], selection = self.sel_DetachedNoMIP ) 
-      
+                 
         self.sel_DetachedNoMIPHiP  = makeDetachedNoMIPHiPSelection( name + "_FromBNoMipHiPCombine", self.selStdNoPIDMuons )
-        self.line_DetachedNoMIPHiP = StrippingLine( name + '_JpsiFromBNoPIDNoMipHiP', prescale = config[ 'DetachedNoMIPHiPPrescale' ], selection = self.sel_DetachedNoMIPHiP ) 
+        self.line_DetachedNoMIPHiP = StrippingLine( name + '_JpsiFromBNoPIDNoMipHiP', 
+                                                    prescale = config[ 'DetachedNoMIPHiPPrescale' ], selection = self.sel_DetachedNoMIPHiP ) 
 
-        self.sel_DetachedNoMIPK  = makeDetachedNoMIPKSelection( name + "_FromBNoMipWithKCombine", self.sel_DetachedNoMIP, self.selStdNoPIDKaons )
-        self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
-  
+        self.sel_DetachedNoMIPNoPCut  = makeDetachedNoMIPNoPCutSelection( name + "_FromBNoMipCombineNoPCut", self.selStdNoPIDMuons )
+        self.sel_DetachedNoMIPK  = makeDetachedNoMIPKSelection( name + "_FromBNoMipWithKCombine", self.sel_DetachedNoMIPNoPCut, self.selStdNoPIDKaons )
+        self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', 
+                                                  prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
 
-        #self.registerLine( self.line_mu ) #GhostLines
-        #self.registerLine( self.line_K )  #GhostLines
+        self.sel_Lambdac = makeLambdacSelection( name + '_FromLambdac', "", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_Lambdac = StrippingLine( name + '_FromLambdacDecay', prescale = config[ 'FromLambdacPrescale' ], selection = self.sel_Lambdac ) 
+
+        self.sel_PiLambdac = makeLambdacSelection( name + '_PiFromLambdac', "pion", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_PiLambdac = StrippingLine( name + '_PiFromLambdacDecay', prescale = config[ 'PiFromLambdacPrescale' ], selection = self.sel_PiLambdac ) 
+
+        self.sel_KLambdac = makeLambdacSelection( name + '_KFromLambdac', "kaon", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_KLambdac = StrippingLine( name + '_KFromLambdacDecay', prescale = config[ 'KFromLambdacPrescale' ], selection = self.sel_KLambdac ) 
+
+        self.sel_PLambdac = makeLambdacSelection( name + '_PFromLambdac', "proton", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_PLambdac = StrippingLine( name + '_PFromLambdacDecay', prescale = config[ 'PFromLambdacPrescale' ], selection = self.sel_PLambdac ) 
+
+        self.sel_PiISMUONLambdac = makeLambdacSelection( name + '_PiISMUONFromLambdac', "pionISMUON", 
+                                                         self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_PiISMUONLambdac = StrippingLine( name + '_PiISMUONFromLambdacDecay', 
+                                                   prescale = config[ 'PiISMUONFromLambdacPrescale' ], selection = self.sel_PiISMUONLambdac ) 
+
+        self.sel_KISMUONLambdac = makeLambdacSelection( name + '_KISMUONFromLambdac', "kaonISMUON", 
+                                                        self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_KISMUONLambdac = StrippingLine( name + '_KISMUONFromLambdacDecay', 
+                                                  prescale = config[ 'KISMUONFromLambdacPrescale' ], selection = self.sel_KISMUONLambdac ) 
+
+        self.sel_PISMUONLambdac = makeLambdacSelection( name + '_PISMUONFromLambdac', "protonISMUON"
+                                                        , self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
+        self.line_PISMUONLambdac = StrippingLine( name + '_PISMUONFromLambdacDecay', 
+                                                  prescale = config[ 'PISMUONFromLambdacPrescale' ], selection = self.sel_PISMUONLambdac ) 
+
 
         self.registerLine( self.line_Prompt )
         self.registerLine( self.line_Detached )
         self.registerLine( self.line_DetachedNoMIP )
         self.registerLine( self.line_DetachedNoMIPHiP )
         self.registerLine( self.line_DetachedNoMIPK )
-
+        self.registerLine( self.line_Lambdac )
+        self.registerLine( self.line_PiLambdac )
+        self.registerLine( self.line_KLambdac )
+        self.registerLine( self.line_PLambdac )
+        self.registerLine( self.line_PiISMUONLambdac )
+        self.registerLine( self.line_KISMUONLambdac )
+        self.registerLine( self.line_PISMUONLambdac )
 
 
 
@@ -142,6 +250,25 @@ def makeDetachedNoMIPSelection( name, muons ):
                       Algorithm = combination,
                       RequiredSelections = [muons] )
 
+def makeDetachedNoMIPNoPCutSelection( name, muons ):
+    '''
+    Create b -> Jpsi -> mumu candidates out of no pid muons without mip cuts
+    TAG:: IsMuon and P>6Gev and Pt>1.5 GeV & IpChi2>10
+    '''
+    #(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & '(P>3*GeV) & (PT>800*MeV)
+    mucocut = '(TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>25)'
+    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),1)) "
+    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),2)) "
+
+    combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
+                                    DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
+                                    CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | (" + tag2cuts + " ) ) "
+                                    )
+    return Selection( name, 
+                      Algorithm = combination,
+                      RequiredSelections = [muons] )
+
 def makeDetachedNoMIPHiPSelection( name, muons ):
     '''
     Create b -> Jpsi -> mumu candidates out of no pid muons without mip cuts
@@ -180,13 +307,51 @@ def makeDetachedNoMIPKSelection( name, jpsis, kaons ):
                       RequiredSelections = [ jpsis, kaons ] )
 
 
+def makeLambdacSelection( name, line, pions, kaons, protons ) :
+#    daucuts  = "( PT>500*MeV ) & ( P>3*GeV ) & ( MIPCHI2DV(PRIMARY)>8. ) & ( TRPCHI2>0.0001 )"
+    daucuts = "( PT>250*MeV ) & ( P>2*GeV ) & ( MIPCHI2DV(PRIMARY)>8. ) & ( TRPCHI2>0.0001 )"
+    kcuts   = daucuts
+    picuts  = daucuts
+    pcuts   = daucuts
 
+    kPID   = " & ( (PIDK - PIDpi)>10.0 )"
+    piPID  = " & ( (PIDK - PIDpi)<-5.0 )"
+    pPID   = " & ( (PIDp - PIDpi)>10.0 )"
+    ismuon = " & (ISMUON)"
 
+    if( line.startswith( "pion" ) ) :
+        kcuts += kPID
+        pcuts += pPID
+        if( line.endswith( "ISMUON" ) ) :
+            picuts += ismuon
+    if( line.startswith( "kaon" ) ) :
+        picuts += piPID
+        pcuts  += pPID
+        if( line.endswith( "ISMUON" ) ) :
+            kcuts += ismuon
+    if( line.startswith( "proton" ) ) :
+        kcuts  += kPID
+        picuts += piPID
+        if( line.endswith( "ISMUON" ) ) :
+            pcuts += ismuon
 
+    combcuts = "( ADAMASS('Lambda_c+')<150*MeV ) & ( APT>1.*GeV ) & ( ADOCACHI2CUT(50, '') )"
+    momcuts  = "( M > 2.240*GeV ) & ( M<2.330*GeV ) & ( VFASPF(VCHI2/VDOF)<8 ) & ( BPVDIRA>0.99999 ) & ( MIPCHI2DV(PRIMARY)<4. )"
+    momcuts += " & in_range( 0.85*GeV, M13, 0.95*GeV ) & ( (WM( 'K-' , 'pi+' , 'pi+' )>1.89*GeV) |  (WM( 'K-' , 'pi+' , 'pi+' )<1.80*GeV) )" #D+->Kpipi removal
+    LambdaC = CombineParticles ( 
+        DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc",
+        DaughtersCuts = {
+            "K-"  : kcuts,
+            "p+"  : pcuts,
+            "pi+" : picuts
+            },
+        CombinationCut = combcuts,
+        MotherCut = momcuts
+        )
 
-
-
-
+    return Selection( name, 
+                      Algorithm = LambdaC,
+                      RequiredSelections = [ pions, kaons, protons ] )
 
 
 
