@@ -136,27 +136,6 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         return combSeq
     # }
 
-    def __filter(self, name, inputSeq, extracode = None) : # {
-	    "Filter combinatorics.  Returns a bindMembers."
-	    from HltLine.HltLine import Hlt2Member, bindMembers
-	    from Configurables import FilterDesktop, CombineParticles
-	    from HltLine.Hlt2Monitoring import Hlt2Monitor
-
-	    codestr = "(ALL)"
-
-	    if extracode :
-		codestr = extracode + '&' + codestr
-	    filter = Hlt2Member( FilterDesktop
-		    , 'Filter'
-		    , Inputs  = inputSeq
-		    , Code=codestr
-		    ,PreMonitor=Hlt2Monitor("M","M(K#mu)",1400.,500,'M_in',nbins=101)
-		    ,PostMonitor=Hlt2Monitor("M","M(K#mu)",1400.,500,'M_out',nbins=101)  
-		    )
-	    filterSeq = bindMembers( name, inputSeq + [ filter] )
-	    return filterSeq
-    # }
-
     def __filterHlt1TOS(self, name, input) : # {
 	'''Require HLT1TrackMuon or HLT1TrackAllL0'''
         from HltLine.HltLine import bindMembers
@@ -164,6 +143,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 	filterTOS = TisTosParticleTagger('Hlt2'+name+"Hlt1TOSFilter")
 	filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
 	filterTOS.Inputs = [ input.outputSelection() ]
+	filterTOS.Output = "/Event/Hlt2/Hlt2"+name+"Hlt1TOSFilter/Particles"
 	return bindMembers(name, [ input, filterTOS ])
 # }
 
@@ -255,13 +235,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                                 , inputSeq = decayModes[mode]['inList']
                                 , decayDesc = [ decayModes[mode]['descriptor'] ]
                            )
-            d02HMuNuTOS = self.__filterHlt1TOS(modeName, d02HMuNuComb)
-	    ## Signal window filter
-	    d02HMuNuSigSeq = self.__filter( name = modeName
-		    , inputSeq = [ d02HMuNuTOS ]
-		    , extracode = ""
-		    )
-            ## Signal window line
+            d02HMuNuSigSeq  = self.__filterHlt1TOS( modeName, d02HMuNuComb )
             d02HMuNuSigLine = self.__makeLine(modeName, algos = [ d02HMuNuSigSeq ])
 
         # }

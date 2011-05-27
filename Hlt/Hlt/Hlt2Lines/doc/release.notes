@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-05-27 - Grant McGregor
+ - Hlt2CharmSemilepD02HMuNu changes to remove redundant filter loop.
+
 ! 2011-05-25 - Vanya Belyaev
 
  - Hlt1InclusiveDiMuon.py
