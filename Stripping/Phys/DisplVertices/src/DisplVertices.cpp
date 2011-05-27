@@ -319,7 +319,7 @@ StatusCode DisplVertices::execute(){
     }
 
     double mass = p->measuredMass();
-    int nbtrks = p->endVertex()->outgoingParticles().size();
+    int nbtrks =  p->info(53,-1000.);//p->endVertex()->outgoingParticles().size();
     double chi = p->endVertex()->chi2PerDoF();
     const Gaudi::XYZPoint & pos = p->endVertex()->position();
     double rho = (m_RCut=="FromPreyInfo")?p->info(52,-1000.):GetRFromBL(pos);

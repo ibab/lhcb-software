@@ -126,6 +126,7 @@ private:
   int    m_nEvents ;          // number of events
   const double pi ;
   // cuts
+  
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
   double m_PreyMaxSumPt ;     ///< Maximum sumpt
@@ -147,6 +148,7 @@ private:
   double m_MaxY;              ///< Max Y position     
   double m_MinZ;              ///< Min Z position     
   double m_MaxZ;              ///< Max Z position
+  
   /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled

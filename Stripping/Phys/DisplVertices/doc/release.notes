@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2011-05-27 - Victor Coco
+ - Add the velo track based particles to the candidates made from RecVertices2Particles
+ - Update DisplVertices
+
 ! 2011-04-12 - Neal Gauvin
  - Added new features for SaveTuple. 
  - Added new cut : BackToBack = dphi to request for at least one pair of

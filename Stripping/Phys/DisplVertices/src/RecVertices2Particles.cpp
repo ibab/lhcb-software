@@ -190,6 +190,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
      tool<IProtoParticleFilter>( "ProtoParticleMUONFilter", "muon", this ) ) );    
   }
 
+  m_veloProtoPartLocation = "Strip/"+this->name()+"/VeloProtoP";
   return StatusCode::SUCCESS;
 }
 
@@ -258,6 +259,11 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
 
   int nbRecParts(0);
 
+  
+  LHCb::ProtoParticles* veloTrProtoP = new LHCb::ProtoParticles();
+  put( veloTrProtoP , m_veloProtoPartLocation );
+  
+
   /////////////////////////////////////////////////////////////
   // Main loop over the candidates. Turn them into particles
   /////////////////////////////////////////////////////////////
@@ -299,10 +305,10 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
         
     //Turn it into a Particle !
     //Will put in info 51: if the particle is in detector 52: the distance to beamline
-    if( !RecVertex2Particle( rv, nbRecParts , r ) ) continue;
+    
+    if( !RecVertex2Particle( rv, nbRecParts , r, *veloTrProtoP ) ) continue;
 
   }
-  
   if( msgLevel(MSG::DEBUG) )
     debug()<<"# of Preys " << nbRecParts << endmsg;
   if( context() == "Info" ) plot( nbRecParts, "NbofPreys", 0, 20 );
@@ -694,7 +700,7 @@ bool RecVertices2Particles::TestTrack( const Track * t ){
 // Turn RecVertices into Particles (from Parts) saved in RecParts
 //=============================================================================
 bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
-						int& nbRecParts , double r){  
+                                                int& nbRecParts , double r, LHCb::ProtoParticles& veloProtos ){  
 
   //Retrieve data Particles from Desktop.
   Particle::ConstVector Parts;
@@ -705,35 +711,30 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
   SmartRefVector< Track >::const_iterator iVtxend = rv->tracks().end();
   int endkey = rv->tracks().back()->key();
 
-
   //Create an decay vertex
   const Gaudi::XYZPoint point = rv->position();
   Vertex tmpVtx = Vertex( point );
   tmpVtx.setNDoF( rv->nDoF());
   tmpVtx.setChi2( rv->chi2());
   tmpVtx.setCovMatrix( rv->covMatrix() );
-  //always()<<"A new Vertex"<<endreq;
   //Create a particle
   Particle tmpPart = Particle( m_PreyID );
 
   std::vector<const Particle *> newParticlesPointer ;
-  
     
   if( !m_UsePartFromTES ){
     // Load the ProtoParticles
-    //int coutPP(0);
     const ProtoParticles * pps = 
       get<ProtoParticles>(ProtoParticleLocation::Charged);
     for ( ProtoParticles::const_iterator ipp = pps->begin();
 	  pps->end() != ipp; ++ipp ){
       const ProtoParticle * pp = *ipp;
       if( pp->track() == NULL ) continue;
-      //if (pp->track()->type()==LHCb::Track::Downstream)always()<<"A protoP from downstream: "<<pp->key()<<endreq;
       while( ((*iVtx)->key() < pp->key()) && (*iVtx)->key() != endkey ){
 	++iVtx;
       }
       if( (*iVtx)->key() == pp->key() ){ 
-	//Make a Particle with best PID 
+        //Make a Particle with best PID 
         if( !TestTrack( *iVtx ) ) continue;
         const Particle * part = MakeParticle( pp );
         tmpVtx.addToOutgoingParticles ( part );
@@ -743,7 +744,26 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
         continue;
       }
     } 
-    //always()<<"Ntracks per DV: "<<coutPP<<endreq;
+    for(SmartRefVector< Track >::const_iterator itr = rv->tracks().begin(); itr != rv->tracks().end();itr++){
+      const Track* p = (*itr);
+      if ((*itr)->type()!= LHCb::Track::Velo) continue;
+      double sx = p->slopes().x(); double sy = p->slopes().y();
+      double pz = m_pt/sqrt( sx*sx + sy*sy );
+      double e = std::sqrt( m_piMass*m_piMass + m_pt*m_pt + pz*pz );
+      // new particle pointer will be handle by the markNewTree function or deleted if the 
+      Particle* pion = new Particle();
+      // new ProtoParticle --> should be written in the TES 
+      ProtoParticle* protoPion = new ProtoParticle() ;
+      protoPion->setTrack(p);
+      veloProtos.insert(protoPion);
+      pion->setProto(protoPion);
+      const Gaudi::LorentzVector mompi = Gaudi::LorentzVector(sx*pz, sy*pz, pz,e );
+      pion->setMomentum(mompi);
+      tmpVtx.addToOutgoingParticles ( pion );
+      tmpPart.addToDaughters( pion );
+      mom += pion->momentum();
+      newParticlesPointer.push_back(pion);
+    }
   }
   else {  
     //Find all particles that have tracks in RecVertex
@@ -797,6 +817,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
   tmpPart.setEndVertex( tmpVtx.clone() );
   tmpPart.setReferencePoint( point );
   tmpPart.addInfo(52,r ); 
+  tmpPart.addInfo(53,rv->tracks().size() ); 
   //Store 51 info if found to be in detector material
   if( IsAPointInDet( tmpPart, m_RemVtxFromDet ) ) 
     tmpPart.addInfo(51,1.);

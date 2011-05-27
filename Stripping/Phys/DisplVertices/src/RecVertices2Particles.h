@@ -60,9 +60,7 @@ private:
   ///Turn a RecVertex into a Particle
   bool RecVertex2Particle( const LHCb::RecVertex*, 
 			   int & ,
-			   double r );
-  /// Creates a pion with 400 MeV pt from track slopes.
-  const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
+			   double r , LHCb::ProtoParticles& veloProtos );
   /// Has a RecVertex a backward track ?
   bool HasBackwardTracks( const LHCb::RecVertex* );
   /// Has a RecVertex a backward and a forward track ?
@@ -135,7 +133,8 @@ private:
   unsigned int m_PVnbtrks;    ///< Min nb of trks for upstream PV candidate
   double m_piMass;  ///< the pion mass
   double m_pt;      ///< default pt for default pions
-
+  std::string m_veloProtoPartLocation;
+  
   ///To sort the reconstructed vertices according to the z position
   class CondRVz{
   public:
