@@ -154,7 +154,7 @@ _default_configuration_ = {
     'SigmaCTau'  :   5 *         mm ,
     'SigmaMass'  : 250 *        MeV ,
     #
-    'DsCTau'     : 100 * micrometer ,
+    'DsCTau'     : 50 * micrometer ,#JAAJ: change to 50?
     'DsMass'     : 250 *        MeV ,
     #
     'DplusCTau'  : 200 * micrometer ,
@@ -182,6 +182,7 @@ _default_configuration_ = {
     'SigmaPrescale' : 1.0 ,
     'DplusPrescale' : 1.0 ,
     'DsPrescale'    : 1.0 ,
+    'Ds3PiPrescale': 1.0 ,
     }
 
 # =============================================================================
@@ -314,6 +315,66 @@ class StrippingHyperCPXConf(LineBuilder) :
         
         return self.PhiPi
 
+
+    ## define ``normalization'' selection for Ds+ -> pi+ pi- pi+
+    def ds2PiPiPi    ( self ) :
+        """
+        Define ``normalization'' selection for Ds+ ->  pi+ pi- pi+
+        """
+
+        def makeTISTOS( name, _input, _trigger ) :
+            from Configurables import TisTosParticleTagger
+            _tisTosFilter = TisTosParticleTagger( name + "Tagger" )
+            _tisTosFilter.TisTosSpecs = { _trigger : 0 }
+            #_tisTosFilter.ProjectTracksToCalo = False
+            #_tisTosFilter.CaloClustForCharged = False
+            #_tisTosFilter.CaloClustForNeutral = False
+            #_tisTosFilter.TOSFrac = { 4:0.0, 5:0.0 }
+            return Selection( name
+                              , Algorithm = _tisTosFilter
+                              , RequiredSelections = [ _input ]
+                              )        
+
+
+        _PiPiPiAlg = CombineParticles (
+            #
+            DecayDescriptors = [" [ D_s+  -> pi+ pi+ pi- ]cc " ] ,
+            #
+            DaughtersCuts = {
+            'pi+' :                           self._config['PionCuts']
+            } , 
+            #
+            Preambulo        =                self._config [ 'Preambulo' ] , 
+            # 
+            CombinationCut  = """
+            ( APT > 2 * GeV           ) &
+            ( ADAMASS ( 'D_s+' ) < %s ) & phi 
+            """                              % self._config[ 'DsMass' ]  , 
+            #
+            MotherCut       = """
+            ( chi2vx < 25 ) &
+            ( ctau   > %s   )
+            """                              % self._config['DplusCTau']
+            )
+        
+       
+        self.combPiPiPi = Selection (
+            'SelDs2PiPiPiFor' + self.name()  ,
+            Algorithm  = _PiPiPiAlg ,
+            RequiredSelections = [ StdLoosePions  ]
+            )
+        
+        self.selDs23PiHlt1TIS = makeTISTOS( self.name() + "Ds23PiHlt1TIS"
+                                    , self.combPiPiPi
+                                    , "Hlt1.*Decision%TIS"
+                                            )
+        self.selDs23PiHlt2TIS = makeTISTOS( self.name() + "Ds23PiHlt2TIS"
+                                            , self.selDs23PiHlt1TIS
+                                            , "Hlt2.*Decision%TIS"
+                                            )
+       
+        return self.selDs23PiHlt2TIS
+
     
     ## define selection for D+ -> pi mu+ mu-
     def d2PiMuMu    ( self ) :
@@ -407,6 +468,13 @@ class StrippingHyperCPXConf(LineBuilder) :
             ) ,
             ##
             StrippingLine (
+            "Ds2PiPiPiFor"  + self.name ()              ,
+            prescale = self._config['Ds3PiPrescale'     ] , ## ATTENTION! Prescale here !!
+            checkPV  = self._config['PrimaryVertices'] ,
+            algos    = [ self.ds2PiPiPi () ]
+            ) ,
+            ##
+            StrippingLine (
             "Dplus2PiMuMuFor"  + self.name ()          ,
             prescale = self._config['DplusPrescale'  ] , ## ATTENTION! Prescale here !!
             checkPV  = self._config['PrimaryVertices'] ,
@@ -422,6 +490,7 @@ class StrippingHyperCPXConf(LineBuilder) :
 default_config = {
     'SigmaPrescale'  : 1.00 ,
     'DsPrescale'     : 1.00 ,
+    'Ds3PiPrescale'  : 1.00 ,
     'DplusPrescale'  : 1.00 ,
     }
 
