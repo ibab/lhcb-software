@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!=============================== 2011-05-27 v3r0 =============================
+! 2011-05-27 - Olivier Callot
+ - Compute a global min/max scale for superimposed trend plots
+
 ! 2011-05-25 - Olivier Callot
  - Keep the archive file opened if this is teh same as for the previous page.
  - Protect long names ( > 80 char) in creating trending histograms

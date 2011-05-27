@@ -1183,7 +1183,7 @@ void PresenterMainFrame::buildGUI() {
     m_dimBrowserDock->MapWindow();
     m_databasePagesDock->MapWindow();
 
-    m_runDb = new RunDB( m_rundbConfig ) ;
+    m_runDb = new RunDB( m_rundbConfig, &m_presenterInfo ) ;
     m_intervalPickerData = new IntervalPickerData( ) ;
     m_prevPresenterMode = presenterMode() ;
     partitionSelectorComboBoxHandler( m_partitionSelectorComboBox->GetSelected() );

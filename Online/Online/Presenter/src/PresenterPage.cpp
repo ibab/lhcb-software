@@ -195,7 +195,17 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
       for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
         if ( (*itF).fileName == file ) {
           std::cout << "  ++ add variable " << variable << " to file " << file << std::endl;
+
+          OnlineHistoOnPage* mother = (*itHP)->getOverlap();
+          int prev = -1;
+          if ( NULL != mother ) {
+            for ( std::vector<DisplayHistogram>::iterator itDH = (*itF).histos.begin(); 
+                  (*itF).histos.end() != itDH; ++itDH ) {
+              if ( mother->histo == (*itDH).histo() ) prev = itDH - (*itF).histos.begin();  
+            }
+          }
           (*itF).histos.push_back( DisplayHistogram( myHist ) );
+          (*itF).histos.back().setPrevious( prev );
           existed = true;
           break;
         }
@@ -959,92 +969,116 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
     int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
     std::cout << "Select for time range: " << startTime << " to " << endTime 
               << " last Tag version " << lastTagVersion << " starts at " << firstTimeThisTag << std::endl;
-    
+
+    std::vector<TrendData> allTrends;
     for ( std::vector<DisplayHistogram>::iterator itH = (*itF).histos.begin();
           (*itF).histos.end() != itH; ++itH ) {
-
-      //== Check that the whole time range is in the current Tag version. Else go down in version.
-      int currVersion = lastTagVersion;
-      if ( firstTimeThisTag > startTime && lastTagVersion > 1 ) {
-        currVersion = lastTagVersion - 1;
-        while( !PresenterGaudi::trendingTool->tags( tags, currVersion ) && 
-               currVersion > 1 ) {
-          --currVersion;
-        }
-        firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+      TrendData tmp;
+      tmp.histo = &(*itH);
+      tmp.tag = (*itH).shortName();
+      tmp.min =  1.e100;
+      tmp.max = -1.e100;
+      allTrends.push_back( tmp );
+    }    
+    
+    //== Check that the whole time range is in the current Tag version. Else go down in version.
+    int currVersion = lastTagVersion;
+    if ( firstTimeThisTag > startTime && lastTagVersion > 1 ) {
+      currVersion = lastTagVersion - 1;
+      while( !PresenterGaudi::trendingTool->tags( tags, currVersion ) && 
+             currVersion > 1 ) {
+        --currVersion;
       }
-
-      int theTime = startTime;
-      std::vector< std::pair<int,double> > values ;
-
-      //== Handle ratios: The tag name is a pair, separated by a '/'
-      std::string myTag   = (*itH).shortName();
-      std::string myRatio = "";
-      if ( std::find( tags.begin(), tags.end(), myTag ) == tags.end() ) {
-        std::cout << "Tag not found : " << myTag << " try to split." << std::endl;
-        unsigned int barIndx = myTag.find( "|" );
-        if ( barIndx < myTag.size() ) {
-          myRatio = myTag.substr( barIndx+1 );
-          myTag   = myTag.substr( 0, barIndx );
-          std::cout << "  num " << myTag << " den " << myRatio << std::endl;
+      firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+    }
+    
+    int theTime = startTime;
+    std::vector<TrendData>::iterator itT;
+    
+    while ( currVersion <= lastTagVersion ) {
+      for ( itT = allTrends.begin(); allTrends.end() != itT; ++itT ) {
+        //== Handle ratios: The tag name is a pair, separated by a '|'
+        if ( std::find( tags.begin(), tags.end(), (*itT).tag ) == tags.end() ) {
+          std::cout << "Tag not found : " << (*itT).tag << " try to split." << std::endl;
+          std::string myTag = (*itT).tag;
+          unsigned int barIndx = myTag.find( "|" );
+          if ( barIndx < myTag.size() ) {
+            (*itT).tag    = myTag.substr( barIndx+1 );
+            (*itT).tagDen = myTag.substr( 0, barIndx );
+            std::cout << "  num='" << (*itT).tag << "'";
+            if ( 0 <= (*itT).tagDen ) std::cout << " den='" << (*itT).tagDen << "'";
+            std::cout << std::endl;
+          }
         }
+        (*itT).index = -1;
+        (*itT).den   = -1;
+        for ( unsigned int kk = 0; tags.size() > kk ; ++kk ) {
+          if ( tags[kk] == (*itT).tag    ) (*itT).index = kk;
+          if ( tags[kk] == (*itT).tagDen ) (*itT).den   = kk;
+        }
+        std::cout << "Index " << (*itT).index << " indxDen " << (*itT).den << std::endl;
       }
-      
+      //== Select for this version      
+      status = PresenterGaudi::trendingTool->select( theTime , endTime );
+      if ( status ) {
+        std::vector<float> theValues ;
+        // Read the values in the selected time interval and fill a vector
+        while ( PresenterGaudi::trendingTool->nextEvent( theTime , theValues ) ) {
+          if ( theTime < startTime ) continue;
+          if ( theTime > endTime   ) continue;
+          for ( itT = allTrends.begin(); allTrends.end() != itT; ++itT ) {
+            double theValue = 0.;
+            if ( (*itT).den >= 0 ) {
+              if ( fabs( theValues[(*itT).den] ) > 0.0001 ) theValue = theValues[(*itT).index] / theValues[(*itT).den];
+            } else if ( 0 <= (*itT).index ) {
+              theValue = theValues[(*itT).index];
+            }
+            (*itT).values.push_back( std::pair<int,double>( theTime, theValue ) );
+            if ( theValue < (*itT).min ) (*itT).min = theValue;
+            if ( theValue > (*itT).max ) (*itT).max = theValue;
+          }
+        }
+      }       
+
+      //== Increase the version as long as needed
       while ( currVersion <= lastTagVersion ) {
-        if ( "" == myRatio ) {
-          status = PresenterGaudi::trendingTool->select( theTime , endTime , (*itH).shortName() );
-          if ( status ) {
-            float theValue ;
-            // Read the values in the selected time interval and fill a vector
-            while ( PresenterGaudi::trendingTool->nextValue( theTime , theValue ) ) {
-              if ( theTime < startTime ) continue;
-              if ( theTime > endTime   ) continue;
-              values.push_back( std::pair<int,double>( theTime, theValue ) );
-            }
-          }
-        } else {
-          unsigned int indxNum = 0;
-          unsigned int indxDen = 0;
-          for ( unsigned int kk = 0; tags.size() > kk ; ++kk ) {
-            if ( tags[kk] == myTag ) indxNum = kk;
-            if ( tags[kk] == myRatio ) indxDen = kk;
-          }
-          std::cout << "IndxNum " << indxNum << " indxDen " << indxDen << std::endl;
-          status = PresenterGaudi::trendingTool->select( theTime , endTime );
-          if ( status ) {
-            std::vector<float> theValues ;
-            // Read the values in the selected time interval and fill a vector
-            while ( PresenterGaudi::trendingTool->nextEvent( theTime , theValues ) ) {
-              if ( theTime < startTime ) continue;
-              if ( theTime > endTime   ) continue;
-              double theValue = 0.;
-              if ( fabs( theValues[indxDen] ) > 0.0001 ) theValue = theValues[indxNum] / theValues[indxDen];
-              values.push_back( std::pair<int,double>( theTime, theValue ) );
-            }
-          }
-        }        
-
-        //== Increase the version as long as needed
-        while ( currVersion <= lastTagVersion ) {
-          ++currVersion;
-          if ( currVersion > lastTagVersion ) break;
-          std::vector<std::string> tags;
-          if ( PresenterGaudi::trendingTool->tags( tags, currVersion ) ) break;
-        }
-        firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+        ++currVersion;
+        if ( currVersion > lastTagVersion ) break;
+        std::vector<std::string> tags;
+        if ( PresenterGaudi::trendingTool->tags( tags, currVersion ) ) break;
       }
-      if ( values.size() > 0 ) {  
-        values.push_back( std::pair<int,double>( endTime, values.back().second  ) ) ;
-        std::cout << "from " << values[0].first << " to " << values[values.size()-1].first 
-                  << " , size " << values.size() << std::endl;
-      } else {
-        values.push_back( std::pair<int,double>( startTime, 0. ) );
-        values.push_back( std::pair<int,double>( endTime, 0. ) );
-        std::cout << "For tag " << (*itH).shortName() << " no data found" << std::endl;
-      }
-      (*itH).createGraph( values, update );
+      firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
     }
     PresenterGaudi::trendingTool->closeFile( ) ;
+
+    //== final adjustment : first/last point, min/max in superimposed plots
+    for ( itT = allTrends.begin(); allTrends.end() != itT; ++itT ) {
+      if ( (*itT).values.size() > 0 ) {  
+        (*itT).values.push_back( std::pair<int,double>( endTime, (*itT).values.back().second  ) ) ;
+      } else {
+        (*itT).values.push_back( std::pair<int,double>( startTime, 0. ) );
+        (*itT).values.push_back( std::pair<int,double>( endTime, 0. ) );
+        (*itT).min = 0.;
+        (*itT).max = 0.;
+      }
+    }
+    for ( unsigned int kk = allTrends.size(); kk > 0 ;  ) {
+      kk--;
+      int jj = allTrends[kk].histo->previous();
+      if ( jj >= 0 ) {
+        if ( allTrends[jj].min > allTrends[kk].min ) allTrends[jj].min = allTrends[kk].min;
+        if ( allTrends[jj].max < allTrends[kk].max ) allTrends[jj].max = allTrends[kk].max;
+      }
+    }
+    for ( itT = allTrends.begin(); allTrends.end() != itT; ++itT ) {
+      std::cout << "For tag '" << (*itT).tag << "' size " << (*itT).values.size() 
+                << " min " << (*itT).min << " max " << (*itT).max 
+                << " prev " << (*itT).histo->previous() << std::endl;
+    }
+    
+    for ( unsigned int kk = 0; (*itF).histos.size() > kk; ++kk ) {
+      (*itF).histos[kk].createGraph( allTrends[kk], update );
+    }
   }
 }
 

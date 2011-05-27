@@ -5,6 +5,7 @@
 // Include files
 #include <string>
 #include <vector>
+#include "PresenterInformation.h"
 
 // forward declarations
 namespace boost {
@@ -23,7 +24,7 @@ namespace boost {
 class RunDB {
 public: 
   /// Standard constructor
-  RunDB( std::string address );
+  RunDB( std::string address, PresenterInformation* pInfo = NULL );
 
   virtual ~RunDB( ); ///< Destructor
 
@@ -68,6 +69,17 @@ public:
   void setDestination( const std::string & destination ) {
     m_destination = destination ; } ;
 
+  int runFromWebLine ( std::string line, bool checkRunAndPart = false );
+
+  std::string capitalize( std::string src )  {
+    std::string::iterator it( src.begin() );
+    if ( it != src.end() ) {
+      src[0] = toupper((unsigned char)src[0]);
+      while(++it != src.end()) *it = tolower((unsigned char)*it);
+    }
+    return src;
+  }
+  
 private:
   /// RunDB Web server address
   std::string m_address;
@@ -93,5 +105,6 @@ private:
   /// Convert to convenient string format
   std::string convertRunTimeToString( boost::posix_time::ptime * st ) const ;
 
+  PresenterInformation* m_presInfo;
 };
 #endif // PRESENTER_RUNDB_H

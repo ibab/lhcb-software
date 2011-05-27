@@ -102,11 +102,23 @@ class PresenterInformation
   void setOfflineContext( bool ctxt ) { m_offlineContext = ctxt; }
   bool offlineContext()               { return m_offlineContext; }
 
+  void setProcessing( std::string proc ) { m_processing = proc; }
+  std::string processing()               { return m_processing; }
+
   void setEventType( std::string type ) { m_eventType = type; }
   std::string eventType()               { return m_eventType; }
 
-  void setProcessing( std::string proc ) { m_processing = proc; }
-  std::string processing()               { return m_processing; }
+  void setRunType( std::string proc ) { m_runType = proc; }
+  std::string runType()               { return m_runType; }
+
+  void setVeloPosition( std::string proc ) { m_veloPosition = proc; }
+  std::string veloPosition()               { return m_veloPosition; }
+
+  void setMagnetState( std::string proc ) { m_magnetState = proc; }
+  std::string magnetState()               { return m_magnetState; }
+
+  void setBeamEnergy( std::string proc ) { m_beamEnergy = proc; }
+  std::string beamEnergy()               { return m_beamEnergy; }
 
   void setTimeC( std::string endTime, std::string duration, bool add=false );
 
@@ -129,6 +141,10 @@ class PresenterInformation
   bool                m_offlineContext;      ///< Running in offline context, for run file access
   std::string         m_processing;
   std::string         m_eventType;
+  std::string         m_runType;
+  std::string         m_veloPosition;
+  std::string         m_magnetState;
+  std::string         m_beamEnergy;
 }; 
 
 #endif /*PRESENTER_PRESENTERINFORMATION_H_*/

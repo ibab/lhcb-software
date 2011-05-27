@@ -429,7 +429,11 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
             << " endRun " << endRun << std::endl;
 
   if ( m_presenterInfo->offlineContext() ) {
-    std::string rootDir = m_savesetPath.string() + "/Collision11/Beam3500GeV-VeloClosed-MagDown/";
+    std::string runType = m_presenterInfo->runType();
+    std::string magnet  = m_presenterInfo->magnetState();
+    std::string velo    = m_presenterInfo->veloPosition();
+    std::string energy  = m_presenterInfo->beamEnergy();
+    std::string rootDir = m_savesetPath.string() + "/" + runType + "/Beam" + energy + "GeV-Velo" + velo +  "-Mag" + magnet + "/";
     for ( int kRun = startRun; endRun >= kRun; ++kRun ) {
       std::stringstream  dirLocation;
       dirLocation << rootDir << kRun << "/" << m_presenterInfo->processing() << "/";

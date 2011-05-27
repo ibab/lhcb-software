@@ -42,6 +42,7 @@
 //=============================================================================
 DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_onlineHist( hist ),
+  m_previous(-1),
   m_identifier( "?not set?" ),
   m_shortName( "" ),
   m_title( "" ),
@@ -234,7 +235,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
 
   pad->cd();
 
-  //== Title suppressed if overlapped plots AND no positioning of the title bo
+  //== Title suppressed if overlapped plots AND no positioning of the title box
   m_hasTitle = m_nOverlap == 0;
   float fopt = 0.;
   if ( hasOption("HTIT_X_OFFS", &fopt) ) m_hasTitle = true;
@@ -290,8 +291,8 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     if ( !m_hasTitle ) m_timeGraph->SetTitle( "" );
     std::string opt =  m_isOverlap ? "SAME" : "AL";
     m_timeGraph->Draw(opt.c_str());
-    if ( NULL != m_minGraph ) m_minGraph->Draw( "SAME" );
-    if ( NULL != m_maxGraph ) m_maxGraph->Draw( "SAME" );
+    if ( NULL != m_minGraph ) m_minGraph->Draw( "" );
+    if ( NULL != m_maxGraph ) m_maxGraph->Draw( "" );
   } else {
     std::cout << "??? No root nor TGraph to draw!" << std::endl;
   }
@@ -662,8 +663,8 @@ void DisplayHistogram::prepareForDisplay ( ) {
 //=========================================================================
 // Set the time graph from argument
 //=========================================================================
-void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, bool update ) {
-  int size = 2*values.size() - 1;
+void DisplayHistogram::createGraph( TrendData& aTrend, bool update ) {
+  int size = 2*aTrend.values.size() - 1;
   if ( NULL != m_timeArray ) delete m_timeArray;
   if ( NULL != m_valueArray ) delete m_valueArray;
   m_timeArray = new double[ size ] ;
@@ -671,7 +672,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
   double* p = m_timeArray;
   double* q = m_valueArray;
   double lastV = -9999.;
-  for ( std::vector<std::pair<int,double> >::iterator itT = values.begin(); values.end() != itT; ++itT ) {
+  for ( std::vector<std::pair<int,double> >::iterator itT = aTrend.values.begin(); aTrend.values.end() != itT; ++itT ) {
     *p++ = (*itT).first - 3600.;
     if ( lastV != -9999. ) {
       *p++ = (*itT).first - 3600.;
@@ -680,8 +681,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
     *q++ = (*itT).second;
     lastV = (*itT).second;
   }
-  std::cout << "Create graph size " << size
-            << " min " << m_timeArray[0] << " max " << m_timeArray[size-1] << std::endl;
+  std::cout << "Created graph '" << aTrend.tag << "' size " << size << std::endl;
 
   float fopt=0.;
   int lineColor = 1;
@@ -725,6 +725,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
         m_minGraph->SetLineColor( lineColor );
         m_hostingPad->cd( );
         m_minGraph->Draw( "SAME" );
+        m_minGraph->Draw( "" );
       }
       if ( NULL == m_maxGraph && hasOption("YMAX", &fopt) ) {
         m_maxGraph = new TGraph( 2, m_timeArray, m_valueArray );
@@ -733,6 +734,7 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
         m_maxGraph->SetLineColor( lineColor );
         m_hostingPad->cd( );
         m_maxGraph->Draw( "SAME" );
+        m_maxGraph->Draw( "" );
       }
     } else {
       if ( NULL != m_minGraph ) {
@@ -765,13 +767,9 @@ void DisplayHistogram::createGraph( std::vector<std::pair<int,double> > values, 
   m_rootHistogram->GetXaxis()->SetLabelOffset( 0.03 );
   m_rootHistogram->GetXaxis()->SetLabelSize( 0.03 );
 
-  double yMin =  1.e30;
-  double yMax = -1.e30;
-  for ( int kk = 0; size > kk; ++kk ) {
-    if ( m_valueArray[kk] < yMin ) yMin = m_valueArray[kk];
-    if ( m_valueArray[kk] > yMax ) yMax = m_valueArray[kk];
-  }
-
+  double yMin = aTrend.min;
+  double yMax = aTrend.max;
+  
   if ( NULL != m_minGraph ) {
     hasOption("YMIN", &fopt);
     double xmin[2], ymin[2];

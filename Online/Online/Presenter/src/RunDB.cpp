@@ -22,7 +22,7 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RunDB::RunDB( std::string address ) :
+RunDB::RunDB( std::string address, PresenterInformation* pInfo ) :
   m_currentRunNumber( 0 ) ,
   m_currentRunStartTime( "" ) ,
   m_currentRunEndTime( "" ) ,
@@ -31,6 +31,7 @@ RunDB::RunDB( std::string address ) :
   m_destination( "OFFLINE" )
 {
   m_address = address;
+  m_presInfo = pInfo;
 }
 
 //=============================================================================
@@ -74,52 +75,11 @@ int RunDB::getLastRun( ) {
     return lastRun ;
   }
 
-  // Parse the web server answers
-  std::string pattern ;
-  pattern = "\\N{left-curly-bracket}(.*)" ;
-  pattern += "\\N{right-curly-bracket}" ;
-
-  const boost::regex e( pattern ) ;
-
-  boost::property_tree::ptree run_tree ;
-
   while ( std::getline( webStream , line ) ) {
-    // Check that the answer has the correct format (JSON format)
-    if ( boost::regex_match( line , e ) ) {
-      // Now parse each line (there should be actually only one line
-      // in the server answer, otherwise it is over-written
-      std::istringstream is( line ) ;
-      std::cout << "RVC: " << line << std::endl;
-      try {
-        boost::property_tree::json_parser::read_json( is , run_tree ) ;
-
-        BOOST_FOREACH( boost::property_tree::ptree::value_type &v,
-                       run_tree.get_child( "runs" ) ) {
-          lastRun = v.second.get< int >( "runid" ) ;
-          m_currentRunNumber = lastRun ;
-          std::string start = v.second.get< std::string >( "starttime" ) ;
-          std::string end   = v.second.get< std::string >( "endtime" ) ;
-          boost::algorithm::erase_all( start , "-" ) ;
-          boost::algorithm::erase_all( start , ":" ) ;
-          boost::algorithm::erase_all( end , "-" ) ;
-          boost::algorithm::erase_all( end , ":" ) ;
-          boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-          m_currentRunStartTime = convertRunTimeToString( &st ) ;
-          boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-          m_currentRunEndTime = convertRunTimeToString( &et ) ;
-
-          boost::posix_time::time_duration dur = et - st ;
-          m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
-          return lastRun ;
-        }
-      }
-      catch (...) {
-        std::cerr << "Error in the problem db server response" << std::endl ;
-        return lastRun ;
-      }
-    }
+    lastRun = runFromWebLine( line );
+    if ( 0 < lastRun  ) return lastRun;
   }
-  //== Protect: If this run has a zero duration, take teh previous one
+  //== Protect: If this run has a zero duration, take the previous one
   if ( "00:00:00" == m_currentRunDuration  ) {
     std::cout << "Run " << lastRun << " has 00:00:00 duration. Take previous one" << std::endl;
     lastRun = getPreviousRun();
@@ -164,38 +124,11 @@ int RunDB::getNextRun( ) {
     return nextRun ;
   }
 
-  // Parse the web server answers
-  std::string pattern ;
-  pattern = "\\N{left-curly-bracket}(.*)" ;
-  pattern += "\\N{right-curly-bracket}" ;
-
-  const boost::regex e( pattern ) ;
-
-  boost::property_tree::ptree run_tree ;
-
   int total = 0 ;
   // Check first the number of candidate run:
   while ( std::getline( webStream , line ) ) {
-    // Check that the answer has the correct format (JSON format)
-    if ( boost::regex_match( line , e ) ) {
-      // Now parse each line (there should be actually only one line
-      // in the server answer, otherwise it is over-written
-      std::istringstream is( line ) ;
-
-      try {
-        boost::property_tree::json_parser::read_json( is , run_tree ) ;
-
-        total = run_tree.get< int >( "totalResults" ) ;
-
-        if ( 0 >= total )
-          // No next run has been found
-          return nextRun ;
-      }
-      catch (...) {
-        std::cerr << "Error in the problem db server response" << std::endl ;
-        return nextRun ;
-      }
-    }
+    nextRun = runFromWebLine( line );
+    if ( 0 < nextRun  ) break;
   }
   webStream.close() ;
 
@@ -229,43 +162,8 @@ int RunDB::getNextRun( ) {
   }
 
   while ( std::getline( webStream2 , line ) ) {
-    // Check that the answer has the correct format (JSON format)
-    if ( boost::regex_match( line , e ) ) {
-      // Now parse each line (there should be actually only one line
-      // in the server answer, otherwise it is over-written
-      std::istringstream is( line ) ;
-
-      std::cout << "RVC: " << line << std::endl;
-
-      try {
-        boost::property_tree::json_parser::read_json( is , run_tree ) ;
-
-        BOOST_FOREACH( boost::property_tree::ptree::value_type &v,
-                       run_tree.get_child( "runs" ) ) {
-          nextRun = v.second.get< int >( "runid" ) ;
-          if ( nextRun == m_currentRunNumber ) return 0 ;
-          m_currentRunNumber = nextRun ;
-          std::string start = v.second.get< std::string >( "starttime" ) ;
-          std::string end   = v.second.get< std::string >( "endtime" ) ;
-          boost::algorithm::erase_all( start , "-" ) ;
-          boost::algorithm::erase_all( start , ":" ) ;
-          boost::algorithm::erase_all( end , "-" ) ;
-          boost::algorithm::erase_all( end , ":" ) ;
-          boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-          m_currentRunStartTime = convertRunTimeToString( &st ) ;
-          boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-          m_currentRunEndTime = convertRunTimeToString( &et ) ;
-
-          boost::posix_time::time_duration dur = et - st ;
-          m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
-          return nextRun ;
-        }
-      }
-      catch (...) {
-        std::cerr << "Error in the problem db server response" << std::endl ;
-        return nextRun ;
-      }
-    }
+    nextRun = runFromWebLine( line );
+    if ( 0 < nextRun  ) return nextRun;
   }
 
   return nextRun ;
@@ -307,53 +205,10 @@ int RunDB::getPreviousRun( ) {
     return previousRun ;
   }
 
-  // Parse the web server answers
-  std::string pattern ;
-  pattern = "\\N{left-curly-bracket}(.*)" ;
-  pattern += "\\N{right-curly-bracket}" ;
-
-  const boost::regex e( pattern ) ;
-
-  boost::property_tree::ptree run_tree ;
-
   // Check first the number of candidate run:
   while ( std::getline( webStream , line ) ) {
-    // Check that the answer has the correct format (JSON format)
-    if ( boost::regex_match( line , e ) ) {
-      // Now parse each line (there should be actually only one line
-      // in the server answer, otherwise it is over-written
-      std::istringstream is( line ) ;
-      std::cout << "RVC: " << line << std::endl;
-
-      try {
-        boost::property_tree::json_parser::read_json( is , run_tree ) ;
-
-        BOOST_FOREACH( boost::property_tree::ptree::value_type &v,
-                       run_tree.get_child( "runs" ) ) {
-          previousRun = v.second.get< int >( "runid" ) ;
-          if ( previousRun == m_currentRunNumber ) return 0 ;
-          m_currentRunNumber = previousRun ;
-          std::string start = v.second.get< std::string >( "starttime" ) ;
-          std::string end   = v.second.get< std::string >( "endtime" ) ;
-          boost::algorithm::erase_all( start , "-" ) ;
-          boost::algorithm::erase_all( start , ":" ) ;
-          boost::algorithm::erase_all( end , "-" ) ;
-          boost::algorithm::erase_all( end , ":" ) ;
-          boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-          m_currentRunStartTime = convertRunTimeToString( &st ) ;
-          boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-          m_currentRunEndTime   = convertRunTimeToString( &et ) ;
-
-          boost::posix_time::time_duration dur = et - st ;
-          m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
-          return previousRun ;
-        }
-      }
-      catch (...) {
-        std::cerr << "Error in the problem db server response" << std::endl ;
-        return previousRun ;
-      }
-    }
+    previousRun = runFromWebLine( line );
+    if ( 0 < previousRun  ) return previousRun;
   }
   webStream.close() ;
 
@@ -410,46 +265,8 @@ bool RunDB::checkRun( int runNumber ) {
 
   // Check destination and partition match
   while ( std::getline( webStream , line ) ) {
-    // Check that the answer has the correct format (JSON format)
-    if ( boost::regex_match( line , e ) ) {
-      // Now parse each line (there should be actually only one line
-      // in the server answer, otherwise it is over-written
-      std::istringstream is( line ) ;
-      std::cout << "RVC: " << line << std::endl;
-
-      try {
-        boost::property_tree::json_parser::read_json( is , run_tree ) ;
-
-        std::string dest = run_tree.get< std::string >( "destination" ) ;
-        std::string part = run_tree.get< std::string >( "partitionname" ) ;
-
-        std::string start = run_tree.get< std::string >( "starttime" ) ;
-        std::string end   = run_tree.get< std::string >( "endtime" ) ;
-        boost::algorithm::erase_all( start , "-" ) ;
-        boost::algorithm::erase_all( start , ":" ) ;
-        boost::algorithm::erase_all( end , "-" ) ;
-        boost::algorithm::erase_all( end , ":" ) ;
-        boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
-        m_currentRunStartTime = convertRunTimeToString( &st ) ;
-        boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
-        m_currentRunEndTime = convertRunTimeToString( &et ) ;
-
-        boost::posix_time::time_duration dur = et - st ;
-        m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
-
-        std::cout << "Dest " << dest << " part " << part << std::endl;
-
-        if ( ( getDestination() == "" || dest == getDestination() ) && 
-             ( part == getPartition() ) ) {
-          m_currentRunNumber = runNumber ;
-          return true ;
-        }
-      }
-      catch (...) {
-        std::cerr << "Error in the problem db server response" << std::endl ;
-        return false ;
-      }
-    }
+    int run = runFromWebLine( line, true );
+    if ( 0 < run ) return true;
   }
 
   return false ;
@@ -468,4 +285,72 @@ std::string RunDB::convertRunTimeToString( boost::posix_time::ptime * st )
   ss << (*st) ;
 
   return ss.str();
+}
+
+//=========================================================================
+//  Parse the web server answer, extract the run parameters. Return 0 if not found
+//=========================================================================
+int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
+
+  std::string pattern( "\\N{left-curly-bracket}(.*)\\N{right-curly-bracket}" ) ;
+
+  const boost::regex e( pattern ) ;
+
+  boost::property_tree::ptree run_tree ;
+
+  // Check that the answer has the correct format (JSON format)
+  if ( boost::regex_match( line , e ) ) {
+    if ( checkDestAndPart ) {
+      line = "{ \"runs\" : ["+line+"]}";
+    }
+    // Now parse each line (there should be actually only one line
+    // in the server answer, otherwise it is over-written
+    std::istringstream is( line ) ;
+    std::cout << "RVC: " << line << std::endl;
+    try {
+      boost::property_tree::json_parser::read_json( is , run_tree ) ;
+      
+      BOOST_FOREACH( boost::property_tree::ptree::value_type &v, run_tree.get_child( "runs" ) ) {
+        int runNb = v.second.get< int >( "runid" ) ;
+        m_currentRunNumber = runNb ;
+        std::string dest   = v.second.get< std::string >( "destination" ) ;
+        std::string part   = v.second.get< std::string >( "partitionname" ) ;
+        if ( checkDestAndPart ) {
+          if ( ( ""   != m_destination && dest != m_destination ) || ( part != m_partition ) ) continue;
+        }
+        m_destination = dest;
+        m_partition   = part;
+        std::string runType      = v.second.get< std::string >( "runtype",      "Collision11" );
+        std::string veloPosition = v.second.get< std::string >( "veloPosition", "Closed" ) ;
+        std::string magnetState  = v.second.get< std::string >( "magnetState",  "Down" ) ;
+        double ene         = v.second.get< float >( "beamenergy",  3500. ) ;
+        std::string start  = v.second.get< std::string >( "starttime" ) ;
+        std::string end    = v.second.get< std::string >( "endtime" ) ;
+        boost::algorithm::erase_all( start , "-" ) ;
+        boost::algorithm::erase_all( start , ":" ) ;
+        boost::algorithm::erase_all( end , "-" ) ;
+        boost::algorithm::erase_all( end , ":" ) ;
+        boost::posix_time::ptime st = boost::posix_time::from_iso_string( start ) ;
+        m_currentRunStartTime = convertRunTimeToString( &st ) ;
+        boost::posix_time::ptime et = boost::posix_time::from_iso_string( end ) ;
+        m_currentRunEndTime = convertRunTimeToString( &et ) ;        
+        boost::posix_time::time_duration dur = et - st ;
+        m_currentRunDuration = boost::posix_time::to_simple_string( dur ) ;
+        if ( NULL != m_presInfo ) {
+          m_presInfo->setRunType(      capitalize( runType ) );
+          m_presInfo->setVeloPosition( capitalize( veloPosition ) );
+          m_presInfo->setMagnetState(  capitalize( magnetState ) );
+          char tmp[40];
+          sprintf( tmp, "%d", int(ene + 0.5) );
+          m_presInfo->setBeamEnergy( std::string( tmp ) );
+        }
+        return runNb ;
+      }
+    }
+    catch (...) {
+      std::cerr << "Error in the problem db server response" << std::endl ;
+      return 0 ;
+    }
+  }
+  return 0;
 }

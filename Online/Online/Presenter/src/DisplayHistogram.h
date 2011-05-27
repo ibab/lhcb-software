@@ -14,6 +14,20 @@ class TPaveText;
 class TPaveStats;
 #include <map>
 
+class DisplayHistogram;
+
+struct TrendData {
+  DisplayHistogram* histo;
+  std::string tag;
+  std::string tagDen;
+  int index;
+  int den;
+  double min;
+  double max;
+  std::vector< std::pair< int, double > > values;
+};
+
+
 /** @class DisplayHistogram DisplayHistogram.h
  *  This class contains the information on a histogram, for display
  *
@@ -29,6 +43,9 @@ public:
 
   std::string identifier() { return m_identifier; }
   void setIdentifier( std::string id ) { m_identifier = id; }
+
+  void setPrevious( int prev ) { m_previous = prev; }
+  int previous()         const { return m_previous; }
 
   OnlineHistogram* histo() { return m_onlineHist; }
   void setOnlineHistogram( OnlineHistogram* hist );
@@ -71,7 +88,7 @@ public:
 
   void prepareForDisplay();
 
-  void createGraph( std::vector<std::pair<int,double> > values, bool update );
+  void createGraph( TrendData& aTrend, bool update );
 
   void copyFrom( TH1* src );
  
@@ -101,6 +118,7 @@ protected:
 
 private:
   OnlineHistogram* m_onlineHist; ///< the online histogram.
+  int m_previous;
   std::string m_identifier;
   std::string m_shortName;
   std::string m_title;
