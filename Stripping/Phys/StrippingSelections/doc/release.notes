@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - A. Poluektov 
+ - Modified StrippingB2DX.py: 
+   * Removed IP chi2 cut for D->hhh and D->Ksh in the config dictionary
+   * Removed cut on the number of long tracks
+   * Added wrong-sign D->hh selection to Lb->Dppi. 
+   Retention on 2011 sample: 2.8%, 75 ms/event (whole StrippingB2DX)
+
 ! 2011-05-27 - V. Gligorov
  - StrippingB2XTau.py 
  - Stripping lines for B->TauTau and B->TauMu with control modes DD and DMu

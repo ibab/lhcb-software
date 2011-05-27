@@ -137,7 +137,7 @@ config = {                                  # Default configuration dictionary
 	      "MaxDauMIPChi2": 40.,          # IP chi2 for at least one track
 	      "DIRAMin"	     : 0.9,          # minimum D DIRA
 	      "DOCAMax"      : 0.6,          # maximum DOCA of track combinations (mm)
-	      "IPChi2Min"    : 9.,           # Minimum IP chi2
+	      "IPChi2Min"    : 0.,           # Minimum IP chi2
     	    }, 
     	    "D2hhhhCuts" : {                 # D->hhhh cuts
     	      "DauChi2Max"   : 4.,           # maximum track chi2
@@ -184,7 +184,7 @@ config = {                                  # Default configuration dictionary
     	      "VDChi2Min"    : 36.,          # D flight distance chi2
 	      "PtMin"        : 1500.,        # Minimum Pt of the D (MeV)
 	      "DIRAMin"	     : 0.9,          # minimum D DIRA 
-	      "IPChi2Min"    : 9.,           # Minimum IP chi2
+	      "IPChi2Min"    : 0.,           # Minimum IP chi2
     	    }, 
     	    "D2KPiPi0Cuts" : {               # D->Kpipi0 cuts
     	      "DauChi2Max"   : 4.,           # maximum track chi2
@@ -268,7 +268,7 @@ config = {                                  # Default configuration dictionary
 	      "IPChi2Max"          : 12.,           # chi2 of LambdaB impact parameter to the related PV
 	      "VDChi2Min"          : 80,            # Chi2 of LambdaB vertex separation from the related PV
 	      "DVDChi2Min"         : 100,           # Chi2 of daughter D vertex separation from the related PV 
-	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
+	      "DIRAMin"            : 0.99995,       # DIRA of the B to the related PV
 	      "LTMin"              : 0.0,           # Minimum LambdaB lifetime
 	      "CombDMass"          : 500,           # Mass window for a combination (MeV) 
 	      "APtMin"		   : 1500.,         # Minumum Pt of a combination (MeV) 
@@ -304,21 +304,21 @@ config = {                                  # Default configuration dictionary
 	    }, 
 	    "CheckPV"	       : True,              # PV requirement
 	    "MaxTracksInEvent" : {                  # GECs for individual lines (max. number of long tracks)
-	      "D2hh"     : 150, 
-	      "D2hhWS"   : 150, 
-	      "D2hhh"    : 150, 
-	      "D2hhhWS"  : 150, 
-	      "D2hhhh"   : 150, 
-	      "D2hhhhWS" : 150, 
-	      "D2Ksh"    : 150, 
-	      "D2Kshh"   : 150, 
-	      "D2KshhWS" : 150, 
-	      "D2KPiPi0Merged"   : 150, 
-	      "D2KPiPi0Resolved" : 150, 
-	      "D2KPiPi0MergedWS"   : 150, 
-	      "D2KPiPi0ResolvedWS" : 150, 
-	      "Lambda"   : 150, 
-	      "Unbiased" : 150
+	      "D2hh"     : 500, 
+	      "D2hhWS"   : 500, 
+	      "D2hhh"    : 500, 
+	      "D2hhhWS"  : 500, 
+	      "D2hhhh"   : 500, 
+	      "D2hhhhWS" : 500, 
+	      "D2Ksh"    : 500, 
+	      "D2Kshh"   : 500, 
+	      "D2KshhWS" : 500, 
+	      "D2KPiPi0Merged"   : 500, 
+	      "D2KPiPi0Resolved" : 500, 
+	      "D2KPiPi0MergedWS"   : 500, 
+	      "D2KPiPi0ResolvedWS" : 500, 
+	      "Lambda"   : 500, 
+	      "Unbiased" : 500
 	    }, 
  	    "MergedLines" : True                    # If True, lines with the same D mode a merged
 }
@@ -450,7 +450,7 @@ class B2DXConf(LineBuilder) :
                 selection5 = makeB02D0Rho(moduleName, name, RhoNoMW, dsel, config["BCuts"])
                 list += [ selection3, selection4, selection5 ]
                 
-                if name == "D2hh" :
+                if name in [ "D2hh", "D2hhWS" ] : 
             	    selection6 = makeLambdaB2D0Lambda(moduleName, name, "pPi", dsel, Lambda02ppi, config["LambdaB2DphCuts"])
             	    selection7 = makeLambdaB2D0Lambda(moduleName, name, "pK",  dsel, Lambda02pK, config["LambdaB2DphCuts"])
             	    list += [ selection6, selection7 ]
