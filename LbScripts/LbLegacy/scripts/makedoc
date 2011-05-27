@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 
+from LbLegacy.Utils import getStatusOutput
+
 from LbUtils.CMT.Common import isCMTMessage
-import sys, os, shutil, commands, random, glob, getopt
+import sys, os, shutil, random, glob, getopt
 
 # - 060816 - adapt the script to be run under CMT v1r18* making use of $CMTPROJECTPATH
 # - 070122 - use GaudiRelease instead of Gaudi
@@ -105,7 +107,7 @@ class builder :
                 sys.exit(0)
         else:
             os.chdir(os.path.join(os.pardir, 'cmt'))
-            status, value = commands.getstatusoutput('cmt show set_value CMTPATH')
+            status, value = getStatusOutput('cmt show set_value CMTPATH')
             if isCMTMessage(value) :
                 CMTPATH = value.split('\n')[1]
             else:
@@ -125,7 +127,7 @@ class builder :
 #      vers = line[line.find('=')+2:len(line)-2]
             native = line.split('=')[0]
             cmtcmd = 'cmt show macro_value ' + native
-            status, vers = commands.getstatusoutput(cmtcmd)
+            status, vers = getStatusOutput(cmtcmd)
             if self.info :
                 print self.argv0 + ': setting $' + pack + '=' + vers
             os.environ[pack] = vers

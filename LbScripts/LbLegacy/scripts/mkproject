@@ -24,6 +24,7 @@
 
 
 from LbLegacy.vol_for_releases import create_volume
+from LbLegacy.Utils import getStatusOutput
 
 from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
@@ -32,7 +33,7 @@ from LbConfiguration.Platform import NativeMachine
 from LbUtils.afs.volume import Volume
 
 import logging
-import sys, os, getopt, time, commands, fnmatch
+import sys, os, getopt, time, fnmatch
 
 script_version = '110301'
 script_name = 'mkproject'
@@ -208,7 +209,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
             sys.exit('you disagree - STOP')
 
 # set tbroadcast command
-    status, tbroadcast = commands.getstatusoutput('which tbroadcast')
+    status, tbroadcast = getStatusOutput('which tbroadcast')
     # this version of tbroadcast does not work properly: it does not return a meaningful returncode
     # use cmt broadcast for the time being
     tbroadcast = 'cmt br '
@@ -219,7 +220,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
     GAUDISOFT = os.environ['Gaudi_release_area']
 
 # get cmt version, set CMTPROJECTPATH if cmtversion >= v1r18
-    status, cmtversion = commands.getstatusoutput('cmt version')
+    status, cmtversion = getStatusOutput('cmt version')
     log.info('cmtversion = %s' % (cmtversion))
     if cmtversion.split('r')[1] > 16 and os.environ.has_key('CMTPROJECTPATH'):
         if len(os.environ['CMTPROJECTPATH']) > 1 and os.getcwd() != LHCBRELEASES and os.getcwd() != GAUDISOFT :
@@ -313,7 +314,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         if pname == 'Gaudi': packSys = pname
         os.environ[pname + '_release_area'] = rel_dir
         os.chdir(os.path.join(rel_dir, pname + 'Env', pversion, 'cmt'))
-        status, CMTPATH = commands.getstatusoutput('cmt show set_value CMTPATH')
+        status, CMTPATH = getStatusOutput('cmt show set_value CMTPATH')
         if CMTPATH[0] == ':' : CMTPATH = CMTPATH[1:]
         os.environ['CMTPATH'] = CMTPATH
         log.info(os.getenv('CMTPATH'))
@@ -330,7 +331,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
 
     # get the base_version from <projet>Env
         os.chdir(os.path.join(rel_dir, pname + 'Env', pversion, 'cmt'))
-        status, base_version = commands.getstatusoutput('cmt show macro_value ' + base_name + 'VERS')
+        status, base_version = getStatusOutput('cmt show macro_value ' + base_name + 'VERS')
         log.info(' CMTPATH = %s ' % (os.environ['CMTPATH']))
     else:
 
@@ -365,7 +366,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         log.info('run cmt use')
         os.chdir(os.path.join(rel_dir, maindir, packSys, 'cmt'))
         ko = 0
-        status, output = commands.getstatusoutput('cmt show uses')
+        status, output = getStatusOutput('cmt show uses')
         line = output[:-1]
         print line
         if line.find('Warning') != -1 : ko = 1
@@ -401,7 +402,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         rc = os.system('cmt show macros config_version -tag=LHCb > ' + native)
 
         # cmt broadcast gmake
-        status, cmtpath = commands.getstatusoutput('cmt show set_value CMTPATH')
+        status, cmtpath = getStatusOutput('cmt show set_value CMTPATH')
         log.info(' CMTPATH= %s ' % (cmtpath))
         str = tbroadcast + ' "'
         str += ' cmt make'
@@ -417,7 +418,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         str += " all_groups"
         str += ' "'
         log.info(' str= %s ' % (str))
-        rc, output = commands.getstatusoutput(str)
+        rc, output = getStatusOutput(str)
         print output
         if rc == 0:
             log.info('%s optimize compilation is finished ' % (day))
@@ -481,7 +482,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
                 str += " -j %s -l %s " % (ncores, nproc)
         str += " all_groups"
         str += ' "'
-        rc, output = commands.getstatusoutput(str)
+        rc, output = getStatusOutput(str)
         os.environ['CMTCONFIG'] = CMTCONFIG
         log.info(output)
         if rc == 0:
@@ -527,7 +528,7 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         log.info('make the release area public')
         os.chdir(os.path.join(rel_dir, maindir))
         str = 'find . -noleaf -type d -print -exec fs setacl {} system:anyuser rl \;'
-        status, output = commands.getstatusoutput(str)
+        status, output = getStatusOutput(str)
         log.info('status = %s' % status)
 
 # ======================= action: build Doxygen documentation ================================

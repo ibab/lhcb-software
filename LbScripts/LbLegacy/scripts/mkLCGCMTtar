@@ -28,13 +28,15 @@
  - 091123 - added support for LHCbDirac
 """
 #------------------------------------------------------------------------------
+from LbLegacy.Utils import getStatusOutput
+
 from LbUtils.Temporary import TempDir
 from LbUtils.Processes import callCommand
 from LbUtils.CMT.Common import CMTCommand as CMT
 
 tmpdir = TempDir(prefix="mkLCGCMTtar")
 
-import sys, os, getopt, time, shutil, commands
+import sys, os, getopt, time, shutil
 import re
 from LbLegacy.install_project import calculateMD5
 version = '091123'
@@ -172,7 +174,7 @@ def get_runtime_cmtpath(native_version):
 
 def get_cmtpath(native_version):
     os.environ['CMTPATH'] = get_runtime_cmtpath(native_version)
-    status,CMTPATH = commands.getstatusoutput('cmt show set_value CMTPATH')
+    status,CMTPATH = getStatusOutput('cmt show set_value CMTPATH')
     if CMTPATH[0] == ':' :
         CMTPATH = CMTPATH[1:]
     os.environ['CMTPATH'] = CMTPATH
@@ -545,7 +547,7 @@ def clean_clhep_dir(LCGCMT_vers,clhep_vers,binary_dir):
 
     # get the list of libraries from the CLHEP_linkopts macro
     str = 'cmt show macro_value CLHEP_linkopts -tag='+binary_dir
-    status,output = commands.getstatusoutput(str)
+    status,output = getStatusOutput(str)
     lib_list = output.split()
 
     # in lib_list remove any character specific to Linux or Win32

@@ -32,12 +32,13 @@
 #-----------------------------------------------------------------------------
 
 from LbLegacy.install_project import calculateMD5
+from LbLegacy.Utils import getStatusOutput
 from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt
 
 from LbUtils.CMT.Common import isCMTMessage
 from LbUtils.Temporary import TempDir
 
-import sys, os, getopt, time, commands, fnmatch
+import sys, os, getopt, time, fnmatch
 import re
 
 script_version = '091013'
@@ -249,7 +250,7 @@ def make_tar(pname, pversion, binary=''):
 
     os.environ['CMTPATH'] = _get_runtime_cmtpath(os.path.join(here, maindir, 'cmt', 'project.cmt'))
 
-    status, value = commands.getstatusoutput('cmt show set_value CMTPATH')
+    status, value = getStatusOutput('cmt show set_value CMTPATH')
     if isCMTMessage(value) :
         CMTPATH = value.split('\n')[1]
     else:
@@ -265,8 +266,8 @@ def make_tar(pname, pversion, binary=''):
                 os.chdir(os.path.join(here, maindir, 'PanoramixSys', 'cmt'))
             else :
                 os.chdir(os.path.join(here, maindir, 'PanoramixSys', pversion, 'cmt'))
-            status, OSC_home = commands.getstatusoutput('cmt show macro_value OSC_home')
-            status, LCG_system = commands.getstatusoutput('cmt show macro_value LCG_system')
+            status, OSC_home = getStatusOutput('cmt show macro_value OSC_home')
+            status, LCG_system = getStatusOutput('cmt show macro_value LCG_system')
             OSC_PATH = OSC_home.split(LCG_system)[0]
             while OSC_PATH.endswith(os.sep) :
                 OSC_PATH = OSC_PATH[:-1]
@@ -353,13 +354,13 @@ def make_tar(pname, pversion, binary=''):
         else :
             os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
         if os.environ.has_key('CMTPROJECTPATH'):
-            status, value = commands.getstatusoutput('cmt show macro_value GENSERVERSION')
+            status, value = getStatusOutput('cmt show macro_value GENSERVERSION')
             if isCMTMessage(value) :
                 GENSER_version = 'GENSER_' + value.split('\n')[1]
             else:
                 GENSER_version = 'GENSER_' + value
         else:
-            status, GENSER_version = commands.getstatusoutput('cmt show macro_value GENSER_native_version')
+            status, GENSER_version = getStatusOutput('cmt show macro_value GENSER_native_version')
 
         if status != 0:
             print 'GENSER is not used'
@@ -374,7 +375,7 @@ def make_tar(pname, pversion, binary=''):
             os.chdir(os.path.join(maindir, packSys, 'cmt'))
         else :
             os.chdir(os.path.join(maindir, packSys, pversion, 'cmt'))
-        status, DIM_version = commands.getstatusoutput('cmt show macro_value DIM_native_version')
+        status, DIM_version = getStatusOutput('cmt show macro_value DIM_native_version')
         if status != 0:
             print 'DIM is not used'
         else:
@@ -398,14 +399,14 @@ def make_tar(pname, pversion, binary=''):
         else:
             str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + maindir
 #    status = os.system(str)
-        tar_status, output = commands.getstatusoutput(str)
+        tar_status, output = getStatusOutput(str)
         print 'make_tar: %s tar status= %s' % (tarfile, tar_status)
     else:
         exclude_list = ' --exclude=' + ' --exclude='.join(exclude_binary)
-        status, output = commands.getstatusoutput('find ' + maindir + ' -type d -name ' + binary + ' -print')
+        status, output = getStatusOutput('find ' + maindir + ' -type d -name ' + binary + ' -print')
         binlist = output.replace('\n', ' ')
         str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + binlist
-        tar_status, output = commands.getstatusoutput(str)
+        tar_status, output = getStatusOutput(str)
         print  ' make_tar: %s tar status= %s' % (tarfile, tar_status)
 
 #
@@ -469,7 +470,7 @@ def data_files_tar(pname, pversion):
 # tar the main directory
     str = 'tar ' + deref + ' -zcvf ' + tarfile + ' ' + TARSRC + '/cmt ' + maindir
     print str
-    tar_status, output = commands.getstatusoutput(str)
+    tar_status, output = getStatusOutput(str)
     print 'data_files_tar: %s tar status= %s ' % (tarfile, tar_status)
 
     if tar_status == 0:

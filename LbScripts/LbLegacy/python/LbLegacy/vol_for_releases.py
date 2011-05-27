@@ -7,10 +7,12 @@
 """
 #-----------------------------------------------------------------------------
 
+from LbLegacy.Utils import getStatusOutput
+
 from LbConfiguration.Project import getProject
 from LbUtils.afs.volume import createVolume
 import logging
-import sys, os, commands
+import sys, os
 
 #-----------------------------------------------------------------------------------
 def create_volume(pname,pversion,size=0):
@@ -22,7 +24,7 @@ def create_volume(pname,pversion,size=0):
         size = projconf.FullSize()
 
 # get user name
-    MYNAME = commands.getstatusoutput('id -u -n')[1]
+    MYNAME = getStatusOutput('id -u -n')[1]
 
 # project directory, afs group, volume root
     PNAME = projconf.NAME()
