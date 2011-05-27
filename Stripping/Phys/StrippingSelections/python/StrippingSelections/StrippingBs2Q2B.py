@@ -14,7 +14,7 @@ __all__ = ( 'Bs2Q2Body4piConf',
 
 config_params = {'Q2BPrescale'     : 1.,
                  'Q2BResMinPT'     : 900.,
-                 'Q2BResMinP'      : 0.,
+                 'Q2BResMinP'      : 1.,
                  'Q2BResMaxMass'   : 1100.,
                  'Q2BResVtxChiDOF' : 9.,
                  'Q2BBMinM'        : 4500.,
@@ -22,7 +22,7 @@ config_params = {'Q2BPrescale'     : 1.,
                  'Q2BBMinCorrM'    : 3500.,
                  'Q2BBMaxCorrM'    : 7000.,
                  'Q2BBVtxChi2DOF'  : 9.,
-                 'Q2BBMinTrkPT'    : 500.0,
+                 'Q2BBMinTrkPT'    : 250.0,
                  'Q2BIPCHI2' : 25}
 
 
