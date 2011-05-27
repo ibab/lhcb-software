@@ -252,7 +252,8 @@ def makeB2DhMerged(name,moduleName,decays,dname,dsels,bcuts,bchcuts):
         sel = makeB2DhSel(sname+'Sel',decay,dsels[tag],bcuts,bchcuts)
         tos_sels.append(makeB2DhTOS('TOS'+sname,sel))
         tis_sels.append(makeB2DhTIS('TIS'+sname,sel))
-    sname = name+'With'+dname#+'For'+moduleName
+    #sname = name+'With'+dname#+'For'+moduleName
+    sname = moduleName+'With'+dname # change requested by Anton in line names
     tos = MergedSelection(sname+'TOS',RequiredSelections=tos_sels)
     tis = MergedSelection(sname+'TIS',RequiredSelections=tis_sels)
     return (tos,tis)
