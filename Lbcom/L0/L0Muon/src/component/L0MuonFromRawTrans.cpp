@@ -46,6 +46,15 @@ L0MuonFromRawTrans::L0MuonFromRawTrans( const std::string& name,
   m_l0EventNumber=-1;
   m_l0_B_Id=-1;
   
+  // Converters for the banks of the 2 TELL1s connected to the controller boards
+  for (int i= 0; i<2; ++i) {
+    m_ctrlRaw[i] =  new L0Muon::CtrlRawCnv(i);
+  }
+  // Converters for the banks of the 4 TELL1s connected to the processing boards
+  for (int i= 0; i<4; ++i) {
+    m_procRaw[i] = new L0Muon::ProcRawCnv(i);
+  }  
+
 }
 //=============================================================================
 // Destructor
@@ -67,7 +76,7 @@ L0MuonFromRawTrans::~L0MuonFromRawTrans() {
 StatusCode L0MuonFromRawTrans::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  
   debug() << "==> Initialize" << endmsg;
   L0Muon::RegisterFactory::selectInstance(2);
   // Instanciate the MuonTrigger registers
@@ -75,14 +84,6 @@ StatusCode L0MuonFromRawTrans::initialize() {
   info() <<  "Configuration file is " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
 
-  // Converters for the banks of the 2 TELL1s connected to the controller boards
-  for (int i= 0; i<2; ++i) {
-    m_ctrlRaw[i] =  new L0Muon::CtrlRawCnv(i);
-  }
-  // Converters for the banks of the 4 TELL1s connected to the processing boards
-  for (int i= 0; i<4; ++i) {
-    m_procRaw[i] = new L0Muon::ProcRawCnv(i);
-  }  
   m_version=0;
   
   return StatusCode::SUCCESS;

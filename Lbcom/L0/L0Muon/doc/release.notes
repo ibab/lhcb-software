@@ -3,6 +3,9 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-05-27 - Julien Cogan
+ - L0MuonFromRawTrans : fix the fix (more variables creation in the constructor)
+
 ! 2011-05-26 - Julien Cogan
  - L0MuonAlg.cpp : fix sprintf statements to please Coverity
  - L0MuonFromRawTrans : fix (?) bug found by coverity (use too much stack space)
