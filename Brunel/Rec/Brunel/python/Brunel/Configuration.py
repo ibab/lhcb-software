@@ -431,7 +431,7 @@ class Brunel(LHCbConfigurableUser):
                 GaudiSequencer("OutputDSTSeq").Members += [PackMCVertex()]
                 DstConf().SimType = "Minimal"
             DstConf().OutputName = self.outputName()
-            self.setOtherProps(DstConf(),["DataType"])
+            self.setOtherProps(DstConf(),["DataType","WriteFSR"])
 
     def outputName(self):
         """
