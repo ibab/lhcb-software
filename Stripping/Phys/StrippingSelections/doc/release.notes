@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+
+! 2011-05-27 - Y. Amhis 
+ - StrippingHeavyBaryons + test_heavybaryons 
+   * First import 
+
 ! 2011-05-27 - A. Poluektov 
  - Modified StrippingB2DX.py: 
    * Removed IP chi2 cut for D->hhh and D->Ksh in the config dictionary
