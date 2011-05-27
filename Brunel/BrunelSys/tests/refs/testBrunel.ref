@@ -70,12 +70,12 @@
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
 # WARNING: Using default tag head-20110302 for partition DDDB
-# WARNING: Using default tag head-20110512 for partition LHCBCOND
+# WARNING: Using default tag head-20110524 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v39r0p3
-                                          running on lxbuild163.cern.ch on Wed May 18 10:02:28 2011
+                                                   Welcome to Brunel version v39r4
+                                          running on lxbuild163.cern.ch on Fri May 27 16:19:23 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -104,13 +104,13 @@ HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/night
 LumiSeq              INFO OR Member list: GaudiSequencer/LumiCounters, HltRoutingBitsFilter/LumiFilter, HltRoutingBitsFilter/PhysFilter, with context 'Offline'
 LumiCounters         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSequencer/LumiBeamCrossingSeq, GaudiSequencer/LumiBeam1Seq, GaudiSequencer/LumiBeam2Seq, GaudiSequencer/TimeSpanSeq, EventAccounting/EventAccount, with context 'Offline'
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam, with context 'Offline'
-FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
+FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20110302"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20110512"
+LHCBCOND             INFO Using TAG "head-20110524"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 LumiBeam2Seq         INFO Member list: LoKi::ODINFilter/FilterBeam2, HltLumiSummaryDecoder/LumiDecodeBeam2, FilterOnLumiSummary/LumiFilterBeam2, LumiAccounting/LumiCountBeam2, with context 'Offline'
@@ -233,11 +233,11 @@ ToolSvc.Offline...   INFO Av. optical distortion correction parameters : [0.03, 
 ToolSvc.Offline...   INFO Maximum number of pixels per event = 30000
 RichOfflineTrac...   INFO Member list: Rich::Rec::Initialise/CreateOfflineTracks, with context 'Offline'
 ToolSvc.Offline...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
-ToolSvc.Offline...   INFO  Forward     : P = 0.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  Match       : P = 0.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  Seed        : P = 1.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
 ToolSvc.Offline...   INFO Aerogel  Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance [Will correct for refraction at Aerogel/Rich1Gas boundary] ]
 ToolSvc.Offline...   INFO Rich1Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
 ToolSvc.Offline...   INFO Rich2Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
@@ -290,11 +290,11 @@ RichOfflinePIDSeq    INFO Member list: GaudiSequencer/RichOfflineGPIDSeq, Rich::
 RichOfflineGPIDSeq   INFO Member list: GaudiSequencer/RichOfflineGPIDInitSeq, GaudiSequencer/RichOfflineGPIDLLSeq, Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin, with context 'Offline'
 RichOfflineGPID...   INFO Member list: Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit, Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel, Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel, with context 'Offline'
 RichOfflineGPID...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
-RichOfflineGPID...   INFO  Forward     : P = 0.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  Match       : P = 0.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
-RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->1.00e+04 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  Forward     : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  Match       : P = 0.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
+RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
 RichOfflineGPID...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt1, with context 'Offline'
 RichOfflineGPID...   INFO Maximum event iterations                  = 500
 RichOfflineGPID...   INFO Minimum signal for LL calculation         = 0.001
@@ -495,13 +495,13 @@ MoniOTSeq            INFO Member list: OTTimeMonitor, OTTrackMonitor, OTHitEffic
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor, with context 'Offline'
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, with context 'Offline'
 MoniHltSeq           INFO Member list: HltDecReportsDecoder, HltRateMonitor, HltCompositionMonitor, MuMonitor, with context 'Offline'
-EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
+EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
 OutputDSTSeq         INFO Member list: TrackToDST, GaudiSequencer/PackDST, with context 'Offline'
 PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, DataPacking::Pack<LHCb::WeightsVectorPacker>/PackPVWeights, PackTwoProngVertex, PackTrack/PackMuonTracks, with context 'Offline'
 CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, with context 'Offline'
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FSRWriter            INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
+FSRWriterOutput...   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
@@ -643,9 +643,10 @@ ChargedProtoPMoni    INFO  # Tracks Per Event         |    Track     |     RICH 
 ChargedProtoPMoni    INFO ----------------------------------------------------------------------------------------------------------------------------------------------------
 ChargedProtoPMoni    INFO ====================================================================================================================================================
 MuMonitor         SUCCESS Booked 4 Histogram(s) : 1D=3 1DProf=1
-FSRWriter            INFO Set up File Summary Record
+FSRWriterOutput...   INFO Set up File Summary Record
+IODataManager        INFO Referring to dataset Brunel.dst by its file ID:56EC9375-6C88-E011-892E-003048C9CD62
 RootDBase.open    SUCCESS Brunel.dst File version:52800
-FSRWriter            INFO Events output: 1
+FSRWriterOutput...   INFO Events output: 1
 DstWriter            INFO Events output: 0
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
@@ -655,6 +656,8 @@ TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
 
 TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ToolSvc              INFO Removing all tools created by ToolSvc
 SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronLCorrection') for SingleElectronRec.LCorrection
 SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronSCorrection') for SingleElectronRec.SCorrection
@@ -1031,10 +1034,9 @@ TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.000 
 TimingAuditor.T...   INFO      PackPVWeights            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackMuonTracks           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO  FSRWriterOutputStreamDstWrite|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
