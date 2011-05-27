@@ -377,7 +377,7 @@ class Brunel(LHCbConfigurableUser):
                 if not dstWriter.isPropertySet( "OutputLevel" ):
                     dstWriter.OutputLevel = INFO
                 if self.getProp("WriteFSR"):
-                    FSRWriter = RecordStream( "FSRWriterOutputStream")
+                    FSRWriter = RecordStream( "FSRWriterOutputStreamDstWriter")
                     if not FSRWriter.isPropertySet( "OutputLevel" ):
                         FSRWriter.OutputLevel = INFO
             # Suppress spurious error when reading POOL files without run records
