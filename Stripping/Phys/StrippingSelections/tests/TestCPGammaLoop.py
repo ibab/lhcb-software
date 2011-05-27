@@ -59,50 +59,11 @@ stream.appendLines(confBhhUnbiased.lines())
 
 
 # B->hhh
-from StrippingSelections.StrippingBu3hFrom2h import Bu3hFrom2hBuilder
-paramsBu3hFrom2h = {
-    'MaxTrSIZE':  None,
-    '_h_PT': 700. ,
-    '_h_P': 5000. ,
-    '_h_IPCHI2': 16. ,
-    '_h_TRCHI2DOF': 3.0 ,
-    '_2hLoose_DOCA': .12 ,
-    '_2h_PTmax': 2000. ,
-    '_2h_PTsum':4000.  ,
-    '_2h_PVIPCHI2sum': 100. ,
-    '_2h_FDCHI2': 150. ,
-    '_2h_DIRA': 0.99 ,
-    '_2h_CORRMmax': 6000. ,
-    '_2h_CORRMmin': 4000. ,
-    '_2h_CharmVetoIPCHI2': 16. ,
-    '_2h_CharmVetoM': 2500. ,
-    '_2h_TRKCHIDOFmin': 3. ,
-    '_2h_Mmin': 3500. ,
-    '_2h_PVDOCAmin': 1.0 ,
-    '_2h_CHI2': 14.0 ,
-    '_2h_PTRANS': 4000. ,
-    '_3h_DOCA': .14 ,
-    '_3h_PTmax': 2000 ,
-    '_3h_DIRA': .9998 ,
-    '_3h_FDCHI2': 150. ,
-    '_3h_PVDOCAmin': 1.0 ,
-    '_3h_CHI2': 14.0 ,
-    '_3h_IP': 0.1 ,
-    '_3h_PT': 1000. ,
-    '_3h_PTsum':4250.  ,
-    '_3h_PVIPCHI2sum': 150. ,
-    '_3h_Charge': 1 ,
-    '_3h_CORRMmax': 7000. ,
-    '_3h_CORRMmin': 4000. ,
-    '_3h_Mmax': 6000. ,
-    '_3h_Mmin': 4000. ,
-    '2hLinePrescale': 1. ,
-    '2hLinePostscale': 1 ,
-    '3hLinePrescale': 1 ,
-    '3hLinePostscale': 1}
+from StrippingSelections.StrippingBu2hhh import Bu2hhhBuilder
+from StrippingSelections.StrippingBu2hhh import config_params as config_params_Bu2hhh
+bu2hhhbuilder = Bu2hhhBuilder('Bu2hhh',config_params_Bu2hhh)
 
-bu3hfrom2hBuilder = Bu3hFrom2hBuilder("bu3hfrom2hBuilder", paramsBu3hFrom2h)
-stream.appendLines( bu3hfrom2hBuilder.lines() )
+stream.appendLines( bu2hhhbuilder.lines() )
 
 
 from StrippingSelections.StrippingB2HHPi0 import StrippingB2HHPi0Conf
