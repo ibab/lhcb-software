@@ -10,8 +10,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','David Dossett','Jussara Miranda']
-__date__ = '23/05/2011'
-__version__ = '$Revision: 1.1 $'
+__date__ = '27/05/2011'
+__version__ = 'Stripping15'
 
 __all__ = 'B2KShhConf'
 
@@ -27,22 +27,23 @@ default_config = {'Trk_Chi2'         : 4.0,
                   'KS_DD_VtxChi2'    : 12.0,
                   'KS_DD_FDChi2'     : 50.0,
                   'KS_DD_Pmin'       : 6000.0,
-                  'KS_LL_MassWindow' : 30.0,
+                  'KS_LL_MassWindow' : 20.0,
                   'KS_LL_VtxChi2'    : 12.0,
-                  'KS_LL_FDChi2'     : 50.0,
+                  'KS_LL_FDChi2'     : 80.0,
 		  'B_Mlow'           : 200.0,
 		  'B_Mhigh'          : 280.0,
 		  'BDaug_MedPT_PT'   : 800.0,
 		  'BDaug_MaxPT_IP'   : 0.05,
-		  'hh_DOCA'          : 0.3,
-		  'BDaug_DD_PTsum'   : 4300.0,
-		  'BDaug_LL_PTsum'   : 4000.0,
+		  'hh_DOCA'          : 0.09,
+		  'BDaug_DD_PTsum'   : 4500.0,
+		  'BDaug_LL_PTsum'   : 4500.0,
 		  'B_VtxChi2'        : 12.0,
-		  'B_Dira'           : 0.999,
-		  'B_IPwrtPV'        : 0.08,
+		  'B_Dira'           : 0.9999,
+		  'B_DD_IPwrtPV'     : 0.08,
+		  'B_LL_IPwrtPV'     : 0.06,
 		  'B_FDwrtPV'        : 1.0,
-		  'B_DD_FDChi2'      : 30.0,
-		  'B_LL_FDChi2'      : 40.0,
+		  'B_DD_FDChi2'      : 15.0,
+		  'B_LL_FDChi2'      : 15.0,
 		  'GEC_MaxTracks'    : 250,
 		  'Prescale'         : 1.0,
 		  'Postscale'        : 1.0
@@ -90,7 +91,8 @@ class B2KShhConf(LineBuilder) :
                               'BDaug_LL_PTsum',
                               'B_VtxChi2',
                               'B_Dira',
-                              'B_IPwrtPV',
+                              'B_DD_IPwrtPV',
+                              'B_LL_IPwrtPV',
                               'B_FDwrtPV',
                               'B_DD_FDChi2',
                               'B_LL_FDChi2',
@@ -188,7 +190,7 @@ class B2KShhConf(LineBuilder) :
 
 	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
 	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_IPwrtPV']
+	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_DD_IPwrtPV']
 	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
 	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_DD_FDChi2']
 
@@ -223,7 +225,7 @@ class B2KShhConf(LineBuilder) :
 
 	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
 	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_IPwrtPV']
+	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_LL_IPwrtPV']
 	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
 	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_LL_FDChi2']
 

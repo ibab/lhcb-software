@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - Thomas Latham
+ - StrippingB2KShh: updated cuts to reduce retention rates
+
 ! 2011-05-27 - Mike Williams
 - StrippingB2DXHltTisTos: new lines based on TIS/TOS of Topo.
 
