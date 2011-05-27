@@ -44,7 +44,7 @@ class RecSysConf(LHCbConfigurableUser):
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
     KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas",
-                         "earlyData", "microBiasTrigger","upgrade" ]
+                         "microBiasTrigger","upgrade" ]
 
     ## Steering options
     __slots__ = {

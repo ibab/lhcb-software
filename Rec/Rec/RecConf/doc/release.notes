@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-05-27 - Marco Cattaneo
+ - Remove obsolete "earlyData" flag from KnownSpecialData list.
+
 !========================= RecConf v2r0 2011-02-02 =========================
 ! 2011-02-02 - Rob Lambert
  - Updated major version because this changes the DST format
