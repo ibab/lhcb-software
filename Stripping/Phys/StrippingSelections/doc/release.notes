@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-27 - Mike Williams
+- StrippingB2DXHltTisTos: new lines based on TIS/TOS of Topo.
+
 ! 2011-05-27 - Irina Nasteva
  - Stripping lines for B->hhh
  - Added new line StrippingBu2hhh.py in place of StrippingBu3hFrom2h.py:
