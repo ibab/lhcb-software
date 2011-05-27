@@ -3,6 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+!2011-05-27 - Benoit Viaud
+
+ - StrippingD2XMuMuSS.py: Added new lines for hhmumu modes, plus D->(h)hhh lines 
+   for control samples (to be prescales at 1%).   
+
 !2011-05-27 - Philip Hunt
  - StrippingDstarPromptWithD02HHHH.py: Fixed bug that prevented global event cuuts from being applied
 
