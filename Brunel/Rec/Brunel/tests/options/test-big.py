@@ -1,6 +1,3 @@
-from GaudiKernel.ProcessJobOptions import importOptions
-importOptions("$APPCONFIGOPTS/Brunel/earlyData.py")
-
 from Gaudi.Configuration import EventSelector
 from Configurables import Brunel
 

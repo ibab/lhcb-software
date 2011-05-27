@@ -1,11 +1,8 @@
 # Test, will read teh FSR from a DST file
-# These options are mostly copied from $IOEXAMPLEROOT/tests/options/ReadDst.opts
 from Gaudi.Configuration import *
 from Configurables import EventSelector, LHCbApp
 from LumiAlgs.Configuration import *
 
-# Set up POOL persistency
-importOptions( "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts" )
 #Select DST file
 EventSelector().Input   = [
   "DATAFILE='PFN:56721-100ev.dst' TYP='POOL_ROOTTREE' OPT='READ'"
