@@ -160,7 +160,7 @@ confdict = {
     #
     # Trigger 
     #
-    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Mu.*Decision') " , 
+    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Decision') " , 
     #
     # Prescale 
     #
@@ -451,7 +451,7 @@ class StrippingTriMuonsConf(LineBuilder) :
             ## 
             ## 
             CombinationCut  = """
-            ( ADAMASS('tau+') < 250 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
+            ( ADAMASS('tau+') < 500 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
             """ , ## wide mass-combination + PT-cuts 
             ##
             MotherCut       = """
