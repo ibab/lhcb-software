@@ -631,32 +631,33 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
   std::vector<boost::filesystem::path> goodRootFiles;
 
   std::vector<TList*> list;
-  while ( histos.size() > list.size() ) list.push_back( new TList );
+  std::vector<std::vector<double> > mean;
+  std::vector<std::vector<double> > error;
+  std::vector<double> dum;
+  while ( histos.size() > list.size() ) {
+    list.push_back( new TList );
+    mean.push_back( dum );
+    error.push_back( dum );
+  }
 
   for ( std::vector< boost::filesystem::path >::const_iterator itF = m_rootFiles.begin();
         m_rootFiles.end() != itF; ++itF ) {
-    TFile* rootFile;
-    std::vector<TFile*>::iterator itOF = std::find( m_openFiles.begin(), m_openFiles.end(), rootFile );
-    if ( itOF == m_openFiles.end() ) {
-      std::cout << "++ Opening root file " << (*itF).file_string().c_str() << std::endl;
-      rootFile = TFile::Open( (*itF).file_string().c_str() ) ;
-      if ( 0 == rootFile ) {
-        std::cout << "Error reading file " << (*itF).file_string()
-                  << std::endl
-                  << "History not available !"
-                  << std::endl ;
-        for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
-        break ;
-      }
-      
-      if ( rootFile -> IsZombie() ) {
-        std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
-        continue;
-      }
-      m_openFiles.push_back( rootFile );
-    } else {
-      rootFile = *itOF;
+    std::cout << "++ Opening root file " << (*itF).file_string().c_str() << std::endl;
+    TFile* rootFile = TFile::Open( (*itF).file_string().c_str() ) ;
+    if ( 0 == rootFile ) {
+      std::cout << "Error reading file " << (*itF).file_string()
+                << std::endl
+                << "History not available !"
+                << std::endl ;
+      for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
+      break ;
     }
+    
+    if ( rootFile -> IsZombie() ) {
+      std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
+      continue;
+    }
+    m_openFiles.push_back( rootFile );
     
     std::cout << " ++ file " << (*itF).file_string() << " is open." << std::endl;
 
@@ -673,7 +674,9 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
         rootFile -> GetObject( name.c_str(), archiveHisto );
       }
       if (archiveHisto) {
-        list[kk]->Add(archiveHisto);
+        list[kk]->Add( archiveHisto );
+        mean[kk].push_back ( archiveHisto->GetMean() );
+        error[kk].push_back( archiveHisto->GetMeanError() );        
         if ( first ) {
           goodRootFiles.push_back(*itF);
           first = false;
@@ -711,8 +714,8 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
                               list[kk]->GetSize(), 0.5,  list[kk]->GetSize() +0.5);
         newh->Sumw2();
         for (int i=0 ; i<list[kk]->GetSize(); i++) {
-          newh->SetBinContent(i+1, ((TH1*)list[kk]->At(i))->GetMean() );
-          newh->SetBinError(i+1, ((TH1*)list[kk]->At(i))->GetMeanError() );
+          newh->SetBinContent(i+1, mean[kk][i] );
+          newh->SetBinError(i+1, error[kk][i] );
         }
         setHistoryLabels(newh, goodRootFiles);
         //dispHist -> setHistoryTrendPlotMode(true);

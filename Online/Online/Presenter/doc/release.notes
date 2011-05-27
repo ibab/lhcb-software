@@ -6,6 +6,9 @@
 
 !=============================== 2011-05-27 v3r0 =============================
 ! 2011-05-27 - Olivier Callot
+ - Fix a bug in the history versus run number
+
+! 2011-05-27 - Olivier Callot
  - Compute a global min/max scale for superimposed trend plots
 
 ! 2011-05-25 - Olivier Callot
