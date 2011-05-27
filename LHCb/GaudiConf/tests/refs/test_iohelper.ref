@@ -18,7 +18,7 @@ IOHelper().inputFiles([
     ])
 (0, '')
 (0, '')
-(0, "['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2aeff18b89b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2aeff18e2850>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2aeff18e2950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2aeff18e2a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2aeff18e2b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2aeff18e2850>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2aeff18e2a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2aeff18e2950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2aeff18e2b50>]")
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x1be49b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>]
 =============================
 POOL
 =============================
@@ -39,7 +39,7 @@ IOHelper().inputFiles([
     ])
 (0, '')
 (0, '')
-(0, "['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b1d22acc9b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b1d22af6850>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b1d22af6950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b1d22af6a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b1d22af6b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b1d22af6850>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b1d22af6a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b1d22af6950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b1d22af6b50>]")
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x1be49b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>]
 =============================
 ROOT
 =============================
@@ -60,7 +60,7 @@ IOHelper().inputFiles([
     ])
 (0, '')
 (0, '')
-(0, "['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x19693550>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x19694010>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x19693550>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x19694010>]")
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x1ff5800>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1ff5e20>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x1ff5800>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1ff5e20>]
 =============================
 MDF
 =============================
@@ -81,4 +81,4 @@ IOHelper().inputFiles([
     ])
 (0, '')
 (0, '')
-(0, "['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', 'LHCb::RawDataCnvSvc']")
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', 'LHCb::RawDataCnvSvc']

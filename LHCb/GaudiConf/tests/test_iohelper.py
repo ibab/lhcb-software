@@ -34,11 +34,9 @@ def testthisioh(ioh):
     import commands
     print commands.getstatusoutput('python -c "'+ioh.selectorString().replace('"','\\"')+'"')
     print commands.getstatusoutput("python -c '"+ioh.helperString()+"'")
-    print commands.getstatusoutput('python -c "from GaudiConf import IOHelper;'
-                                   +"IOHelper('"+ioh._inputPersistency
-                                   +"','"+ioh._outputPersistency
-                                   +"').setupServices();"
-                                   +'print IOHelper().activeServices();"')
+
+    ioh.changeServices()
+    print ioh.activeServices()
     
 
 for persistency in [None,'POOL','ROOT','MDF']:

@@ -172,20 +172,12 @@ class IOHelper(object):
         
         return retlist
     
-    def _getCleanList(self,svclist):
-        retlist=[]
-        for service in svclist:
-            servicestring=''
-            if type(service)==str:
-                servicestr=service
-            else:
-                servicestr=service.getFullName()
-            
-            if not self._isPersistencySvc(servicestr):
-                retlist.append(service)
+    def _removeConfigurables(self, conf_list):
+        from Gaudi.Configuration import allConfigurables
+        conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
+        for k in conftodel:
+            del allConfigurables[k]
         
-        return retlist
-    
     def isRootSupported(self):
         '''Check if the root services exist in this version'''
         import Configurables
@@ -239,6 +231,12 @@ class IOHelper(object):
         # Always enable reading/writing of MDF
         EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
+        #always convert the event selector as a postConfigAction
+        #now only won't work for flattened files
+        from Gaudi.Configuration import appendPostConfigAction
+        
+        appendPostConfigAction(self.convertSelector)
+    
     def activeServices(self):
         '''return all configured persistency services'''
         from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
@@ -252,12 +250,15 @@ class IOHelper(object):
     def clearServices(self):
         '''remove all persistency services'''
         from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
+
+        active=self.activeServices()
         
-        ApplicationMgr().ExtSvc=self._getCleanList(ApplicationMgr().ExtSvc)
-        EventPersistencySvc().CnvServices=self._getCleanList(EventPersistencySvc().CnvServices)
-        PersistencySvc("FileRecordPersistencySvc").CnvServices=(
-            self._getCleanList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
-            )
+        ApplicationMgr().ExtSvc=[svc for svc in ApplicationMgr().ExtSvc if svc not in active]
+        EventPersistencySvc().CnvServices=[svc for svc in EventPersistencySvc().CnvServices if svc not in active]
+        PersistencySvc("FileRecordPersistencySvc").CnvServices=[
+            svc for svc in PersistencySvc("FileRecordPersistencySvc").CnvServices if svc not in active]
+        
+        self._removeConfigurables(active)
         
     def changeServices(self):
         '''Go through the list of gaudi services, remove any persistency services and add different ones
@@ -456,4 +457,12 @@ class IOHelper(object):
         retstr+=' '*alen+'])'
         
         return retstr
+    
+    def postConfigConvertSelector(self, eventSelector):
+        '''append a Post Config action to convert the selection strings,
+        do that when the services are setup such that conversion happens at the end regardless
+        '''
+        from Gaudi.Configuration import appendPostConfigAction
+        
+        appendPostConfigAction(self.convertSelector)
         

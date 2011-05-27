@@ -3,6 +3,10 @@
 !----------------------------------------------------------------------------
 
 ! 2011-05-27 - Rob Lambert
+ - finished changeServices() functionality
+ - added a post config action of convertSelector() to fix across the changeover
+
+! 2011-05-27 - Rob Lambert
  - Added clearServices and changeServices methods.
    changeServices not completed yet due to configurable issues
  - Added isRootSupported() method
