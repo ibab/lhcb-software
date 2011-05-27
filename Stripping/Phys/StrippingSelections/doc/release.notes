@@ -4,7 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-
+!2011-05-27 - Johannes Albrecht	
+ - StrippingTriMuons: adapt tau23mu selection
+ - StrippingHyperCP: add TIS Ds23pi and adapt DS2PhiPi selection
 
 ! 2011-05-27 - Y. Amhis 
  - StrippingHeavyBaryons + test_heavybaryons 
