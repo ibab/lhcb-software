@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2011-05-27 - Victor Coco
+ - StrippingDisplVertices.py: Tighten the line to match the requirements 
+ - StrippingTriMuons.py: Tighten the line to match the requirements 
+
+
 ! 2011-05-27 - Jibo He
  - Removed not-found 'StrippingBu3hFrom2h' from __init__.py
  - Added StrippingDownElectronID for downstream ElectronPID 

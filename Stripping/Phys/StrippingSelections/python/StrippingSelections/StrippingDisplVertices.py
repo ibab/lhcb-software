@@ -57,26 +57,26 @@ confdict = {
     'MinR':{
        'PreselVelo':     0.3*units.mm , 
        'SinglePS': 0.3*units.mm ,
-       'SingleLowMass': 0.3*units.mm ,
+       'SingleLowMass': 0.4*units.mm ,
        'SingleHighMass': 0.3*units.mm ,
-       'SingleDown': 0.3*units.mm ,
+       'SingleDown': 3.0*units.mm ,
        'Double': 0.3*units.mm
     },
     'MinMass':{
        'PreselVelo':     3.*units.GeV , 
        'SinglePS': 5.*units.GeV  ,
-       'SingleLowMass': 6.8*units.GeV ,
+       'SingleLowMass': 7.5*units.GeV ,
        'SingleHighMass':  12.*units.GeV,
-       'SingleDown':  3.*units.GeV,
+       'SingleDown':  4.*units.GeV,
        'Double': 3.*units.GeV 
     },
     'MinSumPt':{
        'PreselVelo':     3.*units.GeV ,
        'SinglePS': 5.*units.GeV  ,
-       'SingleLowMass': 6.*units.GeV ,
+       'SingleLowMass': 7.*units.GeV ,
        'SingleHighMass':  6.*units.GeV,
-       'SingleDown':  3.5*units.GeV,
-       'Double': 3.*units.GeV
+       'SingleDown':  4.*units.GeV,
+       'Double': 3.5*units.GeV
     },
     'MaxMass':{
        'SinglePS': 14*units.TeV ,
@@ -104,7 +104,7 @@ confdict = {
        'SinglePS': -10*units.m,
        'SingleLowMass':  -10*units.m,
        'SingleHighMass':   -10*units.m ,
-       'SingleDown': 100*units.mm  ,
+       'SingleDown': 100.*units.mm  ,
        'Double': -10*units.m
     },
     'MaterialVeto':{
@@ -329,6 +329,7 @@ class DisplVerticeLinesConf(LineBuilder) :
         selectionAlg.PreyMinSumpt = self.__confdict__['MinSumPt'][lineName]
         selectionAlg.PreyMaxMass = self.__confdict__['MaxMass'][lineName]
         selectionAlg.NbTracks = self.__confdict__['NTracks'][lineName]
+        #selectionAlg.SaveTuple = True
         selectionAlg.RemVtxFromDet = self.__confdict__['MaterialVeto'][lineName]
         return Selection ( "Sel" + lineName + name  , Algorithm = selectionAlg , RequiredSelections = [ self.VeloDVPreselection ] )
 
@@ -343,7 +344,7 @@ class DisplVerticeLinesConf(LineBuilder) :
         selectionAlg.PreyMaxMass = self.__confdict__['MaxMass'][lineName]
         selectionAlg.NbTracks = self.__confdict__['NTracks'][lineName]
         selectionAlg.MinZ = self.__confdict__['MinZ'][lineName]
-        ##selectionAlg.SaveTuple = True
+        #selectionAlg.SaveTuple = True
         selectionAlg.RemVtxFromDet = self.__confdict__['MaterialVeto'][lineName]
         return Selection ( "Sel" + lineName + name  , Algorithm = selectionAlg , RequiredSelections = [ self.DownDVPreselection ] )
 

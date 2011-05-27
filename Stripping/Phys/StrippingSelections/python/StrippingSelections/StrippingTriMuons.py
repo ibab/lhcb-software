@@ -154,13 +154,13 @@ confdict = {
     #
     # Selection of basic particles 
     #
-    'GoodMuons'    : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  6 ) " ,
+    'GoodMuons'    : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  9 ) " ,
     'GoodMuonsForBc' : " ( BPVIPCHI2 () >  9 ) " ,
-    'TightMuons'   : " ( PT > 1.5 * GeV ) & ( BPVIPCHI2 () > 16 ) " ,
+    'TightMuons'   : " ( PT > 1.9 * GeV ) & ( BPVIPCHI2 () > 25 ) " ,
     #
     # Trigger 
     #
-    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Decision') " , 
+    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Mu.*Decision') " , 
     #
     # Prescale 
     #
@@ -451,7 +451,7 @@ class StrippingTriMuonsConf(LineBuilder) :
             ## 
             ## 
             CombinationCut  = """
-            ( ADAMASS('tau+') < 500 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
+            ( ADAMASS('tau+') < 250 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
             """ , ## wide mass-combination + PT-cuts 
             ##
             MotherCut       = """
