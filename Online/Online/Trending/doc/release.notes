@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2011-05-27 - Olivier Callot
+ - Fix scan of first entry, if none in the time window.
+
 !============================== 2011-04-07 v1r5 ==============================
 ! 2011-04-07 - Olivier Callot
  - New method of ITrendingTool needed for the presenter, for multi-version access.

@@ -560,7 +560,8 @@ bool TrendingTool::select( int startTime, int endTime, std::string tag ) {
   if ( !getDataContaining( startTime ) ) return false;
 
   debug() << "Skip until startTime, current data time = " << m_data.data[m_ptData].i << endmsg;
-  while ( m_data.data[m_ptData].i < startTime ) unpackAnEvent();  // Skip entries before
+  while ( m_data.data[m_ptData].i < startTime &&
+          m_data.data[m_ptData].i > 0 ) unpackAnEvent();  // Skip entries before
 
   m_lastTime = startTime;
   m_hasSelection = true;
