@@ -226,9 +226,9 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
 ##     the time for the combinatorics (D in particular)
 ##     '''
  
-        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 180",
+        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 250",
                                              'Preambulo' : ["from LoKiTrigger.decorators import *"]}
-        B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 180",
+        B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 250",
                                              'Preambulo' : ["from LoKiTrigger.decorators import *"]}
 
         #Stripping lines
