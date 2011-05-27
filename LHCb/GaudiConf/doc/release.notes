@@ -2,6 +2,21 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-27 - Rob Lambert
+ - Added clearServices and changeServices methods.
+   changeServices not completed yet due to configurable issues
+ - Added isRootSupported() method
+ - added selectorString() method, which returns an eventSelector string
+   useful for constructing any GaudiCards
+ - added helperString() method which returns an IOHelper() string
+   useful for constructing new-style gaudi cards
+ - added qmtest of basic input functionality
+   output functionality is not tested yet
+
+! 2011-05-25 - Rob Lambert
+ - Call undressFile before dressFile in inputFiles, in case somebody
+   accidentally sends in an already dressed string
+
 ! 2011-05-24 - Marco Cattaneo
  - In IOHelper:
    . Add support for MDF persistency. RawDataCnvSvc is always created

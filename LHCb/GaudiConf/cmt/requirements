@@ -1,7 +1,7 @@
 package GaudiConf
 version           v13r10
 
-branches doc cmt options python src
+branches doc cmt options python src tests
 include_path none
 
 use GaudiPolicy v*
@@ -19,3 +19,5 @@ macro GaudiConfConfUserModules "GaudiConf.SimConf GaudiConf.DigiConf GaudiConf.C
 apply_pattern install_python_modules
 apply_pattern install_scripts
 
+#QM tests
+apply_pattern QMTest

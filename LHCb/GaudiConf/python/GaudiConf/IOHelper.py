@@ -8,43 +8,46 @@ __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 class IOHelper(object):
     '''
     IOHelper class, for simpler configuration of input/output
-
+    
     from GaudiConf.IOHelper import IOHelper
     ioh = IOHelper(Input=None,Output=None)
-
+    
     "ioh" is now an instance of the helper which can be used in many places
     Defaults to POOL and POOL at the moment.
     At some point we will change the default to ROOT and ROOT.
     
-    1) configuring services:
+    1) check if root framework is possible:
+        IOHelper().isRootSupported()
+    
+    2) configuring services:
         IOHelper().setupServices()
         IOHelper("POOL","POOL").setupServices()
         ioh.setupServices()
       
-    2) building an EventSelector from a list of files:
+    3) building an EventSelector from a list of files:
         evtsel=IOHelper().inputFiles(filelist)
         evtsel=IOHelper("POOL","POOL").inputFiles(filelist)
         evtsel=ioh.inputFiles(filelist)
       
-    3) adding a simple OutputStream to the OutStream of Application Manager
+    4) adding a simple OutputStream to the OutStream of Application Manager
         ioh.outStream(filename)
       
-    4) adding a named special output stream to the OutputStream of Application Manager
+    5) adding a named special output stream to the OutputStream of Application Manager
         ioh.outStream(filename,"LHCbInputCopyStream/mystream")
       
-    5) creating output algorithms to add to your sequence
+    6) creating output algorithms to add to your sequence
         MySequence+=ioh.outputAlgs(filename,"InputCopyStream/mySelection")
-
-    6) converting event selectors between formats
+        
+    7) converting event selectors between formats
         IOHelper().convertSelector()
         evtsel=IOHelper("ROOT").convertSelector(evtsel)
         ioh.convertSelector()
     
     Specific uses:
-
+    
     a) Ganga.           Needs to create the file name list to be passed to IOHelper.
                         Needs to pickle or otherwise flatten the result.
-
+                        
     b) LHCbApp          Setup the services, may need slots to do the steering
     
     b) Brunel.          Pass type to LHCbApp if it is an MDF.
@@ -71,6 +74,14 @@ class IOHelper(object):
                           'POOL' : "TYP='POOL_ROOTTREE'",
                           'MDF'  : "SVC='LHCb::MDFSelector'"
                           }
+
+    _knownPerServices = ['PoolDbCnvSvc',
+                         'PoolDbCacheSvc',
+                         'RootCnvSvc',
+                         "RawDataCnvSvc",
+                         'MultiFileCatalog',
+                         'IODataManager'
+                         ]
     
     def __init__(self,Input=None,Output=None):
         '''
@@ -81,15 +92,17 @@ class IOHelper(object):
         "ioh" is now an instance of the helper which can be used in many places
         '''
         if Input is not None:
+            if Input.upper()=="RAW": Input="MDF"
             if Input.upper() not in self._inputSvcTypDict:
                 raise ValueError, Input+' input persistency not known'
             self._inputPersistency=Input.upper()
         
         if Output is not None:
+            if Output.upper()=="RAW": Output="MDF"
             if Output.upper() not in self._outputSvcTypDict:
                 raise ValueError, Output+' output persistency not known'
             self._outputPersistency=Output.upper()
-
+        
         if self._outputPersistency == 'POOL':
             if self._inputPersistency == 'ROOT':
                 if Output is not None:
@@ -102,6 +115,16 @@ class IOHelper(object):
             if self._inputPersistency == 'POOL':
                 print "# ROOT output file requested. Forcing reading of POOL input files with RootCnv" 
                 self._inputPersistency = 'ROOT'
+
+        if self._inputPersistency=='ROOT' or self._outputPersistency=='ROOT':
+            if not self.isRootSupported():
+                raise TypeError("ROOT persistency is not supported in this Application version"+
+                                "Ask your release manager for details or change to POOL")
+
+    def __str__(self):
+        '''print the class
+        '''
+        return "<IOHelper Input='"+self._inputPersistency+"' Output='" +self._outputPersistency+"'>"
     
     def __chooseIO(self,IO):
         '''IO = starts with one of r, w, i or o
@@ -123,12 +146,51 @@ class IOHelper(object):
         FileRecordDataSvc( ForceLeaves        = "YES",
                            EnableFaultHandler = True,
                            RootCLID           = 1    )
-
+        
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
         PersistencySvc("FileRecordPersistencySvc").CnvServices += [ fileSvc ]
         
+    def _isPersistencySvc(self,svcstring):
+        '''Returns true if the svcstring is one of the known persistencies'''
+        for service in self._knownPerServices:
+            if service in svcstring:
+                return True
+        return False
+    
+    def _getSvcList(self,svclist):
+        retlist=[]
+        for service in svclist:
+            servicestring=''
+            if type(service)==str:
+                servicestr=service
+            else:
+                servicestr=service.getFullName()
+            
+            if self._isPersistencySvc(servicestr):
+                retlist.append(service)
         
+        return retlist
+    
+    def _getCleanList(self,svclist):
+        retlist=[]
+        for service in svclist:
+            servicestring=''
+            if type(service)==str:
+                servicestr=service
+            else:
+                servicestr=service.getFullName()
+            
+            if not self._isPersistencySvc(servicestr):
+                retlist.append(service)
+        
+        return retlist
+    
+    def isRootSupported(self):
+        '''Check if the root services exist in this version'''
+        import Configurables
+        return hasattr(Configurables,"Gaudi__RootCnvSvc")
+    
     def svcTypString(self,IO):
         ''' given the IO type, return the selection string for the active services'''
         IO=self.__chooseIO(IO)
@@ -144,7 +206,7 @@ class IOHelper(object):
         EventDataSvc( ForceLeaves        = True,
                       RootCLID           =    1,
                       EnableFaultHandler = True )
-
+        
         # Set up the IO
         ApplicationMgr().ExtSvc += [ "Gaudi::MultiFileCatalog/FileCatalog",
                                      "Gaudi::IODataManager/IODataManager"  ]
@@ -165,7 +227,7 @@ class IOHelper(object):
             keySvc  = PoolDbCnvSvc( "PoolRootKeyEvtCnvSvc",  DbType = "POOL_ROOTKEY",  EnableIncident = 1 )
             treeSvc = PoolDbCnvSvc( "PoolRootTreeEvtCnvSvc", DbType = "POOL_ROOTTREE", EnableIncident = 1 )
             EventPersistencySvc().CnvServices += [ evtSvc, treeSvc, keySvc ]
-
+            
             cacheSvc = PoolDbCacheSvc( Dlls        = ["lcg_RootStorageSvc", "GaudiKernelDict"],
                                        OutputLevel = 4,
                                        DomainOpts  = ["Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong"]
@@ -173,13 +235,41 @@ class IOHelper(object):
             ApplicationMgr().ExtSvc += [ cacheSvc, evtSvc, keySvc, treeSvc ]
             fileSvc = PoolDbCnvSvc( "FileRecordCnvSvc", DbType = "POOL_ROOTTREE" )
             self._doConfFileRecords(fileSvc)
+        
         # Always enable reading/writing of MDF
         EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
+
+    def activeServices(self):
+        '''return all configured persistency services'''
+        from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
+        retlist=[]
+        retlist+=self._getSvcList(ApplicationMgr().ExtSvc)
+        retlist+=self._getSvcList(EventPersistencySvc().CnvServices)
+        retlist+=self._getSvcList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
+        
+        return retlist
+    
+    def clearServices(self):
+        '''remove all persistency services'''
+        from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
+        
+        ApplicationMgr().ExtSvc=self._getCleanList(ApplicationMgr().ExtSvc)
+        EventPersistencySvc().CnvServices=self._getCleanList(EventPersistencySvc().CnvServices)
+        PersistencySvc("FileRecordPersistencySvc").CnvServices=(
+            self._getCleanList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
+            )
+        
+    def changeServices(self):
+        '''Go through the list of gaudi services, remove any persistency services and add different ones
+        '''
+        self.clearServices()
+        self.setupServices()
         
     def dressFile(self,filename,IO):
         '''Go from file name to connection string'''
         IO=self.__chooseIO(IO)
-        
+        if "DATAFILE=" in filename:
+            raise ValueError, "the file has already been dressed, don't dress a dressed file!: "+filename
         if IO=='O':
             return "DATAFILE='" + filename + "' " + self.svcTypString( 'O' ) + " OPT='REC'"
         
@@ -195,7 +285,7 @@ class IOHelper(object):
                 filestring=filestring[pos:]
         filestring=filestring.strip("'").split("'")[0]
         return filestring
-
+    
     def convertConnectionStrings(self, filelist, IO):
         '''Go from a list of connection strings or file names to a new list of connection strings
         needs to know the IO type to know what to convert to'''
@@ -208,9 +298,9 @@ class IOHelper(object):
     def convertSelector(self, eventSelector=None):
         '''Modify an EventSelector to switch to the new input connection strings
         Go from a list of connection strings or file names to a new list of connection strings
-
+        
         convertSelector(self, eventSelector=None)
-
+        
         If eventSelector is None, the default EventSelector will be found.
         If an event selector is passed, that one will be modified
         
@@ -227,12 +317,12 @@ class IOHelper(object):
     def inputFiles(self,files,clear=False, eventSelector=None):
         '''Edit the content of EventSelector and fill the Inputs with 
         Go from a list of connection strings or file names to a new list of connection strings
-
+        
         inputFiles(self,files,clear=True, eventSelector=None)
-
+        
         If eventSelector is None, the default EventSelector will be found.
         If an event selector is passed, that one will be modified
-
+        
         If clear is True the original Inputs are overwritten.
         If clear is False the original Inputs are also kept.
         '''
@@ -240,7 +330,7 @@ class IOHelper(object):
         if eventSelector is None:
             from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
-
+        
         if clear:
             eventSelector.Input=[]
         
@@ -248,29 +338,29 @@ class IOHelper(object):
             self.convertSelector(eventSelector)
         
         for file in files:
-            eventSelector.Input += [ self.dressFile(file,'I') ]
+            eventSelector.Input += [ self.dressFile(self.undressFile(file),'I') ]
         return eventSelector
     
     def outputAlgs(self,filename,writer="OutputStream",writeFSR=True):
         '''Create a output stream and FSR writing algorithm instance
         to write into the given file.
-
+        
         Any class inheriting from OutputStream can be used, with an instance name.
-
+        
         e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
-
+        
         returns a list of algorithms to append to your sequencer.
         '''
         
         #build up the filename
         filename=self.dressFile(filename,'O')
-
+        
         writer=writer.replace('::','__')
         
         #find the writer
         wclass=None
         winstance=None
-
+        
         #if it's in Gaudi.Configuration
         import Gaudi.Configuration as GaudiConfigurables
         
@@ -288,7 +378,7 @@ class IOHelper(object):
             winstance=wclass(name=writer.split('/')[-1])
         
         winstance.Output = filename
-
+        
         if not writeFSR: return [winstance]
         
         FSRWriter = GaudiConfigurables.RecordStream( "FSRWriter"+writer.replace('/',''),
@@ -299,15 +389,15 @@ class IOHelper(object):
         FSRWriter.Output = filename
         
         return [FSRWriter, winstance]
-
+    
     def outStream(self,filename,writer="OutputStream",writeFSR=True):
         '''Create a output stream and FSR writing algorithm instance
         to write into the given file.
-
+        
         Any class inheriting from OutputStream can be used, with an instance name.
-
+        
         e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
-
+        
         Adds these streams directly to the Application manager OutStream
         '''
         from Gaudi.Configuration import ApplicationMgr
@@ -319,3 +409,51 @@ class IOHelper(object):
         
         for alg in algs:
             ApplicationMgr().OutStream.append(alg)
+
+    def selectorString(self, eventSelector=None):
+        '''return a string of the event selector which could be used in an old-style gaudi card
+        '''
+        
+        if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
+            eventSelector=EventSelector()
+        
+        retstr='from Gaudi.Configuration import EventSelector\n'
+        retstr+=eventSelector.getType()+'('
+        if eventSelector.getType()!=eventSelector.getName():
+            retstr+=eventSelector.getType()
+        
+        retstr+=').Input=[\n'
+        
+        files=eventSelector.Input
+        
+        alen=4
+        for file in files[:-1]:
+            retstr+=' '*alen+'"'+file+'",\n'
+        for file in files[-1:]:
+            retstr+=' '*alen+'"'+file+'"\n'
+        retstr+=' '*alen+']'
+        return retstr
+    
+    def helperString(self, eventSelector=None):
+        '''return a string of the IOHelper which could be used in a new-style gaudi card
+        '''
+        
+        if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
+            eventSelector=EventSelector()
+        
+        retstr='from GaudiConf import IOHelper\n'
+        retstr+='IOHelper().inputFiles([\n'
+        
+        files=eventSelector.Input
+        
+        alen=4
+        for file in files[:-1]:
+            retstr+=' '*alen+'"'+self.undressFile(file)+'",\n'
+        for file in files[-1:]:
+            retstr+=' '*alen+'"'+self.undressFile(file)+'"\n'
+        retstr+=' '*alen+'])'
+        
+        return retstr
+        
