@@ -10,6 +10,7 @@
 // from Event
 #include "Event/HepMCEvent.h"
 #include "Event/GenCollision.h"
+#include "Event/GenHeader.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
@@ -25,6 +26,7 @@
 // 2004-03-02 : Patrick Robbe
 // 2007-01-30 : Paul Szczypka, add information on hard interaction
 // 2007-02-16 : Gloria Corti, initialize m_event
+// 2011-05-25 : Gloria Corti, add run and event number information
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -43,6 +45,8 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
                    m_inputHepMC = LHCb::HepMCEventLocation::Default);
   declareProperty( "Collisions", 
                    m_inputColl = LHCb::GenCollisionLocation::Default);
+  declareProperty( "Header", m_inputHeader = LHCb::GenHeaderLocation::Default);
+  
 }
 
 //=============================================================================
@@ -59,7 +63,13 @@ StatusCode GeneratorFullMonitor::execute() {
   Tuple ntp = nTuple( 1 , "MCTruth" , CLID_ColumnWiseTuple ) ;
 
   int nEvent = 0;
-  
+
+  LHCb::GenHeader* header = get<LHCb::GenHeader>(m_inputHeader);
+  int runN = header->runNumber();
+  int evtN = header->evtNumber();
+  ntp -> column( "runN", runN );
+  ntp -> column( "evtN", evtN );
+
   LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( m_inputColl );
   
   std::vector< int > procId ;
@@ -89,6 +99,7 @@ StatusCode GeneratorFullMonitor::execute() {
       break;
     }
   }
+
   ntp -> farray( "procId"   , procId , "NInter" , m_event_max ) ;
   ntp -> farray( "s_hat"    , shat   , "NInter" , m_event_max ) ;
   ntp -> farray( "t_hat"    , that   , "NInter" , m_event_max ) ;

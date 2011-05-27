@@ -47,7 +47,9 @@ private:
   std::string m_inputHepMC;
   /// Location where to find GenCollision
   std::string m_inputColl;
-  
+  /// Location where to find GenHeader
+  std::string m_inputHeader;
+
   int m_nPart , m_nInter ;
   std::vector< double > m_e , m_px , m_py , m_pz ;
   std::vector< double > m_vxProd , m_vyProd , m_vzProd , m_vtProd ;
@@ -56,5 +58,6 @@ private:
   std::vector< int > m_pdgIdDau1 , m_pdgIdDau2 , m_pdgIdDau3 , 
     m_pdgIdDau4 , m_pdgIdDau5 , m_pdgIdDau6 ;
   std::vector< int > m_indexMother , m_indexInter ;
+  
 };
 #endif // GAUSSMONITOR_GENERATORFULLMONITOR_H
