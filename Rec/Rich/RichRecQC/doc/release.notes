@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-05-28 - Chris Jones
+ - Add "TrackMonitoring" to the list of Online histograms
+
 ! 2011-05-18 - Chris Jones
  - Some small changes to the HPD hit map plots
 

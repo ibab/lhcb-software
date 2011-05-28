@@ -96,7 +96,7 @@ class RichRecQCConf(RichConfigurableUser):
                                             "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "Online"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
-                                            "DataDecodingErrors",
+                                            "DataDecodingErrors", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "AlignmentMonitoring" ],
                        "None"           : [ ]
