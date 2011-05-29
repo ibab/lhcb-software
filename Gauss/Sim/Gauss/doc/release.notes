@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-05-29 - Patrick Robbe
+ - python/Gauss/Configuration.py: use new beam parameter class
+
 !========================= Gauss v40r0 2011-04-15 ============================
 ! 2011-04-15 - Gloria Corti
  - Fix error in Gauss-DEV.py that was picking up DDDB tag for 2010 instead of

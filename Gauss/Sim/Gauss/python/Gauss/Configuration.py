@@ -81,7 +81,6 @@ class Gauss(LHCbConfigurableUser):
        ,"InteractionSize"   : [ 0.027*SystemOfUnits.mm, 0.027*SystemOfUnits.mm,
                                 3.82*SystemOfUnits.cm ]
        ,"BeamSize"          : [ 0.038*SystemOfUnits.mm, 0.038*SystemOfUnits.mm ]
-       ,"CrossingRate"      : 11.245*SystemOfUnits.kilohertz
        ,"Luminosity"        : 0.116*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
        ,"TotalCrossSection" : 97.2*SystemOfUnits.millibarn
        ,"Output"            : 'SIM'
@@ -944,96 +943,7 @@ class Gauss(LHCbConfigurableUser):
             if self.getProp("EnablePack") :
                 packing = GaudiSequencer(self.slotName(slot)+"EventDataPacking")
                 simSlotSeq.Members += [ packing ]
-                SimConf().PackingSequencers[slot] = packing
-
-    ##########################################################################
-    ## Functions to set beam conditions and propagate them
-    ##
-
-    #-- Function to set mean number of interactions
-    def setInteractionFreq(self, SpillOverSlots):
-        
-        from Configurables import ( FixedLuminosity,
-                                    FixedLuminosityForSpillOver,
-                                    FixedLuminosityForRareProcess,
-                                    FixedNInteractions )
-    
-        lumiPerBunch = self.getProp("Luminosity")
-        crossingRate = self.getProp("CrossingRate")
-        totCrossSection = self.getProp("TotalCrossSection")
-
-        # For standard fixed luminosity in main event
-        gen_t0 = Generation("Generation")
-    
-        gen_t0.addTool(FixedLuminosity,name="FixedLuminosity")
-        gen_t0.FixedLuminosity.Luminosity = lumiPerBunch
-        gen_t0.FixedLuminosity.CrossingRate = crossingRate
-        gen_t0.FixedLuminosity.TotalXSection = totCrossSection
-
-        # the same for rare processes where a different luminosity tool is used
-        gen_t0.addTool(FixedLuminosityForRareProcess,
-                       name="FixedLuminosityForRareProcess")
-        gen_t0.FixedLuminosityForRareProcess.Luminosity = lumiPerBunch
-        gen_t0.FixedLuminosityForRareProcess.CrossingRate = crossingRate
-        gen_t0.FixedLuminosityForRareProcess.TotalXSection = totCrossSection
-        
-        # the following is for beam gas events, the values are just to give the
-        # nominal beam conditions in the data but 1 single interaction is 
-        # forced selecting the appropriate pileup tool in the eventtype
-        gen_t0.addTool(FixedNInteractions,name="FixedNInteractions")
-        gen_t0.FixedNInteractions.NInteractions = 1
-        gen_t0.FixedNInteractions.Luminosity = lumiPerBunch
-        gen_t0.FixedNInteractions.CrossingRate = crossingRate
-        gen_t0.FixedNInteractions.TotalXSection = totCrossSection
-    
-        # and for SpillOver where a dedicated tool is used
-        for slot in SpillOverSlots:
-            gen = Generation("Generation"+slot)
-            gen.addTool(FixedLuminosityForSpillOver,
-                        name="FixedLuminosityForSpillOver")
-            gen.FixedLuminosityForSpillOver.Luminosity = lumiPerBunch
-            gen.FixedLuminosityForSpillOver.CrossingRate = crossingRate
-            gen.FixedLuminosityForSpillOver.TotalXSection = totCrossSection
-
-
-    #--Set the luminous region for colliding beams and beam gas and configure
-    #--the corresponding vertex smearing tools, the choice of the tools is done
-    #--by the event type
-    def setInteractionSize( self, CrossingSlots ):
-
-        from Configurables import ( BeamSpotSmearVertex )
-
-        meanX, meanY, meanZ = self.getProp("InteractionPosition")
-        sigmaX, sigmaY, sigmaZ = self.getProp("InteractionSize")
-
-        for slot in CrossingSlots:
-            gen = Generation("Generation"+slot)
-            gen.addTool(BeamSpotSmearVertex,name="BeamSpotSmearVertex")
-            gen.BeamSpotSmearVertex.MeanX = meanX
-            gen.BeamSpotSmearVertex.MeanY = meanY
-            gen.BeamSpotSmearVertex.MeanZ = meanZ
-            gen.BeamSpotSmearVertex.SigmaX = sigmaX
-            gen.BeamSpotSmearVertex.SigmaY = sigmaY
-            gen.BeamSpotSmearVertex.SigmaZ = sigmaZ
-        
-    #--
-    def setBeamSize( self, CrossingSlots ):
-
-        from Configurables import ( FlatZSmearVertex )
-
-        sigmaX, sigmaY = self.getProp("BeamSize")
-        meanX, meanY, meanZ = self.getProp("InteractionPosition")
-        hCrossAngle = self.getProp("BeamCrossingAngle")
-        
-        for slot in CrossingSlots:
-            gen = Generation("Generation"+slot)
-            gen.addTool(FlatZSmearVertex,name="FlatZSmearVertex")
-            gen.FlatZSmearVertex.SigmaX = sigmaX
-            gen.FlatZSmearVertex.SigmaY = sigmaY
-            gen.FlatZSmearVertex.MeanXat0 = meanX
-            gen.FlatZSmearVertex.MeanYat0 = meanY
-            gen.FlatZSmearVertex.HorizontalCrossingAngle = hCrossAngle
-             
+                SimConf().PackingSequencers[slot] = packing             
     
     #--Set the energy of the beam,
     #--the half effective crossing angle (in LHCb coordinate system),
@@ -1043,192 +953,59 @@ class Gauss(LHCbConfigurableUser):
     #--For beam gas events (with hijing) only the energy of the beams is set
     def setBeamParameters( self, CrossingSlots ):
 
-        from Configurables import ( MinimumBias, Inclusive, SignalPlain,
-                                    SignalRepeatedHadronization,
-                                    SignalForcedFragmentation, Special,
-                                    StandAloneDecayTool ) 
-        from Configurables import ( PythiaProduction, BcVegPyProduction,
-                                    HijingProduction ) 
-        from Configurables import ( CollidingBeams ) 
+        from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction ) 
+        from Configurables import ( BcVegPyProduction , Special , BcVegPyProduction ) 
 
         #
-        beamMom   = self.getProp("BeamMomentum")
-        angle     = self.getProp("BeamCrossingAngle")
+        beamMom                        = self.getProp("BeamMomentum")
+        angle                          = self.getProp("BeamCrossingAngle")
         xAngleBeamLine, yAngleBeamLine = self.getProp("BeamLineAngles")
-        emittance = self.getProp("BeamEmittance")
-        betaStar  = self.getProp("BeamBetaStar")
+        emittance                      = self.getProp("BeamEmittance")
+        betaStar                       = self.getProp("BeamBetaStar")
+        lumiPerBunch                   = self.getProp("Luminosity")
+        totCrossSection                = self.getProp("TotalCrossSection")
+        meanX, meanY, meanZ            = self.getProp("InteractionPosition")
+        sigmaX, sigmaY, sigmaZ         = self.getProp("InteractionSize")
 
-        # Initialization in EvtGenTool always there to make sure even when
-        # Pythia is not used as production engine it is initialize with the
-        # LHCb settings
-        tsvc = ToolSvc()
-        tsvc.addTool(EvtGenDecay,name="EvtGenDecay")
-        tsvc.EvtGenDecay.addTool(PythiaProduction,name="PythiaProduction")
-        tsvc.EvtGenDecay.PythiaProduction.addTool(CollidingBeams,
-                                                 name="CollidingBeams")
-        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.Emittance = emittance
-        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        tsvc.EvtGenDecay.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
+
         
-        # for Minimum bias, including those of spill-over events
-        for slot in CrossingSlots:
-            gen = Generation("Generation"+slot)        
-            gen.addTool(MinimumBias,name="MinimumBias")
-            gen.MinimumBias.addTool(PythiaProduction,name="PythiaProduction")
-            gen.MinimumBias.PythiaProduction.addTool(CollidingBeams,
-                                                     name="CollidingBeams")
-            gen.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-            gen.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-            gen.MinimumBias.PythiaProduction.CollidingBeams.Emittance = emittance
-            gen.MinimumBias.PythiaProduction.CollidingBeams.BetaStar = betaStar
-            gen.MinimumBias.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-            gen.MinimumBias.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-
-
+        # Give beam parameters to GenInit algorithm
+        genInit = GenInit( "GaussGen" )
+        genInit.BeamEnergy              = beamMom
+        genInit.HorizontalCrossingAngle = angle
+        genInit.VerticalCrossingAngle   = 0. 
+        genInit.NormalizedEmittance     = emittance
+        genInit.BetaStar                = betaStar
+        genInit.HorizontalBeamlineAngle = xAngleBeamLine
+        genInit.VerticalBeamlineAngle   = yAngleBeamLine
+        genInit.Luminosity              = lumiPerBunch
+        genInit.TotalCrossSection       = totCrossSection
+        genInit.XLuminousRegion         = meanX
+        genInit.YLuminousRegion         = meanY
+        genInit.ZLuminousRegion         = meanZ
+        genInit.BunchLengthRMS          = sigmaZ
     
-        # for Inclusive events (only primary bunch)
         gen_t0 = Generation("Generation")
-        gen_t0.addTool(Inclusive,name="Inclusive")
-        gen_t0.Inclusive.addTool(PythiaProduction,name="PythiaProduction")
-        gen_t0.Inclusive.PythiaProduction.addTool(CollidingBeams,
-                                                  name="CollidingBeams")
-        gen_t0.Inclusive.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.Inclusive.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.Inclusive.PythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.Inclusive.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.Inclusive.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.Inclusive.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-
-        # Signal plaine (e.g. J/Psi)
-        gen_t0.addTool(SignalPlain,name="SignalPlain")
-        gen_t0.SignalPlain.addTool(PythiaProduction,name="PythiaProduction")
-        gen_t0.SignalPlain.PythiaProduction.addTool(CollidingBeams,name="CollidingBeams")
-        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.SignalPlain.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        # Signal repeated hadronization (e.g. Bd, Bu, Bs, Lambda_b)
-        gen_t0.addTool(SignalRepeatedHadronization,
-                       name="SignalRepeatedHadronization")
-        gen_t0.SignalRepeatedHadronization.addTool(PythiaProduction,
-                                                   name="PythiaProduction")
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.addTool(CollidingBeams,
-                                                                    name="CollidingBeams")
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        # Signal forced fragmentation (e.g. Bc)
-        gen_t0.addTool(SignalForcedFragmentation,
-                       name="SignalForcedFragmentation")
-        gen_t0.SignalForcedFragmentation.addTool(PythiaProduction,
-                                                 name="PythiaProduction")
-        gen_t0.SignalForcedFragmentation.PythiaProduction.addTool(CollidingBeams,
-                                                                  name="CollidingBeams")
-        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.SignalForcedFragmentation.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        # Special signal (Higgs, top and W/Z with Pythia)
-        gen_t0.addTool(Special,name="Special")
-        gen_t0.Special.addTool(PythiaProduction,name="PythiaProduction")
-        gen_t0.Special.PythiaProduction.addTool(CollidingBeams,
-                                                name="CollidingBeams")
-        gen_t0.Special.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.Special.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.Special.PythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.Special.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.Special.addTool(PythiaProduction,name="MinimumBiasPythiaProduction")
-        gen_t0.Special.MinimumBiasPythiaProduction.addTool(CollidingBeams,
-                                                           name="CollidingBeams")
-        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.Special.MinimumBiasPythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-
+        
+        # the following is for beam gas events, the values are just to give the
+        # nominal beam conditions in the data but 1 single interaction is 
+        # forced selecting the appropriate pileup tool in the eventtype
+        gen_t0.addTool(FixedNInteractions,name="FixedNInteractions")
+        gen_t0.FixedNInteractions.NInteractions = 1
+    
         # Special signal  (Bc with BcVegPy)
-        from Configurables import BcVegPyProduction
-        gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
-        gen_t0.Special.BcVegPyProduction.addTool(CollidingBeams,
-                                                 name="CollidingBeams")
-        gen_t0.Special.BcVegPyProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.Special.BcVegPyProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.Special.BcVegPyProduction.CollidingBeams.Emittance = emittance
-        gen_t0.Special.BcVegPyProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.Special.BcVegPyProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.Special.BcVegPyProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
         pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
         ecmInGeV = 2*pInGeV
         txtECM = "upcom ecm "+str(ecmInGeV)
+        gen_t0.addTool(Special,name="Special")
+        gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
         gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
-        # for Pythia8 usage (Minimum Bias):
-        from Configurables import Pythia8Production
-        gen_t0.MinimumBias.addTool(Pythia8Production,name="Pythia8Production")
-        gen_t0.Inclusive.addTool(Pythia8Production,name="Pythia8Production")
-        gen_t0.Special.addTool(Pythia8Production,name="Pythia8Production")
-        gen_t0.SignalPlain.addTool(Pythia8Production,name="Pythia8Production")
-        gen_t0.MinimumBias.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
-        gen_t0.Inclusive.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
-        gen_t0.Special.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
-        gen_t0.SignalPlain.Pythia8Production.addTool(CollidingBeams,name="CollidingBeams")
-        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.Emittance = emittance
-        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.BetaStar = betaStar
-        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.MinimumBias.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        gen_t0.Inclusive.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.Inclusive.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.Inclusive.Pythia8Production.CollidingBeams.Emittance = emittance
-        gen_t0.Inclusive.Pythia8Production.CollidingBeams.BetaStar = betaStar
-        gen_t0.Inclusive.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.Inclusive.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        gen_t0.Special.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.Special.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.Special.Pythia8Production.CollidingBeams.Emittance = emittance
-        gen_t0.Special.Pythia8Production.CollidingBeams.BetaStar = betaStar
-        gen_t0.Special.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.Special.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.Emittance = emittance
-        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.BetaStar = betaStar
-        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.SignalPlain.Pythia8Production.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
-        # Only signal events
-        gen_t0.addTool(StandAloneDecayTool,name="StandAloneDecayTool")
-        gen_t0.StandAloneDecayTool.addTool(PythiaProduction,
-                                           name="PythiaProduction")
-        gen_t0.StandAloneDecayTool.PythiaProduction.addTool(CollidingBeams,
-                                                            name="CollidingBeams")
-        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.BeamMomentum = beamMom
-        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = angle
-        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.Emittance = emittance
-        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.BetaStar = betaStar
-        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.HorizontalBeamLineAngle = xAngleBeamLine
-        gen_t0.StandAloneDecayTool.PythiaProduction.CollidingBeams.VerticalBeamLineAngle = yAngleBeamLine
 
-        # For beam gas with Pythia
-        gen_t0 = Generation("Generation")
-        gen_t0.MinimumBias.PythiaProduction.addTool(FixedTarget,
-                                                 name="FixedTarget")
-        gen_t0.MinimumBias.PythiaProduction.FixedTarget.BeamMomentum = beamMom
         # or with Hijing
         txtP = "hijinginit efrm "+str(pInGeV)
+        gen_t0.addTool(MinimumBias,name="MinimumBias")
         gen_t0.MinimumBias.addTool(HijingProduction,name="HijingProduction")
         gen_t0.MinimumBias.HijingProduction.Commands += [ txtP ]
-
 
     ## end of functions to set beam paramters and propagate them
     ##########################################################################
@@ -1498,9 +1275,6 @@ class Gauss(LHCbConfigurableUser):
         spillOverList = self.getProp("SpilloverPaths")
         if '' in spillOverList : spillOverList.remove('')
         crossingList += spillOverList
-        self.setInteractionFreq( spillOverList )
-        self.setInteractionSize( crossingList )
-        self.setBeamSize( crossingList )
         self.setBeamParameters( crossingList )
         self.configurePhases( crossingList )  # in Boole, defineOptions() in Brunel
 
