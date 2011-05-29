@@ -10,7 +10,7 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // From Event
-#include "Event/GenHeader.h"
+#include "Event/BeamParameters.h"
 
 // From Generators
 #include "Generators/GenCounters.h"
@@ -35,9 +35,8 @@ FixedLuminosityForRareProcess::FixedLuminosityForRareProcess( const std::string&
   : GaudiTool ( type, name , parent ) ,
     m_nEvents( 0 ) {
     declareInterface< IPileUpTool >( this ) ;
-    declareProperty ( "Luminosity"    , m_luminosity    = 2.e32 /Gaudi::Units::cm2/Gaudi::Units::s      ) ;
-    declareProperty ( "CrossingRate"  , m_crossingRate  = 30.0 * Gaudi::Units::megahertz  ) ;
-    declareProperty ( "TotalXSection" , m_totalXSection = 102.4 * Gaudi::Units::millibarn ) ;
+    declareProperty( "BeamParameters" , 
+                     m_beamParameters = LHCb::BeamParametersLocation::Default ) ;
 }
 
 //=============================================================================
@@ -56,14 +55,6 @@ StatusCode FixedLuminosityForRareProcess::initialize( ) {
   m_randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ;  
 
   info() << "Poisson distribution with fixed luminosity. " << endmsg ;
-  info() << "Luminosity (10^32 / cm^2 s): " 
-         << m_luminosity / 1.e32 * Gaudi::Units::cm2 * Gaudi::Units::s << endmsg ;
-  info() << "Bunch crossing rate (MHz): " << m_crossingRate / Gaudi::Units::megahertz 
-         << endmsg ;
-  info() << "Total cross section (mbarn): " << m_totalXSection / Gaudi::Units::millibarn 
-         << endreq ;
-
-  m_mean = m_luminosity * m_totalXSection / m_crossingRate ;
 
   return sc ;
 }
@@ -71,15 +62,13 @@ StatusCode FixedLuminosityForRareProcess::initialize( ) {
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int FixedLuminosityForRareProcess::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
-
-  theGenHeader->setLuminosity( m_luminosity );
-  theGenHeader->setCrossingFreq( m_crossingRate );
-  theGenHeader->setTotCrossSection( m_totalXSection );
+unsigned int FixedLuminosityForRareProcess::numberOfPileUp( ) {
+  LHCb::BeamParameters * beam = get< LHCb::BeamParameters >( m_beamParameters ) ;
+  if ( 0 == beam ) Exception( "No beam parameters registered" ) ;  
 
   unsigned int result = 0 ;
   m_nEvents++ ;
-  Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( m_mean ) ) ;
+  Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( beam -> nu() ) ) ;
   result = (unsigned int) ( poissonGenerator() + 1.0 ) ;
   return result ;
 }

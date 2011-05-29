@@ -40,7 +40,7 @@ public:
    *  mean = Luminosity * cross_section / crossing_rate.
    *  The fixed luminosity is returned as the currentLuminosity.
    */
-  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
+  virtual unsigned int numberOfPileUp( ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
@@ -48,15 +48,9 @@ public:
 protected:
 
 private:
-  double m_luminosity ; ///< Fixed luminosity (set by options)
-
-  double m_crossingRate ; ///< Crossing rate (set by options)
-
-  double m_totalXSection ; ///< Cross section (set by options)
+  std::string m_beamParameters ; ///< Location of beam parameters (set by options)
 
   int    m_nEvents ; ///< Counter of events (including empty events)
-
-  double m_mean ; ///< Mean number of events per crossing
 
   IRndmGenSvc * m_randSvc ; ///< Pointer to random number generator service
 };

@@ -32,18 +32,13 @@ class FixedNInteractions : public GaudiTool, virtual public IPileUpTool {
    *  Implementation of IPileUpTool::numberOfPileUp. 
    *  Returns a luminosity equal to 0.
    */
-  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
+  virtual unsigned int numberOfPileUp( ) ;
   
   /// Implementation of IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
   
  private:
   /// Number of interactions to generate (set by job options)
-  int m_nInteractions ; 
-  /// Luminosity to use for spill over (set by job options, not used)
-  double m_luminosity ;
-  double m_crossingRate ; ///< Crossing rate (set by options, not used)
-  double m_totalXSection ; ///< Cross section (set by options, not used)
-
+  int m_nInteractions ;
 };
 #endif // GENERATORS_FIXEDNINTERACTIONS_H

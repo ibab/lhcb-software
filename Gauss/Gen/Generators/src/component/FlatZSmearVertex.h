@@ -37,14 +37,7 @@ class FlatZSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
   virtual StatusCode smearVertex( LHCb::HepMCEvent * theEvent ) ;
   
  private:
-  /// Width of the smearing along the x-axis (set by job options).
-  double m_sigmaX ;
-
-  /// Width of the smearing along the y-axis (set by job options).
-  double m_sigmaY ;
-
-  /// Mean x and y position of beam for z=0 
-  double m_meanX, m_meanY;
+  std::string m_beamParameters ; ///< Location of beam parameters (set by options)  
 
   /// Number of sigma above which to cut for x-axis smearing (set by options)
   double m_xcut   ;
@@ -57,9 +50,6 @@ class FlatZSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
   
   /// Maximum value for the z coordinate of the vertex (set by options)
   double m_zmax   ;
-
-  /// Horizontal and vertical crossing angle of beam at z = 0
-  double m_hXAngle, m_vXAngle ;
 
   /// Direction of the beam to take into account TOF vs nominal IP8, can have
   /// only values -1 or 1, or 0 to switch off the TOF and set time of 

@@ -6,12 +6,12 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IRndmGenSvc.h" 
+#include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/PhysicalConstants.h" 
 
 // from Event
 #include "Event/HepMCEvent.h"
-
-#include "GaudiKernel/PhysicalConstants.h"
+#include "Event/BeamParameters.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LHCbAcceptance
@@ -32,19 +32,12 @@ BeamSpotSmearVertex::BeamSpotSmearVertex( const std::string& type,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IVertexSmearingTool >( this ) ;
-    declareProperty( "SigmaX" , m_sigmaX = 0.07 * Gaudi::Units::mm ) ;
-    declareProperty( "SigmaY" , m_sigmaY = 0.07 * Gaudi::Units::mm ) ;
-    declareProperty( "SigmaZ" , m_sigmaZ = 50. * Gaudi::Units::mm ) ;
-    
     declareProperty( "Xcut" , m_xcut = 4. ) ; // times SigmaX 
     declareProperty( "Ycut" , m_ycut = 4. ) ; // times SigmaY
-    declareProperty( "Zcut" , m_zcut = 4. ) ; // times SigmaZ    
-
-    declareProperty( "MeanX" , m_meanX = 0. * Gaudi::Units::mm ) ;
-    declareProperty( "MeanY" , m_meanY = 0. * Gaudi::Units::mm ) ;
-    declareProperty( "MeanZ" , m_meanZ = 0. * Gaudi::Units::mm ) ;
+    declareProperty( "Zcut" , m_zcut = 4. ) ; // times SigmaZ
     declareProperty( "SignOfTimeVsT0", m_timeSignVsT0 = 0 ) ;
-    
+    declareProperty( "BeamParameters" , 
+                     m_beamParameters = LHCb::BeamParametersLocation::Default ) ;
 }
 
 //=============================================================================
@@ -64,29 +57,9 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
   if ( ! sc.isSuccess() ) 
     return Error( "Could not initialize gaussian random number generator" ) ;
 
-  m_meanT = m_timeSignVsT0 * m_meanZ/Gaudi::Units::c_light;
     
   info() << "Smearing of interaction point with Gaussian distribution "
          << endmsg;
-  info() << " X,Y,Z primary = " << m_meanX / Gaudi::Units::mm << " mm, "
-         << m_meanY / Gaudi::Units::mm << " mm, "
-         << m_meanZ / Gaudi::Units::mm << " mm " << endmsg;
-  info() << " time of interaction vs T0 of IP is " << m_meanT/Gaudi::Units::ns
-         << " ns" << endmsg;
-  if( msgLevel(MSG::DEBUG) ) {
-    debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm 
-            << " mm troncated at " << m_xcut << " sigma(X)";
-    debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm 
-            << " mm troncated at " 
-            << m_ycut << " sigma(Y)" << endmsg ;
-    debug() << " with sigma(Z) = " << m_sigmaZ / Gaudi::Units::mm 
-            << " mm troncated at " 
-            << m_zcut << " sigma(Z)" << endmsg ;
-  } else {
-    info() << " with sigma(X,Y,Z) = " << m_sigmaX / Gaudi::Units::mm << " mm, "
-           << m_sigmaY / Gaudi::Units::mm << " mm, " 
-           << m_sigmaZ / Gaudi::Units::mm << " mm" << endmsg;
-  }
 
   release( randSvc ) ;
  
@@ -97,16 +70,22 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
 // Smearing function
 //=============================================================================
 StatusCode BeamSpotSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
+
+  LHCb::BeamParameters * beamp = get< LHCb::BeamParameters >( m_beamParameters ) ;
+  if ( 0 == beamp ) Exception( "No beam parameters registered" ) ;
+
   double dx , dy , dz;
   
   do { dx = m_gaussDist( ) ; } while ( fabs( dx ) > m_xcut ) ;
-  dx = dx * m_sigmaX + m_meanX;
+  dx = dx * beamp -> sigmaX() + beamp -> beamSpot().x() ;
   do { dy = m_gaussDist( ) ; } while ( fabs( dy ) > m_ycut ) ;
-  dy = dy * m_sigmaY + m_meanY;
+  dy = dy * beamp -> sigmaY() + beamp -> beamSpot().y() ;
   do { dz = m_gaussDist( ) ; } while ( fabs( dz ) > m_zcut ) ;
-  dz = dz * m_sigmaZ + m_meanZ;
+  dz = dz * beamp -> sigmaZ() + beamp -> beamSpot().z() ;
 
-  HepMC::FourVector dpos( dx , dy , dz , m_meanT ) ;
+  double meanT = m_timeSignVsT0 * beamp -> beamSpot().z() / Gaudi::Units::c_light ;
+
+  HepMC::FourVector dpos( dx , dy , dz , meanT ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;

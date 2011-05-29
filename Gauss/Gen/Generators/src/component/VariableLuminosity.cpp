@@ -12,7 +12,7 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 
 // From Event
-#include "Event/GenHeader.h"
+#include "Event/BeamParameters.h"
 
 // From Generators
 #include "Generators/GenCounters.h"
@@ -35,15 +35,13 @@ VariableLuminosity::VariableLuminosity( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent ) ,
-    m_peakLuminosity( 0. ) ,
     m_numberOfZeroInteraction( 0 ) ,
     m_nEvents( 0 ) {
     declareInterface< IPileUpTool >( this ) ;
-    declareProperty ( "Luminosity"    , m_luminosity    = 2.e32 /cm2/s      ) ;
+    declareProperty( "BeamParameters" , 
+                     m_beamParameters = LHCb::BeamParametersLocation::Default ) ;
     declareProperty ( "FillDuration"  , m_fillDuration  = 7.0 * 3600 * s    ) ;
     declareProperty ( "BeamDecayTime" , m_beamDecayTime = 10.0 * 3600 * s   ) ;
-    declareProperty ( "CrossingRate"  , m_crossingRate  = 30.0 * megahertz  ) ;
-    declareProperty ( "TotalXSection" , m_totalXSection = 102.4 * millibarn ) ;
 }
 
 //=============================================================================
@@ -66,21 +64,9 @@ StatusCode VariableLuminosity::initialize( ) {
     return Error( "Could not initialize flat random generator" ) ;
 
   info() << "Poisson distribution with 'LHCb mean'. " << endmsg ;
-  info() << "Luminosity (10^32 / cm^2 s): " << m_luminosity / 1.e32 * cm2 * s
-         << endmsg ;
   info() << "Fill duration (hours): " << m_fillDuration / 3600 / s << endmsg ;
   info() << "Beam decay time (hours): " << m_beamDecayTime / 3600 / s 
          << endmsg ;
-  info() << "Bunch crossing rate (MHz): " << m_crossingRate / megahertz 
-         << endmsg ;
-  info() << "Total cross section (mbarn): " << m_totalXSection / millibarn 
-         << endreq ;
-  
-
-  // m_luminosity is the average luminosity over the fill duration.
-  // m_peakLuminosity is the luminosity at t=0
-  m_peakLuminosity = m_luminosity * m_fillDuration / m_beamDecayTime /
-    ( 1.0 - exp( -m_fillDuration / m_beamDecayTime ) ) ;
 
   return sc ;
 }
@@ -88,23 +74,23 @@ StatusCode VariableLuminosity::initialize( ) {
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int VariableLuminosity::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
+unsigned int VariableLuminosity::numberOfPileUp( ) {
+  LHCb::BeamParameters * beam = get< LHCb::BeamParameters >( m_beamParameters ) ;
+  if ( 0 == beam ) Exception( "No beam parameters registered" ) ;
+
   unsigned int result = 0 ;
-  double theTime , mean ;
-  double currentLuminosity;
+  double theTime , mean , currentLuminosity;
   while ( 0 == result ) {
     m_nEvents++ ;
     theTime = m_flatGenerator() * m_fillDuration ;
-    currentLuminosity = m_peakLuminosity * exp( -theTime/m_beamDecayTime ) ;
-    mean = currentLuminosity * m_totalXSection / m_crossingRate ;
+    currentLuminosity = beam -> luminosity() * m_fillDuration / m_beamDecayTime / 
+      ( 1.0 - exp( -m_fillDuration / m_beamDecayTime ) ) ;
+
+    mean = currentLuminosity * beam -> totalXSec() / beam -> revolutionFrequency() ;
     Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( mean ) ) ;
     result = (unsigned int) poissonGenerator() ;
     if ( 0 == result ) m_numberOfZeroInteraction++ ;
   }
-
-  theGenHeader->setLuminosity( currentLuminosity );
-  theGenHeader->setCrossingFreq( m_crossingRate );
-  theGenHeader->setTotCrossSection( m_totalXSection );
 
   return result ;
 }

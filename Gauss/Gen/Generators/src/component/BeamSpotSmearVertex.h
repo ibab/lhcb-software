@@ -36,15 +36,6 @@ public:
   virtual StatusCode smearVertex( LHCb::HepMCEvent * theEvent ) ;
   
  private:
-  /// Width of the smearing along the x-axis (set by job options).
-  double m_sigmaX ;
-  
-  /// Width of the smearing along the y-axis (set by job options).
-  double m_sigmaY ;
-
-  /// Width of the smearing along the z-axis (set by job options).
-  double m_sigmaZ ;
-
   /// Number of sigma above which to cut for x-axis smearing (set by options)
   double m_xcut   ;
 
@@ -54,15 +45,11 @@ public:
   /// Number of sigma above which to cut for z-axis smearing (set by options)
   double m_zcut   ;
 
-  /// Mean position of the interaction on the x, y and z-axis
-  double m_meanX, m_meanY, m_meanZ  ;
-
   /// Sign of time of interaction as given from position with respect to 
   /// origin
   int  m_timeSignVsT0 ;
-  
-  /// Time of interaction as from mean Z position
-  double m_meanT ;
+
+  std::string m_beamParameters ; ///< Location of beam parameters (set by options)
 
   Rndm::Numbers m_gaussDist ; ///< Gaussian random number generator
   

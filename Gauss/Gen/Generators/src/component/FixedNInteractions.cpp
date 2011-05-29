@@ -32,9 +32,6 @@ FixedNInteractions::FixedNInteractions( const std::string& type,
   : GaudiTool ( type, name , parent ) {
     declareInterface< IPileUpTool >( this ) ;
     declareProperty ( "NInteractions" , m_nInteractions = 1 ) ;
-    declareProperty ( "Luminosity" , m_luminosity = 3.e32 / Gaudi::Units::cm2/ Gaudi::Units::s ) ;
-    declareProperty ( "CrossingRate"  , m_crossingRate  = 30.0 * Gaudi::Units::megahertz  ) ;
-    declareProperty ( "TotalXSection" , m_totalXSection = 102.4 * Gaudi::Units::millibarn ) ;
 }
 
 //=============================================================================
@@ -53,25 +50,13 @@ StatusCode FixedNInteractions::initialize( ) {
     info() << "Single Interaction Mode" << endmsg ;
   else info() << "Fixed Number of Interactions per Event = : "
               << m_nInteractions << endmsg ;
-  info() << "Luminosity (10^32 / cm^2 s) stored in events: " 
-         << m_luminosity / 1.e32 * Gaudi::Units::cm2 * Gaudi::Units::s << endmsg ;
-  info() << "Rate (MHz) of colliding bunches stored in events: "
-         << m_crossingRate / Gaudi::Units::megahertz << endmsg;
-  info() << "Total cross section (mbarn) stored in events" 
-         <<  m_totalXSection / Gaudi::Units::millibarn << endmsg;
-
   return sc ;
 }
 
 //=============================================================================
 // Compute the number of pile up to generate according to beam parameters
 //=============================================================================
-unsigned int FixedNInteractions::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
-
-  theGenHeader->setLuminosity(m_luminosity);
-  theGenHeader->setCrossingFreq( m_crossingRate );
-  theGenHeader->setTotCrossSection( m_totalXSection );
-
+unsigned int FixedNInteractions::numberOfPileUp( ) {
   return m_nInteractions ;
 }
 

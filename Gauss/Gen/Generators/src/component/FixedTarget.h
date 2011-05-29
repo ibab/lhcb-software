@@ -40,20 +40,7 @@ class FixedTarget : public GaudiTool, virtual public IBeamTool {
                          Gaudi::XYZVector & pBeam2 ) ;
   
  private:
-  /// Value of angular smearing (computed from quantities given in options)
-  double m_angleSmear ;
-
-  double m_beamMomentum ; ///< Incident proton energy (set by job options)
-
-  /// Vertical crossing angle (set by job options)
-  double m_verticalXAngle ; 
-
-  /// Horizontal crossing angle (set by job options)
-  double m_horizontalXAngle ;
-
-  double m_emittance ; ///< Emmittance (set by job options)
-
-  double m_betaStar ; ///< Beta star (set by job options)
+  std::string m_beamParameters ; ///< Location of beam parameters (set by options)
 
   Rndm::Numbers m_gaussianDist ; ///< Gaussian random number generator
 };

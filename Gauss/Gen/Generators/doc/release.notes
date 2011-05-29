@@ -5,6 +5,30 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-05-29 - Patrick Robbe
+ - Generators/IPileUpTool.h: change interface (remove unneeded GenHeader argument,
+   replaced by new beam parameters object)
+ - src/component/FixedLuminosity.h
+ - src/component/FixedTarget.h
+ - src/component/CollidingBeams.h
+ - src/component/BeamSpotSmearVertex.cpp
+ - src/component/FixedLuminosityForRareProcess.cpp
+ - src/component/VariableLuminosity.cpp
+ - src/component/Generation.cpp
+ - src/component/FixedNInteractions.cpp
+ - src/component/BeamSpotSmearVertex.h
+ - src/component/FlatZSmearVertex.cpp
+ - src/component/FixedLuminosityForSpillOver.h
+ - src/component/FixedLuminosityForRareProcess.h
+ - src/component/VariableLuminosity.h
+ - src/component/FixedLuminosity.cpp
+ - src/component/FixedLuminosityForSpillOver.cpp
+ - src/component/FixedNInteractions.h
+ - src/component/FixedTarget.cpp
+ - src/component/FlatZSmearVertex.h
+ - src/component/CollidingBeams.cpp
+     Adapt for new BeamParameters event model class
+
 !====================== Generators v10r10 2011-03-17 =========================
 ! 2011-05-23 - Alex T. Grecu
  - Replace HepMC::IO_Ascii with HepMC::IO_GenEvent in WriteHepMCAsciiFile 

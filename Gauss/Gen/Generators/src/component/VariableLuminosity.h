@@ -43,23 +43,17 @@ public:
    *  The mean luminosity is given in options so the maximum luminosity 
    *  (at t=0) is computed using the fill duration.
    */
-  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
+  virtual unsigned int numberOfPileUp( ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
 
 private:
-  double m_luminosity ; ///< Mean luminoity (set by options)
+  std::string m_beamParameters ; ///< Location of beam parameters (set by options)
 
   double m_fillDuration ; ///< Fill duration (set by options)
 
   double m_beamDecayTime ; ///< Beam decay time (set by options)
-
-  double m_crossingRate ; ///< Beam effective crossing rate (set by options)
-
-  double m_totalXSection ; ///< Total cross section (set by options)
-
-  double m_peakLuminosity ; ///< Peak luminosity (at t=0) Computed.
 
   /// Counter of empty interactions
   int    m_numberOfZeroInteraction ;

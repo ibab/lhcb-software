@@ -11,6 +11,10 @@
 // From Kernel
 #include "GaudiKernel/SystemOfUnits.h"
 
+// From Event
+#include "Event/BeamParameters.h"
+#include "GenEvent/BeamForInitialization.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : CollidingBeams
 //
@@ -28,22 +32,10 @@ DECLARE_TOOL_FACTORY( CollidingBeams );
 CollidingBeams::CollidingBeams( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent ) ,
-    m_angleSmear( 0. ) {
+  : GaudiTool ( type, name , parent ) {
     declareInterface< IBeamTool >( this ) ;
-    declareProperty( "VerticalCrossingAngle" , 
-                     m_verticalXAngle = 0. * Gaudi::Units::milliradian ) ;
-    declareProperty( "HorizontalCrossingAngle" , 
-                     m_horizontalXAngle = 0.285 * Gaudi::Units::milliradian ) ;
-    declareProperty( "Emittance" , 
-                     m_emittance = 0.503 * 1.e-9 * Gaudi::Units::radian * Gaudi::Units::m  ) ;
-    declareProperty( "BetaStar" , m_betaStar = 10. * Gaudi::Units::m ) ;
-    declareProperty( "BeamMomentum" , m_beamMomentum = 7. * Gaudi::Units::TeV ) ;
-    declareProperty( "VerticalBeamLineAngle",
-                     m_vBeamLineAngle = 0. * Gaudi::Units::milliradian ) ;
-    declareProperty( "HorizontalBeamLineAngle",
-                     m_hBeamLineAngle = 0. * Gaudi::Units::milliradian ) ;
-                     
+    declareProperty( "BeamParameters" , 
+                     m_beamParameters = LHCb::BeamParametersLocation::Default ) ;
 }
 
 //=============================================================================
@@ -66,37 +58,6 @@ StatusCode CollidingBeams::initialize( ) {
     return Error( "Could not initialize Gaussian random generator" , sc ) ;
   release( randSvc ) ;
 
-  // set the value of angular smearing
-  if ( 0.0 != m_betaStar ) 
-    m_angleSmear = sqrt( m_emittance / m_betaStar) ;
-  else m_angleSmear = 0.0 ;
-
-  info() << "Colliding Beam Parameters: " << endmsg ;
-  info() << "Beam Momentum (TeV): " << m_beamMomentum / Gaudi::Units::TeV << endmsg ;
-  info() << "Vertical crossing angle (microradian): " 
-          << m_verticalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
-  info() << "Horizontal crossing angle (microradian): " 
-          << m_horizontalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
-  info() << "Beam Line rotated (x,y) in microradian: "
-         << m_hBeamLineAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << ", "
-         << m_vBeamLineAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg;
-  debug() << "Emittance (1.e-9 rad.m): " 
-          << m_emittance / ( 1.e-9 * Gaudi::Units::rad * Gaudi::Units::m ) << endmsg ;
-  debug() << "Beta_star (m): " << m_betaStar / Gaudi::Units::m << endmsg ;
-  debug() << "Angular beam smearing (microradian): " 
-          << m_angleSmear / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
-  debug() << "Beam1 horizontal and vertical angle in LHCb (microrad): "
-          << (m_horizontalXAngle + m_hBeamLineAngle) / 
-             ( Gaudi::Units::milliradian * 1.e-3 ) << ", "
-          << (m_verticalXAngle + m_vBeamLineAngle) /
-             ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg;  
-  debug() << "Beam2 horizontal and vertical angle in LHCb (microrad): "
-          << - (m_horizontalXAngle - m_hBeamLineAngle) / 
-             ( Gaudi::Units::milliradian * 1.e-3 ) << ", "
-          << - (m_verticalXAngle - m_vBeamLineAngle) /
-             ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg;  
-  
-
   return sc ;
 }
 
@@ -106,15 +67,30 @@ StatusCode CollidingBeams::initialize( ) {
 void CollidingBeams::getMeanBeams( Gaudi::XYZVector & pBeam1 , 
                                    Gaudi::XYZVector & pBeam2 )
   const {
+  // Retrieve beam parameters from the static class
+  LHCb::BeamParameters * beam = 
+    BeamForInitialization::getInitialBeamParameters() ;
+  if ( 0 == beam ) 
+    Exception( "No beam parameters in initialization" ) ;
+
   double p1x, p1y, p1z, p2x, p2y, p2z ;
-  p1x = m_beamMomentum * sin( m_horizontalXAngle + m_hBeamLineAngle ) ;
-  p1y = m_beamMomentum * sin( m_verticalXAngle + m_vBeamLineAngle  ) ;
-  p1z = m_beamMomentum ;
+  
+  p1x = beam -> energy() * 
+    sin( beam -> horizontalCrossingAngle() +
+         beam -> horizontalBeamlineAngle() ) ;
+  p1y = beam -> energy() * 
+    sin( beam -> verticalCrossingAngle() + 
+         beam -> verticalBeamlineAngle() ) ;
+  p1z = beam -> energy() ;
   pBeam1.SetXYZ( p1x, p1y, p1z ) ;
 
-  p2x = m_beamMomentum * sin( m_horizontalXAngle - m_hBeamLineAngle ) ;
-  p2y = m_beamMomentum * sin( m_verticalXAngle - m_vBeamLineAngle  ) ;
-  p2z = -m_beamMomentum ;
+  p2x = beam -> energy() * 
+    sin( beam -> horizontalCrossingAngle() - 
+         beam -> horizontalBeamlineAngle() ) ;
+  p2y = beam -> energy() * 
+    sin( beam -> verticalCrossingAngle() - 
+         beam -> verticalBeamlineAngle() ) ;
+  p2z = -beam -> energy() ;
   pBeam2.SetXYZ( p2x, p2y, p2z ) ;
 }
 
@@ -123,18 +99,30 @@ void CollidingBeams::getMeanBeams( Gaudi::XYZVector & pBeam1 ,
 //=============================================================================
 void CollidingBeams::getBeams( Gaudi::XYZVector & pBeam1 , 
                                Gaudi::XYZVector & pBeam2 ) {
+  // Retrieve beam parameters
+  LHCb::BeamParameters * beam = get< LHCb::BeamParameters >( m_beamParameters ) ;
+  if ( 0 == beam ) Exception( "No beam parameters in TES" ) ;
+
   double p1x, p1y, p1z, p2x, p2y, p2z ;
-  p1x = m_beamMomentum * sin( m_horizontalXAngle + m_hBeamLineAngle +
-                              m_gaussianDist() * m_angleSmear ) ;
-  p1y = m_beamMomentum * sin( m_verticalXAngle + m_vBeamLineAngle +
-                              m_gaussianDist() * m_angleSmear ) ;
-  p1z = m_beamMomentum ;
+  p1x = beam -> energy() * 
+    sin( beam -> horizontalCrossingAngle() + 
+         beam -> horizontalBeamlineAngle() + 
+         m_gaussianDist() * beam -> angleSmear() ) ;
+  p1y = beam -> energy() * 
+    sin( beam -> verticalCrossingAngle() + 
+         beam -> verticalBeamlineAngle() +
+         m_gaussianDist() * beam -> angleSmear() ) ;
+  p1z = beam -> energy() ;
   pBeam1.SetXYZ( p1x, p1y, p1z ) ;
 
-  p2x = m_beamMomentum * sin( m_horizontalXAngle - m_hBeamLineAngle + 
-                              m_gaussianDist() * m_angleSmear ) ;
-  p2y = m_beamMomentum * sin( m_verticalXAngle - m_vBeamLineAngle +
-                              m_gaussianDist() * m_angleSmear ) ;
-  p2z = -m_beamMomentum ;
+  p2x = beam -> energy() * 
+    sin( beam -> horizontalCrossingAngle() - 
+         beam -> horizontalBeamlineAngle() + 
+         m_gaussianDist() * beam -> angleSmear() ) ;
+  p2y = beam -> energy() * 
+    sin( beam -> verticalCrossingAngle() - 
+         beam -> verticalBeamlineAngle() +
+         m_gaussianDist() * beam -> angleSmear() ) ;
+  p2z = -beam -> energy() ;
   pBeam2.SetXYZ( p2x, p2y, p2z ) ;
 }

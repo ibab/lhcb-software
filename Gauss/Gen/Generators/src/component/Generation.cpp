@@ -195,15 +195,11 @@ StatusCode Generation::execute() {
     
     // Compute the number of pile-up interactions to generate 
     if ( 0 != m_pileUpTool ) 
-      nPileUp = m_pileUpTool -> numberOfPileUp( theGenHeader ) ;
-    else { 
+      nPileUp = m_pileUpTool -> numberOfPileUp( ) ;
+    else 
       // default set to 1 pile and 2.10^32 luminosity
       nPileUp = 1 ;
-      theGenHeader->setLuminosity(3.e32/Gaudi::Units::cm2/Gaudi::Units::s);
-      theGenHeader->setLuminosity(30.0*Gaudi::Units::megahertz);
-      theGenHeader->setLuminosity(102.4 * Gaudi::Units::millibarn);
-
-    }
+    
     // generate a set of Pile up interactions according to the requested type
     // of event
     if ( 0 < nPileUp ) 

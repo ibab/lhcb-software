@@ -6,11 +6,6 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// Forward declaration
-namespace LHCb {
-  class GenHeader;
-}
-
 /** @class IPileUpTool IPileUpTool.h "Generators/IPileUpTool.h"
  *  
  *  Abstract interface to pile up tools. Generates the number of pile-up
@@ -20,7 +15,7 @@ namespace LHCb {
  *  @date   2005-08-17
  */
 
-static const InterfaceID IID_IPileUpTool( "IPileUpTool" , 2 , 0 ) ;
+static const InterfaceID IID_IPileUpTool( "IPileUpTool" , 3 , 0 ) ;
 
 class IPileUpTool : virtual public IAlgTool {
 public:
@@ -30,7 +25,7 @@ public:
    *  @param[out] currentLuminosity  Luminosity of the current event.
    *  @return Number of pile-up interactions to generate.
    */
-  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) = 0 ;
+  virtual unsigned int numberOfPileUp( ) = 0 ;
 
   /// Print various counters at the end of the job
   virtual void printPileUpCounters( ) = 0 ;
