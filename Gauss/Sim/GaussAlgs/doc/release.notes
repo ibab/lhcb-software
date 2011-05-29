@@ -4,6 +4,10 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2011-05-29 - Patrick Robbe
+ - GenInit.h/.cpp: store beam information retrieved from option in the
+   event model class BeamParameters
+
 !======================== GaussAlgs v3r4 2009-04-06 ===========================
 ! 2009-03-26 - Patrick Robbe
  - GenInit.h/.cpp and SimInit.h/.cpp: 

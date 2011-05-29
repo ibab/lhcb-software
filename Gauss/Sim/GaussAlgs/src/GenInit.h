@@ -6,6 +6,9 @@
 // from LHCbKernel
 #include "Kernel/LbAppInit.h"
 
+// from Event
+#include "Event/BeamParameters.h"
+
 class IGenericTool;
 
 /** @class GenInit GenInit.h
@@ -40,6 +43,21 @@ private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
   
   std::string   m_mcHeader ; ///< Location of MCHeader
+  std::string   m_beamParameters ; ///< Location of beam parameters
 
+  double        m_beamEnergy ;
+  double        m_bunchLengthRMS ;
+  double        m_normalizedEmittance ;
+  double        m_totalCrossSection ;
+  double        m_horizontalCrossingAngle ;
+  double        m_verticalCrossingAngle ;
+  double        m_horizontalBeamlineAngle ;
+  double        m_verticalBeamlineAngle ;
+  double        m_betaStar ;
+  double        m_bunchSpacing ;
+  double        m_xLuminousRegion , m_yLuminousRegion , m_zLuminousRegion ;
+  double        m_luminosity ;
+
+  LHCb::BeamParameters m_beam ; ///< Local beam parameter object
 };
 #endif // GENINIT_H
