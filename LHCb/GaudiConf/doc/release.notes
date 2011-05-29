@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-30 - Rob Lambert
+ - Only change services if original services were not correct
+
 ! 2011-05-27 - Rob Lambert
  - finished changeServices() functionality
  - added a post config action of convertSelector() to fix across the changeover

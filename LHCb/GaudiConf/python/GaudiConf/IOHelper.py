@@ -75,13 +75,13 @@ class IOHelper(object):
                           'MDF'  : "SVC='LHCb::MDFSelector'"
                           }
 
-    _knownPerServices = ['PoolDbCnvSvc',
-                         'PoolDbCacheSvc',
-                         'RootCnvSvc',
-                         "RawDataCnvSvc",
-                         'MultiFileCatalog',
-                         'IODataManager'
-                         ]
+    _knownPerServices = {'PoolDbCnvSvc': 'POOL',
+                         'PoolDbCacheSvc': 'POOL',
+                         'RootCnvSvc' : 'ROOT',
+                         "RawDataCnvSvc": 'MDF',
+                         'MultiFileCatalog' : '',
+                         'IODataManager' : ''
+                         }
     
     def __init__(self,Input=None,Output=None):
         '''
@@ -157,6 +157,29 @@ class IOHelper(object):
             if service in svcstring:
                 return True
         return False
+    
+    def _persistencyType(self,svcstring):
+        '''Returns either ROOT POOL or MDF'''
+        
+        for service in self._knownPerServices:
+            if service in svcstring:
+                return self._knownPerServices[service]
+        return ''
+    
+    def _getPersistencyList(self, svclist):
+        '''Return list of persistencies which are active'''
+        retlist=[]
+        for service in svclist:
+            servicestring=''
+            if type(service)==str:
+                servicestr=service
+            else:
+                servicestr=service.getFullName()
+                pertype=self._persistencyType(servicestr)
+                if len(pertype):
+                    if pertype not in retlist:
+                        retlist.append(pertype)
+        return retlist
     
     def _getSvcList(self,svclist):
         retlist=[]
@@ -236,6 +259,7 @@ class IOHelper(object):
         from Gaudi.Configuration import appendPostConfigAction
         
         appendPostConfigAction(self.convertSelector)
+        
     
     def activeServices(self):
         '''return all configured persistency services'''
@@ -246,6 +270,10 @@ class IOHelper(object):
         retlist+=self._getSvcList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
         
         return retlist
+
+    def activePersistencies(self):
+        '''return all configured persistency services'''
+        return self._getPersistencyList(self.activeServices())
     
     def clearServices(self):
         '''remove all persistency services'''
@@ -259,10 +287,18 @@ class IOHelper(object):
             svc for svc in PersistencySvc("FileRecordPersistencySvc").CnvServices if svc not in active]
         
         self._removeConfigurables(active)
-        
+
+    def servicesExist(self):
+        '''Check if any of the the services required for this persistency are set up'''
+        return (self._inputPersistency in self.activePersistencies() and self._outputPersistency in self.activePersistencies())
+    
     def changeServices(self):
         '''Go through the list of gaudi services, remove any persistency services and add different ones
+        Only change services if the services already set up are not correct.
         '''
+        if self.servicesExist():
+            return
+        
         self.clearServices()
         self.setupServices()
         
