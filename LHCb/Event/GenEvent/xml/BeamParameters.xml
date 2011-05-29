@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' >
+
+<gdd>
+  <package name="BeamParameters">
+   
+    <class
+      name   = "BeamParameters"
+      author = "P. Robbe"
+      desc   = "Parameters of the beam"
+      location = "Gen/BeamParameters"
+      id     = "200"
+    >
+       &KeyedObject;
+       <base name="DataObject"/>
+      <import name="GaudiKernel/Point3DTypes.h"/>
+      <import name="GaudiKernel/SystemOfUnits.h"/>
+       <attribute
+        desc="Beam energy"
+        name="energy"
+        type="double"
+        init="3.5"
+       />
+       <attribute
+        desc="RMS of the bunch length"
+        name="sigmaS"
+        type="double"
+        init="0.0"
+       />
+      <attribute
+       desc  = "Normalized emittance"
+       name  = "epsilonN"
+       type  = "double"
+       init  = "0.0"
+      />
+      <attribute
+       desc  = "Revolution frequency"
+       name  = "revolutionFrequency"
+       type  = "double"
+       init  = "11.245*Gaudi::Units::kilohertz"
+       setMeth = "FALSE"
+      />
+      <attribute
+       desc  = "Total cross-section"
+       name  = "totalXSec"
+       type  = "double"
+       init  = "97.2*Gaudi::Units::millibarn"
+      />
+      <attribute
+       desc  = "Horizontal crossing angle"
+       name  = "horizontalCrossingAngle"
+       type  = "double"
+       init  = "130.0"
+      />
+      <attribute
+       desc  = "Vertical crossing angle"
+       name  = "verticalCrossingAngle"
+       type  = "double"
+       init  = "130.0"
+      />
+      <attribute
+       desc  = "Horizontal beamline angle"
+       name  = "horizontalBeamlineAngle"
+       type  = "double"
+       init  = "130.0"
+      />
+      <attribute
+       desc  = "Vertical beamline angle"
+       name  = "verticalBeamlineAngle"
+       type  = "double"
+       init  = "130.0"
+      />
+      <attribute
+       desc  = "Beta star"
+       name  = "betaStar"
+       type  = "double"
+       init  = "3.0"
+      />
+      <attribute
+       desc  = "Bunch spacing"
+       name  = "bunchSpacing"
+       type  = "double"
+       init  = "50."
+      />
+      <attribute
+       desc  = "Luminous region mean position"
+       name  = "beamSpot"
+       type  = "Gaudi::XYZPoint"
+       init  = "0.0, 0.0, 0.0"
+      />
+      <attribute 
+        desc = "Luminosity" 
+        name = "luminosity"
+        type = "double" 
+        init = "0.2e30/(Gaudi::Units::cm2*Gaudi::Units::s)"
+      />
+      <method
+        const="TRUE"
+        desc="Mean number of interactions per event (nu)"
+        name="nu"
+        type="double"
+        >
+        <code>
+          return luminosity() * totalXSec() / revolutionFrequency() ;
+        </code>
+      </method>
+      <method
+	const = "TRUE"
+	desc = "emittance"
+	name="emittance"
+	type="double"
+	>
+	<code>
+	  double beta = sqrt( energy() * energy() - 938.272013 * Gaudi::Units::GeV * 938.272013 * Gaudi::Units::GeV ) / energy() ; 
+	  double gamma = 1./sqrt(1. - beta * beta ) ; 
+	  return epsilonN()/gamma/beta ;
+	</code>
+      </method>
+      <method
+        const="TRUE"
+        desc="sigma X of the luminous region"
+        name="sigmaX"
+        type="double"
+        >
+        <code>
+          return sqrt( betaStar() * emittance() / 2. ) ;
+        </code>
+      </method>
+      <method
+        const="TRUE"
+        desc="sigma Y of the luminous region"
+        name="sigmaY"
+        type="double"
+        >
+        <code>
+          return sqrt( betaStar() * emittance() /2. ) ;
+        </code>
+      </method>
+      <method
+        const="TRUE"
+        desc="sigma Z of the luminous region"
+        name="sigmaZ"
+        type="double"
+        >
+        <code>
+          return sigmaS() / sqrt(2.) ;
+        </code>
+      </method>
+      <method
+        const="TRUE"
+        desc="Smearing of the angle between the beams"
+        name="angleSmear"
+        type="double"
+        >
+        <code>
+          if ( 0.0 != betaStar() ) return ( epsilonN() / betaStar() ) ;
+          else return 0.0 ;
+        </code>
+      </method>
+
+    </class>    
+  </package>
+</gdd>
+      

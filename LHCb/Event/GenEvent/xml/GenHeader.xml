@@ -15,13 +15,8 @@
        &DataObject;
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>
+      <import name="BeamParameters" soft="TRUE"/>
        <import name="GenCollision" soft="TRUE"/>
-        <attribute
-        desc="Instantaneous luminosity used for pileUp probability"
-        name="luminosity"
-        type="double"
-        init="0.0"
-       />
        <attribute
         desc='LHCb event type. Code used in BookKeeping to identify samples, as defined in &lt;a href="http://cdsweb.cern.ch/record-restricted/855452/"&gt;LHCb-2005-034&lt;/a&gt;'
         name="evType"
@@ -40,18 +35,12 @@
         name="collisions"
         type="LHCb::GenCollision"
        />
-       <attribute
-        desc="Total cross section used for pileUp probability"
-        name="totCrossSection"
-        type="double"
-        init="0.0"
-       />
-       <attribute
-        desc="Filled-filled bunches crossing frequency"
-        name="crossingFreq"
-        type="double"
-        init="0.0"
-       />
+      <relation
+        desc="Pointer to beam parameters in this event"
+        multiplicity="1"
+        name="beamParameters"
+        type="LHCb::BeamParameters"
+        />
        <method
         const="TRUE"
         desc="Number of collisions in bunch crossing"
@@ -62,6 +51,36 @@
 	  return collisions().size();
         </code>
        </method>
+      <method
+	const="TRUE"
+	desc="Retrieve instantaneous luminosity used for pileup probability"
+        name="luminosity"
+        type="double"
+      >
+	<code>
+	  return beamParameters()->luminosity();
+        </code>
+      </method>
+      <method
+        const="TRUE"
+        desc="Retrieve total cross-section used for pileup probability"
+        name="totCrossSection"
+        type="double"
+      >
+        <code>
+         return beamParameters()->totalXSec();
+        </code>
+      </method>
+      <method
+        const="TRUE"
+        desc="Retrieve filled-filled bunches crossing frequency"
+        name="crossingFreq"
+        type="double"
+      >
+        <code>
+         return beamParameters()->revolutionFrequency();
+        </code>
+      </method>
      </class>
   </package>
 </gdd>

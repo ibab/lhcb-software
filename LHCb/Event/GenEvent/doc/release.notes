@@ -2,6 +2,13 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2011-05-29 - Patrick Robbe 
+ - xml/BeamParameters.xml: new class to contain beam parameter informations
+   for the generator step.
+ - xml/GenHeader.xml: move the beam related functions to BeamParameters
+ - src/BeamForInitialization.cpp, GenEvent/BeamForInitialization.h: utility
+   class for Pythia initialization.
+
 !========================= GenEvent v5r7 2011-01-31 =========================
 ! 2011-01-11 - Marco Cattaneo
  - Suppress ICC warnings and remarks
