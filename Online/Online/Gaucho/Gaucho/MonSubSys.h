@@ -53,6 +53,7 @@ public:
   ObjRPC *m_rpc;
   ObjSerializer *m_ser;
   ObjSerializer *m_RPCser;
+  ObjSerializer *m_EORser;
   bool start_done;
   int m_lockcnt;
   int m_lockcount;

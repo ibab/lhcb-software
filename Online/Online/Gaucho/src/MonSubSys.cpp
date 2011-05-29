@@ -29,6 +29,7 @@ MonSubSys::MonSubSys(int intv)
   m_rpc = 0;
   m_ser = 0;
   m_RPCser = 0;
+  m_EORser = 0;
   m_genSrv = 0;
   m_EORsvc = 0;
   m_runno = 0;
@@ -62,6 +63,7 @@ MonSubSys::~MonSubSys()
   deletePtr(m_EORsvc);
   deletePtr(m_ser);
   deletePtr(m_RPCser);
+  deletePtr(m_EORser);
 
   unLock();
   MonSys::m_instance().remSubSys(this);
@@ -200,7 +202,8 @@ void MonSubSys::setup(char *n, bool expandnames)
   }
   nam = m_name;
   nam = std::string("MON_")+m_pname+"/"+m_name+"/EOR";
-  if (m_EORsvc == 0) m_EORsvc = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty,4);
+  if (m_EORser == 0) m_EORser = new ObjSerializer(&m_Objmap,false);
+  if (m_EORsvc == 0) m_EORsvc = new ObjService(m_EORser,(char*)nam.c_str(),(char*)"C",(void*)&mpty,4);
   m_EORsvc->setEORflag(true);
   MonSys::m_instance().addSubSys(this);
 //  unLock();
