@@ -25,6 +25,9 @@ C*    Use Hidden Valley production
 C*    Read ALPGEN partonic event 
       INTEGER ALPGENREADPROCESS
       PARAMETER(ALPGENREADPROCESS=5)
+C*    Use Onia Pairs production
+      INTEGER ONIAPAIRSPROCESS
+      PARAMETER(ONIAPAIRSPROCESS=6)
 C----------------------------------------------------------------------
 C The END 
 C----------------------------------------------------------------------
