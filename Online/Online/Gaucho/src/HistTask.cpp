@@ -158,7 +158,7 @@ int HistTask::TaskList(std::string dns, std::vector<std::string> &tasklist)
   }
   DimClient::setDnsNode(dns.c_str());
   DimBrowser b;
-  int nservcs = b.getServices("MON_*/Histos/Data");
+  int nservcs = b.getServices("MON_*/Histos/Data",5);
   int i;
   for (i=0;i<nservcs;i++)
   {
