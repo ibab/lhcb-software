@@ -1,3 +1,8 @@
+2011-05-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLHCbtar: removed obsolete call to LbInstallArea.
+	* scripts/mkproject: added unconditional exit if the tarball cannot be built.
+
 2011-05-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbLegacy/python/LbLegacy/Utils.py: New file. added getStatusOutput function that

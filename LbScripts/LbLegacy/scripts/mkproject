@@ -505,13 +505,26 @@ def release_project(pname, pversion, action=None, yes_mode=False, parallel_mode=
         os.chdir(rel_dir)
         str = 'mkLHCbtar -p ' + pname + ' -v ' + pversion
         rc = os.system(str)
-        log.info('tar source rc = %s' % rc)
-        if projconf.hasBinary() :
+        if rc == 0 :
+            log.info('mkLHCbtar of %s %s exit code %d' % (pname, pversion, rc))
+        else :
+            log.error('mkLHCbtar of %s %s exit code %d' % (pname, pversion, rc))
+        if projconf.hasBinary() and (rc == 0) :
             rc = os.system(str + ' -b ' + CMTCONFIG)
-            log.info('tar %s rc= %s ' % (CMTCONFIG, rc))
-            if debug :
+            if rc == 0 :
+                log.info('mkLHCbtar of %s %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
+            else :
+                log.error('mkLHCbtar of %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
+            if debug and (rc == 0) :
                 rc = os.system(str + ' -b ' + CMTDEB)
-                log.info('tar %s rc= %s ' % (CMTDEB, rc))
+                if rc == 0 :
+                    log.info('mkLHCbtar of %s %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
+                else :
+                    log.error('mkLHCbtar of %s %s exit code %d' % (pname, pversion, CMTCONFIG, rc))
+
+        if rc != 0 :
+            sys.exit("Failed to build tarballs")
+
 
 # ======================= action: run glimpse index ==========================================
     if glimpse :

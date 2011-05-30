@@ -214,14 +214,15 @@ def make_tar(pname, pversion, binary=''):
 #
     if CMTPROJECTPATH == '':
         if platform != '':
-            if not os.path.isdir(os.path.join(maindir, 'InstallArea', binary)):
-                os.chdir(maindir)
-                str = 'LbInstallArea ' + binary
-                os.system(str)
-                os.chdir(here)
+            ia_dir = os.path.join(maindir, 'InstallArea')
+            if not os.path.isdir(os.path.join(ia_dir, binary)):
+                os.mkdir(os.path.isdir(os.path.join(ia_dir, binary)))
+                os.mkdir(os.path.isdir(os.path.join(ia_dir, binary, 'lib')))
+                os.mkdir(os.path.isdir(os.path.join(ia_dir, binary, 'bin')))
             l = os.listdir(os.path.join(maindir, 'InstallArea', binary, 'lib'))
             b = os.listdir(os.path.join(maindir, 'InstallArea', binary, 'bin'))
-            if len(l) == 0 and len(b) == 0 : sys.exit('no library for this binary %s ' % (binary))
+            if len(l) == 0 and len(b) == 0 :
+                sys.exit('no library for this binary %s ' % (binary))
 
 # tar files location: tar files are stored in $LHCBTAR/<PROJECT> or in $LHCBTAR/source
     if os.path.exists(os.path.join(LHCBTAR, PACK)): TARSRC = PACK
@@ -398,7 +399,6 @@ def make_tar(pname, pversion, binary=''):
             str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + env + '/' + pversion + ' ' + maindir
         else:
             str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + maindir
-#    status = os.system(str)
         tar_status, output = getStatusOutput(str)
         print 'make_tar: %s tar status= %s' % (tarfile, tar_status)
     else:
