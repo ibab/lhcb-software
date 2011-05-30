@@ -366,11 +366,11 @@ class ZooTagging : public TObject
 	/// default constructor
 	ZooTagging() :
 	    m_omega(-0.1),m_osOmega(-0.1), m_elecOmega(-0.1), m_muonOmega(-0.1),
-	    m_osKaonOmega(-0.1), m_ssKaonOmega(-0.1), m_vtxOmega(-0.1),
+	    m_osKaonOmega(-0.1), m_ssKaonOmega(-0.1), m_ssPionOmega(-0.1), m_vtxOmega(-0.1),
 	    m_ssKaon(reinterpret_cast<TObject*>(0)),
             m_tagDecision(0), m_osTagDecision(0), m_tagCategory(0), m_elecTagDecision(0),
 	    m_muonTagDecision(0), m_osKaonTagDecision(0),
-	    m_ssKaonTagDecision(0), m_vtxTagDecision(0)
+	    m_ssKaonTagDecision(0),  m_ssPionTagDecision(0), m_vtxTagDecision(0)
         { }
 
 	int     tagDecision()       const { return m_tagDecision; };
@@ -383,11 +383,13 @@ class ZooTagging : public TObject
 	int     muonTagDecision()   const { return m_muonTagDecision; };
 	int     osKaonTagDecision() const { return m_osKaonTagDecision; };
 	int     ssKaonTagDecision() const { return m_ssKaonTagDecision; };
+	int     ssPionTagDecision() const { return m_ssPionTagDecision; };
 	int     vtxTagDecision()    const { return m_vtxTagDecision; };
 	float   elecOmega()         const { return m_elecOmega; };
 	float   muonOmega()         const { return m_muonOmega; };
 	float   osKaonOmega()       const { return m_osKaonOmega; };
 	float   ssKaonOmega()       const { return m_ssKaonOmega; };
+	float   ssPionOmega()       const { return m_ssPionOmega; };
 	float   vtxOmega()          const { return m_vtxOmega; };
 	// return pointer to ZooP that caused SS Kaon tag (0 if unavailable)
 	const ZooP* ssKaon() const
@@ -405,6 +407,8 @@ class ZooTagging : public TObject
 	{ m_muonTagDecision = d; m_muonOmega = w; }
 	void setOsKaonTagDecision(int d, float w)
 	{ m_osKaonTagDecision = d; m_osKaonOmega = w; }
+	void setSsPionTagDecision(int d, float w)
+	{ m_ssPionTagDecision = d; m_ssPionOmega = w; }
 	void setSsKaonTagDecision(int d, float w)
 	{ m_ssKaonTagDecision = d; m_ssKaonOmega = w; }
 	void setSsKaon(const ZooP* zp)
@@ -419,6 +423,7 @@ class ZooTagging : public TObject
 	Float_t m_muonOmega;
 	Float_t m_osKaonOmega;
 	Float_t m_ssKaonOmega;
+	Float_t m_ssPionOmega;
 	Float_t m_vtxOmega;
         TRef    m_ssKaon;
 	Char_t  m_tagDecision;
@@ -429,6 +434,7 @@ class ZooTagging : public TObject
 	Char_t  m_muonTagDecision;
 	Char_t  m_osKaonTagDecision;
 	Char_t  m_ssKaonTagDecision;
+	Char_t  m_ssPionTagDecision;
 	Char_t  m_vtxTagDecision;
 
 	ClassDef(ZooTagging,2)
