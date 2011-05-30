@@ -261,6 +261,8 @@ class SimConf(LHCbConfigurableUser) :
                         tape.OptItemList += generatorList
                 else:
                     tape.ItemList    += generatorList
+                    if self.getProp("DataType") != '2009' and self.getProp("DataType") != '2010' and self.getProp("DataType") != 'MC09':
+                        tape.ItemList += [ self.tapeLocation( slot , 'Gen' , 'BeamParameters' ) ]
 
     def addMCParticles( self, tape, eventLocations ) :
         

@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-30 - Patrick Robbe
+ - SimConf: add write out of BeamParameters class for Gauss, only
+   for 2011 DataType.
+
 ! 2011-05-30 - Rob Lambert
  - Only change services if original services were not correct
 
