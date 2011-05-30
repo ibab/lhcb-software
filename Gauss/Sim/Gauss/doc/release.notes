@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-05-30 - Patrick Robbe
+ - python/Gauss/Configuration.py: transmit "DataType" property to SimConf
+
 ! 2011-05-29 - Patrick Robbe
  - python/Gauss/Configuration.py: use new beam parameter class
 

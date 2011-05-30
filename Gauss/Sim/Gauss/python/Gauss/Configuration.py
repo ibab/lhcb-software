@@ -1248,7 +1248,7 @@ class Gauss(LHCbConfigurableUser):
 
         # Propagate properties to SimConf
         SimConf().setProp("Writer","GaussTape")
-        self.setOtherProps( SimConf(), ["SpilloverPaths","EnablePack","Phases"] )
+        self.setOtherProps( SimConf(), ["SpilloverPaths","EnablePack","Phases","DataType"] )
         
         # CRJ : Propagate detector list to SimConf. Probably could be simplified a bit
         #       by sychronising the options in Gauss() and SimConf()
