@@ -5,6 +5,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -28,7 +29,7 @@ OniaPairsProduction::OniaPairsProduction
   const std::string& name   , 
   const IInterface*  parent ) 
   : PythiaProduction ( type , name , parent ) 
-  , m_ecm ( 7e+3 ) 
+  , m_ecm ( 7 * Gaudi::Units::TeV ) 
 {
   //
   declareProperty ( "EnergyCM" , m_ecm      , "CM-energy" ) ;
@@ -114,7 +115,7 @@ StatusCode OniaPairsProduction::initialize()
   Pythia::pypars().mstp ( 122 ) = 1 ;
   //
   // set Ecm
-  OniaPairs::SetPar ( "ECM", m_ecm ) ;
+  OniaPairs::SetPar ( "ECM", m_ecm / Gaudi::Units::GeV ) ;
   //
   // my user process number
   m_userProcess = 6 ;
