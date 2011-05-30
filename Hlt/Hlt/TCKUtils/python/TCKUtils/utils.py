@@ -280,6 +280,11 @@ class AccessSvcSingleton(object) :
         return AccessSvcSingleton._cte.updateAndWrite(id,mods,label)
 
 
+# TODO: move AccessSvcSingleton into a seperate process, and 
+#       have it run a gaudi job and keep it going for as long
+#       as needed.... 
+# TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
+#       a callable (involving _pcs callable members), and receive the result...
 def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
     pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
     cte = None
@@ -296,11 +301,6 @@ def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = 
     return svc
 
 
-# TODO: move AccessSvcSingleton into a seperate process, and 
-#       have it run a gaudi job and keep it going for as long
-#       as needed.... 
-# TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
-#       a callable (involving _pcs callable members), and receive the result...
 def _getConfigTree( id , cas = ConfigAccessSvc() ) :
     createAccessSvcSingleton( cas = cas )
     return Tree(id)
@@ -416,6 +416,7 @@ class TreeNode(object) :
     #  use flyweight pattern, and use digest to identify objects...
     import weakref
     _pool = weakref.WeakValueDictionary()
+    #  TODO: add functionality to flush _pool
     def __new__(cls, id = None) :
         if not id: return object.__new__(cls)
         obj = TreeNode._pool.get( id )
@@ -431,6 +432,7 @@ class PropCfg(object) :
     import weakref
     _pool = weakref.WeakValueDictionary()
     #  TODO: make a singleton svc which we use to resolve IDs if not existent yet...
+    #  TODO: add functionality to flush _pool
     def __new__(cls, id = None) :
         if not id : return object.__new__(cls) # added to make it possible to recv in parent process...
         obj = PropCfg._pool.get( id )
@@ -476,6 +478,8 @@ class Tree(object):
     #TODO: add direct access to leafs 'in' this tree by name
     # and use it to implement an efficient __contains__
 
+
+# TODO: rewrite in terms of trees...
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
     table = xget( [ lhs, rhs ] , cas ) 
     setl = set( table[lhs].keys() )
