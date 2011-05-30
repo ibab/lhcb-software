@@ -32,6 +32,39 @@ see: http://indico.cern.ch/conferenceDisplay.py?confId=82203
   PV requirement removed
   prescaled selection for low PT
   prescaled LD line
+
+Usage:
+
+>>> stream = ....
+
+>>> from StrippingSelections.StrippingInclPhi import InclPhiConf
+
+>>> MyInclPhiConf = InclPhiConf("InclPhi", InclPhiConf.config_default)
+
+>>> stream.appendLines( [ MyInclPhiConf.InclPhiHighPtLine,
+                          MyInclPhiConf.InclPhiLowPtLine ] )
+
+Results from running over:
+$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py
+
+StrippingReport                                                INFO Event 70000, Good event 32178
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  |  0.2175|        70|       |   2.017|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.2175|        70|       |   2.011|       |       |       |
+ |!StrippingInclPhiHighPtLine                        |  0.1119|        36|  1.889|   0.724|      0|      0|     40|
+ |!StrippingInclPhiLowPtLine                         |  0.1057|        34|  2.588|   0.803|      0|      0|     48|
+
+===============================================================================
+                AlgorithmCorrelationsAlg.AlgorithmCorrelations
+===============================================================================
+    Algorithm                      Eff.       1        2        3        4   
+-------------------------------------------------------------------------------
+  1 StrippingGlobal                0.218% |  ####### 100.000% 100.000% 100.000%
+  2 StrippingSequenceStreamTest    0.218% | 100.000%  ####### 100.000% 100.000%
+  3 StrippingInclPhiHighPtLine     0.112% |  51.429%  51.429%  #######   0.000%
+  4 StrippingInclPhiLowPtLine      0.106% |  48.571%  48.571%   0.000%  #######
+===============================================================================
+
 '''
 
 __author__  = ['Andrew Powell','Sebastian Schleich']
@@ -67,9 +100,9 @@ class InclPhiConf(LineBuilder):
                   'KaonPT'              : 500      # MeV
                 , 'KaonDLL'             : 15       # adimensional
                 , 'PhiMassWindow'       : 30       # MeV
-                , 'HighPtPrescale'      : 0.0015    # adimensional
-                , 'LowPtPrescale'       : 0.0020    # adimensional
-                , 'LDPrescale'          : 0.0001   # adimensional
+                , 'HighPtPrescale'      : 0.0030   # adimensional 
+                , 'LowPtPrescale'       : 0.0040   # adimensional 
+                , 'LDPrescale'          : 0.0002   # adimensional 
                 }
 
 

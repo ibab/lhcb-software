@@ -33,61 +33,56 @@
 
 Usage:
 
-from StrippingSelections import StrippingV0ForPID
-config_V0ForPID = {
-                'KS0LL_Prescale'           : 0.006,
-                'KS0DD_Prescale'           : 0.006,
-                'LamLL_Prescale_LoP'       : 0.036,
-                'LamLL_Prescale_HiP'       : 0.250,
-                'LamDD_Prescale'           : 0.027,
-                'LamLLIsMUON_Prescale_LoP' : 0.869,
-                'LamLLIsMUON_Prescale_HiP' : 1.000,
-                'LamDDIsMUON_Prescale'     : 0.460
-    }
-confV0ForPID = StrippingV0ForPID.StrippingV0ForPIDConf ('noPIDV0',config_V0ForPID)
-stream.appendLines( confV0ForPID.lines() )
+>>> stream = ...
 
+>>> from StrippingSelections.StrippingV0ForPID import StrippingV0ForPIDConf
+
+>>> conf = {}
+
+>>> V0ForPID = StrippingV0ForPIDConf ( 'noPIDV0', config = conf )
+
+>>> stream.appendLines( V0ForPID.lines() )
 
 Results from running over:
-$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py
+$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py
 
 with prescales above prescales:
 
-StrippingReport                                                INFO Event 70000, Good event 64416
+StrippingReport                                                INFO Event 70000, Good event 32178
  |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  0.6380|       411|       |  15.200|       |       |       |
- |_StrippingSequenceStreamTest_                      |  0.6380|       411|       |  15.197|       |       |       |
- |!StrippingK0SLLLinenoPIDV0                         |  0.1056|        68|  0.000|   0.100|      0|      0|      2|
- |!StrippingK0SDDLinenoPIDV0                         |  0.1040|        67|  0.000|   0.094|      0|      0|      0|
- |!StrippingLam0LLLine1noPIDV0                       |  0.0807|        52|  0.000|   0.337|      0|      0|      3|
- |!StrippingLam0LLLine2noPIDV0                       |  0.0497|        32|  0.000|   2.098|      0|      0|     18|
- |!StrippingLam0DDLinenoPIDV0                        |  0.0916|        59|  0.000|   0.427|      0|      0|      2|
- |!StrippingLam0LLIsMUONLine1noPIDV0                 |  0.1211|        78|  0.000|   5.529|      0|      0|     75|
- |!StrippingLam0LLIsMUONLine2noPIDV0                 |  0.0062|         4|  0.000|   0.841|      0|      0|     11|
- |!StrippingLam0DDIsMUONLinenoPIDV0                  |  0.0931|        60|  0.000|   5.377|      0|      0|      0|
+ |_StrippingGlobal_                                  |  0.7303|       235|       |  21.119|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.7303|       235|       |  21.112|       |       |       |
+ |!StrippingK0SLLLineV0ForPID                        |  0.0963|        31|  1.129|   0.126|      0|      0|      1|
+ |!StrippingK0SDDLineV0ForPID                        |  0.1088|        35|  1.057|   0.145|      0|      0|      1|
+ |!StrippingLam0LLLine1V0ForPID                      |  0.1367|        44|  1.045|   0.286|      0|      0|      0|
+ |!StrippingLam0LLLine2V0ForPID                      |  0.1181|        38|  1.000|   2.306|      0|      0|     25|
+ |!StrippingLam0DDLineV0ForPID                       |  0.1026|        33|  1.061|   0.427|      0|      0|      0|
+ |!StrippingLam0LLIsMUONLine1V0ForPID                |  0.0746|        24|  1.042|   6.382|      0|      0|     81|
+ |!StrippingLam0LLIsMUONLine2V0ForPID                |  0.0062|         2|  1.000|   0.040|      0|      0|      0|
+ |!StrippingLam0DDIsMUONLineV0ForPID                 |  0.0994|        32|  1.000|  10.971|      0|      0|      0|
 
-===========================================================================================================================================
-                                              AlgorithmCorrelationsAlg.AlgorithmCorrelations
-===========================================================================================================================================
-    Algorithm                            Eff.       1        2        3        4        5        6        7        8        9        10  
--------------------------------------------------------------------------------------------------------------------------------------------
-  1 StrippingGlobal                      0.638% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
-  2 StrippingSequenceStreamTest          0.638% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
-  3 StrippingK0SLLLinenoPIDV0            0.106% |  16.545%  16.545%  #######   1.493%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%
-  4 StrippingK0SDDLinenoPIDV0            0.104% |  16.302%  16.302%   1.471%  #######   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%
-  5 StrippingLam0LLLine1noPIDV0          0.081% |  12.652%  12.652%   0.000%   0.000%  #######   3.125%   0.000%   2.564%  25.000%   0.000%
-  6 StrippingLam0LLLine2noPIDV0          0.050% |   7.786%   7.786%   0.000%   0.000%   1.923%  #######   0.000%   1.282%  25.000%   0.000%
-  7 StrippingLam0DDLinenoPIDV0           0.092% |  14.355%  14.355%   0.000%   0.000%   0.000%   0.000%  #######   0.000%   0.000%   0.000%
-  8 StrippingLam0LLIsMUONLine1noPIDV0    0.121% |  18.978%  18.978%   0.000%   0.000%   3.846%   3.125%   0.000%  ####### 100.000%   0.000%
-  9 StrippingLam0LLIsMUONLine2noPIDV0    0.006% |   0.973%   0.973%   0.000%   0.000%   1.923%   3.125%   0.000%   5.128%  #######   0.000%
- 10 StrippingLam0DDIsMUONLinenoPIDV0     0.093% |  14.599%  14.599%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%  #######
-===========================================================================================================================================
-
+============================================================================================================================================
+                                               AlgorithmCorrelationsAlg.AlgorithmCorrelations
+============================================================================================================================================
+    Algorithm                             Eff.       1        2        3        4        5        6        7        8        9        10  
+--------------------------------------------------------------------------------------------------------------------------------------------
+  1 StrippingGlobal                       0.730% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
+  2 StrippingSequenceStreamTest           0.730% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
+  3 StrippingK0SLLLineV0ForPID            0.096% |  13.191%  13.191%  #######   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%
+  4 StrippingK0SDDLineV0ForPID            0.109% |  14.894%  14.894%   0.000%  #######   0.000%   0.000%   0.000%   4.167%   0.000%   0.000%
+  5 StrippingLam0LLLine1V0ForPID          0.137% |  18.723%  18.723%   0.000%   0.000%  #######   0.000%   0.000%   0.000%   0.000%   0.000%
+  6 StrippingLam0LLLine2V0ForPID          0.118% |  16.170%  16.170%   0.000%   0.000%   0.000%  #######   0.000%   0.000%   0.000%   0.000%
+  7 StrippingLam0DDLineV0ForPID           0.103% |  14.043%  14.043%   0.000%   0.000%   0.000%   0.000%  #######   0.000%   0.000%   3.125%
+  8 StrippingLam0LLIsMUONLine1V0ForPID    0.075% |  10.213%  10.213%   0.000%   2.857%   0.000%   0.000%   0.000%  ####### 100.000%   0.000%
+  9 StrippingLam0LLIsMUONLine2V0ForPID    0.006% |   0.851%   0.851%   0.000%   0.000%   0.000%   0.000%   0.000%   8.333%  #######   0.000%
+ 10 StrippingLam0DDIsMUONLineV0ForPID     0.099% |  13.617%  13.617%   0.000%   0.000%   0.000%   0.000%   3.030%   0.000%   0.000%  #######
+============================================================================================================================================
+ 
 """
 # =============================================================================
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
-__date__    = '2011-03-02'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $'
+__date__    = '2011-05-30'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $'
 __all__ = ('StrippingV0ForPIDConf')
 # =============================================================================
 
@@ -139,44 +134,11 @@ _default_configuration_ = {
     'Proton_IsMUONCut'     :  "(INTREE( (ABSID=='p+') & ISMUON ) )" , 
     ## 
     # Technicalities:
-    #
-    'Monitor'              : None    ,          ## Activate the monitoring ?
+    ##
+    'Monitor'              :  False    ,          ## Activate the monitoring ?
     ##
     "HLT"                  : "HLT_PASS_RE('Hlt1MB.*Decision')" ,  ## HLT-cut
     ##
-    'K0S_Monitor'          : [
-    ## define historam type (shortcut)
-    "Histo  = Gaudi.Histo1DDef"  ,
-    ## monitor LL-case
-    "massLL     = monitor ( M / GeV ,  Histo ( 'K0S, LL-case' , 0.45 , 0.55 , 100 ) , 'M_LL'    ) " ,
-    "pTLL       = monitor ( PT / GeV , Histo ( 'K0S, LL-case' , 0.00 , 1.20 , 100 ) , 'pT_LL'   ) " ,
-    "yLL        = monitor ( Y ,        Histo ( 'K0S, LL-case' , 1.60 , 5.40 , 100 ) , 'y_LL'    ) " ,
-    "p1LL       = monitor ( CHILD( P, 1 )  / GeV , Histo ( 'K0S, LL-case' , 0.00 , 120 ,  100 ) , 'p1_LL'   ) " ,
-    "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'K0S, LL-case' , 0.00 , 120 ,  100 ) , 'p2_LL'   ) " ,
-    ## monitor DD-case
-    "massDD     = monitor ( M / GeV ,  Histo ( 'K0S, DD-case' , 0.45 , 0.55 , 100 ) , 'M_DD'    ) " ,
-    "pTDD       = monitor ( PT / GeV , Histo ( 'K0S, DD-case' , 0.00 , 2.00 , 100 ) , 'pT_DD'   ) " ,
-    "yDD        = monitor ( Y ,        Histo ( 'K0S, DD-case' , 1.60 , 5.40 , 100 ) , 'y_DD'    ) " ,
-    "p1DD       = monitor ( CHILD( P, 1 )  / GeV , Histo ( 'K0S, DD-case' , 0.00 , 120 ,  100 ) , 'p1_DD'   ) " ,
-    "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'K0S, DD-case' , 0.00 , 120 ,  100 ) , 'p2_DD'   ) " 
-    ],
-    ##
-    'Lam0_Monitor'         : [
-    ## define historam type (shortcut)
-    "Histo  = Gaudi.Histo1DDef"  ,
-    ## monitor LL-case
-    "massLL     = monitor ( M / GeV ,  Histo ( 'Lambda0, LL-case' , 1.090 , 1.140 , 100 ) , 'M_LL'     ) " ,
-    "pTLL       = monitor ( PT / GeV , Histo ( 'Lambda0, LL-case' , 0.00 , 2.00 , 100 ) , 'pT_LL'   ) " ,
-    "yLL        = monitor ( Y ,        Histo ( 'Lambda0, LL-case' , 1.60 , 5.40 , 100 ) , 'y_LL'           ) " ,
-    "p1LL       = monitor ( CHILD( P, 1 )  / GeV , Histo ( 'Lambda0, LL-case' , 0.00 , 120 ,  100 ) , 'p1_LL'   ) " ,
-    "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00 , 120 ,  100 ) , 'p2_LL'   ) ",
-    ## monitor DD-case
-    "massDD     = monitor ( M / GeV , Histo ( 'Lambda0, DD-case' , 1.080 , 1.140 , 100 ) , 'M_DD'     ) " ,
-    "pTDD       = monitor ( PT / GeV , Histo ( 'Lambda0, DD-case' , 0.00 , 2.00 , 100 ) , 'pT_DD'   ) " ,
-    "yDD        = monitor ( Y , Histo ( 'Lambda0, DD-case' , 1.60 , 5.40 , 100 ) , 'y_DD'           ) " ,
-    "p1DD       = monitor ( CHILD( P, 1 )  / GeV , Histo ( 'Lambda0, DD-case' , 0.00 , 120 ,  100 ) , 'p1_DD'   ) " ,
-    "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00 , 120 ,  100 ) , 'p2_DD'   ) " 
-    ] ,
     'Preambulo'       : [
     ## import c_light
     "from GaudiKernel.PhysicalConstants import c_light" ,
@@ -184,7 +146,16 @@ _default_configuration_ = {
     "DD =    CHILDCUT ( ISDOWN , 1 ) & CHILDCUT ( ISDOWN , 2 ) " ,
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
-    ]
+    ] ,
+    'KS0LL_Prescale'           : 0.008 , 
+    'KS0DD_Prescale'           : 0.009 , 
+    'LamLL_Prescale_LoP'       : 0.033 , 
+    'LamLL_Prescale_HiP'       : 0.270 , 
+    'LamDD_Prescale'           : 0.032 , 
+    'LamLLIsMUON_Prescale_LoP' : 1.000 , 
+    'LamLLIsMUON_Prescale_HiP' : 1.000 , 
+    'LamDDIsMUON_Prescale'     : 1.000  
+
     }
 
 # =============================================================================
@@ -192,15 +163,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
     """
     Helper class to configure 'V0ForPID'-lines
     """
-    __configuration_keys__ = ('KS0LL_Prescale',
-                              'KS0DD_Prescale',
-                              'LamLL_Prescale_LoP',
-                              'LamLL_Prescale_HiP',
-                              'LamDD_Prescale',
-                              'LamLLIsMUON_Prescale_LoP',
-                              'LamLLIsMUON_Prescale_HiP',
-                              'LamDDIsMUON_Prescale'
-                              )
+    __configuration_keys__ = tuple ( _default_configuration_.keys() )
 
     ## get the default configuration 
     #@staticmethod
@@ -215,11 +178,12 @@ class StrippingV0ForPIDConf(LineBuilder) :
     def __init__(self, name, config) :
         """
         Constructor
-        """
-        LineBuilder.__init__(self, name, config)
-    
+        """        
         from copy import deepcopy
         _config = deepcopy ( _default_configuration_ )
+        _config.update ( config )
+
+        LineBuilder.__init__( self , name , _config )
         
         keys = _config.keys()
         for key in keys :
@@ -253,19 +217,17 @@ class StrippingV0ForPIDConf(LineBuilder) :
 
         self._protonIsmuon   = _config.pop ( 'Proton_IsMUONCut',_default_configuration_ [ 'Proton_IsMUONCut'] )
         
-        self._KS0LLPrescale            = config['KS0LL_Prescale']
-        self._KS0DDPrescale            = config['KS0DD_Prescale']
-        self._LamLLPrescale_HiP        = config['LamLL_Prescale_HiP']
-        self._LamLLPrescale_LoP        = config['LamLL_Prescale_LoP']
-        self._LamDDPrescale            = config['LamDD_Prescale']
-        self._LamLLIsMUONPrescale_HiP  = config['LamLLIsMUON_Prescale_HiP']
-        self._LamLLIsMUONPrescale_LoP  = config['LamLLIsMUON_Prescale_LoP']
-        self._LamDDIsMUONPrescale      = config['LamDDIsMUON_Prescale']
+        self._KS0LLPrescale            = _config.pop ( 'KS0LL_Prescale',           _default_configuration_ ['KS0LL_Prescale'          ] )
+        self._KS0DDPrescale            = _config.pop ( 'KS0DD_Prescale',           _default_configuration_ ['KS0DD_Prescale'          ] )
+        self._LamLLPrescale_HiP        = _config.pop ( 'LamLL_Prescale_HiP',       _default_configuration_ ['LamLL_Prescale_HiP'      ] )
+        self._LamLLPrescale_LoP        = _config.pop ( 'LamLL_Prescale_LoP',       _default_configuration_ ['LamLL_Prescale_LoP'      ] )
+        self._LamDDPrescale            = _config.pop ( 'LamDD_Prescale',           _default_configuration_ ['LamDD_Prescale'          ] )
+        self._LamLLIsMUONPrescale_HiP  = _config.pop ( 'LamLLIsMUON_Prescale_HiP', _default_configuration_ ['LamLLIsMUON_Prescale_HiP'] )
+        self._LamLLIsMUONPrescale_LoP  = _config.pop ( 'LamLLIsMUON_Prescale_LoP', _default_configuration_ ['LamLLIsMUON_Prescale_LoP'] )
+        self._LamDDIsMUONPrescale      = _config.pop ( 'LamDDIsMUON_Prescale',     _default_configuration_ ['LamDDIsMUON_Prescale'    ] )
 
         self._monitor      = _config.pop ( 'Monitor',      _default_configuration_ [ 'Monitor'     ] )
         self._hlt          = _config.pop ( 'HLT',          _default_configuration_ [ 'HLT'         ] )
-        self._k0smonitor   = _config.pop ( 'K0S_Monitor',  _default_configuration_ [ 'K0S_Monitor' ] )
-        self._lam0monitor  = _config.pop ( 'Lam0_Monitor', _default_configuration_ [ 'Lam0_Monitor'] )
         self._Preambulo    = _config.pop ( 'Preambulo'   , _default_configuration_ [ 'Preambulo'   ] )
         
         if _config :
@@ -366,27 +328,35 @@ class StrippingV0ForPIDConf(LineBuilder) :
         _K0S = CombineParticles(
             #self.name + "StripK0S" ,
             DecayDescriptor = "KS0 -> pi+ pi-" ,
-            Preambulo       = self._Preambulo + self._k0smonitor ,
+            Preambulo       = self._Preambulo,
             DaughtersCuts   = {
             '' : self._k0s_daughtersCuts ()
             } ,
             CombinationCut  = "AM < 1.0 * GeV " , 
-            MotherCut       = self._k0s_motherCut() ,        
-            Monitor         = self._monitor , 
-            HistoProduce    = self._monitor ,
-            HistoPrint      = self._monitor ,
-            MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            MotherCut       = self._k0s_motherCut()
+            )
+
+        if self._monitor != None :
+            _K0S.Preambulo       += [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'K0S, LL-case' , 0.45 , 0.55 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'K0S, LL-case' , 0.00 , 120 ,  100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'K0S, LL-case' , 0.00 , 120 ,  100 ) , 'p2_LL'   ) " ,
+                ]
+            _K0S.Monitor         = True ,
+            _K0S.HistoProduce    = True ,
+            _K0S.HistoPrint      = True ,
+            _K0S.MotherMonitor = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
             >> EMPTY
             """
-            )
         
         self.K0S_LL = Selection("SelK0S2PiPi_LL_" + self._name,
-                             Algorithm = _K0S,
-                             RequiredSelections = [ StdNoPIDsPions ]) 
+                                Algorithm = _K0S,
+                                RequiredSelections = [ StdNoPIDsPions ]) 
             
         return self.K0S_LL
 
@@ -397,30 +367,38 @@ class StrippingV0ForPIDConf(LineBuilder) :
         if hasattr ( self , 'K0S_DD' ) :
             return self.K0S_DD
         
-        _K0S = CombineParticles(
+        _K0SDD = CombineParticles(
             #self.name + "StripK0S_DD" ,
             DecayDescriptor = "KS0 -> pi+ pi-" ,
-            Preambulo       = self._Preambulo + self._k0smonitor ,
+            Preambulo       = self._Preambulo,
             DaughtersCuts   = {
             '' : self._k0s_daughtersCuts ()
             } ,
             CombinationCut  = "AM < 1.0 * GeV " ,
-            MotherCut       = self._k0s_motherCut() ,    
-            Monitor         = self._monitor ,
-            HistoProduce    = self._monitor ,
-            HistoPrint      = self._monitor ,
-            MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            MotherCut       = self._k0s_motherCut()
+            )
+
+        if self._monitor != None :
+            _K0SDD.Preambulo       += [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massDD     = monitor ( M / GeV ,             Histo ( 'K0S, DD-case' , 0.45 , 0.55 , 100 ) , 'M_DD'    ) " ,
+                "p1DD       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'K0S, DD-case' , 0.00 , 120 ,  100 ) , 'p1_DD'   ) " ,
+                "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'K0S, DD-case' , 0.00 , 120 ,  100 ) , 'p2_DD'   ) " ,
+                ]
+            _K0SDD.Monitor         = True ,
+            _K0SDD.HistoProduce    = True ,
+            _K0SDD.HistoPrint      = True ,
+            _K0SDD.MotherMonitor = """ process ( massDD )
+            >> process ( p1DD )
+            >> process ( p2DD )
             >> EMPTY
             """
-            )
         
         self.K0S_DD = Selection("SelK0S2PiPi_DD_" + self._name,
-                               Algorithm = _K0S,
-                               RequiredSelections = [ StdNoPIDsDownPions ]) 
+                                Algorithm = _K0SDD,
+                                RequiredSelections = [ StdNoPIDsDownPions ]) 
 
         return self.K0S_DD
 
@@ -434,27 +412,36 @@ class StrippingV0ForPIDConf(LineBuilder) :
         _Lam0 = CombineParticles(
             #self.name + "StripLam0" ,
             DecayDescriptor = "[ Lambda0 -> p+ pi-]cc" ,
-            Preambulo       = self._Preambulo + self._lam0monitor,
+            Preambulo       = self._Preambulo,
             DaughtersCuts   = {
             '' : self._lam0_daughtersCuts ()
             } ,
             CombinationCut  = "AM < 1.5 * GeV " ,
-            MotherCut       = self._lam0_motherCut() ,        
-            Monitor         = self._monitor ,
-            HistoProduce    = self._monitor ,
-            HistoPrint      = self._monitor ,
-            MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
-            >> EMPTY
-            """
+            MotherCut       = self._lam0_motherCut()
             )
 
+        if  self._monitor != None :
+            _Lam0.Preambulo       += [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'Lambda0, LL-case' , 1.080 , 1.140 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p2_LL'   ) " ,
+                ]
+            _Lam0.Monitor         = True ,
+            _Lam0.HistoProduce    = True ,
+            _Lam0.HistoPrint      = True ,
+            _Lam0.MotherMonitor = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
+            >> EMPTY
+            """
+        
+
         self.Lam0_LL = Selection("SelLam02PPi_LL",
-                                Algorithm = _Lam0,
-                                RequiredSelections = [ StdNoPIDsPions, StdNoPIDsProtons ]) 
+                                 Algorithm = _Lam0,
+                                 RequiredSelections = [ StdNoPIDsPions, StdNoPIDsProtons ]) 
 
         return self.Lam0_LL
 
@@ -465,30 +452,37 @@ class StrippingV0ForPIDConf(LineBuilder) :
         if hasattr ( self , 'Lam0_DD' ) :
             return self.Lam0_DD
 
-        _Lam0 = CombineParticles(
+        _Lam0DD = CombineParticles(
             #self.name + "StripLam0_DD" ,
             DecayDescriptor = "[ Lambda0 -> p+ pi-]cc" ,
-            Preambulo       = self._Preambulo + self._lam0monitor,
+            Preambulo       = self._Preambulo,
             DaughtersCuts   = {
             '' : self._lam0_daughtersCuts (),
             } ,
             CombinationCut  = "AM < 1.5 * GeV " ,
-            MotherCut       = self._lam0_motherCut() ,        
-            Monitor       = self._monitor ,
-            HistoProduce  = self._monitor ,
-            HistoPrint    = self._monitor ,
-            MotherMonitor = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
-            >> EMPTY
-            """
+            MotherCut       = self._lam0_motherCut()        
             )
 
+        if  self._monitor != None :
+            _Lam0DD.Preambulo       += [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massDD     = monitor ( M / GeV ,             Histo ( 'Lambda0, DD-case' , 1.080 , 1.140 , 100 ) , 'M_DD'    ) " ,
+                "p1DD       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00  , 120   , 100 ) , 'p1_DD'   ) " ,
+                "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00  , 120   , 100 ) , 'p2_DD'   ) " ,
+                ]
+            _Lam0DD.Monitor         = True ,
+            _Lam0DD.HistoProduce    = True ,
+            _Lam0DD.HistoPrint      = True ,
+            _Lam0DD.MotherMonitor = """ process ( massDD )
+            >> process ( p1DD )
+            >> process ( p2DD )
+            >> EMPTY
+            """
         self.Lam0_DD = Selection("SelLam02PiPi_DD",
-                                Algorithm = _Lam0,
-                                RequiredSelections = [ StdNoPIDsDownPions , StdNoPIDsDownProtons]) 
+                                 Algorithm = _Lam0DD,
+                                 RequiredSelections = [ StdNoPIDsDownPions , StdNoPIDsDownProtons]) 
         
         return self.Lam0_DD
 
@@ -502,18 +496,25 @@ class StrippingV0ForPIDConf(LineBuilder) :
         K0S = self.K0S()
         _K0S_LL_Bin1_Filter = FilterDesktop (
             #self.name + 'K0S_LL_Bin1_Filter' ,
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._k0smonitor,
-            Code         = self._k0s_bin1Cut_LL(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            Code         = self._k0s_bin1Cut_LL()
+            )
+
+        if self._monitor != None :
+            _K0S_LL_Bin1_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'K0S, LL-case' , 0.45 , 0.55 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'K0S, LL-case' , 0.00 , 120 ,  100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'K0S, LL-case' , 0.00 , 120 ,  100 ) , 'p2_LL'   ) " ,
+                ]
+            _K0S_LL_Bin1_Filter.Monitor      = True  ,
+            _K0S_LL_Bin1_Filter.HistoProduce = True  ,
+            _K0S_LL_Bin1_Filter.PostMonitor  = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
             >> EMPTY
             """
-            )
 
         self.K0S_LL_Bin1_V0ForPID = Selection(
             "SelK0S_LL_Bin1" + self._name,
@@ -531,18 +532,25 @@ class StrippingV0ForPIDConf(LineBuilder) :
 
         _K0S_DD_Bin1_Filter = FilterDesktop (
             #self.name + 'K0S_DD_Bin1_Filter' ,
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._k0smonitor,
-            Code         = self._k0s_bin1Cut_DD(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            Code         = self._k0s_bin1Cut_DD()
+            )
+
+        if self._monitor != None :
+            _K0S_DD_Bin1_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor DD-case
+                "massDD     = monitor ( M / GeV ,             Histo ( 'K0S, DD-case' , 0.45 , 0.55 , 100 ) , 'M_DD'    ) " ,
+                "p1DD       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'K0S, DD-case' , 0.00 , 120 ,  100 ) , 'p1_DD'   ) " ,
+                "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'K0S, DD-case' , 0.00 , 120 ,  100 ) , 'p2_DD'   ) " ,
+                ]
+            _K0S_DD_Bin1_Filter.Monitor      = True  ,
+            _K0S_DD_Bin1_Filter.HistoProduce = True  ,
+            _K0S_DD_Bin1_Filter.PostMonitor  = """ process ( massDD )
+            >> process ( p1DD )
+            >> process ( p2DD )
             >> EMPTY
             """
-            )
 
         self.K0S_DD_Bin1_V0ForPID = Selection(
             "SelK0S_DD_Bin1" + self._name,
@@ -562,18 +570,25 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Lam0 = self.Lam0()
         _Lam0_LL_Bin1_Filter = FilterDesktop (
             #self.name + 'Lam0_LL_Bin1_Filter' ,
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._lam0monitor,
-            Code         = self._lam0_bin1Cut_LL(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            Code         = self._lam0_bin1Cut_LL()
+            )
+        
+        if self._monitor != None :
+            _Lam0_LL_Bin1_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'Lambda0, LL-case' , 1.080 , 1.140 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p2_LL'   ) " ,
+                ]
+            _Lam0_LL_Bin1_Filter.Monitor      = True  ,
+            _Lam0_LL_Bin1_Filter.HistoProduce = True ,
+            _Lam0_LL_Bin1_Filter.PostMonitor  = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
             >> EMPTY
             """
-            )
 
         self.Lam0_LL_Bin1_V0ForPID = Selection(
             "SelLam0_LL_Bin1" + self._name,
@@ -592,18 +607,25 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Lam0 = self.Lam0()
         _Lam0_LL_Bin2_Filter = FilterDesktop (
             #self.name + 'Lam0_LL_Bin2_Filter' ,
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._lam0monitor,
-            Code         = self._lam0_bin2Cut_LL(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            Code         = self._lam0_bin2Cut_LL()
+            )
+
+        if self._monitor != None :
+            _Lam0_LL_Bin2_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'Lambda0, LL-case' , 1.080 , 1.140 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p2_LL'   ) " ,
+                ]
+            _Lam0_LL_Bin2_Filter.Monitor      = True  ,
+            _Lam0_LL_Bin2_Filter.HistoProduce = True  ,
+            _Lam0_LL_Bin2_Filter.PostMonitor  = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
             >> EMPTY
             """
-            )
 
         self.Lam0_LL_Bin2_V0ForPID = Selection(
             "SelLam0_LL_Bin2" + self._name,
@@ -623,19 +645,26 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Lam0 = self.Lam0()
         _Lam0_LL_Bin1_IsMUON_Filter = FilterDesktop (
             #self.name + 'Lam0_LL_Bin1_Filter' ,
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._lam0monitor,
-            Code         = self._lam0_bin1Cut_LL_IsMUON(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
+            Code         = self._lam0_bin1Cut_LL_IsMUON()
+            )
+
+        if self._monitor != None :
+            _Lam0_LL_Bin1_IsMUON_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'Lambda0, LL-case' , 1.080 , 1.140 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p2_LL'   ) " ,
+                ]
+            _Lam0_LL_Bin1_IsMUON_Filter.Monitor      = True  ,
+            _Lam0_LL_Bin1_IsMUON_Filter.HistoProduce = True ,
+            _Lam0_LL_Bin1_IsMUON_Filter.PostMonitor  = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
             >> EMPTY
             """
-            )
-        
+
         self.Lam0_LL_Bin1_IsMUON_V0ForPID = Selection(
             "SelLam0_LL_Bin1_ISMUON" + self._name,
             Algorithm          = _Lam0_LL_Bin1_IsMUON_Filter,
@@ -653,19 +682,26 @@ class StrippingV0ForPIDConf(LineBuilder) :
         Lam0 = self.Lam0()
         _Lam0_LL_Bin2_IsMUON_Filter = FilterDesktop (
             #self.name + 'Lam0_LL_Bin2_Filter' ,
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._lam0monitor,
-            Code         = self._lam0_bin2Cut_LL_IsMUON(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
-            >> EMPTY
-            """
+            Code         = self._lam0_bin2Cut_LL_IsMUON()
             )
         
+        if self._monitor != None :
+            _Lam0_LL_Bin2_IsMUON_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor LL-case
+                "massLL     = monitor ( M / GeV ,             Histo ( 'Lambda0, LL-case' , 1.080 , 1.140 , 100 ) , 'M_LL'    ) " ,
+                "p1LL       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p1_LL'   ) " ,
+                "p2LL       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, LL-case' , 0.00  , 120   , 100 ) , 'p2_LL'   ) " ,
+                ]
+            _Lam0_LL_Bin2_IsMUON_Filter.Monitor      = True  ,
+            _Lam0_LL_Bin2_IsMUON_Filter.HistoProduce = True  ,
+            _Lam0_LL_Bin2_IsMUON_Filter.PostMonitor  = """ process ( massLL )
+            >> process ( p1LL )
+            >> process ( p2LL )
+            >> EMPTY
+            """
+
         self.Lam0_LL_Bin2_IsMUON_V0ForPID = Selection(
             "SelLam0_LL_Bin2_ISMUON" + self._name,
             Algorithm          = _Lam0_LL_Bin2_IsMUON_Filter,
@@ -685,19 +721,26 @@ class StrippingV0ForPIDConf(LineBuilder) :
             ##
             #self.name + 'Lam0_DD_Bin1_Filter' ,
             ##
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._lam0monitor,
-            Code         = self._lam0_bin1Cut_DD(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
-            >> EMPTY
-            """
+            Code         = self._lam0_bin1Cut_DD()
             )
         
+        if self._monitor != None :
+            _Lam0_DD_Bin1_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor DD-case
+                "massDD     = monitor ( M / GeV ,             Histo ( 'Lambda0, DD-case' , 1.080 , 1.140 , 100 ) , 'M_DD'    ) " ,
+                "p1DD       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00  , 120   , 100 ) , 'p1_DD'   ) " ,
+                "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00  , 120   , 100 ) , 'p2_DD'   ) " ,
+                ]
+            _Lam0_DD_Bin1_Filter.Monitor      = True  ,
+            _Lam0_DD_Bin1_Filter.HistoProduce = True ,
+            _Lam0_DD_Bin1_Filter.PostMonitor  = """ process ( massDD )
+            >> process ( p1DD )
+            >> process ( p2DD )
+            >> EMPTY
+            """
+
         self.Lam0_DD_Bin1_V0ForPID = Selection(
             "SelLam0_DD_Bin1" + self._name,
             Algorithm          = _Lam0_DD_Bin1_Filter,
@@ -717,19 +760,26 @@ class StrippingV0ForPIDConf(LineBuilder) :
             ##
             #self.name + 'Lam0_DD_Bin1_Filter' ,
             ##
-            Monitor      = self._monitor  ,
-            HistoProduce = self._monitor  ,
-            Preambulo    = self._lam0monitor,
-            Code         = self._lam0_bin1Cut_LL_IsMUON(),
-            PostMonitor  = """ process ( switch ( LL , massLL , massDD ) )
-            >> process ( switch ( LL , pTLL , pTDD ) )
-            >> process ( switch ( LL , yLL , yDD ) )
-            >> process ( switch ( LL , p1LL, p1DD ) )
-            >> process ( switch ( LL , p2LL, p2DD ) )
-            >> EMPTY
-            """
+            Code         = self._lam0_bin1Cut_LL_IsMUON()
             )
         
+        if self._monitor != None :
+            _Lam0_DD_Bin1_IsMUON_Filter.Preambulo    = [
+                ## define historam type (shortcut)
+                "Histo  = Gaudi.Histo1DDef"  ,
+                ## monitor DD-case
+                "massDD     = monitor ( M / GeV ,             Histo ( 'Lambda0, DD-case' , 1.080 , 1.140 , 100 ) , 'M_DD'    ) " ,
+                "p1DD       = monitor ( CHILD( P, 1 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00  , 120   , 100 ) , 'p1_DD'   ) " ,
+                "p2DD       = monitor ( CHILD( P, 2 ) / GeV , Histo ( 'Lambda0, DD-case' , 0.00  , 120   , 100 ) , 'p2_DD'   ) " ,
+                ]
+            _Lam0_DD_Bin1_IsMUON_Filter.Monitor      = True  ,
+            _Lam0_DD_Bin1_IsMUON_Filter.HistoProduce = True ,
+            _Lam0_DD_Bin1_IsMUON_Filter.PostMonitor  = """ process ( massDD )
+            >> process ( p1DD )
+            >> process ( p2DD )
+            >> EMPTY
+            """
+
         self.Lam0_DD_Bin1_IsMUON_V0ForPID = Selection(
             "SelLam0_DD_Bin1_ISMUON" + self._name,
             Algorithm          = _Lam0_DD_Bin1_IsMUON_Filter,

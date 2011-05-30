@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-30 - Andrew Powell
+ - Updated prescales to RICH PID Stripping lines:
+	 - StrippingV0ForPID.py
+	 - StrippingInclPhi.py
+	 - StrippingNoPIDDstWithD02RSKPi.py
 
 ! 2011-05-27 - Victor Coco
  - StrippingDisplVertices.py: Tighten the line to match the requirements 
@@ -21,7 +26,7 @@
    for control samples (to be prescales at 1%).   
 
 !2011-05-27 - Philip Hunt
- - StrippingDstarPromptWithD02HHHH.py: Fixed bug that prevented global event cuuts from being applied
+ - StrippingDstarPromptWithD02HHHH.py: Fixed bug that prevented global event cuts from being applied
 
 ! 2011-05-27 - Susan Haines
 - StrippingBu2D0h_D02KShh_NoPID and StrippingBu2D0h_D02KShh_NoPID_WS: loosened GEC on number of long tracks to <250 on all lines.

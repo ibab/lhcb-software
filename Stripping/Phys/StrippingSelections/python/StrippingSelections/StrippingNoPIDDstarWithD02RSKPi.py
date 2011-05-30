@@ -1,8 +1,8 @@
 # $Id: StrippingNoPIDDstarWithD02RSKPi.py,v 1.1 2010-09-03 22:38:21 pxing Exp $
 
 __author__  = ['Philip Xing', 'Andrew Powell']
-__date__    = '25th February 2010'
-__version__ = '$Revision: 4.0 $'
+__date__    = '30th May 2011'
+__version__ = '$Revision: 5.0 $'
 
 '''
 Configurable for the RICH calibration using D*+ -> pi+ D0( K- pi+).
@@ -14,24 +14,13 @@ confNoPIDDstarWithD02RSKPi = StrippingNoPIDDstarWithD02RSKPi.NoPIDDstarWithD02RS
 stream.appendLines( confNoPIDDstarWithD02RSKPi.lines() )
 
 Results from running over:
-$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py
+$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py
 
-
-StrippingReport                                                INFO Event 100000, Good event 92017
+StrippingReport                                                INFO Event 100000, Good event 48215
  |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  0.2054|       189|       |  16.470|       |       |       |
- |_StrippingSequenceStreamTest_                      |  0.2054|       189|       |  16.459|       |       |       |
- |!StrippingStripDstarNoPIDsWithD02RSKPiLine         |  0.2054|       189|  0.000|  15.578|      0|      0|    100|
-
-====================================================================================
-                   AlgorithmCorrelationsAlg.AlgorithmCorrelations
-====================================================================================
-    Algorithm                                    Eff.       1        2        3
-------------------------------------------------------------------------------------
-  1 StrippingGlobal                              0.205% |  ####### 100.000% 100.000%
-  2 StrippingSequenceStreamTest                  0.205% | 100.000%  ####### 100.000%
-  3 StrippingStripDstarNoPIDsWithD02RSKPiLine    0.205% | 100.000% 100.000%  #######
-====================================================================================
+ |_StrippingGlobal_                                  |  0.5102|       246|       |   8.717|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.5102|       246|       |   8.711|       |       |       |
+ |!StrippingStripDstarNoPIDsWithD02RSKPiLine         |  0.5102|       246|  1.093|   8.270|      0|      0|    156|
 
 '''
 from Gaudi.Configuration import *
@@ -66,10 +55,10 @@ default_config =  {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.45           ## unitless
-    , 'Postscale'        : 1.0            ## unitless
+    , 'Prescale'         : 1.00           ## unitless
+    , 'Postscale'        : 1.00           ## unitless
     ##
-    , 'Monitor'          : None           ## Activate the monitoring?
+    , 'Monitor'          : False           ## Activate the monitoring?
     }
 
 class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
