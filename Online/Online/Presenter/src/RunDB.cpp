@@ -316,7 +316,11 @@ int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
         std::string dest   = v.second.get< std::string >( "destination" ) ;
         std::string part   = v.second.get< std::string >( "partitionname" ) ;
         if ( checkDestAndPart ) {
-          if ( ( ""   != m_destination && dest != m_destination ) || ( part != m_partition ) ) continue;
+          if ( ( "" != m_destination && dest != m_destination ) || ( part != m_partition ) ) {
+            std::cout << "m_destination '" << m_destination << "' dest='" << dest 
+                      << "' part='" << part << "'  -> ignore." << std::endl;
+            continue;
+          }
         }
         m_destination = dest;
         m_partition   = part;

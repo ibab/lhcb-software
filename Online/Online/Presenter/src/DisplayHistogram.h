@@ -114,6 +114,8 @@ public:
 
   std::string title() { if ( "" != m_title ) return m_title; return m_shortName; }
 
+  void setHistoryTrendPlot( bool mode ) { m_historyTrendPlot = mode; }
+
 protected:
 
 private:
@@ -124,6 +126,7 @@ private:
   std::string m_title;
   bool m_isOverlap;
   bool m_isTrendPlot;
+  bool m_historyTrendPlot;
   TH1* m_rootHistogram;   ///< pointer to the underlying ROOT histogram
   TH1* m_offsetHistogram; ///< pointer to offset histogram
   TH1* m_referenceHist;   ///< reference histogram

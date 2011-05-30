@@ -4,7 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
-!=============================== 2011-05-27 v3r0 =============================
+!=============================== 2011-05-30 v3r0 =============================
+! 2011-05-30 - Olivier Callot
+ - Delete histograms after history access
+ - Options for history trending plot
+
 ! 2011-05-27 - Olivier Callot
  - Fix a bug in the history versus run number
 

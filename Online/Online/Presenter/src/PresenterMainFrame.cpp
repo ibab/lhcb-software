@@ -1426,13 +1426,12 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case M_IntervalPicker:
     m_intervalPickerData -> setMode( IntervalPickerData::TimeInterval ) ;
-    fClient ->
-      WaitFor(dynamic_cast< TGWindow * >( new IntervalPicker( &m_presenterInfo ,
-                                                              this ,
-                                                              m_archive ,
-                                                              m_verbosity ,
-                                                              m_runDb ,
-                                                              m_intervalPickerData ) ) );
+    fClient -> WaitFor(dynamic_cast< TGWindow * >( new IntervalPicker( &m_presenterInfo ,
+                                                                       this ,
+                                                                       m_archive ,
+                                                                       m_verbosity ,
+                                                                       m_runDb ,
+                                                                       m_intervalPickerData ) ) );
 
     m_previousIntervalButton->SetState(kButtonEngaged);
     m_previousIntervalButton->SetState(kButtonUp);
@@ -1450,17 +1449,21 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case M_IntervalPickerRun:
     m_intervalPickerData -> setMode( IntervalPickerData::SingleRun ) ;
-    fClient->
-      WaitFor(dynamic_cast<TGWindow*>( new IntervalPicker( &m_presenterInfo ,
-                                                           this ,
-                                                           m_archive ,
-                                                           m_verbosity ,
-                                                           m_runDb ,
-                                                           m_intervalPickerData ) ) ) ;
+    fClient->WaitFor(dynamic_cast<TGWindow*>( new IntervalPicker( &m_presenterInfo ,
+                                                                  this ,
+                                                                  m_archive ,
+                                                                  m_verbosity ,
+                                                                  m_runDb ,
+                                                                  m_intervalPickerData ) ) ) ;
+    if ( m_presenterInfo.globalTimePoint() == pres::s_Now ) break; // This is a cancel!
     m_previousIntervalButton->SetState(kButtonEngaged);
     m_previousIntervalButton->SetState(kButtonUp);
     m_nextIntervalButton->SetState(kButtonEngaged);
     m_nextIntervalButton->SetState(kButtonUp);
+
+    std::cout << "Selected runs " <<   m_presenterInfo.globalTimePoint()
+              << " duration " <<  m_presenterInfo.globalPastDuration() << std::endl;
+
     switchToRunNavigation( true ) ;
     if ( ! m_currentPageName.empty() )
       loadSelectedPageFromDB( m_currentPageName ,
@@ -4086,9 +4089,12 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
             m_runDb->setDestination( "" );
             m_runDb->checkRun( m_intervalPickerData->startRun() );
             std::string startTime =  m_runDb -> getCurrentStartTime();
+            m_runDb->setDestination( "" );
             m_runDb->checkRun( m_intervalPickerData->endRun() );
+            std::string endTime   = m_runDb -> getCurrentEndTime();
             m_runDb->setDestination( oldDest );
-            m_presenterInfo.setTimeC( startTime,  m_runDb -> getCurrentEndTime() );
+            std::cout << "Set time start " << startTime << " end " << endTime << std::endl;
+            m_presenterInfo.setTimeC( startTime, endTime );
           }
         } else {
           bannerText = Form("From %s for %s",

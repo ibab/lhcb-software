@@ -75,7 +75,7 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
     }
     hist->getDisplayOption( "SHOWTITLE", &m_title );
     if ( "" == m_title ) m_title = m_shortName;
-  } 
+  }
 }
 //=============================================================================
 // Destructor
@@ -176,7 +176,7 @@ void DisplayHistogram::normalizeReference ( ) {
     } else if (pres::s_Area == refOption) {
       normFactor = m_rootHistogram->Integral();
     }
-    
+
     m_referenceHist->SetNormFactor(normFactor);
     std::cout << "Normalization of reference = " << normFactor << std::endl;
   }
@@ -276,7 +276,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
         if ( hasOption("REFDRAWOPTS", &sopt) ) refdopt += sopt;
         m_referenceHist->Draw(refdopt.c_str());
         m_referenceHist->SetStats(0);
-        std::cout << "  ... superimpose reference..." << std::endl;        
+        std::cout << "  ... superimpose reference..." << std::endl;
         //== Profile plots?
         TProfile* p    = dynamic_cast<TProfile*>(m_rootHistogram);
         TProfile* pref = dynamic_cast<TProfile*>(m_referenceHist);
@@ -365,91 +365,108 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
   float fopt = 0.0;
   std::string sopt("");
 
-  if ( !m_isTrendPlot ) { // no settings for trend mode
-    int statOpt =  pres::s_defStatOptions;
-    hasOption( "STATS", &statOpt );
-    if (0 != statOpt) {
-      int statStyle=0;
-      if ( hasOption("STATTRANSP", &iopt) ) if ( iopt > 0 ) statStyle=1001;
-      gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
-      gStyle->SetOptStat( statOpt );
-      m_statPave = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+  if ( m_isTrendPlot ) return;
+  if ( m_historyTrendPlot ) {
+    m_rootHistogram->SetDrawOption("E1");
+    m_rootHistogram->SetStats(0);
+    TPaveStats* stats = (TPaveStats*) m_rootHistogram->GetListOfFunctions()->FindObject("stats");
 
-      if (m_statPave) {
-        double x1=m_statPave->GetX1NDC();
-        double x2=m_statPave->GetX2NDC();
-        double y1=m_statPave->GetY1NDC();
-        double y2=m_statPave->GetY2NDC();
-        if (hasOption("STAT_X_OFFS", &fopt)) x1 = fopt;
-        if (hasOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
-        if (hasOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
-        if (hasOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
-
-        m_statPave->SetX1NDC(x1);
-        m_statPave->SetX2NDC(x2);
-        m_statPave->SetY1NDC(y1);
-        m_statPave->SetY2NDC(y2);
-      }
-    }
-    // title pave
-    m_titPave = (TPaveText*) pad->GetPrimitive("title");
-    if (m_titPave) {
-      int optTit=1;
-      if(hasOption("NOTITLE", &iopt) ) {
-        if ( iopt > 0 ) optTit = 0;    //user requires no title window
-      }
-
-      if ( 0 == optTit ) {
-        // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)
-        m_titPave->SetX1NDC(-2);
-        m_titPave->SetX2NDC(-1);
-        std::cout << "Set title pave aside" << std::endl;
-        pad->SetName( "" );
-      } else {
-        double x1=m_titPave->GetX1NDC();
-        double x2=m_titPave->GetX2NDC();
-        double y1=m_titPave->GetY1NDC();
-        double y2=m_titPave->GetY2NDC();
-        if (hasOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
-        if (hasOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
-        if (hasOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
-        if (hasOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
-
-        m_titPave->SetX1NDC(x1);
-        m_titPave->SetX2NDC(x2);
-        m_titPave->SetY1NDC(y1);
-        m_titPave->SetY2NDC(y2);
-      }
-    }
-
-    if (hasOption("DRAWOPTS", &sopt) ) m_rootHistogram->SetDrawOption(sopt.c_str());
-    if (hasOption("LOGX", &iopt)) pad->SetLogx(1);
-    if (hasOption("LOGY", &iopt)) {
-      if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1) ;
-      // Set log scale also if the minimum and maximum scale is not 0
-      else if ( ( m_rootHistogram -> GetMinimum() > 0. ) &&
-                ( m_rootHistogram -> GetMaximum() > 0. ) ) pad -> SetLogy( 1 ) ;
-      else pad->SetLogy( 0 );
-    }
-
-    int gridx = gStyle->GetPadGridX();
-    int gridy = gStyle->GetPadGridY();
-    if (hasOption("GRIDX", &iopt)) gridx=iopt;
-    if (hasOption("GRIDY", &iopt)) gridy=iopt;
-    pad->SetGrid(gridx, gridy);
-    if ( m_rootHistogram->GetDimension() > 1) {
-      if (hasOption("LOGZ", &iopt)) pad->SetLogz(1);
-      if (hasOption("THETA", &fopt)) pad->SetTheta(fopt);
-      if (hasOption("PHI", &fopt)) pad->SetPhi(fopt);
-    }
-
-    if(hasOption("TICK_X", &iopt)) pad->SetTickx(iopt);
-    if(hasOption("TICK_Y", &iopt)) pad->SetTicky(iopt);
-    if(hasOption("PADCOLOR", &iopt)) { pad->SetFillColor(iopt); std::cout << "set PADCOLOR=" << iopt << std::endl; }
-    
+    if (stats) stats->Delete();
+    pad->SetLogx(0);
+    pad->SetLogy(0);
+    fopt=.16f;
+    pad->SetBottomMargin( (Float_t) fopt);
+    m_rootHistogram->GetXaxis()->SetTitle("run");
+    fopt=1.2f;
+    m_rootHistogram->GetXaxis()->SetTitleOffset( (Float_t) fopt);
+    std::string ylab="Average";
+    if ( m_onlineHist->getDisplayOption("LABEL_X", &sopt) ) ylab = ylab + " (" + sopt + ")";
+    m_rootHistogram->SetYTitle ( ylab.data() );
+    return;
   }
-}
 
+  int statOpt =  pres::s_defStatOptions;
+  hasOption( "STATS", &statOpt );
+  if (0 != statOpt) {
+    int statStyle=0;
+    if ( hasOption("STATTRANSP", &iopt) ) if ( iopt > 0 ) statStyle=1001;
+    gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
+    gStyle->SetOptStat( statOpt );
+    m_statPave = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
+
+    if (m_statPave) {
+      double x1=m_statPave->GetX1NDC();
+      double x2=m_statPave->GetX2NDC();
+      double y1=m_statPave->GetY1NDC();
+      double y2=m_statPave->GetY2NDC();
+      if (hasOption("STAT_X_OFFS", &fopt)) x1 = fopt;
+      if (hasOption("STAT_X_SIZE", &fopt)) x2 = x1 + fopt;
+      if (hasOption("STAT_Y_OFFS", &fopt)) y1 = fopt;
+      if (hasOption("STAT_Y_SIZE", &fopt)) y2 = y1 + fopt;
+
+      m_statPave->SetX1NDC(x1);
+      m_statPave->SetX2NDC(x2);
+      m_statPave->SetY1NDC(y1);
+      m_statPave->SetY2NDC(y2);
+    }
+  }
+  // title pave
+  m_titPave = (TPaveText*) pad->GetPrimitive("title");
+  if (m_titPave) {
+    int optTit=1;
+    if(hasOption("NOTITLE", &iopt) ) {
+      if ( iopt > 0 ) optTit = 0;    //user requires no title window
+    }
+
+    if ( 0 == optTit ) {
+      // put window title out of sight (better than using TStyle::SetOptTitle which is too global..)
+      m_titPave->SetX1NDC(-2);
+      m_titPave->SetX2NDC(-1);
+      std::cout << "Set title pave aside" << std::endl;
+      pad->SetName( "" );
+    } else {
+      double x1=m_titPave->GetX1NDC();
+      double x2=m_titPave->GetX2NDC();
+      double y1=m_titPave->GetY1NDC();
+      double y2=m_titPave->GetY2NDC();
+      if (hasOption("HTIT_X_OFFS", &fopt)) x1 = fopt;
+      if (hasOption("HTIT_X_SIZE", &fopt)) x2 = x1 + fopt;
+      if (hasOption("HTIT_Y_OFFS", &fopt)) y1 = fopt;
+      if (hasOption("HTIT_Y_SIZE", &fopt)) y2 = y1 + fopt;
+
+      m_titPave->SetX1NDC(x1);
+      m_titPave->SetX2NDC(x2);
+      m_titPave->SetY1NDC(y1);
+      m_titPave->SetY2NDC(y2);
+    }
+  }
+
+  if (hasOption("DRAWOPTS", &sopt) ) m_rootHistogram->SetDrawOption(sopt.c_str());
+  if (hasOption("LOGX", &iopt)) pad->SetLogx(1);
+  if (hasOption("LOGY", &iopt)) {
+    if (m_rootHistogram->GetEntries()>0) pad->SetLogy(1) ;
+    // Set log scale also if the minimum and maximum scale is not 0
+    else if ( ( m_rootHistogram -> GetMinimum() > 0. ) &&
+              ( m_rootHistogram -> GetMaximum() > 0. ) ) pad -> SetLogy( 1 ) ;
+    else pad->SetLogy( 0 );
+  }
+
+  int gridx = gStyle->GetPadGridX();
+  int gridy = gStyle->GetPadGridY();
+  if (hasOption("GRIDX", &iopt)) gridx=iopt;
+  if (hasOption("GRIDY", &iopt)) gridy=iopt;
+  pad->SetGrid(gridx, gridy);
+  if ( m_rootHistogram->GetDimension() > 1) {
+    if (hasOption("LOGZ", &iopt)) pad->SetLogz(1);
+    if (hasOption("THETA", &fopt)) pad->SetTheta(fopt);
+    if (hasOption("PHI", &fopt)) pad->SetPhi(fopt);
+  }
+
+  if(hasOption("TICK_X", &iopt)) pad->SetTickx(iopt);
+  if(hasOption("TICK_Y", &iopt)) pad->SetTicky(iopt);
+  if(hasOption("PADCOLOR", &iopt)) { pad->SetFillColor(iopt); std::cout << "set PADCOLOR=" << iopt << std::endl; }
+
+}
 //=========================================================================
 //  Pass the display options from the OnlineHist to the root histogram
 //=========================================================================
@@ -745,7 +762,7 @@ void DisplayHistogram::createGraph( TrendData& aTrend, bool update ) {
         delete m_maxGraph;
         m_maxGraph = NULL;
       }
-    } 
+    }
   }
 
   if ( 0 < m_nOverlap ) {
@@ -769,7 +786,7 @@ void DisplayHistogram::createGraph( TrendData& aTrend, bool update ) {
 
   double yMin = aTrend.min;
   double yMax = aTrend.max;
-  
+
   if ( NULL != m_minGraph ) {
     hasOption("YMIN", &fopt);
     double xmin[2], ymin[2];
@@ -1095,11 +1112,11 @@ void DisplayHistogram::loadOptions ( ) {
     m_optionsAreLoaded = true;
     return;
   }
-  
+
   m_onlineHist->getIntDisplayOptions( m_intOptions );
   m_onlineHist->getFloatDisplayOptions( m_floatOptions );
-  m_onlineHist->getStringDisplayOptions( m_stringOptions );  
-  std::cout << "Retrieved " << m_intOptions.size() << " int, " << m_floatOptions.size() 
+  m_onlineHist->getStringDisplayOptions( m_stringOptions );
+  std::cout << "Retrieved " << m_intOptions.size() << " int, " << m_floatOptions.size()
             << " float and " << m_stringOptions.size() << " string options." << std::endl;
   m_optionsAreLoaded = true;
 }

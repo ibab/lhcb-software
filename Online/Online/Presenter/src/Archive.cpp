@@ -718,12 +718,19 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
           newh->SetBinError(i+1, error[kk][i] );
         }
         setHistoryLabels(newh, goodRootFiles);
-        //dispHist -> setHistoryTrendPlotMode(true);
+        histos[kk].setHistoryTrendPlot(true);
         histos[kk].deleteRootHist( ) ;
         histos[kk].setRootHist( newh ) ;
       }
     } else {
       histos[kk].createDummyHisto();
+    }
+    //== Cleanup
+    TIter next(list[kk]);
+    TH1* histo;
+    while ( (histo = (TH1 *) next())) {
+      list[kk]->Remove(histo);
+      delete histo;
     }
     delete list[kk];
   }
