@@ -238,46 +238,56 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
 #       make it possible to sent the remote
 #       a callable, and receive the result...
 class AccessSvcSingleton(object) :
-   _pcs = None
-   _cas = None
-   _cte = None
-   def __init__(self,pcs=None,cas=None,cte=None) :
-        if cas : AccessSvcSingleton._cas = cas
-        if pcs : AccessSvcSingleton._pcs = pcs
-        if cte : AccessSvcSingleton._cte = cte
-   def resolveTCK(self,tck) :
-        tck = _tck(tck)
-        for i in AccessSvcSingleton._cas.configTreeNodeAliases( alias( 'TCK/'  ) ) :
-            if _tck(i.alias().str().split('/')[-1]) == _tck(tck) : return digest(i.ref().str())
-        return None
-   def _2id(self,id) :
-        if type(id) is int : id = '0x%08x' % id 
-        if type(id) is str and len(id)==32 : id = _digest(id)
-        #  if we're not a valid id at this point, maybe we're a TCK... 
-        if type(id) is not MD5 : id = self.resolveTCK(id)
-        return id
-   def resolveConfigTreeNode(self,id) :   
-        if type(id) is not MD5 :
-            id = self._2id(id)
-        return AccessSvcSingleton._pcs.resolveConfigTreeNode(id) if (id and id.valid()) else None
-   def resolvePropertyConfig(self,id) :
-        return AccessSvcSingleton._pcs.resolvePropertyConfig(id) if (id and id.valid()) else None
-   def collectLeafRefs(self,id) :
-        if type(id) is not MD5 :
-            id = self._2id(id)
-        for ids in  AccessSvcSingleton._pcs.collectLeafRefs( id )  :
-            yield PropCfg(ids)
-   def resolveConfigTreeNodeAliases(self, a ) :
-        if type(a) is not type(alias) : a = alias(a)
-        return AccessSvcSingleton._pcs.configTreeNodeAliases( a )
-   def configTreeNodeAliases( self, alias ) :
-        return AccessSvcSingleton._cas.configTreeNodeAliases( alias )
-   def writeConfigTreeNodeAlias(self,alias) :
-        return AccessSvcSingleton._cas.writeConfigTreeNodeAlias(alias)
-   def readConfigTreeNode(self, id ) :
-        return AccessSvcSingleton._cas.readConfigTreeNode(id)
-   def updateAndWrite(self,id,mods,label) :
-        return AccessSvcSingleton._cte.updateAndWrite(id,mods,label)
+    _pcs = None
+    _cas = None
+    _cte = None
+    def __init__(self,create=False,createConfigTreeEditor=False,cas=ConfigAccessSvc()) :
+         if create :
+            pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
+            cte = None
+            if createConfigTreeEditor :
+                cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName()
+                                      , ConfigAccessSvc   = cas.getFullName() )
+            appMgr = _appMgr()
+            appMgr.createSvc(cas.getFullName())
+            appMgr.createSvc(pcs.getFullName())
+            AccessSvcSingleton._cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
+            AccessSvcSingleton._pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+            if cte : AccessSvcSingleton._cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
+
+    def resolveTCK(self,tck) :
+         tck = _tck(tck)
+         for i in AccessSvcSingleton._cas.configTreeNodeAliases( alias( 'TCK/'  ) ) :
+             if _tck(i.alias().str().split('/')[-1]) == _tck(tck) : return digest(i.ref().str())
+         return None
+    def _2id(self,id) :
+         if type(id) is int : id = '0x%08x' % id 
+         if type(id) is str and len(id)==32 : id = _digest(id)
+         #  if we're not a valid id at this point, maybe we're a TCK... 
+         if type(id) is not MD5 : id = self.resolveTCK(id)
+         return id
+    def resolveConfigTreeNode(self,id) :   
+         if type(id) is not MD5 :
+             id = self._2id(id)
+         return AccessSvcSingleton._pcs.resolveConfigTreeNode(id) if (id and id.valid()) else None
+    def resolvePropertyConfig(self,id) :
+         return AccessSvcSingleton._pcs.resolvePropertyConfig(id) if (id and id.valid()) else None
+    def collectLeafRefs(self,id) :
+         if type(id) is not MD5 :
+             id = self._2id(id)
+         for ids in  AccessSvcSingleton._pcs.collectLeafRefs( id )  :
+             yield PropCfg(ids)
+    def resolveConfigTreeNodeAliases(self, a ) :
+         if type(a) is not type(alias) : a = alias(a)
+         return AccessSvcSingleton._pcs.configTreeNodeAliases( a )
+    def configTreeNodeAliases( self, alias ) :
+         return AccessSvcSingleton._cas.configTreeNodeAliases( alias )
+    def writeConfigTreeNodeAlias(self,alias) :
+         return AccessSvcSingleton._cas.writeConfigTreeNodeAlias(alias)
+    def readConfigTreeNode(self, id ) :
+         return AccessSvcSingleton._cas.readConfigTreeNode(id)
+    def updateAndWrite(self,id,mods,label) :
+         return AccessSvcSingleton._cte.updateAndWrite(id,mods,label)
 
 
 # TODO: move AccessSvcSingleton into a seperate process, and 
@@ -286,20 +296,7 @@ class AccessSvcSingleton(object) :
 # TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
 #       a callable (involving _pcs callable members), and receive the result...
 def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
-    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-    cte = None
-    if createConfigTreeEditor :
-        cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName(), 
-                                ConfigAccessSvc =  cas.getFullName())
-    appMgr = _appMgr()
-    appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pcs.getFullName())
-    if cte : cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
-    svc = AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-                            , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
-                            , cte = cte )
-    return svc
-
+    return AccessSvcSingleton( create = True, createConfigTreeEditor = createConfigTreeEditor )
 
 def _getConfigTree( id , cas = ConfigAccessSvc() ) :
     createAccessSvcSingleton( cas = cas )
