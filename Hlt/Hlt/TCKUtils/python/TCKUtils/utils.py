@@ -140,19 +140,10 @@ def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
     l0config = configProvider.getValuedProperties()
     l0config['TCK'] = l0tck
 
-    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName(), 
-                            ConfigAccessSvc =  cas.getFullName())
+    svc = createAccessSvcSingleton(cas,createConfigTreeEditor = True )
 
-    appMgr = _appMgr()
-    appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pcs.getFullName())
-    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-    svc = AccessSvcSingleton(pcs = pcs, cas=cas )
-    cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
     id  = _digest(id)
-    a = [ i.alias().str() for  i in cas.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
+    a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
     if len(a) != 1 : 
         print 'something went wrong: no unique toplevel match for ' + str(id)
         return
@@ -174,11 +165,11 @@ def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
             for k,v in props.iteritems() : 
                 mods.push_back( '%s.%s:%s' %  (algname, k, v ) )
     print 'updates: %s ' % mods
-    newId = cte.updateAndWrite(id,mods,label)
-    noderef = cas.readConfigTreeNode( newId )
+    newId = svc.updateAndWrite(id,mods,label)
+    noderef = svc.readConfigTreeNode( newId )
     if not noderef : print 'oops, could not find node for %s ' % newId
     top = topLevelAlias( release, hlttype, noderef.get() )
-    cas.writeConfigTreeNodeAlias(top)
+    svc.writeConfigTreeNodeAlias(top)
     print 'wrote ' + str(top.alias()) 
     return str(newId)
 
@@ -197,13 +188,8 @@ def _createTCKEntries(d, cas ) :
              raise KeyError('requested L0 TCK %s is not known'%l0tck) 
         configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
         l0tcks[l0tck] = configProvider.getValuedProperties()
-    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-    appMgr = _appMgr()
-    appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pcs.getFullName())
-    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
-    svc = AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-                            , cas = cas )
+
+    svc = createAccessSvcSingleton( cas = cas )
     for tck,id in d.iteritems() :
         id  = _digest(id)
         tck = _tck(tck)
@@ -228,20 +214,17 @@ def _createTCKEntries(d, cas ) :
 
 
 def _getConfigurations( cas = ConfigAccessSvc() ) :
-    name = cas.getFullName()
-    appMgr = _appMgr()
-    appMgr.createSvc(name)
-    s = appMgr.service(name,'IConfigAccessSvc')
+    svc = createAccessSvcSingleton( cas = cas )
     info = dict()
-    for i in s.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
-        x = Configuration( i,s )
+    for i in svc.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
+        x = Configuration( i,svc )
         info[ i.alias().str() ] = x
-    for i in s.configTreeNodeAliases( alias( 'TCK/'  ) ) :
+    for i in svc.configTreeNodeAliases( alias( 'TCK/'  ) ) :
         tck =  _tck(i.alias().str().split('/')[-1])
         id  =  i.ref().str()
         for k in info.values() :
             if k.info['id'] == id : k.info['TCK'].append(tck)
-    for i in s.configTreeNodeAliases( alias( 'TAG/'  ) ) :
+    for i in svc.configTreeNodeAliases( alias( 'TAG/'  ) ) :
         tag = i.alias().str().split('/')[1:] 
         id  = i.ref().str()
         for k in info.values() : 
@@ -257,9 +240,11 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
 class AccessSvcSingleton(object) :
    _pcs = None
    _cas = None
-   def __init__(self,pcs=None,cas=None) :
+   _cte = None
+   def __init__(self,pcs=None,cas=None,cte=None) :
         if cas : AccessSvcSingleton._cas = cas
         if pcs : AccessSvcSingleton._pcs = pcs
+        if cte : AccessSvcSingleton._cte = cte
    def resolveTCK(self,tck) :
         tck = _tck(tck)
         for i in AccessSvcSingleton._cas.configTreeNodeAliases( alias( 'TCK/'  ) ) :
@@ -285,8 +270,31 @@ class AccessSvcSingleton(object) :
    def resolveConfigTreeNodeAliases(self, a ) :
         if type(a) is not type(alias) : a = alias(a)
         return AccessSvcSingleton._pcs.configTreeNodeAliases( a )
+   def configTreeNodeAliases( self, alias ) :
+        return AccessSvcSingleton._cas.configTreeNodeAliases( alias )
    def writeConfigTreeNodeAlias(self,alias) :
         return AccessSvcSingleton._cas.writeConfigTreeNodeAlias(alias)
+   def readConfigTreeNode(self, id ) :
+        return AccessSvcSingleton._cas.readConfigTreeNode(id)
+   def updateAndWrite(self,id,mods,label) :
+        return AccessSvcSingleton._cte.updateAndWrite(id,mods,label)
+
+
+def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
+    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
+    cte = None
+    if createConfigTreeEditor :
+        cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName(), 
+                                ConfigAccessSvc =  cas.getFullName())
+    appMgr = _appMgr()
+    appMgr.createSvc(cas.getFullName())
+    appMgr.createSvc(pcs.getFullName())
+    if cte : cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
+    svc = AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+                            , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
+                            , cte = cte )
+    return svc
+
 
 # TODO: move AccessSvcSingleton into a seperate process, and 
 #       have it run a gaudi job and keep it going for as long
@@ -294,12 +302,7 @@ class AccessSvcSingleton(object) :
 # TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
 #       a callable (involving _pcs callable members), and receive the result...
 def _getConfigTree( id , cas = ConfigAccessSvc() ) :
-    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-    appMgr = _appMgr()
-    appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pcs.getFullName())
-    AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-                      , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') )
+    createAccessSvcSingleton( cas = cas )
     return Tree(id)
 
 # TODO: caching should be done seperately for each cas instance...
@@ -314,12 +317,7 @@ def xget( ids , cas = ConfigAccessSvc() ) :
 
 # TODO: deprecate the use of _xget in favour of _getConfigTree...
 def _xget( ids , cas = ConfigAccessSvc() ) :
-    pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-    appMgr = _appMgr()
-    appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pcs.getFullName())
-    svc = AccessSvcSingleton( pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-                            , cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') )
+    svc = createAccessSvcSingleton( cas )
     table = dict()
     for id in ids :
         table[id] = dict( [ ( cfg.name, cfg ) for cfg in svc.collectLeafRefs(id) ] )
@@ -363,19 +361,10 @@ def _updateProperties(id, updates, label, cas  ) :
     if not label : 
         print 'please provide a reasonable label for the new configuration'
         return None
-    pc = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(),
-                            ConfigAccessSvc = cas.getFullName() )
-    # run program...
-    appMgr = _appMgr()
-    cteName = cte.name().split('.')[-1]
-    ed = appMgr.toolsvc().create(cteName,interface='IConfigTreeEditor')
-    if not ed : raise RuntimeWarning(' could not get tool ' + cteName )
-    cf = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    if not cf : raise RuntimeWarning(' could not get service ' + cas.name() )
+    svc = createAccessSvcSingleton( cas = cas, createConfigTreeEditor = True )
     if type(id) == str: id = _digest( id )
     if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
-    a = [ i.alias().str() for  i in cf.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
+    a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
     if len(a) != 1 : 
         print 'something went wrong: no unique toplevel match for ' + str(id)
         return
@@ -386,10 +375,10 @@ def _updateProperties(id, updates, label, cas  ) :
             item = algname + '.' + k + ':' + v
             print 'updating: ' + item
             mods.push_back( item )
-    newId = ed.updateAndWrite(id,mods,label)
-    noderef = cf.readConfigTreeNode( newId )
+    newId = svc.updateAndWrite(id,mods,label)
+    noderef = svc.readConfigTreeNode( newId )
     top = topLevelAlias( release, hlttype, noderef.get() )
-    cf.writeConfigTreeNodeAlias(top)
+    svc.writeConfigTreeNodeAlias(top)
     print 'wrote ' + str(top.alias()) 
     return str(newId)
 
