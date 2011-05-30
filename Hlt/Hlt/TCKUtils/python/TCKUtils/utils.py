@@ -238,11 +238,20 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
 #       make it possible to sent the remote
 #       a callable, and receive the result...
 class AccessSvcSingleton(object) :
-    _pcs = None
-    _cas = None
-    _cte = None
+    __pcs = None
+    __cas = None
+    __cte = None
+    def _pcs(self) : 
+        return AccessSvcSingleton.__pcs
+    def _cas(self) : 
+        return AccessSvcSingleton.__cas
+    def _cte(self) : 
+        return AccessSvcSingleton.__cte
+
     def __init__(self,create=False,createConfigTreeEditor=False,cas=ConfigAccessSvc()) :
          if create :
+            if (AccessSvcSingleton.__pcs or AccessSvcSingleton.__cas) :
+                   raise LogicError('re-entry of singleton creation') 
             pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
             cte = None
             if createConfigTreeEditor :
@@ -251,13 +260,13 @@ class AccessSvcSingleton(object) :
             appMgr = _appMgr()
             appMgr.createSvc(cas.getFullName())
             appMgr.createSvc(pcs.getFullName())
-            AccessSvcSingleton._cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
-            AccessSvcSingleton._pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-            if cte : AccessSvcSingleton._cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
+            AccessSvcSingleton.__cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
+            AccessSvcSingleton.__pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
+            if cte : AccessSvcSingleton.__cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
 
     def resolveTCK(self,tck) :
          tck = _tck(tck)
-         for i in AccessSvcSingleton._cas.configTreeNodeAliases( alias( 'TCK/'  ) ) :
+         for i in self._cas().configTreeNodeAliases( alias( 'TCK/'  ) ) :
              if _tck(i.alias().str().split('/')[-1]) == _tck(tck) : return digest(i.ref().str())
          return None
     def _2id(self,id) :
@@ -269,25 +278,25 @@ class AccessSvcSingleton(object) :
     def resolveConfigTreeNode(self,id) :   
          if type(id) is not MD5 :
              id = self._2id(id)
-         return AccessSvcSingleton._pcs.resolveConfigTreeNode(id) if (id and id.valid()) else None
+         return self._pcs().resolveConfigTreeNode(id) if (id and id.valid()) else None
     def resolvePropertyConfig(self,id) :
-         return AccessSvcSingleton._pcs.resolvePropertyConfig(id) if (id and id.valid()) else None
+         return self._pcs().resolvePropertyConfig(id) if (id and id.valid()) else None
     def collectLeafRefs(self,id) :
          if type(id) is not MD5 :
              id = self._2id(id)
-         for ids in  AccessSvcSingleton._pcs.collectLeafRefs( id )  :
+         for ids in self._pcs().collectLeafRefs( id )  :
              yield PropCfg(ids)
     def resolveConfigTreeNodeAliases(self, a ) :
          if type(a) is not type(alias) : a = alias(a)
-         return AccessSvcSingleton._pcs.configTreeNodeAliases( a )
+         return self._pcs().configTreeNodeAliases( a )
     def configTreeNodeAliases( self, alias ) :
-         return AccessSvcSingleton._cas.configTreeNodeAliases( alias )
+         return self._cas().configTreeNodeAliases( alias )
     def writeConfigTreeNodeAlias(self,alias) :
-         return AccessSvcSingleton._cas.writeConfigTreeNodeAlias(alias)
+         return self._cas().writeConfigTreeNodeAlias(alias)
     def readConfigTreeNode(self, id ) :
-         return AccessSvcSingleton._cas.readConfigTreeNode(id)
+         return self._cas().readConfigTreeNode(id)
     def updateAndWrite(self,id,mods,label) :
-         return AccessSvcSingleton._cte.updateAndWrite(id,mods,label)
+         return self._cte().updateAndWrite(id,mods,label)
 
 
 # TODO: move AccessSvcSingleton into a seperate process, and 
@@ -303,6 +312,7 @@ def _getConfigTree( id , cas = ConfigAccessSvc() ) :
     return Tree(id)
 
 # TODO: caching should be done seperately for each cas instance...
+# TODO: move caching into AccessSvcSingleton
 def xget( ids , cas = ConfigAccessSvc() ) :
     if 'forest' not in dir(xget) : xget.forest = dict()
     fetch = [ id for id in ids if id not in xget.forest.keys() ]
@@ -563,6 +573,7 @@ def orphanScan( cas = ConfigAccessSvc() ) :
     return execInSandbox(_orphanScan, cas)
 
 def getConfigurations( cas = ConfigAccessSvc() ) :
+    #return _getConfigurations( cas )
     return execInSandbox( _getConfigurations, cas )
 
 def getTCKInfo(x) :
