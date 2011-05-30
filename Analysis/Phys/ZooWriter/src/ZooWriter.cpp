@@ -819,6 +819,7 @@ void ZooWriter::writeTagging(ZooP* zp, const LHCb::Particle* p)
 		tag->setSsKaonTagDecision(itag->decision(), itag->omega());
                 if (1 == itag->taggerParts().size())
                    tag->setSsKaon(GetSaved(itag->taggerParts().at(0)));
+		break;
     // Same Side Pion Tagger
 	    case 6:
 		tag->setSsPionTagDecision(itag->decision(), itag->omega());
