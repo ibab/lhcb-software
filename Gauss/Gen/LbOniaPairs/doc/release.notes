@@ -1,0 +1,14 @@
+! $Id:$ 
+! -----------------------------------------------------------------------------
+! Package     : Gen/LbOniaPairs
+! Author      : Alexey novoselov Alexey.Novoselov@cern.ch
+! Responsible : Vanya Belyaev    Ivan.Belyaev@cern.ch
+! Purpose     : Generator for onia pairs production 
+! -----------------------------------------------------------------------------
+
+! 2011-05-30 - Vanya Belyaev
+ - the first import 
+   
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
