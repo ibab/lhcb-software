@@ -1,7 +1,18 @@
 =============================
 None
 =============================
-[]
+["DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
+from Gaudi.Configuration import EventSelector
+EventSelector().Input=[
+    "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'",
+    "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"
+    ]
+from GaudiConf import IOHelper
+IOHelper("MDF").inputFiles([
+    "IAMdf.mdf",
+    "IALSOAMdf.blah"
+    ])
+
 True
 DATAFILE='PFN:itest.txt' TYP='POOL_ROOT' OPT='READ'
 DATAFILE='PFN:otest.txt' TYP='POOL_ROOTTREE' OPT='REC'
@@ -16,13 +27,31 @@ IOHelper().inputFiles([
     "test1.blah",
     "test2.blah"
     ])
+
 (0, '')
 (0, '')
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x1be49b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2adeb7db79b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>]
 =============================
 POOL
 =============================
-["DATAFILE='test1.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'"]
+["DATAFILE='test1.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
+from Gaudi.Configuration import EventSelector
+EventSelector().Input=[
+    "DATAFILE='test1.blah' TYP='POOL_ROOT' OPT='READ'",
+    "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'",
+    "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'",
+    "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"
+    ]
+from GaudiConf import IOHelper
+IOHelper().inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+IOHelper("MDF").inputFiles([
+    "IAMdf.mdf",
+    "IALSOAMdf.blah"
+    ])
+
 True
 DATAFILE='PFN:itest.txt' TYP='POOL_ROOT' OPT='READ'
 DATAFILE='PFN:otest.txt' TYP='POOL_ROOTTREE' OPT='REC'
@@ -37,13 +66,31 @@ IOHelper().inputFiles([
     "test1.blah",
     "test2.blah"
     ])
+
 (0, '')
 (0, '')
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x1be49b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x1c0d750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x1c0da50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x1c0d950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x1c0db50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2adeb7db79b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>]
 =============================
 ROOT
 =============================
-["DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
+["DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
+from Gaudi.Configuration import EventSelector
+EventSelector().Input=[
+    "DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'",
+    "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'",
+    "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'",
+    "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"
+    ]
+from GaudiConf import IOHelper
+IOHelper().inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+IOHelper("MDF").inputFiles([
+    "IAMdf.mdf",
+    "IALSOAMdf.blah"
+    ])
+
 True
 DATAFILE='PFN:itest.txt' SVC='Gaudi::RootEvtSelector' OPT='READ'
 DATAFILE='PFN:otest.txt' SVC='RootCnvSvc' OPT='REC'
@@ -58,13 +105,31 @@ IOHelper().inputFiles([
     "test1.blah",
     "test2.blah"
     ])
+
 (0, '')
 (0, '')
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x1ff5800>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1ff5e20>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x1ff5800>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1ff5e20>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x1bd42e30>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1bd43510>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x1bd42e30>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1bd43510>]
 =============================
 MDF
 =============================
-["DATAFILE='test1.blah' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
+["DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
+from Gaudi.Configuration import EventSelector
+EventSelector().Input=[
+    "DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'",
+    "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'",
+    "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'",
+    "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"
+    ]
+from GaudiConf import IOHelper
+IOHelper().inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+IOHelper("MDF").inputFiles([
+    "IAMdf.mdf",
+    "IALSOAMdf.blah"
+    ])
+
 True
 DATAFILE='PFN:itest.txt' SVC='LHCb::MDFSelector' OPT='READ'
 DATAFILE='PFN:otest.txt' SVC='LHCb::MDFSelector' OPT='REC'
@@ -75,10 +140,11 @@ EventSelector().Input=[
     "DATAFILE='test2.blah' SVC='LHCb::MDFSelector' OPT='READ'"
     ]
 from GaudiConf import IOHelper
-IOHelper().inputFiles([
+IOHelper("MDF").inputFiles([
     "test1.blah",
     "test2.blah"
     ])
+
 (0, '')
 (0, '')
 ['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', 'LHCb::RawDataCnvSvc']

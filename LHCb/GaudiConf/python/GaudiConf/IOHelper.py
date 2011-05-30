@@ -43,6 +43,11 @@ class IOHelper(object):
         evtsel=IOHelper("ROOT").convertSelector(evtsel)
         ioh.convertSelector()
     
+    8) changing the services of old software stacks:
+        IOHelper().postConfigServices()
+        IOHelper("ROOT","ROOT").postConfigServices()
+        ioh.postConfigServices()
+    
     Specific uses:
     
     a) Ganga.           Needs to create the file name list to be passed to IOHelper.
@@ -57,7 +62,7 @@ class IOHelper(object):
     
     d) Stand-alone user. Needs to create the file list to be passed to IOHelper.
                          Adds ioh.outputAlgs to any of their personal sequencers
-                         Adds ioh.convertSelector if using an old options file
+                         Uses ioh.postConfigServices on old software stacks
     
     
     '''
@@ -74,7 +79,7 @@ class IOHelper(object):
                           'POOL' : "TYP='POOL_ROOTTREE'",
                           'MDF'  : "SVC='LHCb::MDFSelector'"
                           }
-
+    
     _knownPerServices = {'PoolDbCnvSvc': 'POOL',
                          'PoolDbCacheSvc': 'POOL',
                          'RootCnvSvc' : 'ROOT',
@@ -120,7 +125,7 @@ class IOHelper(object):
             if not self.isRootSupported():
                 raise TypeError("ROOT persistency is not supported in this Application version"+
                                 "Ask your release manager for details or change to POOL")
-
+    
     def __str__(self):
         '''print the class
         '''
@@ -150,7 +155,7 @@ class IOHelper(object):
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
         PersistencySvc("FileRecordPersistencySvc").CnvServices += [ fileSvc ]
-        
+    
     def _isPersistencySvc(self,svcstring):
         '''Returns true if the svcstring is one of the known persistencies'''
         for service in self._knownPerServices:
@@ -200,7 +205,7 @@ class IOHelper(object):
         conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
         for k in conftodel:
             del allConfigurables[k]
-        
+    
     def isRootSupported(self):
         '''Check if the root services exist in this version'''
         import Configurables
@@ -253,13 +258,12 @@ class IOHelper(object):
         
         # Always enable reading/writing of MDF
         EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
-
-        #always convert the event selector as a postConfigAction
-        #now only won't work for flattened files
-        from Gaudi.Configuration import appendPostConfigAction
         
-        appendPostConfigAction(self.convertSelector)
-        
+        #always convert the event selector
+        #if this is a PostConfigAction, then conversion will happen as a posConfig also
+        #if this is a normal job with no flattened files, UserConfigurables are anyway called last
+        #and so converting when the services are established is the best way.
+        self.convertSelector()
     
     def activeServices(self):
         '''return all configured persistency services'''
@@ -323,12 +327,26 @@ class IOHelper(object):
         filestring=filestring.strip("'").split("'")[0]
         return filestring
     
+    def detectFileType(self, filestring):
+        '''Go from connection string to persistency type'''
+        for type in self._inputSvcTypDict:
+            if self._inputSvcTypDict[type] in filestring:
+                return type
+            if self._outputSvcTypDict[type] in filestring:
+                return type
+        return "UNKNOWN"
+    
     def convertConnectionStrings(self, filelist, IO):
         '''Go from a list of connection strings or file names to a new list of connection strings
         needs to know the IO type to know what to convert to'''
         IO=self.__chooseIO(IO)
         retlist=[]
         for file in filelist:
+            #never convert an MDF file, it's not needed
+            if self.detectFileType(file)=="MDF":
+                retlist.append(file)
+                continue
+            #otherwise convert it
             retlist.append( self.dressFile( self.undressFile(file),IO) )
         return retlist
     
@@ -342,10 +360,13 @@ class IOHelper(object):
         If an event selector is passed, that one will be modified
         
         '''
-        
         if eventSelector is None:
             from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
+
+        #don't do anything if _my_ type is MDF to avoid overwiting everything forever
+        if self._inputPersistency=="MDF":
+            return eventSelector
         
         eventSelector.Input=self.convertConnectionStrings(eventSelector.Input, "I")
         
@@ -375,6 +396,10 @@ class IOHelper(object):
             self.convertSelector(eventSelector)
         
         for file in files:
+            #never convert a dressed MDF file, it's not needed
+            if self.detectFileType(file)=="MDF":
+                eventSelector.Input.append(file)
+                continue
             eventSelector.Input += [ self.dressFile(self.undressFile(file),'I') ]
         return eventSelector
     
@@ -471,19 +496,15 @@ class IOHelper(object):
             retstr+=' '*alen+'"'+file+'"\n'
         retstr+=' '*alen+']'
         return retstr
-    
-    def helperString(self, eventSelector=None):
-        '''return a string of the IOHelper which could be used in a new-style gaudi card
-        '''
-        
-        if eventSelector is None:
-            from Gaudi.Configuration import EventSelector
-            eventSelector=EventSelector()
-        
-        retstr='from GaudiConf import IOHelper\n'
-        retstr+='IOHelper().inputFiles([\n'
-        
-        files=eventSelector.Input
+
+    def _subHelperString(self,files):
+        '''return a string when the types of files are the same'''
+        retstr=''
+        type=self.detectFileType(files[0])
+        if(type)=="MDF":
+            retstr+='IOHelper("MDF").inputFiles([\n'
+        else:
+            retstr+="IOHelper().inputFiles([\n"
         
         alen=4
         for file in files[:-1]:
@@ -494,11 +515,46 @@ class IOHelper(object):
         
         return retstr
     
-    def postConfigConvertSelector(self, eventSelector):
-        '''append a Post Config action to convert the selection strings,
-        do that when the services are setup such that conversion happens at the end regardless
+    def helperString(self, eventSelector=None):
+        '''return a string of the IOHelper which could be used in a new-style gaudi card
+        '''
+        
+        if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
+            eventSelector=EventSelector()
+        
+        retstr='from GaudiConf import IOHelper\n'
+        
+        files=eventSelector.Input
+        if not len(files): return retstr+'IOHelper().inputFiles([])\n'
+        
+        #needs to be more complicated to handle MDF and Root files
+        #first group into lists of the different types
+        type=self.detectFileType(files[0])
+        grouped_files=[[]]
+        group=0
+        for file in files:
+            newtype=self.detectFileType(file)
+            if newtype==type:
+                grouped_files[group].append(file)
+                continue
+            
+            type=newtype
+            group=group+1
+            grouped_files.append([])
+            grouped_files[group].append(file)
+        
+        #then loop over the groups
+        for agroup in grouped_files:
+            retstr+=self._subHelperString(agroup)+'\n'
+        
+        return retstr
+    
+    def postConfigServices(self, eventSelector):
+        '''append a Post Config action to change the services
+        this is a helper function for patching old software
         '''
         from Gaudi.Configuration import appendPostConfigAction
         
-        appendPostConfigAction(self.convertSelector)
+        appendPostConfigAction(self.changeServices)
         

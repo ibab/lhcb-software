@@ -7,6 +7,11 @@
    for 2011 DataType.
 
 ! 2011-05-30 - Rob Lambert
+ - Only convert filenames for non-MDF files
+ - changedPostConfig of convertSelector to changeServices
+ - added qmtests of the postConfig actions to check they work
+
+! 2011-05-30 - Rob Lambert
  - Only change services if original services were not correct
 
 ! 2011-05-27 - Rob Lambert

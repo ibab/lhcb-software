@@ -43,12 +43,18 @@ for persistency in [None,'POOL','ROOT','MDF']:
     print '============================='
     print persistency
     print '============================='
+
+    #preload with MDF
+    iohm=IOHelper("MDF","MDF")
+    iohm.inputFiles(['IAMdf.mdf','IALSOAMdf.blah'])
     
     ioh=IOHelper(persistency, persistency)
     ioh.convertSelector()
     
     from Gaudi.Configuration import EventSelector
     print EventSelector().Input
+    print ioh.selectorString()
+    print ioh.helperString()
     
     EventSelector().Input=[]
     
