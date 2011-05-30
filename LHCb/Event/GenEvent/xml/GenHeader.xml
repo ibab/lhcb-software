@@ -17,6 +17,20 @@
        <import name="Event/ProcessHeader"/>
       <import name="BeamParameters" soft="TRUE"/>
        <import name="GenCollision" soft="TRUE"/>
+      <constructor
+       desc="Constructor">
+	<code>
+	  setVersion( '2' );
+	</code>
+      </constructor>
+       <attribute 
+	desc="Retrieve const Instantaneous luminosity used for pileUp probability (for backward compatibility)"
+        name="luminosity"
+        type="double"
+        init="0.0"
+        setMeth="FALSE"
+        getMeth="FALSE"
+       />
        <attribute
         desc='LHCb event type. Code used in BookKeeping to identify samples, as defined in &lt;a href="http://cdsweb.cern.ch/record-restricted/855452/"&gt;LHCb-2005-034&lt;/a&gt;'
         name="evType"
@@ -28,6 +42,22 @@
         name="evtNumber"
         type="longlong"
         init="0"
+       />
+       <attribute 
+	desc="Retrieve const Total cross section used for pileUp probability (for backward compatibility)"
+        name="totCrossSection"
+        type="double"
+        init="0.0"
+        setMeth="FALSE"
+        getMeth="FALSE"
+       />
+       <attribute 
+	desc="Retrieve const Filled-filled bunches crossing frequency (for backward compatibility)"
+        name="crossingFreq"
+        type="double"
+        init="0.0"
+        setMeth="FALSE"
+        getMeth="FALSE"
        />
        <relation
         desc="Pointer to collisions in this event"
@@ -58,7 +88,9 @@
         type="double"
       >
 	<code>
-	  return beamParameters()->luminosity();
+	  if ( '2' == version() )  
+	    return beamParameters()->luminosity();
+	  return m_luminosity ;
         </code>
       </method>
       <method
@@ -68,7 +100,9 @@
         type="double"
       >
         <code>
-         return beamParameters()->totalXSec();
+	 if ( '2' == version() )
+           return beamParameters()->totalXSec();
+	  return m_totCrossSection ;
         </code>
       </method>
       <method
@@ -78,7 +112,9 @@
         type="double"
       >
         <code>
-         return beamParameters()->revolutionFrequency();
+	  if ( '2' == version() )
+	    return beamParameters()->revolutionFrequency();
+	  return m_crossingFreq ;
         </code>
       </method>
      </class>

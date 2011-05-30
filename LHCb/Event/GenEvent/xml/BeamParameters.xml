@@ -2,7 +2,7 @@
 <!DOCTYPE gdd SYSTEM 'gdd.dtd' >
 
 <gdd>
-  <package name="BeamParameters">
+  <package name="GenEvent">
    
     <class
       name   = "BeamParameters"
@@ -11,7 +11,7 @@
       location = "Gen/BeamParameters"
       id     = "200"
     >
-       &KeyedObject;
+       &DataObject;
        <base name="DataObject"/>
       <import name="GaudiKernel/Point3DTypes.h"/>
       <import name="GaudiKernel/SystemOfUnits.h"/>

@@ -2,6 +2,10 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2011-05-30 - Patrick Robbe
+ - xml/GenHeader.xml, xml/BeamParameters.xml: changes to keep backward  
+   compatibility for the reading of GenHeader.
+
 ! 2011-05-29 - Patrick Robbe 
  - xml/BeamParameters.xml: new class to contain beam parameter informations
    for the generator step.
