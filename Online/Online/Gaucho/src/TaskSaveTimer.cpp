@@ -134,8 +134,10 @@ void TaskSaveTimer::SavetoFile(void *buff)
   }
   TH1 *r;
   MonHist h;
+  TH1::AddDirectory(kFALSE);
   while (buff <bend)
   {
+    r = 0;
     DimBuffBase *b = (DimBuffBase*)buff;
     switch (b->type)
     {
@@ -148,61 +150,37 @@ void TaskSaveTimer::SavetoFile(void *buff)
         m_subsys->Lock();
         r = (TH1*)(h.de_serialize(buff));
         m_subsys->unLock();
-//        TProfile *tp = (TProfile*)r;
-//        TH1D *th1 = (TH1D*)r;
-//        TH2D *th2 = (TH2D*)r;
-        TProfile *tp;
-        TH1D *th1;
-        TH2D *th2;
         char hnam[4096];
-        int ntok;
-        ntok = 0;
         hname = Strsplit(r->GetName(),"/");
         strcpy(hnam,r->GetName());
         gDirectory->Cd("/");
         for (unsigned int i=0;i<hname->size()-1;i++)
         {
-          TKey *k;
-          k = gDirectory->GetKey(hname->at(i).c_str());
+          TKey *k = gDirectory->GetKey(hname->at(i).c_str());
           if (k == 0)
           {
             gDirectory->mkdir(hname->at(i).c_str());
           }
           gDirectory->Cd(hname->at(i).c_str());
         }
-//        r->SetName(ptok);
+        r->SetName(hname->at(hname->size()-1).c_str());
         switch(b->type)
         {
           case H_1DIM:
-          {
-            m_subsys->Lock();
-            th1 = (TH1D*)r->Clone(hname->at(hname->size()-1).c_str());
-            th1->Write(hname->at(hname->size()-1).c_str());
-            m_subsys->unLock();
-            break;
-          }
           case H_2DIM:
-          {
-            m_subsys->Lock();
-            th2=(TH2D*)r->Clone(hname->at(hname->size()-1).c_str());
-            th2->Write(hname->at(hname->size()-1).c_str());
-            m_subsys->unLock();
-            break;
-          }
           case H_PROFILE:
           case H_RATE:
           {
             m_subsys->Lock();
-            tp = (TProfile*)r->Clone(hname->at(hname->size()-1).c_str());
-            tp->Write(hname->at(hname->size()-1).c_str());
+            r->Write(hname->at(hname->size()-1).c_str());
             m_subsys->unLock();
             break;
           }
         }
         m_subsys->Lock();
+        deletePtr(r);
         h.FreeDeser();
         m_subsys->unLock();
-//        r->Write(ptok);
         buff = AddPtr(buff,b->reclen);
         continue;
       }
@@ -219,7 +197,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
     }
   }
   m_subsys->Lock();
-  f->Close();
+  delete f;
   m_subsys->unLock();
   if (m_filenamesvc != 0)
   {

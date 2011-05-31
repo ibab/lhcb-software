@@ -206,7 +206,7 @@ void SaveTimer::SavetoFile(void *buff)
     }
   }
   m_Adder->Lock();
-  f->Close();
+  delete f;
   m_Adder->UnLock();
   if (m_filenamesvc != 0) m_filenamesvc->updateService(fn);
 }
