@@ -48,6 +48,7 @@ DisplayHistogram::DisplayHistogram( OnlineHistogram* hist ) :
   m_title( "" ),
   m_isOverlap( false ),
   m_isTrendPlot( false ),
+  m_historyTrendPlot( false ),
   m_rootHistogram( NULL ),
   m_offsetHistogram( NULL),
   m_referenceHist( NULL ),

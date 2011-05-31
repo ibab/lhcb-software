@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !=============================== 2011-05-30 v3r0 =============================
+! 2011-05-31 - Olivier Callot
+ - Initialize the thistoryTrendPlot option!
+
 ! 2011-05-30 - Olivier Callot
  - Delete histograms after history access
  - Options for history trending plot
