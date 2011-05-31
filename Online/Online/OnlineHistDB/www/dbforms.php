@@ -203,15 +203,16 @@ function hidpost_displayoptions() {
 function get_fitoptions($disp) {
   global $conn;
   global $kintsize,$kfloatsize;
-  $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitOptions($disp,:ff,:np,:ni);end;");
+  $dstid = OCIParse($conn,"begin OnlineHistDB.GetFitOptions($disp,:ff,:np,:ni,:fmin,:fmax);end;");
   ocibindbyname($dstid,":ff",$_POST["FITFUN"],$kintsize);
   ocibindbyname($dstid,":np",$np,$kintsize);
   ocibindbyname($dstid,":ni",$ni,$kintsize);
+  ocibindbyname($dstid,":fmin",$_POST["FITMIN"],$kfloatsize);
+  ocibindbyname($dstid,":fmax",$_POST["FITMAX"],$kfloatsize);
   OCIExecute($dstid);
   ocifreestatement($dstid);
   if ($np>0) {
     $dstid = OCIParse($conn,"begin :p := OnlineHistDB.GetFitParam($disp,:i);end;");
-    echo "doid=$disp \n";
     for ($i=1 ; $i<=$np ; $i++) {
       ocibindbyname($dstid,":i",$i);
       ocibindbyname($dstid,":p",$_POST["FITPAR_$i"],$kfloatsize);
@@ -463,6 +464,13 @@ function histo_display($id,$htype,$mode)
   }
   if ($_POST["FITNP"]>0 && $_POST["FITFUN"]>0) {
     echo "&nbsp&nbsp&nbsp<table align=center>";
+    echo "<tr><td colspan=2 align=center> Fit Range (leave blank to use full histogram range)</td></tr>\n";
+    if($_POST["FITMAX"] < $_POST["FITMIN"]) { // means default values
+      $_POST["FITMAX"] = $_POST["FITMIN"] ="";
+    }
+    printf("<tr><td> Fit Range Minimum  </td><td><input type='text' name='FITMIN' value=%s></td></tr>\n",$_POST["FITMIN"]);
+    printf("<tr><td> Fit Range Maximum  </td><td><input type='text' name='FITMAX' value=%s></td></tr>\n",$_POST["FITMAX"]);
+
     echo "<tr><td colspan=2 align=center> Init. values for fit parameters ";
     if ( $MUSTIN ) 
       echo " (MUST BE PROVIDED):";
@@ -484,7 +492,7 @@ function histo_display($id,$htype,$mode)
         $_POST["FITPAR_${ip}"]="";
       }
       echo "<tr><td><input type='text' name='FITPARNAME_${ip}' value='${pname}' READONLY>";
-      printf("<td><input type='text' name='FITPAR_${ip}' value=%s></tr>\n",$_POST["FITPAR_${ip}"]);
+      printf("</td><td><input type='text' name='FITPAR_${ip}' value=%s></td></tr>\n",$_POST["FITPAR_${ip}"]);
     }
     echo "</table>";
   }

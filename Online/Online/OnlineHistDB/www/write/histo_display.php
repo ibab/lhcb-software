@@ -54,9 +54,15 @@ function update_histo_display() {
         $ffpar[$_POST["FITNP"]+$ip]=-999999.;
     }
     $command .= "vthresholds(".implode(",",$ffpar).")";
+    if (strlen($_POST["FITMIN"])>0 && strlen($_POST["FITMAX"])>0) {
+      $command.=",vthresholds(".$_POST["FITMIN"].",".$_POST["FITMAX"].")";
+    }
+    else {
+      $command.=",vthresholds()";
+    }
   }
   else {
-    $command.=",NULL,vthresholds()";
+    $command.=",NULL,vthresholds(),vthresholds()";
   }
 
   $command .= "); END;";
