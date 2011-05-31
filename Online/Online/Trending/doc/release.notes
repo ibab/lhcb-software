@@ -4,6 +4,11 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Olivier Callot
+ - New program ExtractFromTrendingFile for Renaud: needs 4 arguments: file,
+   tag, start and end time in ISO format.
+   It outputs a list, one per lines, of time stamp (ISO format) and value.
+
 ! 2011-05-27 - Olivier Callot
  - Fix scan of first entry, if none in the time window.
 

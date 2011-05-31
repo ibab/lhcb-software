@@ -27,3 +27,5 @@ library          Trending    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=Trending
+
+application ExtractFromTrendingFile "ExtractFromTrendingFile.cpp"
