@@ -86,9 +86,9 @@ int main()
 	int i;
 
 	dim_init();
-	DimClient::setNoDataCopy();
+//	DimClient::setNoDataCopy();
 
-	for(i = 0; i < 10; i++)
+	for(i = 0; i < 1; i++)
 	{
 		dim_start_thread(do_work,(void *)i);
 	}
