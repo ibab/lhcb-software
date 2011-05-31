@@ -33,13 +33,20 @@ OMAFitHLTjpsi::OMAFitHLTjpsi()  :
 OMAFitHLTjpsi::~OMAFitHLTjpsi() {} 
 
 
-void OMAFitHLTjpsi::fit(TH1* histo, std::vector<float>* ) {
+void OMAFitHLTjpsi::fit(TH1* histo, std::vector<float>* , std::vector<float>* fitRange) {
+  double xmin=0., xmax=0.;
   if(!histo) return;
   if(histo->Integral() < 10.) return;
+  if(fitRange) {
+    if(fitRange->size()>1) {
+      xmin=fitRange->at(0);
+      xmax=fitRange->at(1);
+    }
+  }
   Int_t binnr = histo->GetMaximumBin();
   Double_t maxbin = histo->GetBinContent(binnr);
   ((TF1*) this)->SetParameters(maxbin,histo->GetMean(),histo->GetRMS(),0.,0.);
-  histo->Fit((TF1*) this,"R");
+  histo->Fit((TF1*) this,"R","",xmin,xmax);
   return;
 }
 

@@ -2,6 +2,11 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! ======== v4r0 ===============
+! 20110531
+ - support user supplied fit ranges (requires OnlineHistDB v8)
+ - extend default range of OMAFitHLTjpsi 
+
 ! ======== v3r6 ===============
 ! 20110503
  - new version of OMAFitHLTjpsi from Eric Van Herwijnen

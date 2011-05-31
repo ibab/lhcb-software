@@ -39,7 +39,7 @@ public:
   std::vector<std::string>& inputNames() {return m_inputNames;}
   std::vector<float>& inputDefValues() {return m_inputDefValues;}
   void checkDefValues();
-  virtual void fit(TH1* histo, std::vector<float>* initValues);
+  virtual void fit(TH1* histo, std::vector<float>* initValues, std::vector<float>* fitRange);
   TF1* fittedfun() {return this;}
 protected:
   virtual void init(std::vector<float>* initValues, TH1* histo=NULL);
@@ -88,7 +88,7 @@ class OMAFitTH2withSinCosC: public OMAFitFunction {
   virtual OMAFitFunction* clone() {
     return (OMAFitFunction*) (new OMAFitTH2withSinCosC(*this));
   }
-  virtual void fit(TH1* histo, std::vector<float>* initValues);
+  virtual void fit(TH1* histo, std::vector<float>* initValues, std::vector<float>* fitRange);
 private:
   TF1 GausP1;
 };
@@ -100,7 +100,7 @@ class OMAFitHLTjpsi: public OMAFitFunction {
   virtual OMAFitFunction* clone() {
     return (OMAFitFunction*) (new OMAFitHLTjpsi(*this));
   }
-  virtual void fit(TH1* histo, std::vector<float>* initValues);
+  virtual void fit(TH1* histo, std::vector<float>* initValues, std::vector<float>* fitRange);
 private:
 };
 

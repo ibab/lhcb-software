@@ -15,11 +15,14 @@ OMAFit::OMAFit(OMAlib* Env) :
   m_npars = 1;
   m_parnames.push_back("Min_chi2_prob"); m_parDefValues.push_back(0.);
 
-  m_ninput = 2;
+  m_ninput = 4;
   m_inputNames.push_back("Fit_function"); m_inputDefValues.push_back(1.f);
   m_inputNames.push_back("confidence"); m_inputDefValues.push_back(.95f);
+  m_inputNames.push_back("FitMin");     m_inputDefValues.push_back( 999.);
+  m_inputNames.push_back("FitMax");     m_inputDefValues.push_back(-999.);
   m_doc = "Fit histogram with a given function and check chi2 and/or output parameters";
-  m_doc +=  " with a given normal confidence level (default is 0.95)";
+  m_doc +=  " with a given normal confidence level (default is 0.95) and optional fit range";
+  m_doc +=  " (use default value for using full histogram range)";
 }
 
 void OMAFit::exec(TH1 &Histo,
@@ -41,15 +44,26 @@ void OMAFit::exec(TH1 &Histo,
   if (warn_thresholds.size() < NcheckPars ||
       alarm_thresholds.size() < NcheckPars ) return;
 
-  // perform the fit, with or without init. parameter values
+  // perform the fit, with or without user supplied initial parameter values and fit range
+  std::vector<float>* fitP=NULL;
+  std::vector<float>* fitR=NULL;
+  std::vector<float> fitPars, fitRange;
+
+  if(input_pars.size() >3) {
+    if( input_pars[2] < input_pars[3]) {
+      fitRange.push_back(input_pars[2]);
+      fitRange.push_back(input_pars[3]);
+      fitR = &fitRange;
+    }
+  }
+
   if(input_pars.size() > m_ninput) {
-    std::vector<float> fitPars;
     fitPars.insert(fitPars.end(), input_pars.begin()+m_ninput, input_pars.end());
-    fitfun->fit(&Histo, &fitPars);
+    fitP= &fitPars;
   }
-  else {
-    fitfun->fit(&Histo,NULL);
-  }
+
+  fitfun->fit(&Histo, fitP, fitR);
+
   // check the result
   std::string hname(Histo.GetName());
   TF1* fit = fitfun->fittedfun();

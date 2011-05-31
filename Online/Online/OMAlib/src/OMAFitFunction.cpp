@@ -71,9 +71,10 @@ void OMAFitFunction::init(std::vector<float>* initValues, TH1* histo) {
 }
 
 
-void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues)
+void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues, std::vector<float>* fitRange)
 {
   bool noInit=true;
+  double xmin=0., xmax=0.;
   if(!histo) return;
   if(initValues) {
     if(! initValues->empty() ) {
@@ -81,6 +82,12 @@ void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues)
       // in case init. parameters are passed to a predefined function we need to use the TF1
       m_useTF1=true;      
       init(initValues,histo);
+    }
+  }
+  if(fitRange) {
+    if(fitRange->size()>1) {
+      xmin=fitRange->at(0);
+      xmax=fitRange->at(1);
     }
   }
   if(noInit) {
@@ -94,11 +101,11 @@ void OMAFitFunction::fit(TH1* histo, std::vector<float>* initValues)
   }
  
   if(m_useTF1) {
-    histo->Fit((TF1*) this,"0Q");
+    histo->Fit((TF1*) this,"0Q","",xmin,xmax);
     TF1 * fitf = histo -> GetFunction( this -> GetName() ) ;
     if ( fitf ) fitf -> Draw( "LSAME" ) ;
   } else {
-    histo->Fit(m_funcString.c_str(),"0Q");
+    histo->Fit(m_funcString.c_str(),"0Q","",xmin,xmax);
     TF1 * fitf = histo -> GetFunction( m_funcString.c_str() ) ;
     if ( fitf ) fitf -> Draw( "LSAME" ) ;
   }
