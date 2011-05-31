@@ -21,5 +21,8 @@ apply_pattern reflex_dictionary                                             \
               headerfiles=$(MICRODSTROOT)/dict/MicroDstDict.h     \
               selectionfile=$(MICRODSTROOT)/dict/MicroDstDict.xml \
               options="-U__MINGW32__"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append MicroDstDict_cppflags "" \
+                        target-icc " -wd177 -wd191"
 
 apply_pattern install_python_modules

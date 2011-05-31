@@ -4,6 +4,9 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Marco Cattaneo
+ - Suppress icc compiler warnings in automatically generated dict files
+
 ! 2011-05-18 - Marco Cattaneo
  - Moved to LHCB and changed name of package to Event/MicroDst
  - Changed python subdirectory from DaVinciMaps to MicroDst
