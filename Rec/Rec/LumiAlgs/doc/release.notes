@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Rob Lambert
+ - Moved to IOHelper for writing, old code commented out
+ - Updated test results to reflect changes
+
 ! 2011-05-25 - Rob Lambert
  - Update configurables and job options for new Persistency.
  - Persistency is now set up in LHCbApp

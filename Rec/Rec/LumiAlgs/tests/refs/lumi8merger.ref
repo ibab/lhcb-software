@@ -1,12 +1,13 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
+# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
+# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
+# |-Persistency = None
 # |-DDDBtag     = ''
-# |-OutputLevel = 3
 # |-DataType    = '2009'
 # |-TimeStamp   = False
 # |-SkipEvents  = 0
+# |-OutputLevel = 3
 # |-EvtMax      = -1
 # |-CondDBtag   = 'head-20100826'  (default: '')
 # |-DQFLAGStag  = ''
@@ -25,7 +26,7 @@
 # applying configuration of LumiMergeFSRConf
 # /***** User LumiMergeFSRConf/LumiMergeFSRConf ******************************************************
 # |-outputFile    = 'mergeout.dst'  (default: '')
-# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x2c19690>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x6da3fe0>  (default: None)
 # |-InputType     = 'DST'
 # \----- (End of User LumiMergeFSRConf/LumiMergeFSRConf) ---------------------------------------------
 # applying configuration of XMLSummary
@@ -54,8 +55,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lbcsrv01 on Wed May 25 13:19:04 2011
+                                                   Welcome to Brunel version v39r4
+                                          running on lbcsrv01 on Tue May 31 12:39:07 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -66,7 +67,7 @@ LumiMergeSeq         INFO Member list: EventAccounting/EventAccount, LumiMergeFS
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.32 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.40 times the speed of a 2.8 GHz Xeon.
 FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
 MergeFSR             INFO Primary  BXType BeamCrossing
 MergeFSR             INFO Subtract BXType Beam1
@@ -75,21 +76,21 @@ MergeFSR             INFO Subtract BXType NoBeam
 EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:mergeout.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DstWriter            INFO Data source: EventDataSvc output: DATAFILE='mergeout.dst' TYP='POOL_ROOTTREE' OPT='REC'
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FsrWriter            INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:mergeout.dst' TYP='POOL_ROOTTREE' OPT='REC'
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE'  OPT='REC'
+FSROutputStream...   INFO Data source: FileRecordDataSvc output: DATAFILE='mergeout.dst' TYP='POOL_ROOTTREE' OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOT' OPT='READ'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 RootDBase.open    SUCCESS testFSRout.dst File version:52800
-PoolRootTreeEvt...   INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
+PoolRootEvtCnvSvc    INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 RootDBase.open    SUCCESS mergeout.dst File version:52800
-EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOTTREE'  OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOT' OPT='READ'
 RootDBase.open    SUCCESS testFSRout0.dst File version:52800
-PoolRootTreeEvt...   INFO Records token:[DB=80F7B06F-18D2-DF11-92B1-003048D2BD0C][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
+PoolRootEvtCnvSvc    INFO Records token:[DB=80F7B06F-18D2-DF11-92B1-003048D2BD0C][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
 EventSelector     SUCCESS Reading Event record 1001. Record number within stream 2: 1
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
@@ -100,24 +101,24 @@ MergeFSR             INFO /FileRecords/LumiFSRBeam2 2 FSRs
 MergeFSR             INFO /FileRecords/LumiFSRNoBeam 2 FSRs
 MergeFSR             INFO /FileRecords/TimeSpanFSR 2 FSRs
 DstWriter            INFO Events output: 2000
-FsrWriter            INFO Set up File Summary Record
-FsrWriter            INFO Events output: 1
+FSROutputStream...   INFO Set up File Summary Record
+FSROutputStream...   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.32 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.40 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.002 |     0.004 |    0.003       0.0 |    2000 |     0.008 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    2000 |     0.003 |
-ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.001 |    0.000       0.0 |    2000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.007 |     0.004 |    0.003       0.0 |    2000 |     0.008 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.003 |     0.002 |    0.001       0.0 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.001 |    0.001       0.0 |    2000 |     0.002 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK
 CounterSummarySvc    INFO Wrote xml file summary.xml
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootTreeEvt...   INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C[testFSRout0.dst]
-PoolRootTreeEvt...   INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517[testFSRout.dst]
 PoolRootTreeEvt...   INFO Disconnected data IO:E4271623-16D2-DF11-ACBF-003048D2BD0C[mergeout.dst]
+PoolRootEvtCnvSvc    INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C[testFSRout0.dst]
+PoolRootEvtCnvSvc    INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517[testFSRout.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

@@ -23,7 +23,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                             ]
 
 files = [
-  "DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE' "
+  "PFN:testFSRout.dst"
   ]
 
 LumiFsrReader().inputFiles = files

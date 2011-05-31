@@ -16,17 +16,16 @@ from Configurables import DumpFSR
 
 import GaudiKernel.ProcessJobOptions
 
-def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
-def _file(f) :
-    if f.lstrip().startswith('DATAFILE'): return f
-    from GaudiConf.IOHelper import IOHelper
-    
-    if _ext(f).upper() in ["RAW","MDF"]:
-        
-        return IOHelper(Input="MDF").dressFile(f,IO="I")
-    
-    return IOHelper().dressFile(f,IO="I")
+def _hasMDF(files):
+    from GaudiConf import IOHelper
+    for f in files:
+        f=IOHelper().undressFile(f)
+        if _ext(f).upper()  in ["RAW","MDF"]:
+            return True
+    return False
+
+def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
 def _sequenceAppender( seq ) :
     return lambda x : seq.Members.append( x )
@@ -63,11 +62,16 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     # POOL Persistency
     # not required now in LHCb App
     #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-
     files = self.getProp('inputFiles')
-    if len(files) > 0 :
-        EventSelector().Input = [ _file(f) for f in files ]
-
+    if not len(files): return
+    
+    from GaudiConf import IOHelper
+    
+    if _hasMDF(files):
+        IOHelper(Input="MDF").inputFiles(files,clear=True)
+    else:
+        IOHelper().inputFiles(files,clear=True)
+    
   def __apply_configuration__(self):
     
     GaudiKernel.ProcessJobOptions.PrintOff()

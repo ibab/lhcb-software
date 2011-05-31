@@ -22,17 +22,25 @@ from LumiAlgs.Configuration import LumiAlgsConf
 
 import GaudiKernel.ProcessJobOptions
 
+def _hasMDF(files):
+    from GaudiConf.IOHelper import IOHelper
+    for f in files:
+        f=IOHelper().undressFile(f)
+        if _ext(f).upper()  in ["RAW","MDF"]:
+            return True
+    return False
+
 def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
-def _file(f) :
-    if f.lstrip().startswith('DATAFILE'): return f
-    from GaudiConf.IOHelper import IOHelper
-    
-    if _ext(f).upper()  in ["RAW","MDF"]:
-        
-        return IOHelper(Input="MDF").dressFile(f,IO="I")
-    
-    return IOHelper().dressFile(f,IO="I")
+#def _file(f) :
+#    if f.lstrip().startswith('DATAFILE'): return f
+#    from GaudiConf.IOHelper import IOHelper
+#    
+#    if _ext(f).upper()  in ["RAW","MDF"]:
+#        
+#        return IOHelper(Input="MDF").dressFile(f,IO="I")
+#    
+#    return IOHelper().dressFile(f,IO="I")
 
 def _sequenceAppender( seq ) :
     return lambda x : seq.Members.append( x )
@@ -87,16 +95,25 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
 
 
   def _configureInput(self):
+    from GaudiConf.IOHelper import IOHelper
     files = self.getProp('inputFiles')
-    if len(files) > 0 :
-        EventSelector().Input = [ _file(f) for f in files ]
-
+    if not len(files): return
+    
+    if _hasMDF(files):
+        IOHelper(Input="MDF").inputFiles(files,clear=True)
+    else:
+        IOHelper().inputFiles(files,clear=True)
+  
   def _configureOutput(self):
     # first empty the outstream, because it would write all the time
     ApplicationMgr().OutStream = [ ]
     # only configure the writer - use it where applicable
     outputFile = self.getProp('outputFile')
     if not outputFile : return
+    
+    from GaudiConf.IOHelper import IOHelper
+    
+    #IOHelper().outStream(filename=outputFile, writer="OutputStream/DstWriter")
     
     # POOL Persistency
     # no longer required, now in LHCbApp
@@ -105,10 +122,15 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     from Configurables import OutputStream
     writerName = "DstWriter"
     dstWriter = OutputStream( writerName,
-                              ItemList = [ "/Event#999" ],     # miniDST selection: #1
-                              Output   = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'",
-                              )
-    ApplicationMgr().OutStream.append(dstWriter)
+                              ItemList = [ "/Event#999" ])#,     # miniDST selection: #1
+    #                          Output   = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'",
+    #                          )
+    
+    from GaudiConf.IOHelper import IOHelper
+    
+    IOHelper().outStream(filename=outputFile, writer=dstWriter)
+    
+    #ApplicationMgr().OutStream.append(dstWriter)
     
     # TES setup
     # note required, now in LHCbApp
@@ -125,18 +147,18 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     #                             ]
 
     # FSR output stream
-    from Configurables import RecordStream
-    fsrWriter = RecordStream( "FsrWriter",
-                              ItemList = [ "/FileRecords#999" ],
-                              EvtDataSvc = "FileRecordDataSvc",
-                              EvtConversionSvc = "FileRecordPersistencySvc",
-                              )
-    fsrWriter.Output = dstWriter.getProp("Output")
-    ApplicationMgr().OutStream.append(fsrWriter)
+    #from Configurables import RecordStream
+    #fsrWriter = RecordStream( "FsrWriter",
+    #                          ItemList = [ "/FileRecords#999" ],
+    #                          EvtDataSvc = "FileRecordDataSvc",
+    #                          EvtConversionSvc = "FileRecordPersistencySvc",
+    #                          )
+    #fsrWriter.Output = dstWriter.getProp("Output")
+    #ApplicationMgr().OutStream.append(fsrWriter)
 
 
   def __apply_configuration__(self):
-
+    
     GaudiKernel.ProcessJobOptions.PrintOff()
     # no longer required, now in LHCbApp
     # EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
@@ -146,7 +168,7 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
 
     # instantiate the sequencer
     mainSeq = GaudiSequencer("LumiSeq")
-
+    
     # activate the sequence
     appMgr=ApplicationMgr(TopAlg=[],
                           HistogramPersistency='NONE',
@@ -157,12 +179,12 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     if self.getProp("userAlgorithms"):
         for userAlg in self.getProp("userAlgorithms"):
             ApplicationMgr().TopAlg += [ userAlg ]
-
+    
     # input
     self._configureInput()
-
+    
     # configure the main sequence
     self._createWriter(mainSeq)
-
+    
     # output
     self._configureOutput()
