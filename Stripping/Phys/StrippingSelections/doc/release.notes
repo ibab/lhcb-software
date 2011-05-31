@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-05-31 - Anton Poluektov 
+ - Fixed selection name error in StrippingB2DXHltTisTos.py that prevented it 
+   from configuring. 
+
 ! 2011-05-30 - Andrew Powell
  - Updated prescales to RICH PID Stripping lines:
 	 - StrippingV0ForPID.py
