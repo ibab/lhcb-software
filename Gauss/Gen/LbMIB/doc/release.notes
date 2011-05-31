@@ -5,6 +5,9 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Patrick Robbe
+ - MIBackground.cpp: adapt to new GenHeader class
+
 !=========================== LbMIB v4r1 2010-02-16 =========================
 ! 2010-02-16 - Magnus LIENG
  - Merged the two root file conversion scripts into one. New script can read

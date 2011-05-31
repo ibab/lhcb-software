@@ -115,10 +115,7 @@ StatusCode MIBackground::execute() {
 
   // Update the GenHeader
   LHCb::GenHeader* genHead = get< LHCb::GenHeader >( m_headerLoc ) ;
-  if( !genHead->evType() ){
-    genHead->setEvType( m_evtType );
-    genHead->setLuminosity( m_luminosity );
-  }
+  if( !genHead->evType() ) genHead->setEvType( m_evtType );
 
   // Now generate events
   return generate( genHead, collVector, hepMCVector ); 
