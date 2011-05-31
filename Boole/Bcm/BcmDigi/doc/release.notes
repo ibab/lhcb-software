@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : Bcm/BcmDigi
+! Responsible : Magnus Lieng
+! Purpose     : Create BcmDigits and MCBcmDigits from hits on the BCM
+!-----------------------------------------------------------------------------
+
+!========================= DigiEvent v1r0 2011-05-31 =========================
+! 2011-05-31 - Magnus Lieng
+ - First version. Algorithm BcmDigitization reads Bcm hits and creates one
+   BcmDigit per sensor. BcmDigit contains the sum of energy deposition. The
+   associated MCBcmDigit uses the same key and contains a list of indices to
+   the MCHits on the sensor.
+ 
