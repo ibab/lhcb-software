@@ -178,14 +178,16 @@ class L0Conf(LHCbConfigurableUser) :
             if alg.isPropertySet("TCK"): # Use already defined TCK
                 log.info("%s.TCK was set independently of L0Conf"%(alg.getName()))
             else:                         # Use default TCK
-                if self.getProp("DataType").upper() in ["DC06"]:
-                    alg.TCK = "0xFFF8"
+                if self.getProp("DataType").upper() in ["MC09"]:
+                    alg.TCK = "0xDC09"
                 elif self.getProp("DataType").upper() in ["2009"]:
                     alg.TCK = "0x1309"
                 elif self.getProp("DataType").upper() in ["2010"]:
                     alg.TCK = "0x1810"
+                elif self.getProp("DataType").upper() in ["2011"]:
+                    alg.TCK = "0x0032"
                 else:
-                    alg.TCK = "0xDC09"
+                    alg.TCK = "0x0032"
         log.info("%s will use TCK=%s"%(alg.getFullName(),alg.getProp('TCK')))
 
     def _defineL0Sequencer(self):

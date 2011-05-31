@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-05-31 - Julien Cogan
+ - Add default L0TCK for 2011 data (0x0032)
+ - Change default TCK when DataType is not supplied
+ - Remove default TCK for DC06 data type
+
 !========================= L0DU v10r14 2011-04-27 =========================
 ! 2011-01-24 - Olivier Deschamps
  - fix coverity (non) problems
