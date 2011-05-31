@@ -68,3 +68,55 @@ def prescale_l0anynospd(id,label,tck) :
 
 prescale_l0anynospd('9166f3c8cbdb4b99c92423f55c60e156','Default, MaxOTHits=15000, Hlt2LowMultHadron=0.1, L0NoSPD=1',0x00700034) 
 
+
+
+def repair_0x006d0032() :
+    updates = { 'Hlt1MBNoBiasODINFilter'          : { 'Code' : 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(11.0,LoKi.Scalers.RandomPhasePeriodicLimiter))' } 
+              , 'Hlt2LowMultHadronPreScaler'      : { 'AcceptFraction': '1' } # moved the 0.1 prescale into L0
+              , 'Hlt1DiProtonPreScaler'           : { 'AcceptFraction': '0' }
+              , 'Hlt2DiProtonPreScaler'           : { 'AcceptFraction': '0' }
+              , 'Hlt2DiProtonTFPreScaler'         : { 'AcceptFraction': '0' }
+              , 'Hlt2DiProtonLowMultTFPreScaler'  : { 'AcceptFraction': '0' }
+              }
+    cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+    #  'e6713cde105f6c1202d81c6a4306da5d' = 0x006d0032
+    id = updateL0TCK( 'e6713cde105f6c1202d81c6a4306da5d', 0x0035, 'Default, MaxOTHits=15000', cas=cas, extra = updates )
+    createTCKEntries( { 0x00710035 : id }, cas ) 
+
+def highlumi_test() :
+    updates = { 'Hlt1MBNoBiasODINFilter'              : { 'Code' : 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(11.0,LoKi.Scalers.RandomPhasePeriodicLimiter))' } 
+              , 'Hlt2LowMultHadronPreScaler'          : { 'AcceptFraction': '1' }
+              , 'Hlt1DiProtonPreScaler'               : { 'AcceptFraction': '0' }
+              , 'Hlt2DiProtonPreScaler'               : { 'AcceptFraction': '0' }
+              , 'Hlt2DiProtonTFPreScaler'             : { 'AcceptFraction': '0' }
+              , 'Hlt2DiProtonLowMultTFPreScaler'      : { 'AcceptFraction': '0' }
+              , 'Hlt1L0AnyRateLimitedPostScaler'      : { 'Code' : 'RATE(10)' }
+              , 'Hlt1L0AnyNoSPDRateLimitedPostScaler' : { 'Code' : 'RATE(10)' }
+              , 'Hlt1BeamGasCrossingForcedRecoPostScaler'     : {  'Code': 'RATE(0.5)' }
+              , 'Hlt1BeamGasCrossingEnhancedBeam2PostScaler'  : {  'Code': 'RATE(2)' }
+              , 'Hlt1BeamGasCrossingEnhancedBeam1PostScaler'  : {  'Code': 'RATE(2)' }
+              , 'Hlt1BeamGasCrossingParasiticPostScaler'      : {  'Code': 'RATE(0.5)' }
+              , 'Hlt1BeamGasBeam2PostScaler'          : {  'Code': 'RATE(2)' }
+              , 'Hlt1BeamGasNoBeamBeam1PostScaler'    : {  'Code': 'RATE(0.5)' }
+              , 'Hlt1BeamGasNoBeamBeam2PostScaler'    : {  'Code': 'RATE(0.5)' }
+              , 'Hlt1BeamGasBeam1PostScaler'          : {  'Code': 'RATE(2)' }
+              , 'Hlt2DisplVerticesSinglePostScaledPostScaler' : { 'AcceptFraction': '0.0003' }
+              , 'Hlt2DisplVerticesHighFDSinglePreScaler'      : { 'AcceptFraction': '0.1' }
+              , 'Hlt2DisplVerticesLowMassSinglePreScaler'     : { 'AcceptFraction': '0.01' }
+              , 'Hlt2DisplVerticesDoublePreScaler'            : { 'AcceptFraction': '0.5' }
+              , 'Hlt2DisplVerticesSingleDownPreScaler'        : { 'AcceptFraction': '0.1' }
+              , 'Hlt2IncPhiPreScaler'                 : { 'AcceptFraction': '0.1' }
+              , 'Hlt2DiMuonDY1PreScaler'              : { 'AcceptFraction': '0.0025' }
+              , 'Hlt2DiMuonDY2PreScaler'              : { 'AcceptFraction': '0.02' }
+              , 'Hlt2SingleElectronTFLowPtPreScaler'  : { 'AcceptFraction': '0.1' }
+              , 'Hlt2SingleElectronTFHighPtPreScaler' : { 'AcceptFraction': '0.1' }
+              }
+    cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+    #  'e6713cde105f6c1202d81c6a4306da5d' = 0x006d0032
+    id = updateL0TCK( 'e6713cde105f6c1202d81c6a4306da5d', 0x0036, 'HighLumi, MaxOTHits=15000', cas=cas, extra = updates )
+    createTCKEntries( { 0x00720036 : id }, cas ) 
+       
+
+
+
+
