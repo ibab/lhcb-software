@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Magnus Lieng
+ - Added MCBcmDigit.xml, CLID 3000
+
 !========================= MCEvent v2r19 2011-02-22 =========================
 ! 2011-02-08 - Marco Cattaneo
  - Fix uninitialised variable in MCMuonDigit constructor (coverity defect 16220)
