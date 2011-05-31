@@ -168,7 +168,7 @@ double GenericGun::generateValue( const int mode, const double val,
     do {
       tmp = m_gaussGenerator() * sigma + val ;
       i++;
-    } while ( (tmp<min) || (tmp > max) && (i < maxtries));
+    } while ( ( (tmp<min) || (tmp > max) ) && (i < maxtries));
     if(i>maxtries) {
       error() << "Cant generate value in range (min, max) "
               << val << "\t" << min << "\t" << max << endreq;
