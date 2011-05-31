@@ -50,6 +50,7 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     , "KillBanks" :        True   # whether to kill non-lumi banks
     , "userAlgorithms":    [ ]    # put here user algorithms to add
     , "OutputLevel" :      ERROR  #
+    , "Persistency" :      None   # change the default persistency for testing
     }   
 
 
@@ -74,10 +75,10 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
         )
     # tag input file ---
     writeLumiSequence( FileIdBankWriter( OutputLevel = self.getProp("OutputLevel") ) ) 
-
+    
     # and activate it
     sequence.Members+=[ Sequence('writeLumiSeq') ]
-
+    
     # create lumi sequence
     lumiFsrSeq = GaudiSequencer("LumiFsrSeq", OutputLevel = INFO )
     LumiAlgsConf().LumiSequencer = lumiFsrSeq
@@ -89,10 +90,16 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     files = self.getProp('inputFiles')
     if not len(files): return
     
+    persistency=None
+    if hasattr( self, "Persistency" ):
+        persistency=self.getProp("Persistency")
+    
+    from GaudiConf import IOHelper
+    
     if _hasMDF(files):
-        IOHelper(Input="MDF").inputFiles(files,clear=True)
+        IOHelper(Input="MDF",Output=persistency).inputFiles(files,clear=True)
     else:
-        IOHelper().inputFiles(files,clear=True)
+        IOHelper(persistency,persistency).inputFiles(files,clear=True)
   
   def _configureOutput(self):
     # first empty the outstream, because it would write all the time
@@ -108,9 +115,13 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     dstWriter = OutputStream( writerName,
                               ItemList = [ "/Event#999" ])#,     # miniDST selection: #1
     
+    persistency=None
+    if hasattr( self, "Persistency" ):
+        persistency=self.getProp("Persistency")
+    
     from GaudiConf.IOHelper import IOHelper
     
-    IOHelper().outStream(filename=outputFile, writer=dstWriter)
+    IOHelper(persistency,persistency).outStream(filename=outputFile, writer=dstWriter)
     
   
   def __apply_configuration__(self):
@@ -119,6 +130,9 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )
+    if hasattr( self, "Persistency" ):
+        self.setOtherProps( LHCbApp(), ['Persistency'])
+    
     
     # instantiate the sequencer
     mainSeq = GaudiSequencer("LumiSeq")

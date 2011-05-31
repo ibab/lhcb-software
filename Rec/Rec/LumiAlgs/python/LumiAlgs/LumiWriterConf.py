@@ -150,12 +150,12 @@ class LumiWriterConf(LHCbConfigurableUser):
     if self.getProp("userAlgorithms"):
       for userAlg in self.getProp("userAlgorithms"):
         ApplicationMgr().TopAlg += [ userAlg ]
-
+    
     # input
     self._configureInput()
-
+    
     # configure the main sequence
     self._createWriter(mainSeq)
-
+    
     # output
     self._configureOutput()

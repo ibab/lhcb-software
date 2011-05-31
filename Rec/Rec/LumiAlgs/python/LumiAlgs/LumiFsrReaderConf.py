@@ -45,9 +45,10 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     , "DumpRequests"  :    'F'    # ascii output filename for FSR dump
     , "userAlgorithms":    [ ]    # put here user algorithms to add
     , "OutputLevel" :      ERROR  #
+    , "Persistency" :      None   # change the default persistency for testing
     }   
-
-
+  
+  
   def _createReader(self, sequence):
     '''
     create reader sequence
@@ -57,17 +58,21 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
                      DumpRequests = self.getProp('DumpRequests'),
                      OutputLevel = self.getProp("OutputLevel") )
     sequence.Members+=[ dump ]
-
+  
   def _configureInput(self):
     files = self.getProp('inputFiles')
     if not len(files): return
     
+    persistency=None
+    if hasattr( self, "Persistency" ):
+        persistency=self.getProp("Persistency")
+    
     from GaudiConf import IOHelper
     
     if _hasMDF(files):
-        IOHelper(Input="MDF").inputFiles(files,clear=True)
+        IOHelper(Input="MDF",Output=persistency).inputFiles(files,clear=True)
     else:
-        IOHelper().inputFiles(files,clear=True)
+        IOHelper(persistency,persistency).inputFiles(files,clear=True)
     
   def __apply_configuration__(self):
     
@@ -75,6 +80,8 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )
+    if hasattr( self, "Persistency" ):
+        self.setOtherProps( LHCbApp(), ['Persistency'])
     
     # instantiate the sequencer
     mainSeq = GaudiSequencer("LumiSeq")

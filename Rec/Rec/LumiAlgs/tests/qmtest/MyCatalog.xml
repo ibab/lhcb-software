@@ -113,4 +113,18 @@
     <logical/>
   </File>
 
+  <File ID="92276DC3-898B-E011-B992-002590138ADC">
+    <physical>
+      <pfn filetype="ROOT_All" name="testPoolFsr.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D0BF54DD-898B-E011-A214-002590138ADC">
+    <physical>
+      <pfn filetype="ROOT_TREE" name="testRootFsr.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

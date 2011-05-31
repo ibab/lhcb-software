@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-05-31 - Rob Lambert
+ - Added framework test suite to check FSRs can move between frameworks
+ - Root reading pool files or Root files shows no FSRs
+
+! 2011-05-31 - Rob Lambert
  - Removing deprecated/commented code. r124048
 
 ! 2011-05-31 - Rob Lambert

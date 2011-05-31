@@ -34,6 +34,7 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
       "InputType"     : "DST"      # Data type, can be ['MDF','DST'], works only on DST types
     , "LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
     , "outputFile"    : ''         # output filename
+    , "Persistency" :      None   # change the default persistency for testing
     }   
   
   def _configureOutput(self):
@@ -47,10 +48,16 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     writerName = "DstWriter"
     dstWriter = OutputStream( writerName,
                               ItemList = [ "/Event#999" ])#,     # miniDST selection: #1
+
+    
+    persistency=None
+    if hasattr( self, "Persistency" ):
+        persistency=self.getProp("Persistency")
+    
     
     from GaudiConf.IOHelper import IOHelper
     
-    IOHelper().outStream(filename=outputFile, writer=dstWriter)
+    IOHelper(persistency,persistency).outStream(filename=outputFile, writer=dstWriter)
     
   
   def __apply_configuration__(self):
@@ -58,6 +65,8 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     create sequence
     '''
     sequence = self.getProp("LumiSequencer")
+    if hasattr( self, "Persistency" ):
+        self.setOtherProps( LHCbApp(), ['Persistency'])
     if sequence == None : raise RuntimeError("ERROR : Lumi Sequencer not set")
     seqMembers=[]
     # Input data type - should not be a raw type
