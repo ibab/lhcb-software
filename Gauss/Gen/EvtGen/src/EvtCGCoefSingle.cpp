@@ -107,20 +107,13 @@ void EvtCGCoefSingle::init(int j1,int j2){
       }
     }
   }
-
-  
-
 }
 
 
 double EvtCGCoefSingle::coef(int J,int M,int j1,int j2,int m1,int m2){
-
-  assert(j1==_j1);
+  assert(j1==_j1); 
   assert(j2==_j2);
-
-  return cg(J,M,m1,m2);
-
-  
+  return cg(J,M,m1,m2);  
 }
 
 

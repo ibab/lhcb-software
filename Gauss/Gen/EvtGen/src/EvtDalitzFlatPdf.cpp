@@ -64,4 +64,5 @@ EvtDalitzPoint EvtDalitzFlatPdf::randomPoint()
   
   printf("No point generated for dalitz plot after %d tries\n",maxTries);
   assert(0);
+  return EvtDalitzPoint() ;
 }
