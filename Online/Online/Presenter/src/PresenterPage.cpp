@@ -476,13 +476,16 @@ void PresenterPage::clearReference ( ) {
 //=========================================================================
 //  Upload all the references in one go...
 //=========================================================================
-void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::string tck ) {
+void PresenterPage::uploadReference ( OMAlib* analysisLib, PresenterInformation& presInfo ) {
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
     char startRunStr[30];
-    sprintf( startRunStr, "%d", startRun );
+    sprintf( startRunStr, "%d", presInfo.referenceRun() );
 
     std::string root = analysisLib->refRoot() + "/" + (*itT).name;
-    std::string fileName = root + "/" + tck + "_" + startRunStr + ".root";
+    if ( presInfo.offlineContext() ) {
+      root = analysisLib->refRoot() + "/" + presInfo.eventType() + "/" + presInfo.processing();
+    }
+    std::string fileName = root + "/" + presInfo.currentTCK() + "_" + startRunStr + ".root";
     std::cout << "*** Try reference file " << fileName << std::endl;
 
     TFile* f = new TFile( fileName.c_str(),"READ");
@@ -493,8 +496,8 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, int startRun, std::st
       }
     }
     if ( !f ) {
-      if ( 1 != startRun ) {
-        fileName = root + "/" + tck + "_1.root";
+      if ( "1" != startRunStr ) {
+        fileName = root + "/" + presInfo.currentTCK() + "_1.root";
         std::cout << "*** Try reference file " << fileName << std::endl;
         f = new TFile( fileName.c_str(),"READ");
         if ( f ) {

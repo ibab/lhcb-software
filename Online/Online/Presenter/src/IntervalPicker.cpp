@@ -416,8 +416,9 @@ void IntervalPicker::ok() {
       m_presInfo->setGlobalStepSize( duration ) ;
       
       std::cout << "Selected start time " << startTimeIsoString << " duration " << duration << std::endl;
-      
-      m_presInfo->setGlobalTimePoint( startTimeIsoString ) ;
+
+      std::string endTimeIsoString = m_archive->addIsoTimeDate( startTimeIsoString, duration );      
+      m_presInfo->setGlobalTimePoint( endTimeIsoString ) ;
       m_presInfo->setGlobalPastDuration( duration );
 
     } else if (m_runIntervalRadioButton->IsDown()) {

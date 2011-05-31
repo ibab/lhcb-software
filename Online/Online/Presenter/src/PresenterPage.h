@@ -13,6 +13,7 @@ class TCanvas;
 class TText;
 
 #include "DisplayHistogram.h"
+#include "PresenterInformation.h"
 
 struct TaskHistos {
   std::string name;
@@ -86,7 +87,7 @@ public:
   void loadFromDIM( std::string& partition, bool update, std::string& message );
 
   //== Set reference plots
-  void uploadReference( OMAlib* analysisLib, int startRun, std::string tck );
+  void uploadReference( OMAlib* analysisLib, PresenterInformation& presInfo );
   void clearReference( );
 
   //== Give the (first) DisplayHistogram for the specified OnlineHistoOnPage

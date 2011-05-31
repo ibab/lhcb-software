@@ -30,6 +30,12 @@
 //=============================================================================
 ProblemDB::ProblemDB( std::string address, std::string rundbAddress ) {
   m_address = address;
+  m_port = "http";
+  std::string::size_type colon =  m_address.find(":");
+  if ( colon != std::string::npos ) {
+    m_port    = m_address.substr( colon+1 );
+    m_address = m_address.substr( 0, colon );
+  }
   m_rundbAddress = rundbAddress;
 }
 //=============================================================================
@@ -44,10 +50,10 @@ ProblemDB::~ProblemDB() {}
 int ProblemDB::post( std::string system, std::string username, std::string title,
                      std::string message, std::string logReference ) {
 
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+  boost::asio::ip::tcp::iostream webStream( m_address , m_port ) ;
 
   if ( ! webStream ) {
-    std::cout << "Cannot open the Problem Database at " << m_address  << std::endl ;
+    std::cout << "Cannot open the Problem Database at " << m_address  << " port " << m_port << std::endl ;
     return -1;
   }
 
@@ -56,7 +62,8 @@ int ProblemDB::post( std::string system, std::string username, std::string title
   postArg = "apikey=12345&system_name=" + system
     + "&title=" + urlEncode( title )
     + "&initial_comment=" + urlEncode( message )
-    + "&author_name=" + urlEncode( username );
+    + "&author_name=" + urlEncode( username )
+    + "&severity=Minor";
   if ( !logReference.empty() ) postArg = postArg + "&link=" + urlEncode( logReference );
   char argLen[20];
   sprintf( argLen, "%d", (int)postArg.size() );

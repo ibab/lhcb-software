@@ -348,7 +348,7 @@ int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
           sprintf( tmp, "%d", int(ene + 0.5) );
           m_presInfo->setBeamEnergy( std::string( tmp ) );
           int tck =  v.second.get< int >( "tck" ) ;
-          sprintf( tmp, "%X", tck );
+          sprintf( tmp, "TCK_0x%8.8X", tck );
           m_presInfo->setTCK( std::string( tmp ) );
         }
         return runNb ;

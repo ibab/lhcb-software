@@ -1437,7 +1437,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     m_previousIntervalButton->SetState(kButtonUp);
     m_nextIntervalButton->SetState(kButtonEngaged);
     m_nextIntervalButton->SetState(kButtonUp);
-
     std::cout << "Selected global time " <<   m_presenterInfo.globalTimePoint()
               << " duration " <<  m_presenterInfo.globalPastDuration() << std::endl;
 
@@ -4130,9 +4129,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           m_presenterPage.setDimBrowser( m_dimBrowser );
           m_presenterPage.loadFromDIM( partition, false, message );
           if ( m_referencesOverlayed ) { 
-            m_presenterPage.uploadReference( m_analysisLib,
-                                             m_presenterInfo.referenceRun(),
-                                             m_presenterInfo.currentTCK() );
+            m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
           }
           m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
         } else if (  pres::History       == m_presenterInfo.presenterMode() ||
@@ -4145,11 +4142,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                            m_presenterInfo.globalTimePoint(),
                                            m_presenterInfo.globalPastDuration() );
 
-          if ( m_referencesOverlayed ) { 
-            m_presenterPage.uploadReference( m_analysisLib,
-                                             m_presenterInfo.referenceRun(),
-                                             m_presenterInfo.currentTCK() );
-          }
+          if ( m_referencesOverlayed ) m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
           
           m_presenterPage.fillTrendingPlots( m_presenterInfo.startTimeC(),
                                              m_presenterInfo.endTimeC(), false );
@@ -4159,9 +4152,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
         bool status = m_presenterPage.buildAnalysisHistos( m_analysisLib, false );  // Only after histos are loaded...
         if ( !status ) {
           std::cout << "Load references for analysis, and rebuild..." << std::endl;
-          m_presenterPage.uploadReference( m_analysisLib,
-                                           m_presenterInfo.referenceRun(),
-                                           m_presenterInfo.currentTCK() );
+          m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
           m_presenterPage.buildAnalysisHistos( m_analysisLib, false );
         }
 
@@ -4513,16 +4504,13 @@ void PresenterMainFrame::previousInterval() {
                   ->GetText()->GetString());
   if ( ( pres::History == m_presenterInfo.presenterMode() ) &&
        ( pres::s_timeInterval == m_presenterInfo.historyMode() ) &&
-       ( ("preset interval" == history_entry) ||
-         ("set interval" == history_entry ) ) ) {
-    m_presenterInfo.
-      setGlobalTimePoint
-      (m_archive->
-       substractIsoTimeDate(m_presenterInfo.globalTimePoint(),
-                            m_presenterInfo.globalStepSize()));
+       ("set interval" == history_entry ) ) {
+    m_presenterInfo.setGlobalTimePoint( m_archive->substractIsoTimeDate(m_presenterInfo.globalTimePoint(),
+                                                                        m_presenterInfo.globalStepSize()));
+    std::string prevStart = m_archive->substractIsoTimeDate(m_presenterInfo.globalTimePoint(),
+                                                            m_presenterInfo.globalStepSize() );
 
-    boost::posix_time::ptime startTime =
-      boost::posix_time::from_iso_string( m_presenterInfo.globalTimePoint() ) ;
+    boost::posix_time::ptime startTime = boost::posix_time::from_iso_string( prevStart ) ;
 
     m_intervalPickerData -> setStartTime( startTime.date().year(),
                                           startTime.date().month() ,
@@ -4573,15 +4561,13 @@ void PresenterMainFrame::nextInterval() {
                    GetText()->GetString());
 
   if( ( pres::s_timeInterval == m_presenterInfo.historyMode() ) &&
-      ( ( "preset interval" == history_entry ) ||
-        ( "set interval" == history_entry ) ) ) {
-    m_presenterInfo.
-      setGlobalTimePoint( m_archive ->
-                          addIsoTimeDate( m_presenterInfo.globalTimePoint() ,
-                                          m_presenterInfo.globalStepSize() ) ) ;
+      ( "set interval" == history_entry ) ) {
 
     boost::posix_time::ptime startTime =
       boost::posix_time::from_iso_string( m_presenterInfo.globalTimePoint() ) ;
+
+    m_presenterInfo.setGlobalTimePoint( m_archive ->addIsoTimeDate( m_presenterInfo.globalTimePoint() ,
+                                                                    m_presenterInfo.globalStepSize() ) ) ;
 
     m_intervalPickerData -> setStartTime( startTime.date().year(),
                                           startTime.date().month() ,
@@ -4684,9 +4670,7 @@ void PresenterMainFrame::enableReferenceOverlay() {
     stopped = true;
   }
   editorCanvas->cd();
-  m_presenterPage.uploadReference( m_analysisLib,
-                                   m_presenterInfo.referenceRun(),
-                                   m_presenterInfo.currentTCK() );
+  m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
   editorCanvas->Update();
   if (stopped) { startPageRefresh(); }
 }
