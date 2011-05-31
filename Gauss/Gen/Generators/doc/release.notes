@@ -5,6 +5,9 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Patrick Robbe
+ - SemilepCutForADS: fix warnings
+
 ! 2011-05-29 - Patrick Robbe
  - Generators/IPileUpTool.h: change interface (remove unneeded GenHeader argument,
    replaced by new beam parameters object)

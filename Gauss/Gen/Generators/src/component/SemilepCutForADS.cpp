@@ -58,37 +58,39 @@ bool SemilepCutForADS::applyCut( ParticleVector & theParticleVector ,
                                 const LHCb::GenCollision * /* theHardInfo */ )
   const {
   ParticleVector::iterator it ;
-  double D0_px , D0_py , D0_pz , D0_pE; int findD0=0;
-  double mu_px , mu_py , mu_pz , mu_pE; int findmu=0;
+  double D0_px(0.) , D0_py(0.) , D0_pz(0.) , D0_pE(0.); 
+  int findD0=0;
+  double mu_px(0.) , mu_py(0.) , mu_pz(0.) , mu_pE(0.); 
+  int findmu=0;
   int findnu=0;int findBu=0;
   for ( it = theParticleVector.begin() ; it != theParticleVector.end() ; ++it ) {
-
+    
     debug() << "-----------------------------------"<< std::endl<< endmsg ;
     debug() << "Parent: " << (*it) -> pdg_id() << endmsg ;
     if ( 521 == abs((*it) -> pdg_id()) ) findBu=1;
     HepMC::GenVertex * EV = (*it) -> end_vertex() ; if ( 0 == EV ) return false;
     if ( ! passCuts( *it ) ) return false;
- 
+    
     HepMC::GenVertex::particle_iterator iterDAU ;
     for ( iterDAU = EV -> particles_begin( HepMC::children ) ; iterDAU != EV -> particles_end( HepMC::children ) ; ++iterDAU ) {
       debug() << "   "<< (*iterDAU) -> pdg_id()<< endmsg ;
       //////////////////////
       if ( 421 == abs((*iterDAU) -> pdg_id()) ) {
-	D0_px = (*iterDAU) -> momentum().px() ;
-	D0_py = (*iterDAU) -> momentum().py() ;
-	D0_pz = (*iterDAU) -> momentum().pz() ;
-	D0_pE = (*iterDAU) -> momentum().e() ;
-	findD0=1;
+        D0_px = (*iterDAU) -> momentum().px() ;
+        D0_py = (*iterDAU) -> momentum().py() ;
+        D0_pz = (*iterDAU) -> momentum().pz() ;
+        D0_pE = (*iterDAU) -> momentum().e() ;
+        findD0=1;
       }
       if ( 13  == abs((*iterDAU) -> pdg_id()) ) {
-	mu_px = (*iterDAU) -> momentum().px() ;
-	mu_py = (*iterDAU) -> momentum().py() ;
-	mu_pz = (*iterDAU) -> momentum().pz() ;
-	mu_pE = (*iterDAU) -> momentum().e() ;
-	findmu=1;
+        mu_px = (*iterDAU) -> momentum().px() ;
+        mu_py = (*iterDAU) -> momentum().py() ;
+        mu_pz = (*iterDAU) -> momentum().pz() ;
+        mu_pE = (*iterDAU) -> momentum().e() ;
+        findmu=1;
       }
       if ( 14  == abs((*iterDAU) -> pdg_id()) ) {
-	findnu=1;
+        findnu=1;
       }
       //////////////////////      
     } //end daughters of the B
