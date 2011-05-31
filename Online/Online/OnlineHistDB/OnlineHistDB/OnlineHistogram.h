@@ -137,14 +137,14 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool isSetDisplayOption(std::string ParameterName);
   /// get fit directions: function name and initial parameter values
   /// returns false if a fit function is not specified
-  bool getFitFunction(std::string &Name, std::vector<float> *initValues);
+  bool getFitFunction(std::string &Name, std::vector<float> *initValues=NULL, std::vector<float> *fitRange=NULL);
   /// see if a fit function is associated for display
   inline bool hasFitFunction() { return (!m_fitfun_null); }
   /// sets a display option (in the current display mode). Change is sent to the DB only 
   /// after a call to saveDisplayOptions()
   virtual bool setDisplayOption(std::string ParameterName, void* option);
   /// specify a fit to be performed at display time: function name and initial parameter values
-  void setFitFunction(std::string Name, std::vector<float> *initValues);
+  void setFitFunction(std::string Name, std::vector<float> *initValues=NULL, std::vector<float> *fitRange=NULL);
   /// unsets a display option (in the current display mode)
   virtual bool unsetDisplayOption(std::string ParameterName);
   /// unsets all display options (in the current display mode)
@@ -364,6 +364,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   std::string m_fitfun;
   sb2 m_fitfun_null;
   std::vector<float> m_fitPars;
+  std::vector<float> m_fitRange;
 
   std::vector<std::string> m_binlabels;
   int m_xbinlab;

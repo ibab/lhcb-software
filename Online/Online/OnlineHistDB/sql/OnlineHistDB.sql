@@ -48,16 +48,16 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 
  -- display options
  function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN vthresholds) return number;
+        theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds) return number;
  function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE, theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN vthresholds) return number;
+        theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds) return number;
  function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         theOptions IN dispopt,
-                        theFitFun IN varchar2, theFitPars IN vthresholds) return number;
+                        theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds) return number;
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
  function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
-        theFitFun OUT varchar2, theFitPars OUT vthresholds)  return number;
- procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int);
+        theFitFun OUT varchar2, theFitPars OUT vthresholds, theFitRange OUT vthresholds)  return number;
+ procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int, theFitMin OUT float, theFitMax OUT float);
  function GetFitParam(theDOID IN int, iPar IN int) return number;
  procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float );
  procedure GetFitFunInputParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float );
@@ -164,7 +164,7 @@ create or replace  package body OnlineHistDB as
 -----------------------
 
 
-function DeclareDisplayOptions(theOptions IN dispopt, theFitFun IN varchar2, theFitPars IN vthresholds,
+function DeclareDisplayOptions(theOptions IN dispopt, theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds,
                         theDOID IN DISPLAYOPTIONS.DOID%TYPE := NULL) return number is
  myid number := 0;
 begin
@@ -177,7 +177,7 @@ begin
   myid := theDOID;
  end if;
  if (theFitFun is not NULL) then
-  UPDATE DISPLAYOPTIONS SET VFITPARS=theFitPars WHERE DOID=myid;
+  UPDATE DISPLAYOPTIONS SET VFITPARS=theFitPars, VFITRANGE=theFitRange WHERE DOID=myid;
  end if;
  return myid;
 end DeclareDisplayOptions;
@@ -847,7 +847,7 @@ end SetSpecialAnalysis;
 -----------------------
 
 function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE,theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN vthresholds) return number is
+        theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds) return number is
  cursor checko is select HSDISPLAY from HISTOGRAMSET where HSID=theSet; 
  mydoid DISPLAYOPTIONS.DOID%TYPE;
  mySetDisp HISTOGRAMSET.HSDISPLAY%TYPE := NULL;
@@ -858,7 +858,7 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram Set '||theSet||' does not exist!');
  end if;
- mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars, mySetDisp);
+ mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars, theFitRange, mySetDisp);
  if (mySetDisp is NULL) then
   update HISTOGRAMSET set HSDISPLAY=mydoid where HSID=theSet;
  end if;
@@ -873,7 +873,7 @@ end DeclareHistoSetDisplayOptions;
 -----------------------
 
 function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN vthresholds) return number is
+        theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds) return number is
  cursor checko is select HS.HSID,HS.NHS,H.DISPLAY from HISTOGRAMSET HS,HISTOGRAM H where H.HID=theHID and H.HSET=HS.HSID; 
  mydoid DISPLAYOPTIONS.DOID%TYPE;
  myHSID HISTOGRAMSET.HSID%TYPE;
@@ -886,7 +886,7 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram '||theHID||' does not exist!');
  end if;
- mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars ,myDisp);
+ mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars, theFitRange ,myDisp);
  if (myDisp is NULL) then
    update HISTOGRAM set DISPLAY=mydoid where HID=theHID;
  end if; 
@@ -903,7 +903,7 @@ end DeclareHistDisplayOptions;
 
 function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         theOptions IN dispopt,
-                        theFitFun IN varchar2, theFitPars IN vthresholds) return number is
+                        theFitFun IN varchar2, theFitPars IN vthresholds, theFitRange IN vthresholds) return number is
  cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
  myDisp HISTOGRAM.DISPLAY%TYPE := NULL;
  mydoid DISPLAYOPTIONS.DOID%TYPE;
@@ -914,7 +914,7 @@ begin
  if (checko%NOTFOUND) then
   raise_application_error(-20010,'Histogram '||theHID||' in  Page '||thePage||' not found');
  end if;
- mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars,myDisp);
+ mydoid := DeclareDisplayOptions(theOptions, theFitFun, theFitPars, theFitRange, myDisp);
  if (myDisp is NULL) then
    update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance;
  end if;
@@ -928,12 +928,12 @@ end DeclareHistoPageDisplayOptions;
 
 -----------------------
 function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
-        theFitFun OUT varchar2, theFitPars OUT vthresholds)   return number is
- cursor mydo is select OPT,FITFUN,VFITPARS from DISPLAYOPTIONS where DOID=theDOID;
+        theFitFun OUT varchar2, theFitPars OUT vthresholds, theFitRange OUT vthresholds)   return number is
+ cursor mydo is select OPT,FITFUN,VFITPARS,VFITRANGE from DISPLAYOPTIONS where DOID=theDOID;
  out int;
 begin
  open mydo;
- fetch mydo into theOptions,theFitFun,theFitPars;
+ fetch mydo into theOptions,theFitFun,theFitPars,theFitRange;
  if (mydo%NOTFOUND) then
   out :=  0;
  else
@@ -943,17 +943,24 @@ begin
  return out;
 end GetDisplayOptions;
 -----------------------
--- this is needed for the web interface since PHP4 doesn't support objects.
+-- this is needed for the web interface since PHP4 doesn't support oracle objects.
 
-procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int) is
+procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int, theFitMin OUT float, theFitMax OUT float) is
  theffname DISPLAYOPTIONS.FITFUN%TYPE;
+ thefitrange vthresholds := vthresholds();
 begin
  theNp := 0;
  theNin := 0;
  theFitFun := 0;
- select FITFUN into theffname from DISPLAYOPTIONS where DOID=theDOID; 
+ theFitMin := 999;
+ theFitMax := -999;
+ select FITFUN, VFITRANGE into theffname, thefitrange from DISPLAYOPTIONS where DOID=theDOID; 
  if (theffname is not null) then
    select CODE,NP,NINPUT into theFitFun,theNp,theNin from FITFUNCTION where NAME=theffname;
+   if (thefitrange.COUNT >1) then
+        theFitMin := thefitrange(1);
+        theFitMax := thefitrange(2);
+   end if;
  end if;
 end GetFitOptions;
 

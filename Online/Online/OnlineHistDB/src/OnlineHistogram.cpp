@@ -714,28 +714,37 @@ void OnlineHistogram::getDisplayOptions(int doid) {
   m_StmtMethod = "OnlineHistogram::getDisplayOptions";
 
   if ( OCI_SUCCESS == prepareOCIStatement
-       (stmt, "BEGIN :out := ONLINEHISTDB.GETDISPLAYOPTIONS(:id,:do,:fitf,:fitp); END;") ) {
+       (stmt, "BEGIN :out := ONLINEHISTDB.GETDISPLAYOPTIONS(:id,:do,:fitf,:fitp,:fitr); END;") ) {
     text  fitfun[VSIZE_FITFUN]="";
     OCIArray *fitPars;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &fitPars));
+    OCIArray *fitRange;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &fitRange));
     myOCIBindInt   (stmt,":out" , out);
     myOCIBindInt   (stmt,":id"  , doid);
     myOCIBindObject(stmt,":do"  , (void **) &m_dispopt, OCIdispopt,(void **) &m_dispopt_null);
     myOCIBindString(stmt,":fitf", fitfun, VSIZE_FITFUN, &m_fitfun_null);
     myOCIBindObject(stmt,":fitp", (void **) &fitPars, OCIthresholds);
+    myOCIBindObject(stmt,":fitr", (void **) &fitRange, OCIthresholds);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt, SEVERE)) {
       if (out) {
         m_fitfun = m_fitfun_null ? "" : std::string((const char *) fitfun);
-        if(!m_fitfun_null) floatVarrayToVector(fitPars, m_fitPars);
+        if(!m_fitfun_null) {
+          floatVarrayToVector(fitPars , m_fitPars);
+          floatVarrayToVector(fitRange, m_fitRange);
+        }
       }
       else m_domode = NONE;
     }
     else {
       m_domode = NONE;
     }
-    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitPars, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitPars , OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitRange, OCI_OBJECTFREE_FORCE) );
     releaseOCIStatement(stmt);
   }
 }
@@ -746,22 +755,29 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
   int out=0;
   std::string statement;
   statement = "BEGIN :out := ONLINEHISTDB." + function + ",theOptions => :opt" +
-    ",theFitFun => :fitf, theFitPars => :fitp); END;";
+    ",theFitFun => :fitf, theFitPars => :fitp, theFitRange => :fitr); END;";
   OCIStmt *stmt=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.c_str()) ) {
     OCIArray *fitPars;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &fitPars));
-    floatVectorToVarray(m_fitPars, fitPars);
+    OCIArray *fitRange;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+                             (dvoid **) &fitRange));
+    floatVectorToVarray(m_fitPars , fitPars);
+    floatVectorToVarray(m_fitRange, fitRange);
 
     myOCIBindInt   (stmt,":out", out);  
     myOCIBindObject(stmt,":opt", (void **) &m_dispopt, OCIdispopt, (void**) &m_dispopt_null);
     myOCIBindString(stmt,":fitf", m_fitfun, &m_fitfun_null);
     myOCIBindObject(stmt,":fitp", (void **) &fitPars, OCIthresholds);
+    myOCIBindObject(stmt,":fitr", (void **) &fitRange, OCIthresholds);
     myOCIStmtExecute(stmt);
     releaseOCIStatement(stmt);
     checkerr(OCIObjectFree ( m_envhp, m_errhp, fitPars, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitRange, OCI_OBJECTFREE_FORCE) );
   }
   return out;
 }
@@ -1152,20 +1168,26 @@ bool OnlineHistogram::setPage2display(std::string& pageName) {
   return out;
 }
 
-bool OnlineHistogram::getFitFunction(std::string &Name, std::vector<float> *initValues) {
+bool OnlineHistogram::getFitFunction(std::string &Name, std::vector<float> *initValues, std::vector<float> *fitRange) {
   if (!m_fitfun_null) {
     Name=m_fitfun;
     if(NULL != initValues)
       initValues->insert(initValues->end(), m_fitPars.begin(), m_fitPars.end());
+    if(NULL != fitRange)
+      fitRange->insert(fitRange->end(), m_fitRange.begin(), m_fitRange.end());
   }
   return (!m_fitfun_null);
 }
 
-void OnlineHistogram::setFitFunction(std::string Name, std::vector<float> *initValues) {
+void OnlineHistogram::setFitFunction(std::string Name, std::vector<float> *initValues, std::vector<float> *fitRange) {
   m_fitfun_null=0;
   m_fitfun=Name;
   if(NULL != initValues)
     m_fitPars.insert(m_fitPars.end(), initValues->begin(), initValues->end());
+  if(NULL != fitRange) {
+    if (fitRange->size()>1)
+      m_fitRange.insert(m_fitRange.end(), fitRange->begin(), fitRange->end());
+  }
   return;
 }
 
