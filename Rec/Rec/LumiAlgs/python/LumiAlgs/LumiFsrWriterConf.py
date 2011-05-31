@@ -32,16 +32,6 @@ def _hasMDF(files):
 
 def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
-#def _file(f) :
-#    if f.lstrip().startswith('DATAFILE'): return f
-#    from GaudiConf.IOHelper import IOHelper
-#    
-#    if _ext(f).upper()  in ["RAW","MDF"]:
-#        
-#        return IOHelper(Input="MDF").dressFile(f,IO="I")
-#    
-#    return IOHelper().dressFile(f,IO="I")
-
 def _sequenceAppender( seq ) :
     return lambda x : seq.Members.append( x )
 
@@ -73,10 +63,10 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
                                                     IgnoreFilterPassed = False,
                                                     MeasureTime = True,
                                                     OutputLevel = self.getProp("OutputLevel") ) )
-        
+    
     # create ODIN by hand
     writeLumiSequence( createODIN ('createODIN') )
-
+    
     # kill non-lumi banks to make output small
     if self.getProp('KillBanks') :
       writeLumiSequence(
@@ -92,8 +82,8 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     lumiFsrSeq = GaudiSequencer("LumiFsrSeq", OutputLevel = INFO )
     LumiAlgsConf().LumiSequencer = lumiFsrSeq
     sequence.Members+=[ lumiFsrSeq ]
-
-
+    
+  
   def _configureInput(self):
     from GaudiConf.IOHelper import IOHelper
     files = self.getProp('inputFiles')
@@ -113,59 +103,23 @@ class LumiFsrWriterConf(LHCbConfigurableUser):
     
     from GaudiConf.IOHelper import IOHelper
     
-    #IOHelper().outStream(filename=outputFile, writer="OutputStream/DstWriter")
-    
-    # POOL Persistency
-    # no longer required, now in LHCbApp
-    #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-    # event output
     from Configurables import OutputStream
     writerName = "DstWriter"
     dstWriter = OutputStream( writerName,
                               ItemList = [ "/Event#999" ])#,     # miniDST selection: #1
-    #                          Output   = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'",
-    #                          )
     
     from GaudiConf.IOHelper import IOHelper
     
     IOHelper().outStream(filename=outputFile, writer=dstWriter)
     
-    #ApplicationMgr().OutStream.append(dstWriter)
-    
-    # TES setup
-    # note required, now in LHCbApp
-    #FileRecordDataSvc().ForceLeaves         = True
-    #FileRecordDataSvc().RootCLID            = 1
-    #FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
-
-    # Persistency service setup
-    # no longer required, now in LHCbApp
-    #ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
-    #                                          DbType = "POOL_ROOTTREE",
-    #                                          ShareFiles = "YES"
-    #                                          )
-    #                             ]
-
-    # FSR output stream
-    #from Configurables import RecordStream
-    #fsrWriter = RecordStream( "FsrWriter",
-    #                          ItemList = [ "/FileRecords#999" ],
-    #                          EvtDataSvc = "FileRecordDataSvc",
-    #                          EvtConversionSvc = "FileRecordPersistencySvc",
-    #                          )
-    #fsrWriter.Output = dstWriter.getProp("Output")
-    #ApplicationMgr().OutStream.append(fsrWriter)
-
-
+  
   def __apply_configuration__(self):
     
     GaudiKernel.ProcessJobOptions.PrintOff()
-    # no longer required, now in LHCbApp
-    # EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-
+    
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )
-
+    
     # instantiate the sequencer
     mainSeq = GaudiSequencer("LumiSeq")
     

@@ -59,9 +59,6 @@ class LumiFsrReaderConf(LHCbConfigurableUser):
     sequence.Members+=[ dump ]
 
   def _configureInput(self):
-    # POOL Persistency
-    # not required now in LHCb App
-    #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
     files = self.getProp('inputFiles')
     if not len(files): return
     

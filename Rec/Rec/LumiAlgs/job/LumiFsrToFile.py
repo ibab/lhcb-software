@@ -15,7 +15,7 @@ from LumiAlgs.LumiFsrReaderConf import LumiFsrReaderConf as LumiFsrReader
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
-                            ]
+                           ]
 
 files = [
   "DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOTTREE' ",

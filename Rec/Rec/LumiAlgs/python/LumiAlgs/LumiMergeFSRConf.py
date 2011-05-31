@@ -35,7 +35,7 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     , "LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
     , "outputFile"    : ''         # output filename
     }   
-
+  
   def _configureOutput(self):
     # first empty the outstream, because it would write all the time
     ApplicationMgr().OutStream = [ ]
@@ -43,45 +43,15 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     outputFile = self.getProp('outputFile')
     if not outputFile : return
     
-    # POOL Persistency
-    #no longer required, done by LHCbApp
-    #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-    # event output
     from Configurables import OutputStream
     writerName = "DstWriter"
     dstWriter = OutputStream( writerName,
                               ItemList = [ "/Event#999" ])#,     # miniDST selection: #1
-    #                          Output   = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'",
-    #                          )
-    #ApplicationMgr().OutStream.append(dstWriter)
     
     from GaudiConf.IOHelper import IOHelper
     
     IOHelper().outStream(filename=outputFile, writer=dstWriter)
     
-    # TES setup
-    # no longer required, done by LHCbApp
-    #FileRecordDataSvc().ForceLeaves         = True
-    #FileRecordDataSvc().RootCLID            = 1
-    #FileRecordDataSvc().PersistencySvc      = "PersistencySvc/FileRecordPersistencySvc"
-    
-    # Persistency service setup
-    # no longer required, done by LHCbApp
-    #ApplicationMgr().ExtSvc += [ PoolDbCnvSvc("FileRecordCnvSvc",
-    #                                          DbType = "POOL_ROOTTREE",
-    #                                          ShareFiles = "YES"
-    #                                          )
-    #                             ]
-    
-    # FSR output stream
-    #from Configurables import RecordStream
-    #fsrWriter = RecordStream( "FsrWriter",
-    #                          ItemList = [ "/FileRecords#999" ],           ## only toplevel!
-    #                          EvtDataSvc = "FileRecordDataSvc",
-    #                          EvtConversionSvc = "FileRecordPersistencySvc",
-    #                          )
-    #fsrWriter.Output = dstWriter.getProp("Output")
-    #ApplicationMgr().OutStream.append(fsrWriter)
   
   def __apply_configuration__(self):
     '''
@@ -101,6 +71,6 @@ class LumiMergeFSRConf(LHCbConfigurableUser):
     sequence.ModeOR = False
     sequence.ShortCircuit = True
     sequence.IgnoreFilterPassed = False
-
+    
     # output
     self._configureOutput()

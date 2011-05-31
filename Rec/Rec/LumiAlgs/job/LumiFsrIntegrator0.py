@@ -44,17 +44,17 @@ ApplicationMgr( TopAlg = [ GaudiSequencer( "LumiSeq" ),
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Test input
-files = [ "DATAFILE='PFN:testFSRout0.dst' TYP='POOL_ROOTTREE'  OPT='REC' " ]
+files = [ "PFN:testFSRout0.dst" ]
 #-- input options
 ApplicationMgr().EvtMax =  1000
-# not needed any longer, exists in LHCbApp()
-#importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
-EventSelector( OutputLevel  = INFO, 
-               PrintFreq    = 1000,
-               FirstEvent   = 1,
-               Input        = files
-               )
+es=EventSelector( OutputLevel  = INFO, 
+                  PrintFreq    = 1000,
+                  FirstEvent   = 1,
+                  )
+
+from GaudiConf import IOHelper
+IOHelper().inputFiles(files,es)
 
 #-- to test layer 
 #from Configurables import CondDB
