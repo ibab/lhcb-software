@@ -19,6 +19,12 @@
  */
 class BiasedBB : public GaudiTool, virtual public IGenCutTool {
  public:
+  
+  typedef std::set< int > PIDs ;
+
+  /// Initialization
+  virtual StatusCode initialize() ;
+
   /// Standard constructor
   BiasedBB( const std::string& type, const std::string& name,
             const IInterface* parent);
@@ -43,5 +49,19 @@ class BiasedBB : public GaudiTool, virtual public IGenCutTool {
   double m_vMin ;
   /// Minimum value of ctau
   double m_ctauMin ;
+  /// Minimum value of radius from 0,0 (set by options) 
+  double m_radiusMin ;
+  /// Minimum number of B's (set by options) 
+  double m_nBMin;
+  /// Minimum deltaPhi between B's (set by options) 
+  double m_deltaPhiMin;
+  /// Minimum deltaPhi between B's
+  bool m_deltaPhiCut;
+  /// PDG Id of charged particle to select  
+  PIDs m_chargedPIDList ;
+  /// Minimum number of B stable charged daugthers
+  int m_nStableChargedDaugthers ;
+  
+
 };
 #endif // GENERATORS_BIASEDBB_H

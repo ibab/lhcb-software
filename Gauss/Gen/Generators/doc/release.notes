@@ -5,6 +5,10 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Victor Coco
+ - BiasedBB: add some cuts on number of stable charged daugthers of the B and on 
+   minimal R displacement. By default gives the same result than without those cuts
+
 ! 2011-05-31 - Patrick Robbe
  - SemilepCutForADS: fix warnings
 
