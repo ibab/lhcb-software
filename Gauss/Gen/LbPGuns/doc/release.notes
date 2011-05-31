@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Patrick Robbe
+ - FlatNParticles, ParticleGun, FlatNParticles, RichPatternGun: adapt to use
+   the new BeamParameters class.
+
 !========================== LbPGuns v1r2 2009-11-04 ==========================
 ! 2009-11-04 - Magnus Lieng
  - Changed .opts files into .py files

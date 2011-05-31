@@ -66,12 +66,8 @@ StatusCode FlatNParticles::initialize( ) {
 //=============================================================================
 // Compute the number of particles
 //=============================================================================
-unsigned int FlatNParticles::numberOfPileUp( LHCb::GenHeader* theGenHeader ) {
-
-  theGenHeader->setLuminosity( 0.0 );
-  theGenHeader->setCrossingFreq( 1.0 );
-  theGenHeader->setTotCrossSection( 0.0 );
-
+unsigned int FlatNParticles::numberOfPileUp( ) {
   return ( m_minNumberOfParticles + 
-    (unsigned int) ( m_flatGenerator() * ( 1 + m_maxNumberOfParticles - m_minNumberOfParticles ) ) ) ;
+    (unsigned int) ( m_flatGenerator() * 
+                     ( 1 + m_maxNumberOfParticles - m_minNumberOfParticles ) ) ) ;
 }

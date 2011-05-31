@@ -88,7 +88,6 @@ StatusCode RichPatternGun::execute() {
   // Update the GenHeader 
   LHCb::GenHeader* genHead = get< LHCb::GenHeader >( m_headerLoc ) ;
   genHead->setEvType( m_eventType );
-  genHead->setLuminosity( 0.0 );  
   
   for ( m_curx = m_minx ; m_curx < m_maxx ; m_curx++ ) {
     for ( m_cury = m_miny ; m_cury < m_maxy ; m_cury++ ) {

@@ -35,7 +35,7 @@ public:
    *  Returns the number of particles in one event. It follows
    *  a flat distribution 
    */
-  virtual unsigned int numberOfPileUp( LHCb::GenHeader* theGenHeader ) ;
+  virtual unsigned int numberOfPileUp( ) ;
 
   /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) { ; } ; 
