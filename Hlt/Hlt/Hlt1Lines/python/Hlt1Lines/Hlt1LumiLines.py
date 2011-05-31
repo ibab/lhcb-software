@@ -177,8 +177,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                           , OutputContainer='Hlt/LumiSummary' ) )
 
         # Add L0MuonCandidatesFromRaw to the lumi reco sequence
-        from Configurables import L0MuonCandidatesFromRaw
-        lumiRecoSequence.Members.append( L0MuonCandidatesFromRaw() )
+        from L0DU.L0Algs import decodeL0Muon
+        lumiRecoSequence.Members.append( decodeL0Muon() )
         
         ### get the private lumi velo reco algorithms
         lumiVeloReco = self.__lumi_track_and_vertex_seq__()

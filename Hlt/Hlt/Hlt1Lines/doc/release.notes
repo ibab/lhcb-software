@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+
+! 2011-05-31 - Roel Aaij
+ - Get L0MuonCandidatesFromRaw from L0Algs in Hlt1LumiLines.
+
 ! 2011-05-19 - Gerhard Raven
  - remove redundancy in Hlt1DiProtonLowMult lines
  - remove redundancy in Hlt1Electron lines
