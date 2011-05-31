@@ -4,10 +4,13 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v9r1 2011-05-31 ==========================
+! 2011-05-31 - Gloria Corti
+ - Increase version to v9r1. New feature not a bug fix!
+
 ! 2011-05-11 - Cedric Potterat
  - patch on PythiaProduction.cpp: add an option to cut on Z/gamma* invariance mass, default value (-1) do not change the normal behaviour. 
  - increase to v9r0p2
-
 
 !======================== LbPythia v9r0p1 2011-01-31 =========================
 ! 2011-01-21 - Victor Coco
