@@ -1,6 +1,11 @@
 <?
 include 'util.php';
-$conn=HistDBconnect(0,"HIST_READER","reader");
+if ($Installation == "test") {
+  $conn=HistDBconnect();
+ }
+ else {
+   $conn=HistDBconnect(0,"HIST_READER","reader");
+ }
 $type=$_GET["type"];
 echo "<table border=1><thead>";
 $inputdoc= ($type == "HCREATOR") ? "Input <br> Histograms" : "Input <br>Parameters";

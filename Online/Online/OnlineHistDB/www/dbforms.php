@@ -674,7 +674,7 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
     $_POST["a${ia}_np"]=$np;
     $_POST["a${ia}_ni"]=$ni;
     if ($wantfitpars) { // number of input parameters of fit function
-      $_POST["a${ia}_nfi"]=$ni-(($np-1)/2)-2;
+      $_POST["a${ia}_nfi"]=$ni-(($np-1)/2)-4;
     }
     ocifreestatement($dstid);
   }
@@ -940,10 +940,10 @@ function histo_analysis($id,$htype,$mode) {
           }
           else {
             if($_POST["a${ia}_alg"] == "Fit") {
-              if($ip==3 && $_POST["a${ia}_nfi"]>0) {
+              if($ip==5 && $_POST["a${ia}_nfi"]>0) {
                 echo "<tr><td colspan=2>Input parameters for fit function: ";
               }
-              if($ip== (3+$_POST["a${ia}_nfi"])) {
+              if($ip== (5+$_POST["a${ia}_nfi"])) {
                 echo "<tr><td colspan=2>Init. values for fit parameters: ";
                 if ( $_POST["mi_".$_POST["a${ia}_i1_v"]])
                   echo " (MUST BE PROVIDED)";
