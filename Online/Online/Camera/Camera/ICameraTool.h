@@ -26,7 +26,8 @@ static const InterfaceID IID_ICameraTool ( "ICameraTool", 1, 0 );
  *  @author Nicola Mangiafave
  *  @date   2007-05-30
  */
-class ICameraTool : virtual public IAlgTool {
+class ICameraTool : virtual public IAlgTool 
+{
 
 public: 
   
@@ -79,6 +80,8 @@ public:
   virtual int SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what, 
                              MessageLevel p_l,const std::string& p_who,const std::string& p_what, 
                              int messagePeriod)=0;
+
+  virtual void Clear() = 0;
 
 };
 

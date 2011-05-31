@@ -10,7 +10,6 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
-
 // CAMERA.
 #include "container.h"
 
@@ -266,6 +265,9 @@ public:
    * The identifier is set by this function to TEXT.
    */
   int Append(const std::string & C);
+
+  /// Clear all messages without sending
+  void Clear();
 
 private:
   std::string m_servername; ///! Name of the server to connect to.

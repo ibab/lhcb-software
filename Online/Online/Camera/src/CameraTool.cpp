@@ -17,7 +17,6 @@
 #include "dis.hxx"
 #include "RTL/rtl.h"
 
-
 #include <sstream>
 
 //-----------------------------------------------------------------------------
@@ -415,9 +414,9 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
       m_MessageOwnerLevelMap[key1]["LAST MESSAGE"][0] = (int)currentTime;
       return true;
     }
-    else { // The message must not be sent.
-      m_out.reset();
-      m_lastHistoNum = 0;
+    else 
+    { // The message must not be sent.
+      Clear();
       return false;
     }
   }
@@ -443,8 +442,7 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
       m_MessageOwnerLevelMap[key1][key2][1]++ ;
       // Delete the containers and counters of the appended extrainfo,
       // i.e. delete the extrainfo.
-      m_out.reset();
-      m_lastHistoNum = 0;
+      Clear();
       return false;
     }
   }
@@ -498,12 +496,14 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
                              int messagePeriod)
 {
   // Message periods setting:
-  if(m_messagePeriod < 1){
+  if(m_messagePeriod < 1)
+  {
     m_messagePeriod = 1; // Check to avoid unreasonable numbers for m_messagePeriod
     debug()<<"m_messagePeriod have been set to the unreasonable number: "
            <<m_messagePeriod <<", it we be set to 1."<<endmsg;
   }
-  if(messagePeriod < 1){
+  if(messagePeriod < 1)
+  {
     if(messagePeriod < 0)debug()<<"messagePeriod have been set to the unreasonable number: "
                                 <<messagePeriod <<", it we be set to: "<< m_messagePeriod
                                 <<endmsg;
@@ -512,7 +512,8 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
   // Message period calculation based on number of entries:
   // SizewiseMessagePeriod = ( 5 seconds * number of entries ) / (max number of entries allowed in 5 seconds)
   int SizewiseMessagePeriod = (int) ( (( m_out.entries() + m_lastHistoNum * m_HistoToEntries)  * 5) / m_MaxTextEntries);
-  if ( SizewiseMessagePeriod > messagePeriod ){
+  if ( SizewiseMessagePeriod > messagePeriod )
+  {
     std::ostringstream attachMsg;
     attachMsg << "CAMERA INFORMATION: the message period has been scaled from "
               << messagePeriod <<" to "<<SizewiseMessagePeriod
@@ -545,8 +546,8 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
   //for () {
   std::vector<client *>::iterator itc;
 
-
-  if (m_dosend) {
+  if (m_dosend) 
+  {
     // loop over clients
     for (itc = m_clients.begin(); itc!= m_clients.end(); itc++){
       m_camc = (*itc);
@@ -554,7 +555,8 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
 
       //put attached message into the stream s
       if(l != ICameraTool::CAM_COMMAND)if (m_out.entries()>0) m_out.tostream(s);
-      if (m_camc->Connect()>0) {
+      if (m_camc->Connect()>0) 
+      {
         char buf[3];
         // NM: Lines explanation:
         // NM: m_camc = client that interfaces with the CAMERA server and handles the sending of messages.
@@ -563,23 +565,25 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
         int max_socket_readings = 0;
         while (  (m_camc->rd(buf,2)==-2) && (max_socket_readings < 11) ){max_socket_readings++;}
         buf[2] = 0;
-        if (strncmp(buf,"GO",2) == 0 ){
-          success =true;
-          int ret=0;
-          // if (m_out.entries()<1) m_camc->nowait();
-          ret = m_camc->wr(ss.str().c_str(),ss.str().length());
+        if (strncmp(buf,"GO",2) == 0 )
+        {
+          success = true;
+          int ret = m_camc->wr(ss.str().c_str(),ss.str().length());
           if (ret != (int)ss.str().length() ) success  = false;
           if(l != ICameraTool::CAM_COMMAND)if (m_out.entries()>0)
             ret = m_camc->wr(s.str().c_str(),s.str().length());
           if(l != ICameraTool::CAM_COMMAND)if (ret != (int)s.str().length() ) success  = false;
         }
-        else {
-          if (numErrBZ < 5){
-            warning() << "All threads of camserv are busy!  -> Aborting message '" << ss.str() << endmsg;
-            numErrBZ++;
+        else 
+        {
+          if (numErrBZ < 5)
+          {
+            warning() << "All threads of camserv are busy!  -> Aborting message '" 
+                      << ss.str() << endmsg;
+            ++numErrBZ;
           }
-          if (numErrBZ==5){
-
+          if (numErrBZ==5)
+          {
             warning() << "All threads of camserv are busy!  -> Aborting message '" << ss.str()<<endmsg;
             warning() << "Above message repeated "<<numErrBZ<<" times. Aborting further messaging of this type."<<endmsg;
             numErrBZ++;
@@ -614,8 +618,7 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
       debug() << "Sending to CAMERA disabled. Message " << ss.str() << endmsg;
   } // else(m_dosend&&m_camc)
 
-  m_out.reset();
-  m_lastHistoNum = 0;
+  Clear();
 
   return 1;
 }
@@ -623,18 +626,23 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
 //=============================================================================
 int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)
 {
-  return  SendAndClearTS(l,who,what,0);
+  return SendAndClearTS(l,who,what,0);
 }
 
 int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what,
                                int messagePeriod)
 {
   m_out.add("TEXT","Time of report: ");
-  time_t t = time(NULL);
+  const time_t t = time(NULL);
   m_out.add("CTIME",ctime(&t));
-  return  SendAndClear(l,who,what,messagePeriod);
+  return SendAndClear(l,who,what,messagePeriod);
 }
 
+void CameraTool::Clear()
+{
+  m_out.reset();
+  m_lastHistoNum = 0;
+}
 
 int CameraTool::Append(const char * T,const char * C)
 {
@@ -643,13 +651,15 @@ int CameraTool::Append(const char * T,const char * C)
   return 1;
 }
 
-int CameraTool::Append(const char * T,void * C, int sz){
+int CameraTool::Append(const char * T,void * C, int sz)
+{
   if (m_dosend)
     m_out.add(T,C,sz);
   return 1;
 }
 
-int CameraTool::Append(const char * C){
+int CameraTool::Append(const char * C)
+{
   if (m_dosend)
     m_out.add("TEXT",C);
   return 1;
@@ -663,7 +673,8 @@ int CameraTool::Append(const std::string &C){
 
 int CameraTool::Append(TH1D * H, const char * opts)
 {
-  if (m_dosend) {
+  if (m_dosend) 
+  {
     if ( !H ) { Warning("Null TH1D pointer"); return 0; }
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
     int nXBins = H->GetNbinsX();
@@ -693,6 +704,7 @@ int CameraTool::Append(TH1D * H, const char * opts)
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
     const std::string& title = rootH+"->SetTitle(\"" + std::string(H->GetTitle()) + "\");";
     this->Append( "EVAL", title.c_str() );
+
   }// if(m_dosend)
   return 1;
 }
@@ -701,7 +713,8 @@ int CameraTool::Append(TH1D * H, const char * opts)
 using namespace std;
 int CameraTool::Append(TH2D * H, const char * opts)
 {
-  if (m_dosend) {
+  if (m_dosend)
+  {
     if ( !H ) { Warning("Null TH2D pointer"); return 0; }
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
     int nXBins = H->GetNbinsX();
@@ -812,5 +825,3 @@ std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) {
   }// switch(1)
   return os;
 }//operator<<(std::ostream &, ICameraTool::MessageLevel)
-
-

@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2011-05-31 - Chris Jones
+ - Add a new method to the camera tool to reset the cached messages without
+   sending to the camera server.
+
 =============== v1r18 ===============
 
 ! 2010-06-14 - Nicola Mangiafave
