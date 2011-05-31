@@ -51,17 +51,16 @@ class IOHelper(object):
     Specific uses:
     
     a) Ganga.           Needs to create the file name list to be passed to IOHelper.
-                        Needs to pickle or otherwise flatten the result.
+                        Needs to be sensitive to presence of this class.
                         
     b) LHCbApp          Setup the services, may need slots to do the steering
     
-    b) Brunel.          Pass type to LHCbApp if it is an MDF.
-                        Use ioh.outStream to define the single output file
+    b) Brunel.          Use ioh.outStream to define the single output file
                         
     c) DaVinci.         BaseDSTWriter will use ioh.outputAlgs for each output file
     
     d) Stand-alone user. Needs to create the file list to be passed to IOHelper.
-                         Adds ioh.outputAlgs to any of their personal sequencers
+                         Adds ioh.outputAlgs to any of their personal sequencers not based on the BaseDSTwriter
                          Uses ioh.postConfigServices on old software stacks
     
     
@@ -148,9 +147,10 @@ class IOHelper(object):
         '''
         from Gaudi.Configuration import (FileRecordDataSvc, ApplicationMgr, PersistencySvc)
         # Set up the FileRecordDataSvc
-        FileRecordDataSvc( ForceLeaves        = "YES",
+        FileRecordDataSvc( ForceLeaves        = True,
                            EnableFaultHandler = True,
-                           RootCLID           = 1    )
+                           RootCLID           = 1, #was the next line missed accidentally?
+                           PersistencySvc     = "PersistencySvc/FileRecordPersistencySvc")
         
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
@@ -274,7 +274,7 @@ class IOHelper(object):
         retlist+=self._getSvcList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
         
         return retlist
-
+    
     def activePersistencies(self):
         '''return all configured persistency services'''
         return self._getPersistencyList(self.activeServices())
@@ -282,7 +282,7 @@ class IOHelper(object):
     def clearServices(self):
         '''remove all persistency services'''
         from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
-
+        
         active=self.activeServices()
         
         ApplicationMgr().ExtSvc=[svc for svc in ApplicationMgr().ExtSvc if svc not in active]
@@ -291,7 +291,7 @@ class IOHelper(object):
             svc for svc in PersistencySvc("FileRecordPersistencySvc").CnvServices if svc not in active]
         
         self._removeConfigurables(active)
-
+    
     def servicesExist(self):
         '''Check if any of the the services required for this persistency are set up'''
         return (self._inputPersistency in self.activePersistencies() and self._outputPersistency in self.activePersistencies())
@@ -305,7 +305,7 @@ class IOHelper(object):
         
         self.clearServices()
         self.setupServices()
-        
+    
     def dressFile(self,filename,IO):
         '''Go from file name to connection string'''
         IO=self.__chooseIO(IO)
@@ -407,9 +407,10 @@ class IOHelper(object):
         '''Create a output stream and FSR writing algorithm instance
         to write into the given file.
         
-        Any class inheriting from OutputStream can be used, with an instance name.
+        Any class inheriting from OutputStream can be used, with an instance name or configurable.
         
         e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
+        e.g. ioh.outputAlgs("test.dst",InputCopyStream("Spam"))
         
         returns a list of algorithms to append to your sequencer.
         '''
@@ -417,48 +418,62 @@ class IOHelper(object):
         #build up the filename
         filename=self.dressFile(filename,'O')
         
-        writer=writer.replace('::','__')
-        
         #find the writer
         wclass=None
         winstance=None
         
-        #if it's in Gaudi.Configuration
         import Gaudi.Configuration as GaudiConfigurables
         
-        if hasattr(GaudiConfigurables, writer.split('/')[0]):
-            wclass = getattr(GaudiConfigurables,writer.split('/')[0])
-        else:
-            import Configurables
-            wclass = getattr(Configurables,writer.split('/')[0])
-        #otherwise it must be a configurable
+        if type(writer) is str:
+            writer=writer.replace('::','__')
+            
+            #if it's in Gaudi.Configuration
+            
+            if hasattr(GaudiConfigurables, writer.split('/')[0]):
+                wclass = getattr(GaudiConfigurables,writer.split('/')[0])
+            else:
+                import Configurables
+                wclass = getattr(Configurables,writer.split('/')[0])
+            #otherwise it must be a configurable
+            
+            #check if it has an instance name
+            if '/' not in writer:
+                winstance=wclass()
+            else:
+                winstance=wclass(name=writer.split('/')[-1])
         
-        #check if it has an instance name
-        if '/' not in writer:
-            winstance=wclass()
         else:
-            winstance=wclass(name=writer.split('/')[-1])
+            winstance=writer
+            writer=writer.getFullName()
         
         winstance.Output = filename
         
         if not writeFSR: return [winstance]
         
-        FSRWriter = GaudiConfigurables.RecordStream( "FSRWriter"+writer.replace('/',''),
+        #ignore name when name is type
+        if writer.split('/')[0]== writer.split('/')[-1]:
+            writer=writer.split('/')[0]
+        
+        FSRWriter = GaudiConfigurables.RecordStream( "FSR"+writer.replace('/','').replace('::','').replace('__',''),
                                                      ItemList = [ "/FileRecords#999" ],
                                                      EvtDataSvc = "FileRecordDataSvc",
                                                      EvtConversionSvc = "FileRecordPersistencySvc" )
         
         FSRWriter.Output = filename
         
-        return [FSRWriter, winstance]
+        #As far as I can tell, the ordering of the algs does not matter here
+        return [winstance, FSRWriter]
+        #both result in well-formed Lumi tests
+        #return [FSRWriter, winstance]
     
     def outStream(self,filename,writer="OutputStream",writeFSR=True):
         '''Create a output stream and FSR writing algorithm instance
         to write into the given file.
         
-        Any class inheriting from OutputStream can be used, with an instance name.
+        Any class inheriting from OutputStream can be used, with an instance name or configurable.
         
         e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
+        e.g. ioh.outputAlgs("test.dst",InputCopyStream("Spam"))
         
         Adds these streams directly to the Application manager OutStream
         '''
@@ -471,7 +486,7 @@ class IOHelper(object):
         
         for alg in algs:
             ApplicationMgr().OutStream.append(alg)
-
+    
     def selectorString(self, eventSelector=None):
         '''return a string of the event selector which could be used in an old-style gaudi card
         '''
@@ -496,7 +511,7 @@ class IOHelper(object):
             retstr+=' '*alen+'"'+file+'"\n'
         retstr+=' '*alen+']'
         return retstr
-
+    
     def _subHelperString(self,files):
         '''return a string when the types of files are the same'''
         retstr=''

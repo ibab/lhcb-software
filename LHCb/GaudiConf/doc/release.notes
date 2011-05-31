@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-05-31 - Rob Lambert
+ - IOHelper Required changes for FSRs in POOL
+
 ! 2011-05-30 - Patrick Robbe
  - SimConf: add write out of BeamParameters class for Gauss, only
    for 2011 DataType.

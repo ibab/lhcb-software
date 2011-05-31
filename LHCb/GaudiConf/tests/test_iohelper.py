@@ -34,7 +34,7 @@ def testthisioh(ioh):
     import commands
     print commands.getstatusoutput('python -c "'+ioh.selectorString().replace('"','\\"')+'"')
     print commands.getstatusoutput("python -c '"+ioh.helperString()+"'")
-
+    
     ioh.changeServices()
     print ioh.activeServices()
     
@@ -43,7 +43,7 @@ for persistency in [None,'POOL','ROOT','MDF']:
     print '============================='
     print persistency
     print '============================='
-
+    
     #preload with MDF
     iohm=IOHelper("MDF","MDF")
     iohm.inputFiles(['IAMdf.mdf','IALSOAMdf.blah'])
