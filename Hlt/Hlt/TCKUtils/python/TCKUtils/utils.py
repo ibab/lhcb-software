@@ -619,7 +619,7 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
           tempstr = tempstr + s + (80-len(s))*' ' + str(i.leaf.digest) + '\n'
     return tempstr
 
-def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
+def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessSvc() ) :
     if not properties : 
         properties = [ 'RoutingBits', 'AcceptFraction', 'FilterDescriptor'
                      , 'Preambulo', 'Code', 'InputLocations','Input','Inputs'
@@ -663,6 +663,8 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
 
     import re
     show = not lines
+    from sys import stdout
+    file = open(file,'w') if file else sys.stdout
     for i in tree :
        if not i.leaf or i.leaf.kind != 'IAlgorithm' : continue
        if lines and i.leaf.type in [ 'Hlt::Line', 'HltLine' ] :
@@ -677,7 +679,7 @@ def dump( id, properties = None,  lines = None, cas = ConfigAccessSvc() ) :
            if _tab+25 < len1(line) : line+= '\n'+(_tab+25)*' '
            if k in trtable.keys() : v = trtable[k](v)
            if v : line += '%-15s : %s' % ( k, v)
-       print line
+       file.write(line+'\n')
 
 # TODO: caching should be done seperately for each cas instance...
 def getConfigTree(id, cas = ConfigAccessSvc()):
