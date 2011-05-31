@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r7 2011-05-31 =========================
 ! 2011-5-27 - Mark Whitehead
  - src/GeneratorFullMonitor.cpp, src/GeneratorFullMonitor.h: Gloria added some
    code to include run number and event number in GaussMonitor.root
