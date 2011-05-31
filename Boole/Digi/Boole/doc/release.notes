@@ -5,6 +5,8 @@ Purpose: LHCb Digitization program
 
  - Changes to configurable:
    . No longer initialize persistency services, now done in LHCbApp
+   . Propagate DataType to DigiConf
+   . Set default DataType to "2011"
 
  - Changes to references to reflect changes in Boole v22r2 output:
    . Added variable response with radius, to match data (VeloSim)
@@ -12,6 +14,7 @@ Purpose: LHCb Digitization program
 
  - Changes to tests:
    . Remove all slc4_ia32 specific references and exclusions
+   . Explicitly set DataType=2009 in spillover test, was using default
 
 </PRE><H1><A NAME=v22r1>2011-04-11 Boole v22r1</A></H1><PRE>
 This version uses projects LCGCMT 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2

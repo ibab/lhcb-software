@@ -36,7 +36,7 @@ class Boole(LHCbConfigurableUser):
        ,"ProductionMode"      : False 
        ,"OutputLevel"         : INFO 
        ,"DatasetName"         : "Boole"
-       ,"DataType"            : "2010"
+       ,"DataType"            : "2011"
        ,"DDDBtag"             : ""
        ,"CondDBtag"           : ""
        ,"VeloTell1Processing" : True
@@ -70,7 +70,7 @@ class Boole(LHCbConfigurableUser):
        ,'ProductionMode' : """ Enables special settings for running in production """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
-       ,'DataType'     : """ Data type. Default '2009' (use 'Upgrade' for LHCb Upgrade simulations)"""
+       ,'DataType'     : """ Data type. Default '2011' (use 'Upgrade' for LHCb Upgrade simulations)"""
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
        ,'VeloTell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated Velo data (default True) """
@@ -81,8 +81,8 @@ class Boole(LHCbConfigurableUser):
        ,'LinkSequence' : """ List of MC truth link sequences, see KnownLinkSubdets  """
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
-       ,'EnablePack'    : """ Turn on/off packing of the data (where appropriate/available) """
-       ,'IgnoreFlatSpillover'    : """ Turn on/off the simulation of flat spillover in muon  """
+       ,'EnablePack'   : """ Turn on/off packing of the data (where appropriate/available) """
+       ,'IgnoreFlatSpillover' : """ Turn on/off the simulation of flat spillover in muon  """
        }
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
@@ -661,7 +661,7 @@ class Boole(LHCbConfigurableUser):
 
             # Set up the Digi content
             DigiConf().Writer = writerName
-            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover"])
+            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType"])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
 

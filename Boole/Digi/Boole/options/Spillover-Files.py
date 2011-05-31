@@ -14,6 +14,7 @@ from Configurables import Boole, LHCbApp
 #-- Event input
 LHCbApp().DDDBtag   = "head-20090508"
 LHCbApp().CondDBtag = "sim-20090508-vc-mu100"
+Boole().DataType = "2009"
 
 # Signal events from Gauss v37r3
 datasetName = '11144103-100ev-25ns-20090715'
@@ -32,6 +33,3 @@ Boole().DatasetName = datasetName
 
 # writeRawMDF = false: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
 #OutputStream("DigiWriter").Output = "DATAFILE='PFN:SomeFile.digi' TYP='POOL_ROOTTREE' OPT='REC'"
-
-# write L0ETC = true: ETC with L0 result
-#TagCollectionStream( "WR" ).Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='SomeETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
