@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : M. Lieng -->
+<!--- Created : 2010-06-22 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" [
+<!ENTITY CLID_BcmDigit "3001">
+<!ENTITY className "BcmDigit">
+<!ENTITY location "Raw/Bcm/Digits">
+]>
+<gdd>
+<package name = "DigiEvent">
+  <class name = "&className;"
+    location = "&location;"
+    id = "&CLID_BcmDigit;"
+    author = "M Lieng" 
+    desc = "BCM digit class">
+    <base name="KeyedObject&lt;int&gt;"/>
+    &KeyedContainer;
+    <attribute type = "unsigned int"
+      name = "station"
+      desc = "Station number" />
+    <attribute type = "unsigned int"
+      name = "sensor"
+      desc = "Sensor number" />
+    <attribute type = "double"
+      name = "signal"
+      desc = "Signal value" />
+  </class>
+</package>
+</gdd>
+
+
