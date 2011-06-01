@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-01 - Marco Cattaneo
+ - Add "Persistency" slot to DstConf and propagate to IOHelper
+
 ! 2011-05-31 - Rob Lambert
  - IOHelper Required changes for FSRs in POOL
 
