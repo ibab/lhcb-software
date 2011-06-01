@@ -15,7 +15,7 @@ insert into SUBSYSTEM(SSName) VALUES('DAQ');
 insert into SUBSYSTEM(SSName) VALUES('BEAM');
 insert into SUBSYSTEM(SSName) VALUES('RECO');
 
-insert into ERGOSUM(version,apiversion,alglist) VALUES(16,'v7r0',0);
+insert into ERGOSUM(version,apiversion,alglist) VALUES(16,'v8r0',0);
 insert into PAGEFOLDER VALUES('/',NULL);
 
 

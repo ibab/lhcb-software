@@ -754,30 +754,36 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
   //update the DB with the current display options
   int out=0;
   std::string statement;
+  bool userFitRange=false;
   statement = "BEGIN :out := ONLINEHISTDB." + function + ",theOptions => :opt" +
-    ",theFitFun => :fitf, theFitPars => :fitp, theFitRange => :fitr); END;";
+    ",theFitFun => :fitf, theFitPars => :fitp";
+  if (m_fitRange.size() >1) {
+    if (m_fitRange[0] < m_fitRange[1]) {
+      userFitRange = true;
+      statement += ",theFitMin => :fitmin, theFitMax => :fitmax";
+    }
+  }
+  statement += "); END;";
+
   OCIStmt *stmt=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.c_str()) ) {
     OCIArray *fitPars;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &fitPars));
-    OCIArray *fitRange;
-    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-                             OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-                             (dvoid **) &fitRange));
     floatVectorToVarray(m_fitPars , fitPars);
-    floatVectorToVarray(m_fitRange, fitRange);
-
+    
     myOCIBindInt   (stmt,":out", out);  
     myOCIBindObject(stmt,":opt", (void **) &m_dispopt, OCIdispopt, (void**) &m_dispopt_null);
     myOCIBindString(stmt,":fitf", m_fitfun, &m_fitfun_null);
     myOCIBindObject(stmt,":fitp", (void **) &fitPars, OCIthresholds);
-    myOCIBindObject(stmt,":fitr", (void **) &fitRange, OCIthresholds);
+    if(userFitRange) {
+      myOCIBindFloat (stmt,":fitmin", m_fitRange[0]);
+      myOCIBindFloat (stmt,":fitmax", m_fitRange[1]);
+    }
     myOCIStmtExecute(stmt);
     releaseOCIStatement(stmt);
     checkerr(OCIObjectFree ( m_envhp, m_errhp, fitPars, OCI_OBJECTFREE_FORCE) );
-    checkerr(OCIObjectFree ( m_envhp, m_errhp, fitRange, OCI_OBJECTFREE_FORCE) );
   }
   return out;
 }
