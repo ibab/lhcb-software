@@ -234,7 +234,8 @@ class IOHelper(object):
         # Set up the persistency
         if self._inputPersistency == 'ROOT' or self._outputPersistency == 'ROOT':
             from Configurables import Gaudi__RootCnvSvc
-            rootSvc = Gaudi__RootCnvSvc( "RootCnvSvc" )
+            #it's important also to enable the incidents for FSRs
+            rootSvc = Gaudi__RootCnvSvc( "RootCnvSvc", EnableIncident = 1 )
             EventPersistencySvc().CnvServices += [ rootSvc ]
             ApplicationMgr().ExtSvc           += [ rootSvc ]
             

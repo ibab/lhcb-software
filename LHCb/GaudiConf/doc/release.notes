@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-01 - Rob Lambert
+ - Fix bug in IOHelper, not setting EnableIncident for ROOT Evt
+
 ! 2011-06-01 - Marco Cattaneo
  - Add "Persistency" slot to DstConf and propagate to IOHelper
 
