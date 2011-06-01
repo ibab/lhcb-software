@@ -37,7 +37,6 @@ TrendingTool::TrendingTool( const std::string& type,
   , m_firstTimeThisTag( 0 )
 {
   declareInterface<ITrendingTool>(this);
-
 }
 //=============================================================================
 // Destructor

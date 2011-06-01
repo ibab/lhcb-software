@@ -60,14 +60,11 @@ void SimpleTrendWriter::setPartitionAndName( std::string& partition, std::string
     m_tagVersion = m_trend->tagVersion();
     m_values.resize( m_tags.size(), 0. );
     m_tagChanged = false;
-    //== get the most recent values. Delicate!!!
-    int start = (int)::time(0) - 1000;
-    int nTry = 0;
-    while ( !m_trend->select( start ) ) {
-      start -= 24*3600;  // previous day
-      if ( ++nTry > 50 ) break;
-    }
-    if ( nTry < 50  ) {
+
+    //== get the most recent values. 
+
+    int start = m_trend->firstTimeThisTag();
+    if ( m_trend->select( start ) ) {
       while( m_trend->nextEvent( start, m_values ) ) { }
     }
     m_trend->closeFile();

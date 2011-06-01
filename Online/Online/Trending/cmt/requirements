@@ -22,10 +22,11 @@ apply_pattern install_more_includes more=Trending
 #============================================================================
 # Component library building rule
 #============================================================================
-library          Trending    ../src/*.cpp 
+library          Trending    ../src/TrendingTool.cpp ../src/SimpleTrendWriter.cpp ../src/TestTrend.cpp 
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=Trending
 
 application ExtractFromTrendingFile "ExtractFromTrendingFile.cpp"
+application DumpTrendingFile "DumpTrendingFile.cpp"
