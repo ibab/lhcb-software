@@ -187,6 +187,8 @@ class AccessSvcSingleton(object) :
     def _cas(self) : 
         return AccessSvcSingleton.__cas
     def _cte(self) : 
+        if type(AccessSvcSingleton.__cte) is not GaudiPython.gbl.IConfigAccessSvc : 
+            AccessSvcSingleton.__cte = AccessSvcSingleton.__cte(self)
         return AccessSvcSingleton.__cte
 
     def __init__(self,create=False,createConfigTreeEditor=False,cas=ConfigAccessSvc()) :
@@ -194,16 +196,14 @@ class AccessSvcSingleton(object) :
             if (AccessSvcSingleton.__pcs or AccessSvcSingleton.__cas) :
                    raise LogicError('re-entry of singleton creation') 
             pcs = PropertyConfigSvc( ConfigAccessSvc = cas.getFullName() )
-            cte = None
-            if createConfigTreeEditor :
-                cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName()
-                                      , ConfigAccessSvc   = cas.getFullName() )
+            cte = ConfigTreeEditor( PropertyConfigSvc = pcs.getFullName()
+                                  , ConfigAccessSvc   = cas.getFullName() )
             appMgr = _appMgr()
             appMgr.createSvc(cas.getFullName())
-            appMgr.createSvc(pcs.getFullName())
             AccessSvcSingleton.__cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc') 
+            appMgr.createSvc(pcs.getFullName())
             AccessSvcSingleton.__pcs = appMgr.service(pcs.getFullName(),'IPropertyConfigSvc')
-            if cte : AccessSvcSingleton.__cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
+            AccessSvcSingleton.__cte = lambda x : appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
 
     def resolveTCK(self,tck) :
          tck = _tck(tck)
@@ -237,6 +237,7 @@ class AccessSvcSingleton(object) :
     def readConfigTreeNode(self, id ) :
          return self._cas().readConfigTreeNode(id)
     def updateAndWrite(self,id,mods,label) :
+         print 'updateAndWrite: %s ' % mods
          return self._cte().updateAndWrite(id,mods,label)
 
 
@@ -278,30 +279,6 @@ def getProperty(id,algname,property, cas ) :
     tables = xget( [ id ], cas )
     return _lookupProperty(tables[id],algname,property)
 
-def _updateProperties(id, updates, label, cas  ) :
-    if not label : 
-        print 'please provide a reasonable label for the new configuration'
-        return None
-    svc = createAccessSvcSingleton( cas = cas, createConfigTreeEditor = True )
-    if type(id) == str: id = _digest( id )
-    if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
-    a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
-    if len(a) != 1 : 
-        print 'something went wrong: no unique toplevel match for ' + str(id)
-        return
-    (release,hlttype) = a[0].split('/',3)[1:3]
-    mods = vector_string()
-    for algname,props in updates.iteritems() :
-        for k,v in props.iteritems() : 
-            item = algname + '.' + k + ':' + v
-            print 'updating: ' + item
-            mods.push_back( item )
-    newId = svc.updateAndWrite(id,mods,label)
-    noderef = svc.readConfigTreeNode( newId )
-    top = topLevelAlias( release, hlttype, noderef.get() )
-    svc.writeConfigTreeNodeAlias(top)
-    print 'wrote ' + str(top.alias()) 
-    return str(newId)
 
 
 ### and now define the routines visible from the outside world...
@@ -432,8 +409,6 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
                                         l.fqn(), r.fqn(),
                                         lhs, rhs, n=0) )
 
-def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
-    return execInSandbox( _updateProperties,id,updates,label, cas )
 def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc(), extra = None ) :
     return execInSandbox( _updateL0TCK, id, l0tck, label, cas = cas, extra = extra)
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
@@ -630,6 +605,30 @@ class RemoteAccess(object) :
             for k in info.values() : 
                 if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
         return info
+    def rupdateProperties(self, id, updates, label ) :
+        if not label : 
+            print 'please provide a reasonable label for the new configuration'
+            return None
+        svc = RemoteAccess._svc
+        if type(id) == str: id = _digest( id )
+        if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
+        a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
+        if len(a) != 1 : 
+            print 'something went wrong: no unique toplevel match for ' + str(id)
+            return
+        (release,hlttype) = a[0].split('/',3)[1:3]
+        mods = vector_string()
+        for algname,props in updates.iteritems() :
+            for k,v in props.iteritems() : 
+                item = algname + '.' + k + ':' + v
+                print 'updating: ' + item
+                mods.push_back( item )
+        newId = svc.updateAndWrite(id,mods,label)
+        noderef = svc.readConfigTreeNode( newId )
+        top = topLevelAlias( release, hlttype, noderef.get() )
+        svc.writeConfigTreeNodeAlias(top)
+        print 'wrote ' + str(top.alias()) 
+        return str(newId)
 
 from multiprocessing.managers import BaseManager
 class AccessMgr(BaseManager):
@@ -653,7 +652,7 @@ class AccessProxy( object ) :
     #         and start again... 
     #         (shouldn't have to flush PropertyConfig/ConfigTreeNode)
     def access( self, cas ) :
-        if not self._valid(cas) : self._flush()
+        if not self._valid(cas) : self.flush()
         if not AccessProxy._manager :
             AccessProxy._manager  = AccessMgr()
             AccessProxy._manager.start()
@@ -666,7 +665,7 @@ class AccessProxy( object ) :
 
         return AccessProxy._access
     def _valid( self, cas ) :
-        if not AccessProxy._access : return True 
+        if not AccessProxy._access or not AccessProxy._cas: return True 
         if cas != AccessProxy._cas : return False # different configurable!
         return cas.getProperties() == AccessProxy._properties
     def flush( self ) : # make flush visible such that eg. createTCKEntries can flush the remote and force re-reading...
@@ -687,6 +686,11 @@ def getConfigTree(id, cas = ConfigAccessSvc()):
 
 def getConfigurations( cas = ConfigAccessSvc() ) :
     return  AccessProxy().access(cas).rgetConfigurations()
+
+def updateProperties(id,updates,label='', cas = ConfigAccessSvc() ) :
+    ret = AccessProxy().access(cas).rupdateProperties( id,updates,label )
+    if ret : AccessProxy().flush() # explicit flush if we wrote something
+    return ret
 
 def xget( ids , cas = ConfigAccessSvc() ) :
     if 'forest' not in dir(xget) : xget.forest = dict()
