@@ -21,8 +21,8 @@ from os import getpid
 
 def _appMgr() :
     print 'starting appMgr @ pid = %s' % getpid()
-    #ApplicationMgr().AppName = ""
-    #ApplicationMgr().OutputLevel = ERROR
+    ApplicationMgr().AppName = ""
+    ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
     appMgr.initialize()
     return appMgr
@@ -176,6 +176,8 @@ def _createTCKEntries(d, cas ) :
         svc.writeConfigTreeNodeAlias(alias)
 
 
+# once all calls from inside execInSandbox  are gone,
+# move the functionality into RemoteAccess
 class AccessSvcSingleton(object) :
     __pcs = None
     __cas = None
@@ -240,10 +242,6 @@ class AccessSvcSingleton(object) :
 
 def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
     return AccessSvcSingleton( create = True, createConfigTreeEditor = createConfigTreeEditor )
-
-def _getConfigTree( id , cas = ConfigAccessSvc() ) :
-    createAccessSvcSingleton( cas = cas )
-    return Tree(id)
 
 
 def _copyTree(svc,nodeRef,prefix) :
@@ -607,12 +605,12 @@ class RemoteAccess(object) :
         print 'remote(%s) created at pid=%s' % (self,getpid())
         RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
     def rgetConfigTree( self, id ) :
-        print 'remote(%s) at pid=%s: _getConfigTree(%s)' % (self,getpid(),id)
+        print 'remote(%s) at pid=%s: rgetConfigTree(%s)' % (self,getpid(),id)
         # maybe prefetch all leafs by invoking 
         # RemoteAccess._svc.collectLeafRefs(id)
         return Tree(id)
     def rgetConfigurations( self ) :
-        print 'remote(%s) at pid=%s: _getConfigurations()' % (self,getpid())
+        print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
         svc = RemoteAccess._svc
         info = dict()
         for i in svc.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
@@ -641,15 +639,22 @@ class AccessProxy( object ) :
     _manager = None
     _access = None
     def __init__( self ) :
-        print 'creating proxy'
+        print 'creating proxy in pid = %s' % os.getpid()
         if not AccessProxy._manager :
             AccessProxy._manager  = AccessMgr()
             AccessProxy._manager.start()
             print 'proxy started manager'
-    # TODO: _access should be seperately for each cas instance...
+    # TODO: access should be seperately for each cas instance...
+    #  worse: since Configurables are singletons, they may have 
+    #         changed since the last time used. Hence, have to 
+    #         check that that hasn't happend, so we need a local
+    #         copy of the state of cas, and compare to that....
+    #         and if different, let's just shutdown the remote
+    #         and start again... 
+    #         (shouldn't have to flush PropertyConfig/ConfigTreeNode)
     def access( self, cas ) :
         if not AccessProxy._access :
-            print 'proxy requested access'
+            print 'proxy requesting access to remote'
             AccessProxy._access = AccessProxy._manager.Access( cas )
         return AccessProxy._access
 
@@ -679,6 +684,9 @@ def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
 def getHlt2Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
     return eval(getProperty(id,'Hlt2','Members',cas))
+def getHltLines( id , cas = ConfigAccessSvc() ) :
+    return getHlt1Lines(id,cas) + getHlt2Lines(id,cas)
+
 def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
     table = xget( [ id ], cas )[id]
     lines = eval(_lookupProperty(table,'Hlt1','Members'))
