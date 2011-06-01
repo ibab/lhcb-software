@@ -27,6 +27,7 @@ MDFWriterLite::MDFWriterLite(const string& nam, ISvcLocator* pSvc)
 {
   declareProperty("MaxFileSizeKB",  m_maxFileSizeKB=2000000);
   declareProperty("MaxFileEvents",  m_maxFileEvents=1000000);
+  declareProperty("TimeOut",        m_timeOut = 10); // this is mutually exclusive with file-size	
 }
 
 MDFWriterLite::~MDFWriterLite()   {}
@@ -48,18 +49,22 @@ std::string MDFWriterLite::getConnection(const std::string& org_conn)  {
 /// Execute procedure
 StatusCode MDFWriterLite::execute()    {
   time_t now;
-  now = ::time(0);  
-  bool do_open = (size_t(m_bytesWritten/1024) > m_maxFileSizeKB) || (m_eventsWritten >= m_maxFileEvents);
-  do_open &= (now-m_lastOpen)>1;
+  now = ::time(0);
+  bool do_open;
+
+  if (m_timeOut == 0) {  
+    do_open = (size_t(m_bytesWritten/1024) > m_maxFileSizeKB) || (m_eventsWritten >= m_maxFileEvents);
+    do_open &= (now-m_lastOpen)>1;
+  } else {
+    do_open = (now > m_lastEventWritten + m_timeOut);
+  }	
   if ( do_open ) { 
     MsgStream log(msgSvc(), name());
     string con = getConnection(m_connectParams);
     m_ioMgr->disconnect(m_connection).ignore();
-    //delete m_connection;
     m_connection = new RawDataConnection(this,con);
     StatusCode status = m_ioMgr->connectWrite(m_connection,IDataConnection::RECREATE,"MDF");
     status.ignore();
-    //sleep(1);
     
     if ( m_connection->isConnected() ) {
       log << MSG::INFO << "Received event request connection." << endmsg;
@@ -70,6 +75,13 @@ StatusCode MDFWriterLite::execute()    {
     }
     m_bytesWritten = m_eventsWritten = 0;
   }
+  m_lastEventWritten = now;
   m_eventsWritten++;
   return MDFWriter::execute();
 }
+
+StatusCode MDFWriterLite::initialize() {
+  MsgStream log(msgSvc(), name());
+  m_lastEventWritten = ::time(NULL);
+  return MDFWriter::initialize();
+}		

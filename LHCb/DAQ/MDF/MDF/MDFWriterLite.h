@@ -18,10 +18,10 @@ namespace LHCb    {
 
   /**@class MDFWriterLite 
     *
-    *
+    * @author:  K. Akiba
     * @author:  S. Suman & N. Neufeld
     * @author   M.Frank
-    * @version: 1.0
+    * @version: 1.1
     */
   class MDFWriterLite : public MDFWriter   {
   protected:
@@ -29,11 +29,16 @@ namespace LHCb    {
     time_t m_lastOpen;
     /// Number of events written out to the file so far. 
     size_t m_eventsWritten;
-    /// Maximum size of each file (after which a new file will be written)
+    /// Maximum size of each file (after which a new file will be written) 
+    /// will be ignored if m_timeOut != 0
     size_t m_maxFileSizeKB;
     /// Maximum number of events in a file (after which a new file will be written)
+    /// will be ignored if m_timeOut != 0
     size_t m_maxFileEvents;
-
+    /// Time stamp of last event written
+    time_t m_lastEventWritten;
+    /// Timeout value to open a new file (in seconds)
+    time_t m_timeOut;
     /// Transform file name in presence of catalogs
     virtual std::string getConnection(const std::string& org_conn);
     
@@ -44,8 +49,9 @@ namespace LHCb    {
     /// Standard Destructor
     virtual ~MDFWriterLite();
 
-    /// Algoritm overload: Execute procedure
+    /// Algoritihm overload: Execute & initialize procedure
     virtual StatusCode execute();
+    virtual StatusCode initialize();
   };
 }      // End namespace LHCb
 #endif // MDF_MDFWRITERLITE_H
