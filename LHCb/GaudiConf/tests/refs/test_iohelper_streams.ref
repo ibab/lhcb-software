@@ -1,0 +1,74 @@
+=============================
+None
+=============================
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>]
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x176f5c80>]
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out2.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out2.dst' TYP='POOL_ROOTTREE' OPT='REC'
+=============================
+POOL
+=============================
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>]
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x176f5c80>]
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out2.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out2.dst' TYP='POOL_ROOTTREE' OPT='REC'
+=============================
+ROOT
+=============================
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdROOT at 0x17797ed0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x177919a0>]
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdROOT at 0x17797ed0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x177919a0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x176f5c80>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x177a11a0>]
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+=============================
+MDF
+=============================
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdROOT at 0x17797ed0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x177919a0>, <InputCopyStream/SomethingWeirdMDF at 0x177a1350>, <RecordStream/FSRInputCopyStreamSomethingWeirdMDF at 0x177a1620>]
+[<InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdPOOL at 0x1777cf50>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x17785f50>, <InputCopyStream/SomethingWeirdROOT at 0x17797ed0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x177919a0>, <InputCopyStream/SomethingWeirdMDF at 0x177a1350>, <RecordStream/FSRInputCopyStreamSomethingWeirdMDF at 0x177a1620>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x176f5c80>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x177a11a0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdMDF at 0x177a1be0>]
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='LHCb::MDFSelector' OPT='REC'
+DATAFILE='out1.dst' SVC='LHCb::MDFSelector' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='LHCb::MDFSelector' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out1.dst' SVC='LHCb::MDFSelector' OPT='REC'
+DATAFILE='out1.dst' SVC='LHCb::MDFSelector' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='LHCb::MDFSelector' OPT='REC'

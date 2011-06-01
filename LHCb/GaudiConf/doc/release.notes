@@ -3,6 +3,11 @@
 !----------------------------------------------------------------------------
 
 ! 2011-06-01 - Rob Lambert
+ - detect all known OutputStreams and modify accordingly
+ - should make migration of old options also transparent
+ - several cosmetic changes
+
+! 2011-06-01 - Rob Lambert
  - Fix bug in IOHelper, not setting EnableIncident for ROOT Evt
 
 ! 2011-06-01 - Marco Cattaneo

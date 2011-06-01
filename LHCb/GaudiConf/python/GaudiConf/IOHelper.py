@@ -87,6 +87,14 @@ class IOHelper(object):
                          'IODataManager' : ''
                          }
     
+    _knownOutputStreams = {'InputCopyStream' : 'DST',
+                           'OutputStream' : 'DST',
+                           'MDFWriter' : 'MDF',
+                           'TagCollectionStream' : 'ETC',
+                           'RunRecordStream' : 'FSR',
+                           'RecordStream' : 'FSR'                           
+                           }
+    
     def __init__(self,Input=None,Output=None):
         '''
         IOHelper class, for simpler configuration of input/output
@@ -125,13 +133,17 @@ class IOHelper(object):
                 raise TypeError("ROOT persistency is not supported in this Application version"+
                                 "Ask your release manager for details or change to POOL")
     
+    ###############################################################
+    #              Helper functions
+    ###############################################################
+    
     def __str__(self):
-        '''print the class
+        '''Helper:  print the class
         '''
         return "<IOHelper Input='"+self._inputPersistency+"' Output='" +self._outputPersistency+"'>"
     
     def __chooseIO(self,IO):
-        '''IO = starts with one of r, w, i or o
+        '''Helper:  IO = starts with one of r, w, i or o
         '''
         if len(IO)>1:
             IO=IO[0]
@@ -143,7 +155,7 @@ class IOHelper(object):
         raise ValueError, 'IO type '+IO+' not known'
     
     def _doConfFileRecords(self,fileSvc):
-        ''' create the file records service, should always be done.
+        '''Helper:   create the file records service, should always be done.
         '''
         from Gaudi.Configuration import (FileRecordDataSvc, ApplicationMgr, PersistencySvc)
         # Set up the FileRecordDataSvc
@@ -155,16 +167,24 @@ class IOHelper(object):
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
         PersistencySvc("FileRecordPersistencySvc").CnvServices += [ fileSvc ]
+
+    def _isOutputStream(self, streamstr):
+        '''Helper:  returns true if the string is one of the known output streams'''
+        for stream in self._knownOutputStreams:
+            #only check the type!
+            if stream in streamstr.split('/')[0]:
+                return True
+        return False
     
     def _isPersistencySvc(self,svcstring):
-        '''Returns true if the svcstring is one of the known persistencies'''
+        '''Helper:  Returns true if the svcstring is one of the known persistencies'''
         for service in self._knownPerServices:
             if service in svcstring:
                 return True
         return False
     
     def _persistencyType(self,svcstring):
-        '''Returns either ROOT POOL or MDF'''
+        '''Helper:  Returns either ROOT POOL or MDF'''
         
         for service in self._knownPerServices:
             if service in svcstring:
@@ -172,7 +192,7 @@ class IOHelper(object):
         return ''
     
     def _getPersistencyList(self, svclist):
-        '''Return list of persistencies which are active'''
+        '''Helper:  From a list of services, return list of persistencies which are active'''
         retlist=[]
         for service in svclist:
             servicestring=''
@@ -187,6 +207,7 @@ class IOHelper(object):
         return retlist
     
     def _getSvcList(self,svclist):
+        '''Helper: From a list of services return all persistency services'''
         retlist=[]
         for service in svclist:
             servicestring=''
@@ -201,18 +222,53 @@ class IOHelper(object):
         return retlist
     
     def _removeConfigurables(self, conf_list):
+        '''Helper: get rid of all configurables from a list'''
         from Gaudi.Configuration import allConfigurables
         conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
         for k in conftodel:
             del allConfigurables[k]
     
+    def _configurableInstanceFromString(self, config):
+        '''Get a configurable instance given only the string'''
+        
+        import Gaudi.Configuration as GaudiConfigurables
+        
+        #if it's in Gaudi.Configuration
+        if config in GaudiConfigurables.allConfigurables:
+            return GaudiConfigurables.allConfigurables[config]
+        
+        config=config.replace('::','__')
+        
+        #if it's in Gaudi.Configuration
+        if config in GaudiConfigurables.allConfigurables:
+            return GaudiConfigurables.allConfigurables[config]
+        
+        wclass=None
+        
+        if hasattr(GaudiConfigurables, config.split('/')[0]):
+            wclass = getattr(GaudiConfigurables,config.split('/')[0])
+        else:
+            import Configurables
+            wclass = getattr(Configurables,config.split('/')[0])
+            #otherwise it must be a configurable
+            
+        #check if it has an instance name
+        if '/' not in config:
+            return wclass()
+        else:
+            return wclass(name=config.split('/')[-1])
+    
+    ###############################################################
+    #              Services
+    ###############################################################
+    
     def isRootSupported(self):
-        '''Check if the root services exist in this version'''
+        '''Services:  Check if the root services exist in this version'''
         import Configurables
         return hasattr(Configurables,"Gaudi__RootCnvSvc")
     
     def svcTypString(self,IO):
-        ''' given the IO type, return the selection string for the active services'''
+        '''Services:  given the IO type, return the selection string for the active services'''
         IO=self.__chooseIO(IO)
         # Return SVC/TYP for file IO definition
         if IO == 'I': return self._inputSvcTypDict[self._inputPersistency]
@@ -220,7 +276,7 @@ class IOHelper(object):
         return self._outputSvcTypDict[self._outputPersistency]
     
     def setupServices(self):
-        '''Setup the pool/Root services, to be done by LHCbApp'''
+        '''Services:  Setup the pool/Root services, to be done by LHCbApp'''
         from Gaudi.Configuration import (EventDataSvc, ApplicationMgr, EventPersistencySvc)
         # Set up the TES
         EventDataSvc( ForceLeaves        = True,
@@ -265,9 +321,12 @@ class IOHelper(object):
         #if this is a normal job with no flattened files, UserConfigurables are anyway called last
         #and so converting when the services are established is the best way.
         self.convertSelector()
+        
+        #always convert defined streams
+        self.convertStreams()
     
     def activeServices(self):
-        '''return all configured persistency services'''
+        '''Services:  return all configured persistency services'''
         from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
         retlist=[]
         retlist+=self._getSvcList(ApplicationMgr().ExtSvc)
@@ -277,11 +336,11 @@ class IOHelper(object):
         return retlist
     
     def activePersistencies(self):
-        '''return all configured persistency services'''
+        '''Services:  return all configured persistency services'''
         return self._getPersistencyList(self.activeServices())
     
     def clearServices(self):
-        '''remove all persistency services'''
+        '''Services:  remove all persistency services'''
         from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
         
         active=self.activeServices()
@@ -294,21 +353,36 @@ class IOHelper(object):
         self._removeConfigurables(active)
     
     def servicesExist(self):
-        '''Check if any of the the services required for this persistency are set up'''
+        '''Services:  Check if any of the the services required for this persistency are set up'''
         return (self._inputPersistency in self.activePersistencies() and self._outputPersistency in self.activePersistencies())
     
     def changeServices(self):
-        '''Go through the list of gaudi services, remove any persistency services and add different ones
+        '''Services:  Go through the list of gaudi services, remove any persistency services and add different ones
         Only change services if the services already set up are not correct.
         '''
         if self.servicesExist():
+            self.convertSelector()
+            self.convertStreams()
             return
         
         self.clearServices()
         self.setupServices()
     
+    def postConfigServices(self, eventSelector):
+        '''Services:  append a Post Config action to change the services, input and outpu
+        this is a helper function for patching old software
+        '''
+        from Gaudi.Configuration import appendPostConfigAction
+        
+        appendPostConfigAction(self.changeServices)
+    
+    
+    ###############################################################
+    #              Filenames
+    ###############################################################
+    
     def dressFile(self,filename,IO):
-        '''Go from file name to connection string'''
+        '''Filenames:  Go from file name to connection string'''
         IO=self.__chooseIO(IO)
         if "DATAFILE=" in filename:
             raise ValueError, "the file has already been dressed, don't dress a dressed file!: "+filename
@@ -318,7 +392,7 @@ class IOHelper(object):
         return "DATAFILE='" + filename + "' " + self.svcTypString( 'I' ) + " OPT='READ'"
     
     def undressFile(self,filestring):
-        '''Go from connection string to file name'''
+        '''Filenames:  Go from connection string to file name'''
         match="DATAFILE='"
         pos=filestring.find(match)
         if pos>=0:
@@ -329,7 +403,7 @@ class IOHelper(object):
         return filestring
     
     def detectFileType(self, filestring):
-        '''Go from connection string to persistency type'''
+        '''Filenames:  Go from connection string to persistency type'''
         for type in self._inputSvcTypDict:
             if self._inputSvcTypDict[type] in filestring:
                 return type
@@ -338,7 +412,7 @@ class IOHelper(object):
         return "UNKNOWN"
     
     def convertConnectionStrings(self, filelist, IO):
-        '''Go from a list of connection strings or file names to a new list of connection strings
+        '''Filenames:  Go from a list of connection strings or file names to a new list of connection strings
         needs to know the IO type to know what to convert to'''
         IO=self.__chooseIO(IO)
         retlist=[]
@@ -351,8 +425,13 @@ class IOHelper(object):
             retlist.append( self.dressFile( self.undressFile(file),IO) )
         return retlist
     
+    
+    ###############################################################
+    #              Input
+    ###############################################################
+    
     def convertSelector(self, eventSelector=None):
-        '''Modify an EventSelector to switch to the new input connection strings
+        '''Input:  Modify an EventSelector to switch to the new input connection strings
         Go from a list of connection strings or file names to a new list of connection strings
         
         convertSelector(self, eventSelector=None)
@@ -364,7 +443,7 @@ class IOHelper(object):
         if eventSelector is None:
             from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
-
+        
         #don't do anything if _my_ type is MDF to avoid overwiting everything forever
         if self._inputPersistency=="MDF":
             return eventSelector
@@ -374,7 +453,7 @@ class IOHelper(object):
         return eventSelector
     
     def inputFiles(self,files,clear=False, eventSelector=None):
-        '''Edit the content of EventSelector and fill the Inputs with 
+        '''Input:  Edit the content of EventSelector and fill the Inputs with 
         Go from a list of connection strings or file names to a new list of connection strings
         
         inputFiles(self,files,clear=True, eventSelector=None)
@@ -404,92 +483,8 @@ class IOHelper(object):
             eventSelector.Input += [ self.dressFile(self.undressFile(file),'I') ]
         return eventSelector
     
-    def outputAlgs(self,filename,writer="OutputStream",writeFSR=True):
-        '''Create a output stream and FSR writing algorithm instance
-        to write into the given file.
-        
-        Any class inheriting from OutputStream can be used, with an instance name or configurable.
-        
-        e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
-        e.g. ioh.outputAlgs("test.dst",InputCopyStream("Spam"))
-        
-        returns a list of algorithms to append to your sequencer.
-        '''
-        
-        #build up the filename
-        filename=self.dressFile(filename,'O')
-        
-        #find the writer
-        wclass=None
-        winstance=None
-        
-        import Gaudi.Configuration as GaudiConfigurables
-        
-        if type(writer) is str:
-            writer=writer.replace('::','__')
-            
-            #if it's in Gaudi.Configuration
-            
-            if hasattr(GaudiConfigurables, writer.split('/')[0]):
-                wclass = getattr(GaudiConfigurables,writer.split('/')[0])
-            else:
-                import Configurables
-                wclass = getattr(Configurables,writer.split('/')[0])
-            #otherwise it must be a configurable
-            
-            #check if it has an instance name
-            if '/' not in writer:
-                winstance=wclass()
-            else:
-                winstance=wclass(name=writer.split('/')[-1])
-        
-        else:
-            winstance=writer
-            writer=writer.getFullName()
-        
-        winstance.Output = filename
-        
-        if not writeFSR: return [winstance]
-        
-        #ignore name when name is type
-        if writer.split('/')[0]== writer.split('/')[-1]:
-            writer=writer.split('/')[0]
-        
-        FSRWriter = GaudiConfigurables.RecordStream( "FSR"+writer.replace('/','').replace('::','').replace('__',''),
-                                                     ItemList = [ "/FileRecords#999" ],
-                                                     EvtDataSvc = "FileRecordDataSvc",
-                                                     EvtConversionSvc = "FileRecordPersistencySvc" )
-        
-        FSRWriter.Output = filename
-        
-        #As far as I can tell, the ordering of the algs does not matter here
-        return [winstance, FSRWriter]
-        #both result in well-formed Lumi tests
-        #return [FSRWriter, winstance]
-    
-    def outStream(self,filename,writer="OutputStream",writeFSR=True):
-        '''Create a output stream and FSR writing algorithm instance
-        to write into the given file.
-        
-        Any class inheriting from OutputStream can be used, with an instance name or configurable.
-        
-        e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
-        e.g. ioh.outputAlgs("test.dst",InputCopyStream("Spam"))
-        
-        Adds these streams directly to the Application manager OutStream
-        '''
-        from Gaudi.Configuration import ApplicationMgr
-        
-        algs=self.outputAlgs(filename,writer,writeFSR)
-        
-        if ApplicationMgr().OutStream is None or len(ApplicationMgr().OutStream)==0:
-            ApplicationMgr().OutStream =[]
-        
-        for alg in algs:
-            ApplicationMgr().OutStream.append(alg)
-    
     def selectorString(self, eventSelector=None):
-        '''return a string of the event selector which could be used in an old-style gaudi card
+        '''Input:  return a string of the event selector which could be used in an old-style gaudi card
         '''
         
         if eventSelector is None:
@@ -514,7 +509,7 @@ class IOHelper(object):
         return retstr
     
     def _subHelperString(self,files):
-        '''return a string when the types of files are the same'''
+        '''Input:  return a string when the types of files are the same'''
         retstr=''
         type=self.detectFileType(files[0])
         if(type)=="MDF":
@@ -532,7 +527,7 @@ class IOHelper(object):
         return retstr
     
     def helperString(self, eventSelector=None):
-        '''return a string of the IOHelper which could be used in a new-style gaudi card
+        '''Input:  return a string of the IOHelper which could be used in a new-style gaudi card
         '''
         
         if eventSelector is None:
@@ -566,11 +561,133 @@ class IOHelper(object):
         
         return retstr
     
-    def postConfigServices(self, eventSelector):
-        '''append a Post Config action to change the services
-        this is a helper function for patching old software
+    ###############################################################
+    #              Output
+    ###############################################################
+    
+    def activeStreams(self):
+        '''Output:  Find the list of Output Stream-type objects,
+        search through allConfigurables AppMgr.TopAlg and and AppMgr.OutStream'''
+        streams=[]
+        from Gaudi.Configuration import ApplicationMgr
+        for alg in ApplicationMgr().TopAlg:
+            algname=alg
+            if type(algname) is not str:
+                algname=alg.getFullName()
+            if self._isOutputStream(algname):
+                streams.append(alg)
+        
+        if ApplicationMgr().OutStream is not None:
+            streams+=ApplicationMgr().OutStream
+        
+        from Gaudi.Configuration import allConfigurables
+        for key in allConfigurables:
+            if self._isOutputStream(key):
+                if key not in streams and allConfigurables[key] not in streams:
+                    streams.append(allConfigurables[key])
+        
+        return streams
+    
+    def detectStreamType(self, stream):
+        '''Output:  From the name of the stream, deduce its type'''
+        
+        if type(stream)!=str:
+            stream=stream.getFullName()
+        
+        #only the type!
+        stream=stream.split('/')[0]
+        if stream in self._knownOutputStreams:
+            return self._knownOutputStreams[stream]
+        
+        return "UNKNOWN"
+    
+    def convertStreams(self, streams=None):
+        '''Output:  convert a list of OutputStreams, so that their Output files go to the new services
+        If no list of streams is given, it will search through allConfigurables and AppMgr.OutStream
         '''
-        from Gaudi.Configuration import appendPostConfigAction
+        #don't do anything if _my_ type is MDF to avoid overwiting everything forever
+        if self._outputPersistency=="MDF":
+            return
         
-        appendPostConfigAction(self.changeServices)
+        if streams is None:
+            streams=self.activeStreams()
         
+        for stream in streams:
+            if self.detectStreamType(stream) in ["MDF","UNKNOWN"]:
+                continue
+            if type(stream) is str:
+                stream=self._configurableInstanceFromString(stream)
+                
+            if hasattr(stream,'Output'):
+                if stream.Output is not None:
+                    if len(stream.Output):
+                        if self.detectFileType(stream.Output) not in ["MDF"]:
+                            stream.Output=self.dressFile(self.undressFile(stream.Output),"O")
+        return
+    
+    def outputAlgs(self,filename,writer="OutputStream",writeFSR=True):
+        '''Output:  Create a output stream and FSR writing algorithm instance
+        to write into the given file.
+        
+        Any class inheriting from OutputStream can be used, with an instance name or configurable.
+        
+        e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
+        e.g. ioh.outputAlgs("test.dst",InputCopyStream("Spam"))
+        
+        returns a list of algorithms to append to your sequencer.
+        '''
+        
+        #build up the filename
+        filename=self.dressFile(filename,'O')
+        
+        #find the writer
+        winstance=None
+        
+        import Gaudi.Configuration as GaudiConfigurables
+        
+        if type(writer) is str:
+            winstance=self._configurableInstanceFromString(writer)
+        else:
+            winstance=writer
+            writer=writer.getFullName()
+        
+        winstance.Output = filename
+        
+        if not writeFSR: return [winstance]
+        
+        #ignore name when name is type
+        if writer.split('/')[0]== writer.split('/')[-1]:
+            writer=writer.split('/')[0]
+        
+        FSRWriter = GaudiConfigurables.RecordStream( "FSR"+writer.replace('/','').replace('::','').replace('__',''),
+                                                     ItemList = [ "/FileRecords#999" ],
+                                                     EvtDataSvc = "FileRecordDataSvc",
+                                                     EvtConversionSvc = "FileRecordPersistencySvc" )
+        
+        FSRWriter.Output = filename
+        
+        #As far as I can tell, the ordering of the algs does not matter here
+        return [winstance, FSRWriter]
+        #both result in well-formed Lumi tests
+        #return [FSRWriter, winstance]
+    
+    def outStream(self,filename,writer="OutputStream",writeFSR=True):
+        '''Output:  Create a output stream and FSR writing algorithm instance
+        to write into the given file.
+        
+        Any class inheriting from OutputStream can be used, with an instance name or configurable.
+        
+        e.g. ioh.outputAlgs("test.dst","InputCopyStream/Spam")
+        e.g. ioh.outputAlgs("test.dst",InputCopyStream("Spam"))
+        
+        Adds these streams directly to the Application manager OutStream
+        '''
+        from Gaudi.Configuration import ApplicationMgr
+        
+        algs=self.outputAlgs(filename,writer,writeFSR)
+        
+        if ApplicationMgr().OutStream is None or len(ApplicationMgr().OutStream)==0:
+            ApplicationMgr().OutStream =[]
+        
+        for alg in algs:
+            ApplicationMgr().OutStream.append(alg)
