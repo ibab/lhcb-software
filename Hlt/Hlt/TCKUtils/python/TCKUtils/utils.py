@@ -663,7 +663,14 @@ class AccessProxy( object ) :
 def getConfigTree(id, cas = ConfigAccessSvc()):
     if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict()
     if id not in getConfigTree.forest :
-        getConfigTree.forest[id] = AccessProxy().access(cas).rgetConfigTree( id )
+        tree = AccessProxy().access(cas).rgetConfigTree( id )
+        getConfigTree.forest[id] = tree
+        if tree.digest != id : 
+            # in case we got a TCK, the remote side resolves this to an ID
+            # and we mark this ID in our cache. Unfortunately, it doesn't work
+            # the other way around (i.e. we first get an ID, then a TCK )
+            # and we must rely on the remote to cache as much as possible...
+            getConfigTree.forest[tree.digest] = tree
     return getConfigTree.forest[id]
 
 def getConfigurations( cas = ConfigAccessSvc() ) :
