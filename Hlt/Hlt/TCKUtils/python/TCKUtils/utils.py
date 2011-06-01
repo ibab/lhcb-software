@@ -438,6 +438,9 @@ def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc(), extra = None ) :
     return execInSandbox( _updateL0TCK, id, l0tck, label, cas = cas, extra = extra)
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
+
+
+
 def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
     return execInSandbox( _copy, source, target )
 
@@ -638,12 +641,9 @@ AccessMgr.register('Access',RemoteAccess)
 class AccessProxy( object ) :
     _manager = None
     _access = None
+    _cas = None
     def __init__( self ) :
         print 'creating proxy in pid = %s' % os.getpid()
-        if not AccessProxy._manager :
-            AccessProxy._manager  = AccessMgr()
-            AccessProxy._manager.start()
-            print 'proxy started manager'
     # TODO: access should be seperately for each cas instance...
     #  worse: since Configurables are singletons, they may have 
     #         changed since the last time used. Hence, have to 
@@ -653,10 +653,30 @@ class AccessProxy( object ) :
     #         and start again... 
     #         (shouldn't have to flush PropertyConfig/ConfigTreeNode)
     def access( self, cas ) :
+        if not self._valid(cas) : self._flush()
+        if not AccessProxy._manager :
+            AccessProxy._manager  = AccessMgr()
+            AccessProxy._manager.start()
+            print 'proxy started manager'
         if not AccessProxy._access :
             print 'proxy requesting access to remote'
             AccessProxy._access = AccessProxy._manager.Access( cas )
+            AccessProxy._cas = cas
+            AccessProxy._properties = cas.getProperties()
+
         return AccessProxy._access
+    def _valid( self, cas ) :
+        if not AccessProxy._access : return True 
+        if cas != AccessProxy._cas : return False # different configurable!
+        return cas.getProperties() == AccessProxy._properties
+    def flush( self ) : # make flush visible such that eg. createTCKEntries can flush the remote and force re-reading...
+        print 'proxy: flushing remote'
+        AccessProxy._cas = None
+        AccessProxy._properties = None
+        AccessProxy._access = None
+        AccessProxy._manager.shutdown()
+        AccessProxy._manager = None
+
 
 
 def getConfigTree(id, cas = ConfigAccessSvc()):
