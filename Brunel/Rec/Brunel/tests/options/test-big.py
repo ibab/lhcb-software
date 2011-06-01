@@ -3,9 +3,10 @@ from Configurables import Brunel
 
 Brunel().DataType = "2010"
 
+from GaudiConf.IOHelper import IOHelper
 # file of selected large events
-EventSelector().Input = [
-  "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/run_69669_large_2ev.mdf?svcClass=default' SVC='LHCb::MDFSelector'"
-, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/run_70122_large_1ev.mdf?svcClass=default' SVC='LHCb::MDFSelector'"
-, "DATAFILE='root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/bug67364.mdf?svcClass=default' SVC='LHCb::MDFSelector'"
-    ]
+IOHelper("MDF").inputFiles( [
+  "root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/run_69669_large_2ev.mdf?svcClass=default"
+, "root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/run_70122_large_1ev.mdf?svcClass=default"
+, "root:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/bug67364.mdf?svcClass=default"
+    ] )

@@ -5,10 +5,14 @@ Purpose: LHCb reconstruction program
 
 - Changes to configurable:
   . Adapt to use of IOHelper in LHCbApp and DstConf
+  . Add "Persistency" slot and propagate to DstConf
 
 - Changes to QMTests:
 	. Add test of Brunel().WriteFSR=False to brunel.brunel-mc09-notruth test
   . Remove import of obsolete earlyData.py options from test-big.py
+  . Add brunel2010magoffroot, brunel2011magdownroot,  brunel-bigeventsroot,
+    brunel-mc10-withtruthroot replacing POOL with ROOT persistency and comparing
+    with corresponding POOL tests. Not yet commissioned
 
 - Changes to references to reflect changes in Brunel v40r0 output:
   . Put back "L1SizeMonitoring" from the default list of monitors following
@@ -21,6 +25,8 @@ Purpose: LHCb reconstruction program
   . Update clusterization counters (CaloReco) 
   . Small changes to Rich track selection cuts so they are noe the same
     everywhere and extend max P cut to effectively +inf value (RichRecSys)
+  . Add new plot for high Velo cluster multiplicity (VeloRecMonitors)
+  . Add TrackMonitoring to the list og RICH online histograms (RichRecQC)
 
 </PRE><H1><A NAME=v39r4>2011-05-14 Brunel v39r4</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,

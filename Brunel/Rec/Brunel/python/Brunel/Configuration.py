@@ -52,6 +52,7 @@ class Brunel(LHCbConfigurableUser):
        ,"DigiType"        : "Default"
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
+       ,"Persistency"     : None
        ,"WriteFSR"        : True 
        ,"WriteLumi"       : False 
        ,"Histograms"      : "OfflineFull"
@@ -86,6 +87,7 @@ class Brunel(LHCbConfigurableUser):
        ,'DigiType'     : """ Type of digi, can be ['Minimal','Default','Extended'] """
        ,'OutputType'   : """ Type of output file. Can be one of DstConf().KnownDstTypes (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
+       ,'Persistency'  : """ Overwrite the default persistency with something else. """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'WriteLumi'    : """ Flags whether to write out Lumi-only events to DST """
        ,'Histograms'   : """ Type of histograms. Can be one of self.KnownHistograms """
@@ -363,6 +365,10 @@ class Brunel(LHCbConfigurableUser):
         """
         Set up output stream
         """
+        if hasattr( self, "Persistency" ):
+            self.setOtherProps(LHCbApp(),["Persistency"])
+            self.setOtherProps(DstConf(),["Persistency"])
+            
         if dstType in [ "XDST", "DST", "RDST", "SDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
@@ -377,7 +383,7 @@ class Brunel(LHCbConfigurableUser):
                 if not dstWriter.isPropertySet( "OutputLevel" ):
                     dstWriter.OutputLevel = INFO
                 if self.getProp("WriteFSR"):
-                    FSRWriter = RecordStream( "FSRWriterOutputStreamDstWriter")
+                    FSRWriter = RecordStream( "FSROutputStreamDstWriter")
                     if not FSRWriter.isPropertySet( "OutputLevel" ):
                         FSRWriter.OutputLevel = INFO
             # Suppress spurious error when reading POOL files without run records
