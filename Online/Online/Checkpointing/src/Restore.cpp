@@ -467,7 +467,13 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
 
   if( *(int*)nam == *(int*)"[vdso]" ) {
     offset = a.offset;
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP VDSO area:");
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vdso] area:");
+    if ( fd_in>0 && data_len>0 ) m_fskip(fd_in,data_len);
+    return data_len;
+  }
+  if( *(long*)nam == *(long*)"[vsyscall]" ) {
+    offset = a.offset;
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vsyscall] area:");
     if ( fd_in>0 && data_len>0 ) m_fskip(fd_in,data_len);
     return data_len;
   }
@@ -529,7 +535,10 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   // Create the memory area. This mmap automatically unmaps old memory.
   void* data = mtcp_sys_mmap(addr,size,map_prot,flags,fd,offset);
   if ( data == MAP_FAILED || data != addr ) {
-    mtcp_output(MTCP_FATAL,"restore: error %d mapping 0x%X bytes offset%d at %p ->%p\n",mtcp_sys_errno,size,offset,addr,data);
+    int err = mtcp_sys_errno;
+    mtcp_output(MTCP_ERROR,"restore: \"%s\"\n",nam);
+    mtcp_output(MTCP_FATAL,"restore: error %d mapping 0x%X bytes offset%d at %p ->%p\n",
+		err,size,offset,addr,data);
   }
   // This mmapfile after prev. mmap is okay; use same args again. Posix says prev. map will be munmapped.
   if ( data_len > 0 )   {
@@ -542,7 +551,9 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   }
   if ( !(prot & PROT_WRITE) && (map_prot&PROT_WRITE) ) {
     if (mtcp_sys_mprotect (addr,size,prot) < 0) {
-      mtcp_output(MTCP_FATAL,"restore: error %d write-protecting 0x%X bytes at %p\n",mtcp_sys_errno,size,addr);
+      int err = mtcp_sys_errno;
+      mtcp_output(MTCP_FATAL,"restore: \"%s\" error %d write-protecting 0x%X bytes at %p\n",
+		  nam,err,size,addr);
     }
   }
   // Close image file (fd only gets in the way) */

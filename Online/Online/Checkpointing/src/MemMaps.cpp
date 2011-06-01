@@ -131,7 +131,11 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     return 0;
   }  
   else if( *(int*)a.name == *(int*)"[vdso]" ) {
-    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP VDSO area:");
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vdso] area:");
+    return 0;
+  }
+  else if( *(long*)a.name == *(long*)"[vsyscall]" ) {
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vsyscall] area:");
     return 0;
   }
   else if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
