@@ -9,8 +9,8 @@ preprocessor = LHCbPreprocessor + \
   RegexpReplacer("OID=000000A6-00000000","OID=0000020E-00000000") + \
   LineSkipper(["StoreExplorerAlg     INFO"]) + \
   LineSkipper(["TESFingerPrint"]) + \
-  LineSkipper(["InputCopyStream      INFO"]) + \
-  LineSkipper(["FSRWriterInputC...   INFO "]) + \
+  LineSkipper(["InputCopyStream      INFO "]) + \
+  LineSkipper(["FSRInputCopyStream   INFO "]) + \
   LineSkipper(["FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc"]) + \
