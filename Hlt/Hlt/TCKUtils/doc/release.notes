@@ -6,6 +6,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-05-30 - Gerhard Raven
+ - experimental implementation of using a (persistent) remote process.
+   Not all functionality may be working yet (esp. anything that _writes_
+   -- reading seems to be fine at this point)
+
+! 2011-05-30 - Gerhard Raven
  - funnel (almost) all access which needs Gaudi through createAccessSvcSingleton
    in preparation for moving AccessSvcSingleton into a dedicated process which
    is kept running

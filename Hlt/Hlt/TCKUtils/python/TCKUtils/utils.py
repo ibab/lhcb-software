@@ -17,10 +17,12 @@ alias = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type
 topLevelAlias = GaudiPython.gbl.ConfigTreeNodeAlias.createTopLevel
 TCK = GaudiPython.gbl.ConfigTreeNodeAlias.createTCK
 vector_string = GaudiPython.gbl.std.vector('std::string')
+from os import getpid
 
 def _appMgr() :
-    ApplicationMgr().AppName = ""
-    ApplicationMgr().OutputLevel = ERROR
+    print 'starting appMgr @ pid = %s' % getpid()
+    #ApplicationMgr().AppName = ""
+    #ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
     appMgr.initialize()
     return appMgr
@@ -299,11 +301,6 @@ class AccessSvcSingleton(object) :
          return self._cte().updateAndWrite(id,mods,label)
 
 
-# TODO: move AccessSvcSingleton into a seperate process, and 
-#       have it run a gaudi job and keep it going for as long
-#       as needed.... 
-# TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
-#       a callable (involving _pcs callable members), and receive the result...
 def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
     return AccessSvcSingleton( create = True, createConfigTreeEditor = createConfigTreeEditor )
 
@@ -311,24 +308,6 @@ def _getConfigTree( id , cas = ConfigAccessSvc() ) :
     createAccessSvcSingleton( cas = cas )
     return Tree(id)
 
-# TODO: caching should be done seperately for each cas instance...
-# TODO: move caching into AccessSvcSingleton
-def xget( ids , cas = ConfigAccessSvc() ) :
-    if 'forest' not in dir(xget) : xget.forest = dict()
-    fetch = [ id for id in ids if id not in xget.forest.keys() ]
-    if fetch :
-        xget.forest.update( execInSandbox( _xget, fetch, cas ) )
-    forest = dict()
-    for id in ids : forest[id] = xget.forest[id]
-    return forest
-
-# TODO: deprecate the use of _xget in favour of _getConfigTree...
-def _xget( ids , cas = ConfigAccessSvc() ) :
-    svc = createAccessSvcSingleton( cas )
-    table = dict()
-    for id in ids :
-        table[id] = dict( [ ( cfg.name, cfg ) for cfg in svc.collectLeafRefs(id) ] )
-    return table 
 
 def _copyTree(svc,nodeRef,prefix) :
     node = svc.readConfigTreeNode(nodeRef)
@@ -482,6 +461,17 @@ class Tree(object):
         yield self
         for i in self.nodes:
            for x in i._inorder() : yield x
+    def iterleafs(self) :
+        for i in self._inorder() : # this _can_ give duplicate leafs!!!
+            if i.leaf is None : continue
+            yield i.leaf
+    def leafs(self) :
+        d = dict()
+        for i in self.iterleafs() :
+            if i.name not in d : d[ i.name ] = i
+        return d
+
+
     #TODO: add direct access to leafs 'in' this tree by name
     # and use it to implement an efficient __contains__
 
@@ -572,9 +562,6 @@ def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
 def orphanScan( cas = ConfigAccessSvc() ) :
     return execInSandbox(_orphanScan, cas)
 
-def getConfigurations( cas = ConfigAccessSvc() ) :
-    #return _getConfigurations( cas )
-    return execInSandbox( _getConfigurations, cas )
 
 def getTCKInfo(x) :
     for (i,j) in getConfigurations().iteritems() :
@@ -584,10 +571,10 @@ def getTCKInfo(x) :
 def getReleases( cas = ConfigAccessSvc() ) :
     return set( [ i['release']  for i in getConfigurations(cas).itervalues()  ] )
 def getHltTypes( release, cas = ConfigAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
+    info = getConfigurations( cas )
     return set( [ i['hlttype']  for i in info.itervalues() if i['release']==release ] )
 def getTCKs( release = None, hlttype = None, cas = ConfigAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
+    info = getConfigurations( cas )
     pred = lambda x : x['TCK'] and ( not release or x['release'] == release ) and ( not hlttype or x['hlttype'] == hlttype )
     result = []
     for i in [ x for x in info.itervalues() if pred(x) ]:
@@ -595,7 +582,7 @@ def getTCKs( release = None, hlttype = None, cas = ConfigAccessSvc() ) :
                 result.append( ('0x%08x'%tck,i['label'])  )
     return result
 def getTCKList( cas = ConfigAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
+    info = getConfigurations( cas )
     result = []
     for i in info.itervalues() :
             for tck in i['TCK'] : result.append( '0x%08x'%tck  )
@@ -681,12 +668,76 @@ def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessS
            if v : line += '%-15s : %s' % ( k, v)
        file.write(line+'\n')
 
+class RemoteAccess(object) :
+    _svc = None
+    def __init__( self, cas ) :
+        print 'remote(%s) created at pid=%s' % (self,getpid())
+        RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
+    def rgetConfigTree( self, id ) :
+        print 'remote(%s) at pid=%s: _getConfigTree(%s)' % (self,getpid(),id)
+        # maybe prefetch all leafs by invoking 
+        # RemoteAccess._svc.collectLeafRefs(id)
+        return Tree(id)
+    #def rxget( self, ids ) :
+    #    print 'remote(%s) at pid=%s: _xget(%s)' % (self,getpid(),ids)
+    #    table = dict()
+    #    for id in ids :
+    #        table[id] = dict( [ ( cfg.name, cfg ) for cfg in RemoteAccess._svc.collectLeafRefs(id) ] )
+    #    return table 
+    def rgetConfigurations( self ) :
+        print 'remote(%s) at pid=%s: _getConfigurations()' % (self,getpid())
+        svc = RemoteAccess._svc
+        info = dict()
+        for i in svc.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
+            x = Configuration( i,svc )
+            info[ i.alias().str() ] = x
+        for i in svc.configTreeNodeAliases( alias( 'TCK/'  ) ) :
+            tck =  _tck(i.alias().str().split('/')[-1])
+            id  =  i.ref().str()
+            for k in info.values() :
+                if k.info['id'] == id : k.info['TCK'].append(tck)
+        for i in svc.configTreeNodeAliases( alias( 'TAG/'  ) ) :
+            tag = i.alias().str().split('/')[1:] 
+            id  = i.ref().str()
+            for k in info.values() : 
+                if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
+        return info
+
+from multiprocessing.managers import BaseManager
+class AccessMgr(BaseManager):
+    pass
+AccessMgr.register('Access',RemoteAccess)
+
 # TODO: caching should be done seperately for each cas instance...
 def getConfigTree(id, cas = ConfigAccessSvc()):
+    print 'getConfigTree(%s) at pid=%s' % (id,getpid())
     if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict()
     if id not in getConfigTree.forest :
-        getConfigTree.forest[id] = execInSandbox( _getConfigTree, id, cas )
+        if 'access' not in dir(getConfigTree) : 
+            getConfigTree.manager  = AccessMgr()
+            getConfigTree.manager.start()
+            getConfigTree.access = getConfigTree.manager.Access( cas )
+        getConfigTree.forest[id] = getConfigTree.access.rgetConfigTree( id )
     return getConfigTree.forest[id]
+
+# TODO: share access instance globally (seperate for each cas!)
+def getConfigurations( cas = ConfigAccessSvc() ) :
+    #return _getConfigurations( cas )
+    if 'access' not in dir(getConfigurations) : 
+            getConfigurations.manager  = AccessMgr()
+            getConfigurations.manager.start()
+            getConfigurations.access = getConfigurations.manager.Access( cas )
+    return  getConfigurations.access.rgetConfigurations()
+
+def xget( ids , cas = ConfigAccessSvc() ) :
+    if 'forest' not in dir(xget) : xget.forest = dict()
+    fetch = [ id for id in ids if id not in xget.forest.keys() ]
+    if fetch :
+        for t in fetch : xget.forest[t] = getConfigTree(t).leafs() 
+    forest = dict()
+    for id in ids : forest[id] = xget.forest[id]
+    return forest
+
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
