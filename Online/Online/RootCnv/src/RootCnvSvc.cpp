@@ -64,7 +64,7 @@ m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
   m_setup->cacheBranches.push_back("*");
   declareProperty("IOPerfStats",      m_ioPerfStats);
   declareProperty("ShareFiles",       m_shareFiles          = "NO");
-  declareProperty("EnableIncident",   m_incidentEnabled     = false);
+  declareProperty("EnableIncident",   m_incidentEnabled     = true);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
 
   declareProperty("CacheSize",        m_setup->basketSize   = 40000000);
@@ -477,10 +477,6 @@ StatusCode RootCnvSvc::i__createObj(IOpaqueAddress* pA, DataObject*& refpObj)  {
       string section = par[1].substr(1,len==string::npos ? string::npos : len-1);
 
       int nb = con->loadObj(section,par[1],ipar[1],pObj);
-      bool accept = nb>1;
-      if ( !accept ) accept |= (nb == 1 && pObj->clID() == CLID_DataObject);
-      if ( !accept ) accept |= (nb == 0 && pObj->clID() == CLID_DataObject);
-
       if ( nb > 1 || (nb == 1 && pObj->clID() == CLID_DataObject) ) {
         refpObj = pObj;
         return S_OK;
