@@ -155,24 +155,31 @@ StatusCode ParticleFlow4Jets::getContainers(){
 //=============================================================================
 bool ParticleFlow4Jets::selectTrack( const LHCb::Track* track )
 {
+  verbose()<<"selectTrack: Get the first state..."<<endreq;
   // Cut for infinite momentum
   LHCb::State& firstS = track ->	firstState () ;
+  verbose()<<"selectTrack: Check inf mom..."<<endreq;
   if ( std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal )
        return false ;
-
+  
+  verbose()<<"selectTrack: pass inf mom..."<<endreq;
   // Ghost removal for long tracks
   if(track->type()== LHCb::Track::Long ){
     int NTT = 0;
+    verbose()<<"selectTrack: Get track meas..."<<endreq;
     const std::vector< LHCb::LHCbID > & meas = track->lhcbIDs();
+    verbose()<<"selectTrack: "<<meas.size()<<" LHCbIDs"<<endreq;
     
     for (std::vector< LHCb::LHCbID >::const_iterator im = meas.begin() ; meas.end() != im ; ++ im ){
       if((*im).isTT () )NTT+=1;
     }
+    verbose()<<"selectTrack: "<<NTT<<" of them are from TT"<<endreq;
     // Should have TT hit but don't
     if ( m_ttExpectation->nExpected(*track)!= 0 && NTT == 0 ) return false;
     // Should not have TT hit and too small chi2perdof
     if ( m_ttExpectation->nExpected(*track)== 0 && track->chi2PerDoF () > m_noTTChi2PerDof ) return false;
   }
+  verbose()<<"selectTrack: passed all cuts"<<endreq;
   return true;
 }
 
@@ -189,6 +196,7 @@ StatusCode ParticleFlow4Jets::execute() {
   
   setFilterPassed(false);
 
+  verbose()<<"Entering execute"<<endreq;
   
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Few definitions ~~~~~~~~~~~~~~~~~~~~~~
   typedef std::map<int, std::pair< int , int > > BannedIDMap;
@@ -225,6 +233,7 @@ StatusCode ParticleFlow4Jets::execute() {
     }
   }
 
+
   // Create the output container
   LHCb::Particles* PFParticles = new LHCb::Particles();
   put( PFParticles , m_PFOutputLocation );
@@ -235,6 +244,7 @@ StatusCode ParticleFlow4Jets::execute() {
   BannedIDMap BannedHCALDigits;  
 
 
+  verbose()<<"Start charged Loop..."<<endreq;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The main loop for charged components  ~~~~~~~~~~~~~~~~~~~~~~
   // Loop over charged Protoparticles, reject bad tracks, make best PID hypo particle out of it
   // store the used ECAL cluster and HCAL digits
@@ -249,20 +259,31 @@ StatusCode ParticleFlow4Jets::execute() {
     // Extra cuts
     if ( !selectTrack(track) ) continue;
 
+    verbose()<<"Track passed selections... look at rel table to Calo"<<endreq;
     // Get the calorimeter clusters
     cRange = table  ->inverse()->relations ( track ) ;
-    double chi2TrClu = cRange.front().weight();
-    
-    // TODO: look if the info cannot be taken directly from the protoP
-    // TODO: remove the clusters from electrons brem
-    if ( chi2TrClu < m_Chi2CaloCut && BannedECALClusters.count(cRange.front().to()->seed().all())<0.5 ) {
-      std::pair< double , int > tmpPair;
-      tmpPair.first = TrackMatch ;
-      tmpPair.second =  track->key() ;
-      BannedECALClusters[cRange.front().to()->seed().all()] = tmpPair ;
+    if (cRange.size()>0){
+      
+      double chi2TrClu = cRange.front().weight();
+      verbose()<<"Track match at "<<chi2TrClu<<" with Cluster ID : "<<cRange.front().to()->seed().all()
+               <<" Is tagged already?: "<<BannedECALClusters.count(cRange.front().to()->seed().all())<<endreq;
+      
+      // TODO: look if the info cannot be taken directly from the protoP
+      // TODO: remove the clusters from electrons brem
+      if ( chi2TrClu < m_Chi2CaloCut && BannedECALClusters.count(cRange.front().to()->seed().all())<0.5 ) {
+        verbose()<<"Will tag as: "<<TrackMatch<<" the track "<<track->key()<<endreq;
+        std::pair< double , int > tmpPair;
+        tmpPair.first = TrackMatch ;
+        tmpPair.second =  track->key() ;
+        BannedECALClusters[cRange.front().to()->seed().all()] = tmpPair ;
+        verbose()<<"Tagged..."<<endreq;
+      }
+      verbose()<<"ECAL have been banned..."<<endreq;
     }
+    
     // Save the particle
     PFParticles->insert(MakeParticle(ch_pp));
+    verbose()<<"Particle is saved..."<<endreq;
 
     // Check if belongs to an electron hypothesis...
     if(m_catchBremFromElectrons){  
@@ -290,6 +311,7 @@ StatusCode ParticleFlow4Jets::execute() {
   
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The loops for neutral components  ~~~~~~~~~~~~~~~~~~~~~~
 
+  verbose()<<"Start merged pi0 Loop..."<<endreq;
   // Loop over Merged Pi0, if clusters are not tagged yet, use and tag
 
   for (LHCb::Particles::const_iterator in_p = m_particleContainers["MergedPi0"] -> begin()
@@ -312,6 +334,7 @@ StatusCode ParticleFlow4Jets::execute() {
 
   // Loop over Resolved Pi0, if clusters are not tagged yet, use and tag
 
+  verbose()<<"Start resolved pi0 Loop..."<<endreq;
   for (LHCb::Particles::const_iterator in_p = m_particleContainers["ResolvedPi0"] -> begin()
          ; m_particleContainers["ResolvedPi0"] -> end() != in_p ; ++in_p ){
     LHCb::Particle::ConstVector daugs = (*in_p)->daughtersVector ();
@@ -357,6 +380,7 @@ StatusCode ParticleFlow4Jets::execute() {
 
   // Loop over Loose Photons, if clusters are not tagged yet, use and tag
 
+  verbose()<<"Start Photon Loop..."<<endreq;
   for (LHCb::Particles::const_iterator in_p = m_particleContainers["Photons"] -> begin()
          ; m_particleContainers["Photons"] -> end() != in_p ; ++in_p ){
     const LHCb::ProtoParticle* n_pp = (*in_p)->proto();
