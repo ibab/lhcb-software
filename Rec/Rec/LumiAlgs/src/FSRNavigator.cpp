@@ -46,6 +46,7 @@ std::vector< std::string > FSRNavigator::navigate(std::string rootname, std::str
   std::vector< std::string > addresses;
   SmartDataPtr<DataObject>   root(m_fileRecordSvc, rootname);
   if ( root ) {
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Root Found: " << rootname << " for " << tag << endmsg;
     explore(root->registry(), tag, addresses);
   }
   return addresses;
@@ -54,26 +55,35 @@ std::vector< std::string > FSRNavigator::navigate(std::string rootname, std::str
 //=============================================================================
 void FSRNavigator::explore(IRegistry* pObj, std::string tag, std::vector< std::string >& addresses) {
   // add the addresses which contain the tag to the list and search through the leaves
-  if ( 0 != pObj )    {
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Exploring Registry Object: " << endmsg;
+  if ( 0 != pObj )    
+  {
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Object is not null" << endmsg;
     std::string name = pObj->name();
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Object is " << name << "and I'm looking for " << tag << endmsg;
     std::string::size_type f = name.find(tag);
     std::string id = pObj->identifier();
-
+    
     // add this address to the list
     if ( f != std::string::npos ) addresses.push_back(id);
 
     // search through the leaves
     SmartIF<IDataManagerSvc> mgr(m_fileRecordSvc);
-    if ( mgr )    {
+    if ( mgr )    
+    {
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "Getting the leaves " << endmsg;
       typedef std::vector<IRegistry*> Leaves;
       Leaves leaves;
       StatusCode sc = mgr->objectLeaves(pObj, leaves);
-      if ( sc.isSuccess() )  {
-        for ( Leaves::const_iterator iLeaf=leaves.begin(); iLeaf != leaves.end(); iLeaf++ )   {
-	  // it is important to redefine leafRoot->registry() way back from the identifier 
-	  std::string leafId = (*iLeaf)->identifier();
-	  SmartDataPtr<DataObject> leafRoot(m_fileRecordSvc, leafId);
-	  explore(leafRoot->registry(), tag, addresses);
+      if ( sc.isSuccess() )  
+      {
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << "Found some leaves, moving to iterate over " << leaves.size() << endmsg;
+        for ( Leaves::const_iterator iLeaf=leaves.begin(); iLeaf != leaves.end(); iLeaf++ )   
+        {
+          // it is important to redefine leafRoot->registry() way back from the identifier 
+          std::string leafId = (*iLeaf)->identifier();
+          SmartDataPtr<DataObject> leafRoot(m_fileRecordSvc, leafId);
+          explore(leafRoot->registry(), tag, addresses);
         }
       }
     }

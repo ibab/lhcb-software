@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-06-01 - Rob Lambert
+ - Add more debug (verbose) information to FSRNavigator
+ - Update test references from FSR fixes in GaudiConf
+ 
+
 ! 2011-05-31 - Rob Lambert
  - Added framework test suite to check FSRs can move between frameworks
  - Root reading pool files or Root files shows no FSRs
