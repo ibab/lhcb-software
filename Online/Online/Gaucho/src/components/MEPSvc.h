@@ -43,6 +43,17 @@ public:
       i->second = 0;
     }
   }
+  void NegSuppress()
+  {
+    typename DetData_T<T>::iterator i;
+    for (i = this->begin();i!=this->end();i++)
+    {
+      if (i->second < 0)
+      {
+        i->second = 0;
+      }
+    }
+  }
 };
 template <> void DetData_T<long long>::FillDim(void *buff, int &siz)
 {
@@ -235,6 +246,14 @@ public:
       q.FillDim(ptr,siz);
       m_svcmap[k->first]->updateService(ptr,siz);
       free(ptr);
+    }
+  }
+  void NegSuppress()
+  {
+    typename DetMap_T::iterator i;
+    for (i=this->begin();i!=this->end();i++)
+    {
+      i->second.NegSuppress();
     }
   }
   void Zero()

@@ -140,6 +140,7 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
 //  m_DetMap_old.dump();
   fillsums();
   m_DetMap_diff = m_DetMap - m_DetMap_old;
+  m_DetMap_diff.NegSuppress();
   m_DetMap_old = m_DetMap;
   m_DetMap_diff.divide(m_DetMap_rate,delta);
 //  dump();
