@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Suggested acrontab entry:
+#
+# 00 20 * * * lxbuild157 /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/buildGeneralDoc
+#
+# The user running the script must be able to create AFS volumes in the $LHCBDOC
+# directory.
+
+# Temporary log file (we know where to put the log file only after the LbLogin)
+tmplog=`mktemp`
+outlog=$tmplog
+
+function logmsg() {
+    echo "====>" `date -Is` - "$@" >>$outlog 2>&1
+}
+
+function logcmd() {
+	logmsg cmd: "$@"
+	"$@" >>$outlog 2>&1
+}
+
+logmsg Starting $0
+
+# Get the location of the script
+basedir=`dirname "$0"`
+
+
+# Prepare the environment
+logcmd . $basedir/LbLogin.sh
+
+# Log file
+[ ! -d $LHCB_USERLOGS/doxygen ] && mkdir -p $LHCB_USERLOGS/doxygen
+outlog=$LHCB_USERLOGS/doxygen/doxygen.`date -I`.log
+mv -f $tmplog $outlog
+
+# Location of the documentation directories
+export DOCROOT=$LHCBDOC/doxygen
+
+# Chack if we are asked not to run
+if [ ! -e $DOCROOT/stop_cron ] ; then
+	# Fine tuning of the environment
+    logcmd . SetupProject.sh LbScripts --no-user --runtime LCGCMT graphviz
+    # Run the main script
+    logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused >>$outlog 2>&1
+else
+    logmsg "Doc generation disabled ($DOCROOT/stop_cron)"
+fi
+
+logmsg "Done"
+
+# Compress the log file
+bzip2 $outlog

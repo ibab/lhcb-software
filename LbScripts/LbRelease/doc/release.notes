@@ -1,3 +1,8 @@
+2011-06-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/buildGeneralDoc: script to be added to the (a)crontab to generate the
+	doxygen documentation of the released projects.
+
 2011-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r2
