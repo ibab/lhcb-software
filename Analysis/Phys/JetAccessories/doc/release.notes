@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-06-01 - Victor Coco
+ - Introduction of ParticleFlow4Jets algorithm, remove fragment folder
+
 !========================== JetAccessories v1r0 2011-04-29 ==================
 ! 2011-04-19 - Cédric Potterat
  - Introduction of src/TagJetsWithSeedFinder algorithm
