@@ -58,7 +58,7 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
 { 
   declareProperty( "PFOutputLocation"          ,  m_PFOutputLocation      
                    ,  "Output Location of the charged protoparticles 4 jets") ;  
-  declareProperty( "TrackSelectorType", m_trSelType = "DelegatingTrackSelector" 
+  declareProperty( "TrackSelectorType", m_trSelType = "" 
                    , "TrackSelector for choice of track inputs");
   declareProperty( "MaxMatchCaloTr" , m_Chi2CaloCut = 4. ,
                    "Maximal calo<-->track matching chi2");
@@ -91,7 +91,8 @@ StatusCode ParticleFlow4Jets::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   // get an instance of the track selector
-  m_trSel = tool<ITrackSelector>( m_trSelType, "TrackSelector", this );
+  if( m_trSelType != "")
+    m_trSel = tool<ITrackSelector>( m_trSelType, "TrackSelector", this );
 
   // get the TT Hit expectation tool
   m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");  
@@ -103,7 +104,6 @@ StatusCode ParticleFlow4Jets::initialize() {
     fatal() << "    Unable to locate Particle Property Service"	  << endreq;
     return sc;
   }
-
 
   // TODO turn it to ProbNN
   m_protoMap.push_back( ProtoPair( ppSvc->find( "pi+" ),
@@ -175,9 +175,9 @@ bool ParticleFlow4Jets::selectTrack( const LHCb::Track* track )
     }
     verbose()<<"selectTrack: "<<NTT<<" of them are from TT"<<endreq;
     // Should have TT hit but don't
-    if ( m_ttExpectation->nExpected(*track)!= 0 && NTT == 0 ) return false;
+    //if ( m_ttExpectation->nExpected(*track)!= 0 && NTT == 0 ) return false;
     // Should not have TT hit and too small chi2perdof
-    if ( m_ttExpectation->nExpected(*track)== 0 && track->chi2PerDoF () > m_noTTChi2PerDof ) return false;
+    //if ( m_ttExpectation->nExpected(*track)== 0 && track->chi2PerDoF () > m_noTTChi2PerDof ) return false;
   }
   verbose()<<"selectTrack: passed all cuts"<<endreq;
   return true;
@@ -223,13 +223,16 @@ StatusCode ParticleFlow4Jets::execute() {
 
   // Eventually store electrons PP keys
   std::vector< int > electronPPkeys;
-  if(m_catchBremFromElectrons){  
-    for (LHCb::Particles::const_iterator ie = m_particleContainers["Electrons"] -> begin()
-           ; m_particleContainers["Electrons"] -> end() != ie ; ++ie ){
-      if ((*ie)->proto() == NULL){
-        continue;
+  if(m_catchBremFromElectrons){
+    if (m_particleContainers.count("Electrons") < 0.5 ){
+      Warning("Catching bermstrahlung gamma fron e is activate but no electrons container is specified"); 
+    }
+    else{  
+      for (LHCb::Particles::const_iterator ie = m_particleContainers["Electrons"] -> begin()
+             ; m_particleContainers["Electrons"] -> end() != ie ; ++ie ){
+        if ((*ie)->proto() == NULL)  continue;
+        electronPPkeys.push_back((*ie)->proto()->key());
       }
-      electronPPkeys.push_back((*ie)->proto()->key());
     }
   }
 
@@ -255,7 +258,10 @@ StatusCode ParticleFlow4Jets::execute() {
     
     if ( track == NULL ) continue;
     // Check Track
-    if ( !m_trSel->accept(*track) ) continue;
+    if ( m_trSel!= 0 ){
+      if ( !m_trSel->accept(*track) ) continue;
+    }
+    
     // Extra cuts
     if ( !selectTrack(track) ) continue;
 
@@ -286,7 +292,7 @@ StatusCode ParticleFlow4Jets::execute() {
     verbose()<<"Particle is saved..."<<endreq;
 
     // Check if belongs to an electron hypothesis...
-    if(m_catchBremFromElectrons){  
+    if(m_catchBremFromElectrons){      
       for ( unsigned int i = 0 ; i < electronPPkeys.size() ; i++ ){
         if (electronPPkeys[i] != ch_pp->key()) continue;
         const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	ch_pp -> calo();
@@ -313,92 +319,99 @@ StatusCode ParticleFlow4Jets::execute() {
 
   verbose()<<"Start merged pi0 Loop..."<<endreq;
   // Loop over Merged Pi0, if clusters are not tagged yet, use and tag
-
-  for (LHCb::Particles::const_iterator in_p = m_particleContainers["MergedPi0"] -> begin()
-         ; m_particleContainers["MergedPi0"] -> end() != in_p ; ++in_p ){
-    const LHCb::ProtoParticle* n_pp = (*in_p)->proto();
-    if (n_pp == NULL) continue;
-    const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
-    const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
-
-    // If the cluster have already been tagged, skip.
-    if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5)continue;
-    std::pair< double , int > tmpPair;
-    tmpPair.first = MergedPi0 ;
-    tmpPair.second =  (*in_p)->key() ;
-    BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
-
-    // Save the particle
-    PFParticles->insert((*in_p)->clone());
-  }
-
-  // Loop over Resolved Pi0, if clusters are not tagged yet, use and tag
-
-  verbose()<<"Start resolved pi0 Loop..."<<endreq;
-  for (LHCb::Particles::const_iterator in_p = m_particleContainers["ResolvedPi0"] -> begin()
-         ; m_particleContainers["ResolvedPi0"] -> end() != in_p ; ++in_p ){
-    LHCb::Particle::ConstVector daugs = (*in_p)->daughtersVector ();
-    double minPhotonID = -1000.;
-    bool skip = false;
-    std::vector< int > caloCells;
-
-    // Loop over daughters
-    for  (LHCb::Particle::ConstVector::const_iterator i_daug = daugs. begin()  ; daugs.end() != i_daug ; ++i_daug ){
-      const LHCb::ProtoParticle* n_pp = (*i_daug)->proto();
-      if (n_pp == NULL)  continue;
-
-      // Get their minimal PhotonID
-      double PhotonID = (*i_daug)->proto()->info( LHCb::ProtoParticle::PhotonID,-100.) ;
-      if( minPhotonID < -999.) minPhotonID = PhotonID ;
-      if ( PhotonID < minPhotonID ) minPhotonID = PhotonID ;
-      // ban the corresponding cluster
+  if (m_particleContainers.count("MergedPi0") > 0.5 ){
+    for (LHCb::Particles::const_iterator in_p = m_particleContainers["MergedPi0"] -> begin()
+           ; m_particleContainers["MergedPi0"] -> end() != in_p ; ++in_p ){
+      const LHCb::ProtoParticle* n_pp = (*in_p)->proto();
+      if (n_pp == NULL) continue;
       const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
       const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
-      // Store the cell ID
-      caloCells.push_back(hypoClusters[0].target()->seed().all());
+
       // If the cluster have already been tagged, skip.
-      if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5){
-        skip = true;
-        continue;
-      }
-    }
-    // If both daugther have correct ID and are not used, save the particle and ban
-    if ( minPhotonID > m_photonID4ResolvedPi0 && !skip ){
+      if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5)continue;
+      std::pair< double , int > tmpPair;
+      tmpPair.first = MergedPi0 ;
+      tmpPair.second =  (*in_p)->key() ;
+      BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
 
       // Save the particle
       PFParticles->insert((*in_p)->clone());
+    }
+  }
+  
+  // Loop over Resolved Pi0, if clusters are not tagged yet, use and tag
 
-      // ban the corresponding clusters
-      for (unsigned int iclu = 0 ; iclu < caloCells.size(); iclu++){ 
-        std::pair< double , int > tmpPair;
-        tmpPair.first = ResolvedPi0 ;
-        tmpPair.second =  (*in_p)->key() ;
-        BannedECALClusters[caloCells[iclu]] = tmpPair ;
+  verbose()<<"Start resolved pi0 Loop..."<<endreq;
+  if (m_particleContainers.count("ResolvedPi0") > 0.5 ){
+    for (LHCb::Particles::const_iterator in_p = m_particleContainers["ResolvedPi0"] -> begin()
+           ; m_particleContainers["ResolvedPi0"] -> end() != in_p ; ++in_p ){
+      LHCb::Particle::ConstVector daugs = (*in_p)->daughtersVector ();
+      double minPhotonID = -1000.;
+      bool skip = false;
+      std::vector< int > caloCells;
+
+      // Loop over daughters
+      for  (LHCb::Particle::ConstVector::const_iterator i_daug = daugs. begin()  ; daugs.end() != i_daug ; ++i_daug ){
+        const LHCb::ProtoParticle* n_pp = (*i_daug)->proto();
+        if (n_pp == NULL)  continue;
+
+        // Get their minimal PhotonID
+        double PhotonID = (*i_daug)->proto()->info( LHCb::ProtoParticle::PhotonID,-100.) ;
+        if( minPhotonID < -999.) minPhotonID = PhotonID ;
+        if ( PhotonID < minPhotonID ) minPhotonID = PhotonID ;
+        // ban the corresponding cluster
+        const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
+        const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
+        // Store the cell ID
+        caloCells.push_back(hypoClusters[0].target()->seed().all());
+        // If the cluster have already been tagged, skip.
+        if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5){
+          skip = true;
+          continue;
+        }
+      }
+      // If both daugther have correct ID and are not used, save the particle and ban
+      if ( minPhotonID > m_photonID4ResolvedPi0 && !skip ){
+
+        // Save the particle
+        PFParticles->insert((*in_p)->clone());
+
+        // ban the corresponding clusters
+        for (unsigned int iclu = 0 ; iclu < caloCells.size(); iclu++){ 
+          std::pair< double , int > tmpPair;
+          tmpPair.first = ResolvedPi0 ;
+          tmpPair.second =  (*in_p)->key() ;
+          BannedECALClusters[caloCells[iclu]] = tmpPair ;
+        }
       }
     }
   }
+  
 
   // Loop over Loose Photons, if clusters are not tagged yet, use and tag
 
   verbose()<<"Start Photon Loop..."<<endreq;
-  for (LHCb::Particles::const_iterator in_p = m_particleContainers["Photons"] -> begin()
-         ; m_particleContainers["Photons"] -> end() != in_p ; ++in_p ){
-    const LHCb::ProtoParticle* n_pp = (*in_p)->proto();
-    if (n_pp == NULL)  continue;
-    const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
-    const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
+  if (m_particleContainers.count("Photons") > 0.5 ){
+    for (LHCb::Particles::const_iterator in_p = m_particleContainers["Photons"] -> begin()
+           ; m_particleContainers["Photons"] -> end() != in_p ; ++in_p ){
+      const LHCb::ProtoParticle* n_pp = (*in_p)->proto();
+      if (n_pp == NULL)  continue;
+      const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
+      const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
 
-    // If the cluster have already been tagged, or does not match the photonID reqirements skip.
-    if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5 
-        || n_pp ->info( LHCb::ProtoParticle::PhotonID,-100.)< m_photonID4Photon )continue;
-    std::pair< double , int > tmpPair;
-    tmpPair.first =  Photon ;
-    tmpPair.second =  (*in_p)->key() ;
-    BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
+      // If the cluster have already been tagged, or does not match the photonID reqirements skip.
+      if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5 
+          || n_pp ->info( LHCb::ProtoParticle::PhotonID,-100.)< m_photonID4Photon )continue;
+      std::pair< double , int > tmpPair;
+      tmpPair.first =  Photon ;
+      tmpPair.second =  (*in_p)->key() ;
+      BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
 
-    // Save the particle
-    PFParticles->insert((*in_p)->clone());
+      // Save the particle
+      PFParticles->insert((*in_p)->clone());
+    }
   }
+  
   
   debug()<<"PFParticles: "<<PFParticles->size()<<endreq;
   
