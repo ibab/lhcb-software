@@ -13,9 +13,10 @@ Writer.GenerateMD5                   = true;
 Writer.Connection                    = "file:///tmp/mdfOutput";
 // Limits for creation of a new file with time stamp added
 // Which ever is  reached first will trigger the file creation and reset both counters
-Writer.MaxFileSizeKB                 = 150;  
-Writer.MaxFileEvents                 = 100000;  
-EventSelector.Input                  = "RESULT";
+Writer.MaxFileSizeKB                 = 150;     // will be ignored if TimeOut != 0
+Writer.MaxFileEvents                 = 100000;  // will be ignored if TimeOut != 0
+Writer.TimeOut                       = 0;   // seconds
+UventSelector.Input                  = "RESULT";
 EventSelector.Decode                 = true;
 EventSelector.PartitionID            = 333;
 EventDataSvc.RootCLID                = 1;
