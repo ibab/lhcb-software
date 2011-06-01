@@ -215,30 +215,6 @@ def _createTCKEntries(d, cas ) :
         svc.writeConfigTreeNodeAlias(alias)
 
 
-def _getConfigurations( cas = ConfigAccessSvc() ) :
-    svc = createAccessSvcSingleton( cas = cas )
-    info = dict()
-    for i in svc.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
-        x = Configuration( i,svc )
-        info[ i.alias().str() ] = x
-    for i in svc.configTreeNodeAliases( alias( 'TCK/'  ) ) :
-        tck =  _tck(i.alias().str().split('/')[-1])
-        id  =  i.ref().str()
-        for k in info.values() :
-            if k.info['id'] == id : k.info['TCK'].append(tck)
-    for i in svc.configTreeNodeAliases( alias( 'TAG/'  ) ) :
-        tag = i.alias().str().split('/')[1:] 
-        id  = i.ref().str()
-        for k in info.values() : 
-            if k.info['id'] == id : k.update( { 'TAG' : tag } ) 
-    return info
-
-# TODO: move AccessSvcSingleton into a seperate process, and 
-#       have it run a gaudi job and keep it going for as long
-#       as needed....
-# TODO: Make AccessSvcSingle a proxy for a remote Gaudi process, 
-#       make it possible to sent the remote
-#       a callable, and receive the result...
 class AccessSvcSingleton(object) :
     __pcs = None
     __cas = None
@@ -339,7 +315,7 @@ def _lookupProperty(table,algname,property) :
     if property not in properties: raise KeyError("could not locate property %s for algorithm %s in specified config"%(property,algname) )
     return properties[property]
 
-def _getProperty(id,algname,property, cas ) :
+def getProperty(id,algname,property, cas ) :
     tables = xget( [ id ], cas )
     return _lookupProperty(tables[id],algname,property)
 
@@ -591,7 +567,7 @@ def getRoutingBits( id , cas = ConfigAccessSvc() ) :
     # should be a map... so we try to 'eval' it
     for p in ['RoutingBits','routingBitDefinitions'] :
         try :
-            return eval(_getProperty(id,'HltRoutingBitsWriter',p,cas))
+            return eval(getProperty(id,'HltRoutingBitsWriter',p,cas))
         except KeyError : 
             continue
     return None
@@ -678,12 +654,6 @@ class RemoteAccess(object) :
         # maybe prefetch all leafs by invoking 
         # RemoteAccess._svc.collectLeafRefs(id)
         return Tree(id)
-    #def rxget( self, ids ) :
-    #    print 'remote(%s) at pid=%s: _xget(%s)' % (self,getpid(),ids)
-    #    table = dict()
-    #    for id in ids :
-    #        table[id] = dict( [ ( cfg.name, cfg ) for cfg in RemoteAccess._svc.collectLeafRefs(id) ] )
-    #    return table 
     def rgetConfigurations( self ) :
         print 'remote(%s) at pid=%s: _getConfigurations()' % (self,getpid())
         svc = RemoteAccess._svc
@@ -706,28 +676,37 @@ class RemoteAccess(object) :
 from multiprocessing.managers import BaseManager
 class AccessMgr(BaseManager):
     pass
+
 AccessMgr.register('Access',RemoteAccess)
+
+
+class AccessProxy( object ) :
+    _manager = None
+    _access = None
+    def __init__( self ) :
+        print 'creating proxy'
+        if not AccessProxy._manager :
+            AccessProxy._manager  = AccessMgr()
+            AccessProxy._manager.start()
+            print 'proxy started manager'
+    def access( self, cas ) :
+        if not AccessProxy._access :
+            print 'proxy requested access'
+            AccessProxy._access = AccessProxy._manager.Access( cas )
+        return AccessProxy._access
+
 
 # TODO: caching should be done seperately for each cas instance...
 def getConfigTree(id, cas = ConfigAccessSvc()):
     print 'getConfigTree(%s) at pid=%s' % (id,getpid())
     if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict()
     if id not in getConfigTree.forest :
-        if 'access' not in dir(getConfigTree) : 
-            getConfigTree.manager  = AccessMgr()
-            getConfigTree.manager.start()
-            getConfigTree.access = getConfigTree.manager.Access( cas )
-        getConfigTree.forest[id] = getConfigTree.access.rgetConfigTree( id )
+        getConfigTree.forest[id] = AccessProxy().access(cas).rgetConfigTree( id )
     return getConfigTree.forest[id]
 
 # TODO: share access instance globally (seperate for each cas!)
 def getConfigurations( cas = ConfigAccessSvc() ) :
-    #return _getConfigurations( cas )
-    if 'access' not in dir(getConfigurations) : 
-            getConfigurations.manager  = AccessMgr()
-            getConfigurations.manager.start()
-            getConfigurations.access = getConfigurations.manager.Access( cas )
-    return  getConfigurations.access.rgetConfigurations()
+    return  AccessProxy().access(cas).rgetConfigurations()
 
 def xget( ids , cas = ConfigAccessSvc() ) :
     if 'forest' not in dir(xget) : xget.forest = dict()
@@ -741,10 +720,10 @@ def xget( ids , cas = ConfigAccessSvc() ) :
 
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
-    return eval(_getProperty(id,'Hlt1','Members',cas))
+    return eval(getProperty(id,'Hlt1','Members',cas))
 def getHlt2Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
-    return eval(_getProperty(id,'Hlt2','Members',cas))
+    return eval(getProperty(id,'Hlt2','Members',cas))
 def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
     table = xget( [ id ], cas )[id]
     lines = eval(_lookupProperty(table,'Hlt1','Members'))
