@@ -32,6 +32,7 @@ class Interactor;
 namespace SCR {
   struct Display;
   struct Pasteboard;
+  struct MouseEvent;
 }
 /*
  *   ROMon namespace declaration
@@ -145,20 +146,11 @@ namespace ROMon {
     static void tsDataHandler(void* tag, void* address, int* size);
   };
 
-  /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Monitoring display for the LHCb storage system.
-   *
-   *   @author M.Frank
-   */
-  class FarmDisplay : public InternalDisplay  {
+  class FarmDisplayShow : public InternalDisplay  {
   protected:
     enum { HLT_MODE, RECO_MODE, CTRL_MODE };
-    typedef std::map<std::string, InternalDisplay*> SubDisplays;
-    typedef std::vector<std::string> Farms;
-    SubDisplays                      m_farmDisplays;
-    std::auto_ptr<PartitionListener> m_listener;
     ClusterDisplay*                  m_subfarmDisplay;
+    ScrDisplay*                      m_nodeSelector;
     std::auto_ptr<ClusterDisplay>    m_sysDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
     std::auto_ptr<CtrlNodeDisplay>   m_ctrlDisplay;
@@ -168,7 +160,70 @@ namespace ROMon {
     std::auto_ptr<InternalDisplay>   m_bootDisplay;
     std::auto_ptr<InternalDisplay>   m_statsDisplay;
     std::auto_ptr<InternalDisplay>   m_benchDisplay;
-    ScrDisplay*                      m_nodeSelector;
+    int                              m_subDisplayHeight;
+    int                              m_anchorX, m_anchorY;
+    int                              m_mode;
+    /// Main cursor position
+    size_t                           m_posCursor;
+    /// Cursor position in sub display array
+    size_t                           m_subPosCursor;
+
+    /// Standard constructor
+    FarmDisplayShow();
+    /// Standard destructor
+    virtual ~FarmDisplayShow();
+
+    /// Get farm display name from cursor position
+    virtual std::string currentDisplayName()  const = 0;
+    /// Get the name of the currently selected cluster
+    virtual std::string selectedCluster() const = 0;
+    /// Get the name of the currently selected cluster and node
+    virtual std::pair<std::string,std::string> selectedNode() const = 0;
+    /// Set cursor to appropriate position
+    virtual void set_cursor() = 0;
+
+    /// Show context dependent help window
+    int showHelpWindow();
+    /// Show subfarm display
+    int showSubfarm();
+    /// Show window with node control information
+    int showCtrlWindow();
+    /// Show window with processes on a given node
+    int showProcessWindow(int full=0);
+    /// Show window with CPU information of a given subfarm
+    int showCpuWindow();
+    /// Show window with buffer information of a given node
+    int showMbmWindow();
+    /// Show window with SYSTEM information of a given subfarm
+    int showSysWindow();
+    /// Show window with boot information of the subfarm
+    int showBootWindow();
+    /// Show window with boot information of the subfarm
+    int showStatsWindow();
+    /// Show window to run Moore bench marks
+    int showBenchmarkWindow();
+
+    /// Handle common Mouse interrupt
+    virtual bool handleMouseEvent(const SCR::MouseEvent* m);
+    /// Handle common IOC interrupt
+    virtual bool handleIocEvent(const Event& ev);
+    /// Handle common keyboard interrupts
+    virtual int handleKeyboard(int key);
+  };
+
+  /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
+   *
+   *   Monitoring display for the LHCb storage system.
+   *
+   *   @author M.Frank
+   */
+  class FarmDisplay : public FarmDisplayShow  {
+  protected:
+    enum { HLT_MODE, RECO_MODE, CTRL_MODE };
+    typedef std::map<std::string, InternalDisplay*> SubDisplays;
+    typedef std::vector<std::string> Farms;
+    SubDisplays                      m_farmDisplays;
+    std::auto_ptr<PartitionListener> m_listener;
     std::string                      m_partition;
     std::string                      m_match;
     /// vector with all farm displays
@@ -177,10 +232,8 @@ namespace ROMon {
     int                              m_width;
     int                              m_dense;
     /// Cursor position in sub display array
-    size_t                           m_posCursor;
-    size_t                           m_subPosCursor;
-    int                              m_anchorX, m_anchorY;
-    int                              m_mode;
+    int                              m_subDisplayHeight;
+
     /// Keyboard rearm action
     static int key_rearm (unsigned int fac, void* param);
     /// Keyboard action
@@ -193,11 +246,14 @@ public:
     /// Standard destructor
     virtual ~FarmDisplay();
 
+    /// Get farm display name from cursor position
+    virtual std::string currentDisplayName()  const;
+
     /// Get the name of the currently selected cluster
-    std::string selectedCluster() const;
+    virtual std::string selectedCluster() const;
 
     /// Get the name of the currently selected cluster and node
-    std::pair<std::string,std::string> selectedNode() const;
+    virtual std::pair<std::string,std::string> selectedNode() const;
 
     /// Number of sub-nodes in a cluster
     size_t selectedClusterSize() const;
@@ -207,9 +263,6 @@ public:
 
     /// Get farm display from cursor position
     InternalDisplay* currentDisplay()  const;
-
-    /// Get farm display name from cursor position
-    std::string currentDisplayName()  const;
 
     /// Accessor to sub-displays of main panel
     SubDisplays& subDisplays() {  return m_farmDisplays; }
@@ -230,26 +283,6 @@ public:
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
 
-    /// Show subfarm display
-    int showSubfarm();
-    /// Show context dependent help window
-    int showHelpWindow();
-    /// Show window with processes on a given node
-    int showProcessWindow(int full=0);
-    /// Show window with CPU information of a given subfarm
-    int showCpuWindow();
-    /// Show window with buffer information of a given node
-    int showMbmWindow();
-    /// Show window with SYSTEM information of a given subfarm
-    int showSysWindow();
-    /// Show window with boot information of the subfarm
-    int showBootWindow();
-    /// Show window with boot information of the subfarm
-    int showStatsWindow();
-    /// Show window to run Moore bench marks
-    int showBenchmarkWindow();
-    /// Show window with node control information
-    int showCtrlWindow();
     /// DIM command service callback
     static void dnsDataHandler(void* tag, void* address, int* size);
 

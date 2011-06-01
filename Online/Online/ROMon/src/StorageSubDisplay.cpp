@@ -15,6 +15,7 @@ namespace ROMon {
     int               m_totRecv;
     int               m_totSent;
     int               m_numUpdate;
+    int               m_height;
     bool              m_hasProblems;
     bool              m_inUse;
     std::string       m_partition;
@@ -22,7 +23,7 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    StorageSubDisplay(InternalDisplay* parent, const std::string& title, bool bad=false);
+    StorageSubDisplay(InternalDisplay* parent, const std::string& title, int height, bool bad=false);
     /// Standard destructor
     virtual ~StorageSubDisplay();
     /// Initialize default display text
@@ -48,8 +49,8 @@ namespace ROMon {
     virtual void updateContent(const Nodeset& ns);
   };
 
-  InternalDisplay* createStorageSubDisplay(InternalDisplay* parent, const std::string& title) {
-    return new StorageSubDisplay(parent,title);
+  InternalDisplay* createStorageSubDisplay(InternalDisplay* parent, const std::string& title, int height) {
+    return new StorageSubDisplay(parent,title,height);
   }
 }
 #include <set>
@@ -69,16 +70,17 @@ using namespace std;
 #define UPDATE_TIME_MAX 15
 
 /// Initializing constructor
-StorageSubDisplay::StorageSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
+StorageSubDisplay::StorageSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
+  m_height  = height;
   m_evtSent = m_totSent = 0;
   m_evtRecv = m_totRecv = 0;
   m_partition = parent->name();
   m_relayNode = "storerecv";
   m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
+  ::scrc_create_display(&m_display,m_height,48,NORMAL,ON,m_title.c_str());
   init(bad);
   string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -100,12 +102,12 @@ void StorageSubDisplay::init(bool bad) {
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
   ::scrc_put_chars(m_display," ",col,3,1,1);
-  ::scrc_put_chars(m_display," ",col,4,1,1);
+  ::scrc_put_chars(m_display," ",col,m_height,1,1);
   ::scrc_put_chars(m_display,"Recv Layer:",BOLD,2,1,1);
   ::scrc_put_chars(m_display,"Stream Layer:",BOLD,3,1,1);
   ::scrc_put_chars(m_display,"  ",col,2,46,0);
   ::scrc_put_chars(m_display,"  ",col,3,45,0);
-  ::scrc_put_chars(m_display,"  ",col,4,44,0);
+  ::scrc_put_chars(m_display,"  ",col,m_height,44,0);
   ::scrc_set_border(m_display,m_title.c_str(),col|BOLD);
 }
 
@@ -120,7 +122,7 @@ void StorageSubDisplay::update(const void* address) {
 /// Set timeout error
 void StorageSubDisplay::setTimeoutError() {
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-  ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,4,1,1);
+  ::scrc_put_chars(m_display,"No update information available",BOLD|RED|INVERSE,m_height,1,1);
 }
 
 /// Check display for errors
@@ -215,47 +217,65 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
   }
+
+  if ( tot_prod[0] != 0 )
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+  else
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
+  ::scrc_put_chars(m_display,"Recv Layer:",BOLD,2,1,1);
+  ::scrc_put_chars(m_display,txt,NORMAL,2,14,1);
+
+  if ( tot_prod[1] != 0 )
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
+  else
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
+  ::scrc_put_chars(m_display,"Stream Layer:",BOLD,3,1,1);
+  ::scrc_put_chars(m_display,txt,NORMAL,3,14,1);
+
   m_hasProblems = true;
   if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
     setTimeoutError();
   }
   else if ( numNodes == 0 ) {
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," No nodes found!",BOLD|RED|INVERSE,4,1,1);
+    ::scrc_put_chars(m_display," No nodes found!",BOLD|RED|INVERSE,m_height,1,1);
   }
   else if ( !inuse ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Storage not used yet....",NORMAL|INVERSE|GREEN,4,1,1);
+    ::scrc_put_chars(m_display," Storage not used yet....",NORMAL|INVERSE|GREEN,m_height,1,1);
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SLOTS at limit:");
+    ::sprintf(txt,"SLOTS at limit:");
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Recv ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Stream ");
     ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
     ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,m_height,1,1);
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SPACE at limit:");
+    ::sprintf(txt,"SPACE at limit:");
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Recv ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Stream ");
     ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
     ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,m_height,1,1);
   }
   else if ( min_prod[0] != INT_max && min_prod[0]>0 && min_prod[0] <= m_evtRecv ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Receiving layer idle.",RED|BOLD,4,1,1);
+    ::scrc_put_chars(m_display,"Receiving layer idle.",RED|BOLD,m_height,1,1);
   }
   else if ( min_prod[1] != INT_max && min_prod[1]>0 && min_prod[1] <= m_evtSent ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Streaming layer idle.",RED|BOLD,4,1,1);
+    ::scrc_put_chars(m_display,"Streaming layer idle.",RED|BOLD,m_height,1,1);
+  }
+  else if ( m_height>3 )   {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display,"No obvious Errors detected....",NORMAL|INVERSE|GREEN,m_height,1,1);
   }
   else {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|INVERSE|GREEN);
   }
 
   m_evtRecv = min_prod[0];
@@ -263,16 +283,5 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
   m_totRecv = tot_prod[0];
   m_totSent = tot_prod[1];
 
-  if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
-  else
-    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
-  ::scrc_put_chars(m_display,txt,NORMAL,2,14,1);
-
-  if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
-  else
-    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
-  ::scrc_put_chars(m_display,txt,NORMAL,3,14,1);
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }

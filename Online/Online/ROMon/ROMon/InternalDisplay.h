@@ -47,8 +47,11 @@ namespace ROMon {
     SCR::Pasteboard*  m_pasteboard;
     /// Reference to SCR display structure
     SCR::Display*     m_display;
+    /// Reference to parent display
     InternalDisplay*  m_parent;
+    /// Display name
     std::string       m_name;
+    /// Display title
     std::string       m_title;
     /// Primary DIM service ID. Disconnected on disconnect
     int               m_svc;

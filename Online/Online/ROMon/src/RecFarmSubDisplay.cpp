@@ -16,10 +16,11 @@ namespace ROMon {
     int               m_totRecv;
     int               m_totReco;
     int               m_totSent;
+    int               m_height;
     bool              m_hasProblems;
   public:
     /// Initializing constructor
-    RecFarmSubDisplay(InternalDisplay* parent, const std::string& title, bool bad=false);
+    RecFarmSubDisplay(InternalDisplay* parent, const std::string& title, int height, bool bad=false);
     /// Standard destructor
     virtual ~RecFarmSubDisplay();
     /// Initialize default display text
@@ -45,8 +46,8 @@ namespace ROMon {
     { this->InternalDisplay::update(data,len); }
   };
 
-  InternalDisplay* createRecFarmSubDisplay(InternalDisplay* parent, const std::string& title) {
-    return new RecFarmSubDisplay(parent,title);
+  InternalDisplay* createRecFarmSubDisplay(InternalDisplay* parent, const std::string& title, int height) {
+    return new RecFarmSubDisplay(parent,title, height);
   }
 }
 #include <set>
@@ -72,14 +73,15 @@ static const float FLT_max = numeric_limits<float>::max();
 #define UPDATE_TIME_MAX 15
 
 /// Initializing constructor
-RecFarmSubDisplay::RecFarmSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
+RecFarmSubDisplay::RecFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_evtSent = m_totSent = 0;
   m_evtReco = m_totReco = 0;
   m_evtRecv = m_totRecv = 0;
   m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
+  m_height = height;
+  ::scrc_create_display(&m_display,m_height,48,NORMAL,ON,m_title.c_str());
   init(bad);
   string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -100,13 +102,13 @@ void RecFarmSubDisplay::init(bool bad) {
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
   ::scrc_put_chars(m_display," ",col,3,1,1);
-  ::scrc_put_chars(m_display," ",col,4,1,1);
+  ::scrc_put_chars(m_display," ",col,m_height,1,1);
   ::scrc_put_chars(m_display,"Tot:",BOLD,2,1,1);
   ::scrc_put_chars(m_display,"Min:",BOLD,3,1,1);
   ::scrc_put_chars(m_display,"Max:",BOLD,4,1,1);
   ::scrc_put_chars(m_display,"  ",col,2,46,0);
   ::scrc_put_chars(m_display,"  ",col,3,45,0);
-  ::scrc_put_chars(m_display,"  ",col,4,44,0);
+  ::scrc_put_chars(m_display,"  ",col,m_height,44,0);
   ::scrc_set_border(m_display,m_title.c_str(),col|BOLD);
 }
 
@@ -121,7 +123,10 @@ void RecFarmSubDisplay::update(const void* address) {
 /// Set timeout error
 void RecFarmSubDisplay::setTimeoutError() {
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-  ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,4,1,1);
+  ::scrc_put_chars(m_display," ",NORMAL,2,1,1);
+  ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,3,1,1);
+  ::scrc_put_chars(m_display," ",NORMAL,3,1,1);
+  ::scrc_put_chars(m_display," ",NORMAL,m_height,1,1);
 }
 
 /// Check display for errors
@@ -237,67 +242,7 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
     m_lastUpdate = t1;
   }
   m_hasProblems = true;
-  if ( numNodes == 0 ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," No nodes found in this subfarm!",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
-    setTimeoutError();
-  }
-  else if ( !inuse ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Subfarm not in used by any partition....",NORMAL|INVERSE|GREEN,4,1,1);
-  }
-  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"INPUT ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"OUTPUT ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"INPUT ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"OUTPUT ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( inuse && evt_recv <= m_evtRecv && evt_prod[0] == m_totRecv ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No reconstruction activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( evt_reco <= m_evtReco && evt_prod[1] > m_totReco ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some RECO(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( inuse && evt_reco <= m_evtReco && evt_prod[1] == m_totReco ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( evt_sent <= m_evtSent && evt_prod[1] > m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( inuse && evt_sent <= m_evtSent && evt_prod[1] == m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
-  }
-  else {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
-    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
-    m_hasProblems = false;
-  }
-  m_evtRecv = evt_recv;
-  m_evtReco = evt_reco;
-  m_evtSent = evt_sent;
-  m_totRecv = evt_prod[0];
-  m_totReco = evt_prod[1];
-  m_totSent = evt_prod[1];
+
   if ( buf_clients[0] != 0 )
     ::sprintf(txt,"%9d%4d%6d   %9d%4d%6d",
               evt_prod[0],buf_clients[0],used_slots[0],
@@ -310,5 +255,68 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   else
     ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
   ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);
+
+  if ( numNodes == 0 ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::scrc_put_chars(m_display," No nodes found in this subfarm!",BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
+    setTimeoutError();
+  }
+  else if ( !inuse ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," Subfarm not in used by any partition....",NORMAL|INVERSE|GREEN,m_height,1,1);
+  }
+  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::sprintf(txt," SLOTS at limit:");
+    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"INPUT ");
+    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"OUTPUT ");
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
+    ::strcat(txt,text);
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::sprintf(txt," SPACE at limit:");
+    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"INPUT ");
+    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"OUTPUT ");
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
+    ::strcat(txt,text);
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( inuse && evt_recv <= m_evtRecv && evt_prod[0] == m_totRecv ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No reconstruction activity visible.",BOLD|RED,m_height,1,1);
+  }
+  else if ( evt_reco <= m_evtReco && evt_prod[1] > m_totReco ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::scrc_put_chars(m_display," Some RECO(s) stuck.",BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( inuse && evt_reco <= m_evtReco && evt_prod[1] == m_totReco ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No activity visible.",BOLD|RED,m_height,1,1);
+  }
+  else if ( evt_sent <= m_evtSent && evt_prod[1] > m_totSent ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( inuse && evt_sent <= m_evtSent && evt_prod[1] == m_totSent ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,m_height,1,1);
+  }
+  else {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display,"",NORMAL,m_height,1,1);
+    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,m_height,1,1);
+    m_hasProblems = false;
+  }
+  m_evtRecv = evt_recv;
+  m_evtReco = evt_reco;
+  m_evtSent = evt_sent;
+  m_totRecv = evt_prod[0];
+  m_totReco = evt_prod[1];
+  m_totSent = evt_prod[1];
+
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }

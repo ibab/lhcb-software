@@ -32,10 +32,12 @@ namespace ROMon {
     /// Extracted cluster information for all contained nodes
     Cluster             m_cluster;
     /// Set of excluded nodes
-    StrSet             m_excluded;
+    StrSet              m_excluded;
+    /// Display height
+    int                 m_height;
   public:
     /// Initializing constructor
-    CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, bool bad=false);
+    CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad=false);
     /// Standard destructor
     virtual ~CtrlFarmSubDisplay();
     /// Initialize default display text
@@ -60,8 +62,8 @@ namespace ROMon {
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
   };
-  InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title) {
-    return new CtrlFarmSubDisplay(parent,title);
+  InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height) {
+    return new CtrlFarmSubDisplay(parent,title,height);
   }
 }
 
@@ -72,11 +74,12 @@ namespace ROMon {
 #define COL_ALARM           (RED|BOLD|INVERSE)
 
 /// Initializing constructor
-CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
+CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
 : InternalDisplay(parent, title)
 {
+  m_height = height;
   m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,4,DISP_WIDTH,NORMAL,ON,m_title.c_str());
+  ::scrc_create_display(&m_display,m_height,DISP_WIDTH,NORMAL,ON,m_title.c_str());
   init(bad);
   string svc   = "HLT/ExcludedNodes/"+strupper(title);
   m_svc2 = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
@@ -95,9 +98,7 @@ CtrlFarmSubDisplay::~CtrlFarmSubDisplay() {
 /// Initialize default display text
 void CtrlFarmSubDisplay::init(bool) {
   ::scrc_put_chars(m_display,"                     UNKNOWN ",COL_WARNING,1,1,1);
-  ::scrc_put_chars(m_display,"                             ",NORMAL,2,1,1);
-  ::scrc_put_chars(m_display,"     No information availible",COL_ALARM,3,1,1);
-  ::scrc_put_chars(m_display,"                             ",NORMAL,4,1,1);
+  ::scrc_put_chars(m_display,"     No information availible",COL_ALARM,m_height,1,1);
   ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
 }
 
@@ -124,18 +125,17 @@ void CtrlFarmSubDisplay::update(const void* address) {
 void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   bool twoline = false;
   char txt[128];
-  string val;
+  string val, border = m_title;
   bool cl_good = true;
   Cluster& c = m_cluster;
   Cluster::Nodes::const_iterator i, e;
-  int col = NORMAL, pos = 0, line=3;
+  int col = NORMAL, pos = 0, line=2;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
   int pvss_status=0;
   c.nodes.clear();
   ts.getClusterNodes(c);
-  ::scrc_put_chars(m_display,"", NORMAL,3,1,1);
-  ::scrc_put_chars(m_display,"", NORMAL,4,1,1);
+  ::scrc_put_chars(m_display,"", NORMAL,m_height,1,1);
   for(i=c.nodes.begin(), e=c.nodes.end(), pos=1; i!=e;++i) {
     const Cluster::Node& n = (*i).second;
     bool excl = m_excluded.find(n.name) != m_excluded.end();
@@ -146,7 +146,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
       else if ( !pvss_ok ) pvss_status = 2;
       good = good && pvss_ok;
     }
-    col = good && n.missTaskCount==0 && n.missConnCount==0 ? GREEN|INVERSE : COL_ALARM;
+    col = good && n.missTaskCount==0 && n.missConnCount==0 ? (m_height>2 ? GREEN|INVERSE : NORMAL) : COL_ALARM;
     if ( excl )  {
       col = INVERSE|(col==COL_ALARM ? MAGENTA : BLUE);
     }
@@ -156,7 +156,7 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
       connCount     += n.connCount;
       missConnCount += n.missConnCount;
     }
-    val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2));
+    val = (n.name == m_name ? n.name : " "+n.name.substr(n.name.length()-2));
     if ( twoline && pos > DISP_WIDTH-4 ) {
       ::scrc_put_chars(m_display,"...",col,line,pos,0);
     }
@@ -164,52 +164,62 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
       ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
       pos += val.length();
     }
-    if ( !twoline && pos>DISP_WIDTH-3 )  {
+    if ( !twoline && pos>DISP_WIDTH-2 )  {
+      ::scrc_put_chars(m_display,"",NORMAL,line,pos,1);
       ++line;
       pos=1;
       twoline=true;
     }
     cl_good |= (good || excl);
   }
+  ::scrc_put_chars(m_display,"",NORMAL,line,pos,1);
   col = (c.status=="ALIVE" || cl_good) ? NORMAL|BOLD : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
-  ::sprintf(txt,"%-40s",c.time.c_str());
-  ::scrc_put_chars(m_display,txt,NORMAL,1,1,0);
-  ::sprintf(txt,"%-19s  %-18s %s",pvss_status>0 ? pvss_status==1 ? "PVSS Ok" : "PVSS Errors" : "",
-            c.status.c_str(),c.time.c_str()+11);
+  size_t nchar = ::sprintf(txt,"%-12s",pvss_status>0 ? pvss_status==1 ? "PVSS Ok" : "PVSS Errors" : "");
   ::scrc_put_chars(m_display,txt,col,1,1,1);
-  ::sprintf(txt,"%2zu Nodes %3zu Tasks/%2zu bad %2zu Connections/%2zu bad",
-            c.nodes.size(),taskCount,missTaskCount,connCount,missConnCount);
-  ::scrc_put_chars(m_display,txt,col&~BOLD,2,1,1);
+  nchar  = ::sprintf(txt,"%2zu Nodes ",c.nodes.size());
+  nchar += ::sprintf(txt+nchar,"%3zu %sTasks ",missTaskCount>0?missTaskCount:taskCount,missTaskCount>0?"BAD ":"");
+  nchar += ::sprintf(txt+nchar,"%3zu %sConnections ",missConnCount>0?missConnCount:connCount,missConnCount>0?"BAD ":"");
+  ::scrc_put_chars(m_display,txt,col&~BOLD,1,13,1);
+
+  ::sprintf(txt," - %s",c.time.c_str());
+  border = m_title + " - " + c.status + " - " + c.time;
   col = NORMAL|BOLD;
+
   if ( pvss_status>1 ) {
-    ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,4,1,1);    
-    ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
+    ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,m_height,1,1);    
+    ::scrc_set_border(m_display,border.c_str(),COL_WARNING);
   }
   else if ( !cl_good && c.status == "DEAD" ) {
     ::scrc_put_chars(m_display,"",NORMAL,1,1,0);
-    ::scrc_put_chars(m_display,"",NORMAL,3,1,0);
-    ::scrc_put_chars(m_display,"",NORMAL,4,1,0);
-    ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_WARNING,4,1,1);    
-    ::scrc_set_border(m_display,m_title.c_str(),COL_ALARM);
+    ::scrc_put_chars(m_display,"",NORMAL,m_height,1,0);
+    ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_WARNING,m_height,1,1);    
+    ::scrc_set_border(m_display,border.c_str(),COL_ALARM);
   }
   else if ( !cl_good && c.status == "MIXED" ) {
-    ::scrc_put_chars(m_display,"Some nodes down - Please check.",BOLD,4,1,1);    
-    ::scrc_set_border(m_display,m_title.c_str(),col);
+    ::scrc_put_chars(m_display,"Some nodes down - Please check.",BOLD,m_height,1,1);
+    ::scrc_set_border(m_display,border.c_str(),m_height<=2 ? NORMAL|INVERSE|RED : col);
+  }
+  else if ( c.status == "MIXED" ) {
+    if ( m_height > 3 ) ::scrc_put_chars(m_display,"Some nodes are down.",BOLD,m_height,1,1);
+    ::scrc_set_border(m_display,border.c_str(),m_height<=2 ? NORMAL|INVERSE|RED : col);
   }
   else if ( missTaskCount>0 ) {
-    ::scrc_put_chars(m_display,"Tasks missing - Please check.",NORMAL,4,1,1);    
-    ::scrc_set_border(m_display,m_title.c_str(),col);
+    ::scrc_put_chars(m_display,"Tasks missing - Please check.",NORMAL,m_height,1,1);
+    ::scrc_set_border(m_display,border.c_str(),col);
   }
   else if ( missConnCount>0 ) {
-    ::scrc_put_chars(m_display,"Connectivity bad - Please check.",NORMAL,4,1,1);    
-    ::scrc_set_border(m_display,m_title.c_str(),col);
+    ::scrc_put_chars(m_display,"Connectivity bad - Please check.",NORMAL,m_height,1,1);
+    ::scrc_set_border(m_display,border.c_str(),col);
   }
-  else if ( !twoline )  {
-    ::scrc_put_chars(m_display,"No obvious error detected.",NORMAL|GREEN,4,1,1);    
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
+  else if ( !twoline || m_height>3 )  {
+    ::scrc_put_chars(m_display,"No obvious error detected.",NORMAL|GREEN,m_height,1,1);
+    ::scrc_set_border(m_display,border.c_str(),NORMAL|BOLD);
+  }
+  else if ( m_height<=2 )  {
+    ::scrc_set_border(m_display,border.c_str(),NORMAL|INVERSE|GREEN);
   }
   else  {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
+    ::scrc_set_border(m_display,border.c_str(),NORMAL|BOLD);
   }
 }
 
@@ -217,10 +227,8 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
 void CtrlFarmSubDisplay::setTimeoutError() {
   char txt[128];
   ::scrc_put_chars(m_display,"                     UNKNOWN ",COL_WARNING,1,1,1);
-  ::scrc_put_chars(m_display,"                             ",NORMAL,2,1,1);
   ::sprintf(txt," No update information for > %d seconds",UPDATE_TIME_MAX);
-  ::scrc_put_chars(m_display,txt,COL_ALARM,3,1,1);
-  ::scrc_put_chars(m_display,"                             ",NORMAL,4,1,1);
+  ::scrc_put_chars(m_display,txt,COL_ALARM,m_height,1,1);
   ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
 }
 

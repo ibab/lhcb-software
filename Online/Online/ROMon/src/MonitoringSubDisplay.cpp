@@ -15,6 +15,7 @@ namespace ROMon {
     int               m_totRelay;
     int               m_totWorker;
     int               m_numUpdate;
+    int               m_height;
     bool              m_hasProblems;
     bool              m_inUse;
     std::string       m_partition;
@@ -22,7 +23,7 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    MonitoringSubDisplay(InternalDisplay* parent, const std::string& title, bool bad=false);
+    MonitoringSubDisplay(InternalDisplay* parent, const std::string& title, int height, bool bad=false);
     /// Standard destructor
     virtual ~MonitoringSubDisplay();
     /// Initialize default display text
@@ -48,8 +49,8 @@ namespace ROMon {
     { this->InternalDisplay::update(data,len); }
   };
 
-  InternalDisplay* createMonitoringSubDisplay(InternalDisplay* parent, const std::string& title) {
-    return new MonitoringSubDisplay(parent,title);
+  InternalDisplay* createMonitoringSubDisplay(InternalDisplay* parent, const std::string& title, int height) {
+    return new MonitoringSubDisplay(parent,title,height);
   }
 }
 #include <set>
@@ -69,7 +70,7 @@ using namespace std;
 #define UPDATE_TIME_MAX 15
 
 /// Initializing constructor
-MonitoringSubDisplay::MonitoringSubDisplay(InternalDisplay* parent, const string& title, bool bad) 
+MonitoringSubDisplay::MonitoringSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
@@ -78,7 +79,8 @@ MonitoringSubDisplay::MonitoringSubDisplay(InternalDisplay* parent, const string
   m_partition = parent->name();
   m_relayNode = m_name+"01";
   m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
+  m_height     = height;
+  ::scrc_create_display(&m_display,m_height,48,NORMAL,ON,m_title.c_str());
   init(bad);
   string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -100,12 +102,11 @@ void MonitoringSubDisplay::init(bool bad) {
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
   ::scrc_put_chars(m_display," ",col,3,1,1);
-  ::scrc_put_chars(m_display," ",col,4,1,1);
-  ::scrc_put_chars(m_display,"Relay:",BOLD,2,1,1);
-  ::scrc_put_chars(m_display,"Worker:",BOLD,3,1,1);
+  ::scrc_put_chars(m_display," ",col,m_height,1,1);
+  ::scrc_put_chars(m_display,"Worker:",BOLD,2,1,1);
   ::scrc_put_chars(m_display,"  ",col,2,46,0);
   ::scrc_put_chars(m_display,"  ",col,3,45,0);
-  ::scrc_put_chars(m_display,"  ",col,4,44,0);
+  ::scrc_put_chars(m_display,"  ",col,m_height,45,0);
   ::scrc_set_border(m_display,m_title.c_str(),col|BOLD);
 }
 
@@ -228,68 +229,6 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
     m_lastUpdate = t1;
   }
   m_hasProblems = true;
-  if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
-    setTimeoutError();
-  }
-  else if ( numNodes == 0 ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," No nodes found in this cluster!",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( !inuse ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Monitoring cluster not used yet....",NORMAL|INVERSE|GREEN,4,1,1);
-  }
-  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Relay ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Events ");
-    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"Output ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Relay ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Events ");
-    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"Output ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( tot_prod[0]>0 && tot_prod[0] <= m_totRelay ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No RELAY activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( tot_prod[1]>0 && tot_prod[1] <= m_totWorker ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No Worker activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( min_prod[0] != INT_max && min_prod[0]>0 && min_prod[0] <= m_evtRelay ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Relay node looks idle.",BOLD|RED,4,1,1);
-  }
-  else if ( min_prod[1] != INT_max && min_prod[1]>0 && min_prod[1] <= m_evtWorker ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Some workers idle around.",BOLD|RED,4,1,1);
-  }
-  else {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
-  }
-
-  m_evtRelay  = min_prod[0];
-  m_totRelay  = tot_prod[0];
-  m_evtWorker = min_prod[1];
-  m_totWorker = tot_prod[1];
-
-  if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
-  else
-    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
-  ::scrc_put_chars(m_display,txt,NORMAL,2,8,1);
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 ) {
     ::sprintf(txt,"%-7s%9s%4s%5s%9s%4s%4s","","Events","Cl","Sl","Output","Cl","Sl");
@@ -308,6 +247,76 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
     ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   }
+  ::scrc_put_chars(m_display,"Worker:",BOLD,2,1,1);
+  ::scrc_put_chars(m_display,txt,NORMAL,2,8,1);
+
+  if ( tot_prod[0] != 0 )
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+  else
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
+  ::scrc_put_chars(m_display,"Relay: ",BOLD,3,1,1);
   ::scrc_put_chars(m_display,txt,NORMAL,3,8,1);
+
+
+  if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
+    setTimeoutError();
+  }
+  else if ( numNodes == 0 ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::scrc_put_chars(m_display," No nodes found in this cluster!",BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( !inuse ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," Monitoring cluster not used yet....",NORMAL|INVERSE|GREEN,m_height,1,1);
+  }
+  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::sprintf(txt," SLOTS at limit:");
+    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Relay ");
+    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Events ");
+    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"Output ");
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
+    ::strcat(txt,text);
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::sprintf(txt," SPACE at limit:");
+    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Relay ");
+    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Events ");
+    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"Output ");
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
+    ::strcat(txt,text);
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,m_height,1,1);
+  }
+  else if ( tot_prod[0]>0 && tot_prod[0] <= m_totRelay ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No RELAY activity visible.",BOLD|RED,m_height,1,1);
+  }
+  else if ( tot_prod[1]>0 && tot_prod[1] <= m_totWorker ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No Worker activity visible.",BOLD|RED,m_height,1,1);
+  }
+  else if ( min_prod[0] != INT_max && min_prod[0]>0 && min_prod[0] <= m_evtRelay ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," Relay node looks idle.",BOLD|RED,m_height,1,1);
+  }
+  else if ( min_prod[1] != INT_max && min_prod[1]>0 && min_prod[1] <= m_evtWorker ) {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," Some workers idle around.",BOLD|RED,m_height,1,1);
+  }
+  else if ( m_height>3 )  {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,m_height,1,1);
+  }
+  else {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|INVERSE|GREEN);
+  }
+
+  m_evtRelay  = min_prod[0];
+  m_totRelay  = tot_prod[0];
+  m_evtWorker = min_prod[1];
+  m_totWorker = tot_prod[1];
+
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }
