@@ -91,44 +91,6 @@ def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
 
 
 
-def _createTCKEntries(d, cas ) :
-    ## first pick up all the L0 configurations during the Configurable step
-    l0tcks = {}
-    for tck,id in d.iteritems() :
-        l0tck = tck & 0xffff
-        if l0tck : l0tcks['0x%04X'%l0tck] = None
-    ## find the L0 configurations if needed...   
-    if l0tcks : importOptions('$L0TCK/L0DUConfig.opts')
-    from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
-    for l0tck in l0tcks.keys() :
-        if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
-             raise KeyError('requested L0 TCK %s is not known'%l0tck) 
-        configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
-        l0tcks[l0tck] = configProvider.getValuedProperties()
-
-    svc = createAccessSvcSingleton( cas = cas )
-    for tck,id in d.iteritems() :
-        id  = _digest(id)
-        tck = _tck(tck)
-        # check whether L0 part of the TCK is specified
-        l0tck = tck & 0xffff
-        if l0tck : 
-            l0tck = '0x%04X'%l0tck
-            for cfg in svc.collectLeafRefs( id ) : 
-                #  check for either a MultiConfigProvider with the right setup,
-                #  or for a template with the right TCK in it...
-                if cfg.name == 'ToolSvc.L0DUConfig' : 
-                    if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
-                        raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
-                    if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
-                        raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s; known L0TCKs: %s' % ( l0tck, id, cfg.props['registerTCK'] ))
-                    elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
-                        raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s; known L0TCK: %s' % ( l0tck, id, cfg.props['TCK'] ))
-        print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
-        ref = cas.readConfigTreeNode( id )
-        alias = TCK( ref.get(), tck )
-        svc.writeConfigTreeNodeAlias(alias)
-
 
 # once all calls from inside execInSandbox  are gone,
 # move the functionality into RemoteAccess
@@ -610,6 +572,30 @@ class RemoteAccess(object) :
         svc.writeConfigTreeNodeAlias(top)
         print 'wrote ' + str(top.alias()) 
         return str(newId)
+    def rcreateTCKEntries(self, d ) :
+        svc = RemoteAccess._svc
+        for tck,id in d.iteritems() :
+            id  = _digest(id)
+            tck = _tck(tck)
+            # check whether L0 part of the TCK is specified
+            l0tck = tck & 0xffff
+            if l0tck : 
+                l0tck = '0x%04X'%l0tck
+                for cfg in svc.collectLeafRefs( id ) : 
+                    #  check for either a MultiConfigProvider with the right setup,
+                    #  or for a template with the right TCK in it...
+                    if cfg.name == 'ToolSvc.L0DUConfig' : 
+                        if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
+                            raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
+                        if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
+                            raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s; known L0TCKs: %s' % ( l0tck, id, cfg.props['registerTCK'] ))
+                        elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
+                            raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s; known L0TCK: %s' % ( l0tck, id, cfg.props['TCK'] ))
+            print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
+            ref = svc.readConfigTreeNode( id )
+            alias = TCK( ref.get(), tck )
+            svc.writeConfigTreeNodeAlias(alias)
+
 
 
 from multiprocessing.managers import BaseManager
@@ -699,7 +685,9 @@ def updateL0TCK(id, l0tck, label='', cas = ConfigAccessSvc(), extra = None ) :
 
 
 def createTCKEntries(d, cas = ConfigAccessSvc() ) :
-    return execInSandbox( _createTCKEntries, d, cas )
+    ret = AccessProxy().access(cas).rcreateTCKEntries(d)
+    AccessProxy().flush()
+    return ret
 
 
 def xget( ids , cas = ConfigAccessSvc() ) :
