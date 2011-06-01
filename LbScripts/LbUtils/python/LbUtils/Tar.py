@@ -18,6 +18,10 @@ if "set" not in dir(__builtin__):
 _tar_exclusion_list = []
 
 
+supported_compression = ["gzip", "bzip", "plain"]
+
+
+
 def tarIgnore(src, files):
     ignored_list = set()
     for f in files :
@@ -71,18 +75,29 @@ def tarFilter(namelist, sel_binary=None, binary_list=None):
 
 
 
-def createTarBall(dirname, filename, binary=None, binary_list=[],
-                  symlinks=True, prefix=None):
+def createTarBall(dirname, filename, binary=None, binary_list=None,
+                  symlinks=True, prefix=None, compression_type=None):
     log = logging.getLogger()
-    this_binary_list = binary_list[:]
+    if binary_list :
+        this_binary_list = binary_list[:]
+    else :
+        this_binary_list = []
     if binary and binary not in this_binary_list :
         this_binary_list.append(binary)
 
-    if filename.endswith(".tar.gz") :
+    if compression_type not in supported_compression :
+        if filename.endswith(".tar.gz") :
+            compression_type = "gzip"
+        elif filename.endswith(".tar.bz2") :
+            compression_type = "bzip"
+        elif filename.endswith(".tar") :
+            compression_type = "plain"
+
+    if compression_type == "gzip" :
         tarf = tarfile.open(filename, "w:gz")
-    elif filename.endswith(".tar.bz2") :
+    elif compression_type == "bzip" :
         tarf = tarfile.open(filename, "w:bz2")
-    elif filename.endswith(".tar") :
+    elif compression_type == "plain" :
         tarf = tarfile.open(filename, "w")
     else :
         log.error("No such tar format")

@@ -4,7 +4,7 @@
 #
 # @author: Hubert Degaudenzi
 
-from LbUtils.Tar import createTarBall
+from LbUtils.Tar import createTarBall, supported_compression
 from LbUtils.Temporary import TempFile
 from LbUtils.File import genTemplateFile
 
@@ -19,7 +19,6 @@ except ImportError:
 
 import os
 
-supported_compression = ["gzip", "bzip", "plain"]
 
 default_template = os.path.join(os.environ.get("LBUTILSROOT", ""), "data", "SelfExtract.tmpl")
 
@@ -57,7 +56,7 @@ def createSelfExtractFile(input_dir, target_filename, description, script=None, 
     tmpl_dict["script"] = script
 
     tarball = TempFile()
-    createTarBall(tarball.name, input_dir)
+    createTarBall(tarball.name, input_dir, compression_type=compression_type)
     tmpl_dict["tarball"] = encode(open(tarball.name, "r").read())
     del tarball
 

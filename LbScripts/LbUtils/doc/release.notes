@@ -1,3 +1,8 @@
+2011-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/SelfExtract.py: use compression type
+	* LbUtils/python/LbUtils/Tar.py: added compression type argument to createTarBall
+
 2011-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of versoin v3r2
