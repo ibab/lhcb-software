@@ -31,45 +31,6 @@ def _tck(x) :
     if type(x) == str and x[0:2].upper() == '0X' :  return int(x,16)
     return int(x)
 
-def _orphanScan(cas = ConfigAccessSvc() ) :
-    treeNodeDict = dict()
-    leafNodeDict = dict()
-    import os
-    dir = None
-    if 'Directory' in cas.getProperties() : 
-        dir = cas.getProp('Directory')
-    if not dir  and 'Directory' in cas.getDefaultProperties():
-        dir = cas.getDefaultProperty('Directory')
-    for root,dirs,files in os.walk( dir ) :
-        print 'checking ' + root
-        import fnmatch
-        for d in fnmatch.filter(dirs,'CVS') : dirs.remove(d)
-        def updateDict( d, f) :
-            if f not in d : d.update({f:list()})
-        for f in files : 
-            if 'PropertyConfigs' in root: updateDict( leafNodeDict, f )
-            if 'ConfigTreeNodes' in root: updateDict( treeNodeDict, f )
-    info = getConfigurations(cas)
-    for (k,v) in info.iteritems():
-        print '\n\n'
-        print k 
-        v.printSimple()
-        id = v.info['id'] 
-        tree =  getConfigTree( id, cas )
-        for node in tree :
-           def updateDict( d, id, top ) :
-                if id not in d: d.update({ id: list()})
-                if top not in d[ id ] : d[id] += [ top ]
-           updateDict( treeNodeDict,  node.digest, k )
-           if node.leaf : updateDict( leafNodeDict, node.leaf.digest, k )
-    print 'leafNodes orphans: '
-    for (k,v) in leafNodeDict.iteritems() :
-        if not v : print k
-    print 'treeNodes orphans: '
-    for (k,v) in treeNodeDict.iteritems() :
-        if not v : print k
-
-
 def _digest(x) :
     if type(x) == str : x = digest( x )
     return x
@@ -535,10 +496,6 @@ def listProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
          for k,v in d.iteritems() :
             print "      '%s':%s" % (k,v) 
 
-def orphanScan( cas = ConfigAccessSvc() ) :
-    return execInSandbox(_orphanScan, cas)
-
-
 def getTCKInfo(x) :
     for (i,j) in getConfigurations().iteritems() :
         if x in j['TCK'] : return (j['hlttype'],j['release'])
@@ -689,6 +646,7 @@ class AccessProxy( object ) :
             AccessProxy._manager  = AccessMgr()
             AccessProxy._manager.start()
             print 'proxy started manager'
+    # TODO: _access should be seperately for each cas instance...
     def access( self, cas ) :
         if not AccessProxy._access :
             print 'proxy requested access'
@@ -696,15 +654,12 @@ class AccessProxy( object ) :
         return AccessProxy._access
 
 
-# TODO: caching should be done seperately for each cas instance...
 def getConfigTree(id, cas = ConfigAccessSvc()):
-    print 'getConfigTree(%s) at pid=%s' % (id,getpid())
     if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict()
     if id not in getConfigTree.forest :
         getConfigTree.forest[id] = AccessProxy().access(cas).rgetConfigTree( id )
     return getConfigTree.forest[id]
 
-# TODO: share access instance globally (seperate for each cas!)
 def getConfigurations( cas = ConfigAccessSvc() ) :
     return  AccessProxy().access(cas).rgetConfigurations()
 
