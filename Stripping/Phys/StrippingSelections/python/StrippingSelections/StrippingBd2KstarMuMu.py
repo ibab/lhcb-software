@@ -389,7 +389,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         '''
         from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineDiMuon = CombineParticles()
-        CombineDiMuon.DecayDescriptor = "[J/psi(1S) -> mu- mu+]cc"
+        CombineDiMuon.DecayDescriptor = "J/psi(1S) -> mu- mu+"
         CombineDiMuon.DaughtersCuts = { "mu+" : MuonCuts, "mu-" : MuonCuts }
         CombineDiMuon.MotherCut     = DiMuonCuts
 

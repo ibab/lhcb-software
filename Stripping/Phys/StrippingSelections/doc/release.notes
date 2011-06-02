@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-02 - Alex Shires
+ - Fix wayward []cc in StrippingBd2KstarMuMu.py which duplicated Jpsi candidates
+
 ! 2011-05-31 - Anton Poluektov 
  - Fixed selection name error in StrippingB2DXHltTisTos.py that prevented it 
    from configuring. 
