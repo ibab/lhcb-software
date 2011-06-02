@@ -31,7 +31,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -103,6 +103,10 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::FunVal  MCFunVals  ;
     /// type of "fun-val" for LHCb::MCParticle   (assignable)
     typedef LoKi::Assignable<MCFunVals>::Type                     MCFunVal   ;
+    /// type of "cut-val" for LHCb::MCParticle   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::CutVal  MCCutVals  ;
+    /// type of "cut-val" for LHCb::MCParticle   (assignable)
+    typedef LoKi::Assignable<MCCutVals>::Type                     MCCutVal   ;
     /// type of "source" for LHCb::MCParticle   (interface)
     typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::Source  MCSources  ;
     /// type of "source" for LHCb::MCParticle   (assignable)
@@ -122,6 +126,10 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::FunVal    MCVFunVals  ;
     /// type of "fun-val" for LHCb::MCVertex   (assignable)
     typedef LoKi::Assignable<MCVFunVals>::Type                    MCVFunVal   ;
+    /// type of "cut-val" for LHCb::MCVertex   (interface)
+    typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::CutVal    MCVCutVals  ;
+    /// type of "cut-val" for LHCb::MCVertex   (assignable)
+    typedef LoKi::Assignable<MCVCutVals>::Type                    MCVCutVal   ;
     /// type of "source" for LHCb::MCVertex   (interface)
     typedef LoKi::BasicFunctors<const LHCb::MCVertex*>::Source    MCVSources  ;
     /// type of "source" for LHCb::MCVertex   (assignable)
@@ -171,6 +179,10 @@ namespace LoKi
     typedef LoKi::MCTypes::MCFunVals             MCFunVals   ;
     /// type of "fun-val" for LHCb::MCParticle   (assignable)
     typedef LoKi::MCTypes::MCFunVal              MCFunVal    ;
+    /// type of "cut-val" for LHCb::MCParticle   (interface)
+    typedef LoKi::MCTypes::MCCutVals             MCCutVals   ;
+    /// type of "cut-val" for LHCb::MCParticle   (assignable)
+    typedef LoKi::MCTypes::MCCutVal              MCCutVal    ;
     /// type of "source"  for LHCb::MCParticle   (interface)
     typedef LoKi::MCTypes::MCSources             MCSources   ;
     /// type of "source"  for LHCb::MCParticle   (assignable)
@@ -190,6 +202,10 @@ namespace LoKi
     typedef LoKi::MCTypes::MCVFunVals            MCVFunVals  ;
     /// type of "fun-val" for LHCb::MCVertex     (assignable)
     typedef LoKi::MCTypes::MCVFunVal             MCVFunVal   ;
+    /// type of "cut-val" for LHCb::MCVertex     (interface)
+    typedef LoKi::MCTypes::MCVCutVals            MCVCutVals  ;
+    /// type of "cut-val" for LHCb::MCVertex     (assignable)
+    typedef LoKi::MCTypes::MCVCutVal             MCVCutVal   ;
     /// type of "source"  for LHCb::MCVertex     (interface)
     typedef LoKi::MCTypes::MCVSources            MCVSources  ;
     /// type of "source"  for LHCb::MCVertex     (assignable)

@@ -28,7 +28,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -62,19 +62,21 @@ namespace LoKi
       , public virtual IMCHybridTool 
       , public virtual IMCHybridFactory 
     {
+      // ======================================================================
       // friend factory forn instantiation
       friend class ToolFactory<LoKi::Hybrid::MCTool> ;
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       /// initialization of the tool 
       virtual StatusCode initialize () ;
       /// finalization   of the tool 
       virtual StatusCode finalize  () ;
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // predicates:
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param cuts the placeholder for the result 
@@ -86,7 +88,7 @@ namespace LoKi
         LoKi::Types::MCCut&  cuts    , 
         const std::string&   context ) 
       { return _get ( pycode , m_mccuts  , cuts , context ) ; }
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param cuts the placeholder for the result 
@@ -98,11 +100,11 @@ namespace LoKi
         LoKi::Types::MCVCut& cuts    , 
         const std::string&   context ) 
       { return _get ( pycode , m_mcvcuts  , cuts , context ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // functions:
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -114,7 +116,7 @@ namespace LoKi
         LoKi::Types::MCFun& func    ,
         const std::string&  context ) 
       { return _get ( pycode , m_mcfunc  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -126,11 +128,11 @@ namespace LoKi
         LoKi::Types::MCVFun& func    , 
         const std::string&   context ) 
       { return _get ( pycode , m_mcvfunc  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // maps:
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -142,7 +144,7 @@ namespace LoKi
         LoKi::Types::MCMap& func    ,
         const std::string&  context ) 
       { return _get ( pycode , m_mcmaps  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -154,11 +156,11 @@ namespace LoKi
         LoKi::Types::MCVMap& func    , 
         const std::string&   context ) 
       { return _get ( pycode , m_mcvmaps  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // pipes:
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -170,7 +172,7 @@ namespace LoKi
         LoKi::Types::MCPipe& func    ,
         const std::string&   context ) 
       { return _get ( pycode , m_mcpipe  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -182,11 +184,11 @@ namespace LoKi
         LoKi::Types::MCVPipe& func    , 
         const std::string&    context ) 
       { return _get ( pycode , m_mcvpipe  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // fun-vals:
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -198,7 +200,7 @@ namespace LoKi
         LoKi::Types::MCFunVal& func    ,
         const std::string&     context ) 
       { return _get ( pycode , m_mcfunvals , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -210,11 +212,39 @@ namespace LoKi
         LoKi::Types::MCVFunVal& func    , 
         const std::string&      context ) 
       { return _get ( pycode , m_mcvfunvals  , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
+      // cut-vals:
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the code fragment to be pre-executed
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&     pycode  , 
+        LoKi::Types::MCCutVal& func    ,
+        const std::string&     context ) 
+      { return _get ( pycode , m_mccutvals , func , context ) ; }
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the code fragment to be pre-executed
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&      pycode  , 
+        LoKi::Types::MCVCutVal& func    ,
+        const std::string&      context ) 
+      { return _get ( pycode , m_mcvcutvals , func , context ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // sources:
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -226,7 +256,7 @@ namespace LoKi
         LoKi::Types::MCSource&  func    ,
         const std::string&      context ) 
       { return _get ( pycode , m_mcsource , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
        *  @param func the placeholder for the result 
@@ -238,74 +268,86 @@ namespace LoKi
         LoKi::Types::MCVSource&  func    , 
         const std::string&       context ) 
       { return _get ( pycode , m_mcvsource , func , context ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // predicates:
-      // ========================================================================
+      // ======================================================================
       /// set the C++ predicate for LHCb::MCParticle
       virtual void set ( const LoKi::Types::MCCuts&    cut ) 
       { LoKi::Hybrid::Base::_set ( m_mccuts  , cut ) ; }
       /// set the C++ predicate for LHCb::MCVertex 
       virtual void set ( const LoKi::Types::MCVCuts&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcvcuts , cut ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // functions:
-      // ========================================================================
+      // ======================================================================
       /// set the C++ function for LHCb::MCParticle  
       virtual void set ( const LoKi::Types::MCFunc&    cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcfunc  , cut ) ; }
       /// set the C++ function for LHCb::MCVertex 
       virtual void set ( const LoKi::Types::MCVFunc&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcvfunc  , cut ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // maps:
-      // ========================================================================
+      // ======================================================================
       /// set the C++ map for LHCb::MCParticle  
       virtual void set ( const LoKi::Types::MCMaps&    cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcmaps  , cut ) ; }
       /// set the C++ map for LHCb::MCVertex 
       virtual void set ( const LoKi::Types::MCVMaps&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcvmaps  , cut ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // pipes:
-      // ========================================================================
+      // ======================================================================
       /// set the C++ pipe for LHCb::MCParticle  
       virtual void set ( const LoKi::Types::MCPipes&    cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcpipe  , cut ) ; }
       /// set the C++ pipe for LHCb::MCVertex 
       virtual void set ( const LoKi::Types::MCVPipes&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcvpipe  , cut ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
       // fun-vals:
-      // ========================================================================
+      // ======================================================================
       /// set the C++ fun-val for LHCb::MCParticle  
       virtual void set ( const LoKi::Types::MCFunVals&    cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcfunvals  , cut ) ; }
       /// set the C++ fun-val for LHCb::MCVertex 
       virtual void set ( const LoKi::Types::MCVFunVals&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcvfunvals  , cut ) ; }
-      // ========================================================================
+      // ======================================================================
     public:
-      // ========================================================================
+      // ======================================================================
+      // cut-vals:
+      // ======================================================================
+      /// set the C++ fun-val for LHCb::MCParticle  
+      virtual void set ( const LoKi::Types::MCCutVals&    cut ) 
+      { LoKi::Hybrid::Base::_set ( m_mccutvals  , cut ) ; }
+      /// set the C++ fun-val for LHCb::MCVertex
+      virtual void set ( const LoKi::Types::MCVCutVals&   cut ) 
+      { LoKi::Hybrid::Base::_set ( m_mcvcutvals , cut ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // sources
-      // ========================================================================
+      // ======================================================================
       /// set the C++ source for LHCb::MCParticle  
       virtual void set ( const LoKi::Types::MCSources&    cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcsource  , cut ) ; }
       /// set the C++ source  for LHCb::MCVertex 
       virtual void set ( const LoKi::Types::MCVSources&   cut ) 
       { LoKi::Hybrid::Base::_set ( m_mcvsource , cut ) ; }
-      // ========================================================================
+      // ======================================================================
     protected:
+      // ======================================================================
       /// constrcutor
       MCTool
       ( const std::string& type   ,
@@ -313,14 +355,18 @@ namespace LoKi
         const IInterface*  parent ) ;
       /// destrcutor 
       virtual ~MCTool();
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      MCTool() ; ///< the default constructor is disabled     
-      // the copy constructor is disabled 
-      MCTool( const MCTool& )  ; ///< the copy constructor is disabled 
-      // the assignement operator  is disabled 
-      MCTool& operator=( const MCTool& )  ; ///< no assignement 
+      // ======================================================================
+      /// the default constructor is disabled  
+      MCTool () ;                        // the default constructor is disabled     
+      /// the copy constructor is disabled 
+      MCTool( const MCTool& )  ;            // the copy constructor is disabled 
+      /// the assignement operator  is disabled 
+      MCTool& operator=( const MCTool& )  ;                   // no assignement 
+      // ======================================================================
     private:
+      // ======================================================================
       /// helper method to sdave many lines:
       template <class TYPE1,class TYPE2>
       inline StatusCode _get 
@@ -328,7 +374,9 @@ namespace LoKi
         TYPE1*&            local   , 
         TYPE2&             output  , 
         const std::string& context ) ;
+      // ======================================================================
     protected:
+      // ======================================================================
       // local holder of cuts 
       // predicates:
       LoKi::Types::MCCuts*      m_mccuts     ;
@@ -345,6 +393,9 @@ namespace LoKi
       // funvals:
       LoKi::Types::MCFunVals*   m_mcfunvals  ;
       LoKi::Types::MCVFunVals*  m_mcvfunvals ;
+      // cutvals:
+      LoKi::Types::MCCutVals*   m_mccutvals  ;
+      LoKi::Types::MCVCutVals*  m_mcvcutvals ;
       // sources:
       LoKi::Types::MCSources*   m_mcsource   ;
       LoKi::Types::MCVSources*  m_mcvsource  ;
@@ -354,6 +405,7 @@ namespace LoKi
       std::string m_actor   ;
       typedef std::vector<std::string> Lines   ;
       Lines       m_lines   ;
+      // ======================================================================
     } ;
     // ========================================================================
   } //                                            end of namespace LoKi::Hybrid 
@@ -374,7 +426,7 @@ LoKi::Hybrid::MCTool::_get
   std::string code = makeCode  
     ( m_modules , m_actor , pycode , m_lines , context ) ;
   // define and lock the scope:
-  LoKi::Hybrid::MCLock lock ( this ) ;   ///< ATTENTION: the scope is locked!!
+  LoKi::Hybrid::MCLock lock ( this ) ;      // ATTENTION: the scope is locked!!
   // clear the placeholder:
   if ( 0 != local ) { delete local ; local = 0 ; }
   // execute the code 
@@ -398,25 +450,28 @@ LoKi::Hybrid::MCTool::MCTool
   const std::string& name   ,
   const IInterface*  parent )
   : LoKi::Hybrid::Base ( type , name , parent )
-  // predicates:
+// predicates:
   , m_mccuts      ( 0 )
   , m_mcvcuts     ( 0 )
-  // functions:
+// functions:
   , m_mcfunc      ( 0 )
   , m_mcvfunc     ( 0 )
-  // maps:
+// maps:
   , m_mcmaps      ( 0 )
   , m_mcvmaps     ( 0 )
-  // pipes:
+// pipes:
   , m_mcpipe      ( 0 )
   , m_mcvpipe     ( 0 )
-  // funvals:
+// funvals:
   , m_mcfunvals   ( 0 )
   , m_mcvfunvals  ( 0 )
-  // sources:
+// cutvals:
+  , m_mccutvals   ( 0 )
+  , m_mcvcutvals  ( 0 )
+// sources:
   , m_mcsource    ( 0 )
   , m_mcvsource   ( 0 )
-  //
+//
   , m_modules   (   ) 
   , m_actor     ( "LoKi.Hybrid.MCEngine()" ) 
   , m_lines     ()
@@ -465,6 +520,9 @@ StatusCode LoKi::Hybrid::MCTool::finalize  ()
   // funvals:
   if ( 0 != m_mcfunvals  ) { delete m_mcfunvals  ; m_mcfunvals  = 0  ; }
   if ( 0 != m_mcvfunvals ) { delete m_mcvfunvals ; m_mcvfunvals = 0  ; }
+  // cutvals:
+  if ( 0 != m_mccutvals  ) { delete m_mccutvals  ; m_mccutvals  = 0  ; }
+  if ( 0 != m_mcvcutvals ) { delete m_mcvcutvals ; m_mcvcutvals = 0  ; }
   // sources:
   if ( 0 != m_mcsource   ) { delete m_mcsource   ; m_mcsource   = 0  ; }
   if ( 0 != m_mcvsource  ) { delete m_mcvsource  ; m_mcvsource  = 0  ; }

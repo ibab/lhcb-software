@@ -29,7 +29,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *                    $Revision$
@@ -178,6 +178,32 @@ namespace LoKi
     virtual StatusCode get
     ( const std::string&      pycode       , 
       LoKi::Types::MCVFunVal& func         , 
+      const std::string&      context = "" ) = 0 ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    // cut-vals:
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&     pycode       , 
+      LoKi::Types::MCCutVal& func         ,
+      const std::string&     context = "" ) = 0 ;
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the code fragment to be pre-executed
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&      pycode       , 
+      LoKi::Types::MCVCutVal& func         ,
       const std::string&      context = "" ) = 0 ;
     // ========================================================================
   public:
