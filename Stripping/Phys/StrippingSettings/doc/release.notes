@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-02 - Ulrich Kerzel
+- Start filling in dictionary for Gamma/Loop
+  (not finished yet)
+
+
 ! 2011-Jun-02 - Patrick spradlin
  - Updated StrippingDev dictionaries for the Charm WG.  Modified:
    . StrippingDev/LineConfigDictionaries_Charm.py
