@@ -72,8 +72,8 @@ Helper script to simplify the creation of various LoKi-filters
 # =============================================================================
 __author__   = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__     = "2010-06-19"
-__version__  = "CVS Tag $Name: not supported by cvs2svn $, version $Release:$"
-__all__      = ( "LoKi_Filters" )
+__version__  = "$Revision$"
+__all__      = ( "LoKi_Filters" ,  )
 # =============================================================================
 from Gaudi.Configuration import *
 from copy import deepcopy 
