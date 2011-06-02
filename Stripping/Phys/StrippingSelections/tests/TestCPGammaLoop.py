@@ -20,78 +20,71 @@ stream = StrippingStream("Test")
 # Import your stripping lines
 #
 
-
-# B->hh (lifetime biased)
+##
+## B->hh (lifetime biased)
+##
 from StrippingSelections.StrippingHb2Charged2Body import Hb2Charged2BodyLines
-paramBhh = { 'PrescaleB2Charged2Body'   : 1,      'PrescaleB2PPbar' : 1,
-             'MinPTB2Charged2Body'      : 1100,    'MinPTB2PPbar' : 900,
-             'MinIPB2Charged2Body'      : 0.15,
-             'MinIPChi2B2Charged2Body'  : 100,     'MinIPChi2B2PPbar' : 9,
-             'TrChi2'                   : 5,
-             'PIDppi'                   : 0,
-             'PIDpk'                    : -2,
-             'MaxPTB2Charged2Body'      : 2700,   'MaxPTB2PPbar' : 2100,
-             'MaxIPB2Charged2Body'      : 0.3,
-             'MaxIPChi2B2Charged2Body'  : 200,    'MaxIPChi2B2PPbar' : 25,
-             'CombMassLow'              : 4800,
-             'CombMassHigh'             : 5800,   'CombMassWindow' : 200,
-             'DOCA'                     : 0.08,   'VertexChi2B2PPbar' : 16,
-             'BPT'                      : 1200,   'BPTB2PPbar' : 1000,
-             'BIP'                      : 0.06,
-             'BIPChi2B2Charged2Body'    : 12,     'BIPChi2B2PPbar' : 36,
-             'BDIRA'                    : 0.9995,
-             'BTAU'                     : 0.0009,
-             'MassLow'                  : 4800,
-             'MassHigh'                 : 5800
-             }
+paramBhh = { 
+    'PrescaleB2Charged2Body'   : 1,      'PrescaleB2PPbar' : 1,
+    'MinPTB2Charged2Body'      : 1000,    'MinPTB2PPbar' : 900,
+    'MinIPB2Charged2Body'      : 0.12,
+    'MinIPChi2B2Charged2Body'  : 100,     'MinIPChi2B2PPbar' : 9,
+    'TrChi2'                   : 5,
+    'PIDppi'                   : 0,
+    'PIDpk'                    : -2,
+    'MaxPTB2Charged2Body'      : 2500,   'MaxPTB2PPbar' : 2100,
+    'MaxIPB2Charged2Body'      : 0.25,
+    'MaxIPChi2B2Charged2Body'  : 200,    'MaxIPChi2B2PPbar' : 25,
+    'CombMassLow'              : 4800,
+    'CombMassHigh'             : 5800,   'CombMassWindow' : 200,
+    'DOCA'                     : 0.08,   'VertexChi2B2PPbar' : 16,
+    'BPT'                      : 1200,   'BPTB2PPbar' : 1000,
+    'BIP'                      : 0.1,
+    'BIPChi2B2Charged2Body'    : 12,     'BIPChi2B2PPbar' : 36,
+    'BDIRA'                    : 0.9995,
+    'BTAU'                     : 0.0006,
+    'MassLow'                  : 4800,
+    'MassHigh'                 : 5800
+       }
 confBhh          = Hb2Charged2BodyLines("Bhh", paramBhh)
 stream.appendLines(confBhh.lines())
 
-# B->hh (lifetime unbiased)
+##
+## B->hh (lifetime unbiased)
+##
 from StrippingSelections import StrippingB2hhLTUnbiased
-paramBhhUnbiased = lineBuilderConfiguration('StrippingDev', 'B2hhLTUnbiased' )['CONFIG']
-paramBhhUnbiased['NetCut'] = (0.85 + 1.0)/2.0
+paramBhhUnbiased = lineBuilderConfiguration('stripping13', 'B2hhLTUnbiased' )['CONFIG']
+#paramBhhUnbiased['NetCut'] = (0.85 + 1.0)/2.0
 print "NetCut %lf" % paramBhhUnbiased['NetCut']
 
 
 confBhhUnbiased  = StrippingB2hhLTUnbiased.StrippingB2hhLTUnbiasedConf("BhhLTUnbiased", paramBhhUnbiased)
 stream.appendLines(confBhhUnbiased.lines())
 
-
-# B->hhh
+##
+## B->hhh
+##
 from StrippingSelections.StrippingBu2hhh import Bu2hhhBuilder
 from StrippingSelections.StrippingBu2hhh import config_params as config_params_Bu2hhh
 bu2hhhbuilder = Bu2hhhBuilder('Bu2hhh',config_params_Bu2hhh)
 
 stream.appendLines( bu2hhhbuilder.lines() )
 
-
+##
+## B-> hhpi0
+##
 from StrippingSelections.StrippingB2HHPi0 import StrippingB2HHPi0Conf
-paramsB2HHPi0 = {   'PiMinPT'              : 500       # MeV
-		    ,'PiMinP'               : 5000      # MeV
-		    ,'PiMinTrackProb'       : 0.000001  # unitless
-		    ,'PiMinIPChi2'          : 25        # unitless
-		    ,'Pi0MinPT_M'           : 2500      # MeV
-		    ,'Pi0MinPT_R'           : 1500      # MeV
-		    ,'ResPi0MinMM'          : 100       # MeV  # no effect if bellow 105
-		    ,'ResPi0MaxMM'          : 170       # MeV  # no effect if above  165
-		    ,'ResPi0MinGamCL'       : 0.2       # unitless
-		    ,'BMinM'                : 4200      # MeV
-		    ,'BMaxM'                : 6400      # MeV
-		    ,'BMinPT_M'             : 3000      # MeV
-		    ,'BMinPT_R'             : 2500      # MeV
-		    ,'BMinVtxProb'          : 0.001     # unitless
-		    ,'BMaxIPChi2'           : 9         # unitless
-		    ,'BMinDIRA'             : 0.99995   # unitless
-		    ,'BMinVVDChi2'          : 64        # unitless
-		    ,'MergedLinePrescale'   : 1.        # unitless
-		    ,'MergedLinePostscale'  : 1.        # unitless
-		    ,'ResolvedLinePrescale' : 1.        # unitless
-		    ,'ResolvedLinePostscale': 1.        # unitless
-		    ,'prefix'               : 'StripB2HHPi0'
-                    }
+paramsB2HHPi0 = lineBuilderConfiguration('stripping13', 'B2HHPi0' )['CONFIG']
 confB2HHPi0 = StrippingB2HHPi0Conf("confB2HHPi0",paramsB2HHPi0)
 stream.appendLines( confB2HHPi0.lines() )
+
+##
+## B->Kshh
+##
+from StrippingSelections.StrippingB2KShh import B2KShhConf
+from StrippingSelections.StrippingB2KShh import default_config as paramB2Kshh
+confB2Kshh = B2KShhConf("confB2Kshh", paramB2Kshh)
+stream.appendLines( confB2Kshh.lines())
 
 #
 # remaining config
@@ -152,6 +145,8 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().MoniSequence += [ seq ]            # Append the TagCreator to DaVinci
-DaVinci().DataType = "2010"
-DaVinci().InputType = 'SDST'
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py")
+DaVinci().DataType  = "2011"
+DaVinci().InputType = "SDST"
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py")
+
+

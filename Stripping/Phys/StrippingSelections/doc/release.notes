@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-02 - Ulrich Kerzel
+Update TestCPGammaLoop.py with latest cuts, lines, etc for strip 15
+
 ! 2011-06-02 - Alex Shires
  - Fix wayward []cc in StrippingBd2KstarMuMu.py which duplicated Jpsi candidates
 
