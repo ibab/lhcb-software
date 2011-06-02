@@ -1,4 +1,4 @@
-// $Id: GenSources.h,v 1.1 2007-12-09 18:08:01 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENSOURCES_H 
 #define LOKI_GENSOURCES_H 1

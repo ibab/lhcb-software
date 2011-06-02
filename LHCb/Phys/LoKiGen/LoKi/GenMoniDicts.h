@@ -1,4 +1,4 @@
-// $Id: GenMoniDicts.h,v 1.2 2007-08-12 18:55:03 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENMONIDICTS_H 
 #define LOKI_GENMONIDICTS_H 1

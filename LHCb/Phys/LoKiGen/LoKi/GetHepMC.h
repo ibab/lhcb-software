@@ -1,4 +1,4 @@
-// $Id: GetHepMC.h,v 1.3 2007-12-09 18:08:01 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GETHEPMC_H 
 #define LOKI_GETHEPMC_H 1

@@ -1,4 +1,4 @@
-// $Id: GenHybridLock.h,v 1.1 2007-07-25 15:07:57 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENHYBRIDLOCK_H 
 #define LOKI_GENHYBRIDLOCK_H 1

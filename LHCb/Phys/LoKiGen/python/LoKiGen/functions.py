@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.17 2010-05-30 17:09:55 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file LoKiGen/functions.py
 #  The full set of useful objects from LoKiGen library 
@@ -30,7 +30,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "2007-12-01"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.17 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 

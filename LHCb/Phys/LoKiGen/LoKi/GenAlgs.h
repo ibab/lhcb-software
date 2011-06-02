@@ -1,4 +1,4 @@
-// $Id: GenAlgs.h,v 1.13 2008-10-29 19:23:43 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1

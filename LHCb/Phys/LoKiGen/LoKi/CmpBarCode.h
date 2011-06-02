@@ -1,4 +1,4 @@
-// $Id: CmpBarCode.h,v 1.3 2009-05-09 19:21:38 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_CMPBARCODE_H 
 #define LOKI_CMPBARCODE_H 1

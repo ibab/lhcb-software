@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.14 2010-05-30 17:09:55 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 ## @file LoKiGen/decorators.py
 #  The set of basic decorator for objects from LoKiGen library
@@ -29,7 +29,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "????-??-??"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.14 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 
 from   LoKiGen.functions   import *

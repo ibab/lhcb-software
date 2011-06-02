@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: tests.py,v 1.9 2010-05-30 17:09:55 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file   LoKiGen/tests.py
 #
@@ -29,7 +29,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "2007-05-29"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
+__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 
 # temporary

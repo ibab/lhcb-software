@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.24 2010-02-10 17:37:00 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1

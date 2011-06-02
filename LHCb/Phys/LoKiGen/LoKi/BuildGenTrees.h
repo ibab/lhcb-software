@@ -1,4 +1,4 @@
-// $Id: BuildGenTrees.h,v 1.3 2007-07-23 17:23:35 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_BUILDGENTREES_H 
 #define LOKI_BUILDGENTREES_H 1

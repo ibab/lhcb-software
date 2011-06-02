@@ -1,4 +1,4 @@
-// $Id: PrintHepMCDecay.h,v 1.5 2007-08-16 13:51:04 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PRINTHEPMCDECAY_H 
 #define LOKI_PRINTHEPMCDECAY_H 1

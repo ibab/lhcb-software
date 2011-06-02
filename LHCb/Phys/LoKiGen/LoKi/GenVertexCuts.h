@@ -1,4 +1,4 @@
-// $Id: GenVertexCuts.h,v 1.5 2007-11-28 14:08:29 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENVERTEXCUTS_H 
 #define LOKI_GENVERTEXCUTS_H 1

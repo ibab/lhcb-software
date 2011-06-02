@@ -1,9 +1,9 @@
-// $Id: GenTreesFactory.h,v 1.3 2009-05-23 15:56:20 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENTREESFACTORY_H 
 #define LOKI_GENTREESFACTORY_H 1
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // Include files
 // ============================================================================

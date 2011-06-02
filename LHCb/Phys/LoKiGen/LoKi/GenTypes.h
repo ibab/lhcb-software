@@ -1,4 +1,4 @@
-// $Id: GenTypes.h,v 1.12 2008-11-23 19:36:05 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENTYPES_H 
 #define LOKI_GENTYPES_H 1

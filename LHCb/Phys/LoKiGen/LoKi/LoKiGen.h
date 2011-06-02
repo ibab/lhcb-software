@@ -1,4 +1,4 @@
-// $Id: LoKiGen.h,v 1.11 2007-12-09 18:08:01 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKIGEN_H 
 #define LOKI_LOKIGEN_H 1

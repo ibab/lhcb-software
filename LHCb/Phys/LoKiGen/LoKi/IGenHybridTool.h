@@ -1,4 +1,4 @@
-// $Id: IGenHybridTool.h,v 1.3 2008-02-19 13:16:25 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IGENHYBRIDTOOL_H 
 #define LOKI_IGENHYBRIDTOOL_H 1

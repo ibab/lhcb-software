@@ -1,4 +1,4 @@
-// $Id: GenDecays.h,v 1.9 2009-05-23 15:56:20 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENDECAYS_H 
 #define LOKI_GENDECAYS_H 1
