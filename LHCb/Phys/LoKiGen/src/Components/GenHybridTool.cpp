@@ -451,6 +451,8 @@ LoKi::Hybrid::GenTool::GenTool
   //
   m_modules.push_back ( "LoKiGen.decorators"   ) ;
   m_modules.push_back ( "LoKiGenMC.decorators" ) ;
+  m_modules.push_back ( "LoKiCore.functions"   ) ;
+  //
   declareProperty ( "Modules" , m_modules , "Python modules to be imported"          ) ;
   declareProperty ( "Actor"   , m_actor   , "The processing engine"                  ) ;
   declareProperty ( "Lines"   , m_lines   , "Additional Python lines to be executed" ) ;

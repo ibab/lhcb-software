@@ -13,6 +13,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+ ! 2011-06-02 - Vanya Belyaev
+  
+ - add LoKi::GenFilter algorithm to allow some filtering based on 
+  properties of generator event.
+
+ - cmt/requirements
+     version incrment to v10r2
+
 !========================= LoKiGen v10r1 2011-04-26 =========================
 ! 2011-04-09 - Vanya Belyaev
  - add missing "cutvals" into Tool/Factory interface 
