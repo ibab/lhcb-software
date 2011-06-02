@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-02 - Will Barter
+ - Inserted Electroweak Line Dictionaries into Stripping 15 LineConfigDictionaries_EWWG.py  
+
+
 !========================= StrippingSettings v2r3p2 2011-05-25 =========================
 ! 2011-05-25 - Jibo He
  - Merge MB stream into AllStreams for Stripping1Point4TeV
