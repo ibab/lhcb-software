@@ -117,6 +117,14 @@ def highlumi_test() :
     createTCKEntries( { 0x00720036 : id }, cas ) 
        
 
+def restorenobias() :
+    updates = { 'Hlt1MBNoBiasODINFilter' : { 'Code' : 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(97.0,LoKi.Scalers.RandomPhasePeriodicLimiter))' }  }
+    cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+    tcks =  { 0x00730035 : updateProperties( 'b762a6fd73976ff0d5eb1fe7029f674c', updates, 'Default, MaxOTHits=15000, Hlt1MBNoBias=97Hz', cas=cas )
+            , 0x00740036 : updateProperties( '56cd6d0c22321d897ca1286a099a71af', updates, 'HighLumi, MaxOTHits=15000, Hlt1MBNoBias=97Hz', cas=cas )
+            }
+    createTCKEntries( tcks, cas ) 
 
+    
 
 
