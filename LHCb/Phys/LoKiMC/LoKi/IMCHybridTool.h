@@ -1,4 +1,4 @@
-// $Id: IMCHybridTool.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IMCHYBRIDTOOL_H 
 #define LOKI_IMCHYBRIDTOOL_H 1

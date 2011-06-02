@@ -1,4 +1,4 @@
-// $Id: BuildMCTrees.h,v 1.8 2009-03-13 16:22:44 jpalac Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_BUILDMCTREES_H 
 #define LOKI_BUILDMCTREES_H 1

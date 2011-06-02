@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.26 2010-05-31 20:33:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1

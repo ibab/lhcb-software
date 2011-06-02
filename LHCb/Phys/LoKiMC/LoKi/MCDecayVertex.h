@@ -1,4 +1,4 @@
-// $Id: MCDecayVertex.h,v 1.4 2009-05-10 10:11:42 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCDECAYVERTEX_H 
 #define LOKI_MCDECAYVERTEX_H 1

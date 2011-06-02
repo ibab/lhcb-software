@@ -1,6 +1,6 @@
-// $Id: MCTrees.h,v 1.5 2009-05-06 20:27:54 ibelyaev Exp $
+// $Id$
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision$
 // ===========================================================================
 #ifndef LOKI_MCTREES_H 
 #define LOKI_MCTREES_H 1

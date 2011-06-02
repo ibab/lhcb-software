@@ -1,4 +1,4 @@
-// $Id: MCAlgsDicts.h,v 1.2 2007-07-23 17:27:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCALGSDICTS_H 
 #define LOKI_MCALGSDICTS_H 1

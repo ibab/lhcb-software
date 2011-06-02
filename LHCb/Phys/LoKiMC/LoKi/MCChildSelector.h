@@ -1,4 +1,4 @@
-// $Id: MCChildSelector.h,v 1.1 2010-05-31 20:33:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIMC_MCCHILDSELECTOR_H 
 #define LOKIMC_MCCHILDSELECTOR_H 1

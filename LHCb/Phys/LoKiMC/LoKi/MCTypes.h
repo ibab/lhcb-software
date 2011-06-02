@@ -1,4 +1,4 @@
-// $Id: MCTypes.h,v 1.12 2008-03-30 13:38:00 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
 #define LOKI_MCTYPES_H 1

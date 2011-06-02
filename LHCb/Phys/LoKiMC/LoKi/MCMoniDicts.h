@@ -1,4 +1,4 @@
-// $Id: MCMoniDicts.h,v 1.2 2007-08-12 18:55:30 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCMONIDICTS_H 
 #define LOKI_MCMONIDICTS_H 1

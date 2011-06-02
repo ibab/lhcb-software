@@ -1,4 +1,4 @@
-// $Id: MCHybridEngine.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCHYBRIDENGINE_H 
 #define LOKI_MCHYBRIDENGINE_H 1

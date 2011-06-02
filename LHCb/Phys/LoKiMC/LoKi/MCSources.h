@@ -1,4 +1,4 @@
-// $Id: MCSources.h,v 1.2 2010-06-05 20:15:57 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCSOURCES_H 
 #define LOKI_MCSOURCES_H 1

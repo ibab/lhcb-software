@@ -1,4 +1,4 @@
-// $Id: MCHybridEngineActor.h,v 1.2 2008-02-19 15:04:01 ibelyaev Exp $
+// $Id$
 // ===========================================================================
 #ifndef LOKI_MCCUTSHOLDER_H 
 #define LOKI_MCCUTSHOLDER_H 1

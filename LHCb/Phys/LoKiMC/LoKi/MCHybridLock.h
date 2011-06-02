@@ -1,4 +1,4 @@
-// $Id: MCHybridLock.h,v 1.1 2007-07-25 15:16:06 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCHYBRIDLOCK_H 
 #define LOKI_MCHYBRIDLOCK_H 1

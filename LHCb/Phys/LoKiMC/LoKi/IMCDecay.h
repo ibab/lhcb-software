@@ -1,4 +1,4 @@
-// $Id: IMCDecay.h,v 1.3 2009-08-12 09:50:04 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_IMCDECAY_H 
 #define LOKI_IMCDECAY_H 1

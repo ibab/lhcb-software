@@ -1,4 +1,4 @@
-// $Id: MCSections.h,v 1.3 2008-12-04 16:42:16 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCSECTIONS_H 
 #define LOKI_MCSECTIONS_H 1

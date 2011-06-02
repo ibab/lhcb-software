@@ -1,4 +1,4 @@
-// $Id: MCTreeFactory.h,v 1.2 2009-05-23 15:58:12 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCTREEFACTORY_H 
 #define LOKI_MCTREEFACTORY_H 1
