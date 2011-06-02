@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-Jun-02 - Patrick spradlin
+ - Updated StrippingDev dictionaries for the Charm WG.  Modified:
+   . StrippingDev/LineConfigDictionaries_Charm.py
+   . StrippingDev/LineConfigDictionaries_CharmXsec.py
+
 ! 2011-06-02 - Will Barter
  - Inserted Electroweak Line Dictionaries into Stripping 15 LineConfigDictionaries_EWWG.py  
 
