@@ -2,7 +2,7 @@
 # =============================================================================
 ## @file PhysConf/Filters.py
 #
-#  Helper script to simpify the creation of various LoKi-filters
+# Helper script to simpify the creation of various LoKi-filters
 #
 # @code 
 # 
@@ -13,7 +13,9 @@
 #       L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
 #       HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
 #       STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
-#       VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 ' 
+#       VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 '         , 
+#       MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 '                 , 
+#       GEN_Code   = ' count ( 'D0' ==  GABSID ) > 0.5 '                 , 
 #      )
 #
 # >>> ## get the list of algorithms:
@@ -25,15 +27,19 @@
 #      UserAlgorithms = [ fltrs.sequencer('MySeq') ] 
 #     )
 #
-# @endcode
+#  @endcode
 #
-# @see LoKi::ODINFilter 
-# @see LoKi::L0Filter 
-# @see LoKi:HDRFilter 
-# @see LoKi:VoidFilter
+#  @see LoKi::ODINFilter 
+#  @see LoKi::L0Filter 
+#  @see LoKi:HDRFilter 
+#  @see LoKi:VoidFilter
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2010-06-19
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $author$
 # =============================================================================
 """
 
@@ -44,10 +50,12 @@ Helper script to simplify the creation of various LoKi-filters
 
 >>> fltrs = LoKi_Filters (
      ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
-     L0DU _Code  = ' L0_CHANNEL  ( ... )  '                            ,
+     L0DU _Code  = ' L0_CHANNEL  ( ... )  '                           ,
      HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
      STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
-     VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 ' 
+     VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 '         , 
+     MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 '                 , 
+     GEN_Code   = ' count ( 'D0' ==  GABSID ) > 0.5 '                 , 
     )
     
 >>> ## get the list of algorithms:
@@ -85,7 +93,9 @@ _log = logging.getLogger('LoKi_Filters')
 #       L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
 #       HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
 #       STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
-#       VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 ' 
+#       VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 '         ,
+#       MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 '                 , 
+#       GEN_Code   = ' count ( 'D0' ==  GABSID ) > 0.5 ' 
 #      )
 #
 # >>> ## get the list of algorithms:
@@ -112,28 +122,30 @@ class LoKi_Filters ( object ) :
 
 
     >>> from PhysConf.Filters import LoKi_Filters
-
-    >>> fltrs = Lo Ki_Filters (
-         ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
-         L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
-         HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
-         STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
-         VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 ' 
-         )
-        
+    
+    >>> fltrs = LoKi_Filters (
+    ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
+    L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
+    HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
+    STRIP_Code = ' HLT_PASS    ( 'StrippingBd2KstarGammaDecision') ' ,
+    VOID_Code  = ' CONTAINS    ('Rec/Vertex/Primary') == 1 ' 
+    MC_Code    = ' count ( 'D0' == MCABSID ) > 0.5 ' 
+    GEN_Code   = ' count ( 'D0' ==  GABSID ) > 0.5 ' 
+    )
+    
     >>> ## get the list of algorithms:
     >>> DaVinci ( ...
-          UserAlgorithms = fltrs.filters('MySeq')
-       )
-       
+    UserAlgorithms = fltrs.filters('MySeq')
+    )
+    
     >>> ## or ( alternatively) get the sequencer:
     >>> DaVinci ( ...
-         UserAlgorithms = [ fltrs.sequencer('MySeq') ] 
-         )
-         
+    UserAlgorithms = [ fltrs.sequencer('MySeq') ] 
+    )
+    
     """
     # =========================================================================
-    ## Constructor form all properties 
+    ## Constructor from all properties 
     #  @code
     #
     #  >>> fltrs = LoKi_Filters (
@@ -163,6 +175,14 @@ class LoKi_Filters ( object ) :
         self.__VOID_Code        = kwargs.pop ( 'VOID_Code'        , ''   )
         self.__VOID_Preambulo   = kwargs.pop ( 'VOID_Preambulo'   , []   )
 
+        self.__MC_Code          = kwargs.pop ( 'MC_Code'          , ''   )
+        self.__MC_Preambulo     = kwargs.pop ( 'MC_Preambulo'     , []   )
+        self.__MC_Location      = kwargs.pop ( 'MC_Location'      , ''   )
+        
+        self.__GEN_Code         = kwargs.pop ( 'GEN_Code'         , ''   )
+        self.__GEN_Preambulo    = kwargs.pop ( 'GEN_Preambulo'    , []   )
+        self.__GEN_Location     = kwargs.pop ( 'GEN_Location'     , ''   )
+
         self.__kwargs           = kwargs
 
 
@@ -190,49 +210,72 @@ class LoKi_Filters ( object ) :
         """        
         _seq = []
 
-        if self.__ODIN_Code :
 
+        if self.__MC_Code   :
+            #
+            from Configurables import LoKi__MCFilter
+            _mc = LoKi__MCFilter (
+                name + '_MC'   , 
+                Code  = self.__MC_Code 
+                )
+            if self.__MC_Preambulo : _mc.Preambulo = self.__MC_Preambulo
+            if self.__MC_Location  : _mc.Location  = self.__MC_Location
+            _seq += [ _odin ]
+            
+        if self.__GEN_Code   :
+            #
+            from Configurables import LoKi__GenFilter
+            _gen = LoKi__GenFilter (
+                name + '_GEN'   , 
+                Code  = self.__GEN_Code 
+                )
+            if self.__GEN_Preambulo : _gen.Preambulo = self.__GEN_Preambulo
+            if self.__GEN_Location  : _gen.Location  = self.__GEN_Location
+            _seq += [ _odin ]
+
+        if self.__ODIN_Code :
+            #
             from Configurables import LoKi__ODINFilter
             _odin = LoKi__ODINFilter (
                 name + '_ODIN'   , 
                 Code  = self.__ODIN_Code 
                 )
             if self.__ODIN_Preambulo : _odin.Preambulo = self.__ODIN_Preambulo
-            if self.__ODIN_Location  : _odin.Preambulo = self.__ODIN_Location
+            if self.__ODIN_Location  : _odin.Location  = self.__ODIN_Location
             _seq += [ _odin ]
             
         if self.__L0DU_Code :
-            
+            #
             from Configurables import LoKi__L0Filter
             _l0du = LoKi__L0Filter (
                 name + '_L0DU'    , 
                 Code  = self.__L0DU_Code 
                 )
             if self.__L0DU_Preambulo : _l0du.Preambulo = self.__L0DU_Preambulo
-            if self.__L0DU_Location  : _l0du.Preambulo = self.__L0DU_Location
+            if self.__L0DU_Location  : _l0du.Location  = self.__L0DU_Location
             _seq += [ _l0du ]
 
         if self.__HLT_Code :
-            
+            # 
             from Configurables import LoKi__HDRFilter
             _hlt = LoKi__HDRFilter (
                 name + '_HLT'    , 
                 Code  = self.__HLT_Code 
                 )
             if self.__HLT_Preambulo : _hlt.Preambulo = self.__HLT_Preambulo
-            if self.__HLT_Location  : _hlt.Preambulo = self.__HLT_Location
+            if self.__HLT_Location  : _hlt.Location  = self.__HLT_Location
             _seq += [ _hlt ]
 
         if self.__STRIP_Code :
-            
+            #
             from Configurables import LoKi__HDRFilter
             _strip = LoKi__HDRFilter (
                 name + '_STRIP'                     , 
                 Code     = self.__STRIP_Code        ,
                 Location = '/Event/Strip/Phys/DecReports' 
                 )
-            if self.__STRIP_Preambulo : _strip.Preambulo = self.__STRIP_Preambulo
-            if self.__STRIP_Location  : _strip.Preambulo = self.__STRIP_Location
+            if self.__STRIP_Preambulo : _strip.Location = self.__STRIP_Preambulo
+            if self.__STRIP_Location  : _strip.Location = self.__STRIP_Location
             _seq += [ _strip ]
             
         if self.__VOID_Code :

@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.32 2010-06-24 13:32:37 jpalac Exp $
+!$Id$
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2011-06-02 - Vanya Belyaev
+ - Filters: 
+    add possibility to filter based on MC and Gen-information 
+ - cmt/requirements 
+    version increment  to v1r9
 
 !========================== PhysConf v1r8 2010-09-29 ===================
 
