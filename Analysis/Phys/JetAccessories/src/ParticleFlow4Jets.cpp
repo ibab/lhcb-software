@@ -72,7 +72,7 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
                    "Minimum photon pid for photon from resolved Pi0");
   declareProperty( "CatchBremFromElectrons" , m_catchBremFromElectrons = false ,
                    "Flag bremstrahlung phtons from electrons");
-  declareProperty( "MaxChi2NoTT" , m_noTTChi2PerDof = 3. ,
+  declareProperty( "MaxChi2NoTT" , m_noTTChi2PerDof = 2. ,
                    "Maximum chi2 per DoF for long track with no TTHits");
   m_clust2TrLocation = LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context());
 }
@@ -175,9 +175,9 @@ bool ParticleFlow4Jets::selectTrack( const LHCb::Track* track )
     }
     verbose()<<"selectTrack: "<<NTT<<" of them are from TT"<<endreq;
     // Should have TT hit but don't
-    //if ( m_ttExpectation->nExpected(*track)!= 0 && NTT == 0 ) return false;
+    if ( m_ttExpectation->nExpected(*track)!= 0 && NTT == 0 ) return false;
     // Should not have TT hit and too small chi2perdof
-    //if ( m_ttExpectation->nExpected(*track)== 0 && track->chi2PerDoF () > m_noTTChi2PerDof ) return false;
+    if ( m_ttExpectation->nExpected(*track)== 0 && track->chi2PerDoF () > m_noTTChi2PerDof ) return false;
   }
   verbose()<<"selectTrack: passed all cuts"<<endreq;
   return true;
@@ -259,13 +259,14 @@ StatusCode ParticleFlow4Jets::execute() {
     if ( track == NULL ) continue;
     // Check Track
     if ( m_trSel!= 0 ){
+      verbose()<<"Track "<<track->type()<<" with pt: "<<track->pt()<<" chi2 per dof "<<track->chi2PerDoF()<<endreq;
       if ( !m_trSel->accept(*track) ) continue;
+      verbose()<<"Track accepted"<<endreq;
     }
     
     // Extra cuts
     if ( !selectTrack(track) ) continue;
 
-    verbose()<<"Track passed selections... look at rel table to Calo"<<endreq;
     // Get the calorimeter clusters
     cRange = table  ->inverse()->relations ( track ) ;
     if (cRange.size()>0){
@@ -282,14 +283,11 @@ StatusCode ParticleFlow4Jets::execute() {
         tmpPair.first = TrackMatch ;
         tmpPair.second =  track->key() ;
         BannedECALClusters[cRange.front().to()->seed().all()] = tmpPair ;
-        verbose()<<"Tagged..."<<endreq;
       }
-      verbose()<<"ECAL have been banned..."<<endreq;
     }
     
     // Save the particle
     PFParticles->insert(MakeParticle(ch_pp));
-    verbose()<<"Particle is saved..."<<endreq;
 
     // Check if belongs to an electron hypothesis...
     if(m_catchBremFromElectrons){      
