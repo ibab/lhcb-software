@@ -1,4 +1,4 @@
-// $Id: TrFilter.cpp 117140 2011-02-07 18:20:51Z ibelyaev $
+// $Id$
 // ============================================================================
 // Include Files 
 // ============================================================================
@@ -39,9 +39,9 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  Version           $Revision: $
- *  Last modification $Date:  $
- *                 by $Author: raaij $
+ *  Version           $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  *
  *  @author Roel Aaij roel.aaij@cern.ch
  *  @date 2011-04-08

@@ -14,7 +14,7 @@
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
 #  By usage of this code one clearly states the disagreement
-#  with the campain of Dr.O.Callot et al.:
+#  with the smear campaign of Dr.O.Callot et al.:
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -32,14 +32,14 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 
 By usage of this code one clearly states the disagreement
-with the campain of Dr.O.Callot et al.:
+with the smear campaign of Dr.O.Callot et al.:
  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 """
 # =============================================================================
 __author__   = "Alexander Mazurov  alexander.mazurov@gmail.com"
 __date__     = "2010-10-26"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision$ "
+__version__  = "$Revision$ "
 # =============================================================================
 from  GaudiPython import AppMgr, PyAlgorithm
 gaudi = AppMgr()

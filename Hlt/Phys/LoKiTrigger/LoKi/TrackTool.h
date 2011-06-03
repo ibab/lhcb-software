@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_TRACKTOOL_H 
 #define LOKI_TRACKTOOL_H 1
@@ -38,9 +38,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date   2011-02-07
  *
- *                    $Revision: 114376 $
- *  Last Modification $Date: 2010-12-04 17:49:22 +0100 (Sat, 04 Dec 2010) $ 
- *                 by $Author: ibelyaev $
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 

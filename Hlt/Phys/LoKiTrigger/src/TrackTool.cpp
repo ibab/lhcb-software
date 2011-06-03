@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,9 +24,9 @@
  *  @date 2011-02-07 
  *  @author Vanya  BELYAEV Ivan.Belyaev@cern.ch
  *
- *                    $Revision:$
- *  Last Modification $Date:$ 
- *                 by $Author:$
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
  */
 // ============================================================================
 // the constructor from the cut

@@ -5,6 +5,20 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-06-03 - Vanya Belyaev
+
+ - BeamLineFunctions
+   fix problmes with copy constructor 
+
+   In practice it doe snto affect trigger, 
+   but it could affect offline processing and especially MC processing 
+
+   many thanks to Steve Blusk for pointing to the problem 
+
+ - cmt/requirements 
+
+     version increment to v12r3 
+  
 !========================== LoKiTrigger v12r2 2011-05-04 ===================
 ! 2011-05-04 - Roel Aaij
  - Fix a bug in UpgradeTool where the extraInfo field for the recoID on a seed

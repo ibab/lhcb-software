@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MULTITRACKS_H 
 #define LOKI_MULTITRACKS_H 1
@@ -36,9 +36,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-03-27
  *
- *                    $Revision:$
- *  Last Modification $Date:$ 
- *                 by $Author:$ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 namespace LoKi 
 {
