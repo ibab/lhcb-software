@@ -172,20 +172,22 @@ class CondDB(ConfigurableUser):
         """
         # Check arguments
         if type(OnlyGlobalTags) is not bool:
-            raise RuntimeError("The value of 'OnlyGlobalTags' flag must be boolean. '%s' is not." % DataType)
+            raise RuntimeError("The value of 'OnlyGlobalTags' flag must be boolean."
+                               " '%s' is not." % DataType)
 
         # Check if the latest tags should be set for simulation or not
-        from CondDBUI.Admin.TagsFilter import last_gt_lts
         if not self.getProp("Simulation"):
             partitions = ["DDDB", "LHCBCOND"]
         else:
             partitions = ["DDDB", "SIMCOND"]
 
         # Set the latest tags
+        from CondDBUI.Admin.TagsFilter import last_gt_lts
         for partition in partitions:
             tags = last_gt_lts(partition, DataType)
             if not tags:
-                raise RuntimeError("Cannot find tags for partition '%s', data type '%s'" % (partition, DataType))
+                raise RuntimeError("Cannot find tags for partition '%s',"
+                                   " data type '%s'" % (partition, DataType))
             gt, lts = tags
             self.Tags[partition] = gt
             if not OnlyGlobalTags:
@@ -269,6 +271,33 @@ class CondDB(ConfigurableUser):
         """
         Converts the high-level information passed as properties into low-level configuration.
         """
+        # Set the usage of the latest global tag and (optionally) all available
+        # local tags which exist on top of it
+        if self.getProp("UseLatestTags"):
+            use_latest = self.getProp("UseLatestTags")
+            useLatestLength = len(use_latest)
+            if self.getProp("Tags") or self.getProp("LocalTags"):
+                # reset tags properties before setting the latest tags
+                self.Tags = {}
+                self.LocalTags = {}
+            if useLatestLength == 1:
+                self._useLatestTags(use_latest[0])
+                log.warning("Default global tags will be overridden with the latest ones"
+                            " available for '%s' data type: %s"
+                            %(use_latest[0], self.getProp("Tags")) )
+            elif useLatestLength == 2:
+                self._useLatestTags(use_latest[0],use_latest[1])
+                log.warning("Default global tags will be overridden with the latest ones"
+                            " available for '%s' data type: %s"
+                            %(use_latest[0], self.getProp("Tags")) )
+                log.warning("Latest unbound local tags of '%s' data type will be"
+                            " put on top of the latest global tags: %s"
+                            %(use_latest[0], self.getProp("LocalTags")))
+            else:
+                raise RuntimeError("Wrong 'UseLatestTags' property. Should be: "
+                                   "['DataType', OnlyGlobalTag = bool_flag].")
+
+        # Import SQLDDDB specific info
         if self.getProp("UseOracle"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
             if self.getProp("DisableLFC"):
@@ -284,26 +313,6 @@ class CondDB(ConfigurableUser):
         #########################################################################
         # Access to ConditionsDB
         ##########################################################################
-
-        # Set the usage of the latest global tag and (optionally) all available
-        # local tags which exist on top of it
-        if self.getProp("UseLatestTags"):
-            use_latest = self.getProp("UseLatestTags")
-            useLatestLength = len(use_latest)
-            if self.getProp("Tags") or self.getProp("LocalTags"):
-                # reset tags properties before setting the latest tags
-                self.Tags = {}
-                self.LocalTags = {}
-                log.warning("'UseLatestTags' property was set: the usage of the "
-                            "latest tags for '%s' data type will be forced!" % use_latest[0])
-            if useLatestLength == 1:
-                self._useLatestTags(use_latest[0])
-            elif useLatestLength == 2:
-                self._useLatestTags(use_latest[0],use_latest[1])
-            else:
-                raise RuntimeError("Wrong 'UseLatestTags' property. Should be: "
-                                   "['DataType', OnlyGlobalTag = bool_flag].")
-
         conns = self.getProp("PartitionConnectionString")
         tags = self.getProp("Tags")
         # DB partitions
@@ -490,32 +499,41 @@ def _timegm(t):
     return t1 + (t1 - t2)
 
 def defConnStrFunc(ym_tuple):
-    return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d%02d.db/ONLINE" % ym_tuple
+    return self.connStrOnline(ym_tuple)
+
+def connStrOnline(ym_tuple):
+    dbpath = os.environ["SQLITEDBPATH"]
+    if exists(join(dbpath, "ONLINE-%04d%02d.db" % ym_tuple)):
+        return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d%02d.db/ONLINE" % ym_tuple
+    return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d.db/ONLINE" % ym_tuple[0]
 
 def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     if connStrFunc is None:
-        connStrFunc = defConnStrFunc
+        connStrFunc = connStrOnline
 
     # prepare the configurable instance
     ONLINE = CondDBTimeSwitchSvc("ONLINE")
 
-    # Set the first available pair (year,month)
+    # Default snapshots granularity
+    granularity = 'YEARLY'
+
+    # Set the first available snapshot pair: per-year by default
     if start is None:
-        first_snapshot = (2008,6)
+        first_snapshot = (2008, None)
     else:
         first_snapshot = start
 
-    # Set the last available pair (year,month)
+    # Set the last available snapshot pair: current year by default
     if end is None:
-        # By default it is the previous month
         import time
-        now = time.gmtime()[0:2]
-        if now[1] == 1:
-            last_snapshot = (now[0]-1,12)
-        else:
-            last_snapshot = (now[0],now[1]-1)
+        last_snapshot = (time.gmtime()[0], None)
     else:
         last_snapshot = end
+
+    # If last snapshot is per-month switch the first one to be also per-month
+    if last_snapshot[1]:
+        granularity = 'MONTHLY'
+        first_snapshot = (2008, 6)
 
     # reset the list of readers, for safety
     ONLINE.Readers = []
@@ -523,23 +541,28 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     i = first_snapshot
     until = 0 # this makes the first service used from times starting from 0
     while i < last_snapshot:
-        name = "ONLINE_%04d%02d" % i
-        accSvc = CondDBAccessSvc(name, ConnectionString = connStrFunc(i))
+        if granularity == 'YEARLY':
+            accSvc = CondDBAccessSvc("ONLINE_%04d" %i[0], ConnectionString = connStrFunc((i[0],13)))
+        else:
+            accSvc = CondDBAccessSvc("ONLINE_%04d%02d" %i, ConnectionString = connStrFunc(i))
         since = until
         # increment
-        if i[1] == 12:
-            i = (i[0]+1,1)
+        if granularity == 'YEARLY':
+            i = (i[0]+1, None)
+            until = int(_timegm(tuple([i[0], 1, 1, 0, 0, 0, 0, 0, 0]))) * 1000000000
         else:
-            i = (i[0],i[1]+1)
-        until = int(_timegm(tuple([i[0], i[1], 1, 0, 0, 0, 0, 0, 0]))) * 1000000000
+            if i[1] == 12: i = (i[0]+1,1)
+            else: i = (i[0],i[1]+1)
+            until = int(_timegm(tuple([i[0], i[1], 1, 0, 0, 0, 0, 0, 0]))) * 1000000000
         descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
         ONLINE.Readers.append(descr)
 
     # append the last database with validity extended to the maximum validity
-    name = "ONLINE_%04d%02d" % i
-    accSvc = CondDBAccessSvc(name, ConnectionString = connStrFunc(i))
+    if granularity == 'YEARLY':
+        accSvc = CondDBAccessSvc("ONLINE_%04d" %i[0], ConnectionString = connStrFunc((i[0],13)))
+    else:
+        accSvc = CondDBAccessSvc("ONLINE_%04d%02d" %i, ConnectionString = connStrFunc(i))
     since = until
     until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax
     descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
     ONLINE.Readers.append(descr)
-
