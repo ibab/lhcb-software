@@ -17,7 +17,11 @@ namespace {
     std::vector<const LHCb::Particle*>  _i1;
     std::vector<const LHCb::Particle*>::iterator  _i2;
     std::vector<const LHCb::Vertex*>  _i3;
-    // end instantiations
+    //
+    LHCb::Particle::Selection                       _i4 ;
+    Gaudi::NamedRange_<LHCb::Particle::ConstVector> _i5 ;
+    Gaudi::Range_<LHCb::Particle::ConstVector>      _i6 ;    
+     // end instantiations
   };
 }
 

@@ -3,6 +3,11 @@
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
+! 2011-06-04 - Vanya Belyaev
+
+ - add LHCb::Particle::Selection into dictionary 
+   it helps with GaudiPython/Bender
+
 ! 2011-04-27 - Patrick Koppenburg
  - Remove obsolete FilterCriterionResult. Completes Task #12929.
 
