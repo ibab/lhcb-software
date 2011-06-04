@@ -66,6 +66,8 @@
   <class name = "Decays::IDecay::Finder" />
   <class name = "Decays::IDecay::Tree"   />
   <class name = "LoKi::Dicts::FinderDicts_<const LHCb::Particle*>" />
+
+  <class name = "LoKi::DecayChain"       />
   
   <function pattern = "LoKi::Photons::*"  />
 

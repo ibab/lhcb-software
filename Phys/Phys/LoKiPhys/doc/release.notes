@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-04 - Vanya Belyaev
+ - add utilities for better printout 
+
 !========================= LoKiPhys v10r1 2011-05-13 =========================
 ! 2011-04-29 - Roel Aaij
  - Set instant suppression to VertexDistance::chi2 error message to not display

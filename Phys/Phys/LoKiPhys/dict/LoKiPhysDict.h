@@ -44,6 +44,7 @@
 // ============================================================================
 #include "LoKi/Photons.h"
 #include "LoKi/ChildSelector.h"
+#include "LoKi/DecayChain.h"
 // ============================================================================
 #include "Kernel/DecayTree.h"
 // ============================================================================
@@ -206,6 +207,16 @@ namespace LoKi
       ( const Fun& fun  , const SmartRef<LHCb::Vertex>&     o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<LHCb::RecVertex>&  o ) { return fun ( o ) ; }
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const LHCb::Particle*  o ) 
+      {
+        if ( 0 == o )
+        {
+          const LHCb::VertexBase* _vb = 0 ;
+          return fun ( _vb ) ;
+        }
+        return fun ( o -> endVertex () ) ; 
+      }
       // ======================================================================
     public:
       // ======================================================================

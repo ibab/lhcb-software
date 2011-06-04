@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file
 #  collection of utilities for useful 'decoration' of Phys-objects
 #
@@ -18,6 +16,7 @@
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-08-11
 #
+#                    $Revision$
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
@@ -31,9 +30,6 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
-
-Last modification $Date$
-               by $Author$
 
 """
 # =============================================================================
@@ -371,6 +367,50 @@ LHCb.Particle.Range.__getitem__  = LHCb.Particle.Range.__call__
 
 LHCb.Particle.Range.__setitem__  = None 
 
+
+if not hasattr ( LHCb.Particle , 'Container' ) :
+    LHCb.Particle.Container = cpp.KeyedContainer(LHCb.Particle,'Containers::KeyedObjectManager<Containers::hashmap>')
+if not hasattr ( LHCb.Particle , 'Selection' ) :
+    LHCb.Particle.Selection = cpp.SharedObjectsContainer (LHCb.Particle) 
+
+# =============================================================================
+## define various printers 
+def _print_ ( self                                     ,
+              accept   = None                          ,
+              mark     = None                          ,
+              maxDepth = 5                             ,
+              vertex   = True                          , 
+              mode     = LoKi.DecayChainBase.LV_WITHPT ,
+              fg       = cpp.MSG.YELLOW                ,
+              bg       = cpp.MSG.RED                   ) :
+    
+    """
+    Define the print functions for some MC-objects
+    for details see LoKi::DecayChain 
+    """
+    _printer = LoKi.DecayChain ( maxDepth ,
+                                 vertex   , 
+                                 mode     ,
+                                 fg       ,
+                                 bg       ) 
+    if    accept and not mark : 
+        return _printer.print_ ( self , accept )
+    elif  accept and     mark : 
+        return _printer.print_ ( self , accept , mark )
+    #
+    return _printer.print_ ( self )
+
+_print_ . __doc__ += "\n" + LoKi.DecayChain.print_ . __doc__ 
+
+for t in ( LHCb.Particle             ,
+           LHCb.Particle.Range       , 
+           LHCb.Particle.ConstVector ,
+           LHCb.Particle.Container   ,
+           LHCb.Particle.Selection   ) :    
+    t._print_   = _print_
+    t.__str__   = _print_
+    t.__repr__  = _print_
+    
 # =============================================================================
 if '__main__' == __name__ :
 
