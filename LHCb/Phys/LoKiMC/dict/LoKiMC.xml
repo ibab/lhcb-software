@@ -18,9 +18,10 @@
 -->
 
 <lcgdict>
-
-  <class name = "LoKi::MCFinderObj" />
-  <class name = "LoKi::MCFinder"    />
+  
+  <class name = "LoKi::MCFinderObj"  />
+  <class name = "LoKi::MCFinder"     />
+  <class name = "LoKi::MCDecayChain" />
   
   <class pattern   = "Gaudi::Range_<*LHCb::MC*>"      />
   <class pattern   = "Gaudi::NamedRange_<*LHCb::MC*>" />

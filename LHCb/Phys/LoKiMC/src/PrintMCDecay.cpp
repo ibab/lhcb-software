@@ -96,7 +96,7 @@ std::ostream& LoKi::PrintMC::printDecay
     ( particle , std::back_inserter( daugs ) , decayOnly ) ;
   // own name 
   std::string name = 
-    LoKi::Particles::nameFromPID ( particle->particleID() ) ;
+    LoKi::Particles::nameIdFromPID ( particle->particleID() ) ;
   if ( particle -> hasOscillated() ) { name = "[" + name + "]os" ; }
   if ( daugs.empty() ) 
   { return stream << " " << name << " " ; } ;               // RETURN 

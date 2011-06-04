@@ -13,8 +13,16 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the smear campaign of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @date 2007-08-11 
+#  @date 2007-08-11
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Collection of utilities for useful 'decoration' of MC-objects
@@ -26,17 +34,22 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the smear campaign of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2007-08-11"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = "$Revision$ "
 # =============================================================================
 
 from   LoKiMC.functions    import LoKi,LHCb,cpp
 
 
-
+# ============================================================
 ## get the decay vertex for the particle
 def decayVertex ( mcp ) :
     """
@@ -423,14 +436,61 @@ if not hasattr ( LHCb.MCVertex   , 'ConstVector' ) :
 if not hasattr ( LHCb.MCParticle , 'Range'       ) :
     LHCb.MCParticle.Range = cpp.Gaudi.NamedRange_ ( LHCb.MCParticle.ConstVector ) 
 if not hasattr ( LHCb.MCVertex   , 'Range'       ) :
-    LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   ) 
+    LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   )
+    
 
 LHCb.MCParticle .Range.__getitem__ = LHCb.MCParticle.Range.__call__
 LHCb.MCVertex   .Range.__getitem__ = LHCb.MCVertex  .Range.__call__
 
 LHCb.MCParticle .Range.__setitem__ = None 
-LHCb.MCVertex   .Range.__setitem__ = None   
+LHCb.MCVertex   .Range.__setitem__ = None
 
+if not hasattr ( LHCb.MCParticle , 'Container' ) :
+    LHCb.MCParticle.Container = cpp.KeyedContainer(LHCb.MCParticle,'Containers::KeyedObjectManager<Containers::hashmap>')
+
+# =============================================================================
+## define various printers 
+def _print_ ( self                                     ,
+              accept   = None                          ,
+              mark     = None                          ,
+              maxDepth = 10                            ,
+              vertex   = False                         , 
+              mode     = LoKi.DecayChainBase.LV_WITHPT ,
+              fg       = cpp.MSG.YELLOW                ,
+              bg       = cpp.MSG.RED                   ,
+              vertexe  = True                          ,
+              vertexd  = True                          ) :
+    
+    """
+    Define the print functions for some MC-objects
+    for details see LoKi::MCDecayChain 
+    """
+    _printer = LoKi.MCDecayChain ( maxDepth ,
+                                   vertex   , 
+                                   mode     ,
+                                   fg       ,
+                                   bg       ,
+                                   vertexe  ,
+                                   vertexd  ) 
+    if    accept and not mark : 
+        return _printer.print_ ( self , accept )
+    elif  accept and     mark : 
+        return _printer.print_ ( self , accept , mark )
+    #
+    return _printer.print_ ( self )
+
+_print_ . __doc__ += "\n" + LoKi.MCDecayChain.print_ . __doc__ 
+
+
+for t in ( LHCb.MCParticle             ,
+           LHCb.MCParticle.Range       , 
+           LHCb.MCParticle.ConstVector ,
+           LHCb.MCParticle.Container   ) :
+    t._print_   = _print_
+    t.__str__   = _print_
+    t.__repr__  = _print_
+    
+                      
 
 # =============================================================================
 if '__main__' == __name__ :

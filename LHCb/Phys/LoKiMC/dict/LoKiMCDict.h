@@ -22,6 +22,8 @@
 #include "LoKi/TreeOps.h"
 #include "LoKi/MCDecays.h"
 #include "LoKi/MCChildSelector.h"
+#include "LoKi/MCDecayChain.h"
+#include "LoKi/MCDump.h"
 // ============================================================================
 #include "LoKi/IMCDecay.h"
 #include "LoKi/FinderDict.h"
