@@ -32,6 +32,8 @@
 #include "LoKi/GenAlgsDicts.h"
 #include "LoKi/GenMoniDicts.h"
 #include "LoKi/GenDecays.h"
+#include "LoKi/GenDecayChain.h"
+#include "LoKi/GenDump.h"
 // ============================================================================
 #include "LoKi/IGenDecay.h"
 #include "LoKi/FinderDict.h"

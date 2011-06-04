@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-06-04 - Vanya Belyaev
+
+ - better printout of decay chains 
+
  ! 2011-06-02 - Vanya Belyaev
   
  - add LoKi::GenFilter algorithm to allow some filtering based on 

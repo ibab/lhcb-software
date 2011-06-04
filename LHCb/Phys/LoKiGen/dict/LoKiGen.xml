@@ -94,6 +94,7 @@
   <class name = "Decays::IGenDecay::Tree"   />
   <class name = "LoKi::Dicts::FinderDicts_<const HepMC::GenParticle*>"   />
   
+  <class name = "LoKi::GenDecayChain"     />
   
   <exclusion>
     <class name ="LoKi::GenParticles::FromHepMCTree::VERTICES" />
