@@ -14,7 +14,6 @@
   
   <class name = "LoKi::MCMatch"        />
   <class name = "LoKi::MCMatchObj"     />
-  <class name = "LoKi::DecayChain"     />
   
   <class name="LoKi::Interface<LoKi::MCMatchObj>" />
   

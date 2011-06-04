@@ -5,6 +5,9 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-04 - Vanya Belyaev
+ - remove some code 
+
 ! 2011-05-22 - Vanya Belyaev
   
  - MCMatchObj.cpp

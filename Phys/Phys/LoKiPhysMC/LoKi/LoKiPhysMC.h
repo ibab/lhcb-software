@@ -1,14 +1,6 @@
 // $Id: LoKiPhysMC.h,v 1.3 2007-04-16 16:16:48 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/05/27 11:47:14  ibelyaev
-//  add DecayChain utilities
-//
-// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
-// New package : RC <---> MC links for LoKi 
-// 
+// $Revision: 1.3 $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSMC_H 
 #define LOKI_LOKIPHYSMC_H 1
@@ -22,9 +14,6 @@
 #include "LoKi/PhysMCTypes.h"
 #include "LoKi/PhysMCParticles.h"
 #include "LoKi/PhysMCParticleCuts.h"
-#include "LoKi/DecayChain.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -39,8 +28,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-11 
  */
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================
