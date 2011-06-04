@@ -37,9 +37,27 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /** @var s_InvalidPIDName 
+   *  representation of "invalid" particle ID 
+   */
+  const std::string s_InvalidPIDName = "<Unknown>" ;
+  // ==========================================================================
+}
 // ============================================================================
 /*  retrieve particle ID from Particle name 
  *  @param name particle name 
@@ -53,18 +71,18 @@ LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name )
   static Map s_map ; // ATTENTION
   if ( s_map.empty() ) 
   {
-    s_map.insert (  "gamma" , LHCb::ParticleID(    22 )) ;
-    s_map.insert (  "e+"    , LHCb::ParticleID(   -11 )) ;
-    s_map.insert (  "e-"    , LHCb::ParticleID(    11 )) ;
-    s_map.insert (  "mu+"   , LHCb::ParticleID(   -13 )) ;
-    s_map.insert (  "mu-"   , LHCb::ParticleID(    13 )) ;
-    s_map.insert (  "pi+"   , LHCb::ParticleID(   211 )) ;
-    s_map.insert (  "pi0"   , LHCb::ParticleID(   111 )) ;
-    s_map.insert (  "pi-"   , LHCb::ParticleID(  -211 )) ;
-    s_map.insert (  "K+"    , LHCb::ParticleID(   321 )) ;
-    s_map.insert (  "K-"    , LHCb::ParticleID(  -321 )) ;
-    s_map.insert (  "p+"    , LHCb::ParticleID(  2212 )) ;
-    s_map.insert (  "p~-"   , LHCb::ParticleID( -2212 )) ;
+    s_map.insert (  "gamma" , LHCb::ParticleID (    22 ) ) ;
+    s_map.insert (  "e+"    , LHCb::ParticleID (   -11 ) ) ;
+    s_map.insert (  "e-"    , LHCb::ParticleID (    11 ) ) ;
+    s_map.insert (  "mu+"   , LHCb::ParticleID (   -13 ) ) ;
+    s_map.insert (  "mu-"   , LHCb::ParticleID (    13 ) ) ;
+    s_map.insert (  "pi+"   , LHCb::ParticleID (   211 ) ) ;
+    s_map.insert (  "pi0"   , LHCb::ParticleID (   111 ) ) ;
+    s_map.insert (  "pi-"   , LHCb::ParticleID (  -211 ) ) ;
+    s_map.insert (  "K+"    , LHCb::ParticleID (   321 ) ) ;
+    s_map.insert (  "K-"    , LHCb::ParticleID (  -321 ) ) ;
+    s_map.insert (  "p+"    , LHCb::ParticleID (  2212 ) ) ;
+    s_map.insert (  "p~-"   , LHCb::ParticleID ( -2212 ) ) ;
   } 
   Map::const_iterator ifind = s_map.find( name ) ;
   if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN
@@ -101,8 +119,8 @@ const LHCb::ParticleProperty* LoKi::Particles::_ppFromName
         " return NULL " ) ;
     return 0 ;
   }
-  const LHCb::ParticleProperty* pp = ppSvc -> find( name ) ;
-  return pp ;
+  //
+  return ppSvc -> find ( name ) ;
 }
 // ============================================================================
 /*  retrieve particle ID from Particle name 
@@ -147,6 +165,20 @@ const LHCb::ParticleProperty* LoKi::Particles::_ppFromPID
   const LHCb::ParticleProperty* pp = ppSvc -> find ( pid ) ;
   //
   return pp ;
+}
+// ============================================================================
+/*  retrieve ParticleProperty from ParticleID 
+ *  @param pid particle ID 
+ *  @param particle property 
+ */
+// ============================================================================
+const LHCb::ParticleProperty* LoKi::Particles::__ppFromPID
+( const LHCb::ParticleID& pid ) 
+{
+  const LoKi::Services& services = LoKi::Services::instance () ;
+  LHCb::IParticlePropertySvc* ppSvc = services.ppSvc();
+  if ( 0 == ppSvc ) { return 0 ; }
+  return ppSvc -> find ( pid ) ;
 }
 // ============================================================================
 /*  retrieve ParticleProperty from ParticleID 
@@ -304,6 +336,18 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
  *  @return particle name 
  */
 // ============================================================================
+std::string  LoKi::Particles::nameIdFromPID ( const LHCb::ParticleID& pid ) 
+{
+  const LHCb::ParticleProperty* pp = __ppFromPID ( pid ) ;
+  if ( 0 != pp ) { return pp->particle() ; }
+  return "PID(" + boost::lexical_cast<std::string>( pid.pid() ) + ")" ;  
+}
+// ============================================================================
+/*  retrieve particle name for given PID 
+ *  @param pid particle PID 
+ *  @return particle name 
+ */
+// ============================================================================
 std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid ) 
 {
   typedef GaudiUtils::VectorMap<LHCb::ParticleID,std::string> Map ;
@@ -311,18 +355,18 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
   static Map s_map ;  ///< ATTENTION
   if ( s_map.empty() ) 
   {
-    s_map.insert ( LHCb::ParticleID(    22) , "gamma" ) ;
-    s_map.insert ( LHCb::ParticleID(   -11) , "e+"    ) ;
-    s_map.insert ( LHCb::ParticleID(    11) , "e-"    ) ;
-    s_map.insert ( LHCb::ParticleID(   -13) , "mu+"   ) ;
-    s_map.insert ( LHCb::ParticleID(    13) , "mu-"   ) ;
-    s_map.insert ( LHCb::ParticleID(   211) , "pi+"   ) ;
-    s_map.insert ( LHCb::ParticleID(   111) , "pi0"   ) ;
-    s_map.insert ( LHCb::ParticleID(  -211) , "pi-"   ) ;
-    s_map.insert ( LHCb::ParticleID(   321) , "K+"    ) ;
-    s_map.insert ( LHCb::ParticleID(  -321) , "K-"    ) ;
-    s_map.insert ( LHCb::ParticleID(  2212) , "p+"    ) ;
-    s_map.insert ( LHCb::ParticleID( -2212) , "p~-"   ) ;
+    s_map.insert ( LHCb::ParticleID (    22 ) , "gamma" ) ;
+    s_map.insert ( LHCb::ParticleID (   -11 ) , "e+"    ) ;
+    s_map.insert ( LHCb::ParticleID (    11 ) , "e-"    ) ;
+    s_map.insert ( LHCb::ParticleID (   -13 ) , "mu+"   ) ;
+    s_map.insert ( LHCb::ParticleID (    13 ) , "mu-"   ) ;
+    s_map.insert ( LHCb::ParticleID (   211 ) , "pi+"   ) ;
+    s_map.insert ( LHCb::ParticleID (   111 ) , "pi0"   ) ;
+    s_map.insert ( LHCb::ParticleID (  -211 ) , "pi-"   ) ;
+    s_map.insert ( LHCb::ParticleID (   321 ) , "K+"    ) ;
+    s_map.insert ( LHCb::ParticleID (  -321 ) , "K-"    ) ;
+    s_map.insert ( LHCb::ParticleID (  2212 ) , "p+"    ) ;
+    s_map.insert ( LHCb::ParticleID ( -2212 ) , "p~-"   ) ;
   }
   Map::const_iterator ifind = s_map.find( pid ) ;
   if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN 

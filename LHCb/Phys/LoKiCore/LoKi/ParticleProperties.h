@@ -5,6 +5,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // Kernel 
 // ============================================================================
 #include "Kernel/ParticleID.h"
@@ -23,12 +27,21 @@ namespace LHCb { class ParticleProperty ; }
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::Particles LoKi/ParticleProperties.h
    *  Simple namespace with functio related to particles 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -36,64 +49,82 @@ namespace LoKi
    */
   namespace  Particles
   {
-    // ========================================================================
-    /** @var s_InvalidPIDName 
-     *  representation of "invalid" particle ID 
-     */
-    const std::string s_InvalidPIDName = "<Unknown>" ;
     // ========================================================================    
     /** retrieve particle ID from Particle name 
      *  @param name particle name 
      *  @return particle ID 
      */
+    GAUDI_API 
     LHCb::ParticleID pidFromName ( const std::string& name ) ;
     // ========================================================================    
     /** retrieve particle name for given PID 
      *  @param pid particle PID 
      *  @return particle name 
      */
+    GAUDI_API 
     std::string  nameFromPID( const LHCb::ParticleID& pid ) ;
+    // ========================================================================    
+    /** retrieve particle name for given PID 
+     *  @param pid particle PID 
+     *  @return particle name 
+     */
+    GAUDI_API 
+    std::string  nameIdFromPID( const LHCb::ParticleID& pid ) ;
     // ========================================================================    
     /** retrieve particle ID from Particle name 
      *  @param name particle name 
      *  @return particle property 
      */
+    GAUDI_API 
     const LHCb::ParticleProperty* _ppFromName ( const std::string& name ) ;
     // ========================================================================
     /** retrieve particle ID from Particle name 
      *  @param name particle name 
      *  @return particle property 
      */
+    GAUDI_API 
     const LHCb::ParticleProperty* ppFromName ( const std::string& name ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
      *  @return particle property 
      */
+    GAUDI_API 
     const LHCb::ParticleProperty* _ppFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
      *  @return particle property 
      */
+    GAUDI_API 
+    const LHCb::ParticleProperty* __ppFromPID ( const LHCb::ParticleID& pid   ) ;
+    // ========================================================================    
+    /** retrieve ParticleProperty from ParticleID 
+     *  @param pid particle ID 
+     *  @return particle property 
+     */
+    GAUDI_API 
     const LHCb::ParticleProperty* ppFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
      *  @return particle mass 
      */
+    GAUDI_API 
     double massFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param name particle name 
      *  @return particle mass 
      */
+    GAUDI_API 
     double massFromName ( const std::string&      name ) ;
     // ========================================================================    
     /** retrieve the lifetime (c*tau) for the particle from the name 
      *  @param name particle name 
      *  @return particle lifetime
      */
+    GAUDI_API 
     double ctau             ( const std::string& name ) ;
     inline double lifeTime  ( const std::string& name ) 
     { return ctau ( name ) ; }
@@ -102,6 +133,7 @@ namespace LoKi
      *  @param pid particle ID 
      *  @return particle lifetime
      */
+    GAUDI_API 
     double ctau            ( const LHCb::ParticleID& pid ) ;
     inline double lifeTime ( const LHCb::ParticleID& pid ) 
     { return ctau ( pid ) ; }
@@ -110,12 +142,14 @@ namespace LoKi
      *  @param name particlre name 
      *  @return name of antiParticle 
      */
+    GAUDI_API 
     std::string             antiParticle( const std::string&      name ) ;
     // ========================================================================    
     /** get ParticleProperty of 'antiparticle'
      *  @param  pp ParticleProperty object for the particle 
      *  @return ParticleProperty object for antiparticle 
      */
+    GAUDI_API 
     const LHCb::ParticleProperty* antiParticle
     ( const LHCb::ParticleProperty* pp   ) ;
     // ========================================================================    
@@ -123,13 +157,14 @@ namespace LoKi
      *  @param  pid particle 
      *  @return pid fro antiparticle 
      */
+    GAUDI_API 
     LHCb::ParticleID     antiParticle( const LHCb::ParticleID&       pid  ) ;
     // ========================================================================
-  } // end of namespace LoKi::Particles 
+  } //                                         end of namespace LoKi::Particles
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PARTICLEPROPERTIES_H
 // ============================================================================

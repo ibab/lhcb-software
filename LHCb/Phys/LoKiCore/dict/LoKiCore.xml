@@ -39,9 +39,10 @@
   <function name = "LoKi::throwException"  />
   <!--function name = "LoKi::Assert"          /-->
   <function name = "LoKi::Print::toString" />
-  
+
   <class name    = "LoKi::Dump"            />
   <class name    = "LoKi::Timer"           />
+  <class name    = "LoKi::DecayChainBase"  />  
   
   <class name    = "Bender::Welcome"       />
   

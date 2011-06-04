@@ -33,6 +33,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Objects Objects.h LoKi/Objects.h
    *
    *  Collection of useful small objects for LoKi 
@@ -51,9 +52,11 @@ namespace LoKi
     template <class TYPE>
     struct _ALL 
     {
+      // ======================================================================
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
       inline bool operator() ( ARG /* arg */ ) const { return true   ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @struct _NONE
@@ -64,9 +67,11 @@ namespace LoKi
     template <class TYPE>
     struct _NONE 
     {
+      // ======================================================================
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
       inline bool operator() ( ARG /* arg */ ) const { return false  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @struct _ONE
@@ -77,9 +82,26 @@ namespace LoKi
     template <class TYPE>
     struct _ONE 
     {
+      // ======================================================================
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
       inline int operator() ( ARG /* arg */ ) const { return 1 ; }
+      // ======================================================================
+    };  
+    // ========================================================================
+    /** @struct _ZERO
+     *  trivial class/functor/predicate which always evaluated to "0"
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-08
+     */
+    template <class TYPE>
+    struct _ZERO
+    {
+      // ======================================================================
+      /// type for the argument 
+      typedef typename boost::call_traits<TYPE>::param_type ARG ;  
+      inline int operator() ( ARG /* arg */ ) const { return 0 ; }
+      // ======================================================================
     };  
     // ========================================================================
     /** @struct _VALID
@@ -90,9 +112,11 @@ namespace LoKi
     template <class TYPE> 
     struct _VALID 
     {
+      // ======================================================================
       /// type for the argument 
       typedef typename boost::call_traits<TYPE>::param_type ARG ;  
       inline bool  operator() ( ARG arg ) const { return LoKi::valid ( arg ) ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @var _ALL_
@@ -103,6 +127,14 @@ namespace LoKi
      */
     const _ALL<const void*> _ALL_     = _ALL<const void*>  () ;
     // ========================================================================
+    /** @var _NONE_
+     *  helper objects which allows the efficient implementation 
+     *  of selection algorithms 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    const _NONE<const void*> _NONE_   = _NONE<const void*>  () ;
+    // ========================================================================
     /** @var _ONE_
      *  helper objects which allows the efficient implementation 
      *  of selection algorithms 
@@ -112,6 +144,15 @@ namespace LoKi
     // ========================================================================
     const _ONE<const void*> _ONE_     = _ONE<const void*>  () ;
     // ========================================================================
+    /** @var _ZERO_
+     *  helper objects which allows the efficient implementation 
+     *  of selection algorithms 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    // ========================================================================
+    const _ZERO<const void*> _ZERO_   = _ZERO<const void*>  () ;
+    // ========================================================================
     /** @var _VALID_
      *  helper objects which allows the efficient implementation 
      *  of selection algorithms 
@@ -120,10 +161,11 @@ namespace LoKi
      */
     const _VALID<const void*> _VALID_ = _VALID<const void*> () ;
     // ========================================================================
-  } // end of the namespace LoKi::Objects
-} // end of the namespace LoKi
+  } //                                       end of the namespace LoKi::Objects
+  // ==========================================================================
+} //                                                  end of the namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_OBJECTS_H
 // ============================================================================

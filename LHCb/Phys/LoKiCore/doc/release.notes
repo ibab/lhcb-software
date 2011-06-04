@@ -13,8 +13,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-06-04 - Vanya Belyaev
+
+ - add utilities for better printout of decay trees 
+
+ - cmt/requirements 
+    version increment to v11r1 
+
 !========================= LoKiCore v11r0 2011-04-04 =========================
 ! 2011-04-02 - Vanya Belyaev
+
  - add few functors (& corresponding decorators) for 
     - round   ( bases on LHCb::Math::round ) 
     - jbit    ( based on Gaudi::Math::bit  ) 

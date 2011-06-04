@@ -29,6 +29,7 @@
 #include "LoKi/IDecayNode.h"
 #include "LoKi/Listener.h"
 #include "LoKi/Dump.h"
+#include "LoKi/DecayChainBase.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================
