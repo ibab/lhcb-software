@@ -23,6 +23,11 @@
 #include "LoKi/IHybridTool.h"
 #include "LoKi/HybridEngine.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //  variable ... was declared but never referenced
+#pragma warning(disable:191) // type qualifier is meaningless on cast type
+#endif
+// ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiArrayFunctors
  *

@@ -141,9 +141,6 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-/// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,FilterParticles);
-// ============================================================================
 // the intialization of the tool
 // ============================================================================
 StatusCode LoKi::Hybrid::FilterParticles::initialize () 
@@ -174,6 +171,9 @@ StatusCode LoKi::Hybrid::FilterParticles::initCut ()
   //
   return StatusCode::SUCCESS ;  
 }
+// ============================================================================
+/// Declaration of the Tool Factory
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,FilterParticles)
 // ============================================================================
 // The END 
 // ============================================================================

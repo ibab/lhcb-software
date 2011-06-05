@@ -592,8 +592,6 @@ inline StatusCode LoKi::Hybrid::Tool::_get
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,Tool);
-// ============================================================================
 // Standard constructor
 // ============================================================================
 LoKi::Hybrid::Tool::Tool 
@@ -719,7 +717,7 @@ StatusCode LoKi::Hybrid::Tool::finalize  ()
   return LoKi::Hybrid::Base::finalize() ;
 }
 // ============================================================================
-
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,Tool)
 // ============================================================================
 // The END 
 // ============================================================================

@@ -3,8 +3,6 @@
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
 // ============================================================================
-// $URL$
-// ============================================================================
 // Include files
 // ============================================================================
 // LoKi
@@ -17,6 +15,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @typedef ACHI2DOCA 
      *  The evaluator of the maximal chi2-distance of the closest approach 
@@ -1753,6 +1759,10 @@ namespace LoKi
      *  @date 2009-11-16
      */
     typedef LoKi::AParticles::AFunV                                    AFUNV ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

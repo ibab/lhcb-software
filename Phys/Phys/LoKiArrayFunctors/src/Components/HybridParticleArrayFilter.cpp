@@ -180,9 +180,6 @@ namespace LoKi
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-/// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,ParticleArrayFilter);
-// ============================================================================
 // the intialization fo the tool
 // ============================================================================
 StatusCode LoKi::Hybrid::ParticleArrayFilter::initVar () 
@@ -200,6 +197,9 @@ StatusCode LoKi::Hybrid::ParticleArrayFilter::initVar ()
   //
   return StatusCode::SUCCESS ;  
 }
+// ============================================================================
+/// Declaration of the Tool Factory
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,ParticleArrayFilter)
 // ============================================================================
 // The END 
 // ============================================================================

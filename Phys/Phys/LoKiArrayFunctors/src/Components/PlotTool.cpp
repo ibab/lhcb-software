@@ -487,7 +487,7 @@ StatusCode LoKi::Hybrid::PlotTool::fillPlots
 }
 // ============================================================================
 /// Declare the mandatory factory needed for instantiation
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,PlotTool);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,PlotTool)
 // ============================================================================
 // The END 
 // ============================================================================

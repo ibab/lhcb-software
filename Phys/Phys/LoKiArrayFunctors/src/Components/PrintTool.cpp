@@ -442,11 +442,7 @@ std::string LoKi::Hybrid::PrintTool::eval
 }
 // ============================================================================
 /// the factory: needed for instantistion
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,PrintTool) ;
-// ============================================================================
-
-      
-
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,PrintTool) 
 // ============================================================================
 // The END 
 // ============================================================================
