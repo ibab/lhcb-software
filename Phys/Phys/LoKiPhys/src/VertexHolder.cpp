@@ -67,18 +67,24 @@ LoKi::Vertices::VertexHolder::~VertexHolder(){}
 const LoKi::Point3D& 
 LoKi::Vertices::VertexHolder::position() const 
 {
+  //
   static const LoKi::Point3D s_error = 
     LoKi::Point3D ( 0 , 0 , LoKi::Constants::InvalidDistance ) ;
+  //
   static const std::string   s_print = "Vertex Information is invalid, return " 
     + LoKi::Print::toString( s_error ) ;
+  //
   if ( !valid() ) { Error ( s_print ) ; return s_error ; }    // RETURN 
+  //
   switch ( type() ) 
   {
-  case _point  : return point()                ; break ; // RETURN 
-  case _vertex : return vertex()->position()   ; break ; // RETURN
-  default      : Error ( s_print ) ; return s_error ; break ; // RETURN   
+  case _point  : return point()                ; // RETURN 
+  case _vertex : return vertex()->position()   ; // RETURN
+  default      : break                         ; // break 
   }
-  // Error ( s_print ) ;
+  //
+  Error ( s_print ) ;  
+  // 
   return s_error ;                                            // RETURN 
 } 
 // ============================================================================

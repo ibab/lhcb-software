@@ -23,7 +23,7 @@
  *  ``C++ ToolKit for Smart and Friendly Physics Analysis''
  *
  *   By usage of this code one clearly states the disagreement 
- *    with the campain of Dr.O.Callot et al.: 
+ *    with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  * 
  *  Last modification $Date$
@@ -44,7 +44,7 @@ namespace LoKi
     // ========================================================================
     /** @class PtFlight 
      *  Simple evaluator for transverse momentum relative to flight direction 
-     *  @see LoKi::Cuts::PTFLIGHT 
+     *  @see LoKi::Cuts:PTFLIGHT 
      *  @see LoKi::Particles::TransverseMomentumRel  
      *  @thanks Mike Williams
      *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
@@ -243,6 +243,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================    
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @typedef PTFLIGHT 
      *  Simple functor to evaluate the transverse momentum with respect to 
@@ -338,6 +346,10 @@ namespace LoKi
      *  @thanks Mike Williams
      */
     const LoKi::Particles::MCorrectedWithBestVertex                  BPVCORRM ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

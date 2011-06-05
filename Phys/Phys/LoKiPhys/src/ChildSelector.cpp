@@ -34,12 +34,24 @@
 namespace 
 { 
   // ==========================================================================
+  // Suppress Intel compiler warnings about missing default constructor
+  // In this case the compiler generated constructor is fine, since there are
+  // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
+  // ==========================================================================
   /// invalid decay
   const Decays::Trees::Types_<const LHCb::Particle*>::Invalid       s_INVALID        ;
   /// "None"-selector
   const LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant s_NONE ( false ) ;
   /// "Factory"
   const std::string  s_FACTORY = "LoKi::Decay" ;
+  // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
   // ==========================================================================
 }
 // ============================================================================
@@ -402,13 +414,10 @@ unsigned int LoKi::Child::Selector::children
     LoKi::Extract::particles ( head , std::back_inserter( daughters ) , m_cut ) ;
     return daughters.size() ;                                   // RETURN
   }
-  else 
-  {
-    LHCb::Particle::ConstVector input ( 1 , head ) ;
-    return m_finder.findDecay ( input , daughters ) ;            // RETURN 
-  }
   //
-  return 0 ;                                                     // RETURN 
+  LHCb::Particle::ConstVector input ( 1 , head ) ;
+  //
+  return m_finder.findDecay ( input , daughters ) ;            // RETURN 
 }
 // ============================================================================
 /*  get the child accoeding to the selector 

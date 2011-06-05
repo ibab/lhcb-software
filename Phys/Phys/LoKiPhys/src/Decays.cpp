@@ -434,19 +434,21 @@ bool Decays::Trees::Inclusive::operator()
       continue ;                                               // CONTINUE ;  
     }
     
-    // never go further, unfortunately the most generic algorithm
-    // it terribly slow... O(N!)
+//     // never go further, unfortunately the most generic algorithm
+//     // it terribly slow... O(N!)
     
-    // (4) sort the section 
-    std::stable_sort ( isect->begin() , isect->end() ) ;
-    // make all possible permutations of the section  
-    do 
-    {
-      // (5) match all fields:
-      if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
-      { return true ; }                                            // RETURN 
-    } // next permutation
-    while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
+//     // (4) sort the section 
+//     std::stable_sort ( isect->begin() , isect->end() ) ;
+//     // make all possible permutations of the section  
+//     do 
+//     {
+//       // (5) match all fields:
+//       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
+//       { return true ; }                                            // RETURN 
+//     } // next permutation
+//     while ( std::next_permutation ( isect->begin() , isect->end() ) ) ;
+    
+
   } // next section
   // no match 
   return false ;                                                   // RETURN 
