@@ -5,6 +5,20 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-06-05 - Vanya Belyaev
+
+ - add ``generic'' full-event cut:
+
+   it analyses the event and accept them according to cuts.
+
+     e.g. accept ebents with at least two J/psi :
+ 
+    xxx.Code = " count( 'J/psi(1S)' == GID ) > 1.5 "
+
+     in a similar way one can use anyproerteis, including the acceptance
+
+
+
 ! 2011-05-31 - Victor Coco
  - BiasedBB: add some cuts on number of stable charged daugthers of the B and on 
    minimal R displacement. By default gives the same result than without those cuts
