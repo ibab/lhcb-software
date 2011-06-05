@@ -6,6 +6,11 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-05 - Vanya Belyaev
+ - fix ICC warnings 
+ - cmt/requirements 
+    version increment to v2r0p1  
+
 !========================== LoKiProtoParticles v2r0 2011-04-04 ================
 
 ! 2011-03-10 - Vanya Belyaev

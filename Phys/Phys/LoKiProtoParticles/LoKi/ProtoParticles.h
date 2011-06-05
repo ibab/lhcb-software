@@ -33,7 +33,7 @@
  *   A.Golutvin, P.Koppenburg have been used in the design.
  *
  *   By usage of this code one clearly states the disagreement 
- *   with the campain of Dr.O.Callot et al.: 
+ *   with the smear campaign of Dr.O.Callot et al.: 
  *    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *     
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -443,7 +443,7 @@ namespace LoKi
           CALO_ECALINFO    ,       // has Ecal information ?
           CALO_HCALINFO    ,       // has Hcal information ?
           CALO_BREMINFO    ,       // has Brem information ? 
-          CALO_CALOINFO    ,       // has Calo information ? 
+          CALO_CALOINFO            // has Calo information ? 
         };
       // ======================================================================
     public  :
@@ -904,7 +904,15 @@ namespace LoKi
   { return s << "PP_VALID " ; }
   // ==========================================================================
   namespace Cuts 
-  {
+  {    
+    // ========================================================================
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @typedef PP_FILTER 
      *  simple functor to allow usage of IParticleFilter
@@ -1565,6 +1573,10 @@ namespace LoKi
      *  @date 2010-12-10
      */
     const LoKi::ProtoParticles::NShared                          PP_NSHAREDMU ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
