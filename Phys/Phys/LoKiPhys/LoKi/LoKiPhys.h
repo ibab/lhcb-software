@@ -45,8 +45,7 @@
 #include "LoKi/PrintDecay.h"
 #include "LoKi/PhysSources.h"
 #include "LoKi/PhysSinks.h"
-// ============================================================================
-
+#include "LoKi/PhysDump.h"
 // ============================================================================
 /** @file
  *
@@ -58,43 +57,55 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-28 
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ *
  */
 // ============================================================================
-
 namespace LoKi
 {
-  /** @namesapce LoKi::Particles 
+  // ==========================================================================
+  /** @namespace LoKi::Particles 
    *  The major namespace with implementatioin of all
    *  "Particle"-functions and cuts 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-28 
    */
   namespace Particles 
-  {
+  { 
   }
+  // ==========================================================================
   /** @namesapce LoKi::Vertices 
-   *  The major namespace with implementatioin of all
+   *  The major namespace with implementation of all
    *  "Particle"-functions and cuts 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-28 
    */
   namespace Vertices 
-  {
+  { 
   }
-  /** @namesapce LoKi::PhysTypes 
+  // ==========================================================================
+  /** @namespace LoKi::PhysTypes 
    *  The major namespace with basic classes for physics analysis
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-01-28 
    */
   namespace PhysTypes 
-  {
+  { 
   }
-}
-  
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_LOKIPHYS_H
 // ============================================================================

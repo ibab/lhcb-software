@@ -27,7 +27,7 @@ namespace LHCb
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -1468,6 +1468,14 @@ namespace LoKi
   namespace Cuts 
   {
     // ========================================================================
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
+    // ========================================================================
     /** @typedef PCOV2 
      *  Trivial accessor toe elemenst of particel covarinacte matrix :
      *  @code 
@@ -1544,6 +1552,10 @@ namespace LoKi
      *  @date 2010-12-09     
      */ 
     const LoKi::Particles::M2err2                                      M2ERR2 ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts  
   // ==========================================================================

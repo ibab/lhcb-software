@@ -19,7 +19,7 @@
 #include "LoKi/Trees.h"
 // ============================================================================
 /** @file
- *  Implementation file for LoKi MC-specific decay/tree-functors 
+ *  Implementation file for LoKi specific decay/tree-functors 
  *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
  *  @date   2008-05-25
  */

@@ -32,7 +32,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -49,6 +49,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts
   {
+    // ========================================================================    
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @typedef EQUALTO 
      *  The trivial prodicate which tests the value of some function 
@@ -6555,8 +6563,14 @@ namespace LoKi
      *  @see LoKi::Particles::TrgPointingScore
      *  @author patrick spradlin
      *  @date   10 March 2009
+     *
+     *  @todo check if somebody uses TrgPointingScore 
      */
     typedef LoKi::Particles::TrgPointingScore              TRGPOINTING ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts  
   // ==========================================================================

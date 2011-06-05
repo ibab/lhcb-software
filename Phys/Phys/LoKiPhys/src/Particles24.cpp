@@ -27,11 +27,33 @@
 // ============================================================================
 /** @file 
  *  Implementation file for file LoKi/Particles24.h
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @date 2008-12-17 
  *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+ *
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
  */
 namespace 
 { 
+  // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
   // ==========================================================================
   /// invalid Node 
   const Decays::Nodes::Invalid                                      s_NODE ;
@@ -39,6 +61,10 @@ namespace
   const Decays::Trees::Types_<const LHCb::Particle*>::Invalid       s_TREE ;
   /// "Factory"
   const std::string  s_FACTORY = "LoKi::Decay" ;
+  // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
   // ==========================================================================
 }
 // ============================================================================

@@ -29,7 +29,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -46,7 +46,15 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {   
-    // ========================================================================    
+    // ========================================================================   
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
+    // ========================================================================
     /** @typedef VABSDZ 
      *  Simple evaluator of abs(Delta-Z) with the reference vertex or point 
      *  
@@ -785,6 +793,10 @@ namespace LoKi
      *  @date 2010-12-04
      */
     const LoKi::Vertices::IsRecVertex                             ISRECVERTEX ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts
   // ==========================================================================

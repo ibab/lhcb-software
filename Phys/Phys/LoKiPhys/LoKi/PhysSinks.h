@@ -1,4 +1,4 @@
-// $Id: PhysSinks.h 95190 2010-10-25 15:48:47Z ibelyaev $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSSINKS_H 
 #define LOKI_PHYSSINKS_H 1

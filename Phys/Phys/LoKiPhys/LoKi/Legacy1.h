@@ -50,8 +50,6 @@ namespace LoKi
       { return s << "BPVVDS_LEGACY" ; }
     } ;
     // ========================================================================
-
-    // ========================================================================
     /** @class TrgPointingScoreWithPt
      *  Evaluator of the custom 'pointing angle' sometimes used in
      *  trigger applications:
@@ -110,8 +108,6 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-
-    // ========================================================================
     /** @class TrgPointingScoreWithPtWithBestPV
      *  The special version of LoKi::Legacy::TrgPointingScoreWithPt functor,
      *  which gets the related primary vertex from IPhysDesktop tool
@@ -148,15 +144,23 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Legacy
+  } //                                            end of namespace LoKi::Legacy
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 namespace LoKi
 {
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @var BPVVDS_LEGACY 
      *  Sime functor to evaluate the incorrect distance significance
@@ -191,9 +195,13 @@ namespace LoKi
      */
     const LoKi::Legacy::TrgPointingScoreWithPtWithBestPV  BPVTRGPOINTINGWPT ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
-} // end of namespace LoKi 
+} //                                                      end of namespace LoKi 
 // ============================================================================
 #endif // LOKI_LEGACY1_H
 // ============================================================================

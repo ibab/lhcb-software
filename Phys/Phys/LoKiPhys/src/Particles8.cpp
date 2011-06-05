@@ -21,6 +21,10 @@
 #include "LoKi/Particles8.h"
 #include "LoKi/PhysAlgs.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) // ... was declared but never referenced
+#endif
+// ============================================================================
 // Boost 
 // ============================================================================
 #include "boost/lambda/lambda.hpp"

@@ -11,10 +11,31 @@
 #include "LoKi/Algs.h"
 // ============================================================================
 /** @file
- *  Implementation file for LoKi MC-tree-functors 
+ *  Implementation file for LoKi tree-functors 
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
  *  @date   2008-05-25
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) // ... was declared but never referenced
+#endif
 // ============================================================================
 namespace 
 {
@@ -42,11 +63,13 @@ namespace
   // ==========================================================================
   struct NotPid : public std::unary_function<const LHCb::Particle*,bool>
   {
+    // ========================================================================
     /// constructor 
     NotPid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // the major method: find "not a pid" 
     inline bool operator () ( const LHCb::Particle* p ) const 
     { return 0 != p && !m_pid.check ( p->particleID() ) ; }
+    // ========================================================================
   private:
     // ========================================================================
     /// the pid-checker 

@@ -45,6 +45,7 @@
 #include "LoKi/Photons.h"
 #include "LoKi/ChildSelector.h"
 #include "LoKi/DecayChain.h"
+#include "LoKi/PhysDump.h"
 // ============================================================================
 #include "Kernel/DecayTree.h"
 // ============================================================================
@@ -66,6 +67,11 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2007-12-01
  */
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //  variable ... was declared but never referenced
+#pragma warning(disable:191) // type qualifier is meaningless on cast type
+#endif
 // ============================================================================
 namespace LoKi 
 {

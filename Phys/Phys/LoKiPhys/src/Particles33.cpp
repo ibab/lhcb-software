@@ -22,16 +22,39 @@
 #include "LoKi/IDecay.h"
 // ============================================================================
 /** @file 
- *  Implementation file for functirons from file  LoKi/Particles33.h
+ *  Implementation file for functions from file  LoKi/Particles33.h
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *  
  *  @author Vaya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2010-02-21
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$
+ *
  */
 // ============================================================================
 namespace 
 {
   // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
+  // ==========================================================================
   // invalid decay
   const Decays::Trees::Types_<const LHCb::Particle*>::Invalid s_INVALID     ;
+  // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
   // ==========================================================================
 }
 // ============================================================================
