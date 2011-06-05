@@ -27,22 +27,20 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *
- *  $Revision$
+ *                    $Revision$
  *  Last Modification $Date$ 
  *                 by $Author$ 
  */
 // ============================================================================
 // destructor : virtual and protected 
 // ============================================================================
-LoKi::ITrackFunctorFactory::~ITrackFunctorFactory () {}; 
-// ============================================================================
-
+LoKi::ITrackFunctorFactory::~ITrackFunctorFactory () {}
 // ============================================================================
 // The END 
 // ============================================================================

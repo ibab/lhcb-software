@@ -17,6 +17,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts
   {
+    // ========================================================================
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ======================================================================== 
     /** @var TrTYPE 
      *  Simple function which evaluates LHCb::Track::type
@@ -1232,6 +1240,10 @@ namespace LoKi
      *  @date 2011-02-02
      */
     const LoKi::Tracks::NTHits                                     TrTNORMIDC ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif
     // ========================================================================
  } //                                            end of namespace LoKi::Tracks
   // ==========================================================================

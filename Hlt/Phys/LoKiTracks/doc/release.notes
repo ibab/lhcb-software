@@ -1,9 +1,17 @@
-! $Id:$
+! $Id$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTracks
 ! Responsible : Vanya Belyaev
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
+
+! 2011-06-05 - Vanya Belyaev
+
+ - fix ICC warnings  
+
+ - cmt/requirements 
+
+     version increment to v2r1p1
 
 !========================== LoKiTracks v2r1 2011-03-29 ===================
 ! 2011-03-18 - Vanya Belyaev

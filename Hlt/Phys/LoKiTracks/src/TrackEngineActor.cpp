@@ -19,13 +19,13 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @date 2004-06-29 
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *
- *  $Revision$
+ *                    $Revision$
  *  Last Modification $Date$ 
  *                 by $Author$ 
  */
@@ -65,11 +65,11 @@ LoKi::Hybrid::TrackEngineActor::instance()
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::Hybrid::TrackEngineActor::TrackEngineActor() : m_tool ( 0 ) {} ;
+LoKi::Hybrid::TrackEngineActor::TrackEngineActor() : m_tool ( 0 ) {} 
 // ============================================================================
 // destructor
 // ============================================================================
-LoKi::Hybrid::TrackEngineActor::~TrackEngineActor() {} ;
+LoKi::Hybrid::TrackEngineActor::~TrackEngineActor() {} 
 // ============================================================================
 // disconnect the tool 
 // ============================================================================

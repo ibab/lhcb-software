@@ -18,6 +18,11 @@
 #include "LoKi/ITrackFunctorAntiFactory.h"
 #include "LoKi/TrackEngine.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //  variable ... was declared but never referenced
+#pragma warning(disable:191) // type qualifier is meaningless on cast type
+#endif
+// ============================================================================
 /** @file
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -28,11 +33,10 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- 
- *  $Revision$
+ *                    $Revision$
  *  Last Modification $Date$ 
  *                 by $Author$ 
  */
