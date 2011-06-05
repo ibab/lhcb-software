@@ -30,11 +30,33 @@
 #include "LoKi/Services.h"
 #include "LoKi/Assert.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER       // Disable ICC remark
+#pragma warning(disable:2259) // non-pointer conversion may lose significant bits
+#pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+#endif
+// ============================================================================
 /** @file
  *  Implementation file for functions from namespace LoKi::Algorithms 
  *  @see LoKi::Algorithms 
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-010-14 
+ *
+ *                     $Revision$
+ *   Last modification $Date$
+ *                  by $Author$
  */ 
 // ============================================================================
 namespace 
@@ -68,6 +90,16 @@ namespace
     }
     ///////// start of code copied from GaudiSequencer...
 
+    /** @todo       AlgFunctors.cpp : This stupid code MUST BE REMOVED ASAP!
+     *              we definitely can;t live with it!
+     *  
+     *  @warning    AlgFunctors.cpp : This stupid code MUST BE REMOVED ASAP!
+     *              we definitely can;t live with it!
+     *
+     *  @attention  AlgFunctors.cpp : This stupid code MUST BE REMOVED ASAP!
+     *              we definitely can;t live with it!
+     */
+    
     // get job options svc -- todo: move this one level up, not done 
     // on this branch to retain binary compatiblity...
     LoKi::ILoKiSvc *ls = LoKi::Services::instance().lokiSvc ();
@@ -86,7 +118,8 @@ namespace
     bool addedContext = false;
     bool addedRootInTES = false;
     bool addedGlobalTimeOffset = false;
-    SmartIF<IAlgorithm> myIAlg = iam->algorithm( typeName , false); // do not create it now
+    // do not create it now
+    SmartIF<IAlgorithm> myIAlg = iam->algorithm( typeName , false); 
     if ( !myIAlg.isValid() ) {
       //== Set the Context if not in the jobOptions list
       if ( ""  != parent->context() ||
@@ -95,13 +128,16 @@ namespace
         bool foundContext = false;
         bool foundRootInTES = false;
         bool foundGlobalTimeOffset = false;
-        const std::vector<const Property*>* properties = jos->getProperties( theName );
+        const std::vector<const Property*>* properties = 
+          jos->getProperties( theName );
         if ( 0 != properties ) {
           // Iterate over the list to set the options
-          for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
-               itProp != properties->end();
-               itProp++ )   {
-            const StringProperty* sp = dynamic_cast<const StringProperty*>(*itProp); // is GlobalTimeOffSet really a stringproperty....
+          for ( std::vector<const Property*>::const_iterator itProp = 
+                  properties->begin();
+                itProp != properties->end();
+                itProp++ )   {
+            const StringProperty* sp =
+              dynamic_cast<const StringProperty*>(*itProp); // is GlobalTimeOffSet really a stringproperty....
             if ( 0 != sp )    {
               if ( "Context" == (*itProp)->name() ) foundContext = true;
               if ( "RootInTES" == (*itProp)->name() ) foundRootInTES = true;
@@ -120,8 +156,10 @@ namespace
           addedRootInTES = true;
         }
         if ( !foundGlobalTimeOffset && 0.0 != parent->globalTimeOffset() ) {
-          DoubleProperty globalTimeOffsetProperty( "GlobalTimeOffset", parent->globalTimeOffset() );
-          jos->addPropertyToCatalogue( theName, globalTimeOffsetProperty ).ignore();
+          DoubleProperty globalTimeOffsetProperty( "GlobalTimeOffset", 
+                                                   parent->globalTimeOffset() );
+          jos->addPropertyToCatalogue( theName, 
+                                       globalTimeOffsetProperty ).ignore();
           addedGlobalTimeOffset = true;
         }
       }
@@ -135,7 +173,8 @@ namespace
       Algorithm *myAlg = dynamic_cast<Algorithm*>(myIAlg.get());
       if (myAlg) {
         parent->subAlgorithms()->push_back(myAlg);
-        // when the algorithm is not created, the ref count is short by one, so we have to fix it.
+        // when the algorithm is not created, 
+        // the ref count is short by one, so we have to fix it.
         myAlg->addRef();
       }
     }

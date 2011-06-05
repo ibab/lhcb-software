@@ -14,6 +14,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-06-05 - Vanya Belyaev
+ - reduce number of warnings for ICC compiler
+
+! 2011-06-05 - Vanya Belyaev
 
  - add base class LoKi::FilterTool 
 

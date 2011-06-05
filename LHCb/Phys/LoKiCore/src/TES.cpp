@@ -23,6 +23,11 @@
 #include "LoKi/ILoKiSvc.h"
 #include "LoKi/Constants.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER       // Disable ICC remark
+#pragma warning(disable:2259) // non-pointer conversion may lose significant bits
+#pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
+#endif
+// ============================================================================
 /** @file 
  *  Implementation file for classes from namespace LoKi::TES 
  *
@@ -35,7 +40,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
