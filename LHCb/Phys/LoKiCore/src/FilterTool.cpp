@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,9 +22,9 @@
  *  @date 2008-09-23 
  *  @author Vanya  BELYAEV Ivan.Belyaev@cern.ch
  *
- *                    $Revision: 120817 $
- *  Last modification $Date: 2011-03-27 17:22:49 +0200 (Sun, 27 Mar 2011) $
- *                 by $Author: ibelyaev $
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 // standard constructor 
@@ -71,6 +71,24 @@ LoKi::FilterTool::FilterTool
 // virtual and protected destructor 
 // ============================================================================
 LoKi::FilterTool::~FilterTool () {}
+// ============================================================================
+// add to preambulo 
+// ============================================================================
+void LoKi::FilterTool::addToPreambulo 
+( const std::string&              item ) 
+{
+  m_preambulo_.push_back ( item ) ;
+  m_preambulo_updated = true ;
+}
+// ============================================================================
+// sety preambulo 
+// ============================================================================
+void LoKi::FilterTool::setPreambulo  
+( const std::vector<std::string>& items )
+{
+  m_preambulo_        = items ;
+  m_preambulo_updated = true  ;
+}
 // ============================================================================
 // update the factory 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_FILTERTOOL_H 
 #define LOKI_FILTERTOOL_H 1
@@ -23,9 +23,9 @@
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- *                    $Revision: 120817 $
- *  Last modification $Date: 2011-03-27 17:22:49 +0200 (Sun, 27 Mar 2011) $
- *                 by $Author: ibelyaev $
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 
@@ -86,8 +86,12 @@ namespace LoKi
     const std::string& preambulo() const { return m_preambulo ; }    
     // check the nesessity of updated 
     inline bool updateRequired () const 
-    { return m_factory_updated || m_code_updated || m_preambulo_updated ; }
-    // ========================================================================
+    { return m_factory_updated || m_code_updated || m_preambulo_updated ; } 
+    // add to preambulo 
+    void addToPreambulo ( const std::string&              item ) ;
+    // set the preambulo
+    void setPreambulo   ( const std::vector<std::string>& items ) ;
+   // ========================================================================
   public:
     /// =======================================================================
     /** decode the functor

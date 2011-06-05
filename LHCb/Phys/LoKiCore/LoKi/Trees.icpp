@@ -1,4 +1,4 @@
-// $Id: Trees.icpp,v 1.9 2009-05-23 15:54:19 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_DECAYTREES_ICPP 
 #define LOKI_DECAYTREES_ICPP 1

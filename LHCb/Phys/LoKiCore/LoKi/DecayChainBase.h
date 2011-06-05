@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_DECAYCHAINBASE_H 
 #define LOKI_DECAYCHAINBASE_H 1

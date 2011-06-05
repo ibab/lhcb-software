@@ -142,6 +142,10 @@ namespace LoKi
     // check the nesessity of updated 
     inline bool updateRequired () const 
     { return m_factory_updated || m_code_updated || m_preambulo_updated ; }
+    // add to preambulo 
+    void addToPreambulo ( const std::string&              item ) ;
+    // set the preambulo
+    void setPreambulo   ( const std::vector<std::string>& items ) ;
     // ========================================================================
   public:
     /// =======================================================================

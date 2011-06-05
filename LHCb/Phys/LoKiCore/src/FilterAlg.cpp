@@ -47,11 +47,11 @@ LoKi::FilterAlg::FilterAlg
 ( const std::string& name ,                     // the algorithm instance name 
   ISvcLocator*       pSvc )                  // pointer to the service locator
   : GaudiAlgorithm ( name , pSvc ) 
-  // the type/name for LoKi/Bender "hybrid" factory 
+// the type/name for LoKi/Bender "hybrid" factory 
   , m_factory ( "<UNSPECIFIED>" )
-  // the filter/code criteria itself 
+// the filter/code criteria itself 
   , m_code   ( "<unspecified>" ) 
-  // the preambulo 
+// the preambulo 
   , m_preambulo_ () 
   // the preambulo 
   , m_preambulo  ()
@@ -87,20 +87,39 @@ LoKi::FilterAlg::FilterAlg
 // ============================================================================
 LoKi::FilterAlg::~FilterAlg () {}
 // ============================================================================
+// add to preambulo 
+// ============================================================================
+void LoKi::FilterAlg::addToPreambulo 
+( const std::string&              item ) 
+{
+  m_preambulo_.push_back ( item ) ;
+  m_preambulo_updated = true ;
+}
+// ============================================================================
+// set preambulo 
+// ============================================================================
+void LoKi::FilterAlg::setPreambulo  
+( const std::vector<std::string>& items )
+{
+  m_preambulo_        = items ;
+  m_preambulo_updated = true  ;
+}
+// ============================================================================
 // update the factory 
 // ============================================================================
 void LoKi::FilterAlg::updateFactory ( Property& /* p */ ) // update the factory 
 {
   // no action if not yet initialized 
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
-  /// mark as "to-be-updated" 
+  //
+  // mark as "to-be-updated" 
   m_factory_updated = true ;
   //
   // postpone the action 
   if ( !m_code_updated || !m_preambulo_updated ) { return ; } 
-  
+  //
   // perform the actual immediate decoding  
-  
+  //
   StatusCode sc = decode () ;
   Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
   
