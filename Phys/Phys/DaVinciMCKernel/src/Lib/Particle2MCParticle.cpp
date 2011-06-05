@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.cpp,v 1.2 2009-04-08 06:52:15 jpalac Exp $
+// $Id$
 // Include files 
 
 

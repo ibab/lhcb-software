@@ -1,4 +1,4 @@
-// $Id: MC2Collision.cpp,v 1.2 2007-03-02 13:26:58 cattanem Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,8 +25,6 @@
 // ============================================================================
 #include "LoKi/Report.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Implementation file for functions from namespace MC2Collision
@@ -40,14 +38,16 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smar campaign of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-18 
+*
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
-// ============================================================================
-
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -69,7 +69,7 @@ MC2Collision::collision
   if ( prim != vertex ) { return collision ( prim , table ) ; } // RETURN 
   // 
   return 0 ;
-} ;
+} 
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -79,7 +79,7 @@ MC2Collision::collision
   // trivial check 
   if ( 0 == particle ) { return 0 ; }
   return collision ( particle->primaryVertex() , table ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -89,7 +89,7 @@ MC2Collision::collision
   // trivial check 
   if ( 0 == hit ) { return 0 ; }
   return collision ( hit->mcParticle() , table ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -99,7 +99,7 @@ MC2Collision::collision
   // trivial check 
   if ( 0 == hit ) { return 0 ; }
   return collision ( hit->particle() , table ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -109,7 +109,7 @@ MC2Collision::collision
   // trivial check 
   if ( 0 == hit ) { return 0 ; }
   return collision ( hit->mcHit() , table ) ;
-};
+}
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -119,7 +119,7 @@ MC2Collision::collision
   // trivial check 
   if ( 0 == hit ) { return 0 ; }
   return collision ( hit->mcHit() , table ) ;
-};
+}
 // ============================================================================
 const LHCb::GenCollision* 
 MC2Collision::collision 
@@ -129,7 +129,7 @@ MC2Collision::collision
   // trivial check 
   if ( 0 == hit ) { return 0 ; }
   return collision ( hit->mcParticle() , table ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -137,7 +137,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == vertex ) { return 0 ; }
   return vertex->primaryVertex() ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -145,7 +145,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == particle ) { return 0 ; }
   return particle->primaryVertex() ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -153,7 +153,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == hit ) { return 0 ; }
   return primaryVertex ( hit->mcParticle() ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -161,7 +161,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == hit ) { return 0 ; }
   return primaryVertex ( hit->mcParticle() ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -169,7 +169,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == hit ) { return 0 ; }
   return primaryVertex ( hit->particle() ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -177,7 +177,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == hit ) { return 0 ; }
   return primaryVertex ( hit->mcHit() ) ;
-} ;
+} 
 // ============================================================================
 const LHCb::MCVertex* 
 MC2Collision::primaryVertex 
@@ -185,7 +185,7 @@ MC2Collision::primaryVertex
 {
   if ( 0 == hit ) { return 0 ; }
   return primaryVertex ( hit->mcHit() ) ;
-} ;
+} 
 // ============================================================================
 /** Helper function which checs, is the given (primary) vertex 
  *  has as an origin the given collision
@@ -219,7 +219,7 @@ bool MC2Collision::fromCollision
     if ( collision == ir->to() ) { return true ; }                    // RETURN
   }
   return false ;                                                      // RETURN 
-};
+}
 // ============================================================================
 
 

@@ -1,4 +1,4 @@
-// $Id: IP2VVMCPartAngleCalculator.h,v 1.3 2008-06-03 13:44:01 pkoppenb Exp $
+// $Id$
 #ifndef IMCANGLECALCULATOR_H 
 #define IMCANGLECALCULATOR_H 1
 

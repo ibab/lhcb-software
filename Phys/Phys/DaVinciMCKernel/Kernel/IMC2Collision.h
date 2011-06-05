@@ -1,4 +1,4 @@
-// $Id: IMC2Collision.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef KERNEL_IMC2COLLISION_H 
 #define KERNEL_IMC2COLLISION_H 1

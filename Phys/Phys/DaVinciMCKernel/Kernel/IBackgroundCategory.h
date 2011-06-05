@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.6 2010-06-09 12:00:55 gligorov Exp $
+// $Id$
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 

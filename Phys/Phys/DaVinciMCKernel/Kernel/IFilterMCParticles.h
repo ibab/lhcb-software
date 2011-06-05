@@ -1,4 +1,4 @@
-// $Id: IFilterMCParticles.h,v 1.1 2007-07-24 12:08:44 jpalac Exp $
+// $Id$
 #ifndef KERNEL_IFILTERMCPARTICLES_H 
 #define KERNEL_IFILTERMCPARTICLES_H 1
 

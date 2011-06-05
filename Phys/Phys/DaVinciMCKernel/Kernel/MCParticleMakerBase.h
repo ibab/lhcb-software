@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.h,v 1.3 2008-10-29 09:14:33 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 
 #define DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 1

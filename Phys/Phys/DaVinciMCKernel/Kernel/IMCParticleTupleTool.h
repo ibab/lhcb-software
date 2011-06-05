@@ -1,4 +1,4 @@
-// $Id: IMCParticleTupleTool.h,v 1.1 2009-01-19 18:05:52 pkoppenb Exp $
+// $Id$
 #ifndef DECAYTUPLE_IMCPARTICLETUPLETOOL_H
 #define DECAYTUPLE_IMCPARTICLETUPLETOOL_H  1
 

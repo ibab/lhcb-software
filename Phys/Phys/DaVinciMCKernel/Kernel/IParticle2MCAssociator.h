@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.11 2009-10-15 14:07:30 jpalac Exp $
+// $Id$
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 

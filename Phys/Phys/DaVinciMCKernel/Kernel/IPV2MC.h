@@ -1,4 +1,4 @@
-// $Id: IPV2MC.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef KERNEL_IPV2MC_H 
 #define KERNEL_IPV2MC_H 1
@@ -7,13 +7,12 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IAlgTool.h"
 // ============================================================================
 // Kernel ?
 // ============================================================================
 #include "Kernel/PV2MC.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -27,20 +26,22 @@
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-19 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
-
-
 /** @class IPV2MC IPV2MC.h Kernel/IPV2MC.h
  *  
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-03-19
  */
-class IPV2MC 
-  : virtual public IAlgTool
+class GAUDI_API IPV2MC : virtual public IAlgTool
 {
 public:
+  // ==========================================================================
   /// the actual type of PV -> MC relations 
   typedef LHCb::PV2MC          PV2MC        ;
   /// the actual type of MC -> PV relations 
@@ -49,8 +50,9 @@ public:
   typedef LHCb::PV2Collision   PV2Collision ;
   /// the actual type of Collision -> PV relations 
   typedef LHCb::Collision2PV   Collision2PV ;
+  // ==========================================================================
 public:
-  
+  // ==========================================================================  
   /** return a relation table for 
    *  LHCb::RecVertex ---> LHCb::MCVertex relations
    *
@@ -88,7 +90,7 @@ public:
    *  @date 2006-03-19
    */
   virtual const PV2MC* pv2MC() const = 0 ;
-  
+  // ==========================================================================  
   /** return a relation table for 
    *  (primary)LHCb::MCVertex --> LHCb::RecVertex relations
    *
@@ -99,7 +101,7 @@ public:
    *  @date 2006-03-19
    */
   virtual const MC2PV* mc2PV() const = 0 ;
-  
+  // ==========================================================================
   /** return a relation table for 
    *  LHCb::RecVertex ---> LHCb::GenCollision relations
    *
@@ -137,7 +139,7 @@ public:
    *  @date 2006-03-19
    */
   virtual const PV2Collision* pv2Collision() const = 0 ;
-  
+  // ==========================================================================
   /** return a relation table for 
    *  LHCb::GenCollision --> LHCb::RecVertex relations
    *
@@ -148,15 +150,18 @@ public:
    *  @date 2006-03-19
    */
   virtual const Collision2PV* collision2PV() const = 0 ;
-
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// Return the unique interface identifier 
   static const InterfaceID& interfaceID() ; 
+  // ==========================================================================
 protected:
-  // virtual and protected destructor 
-  virtual ~IPV2MC( ); ///< virtual and protected destructor 
+  // ==========================================================================
+  /// virtual and protected destructor 
+  virtual ~IPV2MC() ;                       // virtual and protected destructor 
+  // ==========================================================================
 };
-
 // ============================================================================
 // The END
 // ============================================================================

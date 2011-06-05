@@ -1,4 +1,4 @@
-// $Id: HepMC2MC.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef MCTOOLS_HEPMC2MC_H 
 #define MCTOOLS_HEPMC2MC_H 1
@@ -24,8 +24,6 @@ template <class FROM,class TO> class IRelation2D ;
 // ============================================================================
 namespace LHCb { class MCParticle  ; }
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -40,10 +38,9 @@ namespace LHCb { class MCParticle  ; }
  *  @date 2006-01-23 
  */
 // ============================================================================
-
-
 namespace LHCb
 {
+  // ===========================================================================
   /** @namespace LHCb::Relations_
    *  definition fo low-level classes used for relations
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -51,21 +48,22 @@ namespace LHCb
    */
   namespace Relations_ 
   {
+    // ========================================================================
     /// the actual type for HepMC  -->    MC relations 
     typedef IRelation<HepMC::GenParticle*,LHCb::MCParticle>    HepMC2MC   ;
     /// the actual type for    MC  --> HepMC relations 
     typedef IRelation<LHCb::MCParticle,HepMC::GenParticle*>    MC2HepMC   ;
     /// the actual type for HepMC <-->    MC relations 
     typedef IRelation2D<HepMC::GenParticle*,LHCb::MCParticle>  HepMC2MC2D ;
-  };
-  
+    // ========================================================================
+  } //                                        end of namespace LHCb::Relations_
+  // ==========================================================================
   /// the actual type for HepMC  -->    MC relations 
   typedef LHCb::Relations_::HepMC2MC HepMC2MC   ;
   /// the actual type for    MC  --> HepMC relations 
   typedef LHCb::Relations_::MC2HepMC     MC2HepMC   ;
   /// the actual type for HepMC <-->    MC relations 
   typedef LHCb::Relations_::HepMC2MC2D   HepMC2MC2D ;
-  
   // ==========================================================================
   /** @namespace HepMC2MCLocation
    *  namespace with the definiton of "default" TES 
@@ -87,13 +85,11 @@ namespace LHCb
     const std::string Default = 
     "Relations/" + LHCb::HepMCEventLocation::Default ;
     // ========================================================================
-  };
+  } //                                  end of namespace LHCb::HepMC2MCLocation 
   // ==========================================================================
-  
-} ; // end of namespace LHCb
-
+} //                                                      end of namespace LHCb
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // MCTOOLS_HEPMC2MC_H
 // ============================================================================

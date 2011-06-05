@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.13 2009-10-15 14:07:30 jpalac Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.cpp,v 1.2 2006-11-12 14:37:40 ibelyaev Exp $
+// $Id$
 // Include files
 #include <memory>
 

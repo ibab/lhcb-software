@@ -1,4 +1,4 @@
-// $Id: Track2MC.h,v 1.2 2008-06-03 15:24:15 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef KERNEL_TRACK2MC_H 
 #define KERNEL_TRACK2MC_H 1

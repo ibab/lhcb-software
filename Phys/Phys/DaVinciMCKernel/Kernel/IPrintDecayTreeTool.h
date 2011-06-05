@@ -1,4 +1,4 @@
-// $Id: IPrintDecayTreeTool.h,v 1.6 2008-03-30 18:00:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H
 #define DAVINCIMCTOOLS_IPRINTDECAYTREETOOL_H 1

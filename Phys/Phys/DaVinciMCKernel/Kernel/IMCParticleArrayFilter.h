@@ -1,4 +1,4 @@
-// $Id: IMCParticleArrayFilter.h,v 1.2 2007-07-24 12:38:25 jpalac Exp $
+// $Id$
 #ifndef KERNEL_IMCPARTICLEARRAYFILTER_H 
 #define KERNEL_IMCPARTICLEARRAYFILTER_H 1
 

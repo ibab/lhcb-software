@@ -1,4 +1,4 @@
-// $Id: Particle2MCParticle.h,v 1.11 2009-04-16 15:34:19 jpalac Exp $
+// $Id$
 #ifndef KERNEL_PARTICLE2MCPARTICLE_H 
 #define KERNEL_PARTICLE2MCPARTICLE_H 1
 

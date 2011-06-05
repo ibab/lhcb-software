@@ -1,4 +1,4 @@
-// $Id: IHepMC2MC.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef MCTOOLS_IHEPMC2MC_H 
 #define MCTOOLS_IHEPMC2MC_H 1

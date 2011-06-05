@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.24 2009-10-15 14:07:30 jpalac Exp $
+// $Id$
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 

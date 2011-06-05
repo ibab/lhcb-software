@@ -1,4 +1,4 @@
-// $Id: PV2MC.h,v 1.4 2008-06-03 15:24:14 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef KERNEL_PV2MC_H 
 #define KERNEL_PV2MC_H 1
@@ -13,7 +13,7 @@
 // ============================================================================
 // Forward Declarations 
 // ============================================================================
-template <class FROM,class TO,class WEIGHT> class IRelationWeighted ;
+template <class FROM,class TO,class WEIGHT> class IRelationWeighted   ;
 template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
 // ============================================================================
 /** @file
@@ -32,8 +32,10 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
 // ============================================================================
 namespace LHCb
 {
+  // ==========================================================================
   namespace Relations_
   {
+    // ========================================================================
     /// the actual type of "weight" (pair: number of tracks + chi2)
     typedef std::pair<unsigned int,float>                    PV2MCWeight ;
     /// the actual type of PV   -> MC relations 
@@ -54,8 +56,9 @@ namespace LHCb
     /// the actual type of PV <--> Collision relations 
     typedef IRelationWeighted2D<LHCb::RecVertex,LHCb::GenCollision,PV2MCWeight> 
     PV2Collision2D ;    
-    
-  } ;
+    // ========================================================================
+  } //                                        end of namespace LHcb::Relations_
+  // ==========================================================================
   /// the actual type of "weight" for PV   -> MC relations 
   typedef LHCb::Relations_::PV2MCWeight                            PV2MCWeight ;  
   /// the actual type of PV   -> MC relations 
@@ -70,7 +73,6 @@ namespace LHCb
   typedef LHCb::Relations_::Collision2PV                           Collision2PV ;  
   /// the actual type of PV <--> Collision  relations 
   typedef LHCb::Relations_::PV2Collision2D                         PV2Collision2D ;
-  
   // ==========================================================================
   /** @namespace PV2MCLocation
    *  namespace with the defintion of "default" TES location for 
@@ -91,7 +93,7 @@ namespace LHCb
     // ========================================================================
     const std::string Default = "Relations/" + LHCb::RecVertexLocation::Primary ;
     // ========================================================================
-  };
+  } //                                     end of namespace LHCb::PV2MCLocation
   // ==========================================================================
   /** @namespace PV2CollisionLocation
    *  namespace with the defintion of "default" TES location for 
@@ -111,17 +113,13 @@ namespace LHCb
      */
     // ========================================================================
     const std::string Default = 
-    "Relations/" + LHCb::RecVertexLocation::Primary + "2Collision";
+      "Relations/" + LHCb::RecVertexLocation::Primary + "2Collision";
     // ========================================================================
-  }; // end of namespace LHCb::PV2CollisionLocation  
+  } //                              end of namespace LHCb::PV2CollisionLocation  
   // ==========================================================================
-  
-} ; // end of namespace LHCb
+} //                                                      end of namespace LHCb
 // ============================================================================
-
-
-// ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // KERNEL_PV2MC_H
 // ============================================================================

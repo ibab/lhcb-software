@@ -1,4 +1,4 @@
-// $Id: DaVinciMCKernelDict.h,v 1.12 2010-02-10 22:58:05 gligorov Exp $
+// $Id$
 #ifndef DICT_DAVINCIMCKERNELDICT_H 
 #define DICT_DAVINCIMCKERNELDICT_H 1
 

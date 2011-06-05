@@ -1,4 +1,4 @@
-// $Id: FilterMCParticlesBase.cpp,v 1.2 2008-04-21 11:45:13 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

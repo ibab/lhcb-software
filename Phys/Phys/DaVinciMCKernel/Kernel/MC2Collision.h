@@ -1,9 +1,13 @@
-// $Id: MC2Collision.h,v 1.3 2008-06-03 15:24:14 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef KERNEL_MC2COLLISION_H 
 #define KERNEL_MC2COLLISION_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -21,12 +25,11 @@ namespace LHCb
   class MCRichHit    ;
   class MCOTDeposit  ;
   class MCSTDeposit  ;
-};
+}
+// ============================================================================
 template <class FROM, class TO> class IRelation;
 // ============================================================================
-
-// ============================================================================
-/** @file
+/** @file Kernel/MC2Collision.h
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -38,28 +41,37 @@ template <class FROM, class TO> class IRelation;
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-18 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
-
 namespace LHCb
 {
+  // ==========================================================================
   namespace Relations_
   {
+    // ========================================================================
     /// the actual type for MCVertex  --> GenCollision relations 
     typedef IRelation<LHCb::MCVertex,LHCb::GenCollision> MCVertex2Collision ;
-  } ;
+    // ========================================================================
+  } //                                        end of namesapce LHCb::Relations_ 
+  // ==========================================================================
   /// the actual type for MCVertex  --> GenCollision relations 
   typedef   LHCb::Relations_::MCVertex2Collision          MCVertex2Collision ;
-  ///
+  // ==========================================================================
   namespace MC2CollisionLocation
   {
+    // ========================================================================
     const std::string Default = 
     "Relations/" + LHCb::MCVertexLocation::Default + "2Collision";
-  };
-} ;
-
+    // ========================================================================
+  } //                              end of namespace LHCb::MC2CollisionLocation
+  // ==========================================================================
+} //                                                     end of namespace LHCb
 // ============================================================================
-/** @namespace MC2Collision MC2Collision.h Kernel/MC2Collision.h
+/** @namespace MC2Collision Kernel/MC2Collision.h
  *  
  *  Collection of helper utilities to determine the collision for 
  *  MC objects 
@@ -70,6 +82,7 @@ namespace LHCb
 // ==========================================================================
 namespace MC2Collision 
 {
+  // ==========================================================================
   /** get the GenCollision object, associated with the given vertex
    *
    *  @code 
@@ -95,11 +108,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCVertex*           vertex , 
     const LHCb::MCVertex2Collision* table  ) ;
-
+  // ==========================================================================
   /** get the GenCollision object, associated with the given particle
    *
    *  @code 
@@ -125,11 +139,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCParticle*         particle , 
     const LHCb::MCVertex2Collision* table    ) ;
-
+  // ==========================================================================
   /** get the GenCollision object, associated with the given hit
    *
    *  @code 
@@ -155,11 +170,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCHit*              hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
-
+  // ==========================================================================
   /** get the GenCollision object, associated with the given hit
    *
    *  @code 
@@ -185,11 +201,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCCaloHit*          hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
-
+  // ==========================================================================
   /** get the GenCollision object, associated with the given deposit
    *
    *  @code 
@@ -215,11 +232,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCOTDeposit*        hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
-
+  // ==========================================================================
   /** get the GenCollision object, associated with the given deposit
    *
    *  @code 
@@ -245,11 +263,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCSTDeposit*        hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
-
+  // ==========================================================================
   /** get the GenCollision object, associated with the given Rich hit
    *
    *  @code 
@@ -275,11 +294,12 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::GenCollision* 
   collision 
   ( const LHCb::MCRichHit*          hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
-  
+  // ==========================================================================  
   /** Simple function wich returns the primary vertex for the given vertex
    *  
    *  @param vertex vertex
@@ -288,8 +308,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCVertex* vertex ) ;
+  // ==========================================================================
   /** Simple function wich returns the primary vertex for the given particle 
    *  
    *  @param hit particle
@@ -298,8 +320,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCParticle* hit ) ;
+  // ==========================================================================
   /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
@@ -308,8 +332,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCHit* hit ) ;
+  // ==========================================================================
   /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
@@ -318,8 +344,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCCaloHit* hit ) ;
+  // ==========================================================================
   /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
@@ -328,8 +356,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCRichHit* hit ) ;
+  // ==========================================================================
   /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
@@ -338,8 +368,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCOTDeposit* hit ) ;
+  // ==========================================================================
   /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
@@ -348,9 +380,10 @@ namespace MC2Collision
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-18
    */
+  GAUDI_API 
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCSTDeposit* hit ) ;
-  
+  // ==========================================================================  
   /** Helper function which checs, is the given (primary) vertex 
    *  has as an origin the given collision
    *  @param vertex the vertex 
@@ -358,11 +391,12 @@ namespace MC2Collision
    *  @param table the information source
    *  @return true if the vertex comes from the collision
    */
+  GAUDI_API 
   bool fromCollision 
   ( const LHCb::MCVertex*            vertex    , 
     const LHCb::GenCollision*        collision , 
     const LHCb::MCVertex2Collision*  table     ) ;
-  
+  // ==========================================================================  
   /** Helper class(functor) to find check if the MC-objects 
    *  originates form a given GenCollision
    *  
@@ -410,6 +444,7 @@ namespace MC2Collision
     : public std::unary_function<const TYPE*,bool>
   {
   public:
+    // ========================================================================
     /// constructor from the collision and the information provider 
     FromCollision
     ( const LHCb::GenCollision*       collision , 
@@ -421,19 +456,22 @@ namespace MC2Collision
     bool operator () ( const TYPE* object ) const 
     { return fromCollision
         ( primaryVertex ( object ) , m_collision , m_table ) ; }
+    // ========================================================================
   private:
-    // the default constructor is disabled
-    FromCollision();
+    // ========================================================================
+    /// the default constructor is disabled
+    FromCollision();                     // the default constructor is disabled
+    // ========================================================================
   private:
+    // ========================================================================
     const LHCb::GenCollision*       m_collision ;
     const LHCb::MCVertex2Collision* m_table     ;
+    // ========================================================================
   } ;
-
-} ; // end of namespace MC2Collision
-   
-   
+  // ==========================================================================
+} //                                              end of namespace MC2Collision   
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // KERNEL_MC2COLLISION_H
 // ============================================================================
