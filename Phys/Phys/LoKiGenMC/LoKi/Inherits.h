@@ -1,4 +1,4 @@
-// $Id: Inherits.h,v 1.1 2008-11-03 18:34:47 ibelyaev Exp $
+// $Id$
 #ifndef LOKI_INHERITS_H 
 #define LOKI_INHERITS_H 1
 // ============================================================================

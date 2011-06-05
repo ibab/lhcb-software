@@ -1,4 +1,4 @@
-// $Id: GenMCParticles.h,v 1.10 2008-06-02 11:46:04 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLES_H 
 #define LOKI_GENMCPARTICLES_H 1

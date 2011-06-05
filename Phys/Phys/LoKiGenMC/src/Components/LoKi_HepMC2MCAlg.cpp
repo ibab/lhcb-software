@@ -1,6 +1,6 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.17 2008-11-19 16:54:32 cattanem Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision$
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // Revision 1.16  2008/11/04 12:43:47  ibelyaev

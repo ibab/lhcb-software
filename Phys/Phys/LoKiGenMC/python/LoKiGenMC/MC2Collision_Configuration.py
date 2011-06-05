@@ -1,4 +1,4 @@
-# $Id: MC2Collision_Configuration.py,v 1.2 2008-11-04 13:53:02 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file
 #  The configuration file to run MC -> GenCollision stuff "on-demand"
@@ -39,7 +39,7 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision$ "
 # =============================================================================
 
 from  Gaudi.Configuration import * 

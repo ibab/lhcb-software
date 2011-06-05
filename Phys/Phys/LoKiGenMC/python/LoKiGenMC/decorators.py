@@ -28,7 +28,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS tag $NaMe:$, version $Revision: 1.6 $  "
+__version__ = "CVS tag $NaMe:$, version $Revision$  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore

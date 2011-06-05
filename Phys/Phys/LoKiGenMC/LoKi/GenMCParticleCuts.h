@@ -1,4 +1,4 @@
-// $Id: GenMCParticleCuts.h,v 1.7 2007-07-23 17:29:51 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLECUTS_H 
 #define LOKI_GENMCPARTICLECUTS_H 1

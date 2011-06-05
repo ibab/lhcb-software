@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.2 2007-12-02 11:57:06 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file  LoKiGenMC/__init__.py
 #  Helper file to manage LoKiGenMC package
