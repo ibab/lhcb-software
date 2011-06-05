@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-05 - Jibo He
+ - Added Stripping lines of the PS WG for Stripping15
+
 ! 2011-06-02 - Ulrich Kerzel
 - Start filling in dictionary for Gamma/Loop
   (not finished yet)
