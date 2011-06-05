@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LOKI_GENDECAYCHAIN_H 
 #define LOKI_GENDECAYCHAIN_H 1
