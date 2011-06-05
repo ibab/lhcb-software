@@ -1,15 +1,15 @@
-// $Id$
+// $Id: $
 // ============================================================================
-#ifndef LOKI_FILTERALG_H 
-#define LOKI_FILTERALG_H 1
+#ifndef LOKI_FILTERTOOL_H 
+#define LOKI_FILTERTOOL_H 1
 // ============================================================================
 // Include files
 // ============================================================================
 // GaudiAlg 
 // ============================================================================
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiTool.h"
 // ============================================================================
-/** @file LoKi/FilterAlg.h
+/** @file LoKi/FilterTool.h
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -23,102 +23,47 @@
  *  with the campain of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *                    $Revision: 120817 $
+ *  Last modification $Date: 2011-03-27 17:22:49 +0200 (Sun, 27 Mar 2011) $
+ *                 by $Author: ibelyaev $
  */
 // ============================================================================
 namespace LoKi 
 {
-  // ===========================================================================
-  /** @class FilterAlg LoKi/FilterAlg.h
+  // ==========================================================================
+  /** @class FilterTool LoKi/FilterTool.h
    *  The base class for implementation of various 
-   *  "hybrid" filter algorithms
-   *
-   *  The basic algorithm properties properties  
-   *   (in additon to properties form GaudiAlgortuhm base class) are:
-   *   - "Factory"   : the type/name of LoKi/Bender "hybrid" factory
-   *   - "Code"      : the string represenattion of the functor 
-   *   - "Preambulo" : the list of strings for "preambulo"-code
-   * 
-   *  The methods, convinient for defined class are:
-   *     - <c>factory()</c> : gets the access to LoKi/Bende "hybrid" 
-   *                          factory type/name 
-   *     - <c>code()</c> : get the access to the code string itself
-   *     - <c>updateRequired()</c> : simple function which indicated that 
-   *                      the properties has been modified and the recreation
-   *                      of functor is required 
-   *     - <c>i_decode()</c> : helper function for implementation 
-   *                           of the actual functor decoding.
-   *
-   *  The clients are requires to implement pure abstract 
-   *   method "decode()".
-   *  The "typical" implementation of <c>decode()</c> is:
-   *
-   *  @code 
-   *
-   *  StatusCode MyAlg::decode() 
-   *  {
-   *
-   *     typedef XXXXXX FACTORY ;
-   *
-   *     return i_decode<FACTORY>( m_functor ) ;
-   *  }
-   *
-   *  @endcode 
-   *  where <c>m_functor</c> is a data member (placeholder) 
-   *  of the type, known to the factory.
-   *
-   *  The "typical" implementation of <c>execute()</c> is:
-   *  
-   *  @code 
-   *
-   *  StatusCode MyAlg::execute() 
-   *   {
-   *     if ( updateRequired() ) 
-   *       { Assert( decode().isSuccess() , "Unable to decode" + code() ) ; }
-   *   
-   *     ...
-   *     return StatusCode::SUCCESS ;
-   *   }
-   *
-   *  @endcode 
-   * 
-   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-   *  @date   2008-09-23
+   *  "hybrid" filter tools 
+   *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+   *  @date   2011-06-05
    */
-  class FilterAlg : public GaudiAlgorithm 
+  class FilterTool : public GaudiTool 
   {
-  public:
+  public: 
     // ========================================================================
-    /// the initialization of the algorithm 
+    /// the initialization of the tool
     virtual StatusCode initialize () ;
-    /// the finalization of the algorithm 
+    /// the finalization of the tool 
     virtual StatusCode finalize   () ;
     // ========================================================================
   protected:
     // ========================================================================
-    /** standard constructor 
-     *  @see GaudiAlgorithm 
-     *  @see      Algorithm 
-     *  @see      AlgFactory
-     *  @see     IAlgFactory
-     *  @param name the algorithm instance name 
-     *  @param pSvc pointer to Service Locator 
-     */
-    FilterAlg ( const std::string& name ,   // the algorithm instance name 
-                ISvcLocator*       pSvc ) ; // pointer to the service locator
+    /// standard constructor 
+    FilterTool 
+    ( const std::string& type   ,   // tool type (?)
+      const std::string& name   ,   // toolinstance name
+      const IInterface*  parent ) ; // tool's parent 
     /// virtual and protected destructor 
-    virtual ~FilterAlg() ;
+    virtual ~FilterTool () ;                // virtual and protected destructor 
     // ========================================================================
   private:
     // ========================================================================
     /// the default constructor is disabled 
-    FilterAlg () ;                       // the default constructor is disabled 
+    FilterTool  () ;                     // the default constructor is disabled 
     /// the copy constructor is disabled 
-    FilterAlg ( const FilterAlg& ) ;        // the copy constructor is disabled 
+    FilterTool ( const FilterTool& ) ;      // the copy constructor is disabled 
     /// the assignement operator is disabled 
-    FilterAlg& operator=( const FilterAlg& ) ;   // the assignement is disabled
+    FilterTool& operator=( const FilterTool& ) ; // the assignement is disabled
     // ========================================================================
   public: // property update handlers 
     // ========================================================================
@@ -148,7 +93,7 @@ namespace LoKi
     /** decode the functor
      *  it is assumed that this method is implemented as
      *  
-     *  StatusCode MyAlg::decode() 
+     *  StatusCode MyTool::decode() 
      *  {
      *     typedef XXXXXX FACTORY ;
      *     tydedef LoKi::BasicFunctor<XXXX>::PredicateFromPredicate  FUNCTOR ;
@@ -220,12 +165,11 @@ namespace LoKi
     /// flag which indicated that preambulo has been updated 
     bool m_preambulo_updated ;                // the preambulo has been updated 
     // ========================================================================
-  };
+  } ;
   // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================
-//                                                                      The END
+//                                                                      The END 
 // ============================================================================
-#endif // LOKI_FILTERALG_H
+#endif // LOKI_FILTERTOOL_H
 // ============================================================================
-

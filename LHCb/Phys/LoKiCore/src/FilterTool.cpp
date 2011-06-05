@@ -1,21 +1,14 @@
-// $Id$
+// $Id:$
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/IAlgContextSvc.h"
-// ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/FilterAlg.h"
+#include "LoKi/FilterTool.h"
 // ============================================================================
 /** @file 
- *  Implementation file for class LoKi::FilterAlg
- *
- *  This file is a part of LoKi project - 
- *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
- *
+ *  Implementation file for class LoKi::FilterTool
+ * 
  *  The package has been designed with the kind help from
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
@@ -25,37 +18,31 @@
  *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- *  @see LoKi::FilterAlg
+ *  @see LoKi::FilterTool
  *  @date 2008-09-23 
- *  @author Vanya  BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @author Vanya  BELYAEV Ivan.Belyaev@cern.ch
  *
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *                    $Revision: 120817 $
+ *  Last modification $Date: 2011-03-27 17:22:49 +0200 (Sun, 27 Mar 2011) $
+ *                 by $Author: ibelyaev $
  */
 // ============================================================================
-/*  standard constructor 
- *  @see GaudiAlgorithm 
- *  @see      Algorithm 
- *  @see      AlgFactory
- *  @see     IAlgFactory
- *  @param name the algorithm instance name 
- *  @param pSvc pointer to Service Locator 
- */
+// standard constructor 
 // ============================================================================
-LoKi::FilterAlg::FilterAlg 
-( const std::string& name ,                     // the algorithm instance name 
-  ISvcLocator*       pSvc )                  // pointer to the service locator
-  : GaudiAlgorithm ( name , pSvc ) 
-  // the type/name for LoKi/Bender "hybrid" factory 
+LoKi::FilterTool::FilterTool 
+( const std::string& type   ,   // tool type (?)
+  const std::string& name   ,   // toolinstance name
+  const IInterface*  parent )   // tool's parent 
+  : GaudiTool ( type , name , parent ) 
+// the type/name for LoKi/Bender "hybrid" factory 
   , m_factory ( "<UNSPECIFIED>" )
-  // the filter/code criteria itself 
+// the filter/code criteria itself 
   , m_code   ( "<unspecified>" ) 
-  // the preambulo 
+// the preambulo 
   , m_preambulo_ () 
-  // the preambulo 
+// the preambulo 
   , m_preambulo  ()
-  //
+//
   , m_factory_updated   ( false )
   , m_code_updated      ( false )
   , m_preambulo_updated ( false )
@@ -65,45 +52,44 @@ LoKi::FilterAlg::FilterAlg
     ( "Factory" , 
       m_factory , 
       "The type/name of LoKiBender \"hybrid\" factory" ) 
-    -> declareUpdateHandler ( &LoKi::FilterAlg::updateFactory  , this ) ;
+    -> declareUpdateHandler ( &LoKi::FilterTool::updateFactory  , this ) ;
   // the code 
   declareProperty 
     ( "Code"    , 
       m_code    , 
       "The Bender/Python code to be used" ) 
-    -> declareUpdateHandler ( &LoKi::FilterAlg::updateCode     , this ) ;
+    -> declareUpdateHandler ( &LoKi::FilterTool::updateCode     , this ) ;
   // the code 
   declareProperty 
     ( "Preambulo"  , 
       m_preambulo_ , 
       "The preambulo to be used for the temporary python script" ) 
-    -> declareUpdateHandler ( &LoKi::FilterAlg::updatePreambulo , this ) ;
+    -> declareUpdateHandler ( &LoKi::FilterTool::updatePreambulo , this ) ;
   // 
-  Assert( setProperty ( "RegisterForContextService" , true ).isSuccess() ,
-          "Unable to enforce the registration for Algorithm Context Service") ;
 }
 // ============================================================================
 // virtual and protected destructor 
 // ============================================================================
-LoKi::FilterAlg::~FilterAlg () {}
+LoKi::FilterTool::~FilterTool () {}
 // ============================================================================
 // update the factory 
 // ============================================================================
-void LoKi::FilterAlg::updateFactory ( Property& /* p */ ) // update the factory 
+void LoKi::FilterTool::updateFactory ( Property& /* p */ ) // update the factory 
 {
   // no action if not yet initialized 
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
-  /// mark as "to-be-updated" 
+  //
+  // mark as "to-be-updated" 
   m_factory_updated = true ;
   //
   // postpone the action 
   if ( !m_code_updated || !m_preambulo_updated ) { return ; } 
-  
+  //
   // perform the actual immediate decoding  
-  
+  //
   StatusCode sc = decode () ;
-  Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
-  
+  Assert ( sc.isSuccess () , "Error from LoKi::FilterTool::decode()" , sc ) ;
+  //
   m_code_updated      = false ;
   m_factory_updated   = false ;
   m_preambulo_updated = false ;
@@ -111,21 +97,22 @@ void LoKi::FilterAlg::updateFactory ( Property& /* p */ ) // update the factory
 // ============================================================================
 // update the code 
 // ============================================================================
-void LoKi::FilterAlg::updateCode ( Property& /* p */ )    // update the factory 
+void LoKi::FilterTool::updateCode ( Property& /* p */ )    // update the factory 
 {
   // no action if not yet initialized 
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
-  /// mark as "to-be-updated" 
+  //
+  // mark as "to-be-updated" 
   m_code_updated = true ;
   //
   // postpone the action 
   if ( !m_factory_updated || !m_preambulo_updated ) { return ; } 
-  
+  //
   // perform the actual immediate decoding  
-  
+  //
   StatusCode sc = decode  () ;
-  Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
-  
+  Assert ( sc.isSuccess () , "Error from LoKi::FilterTool::decode()" , sc ) ;
+  //
   m_code_updated      = false ;
   m_factory_updated   = false ;
   m_preambulo_updated = false ;
@@ -133,8 +120,9 @@ void LoKi::FilterAlg::updateCode ( Property& /* p */ )    // update the factory
 // ============================================================================
 // update the preambulo
 // ============================================================================
-void LoKi::FilterAlg::updatePreambulo ( Property& /* p */ )  // update preambulo
+void LoKi::FilterTool::updatePreambulo ( Property& /* p */ )  // update preambulo
 {
+  //
   // decode the preambulo:
   m_preambulo.clear() ;
   for ( std::vector<std::string>::const_iterator iline = 
@@ -145,16 +133,18 @@ void LoKi::FilterAlg::updatePreambulo ( Property& /* p */ )  // update preambulo
   }
   // no further action if not yet initialized 
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
-  /// mark as "to-be-updated"
+  //
+  // mark as "to-be-updated"
   m_preambulo_updated = true ;
+  //
   // postpone the action 
   if ( !m_factory_updated || !m_code_updated ) { return ; } 
-  
+  //
   // perform the actual immediate decoding  
-  
+  //
   StatusCode sc = decode  () ;
-  Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
-  
+  Assert ( sc.isSuccess () , "Error from LoKi::FilterTool::decode()" , sc ) ;
+  //
   m_code_updated      = false ;
   m_factory_updated   = false ;
   m_preambulo_updated = false ;
@@ -162,15 +152,11 @@ void LoKi::FilterAlg::updatePreambulo ( Property& /* p */ )  // update preambulo
 // ============================================================================
 // the initialization of the algorithm 
 // ============================================================================
-StatusCode LoKi::FilterAlg::initialize () 
+StatusCode LoKi::FilterTool::initialize () 
 {
-  // look the context 
-  Gaudi::Utils::AlgContext lock ( this , contextSvc() ) ;
   /// initialize the base 
-  StatusCode sc = GaudiAlgorithm::initialize () ;
+  StatusCode sc = GaudiTool::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
-  /// lock the context 
-  Gaudi::Utils::AlgContext ( this , contextSvc() ) ;
   // force LoKi service 
   svc<IService>( "LoKiSvc" , true ) ;
   // decode the functor 
@@ -179,12 +165,8 @@ StatusCode LoKi::FilterAlg::initialize ()
 // ============================================================================
 // the finalization of the algorithm 
 // ============================================================================
-StatusCode LoKi::FilterAlg::finalize () 
-{ return GaudiAlgorithm::finalize () ; }
-// ============================================================================
-
-
-
+StatusCode LoKi::FilterTool::finalize () 
+{ return GaudiTool::finalize () ; }
 // ============================================================================
 // The END 
 // ============================================================================

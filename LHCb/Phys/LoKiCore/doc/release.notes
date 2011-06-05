@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-06-05 - Vanya Belyaev
+
+ - add base class LoKi::FilterTool 
+
 ! 2011-06-04 - Vanya Belyaev
 
  - add utilities for better printout of decay trees 
