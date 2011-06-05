@@ -193,6 +193,13 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun , const SmartRef<LHCb::RecVertex>&  p ) { return fun ( p ) ; }
       // ======================================================================
+      static Fun::result_type __call__ 
+      ( const Fun& fun , const LHCb::Particle*  p ) 
+      {
+        const LHCb::VertexBase* _vertex = 0 ;
+        return 0 != p ? fun ( p->endVertex() ) : fun ( _vertex ) ;
+      }
+      // ======================================================================
     public:
       // ======================================================================
       // __rrshift__ 

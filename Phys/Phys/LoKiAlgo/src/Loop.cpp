@@ -38,7 +38,7 @@ LoKi::Loop::Loop
   : LoKi::Interface<LoKi::LoopObj>( obj )
 {}
 // ============================================================================
-LoKi::Loop::~Loop() {};
+LoKi::Loop::~Loop() {}
 // ============================================================================
 const LHCb::Particle* LoKi::Loop::particle() const 
 {

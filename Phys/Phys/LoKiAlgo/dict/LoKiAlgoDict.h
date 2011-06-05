@@ -28,8 +28,14 @@
 #endif 
 #endif
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //  variable ... was declared but never referenced
+#pragma warning(disable:191) // type qualifier is meaningless on cast type
+#endif
+// ============================================================================
 namespace 
 {
+  // ===========================================================================
   struct __Instantiations
   {
     LoKi::Dicts::ExtFunCalls<LHCb::Particle>   m_c1 ;
@@ -42,6 +48,7 @@ namespace
     __Instantiations();
     ~__Instantiations();
   } ;    
+  // ==========================================================================
 } // end of anonymous namespace 
 // ============================================================================
 // The END 
