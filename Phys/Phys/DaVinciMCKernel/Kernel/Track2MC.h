@@ -31,8 +31,10 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
 // ============================================================================
 namespace LHCb
 {
+  // ==========================================================================
   namespace Relations_
   {
+    // ========================================================================
     /// the actual type of Track   -> MC relations 
     typedef IRelationWeighted<LHCb::Track,LHCb::MCParticle,double> 
     Track2MC ;
@@ -42,7 +44,9 @@ namespace LHCb
     /// the actual type of Track <--> MC relations 
     typedef IRelationWeighted2D<LHCb::Track,LHCb::MCParticle,double> 
     Track2MC2D ;
-  } ;
+    // ========================================================================
+  } //                                        end of namespace LHCb::Relations_
+  // ==========================================================================
   /// the actual type of PV   -> MC relations 
   typedef LHCb::Relations_::Track2MC                              Track2MC    ;  
   /// the actual type of MC   -> Track relations 
@@ -52,13 +56,15 @@ namespace LHCb
   // ==========================================================================
   namespace Track2MCLocation
   {  
+    // ========================================================================
     const std::string Default = "Relations/Rec/Track/Default"     ;
     const std::string One2One = "Relations/Rec/Track/Default1to1" ;
-  } // end of namespace Track2MCLocation
-  //
-} // end of namespace LHCb
+    // ========================================================================
+  } //                                  end of namespace LHCb::Track2MCLocation
+  // ==========================================================================
+} //                                                      end of namespace LHCb
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // KERNEL_TRACK2MC_H
 // ============================================================================

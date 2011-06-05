@@ -31,11 +31,12 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
  *  @date 2006-08-17 
  */
 // ============================================================================
-
 namespace LHCb
 {
+  // ==========================================================================
   namespace Relations_
   {
+    // ========================================================================
     /// the actual type of Particle   -> MC relations 
     typedef IRelationWeighted<LHCb::Particle,LHCb::MCParticle,double> 
     P2MCW   ;
@@ -51,7 +52,9 @@ namespace LHCb
     typedef IRelation<LHCb::MCParticle,LHCb::Particle>            MC2P    ;
     /// the actual type of Particle <--> MC relations 
     typedef IRelation2D<LHCb::Particle,LHCb::MCParticle>          P2MC2D  ;
-  } ;
+    // ========================================================================
+  } //                                        end of namespace LHCb::Relations_ 
+  // ==========================================================================
   /// the actual type of Particle   -> MC relations 
   typedef LHCb::Relations_::P2MCW                                 P2MCW   ;  
   /// the actual type of MC   -> Particle relations 
@@ -63,16 +66,16 @@ namespace LHCb
   /// the actual type of MC   -> Particle relations 
   typedef LHCb::Relations_::MC2P                                  MC2P    ;  
   /// the actual type of Particle<--> MC relations 
-  typedef LHCb::Relations_::P2MC2D                                P2MC2D  ;
-  
+  typedef LHCb::Relations_::P2MC2D                                P2MC2D  ;  
   // ==========================================================================
   namespace Particle2MCLocation
-  {  
-  } // end of namespace Track2MCLocation
-  //
-} // end of namespace LHCb
+  {
+    // ========================================================================
+  } // end of namespace LHCb::Particle2MCLocation
+  // ==========================================================================
+} //                                                      end of namespace LHCb
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // KERNEL_PARTICLE2MC_H
 // ============================================================================
