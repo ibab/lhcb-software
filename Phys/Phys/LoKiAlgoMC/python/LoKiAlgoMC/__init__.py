@@ -1,6 +1,6 @@
-# $Id: __init__.py,v 1.1 2007-06-01 12:30:51 ibelyaev Exp $
+# $Id$
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision$
 # =============================================================================
 # $Log: not supported by cvs2svn $ 
 # =============================================================================

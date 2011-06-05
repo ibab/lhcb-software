@@ -1,4 +1,4 @@
-// $Id: HybridMCParticleArrayFilter.cpp,v 1.1 2010-02-14 20:58:48 cattanem Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -122,9 +122,6 @@ namespace LoKi
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
-/// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCParticleArrayFilter );
-// ============================================================================
 StatusCode LoKi::Hybrid::MCParticleArrayFilter::initialize () 
 {
   // (1) initialize the base 
@@ -143,6 +140,9 @@ StatusCode LoKi::Hybrid::MCParticleArrayFilter::initialize ()
   //
   return StatusCode::SUCCESS ;  
 }
+// ============================================================================
+/// Declaration of the Tool Factory
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MCParticleArrayFilter )
 // ============================================================================
 // The END 
 // ============================================================================

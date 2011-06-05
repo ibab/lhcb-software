@@ -1,4 +1,4 @@
-// $Id: DecayTruth.cpp,v 1.3 2008-06-02 12:22:05 cattanem Exp $
+// $Id$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -362,23 +362,23 @@ StatusCode LoKi::DecayTruth::analyse   ()
       const size_t indx   = d - children.begin() + 1 ;
       const size_t nTrees = trees - mcCont.begin() ;
       
-      MsgStream& log = always() ;
-      log << " Inspect reconstructed daughter particle " 
-          << " '" << LoKi::Particles::nameFromPID( child->particleID() ) << "' " 
-          << indx << "/" << children.size()  ;
-      if ( child->hasKey() ) { log << " (key:" << child->key() << "): " ; }
-      log << " #'matched' MC trees "          << nTrees 
-          << " (#'matched' MC particles "     << mcCont.size() << ")" 
-          << std::endl ;
+      MsgStream& log_ = always() ;
+      log_ << " Inspect reconstructed daughter particle " 
+           << " '" << LoKi::Particles::nameFromPID( child->particleID() ) << "' " 
+           << indx << "/" << children.size()  ;
+      if ( child->hasKey() ) { log_ << " (key:" << child->key() << "): " ; }
+      log_ << " #'matched' MC trees "          << nTrees 
+           << " (#'matched' MC particles "     << mcCont.size() << ")" 
+           << std::endl ;
       //    print all matched MC trees and colorize/mark the 'matched' particles  
       mcPrinter.print 
         ( mcCont.begin() , 
-          trees          , log.stream() , '\n' , 
+          trees          , log_.stream() , '\n' , 
           MCALL          , 
           rcChild        ,
           "  "           , 0  );
       //
-      log << endreq ;
+      log_ << endreq ;
     } //                                              end of loop over children
     always () << std::string(80,'*') << endreq ;
   } //                      end of loop over reconstructed & selected particles
@@ -388,10 +388,7 @@ StatusCode LoKi::DecayTruth::analyse   ()
 }
 // ============================================================================
 ///  static factory for algorithm instantiation
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,DecayTruth);
-// ============================================================================
-
-
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,DecayTruth)
 // ============================================================================
 // The END 
 // ============================================================================

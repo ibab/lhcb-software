@@ -1,4 +1,4 @@
-// $Id: LoKiAlgoMCDict.h,v 1.4 2008-06-02 12:22:05 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1

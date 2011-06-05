@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: fArrayP.py,v 1.1 2008-06-12 08:28:54 ibelyaev Exp $
+# $Id$
 # =============================================================================
 ## @file
 #  helper module for decoration of standard N-tuples
@@ -44,7 +44,7 @@ with the campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__ = "Vanya BELYAEV Ivan.Belyaev@cern.ch "
 __date__    = "????-??-??"
-__version__ = "SVN $Revision: 116907 $ "
+__version__ = "SVN $Revision$ "
 # =============================================================================
 
 import PyCintex

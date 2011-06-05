@@ -1,4 +1,4 @@
-// $Id: MCMatchAlgoDicts.h,v 1.2 2007-07-23 17:44:14 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCMATCHALGODICTS_H 
 #define LOKI_MCMATCHALGODICTS_H 1
