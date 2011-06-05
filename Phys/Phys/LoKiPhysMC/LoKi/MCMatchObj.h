@@ -1,4 +1,4 @@
-// $Id: MCMatchObj.h,v 1.9 2009-08-11 18:26:59 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCMATCHOBJ_H 
 #define LOKI_MCMATCHOBJ_H 1

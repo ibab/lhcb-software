@@ -1,4 +1,4 @@
-// $Id: P2MCBase.h,v 1.2 2010-04-21 12:47:43 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKIPHYSMC_P2MCBASE_H 
 #define LOKIPHYSMC_P2MCBASE_H 1

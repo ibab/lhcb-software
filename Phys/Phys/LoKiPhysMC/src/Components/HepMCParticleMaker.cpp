@@ -1,4 +1,4 @@
-// $Id: HepMCParticleMaker.cpp,v 1.1 2008-06-25 17:27:39 ibelyaev Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -490,7 +490,7 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
 }
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker);
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker)
 // ============================================================================
 // The END 
 // ============================================================================

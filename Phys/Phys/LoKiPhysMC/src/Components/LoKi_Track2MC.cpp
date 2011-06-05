@@ -1,6 +1,6 @@
-// $Id: LoKi_Track2MC.cpp,v 1.3 2008-11-03 18:35:49 ibelyaev Exp $
+// $Id$
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, Version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, Version $Revision$
 // ===========================================================================
 // $Log: not supported by cvs2svn $
 // Revision 1.2  2007/04/16 16:16:48  pkoppenb
@@ -130,10 +130,6 @@ namespace LoKi
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
-/// Declaration of the Algorithm Factory
-// ============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi, Track2MC );
-// ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
      !Relations::IsConvertible<const T1*,const void*>::same)
@@ -204,5 +200,9 @@ StatusCode LoKi::Track2MC::execute()
   return StatusCode::SUCCESS;
 } 
 // ============================================================================
-/// The END 
+// Declaration of the Algorithm Factory
+// ============================================================================
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi, Track2MC )
+// ============================================================================
+// The END 
 // ============================================================================

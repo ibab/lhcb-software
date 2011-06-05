@@ -1,4 +1,4 @@
-// $Id: MCTruth.h,v 1.1 2009-08-11 18:26:59 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCTRUTH_H 
 #define LOKI_MCTRUTH_H 1

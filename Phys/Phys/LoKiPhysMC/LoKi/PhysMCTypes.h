@@ -1,4 +1,4 @@
-// $Id: PhysMCTypes.h,v 1.7 2008-05-19 06:46:13 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSMCTYPES_H 
 #define LOKI_PHYSMCTYPES_H 1
@@ -30,8 +30,6 @@
 #include "Kernel/Track2MC.h"
 #include "Kernel/Particle2MC.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -46,11 +44,12 @@
  *  @date 2006-02-20 
  */
 // ============================================================================
-
 namespace LoKi 
 {
+  // ==========================================================================
   namespace  PhysMCTypes 
   {
+    // ========================================================================
     /// the actual type of Particle->MCParticle relation  
     typedef LHCb::P2MC                                            TableP2MC   ;
     /// the actual type of Particle->MCParticle relation with weight 
@@ -63,10 +62,12 @@ namespace LoKi
     <LHCb::Track,LHCb::MCParticle>                                 TableT2MC  ;
     /// the actual type of Track->MCParticle relation with weight 
     typedef LHCb::Track2MC                                        TableT2MCW  ;
-  }  // end of namespace LoKi::PhysMCTypes 
-  
+    // ========================================================================
+  } //                                       end of namespace LoKi::PhysMCTypes 
+  // ==========================================================================
   namespace Types 
   {    
+    // ========================================================================
     /// the actual type of Particle->MCParticle relation  
     typedef LoKi::PhysMCTypes::TableP2MC                           TableP2MC ; 
     /// the actual type of Particle->MCParticle relation with weight  
@@ -77,11 +78,12 @@ namespace LoKi
     typedef LoKi::PhysMCTypes::TableT2MC                           TableT2MC ; 
     /// the actual type of Track->MCParticle relations with weight
     typedef LoKi::PhysMCTypes::TableT2MCW                         TableT2MCW ; 
-  } ; // end of namespace LoKi::Types
-}  // end of namespace LoKi 
-
+    // ========================================================================
+  } //                                             end of namespace LoKi::Types
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PHYSMCTYPES_H
 // ============================================================================

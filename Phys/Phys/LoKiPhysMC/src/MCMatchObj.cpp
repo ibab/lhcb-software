@@ -1,6 +1,6 @@
-// $Id: MCMatchObj.cpp,v 1.7 2010-03-14 13:35:56 ibelyaev Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // Revision 1.6  2009/03/12 12:54:13  ibelyaev

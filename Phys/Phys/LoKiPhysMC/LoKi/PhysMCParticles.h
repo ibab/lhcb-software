@@ -1,4 +1,4 @@
-// $Id: PhysMCParticles.h,v 1.11 2009-08-11 18:26:59 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1

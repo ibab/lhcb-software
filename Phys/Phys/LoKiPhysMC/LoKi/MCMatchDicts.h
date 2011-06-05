@@ -1,4 +1,4 @@
-// $Id: MCMatchDicts.h,v 1.1 2007-06-10 20:17:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_MCMATCHDICTS_H 
 #define LOKI_MCMATCHDICTS_H 1

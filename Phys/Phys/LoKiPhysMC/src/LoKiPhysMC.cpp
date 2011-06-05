@@ -1,6 +1,6 @@
-// $Id: LoKiPhysMC.cpp,v 1.2 2007-04-16 16:16:48 pkoppenb Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev

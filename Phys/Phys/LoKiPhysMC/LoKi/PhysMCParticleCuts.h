@@ -1,4 +1,4 @@
-// $Id: PhysMCParticleCuts.h,v 1.4 2007-06-10 20:17:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLECUTS_H 
 #define LOKI_PHYSMCPARTICLECUTS_H 1

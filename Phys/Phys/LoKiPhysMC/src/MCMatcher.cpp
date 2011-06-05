@@ -1,4 +1,4 @@
-// $Id: MCMatcher.cpp,v 1.6 2010-05-31 20:38:06 ibelyaev Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -48,6 +48,14 @@
 namespace 
 {
   // ==========================================================================
+  // Suppress Intel compiler warnings about missing default constructor
+  // In this case the compiler generated constructor is fine, since there are
+  // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
+  // ==========================================================================
   /// validation of decay finder 
   inline StatusCode _validate 
   ( const LoKi::PhysMCParticles::MCTreeMatch::iTree& tree , 
@@ -70,6 +78,10 @@ namespace
     if ( 0                 == loc.find ('/')           ) { return loc ; }
     return "Relations/" + loc ;
   }  
+  // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif
   // ==========================================================================
 } //                                                 end of anonymous namespace
 // ============================================================================
