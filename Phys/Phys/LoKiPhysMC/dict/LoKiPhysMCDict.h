@@ -12,6 +12,11 @@
 // ============================================================================
 #include "LoKi/MCMatchDicts.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //  variable ... was declared but never referenced
+#pragma warning(disable:191) // type qualifier is meaningless on cast type
+#endif
+// ============================================================================
 // The END 
 // ============================================================================
 #endif // LOKI_LOKIPHYSMCDICT_H
