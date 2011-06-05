@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 #ifndef LOKI_MCDECAYCHAIN_H 
 #define LOKI_MCDECAYCHAIN_H 1
 // ============================================================================
@@ -219,10 +219,10 @@ namespace LoKi
       for ( EndVertices::const_iterator ev = endVertices.begin() ; 
             endVertices.end() != ev ; ++ev ) 
       {
-        const LHCb::MCVertex* vertex = *ev ;
-        if ( 0 == vertex )                     { continue ; } // CONTINUE 
+        const LHCb::MCVertex* evertex = *ev ;
+        if ( 0 == evertex )                     { continue ; } // CONTINUE 
         // keep only "decay"-endvertices  
-        if ( m_vertexd && !vertex->isDecay() ) { continue ; } // CONTINUE 
+        if ( m_vertexd && !evertex->isDecay() ) { continue ; } // CONTINUE 
         //
         if ( m_vertex && m_vertexe )  
         {
@@ -230,17 +230,17 @@ namespace LoKi
           stream << term     ;
           stream << blank ( _indent + 5 );
           stream << " EndVtx[" << (ev-endVertices.begin() ) << "] " ;
-          stream << toString( vertex -> position() ) ; 
+          stream << toString ( evertex -> position() ) ; 
           if ( vertex -> hasKey() )  
-          { stream << " #" << toString ( vertex -> key() ) ; }
-          stream << " "   << vertex->type()  ;
+          { stream << " #" << toString ( evertex -> key() ) ; }
+          stream << " "    << evertex->type()  ;
         }
         //
-        print ( vertex -> products () . begin ()  ,
-                vertex -> products () . end   ()  ,  
-                stream            ,   term        , 
-                accept            ,   mark        ,
-                prefix + "   "    ,   depth + 1   ) ;   // RECURSION 
+        print ( evertex -> products () . begin ()  ,
+                evertex -> products () . end   ()  ,  
+                stream            ,   term         , 
+                accept            ,   mark         ,
+                prefix + "   "    ,   depth + 1    ) ;   // RECURSION 
       }
       //
       return stream ;
