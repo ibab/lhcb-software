@@ -33,6 +33,13 @@ namespace LoKi
    *  Simple generic implementation of IFullGenEventCutTool interface
    *  to check if event is "good"
    *
+   *  Select event with at leats two J/psi:
+   *  @code 
+   * 
+   *    tool.Code = " count ( 'J/psi(1S)' == GID )  > 1 "
+   *
+   *  @endcode 
+   *
    *  @see IFullGenEventCutTool
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    */
