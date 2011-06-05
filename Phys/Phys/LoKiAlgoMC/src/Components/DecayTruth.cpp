@@ -10,13 +10,36 @@
 #include "LoKi/MCParticleCuts.h"
 #include "LoKi/PhysMCParticleCuts.h"
 #include "LoKi/DecayChain.h"
+#include "LoKi/MCDecayChain.h"
 #include "LoKi/BuildMCTrees.h"
 #include "LoKi/Child.h"
+// ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2004-08-17 
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
 // ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
-  /** @file 
+  /** @class DecayTruth 
    *
    *  helper algorithm to inspect MC-truth for the selected signal candidates
    *
@@ -151,7 +174,7 @@ namespace LoKi
     // ========================================================================    
   };
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 /*  standard constructor
  *  @param name algorithm name instance 
@@ -268,10 +291,9 @@ StatusCode LoKi::DecayTruth::analyse   ()
   
   // create the printer for RC-decays  
   DecayChain rcPrinter 
-    ( m_rc_depth                   , 
-      m_rc_vertex                  , 
-      false                        , 
-      (DecayChain::Mode) m_rc_mode ) ;
+    ( m_rc_depth                       , 
+      m_rc_vertex                      , 
+      (DecayChainBase::Mode) m_rc_mode ) ;
   
   rcPrinter.setFmt_M   ( m_rc_fmt_m  ) ;
   rcPrinter.setFmt_PT  ( m_rc_fmt_pt ) ;
@@ -281,11 +303,14 @@ StatusCode LoKi::DecayTruth::analyse   ()
   rcPrinter.setFmt_I   ( m_rc_fmt_i  ) ;
   
   // create the printer for MC-decays  
-  DecayChain mcPrinter 
-    ( m_mc_depth                   , 
-      m_mc_vertex                  , 
-      m_mc_vertexe                 , 
-      (DecayChain::Mode) m_mc_mode ) ;
+  MCDecayChain mcPrinter 
+    ( m_mc_depth                       , 
+      m_mc_vertex                      , 
+      (DecayChainBase::Mode) m_mc_mode ,
+      MSG::YELLOW                      , 
+      MSG::RED                         ,
+      m_mc_vertexe                     ,
+      m_mc_vertexd                     ) ;
   // 
   mcPrinter.setFmt_M   ( m_mc_fmt_m   ) ;
   mcPrinter.setFmt_PT  ( m_mc_fmt_pt  ) ;
@@ -294,8 +319,6 @@ StatusCode LoKi::DecayTruth::analyse   ()
   mcPrinter.setFmt_D   ( m_mc_fmt_d   ) ;
   mcPrinter.setFmt_I   ( m_mc_fmt_i   ) ;
   //
-  mcPrinter.setVertexD ( m_mc_vertexd ) ;
-  
   LoKi::MCMatch match = mcTruth("DecTruth") ;
   
   // start the loop over reconstructed 'Particles'
@@ -347,13 +370,18 @@ StatusCode LoKi::DecayTruth::analyse   ()
       log << " #'matched' MC trees "          << nTrees 
           << " (#'matched' MC particles "     << mcCont.size() << ")" 
           << std::endl ;
-      // print all matched MC trees and colorize/mark the 'matched' particles  
+      //    print all matched MC trees and colorize/mark the 'matched' particles  
       mcPrinter.print 
-        ( mcCont.begin() , trees , log.stream() , '\n' , MCALL , rcChild ) ;
+        ( mcCont.begin() , 
+          trees          , log.stream() , '\n' , 
+          MCALL          , 
+          rcChild        ,
+          "  "           , 0  );
+      //
       log << endreq ;
-    } // end of loop over children
+    } //                                              end of loop over children
     always () << std::string(80,'*') << endreq ;
-  } // end of loop over reconstructed & selected particles
+  } //                      end of loop over reconstructed & selected particles
   // ==========================================================================
   return StatusCode::SUCCESS ;
   // ==========================================================================

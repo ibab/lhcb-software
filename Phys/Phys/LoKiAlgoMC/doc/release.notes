@@ -5,6 +5,15 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-05 - Vanya Belyaev
+
+ - fix for modification in (MC)DecayChain class 
+
+ - cmt/requirement
+
+     version increment to v9r3
+
+
 !========================== LoKiAlgoMC v9r2 2011-02-20 ========================
 
 ! 2011-02-14 - Vanya Belyaev
