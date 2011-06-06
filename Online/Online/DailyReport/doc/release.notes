@@ -4,6 +4,7 @@
 ! Purpose     : Produce an HTML file every day with a summary of the run
 !-----------------------------------------------------------------------------
 
+!============================== 2011-06-06 v1r0 ==============================
 ! 2011-05-24 - Olivier Callot
  - Detect http links in the report and make them as link
  - Add Calo piquet report.

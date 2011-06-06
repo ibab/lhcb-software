@@ -211,7 +211,7 @@ void DailyReport::listOnePiquet ( std::string name ) {
     pbdb.getListOfProblems( problems, "IT" );
     m_histAlarms->retrieveAlarms( histAlarms, "IT" );
     m_histAlarms->retrieveAlarms( histAlarms, "TT" );
-    extractFromElog( "ST", "ST | Piquet Report" );
+    extractFromElog( "ST", "Daily Report" );
 
   } else if ( name == "OT Piquet" ) {
     pbdb.getListOfProblems( problems, "OT" );
@@ -223,7 +223,7 @@ void DailyReport::listOnePiquet ( std::string name ) {
     pbdb.getListOfProblems( problems, "RICH2" );
     m_histAlarms->retrieveAlarms( histAlarms, "RICH1" );
     m_histAlarms->retrieveAlarms( histAlarms, "RICH2" );
-    extractFromElog( "RICH", "RICH | Checklist" );
+    extractFromElog( "RICH", "Daily Report" );
 
   } else if ( name == "Calo Piquet" ) {
     pbdb.getListOfProblems( problems, "SPD" );
@@ -245,6 +245,7 @@ void DailyReport::listOnePiquet ( std::string name ) {
   } else if ( name == "L0 Piquet" ) {
     pbdb.getListOfProblems( problems, "L0" );
     m_histAlarms->retrieveAlarms( histAlarms, "L0" );
+    extractFromElog( "L0 Trigger", "Daily Report" );
 
   } else if ( name == "HLT Piquet" ) {
     pbdb.getListOfProblems( problems, "HLT" );
@@ -313,7 +314,7 @@ void DailyReport::scanElog( std::string file, std::string system, bool today, bo
       if ( today || atoi( date.substr(7,2).c_str() ) > 6 ) {  // exclude reports before 7 AM yesterday.
         std::string systemName = getLogbookTagValue( "System:" );
         std::cout << "System '" << systemName << "'" << std::endl;
-        if ( system  == systemName ) {
+        if ( systemName.find( system ) != std::string::npos ) {
           std::cout << "Found a wanted entry " << itemString << " at '" << date << "'" << std::endl;
           std::string author = getLogbookTagValue( "Author:" );
           std::string text("") ;
@@ -384,7 +385,8 @@ char* DailyReport::html( std::string src ) {
     else if ( tmp == '&' ) out = strcpy( out, "&amp;" ) + 5;
     else if ( tmp == 'h' ) {
       std::cout << "Test link " << *in << *(in+1) << *(in+2) << *(in+3) << *(in+4) << *(in+5) << std::endl;
-      if ( 0 == strncmp( in, "ttp://", 6 ) ) { /// link!
+      if ( 0 == strncmp( in, "ttp://",  6 ) ||
+           0 == strncmp( in, "ttps://", 7 )  ) { /// link!
         std::cout << "Found link" << in << std::endl;
         size_t len = strcspn( in, " ,;)\n" );
         std::string link( in-1, in+len );
