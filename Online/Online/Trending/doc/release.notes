@@ -4,7 +4,7 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
-!============================== 2011-06-06 v1r6 ==============================
+!============================== 2011-06-06 v1r7 ==============================
 ! 2011-06-06 - Olivier Callot
  - New program DumpTrendingFile to analyse a file and detect ordering problems,
    inconsistencies and large time gaps.
