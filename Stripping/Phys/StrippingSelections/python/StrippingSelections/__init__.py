@@ -126,7 +126,10 @@ import StrippingMuIDCalib
 import StrippingD02KPiPi0
 import StrippingBeamGas
 
-
+import StrippingD2HHLTUnbiased
+import StrippingBu2hhh
+import StrippingZ02TauTau
+import StrippingX2D0D0
 
 from sys import modules as _modules
 _this = _modules[__name__]

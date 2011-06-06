@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-06 - Thomas Blake
+ - Updated __init__.py to add: 
+  . import StrippingD2HHLTUnbiased
+  . import StrippingBu2hhh
+  . import StrippingZ02TauTau
+  . import StrippingX2D0D0
+  Renamed global var name to default_name in  StrippingB2XGamma.py
+
 ! 2011-06-06 - Jibo He
  - Added StrippingCharmAssociative, StrippingHeavyBaryons, StrippingTwoBody_prompt to __init__.py
  - Fixed the not-applied bachelor cuts in Bc2JpsiH, Bc2JpsiMuX lines

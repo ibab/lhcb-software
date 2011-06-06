@@ -21,7 +21,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseAllPhotons
 
-name = 'B2XGamma'
+default_name = 'B2XGamma'
 
 class StrippingB2XGammaConf(LineBuilder):
     """
