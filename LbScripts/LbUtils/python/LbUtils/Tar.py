@@ -20,6 +20,12 @@ _tar_exclusion_list = []
 
 supported_compression = ["gzip", "bzip", "plain"]
 
+compression_extensions = { "gzip"  : [ "tar.gz", "tgz" ],
+                           "bzip2" : [ "tar.bz2", "tbz2" ],
+                           "plain" : [ "tar"] }
+
+class NoSuchTarCompression(Exception):
+    pass
 
 
 def tarIgnore(src, files):
@@ -85,22 +91,7 @@ def createTarBall(dirname, filename, binary=None, binary_list=None,
     if binary and binary not in this_binary_list :
         this_binary_list.append(binary)
 
-    if compression_type not in supported_compression :
-        if filename.endswith(".tar.gz") :
-            compression_type = "gzip"
-        elif filename.endswith(".tar.bz2") :
-            compression_type = "bzip"
-        elif filename.endswith(".tar") :
-            compression_type = "plain"
-
-    if compression_type == "gzip" :
-        tarf = tarfile.open(filename, "w:gz")
-    elif compression_type == "bzip" :
-        tarf = tarfile.open(filename, "w:bz2")
-    elif compression_type == "plain" :
-        tarf = tarfile.open(filename, "w")
-    else :
-        log.error("No such tar format")
+    tarf, lockf = openTar(filename, "w", compression_type)
 
     if dirname[-1] != os.sep :
         dirname = dirname + os.sep
@@ -132,18 +123,38 @@ def createTarBall(dirname, filename, binary=None, binary_list=None,
             dirs.remove(d)
 
 
-    tarf.close()
+    closeTar(tarf, lockf, filename)
 
-def openTar(filename, tar_mode="r"):
+def openTar(filename, tar_mode="r", compression_type=None):
+    """ wrapper function to open a tar file. compression if guessed from the
+    filename is none was passed as arguments"""
     log = logging.getLogger()
-    if filename.endswith(".tar.gz") :
-        tar_mode += ":gz"
-    elif filename.endswith(".tar.bz2") :
-        tar_mode += ":bz2"
-    elif filename.endswith(".tar") :
-        pass
+    if compression_type is None :
+        for t in compression_extensions.keys() :
+            for e in compression_extensions[t] :
+                if filename.endswith("." + e) :
+                    compression_type = t
+                    log.debug("Compression type guessed from the file name: %s" % t)
+        if not compression_type :
+            log.warning("Cannot guess compression type from the filename of %s." % filename)
+            log.info("Using plain tar uncompressed")
+            compression_type = "plain"
+    elif compression_type not in supported_compression :
+        raise NoSuchTarCompression
     else :
-        log.error("No such tar format. Using plain tar uncompressed")
+        correct_ext = False
+        for e in compression_extensions[compression_type] :
+            if filename.endswith("." + e) :
+                correct_ext = True
+                break
+        if not correct_ext :
+            log.warning("The file name %s has an extension inconsistent with the compression type")
+
+    if compression_type == "gzip" :
+        tar_mode += ":gz"
+    elif compression_type == "bzip" :
+        tar_mode += ":bz2"
+
     lock = AFSLock(filename)
     lock.lock(force=False)
     tarf = tarfile.open(filename, tar_mode)

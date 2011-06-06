@@ -1,3 +1,8 @@
+2011-06-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Tar.py: factored out the guessing of the compression to place it
+	in the openTar function.
+
 2011-06-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/SelfExtract.py: use compression type
