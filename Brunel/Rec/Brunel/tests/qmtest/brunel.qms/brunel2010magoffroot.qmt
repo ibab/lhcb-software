@@ -5,7 +5,7 @@
     <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagOff.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=1000;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="DST"; LHCbApp().Persistency="ROOT"</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=1000;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="DST"; Brunel().Persistency="ROOT"</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2010magoff.ref</text></argument>
   <argument name="validator"><text>
