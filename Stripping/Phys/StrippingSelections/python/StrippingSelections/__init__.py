@@ -19,6 +19,7 @@ import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
 import StrippingB2nbody
+import StrippingTwoBody_prompt
 import StrippingHb2Charged2Body
 import StrippingBd2DstarMuNu
 import StrippingB0q2DplusMuX
@@ -63,6 +64,8 @@ import StrippingCcbar2PpbarNew
 import StrippingDForBSemi
 import StrippingD0ForBXX
 import StrippingJpsippForD0MuMu
+import StrippingCharmAssociative
+import StrippingHeavyBaryons
 
 import StrippingZ02MuMu
 import StrippingZ02ee

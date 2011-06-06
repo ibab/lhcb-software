@@ -115,7 +115,8 @@ def makeJpsi2MuMu( name,
     
     _StdLooseDiMuon = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
     
-    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
+    #MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
+    MuonCut = "(CHILDCUT((TRCHI2DOF < %(MuonTRCHI2DOF)s),1)) & (CHILDCUT((TRCHI2DOF < %(MuonTRCHI2DOF)s),2)) & (CHILDCUT((PT > %(MuonPT)s *MeV),1))  & (CHILDCUT((PT > %(MuonPT)s *MeV),2))" % locals()
     
     MuMuCut = "(ADMASS(%(MuMuParticleName)s) < %(MuMuMassWindow)s *MeV) & (VFASPF(VCHI2PDOF)< %(MuMuVtxCHI2)s) & (PT > %(MuMuPT)s *MeV)" % locals()
     
@@ -138,11 +139,24 @@ def makeBc2JpsiMu( name,
                    BcPT
                    ):
 
-    from StandardParticles import StdNoPIDsMuons as MuonsForBc2JpsiMuX
-
+    #---------------------------
+    # Muon
+    #---------------------------        
+    from StandardParticles import StdNoPIDsMuons
+    
     # MuBc Cut
     MuonBcCut = "(PT > %(MuonBcPT)s *MeV) & (P > %(MuonBcP)s *MeV) & (TRCHI2DOF < %(MuonBcTRCHI2DOF)s)" % locals()
+
+    _MuonBcFilter = FilterDesktop( Code = MuonBcCut )
     
+    SelMuonBc = Selection("SelMuonBc_"+name,
+                          Algorithm = _MuonBcFilter,
+                          RequiredSelections = [ StdNoPIDsMuons ])
+    
+    
+    #---------------------------
+    # Bc -> J/psi(MuMu) Mu X
+    #---------------------------         
     # Comb cut
     combCut = "(in_range( %(BcLowerMass)s *MeV, AM, %(BcUpperMass)s *MeV))" % locals()
     
@@ -156,5 +170,5 @@ def makeBc2JpsiMu( name,
     
     return Selection( name,
                       Algorithm = _Bc2JpsiMuX,
-                      RequiredSelections = [ SelJpsi2MuMu, MuonsForBc2JpsiMuX ]
+                      RequiredSelections = [ SelJpsi2MuMu, SelMuonBc ]
                       )

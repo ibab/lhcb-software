@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-06 - Jibo He
+ - Added StrippingCharmAssociative, StrippingHeavyBaryons, StrippingTwoBody_prompt to __init__.py
+ - Fixed the not-applied bachelor cuts in Bc2JpsiH, Bc2JpsiMuX lines
+
 ! 2011-06-06 - Sophie Redford
 - Update B2XMuMuSS lines, correctly implemented DimuonMass cut
 

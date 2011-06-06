@@ -183,11 +183,24 @@ def makeBc2JpsiH( name,
                   BcLTIME
                   ):
 
-    from StandardParticles import StdNoPIDsPions as PionsForBc2JpsiH
+    #---------------------------
+    # Pion or Kaon
+    #---------------------------        
+    from StandardParticles import StdNoPIDsPions
 
-    # MuBc Cut
+    # Pion Cut
     PionCut = "(PT > %(PionPT)s *MeV) & (P > %(PionP)s *MeV) & (TRCHI2DOF < %(PionTRCHI2DOF)s)" % locals()
+
+    _PionFilter = FilterDesktop( Code = PionCut )
     
+    SelPion = Selection("SelPion_"+name,
+                        Algorithm = _PionFilter,
+                        RequiredSelections = [ StdNoPIDsPions ])
+
+    
+    #---------------------------
+    # Bc -> J/psi(MuMu) H
+    #---------------------------    
     # Comb cut
     combCut = "(ADAMASS('B_c+') < %(BcMassWindow)s *MeV)" % locals()
     
@@ -203,5 +216,5 @@ def makeBc2JpsiH( name,
     
     return Selection( name,
                       Algorithm = _Bc2JpsiH,
-                      RequiredSelections = [ SelJpsi2MuMu, PionsForBc2JpsiH ]
+                      RequiredSelections = [ SelJpsi2MuMu, SelPion  ]
                       )
