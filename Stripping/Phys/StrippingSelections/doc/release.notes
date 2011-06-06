@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-06 - Sophie Redford
+- Update B2XMuMuSS lines, correctly implemented DimuonMass cut
+
 ! 2011-06-02 - Ulrich Kerzel
 Update TestCPGammaLoop.py with latest cuts, lines, etc for strip 15
 

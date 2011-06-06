@@ -231,12 +231,13 @@ class B2XMuMuSSConf(LineBuilder) :
 #
 # Out of class
 #####################################################
-def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
     """
     Makes the B+ -> pi+ mu+ mu- 
     """
 
-    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) " % locals()
+    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -251,12 +252,13 @@ def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
                      RequiredSelections = [ pionSel, muonSel ] )
 
 #####################################################
-def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
     """
     Makes the B- -> pi+ mu- mu-
     """
     
-    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) "% locals()
+    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -271,12 +273,13 @@ def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
                      RequiredSelections = [ pionSel, muonSel ] )
 
 #####################################################
-def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
     """
     Makes the B+ -> K+ mu+ mu-
     """
     
-    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) " % locals()
+    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
@@ -291,12 +294,13 @@ def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
                      RequiredSelections = [ kaonSel, muonSel ] )
 
 #####################################################
-def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA):
+def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, DimuonMass):
     """
     Makes the B- -> K+ mu- mu-
     """
     
-    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) " % locals()
+    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
