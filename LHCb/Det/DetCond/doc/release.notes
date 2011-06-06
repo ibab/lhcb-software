@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2011-06-06 - Illya Shapoval
+ - Another minor add-on for the 'UseLatestTags' warning output case.
+
 ! 2011-06-03 - Illya Shapoval
  - Added a missing configuration bit for the case of per-year-made ONLINE
    snapshots: if per-year scheme is met 'CondDBAccessSvc' services are also

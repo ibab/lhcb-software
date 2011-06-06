@@ -285,14 +285,18 @@ class CondDB(ConfigurableUser):
                 log.warning("Default global tags will be overridden with the latest ones"
                             " available for '%s' data type: %s"
                             %(use_latest[0], self.getProp("Tags")) )
+                log.warning("Latest unbound local tags of '%s' data type will be"
+                            " put on top of the latest global tags: %s"
+                            %(use_latest[0], self.getProp("LocalTags")))
             elif useLatestLength == 2:
                 self._useLatestTags(use_latest[0],use_latest[1])
                 log.warning("Default global tags will be overridden with the latest ones"
                             " available for '%s' data type: %s"
                             %(use_latest[0], self.getProp("Tags")) )
-                log.warning("Latest unbound local tags of '%s' data type will be"
-                            " put on top of the latest global tags: %s"
-                            %(use_latest[0], self.getProp("LocalTags")))
+                if not use_latest[1]:
+                    log.warning("Latest unbound local tags of '%s' data type will be"
+                                " put on top of the latest global tags: %s"
+                                %(use_latest[0], self.getProp("LocalTags")))
             else:
                 raise RuntimeError("Wrong 'UseLatestTags' property. Should be: "
                                    "['DataType', OnlyGlobalTag = bool_flag].")
