@@ -154,6 +154,7 @@ CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
   declareProperty ( "withET" , m_withET ) ;
   declareProperty ( "ETcut" , m_ETcut ) ;
   declareProperty ( "CellSelectorForEnergy" , m_used = "3x3");
+  declareProperty ( "MaxIteration" , m_passMax = 10);
 
   declareInterface<ICaloClusterization>(this);
 }
@@ -339,6 +340,7 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     if( itTagLastClustered == itTagFirst )m_release = true; // try additional passes releasing appliRulesTagger criteria
     m_pass++;
     itTagFirst = itTagLastClustered;
+    if( m_passMax > 0 && (int) m_pass >= m_passMax)break;
   }
 
 

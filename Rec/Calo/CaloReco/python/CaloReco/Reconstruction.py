@@ -85,6 +85,7 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
     ## Define the context-dependent sequencer
     seq   = getAlgo ( GaudiSequencer           , "ClusterReco", context , "Rec/Calo/EcalClusters" , enableRecoOnDemand )
 
+    seq.Members[:]=[]
     filter= getAlgo ( CaloDigitFilterAlg       , "CaloDigitFilter",context)
     clust = getAlgo ( CellularAutomatonAlg     , "EcalClust"  , context )
     share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )  

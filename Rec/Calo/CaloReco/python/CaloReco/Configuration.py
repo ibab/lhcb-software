@@ -15,7 +15,8 @@ __all__ = (
     'HltCaloRecoConf'     ,
     'OffLineCaloRecoConf' ,
     'CaloRecoConf',
-    'CaloProcessor'
+    'CaloProcessor',
+    'CaloLines'
     )
 # =============================================================================
 
@@ -456,71 +457,75 @@ class CaloProcessor( CaloRecoConf ):
 
     def caloSequence ( self,   tracks=[]  ) :
         seq  = GaudiSequencer ( 'CaloRecoPIDs' + self.getName() )
-        conf = CaloProcessor(self.getName() )
-        conf.setProp("CaloSequencer", seq)
+        seq.Members[:] = []
+        self.setProp("CaloSequencer", seq)
         context = self.getProp('Context')
         if context == '' :
-            conf.setProp("Context", self.getName() )
-        
-        conf.setProp("TrackLocations", tracks)        
+            self.setProp("Context", self.getName() )        
+        self.setProp("TrackLocations", tracks)
+        self.applyConf()
         return seq
     def protoSequence ( self,   tracks=[] , protoPrefix = '' ) :
         seq  = GaudiSequencer ( 'CaloProtoPUpdate' + self.getName() )
-        conf = CaloProcessor(self.getName() )
-        conf.setProp("ProtoSequencer", seq)
+        seq.Members[:] = []
+        self.setProp("ProtoSequencer", seq)
         if self.getProp('Context') == '' : 
-            conf.setProp("Context", self.getName() )
-        conf.setProp("TrackLocations", tracks)        
+            self.setProp("Context", self.getName() )
+        self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             nloc = protoPrefix + '/Neutrals'
             cloc = protoPrefix + '/Charged'
             nloc = nloc.replace('//', '/')
             cloc = cloc.replace('//', '/')
-            conf.setProp("ChargedProtoLocation",cloc)
-            conf.setProp("NeutralProtoLocation",nloc)            
+            self.setProp("ChargedProtoLocation",cloc)
+            self.setProp("NeutralProtoLocation",nloc)            
+        self.applyConf()
         return seq
     def chargedProtoSequence ( self,   tracks=[] , protoPrefix = '' ) :
         seq  = GaudiSequencer ( 'CaloChargedProtoPUpdate' + self.getName() )
-        conf = CaloProcessor(self.getName() )
-        conf.setProp("ChargedProtoSequencer", seq)
+        seq.Members[:] = []
+        self.setProp("ChargedProtoSequencer", seq)
         if self.getProp('Context') == '' : 
-            conf.setProp("Context", self.getName() )
-        conf.setProp("TrackLocations", tracks)        
+            self.setProp("Context", self.getName() )
+        self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             cloc = protoPrefix
             if protoPrefix.find('/Charged') == -1 :
                 cloc = protoPrefix + '/Charged'
                 cloc = cloc.replace('//', '/')
-            conf.setProp("ChargedProtoLocation",cloc)
+            self.setProp("ChargedProtoLocation",cloc)
+        self.applyConf()
         return seq
     def neutralProtoSequence ( self,   tracks=[] , protoPrefix = '' ) :
         seq  = GaudiSequencer ( 'CaloNeutralProtoPUpdate' + self.getName() )
-        conf = CaloProcessor(self.getName() )
-        conf.setProp("NeutralProtoSequencer", seq) 
+        seq.Members[:] = []
+        self.setProp("NeutralProtoSequencer", seq) 
         if self.getProp('Context') == '' : 
-            conf.setProp("Context", self.getName() )
-        conf.setProp("TrackLocations", tracks)        
+            self.setProp("Context", self.getName() )
+        self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             nloc = protoPrefix
             if protoPrefix.find('/Neutrals') == -1 :
                 nloc = protoPrefix + '/Neutrals'
                 nloc = nloc.replace('//', '/')
-            conf.setProp("NeutralProtoLocation",nloc)            
+            self.setProp("NeutralProtoLocation",nloc)            
+        self.applyConf()
         return seq
     def sequence ( self,   tracks=[], protoPrefix = ''  ) :
         seq  = GaudiSequencer ( 'CaloProcessor' + self.getName() )
-        conf = CaloProcessor(self.getName() )
-        conf.setProp("Sequence", seq)
+        seq.Members[:] = []
+        self.setProp("Sequence", seq)
         if self.getProp('Context') == '' : 
-            conf.setProp("Context", self.getName() )
-        conf.setProp("TrackLocations", tracks)        
+            self.setProp("Context", self.getName() )
+        self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             nloc = protoPrefix + '/Neutrals'
             cloc = protoPrefix + '/Charged'
             nloc = nloc.replace('//', '/')
             cloc = cloc.replace('//', '/')
-            conf.setProp("ChargedProtoLocation",cloc)
-            conf.setProp("NeutralProtoLocation",nloc)            
+            self.setProp("ChargedProtoLocation",cloc)
+            self.setProp("NeutralProtoLocation",nloc)            
+        self.applyConf()
         return seq
 
         
@@ -551,9 +556,10 @@ class CaloProcessor( CaloRecoConf ):
         if dod :
             pdod = dod            
         self.setProp('EnableRecoOnDemand',dod)
-
+            
         ## define the calo sequence
         caloSeq     = []
+        
         doReco = self.getProp('CaloReco')
         doPIDs = self.getProp('CaloPIDs')
         skipNeutrals = self.getProp('SkipNeutrals')
@@ -562,6 +568,7 @@ class CaloProcessor( CaloRecoConf ):
 
         # CaloReco sequence
         recoSeq = getAlgo( GaudiSequencer , "CaloReco"+self.getName() , context ) 
+        recoSeq.Members[:] = []
         recList = self.getProp ( 'RecList')         
 
 
@@ -706,35 +713,182 @@ class CaloProcessor( CaloRecoConf ):
         # Full sequence
         addAlgs( fullSeq, caloSeq )
         addAlgs( fullSeq, protoSeq )
-        
-            
+                    
         
         ## define the sequencers
         if self.isPropertySet('Sequence') :
             main = self.getProp('Sequence') 
+            main.Members[:]=[]
             addAlgs  ( main , fullSeq ) 
             _log.info ('Configure main Calo processing Sequence  : %s '% main.name() )
             _log.info ( prntCmp ( main ) ) 
 
         if self.isPropertySet('CaloSequencer') :
             calo = self.getProp('CaloSequencer') 
+            calo.Members[:]=[]
             addAlgs  ( calo , caloSeq ) 
 
         if self.isPropertySet('ProtoSequencer') :
             proto = self.getProp('ProtoSequencer') 
+            proto.Members[:]=[]
             addAlgs  ( proto , protoSeq ) 
 
 
         if self.isPropertySet('ChargedProtoSequencer') :
             cproto = self.getProp('ChargedProtoSequencer') 
+            cproto.Members[:]=[]
             addAlgs  ( cproto , cProtoSeq ) 
 
         if self.isPropertySet('NeutralProtoSequencer') :
             nproto = self.getProp('NeutralProtoSequencer') 
+            nproto.Members[:]=[]
             addAlgs  ( nproto , nProtoSeq ) 
 
         if self.getProp( 'EnableOnDemand' )  :
             _log.info ( printOnDemand () ) 
+
+#####################################
+class CaloLines(LHCbConfigurableUser):
+    """
+    Class/Configurable to define the HLT2 fast reconstruction for high-ET photon, low-ET photon/pi0 & low-ET electrons
+    """
+
+
+#    __used_configurables__ = [ CaloProcessor ]
+
+   ## define the additional slots
+    __slots__ = {
+        "Context"            : '' ,    # The context to run (default = offline)
+        'TrackLocations'     : [] ,    # Track locations (Neutral/Charged cluster selection with UseTrack(E) )
+        'HighPhoton'         : True , ## process the highEt-threshold photon reconstruction
+        'LowPhoton'          : True , ## process the lowEt-threshold photon reconstruction
+        'LowElectron'        : True , ## process the LowEt-threshold electron reconstruction
+        'EnableOnDemand'     : False, ## overwrite EnableRecoOnDemand & EnablePIDsOnDemand
+        'HighEt'             : 2000.*MeV ,
+        'LowEt'              : 300.*MeV,
+        'ClusterEtFactor'    : 1.,     # pre-cut on cluster Et is factor * Low(High)ET (should be <=1)
+        'L0Calo2Calo'        : True,
+        'ProtoOnDemand'      : False,
+        'Sequencer'          : None,
+        'OutputLevel'        : INFO
+        }
+    
+
+
+    def sequence ( self,   tracks=[]  ) :
+        seq  = GaudiSequencer ( 'CaloLines' + self.getName() )
+        seq.Members[:] = []
+        self.setProp("Sequencer", seq)
+        context = self.getProp('Context')
+        if context == '' :
+            self.setProp("Context", self.getName() )        
+        self.setProp("TrackLocations", tracks)        
+        self.applyConf()
+        return seq
+ 
+        
+    def applyConf ( self ) :
+        
+
+        from Configurables import ( GaudiSequencer,
+                                    HltL0CaloCandidates
+                                    )
+
+
+        if self.getName() == 'CaloLines' and ( self.getProp('Context') == '' or self.getProp('Context') == 'CaloLines' ) :
+            self.setProp('Context','Offline') # default is Offline is neither context nor name is specified
+
+
+
+        # overwrite Reco & PID onDemand
+        dod = self.getProp('EnableOnDemand')
+        pdod = self.getProp('ProtoOnDemand')
+        if dod :
+            pdod = dod            
+
+        tracks = self.getProp('TrackLocations')
+
+        ###
+        caloLines = GaudiSequencer( 'CaloLinesSeq' + self.getName() )
+        caloLines.Members[:] = []
+
+        if self.getProp('L0Calo2Calo') : 
+            l0calo2calo=HltL0CaloCandidates('L0Calo2Calo')
+            addAlgs( caloLines,  l0calo2calo )
+            tagHighP = ''
+            tagLowP = ''
+            tagLowE = ''
+        else :
+            tagHighP = 'HighPhoton'
+            tagLowP  = 'LowPhoton'
+            tagLowE  = 'LowElectron'
+            
+        name = self.getName()
+        fac  = self.getProp('ClusterEtFactor') 
+
+        if self.getProp('HighPhoton') :            
+            context = self.getProp('Context')
+            if  context != '' :
+                context = context +'HighPhoton'
+            hp = CaloProcessor(name+'HighPhoton'
+                               ,TrackLocations = tracks
+                               ,Context = context
+                               ,RecList = ['Digits','Clusters','Photons']
+                               ,CaloPIDs = False
+                               ,ExternalClusters="/Event/Rec/Calo/HighEtPhotons"
+                               ,ClusterPt = self.getProp('HighEt')*fac
+                               ,PhotonPt = self.getProp('HighEt')
+                               ,MakeExternalClustersWithTag = tagHighP
+                               )
+            
+            addAlgs( caloLines, hp.caloSequence() )
+            addAlgs( caloLines, hp.neutralProtoSequence(protoPrefix = name+'HighPhotonProtoP')  )
+
+        if self.getProp('LowPhoton') :
+            context = self.getProp('Context')
+            if  context != '' :
+                context = context +'LowPhoton'
+            lp = CaloProcessor(name+'LowPhoton'
+                               ,TrackLocations = tracks
+                               ,Context = context
+                               ,RecList = ['Digits','Clusters','Photons','MergedPi0s','SplitPhotons']
+                               ,ExternalClusters="/Event/Rec/Calo/LowEtPhotons"
+                               ,CaloPIDs = False
+                               ,ClusterPt = self.getProp('LowEt')*fac
+                               ,PhotonPt = self.getProp('LowEt')
+                               ,MakeExternalClustersWithTag = tagLowP
+                               )
+            addAlgs( caloLines , lp.caloSequence() )
+            addAlgs( caloLines ,  lp.neutralProtoSequence(protoPrefix=name+'LowPhotonProtoP'))
+
+
+        if self.getProp('LowElectron') :
+            context = self.getProp('Context')
+            if  context != '' :
+                context = context +'LowElectron'
+            le = CaloProcessor(name+'LowElectron'
+                               ,TrackLocations = tracks
+                               ,Context = context
+                               ,RecList = ['Digits','Clusters','Electrons']
+                               ,ExternalClusters="/Event/Rec/Calo/LowEtElectrons"
+                               ,ClusterPt = self.getProp('LowEt')*fac
+                               ,ElectronPt = self.getProp('LowEt')
+                               ,SkipNeutrals = True
+                               ,ProtoOnDemand = pdod
+                               ,MakeExternalClustersWithTag = tagLowE
+                               )
+            addAlgs( caloLines , le.caloSequence())
+            addAlgs( caloLines , le.chargedProtoSequence(protoPrefix=name+'LowElectronProtoP'))
+
+
+        caloLines.IgnoreFilterPassed = True
+        ## propagate the global properties
+        setTheProperty ( caloLines , 'OutputLevel'     , self.getProp ( 'OutputLevel'     ) )
+
+        ## define the sequencers
+        if self.isPropertySet('Sequencer') :
+            main = self.getProp('Sequencer') 
+            addAlgs  ( main , caloLines ) 
 
 
 
@@ -745,3 +899,4 @@ if '__main__' == __name__ :
     print __version__
     
             
+    

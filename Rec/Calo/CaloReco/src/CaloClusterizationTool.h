@@ -121,5 +121,6 @@ private:
   std::string m_used;
   CellSelector m_cellSelector;
   unsigned int m_pass;
+  int m_passMax;
 };
 #endif // CALOCLUSTERIZATIONTOOL_H
