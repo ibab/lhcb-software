@@ -3,7 +3,6 @@
 The format of this stripping line is borrowed very heavily from the StrippingBs2JpsiPhiPrescaledAndDetatched
 line, by Greig Cowan and Juan Palacios.
 Module for construction of D*->D0(KMuNu)pi  stripping Selections and StrippingLines.
-Provides functions to build Bs, Jpsi, Phi selections.
 Provides class DstarD02KMuNuConf, which constructs the Selections and 
 StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
@@ -334,7 +333,7 @@ def makeDstarD02KMuNuWS(name,
 		   Dstar_VtxChi2,
 		   Dstar_DeltaMass)  :
     """
-    Create and return a D* -> pi D0(KMuNu) right sign selection object.
+    Create and return a D* -> pi D0(KMuNu) wrong sign selection object.
     Arguments:
     name             : name of the Selection.
     """
