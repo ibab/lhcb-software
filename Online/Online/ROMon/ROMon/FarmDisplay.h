@@ -181,6 +181,8 @@ namespace ROMon {
     virtual std::pair<std::string,std::string> selectedNode() const = 0;
     /// Set cursor to appropriate position
     virtual void set_cursor() = 0;
+    /// Set cursor position to specified display
+    virtual void set_cursor(InternalDisplay* d) { this->InternalDisplay::set_cursor(d); }
 
     /// Show context dependent help window
     int showHelpWindow();
