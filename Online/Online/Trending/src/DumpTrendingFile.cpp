@@ -35,9 +35,9 @@ extern "C" int main(int argc, char* argv[]) {
     std::cout << "        fileName  is the file to extract, e.g. LHCb_HLT" << std::endl;
     exit( 0 );
   }  
-
+  bool verbose = (argc == 3 );
   DumpTrendingFile dump( trendTool );
-  dump.dump( std::string(argv[1]) );
+  dump.dump( std::string( argv[1]), verbose );
   delete trendTool;
 };
 //=============================================================================
@@ -56,8 +56,7 @@ DumpTrendingFile::~DumpTrendingFile() {}
 //=========================================================================
 //  Dump a file
 //=========================================================================
-void DumpTrendingFile::dump (std::string file ) {
-
+void DumpTrendingFile::dump (std::string file, bool verbose ) {
   std::string fileFullName = TREND_AREA + file + ".trend";
   std::string mode = "r";
   m_file = fopen( fileFullName.c_str(), mode.c_str() );
@@ -100,7 +99,8 @@ void DumpTrendingFile::dump (std::string file ) {
       nn -= ll;
       m_tags.push_back( tag );
       m_lastData.push_back( 0. );
-      std::cout << "   loaded tag " << m_tags.size() << " = '" << tag << "'   rest " << nn << " bytes." << std::endl;
+      if ( verbose ) std::cout << "   loaded tag " << m_tags.size() << " = '" << tag 
+                               << "'   rest " << nn << " bytes." << std::endl;
     }
     m_nbTag = m_tags.size();
     m_nbMask = (m_nbTag/32) + 1;
@@ -113,6 +113,7 @@ void DumpTrendingFile::dump (std::string file ) {
     
     std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version 
               << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
+
     for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
       sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
                m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  m_dir.entry[kk].fileOffset );

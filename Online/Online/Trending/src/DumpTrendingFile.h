@@ -18,7 +18,7 @@ public:
 
   virtual ~DumpTrendingFile( ); ///< Destructor
 
-  void dump( std::string file );
+  void dump( std::string file, bool verbose );
 
 protected:
 

@@ -237,6 +237,8 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
     if ( 0 == m_dir.size ) {       // No directory block. Create one...
       fseek( m_file, m_dirAddressInFile, SEEK_SET );
       createDirectoryRecord( &m_dir, now );
+      m_data.size = 0;
+      m_ptData    = 0;
     }
   }
   debug() << "write: Directory address in file = " << m_dirAddressInFile
