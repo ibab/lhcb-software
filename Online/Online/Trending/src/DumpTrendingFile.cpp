@@ -111,23 +111,45 @@ void DumpTrendingFile::dump (std::string file ) {
     fseek( m_file, m_dirAddressInFile, SEEK_SET );
     fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
     
-    std::cout << "Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version 
+    std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version 
               << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
     for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
       sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
                m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  m_dir.entry[kk].fileOffset );
       std::cout << line << std::endl;
-
+    }
+    std::cout << "*** Data analysis *** " << std::endl;
+    int firstTime = 0;
+    for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
       m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[kk].fileOffset;
       fseek( m_file, m_dataAddressInFile, SEEK_SET );
       fread( &m_data, 1, sizeof(DataRecord), m_file );
-      std::cout << "     data size " << m_data.size << " type " << m_data.type << " version " << m_data.version << std::endl;
+      sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d", 
+               kk,  m_dir.entry[kk].firstTime,
+               m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  
+               m_dir.entry[kk].fileOffset,
+               m_data.size, m_data.type, m_data.version );
+      std::cout << line << std::endl;
       m_ptData = 0;
       int maxPtData = ( int(m_data.size)-8 ) /4;
+      if ( m_data.data[m_ptData].i < firstTime ||
+           m_dir.entry[kk].firstTime < firstTime ) {
+        std::cout << " -- Time ordering   " << firstTime << " = " <<  m_trend->timeString( firstTime ) 
+                  << " ** After **" << std::endl;
+      }
+      firstTime = m_data.data[m_ptData].i;
+      if ( firstTime != m_dir.entry[kk].firstTime ) {
+        std::cout << " -- First time data " << firstTime << " = " << m_trend->timeString( firstTime )
+                  << " ** Mismatch ** " << std::endl;
+      }
       while ( m_ptData < maxPtData ) {
         int time = m_data.data[m_ptData++].i;
-        std::cout << "            entry time " << time << " = "
-                  << m_trend->timeString( time );
+        if ( 0 == time ) {
+          if ( m_ptData != maxPtData ) {
+            std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words" << std::endl;
+          }
+          break;
+        }
         int ptMask = m_ptData;
         m_ptData  += m_nbMask;
         int mask = 0;
@@ -140,7 +162,16 @@ void DumpTrendingFile::dump (std::string file ) {
           }
           mask = mask>>1;
         }
-        std::cout << " read " << nbData << " values, pointer " << m_ptData << std::endl;
+        if ( time < firstTime ) {
+          std::cout << " ** Mismatch time ordering: Previous " << firstTime << " current " << time << " = "
+                    << m_trend->timeString( time ) << " read " << nbData << " values, next pointer " << m_ptData 
+                    << std::endl;
+        }
+        if ( time - firstTime > 3600 ) {
+          std::cout << " ** Gap>1 hour from " << firstTime << " = " << m_trend->timeString( firstTime ) << std::endl
+                    << "                 to " << time << " = " << m_trend->timeString( time ) << std::endl;
+        }
+        firstTime = time;
       }
     }
   }

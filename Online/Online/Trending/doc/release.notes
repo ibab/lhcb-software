@@ -4,6 +4,13 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+!============================== 2011-06-06 v1r6 ==============================
+! 2011-06-06 - Olivier Callot
+ - New program DumpTrendingFile to analyse a file and detect ordering problems,
+   inconsistencies and large time gaps.
+ - Fix the use of the same tool for write after read ( e.g. in SimpleToolWriter )
+   Some variables needed re-initialization. Files were corrupted upon restart.
+
 ! 2011-05-31 - Olivier Callot
  - New program ExtractFromTrendingFile for Renaud: needs 4 arguments: file,
    tag, start and end time in ISO format.

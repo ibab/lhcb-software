@@ -492,9 +492,15 @@ void TrendingTool::closeFile() {
     if ( 0 != status ) error() << "fclose returned status " << status << std::endl;
     m_file = NULL;
   }
-  m_tagAddressInFile  = -1;
-  m_dirAddressInFile  = -1;
-  m_dataAddressInFile = -1;
+  m_firstDirAddress    = -1;
+  m_tagAddressInFile   = -1;
+  m_dirAddressInFile   = -1;
+  m_dataAddressInFile  = -1;
+  m_hasSelection       = false;
+  m_requestedTagNumber = -1;
+  m_lastTime           = 0x7fffffff;
+  m_maxTime            = 0x7fffffff;
+  m_firstTimeThisTag   = 0;
 }
 //=========================================================================
 // Open an existing file for reading
