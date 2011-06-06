@@ -100,25 +100,34 @@ V0ForPID = {
 
 Jpsi2eeForElectronID = {
     'BUILDERTYPE'	: 'ElectronIDConf',
-    'CONFIG'	: {'Both_MIPCHI2': 9.0,
-                   'Both_P': 3000.0,
-                   'Both_PT': 500.0,
-                   'Both_TRCHI2DOF': 5.0,
-                   'LinePostscale': 1.0,
-                   'LinePrescale': 0.40000000000000002,
-                   'Probe_MIPCHI2': 9.0,
-                   'Probe_P': 3000.0,
-                   'Probe_PT': 500.0,
-                   'Tag_MIPCHI2': 9.0,
-                   'Tag_P': 6000.0,
-                   'Tag_PIDe': 5.0,
-                   'Tag_PT': 1500.0,
-                   'eeCombMaxMass': 4300.0,
-                   'eeCombMinMass': 2100.0,
-                   'eeFDCHI2': 225.0,
-                   'eeMaxMass': 4200.0,
-                   'eeMinMass': 2200.0,
-                   'eeVCHI2PDOF': 9.0},
+    'CONFIG'	: {
+    'LinePrescale'            :    1.   ,
+    'LinePostscale'           :    1.   ,
+    'HltFilter'               : None    ,
+    
+    'Both_PT'                 :  500.   ,  # MeV
+    'Both_P'                  : 3000.   ,  # MeV
+    'Both_TRCHI2DOF'          :    5.   ,
+    'Both_MIPCHI2'            :    9.   ,
+    
+    'Tag_PT'                  : 1500.   ,  # MeV
+    'Tag_P'                   : 6000.   ,  # MeV
+    'Tag_PIDe'                :    5.   ,
+    'Tag_MIPCHI2'             :    9.   ,
+    
+    'Probe_PT'                :  500.   ,  # MeV
+    'Probe_P'                 : 3000.   ,  # MeV
+    'Probe_MIPCHI2'           :    9.   ,
+    
+    'eeCombMinMass'           : 2100.   ,  # MeV         
+    'eeCombMaxMass'           : 4300.   ,  # MeV   
+    'eeVCHI2PDOF'             :    9.   ,  
+    'eeMinMass'               : 2200.   ,  # MeV 
+    'eeMaxMass'               : 4200.   ,  # MeV
+    
+    'eeFDCHI2'                :  400.   ,
+    'eeVZ'                    : -1.0e+9    # mm
+    },
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }
@@ -128,25 +137,33 @@ MuIDCalib = {
     'BUILDERTYPE' : 'MuIDCalibConf',
     'WGs'         : [ 'ALL' ],
     'STREAMS'     : [ 'Calibration' ],
-    'CONFIG'      : { 'PromptPrescale'           : 0.08,
-                  'DetachedPrescale'         : 1.,
-                  'DetachedNoMIPPrescale'    : 0.3,
-                  'DetachedNoMIPHiPPrescale' : 1.,
-                  'DetachedNoMIPKPrescale'   : 1.
-                 }
+    'CONFIG'      : {
+    'PromptPrescale'           : 0.08,
+    'DetachedPrescale'         : 1.,
+    'DetachedNoMIPPrescale'    : 0.3,
+    'DetachedNoMIPHiPPrescale' : 1., 
+    'DetachedNoMIPKPrescale'   : 1.,
+    'FromLambdacPrescale'      : 1.,
+    'KFromLambdacPrescale'     : 1.,
+    'PiFromLambdacPrescale'    : 1.,
+    'PFromLambdacPrescale'     : 1.,
+    'KISMUONFromLambdacPrescale' : 1.,
+    'PiISMUONFromLambdacPrescale': 1.,
+    'PISMUONFromLambdacPrescale' : 1.
+    }
     }
 
-MuIDCalibMicroDST = {
-    'BUILDERTYPE' : 'MuIDCalibConf',
-    'WGs'         : [ 'ALL' ],
-    'STREAMS'     : [ 'Leptonic' ],
-    'CONFIG'      : { 'PromptPrescale'     : 0.5, 
-                  'DetachedPrescale'       : 0.,
-                  'DetachedNoMIPPrescale'  : 1., 
-                  'DetachedNoMIPHiPPrescale' : 0., 
-                  'DetachedNoMIPKPrescale' : 0.
-                 }
-    }
+## MuIDCalibMicroDST = {
+##     'BUILDERTYPE' : 'MuIDCalibConf',
+##     'WGs'         : [ 'ALL' ],
+##     'STREAMS'     : [ 'Leptonic' ],
+##     'CONFIG'      : { 'PromptPrescale'     : 0.5, 
+##                   'DetachedPrescale'       : 0.,
+##                   'DetachedNoMIPPrescale'  : 1., 
+##                   'DetachedNoMIPHiPPrescale' : 0., 
+##                   'DetachedNoMIPKPrescale' : 0.
+##                  }
+##     }
 
 ## TrackEffDownMuon = { 
 ##     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',

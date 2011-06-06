@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-06 - Thomas Blake
+ - Added RD lines to StrippingDev for Stripping15
+
+
 ! 2011-06-06 - Will Barter
  - Added Stripping Lines of Jets and Exotica for Stripping 15
 
