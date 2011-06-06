@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-06 - Marco Cattaneo
+ - Add "WriteFSR" slot to DstConf and propagate to IOHelper
+
 ! 2011-06-01 - Rob Lambert
  - detect all known OutputStreams and modify accordingly
  - should make migration of old options also transparent

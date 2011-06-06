@@ -33,6 +33,7 @@ class DstConf(LHCbConfigurableUser):
        , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next" ]
        , "DataType"       : ""
        , "Persistency"    : None
+       , "WriteFSR"       : True 
          }
 
     _propertyDocDct = { 
@@ -48,6 +49,7 @@ class DstConf(LHCbConfigurableUser):
        ,'SpilloverPaths': """ Paths to write to XDST if available on input file """
        ,'DataType'      : """ Flag for backward compatibility with old data """
        ,'Persistency'   : """ Overwrite the default persistency with something else. """
+       ,'WriteFSR'      : """ Flags whether to write out an FSR """
        }
 
     __used_configurables__ = [
@@ -194,7 +196,7 @@ class DstConf(LHCbConfigurableUser):
         persistency=None
         if hasattr( self, "Persistency" ):
             persistency=self.getProp("Persistency")
-        IOHelper(None,persistency).outStream( outputFile, "OutputStream/"+self.getProp("Writer") )        
+        IOHelper(None,persistency).outStream( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )        
 
     def _doWriteMDF( self, items ):
         """
