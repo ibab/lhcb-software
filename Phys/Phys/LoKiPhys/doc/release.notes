@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-06 - Vanya Belyaev
+ - more fixes for ICC compiler 
+
 ! 2011-06-04 - Vanya Belyaev
  - add utilities for better printout 
 

@@ -100,6 +100,15 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
+    // ========================================================================
     /** @var  BPVDVDOCA
      *  
      * From Jaap Panman:
@@ -121,6 +130,10 @@ namespace LoKi
      *             the first particle <b>MUST</b> have the valid end-vertex
      */
     const LoKi::Particles::DHCoplanarity                            BPVDVDOCA ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts   
   // ==========================================================================
