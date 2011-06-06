@@ -17,7 +17,7 @@ Runable.Wait                         = 3;  // 1 of running as daemon
 
 MessageSvc.fifoPath                  = "$LOGFIFO";
 MessageSvc.LoggerOnly                = true;  // Set to false for stdout
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MessageSvc.OutputLevel               = 3;//@OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
 
 AdderSvc.MyName                      = "<part>_<node>_Adder";

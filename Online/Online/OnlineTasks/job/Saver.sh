@@ -1,7 +1,7 @@
 #!/bin/bash
 #need to cd incase script is launched outside the taskmanager
 #get online version
-ulimit -c unlimited
+#ulimit -c unlimited
 test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
 
 if test -n "$2" ; then 
@@ -38,20 +38,9 @@ if test -n "${TOP}"
    then export DIM_DNS_NODE=mona08;
 fi
 
-if [[ ${PARENT} == "mona09" ]]
-   then export DIM_DNS_NODE=mona09;
-fi   
-
 echo "options "${OPTIONS} "dim dns node "${DIM_DNS_NODE}  
 . ./setupOnline.sh 
-
-if [[ ${PARENT} == "cald07" ]]
-  then ${gaudi_exe3} -options=../options/SaverCalibrationfarm.opts &
-  else 
-     if [[ ${PARENT} == "mona09" ]]
-       then exec -a ${UTGID} ${gaudi_exe3} -options=../options/SaverRecBrunel.opts &
-      #else exec -a ${UTGID} ${gaudi_exe3} -options=../options/Saver.opts &
-    #  else exec -a ${UTGID} ${debug_exe} -options=../options/Saver.opts &  
-      else exec -a ${UTGID} ${CLASS1_TASK} -options=../options/Saver.opts &
-     fi 
-fi  
+if [[ ${PARTNAME} == "LHCb" ]]
+   then exec -a ${UTGID} ${CLASS1_TASK} -options=../options/pooper.opts &
+   else exec -a ${UTGID} ${CLASS1_TASK} -options=/group/online/dataflow/templates/options/FSMDummyTask.opts &
+fi

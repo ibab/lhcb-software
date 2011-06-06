@@ -17,7 +17,7 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "MEP" };
 //MEPManager.MapUnusedBuffers          = false;
 Runable.MEPBuffers       = 3;          // concurrently built events
-Runable.InitialMEPReqs   = 1;
+Runable.InitialMEPReqs   = 3;
 Runable.maxBadPktRatio   = 0.1;        // maximum fraction of erroneous packets during 
                                        // sampling time before going into state ERROR - 
                                        // this is currently disabled
@@ -27,7 +27,7 @@ Runable.partitionID      = @OnlineEnv.PartitionID;
 //Runable.MEPBufSize       = 21000000; // maximum MEP, make sure that there is
                                        // enough space declared in MEPInit.opts
                                        // you will need MEPBuffers * MEPBufsize
-Runable.MEPBufSize       = 4000000;    // Test to see whether better CPU usage of farm can be achieved. BJ 6/10/2010
+Runable.MEPBufSize       = 8000000;    // Test to see whether better CPU usage of farm can be achieved. BJ 6/10/2010
 Runable.sockBuf          = 30000000;   // this must be supported by the kernel! 
 Runable.refCount         = 2;
 Runable.RTTCCompat       = false;      // for RTTC backward compatibility
@@ -35,3 +35,4 @@ Runable.maxEventAge      = 100000;
 Runable.MEPRecvTimeout   = 5;
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
+MonitorSvc.CounterUpdateInterval = 5;

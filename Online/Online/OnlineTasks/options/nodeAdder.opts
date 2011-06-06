@@ -17,7 +17,7 @@ Runable.Wait                         = 3;  // 1 of running as daemon (Class1 tas
 
 MessageSvc.fifoPath                  = "$LOGFIFO";
 MessageSvc.LoggerOnly                = true;  // Set to false for stdout
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MessageSvc.OutputLevel               = 3;//@OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
 
 GauchoHistAdder.MyName            = "<node>_GauchoJob";
