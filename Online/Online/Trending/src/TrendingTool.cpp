@@ -237,8 +237,9 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
     if ( 0 == m_dir.size ) {       // No directory block. Create one...
       fseek( m_file, m_dirAddressInFile, SEEK_SET );
       createDirectoryRecord( &m_dir, now );
-      m_data.size = 0;
-      m_ptData    = 0;
+      m_data.size      = 0;
+      m_ptData         = 0;
+      m_data.data[0].i = 0;
     }
   }
   debug() << "write: Directory address in file = " << m_dirAddressInFile
@@ -256,6 +257,8 @@ bool TrendingTool::write( std::vector<float> data, int now ) {
     if ( 0 == m_dir.entry[m_ptDir].firstTime ) { // No data block at all
       m_dataAddressInFile = ftell( m_file );  // As we have just read the directory, this is the free position...
       m_data.size = 0;
+      m_ptData    = 0;
+      m_data.data[0].i = 0;
     } else {
       while ( m_data.data[m_ptData].i < now &&
               m_data.data[m_ptData].i > 0 ) unpackAnEvent( );

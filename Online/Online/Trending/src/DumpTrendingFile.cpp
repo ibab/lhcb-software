@@ -167,10 +167,12 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
           std::cout << " ** Mismatch time ordering: Previous " << firstTime << " current " << time << " = "
                     << m_trend->timeString( time ) << " read " << nbData << " values, next pointer " << m_ptData 
                     << std::endl;
-        }
-        if ( time - firstTime > 3600 ) {
+        } else if ( time - firstTime > 3600 ) {
           std::cout << " ** Gap>1 hour from " << firstTime << " = " << m_trend->timeString( firstTime ) << std::endl
                     << "                 to " << time << " = " << m_trend->timeString( time ) << std::endl;
+        } else if ( verbose ) {
+          std::cout << "     data at " << time << " = " << m_trend->timeString( time ) 
+                    << " nb " << nbData << std::endl;
         }
         firstTime = time;
       }
