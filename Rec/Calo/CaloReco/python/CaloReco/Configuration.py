@@ -770,8 +770,11 @@ class CaloLines(LHCbConfigurableUser):
         'L0Calo2Calo'        : True,
         'ProtoOnDemand'      : False,
         'Sequencer'          : None,
-        'OutputLevel'        : INFO
+        'OutputLevel'        : INFO,
+        'HighEtProtoPPrefix' : '',
+        'LowEtProtoPPrefix'  : ''
         }
+
     
 
 
@@ -842,7 +845,12 @@ class CaloLines(LHCbConfigurableUser):
                                )
             
             addAlgs( caloLines, hp.caloSequence() )
-            addAlgs( caloLines, hp.neutralProtoSequence(protoPrefix = name+'HighPhotonProtoP')  )
+
+            if self.getProp('HighEtProtoPPrefix') == '' :
+                hploc = name+'HighPhoton/ProtoP'
+            else :
+                hploc = self.getProp('HighEtProtoPPrefix')
+            addAlgs( caloLines, hp.neutralProtoSequence(protoPrefix = hploc )  )
 
         if self.getProp('LowPhoton') :
             context = self.getProp('Context')
@@ -859,8 +867,12 @@ class CaloLines(LHCbConfigurableUser):
                                ,MakeExternalClustersWithTag = tagLowP
                                )
             addAlgs( caloLines , lp.caloSequence() )
-            addAlgs( caloLines ,  lp.neutralProtoSequence(protoPrefix=name+'LowPhotonProtoP'))
-
+            if self.getProp('LowEtProtoPPrefix') == '' :
+                lploc = name+'LowPhoton/ProtoP'
+            else :
+                lploc = self.getProp('LowEtProtoPPrefix')
+            addAlgs( caloLines ,  lp.neutralProtoSequence(protoPrefix=lploc))
+            
 
         if self.getProp('LowElectron') :
             context = self.getProp('Context')
@@ -878,7 +890,11 @@ class CaloLines(LHCbConfigurableUser):
                                ,MakeExternalClustersWithTag = tagLowE
                                )
             addAlgs( caloLines , le.caloSequence())
-            addAlgs( caloLines , le.chargedProtoSequence(protoPrefix=name+'LowElectronProtoP'))
+            if self.getProp('LowEtProtoPPrefix') == '' :
+                leloc = name+'LowElectron/ProtoP'
+            else :
+                leloc = self.getProp('LowEtProtoPPrefix')
+            addAlgs( caloLines , le.chargedProtoSequence(protoPrefix=leloc))
 
 
         caloLines.IgnoreFilterPassed = True
