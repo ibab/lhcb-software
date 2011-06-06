@@ -121,6 +121,8 @@ void SaveTimer::SavetoFile(void *buff)
   }
   TH1 *r;
   MonHist h;
+  Bool_t dirstat = TH1::AddDirectoryStatus();
+  TH1::AddDirectory(kFALSE);
   while (buff <bend)
   {
     DimBuffBase *b = (DimBuffBase*)buff;
@@ -161,32 +163,18 @@ void SaveTimer::SavetoFile(void *buff)
         switch(b->type)
         {
           case H_1DIM:
-          {
-            m_Adder->Lock();
-            th1 = (TH1D*)r->Clone(hname->at(hname->size()-1).c_str());
-            th1->Write(hname->at(hname->size()-1).c_str());
-            m_Adder->UnLock();
-            break;
-          }
           case H_2DIM:
-          {
-            m_Adder->Lock();
-            th2=(TH2D*)r->Clone(hname->at(hname->size()-1).c_str());
-            th2->Write(hname->at(hname->size()-1).c_str());
-            m_Adder->UnLock();
-            break;
-          }
           case H_PROFILE:
           case H_RATE:
           {
             m_Adder->Lock();
-            tp = (TProfile*)r->Clone(hname->at(hname->size()-1).c_str());
-            tp->Write(hname->at(hname->size()-1).c_str());
+            r->Write(hname->at(hname->size()-1).c_str());
             m_Adder->UnLock();
             break;
           }
         }
         m_Adder->Lock();
+        deletePtr(r);
         h.FreeDeser();
         m_Adder->UnLock();
 //        r->Write(ptok);
@@ -205,6 +193,7 @@ void SaveTimer::SavetoFile(void *buff)
       }
     }
   }
+  TH1::AddDirectory(dirstat);
   m_Adder->Lock();
   delete f;
   m_Adder->UnLock();

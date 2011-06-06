@@ -134,6 +134,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   }
   TH1 *r;
   MonHist h;
+  Bool_t dirstat = TH1::AddDirectoryStatus();
   TH1::AddDirectory(kFALSE);
   while (buff <bend)
   {
@@ -196,12 +197,13 @@ void TaskSaveTimer::SavetoFile(void *buff)
       }
     }
   }
+  TH1::AddDirectory(dirstat);
   m_subsys->Lock();
   delete f;
   m_subsys->unLock();
   if (m_filenamesvc != 0)
   {
-    DimLock l;
+//    DimLock l;
     m_filenamesvc->updateService(fn);
   }
 }

@@ -297,7 +297,7 @@ StatusCode AdderSvc::finalize()
   releasePtr(m_phistsvc);
   releasePtr(m_pMonitorSvc);
   //printf("AdderSvc: Locking DIM\n");
-  DimLock l;
+//  DimLock l;
   if (m_SaveTimer != 0)
   {
     m_SaveTimer->Stop();

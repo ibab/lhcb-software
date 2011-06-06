@@ -13,7 +13,7 @@ AddTimer::~AddTimer( )
 
 void AddTimer::timerHandler ( void )
 {
-  DimLock l;
+//  DimLock l;
 //  dim_lock();
 //  try
 //  {
