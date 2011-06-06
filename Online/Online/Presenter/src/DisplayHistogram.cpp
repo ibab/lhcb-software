@@ -565,8 +565,9 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
        0 < m_rootHistogram->GetEntries() ) {
     std::string Name;
     std::vector<float> initValues;
+    //std::vector<float> fitRanges;
     gStyle -> SetOptFit( 1111111 ) ;
-    m_onlineHist->getFitFunction( Name, &initValues);
+    m_onlineHist->getFitFunction( Name, &initValues );// , &fitRanges);
 
     std::cout << "fitting histogram " << m_identifier
               << " with function "<< Name << std::endl;
@@ -579,7 +580,7 @@ void DisplayHistogram::fit ( OMAlib* analysisLib ) {
                 << std::endl ;
       return ;
     }
-    requestedFit->fit(m_rootHistogram, &initValues);
+    requestedFit->fit(m_rootHistogram, &initValues ); //, &fitRanges);
   }
 }
 

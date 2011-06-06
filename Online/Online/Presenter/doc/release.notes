@@ -4,11 +4,14 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!=============================== 2011-06-06 v3r0 =============================
+! 2011-06-06 - Olivier Callot
+ - NextRun is not working. Waiting for new RunDB web functions.
+
 ! 2011-05-31 - Olivier Callot
  - Set the reference files for offline as <stream>/<processing>/<tck>_1.root
  - Fix the time interval access: Was shifter by one step for savesets.
 
-!=============================== 2011-05-31 v3r0 =============================
 ! 2011-05-31 - Olivier Callot
  - Support a port number in the ProblemDb web address
 

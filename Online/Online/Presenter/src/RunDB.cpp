@@ -94,6 +94,7 @@ int RunDB::getLastRun( ) {
 int RunDB::getNextRun( ) {
 
   int nextRun = 0 ;
+  int currRun = m_currentRunNumber;
 
   std::cout << "getNextRun in run database: Open webstream at " << m_address << std::endl;
 
@@ -109,6 +110,7 @@ int RunDB::getNextRun( ) {
   webStream << "GET /api/search/?rows=1" ;
   if ( getPartition() != "" ) webStream << "&partition=" << getPartition() ;
   if ( getDestination() != "" ) webStream << "&destination=" << getDestination() ;
+
   webStream << "&starttime="
             << boost::posix_time::to_iso_extended_string( boost::posix_time::time_from_string( m_currentRunEndTime ) ) ;
   webStream << " HTTP/1.0\r\n"
@@ -124,47 +126,12 @@ int RunDB::getNextRun( ) {
     return nextRun ;
   }
 
-  int total = 0 ;
   // Check first the number of candidate run:
   while ( std::getline( webStream , line ) ) {
-    nextRun = runFromWebLine( line );
+    currRun = runFromWebLine( line );
     if ( 0 < nextRun  ) break;
   }
   webStream.close() ;
-
-  std::cout << "getNextRun2 in run database: Open webstream at " << m_address << std::endl;
-
-  boost::asio::ip::tcp::iostream webStream2( m_address , "http" ) ;
-
-  if ( ! webStream2 ) {
-    std::cerr << "Cannot open the RunDb Database at " << m_address
-              << std::endl ;
-    return nextRun ;
-  }
-
-  // Call again web server to get only next run
-  // Send HTTP request to web server
-  if ( total > 1 ) total = total - 1 ;
-  webStream2 << "GET /api/search/?rows=" << total << "&start=" << (total-1) ;
-  if ( getPartition() != "" ) webStream2 << "&partition=" << getPartition() ;
-  if ( getDestination() != "" ) webStream2 << "&destination=" << getDestination() ;
-  webStream2 << "&starttime="
-             << boost::posix_time::to_iso_extended_string( boost::posix_time::time_from_string( m_currentRunEndTime ) ) ;
-  webStream2 << " HTTP/1.0\r\n"
-             << "Host:" << m_address << "\r\n"
-             << "\r\n" << std::flush ;
-
-  // Check that the web server answers correctly
-  std::getline( webStream2 , line ) ;
-  if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
-    std::cerr << "RunDB server does not answer OK :" << line << std::endl;
-    return nextRun ;
-  }
-
-  while ( std::getline( webStream2 , line ) ) {
-    nextRun = runFromWebLine( line );
-    if ( 0 < nextRun  ) return nextRun;
-  }
 
   return nextRun ;
 }
@@ -359,5 +326,5 @@ int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
       return 0 ;
     }
   }
-  return 0;
+  return 0 ;
 }

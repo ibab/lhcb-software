@@ -496,7 +496,7 @@ void PresenterPage::uploadReference ( OMAlib* analysisLib, PresenterInformation&
       }
     }
     if ( !f ) {
-      if ( "1" != startRunStr ) {
+      if ( "1" != std::string( startRunStr ) ) {
         fileName = root + "/" + presInfo.currentTCK() + "_1.root";
         std::cout << "*** Try reference file " << fileName << std::endl;
         f = new TFile( fileName.c_str(),"READ");
