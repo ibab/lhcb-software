@@ -1006,8 +1006,8 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
           std::string myTag = (*itT).tag;
           unsigned int barIndx = myTag.find( "|" );
           if ( barIndx < myTag.size() ) {
-            (*itT).tag    = myTag.substr( barIndx+1 );
-            (*itT).tagDen = myTag.substr( 0, barIndx );
+            (*itT).tagDen = myTag.substr( barIndx+1 );
+            (*itT).tag    = myTag.substr( 0, barIndx );
             std::cout << "  num='" << (*itT).tag << "'";
             if ( 0 <= (*itT).tagDen ) std::cout << " den='" << (*itT).tagDen << "'";
             std::cout << std::endl;
