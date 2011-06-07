@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-06-07 - Olivier Deschamps
+ - NeutralProtoPAlg : reduce verbosity in case of partial Calo reconstruction
+
+
 !========================= GlobalReco v6r37 2011-04-27 =========================
 ! 2011-04-16 - Chris Jones
  - Remove from ChargedProtoParticleMaker the option to reuse an existing

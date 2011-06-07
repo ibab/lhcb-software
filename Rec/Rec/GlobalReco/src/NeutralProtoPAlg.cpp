@@ -108,7 +108,7 @@ StatusCode NeutralProtoPAlg::execute(){
 
     // Load the CaloHypo objects if the container exists
     if ( !exist<LHCb::CaloHypos>( *loc )){
-      Warning ( "No CaloHypo at '" + (*loc) + "'",StatusCode::SUCCESS).ignore() ;
+      debug()<< "No CaloHypo at '" << (*loc) + "'"<<endmsg ;
       counter("No " + (*loc) + " container") += 1;
       continue;
     }
