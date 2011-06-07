@@ -25,7 +25,7 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"Histograms"       : "OfflineFull"
         ,"WithMC"           : False     # set to True to use MC truth
         ,"MinTrackMomentum" : [ 5, 5, 10 ] # momentum cut in GeV, use -1 for default
-        ,"DeltaThetaRange"  : [ 0.04, 0.01, 0.005 ]
+        ,"DeltaThetaRange"  : [ 0.04, 0.005, 0.005 ]
         ,"HPDList"          : [ [], [], [] ] # list of HPDs for histograms
         }
 

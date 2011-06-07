@@ -4,6 +4,11 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+!========================= RichAlignment v1r3p1 2011-04-27 =========================
+! 2011-06-07 - Matt Coombes
+ - Changed default Rich1 Histogram ranges from 10mrads to 5mrads
+ - Increased Bins in dThetavphiRec plots to help alignment
+
 !========================= RichAlignment v1r3 2011-04-27 =========================
 ! 2011-04-12 - Chris Jones
  - Fix some bugs in the order of arguments passed to richHisto2D
