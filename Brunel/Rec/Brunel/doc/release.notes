@@ -11,8 +11,8 @@ Purpose: LHCb reconstruction program
 	. Add test of Brunel().WriteFSR=False to brunel.brunel-mc09-notruth test
   . Remove import of obsolete earlyData.py options from test-big.py
   . Add brunel2010magoffroot, brunel2011magdownroot,  brunel-bigeventsroot,
-    brunel-mc10-withtruthroot replacing POOL with ROOT persistency and comparing
-    with corresponding POOL tests. Not yet commissioned
+    brunel-mc10-withtruthroot, readdstfsrroot, replacing POOL with ROOT 
+    persistency and comparing with corresponding POOL tests.
 
 - Changes to references to reflect changes in Brunel v40r0 output:
   . Put back "L1SizeMonitoring" from the default list of monitors following
