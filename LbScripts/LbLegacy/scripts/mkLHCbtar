@@ -144,7 +144,7 @@ def make_tar(pname, pversion, binary=''):
     compMiscLinuxIa32 = 'i686-slc'
 
     # exclude following files and directories from source tar file
-    exclude_source = ['install.history', 'core.*', 'html', 'Visual', '*.pyc', '*.pyo', 'NOT_READY',
+    exclude_source = ['install.history', 'install.*.history', 'core.*', 'html', 'Visual', '*.pyc', '*.pyo', 'NOT_READY',
                       compLinux + '*',
                       compWIN32 + '*',
                       altcompWIN32 + '*',
