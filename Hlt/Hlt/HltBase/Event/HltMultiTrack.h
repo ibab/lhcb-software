@@ -30,7 +30,7 @@ namespace Hlt
   // Namespace for locations in TDS
   namespace MultiTrackLocation 
   {
-    static const std::string& Default = "Hlt/MultiTracks";
+    const std::string Default = "Hlt/MultiTracks";
   }
   // ==========================================================================
   /** @class MultiTrack MultiTrack.h

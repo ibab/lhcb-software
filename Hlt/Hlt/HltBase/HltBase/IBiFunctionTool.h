@@ -18,7 +18,7 @@
 namespace LHCb {
   class Track;
   class RecVertex;
-};
+}
 // ============================================================================
 /** @class IBiFunctionTool IBiFunctionTool.h HltBase/IBiFunctionTool.h
  *  

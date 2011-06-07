@@ -32,7 +32,7 @@ namespace Hlt
   // Namespace for locations in TDS
   namespace L0DiMuonCandidateLocation 
   {
-    static const std::string& Default = "Hlt/DiTracks";
+    const std::string Default = "Hlt/DiTracks";
   }
   // ==========================================================================
   /** @class L0DiMuonCandidate L0DiMuonCandidate.h

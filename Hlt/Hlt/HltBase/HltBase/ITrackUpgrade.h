@@ -15,7 +15,7 @@ namespace LHCb {
   class Track;
   class State;
   class LHCbID;
-};
+}
 
 
 static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade" , 3 , 0 );

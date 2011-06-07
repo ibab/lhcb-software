@@ -28,8 +28,8 @@ namespace {
         HltAlgorithm& m_parent;
         bool m_flag;
     };
-};
-
+}
+// ============================================================================
 HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator,
                             bool requireInputsToBeValid )

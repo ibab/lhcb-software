@@ -63,7 +63,8 @@ namespace Hlt
     /** @var Default 
      *  The default TES-location of HLT-Stages 
      */
-    static const std::string& Default = "Hlt/Stages";
+    const std::string Default = "Hlt/Stages" ;
+    // =========================================================================
   }
   // ===========================================================================
   /** @class Stage Event/HltStage.h

@@ -13,7 +13,7 @@
 namespace LHCb {
   class L0MuonCandidate;
   class Track;
-};
+}
 
 static const InterfaceID IID_IMuonSeedTool ( "IMuonSeedTool", 1, 0 );
 

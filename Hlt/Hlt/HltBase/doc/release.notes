@@ -4,6 +4,17 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2011-06-07 - Vanya Belyaev
+
+ - fix ICC warninsg that affects Phys/LoKiTrigger 
+
+! 2011-06-06 - Vanya Belyaev
+
+ - fix few ICC warnings
+
+ - cmt/requirements 
+    version increment v12r1p1 
+
 !========================== HltBase v12r1 2011-03-06 ===================
 ! 2011-03-04 - Roel Aaij
  - Add instantiations to the dictionary for:

@@ -13,7 +13,7 @@
 namespace LHCb {
   class L0CaloCandidate;
   class Track;
-};
+}
 
 static const InterfaceID IID_ITrackL0CaloMatchTool ( "ITrackL0CaloMatchTool", 1, 0 );
 

@@ -11,9 +11,9 @@
 #include "HltBase/ParabolaHypothesis.h"
 
 namespace LHCb {
-    class State;
-    class Track;
-};
+  class State;
+  class Track;
+}
 
 static const InterfaceID IID_ITrackConfirmTool ( "ITrackConfirmTool", 1, 0 );
 

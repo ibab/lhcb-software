@@ -49,7 +49,7 @@ namespace Hlt
     /** @var Default 
      *  The defaull TES-location of HLT-candidates 
      */
-    static const std::string& Default = "Hlt/Candidates";
+    const std::string Default = "Hlt/Candidates";
     // =========================================================================
   } //                                   end of namespace Hlt::CandidateLocation 
   // ===========================================================================

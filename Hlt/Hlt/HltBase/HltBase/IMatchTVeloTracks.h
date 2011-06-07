@@ -6,7 +6,7 @@
 #include "GaudiKernel/IAlgTool.h"
 
 //forward declarations
-namespace LHCb { class Track; };
+namespace LHCb { class Track; }
 
 static const InterfaceID IID_IMatchTVeloTracks ( "IMatchTVeloTracks", 1, 1 );
 

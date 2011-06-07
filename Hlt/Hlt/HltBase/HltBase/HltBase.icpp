@@ -58,7 +58,7 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
                                            : Gaudi::Histo1DDef(title,x0,xf,nbins);
   EBASE::debug() << " booking histogram  " << hd << endreq;
   return EBASE::book(hd);
-};
+}
 
 // ============================================================================
 // accessor to Hlt Registration Service 

@@ -1,6 +1,11 @@
 #ifndef DICT_HLTBASEDICT_H 
 #define DICT_HLTBASEDICT_H 1
-
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:2259) // non-pointer conversion ... may lose significant bits
+#pragma warning(push)
+#endif
+// ============================================================================
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/ITrackConfirmTool.h"
 #include "HltBase/ITrackL0CaloMatchTool.h"
@@ -21,7 +26,16 @@
 
 #include "HltBase/HltUtils.h"
 #include "HltBase/ITrack2CandidateMatch.h"
-
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177)  //  variable ... was declared but never referenced
+#pragma warning(disable:191)  // type qualifier is meaningless on cast type
+#endif
+// ============================================================================
 namespace 
 {
   struct __Instantiations

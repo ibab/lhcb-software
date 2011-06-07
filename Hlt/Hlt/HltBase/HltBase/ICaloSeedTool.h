@@ -15,7 +15,7 @@ namespace LHCb
 {
   class L0CaloCandidate;
   class Track;
-};
+}
 
 
 /** @class ICaloSeedTool ICaloSeedTool.h HltBase/ICaloSeedTool.h
