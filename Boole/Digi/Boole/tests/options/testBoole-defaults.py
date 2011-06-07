@@ -2,5 +2,5 @@
 from Boole.Configuration import *
 
 Boole().EvtMax   = 10
-Boole().Outputs  = ["DIGI","MDF","L0ETC"] # Test all output types
-Boole().Monitors = ["SC","FPE"]           # Add StatusCode and FPE checks
+Boole().Outputs  = ["DIGI","MDF"] # Test all output types
+Boole().Monitors = ["SC","FPE"]   # Add StatusCode and FPE checks

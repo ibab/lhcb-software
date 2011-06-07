@@ -63,7 +63,7 @@ class Boole(LHCbConfigurableUser):
        ,'TAEPrev'      : """ Number of Prev Time Alignment Events to generate """
        ,'TAENext'      : """ Number of Next Time Alignment Events to generate """
        ,'TAESubdets'   : """ Subdetectors for which TAE are enabled """
-       ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
+       ,'Outputs'      : """ List of outputs: ['MDF','DIGI'] (default 'DIGI') """
        ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default','Extended'] """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
        ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
@@ -632,7 +632,7 @@ class Boole(LHCbConfigurableUser):
         Set up output stream according to output data type
         """
 
-        knownOptions = ["MDF","DIGI","L0ETC"]
+        knownOptions = ["MDF","DIGI"]
         outputs = []
         for option in self.getProp("Outputs"):
             if option not in knownOptions:
@@ -664,17 +664,6 @@ class Boole(LHCbConfigurableUser):
             self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType"])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
-
-        if "L0ETC" in outputs:
-            from Configurables import L0Conf
-            seq = GaudiSequencer("L0ETC")
-            ApplicationMgr().OutStream += [ seq ]
-            L0Conf().ETCSequencer = seq
-            MyWriter = TagCollectionStream( "WR" )
-            if not MyWriter.isPropertySet( "Output" ):
-                L0Conf().ETCOutput = self.getProp("DatasetName") + "-L0ETC.root"
-            if self.getProp( "NoWarnings" ) and not MyWriter.isPropertySet( "OutputLevel" ):
-                MyWriter.OutputLevel = INFO
 
         if "MDF" in outputs:
             # Make sure that file will have no knowledge of other nodes
