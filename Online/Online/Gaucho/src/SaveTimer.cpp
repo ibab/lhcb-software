@@ -137,12 +137,6 @@ void SaveTimer::SavetoFile(void *buff)
         m_Adder->Lock();
         r = (TH1*)(h.de_serialize(buff));
         m_Adder->UnLock();
-//        TProfile *tp = (TProfile*)r;
-//        TH1D *th1 = (TH1D*)r;
-//        TH2D *th2 = (TH2D*)r;
-        TProfile *tp;
-        TH1D *th1;
-        TH2D *th2;
         char hnam[4096];
         int ntok;
         ntok = 0;
