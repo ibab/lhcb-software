@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-06-07 - Vanya Belyaev
+
+ - add simple module with decorations form some ROOT classes 
+ - cmt/requirements 
+    version increment to v2r1 
+
 ! 2011-04-30 - Vanya Belyaev
 
  - add python module for python selector 
