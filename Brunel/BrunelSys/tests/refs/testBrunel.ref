@@ -2,9 +2,10 @@
 # <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
-# |-DatasetName       = 'Brunel'
+# |-Persistency       = None
 # |-Histograms        = 'OfflineFull'
 # |-SkipEvents        = 0
+# |-DatasetName       = 'Brunel'
 # |-ProductionMode    = False
 # |-PackType          = 'TES'
 # |-WriteLumi         = False
@@ -18,10 +19,10 @@
 # |-PrintFreq         = 1
 # |-OutputLevel       = 3
 # |-EvtMax            = 0  (default: -1)
-# |-CondDBtag         = ''
+# |-Simulation        = False
 # |-Context           = 'Offline'
 # |-RecoSequence      = None
-# |-Simulation        = False
+# |-CondDBtag         = ''
 # |-MCLinksSequence   = ['L0', 'Unpack', 'Tr']  (default: ['L0', 'Unpack', 'Tr'])
 # |-InitSequence      = ['Reproc', 'Brunel']  (default: None)
 # |-DataType          = '2011'
@@ -75,7 +76,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v39r4
-                                          running on lxbuild163.cern.ch on Fri May 27 16:19:23 2011
+                                          running on lxbuild163.cern.ch on Tue Jun  7 10:38:42 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -85,7 +86,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -500,11 +501,11 @@ Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context
 OutputDSTSeq         INFO Member list: TrackToDST, GaudiSequencer/PackDST, with context 'Offline'
 PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, DataPacking::Pack<LHCb::WeightsVectorPacker>/PackPVWeights, PackTwoProngVertex, PackTrack/PackMuonTracks, with context 'Offline'
 CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, with context 'Offline'
-FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FSRWriterOutput...   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
+FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSROutputStream...   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 ApplicationMgr       INFO Application Manager Stopped successfully
@@ -622,7 +623,7 @@ MuonTrackFitter   SUCCESS Number of counters : 1
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 MuonTrackAligMo...SUCCESS Booked 64 Histogram(s) : 1D=42 2D=2 1DProf=20
 MuEffMonitor      SUCCESS Booked 34 Histogram(s) : 1D=31 2D=3
-VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
+VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
 VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
 TrackVertexMonitorSUCCESS Booked 23 Histogram(s) : 1D=13 1DProf=10
@@ -643,11 +644,10 @@ ChargedProtoPMoni    INFO  # Tracks Per Event         |    Track     |     RICH 
 ChargedProtoPMoni    INFO ----------------------------------------------------------------------------------------------------------------------------------------------------
 ChargedProtoPMoni    INFO ====================================================================================================================================================
 MuMonitor         SUCCESS Booked 4 Histogram(s) : 1D=3 1DProf=1
-FSRWriterOutput...   INFO Set up File Summary Record
-IODataManager        INFO Referring to dataset Brunel.dst by its file ID:56EC9375-6C88-E011-892E-003048C9CD62
-RootDBase.open    SUCCESS Brunel.dst File version:52800
-FSRWriterOutput...   INFO Events output: 1
 DstWriter            INFO Events output: 0
+FSROutputStream...   INFO Set up File Summary Record
+RootDBase.open    SUCCESS Brunel.dst File version:52800
+FSROutputStream...   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
 
@@ -657,7 +657,6 @@ TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
 
 TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ToolSvc              INFO Removing all tools created by ToolSvc
 SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronLCorrection') for SingleElectronRec.LCorrection
 SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronSCorrection') for SingleElectronRec.SCorrection
@@ -675,7 +674,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1034,8 +1033,8 @@ TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.000 
 TimingAuditor.T...   INFO      PackPVWeights            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackMuonTracks           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  FSRWriterOutputStreamDstWrite|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO  FSROutputStreamDstWriter     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
