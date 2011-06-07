@@ -416,7 +416,7 @@ void DailyReport::extractFromElog ( std::string logbook, std::string system, boo
 }
 //=============================================================================
 
-extern "C" int main(int argc, char* argv[]) {
+extern "C" int main(int argc, char** ) {
   DailyReport report;
   report.build( argc );
   return 1;
