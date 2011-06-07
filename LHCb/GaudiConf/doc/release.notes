@@ -2,6 +2,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-07 - Rob Lambert
+ - Fixed bug in detecting known streams, allConfigurables holds names,
+   not fullNames, for some reason
+ - Fixed bug in MDF writing, MDF files are written with the RawCnvSvc
+ - Updated tests accordingly
+
 ! 2011-06-06 - Marco Cattaneo
  - Add "WriteFSR" slot to DstConf and propagate to IOHelper
 

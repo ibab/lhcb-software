@@ -2,7 +2,9 @@ from GaudiConf import IOHelper
 
 
 def testthisioh(ioh):
-    print ioh.isRootSupported()
+    print 'isRootSupported? ', ioh.isRootSupported()
+
+    print '- filedressing tests'
     
     ifi='PFN:itest.txt'
     dressedI=ioh.dressFile(ifi,"I")
@@ -23,7 +25,8 @@ def testthisioh(ioh):
     
     if ofi!=undressedO:
         print dressedO,"!=",undressedO
-    
+
+    print "- input assignment tests"
     
     ioh.inputFiles(['test1.blah','test2.blah'])
     from Gaudi.Configuration import EventSelector
@@ -34,6 +37,8 @@ def testthisioh(ioh):
     import commands
     print commands.getstatusoutput('python -c "'+ioh.selectorString().replace('"','\\"')+'"')
     print commands.getstatusoutput("python -c '"+ioh.helperString()+"'")
+
+    print "- change service tests"
     
     ioh.changeServices()
     print ioh.activeServices()
@@ -43,7 +48,8 @@ for persistency in [None,'POOL','ROOT','MDF']:
     print '============================='
     print persistency
     print '============================='
-    
+
+    print "- input conversion tests "
     #preload with MDF
     iohm=IOHelper("MDF","MDF")
     iohm.inputFiles(['IAMdf.mdf','IALSOAMdf.blah'])

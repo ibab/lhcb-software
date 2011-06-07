@@ -1,6 +1,7 @@
 =============================
 None
 =============================
+- input conversion tests
 ["DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -13,9 +14,11 @@ IOHelper("MDF").inputFiles([
     "IALSOAMdf.blah"
     ])
 
-True
+isRootSupported?  True
+- filedressing tests
 DATAFILE='PFN:itest.txt' TYP='POOL_ROOT' OPT='READ'
 DATAFILE='PFN:otest.txt' TYP='POOL_ROOTTREE' OPT='REC'
+- input assignment tests
 ["DATAFILE='test1.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -30,10 +33,12 @@ IOHelper().inputFiles([
 
 (0, '')
 (0, '')
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2adeb7db79b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>]
+- change service tests
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b2adc7048c0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>]
 =============================
 POOL
 =============================
+- input conversion tests
 ["DATAFILE='test1.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -52,9 +57,11 @@ IOHelper("MDF").inputFiles([
     "IALSOAMdf.blah"
     ])
 
-True
+isRootSupported?  True
+- filedressing tests
 DATAFILE='PFN:itest.txt' TYP='POOL_ROOT' OPT='READ'
 DATAFILE='PFN:otest.txt' TYP='POOL_ROOTTREE' OPT='REC'
+- input assignment tests
 ["DATAFILE='test1.blah' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -69,10 +76,12 @@ IOHelper().inputFiles([
 
 (0, '')
 (0, '')
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2adeb7db79b0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2adeb7fe6750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2adeb7fe6a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2adeb7fe6950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2adeb7fe6b50>]
+- change service tests
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b2adc7048c0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>]
 =============================
 ROOT
 =============================
+- input conversion tests
 ["DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -91,9 +100,11 @@ IOHelper("MDF").inputFiles([
     "IALSOAMdf.blah"
     ])
 
-True
+isRootSupported?  True
+- filedressing tests
 DATAFILE='PFN:itest.txt' SVC='Gaudi::RootEvtSelector' OPT='READ'
 DATAFILE='PFN:otest.txt' SVC='RootCnvSvc' OPT='REC'
+- input assignment tests
 ["DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -108,10 +119,12 @@ IOHelper().inputFiles([
 
 (0, '')
 (0, '')
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x1bd42e30>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1bd43510>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x1bd42e30>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1bd43510>]
+- change service tests
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x4f4d960>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4f4ef00>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x4f4d960>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4f4ef00>]
 =============================
 MDF
 =============================
+- input conversion tests
 ["DATAFILE='test1.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='IAMdf.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='IALSOAMdf.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -130,9 +143,11 @@ IOHelper("MDF").inputFiles([
     "IALSOAMdf.blah"
     ])
 
-True
+isRootSupported?  True
+- filedressing tests
 DATAFILE='PFN:itest.txt' SVC='LHCb::MDFSelector' OPT='READ'
-DATAFILE='PFN:otest.txt' SVC='LHCb::MDFSelector' OPT='REC'
+DATAFILE='PFN:otest.txt' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+- input assignment tests
 ["DATAFILE='test1.blah' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='test2.blah' SVC='LHCb::MDFSelector' OPT='READ'"]
 from Gaudi.Configuration import EventSelector
 EventSelector().Input=[
@@ -147,4 +162,5 @@ IOHelper("MDF").inputFiles([
 
 (0, '')
 (0, '')
+- change service tests
 ['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', 'LHCb::RawDataCnvSvc']

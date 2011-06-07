@@ -76,7 +76,7 @@ class IOHelper(object):
     
     _outputSvcTypDict = { 'ROOT' : "SVC='RootCnvSvc'",
                           'POOL' : "TYP='POOL_ROOTTREE'",
-                          'MDF'  : "SVC='LHCb::MDFSelector'"
+                          'MDF'  : "SVC='LHCb::RawDataCnvSvc'"
                           }
     
     _knownPerServices = {'PoolDbCnvSvc': 'POOL',
@@ -227,6 +227,13 @@ class IOHelper(object):
         conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
         for k in conftodel:
             del allConfigurables[k]
+
+    def _fullNameConfigurables(self):
+        import Gaudi.Configuration as GaudiConfigurables
+        retdict={}
+        for key in GaudiConfigurables.allConfigurables:
+            retdict[GaudiConfigurables.allConfigurables[key].getFullName()]=GaudiConfigurables.allConfigurables[key]
+        return retdict
     
     def _configurableInstanceFromString(self, config):
         '''Get a configurable instance given only the string'''
@@ -234,12 +241,20 @@ class IOHelper(object):
         import Gaudi.Configuration as GaudiConfigurables
         
         #if it's in Gaudi.Configuration
+        
+        if config in self._fullNameConfigurables():
+            return self._fullNameConfigurables()[config]
+        
         if config in GaudiConfigurables.allConfigurables:
             return GaudiConfigurables.allConfigurables[config]
         
         config=config.replace('::','__')
         
         #if it's in Gaudi.Configuration
+        
+        if config in self._fullNameConfigurables():
+            return self._fullNameConfigurables()[config]
+        
         if config in GaudiConfigurables.allConfigurables:
             return GaudiConfigurables.allConfigurables[config]
         
@@ -580,7 +595,8 @@ class IOHelper(object):
         if ApplicationMgr().OutStream is not None:
             streams+=ApplicationMgr().OutStream
         
-        from Gaudi.Configuration import allConfigurables
+        allConfigurables=self._fullNameConfigurables()
+        #from Gaudi.Configuration import allConfigurables
         for key in allConfigurables:
             if self._isOutputStream(key):
                 if key not in streams and allConfigurables[key] not in streams:
@@ -636,6 +652,22 @@ class IOHelper(object):
         
         returns a list of algorithms to append to your sequencer.
         '''
+                
+        if self._outputPersistency=="MDF" and writeFSR:
+            print "# WARNING: FSRs can not be written to MDF file ",filename,  ". Set writeFSR to False to supress this warning"
+            writeFSR=False
+        
+        stype=self.detectStreamType(writer)
+        if stype not in ["DST", "ETC"] and writeFSR:
+            writeFSR=False
+            print "# WARNING: ",
+            if stype in ["FSR"]:
+                print "this is already an FSR-stream, it makes no sense to write _more_ FSRs to the file.",filename,
+            else:
+                print "FSRs can not be written to streams of the form ",stype,
+            
+            print ". Set writeFSR to False to supress this warning"
+            writeFSR=False
         
         #build up the filename
         filename=self.dressFile(filename,'O')
