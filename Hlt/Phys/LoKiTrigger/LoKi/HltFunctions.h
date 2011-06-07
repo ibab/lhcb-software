@@ -44,6 +44,11 @@ namespace LoKi
   // ==========================================================================
   namespace Tracks
   {  
+    // ========================================================================    
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:654) // overloaded virtual function is only partially overridden
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @class DistanceOfClosestApproach 
      *  Evaluate the distance of the closest approach between two tracks.
@@ -241,6 +246,10 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "TTrDA" ; }
     } ;    
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
     // ========================================================================
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================

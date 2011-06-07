@@ -5,6 +5,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-06-07 - Vanya Belyaev
+ - fix almost all ICC warnings 
+
 ! 2011-06-03 - Vanya Belyaev
 
  - BeamLineFunctions

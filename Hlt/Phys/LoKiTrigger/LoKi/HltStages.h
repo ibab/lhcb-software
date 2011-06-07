@@ -772,6 +772,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================    
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @var TS_TRACK 
      *  trivial predicate to check the type of Hlt::Stage 
@@ -1031,6 +1039,10 @@ namespace LoKi
      *  @date 2010-12-06
      */
     typedef LoKi::Stages::Cache2                                TS_CACHE_BOOL ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif    
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

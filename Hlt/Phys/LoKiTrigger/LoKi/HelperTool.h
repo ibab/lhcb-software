@@ -40,7 +40,7 @@ class GaudiAlgorithm ;
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -96,7 +96,7 @@ namespace LoKi
       {
         if ( 0 != object && 0 != container ) { container -> push_back ( object ) ; }
         return object ;
-      } ;
+      } 
       // ========================================================================
       template <class TYPE, class MAPPING>
       inline const TYPE* _add_ 

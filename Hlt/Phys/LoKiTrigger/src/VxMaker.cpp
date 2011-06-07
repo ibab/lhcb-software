@@ -2,6 +2,11 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:1572) // non-pointer conversion ... may lose significant bits
+#pragma warning(push)
+#endif
+// ============================================================================
 // HltBase 
 // ============================================================================
 #include "HltBase/HltUtils.h"
@@ -21,6 +26,11 @@
 #include "LoKi/VxMaker.h"
 #include "LoKi/Hlt1.h"
 #include "LoKi/Constants.h"
+#include  "LTTools.h"
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
 // ============================================================================
 /** @file 
  *
@@ -34,7 +44,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl

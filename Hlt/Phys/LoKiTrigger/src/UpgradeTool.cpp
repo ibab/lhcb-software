@@ -14,6 +14,11 @@
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:1572) // non-pointer conversion ... may lose significant bits
+#pragma warning(push)
+#endif
+// ============================================================================
 // HltBase 
 // ============================================================================
 #include "HltBase/HltUtils.h"
@@ -28,6 +33,9 @@
 // Local 
 // ============================================================================
 #include  "LTTools.h"
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
 // ============================================================================
 /** @file
  *  Implementation file for class LoKi::Hlt1::UpgradeTool
@@ -61,6 +69,10 @@ LoKi::Hlt1::UpgradeTool::UpgradeTool
 // anonymos namespace to hide some local tchnical details 
 namespace
 {
+  // ==========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //  function .. was declared but never referenced
+#endif
   // ==========================================================================
   /// move LHCbIDs
   inline void moveIDs ( const LHCb::Track* tr1 , LHCb::Track* tr2 )
@@ -530,8 +542,11 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   Hlt::Candidate::ConstVector&       output       , 
   LHCb::Track::Container*            otracks      ) const 
 {
+  //
   // FIXME, check/update this code to the latest "model"
-  return StatusCode::FAILURE;
+  // return StatusCode::FAILURE;
+  return Error  ( "FIXME, check/update this code to the latest" ) ;
+  // 
   //
   if ( 0 == input ) { return Error("Hlt::Candidate points to NULL") ; }
   const Hlt::Stage* stage = input->currentStage() ;
@@ -646,7 +661,9 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
   LHCb::Track::Container*            otracks      ) const 
 {
   // FIXME, check/update this code to the latest "model"
-  return StatusCode::FAILURE;
+  // return StatusCode::FAILURE;
+  return Error ( "FIXME, check/update this code to the latest ") ;
+  //
   //
   if ( 0 == input ) { return Error("Hlt::Candidate points to NULL") ; }
   const Hlt::Stage* stage = input->currentStage() ;

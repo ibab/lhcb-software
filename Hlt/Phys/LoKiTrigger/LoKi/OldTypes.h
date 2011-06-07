@@ -15,6 +15,11 @@
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:654) // overloaded virtual function is only partially overridden
+#pragma warning(push)
+#endif
+// ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
@@ -191,6 +196,10 @@ namespace LoKi
   } // end of namespace LoKi::Types 
   // ==========================================================================
 } // end of namespace LoKi
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
 // ============================================================================
 namespace LoKi 
 {

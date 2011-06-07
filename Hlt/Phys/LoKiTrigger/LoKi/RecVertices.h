@@ -160,6 +160,14 @@ namespace LoKi
   // ==========================================================================
   namespace Cuts 
   {
+    // ========================================================================    
+    // Suppress Intel compiler warnings about missing default constructor
+    // In this case the compiler generated constructor is fine, since there are
+    // no member data to be initialised
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854)
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @var RV_MAXDOCA 
      *  Simple evaluator for "DOCA-max" between all tracks in 
@@ -218,6 +226,10 @@ namespace LoKi
      *  @date 2010-12-07     
      */
     typedef LoKi::RecVertices::DOCACut                             RV_DOCACUT ;
+    // ========================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop)
+#endif
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

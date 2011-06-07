@@ -25,9 +25,18 @@
 // ============================================================================
 #include "KalmanFilter/FastVertex.h"
 // ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:177) //variable ... was declared but never referenced
+#pragma warning(push) 
+#endif
+// ============================================================================
 // Boost 
 // ============================================================================
 #include "boost/lambda/bind.hpp"
+// ============================================================================
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) 
+#endif
 // ============================================================================
 /** @file 
  *  implementation file for classed form the file LoKi/Hlt1Functions.h
