@@ -5,6 +5,9 @@ from LbUtils.afs.directory import AFSLock
 from LbUtils.Temporary import TempDir
 from LbUtils.Links import fixLinks
 from shutil import copy2
+
+from itertools import imap
+
 import fnmatch
 import tarfile
 import logging
@@ -22,10 +25,22 @@ supported_compression = ["gzip", "bzip", "plain"]
 
 compression_extensions = { "gzip"  : [ "tar.gz", "tgz" ],
                            "bzip2" : [ "tar.bz2", "tbz2" ],
-                           "plain" : [ "tar"] }
+                           "plain" : [ "tar" ] }
+
 
 class NoSuchTarCompression(Exception):
     pass
+
+def getCompressionTypeFromFileName(filename):
+    def oneTrue(pred, seq):
+        return True in imap(pred, seq)
+    comp = None
+    for t in compression_extensions.keys() :
+        if oneTrue(filename.endswith, compression_extensions[t]) :
+            comp = t
+
+    return comp
+
 
 
 def tarIgnore(src, files):
@@ -130,12 +145,10 @@ def openTar(filename, tar_mode="r", compression_type=None):
     filename is none was passed as arguments"""
     log = logging.getLogger()
     if compression_type is None :
-        for t in compression_extensions.keys() :
-            for e in compression_extensions[t] :
-                if filename.endswith("." + e) :
-                    compression_type = t
-                    log.debug("Compression type guessed from the file name: %s" % t)
-        if not compression_type :
+        compression_type = getCompressionTypeFromFileName(filename)
+        if compression_type :
+            log.debug("Compression type guessed from the file name: %s" % compression_type)
+        else :
             log.warning("Cannot guess compression type from the filename of %s." % filename)
             log.info("Using plain tar uncompressed")
             compression_type = "plain"

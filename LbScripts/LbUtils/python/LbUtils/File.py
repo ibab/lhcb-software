@@ -18,9 +18,10 @@ if "set" not in dir(__builtin__):
 
 if sys.version_info >= (2,6) :
     from hashlib import md5
+    from hashlib import sha1
 else :
     from md5 import md5
-
+    from sha import sha as sha1
 
 
 try:
@@ -191,15 +192,6 @@ def createMD5File(fname, md5fname, targetname=None):
     locked_file.close()
 
 
-#    lock = AFSLock(md5fname)
-#    lock.lock(force=False)
-#
-#    mdf = open(md5fname, "w")
-#    mdf.write("%s  %s" % (md5sum, targetname))
-#    mdf.flush()
-#    os.fsync(mdf.fileno())
-#    mdf.close()
-#    lock.unlock()
 
 
 def getMD5Info(md5fname):

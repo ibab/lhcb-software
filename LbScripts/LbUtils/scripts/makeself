@@ -54,7 +54,7 @@ class makeSelfScript(Script):
                           dest="template",
                           help="template to be used [default %default]")
 
-        parser.set_defaults(use_md5_check=True)
+        parser.set_defaults(use_md5_check=False)
         parser.add_option("--no-md5",
                           action="store_false",
                           dest="use_md5_check",
@@ -102,7 +102,8 @@ class makeSelfScript(Script):
 
         status = createSelfExtractFile(input_dir, target_filename, description, script, script_args,
                                        opts.compression_type, opts.target_dir, opts.use_temp_dir,
-                                       opts.template, opts.update_url, opts.script_version)
+                                       opts.template, opts.update_url, opts.script_version,
+                                       opts.use_sha1_check, opts.use_md5_check)
 
 
         return status

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ template for a self extracting script
 This file must not depend on other private python modules. It should rely only
-on a vanilla python 2.4.
+on a vanilla python >= 2.4.
 """
 
 import os
@@ -15,14 +15,18 @@ if __name__ == '__main__':
     pass
 
 
-_sef_description = "%(description)s"
-_sef_version = "%(version)s"
-_sef_update_url = "%(update_url)s"
-_sef_script = "%(script)s"
+_sef_description      = "%(description)s"
+_sef_version          = "%(version)s"
+_sef_update_url       = "%(update_url)s"
+_sef_script           = "%(script)s"
+_sef_script_args      = "%(script_args)"
 _sef_compression_type = "%(compression_type)s"
-_sef_target_dir = "%(target_dir)s"
-_sef_tarball = "%(tarball)s"
-_sef_use_temp = "%(use_temp)s"
+_sef_target_dir       = "%(target_dir)s"
+_sef_tarball          = "%(tarball)s"
+_sef_use_temp         = bool("%(use_temp)s")
+
+_sef_sha1_sum         = "%(sha1_sum)s"
+_sef_md5_sum          = "%(md5_sum)s"
 
 
 
