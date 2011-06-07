@@ -76,6 +76,7 @@ class Gauss(LHCbConfigurableUser):
        ,"BeamEmittance"     : 0.704*(10**(-9))*SystemOfUnits.rad*SystemOfUnits.m
        ,"BeamBetaStar"      : 2.0*SystemOfUnits.m
        ,"BeamLineAngles"    : [ 0.0*SystemOfUnits.mrad, 0.0*SystemOfUnits.mrad ]
+       ,"CrossingRate"      : 11.245*SystemOfUnits.kilohertz
        ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm, 0.0*SystemOfUnits.mm,
                                   0.0*SystemOfUnits.mm ]
        ,"InteractionSize"   : [ 0.027*SystemOfUnits.mm, 0.027*SystemOfUnits.mm,

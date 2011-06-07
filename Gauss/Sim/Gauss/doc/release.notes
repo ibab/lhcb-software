@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-06-07 - Patrick Robbe
+ - python/Gauss/Configuration.py: restore CollisionRate option for backward
+   compatibilite
+
 ! 2011-05-30 - Patrick Robbe
  - python/Gauss/Configuration.py: transmit "DataType" property to SimConf
 
