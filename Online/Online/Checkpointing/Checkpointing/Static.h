@@ -51,7 +51,10 @@ namespace CHECKPOINTING_NAMESPACE    {
     unsigned long   chkptStart;
     /// The size of the checkpointing image
     unsigned long   chkptSize;
-
+    /// The low address of the vsyscall area
+    unsigned long   vsyscallStart;
+    /// The high address of the vsyscall area
+    unsigned long   vsyscallEnd;
     /// The saved end-pointer of the process heap
     void*           saved_break;
 

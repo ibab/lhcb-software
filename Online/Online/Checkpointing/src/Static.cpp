@@ -34,6 +34,8 @@ SysInfo::SysInfo() {
   addrEnd            = 0;
   chkptStart         = 0;
   chkptSize          = 0;
+  vsyscallStart      = 0;
+  vsyscallEnd        = 0;
   sysInfo            = 0;
   pageSize           = ::sysconf(_SC_PAGESIZE);
   checkpointFD       = lim.rlim_max-1;
@@ -80,11 +82,13 @@ void SysInfo::aquire() {
       //sz = ((sz+PAGE_SIZE-1) & (-PAGE_SIZE)); // icc does not like this...
       sz = ((sz+PAGE_SIZE-1)/PAGE_SIZE)*PAGE_SIZE;
       m_memcpy(checkpointImage,hdlr.image,sizeof(checkpointImage));
-      chkptStart = hdlr.checkpointAddr[0];
-      chkptSize  = hdlr.checkpointAddr[1]-hdlr.checkpointAddr[0];
-      addrSize   = sz;//high-low;
-      addrStart  = hdlr.imageAddr[0];
-      addrEnd    = hdlr.imageAddr[0]+addrSize;
+      chkptStart    = hdlr.checkpointAddr[0];
+      chkptSize     = hdlr.checkpointAddr[1]-hdlr.checkpointAddr[0];
+      addrSize      = sz;//high-low;
+      addrStart     = hdlr.imageAddr[0];
+      addrEnd       = hdlr.imageAddr[0]+addrSize;
+      vsyscallStart = hdlr.vsyscall[0];
+      vsyscallEnd   = hdlr.vsyscall[1];
       return;
     }
     mtcp_output(MTCP_FATAL,"restore: Failed to access checkpointing image.\n");

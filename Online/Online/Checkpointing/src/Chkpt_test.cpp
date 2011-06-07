@@ -7,6 +7,7 @@
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
+#include <csignal>
 #include <unistd.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -17,7 +18,7 @@ static bool s_stop = false;
 
 static void* main_thread(void * /* arg */)  {
   int cnt = 0;
-  mtcp_output(MTCP_INFO,"init: MAIN \n");
+  mtcp_output(MTCP_INFO,"init: MAIN SIGRTMIN=%d SIGRTMAX=%d\n",SIGRTMIN,SIGRTMAX);
   while( !s_stop )  {
     struct timeval tv;
     ::fprintf(stdout,"Chr[%d]...",++cnt);

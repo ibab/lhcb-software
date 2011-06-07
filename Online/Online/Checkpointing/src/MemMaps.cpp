@@ -130,7 +130,7 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP IMAGE area:");
     return 0;
   }  
-  else if( *(int*)a.name == *(int*)"[vdso]" ) {
+  else if( *(int*)a.name == *(int*)"[vdso]" && chkpt_sys.vsyscallStart == 0 ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vdso] area:");
     return 0;
   }

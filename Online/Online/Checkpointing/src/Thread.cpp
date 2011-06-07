@@ -48,8 +48,10 @@ static FutexState  restoreinprog;
 static int         s_restoring = 0;
 static sigset_t    sigpending_global;    // pending signals for the process
 static int         dmtcp_info_pid_virtualization_enabled = 0;
-#define SIG_THREAD_CANCEL 32
-#define SIG_THREAD_SETXID 33
+//#define SIG_THREAD_CANCEL 32
+//#define SIG_THREAD_SETXID 33
+#define SIG_THREAD_CANCEL 34
+#define SIG_THREAD_SETXID 35
 
 using namespace Checkpointing;
 

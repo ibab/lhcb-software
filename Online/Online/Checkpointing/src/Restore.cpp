@@ -465,7 +465,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   size_t size = a.size;
   off_t  offset = a.offset;
 
-  if( *(int*)nam == *(int*)"[vdso]" ) {
+  if( *(int*)nam == *(int*)"[vdso]"  && chkpt_sys.vsyscallStart == 0 ) {
     offset = a.offset;
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vdso] area:");
     if ( fd_in>0 && data_len>0 ) m_fskip(fd_in,data_len);
