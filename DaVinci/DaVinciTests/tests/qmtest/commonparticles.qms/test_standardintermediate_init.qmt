@@ -5,6 +5,7 @@
 <argument name="timeout"><integer>6400</integer></argument>
 <argument name="args"><set>
   <text>../options/CommonParticles/TestStandardIntermediateCuts.py</text>
+  <text>../options/dimuon_testfile.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""

@@ -9,7 +9,7 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-from StrippingSelections.Utils import buildStream
+from StrippingArchive.Utils import buildStream
 stream = buildStream('Stripping13', 'Dimuon')
 sc = StrippingConf()
 sc.appendStream( stream )

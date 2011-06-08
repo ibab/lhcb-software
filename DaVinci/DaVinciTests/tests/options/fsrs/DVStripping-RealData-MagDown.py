@@ -5,7 +5,7 @@ from CommonParticles.Utils import DefaultTrackingCuts
 from Configurables import SelDSTWriter, DaVinci
 
 from StrippingConf.Configuration import StrippingConf
-from StrippingSelections.Utils import buildStreams
+from StrippingArchive.Utils import buildStreams
 
 allStreams = buildStreams('Stripping13')
 

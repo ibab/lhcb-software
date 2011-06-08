@@ -41,11 +41,8 @@ DaVinci().EvtMax = 500
 DaVinci().DataType = "2010"
 DaVinci().Simulation = False
 DaVinci().InputType = "DST"
-EventSelector().Input   = [
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00007557/0000/00007557_00000996_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00007557/0000/00007557_00001004_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00007557/0000/00007557_00001008_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2010/DIMUON.DST/00007557/0000/00007557_00001009_1.dimuon.dst?svcClass=lhcbmdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+
+#importOptions("../dimuon_testfile.py")
 
 #EventSelector().Input   = [
 #    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RDST/00004937/0000/00004937_00000001_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]

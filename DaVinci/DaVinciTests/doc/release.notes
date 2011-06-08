@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-06-08 - Rob Lambert
+ - Update tests to use Stripping13 from StrippingArchive
+ - Update CommonParticles to use a file which really exists!
+
 !=========================== DaVinciTests v2r5 2011-03-30 ====================
 
 ! 2011-03-30 - Juan Palacios

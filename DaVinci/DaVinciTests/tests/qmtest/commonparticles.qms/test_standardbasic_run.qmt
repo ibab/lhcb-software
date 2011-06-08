@@ -5,6 +5,7 @@
 <argument name="timeout"><integer>6400</integer></argument>
 <argument name="args"><set>
   <text>../options/CommonParticles/DVTestStandardBasic.py</text>
+  <text>../options/dimuon_testfile.py</text>
 </set></argument>
 <argument name="prerequisites"><set>
   <tuple><text>commonparticles.test_standardbasic_init</text><enumeral>PASS</enumeral></tuple>
@@ -20,7 +21,7 @@ DaVinciInitAlg                                              SUCCESS Number of co
 findReferenceBlock("""
 CountParticles                                              SUCCESS Number of counters : 41
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/StdLooseAllPhotons"                     |       500 |      23663 |     47.326 |     15.822 |      6.0000 |      88.000 |
+ | "# Phys/StdLooseAllPhotons"                     |       500 |      18612 |     37.224 |     15.601 |      2.0000 |      75.000 |
 """, stdout, result, causes, signature_offset = 0, id='Particles')
 countErrorLines({"FATAL":0})
 </text></argument>
