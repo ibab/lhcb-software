@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-08 - Marco Cattaneo
+ - Minor fix to python/GaudiConf/QMTest/LHCbExclusions.py
+
 ! 2011-06-07 - Rob Lambert
  - Fixed bug in detecting known streams, allConfigurables holds names,
    not fullNames, for some reason
