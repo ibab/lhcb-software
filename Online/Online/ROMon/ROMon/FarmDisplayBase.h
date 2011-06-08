@@ -301,6 +301,10 @@ public:
     /// Set cursor to position
     virtual void set_cursor();
 
+    /// Set cursor to position
+    virtual void set_cursor(InternalDisplay* d) 
+    { this->InternalDisplay::set_cursor(d); }
+
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
     /// Connect to data resources
