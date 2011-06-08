@@ -62,7 +62,7 @@ class Volume(object):
                 raise IsNotaVolume
     def ID(self):
         if self._mtpoints :
-            self._mtpoints[0].getVolumeID()
+            return self._mtpoints[0].getVolumeID()
         else :
             raise HasNoMountPoint, "%s has no mount point" % self._name
     def name(self):

@@ -1,3 +1,7 @@
+2011-06-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/volume.py: fixed ID() method. There was no return statement.
+
 2011-06-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/data/SelfExtract.tmpl:
