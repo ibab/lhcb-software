@@ -35,6 +35,14 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   typedef _IOSB IOSB_t;
 #if defined(_WIN32)
   typedef __int64       int64_t;
+  #ifdef __cplusplus
+    namespace { 
+      inline FILE* popen(__CXX_CONST char* cmd, __CXX_CONST char* typ)
+	{ return ::_popen(cmd,typ); }
+    }
+  #else
+    #define popen _popen
+  #endif
 #elif !defined(__int8_t_defined)
   typedef long long int int64_t;
 #endif
