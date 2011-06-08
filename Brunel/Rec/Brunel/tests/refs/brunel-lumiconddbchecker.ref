@@ -24,11 +24,12 @@
 # <-- End of file '/build/cattanem/Brunel_HEAD/Rec/Brunel/tests/options/brunel-lumiconddbchecker.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
+# |-Persistency = None
 # |-DDDBtag     = ''
-# |-OutputLevel = 3
 # |-DataType    = '2009'
 # |-TimeStamp   = False
 # |-SkipEvents  = 0
+# |-OutputLevel = 3
 # |-EvtMax      = -1
 # |-CondDBtag   = 'head-20110131'  (default: '')
 # |-DQFLAGStag  = ''
@@ -68,7 +69,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v39r4
-                                          running on lxbuild163.cern.ch on Wed May 25 07:54:16 2011
+                                          running on lxbuild163.cern.ch on Wed Jun  8 10:35:18 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -78,7 +79,7 @@ CheckDB              INFO Member list: LumiCheckCondDB/CheckCondDB
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.91 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
@@ -87,8 +88,8 @@ LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/s
 LHCBCOND             INFO Using TAG "head-20110131"
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-ONLINE_201101        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
-ONLINE_201101        INFO Using TAG ""
+ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
+ONLINE_2011          INFO Using TAG ""
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
@@ -97,10 +98,10 @@ EventSelector        INFO End of event input reached.
 EventLoopMgr         INFO No more events in event selection
 CheckCondDB          INFO ========== Probe DB: START ========== stop
 CheckCondDB          INFO Generate event at unix time: 1269817249
-ONLINE_201003        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201003        INFO Using TAG ""
+ONLINE_2010          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
+ONLINE_2010          INFO Using TAG ""
 PropertyConfigSvc    INFO  resolving alias TCK/0x00021810
-ConfigTarFileAc...   INFO  opening /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/TCK/HltTCK/v2r4p3/config.tar in mode ReadOnly
+ConfigTarFileAc...   INFO  opening /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/TCK/HltTCK/v2r4p5/config.tar in mode ReadOnly
 PropertyConfigSvc    INFO  resolved TCK/0x00021810 to bcfe26c8d3c0d51154e37b179032d735
 CheckCondDB          INFO Event time: 2010-03-29 01:00
 CheckCondDB          INFO  TCK:           137232 OdinFraction:  0.7 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 700 bunches:       1 absolutescale: 1.634e-11
@@ -110,8 +111,6 @@ PropertyConfigSvc    INFO  resolved TCK/0x00021310 to dd8c0d97e5d96f783dab121bd6
 CheckCondDB          INFO Event time: 2010-04-01 01:00
 CheckCondDB          INFO  TCK:           135952 OdinFraction:  0.7 Randomrate:    1000 LHCfrequency:  11245 BB RandomRate: 562.274 bunches:       1 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1270335649
-ONLINE_201004        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201004        INFO Using TAG ""
 PropertyConfigSvc    INFO  resolving alias TCK/0x00021210
 PropertyConfigSvc    INFO  resolved TCK/0x00021210 to 5f7e62274021536c77f4bf5c19ad53cb
 CheckCondDB          INFO Event time: 2010-04-04 01:00
@@ -161,8 +160,6 @@ ToolSvc.lumiDat...WARNING could not find property Hlt1LumiODINFilter
 CheckCondDB          INFO Event time: 2010-05-01 01:00
 CheckCondDB          INFO  TCK:           2156139024 OdinFraction:  0.7 Randomrate:    0 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       1 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1272927649
-ONLINE_201005        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201005        INFO Using TAG ""
 PropertyConfigSvc    INFO  resolving alias TCK/0x00051210
 PropertyConfigSvc    INFO  resolved TCK/0x00051210 to 39044f6c6a79df8877b8661696708eb5
 CheckCondDB          INFO Event time: 2010-05-04 01:00
@@ -202,8 +199,6 @@ CheckCondDB          INFO Generate event at unix time: 1275260449
 CheckCondDB          INFO Event time: 2010-05-31 01:00
 CheckCondDB          INFO  TCK:           594448 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       8 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1275519649
-ONLINE_201006        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201006        INFO Using TAG ""
 CheckCondDB          INFO Event time: 2010-06-03 01:00
 CheckCondDB          INFO  TCK:           594448 OdinFraction:  1 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       8 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1275778849
@@ -241,8 +236,6 @@ PropertyConfigSvc    INFO  resolved TCK/0x000e001e to 92dd07abfe253337e69e3ba4ff
 CheckCondDB          INFO Event time: 2010-06-30 01:00
 CheckCondDB          INFO  TCK:           917534 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       2 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1278111649
-ONLINE_201007        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201007        INFO Using TAG ""
 PropertyConfigSvc    INFO  resolving alias TCK/0x0012001e
 PropertyConfigSvc    INFO  resolved TCK/0x0012001e to 5f62ada7ce1db2d172ad10c34b7d81dc
 CheckCondDB          INFO Event time: 2010-07-03 01:00
@@ -287,8 +280,6 @@ PropertyConfigSvc    INFO  resolved TCK/0x0017001f to 407180c5dd757f15f100a98e1f
 CheckCondDB          INFO Event time: 2010-07-30 01:00
 CheckCondDB          INFO  TCK:           1507359 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1280703649
-ONLINE_201008        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201008        INFO Using TAG ""
 CheckCondDB          INFO Event time: 2010-08-02 01:00
 CheckCondDB          INFO  TCK:           1507359 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       16 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1280962849
@@ -328,8 +319,6 @@ CheckCondDB          INFO Generate event at unix time: 1283295649
 CheckCondDB          INFO Event time: 2010-09-01 01:00
 CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1283554849
-ONLINE_201009        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201009        INFO Using TAG ""
 CheckCondDB          INFO Event time: 2010-09-04 01:00
 CheckCondDB          INFO  TCK:           1638436 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       35 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1283814049
@@ -371,8 +360,6 @@ PropertyConfigSvc    INFO  resolving alias TCK/0x001f0029
 CheckCondDB          INFO Event time: 2010-10-01 01:00
 CheckCondDB          INFO  TCK:           2031657 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       12 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1286146849
-ONLINE_201010        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201010        INFO Using TAG ""
 CheckCondDB          INFO Event time: 2010-10-04 01:00
 CheckCondDB          INFO  TCK:           2031657 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       140 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1286406049
@@ -417,8 +404,6 @@ PropertyConfigSvc    INFO  resolving alias TCK/0x002e002a
 CheckCondDB          INFO Event time: 2010-10-31 01:00
 CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 697.9 bunches:       -99999 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1288738849
-ONLINE_201011        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
-ONLINE_201011        INFO Using TAG ""
 CheckCondDB          INFO Event time: 2010-11-03 00:00
 CheckCondDB          INFO  TCK:           3014698 OdinFraction:  0.7 Randomrate:    997 LHCfrequency:  11245 BB RandomRate: 100 bunches:       -99999 absolutescale: 1.634e-11
 CheckCondDB          INFO Generate event at unix time: 1288998049
@@ -444,7 +429,7 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.91 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO CheckDB                       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
