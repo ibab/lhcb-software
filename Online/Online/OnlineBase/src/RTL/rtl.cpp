@@ -480,7 +480,7 @@ FILE* lib_rtl_pipe_open(const char* command, const char* mode) {
 #ifdef _WIN32
   return ::_popen(command, mode);
 #else
-  return ::popen(command, mode);
+  return popen(command, mode);
 #endif
 }
 
