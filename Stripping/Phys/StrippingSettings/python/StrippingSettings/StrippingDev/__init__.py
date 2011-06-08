@@ -7,5 +7,7 @@ __all__ = [ 'LineConfigDictionaries_Charm',
             'LineConfigDictionaries_GLWG',
             'LineConfigDictionaries_RDWG',
             'LineConfigDictionaries_CharmXsec',
-            'LineConfigDictionaries_EWWG' ]
+            'LineConfigDictionaries_EWWG',
+            'LineConfigDictionaries_PSWG'
+            ]
 

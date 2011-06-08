@@ -66,6 +66,7 @@ D02MuMu = {
 
 ## Micro-DST, Vanya BELYAEV
 ## Test:  Yes
+"""
 PromptCharm = {
     'BUILDERTYPE' : 'StrippingPromptCharmConf', 
     'CONFIG'      : {
@@ -78,7 +79,7 @@ PromptCharm = {
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
     }
-
+"""
 
 ## Full DST, Marco Gersabeck
 ## Modified from Strippinb13b

@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-08 - Jibo He
+ - Added semi-leptonic lines to StrippingDev for Stripping15
+ - python/StrippingSettings/StrippingDev/LineConfigDictionaries_EWWG.py
+   . remove "units." which cause trouble in genrating database
+ - python/StrippingSettings/StrippingDev/LineConfigDictionaries_Charm.py
+   . comment out "PromptCharm" 
+
 ! 2011-06-06 - Thomas Blake
  - Added RD lines to StrippingDev for Stripping15
 
