@@ -66,20 +66,18 @@ D02MuMu = {
 
 ## Micro-DST, Vanya BELYAEV
 ## Test:  Yes
-"""
 PromptCharm = {
     'BUILDERTYPE' : 'StrippingPromptCharmConf', 
-    'CONFIG'      : {
-    'D0Prescale'      : 1.00,
-    'DstarPrescale'   : 1.00,
-    'DsPrescale'      : 1.00,
-    'DplusPrescale'   : 1.00,
-    'LamCPrescale'    : 1.00
-    },
+    'CONFIG'      : { 'DiCharmPrescale'        : 1.0 ,
+                      'DiMuonAndCharmPrescale' : 1.0 ,
+                      'DiMuonAndGammaPrescale' : 1.0 ,
+                      'DoubleDiMuonPrescale'   : 1.0 ,
+                      ##  allow to move up to 4 GeV or even 5 GeV
+                      'PhotonCuts'  : " PT > 3 * GeV "
+                      },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
     }
-"""
 
 ## Full DST, Marco Gersabeck
 ## Modified from Strippinb13b

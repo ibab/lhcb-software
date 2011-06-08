@@ -1016,7 +1016,7 @@ CharmAssociative = {
                   'DiMuonAndGammaPrescale' : 1.0 ,
                   'DoubleDiMuonPrescale'   : 1.0 ,
                   ##  allow to move up to 4 GeV or even 5 GeV
-                  'PhotonCuts'  : " PT > 3 * GeV " ,
+                  'PhotonCuts'  : " PT > 3 * GeV "
                   },
     'STREAMS' : [ 'Dimuon' ] ,
     'WGs'     : [ 'PSWG'    ]
