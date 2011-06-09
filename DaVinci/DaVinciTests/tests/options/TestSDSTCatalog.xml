@@ -89,4 +89,18 @@
     <logical/>
   </File>
 
+  <File ID="48ACE41C-7792-E011-ADC8-002590138ADC">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.Charm.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="5ABBE61C-7792-E011-ADC8-002590138ADC">
+    <physical>
+      <pfn filetype="ROOT_All" name="000000.CharmCompleteEvent.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

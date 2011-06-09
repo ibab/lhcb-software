@@ -94,5 +94,5 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 # bs->Jpsi, Phi
 from Gaudi.Configuration import * 
 
-EventSelector().Input   = [
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]
+#EventSelector().Input   = [
+#    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]

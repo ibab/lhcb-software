@@ -8,15 +8,15 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-StdVeryLooseDiMuon                                          SUCCESS Number of counters : 7
+StdLooseDiMuon                                              SUCCESS Number of counters : 7
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# J/psi(1S) -> mu+  mu- "                      |      1000 |       4082 |     4.0820 |     8.2469 |      0.0000 |      91.000 |
- | "# Phys/StdVeryLooseMuons"                      |      1000 |       4421 |     4.4210 |     3.7005 |      0.0000 |      23.000 |
- | "# input particles"                             |      1000 |       4421 |     4.4210 |     3.7005 |      0.0000 |      23.000 |
- | "# mu+"                                         |      1000 |       2227 |     2.2270 |     2.2171 |      0.0000 |      19.000 |
- | "# mu-"                                         |      1000 |       2194 |     2.1940 |     2.3247 |      0.0000 |      17.000 |
- | "# selected"                                    |      1000 |       4082 |     4.0820 |     8.2469 |      0.0000 |      91.000 |
- |*"#accept"                                       |      1000 |        745 |(  74.5000 +- 1.37831  )%|   -------   |   -------   |
+ | "# J/psi(1S) -> mu+  mu- "                      |       200 |        411 |     2.0550 |     3.0646 |      0.0000 |      21.000 |
+ | "# Phys/StdLooseMuons"                          |       200 |        667 |     3.3350 |     2.5461 |      0.0000 |      14.000 |
+ | "# input particles"                             |       200 |        667 |     3.3350 |     2.5461 |      0.0000 |      14.000 |
+ | "# mu+"                                         |       200 |        318 |     1.5900 |     1.4601 |      0.0000 |      12.000 |
+ | "# mu-"                                         |       200 |        349 |     1.7450 |     1.8439 |      0.0000 |      13.000 |
+ | "# selected"                                    |       200 |        411 |     2.0550 |     3.0646 |      0.0000 |      21.000 |
+ |*"#accept"                                       |       200 |        143 |(  71.5000 +- 3.19198  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 countErrorLines({"FATAL":0})

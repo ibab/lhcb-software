@@ -4,6 +4,7 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
   <text>../options/DVTestDecayTreeTuple-TisTos.py</text>
+  <text>../options/mc09_testdata.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""

@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-06-09 - Rob Lambert
+ - Update tests for removal of MC09 and 2010 files.
+ - Remove etc-reading tests, since etcs are no longer supported.
+ - Modify appconfig stripping test to run from Stripping14 Archive
+   Needs to be switched back to AppConfig options once they are modified
+
 ! 2011-06-08 - Rob Lambert
  - Update tests to use Stripping13 from StrippingArchive
  - Update CommonParticles to use a file which really exists!

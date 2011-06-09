@@ -38,7 +38,7 @@ from Configurables import DaVinci
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
-DaVinci().EvtMax = 1000                         # Number of events
+DaVinci().EvtMax = 200                         # Number of events
 DaVinci().DataType = "2010"      
 DaVinci().Simulation   = True                  # It is MC
 DaVinci().ETCFile = "etc.root"
@@ -51,4 +51,4 @@ DaVinci().ETCFile = "etc.root"
 from Gaudi.Configuration import * 
 
 EventSelector().Input   = [
-    "   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008405/0000/00008405_00000506_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]
+    "   DATAFILE='castor:/castor/cern.ch/user/r/rlambert/testfiles/MC2010_00008405_00000506_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
