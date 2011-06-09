@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-09 - Jibo He
+ - Added stripping lines of Beta_s WG to StrippingDev for Stripping15
+
 ! 2011-06-08 - Jibo He
  - python/StrippingSettings/StrippingDev/LineConfigDictionaries_Charm.py
    Updated conf dict of PromptCharm
