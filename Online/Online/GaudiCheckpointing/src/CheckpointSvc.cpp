@@ -191,7 +191,7 @@ namespace LHCb  {
   #define STDERR_FILENO 3
   #define S_IWUSR       _S_IWRITE 
   #define S_IRUSR       _S_IREAD
-  static const int S_IRWXU = (S_IREAD|S_IWRITE);
+  static const int S_IRWXU = (_S_IREAD|_S_IWRITE);
   static const int S_IRWXG = 0;
   static const int S_IRWXO = 0;
 
