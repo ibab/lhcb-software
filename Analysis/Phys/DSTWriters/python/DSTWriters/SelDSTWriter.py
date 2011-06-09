@@ -35,11 +35,11 @@ class SelDSTWriter(MicroDSTWriter) :
 
     def multiSequences(self) :
         return len(self.selectionSequences()) > 1
-
+    
     def outputStreamType(self) :
         from Configurables import InputCopyStream
         return InputCopyStream
-
+    
     def extendStream(self, seq, stream) :
 #        if self.multiSequences() :
 #            self.setProp('OutputPrefix', 'SequenceName')
@@ -48,10 +48,10 @@ class SelDSTWriter(MicroDSTWriter) :
         stream.PreloadOptItems = False  # True makes LoKi crash (why?)
         if self.getProp("SaveCandidates") :
             MicroDSTWriter.extendStream(self, seq, stream)
-
+    
     def fileExtension(self) :
         return ".dst"
-
+    
     def _nodeKiller(self, seq) :
         from Configurables import EventNodeKiller
         loc = '/Event/'+self.outputPrefix(seq)
@@ -59,12 +59,12 @@ class SelDSTWriter(MicroDSTWriter) :
         print 'Add Killer for node', loc
         return EventNodeKiller(seq.name()+'NodeKiller',
                                Nodes = [loc])
-
-    def addOutputStream(self, seq) :
-        MicroDSTWriter.addOutputStream(self, seq)
+    
+    def addOutputStream(self, seq, algs) :
+        MicroDSTWriter.addOutputStream(self, seq, algs)
 #        if self.getProp("SaveCandidates") and self.multiSequences() :
 #            seq.Members += [self._nodeKiller(seq)]
-
+    
     def extendSequence(self, sel) :
         seqExtension = []
         if self.getProp("SaveCandidates") :

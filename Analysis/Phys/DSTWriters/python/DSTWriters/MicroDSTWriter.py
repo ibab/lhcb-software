@@ -36,7 +36,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                           , "CopyMCTruth"          : """ """
                           , "OutputPrefix"         : """ TES location of output. Default: /Event/MicroDST. If set to 'SequenceName then it takes the name of the name of each SelectionSequence.'"""
                           }
-
+    
     def outputStreamType(self) :
         from Configurables import OutputStream
         return OutputStream
@@ -49,13 +49,13 @@ class MicroDSTWriter(BaseDSTWriter) :
             stream.OptItemList += ["/Event/Rec/Header#1"]
         outputLocation = (self.getProp('RootInTES') + location +"#99").replace('//', '/')
         stream.OptItemList += [outputLocation]
-
+    
     def fileExtension(self) :
         return ".mdst"
     
     def _personaliseName(self, sel, name) :
         return name + "_" + sel.name()
-
+    
     def dataLocations(self, sel, extension) :
         loc = []
         for output in sel.outputLocations() :
@@ -68,7 +68,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                 location = location[ : -1 ]
             loc += [location]            
         return loc
-
+    
     def outputPrefix(self, seq) :
         prefix = seq.name().replace('.', '')
         branch = self.getProp('OutputPrefix')
@@ -79,30 +79,27 @@ class MicroDSTWriter(BaseDSTWriter) :
     
     def setOutputPrefix(self, seq, cloner) :
         cloner.OutputPrefix = self.outputPrefix(seq)
-            
+    
     def _copyRecHeader(self, sel):
         from Configurables import CopyRecHeader
         cloner = CopyRecHeader(self._personaliseName(sel,
                                                      "CopyRecHeader"))
         self.setOutputPrefix(sel, cloner)
         return [cloner]
-
+    
     def _copyRecSummary(self, sel):
         from Configurables import CopyRecSummary
         cloner = CopyRecSummary(self._personaliseName(sel,
                                                       "CopyRecSummary"))
         self.setOutputPrefix(sel, cloner)
         return [cloner]
-
-
+    
     def _copyODIN(self, sel) :
         from Configurables import CopyODIN
         cloner = CopyODIN(self._personaliseName(sel,"CopyODIN"))
         self.setOutputPrefix(sel, cloner)
         return [cloner]
-        
-
-
+    
     def _copyParticleTrees(self, sel) :
         from Configurables import (CopyParticles,
                                    VertexCloner,
@@ -121,7 +118,7 @@ class MicroDSTWriter(BaseDSTWriter) :
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
         self.setOutputPrefix(sel, cloner)
         return [cloner]
-
+    
     def _copyP2PVRelations(self, sel, name, locations) :
         from Configurables import CopyParticle2PVRelations
         cloner = CopyParticle2PVRelations(self._personaliseName(sel,name))
@@ -129,7 +126,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner.OutputLevel=4
         self.setOutputPrefix(sel, cloner)
         return cloner
-
+    
     def _copyPVs(self, sel) :
         from Configurables import CopyPrimaryVertices
         cloner=CopyPrimaryVertices(self._personaliseName(sel,
@@ -159,7 +156,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner.OutputLevel = 4
         self.setOutputPrefix(sel, cloner)
         return [p2mcRelator, cloner]
-
+    
     def _copyBTaggingInfo(self, sel) :
         from Configurables import BTagging
         from Configurables import CopyFlavourTag
@@ -173,7 +170,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner.OutputLevel=4
         self.setOutputPrefix(sel, cloner)
         return [BTagAlgo, cloner]
-
+    
     def _copyPVRelations(self, sel) :
         """
         loop over related PV locations and copy each table.
@@ -204,13 +201,13 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner = CopyL0DUReport(self._personaliseName(sel,'CopyL0DUReport'))
         self.setOutputPrefix(sel, cloner)
         return [cloner]
-
+    
     def _copyHltDecReports(self, sel) :
         from Configurables import CopyHltDecReports
         cloner = CopyHltDecReports(self._personaliseName(sel,'CopyHltDecReports'))
         self.setOutputPrefix(sel, cloner)
         return [cloner]
-
+    
     def extendSequence(self, sel) :
         print self.name(), ": Extending sequence ", sel.sequence().Members
         clonerList = []

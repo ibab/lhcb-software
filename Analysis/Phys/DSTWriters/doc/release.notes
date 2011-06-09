@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-06-09 - Rob Lambert
+ - Update to use IOHelper to create and configure output streams.
+ - tested using the davincitests.fsrs and davincitests.stripping suites
+
 !========================= DSTWriters v2r2 2011-05-13 =========================
 ! 2011-04-20 - Juan Palacios
  - DSTWriters.__dev__.microdst
