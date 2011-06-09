@@ -358,7 +358,9 @@ def makePsi2S(name,
 #    print ' makePsi2S ', name, 'MotherCuts:', _motherCuts, 'DaughtersCuts:', _daughtersCuts, 'preVertexCuts:', _preVertexCuts
     return Selection ( name,
                        Algorithm = _Psi2S,
-                       RequiredSelections = [Pions,Jpsi])
+#                       RequiredSelections = [Pions,Jpsi]
+                       RequiredSelections = [Jpsi,Pions]
+                       )
 
 
 def makeChK(name,
@@ -482,7 +484,8 @@ def makeBs2Psi2SPhiJpsiPiPi(name,
     
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [PhiSel, Psi2SSel])
+#                       RequiredSelections = [PhiSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, PhiSel])
 
 
         
@@ -515,7 +518,8 @@ def makeBu2Psi2SKJpsiPiPi(name,
 
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [ChKSel, Psi2SSel])
+#                       RequiredSelections = [ChKSel, Psi2SSel])
+                      RequiredSelections = [Psi2SSel, ChKSel])
 
 
 
@@ -548,7 +552,8 @@ def makeBd2Psi2SKstarJpsiPiPi(name,
     
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [KstarSel, Psi2SSel])
+#                       RequiredSelections = [KstarSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, KstarSel])
 
 
 #####################
@@ -577,7 +582,8 @@ def makeBd2Psi2SKsJpsiPiPi(name,
     
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [KsSel, Psi2SSel])
+#                       RequiredSelections = [KsSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, KsSel])
 
 
 
