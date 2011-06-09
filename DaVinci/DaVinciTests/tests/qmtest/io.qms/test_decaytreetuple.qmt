@@ -9,21 +9,21 @@
 findReferenceBlock("""
 Tuple                                                       SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/BetaSBd2JpsiKsUnbiasedLine"             |       105 |         96 |    0.91429 |    0.34127 |      0.0000 |      2.0000 |
- | "# input particles"                             |      1000 |         96 |   0.096000 |    0.30130 |      0.0000 |      2.0000 |
- |*"#accept"                                       |      1000 |         94 |(  9.40000 +- 0.922843 )%|   -------   |   -------   |
- | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# Phys/BetaSBd2JpsiKsUnbiasedLine"             |        12 |         11 |    0.91667 |    0.27639 |      0.0000 |      1.0000 |
+ | "# input particles"                             |       100 |         11 |    0.11000 |    0.31289 |      0.0000 |      1.0000 |
+ |*"#accept"                                       |       100 |         11 |(  11.0000 +- 3.12890  )%|   -------   |   -------   |
+ | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="Tuple")
 findReferenceBlock("""
 EventTuple                                                  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="EventTuple")
 findReferenceBlock("""
 MCTuple                                                     SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |      1000 |        933 |(  93.3000 +- 0.790639 )%|   -------   |   -------   |
- | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#accept"                                       |       100 |         99 |(  99.0000 +- 0.994987 )%|   -------   |   -------   |
+ | "Event"                                         |       100 |        100 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id="MCTuple")
 countErrorLines({"FATAL":0})
 </text></argument>

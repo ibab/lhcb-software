@@ -79,7 +79,7 @@ pmc.ParticleNames = [ "B0", "B~0" ]
 #
 from Configurables import DaVinci
 
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 100
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "2010" 
 DaVinci().Simulation   = True
@@ -87,6 +87,7 @@ DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ] # , pmc ] 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
+
 #-- GAUDI jobOptions generated on Mon Jan 17 17:06:59 2011
 #-- Contains event types : 
 #--   11144103 - 1 files - 10000 events - 4.10 GBytes
@@ -96,7 +97,7 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 from Gaudi.Configuration import * 
 
 EventSelector().Input   = [
-"   DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008414/0000/00008414_00000106_1.dst?svcClass=lhcbdata' TYP='POOL_ROOTTREE' OPT='READ'"]
+"   DATAFILE='castor:/castor/cern.ch/user/r/rlambert/testfiles/MC2010_BdJPsiKs_00008414_00000106_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 #FileCatalog().Catalogs = [ 'xmlcatalog_file:Sim2010_Bd2JpsiKs.xml' ]
 
 
