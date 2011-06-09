@@ -30,6 +30,7 @@
 #include <memory>
 #include "bm_struct.h"
 #include "bm_internals.h"
+#include "RTL/strdef.h"
 #include "RTL/DoubleLinkedQueue.h"
 #include "RTL/DoubleLinkedQueueScan.h"
 #define MBM_MAX_BUFF  32
