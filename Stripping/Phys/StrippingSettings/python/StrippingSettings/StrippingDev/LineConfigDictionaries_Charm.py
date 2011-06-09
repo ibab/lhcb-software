@@ -474,7 +474,7 @@ Xicc = {
     ,'signalPrescaleViaXic' :   1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ] 
+    'STREAMS' : [ 'CharmCompleteEvent' ] 
     }
 
 

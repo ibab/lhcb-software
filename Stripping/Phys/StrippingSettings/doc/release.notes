@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-Jun-09 - Patrick spradlin
+ - StrippingDev/LineConfigDictionaries_Charm.py
+   Changed STREAMS for Xicc to 'CharmCompleteEvent'.
+ 
 ! 2011-06-09 - Jibo He
  - Added stripping lines of Beta_s WG to StrippingDev for Stripping15
 
