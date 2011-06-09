@@ -7,7 +7,6 @@ __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 __version__ = "$Id$"
 
 # Hack to simplify the usage of sets with older versions of Python.
-import sys
 
 import __builtin__
 if "set" not in dir(__builtin__):

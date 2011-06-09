@@ -1,3 +1,7 @@
+2011-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/VersionsDB.py: removed import of the unused sys module.
+
 2011-06-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/afs/volume.py: fixed ID() method. There was no return statement.
