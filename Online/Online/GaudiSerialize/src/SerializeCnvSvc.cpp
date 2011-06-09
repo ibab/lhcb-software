@@ -45,9 +45,11 @@ typedef const std::string& CSTR;
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
 
-void popCurrentDataObject();
-void pushCurrentDataObject(DataObject** pobjAddr);
-namespace GaudiPoolDb  {  bool patchStreamers(MsgStream& s); }
+namespace GaudiRoot  {
+  bool patchStreamers(MsgStream& s); 
+  void popCurrentDataObject();
+  void pushCurrentDataObject(DataObject** pobjAddr);
+}
 
 namespace {
   struct DataObjectPush {
@@ -99,7 +101,7 @@ StatusCode SerializeCnvSvc::initialize()  {
     return status;
   }
   setDataProvider(pSvc);
-  GaudiPoolDb::patchStreamers(log);
+  GaudiRoot::patchStreamers(log);
   return S_OK;
 }
 

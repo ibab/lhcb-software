@@ -6,7 +6,7 @@ branches  cmt doc src GaudiSerialize
 
 use MDF            v* DAQ
 use DAQEvent	   v* Event
-use GaudiPoolDb    v*
+use RootCnv        v* Online
 
 #===========================================================================
 apply_pattern install_more_includes more=GaudiSerialize
@@ -20,9 +20,9 @@ macro_append  GaudiSerialize_dependencies GaudiSerializeGen
 apply_pattern component_library library=GaudiSerialize
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
 macro_append  GaudiSerialize_pp_cppflags ' -D$(GaudiPolicy_project_release) '
-
+macro_append  GaudiSerialize_shlibflags  $(RootCnv_ext_linkopts)
 # Hack for Gaudi v21r1 to link dictionary on windows
 private
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 
-use GaudiExamples v*
+##use GaudiExamples v*
