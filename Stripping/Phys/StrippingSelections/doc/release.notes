@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-06-09 - Neus Lopez March
+ - StrippingB2Psi2SX.py: reordering of the list to match CPU timing 
 
 ! 2011-06-09 - Victor Coco
  - StrippingTriMuons.py: set HLT to None
