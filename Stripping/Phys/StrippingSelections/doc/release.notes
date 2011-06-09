@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-09 - Victor Coco
+ - StrippingTriMuons.py: Restore Johannes settings for Tau23muons lines (overwritten
+   accidentally)
+
 ! 2011-06-06 - Thomas Blake
  - Updated __init__.py to add: 
   . import StrippingD2HHLTUnbiased
