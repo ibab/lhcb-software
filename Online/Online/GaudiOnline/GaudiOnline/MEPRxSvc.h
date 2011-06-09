@@ -87,14 +87,15 @@ namespace LHCb  {
     char                       *m_allNames;
     int                         m_dataSock; /* Raw socket for receiving data.*/
     int                         m_mepSock;  /* Raw socket to send MEP requests.*/
-	    EvtBuilderState             m_ebState;
-	    bool                        m_forceStop;
+    EvtBuilderState             m_ebState;
+    bool                        m_forceStop;
     bool                        m_RTTCCompat;
     bool                        m_dynamicMEPRequest;
     bool                        m_dropIncompleteEvents;	
     bool                        m_checkPartitionID;
     bool                        m_expectOdin;
     bool                        m_createDAQErrorMEP;
+    bool                        m_createODINMEP; // fake ODIN MEP for timepix testbeam only!
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 
