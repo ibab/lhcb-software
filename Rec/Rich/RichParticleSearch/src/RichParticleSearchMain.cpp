@@ -114,6 +114,7 @@ StatusCode RichParticleSearchMain::initialize() {
   return StatusCode::SUCCESS;
 }
 
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -167,10 +168,15 @@ StatusCode RichParticleSearchMain::execute() {
 
   // Resolution for RICH radiators in mrads
   std::vector<double> RichRes;
-  RichRes.push_back(3.1);
-  RichRes.push_back(1.66);
-  RichRes.push_back(0.68);
+  RichRes.push_back(0.00310);
+  RichRes.push_back(0.00166);
+  RichRes.push_back(0.00068);
 
+  // Resolution for RICH radiators in mrads
+  std::vector<double> RichPhotonCut;
+  RichPhotonCut.push_back(0.15);
+  RichPhotonCut.push_back(0.02);
+  RichPhotonCut.push_back(0.01);
 
 
   EvtNum++;
@@ -186,10 +192,10 @@ StatusCode RichParticleSearchMain::execute() {
 
     // Saturated CK angle for segment
     double SatCK = m_ckAngle->saturatedCherenkovTheta(segment);
-    info()<< "Saturated angle: " << SatCK << std::endl;
 
     // Maximum allowed angle
     double maxCK = SatCK + RichRes[RICHint]*m_maxCKcut;
+
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
@@ -261,6 +267,13 @@ StatusCode RichParticleSearchMain::execute() {
       {
         LHCb::RichRecPhoton* photon2 = *iPhot2;
 
+//        bool TP ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon2 ) );
+//        if (TP == false)
+//        {
+//        	continue;
+//        }
+
+
         const LHCb::RichGeomPhoton & gPhoton2 = photon2->geomPhoton();
         const LHCb::RichRecPixel * pixel  = photon2->richRecPixel();
         // Get the local coords of the photon detection point (correted for radiator type)
@@ -309,11 +322,40 @@ StatusCode RichParticleSearchMain::execute() {
 
     	  if (AvThetaRec > m_minCK) //  lower cut on average CK
     	  {
-    		  double CKVariance = 0.0;
-    		  for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
-    			  CKVariance = CKVariance + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta
-    		  }// end iterator
+    		  // Setup Sort by largest variance first
+    		  MattTest mt;
+    		  mt.SetAvTheta(AvThetaRec);
+    		  std::sort(CKTheta.begin(), CKTheta.end(), MattTestOb); // sort in order to remove furthest out-lyers first
 
+    		  int CKcounter = 0;
+    		  double CKVariance = 0.0;
+    		  double thetaRecSumUpdate = 0.0; //Updated after outlyer removals
+    		  int UsedPhotons = 0; //Updated after outlyer removals
+    	//	  std::cout << " AvThetaRec: " << AvThetaRec <<std::endl;
+    		  for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
+    		 // A method to remove outlyers
+    			  if (fabs(*it- AvThetaRec) > 500*RichPhotonCut[RICHint])
+    			  {
+    				  CKcounter++;
+    			//	  std::cout << fabs(*it- AvThetaRec) << " ";
+    				  CKTheta.erase(it);// Remove the element outside variance range
+    				  // update ThetaRecAv for next removal
+    				  AvThetaRec = (AvThetaRec*(PhotonCounter - CKcounter +1) - *it)/(PhotonCounter- CKcounter);
+    				  it--;// in order to cover whole range
+    			  }
+    			  else
+    			  {
+    				  UsedPhotons++;
+        			  CKVariance = CKVariance + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta
+    			  }
+    			  thetaRecSumUpdate = *it + thetaRecSumUpdate;
+
+    		  }// end iterator
+    		//  std::cout << " AvThetaRecUpdated: " << AvThetaRec <<std::endl;
+
+    		//  std::cout << std::endl;
+    		  AvThetaRec = thetaRecSumUpdate/UsedPhotons;
+    		  PhotonCounter = UsedPhotons; // Update photon counter
 			  // Average beta calculated per track
 			  double avBetaTk = 1.0/(std::cos(AvThetaRec)*refIndx);
 			  // Average Mass calculated per track
@@ -413,25 +455,39 @@ StatusCode RichParticleSearchMain::execute() {
 								// Mass from photon track pair
 								double mass = momentum * std::sqrt((1/(std::pow(beta,2)))-1.0);
 
-								if (thetaRec <= maxCK && beta >=1.0/refIndx && thetaRec > m_minCK){ // Make sure these are same cuts as in first photon loop
+								if (thetaRec <= maxCK && beta >=1.0/refIndx && thetaRec > m_minCK)
+								{ // Make sure these are same cuts as in first photon loop
 
 									if ( m_histoOutputLevel > 1 ){
 										  //Make Plots per track
 										  plot1D( avTrackMass, "MassperPhoton", "Mass per Photon",90000, 0, 45000);
 										  plot1D( 1/avTrackMass, "InverseMassPerPhoton", "Inverse Mass per photon", 8000, 0, 0.0008);
 									}
-									if ( produceNTuples())
+
+									double Var = fabs(thetaRec- AvThetaRec);
+									if (Var < RichPhotonCut[RICHint])
 									{
-									  Tuple photonTuple = nTuple( "massTuplePhoton", "Rich Alignment" );
-									  photonTuple->column( "tkNum",trackCounter);
-									  photonTuple->column( "mass"          , mass           );
-									  photonTuple->column( "TrueParent", trueParent2 );
-									  photonTuple->column( "EvtNum", EvtNum);
-									  photonTuple->write();
+										if ( produceNTuples())
+										{
+											Tuple photonTuple = nTuple( "massTuplePhoton", "Rich Alignment" );
+											photonTuple->column( "tkNum",trackCounter);
+											photonTuple->column( "mass"          , mass           );
+											photonTuple->column( "TrueParent", trueParent2 );
+											photonTuple->column( "Variance", Var );
+											photonTuple->column( "EvtNum", EvtNum);
+											photonTuple->write();
+										}
 									}
-							    }
+								//	else
+								//	{
+									//	std::cout << Var << " ";
+
+									//}
+								}
 
 						}//end photon loop
+						//std::cout << std::endl;
+
 				  }//End if m_plotPhotons
         	  }//End CKDev Cut
     	  }// end Average CK cut

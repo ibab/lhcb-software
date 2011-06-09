@@ -4,6 +4,10 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
 !========================= RichParticleSearch v1r3 2011-05-25 =========================
+! 2011-06-09 - Matt Coombes
+ - Introduced method to remove outlyer photons. Results look promising.
+   better signal to background ratio.
+   
 ! 2011-05-26 - Matt Coombes
  - Major changes to configurations. now make more sense. Set the cuts as an array in 
    form [Aerogel,R1Gas,R2Gas].

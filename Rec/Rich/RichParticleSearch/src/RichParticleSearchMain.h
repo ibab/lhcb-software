@@ -124,11 +124,30 @@ namespace Rich
         int EvtNum;
 
         int m_tkTotal;
+
+       // friend class MattTest;
       };
+
+      class MattTest
+      {
+      private:
+    	double  m_AvTheta;
+      public:
+    	void SetAvTheta(double AvTheta)
+    	{
+    	    m_AvTheta = AvTheta;
+    	}
+
+      	bool operator() (int i,int j)
+      	{
+      		//return (i<j);
+      		return (fabs(i-m_AvTheta)>fabs(j-m_AvTheta));
+      	}
+      }MattTestOb;
 
 
       inline int RichParticleSearchMain::GetRichInt(){
-        return (int) m_radiator;
+      return (int) m_radiator;
       }
 
     }
