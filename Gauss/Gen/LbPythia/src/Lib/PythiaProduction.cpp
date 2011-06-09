@@ -451,8 +451,16 @@ StatusCode PythiaProduction::initializeGenerator( ) {
     }
   }
   
+  debug () 
+    << " initialize PYTHIA with "
+    << "  FRAME='"      << m_frame       << "'"
+    << "   BEAM='"      << m_beam        << "'"
+    << " TARGET='"      << m_target      << "'"
+    << "    WIN='"      << m_win         << "'"
+    << " USERPROCESS='" << m_userProcess << "'" << endmsg ;
+  
   Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;  
-
+  
   //Close mass spectrum file
   if ( "empty" != m_slhaSpectrumFile ) {
     sc = F77Utils::close( lunUnit , msgLevel( MSG::INFO ) ) ;

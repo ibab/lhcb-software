@@ -4,6 +4,11 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+
+! 2011-06-09 - Vanya Belyaev
+ - resurect the reading of LHA/LHE events 
+ - increase version to v9r2
+
 !========================= LbPythia v9r1 2011-05-31 ==========================
 ! 2011-05-31 - Gloria Corti
  - Increase version to v9r1. New feature not a bug fix!

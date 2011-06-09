@@ -29,43 +29,40 @@ C...PYTHIA commonblock: only used to provide read unit MSTP(162).
       SAVE /PYPARS/
  
 C...User process event common block.
-      INTEGER MAXNUP
-      PARAMETER (MAXNUP=500)
-      INTEGER NUP,IDPRUP,IDUP,ISTUP,MOTHUP,ICOLUP
-      DOUBLE PRECISION XWGTUP,SCALUP,AQEDUP,AQCDUP,PUP,VTIMUP,SPINUP
-      COMMON/HEPEUP/NUP,IDPRUP,XWGTUP,SCALUP,AQEDUP,AQCDUP,IDUP(MAXNUP),
-     &ISTUP(MAXNUP),MOTHUP(2,MAXNUP),ICOLUP(2,MAXNUP),PUP(5,MAXNUP),
-     &VTIMUP(MAXNUP),SPINUP(MAXNUP)
-      SAVE /HEPEUP/
+#include "HepXUP.inc"
 
 C...Lines to read in assumed never longer than 200 characters. 
       PARAMETER (MAXLEN=200)
       CHARACTER*(MAXLEN) STRING
-
+      
 C...Format for reading lines.
       CHARACTER*6 STRFMT
       STRFMT='(A000)'
       WRITE(STRFMT(3:5),'(I3)') MAXLEN
 
+
+      MSTI(51) = 0 
+      
 C...Loop until finds line beginning with "<event>" or "<event ". 
-  100 READ(MSTP(162),STRFMT,END=130,ERR=130) STRING
+ 100  READ(MSTP(162),STRFMT,END=130,ERR=130) STRING
       IBEG=0
-  110 IBEG=IBEG+1
+ 110  IBEG=IBEG+1
 C...Allow indentation.
       IF(STRING(IBEG:IBEG).EQ.' '.AND.IBEG.LT.MAXLEN-6) GOTO 110 
       IF(STRING(IBEG:IBEG+6).NE.'<event>'.AND.
-     &STRING(IBEG:IBEG+6).NE.'<event ') GOTO 100
-
+     &  STRING(IBEG:IBEG+6).NE.'<event ') GOTO 100
+      
 C...Read first line of event info.
       READ(MSTP(162),*,END=130,ERR=130) NUP,IDPRUP,XWGTUP,SCALUP,
-     &AQEDUP,AQCDUP
-
+     &  AQEDUP,AQCDUP
+      
 C...Read NUP subsequent lines with information on each particle.
       DO 120 I=1,NUP
         READ(MSTP(162),*,END=130,ERR=130) IDUP(I),ISTUP(I),
-     &  MOTHUP(1,I),MOTHUP(2,I),ICOLUP(1,I),ICOLUP(2,I),
-     &  (PUP(J,I),J=1,5),VTIMUP(I),SPINUP(I)
-  120 CONTINUE
+     &    MOTHUP(1,I),MOTHUP(2,I),ICOLUP(1,I),ICOLUP(2,I),
+     &    (PUP(J,I),J=1,5),VTIMUP(I),SPINUP(I)
+ 120  CONTINUE
+      
       RETURN
       
 C...Error exit, typically when no more events.

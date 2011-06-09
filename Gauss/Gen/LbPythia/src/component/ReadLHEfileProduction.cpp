@@ -22,9 +22,12 @@
  */
 class ReadLHEfileProduction : public LbPythia::ReadLHE
 {
+  // =========================================================================
   /// friend factory for instantiation
   friend class ToolFactory<ReadLHEfileProduction> ;
+  // =========================================================================
 protected:
+  // =========================================================================
   /** standard constructor 
    *  @param type tool type (?)
    *  @param name tool name 
@@ -38,20 +41,21 @@ protected:
   {}
   // destructor 
   virtual ~ReadLHEfileProduction() {} ///< destructor 
+  // =========================================================================
 private:
+  // =========================================================================
   // the default constructor is disabled 
   ReadLHEfileProduction() ;
   // the copy constructor is disabled 
   ReadLHEfileProduction ( const ReadLHEfileProduction& ) ;
   // assignement operator is disabled 
   ReadLHEfileProduction& operator=( const ReadLHEfileProduction& ) ;
+  // =========================================================================
 } ;
 // ============================================================================
 // Declaration of the Tool Factory
 // ============================================================================
 DECLARE_TOOL_FACTORY( ReadLHEfileProduction )
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================

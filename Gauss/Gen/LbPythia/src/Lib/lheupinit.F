@@ -24,19 +24,12 @@ C...Double precision and integer declarations.
       IMPLICIT INTEGER(I-N)
       
 C...PYTHIA commonblock: only used to provide read unit MSTP(161).
+      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
       COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
       SAVE /PYPARS/
-      
+
 C...User process initialization commonblock.
-      INTEGER MAXPUP
-      PARAMETER (MAXPUP=100)
-      INTEGER IDBMUP,PDFGUP,PDFSUP,IDWTUP,NPRUP,LPRUP
-      DOUBLE PRECISION EBMUP,XSECUP,XERRUP,XMAXUP
-      COMMON/HEPRUP/IDBMUP(2),EBMUP(2),PDFGUP(2),PDFSUP(2),
-     &  IDWTUP,NPRUP,XSECUP(MAXPUP),XERRUP(MAXPUP),XMAXUP(MAXPUP),
-     &  LPRUP(MAXPUP)
-      SAVE /HEPRUP/
-      
+#include "HepXUP.inc"      
       
 C...Lines to read in assumed never longer than 200 characters. 
 C: V.B.      PARAMETER (MAXLEN=200)
@@ -54,18 +47,16 @@ C...Format for reading lines.
       WRITE(STRFMT(3:5),'(I3)') MAXLEN
       
       IF ( FIRST ) THEN
-        FIRST = .FALSE. 
+        WRITE(MSTU(11),*)' LHEUPINIT is  invoked '
       ELSE 
-        WRITE(*,*)'LHEUPINIT has been invoked already, REWIND the file!'
-        REWIND MSTP(161) 
+        CALL LHERESTORE
+        RETURN
       ENDIF 
-      
-      WRITE(*,*)" ***********I am LHEUPINIT ************ " 
       
 C...Loop until finds line beginning with "<init>" or "<init ". 
  100  READ(MSTP(161),STRFMT,END=130,ERR=130) STRING
       IBEG=0
-  110 IBEG=IBEG+1
+ 110  IBEG=IBEG+1
 C...Allow indentation.
       IF(STRING(IBEG:IBEG).EQ.' '.AND.IBEG.LT.MAXLEN-5) GOTO 110 
       IF(STRING(IBEG:IBEG+5).NE.'<init>'.AND.
@@ -80,6 +71,10 @@ C...Read NPRUP subsequent lines with information on each process.
         READ(MSTP(161),*,END=130,ERR=130) XSECUP(IPR),XERRUP(IPR),
      &    XMAXUP(IPR),LPRUP(IPR)
  120  CONTINUE
+      
+      CALL LHESAVE 
+      FIRST = .FALSE.
+      
       RETURN
       
 C...Error exit: give up if initalization does not work.

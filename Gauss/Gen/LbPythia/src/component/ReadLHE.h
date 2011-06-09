@@ -26,6 +26,7 @@
 // ============================================================================
 namespace LbPythia 
 {
+  // ==========================================================================
   /** @class ReadLHE RadLHE.h ReadLHE.cpp
    *
    *  Simple production tool which reads parton level 
@@ -37,14 +38,19 @@ namespace LbPythia
    */
   class ReadLHE: public LbPythia::ReadFile
   {
+    // ========================================================================
     /// friend factory for instantiation
     friend class ToolFactory<LbPythia::ReadLHE> ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// tool initialization 
     virtual StatusCode initialize () ;
     /// tool finalization 
     virtual StatusCode finalize   () ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /** standard constructor 
      *  @param type tool type (?)
      *  @param name tool name 
@@ -56,17 +62,23 @@ namespace LbPythia
       const IInterface* parent ) ;
     // destructor
     virtual ~ReadLHE () ;
+    // ========================================================================
   private:
+    // ========================================================================
     // the default constructor is disabled 
     ReadLHE () ;
     // the copy constructor is disabled 
     ReadLHE( const ReadLHE& ) ;
     // assignement operator is disabled 
     ReadLHE& operator=( const ReadLHE& ) ;
+    // ========================================================================
   private:
-    // logical file unit  (F77)
-    int         m_LUN     ; ///< logical file unit  (F77)
+    // ========================================================================
+    /// logical file unit  (F77)
+    int         m_LUN     ;                         // logical file unit  (F77)
+    // ========================================================================
   } ;
+  // ==========================================================================
 } // end of namespace LbPythia
 // ============================================================================
 // The END 

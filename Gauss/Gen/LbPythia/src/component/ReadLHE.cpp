@@ -53,7 +53,7 @@ LbPythia::ReadLHE::~ReadLHE(){}
 StatusCode LbPythia::ReadLHE::initialize () 
 {
   // check input file name 
-  if ( file().empty() ) { return Error("Input fiel name is not specified!") ; }
+  if ( file().empty() ) { return Error("Input file name is not specified!") ; }
   // get free fortran Unit 
   m_LUN = F77Utils::getUnit ( msgLevel ( MSG::DEBUG ) ) ;
   if ( 0 >= m_LUN ) { return Error("No free FORTRAN unit available ") ; }    
@@ -62,8 +62,10 @@ StatusCode LbPythia::ReadLHE::initialize ()
   if ( sc.isFailure() ) 
   { return Error ( "Could not open the file '" + file() + "'" ) ; }
   //
-  Pythia::pypars().mstp ( 161 ) = m_LUN ;                                // ATTENTION!
-  Pythia::pypars().mstp ( 162 ) = m_LUN ;                                // ATTENTION!
+  Pythia::pypars().mstp ( 161 ) = m_LUN ;                         // ATTENTION!
+  Pythia::pypars().mstp ( 162 ) = m_LUN ;                         // ATTENTION!
+  //
+  PythiaProduction::m_userProcess    = 3 ; ///< see LHEREADPROCESS
   //
   return LbPythia::ReadFile::initialize () ;
 }
@@ -77,8 +79,8 @@ StatusCode LbPythia::ReadLHE::finalize   ()
   if ( sc.isFailure() ) 
   { Error ( "Error in closing '" + file() + "'" , sc ) ; } // NO RETURN !
   m_LUN = 0 ;
-  Pythia::pypars().mstp ( 161 ) = 0 ;                      // ATTENTION!
-  Pythia::pypars().mstp ( 162 ) = 0 ;                      // ATTENTION!
+  Pythia::pypars().mstp ( 161 ) = 0 ;                      // ATTENTION !
+  Pythia::pypars().mstp ( 162 ) = 0 ;                      // ATTENTION !
   //
   return LbPythia::ReadFile::finalize() ;
 } 

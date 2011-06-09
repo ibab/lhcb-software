@@ -11,6 +11,7 @@
 // ============================================================================
 namespace LbPythia
 {
+  // ==========================================================================
   /** @class ReadFile ReadFile.h
    *  The base class for various production tools which reads parton level events 
    *  from external files and perform showering using Pythia 
@@ -20,16 +21,21 @@ namespace LbPythia
   class ReadFile : public PythiaProduction 
   {
   public:
+    // ========================================================================
     /// tool initialization 
     virtual StatusCode initialize () ;
     /// tool finalization 
     virtual StatusCode finalize   () ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// Read the event from the file @see IProductionTool::generateEvent
     virtual StatusCode generateEvent 
     ( HepMC::GenEvent*    event     , 
       LHCb::GenCollision* collision ) ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /** standard constructor 
      *  @param type tool type (?)
      *  @param name tool name 
@@ -39,25 +45,33 @@ namespace LbPythia
     ( const std::string& type,
       const std::string& name,
       const IInterface* parent ) ;
-    // virtual and protected destructor 
-    virtual ~ReadFile () ;///< virtual and protected destructor 
+    /// virtual and protected destructor 
+    virtual ~ReadFile () ;                 // virtual and protected destructor 
+    // ========================================================================
   public:
+    // ========================================================================
     /// the name of the input file  
     const std::string& file() const  { return m_file ; }    
+    // ========================================================================
   private:
+    // ========================================================================
     // the default constructor is disabled 
     ReadFile () ;
     // the copy constructor is disabled 
     ReadFile ( const ReadFile & ) ;
     // assignement operator is disabled 
     ReadFile& operator=( const ReadFile& ) ;
+    // ========================================================================
   private:
-    // the name of input file 
-    std::string m_file ; ///< the name of input file 
+    // ========================================================================
+    /// the name of input file 
+    std::string m_file ;                              // the name of input file 
+    // ========================================================================
   } ;
-} // end of namespace LbPythia 
+  // ==========================================================================
+} //                                                  end of namespace LbPythia 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LBPYTHIA_READFILE_H 1 
 // ============================================================================
