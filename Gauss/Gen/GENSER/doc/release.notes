@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2011-06-09 - Vanya Belyaev
+
+ - improve the reading of LHA/LHE events 
+
 ! 2011-05-30 - Vanya Belyaev
 
  -  src/pythia6/GaussUserProcess.inc
