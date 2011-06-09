@@ -161,7 +161,7 @@ C
 C...Final Les Houches Event File, obtained by combining above two.
       IF ( FIRST ) THEN 
         
-C**        CALL HVUPINIT 
+        CALL HVUPINIT 
         
         FIRST = .FALSE.  
         
