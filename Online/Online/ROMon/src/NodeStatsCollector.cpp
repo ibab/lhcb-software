@@ -210,7 +210,8 @@ int NodeStatsCollector::monitor() {
       stat_delay = m_statDelay;
     }
     ::dim_unlock();
-    ::lib_rtl_sleep(m_mbmDelay);
+    //::lib_rtl_sleep(m_mbmDelay);
+    ::dim_usleep(1000*m_mbmDelay);
   }
   return 1;
 }
