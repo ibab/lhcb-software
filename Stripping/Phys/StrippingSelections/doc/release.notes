@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-06-09 - Victor Coco
+ - StrippingTriMuons.py: set HLT to None
+
+! 2011-06-09 - Victor Coco
  - StrippingTriMuons.py: Restore Johannes settings for Tau23muons lines (overwritten
    accidentally)
 

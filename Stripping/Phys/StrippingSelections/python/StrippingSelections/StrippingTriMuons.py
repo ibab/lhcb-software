@@ -160,7 +160,7 @@ confdict = {
     #
     # Trigger 
     #
-    'HLT'    : " HLT_PASS_RE('(Hlt1|Hlt2).*Decision') " ,  
+    'HLT'    : None ,  
     #
     # Prescale 
     #
