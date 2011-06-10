@@ -160,50 +160,19 @@ StatusCode HltDecReportsDecoder::execute() {
 
   // ---------------- loop over decisions in the bank body; insert them into the output container
 
+  int err=0;
   switch ( hltdecreportsRawBank->version() ) {
-    case 0 : this->decodeHDR<v0_v1>( content, hltdecreportsRawBank->end<unsigned int>(), 
+    case 0 : err+=this->decodeHDR<v0_v1>( content, hltdecreportsRawBank->end<unsigned int>(), 
                                      *outputSummary );
         break;
-    case 1 : this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
+    case 1 : err+=this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
                                      *outputSummary );
         break;
     default : Error(
 " HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE );
+    err+=1;
  }
 
-#if 0
-  // make this part inactive until have access to real config in off-line
-
-  // ---------------- put decision=false decisions for "*Decision"s in configuration
-
-  // loop over all selections in this configuration
-  for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-       si!=selectionNameToIntMap.end();++si){
-    const std::string & selName = si->first;
-
-    // don't bother if already in 
-    if( outputSummary->hasSelectionName(selName) )continue;
-
-    if( selName.find("Decision") != std::string::npos ){
-      
-      HltDecReport selSumOut( 0, 0, 0, si->second );
-      if( selSumOut.invalidIntSelectionID() ){
-        std::ostringstream mess;
-        mess << " selectionName=" << selName << " has invalid intSelectionID=" << si->second;
-        Warning( mess.str(), StatusCode::SUCCESS, 20 );
-        continue;
-      }
-
-      // insert selection into the container
-      if( outputSummary->insert( selName, selSumOut ) == StatusCode::FAILURE ){
-        Error(" Failed to add HltDecReport selectionName=" + selName 
-              + " to its container ");
-      }    
-    }
-    
-
-  }
-#endif 
  
   if ( msgLevel(MSG::VERBOSE) ){
     // debugging info
@@ -212,14 +181,15 @@ StatusCode HltDecReportsDecoder::execute() {
   }
   
   
-  return StatusCode::SUCCESS;
+  return err==0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 template <typename HDRConverter, typename I> 
-void
+int
 HltDecReportsDecoder::decodeHDR(I i, I end,  
                                HltDecReports& output ) const 
 {
+   int ret = 0;
    HDRConverter converter;
    while (i != end ) {
 
@@ -231,15 +201,17 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
     if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
     if( selName ){
       if( !output.insert( selName->first, dec ).isSuccess() ) {
-        Warning(" Duplicate decision report in storage "+selName->first, StatusCode::SUCCESS, 20 ).ignore();
+        Error(" Duplicate decision report in storage "+selName->first, StatusCode::FAILURE, 20 ).ignore();
+        ++ret;
       }
     } else {
       std::ostringstream mess;
       mess << " No string key found for trigger decision in storage "
            << " id=" << id;
-      Error(mess.str(), StatusCode::SUCCESS, 50 ).ignore();
+      Error(mess.str(), StatusCode::FAILURE, 50 ).ignore();
+      ++ret;
     }
    }
-    
+   return ret;
 }
 //=============================================================================

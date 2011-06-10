@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
+! 2011-06-10 - Gerhard Raven
+ - make HltDecReportsDecoder return StatusCode::FAILURE from execute in case
+   it encounters trouble while decoding...
+
 ! 2011-05-09 - Gerhard Raven
  - make HltSelReports decoder forward compatible for the case of adding additional
    data words (i.e. new data is a pure superset of old data).

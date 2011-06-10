@@ -35,9 +35,7 @@ private:
   };
 
   template <typename HDRConverter,typename I > 
-  void
-  decodeHDR(I i, I end,  
-            LHCb::HltDecReports& output) const ;
+  int decodeHDR(I i, I end,  LHCb::HltDecReports& output) const ;
 
   /// location of input H
   StringProperty m_outputHltDecReportsLocation;
