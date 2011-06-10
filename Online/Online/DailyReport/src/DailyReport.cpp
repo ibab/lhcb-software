@@ -293,7 +293,6 @@ void DailyReport::scanElog( std::string file, std::string system, bool today, bo
     char buffer[50000];
     int size = 0;
     char* inPtr = &buffer[0];
-    std::string itemString( "start" );
     m_rdPtr = &buffer[0];
     buffer[0] = 0;
     while ( NULL != m_rdPtr ) {
@@ -416,7 +415,7 @@ void DailyReport::extractFromElog ( std::string logbook, std::string system, boo
 }
 //=============================================================================
 
-extern "C" int main(int argc, char** ) {
+main(int argc, char** ) {
   DailyReport report;
   report.build( argc );
   return 1;
