@@ -1913,7 +1913,7 @@ void PresenterMainFrame::reportToLog() {
            logbook == "Shift"    &&
            !m_pbdbConfig.empty()    ) {
         std::string title = subject + " (from Presenter page " + m_currentPageName + ")";
-        std::string severity = "Report";
+        std::string severity = "" //== need the new ProblemDB interface for "Report";
         ProblemDB myProblem( m_pbdbConfig, m_rundbConfig );
         std::string link( linkText );
         if ( "" == message ) message = title;
