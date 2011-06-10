@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-06-10 - Olivier Deschamps
+  - L0DUCounter : counter base change from 10^3 to 10^6 : WAS NOT PROPERLY DONE IN XML ON 2011-01-24 !!
+
 !========================= L0Event v19r3 2011-04-26 =========================
 ! 2011-04-24 - Olivier Deschamps
   - L0DUReport.xml : fix coverity (non) problem

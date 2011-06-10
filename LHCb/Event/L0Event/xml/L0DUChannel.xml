@@ -29,7 +29,7 @@
         desc="Scale of the downscaling counter" 
         name="Scale" 
         type="static const unsigned int" 
-        init="1000"/>
+        init="1000000"/>
     </namespace>
     
     <class 
