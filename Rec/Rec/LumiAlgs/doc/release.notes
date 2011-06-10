@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v6r0 2011-06-10 =========================
 ! 2011-06-01 - Rob Lambert
  - Add more debug (verbose) information to FSRNavigator
  - Update test references from FSR fixes in GaudiConf
