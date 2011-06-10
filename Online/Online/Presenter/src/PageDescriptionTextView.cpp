@@ -99,8 +99,7 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
   } else return false ;
 
   ProblemDB pbdb( m_problemDbServerAddress, m_rundbServerAddress ) ;
-  std::vector< std::vector< std::string > > problems ;
-  pbdb.getListOfProblems( problems , systemName , runNumber ) ;
+  std::vector< std::vector< std::string > > problems =  pbdb.listOfProblems( systemName , runNumber ) ;
 
   if ( problems.empty() ) return false ;
 

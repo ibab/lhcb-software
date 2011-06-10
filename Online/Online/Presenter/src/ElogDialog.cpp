@@ -28,8 +28,7 @@ using namespace pres;
 ClassImp(ElogDialog)
 
 ElogDialog::ElogDialog(PresenterMainFrame* gui, int width, int height) :
-      TGTransientFrame(gClient->GetRoot(), gui, width, height),
-      m_hasProblem( false ) {
+      TGTransientFrame(gClient->GetRoot(), gui, width, height) {
   SetCleanup(kDeepCleanup);
   Connect("CloseWindow()", "ElogDialog", this, "DontCallClose()");
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
@@ -52,10 +51,15 @@ void ElogDialog::setParameters( std::string& logbook, std::string& username,
   build();
   MapWindow();
 }
-void ElogDialog::setProblemDatabase( std::string& title ) {
-  m_hasProblem = true;
-  m_title      = &title;
+
+//=========================================================================
+//  
+//=========================================================================
+void ElogDialog::elog ( ) {
+  ok();
+  *m_isOK = 2;
 }
+
 
 void ElogDialog::ok() {
   TGTextLBEntry * logbook_entry = 
@@ -71,7 +75,6 @@ void ElogDialog::ok() {
   
   *m_isOK     = 1;
 
-  if ( m_hasProblem ) *m_title =  m_titleTextEntry->GetDisplayText().Data();
   CloseWindow();
 }
 void ElogDialog::build() {
@@ -91,7 +94,7 @@ void ElogDialog::build() {
   int xInputSize = 400;
   int yStep = 30;
 
-  int xButtonSize = 92;
+  int xButtonSize = 100;
   int yButtonSize = 24;
 
   TGLabel* m_usernameLabel = new TGLabel(elogFrame,"Username : ");
@@ -127,6 +130,7 @@ void ElogDialog::build() {
   m_logbookListBox -> AddEntry( "HLT Trigger"     , 11 ) ;
   m_logbookListBox -> AddEntry( "Online"          , 12 ) ;
   m_logbookListBox -> AddEntry( "Data Quality"    , 13 ) ;
+  m_logbookListBox -> AddEntry( "Shift-Test"      , 14 ) ;
 
   m_logbookListBox -> Select( 1  , kFALSE ) ;
 
@@ -134,20 +138,17 @@ void ElogDialog::build() {
   m_logbookListBox -> MoveResize( xBeg + xSize, yBeg, xInputSize, 22); 
   yBeg += yStep ;
 
-  m_subjectTextEntry = 0;
-  if ( "-none-" != *m_subject ) {
-    TGLabel* m_subjectLabel = new TGLabel(elogFrame,"Subject: ");
-    m_subjectLabel->SetTextJustify(kTextRight);
-    elogFrame->AddFrame(m_subjectLabel, layout );
-    m_subjectLabel->MoveResize( xBeg, yBeg, xSize, 18);
-    m_subjectTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
-    m_subjectTextEntry->SetMaxLength(255);
-    m_subjectTextEntry->SetAlignment(kTextLeft);
-    m_subjectTextEntry->SetText( (*m_subject).c_str() );
-    elogFrame->AddFrame(m_subjectTextEntry, layout );
-    m_subjectTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
-    yBeg += yStep;
-  }  
+  TGLabel* m_systemLabel = new TGLabel(elogFrame,"System : ");
+  m_systemLabel->SetTextJustify(kTextRight);
+  elogFrame->AddFrame(m_systemLabel, layout );
+  m_systemLabel->MoveResize( xBeg, yBeg, xSize, 18);
+  m_systemTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
+  m_systemTextEntry->SetMaxLength(255);
+  m_systemTextEntry->SetAlignment(kTextLeft);
+  m_systemTextEntry->SetText( (*m_system).c_str() );
+  elogFrame->AddFrame(m_systemTextEntry, layout );
+  m_systemTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
+  yBeg += yStep;
 
   m_runNumberTextEntry = 0;
   if ( "" != *m_runNumber ) {
@@ -164,19 +165,20 @@ void ElogDialog::build() {
     yBeg += yStep;
   }  
 
-  TGLabel* m_systemLabel = new TGLabel(elogFrame,"System : ");
-  m_systemLabel->SetTextJustify(kTextRight);
-  elogFrame->AddFrame(m_systemLabel, layout );
-  m_systemLabel->MoveResize( xBeg, yBeg, xSize, 18);
-  m_systemTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
-  m_systemTextEntry->SetMaxLength(255);
-  m_systemTextEntry->SetAlignment(kTextLeft);
-  m_systemTextEntry->SetText( (*m_system).c_str() );
-  elogFrame->AddFrame(m_systemTextEntry, layout );
-  m_systemTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
-  yBeg += yStep;
+  TGLabel* m_subjectLabel = new TGLabel(elogFrame,"(MANDATORY) Subject: ");
+  m_subjectLabel->SetTextJustify(kTextRight);
+  elogFrame->AddFrame(m_subjectLabel, layout );
+  m_subjectLabel->MoveResize( xBeg, yBeg, xSize, 18);
+  m_subjectTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
+  m_subjectTextEntry->SetMaxLength(255);
+  m_subjectTextEntry->SetAlignment(kTextLeft);
+  m_subjectTextEntry->SetText( (*m_subject).c_str() );
+  elogFrame->AddFrame(m_subjectTextEntry, layout );
+  m_subjectTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
+  yBeg += yStep;  
 
-  TGLabel* m_messageLabel = new TGLabel(elogFrame,"Message : ");
+
+  TGLabel* m_messageLabel = new TGLabel(elogFrame,"Description : ");
   m_messageLabel->SetTextJustify(kTextRight);
   elogFrame->AddFrame(m_messageLabel, layout );
   m_messageLabel->MoveResize( xBeg, yBeg, xSize, 18);
@@ -184,37 +186,29 @@ void ElogDialog::build() {
   elogFrame->AddFrame(m_messageTextEntry, layout );
   m_messageTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 10*22);
   yBeg += 10*22+10;
+  
+  int xFirst = xBeg + xSize;
 
-  if ( m_hasProblem ) {
-    TGLabel* m_problemLabel = new TGLabel( elogFrame,
-             "Enter a (short) description below ONLY to create an entry in the Problem Database");
-    m_problemLabel->SetTextJustify( kTextLeft );
-    elogFrame->AddFrame(m_problemLabel, layout );
-    m_problemLabel->MoveResize( xBeg, yBeg, 500, 18);
-    yBeg += yStep;
-    TGLabel* m_titleLabel = new TGLabel(elogFrame,"Problem description : ");
-    m_titleLabel->SetTextJustify(kTextRight);
-    elogFrame->AddFrame(m_titleLabel, layout );
-    m_titleLabel->MoveResize( xBeg, yBeg, xSize, 18);
-    m_titleTextEntry = new TGTextEntry(elogFrame, new TGTextBuffer(15), -1);
-    m_titleTextEntry->SetMaxLength(255);
-    m_titleTextEntry->SetAlignment(kTextLeft);
-    m_titleTextEntry->SetText( (*m_title).c_str() );
-    elogFrame->AddFrame(m_titleTextEntry, layout );
-    m_titleTextEntry->MoveResize( xBeg + xSize, yBeg, xInputSize, 22);
-    yBeg += yStep;
+  if ( std::string("Shift") == *m_logbook ) {
+    TGTextButton* okButton = new TGTextButton(elogFrame,"Send to Elog and ProblemDb");
+    okButton->SetTextJustify(kTextCenterX);
+    elogFrame->AddFrame(okButton, layout );
+    okButton->MoveResize( xFirst, yBeg, 2*xButtonSize, yButtonSize );
+    okButton->Connect("Clicked()", "ElogDialog", this, "ok()");
+    xFirst += 2*xButtonSize + 20;
+  } else {
+    TGTextButton* elogButton = new TGTextButton(elogFrame,"Send to Elog");
+    elogButton->SetTextJustify(kTextCenterX);
+    elogFrame->AddFrame(elogButton, layout );
+    elogButton->MoveResize( xFirst, yBeg, xButtonSize, yButtonSize );
+    elogButton->Connect("Clicked()", "ElogDialog", this, "elog()");
+    xFirst += xButtonSize + 20;
   }
-
-  TGTextButton* okButton = new TGTextButton(elogFrame,"Send to Elog");
-  okButton->SetTextJustify(kTextCenterX);
-  elogFrame->AddFrame(okButton, layout );
-  okButton->MoveResize( xBeg + xSize, yBeg, xButtonSize, yButtonSize );
-  okButton->Connect("Clicked()", "ElogDialog", this, "ok()");
-
+  
   TGTextButton*  cancelButton = new TGTextButton(elogFrame,"Cancel");
   cancelButton->SetTextJustify(kTextCenterX);
   elogFrame->AddFrame(cancelButton, layout );
-  cancelButton->MoveResize( xBeg+xSize+xSize, yBeg, xButtonSize, yButtonSize );
+  cancelButton->MoveResize( xFirst, yBeg, xButtonSize, yButtonSize );
   cancelButton->Connect("Clicked()", "ElogDialog", this, "CloseWindow()");
   yBeg += yButtonSize + 20;
 

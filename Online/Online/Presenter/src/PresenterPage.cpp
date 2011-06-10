@@ -1036,9 +1036,14 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
             } else if ( 0 <= (*itT).index ) {
               theValue = theValues[(*itT).index];
             }
-            (*itT).values.push_back( std::pair<int,double>( theTime, theValue ) );
-            if ( theValue < (*itT).min ) (*itT).min = theValue;
-            if ( theValue > (*itT).max ) (*itT).max = theValue;
+            if ( theValue > -1.e8 && theValue < 1.e8 ) {
+              (*itT).values.push_back( std::pair<int,double>( theTime, theValue ) );
+              if ( theValue < (*itT).min ) (*itT).min = theValue;
+              if ( theValue > (*itT).max ) (*itT).max = theValue;
+            } else {
+              std::cout << "Tag " << (*itT).tag << " time " << PresenterGaudi::trendingTool->timeString( theTime ) 
+                        << " ABSURD value " << theValue << " ignored" << std::endl;
+            }
           }
         }
       }       

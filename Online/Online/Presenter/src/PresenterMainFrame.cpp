@@ -1816,21 +1816,21 @@ void PresenterMainFrame::reportToLog() {
   }
 
   if (false == m_logBookConfig.empty()) {
-
+    bool offlineUser = false;
     ElogDialog* elogDialog = new ElogDialog(this, 646, 435 );
-    // Default values.
-    std::string logbook  = "Shift";
+
+    std::string logbook  = currentPartition() ;
     std::string username = "?";
     std::string system   = currentPartition() ;
     std::string subject  = "";
-    std::string message  = "See attached plot.";
-    std::string title    = "";
+    std::string message  = "";
     int         isOK     = 0;
     std::string runNumber= "";
 
     //== In LHCb partition, get the Data Manager name, extract the system
-    // from the SHIFTS page and remove subject
+    //   from the SHIFTS page.
     if ( "LHCb" == currentPartition() ) {
+      logbook = "Shift";
       //== get name of Data Manager on shift
       ShiftDB shiftdb ;
       username =  shiftdb.getCurrentDataManager().c_str();
@@ -1845,15 +1845,13 @@ void PresenterMainFrame::reportToLog() {
         sprintf( runChar, "%d", getRun.getInt() );
         runNumber = std::string( runChar );
         std::cout << "Run number " << runNumber << std::endl;
-        subject = "-none-";
       } else if ( "/OfflineDataQuality/" == m_currentPageName.substr(0, 20) ) {
+        offlineUser = true;
         username =  shiftdb.getDQPiquet().c_str();
         system   = m_currentPageName.substr( 20 );
         system   = system.substr( 0, system.find( ':' ));
         logbook  = "Data Quality";
       }
-
-      if ( !m_pbdbConfig.empty() )  elogDialog->setProblemDatabase( title );
     }
 
     elogDialog->setParameters( logbook, username, system, subject, message, runNumber,
@@ -1865,62 +1863,74 @@ void PresenterMainFrame::reportToLog() {
     editorCanvas->SaveAs(pageName.Data());
 
     fClient->WaitFor(dynamic_cast<TGWindow*>( elogDialog ));
-    if ( 1 == isOK ) {
+
+    std::string answer("");
+
+    if ( 0 == isOK ) {
+      answer = "Request canceled.";
+    } else if ( "" == subject ) {
+      answer = "Mandatiory subject is absent. Ignored";
+    } else {
       Elog myElog( m_logBookConfig, 8080 );
-      myElog.setCredential( "common", "Common!" );
+      if ( offlineUser ) {
+        myElog.setCredential( "OfflineDQShifter", "DQ4LHCb" );
+      } else {
+        myElog.setCredential( "common", "Common!" );
+      }
       myElog.setLogbook( logbook );
       myElog.addAttachment( pageName.Data() );
       myElog.addAttribute( "Author", username );
       myElog.addAttribute( "System", system );
+      std::string body = message;
       if ( "Shift" != logbook ) {
         myElog.addAttribute( "Subject", subject );
       } else {
         myElog.addAttribute( "Run", runNumber );
+        body = subject + "\n" + message;
       }
 
       std::cout << "send to Elog " << std::endl;
-      int number = myElog.submit( message );
+      int number = myElog.submit( body );
       std::cout << "=== produced entry " << number << std::endl;
       char statusMessage[100];
       char linkText[100];
-      std::string message = "Created ELOG entry ";
+      answer = "Created ELOG entry ";
       if ( 0 != number ) {
         sprintf( linkText, "http://lblogbook.cern.ch/%s/%d", logbook.c_str(),
                  number );
         sprintf( statusMessage, "Entry %d created in logbook %s", number,
                  logbook.c_str() );
-        message = message + std::string( linkText );
+        answer = answer + std::string( linkText );
       } else {
         sprintf( statusMessage, "Failed to create entry, see log file" );
         sprintf( linkText,  "Failed to create entry, see log file" );
-        message = "*** Failed to create Elog entry, see log file ***";
-        title = "";
+        answer = "*** Failed to create Elog entry, see log file ***";
       }
 
       m_mainStatusBar->SetText( statusMessage, 2);
 
-      if ( "" != title ) {
+      if ( 2 != isOK &&
+           logbook == "Shift"    &&
+           !m_pbdbConfig.empty()    ) {
+        std::string title = subject + " (from Presenter page " + m_currentPageName + ")";
+        std::string severity = "Report";
         ProblemDB myProblem( m_pbdbConfig, m_rundbConfig );
         std::string link( linkText );
-        int stat = myProblem.post( system, username, title, message, link );
-        std::cout << "Status = " << stat << " entry " <<
-          myProblem.getReference() << std::endl;
+        if ( "" == message ) message = title;
+        int stat = myProblem.post( system, username, title, message, link, severity );
+        std::cout << "Status = " << stat << " entry " << myProblem.reference() << std::endl;
         if ( 1 == stat ) {
-          message = message + "\r\nCreated Problem Database entry " +
-            myProblem.getReference();
+          answer = answer + "\r\nCreated Problem Database entry " +
+            myProblem.reference();
         } else {
-          message = message +
-            "\r\n FAILED to create the problem database entry, see log file";
+          answer = answer +
+            "\r\n FAILED to create the problem database entry : " + myProblem.reference();
         }
       }
-
-      new TGMsgBox( fClient->GetRoot(), this, "Elog and ProblemDatabase result",
-                    message.c_str(), kMBIconExclamation, kMBOk,
-                    &m_msgBoxReturnCode );
-    } else {
-      std::string statusMessage = "No logbook entry created";
-      m_mainStatusBar->SetText( statusMessage.c_str(), 2);
     }
+    new TGMsgBox( fClient->GetRoot(), this, "Elog and ProblemDatabase result",
+                  answer.c_str(), kMBIconExclamation, kMBOk,
+                  &m_msgBoxReturnCode );
     remove( pageName.Data() ); // delete temporary file.
   }
   if ( m_resumePageRefreshAfterLoading ) startPageRefresh() ;
@@ -4076,21 +4086,21 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
             } else {
               bannerText = Form( "Run %d, started %s, duration: %s" ,
                                  m_intervalPickerData->startRun() ,
-                                 m_runDb -> getCurrentStartTime().c_str() ,
-                                 m_runDb -> getCurrentRunDuration().c_str() ) ;
+                                 m_runDb->currentStartTime().c_str() ,
+                                 m_runDb->currentRunDuration().c_str() ) ;
             }
-            m_presenterInfo.setTimeC( m_runDb -> getCurrentStartTime(),  m_runDb -> getCurrentRunDuration(), true );
+            m_presenterInfo.setTimeC( m_runDb->currentStartTime(),  m_runDb->currentRunDuration(), true );
           } else {
             bannerText = Form( "Run %d to %d",
                              m_intervalPickerData->startRun(),
                              m_intervalPickerData->endRun());
-            std::string oldDest = m_runDb->getDestination();
+            std::string oldDest = m_runDb->destination();
             m_runDb->setDestination( "" );
             m_runDb->checkRun( m_intervalPickerData->startRun() );
-            std::string startTime =  m_runDb -> getCurrentStartTime();
+            std::string startTime =  m_runDb->currentStartTime();
             m_runDb->setDestination( "" );
             m_runDb->checkRun( m_intervalPickerData->endRun() );
-            std::string endTime   = m_runDb -> getCurrentEndTime();
+            std::string endTime   = m_runDb->currentEndTime();
             m_runDb->setDestination( oldDest );
             std::cout << "Set time start " << startTime << " end " << endTime << std::endl;
             m_presenterInfo.setTimeC( startTime, endTime );
@@ -4530,7 +4540,7 @@ void PresenterMainFrame::previousInterval() {
 
   } else if ( IntervalPickerData::SingleRun ==
               m_intervalPickerData -> getMode() ) {
-    int previousRun = m_runDb -> getPreviousRun( ) ;
+    int previousRun = m_runDb->previousRun( ) ;
     if ( 0 == previousRun )
       new TGMsgBox( fClient -> GetRoot() , this , "Previous run" ,
                     "Already at first run" , kMBIconExclamation ) ;
@@ -4542,7 +4552,7 @@ void PresenterMainFrame::previousInterval() {
       m_intervalPickerData -> setStartRun( previousRun ) ;
       m_intervalPickerData -> setEndRun  ( previousRun ) ;
       m_textNavigation     -> LoadBuffer ( Form( "%d" ,
-                                                 m_runDb -> getCurrentRunNumber() ) ) ;
+                                                 m_runDb->currentRunNumber() ) ) ;
       if ( ! m_currentPageName.empty() )
         loadSelectedPageFromDB( m_currentPageName , m_presenterInfo.globalTimePoint() ,
                                 m_presenterInfo.globalPastDuration() ) ;
@@ -4586,9 +4596,9 @@ void PresenterMainFrame::nextInterval() {
                 << m_presenterInfo.globalTimePoint() << std::endl;
   } else if ( IntervalPickerData::SingleRun ==
               m_intervalPickerData -> getMode() ) {
-    int nextRun = m_runDb -> getNextRun( ) ;
+    int nextRun = m_runDb->nextRun( ) ;
     if ( 0 == nextRun )
-      new TGMsgBox( fClient -> GetRoot() , this , "Next run" ,
+      new TGMsgBox( fClient->GetRoot() , this , "Next run" ,
                     "Already at last run" , kMBIconExclamation ) ;
     else {
       std::ostringstream is ;
@@ -4597,8 +4607,7 @@ void PresenterMainFrame::nextInterval() {
       m_presenterInfo.setGlobalPastDuration( "0" ) ;
       m_intervalPickerData -> setStartRun( nextRun ) ;
       m_intervalPickerData -> setEndRun  ( nextRun ) ;
-      m_textNavigation     -> LoadBuffer ( Form( "%d" ,
-                                                 m_runDb -> getCurrentRunNumber() ) ) ;
+      m_textNavigation     -> LoadBuffer ( Form( "%d" , m_runDb->currentRunNumber() ) ) ;
       if ( ! m_currentPageName.empty() )
         loadSelectedPageFromDB( m_currentPageName , m_presenterInfo.globalTimePoint() ,
                                 m_presenterInfo.globalPastDuration() ) ;
@@ -4890,8 +4899,7 @@ void PresenterMainFrame::switchToRunNavigation( bool ok ) {
     m_nextIntervalButton     -> SetToolTipText( "Next run" ) ;
     m_toolBarLabel           -> SetText       ( "Run: " ) ;
     m_textNavigation         -> Clear         ( ) ;
-    m_textNavigation         -> LoadBuffer    ( Form( "%d" ,
-                                                      m_runDb -> getCurrentRunNumber() ) ) ;
+    m_textNavigation         -> LoadBuffer    ( Form( "%d" , m_runDb->currentRunNumber() ) ) ;
   } else {
     m_previousIntervalButton -> SetToolTipText( "Before" ) ;
     m_nextIntervalButton     -> SetToolTipText( "After" ) ;

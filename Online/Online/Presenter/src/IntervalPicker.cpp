@@ -210,13 +210,16 @@ void IntervalPicker::build() {
                                              kDoubleBorder |
                                              kOwnBackground);
   m_runDestinationComboBox->AddEntry( "OFFLINE", 1);
-  m_runDestinationComboBox->AddEntry( "any", 2);
+  m_runDestinationComboBox->AddEntry( "CASTOR", 2);
+  m_runDestinationComboBox->AddEntry( "LOCAL", 3);
   m_runDestinationComboBox->Resize(100, 22);
-  if ( m_runDb->getDestination() == "OFFLINE" ) {
+  if ( m_runDb->destination() == "OFFLINE" ) {
     m_runDestinationComboBox->Select(1);
-  } else {
+  } else if ( m_runDb->destination() == "CASTOR" ){
     m_runDestinationComboBox->Select(2);
-  }
+  } else {
+     m_runDestinationComboBox->Select(3);
+  }   
   m_runDestinationComboBox->Connect( "Selected(Int_t)", "IntervalPicker", this, "setDestination(Int_t)");
   runDestHFrame->AddFrame( m_runDestinationComboBox, ltLayout );
 
@@ -385,7 +388,7 @@ void IntervalPicker::ok() {
       std::stringstream endRun;
       endRun << m_intData -> endRun() ;
       m_presInfo->setGlobalTimePoint( endRun.str() ) ;
-      m_intData -> setStartRun( m_runIntervalFromNumberEntry->GetIntNumber() ) ;
+      m_intData->setStartRun( m_runIntervalFromNumberEntry->GetIntNumber() ) ;
       std::stringstream runDuration;
       runDuration << (m_intData -> endRun() - m_intData -> startRun() ) ;
       m_presInfo -> setGlobalPastDuration( runDuration.str() ) ;
@@ -425,7 +428,7 @@ void IntervalPicker::ok() {
       m_presInfo -> setGlobalHistoryByRun( true ) ;
       int lastRun = m_runIntervalToNumberEntry->GetIntNumber();
       if ( !m_runDb->checkRun( lastRun ) ) {
-        lastRun = m_runDb->getNextRun( );
+        lastRun = m_runDb->nextRun( );
       }
       m_intData -> setEndRun( m_runIntervalToNumberEntry->GetIntNumber() ) ;
       std::stringstream endRun;
@@ -433,7 +436,7 @@ void IntervalPicker::ok() {
       m_presInfo -> setGlobalTimePoint( endRun.str() ) ;
       m_intData -> setStartRun( m_runIntervalFromNumberEntry->GetIntNumber() ) ;
       std::stringstream runDuration;
-      runDuration << (m_intData->endRun() - m_intData -> startRun() );
+      runDuration << (m_intData->endRun() - m_intData->startRun() );
       m_presInfo -> setGlobalPastDuration( runDuration.str() ) ;
     }
   }
@@ -459,11 +462,11 @@ const char* IntervalPickerData::durationString() {
 //============================================================================
 void IntervalPicker::SelectMode( ) {
   // Select the interesting tab
-  int lastrun = m_runDb -> getCurrentRunNumber() ;
-  if ( 0 == lastrun ) lastrun = m_runDb -> getLastRun( ) ;
+  int lastrun = m_runDb->currentRunNumber() ;
+  if ( 0 == lastrun ) lastrun = m_runDb->lastRun( ) ;
   m_runIntervalFromNumberEntry -> SetIntNumber( lastrun ) ;
 
-  if ( IntervalPickerData::SingleRun == m_intData -> getMode() ) {
+  if ( IntervalPickerData::SingleRun == m_intData->getMode() ) {
     SetWindowName( "History run selection" ) ;
   } else {
     m_runIntervalToNumberEntry -> SetIntNumber( lastrun ) ;
@@ -482,9 +485,11 @@ void IntervalPicker::SelectMode( ) {
 void IntervalPicker::setDestination( int index ) {
   if ( 1 == index ) {
     m_runDb->setDestination( "OFFLINE" );
+  } else if ( 2 == index ) {
+    m_runDb->setDestination( "CASTOR" );
   } else {
-    m_runDb->setDestination( "" );
+    m_runDb->setDestination( "LOCAL" );
   }
-  int lastrun = m_runDb -> getLastRun( ) ;
+  int lastrun = m_runDb ->lastRun( ) ;
   m_runIntervalFromNumberEntry -> SetIntNumber( lastrun ) ;
 }

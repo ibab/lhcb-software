@@ -411,7 +411,8 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
   m_runNumbers.clear();
 
   iendRun >> endRun;
-  irunDuration >> startRun; startRun=endRun-startRun;
+  irunDuration >> startRun; 
+  startRun=endRun-startRun;
   if (endRun < startRun) {
     std::cout << "Invalid run interval "<<startRun << " - "<<endRun
               << "  converted to "<<endRun << " - "<<endRun<< std::endl;
@@ -471,7 +472,6 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
     if (exists(runPath)) {
       for ( boost::filesystem::directory_iterator itr(runPath);
             itr != end_itr; ++itr) {
-        std::cout << "Checking file " << itr->path() << std::endl;
         if ( is_regular(itr->path()) &&
              pres::s_rootFileExtension == extension(itr->path()) ) {
           TObjArray* fileRunMatchGroup = 0;
@@ -482,7 +482,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
             icurRun >> curRun;
             if (curRun >=  startRun && curRun <= endRun) {
               foundRootFiles.push_back(itr->path());
-              std::cout << "using file: " << (itr->path()).leaf() << std::endl;
+              std::cout << "using file: " << itr->path() << std::endl;
               m_runNumbers.push_back( curRun );
             }
           }

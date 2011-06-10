@@ -36,6 +36,9 @@ ProblemDB::ProblemDB( std::string address, std::string rundbAddress ) {
     m_port    = m_address.substr( colon+1 );
     m_address = m_address.substr( 0, colon );
   }
+
+  getSystems();
+  
   m_rundbAddress = rundbAddress;
 }
 //=============================================================================
@@ -48,12 +51,24 @@ ProblemDB::~ProblemDB() {}
 //
 //=========================================================================
 int ProblemDB::post( std::string system, std::string username, std::string title,
-                     std::string message, std::string logReference ) {
+                     std::string message, std::string logReference, std::string severity ) {
+
+  if ( system == "L0CALO" ) system = "L0";
+  if ( system == "L0MUON" ) system = "L0";
+  if ( system == "L0DU"   ) system = "L0";
+  if ( system == "Brunel" ) system = "Alignment";
+
+  if ( std::find( m_systems.begin(), m_systems.end(), system ) == m_systems.end() ) {
+    std::cout << "ProblemDB: System '" << system << "' unknown. request ignored." << std::endl;
+    m_reference = "Unknown system '" + system +"'";
+    return -1;
+  }
 
   boost::asio::ip::tcp::iostream webStream( m_address , m_port ) ;
 
   if ( ! webStream ) {
     std::cout << "Cannot open the Problem Database at " << m_address  << " port " << m_port << std::endl ;
+    m_reference = "Cannot open problem database at " + m_address +" port " + m_port;
     return -1;
   }
 
@@ -62,9 +77,9 @@ int ProblemDB::post( std::string system, std::string username, std::string title
   postArg = "apikey=12345&system_name=" + system
     + "&title=" + urlEncode( title )
     + "&initial_comment=" + urlEncode( message )
-    + "&author_name=" + urlEncode( username )
-    + "&severity=Minor";
+    + "&author_name=" + urlEncode( username );
   if ( !logReference.empty() ) postArg = postArg + "&link=" + urlEncode( logReference );
+  if ( !severity.empty() )     postArg = postArg + "&severity=" + urlEncode( severity );
   char argLen[20];
   sprintf( argLen, "%d", (int)postArg.size() );
 
@@ -80,7 +95,8 @@ int ProblemDB::post( std::string system, std::string username, std::string title
   int status = 0;
   std::getline( webStream , line );
   std::cout << line << std::endl;
-  if ( line.find( "201 Created") != std::string::npos ) {
+  if ( line.find( "201 Created") != std::string::npos ||
+       line.find( "201 CREATED") != std::string::npos ) {
     status = 1;
     while( std::getline( webStream , line )  ) {
       std::cout << line << std::endl;
@@ -88,8 +104,11 @@ int ProblemDB::post( std::string system, std::string username, std::string title
         m_reference = line.substr( 10 );
       }
     }
+  } else {
+    m_reference = line;
   }
-  // Check that the web server answers correctly
+  
+  // Check that the web server answers correctly, log the messages
   while( std::getline( webStream , line )  ) {
     std::cout << line << std::endl;
   }
@@ -126,18 +145,17 @@ std::string  ProblemDB::urlEncode ( std::string src) {
 //=============================================================================
 //
 //=============================================================================
-void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &problems ,
-                                   const std::string & systemName ,
-                                   int runNumber ) {
-  problems.clear() ;
+std::vector< std::vector< std::string > > ProblemDB::listOfProblems( const std::string & systemName ,
+                                                                     int runNumber ) {
+  std::vector< std::vector< std::string > > problems;
 
   std::cout << "Accessing the Problem Database" << std::endl;
   
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+  boost::asio::ip::tcp::iostream webStream( m_address , m_port ) ;
 
   if ( ! webStream ) {
     std::cout << "Cannot open the Problem Database at " << m_address  << std::endl ;
-    return ;
+    return problems;
   }
 
   webStream << "GET /api/search/?_inline=True&system_visible=True" ;
@@ -157,10 +175,10 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
     if ( ! runDb.checkRun( runNumber ) ) {
       std::cerr << "Run number " << runNumber << "was not found in db"
                 << std::endl ;
-      return ;
+      return problems;
     }
-    std::string st( runDb.getCurrentStartTime() ) ;
-    std::string et( runDb.getCurrentEndTime() ) ;
+    std::string st( runDb.currentStartTime() ) ;
+    std::string et( runDb.currentEndTime() ) ;
     boost::algorithm::erase_all( st , " " ) ;
     boost::algorithm::erase_all( et , " " ) ;
     webStream << "&open_or_closed_gte=" << st
@@ -176,7 +194,7 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
   std::getline( webStream , line ) ;
   if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
     std::cerr << "ProblemDB server does not reply" << std::endl ;
-    return ;
+    return problems;
   }
 
   // Parse the web server answers
@@ -219,4 +237,41 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
       }
     }
   }
+  return problems;
+}
+
+//=========================================================================
+//  Read teh list of valid systems from the web.
+//=========================================================================
+void ProblemDB::getSystems ( ) {
+
+  boost::asio::ip::tcp::iostream webStream( m_address , m_port ) ;
+
+  if ( ! webStream ) {
+    std::cout << "Cannot open the Problem Database at " << m_address  << " port " << m_port << std::endl ;
+    return;
+  }
+
+  webStream << "GET /api/systems/ HTTP/1.0\r\n"
+            << "Host:" << m_address << "\r\n"
+            << "\r\n" << std::flush ;
+
+  std::string line ;
+
+  // Check that the web server answers correctly
+  std::getline( webStream , line ) ;
+  if ( !boost::algorithm::find_first( line , "200 OK" ) ) {
+    std::cerr << "ProblemDB replied " << line << std::endl ;
+    return;
+  }
+  bool valid = false;
+  while ( std::getline( webStream , line ) ) {
+    line = line.substr( 0, line.size()-1);
+    if ( valid ) m_systems.push_back( line );
+    if ( line == "name" ) valid = true;
+  }
+
+  //for ( std::vector<std::string>::iterator itS = m_systems.begin(); m_systems.end() != itS ; ++itS ) {
+  //  std::cout << "System '" << *itS << "'" << std::endl;
+  //}
 }

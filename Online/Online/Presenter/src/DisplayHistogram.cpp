@@ -824,8 +824,9 @@ void DisplayHistogram::createGraph( TrendData& aTrend, bool update ) {
 
   (( TNamed ) (*hax)).Copy( *grax ) ;
   (( TAttAxis ) (*hax)).Copy( *grax ) ;
-  yMin = 0.95 * yMin;
-  yMax = 1.05 * yMax;
+
+  yMin = yMin - 0.05 * fabs( yMin );
+  yMax = yMax + 0.05 * fabs( yMax );
   grax -> SetRangeUser( yMin, yMax ) ;
 
   grax = m_timeGraph -> GetXaxis() ;

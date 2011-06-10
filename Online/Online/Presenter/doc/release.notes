@@ -4,6 +4,19 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-10 - Olivier Callot
+ - Use a different account for the offline Elog posts.
+ - Get the list of ProblemDB system from teh Problem DB, and check against it.
+
+! 2011-06-09 - Olivier Callot
+ - Improved use fo Problem Database: Report ALWAYS and only for the Shift logbook
+   The subject of the item is mandatory, and an extra text is possible. For the shift
+   logbook they are concatenated.
+
+! 2011-06-09 - Olivier Callot
+ - New implementation of the RunDB interface, with next/prev runs provided by the
+   database. Destination All is no longer supported, CASTOR and LOCAL available.
+
 !=============================== 2011-06-06 v3r0 =============================
 ! 2011-06-06 - Olivier Callot
  - NextRun is not working. Waiting for new RunDB web functions.

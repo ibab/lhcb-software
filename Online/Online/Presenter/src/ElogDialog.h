@@ -31,18 +31,18 @@ public:
   ElogDialog(PresenterMainFrame* gui, int width, int height);
   virtual ~ElogDialog();
   
-  void setProblemDatabase( std::string& title );
-  
   void setParameters( std::string& logbook, std::string& username, std::string& system, 
                       std::string& subject, std::string& message, std::string& runNumber, 
                       int& isOK );
-  
+   
   void ok();
+  void elog();
   void build();
   void CloseWindow();
 
 private:
   TGTextButton       *m_okButton;
+  TGTextButton       *m_elogButton;
   TGTextButton       *m_cancelButton;
 
   std::string* m_logbook;
@@ -52,8 +52,6 @@ private:
   std::string* m_message;
   std::string* m_runNumber;
   int*         m_isOK;
-  std::string* m_title;
-  int          m_hasProblem;
 
   TGTextEntry        *m_logbookTextEntry;
   TGTextEntry        *m_usernameTextEntry;
@@ -61,7 +59,6 @@ private:
   TGTextEntry        *m_subjectTextEntry;
   TGTextEntry        *m_runNumberTextEntry;
   TGTextEdit         *m_messageTextEntry;
-  TGTextEntry        *m_titleTextEntry;
 
   TGComboBox *m_logbookListBox ;
 

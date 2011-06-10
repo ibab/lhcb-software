@@ -24,6 +24,8 @@
 //=============================================================================
 RunDB::RunDB( std::string address, PresenterInformation* pInfo ) :
   m_currentRunNumber( 0 ) ,
+  m_prevRunNumber( 0 ),
+  m_nextRunNumber( 0 ),
   m_currentRunStartTime( "" ) ,
   m_currentRunEndTime( "" ) ,
   m_currentRunDuration( "" ) ,
@@ -42,11 +44,11 @@ RunDB::~RunDB() {}
 //=============================================================================
 // Get last run
 //=============================================================================
-int RunDB::getLastRun( ) {
+int RunDB::lastRun( ) {
 
   int lastRun = 0 ;
 
-  std::cout << "getLastRun in run database: Open webstream at " << m_address << std::endl;
+  std::cout << "RunDB::lastRun: Open webstream at " << m_address << std::endl;
 
   boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
 
@@ -58,8 +60,8 @@ int RunDB::getLastRun( ) {
 
   // Send HTTP request to web server
   std::string request =  "GET /api/search/?rows=1" ;
-  if ( getPartition() != "" ) request = request + "&partition=" + getPartition() ;
-  if ( getDestination() != "" ) request = request + "&destination=" + getDestination() ;
+  if ( m_partition   != "" ) request = request + "&partition="   + m_partition;
+  if ( m_destination != "" ) request = request + "&destination=" + m_destination;
   request = request + " HTTP/1.0\r\nHost:" + m_address + "\r\n\r\n";
 
   std::cout << "Send '" << request << "'" << std::endl;
@@ -77,124 +79,40 @@ int RunDB::getLastRun( ) {
 
   while ( std::getline( webStream , line ) ) {
     lastRun = runFromWebLine( line );
-    if ( 0 < lastRun  ) return lastRun;
+    if ( 0 < lastRun  ) break;
   }
   //== Protect: If this run has a zero duration, take the previous one
+  std::cout << "Run duration " << m_currentRunDuration << std::endl;
   if ( "00:00:00" == m_currentRunDuration  ) {
-    std::cout << "Run " << lastRun << " has 00:00:00 duration. Take previous one" << std::endl;
-    lastRun = getPreviousRun();
+    std::cout << "Run " << lastRun << " has no duration. Take previous one" << std::endl;
+    lastRun = m_prevRunNumber;
   }
-
   return lastRun ;
 }
 
 //=============================================================================
 // Get next run
 //=============================================================================
-int RunDB::getNextRun( ) {
-
-  int nextRun = 0 ;
-  int currRun = m_currentRunNumber;
-
-  std::cout << "getNextRun in run database: Open webstream at " << m_address << std::endl;
-
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
-
-  if ( ! webStream ) {
-    std::cerr << "Cannot open the RunDb Database at " << m_address
-              << std::endl ;
-    return nextRun ;
-  }
-
-  // Send HTTP request to web server
-  webStream << "GET /api/search/?rows=1" ;
-  if ( getPartition() != "" ) webStream << "&partition=" << getPartition() ;
-  if ( getDestination() != "" ) webStream << "&destination=" << getDestination() ;
-
-  webStream << "&starttime="
-            << boost::posix_time::to_iso_extended_string( boost::posix_time::time_from_string( m_currentRunEndTime ) ) ;
-  webStream << " HTTP/1.0\r\n"
-            << "Host:" << m_address << "\r\n"
-            << "\r\n" << std::flush ;
-
-  std::string line ;
-
-  // Check that the web server answers correctly
-  std::getline( webStream , line ) ;
-  if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
-    std::cerr << "RunDB server does not answer OK :'" << line << "'" << std::endl;
-    return nextRun ;
-  }
-
-  // Check first the number of candidate run:
-  while ( std::getline( webStream , line ) ) {
-    currRun = runFromWebLine( line );
-    if ( 0 < nextRun  ) break;
-  }
-  webStream.close() ;
-
-  return nextRun ;
+int RunDB::nextRun( ) {
+  if ( 0 == m_nextRunNumber ) return 0;
+  checkRun( m_nextRunNumber );
+  return m_currentRunNumber;
 }
 
 //=============================================================================
-// Get next run
+// Get previous run
 //=============================================================================
-int RunDB::getPreviousRun( ) {
-
-  int previousRun = 0 ;
-
-  std::cout << "getPreviousRun in run database: Open webstream at " << m_address << std::endl;
-
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
-
-  if ( ! webStream ) {
-    std::cerr << "Cannot open the RunDb Database at " << m_address
-              << std::endl ;
-    return previousRun ;
-  }
-
-  // Send HTTP request to web server
-  webStream << "GET /api/search/?rows=2&start=1" ;
-  if ( getPartition() != "" ) webStream << "&partition=" << getPartition() ;
-  if ( getDestination() != "" ) webStream << "&destination=" << getDestination() ;
-  webStream << "&endtime="
-            << boost::posix_time::to_iso_extended_string( boost::posix_time::time_from_string( m_currentRunStartTime ) ) ;
-  webStream << " HTTP/1.0\r\n"
-            << "Host:" << m_address << "\r\n"
-            << "\r\n" << std::flush ;
-
-  std::string line ;
-
-  // Check that the web server answers correctly
-  std::getline( webStream , line ) ;
-  if ( ! boost::algorithm::find_first( line , "200 OK" ) ) {
-    std::cerr << "RunDB server does not answer OK :" << line << std::endl;
-    return previousRun ;
-  }
-
-  // Check first the number of candidate run:
-  while ( std::getline( webStream , line ) ) {
-    previousRun = runFromWebLine( line );
-    if ( 0 < previousRun  ) return previousRun;
-  }
-  webStream.close() ;
-
-  return previousRun ;
-}
-
-//=============================================================================
-// Get a list of runs from the run db
-// starting for a given run number with +/-10 runs
-//=============================================================================
-std::vector< int > RunDB::getListOfRuns( int /*runNumber*/ ) {
-  return std::vector< int >() ;
+int RunDB::previousRun( ) {
+  if ( 0 == m_prevRunNumber ) return 0;
+  checkRun( m_prevRunNumber );
+  return m_currentRunNumber;
 }
 
 //=============================================================================
 // Check run
 //=============================================================================
 bool RunDB::checkRun( int runNumber ) {
-  if ( runNumber == getCurrentRunNumber() ) return true ;
+  if ( runNumber == m_currentRunNumber ) return true ;
 
   std::cout << "checkRun in run database run " << runNumber << " : Open webstream at " << m_address << std::endl;
 
@@ -280,8 +198,10 @@ int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
       BOOST_FOREACH( boost::property_tree::ptree::value_type &v, run_tree.get_child( "runs" ) ) {
         int runNb = v.second.get< int >( "runid" ) ;
         m_currentRunNumber = runNb ;
-        std::string dest   = v.second.get< std::string >( "destination" ) ;
-        std::string part   = v.second.get< std::string >( "partitionname" ) ;
+        m_prevRunNumber    = v.second.get< int >( "prev_runid", 0 ) ;
+        m_nextRunNumber    = v.second.get< int >( "next_runid", 0 ) ;
+        std::string dest   = v.second.get< std::string >( "destination", "" ) ;
+        std::string part   = v.second.get< std::string >( "partitionname", "" ) ;
         if ( checkDestAndPart ) {
           if ( ( "" != m_destination && dest != m_destination ) || ( part != m_partition ) ) {
             std::cout << "m_destination '" << m_destination << "' dest='" << dest 
@@ -314,7 +234,7 @@ int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
           char tmp[40];
           sprintf( tmp, "%d", int(ene + 0.5) );
           m_presInfo->setBeamEnergy( std::string( tmp ) );
-          int tck =  v.second.get< int >( "tck" ) ;
+          int tck =  v.second.get< int >( "tck", 0 ) ;
           sprintf( tmp, "TCK_0x%8.8X", tck );
           m_presInfo->setTCK( std::string( tmp ) );
         }
@@ -322,7 +242,7 @@ int RunDB::runFromWebLine ( std::string line, bool checkDestAndPart ) {
       }
     }
     catch (...) {
-      std::cerr << "Error in the problem db server response" << std::endl ;
+      std::cerr << "Error in the Run db server response" << std::endl ;
       return 0 ;
     }
   }

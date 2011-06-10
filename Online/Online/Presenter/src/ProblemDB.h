@@ -19,13 +19,15 @@ public:
 
   virtual ~ProblemDB( ); ///< Destructor
 
-  int post( std::string system, std::string username, std::string title, std::string message, std::string logReference );
-  std::string getReference() const { return m_reference; }
+  int post( std::string system, std::string username, std::string title, std::string message, 
+            std::string logReference, std::string severity );
+  std::string reference() const { return m_reference; }
 
   /// get list of problems in database, if run number set to 0, give list of opened problems
-  void getListOfProblems( std::vector< std::vector< std::string > > & problems , 
-			  const std::string & system ,
-			  int runNumber ) ;
+  std::vector< std::vector< std::string > > listOfProblems( const std::string & system ,
+                                                            int runNumber ) ;
+
+  void getSystems();
   
 protected:
   std::string urlEncode( std::string src );
@@ -35,5 +37,6 @@ private:
   std::string m_port;
   std::string m_rundbAddress;
   std::string m_reference;
+  std::vector<std::string> m_systems;
 };
 #endif // PROBLEMDB_H

@@ -29,41 +29,38 @@ public:
   virtual ~RunDB( ); ///< Destructor
 
   /// Get last run number (for all destination or all partition, give empty string
-  int getLastRun( ) ;
+  int lastRun( ) ;
 
   /// Get next run number (compared to current run number) 
-  int getNextRun( ) ;
+  int nextRun( ) ;
 
   /// Get previous run number (compared to current run number) 
-  int getPreviousRun( ) ;
-
-  /// Get list of runs for a given partition (+/- 10 runs)
-  std::vector< int > getListOfRuns( int runNumber ) ;
+  int previousRun( ) ;
 
   /// Get current run's start time
-  std::string getCurrentStartTime( ) { return m_currentRunStartTime ; } ;
+  std::string currentStartTime( ) { return m_currentRunStartTime ; } ;
 
   /// Get current run's end time
-  std::string getCurrentEndTime( ) { return m_currentRunEndTime ; } ;
+  std::string currentEndTime( ) { return m_currentRunEndTime ; } ;
   
   /// Get current run's duration
-  std::string getCurrentRunDuration( ) { return m_currentRunDuration ; } ;
+  std::string currentRunDuration( ) { return m_currentRunDuration ; } ;
 
   /// Get current run number (cached)
-  int getCurrentRunNumber( ) { return m_currentRunNumber ; } ;
+  int currentRunNumber( ) { return m_currentRunNumber ; } ;
 
   /// Check if this run exists
   bool checkRun( int runNumber ) ;
 
   /// Get partition
-  std::string getPartition() { return m_partition ; } ;
+  std::string partition() { return m_partition ; } ;
     
   /// Set Partition
   void setPartition( const std::string & partition ) {
     m_partition = partition ; } ;
 
   /// Get destination
-  std::string getDestination() { return m_destination ; } ;
+  std::string destination() { return m_destination ; } ;
 
   /// Set Destination
   void setDestination( const std::string & destination ) {
@@ -86,6 +83,8 @@ private:
 
   /// Current (cached) run number
   int m_currentRunNumber ;
+  int m_prevRunNumber;
+  int m_nextRunNumber;
 
   /// Current run's start time
   std::string m_currentRunStartTime ;
