@@ -672,7 +672,8 @@ def makeBs2Psi2SPhiMuMu(name,
 
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [PhiSel, Psi2SSel])
+                       #RequiredSelections = [PhiSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, PhiSel])
 
 
         
@@ -715,7 +716,8 @@ def makeBu2Psi2SKMuMu(name,
 
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [ChKSel, Psi2SSel])
+#                       RequiredSelections = [ChKSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, ChKSel])
 
 
 
@@ -758,7 +760,8 @@ def makeBd2Psi2SKstarMuMu(name,
 
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [KstarSel, Psi2SSel])
+#                       RequiredSelections = [KstarSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, KstarSel])
 
 
 #####################
@@ -797,7 +800,8 @@ def makeBd2Psi2SKsMuMu(name,
 
     return Selection ( name,
                        Algorithm = _Bs,
-                       RequiredSelections = [KsSel, Psi2SSel])
+#                       RequiredSelections = [KsSel, Psi2SSel])
+                       RequiredSelections = [Psi2SSel, KsSel])
 
 
 
