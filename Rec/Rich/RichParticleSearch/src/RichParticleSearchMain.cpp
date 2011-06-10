@@ -172,10 +172,10 @@ StatusCode RichParticleSearchMain::execute() {
   RichRes.push_back(0.00166);
   RichRes.push_back(0.00068);
 
-  // Resolution for RICH radiators in mrads
+  // Variance Cuts
   std::vector<double> RichPhotonCut;
   RichPhotonCut.push_back(0.15);
-  RichPhotonCut.push_back(0.02);
+  RichPhotonCut.push_back(0.018);
   RichPhotonCut.push_back(0.01);
 
 
