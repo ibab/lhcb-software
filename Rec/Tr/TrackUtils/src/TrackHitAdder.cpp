@@ -65,8 +65,8 @@ DECLARE_ALGORITHM_FACTORY( TrackHitAdder );
 TrackHitAdder::TrackHitAdder( const std::string& name,
 				ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
-    m_ithitcreator("Tf::STHitCreator<Tf::IT>/Tf::ITHitCreator"),
-    m_tthitcreator("Tf::STHitCreator<Tf::TT>/Tf::TTHitCreator"),
+    m_ithitcreator("Tf::STHitCreator<Tf::IT>/ITHitCreator"),
+    m_tthitcreator("Tf::STHitCreator<Tf::TT>/TTHitCreator"),
     m_othitcreator("Tf::OTHitCreator"),
     m_trackhitcollector("TrackHitCollector",this)
 {
@@ -238,7 +238,7 @@ StatusCode TrackHitAdder::execute()
     LHCb::Track* track = *itrk ;
 
     bool trackIsModified(false) ;
-    if( track->nStates() > 0 ) {
+    if( track->nStates() > 0 && track->fitStatus() != LHCb::Track::FitFailed ) {
 
       // check that the LHCbIDs on the track are unique and sorted
       LHCb::Track::LHCbIDContainer lhcbids = track->lhcbIDs() ;
