@@ -38,35 +38,14 @@ public:
   bool m_HltLinesFrom1stEvent;
   bool m_requireTrackClassID;
   bool m_addFirstState;
-  bool m_requireFirstState;
-  LHCb::Tracks * tracks; 
   double m_CloneOverlapTreshold;
   unsigned int m_MinimalHits ;
   LHCb::HltObjectSummary * m_HltObjectSummary;
   ObjectVector<LHCb::HltObjectSummary>* m_HltObjectSummarys ;
-  void executeRecursive(const LHCb::HltObjectSummary* SelRep);
-  LHCb::Track::Types  SetTrackType(LHCb::Track*);
-  void RemoveClones(LHCb::Tracks *);
+  void executeRecursive(LHCb::Track::Vector& tracks, const LHCb::HltObjectSummary& SelRep) const ;
+  LHCb::Track::Types  SetTrackType(const LHCb::Track& ) const ;
+  void RemoveClones(LHCb::Track::Vector& tracks) const ;
   StatusCode initializeTriggerLists();
-  class TrackComperator
-  {
-  public:
-    bool operator()(LHCb::Track* a ,LHCb::Track*b)
-    {
-      return a->nLHCbIDs() > b->nLHCbIDs();
-    }
-  }tc;
-  class AssignNumInfos
-  {
-  public:
-    std::string m_name;
-    unsigned int m_prime;
-  AssignNumInfos(std::string name,unsigned int prime)
-    :m_name(name),m_prime(prime)
-    {}
-    AssignNumInfos(){}
-  };
- std::map<std::string,AssignNumInfos> requiredNumericalInformation;
 };
 #endif // HLTTRACKCONVERTER_H
  

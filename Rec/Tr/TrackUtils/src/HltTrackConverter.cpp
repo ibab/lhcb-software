@@ -106,29 +106,10 @@ HltTrackConverter::HltTrackConverter( const std::string& name,
 		   , "Names of Trigger lines of which hits should be used" );
   declareProperty( "RequireTrackClassID", m_requireTrackClassID= true
 		   , "Require that the HLTObjectSummaryClID is equal to LHCb::Track::classID()" );
-  declareProperty( "TryToAddFirstState", m_addFirstState = true
-		   , "Names of Trigger lines of which hits should be used" );
-  declareProperty( "RequireFirstState", m_requireFirstState = m_addFirstState 
-		   , "Add only tracks were the first state could be decoded." );
-  if(m_requireFirstState&&!m_addFirstState)
-    warning() << "Algorithm is configured to require decoded track first state but will not add it to the track!"<<endmsg;
-  
-  { //configure the decoding of the numericInfo 
-    const AssignNumInfos z("0#Track.firstState.z",2);
-    const AssignNumInfos x("1#Track.firstState.x",3);
-    const AssignNumInfos y("2#Track.firstState.y",5);
-    const AssignNumInfos tx("3#Track.firstState.tx",7);
-    const AssignNumInfos ty("4#Track.firstState.ty",11);
-    const AssignNumInfos qOverP("5#Track.firstState.qOverP",13);
-    
-    requiredNumericalInformation["z"] = z;
-    requiredNumericalInformation["x"] = x;
-    requiredNumericalInformation["y"] = y;
-    requiredNumericalInformation["tx"] = tx;
-    requiredNumericalInformation["ty"] = ty;
-    requiredNumericalInformation["qOverP"] = qOverP;
-  }
+  declareProperty( "AddFirstState", m_addFirstState = true
+		   , "Add a state to the track." ) ;
 }
+
 StatusCode HltTrackConverter::initializeTriggerLists()
 {
   std::vector<std::string> m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
@@ -168,14 +149,14 @@ StatusCode HltTrackConverter::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-LHCb::Track::Types HltTrackConverter::SetTrackType(LHCb::Track * t)
+LHCb::Track::Types HltTrackConverter::SetTrackType(const LHCb::Track& t) const
 {
   //  enum  	Types  {
   //    TypeUnknown = 0, Velo, VeloR, Long,
   //    Upstream, Downstream, Ttrack, Muon,
   //    Calo, TT, VeloPix
   //  }
-  std::vector<LHCb::LHCbID> lhcbIDs = t->lhcbIDs(); 
+  const std::vector<LHCb::LHCbID>& lhcbIDs = t.lhcbIDs(); 
   bool hasIT = false;
   bool hasOT = false;
   bool hasVelo = false;
@@ -183,7 +164,7 @@ LHCb::Track::Types HltTrackConverter::SetTrackType(LHCb::Track * t)
   bool hasTT =  false;
   bool hasMuon = false;
 
-  for(std::vector<LHCb::LHCbID>::iterator it = lhcbIDs.begin();it!=lhcbIDs.end();++it)
+  for(std::vector<LHCb::LHCbID>::const_iterator it = lhcbIDs.begin();it!=lhcbIDs.end();++it)
     switch(it->detectorType())
       {
       case LHCb::LHCbID::Velo:
@@ -223,43 +204,41 @@ LHCb::Track::Types HltTrackConverter::SetTrackType(LHCb::Track * t)
   return LHCb::Track::TypeUnknown;
 }
 
-void  HltTrackConverter::RemoveClones(LHCb::Tracks * tracks)
-{
- 
-  std::sort(tracks->begin(),tracks->end(), tc);
-  bool CloneFound = false;
-  for(LHCb::Tracks::iterator it = tracks->begin();it!=tracks->end();++it)
-    for(LHCb::Tracks::iterator jt = tracks->begin();jt!=it;++jt)
-      {
-	if ((*jt)-> flags()==LHCb::Track::Clone)
-	  continue; //don't compare to track which are gonna be removed anyway
-	double nOverlap = (*jt)->containsLhcbIDs((**it));
-	double minN = (*it)->nLHCbIDs();
-	if (nOverlap/minN>=m_CloneOverlapTreshold)
-	  {
-	    (*it)->setFlags(LHCb::Track::Clone);
-	    CloneFound = true;//cant call erase here because it invalidates all iterators.
-	  }
-	debug() << "In clone remover. Comparing " << *jt << " and " << *it
-		<<" Overlap: " << nOverlap/minN 
-		<< " = "  << nOverlap << " / "  << minN << endmsg;
-      }
-  bool ClonesRemaining = CloneFound;
-  while (ClonesRemaining)
-    { 
-      ClonesRemaining = false;
-      for(LHCb::Tracks::iterator it = tracks->begin();it!=tracks->end();++it)
-	if((*it)->flags() == LHCb::Track::Clone)
-	  {
-	    ClonesRemaining= true;
-	    debug() << " removed clone " << (*it) << endmsg;
-	    delete(*it);
-	    (*it)=0; 
- 	    tracks->erase(it);
-	    break; // iterators have been invalidated because of the erase call. Start again to catch remaining clones
-	  }
-    } 
+namespace {
+  class TrackComperator
+  {
+  public:
+    bool operator()(LHCb::Track* a ,LHCb::Track*b)
+    {
+      return a->nLHCbIDs() > b->nLHCbIDs();
+    }
+  } ;
 }
+
+void  HltTrackConverter::RemoveClones(LHCb::Track::Vector& tracks) const
+{
+  std::vector<LHCb::Track*> alltracks(tracks.begin(), tracks.end()) ;
+  std::sort(alltracks.begin(),alltracks.end(), TrackComperator() );
+  tracks.clear() ;
+  for( std::vector<LHCb::Track*>::iterator it = alltracks.begin() ;
+       it != alltracks.end(); ++it ) {
+    bool found = false;
+    for(LHCb::Tracks::iterator jt = tracks.begin(); 
+	jt!=tracks.end() && !found ;++jt) {
+      size_t nOverlap = (*jt)->nCommonLhcbIDs(**it) ;
+      size_t minN     = std::min( (*jt)->lhcbIDs().size(),  (*it)->lhcbIDs().size() ) ;
+      found = nOverlap >= minN * m_CloneOverlapTreshold ;
+    }
+    if(found) {
+      delete *it ;
+      *it = 0 ;
+    } else {
+      tracks.push_back(*it) ;
+    }
+  }
+  debug() << "CloneRemoval kept " << tracks.size() << " out of " << alltracks.size() << " tracks." << endreq ;
+}
+
 StatusCode HltTrackConverter::execute() 
 {
   if(m_HltLinesFrom1stEvent)
@@ -267,136 +246,108 @@ StatusCode HltTrackConverter::execute()
       m_HltLinesFrom1stEvent = false;
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "==> Execute" << endmsg;
-  tracks = 0;
-  if(exist<LHCb::HltSelReports>  (LHCb::HltSelReportsLocation::Default))
-    {
-      LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>(LHCb::HltSelReportsLocation::Default);
-      for (std::vector<std::string>::iterator s = m_HltLines.begin();s!= m_HltLines.end();++s)
-	{
-	  const LHCb::HltObjectSummary*  selReport =  selReports->selReport(*s);
-	  if (selReport)
-	    executeRecursive(selReport);
-	}
-    }
-  if (!tracks)
-    {
-      tracks = new LHCb::Tracks(); 
-      debug() << "Inserting empty track collection to" << m_ConvertedTracksDestignation << endmsg;
-    }
-  else
-    {
-      RemoveClones(tracks);
-      debug() << "Inserting track collection with "  << tracks->size() <<" tracks to " << m_ConvertedTracksDestignation << endmsg;
-    }
-  put(tracks,m_ConvertedTracksDestignation );
+  LHCb::Track::Vector tracks ;
+  const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>(LHCb::HltSelReportsLocation::Default);
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Retrieved HltSelReports with size: " << selReports->size() << endreq ;
+  for (std::vector<std::string>::const_iterator s = m_HltLines.begin();s!= m_HltLines.end();++s) {
+    const LHCb::HltObjectSummary*  selReport =  selReports->selReport(*s);
+    if (selReport)
+      executeRecursive(tracks,*selReport);
+  } 
+  
+  RemoveClones( tracks ) ;
+  LHCb::Tracks* trackcontainer = new LHCb::Tracks() ;
+  for( LHCb::Track::Vector::iterator it = tracks.begin() ;
+       it != tracks.end(); ++it) 
+    trackcontainer->insert( *it ) ;
+
+  debug() << "Inserting track collection with "  << trackcontainer->size() <<" tracks to " << m_ConvertedTracksDestignation << endmsg;
+  put(trackcontainer,m_ConvertedTracksDestignation );
   return StatusCode::SUCCESS;
 }
 
-  void HltTrackConverter::executeRecursive(const LHCb::HltObjectSummary* SelRep)
+namespace {
+  template<class T>
+  struct StringWithSetter
   {
-    if(!SelRep)
-      return;
-    debug() << "called executeRecursive(" <<  SelRep << ");" << endmsg;
-    SmartRefVector <LHCb::HltObjectSummary> substructure = SelRep->substructure();
-    for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator child = substructure.begin();child!=substructure.end();++child)
-      executeRecursive(*child);
-    if (SelRep->summarizedObjectCLID() ==  LHCb::Track::classID() )  
-      debug() << "found track" << endmsg; //never prints anything
-    else
-      if (m_requireTrackClassID)
-	return; 
-    {
-      std::vector<LHCb::LHCbID> LhcbIDs = SelRep->lhcbIDs();
-      for (std::vector<LHCb::LHCbID>::iterator it = LhcbIDs.begin();it!=LhcbIDs.end();++it)
-	if (m_UseHitsFromLookupTable[it->detectorType()])
-	  {
-	    //creation of the Track object
-	    LHCb::Track * t = new LHCb::Track();
-	    for (;it != LhcbIDs.end();++it)
-	      if (m_UseHitsFromLookupTable[it->detectorType()])
-		{
-		  t -> addToLhcbIDs(*it);
-		  debug() << "added" << *it << " to track " << t << endmsg; 
-		}
-	    if (m_addFirstState|| m_requireFirstState)
-	      //decode first state from numericalInfo() and add it to track
-	      {
-		std::vector<std::string> numericalInfoKeys = SelRep->numericalInfoKeys();
-		LHCb::HltObjectSummary::Info numericalInfo = SelRep->numericalInfo();
-		if ( msgLevel(MSG::DEBUG) )
-		  { 
-		    for (std::vector<std::string>::iterator it = numericalInfoKeys.begin();it!=numericalInfoKeys.end();++it)
-		      debug() << *it << "\t";
-		    debug() << endmsg;
-		    debug() <<  numericalInfo[requiredNumericalInformation["x"].m_name]	<< "\t"
-			    <<  numericalInfo[requiredNumericalInformation["y"].m_name]	<< "\t"
-			    <<  numericalInfo[requiredNumericalInformation["y"].m_name]	<< "\t"
-			    <<  numericalInfo[requiredNumericalInformation["tx"].m_name]<< "\t"
-			    <<  numericalInfo[requiredNumericalInformation["ty"].m_name]<< "\t"
-			    <<  numericalInfo[requiredNumericalInformation["qOverP"].m_name]	
-			    << endmsg;
-		  }
-		
-		//Are all required variables in the std::map recievet from SelRep?
-		unsigned int test = 1;
-		for (std::vector<std::string>::iterator it = numericalInfoKeys.begin();it!=numericalInfoKeys.end();++it)
-		  for(std::map<std::string,AssignNumInfos>::iterator jt =requiredNumericalInformation.begin();jt!=requiredNumericalInformation.end();++jt)
-		    if(*it==jt->second.m_name)
-		      //for (unsigned int i=0;i<requiredNumericalInformation.size();i++)
-		      //if (*it==requiredNumericalInformation[i])
-		      test*=jt->second.m_prime; //this condition must ecactly once be true for each element of requiredNumericalInformation
-		if (test == 30030)              //so the product should be the product of the first n elemets of primes. Since these numbers are prime this is the unique factorisation.  
-		  {
-		    if ( msgLevel(MSG::DEBUG) )
-		      debug() << "Trach state recieved from HltObjectSummary" << endmsg;
-		    LHCb::State s;
-		    s.setX( numericalInfo[requiredNumericalInformation["x"].m_name] );
-		    s.setY( numericalInfo[requiredNumericalInformation["y"].m_name] );
-		    s.setZ ( numericalInfo[requiredNumericalInformation["z"].m_name] );
-		    s.setTx ( numericalInfo[requiredNumericalInformation["tx"].m_name] );
-		    s.setTy ( numericalInfo[requiredNumericalInformation["ty"].m_name] );
-		    s.setQOverP ( numericalInfo[requiredNumericalInformation["qOverP"].m_name] );
-		    if (m_addFirstState )
-		      t->addToStates(s);
-		  }
-		
-		else
-		  {
-		    if (m_requireFirstState)
-		      {
-			delete t;
-			return;
-		      }
-		    if ( msgLevel(MSG::DEBUG) )
-		      { 
-			debug() << "test evaluates to :" << test << " which is not what it supposed to be!" << endmsg;
-			for (std::vector<std::string>::iterator it = numericalInfoKeys.begin();it!=numericalInfoKeys.end();++it)
-			  debug() << *it << "\t";
-			debug() << endmsg;
-			for (std::map<std::string,AssignNumInfos>::iterator it = requiredNumericalInformation.begin();it!=requiredNumericalInformation.end();++it)
-			  if (count(numericalInfoKeys.begin(),numericalInfoKeys.end(),it->second.m_name) !=1 )
-			    debug() << it->second.m_name << " occurs " << count(numericalInfoKeys.begin(),numericalInfoKeys.end(),it->second.m_name)  << "(supposed to be 1!)" <<endmsg ;
-		      }
-		  }
-	      }
-	    t->setType(SetTrackType(t));
-	    t->setHistory(LHCb::Track::HLTImportedTrack);
-	    debug() << t;
-	      
-		
-	    
-	    if (!tracks)
-	      tracks = new LHCb::Tracks();
-	    if (t->nLHCbIDs()>= m_MinimalHits )
-	      tracks->add(t);
-	    else
-	      delete t;
-	    t=NULL;
-	    break; //outer loop over LHCbIds
-	  } 
-    }
+    StringWithSetter( const std::string& aname, void (T::*afunction)(double) ) 
+      : name(aname), function(afunction) {}
+    std::string name ;
+    void (T::*function)(double) ;
+  } ;
+}
 
+
+void HltTrackConverter::executeRecursive(LHCb::Track::Vector& tracks, const LHCb::HltObjectSummary& SelRep) const
+{
+  debug() << "called executeRecursive(" <<  SelRep << ");" << endmsg;
+  SmartRefVector <LHCb::HltObjectSummary> substructure = SelRep.substructure();
+  for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator child = substructure.begin();child!=substructure.end();++child)
+    if( *child ) executeRecursive(tracks, **child);
+
+  if (SelRep.summarizedObjectCLID() ==  LHCb::Track::classID() )  
+    debug() << "found track" << endmsg; //never prints anything
+  else
+    if (m_requireTrackClassID) return; 
+
+  // collect the LHCbIDs
+  std::vector<LHCb::LHCbID> LhcbIDs = SelRep.lhcbIDs();
+  LHCb::Track::LHCbIDContainer acceptedlhcbids ;
+  for (std::vector<LHCb::LHCbID>::iterator it = LhcbIDs.begin();it!=LhcbIDs.end();++it)
+    if (m_UseHitsFromLookupTable[it->detectorType()]) {
+      if( it->isOT() && it->otID().straw()==0 ) 
+	warning() << "Skipping invalid LHCbID: " << *it << endreq ;
+      else {
+	acceptedlhcbids.push_back(*it) ;
+	if ( msgLevel(MSG::DEBUG) ) 
+	  debug() << "added" << *it << " to track." << endmsg; 
+      }
+    }
+  
+  if( acceptedlhcbids.size() >= m_MinimalHits ) {
+    
+    // create a state from the info fields
+    bool stateIsValid = false ;
+    LHCb::State state;
+    if (m_addFirstState ) {
+      
+      // we could also do this in initialize. but then, who cares.
+      std::vector< StringWithSetter<LHCb::State> > trackStateFields ;
+      trackStateFields.push_back( StringWithSetter<LHCb::State>("0#Track.firstState.z",&LHCb::State::setZ) ) ;
+      trackStateFields.push_back( StringWithSetter<LHCb::State>("1#Track.firstState.x",&LHCb::State::setX) ) ;
+      trackStateFields.push_back( StringWithSetter<LHCb::State>("2#Track.firstState.y",&LHCb::State::setY) ) ;
+      trackStateFields.push_back( StringWithSetter<LHCb::State>("3#Track.firstState.tx",&LHCb::State::setTx) ) ;
+      trackStateFields.push_back( StringWithSetter<LHCb::State>("4#Track.firstState.ty",&LHCb::State::setTy) ) ;
+      trackStateFields.push_back( StringWithSetter<LHCb::State>("5#Track.firstState.qOverP",&LHCb::State::setQOverP) ) ;
+
+      //decode first state from numericalInfo() and add it to track
+      stateIsValid = true ;
+      const LHCb::HltObjectSummary::Info& numericalInfo = SelRep.numericalInfo();
+      for( std::vector< StringWithSetter<LHCb::State> >::const_iterator ifield = trackStateFields.begin() ;
+	   ifield != trackStateFields.end(); ++ifield) {
+	LHCb::HltObjectSummary::Info::const_iterator aninfo = numericalInfo.find( ifield->name ) ;
+	if( aninfo != numericalInfo.end() ) 
+	  (state.*(ifield->function))( aninfo->second ); 
+	else {
+	  warning() << "Cannot find numerical info for field " << ifield->name << endreq ;
+	  stateIsValid = false ;
+	}
+      }
+    }
+    
+    if( stateIsValid || !m_addFirstState ) {
+      // create the track, fill it and add to track list
+      LHCb::Track * t = new LHCb::Track();
+      t->setLhcbIDs( acceptedlhcbids ) ;
+      t->setType(SetTrackType(*t));
+      t->setHistory(LHCb::Track::HLTImportedTrack);
+      if( stateIsValid ) t->addToStates(state);
+      tracks.push_back(t);
+    } 
   }
+}
+
 //=============================================================================
 //  Finalize
 //=============================================================================
