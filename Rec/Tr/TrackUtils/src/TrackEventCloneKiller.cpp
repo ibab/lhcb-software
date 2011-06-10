@@ -34,7 +34,8 @@ DECLARE_ALGORITHM_FACTORY( TrackEventCloneKiller );
 //=============================================================================
 TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_cloneFinder("TrackCloneFinder",this)
 {
   // default list of input containers
   m_tracksInContainers.push_back( LHCb::TrackLocation::Forward    );
@@ -55,8 +56,7 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
                    m_skipSameContainerTracks = true );
   declareProperty( "CompareInSameContainerForwardUpstream",
                    m_compareInSameContainerForwardUpstream = false);
-  declareProperty( "CloneFinderTool",
-                   m_cloneFinderName = "TrackCloneFinder" );
+  declareProperty( "CloneFinderTool", m_cloneFinder) ;
 // In some cases we just want to flag the tracks but not copy them to an output 
 // container. The following algorithms can supress clones by checking 
 // LHCb::Track::Clone
@@ -85,8 +85,7 @@ StatusCode TrackEventCloneKiller::initialize()
   
   // Retrieve the clone finder tool
   // ------------------------------
-  m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
-                                           "CloneFinderTool", this );
+  sc = m_cloneFinder.retrieve() ;
   
   // Reserve memory for track vector
   // -------------------------------
@@ -251,6 +250,6 @@ void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
 StatusCode TrackEventCloneKiller::finalize()
 {
   debug() << "==> Finalize" << endmsg;
-  
+  m_cloneFinder.release().ignore() ;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };

@@ -6,6 +6,7 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackCloneFinder.h"
@@ -34,7 +35,7 @@ public:
 protected:
   
 private:
-  ITrackCloneFinder* m_cloneFinder; ///< interface to clone finder tool
+  ToolHandle<ITrackCloneFinder> m_cloneFinder; ///< interface to clone finder tool
   std::vector<LHCb::Track*> allTracks;
   
   bool m_debugLevel;
