@@ -4,6 +4,13 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-06-10 - Wouter Hulsbergen
+ - changes in HltTrackConverter
+   - fix bug in  HltTrackConverter::CloneRemoval
+   - check validity of OTHits in HltTrackConverter
+ - make clonetool a toolhandle in TrackEventCloneKiller
+ - use the correct ST hit adders in TrackHitAdder
+
 !========================= TrackUtils v1r41 2011-02-28 =========================
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
