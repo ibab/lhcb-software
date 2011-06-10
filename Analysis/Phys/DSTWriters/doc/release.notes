@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-06-10 - Rob Lambert
+ - Fixed a problem with the new __dev__ dstwriter, causing the 
+   davincitests io.test_read_dst to fail.
+   some of the sequesnces were configured in the wrong order.
+
 ! 2011-06-09 - Rob Lambert
  - Update to use IOHelper to create and configure output streams.
  - tested using the davincitests.fsrs and davincitests.stripping suites

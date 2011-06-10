@@ -47,6 +47,10 @@ class DSTWriterSelectionSequence(object) :
         
         self.mainSeq = None
         
+        if extras is not None:
+            for _algs in [x(selSequence) for x in extras] :
+                self.algos += _algs
+        
         
         self.algos.append( FixInputCopyStream() )
         
@@ -60,11 +64,8 @@ class DSTWriterSelectionSequence(object) :
                 self.algos += [alg]
                 if extras is not None:
                     alg.OptItemList += [extras.output]
-        
-        if extras is not None:
-            for _algs in [x(selSequence) for x in extras] :
-                self.algos += _algs
-        
+    
+    
     def sequence(self, sequencerType = GaudiSequencer) :
         if self.mainSeq == None :
             self.mainSeq = sequencerType(self.name, Members = copy(self.algos))
