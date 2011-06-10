@@ -150,6 +150,11 @@ void TupleToolWZJets::SaveDecayChainParticles( const LHCb::Particle *top){
 bool TupleToolWZJets::isParticleInDecay(const LHCb::Particle* part){
   bool isInDecay = false;
   const LHCb::ProtoParticle* proto1 = part->proto();
+  if (!proto1)
+    {
+      warning() << "Could not retrieve protoparticle! Cannot check overlap!" << endmsg;
+      return false;
+    }
   const LHCb::Track* track = proto1->track();
   for(  std::vector<LHCb::Particle*>::iterator it = m_decayParticles.begin() ; it != m_decayParticles.end() ; ++it ){
     const LHCb::ProtoParticle* proto = (*it)->proto();

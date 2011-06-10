@@ -53,6 +53,7 @@ bool TupleToolJetsBase::WriteJetToTuple(const LHCb::Particle*jet,std::string pre
       result &= (*m_tuple)->column( prefix+"_maxPT", jet?maxPT(jet):-1.0);
       SmartRefVector< LHCb::Particle > SortedDaughters; 
       //buffer to store intermediate result to speed things up a bit
+      result &= (*m_tuple)->column( prefix+"_PT1",  jet?MaxSumNPart(jet,1, LoKi::Cuts::PT,&SortedDaughters):-1.0);
       result &= (*m_tuple)->column( prefix+"_PT2",  jet?MaxSumNPart(jet,2, LoKi::Cuts::PT,&SortedDaughters):-1.0);
       result &= (*m_tuple)->column( prefix+"_PT3",  jet?MaxSumNPart(jet,3, LoKi::Cuts::PT,&SortedDaughters):-1.0);
       result &= (*m_tuple)->column( prefix+"_PT4",  jet?MaxSumNPart(jet,4, LoKi::Cuts::PT,&SortedDaughters):-1.0);

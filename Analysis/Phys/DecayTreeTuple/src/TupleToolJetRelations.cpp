@@ -91,7 +91,7 @@ StatusCode TupleToolJetRelations::fill( const LHCb::Particle* /* top */,
 double TupleToolJetRelations::DeltaR(const LHCb::Particle& jet,const LHCb::Particle& jet2)
 {  //Delta R
   double dphi = jet.momentum().Phi()- jet2.momentum().Phi();
-  while (fabs(dphi)>2*M_PI)
+  while (fabs(dphi)>M_PI)
     dphi+=(dphi>0)?-2*M_PI:2*M_PI;
   return sqrt(pow(jet.momentum().Eta()- jet2.momentum().Eta(),2)+pow(dphi,2));
 }
@@ -109,7 +109,7 @@ bool TupleToolJetRelations::fill(unsigned int i,const IJets2Jets::Table::Entry *
   if (e&&e->to())
     WriteJetToTuple(e->to(),m_head+"Relation"+I+"Jet");
   else 
-    WriteJetToTuple(0,m_head+"Relation"+I+"Jet");
+    WriteJetToTuple(0      ,m_head+"Relation"+I+"Jet");
       
 
   
