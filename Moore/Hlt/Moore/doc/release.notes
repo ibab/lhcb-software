@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2011-06-10 - Eric van Herwijnen
+ - changes to Configuration.py and ConfigureFromCheckpoint.py to  
+   support the F subfarms
+
 !========================== Moore v12r6p1 2011-05-12 =================
 ! 2011-05-12 - Gerhard Raven
  - add a postconfig action to update any configurable which has an
