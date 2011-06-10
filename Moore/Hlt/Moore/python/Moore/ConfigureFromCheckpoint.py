@@ -12,9 +12,10 @@ print "echo DIM_DNS_NODE="+os.environ['DIM_DNS_NODE']+';'
 numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
 host = socket.gethostname().split('.')[0].upper()
 if host[:3]=='HLT':
-  if len(host)==8:
-    id = int(host[6:])
-    if id < 5: numChildren=7
-    elif id < 12: numChildren=7
-    else: numChildren=19
+  if host[3]=='F': numChildren=19
+  if host[3]!='F':
+    if len(host)==8:
+      id = int(host[6:])
+      if id < 12: numChildren=7
+      if id > 11: numChildren=19
 print "echo NUMBER_OF_CHILDREN="+str(numChildren)+';'
