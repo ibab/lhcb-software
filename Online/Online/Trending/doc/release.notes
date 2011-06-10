@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2011-06-10 - Olivier Callot
+ - Remove the 'extern "C"' before the declaration of the main in the two applicattions
+
 !============================== 2011-06-06 v1r8 ==============================
 ! 2011-06-06 - Olivier Callot
  - New program DumpTrendingFile to analyse a file and detect ordering problems,

@@ -14,7 +14,7 @@
 //
 // 2011-05-31 : Olivier Callot
 //-----------------------------------------------------------------------------
-extern "C" int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
   // load trending tool
   ISvcLocator * iface = Gaudi::svcLocator() ;
   IService * isvc ;
