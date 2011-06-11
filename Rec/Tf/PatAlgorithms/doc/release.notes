@@ -4,6 +4,21 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2011-06-11 - Manuel Tobias Schiller
+ - PatSeedingTool: revert back to old (pre-early data) tuning, and make
+   current tuning available as early data tuning again - the old tuning turned
+   out to be better when the detector is not roughly misaligned
+ - PatSeedingTool: tighten CurveTol from 5 mm to 3mm; during the x candidate
+   search, this parameter influences how close the hit in T2 must be to the
+   prediction based on hits in T1 and T3 - this has been shown to help
+   efficiency and improve the behaviour of the algorithm in very busy events
+   by killing a certain amount of combinatorics
+ - PatSeedingTool: during x candidate search, consider only the best and
+   next-to-best candidates (best here means hit in T2 is closest to
+   prediction) to further reduce combinatoric buildup in busy events; if the
+   best candidate satisfies quality cuts, use it greedily, i.e. discarding a
+   potentially existing next-to-best candidate
+
 ! 2011-05-02 - Victor Coco
  - Fix coverity defect 17680: UNINIT_CTOR in PatDownstream, m_clusterFilter,
    m_maxDist removed from header (unused)

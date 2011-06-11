@@ -31,6 +31,17 @@ class SeedingConf(object):
     self.configureTool(SeedAlg.PatSeedingTool)
     
   def configureTool(self, SeedTool):
+    if "earlyData"  in TrackSys().getProp("SpecialData"):
+      SeedTool.MaxRangeIT = 35. # mm
+      SeedTool.TolCollectOT = 4.0 # mm
+      SeedTool.TolCollectIT = 0.6 # mm
+      SeedTool.MaxChi2HitOT = 56.25
+      SeedTool.MaxChi2HitIT = 36.0
+      SeedTool.MinXPlanes = 4
+      SeedTool.MinTotalPlanes = 8
+      SeedTool.OTNHitsLowThresh = 15
+      SeedTool.MaxMisses = 2
+      SeedTool.MaxHoles = 4
     if TrackSys().fieldOff():
       SeedTool.xMagTol = 4e2
       SeedTool.zMagnet = 0.
@@ -46,6 +57,17 @@ class CosmicConf(object):
     self.configureTool(SeedAlg.PatSeedingTool)
         
   def configureTool(self, SeedTool, hitCreator=Tf__OTHitCreator("ToolSvc.OTHitCreator")):
+    if "earlyData"  in TrackSys().getProp("SpecialData"):
+      SeedTool.MaxRangeIT = 35. # mm
+      SeedTool.TolCollectOT = 4.0 # mm
+      SeedTool.TolCollectIT = 0.6 # mm
+      SeedTool.MaxChi2HitOT = 56.25
+      SeedTool.MaxChi2HitIT = 36.0
+      SeedTool.MinXPlanes = 4
+      SeedTool.MinTotalPlanes = 8
+      SeedTool.OTNHitsLowThresh = 15
+      SeedTool.MaxMisses = 2
+      SeedTool.MaxHoles = 4
     #no magnetic field
     #options to tune PatSeeding for tracking with B field off
     SeedTool.xMagTol = 4e2

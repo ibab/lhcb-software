@@ -74,16 +74,16 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   // curvature cut
   declareProperty( "MinMomentum",		m_minMomentum		=  500. * Gaudi::Units::MeV );
-  declareProperty( "CurveTol",			m_curveTol		=    5. * Gaudi::Units::mm );
+  declareProperty( "CurveTol",			m_curveTol		=    3. * Gaudi::Units::mm );
   // center of magnet compatibility
   declareProperty( "zMagnet",			m_zMagnet		= -1e42 );
   declareProperty( "xMagTol",			m_xMagTol		= 2000. * Gaudi::Units::mm );
   // window to collect hits from
-  declareProperty( "TolCollectOT",		m_tolCollectOT		=    4. * Gaudi::Units::mm );
-  declareProperty( "TolCollectIT",		m_tolCollectIT		=    .6 * Gaudi::Units::mm );
+  declareProperty( "TolCollectOT",		m_tolCollectOT		=    3. * Gaudi::Units::mm );
+  declareProperty( "TolCollectIT",		m_tolCollectIT		=    .3 * Gaudi::Units::mm );
   declareProperty( "TolCollectITOT",		m_tolCollectITOT	=    .6 * Gaudi::Units::mm );
   // clone killing in xz projection
-  declareProperty( "MinXPlanes",		m_minXPlanes		=    4                     );
+  declareProperty( "MinXPlanes",		m_minXPlanes		=    5                     );
   declareProperty( "CloneMaxXDistIT",		m_cloneMaxXDistIT	=    3. * Gaudi::Units::mm );
   declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
@@ -96,7 +96,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "zForYMatch",		m_zForYMatch		= 9000. * Gaudi::Units::mm );
   // spread of run of stereo hits in projection plane
   declareProperty( "MaxRangeOT",		m_maxRangeOT		=  150. * Gaudi::Units::mm );
-  declareProperty( "MaxRangeIT",		m_maxRangeIT		=   35. * Gaudi::Units::mm );
+  declareProperty( "MaxRangeIT",		m_maxRangeIT		=   15. * Gaudi::Units::mm );
   // pointing criterium in y
   declareProperty( "yCorrection",		m_yCorrection		= -1e42);
   declareProperty( "MaxYAtOrigin",		m_maxYAtOrigin		=  400. * Gaudi::Units::mm );
@@ -115,18 +115,18 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   // internal fit, outlier removal, minimum number of planes
   //------------------------------------------------------------------------
-  declareProperty( "MaxChi2HitOT",		m_maxChi2HitOT		=   56.25                  );
-  declareProperty( "MaxChi2HitIT",		m_maxChi2HitIT		=   36.                    );
+  declareProperty( "MaxChi2HitOT",		m_maxChi2HitOT		=   30.                    );
+  declareProperty( "MaxChi2HitIT",		m_maxChi2HitIT		=   10.                    );
   declareProperty( "MaxTrackChi2",		m_maxTrackChi2     	=   15.                    );
   declareProperty( "MaxFinalChi2",		m_maxFinalChi2     	=   12.25                  );
   declareProperty( "MaxFinalTrackChi2",		m_maxFinalTrackChi2	=    9.                    );
   declareProperty( "MaxTrackChi2LowMult",	m_maxTrackChi2LowMult	=    6.			   );
-  declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=    8			   );
-  declareProperty( "MaxMisses",			m_maxMisses		=    2			   );
-  declareProperty( "OTNHitsLowThresh",		m_otNHitsLowThresh	=   15			   );
+  declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=    9			   );
+  declareProperty( "MaxMisses",			m_maxMisses		=    1			   );
+  declareProperty( "OTNHitsLowThresh",		m_otNHitsLowThresh	=   17			   );
 
   declareProperty( "MinPlanesPerStation",	m_minPlanesPerStation	=    1			   );
-  declareProperty( "MaxHoles",			m_maxHoles		=    4			   );
+  declareProperty( "MaxHoles",			m_maxHoles		=    2			   );
   declareProperty( "ITStubLooseChi2",		m_itStubLooseChi2	= 1500.			   );
   declareProperty( "ITStubTightChi2",		m_itStubTightChi2	=   80.			   );
 
@@ -489,11 +489,12 @@ StatusCode PatSeedingTool::performTracking(
   std::vector<PatSeedTrack> pool;
   std::vector<PatSeedTrack> lowQualTracks;
   std::vector<PatSeedTrack*> finalSelection;
+  PatFwdHits candsT2;
   if (0 == state) pool.reserve(1024);
 
   // collect all tracks inside a single region
   collectPerRegion(pool, lowQualTracks, finalSelection,
-                   outputTracks, state);
+                   outputTracks, state, candsT2);
 
   //== Find remaining points in IT
   // skip in trigger context if state indicates a track with fabs(y)>70cm at T1
@@ -513,7 +514,7 @@ StatusCode PatSeedingTool::performTracking(
     std::swap(m_initialArrow, initialArrow);
     std::swap(m_maxUsedFractPerRegion, maxUsedFractPerRegion);
     collectPerRegion(pool, lowQualTracks, finalSelection,
-                     outputTracks, state, true);
+                     outputTracks, state, candsT2, true);
     std::swap(m_initialArrow, initialArrow);
     std::swap(m_maxUsedFractPerRegion, maxUsedFractPerRegion);
   }
@@ -532,6 +533,7 @@ void PatSeedingTool::collectPerRegion(
                                       std::vector<PatSeedTrack*>& finalSelection,
                                       std::vector<LHCb::Track*>& outputTracks,
                                       const LHCb::State* state,
+				      PatFwdHits& candsT2,
                                       bool OTonly)
 {
   std::vector<PatSeedTrack>::iterator itS;
@@ -592,7 +594,7 @@ void PatSeedingTool::collectPerRegion(
         const unsigned reginc1 = (m_nReg - 1u - (reginc / m_nReg));
         const unsigned reginc2 = (m_nReg - 1u - (reginc % m_nReg));
         findXCandidates(lay, reg | (reginc1 << 3u) | (reginc2 << 6u),
-                        pool, state);
+                        pool, candsT2, state);
 
         if ( msgLevel( MSG::DEBUG ) )
           debug() << "Found " << pool.size()
@@ -1524,9 +1526,11 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
 //=========================================================================
 void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
                                        std::vector<PatSeedTrack>& pool,
+				       PatFwdHits& candsT2,
                                        const LHCb::State* state)
 {
   HitRange::const_iterator itBeg, itH0, itH1, itH2;
+  candsT2.reserve(16);
 
   // depending on the region, we have to correct for the OT tilt because it
   // causes a z displacement (negligible for the IT):
@@ -1625,16 +1629,37 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       if (0 != state && !isGoodSlope(state, true, slope))
         continue;
 
-      // work out intercept
-      const double intercept =  x0 - z0 * slope;
-      // and use it to correct for curvature in prediction of x1
+      // work out by how much we need to propagate wrt z0
       const double dz = regionZ0(1,lay1,reg1) +
 	regionDzDx(1,lay1,reg1) * (x0 + slope * (regionZ0(1,lay1,reg1) - z0)) - z0;
-      const double x1Pred = x0 + dz * (slope + m_initialArrow*intercept*dz);
+      // "track" parameters for hit position prediction in T2
+      double a, b, c;
+      {
+	// work out intercept at z = 0
+	const double intercept =  x0 - z0 * slope;
+	// get curvature
+	c = - m_initialArrow * intercept;
+	// use it to obtain track parameter predictions
+	const double dz0 = z0 - m_zReference;
+	const double dz2 = z2 - m_zReference;
+	const double D0 = x0 - c * dz0 * dz0 * (1. + dz0 * m_dRatio);
+	const double D2 = x2 - c * dz2 * dz2 * (1. + dz2 * m_dRatio);
+	const double denom = 1. / (dz2 - dz0);
+	a = denom * (dz2 * D0 - dz0 * D2);
+	b = denom * (D2 - D0);
+      }
+      double x1Pred, slopePred;
+      {
+	// how far is layer in T2 away from m_zReference
+	const double dz1 = dz + z0 - m_zReference;
+	// work out prediction for x position and slope there
+	x1Pred = a + dz1 * (b + dz1 * (c * (1. + dz1 * m_dRatio)));
+	slopePred = b + dz1 * c * (2. + 3. * dz1 * m_dRatio);
+      }
       // obtain tilt-corrected range around x1Pred, open window of size
       // m_curveTol
       PatRange x1Range = tiltCorrectedRange(1,lay1,reg1,reg1,
-                                            dz, slope, x1Pred, m_curveTol);
+                                            dz, slopePred, x1Pred, m_curveTol);
       // if we know more because we have a state, make use of that knowledge
       if (0 != state) x1Range.intersect(predictXinRegion(state, 1, lay1, reg1));
 
@@ -1642,6 +1667,56 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         x1Range.max() << " linear " << x0 + dz * slope << endmsg;
 
       HitRange rangeX1 = hitsInRange( x1Range, 1, lay1, reg1 );
+
+      // find best (and next-to-best if applicable) candidate hits in terms
+      // of distance of hit to predicted x position in T2
+      HitRange::const_iterator itH1Best = rangeX1.end(), itH1NextBest = rangeX1.end();
+      double dx1best = 1e42;
+      for ( itH1 = rangeX1.begin(); rangeX1.end() != itH1; ++itH1 ) {
+        PatFwdHit* hit1 = *itH1;
+        if ( hit1->isUsed() ) continue;
+	// obtian new prediction with correct hit z
+	const double dz1 = hit1->hit()->zAtYEq0() - m_zReference;
+	const double x1p = a + dz1 * (b + dz1 * c * (1. + dz1 * m_dRatio));
+	const double r1 = (hit1->hit()->othit())?hit1->hit()->othit()->untruncatedDriftDistance(0.):0.;
+        const double dx1 = hit1->hit()->xAtYEq0() - x1p;
+	const double absdx1 = std::min(std::abs(dx1-r1), std::abs(dx1 + r1));
+	if (absdx1 < dx1best) {
+	  itH1NextBest = itH1Best;
+	  dx1best = absdx1;
+	  itH1Best = itH1;
+	  // if part of cluster, skip 2nd hit in cluster
+	  if (hit1->hasNext() && rangeX1.end() != (itH1 + 1) &&
+	      !(*(itH1 + 1))->isUsed()) {
+	    ++itH1;
+	    // update dx1best if better for 2nd hit in cluster
+	    hit1 = *itH1;
+	    const double dz1 = hit1->hit()->zAtYEq0() - m_zReference;
+	    const double x1p = a + dz1 * (b + dz1 * c * (1. + dz1 * m_dRatio));
+	    const double r1 = (hit1->hit()->othit())?hit1->hit()->othit()->untruncatedDriftDistance(0.):0.;
+	    const double dx1 = hit1->hit()->xAtYEq0() - x1p;
+	    const double absdx1 = std::min(std::abs(dx1-r1), std::abs(dx1 + r1));
+	    if (absdx1 < dx1best)
+	      dx1best = absdx1;
+	  }
+	}
+      }
+      // we're done if there is no best candidate hit
+      if (itH1Best == rangeX1.end()) continue;
+      // ok, make new array with best and next-to-best candidate hits
+      candsT2.clear();
+      candsT2.push_back(*itH1Best);
+      if ((*itH1Best)->hasNext() && rangeX1.end() != (itH1Best + 1) &&
+	  !(*(itH1Best + 1))->isUsed())
+	candsT2.push_back(*(itH1Best + 1));
+      if (itH1NextBest != rangeX1.end()) {
+	candsT2.push_back(*itH1NextBest);
+        if ((*itH1NextBest)->hasNext() && rangeX1.end() != (itH1NextBest + 1) &&
+	    !(*(itH1NextBest + 1))->isUsed())
+	  candsT2.push_back(*(itH1NextBest + 1));
+      }
+
+      rangeX1 = HitRange(candsT2.begin(), candsT2.end());
       for ( itH1 = rangeX1.begin(); rangeX1.end() != itH1; ++itH1 ) {
         PatFwdHit* hit1 = *itH1;
         if ( hit1->isUsed() ) continue;
@@ -1656,6 +1731,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         } else if ( m_printing ) {
           info() << "         ==> found hit1 " << x1 << endmsg;
         }
+
         // isolation in station 1?
         if (m_enforceIsolation && !isIsolated(itH1, rangeX1))
           continue;
@@ -1782,6 +1858,8 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         if (0 != state && !isGoodSlope(state, true, track.xSlope(z1)))
           continue;
         addIfBetter( track, pool );
+	// ok, best candidate so far passed quality cuts, discard others
+	break;
       }
     }
   }

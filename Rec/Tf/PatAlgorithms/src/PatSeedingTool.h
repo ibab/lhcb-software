@@ -132,7 +132,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 
     /// find candidates in xz projection in region reg, layer lay
     void findXCandidates ( unsigned lay, unsigned reg,
-	std::vector<PatSeedTrack>& pool,
+	std::vector<PatSeedTrack>& pool, PatFwdHits& candsT2,
 	const LHCb::State* state );
 
     /// collect stereo hits compatible with track candidate in xz projection
@@ -164,6 +164,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 	std::vector<PatSeedTrack*>& finalSelection,
 	std::vector<LHCb::Track*>& outputTracks,
 	const LHCb::State* state,
+	PatFwdHits& candsT2,
 	bool OTonly = false);
 
     /// second stage: make tracks in one IT station, collect more OT/IT hits
@@ -446,11 +447,11 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 
     /// return range satisfying center of magnet constraint
     inline PatRange magnetRange(const double x0, const double zScaling) const
-    { return symmetricRange(x0 * (1. + zScaling), m_xMagTol * zScaling); }
+    { return symmetricRange(x0 * (1. + zScaling), std::abs(m_xMagTol * zScaling)); }
 
     /// return range satisfying impact condition at z=0
     inline PatRange impactRange(const double x0, const double zScaling) const
-    { return symmetricRange(x0 * (1. + zScaling), m_maxImpact * zScaling); }
+    { return symmetricRange(x0 * (1. + zScaling), std::abs(m_maxImpact * zScaling)); }
 
     /// return extension of a region in x
     inline PatRange regionX(const unsigned sta, const unsigned lay,
