@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2011-06-13 - Philip Hunt
+ - Added MCTupleToolPrompt which flags whether a particle originates from a prompt charm
+   decay based on the true lifetime of the ancestors.
 
 !========================= DecayTreeTuple v3r14p2 2011-05-24 =========================
 ! 2011-05-23 - Albert Bursche
