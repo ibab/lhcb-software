@@ -422,18 +422,28 @@ class IOHelper(object):
         for type in self._inputSvcTypDict:
             if self._inputSvcTypDict[type] in filestring:
                 return type
+        
+        for type in self._outputSvcTypDict:
             if self._outputSvcTypDict[type] in filestring:
                 return type
+        
         return "UNKNOWN"
     
-    def convertConnectionStrings(self, filelist, IO):
+    def convertConnectionStrings(self, filelist, IO, force=False):
         '''Filenames:  Go from a list of connection strings or file names to a new list of connection strings
         needs to know the IO type to know what to convert to'''
         IO=self.__chooseIO(IO)
+
+        #don't do anything if my type is MDF
+        if not force and IO=="I" and self._inputPersistency=="MDF":
+            return filelist
+        if not force and IO=="O" and self._outputPersistency=="MDF":
+            return filelist
+        
         retlist=[]
         for file in filelist:
             #never convert an MDF file, it's not needed
-            if self.detectFileType(file)=="MDF":
+            if not force and self.detectFileType(file)=="MDF":
                 retlist.append(file)
                 continue
             #otherwise convert it
@@ -636,8 +646,9 @@ class IOHelper(object):
                 
             if hasattr(stream,'Output'):
                 if stream.Output is not None:
-                    if len(stream.Output):
-                        if self.detectFileType(stream.Output) not in ["MDF"]:
+                    #don't convert odd looking lists or empty strings
+                    if len(stream.Output) and type(stream.Output) is str:
+                        if self.detectFileType(stream.Output) not in ["MDF","ETC","UNKNOWN"]:
                             stream.Output=self.dressFile(self.undressFile(stream.Output),"O")
         return
     

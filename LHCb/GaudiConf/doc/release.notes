@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-13 - Rob Lambert
+ - Add more MDF protection in convertConnectionStrings
+ - Add 'force' mode for convertConnectionStrings
+ - allow for input and output type dictionaries to be different
+
 ! 2011-06-08 - Marco Cattaneo
  - Minor fix to python/GaudiConf/QMTest/LHCbExclusions.py
 
