@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-06-13 - Rob Lambert
+ - Remove ETC from stripping tests
+
 ! 2011-06-09 - Rob Lambert
  - Update FSR test suite
 

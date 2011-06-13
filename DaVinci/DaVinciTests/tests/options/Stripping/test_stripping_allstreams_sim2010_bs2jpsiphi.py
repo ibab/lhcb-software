@@ -23,8 +23,8 @@ sc = StrippingConf( Streams = allStreams)
 
 from Configurables import EventTuple, TupleToolSelResults
 
-tag = EventTuple("TagCreator")
-tag.EvtColsProduce = True
+tag = EventTuple("SelResults")
+#tag.EvtColsProduce = True
 tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolSelResults"  ]
 tag.addTool(TupleToolSelResults)
 
@@ -37,11 +37,12 @@ tag.TupleToolSelResults.Selections = sc.selections()  # Add the list of strippin
 from Configurables import DaVinci
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
-DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
+#DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().EvtMax = 200                         # Number of events
 DaVinci().DataType = "2010"      
 DaVinci().Simulation   = True                  # It is MC
-DaVinci().ETCFile = "etc.root"
+DaVinci().TupleFile = "DVnTuple.root"
+#DaVinci().ETCFile = "etc.root"                # no longer supported
 
 #-- GAUDI jobOptions generated on Mon Jan 17 17:13:58 2011
 #-- Contains event types : 
