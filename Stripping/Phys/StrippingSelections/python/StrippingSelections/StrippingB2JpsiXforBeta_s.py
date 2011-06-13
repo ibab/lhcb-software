@@ -92,9 +92,9 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                                                                                                                                  
         self.f0List = self.createCombinationsSel( OutputList = "f02PiPiForBetaS" + self.name,
                                DaughterLists = [ self.KaonList, StdLoosePions ],
-                               DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+", "f_0(980) -> K+ K-", "f_0(980) -> K- K-", "f_0(980) -> K+ K+"],
-                               DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>6) & (TRCHI2DOF < %(TRCHI2DOF)s)" % self.config,
-                                                "K+"  : " (MIPCHI2DV(PRIMARY)>6) & (TRCHI2DOF < %(TRCHI2DOF)s)" % self.config },
+                               DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+", "f_0(980) -> K+ K-"],
+                               DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF < %(TRCHI2DOF)s)" % self.config,
+                                                "K+"  : " (MIPCHI2DV(PRIMARY)>9) & (TRCHI2DOF < %(TRCHI2DOF)s)" % self.config },
                                PreVertexCuts = "(ACHILD(PT,1)+ACHILD(PT,2) > 900.*MeV) & (AM < 2700 *MeV) & (ADOCACHI2CUT(20., ''))",
                                PostVertexCuts = "(VFASPF(VCHI2) < 16)" )
 

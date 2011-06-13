@@ -21,7 +21,7 @@ __all__ = ('D0forBXXConf',
            'confdict')
 
 confdict =  {
-    "PreScale"      : 0.03   # adimensiional        
+    "PreScale"      : 0.015   # adimensiional        
     ,"PreScaleRS"   : 1.0    # adimensiional
     ,"PreScaleWS"   : 0.2    # adimensiional
     ,"MINIPCHI2"     : 9.0   # adimensiional
@@ -139,8 +139,8 @@ class D0forBXXLinesConf(LineBuilder):
                                 MotherCut = _motherCut,
                                 )
     def _D02K2Pi( self ):
-        _decayDescriptors = ['[D0 -> pi+ pi- K-]cc', '[D0 -> pi+ pi+ K-]cc']
-        _combinationCut = "(AM>1.4*GeV) & (AM<1.7*GeV) & (AM12>375.5*MeV) & (AM12<975.5*MeV) & (APT > 3000*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _decayDescriptors = ['[D0 -> pi+ pi- K-]cc']
+        _combinationCut = "(AM>1.4*GeV) & (AM<1.7*GeV) & (AM12>575.5*MeV) & (AM12<975.5*MeV) & (APT > 3000*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _daughtersCuts = {  "pi+" : "(TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > 400 *MeV)"\
                      "& (MIPCHI2DV(PRIMARY)> 4.0) &  (PIDK< %(PionPIDK)s) & (PIDmu< 10)" % self.__confdict__,
                             "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > 400 *MeV) & (P>2.0*GeV) "\

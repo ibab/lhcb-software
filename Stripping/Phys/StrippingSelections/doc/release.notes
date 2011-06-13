@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-13 - Liming Zhang
+ - tighten Bs->J/psif0 line in StrippingB2JpsiXforBeta_s.py
+ - tighten line in StrippingD0ForBXX.py
+
 ! 2011-06-13 - Nicola Mangiafave
  - StrippingBuToKX3872.py: made faster.
 
