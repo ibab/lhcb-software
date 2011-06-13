@@ -47,15 +47,17 @@ from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
                           SelectionBase )
 confdict={
-			"TrChi2Mu":		10.	# adimensional
+			"TrChi2Mu":		5.	# adimensional
 		,	"JpsiPt":		0.5	# GeV
 		,	"TrPt":			100.	# MeV
-		,	"VertChi2":		25.	# adimensional
+		,	"TrP":			7.	# GeV
+		,	"MuDLL":		1.	# adimensional
+		,	"VertChi2":		2.	# adimensional
 		,	"MassPreComb":		1000.	# MeV
 		,	"MassPostComb":		400.	# MeV
 		,	"Prescale":		1.	# MeV
 		,	"Postscale":		1.	# MeV
-		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 		,	'HLT1PassOnAll': True
 		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
 		,	'HLT2PassOnAll': False
@@ -69,6 +71,8 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 				'TrChi2Mu',
 				'JpsiPt',
 				'TrPt',
+				'TrP',
+				'MuDLL',
 				'VertChi2',
 				'MassPreComb',
 				'MassPostComb',
@@ -95,11 +99,14 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 	self.TrackingPreFilter = trackingPreFilter('TrackingPreFilter'+name, self.TisTosPreFilter2Jpsi)
 	self.VeloMuProtoPFilter = selMuonPParts('VeloMuon'+name, self.TrackingPreFilter)
 	self.VeloMuPFilter = makeMyMuons('VeloMuon'+name, self.VeloMuProtoPFilter)
-	
-	self.veloMuonMinusJpsi = chargeFilter(name+'MuonVeloJpsiMinus', trackAlgo =  'VeloMuon',   partSource =  self.VeloMuPFilter , charge = -1)
-        self.veloMuonPlusJpsi = chargeFilter(name+'MuonVeloJpsiPlus', trackAlgo = 'VeloMuon',  partSource = self.VeloMuPFilter,  charge = 1)
-	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = StdLooseMuons, charge = -1)
-	self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = StdLooseMuons  , charge = 1)
+	   
+	muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s) & (PIDmu > %(MuDLL)s)" % config
+	vmCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
+
+	self.veloMuonMinusJpsi = chargeFilter(name+'MuonVeloJpsiMinus', trackAlgo =  'VeloMuon',   partSource =  self.VeloMuPFilter , charge = -1, vmCut = vmCut, muCut = muCut)
+        self.veloMuonPlusJpsi = chargeFilter(name+'MuonVeloJpsiPlus', trackAlgo = 'VeloMuon',  partSource = self.VeloMuPFilter,  charge = 1, vmCut = vmCut, muCut = muCut)
+	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = StdLooseMuons, charge = -1, vmCut = vmCut, muCut = muCut)
+	self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = StdLooseMuons  , charge = 1, vmCut = vmCut, muCut = muCut)
 	
 	# ##########################################
 	self.JpsiMuMuTrackEff1 = makeResonanceVeloMuTrackEff(name + "VeloMuJpsiSel1", 
@@ -110,6 +117,8 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   mode = 1,
 							   TrChi2Mu = config['TrChi2Mu'], 
 							   TrPt = config['TrPt'], 
+							   TrP = config['TrP'],
+							   MuDLL = config['MuDLL'],
 							   MassPreComb = config['MassPreComb'], 
 							   VertChi2 = config['VertChi2'], 
 							   MassPostComb = config['MassPostComb'], 
@@ -122,7 +131,9 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   minusCharge = self.veloMuonMinusJpsi,
 							   mode = 2,
 							   TrChi2Mu = config['TrChi2Mu'], 
-							   TrPt = config['TrPt'], 
+							   TrPt = config['TrPt'],  
+							   TrP = config['TrP'],
+							   MuDLL = config['MuDLL'],
 							   MassPreComb = config['MassPreComb'], 
 							   VertChi2 = config['VertChi2'], 
 							   MassPostComb = config['MassPostComb'], 
@@ -192,7 +203,7 @@ def makeMyMuons(name, protoParticlesMaker):
    return Selection(name+"SelVeloMuonParts", Algorithm = particleMaker, RequiredSelections = [protoParticlesMaker], InputDataSetter=None)
 
 def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, minusCharge, 
-                              mode, TrChi2Mu, TrPt, MassPreComb, VertChi2, MassPostComb, JpsiPt):    
+                              mode, TrChi2Mu, TrPt, TrP, MuDLL, MassPreComb, VertChi2, MassPostComb, JpsiPt):    
    """
    Create and return a Resonance -> mu mu Selection object, with one track a long track
    and the other a MuonVelo track.
@@ -209,13 +220,11 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
    MuonVeloResonance = CombineParticles('_'+name)
    MuonVeloResonance.DecayDescriptor = decayDescriptor
    MuonVeloResonance.OutputLevel = 4 
-   
-   muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s)" % locals()
-   vmCut = "((TRCHI2DOF < 10)) & (PT > %(TrPt)s)" % locals()
+
 
    if(mode == 1):
-       MuonVeloResonance.DaughtersCuts = {"mu+": muCut,
-                                          "mu-": vmCut}
+       #MuonVeloResonance.DaughtersCuts = {"mu+": muCut,
+       #                                   "mu-": vmCut}
 
        MuonVeloResonance.CombinationCut = "ADAMASS('J/psi(1S)')<%(MassPreComb)s*MeV"% locals()
        MuonVeloResonance.MotherCut = "(VFASPF(VCHI2/VDOF)< %(VertChi2)s) & (ADMASS('J/psi(1S)')<%(MassPostComb)s*MeV) & (PT > %(JpsiPt)s*GeV)"% locals()
@@ -223,8 +232,8 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
        return Selection( name, Algorithm = MuonVeloResonance, RequiredSelections = [minusCharge, plusCharge] )
      
    if(mode == 2):
-       MuonVeloResonance.DaughtersCuts = {"mu-": muCut  % locals(),
-                                          "mu+": vmCut  % locals() }
+       #MuonVeloResonance.DaughtersCuts = {"mu-": muCut  % locals(),
+       #                                   "mu+": vmCut  % locals() }
 
        MuonVeloResonance.CombinationCut = "ADAMASS('J/psi(1S)')<%(MassPreComb)s*MeV"% locals()
        MuonVeloResonance.MotherCut = "(VFASPF(VCHI2/VDOF)< %(VertChi2)s) & (ADMASS('J/psi(1S)')<%(MassPostComb)s*MeV) & (PT > %(JpsiPt)s*GeV)"% locals()
@@ -233,7 +242,7 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
 # ########################################################################################
 # Charge filter, that filters, well, the charge and takes the particles from the right source (long or Velomuon)
 # ########################################################################################
-def chargeFilter(name, trackAlgo,  partSource, charge):
+def chargeFilter(name, trackAlgo,  partSource, charge, vmCut, muCut):
     """
         Select plus or minus charge for Velomuon or long track
     """
@@ -241,10 +250,14 @@ def chargeFilter(name, trackAlgo,  partSource, charge):
     myFilter1 = Filter.configurable("myFilter1")
             
     if(charge == -1):
-        myFilter1.Code = "(Q < 0)"
+        myFilter1.Code = "(Q < 0) & "
     if(charge == 1):
-        myFilter1.Code = "(Q > 0)"    
+        myFilter1.Code = "(Q > 0) & "    
             
+    if(trackAlgo == 'VeloMuon'):
+        myFilter1.Code += vmCut
+    if(trackAlgo == "LongMu"):
+        myFilter1.Code += muCut
     if(trackAlgo == 'VeloMuon'):
         return Selection( name+'_chargeFilter'+'VeloMuon', Algorithm = myFilter1, RequiredSelections = [  partSource ] )
     if(trackAlgo == 'LongMu'):
