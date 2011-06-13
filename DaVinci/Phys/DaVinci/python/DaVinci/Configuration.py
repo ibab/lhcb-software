@@ -33,8 +33,12 @@ class DaVinci(LHCbConfigurableUser) :
         , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
         , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
         , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
+        # Persistency
+        , "Persistency"        : None            # ROOT or POOL, steers the setup of services
         # Input
         , "Input"              : []              # Input data. Can also be passed as a second option file.
+        , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
+        , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
         # Output
         , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
         , "TupleFile"          : ""              # Name of output Tuple file
@@ -46,8 +50,6 @@ class DaVinci(LHCbConfigurableUser) :
         , "MainOptions"        : ""              # Main option file to execute
         , "UserAlgorithms"     : []              # User algorithms to run.
         , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-        , "InputType"          : "DST"           # or "DIGI" or "ETC" or "RDST" or "DST or "MDST" of "SDST". Nothing means the input type is compatible with being a DST. 
-        , 'EnableUnpack' : None                  # Explicitly enable/disable unpacking for input data (if specified) 
         , "Lumi"               : False           # Run Lumi accounting (should normally be True for user jobs)
         # Trigger running
         , "L0"                 : False           # Run L0.
@@ -69,15 +71,16 @@ class DaVinci(LHCbConfigurableUser) :
         , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
         , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
         , "Input"              : """ Input data. Can also be passed as a second option file. """
+        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
+        , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
         , "HistogramFile"      : """ Write name of output Histogram file """
         , "TupleFile"          : """ Write name of output Tuple file """
         , "ETCFile"            : """ Write name of output ETC file."""
         , 'WriteFSR'           : """ Flags whether to write out an FSR """
+        , "Persistency"        : """ ROOT or POOL, steers the setup of services """
         , "MainOptions"        : """ Main option file to execute """
         , "UserAlgorithms"     : """ User algorithms to run. """
         , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
-        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
-        , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
         , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
         , "L0"                 : """ Re-Run L0 """
         , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
@@ -139,11 +142,21 @@ class DaVinci(LHCbConfigurableUser) :
             if (inputType == "RDST")  and (redo) :
                 log.warning("Re-doing MC links not possible for RDST")
                 self.setProp("RedoMCLinks", False )
-
+        
         if self.getProp("Simulation") and self.getProp('Lumi') :
             log.warning('Lumi not valid for Simulation. Setting Lumi = False')
             self.setProp('Lumi', False )
 
+        persistency=None
+        if hasattr(self, "Persistency"):
+            persistency=self.getProp("Persistency")
+        else:
+            from GaudiConf import IOHelper
+            persistency=IOHelper()._inputPersistency
+        
+        if (inputType in ["ETC"] or ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" )) and persistency=="ROOT":
+            raise TypeError, "The reading/writing of ETC is no longer supported in the ROOT framework. Contact your release manager for details."
+        
 ################################################################################
 # Configure slaves
 #
@@ -159,7 +172,7 @@ class DaVinci(LHCbConfigurableUser) :
         db = self.getProp("DDDBtag")
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
-
+    
     def _analysisSeq(self) :
         return GaudiSequencer('DaVinciAnalysisSeq', IgnoreFilterPassed = True)
 
@@ -220,12 +233,12 @@ class DaVinci(LHCbConfigurableUser) :
         log.info("Creating Lumi Algorithms")
         seq = []
         self.setOtherProps(LumiAlgsConf(),["DataType","InputType"])
-
+        
         # add merge, touch-and-count sequence
         lumiSeq = GaudiSequencer("LumiSeq")
         LumiAlgsConf().LumiSequencer = lumiSeq
         seq += [ lumiSeq ]
-
+        
         if self.getProp( "Lumi" ):            
             tupleFile = self.getProp('TupleFile')
 	    if tupleFile == '' :
@@ -277,9 +290,9 @@ class DaVinci(LHCbConfigurableUser) :
                 log.info('Hlt2 requires L0 only. Will set Hlt1 passthrough prescale to 1. Note that Hlt1Global has no useful meaning.')
                 from Hlt1Lines.Hlt1L0Lines import Hlt1L0LinesConf
                 Hlt1L0LinesConf().Prescale.update( { 'Hlt1L0Any'  : 1. } )
-
+                
             else : raise AttributeError, 'Hlt2 can require L0 or Hlt1'
-
+            
             from Configurables import GaudiSequencer, HltRoutingBitsFilter
             physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )  # make sure lumi events are ignored
             hltDVSeq = GaudiSequencer("RunHltInDaVinci")  # 
@@ -361,7 +374,7 @@ class DaVinci(LHCbConfigurableUser) :
             log.warning("Print frequence cannot be 0")
             printfreq = 100
         EventSelector().PrintFreq = printfreq
-
+        
 ################################################################################
 # set EvtMax
 #
@@ -371,7 +384,7 @@ class DaVinci(LHCbConfigurableUser) :
         """
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
-
+        
 ################################################################################
 # returns evtMax
 #
@@ -391,16 +404,28 @@ class DaVinci(LHCbConfigurableUser) :
         input = self.getProp("Input")
 
         if ( len(input) > 0) :
-            EventSelector().Input = input
-        inputType = self.getProp( "InputType" ).upper()
-        if inputType == "MDF" :
-            log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
-            EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-            importOptions("$STDOPTS/DecodeRawEvent.py")
-        if inputType == 'SDST' or inputType == 'ETC' :
-            log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
-            EventPersistencySvc().CnvServices.append('LHCb::RawDataCnvSvc')
-
+            from GaudiConf import IOHelper
+            
+            persistency=None
+            if hasattr(self, "Persistency"):
+                persistency=self.getProp("Persistency")
+            
+            inputType = self.getProp( "InputType" ).upper()
+            if inputType == "MDF":
+                persistency="MDF"
+            #support connection strings and lists of files
+            input=IOHelper(persistency,persistency).convertConnectionStrings(input,"I")
+            #clear selector to maintain the same behaviour
+            IOHelper(persistency,persistency).inputFiles(input, clear=True)
+        #inputType = self.getProp( "InputType" ).upper()
+        #if inputType == "MDF" :
+        #    log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
+        #    EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+        #    importOptions("$STDOPTS/DecodeRawEvent.py")
+        #if inputType == 'SDST' or inputType == 'ETC' :
+        #    log.info('Adding LHCb::RawDataCnvSvc to EventPersistencySvc().CnvServices.')
+        #    EventPersistencySvc().CnvServices.append('LHCb::RawDataCnvSvc')
+    
 ################################################################################
 # Tune initialisation
 #
@@ -408,8 +433,13 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Tune initialisation 
         """
+        if hasattr(self, "Persistency"):
+            self.setOtherProps(LHCbApp(),["Persistency"])
+            self.setOtherProps(DstConf(),["Persistency"])
+
+        #no longer required, done by LHCbApp
         # POOL Persistency
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+        #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
@@ -421,6 +451,7 @@ class DaVinci(LHCbConfigurableUser) :
             unPack = self.getProp('EnableUnpack')
             DstConf           ( EnableUnpack = unPack )
             PhysConf ( EnableUnpack = unPack)
+            
         elif inputType!="MDST" and ( self.getProp("DataType") != "DC06"
                                      and inputType != "MDF" ):
             # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
@@ -429,7 +460,7 @@ class DaVinci(LHCbConfigurableUser) :
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType
-
+    
     def _hltCondDBHack(self) :
         cdb = self.getProp("CondDBtag")
         if not isNewCondDBTag(cdb) :
@@ -451,7 +482,7 @@ class DaVinci(LHCbConfigurableUser) :
             HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
         if ( self.isPropertySet('TupleFile') and self.getProp("TupleFile") != "" ):
             tupleFile = self.getProp("TupleFile")
-
+            
             ntSvc = NTupleSvc()
             ApplicationMgr().ExtSvc +=  [ ntSvc ]
             for _line in ntSvc.Output :
@@ -510,6 +541,74 @@ class DaVinci(LHCbConfigurableUser) :
 
         # Write the FSRs to the same file as the events
         ApplicationMgr().OutStream += [ FSRWriter ]
+        
+##         if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
+##             #if ( self.getProp("WriteFSR") ):
+##             #    self._etcfsr(self.getProp("ETCFile"))
+##             self._etc(self.getProp("ETCFile"))
+    
+## ################################################################################
+## # ETC
+## #
+##     def _etc(self,etcFile):
+##         """
+##         write out an ETC
+##         """
+##         #dummy stream object, with necessary parts for IOHelper
+##         class Dummy(object):
+##             def __init__(self, fullName):
+##                 self.Output=None
+##                 self.fullName=fullName
+##             def getFullName(self):
+##                 return self.fullName
+        
+##         from Configurables import TagCollectionSvc
+##         tcname = "EvtTupleSvc"
+##         ets = TagCollectionSvc(tcname)
+##         persistency=None
+##         if hasattr(self, "Persistency"):
+##             persistency=self.getProp("Persistency")
+        
+##         from Configurables import EvtCollectionStream
+##         tagW = EvtCollectionStream("TagWriter")
+##         # this somehow matches CollectionName
+##         log.info("Did not defined itemlist for ETC.")
+## #        tagW.ItemList = iList
+##         tagW.EvtDataSvc = tcname
+##         dummy=Dummy(tagW.getFullName())
+##         from GaudiConf import IOHelper
+##         algs=IOHelper(persistency,persistency).outputAlgs(etcFile, dummy, self.getProp("WriteFSR"))
+##         #swap output from alg to service
+##         ets.Output = ["EVTCOL "+dummy.Output]#[ "EVTCOL DATAFILE='"+etcFile+"' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
+##         ets.OutputLevel = 1
+##         ApplicationMgr().ExtSvc  += [ ets ]
+##         #
+        
+##         from Configurables import Sequencer
+##         seq = Sequencer("SeqWriteTag")
+##         #it is IMPERATIVE to define the FSR outputstream before the etc
+##         for alg in algs:
+##             if IOHelper().detectStreamType(alg) in ["FSR"]:
+##                 ApplicationMgr().OutStream += [alg]
+##         ApplicationMgr().OutStream += [ tagW ]
+        
+################################################################################
+# ETC + FSR - write fsr to etc file, done by LHCb App
+#
+#    def _etcfsr(self, fsrFile):
+#        """
+#        write out the FSR
+#        it is IMPERATIVE to define the FSR outputstream before the etc
+#        """
+#        # Output stream
+#        FSRWriter = RecordStream( "FileRecords",
+#                                  ItemList         = [ "/FileRecords#999" ],
+#                                  EvtDataSvc       = "FileRecordDataSvc",
+#                                  Output           = "DATAFILE='"+fsrFile+"' TYP='POOL_ROOTTREE'",
+#                                  )
+#        
+#        # Write the FSRs to the same file as the events
+#        ApplicationMgr().OutStream += [ FSRWriter ]
         
 ################################################################################
 # Main sequence
@@ -595,11 +694,11 @@ class DaVinci(LHCbConfigurableUser) :
         """
         log.info("Applying DaVinci configuration")
         log.info( self )
-
+        
         self._checkOptions()
-
+        
         self._setAncestorDepth()
-
+        
         ApplicationMgr().TopAlg = [self.sequence()]
         self._configureSubPackages()
         importOptions("$STDOPTS/PreloadUnits.opts") # to get units in .opts files
