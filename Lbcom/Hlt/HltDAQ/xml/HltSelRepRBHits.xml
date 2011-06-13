@@ -285,11 +285,13 @@ Then sequences must be pushed back in the sequencial order.'
           throw GaudiException( "Pushing too many hits to HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
                  m_location[iWord]= ( m_location[iWord] &amp; ~mask ) | ( end &lt;&lt; bits );  
                  ++iSeq;
-                 iWord = (iSeq+1)/2;
-                 iPart = (iSeq+1)%2;
-                 bits = iPart*16;
-                 mask = 0xFFFFL &lt;&lt; bits;
-                 m_location[iWord]= ( m_location[iWord] &amp; ~mask ) | ( end &lt;&lt; bits );  
+                 if( iSeq &lt; numberOfSeq() ){ 
+                   iWord = (iSeq+1)/2;
+                   iPart = (iSeq+1)%2;
+                   bits = iPart*16;
+                   mask = 0xFFFFL &lt;&lt; bits;
+                   m_location[iWord]= ( m_location[iWord] &amp; ~mask ) | ( end &lt;&lt; bits );  
+                 }   
                  // copy hits
                  unsigned int i=0;
                  for( std::vector&lt; unsigned int &gt;::const_iterator iHit=hitvec.begin();

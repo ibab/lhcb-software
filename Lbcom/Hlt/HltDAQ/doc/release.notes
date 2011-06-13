@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
+
+! 2011-06-13 - Tomasz Skwarnicki
+ - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid 
+   per event, for odd number of hit sequences saved
+
 ! 2011-06-10 - Gerhard Raven
  - make HltDecReportsDecoder return StatusCode::FAILURE from execute in case
    it encounters trouble while decoding...
