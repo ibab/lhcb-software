@@ -24,7 +24,7 @@
 class HltSelReportsWriter : public GaudiAlgorithm {
 public: 
 
-  enum HeaderIDs { kVersionNumber=0 };
+  enum HeaderIDs { kVersionNumber=1 };
 
   /// Standard constructor
   HltSelReportsWriter( const std::string& name, ISvcLocator* pSvcLocator );

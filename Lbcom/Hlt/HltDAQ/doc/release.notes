@@ -6,7 +6,9 @@
 
 ! 2011-06-13 - Tomasz Skwarnicki
  - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid 
-   per event, for odd number of hit sequences saved
+   per event, for odd number of hit sequences saved. 
+   Change bank version number to 1 in HltSelReportsWriter.
+   Make HltSelReportsDecoder omit corrupted hit for bank version 0.
 
 ! 2011-06-10 - Gerhard Raven
  - make HltDecReportsDecoder return StatusCode::FAILURE from execute in case

@@ -471,7 +471,19 @@ StatusCode HltSelReportsDecoder::execute() {
         unsigned int iSeq=*i;
         if( iSeq<nSeq ){
           std::vector< LHCb::LHCbID > hitseq = hitsSubBank.sequence( iSeq );
-          hits.insert( hits.end(), hitseq.begin(), hitseq.end() );
+          //   for bank version zero, first hit in the first sequence was corrupted ------
+          //                   for odd number of sequences saved - omit this hit
+          if( iSeq==0 ){
+            if( hltselreportsRawBank0->version()==0 ){
+              if( nSeq%2 == 1 ){
+                hitseq.erase( hitseq.begin() );
+              }
+            }
+          }
+          // ------------------------- end fix --------------------------------------------
+          if( hitseq.size() ){            
+            hits.insert( hits.end(), hitseq.begin(), hitseq.end() );
+          }          
         } else {
           Error(  "Hit sequence index out of range", StatusCode::SUCCESS, 10 );
         }

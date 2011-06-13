@@ -21,7 +21,7 @@
 class HltSelReportsDecoder : public GaudiAlgorithm {
 public: 
 
-  enum HeaderIDs { kVersionNumber=0 };
+  enum HeaderIDs { kVersionNumber=1 };
 
   /// Standard constructor
   HltSelReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
