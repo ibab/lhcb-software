@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-06-13 - Nicola Mangiafave
+ - StrippingBuToKX3872.py: made faster.
+
 ! 2011-06-13 - Paul Seyfert
  - StrippingTrackEffVeloMuon.py: tighter cuts
 

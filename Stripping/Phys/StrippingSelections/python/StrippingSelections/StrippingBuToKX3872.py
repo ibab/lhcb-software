@@ -64,7 +64,7 @@ Stripping_BuToKX3872_TestDictonary = {
 
     # JPsi cuts
     'JPsi_MassWindow'       :  70.0,
-    'JPsi_MassWindowLoose'  :  80.0,
+    'JPsi_MassWindowLoose'  :  70.0,
     'JPsi_VertexCHI2'       :  10.0,
     'JPsi_VertexCHI2Loose'  :  10.0,
 
@@ -253,14 +253,6 @@ class StrippingBu2KX3872Conf(LineBuilder):
 
         from StrippingConf.StrippingLine import StrippingLine
 
-        ## --- B+ -> X3872 K+ line ---
-        Line_BuToX3872_Name = self.BuToKX3872LineName + "Line"
-        Line_BuToX3872 = StrippingLine( Line_BuToX3872_Name,
-                                        prescale = config['Prescale_BuToKX3872'],
-                                        postscale = config['Postscale_BuToKX3872'],
-                                        selection = Sel_BuX3872K)
-        self.registerLine(Line_BuToX3872)
-
         ## --- B+ -> X3872 K+ loose line ---
         Line_BuToX3872Loose_Name = self.BuToKX3872LooseLineName + "Line"
         Line_BuToX3872Loose = StrippingLine( Line_BuToX3872Loose_Name,
@@ -269,14 +261,6 @@ class StrippingBu2KX3872Conf(LineBuilder):
                                              selection = Sel_BuX3872KLoose)
         self.registerLine(Line_BuToX3872Loose)
 
-        ## --- B+ -> Psi2S K+ line ---
-        Line_BuToPsi2S_Name = self.BuToKPsi2SLineName + "Line"
-        Line_BuToPsi2S = StrippingLine( Line_BuToPsi2S_Name,
-                                        prescale = config['Prescale_BuToKPsi2S'],
-                                        postscale = config['Postscale_BuToKPsi2S'],
-                                        selection = Sel_BuPsi2SK)
-        self.registerLine(Line_BuToPsi2S)
-
         ## --- B+ -> Psi2S K+ loose line ---
         Line_BuToPsi2SLoose_Name = self.BuToKPsi2SLooseLineName + "Line"
         Line_BuToPsi2SLoose = StrippingLine( Line_BuToPsi2SLoose_Name,
@@ -284,6 +268,22 @@ class StrippingBu2KX3872Conf(LineBuilder):
                                              postscale = config['Postscale_BuToKPsi2SLoose'],
                                              selection = Sel_BuPsi2SKLoose)
         self.registerLine(Line_BuToPsi2SLoose)
+
+        ## --- B+ -> X3872 K+ line ---
+        Line_BuToX3872_Name = self.BuToKX3872LineName + "Line"
+        Line_BuToX3872 = StrippingLine( Line_BuToX3872_Name,
+                                        prescale = config['Prescale_BuToKX3872'],
+                                        postscale = config['Postscale_BuToKX3872'],
+                                        selection = Sel_BuX3872K)
+        self.registerLine(Line_BuToX3872)
+
+        ## --- B+ -> Psi2S K+ line ---
+        Line_BuToPsi2S_Name = self.BuToKPsi2SLineName + "Line"
+        Line_BuToPsi2S = StrippingLine( Line_BuToPsi2S_Name,
+                                        prescale = config['Prescale_BuToKPsi2S'],
+                                        postscale = config['Postscale_BuToKPsi2S'],
+                                        selection = Sel_BuPsi2SK)
+        self.registerLine(Line_BuToPsi2S)
 
         self.printCuts()
         
