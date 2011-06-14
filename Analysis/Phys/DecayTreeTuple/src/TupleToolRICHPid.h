@@ -38,9 +38,6 @@ public:
 			   Tuples::Tuple& );
 
 private: 
-
-  int m_photonID; 
-  int m_pi0ID; 
   
 };
 

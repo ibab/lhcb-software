@@ -6,9 +6,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "Kernel/IDecayFinder.h"
 #include "MCInterfaces/IMCDecayFinder.h"
-
 #include "DecayTreeTupleBase.h"
-
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
 //-----------------------------------------------------------------------------

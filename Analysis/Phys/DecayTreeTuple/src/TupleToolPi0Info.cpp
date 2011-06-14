@@ -44,7 +44,7 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
   
   bool filltuple = true;
   if( P ){
-    if (P->particleID().pid() == m_Pi0ID) { 
+    if (P->particleID().pid() == m_Pi0ID &&  isPureNeutralCalo(P)) { 
       debug() << " Make the special case for the pi0  " <<  P->particleID().pid() << endmsg; 
       debug() << " The pi0s has : " <<  P->daughters().size()   << " daughters  "<< endmsg; 
       int Type = 0; 
@@ -53,6 +53,7 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
       }
       else Type  = 1; //for the merged pi0s 
       filltuple &= tuple->column( prefix+"_Type", Type );
+      filltuple &= tuple->column( prefix+"_CL"  , P->confLevel() );
       
       
       if(m_RequireMCTruth == true){

@@ -100,12 +100,11 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     }
   */
   const LHCb::Vertex* vtx;
-  if (P->isBasicParticle()){
+  if (P->isBasicParticle() || isPureNeutralCalo(P) ){
     vtx = mother->endVertex(); 
   }
   else{
-    vtx = P->endVertex();
-    
+    vtx = P->endVertex();    
   }
   debug()<<"vertex for P, ID " <<P->particleID().pid()<<" = " <<vtx<<" at "<<vtx->position()<<  endmsg;
   if( !vtx ){
@@ -146,7 +145,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
           target.push_back(*itmp);
           
           // Add the final states, i.e. particles with proto and ignoring gammas
-          if((*itmp)->proto() && 22 != (*itmp)->particleID().pid()) finalStates.push_back(*itmp);
+          if((*itmp)->proto() && !isPureNeutralCalo(*itmp) ) finalStates.push_back(*itmp);
         }
       } // if endVertex
     } // isource
@@ -180,8 +179,8 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
       // Ignore if no proto
       if(!(*iparts)->proto()) continue;
       // Ignore if proto and gammas
-      if(22 == (*iparts)->particleID().pid()) continue;
-      
+      if(isPureNeutralCalo(*iparts)) continue;
+
       // Compare protos, not pointers (e.g. because of clones)
       bool isSignal = false;
       for(LHCb::Particle::ConstVector::const_iterator signal = finalStates.begin(); 
@@ -285,7 +284,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   }
   
   if(m_deltaChi2 > 0.0) test &= tuple->column( prefix + "_NOPARTWITHINDCHI2WDW",  nCompatibleDeltaChi2);
-  if(m_Chi2 > 0.0) test &= tuple->column( prefix + "_NOPARTWITHINCHI2WDW",  nCompatibleChi2);
+  if(m_Chi2 > 0.0)      test &= tuple->column( prefix + "_NOPARTWITHINCHI2WDW",  nCompatibleChi2);
   tuple->column( prefix + "_SMALLESTCHI2",  smallestChi2 );
   tuple->column( prefix + "_SMALLESTDELTACHI2",  smallestDeltaChi2 );
   

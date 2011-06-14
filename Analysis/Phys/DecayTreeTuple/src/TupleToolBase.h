@@ -2,9 +2,11 @@
 #ifndef DV_TUPLETOOLBASE_H
 #define DV_TUPLETOOLBASE_H 1
 
+
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTupleTool.h"
+#include "CaloUtils/CaloParticle.h"
 
 //namespace LHCb {
 //  class Particle;
@@ -74,6 +76,10 @@ protected:
   //DVAlgorithm* m_dva;
   std::string m_extraName; ///<Extra title to add to head
   bool m_verbose;///<Add extra items to the tuple
+  bool isPureNeutralCalo(const LHCb::Particle* P)const{
+    LHCb::CaloParticle caloP(  (LHCb::Particle*) P );
+    return caloP.isPureNeutralCalo();
+  }
   
 private:
   

@@ -30,8 +30,6 @@ TupleToolRICHPid::TupleToolRICHPid( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
   : TupleToolBase ( type, name , parent )
-    ,m_photonID(22)
-    ,m_pi0ID(111)
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -74,9 +72,7 @@ StatusCode TupleToolRICHPid::fill( const Particle*
     
     if( !P->isBasicParticle() ) return StatusCode(test); // no rich info for composite!
     
-    if( P->particleID().pid() == m_photonID || 
-        P->particleID().pid() == m_pi0ID ) 
-      return StatusCode(test); // no rich information for neutrals
+    if( isPureNeutralCalo(P) )return StatusCode(test); // no rich information for calo neutrals
     
     const ProtoParticle* proto = P->proto();
     

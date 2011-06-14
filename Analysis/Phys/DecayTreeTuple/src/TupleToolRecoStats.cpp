@@ -33,7 +33,7 @@ TupleToolRecoStats::TupleToolRecoStats( const std::string& type,
   : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("fillVerbose", fillVerbose=true );
+  declareProperty("LongChi2", m_chi2 = 9.);
 }
 //=============================================================================
 // Destructor
@@ -92,6 +92,7 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
     const LHCb::Track::Container* tracks =  get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
 
     unsigned int nBack = 0;
+    unsigned int nLong = 0;
     int veloTracks = 0;
 
     // Protection from empty track container 
@@ -99,6 +100,8 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
       LHCb::Tracks::const_iterator iterT = tracks->begin();
       for(; iterT != tracks->end() ;++iterT) {
         if ((*iterT)->checkFlag( LHCb::Track::Backward) == true) ++nBack;
+        double chi2 = ((*iterT)->nDoF() > 0) ? (*iterT)->chi2()/(*iterT)->nDoF() : 999;
+        if ((*iterT)->checkType( LHCb::Track::Long) == true && chi2 < m_chi2) ++nLong;
       }
       
       veloTracks = nVelo(tracks);
@@ -106,6 +109,7 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
     
     test &= tup->column(prefix+"backwardTracks", nBack);
     test &= tup->column(prefix+"veloTracks", veloTracks);
+    test &= tup->column(prefix+"goodLongTracks", nLong);
   }
   
   return StatusCode(test) ;

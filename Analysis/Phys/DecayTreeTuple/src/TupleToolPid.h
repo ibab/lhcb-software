@@ -46,7 +46,5 @@ public:
                            , const std::string&, Tuples::Tuple& );
 
 private:
-  int m_photonID;
-  int m_pi0ID;
 };
 #endif // JBOREL_TUPLETOOLPID_H

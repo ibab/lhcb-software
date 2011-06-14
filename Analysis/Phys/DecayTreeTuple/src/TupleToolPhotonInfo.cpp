@@ -41,8 +41,7 @@ StatusCode TupleToolPhotonInfo::fill(const Particle* , const Particle* P
   
   bool filltuple = true;
   if( P ){
-    if (P->particleID().pid() == m_PhotonID) { 
-      
+    if (P->particleID().pid() == m_PhotonID &&  isPureNeutralCalo(P)) {      
 
       const LHCb::ProtoParticle* proto = P->proto();
       if(NULL == proto)return StatusCode::SUCCESS;

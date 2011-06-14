@@ -36,9 +36,6 @@ TupleToolGeometry::TupleToolGeometry( const std::string& type,
   : 
   TupleToolBase ( type, name , parent )
   , m_dist(0)
-  , m_photonID(22)
-  , m_pi0ID(111)
-  , m_etaID(221)  
   //, m_fillMother(true)
   , m_dva(0)
 {
@@ -87,11 +84,10 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   
   Assert( P && m_dist && m_dva
           , "No mother or particle, or tools misconfigured." );
-  
-  if( P->particleID().pid() == m_photonID ||  P->particleID().pid()  == m_pi0ID || P->particleID().pid() == m_etaID ){
-    return Warning("Will not fill geometry tuple for photons and pi0 and eta. No worry.", StatusCode::SUCCESS, 10);
-  }
 
+
+  if( isPureNeutralCalo(P) )
+    return Warning("Will not fill geometry tuple for neutral Calo particles. No worry", StatusCode::SUCCESS, 10);
   verbose() << "TupleToolGeometry::fill " << mother << " " << P << " " << prefix << endmsg ;
   
   //fill min IP

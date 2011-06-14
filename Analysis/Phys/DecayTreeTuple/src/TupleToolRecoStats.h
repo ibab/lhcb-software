@@ -69,8 +69,7 @@ private:
   const IOTRawBankDecoder* m_rawBankDecoder;
   std::string m_fromRawTool;
   IL0DUFromRawTool* m_l0BankDecoder;
-  bool fillVerbose;
- 
+  double m_chi2;
 };
 #endif // TUPLETOOLRECOSTATS_H
 
