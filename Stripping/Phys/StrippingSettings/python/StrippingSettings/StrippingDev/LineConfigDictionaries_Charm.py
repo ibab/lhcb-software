@@ -403,7 +403,8 @@ DstarD02xx ={
     , 'PrescaleKpi_untagged_BoxMB'  :    1.
     , 'Prescalepipi_untagged_BoxMB' :    1.
     ,'DMassWin'                     :   70.      # MeV
-    ,'DMassWinMuMu'                 :  300       # MeV
+    ,'DMassWinMuMuLow'    : -150.       #MeV
+    ,'DMassWinMuMuHigh'   : 300       #MeV
     ,'DMassWinEMu'                  :  300
     ,'doca'                         :    0.1     # mm
     ,'XminPT'                       :  750.      # MeV
