@@ -1,8 +1,6 @@
-# $Id: requirements,v 1.46 2010-02-02 15:51:25 wouter Exp $
 # =========================================================================
-
-package  OTDet 
-version           v8r5p1
+package           OTDet 
+version           v8r6
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet dict
