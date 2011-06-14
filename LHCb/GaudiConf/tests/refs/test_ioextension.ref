@@ -1,0 +1,555 @@
+=============================
+None
+=============================
+- input conversion tests
+- test file detection and dressing
+MDF
+MDF
+DATAFILE='eggs.spam_.RAW' SVC='LHCb::MDFSelector' OPT='READ'
+DATAFILE='eggs.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+MDF
+MDF
+DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::MDFSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.digi' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+POOL
+POOL
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOT' OPT='READ'
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+- check you take the last extension
+POOL
+MDF
+- test getting ioh
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='MDF'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='MDF'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+- test inputting files
+['eggs.spam_.RAW', 'eggs.spam_.spam_.mdf', 'eggs.spam_.spam_.spam_.digi', 'eggs.spam_.spam_.spam_.spam_.sim', 'eggs.spam_.spam_.spam_.spam_.spam_.sdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst']
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+["DATAFILE='eggs.spam_.RAW' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.digi' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOT' OPT='READ'"]
+- test outputting files
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+[<OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/Algmdf at 0x2514860>, <OutputStream/Algxdst at 0x2518fe0>, <RecordStream/FSROutputStreamAlgmdst at 0x251a730>, <RecordStream/FSROutputStreamAlgdst at 0x251b270>, <OutputStream/Algdigi at 0x2515410>, <OutputStream/AlgRAW at 0x24a3020>, <OutputStream/Algsim at 0x2516a10>, <OutputStream/Algmdst at 0x2515100>, <RecordStream/FSROutputStreamAlgdigi at 0x25156e0>, <OutputStream/Algsdst at 0x2517550>, <RecordStream/FSROutputStreamAlgxdst at 0x25192b0>, <RecordStream/FSROutputStreamAlgsim at 0x2516ce0>, <RecordStream/FSROutputStreamAlgsdst at 0x2517820>, <OutputStream/Algdst at 0x251afa0>]
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+- test file extensions which should not be known
+['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']
+=============================
+POOL
+=============================
+- input conversion tests
+- test file detection and dressing
+MDF
+MDF
+DATAFILE='eggs.spam_.RAW' SVC='LHCb::MDFSelector' OPT='READ'
+DATAFILE='eggs.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+MDF
+MDF
+DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::MDFSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.digi' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+POOL
+POOL
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOT' OPT='READ'
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+POOL
+POOL
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOT' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+- check you take the last extension
+POOL
+MDF
+- test getting ioh
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='MDF' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='MDF'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='MDF'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='MDF'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+<IOHelper Input='POOL' Output='POOL'>
+- test inputting files
+['eggs.spam_.RAW', 'eggs.spam_.spam_.mdf', 'eggs.spam_.spam_.spam_.digi', 'eggs.spam_.spam_.spam_.spam_.sim', 'eggs.spam_.spam_.spam_.spam_.spam_.sdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst']
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+["DATAFILE='eggs.spam_.RAW' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.digi' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOT' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOT' OPT='READ'"]
+- test outputting files
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
+[<OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/Algmdf at 0x2514860>, <OutputStream/Algxdst at 0x2518fe0>, <RecordStream/FSROutputStreamAlgmdst at 0x251a730>, <RecordStream/FSROutputStreamAlgdst at 0x251b270>, <OutputStream/Algdigi at 0x2515410>, <OutputStream/AlgRAW at 0x24a3020>, <OutputStream/Algsim at 0x2516a10>, <OutputStream/Algmdst at 0x2515100>, <RecordStream/FSROutputStreamAlgdigi at 0x25156e0>, <OutputStream/Algsdst at 0x2517550>, <RecordStream/FSROutputStreamAlgxdst at 0x25192b0>, <RecordStream/FSROutputStreamAlgsim at 0x2516ce0>, <RecordStream/FSROutputStreamAlgsdst at 0x2517820>, <OutputStream/Algdst at 0x251afa0>]
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
+- test file extensions which should not be known
+['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']
+=============================
+ROOT
+=============================
+- input conversion tests
+- test file detection and dressing
+MDF
+MDF
+DATAFILE='eggs.spam_.RAW' SVC='LHCb::MDFSelector' OPT='READ'
+DATAFILE='eggs.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+MDF
+MDF
+DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::MDFSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+ROOT
+ROOT
+DATAFILE='eggs.spam_.spam_.spam_.digi' SVC='Gaudi::RootEvtSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+ROOT
+ROOT
+DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' SVC='Gaudi::RootEvtSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+ROOT
+ROOT
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+ROOT
+ROOT
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+ROOT
+ROOT
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+ROOT
+ROOT
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+- check you take the last extension
+ROOT
+MDF
+- test getting ioh
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='MDF'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='MDF' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='MDF'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='MDF'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='MDF'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+<IOHelper Input='ROOT' Output='ROOT'>
+- test inputting files
+['eggs.spam_.RAW', 'eggs.spam_.spam_.mdf', 'eggs.spam_.spam_.spam_.digi', 'eggs.spam_.spam_.spam_.spam_.sim', 'eggs.spam_.spam_.spam_.spam_.spam_.sdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst', 'eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst']
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+["DATAFILE='eggs.spam_.RAW' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.mdf' SVC='LHCb::MDFSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.digi' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.sim' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.sdst' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='Gaudi::RootEvtSelector' OPT='READ'", "DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
+- test outputting files
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+[<OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/Algmdf at 0x2514860>, <OutputStream/Algxdst at 0x2518fe0>, <RecordStream/FSROutputStreamAlgmdst at 0x251a730>, <RecordStream/FSROutputStreamAlgdst at 0x251b270>, <OutputStream/Algdigi at 0x2515410>, <OutputStream/AlgRAW at 0x24a3020>, <OutputStream/Algsim at 0x2516a10>, <OutputStream/Algmdst at 0x2515100>, <RecordStream/FSROutputStreamAlgdigi at 0x25156e0>, <OutputStream/Algsdst at 0x2517550>, <RecordStream/FSROutputStreamAlgxdst at 0x25192b0>, <RecordStream/FSROutputStreamAlgsim at 0x2516ce0>, <RecordStream/FSROutputStreamAlgsdst at 0x2517820>, <OutputStream/Algdst at 0x251afa0>]
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.xdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sim' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
+- test file extensions which should not be known
+['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']
