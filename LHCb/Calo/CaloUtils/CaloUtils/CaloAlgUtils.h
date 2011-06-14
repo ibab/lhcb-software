@@ -59,6 +59,8 @@ namespace LHCb{
     std::string CaloIdLocation( std::string type, std::string context = "");
     std::vector<std::string> TrackLocations( std::string context="" );
     const LHCb::CaloCluster*  ClusterFromHypo(const LHCb::CaloHypo* hypo,bool split=true);
+    bool StringMatcher(std::vector<std::string> refs, std::string name);
+    bool StringMatcher(std::string ref, std::string name);
   } // end of namespace CaloUtils
 }// end of namespace LHCb
 #endif // CALOUTILS_CALOALGUTILS_H

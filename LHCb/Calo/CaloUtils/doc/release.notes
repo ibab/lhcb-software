@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2011-06-14 - Olivier Deschamps
+ - CaloAlgUtils : new method StringMatcher()
 
 ! 2011-05-15 - Olivier Deschamps
   - src/CaloNeighbours::_neighbours : fix infinite loop when level < 0

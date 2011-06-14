@@ -178,3 +178,60 @@ const LHCb::CaloCluster*  LHCb::CaloAlgUtils::ClusterFromHypo(const LHCb::CaloHy
 }
 
   
+
+bool LHCb::CaloAlgUtils::StringMatcher(std::vector<std::string> refs, std::string name){
+  bool ok = true;
+  bool ko = true;
+
+  if( refs.empty())return true;
+  for( std::vector<std::string>::iterator iref=refs.begin() ; refs.end() != iref; ++iref){
+    std::string ref = *iref;
+    if( toUpper(ref) == "ALL")return true;
+    if( toUpper(ref) == "NONE")return false;
+    bool match = StringMatcher( ref , name );
+    if( ref.find("!") != std::string::npos) ko = ko && match;
+    else 
+      ok = ok || match;
+  }
+  return ok && ko;
+}
+
+
+bool LHCb::CaloAlgUtils::StringMatcher(std::string ref, std::string name){
+
+  std::string uref=ref;
+  if( toUpper(uref) == "ALL")return true;
+  if( toUpper(uref) == "NONE")return false;
+  std::string uname=name;
+  bool rev=false;
+  if( std::string::npos != uref.find("!")  ){
+    rev=true;
+    int ind=uref.find_first_of("!");
+    uref =  uref.erase(ind,1);
+  }
+  bool exact=true;
+  if( std::string::npos !=  uref.find("*") ){
+    exact=false;
+    if( uref.find_first_of("*") != std::string::npos){
+    int i1=uref.find_first_of("*");
+    uref.erase(i1,1);
+    }
+    if( uref.find_last_of("*") != std::string::npos){
+      int i2=uref.find_last_of("*");
+      uref.erase(i2,1);
+    }
+  }
+  
+  uname = toUpper(uname);
+  uref  = toUpper(uref);
+  
+  bool match;
+  if( exact )
+    match = ( uref == uname );
+  else
+    match = (uname.find(uref) != std::string::npos);
+
+  return rev ? !match : match;
+
+}
+
