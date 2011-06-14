@@ -5,6 +5,13 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-06-14 - Illya Shapoval
+ - TagsFilter.py is updated:
+   + 'BookkeepingSystem' module is changed to 'NewBookkeepingSystem' one;
+   + SQLDDDBROOT environment variable is changed to the SQLITEDBPATH one
+   (latter is set in the SQLDDDB package). This is needed in the frame of
+   SQLite db files distribution model migration where CVMFS will host the files.
+
 !========================= CondDBUI v3r9 2011-04-04 =========================
 ! 2011-03-03 - Illya Shapoval
  - CondDB.getTagList method is parallelized (using Python multiprocessing).

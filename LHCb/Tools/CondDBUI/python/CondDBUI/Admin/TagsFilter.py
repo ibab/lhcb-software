@@ -33,7 +33,7 @@ class ReleaseNotesHandler(ContentHandler):
 
     def startElement(self, name, attrs):
         """Performs claiming by setting flag_*_* variables, that needed element is opened."""
-        
+
         # Local tag entry treating. Marking needed elements.
         if name == 'lhcb:note' and not self.search_gts:
             self.found_lt = True
@@ -44,7 +44,7 @@ class ReleaseNotesHandler(ContentHandler):
                 self.found_lt_Name = True
             elif name == 'lhcb:type':
                 self.found_lt_DataType = True
-        
+
         # Global tag entry treating. Marking needed elements.
         elif name == 'lhcb:global_tag':
             self.found_gt = True
@@ -55,46 +55,46 @@ class ReleaseNotesHandler(ContentHandler):
                 self.found_gt_DataType = True
             elif name == 'lhcb:name':
                 self.found_gt_Partition = True
-        
+
     def characters(self, ch):
-        """Performs analysis of .xml file elements content. 
-        
+        """Performs analysis of .xml file elements content.
+
         Depending on the request, this function fills:
-        1) The list of all global tags wich correspond to the given partition 
+        1) The list of all global tags wich correspond to the given partition
         and data type.
         2) The tuple of the most recent global tag and all subsequent local tags for it.
         """
-        
-        # Cancellation of whitespaces processing by characters() 
+
+        # Cancellation of whitespaces processing by characters()
         if ch in ("\n", "\t", "\t\t", "\t\t\t"): return 0
-        
-        # Local tag entry treating. Grabing marked elemets values. 
+
+        # Local tag entry treating. Grabing marked elemets values.
         if self.found_lt:
             if self.found_lt_Partition:
                 self.lt_Partition = ch
             elif self.found_lt_Name:
                 self.lt_Name = ch
             elif self.found_lt_DataType:
-                # Choosing among all mentioned datatypes the one requested 
+                # Choosing among all mentioned datatypes the one requested
                 if ch == self.requested_datatype:
                     self.lt_DataType = ch
-                
+
             if self.lt_Name and self.lt_Partition and self.lt_DataType:
                 if self.lt_Partition == self.requested_partition:
                     if self.lt_Name not in self.local_tags:
                         self.local_tags.append(str(self.lt_Name))
-        
+
         # Global tag entry treating.  Grabing marked elemets values.
         elif self.found_gt:
             if self.found_gt_Name:
                 self.gt_Name = ch
             elif self.found_gt_DataType:
-                # Choosing among all mentioned datatypes the one requested 
+                # Choosing among all mentioned datatypes the one requested
                 if ch == self.requested_datatype:
                     self.gt_DataType = ch
             elif self.found_gt_Partition:
                 self.gt_Partition = ch
-                
+
             if self.gt_Name and self.gt_Partition and self.gt_DataType:
                 if self.gt_Partition == self.requested_partition:
                     if not self.search_gts:
@@ -105,7 +105,7 @@ class ReleaseNotesHandler(ContentHandler):
 
     def endElement(self, name):
         """Performs unsetting the flag_*_* variables, when processed element is left."""
-        
+
         # Local tag entry treating.
         if self.found_lt:
             if name == 'lhcb:name':
@@ -135,11 +135,11 @@ class ReleaseNotesHandler(ContentHandler):
                 self.found_gt = False
                 # Prepare for searching in next GT
                 self.gt_Name, self.gt_DataType = None, None
-                
+
 
 def init_finder(partition, datatype, search_gts):
     """Initializing SAX handler and parser for the "release_notes.xml" file."""
-    
+
     handler = ReleaseNotesHandler(partition, datatype, search_gts)
     parser = make_parser()
     parser.setContentHandler(handler)
@@ -147,13 +147,13 @@ def init_finder(partition, datatype, search_gts):
 
 def all_gts(partition, datatype, rel_notes = None):
     """Returns for the given partition and datatype the list of all global tags.
-    
-    The output is in the form of a list. The fist one global tag is the most recent one.    
+
+    The output is in the form of a list. The fist one global tag is the most recent one.
     """
-    
+
     parser, handler = init_finder(partition, datatype, True)
     if not rel_notes:
-        rel_notes = os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml")
+        rel_notes = os.path.join(os.environ["SQLITEDBPATH"], "..", "doc", "release_notes.xml")
     try:
         parser.parse(open(rel_notes))
         if len(handler.global_tags) != 0:
@@ -170,17 +170,17 @@ def all_gts(partition, datatype, rel_notes = None):
 def last_gt_lts(partition, datatype, rel_notes = None):
     """Returns for the given partition and datatype the most recent global tag and \
     all subsequent local tags.
-    
-    The output is in the form: (global tag, [lt1, lt2, ... ,ltN]). You have to give 
-    the partition name (DDDB, LHCBCOND or SIMCOND) and the data type (e.g., 2009 or MC09). 
+
+    The output is in the form: (global tag, [lt1, lt2, ... ,ltN]). You have to give
+    the partition name (DDDB, LHCBCOND or SIMCOND) and the data type (e.g., 2009 or MC09).
     Odering of the local tags: from the most recent one, to the most old one.
     If for given pair partition-datatype no global tag is found for some reason - "None"
     will be returned, even if local tags were found for the condition.
     """
-    
+
     parser, handler = init_finder(partition, datatype, False)
     if not rel_notes:
-        rel_notes = os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml")
+        rel_notes = os.path.join(os.environ["SQLITEDBPATH"], "..", "doc", "release_notes.xml")
     try:
         parser.parse(open(rel_notes))
         return None
@@ -200,7 +200,7 @@ def main():
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [options] PARTITION(S) DATA_TYPE",
                         version = __version__,
-                        description = 
+                        description =
 """Script returns for the given partition and data type the most recent global tag and all \
 subsequent local tags.
 
@@ -221,19 +221,18 @@ will be returned, even if local tags were found for the given condition.
 for the given partition and data type will be done. The user will be asked for \
 final confirmation."
                     )
-    
+
     try:
-        parser.set_default("rel_notes",
-                os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml")
-                    )
+        parser.set_default("rel_notes", os.path.join(os.environ["SQLITEDBPATH"],
+                                                     "..", "doc", "release_notes.xml"))
     except KeyError:
-        print "Sorry.. Check your environment. SQLDDDBROOT variable is not set."
+        print "Sorry.. Check your environment. SQLITEDBPATH variable is not set."
         return 1
 
     options, args = parser.parse_args()
     if len(args) != 2:
         parser.error("Not enough or too much of arguments. Try with --help.")
-    
+
     datatype = args[1]
     ################ Processing and validation of the given partitions#######################
     partitions = []
@@ -247,7 +246,7 @@ final confirmation."
         elif i == " ":
             parser.error("Partitions coma separated list should be given without spaces.")
     partitions.append(word)
-    
+
     standard_partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
     for partition in partitions:
         if partition not in standard_partitions and partition != "all":
@@ -260,7 +259,7 @@ final confirmation."
     print "#  Partitions to look in: %s" %partitions
     print "#  Data type to look for is: %s" %datatype
     print "###########################################################################################"
-    
+
     ########### Launch parsing and return the result#####################################
     if not options.update_bkk:
         if not options.all_GTs:
@@ -287,7 +286,7 @@ final confirmation."
                 if gts:
                     BK_tags[partition] = gts
         print "\t", BK_tags
-    
+
         ans = None
         while ans is None:
             ans = raw_input("\nDo you really want to update the Bookkeeping database (Yes,[No])? ")
@@ -295,15 +294,15 @@ final confirmation."
             if ans not in [ "Yes", "No" ]:
                 print "You have to type exactly 'Yes' or 'No'"
                 ans = None
-        
+
         if ans == "No":
             print "...\nBookkeeping database update was cancelled by user. No changes were done to the db."
             return 0
-	    
+
         from DIRAC.Core.Base.Script import initialize
         initialize(enableCommandLine = False)
-    	from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-    	cl = BookkeepingClient()
+        from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+        cl = BookkeepingClient()
         retVal = cl.insertTag(BK_tags)
         if retVal['OK']:
             print "Bookkeeping database was updated."
@@ -314,7 +313,7 @@ final confirmation."
         print "\nThe Bookkeeping database can only be updated with 'BK' data type global tags.\n\
 The update process wasn't done."
         return 1
-        
+
 if __name__ == '__main__':
     sys.exit(main())
 
