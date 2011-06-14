@@ -7,6 +7,7 @@ __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
 # Gamma from trees
 import StrippingB2DX
+import StrippingB2DXHltTisTos
 import StrippingDstarD02Kpipi0
 import StrippingB2D3H
 import StrippingBu2D0h_D02KShh_NoPID
@@ -39,6 +40,7 @@ import StrippingBs2PhiKst0
 import StrippingBs2EtacPhi
 import StrippingBs2ChicPhi_Chic2KKPiPi
 import StrippingBs2ChicPhi_Chic2PiPiPiPi
+import StrippingBs2Q2B
 
 import StrippingBs2MuMuPhi
 import StrippingB2XMuMu
