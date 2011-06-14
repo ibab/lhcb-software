@@ -6,6 +6,8 @@
 
 ! 2011-06-14 - Olivier Deschamps
  - extend CaloHypoEstimator : more Prs info + Gamma/pi0 separation info
+ - new GammaPi0SeparationTool + related MLP files
+
 
 ! 2011-05-16 - Olivier Deschamps
  - L0Calo2Calo tool : clusterize around right seedID
