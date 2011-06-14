@@ -50,6 +50,8 @@ public:
 
   LHCb::L0DUReport report(){return m_report;}
   LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas;}
+  const std::map<std::string, std::pair<unsigned int,double> >& datas(){return m_dataMap;}
+  
   
 protected:
 
