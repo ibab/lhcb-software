@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.137 2010-03-17 21:30:50 raaij Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Event v19r4 2011-06-14 =========================
 ! 2011-06-10 - Olivier Deschamps
   - L0DUCounter : counter base change from 10^3 to 10^6 : WAS NOT PROPERLY DONE IN XML ON 2011-01-24 !!
 
