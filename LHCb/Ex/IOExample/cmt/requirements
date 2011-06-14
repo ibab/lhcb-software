@@ -1,6 +1,5 @@
-# $Id: requirements,v 1.44 2010-01-07 13:15:36 cattanem Exp $
-package IOExample
-version v3r5
+package           IOExample
+version           v4r0
 
 branches doc cmt tests python
 include_path none

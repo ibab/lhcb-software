@@ -4,6 +4,7 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+!========================= IOExample v4r0 2011-06-14 =========================
 ! 2011-05-24 - Marco Cattaneo
  - Adapt to use IOHelper instead of IOConf
 
