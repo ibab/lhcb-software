@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-Jun-14 - Patrick Spradlin
+ - StrippingDev/LineConfigDictionaries_Charm.py
+   Updated configurations of D2hh and Xicc.
+
 ! 2011-06-14 - Jibo He
  - LineConfigDictionaries_Calib.py 
    + Re-included tracking lines and updated all conf dict 
@@ -23,7 +27,7 @@
  - StrippingDev/LineConfigDictionaries_GTWG.py 
    Prepared config for Stripping15
 
-! 2011-Jun-09 - Patrick spradlin
+! 2011-Jun-09 - Patrick Spradlin
  - StrippingDev/LineConfigDictionaries_Charm.py
    Changed STREAMS for Xicc to 'CharmCompleteEvent'.
  

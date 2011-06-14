@@ -94,7 +94,7 @@ D2hh = {
     'LowPIDK'                   :    0.,
     'D0Pt'                      : 2000.,
     'D0MassWindowCentre'        : 1865.,
-    'D0MassWindowWidth'         :  100.,
+    'D0MassWindowWidth'         :   75.,
     'D0P'                       : 5000.,
     'D0VtxChi2Ndof'             :   10.,
     'D0FDChi2'                  :   40.,
@@ -146,14 +146,14 @@ D2hhMicroKPi = {
     'Dstar_MDiff_MAX'           :  160.,
     'UntaggedCFLinePrescale'    :    1.,
     'UntaggedCFLinePostscale'   :    1.,
-    'UntaggedSCSLinePrescale'   :    0.,
-    'UntaggedSCSLinePostscale'  :    0.,
-    'TaggedRSLinePrescale'      :    0.,
-    'TaggedRSLinePostscale'     :    0.,
-    'TaggedWSLinePrescale'      :    0.,
-    'TaggedWSLinePostscale'     :    0.,
-    'TaggedSCSLinePrescale'     :    0.,
-    'TaggedSCSLinePostscale'    :    0.
+    'UntaggedSCSLinePrescale'   :    1.,
+    'UntaggedSCSLinePostscale'  :    1.,
+    'TaggedRSLinePrescale'      :    1.,
+    'TaggedRSLinePostscale'     :    1.,
+    'TaggedWSLinePrescale'      :    1.,
+    'TaggedWSLinePostscale'     :    1.,
+    'TaggedSCSLinePrescale'     :    1.,
+    'TaggedSCSLinePostscale'    :    1.
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
@@ -232,9 +232,9 @@ D2hhh = {
     'D2KKKDaughterIPChi2'       :    2.,
     'D2KKKDaughter2IPChi2'      :    4.,
     'D2KKKDaughter1IPChi2'      :   10.,
-    'KPIDK'                     :    3.,
-    'piPIDK'                    :   10.,
-    'PTSum'                     : 2500.,
+    'KPIDK'                     :    7.,
+    'piPIDK'                    :    3.,
+    'PTSum'                     : 2800.,
     'DOCAChi2'                  :   50.,
     'DPt'                       : 1000.,
     'DIPChi2'                   :   15.,
@@ -384,48 +384,48 @@ D2XMuMuMicro = {
 ## Full DST, Walter Bonivento and Francesco Dettori
 ## Modified from Strippinb13b
 ## Test:  Yes
-DstarD02xx ={
+DstarD02xx = {
     'BUILDERTYPE' : 'StrippingDstarD02xxConf',
     'CONFIG':  {
-                 'PrescalepipiBox'     : 0.5
-                 , 'PrescalemumuBox'     : 1.
-                 , 'PrescaleKpiBox'    : 0.3 
-                 , 'PrescaleemuBox'    : 1.  
-                 , 'PrescaleeKBox'    : 1.   
-                 , 'PrescaleepiBox'    : 1.  
-                 , 'PrescalepimuBox'    : 1. 
-                 , 'PrescaleKmuBox'    : 1.  
-                 , 'Prescalepipi_untagged_Box'     : 0.2
-                 , 'Prescalemumu_untagged_Box'     : 1. 
-                 , 'PrescaleKpi_untagged_Box'    : 0.2  
-                 , 'Prescalepimu_untagged_Box'    : 1.  
-                 , 'PrescaleKmu_untagged_Box'    : 0.2  
-                 , 'PrescaleKpi_untagged_BoxMB' : 1     
-                 , 'Prescalepipi_untagged_BoxMB':1      
-                 ,'DMassWin'           : 70.       # MeV
-                 ,'DMassWinMuMuLow'    : -150.       #MeV
-                 ,'DMassWinMuMuHigh'   : 300       #MeV  
-                 ,'DMassWinEMu'        : 300             
-                 ,'doca'               : 0.1        # mm 
-                 ,'XminPT'             : 750.       # MeV
-                 ,'XmaxPT'             : 1100.      # MeV
-                 ,'XminP'              : 4000.      # MeV
-                 ,'XTrackChi2'         : 5.        # adimensional
-                 ,'XTrackChi2Pi'         : 7.        # adimensional
-                 ,'XminIPChi2'         : 3        # adimensional   
-                 ,'XmaxIPChi2'         : 8        # adimensional   
-                 ,'DMinFlightChi2'    :  20.                       
-                 ,'DDira'              : 0.9997     # adimensional 
-                 ,'D0MinPT'            : 1800.      # MeV          
-                 ,'DMaxIPChi2'        :15.                         
-                 ,'DVChi2'            :10.                         
-                 ,'PiMinPT'            : 110.       # MeV          
-                 ,'PiMaxIPCHI2'        : 10.         # adimensional
-                 ,'DstMassWin'         : 110.       # MeV
-                 ,'DstD0DMWin'         : 10.        # MeV
-                 ,'DstD0DMWinMuMu'      : 30.        # MeV
-                 ,'RequireHlt'         : 1          #
-                 ,'prefix'         : ''
+                 'PrescalepipiBox'               :    0.5
+                 , 'PrescalemumuBox'             :    1.
+                 , 'PrescaleKpiBox'              :    0.3
+                 , 'PrescaleemuBox'              :    1.
+                 , 'PrescaleeKBox'               :    1.
+                 , 'PrescaleepiBox'              :    1.
+                 , 'PrescalepimuBox'             :    1.
+                 , 'PrescaleKmuBox'              :    1.
+                 , 'Prescalepipi_untagged_Box'   :    0.2
+                 , 'Prescalemumu_untagged_Box'   :    1.
+                 , 'PrescaleKpi_untagged_Box'    :    0.2
+                 , 'Prescalepimu_untagged_Box'   :    1.
+                 , 'PrescaleKmu_untagged_Box'    :    0.2
+                 , 'PrescaleKpi_untagged_BoxMB'  :    1.
+                 , 'Prescalepipi_untagged_BoxMB' :    1.
+                 , 'DMassWin'                    :   70.        # MeV
+                 , 'DMassWinMuMuLow'             : -150.        # MeV
+                 , 'DMassWinMuMuHigh'            :  300         # MeV
+                 , 'DMassWinEMu'                 :  300         # MeV
+                 , 'doca'                        :    0.1       # mm
+                 , 'XminPT'                      :  750.        # MeV
+                 , 'XmaxPT'                      : 1100.        # MeV
+                 , 'XminP'                       : 4000.        # MeV
+                 , 'XTrackChi2'                  :    5.        # adimensional
+                 , 'XTrackChi2Pi'                :    7.        # adimensional
+                 , 'XminIPChi2'                  :    3         # adimensional
+                 , 'XmaxIPChi2'                  :    8         # adimensional
+                 , 'DMinFlightChi2'              :   20.
+                 , 'DDira'                       :    0.9997    # adimensional
+                 , 'D0MinPT'                     : 1800.        # MeV
+                 , 'DMaxIPChi2'                  :   15.
+                 , 'DVChi2'                      :   10.
+                 , 'PiMinPT'                     :  110.        # MeV
+                 , 'PiMaxIPCHI2'                 :   10.        # adimensional
+                 , 'DstMassWin'                  :  110.        # MeV
+                 , 'DstD0DMWin'                  :   10.        # MeV
+                 , 'DstD0DMWinMuMu'              :   30.        # MeV
+                 , 'RequireHlt'                  :    1         #
+                 , 'prefix'                      : ''
                  },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ]
@@ -463,19 +463,35 @@ DstarPromptWithD02HH = {
     }
 
 
-## Micro-DST, Mat Charles
+## Full-DST, Mat Charles
 ## Test:  Yes.
 Xicc = {
     'BUILDERTYPE' : 'XiccBuilder',
     'CONFIG'      : {
     'LongTrackGEC'          : 150
-    ,'controlPrescaleLc'    :   0.05
+    ,'controlPrescaleLc'    :   0.0
     ,'controlPrescaleXic'   :   1.0
     ,'signalPrescaleViaLc'  :   1.0
     ,'signalPrescaleViaXic' :   1.0
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ] 
+    }
+
+
+## Micro-DST, Ibid.
+## Test:  Yes.
+XiccMicro = {
+    'BUILDERTYPE' : 'XiccBuilder',
+    'CONFIG'      : {
+    'LongTrackGEC'          : 150
+    ,'controlPrescaleLc'    :   0.05
+    ,'controlPrescaleXic'   :   0.0
+    ,'signalPrescaleViaLc'  :   0.0
+    ,'signalPrescaleViaXic' :   0.0
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'Charm' ] 
     }
 
 
