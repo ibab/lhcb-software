@@ -1,5 +1,9 @@
 """
-Configure IO persistency and TES
+Configure IO persistency and TES.
+
+IOHelper class for whan you know the persistency services you want
+
+IOExtention if you want to be clever and get the 
 """
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
@@ -9,7 +13,7 @@ class IOHelper(object):
     '''
     IOHelper class, for simpler configuration of input/output
     
-    from GaudiConf.IOHelper import IOHelper
+    from GaudiConf import IOHelper
     ioh = IOHelper(Input=None,Output=None)
     
     "ioh" is now an instance of the helper which can be used in many places
@@ -680,9 +684,6 @@ class IOHelper(object):
             print ". Set writeFSR to False to supress this warning"
             writeFSR=False
         
-        #build up the filename
-        filename=self.dressFile(filename,'O')
-        
         #find the writer
         winstance=None
         
@@ -694,7 +695,16 @@ class IOHelper(object):
             winstance=writer
             writer=writer.getFullName()
         
-        winstance.Output = filename
+        if hasattr(winstance,"Output") or (hasattr(winstance,'__slots__') and "Output" in winstance.__slots__):
+            #build up the filename
+            filename=self.dressFile(filename,'O')
+            winstance.Output = filename
+        elif hasattr(winstance, "Connection") or (hasattr(winstance,'__slots__') and "Connection" in winstance.__slots__):
+            winstance.Connection="file://"+filename
+            #build up the filename
+            filename=self.dressFile(filename,'O')
+        else:
+            raise TypeError, "writer class "+writer+" does not have any output to configure. Choose a class with either Output or Connection"
         
         if not writeFSR: return [winstance]
         
@@ -734,3 +744,210 @@ class IOHelper(object):
         
         for alg in algs:
             ApplicationMgr().OutStream.append(alg)
+
+class IOExtension(object):
+    '''Helper class when you want to construct specific IO
+    using the file extensions rather than flagging the MDF persistencies
+    
+    Uses an internal map of known extensions
+    
+    Internally uses IOHelper wherever possible
+    
+    from GaudiConf import IOExtension
+    iox = IOExtension(Persistency=None)
+    
+    Persistency is then persistency type to use for Root-type files (ROOT/POOL)
+    the default from IOHelper is maintained if None is passed.
+    
+    examples:
+    
+    1) building an EventSelector from a list of files of mixed types:
+        evtsel=IOExtension().inputFiles(filelist)
+        evtsel=IOExtension("POOL").inputFiles(filelist)
+        evtsel=iox.inputFiles(filelist)
+      
+    2) adding a simple OutputStream to the OutStream of Application Manager
+        iox.outStream(filename)
+      
+    3) adding a named special output stream to the OutputStream of Application Manager
+        iox.outStream(filename,"LHCbInputCopyStream/mystream")
+      
+    4) creating output algorithms to add to your sequence
+        MySequence+=iox.outputAlgs(filename,"InputCopyStream/mySelection")
+        
+    Specific examples:
+    
+    a) Ganga:       needs only to pass the persistency once if requested
+                    backwards compatible with respect to MDF files in ganga
+                    
+                    from GaudiConf import IOExtension
+                    IOExtension(Persistency).inputFiles(file_list)
+                    
+    b) MOORE:       uses extensions to determine type
+                    will use detectMinType, maybe both input and output are MDF
+                    this result would then be passed to LHCbApp
+                    
+                    from GaudiConf import IOExtension
+                    iox=IOExtension(Persistency)
+                    LHCbApp().Persistency=iox.detectMinType(input+output)
+    '''
+    
+    _defaultPersistency=IOHelper._inputPersistency
+    
+    _knownExtensions={ 'DIGI' : '',
+                       'SIM'  : '',
+                       'DST'  : '',
+                       'XDST'  : '',
+                       'MDST'  : '',
+                       'SDST'  : 'Warning',
+                       'MDF'    : 'MDF',
+                       'RAW'  : 'MDF'
+                       }
+    
+    def __init__(self, Persistency=None):
+        '''
+        Initialise with persistency, which is the persistency to use for
+        detected root-type files (POOL/ROOT)
+        '''
+        if Persistency is not None:
+            #check the persistency is valid
+            ioh=IOHelper(Persistency,Persistency)
+            #reset own persistency
+            self._defaultPersistency=ioh._inputPersistency
+    
+    ###############################################################
+    #              Extensions
+    ###############################################################
+    
+    def detectFileType(self, filename):
+        '''
+        Extensions: From first the connection string, and second the extension
+        determine the type of the file from its name when possible
+        
+        returns the string of the file type, or "UNKNOWN" if there is a problem
+        '''
+        iohtype=IOHelper().detectFileType(filename)
+        if iohtype is not "UNKNOWN":
+            return iohtype
+        
+        filename=IOHelper().undressFile(filename)
+        ext=filename.split('.')[-1].strip().upper()
+        
+        if ext not in self._knownExtensions:
+            return "UNKNOWN"
+        
+        retext=self._defaultPersistency
+        if 'MDF' in self._knownExtensions[ext]:
+            retext='MDF'
+        if 'Warning' in self._knownExtensions[ext]:
+            print "# Warning, guessing type of "+ext+" to be "+retext+" use IOHelper instead to avoid this warning"
+        
+        return retext
+    
+    
+    def detectMinType(self, files):
+        '''Extensions:  from a list of files determine the minimal persistency required
+        This will either be MDF or (POOL/ROOT)
+        
+        If POOL/ROOT is ecountered, but IOExtension was initialized with the
+        other persistency, a TypeError is raised.
+        
+        If any one of the files is POOL/ROOT return POOL/ROOT
+        Only if all the files are MDF return MDF
+        '''
+        for file in files:
+            persistency=self.detectFileType(file)
+            if persistency=="UNKNOWN":
+                raise TypeError, "Type of file "+filename+" could not be determined"+" use IOHelper with specified persistency instead"
+            if persistency is not 'MDF':
+                if persistency!=self._defaultPersistency:
+                    raise TypeError, "You are trying to parse "+persistency+" file types when you told IOExtension to expect "+self._defaultPersistency
+                return persistency
+        
+        return 'MDF'
+    
+    def getIOHelper(self, filename):
+        '''Extensions: Determine the persistency of a given file, and then grab an IOHelper
+        instance with that persistency
+        '''
+        persistency=self.detectFileType(filename)
+        if persistency=="UNKNOWN":
+            raise TypeError, "Type of file "+filename+" could not be determined"+" use IOHelper with specified persistency instead"
+        return IOHelper(persistency,persistency)
+    
+    def getCompleteIOHelper(self, infiles, outfile):
+        '''Extensions:  for a set of input and output files, determine their persistencies
+        then grab an IOHelper instance with those persistencies
+        '''
+        inputs=self.detectMinType(infiles)
+        
+        output=self.detectFileType(outfile)
+        
+        return IOHelper(inputs, output)
+    
+    ###############################################################
+    #              Filenames
+    ###############################################################
+    
+    def dressFile(self, filename, IO):
+        '''Filenames: wrapper for IOHelper.dressFile, where the persistency
+        type is guessed from the file extension
+
+        takes a simple filename and returns the connection string
+        '''
+        return self.getIOHelper(filename).dressFile(filename,IO)
+    
+    
+    ###############################################################
+    #              Input
+    ###############################################################
+    
+    def inputFiles(self,files,clear=False, eventSelector=None):
+        '''Input: wrapper for IOHelper.inputFiles, where the persistency
+        type is guessed from the file extension
+
+        inputFiles(<list_of_files>, clear=False, eventSelector=None)
+
+        if clear is True, empty the existing EventSelector list
+        '''
+        #print eventSelector
+        #print eventSelector.__slots__
+        
+        if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
+            eventSelector=EventSelector()
+        
+        if clear:
+            eventSelector.Input=[]
+        
+        for file in files:
+            eventSelector=self.getIOHelper(file).inputFiles([file],clear=False,eventSelector=eventSelector)
+        
+        return eventSelector
+    
+    
+    ###############################################################
+    #              Output
+    ###############################################################
+    
+    def outputAlgs(self,filename,writer="OutputStream"):
+        '''Output: wrapper for IOHelper.outputAlgs, where the persistency
+        type is guessed from the file extension
+        In the case of MDF, no FSR will be written
+
+        returns a list of algorithms to add to your sequence
+        '''
+        ftype=self.detectFileType(filename)
+        return IOHelper(ftype,ftype).outputAlgs(filename,writer,writeFSR=(ftype!='MDF'))
+    
+    def outStream(self,filename,writer="OutputStream"):
+        '''Output: wrapper for IOHelper.outStream, where the persistency
+        type is guessed from the file extension
+        In the case of MDF, no FSR will be written
+        
+        Adds the resultant algorithms to ApplicationMgr().OutStream
+        '''
+        ftype=self.detectFileType(filename)
+        return IOHelper(ftype,ftype).outStream(filename,writer,writeFSR=(ftype!='MDF'))
+    
+    

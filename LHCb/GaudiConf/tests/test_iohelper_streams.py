@@ -10,16 +10,23 @@ def testthisioh(ioh):
     
     print ioh.activeStreams()
     for stream in ioh.activeStreams():
-        print stream.Output
+        if hasattr(stream,"Output") or "Output" in stream.__slots__:
+            print stream.Output
+        else:
+            print stream.Connection
     
     ioh.convertStreams()
     print "- after conversion"
     for stream in ioh.activeStreams():
-        print stream.Output
+        if hasattr(stream,"Output") or "Output" in stream.__slots__:
+            print stream.Output
+        else:
+            print stream.Connection
 
 #preload with some MDFs, check they make it through the conversions
 ioh=IOHelper("MDF","MDF")
 ioh.outputAlgs("file1.mdf",writeFSR=False)
+ioh.outputAlgs("file2.mdf","LHCb::MDFWriter",writeFSR=False)
 
 for persistency in [None,'POOL','ROOT','MDF']:
     print '============================='

@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-14 - Rob Lambert
+ - Support MDFWriter in IOHelper.outputAlgs
+ - Add IOExtension class, holding useful functions when the file type
+   needs to be determined from the file extension
+
 !========================= GaudiConf v14r0 2011-06-14 =========================
 ! 2011-06-13 - Rob Lambert
  - Add more MDF protection in convertConnectionStrings
