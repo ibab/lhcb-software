@@ -42,8 +42,35 @@ namespace CaloDataType{
                     NeutralID    ,  // neutral pid
                     Spread       ,  // cluster spread
                     TrajectoryL  ,
-                    Last // dummy end
+                    PrsE19,
+                    PrsE49,
+                    PrsE4Max,
+                    PrsE1,
+                    PrsE2,
+                    PrsE3,
+                    PrsE4,
+                    PrsE5,
+                    PrsE6,
+                    PrsE7,
+                    PrsE8,
+                    PrsE9,
+                    isPhoton,
+                    isPhotonEcl,
+                    isPhotonFr2,
+                    isPhotonFr2r4,
+                    isPhotonAsym,
+                    isPhotonKappa,
+                    isPhotonEseed,
+                    isPhotonE2,
+                    Last // dummy end (36)
   };                
+
+  static const  int TypeMask[Last] ={  // 0x1 : neutral ; 0x2 : charged ; 0x3 : both
+    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,
+    0x2,0x2,0x1,0x3,0x1,
+    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,
+    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3
+  };
   static const  std::string Name[Last] = {
     "HypoE"     ,
     "HypoEt"    ,     
@@ -68,9 +95,28 @@ namespace CaloDataType{
     "BremMatch"    ,  
     "NeutralID"    ,  
     "Spread"       ,  
-    "TrajectoryL"  
-  };  
-
+    "TrajectoryL"  ,
+    "PrsE19" ,
+    "PrsE49" ,
+    "PrsE4Max" ,
+    "PrsE1" , 
+    "PrsE2" , 
+    "PrsE3" , 
+    "PrsE4" , 
+    "PrsE5" , 
+    "PrsE6" , 
+    "PrsE7" , 
+    "PrsE8" , 
+    "PrsE9" ,
+    "isPhoton",
+    "isPhoton_Ecl",
+    "isPhoton_Fr2",
+    "isPhoton_Fr2r4",
+    "isPhoton_Asym",
+    "isPhoton_Kappa",
+    "isPhoton_Eseed",
+    "isPhoton_E2"
+  };
 }
 
 namespace CaloMatchType{

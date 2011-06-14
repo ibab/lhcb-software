@@ -25,4 +25,5 @@
 #include "CaloInterfaces/IPart2Calo.h"
 #include "CaloInterfaces/ITrack2Calo.h"
 #include "CaloInterfaces/ICaloHypoEstimator.h"
+#include "CaloInterfaces/IGammaPi0SeparationTool.h"
 #endif //DICT_CALOINTERFACESDICT_H 
