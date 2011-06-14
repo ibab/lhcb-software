@@ -9,52 +9,12 @@ from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
-config_default ={'PrescalepipiBox'     : 0.5
-                 , 'PrescalemumuBox'     : 1.
-                 , 'PrescaleKpiBox'    : 1.
-                 , 'PrescaleemuBox'    : 1.
-                 , 'PrescaleeKBox'    : 1.
-                 , 'PrescaleepiBox'    : 1.
-                 , 'PrescalepimuBox'    : 1.
-                 , 'PrescaleKmuBox'    : 1.
-                 , 'Prescalepipi_untagged_Box'     : 1.
-                 , 'Prescalemumu_untagged_Box'     : 1.
-                 , 'PrescaleKpi_untagged_Box'    :  1.
-                 , 'Prescalepimu_untagged_Box'    : 1.
-                 , 'PrescaleKmu_untagged_Box'    : 1.
-                 , 'PrescaleKpi_untagged_BoxMB' : 1
-                 , 'Prescalepipi_untagged_BoxMB':1
-                 ,'DMassWin'           : 70.       # MeV
-                 ,'DMassWinMuMu'       : 300       #MeV
-                 ,'DMassWinEMu'        : 300
-                 ,'doca'               : 0.1        # mm
-                 ,'XminPT'             : 750.       # MeV
-                 ,'XmaxPT'             : 1100.      # MeV
-                 ,'XminP'              : 4000.      # MeV
-                 ,'XTrackChi2'         : 5.        # adimensional
-                 ,'XTrackChi2Pi'         : 7.        # adimensional
-                 ,'XminIPChi2'         : 3        # adimensional
-                 ,'XmaxIPChi2'         : 8        # adimensional
-                 ,'DMinFlightChi2'    :  20.
-                 ,'DDira'              : 0.9997     # adimensional
-                 ,'D0MinPT'            : 1800.      # MeV
-                 ,'DMaxIPChi2'        :15.
-                 ,'DVChi2'            :10. 
-                 ,'PiMinPT'            : 110.       # MeV
-                 ,'PiMaxIPCHI2'        : 10.         # adimensional
-                 ,'DstMassWin'         : 110.       # MeV
-                 ,'DstD0DMWin'         : 10.        # MeV
-                 ,'DstD0DMWinMuMu'      : 30.        # MeV  
-                 ,'RequireHlt'         : 1          # 
-                 ,'prefix'         : '' 
-                 }
-
 
 from StrippingSelections.StrippingDstarD02xx import StrippingDstarD02xxConf as builder
-#from StrippingSelections.StrippingDstarD02xx import config_default as config_params
+from StrippingSelections.StrippingDstarD02xx import config_default as config_params
 
 
-lb = builder('Test',config_default)
+lb = builder('Test',config_params)
 
 stream.appendLines( lb.lines() )
 
@@ -119,7 +79,7 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 100000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

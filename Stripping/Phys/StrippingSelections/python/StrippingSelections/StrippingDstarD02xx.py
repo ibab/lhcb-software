@@ -33,7 +33,8 @@ config_default ={'PrescalepipiBox'     : 0.5
                  , 'PrescaleKpi_untagged_BoxMB' : 1
                  , 'Prescalepipi_untagged_BoxMB':1
                  ,'DMassWin'           : 70.       # MeV
-                 ,'DMassWinMuMu'       : 300       #MeV
+                 ,'DMassWinMuMuLow'    : -150.       #MeV
+                 ,'DMassWinMuMuHigh'   : 300       #MeV
                  ,'DMassWinEMu'        : 300
                  ,'doca'               : 0.1        # mm
                  ,'XminPT'             : 750.       # MeV
@@ -80,7 +81,8 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  , 'PrescaleKpi_untagged_BoxMB'
                                  , 'Prescalepipi_untagged_BoxMB'
                                  ,'DMassWin'
-                                 ,'DMassWinMuMu'
+                                 ,'DMassWinMuMuLow'
+                                 ,'DMassWinMuMuHigh'
                                  ,'DMassWinEMu' 
                                  ,'doca'
                                  ,'XminPT'
@@ -118,7 +120,7 @@ class StrippingDstarD02xxConf(LineBuilder):
     def combinetwobody(self, name, config, xplus, xminus, postfix="") :
         from Configurables import CombineParticles
         if(xplus == "mu") and (xminus == "mu") :                                     
-            d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWinMuMu)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
+            d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (DAMASS('D0')< %(DMassWinMuMuHigh)s *MeV) & (DAMASS('D0')> %(DMassWinMuMuLow)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
         elif (((xplus == "mu") and (xminus == "e")) or ((xplus == "e") and (xminus == "mu"))) :
             d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (ADAMASS('D0')< %(DMassWinEMu)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
         else :
