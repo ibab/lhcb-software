@@ -1,10 +1,9 @@
 ! =============================================================================
-! $Id: release.notes,v 1.140 2010-01-12 17:50:38 marcocle Exp $
-! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r10 2011-06-14 =========================
 ! 2011-06-14 - Illya Shapoval
  - TagsFilter.py is updated:
    + 'BookkeepingSystem' module is changed to 'NewBookkeepingSystem' one;
