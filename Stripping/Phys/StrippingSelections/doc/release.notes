@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-14 - Anton Poluektov 
+ - StrippingB2DX.py : somewhat improve timing (~10 ms) by reordering the cuts. 
+
 ! 2011-06-14 - Michel De Cian
  - Tightened hardcoded cuts in StrippingTrackEffMuonTT
 

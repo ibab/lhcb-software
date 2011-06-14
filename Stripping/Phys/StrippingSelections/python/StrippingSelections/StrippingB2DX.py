@@ -535,10 +535,12 @@ def makeD2hh(moduleName, config) :
 
     D2pipi = CombineParticles(DecayDescriptors = [ "D0 -> pi- pi+" ], 
 			      DaughtersCuts =  { "pi+"      : Daughtercut, "K+"       : Daughtercut }, 
-			      CombinationCut = "(APT>%(PtMin)s*MeV) & " \
+			      CombinationCut = \
+			    "(ADAMASS('D0') < %(CombDMass)s*MeV) & " \
+			    "(APT>%(PtMin)s*MeV) & " \
 			    "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
-			    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) & " \
-			    "(ADAMASS('D0') < %(CombDMass)s*MeV)" % config, 
+			    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s))" \
+			    % config, 
 			      MotherCut = "(ADMASS('D0') < %(DMass)s*MeV) " \
 			    "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & " \
 			    "(BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
@@ -579,10 +581,12 @@ def makeD2hhWS(moduleName, config) :
     D2pipi.DaughtersCuts =  { "pi+"      : Daughtercut,
                               "K+"       : Daughtercut }
 
-    D2pipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
+    D2pipi.CombinationCut = \
+    "(ADAMASS('D0') < %(CombDMass)s*MeV) & " \
+    "(APT>%(PtMin)s*MeV) & " \
     "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
-    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) & " \
-    "(ADAMASS('D0') < %(CombDMass)s*MeV)" % config
+    "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s))" \
+    % config
 
     D2pipi.MotherCut = "(ADMASS('D0') < %(DMass)s*MeV) " \
     "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
@@ -623,8 +627,9 @@ def makeD2hhh(moduleName, config) :
     D2pipipi.DaughtersCuts =  { "pi+"     : Daughtercut,
                                 "K+"      : Daughtercut }
 
-    D2pipipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
+    D2pipipi.CombinationCut = \
     "((ADAMASS('D+') < %(CombDMass)s*MeV) | (ADAMASS('D_s+') < %(CombDMass)s*MeV)) & " \
+    "(APT>%(PtMin)s*MeV) & " \
     "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
     "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s))" \
     % config
@@ -676,8 +681,9 @@ def makeD2hhhWS(moduleName, config) :
     D2pipipi.DaughtersCuts =  { "pi+"     : Daughtercut,
                                 "K+"      : Daughtercut }
 
-    D2pipipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
+    D2pipipi.CombinationCut = \
     "((ADAMASS('D+') < %(CombDMass)s*MeV) | (ADAMASS('D_s+') < %(CombDMass)s*MeV)) & " \
+    "(APT>%(PtMin)s*MeV) & " \
     "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
     "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s))" \
     % config
@@ -748,8 +754,11 @@ def makeD2Kshh(moduleName, KsSel, config) :
                                "K+"  : Daughtercut,
                                "KS0" : "ALL" }
 
-    D2Kspipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
-    "(ADAMASS('D0') < %(CombDMass)s*MeV) & (ADOCA(2,3) < %(DOCAMax)s)" % config
+    D2Kspipi.CombinationCut = \
+    "(ADAMASS('D0') < %(CombDMass)s*MeV) & " \
+    "(APT>%(PtMin)s*MeV) & " \
+    "(ADOCA(2,3) < %(DOCAMax)s)" \
+    % config
 
     D2Kspipi.MotherCut = "(ADMASS('D0') < %(DMass)s*MeV) " \
     "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
@@ -791,8 +800,10 @@ def makeD2KshhWS(moduleName, KsSel, config) :
                                "K+"  : Daughtercut,
                                "KS0" : "ALL" }
 
-    D2Kspipi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
-    "(ADAMASS('D0') < %(CombDMass)s*MeV) & (ADOCA(2,3) < %(DOCAMax)s)" % config
+    D2Kspipi.CombinationCut = \
+    "(ADAMASS('D0') < %(CombDMass)s*MeV) & (ADOCA(2,3) < %(DOCAMax)s) & " \
+    "(APT>%(PtMin)s*MeV)" \
+    % config
 
     D2Kspipi.MotherCut = "(ADMASS('D0') < %(DMass)s*MeV) " \
     "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
@@ -833,8 +844,10 @@ def makeD2Ksh(moduleName, KsSel, config) :
                              "K+"  : Daughtercut,
                              "KS0" : "ALL" }
 
-    D2Kspi.CombinationCut = "(APT>%(PtMin)s*MeV) & " \
-    "((ADAMASS('D+') < %(CombDMass)s*MeV) | (ADAMASS('D_s+') < %(CombDMass)s*MeV))" % config
+    D2Kspi.CombinationCut = \
+    "((ADAMASS('D+') < %(CombDMass)s*MeV) | (ADAMASS('D_s+') < %(CombDMass)s*MeV)) & " \
+    "(APT>%(PtMin)s*MeV)" \
+    % config
 
     D2Kspi.MotherCut = "((ADMASS('D+') < %(DMass)s*MeV) | (ADMASS('D_s+') < %(DMass)s*MeV))" \
     "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
@@ -888,14 +901,16 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Sel) :
     _DDauCut = "( " + _DDauKineCut + " & " + _DDauChi2Cut + " )"
     _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
 
-    _DCombCut = "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
+    _DCombCut = \
+    "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
     "(ADOCA(1,2) < %(DOCAMax)s) & " \
     "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) &" \
-    "(APT> %(PtMin)s *MeV)" % config
+    "(APT> %(PtMin)s *MeV)" \
+    % config
 
-    _DCut = "(M> %(MassMin)s *MeV) & (M< %(MassMax)s *MeV) & " \
+    _DCut = "(M> %(MassMin)s *MeV) & (M< %(MassMax)s *MeV) & (P>%(PMin)s) & " \
     "(PT> %(PtMin)s *MeV) & (VFASPF(VCHI2/VDOF)< %(VtxChi2Max)s ) & " \
-    "(BPVVDCHI2> %(VDChi2Min)s ) & (P>%(PMin)s) & (BPVDIRA > %(DIRAMin)s)" % config
+    "(BPVVDCHI2> %(VDChi2Min)s ) & (BPVDIRA > %(DIRAMin)s)" % config
 
     _D0 = CombineParticles()
     _D0.DecayDescriptors = ["[D0 -> K- pi+ pi0]cc" ]
@@ -926,14 +941,18 @@ def makeD2KPiPi0WS(moduleName, pi0name, config, Pi0Sel) :
     _DDauCut = "( " + _DDauKineCut + " & " + _DDauChi2Cut + " )"
     _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
 
-    _DCombCut = "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
+    _DCombCut = \
+    "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
     "(ADOCA(1,2) < %(DOCAMax)s) & " \
     "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s)) &" \
-    "(APT> %(PtMin)s *MeV)" % config
+    "(APT> %(PtMin)s *MeV)" \
+    % config
 
-    _DCut = "(M> %(MassMin)s *MeV) & (M< %(MassMax)s *MeV) & " \
+    _DCut = \
+    "(M> %(MassMin)s *MeV) & (M< %(MassMax)s *MeV) & (P>%(PMin)s) & " \
     "(PT> %(PtMin)s *MeV) & (VFASPF(VCHI2/VDOF)< %(VtxChi2Max)s ) & " \
-    "(BPVVDCHI2> %(VDChi2Min)s ) & (P>%(PMin)s) & (BPVDIRA > %(DIRAMin)s)" % config
+    "(BPVVDCHI2> %(VDChi2Min)s ) & (BPVDIRA > %(DIRAMin)s)" \
+    % config
 
     _D0 = CombineParticles()
     _D0.DecayDescriptors = ["[D0 -> K+ pi+ pi0]cc" ]
@@ -972,14 +991,14 @@ def makeD2hhhh(moduleName, config) :
     D2Kpipipi.DaughtersCuts =  { "pi+"     : DaughtercutPion, "K+" : DaughtercutKaon }
 
     D2Kpipipi.CombinationCut = \
-    "(APT>%(PtMin)s*MeV) & " \
     "(in_range(%(CombMassMin)s*MeV, AM, %(CombMassMax)s*MeV)) & " \
+    "(APT>%(PtMin)s*MeV) & " \
     "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
     "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s))" \
     % config
 
-    D2Kpipipi.MotherCut = "(in_range(%(MassMin)s*MeV, M, %(MassMax)s*MeV))" \
-    "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (P>%(PMin)s) & (BPVDIRA > %(DIRAMin)s)" % config
+    D2Kpipipi.MotherCut = "(in_range(%(MassMin)s*MeV, M, %(MassMax)s*MeV)) & (P>%(PMin)s) " \
+    "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s)" % config
 
     D2KpipipiSel = Selection("D2KpipipiFor" + moduleName, Algorithm = D2Kpipipi, RequiredSelections = [ StdPi, StdK ] )
 
@@ -1021,14 +1040,14 @@ def makeD2hhhhWS(moduleName, config) :
     D2Kpipipi.DaughtersCuts =  { "pi+"     : DaughtercutPion, "K+" : DaughtercutKaon }
 
     D2Kpipipi.CombinationCut = \
-    "(APT>%(PtMin)s*MeV) & " \
     "(in_range(%(CombMassMin)s*MeV, AM, %(CombMassMax)s*MeV)) & " \
+    "(APT>%(PtMin)s*MeV) & " \
     "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
     "AHASCHILD(((ABSID == 'K+') | (ABSID == 'pi+')) & (MIPCHI2DV(PRIMARY) > %(MaxDauMIPChi2)s))" \
     % config
 
-    D2Kpipipi.MotherCut = "(in_range(%(MassMin)s*MeV, M, %(MassMax)s*MeV))" \
-    "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (P>%(PMin)s) & (BPVDIRA > %(DIRAMin)s)" % config
+    D2Kpipipi.MotherCut = "(in_range(%(MassMin)s*MeV, M, %(MassMax)s*MeV)) & (P>%(PMin)s) " \
+    "& (VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & (BPVDIRA > %(DIRAMin)s)" % config
 
     D2KpipipiSel = Selection("D2KpipipiWSFor" + moduleName, Algorithm = D2Kpipipi, RequiredSelections = [ StdPi, StdK ] )
 
@@ -1051,11 +1070,14 @@ def makeLambdaC(moduleName, config) :
     StdK  = StdNoPIDsKaons
     Stdp  = StdNoPIDsProtons
 
-    Lccut = "(VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & "\
+    Lccut = "(VFASPF(VCHI2/VDOF)<%(VtxChi2Max)s) & (BPVVDCHI2 > %(VDChi2Min)s) & " \
     "(in_range(%(MassMin)s*MeV, M, %(MassMax)s*MeV)) & (BPVDIRA > %(DIRAMin)s) & (BPVIPCHI2() > %(IPChi2Min)s)" % config
-    Lccombcut = "((APT>%(PtMin)s*MeV) &"\
-    "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
-    " (in_range(%(CombMassMin)s*MeV, AM, %(CombMassMax)s*MeV)))" % config
+
+    Lccombcut = \
+    "(in_range(%(CombMassMin)s*MeV, AM, %(CombMassMax)s*MeV)) & " \
+    "(APT>%(PtMin)s*MeV) &" \
+    "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s)" \
+    % config
 
     Daughtercut = "((TRCHI2DOF<%(DauChi2Max)s) & " \
     "(PT > %(DauPtMin)s*MeV) & (P > %(DauPMin)s*MeV) & " \
