@@ -29,8 +29,8 @@ StdLooseKstar2Kpi = CombineParticles ("StdLooseKstar2Kpi")
 StdLooseKstar2Kpi.Inputs = ["Phys/StdLooseKaons/Particles",
                             "Phys/StdLoosePions/Particles"]
 StdLooseKstar2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
-StdLooseKstar2Kpi.CombinationCut = "(ADAMASS('K*(892)0') < 300.*MeV) & (ADOCACHI2CUT(30., ''))"
-StdLooseKstar2Kpi.MotherCut = "(VFASPF(VCHI2) < 25.) & (PT > 500.*MeV)"
+StdLooseKstar2Kpi.CombinationCut = "(APT > 500.*MeV) & (ADAMASS('K*(892)0') < 300.*MeV) & (ADOCACHI2CUT(30., ''))"
+StdLooseKstar2Kpi.MotherCut = "(VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseKstar2Kpi )
