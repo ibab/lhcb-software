@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r21 2011-06-14 =========================
 ! 2011-05-18 - Alexandr Kozlinskiy
  - Move code from DeOTModule::propagationTime to OTHit::propagationTime to
    improve performance
