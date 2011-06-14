@@ -12,7 +12,7 @@
 #include "Event/L0DUReport.h"
 #include "Event/L0ProcessorData.h"
 
-static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 3 );
+static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 4 );
 
 /** @class IL0DUFromRawTool IL0DUFromRawTool.h
  *  
@@ -43,7 +43,7 @@ public:
   virtual unsigned long roStatus()=0;
   virtual void fillDataMap(bool fill = true)=0;
   virtual std::string dump()=0;
-
+  virtual const std::map<std::string, std::pair<unsigned int,double> >& datas()=0;
 protected:
 
 private:
