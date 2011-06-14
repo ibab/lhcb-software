@@ -659,7 +659,7 @@ def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 2 )"%locals()
     _KSFilter = FilterDesktop(Code = _code)
-    _stdKS = DataOnDemand(Location = "Phys/StdLooseDetachedKst2Kpi/Particles")
+    _stdKS = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles")
     return Selection (name, Algorithm = _KSFilter, RequiredSelections = [_stdKS])
                                                             
 def makeJp(name, MaxJpDeltaM, MinJpPt, MaxJpVertChi2DOF, MinJpPVVDChi2, MinJpIPChi2, MinJpDauPt, MinJpDauIPChi2, MaxJpDauTrkChi2):
