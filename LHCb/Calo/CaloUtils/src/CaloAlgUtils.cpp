@@ -180,8 +180,9 @@ const LHCb::CaloCluster*  LHCb::CaloAlgUtils::ClusterFromHypo(const LHCb::CaloHy
   
 
 bool LHCb::CaloAlgUtils::StringMatcher(std::vector<std::string> refs, std::string name){
-  bool ok = true;
-  bool ko = true;
+
+  bool ok=false;
+  bool ko=true;
 
   if( refs.empty())return true;
   for( std::vector<std::string>::iterator iref=refs.begin() ; refs.end() != iref; ++iref){
@@ -189,11 +190,12 @@ bool LHCb::CaloAlgUtils::StringMatcher(std::vector<std::string> refs, std::strin
     if( toUpper(ref) == "ALL")return true;
     if( toUpper(ref) == "NONE")return false;
     bool match = StringMatcher( ref , name );
-    if( ref.find("!") != std::string::npos) ko = ko && match;
-    else 
-      ok = ok || match;
+    if( ref.find("!") != std::string::npos && match)ko=false;
+    else if( match )ok=true;
   }
-  return ok && ko;
+  if( !ko )return  false; // rejection win
+  if(  ok )return  true;
+  return false;
 }
 
 
