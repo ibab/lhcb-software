@@ -5,10 +5,140 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v32r4>2011-06-15 LHCbSys v32r4</A></H1><PRE>
+This version uses Gaudi v22r2 and LCG_60a
+Production version for 2011 data after July 2011 technical stop
+Development release for commissioning of RootCnv persistency
+
 - Packages added:   Online/RootCnv: supports ROOT persistency. Also released as
                                     part of ONLINE project
                     Event/MicroDst: Contains DaVinci::Maps classes stored on
                                     MicroDst, previously in Phys/DaVinciMaps
+
+- Packages modified: CaloUtils v9r1, MDF v3r30, DDDB v1r45,  DetCond v12r19,
+    DetDesc v18r26, OTDet v8r6, RichDet v16r4, DigiEvent v2r18, GenEvent v6r0,
+    L0Event v19r4, MCEvent v2r20, PhysEvent v11r14, IOExample v4r0,
+    GaudiConf v14r0, LHCbAlgs v2r39, LHCbKernel v13r2, OTDAQ v7r10,
+    LoKiCore v11r1, LoKiGen v10r2, LoKiMC v10r1, RichKernel v7r44, 
+    TfKernel v2r21, CondDBUI v3r10
+
+- In CaloUtils v9r1
+  . CaloAlgUtils : new method StringMatcher()
+  . src/CaloNeighbours::_neighbours : fix infinite loop when level < 0
+
+- In MDF v3r30
+  . Improve handling (and printouts) when files get retired.
+
+- In DDDB v1r45
+  . Update database tags for SQLDDDB v6r10:
+    o LHCBCOND, 2011, 2010, 2009: head-20110524
+
+- In DetCond v12r19
+  . Another minor add-on for the 'UseLatestTags' warning output case.
+  . Added a missing configuration bit for the case of per-year-made ONLINE
+    snapshots: if per-year scheme is met 'CondDBAccessSvc' services are also
+    created per-year (before they were created per-month but pointing to a
+    single per-year ONLINE snapshot). SQLDDDB needs a minor change to enable
+    this configuration change.
+  . Warnings about latest tags usage are made more meaningful.
+
+- In DetDesc v18r26
+  . Add SmartRef<Condition>, SmartRef<AlignmentCondition> to python dictionary
+
+- In OTDet v8r6
+  . Fixed bug with usage of calibration instead of status for channel status
+  . Added walk parameterization which describes propagation time correction
+  . Added reading of walk parameters from database.
+
+- In RichDet v16r4
+  . Add some missing protection for failed dynamic casts in DeRichHPDPanel and
+    DeRichSphMirror
+  . Some other minor code tidy ups
+
+- In DigiEvent v2r18
+  . Added BcmDigit.xml, CLID 3001
+
+- In GenEvent v6r0
+  . xml/BeamParameters.xml: new class to contain beam parameter informations
+    for the generator step.
+  . xml/GenHeader.xml: move the beam related functions to BeamParameters.
+    Changes are backward compatible for reading old data
+  . src/BeamForInitialization.cpp, GenEvent/BeamForInitialization.h: utility
+    class for Pythia initialization.
+
+- In L0Event v19r4
+  . L0DUCounter : counter base change from 10^3 to 10^6 : 
+                  WAS NOT PROPERLY DONE IN XML ON 2011-01-24 !!
+
+- In MCEvent v2r20
+  . Added MCBcmDigit.xml, CLID 3000
+
+- In PhysEvent v11r14
+  . Add LHCb::Particle::Selection into dictionary
+  . Remove obsolete FilterCriterionResult. Completes Task #12929.
+- In IOExample v4r0
+  . Major reorganisation of package:
+    o Added IOTest configurable for tests
+    o Options directory removed, all examples are now in tests/options
+    o Tests updated for I/O in both POOL and ROOT persistency format
+      (needs RootCnv)
+    o Add tests for 2009, Reco08 (dst+mdst), Reco09 (dst+mdst) and MC10 data
+
+- In GaudiConf v14r0
+  . Added IOHelper configurable to transprently support ROOT and POOL persistency
+    (see code for documentation and release notes for details of changes)
+  . Adapted LHCbApp, DstConf to use IOHelper
+  . SimConf: add write out of BeamParameters class for Gauss, only
+             for 2011 DataType.
+  . Minor fix to python/GaudiConf/QMTest/LHCbExclusions.py
+
+- In LHCbAlgs v2r39
+  . AlgorithmCorreations : Fix bug https://savannah.cern.ch/bugs/index.php?82587
+  . Added an algorithm to produce the TES finger print (quantitative image). Two
+    heuristics levels are possible:
+    o Plain data objects statistics through the store ('Low' level);
+    o Mentioned above + more closer look on the container object contents
+      ('Medium' level).
+
+- In LHCbKernel v13r2
+  . Remove RICHDEBUG preprocessor directive. Use Gaudi NDEBUG instead.
+  . Add LHCb::RichSmartID::Vector to python dictionary
+
+- In OTDAQ v7r10
+  . Add possibility to apply a fiducial time window in OTRawBankDecoder.
+    Default behaviour is backwards compatible.
+
+- In LoKiCore v11r1
+  . reduce number of warnings for ICC compiler
+  . add base class LoKi::FilterTool
+  . add utilities for better printout of decay trees
+
+- In LoKiGen v10r2
+  . reduce compilation warnings for ICC compiler
+  . better printout of decay chains
+  . add LoKi::GenFilter algorithm to allow some filtering based on
+    properties of generator event.
+
+- In LoKiMC v10r1
+  . reduce warnings for ICC compiler
+  . add "CutVal" to the list of known types
+  . add MC-filter
+
+- In RichKernel v7r44
+  . Add a workaround to RichConfigurableUser to deal with the fact that
+   _context_defaults_ is a singleton between all instances.
+
+- In TfKernel v2r21
+  . Move code from DeOTModule::propagationTime to OTHit::propagationTime to
+    improve performance
+  . Change OTHit::propagationTime to use DeOTModule::propagationTime
+
+- In CondDBUI v3r10
+  . TagsFilter.py is updated:
+    + 'BookkeepingSystem' module is changed to 'NewBookkeepingSystem' one;
+    + SQLDDDBROOT environment variable is changed to the SQLITEDBPATH one
+      (latter is set in the SQLDDDB package). This is needed in the frame of
+     SQLite db files distribution model migration where CVMFS will host the files
 
 </PRE><H1><A NAME=v32r3>2011-04-27 LHCbSys v32r3</A></H1><PRE>
 This version uses Gaudi v22r2 and LCG_60a
