@@ -4,6 +4,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2011-06-14 - Olivier Deschamps 
+ - add new interface : ICaloGammaPi0SeparationTool.h
+
 ! 2011-06-14 - Olivier Deschamps
  - extend ICaloHypoEstimator enum
 
