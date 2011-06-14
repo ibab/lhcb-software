@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r4 2011-06-14 =========================
 ! 2011-05-25 - Chris Jones
  - Add some missing protection for failed dynamic casts in DeRichHPDPanel and
    DeRichSphMirror
