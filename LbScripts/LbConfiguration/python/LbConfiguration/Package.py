@@ -31,9 +31,10 @@ package_names = ['XmlDDDB',
                  'ChargedProtoANNPIDParam',
                  'Emacs',
                  'eclipse',
-                 'jre']
+                 'jre',
+                 'CPConfig']
 
-class PackageConfException(Exception): 
+class PackageConfException(Exception):
     pass
 
 class PackageConf(object):
@@ -102,7 +103,7 @@ class PackageConf(object):
         if version :
             prefix = os.path.join(prefix, version)
         return prefix
-            
+
     def md5FileName(self, version=None):
         mfname = self.tarBallName(version, full=False)
         mfname += ".md5"
@@ -114,7 +115,7 @@ class PackageConf(object):
     def disableDereferenceTar(self):
         self._dereference_tar = False
 
-    
+
 package_list = []
 for _pak in package_names:
     package_list.append(PackageConf(_pak))
@@ -146,7 +147,7 @@ def getPackageList(projectname=None, hatname=None):
     if hatname :
         plist = [ p for p in plist if p.hat() == hatname ]
     return plist
-        
+
 def getTarBallName(packagename, version):
     """ contruct the tarball name from the components """
     filename = None
@@ -215,3 +216,7 @@ jre.setHat("Java")#IGNORE:E0602
 jre.setProject("TOOLS")#IGNORE:E0602
 
 eclipse.setProject("TOOLS")#IGNORE:E0602
+
+CPConfig.setHat("WG")#IGNORE:E0602
+CPConfig.setProject("DBASE")#IGNORE:E0602
+

@@ -1,3 +1,7 @@
+2011-06-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Package.py: added WG/CPCOnfig package
+
 2011-06-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: fixed handling of LCGCMT version scheme in the CVMFS optimization
