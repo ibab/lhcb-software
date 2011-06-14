@@ -4,6 +4,7 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+!========================= MicroDst v1r0 2011-06-14 =========================
 ! 2011-05-31 - Marco Cattaneo
  - Suppress icc compiler warnings in automatically generated dict files
 
