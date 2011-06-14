@@ -2,8 +2,8 @@
 # Created    : 2004-06-14
 # Maintainer : Marco Cattaneo
 #============================================================================
-package LHCbAlgs
-version           v2r38
+package           LHCbAlgs
+version           v2r39
 
 #============================================================================
 # Structure, i.e. directories to process.
