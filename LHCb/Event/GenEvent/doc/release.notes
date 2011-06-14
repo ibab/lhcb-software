@@ -2,6 +2,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v6r0 2011-06-14 =========================
 ! 2011-05-30 - Patrick Robbe
  - xml/GenHeader.xml, xml/BeamParameters.xml: changes to keep backward  
    compatibility for the reading of GenHeader.
