@@ -1,3 +1,18 @@
+2011-06-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r2p1
+
+	LbConfiguration:
+	* python/LbConfiguration/Package.py: added WG/CPCOnfig package
+	* python/LbConfiguration/SetupProject.py: fixed handling of LCGCMT version scheme in the CVMFS optimization (Marco Cl.)
+
+	LbLegacy:
+	* scripts/mkLHCbtar: fix exclusion list for shared tarball and install.<cmtconfig>.history.
+	* scripts/mkLHCbtar: removed obsolete call to LbInstallArea.
+	* scripts/mkproject: added unconditional exit if the tarball cannot be built.
+	* LbLegacy/python/LbLegacy/Utils.py: New file. added getStatusOutput function that
+	simulates commands.getstatusoutput with subprocess
+
 2011-05-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r2
