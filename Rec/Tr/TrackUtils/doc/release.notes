@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-06-14 - Wouter Hulsbergen
+ - TrackEventCloneKiller:
+   - fixed untested statuscode introduced in previous commit
+   - removed unused datamember for tool type
+
 ! 2011-06-10 - Wouter Hulsbergen
  - changes in HltTrackConverter
    - fix bug in  HltTrackConverter::CloneRemoval

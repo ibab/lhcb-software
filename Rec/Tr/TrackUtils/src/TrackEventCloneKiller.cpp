@@ -99,7 +99,7 @@ StatusCode TrackEventCloneKiller::initialize()
          << "TracksInContainers                    : " << getProperty( "TracksInContainers" ).toString()                    << endmsg
          << "TrackOutContainer                     : " << m_tracksOutContainer                                              << endmsg
          << "IgnoredTrackTypes                     : " << getProperty( "IgnoredTrackTypes" ).toString()                     << endmsg
-         << "CloneFinderTool                       : " << m_cloneFinderName                                                 << endmsg                 
+         << "CloneFinderTool                       : " << m_cloneFinder.type()                                              << endmsg
          << "StoreCloneTracks                      : " << getProperty( "StoreCloneTracks" ).toString()                      << endmsg
          << "SkipSameContainerTracks               : " << getProperty( "SkipSameContainerTracks" ).toString()               << endmsg
          << "CompareInSameContainerForwardUpstream : " << getProperty( "CompareInSameContainerForwardUpstream" ).toString() << endmsg
@@ -107,7 +107,7 @@ StatusCode TrackEventCloneKiller::initialize()
          << endmsg;
   
 
-  return StatusCode::SUCCESS;
+  return sc ;
 
 };
 

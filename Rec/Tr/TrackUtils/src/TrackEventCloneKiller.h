@@ -56,8 +56,6 @@ private:
   // do not do a clone compare for tracks from a same container
   bool m_skipSameContainerTracks;
   bool m_compareInSameContainerForwardUpstream;
-  // clone finder tool name
-  std::string m_cloneFinderName;
 
   bool m_copyTracks;
 
