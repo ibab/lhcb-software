@@ -272,7 +272,11 @@ def isProject(path, ignore_not_ready = False, cvmfs = False):
             # take the last two elements of the path
             p, v = path.rsplit(os.path.sep, 2)[-2:]
             # check that they are like PROJECT and PROJECT_vXrY
-            return v.startswith(p + "_") and lhcb_style_version.match(v[len(p)+1:])
+            if v.startswith(p + "_"):
+                v = v[len(p)+1:]
+                return lhcb_style_version.match(v) or lcg_style_version.match(v)
+            else:
+                return False
         except:
             return False
     # on other filesystems we use a better check
