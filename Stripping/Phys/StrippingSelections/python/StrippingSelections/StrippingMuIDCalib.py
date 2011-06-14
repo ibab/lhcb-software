@@ -13,22 +13,6 @@ lb = builder( 'MuIDCalib', config_params )
 First set of config_params (the commented one) are for mDST and second one for fullDST.
 The stripping report with config_params as full DST is:
 
-StrippingReport                                                INFO Event 100000, Good event 48215
- |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  0.5081|       245|       |        |       |       |       |
- |_StrippingSequenceStreamTest_                      |  0.5081|       245|       |        |       |       |       |
- |!StrippingMuIDCalib_JpsiNoPID                      |  0.1203|        58|  1.034|        |      0|      0|     11|
- |!StrippingMuIDCalib_JpsiFromBNoPID                 |  0.1514|        73|  1.000|        |      0|      0|    141|
- |!StrippingMuIDCalib_JpsiFromBNoPIDNoMip            |  0.1493|        72|  1.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_JpsiFromBNoPIDNoMipHiP         |  0.0892|        43|  1.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_JpsiKFromBNoPIDNoMip           |  0.0436|        21|  1.095|        |      0|      0|      0|
- |!StrippingMuIDCalib_FromLambdacDecay               |  0.0871|        42|  1.048|        |      0|      0|      0|
- |!StrippingMuIDCalib_PiFromLambdacDecay             |  0.0041|         2|  1.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_KFromLambdacDecay              |  0.0062|         3|  1.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_PFromLambdacDecay              |  0.0145|         7|  1.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_PiISMUONFromLambdacDecay       |  0.0000|         0|  0.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_KISMUONFromLambdacDecay        |  0.0000|         0|  0.000|        |      0|      0|      0|
- |!StrippingMuIDCalib_PISMUONFromLambdacDecay        |  0.0021|         1|  1.000|        |      0|      0|      0|
 '''
 
 
@@ -38,12 +22,12 @@ __version__ = '$Revision: 1.3 $'
 
 
 #config_params = {     #for mDST
-#    'PromptPrescale'           : 0.5,
-#    'DetachedPrescale'         : 0.,
-#    'DetachedNoMIPPrescale'    : 1.,
+#    'PromptPrescale'           : 0.3,
+#    'DetachedPrescale'         : 1.,
+#    'DetachedNoMIPPrescale'    : 0.,
 #    'DetachedNoMIPHiPPrescale' : 0., 
 #    'DetachedNoMIPKPrescale'   : 0.,
-#    'FromLambdacPrescale'      : 0.,
+#    'FromLambdacPrescale'      : 1.,
 #    'KFromLambdacPrescale'     : 0.,
 #    'PiFromLambdacPrescale'    : 0.,
 #    'PFromLambdacPrescale'     : 0.,
@@ -53,12 +37,12 @@ __version__ = '$Revision: 1.3 $'
 #    }
 
 config_params = {      #for fullDST
-    'PromptPrescale'           : 0.08,
-    'DetachedPrescale'         : 1.,
+    'PromptPrescale'           : 0.,
+    'DetachedPrescale'         : 0.,
     'DetachedNoMIPPrescale'    : 0.3,
     'DetachedNoMIPHiPPrescale' : 1., 
     'DetachedNoMIPKPrescale'   : 1.,
-    'FromLambdacPrescale'      : 1.,
+    'FromLambdacPrescale'      : 0.,
     'KFromLambdacPrescale'     : 1.,
     'PiFromLambdacPrescale'    : 1.,
     'PFromLambdacPrescale'     : 1.,
