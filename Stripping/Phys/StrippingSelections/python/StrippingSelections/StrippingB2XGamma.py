@@ -222,6 +222,13 @@ def makePhoton(name, photonPT):
     @return: Selection object
     
     """
+    # Configure clusterization
+    from Configurables import CaloClusterizationTool, CellularAutomatonAlg
+    clust = CellularAutomatonAlg("EcalClust")
+    clust.addTool(CaloClusterizationTool,'CaloClusterizationTool')
+    clust.CaloClusterizationTool.ETcut = 300
+    clust.CaloClusterizationTool.withET = True
+    # Prepare selection
     _code = "(PT> %(photonPT)s*MeV)" % locals()
     _gammaFilter = FilterDesktop(Code=_code)
     _stdGamma = StdLooseAllPhotons
@@ -312,6 +319,7 @@ def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
                            ReFitPVs=False)#True)
     #_Bd.addTool(OfflineVertexFitter())
     #_Bd.VertexFitters.update({"": "OfflineVertexFitter"})
+    #return Selection(name, Algorithm=_Bd, RequiredSelections=[kstSel, gammaSel])
     return Selection(name, Algorithm=_Bd, RequiredSelections=[gammaSel, kstSel])
         
 # EOF

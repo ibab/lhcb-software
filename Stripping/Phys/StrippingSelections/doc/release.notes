@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-14 - Albert Puig Navarro
+ - Tightened photon creation for radiative decays
+
 ! 2011-06-14 - Francesco Dettori  
  - tighten D0->mumu lower invariant mass limit
 
