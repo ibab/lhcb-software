@@ -4,6 +4,18 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-14 - Jibo He
+ - LineConfigDictionaries_Calib.py 
+   + Re-included tracking lines and updated all conf dict 
+ - LineConfigDictionaries_Semileptonic.py
+   . Updated DForBSemi, D0ForBXX
+ - LineConfigDictionaries_RDWG.py
+   . Updated TriMuon, B2XGamma
+ - LineConfigDictionaries_Charm.py
+   . Updated DstarD02xx
+ - LineConfigDictionaries_BetaS.py
+   + Added Bs2Q2Body4pi
+
 ! 2011-06-09 - Anton Poluektov 
  - Added BDT stripping config to StrippingDev/LineConfigDictionaries_GTWG.py
 

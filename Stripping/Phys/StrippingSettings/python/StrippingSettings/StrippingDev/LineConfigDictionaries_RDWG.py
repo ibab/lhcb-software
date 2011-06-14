@@ -233,15 +233,26 @@ B2MuMuMuMuLines = {
 TriMuon = {
     'BUILDERTYPE'  : 'StrippingTriMuonsConf',
     'CONFIG'       :  {
-    'GoodMuons'    : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  9 ) " ,
+    'GoodMuons'        : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  6 ) " ,
     'GoodMuonsForBc' : " ( BPVIPCHI2 () >  9 ) " ,
     'TightMuons'   : " ( PT > 1.9 * GeV ) & ( BPVIPCHI2 () > 25 ) " ,
-    'HLT'          : " HLT_PASS_RE('(Hlt1|Hlt2).*Mu.*Decision') " , 
+    #
+    # Trigger 
+    #
+    'HLT'    : None ,  
+    #
+    # Prescale 
+    #
     '3mu-Prescale' : 1.00 , 
     'Bc-Prescale'  : 1.00 , 
     'Tau-Prescale' : 1.00 , 
+    #
+    # Technicalities:
+    #
     'Preambulo'    : [
+    ## shortcut for chi2 of vertex fit 
     'chi2vx = VFASPF(VCHI2) '                               ,
+    ## shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light"     ,
     "ctau    =                    BPVLTIME ( ) * c_light "  ,
     "ctauBc  = PDGM('B_c+') / M * BPVLTIME ( ) * c_light "  
@@ -288,7 +299,7 @@ B2XGamma = {
     'CONFIG' : {'TrIPchi2Phi'          : 10.       # Dimensionless
                 ,'TrIPchi2Kst'         : 10.       # Dimensionless
                 ,'PhiMassWin'          : 15.       # MeV
-                ,'KstMassWin'          : 100.      # MeV
+                ,'KstMassWin'          : 150.      # MeV
                 ,'KstMassWinSB'        : 200.      # MeV
                 ,'BsMassWin'           : 1000.     # MeV
                 ,'B0MassWin'           : 1000.     # MeV

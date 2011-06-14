@@ -408,9 +408,9 @@ DstarVeryLooseWithD02Kpi = {
 DForBSemi = {
     'BUILDERTYPE'	: 'DforBSemiLinesConf',
     'CONFIG'	: {
-     "DpPreScale"    : 0.04
-    ,"DsPreScale"    : 0.04   
-    ,"LcPreScale"    : 0.08   
+     "DpPreScale"    : 0.02
+    ,"DsPreScale"    : 0.02
+    ,"LcPreScale"    : 0.05
     ,"MINIPCHI2"     : 9.0    # adimensiional
     ,"TRCHI2"        : 5.0   # adimensiional
     ,"KaonPIDK"      : 4.0    # adimensiional
@@ -422,7 +422,7 @@ DForBSemi = {
     ,"DsAMassWin"    : 100.0  # MeV
     ,"DsIP"          : 7.4    # mm
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
-    ,"DDocaChi2Max"  : 20   #adimensiional
+    ,"DDocaChi2Max"  : 20   #adimensiional 
      },
     'STREAMS' : ['CharmControl'],
     'WGs'    : ['Semileptonic'] 
@@ -433,7 +433,7 @@ DForBSemi = {
 D0ForBXX = {
     'BUILDERTYPE'	: 'D0forBXXLinesConf',
     'CONFIG'	: {
-     "PreScale"      : 0.03   # adimensiional        
+     "PreScale"      : 0.015   # adimensiional
     ,"PreScaleRS"   : 1.0    # adimensiional
     ,"PreScaleWS"   : 0.2    # adimensiional
     ,"MINIPCHI2"     : 9.0   # adimensiional
@@ -442,12 +442,12 @@ D0ForBXX = {
     ,"PionPIDK"      : 10.0   # adimensiional
     ,"PT"            : 300.0  # MeV
     ,"D0DIRA"        : 0.9999    # adimensiional
-    ,"D0DIRAK3Pi"    : 0.9999    # adimensiional        
+    ,"D0DIRAK3Pi"    : 0.9999    # adimensiional
     ,"FDCHI2"        : 100.0   # adimensiional
     ,"D0AMassWin"    : 100.0   # MeV
     ,"D0MassWin"     : 80.0  # MeV
     ,"D0IP"          : 0.2    #mm
-    ,"D0K3PiIP"      : 0.2    #mm        
+    ,"D0K3PiIP"      : 0.2    #mm
     ,"D0VCHI2DOF"    : 6.0   # adimensiional
     ,"DDocaChi2Max" : 20   #adimensiional
      },
