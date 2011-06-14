@@ -97,7 +97,7 @@ use XMLSummaryBase        v1r2    Kernel  # Rob Lambert
 use XMLSummaryKernel      v1r0p2  Kernel  # Rob Lambert
 
 use L0Base                v1r3    L0      # Julien Cogan
-use L0Interfaces          v1r7    L0      # Olivier Deschamps
+use L0Interfaces          v1r8    L0      # Olivier Deschamps
 use L0MuonKernel          v9r6    L0      # Julien Cogan
 use ProcessorKernel       v6r1    L0      # Julien Cogan
 

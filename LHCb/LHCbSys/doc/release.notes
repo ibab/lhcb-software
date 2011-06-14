@@ -18,8 +18,8 @@ Development release for commissioning of RootCnv persistency
 - Packages modified: CaloUtils v9r1, MDF v3r30, DDDB v1r45,  DetCond v12r19,
     DetDesc v18r26, OTDet v8r6, RichDet v16r4, DigiEvent v2r18, GenEvent v6r0,
     L0Event v19r4, MCEvent v2r20, PhysEvent v11r14, IOExample v4r0,
-    GaudiConf v14r0, LHCbAlgs v2r39, LHCbKernel v13r2, OTDAQ v7r10,
-    LoKiCore v11r1, LoKiGen v10r2, LoKiMC v10r1, RichKernel v7r44, 
+    GaudiConf v14r0, LHCbAlgs v2r39, LHCbKernel v13r2, L0Interfaces v1r8, 
+    OTDAQ v7r10, LoKiCore v11r1, LoKiGen v10r2, LoKiMC v10r1, RichKernel v7r44, 
     TfKernel v2r21, CondDBUI v3r10
 
 - In CaloUtils v9r1
@@ -44,6 +44,9 @@ Development release for commissioning of RootCnv persistency
 
 - In DetDesc v18r26
   . Add SmartRef<Condition>, SmartRef<AlignmentCondition> to python dictionary
+
+- In L0Interfaces v1r8
+  . IL0DUFromRawTool : new virtual method datas() return <string,value> data map
 
 - In OTDet v8r6
   . Fixed bug with usage of calibration instead of status for channel status
