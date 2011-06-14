@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-14 - Michel De Cian
+ - Tightened hardcoded cuts in StrippingTrackEffMuonTT
+
 ! 2011-06-14 - Marco Gersabeck
  - Fixed bug plus 25% timing improvement in StrippingD2hh.py
 

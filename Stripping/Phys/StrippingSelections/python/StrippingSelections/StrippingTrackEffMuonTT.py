@@ -453,7 +453,7 @@ def selFilterLongPartsMu(name, IPcut):
     """
     Filter = FilterDesktop()
     FilterLongPartsMu = Filter.configurable(name+"FilterLongPartsMu")
-    FilterLongPartsMu.Code = "(ISMUON) & (P > 3000) & (PT > 1300) & (PIDmu > -2.0) & (TRCHI2DOF < 3.0) & (MIPDV(PRIMARY) > %(IPcut)s)" %locals()
+    FilterLongPartsMu.Code = "(ISMUON) & (P > 8000) & (PT > 1300) & (PIDmu > 0.0) & (TRCHI2DOF < 3.0) & (MIPDV(PRIMARY) > %(IPcut)s)" %locals()
 #
     return Selection(name+"_SelFilterLongPartsMu", Algorithm = FilterLongPartsMu, RequiredSelections = [StdLooseMuons])
 # ########################################################################################
