@@ -13,17 +13,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
  - reduce number of warnings for ICC compiler
-
-! 2011-06-05 - Vanya Belyaev
-
  - add base class LoKi::FilterTool 
 
 ! 2011-06-04 - Vanya Belyaev
-
  - add utilities for better printout of decay trees 
-
  - cmt/requirements 
     version increment to v11r1 
 
