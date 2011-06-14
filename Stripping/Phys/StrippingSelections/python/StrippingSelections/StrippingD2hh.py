@@ -122,6 +122,7 @@ class D2hhConf(LineBuilder) :
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
+        """
         self.selD0RS = makeD2hh(d0RS_name,  
 			         config,
  				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
@@ -130,13 +131,14 @@ class D2hhConf(LineBuilder) :
 				 DecayDescriptor = 'D0 -> K- pi+',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
+        """
 
         self.selD0WS = makeD2hh(d0WS_name,  
 			         config,
  				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
 				 PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
 				 CombPIDK_string = '',
-				 DecayDescriptor = 'D0 -> K+ pi-',
+				 DecayDescriptor = '[D0 -> K+ pi-]cc',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
@@ -162,7 +164,7 @@ class D2hhConf(LineBuilder) :
 	self.selDstRS = makeDstar2D0Pi( dst2DRS_name
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0RS, stdNoPIDsPions]
+                                   , inputSel = [self.selD2Kpi, stdNoPIDsPions]
                                  )
 
 	self.selDstWS = makeDstar2D0Pi( dst2DWS_name
