@@ -280,12 +280,6 @@ void PresenterMainFrame::cleanHistogramDB() {
 //  Build the graphical interface. A lot of ROOT calls !!!
 //==============================================================================
 void PresenterMainFrame::buildGUI() {
-  /*
-  if ( ( pres::EditorOnline  == presenterMode() ) ||
-       ( pres::EditorOffline == presenterMode() ) ||
-       ( pres::Online        == presenterMode() ) ||
-       ( pres::History       == presenterMode() ) ) {
-  */
     SetCleanup(kDeepCleanup);
     TGPicturePool* picpool = gClient->GetResourcePool()->GetPicturePool();
     SetIconPixmap((char**)presenter32);
@@ -681,7 +675,7 @@ void PresenterMainFrame::buildGUI() {
     m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
     m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
     m_historyIntervalComboBox->Select(M_RecentHistory, false);
-
+    
     m_historyIntervalComboBox->Resize(112,22);
     m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
                                        this, "handleCommand(Command)");
@@ -1962,8 +1956,7 @@ void PresenterMainFrame::setReference() {
 // below is either HISTO DIM sevices, or a ROOT filename
 // Open ROOT file at startup
 //==============================================================================
-void PresenterMainFrame::setStartupHistograms(const std::vector< std::string > &
-                                              histogramList) {
+void PresenterMainFrame::setStartupHistograms(const std::vector< std::string >& histogramList) {
   std::vector< std::string >::const_iterator histogramListIt ;
 
   for ( histogramListIt = histogramList.begin() ;
@@ -1972,6 +1965,7 @@ void PresenterMainFrame::setStartupHistograms(const std::vector< std::string > &
     if ( inputParamTS.EndsWith( pres::s_rootFileExtension.c_str() ) ) {
       m_savesetFileName = *histogramListIt ;
       setStatusBarText( m_savesetFileName.c_str() , 2 ) ;
+      m_historyIntervalComboBox->Select(M_File_Picker, false);
     } else {
       HistogramIdentifier histogram = HistogramIdentifier( *histogramListIt ) ;
       if (histogram.isDimFormat()) addHistoToPage( *histogramListIt );
@@ -2911,7 +2905,7 @@ void PresenterMainFrame::reconfigureGUI() {
       m_historyPlotsButton->SetState(kButtonUp);
       m_viewMenu->EnableEntry(HISTORY_PLOTS_COMMAND);
 
-      std::cout << "ReconfigureGUI:: After Offline selector" << std::endl;
+      std::cout << "ReconfigureGUI:: After Offline selector, savesetFile " << m_savesetFileName << std::endl;
 
     } else if (pres::EditorOnline == presenterMode()) {
       unclearHistosIfNeeded();

@@ -261,16 +261,25 @@ void ProblemDB::getSystems ( ) {
   // Check that the web server answers correctly
   std::getline( webStream , line ) ;
   if ( !boost::algorithm::find_first( line , "200 OK" ) ) {
-    std::cerr << "ProblemDB replied " << line << std::endl ;
+    std::cerr << "Error: ProblemDB replied " << line << std::endl ;
     return;
   }
-  bool valid = false;
   while ( std::getline( webStream , line ) ) {
-    line = line.substr( 0, line.size()-1);
-    if ( valid ) m_systems.push_back( line );
-    if ( line == "name" ) valid = true;
+    if ( line.size() == 1 ) break;
   }
-
+  while ( std::getline( webStream , line ) ) {
+    while ( "" != line ) {
+      std::string::size_type kk = line.find(" ");
+      if ( std::string::npos == kk ) {
+        m_systems.push_back( line );
+        break;
+      }
+      m_systems.push_back( line.substr( 0, kk ) );
+      line = line.substr( kk+1 );
+    }
+  }
+  webStream.close();
+  
   //for ( std::vector<std::string>::iterator itS = m_systems.begin(); m_systems.end() != itS ; ++itS ) {
   //  std::cout << "System '" << *itS << "'" << std::endl;
   //}

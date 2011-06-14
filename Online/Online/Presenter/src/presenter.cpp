@@ -177,8 +177,7 @@ int main(int argc, char* argv[]) {
     // program argument -> histo list
     options_description hidden("Histogram list");
     hidden.add_options()
-      ("startup-histograms,H", value< std::vector<std::string> >(), "startup histograms")
-      ;
+      ("startup-histograms,G", value< std::vector<std::string> >(), "startup histograms");
 
     options_description cmdline_options;
     cmdline_options.add(cliOptions).add(config).add(hidden);
@@ -383,7 +382,7 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setCurrentPageName( startupPage ) ;
       presenterMainFrame.loadSelectedPageFromDB( startupPage , pres::s_startupFile,
                                                  savesetFile ) ;
-      presenterMainFrame.startPageRefresh();
+      if ( presenterMainFrame.presenterMode() == pres::Online ) presenterMainFrame.startPageRefresh();
     }
 
     if (startupSettings.count("image-path")) {

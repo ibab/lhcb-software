@@ -4,9 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-14 - Olivier Callot
+ - Fix the command line access to history by file (specified as last argument)
+
 ! 2011-06-10 - Olivier Callot
  - Use a different account for the offline Elog posts.
- - Get the list of ProblemDB system from teh Problem DB, and check against it.
+ - Get the list of ProblemDB system from the Problem DB, and check against it.
 
 ! 2011-06-09 - Olivier Callot
  - Improved use fo Problem Database: Report ALWAYS and only for the Shift logbook
