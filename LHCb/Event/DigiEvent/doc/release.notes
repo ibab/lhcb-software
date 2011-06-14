@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v2r18 2011-06-14 =========================
 ! 2011-05-31 - Magnus Lieng
  - Added BcmDigit.xml, CLID 3001
 
