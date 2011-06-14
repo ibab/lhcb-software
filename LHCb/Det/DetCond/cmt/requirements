@@ -1,6 +1,6 @@
 # =============================================================================
-package       DetCond
-version           v12r18
+package           DetCond
+version           v12r19
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src

@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r19 2011-06-14 =========================
 ! 2011-06-06 - Illya Shapoval
  - Another minor add-on for the 'UseLatestTags' warning output case.
 
