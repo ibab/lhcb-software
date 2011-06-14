@@ -291,6 +291,51 @@ B2DX = {
     'WGs' : [ 'GammaFromTrees' ]
 }
 
+
+B2DXHltTisTos = {
+    'BUILDERTYPE' : 'B2DXHltTisTosConf',
+    'CONFIG' : {                    # Default configuration dictionary
+	'TrkChi2Max'   : 4,         # Max track chi2/ndof
+	'BCuts' : {
+	    'TauMin'       : 0.3,
+	    'IPChi2Max'    : 25,
+	    'DIRAMin'      : 0.999,
+	    'VChi2Max'     : 30,
+	    'PTSumMin'     : 5000,
+	    'BMassWindow'  : 500
+	},
+	'BachCuts' : {
+	    'IPChi2Min'    : 4,
+	    'PTMin'        : 500,
+	    'PMin'         : 5000
+	},
+	'DCuts' : {
+	    'DauPTMin'     : 100,     
+	    'DauPMin'      : 1000,
+	    'DauIPChi2Min' : 4,
+	    'SumPTMin'     : 1500,
+	    'IPChi2Min'    : 0,
+	    'MaxDauIPChi2Min' : 36,
+	    'VChi2Max'     : 30,
+	    'DMassWindow'  : 100,
+	    'FDChi2Min'    : 36,
+	    'DOCAMax'      : 1.0
+	},
+	"Prescales" : {             # Prescales for individual lines
+	    "D2hh"         : 1.,
+	    "D2hhTIS"      : 1.,
+	    "D2hhWS"       : 0.1,
+	    "D2hhh"        : 1.,
+	    "D2hhhTIS"     : 1., 
+	    "D2hhhWS"      : 0.1, 
+	},
+	'GECNTrkMax'   : 500
+    }, 
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs' : [ 'GammaFromTrees' ]
+}
+
+
 DstarD02Kpipi0 = {
     'BUILDERTYPE' : 'DstarD02Kpipi0Conf',
     'CONFIG' : {

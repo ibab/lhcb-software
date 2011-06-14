@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-06-09 - Anton Poluektov 
+ - Added BDT stripping config to StrippingDev/LineConfigDictionaries_GTWG.py
+
+! 2011-06-09 - Anton Poluektov 
  - StrippingDev/LineConfigDictionaries_GTWG.py 
    Prepared config for Stripping15
 
