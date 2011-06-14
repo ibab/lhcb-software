@@ -17,21 +17,6 @@ from  ctypes import c_uint
 
 ## HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 
-def _ext(name) : 
-    x =  path.splitext(name)[-1].lstrip('.').upper()
-    if x == 'MDF' : x = 'RAW'
-    if x == 'XDST' : x = 'DST'
-    return x
-
-def _datafmt(fn) : 
-    pfn = 'PFN:%s' % fn if fn.find(':') == -1  else fn
-    fmt = { 'RAW' : "DATAFILE='%s' SVC='LHCb::MDFSelector'"
-          , 'DST' : "DATAFILE='%s' TYP='POOL_ROOTTREE' OPT='READ'" 
-          }
-    ext = _ext(pfn)
-    if ext not in fmt.iterkeys() : ext = 'DST'
-    return fmt[ ext ] % pfn
-
 # canonicalize tck  -- eats integer + string, returns canonical string
 def _tck(x) :
     if type(x) == str and x[0:2] == '0x' : return '0x%08x'%int(x,16)
@@ -91,6 +76,8 @@ class Moore(LHCbConfigurableUser):
         , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
         , 'VetoRoutingBits'    : []
         , 'REQ1' : ''
+        , 'Persistency' :  None #Root or Pool?
+        , 'WriteFSR'    :  True #copy FSRs as required
 
         }   
                 
@@ -105,24 +92,25 @@ class Moore(LHCbConfigurableUser):
             if dod not in ApplicationMgr().ExtSvc :
                 ApplicationMgr().ExtSvc.append( dod ) 
             importOptions('$STDOPTS/DecodeRawEvent.py')
-
+    
     def _configureOnline(self) :
         from Configurables import LoKiSvc
         LoKiSvc().Welcome = False
-
+        
         import OnlineEnv 
         self.setProp('UseTCK', True)
         self._configureDataOnDemand()
-
-        from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
-        EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
+        
+        #from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
+        #done in LHCbApp
+        #EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
         EventLoopMgr().Warnings = False
-
+        
         from Configurables import MonitorSvc
         MonitorSvc().disableDimPropServer      = 1
         MonitorSvc().disableDimCmdServer       = 1
         MonitorSvc().disableMonRate            = 0
-
+        
         app=ApplicationMgr()
         
         # setup the histograms and the monitoring service
@@ -133,11 +121,11 @@ class Moore(LHCbConfigurableUser):
         HistogramPersistencySvc().Warnings = False
         from Configurables import RootHistCnv__PersSvc
         RootHistCnv__PersSvc().OutputEnabled = False
-
+        
         # set up the event selector
         if 'EventSelector' in allConfigurables : 
             del allConfigurables['EventSelector']
-
+        
         if not self.getProp('RunMonitoringFarm') :
             ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
             ## It will not work if these are created before.
@@ -146,7 +134,7 @@ class Moore(LHCbConfigurableUser):
                     self._configureOnlineForking()
                 elif OnlineEnv.MooreStartupMode == 2:
                     self._configureOnlineCheckpointing()
-
+            
             TAE = OnlineEnv.TAE != 0
             input   = 'EVENT' if not TAE else 'MEP'
             output  = 'SEND'
@@ -159,7 +147,7 @@ class Moore(LHCbConfigurableUser):
             eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
             app.ExtSvc.append(eventSelector)
             OnlineEnv.evtDataSvc()
-
+            
             # define the send sequence
             writer =  GaudiSequencer('SendSequence')
             writer.OutputLevel = OnlineEnv.OutputLevel
@@ -175,13 +163,13 @@ class Moore(LHCbConfigurableUser):
             app.ExtSvc.append(eventSelector)
             OnlineEnv.evtDataSvc()
             if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
-
+        
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         # Now setup the message service
         self._configureOnlineMessageSvc()
-
+    
     def _configureOnlineForking(self):
         import os, socket, OnlineEnv
         from Configurables import LHCb__CheckpointSvc
@@ -208,10 +196,10 @@ class Moore(LHCbConfigurableUser):
         forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
         forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
         ApplicationMgr().ExtSvc.append(forker)
-
+    
     def _configureOnlineCheckpointing(self):
         pass
-
+    
     def _configureOnlineMessageSvc(self):
         # setup the message service
         from Configurables import LHCb__FmcMessageSvc as MessageSvc
@@ -229,7 +217,7 @@ class Moore(LHCbConfigurableUser):
         import OnlineEnv 
         msg.OutputLevel = OnlineEnv.OutputLevel
         msg.doPrintAlways = False
-
+    
     def _configureDBSnapshot(self):
         tag = { "DDDB":     self.getProp('DDDBtag')
               , "LHCBCOND": self.getProp('CondDBtag')
@@ -283,20 +271,35 @@ class Moore(LHCbConfigurableUser):
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
-        if len(files)==0 or 'DST' in [ _ext(f) for f in files ] :
-            importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
-        if 'RAW' in [ _ext(f) for f in files ] :
-            #  veto lumi events..
-            #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
-            EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+        #    #  veto lumi events..
+        #    #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
         self._configureDataOnDemand()
-        if files : EventSelector().Input = [ _datafmt(f) for f in files ]
-
+        
+        if not files:
+            return
+        
+        persistency=None
+        if hasattr(self, "Persistency"):
+            if self.getProp("Persistency") is not None:
+                persistency=self.getProp("Persistency")
+        from GaudiConf import IOExtension
+        IOExtension(persistency).inputFiles(files,clear=True)
+    
     def _configureOutput(self):
         fname = self.getProp('outputFile')
         if not fname : return
-        writer = None 
-        if _ext(fname).upper() == 'RAW'  : 
+        writer = None
+        
+        #retrieve the persistency
+        persistency=None
+        if hasattr(self, "Persistency"):
+            if self.getProp("Persistency") is not None:
+                persistency=self.getProp("Persistency")
+        from GaudiConf import IOExtension, IOHelper
+        iox=IOExtension(persistency)
+        
+        #check the file type and use MDF writer or InputCopyStream
+        if iox.detectFileType(fname) == 'MDF'  : 
             from Configurables import LHCb__MDFWriter as MDFWriter
             writer = MDFWriter( 'Writer'
                               , Compress = 0
@@ -314,15 +317,14 @@ class Moore(LHCbConfigurableUser):
                                                    , writer 
                                                    ]
                                        )
-        if _ext(fname).upper() in ['DST','DIGI'] : 
-            importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+            IOHelper("MDF","MDF").outStream(fname,writer,writeFSR=False)
+        else : 
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer"
                                     , RequireAlgs = self.getProp('WriterRequires')
-                                    , Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % fname
                                     )
-        if not writer : raise NameError('unsupported filetype for file "%s"'%fname)
-        ApplicationMgr().OutStream.append( writer )
+            IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
+        
 
     def getRelease(self):
         import re,fileinput
@@ -510,7 +512,33 @@ class Moore(LHCbConfigurableUser):
                     from Gaudi.Configuration import appendPostConfigAction
                     appendPostConfigAction( _fixL0DUConfigProviderTypes )
 
+    def _definePersistency(self):
+        
+        #configure persistency services
+        persistency=None
 
+        #online, do the minimum possible, of only setting up MDF
+        if self.getProp("RunOnline") :
+            persistency="MDF"
+        else:
+            #offline is more complicated, depending on the options
+            if hasattr(self, "Persistency"):
+                if self.getProp("Persistency") is not None:
+                    persistency=self.getProp("Persistency")
+            
+            
+            #could use IOExtension to determine the minimum persistency.
+            #but then GaudiCards would be problematic!
+            #from GaudiConf import IOExtension
+            #iox=IOExtension(persistency)
+            #minpersistency=iox.detectMinType([self.getProp("outputFile")]+self.getProp("inputFiles"))
+            #
+            #if minpersistency=="MDF":
+            #    persistency="MDF"
+        
+        if persistency is not None:
+            LHCbApp().setProp("Persistency",persistency)
+    
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         # verify mutually exclusive settings:
@@ -547,6 +575,7 @@ class Moore(LHCbConfigurableUser):
         # WARNING: this triggers setup of /dd -- could be avoided in PA only mode...
         app = LHCbApp()
         self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType' ] )
+
         # this is a hack. Why does setOtherProps not work?
         app.CondDBtag = self.getProp('CondDBtag')
         app.DDDBtag   = self.getProp('DDDBtag')
@@ -565,7 +594,8 @@ class Moore(LHCbConfigurableUser):
         else:
             self._config_with_hltconf()
             
-
+        self._definePersistency()
+        
         if self.getProp("RunOnline") :
             self._configureOnline()
         else :
