@@ -3,6 +3,7 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= L0Interfaces v1r8 2011-06-14 =========================
 ! 2011-06-14 - Olivier Deschamps
  - IL0DUFromRawTool : new virtual method datas() return <string,value> data map 
 
