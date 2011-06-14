@@ -18,6 +18,7 @@
 #include "Relations/IRelationWeighted2D.h"
 #include "Event/Track.h"
 #include "CaloInterfaces/ICaloHypoEstimator.h"            // Interface
+#include "CaloInterfaces/IGammaPi0SeparationTool.h"
 #include "CaloUtils/ICaloElectron.h"
 
 /** @class CaloHypoEstimator CaloHypoEstimator.h
@@ -87,5 +88,6 @@ private:
   std::map<std::string,LHCb::Calo2Track::IHypoEvalTable*> m_idTable;  
   bool m_status;
   ICaloElectron * m_electron;
+  IGammaPi0SeparationTool* m_GammaPi0; 
 };
 #endif // CALOHYPOESTIMATOR_H

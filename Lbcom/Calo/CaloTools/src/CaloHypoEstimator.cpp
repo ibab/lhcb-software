@@ -68,6 +68,7 @@ StatusCode CaloHypoEstimator::initialize() {
   hypo2Calo()->_setProperty("PhotonLine", line).ignore();
   hypo2Calo()->_setProperty("AddNeighbors", neig).ignore();
   m_electron = tool<ICaloElectron>("CaloElectron","CaloElectron",this);
+  m_GammaPi0 = tool<IGammaPi0SeparationTool>("GammaPi0SeparationTool" , "GammaPi0SeparationTool", this);
 
   clean();
   m_status = true;
@@ -140,6 +141,9 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     if ( 0 != *id && isPrs ( *id ) ) { sumPrs += (*id)->e(); } 
   }
   m_data[HypoPrsE]=sumPrs;
+
+
+
   
   // electron matching
   if( !m_skipC ){
@@ -211,6 +215,100 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
   const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );
   m_clusters[CaloClusterType::SplitOrMain]=cluster;
   m_clusters[CaloClusterType::Main]=  LHCb::CaloAlgUtils::ClusterFromHypo( hypo , false); // get the main cluster
+
+  //Prs info
+  if( cluster == NULL ){
+    Warning("Cluster point to NULL",StatusCode::SUCCESS).ignore();
+  }else{
+    // Ecal seed
+    LHCb::CaloCluster::Entries::const_iterator iseed = 
+      LHCb::ClusterFunctors::locateDigit(cluster->entries().begin(),cluster->entries().end(), LHCb::CaloDigitStatus::SeedCell);
+    if (iseed != cluster->entries().end()) {
+      const LHCb::CaloDigit* seed = iseed->digit();
+      const LHCb::CaloCellID idseed=seed->cellID();
+      double sum9 = 0.;
+      double sum1 = 0.;
+      // PrsE4
+      std::vector<double> Prse4s;
+      Prse4s.reserve(4);
+      Prse4s.push_back(0.);
+      Prse4s.push_back(0.);
+      Prse4s.push_back(0.);
+      Prse4s.push_back(0.);
+      std::vector<double> Prse9;
+      Prse9.reserve(9);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      Prse9.push_back(0.);
+      
+      for( LHCb::CaloHypo::Digits::const_iterator id = digits.begin(); id != digits.end() ; ++id){ 
+        
+        if ( 0 == *id || !isPrs ( *id ) )continue;
+        LHCb::CaloCellID id2 = (*id)->cellID();
+        if( abs((*id)->cellID().row() - idseed.row())<2 && abs( (*id)->cellID().col() - idseed.col())<2 ){
+          // Build sum1 and sum9
+          //
+          sum9 += (*id)->e(); 
+          if( (*id)->cellID().row() == idseed.row() &&  (*id)->cellID().col() == idseed.col() ) sum1=(*id)->e();
+          // Prs4
+          //
+          if(id2.col() <= idseed.col() && id2.row() >= idseed.row() )Prse4s[0] += (*id)->e();
+          if(id2.col() >= idseed.col() && id2.row() >= idseed.row() )Prse4s[1] += (*id)->e(); 
+          if(id2.col() >= idseed.col() && id2.row() <= idseed.row() )Prse4s[2] += (*id)->e();
+          if(id2.col() <= idseed.col() && id2.row() <= idseed.row() )Prse4s[3] += (*id)->e();
+          // Select the 3X3 cluster
+          // 
+          int dcol = id2.col()-idseed.col()+1;
+          int drow = id2.row()-idseed.row()+1;
+          int indexPrs = drow*3+dcol; 
+          Prse9[indexPrs] += (*id)->e();
+        }
+      }
+      //    Build E19 and E49
+      //
+      double Prse4max = 0;
+      for( std::vector<double>::iterator ih = Prse4s.begin();Prse4s.end() != ih;++ih){
+        if( *ih >= Prse4max ) Prse4max=*ih;
+      }
+      m_data[PrsE4Max]  = Prse4max;
+      m_data[PrsE49] = (sum9>0) ? Prse4max /sum9 : 0.;
+      m_data[PrsE19]= (sum9>0) ? sum1/sum9 : 0. ;
+      m_data[PrsE1]= Prse9[0]; 
+      m_data[PrsE2]= Prse9[1]; 
+      m_data[PrsE3]= Prse9[2]; 
+      m_data[PrsE4]= Prse9[3]; 
+      m_data[PrsE5]= Prse9[4]; 
+      m_data[PrsE6]= Prse9[5];
+      m_data[PrsE7]= Prse9[6]; 
+      m_data[PrsE8]= Prse9[7]; 
+      m_data[PrsE9]= Prse9[8];  
+    }
+  }
+    
+  // gamma/pi0 separation
+  m_data[isPhoton]= m_GammaPi0->isPhoton( hypo );
+  std::map<std::string,double> isPhotonData = m_GammaPi0->inputDataMap();
+  for(   std::map<std::string,double>::iterator idata = isPhotonData.begin() ; isPhotonData.end() != idata; ++idata){
+    std::string name = "isPhoton_"+idata->first;
+    double val = idata->second;
+    bool ok =false;
+    for( int i = 0; i < Last ; ++i){
+      if( Name[i] == name){
+        m_data[(DataType)i]=val;
+        ok=true;
+        break;
+      }
+    }
+    if( !ok )Warning("DataType '" + name + "' is undefined",StatusCode::SUCCESS).ignore();
+  }
+  
+  //
   if( 0 != cluster )return estimator( cluster , hypo);
   return false;
 }
