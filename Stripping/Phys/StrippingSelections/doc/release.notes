@@ -5,7 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-06-14 - Marco Gersabeck
- - Fixed bug in StrippingD2hh.py
+ - Fixed bug plus 25% timing improvement in StrippingD2hh.py
 
 ! 2011-06-14 - Albert Puig Navarro
  - Tightened photon creation for radiative decays

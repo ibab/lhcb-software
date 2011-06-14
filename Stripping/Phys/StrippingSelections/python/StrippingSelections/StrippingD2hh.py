@@ -122,32 +122,12 @@ class D2hhConf(LineBuilder) :
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
-        """
-        self.selD0RS = makeD2hh(d0RS_name,  
-			         config,
- 				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
-				 PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
-				 CombPIDK_string = '',
-				 DecayDescriptor = 'D0 -> K- pi+',
-			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
-			        )
-        """
-
-        self.selD0WS = makeD2hh(d0WS_name,  
-			         config,
- 				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
-				 PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
-				 CombPIDK_string = '',
-				 DecayDescriptor = '[D0 -> K+ pi-]cc',
-			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
-			        )
-
         self.selD0KK = makeD2hh(d2kk_name,  
 			        config,
  				KPIDK_string = ' & (PIDK > %(LowPIDK)s)',
 				PiPIDK_string = '',
 				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
-				DecayDescriptor = '[D0 -> K+ K-]cc',
+				DecayDescriptor = 'D0 -> K+ K-',
 			        inputSel = [stdNoPIDsKaons]
 			       )
 
@@ -156,9 +136,18 @@ class D2hhConf(LineBuilder) :
  				  KPIDK_string = '',
 				  PiPIDK_string = ' & (PIDK < %(HighPIDK)s)',
 				  CombPIDK_string = '',
-				  DecayDescriptor = '[D0 -> pi+ pi-]cc',
+				  DecayDescriptor = 'D0 -> pi+ pi-',
 			          inputSel = [stdNoPIDsPions]
 			         )
+
+        from Configurables import ConjugateNeutralPID
+        from PhysSelPython.Wrappers import Selection
+        _localConj_KPi = ConjugateNeutralPID('Conjugate'+d0WS_name)
+        _localConj_KK = ConjugateNeutralPID('Conjugate'+d2kk_name)
+        _localConj_PiPi = ConjugateNeutralPID('Conjugate'+d2pipi_name)
+        self.selD0WS = Selection(d0WS_name, Algorithm=_localConj_KPi, RequiredSelections=[self.selD2Kpi])
+        self.selD0ConjKK = Selection('SelConjugate'+d2kk_name, Algorithm = _localConj_KK, RequiredSelections = [self.selD0KK])
+        self.selD0ConjPiPi = Selection('SelConjugate'+d2pipi_name, Algorithm = _localConj_PiPi, RequiredSelections = [self.selD0PiPi])
 
         # Dstar -> D0 pi selections
 	self.selDstRS = makeDstar2D0Pi( dst2DRS_name
@@ -176,13 +165,13 @@ class D2hhConf(LineBuilder) :
 	self.selDstKK = makeDstar2D0Pi( dst2DKK_name
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0KK, stdNoPIDsPions]
+                                   , inputSel = [self.selD0KK, self.selD0ConjKK, stdNoPIDsPions]
                                  )
 
 	self.selDstPiPi = makeDstar2D0Pi( dst2DPiPi_name
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0PiPi, stdNoPIDsPions]
+                                   , inputSel = [self.selD0PiPi, self.selD0ConjPiPi, stdNoPIDsPions]
                                  )
 
         # Untagged lines
