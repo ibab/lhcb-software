@@ -133,7 +133,7 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
   
   StatusCode sc = StatusCode::SUCCESS ;
   std::vector<std::string> decisions;
-  const selReports = 0;
+  const LHCb::HltSelReports* selReports = 0;
   if ( exist<LHCb::HltSelReports>(m_hltSelReportsLocation )) 
       selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
 
