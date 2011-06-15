@@ -6,6 +6,59 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r4>2011-06-16 LbcomSys v10r4</A></H1><PRE>
+This version uses Gaudi v22r2 and LHCb v32r4
+
+- Production release for 2011 data, devlopments for 2011 MC
+
+- Packages updated: HltDAQ v2r10, L0DU v10r15, L0Muon v9r5, RichTools v2r35,
+    VeloAlgorithms v5r4, VeloDAQ v6r3, VeloSimulation v3r10
+
+- In HltDAQ v2r10
+  . Fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid
+    per event, for odd number of hit sequences saved.
+    Change bank version number to 1 in HltSelReportsWriter.
+    Make HltSelReportsDecoder omit corrupted hit for bank version 0.
+  . Make HltDecReportsDecoder return StatusCode::FAILURE from execute in case
+    it encounters trouble while decoding...
+  . Make HltSelReportsDecoder forward compatible for the case of adding
+    additional data words (i.e. new data is a pure superset of old data).
+  . Fix windows compile error in ConfigZipFileAccessSvc
+  . Make bzip2 conditional on 'not being on windows' in ConfigZipFileAccessSvc
+
+- In L0DU v10r15
+  . L0DUFromRawTool : new interfaced method datas() returns <string,value> 
+                      data map
+  . Add default L0TCK for 2011 data (0x0032)
+  . Change default TCK when DataType is not supplied
+  . Remove default TCK for DC06 data type
+
+- In L0Muon v9r5 
+  . L0MuonAlg.cpp : fix sprintf statements to please Coverity
+  . L0MuonFromRawTrans : fix (?) bug found by coverity (use too much stack space)
+  . L0MuonOutput : Fix an other bug found by Coverity (affecting only debug
+                   output)
+  . L0MuonOutput : Try to fix "bugs" found by Coverity (local variable exceed
+    allowed stack space). Faulty variables are now using pointers so that the 
+    used memory is taken from the heap.
+
+- In RichTools v2r35
+  . Some improvements to the HPD occupancy tool. Remove possibility of some
+    problem with the occupancy data causing an exception to be thrown and the
+    processing aborted. Instead, empty entries are created on the fly in the
+    occupancy map.
+
+- In VeloAlgorithms v5r4
+  . fixed uninitialized fields signalled by the coverity tool
+
+- In VeloDAQ v6r3
+  . fix of the problems reported by the coverity tool
+
+- In VeloSimulation v3r10
+  . Added a variable response verse radius to match data and later to
+    simulate radiation damage
+  . Will give warnings until new db released
+
 </PRE><H1><A NAME=v10r3>2011-04-29 LbcomSys v10r3</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r3
 
