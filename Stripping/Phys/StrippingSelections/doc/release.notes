@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Johannes Albrecht	
+ - update cuts of StrippingTriMuons
+
 ! 2011-06-15 - Jibo He
  - Updated __init__.py to add: 
    . StrippingB2DXHltTisTos
