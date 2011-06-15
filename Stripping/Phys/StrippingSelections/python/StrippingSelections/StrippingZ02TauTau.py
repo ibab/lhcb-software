@@ -19,6 +19,8 @@ confdict_Z02TauTau={
     ,  'Z0MinMass' : 14.
     ,  'mucut' : 10.
     ,  'picut' : 5.
+    ,  'mutrpchi2' : 0.001
+    ,  'pitrpchi2' : 0.001
     }
 
 name = "Z02TauTau"
@@ -29,7 +31,9 @@ class Z02TauTauConf(LineBuilder) :
                               'mucut',
                               'picut',
                               'Z02TauTauLinePrescale',
-                              'Z02TauTauLinePostscale'                           
+                              'Z02TauTauLinePostscale',
+                              'mutrpchi2',
+                              'pitrpchi2'
                               )
     
     def __init__(self, name, config) :
@@ -38,8 +42,8 @@ class Z02TauTauConf(LineBuilder) :
         self._myname = name
         
         #Define the cuts
-        _mucut= '(PT>%(mucut)s*GeV)'%config
-        _picut= '(PT>%(picut)s*GeV)'%config
+        _mucut= '(PT>%(mucut)s*GeV)&(TRPCHI2>%(mutrpchi2)s)'%config
+        _picut= '(PT>%(picut)s*GeV)&(TRPCHI2>%(pitrpchi2)s)'%config
         
         _Z0MinMass = '(MM>%(Z0MinMass)s*GeV)'%config
 
