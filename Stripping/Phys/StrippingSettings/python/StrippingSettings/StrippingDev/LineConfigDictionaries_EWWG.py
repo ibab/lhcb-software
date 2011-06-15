@@ -50,33 +50,33 @@ WMu = {
 DY2MuMu = {
     'BUILDERTYPE'  : 'DY2MuMuConf',
     'CONFIG'       : {
-    'DY2MuMu1Line_psPrescale'    : .02,
-    'DY2MuMu1Line_HltPrescale': .1, 
-    'DY2MuMu1Line_HltaPrescale': 1.0, 
-    'DY2MuMu1LinePostscale'   : 1.0,
-    'DY2MuMu2LinePrescale'    : .5, 
-    'DY2MuMu2Line_HltPrescale': .2,
-    'DY2MuMu2Line_HltaPrescale': 1.0,
-    'DY2MuMu2LinePostscale'   : 1.0,
-    'DY2MuMu3LinePrescale'    : 1.0,
-    'DY2MuMu3LinePostscale'   : 1.0,
-    'DY2MuMu4LinePrescale'    : 1.0,
-    'DY2MuMu4LinePostscale'   : 1.0,
-    'DY1MinMass' : 2.5,
-    'DY1jpsiexclow' : 3.0,
-    'DY1jpsiexchigh' : 3.2,
-    'DY1MaxMass' : 5.,
-    'DY2MinMass' : 5.,
-    'DY2MaxMass' : 10.,
-    'DY3MinMass' : 10.,
-    'DY3MaxMass' : 20.,
-    'DY4MinMass' : 20.,
-    'DY4MaxMass' : 40.,
-    'mupt1' : 800.,
-    'mupt2' : 1.,
-    'mutrkpchi2' : 0.001,
-    'muipdvchi2ratio' : 5.,
-    'mupidreq' : -3.,
+    'DY2MuMu1Line_psPrescale'    : .02
+    ,  'DY2MuMu1Line_HltPrescale': .2 
+    ,  'DY2MuMu1Line_HltaPrescale': 1.0 
+    ,  'DY2MuMu1LinePostscale'   : 1.0
+    ,  'DY2MuMu2LinePrescale'    : .05 
+    ,  'DY2MuMu2Line_HltPrescale': .4
+    ,  'DY2MuMu2Line_HltaPrescale': 1.0
+    ,  'DY2MuMu2LinePostscale'   : 1.0
+    ,  'DY2MuMu3LinePrescale'    : 1.0
+    ,  'DY2MuMu3LinePostscale'   : 1.0
+    ,  'DY2MuMu4LinePrescale'    : 1.0
+    ,  'DY2MuMu4LinePostscale'   : 1.0
+    ,  'DY1MinMass' : 2.5
+    ,  'DY1jpsiexclow' : 3.0
+    ,  'DY1jpsiexchigh' : 3.2
+    ,  'DY1MaxMass' : 5.
+    ,  'DY2MinMass' : 5.
+    ,  'DY2MaxMass' : 10.
+    ,  'DY3MinMass' : 10.
+    ,  'DY3MaxMass' : 20.
+    ,  'DY4MinMass' : 20.
+    ,  'DY4MaxMass' : 40.
+    ,  'mupt1' : 800.
+    ,  'mupt2' : 1.
+    ,  'mutrkpchi2' : 0.001
+    ,  'muipdvchi2ratio' : 5.
+    ,  'mupidreq' : -3.
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -86,11 +86,13 @@ DY2MuMu = {
 Z02TauTau = {
     'BUILDERTYPE'  : 'Z02TauTauConf',
     'CONFIG'       : {
-    'Z02TauTauLinePrescale'    : 1.0,
-    'Z02TauTauLinePostscale'   : 1.0,
-    'Z0MinMass' : 14.,
-    'mucut' : 10.,
-    'picut' : 5.,
+    'Z02TauTauLinePrescale'    : 1.0 
+    ,  'Z02TauTauLinePostscale'   : 1.0
+    ,  'Z0MinMass' : 14.
+    ,  'mucut' : 10.
+    ,  'picut' : 5.
+    ,  'mutrpchi2' : 0.001
+    ,  'pitrpchi2' : 0.001
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
