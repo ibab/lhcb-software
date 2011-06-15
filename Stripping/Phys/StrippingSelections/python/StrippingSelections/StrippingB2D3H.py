@@ -1562,7 +1562,7 @@ def makePPbarh( name,
     _ppbarhAlg = CombineParticles(name)
     _ppbarhAlg.DecayDescriptor = decayDesc 
     dauCut = "(PIDp > 0)"
-    _ppbarhAlg.DaughtersCuts =  { "p"      : dauCut}
+    _ppbarhAlg.DaughtersCuts =  { "p+"      : dauCut}
     _ppbarhAlg.CombinationCut = "( (AM < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s  *MeV)" \
                            " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & (ACUTDOCA( %(Bach3HDocaMax)s *mm, '')) ) " %locals()
     _ppbarhAlg.MotherCut = "( (PT > %(Bach3HMinPT)s *MeV) & (VFASPF(VCHI2/VDOF)< %(Bach3HVtxChisq)s )  " \
