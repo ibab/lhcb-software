@@ -662,7 +662,7 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         self.B2DD = makeB2D3H(name8,
                                    dSel = self.selDch,
                                    hhhSel = self.selDch,
-                                   BMassWindow = 600.0,
+                                   BMassWindow = 800.0,
                                    BMinPT = config['BMinPT'],
                                    MinPT = config['MinPT'],
                                    BIP2PV = config['BIP2PV'],
@@ -1561,6 +1561,8 @@ def makePPbarh( name,
     
     _ppbarhAlg = CombineParticles(name)
     _ppbarhAlg.DecayDescriptor = decayDesc 
+    dauCut = "(PIDp > 0)"
+    _ppbarhAlg.DaughtersCuts =  { "p"      : dauCut}
     _ppbarhAlg.CombinationCut = "( (AM < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s  *MeV)" \
                            " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & (ACUTDOCA( %(Bach3HDocaMax)s *mm, '')) ) " %locals()
     _ppbarhAlg.MotherCut = "( (PT > %(Bach3HMinPT)s *MeV) & (VFASPF(VCHI2/VDOF)< %(Bach3HVtxChisq)s )  " \

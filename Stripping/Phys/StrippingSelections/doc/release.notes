@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-06-15 S. Blusk
+ - Tightened PID cut on proton for Lb-->LcPPbarPi, PPbarK
+ - Slight loosening of B-->DD lower mass cut 
+
 ! 2011-06-15 - David Dossett
  - Tightened cuts of B2KShh lines
  - Added hh MINIPCHI2 cuts
