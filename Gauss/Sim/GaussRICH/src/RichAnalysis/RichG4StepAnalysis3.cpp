@@ -12,6 +12,8 @@
 #include "G4LogicalVolume.hh"
 #include "G4Step.hh"
 #include "G4VProcess.hh"
+#include "RichG4RadiatorMaterialIdValues.h"
+
 //
 /// GaudiKernel
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -66,6 +68,33 @@ RichG4StepAnalysis3::RichG4StepAnalysis3
 
 RichG4StepAnalysis3::~RichG4StepAnalysis3()
 {
+}
+G4bool RichG4StepAnalysis3::RichG4AgelPhotRad(G4int aRadNum) 
+{
+  G4bool aflAg=false;
+  
+ RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+ if( aRMIdValues -> IsRich1AerogelAnyTileRad( aRadNum )) {
+   aflAg=true;
+ }
+ 
+ 
+ return aflAg;  
+}
+
+G4bool RichG4StepAnalysis3::RichG4Rich1GasPhotRad(G4int aRadiatorNumber) 
+{
+  G4bool aflR1=false;
+ RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+  
+ if( aRadiatorNumber == (aRMIdValues->Rich1GaseousCkvRadiatorNum())) {
+   aflR1=true;
+   
+ }
+ return aflR1;
+ 
 }
 
 
@@ -156,22 +185,25 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 	//	       <<RadLenPre<<"   "<<RadLenPost<<"   "
 	//              <<  NucLenPre<<"   "<<NucLenPost << G4endl;
 		 
+        //        RichG4RadiatorMaterialIdValues* aRMIdValues= 
+        //    RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
 
 
         // Now for the photon production point in c4f10.
 
-        if( ( aRadiatorNum >=10 && aRadiatorNum <=25 )  || aRadiatorNum == 1 ) {
+        if( RichG4AgelPhotRad(aRadiatorNum) || RichG4Rich1GasPhotRad(aRadiatorNum) ) {
+          
 
           G4int aStepNum = aTrack -> GetCurrentStepNumber() ;
 
           if(aStepNum == 1 ) {
 
-            if(    aRadiatorNum == 1 ) {
+            if(  RichG4Rich1GasPhotRad (aRadiatorNum) ) {
 
               aRichCounter->bumpNumPhotProdRich1Gas();
 
-            }else if ( aRadiatorNum >=10 && aRadiatorNum <=25 ) {
-
+            }else if ( RichG4AgelPhotRad(aRadiatorNum) ) {
               aRichCounter->bumpNumPhotProdRich1Agel();
             }
           }
@@ -194,7 +226,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
             G4String aPreVolNameA =std::string(aPreVolName,0,33);
 
-            if(aRadiatorNum >=10 && aRadiatorNum <=25 ) {
+            if(RichG4AgelPhotRad( aRadiatorNum )  ) {
 
               if(aPreVolNameA ==  LogVolAgelNameAnalysis &&
                  aPostVolName ==  LogVolC4F10NameAnalysis) {
@@ -225,7 +257,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                 aRichCounter->  bumpNumPhotGasOnRich1Mirror1();
 
-              }else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
+              }else if (  RichG4AgelPhotRad (aRadiatorNum ) ) {
 
                 aRichCounter->  bumpNumPhotAgelOnRich1Mirror1();
 
@@ -247,9 +279,9 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
               //                   if(PhotCurDir.z() < 0.0 ) {
 
-              if(aRadiatorNum == 1 ) {
+              if( RichG4Rich1GasPhotRad ( aRadiatorNum)  ) {
                 aRichCounter->  bumpNumPhotGasOnRich1Mirror2();
-              } else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
+              } else if (RichG4AgelPhotRad( aRadiatorNum)    ) {
 
                 aRichCounter->  bumpNumPhotAgelOnRich1Mirror2();
 
@@ -263,9 +295,9 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
               if(PhotCurDir.z() > 0.0 ) {
 
-                if( aRadiatorNum == 1 ) {
+                if( RichG4Rich1GasPhotRad ( aRadiatorNum)   ) {
                   aRichCounter->  bumpNumPhotGasOnRich1GasQW();
-                } else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
+                } else if ( RichG4AgelPhotRad( aRadiatorNum)   ) {
 
                   aRichCounter->  bumpNumPhotAgelOnRich1GasQW();
 
@@ -287,9 +319,9 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
               if(PhotCurDir.z() > 0.0 ) {
 
-                if( aRadiatorNum == 1 ) {
+                if( RichG4Rich1GasPhotRad ( aRadiatorNum)  ) {
                   aRichCounter->  bumpNumPhotGasOnRich1HpdQW();
-                } else if ( aRadiatorNum >= 10 && aRadiatorNum <= 25 ) {
+                } else if ( RichG4AgelPhotRad( aRadiatorNum)  ) {
 
                   aRichCounter->  bumpNumPhotAgelOnRich1HpdQW();
 
@@ -373,11 +405,11 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                     }
                   }
                 }
-                if( aPeRadiatorNumber == 1 ) {
+                if( RichG4Rich1GasPhotRad(aPeRadiatorNumber)   ) {
                   aRichCounter-> bumpNumPhotGasRich1SiDet();
 
 
-                }else if( aPeRadiatorNumber >=10 && aPeRadiatorNumber <= 25  ) {
+                }else if(RichG4AgelPhotRad(aPeRadiatorNumber)  ) {
 
                   aRichCounter-> bumpNumPhotAgelRich1SiDet();
 

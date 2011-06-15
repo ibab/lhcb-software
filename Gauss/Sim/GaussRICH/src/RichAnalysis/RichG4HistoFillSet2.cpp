@@ -132,6 +132,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   SmartDataPtr<IHistogram1D>hNumTotHitNoRadiator(CurrentHistoSvc,
                                                "RICHG4HISTOSET2/197");
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
 
   G4HCofThisEvent * HCE;
 
@@ -156,7 +159,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   G4int NumRichCollection= NumRichColl;
 
   int Current_RichG4CollectionID=0;
-
+  
 
   for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
     Current_RichG4CollectionID =RichG4CollectionID[ihcol];
@@ -214,7 +217,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
 
 
-          if(  aRadiatorNum >= 10 && aRadiatorNum<= 25 ) {
+          if( RichG4AgelPhotonRadiator( aRadiatorNum) ) {
             NumtotAgel++;
 
 
@@ -226,7 +229,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
             
 
 
-          }else if( aRadiatorNum == 1 ) {
+          }else if(    aRadiatorNum ==  (aRMIdValues->Rich1GaseousCkvRadiatorNum())) {
 
             Numtotc4f10++;
 
@@ -236,7 +239,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
             }
             if(hCkvProdC4F10Rich1)hCkvProdC4F10Rich1->fill(aChTrackTotMom,CkvTheta*1.0);
 
-          }else if (aRadiatorNum == 2 ) {
+          }else if (aRadiatorNum == (aRMIdValues->Rich2GaseousCkvRadiatorNum()) ) {
             Numtotcf4++;
 
             if(  ChtkId <= 1 ) {
@@ -728,3 +731,16 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
   //=============================================================================
 }
 
+G4bool RichG4HistoFillSet2::RichG4AgelPhotonRadiator(G4int aRadNum) 
+{
+  G4bool aflAg=false;
+  
+ RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
+ if(aRMIdValues -> IsRich1AerogelAnyTileRad(  aRadNum) ) {
+   aflAg=true;
+ }
+ 
+ return aflAg;  
+}

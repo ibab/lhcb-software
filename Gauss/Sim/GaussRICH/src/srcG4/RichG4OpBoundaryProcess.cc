@@ -642,7 +642,11 @@ void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack )
         //   << Material2->GetName() <<" is  with ref index "<<Rindex1
         //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1
         //                  << "   Sint2=  "<< sint2 <<G4endl;
+          G4String aMaterial1Name= Material1->GetName();
+          const std::string::size_type aAgelSubTileNamePos = aMaterial1Name.find( AgelSubTileMaterialNamePrefix );
+          
         if( (Material1->GetName() ==  AgelMaterialName) ||
+            ( aAgelSubTileNamePos != std::string::npos)  ||      
             (Material1->GetName() ==  FilterGenericMaterialName) ||
             (Material1->GetName() ==  FilterD263MaterialName) ||
             (Material1->GetName() == Rich1GasQWindowMaterialName) ||

@@ -30,6 +30,7 @@
 #include "AIDA/IHistogram2D.h"
 //#include "AIDA/IProfile.h"
 #include "RichG4SvcLocator.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 
 
 //-----------------------------------------------------------------------------
@@ -163,6 +164,8 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   SmartDataPtr<IHistogram1D>hCkvRich1AgelExitResRefraction (CurrentHistoSvc,
                                                             "RICHG4HISTOSET4/1635");
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues =
+      RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
   int curRdet =   acHit-> GetCurRichDetNum();
   int curRadiator= acHit-> GetRadiatorNumber();
@@ -187,6 +190,10 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   double aCkvRecD7E1 = aReconResult-> ckvAngleD7E1();
   double aCkvRecD7E3 = aReconResult-> ckvAngleD7E3();
 
+  // double   aCkvRecD5E3= aReconResult-> ckvAngleD5E3();
+  // double   aCkvRecD6E3= aReconResult-> ckvAngleD6E3();
+
+
   double aCkvRecD1E3 = aReconResult-> ckvAngleD1E3();
   double aCkvRecD2E3 = aReconResult-> ckvAngleD2E3();
   double aCkvRecD3E3 = aReconResult-> ckvAngleD3E3();
@@ -195,10 +202,11 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   //  double aCkvRecD4E2 = aReconResult-> ckvAngleD4E2();
   double aCkvRecD4E3 = aReconResult-> ckvAngleD4E3();
   double aCkvRecD4E4 = aReconResult-> ckvAngleD4E4();
+
   double aCkvRecD5E4 = aReconResult-> ckvAngleD5E4();
 
 
-  if( (curRdet == 0) &&   (curRadiator >= 10  && curRadiator <= 25 )) {
+  if( (curRdet == 0) &&    (aRMIdValues-> IsRich1AerogelAnyTileRad(curRadiator)  ) ) {
     //    std::cout<< "histo id "<<hCkvRich1Agel<<"   "
     // <<  hCkvRich1Gas<<std::endl;
 
@@ -219,7 +227,13 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
 
     if(hCkvRich1AgelQw) hCkvRich1AgelQw ->fill(aCkvRecD4E3-aCkvRecD3E3);
 
+
     if(hCkvRich1AgelQwPh) hCkvRich1AgelQwPh ->fill(aCkvRecD4E3-aCkvRecD7E3);
+
+    // std::cout<<" Agel Qw Ph "<<aCkvRecD4E3<<"  "<<aCkvRecD7E3<<"    "
+    //         <<(aCkvRecD4E3-aCkvRecD7E3)<<"    "<<aCkvRecD3E3<<std::endl;
+    // std::cout<<" Agel D5E3 D6E3 D4E1 "<<   aCkvRecD5E3 <<"  "<< aCkvRecD6E3<<"   "<<aCkvRecD4E1<< std::endl;
+        
 
     if(hCkvRich1AgelResTotal) hCkvRich1AgelResTotal->
                                 fill(aCkvRecD1E4-genckv);
@@ -248,7 +262,7 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
     //             fill(aCkvRecD3E3-genckv,genckvphi);
 
   }
-  if((curRdet == 0) &&   (curRadiator== 1)) {
+  if((curRdet == 0) &&   (curRadiator== (aRMIdValues-> Rich1GaseousCkvRadiatorNum() ) )) {
     if(hCkvRich1GasD3E1) hCkvRich1GasD3E1->fill(aCkvRecD3E1) ;
     if(hCkvRich1GasD4E1) hCkvRich1GasD4E1->fill(aCkvRecD4E1) ;
     if(hCkvRich1GasD1E4) hCkvRich1GasD1E4->fill(aCkvRecD1E4) ;
@@ -281,7 +295,7 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
     //             fill(aCkvRecD3E1-genckv,genckvphi);
 
   }
-  if( (curRdet == 1) &&  (curRadiator== 2)) {
+  if( (curRdet == 1) &&  (curRadiator== (aRMIdValues-> Rich2GaseousCkvRadiatorNum() ) )) {
 
     // G4cout<<" Rich2 reconstructed Ckv Angle D3E1 D1E4 "<< aCkvRecD3E1<<"   "<<aCkvRecD1E4<<G4endl;
     

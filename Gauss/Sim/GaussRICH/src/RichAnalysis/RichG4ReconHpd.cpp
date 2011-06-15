@@ -263,7 +263,7 @@ Gaudi::XYZPoint RichG4ReconHpd::GetLocalPointWithQwCorr(const Gaudi::XYZPoint & 
      MsgStream RichG4HpdReconlog( msgSvc,"RichG4HpdRecon");
      double xPh=aPhCathPoint.x();
      double yPh=aPhCathPoint.y();
-     double zPh=aPhCathPoint.z();
+     // double zPh=aPhCathPoint.z();// not used
      double rphSq = (xPh*xPh) + (yPh* yPh);
      double rPh = pow(rphSq, 0.5);
      double rPhCorr = GetCorrectionForQwRefraction(rPh);

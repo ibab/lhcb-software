@@ -10,6 +10,7 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Step.hh"
+
 /// GaudiKernel
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -58,6 +59,8 @@ RichG4StepAnalysis4::~RichG4StepAnalysis4(  ) { }
 void RichG4StepAnalysis4::UserSteppingAction( const G4Step* aStep )
 {
 
+
+ 
   //     G4cout<<"Now in Rich Step Analysis 4 " <<G4endl;
 
   G4StepPoint* aPreStepPoint = aStep->GetPreStepPoint();
@@ -76,11 +79,12 @@ void RichG4StepAnalysis4::UserSteppingAction( const G4Step* aStep )
         {
         RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
                           RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
+        RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
         G4int CurMatIndex =  aTrack->GetMaterial() ->GetIndex();
         G4int CurAgelIndex =aRichG4MatRadIdentifier -> getRadiatorNumForG4MatIndex ( CurMatIndex);
-        if(CurAgelIndex >= Rich1AgelTile0CkvRadiatorNum && 
-           CurAgelIndex <= Rich1AgelTile15CkvRadiatorNum) { 
+        if( ( aRMIdValues -> IsRich1AerogelAnyTileRad( CurAgelIndex ) )) {
          
           //            G4String aPreVolName= aPreStepPoint->GetPhysicalVolume()
           //    ->GetLogicalVolume()->GetName();

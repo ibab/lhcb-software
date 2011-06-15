@@ -217,6 +217,10 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
 }
 void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack) {
 
+
+   RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
   //  INTupleSvc* CurrentNtupleSvc=RichG4SvcLocator::RichG4NtupleSvc();
 
   //    NTuple::Item <long> m_nPartQw ;
@@ -265,9 +269,9 @@ void RichG4CherenkovProdFeaturesHisto(const G4Track& aChTrack) {
 
   
    G4int aRadiatorNum = aRichG4MatRadIdentifier->getRadiatorNumForG4MatIndex(aChTrack.GetMaterial()->GetIndex());
-   if( ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum)  || 
-       ( aRadiatorNum ==  Rich1GasQWindowCkvRadiatorNum)  ||
-      ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) ) {
+   if( ( aRadiatorNum == (aRMIdValues -> RichHpdQuartzWindowCkvRadiatorNum() ) )  || 
+       ( aRadiatorNum == (aRMIdValues -> Rich1GasQWindowCkvRadiatorNum ()) )  ||
+       ( aRadiatorNum == (aRMIdValues -> Rich2GasQWindowCkvRadiatorNum() ) ) ) {
     const G4ThreeVector& aChTrackProdPos = aChTrack.GetVertexPosition();
     //  const G4ThreeVector& aMomAtProd = aChTrack.GetVertexMomentumDirection();
     G4String aParticleName = aChTrackParticle->GetDefinition()->GetParticleName();

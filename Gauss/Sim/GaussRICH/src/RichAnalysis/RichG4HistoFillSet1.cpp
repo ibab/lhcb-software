@@ -77,6 +77,8 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
   SmartDataPtr<IHistogram2D>hGlobalHitCF4PosXY(CurrentHistoSvc,
                                                "RICHG4HISTOSET1/172");
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues= 
+      RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
   G4HCofThisEvent * HCE;
   G4int nHitTotRich1=0;
@@ -140,7 +142,7 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
 
           G4int aRadnum = aHit-> GetRadiatorNumber();
 
-          if(  aRadnum >= 10 && aRadnum <= 25  ) {
+          if(  aRMIdValues-> IsRich1AerogelAnyTileRad (aRadnum) )  {
             if(  aHitGlobalPEOriginY > 0.0 ) {
 
               if(hGlobalHitAgelPosXY) hGlobalHitAgelPosXY->
@@ -152,7 +154,7 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
             if(hGlobalHitAgelXY) hGlobalHitAgelXY->
                                    fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
 
-          }else if (  aRadnum == 1 ) {
+          }else if (  aRadnum == ( aRMIdValues-> Rich1GaseousCkvRadiatorNum() ) ) {
             if(  aHitGlobalPEOriginY > 0.0 ) {
 
               if(hGlobalHitC4F10PosXY) hGlobalHitC4F10PosXY->
@@ -163,7 +165,7 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
             if(  hGlobalHitC4F10XY)  hGlobalHitC4F10XY->
                                        fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
 
-          }else if (aRadnum == 2 ) {
+          }else if (aRadnum == ( aRMIdValues-> Rich2GaseousCkvRadiatorNum()  )  ) {
             if(  aHitGlobalPEOriginY > 0.0 ) {
               if(hGlobalHitCF4PosXY) hGlobalHitCF4PosXY->
                                        fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);

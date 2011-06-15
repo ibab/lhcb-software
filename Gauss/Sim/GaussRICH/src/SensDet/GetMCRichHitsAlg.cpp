@@ -94,6 +94,9 @@ StatusCode GetMCRichHitsAlg::execute()
     }
     // Get the Geant4->MCParticle table
     GiGaKineRefTable& table = kineSvc()->table();
+    RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
 
     // now loop through the collections.
     for ( int iii= colRange()[0]; iii < colRange()[1]+1 ; ++iii )
@@ -183,6 +186,8 @@ StatusCode GetMCRichHitsAlg::execute()
         // radiator information
         const Rich::RadiatorType rad = g4hit->radiatorType();
         const int radID              = g4hit->GetRadiatorNumber();
+
+        
         if ( g4hit->GetChTrackID() > 0 && rad == Rich::InvalidRadiator )
         {
           std::ostringstream mess;
@@ -197,18 +202,30 @@ StatusCode GetMCRichHitsAlg::execute()
         // for aerogel, save tile number
         if ( Rich::Aerogel == rad )
         {
-          const int aeroID = radID - Rich1AgelTile0CkvRadiatorNum;
+          const int aeroID = 
+                    aRMIdValues->Rich1AgelRadiatorNumToFullTileNum(radID);
+          const int aeroSubTileID=  
+                    aRMIdValues->Rich1AgelRadiatorNumToSubTileNumInFullTile(radID);          
+
           if ( aeroID < 2*2*2*2*2 ) // Aerogel tile ID field has 5 bits allocated
           {
             mchit->setAerogelTileID( aeroID );
+            
           }
           else
           {
-            std::ostringstream mess;
-            mess << "Aerogel ID " << aeroID
-                 << " too large to pack into MCRichHit !!";
-            Warning ( mess.str(), StatusCode::FAILURE );
+            //  std::ostringstream mess;
+            // mess << "Aerogel ID " << aeroID
+            //     << " too large to pack into MCRichHit !!";
+            // Warning ( mess.str(), StatusCode::FAILURE );
           }
+          if( (aeroSubTileID >=0)   && (aeroSubTileID < 2*2*2*2*2*2) ) 
+                 // Aerogel Sub tile ID has 6 bits allocated
+            // commented out temporarily until new MCRichHit is available.
+          {
+            //  mchit->setAerogelSubTileID ( aeroSubTileID);
+          }
+          
         }
 
         // charged track hitting HPD flag
@@ -323,6 +340,9 @@ StatusCode GetMCRichHitsAlg::finalize()
 {
   const Rich::StatDivFunctor occ("%7.2f +-%5.2f");
 
+    RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
   info() << "Av. # Invalid RICH flags              = "
          << occ(m_invalidRichHits,m_nEvts)
          << endmsg;
@@ -354,7 +374,7 @@ StatusCode GetMCRichHitsAlg::finalize()
   // number of hits in each aerogel tile
   info() << "Av. # Aero hits per tile     :" << endreq;
   const int maxTileID =
-    Rich1AgelTile15CkvRadiatorNum-Rich1AgelTile0CkvRadiatorNum;
+    (aRMIdValues-> Rich1AgelTile15CkvRadiatorNum()) - (aRMIdValues-> Rich1AgelTile0CkvRadiatorNum());
   for ( int iTile = 0; iTile <= maxTileID; ++iTile )
   {
     info() << "          tile = "; 

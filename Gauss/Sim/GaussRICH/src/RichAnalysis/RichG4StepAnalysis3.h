@@ -39,6 +39,9 @@ public:
     return m_RichG4AgelPhotonDirTolerence;
   }
 
+  G4bool RichG4AgelPhotRad(G4int aRadiatorNum);
+  G4bool RichG4Rich1GasPhotRad(  G4int aRadiatorNumber);
+
 protected:
 
 private:

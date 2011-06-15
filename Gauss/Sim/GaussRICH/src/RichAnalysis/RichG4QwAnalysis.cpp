@@ -125,6 +125,8 @@ void  RichG4QwAnalysis::FillQwAnalysisHisto( const G4Track& aChTrack)
   if( !  m_qwAnalysisNtupleBooked ) return;
   if(  m_qPart >  m_qPartMax ) return;
 
+   RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+   
    RichG4MatRadIdentifier* aRichG4MatRadIdentifier =
                           RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
    const G4DynamicParticle* aChTrackParticle
@@ -134,9 +136,9 @@ void  RichG4QwAnalysis::FillQwAnalysisHisto( const G4Track& aChTrack)
  
    G4int aRadiatorNum = aRichG4MatRadIdentifier->
                         getRadiatorNumForG4MatIndex(aChTrack.GetMaterial()->GetIndex());
-   if( ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum)  ||
-       ( aRadiatorNum ==  Rich1GasQWindowCkvRadiatorNum)  ||
-      ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) ) {
+   if( ( aRadiatorNum == (aRMIdValues -> RichHpdQuartzWindowCkvRadiatorNum()) )  ||
+       ( aRadiatorNum == ( aRMIdValues -> Rich1GasQWindowCkvRadiatorNum () )  )  ||
+       ( aRadiatorNum == ( aRMIdValues -> Rich2GasQWindowCkvRadiatorNum() ) )   ) {
       const G4ThreeVector& aChTrackProdPos = aChTrack.GetVertexPosition();
  
 //    const G4ThreeVector& aMomAtProd = aChTrack.GetVertexMomentumDirection();

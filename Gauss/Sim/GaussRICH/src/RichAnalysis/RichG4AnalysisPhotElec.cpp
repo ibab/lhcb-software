@@ -19,6 +19,7 @@
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichInfo.h"
 #include "RichPhotInfo.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 
 
 /// GaudiKernel
@@ -50,6 +51,9 @@ void RichG4AnalysisPhotElecA ( const G4Step& aStep,
 
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues =
+    RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
   if(currentRichDetNumber == 0) {
 
     const G4Track* bTrack= aStep.GetTrack();
@@ -76,9 +80,9 @@ void RichG4AnalysisPhotElecA ( const G4Step& aStep,
 	         aRadiatorNumber = aRichPhotInfo->PhotProdRadiatorNum() ;
            if(  aRichCounter ) {
 
-              if(    aRadiatorNumber == 1 ) {
+             if(    aRadiatorNumber == (aRMIdValues ->Rich1GaseousCkvRadiatorNum())  ) {
                 aRichCounter->bumpNumPhotGasRich1BeforeQE();              
-	      }else if ( aRadiatorNumber >=10 && aRadiatorNumber <= 25 ) {
+             }else if ( aRMIdValues ->  IsRich1AerogelAnyTileRad (aRadiatorNumber) ) {
                 aRichCounter->bumpNumPhotAgelRich1BeforeQE();
               } 
 
@@ -95,6 +99,8 @@ void RichG4AnalysisPhotElecB ( const G4Step& aStep,
 
 
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
+  RichG4RadiatorMaterialIdValues* aRMIdValues =
+    RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
 
   if(currentRichDetNumber == 0) {
@@ -124,13 +130,15 @@ void RichG4AnalysisPhotElecB ( const G4Step& aStep,
 	         aRadiatorNumber = aRichPhotInfo->PhotProdRadiatorNum() ;
            if(  aRichCounter ) {
 
-              if(    aRadiatorNumber == 1 ) {
+             if(    aRadiatorNumber ==  (aRMIdValues ->Rich1GaseousCkvRadiatorNum())    ) {
                 aRichCounter->bumpNumPhotGasRich1AfterQE();              
-	      }else if ( aRadiatorNumber >=10 && aRadiatorNumber <= 25 ) {
-                aRichCounter->bumpNumPhotAgelRich1AfterQE();
-              } 
-
-              } 
+	           }else if ( aRMIdValues ->  IsRich1AerogelAnyTileRad (aRadiatorNumber)   ) {
+               aRichCounter->bumpNumPhotAgelRich1AfterQE();
+             }
+             
+             
+           }
+           
 
 	 }}}}}}
 

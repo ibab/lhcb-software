@@ -29,7 +29,8 @@ public:
   void FillRichG4HistoSet2A( );
 
   void FillRichG4HistoSet2B();
-
+  G4bool RichG4AgelPhotonRadiator(G4int aRadNum) ;
+  
 protected:
 
 private:

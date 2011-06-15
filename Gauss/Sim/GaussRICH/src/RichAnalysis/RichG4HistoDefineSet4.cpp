@@ -135,7 +135,7 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
    
 
      m_hCkvRich1AgelQwPh = CurHistoSvc->book(m_RichG4HistoPathSet4+"1614",
-					   title, 200,-0.005, 0.005);
+					   title, 200,-0.025, 0.025);
 
 
      title = "Cherenkov angle D3E1 reconstructed from Rich2 Gas radiator";

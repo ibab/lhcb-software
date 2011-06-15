@@ -116,8 +116,11 @@ void  RichG4TrackActionAerogelPhoton::PreUserTrackingAction
 
               if( aRichPhotInfo ) {
                   G4int CurPhotProdRadiator = aRichPhotInfo-> PhotProdRadiatorNum();
-                  if( CurPhotProdRadiator >= Rich1AgelTile0CkvRadiatorNum &&
-                      CurPhotProdRadiator <= Rich1AgelTile15CkvRadiatorNum) {
+                  RichG4RadiatorMaterialIdValues* aRMIdValues = 
+                    RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+                  
+
+                  if(  aRMIdValues -> IsRich1AerogelAnyTileRad(CurPhotProdRadiator) ){
                       G4double CurPhotonMomentum =  aRichPhotInfo-> CkvPhotonEnergyAtProd();
                       if( CurPhotonMomentum > m_EnergyCutoffInAerogel ) {
                         // This photon is above the cutoff energy in Aerogel.
