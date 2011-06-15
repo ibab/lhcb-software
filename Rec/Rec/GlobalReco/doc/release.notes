@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r37p1 2011-06-15 =========================
 ! 2011-06-07 - Olivier Deschamps
  - NeutralProtoPAlg : reduce verbosity in case of partial Calo reconstruction
 
