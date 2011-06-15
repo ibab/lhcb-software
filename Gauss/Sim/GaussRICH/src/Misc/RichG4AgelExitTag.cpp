@@ -20,6 +20,8 @@
 void RichG4AgelExitTag(const G4Track* aPhotonTk,
                        const G4ThreeVector & aAgelExitPos ) {
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+  
   G4VUserTrackInformation* aUserTrackInfo=aPhotonTk->GetUserInformation();
   GaussTrackInformation* aRichPhotTrackInfo
     = (GaussTrackInformation*)aUserTrackInfo;
@@ -40,12 +42,11 @@ void RichG4AgelExitTag(const G4Track* aPhotonTk,
           //      <<G4endl;
           G4int CurPhotProdRadiator =aRichPhotInfo-> PhotProdRadiatorNum();
           
-          if( CurPhotProdRadiator >= Rich1AgelTile0CkvRadiatorNum && 
-              CurPhotProdRadiator <= Rich1AgelTile15CkvRadiatorNum) {
+          if( aRMIdValues ->IsRich1AerogelAnyTileRad( CurPhotProdRadiator ) ) {            
             
-          if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
+           if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
             aRichPhotInfo -> setAerogelExitPosition(aAgelExitPos);
-          }
+           }
           }
           
 

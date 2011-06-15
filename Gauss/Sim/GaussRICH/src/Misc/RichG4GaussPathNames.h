@@ -30,7 +30,7 @@ static const G4String AgelTile12MaterialName = "/dd/Materials/RichMaterials/Aero
 static const G4String AgelTile13MaterialName = "/dd/Materials/RichMaterials/AerogelT13";
 static const G4String AgelTile14MaterialName = "/dd/Materials/RichMaterials/AerogelT14";
 static const G4String AgelTile15MaterialName = "/dd/Materials/RichMaterials/AerogelT15";
-
+static const G4String AgelSubTileMaterialNamePrefix = "/dd/Materials/RichAerogelSubTileMaterials/AerogelT";
 static const G4String RichHpdKovarMaterialName = "/dd/Materials/RichMaterials/Kovar";
 static const G4String RichHpdKaptonMaterialName = "/dd/Materials/RichMaterials/HpdKapton";
 static const G4String RichHpdChromiumMaterialName = "/dd/Materials/RichMaterials/HpdChromium";
@@ -54,6 +54,11 @@ static const G4String RichHpdHitSmearPath="/dd/Materials/RichMaterialTabProperti
 
 static const G4String LogVolAgelNameAnalysis= 
                               "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1Aerogel";
+
+static const G4String LogVolAgelSubTileNameAnalysis=
+      "/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1AerogelSubTileLogList/lvRich1AerogelSubTile";
+
+
 static const G4String LogVolC4F10NameAnalysis=
                                "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1SubMaster";
 static const G4String LogVolRich1Mirror1MasterNameAnalysis=

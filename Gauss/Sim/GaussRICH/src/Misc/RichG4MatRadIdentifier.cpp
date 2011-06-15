@@ -25,7 +25,7 @@ RichG4MatRadIdentifier::RichG4MatRadIdentifier(  )
   : m_RichNumRadMat(0)
 {
   
-
+  
   InitializeRichG4MatRadIdentifier();
 }
 //=============================================================================
@@ -47,107 +47,146 @@ RichG4MatRadIdentifier* RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance()
 void RichG4MatRadIdentifier::InitializeRichG4MatRadIdentifier() 
 {
 
+RichG4RadiatorMaterialIdValues* aRMIdValues=
+  RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+  std::vector<std::string>aAgelSubTileLabelSuf= aRMIdValues->Rich1AgelSubTileNameSuffix();
+  std::vector<G4int> aAgelSubTileIndexV=aRMIdValues->Rich1AgelSubTileCkvRadiatorNum();
+  
+   
   G4int n_mat=0;
   m_RichG4MatIndexRadNum.clear();      
   static const G4MaterialTable* theMaterialTable =
     G4Material::GetMaterialTable();
   G4int numberOfMat=  theMaterialTable->size() ;
   for(G4int iMat=0;iMat<numberOfMat;++iMat) {
-    //    G4cout<<"G4mat name list "<<(*theMaterialTable)[iMat]->GetName()<<G4endl;
+    //   G4cout<<"G4mat name list "<<(*theMaterialTable)[iMat]->GetName()<<G4endl;
     G4String curMatName =  (*theMaterialTable)[iMat]->GetName();
     G4int curMatIndex = (*theMaterialTable)[iMat]->GetIndex();
-  
+      
     if(curMatName == AgelMaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelGenericCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] =aRMIdValues->Rich1AgelGenericCkvRadiatorNum();
 
     }else if((curMatName == C4F10MaterialName) || 
              (curMatName == C3F8MaterialName) || (curMatName ==R1RadGasMaterialName)  ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1GaseousCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1GaseousCkvRadiatorNum();
     
     }else if( (curMatName == CF4MaterialName) || (curMatName == R2RadGasMaterialName) ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] =  Rich2GaseousCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] =  aRMIdValues->Rich2GaseousCkvRadiatorNum();
       
     }else if(curMatName ==   FilterGenericMaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = RichFilterGenericCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->RichFilterGenericCkvRadiatorNum();
     }else if (curMatName == FilterD263MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = RichFilterD263CkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->RichFilterD263CkvRadiatorNum();
     }else if (curMatName == Rich1GasQWindowMaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1GasQWindowCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1GasQWindowCkvRadiatorNum();
       
     }else if (curMatName == Rich2GasQWindowMaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich2GasQWindowCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich2GasQWindowCkvRadiatorNum();
       
-    }else if ((curMatName == RichHpdQuartzWindowMaterialName) || (curMatName == RichPmtQWindowMaterialName )) {
+      //    }else if ((curMatName == RichHpdQuartzWindowMaterialName) || (curMatName == RichPmtQWindowMaterialName )) {
+    }else if (curMatName == RichHpdQuartzWindowMaterialName) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = RichHpdQuartzWindowCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->RichHpdQuartzWindowCkvRadiatorNum();
       
+    }else if (curMatName == RichPmtQWindowMaterialName ) {
+      n_mat++;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->RichPmtQuartzWindowCkvRadiatorNum();
+
     }else if (curMatName == AgelTile0MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile0CkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile0CkvRadiatorNum();
     }else if (curMatName == AgelTile1MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile1CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile1CkvRadiatorNum() ;
     }else if (curMatName == AgelTile2MaterialName ) {
       n_mat++;
 
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile2CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile2CkvRadiatorNum() ;
 
     }else if (curMatName == AgelTile3MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile3CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile3CkvRadiatorNum() ;
     }else if (curMatName == AgelTile4MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile4CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile4CkvRadiatorNum() ;
     }else if (curMatName == AgelTile5MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile5CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile5CkvRadiatorNum() ;
      }else if (curMatName == AgelTile6MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile6CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile6CkvRadiatorNum() ;
     }else if (curMatName == AgelTile7MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile7CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile7CkvRadiatorNum() ;
      }else if (curMatName == AgelTile8MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile8CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile8CkvRadiatorNum() ;
     }else if (curMatName == AgelTile9MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile9CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile9CkvRadiatorNum() ;
     }else if (curMatName == AgelTile10MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile10CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile10CkvRadiatorNum() ;
     }else if (curMatName == AgelTile11MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile11CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile11CkvRadiatorNum() ;
     }else if (curMatName == AgelTile12MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile12CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile12CkvRadiatorNum() ;
     }else if (curMatName == AgelTile13MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile13CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile13CkvRadiatorNum() ;
     }else if (curMatName == AgelTile14MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile14CkvRadiatorNum ;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile14CkvRadiatorNum() ;
     }else if (curMatName == AgelTile15MaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1AgelTile15CkvRadiatorNum ;    
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1AgelTile15CkvRadiatorNum() ;    
      }else if (curMatName == Rich1NitrogenMaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich1NitrogenCkvRadiatorNum;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich1NitrogenCkvRadiatorNum();
      }else if (curMatName == Rich2NitrogenMaterialName ) {
       n_mat++;
-      m_RichG4MatIndexRadNum[curMatIndex] = Rich2NitrogenCkvRadiatorNum;      
-     }
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich2NitrogenCkvRadiatorNum();    
+  
+    }else if (curMatName.find(AgelSubTileMaterialNamePrefix) != std::string::npos   ){
+      
+      //const std::string::size_type aSubTilePos = 
+      //   curMatName.find("AgelSubTileMaterialNamePrefix")
+      // if(std::string::npos != aSubTilePos ) {
+          std::string curSubTileIndexStr= curMatName.substr(curMatName.size()-4); 
+
+          // G4cout<<"RichG4MatIdentifier:  AgelSubtileName "<<curMatName<<"   "<< curSubTileIndexStr <<G4endl;
+
+          std::vector<std::string>::const_iterator aSubIter=std::find(aAgelSubTileLabelSuf.begin(),
+                                                                                      aAgelSubTileLabelSuf.end(), 
+                                                                                      curSubTileIndexStr);
+
+          int curAgelSubTileRadiatorNum=
+           ( aSubIter !=aAgelSubTileLabelSuf.end()) ?   (aSubIter-(aAgelSubTileLabelSuf.begin())): -1;
+          // G4cout<<" RichG4MarIdentifier:  AgelSubtileRadiatorNum "<<curAgelSubTileRadiatorNum<<G4endl;
+          
+          
+          if((curAgelSubTileRadiatorNum >=0) && (curAgelSubTileRadiatorNum < ((int) aAgelSubTileIndexV.size()))) {
+            n_mat++;
+            m_RichG4MatIndexRadNum[curMatIndex]=aAgelSubTileIndexV[curAgelSubTileRadiatorNum];
+          }else {
+             G4cout<<" unknown aerogel sub tile index "<< curAgelSubTileRadiatorNum<<G4endl;
+            
+          } 
+          
+    } 
     
     
-  }
+  }// end loop over mat index
+  
   m_RichNumRadMat = n_mat;
   
 }
@@ -206,7 +245,6 @@ void RichG4MatRadIdentifier::InitializeRichCkvMatMaxNumPhot(std::vector<G4int>  
   G4int aC4f10Lim = 40;  
   G4int aCf4Lim   =  40;  
   G4int aQuartzLim = 5000;
-  
  
   if( (G4int) aMaxPhotLim.size() >= 4 ) {
     
@@ -229,7 +267,7 @@ void RichG4MatRadIdentifier::InitializeRichCkvMatMaxNumPhot(std::vector<G4int>  
     if(curMatName == AgelMaterialName ) {
       
       m_RichG4CkvMaxPhotPerStep[curMatIndex] =  aAgelLim;
-    }  else if ( (curMatName == AgelTile0MaterialName) ||                 
+    }  else if ( (curMatName == AgelTile0MaterialName ) ||                 
                  (curMatName == AgelTile1MaterialName) ||  
                  (curMatName == AgelTile2MaterialName) ||  
                  (curMatName == AgelTile3MaterialName) ||  
@@ -244,8 +282,9 @@ void RichG4MatRadIdentifier::InitializeRichCkvMatMaxNumPhot(std::vector<G4int>  
                  (curMatName == AgelTile12MaterialName) ||  
                  (curMatName == AgelTile13MaterialName) ||  
                  (curMatName == AgelTile14MaterialName) ||  
-                 (curMatName == AgelTile15MaterialName) ) {
-             m_RichG4CkvMaxPhotPerStep[curMatIndex] =  aAgelLim;
+                 (curMatName == AgelTile15MaterialName) ||
+                 (curMatName.find("AgelSubTileMaterialNamePrefix") != std::string::npos)) {
+                    m_RichG4CkvMaxPhotPerStep[curMatIndex] =  aAgelLim;
     }else if ( (curMatName == C4F10MaterialName) || 
                 (curMatName == C3F8MaterialName) || (curMatName == R1RadGasMaterialName)    ) {
              m_RichG4CkvMaxPhotPerStep[curMatIndex] = aC4f10Lim;
