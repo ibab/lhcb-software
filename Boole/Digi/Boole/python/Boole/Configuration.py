@@ -49,6 +49,7 @@ class Boole(LHCbConfigurableUser):
        ,"FilterSequence"      : []
        ,"EnablePack"          : True
        ,"IgnoreFlatSpillover" : False 
+       ,"Persistency"         : None
         }
 
     _propertyDocDct = { 
@@ -83,7 +84,8 @@ class Boole(LHCbConfigurableUser):
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        ,'EnablePack'   : """ Turn on/off packing of the data (where appropriate/available) """
        ,'IgnoreFlatSpillover' : """ Turn on/off the simulation of flat spillover in muon  """
-       }
+       ,'Persistency'  : """ Overwrite the default persistency with something else. """
+        }
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
     KnownHistOptions = ["","None","Default","Expert"]
@@ -98,6 +100,9 @@ class Boole(LHCbConfigurableUser):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","DataType"])
         LHCbApp().Simulation = True
+        if hasattr( self, "Persistency" ):
+            self.setOtherProps(LHCbApp(),["Persistency"])
+            self.setOtherProps(DigiConf(),["Persistency"])
 
 
     def defineEvents(self):
@@ -653,15 +658,14 @@ class Boole(LHCbConfigurableUser):
 
             writerName = "DigiWriter"
             digiWriter = OutputStream( writerName, Preload=False )
-            if not digiWriter.isPropertySet( "Output" ):
-                digiWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
             digiWriter.RequireAlgs.append( "Filter" )
             if self.getProp( "NoWarnings" ) and not digiWriter.isPropertySet( "OutputLevel" ):
                 digiWriter.OutputLevel = INFO
 
             # Set up the Digi content
-            DigiConf().Writer = writerName
-            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType"])
+            DigiConf().Writer     = writerName
+            DigiConf().OutputName = self.outputName()
+            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType",])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
 
