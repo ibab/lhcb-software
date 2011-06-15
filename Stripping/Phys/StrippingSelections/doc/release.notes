@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-06-15 - Jibo He
+ - Tightened cuts of DiMuon, DiElectron, Bc2JpsiX lines
+
 ! 2011-06-15 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  - tightened pipi resonance mass cut

@@ -23,16 +23,16 @@ config_default =  {
     'MuonPT'              : 1200.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
-    'MuMuMassWindow'      :  100.   ,  # MeV, 10 sigma, may decreased to 150
+    'MuMuMassWindow'      :   80.   ,  # MeV, 10 sigma, may decreased to 150
     'MuMuVtxCHI2'         :    9.   ,  # adimentional
-    'MuMuPT'              :  -10.   ,  # MeV, not applied 
+    'MuMuPT'              : 2000.   ,  # MeV
     
     'PionTRCHI2DOF'       :    5.   ,  # adimentional     
     'PionPT'              : 2000.   ,  # MeV
     'PionP'               :   -5.   ,  # MeV, not applied now
     'BcMassWindow'        :  400.   ,  # MeV, mass window
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed       
+    'BcPT'                : 6000.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
     'PionIPCHI2'          :   -1.   ,
     'MuonIPCHI2'          :   -1.   ,

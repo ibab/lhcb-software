@@ -20,7 +20,7 @@ config_default =  {
     'LinePostscale'       :    1.   ,
     
     'MuonTRCHI2DOF'       :    5.   ,  # adimentional 
-    'MuonPT'              : 1200.   ,  # MeV
+    'MuonPT'              : 1400.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
     'MuMuMassWindow'      :  200.   ,  # MeV, 10 sigma, may decreased to 150
@@ -33,7 +33,7 @@ config_default =  {
     'BcUpperMass'         : 6400.   ,  # MeV, Upper limit for partial rec. 
     'BcLowerMass'         : 3200.   ,  # MeV, Lower limit for partial rec.
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 4000.      # MeV, May incrase up to 5000 MeV if needed       
+    'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed       
     }
 
 

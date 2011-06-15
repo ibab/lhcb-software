@@ -41,22 +41,22 @@ config_default= {
         'DiElectron_Postscale'                          :     1.  ,
         'DiElectron_checkPV'                            : False   , 
         
-        'DiElectron_ElectronPT'                         :  1100.  ,  # MeV
+        'DiElectron_ElectronPT'                         :  1200.  ,  # MeV
         'DiElectron_ElectronP'                          : -8000.  ,  # MeV, no cut now
-        'DiElectron_ElectronPIDe'                       :     4.  ,  
+        'DiElectron_ElectronPIDe'                       :     5.  ,  
         'DiElectron_ElectronTRCHI2DOF'                  :     5.  , 
         'DiElectron_MinMass'                            :  2000.  ,  # MeV
         'DiElectron_VCHI2PDOF'                          :    16.  , 
-        'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
+        'DiElectron_PT'                                 :  2000.  ,  # MeV, no cut now 
 
         # DiElectronLowMass line
-        'DiElectronLowMass_Prescale'                    :     0.05 ,
+        'DiElectronLowMass_Prescale'                    :     0.04,
         'DiElectronLowMass_Postscale'                   :     1.  ,
         'DiElectronLowMass_checkPV'                     : False   ,   
         
-        'DiElectronLowMass_ElectronPT'                  :  1100.  ,  # MeV
+        'DiElectronLowMass_ElectronPT'                  :  1200.  ,  # MeV
         'DiElectronLowMass_ElectronP'                   : -8000.  ,  # MeV, no cut now
-        'DiElectronLowMass_ElectronPIDe'                :     4.  , 
+        'DiElectronLowMass_ElectronPIDe'                :     5.  , 
         'DiElectronLowMass_ElectronTRCHI2DOF'           :     5.  , 
         'DiElectronLowMass_MinMass'                     :    30.  ,  # MeV
         'DiElectronLowMass_VCHI2PDOF'                   :    16.  ,       
@@ -68,8 +68,8 @@ config_default= {
         
         'BiasedDiElectron_ElectronPT'                   :   500.  ,  # MeV
         'BiasedDiElectron_ElectronP'                    : -8000.  ,  # MeV, no cut now
-        'BiasedDiElectron_ElectronPIDe'                 :     3.  ,
-        'BiasedDiElectron_ElectronMIPCHI2'              :     4.  , 
+        'BiasedDiElectron_ElectronPIDe'                 :     5.  ,
+        'BiasedDiElectron_ElectronMIPCHI2'              :    16.  , 
         'BiasedDiElectron_ElectronTRCHI2DOF'            :     5.  , 
         'BiasedDiElectron_MinMass'                      :  2000.  ,  # MeV
         'BiasedDiElectron_VCHI2PDOF'                    :    16.  ,
@@ -82,7 +82,7 @@ config_default= {
         'BiasedDiElectronLowMass_ElectronPT'            :   500.  ,  # MeV
         'BiasedDiElectronLowMass_ElectronP'             : -8000.  ,  # MeV
         'BiasedDiElectronLowMass_ElectronPIDe'          :     0.  ,
-        'BiasedDiElectronLowMass_ElectronMIPCHI2'       :     4.  ,  
+        'BiasedDiElectronLowMass_ElectronMIPCHI2'       :    16.  ,  
         'BiasedDiElectronLowMass_ElectronTRCHI2DOF'     :     9.  , 
         'BiasedDiElectronLowMass_MinMass'               :    30.  ,  # MeV
         'BiasedDiElectronLowMass_VCHI2PDOF'             :    16.  ,
@@ -95,12 +95,12 @@ config_default= {
         
         'Jpsi2ee_ElectronPT'                            :  1200.  ,  # MeV
         'Jpsi2ee_ElectronP'                             : -8000.  ,  # MeV, no cut now
-        'Jpsi2ee_ElectronPIDe'                          :     4.  ,
+        'Jpsi2ee_ElectronPIDe'                          :     5.  ,
         'Jpsi2ee_ElectronTRCHI2DOF'                     :     5.  , 
         'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
         'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
         'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
-        'Jpsi2ee_PT'                                    :  1500.     # MeV
+        'Jpsi2ee_PT'                                    :  2000.     # MeV
         }
 
 
