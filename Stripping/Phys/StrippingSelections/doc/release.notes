@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-06-15 - David Dossett
+ - Tightened cuts of B2KShh lines
+ - Added hh MINIPCHI2 cuts
 
 ! 2011-06-15 - Irina Nasteva
  - Tightened cuts of Bu2hhh lines
