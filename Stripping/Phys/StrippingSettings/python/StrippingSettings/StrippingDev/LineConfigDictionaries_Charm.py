@@ -152,16 +152,16 @@ D2hhMicroKPi = {
            'Dstar_AMDiff_MAX': 165.,
            'Dstar_VCHI2VDOF_MAX': 100.,
            'Dstar_MDiff_MAX': 160.,
-           'UntaggedCFLinePrescale': 0.2,
+           'UntaggedCFLinePrescale': 1.0,
            'UntaggedCFLinePostscale': 1.,
-           'UntaggedSCSLinePrescale': 1.,
-           'UntaggedSCSLinePostscale': 1.,
-           'TaggedRSLinePrescale': 1.,
-           'TaggedRSLinePostscale': 1.,
-           'TaggedWSLinePrescale': 1.,
-           'TaggedWSLinePostscale': 1.,
-           'TaggedSCSLinePrescale': 1.,
-           'TaggedSCSLinePostscale': 1.
+           'UntaggedSCSLinePrescale': 0.,
+           'UntaggedSCSLinePostscale': 0.,
+           'TaggedRSLinePrescale': 0.,
+           'TaggedRSLinePostscale': 0.,
+           'TaggedWSLinePrescale': 0.,
+           'TaggedWSLinePostscale': 0.,
+           'TaggedSCSLinePrescale': 0.,
+           'TaggedSCSLinePostscale': 0.
            },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
@@ -691,8 +691,8 @@ DstarD2KShh = {
     ,'trackFromDCutP'       : 1500.0      ## in MeV
     ,'trackFromDCutPIDe'    :   10.0      ## unitless -- note that this means (DLLe - DLLx) < 10 for x=K,pi
     ,'trackFromDCutPIDp'    :   15.0      ## unitless -- note that this means (DLLp - DLLx) < 15 for x=K,pi
-    ,'pionFromDCutPIDK'     :   -5.0      ## unitless -- note that this means (DLLpi - DLLK) < -5, i.e. (DLLK-DLLpi) > +5
-    ,'kaonFromDCutPIDpi'    :    0.0      ## unitless -- note that this means (DLLK - DLLpi) < 0
+    ,'pionFromDCutPIDK'     :   -1.0
+    ,'kaonFromDCutPIDpi'    :   -3.0
     ,'pionFromDCutTRCHI2DOF':    4.0      ## unitless
     ,'kaonFromDCutTRCHI2DOF':    5.0      ## unitless
     ,'DCutDIRA'             :    0.0      ## unitless -- remove "backwards-going" D0

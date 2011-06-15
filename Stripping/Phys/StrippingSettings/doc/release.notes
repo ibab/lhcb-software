@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-Jun-15 - Patrick Spradlin
+ - StrippingDev/LineConfigDictionaries_Charm.py
+   Updated D2hhMicro and DstarD2KShh.
+
 ! 2011-06-15 - Jibo He
  - LineConfigDictionaries_BetaS.py
    . Updated BetaSQ2B
