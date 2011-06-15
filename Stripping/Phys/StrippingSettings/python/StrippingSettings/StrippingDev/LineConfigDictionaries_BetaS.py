@@ -12,7 +12,7 @@ BetaS = {
     ,       'BPVLTIME'              :       0.2
     ,       'DaughterPT'            :       1000
     ,       'VCHI2PDOF'             :       10
-    ,       'Jpsi2MuMuPrescale'     :       0.02
+    ,       'Jpsi2MuMuPrescale'     :       0.01
     ,       'Bu2JpsiKPrescale'      :       0.1
     ,       'Bd2JpsiKstarPrescale'  :       0.05
     ,       'Bd2JpsiKsPrescale'     :       0.5
