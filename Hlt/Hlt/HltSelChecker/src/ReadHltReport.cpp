@@ -104,11 +104,6 @@ StatusCode ReadHltReport::execute() {
     if (hltDecReports->decReport("Hlt1Global")->decision()){
       counter("Hlt1-yes")++;
     }
-    if ( hltDecReports->decReport("Hlt1IgnoringLumiDecision")){
-      if (hltDecReports->decReport("Hlt1IgnoringLumiDecision")->decision()){
-        counter("Hlt1noLumi-yes")++;
-      }
-    }
   }
   if ( hltDecReports->decReport("Hlt2Global")){
     counter("Has Hlt2")++;
@@ -138,8 +133,9 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
   
   StatusCode sc = StatusCode::SUCCESS ;
   std::vector<std::string> decisions;
-  if ( !exist<LHCb::HltSelReports>(m_hltSelReportsLocation )) return sc ;
-  const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
+  const selReports = 0;
+  if ( exist<LHCb::HltSelReports>(m_hltSelReportsLocation )) 
+      selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
 
   for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
       it!=decReports->end();++it){
@@ -149,7 +145,7 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
       if (m_printDecisions) decisions.push_back(it->first);
       counter("Selections")++ ;
       counter(it->first)++;
-      if (m_printParticles && it->first!="Hlt1Global" && it->first!="Hlt2Global"){
+      if (m_printParticles && selReports && it->first!="Hlt1Global" && it->first!="Hlt2Global"){
         const LHCb::HltObjectSummary* sum = selReports->selReport(it->first);
         if (0==sum) {
           Warning("No summary for "+it->first,StatusCode::SUCCESS,1);
