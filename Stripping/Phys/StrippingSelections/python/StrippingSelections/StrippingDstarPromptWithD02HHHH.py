@@ -248,6 +248,14 @@ def makeD02hhhh (
     _pionCuts+=_pionCutsOLD
 
   from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
+  from StandardParticles import StdLoosePions, StdLooseKaons
+
+  _kaons = StdNoPIDsKaons
+  _pions = StdNoPIDsPions
+  if applyKaonPIDK:
+    _kaons = StdLooseKaons
+  if applyPionPIDK:
+    _pions = StdLoosePions
 
   _d02k3pi = CombineParticles (DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc"
                                ,CombinationCut = _prefitCuts
@@ -257,7 +265,7 @@ def makeD02hhhh (
                                )
   _selD02K3Pi = Selection('D02K3PiFor'+moduleName
                           ,Algorithm=_d02k3pi
-                          ,RequiredSelections=[StdNoPIDsPions, StdNoPIDsKaons])
+                          ,RequiredSelections=[_pions,_kaons])
 
   _conjPID = ConjugateNeutralPID()
 
@@ -270,7 +278,7 @@ def makeD02hhhh (
 
   _selD02KKPiPi = Selection('D02KKPiPiFor'+moduleName
                             ,Algorithm=_d02kkpipi
-                            ,RequiredSelections=[StdNoPIDsPions, StdNoPIDsKaons])
+                            ,RequiredSelections=[_pions,_kaons])
 
   _selD02KKPiPiConj = Selection('D02KKPiPiConjFor'+moduleName
                              ,Algorithm=_conjPID
@@ -282,7 +290,7 @@ def makeD02hhhh (
   
   _selD02FourPi = Selection('D02FourPiFor'+moduleName
                            ,Algorithm=_d02fourpi
-                           ,RequiredSelections=[StdNoPIDsPions])
+                           ,RequiredSelections=[_pions])
 
   _selD02FourPiConj = Selection('D02FourPiConjFor'+moduleName
                                 ,Algorithm=_conjPID

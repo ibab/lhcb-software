@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-06-15 - Philip Hunt
+ - Modified StrippingPromptDstarWithD02HHHH.py to use StdLooseKaons and
+   StdLoosePions for lines that use PID cuts
 
 ! 2011-06-15 - Greig Cowan
  - Tightened some JpsiX lines for beta_s.
