@@ -1264,8 +1264,17 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data) {
 // Close presenter window
 //==============================================================================
 void PresenterMainFrame::CloseWindow() {
-  if (0 != m_pageRefreshTimer) { m_pageRefreshTimer->Stop(); }
-  if (0 != m_clockTimer) { m_clockTimer->Stop(); }
+  if ( m_refreshingPage ) stopPageRefresh();
+  if (0 != m_pageRefreshTimer) { 
+    m_pageRefreshTimer->Stop();
+    delete m_pageRefreshTimer;
+    m_pageRefreshTimer = 0;
+  }
+  if (0 != m_clockTimer) { 
+    m_clockTimer->Stop(); 
+    delete m_clockTimer;
+    m_clockTimer = 0;
+  }
 
   removeHistogramsFromPage();
   if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
@@ -4178,13 +4187,10 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
     }
 
-    m_loadingPage = false;
     if ( m_resumePageRefreshAfterLoading &&
          "" == message && 
          ( pres::Online == m_presenterInfo.presenterMode())) startPageRefresh() ;
-    if ( m_reAccess ) reAccessPage();
-    gVirtualX->SetCursor(GetId(),
-                         gClient->GetResourcePool()->GetDefaultCursor());
+    gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   }
   if (m_referencesOverlayed) enableReferenceOverlay();
   else disableReferenceOverlay();
@@ -4196,6 +4202,8 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     new TGMsgBox(fClient->GetRoot(), this, "Error accessing histograms", message.c_str(),
                  kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
   }
+  m_loadingPage = false;
+  if ( m_reAccess ) reAccessPage();
 }
 
 //==============================================================================
@@ -4661,6 +4669,7 @@ void PresenterMainFrame::refreshPageForced() {
   }
   m_loadingPage = false;
   std::cout << "=== Page refreshed." << std::endl;
+  if ( m_reAccess ) reAccessPage();
 }
 
 //==============================================================================
@@ -5049,10 +5058,23 @@ std::string PresenterMainFrame::timeStamp ( ) {
 //=========================================================================
 void PresenterMainFrame::reAccessPage( ) {
   if ( !m_loadingPage ) {
+    m_reAccess = false;
+    std::string prevstatusText;
+    if ( displayMode() == pres::Alarm ) { // clear page if an alarm was displayed
+      removeHistogramsFromPage();
+      prevstatusText ="List of Analysis Alarms has been updated";
+    } else {
+      prevstatusText = getStatusBarText(2);
+    }
+    setStatusBarText("Analysis Alarms have changed! reloading them...", 2);
+    std::cout << "sleep 3" << std::endl;
+    sleep(3); // give time to analysis to end
+    std::cout << "Refresh alarm list from database" << std::endl;
+    m_alarmDisplay->listAlarmsFromHistogramDB();
+    setStatusBarText(prevstatusText.c_str(),2);
     std::cout << "$$reAccess: refresh histDb" << std::endl;
     histogramDB()->refresh();
     clearAlarmPages();
-    m_reAccess = false;
     if ( m_refreshingPage ) {
       std::string name = m_presenterPage.name();
       std::string timePoint = m_presenterInfo.rwTimePoint();

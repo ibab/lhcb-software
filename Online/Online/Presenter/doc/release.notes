@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-15 - Olivier Callot
+ - Try to improve the conflicts between Alarm refresh and page access.
+ - Delete timer in the closeWindow method.
+
 ! 2011-06-14 - Olivier Callot
  - Fix the command line access to history by file (specified as last argument)
 
