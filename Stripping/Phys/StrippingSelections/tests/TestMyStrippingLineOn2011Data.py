@@ -10,22 +10,22 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
 # Import your stripping lines. Replace the lines below appropriately.
-from StrippingSelections.StrippingB2XMuMuSS import B2XMuMuSSConf as builder
-from StrippingSelections.StrippingB2XMuMuSS import config_params as config_params
-lb = builder('B2XMuMuSS',config_params)
-
-stream.appendLines( lb.lines() )
-
-
-#from StrippingSelections.StrippingB2SameChargeMuon import StrippingB2SameChargeMuonConf as builder
-
-#config_params =  {
-#    'LinePrescale'        : 1.0
-#    , 'LinePostscale'            : 1.0
-#}
-#lb = builder('B2SameChargeMuon',config_params)
+#from StrippingSelections.StrippingB2XMuMuSS import B2XMuMuSSConf as builder
+#from StrippingSelections.StrippingB2XMuMuSS import config_params as config_params
+#lb = builder('B2XMuMuSS',config_params)
 
 #stream.appendLines( lb.lines() )
+
+
+from StrippingSelections.StrippingB2SameChargeMuon import StrippingB2SameChargeMuonConf as builder
+
+config_params =  {
+    'LinePrescale'        : 1.0
+    , 'LinePostscale'            : 1.0
+}
+lb = builder('B2SameChargeMuon',config_params)
+
+stream.appendLines( lb.lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()

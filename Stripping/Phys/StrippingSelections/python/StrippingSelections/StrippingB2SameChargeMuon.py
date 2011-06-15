@@ -62,16 +62,16 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
     
     def _MuonFilter( self ):       
         Muoncut = "(TRCHI2DOF < 5.0) & (PIDmu > 0.0)  & (MIPCHI2DV(PRIMARY) > 4.0) & (PT > 300*MeV)"
-        muonfilter =  FilterDesktop("muonfilter",Code = Muoncut)
-        SelectedMuon = Selection("SelMuon",
+        muonfilter =  FilterDesktop(Code = Muoncut)
+        SelectedMuon = Selection(self.name+"SelMuon",
                                  Algorithm = muonfilter,
                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseMuons/Particles")])
         return SelectedMuon
     
     def _KaonFilter( self ):
         Kaoncut = "(TRCHI2DOF < 5.0) & (PIDK > -1.0)  & (MIPCHI2DV(PRIMARY) > 4.0)  & (PT > 300*MeV)"
-        kaonfilter = FilterDesktop("kaonfilter",Code = Kaoncut)
-        SelectedKaon = Selection("SelKaon",
+        kaonfilter = FilterDesktop(Code = Kaoncut)
+        SelectedKaon = Selection(self.name+"SelKaon",
                                  Algorithm = kaonfilter,
                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKaons/Particles")])
         
@@ -79,113 +79,113 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
     
     def _PionFilter( self ):
         Pioncut = "(TRCHI2DOF < 5.0) & (PIDK < 6.0)  & (MIPCHI2DV(PRIMARY) > 4.0)  & (PT > 300*MeV)"
-        pionfilter = FilterDesktop("pionfilter",Code = Pioncut)
-        SelectedPion = Selection("SelPion",
+        pionfilter = FilterDesktop(Code = Pioncut)
+        SelectedPion = Selection(self.name+"SelPion",
                                  Algorithm = pionfilter,
                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLoosePions/Particles")])
         return SelectedPion
     
     def _JpsiMaker( self , inputList):
-        Jpsi2MuMu = CombineParticles( "SelJpsi",
+        Jpsi2MuMu = CombineParticles( 
                                       DecayDescriptor =  "J/psi(1S) -> mu- mu+" ,
                                       CombinationCut = "(ADAMASS('J/psi(1S)') < 100*MeV)",
                                       MotherCut = "(ADMASS('J/psi(1S)') < 100*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)",
                                       ReFitPVs = False)
-        return Selection ( "Jpsi2MuMu",
+        return Selection ( self.name+"Jpsi2MuMu",
                            Algorithm = Jpsi2MuMu,
                            RequiredSelections = inputList)
 
 
     def _D0Maker( self,inputList ):
-        D02kpi = CombineParticles( "SelD0",
+        D02kpi = CombineParticles( 
                                    DecayDescriptor = "[D0 -> K- pi+]cc" ,
                                    CombinationCut = "(ADAMASS('D0') < 100*MeV)",
                                    MotherCut = "(ADMASS('D0') < 80*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)",
                                    ReFitPVs = False)
-        return Selection ( "D02kpi",
+        return Selection ( self.name+"D02kpi",
                            Algorithm = D02kpi,
                            RequiredSelections = inputList)
     
     def _DsMaker( self, inputList ):
-        Ds2kkpi = CombineParticles( "SelDs",
+        Ds2kkpi = CombineParticles( 
                                     DecayDescriptor = "[D_s+ -> K+ K- pi+]cc",
                                     CombinationCut = "(DAMASS('D_s+') < 100*MeV) & (DAMASS('D+')> -100 *MeV)",
                                     MotherCut = "(DMASS('D_s+') < 80 *MeV) & (DMASS('D+') > -80 *MeV) & (VFASPF(VCHI2/VDOF) < 6.0)",
                                     ReFitPVs = False)
-        return Selection ( "Ds2kkpi",
+        return Selection ( self.name+"Ds2kkpi",
                            Algorithm = Ds2kkpi,
                            RequiredSelections = inputList)
     
     def _DpMaker( self , inputList):
-        Dp2kpipi = CombineParticles( "SelDp",
+        Dp2kpipi = CombineParticles( 
                                      DecayDescriptor = "[D+ -> K- pi+ pi+]cc",
                                      CombinationCut = "(ADAMASS('D+') < 100*MeV)",
                                      MotherCut = "(ADMASS('D+') < 80*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)" ,
                                      ReFitPVs = False)
-        return Selection ( "Dp2kpipi",
+        return Selection ( self.name+"Dp2kpipi",
                            Algorithm = Dp2kpipi,
                            RequiredSelections = inputList)
     
     
     def _makeB2JpsiKPiPi(self,inputList):
-        combineJpsi = CombineParticles( "SelB2Jpsi",
+        combineJpsi = CombineParticles( 
                                         DecayDescriptor = "[B- -> J/psi(1S) K- pi- pi+]cc",
                                         CombinationCut = "(ADAMASS('B+')< 400*MeV)",
                                         MotherCut = "(ADMASS('B+')< 300*MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVDIRA> 0.9999)" ,
                                         ReFitPVs = False)
-        B2JpsiKPiPi = Selection ( "B2JpsiKPiPi",
+        B2JpsiKPiPi = Selection ( self.name+"B2JpsiKPiPi",
                                   Algorithm = combineJpsi,
                                   RequiredSelections = inputList)
         
-        B2JpsiKPiPiLine = StrippingLine("B2JpsiKPiPiLine",
+        B2JpsiKPiPiLine = StrippingLine(self.name+"B2JpsiKPiPiLine",
                                         prescale = 1,
                                         algos = [ B2JpsiKPiPi]
                                         )
         self.registerLine(B2JpsiKPiPiLine)
         
     def _makeB2D0MuMuPi(self, inputList):
-        combineD0 = CombineParticles( "SelB2D0",
+        combineD0 = CombineParticles( 
                                       DecayDescriptor = "[B- -> D0 mu- mu- pi+]cc",
                                       CombinationCut = "(ADAMASS('B+')< 400*MeV)",
                                       MotherCut = "(ADMASS('B+')< 300*MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVDIRA> 0.9999)" ,
                                       ReFitPVs = False)
-        B2D0MuMuPi = Selection ( "B2D0MuMuPi",
+        B2D0MuMuPi = Selection ( self.name+"B2D0MuMuPi",
                                  Algorithm = combineD0,
                                  RequiredSelections = inputList)
         
-        B2D0MuMuPiLine = StrippingLine( "B2D0MuMuPiLine"
+        B2D0MuMuPiLine = StrippingLine( self.name+"B2D0MuMuPiLine"
                                         , prescale = 1
                                         , algos = [ B2D0MuMuPi ]
                                         )
         self.registerLine(B2D0MuMuPiLine)
         
     def _makeB2DpMuMu(self,inputList):
-        combineDp = CombineParticles( "SelB2Dp",
+        combineDp = CombineParticles( 
                                       DecayDescriptor = "[B- -> D+ mu- mu-]cc",
                                       CombinationCut = "(ADAMASS('B+')< 400*MeV)",
                                       MotherCut = "(ADMASS('B+')< 300*MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVDIRA> 0.9999)" ,
                                       ReFitPVs = False)
-        B2DpMuMu = Selection ( "B2DpMuMu",
+        B2DpMuMu = Selection ( self.name+"B2DpMuMu",
                                Algorithm = combineDp,
                                RequiredSelections = inputList)
         
-        B2DpMuMuLine = StrippingLine("B2DpMuMuLine"
+        B2DpMuMuLine = StrippingLine(self.name+"B2DpMuMuLine"
                                      , prescale = 1
                                      , algos = [ B2DpMuMu ]
                                      )
         self.registerLine(B2DpMuMuLine)
 
     def _makeB2DsMuMu(self,inputList):
-        combineDs = CombineParticles( "SelB2Ds",
+        combineDs = CombineParticles( 
                                       DecayDescriptor = "[B- -> D_s+ mu- mu-]cc",
                                       CombinationCut = "(ADAMASS('B+')< 400*MeV)",
                                       MotherCut = "(ADMASS('B+')< 300*MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVDIRA> 0.9999)" ,
                                       ReFitPVs = False)
-        B2DsMuMu = Selection ( "B2DsMuMu",
+        B2DsMuMu = Selection ( self.name+"B2DsMuMu",
                                Algorithm = combineDs,
                                RequiredSelections = inputList)
 
-        B2DsMuMuLine = StrippingLine("B2DsMuMuLine"
+        B2DsMuMuLine = StrippingLine(self.name+"B2DsMuMuLine"
                                      , prescale = 1
                                      , algos = [ B2DsMuMu ]
                                      )
