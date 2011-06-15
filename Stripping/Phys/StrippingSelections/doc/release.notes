@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Marcin Kucharczyk
+ - Preslale slightly StrippingHighPtJets wrt Stripping15 needs
+
 ! 2011-06-15 - Johannes Albrecht	
  - update cuts of StrippingTriMuons
 
