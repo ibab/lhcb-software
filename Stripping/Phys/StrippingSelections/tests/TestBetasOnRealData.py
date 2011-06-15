@@ -4,7 +4,7 @@
 from Gaudi.Configuration import *
 from Configurables import SelDSTWriter, DaVinci
 from StrippingConf.Configuration import StrippingConf
-from StrippingSettings.Utils import *
+from StrippingSelections.Utils import lineBuilder
 
 # Now build the stream
 from StrippingConf.StrippingStream import StrippingStream
@@ -21,11 +21,12 @@ BetaSconfigs = [
         'BetaSBs2PhiKst',
         'BetaSBs2EtacPhi',
         'BetaSBs2ChicPhi_Chic2KKPiPi',
-        'BetaSBs2ChicPhi_Chic2PiPiPiPi'
+        'BetaSBs2ChicPhi_Chic2PiPiPiPi',
+	'Bs2Q2Body4pi'
         ]
 
 for config in BetaSconfigs:
-        stream.appendLines( lineBuilder('stripping13', config).lines() )
+        stream.appendLines( lineBuilder('strippingdev', config).lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
@@ -50,13 +51,11 @@ tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolStripping
 tag.addTool( TupleToolStripping )
 tag.TupleToolStripping.StrippigReportsLocations = "/Event/Strip/Phys/DecReports"
 
-# Remove the microbias and beam gas etc events before doing the tagging step
-regexp = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"
+# Remove the microbias, nobias and beam gas etc events before doing the tagging step. Remove these lines if inapropriate for your analysis
+regexp = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NoBias)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"
 from Configurables import LoKi__HDRFilter
 filterHLT = LoKi__HDRFilter("FilterHLT",Code = regexp )
 
-seq = GaudiSequencer("TagSeq")
-seq.Members = [tag]
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -74,13 +73,13 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 50000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
-DaVinci().MoniSequence += [ seq ]            # Append the TagCreator to DaVinci
-DaVinci().DataType = "2010"
-DaVinci().InputType = 'SDST'
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py")
+DaVinci().DataType  = "2011"
+DaVinci().InputType = "SDST"
+
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py")
+

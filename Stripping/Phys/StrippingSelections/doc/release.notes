@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Greig Cowan
+ - Tightened some JpsiX lines for beta_s.
+
 ! 2011-06-15 - Marco Gersabeck
  - Introduced asymmetric mass windows to reduce rate in StrippingD2hh.py
 

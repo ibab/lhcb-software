@@ -9,15 +9,15 @@ from StrippingUtils import LineBuilderTests
 
 from StrippingSelections.StrippingB2JpsiXforBeta_s import B2JpsiXforBeta_sConf 
 configJpsiX = {      'TRCHI2DOF'             :       4 
-        ,       'BPVLTIME'              :       0.25
+        ,       'BPVLTIME'              :       0.2
         ,       'DaughterPT'            :       1000
         ,       'VCHI2PDOF'             :       10
-        ,       'Jpsi2MuMuPrescale'     :       0.1
+        ,       'Jpsi2MuMuPrescale'     :       0.02
         ,       'Bu2JpsiKPrescale'      :       0.1
         ,       'Bd2JpsiKstarPrescale'  :       0.05
-        ,       'Bd2JpsiKsPrescale'     :       0.2
+        ,       'Bd2JpsiKsPrescale'     :       0.5
         ,       'Bs2JpsiPhiPrescale'    :       0.2
-        ,       'Bs2JpsiEtaPrescale'    :       0.1
+        ,       'Bs2JpsiEtaPrescale'    :       0.2
         }
 
 # Fred Blanc, Neus Lopez March
@@ -30,20 +30,24 @@ configB2Psi2SX = {'PionsTRCHI2DOF': 5,
                  'Psi2SAPT': 500,
                  'Psi2SADAMASS': 30,
                  'Psi2SVFASPF': 16,
+                 'PIDpi': 10, # new 10
                  'ChKTRCHI2DOF':5,
-                 'ChKPID':-2,#
+                 'ChKPID': 0 ,# before -2
                  'PhiWin':20,
                  'PhiPT':500,
                  'PhiVFASPF':16,
                  'PhiMAXTRCHI2DOF':5,
                  'PhiMINTRCHI2DOF':-2,#
-                 'KstPipTRCHI2DOF':5,
-                 'KstAPT' :500,
-                 'KstADAMASS' : 90,
-                 'KstVFASPF':16, #
+                 'KstMassDown':  826,
+                 'KstMassUp': 966,
+                 'KstAPT':500,
+                 'KstVFASPF':16,
+                 'KstTRCHI2DOF':4,
+                 'KstPIDK': 0, #before -2
+                 'KstPIDpi': 10, #new 10
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.5,
+                 'incl_LinePrescale':0.4,
                  'incl_LinePostscale':1,
                  'BsMassCutDownPre':5000,
                  'BsMassCutUpPre':5650,
@@ -57,56 +61,61 @@ configB2Psi2SX = {'PionsTRCHI2DOF': 5,
                  'K_LinePostscale': 1,
                  'Kstar_LinePrescale': 1,
                  'Kstar_LinePostscale': 1,
+                 'MINTREEPT2' : 1000,
                  'BKsVCHI2PDOF': 10,
                  'Ks_LinePrescale': 1,
                  'Ks_LinePostscale':1
-                 }
+	}
 
 from StrippingSelections.StrippingB2Psi2SXMuMu import Bs2Psi2SPhiMuMuConf
 configBs2Psi2SPhiMuMu = {'muPID':0.,
                  'Psi2SMassWin':60.,
                  'Psi2SADOCACHI2CUT':30.,
-                 'Psi2SVFASPF':16,#
+                 'Psi2SVFASPF':16,
                  'ChKTRCHI2DOF':5,
-                 'ChKPID':-2,#
+                 'ChKPID':0, #before -2
                  'PhiWin':20,
                  'PhiPT':500,
                  'PhiVFASPF':16,
                  'PhiMAXTRCHI2DOF':5,
-                 'PhiMINTRCHI2DOF':-2,#
-                 'KstPipTRCHI2DOF':5,
-                 'KstAPT' :500,
-                 'KstADAMASS' : 90,
-                 'KstVFASPF':16, #
+                 'PhiMINTRCHI2DOF':-2,
+                 'KstMassDown':  826,
+                 'KstMassUp': 966,
+                 'KstAPT':500,
+                 'KstVFASPF':16,
+                 'KstTRCHI2DOF':4,
+                 'KstPIDK': 0, # before -2
+                 'KstPIDpi': 10, #new
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.5,
+                 'incl_LinePrescale':0.1,
                  'incl_LinePostscale':1,
                  'BPVLTIME_detatched':0.15,
-                 'incl_DetatchedLinePrescale':1,
+                 'incl_DetatchedLinePrescale':0.5,
                  'incl_DetatchedLinePostscale':1,
-                 'BsMassCutDownPre':5000,
-                 'BsMassCutUpPre':5650,
-                 'BsMassCutDownPost':5100,
-                 'BsMassCutUpPost':5550,
+                 'BsMassCutDownPre':5050, #before 5000
+                 'BsMassCutUpPre':5600,  #before 5650
+                 'BsMassCutDownPost':5150, #before 5100
+                 'BsMassCutUpPost':5500,  #before 5550
                  'BsVCHI2PDOF':10,
                  'sig_PrescaledLinePrescale':1,
                  'sig_PrescaledLinePostscale':1,
                  'sig_DetatchedLinePrescale':1,
                  'sig_DetatchedLinePostscale':1,
                  'BPVLTIME_unbiased': None,
-                 'MINTREEPT':1000,
+                 'MINTREEPT':1000, #before 1000
+                 'MINTREEPT2':1500, #before 1000
                  'sig_UnbiasedLinePrescale':1,
                  'sig_UnbiasedLinePostscale':1,
                  'ChKPT':500,
-                 'K_PrescaledLinePrescale':1,
+                 'K_PrescaledLinePrescale':0.3,
                  'K_PrescaledLinePostscale':1,
                  'K_DetatchedLinePrescale':1,
                  'K_DetatchedLinePostscale':1,
                  'K_UnbiasedLinePrescale':1,
                  'K_UnbiasedLinePostscale':1,
                  'KstarPT': 2,
-                 'Kstar_PrescaledLinePrescale':0.5,
+                 'Kstar_PrescaledLinePrescale':0.1,
                  'Kstar_PrescaledLinePostscale':1,
                  'Kstar_DetatchedLinePrescale':1,
                  'Kstar_DetatchedLinePostscale':1,
@@ -119,14 +128,13 @@ configBs2Psi2SPhiMuMu = {'muPID':0.,
                  'Ks_DetatchedLinePostscale':1,
                  'Ks_UnbiasedLinePrescale':1,
                  'Ks_UnbiasedLinePostscale':1
-                 }
-
-
+                       }
 
 # Jibo He
 from StrippingSelections.StrippingBs2JpsieePhi import Bs2JpsieePhiConf
 configJpsieePhi = {
                   'ElectronPTLoose'            :   800.    # MeV
+                , 'ElectronPIDLoose'           :     0.    # adimensional
                 , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
                 , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
                 , 'JpsiMassMinLoose'           :  2700.    # MeV
@@ -159,19 +167,19 @@ configJpsieePhi = {
                 }
 
 # Fred Blanc
-from StrippingSelections.StrippingB2CharmlessQuasi2Body import B2Quasi2Body4piConf
+from StrippingSelections.StrippingB2CharmlessQuasi2Body import B2Quasi2BodyConf
 configQ2B = {'Q2BPrescale'     : 1.,
-                 'Q2BResMinPT'     : 1500.,
+                 'Q2BResMinPT'     : 1000.,
                  'Q2BResMinP'      : 10.,
-                 'Q2BResMaxMass'   : 900.,
-                 'Q2BResVtxChiDOF' : 4.,
-                 'Q2BBMinM'        : 2800.,
+                 'Q2BResMaxMass'   : 1100.,
+                 'Q2BResVtxChiDOF' : 9.,
+                 'Q2BBMinM'        : 2500.,
                  'Q2BBMaxM'        : 5700.,
-                 'Q2BBVtxChi2DOF'  : 4.,
-                 'Q2BBMinTrkPT'    : 1500.,
-                 'Q2BBPVVDZ'       : 2. }
-
-
+                 'Q2BBMinCorrM4pi' : 4000.,
+                 'Q2BBMinCorrM3pi' : 4600.,
+                 'Q2BBMaxCorrM'    : 7000.,
+                 'Q2BBVtxChi2DOF'  : 9.,
+                 'Q2BBMinTrkPT'    : 1000.}
 
 # Sebastian Schleich
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf
@@ -328,6 +336,21 @@ configBs2ChicPhi_Chic2PiPiPiPi = {
     'Bs_VCHI2_VDOF'           : 16.
     }
 
+from StrippingSelections.StrippingBs2Q2B import Bs2Q2Body4piConf
+configBs2Q2Body4pi = {'Q2BPrescale'     : 1.,
+                 'Q2BResMinPT'     : 900.,
+                 'Q2BResMinP'      : 1.,
+                 'Q2BResMaxMass'   : 1100.,
+                 'Q2BResVtxChiDOF' : 9.,
+                 'Q2BBMinM'        : 4500.,
+                 'Q2BBMaxM'        : 5700.,
+                 'Q2BBMinCorrM'    : 3500.,
+                 'Q2BBMaxCorrM'    : 7000.,
+                 'Q2BBVtxChi2DOF'  : 9.,
+                 'Q2BBMinTrkPT'    : 250.0,
+                 'Q2BIPCHI2' : 25
+                 }
+
 def test_line_builder() :
     LineBuilderTests.test_line_builder(B2JpsiXforBeta_sConf, configJpsiX)
     b = B2JpsiXforBeta_sConf( "BetaS", configJpsiX )
@@ -349,28 +372,31 @@ def test_line_builder() :
     for line in b.lines():
         print line.outputLocation()
    
-	''' 
     LineBuilderTests.test_line_builder(StrippingBs2KstKstConf, configBs2KstKst )
     b = StrippingBs2KstKstConf( "Bs2KstKst", configBs2KstKst )
     for line in b.lines():
         print line.outputLocation()
-   	'''
 
     LineBuilderTests.test_line_builder(StrippingBs2PhiKstConf, configBs2PhiKst )
     b = StrippingBs2PhiKstConf( "Bs2PhiKst", configBs2PhiKst )
     for line in b.lines():
         print line.outputLocation()
-    
-    LineBuilderTests.test_line_builder(B2Quasi2Body4piConf, configQ2B )
-    b = B2Quasi2Body4piConf( "Q2B", configQ2B )
+   
+    LineBuilderTests.test_line_builder(B2Quasi2BodyConf, configQ2B )
+    b = B2Quasi2BodyConf( "Q2B", configQ2B )
     for line in b.lines():
         print line.outputLocation()
-   	'''
+	
+    LineBuilderTests.test_line_builder(Bs2Q2Body4piConf, configBs2Q2Body4pi )
+    b = Bs2Q2Body4piConf( "BsQ2B", configBs2Q2Body4pi )
+    for line in b.lines():
+        print line.outputLocation()
+	
     LineBuilderTests.test_line_builder(Bs2JpsieePhiConf, configJpsieePhi )
     b = Bs2JpsieePhiConf( "Bs2JpsieePhi", configJpsieePhi )
     for line in b.lines():
         print line.outputLocation()
-	'''
+	
     LineBuilderTests.test_line_builder(Bs2ChicPhi_Chic2PiPiPiPiConf, configBs2ChicPhi_Chic2PiPiPiPi )
     b = Bs2ChicPhi_Chic2PiPiPiPiConf( "Bs2ChicPhi_Chic2PiPiPiPi", configBs2ChicPhi_Chic2PiPiPiPi )
     for line in b.lines():
