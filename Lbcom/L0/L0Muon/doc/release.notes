@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.103 2010-06-21 08:16:17 cattanem Exp $
+!-----------------------------------------------------------------------------
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+!========================= L0Muon v9r5 2011-06-15 =========================
 ! 2011-05-27 - Julien Cogan
  - L0MuonFromRawTrans : fix the fix (more variables creation in the constructor)
 
