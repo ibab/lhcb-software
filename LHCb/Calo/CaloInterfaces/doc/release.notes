@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.73 2010-03-17 14:00:37 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloInterfaces v8r2 2011-06-15 =========================
 ! 2011-06-14 - Olivier Deschamps 
  - add new interface : ICaloGammaPi0SeparationTool.h
 
