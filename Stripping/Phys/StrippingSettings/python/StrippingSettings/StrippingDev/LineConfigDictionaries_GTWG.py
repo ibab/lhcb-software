@@ -14,7 +14,7 @@ from GaudiKernel.SystemOfUnits import *
 
 B2DX = {
     'BUILDERTYPE' : 'B2DXConf',
-    'CONFIG' : {                                  # Default configuration dictionary
+    'CONFIG' : {                            # Default configuration dictionary
     	    "KstarCuts" : {                 # Kstar->Kpi cuts 
     	      "DauChi2Max"   : 4.,          # maximum track chi2
     	      "DauPtMin"     : 300.,        # track Pt cut (MeV)
@@ -166,6 +166,7 @@ B2DX = {
 	      "PMin"         : 2000.,        # Minimum P of the D (MeV)
 	      "Pi0PtMin"     : 600,          # Minimum Pt of pi0 (MeV)
 	      "Pi0PMin"      : 2000,         # Minimum P of pi0 (MeV)
+	      "PhotonCL"     : 0.25,         # Confidence level for Pi0 photons
 	      "MaxDauMIPChi2": 40.,          # IP chi2 for at least one track
 	      "DIRAMin"	     : 0.9,          # minimum D DIRA  
 	      "DOCAMax"      : 0.6,          # maximum DOCA of charged track combinations (mm)
@@ -187,6 +188,18 @@ B2DX = {
 	      "IPChi2Min"    : 0.,           # Minimum IP chi2
     	    }, 
 	    "BCuts" : {                             # B->DX cuts (except for special cases below)
+    	      "BachelorChi2Max"    : 4.,            # maximum bachelor track chi2
+    	      "BachelorPtMin"      : 500.,          # bachelor track Pt cut (MeV)
+    	      "BachelorPMin"       : 5000.,         # bachelor track P cut (MeV)
+    	      "BachelorMIPChi2Min" : 16.,           # minimum IP chi2 for a bachelor track
+	      "VtxChi2Max"         : 9.,            # B vertex Chi2
+	      "IPChi2Max"          : 16.,           # chi2 of B impact parameter to the related PV
+	      "LTMin"              : 0.2,           # Minimum B lifetime
+	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
+	      "CombDMass"          : 500,           # Mass window for a combination (MeV)
+	      "APtMin"		   : 0.,            # Minumum Pt of a combination (MeV)
+	    }, 
+	    "BWithD2KPiPi0Cuts" : {                 # B->DX cuts with D->KPiPi0
     	      "BachelorChi2Max"    : 4.,            # maximum bachelor track chi2
     	      "BachelorPtMin"      : 500.,          # bachelor track Pt cut (MeV)
     	      "BachelorPMin"       : 5000.,         # bachelor track P cut (MeV)
@@ -285,7 +298,7 @@ B2DX = {
 	      "Lambda"   : 500, 
 	      "Unbiased" : 500
 	    }, 
- 	    "MergedLines" : True                    # If True, lines with the same D mode a merged
+ 	    "MergedLines" : True                    # If True, lines with the same D mode are merged
 	},
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]

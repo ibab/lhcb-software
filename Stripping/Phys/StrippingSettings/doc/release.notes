@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Anton Poluektov 
+ - Updated B2DX cuts in GWT config. 
+
 ! 2011-06-15 - Greig Cowan
  - Tightend beta_s JpsiX lines.
 
