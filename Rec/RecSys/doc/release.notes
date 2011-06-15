@@ -5,6 +5,28 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v11r5>2011-06-15 RecSys v11r5</A></H1><PRE>
+This version uses Gaudi v22r2 and LHCb v32r4
+
+This is the first version of Rec to support the ROOT persistency framework.
+
+Major changes:
+  . Muon/MuonID v9r0: Implement use of KalmanFoI in MuonIDAlg;
+                      introduce nshared tool;
+                      add flag to restrict use of uncrossed hits in MuonID
+  . Rec/LumiAlgs v6r0: IOHelper now used for reading/writing FSRs and tests
+
+Several changes are included in this version of Rec which previously were
+released within other projects:
+  . Tr/TrackTools v4r3 with DaVinci v28r3+
+  . Tf/TrackSys v6r2 with Brunel v39r3+ and DaVinci v28r3+
+  . Rich/RichRecTrackTools with Brunel v39r4+
+  . Rich/RichRecQC [v2r51, intermediate state with Brunel v39r4+]
+  . Rec/LumiAlgs [v5r2 with DaVinci v28r3+, since then the package has further improved]
+
+For links to the changesets and details of many other minor changes see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Rec&version=v11r5
+
 </PRE><H1><A NAME=v11r4>2011-04-29 RecSys v11r4</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r3
 
