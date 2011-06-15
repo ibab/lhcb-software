@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r52 2011-06-15 =========================
 ! 2011-05-28 - Chris Jones
  - Add "TrackMonitoring" to the list of Online histograms
 
