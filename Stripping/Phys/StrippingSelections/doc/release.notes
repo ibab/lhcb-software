@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Marco Gersabeck
+ - Introduced asymmetric mass windows to reduce rate in StrippingD2hh.py
+
 ! 2011-06-15 - Will Barter
  - Add trk prob chi2 cuts in Z02TauTau
  - Change prescales in DY2MuMu

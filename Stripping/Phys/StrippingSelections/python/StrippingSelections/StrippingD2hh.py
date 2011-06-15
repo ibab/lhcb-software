@@ -23,6 +23,10 @@ default_config = { 'DaugPtMin': 800.,
            'D0Pt': 2000.,
            'D0MassWindowCentre': 1865.,
            'D0MassWindowWidth': 100.,
+           'D0PiPiMassWindowWidthLow':  -75.,
+           'D0PiPiMassWindowWidthHigh': 100.,
+           'D0KKMassWindowWidthLow': -100.,
+           'D0KKMassWindowWidthHigh': 75.,
            'D0P': 5000.,
            'D0VtxChi2Ndof': 10.,
            'D0FDChi2': 40.,
@@ -74,6 +78,10 @@ class D2hhConf(LineBuilder) :
 	     		      'D0Pt',
 	     		      'D0MassWindowCentre',
 	     		      'D0MassWindowWidth',
+	     		      'D0PiPiMassWindowWidthLow',
+	     		      'D0PiPiMassWindowWidthHigh',
+	     		      'D0KKMassWindowWidthLow',
+	     		      'D0KKMassWindowWidthHigh',
 	     		      'D0P',
 	     		      'D0VtxChi2Ndof',
 	     		      'D0FDChi2',
@@ -122,19 +130,23 @@ class D2hhConf(LineBuilder) :
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
 			        )
 
-        self.selD0KK = makeD2hh(d2kk_name,  
+        self.selD0KK = makeD2hhAsymm(d2kk_name,  
 			        config,
  				KPIDK_string = ' & (PIDK > %(LowPIDK)s)',
 				PiPIDK_string = '',
+				Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KKMassWindowWidthLow)s* MeV)',
+				Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KKMassWindowWidthHigh)s* MeV)',
 				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
 				DecayDescriptor = 'D0 -> K+ K-',
 			        inputSel = [stdNoPIDsKaons]
 			       )
 
-        self.selD0PiPi = makeD2hh(d2pipi_name,  
+        self.selD0PiPi = makeD2hhAsymm(d2pipi_name,  
 			          config,
  				  KPIDK_string = '',
 				  PiPIDK_string = ' & (PIDK < %(HighPIDK)s)',
+				  Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0PiPiMassWindowWidthLow)s* MeV)',
+				  Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0PiPiMassWindowWidthHigh)s* MeV)',
 				  CombPIDK_string = '',
 				  DecayDescriptor = 'D0 -> pi+ pi-',
 			          inputSel = [stdNoPIDsPions]
@@ -263,6 +275,59 @@ def makeD2hh(name,
                 "& (AP > %(D0P)s* MeV)" % locals()['config']
     _combCutsPIDK = CombPIDK_string % locals()['config']
     _combCuts = _combCuts1 + _combCutsPIDK
+
+    _motherCuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
+                  "& (BPVVDCHI2 > %(D0FDChi2)s)" \
+                  "& (BPVDIRA > %(D0BPVDira)s)" % locals()['config']
+
+    _D0 = CombineParticles( DecayDescriptor = DecayDescriptor,
+                            MotherCut = _motherCuts,
+                            CombinationCut = _combCuts,
+                            DaughtersCuts = _dauCuts)
+
+    return Selection ( name+'Sel',
+                       Algorithm = _D0,
+                       RequiredSelections = inputSel )
+
+def makeD2hhAsymm(name,
+             config,
+	     KPIDK_string,
+	     PiPIDK_string,
+	     Mass_low_string,
+	     Mass_high_string,
+	     CombPIDK_string,
+	     DecayDescriptor,
+             inputSel
+            ) :
+    """
+    Create and return a D0 -> hh' Selection object.
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of cut values.
+    ..._string  : cut implementation for PIDK cuts.
+    DecayDescriptor: DecayDescriptor.
+    inputSel    : input selections
+    """
+
+    _Kcuts1  = "(PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
+    _KcutsPIDK  = KPIDK_string % locals()['config']
+    _Kcuts2  = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
+    _Kcuts = _Kcuts1 + _KcutsPIDK + _Kcuts2
+    _Picuts1 = "(PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
+    _PicutsPIDK  = PiPIDK_string % locals()['config']
+    _Picuts2 = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
+    _Picuts = _Picuts1 + _PicutsPIDK + _Picuts2
+    _dauCuts = { 'K+': _Kcuts, 'pi+': _Picuts }
+
+    _massLow  = Mass_low_string % locals()['config']
+    _massHigh  = Mass_high_string % locals()['config']
+    _combCuts1 = "(APT > %(D0Pt)s* MeV)" \
+		"& (AHASCHILD( PT > %(DaugPtMax)s* MeV ) )" \
+    		"& (ADOCA(1,2)< %(D0DOCA)s* mm)" \
+                "& (AP > %(D0P)s* MeV)" % locals()['config']
+    _combCutsPIDK = CombPIDK_string % locals()['config']
+    _combCuts = _combCuts1 + _combCutsPIDK + _massLow + _massHigh
+    print name, _combCuts
 
     _motherCuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
                   "& (BPVVDCHI2 > %(D0FDChi2)s)" \
