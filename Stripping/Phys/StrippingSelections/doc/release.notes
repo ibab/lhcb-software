@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-06-15 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ - tightened pipi resonance mass cut
+
 ! 2011-06-15 - Philip Hunt
  - Modified StrippingPromptDstarWithD02HHHH.py to use StdLooseKaons and
    StdLoosePions for lines that use PID cuts
