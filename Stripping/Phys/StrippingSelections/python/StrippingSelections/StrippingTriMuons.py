@@ -451,12 +451,12 @@ class StrippingTriMuonsConf(LineBuilder) :
             ## 
             ## 
             CombinationCut  = """
-            ( ADAMASS('tau+') < 500 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
+            ( ADAMASS('tau+') < 400 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
             """ , ## wide mass-combination + PT-cuts 
             ##
             MotherCut       = """
             ( chi2vx < 25 ) &
-            ( ctau   > 50 * micrometer )
+            ( ctau   > 70 * micrometer )
             """ 
             )
         
