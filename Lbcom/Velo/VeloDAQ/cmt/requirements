@@ -1,8 +1,8 @@
 # Created    : 06/03/04
 # Maintainer : David Hutchcroft, Kurt Rinnert
 #
-package VeloDAQ
-version           v6r2
+package           VeloDAQ
+version           v6r3
 
 # Structure, i.e. directories to process. 
 #===========================================================================

@@ -2,6 +2,8 @@
 ! Package     : VeloDAQ
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
+
+!========================= VeloDAQ v6r3 2011-06-15 =========================
 ! 2011-04-27 - Tomasz Szumlak
  - fix of the problems reported by the coverity tool
  
