@@ -13,28 +13,24 @@
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import OfflineVertexFitter,ProtoParticleMUONFilter, CombineParticles	
+from Configurables import OfflineVertexFitter, CombineParticles	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
-from Configurables import ChargedProtoParticleMaker, NoPIDsParticleMaker, DataOnDemandSvc, UnpackTrack, DelegatingTrackSelector, TrackSelector, CombinedParticleMaker, BestPIDParticleMaker
-from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking
+from Configurables import ChargedProtoParticleMaker, NoPIDsParticleMaker, DataOnDemandSvc, DelegatingTrackSelector, TrackSelector, CombinedParticleMaker, BestPIDParticleMaker
+from Configurables import FastVeloTracking
   
 from StrippingConf.StrippingLine import StrippingLine
-from Configurables import TrackStateInitAlg, TrackEventFitter, TrackPrepareVelo,TrackContainerCopy,TrackMatchVeloSeed, Tf__PatVeloSpaceTool, StandaloneMuonRec
+from Configurables import TrackStateInitAlg, TrackEventFitter, TrackPrepareVelo,TrackContainerCopy, Tf__PatVeloSpaceTool, StandaloneMuonRec
 from Configurables import TrackCloneFinder
-from Configurables import ChargedProtoParticleAddMuonInfo, MuonIDAlg, ChargedProtoCombineDLLsAlg
-from MuonID import ConfiguredMuonIDs
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseMuons
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, TisTosParticleTagger
 
-from Configurables import LoKi__VoidFilter
 from Configurables import GaudiSequencer
-from Configurables import TrackToDST
 from Configurables import TrackSys
 from PhysSelPython.Wrappers import AutomaticData
 # Get the fitters
-from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredFitDownstream
+from TrackFitter.ConfiguredFitters import ConfiguredFit
 
 from Configurables import TrackEventCloneKiller,VeloMuonBuilder
 from Configurables import TrackEventFitter, TrackMasterFitter
@@ -91,24 +87,26 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 	
 	#algos.append(self.VeloCaloMuons())
 	
+	# CHECK TRIGGER
 	self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsifor'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
 	self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
 
-
+	# CHECK FOR TAG-TRACKS
+	muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s) & (PIDmu > %(MuDLL)s)" % config
+	vmCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
+        self.longbothJpsi = longtrackFilter( name+'LongJpsiBoth', trackAlgo = 'LongMu', partSource = StdLooseMuons, muCut = muCut)
+	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.longbothJpsi, charge = -1, vmCut = vmCut, muCut = muCut)
+	self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = self.longbothJpsi, charge = 1, vmCut = vmCut, muCut = muCut)
 	
-	self.TrackingPreFilter = trackingPreFilter('TrackingPreFilter'+name, self.TisTosPreFilter2Jpsi)
+	# RECONSTRUCT PROBE-TRACKS
+	self.TrackingPreFilter = trackingPreFilter('TrackingPreFilter'+name, [self.TisTosPreFilter2Jpsi,self.longbothJpsi]) 
 	self.VeloMuProtoPFilter = selMuonPParts('VeloMuon'+name, self.TrackingPreFilter)
 	self.VeloMuPFilter = makeMyMuons('VeloMuon'+name, self.VeloMuProtoPFilter)
 	   
-	muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s) & (PIDmu > %(MuDLL)s)" % config
-	vmCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
-
 	self.veloMuonMinusJpsi = chargeFilter(name+'MuonVeloJpsiMinus', trackAlgo =  'VeloMuon',   partSource =  self.VeloMuPFilter , charge = -1, vmCut = vmCut, muCut = muCut)
         self.veloMuonPlusJpsi = chargeFilter(name+'MuonVeloJpsiPlus', trackAlgo = 'VeloMuon',  partSource = self.VeloMuPFilter,  charge = 1, vmCut = vmCut, muCut = muCut)
-	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = StdLooseMuons, charge = -1, vmCut = vmCut, muCut = muCut)
-	self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = StdLooseMuons  , charge = 1, vmCut = vmCut, muCut = muCut)
-	
-	# ##########################################
+
+	# TAG-AND-PROBE
 	self.JpsiMuMuTrackEff1 = makeResonanceVeloMuTrackEff(name + "VeloMuJpsiSel1", 
 							   resonanceName = 'J/psi(1S)', 
 							   decayDescriptor = 'J/psi(1S) -> mu+ mu-',
@@ -152,9 +150,9 @@ def selMuonPParts(name, trackingSeq):
    """
        Make ProtoParticles out of VeloMuon tracks
    """
-   unpacker = UnpackTrack(name+"UnpackTrack")
-   unpacker.InputName="pRec/VeloMuon/Tracks"
-   unpacker.OutputName="Rec/VeloMuon/Tracks"
+   #unpacker = UnpackTrack(name+"UnpackTrack")
+   #unpacker.InputName="pRec/VeloMuon/Tracks"
+   #unpacker.OutputName="Rec/VeloMuon/Tracks"
 
    veloprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
    veloprotos.Inputs = ["Rec/VeloMuon/Tracks"]
@@ -173,9 +171,9 @@ def selMuonPParts(name, trackingSeq):
    	ts.TrackTypes = [tsname]
 
 #        
-   DataOnDemandSvc().AlgMap.update( {
-                "/Event/Rec/VeloMuon/Tracks" : unpacker.getFullName(),
-		} )
+   #DataOnDemandSvc().AlgMap.update( {
+   #             "/Event/Rec/VeloMuon/Tracks" : unpacker.getFullName(),
+#		} )
 
    veloprotoseq = GaudiSequencer(name+"ProtoPSeq")
    veloprotoseq.Members += [ veloprotos ]
@@ -263,6 +261,21 @@ def chargeFilter(name, trackAlgo,  partSource, charge, vmCut, muCut):
     if(trackAlgo == 'LongMu'):
         return Selection( name+'_chargeFilter'+'LongMu', Algorithm = myFilter1, RequiredSelections = [  partSource ] )
 # ################################################################
+
+# ##########################
+# high quality muons
+# ##########################
+def longtrackFilter(name, trackAlgo, partSource, muCut):
+    """
+        Select plus or minus charge for longtrack
+    """
+    Filter = FilterDesktop() #there is maybe a change needed
+    myFilter1 = Filter.configurable("mylongFilter1")
+            
+    myFilter1.Code = muCut
+    return Selection( name+'_longFilter'+'LongMu', Algorithm = myFilter1, RequiredSelections = [  partSource ] )
+# ################################################################
+
 """
 Define TisTos Prefilters
 
@@ -325,8 +338,7 @@ def trackingPreFilter(name, prefilter):
    preve.inputLocation = "Rec/Track/Velo"
    preve.outputLocation = "Rec/Track/UnfittedPreparedVelo"
    preve.bestLocation = ""
-   vefit = TrackEventFitter('vefit')
-   vefit.TracksInContainer = "Rec/Track/UnfittedPreparedVelo"
+   vefit = ConfiguredFit("vefit","Rec/Track/UnfittedPreparedVelo")
    vefit.TracksOutContainer = "Rec/Track/FittedVelo"
    vefit.addTool(TrackMasterFitter, name = 'Fitter')
    ConfiguredFastFitter( getattr(vefit,'Fitter'))
@@ -335,8 +347,6 @@ def trackingPreFilter(name, prefilter):
    #low = TrackCloneFinder("TrackCloneFinder/low")
    #low.MatchingFraction = 0.6
 	
-   Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-   Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
    #Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").OutputLevel = 0;
 	
 #	algos = [tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi, Tf__PatVeloRTracking(), Tf__PatVeloSpaceTracking(),Tf__PatVeloGeneralTracking(), preve,vefit, StandaloneMuonRec(), VeloMuonBuilder1]
@@ -344,15 +354,15 @@ def trackingPreFilter(name, prefilter):
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
                          #Members = [Jpsi_already_there,
                          #           jpsidotracking],
-                         Members = [ DecodeVeloRawBuffer(name+"VeloDecoding"),
-                                 Tf__PatVeloRTracking(name+"VeloR"), Tf__PatVeloSpaceTracking(name+"VeloSpace"),
-				 Tf__PatVeloGeneralTracking(name+"VeloGen"), preve,vefit, 
+                         Members = [ DecodeVeloRawBuffer(name+"VeloDecoding",DecodeToVeloLiteClusters=True,DecodeToVeloClusters=True),
+			         FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
+				 preve,vefit, 
 				 StandaloneMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
 
    return GSWrapper(name="WrappedVeloMuonTracking",
                      sequencer=alg,
                      output='Rec/VeloMuon/Tracks',
-                     requiredSelections = [ prefilter])
+                     requiredSelections =  prefilter)
 
 
 
