@@ -1,6 +1,9 @@
+!--------------------------------------------------------------------------
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+
+!========================= VeloAlgorithms v5r4 2011-06-15 =========================
 ! 2011-04-27 - Tomasz Szumlak
  - fixed uninitialized fields signalled by the coverity tool
  
