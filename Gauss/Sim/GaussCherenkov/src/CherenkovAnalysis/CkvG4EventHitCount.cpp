@@ -1041,6 +1041,7 @@ void CkvG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int N
   //  G4double MinMomc4f10Cut=5.0*GeV;
   //  G4double MaxMomAgelCut=15.0*GeV;
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
 
 
@@ -1291,7 +1292,7 @@ void CkvG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int N
           while(it < (int) TrajIdVectR1Agel.size()) {
 
             if(TrajIdVectR1Agel[it] ==  ChtkId) {
-              if(aRadiatorNum >=  Rich1AgelTile0CkvRadiatorNum && aRadiatorNum <= Rich1AgelTile15CkvRadiatorNum) {
+              if(aRMIdValues -> IsRich1AerogelAnyTileRad( aRadiatorNum  )) {
 
                      TrajNumHitAgelWithRayleighRich1[it]++;
 
@@ -1336,7 +1337,7 @@ void CkvG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int N
             if(TrajIdVectR1[itr1g] ==  ChtkId) {
 
 
-              if( aRadiatorNum == 1 ) {
+              if( aRadiatorNum == ( aRMIdValues -> Rich1GaseousCkvRadiatorNum())  ) {
 
                 TrajNumHitGasRich1[itr1g]++;
 
@@ -1370,7 +1371,7 @@ void CkvG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int N
           while(it2 < (int) TrajIdVectR2.size()) {
 
             if(TrajIdVectR2[it2] ==  ChtkId) {
-              if(aRadiatorNum == 2 ) {
+              if(aRadiatorNum == ( aRMIdValues -> Rich2GaseousCkvRadiatorNum() )   ) {
 
                 TrajNumHitGasRich2[it2]++;
 
@@ -1498,7 +1499,8 @@ void CkvG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  in
 {
 
 
-  
+  RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+ 
 
   G4HCofThisEvent * HCE;
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
@@ -1572,7 +1574,7 @@ void CkvG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  in
             }
 
 
-            if(   aRadiatorNum == Rich1C4F10CkvRadiatorNum ){
+            if(   aRadiatorNum == ( aRMIdValues -> Rich1GaseousCkvRadiatorNum () ) ){
 
               aRichCounter->bumpNumHitTotRich1Gas();
 
@@ -1592,7 +1594,8 @@ void CkvG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  in
               }
               
                
-            }else if (aRadiatorNum >=  Rich1AgelTile0CkvRadiatorNum  &&  aRadiatorNum <= Rich1AgelTile15CkvRadiatorNum ) {
+            }else if(aRMIdValues -> IsRich1AerogelAnyTileRad (aRadiatorNum)) { 
+
 
               aRichCounter->bumpNumHitTotRich1Agel();
 
@@ -1605,7 +1608,7 @@ void CkvG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  in
 
 
               
-            }else if (  aRadiatorNum == Rich2CF4CkvRadiatorNum ) {
+            }else if (  aRadiatorNum == (aRMIdValues -> Rich2GaseousCkvRadiatorNum()) ) {
 
               aRichCounter->bumpNumHitTotRich2Gas();
               if(aPhotonSource == 1   ) { 
@@ -1629,17 +1632,17 @@ void CkvG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  in
 
               
 
-            }else if (aRadiatorNum == RichFilterGenericCkvRadiatorNum ) {
+            }else if (aRadiatorNum ==  ( aRMIdValues ->  RichFilterGenericCkvRadiatorNum() ) ) {
       	      aRichCounter-> bumpNumHitTotRich1FilterGeneric();
 
-            }else if ( aRadiatorNum == RichFilterD263CkvRadiatorNum ) {
+            }else if ( aRadiatorNum == ( aRMIdValues -> RichFilterD263CkvRadiatorNum() )) {
          	      aRichCounter->bumpNumHitTotRich1FilterD263();
 
-            }else if ( aRadiatorNum == Rich1GasQWindowCkvRadiatorNum) {
+            }else if ( aRadiatorNum == ( aRMIdValues -> Rich1GasQWindowCkvRadiatorNum())) {
           	      aRichCounter->bumpNumHitTotRich1GasQw();
-            }else if ( aRadiatorNum == Rich2GasQWindowCkvRadiatorNum) {
+            }else if ( aRadiatorNum == ( aRMIdValues -> Rich2GasQWindowCkvRadiatorNum())) {
 	                aRichCounter->bumpNumHitTotRich2GasQw();
-	          }else if ( aRadiatorNum == RichHpdQuartzWindowCkvRadiatorNum) {
+	          }else if ( aRadiatorNum == ( aRMIdValues -> RichHpdQuartzWindowCkvRadiatorNum())) {
               
               if(ihcol == 0 || ihcol == 1 ) {
 	               aRichCounter-> bumpNumHitTotRich1HpdQw();
@@ -1686,6 +1689,7 @@ void CkvG4EventHitCount::CkvG4CountFullAcceptSatHits(const G4Event* anEvent,  in
   TrajIdVectR1FA.reserve(100);
   TrajIdVectR2FA.clear();
   TrajIdVectR2FA.reserve(100);
+  RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
 
   G4HCofThisEvent * HCE;
@@ -1852,7 +1856,7 @@ void CkvG4EventHitCount::CkvG4CountFullAcceptSatHits(const G4Event* anEvent,  in
             if(TrajIdVectR1FA[itr1g] ==  ChtkId) {
 
 
-              if( aRadiatorNum == 1 ) {
+              if( aRadiatorNum == ( aRMIdValues -> Rich1GaseousCkvRadiatorNum () ) ) {
 
                 TrajNumHitGasRich1FA[itr1g]++;
 
@@ -1876,7 +1880,7 @@ void CkvG4EventHitCount::CkvG4CountFullAcceptSatHits(const G4Event* anEvent,  in
           while(it2 < (int) TrajIdVectR2FA.size()) {
 
             if(TrajIdVectR2FA[it2] ==  ChtkId) {
-              if(aRadiatorNum == 2 ) {
+              if(aRadiatorNum == ( aRMIdValues -> Rich1GaseousCkvRadiatorNum () ) ) {
 
                 if( aPhotSource == 1 ) {
                   

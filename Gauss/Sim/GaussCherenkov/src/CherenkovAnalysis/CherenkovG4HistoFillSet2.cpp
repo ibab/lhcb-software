@@ -48,6 +48,8 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
                                                 const std::vector<int> & RichG4CollectionID )
 {
 
+
+
   FillRichG4HistoSet2A();
 
   FillRichG4HistoSet2B();
@@ -111,6 +113,8 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   SmartDataPtr<IHistogram2D>hXYHitLocationRich1Gas(CurrentHistoSvc,"RICHG4HISTOSET2/361");
   SmartDataPtr<IHistogram2D>hXYHitLocationRich2Gas(CurrentHistoSvc,"RICHG4HISTOSET2/381");
   
+  RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
   G4HCofThisEvent * HCE;
 
@@ -193,7 +197,7 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
 
 
-          if(  aRadiatorNum >= 10 && aRadiatorNum<= 25 ) {
+          if( (aRMIdValues -> IsRich1AerogelAnyTileRad(   aRadiatorNum ))) {
             NumtotAgel++;
 
 
@@ -205,7 +209,7 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
             
 
 
-          }else if( aRadiatorNum == 1 ) {
+          }else if( aRadiatorNum ==  (aRMIdValues->Rich1GaseousCkvRadiatorNum())) {
 
             Numtotc4f10++;
 
@@ -215,7 +219,7 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
             }
             if(hCkvProdC4F10Rich1)hCkvProdC4F10Rich1->fill(aChTrackTotMom,CkvTheta*1.0);
 
-          }else if (aRadiatorNum == 2 ) {
+          }else if (aRadiatorNum ==  (aRMIdValues->Rich2GaseousCkvRadiatorNum()) ) {
             Numtotcf4++;
 
             if(  ChtkId <= 1 ) {

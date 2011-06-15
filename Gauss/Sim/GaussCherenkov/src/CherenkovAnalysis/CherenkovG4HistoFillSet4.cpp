@@ -145,6 +145,9 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
                                                             "RICHG4HISTOSET4/1635");
 
 
+  RichG4RadiatorMaterialIdValues* aRMIdValues =
+      RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
   int curRdet =   acHit-> GetCurRichDetNum();
   int curRadiator= acHit-> GetRadiatorNumber();
   double genckv =   acHit-> ThetaCkvAtProd();
@@ -161,6 +164,7 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
   double aCkvRecD2E1 = aReconResult-> ckvAngleD2E1();
   double aCkvRecD3E1 = aReconResult-> ckvAngleD3E1();
 
+
   //  double aCkvRecD3E2 = aReconResult-> ckvAngleD3E2();
   //double aCkvRecD1E2 = aReconResult-> ckvAngleD1E2();
   double aCkvRecD3E4 = aReconResult-> ckvAngleD3E4();
@@ -174,7 +178,7 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
   double aCkvRecD4E4 = aReconResult-> ckvAngleD4E4();
 
 
-  if( (curRdet == 0) &&   (curRadiator >= 10  && curRadiator <= 25 )) {
+  if( (curRdet == 0) &&  (aRMIdValues-> IsRich1AerogelAnyTileRad(curRadiator))) {
     //    std::cout<< "histo id "<<hCkvRich1Agel<<"   "
     // <<  hCkvRich1Gas<<std::endl;
 
@@ -215,9 +219,9 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
     //             fill(aCkvRecD3E3-genckv,genckvphi);
 
   }
-  if((curRdet == 0) &&   (curRadiator== 1)) {
+  if((curRdet == 0) &&   (curRadiator== (aRMIdValues-> Rich1GaseousCkvRadiatorNum()))) {
     if(hCkvRich1GasD3E1) hCkvRich1GasD3E1->fill(aCkvRecD3E1) ;
-    //   if(hCkvRich1GasD3E1A) hCkvRich1GasD3E1A->fill(aCkvRecD3E1) ;
+    //if(hCkvRich1GasD3E1A) hCkvRich1GasD3E1A->fill(aCkvRecD3E1) ;
     if(hCkvRich1GasD3E1A) hCkvRich1GasD3E1A->fill(aCkvRecD4E1) ;
     if(hCkvRich1GasD4E1) hCkvRich1GasD4E1->fill(aCkvRecD4E1) ;
 
@@ -250,7 +254,7 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
     //             fill(aCkvRecD3E1-genckv,genckvphi);
 
   }
-  if( (curRdet == 1) &&  (curRadiator== 2)) {
+  if( (curRdet == 1) && (curRadiator== (aRMIdValues-> Rich2GaseousCkvRadiatorNum() ) ) ){
 
     // G4cout<<" Rich2 reconstructed Ckv Angle D3E1 D1E4 "<< aCkvRecD3E1<<"   "<<aCkvRecD1E4<<G4endl;
     

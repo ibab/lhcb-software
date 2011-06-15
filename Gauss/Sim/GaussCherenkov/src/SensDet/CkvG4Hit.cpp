@@ -266,20 +266,26 @@ std::vector<bool>  CkvG4Hit::DecodeRichHpdReflectionFlag() const
 }
 Rich::RadiatorType CkvG4Hit::radiatorType() const
 {
+  RichG4RadiatorMaterialIdValues* aRMIdValues= 
+            RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
   // default invalid radiator type
   Rich::RadiatorType rad = Rich::InvalidRadiator;
   // fill if known ID
-  if      ( GetRadiatorNumber() == Rich1C4F10CkvRadiatorNum )          { rad = Rich::C4F10; }
-  else if ( GetRadiatorNumber() == Rich2CF4CkvRadiatorNum   )          { rad = Rich::CF4; }
-  else if ( Rich1AgelTile0CkvRadiatorNum <= GetRadiatorNumber() &&
-            Rich1AgelTile15CkvRadiatorNum >= GetRadiatorNumber() )     { rad = Rich::Aerogel; }
-  else if ( RichHpdQuartzWindowCkvRadiatorNum == GetRadiatorNumber() ) { rad = Rich::HPDQuartzWin; }
-  else if ( Rich1GasQWindowCkvRadiatorNum == GetRadiatorNumber() ||
-            Rich2GasQWindowCkvRadiatorNum == GetRadiatorNumber() )     { rad = Rich::GasQuartzWin; }
-  else if ( RichFilterGenericCkvRadiatorNum == GetRadiatorNumber() ||
-            RichFilterD263CkvRadiatorNum    == GetRadiatorNumber() )   { rad = Rich::AerogelFilter; }
-  else if ( Rich1NitrogenCkvRadiatorNum == GetRadiatorNumber() ||
-            Rich2NitrogenCkvRadiatorNum == GetRadiatorNumber() )       { rad = Rich::Nitrogen; }
+  if      ( GetRadiatorNumber() == ( aRMIdValues-> Rich1GaseousCkvRadiatorNum () )){ rad = Rich::Rich1Gas; }
+  else if ( GetRadiatorNumber() == ( aRMIdValues-> Rich2GaseousCkvRadiatorNum())) { rad = Rich::Rich2Gas; }
+  else if ( aRMIdValues->  IsRich1AerogelAnyTileRad (  GetRadiatorNumber() ))    { rad = Rich::Aerogel; }
+  else if (( aRMIdValues->  RichHpdQuartzWindowCkvRadiatorNum()) == GetRadiatorNumber() ) { rad = Rich::HPDQuartzWin; }
+  else if ( ( aRMIdValues-> Rich1GasQWindowCkvRadiatorNum()) == GetRadiatorNumber() ||
+            ( aRMIdValues-> Rich2GasQWindowCkvRadiatorNum() ) == GetRadiatorNumber() )     { rad = Rich::GasQuartzWin; }
+  else if ( ( aRMIdValues-> RichFilterGenericCkvRadiatorNum()) == GetRadiatorNumber() ||
+            ( aRMIdValues-> RichFilterD263CkvRadiatorNum())    == GetRadiatorNumber() )   { rad = Rich::AerogelFilter; }
+  else if ( ( aRMIdValues-> Rich1NitrogenCkvRadiatorNum()) == GetRadiatorNumber() ||
+            ( aRMIdValues-> Rich2NitrogenCkvRadiatorNum()) == GetRadiatorNumber() )       { rad = Rich::Nitrogen; }
+  else if  (aRMIdValues-> RichPmtQuartzWindowCkvRadiatorNum()== GetRadiatorNumber() ) { rad = Rich::HPDQuartzWin;} // to be changed.
+  
+  
+
   // return final type
   return rad;
 }

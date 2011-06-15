@@ -200,6 +200,8 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
   int NumTkIdRich2Gas =  TkIdVectRich2Gas.size();
  //  CherenkovG4HitReconlog<<MSG::INFO<<" NumTrkid rich1 rich2 "<<NumTkIdRich1Gas <<"  "
  //                       <<NumTkIdRich2Gas<<endreq;
+  RichG4RadiatorMaterialIdValues* aRMIdValues =
+      RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
   
 
   const std::vector<int> aNumPmtInRich =  m_RichG4CkvRec->NumPmtRich();
@@ -331,13 +333,16 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
         	    if( ! m_useOnlyStdRadiatorHits ) {
                SelectThisHit= true;
               }else {
-       	       if( ( aRadiatornum == 1 ) || ( aRadiatornum == 2 ) || 
-                  ( aRadiatornum >= 10 && aRadiatornum <= 25 ) ) {
+                if( ( aRadiatornum == (aRMIdValues-> Rich1GaseousCkvRadiatorNum() )   ) || 
+                    ( aRadiatornum ==  (aRMIdValues-> Rich2GaseousCkvRadiatorNum() )   ) || 
+                    (  aRMIdValues -> IsRich1AerogelAnyTileRad(aRadiatornum)) ) {
 
                 SelectThisHit= true;
-
+                
+                }
+                
               }
-            }
+              
 
           }else {
 
@@ -346,7 +351,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             // first for agel saturated  hits
             int itagel=0;
 
-            while ( aRadiatornum >= 10 && aRadiatornum <= 25  && itagel < NumTkIdRich1Agel ) {
+            while ( (aRMIdValues-> IsRich1AerogelAnyTileRad(aRadiatornum))  && (itagel < NumTkIdRich1Agel) ) {
 
               if( TkIdVectRich1Agel[itagel] ==  ChtkId ) {
                 // select only those are not rayleigh scattered.
@@ -372,7 +377,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             // now  for rich1gas saturated  hits
             int itr1s=0;
 
-            while (aRadiatornum == 1 && itr1s < NumTkIdRich1Gas ) {
+            while (( aRadiatornum == (aRMIdValues-> Rich1GaseousCkvRadiatorNum() )) && (itr1s < NumTkIdRich1Gas) ) {
               if( TkIdVectRich1Gas[itr1s] ==  ChtkId ) {
 
                 if( ChTkBeta >   m_chtkBetaSaturatedCut ) {
@@ -399,7 +404,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             // now  for rich2gas saturated  hits
             int itr2s=0;
 
-            while (aRadiatornum == 2 && itr2s < NumTkIdRich2Gas ) {
+            while ((aRadiatornum == (aRMIdValues-> Rich2GaseousCkvRadiatorNum() ))  && (itr2s < NumTkIdRich2Gas) ) {
                
            //   CherenkovG4HitReconlog<<MSG::INFO<<" Now recon Rich2 sat  hits "<<NumTkIdRich2Gas
            //                         <<"  "<<itr2s<<"   "<<  TkIdVectRich2Gas[itr2s] <<"  "<< ChtkId<<endreq;
@@ -559,11 +564,11 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
               aslpLocalY =aYdiff/aZDiff; 
             }
 
-              if(aRadiatornum == 1) {
+            if(aRadiatornum ==   (aRMIdValues-> Rich1GaseousCkvRadiatorNum() ) ){
                 aZdiffWrtRich1MidZ= m_MidRich1GasZ- aChTrackPreStepPos.z();
                 aMidRadX =  aChTrackPreStepPos.x() + aslpLocalX *  aZdiffWrtRich1MidZ;
                 aMidRadY = aChTrackPreStepPos.y() +  aslpLocalY * aZdiffWrtRich1MidZ;
-              } else if ( aRadiatornum == 2 ) {
+            } else if ( aRadiatornum ==  (aRMIdValues-> Rich2GaseousCkvRadiatorNum() ) ) {
                 
                aZdiffWrtRich2MidZ=  m_MidRich2GasZ- aChTrackPreStepPos.z();
                aMidRadX =  aChTrackPreStepPos.x() + aslpLocalX *  aZdiffWrtRich2MidZ;
@@ -580,7 +585,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
 
 
-            if( (aRadiatornum >= 10) &&  (aRadiatornum <= 25)   ) {
+            if( aRMIdValues -> IsRich1AerogelAnyTileRad(aRadiatornum)  ) {
                 emisptReconZ =  m_MidRich1AgelZ;
 
               if( PhotonAerogelExitPosition.z() > 0.0 ) {
@@ -600,7 +605,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
               }
 
-            }else if( aRadiatornum == 1 ) {
+            }else if( aRadiatornum ==( aRMIdValues ->  Rich1GaseousCkvRadiatorNum() )) {
               emisptReconZ =   m_MidRich1GasZ;
               emisptReconX  =  aMidRadX;
               emisptReconY  =  aMidRadY;
@@ -611,7 +616,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
               //      << emisptReconY<<"  "<<testmidy<<G4endl;
               
               
-            } else if ( aRadiatornum == 2 ) {
+            } else if ( aRadiatornum ==  ( aRMIdValues ->  Rich2GaseousCkvRadiatorNum() ) ) {
               emisptReconZ = m_MidRich2GasZ;
               emisptReconX  =  aMidRadX;
               emisptReconY  =  aMidRadY;
@@ -749,7 +754,11 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
             m_RichG4ReconResult-> setradiatorForCkv(aRadiatornum);
 
-            if( aRadiatornum == 1 ||  aRadiatornum == 2 ) {
+
+            if( ( aRadiatornum ==  ( aRMIdValues ->  Rich1GaseousCkvRadiatorNum() ) )  ||  
+                ( aRadiatornum == ( aRMIdValues ->  Rich2GaseousCkvRadiatorNum() ) )) {
+
+
 
 
               aReflPointD1E1 =  m_RichG4CkvRec->
@@ -879,7 +888,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
                                                    m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD4E4,
                                                                                             EmisPtUseMidPtRadiator ));
 
-            }else if(  aRadiatornum >= 10 && aRadiatornum <= 25 ) {
+            }else if( aRMIdValues-> IsRich1AerogelAnyTileRad(aRadiatornum) ) {
 
 
 
