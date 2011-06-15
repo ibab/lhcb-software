@@ -28,15 +28,16 @@ public:
 protected:
 
 private:
-  StatusCode readHltReport(const LHCb::HltDecReports*);
-  StatusCode printParticles(const LHCb::Particle::ConstVector&)const;
+  StatusCode readHltReport(const LHCb::HltDecReports*); ///< main method
+  StatusCode printObject(const LHCb::HltObjectSummary*, std::string increment = "");  ///< print summary object (recursive)
 
 private:
   bool m_printParticles ; ///< print particles
-  unsigned int m_maxCandidatesPrinted ; ///< maximum number of candidates per selection printed out
+  bool m_printDecisions ; ///< print decisions
   std::string m_decisionString ; ///< "Decision", following Tomasz' guidelines
   std::string m_hltDecReportsLocation  ; ///< location
   std::string m_hltSelReportsLocation  ; ///< location
+  std::map<std::string,std::string> m_infos ; ///< all known info fields
   
 };
 #endif // READHLTSUMMARY_H

@@ -39,12 +39,38 @@ ReadHltReport::ReadHltReport( const std::string& name,
   , m_decisionString("Decision")
 {
   declareProperty("PrintParticles", m_printParticles = false, "Print out candidates");
-  declareProperty("MaxCandidates", m_maxCandidatesPrinted = 10 , 
-                  "Maximum number of candidates printed per selection. Set to 0 for all");
+  declareProperty("PrintDecisions", m_printDecisions = false, "Print out decisions");
   declareProperty("HltDecReportsLocation",
                   m_hltDecReportsLocation = LHCb::HltDecReportsLocation::Default);   
   declareProperty("HltSelReportsLocation",
                   m_hltSelReportsLocation = LHCb::HltSelReportsLocation::Default);
+
+  //  grep infoPersistent.insert $HLTRAWDATAROOT/src/HltSelReportsMaker.cpp |
+  // grep # | awk -F"\(" '{print $2}' | awk -F, '{print $1}'
+  // Bug #83271, HltSelReport fields are hard-coded
+  m_infos["0#SelectionID"] = "ID";
+  m_infos["0#Track.firstState.z"] = "Track z";
+  m_infos["1#Track.firstState.x"] = "x";
+  m_infos["2#Track.firstState.y"] = "y";
+  m_infos["3#Track.firstState.tx"] = "tx";
+  m_infos["4#Track.firstState.ty"] = "ty";
+  m_infos["5#Track.firstState.qOverP"] = "q/P";
+  m_infos["0#RecVertex.position.x"] = "Vx x";
+  m_infos["1#RecVertex.position.y"] = "y";
+  m_infos["2#RecVertex.position.z"] = "z";
+  m_infos["0#Particle.particleID.pid"] = "Part pid";
+  m_infos["1#Particle.measuredMass"] = "m";
+  m_infos["2#Particle.referencePoint.z"] = "z";
+  m_infos["3#Particle.referencePoint.x"] = "y";
+  m_infos["4#Particle.referencePoint.y"] = "y";
+  m_infos["5#Particle.slopes.x"] = "tx";
+  m_infos["6#Particle.slopes.y"] = "ty";
+  m_infos["7#Particle.1/p"] = "1/p";
+  m_infos["0#CaloCluster.e"] = "Calo E";
+  m_infos["1#CaloCluster.position.x"] = "x";
+  m_infos["2#CaloCluster.position.y"] = "y";
+  m_infos["3#CaloCluster.position.z"] = "z";
+
 }
 //=============================================================================
 // Destructor
@@ -58,10 +84,6 @@ StatusCode ReadHltReport::initialize() {
   StatusCode sc = DVAlgorithm::initialize(); 
   if (!sc) return sc;
   debug() << "==> Initialize" << endmsg;
-
-  if (m_printParticles) info() << "Will print up to " << m_maxCandidatesPrinted 
-                               << " particles " << endmsg ;
-  
   return StatusCode::SUCCESS;
 }
 
@@ -115,6 +137,7 @@ StatusCode ReadHltReport::finalize() {
 StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
   
   StatusCode sc = StatusCode::SUCCESS ;
+  std::vector<std::string> decisions;
   if ( !exist<LHCb::HltSelReports>(m_hltSelReportsLocation )) return sc ;
   const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>( m_hltSelReportsLocation );
 
@@ -123,78 +146,49 @@ StatusCode ReadHltReport::readHltReport(const LHCb::HltDecReports* decReports){
     if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
                                        << " decision= " << it->second.decision() << endmsg;
     if ( it->second.decision() ){
+      if (m_printDecisions) decisions.push_back(it->first);
       counter("Selections")++ ;
       counter(it->first)++;
-      const LHCb::HltObjectSummary* sum = selReports->selReport(it->first);
-      if (0==sum) {
-        Warning("No summary for "+it->first,StatusCode::SUCCESS,1);
-        continue ;
+      if (m_printParticles && it->first!="Hlt1Global" && it->first!="Hlt2Global"){
+        const LHCb::HltObjectSummary* sum = selReports->selReport(it->first);
+        if (0==sum) {
+          Warning("No summary for "+it->first,StatusCode::SUCCESS,1);
+          continue ;
+        } else {
+          always() << "Selected objects for line " << it->first << " :" << endmsg ;
+          sc = printObject(sum);
+          if (!sc) return sc;
+        }
       }
-      if (msgLevel(MSG::DEBUG)) debug() <<  it->first << " summarised obj = " << sum->summarizedObject() 
-                                        << ", vector " << sum->substructure().size() << endmsg ;
-      LHCb::Particle::ConstVector parts;
-      for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ; 
-            s != sum->substructure().end() ; ++s){
-        if (msgLevel(MSG::DEBUG)) debug() << it->first << " substructure has " << (*s)->summarizedObject() << " and " 
-                                          << (*s)->substructure().size() << endmsg ;
-        if (0==(*s)->summarizedObject()) continue ;
-        const LHCb::Particle* p = dynamic_cast<const LHCb::Particle*>((*s)->summarizedObject());
-        if ( 0==p ) Warning(it->first+" has no particles",StatusCode::SUCCESS,1).ignore();
-        else parts.push_back(p);
-      }
-      if (!parts.empty()) {
-        info() << it->first << " found " << parts.size() << " particle(s)." << endmsg ;
-        counter("Candidates") += parts.size() ;
-        sc = printParticles(parts);
-        if (!sc) return sc ;
-      } else {
-        if (msgLevel(MSG::DEBUG)) debug() << it->first << " stored no particles." << endmsg ;        
-      }
-      
     }
   }
-  return sc ;
+  if (!decisions.empty()) {
+    always() << "Decisions in this event : " ;
+    for ( std::vector<std::string>::const_iterator s = decisions.begin() ; s!=decisions.end() ; ++s) always() << *s << " ";
+    always() << endmsg;
+  }
+return sc ;
 }
 
 //=========================================================================
 // print candidates
 //=========================================================================
-StatusCode ReadHltReport::printParticles(const LHCb::Particle::ConstVector& parts) const{
-  unsigned int np = 0 ;
-  for ( LHCb::Particle::ConstVector::const_iterator ip =  
-          parts.begin(); ((ip!= parts.end()) && 
-         ((0==m_maxCandidatesPrinted) || (np<m_maxCandidatesPrinted))) ; ++ip){
-    np++ ;
-    const LHCb::ParticleProperty* pp = ppSvc()->find ( (*ip)->particleID() ) ;
-    if ( 0!=pp) info() << "  -> a " << pp->particle() ;
-    else info() << "  -> an unknown PID " << (*ip)->particleID() ;
-    info() << " P= " << (*ip)->momentum() ;
-    const LHCb::VertexBase* bPV =  bestPV(*ip) ;
-    if ( 0==(*ip)->endVertex()){
-      double IP, IPe ;
-      if ( 0!= bPV ){
-        StatusCode sc = distanceCalculator()->distance((*ip), bPV, IP, IPe);
-        if (!sc) return sc;
-        info() << ", IP = " << IP/Gaudi::Units::micrometer << " +/- " 
-               << IPe/Gaudi::Units::micrometer << " mum"  ;
-      } 
-    } else {
-      info()  << ", M = " << (*ip)->measuredMass() ;
-      if ( 0!= bPV ){
-        double fp, chi2 ;
-        StatusCode sc = distanceCalculator()
-          ->distance(bPV, (*ip)->endVertex(), fp, chi2);
-        if (!sc) return sc;
-        double boost = ((*ip)->momentum().Beta())*((*ip)->momentum().Gamma())*Gaudi::Units::c_light ;
-        info()  << ", FT = " << (fp/boost)/Gaudi::Units::picosecond << " ps, at "
-                << chi2 << " chi2-separation";
-      }
-    }
-    info() << endmsg ;
+StatusCode ReadHltReport::printObject(const LHCb::HltObjectSummary* sum, std::string increment){
+  if (0==sum) return StatusCode::SUCCESS ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Summarised obj = " << sum->summarizedObject() 
+                                    << ", vector " << sum->substructure().size() << endmsg ;
+  const LHCb::HltObjectSummary::Info info = sum->numericalInfoFlattened() ;
+  always() << increment << "Info: " ;
+  for ( LHCb::HltObjectSummary::Info::const_iterator i = info.begin() ; i != info.end() ; ++i){  
+    if ((m_infos.find(i->first))!=m_infos.end()) 
+      always() << m_infos[i->first] << " = " << i->second << ", " ;
+    else always() << i->first << " = " << i->second << ", " ;
   }
-  
-  if ((0!=m_maxCandidatesPrinted) && (parts.size()>m_maxCandidatesPrinted))
-    info() << "  ... and " << parts.size()-m_maxCandidatesPrinted 
-           << " more candidates not printed." << endmsg ;
+  always() << endmsg ;
+  for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ; 
+        s != sum->substructure().end() ; ++s){
+    StatusCode sc = printObject(*s,increment+"   ");
+    if (!sc) return sc;
+  }
   return StatusCode::SUCCESS ;
 }
