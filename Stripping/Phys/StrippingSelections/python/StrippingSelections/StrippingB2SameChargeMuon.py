@@ -10,7 +10,7 @@ __version__= '$Revision: 1.0 $'
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
