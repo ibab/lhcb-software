@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.209 2010-06-21 08:13:52 cattanem Exp $
+!--------------------------------------------------------------------------
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
-
+!========================= L0DU v10r15 2011-06-15 =========================
 ! 2011-06-14 - Olivier Deschamps
  - L0DUFromRawTool : new interfaced method datas() returns <string,value> data map 
 
