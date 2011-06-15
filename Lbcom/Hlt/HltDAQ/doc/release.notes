@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r10 2011-06-15 =========================
 ! 2011-06-13 - Tomasz Skwarnicki
  - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid 
    per event, for odd number of hit sequences saved. 
