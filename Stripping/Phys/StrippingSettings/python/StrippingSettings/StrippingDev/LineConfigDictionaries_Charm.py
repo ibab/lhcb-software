@@ -502,8 +502,10 @@ XiccMicro = {
     'STREAMS' : [ 'Charm' ] 
     }
 
-## Ibid
-## New in Stripping15
+
+## Micro-DST, Philip Hunt and Benoit Viaud
+## Modified from Strippinb13b
+## Test:  Yes
 DstarPromptWithD02HHHH = {
     'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
     'CONFIG'      : {
@@ -546,52 +548,7 @@ DstarPromptWithD02HHHH = {
     }
 
 
-
-DstarD02KKpipiNoPID = {
-    'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
-    'CONFIG'      : {
-    'CombDelmLower'     :   -8.25 * MeV
-    ,'CombDelmUpper'    :   16.5  * MeV
-    ,'DelmLower'        :   -7.5  * MeV
-    ,'DelmUpper'        :   12.   * MeV
-    ,'CombD0MassWin'    :   82.5  * MeV
-    ,'D0MassWin'        :   65.   * MeV
-    ,'DstarDOCA'        :    0.2  * mm
-    ,'D0MaxDOCA'        :    0.12 * mm
-    ,'D0DauPt'          :  300.   * MeV
-    ,'D0DauP'           :    3.   * GeV
-    ,'D0Pt'             :    2.5  * GeV
-    ,'DstarPt'          :    2.5  * GeV
-    ,'SlowPionPt'       :  200.   * MeV
-    ,'DstarVtxChi2DOF'  :   10.
-    ,'D0VtxChi2DOF'     :   10.
-    ,'D0DauMaxIPChi2'   :   20.
-    ,'D0DauIPChi2'      :    0.5
-    ,'D0FDChi2'         :   36.
-    ,'D0IPChi2'         :   30.
-    ,'D0DIRA'           :    0.9998
-    ,'TrackChi2DOF'     :    5.
-    ,'ApplyKaonPIDK'    : False 
-    ,'KaonPIDK'         : -100.
-    ,'ApplyPionPIDK'    : False 
-    ,'PionPIDK'         : 100 # not applied to the slow pion
-    ,'CheckPV'          : True # reject events with no PVs
-    ,'ApplyGECs'        : True # set to False to apply no GECs
-    ,'MaxLongTracks'    :  150
-    ,'MaxVeloTracks'    : None
-    ,'MaxSpdDigits'     : None
-    ,'MaxITClusters'    : None
-    ,'Prescale'         :    0.10
-    ,'Postscale'        :    1.0
-    },
-    'WGs' : ['Charm'],
-    'STREAMS' : [ 'Charm' ]
-    }
-
-
-## Micro-DST, Philip Hunt
-## Modified from Strippinb13b
-## Test:  Yes
+## Micro-DST, Ibid.
 DstarPromptWithD02HHHHNoPID = {
     'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
     'CONFIG'      : {
@@ -630,48 +587,6 @@ DstarPromptWithD02HHHHNoPID = {
     ,'Postscale'        : 1
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
-    }
-
-## Ibid
-DstarPromptWithD02HHHH = {
-    'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
-    'CONFIG'      : {
-    'CombDelmLower'     :  -8.25    * MeV
-    ,'CombDelmUpper'    :  16.5     * MeV
-    ,'DelmLower'        :  -7.5     * MeV
-    ,'DelmUpper'        :  15       * MeV
-    ,'CombD0MassWin'    :  82.5     * MeV
-    ,'D0MassWin'        :  75       * MeV
-    ,'DstarDOCA'        :   0.45    * mm
-    ,'D0MaxDOCA'        :   0.5     * mm
-    ,'D0DauPt'          : 300       * MeV
-    ,'D0DauP'           :   3       * GeV
-    ,'D0Pt'             :   3       * GeV
-    ,'DstarPt'          :   3       * GeV
-    ,'SlowPionPt'       :  70       * MeV
-    ,'DstarVtxChi2DOF'  :  20
-    ,'D0VtxChi2DOF'     :  10
-    ,'D0DauMaxIPChi2'   :  30
-    ,'D0DauIPChi2'      :   1.7
-    ,'D0FDChi2'         :  48
-    ,'D0IPChi2'         :  30
-    ,'D0DIRA'           :   0.9998
-    ,'TrackChi2DOF'     :   5
-    ,'ApplyKaonPIDK'    : True
-    ,'KaonPIDK'         :   0
-    ,'ApplyPionPIDK'    : True
-    ,'PionPIDK'         :   3       # not applied to the slow pion
-    ,'CheckPV'          : True      # reject events with no PVs
-    ,'ApplyGECs'        : True      # set to False to apply no GECs
-    ,'MaxLongTracks'    : 250
-    ,'MaxVeloTracks'    : None
-    ,'MaxSpdDigits'     : None
-    ,'MaxITClusters'    : None
-    ,'Prescale'         :   1
-    ,'Postscale'        :   1
-    },
-    'WGs' : ['Charm'],
     'STREAMS' : [ 'Charm' ]
     }
 
