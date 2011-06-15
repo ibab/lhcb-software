@@ -51,8 +51,8 @@ confdict={
 		,	"VertChi2":		2.	# adimensional
 		,	"MassPreComb":		1000.	# MeV
 		,	"MassPostComb":		400.	# MeV
-		,	"Prescale":		1.	# MeV
-		,	"Postscale":		1.	# MeV
+		,	"Prescale":		1.	# adimensional
+		,	"Postscale":		1.	# adimensional
 		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 		,	'HLT1PassOnAll': True
 		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
@@ -83,9 +83,6 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
     def __init__(self, name, config) :
 
         LineBuilder.__init__(self, name, config)
-
-	
-	#algos.append(self.VeloCaloMuons())
 	
 	# CHECK TRIGGER
 	self.TisTosPreFilter1Jpsi = selHlt1Jpsi('TisTosFilter1Jpsifor'+name, HLT1TisTosSpecs = config['HLT1TisTosSpecs'], HLT1PassOnAll = config['HLT1PassOnAll'])
@@ -150,18 +147,11 @@ def selMuonPParts(name, trackingSeq):
    """
        Make ProtoParticles out of VeloMuon tracks
    """
-   #unpacker = UnpackTrack(name+"UnpackTrack")
-   #unpacker.InputName="pRec/VeloMuon/Tracks"
-   #unpacker.OutputName="Rec/VeloMuon/Tracks"
-
    veloprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
    veloprotos.Inputs = ["Rec/VeloMuon/Tracks"]
    veloprotos.Output = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    veloprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
    tracktypes = [ "Long" ]
-   #veloprotos.OutputLevel =0
-   #if (trackcont == "Best") :
-   #	tracktypes = [ "Long" ]
    veloprotos.TrackSelector.TrackTypes = tracktypes
    selector = veloprotos.TrackSelector
    for tsname in tracktypes:
@@ -169,11 +159,6 @@ def selMuonPParts(name, trackingSeq):
    	ts = getattr(selector,tsname)
    	# Set Cuts
    	ts.TrackTypes = [tsname]
-
-#        
-   #DataOnDemandSvc().AlgMap.update( {
-   #             "/Event/Rec/VeloMuon/Tracks" : unpacker.getFullName(),
-#		} )
 
    veloprotoseq = GaudiSequencer(name+"ProtoPSeq")
    veloprotoseq.Members += [ veloprotos ]
@@ -239,6 +224,7 @@ def makeResonanceVeloMuTrackEff(name, resonanceName, decayDescriptor, plusCharge
        return Selection( name, Algorithm = MuonVeloResonance, RequiredSelections = [plusCharge, minusCharge] )
 # ########################################################################################
 # Charge filter, that filters, well, the charge and takes the particles from the right source (long or Velomuon)
+# TODO: I introduced vmCut and muCut here although muCut is already been done somewhere else ... clean this some day
 # ########################################################################################
 def chargeFilter(name, trackAlgo,  partSource, charge, vmCut, muCut):
     """
@@ -343,17 +329,7 @@ def trackingPreFilter(name, prefilter):
    vefit.addTool(TrackMasterFitter, name = 'Fitter')
    ConfiguredFastFitter( getattr(vefit,'Fitter'))
 	
-   #define a TrackCloneFinder
-   #low = TrackCloneFinder("TrackCloneFinder/low")
-   #low.MatchingFraction = 0.6
-	
-   #Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").OutputLevel = 0;
-	
-#	algos = [tisTosPreFilterHlt1Jpsi, tisTosPreFilterHlt2Jpsi, Tf__PatVeloRTracking(), Tf__PatVeloSpaceTracking(),Tf__PatVeloGeneralTracking(), preve,vefit, StandaloneMuonRec(), VeloMuonBuilder1]
-#	
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
-                         #Members = [Jpsi_already_there,
-                         #           jpsidotracking],
                          Members = [ DecodeVeloRawBuffer(name+"VeloDecoding",DecodeToVeloLiteClusters=True,DecodeToVeloClusters=True),
 			         FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
 				 preve,vefit, 

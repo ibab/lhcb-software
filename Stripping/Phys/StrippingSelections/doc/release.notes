@@ -7,10 +7,10 @@
 ! 2011-06-15 S. Blusk
  - Fixed silly error p --> p+
 
-
 ! 2011-06-15 - Paul Seyfert
  - Reordered dependencies in TrackEffVeloMuon (small potential speedup)
  - Switched from PatVelo to FastVelo (speedup, consistency and convenience)
+ - corrected and cleaned comments in TrackEffVeloMuon
 
 ! 2011-06-15 S. Blusk
  - Tightened PID cut on proton for Lb-->LcPPbarPi, PPbarK
