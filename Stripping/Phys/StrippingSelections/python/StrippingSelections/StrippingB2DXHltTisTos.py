@@ -136,6 +136,8 @@ def makeD2XSel(name, config, decay):
     dauCuts = {'pi+':dauCut,'K+':dauCut}
     #comboCut = "(APT>%(PTMin)s*MeV) & " \
     comboCut = "(ASUM(PT)>%(SumPTMin)s*MeV) & " \
+               "AHASCHILD(((ABSID == 'K+')|(ABSID == 'pi+')) & "\
+               "(PT > 500*MeV) & (P > 5000*MeV)) &"\
                "(AMAXDOCA('LoKi::TrgDistanceCalculator') < %(DOCAMax)s) & " \
                "AHASCHILD(((ABSID == 'K+')|(ABSID == 'pi+')) & "\
                "(MIPCHI2DV(PRIMARY) > %(MaxDauIPChi2Min)s)) & " \
