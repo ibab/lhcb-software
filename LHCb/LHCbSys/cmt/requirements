@@ -11,7 +11,7 @@ branches doc cmt test
 use MCAssociators         v1r1    Associators # V. Gligorov
 
 use CaloDAQ               v4r22   Calo    # Olivier Deschamps
-use CaloInterfaces        v8r1    Calo    # Olivier Deschamps
+use CaloInterfaces        v8r2    Calo    # Olivier Deschamps
 use CaloKernel            v6r2    Calo    # Olivier Deschamps
 use CaloUtils             v9r1    Calo    # Olivier Deschamps
 
