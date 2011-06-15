@@ -23,15 +23,15 @@ __all__ = ('Bu2hhhBuilder',
 config_params = {
     'MaxTrSIZE'             : 450 ,      ## GEC  maximim Rec/Track/Best TrSIZE
     '_h_PT'                 : 100. ,     ## tracks min PT
-    '_h_P'                  : 2500. ,    ## tracks min P  
-    '_h_IPCHI2'             : 1. ,       ## min tracks PI wrt OWNPV
+    '_h_P'                  : 1500. ,    ## tracks min P  
+    '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
     '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
-    '_3h_DOCA'              : .12 ,      ## max DOCA between h and 2h 
+    '_3h_DOCA'              : .2 ,      ## max DOCA between h and 2h 
     '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
-    '_3h_DIRA'              : .9998 ,    ## min cos angle between 3h momentum and PV decay direction   
+    '_3h_DIRA'              : .9999 ,    ## min cos angle between 3h momentum and PV decay direction   
     '_3h_FDCHI2'            : 500. ,     ## min 3h FDCHI2 wrt best 3h PV  
-    '_3h_PVDOCAmin'         : 1.0 ,      ## min value of the 3h doca wrt any PV
-    '_3h_CHI2'              : 14.0 ,     ## max 3h vertex CHI2 
+    '_3h_PVDOCAmin'         : 3.0 ,      ## min value of the 3h doca wrt any PV
+    '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2 
     '_3h_IPCHI2'            : 10. ,      ## max 3h IP CHI2 wrt best 3h PV
     '_3h_PT'                : 1000. ,    ## min 3h PT   
     '_3h_PTsum'             : 4000. ,    ## min of 3h tracks PT sum 
