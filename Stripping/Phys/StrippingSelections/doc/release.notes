@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Anton Poluektov 
+ - Tightened D2KPiPi0 cuts in StrippingB2DX
+
 ! 2011-06-15 - Jibo He
  - Tightened cuts of DiMuon, DiElectron, Bc2JpsiX lines
 

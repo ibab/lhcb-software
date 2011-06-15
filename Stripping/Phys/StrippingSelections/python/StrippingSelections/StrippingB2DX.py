@@ -39,6 +39,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
 from StandardParticles import ( StdNoPIDsPions,
                                 StdNoPIDsKaons,
+                                StdLooseKaons,
                                 StdNoPIDsDownPions,
                                 StdNoPIDsProtons,
                                 StdLooseMergedPi0,
@@ -201,6 +202,7 @@ config = {                                  # Default configuration dictionary
 	      "PMin"         : 2000.,        # Minimum P of the D (MeV)
 	      "Pi0PtMin"     : 600,          # Minimum Pt of pi0 (MeV)
 	      "Pi0PMin"      : 2000,         # Minimum P of pi0 (MeV)
+	      "PhotonCL"     : 0.25,         # Confidence level for Pi0 photons
 	      "MaxDauMIPChi2": 40.,          # IP chi2 for at least one track
 	      "DIRAMin"	     : 0.9,          # minimum D DIRA  
 	      "DOCAMax"      : 0.6,          # maximum DOCA of charged track combinations (mm)
@@ -222,6 +224,18 @@ config = {                                  # Default configuration dictionary
 	      "IPChi2Min"    : 0.,           # Minimum IP chi2
     	    }, 
 	    "BCuts" : {                             # B->DX cuts (except for special cases below)
+    	      "BachelorChi2Max"    : 4.,            # maximum bachelor track chi2
+    	      "BachelorPtMin"      : 500.,          # bachelor track Pt cut (MeV)
+    	      "BachelorPMin"       : 5000.,         # bachelor track P cut (MeV)
+    	      "BachelorMIPChi2Min" : 16.,           # minimum IP chi2 for a bachelor track
+	      "VtxChi2Max"         : 9.,            # B vertex Chi2
+	      "IPChi2Max"          : 16.,           # chi2 of B impact parameter to the related PV
+	      "LTMin"              : 0.2,           # Minimum B lifetime
+	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
+	      "CombDMass"          : 500,           # Mass window for a combination (MeV)
+	      "APtMin"		   : 0.,            # Minumum Pt of a combination (MeV)
+	    }, 
+	    "BWithD2KPiPi0Cuts" : {                 # B->DX cuts with D->KPiPi0
     	      "BachelorChi2Max"    : 4.,            # maximum bachelor track chi2
     	      "BachelorPtMin"      : 500.,          # bachelor track Pt cut (MeV)
     	      "BachelorPMin"       : 5000.,         # bachelor track P cut (MeV)
@@ -339,6 +353,7 @@ class B2DXConf(LineBuilder) :
                               "D2KshCuts",
                               "LambdaCCuts",
                               "BCuts",
+                              "BWithD2KPiPi0Cuts",
                               "B2DV0Cuts",
                               "B2DVChargedCuts",
                               "LambdaBCuts",
@@ -455,10 +470,16 @@ class B2DXConf(LineBuilder) :
             	    selection7 = makeLambdaB2D0Lambda(moduleName, name, "pK",  dsel, Lambda02pK, config["LambdaB2DphCuts"])
             	    list += [ selection6, selection7 ]
 
-            elif name in ["D2KPiPi0Merged", "D2KPiPi0Resolved", "D2hhhh", "D2KPiPi0MergedWS", "D2KPiPi0ResolvedWS", "D2hhhhWS"] :
+            elif name in ["D2hhhh", "D2hhhhWS"] :
                 selection3 = makeB02D0Kstar(moduleName, name, Kstar, dsel, config["BCuts"])
                 selection4 = makeB02D0Phi(moduleName, name, Phi, dsel, config["BCuts"])
                 selection5 = makeB02D0Rho(moduleName, name, Rho, dsel, config["BCuts"])
+                list += [ selection3, selection4, selection5 ]
+
+            elif name in ["D2KPiPi0Merged", "D2KPiPi0Resolved", "D2KPiPi0MergedWS", "D2KPiPi0ResolvedWS"] :
+                selection3 = makeB02D0Kstar(moduleName, name, Kstar, dsel, config["BWithD2KPiPi0Cuts"])
+                selection4 = makeB02D0Phi(moduleName, name, Phi, dsel, config["BWithD2KPiPi0Cuts"])
+                selection5 = makeB02D0Rho(moduleName, name, Rho, dsel, config["BWithD2KPiPi0Cuts"])
                 list += [ selection3, selection4, selection5 ]
 
 	    if (config["MergedLines"]) : 
@@ -888,18 +909,19 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Sel) :
     __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min",
                               "PtMin", "CombMassMin", "CombMassMax", "MassMin", "MassMax",
                               "VtxChi2Max", "VDChi2Min", "Pi0PtMin", "Pi0PMin", "PMin",
-                              "DIRAMin", "DOCAMax", "MaxDauMIPChi2")
+                              "DIRAMin", "DOCAMax", "MaxDauMIPChi2", "PhotonCL")
 
     checkConfig(__configuration_keys__, config)
 
     _Kaon = StdNoPIDsKaons
+#    _Kaon = StdLooseKaons
     _Pion = StdNoPIDsPions
     _Pi0  = Pi0Sel
 
     _DDauKineCut = "(PT> %(DauPtMin)s *MeV) & (P> %(DauPMin)s *MeV)" % config
     _DDauChi2Cut = "(MIPCHI2DV(PRIMARY)> %(DauMIPChi2Min)s ) & (TRCHI2DOF< %(DauChi2Max)s )" % config
     _DDauCut = "( " + _DDauKineCut + " & " + _DDauChi2Cut + " )"
-    _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
+    _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV) & (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % config
 
     _DCombCut = \
     "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
@@ -928,18 +950,19 @@ def makeD2KPiPi0WS(moduleName, pi0name, config, Pi0Sel) :
     __configuration_keys__ = ("DauChi2Max", "DauPtMin", "DauPMin", "DauMIPChi2Min",
                               "PtMin", "CombMassMin", "CombMassMax", "MassMin", "MassMax",
                               "VtxChi2Max", "VDChi2Min", "Pi0PtMin", "Pi0PMin", "PMin",
-                              "DIRAMin", "DOCAMax", "MaxDauMIPChi2")
+                              "DIRAMin", "DOCAMax", "MaxDauMIPChi2", "PhotonCL")
 
     checkConfig(__configuration_keys__, config)
 
     _Kaon = StdNoPIDsKaons
+#    _Kaon = StdLooseKaons
     _Pion = StdNoPIDsPions
     _Pi0  = Pi0Sel
 
     _DDauKineCut = "(PT> %(DauPtMin)s *MeV) & (P> %(DauPMin)s *MeV)" % config
     _DDauChi2Cut = "(MIPCHI2DV(PRIMARY)> %(DauMIPChi2Min)s ) & (TRCHI2DOF< %(DauChi2Max)s )" % config
     _DDauCut = "( " + _DDauKineCut + " & " + _DDauChi2Cut + " )"
-    _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
+    _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV) & (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % config
 
     _DCombCut = \
     "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
