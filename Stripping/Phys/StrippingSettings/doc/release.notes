@@ -4,6 +4,19 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Jibo He
+ - LineConfigDictionaries_BetaS.py
+   . Updated BetaSQ2B
+ - LineConfigDictionaries_Charm.py
+   . Removed DstarD02KKpipi
+   . Updated DstarPromptWithD02HHHH, DstarPromptWithD02HHHHNoPID, D2hh, D2hhMicroKPi
+ - LineConfigDictionaries_PSWG.py
+   . Updated FullDSTDiMuon, MicroDSTDiMuon, Bc2JpsiMu, Bc2JpsiH, BuToKX3872, FullDSTDiElectron
+ - LineConfigDictionaries_EWWG.py
+   . Updated HighPtJets
+ - LineConfigDictionaries_GLWG.py
+   . Updated B2hhh
+ 
 ! 2011-06-15 - Anton Poluektov 
  - Updated B2Kshh cuts (for David Dossett)
 

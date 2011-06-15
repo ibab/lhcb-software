@@ -328,7 +328,7 @@ HighPtJets = {
     ,  'Min2ndJetPtCut'   : 7.0
     ,  'JetMultCut'       : 2
     ,  'MaxRPVCut'        : 0.8
-    ,  'scale'            : 1.0
+    ,  'scale'            : 0.2
     },
     'WGs' : [ 'Exotics' ],
     'STREAMS' : [ 'EW' ]

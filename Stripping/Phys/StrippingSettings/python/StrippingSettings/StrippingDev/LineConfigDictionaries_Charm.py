@@ -85,35 +85,39 @@ PromptCharm = {
 D2hh = { 
     'BUILDERTYPE' : 'D2hhConf',
     'CONFIG'      : {
-    'DaugPtMin'                 :  800.,
-    'DaugPtMax'                 : 1500.,
-    'DaugP'                     : 5000.,
-    'DaugIPChi2'                :    9.,
-    'DaugTrkChi2'               :    3.,
-    'HighPIDK'                  :    5.,
-    'LowPIDK'                   :    0.,
-    'D0Pt'                      : 2000.,
-    'D0MassWindowCentre'        : 1865.,
-    'D0MassWindowWidth'         :   75.,
-    'D0P'                       : 5000.,
-    'D0VtxChi2Ndof'             :   10.,
-    'D0FDChi2'                  :   40.,
-    'D0BPVDira'                 :    0.9999,
-    'D0DOCA'                    :    0.07,
-    'Daug_TRCHI2DOF_MAX'        :    5.,
-    'Dstar_AMDiff_MAX'          :  165.,
-    'Dstar_VCHI2VDOF_MAX'       :  100.,
-    'Dstar_MDiff_MAX'           :  160.,
-    'UntaggedCFLinePrescale'    :    0.2,
-    'UntaggedCFLinePostscale'   :    1.,
-    'UntaggedSCSLinePrescale'   :    1.,
-    'UntaggedSCSLinePostscale'  :    1.,
-    'TaggedRSLinePrescale'      :    1.,
-    'TaggedRSLinePostscale'     :    1.,
-    'TaggedWSLinePrescale'      :    1.,
-    'TaggedWSLinePostscale'     :    1.,
-    'TaggedSCSLinePrescale'     :    1.,
-    'TaggedSCSLinePostscale'    :    1.
+           'DaugPtMin': 800.,
+           'DaugPtMax': 1500.,
+           'DaugP': 5000.,
+           'DaugIPChi2': 9.,
+           'DaugTrkChi2': 3.,
+           'HighPIDK': 5.,
+           'LowPIDK': 0.,
+           'D0Pt': 2000.,
+           'D0MassWindowCentre': 1865.,
+           'D0MassWindowWidth': 100.,
+           'D0PiPiMassWindowWidthLow':  -75.,
+           'D0PiPiMassWindowWidthHigh': 100.,
+           'D0KKMassWindowWidthLow': -100.,
+           'D0KKMassWindowWidthHigh': 75.,
+           'D0P': 5000.,
+           'D0VtxChi2Ndof': 10.,
+           'D0FDChi2': 40.,
+           'D0BPVDira': 0.9999,
+           'D0DOCA': 0.07,
+           'Daug_TRCHI2DOF_MAX': 5.,
+           'Dstar_AMDiff_MAX': 165.,
+           'Dstar_VCHI2VDOF_MAX': 100.,
+           'Dstar_MDiff_MAX': 160.,
+           'UntaggedCFLinePrescale': 0.2,
+           'UntaggedCFLinePostscale': 1.,
+           'UntaggedSCSLinePrescale': 1.,
+           'UntaggedSCSLinePostscale': 1.,
+           'TaggedRSLinePrescale': 1.,
+           'TaggedRSLinePostscale': 1.,
+           'TaggedWSLinePrescale': 1.,
+           'TaggedWSLinePostscale': 1.,
+           'TaggedSCSLinePrescale': 1.,
+           'TaggedSCSLinePostscale': 1.
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ]
@@ -125,36 +129,40 @@ D2hh = {
 D2hhMicroKPi = { 
     'BUILDERTYPE' : 'D2hhConf',
     'CONFIG'      : {
-    'DaugPtMin'                 :  800.,
-    'DaugPtMax'                 : 1500.,
-    'DaugP'                     : 5000.,
-    'DaugIPChi2'                :    9.,
-    'DaugTrkChi2'               :    3.,
-    'HighPIDK'                  :    5.,
-    'LowPIDK'                   :    0.,
-    'D0Pt'                      : 2000.,
-    'D0MassWindowCentre'        : 1865.,
-    'D0MassWindowWidth'         :  100.,
-    'D0P'                       : 5000.,
-    'D0VtxChi2Ndof'             :   10.,
-    'D0FDChi2'                  :   40.,
-    'D0BPVDira'                 :    0.9999,
-    'D0DOCA'                    :    0.07,
-    'Daug_TRCHI2DOF_MAX'        :    5.,
-    'Dstar_AMDiff_MAX'          :  165.,
-    'Dstar_VCHI2VDOF_MAX'       :  100.,
-    'Dstar_MDiff_MAX'           :  160.,
-    'UntaggedCFLinePrescale'    :    1.,
-    'UntaggedCFLinePostscale'   :    1.,
-    'UntaggedSCSLinePrescale'   :    1.,
-    'UntaggedSCSLinePostscale'  :    1.,
-    'TaggedRSLinePrescale'      :    1.,
-    'TaggedRSLinePostscale'     :    1.,
-    'TaggedWSLinePrescale'      :    1.,
-    'TaggedWSLinePostscale'     :    1.,
-    'TaggedSCSLinePrescale'     :    1.,
-    'TaggedSCSLinePostscale'    :    1.
-    },
+           'DaugPtMin': 800.,
+           'DaugPtMax': 1500.,
+           'DaugP': 5000.,
+           'DaugIPChi2': 9.,
+           'DaugTrkChi2': 3.,
+           'HighPIDK': 5.,
+           'LowPIDK': 0.,
+           'D0Pt': 2000.,
+           'D0MassWindowCentre': 1865.,
+           'D0MassWindowWidth': 100.,
+           'D0PiPiMassWindowWidthLow':  -75.,
+           'D0PiPiMassWindowWidthHigh': 100.,
+           'D0KKMassWindowWidthLow': -100.,
+           'D0KKMassWindowWidthHigh': 75.,
+           'D0P': 5000.,
+           'D0VtxChi2Ndof': 10.,
+           'D0FDChi2': 40.,
+           'D0BPVDira': 0.9999,
+           'D0DOCA': 0.07,
+           'Daug_TRCHI2DOF_MAX': 5.,
+           'Dstar_AMDiff_MAX': 165.,
+           'Dstar_VCHI2VDOF_MAX': 100.,
+           'Dstar_MDiff_MAX': 160.,
+           'UntaggedCFLinePrescale': 0.2,
+           'UntaggedCFLinePostscale': 1.,
+           'UntaggedSCSLinePrescale': 1.,
+           'UntaggedSCSLinePostscale': 1.,
+           'TaggedRSLinePrescale': 1.,
+           'TaggedRSLinePostscale': 1.,
+           'TaggedWSLinePrescale': 1.,
+           'TaggedWSLinePostscale': 1.,
+           'TaggedSCSLinePrescale': 1.,
+           'TaggedSCSLinePostscale': 1.
+           },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
     }
@@ -494,53 +502,51 @@ XiccMicro = {
     'STREAMS' : [ 'Charm' ] 
     }
 
-
-## Micro-DST, Benoit Vaud
-## Modified from Strippinb13b
-## Test:  Yes
-DstarD02KKpipi = {
+## Ibid
+## New in Stripping15
+DstarPromptWithD02HHHH = {
     'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
     'CONFIG'      : {
-    'CombDelmLower'     :   -8.25 * MeV
-    ,'CombDelmUpper'    :   16.5  * MeV
-    ,'DelmLower'        :   -7.5  * MeV
-    ,'DelmUpper'        :   12.   * MeV
-    ,'CombD0MassWin'    :   82.5  * MeV
-    ,'D0MassWin'        :   65.   * MeV
-    ,'DstarDOCA'        :    0.2  * mm
-    ,'D0MaxDOCA'        :    0.12 * mm
-    ,'D0DauPt'          :  300.   * MeV
-    ,'D0DauP'           :    3.   * GeV
-    ,'D0Pt'             :    2.5  * GeV
-    ,'DstarPt'          :    2.5  * GeV
-    ,'SlowPionPt'       :  200.   * MeV
-    ,'DstarVtxChi2DOF'  :   10.
-    ,'D0VtxChi2DOF'     :   10.
-    ,'D0DauMaxIPChi2'   :   20.
-    ,'D0DauIPChi2'      :    0.5
-    ,'D0FDChi2'         :   36.
-    ,'D0IPChi2'         :   30.
-    ,'D0DIRA'           :    0.9998
-    ,'TrackChi2DOF'     :    5.0
+    'CombDelmLower'     : -8.*MeV
+    ,'CombDelmUpper'    : 14*MeV
+    ,'DelmLower'        : -7.5*MeV
+    ,'DelmUpper'        : 13*MeV
+    ,'CombD0MassWin'    : 68*MeV
+    ,'D0MassWin'        : 65*MeV
+    ,'DstarDOCA'        : 0.22*mm
+    ,'D0MaxDOCA'        : 0.12*mm
+    ,'D0DauPt'          : 300*MeV
+    ,'D0DauP'           : 3*GeV
+    ,'D0Pt'             : 3*GeV
+    ,'DstarPt'          : 3*GeV
+    ,'SlowPionPt'       : 70*MeV
+    ,'DstarVtxChi2DOF'  : 20
+    ,'D0VtxChi2DOF'     : 10
+    ,'D0DauMaxIPChi2'   : 30
+    ,'D0DauIPChi2'      : 0.8
+    ,'D0FDChi2'         : 48
+    ,'D0IPChi2'         : 30
+    ,'D0DIRA'           : 0.9998
+    ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : True
-    ,'KaonPIDK'         :   -3.0
+    ,'KaonPIDK'         : -2
     ,'ApplyPionPIDK'    : True
-    ,'PionPIDK'         :    3.0         # not applied to the slow pion
-    ,'CheckPV'          : True          # reject events with no PVs
-    ,'ApplyGECs'        : True          # set to False to apply no GECs
-    ,'MaxLongTracks'    :  150
+    ,'PionPIDK'         : 3 # not applied to the slow pion
+    ,'CheckPV'          : True # reject events with no PVs
+    ,'ApplyGECs'        : True # set to False to apply no GECs
+    ,'MaxLongTracks'    : 250
     ,'MaxVeloTracks'    : None
     ,'MaxSpdDigits'     : None
     ,'MaxITClusters'    : None
-    ,'Prescale'         :    1.0
-    ,'Postscale'        :    1.0
+    ,'Prescale'         : 1
+    ,'Postscale'        : 1
     },
     'WGs' : ['Charm'],
     'STREAMS' : [ 'Charm' ]
     }
 
-## Ibid
-## New in Stripping15
+
+
 DstarD02KKpipiNoPID = {
     'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
     'CONFIG'      : {
@@ -589,39 +595,39 @@ DstarD02KKpipiNoPID = {
 DstarPromptWithD02HHHHNoPID = {
     'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
     'CONFIG'      : {
-    'CombDelmLower'     :   -8.25   * MeV
-    ,'CombDelmUpper'    :   16.5    * MeV
-    ,'DelmLower'        :   -7.5    * MeV
-    ,'DelmUpper'        :   15      * MeV
-    ,'CombD0MassWin'    :   82.5    * MeV
-    ,'D0MassWin'        :   75      * MeV
-    ,'DstarDOCA'        :    0.45   * mm
-    ,'D0MaxDOCA'        :    0.5    * mm
-    ,'D0DauPt'          :  300      * MeV
-    ,'D0DauP'           :    3      * GeV
-    ,'D0Pt'             :    3      * GeV
-    ,'DstarPt'          :    3      * GeV
-    ,'SlowPionPt'       :   70      * MeV
-    ,'DstarVtxChi2DOF'  :   20
-    ,'D0VtxChi2DOF'     :   10
-    ,'D0DauMaxIPChi2'   :   30
-    ,'D0DauIPChi2'      :    1.7
-    ,'D0FDChi2'         :   48
-    ,'D0IPChi2'         :   30
-    ,'D0DIRA'           :    0.9998
-    ,'TrackChi2DOF'     :    5
+    'CombDelmLower'     : -8*MeV
+    ,'CombDelmUpper'    : 5.5*MeV
+    ,'DelmLower'        : -7.5*MeV
+    ,'DelmUpper'        : 5*MeV
+    ,'CombD0MassWin'    : 42*MeV
+    ,'D0MassWin'        : 40*MeV
+    ,'DstarDOCA'        : 0.22*mm
+    ,'D0MaxDOCA'        : 0.12*mm
+    ,'D0DauPt'          : 300*MeV
+    ,'D0DauP'           : 3*GeV
+    ,'D0Pt'             : 3*GeV
+    ,'DstarPt'          : 3*GeV
+    ,'SlowPionPt'       : 70*MeV
+    ,'DstarVtxChi2DOF'  : 20
+    ,'D0VtxChi2DOF'     : 10
+    ,'D0DauMaxIPChi2'   : 30
+    ,'D0DauIPChi2'      : 0.8
+    ,'D0FDChi2'         : 48
+    ,'D0IPChi2'         : 30
+    ,'D0DIRA'           : 0.9998
+    ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : False 
     ,'KaonPIDK'         : -100
     ,'ApplyPionPIDK'    : False 
-    ,'PionPIDK'         :  100      # not applied to the slow pion
-    ,'CheckPV'          : True      # reject events with no PVs
-    ,'ApplyGECs'        : True      # set to False to apply no GECs
-    ,'MaxLongTracks'    :  250
+    ,'PionPIDK'         : 100 # not applied to the slow pion
+    ,'CheckPV'          : True # reject events with no PVs
+    ,'ApplyGECs'        : True # set to False to apply no GECs
+    ,'MaxLongTracks'    : 250
     ,'MaxVeloTracks'    : None
     ,'MaxSpdDigits'     : None
     ,'MaxITClusters'    : None
-    ,'Prescale'         :    0.10
-    ,'Postscale'        :    1
+    ,'Prescale'         : 0.10
+    ,'Postscale'        : 1
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
