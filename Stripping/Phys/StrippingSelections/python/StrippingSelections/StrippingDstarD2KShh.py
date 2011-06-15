@@ -231,7 +231,9 @@ def makeD2KShh(name, inputDecayDescriptors, inputKs, inputDaughters, preFitMassC
     The same routine works for all final states and for KS via long/downstream tracks.
     """
 
-    _combCuts = "(APT > %(preFitDCutPT)s * MeV) & (APT > %(preFitDCutPT)s * MeV)" % locals()
+    _combCutsPT = "(APT > %(preFitDCutPT)s * MeV) & (APT > %(preFitDCutPT)s * MeV)" % locals()
+    _combCutsMass = "(ADAMASS('D0') < %(preFitMassCut)s * MeV)" % locals()
+    _combCuts = '( ' + _combCutsPT + ' & ' + _combCutsMass + ' )'
     _motherCutsBase = '((BPVVDZ < 7000.0*mm) & (BPVDIRA > %(DCutDIRA)s ))' % locals()
     _motherCutsVtx  = '(VFASPF(VCHI2) < %(DCutVtxChi2)s )' % locals()
     _motherCutsMass = "(ADMASS('D0') < %(postFitMassCut)s * MeV)" % locals()
