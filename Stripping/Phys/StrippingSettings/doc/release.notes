@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-15 - Jibo He
+ - LineConfigDictionaries_PSWG.py
+   . Updated DiMuon
+
 ! 2011-Jun-14 - Patrick Spradlin
  - StrippingDev/LineConfigDictionaries_Charm.py
    Updated configurations of D2hh and Xicc.

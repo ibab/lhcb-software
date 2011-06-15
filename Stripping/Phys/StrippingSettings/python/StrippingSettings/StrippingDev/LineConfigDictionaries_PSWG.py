@@ -476,12 +476,12 @@ FullDSTDiMuon = {
         'Jpsi2MuMu_checkPV'                        : False    ,
         
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
-        'Jpsi2MuMu_MuonP'                          : -8000.   ,  # MeV, no cut now
+        'Jpsi2MuMu_MuonP'                          :  8000.   ,  # MeV, no cut now
         'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
         'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
         'Jpsi2MuMu_MaxMass'                        :  3170.   ,  # MeV
         'Jpsi2MuMu_VCHI2PDOF'                      :    20.   ,
-        'Jpsi2MuMu_PT'                             :  1500.   ,  # MeV
+        'Jpsi2MuMu_PT'                             :  3000.   ,  # MeV
 
         # Psi2MuMu line
         'Psi2MuMu_Prescale'                        :     1.   ,
@@ -516,8 +516,8 @@ FullDSTDiMuon = {
         'Jpsi2MuMuDetached_MuonPT'                         :   500.   ,  # MeV
         'Jpsi2MuMuDetached_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMuDetached_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMuDetached_MinMass'                        :  2976.916,  # MeV
-        'Jpsi2MuMuDetached_MaxMass'                        :  3216.916,  # MeV
+        'Jpsi2MuMuDetached_MinMass'                        :  2996.916,  # MeV
+        'Jpsi2MuMuDetached_MaxMass'                        :  3196.916,  # MeV
         'Jpsi2MuMuDetached_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
         'Jpsi2MuMuDetached_DLS'                            :     3. 
