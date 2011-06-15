@@ -327,7 +327,6 @@ def makeD2hhAsymm(name,
                 "& (AP > %(D0P)s* MeV)" % locals()['config']
     _combCutsPIDK = CombPIDK_string % locals()['config']
     _combCuts = _combCuts1 + _combCutsPIDK + _massLow + _massHigh
-    print name, _combCuts
 
     _motherCuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
                   "& (BPVVDCHI2 > %(D0FDChi2)s)" \
