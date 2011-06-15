@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r2 2011-06-15 =========================
 ! 2011-05-24 - Chris Jones
  - Small changes to the track selector cuts
   + Synchronises the cuts between various places.
