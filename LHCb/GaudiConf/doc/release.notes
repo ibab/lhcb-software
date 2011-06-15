@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!========================= GaudiConf v14r0 2011-06-14 =========================
+!========================= GaudiConf v14r0 2011-06-15 =========================
+! 2011-06-15 - Marco Cattaneo
+ - Add slots OutputName, Persistency, WriteFSR to DigiConf, to use with IOHelper
+
 ! 2011-06-14 - Rob Lambert
  - Support MDFWriter in IOHelper.outputAlgs
  - Add IOExtension class, holding useful functions when the file type

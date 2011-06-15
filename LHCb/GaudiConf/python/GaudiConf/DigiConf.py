@@ -26,6 +26,9 @@ class DigiConf(LHCbConfigurableUser):
        , "PackSequencer"  : None
        , "Detectors"      : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
        , "DataType"       : ""
+       , "OutputName"     : ""
+       , "Persistency"    : None
+       , "WriteFSR"       : False
          }
 
     _propertyDocDct = { 
@@ -39,6 +42,9 @@ class DigiConf(LHCbConfigurableUser):
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        ,'Detectors'     : """ Active subdetectors """
        ,'DataType'      : """ Flag for backward compatibility with old data """
+       ,'OutputName'    : """ Name of the output file """
+       ,'Persistency'   : """ Overwrite the default persistency with something else. """
+       ,'WriteFSR'      : """ Flags whether to write out an FSR """
        }
 
     __used_configurables__ = [ SimConf ]
@@ -62,10 +68,24 @@ class DigiConf(LHCbConfigurableUser):
             if not hasattr( self, "PackSequencer" ):
                 raise TypeError( "Packing requested but PackSequencer not defined" )
 
-        # get the write instance
+        from GaudiConf.IOHelper import IOHelper
         writer = OutputStream( self.getProp("Writer") )
-        ApplicationMgr().OutStream.insert( 0, writer )
         writer.Preload = False
+
+        # Set a default file name if not already set
+        if not writer.isPropertySet("Output") :
+            outputFile = self.getProp("OutputName")
+            outputFile = "PFN:"+outputFile + '.digi'
+        else:
+            outputFile = IOHelper().undressFile( writer.getProp("Output") )
+
+        # Add to the ApplicationMgr with correct output persistency
+        persistency=None
+        if hasattr( self, "Persistency" ):
+            persistency=self.getProp("Persistency")
+        algs = IOHelper(None,persistency).outputAlgs( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
+        for alg in algs:
+            ApplicationMgr().OutStream.insert( 0, alg )
 
         self._defineOutputData( dType, writer )
         
