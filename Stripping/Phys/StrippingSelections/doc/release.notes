@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-16 - Anton Poluektov 
+ - Added HLT filter to StrippingB2DX.py
+
 ! 2011-06-15 S. Blusk
  - Fixed silly error p --> p+
 

@@ -233,7 +233,7 @@ config = {                                  # Default configuration dictionary
 	      "LTMin"              : 0.2,           # Minimum B lifetime
 	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
 	      "CombDMass"          : 500,           # Mass window for a combination (MeV)
-	      "APtMin"		   : 0.,            # Minumum Pt of a combination (MeV)
+	      "APtMin"		   : 1500.,            # Minumum Pt of a combination (MeV)
 	    }, 
 	    "BWithD2KPiPi0Cuts" : {                 # B->DX cuts with D->KPiPi0
     	      "BachelorChi2Max"    : 4.,            # maximum bachelor track chi2
@@ -245,7 +245,7 @@ config = {                                  # Default configuration dictionary
 	      "LTMin"              : 0.2,           # Minimum B lifetime
 	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
 	      "CombDMass"          : 500,           # Mass window for a combination (MeV)
-	      "APtMin"		   : 0.,            # Minumum Pt of a combination (MeV)
+	      "APtMin"		   : 1500.,            # Minumum Pt of a combination (MeV)
 	    }, 
 	    "B2DV0Cuts" : {                         # B->D(hhh)V0 (V0=Kstar,rho,phi) cuts
 	      "VtxChi2Max"         : 9.,            # B vertex Chi2
@@ -275,7 +275,7 @@ config = {                                  # Default configuration dictionary
 	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
 	      "CombMassMin"        : 4800,          # Lower mass of a combination (MeV)
 	      "CombMassMax"        : 5900,          # Upper mass of a combination (MeV) 
-	      "APtMin"		   : 0.,            # Minumum Pt of a combination (MeV)
+	      "APtMin"		   : 1500.,            # Minumum Pt of a combination (MeV)
 	    }, 
 	    "LambdaB2DphCuts" : {                   # LambdaB->D(hh)ppi and LambdaB->D(hh)pK cuts 
 	      "VtxChi2Max"         : 9.,            # LambdaB vertex Chi2
@@ -317,6 +317,8 @@ config = {                                  # Default configuration dictionary
 	      "Unbiased" : 0.1, 
 	    }, 
 	    "CheckPV"	       : True,              # PV requirement
+	    "HLT"              : "HLT_PASS_RE('Hlt2Topo.*Decision')", 
+#	    "HLT"              : None, 
 	    "MaxTracksInEvent" : {                  # GECs for individual lines (max. number of long tracks)
 	      "D2hh"     : 500, 
 	      "D2hhWS"   : 500, 
@@ -361,6 +363,7 @@ class B2DXConf(LineBuilder) :
                               "UnbiasedBCuts",
                               "Prescales",
                               "CheckPV",
+                              "HLT",
                               "MaxTracksInEvent", 
                               "MergedLines")
 
@@ -493,7 +496,8 @@ class B2DXConf(LineBuilder) :
         	line = StrippingLine(BSidebandSel.name()+"Line", prescale = config["Prescales"][name] ,
                                  selection = BSidebandSel,
                                  checkPV = config["CheckPV"],
-                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name] )
+                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                 HLT = config["HLT"] )
         	self.registerLine( line )
 
     	    else : 
@@ -506,7 +510,8 @@ class B2DXConf(LineBuilder) :
         	    line = StrippingLine(sel.name()+"Line", prescale = config["Prescales"][name] ,
                                  selection = BSidebandSel,
                                  checkPV = config["CheckPV"],
-                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name] )
+                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                 HLT = config["HLT"] )
         	    self.registerLine( line )
 
         selection1 = makeLambdaB2LambdaCK(moduleName, LambdaC, config["LambdaBCuts"])
@@ -522,7 +527,8 @@ class B2DXConf(LineBuilder) :
         line = StrippingLine(LambdaBSidebandSel.name()+"Line", prescale = config["Prescales"]["Lambda"] ,
                              selection = LambdaBSidebandSel,
                              checkPV = config["CheckPV"],
-                             FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"] )
+                             FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"], 
+                             HLT = config["HLT"] )
 
         self.registerLine( line )
 
