@@ -5,6 +5,7 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r9 2011-06-16 =========================
 ! 2011-06-02 - Vanya Belyaev
  - Filters: 
     add possibility to filter based on MC and Gen-information 
