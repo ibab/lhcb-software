@@ -3,8 +3,20 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-! 2011-05-18 - Marco Cattaneo
- - Removed Phys/DaVinciMaps, moved to LHCb as Event/MicroDst
+
+</PRE><H1><A NAME=v12r5>2011-06-16 Phys v12r5 </A></H1><PRE>
+- Based on LHCb v32r4. Stripping13/14/15 compatible patches.
+
+This is the first Phys Version to support the ROOT persistency framework.
+
+Version for 2011 processing post-june-technical stop.
+
+highlights:
+  . Campaign to eliminate icc warnings from LoKi
+  . removed Phys/DaVinciMaps, moved to LHCb as Event/MicroDst
+
+Other minor changes, for details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Phys&version=v12r5
 
 </PRE><H1><A NAME=v12r4p1>2011-05-13 Phys v12r4p1 </A></H1><PRE>
 - Based on LHCb v32r3. Stripping13 compatible patches.
