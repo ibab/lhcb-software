@@ -1,4 +1,4 @@
-// $Id: Lomont.h,v 1.2 2009-07-06 08:57:16 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_LOMONT_H 
 #define LHCBMATH_LOMONT_H 1

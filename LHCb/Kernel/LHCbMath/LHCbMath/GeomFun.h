@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.8 2008-03-10 11:39:52 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_GEOMFUN_H
 #define LHCBMATH_GEOMFUN_H 1

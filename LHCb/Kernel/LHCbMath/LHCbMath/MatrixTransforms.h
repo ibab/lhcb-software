@@ -1,4 +1,4 @@
-// $Id: MatrixTransforms.h,v 1.7 2009-09-12 19:29:26 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_MATRIXTRANSFORMS_H 
 #define LHCBMATH_MATRIXTRANSFORMS_H 1

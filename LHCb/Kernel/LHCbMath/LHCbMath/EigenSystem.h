@@ -1,4 +1,4 @@
-// $Id: EigenSystem.h,v 1.4 2010-02-09 11:04:18 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_EIGENSYSTEM_H 
 #define LHCBMATH_EIGENSYSTEM_H 1

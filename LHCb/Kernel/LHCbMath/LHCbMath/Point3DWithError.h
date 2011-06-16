@@ -1,4 +1,4 @@
-// $Id: Point3DWithError.h,v 1.6 2010-05-26 13:19:16 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_POINT3DWITHERROR_H 
 #define LHCBMATH_POINT3DWITHERROR_H 1

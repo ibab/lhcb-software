@@ -26,7 +26,16 @@
   <class name    = "Gaudi::Math::ParticleParams"     />
   <class name    = "Gaudi::Math::FitMass"            />
   
-  <class name    = "Gaudi::Math::EigenSystems"       />
+  <class name    = "Gaudi::Math::EigenSystems"            />
+  <class name    = "Gaudi::Math::Chebyshev"               />
+  <class name    = "Gaudi::Math::Legendre"                />  
+  <class name    = "Gaudi::Math::Hermite"                 />  
+  <class name    = "Gaudi::Math::Bukin"                   />
+  <class name    = "Gaudi::Math::Novosibirsk"             />
+  <class name    = "Gaudi::Math::CrystalBall"             />
+  <class name    = "Gaudi::Math::CrystalBallDoubleSided"  />
+  <class name    = "Gaudi::Math::BifurcatedGauss"         />
+  <class name    = "Gaudi::Math::GramCharlierA"           />
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
@@ -56,6 +65,10 @@
     <class name = "Gaudi::Math::SVectorWithError&lt;7,double&gt;::Covariance"  />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
+    
+    <class name = "Gaudi::Math::Bukin">  
+      <field name = "m_workspace"/>      
+    </class>
   </exclusion> 
   
 

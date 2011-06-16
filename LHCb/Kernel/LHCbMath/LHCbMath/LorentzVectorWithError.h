@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.h,v 1.6 2010-06-08 17:51:53 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_LORENTZVECTORWITHERROR_H 
 #define LHCBMATH_LORENTZVECTORWITHERROR_H 1

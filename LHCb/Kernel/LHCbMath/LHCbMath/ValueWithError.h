@@ -1,4 +1,4 @@
-// $Id: ValueWithError.h,v 1.5 2010-03-18 18:26:00 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_ERRORS_H 
 #define LHCBMATH_ERRORS_H 1

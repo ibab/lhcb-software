@@ -1,4 +1,4 @@
-// $Id: MatrixManip.h,v 1.2 2007-07-10 07:25:53 cattanem Exp $
+// $Id$
 #ifndef LHCBMATH_MATRIXMANIP_H 
 #define LHCBMATH_MATRIXMANIP_H 1
 

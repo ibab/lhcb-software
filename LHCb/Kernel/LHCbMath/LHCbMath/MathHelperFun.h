@@ -1,4 +1,4 @@
-// $Id: MathHelperFun.h,v 1.1 2006-05-31 13:38:31 jpalac Exp $
+// $Id$
 #ifndef KERNEL_MATHHELPERFUN_H 
 #define KERNEL_MATHHELPERFUN_H 1
 

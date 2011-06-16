@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.6 2010-06-16 10:58:56 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_KINEMATICS_H 
 #define LHCBMATH_KINEMATICS_H 1

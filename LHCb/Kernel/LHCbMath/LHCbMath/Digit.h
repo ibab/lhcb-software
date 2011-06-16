@@ -1,4 +1,4 @@
-// $Id: Digit.h,v 1.6 2009-07-06 08:57:16 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_DIGIT_H 
 #define LHCBMATH_DIGIT_H 1

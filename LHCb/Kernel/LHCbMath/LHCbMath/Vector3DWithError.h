@@ -1,4 +1,4 @@
-// $Id: Vector3DWithError.h,v 1.4 2010-05-26 13:19:16 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_VECTOR3DWITHERROR_H 
 #define LHCBMATH_VECTOR3DWITHERROR_H 1

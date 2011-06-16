@@ -1,4 +1,4 @@
-// $Id: Line.h,v 1.9 2009-07-09 08:02:11 cattanem Exp $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_LINE_H 
 #define LHCBMATH_LINE_H 1

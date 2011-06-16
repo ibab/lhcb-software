@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-06-16 - Vanya Belyaev
+ - add few useful math functions...
+ - cmt/requirements 
+   version increment to v3r26
+
 !========================= LHCbMath v3r25 2011-04-04 =========================
 ! 2011-03-29 - Vanya Belyaev
  - Kinematics.h

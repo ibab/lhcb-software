@@ -1,6 +1,6 @@
-// $Id: EigenSystem.cpp,v 1.1 2006-05-31 14:49:54 jpalac Exp $
+// $Id$
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $ 
 // ============================================================================

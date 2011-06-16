@@ -1,4 +1,4 @@
-// $Id: LineTypes.h,v 1.5 2008-06-24 12:24:27 jpalac Exp $
+// $Id$
 #ifndef LHCBMATH_LINETYPES_H 
 #define LHCBMATH_LINETYPES_H 1
 
