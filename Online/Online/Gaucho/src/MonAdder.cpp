@@ -305,6 +305,8 @@ void MonAdder::stop()
 void MonAdder::TimeoutHandler()
 {
   INServIter i;
+  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
+  DimLock l;
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {
     INServiceDescr *d = i->second;
@@ -314,12 +316,10 @@ void MonAdder::TimeoutHandler()
           d->m_Info->m_TargetService.c_str(), m_reference,d->last_update);
       if (d->m_buffer != 0)
       {
-        DimLock l;
         add(d->m_buffer,d->m_bufsiz,d->m_Info);
       }
       else
       {
-        DimLock l;
         m_received++;
       }
     }

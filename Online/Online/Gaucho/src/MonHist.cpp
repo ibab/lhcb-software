@@ -92,6 +92,8 @@ MonHist::MonHist(IMessageSvc* msgs, const std::string& source, const AIDA::IBase
 }
 void MonHist::makeCounters()
 {
+  Bool_t dirstat = TH1::AddDirectoryStatus();
+  TH1::AddDirectory(kFALSE);
   TProfile *tp;
 //  MsgStream msg(m_msgsvc,"MonitorSvc");
   if (m_cntrmgr != 0)
@@ -109,6 +111,7 @@ void MonHist::makeCounters()
     tp = (TProfile*)m_rootobj;
     if (tp == 0)
     {
+      TH1::AddDirectory(dirstat);
       return;
     }
     tp->Reset();
@@ -195,6 +198,7 @@ void MonHist::makeCounters()
      }
      this->setup(m_msgsvc);
    }
+  TH1::AddDirectory(dirstat);
 }
 void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IBaseHistogram *aidahist)
 {
@@ -417,6 +421,8 @@ void MonHist::setup(IMessageSvc* msgs)
 
 MonHist::~MonHist()
 {
+  Bool_t dirstat = TH1::AddDirectoryStatus();
+  TH1::AddDirectory(kFALSE);
   if (m_Xlabels != 0)
   {
     free(m_Xlabels);
@@ -437,6 +443,7 @@ MonHist::~MonHist()
     delete m_rootdeser;
     m_rootdeser = 0;
   }
+  TH1::AddDirectory(dirstat);
 }
 
 int MonHist::GetBinLabels(TAxis *ax, char ***labs)
@@ -758,6 +765,8 @@ void MonHist::List()
 
 void *MonHist::de_serialize(void *ptr, char *nam)
 {
+  Bool_t dirstat = TH1::AddDirectoryStatus();
+  TH1::AddDirectory(kFALSE);
   DimBuffBase *p = (DimBuffBase*)ptr;
   double *mhentries,*mhsumw2;
   int mblocksize;
@@ -802,6 +811,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         char *xl = (char*)AddPtr(b,b->xlaboff);
         SetBinLabels(&h->fXaxis,xl);
       }
+      TH1::AddDirectory(dirstat);
       return h;
       break;
     }
@@ -844,6 +854,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         char *xl = (char*)AddPtr(b,b->ylaboff);
         SetBinLabels(&h->fYaxis,xl);
       }
+      TH1::AddDirectory(dirstat);
       return h;
       break;
     }
@@ -905,6 +916,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
 //        a->Dump((char*)"fBinSumw2");
 //      }
 
+      TH1::AddDirectory(dirstat);
       return h;
       break;
     }
@@ -928,9 +940,11 @@ void *MonHist::de_serialize(void *ptr, char *nam)
       tit = (char*)AddPtr(b,b->titoff);
 //      cpyName(nam);
 //      cpytitle(tit);
+      TH1::AddDirectory(dirstat);
       return s;
       break;
     }
   }
+  TH1::AddDirectory(dirstat);
   return 0;
 }
