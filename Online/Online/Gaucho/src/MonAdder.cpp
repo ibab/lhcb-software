@@ -72,7 +72,7 @@ void MonAdder::Configure()
     toLowerCase(nodename);
     m_name= "MON_" + m_MyName;
   }
-  m_timer = new AddTimer(this);
+  m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
   m_outsvcname = m_name+m_serviceName;
