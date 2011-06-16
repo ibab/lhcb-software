@@ -72,6 +72,7 @@ class Brunel(LHCbConfigurableUser):
        ,"Context"         : "Offline"
        ,"RawBanksToKill"  : None
        ,"CaloPhotonChecker" : False
+       ,"VetoHltErrorEvents" : True
         }
 
 
@@ -107,6 +108,7 @@ class Brunel(LHCbConfigurableUser):
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        ,'CaloPhotonChecker':""" Temporary workaround to bug #73392 """
+       ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
        }
 
     KnownInputTypes  = [ "MDF",  "DST", "RDST", "SDST", "XDST", "DIGI" ]
@@ -152,8 +154,11 @@ class Brunel(LHCbConfigurableUser):
 
         # Flag to handle or not LumiEvents
         handleLumi = inputType in ["MDF"] and not withMC
+
+        # veto Hlt Error Events
+        vetoHltErrorEvents = self.getProp("VetoHltErrorEvents")
         
-        self.configureSequences( withMC, handleLumi )
+        self.configureSequences( withMC, handleLumi, vetoHltErrorEvents )
 
         self.configureInit( inputType )
         
@@ -215,7 +220,7 @@ class Brunel(LHCbConfigurableUser):
         AuditorSvc().Auditors += [ 'TimingAuditor' ] 
         SequencerTimerTool().OutputLevel = 4
         
-    def configureSequences(self, withMC, handleLumi):
+    def configureSequences(self, withMC, handleLumi, vetoHltErrorEvents):
         brunelSeq = GaudiSequencer("BrunelSequencer")
         brunelSeq.Context = self.getProp("Context")
         ApplicationMgr().TopAlg += [ brunelSeq ]
@@ -248,6 +253,27 @@ class Brunel(LHCbConfigurableUser):
 
             brunelSeq.Members += [ lumiSeq, notPhysSeq ]
 
+        # Do not process events flagged as error in Hlt, but still write procstatus
+        if vetoHltErrorEvents:
+            """
+            By Patrick Koppenburg, 16/6/2011
+            """
+            from Configurables import LoKi__HDRFilter, HltDecReportsDecoder, AddToProcStatus
+            # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
+            filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
+            hltErrorFilter = LoKi__HDRFilter('HltErrorFilter', Code = filterCode )   # the filter
+            # Make a sequence that selects these events
+            hltfilterSeq = GaudiSequencer( "HltfilterSeq" )
+            if handleLumi: hltfilterSeq.Members = [ physFilter ]         # protect against lumi (that doesn't have decreports)
+            hltfilterSeq.Members += [HltDecReportsDecoder(),             # decode DecReports
+                                     hltErrorFilter  ]                   # apply filter
+            # Sequence to be executed if hltErrorFilter is failing to set ProcStatus
+            hlterrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
+            addToProc = AddToProcStatus("HltErrorProc",Reason="HltError",Subsystem="Hlt")   # write a procstatus
+            hlterrorSeq.Members += [ hltfilterSeq, addToProc ]           # only run if hltfilterSeq fails
+            brunelSeq.Members += [ hlterrorSeq ]                         # add this sequece to Brunel _before_ physseq
+            physicsSeq.Members += [ hltfilterSeq ]                       # take good events in physics seq          
+
         # Convert Calo 'packed' banks to 'short' banks if needed
         physicsSeq.Members += ["GaudiSequencer/CaloBanksHandler"]
 
@@ -269,7 +295,8 @@ class Brunel(LHCbConfigurableUser):
         physicsSeq.Members += self.getProp("MainSequence")
         from Configurables import ProcessPhase
         outputPhase = ProcessPhase("Output")
-        brunelSeq.Members  += [ physicsSeq, outputPhase ]
+        brunelSeq.Members  += [ physicsSeq ]
+        brunelSeq.Members  += [ outputPhase ]
 
     def configureInit(self, inputType):
         # Init sequence

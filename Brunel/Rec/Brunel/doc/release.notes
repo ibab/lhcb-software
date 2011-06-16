@@ -6,6 +6,9 @@ Purpose: LHCb reconstruction program
 - Changes to configurable:
   . Adapt to use of IOHelper in LHCbApp and DstConf
   . Add "Persistency" slot and propagate to DstConf
+  . Add "VetoHltErrorEvents" slot (default: True) to Brunel Configurable
+    . This will skip events that are flagged as Hlt{1,2}ErrorEvent and 
+      write a line in ProcStatus. See Patrick's talks at 04 and 20/06 PPMTS
 
 - Changes to QMTests:
 	. Add test of Brunel().WriteFSR=False to brunel.brunel-mc09-notruth test
