@@ -177,6 +177,7 @@ namespace LHCb  {
 #include <fcntl.h>
 #ifdef _WIN32
   #include <io.h>
+  #include <sys/stat.h>
   typedef int pid_t;
   static inline  int   setenv(const char*, const char*, int) { return -1; }
   static inline  pid_t waitpid(int, int*, int) { return -1; }
