@@ -20,8 +20,10 @@
 #undef _POSIX_C_SOURCE
 #endif
 #include "Python.h"
+#ifndef _WIN32
 extern "C" void _PyGILState_Init(PyInterpreterState *, PyThreadState *);
 extern "C" void _PyGILState_Fini();
+#endif
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
 
@@ -68,12 +70,13 @@ void GaudiTask::PythonInterpreter::reinitializeGIL() {
   if ( ::Py_IsInitialized() ) {
     PyThreadState *tstate = 0;
     PyInterpreterState *interp = 0;
-
+#ifndef _WIN32
     ::_PyGILState_Fini();
     ::PyOS_AfterFork();
     tstate = PyThreadState_GET();
     interp = tstate->interp;
     ::_PyGILState_Init(interp, tstate);
+#endif
   }
 }
 
