@@ -59,7 +59,7 @@ MicroDSTNeuroBayesMuMu = {
               , 'PrescaleJPsi'      : 0.
               , 'PostscaleJPsi'     : 1.0
               },
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS' : [ 'Leptonic' ],
     'WGs'    : [ 'PSWG' ]
     }
 

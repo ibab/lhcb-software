@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-06-16 - Jibo He
+ - Move NeuroBayesMuMuMuMuNBLine to Leptonic MicroDST stream
+
+! 2011-06-16 - Jibo He
  - dbase/strippingdev updated
 
 ! 2011-Jun-15 - Patrick Spradlin
