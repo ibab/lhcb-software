@@ -401,7 +401,7 @@ DstarVeryLooseWithD02Kpi = {
                 'Dstar_VCHI2' : 25, # 20 # 15
                 'DstarMassW'  : 80 # 50 # 80 MeV
                 },
-    'STREAMS' : ['CharmControl'],
+    'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -424,7 +424,7 @@ DForBSemi = {
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
     ,"DDocaChi2Max"  : 20   #adimensiional 
      },
-    'STREAMS' : ['CharmControl'],
+    'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
 }
 
@@ -451,6 +451,6 @@ D0ForBXX = {
     ,"D0VCHI2DOF"    : 6.0   # adimensiional
     ,"DDocaChi2Max" : 20   #adimensiional
      },
-    'STREAMS' : ['CharmControl'],
+    'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
     }

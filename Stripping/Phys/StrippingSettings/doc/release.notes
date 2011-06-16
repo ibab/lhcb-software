@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-16 - Thomas Blake
+ - Merged CharmControl and CharmCompleteEvent
+
 ! 2011-06-16 - Anton Poluektov 
  - Add HLT filter to GWT B2DX config, tighten Pt(B) cut to 1500 MeV. 
 

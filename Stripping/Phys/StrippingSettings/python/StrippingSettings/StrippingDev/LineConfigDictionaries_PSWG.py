@@ -1064,7 +1064,7 @@ Ccbar2Ppbar = {
                     'VtxCHI2'          :     9.  , # dimensionless
                     'CCPT'             :  5000.    
                    },
-    'STREAMS' : [ 'CharmControl' ] ,
+    'STREAMS' : [ 'CharmCompleteEvent' ] ,
     'WGs'    : [ 'PSWG' ]
 }
 
@@ -1086,7 +1086,7 @@ Ccbar2PpbarExclusive = {
                      'VtxCHI2'          :     9.  , # dimensionless
                      'CCPT'             :    -2.    
                      },
-    'STREAMS' : [ 'CharmControl' ] ,
+    'STREAMS' : [ 'CharmCompleteEvent' ] ,
     'WGs'    : [ 'PSWG' ]
     }
 
@@ -1099,7 +1099,7 @@ Ccbar2Baryons = {
     'MaxMass'          :  4000.  , # MeV, after Vtx fit
     'MinMass'          :  2800.    # MeV, after Vtx fit
     },
-    'STREAMS' : [ 'CharmControl' ],
+    'STREAMS' : [ 'CharmCompleteEvent' ],
     'WGs'    : ['PSWG']
     }
 
