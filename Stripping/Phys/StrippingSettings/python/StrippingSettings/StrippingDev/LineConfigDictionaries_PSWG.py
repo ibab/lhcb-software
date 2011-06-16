@@ -25,7 +25,7 @@ NeuroBayesMuMu = {
               , 'PostscaleMuMu'     : 1.0
               , 'PrescaleMuMuHigh'  : 1.0
               , 'PostscaleMuMuHigh' : 1.0
-              , 'PrescaleJPsi'      : 1.0
+              , 'PrescaleJPsi'      : 0.1
               , 'PostscaleJPsi'     : 1.0
               },
     'STREAMS' : [ 'Dimuon' ],

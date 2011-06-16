@@ -210,7 +210,7 @@ TrackEffDownMuon = {
                 ,       'DataType':             '2011'        
                 ,       'NominalLinePrescale':  1.
                 ,       'NominalLinePostscale': 1.
-                ,       'ValidationLinePrescale': 0.5
+                ,       'ValidationLinePrescale': 0.1
                 ,       'ValidationLinePostscale': 1.
                 ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
                 ,       'HLT1PassOnAll': True

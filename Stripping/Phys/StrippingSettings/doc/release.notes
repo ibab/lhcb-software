@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-16 - Jibo He
+ - Prescale TrackEffDownMuonValidationLine and NeuroBayesMuMuJPsiNBLine by a factor of 10
+ - dbase/strippingdev updated as well
+ 
 ! 2011-06-16 - Thomas Blake
  - Merged CharmControl and CharmCompleteEvent
 
