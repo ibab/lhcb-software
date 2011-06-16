@@ -13,7 +13,7 @@ library OnlineKernel       ../src/CPP/*.cpp     \
                            ../src/SCR/*.cpp     \
                            ../src/MBM/*.cpp
 ###include_path none
-macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
+macro_append  OnlineKernel_shlibflags ' -lpthread -lrt ' WIN32 ' '
 apply_pattern ld_library_path
 apply_pattern linker_library          library=OnlineKernel
 #
