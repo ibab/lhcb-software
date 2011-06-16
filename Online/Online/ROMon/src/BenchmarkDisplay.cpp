@@ -17,6 +17,7 @@
 #include "ROMon/BenchmarkDisplay.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
+#include "RTL/strdef.h"
 #include "SCR/scr.h"
 extern "C" {
 #include "dic.h"
@@ -92,7 +93,7 @@ void BenchmarkDisplay::update(const void* data) {
   const Nodeset& ns = *(const Nodeset*)data;
   if ( ns.type == Nodeset::TYPE ) {
     int line = 1;
-    if ( ::strncasecmp(ns.name,"hlt",3) != 0 ) {
+    if ( ::str_ncasecmp(ns.name,"hlt",3) != 0 ) {
       return;
     }
     else if ( 0 == ns.nodes.size() ) {
@@ -138,7 +139,7 @@ void BenchmarkDisplay::updateStats(const Nodeset& ns) {
       const char*    bnam    = (*ib).name;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
 	const char*         cnam   = (*ic).name;
-	if ( ::strncasecmp(cnam,nnam,nnam_len)==0 )  {
+	if ( ::str_ncasecmp(cnam,nnam,nnam_len)==0 )  {
 	  cnam += nnam_len+1;
 	}
 	if ( ::strstr(cnam,"GauchoJob") && ::strstr(bnam,"SEND") )  {
@@ -176,7 +177,7 @@ void BenchmarkDisplay::updateStats(const Nodeset& ns) {
 /// Update node display content
 int BenchmarkDisplay::updateNode(const Nodeset& ns) {
   int line = 1;
-  if ( ::strncasecmp(m_name.c_str(),ns.name,::strlen(ns.name))==0 )  {
+  if ( ::str_ncasecmp(m_name.c_str(),ns.name,::strlen(ns.name))==0 )  {
     SubfarmStats& sfstat = m_stat[ns.name];
     time_t t1 = ns.firstUpdate().first;
     char txt[255], text1[64];
@@ -206,7 +207,7 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
     for(SubfarmStats::const_iterator i=sfstat.begin();i!=sfstat.end();++i) {
       const string& nnam = (*i).first;
       const NodeStats& nstat = (*i).second;
-      if ( ::strcasecmp(nnam.c_str(),m_name.c_str())==0 ) {
+      if ( ::str_casecmp(nnam.c_str(),m_name.c_str())==0 ) {
 	NodeStats ns_rel, ns_tot;
 	NodeStats::const_iterator j;
 	for(j=nstat.begin(); j!=nstat.end();++j)   {
