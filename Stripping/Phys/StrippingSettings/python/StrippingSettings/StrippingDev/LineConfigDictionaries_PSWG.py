@@ -21,7 +21,7 @@ NeuroBayesMuMu = {
               , 'NBVersionJPsi'     : "TuneSep2010"
               , 'NBVersionMuMu'     : "TuneSep2010"
               , 'NBVersionMuMuHigh' : "TuneSep2010"
-              , 'PrescaleMuMu'      : 1.0
+              , 'PrescaleMuMu'      : 0.
               , 'PostscaleMuMu'     : 1.0
               , 'PrescaleMuMuHigh'  : 1.0
               , 'PostscaleMuMuHigh' : 1.0
@@ -31,6 +31,39 @@ NeuroBayesMuMu = {
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]
     }
+
+
+MicroDSTNeuroBayesMuMu = {
+    'BUILDERTYPE' : 'StrippingNeuroBayesMuMuConf',
+    'CONFIG' : {'trackChi2'           :    5.0
+              , 'MuMuMassMin'       :    0.0
+              , 'MuMuMassMax'       :   12.0
+              , 'MuMuMassHighMin'   :    8.5
+              , 'MuMuMassHighMax'   :  130.0
+              , 'JPsiMassMin'       :    3.04 # GeV
+              , 'JPsiMassMax'       :    3.14 # GeV
+              , 'vertexChi2'        :   25.0
+              , 'NBCutJPsi'         :    0.7
+              , 'NBCutMuMu'         :    0.95
+              , 'NBCutMuMuHigh'     :   -0.7
+              , 'ExpertiseJPsi'     : 'Muon/mumu_net_noip.nb'
+              , 'ExpertiseMuMu'     : 'Muon/mumu_net_full.nb'
+              , 'ExpertiseMuMuHigh' : 'Muon/mumuhighmass_full.nb'
+              , 'NBVersionJPsi'     : "TuneSep2010"
+              , 'NBVersionMuMu'     : "TuneSep2010"
+              , 'NBVersionMuMuHigh' : "TuneSep2010"
+              , 'PrescaleMuMu'      : 1.0
+              , 'PostscaleMuMu'     : 1.0
+              , 'PrescaleMuMuHigh'  : 0.
+              , 'PostscaleMuMuHigh' : 1.0
+              , 'PrescaleJPsi'      : 0.
+              , 'PostscaleJPsi'     : 1.0
+              },
+    'STREAMS' : [ 'Dimuon' ],
+    'WGs'    : [ 'PSWG' ]
+    }
+
+
 
 B2twobody = {
     'BUILDERTYPE' : 'B2nbodyConf',
@@ -531,8 +564,8 @@ FullDSTDiMuon = {
         'Jpsi2MuMuDetached_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMuDetached_MuonPIDmu'                      :    -5.   , 
         'Jpsi2MuMuDetached_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMuDetached_MinMass'                        :  2976.916,  # MeV
-        'Jpsi2MuMuDetached_MaxMass'                        :  3216.916,  # MeV
+        'Jpsi2MuMuDetached_MinMass'                        :  2996.916,  # MeV
+        'Jpsi2MuMuDetached_MaxMass'                        :  3196.916,  # MeV
         'Jpsi2MuMuDetached_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
         'Jpsi2MuMuDetached_DLS'                            :     3.   ,

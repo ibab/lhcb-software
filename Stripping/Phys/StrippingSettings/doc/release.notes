@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-16 - Jibo He
+ - dbase/strippingdev updated
+
 ! 2011-Jun-15 - Patrick Spradlin
  - StrippingDev/LineConfigDictionaries_Charm.py
    Removed duplicate DstarPromptWithD02HHHH and DstarD02KKpipiNoPID

@@ -167,7 +167,7 @@ Jpsi2eeForElectronID = {
     'eeMinMass'               : 2200.   ,  # MeV 
     'eeMaxMass'               : 4200.   ,  # MeV
     
-    'eeFDCHI2'                :  625.   ,
+    'eeFDCHI2'                :  900.   ,
     'eeVZ'                    : -1.0e+9    # mm
     },
     'STREAMS' : [ 'Calibration' ],
@@ -207,7 +207,7 @@ TrackEffDownMuon = {
                 ,       'MassPostComb':         200.    # MeV
                 ,       'Doca':                 5.      # mm
                 ,       'VertChi2':             25.     # adimensional
-                ,       'DataType':             '2010'        
+                ,       'DataType':             '2011'        
                 ,       'NominalLinePrescale':  1.
                 ,       'NominalLinePostscale': 1.
                 ,       'ValidationLinePrescale': 0.5
