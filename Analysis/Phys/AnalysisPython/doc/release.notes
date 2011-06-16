@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-06-16 - Vanya Belyaev
+ - add python module for python selector 
+ - add few useful decorators for plain ROOT classes 
+
 ! 2011-06-07 - Vanya Belyaev
 
  - add simple module with decorations form some ROOT classes 

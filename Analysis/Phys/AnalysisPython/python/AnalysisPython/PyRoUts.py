@@ -23,7 +23,13 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-06-07"
 # =============================================================================
 __all__     = (
+    #
     'rootID'         ,     ## construct the (global) unique ROOT identifier
+    'funcID'         ,     ## construct the (global) unique ROOT identifier
+    'funID'          ,     ## construct the (global) unique ROOT identifier
+    'hID'            ,     ## construct the (global) unique ROOT identifier
+    'histoID'        ,     ## construct the (global) unique ROOT identifier
+    #
     'VE'             ,     ## Gaudi::Math::ValueWithError
     'ValueWithError' ,     ## Gaudi::Math::ValueWithError
     'histoGuess'     ,     ## guess the simple histo parameters
@@ -40,23 +46,29 @@ ValueWithError = cpp.Gaudi.Math.ValueWithError
 
 # =============================================================================
 ## global identifier for ROOT objects 
-__root_ID = 1000
 def rootID ( prefix = 'o_') :
     """
     Construct the unique ROOT-id 
     """
     _fun = lambda i : prefix + '%d'% i
     
-    global __root_ID
+    _root_ID = 1000
     
-    _id = _fun ( __root_ID ) 
+    _id = _fun ( _root_ID ) 
     while ROOT.gROOT.FindObject ( _id ) :
-        __root_ID += 10 
-        _id = _fun ( __root_ID ) 
+        _root_ID += 10 
+        _id = _fun ( _root_ID ) 
 
     return _id                 ## RETURN
-        
-        
+# =============================================================================
+## global ROOT identified for function obejcts 
+def funcID  () : return rootID  ( 'f_' )
+## global ROOT identified for function obejcts 
+def funID   () : return funcID  ( )
+## global ROOT identified for histogram objects 
+def histoID () : return rootID  ( 'h_' )
+## global ROOT identified for histogram objects 
+def hID     () : return histoID ( )
 # =============================================================================
 # Decorate histogram axis and iterators 
 # =============================================================================
@@ -92,6 +104,47 @@ def _axis_iter_2_ ( h ) :
             
 ROOT.TAxis . __iter__ = _axis_iter_1_
 ROOT.TH1   . __iter__ = _axis_iter_2_
+
+# =============================================================================
+## get item for the histogram 
+def _histo_get_item_ ( self , ibin ) :
+    """
+    ``Get-item'' for the histogram :
+    
+    >>> histo = ...
+    >>> ve    = histo[ibin]
+    """
+    if not ibin in self : raise IndexError 
+    val = self.GetBinContent ( ibin ) 
+    err = self.GetBinError   ( ibin ) 
+    return VE ( val , err * err ) 
+
+# =============================================================================
+## histogram as function 
+def _histo_call_ ( self , x ) :
+    """
+    Histogram as function:
+    
+    >>> histo = ....
+    >>> ve    = histo ( x ) 
+    """    
+    axis = self.GetXaxis()
+    if not axis.GetXmin() <= x    <= axis.GetXmax  () : return VE(0,0)
+    ##
+    ibin = axis.FindBin ( x )
+    if not 1              <= ibin <= axis.GetNbins () : return VE(0,0)
+    ##
+    val = self.GetBinContent ( ibin ) 
+    err = self.GetBinError   ( ibin ) 
+    return VE ( val , err * err ) 
+
+ROOT.TH1   . __getitem__  = _histo_get_item_
+ROOT.TH1F  . __getitem__  = _histo_get_item_
+ROOT.TH1D  . __getitem__  = _histo_get_item_
+ROOT.TH1   . __call__     = _histo_call_
+ROOT.TH1   . __len__      = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ()
+ROOT.TH1   .   size       = lambda s : len ( s ) 
+ROOT.TH1   . __contains__ = lambda s , i : 1<= i <= len ( s ) 
 
 # =============================================================================
 # Decorate fit results 
