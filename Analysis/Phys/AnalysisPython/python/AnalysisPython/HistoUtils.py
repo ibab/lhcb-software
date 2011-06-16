@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ##  This module contains set of simple and useful utilities for booking and  
 #   manipulations with Gaudi-AIDA histograms, inspired by Thomas' request
