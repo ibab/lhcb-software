@@ -4,13 +4,17 @@
 #include "RTL/rtl.h"
 #include "RTL/ConsoleDisplay.h"
 
-RTL::ConsoleDisplay::ConsoleDisplay() : m_currLine(0), m_continue(true) {
-  m_bkgColor = BLUE;
-  m_textColor = YELLOW;
-  m_win = initscreen();
-  _setcursortype(_NOCURSOR);            // hide the cursor
-  textcolor(m_textColor);               // change textcolor to YELLOW
-  textbackground(m_bkgColor);           // change backgroundcolor to BLUE
+using namespace SCR;
+
+RTL::ConsoleDisplay::ConsoleDisplay(const char* title) : m_currLine(0), m_continue(true) {
+  int width, height;
+  ::scrc_create_pasteboard (&m_pasteboard, 0, &height, &width);
+  ::scrc_create_display (&m_display, height-2, width-2, SCR::NORMAL, SCR::ON, title);
+  ::scrc_paste_display  (m_display, m_pasteboard, 2, 2);
+  ::scrc_end_pasteboard_update(m_pasteboard);
+  ::scrc_fflush(m_pasteboard);
+  ::scrc_set_cursor(m_display, 2, 10);
+  ::scrc_cursor_off(m_pasteboard);
 }
 
 RTL::ConsoleDisplay::~ConsoleDisplay()  {
@@ -20,40 +24,24 @@ size_t RTL::ConsoleDisplay::draw_line(int flags, const char* format,...)  {
   va_list args;
   char buffer[1024];
   va_start( args, format );
-  size_t len = ::vsprintf(buffer, format, args);
-  print_char(1, m_currLine, VERT_BAR);
-  for(size_t j=0; j<len && j<term_width()-1; ++j)
-    print_char(j+2, m_currLine, flags|buffer[j]);
-  for(size_t i=len; i < term_width()-1; ++i)
-    print_char(i+2, m_currLine, ' '|flags);
-  print_char(term_width(), m_currLine, VERT_BAR);
+  /* size_t len = */ ::vsnprintf(buffer, sizeof(buffer), format, args);
+  ::scrc_put_chars(m_display,buffer,flags,m_currLine,1,1);
   return ++m_currLine;
 }
+
 size_t RTL::ConsoleDisplay::draw_line()  {
-  print_char(1, m_currLine, TEE_LEFT);
-  for(size_t i=1; i < term_width()-1; ++i)
-    print_char(i+1, m_currLine, HORZ_BAR);
-  print_char(term_width(), m_currLine, TEE_RIGHT);
+  for(int i=0; i < term_width()-1; ++i)
+    scrc_put_chars(m_display,"_", NORMAL, m_currLine, i+1, 0);
   return ++m_currLine;
 }
 
 void RTL::ConsoleDisplay::begin_update()  {
-  ::textcolor(m_textColor);
-  m_currLine = 1;
-  print_char(1,m_currLine,LEFT_UP_EDGE);
-  for(size_t i=1; i < term_width()-1; ++i)
-    print_char(i+1,m_currLine,HORZ_BAR);
-  print_char(term_width(),m_currLine,RIGHT_UP_EDGE);      
+  ::scrc_begin_pasteboard_update(m_pasteboard);
   m_currLine = 2;
 }
 
 void RTL::ConsoleDisplay::end_update() {
-  print_char(1,m_currLine,LEFT_LOW_EDGE);
-  for(size_t i=1; i < term_width()-1; ++i)
-    print_char(i+1,m_currLine,HORZ_BAR);
-  print_char(term_width(),m_currLine,RIGHT_LOW_EDGE);      
-  m_currLine++;
-  refresh();
+  ::scrc_end_pasteboard_update(m_pasteboard);
 }
 
 void RTL::ConsoleDisplay::run(int millsecs_to_sleep)  {
@@ -68,15 +56,4 @@ void RTL::ConsoleDisplay::run(int millsecs_to_sleep)  {
       break;
     }
   }
-}
-
-extern "C" int rtl_reset_terminal(int, char**)  {
-  initscreen();
-  _setcursortype(_NORMALCURSOR);
-  textbackground(BLACK); 
-  textcolor(LIGHTGREEN);
-  refresh();
-  clrscr();
-  refresh();
-  return 1;
 }

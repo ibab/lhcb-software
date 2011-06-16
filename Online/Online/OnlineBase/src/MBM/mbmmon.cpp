@@ -4,11 +4,12 @@
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
 #include <cstdlib>
+#include "RTL/rtl.h"
 #include "MBM/Monitor.h"
 #include "CPP/AsciiDisplay.h"
 
 extern "C" int mbm_mon(int argc , char** argv) {
-  MBM::Monitor mon(argc, argv, new AsciiDisplay());
+  MBM::Monitor mon(argc, argv, new AsciiDisplay(""));//Buffer Manager Monitor on "+RTL::nodeName()));
   return mon.monitor();
 }
 

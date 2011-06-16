@@ -148,9 +148,9 @@ size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
     "",(ctr->bm_size*ctr->bytes_p_Bit)/1024, (ctr->i_space*ctr->bytes_p_Bit)/1024, 
     ctr->i_users, ctr->p_umax);
 
-  display()->draw_line_normal("  Occupancy [Events]:");
+  display()->draw_line_normal(" Occupancy [Events]:");
   display()->draw_bar(30,display()->currLine()-1,float(ctr->i_events)/float(ctr->p_emax),display()->width()-30);
-  display()->draw_line_normal("            [Space]: ");
+  display()->draw_line_normal("           [Space]: ");
   display()->draw_bar(30,display()->currLine()-1,float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size),display()->width()-30);
   return 1;
 }
@@ -174,10 +174,9 @@ int Monitor::show_information()   {
   static const char* head=" Name                            Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
 #endif
   char line[256];
-  display()->draw_line();
+  display()->draw_line_normal("");
   display()->draw_line_reverse("                 Buffer Manager Monitor [%s]  pid:%d on %s", 
     ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid(),RTL::nodeName().c_str());
-  display()->draw_line();
   display()->draw_line_normal("");
   for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
@@ -186,9 +185,7 @@ int Monitor::show_information()   {
       display()->draw_line_normal("");
     }
   }
-  display()->draw_line();
-  display()->draw_line_normal(m_numBM<=0 ? "               No active buffers present" : head);
-  display()->draw_line();
+  display()->draw_line_reverse(m_numBM<=0 ? "               No active buffers present" : head);
 
   for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {

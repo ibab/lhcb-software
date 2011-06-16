@@ -1,6 +1,6 @@
 #ifndef ONLINEKERNEL_RTL_CONSOLE_DISPLAY_H
 #define ONLINEKERNEL_RTL_CONSOLE_DISPLAY_H
-#include "RTL/screen.h"
+#include "SCR/scr.h"
 
 namespace RTL {
 
@@ -9,14 +9,17 @@ namespace RTL {
     */
   class ConsoleDisplay  {
   protected:
-    WINDOW* m_win;
-    size_t m_currLine;
-    int m_textColor;
-    int m_bkgColor;
-    bool m_continue;
+    enum { NORMAL = SCR::NORMAL, REVERSE=SCR::INVERSE, INVERSE=SCR::INVERSE };
+    SCR::Pasteboard* m_pasteboard;
+    SCR::Display*    m_display;
+    size_t           m_currLine;
+    bool             m_continue;
+    int              m_width, m_height;
   public:
-    ConsoleDisplay();
+    ConsoleDisplay(const char* title = "");
     virtual ~ConsoleDisplay();
+    int term_width()    const    {    return m_width;     }
+    int term_height()   const    {    return m_height;    }
     virtual size_t draw_line();
     virtual size_t draw_line(int flags, const char* format,...);
     virtual void begin_update();

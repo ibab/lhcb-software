@@ -39,16 +39,16 @@ static inline size_t term_width()  {   return 132; }
 
 #else
 
-#include <curses.h>
-
-#define clrscr    clear
-#define RED     COLOR_RED
-#define BLUE    COLOR_BLUE
-#define YELLOW  COLOR_YELLOW
-#define BLACK   COLOR_BLACK
+#include "SCR/scrdef.h"
+#if 0
+#define clrscr     clear
+#define RED        COLOR_RED
+#define BLUE       COLOR_BLUE
+#define YELLOW     COLOR_YELLOW
+#define BLACK      COLOR_BLACK
 #define LIGHTGREEN COLOR_GREEN
-static inline WINDOW* initscreen()  {  WINDOW* w=initscr(); clrscr(); return w; }
-static inline void gotoxy(int x, int y) { ::move(x-1,y-1); }
+static inline WINDOW* initscreen()                         {  WINDOW* w=initscr(); clrscr(); return w; }
+static inline void gotoxy(int x, int y)                    { ::move(x-1,y-1); }
 static inline void printxy(int x, int y, const char* buff) { ::mvprintw(y-1,x-1,buff); }
 static inline void printxyw(WINDOW* w,int x, int y, const char* buff) {  ::mvwprintw(w,x-1,y-1,buff); }
 
@@ -80,6 +80,7 @@ static inline size_t term_width()  {   return COLS; }
 #define RIGHT_LOW_EDGE  ACS_LRCORNER
 #define TEE_LEFT        ACS_LTEE
 #define TEE_RIGHT       ACS_RTEE
+#endif
 
 #endif
 

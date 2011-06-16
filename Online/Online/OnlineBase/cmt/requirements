@@ -18,7 +18,7 @@ library       OnlineBase   ../src/AMS/*.cpp     \
                            ../src/TAN/*.cpp     \
                            ../src/WT/*.cpp
 
-macro_append  OnlineBase_shlibflags ' -ldl -lpthread -lrt -lcurses ' WIN32 ' '
+macro_append  OnlineBase_shlibflags ' -ldl -lpthread -lrt ' WIN32 ' '
 apply_pattern ld_library_path
 apply_pattern linker_library          library=OnlineBase
 macro_append  use_includes            ' $(ppcmd)"$(OnlineBase_cmtpath)/$(cmt_installarea_prefix)$(shared_install_subdir)/include/OnlineBase" '

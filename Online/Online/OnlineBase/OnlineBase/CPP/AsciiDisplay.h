@@ -8,9 +8,9 @@
 
 #include <cstdlib>
 #include <cstdarg>
-#include "RTL/screen.h"
+#include <string>
+#include "SCR/scr.h"
 #include "CPP/MonitorDisplay.h"
-
 
 /**@class AsciiDisplay AsciiDisplay.h CPP/AsciiDisplay.h
  *
@@ -22,10 +22,17 @@ class AsciiDisplay : public MonitorDisplay
 {
  protected:
   /// Pointer to WINDOW structure
-  WINDOW*          m_window;
+  SCR::Pasteboard* m_pasteboard;
+  SCR::Display*    m_display;
+  //WINDOW*          m_window;
   /// Color setup
   int              m_color;
-  
+  /// Display width
+  int              m_width;
+  /// Display height
+  int              m_height;
+  /// Display title
+  std::string      m_title;
  public:
   /// Setup display window
   virtual void setup_window();
@@ -53,6 +60,8 @@ class AsciiDisplay : public MonitorDisplay
   virtual size_t draw_bar(int x, int y,float ratio,int full_scale);
   /// Default Constructor
   AsciiDisplay();
+  /// Default Constructor with title
+  AsciiDisplay(const std::string& title);
   /// Default destructor
   virtual ~AsciiDisplay() {}
 };

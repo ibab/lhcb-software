@@ -54,7 +54,6 @@ namespace MBM {
         draw_line(REVERSE,  "                          %s Buffer Bitmap Monitor [%s]  pid:%d", 
           id->bm_name, ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid());
         if ( m_bm.size() == 1 )  {
-          draw_line();
           draw_line(NORMAL,"");
         }
         s = " ";

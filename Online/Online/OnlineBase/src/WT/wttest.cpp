@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
-#include "RTL/screen.h"
+#include "SCR/scr.h"
 #include <cstdlib>
 #include <cstdarg>
 
@@ -19,6 +19,8 @@ static int ast2_count = 0;
 static int ast3_count = 0;
 static int ast4_count = 0;
 static int rearm4_count = -1;
+static SCR::Pasteboard* pasteboard = 0;
+static SCR::Display*    display = 0;
 
 static void __print_at_file(int, int, const char* fmt, ...)  {
   va_list args;
@@ -35,10 +37,9 @@ static void __print_at_screen(int x, int y, const char* fmt, ...)  {
   va_start( args, fmt );
   ::vsprintf( buff, fmt, args);
   va_end(args);
-  printxy(x,y,buff);
-  //lib_rtl_output(LIB_RTL_ALWAYS,buff);
-  //lib_rtl_output(LIB_RTL_ALWAYS,"\n");
-  refresh();
+  ::scrc_begin_pasteboard_update(pasteboard);
+  ::scrc_put_chars(display,buff,SCR::NORMAL,y,x,0);
+  ::scrc_end_pasteboard_update(pasteboard);
 }
 
 static void (*print_at)(int x, int y, const char* fmt, ...) = 0;
@@ -121,12 +122,20 @@ static int action4(unsigned int /* fac */, void* /* par */) {
 }
 
 extern "C" int wtc_test(int /* argc */, char** /* argv */)   {  
+  int width, height;
   print_at = __print_at_screen;
 
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
 
-  initscreen();      // clear + initialize the screen
+  ::scrc_create_pasteboard (&pasteboard, 0, &height, &width);
+  ::scrc_create_display (&display, height-2, width-2, SCR::NORMAL, SCR::ON, "WT test program");
+  ::scrc_paste_display  (display, pasteboard, 2, 2);
+  ::scrc_end_pasteboard_update(pasteboard);
+  ::scrc_fflush(pasteboard);
+  ::scrc_set_cursor(display, 2, 10);
+  ::scrc_cursor_off(pasteboard);
+
   print_at(4,2,"Object name             Actions    Rearms      Asts");
   print_at(4,4,"Timer 1 (%5d msecs):",INTERVAL1);
   print_at(4,5,"Timer 2 (%5d msecs):",INTERVAL2);
