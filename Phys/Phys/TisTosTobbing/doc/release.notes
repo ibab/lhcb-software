@@ -3,6 +3,7 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+!========================= TisTosTobbing v7r3 2011-06-16 =========================
 ! 2011-05-18 - Marco Cattaneo
  - Change dependency from Phys/DaVinciMaps to Event/MicroDst. Needs LHCB >= v32r4
 
