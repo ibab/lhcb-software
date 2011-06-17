@@ -6,6 +6,10 @@
 
 
 
+! 2011-06-17 - Olivier Deschamps
+  - NEW TupleToolProtoData: tuple  ProtoP Info (from property list) - require CaloUtils v9r1
+
+
 ! 2011-06-14 - Olivier Deschamps
  - TupleToolBase.h : new method isPureNeutralCalo() based on CaloUtils/CaloParticle.h : detect neutral calo particles (gamma, pi0, eta->gg, ...) 
    	NEEDED to treat gamma->e+e- as a standard vertexed particle.
