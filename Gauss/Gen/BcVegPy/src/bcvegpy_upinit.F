@@ -1183,14 +1183,15 @@ C...cross-section.
             IF(IVEGASOPEN.EQ.1) THEN
                XMAXUP(1)=CROSSMAX
             ELSE
-               WRITE(*,'(A)') 
-     &              'WARNING: HERE SHOULD INPUT
-     &              A MAXIMUM DIFFERENTIAL CROSS-SEC'
-               WRITE(*,'(A)')
-     &              '!STOP HERE! INPUT A PROPER 
-     &              VALUE IN (SUBROUTINE UPINIT) !!!!'
-               STOP 'OR RUNNING VEGAS TO GET THE
-     &              CORRECT VALUE !PROGRAM STOP!'
+C               WRITE(*,'(A)') 
+C     &              'WARNING: HERE SHOULD INPUT
+C     &              A MAXIMUM DIFFERENTIAL CROSS-SEC'
+C               WRITE(*,'(A)')
+C     &              '!STOP HERE! INPUT A PROPER 
+C     &              VALUE IN (SUBROUTINE UPINIT) !!!!'
+C               STOP 'OR RUNNING VEGAS TO GET THE
+C     &              CORRECT VALUE !PROGRAM STOP!'
+               XMAXUP(1) = 200000. 
 C...      XMAXUP(1)=! THE VALUE ADDED HERE! FIND THE VALUE IN OLD RUNS.
 C...NOTE: THIS VALUE SHOULD BE THE ONE OBTAINED UNDER THE SAME CONDITION.
             END IF
@@ -1198,7 +1199,6 @@ C...NOTE: THIS VALUE SHOULD BE THE ONE OBTAINED UNDER THE SAME CONDITION.
             XMAXUP(1)=0.0D0
          END IF
       END IF
-
 C...THE VALUE OF XSECUP(1) CAN BE GIVEN ARBITRARILY. IT IS ONLY
 C...USED FOR PYSTAT(1) TO PRODUCE A SENSIBLE CROSS-SECTION TABLE.
 C...THE ACTURAL TOTAL CROSS-SEC IS (APPCROSS).

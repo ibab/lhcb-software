@@ -2,6 +2,8 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! 2011-06-17 - Patrick Robbe
+ - bcvegpy_upinit.F: generate weighted events.
 
 ! ====================== BcVegPy v2r1 2009-11-04 ===========================
 ! 2009-10-01 - Hubert Degaudenzi
