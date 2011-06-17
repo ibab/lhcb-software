@@ -152,7 +152,7 @@ extern "C"  {
 #define __CXX_CONST 
 #endif
 
-//scr_edit.cpp
+// scr_edit.cpp
 int scrc_change_rendition (SCR::Display *disp, int r1, int c1, int rows, int cols, unsigned int attr);
 int scrc_insert_line (SCR::Display *disp, __CXX_CONST char *str, unsigned int attr, int row, int scroll);
 int scrc_insert_char (SCR::Display *disp, char ch, unsigned int attr, int row, int col);
