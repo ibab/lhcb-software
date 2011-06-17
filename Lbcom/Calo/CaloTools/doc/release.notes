@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+
+! 2011-06-17 - Olivier Deschamps
+  - fix window compilation warning
+
 !========================= CaloTools v6r2 2011-06-15 =========================
 ! 2011-06-14 - Olivier Deschamps
  - extend CaloHypoEstimator : more Prs info + Gamma/pi0 separation info

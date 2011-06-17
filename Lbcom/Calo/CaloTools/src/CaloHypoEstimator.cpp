@@ -251,7 +251,7 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
         
         if ( 0 == *id || !isPrs ( *id ) )continue;
         LHCb::CaloCellID id2 = (*id)->cellID();
-        if( abs((*id)->cellID().row() - idseed.row())<2 && abs( (*id)->cellID().col() - idseed.col())<2 ){
+        if( abs((int)(*id)->cellID().row() - (int)idseed.row())<2 && abs( (int)(*id)->cellID().col() - (int)idseed.col())<2 ){
           // Build sum1 and sum9
           //
           sum9 += (*id)->e(); 
