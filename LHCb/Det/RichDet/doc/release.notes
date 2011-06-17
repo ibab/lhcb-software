@@ -3,7 +3,11 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
-
+! 2011-06-10 - Sajan Easo
+ - For using  the new version of database with aerogel sub tiles, 
+   modifications made to DeRichAerogelRadiator
+   and DeRichMultiSolidRadiator. These are backward compatible and hence can be used
+   for old version of database without the aerogel sub tiles.
 !========================= RichDet v16r4 2011-06-14 =========================
 ! 2011-05-25 - Chris Jones
  - Add some missing protection for failed dynamic casts in DeRichHPDPanel and
