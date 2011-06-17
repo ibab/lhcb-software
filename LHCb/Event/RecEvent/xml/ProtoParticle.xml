@@ -91,6 +91,7 @@
         <enumval name="HcalPIDmu"       value="364"  desc="Hcal-based DLL for muon-ID DLL (charged)"/>
         <enumval name="EcalPIDmu"       value="365"  desc="Ecal-based DLL for muon-ID DLL (charged)"/>
         <enumval name="PhotonID"        value="380"  desc="Combined PDF for photonID (neutral)"/>
+        <enumval name="IsPhoton"        value="381"  desc="Gamma/Pi0 separation variable (neutral)"/>
 
         <enumval name="VeloCharge"      value="400"  desc="The dE/dx charge from the VELO system"/>
 
