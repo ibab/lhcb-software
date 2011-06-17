@@ -132,6 +132,7 @@ StatusCode NeutralProtoPAlg::execute(){
         using namespace CaloDataType;
         proto -> addInfo ( LHCb::ProtoParticle::CaloTrMatch     ,  m_estimator->data(hypo, ClusterMatch, m_caloTrMatch_bad )) ;
         proto -> addInfo ( LHCb::ProtoParticle::PhotonID        ,  m_estimator->data(hypo, NeutralID   , m_photonID_bad    )) ;
+        proto -> addInfo ( LHCb::ProtoParticle::IsPhoton        ,  m_estimator->data(hypo, isPhoton    , m_photonID_bad    )) ;
         double dep = (m_estimator->data(hypo,  ToSpdM ) > 0) ? -1. : +1.;
         dep *= m_estimator->data(hypo,  ToPrsE, m_caloDepositID_bad );
         proto -> addInfo ( LHCb::ProtoParticle::CaloDepositID   , dep ) ;
