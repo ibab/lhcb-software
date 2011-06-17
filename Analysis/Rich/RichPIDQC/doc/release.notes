@@ -5,6 +5,7 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!========================= RichPIDQC v1r7 2011-06-17 =========================
 ! 2011-05-18 - Nicola Mangiafave
  - JPsiMuMu.py: tightened selection with harder cut on J/psi pT and mass.
 
