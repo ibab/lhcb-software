@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------------------
 /** @file DeRichAerogelRadiator.cpp
  *
@@ -35,7 +34,9 @@ DeRichAerogelRadiator::DeRichAerogelRadiator(const std::string & name)
   : DeRichSingleSolidRadiator ( name ),
     m_deRich1                 ( NULL ),
     m_photMomWaveConv         ( 0    ),
-    m_tileNumber              ( -1   )
+    m_tileNumber              ( -1   ),
+    m_subtilecopynumber       (-1    ),
+    m_subtileNumInTile        (-1    )
 { }
 
 //=============================================================================
@@ -63,17 +64,48 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // extract tile number from detector element name
-  const std::string::size_type pos = name().find(':');
-  if ( std::string::npos == pos )
-  {
-    fatal() << "An Aerogel tile without a number!" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  m_tileNumber = atoi( name().substr(pos+1).c_str() );
-
   m_photMomWaveConv = 1243.125*Gaudi::Units::nanometer*Gaudi::Units::eV;
+  // Check on full tile vs subtile 
+  const std::string::size_type tilenamePos = name().find("AerogelT");
+  const std::string::size_type subtilenamePos = name().find("Rich1AerogelSubTileDe");
+  
+  if(tilenamePos != std::string::npos ) {
+    //This is full tile, so  extract tile number from detector element name
 
+     const std::string::size_type pos = name().find(':');
+     if ( std::string::npos == pos ){
+       fatal() << "An Aerogel full tile without a number!" << endmsg;
+       return StatusCode::FAILURE;
+     }
+     m_tileNumber = atoi( name().substr(pos+1).c_str() );
+     
+  }else if ( subtilenamePos !=  std::string::npos ) {
+    // this is a subtile, so extract the subtile copy number and the 
+    // corresponding full tile number and the subtile number inside the 
+    // full tile. The copy number is a unique number for each subtile and is within the range 0->299.
+
+     const std::string::size_type colpos = name().find(':');
+     if ( colpos != std::string::npos ) {
+       m_subtilecopynumber= atoi( name().substr(colpos+1).c_str() );
+       m_subtileNumInTile = atoi( name().substr(colpos-2,2).c_str() );      
+       m_tileNumber = atoi( name().substr(colpos-4,2).c_str() );
+       verbose()<<"DeRichAerogelRadiator Tile subtileNum and subtileCopy number "<<   m_tileNumber <<"   "
+             << m_subtileNumInTile <<"   "<<m_subtilecopynumber<<endreq;
+       
+     }else {
+       fatal()<< "An Aerogel sub tile tile without a number!" << endmsg;  
+       return StatusCode::FAILURE;
+     }
+     
+  } else {
+    
+       fatal() << "An Aerogel radiator det elem without corresponding full tile or sub tile !" << endmsg;
+       return StatusCode::FAILURE;
+    
+  }
+
+
+ 
   // configure refractive index updates
 
   // aerogel parameters from cond DB
@@ -102,6 +134,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   // return
   return sc;
 }
+
 
 //=========================================================================
 // Access on demand the DeRich1 detector element

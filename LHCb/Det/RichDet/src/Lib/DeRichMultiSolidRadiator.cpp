@@ -1,4 +1,3 @@
-
 /** @file DeRichMultiSolidRadiator.cpp
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
@@ -82,19 +81,19 @@ StatusCode DeRichMultiSolidRadiator::geometryUpdate()
   // look for Aerogel container left
   const IPVolume* contR = topLV->pvolume("pvRich1AerogelContainerRight:0");
   if ( contR )
-    if ( !addVolumes(contR->lvolume(), "AerogelT", contR->matrix() ) ) 
+    if ( !addVolumes(contR->lvolume(), "AerogelT", contR->matrix(),0 ) ) 
       return StatusCode::FAILURE;
   
   // look for Aerogel container right
   const IPVolume* contL = topLV->pvolume("pvRich1AerogelContainerLeft:1");
   if ( contL ) {
-    if ( !addVolumes(contL->lvolume(), "AerogelT", contL->matrix() ) ) 
+    if ( !addVolumes(contL->lvolume(), "AerogelT", contL->matrix(),1 ) ) 
       return StatusCode::FAILURE;
   }
 
   // old geometry with aerogel quarters
   if ( !contR && !contL )
-    if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ) ) 
+    if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ,0) ) 
       return StatusCode::FAILURE;
 
   m_firstUpdate = false;
@@ -103,10 +102,112 @@ StatusCode DeRichMultiSolidRadiator::geometryUpdate()
 }
 
 //=========================================================================
-// add physical volumes to multi solid radiator
+// add physical volumes to multi solid radiator 
 //=========================================================================
 StatusCode 
-DeRichMultiSolidRadiator::addVolumes ( const ILVolume* lv,
+DeRichMultiSolidRadiator::addVolumes(const ILVolume* lv,
+                                       const std::string& volName,
+                                     const Gaudi::Transform3D& toLowerLevel, const int  VolIndex ){
+
+StatusCode sc =  StatusCode::SUCCESS;
+ 
+// First determine if the subtiles exist or not. Depending upon this activate adding the
+// full tile volumes or sub tile volumes. For one may use any full tile and its subtile.
+// so here full tile 2 for right container and tile 10 for the left container are used.
+
+ std::string aTilePvName= "pvRich1AerogelTile:2";
+ if(VolIndex == 1 )aTilePvName =  "pvRich1AerogelTile:10" ;
+ 
+  const IPVolume* aFullTilePv = lv->pvolume(aTilePvName);
+  if( aFullTilePv ) {      
+
+    int aNumSubTile = (int)  ( aFullTilePv->lvolume()-> noPVolumes()) ;
+
+    if(   aNumSubTile == 0 ) {
+      // old geometry with no sub tiles. use the full tiles as before. 
+      sc =  addFullTileVolumes( lv , volName,  toLowerLevel );
+
+    }else if( aNumSubTile > 0 )   {
+      // new geometry with sub tiles.
+      sc =  addSubTileVolumes( lv , volName,  toLowerLevel );
+    }else {
+      
+      error()<<"InAdmissible number of subtiles in Aerogel tile 2 =  "<< aNumSubTile<< endreq;
+      sc = StatusCode::FAILURE;
+      
+    }
+    
+    
+    
+
+  }else {
+    
+    error()<<" No Aerogel full tile from DeRichMultiSolidRadiator  "<<endreq;
+    sc = StatusCode::FAILURE;
+  }
+  
+  
+  
+  return sc;
+  
+}
+//=========================================================================
+// add  sub tiles det elements
+//=========================================================================
+
+StatusCode
+DeRichMultiSolidRadiator::addSubTileVolumes ( const ILVolume* lv,
+                                              const std::string& volName,
+                                  const Gaudi::Transform3D& toLowerLevel ){
+
+  std::string aAgelLocation=DeRichLocations::Aerogel;
+  std::string aAgelSubTileMasterLocation= aAgelLocation.substr(0,aAgelLocation.size()-7);
+  
+  for ( ILVolume::PVolumes::const_iterator pviter = lv->pvBegin(); pviter != lv->pvEnd(); ++pviter ){
+    
+    if( (*pviter)->name().find(volName) != std::string::npos ){
+      const Gaudi::Transform3D & tileTrans= (*pviter)->matrix();
+      const Gaudi::Transform3D & tileTransInv = (*pviter)->matrixInv();
+      const ILVolume* tileLv= (*pviter)->lvolume();
+      for (ILVolume::PVolumes::const_iterator stpviter = tileLv->pvBegin(); stpviter != tileLv->pvEnd(); ++stpviter  ) {
+        m_pVolumes.push_back( (*stpviter) );
+        m_toLowLevel.push_back( ( (*stpviter)->matrix()) * tileTrans * toLowerLevel );
+        m_toTopLevel.push_back( (toLowerLevel.Inverse()) * tileTransInv * ((*stpviter)->matrixInv()));
+        m_solids.push_back( (*stpviter)->lvolume()->solid() );
+        debug() << "Storing aerogel sub tile pvolume " << (*stpviter)->name() << endmsg;
+        
+        const std::string::size_type  pvolNameColPos = (*stpviter)->name().find(":");
+        const std::string pvolNameSuffixA= (*stpviter)->name().substr(pvolNameColPos-4,4);
+        const std::string pvolNameSuffixB = (*stpviter)->name().substr(pvolNameColPos);
+        const std::string curSubTileDeName= aAgelSubTileMasterLocation + "Rich1AerogelSubTileDeT"+pvolNameSuffixA+pvolNameSuffixB;
+        SmartDataPtr<DeRichRadiator> deRad( dataSvc(), curSubTileDeName );
+        if ( !deRad ) {
+          error() << "Cannot find DeRichRadiator for " << curSubTileDeName <<"  "
+                << (*stpviter)->name() << endmsg;
+          return StatusCode::FAILURE;
+        }
+        debug() << " DeRichMultiSolidRadiator Loading " << curSubTileDeName << endmsg;
+        m_radiators.push_back( deRad );
+       
+        
+      } // end loop over sub tiles     
+      
+    }// end if , checking for Agel full tile
+    
+     
+  }// end loop over container daughters
+  
+  return StatusCode::SUCCESS;
+
+  
+}
+
+
+//=========================================================================
+// add full tiles det elements
+//=========================================================================
+StatusCode 
+DeRichMultiSolidRadiator::addFullTileVolumes ( const ILVolume* lv,
                                        const std::string& volName,
                                        const Gaudi::Transform3D& toLowerLevel )
 {
@@ -118,8 +219,8 @@ DeRichMultiSolidRadiator::addVolumes ( const ILVolume* lv,
     if( (*pviter)->name().find(volName) != std::string::npos )
     {
       m_pVolumes.push_back( (*pviter) );
-      m_toLowLevel.push_back( toLowerLevel*(*pviter)->matrix() );
-      m_toTopLevel.push_back( toLowerLevel.Inverse()*(*pviter)->matrixInv() );
+      m_toLowLevel.push_back( ((*pviter)->matrix()) * (toLowerLevel) );
+      m_toTopLevel.push_back( (toLowerLevel.Inverse()) * ((*pviter)->matrixInv()) );
       m_solids.push_back( (*pviter)->lvolume()->solid() );
       debug() << "Storing pvolume " << (*pviter)->name() << endmsg;
 
@@ -138,7 +239,7 @@ DeRichMultiSolidRadiator::addVolumes ( const ILVolume* lv,
       SmartDataPtr<DeRichRadiator> deRad( dataSvc(), radLoc );
       if ( !deRad )
       {
-        error() << "Cannot find DeRichRadiator " << radLoc
+        error() << "Cannot find DeRichRadiator " << radLoc<<"  "
                 << (*pviter)->name() << endmsg;
         return StatusCode::FAILURE;
       }
