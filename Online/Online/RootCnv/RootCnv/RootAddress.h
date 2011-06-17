@@ -12,7 +12,6 @@
 // Framework include files
 #include "GaudiKernel/GenericAddress.h"
 #include "TTreeFormula.h"
-#include "RootUtils.h"
 
 // Forward declaration
 class TTree;
@@ -51,9 +50,9 @@ namespace Gaudi {
 		 const std::string& p2="",
 		 unsigned long ip1=0,
 		 unsigned long ip2=0)
-    : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), section(0) { }
-    /// Standard Destructor
-    virtual ~RootAddress() {  deletePtr(select);  }
+      : GenericAddress(svc,clid,p1,p2,ip1,ip2), select(0), section(0) { }
+      /// Standard Destructor
+      virtual ~RootAddress() {  if ( select ) delete select; select = 0; }
   };
 }
 

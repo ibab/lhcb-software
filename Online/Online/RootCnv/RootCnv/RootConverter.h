@@ -9,7 +9,7 @@
 
 // Framework include files
 #include "GaudiKernel/Converter.h"
-#include "RootCnvSvc.h"
+#include "RootCnv/RootCnvSvc.h"
 
 /*
  * Gaudi namespace declaration

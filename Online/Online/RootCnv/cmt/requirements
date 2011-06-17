@@ -15,9 +15,15 @@ apply_pattern reflex_dictionary dictionary=RootCnv \
 		headerfiles=$(ROOTCNVROOT)/dict/RootCnv_dict.h \
 		selectionfile=$(ROOTCNVROOT)/dict/RootCnv_dict.xml
 #===========================================================================
-library     RootCnv ../src/*.cpp
-apply_pattern component_library library=RootCnv
+library     RootCnvLib ../src/*.cpp
+apply_pattern linker_library library=RootCnvLib
 macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
+
+library RootCnv ../components/*.cpp
+apply_pattern component_library library=RootCnv
+macro_append  RootCnv_dependencies  " RootCnvLib "
+###macro_append  MDF_cppflags "" target-vc9 " -wd4996 "
+
 macro RootCnv_ext_linkopts  ' -lRootCnv ' WIN32 ' RootCnv.lib '
 application gaudi_merge ../merge/merge.cpp
 

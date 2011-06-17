@@ -8,9 +8,9 @@
 //------------------------------------------------------------------------------
 
 // Include files
-#include "RootRefs.h"
-#include "RootStatCnv.h"
-#include "RootDataConnection.h"
+#include "RootCnv/RootRefs.h"
+#include "RootCnv/RootStatCnv.h"
+#include "RootCnv/RootDataConnection.h"
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"

@@ -10,7 +10,7 @@
 #include <map>
 
 #include "TFile.h"
-#include "RootRefs.h"
+#include "RootCnv/RootRefs.h"
 
 // Forward declarations
 class TTree;

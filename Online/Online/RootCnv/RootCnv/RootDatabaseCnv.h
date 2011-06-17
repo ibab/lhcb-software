@@ -9,7 +9,7 @@
 #define GAUDIROOTCNV_ROOTDATABASECNV_H 1
 
 // Framework include files
-#include "RootDirectoryCnv.h"
+#include "RootCnv/RootDirectoryCnv.h"
 
 /*
  *   Gaudi namespace declaration

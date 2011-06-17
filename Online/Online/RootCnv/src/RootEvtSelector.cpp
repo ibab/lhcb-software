@@ -11,7 +11,7 @@
 #define GAUDIROOTCNV_ROOTEVTSELECTORCONTEXT_H
 
 // Include files
-#include "RootEvtSelector.h"
+#include "RootCnv/RootEvtSelector.h"
 #include <vector>
 
 // Forward declarations
@@ -84,17 +84,15 @@ namespace Gaudi {
 // Include files
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "RootCnvSvc.h"
-#include "RootDataConnection.h"
+#include "RootCnv/RootCnvSvc.h"
+#include "RootCnv/RootDataConnection.h"
 #include "TBranch.h"
 
 using namespace Gaudi;
 using namespace std;
-
 
 // Service Constructor
 RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc )

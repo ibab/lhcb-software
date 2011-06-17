@@ -11,7 +11,6 @@
 
 // Framework include files
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -23,14 +22,14 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/System.h"
 #include "GaudiUtils/IIODataManager.h"
-#include "RootRefs.h"
-#include "RootCnvSvc.h"
-#include "RootAddress.h"
-#include "RootConverter.h"
-#include "RootDatabaseCnv.h"
-#include "RootDirectoryCnv.h"
-#include "RootNTupleCnv.h"
-#include "RootDataConnection.h"
+#include "RootCnv/RootRefs.h"
+#include "RootCnv/RootCnvSvc.h"
+#include "RootCnv/RootAddress.h"
+#include "RootCnv/RootConverter.h"
+#include "RootCnv/RootDatabaseCnv.h"
+#include "RootCnv/RootDirectoryCnv.h"
+#include "RootCnv/RootNTupleCnv.h"
+#include "RootCnv/RootDataConnection.h"
 #include "RootUtils.h"
 
 // ROOT include files
@@ -42,8 +41,6 @@
 using namespace std;
 using namespace Gaudi;
 typedef const string& CSTR;
-
-DECLARE_SERVICE_FACTORY(RootCnvSvc)
 
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE

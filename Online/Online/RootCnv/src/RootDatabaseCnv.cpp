@@ -7,8 +7,8 @@
 //
 //------------------------------------------------------------------------------
 // Framework include files
-#include "RootDatabaseCnv.h"
-#include "RootDataConnection.h"
+#include "RootCnv/RootDatabaseCnv.h"
+#include "RootCnv/RootDataConnection.h"
 
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IRegistry.h"

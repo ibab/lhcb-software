@@ -11,7 +11,7 @@
 #define POOLDB_POOLDBDIRECTORYCNV_H 1
 
 // Include files
-#include "RootStatCnv.h"
+#include "RootCnv/RootStatCnv.h"
 
 /*
  *  Gaudi namespace declaration

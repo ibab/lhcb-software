@@ -9,10 +9,10 @@
 
 #define ALLOW_ALL_TYPES
 // Include files
-#include "RootRefs.h"
-#include "RootAddress.h"
-#include "RootNTupleCnv.h"
-#include "RootDataConnection.h"
+#include "RootCnv/RootRefs.h"
+#include "RootCnv/RootAddress.h"
+#include "RootCnv/RootNTupleCnv.h"
+#include "RootCnv/RootDataConnection.h"
 
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartIF.h"

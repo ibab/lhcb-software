@@ -10,7 +10,7 @@
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
-#include "RootConverter.h"
+#include "RootCnv/RootConverter.h"
 
 // Forward declarations
 class IDataManagerSvc;

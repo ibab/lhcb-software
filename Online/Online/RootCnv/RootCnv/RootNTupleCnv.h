@@ -10,7 +10,7 @@
 #define GAUDIROOTCNV_ROOTNTUPLECNV_H 1
 
 // Include files
-#include "RootStatCnv.h"
+#include "RootCnv/RootStatCnv.h"
 
 // Forward declarations
 class INTuple;

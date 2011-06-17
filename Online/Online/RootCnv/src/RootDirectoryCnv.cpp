@@ -11,9 +11,9 @@
 #include <memory>
 
 // Include files
-#include "RootCnvSvc.h"
-#include "RootDirectoryCnv.h"
-#include "RootDataConnection.h"
+#include "RootCnv/RootCnvSvc.h"
+#include "RootCnv/RootDirectoryCnv.h"
+#include "RootCnv/RootDataConnection.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/NTuple.h"
 #include "TBranch.h"

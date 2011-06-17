@@ -8,7 +8,7 @@
 // $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/RootCnv/src/RootDataConnection.cpp,v 1.16 2010-09-27 15:43:53 frankb Exp $
 
 // Framework include files
-#include "RootDataConnection.h"
+#include "RootCnv/RootDataConnection.h"
 #include "RootUtils.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/LinkManager.h"
