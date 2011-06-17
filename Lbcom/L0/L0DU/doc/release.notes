@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-06-17 - Patrick Robbe
+ - Configuration.py: set new electron/photon L0 Calo algorithm depending
+   on the data type
+
 !========================= L0DU v10r15 2011-06-15 =========================
 ! 2011-06-14 - Olivier Deschamps
  - L0DUFromRawTool : new interfaced method datas() returns <string,value> data map 
