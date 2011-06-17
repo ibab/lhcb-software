@@ -1,0 +1,199 @@
+! $Id$ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiAlgoMC
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : MC-analogue for the basic LoKi algorithm 
+! -----------------------------------------------------------------------------
+
+!========================= LoKiAlgoMC v9r4 2011-06-16 =========================
+! 2011-06-05 - Vanya Belyaev
+
+ - fix for modification in (MC)DecayChain class 
+
+ - cmt/requirement
+
+     version increment to v9r3
+
+
+!========================== LoKiAlgoMC v9r2 2011-02-20 ========================
+
+! 2011-02-14 - Vanya Belyaev
+  
+ - add the proper decoration of farray-methods for HepMC-particles 
+
+! 2011-02-13 - Vanya Belyaev
+
+ - add the proper decoration of farray-methods for MC-particles 
+
+ - cmt/requirement
+
+     version increment to v9r2 
+
+!========================== LoKiAlgoMC v9r1 2010-06-24 ========================
+
+! 2010-06-13 - Vanya Belyaev
+
+ - add decay finders for gselect methods 
+
+
+! 2010-06-01 - Vanya Belyaev
+
+ - decay finder
+
+ - cmt/requirement
+
+     version increment to v9r1 
+
+!========================== LoKiAlgoMC v9r0 2010-04-30 ========================
+
+! 2010-04-06 - Vanya Belyaev
+
+ - replace LoKi::Range with Gaudi::Range 
+ - new decorators 
+ - version increment to v9r0
+
+
+!========================== LoKiAlgoMC v8r2 2010-02-17 ========================
+
+! 2010-02-14 - Marco Cattaneo
+ - Add src/Components/HybridMCParticleArrayFilter.cpp, moved from LoKiMC
+   because of dependency in DaVinciMCKernel
+ - Remove obsolete file src/Components/LoKiAlgoMC_load.cpp
+
+!========================== LoKiAlgoMC v8r1 2009-01-12 ========================
+! 2009-01-10 - Chris Jones
+ - Add CLHEP dependency for OSX only
+
+! 2009-01-09 - Marco Cattaneo
+ - import GaudiPython, but only for the dictionary
+
+! 2009-01-08 - Marco Cattaneo
+ - Add -no_auto_imports to GaudiPython usage
+
+! 2008-11-27 - Vanya BELYAEV
+ - add QMTest
+ - new decorators 
+ - version increment to v8r1 
+
+!========================== LoKiAlgoMC v8r0 2008-11-17 ========================
+! 2008-11-02 - Vanya BELYAEV
+ - fixes for various compilers 
+ - remove extra methods form dictionaries 
+ - cmt/requirements
+   version increment to v8r0  
+
+!========================== LoKiAlgoMC v7r2 2008-06-30 ========================
+! 2008-06-26 - Vanya BELYAEV
+ - from now LOKI_MCALGORITHM puts the algorithm into namespace LoKi 
+ - cmt/requirements 
+    version increment to v7r2 
+
+!========================== LoKiAlgoMC v7r1p1 2008-06-02 ======================
+! 2008-06-02 - Marco Cattaneo
+ - In LoKiAlgoMCDict.h: add hack to suppress _POSIX_C_SOURCE redefinition warning
+ - Fix many doxygen typos
+ - In requirements increment version to v7r1p1
+
+!========================== LoKiAlgoMC v7r1 2008-05-20 ========================
+! 2008-05-20 - Marco Cattaneo
+ - Remove include LoKi.h from DecayTruth.cpp (introduces dependency on LoKi/LoKi
+   which would be circular) and replace it with include of only needed headers
+
+! 2008-05-19 - Marco Cattaneo
+ - Fix many doxygen warnings due to cut and paste typos
+
+! 2008-05-17 - Vanya BELYAEV
+ - src/Components/DecayTruth.cpp
+   Resurrect old (DC04) and very useful algorithm LoKi::DecayTruth 
+   for the study of MC-truth for the selected particles 
+   (many thanks to Lesya SHCHUTSKA for the kind help)
+
+- cmt/requirements
+     add the component library 
+     version increment to v7r1 
+
+!========================== LoKiAlgoMC v7r0 2007-12-03 ========================
+! 2007-12-03 - Vanya BELYAEV
+ - the major update for new major version of LoKi v7r0 ("The powerful streamers")
+ - cmt/requirements 
+   version increment to v7r0 
+
+!========================== LoKiAlgoMC v6r1 2007-10-09 ========================
+! 2007-10-07 - Vanya BELYAEV
+ - cmt/requirements 
+    increment version to v6r1 
+    use new pattern for python modules 
+
+!========================== LoKiAlgoMC v6r0 2007-09-04 ========================
+! 2007-08-20 - Vanya BELYAEV
+ - increment the major version to v6r0 
+
+! 2007-07-23 - Vanya BELYAEV
+ - many tiny fixes to speedupo the compilation, reduce dictionaries
+   and improve the doxygen
+ - cmt/requirements 
+   version increment to v4r1
+
+!========================== LoKiAlgoMC v4r0 2007-06-11 ========================
+! 2007-06-10 - Vanya BELYAEV
+ - few fixes to plaase reflex 
+ - add decorators for MCMatchAlgo
+
+  new files: 
+
+   LoKi/MCMatchAlgoDicts.h
+   src/MCMatchAlgoDicts.cpp
+
+! 2007-06-04 - Marco Cattaneo
+ - Adapt to interfaces moved to MCInterfaces
+
+! 2007-06-01 - Vanya BELYAEV
+ - prepare for the next major version v4r0 
+
+ - New files:
+
+   dict/LoKiAlgoMC.xml
+   dict/LoKiAlgoMCDict.h
+
+   python/LoKiAlgoMC/__init__.py
+   python/LoKiAlgoMC/decorators.py
+   python/LoKiAlgoMC/functions.py
+   python/LoKiAlgoMC/tests.py
+
+ - Modified files:
+
+ - cmt/requirements
+     version increment to v4r0 
+
+
+!========================== LoKiAlgoMC v3r0p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
+
+!========================== LoKiAlgoMC v3r0 2007-01-09 =====================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+
+!========================== LoKiAlgoMC v2r0 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+
+ - LoKi/AlgoMC.h, src//AlgoMC.h
+    add new methods for effiicent selection of generator(HepMC) particles, 
+    similar for "real" and MC- particles.
+
+       LoKi::Types::GRange LoKi::AlgoMC::gselect 
+       LoKi::Types::GRange LoKi::AlgoMC::gselected  
+
+ - cmt/requirements 
+     version increment to v2r0 
+
+!========================== LoKiAlgoMC v1r1 2006-08-30 ===================
+
+! 2006-08-29 - Vanya BELYAEV
+ - many fixes 
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
