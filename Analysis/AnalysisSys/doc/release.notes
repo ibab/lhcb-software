@@ -3,6 +3,21 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v6r5>2011-06-17 Analysis v6r5 </A></H1><PRE>
+
+Based on Phys v12r5, patch for the 2011 processing post-june-technical stop.
+
+This is the first version of Analysis to be compatible with the ROOT persistency framework.
+
+The Phys/DecayTreeTuple package was previously bundled with a higher DaVinci v28r3p1.
+
+Major changes:
+  . Phys/DSTWriters. Supports ROOT persistency through IOHelper.
+
+Other minor changes, for more details and links to the changesets see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Analysis&version=v6r5
+
+
 </PRE><H1><A NAME=v6r4p1>2011-05-13 Analysis v6r4p1 </A></H1><PRE>
 
 Based on Phys v12r4p1, patch for the 2010 restripping and 2011 reprocessing.
