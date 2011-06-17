@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2011-06-17 - Alex Grecu
+ - patch PythiaProduction.cpp: comment IO_Ascii include as not used
+ - patch component/JetProduction.cpp: comment IO_Ascii include as not used
+
 ! 2011-06-09 - Vanya Belyaev
  - resurect the reading of LHA/LHE events 
  - increase version to v9r2
