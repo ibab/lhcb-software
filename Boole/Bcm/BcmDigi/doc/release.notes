@@ -4,7 +4,7 @@
 ! Purpose     : Create BcmDigits and MCBcmDigits from hits on the BCM
 !-----------------------------------------------------------------------------
 
-!========================= DigiEvent v1r0 2011-05-31 =========================
+!========================= BcmDigi v1r0 2011-06-17 =========================
 ! 2011-05-31 - Magnus Lieng
  - First version. Algorithm BcmDigitization reads Bcm hits and creates one
    BcmDigit per sensor. BcmDigit contains the sum of energy deposition. The
