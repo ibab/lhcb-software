@@ -3,6 +3,42 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v22r2>2011-06-20 Boole v22r2</A></H1><PRE>
+This version uses projects LCGCMT 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Development release for 2011 simulation.
+
+ - Changes in functionality
+   . Add support for new ROOT persistency (Boole, GaudiConf v14r0, RootCnv v1r6)
+   . Add support for BCM digitization, not yet integrated in Boole configurable
+     (BcmDigi v1r0, DigiEvent v2r18, MCEvent v2r20)
+   . Drop all support for DC06. This DataType is no longer recognised
+
+ - Changes to configuration
+   . Add "Persistency" slot to Boole (default POOL) and propagate to DigiConf
+   . Set default DataType to "2011"
+   . Remove support for writing L0ETC
+   . Add default L0TCK for 2011 data (0x0032) (L0DU v10r15)
+
+ - New tuning:
+   . Added variable response with radius, to match data (VeloSimulation v3r10)
+   . Add capability to vary response according to radiation damage
+     (VeloSimulation v3r10)
+
+ - Bug fixes:
+   . Fix bug #80947 (access system-memory information, if process memory is >4GB)
+     (GaudiKernel v27r14)
+   . Recover precision in matrices for rotations through pi or halfpi
+     (DetDesc v18r25, DetDescCnv v4r13)
+   . Fix various warnings from coverity
+
+ - Changes to tests:
+   . Remove all slc4_ia32 specific references and exclusions
+   . Explicitly set DataType=2009 in spillover test, was using default
+   . Remove tests of writing L0ETC
+   . Add test boole.boole-2010root to test ROOT persistency
+
 </PRE><H1><A NAME=v22r1>2011-04-11 Boole v22r1</A></H1><PRE>
 This version uses projects LCGCMT 60a, Gaudi v22r1, LHCb v32r2, Lbcom v10r2
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
