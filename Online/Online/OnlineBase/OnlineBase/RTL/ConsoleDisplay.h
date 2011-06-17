@@ -16,7 +16,7 @@ namespace RTL {
     bool             m_continue;
     int              m_width, m_height;
   public:
-    ConsoleDisplay(const char* title = "");
+    explicit ConsoleDisplay(const char* title = "");
     virtual ~ConsoleDisplay();
     int term_width()    const    {    return m_width;     }
     int term_height()   const    {    return m_height;    }
