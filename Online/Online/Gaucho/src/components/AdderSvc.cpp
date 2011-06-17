@@ -133,7 +133,6 @@ StatusCode AdderSvc::initialize()
   m_adder = 0;
   m_EoRadder = 0;
   m_SaveTimer = 0;
-  m_AdderSys = &AdderSys::Instance();
   sc = serviceLocator()->service("IncidentSvc",m_incidentSvc,true);
   if( !sc.isSuccess() ) {
     return sc;
@@ -206,6 +205,7 @@ StatusCode AdderSvc::start()
   ::lib_rtl_output(LIB_RTL_DEBUG,"        Service Pattern %s+Data or EOR\n",m_ServicePattern.c_str());
   DimServer::autoStartOn();
   if (!m_InputDNS.empty()) DimClient::setDnsNode(m_InputDNS.c_str());
+  m_AdderSys = &AdderSys::Instance();
   if (m_AdderClass == "hists")
   {
     m_adder = new HistAdder((char*)myservicename.c_str(), (char*)"Data");

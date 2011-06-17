@@ -181,6 +181,7 @@ public:
   lib_rtl_lock_t m_lockid;
   lib_rtl_lock_t m_maplock;
   bool m_dohisto;
+  bool m_timeout;
   AIDA::IHistogram1D *m_histo;
   IGauchoMonitorSvc *m_monsvc;
 
@@ -260,6 +261,6 @@ public:
   void dumpServices();
   void start();
   void stop();
-  virtual void Update(){};
+  virtual void Update()=0;
 };
 #endif

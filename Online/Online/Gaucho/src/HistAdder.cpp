@@ -177,7 +177,11 @@ void HistAdder::Update()
 {
   if (m_received >= m_expected)
   {
-    this->m_timer->Stop();
+    if (!m_timeout)
+    {
+//      printf("No Timeout... Normal Update. Stopping Timer\n");
+      this->m_timer->Stop();
+    }
 //    printf("%s Finished one cycle. Updating our service... \n", this->m_MyName.c_str());
 //    fflush(stdout);
     if (m_isSaver)

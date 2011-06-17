@@ -150,7 +150,10 @@ void CounterAdder::Update()
 {
   if (m_received >= m_expected)
   {
-    this->m_timer->Stop();
+    if (!m_timeout)
+    {
+      this->m_timer->Stop();
+    }
     //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
     if (m_isSaver)
     {

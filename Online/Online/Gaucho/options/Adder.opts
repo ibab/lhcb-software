@@ -1,39 +1,42 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
-//#include "$OPTIONS"
+#include "$INFOOPTIONS"
 
-ApplicationMgr.ExtSvc               += { "AdderSvc" };
+ApplicationMgr.ExtSvc               += {"MonitorSvc",
+					"AdderSvc/GauchoHistAdder",
+					"AdderSvc/GauchoCountAdder"
+					};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
+MessageSvc.OutputLevel               = 3; //@OnlineEnv.OutputLevel;
 
-//AdderSvc.publishRates   = 1;
-//AdderSvc.OutputLevel    = 3;
-MessageSvc.OutputLevel  = 3;
-//MessageSvc.LoggerOnly   = 1;
-HistogramPersistencySvc.Warnings = false;
+//MessageSvc.fifoPath                = "$LOGFIFO";
+//MessageSvc.LoggerOnly              = true;  // Set to false for stdout
+HistogramPersistencySvc.Warnings   = false;
 
-//AdderSvc.taskname="RecBrunel"; // Could be empty.
-//AdderSvc.refreshTime=20;
-//AdderSvc.dimclientdns="hlt01";
-//AdderSvc.partitionname="LHCb";
 
-//AdderSvc.subfarmname=@OnlineEnv.SubFarms;
-//AdderSvc.partitionname=@OnlineEnv.PartitionName;
+GauchoHistAdder.MyName             = "<part>_<node>_me_00";
+GauchoHistAdder.PartitionName      = "LHCb";
+GauchoHistAdder.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+GauchoHistAdder.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Histos/";
+GauchoHistAdder.AdderClass         = "hists";
+GauchoHistAdder.InDNS              = "hlt01";
+//GauchoHistAdder.ExpandRate         = true;
+GauchoHistAdder.SaveSetTaskName    = "GauchoJob";
+//GauchoHistAdder.IsSaver            = true;
+//GauchoHistAdder.SaveRootDir        = "/hist/Savesets";
+//GauchoHistAdder.SaveInterval       = 900; // Save snapshot every 2 minutes
 
-AdderSvc.SourceTaskPattern="Moore";
-AdderSvc.MyName="Adder";
-AdderSvc.SourceServiceName="Data";
-AdderSvc.InDNS="plus15";
-//AdderSvc.OutDNS="plus15";
-AdderSvc.HistoSrcNode="plus16";
+GauchoCountAdder.MyName            = "<part>_<node>_me_00";
+GauchoCountAdder.PartitionName     = @OnlineEnv.PartitionName;
+GauchoCountAdder.TaskPattern       = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+GauchoCountAdder.ServicePattern    = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Counter/";
+GauchoCountAdder.AdderClass        = "Counter";
+GauchoCountAdder.InDNS             = "hlt01";
 
-AdderSvc.TopLevel=false;
-AdderSvc.SaveRootDir="/home/beat/Hist/Savesets";
-AdderSvc.IsSaver=false;
-AdderSvc.SaveInterval= 120;
-AdderSvc.PartitionName="LHCb";
-AdderSvc.SaveSetTaskName="Moore";
-AdderSvc.ExpandRate=false;
+GauchoHistAdder.ReceiveTimeout     = 12;
+GauchoCountAdder.ReceiveTimeout    = 12;
+

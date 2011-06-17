@@ -305,14 +305,16 @@ void MonAdder::stop()
 void MonAdder::TimeoutHandler()
 {
   INServIter i;
-  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
+//  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
+//  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
   DimLock l;
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {
     INServiceDescr *d = i->second;
     if (d->last_update < this->m_reference)
     {
-      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
+//      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
+      printf("Timeout from source %s expected %lli last received %lli\n",
           d->m_Info->m_TargetService.c_str(), m_reference,d->last_update);
       if (d->m_buffer != 0)
       {
@@ -324,11 +326,15 @@ void MonAdder::TimeoutHandler()
       }
     }
   }
+//  printf("Timeout Handler after add... received %d expected %d\n",(int)m_received,(int)m_expected);
+  m_timeout = true;
   Update();
+//  printf("called Update...\n");
 }
 void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
 {
   unsigned long long tim = gettime();
+//  printf("Basic Add called...expected %d received %d\n",(int)m_expected,(int)m_received);
   SerialHeader* header= ((SerialHeader*)buff);
   if (siz == 4)
   {
@@ -356,6 +362,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   {
     buff = isvcd->CpyBuffer(buff,siz);
   }
+//  printf("Received data from %s\n",h->m_TargetService.c_str());
   m_expected = m_inputServicemap.size();
   long long current  = (m_IsEOR) ? header->run_number : header->ser_tim;
   isvcd->last_update = current;
@@ -374,6 +381,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   if (m_reference < current)
   {
 //    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
+    m_timeout = false;
     if(this->m_rectmo >0) this->m_timer->Start();
 //    if ((m_reference != -1) && !m_updated)
 //    {

@@ -57,6 +57,18 @@ void GenTimer::Start()
       ::lib_rtl_output(LIB_RTL_ERROR,"Timer Thread NOT Started successfully %d\n", status);
     }
   }
+  else
+  {
+    if (!m_periodic)
+    {
+      Stop();
+      int status = ::lib_rtl_start_thread(ThreadRoutine_C,this,&m_thread);
+      if ( !lib_rtl_is_success(status) )
+      {
+        ::lib_rtl_output(LIB_RTL_ERROR,"Timer Thread NOT Started successfully %d\n", status);
+      }
+    }
+  }
 }
 
 void GenTimer::Stop()
