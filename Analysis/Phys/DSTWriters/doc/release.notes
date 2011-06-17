@@ -4,6 +4,7 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v3r0 2011-06-17 =========================
 ! 2011-06-10 - Rob Lambert
  - Fixed a problem with the new __dev__ dstwriter, causing the 
    davincitests io.test_read_dst to fail.
