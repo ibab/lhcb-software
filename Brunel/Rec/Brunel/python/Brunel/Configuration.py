@@ -151,6 +151,13 @@ class Brunel(LHCbConfigurableUser):
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
             self.setProp("WriteFSR", False)
 
+        # Do not look for Hlt errors in data without HltDecReports bank
+        if self.getProp( "DataType" ) in [ "2008", "2009" ]:
+            self.setProp( "VetoHltErrorEvents", False )
+        # For simulation, change the default but allow to override
+        if self.getProp( "Simulation" ) and not hasattr( self, "VetoHltErrorEvents" ):
+            self.setProp( "VetoHltErrorEvents", False )
+
 
         # Flag to handle or not LumiEvents
         handleLumi = inputType in ["MDF"] and not withMC

@@ -3,12 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v40r0>2011-06-20 Brunel v40r0</A></H1><PRE>
+This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4,
+ Rec v11r5 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2011 summer processing (Reco11)
+
 - Changes to configurable:
   . Adapt to use of IOHelper in LHCbApp and DstConf
   . Add "Persistency" slot and propagate to DstConf
   . Add "VetoHltErrorEvents" slot (default: True) to Brunel Configurable
-    . This will skip events that are flagged as Hlt{1,2}ErrorEvent and 
+    o This will skip events that are flagged as Hlt{1,2}ErrorEvent and 
       write a line in ProcStatus. See Patrick's talks at 04 and 20/06 PPMTS
+    o Disabled for data prior to 2010, and off by default for simulation
 
 - Changes to QMTests:
 	. Add test of Brunel().WriteFSR=False to brunel.brunel-mc09-notruth test
@@ -30,6 +37,7 @@ Purpose: LHCb reconstruction program
     everywhere and extend max P cut to effectively +inf value (RichRecSys)
   . Add new plot for high Velo cluster multiplicity (VeloRecMonitors)
   . Add TrackMonitoring to the list og RICH online histograms (RichRecQC)
+  . Tune PatSeedingTool to better cope with high occupancy events (PatAlgorithms)
 
 </PRE><H1><A NAME=v39r4>2011-05-14 Brunel v39r4</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
