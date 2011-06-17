@@ -27,6 +27,12 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                   ,'PhiDOCA'            : 0.2      # mm
                   ,'PhiVCHI2'           : 20       # dimensionless
                   ,'KaonRichPID'        : 0        # dimensionless
+                  # GEC
+                  ,'GEC_Filter_NTRACK'  : True       # do or do not
+                  ,'GEC_NTRACK_MAX'     : 120        # max number of tracks
+                  # TOS
+                  ,'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
+                  # Pre-/Post-scales
                   ,'Prescale'           : {'Hlt2IncPhi'           : 1.0
                                           ,'Hlt2IncPhiSidebands'  : 0.1
                                           ,'Hlt2IncPhiTrackFit'   : 0.001
@@ -45,114 +51,133 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
-        from Configurables import HltANNSvc
         from Configurables import CombineParticles
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons, BiKalmanFittedRichKaons
+
+        ############################################################################
+        #    Filter Kaons
+        ############################################################################
+        kaons = self.__filterTracks('IncPhiKaons', [BiKalmanFittedKaons])
+        kaonsRich = self.__filterTracks('IncPhiKaonsRich', [BiKalmanFittedRichKaons], ['(PIDK>%(KaonRichPID)s)'])
+
+        ############################################################################
+        #    Create wide mass Phi combination
+        ############################################################################
+        widePhi = self.__combine('IncPhiWide', [kaons])
+        widePhiRich = self.__combine('IncPhiWideRich', [kaonsRich])
+
+        ############################################################################
+        #    TOS
+        ############################################################################
+        widePhiTOS = self.__filterHlt1TOS('IncPhiWideTOS', widePhi)
+        widePhiRichTOS = self.__filterHlt1TOS('IncPhiWideRichTOS', widePhiRich)
+
+        ############################################################################
+        #    Add tight mass cuts
+        ############################################################################
+        tightPhi = self.__tightenMass('IncPhiTight', [widePhiTOS])
+        tightPhiRich = self.__tightenMass('IncPhiTightRich', [widePhiRichTOS])
         
-        # Our decay descriptor 
-        decayDesc = ["phi(1020) -> K+ K-"]
-
         ############################################################################
-        #    Inclusive Phi selection, track cuts
+        #    Make lines
         ############################################################################
-        
-        TrackChi2DOF = "(TRCHI2DOF<%(TrackChi2DOF)s)" % self.getProps()
-        KaonPtCut = "(PT>%(KaonPT)s*MeV)" % self.getProps()
-        KaonIpsCut = "(MIPCHI2DV(PRIMARY)>%(KaonIPS)s)" % self.getProps()
-        PhiMassCut = "(ADAMASS('phi(1020)')<%(PhiMassWin)s*MeV)" % self.getProps()
-        PhiMassCutSB = "(ADAMASS('phi(1020)')<%(PhiMassWinSB)s*MeV)" % self.getProps()
-        PhiPtCut = "(PT>%(PhiPT)s*MeV)" % self.getProps()
-        PhiDocaCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<%(PhiDOCA)s)" % self.getProps()
-        PhiVchi2Cut = "(VFASPF(VCHI2PDOF)<%(PhiVCHI2)s)" % self.getProps()
-
-        Hlt2InclusivePhi = Hlt2Member( CombineParticles
-                                       , "TrackCombine"
-                                       , DecayDescriptors = decayDesc
-                                       , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackChi2DOF, KaonPtCut, KaonIpsCut) }
-                                       , CombinationCut =  "%s & %s" % (PhiMassCut, PhiDocaCut)
-                                       , MotherCut = "%s & %s" % (PhiPtCut, PhiVchi2Cut)
-                                       , Inputs  = [ BiKalmanFittedKaons ]
-                                       )
-        Hlt2InclusivePhiSB = Hlt2Member( CombineParticles
-                                       , "TrackCombineSB"
-                                       , DecayDescriptors = decayDesc
-                                       , DaughtersCuts = { "K+" : "%s & %s & %s" % (TrackChi2DOF, KaonPtCut, KaonIpsCut) }
-                                       , CombinationCut =  "%s & %s" % (PhiMassCutSB, PhiDocaCut)
-                                       , MotherCut = "%s & %s" % (PhiPtCut, PhiVchi2Cut)
-                                       , Inputs  = [ BiKalmanFittedKaons ]
-                                       )
-                                               
-        ############################################################################
-        #    Inclusive Phi selection, RICH PID
-        ############################################################################
-
-        # from HltLine.Hlt2Monitoring import Hlt2Monitor
+        incPhiLine = self.__makeLine('IncPhi', algos=[tightPhi, tightPhiRich])
+        incPhiTrackLine = self.__makeLine('IncPhiTrackFit', algos=[tightPhi])
+        incPhiSBLine = self.__makeLine('IncPhiSidebands', algos=[widePhiTOS, widePhiRichTOS])
     
-        # Filter on RICH info
-        KaonRichPid = "(2 == NINGENERATION(('K+'==ABSID) & (PIDK > %(KaonRichPID)s), 1))" % self.getProps()
-        Hlt2InclusivePhiRich  = Hlt2Member( CombineParticles
-                                         , "RichCombine"
-                                         , DecayDescriptors = decayDesc
-                                         , DaughtersCuts = { "K+" : "%s & %s" % (KaonPtCut, KaonIpsCut) }
-                                         , CombinationCut = PhiMassCut
-                                         , MotherCut = "%s & %s & %s" % (PhiPtCut, PhiVchi2Cut, KaonRichPid)
-                                         , Inputs  = [ BiKalmanFittedRichKaons ]
-                                         # , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,20)
-                                         )
-        Hlt2InclusivePhiRichSB  = Hlt2Member( CombineParticles
-                                           , "RichCombineSB"
-                                           , DecayDescriptors = decayDesc
-                                           , DaughtersCuts = { "K+" : "%s & %s" % (KaonPtCut, KaonIpsCut) }
-                                           , CombinationCut = PhiMassCutSB
-                                           , MotherCut = "%s & %s & %s" % (PhiPtCut, PhiVchi2Cut, KaonRichPid)
-                                           , Inputs  = [ BiKalmanFittedRichKaons ]
-                                           # , MotherMonitor  =  Hlt2Monitor("M", "M(KK)",1020,20)
-                                           )
-        ############################################################################
-        #    Inclusive Phi complete line
-        ############################################################################
-
+    def __makeLine(self, name, algos):
+        # Prepend GEC to the algo list
+        gec = self.__seqGEC()
+        algoList = [gec] + algos
+        # Now build the line
+        from HltLine.HltLine import Hlt2Line
+        line = Hlt2Line(name
+                        ,prescale=self.prescale
+                        ,postscale=self.postscale
+                        ,algos=algoList
+                       )
+        from Configurables import HltANNSvc
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2%sDecision" % name : self.getProp('HltANNSvcID')[name] } )               
+    
+    def __filterTracks(self, name, inputContainers, extraCuts=[]):
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop
         from HltTracking.HltPVs import PV3D
-        line = Hlt2Line('IncPhi'
-                        , prescale = self.prescale
-                        , algos = [ PV3D(),
-                                    BiKalmanFittedKaons,
-                                    Hlt2InclusivePhi,
-                                    BiKalmanFittedRichKaons, 
-                                    Hlt2InclusivePhiRich]
-                        , postscale = self.postscale
-                         )
+        # Build the cuts
+        baseCuts = ["(TRCHI2DOF<%(TrackChi2DOF)s)", "(PT>%(KaonPT)s*MeV)", "(MIPCHI2DV(PRIMARY)>%(KaonIPS)s)"]+extraCuts
+        _code = (' & '.join(baseCuts)) % self.getProps()
+        # Create filter
+        _filter = Hlt2Member(FilterDesktop
+                            ,'Filter'
+                            ,Inputs=inputContainers
+                            ,Code=_code
+                            )
+        # Require the PV3D reconstruction before our cut on IPS
+        return bindMembers(name, [PV3D()] + inputContainers + [_filter])
+    
+    def __combine(self, name, inputSeq):
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import CombineParticles      
+        # Build cuts
+        combCutBase = ["(ADAMASS('phi(1020)')<%(PhiMassWinSB)s*MeV)", "(AMINDOCA('LoKi::TrgDistanceCalculator')<%(PhiDOCA)s)"]
+        motherCutBase = ["(PT>%(PhiPT)s*MeV)", "(VFASPF(VCHI2PDOF)<%(PhiVCHI2)s)"]
+        _combinationCut =  (" & ".join(combCutBase)) % self.getProps()
+        _motherCut = (" & ".join(motherCutBase)) % self.getProps()
+        # Combine particles
+        _combineParticles = Hlt2Member(CombineParticles
+                                       ,'Combine'
+                                       ,DecayDescriptors=["phi(1020) -> K+ K-"]
+                                       ,Inputs=inputSeq
+                                       ,CombinationCut=_combinationCut
+                                       ,MotherCut=_motherCut
+                                      )
+        combSeq = bindMembers(name, inputSeq+[_combineParticles])
+        return combSeq
+    
+    def __filterHlt1TOS(self, name, inputComb) :
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import TisTosParticleTagger
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
- 
-        ############################################################################
-        #    Inclusive Phi robust and Track line
-        ############################################################################
+        filterTOS = Hlt2Member(TisTosParticleTagger
+                               ,'Hlt1TOSFilter'
+                               ,Inputs = [inputComb.outputSelection()]
+                               ,TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
+                              )
+        filterTOSSeq = bindMembers(name, [inputComb, filterTOS])
+        return filterTOSSeq
+        
+    def __tightenMass(self, name, inputSeq):
+      from HltLine.HltLine import Hlt2Member, bindMembers
+      from Configurables import FilterDesktop
 
-        line = Hlt2Line('IncPhiTrackFit'
-                        , prescale = self.prescale
-                        , algos = [ PV3D(),
-                                    BiKalmanFittedKaons,
-                                    Hlt2InclusivePhi]
-                        , postscale = self.postscale
-                          )
+      _code = "(ADMASS('phi(1020)')<%(PhiMassWin)s*MeV)" % self.getProps()
+      _filter = Hlt2Member(FilterDesktop
+                           ,'Filter'
+                           ,Inputs=inputSeq
+                           ,Code=_code
+                           )
+      filterSeq = bindMembers(name, inputSeq+[_filter] )
+      return filterSeq
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
+    def __seqGEC(self) : # {
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        from HltLine.HltLine import bindMembers
 
-        ############################################################################
-        #    Inclusive Phi complete line for mass sidebands
-        ############################################################################
+        modules =  CoreFactory('CoreFactory').Modules
+        for i in [ 'LoKiTrigger.decorators' ] :
+            if i not in modules : modules.append(i)
 
-        line = Hlt2Line('IncPhiSidebands'
-                        , prescale = self.prescale
-                        , algos = [ PV3D(),
-                                    BiKalmanFittedKaons,
-                                    Hlt2InclusivePhiSB,
-                                    BiKalmanFittedRichKaons,
-                                    Hlt2InclusivePhiRichSB]
-                        , postscale = self.postscale
-                        )
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
+        filtCode = "CONTAINS('"+tracks.outputSelection()+"') > -1"
+        if self.getProp('GEC_Filter_NTRACK') : # {
+            filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
+        # }
+
+        KillTooManyTracksAlg = VoidFilter('Hlt2IncPhiKillTooManyTracksAlg', Code=filtCode)
+        Hlt2CharmKillTooManyInTrk = bindMembers(None, [tracks, KillTooManyTracksAlg])
+        return Hlt2CharmKillTooManyInTrk
 
 # EOF
