@@ -3,9 +3,55 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2011-06-16 - Rob Lambert
- - remove previous added packages.
+</PRE><H1><A NAME=v40r0>2011-06-20 Brunel v40r0</A></H1><PRE>
+This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4,
+ Rec v11r5 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
+Production version for 2011 summer processing (Reco11)
+
+- New functionality
+  . Add support for new ROOT persistency (Brunel, GaudiConf v14r0, RootCnv v1r6)
+
+- Changes to configuration
+  . Add "Persistency" slot to Brunel (default POOL) and propagate to DstConf
+  . Add "VetoHltErrorEvents" slot (default: True) to Brunel Configurable
+
+- New tuning
+  . By default, Brunel now skips events that are flagged as Hlt{1,2}ErrorEvent
+    and writes a line in ProcStatus. See Patrick's talks at 04 and 20/06 PPMTS
+    o Disabled for data prior to 2010, and off by default for simulation
+  . Tune PatSeedingTool to better cope with high occupancy events
+    (PatAlgorithms v4r13)
+  . Major changes to MuonID (MuonID v9r0):
+    o Implement use of KalmanFoI in MuonIDAlg
+    o Introduce nshared tool
+    o Add flag to restrict use of uncrossed hits in MuonID 
+  . Fix error assigned to OT hits in 'prefit' (TrackProjectors v2r29p1)
+  . Apply walk correction in OT drift times
+    (TrackFitEvent v5r10, OTDet v8r6, TfKernel v2r21)
+  . Small changes to Rich track selection cuts so they are noe the same
+    everywhere and extend max P cut to effectively +inf value (RichRecSys v4r2)
+
+- Bug fixes
+  . Fix uninitialised member data to please Coverity
+    (TrackFitEvent v5r10, PatAlgorithms v4r13)
+
+- Obsolete functionality removed
+  . Remove obsolete 'earlyData' flag from KnownSpecialData list (RecConf v2r1)
+
+- Changes to monitoring
+  . Add new plot for high Velo cluster multiplicity (VeloRecMonitors v2r13)
+  . Add TrackMonitoring to the list of RICH online histograms (RichRecQC v2r52)
+  . Put back "L1SizeMonitoring" from the default list of monitors following
+    fixes to initialisation (RichRecQC v2r52)
+  . Update clusterization counters (CaloReco v5r10) 
+
+- Changes to tests
+	. Add test of Brunel().WriteFSR=False to brunel.brunel-mc09-notruth test
+  . Remove import of obsolete earlyData.py options from test-big.py
+  . Add brunel2010magoffroot, brunel2011magdownroot,  brunel-bigeventsroot,
+    brunel-mc10-withtruthroot, readdstfsrroot, replacing POOL with ROOT 
+    persistency and comparing with corresponding POOL tests.
 
 </PRE><H1><A NAME=v39r4>2011-05-14 Brunel v39r4</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r3, Lbcom v10r3,
