@@ -77,7 +77,7 @@ L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   declareProperty( "CreateHCALLut"   , m_createHCALLut      = false    ) ;
   declareProperty( "UsePSSPD"        , m_usePsSpdOpts       = true     ) ;
   declareProperty( "AddECALToHCAL"   , m_addEcalToHcalOpts  = true     ) ;
-  declareProperty( "UseNewElectron"  , m_newElectron        = false    ) ;
+  declareProperty( "UseNewElectron"  , m_newElectron        = true     ) ;
   m_spdMult = std::vector< int >( 16 , 0 ) ;
 }
 

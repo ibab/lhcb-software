@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2011-06-17 - Patrick Robbe
+ - L0CaloAlg.cpp: switch default from UseNewElectron = False (2010
+   and 2009 data types) to True (2011 data)
+
 !========================= L0Calo v11r3 2011-04-27 =========================
 ! 2011-04-22 - Olivier Deschamps
   - fix coverity (non) problems
