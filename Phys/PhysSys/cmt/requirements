@@ -26,7 +26,6 @@ use  PhysDict                   v4r2     Phys    # Juan Palacios
 #===================================================================
 use LoKiUtils                   v1r1p1   Phys    # Vanya Belyaev
 use LoKiAlgo                    v9r4     Phys    # Vanya Belyaev
-use LoKiAlgoMC                  v9r4     Phys    # Vanya Belyaev
 use LoKiArrayFunctors           v10r0    Phys    # Vanya Belyaev
 use LoKiPhys                    v10r2    Phys    # Vanya Belyaev
 use LoKiProtoParticles          v2r0p1   Phys    # Vanya Belyaev
