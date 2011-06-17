@@ -17,6 +17,7 @@ void AddTimer::timerHandler ( void )
 //  dim_lock();
 //  try
 //  {
+  printf("Timeout from Adder %s\n",m_owner->m_MyName.c_str());
     m_owner->TimeoutHandler();
 //  }
 //  catch(const std::exception& e)
