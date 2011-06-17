@@ -7,13 +7,6 @@
 extern "C" int rtl_testscreen(int argc,char **) {
   char caption[255];
   ::snprintf(caption, sizeof(caption), "This is just a message!");
-#if 0
-  initscreen();
-  printxy(10, 20,"Welcome to Curses!");
-  printxy(10, 22,caption);
-  printxy(1,  33,".....");
-  refresh();
-#endif
   using namespace SCR;
   Pasteboard* pasteboard;
   Display*    display;
