@@ -12,6 +12,8 @@
 
 #include "Event/Particle.h"
 #include "Event/RichPID.h"
+
+#include "RichKernel/RichTrackSegment.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
 //
@@ -30,6 +32,7 @@ TupleToolRICHPid::TupleToolRICHPid( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
   : TupleToolBase ( type, name , parent )
+  ,m_SegMaker()
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -37,13 +40,24 @@ TupleToolRICHPid::TupleToolRICHPid( const std::string& type,
 //=============================================================================
 
 
+StatusCode TupleToolRICHPid::initialize()
+{
+  
+  StatusCode sc = TupleToolBase::initialize();
+  if (!sc) return sc;
+  m_SegMaker = tool<Rich::Rec::ITrSegMaker>( "Rich::Rec::DetailedTrSegMakerFromRecoTracks", this );
+  if( !m_SegMaker )  return StatusCode::FAILURE;
+  
+  return sc;
+}
+
 StatusCode TupleToolRICHPid::fill( const Particle* 
 				   , const Particle* P
 				   , const std::string& head
 				   , Tuples::Tuple& tuple ){
   
   const std::string prefix=fullName(head);
-
+  assert(m_SegMaker);
   if( P ){
     bool test = true;
     
@@ -113,8 +127,77 @@ StatusCode TupleToolRICHPid::fill( const Particle*
       if( !tuple->column( prefix+"_TRACK_Phi", proto->track() ?
                           (proto->track()->phi()) : -4.0)) return StatusCode::FAILURE; 
 
+      std::vector< LHCb::RichTrackSegment * > vec;
+            
+      int ret = m_SegMaker->constructSegments(proto->track(), vec);
+      const Gaudi::XYZPoint* pt_aerogel = getXYZ(vec, Rich::Aerogel);
+      const Gaudi::XYZPoint* pt_rich1gas = getXYZ(vec, Rich::Rich1Gas);
+      const Gaudi::XYZPoint* pt_rich2gas = getXYZ(vec, Rich::Rich2Gas);
+
+      if( !tuple->column( prefix+"_Aerogel_X", ret!=0 && pt_aerogel!=NULL ?
+                          pt_aerogel->X(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Aerogel_Y", ret!=0 && pt_aerogel!=NULL?
+                          pt_aerogel->Y(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Aerogel_Z", ret!=0 && pt_aerogel!=NULL?
+                          pt_aerogel->Z(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Aerogel_Rho", ret!=0 && pt_aerogel!=NULL?
+                          pt_aerogel->Rho(): -1)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Aerogel_Phi", ret!=0 && pt_aerogel!=NULL?
+                          pt_aerogel->Phi(): -4)) return StatusCode::FAILURE;
+      
+      if( !tuple->column( prefix+"_Rich1Gas_X", ret!=0 && pt_rich1gas!=NULL ?
+                          pt_rich1gas->X(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich1Gas_Y", ret!=0 && pt_rich1gas!=NULL ?
+                          pt_rich1gas->Y(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich1Gas_Z", ret!=0 && pt_rich1gas!=NULL ?
+                          pt_rich1gas->Z(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich1Gas_Rho", ret!=0 && pt_rich1gas!=NULL ?
+                          pt_rich1gas->Rho(): -1)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich1Gas_Phi", ret!=0 && pt_rich1gas!=NULL ?
+                          pt_rich1gas->Phi(): -4)) return StatusCode::FAILURE;
+
+      if( !tuple->column( prefix+"_Rich2Gas_X", ret!=0 && pt_rich2gas!=NULL ?
+                          pt_rich2gas->X(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich2Gas_Y", ret!=0 && pt_rich2gas!=NULL ?
+                          pt_rich2gas->Y(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich2Gas_Z", ret!=0 && pt_rich2gas!=NULL ?
+                          pt_rich2gas->Z(): -10000)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich2Gas_Rho", ret!=0 && pt_rich2gas!=NULL ?
+                          pt_rich2gas->Rho(): -1)) return StatusCode::FAILURE;
+      if( !tuple->column( prefix+"_Rich2Gas_Phi", ret!=0 && pt_rich2gas!=NULL ?
+                          pt_rich2gas->Phi(): -4)) return StatusCode::FAILURE;
+
+      std::vector< LHCb::RichTrackSegment * >::iterator itr; 
+      for(itr = vec.begin(); itr!=vec.end(); ++itr)
+      {
+        assert(*itr);
+        delete *itr;
+      }
+
       return StatusCode(test);
     }
   }
   return StatusCode::FAILURE;
+}
+
+const Gaudi::XYZPoint* TupleToolRICHPid::getXYZ(std::vector< LHCb::RichTrackSegment * >& vec,
+                                                Rich::RadiatorType Rad)
+{
+  std::vector< LHCb::RichTrackSegment * >::iterator itr; 
+  
+  const Gaudi::XYZPoint* entryPoint = 0;
+  if(vec.size() == 0)
+  {
+    return entryPoint;
+  }
+ 
+  for(itr = vec.begin(); itr!=vec.end(); ++itr)
+  {
+    assert(*itr);
+
+    if(Rad != (*itr)->radiator())
+      continue;
+    entryPoint = &((*itr)->entryPoint());
+  }
+  return entryPoint;
 }

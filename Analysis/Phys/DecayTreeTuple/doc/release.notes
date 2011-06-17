@@ -4,7 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
-
+! 2011-06-17 - Andrew Powell
+ - TupleToolRICHPid: Added track (x,y,z) and (rho,phi) entrance coordinates for each radiator   
 
 ! 2011-06-17 - Olivier Deschamps
   - NEW TupleToolProtoData: tuple  ProtoP Info (from property list) - require CaloUtils v9r1

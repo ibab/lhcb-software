@@ -6,6 +6,8 @@
 // from Gaudi
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
+#include "RichRecBase/IRichTrSegMaker.h"
+#include "Kernel/RichRadiatorType.h"
 
 /** @class TupleToolRICHPid TupleToolRICHPid.h powell/TupleToolRICHPid.h
  *
@@ -32,6 +34,8 @@ public:
   
   virtual ~TupleToolRICHPid(){}; ///< Destructor
 
+  StatusCode initialize() ;
+
   virtual StatusCode fill( const LHCb::Particle*, 
 			   const LHCb::Particle*, 
 			   const std::string&, 
@@ -39,6 +43,11 @@ public:
 
 private: 
   
+  const Gaudi::XYZPoint* getXYZ(std::vector< LHCb::RichTrackSegment * >& vec,
+                                Rich::RadiatorType Rad);
+  
+  Rich::Rec::ITrSegMaker* m_SegMaker;
+
 };
 
 #endif // APOWELL_TUPLETOOLRICHPID_H
