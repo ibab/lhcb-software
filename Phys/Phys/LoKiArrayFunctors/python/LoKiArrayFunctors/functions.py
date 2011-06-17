@@ -88,7 +88,7 @@ ANONE    = AFALSE
 
 
 ## @see LoKi::Cuts::ACHI2DOCA
-ACHI2DOCA     = LoKi.AParticles.MaxDOCAChi2
+ACHI2DOCA     = LoKi.AParticles.DOCAChi2
 
 ## @see LoKi::Cuts::ACHI2V
 ACHI2V        = LoKi.AParticles.VertexChi2

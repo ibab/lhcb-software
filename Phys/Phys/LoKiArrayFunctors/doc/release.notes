@@ -5,6 +5,17 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2011-06-17 - Vanya Belyaev
+ - fif doca-chi2 issue:
+
+    ACHI2DOCA(i,j) returns chid(doca) between ith and jth particles.
+    ADOCACHI2      returns the maimal value 
+  
+    Thanks to David Alasdair Dossett for reporting the problem.
+
+ - cmt/requirements 
+    version increment to v10r1
+
 !========================== LoKiArrayFunctors v10r0 2010-04-04 ================
 
 ! 2011-03-18 - Vanya Belyaev

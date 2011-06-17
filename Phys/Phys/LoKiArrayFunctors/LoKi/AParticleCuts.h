@@ -25,27 +25,26 @@ namespace LoKi
 #endif
     // ========================================================================
     /** @typedef ACHI2DOCA 
-     *  The evaluator of the maximal chi2-distance of the closest approach 
+     *  The evaluator of chi2-distance of the closest approach 
      *  for all two-particle subcombinations
      *  
      *  @code
      * 
      *  IDistanceCalculator* doca = ... ;
-     *  AFun chi2MAX = ACHI2DOCA ( doca ) ;
+     *  AFun chi2_12 = ACHI2DOCA ( 1 , 2 , doca ) ;
      *
      *  const LHCb::Particle::ConstVector& combination = ... ;
      *
-     *  const double maxChi2 = fun ( combination ) ;
+     *  const double chi2 = chi2_12 ( combination ) ;
      *
      *  @endcode
      *  
      *  @see IDistanceCalculator
-     *  @see LoKi::AParticles::MaxDOCAChi2
-     *  @see LoKi::Cuts::ADOCACHI2
+     *  @see LoKi::AParticles::DOCAChi2
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-20
      */
-    typedef LoKi::AParticles::MaxDOCAChi2                           ACHI2DOCA ;
+    typedef LoKi::AParticles::DOCAChi2                              ACHI2DOCA ;
     // ========================================================================
     /** @typedef ACHI2V
      *  Simple fuction which evaluates chi2 of the vertex fit for the 
@@ -355,7 +354,6 @@ namespace LoKi
      *  
      *  @see IDistanceCalculator
      *  @see LoKi::AParticles::MaxDOCAChi2
-     *  @see LoKi::Cuts::ACHI2DOCA
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-07-20
      */
