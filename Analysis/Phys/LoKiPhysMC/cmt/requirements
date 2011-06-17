@@ -1,0 +1,48 @@
+# $Id$ 
+# ============================================================================
+# Created    : 2006-03-11
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
+# ============================================================================
+package           LoKiPhysMC
+version           v9r3
+
+# =============== structure ==================================================
+branches          cmt doc src dict python LoKi
+	
+# =============== dependencies ===============================================
+use               Relations          v* Kernel
+use               LoKiMC             v* Phys 
+use               LoKiPhys           v* Phys 
+use               LoKiGenMC          v* Phys 
+use               LinkerEvent        v* Event
+use               DaVinciMCKernel    v* Phys
+
+private
+macro CLHEP_use "" osx105 "CLHEP v* LCG_Interfaces"
+use ${CLHEP_use}
+public
+
+# =============== own includes ===============================================
+apply_pattern install_more_includes  more=LoKi
+apply_pattern install_python_modules 
+
+# =============== constituents ===============================================
+library           LoKiPhysMCLib ../src/*.cpp 
+library           LoKiPhysMC    ../src/Components/*.cpp 
+
+# ============== Produce LCG dictionary =======================================
+apply_pattern    reflex_dictionary                                     \
+                 dictionary=LoKiPhysMC                                 \        
+                 headerfiles=$(LOKIPHYSMCROOT)/dict/LoKiPhysMCDict.h   \
+                 selectionfile=$(LOKIPHYSMCROOT)/dict/LoKiPhysMC.xml   \  
+                 options=" -U__MINGW32__ "
+
+# =============== patterns ===================================================
+apply_pattern    linker_library    library=LoKiPhysMCLib
+apply_pattern    component_library library=LoKiPhysMC
+apply_pattern    QMTest  
+# ============================================================================
+
+# ============================================================================
+# The END 
+# ============================================================================

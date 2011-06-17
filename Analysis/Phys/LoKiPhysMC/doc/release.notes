@@ -1,0 +1,601 @@
+! $Id$ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiPhysMC
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : RC <--> MC part of LoKi 
+! -----------------------------------------------------------------------------
+
+!========================= LoKiPhysMC v9r3 2011-06-17 =========================
+! 2011-06-04 - Vanya Belyaev
+ - remove some code 
+
+! 2011-05-22 - Vanya Belyaev
+  
+ - MCMatchObj.cpp
+    another fix 
+  
+  
+! 2011-05-18 - Vanya Belyaev
+
+ - MCMatchObj.cpp
+   minor fix in logic 
+
+! 2011-05-18 - Vanya Belyaev
+
+ - MCMatchObj.cpp
+   see bug report #82409
+   release a bit the matching criteria for composed particles :-( 
+   finally the final state matches is enough... 
+   I suspect that it it too "loose".. but  not I see no other easy solution 
+   for Steve's problem 
+
+ - cmt/requirements 
+   version increment to v9r2 
+
+     
+
+!========================== LoKiPhysMC v9r1 2010-06-24 ========================
+
+! 2010-05-31 - Vanya Belyaev
+ - fix for new LoKiMC 
+ - cmt/requirements 
+   version increment to v9r1 
+
+!========================== LoKiPhysMC v9r0 2010-04-30 ========================
+
+! 2010-04-21 - Vanya Belyaev
+
+ - src/Component/P2MCBase.h
+
+     Container -> Range 
+
+   see task #13342 
+
+
+
+! 2010-04-06 - Vanya Belyaev
+ - replace LoKi::Range with Gaudi::Range
+ - new decorators 
+ - cmt/requirements 
+    version increment to v9r0 
+  
+!========================== LoKiPhysMC v8r8 2010-03-27 ========================
+! 2010-03-14 - Vanya Belyaev
+
+ - src/MatchObj.cpp
+
+    - do not try to "use" ProtoParticles & Tracks, 
+      if no corresponidg MC-tables are provided
+
+    It is minor fix, but very important for usage with MicroDST  
+
+- cmt/requirements
+
+     verision increment to v8r8 
+
+!========================== LoKiPhysMC v8r7 2010-02-26 ========================
+
+! 2010-02-18 - Vanya Belyaev
+
+ - add new component , LoKi::Hybrid::MCTupleTool, 
+
+    simple implementation  of IMCParticleTupleTool interface:
+
+    XXTool.Varibales = {
+
+     ## "name" : "functor" 
+
+     'px' : "MCPX" , 
+
+     'fromB'         : " switch ( MCINANCESTORS ( BEAUTY ) , 1 , 0 ) " , 
+
+     'fromLongLived' : " switch ( MCINANCESTORS ( MCDECNODE ( Nodes.LonvLived ), 1 , 0 ) " ,
+
+     'fromPV' : " 0 == MCNINANCESTORS ( MCDECNODE ( Nodes.LonvLived ) ) " 
+
+    }
+    
+
+
+ - cmt/requirements 
+
+     version increment to v8r7  
+
+!========================== LoKiPhysMC v8r6 2009-12-11 ========================
+! 2009-12-03 - Vanya Belyaev
+
+ - MCMatcher: automatiocally insert 'Relations/' into the path for relation table, 
+   is original path does nto work...
+
+
+! 2009-11-27 - Vanya Belyaev
+
+ - minor fix with the default arguments for MCMatcher functors 
+  ( required for properMC-match within DecayTreeTuple framework)
+ 
+ - cmt/requirement 
+
+     version increment to v8r6 
+
+!========================== LoKiPhysMC v8r5 2009-10-16 ========================
+! 2009-09-03 - Vanya BELYAEV
+ - fix event and reference counters for MC-match 
+ - cmt/requirements 
+     version increment to v8r5 
+
+!========================== LoKiPhysMC v8r4 2009-09-02 ========================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiPhysMC_dll.cpp
+
+! 2009-08-12 - Vanya BELYAEV
+
+ - add more context symnols:
+
+      MCSELMATCH 
+      MCNODEMATCH 
+      MCTREEMATCH 
+
+   and the helper function mcMatch 
+
+ Thus one can use following constructions for 
+   CombineParticles/FilterDesktop & "Hybrid" Plot/Print/Tuple-tools
+
+
+    XXX.DaughterCuts  = { 
+      'K+'  :  " ( PT > 1*GeV ) & MCMATCH     ( '[B_s0 => ^K+ ^K-]cc' ) " , 
+      'pi+' :  " ( PT > 1*GeV ) & MCSELMATCH  ( 'pi+' == MCABSD )  "      , 
+      'mu+' :  " ( PT > 1*GeV ) & MCNODEMATCH ( Lepton ) "   
+     }
+
+
+! 2009-08-11 - Vanya BELYAEV
+
+ - add new "context" symbol MCMATCH to be used with CombineParticles/FilterDesktop 
+
+ - cmt/requirements 
+
+   version increment to v8r4 
+
+!========================== LoKiPhysMC v8r3 2009-05-25 ========================
+! 2009-05-09 - Vanya BELYAEV
+ - remove unnesessary std::unary/binary_function bases 
+ - cmt/requirements
+   version increment to v8r3 
+
+!========================== LoKiPhysMC v8r2 2009-05-07 ========================
+! 2009-03-12 - Vanya BELYAEV
+ - src/MCMatchObj.cpp
+   fix to speed-up drastically the Monte Carlo Truth Matching 
+   (thank to Jibo HE for inspiring "bug"-example) 
+
+ - cmt/requirements 
+   version increment to v8r2 
+
+!========================== LoKiPhysMC v8r1 2009-01-12 ========================
+! 2009-01-10 - Chris Jones
+ - Add CLHEP dependency for OSX
+
+! 2008-11-28 - Vanya BELYAEV
+ - Add QMTest
+
+!========================== LoKiPhysMC v8r0 2008-11-17 ========================
+! 2008-11-04 - Vanya BELYAEV
+ - remove all opts files ( and the directory)
+
+   add the configurations to tun 'on-demand'
+    Track -> MC relation tables 
+    Primary Vertices ---> Monte Carlo Vertices 
+    Primary Vertices ---> Generator Collisions  relation tables
+   
+   python/LoKiPhysMC/Track2MC_Configuration.py 
+   python/LoKiPhysMC/PV2MC_Configuration.py 
+
+
+! 2008-11-03 - Vanya BELYAEV
+ - resurrect & redesign all PV -> MCV stuff
+
+! 2008-11-02 - Vanya BELYAEV
+ - more fixes for variosu compilers 
+ - remove some methods form the dictionaries 
+
+! 2008-10-29 - Vanya BELYAEV
+ - few fixes to please gcc43 compilation 
+ - cmt/requirements 
+    versiom increment to v8r0 
+
+!========================== LoKiPhysMC v7r4 2008-07-27 ========================
+! 2008-07-22 - Vanya BELYAEV
+ - LoKi/DecayChain.h
+   remove obsolete CLHEP methods (not needed anymore with new HepMC)
+
+ - cmt/requirements 
+   version inrement to v7r4
+
+!========================== LoKiPhysMC v7r3 2008-06-30 ========================
+! 2008-06-25 - Vanya BELYAEV
+ - update the components
+ - cmt/release.notes 
+    version inrment to v7r3
+
+!========================== LoKiPhysMC v7r2 2008-06-02 ========================
+! 2008-06-02 - Marco Cattaneo
+ - Fix two doxygen warnings
+ - cmt/requirements:  version increment to v7r2 
+
+! 2008-06-02 - Vanya Belyaev
+ - Change the handled incidents from EndEvent to BeginEvent 
+
+!========================== LoKiPhysMC v7r1 2008-05-19 ========================
+! 2008-05-19 - Marco Cattaneo
+ - Fix many "cut & paste" doxygen warnings
+ - Remove obsolete macro form requirements
+
+! 2008-05-17 - Vanya BELYAEV
+ - LoKi/DechayChain.h, src/DecayChain.cpp 
+    put the various minor changes into improve the printout
+    in partular now all colors work nicely
+
+! 2008-05-05 - Vanya BELYAEV
+ - src/Components/DumpMC.cpp 
+     new algorithm LoKi::DumpMC to perform the detailed printout of 
+     MC information
+
+! 2008-05-04 - Vanya BELYAEV
+ - src/Components/DumpHepMC.cpp 
+     new algorithm LoKi::DumpHepMC to perform the detailed prinput of 
+     HepMC information (it is very useful for debugging of generators)
+
+- cmt/requirements:  version increment to v7r1 
+
+!========================== LoKiPhysMC v7r0 2007-12-03 ========================
+! 2007-12-03 - Vanya BELYAEV
+ - update for the next major version of LoKi v7r0 ("The powerful Streamers")
+ - cmt/requirements
+   version increment to v7r0 
+
+!========================== LoKiPhysMC v6r2 2007-11-06 ========================
+! 2007-11-06 - Marco Cattaneo
+ - Fix some doxygen warnings
+
+! 2007-11-05 - Vanya BELYAEV
+  - src/Components/LoKi_PV2MCAlg.cpp 
+
+    fix couple of small problems with PV vertex <--> MC vertex association 
+     
+ - cmt/requirements 
+   version increment to v6r2 
+
+!========================== LoKiPhysMC v6r1 2007-10-08 ========================
+! 2007-10-07 - Vanya BELYAEV
+ - cmt/requirements 
+    increment version to v6r1 
+    use new pattern for python modules 
+
+!========================== LoKiPhysMC v6r0 2007-09-04 ========================
+! 2007-08-20 - Vanya BELYAEV
+ - increment the major version to v6r0
+
+!========================== LoKiPhysMC v5r0 2007-06-11 ========================
+! 2007-06-10 - Vanya BELYAEV
+ - add the decorators for MCMatch class, 
+ - few small fixes to please Reflex and make 
+   functions vizible 
+ - some work on unification of vizible interface 
+
+  New files:
+
+   LoKi/MCMatchDicts.h
+    src/MCMatchDicts.cpp
+
+! 2007-06-04 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiPhysMC_load.cpp
+
+! 2007-06-01 - Vanya BELYAEV
+ - prepare for the new major version v5r0
+
+ - New files:
+
+   dict/LoKiPhysMC.xml
+   dict/LoKiPhysMCDict.h
+
+   python/LoKiPhysMC/__init__.py
+   python/LoKiPhysMC/decorators.py
+   python/LoKiPhysMC/functions.py
+   python/LoKiPhysMC/tests.py
+
+ - Modified files:
+
+ - cmt/requirements 
+    version increment to v5r0 
+
+!========================== LoKiPhysMC v4r1p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
+
+!========================== LoKiPhysMC v4r1 2007-04-04 =======================
+
+! 2007-04-04 - Vanya BELYAEV
+
+ - src/Components/LoKi_HepMCPArticleMaker.cpp
+    fix a stupid bug with the defauld cuts for photons 
+ - cmt/requirements 
+    version increment to v4r1 
+  
+!========================== LoKiPhysMC v4r0 2007-02-25 =======================
+
+! 2007-02-24 - Vanya BELYAEV
+  - src/Components/LoKi_P2MC.cpp ,
+    src/Components/LoKi_P2MCW.cpp
+       1) adapt to new location of Particle2MCLinker 
+       2) eliminate the code duplication through insertion of base class 
+          LoKi::P2MC
+  - src/Components/P2MC.h,
+    src/Components/P2MC.cpp
+      new base class to remove the code duplication in P2MC and 
+      P2MCW algorithms
+
+  - retag as v4r0
+
+! 2007-02-23 - Vanya BELYAEV
+ - add an "On-Demand" conversion of Linkers into Relation tables.
+   - options/StdParticles2MC.opts
+     options/StdKaons2MC.opts
+     options/StdMuons2MC.opts
+     options/StdPions2MC.opts
+     options/StdProtons2MC.opts
+     options/StdElectrons2MC.opts
+     options/StdD02MC.opts
+     options/StdDplus2MC.opts
+     options/StdPhi2MC.opts
+     options/StdJpsi2MC.opts
+
+    Configuration files to run an automatic on-demand decoding of linker objects 
+    into  Relation tables.
+    The configurtaionis just approximate, 
+      for each concrete case, some tuning could be needed  
+ 
+ - cmt/requirements
+    version increment to v4r0 
+
+!========================== LoKiPhysMC v3r0 2007-01-20 =======================
+
+! 2007-01-20 - Vanya BELYAEV
+ - LoKi/PhysMCParticles.h, 
+   src/PhysMCParticles.cpp 
+    
+    add new function LoKi::Particles::GenMCTruth for association of 
+    LHCb::Particle objects and HepMC::GenParticle objects
+   ( it is needed e.g. for parton-jet matching in higgs/jet studies)
+
+    /** @class GenMCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
+     *
+     *  Helper and useful function to be used to check the matching of  
+     *  LHCb::Particle and some HepMC::GenParticle
+     *
+     *  @code 
+     * 
+     *  // some sequence of HepMC-particles
+     *  SEQUENCE hepmcps = ...  ;
+     *  // get RC<-->MC-matcher 
+     *  MCMatch   mc =  ... ;
+     *  // get HepMC<-->MC matcher
+     *  const LHCb::HepMC2MC* table = ... ;
+     *  // create the function 
+     *  Cut cut = GMCTRUTH( table , mc , hepmcps.begin() , hepmcps.end() ) ;
+     *  
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the predicate!
+     * 
+     *  const bool good = cut( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GMCTRUTH 
+     *  @author Vanya BELYAEV ibelyaev@physics.sye.edu
+     *  @date   2003-01-28
+     */
+
+ - LoKi/PhysMCParticleCuts.h:
+
+    add a shortcut (LoKi::Cuts::)GMCTRUTH for new class LoKi::Particles::GenMCTruth
+
+! 2007-01-19 - Vanya BELYAEV
+
+ - LoKi/DecayChain.h
+     add the printout for many additional classes
+
+
+!========================== LoKiPhysMC v3r0 2007-01-09 =======================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+
+!========================== LoKiPhysMC v2r6p1 2006-12-15 =====================
+
+! 2006-12-15 - Ivan Belyaev
+ - src/Components/LoKi_HepMCParticleMaker.cpp
+   fix few bugs, observed and lindly reported by Victor COCO
+ - cmt/requirements 
+   version increment to v2r6p1 
+ 
+!========================== LoKiPhysMC v2r6 2006-11-25 ========================
+! 2006-11-25 - Vanya BELYAEV
+  - add RCTUTH typedef into namespace LoKi::Cuts 
+  - improve a little bit Doxygen documentation 
+  - remove semicolumns after the namespaces 
+  - cmt/requirements 
+    version imcprement to v2r6 
+
+
+!========================== LoKiPhysMC v2r5 2006-11-12 ========================
+
+! 2006-11-12 - Vanya BELYAEV
+
+ - src/Components/LoKi_HepMCParticleMaker.cpp
+    for the default configuration DISABLE the smearing of momenta and positions
+    
+ - options/StdHepMCPhotons.opts
+     new file for "standard HepMC-photons" 
+
+ - options/*.opts 
+     adapt all option-file for new semantic of Data-On-Demans Service 
+  
+ - cmt/requirements 
+    1) add the environment variables:  
+       HEPMCSTANDARDPARTICLESROOT and HEPMCSTANDARDPARTICLESOPTS to allow
+       coherent inclusion of HepMC particles, e.g.
+   
+          #include "$HEPMCSTANDARDPARTICLESOPTS/StdHepMCPions.opts"
+    2) version increment to v2r5 
+
+!========================== LoKiPhysMC v2r4 2006-10-11 ========================
+
+! 2006-10-11 - Vanya BELYAEV
+
+   Make usage of new package Phys/DaVinciMCKernel 
+
+ - Kernel/*.cpp : remove all files 
+
+ - cmt/requirements
+     version incrmeent to v2r4 
+
+! 2006-10-10 - Vanya BELYAEV
+ - LoKi/MCMatchObj.h
+   src/MCMatchObj.cpp
+     tiny fixes for good&valid reflex/python dictionaries 
+ - cmt/requirements
+     version incrmeent to v2r3 
+  
+!========================== LoKiPhysMC v2r2 2006-10-04 ========================
+! 2006-10-04 - Vanya BELYAEV
+ 
+  - Kernel/RC2HepMC.h 
+
+      new file, nesessary definitions for LHCb::Particle -> HepMC::GenParticle
+  
+  - options/StdHepMCElectrons.opts
+  - options/StdHepMCKaons.opts
+  - options/StdHepMCMuons.opts
+  - options/StdHepMCPions.opts
+  - options/StdHepMCProtons.opts
+
+     configuration files to build on-demand "standard" particles 
+     from generator information 
+
+  - src/Components/LoKi_HepMCParticleMaker.cpp
+    
+     special "particle maker": tool to produce particles from generator 
+     particles.
+
+ - RETAG ad v2r2 
+
+
+!========================== LoKiPhysMC v2r2 2006-09-26 ========================
+! 2006-09-26 - Vanya Belyaev
+ - add LoKi_HepMCParticleMaker.cpp 
+ - cmt/requirements
+      version increment to v2r2 
+
+!========================== LoKiPhysMC v2r1 2006-09-06 ===================
+
+! 2006-09-06 - Vanya BELYAEV
+ - LoKi/PhysMCParticles.h, src/PhysMCParticles.cpp
+     fix a duplication in constructor 
+ - cmt/requirements 
+     version increment to v2r1 
+
+
+!========================== LoKiPhysMC v2r0 2006-08-30 ===================
+
+
+! 2006-08-29 - Ivan BELYAEV
+
+   Many updated to simplify the operations with MC 
+
+ - Kernel/Particle2MC.h
+   Kernel/Track2MC.h
+     new definitions 
+   
+
+
+! 2006-08-15 - Vanya BELYAEV
+
+ - make an adaptation to new inheriance scheme 
+      LHCb::Vertex <--- LHCb::VertexBase --> LHCb::RecVertex 
+ - cmt/requirements 
+   version increment to v2r0 
+
+
+!========================== LoKiPhys v1r2 2006-07-07 ===================
+
+! 2006-06-23 - Juan PALACIOS
+  - fix for new version of Kernel/Relations 
+   (no need in "serializers" anymore)
+  - cmt/requirements increment version to v1r2
+
+!========================== LoKiPhys v1r1 2006-05-29 ===================
+
+! 2006-05-27 - VanyaBELYAEV
+ - LoKi/DecayChain.h, src/DecayChain.cpp
+   nice utility for printout of  (Phys/MC/HepMC)-trees 
+ - cmt/requirments
+   versionincrement to v1r1 
+ 
+! 2006-03-19 - Vanya BELYAEV
+ - the major upgrade 
+   add the code for making the links inbetween the recontructed 
+   primary vertices and (primary) MC-vertices and pp-collisions.
+  
+   The link attribute ("weight") is LHCb::PV2MCWeight, 
+     which is std::pair<size_t,float>.
+   The first component is  a number of true MC-tracks from the 
+   given (primary) vertez, used in the reconstruction of the PrimVertex
+   The second component is chi2-distance inbetween the reconstructed 
+   primary vertex and (primary) MC-vertex/pp-Collision 
+
+   Relation tables and builder algorithsm 
+    
+   Kernel/PV2MC.h 
+     the defintion of basic types & table locations
+     Types: 
+      RC           --> MC 
+     IRelationWeighted<LHCb::PrimVertex,LHCb::MCVertex,LHCb::PV2MCWeght> ,
+      MC           --> RC 
+     IRelationWeighted<LHCb::MCVertex,LHCb::PrimVertexLHCb::PV2MCWeght> ,
+      RC           --> pp-Collision
+     IRelationWeighted<LHCb::PrimVertex,LHCb::GenCollision,LHCb::PV2MCWeght> ,
+      pp-Collision --> RC 
+     IRelationWeighted<LHCb::GenCollision,LHCb::PrimVertexLHCb::PV2MCWeght> 
+
+  Locaions of 2D tables:
+    LHCb::PV2MCLocation::Default, defined as 
+      "Relations/" + LHCb::VertexLocation::Primary 
+    LHCb::PV2CoillisonLocation::Default, defined as 
+      "Relations/" + LHCb::VertexLocation::Primary + "2Collision"
+ 
+  Algorithm:
+   
+   src/Components/LoKi_PV2MCAlg.cpp
+     the algorithm to build the links
+
+  Run-time configuration  (using Data-on-Demand service) 
+
+     options/LoKiPhysMC.opts
+     options/PV2MC.opts
+    
+
+   OPTIONAL: (for those who likes to manipulate with tools)
+
+   Kernel/IPV2MC.h
+   src/Components/LoKi_PV2MC.cpp 
+     definition of the abstract interface to deal with the tables
+     and concrete tool  
+
+
+! 2006-03-14 - Vanya BELYAEV
+ - new import 
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
