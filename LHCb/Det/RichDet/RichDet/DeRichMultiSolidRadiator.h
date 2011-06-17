@@ -100,7 +100,17 @@ private:
   /// Add radiator volumes
   StatusCode addVolumes(const ILVolume* lv,
                         const std::string& volName,
+                        const Gaudi::Transform3D& toUpperLevel, const int VolIndex);
+
+  StatusCode addFullTileVolumes(const ILVolume* lv,
+                        const std::string& volName,
                         const Gaudi::Transform3D& toUpperLevel);
+
+  StatusCode addSubTileVolumes(const ILVolume* lv,
+                        const std::string& volName,
+                        const Gaudi::Transform3D& toUpperLevel);
+
+
 
   /// UMS update on geometry changes
   StatusCode geometryUpdate();

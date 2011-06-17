@@ -60,7 +60,10 @@ public:
   /** Access the Aerogel tile ID number
    *  @return The tile ID */
   inline int tileID() const { return m_tileNumber; }
-
+  inline int subtileCopynumber() const { return m_subtilecopynumber;}
+  inline int subtileIDInTile() const  {  return m_subtileNumInTile;}
+  
+  
 private:
 
   /// method to update the refractive index of the radiator
@@ -97,7 +100,12 @@ private:
 
   /// Aerogel tile number
   int m_tileNumber;
-
+  /// Aerogel  sub tile copy number
+  int m_subtilecopynumber;
+  
+  /// Aerogel subtile number in  a tile
+  int m_subtileNumInTile;
+  
 };
 
 #endif // RICHDET_DERICHAEROGELRADIATOR_H
