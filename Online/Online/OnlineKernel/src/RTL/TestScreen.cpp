@@ -2,7 +2,6 @@
 #include <cstring>
 #include "RTL/rtl.h"
 #include "RTL/strdef.h"
-#include "RTL/screen.h"
 #include "SCR/scr.h"
 
 extern "C" int rtl_testscreen(int argc,char **) {
