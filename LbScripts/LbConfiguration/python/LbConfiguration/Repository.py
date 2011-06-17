@@ -71,8 +71,6 @@ repositories = { "gaudi": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch",
                             "anonymous": SVNReposInfo( "http", "svnweb.cern.ch", "/guest/lhcb" ) },
                  "dirac": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/dirac" ),
                             "anonymous": SVNReposInfo( "http", "svnweb.cern.ch", "/guest/dirac" ) },
-                 "lbdirac": { "ssh":     SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/lbdirac" ),
-                            "anonymous": SVNReposInfo( "http", "svnweb.cern.ch", "/guest/lbdirac" ) },
                  }
 # Define default repositories
 for k in repositories:
