@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-06-18 - Patrick Robbe
+ - src/ProductionAsymmetry.cpp, src/GenMonitorAlg.cpp, 
+   src/GeneratorAnalysis.cpp, src/ProductionAnalysis.cpp:
+    fix for HepMC2.06 compilation: change mag() function to rho()
+
 !====================== GaussMonitor v6r7 2011-05-31 =========================
 ! 2011-5-27 - Mark Whitehead
  - src/GeneratorFullMonitor.cpp, src/GeneratorFullMonitor.h: Gloria added some

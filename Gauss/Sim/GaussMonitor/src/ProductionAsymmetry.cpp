@@ -237,7 +237,7 @@ StatusCode ProductionAsymmetry::someplots(const HepMC::GenParticle* plotme)
    double pseudoRap =  plotme->momentum().pseudoRapidity();
    double energy = plotme->momentum().e()/Gaudi::Units::GeV;
    double pt = plotme->momentum().perp()/Gaudi::Units::GeV;
-   double p =  plotme->momentum().mag()/Gaudi::Units::GeV;
+   double p =  plotme->momentum().rho()/Gaudi::Units::GeV;
             
    debug() << "ready to book histos" << endmsg;
 

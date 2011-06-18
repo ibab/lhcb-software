@@ -149,7 +149,7 @@ StatusCode GenMonitorAlg::execute() {
             } 
           }
           
-          m_hPartP->fill( hepMCpart->momentum().mag()/
+          m_hPartP->fill( hepMCpart->momentum().rho()/
                           Gaudi::Units::GeV );
           m_hPartPDG->fill( hepMCpart->pdg_id() );
         }
@@ -160,7 +160,7 @@ StatusCode GenMonitorAlg::execute() {
         if( ( hepMCpart->status() != 2 ) && ( hepMCpart->status() != 3 ) ) {
           nParticlesStable++;
           if( produceHistos() ) {
-            m_hProtoP->fill( hepMCpart->momentum().mag()/
+            m_hProtoP->fill( hepMCpart->momentum().rho()/
                              Gaudi::Units::GeV );
             m_hProtoPDG->fill( hepMCpart->pdg_id() );
             m_hProtoLTime->fill( GaussGenUtil::lifetime( hepMCpart )/

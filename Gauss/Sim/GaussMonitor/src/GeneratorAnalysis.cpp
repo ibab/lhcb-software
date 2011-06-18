@@ -202,7 +202,7 @@ StatusCode GeneratorAnalysis::execute() {
         double pseudoRap =  hepMCpart->momentum().pseudoRapidity();
         double energy = hepMCpart->momentum().e()/Gaudi::Units::GeV;
         double pt = hepMCpart->momentum().perp()/Gaudi::Units::GeV;
-        double p =  hepMCpart->momentum().mag()/Gaudi::Units::GeV;
+        double p =  hepMCpart->momentum().rho()/Gaudi::Units::GeV;
         int pID = hepMCpart->pdg_id();
         LHCb::ParticleID LHCb_pID( hepMCpart->pdg_id() );
 
