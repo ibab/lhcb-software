@@ -348,6 +348,3 @@ RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
   }
   return error("Invalid iteration context.");
 }
-
-#include "GaudiKernel/DeclareFactoryEntries.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootEvtSelector)

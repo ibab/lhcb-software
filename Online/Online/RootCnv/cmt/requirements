@@ -16,16 +16,19 @@ apply_pattern reflex_dictionary dictionary=RootCnv \
 		selectionfile=$(ROOTCNVROOT)/dict/RootCnv_dict.xml
 #===========================================================================
 library     RootCnvLib ../src/*.cpp
+macro_append RootCnvLib_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
 apply_pattern linker_library library=RootCnvLib
-macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
 
 library RootCnv ../components/*.cpp
+macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
 apply_pattern component_library library=RootCnv
 macro_append  RootCnv_dependencies  " RootCnvLib "
 ###macro_append  MDF_cppflags "" target-vc9 " -wd4996 "
 
-macro RootCnv_ext_linkopts  ' -lRootCnv ' WIN32 ' RootCnv.lib '
 application gaudi_merge ../merge/merge.cpp
+macro_append gaudi_merge_dependencies  " RootCnvLib "
+
+macro RootCnv_ext_linkopts  ' -lRootCnv ' WIN32 ' RootCnv.lib '
 
 private
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
