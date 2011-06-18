@@ -20,6 +20,8 @@ macro_append  ROMon_dependencies       " XMLRPC "
 apply_pattern linker_library   library=XMLRPC
 apply_pattern linker_library   library=ROMon
 apply_pattern install_python_modules
+macro_append  ROMon_cppflags "" target-vc9 " -wd4996 -wd4503 "
+
 #
 #
 set ROMONDATA ${ROMONROOT}/xml
