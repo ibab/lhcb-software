@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2011-06-19 - Alex GRECU
+ - comment #include <IO_Ascii.h> in component/HijingProduction.cpp. Fix 
+   compilation against HepMC 2.06
+
 !========================= LbHijing v6r0 2011-04-13 ==========================
 ! 2011-03-22 - Gloria CORTI
  - Introduce "-fno-second-underscore" for gcc3 to test if rebuild version of
