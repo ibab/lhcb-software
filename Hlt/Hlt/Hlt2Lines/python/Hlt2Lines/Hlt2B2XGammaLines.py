@@ -36,7 +36,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'B0DirAngle'   : 0.045  #0.999    # Dimensionless
                   # HLT filter
                    #,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1.*Photon.*Decision')"
-                   ,'HLT1FILTER'   : ""
+                   ,'HLT1FILTER'   : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!Velo)(?!BeamGas)(?!Incident).*Decision')" 
                    ,'L0FILTER'     : "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon','Electron'] ] ) 
                   # Pre- and postscale
                    ,'Prescale'     : { 'Hlt2Bs2PhiGamma$'   : 1.0
