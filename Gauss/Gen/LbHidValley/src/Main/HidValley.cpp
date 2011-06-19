@@ -51,7 +51,7 @@ struct MYDATA_DEF { double zpmass, pimass, pizlif,piplif; } ;
 extern "C" MYDATA_DEF MYDATA;
 #define mydata MYDATA
 #else 
-extern struct { double zpmass,pimass, pizlif,piplif; } mydata_ ;
+extern struct mydata_def { double zpmass,pimass, pizlif,piplif; } mydata_ ;
 #define mydata mydata_ 
 #endif
 // ============================================================================

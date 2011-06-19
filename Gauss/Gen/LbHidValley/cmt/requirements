@@ -19,6 +19,7 @@ set               LBHIDVALLEYOPTS $(LBHIDVALLEYROOT)/options
 use               LbPythia     v* Gen 
 use               Boost        v* LCG_Interfaces 
 use               GENSER       v* Gen 
+use               LoKiGen      v* Phys
 
 # =============== constituents ================================================
 library           LbHidValleyLib Lib/*.cpp  Lib/*.F  
