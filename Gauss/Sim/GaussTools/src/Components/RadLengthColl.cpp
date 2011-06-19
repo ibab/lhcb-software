@@ -153,7 +153,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
   VOL=Vol->GetLogicalVolume();
   initial_position = thePreStepPoint->GetPosition();
   // initialize the counters at the origin of the track
-  if(initial_position[0] == 0 && initial_position[1] == 0 & initial_position[2] == 0 ){
+  if(initial_position[0] == 0 && initial_position[1] == 0 && initial_position[2] == 0 ){
     theRadLength=0;
     theCumulatedRadLength=0;
     thePlane2PlaneRadLength=0;
