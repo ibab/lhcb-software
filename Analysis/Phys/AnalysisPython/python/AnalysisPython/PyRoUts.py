@@ -457,13 +457,16 @@ def binomEff_h1 ( h1 , h2 ) :
     """
     func = binomEff
     #
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h1 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
     result = h1.Clone( hID () )
     #
     for i1,x1,y1 in h1.iteritems() :
         #
         assert ( _int ( y1 ) )
         #
-        y2 = h2 ( x1 ) 
+        y2 = h2 ( x1.value() ) 
         assert ( _int ( y2 ) )
         #
         l1 = long ( y1.value () )
@@ -479,7 +482,6 @@ def binomEff_h1 ( h1 , h2 ) :
     return result 
 
 ROOT.TH1.  binomEff    = binomEff_h1 
-ROOT.TH1.__floordiv__  = binomEff_h1 
 
 # =============================================================================
 ## calculate the efficiency histogram using the binomial erorrs 
@@ -489,13 +491,16 @@ def binomEff_h2 ( h1 , h2 ) :
     """
     func = binomEff
     #
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h1 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
     result = h1.Clone( hID () )
     #
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
         assert ( _int ( z1 ) )
         #
-        z2 = h2 ( x1 , y1 ) 
+        z2 = h2 ( x1.value() , y1.value() ) 
         assert ( _int ( z2 ) )
         #
         l1 = long ( z1.value () )
@@ -511,7 +516,177 @@ def binomEff_h2 ( h1 , h2 ) :
     return result 
 
 ROOT.TH2.  binomEff    = binomEff_h2 
+
+
+ROOT.TH1.__floordiv__  = binomEff_h1 
 ROOT.TH2.__floordiv__  = binomEff_h2
+
+# =============================================================================
+## operation with the histograms 
+def _h1_oper_ ( h1 , h2 , oper ) :
+    """
+    Operation with the histogram 
+    """
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h1 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    #
+    for i1,x1,y1 in h1.iteritems() :
+        #
+        result.SetBinContent ( i1 , 0 ) 
+        result.SetBinError   ( i1 , 0 )
+        #
+        y2 = h2 ( x1.value() ) 
+        #
+        v = oper ( y1 , y2 ) 
+        #
+        result.SetBinContent ( i1 , v.value () ) 
+        result.SetBinError   ( i1 , v.error () )
+        
+    return result
+
+# =============================================================================
+##  Division with the histograms 
+def _h1_div_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x/y ) 
+# =============================================================================
+##  Division with the histograms 
+def _h1_mul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x*y ) 
+# =============================================================================
+##  Addition with the histograms 
+def _h1_add_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x+y ) 
+# =============================================================================
+##  Subtraction of the histograms 
+def _h1_sub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x-y ) 
+
+# =============================================================================
+## 'pow' the histograms 
+def _h1_pow_ ( h1 , val ) :
+    """
+    ``pow'' the histogram 
+    """
+    if not h1.GetSumw2() : h1.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    #
+    for i1,x1,y1 in h1.iteritems() :
+        #
+        result.SetBinContent ( i1 , 0 ) 
+        result.SetBinError   ( i1 , 0 )
+        #
+        v = pow ( y1 , val ) 
+        #
+        result.SetBinContent ( i1 , v.value () ) 
+        result.SetBinError   ( i1 , v.error () )
+        
+    return result 
+
+    
+ROOT.TH1.__div__  = _h1_div_
+ROOT.TH1.__mul__  = _h1_mul_
+ROOT.TH1.__add__  = _h1_add_
+ROOT.TH1.__sub__  = _h1_sub_
+ROOT.TH1.__pow__  = _h1_pow_
+
+# =============================================================================
+## operation with the histograms 
+def _h2_oper_ ( h1 , h2 , oper ) :
+    """
+    Operation with the histogram 
+    """
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h1 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    #
+    for ix1,iy1,x1,y1,z1 in h1.iteritems() :
+        #
+        result.SetBinContent ( ix1 , iy1 , 0 ) 
+        result.SetBinError   ( ix1 , iy1 , 0 )
+        #
+        y2 = h2 ( x1.value() , y1.value() ) 
+        #
+        v = oper ( y1 , y2 ) 
+        #
+        result.SetBinContent ( ix1 , iy1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , v.error () )
+        
+    return result
+
+
+# =============================================================================
+##  Division with the histograms 
+def _h2_div_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x/y ) 
+# =============================================================================
+##  Division with the histograms 
+def _h2_mul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x*y ) 
+# =============================================================================
+##  Addition with the histograms 
+def _h2_add_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x+y ) 
+# =============================================================================
+##  Subtraction of the histograms 
+def _h2_sub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x-y ) 
+
+# =============================================================================
+## 'pow' the histograms 
+def _h2_pow_ ( h1 , val ) :
+    """
+    ``pow'' the histogram 
+    """
+    if not h1.GetSumw2() : h1.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    #
+    for ix1,iy1,x1,y1,z1 in h1.iteritems() :
+        #
+        result.SetBinContent ( ix1 , iy1 , 0 ) 
+        result.SetBinError   ( ix1 , iy1 , 0 )
+        #
+        v = pow ( y1 , val ) 
+        #
+        result.SetBinContent ( ix1 , iy1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , v.error () )
+        
+    return result 
+    
+ROOT.TH2.__div__  = _h2_div_
+ROOT.TH2.__mul__  = _h2_mul_
+ROOT.TH2.__add__  = _h2_add_
+ROOT.TH2.__sub__  = _h2_sub_
+ROOT.TH2.__pow__  = _h2_pow_
+
 
 # =============================================================================
 ## make graph from data 
