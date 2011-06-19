@@ -142,16 +142,16 @@ StatusCode TimeCorrSource::initialize() {
     info() << "Additional info:" << endmsg;
     info() << "  " << ((RooStringVar*)m_rootFile->Get("Header/Misc"))->getVal() << endmsg;
     info() << "" << endmsg;
-    if (((RooStringVar*)m_rootFile->Get("Header/Beam"))->getVal() != "" && m_dz == m_dzDef){
+    if (  ( (TString) *((RooStringVar*)m_rootFile->Get("Header/Beam")) )  != "" && m_dz == m_dzDef){
       m_dz = atoi(((RooStringVar*)m_rootFile->Get("Header/Beam"))->getVal())==1?1:-1;
     }
-    if (((RooStringVar*)m_rootFile->Get("Header/Plane"))->getVal() != "" && m_zOrigin == m_zOriginDef){
+    if (  ( (TString) *((RooStringVar*)m_rootFile->Get("Header/Plane")) ) != "" && m_zOrigin == m_zOriginDef){
       m_zOrigin = atof(((RooStringVar*)m_rootFile->Get("Header/Plane"))->getVal());
     }
-    if (((RooStringVar*)m_rootFile->Get("Header/Scale"))->getVal() != "" && m_protInFile == m_protInFileDef){
+    if (  ( (TString) *((RooStringVar*)m_rootFile->Get("Header/Scale")) ) != "" && m_protInFile == m_protInFileDef){
       m_protInFile = atof(((RooStringVar*)m_rootFile->Get("Header/Scale"))->getVal());
     }
-    if (((RooStringVar*)m_rootFile->Get("Header/Energy"))->getVal() != "" && m_beamEnergy == m_beamEnergyDef){
+    if (  ( (TString) *((RooStringVar*)m_rootFile->Get("Header/Energy")) ) != "" && m_beamEnergy == m_beamEnergyDef){
       m_beamEnergy = atof(((RooStringVar*)m_rootFile->Get("Header/Energy"))->getVal());
     }  
   }
