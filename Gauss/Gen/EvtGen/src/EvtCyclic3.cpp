@@ -239,6 +239,7 @@ Index EvtCyclic3::strToIndex(const char* str)
   else if(strcmp(str,"B")) return B;
   else if(strcmp(str,"C")) return C;
   else assert(0);
+  return A ;
 }
 
 
@@ -248,6 +249,7 @@ Pair EvtCyclic3::strToPair(const char* str)
   else if(!strcmp(str,"BC") || !strcmp(str,"CB")) return BC;
   else if(!strcmp(str,"CA") || !strcmp(str,"AC")) return CA;
   else assert(0);
+  return AB ;
 }
 
 

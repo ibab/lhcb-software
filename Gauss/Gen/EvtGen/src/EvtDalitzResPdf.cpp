@@ -87,6 +87,7 @@ EvtDalitzPoint EvtDalitzResPdf::randomPoint()
   
   printf("No point generated for dalitz plot after 1000 tries\n");
   assert(0);
+  return EvtDalitzPoint(0.,0.,0.,0.,0.,0. ) ;
 }
 
 

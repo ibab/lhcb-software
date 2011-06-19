@@ -1,8 +1,16 @@
 !-----------------------------------------------------------------------------
 ! Package     : EvtGen
-! Responsible : Patrick Robbe, Mark Whitehead 
+! Responsible : Patrick Robbe, Mark Whitehead, John Back
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+! 2011-06-19 - Patrick Robbe
+ - src/EvtBaryonPCRFF.cpp
+   src/EvtBlattWeisskopf.cpp
+   src/EvtDalitzResPdf.cpp
+   src/EvtCyclic3.cpp
+   src/EvtPto3PAmpFactory.cpp
+      fix compilation warnings
 
 !========================== EvtGen v12r0 2011-04-13 ==========================
 ! 2011-02-28 - John Back

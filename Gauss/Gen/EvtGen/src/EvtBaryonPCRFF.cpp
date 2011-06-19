@@ -33,7 +33,7 @@
 using std::endl;
 
 void EvtBaryonPCRFF::getdiracff(EvtId parent, EvtId daught,
-				double q2, double mass, 
+				double q2, double /* mass */ , 
 				double *f1, double *f2, double *f3, 
 				double *g1, double *g2, double *g3 ) {
 
@@ -184,7 +184,7 @@ void EvtBaryonPCRFF::getdiracff(EvtId parent, EvtId daught,
 
 
 void EvtBaryonPCRFF::getraritaff( EvtId parent, EvtId daught,
-				  double q2, double mass, 
+				  double q2, double /* mass */, 
 				  double *f1, double *f2, double *f3, double *f4, 
 				  double *g1, double *g2, double *g3, double *g4 ) {
 

@@ -83,5 +83,6 @@ double EvtBlattWeisskopf::compute(double p) const
 	  assert(0);
 	}
   }
+  return 0.;
 }
 
