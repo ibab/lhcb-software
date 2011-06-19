@@ -35,6 +35,10 @@ __all__     = (
     'histoGuess'     ,     ## guess the simple histo parameters
     'useLL'          ,     ## use LL for histogram fit?
     'allInts'        ,     ## natural histogram with natural entries?
+    #
+    'binomEff'       ,     ## calculate binomial efficiency 
+    'binomEff_h1'    ,     ## calculate binomial efficiency for 1D-histos
+    'binomEff_h2'    ,     ## calculate binomial efficiency for 2D-ihstos 
     'makeGraph'            ## make ROOT Graph from input data
     )
 # =============================================================================
@@ -43,6 +47,7 @@ from   GaudiPython.Bindings import gbl as cpp
 import LHCbMath.Types
 VE             = cpp.Gaudi.Math.ValueWithError
 ValueWithError = cpp.Gaudi.Math.ValueWithError
+binomEff       = cpp.Gaudi.Math.binomEff 
 
 # =============================================================================
 ## global identifier for ROOT objects 
@@ -107,7 +112,7 @@ ROOT.TH1   . __iter__ = _axis_iter_2_
 
 # =============================================================================
 ## get item for the histogram 
-def _histo_get_item_ ( self , ibin ) :
+def _h1_get_item_ ( self , ibin ) :
     """
     ``Get-item'' for the histogram :
     
@@ -121,31 +126,127 @@ def _histo_get_item_ ( self , ibin ) :
 
 # =============================================================================
 ## histogram as function 
-def _histo_call_ ( self , x ) :
+def _h1_call_ ( h1 , x ) :
     """
     Histogram as function:
     
     >>> histo = ....
     >>> ve    = histo ( x ) 
-    """    
-    axis = self.GetXaxis()
-    if not axis.GetXmin() <= x    <= axis.GetXmax  () : return VE(0,0)
-    ##
-    ibin = axis.FindBin ( x )
-    if not 1              <= ibin <= axis.GetNbins () : return VE(0,0)
-    ##
-    val = self.GetBinContent ( ibin ) 
-    err = self.GetBinError   ( ibin ) 
+    """
+    #
+    if hasattr ( x , 'value' )  : return _h1_call_ ( h1 ,  x.value() )
+    #
+    ax = h1.GetXaxis (   )
+    ix = ax.FindBin  ( x )
+    if not 1 <= ix <= ax.GetNbins () : return VE(0,0)
+    #
+    val = h1.GetBinContent ( ix ) 
+    err = h1.GetBinError   ( ix )
+    #
     return VE ( val , err * err ) 
 
-ROOT.TH1   . __getitem__  = _histo_get_item_
-ROOT.TH1F  . __getitem__  = _histo_get_item_
-ROOT.TH1D  . __getitem__  = _histo_get_item_
-ROOT.TH1   . __call__     = _histo_call_
+ROOT.TH1   . __getitem__  = _h1_get_item_
+ROOT.TH1F  . __getitem__  = _h1_get_item_
+ROOT.TH1D  . __getitem__  = _h1_get_item_
+ROOT.TH1   . __call__     = _h1_call_
 ROOT.TH1   . __len__      = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ()
 ROOT.TH1   .   size       = lambda s : len ( s ) 
 ROOT.TH1   . __contains__ = lambda s , i : 1<= i <= len ( s ) 
 
+
+# =============================================================================
+## histogram as function 
+def _h2_call_ ( h2 , x , y ) :
+    """
+    Histogram as function:
+    
+    >>> histo = ....
+    >>> ve    = histo ( x , y ) 
+    """    
+    #
+    if hasattr ( x , 'value' )  : return _h2_call_ ( h2 ,  x.value() , y          )
+    if hasattr ( y , 'value' )  : return _h2_call_ ( h2 ,  x         , y.value () )
+    #
+    ax = h2.GetXaxis (   )
+    ix = ax.FindBin  ( x )
+    if not  1 <= ix <= ax.GetNbins() : return VE ( 0, 0 )
+    #
+    ay = h2.GetYaxis (   )
+    iy = ay.FindBin  ( y )
+    if not  1 <= iy <= ay.GetNbins() : return VE ( 0, 0 )
+    ##
+    val = h2.GetBinContent ( ix , iy ) 
+    err = h2.GetBinError   ( ix , iy )
+    #
+    return VE ( val , err * err ) 
+
+ROOT.TH2   . __call__     = _h2_call_
+
+# =============================================================================
+# iterate over items
+# =============================================================================
+## iterate over entries in 1D-histogram 
+def _h1_iteritems_ ( h1 ) :
+    """
+    Iterate over histogram items:
+    
+    >>> h1 = ...
+    >>> for i,x,y in h1 : ...
+    
+    """
+    ax = h1.GetXAxis()
+    sx = ax.GetNbins()
+    ix = 1
+    while ix <= sx :
+        
+        x   =       ax.GetBinCenter ( ix )
+        xe  = 0.5 * ax.GetBinWidth  ( ix )
+        
+        y   =       h1.GetBinContent ( ix )
+        ye  =       h1.GetBinError   ( ix )
+        
+        yield ix, VE(x,xe*xe) , VE ( y,ye*ye)
+        
+        ix += 1
+
+# =============================================================================
+## iterate over entries in 2D-histogram 
+def _h2_iteritems_ ( h2 ) :
+    """
+    Iterate over histogram items:
+    
+    >>> h2 = ...
+    >>> for ix,iy,x,y,z in h2 : ...
+    
+    """
+    ax = h2.GetXaxis()
+    sx = ax.GetNbins()
+
+    ay = h2.GetYaxis()
+    sy = ay.GetNbins()
+    
+    ix = 1
+    while ix <= sx :        
+        x   =       ax.GetBinCenter ( ix )
+        xe  = 0.5 * ax.GetBinWidth  ( ix )
+        #
+        iy  = 1
+        while iy <= sy :
+            #
+            y   =       ay.GetBinCenter  ( iy      )
+            ye  = 0.5 * ay.GetBinWidth   ( iy      )
+            #
+            z   =       h2.GetBinContent ( ix , iy )
+            ze  =       h2.GetBinError   ( ix , iy )
+            #
+            yield ix, iy, VE(x,xe*xe) , VE ( y,ye*ye) , VE( z,ze*ze) 
+            #
+            iy += 1
+            
+        ix += 1 
+        
+ROOT.TH2   . iteritems     = _h2_iteritems_
+        
 # =============================================================================
 # Decorate fit results 
 # =============================================================================
@@ -280,12 +381,26 @@ def histoGuess ( histo , mass , sigma ) :
 
 ROOT.TH1.histoGuess = histoGuess
 
+# =============================================================================
+def _int ( ve , precision = 1.e-5 ) :
+    #
+    if not hasattr ( ve , 'value' ) :
+        return _int ( VE ( ve , abs ( ve ) ) , precision )  
+    #
+    diff = max ( 1 , abs ( ve.value() ) ) * precision 
+    diff = min ( 0.1 , diff ) 
+    # 
+    if abs ( ve.value() - long ( ve.value() ) ) > diff : return False 
+    if abs ( ve.value() -        ve.cov2 ()   ) > diff : return False
+    #
+    return True 
+
 
 # =============================================================================
 ## use likelihood in histogram fit ? 
 def useLL ( histo         ,
             minc  = 10    ,
-            diff  = 1.e-4 ) :
+            diff  = 1.e-5 ) :
     """
     Use Likelihood in histogram fit?
     """
@@ -293,26 +408,19 @@ def useLL ( histo         ,
     axis = histo.GetXaxis()
     bins = axis.GetNbins()
     
-    diff = abs ( diff )
-    
-    minv = 1.e+9
-    
+    minv = 1.e+9    
     for ibin in histo :
         
         c = histo . GetBinContent ( ibin )
-        e = histo . GetBinError   ( ibin )
-
-        if c < 0                          : return False
+        if c < 0                                : return False
         
-        diff_ = max ( 1.0 , abs ( c ) ) * diff
-        if abs ( c - long ( c ) ) > diff_ : return False 
-        if abs ( c - e * e      ) > diff_ : return False 
-
+        e = histo . GetBinError   ( ibin )
+        if not _int ( VE ( c , e * e ) , diff ) : return False 
+        
         minv = min ( minv , c )
 
-    if minv > abs ( minc )   : return False
-    
-    return True
+    return  minv < abs ( minc ) 
+
 
 ROOT.TH1.useLL = useLL
 
@@ -332,17 +440,78 @@ def allInts ( histo         ,
     for ibin in histo : 
         
         c = histo . GetBinContent ( ibin )
-        e = histo . GetBinError   ( ibin )
-        if c < 0                            : return False
-
-        diff_ = max ( 1.0 , abs ( c ) ) * diff
-        if abs ( c   - long ( c ) ) > diff_ : return False
+        if c < 0                                : return False
         
-        if abs ( c - e * e ) > diff_        : return False 
+        e = histo . GetBinError   ( ibin )
+        if not _int ( VE ( c , e * e ) , diff ) : return False
         
     return True
 
 ROOT.TH1.allInts = allInts
+
+# =============================================================================
+## calculate the efficiency histogram using the binomial erorrs 
+def binomEff_h1 ( h1 , h2 ) :
+    """
+    Calculate the efficiency histogram using the binomial erorrs
+    """
+    func = binomEff
+    #
+    result = h1.Clone( hID () )
+    #
+    for i1,x1,y1 in h1.iteritems() :
+        #
+        assert ( _int ( y1 ) )
+        #
+        y2 = h2 ( x1 ) 
+        assert ( _int ( y2 ) )
+        #
+        l1 = long ( y1.value () )
+        l2 = long ( y2.value () )
+        #
+        assert ( l1 <= l2 )
+        #
+        v = func ( l1 , l2 )
+        #
+        result.SetBinContent ( i1 , v.value () ) 
+        result.SetBinError   ( i1 , v.error () )
+        
+    return result 
+
+ROOT.TH1.  binomEff    = binomEff_h1 
+ROOT.TH1.__floordiv__  = binomEff_h1 
+
+# =============================================================================
+## calculate the efficiency histogram using the binomial erorrs 
+def binomEff_h2 ( h1 , h2 ) :
+    """
+    Calculate the efficiency histogram using the binomial erorrs
+    """
+    func = binomEff
+    #
+    result = h1.Clone( hID () )
+    #
+    for ix1,iy1,x1,y1,z1 in h1.iteritems() :
+        #
+        assert ( _int ( z1 ) )
+        #
+        z2 = h2 ( x1 , y1 ) 
+        assert ( _int ( z2 ) )
+        #
+        l1 = long ( z1.value () )
+        l2 = long ( z2.value ()  )
+        #
+        assert ( l1 <= l2 )
+        #
+        v = func ( l1 , l2 )
+        #
+        result.SetBinContent ( ix1 , iy1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , v.error () ) 
+        
+    return result 
+
+ROOT.TH2.  binomEff    = binomEff_h2 
+ROOT.TH2.__floordiv__  = binomEff_h2
 
 # =============================================================================
 ## make graph from data 

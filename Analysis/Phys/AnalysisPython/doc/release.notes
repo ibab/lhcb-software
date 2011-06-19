@@ -5,7 +5,14 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-06-19 - Vanya Belyaev
+
+ - more improvements for root-decorators 
+ - cmt/requirements 
+    version increment to v2r3 
+
 !========================= AnalysisPython v2r2 2011-06-17 =========================
+
 ! 2011-06-16 - Vanya Belyaev
  - add python module for python selector 
  - add few useful decorators for plain ROOT classes 
