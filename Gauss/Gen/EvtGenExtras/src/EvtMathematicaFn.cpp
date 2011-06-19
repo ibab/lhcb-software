@@ -6,7 +6,7 @@
 
 EvtComplex PolyLog(const int n, const EvtComplex value){
 	assert(n == 2);//We can only handle dilogarithms
-	
+	if ( n != 2 ) return EvtComplex(0.,0.) ;
 	gsl_sf_result re;
 	gsl_sf_result im;
 	

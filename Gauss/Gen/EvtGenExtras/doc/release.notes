@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2011-06-19 - Patrick Robbe
+ - src/EvtMathematicaFn.cpp: fix compilation warning
+
 ======================== EvtGenExtras v2r6 2011-04-13 ========================
 ! 2011-22-02 - Nikolai Nikitin
  - Minor bug fix: optimization of the function for the maximum probability
