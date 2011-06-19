@@ -10,8 +10,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','David Dossett','Jussara Miranda']
-__date__ = '15/06/2011'
-__version__ = 'Stripping15-1'
+__date__ = '19/06/2011'
+__version__ = 'Stripping15-2'
 __all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
@@ -21,34 +21,35 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLoosePions, StdLooseKaons
 
-default_config = {'Trk_Chi2'         : 4.0,
-                  'KS_DD_MassWindow' : 30.0,
-                  'KS_DD_VtxChi2'    : 12.0,
-                  'KS_DD_FDChi2'     : 50.0,
-                  'KS_DD_Pmin'       : 6000.0,
-                  'KS_LL_MassWindow' : 20.0,
-                  'KS_LL_VtxChi2'    : 12.0,
-                  'KS_LL_FDChi2'     : 80.0,
-		  'B_Mlow'           : 200.0,
-		  'B_Mhigh'          : 280.0,
-		  'BDaug_MedPT_PT'   : 800.0,
-		  'BDaug_MaxPT_IP'   : 0.05,
-		  'hh_DOCA'          : 0.06,
-		  'BDaug_DD_PTsum'   : 4800.0,
-		  'BDaug_LL_PTsum'   : 4500.0,
-		  'B_VtxChi2'        : 12.0,
-		  'B_Dira'           : 0.9999,
-		  'B_DD_IPwrtPV'     : 0.08,
-		  'B_LL_IPwrtPV'     : 0.06,
-		  'BDaug_LL_IPChi2sum'	: 15.0,
-		  'BDaug_DD_IPChi2sum'	: 15.0,
-		  'B_FDwrtPV'        : 1.0,
-		  'B_DD_FDChi2'      : 50.0,
-		  'B_LL_FDChi2'      : 50.0,
-		  'GEC_MaxTracks'    : 250,
-		  'Prescale'         : 1.0,
-		  'Postscale'        : 1.0
-		  }
+default_config = {'Trk_Chi2'         		: 4.0,
+                  'KS_DD_MassWindow' 		: 30.0,
+                  'KS_DD_VtxChi2'    		: 12.0,
+                  'KS_DD_FDChi2'     		: 50.0,
+                  'KS_DD_Pmin'       		: 6000.0,
+                  'KS_LL_MassWindow' 		: 20.0,
+                  'KS_LL_VtxChi2'    		: 12.0,
+                  'KS_LL_FDChi2'     		: 80.0,
+                  'B_Mlow'          		: 200.0,
+                  'B_Mhigh'         		: 280.0,
+                  'BDaug_MedPT_PT'   		: 800.0,
+                  'BDaug_MaxPT_IP'   		: 0.05,
+                  'BDaug_DD_maxDocaChi2'  	: 3.0,
+                  'BDaug_LL_maxDocaChi2'	: 5.0,
+                  'BDaug_DD_PTsum'   		: 4800.0,
+                  'BDaug_LL_PTsum'   		: 4500.0,
+                  'B_VtxChi2'        		: 12.0,
+                  'B_Dira'           		: 0.9999,
+                  'B_DD_IPCHI2wrtPV' 		: 8.0,
+                  'B_LL_IPCHI2wrtPV' 		: 8.0,
+                  'BDaug_LL_IPChi2sum'		: 15.0,
+                  'BDaug_DD_IPChi2sum'		: 15.0,
+                  'B_FDwrtPV'        		: 1.0,
+                  'B_DD_FDChi2'      		: 50.0,
+                  'B_LL_FDChi2'      		: 50.0,
+                  'GEC_MaxTracks'    		: 250,
+                  'Prescale'         		: 1.0,
+                  'Postscale'        		: 1.0
+                  }
 
 class B2KShhConf(LineBuilder) :
     """
@@ -87,15 +88,16 @@ class B2KShhConf(LineBuilder) :
                               'B_Mhigh',
                               'BDaug_MedPT_PT',
                               'BDaug_MaxPT_IP',
-                              'hh_DOCA',
+                              'BDaug_DD_maxDocaChi2',
+                              'BDaug_LL_maxDocaChi2',
                               'BDaug_DD_PTsum',
                               'BDaug_LL_PTsum',
                               'B_VtxChi2',
                               'B_Dira',
-                              'B_DD_IPwrtPV',
-			      'BDaug_LL_IPChi2sum',
-			      'BDaug_DD_IPChi2sum',
-                              'B_LL_IPwrtPV',
+                              'B_DD_IPCHI2wrtPV',
+                              'B_LL_IPCHI2wrtPV',
+                              'BDaug_LL_IPChi2sum',
+                              'BDaug_DD_IPChi2sum',
                               'B_FDwrtPV',
                               'B_DD_FDChi2',
                               'B_LL_FDChi2',
@@ -186,19 +188,19 @@ class B2KShhConf(LineBuilder) :
 	_massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
 	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
 	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-	_hhDocaCut      = "(ADOCA(1,2)<%s)"                  % config['hh_DOCA']
+	_maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_DD_maxDocaChi2']
 	_daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_DD_PTsum']
-	_daugIPChi2SumCut  = "((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%s)"	% config['BDaug_DD_IPChi2sum']
+	_daugIPChi2SumCut = "((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%s)" % config['BDaug_DD_IPChi2sum']
 
-	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_hhDocaCut+'&'+_daugPtSumCut+'&'+_daugIPChi2SumCut
+	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut+'&'+_daugPtSumCut+'&'+_daugIPChi2SumCut
 
 	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
 	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_DD_IPwrtPV']
+	_ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_DD_IPCHI2wrtPV']
 	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
 	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_DD_FDChi2']
 
-	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipCut+'&'+_fdCut+'&'+_fdChi2Cut
+	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
 	_B = CombineParticles()
 	_B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
@@ -222,19 +224,19 @@ class B2KShhConf(LineBuilder) :
 	_massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
 	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
 	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-	_hhDocaCut      = "(ADOCA(1,2)<%s)"                  % config['hh_DOCA']
+	_maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_LL_maxDocaChi2']
 	_daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_LL_PTsum']
-	_daugIPChi2SumCut  = "((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%s)"	% config['BDaug_LL_IPChi2sum']
+	_daugIPChi2SumCut = "((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%s)" % config['BDaug_LL_IPChi2sum']
 
-	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_hhDocaCut+'&'+_daugPtSumCut+'&'+_daugIPChi2SumCut
+	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut+'&'+_daugPtSumCut+'&'+_daugIPChi2SumCut
 
 	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
 	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-	_ipCut      = "(MIPDV(PRIMARY)<%s)"            % config['B_LL_IPwrtPV']
+	_ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_LL_IPCHI2wrtPV']
 	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
 	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_LL_FDChi2']
 
-	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipCut+'&'+_fdCut+'&'+_fdChi2Cut
+	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
 	_B = CombineParticles()
 	_B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
