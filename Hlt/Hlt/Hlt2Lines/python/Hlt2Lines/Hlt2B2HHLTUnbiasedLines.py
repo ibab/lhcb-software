@@ -3,8 +3,9 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
 
-    __slots__ = {  'BMassWinLow'         :  5000      # MeV
-                   ,'BMassWinHigh'       :  5900      # MeV
+    __slots__ = {  'BMassWinLow'         :  5000       # MeV
+                   ,'BMassWinHigh'       :  5900       # MeV
+                   ,'BLifetime'          :     0.1     # ps 
                    ,'doca'               :     0.1
                    ,'KaonPTmin'          :  1000       # MeV
                    ,'KaonPTmax'          :  1500       # MeV
@@ -47,7 +48,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         combCut        = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::DistanceCalculator')< %(doca)s ))"                                  % self.getProps()
         motherCutNoPID = "(P>%(BPmin)s * MeV) & (MAXTREE(('K+'==ABSID) ,PT) > %(KaonPTmax)s*MeV)  & (VFASPF(VCHI2PDOF)< %(VertexChi2)s) & (abs(LV01) < %(AbsCosTheta)s)"   % self.getProps()
         motherCutPID   = motherCutNoPID + " & (MAXTREE(('K+'==ABSID) , PIDK) > %(PIDK_max)s)"                                                                              % self.getProps()
-
+        motherCutPIDLT = motherCutNoPID + " & (MAXTREE(('K+'==ABSID) , PIDK) > %(PIDK_max)s) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(BLifetime)s*ps)"        % self.getProps() 
 
         #######################################################################################################
         #######################################################################################################
@@ -79,16 +80,16 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ##
         ## prepare the candidates
         ##
-        Hlt2B2HHLTUnbiased = Hlt2Member( CombineParticles 
-                                         , "Combine"     
-                                         , DecayDescriptor = "B_s0 -> K+ K-"
-                                         , DaughtersCuts   = { "K+" : childCutNoPID}
-                                         , CombinationCut  = combCut 
-                                         , MotherCut       = motherCutNoPID
-                                         , Inputs = [ HLT1TISFilter ]
-                                         )
-        nopidAlgos += [ Hlt2B2HHLTUnbiased ]
-
+        CombineBsKK = Hlt2Member( CombineParticles 
+                                  , "CombineBsKK"     
+                                  , DecayDescriptor = "B_s0 -> K+ K-"
+                                  , DaughtersCuts   = { "K+" : childCutNoPID}
+                                  , CombinationCut  = combCut 
+                                  , MotherCut       = motherCutNoPID
+                                  , Inputs = [ HLT1TISFilter ]
+                                  )
+        nopidAlgos += [ CombineBsKK ]
+        
         ##
         ## first NeuroBayes network - no PID information (kinemematics + calo)
         ##
@@ -105,7 +106,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HHNoPID')"
         NBNoPIDFilter = Hlt2Member(FilterDesktop, 'FilterNBBhhNoPID',
                                    Code    = cuts,
-                                   Inputs = [ Hlt2B2HHLTUnbiased ],
+                                   Inputs = [ CombineBsKK ],
                                    tools   = [NBBhhNoPIDTool])
         nopidAlgos += [ NBNoPIDFilter ]
 
@@ -141,16 +142,16 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         ##
         ## prepare the candidates
         ##
-        Hlt2B2HHLTUnbiasedRich = Hlt2Member( CombineParticles
-                                             , "CombineRich"
-                                             , DecayDescriptor = "B_s0 -> K+ K-"
-                                             , DaughtersCuts   = { "K+" : childCutPID}
-                                             , CombinationCut  = combCut
-                                             , MotherCut       = motherCutPID
-                                             , Inputs = [ HLT1TISRichFilter ],
-                                             )
+        CombineBsKKRich = Hlt2Member( CombineParticles
+                                      , "CombineBsKKRich"
+                                      , DecayDescriptor = "B_s0 -> K+ K-"
+                                      , DaughtersCuts   = { "K+" : childCutPID}
+                                      , CombinationCut  = combCut
+                                      , MotherCut       = motherCutPID
+                                      , Inputs = [ HLT1TISRichFilter ],
+                                      )
                                                                 
-        richpidAlgos +=  [ Hlt2B2HHLTUnbiasedRich ]
+        richpidAlgos +=  [ CombineBsKKRich  ]
         
 
         ##
@@ -169,7 +170,7 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
         cuts = "FILTER('NBB2HHTriggerTool/TrigNBB2HH')"
         NBFilter = Hlt2Member(FilterDesktop, 'FilterNBBhh',
                               Code    = cuts,
-                              Inputs = [ Hlt2B2HHLTUnbiasedRich ],
+                              Inputs = [ CombineBsKKRich ],
                               tools   = [NBBhhTool])
         richpidAlgos +=  [ NBFilter ]
                             
@@ -183,4 +184,14 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                         , algos = nopidAlgos + richpidAlgos 
                         , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHLTUnbiasedDecision" : 50081 } )
+
+        line.clone('B2HHLTUnbiasedDetached'
+                   , prescale        = self.prescale
+                   , postscale       = self.postscale
+                   , algos           = nopidAlgos + richpidAlgos
+                   , CombineBsKKRich = { "MotherCut"  :  motherCutPIDLT}
+                   )
+
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHLTUnbiasedDecision"         : 50081 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHLTUnbiasedDetachedDecision" : 50082 } )

@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-20 - Ulrich Kerzel
+- add detached B->hh lifetime unbiased line with cut tau > 0.1ps
+- keep original one prescaled  
+
 ! 2011-06-17 - Albert Puig
  - Added Hlt2RadiativeTopologicalLines (still with suboptimal cuts)
  - Fixed HLTFilter in Hlt2B2XGammaLines.py
