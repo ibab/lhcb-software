@@ -5,7 +5,6 @@ from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigTarFile
 # pick the default config access svc
 from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
 
-from TCKUtils.Sandbox import execInSandbox
 from pprint import pprint
 
 ### add some decoration...
@@ -89,11 +88,6 @@ def getL0Prescales( id, cas  = ConfigAccessSvc() ) :
             ret[ l0tck ][ chan['name'] ] = chan['rate']
     return ret
 
-
-
-
-# once all calls from inside execInSandbox  are gone,
-# move the functionality into RemoteAccess
 class AccessSvcSingleton(object) :
     __pcs = None
     __cas = None
@@ -325,9 +319,8 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
                                         l.fqn(), r.fqn(),
                                         lhs, rhs, n=0) )
 
-
-
 def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
+    from TCKUtils.Sandbox import execInSandbox
     return execInSandbox( _copy, source, target )
 
 def listComponents( id, cas = ConfigAccessSvc() ) :
