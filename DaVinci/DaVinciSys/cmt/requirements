@@ -7,15 +7,6 @@ branches doc cmt
 use  DaVinci                 	v28r3p1   Phys
 use  DaVinciTests               v2r5
 
-# Patches from other projects
-# from Rec, to be removed with next Rec release.
-use OTDAQ v7r10 OT
-use LumiAlgs v5r2 Rec
-use TrackSys v6r2 Tf
-use TrackTools v4r6 Tr
-use DecayTreeTuple v3r14p2 Phys
-
-
 # Declare this as a container package
 apply_pattern container_package
 
