@@ -1,3 +1,5 @@
+raise DeprecationWarning, "This file needs to be migrated to IOHelper for persistency"
+
 from Gaudi.Configuration import *
 
 nEvents            = 100000

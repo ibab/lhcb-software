@@ -1,3 +1,4 @@
+raise DeprecationWarning, "This file needs to be migrated to IOHelper for persistency"
 
 from Gaudi.Configuration import *
 
@@ -543,6 +544,9 @@ EventPersistencySvc().CnvServices.append( "LHCb::RawDataCnvSvc" )
 #import Gaudi.CommonGaudiConfigurables
 
 # Hack to overide default EvtSel open
+#
+# I don't understand this. What the heck is iEventSelector
+#
 from GaudiPython.Bindings import iEventSelector
 iEventSelector.__open_orig__ = iEventSelector.open
 def _my_open_(self,stream, typ = 'POOL_ROOT', opt = 'READ', sel = None, fun = None, collection = None):

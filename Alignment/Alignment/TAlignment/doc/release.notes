@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2011-06-20 - Rob Lambert
+ - Raise exceptions for outdated scripts about IOHelper
+
 - bug fix: VertexResidualTool was using the wrong particlepropsvc
 
 !========================= TAlignment v5r4 2011-03-15 =========================
