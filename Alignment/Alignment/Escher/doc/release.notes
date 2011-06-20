@@ -4,6 +4,7 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v4r11>2011-06-20 Escher v4r11</A></H1><PRE>
 ! 2011-06-20 - Rob Lambert
  - Adapt Escher Configurable for IOHelper, propagate to DstConf and LHCbApp
  - Update test references accordingly
