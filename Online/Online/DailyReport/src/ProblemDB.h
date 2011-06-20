@@ -15,7 +15,7 @@
 class ProblemDB {
 public: 
   /// Standard constructor
-  ProblemDB( std::string address );
+  ProblemDB( std::string address, std::string port = "http" );
 
   virtual ~ProblemDB( ); ///< Destructor
 
@@ -28,6 +28,7 @@ protected:
   
 private:
   std::string m_address;
+  std::string m_port;
   std::vector<std::string> m_monthName;
 };
 #endif // PROBLEMDB_H

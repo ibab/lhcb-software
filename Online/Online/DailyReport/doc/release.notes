@@ -4,8 +4,11 @@
 ! Purpose     : Produce an HTML file every day with a summary of the run
 !-----------------------------------------------------------------------------
 
+! 2011-06-16 - Olivier Callot
+ - use the new api 'activity' of the problem database.
+
 ! 2011-06-10 - Olivier Callot
- - Fix the 'extern "C"' from teh declaration of main.
+ - Fix the 'extern "C"' from the declaration of main.
  - Remove an unused variable that was duplicated.
 
 !============================== 2011-06-06 v1r0 ==============================

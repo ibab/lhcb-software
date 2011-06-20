@@ -198,7 +198,7 @@ void DailyReport::listOnePiquet ( std::string name ) {
   fprintf( m_web, "<H3>%s : %s </H3>", name.c_str(), piquet.c_str() );
 
   std::vector< std::vector< std::string > > problems;
-  ProblemDB pbdb( "lbproblems.cern.ch" );
+  ProblemDB pbdb( "devweb01.lbdaq.cern.ch", "8000" ); //"lbproblems.cern.ch" );
   std::vector< std::string > histAlarms;
 
   if ( name == "VELO Piquet" ) {
@@ -415,7 +415,7 @@ void DailyReport::extractFromElog ( std::string logbook, std::string system, boo
 }
 //=============================================================================
 
-main(int argc, char** ) {
+int main(int argc, char** ) {
   DailyReport report;
   report.build( argc );
   return 1;

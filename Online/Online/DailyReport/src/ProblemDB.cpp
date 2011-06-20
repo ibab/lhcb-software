@@ -25,8 +25,9 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ProblemDB::ProblemDB( std::string address ) {
+ProblemDB::ProblemDB( std::string address, std::string port ) {
   m_address = address;
+  m_port = port;
   m_monthName.push_back( "Jan" );
   m_monthName.push_back( "Feb" );
   m_monthName.push_back( "Mar" );
@@ -77,25 +78,16 @@ std::string  ProblemDB::urlEncode ( std::string src) {
 void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &problems ,
                                    const std::string & systemName ) {
 
-  boost::asio::ip::tcp::iostream webStream( m_address , "http" ) ;
+  boost::asio::ip::tcp::iostream webStream( m_address , m_port ) ;
 
   if ( ! webStream ) {
     std::cout << "Cannot open the Problem Database at " << m_address  << std::endl ;
     return ;
   }
 
-  webStream << "GET /api/search/?_inline=True&system_visible=True" ;
-
-  // Take date of tomorrow to have list of opened problems
-  boost::posix_time::ptime now =
-    boost::posix_time::second_clock::local_time() ;
-  boost::gregorian::date day = now.date() + boost::gregorian::date_duration( 1 ) ;
-
-  webStream << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
-            << " HTTP/1.0\r\n"
+  webStream << "GET /api/activity/  HTTP/1.0\r\n"
             << "Host:" << m_address << "\r\n"
             << "\r\n" << std::flush ;
-
 
   std::string line ;
 
