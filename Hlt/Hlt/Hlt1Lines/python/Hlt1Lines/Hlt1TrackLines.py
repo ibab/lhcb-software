@@ -37,6 +37,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'AllL0_Velo_NHits'  : 9
                     ,   'AllL0_Velo_Qcut'   : 3
                     ,   'AllL0_GEC'         : 'Loose'
+                    ,   'AllL0_ValidateTT'  : False
                     ,   'Muon_PT'           : 800.
                     ,   'Muon_P'            : 8000.
                     ,   'Muon_IP'           : 0.100
@@ -46,6 +47,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_Velo_NHits'   : 0 #OFF
                     ,   'Muon_Velo_Qcut'    : 999 #OFF
                     ,   'Muon_GEC'          : 'Loose'
+                    ,   'Muon_ValidateTT'   : False
                     ,   'Photon_PT'         : 1200.
                     ,   'Photon_P'          : 10000.
                     ,   'Photon_IP'         : 0.100
@@ -56,6 +58,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_Velo_Qcut'  : 4 
                     ,   'Photon_L0Channels' : "Photon,Electron"
                     ,   'Photon_GEC'        : 'Loose'
+                    ,   'Photon_ValidateTT' : False
                     ,   'Prescale'          : {'Hlt1TrackForwardPassThrough'      : 0,
                                                'Hlt1TrackForwardPassThroughLoose' : 0}
                 }
@@ -63,16 +66,19 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     def localise_props( self, prefix ):
         ps = self.getProps()
         lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2",
-                    "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC" ) )
+                    "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC", 'ValidateTT' ) )
         return dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
                                                        LooseForward, TightForward,
                                                        FitTrack, MatchVeloMuon, IsMuon )
+        from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
+ 
         Preambulo = [ VeloCandidates( prefix ),
                       TightForward,
                       LooseForward,
+                      ValidateWithTT,
                       MatchVeloMuon,
                       FitTrack ,
                       IsMuon ]
@@ -99,6 +105,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
+        if props['ValidateTT'] :
+            props['forward'] = "ValidateWithTT >>" + props['forward']  
 
         lineCode = """ 
         VeloCandidates
@@ -139,6 +147,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['forward'] = 'LooseForward' if name.find('Loose') > -1 else 'TightForward'
+        if props['ValidateTT'] :
+            props['forward'] = "ValidateWithTT >>" + props['forward']
 
         lineCode = """ 
         VeloCandidates
@@ -166,6 +176,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
+        props['forward'] = 'LooseForward'
+        if props['ValidateTT'] :
+            props['forward'] = "ValidateWithTT >>" + props['forward']
 
         lineCode = """ 
         VeloCandidates
@@ -177,7 +190,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
-        >>  LooseForward
+        >>  %(forward)s
         >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
         >>  ((TrTNORMIDC > %(TrNTHits)s ) & \
