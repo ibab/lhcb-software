@@ -7,6 +7,17 @@ Purpose: LHCb Alignment packages.
          components.
 
 </PRE><H1><A NAME=v6r0>2011-03-15 AlignmentSys v6r0</A></H1><PRE>
+Based on Rec v11r5, on the LHCb v32r4 stack for 2011 data
+
+This is the first release of Alignment compatible with ROOT data format.
+
+Only minor changes apart from the change of supported persistencies.
+
+For more details and liks to changesets see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Alignment&version=v6r1
+
+
+</PRE><H1><A NAME=v6r0>2011-03-15 AlignmentSys v6r0</A></H1><PRE>
 Based on Rec v11r2p1, on the LHCb v32r1p1 stack for 2011 data
 
 This is the first release of Alignment compatible with 2011 data.
