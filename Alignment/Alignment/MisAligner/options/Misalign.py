@@ -18,5 +18,8 @@ MisAligner().OutputLevel = 3
 from Configurables import EventClockSvc
 EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
 #EventSelector().Input = ["DATAFILE='PFN:/data/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-EventSelector().Input = ["DATAFILE='PFN:/castor/cern.ch/user/j/jblouw/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+
+from GaudiConf import IOHelper
+IOHelper().inputFiles( ["PFN:/castor/cern.ch/user/j/jblouw/FieldOff_450GeV.dst"] )
+
 #EventSelector().Input = ["DATAFILE='PFN:/work/blouw/data//FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
