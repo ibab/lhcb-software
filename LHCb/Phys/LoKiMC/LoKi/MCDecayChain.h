@@ -229,9 +229,9 @@ namespace LoKi
           // use the terminator 
           stream << term     ;
           stream << blank ( _indent + 5 );
-          stream << " EndVtx[" << (ev-endVertices.begin() ) << "] " ;
+          stream << " EndVtx[" << ( ev - endVertices.begin() ) << "] " ;
           stream << toString ( evertex -> position() ) ; 
-          if ( vertex -> hasKey() )  
+          if ( evertex -> hasKey() )  
           { stream << " #" << toString ( evertex -> key() ) ; }
           stream << " "    << evertex->type()  ;
         }

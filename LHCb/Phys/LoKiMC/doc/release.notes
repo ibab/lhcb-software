@@ -15,6 +15,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-06-20 - Vanya Belyaev
+
+ - LoKi/MCDecayChain.h
+
+    fix Coverity reports 22945/22946 
+
+ - cmt/requirements
+
+    version increment to v10r2 
+
 !========================= LoKiMC v10r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
  - reduce warnings for ICC compiler 
