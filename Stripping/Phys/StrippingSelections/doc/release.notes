@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-20 - Albert Puig
+ - Fixed cut on the mass window of B2XGammaLines
+
 ! 2011-06-19 - Thomas Latham
  - B2KShh: change absolute IP/DOCA cuts to use CHI2 type variables instead
 
