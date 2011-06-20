@@ -3,6 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v5r5 2011-06-20 =========================
 ! 2011-06-20 - Rob Lambert
  - Remove old scripts which didn't use iohelper
 
