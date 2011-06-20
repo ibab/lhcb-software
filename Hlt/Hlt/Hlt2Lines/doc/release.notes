@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-20 - Albert Puig
+ - Fixed ADAMASS cut usage in CombinationCut in Hlt2B2XGammaLines.py
+
 ! 2011-06-20 - Ulrich Kerzel
 - add detached B->hh lifetime unbiased line with cut tau > 0.1ps
 - keep original one prescaled  

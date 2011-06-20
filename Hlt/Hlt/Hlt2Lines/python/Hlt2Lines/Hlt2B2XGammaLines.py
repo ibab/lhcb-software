@@ -109,8 +109,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , "CombineBs"
                                       , DecayDescriptors = ["B_s0 -> gamma phi(1020)"]
                                       , DaughtersCuts = { "gamma": "(PT>%(photonPT)s*MeV)" % self.getProps() }
-                                      , CombinationCut = "(ADAMASS('B_s0')<%(BsMassWin)s*MeV)" % self.getProps()
-                                      , MotherCut = "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s))" % self.getProps()
+                                      , CombinationCut = "(ADAMASS('B_s0')<1.5*%(BsMassWin)s*MeV)" % self.getProps()
+                                      , MotherCut = "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV))" % self.getProps()
                                       , Preambulo = ["from math import cos"]
                                       , Inputs  = [ BiKalmanFittedPhotons,  Hlt2Phi4PhiGamma ] #  
                                       )
@@ -122,8 +122,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                       , "CombineB0"
                                       , DecayDescriptors = ["[B0 -> K*(892)0  gamma]cc"]
                                       , DaughtersCuts = { "gamma": "(PT>%(photonPT)s*MeV)" % self.getProps() }
-                                      , CombinationCut =  "(ADAMASS('B0')<%(B0MassWin)s*MeV)" % self.getProps()
-                                      , MotherCut = "( (BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s))"%self.getProps()
+                                      , CombinationCut =  "(ADAMASS('B0')<1.5*%(B0MassWin)s*MeV)" % self.getProps()
+                                      , MotherCut = "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV))" % self.getProps()
                                       , Preambulo = ["from math import cos"]
                                       , Inputs  = [ BiKalmanFittedPhotons, Hlt2Kst4KstGamma ]# 
                                      )
@@ -159,7 +159,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2PhiGammaWideBMass'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, BiKalmanFittedPhotons, Hlt2BstoPhiGamma ]
-                   , CombineBs = { "CombinationCut" : "(ADAMASS('B_s0')<%(BMassWinSB)s*MeV)"%self.getProps() }
+                   , CombineBs = { "CombinationCut" : "(ADAMASS('B_s0')<1.5*%(BMassWinSB)s*MeV)" % self.getProps(),
+                                   "MotherCut"      : "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BMassWinSB)s*MeV))" % self.getProps()}
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaWideBMassDecision": self.getProp('HltANNSvcID')['Bs2PhiGammaWideBMass'] } )
@@ -168,7 +169,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2PhiGammaLooseDira'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, BiKalmanFittedPhotons, Hlt2BstoPhiGamma ]
-                   , CombineBs = {"MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(BsPVIPchi2)s))" % self.getProps() }
+                   , CombineBs = {"MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(BsPVIPchi2)s)) & (ADMASS('B_s0')<%(BsMassWin)s*MeV))" % self.getProps() }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaLooseDiraDecision" : self.getProp('HltANNSvcID')['Bs2PhiGammaLooseDira'] } )
@@ -194,7 +195,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bd2KstGammaWideKMass'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, BiKalmanFittedPhotons, Hlt2BdtoKstGamma ]
-                   , CombineKstar = { 'MotherCut': "(VFASPF(VCHI2)<%(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinT)s*MeV)" % self.getProps() }
+                   , CombineKstar = { 'CombinationCut' : "(ADAMASS('K*(892)0')<1.5*%(KstMassWinL)s*MeV)" % self.getProps(),
+                                      'MotherCut'      : "(VFASPF(VCHI2)<%(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinL)s*MeV)" % self.getProps() }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaWideKMassDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaWideKMass'] } )
@@ -202,7 +204,8 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bd2KstGammaWideBMass'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, BiKalmanFittedPhotons, Hlt2BdtoKstGamma ]
-                   , CombineB0 = { "CombinationCut": "(ADAMASS('B0')<%(BMassWinSB)s*MeV)" %self.getProps() }
+                   , CombineB0 = { "CombinationCut": "(ADAMASS('B0')<1.5*%(BMassWinSB)s*MeV)" %self.getProps(),
+                                   "MotherCut"     : "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(BMassWinSB)s*MeV))" % self.getProps()}
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaWideBMassDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaWideBMass'] } )
@@ -210,10 +213,9 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         line.clone('Bd2KstGammaLooseDira'
                    , prescale = self.prescale
                    # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, BiKalmanFittedPhotons, Hlt2BdtoKstGamma ]
-                   , CombineB0 = { "MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s))" %self.getProps() }
+                   , CombineB0 = { "MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s)) & (ADMASS('B0')<%(B0MassWin)s*MeV))" %self.getProps() }
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaLooseDiraDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaLooseDira'] } )
 
 # EOF
-
