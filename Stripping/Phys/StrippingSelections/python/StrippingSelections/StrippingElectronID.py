@@ -30,24 +30,25 @@ config_default =  {
         'Both_PT'                 :  500.   ,  # MeV
         'Both_P'                  : 3000.   ,  # MeV
         'Both_TRCHI2DOF'          :    5.   ,
-        'Both_MIPCHI2'            :    9.   ,
+        'Both_MIPCHI2'            :   25.   ,
         
         'Tag_PT'                  : 1500.   ,  # MeV
         'Tag_P'                   : 6000.   ,  # MeV
         'Tag_PIDe'                :    5.   ,
-        'Tag_MIPCHI2'             :    9.   ,
+        'Tag_MIPCHI2'             :   25.   ,
 
         'Probe_PT'                :  500.   ,  # MeV
         'Probe_P'                 : 3000.   ,  # MeV
-        'Probe_MIPCHI2'           :    9.   ,
+        'Probe_MIPCHI2'           :   25.   ,
 
         'eeCombMinMass'           : 2100.   ,  # MeV         
         'eeCombMaxMass'           : 4300.   ,  # MeV   
         'eeVCHI2PDOF'             :    9.   ,  
         'eeMinMass'               : 2200.   ,  # MeV 
         'eeMaxMass'               : 4200.   ,  # MeV
+        'eePT'                    : 2000.   , 
                 
-        'eeFDCHI2'                :  400.   ,
+        'eeDLS'                   :   50.   ,
         'eeVZ'                    : -1.0e+9    # mm   
         }
 
@@ -76,8 +77,9 @@ config_convertedPhoton =  {
         'eeVCHI2PDOF'             :    9.   ,  
         'eeMinMass'               :    0.   ,  # MeV 
         'eeMaxMass'               :   50.   ,  # MeV
+        'eePT'                    : 2000.   ,
                 
-        'eeFDCHI2'                :   16.   ,  
+        'eeDLS'                   :   50.   ,  
         'eeVZ'                    : 1100.      # mm 
         }
 
@@ -115,8 +117,9 @@ class ElectronIDConf(LineBuilder):
         'eeVCHI2PDOF',
         'eeMinMass',
         'eeMaxMass',
+        'eePT',
         
-        'eeFDCHI2',
+        'eeDLS',
         'eeVZ'
         )
     
@@ -146,9 +149,10 @@ class ElectronIDConf(LineBuilder):
                              eeVCHI2PDOF = config['eeVCHI2PDOF'],
                              eeMinMass = config['eeMinMass'],
                              eeMaxMass = config['eeMaxMass'],
+                             eePT      = config['eePT'],
                              #
-                             eeFDCHI2 = config['eeFDCHI2'],
-                             eeVZ     = config['eeVZ']
+                             eeDLS = config['eeDLS'],
+                             eeVZ  = config['eeVZ']
                              )
         
         self.line = StrippingLine( self.name+"Line",
@@ -183,8 +187,9 @@ def makeEE( name,
             eeVCHI2PDOF,
             eeMinMass,
             eeMaxMass,
+            eePT,
             #
-            eeFDCHI2,
+            eeDLS,
             eeVZ
             ):
     
@@ -200,7 +205,8 @@ def makeEE( name,
     
     EEMomCut = "(VFASPF(VCHI2)< %(eeVCHI2PDOF)s)"\
                " & (in_range(%(eeMinMass)s *MeV, MM, %(eeMaxMass)s *MeV))"\
-               " & (BPVVDCHI2>%(eeFDCHI2)s)"\
+               " & (PT>%(eePT)s)" \
+               " & (BPVDLS>%(eeDLS)s)"\
                " & (VFASPF(VZ)>%(eeVZ)s *mm)" % locals()
     
     Tag1Cuts = "(CHILDCUT((PT>%(Tag_PT)s*MeV),1)) & (CHILDCUT((PIDe>%(Tag_PIDe)s),1)) & (CHILDCUT((P>%(Tag_P)s*MeV),1))"\
