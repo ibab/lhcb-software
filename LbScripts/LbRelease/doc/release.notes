@@ -1,3 +1,7 @@
+2011-06-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/AfsProjectSpace.py: fixed size reported in GB.
+
 2011-06-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/buildGeneralDoc: script to be added to the (a)crontab to generate the

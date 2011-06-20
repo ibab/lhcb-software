@@ -8,6 +8,8 @@ If the Space available is less than 5% a mail is send to lhcb-afs-admins@cern.ch
 do make the request of more space
 """
 
+from LbUtils.Storage import convert
+
 from subprocess import Popen, PIPE
 import sys
 import logging, logging.handlers
@@ -24,12 +26,12 @@ def check_space(thelog):
         if nb_line < 6 :
             member = line.split()
             if member[0] in ('lhcb', 'lhcb_q','lhcb_s'):
-                free_space = str( int(member[1]) - int(member[2]) )
-                space_left = str( int(free_space)  * 100 / int(member[1]))
-                if int(space_left) < 10 :
-                    size_GB = int(member[1]) / 100000
-                    free_GB = int(free_space) / 100000
-                    thelog.info('The space left for %s represents %s percent \n (Total is %s GB and free is %s GB)' %( member[0], space_left, size_GB, free_GB))
+                free_space = int(member[1]) - int(member[2])
+                space_left = float(free_space)  * 100.0 / float(member[1])
+                if space_left < 10.0 :
+                    size_GB = convert(int(member[1]), "KB", "GB")
+                    free_GB = convert(free_space, "KB", "GB")
+                    thelog.info('The space left for %s represents %s percent \n (Total is %s GB and free is %s GB)' %( member[0], str(round(space_left,2)), str(round(size_GB,3)), str(round(free_GB,3)))
         else:
             break
 
