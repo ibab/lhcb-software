@@ -3,6 +3,10 @@
 ! Responsible : Matt Coombes
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
+
+! 2011-06-20 - Matt Coombes
+ - Added track and Evt information by Viet Nga
+ 
 !========================= RichParticleSearch v1r3 2011-05-25 =========================
 ! 2011-06-09 - Matt Coombes
  - Introduced method to remove outlyer photons. Results look promising.

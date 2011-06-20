@@ -59,11 +59,11 @@
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/RichSmartIDCnv.h"
 #include "RichKernel/IRichSmartIDTool.h"
-#include <RichKernel/IRichRayTracing.h>
+//#include <RichKernel/IRichRayTracing.h>
 
 // boost
 #include "boost/lexical_cast.hpp"
-#include <boost/foreach.hpp>
+//#include <boost/foreach.hpp>
 
 /** @class MuonInformation MuonInformation.h
  *  

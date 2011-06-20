@@ -15,6 +15,7 @@
 //#include "Kernel/IOnOffline.h"
 #include "Event/RecVertex.h"
 #include "GaudiAlg/GaudiTool.h"
+#include "Event/ProcessHeader.h"
 
 //namespaces
 
@@ -185,6 +186,12 @@ StatusCode RichParticleSearchMain::execute() {
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
+	  //runNumber and eventNumber added by Viet Nga
+	const LHCb::ProcessHeader* header = get<LHCb::ProcessHeader>(LHCb::ProcessHeaderLocation::Digi);
+	const std::vector<long int> seeds = header-> randomSeeds();
+	long int runNumber = seeds[0];
+	long int evtNumber = seeds[1];
+
     LHCb::RichRecSegment* segment = *iSeg;
     debug()<< "Event "<<EvtNum<<endmsg;
     debug()<< "trackCounter "<<trackCounter<<endmsg;
@@ -234,6 +241,9 @@ StatusCode RichParticleSearchMain::execute() {
     const LHCb::Track* track = dynamic_cast<const LHCb::Track*>(richtrack->parentTrack());
 
     const double trChi2 = track->chi2();
+
+    //track key added by VietNga
+    const int trackKey = track->key();
 
     const int TrackType = (int) track->type();
 
@@ -412,6 +422,10 @@ StatusCode RichParticleSearchMain::execute() {
 						TrackTuple->column( "TrackProjectionY", trackProjection[1]);
 						TrackTuple->column( "TrackProjectionZ", trackProjection[2]);
 						TrackTuple->column( "trChi2", trChi2);
+						//columns added by Viet Nga
+						TrackTuple->column( "trackKey", trackKey);
+						TrackTuple->column( "runNumber", runNumber);
+						TrackTuple->column( "evtNumber", evtNumber);
 
 						if ( m_useMCTruth )
 						{ // if use Truth information
