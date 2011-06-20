@@ -137,9 +137,8 @@
 	const = 'TRUE'> 
 	<arg type='double' name='arclen' />
         <code>
-        double dist2readout = trajectory().endRange() - arclen;
-        double propTime = dist2readout / module().propagationVelocity();
-        double dist2strawend = module().wireLength(channel()) - dist2readout;
+        double propTime = (trajectory().endRange() - arclen) / module().propagationVelocity();
+        double dist2strawend = arclen - trajectory().beginRange();
         propTime += module().walkRelation().walk(dist2strawend);
         return calibratedTime() - deltaTimeOfFlight() - propTime ;
         </code>
@@ -153,7 +152,7 @@
 	<arg type='double' name='globalY' />
         <code>
         double propTime = (trajectory().endPoint().y() - globalY) / module().propagationVelocityY();
-        double dist2strawend = module().wireLength(channel()) - propTime * module().propagationVelocity();
+        double dist2strawend = (globalY - trajectory().beginPoint().y()) * module().propagationVelocity() / module().propagationVelocityY();
         propTime += module().walkRelation().walk(dist2strawend);
         return calibratedTime() - deltaTimeOfFlight() - propTime ;
         </code>

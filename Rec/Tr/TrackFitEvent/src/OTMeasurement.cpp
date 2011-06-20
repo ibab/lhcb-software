@@ -76,7 +76,7 @@ OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double g
 double LHCb::OTMeasurement::propagationTimeFromY( double globalY ) const
 {
   double propTime = (trajectory().endPoint().y() - globalY) / module().propagationVelocityY();
-  double dist2strawend = module().wireLength(channel()) - propTime * module().propagationVelocity();
+  double dist2strawend = (globalY - trajectory().beginPoint().y()) * module().propagationVelocity() / module().propagationVelocityY();
   return propTime + module().walkRelation().walk(dist2strawend);
 }
 
