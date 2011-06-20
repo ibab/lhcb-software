@@ -338,7 +338,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   SerialHeader* header= ((SerialHeader*)buff);
   if (siz == 4)
   {
-    //printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
+    printf("No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
     Update();
     return;
