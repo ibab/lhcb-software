@@ -66,7 +66,9 @@ namespace Decays
       // ======================================================================
       Node ( const Symbols_* sym   ,
              const Symbols_* parts ) 
-        : m_symbols   ( sym   ) 
+        : m_low       ( 0     ) 
+        , m_high      ( 0     ) 
+        , m_symbols   ( sym   ) 
         , m_particles ( parts ) 
       {}
       // ======================================================================
@@ -193,13 +195,13 @@ namespace Decays
       const Symbols_*      m_symbols   ;
       const Symbols_*      m_particles ;
       // ======================================================================
-    } ; // end of class ParNode  
+    } ; //                                                 end of class ParNode  
     // ========================================================================
-  } // end of namespace Decays::Grammars
+  } //                                        end of namespace Decays::Grammars
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_NODEGRAMMAR_H
 // ============================================================================

@@ -13,6 +13,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-06-20 - Vanya Belyaev
+
+ - LoKi/NodeGrammar.h
+
+   fix coverity report 16248 
+
+ - cmt/requirements 
+
+    version increment to v11r2
+
 !========================= LoKiCore v11r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
  - reduce number of warnings for ICC compiler
