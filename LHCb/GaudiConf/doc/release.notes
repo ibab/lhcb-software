@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-06-20 - Rob Lambert
+ - Fix DigiConf and DstConf to correctly use IOHelper
+ - avoiding a printed warning if something other than the default is propagated
+
 !========================= GaudiConf v14r0 2011-06-15 =========================
 ! 2011-06-15 - Marco Cattaneo
  - Add slots OutputName, Persistency, WriteFSR to DigiConf, to use with IOHelper

@@ -196,7 +196,7 @@ class DstConf(LHCbConfigurableUser):
         persistency=None
         if hasattr( self, "Persistency" ):
             persistency=self.getProp("Persistency")
-        IOHelper(None,persistency).outStream( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )        
+        IOHelper(persistency,persistency).outStream( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )        
 
     def _doWriteMDF( self, items ):
         """

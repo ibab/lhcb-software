@@ -83,7 +83,7 @@ class DigiConf(LHCbConfigurableUser):
         persistency=None
         if hasattr( self, "Persistency" ):
             persistency=self.getProp("Persistency")
-        algs = IOHelper(None,persistency).outputAlgs( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
+        algs = IOHelper(persistency,persistency).outputAlgs( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
         for alg in algs:
             ApplicationMgr().OutStream.insert( 0, alg )
 
