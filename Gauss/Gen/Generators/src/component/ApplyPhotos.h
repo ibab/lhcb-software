@@ -29,6 +29,8 @@ private:
 
   std::string  m_hepMCEventLocation ;    ///< Input TES for HepMC events
 
-  int          m_pdgId              ;    ///< PDG of the particle ID to study
+  std::vector< int > m_pdgIdList    ;    ///< list of the particle ID to study
+  std::set   < int > m_pdgIds       ;    ///< ordered list of PDG Ids
+
 };
 #endif // GENERATORS_APPLYPHOTOS_H

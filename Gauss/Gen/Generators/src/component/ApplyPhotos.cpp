@@ -44,7 +44,7 @@ ApplyPhotos::ApplyPhotos( const std::string& name,
     // Location of the input from the generation
     declareProperty ( "HepMCEventLocation" , m_hepMCEventLocation =
                       LHCb::HepMCEventLocation::Default ) ;
-    declareProperty ( "PDGId" , m_pdgId = 23 ) ;
+    declareProperty ( "PDGId" , m_pdgIdList ) ;
 }
 //=============================================================================
 // Destructor
@@ -60,6 +60,12 @@ StatusCode ApplyPhotos::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  if ( m_pdgIdList.empty() ) 
+    return Error( "PDGId list property is not set" ) ;
+
+  for ( std::vector<int>::iterator it = m_pdgIdList.begin() ; 
+        it != m_pdgIdList.end() ; ++it ) m_pdgIds.insert( *it ) ;
+  
   // Initialize PHOTOS
   phoini_() ;
 
@@ -83,97 +89,99 @@ StatusCode ApplyPhotos::execute() {
     HepMC::GenEvent * ev = (*it) -> pGenEvt() ;
     for ( HepMC::GenEvent::particle_iterator itP = ev -> particles_begin() ;
           itP != ev -> particles_end() ; ++itP ) {
-      if ( m_pdgId == abs( (*itP) -> pdg_id() ) && ( (*itP) -> status() != 3 )) {
-        HepMC::GenVertex * EV = (*itP)->end_vertex();
-        if ( 0 == EV ) continue ;
+      if ( LHCb::HepMCEvent::DocumentationParticle != (*itP) -> status() ) {
+	if ( std::binary_search( m_pdgIds.begin() , m_pdgIds.end() , abs( (*itP) -> pdg_id() ) ) ) {
+	  HepMC::GenVertex * EV = (*itP)->end_vertex();
+	  if ( 0 == EV ) continue ;
+	  
+	  // Store the Z0 parameters in the HEPEVT common block
+	  int entry = 1 ;
+	  int eventnum = 1 ;
+	  int numparticle = 1 ;
+	  int istat = 2 ;
+	  int partnum = (*itP) -> pdg_id() ;
+	  int mother = 0 ;
+	  int daugfirst = 2 ;
+	  int dauglast = 1 + EV->particles_out_size();
+	  double px = (*itP)->momentum().px();
+	  double py = (*itP)->momentum().py();
+	  double pz = (*itP)->momentum().pz();
+	  double e  = (*itP)->momentum().e();
+	  double m  = (*itP)->momentum().m();
+	  double x = 0. ;
+	  double y = 0. ;
+	  double z = 0. ;
+	  double t = 0. ;
+	  
+	  begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
+			   &mother,&daugfirst,&dauglast,
+			   &px,&py,&pz,&e,&m,&x,&y,&z,&t);
 
-        // Store the Z0 parameters in the HEPEVT common block
-        int entry = 1 ;
-        int eventnum = 1 ;
-        int numparticle = 1 ;
-        int istat = 2 ;
-        int partnum = (*itP) -> pdg_id() ;
-        int mother = 0 ;
-        int daugfirst = 2 ;
-        int dauglast = 1 + EV->particles_out_size();
-        double px = (*itP)->momentum().px();
-        double py = (*itP)->momentum().py();
-        double pz = (*itP)->momentum().pz();
-        double e  = (*itP)->momentum().e();
-        double m  = (*itP)->momentum().m();
-        double x = 0. ;
-        double y = 0. ;
-        double z = 0. ;
-        double t = 0. ;
 
-        begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
-                         &mother,&daugfirst,&dauglast,
-                         &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-
-
-        HepMC::GenVertex::particle_iterator iter ;
-        for ( iter = EV -> particles_begin( HepMC::children ) ;
-              iter != EV -> particles_end( HepMC::children ) ; ++iter ) {
-          entry++ ;
-          numparticle++ ;
-          istat = 1 ;
-          partnum = (*iter)->pdg_id() ;
-          mother = 1 ;
-          daugfirst = 0 ;
-          dauglast = 0 ;
-          px = (*iter)->momentum().px() ;
-          py = (*iter)->momentum().py() ;
-          pz = (*iter)->momentum().pz() ;
-          e  = (*iter)->momentum().e()  ;
-          m  = (*iter)->momentum().m()  ;
-
-          begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
-                           &mother,&daugfirst,&dauglast,
-                           &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-
-        }
-        // call PHOTOS
-        entry = 1 ;
-        photos_( &entry ) ;
-
-        // get back the parameters and update the event
-        int numparticlephotos ;
-        begevtgengetx_(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
-                       &mother,&daugfirst,&dauglast,
-                       &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-        if ( numparticlephotos == numparticle ) continue ;
-
-        int i = 0 ;
-        int np ;
-        for ( iter = EV -> particles_begin( HepMC::children ) ;
-              iter != EV -> particles_end( HepMC::children ) ; ++iter ) {
-          entry = i + 2 ;
-
-          begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
-                          &mother,&daugfirst,&dauglast,
-                          &px,&py,&pz,&e,&m,&x,&y,&z,&t);
-
-          double mp = (*iter)->momentum().m() ;
-          e = sqrt(mp*mp+px*px+py*py+pz*pz) ;
-          (*iter)->set_momentum(HepMC::FourVector(px,py,pz,e)) ;
-          i++ ;
-        }
-
-	// Add the new photons
-	for ( entry = numparticle + 1 ; entry <= numparticlephotos ; ++entry ) {
-          begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
+	  HepMC::GenVertex::particle_iterator iter ;
+	  for ( iter = EV -> particles_begin( HepMC::children ) ;
+		iter != EV -> particles_end( HepMC::children ) ; ++iter ) {
+	    entry++ ;
+	    numparticle++ ;
+	    istat = 1 ;
+	    partnum = (*iter)->pdg_id() ;
+	    mother = 1 ;
+	    daugfirst = 0 ;
+	    dauglast = 0 ;
+	    px = (*iter)->momentum().px() ;
+	    py = (*iter)->momentum().py() ;
+	    pz = (*iter)->momentum().pz() ;
+	    e  = (*iter)->momentum().e()  ;
+	    m  = (*iter)->momentum().m()  ;
+	    
+	    begevtgenstorex_(&entry,&eventnum,&numparticle,&istat,&partnum,
+			     &mother,&daugfirst,&dauglast,
+			     &px,&py,&pz,&e,&m,&x,&y,&z,&t);
+	    
+	  }
+	  // call PHOTOS
+	  entry = 1 ;
+	  photos_( &entry ) ;
+	  
+	  // get back the parameters and update the event
+	  int numparticlephotos ;
+	  begevtgengetx_(&entry,&eventnum,&numparticlephotos,&istat,&partnum,
 			 &mother,&daugfirst,&dauglast,
-			 &px,&py,&pz,&e,&m,&x,&y,&z,&t) ;
-	  e = sqrt( px*px + py*py + pz*pz ) ;
-	  HepMC::GenParticle * new_photon = new
-	    HepMC::GenParticle( HepMC::FourVector( px , py , pz , e ) , 22 , 
-				LHCb::HepMCEvent::StableInDecayGen ) ;
-	  EV -> add_particle_out( new_photon ) ;
+			 &px,&py,&pz,&e,&m,&x,&y,&z,&t);
+	  if ( numparticlephotos == numparticle ) continue ;
+	  
+	  int i = 0 ;
+	  int np ;
+	  for ( iter = EV -> particles_begin( HepMC::children ) ;
+		iter != EV -> particles_end( HepMC::children ) ; ++iter ) {
+	    entry = i + 2 ;
+	    
+	    begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
+			   &mother,&daugfirst,&dauglast,
+			   &px,&py,&pz,&e,&m,&x,&y,&z,&t);
+	    
+	    double mp = (*iter)->momentum().m() ;
+	    e = sqrt(mp*mp+px*px+py*py+pz*pz) ;
+	    (*iter)->set_momentum(HepMC::FourVector(px,py,pz,e)) ;
+	    i++ ;
+	  }
+	  
+	  // Add the new photons
+	  for ( entry = numparticle + 1 ; entry <= numparticlephotos ; ++entry ) {
+	    begevtgengetx_(&entry,&eventnum,&np,&istat,&partnum,
+			   &mother,&daugfirst,&dauglast,
+			   &px,&py,&pz,&e,&m,&x,&y,&z,&t) ;
+	    e = sqrt( px*px + py*py + pz*pz ) ;
+	    HepMC::GenParticle * new_photon = new
+	      HepMC::GenParticle( HepMC::FourVector( px , py , pz , e ) , 22 , 
+				  LHCb::HepMCEvent::StableInDecayGen ) ;
+	    EV -> add_particle_out( new_photon ) ;
+	  }
 	}
       }
     }
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
