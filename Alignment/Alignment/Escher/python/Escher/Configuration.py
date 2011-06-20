@@ -41,6 +41,7 @@ class Escher(LHCbConfigurableUser):
        , "Simulation"		: False    # set to True to use SimCond
        , "InputType"		: "DST"    # or "DIGI" or "ETC" or "RDST" or "DST"
        , "OutputType"		: "NONE"   # or "RDST" or "NONE". Also forwarded to RecSys
+       , "Persistency"          : None     # POOL or ROOT foraward to LHCbApp
        , "PackType"		: "TES"    # Flag whether or not to use packed containers
        , "NoWarnings"		: False    # suppress all messages with MSG::WARNING or below 
        , "Detectors" 		: ["VELO", "TT", "IT", "OT", "MUON", "Tr", "Vertex"] # detectors to be aligned
@@ -65,6 +66,7 @@ class Escher(LHCbConfigurableUser):
        , "MoniSequence"         : ["VELO","Tr", "OT","ST"]
        , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
        , "Context"		: "Offline" # The context within which to run
+       , "WriteFSR"             : True #write FSRs to DSTs
         }
 
 
@@ -73,7 +75,7 @@ class Escher(LHCbConfigurableUser):
         # DIGI is always simulation, as is usage of MC truth!
         if self.getProp( "WithMC" ) or self.getProp( "InputType" ).upper() == 'DIGI':
             self.setProp( "Simulation", True )
-
+        
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
         # specify the use of the oracle database
@@ -98,22 +100,24 @@ class Escher(LHCbConfigurableUser):
 
         self.configureSequences( )
 
+        self.configurePersistency()
+        
         self.configureInput( inputType )
-
+        
         self.configureOutput( outputType )
-
+        
         # ROOT persistency for histograms
         importOptions('$STDOPTS/RootHist.opts')
         from Configurables import RootHistCnv__PersSvc
         RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
-
+        
         # Use a default histogram file name if not already set
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
             histosName   = self.getProp("DatasetName")
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
             histosName += '-histos.root'
             HistogramPersistencySvc().OutputFile = histosName
-
+        
     def configureSequences(self):
         escherSeq = GaudiSequencer("EscherSequencer")
         #escherSeq.Context = self.getProp("Context")
@@ -137,7 +141,7 @@ class Escher(LHCbConfigurableUser):
         if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
 	    ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 	    DstConf( EnableUnpack = True )
-
+            
         if  self.getProp("Millepede") :
             self.setProp("Kalman", False )
             log.info("Using Millepede type alignment!")
@@ -146,7 +150,7 @@ class Escher(LHCbConfigurableUser):
             ta.Method = "Millepede"
             ta.Sequencer = GaudiSequencer("MpedeAlignSeq")
             alignSeq.Members.append( ta.Sequencer )
-
+            
         if self.getProp("Kalman") :
 	    log.info("Using Kalman style alignment!")
             self.setProp("Incident", "UpdateConstants")
@@ -154,20 +158,24 @@ class Escher(LHCbConfigurableUser):
             ta.Method = "Kalman"
             ta.Sequencer = GaudiSequencer("KalmanAlignSeq")
             alignSeq.Members.append( ta.Sequencer )
-
-		  
+        
+    def configurePersistency(self):
+        if hasattr(self,"Persistency"):
+            if self.getProp("Persistency") is not None:
+                LHCbApp().setProp("Persistency", self.getProp("Persistency"))
+    
     def configureInput(self, inputType):
         """
         Tune initialisation according to input type
         """
-
-        # POOL Persistency
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-
+        
+        # POOL Persistency, now in LHCbApp
+        #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+        
         # By default, Escher only needs to open one input file at a time
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
-
+        
         if inputType in [ "XDST", "DST", "RDST", "ETC" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
@@ -178,17 +186,18 @@ class Escher(LHCbConfigurableUser):
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
-
+        
         if inputType == "ETC":
+            raise DeprecationWarning, "ETC are no longer supported by LHCb software"
             from Configurables import  TagCollectionSvc
             ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
             # Read ETC selection results into TES for writing to DST
             IODataManager().AgeLimit += 1
-
-        if inputType in [ "MDF", "RDST", "ETC" ]:
-            # In case raw data resides in MDF file
-            EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
-
+        
+        #if inputType in [ "MDF", "RDST", "ETC" ]:
+        #    # In case raw data resides in MDF file
+        #    EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
+        
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
@@ -200,23 +209,32 @@ class Escher(LHCbConfigurableUser):
         Set up output stream
         """
         if dstType in [ "DST", "RDST" ]:
+            if hasattr(self,"Persistency"):
+                if self.getProp("Persistency") is not None:
+                    DstConf().Persistency=self.getProp("Persistency")
+            
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
             # Do not pack DC06 DSTs, for consistency with existing productions
             if self.getProp("DataType") == "DC06": packType = "NONE"
-
+            
             dstWriter = OutputStream( writerName )
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
-
+            
             # Set a default output file name if not already defined in the user job options
             if not hasattr( dstWriter, "Output" ):
-                dstWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
-
+                DstConf().OutputName = self.outputName()
+            
             # Define the file content
             DstConf().Writer     = writerName
             DstConf().DstType    = dstType
             DstConf().PackType   = packType
-
+            DstConf().setProp("WriteFSR", self.getProp("WriteFSR"))
+            
+            if hasattr(self,"Persistency"):
+                if self.getProp("Persistency") is not None:
+                    DstConf().setProp("Persistency", self.getProp("Persistency"))
+            
             from Configurables import TrackToDST
             if dstType == "DST":
                 # Sequence for altering DST content
@@ -233,32 +251,33 @@ class Escher(LHCbConfigurableUser):
                 trackFilter.TTrackStates = ["FirstMeasurement"]
                 trackFilter.downstreamStates = ["FirstMeasurement"]
                 trackFilter.upstreamStates = ["ClosestToBeam"]
-                
+            
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
-
+            
             if packType != "NONE":
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
                 DstConf().PackSequencer = packSeq
                 DstConf().AlwaysCreate  = True
                 GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
-
+                
         # Always write an ETC if ETC input
         if self.getProp( "InputType" ).upper() == "ETC":
+            raise DeprecationWarning, "ETC are no longer supported by LHCb"
             etcWriter = TagCollectionSvc("EvtTupleSvc")
             ApplicationMgr().ExtSvc.append(etcWriter)
             ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
             importOptions( "$ESCHEROPTS/DefineETC.opts" )
             if not hasattr( etcWriter, "Output" ):
                etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
-
+        
         # Do not print event number at every event (done already by Brunel)
         EventSelector().PrintFreq = -1
         CountingPrescaler("EscherPrescaler").PrintFreq = self.getProp( "PrintFreq" )
         # Modify printout defaults
         if self.getProp( "NoWarnings" ):
             importOptions( "$ESCHEROPTS/SuppressWarnings.opts" )
-
+        
     def outputName(self):
         """
         Build a name for the output file, based in input options
