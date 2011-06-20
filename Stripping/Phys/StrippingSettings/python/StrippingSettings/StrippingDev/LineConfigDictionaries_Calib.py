@@ -143,33 +143,34 @@ V0ForPID = {
 Jpsi2eeForElectronID = {
     'BUILDERTYPE'	: 'ElectronIDConf',
     'CONFIG'	: {
-    'LinePrescale'            :    1.   ,
-    'LinePostscale'           :    1.   ,
-    'HltFilter'               : None    ,
-    
-    'Both_PT'                 :  500.   ,  # MeV
-    'Both_P'                  : 3000.   ,  # MeV
-    'Both_TRCHI2DOF'          :    5.   ,
-    'Both_MIPCHI2'            :   16.   ,
-    
-    'Tag_PT'                  : 1500.   ,  # MeV
-    'Tag_P'                   : 6000.   ,  # MeV
-    'Tag_PIDe'                :    5.   ,
-    'Tag_MIPCHI2'             :   16.   ,
-    
-    'Probe_PT'                :  500.   ,  # MeV
-    'Probe_P'                 : 3000.   ,  # MeV
-    'Probe_MIPCHI2'           :   16.   ,
-    
-    'eeCombMinMass'           : 2100.   ,  # MeV         
-    'eeCombMaxMass'           : 4300.   ,  # MeV   
-    'eeVCHI2PDOF'             :    9.   ,  
-    'eeMinMass'               : 2200.   ,  # MeV 
-    'eeMaxMass'               : 4200.   ,  # MeV
-    
-    'eeFDCHI2'                :  900.   ,
-    'eeVZ'                    : -1.0e+9    # mm
-    },
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        'HltFilter'               : None    ,
+
+        'Both_PT'                 :  500.   ,  # MeV
+        'Both_P'                  : 3000.   ,  # MeV
+        'Both_TRCHI2DOF'          :    5.   ,
+        'Both_MIPCHI2'            :   25.   ,
+        
+        'Tag_PT'                  : 1500.   ,  # MeV
+        'Tag_P'                   : 6000.   ,  # MeV
+        'Tag_PIDe'                :    5.   ,
+        'Tag_MIPCHI2'             :   25.   ,
+
+        'Probe_PT'                :  500.   ,  # MeV
+        'Probe_P'                 : 3000.   ,  # MeV
+        'Probe_MIPCHI2'           :   25.   ,
+
+        'eeCombMinMass'           : 2100.   ,  # MeV         
+        'eeCombMaxMass'           : 4300.   ,  # MeV   
+        'eeVCHI2PDOF'             :    9.   ,  
+        'eeMinMass'               : 2200.   ,  # MeV 
+        'eeMaxMass'               : 4200.   ,  # MeV
+        'eePT'                    : 2000.   , 
+                
+        'eeDLS'                   :   50.   ,
+        'eeVZ'                    : -1.0e+9    # mm   
+        },
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }

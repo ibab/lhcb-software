@@ -155,13 +155,14 @@ B2KShh = {
                  'B_Mhigh'          	: 280.0,
                  'BDaug_MedPT_PT'   	: 800.0,
                  'BDaug_MaxPT_IP'   	: 0.05,
-                 'hh_DOCA'          	: 0.06,
+                 'BDaug_DD_maxDocaChi2' : 3.0,
+                 'BDaug_LL_maxDocaChi2' : 5.0,
                  'BDaug_DD_PTsum'   	: 4800.0,
                  'BDaug_LL_PTsum'   	: 4500.0,
                  'B_VtxChi2'        	: 12.0,
                  'B_Dira'           	: 0.9999,
-                 'B_DD_IPwrtPV'		: 0.08,
-                 'B_LL_IPwrtPV'		: 0.06,
+                 'B_DD_IPCHI2wrtPV'	: 8.0,
+                 'B_LL_IPCHI2wrtPV'	: 8.0,
                  'BDaug_LL_IPChi2sum'  	: 15.0,
                  'BDaug_DD_IPChi2sum'  	: 15.0,
                  'B_FDwrtPV'		: 1.0,
@@ -170,7 +171,7 @@ B2KShh = {
                  'GEC_MaxTracks'	: 250,
                  'Prescale'		: 1.0,
                  'Postscale'		: 1.0
-                  },
+                 },
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : ['GammaFromLoops']
     }
