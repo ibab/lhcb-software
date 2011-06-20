@@ -311,8 +311,8 @@ def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
     @return: Selection object
 
     """  
-    _motherCut = "(acos(BPVDIRA) <%(B0DirAngle)s) & (BPVIPCHI2() < %(B0PVIPchi2)s) & (ADMASS('B0')<%(BsMassWin)s*MeV)" % locals()
     _combinationCut = "ADAMASS('B0') < 1.5*%(B0MassWin)s*MeV" % locals()
+    _motherCut = "(acos(BPVDIRA) <%(B0DirAngle)s) & (BPVIPCHI2() < %(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV)" % locals()
     _Bd = CombineParticles(DecayDescriptor="[B0 -> K*(892)0 gamma]cc",
                            CombinationCut=_combinationCut,
                            MotherCut=_motherCut,
