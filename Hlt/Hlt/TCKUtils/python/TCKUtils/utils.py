@@ -491,15 +491,15 @@ def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessS
 class RemoteAccess(object) :
     _svc = None
     def __init__( self, cas ) :
-        print 'remote(%s) created at pid=%s' % (self,getpid())
+        #print 'remote(%s) created at pid=%s' % (self,getpid())
         RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
     def rgetConfigTree( self, id ) :
-        print 'remote(%s) at pid=%s: rgetConfigTree(%s)' % (self,getpid(),id)
+        #print 'remote(%s) at pid=%s: rgetConfigTree(%s)' % (self,getpid(),id)
         # maybe prefetch all leafs by invoking 
         # RemoteAccess._svc.collectLeafRefs(id)
         return Tree(id)
     def rgetConfigurations( self ) :
-        print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
+        #print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
         svc = RemoteAccess._svc
         info = dict()
         for i in svc.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
@@ -610,7 +610,8 @@ class AccessProxy( object ) :
     _access = None
     _cas = None
     def __init__( self ) :
-        print 'creating proxy in pid = %s' % os.getpid()
+        #print 'creating proxy in pid = %s' % os.getpid()
+        pass
     # TODO: access should be seperately for each cas instance...
     #  worse: since Configurables are singletons, they may have 
     #         changed since the last time used. Hence, have to 
@@ -624,9 +625,9 @@ class AccessProxy( object ) :
         if not AccessProxy._manager :
             AccessProxy._manager  = AccessMgr()
             AccessProxy._manager.start()
-            print 'proxy started manager'
+            #print 'proxy started manager'
         if not AccessProxy._access :
-            print 'proxy requesting access to remote'
+            #print 'proxy requesting access to remote'
             AccessProxy._access = AccessProxy._manager.Access( cas )
             AccessProxy._cas = cas
             AccessProxy._properties = cas.getProperties()
@@ -637,7 +638,7 @@ class AccessProxy( object ) :
         if cas != AccessProxy._cas : return False # different configurable!
         return cas.getProperties() == AccessProxy._properties
     def flush( self ) : # make flush visible such that eg. createTCKEntries can flush the remote and force re-reading...
-        print 'proxy: flushing remote'
+        #print 'proxy: flushing remote'
         AccessProxy._cas = None
         AccessProxy._properties = None
         AccessProxy._access = None
