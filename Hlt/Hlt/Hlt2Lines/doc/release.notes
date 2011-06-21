@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-21 - Will Barter
+ - Included changes to DY lines 1 and 2 in Hlt2InclusiveDiMuonLines.py presented at T&S meeting on 20th June
+
 ! 2011-06-20 - Albert Puig
  - Fixed ADAMASS cut usage in CombinationCut in Hlt2B2XGammaLines.py
 

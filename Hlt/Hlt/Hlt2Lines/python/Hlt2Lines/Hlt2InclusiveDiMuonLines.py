@@ -105,9 +105,13 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
                    ,'DYPt'                    :    0      # MeV
                    ,'DY1MinMass'              : 2500      # MeV
+                   ,'DY1MinExcMass'           : 3000      # MeV
+                   ,'DY1MaxExcMass'           : 3200      # MeV
                    ,'DY2MinMass'              : 5000      # MeV
                    ,'DY3MinMass'              :10000      # MeV 
                    ,'DY4MinMass'              :20000      # MeV
+                   ,'DY1MuPt'                 :  800      # MeV
+                   ,'DY2MuPt'                 : 1000      # MeV
                    
                    ,'BiasedSingleMuonPt'      :  700      # MeV
                    ,'BiasedMass'              :  500      # MeV
@@ -409,8 +413,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY1'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "  (MM>%(DY1MinMass)s*MeV) "\
+                    , Filter = { 'Code': " (((MM>%(DY1MinMass)s*MeV) & (MM<%(DY1MinExcMass)s*MeV))| ((MM>%(DY1MaxExcMass)s*MeV))) "\
                                  "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(DY1MuPt)s*MeV)"\
                                  "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
@@ -424,6 +429,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , prescale = self.prescale 
                     , Filter = { 'Code': "  (MM>%(DY2MinMass)s*MeV) "\
                                  "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(DY2MuPt)s*MeV)"\
                                  "& (PT>%(DYPt)s*MeV) " % self.getProps() }
                     , postscale = self.postscale
                     )
