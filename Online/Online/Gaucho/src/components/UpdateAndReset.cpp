@@ -524,11 +524,13 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
 }
 
 void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
-  std::string> &idList, bool reset, bool save, int &level, TDirectory* rootdir)
+  std::string> &idList, bool reset, bool save, int &, TDirectory* rootdir)
 {
   MsgStream msg(msgSvc(), name());
   std::vector<IRegistry*> leaves;
   std::vector<IRegistry*>::const_iterator it;
+  Bool_t dirstat = TH1::AddDirectoryStatus();
+  TH1::AddDirectory(kFALSE);
   try
   {
     //     msg << MSG::INFO << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
@@ -536,6 +538,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
     if (!dataManagerSvc)
     {
       //       msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
+      TH1::AddDirectory(dirstat);
       return;
     }
 
@@ -543,6 +546,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
     if (sc.isFailure())
     {
       //        msg << MSG::WARNING << "    No histograms found on the transient store." << endreq;
+      TH1::AddDirectory(dirstat);
       return;
     }
 
@@ -567,8 +571,18 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
         if (save)
         {
           TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
-          dyn_string *HistoFullName = Strsplit((char*) hRoot->GetName(),
-              (char*) "/");
+          dyn_string *HistoFullName = Strsplit((char*) hRoot->GetName(),(char*) "/");
+          gDirectory->Cd("/");
+          for (unsigned int i=0;i<HistoFullName->size()-1;i++)
+          {
+            TKey *k;
+            k = gDirectory->GetKey(HistoFullName->at(i).c_str());
+            if (k == 0)
+            {
+              gDirectory->mkdir(HistoFullName->at(i).c_str());
+            }
+            gDirectory->Cd(HistoFullName->at(i).c_str());
+          }
           hRoot->Write(HistoFullName->at(HistoFullName->size() - 1).c_str());
           //         msg << MSG::INFO << ", saving name=" << hRoot->GetName() << " directory="
           //          << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
@@ -593,6 +607,17 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
               profile);
           dyn_string *HistoFullName = Strsplit((char*) hRoot->GetName(),
               (char*) "/");
+          gDirectory->Cd("/");
+          for (unsigned int i=0;i<HistoFullName->size()-1;i++)
+          {
+            TKey *k;
+            k = gDirectory->GetKey(HistoFullName->at(i).c_str());
+            if (k == 0)
+            {
+              gDirectory->mkdir(HistoFullName->at(i).c_str());
+            }
+            gDirectory->Cd(HistoFullName->at(i).c_str());
+          }
           hRoot->Write(HistoFullName->at(HistoFullName->size() - 1).c_str());
           //should we reset at the root level?
           //if (reset) hRoot->Reset();
@@ -607,17 +632,17 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
       }
 
       // not an histogram: must be a directory: create corresponding TDirectory
-      dyn_string *rootDirs = Strsplit((char*) id.c_str(), (char*) "/");
-      TDirectory* newdir = rootdir;
-      if (NULL != newdir)
-      {
-        newdir = rootdir->mkdir(rootDirs->at(rootDirs->size() - 1).c_str());
-        newdir->cd();
-      }
-      int newLevel = level + 1;
-      if (newLevel >= 10)
-        continue;
-      histogramIdentifier(*it, idList, reset, save, newLevel, newdir);
+//      dyn_string *rootDirs = Strsplit((char*) id.c_str(), (char*) "/");
+//      TDirectory* newdir = rootdir;
+//      if (NULL != newdir)
+//      {
+//        newdir = rootdir->mkdir(rootDirs->at(rootDirs->size() - 1).c_str());
+//        newdir->cd();
+//      }
+//      int newLevel = level + 1;
+//      if (newLevel >= 10)
+//        continue;
+//      histogramIdentifier(*it, idList, reset, save, newLevel, newdir);
     }
   }
   catch (const std::exception &ex)
@@ -625,6 +650,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
     msg << MSG::WARNING << "histogramidentifier std::exception: " << ex.what()
         << endreq;
   }
+  TH1::AddDirectory(dirstat);
 }
 
 IRegistry* UpdateAndReset::rootObject(){
