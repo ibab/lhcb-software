@@ -1,0 +1,562 @@
+StrippingReport                                                INFO Event 100000, Good event 48215
+ |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
+ |_StrippingGlobal_                                  | 25.7617|     12421|       | 390.002|       |       |       |
+ |_StrippingSequenceStreamBhadron_                   |  3.4906|      1683|       | 172.037|       |       |       |
+ |!StrippingB2DXWithD2KPiPi0ResolvedWSLine           |  0.0021|         1|  6.000|   0.815|      0|      0|      8|
+ |!StrippingB2DXWithD2KshLine                        |  0.0124|         6|  2.000|   4.097|      0|      0|     47|
+ |!StrippingB2DXWithD2KshhWSLine                     |  0.0041|         2| 15.500|   0.429|      0|      0|      0|
+ |!StrippingB2DXWithD2KPiPi0MergedLine               |  0.0000|         0|  0.000|   3.287|      0|      0|      0|
+ |!StrippingB2DXWithD2hhhWSLine                      |  0.0684|        33|  4.788|   0.569|      0|      0|      0|
+ |!StrippingB2DXWithD2hhLine                         |  0.4252|       205|  6.512|   3.399|      0|      0|      0|
+ |!StrippingB2DXWithD2hhhhWSLine                     |  0.0083|         4|  2.750|   0.240|      0|      0|      0|
+ |!StrippingB2DXWithD2KPiPi0MergedWSLine             |  0.0000|         0|  0.000|   0.103|      0|      0|      0|
+ |!StrippingB2DXWithD2hhWSLine                       |  0.0270|        13|  8.154|   0.164|      0|      0|      0|
+ |!StrippingB2DXWithD2KshhLine                       |  0.1286|        62|  6.581|   1.318|      0|      0|      0|
+ |!StrippingB2DXWithD2hhhLine                        |  0.3713|       179|  8.045|   3.463|      0|      0|      0|
+ |!StrippingB2DXWithD2hhhhLine                       |  0.1410|        68|  8.279|   3.895|      0|      0|      0|
+ |!StrippingB2DXWithD2KPiPi0ResolvedLine             |  0.1224|        59|  4.017|   1.226|      0|      0|      0|
+ |!StrippingB2DXWithLambdaLine                       |  0.1327|        64|  2.453|   1.175|      0|      0|      0|
+ |!StrippingB2DXWithUnbiasedB2DPiLine                |  0.3236|       156|  2.545|   1.238|      0|      0|      8|
+ |!StrippingB2threebodyLine                          |  0.1120|        54|  4.407|  38.922|      0|      0|    106|
+ |!StrippingBs2Q2Body4piLine                         |  0.0228|        11|  1.273|   1.249|      0|      0|      0|
+ |!StrippingBu2D0h_D02KShh_NoPIDBu2D0h_D02KShh_KSLL  |  0.0021|         1|  2.000|   1.699|      0|      0|      2|
+ |!StrippingBu2D0h_D02KShh_NoPIDBu2D0h_D02KShh_KSDD  |  0.0166|         8|  2.125|   0.928|      0|      0|      0|
+ |!StrippingB2hhh_KKK_inclLine                       |  0.1286|        62|  1.419|   4.503|      0|      0|      0|
+ |!StrippingB2hhh_pph_inclLine                       |  0.0332|        16|  1.125|   3.357|      0|      0|      0|
+ |!StrippingBd2DstarTauNuTight                       |  0.0436|        21|  7.524|   0.390|      0|      0|      0|
+ |!StrippingBd2DstarTauNuLoose                       |  0.0290|        14|  9.786|   0.162|      0|      0|      0|
+ |!StrippingB2hhLTUnbiasedLooseLine                  |  0.0601|        29|  1.759|   0.040|      0|      0|      0|
+ |!StrippingB2hhLTUnbiasedNeuroBayesLine             |  0.1244|        60|  1.017|   0.363|      0|      0|      0|
+ |!StrippingBetaSQ2B4piSelectionLine                 |  0.1887|        91|  1.297|   1.076|      0|      0|      0|
+ |!StrippingBetaSQ2B3piSelectionLine                 |  0.0830|        40|  1.075|   0.133|      0|      0|      0|
+ |!StrippingBetaSBs2ChicPhi_Chic2KKPiPiNominalLine   |  0.0000|         0|  0.000|   1.307|      0|      0|      0|
+ |!StrippingB2DXHltTisTosWithB2DhD2hhTOSLine         |  0.2572|       124|  3.524|   2.211|      0|      0|      0|
+ |!StrippingB2DXHltTisTosWithB2DhD2hhTISLine         |  0.0830|        40|  3.775|   0.200|      0|      0|      0|
+ |!StrippingB2DXHltTisTosWithB02DhD2hhhTOSLine       |  0.6409|       309|  8.210|  21.609|      0|      0|    165|
+ |!StrippingB2DXHltTisTosWithB02DhD2hhhTISLine       |  0.3484|       168|  8.649|   0.247|      0|      0|      0|
+ |!StrippingB2DXHltTisTosWithB02DhWSD2hhhTOSLine     |  0.0726|        35|  9.429|   1.020|      0|      0|      1|
+ |!StrippingB2twobodyLine                            |  0.1410|        68|  3.324|  21.405|      0|      0|      0|
+ |!StrippingB2KShhDDLine                             |  0.0311|        15|  2.400|   2.384|      0|      0|      0|
+ |!StrippingB2KShhLLLine                             |  0.0187|         9|  2.333|   0.778|      0|      0|      0|
+ |!StrippingBetaSBs2PhiKstNominalLine                |  0.0664|        32|  1.812|   3.851|      0|      0|      1|
+ |!StrippingB2HHPi0_R                                |  0.0415|        20|  1.100|   1.591|      0|      0|      4|
+ |!StrippingB2HHPi0_M                                |  0.0228|        11|  1.000|   0.101|      0|      0|      0|
+ |!StrippingAllB2D0PiPiPiLineB2D3H                   |  0.0373|        18|  1.389|   6.790|      0|      0|      0|
+ |!StrippingAllB2D0KPiPiLineB2D3H                    |  0.0394|        19|  1.684|   6.165|      0|      0|      0|
+ |!StrippingAllUnbiasedB2DPiPiPiLineB2D3H            |  0.0083|         4|  2.000|   3.625|      0|      0|      0|
+ |!StrippingAllB2DPiPiPiLineB2D3H                    |  0.0622|        30|  2.167|   2.608|      0|      0|      0|
+ |!StrippingAllB2DKPiPiLineB2D3H                     |  0.1037|        50|  1.620|   0.179|      0|      0|      0|
+ |!StrippingAllB2DStarPiPiPiLineB2D3H                |  0.0000|         0|  0.000|   0.259|      0|      0|      0|
+ |!StrippingAllB2DStarKPiPiLineB2D3H                 |  0.0000|         0|  0.000|   0.085|      0|      0|      0|
+ |!StrippingAllB2DDLineB2D3H                         |  0.0270|        13|  1.692|   0.189|      0|      0|      0|
+ |!StrippingAllB2DStarDLineB2D3H                     |  0.0000|         0|  0.000|   0.086|      0|      0|      0|
+ |!StrippingAllLambdaB2LambdaCPiPiPiLineB2D3H        |  0.0207|        10|  1.700|   1.249|      0|      0|      0|
+ |!StrippingAllLambdaB2LambdaCKPiPiLineB2D3H         |  0.0353|        17|  1.412|   0.102|      0|      0|      0|
+ |!StrippingAllLambdaB2LambdaCPPbarPiLineB2D3H       |  0.0456|        22|  2.909|   0.956|      0|      0|      0|
+ |!StrippingAllLambdaB2LambdaCPPbarKLineB2D3H        |  0.0249|        12|  4.667|   0.801|      0|      0|      0|
+ |!StrippingAllB2DStarDKLineB2D3H                    |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingAllWSB2DPiPiPiLineB2D3H                  |  0.0000|         0|  0.000|   0.066|      0|      0|      0|
+ |!StrippingAllWSB2DKPiPiLineB2D3H                   |  0.0041|         2|  2.000|   0.062|      0|      0|      0|
+ |!StrippingAllWSB2DStarPiPiPiLineB2D3H              |  0.0000|         0|  0.000|   0.053|      0|      0|      0|
+ |!StrippingAllWSB2DStarKPiPiLineB2D3H               |  0.0000|         0|  0.000|   0.055|      0|      0|      0|
+ |!StrippingAllWSB2DDLineB2D3H                       |  0.0000|         0|  0.000|   0.065|      0|      0|      0|
+ |!StrippingAllWSB2DStarDLineB2D3H                   |  0.0000|         0|  0.000|   0.054|      0|      0|      0|
+ |!StrippingAllWSLambdaB2LambdaCPiPiPiLineB2D3H      |  0.0000|         0|  0.000|   0.055|      0|      0|      0|
+ |!StrippingAllWSLambdaB2LambdaCKPiPiLineB2D3H       |  0.0041|         2|  1.000|   0.054|      0|      0|      0|
+ |!StrippingAllWSLambdaB2LambdaCPPbarPiLineB2D3H     |  0.0041|         2|  2.000|   0.056|      0|      0|      0|
+ |!StrippingAllWSLambdaB2LambdaCPPbarKLineB2D3H      |  0.0021|         1|  3.000|   0.054|      0|      0|      0|
+ |!StrippingAllWSB2DStarDKLineB2D3H                  |  0.0000|         0|  0.000|   0.061|      0|      0|      0|
+ |!StrippingAllB2D0DLineB2D3H                        |  0.0062|         3|  1.333|   0.242|      0|      0|      0|
+ |!StrippingBetaSBs2EtacPhiNominalLine               |  0.0000|         0|  0.000|   0.694|      0|      0|      0|
+ |!StrippingBetaSBs2KstKstNominalLine                |  0.0394|        19|  1.211|   6.201|      0|      0|      0|
+ |!StrippingBetaSBs2KstKstSameChargeLine             |  0.0332|        16|  1.375|   0.131|      0|      0|      0|
+ |!StrippingBd2JPsiKstForBetaSBs2KstKstLine          |  0.0083|         4|  1.250|   0.255|      0|      0|      0|
+ |!StrippingBu2D0h_D02KShh_NoPID_WSBu2D0h_D02KShh_KSL|  0.0000|         0|  0.000|   0.300|      0|      0|      0|
+ |!StrippingBu2D0h_D02KShh_NoPID_WSBu2D0h_D02KShh_KSD|  0.0041|         2|  1.500|   0.189|      0|      0|      0|
+ |!StrippingHb2Charged2BodyB2PPbarLine               |  0.0104|         5|  1.000|   0.267|      0|      0|      0|
+ |!StrippingHb2Charged2BodyB2Charged2BodyLine        |  0.0290|        14|  1.000|   0.438|      0|      0|      0|
+ |!StrippingBetaSBs2ChicPhi_Chic2PiPiPiPiNominalLine |  0.0000|         0|  0.000|   0.618|      0|      0|      0|
+ |!StrippingBetaSBs2PhiPhiLine                       |  0.0228|        11|  1.273|   0.447|      0|      0|      0|
+ |!StrippingBetaSBs2PhiPhiWideLine                   |  0.0041|         2|  1.000|   0.077|      0|      0|      0|
+ |!StrippingTwoBodyPromptLine                        |  0.1058|        51|  1.137|   2.600|      0|      0|      0|
+ |_StrippingSequenceStreamSemileptonic_              |  1.0681|       515|       |  10.671|       |       |       |
+ |!StrippingB2XuMuNuBd2PiLine                        |  0.0996|        48|  1.021|   0.150|      0|      0|      0|
+ |!StrippingB2XuMuNuBd2PiSSLine                      |  0.0643|        31|  1.000|   0.195|      0|      0|      0|
+ |!StrippingB2XuMuNuBu2RhoLine                       |  0.0664|        32|  2.312|   0.257|      0|      0|      0|
+ |!StrippingB2XuMuNuBu2RhoWSLine                     |  0.0705|        34|  1.088|   0.275|      0|      0|      0|
+ |!StrippingB2XuMuNuBs2KLine                         |  0.0830|        40|  1.000|   0.120|      0|      0|      0|
+ |!StrippingB2XuMuNuBs2KSSLine                       |  0.0622|        30|  1.033|   0.101|      0|      0|      0|
+ |!StrippingB2XuMuNuBs2KstarLine                     |  0.0664|        32|  4.312|   0.466|      0|      0|      1|
+ |!StrippingB2XuMuNuBs2KstarSSLine                   |  0.0601|        29|  3.172|   0.226|      0|      0|      0|
+ |!StrippingB0q2DplusMuXMC09                         |  0.0207|        10|  1.100|   0.455|      0|      0|      0|
+ |!StrippingB0q2DplusMuXPresel                       |  0.0207|        10|  1.400|   0.085|      0|      0|      0|
+ |!StrippingB0q2DplusMuXTuned                        |  0.0601|        29|  1.138|   0.632|      0|      0|      0|
+ |!StrippingBd2DstarMuNuTight                        |  0.0124|         6|  1.000|   0.734|      0|      0|      0|
+ |!StrippingBd2DstarMuNuLoose                        |  0.0249|        12|  1.667|   0.410|      0|      0|      0|
+ |!StrippingB2XTau_TauTau_TOSLine                    |  0.0581|        28|  6.179|   1.910|      0|      0|      0|
+ |!StrippingB2XTau_DD_TOSLine                        |  0.0062|         3|  1.000|   1.339|      0|      0|      0|
+ |!StrippingB2XTau_TauMu_TOSLine                     |  0.1203|        58|  1.397|   0.092|      0|      0|      0|
+ |!StrippingB2XTau_DMu_TOSLine                       |  0.0373|        18|  1.333|   0.068|      0|      0|      0|
+ |!StrippingB2XTau_TauTau_TISLine                    |  0.0145|         7|  6.857|   0.061|      0|      0|      0|
+ |!StrippingB2XTau_DD_TISLine                        |  0.0000|         0|  0.000|   0.063|      0|      0|      0|
+ |!StrippingB2XTau_TauMu_TISLine                     |  0.0166|         8|  1.125|   0.062|      0|      0|      0|
+ |!StrippingB2XTau_DMu_TISLine                       |  0.0332|        16|  1.188|   0.081|      0|      0|      0|
+ |!Strippingb2D0MuXB2DMuNuXLine                      |  0.1141|        55|  1.018|   0.562|      0|      0|      0|
+ |!Strippingb2DpMuXB2DMuNuXLine                      |  0.0684|        33|  1.000|   0.211|      0|      0|      0|
+ |!Strippingb2DsMuXB2DMuNuXLine                      |  0.0684|        33|  1.121|   0.151|      0|      0|      0|
+ |!Strippingb2LcMuXB2DMuNuXLine                      |  0.0332|        16|  1.188|   0.256|      0|      0|      0|
+ |!Strippingb2D0MuXK3PiB2DMuNuXLine                  |  0.0124|         6|  2.333|   1.427|      0|      0|      2|
+ |_StrippingSequenceStreamLeptonic_                  |  5.6829|      2740|       |   3.612|       |       |       |
+ |!StrippingMicroDSTDiElectronIncDiElectronLine      |  0.7093|       342|  1.281|   2.144|      0|      0|      6|
+ |!StrippingMicroDSTDiElectronBiasedIncDiElectronLine|  0.4729|       228|  1.180|   0.152|      0|      0|      0|
+ |!StrippingMicroDSTDiMuonDiMuonIncLine              |  3.1546|      1521|  1.124|   0.098|      0|      0|      0|
+ |!StrippingMicroDSTDiMuonDiMuonSameSignLine         |  0.0539|        26|  1.077|   0.084|      0|      0|      0|
+ |!StrippingMicroDSTDiMuonDiMuonPrescaledLine        |  0.9872|       476|  1.128|   0.062|      0|      0|      0|
+ |!StrippingMicroDSTNeuroBayesMuMuMuMuNBLine         |  1.4954|       721|  1.015|   0.754|      0|      0|      0|
+ |!StrippingMicroDSTNeuroBayesMuMuMuMuHighNBLine     |  0.0000|         0|  0.000|   0.058|      0|      0|      0|
+ |!StrippingMicroDSTNeuroBayesMuMuJPsiNBLine         |  0.0000|         0|  0.000|   0.055|      0|      0|      0|
+ |_StrippingSequenceStreamDimuon_                    |  3.4305|      1654|       |  42.193|       |       |       |
+ |!StrippingBetaSJpsi2MuMuLine                       |  0.0249|        12|  1.000|   0.066|      0|      0|      0|
+ |!StrippingBetaSJpsi2MuMuDetachedLine               |  0.0498|        24|  1.000|   0.080|      0|      0|      0|
+ |!StrippingBetaSBu2JpsiKPrescaledLine               |  0.0622|        30|  1.700|   0.121|      0|      0|      0|
+ |!StrippingBetaSBu2JpsiKDetachedLine                |  0.0643|        31|  1.161|   0.766|      0|      0|      0|
+ |!StrippingBetaSBu2JpsiKUnbiasedLine                |  0.2468|       119|  1.160|   0.066|      0|      0|      0|
+ |!StrippingBetaSBu2JpsiKNoPIDDetachedLine           |  0.1141|        55|  1.491|   1.256|      0|      0|      0|
+ |!StrippingBetaSBs2JpsiPhiPrescaledLine             |  0.0581|        28|  1.357|   0.103|      0|      0|      0|
+ |!StrippingBetaSBs2JpsiPhiDetachedLine              |  0.0187|         9|  1.444|   0.273|      0|      0|      1|
+ |!StrippingBetaSBs2JpsiPhiUnbiasedLine              |  0.0996|        48|  1.188|   0.067|      0|      0|      0|
+ |!StrippingBetaSBd2JpsiKstarPrescaledLine           |  0.0788|        38|  2.474|   0.140|      0|      0|      0|
+ |!StrippingBetaSBd2JpsiKstarDetachedLine            |  0.0747|        36|  2.361|   1.721|      0|      0|     19|
+ |!StrippingBetaSBd2JpsiKstarUnbiasedLine            |  0.4770|       230|  1.722|   0.070|      0|      0|      0|
+ |!StrippingBetaSBd2JpsiKsPrescaledLine              |  0.0436|        21|  1.048|   0.092|      0|      0|      0|
+ |!StrippingBetaSBd2JpsiKsDetachedLine               |  0.0041|         2|  1.000|   0.104|      0|      0|      0|
+ |!StrippingBetaSBd2JpsiKsUnbiasedLine               |  0.0456|        22|  1.000|   0.066|      0|      0|      0|
+ |!StrippingBetaSBs2Jpsif0Line                       |  0.0664|        32|  2.438|   0.919|      0|      0|      8|
+ |!StrippingBetaSBs2JpsiKstarLine                    |  0.0311|        15|  1.733|   0.428|      0|      0|      0|
+ |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine      |  0.0581|        28|  1.036|   0.104|      0|      0|      0|
+ |!StrippingBetaSBs2JpsiEtaPrescaledLine             |  0.0477|        23|  1.087|   0.108|      0|      0|      0|
+ |!StrippingBetaSBs2JpsiEtaDetachedLine              |  0.0249|        12|  1.000|   0.236|      0|      0|      0|
+ |!StrippingBetaSBs2JpsiEtaUnbiasedLine              |  0.0311|        15|  1.000|   0.067|      0|      0|      0|
+ |!StrippingBc2JpsiMuLine                            |  0.0705|        34|  1.235|   0.151|      0|      0|      0|
+ |!StrippingBs2PhiMuMuBs2PhiMuMuLine                 |  0.0104|         5|  1.200|   0.179|      0|      0|      0|
+ |!StrippingBs2f0MuMuBs2PhiMuMuLine                  |  0.0456|        22|  1.409|   0.266|      0|      0|      0|
+ |!StrippingTriMuonThreeMuons                        |  0.0767|        37|  3.081|   0.224|      0|      0|      0|
+ |!StrippingTriMuonBc2ThreeMu                        |  0.0415|        20|  1.150|   0.090|      0|      0|      0|
+ |!StrippingTriMuonTau2ThreeMu                       |  0.0477|        23|  1.130|   0.076|      0|      0|      0|
+ |!StrippingB2XMuMuSS_PiOSLine                       |  0.0684|        33|  1.303|   1.443|      0|      0|      4|
+ |!StrippingB2XMuMuSS_PiSSLine                       |  0.0145|         7|  1.571|   0.402|      0|      0|      0|
+ |!StrippingB2XMuMuSS_KOSLine                        |  0.0539|        26|  1.192|   0.963|      0|      0|      3|
+ |!StrippingB2XMuMuSS_KSSLine                        |  0.0041|         2|  1.000|   0.321|      0|      0|      0|
+ |!StrippingHeavyBaryonXib2JpsiXi                    |  0.0021|         1|  1.000|   0.186|      0|      0|      0|
+ |!StrippingHeavyBaryonXibzero2JpsiXistar            |  0.0083|         4|  3.250|   0.122|      0|      0|      1|
+ |!StrippingHeavyBaryonOmegab2JpsiOmega              |  0.0249|        12|  1.250|   0.550|      0|      0|      5|
+ |!StrippingDiCharmForPromptCharm                    |  0.0124|         6|  1.833|   3.879|      0|      0|      0|
+ |!StrippingDiMuonAndCharmForPromptCharm             |  0.0311|        15|  1.400|   0.215|      0|      0|      0|
+ |!StrippingDiMuonAndGammaForPromptCharm             |  0.1535|        74|  1.243|   0.199|      0|      0|      1|
+ |!StrippingDoubleDiMuonForPromptCharm               |  0.0539|        26|  1.308|   0.082|      0|      0|      0|
+ |!StrippingSigma2PMuMuForHyperCP                    |  0.0062|         3|  1.000|   0.314|      0|      0|      0|
+ |!StrippingDs2PhiPiForHyperCP                       |  0.0104|         5|  1.000|   0.179|      0|      0|      0|
+ |!StrippingDs2PiPiPiForHyperCP                      |  0.0394|        19|  1.211|   0.948|      0|      0|      0|
+ |!StrippingDplus2PiMuMuForHyperCP                   |  0.0104|         5|  1.000|   0.180|      0|      0|      0|
+ |!StrippingB2SameChargeMuonB2JpsiKPiPiLine          |  0.0062|         3|  1.000|   0.327|      0|      0|      0|
+ |!StrippingB2SameChargeMuonB2D0MuMuPiLine           |  0.0021|         1|  1.000|   1.772|      0|      0|      0|
+ |!StrippingB2SameChargeMuonB2DpMuMuLine             |  0.0021|         1|  1.000|   1.924|      0|      0|      0|
+ |!StrippingB2SameChargeMuonB2DsMuMuLine             |  0.0041|         2|  1.000|   3.608|      0|      0|      0|
+ |!StrippingJpsiMuMuforD0MuMuLine                    |  0.0498|        24|  1.000|   0.307|      0|      0|      0|
+ |!StrippingB2MuMuMuMuLinesLine                      |  0.0000|         0|  0.000|   0.234|      0|      0|      0|
+ |!StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine       |  0.0809|        39|  1.385|   0.136|      0|      0|      0|
+ |!StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine       |  0.0477|        23|  3.000|   0.238|      0|      0|      2|
+ |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine         |  0.0809|        39|  2.282|   0.144|      0|      0|      0|
+ |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine     |  0.0850|        41|  4.561|   0.251|      0|      0|      4|
+ |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine        |  0.0124|         6|  1.167|   0.081|      0|      0|      0|
+ |!StrippingBd2KstarMuMu_BdToKstarMuMuLine           |  0.0394|        19|  2.316|   1.402|      0|      0|      0|
+ |!StrippingBd2KstarMuMu_BdToKstarMuMuSSLine         |  0.0207|        10|  2.000|   0.914|      0|      0|      0|
+ |!StrippingBd2KstarMuMu_BuToKMuMuLine               |  0.0270|        13|  1.000|   0.177|      0|      0|      0|
+ |!StrippingBd2KstarMuMu_BuToKMuMuSSLine             |  0.0062|         3|  1.000|   0.168|      0|      0|      0|
+ |!StrippingBuToKX3872_BuToKX3872LooseLine           |  0.0394|        19|  5.316|   0.209|      0|      0|      0|
+ |!StrippingBuToKX3872_BuToKPsi2SLooseLine           |  0.0270|        13|  5.077|   0.089|      0|      0|      0|
+ |!StrippingBuToKX3872_BuToKX3872Line                |  0.0207|        10|  3.200|   0.131|      0|      0|      0|
+ |!StrippingBuToKX3872_BuToKPsi2SLine                |  0.0083|         4|  4.250|   0.084|      0|      0|      0|
+ |!StrippingBc2JpsiHDetachedLine                     |  0.0062|         3|  1.000|   0.212|      0|      0|      0|
+ |!StrippingNeuroBayesMuMuMuMuNBLine                 |  0.0000|         0|  0.000|   0.067|      0|      0|      0|
+ |!StrippingNeuroBayesMuMuMuMuHighNBLine             |  0.1244|        60|  1.083|   0.339|      0|      0|      0|
+ |!StrippingNeuroBayesMuMuJPsiNBLine                 |  0.1867|        90|  1.011|   0.095|      0|      0|      0|
+ |!StrippingB2XMuMu_Line                             |  0.0394|        19|  3.474|   1.302|      0|      0|      0|
+ |!StrippingFullDSTDiMuonDiMuonExclusiveLine         |  0.0000|         0|  0.000|   0.069|      0|      0|      0|
+ |!StrippingFullDSTDiMuonDiMuonNoPVLine              |  0.0000|         0|  0.000|   0.091|      0|      0|      0|
+ |!StrippingFullDSTDiMuonDiMuonHighMassLine          |  0.1182|        57|  1.035|   0.102|      0|      0|      0|
+ |!StrippingFullDSTDiMuonDiMuonHighMassSameSignLine  |  0.0290|        14|  1.143|   0.299|      0|      0|      0|
+ |!StrippingFullDSTDiMuonDiMuonLowMassLine           |  0.1016|        49|  1.510|   0.086|      0|      0|      0|
+ |!StrippingFullDSTDiMuonJpsi2MuMuLine               |  0.7653|       369|  1.014|   0.083|      0|      0|      0|
+ |!StrippingFullDSTDiMuonPsi2MuMuLine                |  0.0767|        37|  1.000|   0.105|      0|      0|      0|
+ |!StrippingFullDSTDiMuonDiMuonDetachedLine          |  0.0000|         0|  0.000|   0.067|      0|      0|      0|
+ |!StrippingFullDSTDiMuonJpsi2MuMuDetachedLine       |  0.6907|       333|  1.009|   0.081|      0|      0|      0|
+ |!StrippingFullDSTDiMuonPsi2MuMuDetachedLine        |  0.1514|        73|  1.041|   0.104|      0|      0|      0|
+ |!StrippingBc2JpsiHLine                             |  0.0228|        11|  1.182|   0.123|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine       |  0.0436|        21|  1.143|   0.106|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetatchedLi|  0.0373|        18|  1.000|   0.213|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLi|  0.0809|        39|  2.436|   0.321|      0|      0|      3|
+ |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetatchedLi|  0.0041|         2|  1.000|   0.194|      0|      0|      3|
+ |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuUnbiasedLin|  0.0124|         6|  1.167|   0.087|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuUnbiasedLine |  0.0622|        30|  1.167|   0.112|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetatchedLine|  0.0187|         9|  1.111|   0.248|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine|  0.0643|        31|  1.419|   0.113|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuUnbiasedL|  0.0809|        39|  1.846|   0.155|      0|      0|      1|
+ |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetatched|  0.0290|        14|  3.643|   0.756|      0|      0|     14|
+ |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaled|  0.0394|        19|  5.000|   0.191|      0|      0|      1|
+ |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuUnbiasedLine|  0.0083|         4|  1.500|   0.085|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetatchedLin|  0.0000|         0|  0.000|   0.086|      0|      0|      0|
+ |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLin|  0.0124|         6|  1.500|   0.085|      0|      0|      0|
+ |!StrippingBs2MuMuPhiLine                           |  0.0062|         3|  1.000|   0.658|      0|      0|      0|
+ |!StrippingBs2MuMuLinesNoMuIDLine                   |  0.0705|        34|  1.029|   3.075|      0|      0|      1|
+ |!StrippingBs2MuMuLinesWideMassLine                 |  0.0643|        31|  1.032|   0.382|      0|      0|      0|
+ |!StrippingBs2MuMuLinesNoMuIDLooseLine              |  0.0560|        27|  1.185|   0.369|      0|      0|      1|
+ |!StrippingBs2MuMuLinesDetachedJPsiLine             |  0.2074|       100|  1.010|   0.306|      0|      0|      0|
+ |!StrippingBs2MuMuLinesDetachedJPsiLooseLine        |  0.0332|        16|  1.000|   0.110|      0|      0|      0|
+ |!StrippingBs2MuMuLinesDetachedJPsi_noDetachedLine  |  0.0581|        28|  1.000|   0.096|      0|      0|      0|
+ |!StrippingBu2LLK_eeLine                            |  0.0062|         3|  1.000|   0.450|      0|      0|      0|
+ |!StrippingBu2LLK_mmLine                            |  0.0145|         7|  1.000|   0.116|      0|      0|      0|
+ |_StrippingSequenceStreamCalibration_               |  4.9010|      2363|       |  82.347|       |       |       |
+ |!StrippingTrackEffDownMuonNominalLine              |  0.3775|       182|  1.055|  32.780|      0|      0|    636|
+ |!StrippingTrackEffDownMuonValidationLine           |  1.3709|       661|  1.011|   0.105|      0|      0|      0|
+ |!StrippingD02KPiPi0_R                              |  0.3007|       145|  1.172|   1.742|      0|      0|      1|
+ |!StrippingD02KPiPi0_M                              |  0.1452|        70|  1.129|   0.122|      0|      0|      0|
+ |!StrippingJpsi2eeForElectronIDLine                 |  0.3567|       172|  1.105|   2.615|      0|      0|      1|
+ |!StrippingK0SLLLineV0ForPID                        |  0.1182|        57|  1.105|   0.094|      0|      0|      0|
+ |!StrippingK0SDDLineV0ForPID                        |  0.1348|        65|  1.077|   0.139|      0|      0|      0|
+ |!StrippingLam0LLLine1V0ForPID                      |  0.1224|        59|  1.034|   0.195|      0|      0|      0|
+ |!StrippingLam0LLLine2V0ForPID                      |  0.1120|        54|  1.019|   1.028|      0|      0|      0|
+ |!StrippingLam0DDLineV0ForPID                       |  0.0975|        47|  1.043|   0.333|      0|      0|      0|
+ |!StrippingLam0LLIsMUONLine1V0ForPID                |  0.0788|        38|  1.053|   2.703|      0|      0|      0|
+ |!StrippingLam0LLIsMUONLine2V0ForPID                |  0.0062|         3|  1.000|   0.084|      0|      0|      0|
+ |!StrippingLam0DDIsMUONLineV0ForPID                 |  0.1079|        52|  1.000|   8.039|      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiNoPID                      |  0.1203|        58|  1.034|   0.102|      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiFromBNoPID                 |  0.1514|        73|  1.000|   0.517|      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiFromBNoPIDNoMip            |  0.1493|        72|  1.000|   0.188|      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiFromBNoPIDNoMipHiP         |  0.0892|        43|  1.000|   0.448|      0|      0|      0|
+ |!StrippingMuIDCalib_JpsiKFromBNoPIDNoMip           |  0.0436|        21|  1.095|   0.826|      0|      0|      0|
+ |!StrippingMuIDCalib_FromLambdacDecay               |  0.0871|        42|  1.048|   2.169|      0|      0|      0|
+ |!StrippingMuIDCalib_PiFromLambdacDecay             |  0.0041|         2|  1.000|   1.797|      0|      0|      0|
+ |!StrippingMuIDCalib_KFromLambdacDecay              |  0.0062|         3|  1.000|   1.808|      0|      0|      0|
+ |!StrippingMuIDCalib_PFromLambdacDecay              |  0.0145|         7|  1.000|   1.804|      0|      0|      0|
+ |!StrippingMuIDCalib_PiISMUONFromLambdacDecay       |  0.0000|         0|  0.000|   1.782|      0|      0|      0|
+ |!StrippingMuIDCalib_KISMUONFromLambdacDecay        |  0.0000|         0|  0.000|   1.785|      0|      0|      0|
+ |!StrippingMuIDCalib_PISMUONFromLambdacDecay        |  0.0021|         1|  1.000|   1.780|      0|      0|      0|
+ |!StrippingStripDstarNoPIDsWithD02RSKPiLine         |  0.5102|       246|  1.093|   1.374|      0|      0|      0|
+ |!StrippingTrackEffVeloMuonLine1                    |  0.0684|        33|  1.061|   3.262|      0|      0|      0|
+ |!StrippingTrackEffVeloMuonLine2                    |  0.0892|        43|  1.047|   1.742|      0|      0|      0|
+ |!StrippingBeamGasLine                              |  0.0021|         1|  0.000|   0.029|      0|      0|      0|
+ |!StrippingInclPhiHighPtLine                        |  0.1286|        62|  1.887|   0.098|      0|      0|      0|
+ |!StrippingInclPhiLowPtLine                         |  0.0933|        45|  4.956|   0.097|      0|      0|      0|
+ |!StrippingInclPhiHighPtPhiLine                     |  0.1224|        59|  1.746|   0.096|      0|      0|      0|
+ |!StrippingInclPhiLowPtPhiLine                      |  0.1556|        75|  3.320|   0.100|      0|      0|      0|
+ |!StrippingInclPhiLDLine                            |  0.0000|         0|  0.000|   0.075|      0|      0|      0|
+ |!StrippingTrackEffMuonTT_JpsiLine1                 |  0.1099|        53|  1.038|   4.082|      0|      0|     10|
+ |!StrippingTrackEffMuonTT_JpsiLine2                 |  0.0830|        40|  1.050|   3.561|      0|      0|      2|
+ |!StrippingTrackEffMuonTT_UpsilonLine1              |  0.0000|         0|  0.000|   0.418|      0|      0|      0|
+ |!StrippingTrackEffMuonTT_UpsilonLine2              |  0.0000|         0|  0.000|   0.258|      0|      0|      0|
+ |!StrippingTrackEffMuonTT_ZLine1                    |  0.0000|         0|  0.000|   0.337|      0|      0|      0|
+ |!StrippingTrackEffMuonTT_ZLine2                    |  0.0000|         0|  0.000|   0.412|      0|      0|      0|
+ |!StrippingTrackEffMuonTT_BJpsiKLine1               |  0.0000|         0|  0.000|   0.680|      0|      0|      0|
+ |!StrippingTrackEffMuonTT_BJpsiKLine2               |  0.0000|         0|  0.000|   0.367|      0|      0|      0|
+ |_StrippingSequenceStreamRadiative_                 |  0.1970|        95|       |   2.310|       |       |       |
+ |!StrippingB2XGammaStripping_Bs2PhiGamma            |  0.0062|         3|  1.333|   1.130|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bs2PhiGammaWideBMass   |  0.0021|         1|  1.000|   0.094|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bs2PhiGammaLooseDira   |  0.0000|         0|  0.000|   0.088|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bd2KstGamma            |  0.1348|        65|  1.308|   0.371|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bd2KstGammaWideBMass   |  0.0187|         9|  1.222|   0.093|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bd2KstGammaWideKstMass |  0.0083|         4|  1.000|   0.099|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bd2KstGammaWide        |  0.0477|        23|  1.696|   0.101|      0|      0|      0|
+ |!StrippingB2XGammaStripping_Bd2KstGammaLooseDira   |  0.0166|         8|  1.750|   0.088|      0|      0|      0|
+ |_StrippingSequenceStreamCharmCompleteEvent_        |  3.7499|      1808|       |  23.051|       |       |       |
+ |!StrippingCcbar2PpbarExclusiveLine                 |  0.0124|         6|  1.167|   0.280|      0|      0|      0|
+ |!StrippingD02KPiD0ForBXXLine                       |  0.0436|        21|  1.000|   0.098|      0|      0|      0|
+ |!StrippingD02K3PiD0ForBXXLine                      |  0.0415|        20|  1.650|   0.362|      0|      0|      2|
+ |!StrippingDstRSwD02K2PiD0ForBXXLine                |  0.0705|        34|  1.235|   1.038|      0|      0|      0|
+ |!StrippingDstWSwD02K2PiD0ForBXXLine                |  0.0062|         3|  1.000|   0.090|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02pipiBox               |  0.0000|         0|  0.000|   0.095|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02mumuBox               |  0.0021|         1|  1.000|   0.103|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02KpiBox                |  0.0000|         0|  0.000|   0.086|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02emuBox                |  0.0000|         0|  0.000|   0.093|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02KmuBox                |  0.0000|         0|  0.000|   0.094|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02mumu_untagged_Box     |  0.0332|        16|  1.000|   0.097|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02Kmu_untagged_Box      |  0.0021|         1|  1.000|   0.086|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02pipi_untagged_Box     |  0.0000|         0|  0.000|   0.083|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02Kpi_untagged_Box      |  0.0000|         0|  0.000|   0.085|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMB    |  0.0187|         9|  1.000|   0.112|      0|      0|      0|
+ |!StrippingDstarD02xxDst2PiD02pipi_untagged_BoxMB   |  0.0021|         1|  1.000|   0.107|      0|      0|      0|
+ |!StrippingDstarVeryLooseWithD02Kpi                 |  0.1410|        68|  1.544|   0.224|      0|      0|      0|
+ |!StrippingXiccControlLc                            |  0.0000|         0|  0.000|   0.077|      0|      0|      0|
+ |!StrippingXiccControlXicZero                       |  0.0207|        10|  1.900|   0.421|      0|      0|      0|
+ |!StrippingXiccControlXicPlus                       |  0.0166|         8|  1.375|   0.102|      0|      0|      0|
+ |!StrippingXiccXiccPlusToLcKPi                      |  0.1659|        80|  1.988|   0.280|      0|      0|      0|
+ |!StrippingXiccXiccPlusPlusToLcKPiPi                |  0.0684|        33|  2.152|   0.290|      0|      0|      0|
+ |!StrippingXiccXiccPlusToXicZeroPi                  |  0.0000|         0|  0.000|   0.103|      0|      0|      0|
+ |!StrippingXiccXiccPlusPlusToXicZeroPiPi            |  0.0000|         0|  0.000|   0.102|      0|      0|      0|
+ |!StrippingXiccXiccPlusToXicPlusPiPi                |  0.0021|         1|  1.000|   0.100|      0|      0|      0|
+ |!StrippingXiccXiccPlusPlusToXicPlusPi              |  0.0021|         1|  1.000|   0.100|      0|      0|      0|
+ |!StrippingDstarD2KShhKKLLLine                      |  0.0166|         8|  1.250|   0.371|      0|      0|      0|
+ |!StrippingDstarD2KShhKPLLLine                      |  0.0290|        14|  1.643|   0.488|      0|      0|      1|
+ |!StrippingDstarD2KShhPPLLLine                      |  0.0892|        43|  1.791|   0.426|      0|      0|      0|
+ |!StrippingDstarD2KShhKKDDLine                      |  0.0145|         7|  1.143|   0.329|      0|      0|      0|
+ |!StrippingDstarD2KShhKPDDLine                      |  0.0270|        13|  1.462|   0.431|      0|      0|      0|
+ |!StrippingDstarD2KShhPPDDLine                      |  0.0581|        28|  1.714|   0.391|      0|      0|      0|
+ |!StrippingCcbar2BaryonsJpsi2DiLambdaLine           |  0.0290|        14|  1.143|   0.759|      0|      0|      0|
+ |!StrippingCcbar2BaryonsJpsi2DiXiLine               |  0.0041|         2|  1.500|   2.641|      0|      0|      1|
+ |!StrippingD2XMuMu_KSSLine                          |  0.0083|         4|  1.000|   0.935|      0|      0|      0|
+ |!StrippingD2XMuMu_KOSLine                          |  0.0166|         8|  1.125|   0.456|      0|      0|      0|
+ |!StrippingD2XMuMu_PiSSLine                         |  0.0062|         3|  1.000|   1.142|      0|      0|      1|
+ |!StrippingD2XMuMu_PiOSLine                         |  0.0477|        23|  1.087|   0.791|      0|      0|      5|
+ |!StrippingD2XMuMu_PiCalLine                        |  0.0664|        32|  3.562|   2.212|      0|      0|     60|
+ |!StrippingD2XMuMu_KKLine                           |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingD2XMuMu_PiPiLine                         |  0.0000|         0|  0.000|   0.081|      0|      0|      0|
+ |!StrippingD2XMuMu_KKPiPiLine                       |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingD2XMuMu_K3PiLine                         |  0.0000|         0|  0.000|   0.080|      0|      0|      0|
+ |!StrippingD2XMuMu_K2PiLine                         |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingD2XMuMu_2KPiLine                         |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingD2hhPromptD2KPiLine                      |  0.5475|       264|  1.008|   0.207|      0|      0|      0|
+ |!StrippingD2hhPromptD2KKLine                       |  0.6160|       297|  1.010|   0.454|      0|      0|      0|
+ |!StrippingD2hhPromptD2PiPiLine                     |  0.5517|       266|  1.015|   0.452|      0|      0|      0|
+ |!StrippingD2hhPromptDst2D2RSLine                   |  0.5932|       286|  1.129|   0.703|      0|      0|      0|
+ |!StrippingD2hhPromptDst2D2WSLine                   |  0.1556|        75|  1.187|   0.109|      0|      0|      0|
+ |!StrippingD2hhPromptDst2D2KKLine                   |  0.1224|        59|  1.203|   0.471|      0|      0|      0|
+ |!StrippingD2hhPromptDst2D2PiPiLine                 |  0.0996|        48|  1.208|   0.473|      0|      0|      0|
+ |!StrippingDp2KPiPiDForBSemiLine                    |  0.0456|        22|  1.045|   0.110|      0|      0|      0|
+ |!StrippingDs2KKPiDForBSemiLine                     |  0.0456|        22|  1.273|   0.106|      0|      0|      0|
+ |!StrippingLc2PKPiDForBSemiLine                     |  0.0415|        20|  1.050|   0.146|      0|      0|      0|
+ |!StrippingDstarD02Kpipi0RS                         |  0.1390|        67|  1.940|   0.608|      0|      0|      0|
+ |!StrippingDstarD02Kpipi0WS                         |  0.0000|         0|  0.000|   0.092|      0|      0|      0|
+ |!StrippingDstarPromptWithD02HHWithD02RSKPiLine     |  0.3754|       181|  1.083|   0.350|      0|      0|      0|
+ |!StrippingDstarPromptWithD02HHWithD02WSKPiLine     |  0.0892|        43|  1.047|   0.101|      0|      0|      0|
+ |!StrippingDstarPromptWithD02HHWithD02KKLine        |  0.0809|        39|  1.077|   0.287|      0|      0|      0|
+ |!StrippingDstarPromptWithD02HHWithD02PiPiLine      |  0.0850|        41|  1.122|   0.304|      0|      0|      0|
+ |!StrippingCcbar2PpbarLine                          |  0.0498|        24|  1.083|   0.154|      0|      0|      0|
+ |!StrippingX2D0D0Line                               |  0.0996|        48|  1.125|   0.831|      0|      0|      0|
+ |_StrippingSequenceStreamCharm_                     |  9.2357|      4453|       |  37.804|       |       |       |
+ |!StrippingDstarPromptWithD02HHHHNoPIDLine          |  0.0311|        15|  2.067|   3.657|      0|      0|     13|
+ |!StrippingD2hhh_KKPLine                            |  0.6927|       334|  1.075|   0.378|      0|      0|      0|
+ |!StrippingD2hhh_KPPLine                            |  1.6447|       793|  1.024|   0.359|      0|      0|      0|
+ |!StrippingD2hhh_PPPLine                            |  0.7238|       349|  1.152|   3.641|      0|      0|      0|
+ |!StrippingD2hhh_KPPosLine                          |  0.5496|       265|  1.121|   6.610|      0|      0|      0|
+ |!StrippingD2hhh_KKKLine                            |  0.0332|        16|  1.188|   0.841|      0|      0|      0|
+ |!StrippingD2hhh_HHHIncLine                         |  0.4024|       194|  1.428|   0.665|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_KSSLine                     |  0.0000|         0|  0.000|   0.087|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_KOSLine                     |  0.0000|         0|  0.000|   0.087|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_PiSSLine                    |  0.0000|         0|  0.000|   0.088|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_PiOSLine                    |  0.0000|         0|  0.000|   0.085|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_PiCalLine                   |  0.0000|         0|  0.000|   0.087|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_KKLine                      |  0.0062|         3|  1.333|   0.916|      0|      0|      0|
+ |!StrippingD2XMuMuMicro_PiPiLine                    |  0.0145|         7|  1.286|   1.435|      0|      0|      4|
+ |!StrippingD2XMuMuMicro_KKPiPiLine                  |  0.0104|         5|  1.400|   0.296|      0|      0|      1|
+ |!StrippingD2XMuMuMicro_K3PiLine                    |  0.0207|        10|  1.600|   0.452|      0|      0|      7|
+ |!StrippingD2XMuMuMicro_K2PiLine                    |  0.0436|        21|  1.476|   0.866|      0|      0|     14|
+ |!StrippingD2XMuMuMicro_2KPiLine                    |  0.1120|        54|  2.852|   2.120|      0|      0|     48|
+ |!StrippingD2hhMicroKPiPromptD2KPiLine              |  2.7543|      1328|  1.003|   0.700|      0|      0|      0|
+ |!StrippingD2hhMicroKPiPromptD2KKLine               |  0.0000|         0|  0.000|   0.094|      0|      0|      0|
+ |!StrippingD2hhMicroKPiPromptD2PiPiLine             |  0.0000|         0|  0.000|   0.089|      0|      0|      0|
+ |!StrippingD2hhMicroKPiPromptDst2D2RSLine           |  0.0000|         0|  0.000|   0.087|      0|      0|      0|
+ |!StrippingD2hhMicroKPiPromptDst2D2WSLine           |  0.0000|         0|  0.000|   0.085|      0|      0|      0|
+ |!StrippingD2hhMicroKPiPromptDst2D2KKLine           |  0.0000|         0|  0.000|   0.087|      0|      0|      0|
+ |!StrippingD2hhMicroKPiPromptDst2D2PiPiLine         |  0.0000|         0|  0.000|   0.089|      0|      0|      0|
+ |!StrippingXiccMicroControlLc                       |  0.1016|        49|  1.388|   0.096|      0|      0|      0|
+ |!StrippingXiccMicroControlXicZero                  |  0.0000|         0|  0.000|   0.085|      0|      0|      0|
+ |!StrippingXiccMicroControlXicPlus                  |  0.0000|         0|  0.000|   0.083|      0|      0|      0|
+ |!StrippingXiccMicroXiccPlusToLcKPi                 |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingXiccMicroXiccPlusPlusToLcKPiPi           |  0.0000|         0|  0.000|   0.084|      0|      0|      0|
+ |!StrippingXiccMicroXiccPlusToXicZeroPi             |  0.0000|         0|  0.000|   0.085|      0|      0|      0|
+ |!StrippingXiccMicroXiccPlusPlusToXicZeroPiPi       |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingXiccMicroXiccPlusToXicPlusPiPi           |  0.0000|         0|  0.000|   0.082|      0|      0|      0|
+ |!StrippingXiccMicroXiccPlusPlusToXicPlusPi         |  0.0000|         0|  0.000|   0.084|      0|      0|      0|
+ |!StrippingCharmedAndCharmedStrangeSpectroscopy_DpKs|  0.0622|        30|  1.067|   0.232|      0|      0|      0|
+ |!StrippingCharmedAndCharmedStrangeSpectroscopy_Dsta|  0.0311|        15|  1.000|   0.134|      0|      0|      0|
+ |!StrippingCharmedAndCharmedStrangeSpectroscopy_D0K |  0.1701|        82|  1.244|   0.236|      0|      0|      0|
+ |!StrippingCharmedAndCharmedStrangeSpectroscopy_DpPi|  0.3443|       166|  1.127|   0.133|      0|      0|      0|
+ |!StrippingCharmedAndCharmedStrangeSpectroscopy_D0Pi|  0.3899|       188|  1.218|   0.129|      0|      0|      0|
+ |!StrippingCharmedAndCharmedStrangeSpectroscopy_Dsta|  0.1244|        60|  1.133|   0.109|      0|      0|      0|
+ |!StrippingD02HHForPromptCharm                      |  2.7170|      1310|  1.005|   0.108|      0|      0|      0|
+ |!StrippingDstarForPromptCharm                      |  0.5745|       277|  1.144|   0.106|      0|      0|      0|
+ |!StrippingDsForPromptCharm                         |  0.2198|       106|  1.019|   0.309|      0|      0|      0|
+ |!StrippingDForPromptCharm                          |  1.1034|       532|  1.008|   0.311|      0|      0|      0|
+ |!StrippingLambdaCForPromptCharm                    |  0.1182|        57|  1.053|   0.431|      0|      0|      0|
+ |!StrippingDstarD02KMuNuPrescaledRSLine             |  0.5040|       243|  1.263|   0.584|      0|      0|      0|
+ |!StrippingDstarD02KMuNuPrescaledWSLine             |  0.1099|        53|  1.302|   0.289|      0|      0|      0|
+ |!StrippingD2KS0HPionLine                           |  0.0871|        42|  1.048|   0.283|      0|      0|      0|
+ |!StrippingD2KS0HKaonLine                           |  0.0643|        31|  1.000|   0.160|      0|      0|      0|
+ |!StrippingDstarPromptWithD02HHHHLine               |  0.2655|       128|  1.531|   8.231|      0|      0|      0|
+ |!StrippingD02MuMuLine                              |  0.0436|        21|  2.000|   0.285|      0|      0|      0|
+ |!StrippingD02MuMuDstLine                           |  0.0083|         4|  2.750|   0.285|      0|      0|      0|
+ |!StrippingD02MuMuClbrD02PiPiLine                   |  0.3650|       176|  2.102|   0.150|      0|      0|      0|
+ |!StrippingD02MuMuClbrDstD02PiPiLine                |  0.0975|        47|  1.298|   0.150|      0|      0|      0|
+ |_StrippingSequenceStreamDielectron_                |  0.3318|       160|       |   2.950|       |       |       |
+ |!StrippingBd2eeKstarLine                           |  0.0601|        29|  1.379|   0.779|      0|      0|      0|
+ |!StrippingBd2JpsieeKstarLine                       |  0.0684|        33|  2.152|   0.463|      0|      0|      0|
+ |!StrippingBetaSBs2JpsieePhiLine                    |  0.0021|         1|  1.000|   0.515|      0|      0|      0|
+ |!StrippingBetaSBs2JpsieePhiLooseLine               |  0.0519|        25|  1.520|   0.154|      0|      0|      0|
+ |!StrippingFullDSTDiElectronIncDiElectronLine       |  0.1161|        56|  1.179|   0.209|      0|      0|      0|
+ |!StrippingFullDSTDiElectronDiElectronLowMassLine   |  0.0207|        10|  1.500|   0.104|      0|      0|      0|
+ |!StrippingFullDSTDiElectronBiasedIncDiElectronLine |  0.0601|        29|  1.103|   0.204|      0|      0|      0|
+ |!StrippingFullDSTDiElectronBiasedIncDiElectronLowMa|  0.0083|         4|  2.250|   0.102|      0|      0|      0|
+ |!StrippingFullDSTDiElectronJpsi2eeLine             |  0.0622|        30|  1.100|   0.138|      0|      0|      0|
+ |_StrippingSequenceStreamMiniBias_                  |  0.0270|        13|       |   1.813|       |       |       |
+ |!StrippingD2HHHForXSecD2KPPLine                    |  0.0021|         1|  1.000|   0.104|      0|      0|      0|
+ |!StrippingD2HHHForXSecD2KKPLine                    |  0.0000|         0|  0.000|   0.101|      0|      0|      0|
+ |!StrippingMBNoBias                                 |  0.0021|         1|  0.000|   0.021|      0|      0|      0|
+ |!StrippingHlt1L0Any                                |  0.0124|         6|  0.000|   0.019|      0|      0|      0|
+ |!StrippingD02HHForXSecD02HHLine                    |  0.0021|         1|  1.000|   0.102|      0|      0|      0|
+ |!StrippingD02HHForXSecDstar2D0Pi_D02HHLine         |  0.0000|         0|  0.000|   0.104|      0|      0|      0|
+ |!StrippingLambdac2PKPiForXSecLambdac2PKPiLine      |  0.0000|         0|  0.000|   0.100|      0|      0|      0|
+ |!StrippingD02KPiGeoForXSecD02HHLine                |  0.0021|         1|  1.000|   0.103|      0|      0|      0|
+ |!StrippingD02KPiGeoForXSecDstar2D0Pi_D02HHLine     |  0.0000|         0|  0.000|   0.100|      0|      0|      0|
+ |!StrippingD2PhiPiForXSecD2PhiPiLine                |  0.0000|         0|  0.000|   0.102|      0|      0|      0|
+ |!StrippingD02K3PiForD02K3PiForXSecLine             |  0.0041|         2| 15.500|   0.107|      0|      0|      0|
+ |!StrippingDstar2D0pi_D02K3PiForD02K3PiForXSecLine  |  0.0000|         0|  0.000|   0.101|      0|      0|      0|
+ |!StrippingD2HHLTUnbiasedD02HHLine                  |  0.0000|         0|  0.000|   0.118|      0|      0|      0|
+ |!StrippingD2HHLTUnbiasedDstar2D0Pi_D02HHLine       |  0.0000|         0|  0.000|   0.116|      0|      0|      0|
+ |!StrippingDstar2D0Pi_D02KPiForXSecD02HHLine        |  0.0021|         1|  1.000|   0.104|      0|      0|      0|
+ |!StrippingDstar2D0Pi_D02KPiForXSecDstar2D0Pi_D02HHL|  0.0000|         0|  0.000|   0.100|      0|      0|      0|
+ |_StrippingSequenceStreamEW_                        |  1.3129|       633|       |  11.160|       |       |       |
+ |!StrippingWeLine                                   |  0.0166|         8|  1.000|   0.267|      0|      0|      0|
+ |!StrippingWeLine_ps                                |  0.0041|         2|  1.000|   0.111|      0|      0|      0|
+ |!StrippingDY2MuMuLine1_ps                          |  0.0830|        40|  1.125|   0.103|      0|      0|      0|
+ |!StrippingDY2MuMuLine1_Hlt                         |  0.1141|        55|  1.164|   0.103|      0|      0|      0|
+ |!StrippingDY2MuMuLine1_Hlta                        |  0.0000|         0|  0.000|   0.114|      0|      0|      0|
+ |!StrippingDY2MuMuLine2                             |  0.0373|        18|  1.056|   0.108|      0|      0|      0|
+ |!StrippingDY2MuMuLine2_Hlt                         |  0.0954|        46|  1.065|   0.108|      0|      0|      0|
+ |!StrippingDY2MuMuLine2_Hlta                        |  0.0000|         0|  0.000|   0.115|      0|      0|      0|
+ |!StrippingDY2MuMuLine3                             |  0.0560|        27|  1.000|   0.271|      0|      0|      0|
+ |!StrippingDY2MuMuLine4                             |  0.0021|         1|  1.000|   0.252|      0|      0|      0|
+ |!StrippingZ02eeLine                                |  0.0000|         0|  0.000|   0.320|      0|      0|      0|
+ |!StrippingDY2eeLine1                               |  0.0311|        15|  1.000|   0.142|      0|      0|      0|
+ |!StrippingDY2eeLine2                               |  0.1120|        54|  1.185|   0.488|      0|      0|      0|
+ |!StrippingDY2eeLine3                               |  0.0332|        16|  1.125|   0.596|      0|      0|      0|
+ |!StrippingDY2eeLine4                               |  0.0000|         0|  0.000|   0.337|      0|      0|      0|
+ |!StrippingWMuLowPTLine                             |  0.0622|        30|  1.033|   0.105|      0|      0|      0|
+ |!StrippingWMuLine_looseps                          |  0.0187|         9|  1.000|   0.106|      0|      0|      0|
+ |!StrippingWMuLine_NoPIDsps                         |  0.0290|        14|  1.143|   0.113|      0|      0|      0|
+ |!StrippingWMuLine                                  |  0.2302|       111|  1.036|   0.178|      0|      0|      0|
+ |!StrippingWMuLine_loose                            |  0.0996|        48|  1.042|   0.220|      0|      0|      0|
+ |!StrippingWMuSingleTrackNoBias                     |  0.0145|         7|  1.000|   0.109|      0|      0|      0|
+ |!StrippingSinglePSDisplVertices                    |  0.0062|         3|  1.000|   0.152|      0|      0|      0|
+ |!StrippingSingleLowMassDisplVertices               |  0.0249|        12|  1.000|   1.155|      0|      0|      0|
+ |!StrippingSingleHighMassDisplVertices              |  0.0104|         5|  1.000|   0.111|      0|      0|      0|
+ |!StrippingDoubleDisplVertices                      |  0.0249|        12|  2.000|   0.109|      0|      0|      0|
+ |!StrippingSingleDownDisplVertices                  |  0.0290|        14|  1.000|   2.509|      0|      0|      0|
+ |!StrippingMuMuSSLine1                              |  0.0207|        10|  1.000|   0.103|      0|      0|      0|
+ |!StrippingMuMuSSLine2                              |  0.0539|        26|  1.192|   0.111|      0|      0|      0|
+ |!StrippingMuMuSSLine3                              |  0.0456|        22|  1.182|   0.223|      0|      0|      0|
+ |!StrippingMuMuSSLine4                              |  0.0000|         0|  0.000|   0.217|      0|      0|      0|
+ |!StrippingDiPhotonDiMuonNoPVLine                   |  0.0415|        20|  0.000|   0.035|      0|      0|      0|
+ |!StrippingSingleTrackTISLowPt                      |  0.1037|        50|  1.140|   0.116|      0|      0|      0|
+ |!StrippingSingleTrackTISHighPt                     |  0.0249|        12|  1.083|   0.120|      0|      0|      0|
+ |!StrippingLowMultMuonLine                          |  0.0000|         0|  0.000|   0.031|      0|      0|      0|
+ |!StrippingLowMultElectronLine                      |  0.0000|         0|  0.000|   0.029|      0|      0|      0|
+ |!StrippingLowMultHadronLine                        |  0.0000|         0|  0.000|   0.026|      0|      0|      0|
+ |!StrippingLowMultPhotonLine                        |  0.0000|         0|  0.000|   0.027|      0|      0|      0|
+ |!StrippingLowMultPP2PPMuMuLine                     |  0.0000|         0|  0.000|   0.027|      0|      0|      0|
+ |!StrippingZ02TauTauLine                            |  0.0477|        23|  1.043|   0.247|      0|      0|      0|
+ |!StrippingZ02TauTauSameSignLine                    |  0.0581|        28|  1.143|   0.242|      0|      0|      0|
+ |!StrippingZ02MuMuLine                              |  0.0000|         0|  0.000|   0.204|      0|      0|      0|
+ |!StrippingZ02MuMuLooseLine                         |  0.0000|         0|  0.000|   0.244|      0|      0|      0|
+ |!StrippingZ02MuMuNoPIDsLine                        |  0.0083|         4|  1.000|   0.290|      0|      0|      0|
+ |!StrippingHighPtJets                               |  0.0311|        15|  0.000|   0.130|      0|      0|      0|
+
+StrippingReport                                             WARNING 
+StrippingReport                                             WARNING -----------------------------------------------------------------
+StrippingReport                                             WARNING Non-responding lines:                              
+StrippingReport                                             WARNING -- StrippingB2DXWithD2KPiPi0MergedLine             
+StrippingReport                                             WARNING -- StrippingB2DXWithD2KPiPi0MergedWSLine           
+StrippingReport                                             WARNING -- StrippingBetaSBs2ChicPhi_Chic2KKPiPiNominalLine 
+StrippingReport                                             WARNING -- StrippingAllB2DStarPiPiPiLineB2D3H              
+StrippingReport                                             WARNING -- StrippingAllB2DStarKPiPiLineB2D3H               
+StrippingReport                                             WARNING -- StrippingAllB2DStarDLineB2D3H                   
+StrippingReport                                             WARNING -- StrippingAllB2DStarDKLineB2D3H                  
+StrippingReport                                             WARNING -- StrippingAllWSB2DPiPiPiLineB2D3H                
+StrippingReport                                             WARNING -- StrippingAllWSB2DStarPiPiPiLineB2D3H            
+StrippingReport                                             WARNING -- StrippingAllWSB2DStarKPiPiLineB2D3H             
+StrippingReport                                             WARNING -- StrippingAllWSB2DDLineB2D3H                     
+StrippingReport                                             WARNING -- StrippingAllWSB2DStarDLineB2D3H                 
+StrippingReport                                             WARNING -- StrippingAllWSLambdaB2LambdaCPiPiPiLineB2D3H    
+StrippingReport                                             WARNING -- StrippingAllWSB2DStarDKLineB2D3H                
+StrippingReport                                             WARNING -- StrippingBetaSBs2EtacPhiNominalLine             
+StrippingReport                                             WARNING -- StrippingBu2D0h_D02KShh_NoPID_WSBu2D0h_D02KShh_K
+StrippingReport                                             WARNING -- StrippingBetaSBs2ChicPhi_Chic2PiPiPiPiNominalLin
+StrippingReport                                             WARNING -- StrippingB2XTau_DD_TISLine                      
+StrippingReport                                             WARNING -- StrippingMicroDSTNeuroBayesMuMuMuMuHighNBLine   
+StrippingReport                                             WARNING -- StrippingMicroDSTNeuroBayesMuMuJPsiNBLine       
+StrippingReport                                             WARNING -- StrippingB2MuMuMuMuLinesLine                    
+StrippingReport                                             WARNING -- StrippingNeuroBayesMuMuMuMuNBLine               
+StrippingReport                                             WARNING -- StrippingFullDSTDiMuonDiMuonExclusiveLine       
+StrippingReport                                             WARNING -- StrippingFullDSTDiMuonDiMuonNoPVLine            
+StrippingReport                                             WARNING -- StrippingFullDSTDiMuonDiMuonDetachedLine        
+StrippingReport                                             WARNING -- StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetatchedL
+StrippingReport                                             WARNING -- StrippingMuIDCalib_PiISMUONFromLambdacDecay     
+StrippingReport                                             WARNING -- StrippingMuIDCalib_KISMUONFromLambdacDecay      
+StrippingReport                                             WARNING -- StrippingInclPhiLDLine                          
+StrippingReport                                             WARNING -- StrippingTrackEffMuonTT_UpsilonLine1            
+StrippingReport                                             WARNING -- StrippingTrackEffMuonTT_UpsilonLine2            
+StrippingReport                                             WARNING -- StrippingTrackEffMuonTT_ZLine1                  
+StrippingReport                                             WARNING -- StrippingTrackEffMuonTT_ZLine2                  
+StrippingReport                                             WARNING -- StrippingTrackEffMuonTT_BJpsiKLine1             
+StrippingReport                                             WARNING -- StrippingTrackEffMuonTT_BJpsiKLine2             
+StrippingReport                                             WARNING -- StrippingB2XGammaStripping_Bs2PhiGammaLooseDira 
+StrippingReport                                             WARNING -- StrippingDstarD02xxDst2PiD02pipiBox             
+StrippingReport                                             WARNING -- StrippingDstarD02xxDst2PiD02KpiBox              
+StrippingReport                                             WARNING -- StrippingDstarD02xxDst2PiD02emuBox              
+StrippingReport                                             WARNING -- StrippingDstarD02xxDst2PiD02KmuBox              
+StrippingReport                                             WARNING -- StrippingDstarD02xxDst2PiD02pipi_untagged_Box   
+StrippingReport                                             WARNING -- StrippingDstarD02xxDst2PiD02Kpi_untagged_Box    
+StrippingReport                                             WARNING -- StrippingXiccControlLc                          
+StrippingReport                                             WARNING -- StrippingXiccXiccPlusToXicZeroPi                
+StrippingReport                                             WARNING -- StrippingXiccXiccPlusPlusToXicZeroPiPi          
+StrippingReport                                             WARNING -- StrippingD2XMuMu_KKLine                         
+StrippingReport                                             WARNING -- StrippingD2XMuMu_PiPiLine                       
+StrippingReport                                             WARNING -- StrippingD2XMuMu_KKPiPiLine                     
+StrippingReport                                             WARNING -- StrippingD2XMuMu_K3PiLine                       
+StrippingReport                                             WARNING -- StrippingD2XMuMu_K2PiLine                       
+StrippingReport                                             WARNING -- StrippingD2XMuMu_2KPiLine                       
+StrippingReport                                             WARNING -- StrippingDstarD02Kpipi0WS                       
+StrippingReport                                             WARNING -- StrippingD2XMuMuMicro_KSSLine                   
+StrippingReport                                             WARNING -- StrippingD2XMuMuMicro_KOSLine                   
+StrippingReport                                             WARNING -- StrippingD2XMuMuMicro_PiSSLine                  
+StrippingReport                                             WARNING -- StrippingD2XMuMuMicro_PiOSLine                  
+StrippingReport                                             WARNING -- StrippingD2XMuMuMicro_PiCalLine                 
+StrippingReport                                             WARNING -- StrippingD2hhMicroKPiPromptD2KKLine             
+StrippingReport                                             WARNING -- StrippingD2hhMicroKPiPromptD2PiPiLine           
+StrippingReport                                             WARNING -- StrippingD2hhMicroKPiPromptDst2D2RSLine         
+StrippingReport                                             WARNING -- StrippingD2hhMicroKPiPromptDst2D2WSLine         
+StrippingReport                                             WARNING -- StrippingD2hhMicroKPiPromptDst2D2KKLine         
+StrippingReport                                             WARNING -- StrippingD2hhMicroKPiPromptDst2D2PiPiLine       
+StrippingReport                                             WARNING -- StrippingXiccMicroControlXicZero                
+StrippingReport                                             WARNING -- StrippingXiccMicroControlXicPlus                
+StrippingReport                                             WARNING -- StrippingXiccMicroXiccPlusToLcKPi               
+StrippingReport                                             WARNING -- StrippingXiccMicroXiccPlusPlusToLcKPiPi         
+StrippingReport                                             WARNING -- StrippingXiccMicroXiccPlusToXicZeroPi           
+StrippingReport                                             WARNING -- StrippingXiccMicroXiccPlusPlusToXicZeroPiPi     
+StrippingReport                                             WARNING -- StrippingXiccMicroXiccPlusToXicPlusPiPi         
+StrippingReport                                             WARNING -- StrippingXiccMicroXiccPlusPlusToXicPlusPi       
+StrippingReport                                             WARNING -- StrippingD2HHHForXSecD2KKPLine                  
+StrippingReport                                             WARNING -- StrippingD02HHForXSecDstar2D0Pi_D02HHLine       
+StrippingReport                                             WARNING -- StrippingLambdac2PKPiForXSecLambdac2PKPiLine    
+StrippingReport                                             WARNING -- StrippingD02KPiGeoForXSecDstar2D0Pi_D02HHLine   
+StrippingReport                                             WARNING -- StrippingD2PhiPiForXSecD2PhiPiLine              
+StrippingReport                                             WARNING -- StrippingDstar2D0pi_D02K3PiForD02K3PiForXSecLine
+StrippingReport                                             WARNING -- StrippingD2HHLTUnbiasedD02HHLine                
+StrippingReport                                             WARNING -- StrippingD2HHLTUnbiasedDstar2D0Pi_D02HHLine     
+StrippingReport                                             WARNING -- StrippingDstar2D0Pi_D02KPiForXSecDstar2D0Pi_D02H
+StrippingReport                                             WARNING -- StrippingDY2MuMuLine1_Hlta                      
+StrippingReport                                             WARNING -- StrippingDY2MuMuLine2_Hlta                      
+StrippingReport                                             WARNING -- StrippingZ02eeLine                              
+StrippingReport                                             WARNING -- StrippingDY2eeLine4                             
+StrippingReport                                             WARNING -- StrippingMuMuSSLine4                            
+StrippingReport                                             WARNING -- StrippingLowMultMuonLine                        
+StrippingReport                                             WARNING -- StrippingLowMultElectronLine                    
+StrippingReport                                             WARNING -- StrippingLowMultHadronLine                      
+StrippingReport                                             WARNING -- StrippingLowMultPhotonLine                      
+StrippingReport                                             WARNING -- StrippingLowMultPP2PPMuMuLine                   
+StrippingReport                                             WARNING -- StrippingZ02MuMuLine                            
+StrippingReport                                             WARNING -- StrippingZ02MuMuLooseLine                       
+StrippingReport                                             WARNING -----------------------------------------------------------------
+StrippingReport                                             WARNING 
+StrippingReport                                             WARNING -----------------------------------------------------------------
+StrippingReport                                             WARNING Hot lines:                                         
+StrippingReport                                             WARNING -----------------------------------------------------------------
