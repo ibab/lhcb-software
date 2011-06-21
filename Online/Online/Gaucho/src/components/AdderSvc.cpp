@@ -252,19 +252,19 @@ StatusCode AdderSvc::start()
   m_EoRadder->m_taskPattern = m_TaskPattern;
   m_EoRadder->m_servicePattern = m_ServicePattern+std::string("EOR");
   m_EoRadder->m_noRPC = true;
-//  m_EoRadder->setIsSaver(m_isSaver);
+  m_EoRadder->setIsSaver(m_isSaver);
   m_EoRadder->m_rectmo = 5*m_recvtmo;
   m_EoRadder->Configure();
   m_AdderSys->Add(m_EoRadder);
-//  if (m_isSaver)
-//  {
-//    m_EoRSaver = new SaveTimer(m_EoRadder,m_SaveInterval);
-//    m_EoRSaver->setPartName(m_PartitionName);
-//    m_EoRSaver->setRootDir(m_SaveRootDir);
-//    m_EoRSaver->setTaskName(m_SaverTaskName);
-//    m_EoRSaver->setEOR(true);
-//    m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
-//  }
+  if (m_isSaver)
+  {
+    m_EoRSaver = new SaveTimer(m_EoRadder,m_SaveInterval);
+    m_EoRSaver->setPartName(m_PartitionName);
+    m_EoRSaver->setRootDir(m_SaveRootDir);
+    m_EoRSaver->setTaskName(m_SaverTaskName);
+    m_EoRSaver->setEOR(true);
+    m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
+  }
   m_started = true;
   return StatusCode::SUCCESS;
 }
