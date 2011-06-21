@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-06-21 - Rob Lambert
+ - Add Persistency to Configurable, to support ROOT persistency.
+ - use IOHelper to define outStream.
+
 ! 2011-06-07 - Patrick Robbe
  - python/Gauss/Configuration.py: restore CollisionRate option for backward
    compatibilite

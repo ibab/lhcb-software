@@ -88,6 +88,8 @@ class Gauss(LHCbConfigurableUser):
        ,"Production"        : 'PHYS'
        ,"EnablePack"        : True
        ,"DataPackingChecks" : True
+       ,"WriteFSR"          : True
+       , "Persistency"      : None
       }
     
     _propertyDocDct = { 
@@ -105,6 +107,8 @@ class Gauss(LHCbConfigurableUser):
        ,'Production'     : """ Generation type : ['PHYS', 'PGUN', 'MIB' (default 'PHYS')"""
        ,'EnablePack'     : """ Flag to turn on or off the packing of the SIM data """
        ,'DataPackingChecks' : """ Flag to turn on or off the running of some test algorithms to check the quality of the data packing """
+       ,"WriteFSR"       : "Add file summary record, default True"
+       , "Persistency"   : "ROOT or POOL persistency, overwrite the default"
        }
     KnownHistOptions = ['NONE','DEFAULT']
     TrackingSystem   = ['VELO','TT','IT','OT']
@@ -202,14 +206,28 @@ class Gauss(LHCbConfigurableUser):
 
 
     ##
+    def definePersistency(self):
+        """
+        ROOT or POOL propagated to LHCbApp
+        """
+        
+        persistency=None
+        
+        if hasattr( self, "Persistency" ):
+            persistency=self.getProp("Persistency")
+
+        if persistency is not None:
+            LHCbApp().setProp("Persistency",persistency)
+        
     def defineOutput( self, SpillOverSlots ):
         """
         Set up output stream according to phase processed and spill-over slots
         """
         # and in the future extended or reduced DIGI
-        
+
+        # not required since it is now in LHCb App
         # POOL persistency 
-        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+        #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         #
         knownOptions = ['NONE','SIM']
@@ -217,7 +235,7 @@ class Gauss(LHCbConfigurableUser):
         if output == 'NONE':
             log.warning("No event data output produced")
             return
-
+        
         simWriter = SimConf().writer()
         fileExtension = ".gen"
         if "GenToMCTree" in self.getProp("Phases"):
@@ -225,14 +243,23 @@ class Gauss(LHCbConfigurableUser):
         elif "Simulation" in self.getProp("Phases"):
             fileExtension = ".sim"
         
-        if not simWriter.isPropertySet( "Output" ):
-            simWriter.Output = "DATAFILE='PFN:" + self.outputName() + fileExtension + "' TYP='POOL_ROOTTREE' OPT='RECREATE'"
-        simWriter.RequireAlgs.append( 'GaussSequencer' )
+        outputFile=""
+        from GaudiConf import IOHelper
+        if simWriter.isPropertySet( "Output" ):
+            outputFile=simWriter.getProp("Output")
+        else:
+            outputFile=self.outputName() + fileExtension
 
-        ApplicationMgr().OutStream = [ simWriter ]
+        persistency=None
+        
+        if hasattr( self, "Persistency" ):
+            persistency=self.getProp("Persistency")
+        IOHelper(persistency,persistency).outStream( outputFile, simWriter, self.getProp("WriteFSR") )
+        
+        simWriter.RequireAlgs.append( 'GaussSequencer' )
         if not FileCatalog().isPropertySet("Catalogs"):
             FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
-
+        
 
 
     def defineMonitors( self ):
@@ -1214,8 +1241,8 @@ class Gauss(LHCbConfigurableUser):
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
         else:
             raise RuntimeError("Unknown Hadron PhysicsList chosen ('%s')"%hadronPhys)
-
-
+        
+        
         ## --- LHCb specific physics: 
         if  (lhcbPhys == True):
         ## LHCb specific RICH processes
@@ -1227,29 +1254,32 @@ class Gauss(LHCbConfigurableUser):
             log.warning("The lhcb-related physics (RICH processed, UnknowParticles) is disabled")
         else:        
             raise RuntimeError("Unknown setting for LHCbPhys PhysicsList chosen ('%s')"%lhcbPhys)
-
+        
     ##
     ##
     ## Apply the configuration
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-
+        
         #defineDB() in Boole and
         # defineGeometry() in Brunel, need the same + random seeds
         self.configureRndmEngine()
         self.configureInput()  #defineEvents() in both Boole and Brunel
         LHCbApp( Simulation = True ) # in Boole? where? 
-
+        
         #--Define sequences: generator, simulation
         #  each with its init, make, moni
         #  in the sim phase define the geometry to simulate and the settings
-
+        
         self.checkGeoSimMoniDictionnary() ## raise an error if DetectorGeo/Sim/Moni dictionnaries are incompatible
-
+        
         # Propagate properties to SimConf
         SimConf().setProp("Writer","GaussTape")
         self.setOtherProps( SimConf(), ["SpilloverPaths","EnablePack","Phases","DataType"] )
+
+        #Setup persistency services
+        self.definePersistency()
         
         # CRJ : Propagate detector list to SimConf. Probably could be simplified a bit
         #       by sychronising the options in Gauss() and SimConf()
