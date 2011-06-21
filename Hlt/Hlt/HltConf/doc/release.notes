@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-21 - V. Gligorov
+ - Relax nVELO GEC in Hlt2 from 350 to 1000.
+
 !========================== HltConf v9r9p1 2011-05-11 ===================
 ! 2011-05-08 -  Roel Aaij
  - Remove any references to Hlt2UnfittedForwardTracking.
