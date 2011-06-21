@@ -4,6 +4,7 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTests v2r6 2011-06-21 =========================
 ! 2011-06-13 - Rob Lambert
  - Remove ETC from stripping tests
 
