@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1921
+#define DIM_VERSION_NUMBER 1922
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2
@@ -398,13 +398,16 @@ typedef struct {
 	void (*read_rout)();
 	char *buffer;
 	int size;
+/*
 	unsigned short *iosb_r;
 	unsigned short *iosb_w;
+*/
 	char node[MAX_NODE_NAME];
 	char task[MAX_TASK_NAME];
 	int port;
 	int reading;
 	int timeout;
+	int write_timedout;
 	TIMR_ENT *timr_ent;
 	time_t last_used;
 } NET_CONNECTION;

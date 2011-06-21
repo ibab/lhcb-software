@@ -241,6 +241,11 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 	dis_init();
 	{
 	DISABLE_AST
+	if(Serving == -1)
+	{
+		ENABLE_AST
+		return((unsigned) 0);
+	}
 	if(!check_service_name(name))
 	{
 		strcpy(str,"Service name too long: ");
@@ -414,6 +419,11 @@ static unsigned do_dis_add_cmnd_dns( char *name, char *type, void (*user_routine
 	dis_init();
 	{
 	DISABLE_AST
+	if(Serving == -1)
+	{
+		ENABLE_AST
+		return((unsigned) 0);
+	}
 	if(!check_service_name(name))
 	{
 		strcpy(str,"Command name too long: ");
@@ -581,6 +591,10 @@ static int get_format_data(FORMAT_STR *format_data, char *def)
 					break;
 				case 'c':
 				case 'C':
+				case 'b':
+				case 'B':
+				case 'v':
+				case 'V':
 					format_data->par_bytes = SIZEOF_CHAR;
 					format_data->flags |= NOSWAP;
 					break;
@@ -648,6 +662,8 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 
 		if(dnsp->dns_dis_conn_id > 0)
 			dna_close(dnsp->dns_dis_conn_id);
+		if(Serving == -1)
+			return;
 		if(dnsp->serving)
 		{
 			dnsp->dns_dis_conn_id = open_dns(dnsp->dnsid, recv_dns_dis_rout, error_handler,
@@ -691,9 +707,12 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 			/*
 			exit(2);
 			*/
+			Serving = -1;
 			error_handler(0, DIM_FATAL, DIMDNSDUPLC, str);
+			/*
 			do_dis_stop_serving_dns(dnsp);
 			dis_stop_serving();
+			*/
 /*
 			exit_tag = 0;
 			exit_code = 2;
@@ -707,9 +726,12 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 /*
 			exit(2);
 */
+			Serving = -1;
 			error_handler(0, DIM_FATAL, DIMDNSREFUS, str);
+			/*
 			do_dis_stop_serving_dns(dnsp);
 			dis_stop_serving();
+			*/
 /*
 			exit_tag = 0;
 			exit_code = 2;
@@ -720,6 +742,9 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 		case DNS_DIS_EXIT :
 			sprintf(str, 
 				"%s: DNS requests Exit",dnsp->task_name);
+/*
+			Serving = -1;
+*/
 			error_handler(0, DIM_FATAL, DIMDNSEXIT, str);
 			break;
 		}
@@ -1062,6 +1087,11 @@ int dis_start_serving_dns(long dnsid, char *task/*, int *idlist*/)
 	dis_init();
 	{
 	DISABLE_AST
+	if(Serving == -1)
+	{
+		ENABLE_AST
+		return(0);
+	}
 	  /*
 #ifdef VxWorks
 	taskDeleteHookAdd(remove_all_services);
@@ -1459,7 +1489,15 @@ int execute_service( int req_id )
 	Dis_packet->size = htovl(header_size + size);
 	if( !dna_write_nowait(reqp->conn_id, Dis_packet, header_size + size) ) 
 	{
-		reqp->to_delete = 1;
+		if(reqp->delay_delete > 1)
+		{
+			reqp->to_delete = 1;
+		}
+		else
+		{
+			reqp->delay_delete = 0;
+			release_conn(reqp->conn_id, 1, 0);
+		}
 	}
 /*
 	else
@@ -1638,6 +1676,11 @@ int do_update_service(unsigned service_id, int *client_ids)
 	int n_clients = 0;
 
 	DISABLE_AST
+	if(Serving == -1)
+	{
+		ENABLE_AST
+		return(found);
+	}
 	if(!service_id)
 	{
 		sprintf(str, "Update Service - Invalid service id");
@@ -2232,6 +2275,9 @@ register SERVICE *servp, *prevp;
 void dim_stop_threads(void);
 int hash_index;
 
+/*
+	if(Serving != -1)
+*/
 	Serving = 0;
 	dis_init();
 	if(Dis_conn_id)
@@ -2278,6 +2324,9 @@ int hash_index;
 */
 	dtq_delete(Dis_timer_q);
 	Dis_timer_q = 0;
+/*
+	if(Serving != -1)
+*/
 	dim_stop_threads();
 }
 
@@ -2516,7 +2565,7 @@ int release_request(REQUEST *reqp, REQUEST_PTR *reqpp, int remove)
 		free(reqpp);
 /* Would do it too early, the client will disconnect anyway
 */
-	if((remove) && (!Serving))
+	if((remove) && (Serving == 0))
 	{
 		clip = find_client(conn_id);
 		if(clip)

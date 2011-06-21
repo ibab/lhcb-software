@@ -54,6 +54,11 @@ void rout_list( int *tag, char *buf, int *size )
 }
 */
 
+void version_rout( int *tag, int *buf, int *size)
+{
+	printf("Received VERSION %x, %d\n", buf, *size);
+}
+
 void rout( tag, buf, size )
 char *buf;
 int *tag, *size;
@@ -123,6 +128,9 @@ int main(int argc, char **argv)
 	dic_info_service_stamped( aux, TIMED, 5, 0, 0, rout, 1200,
 			  &no_link, 4 );
 
+	sprintf(str,"%s/VERSION_NUMBER",argv[2]);
+	dic_info_service( str, MONITORED, 0, 0, 0, version_rout, 0,
+			  NULL, 0 );
 /*	
 	sprintf(aux,"%s/TestMem",argv[2]);
 	dic_info_service( aux, MONITORED, 0, 0, 0, big_rout, 0,

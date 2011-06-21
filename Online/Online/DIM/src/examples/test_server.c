@@ -144,6 +144,15 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 	{
 		printf("client %s\n",name);
 	}
+/*
+	for(i = 0; i < 5; i++)
+	{
+		sleep(10);
+
+	}
+	dis_stop_serving();
+	sleep(59);
+*/
 	while(1)
 	{
 /*
@@ -182,6 +191,7 @@ printf("Adding service %s\n",more_str[curr_more_index]);
 			}
 		}
 */
+		/*
 		if(new_dns)
 		{
 			if(!on)
@@ -194,7 +204,7 @@ printf("Connecting New DNS \n");
 						(void *)0, 0 );
 				}
 				NewIds[10] = 0;
-				dis_start_serving_dns(dnsid, "xx_new"/*, NewIds*/);
+				dis_start_serving_dns(dnsid, "xx_new");
 				on = 1;
 			}
 			else
@@ -207,6 +217,7 @@ printf("DisConnecting New DNS \n");
 				on = 0;
 			}
 		}
+		*/
 	}
 	return 1;
 }

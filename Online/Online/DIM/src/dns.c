@@ -73,9 +73,9 @@ static int Curr_n_services = 0;
 static int Curr_n_servers = 0;
 static int Last_conn_id;
 /*
-static int Debug = TRUE;
+static int Debug = 2;
 */
-static int Debug = FALSE;
+static int Debug = 0;
 
 static int Timer_q;
 static int Server_info_id, Server_new_info_id, 
@@ -92,7 +92,7 @@ _DIM_PROTO( DNS_SERVICE *service_exists, (char *name) );
 _DIM_PROTO( void check_validity,         (int conn_id) );
 _DIM_PROTO( void send_dns_server_info,   (int conn_id, int **bufp, int *size) );
 _DIM_PROTO( void print_stats,            (void) );
-_DIM_PROTO( void set_debug_on,           (void) );
+_DIM_PROTO( void set_debug_on,           (int level) );
 _DIM_PROTO( void set_debug_off,          (void) );
 _DIM_PROTO( void kill_servers,           (void) );
 _DIM_PROTO( void print_hash_table,       (void) );
@@ -206,6 +206,7 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 			if(service_id & 0x80000000)
 				rem_only = 1;
 		}
+/*
     if( Debug )
 	{
 			dim_print_date_time();
@@ -216,6 +217,7 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 				vtohl(packet->n_services), rem_only );
 			fflush(stdout);
 	}
+*/
 		if(rem_only)
 			return 0;
 

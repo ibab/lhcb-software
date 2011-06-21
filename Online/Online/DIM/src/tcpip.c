@@ -33,9 +33,9 @@
 
 #else
 /*
-#define closesock(s) shutdown(s,2);
+#define closesock(s) shutdown(s,2)
 */
-#define closesock close
+#define closesock(s) close(s)
 #define readsock(a,b,c,d) read(a,b,c)
 
 #if defined(__linux__) && !defined (darwin)
@@ -989,6 +989,7 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	Net_conns[conn_id].last_used = time(NULL);
 	Net_conns[conn_id].reading = -1;
 	Net_conns[conn_id].timr_ent = NULL;
+	Net_conns[conn_id].write_timedout = 0;
 	return(1);
 }
 
@@ -1113,6 +1114,7 @@ printf("Trying port %d, ret = %d\n", *port, ret);
 	Net_conns[conn_id].last_used = time(NULL);
 	Net_conns[conn_id].reading = -1;
 	Net_conns[conn_id].timr_ent = NULL;
+	Net_conns[conn_id].write_timedout = 0;
 	return(1);
 }
 
@@ -1187,6 +1189,7 @@ int tcpip_open_connection( int conn_id, int path )
 	Net_conns[conn_id].port = 0;
 	Net_conns[conn_id].reading = -1;
 	Net_conns[conn_id].timr_ent = NULL;
+	Net_conns[conn_id].write_timedout = 0;
 	return(1);
 }
 
@@ -1278,7 +1281,13 @@ int tcpip_write_nowait( int conn_id, char *buffer, int size )
 			}
 		}
 		else
+		{
 			return(0);
+		}
+	}
+	if(wrote == -1)
+	{
+		Net_conns[conn_id].write_timedout = 1;
 	}
 	return(wrote);
 }
@@ -1299,7 +1308,16 @@ int tcpip_close( int conn_id )
 	Net_conns[conn_id].node[0] = 0;
 	Net_conns[conn_id].task[0] = 0;
 	if(channel)
+	{
+		if(Net_conns[conn_id].write_timedout)
+		{
+			Net_conns[conn_id].write_timedout = 0;
+#if defined(__linux__) && !defined (darwin)
+			shutdown(channel, 2);
+#endif
+		}
 		closesock(channel);
+	}
 	return(1);
 }
 
