@@ -1,8 +1,8 @@
 project DAVINCI
 
-use HLT       HLT_v13r6
-use ANALYSIS  ANALYSIS_v6r4p1
-use STRIPPING STRIPPING_v2r3p2
+use HLT       HLT_v13r7
+use ANALYSIS  ANALYSIS_v6r5
+use STRIPPING STRIPPING_v2r4
 
 build_strategy with_installarea
 setup_strategy root
