@@ -5,6 +5,7 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingAlgs v1r7 2011-06-21 =========================
 ! 2011-05-27 - Anton Poluektov 
  - StrippingReport: 
    * Changed ':execute' to ':Execute' in ChronoAuditor query to fix the timing 
