@@ -178,17 +178,10 @@ void RateSvc::makerate(MonMap* mmap)
 RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
 {
 
-  m_trender = 0;
   // load trending tool
-  IService * isvc ;
-  sl->getService( "ToolSvc" , isvc ) ;
+  sl->getService( "ToolSvc" , m_isvc ) ;
 //  printf("%x\n",isvc);
-  const IInterface *a3( isvc ) ;
-//  printf("%x\n",a3);
-  const std::string & nam( "SimpleTrendWriter" ) ;
-  IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
-//  printf("%x\n",intf);
-  m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
+  m_trender = 0;//dynamic_cast< ISimpleTrendWriter * >( intf ) ;
   m_oldProf = 0;
 }
 OUTServiceDescr *RateSvc::findOUTService(std::string servc)
@@ -248,12 +241,25 @@ StatusCode RateSvc::initialize()
 //  m_trender=tool<ISimpleTrendWriter>("SimpleTrendWriter");
   PubSvc::initialize();
   std::string syst = "HLT";
-  m_trender->initialize();
-  m_trender->setPartitionAndName(this->m_PartitionName,syst);
+  if (m_trender == 0)
+  {
+    const IInterface *a3( m_isvc ) ;
+    const std::string & nam( "SimpleTrendWriter" ) ;
+    IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
+    m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
+  }
+  if (m_trender != 0)
+  {
+    m_trender->initialize();
+    m_trender->setPartitionAndName(this->m_PartitionName,syst);
+  }
   return StatusCode::SUCCESS;
 }
 StatusCode RateSvc::finalize()
 {
-  m_trender->close();
+  if (m_trender != 0)
+  {
+    m_trender->close();
+  }
   return StatusCode::SUCCESS;
 }
