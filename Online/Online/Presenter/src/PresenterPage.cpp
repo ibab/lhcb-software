@@ -16,7 +16,6 @@
 
 // local
 #include "PresenterPage.h"
-#include "HistogramIdentifier.h"
 
 // Trending
 #include "Trending/ITrendingTool.h" 

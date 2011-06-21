@@ -19,7 +19,6 @@ class HistogramIdentifier {
   virtual ~HistogramIdentifier();
   
   void setIdentifiersFromDim(std::string newDimServiceName);
-  void dumpMembersToConsole();
   
   std::string histogramIdentifier() const { return m_identifier; };
   std::string histogramType() const { return m_histogramType; };
@@ -39,8 +38,6 @@ class HistogramIdentifier {
   bool isPlausible() const { return m_isPlausible; };
   bool isDimFormat() const { return m_isDimFormat; };
   bool isEFF() const { return m_isEFF; };
-  std::string gauchocommentBeat() const { return m_gauchocommentBeat; };
-  std::string gauchocommentEric() const { return m_gauchocommentEric; };
   std::string histogramUrl() const { return m_histogramUrlTS.Data(); };
   std::string dbDimServiceName() const { return m_dbDimServiceName; };
   int dbHistogramType() const { return m_dbHistogramType; };
@@ -64,8 +61,6 @@ class HistogramIdentifier {
   std::string m_fileName;
   bool m_isPlausible;
   bool m_isDimFormat;
-  std::string m_gauchocommentBeat;
-  std::string m_gauchocommentEric;
   std::string m_dbDimServiceName;
   int m_dbHistogramType;
 };

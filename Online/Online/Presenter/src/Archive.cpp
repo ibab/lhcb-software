@@ -447,11 +447,15 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
       boost::filesystem::directory_iterator end_itr;
       std::cout << "inspecting folder: " << dirLocation.str() << std::endl;
       if ( exists( runPath ) ) {
+        boost::filesystem::path lastPath( "" );
         for ( boost::filesystem::directory_iterator itr(runPath); itr != end_itr; ++itr) {
           std::cout << "Found file " << itr->path() << std::endl;
-          foundRootFiles.push_back(itr->path());
+          lastPath = itr->path();
         }
-        m_runNumbers.push_back( kRun );
+        if ( "" != lastPath ) {
+          foundRootFiles.push_back( lastPath );
+          m_runNumbers.push_back( kRun );
+        }
       }
     }
     return foundRootFiles;

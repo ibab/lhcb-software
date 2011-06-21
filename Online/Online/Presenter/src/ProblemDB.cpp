@@ -61,6 +61,9 @@ int ProblemDB::post( std::string system, std::string username, std::string title
   if ( std::find( m_systems.begin(), m_systems.end(), system ) == m_systems.end() ) {
     std::cout << "ProblemDB: System '" << system << "' unknown. request ignored." << std::endl;
     m_reference = "Unknown system '" + system +"'";
+    for ( std::vector<std::string>::iterator itS = m_systems.begin(); m_systems.end() != itS ; ++itS ) {
+      std::cout << "Known system '" << *itS << "'" << std::endl;
+    }
     return -1;
   }
 
@@ -279,8 +282,4 @@ void ProblemDB::getSystems ( ) {
     }
   }
   webStream.close();
-  
-  //for ( std::vector<std::string>::iterator itS = m_systems.begin(); m_systems.end() != itS ; ++itS ) {
-  //  std::cout << "System '" << *itS << "'" << std::endl;
-  //}
 }

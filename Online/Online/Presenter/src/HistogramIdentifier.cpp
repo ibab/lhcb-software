@@ -34,15 +34,12 @@ HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
   m_histogramName(""),
   m_isPlausible(false),
   m_isDimFormat(false),
-  m_gauchocommentBeat(""),
-  m_gauchocommentEric(""),
   m_dbDimServiceName(""),
   m_dbHistogramType(0)
 {
   setIdentifiersFromDim(m_histogramUrlTS.Data());
 }
-HistogramIdentifier::~HistogramIdentifier()
-{
+HistogramIdentifier::~HistogramIdentifier() {
 }
 
 void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
@@ -74,12 +71,8 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   if (!histogramUrlMatchGroup->IsEmpty()) {
     m_isPlausible = true;
     m_histogramType = (((TObjString *)histogramUrlMatchGroup->At(1))->GetString()).Data();
-    if (m_histogramType.empty()) {
-      m_histogramType = s_CNT;
-    } else if (m_histogramUrlTS.BeginsWith(s_CNT.c_str())) {
-      m_histogramType = s_CNT;
-      m_histogramUrlTS.Remove(0, s_CNT.length()+1);
-    }
+    if (m_histogramType.empty()) m_histogramType = s_pfixMonH1D;
+    
     m_histogramUTGID = (((TObjString *)histogramUrlMatchGroup->At(2))->GetString()).Data();
     // Special case for farm monitoring histogram (MEPRx, ...)
     if ( m_histogramUTGID.find( "HLT" ) == 0 ) m_histogramUTGID = "LHCb_" + m_histogramUTGID ;
@@ -126,10 +119,6 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     if (m_isPlausible && m_histogramType != "") {
       m_isDimFormat = true;
     }
-    m_gauchocommentBeat = newDimServiceName + s_gauchocomment;
-    m_gauchocommentEric = newDimServiceName.substr(m_histogramType.length() + 1,
-                                                   newDimServiceName.length())
-      + s_gauchocomment;
   }
 
   histogramUrlMatchGroup->Delete();
@@ -147,8 +136,6 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     m_dbHistogramType = 1;
   } else if ( s_pfixMonProfile == m_histogramType ) {
     m_dbHistogramType = 2;
-  } else if (s_CNT == m_histogramType) {
-    m_dbHistogramType = 4;
   }
 
   m_lastName = m_histogramName.substr( (m_histogramName.find_last_of(s_slash,std::string::npos)-std::string::npos),
@@ -171,31 +158,4 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
        m_dbHistogramType >= OnlineHistDBEnv_constants::NHTYPES ) {
     m_isPlausible = false;
   }
-}
-
-void HistogramIdentifier::dumpMembersToConsole()
-{
-  // #ifdef _DEBUG
-  std::cout << "m_histogramUrlTS " << m_histogramUrlTS << std::endl;
-  std::cout << "m_identifier " << m_identifier << std::endl;
-  std::cout << "m_histogramType " <<  m_histogramType << std::endl;
-  std::cout << "m_partitionName " <<  m_partitionName<< std::endl;
-  std::cout << "m_nodeName " << m_nodeName << std::endl;
-  std::cout << "m_taskName " << m_taskName << std::endl;
-  std::cout << "m_instanceOnNode " << m_instanceOnNode << std::endl;
-  std::cout << "m_histogramUTGID " << m_histogramUTGID << std::endl;
-  std::cout << "m_algorithmName " << m_algorithmName << std::endl;
-  std::cout << "m_isFromHistogramSet " << m_isFromHistogramSet << std::endl;
-  std::cout << "m_histogramName " << m_histogramName << std::endl;
-  std::cout << "m_setName " << m_setName << std::endl;
-  std::cout << "m_isEFF " << m_isEFF << std::endl;
-  std::cout << "m_isPlausible " << m_isPlausible << std::endl;
-  std::cout << "m_isDimFormat " << m_isDimFormat << std::endl;
-  std::cout << "m_dbDimServiceName " << m_dbDimServiceName << std::endl;
-  std::cout << "m_dbHistogramType " << m_dbHistogramType << std::endl;
-  //    std::cout << "" <<  << std::endl;
-  //    m_gauchocommentBeat(""),
-  //    m_gauchocommentEric(""),
-
-  // #endif
 }

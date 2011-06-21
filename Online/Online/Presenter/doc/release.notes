@@ -4,6 +4,15 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-20 - Olivier Callot
+ - When adding Online histograms to database, get the histogram so that one knows its type
+   ( 1D, 2D, profile )
+ - In offline context, get only the LAST file for a run, as there should be one.
+   The list of all files is listed in the log file.
+
+! 2011-06-16 - Olivier Callot
+ - Set m_rundb tro null after deletion.
+
 ! 2011-06-15 - Olivier Callot
  - Try to improve the conflicts between Alarm refresh and page access.
  - Delete timer in the closeWindow method.

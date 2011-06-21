@@ -29,7 +29,6 @@
 // local
 #include "DisplayHistogram.h"
 #include "presenter.h"
-#include "HistogramIdentifier.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DisplayHistogram

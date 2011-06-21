@@ -109,14 +109,10 @@ namespace pres {
   static const bool s_timeInterval      = true;
   static const bool s_runInterval       = false;
 
-  // Conventions (see HistogramIdentifier for parsing)
-  static const std::string s_CNT("CNT");  
-
   static const std::string s_FILE_URI("file://");
   
   static const std::string s_DimWildcard("*");
   static const std::string s_Mon("Mon");
-  static const std::string s_gauchocomment("/gauchocomment");
 
 //  The format parameter specifies the contents of the structure in the form
 //  T:N[;T:N]*[;T] where T is the item type:

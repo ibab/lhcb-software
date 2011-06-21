@@ -1280,8 +1280,12 @@ void PresenterMainFrame::CloseWindow() {
   if (0 != m_analysisLib) { delete m_analysisLib; m_analysisLib = NULL; }
 
   // delete RunDB interface object
-  if ( m_runDb ) delete m_runDb ;
+  if ( 0 != m_runDb ) {
+    delete m_runDb ;
+    m_runDb = 0;
+  }
 
+  m_resumePageRefreshAfterLoading = false;  // avoid action after closing some windows...
   std::cout << timeStamp() << "Closing main window. Bye." << std::endl;
 
   gApplication->Terminate( 0 );
@@ -1916,7 +1920,7 @@ void PresenterMainFrame::reportToLog() {
            logbook == "Shift"    &&
            !m_pbdbConfig.empty()    ) {
         std::string title = subject + " (from Presenter page " + m_currentPageName + ")";
-        std::string severity = ""; //== need the new ProblemDB interface for "Report";
+        std::string severity = "Report";
         ProblemDB myProblem( m_pbdbConfig, m_rundbConfig );
         std::string link( linkText );
         if ( "" == message ) message = title;
@@ -2429,7 +2433,9 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
         m_histogramNode = listView->AddItem( m_histogramNode, m_histogramIdItem->GetName());
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
-        setTreeNodeType(m_histogramNode, *m_histogramType);
+        std::string histType =  *m_histogramType;
+        if ( "CNT" == histType ) histType = "H1D";
+        setTreeNodeType(m_histogramNode, histType );
         m_histogramNode->SetUserData(new TObjString( histogramIdentifier.histogramIdentifier().c_str()));
       }
     }
@@ -2533,8 +2539,8 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
 //==============================================================================
 // Set tree node type
 //==============================================================================
-void PresenterMainFrame::setTreeNodeType(TGListTreeItem* node,
-                                         const std::string & type) {
+void PresenterMainFrame::setTreeNodeType( TGListTreeItem* node,
+                                          const std::string & type) {
   if ( 0 == node ) return ;
   const TGPicture*  m_icon;
 
@@ -2545,7 +2551,6 @@ void PresenterMainFrame::setTreeNodeType(TGListTreeItem* node,
   else if ( "H2D" == type )             m_icon = m_iconH2D ;
   else if ( "P1D" == type )             m_icon = m_iconProfile ;
   else if ( "P2D" == type )             m_icon = m_iconProfile ;
-  else if ( pres::s_CNT == type )       m_icon = m_iconCounter;
   else if ( pres::s_PAGE == type )      m_icon = m_iconPage;
   else if ( pres::s_TASK == type)       m_icon = m_iconTask ;
   else if ( pres::s_ALGORITHM == type ) m_icon = m_iconAlgorithm ;
@@ -3541,32 +3546,41 @@ void PresenterMainFrame::addHistoToHistoDB() {
         if (histoName.BeginsWith( pres::s_FILE_URI ) ) histoName.Remove(0, pres::s_FILE_URI.length( ) ) ;
         //if (m_verbosity >= pres::Verbose)
         std::cout<<"presenter is declaring " << std::string(histoName)  <<std::endl;
+        std::string histogramName = std::string( histoName );
+        HistogramIdentifier hId( histogramName );
+        std::string::size_type kk = histogramName.find( "/" );
+        std::string myName = histogramName.substr( kk+1 );
+        std::string myTask = histogramName.substr( 0, kk );
 
-        HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
-
-        if(histogramService.isPlausible()) {
-          if (m_verbosity >= pres::Verbose)
-            std::cout << "declaring histogram to DB: " << std::endl
-                      << "   taskName= " << histogramService.taskName()
-                      <<std::endl
-                      << "   algorithmName= "<< histogramService.algorithmName()
-                      <<std::endl
-                      << "   histogramName= "
-                      << histogramService.histogramFullName() << std::endl;
-
-          m_histogramDB->declareHistogram(histogramService.taskName(),
-                                          histogramService.algorithmName(),
-                                          histogramService.histogramFullName(),
-                                          (OnlineHistDBEnv::HistType)
-                                          histogramService.dbHistogramType());
+        //== Need to check the type! This is not automatic any longer...
+        HistTask myHists( myTask , "", 10 );
+        std::vector<TObject*> results;
+        std::vector<std::string> histNames;
+        histNames.push_back( myName );
+        int status = myHists.Histos( histNames, results );
+        
+        OnlineHistDBEnv::HistType dbType = OnlineHistDBEnv::H1D;
+        if ( 0 == status ) {
+          if ( 0 != dynamic_cast<TProfile*>( results[0]) ) {
+            dbType = OnlineHistDBEnv::P1D;
+          } else if ( 0 != dynamic_cast<TH2D*>( results[0]) ) {
+            dbType = OnlineHistDBEnv::H2D;
+          }
         }
-        else {
-          std::cout<< "ERROR: input histogram identifier is not correct: "
-                   << " taskName= "<< histogramService.taskName()
-                   << " algorithmName= "<< histogramService.algorithmName()
-                   << " histogramName= " << histogramService.histogramFullName()
-                   << std::endl;
-        }
+
+        std::cout << "declaring histogram to DB: " << std::endl
+                  << "   taskName      " << myTask << std::endl
+                  << "   histogramName " << myName << std::endl
+                  << "   Db task       " << hId.taskName() << std::endl
+                  << "   Db algorithm  " << hId.algorithmName() << std::endl
+                  << "   Db histoName  " << hId.histogramFullName() << std::endl
+                  << "   Db type       " << dbType << std::endl;
+          
+        
+        m_histogramDB->declareHistogram( hId.taskName(),
+                                         hId.algorithmName(),
+                                         hId.histogramFullName(),
+                                         dbType );
       }
     } catch (std::string sqlException) {
       if (m_verbosity >= pres::Verbose) std::cout << sqlException;
@@ -4620,6 +4634,11 @@ void PresenterMainFrame::nextInterval() {
 // Refresh pages in refresh mode
 //==============================================================================
 void PresenterMainFrame::refreshPage( ) {
+  if ( presenterMode() != pres::Online    &&
+       presenterMode() != pres::EditorOnline ) {
+    stopPageRefresh();
+    return;
+  }
   if ( m_refreshingPage ) refreshPageForced();
 }
 
