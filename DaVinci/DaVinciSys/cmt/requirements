@@ -1,11 +1,11 @@
 package DaVinciSys
-version           v28r3p1
+version           v28r4
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v28r3p1   Phys
-use  DaVinciTests               v2r5
+use  DaVinci                 	v28r4   Phys
+use  DaVinciTests               v2r6
 
 # Declare this as a container package
 apply_pattern container_package

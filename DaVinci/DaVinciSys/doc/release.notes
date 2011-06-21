@@ -3,6 +3,20 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v28r4>2011-05-24 DaVinci v28r4</A></H1><PRE>
+
+Production version for 2011 processing of data following June technical stop.
+(Stripping 15) 
+
+This is the first version of DaVinci to support the ROOT persistency framework.
+
+Stripping v2r4, Analysis v6r5, Hlt v13r7, Phys v12r5
+
+Otherwise no major changes. Packages which were previously included have been released with their respective projects.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r4
+
 </PRE><H1><A NAME=v28r3p1>2011-05-24 DaVinci v28r3p1</A></H1><PRE>
 
 Production version for 2011 processing of 1.4 TeV data.
