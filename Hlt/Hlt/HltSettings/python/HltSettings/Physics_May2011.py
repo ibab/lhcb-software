@@ -63,12 +63,16 @@ class Physics_May2011( object ):
                                                , 'AllL0_IPChi2'  :    16
                                                , 'AllL0_TrChi2'  :     2.5
                                                , 'AllL0_GEC'     : 'Loose'
+                                               , 'AllL0_Velo_NHits' : 9 
+                                               , 'AllL0_Velo_Qcut' : 3  
+                                               , 'AllL0_ValidateTT' : False 
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  8000 
                                                , 'Muon_IP'       :     0.100
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
+                                               , 'Muon_ValidateTT' : False
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  6000
                                                , 'Photon_IP'     :     0.100
@@ -76,6 +80,7 @@ class Physics_May2011( object ):
                                                , 'Photon_TrChi2' :     2.5
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
+                                               , 'Photon_ValidateTT' : False
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
@@ -183,6 +188,7 @@ class Physics_May2011( object ):
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingParasitic'
                  , 'Hlt1NoPVPassThrough'
+                 , 'Hlt1CharmCalibrationNoBias'
                  , 'Hlt1TrackMuon', 'Hlt1TrackAllL0', 'Hlt1TrackPhoton'
                  , 'Hlt1TrackForwardPassThrough','Hlt1TrackForwardPassThroughLoose'
                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
