@@ -11,7 +11,8 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                 , 'MaxNoBiasRate'          : 97.
-                , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)' }
+                , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)', 
+                                               'Hlt1CharmCalibrationNoBias' : 'RATE(500)'  }
                 }
 
     def __create_nobias_line__(self ):
@@ -25,6 +26,19 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
                     , ODIN = 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger , RATE(%s,LoKi.Scalers.RandomPhasePeriodicLimiter)) ' % ( self.getProp('MaxNoBiasRate') )
+                    , postscale = self.postscale
+                    )
+    def __create_charm_nobias_line__(self ) :
+        ''' 
+        returns an Hlt1 "Line" including input and output filter
+        '''
+        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+        for i in [ 'LoKiCore.functions', 'LoKiNumbers.sources' ] : 
+            if i not in HltFactory('ToolSvc.HltFactory').Modules : HltFactory('ToolSvc.HltFactory').Modules += [ i ] 
+        from HltLine.HltLine import Hlt1Line as Line
+        return Line ( 'CharmCalibrationNoBias'
+                    , prescale = self.prescale
+                    , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)&(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)' 
                     , postscale = self.postscale
                     ) 
     def __create_microbias_line__(self, name, tracking) :
@@ -60,7 +74,8 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         '''
         self.__create_minibias_line__()
         self.__create_nobias_line__()
-
+        self.__create_charm_nobias_line__()
+    
         from HltTracking.HltReco import MinimalVelo , Hlt1Seeding
         ve = self.__create_microbias_line__('Velo',MinimalVelo )
         ve.clone( ve.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale, prescale = self.prescale )
