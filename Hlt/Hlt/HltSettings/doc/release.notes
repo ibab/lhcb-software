@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-06-20 - V. Gligorov
+ - Add new charm Calibration NoBias line to Physics_May2011  
+
 !========================== HltSettings v5r12 2011-05-04 ===================
 ! 2011-05-03 - Johannes Albrecht
  - Add Low mult lines to Physics_May2011
