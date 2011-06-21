@@ -133,6 +133,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1MBNoBiasBeam1Decision"             :  505, 
     "Hlt1MBNoBiasBeam2Decision"             :  506,
     "Hlt1MBNoBiasBeamCrossingDecision"      :  507, 
+    "Hlt1CharmCalibrationNoBiasDecision"    :  512,
     #  MicroBias
     'Hlt1MBMicroBiasRZVeloDecision'         :  508,
     'Hlt1MBMicroBiasTStationDecision'       :  509,
