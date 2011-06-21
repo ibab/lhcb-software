@@ -1,3 +1,7 @@
+2011-06-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Repository.py: use svn.cern.ch instead of svnweb.cern.ch for the anonymous access.
+
 2011-06-17  Joel Closier  <Joel.Closier@cern.ch>
 
     * LbConfiguration/Repository.py : remove lbdirac repository

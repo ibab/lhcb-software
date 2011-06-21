@@ -62,15 +62,15 @@ class CVSReposInfo( RepositoryInfo ):
 
 ## List of known repositories
 repositories = { "gaudi": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/gaudi" ),
-                            "anonymous": SVNReposInfo( "http", "svnweb.cern.ch", "/guest/gaudi" ) },
+                            "anonymous": SVNReposInfo( "http", "svn.cern.ch", "/guest/gaudi" ) },
 #                 "lhcb":  { "kerberos":  CVSReposInfo("gserver", "isscvs.cern.ch", "/local/reps/lhcb"),
 #                            "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
 #                            "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
 #                            "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/lhcb", "anonymous") },
                  "lbsvn": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/lhcb" ),
-                            "anonymous": SVNReposInfo( "http", "svnweb.cern.ch", "/guest/lhcb" ) },
+                            "anonymous": SVNReposInfo( "http", "svn.cern.ch", "/guest/lhcb" ) },
                  "dirac": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/dirac" ),
-                            "anonymous": SVNReposInfo( "http", "svnweb.cern.ch", "/guest/dirac" ) },
+                            "anonymous": SVNReposInfo( "http", "svn.cern.ch", "/guest/dirac" ) },
                  }
 # Define default repositories
 for k in repositories:
