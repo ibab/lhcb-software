@@ -3,6 +3,10 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+</PRE><H1><A NAME=v2r4>2011-06-21 StrippingSys v2r4 </A></H1><PRE>
+
+Stripping for 2011 processing post technical stop of June (stripping15)
+
 </PRE><H1><A NAME=v2r3p2>2011-05-24 StrippingSys v2r3p2 </A></H1><PRE>
 
 Stripping for 2011 1.4 TeV processing (stripping1point4tev)
