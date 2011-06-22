@@ -123,14 +123,27 @@ def callCommand(cmd, *args, **kwargs):
     """
     Simple wrapper to execute a command and return standard output, standard error and return code.
     """
+    repfail = False
     use_shell = sys.platform.startswith("win")
+
     d = {"stdout": PIPE, "stderr": PIPE, "shell": use_shell}
+    if "report_failure" in kwargs.keys() :
+        if kwargs["report_failure"] == True :
+            repfail = True
+        del kwargs["report_failure"]
     d.update(kwargs)
     cmd = [cmd] + list(args)
     _call_command_log.debug("Execute command: %r %r", " ".join(cmd), kwargs)
     proc = apply(Popen, (cmd,), d)
     out, err = proc.communicate()
-    return (out, err, proc.returncode)
+    retcode = proc.returncode
+    if repfail and retcode != 0 :
+        _call_command_log.debug("The command %r %r failed with %d return code", " ".join(cmd), kwargs, retcode)
+        if out :
+            _call_command_log.debug("stdout: %s", out)
+        if err:
+            _call_command_log.debug("stderr: %s", err)
+    return (out, err, retcode)
 
 class RetryCommand(object):
     """Small wrapper to add a 're-try' feature to _call_command."""
@@ -148,3 +161,12 @@ class RetryCommand(object):
             retries -= 1
             sleep(self._sleeptime)
         return retval
+
+def averageLoad():
+    load = [ 1.0, 1.0, 1.0]
+
+    if sys.platform != "win32" :
+        if os.path.exists("/proc/loadavg") :
+            pass
+
+    return load

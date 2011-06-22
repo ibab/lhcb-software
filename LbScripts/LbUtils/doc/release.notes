@@ -1,3 +1,9 @@
+2011-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Processes.py: added the "report_failure" option to the callCommand function. It is is
+	True, the stdout and stderr of the failure are reported to to the logger. This only happens if the
+	return code of the command is different from 0.
+
 2011-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/VersionsDB.py: removed import of the unused sys module.
