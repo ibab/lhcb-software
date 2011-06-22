@@ -5,6 +5,10 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+
+! 2011-06-22 - Benoit Viaud
+- Add BiKalmanFittedSecondLoop Muons to TrackFittedBasicParticles.py
+
 ! 2011-06-22 - Albert Puig
  - Add BiKalmanFittedPhotonsFromL0 particles that build photons from L0 candidates.
 
