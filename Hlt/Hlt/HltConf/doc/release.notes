@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Add Hlt2 radiative topological lines.
+
 ! 2011-06-21 - V. Gligorov
  - Add charm calibration nobias line.
 
