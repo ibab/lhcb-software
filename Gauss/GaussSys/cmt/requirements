@@ -7,11 +7,16 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
+# Temporarly for Gauss v40r1 as not in LHCb v32r4
+use MCInterfaces          v1r14       Kernel  
+
+
 # Gauss application: the application is not built on Win32
 macro Gauss_use         "Gauss        v40r1 Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
+use GenCuts   v1r0  Gen
 macro GENSER_use        "GENSER       v9r0    Gen"  WIN32 ""
 macro EvtGen_use        "EvtGen       v12r0   Gen"  WIN32 ""
 macro EvtGenExtras_use  "EvtGenExtras v2r6    Gen"  WIN32 ""
