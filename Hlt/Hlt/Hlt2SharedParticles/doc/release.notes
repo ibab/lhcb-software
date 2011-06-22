@@ -5,6 +5,9 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Add BiKalmanFittedPhotonsFromL0 particles that build photons from L0 candidates.
+
 !========================== Hlt2SharedParticles v6r2  2011-05-11 ===================
 ! 2011-05-06 Gerhard Raven
  - skip P2PV relations for photon protoparticles
