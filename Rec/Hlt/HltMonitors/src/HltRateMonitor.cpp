@@ -50,7 +50,7 @@ namespace {
 HltRateMonitor::HltRateMonitor( const std::string& name,
                                 ISvcLocator* pSvcLocator )
    : HltMonitorBase ( name , pSvcLocator ), m_runParameters( 0 ),
-     m_startOfRun( 0 ), m_runNumber( 0 )
+     m_startOfRun( 0 ), m_runNumber( 0 ), m_disabled( false )
 {
    declareProperty( "HltDecReportsLocation", m_decReportsLocation =
                     HltDecReportsLocation::Default );
