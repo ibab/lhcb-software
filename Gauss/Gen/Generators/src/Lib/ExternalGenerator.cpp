@@ -10,11 +10,12 @@
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h"
+// Kernal
+#include "MCInterfaces/IGenCutTool.h"
 
 // from Generators
 #include "Generators/IProductionTool.h"
 #include "Generators/IDecayTool.h"
-#include "Generators/IGenCutTool.h"
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
 #include "Generators/HepMCUtils.h"

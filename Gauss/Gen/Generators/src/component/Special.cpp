@@ -5,9 +5,11 @@
 #include "Special.h"
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+// from Kernel
+#include "MCInterfaces/IGenCutTool.h"
 
+// from Generators
 #include "Generators/IProductionTool.h"
-#include "Generators/IGenCutTool.h"
 #include "Generators/GenCounters.h"
 #include "Generators/LhaPdf.h"
 

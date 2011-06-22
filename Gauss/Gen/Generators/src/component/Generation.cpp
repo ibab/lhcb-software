@@ -12,13 +12,13 @@
 
 // from LHCb
 #include "Kernel/ParticleID.h"
+#include "MCInterfaces/IFullGenEventCutTool.h"
 
 // from Generators
 #include "Generators/ISampleGenerationTool.h"
 #include "Generators/IPileUpTool.h"
 #include "Generators/IDecayTool.h" 
 #include "Generators/IVertexSmearingTool.h"
-#include "Generators/IFullGenEventCutTool.h"
 #include "Generators/GenCounters.h"
 #include "Generators/HepMCUtils.h"
 

@@ -17,9 +17,9 @@ branches      Generators doc cmt src
 #============================================================================
 use           GaudiAlg          v*
 use           GenEvent          v*                Event
+use           MCInterfaces      v*                Kernel
 use           EvtGen            v*                Gen
 use           EvtGenExtras      v*                Gen
-use           LoKiGen           v*                Phys 
 
 #============================================================================
 # Include directories
@@ -51,10 +51,3 @@ apply_pattern library_stamps    library=GeneratorsLib
 #============================================================================
 macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio " \
                        WIN32 "/LIBPATH:$(HepMC_home)/lib HepMCfio.lib"
-
-
-private 
-
-macro_append ROOT_linkopts " -lHist " \
-              target-winxp " libHist.lib " \
-             target-mac104 " -lHist -lMatrix "

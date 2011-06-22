@@ -9,9 +9,11 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
+// from Kernel
+#include "MCInterfaces/IGenCutTool.h"
+
 // from Generators
 #include "Generators/IProductionTool.h"
-#include "Generators/IGenCutTool.h"
 #include "Generators/GenCounters.h"
 
 //-----------------------------------------------------------------------------

@@ -8,9 +8,8 @@
 #include "Event/GenHeader.h"
 #include "Event/GenCollision.h"
 
-// from Gauss
-#include "Generators/IFullGenEventCutTool.h"
-
+// from Kernel
+#include "MCInterfaces/IFullGenEventCutTool.h"
 
 // local
 #include "MergedEventsFilter.h"
