@@ -28,7 +28,7 @@ macro_append  RootCnv_dependencies  " RootCnvLib "
 application gaudi_merge ../merge/merge.cpp
 macro_append gaudi_merge_dependencies  " RootCnvLib "
 
-macro RootCnv_ext_linkopts  ' -lRootCnv ' WIN32 ' RootCnv.lib '
+macro RootCnv_ext_linkopts  ' -lRootCnvLib ' WIN32 ' RootCnvLib.lib '
 
 private
 set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
