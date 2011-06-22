@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Bypassed HltL0Candidates in order to avoid calling old HltL0CaloCandidates.
+
 ! 2011-06-21 - V. Gligorov
  - Add a new Charm Calibration NoBias line, running on lumi
    BeamCrossing events, rate limited to 500Hz.

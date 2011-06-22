@@ -80,14 +80,13 @@ def _muon( channel ) :
     return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name)]) }
 
 def _calo( channel , calomaker ) :
-    from HltLine.HltDecodeRaw import DecodeL0CALO
-    from Configurables import HltL0CaloCandidates
-    name = _name(channel)
+    return {channel: None}
+    #from HltLine.HltDecodeRaw import DecodeL0CALO
+    #from Configurables import HltL0CaloCandidates
+    #name = _name(channel)
     #note: explicitly set the OutputSelection so we can pick it up downstream...
-    x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) ]) }
-    HltL0CaloCandidates(name).addTool(calomaker,name='CaloMakerTool')
-    HltL0CaloCandidates(name).CaloMakerTool = calomaker.__name__
-    return x
+    #x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) ]) }
+    #return x
 
 def _converter( channel ) :
     from Configurables import ElectronSeedTool, HadronSeedTool
