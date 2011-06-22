@@ -5,52 +5,39 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "boost/foreach.hpp"
 #include <memory>
-#include "Event/L0DUBase.h"
-#include "Event/L0DUReport.h"
-#include "Event/L0CaloCandidate.h"
-
 // local
 #include "HltL0CaloCandidates.h"
 
 using namespace LHCb;
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltL0CaloCandidates
-// 2008-12-05 : Gerhard Raven
-// based on HltL0CaloPrepare by Jose Angel Hernando Morata
+// 2011-04-14  Albert Puig Navarro (albert.puig@cern.ch)
+// based on the older implementation by Gerhard Raven
+// which was based on HltL0CaloPrepare by Jose Angel Hernando Morata
+// based on the ideas of the HltIsPhotonTool by M.Witek
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltL0CaloCandidates );
-
-
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltL0CaloCandidates::HltL0CaloCandidates( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator, false 
-  // vector of default histo defs...
-  //   list_of( Gaudi::Histo1DDef( "Et", 0., 6000., 100 ) )
-  //            Gaudi::Histo1DDef( "EtBest", 0., 6000., 100 ) )
-    ) 
-  , m_selection(*this)
-  , m_caloMaker(0)
+  : GaudiHistoAlg ( name , pSvcLocator ) 
+  // , m_selection(*this)
+  //, m_tck(0)
   , m_et(0)
   , m_etMax(0)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
-  declareProperty("L0Channel", m_l0Channel );
-  declareProperty("CaloMakerTool", m_caloMakerName = "");
-  // (re)set property from HltAlgorithm
-  setProperty("HistoDescriptor","{ 'Et'    : ('Et',   0.,6000.,100)"
-                                ", 'EtMax' : ('EtMax',0.,6000.,100)"
-                                "}");
-
-  //FIXME/TODO: check whether Full should not be Default...
-  m_selection.declareProperties( boost::assign::map_list_of(1,std::string("TES:")+L0CaloCandidateLocation::Full)  );
+  declareProperty("TESOutputPrefix", m_TESprefix = "/Event/Rec/Calo");
+  declareProperty("EtThresholdLow", m_lowEtThreshold = 500);
+  declareProperty("EtThresholdHigh", m_highEtThreshold = 2500);
+  declareProperty("ClusterizationLevel",m_level=1);
+  declareProperty("L0CaloCandidateLocation",m_l0loc=L0CaloCandidateLocation::Full);
 }
 //=============================================================================
 // Destructor
@@ -62,22 +49,18 @@ HltL0CaloCandidates::~HltL0CaloCandidates() {
 // Initialization
 //=============================================================================
 StatusCode HltL0CaloCandidates::initialize() {
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_selection.retrieveSelections();
-  m_selection.registerSelection();
+  // Calo clusterization interface
+  m_l02CaloTool   = tool<IL0Calo2Calo>("L0Calo2CaloTool", "ClusterLowPhoton", this);
+  //Gaudi::Utils::setProperty(m_l02CaloTool, "OutputLevel", 3).ignore() ;
 
-  m_caloMaker = (m_caloMakerName.empty() 
-                    ? (ICaloSeedTool*)0
-                    :tool<ICaloSeedTool>(m_caloMakerName));
+  if ( !m_l02CaloTool ) {
+    error() << "Error retrieving L02Calo tool" << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  counter("#input");
-  // force creation of counters, and declare them to monitoring...
-  //declareInfo("#input",counter("#input"),std::string("Candidates seen by ") + name());
-  
-  m_et    = book("Et");
-  m_etMax = book("EtMax");
   return StatusCode::SUCCESS;
 }
 
@@ -85,163 +68,80 @@ StatusCode HltL0CaloCandidates::initialize() {
 // Main execution
 //=============================================================================
 
-HltL0CaloCandidates::CutList_t 
-HltL0CaloCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
-  typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
-  static map_t map;
-  if (map.empty()) {
-     map.insert("Electron(Et)", L0DUBase::CaloType::Electron);
-     map.insert("Photon(Et)",   L0DUBase::CaloType::Photon);
-     map.insert("Hadron(Et)",   L0DUBase::CaloType::Hadron);
-     map.insert("LocalPi0(Et)", L0DUBase::CaloType::Pi0Local);
-     map.insert("GlobalPi0(Et)",L0DUBase::CaloType::Pi0Global);
-  }
-  CutList_t cuts;
-  const LHCb::L0DUElementaryCondition::Map& conditions = channel.elementaryConditions();
-  for (LHCb::L0DUElementaryCondition::Map::const_iterator condition = conditions.begin();
-       condition!=conditions.end(); ++condition) {
-         std::string data = condition->second->data()->name();
-         for (map_t::const_iterator i = map.begin();i!=map.end();++i ) {
-            if (data!=i->first) continue;
-            cuts.push_back( L0CaloCandidateCut( i->second, condition->second->threshold() ) );
-         }
-  }
-  return cuts;
-}
-
-HltL0CaloCandidates::CutList_t 
-HltL0CaloCandidates::generateCutList(const std::string& whichType) {
-  typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
-  static map_t map;
-  if (map.empty()) {
-     map.insert("AllElectron", L0DUBase::CaloType::Electron);
-     map.insert("AllPhoton",   L0DUBase::CaloType::Photon);
-     map.insert("AllHadron",   L0DUBase::CaloType::Hadron);
-     map.insert("AllLocalPi0", L0DUBase::CaloType::Pi0Local);
-     map.insert("AllGlobalPi0",L0DUBase::CaloType::Pi0Global);
-  }
-  map_t::const_iterator i = map.find(whichType);
-  CutList_t cuts;
-  if (i!=map.end()) cuts.push_back( L0CaloCandidateCut( i->second ) );
-  return cuts;
-}
-
 StatusCode HltL0CaloCandidates::execute() {
-
-  HltL0CaloCandidates::CutList_t cuts;
-  if (m_l0Channel.substr(0,3)!="All") {
-      LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
-
-      //@TODO: only update cuts on L0 TCK change, and cache the result...
-      const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
-      LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
-      if (channel == channels.end()) {
-            error() << "could not find requested l0 channel " << m_l0Channel << endmsg;
-            return StatusCode::FAILURE;
-      }
-      //@TODO: check if channel is actually enabled!!
-      cuts = generateCutList( *(channel->second) );
-  } else {
-      cuts = generateCutList( m_l0Channel );
-  }
-
-  Tracks* output = new Tracks();
-  put(output,"Hlt/Track/"+m_selection.output()->id().str());
-
-  if (cuts.empty()) {
-    return Warning( " L0 channel " + m_l0Channel + " does not use any known type of l0CaloCandidate?? -- no candidates converted!" , 
-             StatusCode::SUCCESS, 1 );
-  }
-
+  // Create containers
+  // Loop over candidates
   double etMax = -1.;
-  BOOST_FOREACH(const L0CaloCandidate* calo, *m_selection.input<1>()) {
-    if (       calo->type()!=L0DUBase::CaloType::Electron
-            && calo->type()!=L0DUBase::CaloType::Photon
-            && calo->type()!=L0DUBase::CaloType::Hadron
-            && calo->type()!=L0DUBase::CaloType::Pi0Local
-            && calo->type()!=L0DUBase::CaloType::Pi0Global ) {
-             warning() << " got candidate with unexpected type " << calo->type() << endmsg;
+  const L0CaloCandidates* candidates = get<L0CaloCandidates>( m_l0loc );
+
+  // counters
+  int nc=0;
+  int ne=0;
+  int ng=0;
+  int nh=0;
+  // create cluster containers and put on TES
+  LHCb::CaloCluster::Container* cont_e = new LHCb::CaloCluster::Container();
+  LHCb::CaloCluster::Container* cont_g = new LHCb::CaloCluster::Container();
+  LHCb::CaloCluster::Container* cont_h = new LHCb::CaloCluster::Container();
+  put ( cont_e , m_TESprefix+"/LowEtElectrons"  ) ;
+  put ( cont_g , m_TESprefix+"/LowEtPhotons"  ) ;
+  put ( cont_h , m_TESprefix+"/HighEtPhotons"  ) ;
+
+  // loop over l0calocandidates
+  if ( 0 == candidates->size() ) return StatusCode::SUCCESS ;
+  BOOST_FOREACH(const L0CaloCandidate* calo, *candidates) {
+    if (       calo->type() == L0DUBase::CaloType::Electron
+            || calo->type() == L0DUBase::CaloType::Photon ) {
+
+      nc++;
+      // Check the cuts
+      bool passHigh = L0CaloCandidateCut((L0DUBase::CaloType::Type) calo->type(), m_highEtThreshold)(calo);
+      bool passLow = L0CaloCandidateCut((L0DUBase::CaloType::Type) calo->type(), m_lowEtThreshold)(calo);
+      if ( !passLow ) continue; // passLow => passHigh
+      // Fine, we got a candidate
+      if ( msgLevel(MSG::DEBUG) )debug() << "-> Accepted calo candidate with type = " << calo->type()  << " and et = " << calo->et() << " and etcode = " << calo->etCode() << endmsg;
+      if ( calo->et() > etMax ) etMax = calo->et();
+
+
+      // Clusterize 
+      std::vector<CaloCluster*> clusters;
+      m_l02CaloTool->clusterize(clusters, calo, m_level);        
+      for(std::vector<CaloCluster*>::iterator ic=clusters.begin() ; clusters.end() != ic ; ++ic){
+        // LowEt photon clusters from L0g+L0e
+        cont_g->insert( *ic );
+        if ( msgLevel(MSG::DEBUG) )debug() << "Inserted  " << clusters.size() << " lowET photons clusters" << endmsg;        
+        ng++;
+
+        // highEt photon clusters from L0g+L0e
+        if ( passHigh ) {
+          cont_h->insert( *ic );
+          if ( msgLevel(MSG::DEBUG) )debug() << "Inserted  " << clusters.size() << " highET photons clusters" << endmsg;        
+          nh++;
+        }
+        // electron clusters from L0e only
+        if ( calo->type() == L0DUBase::CaloType::Electron ){
+          cont_e->insert( *ic );
+          if ( msgLevel(MSG::DEBUG) )debug() << "Inserted  " << clusters.size() << " lowET electrons clusters" << endmsg;        
+          ne++;
+        }
+      }
     }
-    bool pass=true;
-    CutList_t::const_iterator i = cuts.begin();
-    while ( pass && i!=cuts.end() ) pass = (*i++)(calo);
-    if (!pass)  continue;
-    fill(m_et,calo->et(),1.);
-    if (calo->et()>etMax) etMax = calo->et();
-    debug() << " accepted calo cand with type = " << calo->type()  << " and et = " << calo->et() << " and etcode = " << calo->etCode() << endmsg;
-    //TODO: split creating subset of L0 candidates and conversion into track....
-    std::auto_ptr<Track> tcalo( new Track() );
-    if (m_caloMaker) {
-        StatusCode sc = m_caloMaker->makeTrack(*calo,*tcalo);
-        if (sc.isFailure()) return sc;
-    } else                           makeTrack(*calo,*tcalo);
-    addExtras(*calo,*tcalo);
-    m_selection.output()->push_back(tcalo.get());
-    output->insert(tcalo.release());
   }
-  if (!m_selection.output()->empty()) fill(m_etMax,etMax,1.);
-
-  counter("#input")  +=  m_selection.input<1>()->size();
-
-  if (msgLevel(MSG::DEBUG)) {
-    debug()  << "# Input: " << m_selection.input<1>()->size() 
-             << " -> # Output: " << m_selection.output()->size() << endreq;
-    printInfo(" Calos ",*m_selection.output()); //#($)*))@*)@ requires outputlevel debug, but prints at INFO...
+  
+  if ( msgLevel(MSG::DEBUG) ){
+    debug() << "-> Put " << nh << " clusters in TES -> " << m_TESprefix+"/HighEtPhotons from " << nc << " L0CaloCandidates" << endmsg;
+    debug() << "-> Put " << ng  << " clusters in TES -> " << m_TESprefix+"/LowEtPhotons from " <<  nc << " L0CaloCandidates"  <<endmsg;
+    debug() << "-> Put " << ne  << " clusters in TES -> " << m_TESprefix+"/LowEtElectrons from " <<  nc << " L0CaloCandidates"<< endmsg;
   }
+
+  counter("#L0CaloCandidates")        +=  nc;
+  counter("#L0Calo->LowEt photons")   +=  ng;
+  counter("#L0Calo->LowEt Electrons") +=  ne;
+  counter("#L0Calo->HighEt photons")  +=  nh;
+
+  // setFilterPassed(true);
   return StatusCode::SUCCESS;
 }
 
-
-void HltL0CaloCandidates::makeTrack(const L0CaloCandidate& calo,
-                                  LHCb::Track& track) {
-  
-  // Get energy and position of L0 calo candidate:
-  double x      = calo.position().x();
-  double y      = calo.position().y();
-  double z      = calo.position().z();
-  double ex     = calo.posTol()*(4./sqrt(12.0));
-  double ey     = ex;
-  double et     = calo.et();
-
-  double sintheta = sqrt(x*x + y*y)/(sqrt(x*x + y*y + z*z));
-  double e = fabs(et)/sintheta;
-
-  debug() << " position " << calo.position() << " et " << et
-          << " sintheta " << sintheta << " e " << e << endreq;  
-
-  State state;
-  state.setLocation(State::MidHCal);
-  state.setState(x,y,z,ex,ey,1./e); // ??? slopeX = ex, slopY = ey ???
-  track.addToStates(state);
-  
-}
-
-void HltL0CaloCandidates::addExtras(const L0CaloCandidate& calo,
-                                  LHCb::Track& track) {
-
-  double ex     = calo.posTol()*(4./sqrt(12.0));
-  double ey     = ex;
-
-  track.addInfo(hltInfoID("L0ET"),calo.et());
-
-  BOOST_FOREACH( State* state, track.states() ) {
-    if (state->location() == State::MidHCal){
-      state->setTx(ex); // ???
-      state->setTy(ey); // ???
-      debug() << " changed slopes! " << state->slopes() << endreq;
-    }
-  }  
-
-  CaloCellID id = calo.id();
-  LHCb::CaloCellID id1(id.calo(), id.area(), id.row()+1, id.col()   );
-  LHCb::CaloCellID id2(id.calo(), id.area(), id.row()+1, id.col()+1 );
-  LHCb::CaloCellID id3(id.calo(), id.area(), id.row()  , id.col()+1 );
-
-  track.addToLhcbIDs( LHCbID(id) );
-  track.addToLhcbIDs( LHCbID(id1) );
-  track.addToLhcbIDs( LHCbID(id2) );
-  track.addToLhcbIDs( LHCbID(id3) );
-}
-
-
 //=============================================================================
+

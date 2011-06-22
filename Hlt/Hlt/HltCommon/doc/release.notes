@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Rewritten HltL0CaloCandidates to build clusters from L0CaloCandidates
+   in an acceptable way.
+
 !========================== HltCommon v8r1   2011-03-17 ==================
 ! 2011-03-15 - Gerhard Raven
  - TarFileAccess now fully functional.
