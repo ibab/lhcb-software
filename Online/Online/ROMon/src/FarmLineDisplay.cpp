@@ -311,7 +311,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
       missConnCount += n.missConnCount;
     }
     val = (n.name == m_name ? " "+n.name : " "+n.name.substr(n.name.length()-2));
-    if ( n.name.substr(0,4)=="store" ) val = " " + n.name;
+    if ( ::strncasecmp(n.name.c_str(),"store",4)==0 ) val = " " + n.name;
     ::scrc_put_chars(dis,val.c_str(),col,line,pos,0);
     pos += val.length();
     cl_good |= (good || excl);
@@ -1477,7 +1477,7 @@ void FarmLineDisplay::connect(const vector<string>& vfarms) {
 	      "<<---------- Summ Counters --------->>",
 	      "<<--------- Minimum Counters -------->>");
     ::scrc_put_chars(m_display,txt,INVERSE|BLUE,CLUSTERLINE_FIRSTPOS-2,1,1);
-    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %-32s  %9s%5s%11s%6s%9s%5s   %9s%5s%11s%6s%9s%4s",
+    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %-32s  %9s%5s%11s%6s%9s%5s  %9s%5s%10s%7s%9s%5s",
 	      "Subfarm","Update","Nodes", "Buffer","Client","Subfarm status",
 	      "MEP","Sl","EVENT","Sl","SEND","Sl","MEP","Sl","EVENT","Sl","SEND","Sl");
     ::scrc_put_chars(m_display,txt,INVERSE|BLUE,CLUSTERLINE_FIRSTPOS-1,1,1);
