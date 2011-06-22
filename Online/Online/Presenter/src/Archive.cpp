@@ -465,7 +465,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
 
   int th = startRun / 1000 * 1000;
 
-  while (th < endRun) {
+  while (th <= endRun) {
     int dth = th / 10000 * 10000;
     std::stringstream  dirLocation;
     dirLocation << aggrSvsPath << pres::s_slash << dth << pres::s_slash << th;

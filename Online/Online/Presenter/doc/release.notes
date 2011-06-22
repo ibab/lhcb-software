@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Olivier Callot
+ - Fix online history by run for runs multiple of 1000.
+
 ! 2011-06-20 - Olivier Callot
  - When adding Online histograms to database, get the histogram so that one knows its type
    ( 1D, 2D, profile )
