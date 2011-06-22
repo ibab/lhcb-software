@@ -33,6 +33,11 @@ from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines  import Hlt2CharmSemilepD02HMuNuLin
 from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD2HMuMuLines   import Hlt2CharmSemilepD2HMuMuLinesConf
+from Hlt2Lines.Hlt2CharmSemilepTwoHadForMuMuHH import Hlt2CharmSemilepTwoHadForMuMuHHConf
+from Hlt2Lines.Hlt2CharmSemilep2Had1MuForHHMuMu import Hlt2CharmSemilep2Had1MuForHHMuMuConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines import Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
 from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
@@ -48,7 +53,6 @@ from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2MuNTrackLines import Hlt2MuNTrackLinesConf
-from Hlt2Lines.Hlt2RadiativeTopoLines import Hlt2RadiativeTopoConf
 #
 # The tracking configurations
 #
@@ -81,7 +85,12 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2CharmSemilepD02HHMuMuLinesConf
                              , Hlt2CharmSemilepD2HMuMuLinesConf
+                             , Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
+                             , Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
+                             , Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf 
                              , Hlt2CharmSemilepTwoMuonForMuMuHadConf
+                             , Hlt2CharmSemilepTwoHadForMuMuHHConf
+                             , Hlt2CharmSemilep2Had1MuForHHMuMuConf
                              , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf 
@@ -105,12 +114,11 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2KstareeLinesConf  
                              , Hlt2SecondLoopExampleLinesConf
                              , Hlt2MuNTrackLinesConf
-                             , Hlt2RadiativeTopoConf
                              ]
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "DefaultVoidFilter"          : ''
-                , "Hlt2ForwardMaxVelo"         : 1000
+                , "Hlt2ForwardMaxVelo"         : 350
                 }
 
 ###################################################################################

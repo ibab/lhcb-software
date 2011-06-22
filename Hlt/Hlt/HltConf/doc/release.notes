@@ -5,6 +5,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-22 - Benoit Viaud
+ - Add new lines for D0->HHMuMu using SecondLoop Muons.
+
 ! 2011-06-22 - Albert Puig
  - Add Hlt2 radiative topological lines.
 
