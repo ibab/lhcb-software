@@ -1,28 +1,28 @@
 __author__  = [ 'Benoit F. Viaud' ]
 __date__    = '$Date: 22-06-2011$'
-__version__ = '$Revision: 1$'
+__version__ = '$Revision: 0$'
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
-
-class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
+        
+class Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf(HltLinesConfigurableUser) :
     __slots__ = {
                  ## HHmumu
-                    'TrkPt_HHmumu'                 : 300.0 * MeV
-                  , 'TrkP_HHmumu'                  : 2500.0 * MeV
+                    'TrkPt_HHmumu'                 : 500.0 * MeV
+                  , 'TrkP_HHmumu'                  : 5000.0 * MeV
                   , 'TrkPVIPChi2_HHmumu'           : 0.0      # unitless
-                  , 'TrkPVIPChi2MAX_HHmumu'           : 12.0      # unitless
+                  , 'TrkPVIPChi2MAX_HHmumu'           : 10.0      # unitless
                   ,  'TrkPtMAX_HHmumu'                 : 0.0 * MeV
                   , 'TrkChi2_HHmumu'               : 5.0      # unitless
-                  , 'PairMinDoca_HHmumu'           : 0.1 * mm
-                  , 'PairMaxDoca_HHmumu'           : 0.2 * mm
-                  , 'VtxPVDispChi2_HHmumu'         : 25.0    # unitless
+                  , 'PairMinDoca_HHmumu'           : 0.15 * mm
+                  , 'PairMaxDoca_HHmumu'           : 0.25 * mm
+                  , 'VtxPVDispChi2_HHmumu'         : 20.0    # unitless
                   , 'VtxChi2_HHmumu'               : 20.0     # unitless
                   , 'DIPChi2_HHmumu'               : 36.0     # unitless
-                  , 'DSumPt_HHmumu'                : 2500.0 * MeV
-                  , 'DDira'              : 0.9998     # adimensional                    
+                  , 'DSumPt_HHmumu'                : 0.0 * MeV
+                  , 'DDira'              : 0.9996     # adimensional                    
                   , 'MCOR_MAX_HHmumu'              : 3500.0 * MeV
                   , 'Sig_M_MIN'                   : 1800.0 * MeV
                   , 'Sig_M_MAX'                   : 1950.0 * MeV
@@ -35,12 +35,12 @@ class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
                   , 'GEC_NTRACK_MAX'           : 120000        # max number of tracks
                   # prescales
                   , 'Prescale'                  : {
-                        'Hlt2CharmSemilepD02HHMuMuWideMass'    : 0.1
+                        'Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsWideMass'    : 0.1
                         }
                   , 'HltANNSvcID'  : {
-                          'Hlt2CharmSemilep2MuonForD02HHMuMuDecision' : 60000
-                        , 'Hlt2CharmSemilepD02HHMuMuDecision'         : 60001
-                        , 'Hlt2CharmSemilepD02HHMuMuWideMassDecision' : 60002
+                          'Hlt2CharmSemilep2HadForD02HHMuMuHardHadronsAndMuonsDecision' : 60009
+                        , 'Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsDecision'         : 60010
+                        , 'Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsWideMassDecision' : 60011
                         }
                 }
 
@@ -69,7 +69,7 @@ class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
         # }
 
-        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmSemilepD02HHMuMuKillTooManyInTrkAlg'
+        Hlt2CharmKillTooManyInTrkAlg = VoidFilter('Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsKillTooManyInTrkAlg'
                                                  , Code = filtCode
                                                 )
         Hlt2CharmKillTooManyInTrk = bindMembers( None, [ tracks, Hlt2CharmKillTooManyInTrkAlg ] )
@@ -78,26 +78,7 @@ class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __InPartFilterLowIP(self, name, inputContainers) : 
-        from HltLine.HltLine import Hlt2Member, bindMembers
-        from Configurables import FilterDesktop, CombineParticles
-        from HltTracking.HltPVs import PV3D
-
-        incuts = "(TRCHI2DOF< %(TrkChi2_2MuonForHHmumu)s )" \
-                 "& (MIPCHI2DV(PRIMARY)> %(TrkPVIPChi2_HHmumu)s )" % self.getProps()
-
-        filter = Hlt2Member( FilterDesktop
-                            , 'Filter'
-                            , Inputs = inputContainers
-                            , Code = incuts
-                           )
-
-        ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
-
-        return filterSeq
-
-    def __InPartFilterHHmumu(self, name, inputContainers) :  
+    def __InPartFilter(self, name, inputContainers) :  
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
         from HltTracking.HltPVs import PV3D
@@ -178,29 +159,25 @@ class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Configurables import CombineParticles
         from Configurables import FilterDesktop
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedSecondLoopPions, BiKalmanFittedKaons, BiKalmanFittedSecondLoopKaons, BiKalmanFittedMuons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
 
         from HltTracking.HltPVs import PV3D
         
-        # Filter pions and kaons with LowIP Cut
-        KaonsLowIP = self.__InPartFilterLowIP('CharmHHmumuInputKaonsLowIP', [ BiKalmanFittedKaons] )
-        PionsLowIP = self.__InPartFilterLowIP('CharmHHmumuInputPionsLowIP', [ BiKalmanFittedPions] )
-         
-        from   Hlt2CharmSemilepTwoMuonForMuMuHad import  Hlt2CharmSemilepTwoMuonForMuMuHadConf
 
-        Hlt2Charm2MuonForHHmumu =  Hlt2CharmSemilepTwoMuonForMuMuHadConf().twoMuonSequence()
+        from  Hlt2CharmSemilepTwoHadForMuMuHH import  Hlt2CharmSemilepTwoHadForMuMuHHConf
+
+        Hlt2Charm2HadForHHmumu =   Hlt2CharmSemilepTwoHadForMuMuHHConf().twoHadforHHMuMuSequence()
 
         #Second Stage - picks up two low pt tracks too
 
-        # Filter low PT pions and kaons 
+        # Filter  second loop 
 
-        pionsForHHmumu = self.__InPartFilterHHmumu('CharmInputPionsHHmumu', [ BiKalmanFittedSecondLoopPions] )
-        kaonsForHHmumu = self.__InPartFilterHHmumu('CharmInputKaonsHHmumu', [ BiKalmanFittedSecondLoopKaons] )
- 
+        muonsForHHmumu = self.__InPartFilter('CharmInputMuonsForHHMuMuHardHadronsAndMuons',[BiKalmanFittedMuons] )
+  
         # Make HHmumu 
-        CharmHHmumuCombine = self.__HHmumuCombine ( name = 'CharmSemilepD02HHMuMu'
-                                                  , inputSeq = [Hlt2Charm2MuonForHHmumu , pionsForHHmumu, kaonsForHHmumu, KaonsLowIP, PionsLowIP]
-                                                  , decayDesc = [ "D0 -> J/psi(1S) pi+ pi-", "D0 -> J/psi(1S)  K+ K-"]
+        CharmHHmumuCombine = self.__HHmumuCombine ( name = 'CharmSemilepD02HHMuMuHardHadronsAndMuons'
+                                                  , inputSeq = [Hlt2Charm2HadForHHmumu, muonsForHHmumu]
+                                                  , decayDesc = [ "D0 -> K*(892)0  mu+ mu-"]
                                                  )   
 
         sigMassCut  = "in_range(%s, M, %s)" \
@@ -211,9 +188,9 @@ class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
                          self.getProp('WideMass_M_MAX'))
 
         # HHmumu line
-        Hlt2CharmHHmumu = self.__HHmumuFilter ( name = 'CharmSemilepD02HHMuMu', inputSeq = [CharmHHmumuCombine], extracode = sigMassCut )
+        Hlt2CharmHHmumuHardHadronsAndMuons = self.__HHmumuFilter ( name = 'CharmSemilepD02HHMuMuHardHadronsAndMuons', inputSeq = [CharmHHmumuCombine], extracode = sigMassCut )
         # HHmumu WideMass line - with prescale
-        Hlt2CharmHHmumuWideMass = self.__HHmumuFilter (name = 'CharmSemilepD02HHMuMuWideMass', inputSeq = [CharmHHmumuCombine], extracode = wideMassCut )
+        Hlt2CharmHHmumuHardHadronsAndMuonsWideMass = self.__HHmumuFilter (name = 'CharmSemilepD02HHMuMuHardHadronsAndMuonsWideMass', inputSeq = [CharmHHmumuCombine], extracode = wideMassCut )
 
         ###########################################################################
         # Define the Hlt2 Lines
@@ -221,28 +198,28 @@ class Hlt2CharmSemilepD02HHMuMuLinesConf(HltLinesConfigurableUser) :
         # Note: for the 2-loop approach you just need to explicitly add the second loop pions inbetween the two stages above 
         ##########################################################################
         Hlt2CharmKillTooManyInTrk = self.__seqGEC()
-
-        line = Hlt2Line('CharmSemilep2MuonForD02HHMuMu', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHHmumu]
+                        
+        line = Hlt2Line('CharmSemilep2HadForD02HHMuMuHardHadronsAndMuons', prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2HadForHHmumu]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmSemilep2MuonForD02HHMuMuDecision"
+        decName = "Hlt2CharmSemilep2HadForD02HHMuMuHardHadronsAndMuonsDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
  
-        line = Hlt2Line('CharmSemilepD02HHMuMu', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHHmumu, pionsForHHmumu, kaonsForHHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHHmumu]
+        line = Hlt2Line('CharmSemilepD02HHMuMuHardHadronsAndMuons', prescale = self.prescale
+                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2HadForHHmumu, muonsForHHmumu, Hlt2CharmHHmumuHardHadronsAndMuons]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmSemilepD02HHMuMuDecision"
+        decName = "Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
-        line = Hlt2Line('CharmSemilepD02HHMuMuWideMass', prescale = self.prescale
-                        , algos =  [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHHmumu, pionsForHHmumu, kaonsForHHmumu, KaonsLowIP, PionsLowIP, Hlt2CharmHHmumuWideMass]
+        line = Hlt2Line('CharmSemilepD02HHMuMuHardHadronsAndMuonsWideMass', prescale = self.prescale
+                        , algos =  [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2HadForHHmumu, muonsForHHmumu, Hlt2CharmHHmumuHardHadronsAndMuonsWideMass]
                         , postscale = self.postscale
                         )
-        decName = "Hlt2CharmSemilepD02HHMuMuWideMassDecision"
+        decName = "Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsWideMassDecision"
         annSvcID = self._scale(decName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 

@@ -1,6 +1,6 @@
 __author__  = [ 'B. Viaud', 'Sandra Amato', 'Carlo Gobel', 'Patrick Spradlin' ]
-__date__    = '$Date: 27-03-2011$'
-__version__ = '$Revision: 0$'
+__date__    = '$Date: 22-06-2011$'
+__version__ = '$Revision: 1$'
 
 
 from Gaudi.Configuration import *
@@ -31,11 +31,11 @@ class Hlt2CharmSemilepTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
                   ## 2-body Input for 3Body
                     'Trk_PT_MIN'                :  500.0 * MeV
                   , 'Trk_P_MIN'                 : 5000.0 * MeV
-                  , 'Trk_MIPCHI2DV_MIN'         :   4.0      # unitless
+                  , 'Trk_MIPCHI2DV_MIN'         :    2.0      # unitless
                   , 'Trk_TRCHI2DOF_MAX'         :    5.0      # unitless
                   , 'Pair_AMINDOCA_MAX'         :    0.1 * mm
-                  , 'Pair_BPVVDCHI2_MIN'        :   25.0      # unitless  
-                  , 'Pair_BPVVD_MIN'            :    1.0 * mm
+                  , 'Pair_BPVVDCHI2_MIN'        :   20.0      # unitless  
+                  , 'Pair_BPVVD_MIN'            :    0.0 * mm
                   , 'Pair_SumAPT_MIN'           : 0.0 * MeV
                   , 'Pair_BPVCORRM_MAX'         : 3500.0 * MeV
                   ##
@@ -78,11 +78,11 @@ class Hlt2CharmSemilepTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
                           , DaughtersCuts = { "mu+" : twoMuonDaughterCut}
                           , CombinationCut = twoMuonCombCut 
                           , MotherCut = twoMuonMotherCut
-                          , Inputs = [ BiKalmanFittedMuons ])
+                          , Inputs = [BiKalmanFittedMuons])
 
-        twoMuonSeq = bindMembers('CharmSemilepTwoMuonForMuMuHad', [ PV3D(), BiKalmanFittedMuons, Charm2MuonCombine ])
+        twoMuonSeq = bindMembers('CharmSemilepTwoMuonForMuMuHad', [ PV3D(), BiKalmanFittedMuons,  Charm2MuonCombine ])
  
         self.setProp('__hlt2TwoMuonSeq__', twoMuonSeq)
-    # }
+    # }A
 
 # }
