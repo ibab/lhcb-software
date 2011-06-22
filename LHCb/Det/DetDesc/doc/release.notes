@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2011-06-22 - Marco Cattaneo
+ - Protect unprotected debug and verbose printout
+
 !========================= DetDesc v18r26 2011-06-14 =========================
 ! 2011-05-06 - Chris Jones
  - Add SmartRef<Condition> and SmartRef<AlignmentCondition> to python dictionary

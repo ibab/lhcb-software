@@ -1,4 +1,3 @@
-// $Id: AlignmentCondition.cpp,v 1.23 2010-01-11 15:57:16 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -42,9 +41,10 @@ AlignmentCondition::AlignmentCondition(const std::vector<double>& translation,
   m_pivotString("pivotXYZ")
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::VERBOSE << "Constructing AlignmentCondition from transformation parameters. classID " 
-      << classID()
-      << endmsg;
+  if( log.level() <= MSG::VERBOSE )
+    log << MSG::VERBOSE << "Constructing AlignmentCondition from transformation parameters. classID " 
+        << classID()
+        << endmsg;
 
   setOffNominalTransformation(translation, rotation, pivot);
 
@@ -92,7 +92,8 @@ void AlignmentCondition::setPivotPoint( const Gaudi::XYZPoint& point )
 StatusCode AlignmentCondition::makeMatrices() 
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::VERBOSE << " Making transformation matrix for \'" << name() << "\'" << endmsg;
+  if( log.level() <= MSG::VERBOSE )
+    log << MSG::VERBOSE << " Making transformation matrix for \'" << name() << "\'" << endmsg;
   
   std::vector<double> translations = paramAsDoubleVect (m_translationString);
   std::vector<double> rotations    = paramAsDoubleVect (m_rotationString);

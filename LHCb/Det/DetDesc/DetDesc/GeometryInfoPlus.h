@@ -1,4 +1,3 @@
-// $Id: GeometryInfoPlus.h,v 1.13 2009-02-02 12:20:22 marcocle Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
