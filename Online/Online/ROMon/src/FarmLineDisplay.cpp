@@ -44,6 +44,8 @@ typedef vector<string>               StringV;
 #define UPDATE_TIME_MAX 15
 #define CLUSTERLINE_START      2
 #define CLUSTERLINE_FIRSTPOS   6
+#define INT_max  numeric_limits<int>::max()
+#define FLT_max  numeric_limits<float>::max()
 
 static FarmLineDisplay* s_fd = 0;
 
@@ -213,6 +215,10 @@ namespace ROMon {
   {    return new MonitoringClusterLine(parent,pos,title);  }
   ClusterLine* createStorageClusterLine(FarmLineDisplay* parent, int pos, const string& title)
   {    return new StorageClusterLine(parent,pos,title);  }
+
+  typedef MBMBuffer::Clients           Clients;
+  typedef Node::Buffers                Buffers;
+  typedef Nodeset::Nodes               Nodes;
 }
 
 
@@ -275,8 +281,6 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   string val, err;
   bool cl_good = true;
   Cluster& c = m_cluster;
-  Cluster::Nodes::const_iterator i, e;
-  Pasteboard*     pb = m_parent->pasteboard();
   Display*       dis = m_parent->display();
   int col = NORMAL, pos = 0, line=position();
   size_t taskCount=0, missTaskCount=0;
@@ -286,11 +290,10 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   ts.getClusterNodes(c);
 
   RTL::Lock lock(InternalDisplay::screenLock());
-  ::scrc_begin_pasteboard_update (pb);
-
-  ::scrc_put_chars(dis,"", NORMAL,line,11,1);
+  ::sprintf(txt,"%8s %6zu ",c.time.c_str()+11,c.nodes.size());
+  begin_update(txt);
   pos = 87+CLUSTERLINE_START;
-  for(i=c.nodes.begin(), e=c.nodes.end(); i!=e;++i) {
+  for(Cluster::Nodes::const_iterator i=c.nodes.begin(), e=c.nodes.end(); i!=e;++i) {
     const Cluster::Node& n = (*i).second;
     bool excl = m_excluded.find(n.name) != m_excluded.end();
     bool good = (n.status == "ALIVE");
@@ -317,12 +320,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
     cl_good |= (good || excl);
   }
 
-  ::scrc_put_chars(dis,"",NORMAL,line,pos,1);
   col = (c.status=="ALIVE" || cl_good) ? NORMAL : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
-  ::scrc_put_chars(dis,strlower(c.name).c_str(),(this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,line,2,0);
-  ::sprintf(txt,"%8s %6zu ",c.time.c_str()+11,c.nodes.size());
-  ::scrc_put_chars(dis,txt,NORMAL,line,12,0);
-
   if ( missTaskCount>0 ) {
     ::sprintf(txt,"%4zu/BAD ",missTaskCount);
     ::scrc_put_chars(dis,txt,COL_ALARM,line,28,0);
@@ -346,7 +344,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   ::sprintf(txt,"  %-6s  ",c.status.c_str());
   ::scrc_put_chars(dis,txt,col|BOLD,line,45,0);
   //bg_black(pb);
-  ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:NORMAL|BOLD|GREEN,line,53,0);    
+  ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:GREEN,line,53,0);    
 
   col = NORMAL|BOLD;
 
@@ -362,7 +360,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
     err = " Connectivity bad - Check.", col = COL_WARNING;
   else
     err = " No obvious error detected.", col = NORMAL|BOLD|GREEN;
-  err = err + "                                                                 ";
+  err = err + "                                ";
   ::scrc_put_chars(dis,err.substr(0,30).c_str(),col,line,57+CLUSTERLINE_START,0);
 
   end_update();
@@ -410,21 +408,13 @@ StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, int pos, const std::s
 }
 
 void StorageClusterLine::display() {
-  typedef MBMBuffer::Clients           Clients;
-  typedef Node::Buffers                Buffers;
-  typedef Nodeset::Nodes               Nodes;
-  char text[256], txt[256];
-  size_t         pos = position();
-  Pasteboard*     pb = m_parent->pasteboard();
-  Display*       dis = m_parent->display();
-  const Nodeset*   c = cluster();
-  const Nodes& nodes = c->nodes;
+  char txt[256];
   string err = "";
   int col = NORMAL;
-  bool inuse = false;
   set<string> bad_nodes;
-  static const int   INT_max = numeric_limits<int>::max();
-  static const float FLT_max = numeric_limits<float>::max();
+  size_t         pos = position();
+  Display*       dis = m_parent->display();
+  const Nodeset*   c = cluster();
 
   string evt_buff = std::string("Events_"+m_partition);
   int numNodes = 0, numBuffs = 0, numClients = 0;
@@ -432,10 +422,8 @@ void StorageClusterLine::display() {
   int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
   int   num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
 
-  RTL::Lock lock(InternalDisplay::screenLock());
-  ::scrc_begin_pasteboard_update (pb);
-
-  for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+  m_inUse = false;
+  for (Nodes::const_iterator n=c->nodes.begin(); n!=c->nodes.end(); n=c->nodes.next(n))  {
     bool recv_node = ::strncasecmp((*n).name,"storerecv",8) == 0;
     const Buffers& buffs = *(*n).buffers();
     ++numNodes;
@@ -456,20 +444,17 @@ void StorageClusterLine::display() {
           fspace[idx]    = min(fspace[idx],fsp);
           fslots[idx]    = min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) bad_nodes.insert((*n).name);
-          inuse = true;
+          m_inUse = true;
         }
       }
     }
   }
-  char b1[64];
-  TimeStamp frst=c->firstUpdate();
-  time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
-  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(text," %8s %6d %6d %6d   ",b1,numNodes,numBuffs,numClients);
-  ::scrc_put_chars(dis," ",NORMAL,pos,1,1);
-  ::scrc_put_chars(dis,c->name,(this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,pos,2,0);
-  ::scrc_put_chars(dis,text,NORMAL,pos,12,0);
-  m_inUse = inuse;
+
+  RTL::Lock lock(InternalDisplay::screenLock());
+  time_t now = ::time(0), t1 = numNodes == 0 ? now : c->firstUpdate().first;
+  ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
+  ::sprintf(txt+strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
+  begin_update(txt);
 
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
@@ -496,23 +481,21 @@ void StorageClusterLine::display() {
   else if ( numNodes == 0 ) {
     err = " No nodes found!", col = BOLD|RED|INVERSE;
   }
-  else if ( !inuse ) {
+  else if ( !m_inUse ) {
     err = " Storage not used yet....", col = NORMAL|INVERSE|GREEN;
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
     ::sprintf(txt," SLOTS at limit:");
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Recv ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Stream ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
+    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
     ::sprintf(txt," SPACE at limit:");
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Recv ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Stream ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
+    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( min_prod[0] != INT_max && min_prod[0]>0 && min_prod[0] <= m_evtRecv ) {
@@ -551,33 +534,22 @@ MonitoringClusterLine::MonitoringClusterLine(FarmLineDisplay* p, int pos, const 
 
 
 void MonitoringClusterLine::display() {
-  typedef MBMBuffer::Clients           Clients;
-  typedef Node::Buffers                Buffers;
-  typedef Nodeset::Nodes               Nodes;
-  char text[256], txt[256];
+  char txt[256];
+  string err = "";
+  set<string> bad_nodes;
   size_t         pos = position();
-  Pasteboard*     pb = m_parent->pasteboard();
   Display*       dis = m_parent->display();
   const Nodeset*   c = cluster();
   const Nodes& nodes = c->nodes;
-  string err = "";
-  bool inuse = false;
-  set<string> bad_nodes;
-  static const int   INT_max = numeric_limits<int>::max();
-  static const float FLT_max = numeric_limits<float>::max();
-
   string evt_buff = "Events_"+m_partition;
-  string out_buff = std::string("Output_"+m_partition);
+  string out_buff = "Output_"+m_partition;
   int numNodes = 0, numBuffs = 0, numClients = 0;
   int tot_prod[3] = {0,0,0}, num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
   int min_prod[3] = {INT_max,INT_max,INT_max};
-
   float fsp, fspace[3] = {FLT_max,FLT_max,FLT_max};
   float fsl, fslots[3] = {FLT_max,FLT_max,FLT_max};
 
-  RTL::Lock lock(InternalDisplay::screenLock());
-  ::scrc_begin_pasteboard_update (pb);
-
+  m_inUse = false;
   for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
     bool relay = ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0;
     const Buffers& buffs = *(*n).buffers();
@@ -608,20 +580,17 @@ void MonitoringClusterLine::display() {
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {
             bad_nodes.insert((*n).name);
           }
-          inuse = true;
+          m_inUse = true;
         }
       }
     }
   }
-  char b1[64];
-  TimeStamp frst=c->firstUpdate();
-  time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
-  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(text," %8s %6d %6d %6d   ",b1,numNodes,numBuffs,numClients);
-  ::scrc_put_chars(dis," ",NORMAL,pos,1,1);
-  ::scrc_put_chars(dis,c->name,(this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,pos,2,0);
-  ::scrc_put_chars(dis,text,NORMAL,pos,12,0);
-  m_inUse = inuse;
+
+  RTL::Lock lock(InternalDisplay::screenLock());
+  time_t now = time(0), t1 = numNodes == 0 ? time(0) : c->firstUpdate().first;
+  ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
+  ::sprintf(txt+::strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
+  begin_update(txt);
 
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
@@ -652,7 +621,7 @@ void MonitoringClusterLine::display() {
   else if ( numNodes == 0 ) {
     err = " No nodes found in this cluster!", col = BOLD|RED|INVERSE;
   }
-  else if ( !inuse ) {
+  else if ( !m_inUse ) {
     err = " Monitoring cluster not used yet....", col = NORMAL|INVERSE|GREEN;
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
@@ -660,8 +629,7 @@ void MonitoringClusterLine::display() {
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Relay ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Events ");
     if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"Output ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
+    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
@@ -669,8 +637,7 @@ void MonitoringClusterLine::display() {
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Relay ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Events ");
     if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"Output ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
+    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( tot_prod[0]>0 && tot_prod[0] <= m_totRelay ) {
@@ -713,18 +680,11 @@ FarmClusterLine::FarmClusterLine(FarmLineDisplay* p, int pos, const std::string&
 }
 
 void FarmClusterLine::display() {
-  typedef MBMBuffer::Clients           Clients;
-  typedef Node::Buffers                Buffers;
-  typedef Nodeset::Nodes               Nodes;
-  char ti[128], text[256], txt[256];
+  char txt[256];
   size_t pos = position();
-  Pasteboard* pb = m_parent->pasteboard();
-  Display*    dis = m_parent->display();
-  const Nodeset* c = cluster();
+  Display*       dis = m_parent->display();
+  const Nodeset*   c = cluster();
   const Nodes& nodes = c->nodes;
-  static const int   INT_max = numeric_limits<int>::max();
-  static const float FLT_max = numeric_limits<float>::max();
-
   int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
   int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
   int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
@@ -735,16 +695,13 @@ void FarmClusterLine::display() {
   int evt_sent       = INT_max;
   int evt_moore      = INT_max;
   int evt_built      = INT_max;
-  bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
   int numClients     = 0;
   set<string> bad_nodes;
-
-  RTL::Lock lock(InternalDisplay::screenLock());
   int col = NORMAL;
 
-  ::scrc_begin_pasteboard_update (pb);
+  m_inUse = false;
   for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
@@ -770,7 +727,7 @@ void FarmClusterLine::display() {
       case SND_BUFFER:        idx = 3; break;
       default:                continue;
       }
-      inuse = true;
+      m_inUse = true;
       fsp               = float(ctrl.i_space)/float(ctrl.bm_size);
       fsl               = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
       fspace[idx]       = min(fspace[idx],fsp); 
@@ -815,15 +772,13 @@ void FarmClusterLine::display() {
     evt_built = min(evt_built,node_evt_mep);
     evt_sent  = min(evt_sent,node_evt_sent);
   }
-  TimeStamp frst=c->firstUpdate();
-  time_t t1 = numNodes == 0 ? time(0) : frst.first, prev_update=m_lastUpdate;;
-  ::strftime(ti,sizeof(ti),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(text," %8s %6d %6d %6d   ",ti,numNodes,numBuffs,numClients);
-  ::scrc_put_chars(dis," ",NORMAL,pos,1,1);
-  ::scrc_put_chars(dis,c->name,(this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,pos,2,0);
-  ::scrc_put_chars(dis,text,NORMAL,pos,12,0);
 
-  m_inUse = inuse;
+  RTL::Lock lock(InternalDisplay::screenLock());
+  time_t t1 = numNodes == 0 ? time(0) : c->firstUpdate().first, prev_update=m_lastUpdate;
+  ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
+  ::sprintf(txt+::strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
+  begin_update(txt);
+
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
   }
@@ -852,7 +807,7 @@ void FarmClusterLine::display() {
   else if ( numNodes == 0 ) {
     err = " No nodes found in this subfarm!", col =  RED|INVERSE|BOLD;
   }
-  else if ( !inuse ) {
+  else if ( !m_inUse ) {
     err = " Subfarm not used by any partition....", col = NORMAL|INVERSE|GREEN;
   }
   else if ( evt_built <= m_evtBuilt && evt_prod[0]<m_totBuilt ) {
@@ -879,8 +834,7 @@ void FarmClusterLine::display() {
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
     if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",nbad);
-    ::strcat(txt,text);
+    ::sprintf(txt+strlen(txt),"[%d nodes]",nbad);
     // We have 11 slow nodes in a farm: if these are full, this is no error
     err = txt, col = INVERSE|(nbad>0 ? GREEN : RED);
   }
@@ -890,8 +844,7 @@ void FarmClusterLine::display() {
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
     if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",nbad);
-    ::strcat(txt,text);
+    ::sprintf(txt+strlen(txt),"[%d nodes]",nbad);
     // We have 11 slow nodes in a farm: if these are full, this is no error
     err = txt, col = INVERSE|(nbad>0 ? GREEN : RED);
   }
@@ -945,6 +898,12 @@ ClusterLine::~ClusterLine() {
 void ClusterLine::check(time_t /* now */) {
 }
 
+void ClusterLine::set_cursor()  {
+  string val = (" "+strlower(m_name)+"   ").substr(0,10);
+  ::scrc_put_chars(m_parent->display(),val.c_str(),
+		   (this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,position(),1,0);
+}
+
 /// Connect to data service
 void ClusterLine::connect(const std::string& nam) {
   string svc = InternalDisplay::svcPrefix()+nam;
@@ -953,60 +912,54 @@ void ClusterLine::connect(const std::string& nam) {
 }
 
 void ClusterLine::display() {
-  char ti[128], text[256];
-  size_t pos = position();
-  Pasteboard* pb = m_parent->pasteboard();
-  Display*    dis = m_parent->display();
+  char text[256];
+  time_t   t1  = time(0);
+  size_t   pos = position();
+  int xp = 42+CLUSTERLINE_START;
+  Display* dis = m_parent->display();
   const Nodeset* c = cluster();
-  const Nodeset::Nodes& nodes = c->nodes;
-  Nodeset::Nodes::const_iterator ci=nodes.begin();
-
-  TimeStamp frst=c->firstUpdate();
-  int numNodes=0,numBuffs=0,numClients=0;
 
   RTL::Lock lock(InternalDisplay::screenLock());
-
-  ::scrc_begin_pasteboard_update (pb);
-  ::scrc_put_chars(dis,c->name,(this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,pos,2,0);
-  time_t t1 = numNodes == 0 ? time(0) : frst.first;
-
-  ::strftime(ti,sizeof(ti),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(text," %8s %6d %6d %6d   ",ti,numNodes,numBuffs,numClients);
-  ::scrc_put_chars(dis,text,NORMAL,pos,12,0);
-  static int upda = 0;
-  ++upda;
-  int xp = 42+CLUSTERLINE_START;
-  for(; ci != nodes.end(); ci = nodes.next(ci) ) {
-    char txt[64];
-    int col = RED; //(upda%4==0) ? RED : (upda%3==0) ? BLUE : (upda%2==0) ? GREEN : BOLD;
-    col |= INVERSE;
+  ::strftime(text,sizeof(text)," %H:%M:%S ",::localtime(&t1));
+  ::sprintf(text+strlen(text),"%20s   ","");
+  begin_update(text);
+  for(Nodeset::Nodes::const_iterator ci=c->nodes.begin(); ci != c->nodes.end(); ci = c->nodes.next(ci) ) {
     const char* n = (*ci).name;
-    txt[1] = n[0];
-    txt[2] = n[1];
-    ::sprintf(txt," %s ",n+((::strncmp(n,c->name,::strlen(c->name)+2) == 0) ? 0 : ::strlen(n)-2));
-    ::scrc_put_chars(dis,txt,col,pos,xp,0);
-    xp += ::strlen(txt);
+    ::sprintf(text," %s ",n+((::strncmp(n,c->name,::strlen(c->name)+2) == 0) ? 0 : ::strlen(n)-2));
+    ::scrc_put_chars(dis,text,RED|INVERSE,pos,xp,0);
+    xp += ::strlen(text);
   }
-
   ::scrc_put_chars(dis," ",NORMAL,pos,xp,1);
   end_update();
 }
 
+void ClusterLine::begin_update(const char* text) {
+  Pasteboard* pb = m_parent->pasteboard();
+  Display*       dis = m_parent->display();
+
+  ::scrc_begin_pasteboard_update(pb);
+  ::scrc_put_chars(dis," ", NORMAL,position(),1,1);
+  if ( text ) {
+    ::scrc_put_chars(dis,text,NORMAL,position(),12,0);    
+  }
+}
+
 void ClusterLine::end_update() {
   ClusterDisplay* sfdis = m_parent->subfarmDisplay();
-  Pasteboard* pb = m_parent->pasteboard();
-  const Nodeset* c = cluster();
-  if ( sfdis && sfdis->clusterName() == c->name )  {
-    IocSensor::instance().send(m_parent,CMD_CHECK,this);
-    //sfdis->updateDisplay(*c);
-  }
-  ::scrc_end_pasteboard_update(pb);
+  Pasteboard*        pb = m_parent->pasteboard();
+  const Nodeset*      c = cluster();
   if ( sfdis ) {
     m_parent->set_cursor();
     ::scrc_cursor_on(pb);
   }
   else {
     ::scrc_cursor_off(pb);
+  }
+  set_cursor();
+  ::scrc_end_pasteboard_update(pb);
+  if ( sfdis && sfdis->clusterName() == c->name )  {
+    IocSensor::instance().send(m_parent,CMD_CHECK,this);
+    //sfdis->updateDisplay(*c);
   }
 }
 
@@ -1207,18 +1160,13 @@ void FarmLineDisplay::set_cursor() {
     if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
   }
   else {
+    m_currentLine = 0;
+    //for(SubDisplays::iterator k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k)
+    //  (*k).second->set_cursor();
     for(SubDisplays::iterator k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
       ClusterLine* curr = (*k).second;
-      if ( curr == m_currentLine ) {
-	::scrc_put_chars(m_display,curr->name().c_str(),NORMAL|BOLD,curr->position(),CLUSTERLINE_START,0);
-      }
-    }
-    for(SubDisplays::iterator k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
-      ClusterLine* curr = (*k).second;
-      if ( curr->position() == m_posCursor+CLUSTERLINE_FIRSTPOS ) {
-	m_currentLine = curr;
-	::scrc_put_chars(m_display,curr->name().c_str(),BLUE|BOLD|INVERSE,curr->position(),CLUSTERLINE_START,0);
-      }
+      if ( curr->position() == m_posCursor+CLUSTERLINE_FIRSTPOS ) m_currentLine = curr;
+      curr->set_cursor();
     }
   }
 }

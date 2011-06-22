@@ -40,6 +40,7 @@ namespace ROMon {
     char*              m_ptr;
 
     /// End update cycle.
+    void begin_update(const char* text=0);
     void end_update();
 
   public:
@@ -54,6 +55,8 @@ namespace ROMon {
     const Nodeset* cluster() const            { return m_cluster;   }
     size_t position() const                   { return m_position;  }
     void check(time_t now);
+    /// Hightlight cursor if current
+    void set_cursor();
     /// Display function drawing on pasteboard of current display
     virtual void display();
     /// DIM command service callback

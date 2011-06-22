@@ -30,7 +30,8 @@
 namespace ROMon {
 
   // Forward declarations
-  class BootNodeStatusset;
+  class  BootNodeStatusset;
+  struct FarmBenchStats;
   struct Nodeset;
 
   /**@class BenchmarkDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -42,51 +43,18 @@ namespace ROMon {
   class BenchmarkDisplay : public InternalDisplay {
   public:
     enum { NODE_STATS=1, SUBFARM_STATS=2, FARM_STATS=3 };
-    struct ClientStat {
-      double    timesqr;
-      double    time;
-      long long nevt;
-      long long last;
-      unsigned int tm[2];
-      
-      ClientStat()
-	: timesqr(0), time(0), nevt(0), last(0)
-      { tm[0]=tm[1]=0;}
-      ClientStat(const ClientStat& c) 
-	: timesqr(c.timesqr), time(c.time), nevt(c.nevt), last(c.last)
-      {tm[0]=c.tm[0];tm[1]=c.tm[1];}
-
-      ClientStat& operator=(const ClientStat& c) {
-	timesqr = c.timesqr; 
-	time    = c.time; 
-	nevt    = c.nevt; 
-	last    = c.last;
-	tm[0]   = c.tm[0]; 
-	tm[1]   = c.tm[1];
-	return *this;
-      }
-      long long entries() const { return nevt;                        }
-      double mean()       const { return time/double(nevt);           }
-      double mean2()      const { return timesqr/double(nevt);        }
-      double sigma()      const { return sqrt(mean2()-mean()*mean()); }
-    };
-
-    typedef std::map<std::string, ClientStat>        BufferStats;
-    typedef std::map<std::string, BufferStats>       NodeStats;
-    typedef std::map<std::string, NodeStats>         SubfarmStats;
-    typedef std::map<std::string, SubfarmStats>      FarmStats;
 
   private:
-    int          m_mode;
+    ///Flag containing execution mode
+    int             m_mode;
     /// Time stamp of last farm display update
-    time_t       m_last;
+    time_t          m_last;
     /// Node name
-    std::string  m_name;
-    std::string  m_partition;
-    
-    FarmStats    m_stat;
-
-    void makeNodeStatLine(char* txt, const char* nnam, const NodeStats& ns) const;
+    std::string     m_name;
+    /// Partition name
+    std::string     m_partition;
+    /// Pointer with data to benchmark structure
+    FarmBenchStats* m_stat;
 
   public:
     /// Initializing constructor

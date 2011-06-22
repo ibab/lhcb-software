@@ -37,7 +37,40 @@ InternalDisplay* ROMon::createBenchmarkDisplay(InternalDisplay* parent, int mode
 }
 
 namespace {
-  size_t append(char* txt, const BenchmarkDisplay::ClientStat* cs) {
+  struct ClientStat {
+    double    timesqr;
+    double    time;
+    long long nevt;
+    long long last;
+    unsigned int tm[2];
+      
+    ClientStat()
+      : timesqr(0), time(0), nevt(0), last(0)
+    { tm[0]=tm[1]=0;}
+    ClientStat(const ClientStat& c) 
+      : timesqr(c.timesqr), time(c.time), nevt(c.nevt), last(c.last)
+    {tm[0]=c.tm[0];tm[1]=c.tm[1];}
+
+    ClientStat& operator=(const ClientStat& c) {
+      timesqr = c.timesqr; 
+      time    = c.time; 
+      nevt    = c.nevt; 
+      last    = c.last;
+      tm[0]   = c.tm[0]; 
+      tm[1]   = c.tm[1];
+      return *this;
+    }
+    long long entries() const { return nevt;                        }
+    double mean()       const { return time/double(nevt);           }
+    double mean2()      const { return timesqr/double(nevt);        }
+    double sigma()      const { return sqrt(mean2()-mean()*mean()); }
+  };
+  typedef std::map<std::string, ClientStat>        BufferStats;
+  typedef std::map<std::string, BufferStats>       NodeStats;
+  typedef std::map<std::string, NodeStats>         SubfarmStats;
+  typedef std::map<std::string, SubfarmStats>      FarmStats;
+
+  size_t append(char* txt, const ClientStat* cs) {
     if ( 0 == cs || cs->nevt <= 0 )
       return ::sprintf(txt," %10s %5s %6s ","--","--","--");
     double m = cs->mean();
@@ -45,13 +78,35 @@ namespace {
     if ( m < 99.9999 ) fmt = " %10lld %5.2f %c%5.1f ";
     return ::sprintf(txt,fmt,cs->entries(),m, char(177), cs->sigma());
   }  
-  size_t append(char* txt, const BenchmarkDisplay::BufferStats& bs, const string& task) {
-    BenchmarkDisplay::BufferStats::const_iterator l = bs.find(task);
+  size_t append(char* txt, const BufferStats& bs, const string& task) {
+    BufferStats::const_iterator l = bs.find(task);
     if ( l == bs.end() ) return append(txt,0);
-    const BenchmarkDisplay::ClientStat& cs = (*l).second;
+    const ClientStat& cs = (*l).second;
     return append(txt,&cs);
   }
+  void makeNodeStatLine(char* txt, const char* nnam, const NodeStats& ns)   {
+    size_t len = ::sprintf(txt,"%-10s ",nnam);
+    NodeStats::const_iterator k;
+    if ( (k=ns.find("MEP")) != ns.end() )   {
+      len += append(txt+len, (*k).second, "MEPRx");
+    }	  
+    if ( (k=ns.find("EVENT")) != ns.end() )   {
+      len += append(txt+len, (*k).second, "EvtProd");
+      len += append(txt+len, (*k).second, "GauchoJob");
+    }
+    if ( (k=ns.find("SEND")) != ns.end() )   {
+      len += append(txt+len, (*k).second, "DiskWR");
+    }	  
+  }
 }
+
+namespace ROMon {
+  class FarmBenchStats : public FarmStats {
+  public:
+    explicit FarmBenchStats() {}
+  };
+}
+#define FARMSTAT (*m_stat)
 
 /// Initializing constructor
 BenchmarkDisplay::BenchmarkDisplay(InternalDisplay* parent, int mode, const string& title, int height, int width)
@@ -59,6 +114,7 @@ BenchmarkDisplay::BenchmarkDisplay(InternalDisplay* parent, int mode, const stri
 {
   m_last = ::time(0);
   m_partition = "LHCb";
+  m_stat = new FarmBenchStats();
   m_title = "Benchmark monitor on subfarm "+m_title;
   ::scrc_create_display(&m_display,height,width,INVERSE,ON,m_title.c_str());
   ::scrc_put_chars(m_display,".....waiting for data from DIM service.....",BOLD,2,10,1);
@@ -67,25 +123,11 @@ BenchmarkDisplay::BenchmarkDisplay(InternalDisplay* parent, int mode, const stri
 
 /// Standard destructor
 BenchmarkDisplay::~BenchmarkDisplay() {
+  delete m_stat;
 }
 
 /// Explicit connect to data services
 void BenchmarkDisplay::connect() {
-}
-
-void BenchmarkDisplay::makeNodeStatLine(char* txt, const char* nnam, const NodeStats& ns)  const {
-  size_t len = ::sprintf(txt,"%-10s ",nnam);
-  NodeStats::const_iterator k;
-  if ( (k=ns.find("MEP")) != ns.end() )   {
-    len += append(txt+len, (*k).second, "MEPRx");
-  }	  
-  if ( (k=ns.find("EVENT")) != ns.end() )   {
-    len += append(txt+len, (*k).second, "EvtProd");
-    len += append(txt+len, (*k).second, "GauchoJob");
-  }
-  if ( (k=ns.find("SEND")) != ns.end() )   {
-    len += append(txt+len, (*k).second, "DiskWR");
-  }	  
 }
 
 /// Update display content
@@ -126,7 +168,7 @@ void BenchmarkDisplay::updateStats(const Nodeset& ns) {
   typedef Nodeset::Nodes               _N;
   typedef MBMBuffer::Clients           Clients;
   typedef Node::Buffers                Buffers;
-  SubfarmStats& sfstat = m_stat[ns.name];
+  SubfarmStats& sfstat = FARMSTAT[ns.name];
 
   for(_N::const_iterator i=ns.nodes.begin(); i!=ns.nodes.end(); i=ns.nodes.next(i)) {
     const _N::value_type& n = *i;
@@ -178,7 +220,7 @@ void BenchmarkDisplay::updateStats(const Nodeset& ns) {
 int BenchmarkDisplay::updateNode(const Nodeset& ns) {
   int line = 1;
   if ( ::str_ncasecmp(m_name.c_str(),ns.name,::strlen(ns.name))==0 )  {
-    SubfarmStats& sfstat = m_stat[ns.name];
+    SubfarmStats& sfstat = FARMSTAT[ns.name];
     time_t t1 = ns.firstUpdate().first;
     char txt[255], text1[64];
     size_t len;
@@ -298,7 +340,7 @@ int BenchmarkDisplay::updateSubfarm(const Nodeset& ns) {
   if ( ns.name == m_name ) {
     char txt[255], text1[64];
     time_t t1 = ns.firstUpdate().first;
-    SubfarmStats& sfstat = m_stat[ns.name];
+    SubfarmStats& sfstat = FARMSTAT[ns.name];
 
     updateStats(ns);
 
@@ -406,7 +448,7 @@ int BenchmarkDisplay::updateFarm(const Nodeset& ns) {
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 
   NodeStats ns_rel, ns_tot;
-  for(FarmStats::const_iterator h=m_stat.begin();h!=m_stat.end();++h) {
+  for(FarmStats::const_iterator h=FARMSTAT.begin();h!=FARMSTAT.end();++h) {
     const SubfarmStats& sfstat = (*h).second;
     ns_rel.clear();
     for(SubfarmStats::const_iterator i=sfstat.begin();i!=sfstat.end();++i) {
