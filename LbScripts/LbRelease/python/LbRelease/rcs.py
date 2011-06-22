@@ -1052,7 +1052,7 @@ class SubversionCmd(RevisionControlSystem):
             tmpdir = TempDir(suffix="tempdir", prefix="movepak_%s_%s" % (package.replace("/", "_"), project))
             tmpdir_name = tmpdir.getName()
             log.debug("The temporary directory used is %s" % tmpdir_name)
-            _, _, _ = _svn("checkout", "-N", self.repository, cwd=tmpdir_name)
+            _, _, _ = _svn("checkout", "-N", self.repository, cwd=tmpdir_name, report_failure=True)
             root_dir  = os.path.join(tmpdir_name, self.repository.split("/")[-1])
 
             # package full checkout
@@ -1069,7 +1069,7 @@ class SubversionCmd(RevisionControlSystem):
                         self._updatePath(pdir, root_dir)
                         for d in _svn("ls", pdir, cwd = root_dir)[0].splitlines() :
                             ddir = os.path.join(pdir, d)
-                            _, _, _ = _svn("update", ddir, cwd=root_dir)
+                            _, _, _ = _svn("update", ddir, cwd=root_dir, report_failure=True)
 
                         ppdir = prdir
                         pkglist = package.split("/")[:-1]
@@ -1078,7 +1078,7 @@ class SubversionCmd(RevisionControlSystem):
                         log.info("Creating the path %s" % ppdir)
                         self._createPath(ppdir, root_dir)
                         log.info("Moving %s to %s" %(pdir, ppdir))
-                        _, _, _ = _svn("move", pdir, ppdir, cwd=root_dir)
+                        _, _, _ = _svn("move", pdir, ppdir, cwd=root_dir, report_failure=True)
 
             self.modules[package] = project
             modlist = os.path.join(tmpdir_name,"packages.list")
@@ -1086,9 +1086,9 @@ class SubversionCmd(RevisionControlSystem):
             f.write(self._getPackageProperty())
             f.close()
             log.info("Setting the new packages property")
-            _svn("propset", "--file", modlist, "packages", root_dir)
+            _svn("propset", "--file", modlist, "packages", root_dir, report_failure=True)
             log.info("Committing the changes.")
-            _, _, status = _svn("commit", "-m", "move_package: moved the %s package to the %s project" % (package, project), cwd=root_dir)
+            _, _, status = _svn("commit", "-m", "move_package: moved the %s package to the %s project" % (package, project), cwd=root_dir, report_failure=True)
 
         return status
 
