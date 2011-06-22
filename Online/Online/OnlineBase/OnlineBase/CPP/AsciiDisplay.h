@@ -59,7 +59,7 @@ class AsciiDisplay : public MonitorDisplay
   /// Draw a progress bar
   virtual size_t draw_bar(int x, int y,float ratio,int full_scale);
   /// Default Constructor
-  AsciiDisplay();
+  explicit AsciiDisplay();
   /// Default Constructor with title
   AsciiDisplay(const std::string& title);
   /// Default destructor
