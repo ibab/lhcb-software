@@ -1,3 +1,8 @@
+2011-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: use LbConfiguration.Package to get the hat of the packages
+	instead of a hardcoded dictionary.
+
 2011-06-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Repository.py: use svn.cern.ch instead of svnweb.cern.ch for the anonymous access.

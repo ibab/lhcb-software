@@ -61,6 +61,8 @@ from LbConfiguration.Package import project_names as package_project_names
 package_project_names.append("LCGCMT") # This is not an LHCb project but we know about it
 project_names += package_project_names # Add the projects without container to the full list
 
+import LbConfiguration.Package
+
 # List of pairs (project,[packages]) to automatically select for override
 # The project are prepended to the list of overriding packages and
 # the packages are appended to the list of used packages
@@ -1308,24 +1310,20 @@ class SetupProject:
         req = open(os.path.join(tmp_dir,"requirements"),"w")
 
         # prepare use statementes for user-requested packages
-        use_hats = { 'XmlDDDB':'Det',
-                     'XmlConditions':'Det',
-                     'DecFiles':'Gen',
-                     'SQLDDDB':'Det',
-                     'VeloSQLDDDB':'Det',
-                     'HltTCK':'TCK' }
         use_rexp = re.compile("^(?:([^/]*)/)?([^/ .]*)[ .]*([^ ]+)? *$")
         for u in self.use:
             m = use_rexp.match(u)
             if m: # handle the case of "use" string in the format "[Hat/]Package [version]"
-                hat,pack,ver = m.groups()
+                hat, pack, ver = m.groups()
                 if ver is None:
                     ver = 'v*'
                 if hat is None:
-                    if pack in use_hats:
-                        hat = use_hats[pack]
-                    else:
-                        hat = ''
+                    try:
+                        hat = LbConfiguration.Package.getPackage(pack).hat()
+                    except:
+                        # handles transparently the case the package doesn't exists
+                        pass
+                    hat = hat or '' # ensure that the hat is either 'not None' or the empty string
                 req.write("use %s %s %s\n"%(pack,ver,hat))
             else: # for any other case, just use the provided string
                 req.write("use %s\n"%u)
