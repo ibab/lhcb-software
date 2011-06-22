@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Gen/GenCuts
+! Responsible : Gloria CORTI, Patrick ROBBE
+! Purpose     : cut tools for Gauss
+!-----------------------------------------------------------------------------
+
+! 2011-06-22 - Patrick Robbe
+ - first version of the package, collecting cut tools that were previously
+   placed in Gen/Generators and Gen/LbPythia.
+!============================================================================ 
