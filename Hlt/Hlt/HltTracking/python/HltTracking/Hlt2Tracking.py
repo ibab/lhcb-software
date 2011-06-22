@@ -53,6 +53,11 @@ from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines     import Hlt2CharmSemilepD02HMuNu
 from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD2HMuMuLines   import Hlt2CharmSemilepD2HMuMuLinesConf
+from Hlt2Lines.Hlt2CharmSemilepTwoHadForMuMuHH import Hlt2CharmSemilepTwoHadForMuMuHHConf
+from Hlt2Lines.Hlt2CharmSemilep2Had1MuForHHMuMu import Hlt2CharmSemilep2Had1MuForHHMuMuConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines import Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf
+from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines import Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
 from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0HLines    import Hlt2CharmHadD2KS0HLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHKsLines   import Hlt2CharmHadD02HHKsLinesConf  
@@ -70,7 +75,6 @@ from Hlt2Lines.Hlt2B2KsHHLines              import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2MuNTrackLines             import Hlt2MuNTrackLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines           import Hlt2CharmSemilepD02HMuNuLinesConf
-from Hlt2Lines.Hlt2RadiativeTopoLines        import Hlt2RadiativeTopoConf
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -99,7 +103,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2CharmSemilepD02HHMuMuLinesConf
                              , Hlt2CharmSemilepD2HMuMuLinesConf
+                             , Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLinesConf
+                             , Hlt2CharmSemilepD02HHMuMu2SoftMuonsLinesConf
+                             , Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLinesConf 
                              , Hlt2CharmSemilepTwoMuonForMuMuHadConf
+                             , Hlt2CharmSemilepTwoHadForMuMuHHConf
+                             , Hlt2CharmSemilep2Had1MuForHHMuMuConf
                              , Hlt2CharmRareDecayLinesConf
                              , Hlt2InclusiveDiMuonLinesConf
                              , Hlt2InclusiveMuonLinesConf
@@ -123,7 +132,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2KsHHLinesConf
                              , Hlt2MuNTrackLinesConf
                              , Hlt2CharmSemilepD02HMuNuLinesConf
-                             , Hlt2RadiativeTopoConf
                              ]
     __slots__ = { "DataType"                        : '2010' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
@@ -142,12 +150,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "__hlt2ChargedNoPIDsSecondLoopProtosSeq__"  : 0
                 , "__hlt2ChargedCaloProtosSeq__"    : 0
                 , "__hlt2ChargedRichProtosSeq__"    : 0
+                , "__hlt2ChargedMuonSecondLoopProtosSeq__"    : 0
                 , "__hlt2ChargedMuonProtosSeq__"    : 0
                 , "__hlt2ChargedMuonWithCaloProtosSeq__": 0
                 , "__hlt2NeutralProtosSeq__"        : 0
-                , "__hlt2PhotonsFromL0Seq__"        : 0
-                , "__hlt2Pi0FromL0Seq__"            : 0
-                , "__hlt2ElectronsFromL0Seq__"      : 0
                 , "__hlt2VeloTrackingSeq__"         : 0
                 , "__hlt2ForwardTrackingSeq__"      : 0
                 , "__hlt2ForwardSecondLoopTrackingSeq__"      : 0
@@ -199,11 +205,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     # Charged ProtoParticles with Muon ID
     #
-    def hlt2ChargedMuonProtos(self):
+    def hlt2ChargedMuonProtos(self, secondLoop=False):
         """
         Charged protoparticles using Muon (=Muons)
         """
-        return self.getProp("__hlt2ChargedMuonProtosSeq__")
+        if not secondLoop:
+            return self.getProp("__hlt2ChargedMuonProtosSeq__")
+        else :
+            return self.getProp("__hlt2ChargedMuonSecondLoopProtosSeq__")
+        
     #############################################################################################
     #
     # Charged ProtoParticles with Muon and CALO ID
@@ -222,33 +232,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Neutral protoparticles 
         """
         return self.getProp("__hlt2NeutralProtosSeq__")
-    #############################################################################################
-    #
-    # Photons from L0 Candidates
-    #
-    def hlt2PhotonsFromL0(self):
-        """
-        Neutral protoparticles 
-        """
-        return self.getProp("__hlt2PhotonsFromL0Seq__")
-    #############################################################################################
-    #
-    # Electrons from L0 Candidates
-    #
-    def hlt2ElectronsFromL0(self):
-        """
-        Charged protoparticles 
-        """
-        return self.getProp("__hlt2ElectronsFromL0Seq__")
-    #############################################################################################
-    #
-    # Pi0 from L0 Candidates
-    #
-    def hlt2Pi0FromL0(self):
-        """
-        Neutral protoparticles 
-        """
-        return self.getProp("__hlt2Pi0FromL0Seq__")
     #############################################################################################
     #
     # Velo tracking for the PV making sequence
@@ -435,19 +418,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
     
             self.setProp(    "__hlt2ChargedMuonProtosSeq__"        ,
                              self.__hlt2ChargedMuonProtos()        )
-    
+
+            self.setProp(    "__hlt2ChargedMuonSecondLoopProtosSeq__"        ,
+                             self.__hlt2ChargedMuonProtos(secondLoop=True)        )
+            
             self.setProp(    "__hlt2ChargedMuonWithCaloProtosSeq__"    ,
                              self.__hlt2ChargedMuonWithCaloProtos()  )
             self.setProp(    "__hlt2CALOIDSeq__"        ,
                              self.__hlt2CALOID()                 )
             self.setProp(    "__hlt2NeutralProtosSeq__"        ,       
                              self.__hlt2NeutralProtos()          )    
-            self.setProp(    "__hlt2PhotonsFromL0Seq__"        ,       
-                             self.__hlt2PhotonsFromL0()          )    
-            self.setProp(    "__hlt2Pi0FromL0Seq__"            ,       
-                             self.__hlt2Pi0FromL0()              )    
-            self.setProp(    "__hlt2ElectronsFromL0Seq__"      ,       
-                             self.__hlt2ElectronsFromL0()        )    
         #
         # The RICH needs fitted tracks!
         #
@@ -519,21 +499,25 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     # The trackified Muon ID location
     #
-    def _trackifiedMuonIDLocation(self) :
-        return self.__hltBasePIDLocation() + "/"+ HltMuonTracksName
+    def _trackifiedMuonIDLocation(self,secondLoop=False) :
+        return self.__hltBasePIDLocation(secondLoop) + "/"+ HltMuonTracksName
+
     #
     # The trackified AllMuon ID location
     # 
-    def _trackifiedAllMuonIDLocation(self) :
-        return self.__hltBasePIDLocation() + "/"+ HltAllMuonTracksName
+    def _trackifiedAllMuonIDLocation(self,secondLoop=False) :
+        return self.__hltBasePIDLocation(secondLoop) + "/"+ HltAllMuonTracksName
+    
+        
     #
     # The PID objects themselves
     #
-    def __hltBasePIDLocation(self) : 
-        return self.__trackLocation() + "/" + HltSharedPIDPrefix
+    def __hltBasePIDLocation(self,secondLoop=False) : 
+        return self.__trackLocation(secondLoop) + "/" + HltSharedPIDPrefix
     #
-    def __muonIDLocation(self) :
-        return self.__hltBasePIDLocation() + "/" + HltMuonIDSuffix
+    def __muonIDLocation(self,secondLoop=False) :
+        return self.__hltBasePIDLocation(secondLoop) + "/" + HltMuonIDSuffix
+    
     #
     def __richIDLocation(self) :
         return self.__hltBasePIDLocation() + "/" + HltRICHIDSuffix + "/" + self.__richIDSuffix()
@@ -549,10 +533,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     def __caloIDLocation(self) :
         caloBase =  self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix
-        return caloBase
-
-    def __caloL0IDLocation(self) :
-        caloBase =  self.__hltBasePIDLocation() + "/L0Calo" + HltCALOIDSuffix
         return caloBase
     #
     # The prefixes for the various tools and algorithms used
@@ -679,7 +659,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     # Muon Protos
     #
-    def __hlt2ChargedMuonProtos(self):
+    def __hlt2ChargedMuonProtos(self, secondLoop=False):
         """
         Charged muon protoparticles
         Requires chargedProtos and muon ID
@@ -690,19 +670,28 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #The different add PID algorithms
         #
         # The charged protoparticles and their output location
-        chargedProtos                   = self.__hlt2ChargedProtos(HltMuonProtosSuffix)
+        chargedProtos                   = self.__hlt2ChargedProtos(HltMuonProtosSuffix, secondLoop)
         chargedProtosOutputLocation     = chargedProtos.outputSelection()
         #
-        muon_name           = self.__pidAlgosAndToolsPrefix()+"ChargedProtoPAddMuon"
+        if not secondLoop :
+            muon_name           = self.__pidAlgosAndToolsPrefix()+"ChargedProtoPAddMuon"
+        else :
+            muon_name           = self.__pidAlgosAndToolsPrefix()+"ChargedSecondLoopProtoPAddMuon"
+            
         muon                = ChargedProtoParticleAddMuonInfo(muon_name)
         muon.ProtoParticleLocation  = chargedProtosOutputLocation
         # Get the MuonID from the MuonID sequence
-        muonID                      = self.__hlt2MuonID()
+        muonID                      = self.__hlt2MuonID(secondLoop)
         muon.InputMuonPIDLocation   = muonID.outputSelection()
     
         from HltLine.HltLine import bindMembers
-        # Build the bindMembers 
-        bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedMuonProtosSeq" 
+        # Build the bindMembers
+        
+        if not secondLoop :
+            bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedMuonProtosSeq" 
+        else :
+            bm_name         = self.__pidAlgosAndToolsPrefix()+"ChargedMuonSecondLoopProtosSeq" 
+
         bm_members      = [ muonID, chargedProtos, muon ]
         bm_output       = chargedProtosOutputLocation
 
@@ -818,42 +807,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return myCALOProcessorNeutralSeq 
     #########################################################################################
     #
-    # Photons built from L0
-    #
-    def __hlt2PhotonsFromL0(self):
-        """
-        Photons coming from L0
-        """
-
-        caloPhotonsFromL0 = self.__getNewCALOSeq('photon')
-        return caloPhotonsFromL0
-    #########################################################################################
-    #
-    # Photons built from L0
-    #
-    def __hlt2Pi0FromL0(self):
-        """
-        Pi0 coming from L0
-        """
-
-        caloPi0FromL0 = self.__getNewCALOSeq('pi0')
-        return caloPi0FromL0
-    #########################################################################################
-    #
-    # Photons built from L0
-    #
-    def __hlt2ElectronsFromL0(self):
-        """
-        Photons coming from L0
-        """
-
-        caloElectronsFromL0 = self.__getNewCALOSeq('electron')
-        return caloElectronsFromL0
-    #########################################################################################
-    #
     # MuonID
     #
-    def __hlt2MuonID(self) :
+    def __hlt2MuonID(self,secondLoop=False) :
         """
         Muon ID options 
         Requires tracks
@@ -861,29 +817,51 @@ class Hlt2Tracking(LHCbConfigurableUser):
    
         from MuonID import ConfiguredMuonIDs
         from Configurables import MuonRec, MuonIDAlg
-
+        from HltLine.HltLine import bindMembers
 
         cm                  = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-        HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlg"
-        HltMuonIDAlg        = cm.configureMuonIDAlg(HltMuonIDAlg_name)
-        #The tracks to use
-        tracks              = self.__hlt2StagedFastFit()
-        #Enforce naming conventions
-        HltMuonIDAlg.TrackLocation          = tracks.outputSelection() 
-        HltMuonIDAlg.MuonIDLocation         = self.__muonIDLocation() #output 
-        HltMuonIDAlg.MuonTrackLocation      = self._trackifiedMuonIDLocation() 
-        HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation() 
-        # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
-        #       a factor 3-4
-        HltMuonIDAlg.FindQuality            = False
-        
-        from HltLine.HltLine import bindMembers
-        # Build the bindMembers        
-        bm_name         = self.__pidAlgosAndToolsPrefix()+"MuonIDSeq"
-        bm_members      = [ tracks, MuonRec(), HltMuonIDAlg ]
-        bm_output       = HltMuonIDAlg.MuonIDLocation
 
-        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        if not secondLoop :
+            HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlg"
+            HltMuonIDAlg        = cm.configureMuonIDAlg(HltMuonIDAlg_name)
+            #The tracks to use
+            tracks              = self.__hlt2StagedFastFit()
+            #Enforce naming conventions
+            HltMuonIDAlg.TrackLocation          = tracks.outputSelection() 
+            HltMuonIDAlg.MuonIDLocation         = self.__muonIDLocation() #output 
+            HltMuonIDAlg.MuonTrackLocation      = self._trackifiedMuonIDLocation() 
+            HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation() 
+            # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
+            #       a factor 3-4
+            HltMuonIDAlg.FindQuality            = False
+        
+            # Build the bindMembers        
+            bm_name         = self.__pidAlgosAndToolsPrefix()+"MuonIDSeq"
+            bm_members      = [ tracks, MuonRec(), HltMuonIDAlg ]
+            bm_output       = HltMuonIDAlg.MuonIDLocation
+            
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        else :
+            HltMuonIDAlg_secondLoop_name   = self.__pidAlgosAndToolsPrefix()+"MuonSecondLoopIDAlg"
+            HltMuonIDAlg_secondLoop        = cm.configureMuonIDAlg(HltMuonIDAlg_secondLoop_name)
+            #The tracks to use
+            tracks_secondLoop           = self.__hlt2StagedFastFit(secondLoop=True)
+            #Enforce naming conventions
+            HltMuonIDAlg_secondLoop.TrackLocation          = tracks_secondLoop.outputSelection() 
+            HltMuonIDAlg_secondLoop.MuonIDLocation         = self.__muonIDLocation(secondLoop=True) #output 
+            HltMuonIDAlg_secondLoop.MuonTrackLocation      = self._trackifiedMuonIDLocation(secondLoop=True) 
+            HltMuonIDAlg_secondLoop.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation(secondLoop=True) 
+            # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
+            #       a factor 3-4
+            HltMuonIDAlg_secondLoop.FindQuality            = False
+            
+            # Build the bindMembers        
+            bm_name         = self.__pidAlgosAndToolsPrefix()+"MuonSecondLoopIDSeq"
+            bm_members      = [ tracks_secondLoop, MuonRec(), HltMuonIDAlg_secondLoop ]
+            bm_output       = HltMuonIDAlg_secondLoop.MuonIDLocation
+        
+            return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        
     #########################################################################################
     #
     # Calo ID
@@ -1342,32 +1320,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltDecodeRaw     import DecodeTT, DecodeIT
         from HltLine.HltLine        import bindMembers
         return bindMembers(self.getProp("Prefix")+"DecodeSTSeq", DecodeTT.members() + DecodeIT.members())
-
-    #########################################################################################
-    #
-    # Helper function to set up the CALO processor and return the correct sequence 
-    #
-    def __getNewCALOSeq(self, mode):
-        from HltLine.HltLine    import bindMembers      
-        # Load tracks
-        tracks = self.__hlt2StagedFastFit()
-        # Create configurable
-        from Configurables import CaloLines
-        seq = CaloLines('HLT2CaloLines', TrackLocations=[tracks]).sequence()
-        bm_name    = self.__pidAlgosAndToolsPrefix()
-        bm_members = [tracks, seq]
-        bm_output = ''
-        if mode.lower() == 'photon':
-            bm_name  += 'PhotonsFromL0'
-            bm_output = '/Event/HLT2CaloLinesHighPhoton/ProtoP/Neutrals'
-        elif mode.lower() == 'electron':
-            bm_name  += 'ElectronsFromL0'
-            bm_output = '/Event/HLT2CaloLinesLowElectron/ProtoP/Neutrals'
-        elif mode.lower() == 'pi0':
-            bm_name  += 'Pi0FromL0'
-            bm_output = '/Event/HLT2CaloLinesLowPhoton/ProtoP/Neutrals'
-        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
-        
     #########################################################################################
     #
     # Helper function to set up the CALO processor and return the correct sequence 
@@ -1424,4 +1376,3 @@ class Hlt2Tracking(LHCbConfigurableUser):
             bm_members      = [tracks, myPIDSeq, chargedProtos, myChargedSeq]
             bm_output       = chargedProtosOutputLocation
             return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
-

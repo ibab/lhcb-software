@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Benoit Viaud
+ - Added SecondLoop Muons to Hlt2Tracking.py, plus the configurables of two new lines 
+   using them for D0->HHMuMu
+
 ! 2011-06-22 - Albert Puig
  - Added Photons/Electrons/Pi0 from L0 to Hlt2Tracking.py
 
