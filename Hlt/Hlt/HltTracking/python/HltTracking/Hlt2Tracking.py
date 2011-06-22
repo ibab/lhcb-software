@@ -70,6 +70,7 @@ from Hlt2Lines.Hlt2B2KsHHLines              import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2MuNTrackLines             import Hlt2MuNTrackLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines           import Hlt2CharmSemilepD02HMuNuLinesConf
+from Hlt2Lines.Hlt2RadiativeTopoLines        import Hlt2RadiativeTopoConf
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -122,6 +123,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2B2KsHHLinesConf
                              , Hlt2MuNTrackLinesConf
                              , Hlt2CharmSemilepD02HMuNuLinesConf
+                             , Hlt2RadiativeTopoConf
                              ]
     __slots__ = { "DataType"                        : '2010' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
@@ -143,6 +145,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "__hlt2ChargedMuonProtosSeq__"    : 0
                 , "__hlt2ChargedMuonWithCaloProtosSeq__": 0
                 , "__hlt2NeutralProtosSeq__"        : 0
+                , "__hlt2PhotonsFromL0Seq__"        : 0
+                , "__hlt2Pi0FromL0Seq__"            : 0
+                , "__hlt2ElectronsFromL0Seq__"      : 0
                 , "__hlt2VeloTrackingSeq__"         : 0
                 , "__hlt2ForwardTrackingSeq__"      : 0
                 , "__hlt2ForwardSecondLoopTrackingSeq__"      : 0
@@ -217,6 +222,33 @@ class Hlt2Tracking(LHCbConfigurableUser):
         Neutral protoparticles 
         """
         return self.getProp("__hlt2NeutralProtosSeq__")
+    #############################################################################################
+    #
+    # Photons from L0 Candidates
+    #
+    def hlt2PhotonsFromL0(self):
+        """
+        Neutral protoparticles 
+        """
+        return self.getProp("__hlt2PhotonsFromL0Seq__")
+    #############################################################################################
+    #
+    # Electrons from L0 Candidates
+    #
+    def hlt2ElectronsFromL0(self):
+        """
+        Charged protoparticles 
+        """
+        return self.getProp("__hlt2ElectronsFromL0Seq__")
+    #############################################################################################
+    #
+    # Pi0 from L0 Candidates
+    #
+    def hlt2Pi0FromL0(self):
+        """
+        Neutral protoparticles 
+        """
+        return self.getProp("__hlt2Pi0FromL0Seq__")
     #############################################################################################
     #
     # Velo tracking for the PV making sequence
@@ -410,6 +442,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              self.__hlt2CALOID()                 )
             self.setProp(    "__hlt2NeutralProtosSeq__"        ,       
                              self.__hlt2NeutralProtos()          )    
+            self.setProp(    "__hlt2PhotonsFromL0Seq__"        ,       
+                             self.__hlt2PhotonsFromL0()          )    
+            self.setProp(    "__hlt2Pi0FromL0Seq__"            ,       
+                             self.__hlt2Pi0FromL0()              )    
+            self.setProp(    "__hlt2ElectronsFromL0Seq__"      ,       
+                             self.__hlt2ElectronsFromL0()        )    
         #
         # The RICH needs fitted tracks!
         #
@@ -511,6 +549,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #
     def __caloIDLocation(self) :
         caloBase =  self.__hltBasePIDLocation() + "/" + HltCALOIDSuffix
+        return caloBase
+
+    def __caloL0IDLocation(self) :
+        caloBase =  self.__hltBasePIDLocation() + "/L0Calo" + HltCALOIDSuffix
         return caloBase
     #
     # The prefixes for the various tools and algorithms used
@@ -774,6 +816,39 @@ class Hlt2Tracking(LHCbConfigurableUser):
         myCALOProcessorNeutralSeq  = self.__getCALOSeq("Neutral")
 
         return myCALOProcessorNeutralSeq 
+    #########################################################################################
+    #
+    # Photons built from L0
+    #
+    def __hlt2PhotonsFromL0(self):
+        """
+        Photons coming from L0
+        """
+
+        caloPhotonsFromL0 = self.__getNewCALOSeq('photon')
+        return caloPhotonsFromL0
+    #########################################################################################
+    #
+    # Photons built from L0
+    #
+    def __hlt2Pi0FromL0(self):
+        """
+        Pi0 coming from L0
+        """
+
+        caloPi0FromL0 = self.__getNewCALOSeq('pi0')
+        return caloPi0FromL0
+    #########################################################################################
+    #
+    # Photons built from L0
+    #
+    def __hlt2ElectronsFromL0(self):
+        """
+        Photons coming from L0
+        """
+
+        caloElectronsFromL0 = self.__getNewCALOSeq('electron')
+        return caloElectronsFromL0
     #########################################################################################
     #
     # MuonID
@@ -1267,6 +1342,32 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltDecodeRaw     import DecodeTT, DecodeIT
         from HltLine.HltLine        import bindMembers
         return bindMembers(self.getProp("Prefix")+"DecodeSTSeq", DecodeTT.members() + DecodeIT.members())
+
+    #########################################################################################
+    #
+    # Helper function to set up the CALO processor and return the correct sequence 
+    #
+    def __getNewCALOSeq(self, mode):
+        from HltLine.HltLine    import bindMembers      
+        # Load tracks
+        tracks = self.__hlt2StagedFastFit()
+        # Create configurable
+        from Configurables import CaloLines
+        seq = CaloLines('HLT2CaloLines', TrackLocations=[tracks]).sequence()
+        bm_name    = self.__pidAlgosAndToolsPrefix()
+        bm_members = [tracks, seq]
+        bm_output = ''
+        if mode.lower() == 'photon':
+            bm_name  += 'PhotonsFromL0'
+            bm_output = '/Event/HLT2CaloLinesHighPhoton/ProtoP/Neutrals'
+        elif mode.lower() == 'electron':
+            bm_name  += 'ElectronsFromL0'
+            bm_output = '/Event/HLT2CaloLinesLowElectron/ProtoP/Neutrals'
+        elif mode.lower() == 'pi0':
+            bm_name  += 'Pi0FromL0'
+            bm_output = '/Event/HLT2CaloLinesLowPhoton/ProtoP/Neutrals'
+        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+        
     #########################################################################################
     #
     # Helper function to set up the CALO processor and return the correct sequence 
@@ -1323,3 +1424,4 @@ class Hlt2Tracking(LHCbConfigurableUser):
             bm_members      = [tracks, myPIDSeq, chargedProtos, myChargedSeq]
             bm_output       = chargedProtosOutputLocation
             return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+

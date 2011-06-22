@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Added Photons/Electrons/Pi0 from L0 to Hlt2Tracking.py
+
 ! 2011-05-19 - Jibo He
  - python/HltTracking/Hlt2TrackingConfigurations.py
    Change RichHypos of LowPTProton to two to avoid outputlocation overwrite 
