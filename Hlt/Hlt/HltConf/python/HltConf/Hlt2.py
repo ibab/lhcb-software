@@ -115,7 +115,9 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2KstareeLinesConf  
                              , Hlt2SecondLoopExampleLinesConf
                              , Hlt2MuNTrackLinesConf
+                             , Hlt2RadiativeTopoConf
                              ]
+
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "DefaultVoidFilter"          : ''
