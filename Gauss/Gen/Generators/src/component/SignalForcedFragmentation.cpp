@@ -11,10 +11,12 @@
 // from HepMC
 #include "HepMC/GenEvent.h"
 
+// from Kernel
+#include "MCInterfaces/IGenCutTool.h"
+
 // from Generators
 #include "Generators/IDecayTool.h"
 #include "Generators/IProductionTool.h"
-#include "Generators/IGenCutTool.h"
 #include "Generators/HepMCUtils.h"
 
 // local
