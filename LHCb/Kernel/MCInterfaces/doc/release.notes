@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Patrick Robbe
+ - Move IGenCutTool.h and IFullGenEventCutTool.h interface headers from 
+   Gen/Generators here to be accessible from other projects than Gauss
+
 !========================= MCInterfaces v1r13 2011-02-22 =========================
 ! 2011-02-10 - Chris Jones
  - Supress some icc warnings
