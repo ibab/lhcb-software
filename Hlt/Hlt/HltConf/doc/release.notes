@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Readd Hlt2 radiative topological lines that were erased in the previous commit.
+ 
+
 ! 2011-06-22 - Benoit Viaud
  - Add new lines for D0->HHMuMu using SecondLoop Muons.
 

@@ -53,6 +53,7 @@ from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf
 from Hlt2Lines.Hlt2B2HHPi0Lines import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2B2KsHHLines import Hlt2B2KsHHLinesConf
 from Hlt2Lines.Hlt2MuNTrackLines import Hlt2MuNTrackLinesConf
+from Hlt2Lines.Hlt2RadiativeTopoLines import Hlt2RadiativeTopoConf
 #
 # The tracking configurations
 #
