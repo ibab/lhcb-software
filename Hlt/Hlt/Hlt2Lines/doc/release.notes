@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-06-21 - Benoit Viaud
+ - One line was forgotten below. Added it.
+
+! 2011-06-21 - Benoit Viaud
  - Updated versions of the D+->HMuMu and D0->HHMuMu lines, including new lines using SecondLoop Muons.
 
 ! 2011-06-21 - Will Barter
