@@ -1,4 +1,3 @@
-// $Id: UpdateManagerSvc_Item.cpp,v 1.5 2009-02-16 14:22:56 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -35,17 +34,23 @@ UpdateManagerSvc::Item::~Item() {
 // Main method. Used to update the object and all the used ones.
 //=============================================================================
 StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream &log, bool inInit){
-  log << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
-  if (!path.empty()) log << " " << path;
-  log << endmsg;
-  log << MSG::VERBOSE << "    initial validity: " << since << " -> " << until << endmsg;
+  if( log.level() <= MSG::DEBUG ) {
+    log << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
+    if (!path.empty()) log << " " << path;
+    log << endmsg;
+    if( log.level() <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "    initial validity: " << since << " -> " << until << endmsg;
+  }
+  
   if (updateLock) {
-    log << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
+    if( log.level() <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
     return StatusCode::SUCCESS;
   }
   // check validity
   if (isValid(when)) {
-    log << MSG::VERBOSE << "Item valid, not need to update" << endmsg;
+    if( log.level() <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "Item valid, not need to update" << endmsg;
     return StatusCode::SUCCESS;
   }
   // prepare for update
@@ -55,7 +60,8 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
   // start real update
   if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
 
-    log << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
 
     DataObject  *pObj;
     sc = dp->retrieveObject(path, pObj);
@@ -127,7 +133,8 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     // (see bug #80076, https://savannah.cern.ch/bugs/?80076)
     if (!inInit) { // during initialization we may have a loaded object that doesn't have a valid
                    // IOV because of the HeartBeat, so it is actually OK and doesn't need to be updated.
-      log << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
+      if( log.level() <= MSG::DEBUG )
+        log << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
       sc = vdo->update(); // only if I didn't load it
       if ( !sc.isSuccess() ) {
         log << MSG::ERROR << "Cannot update " << path << " from data provider!" << endmsg;
@@ -147,11 +154,13 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     until = vdo->validTill();
   }
   // object internal data are up-to-date, now check what it depends on
-  log << MSG::VERBOSE << "Enter dependencies update loop" << endmsg;
+  if( log.level() <= MSG::VERBOSE )
+    log << MSG::VERBOSE << "Enter dependencies update loop" << endmsg;
   for (MembFuncList::iterator mfIt = memFuncs.begin(); mfIt != memFuncs.end(); ++mfIt){
     if (!mfIt->isValid(when)) { // only if one the children of the member function need an update
       size_t n = mfIt - memFuncs.begin();
-      log << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
+      if( log.level() <= MSG::VERBOSE )
+        log << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
       mfIt->resetIOV();
       for (ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
         sc = (*itemIt)->update(dp, when, log, inInit);
@@ -160,10 +169,12 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         if (mfIt->since < (*itemIt)->since) mfIt->since = (*itemIt)->since;
         if (mfIt->until > (*itemIt)->until) mfIt->until = (*itemIt)->until;
       }
-      log << MSG::VERBOSE << "Call m.f. " << n << endmsg;
+      if( log.level() <= MSG::VERBOSE )
+        log << MSG::VERBOSE << "Call m.f. " << n << endmsg;
       sc = (*(mfIt->mf))();
       if (!sc.isSuccess()){
-        log << MSG::DEBUG << "m.f. " << n << " returned a failure" << endmsg;
+        if( log.level() <= MSG::DEBUG )
+          log << MSG::DEBUG << "m.f. " << n << " returned a failure" << endmsg;
         return sc;
       }
     }
@@ -172,12 +183,13 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     if (until > mfIt->until) until = mfIt->until;
   }
   updateLock = false;
-  //std::cout << "UMS:      final validity: " << since << " -> " << until << std::endl;
-  //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---END---" << std::endl;
-  log << MSG::VERBOSE << "    final validity: " << since << " -> " << until << endmsg;
-  log << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
-  if (!path.empty()) log << " " << path;
-  log << endmsg;
+  if( log.level() <= MSG::DEBUG ) {
+    if( log.level() <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "    final validity: " << since << " -> " << until << endmsg;
+    log << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
+    if (!path.empty()) log << " " << path;
+    log << endmsg;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -219,12 +231,14 @@ BaseObjectMemberFunction * UpdateManagerSvc::Item::addChild(BaseObjectMemberFunc
 //=============================================================================
 void UpdateManagerSvc::Item::purge(MsgStream *log) {
   if ( ! path.empty() ) {
-    if (log) (*log) << MSG::DEBUG << "Purging " << path << endmsg;
+    if( log && (*log).level() <= MSG::DEBUG )
+      (*log) << MSG::DEBUG << "Purging " << path << endmsg;
     // Clean up pointers
     const bool force = true;
     setPointers(NULL,force).ignore();
   } else {
-    if (log) (*log) << MSG::DEBUG << "Purging object at " << ptr << endmsg;
+    if( log && (*log).level() <= MSG::DEBUG )
+      (*log) << MSG::DEBUG << "Purging object at " << ptr << endmsg;
   }
 
   // I'm not sure I need this

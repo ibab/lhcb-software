@@ -1,4 +1,3 @@
-// $Id: UpdateManagerSvc.cpp,v 1.29 2009-01-23 13:09:15 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -24,7 +23,7 @@
 
 #include "ConditionParser.h"
 
-DECLARE_SERVICE_FACTORY( UpdateManagerSvc );
+DECLARE_SERVICE_FACTORY( UpdateManagerSvc )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : UpdateManagerSvc
@@ -68,7 +67,8 @@ StatusCode UpdateManagerSvc::initialize(){
   if (!sc.isSuccess()) return sc;
   // local initialization
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "--- initialize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
   // find the data provider
   sc = serviceLocator()->service<IDataProviderSvc>(m_dataProviderName,m_dataProvider,true);
@@ -76,7 +76,8 @@ StatusCode UpdateManagerSvc::initialize(){
     log << MSG::ERROR << "Unable to get a handle to the data provider" << endmsg;
     return sc;
   } else {
-    log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_dataProviderName << '"' << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_dataProviderName << '"' << endmsg;
     IDataManagerSvc * dMgr;
     sc = m_dataProvider->queryInterface(IDataManagerSvc::interfaceID(),(void **) &dMgr);
     if ( sc.isSuccess() ) {
@@ -101,14 +102,16 @@ StatusCode UpdateManagerSvc::initialize(){
       " all the calls to newEvent(void) will fail!" << endmsg;
     m_detDataSvc = NULL;
   } else {
-    log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
   }
 
   // before registering to the incident service I have to be sure that the EventClockSvc is ready
   IService *evtClockSvc;
   sc = service("EventClockSvc", evtClockSvc, true);
   if ( sc.isSuccess() ) {
-    log << MSG::DEBUG << "Good: EventClockSvc found" << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Good: EventClockSvc found" << endmsg;
     evtClockSvc->release();
   } else {
     log << MSG::WARNING << "Unable find EventClockSvc, probably I'll not work." << endmsg;
@@ -118,7 +121,8 @@ StatusCode UpdateManagerSvc::initialize(){
   sc = service("IncidentSvc", m_incidentSvc, false);
   if ( sc.isSuccess() ) {
     m_incidentSvc->addListener(this,IncidentType::BeginEvent);
-    log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
   } else {
     log << MSG::ERROR << "Unable to register to the incident service." << endmsg;
     m_incidentSvc = NULL;
@@ -154,7 +158,8 @@ StatusCode UpdateManagerSvc::initialize(){
 
       // Add the condition to internal list
       m_conditionsOverides[name] = cond;
-      log << MSG::DEBUG << "Added condition: " << name << "\n" << cond->printParams() << endmsg;
+      if( log.level() <= MSG::DEBUG )
+        log << MSG::DEBUG << "Added condition: " << name << "\n" << cond->printParams() << endmsg;
 
     } else {
       // something went wrong while parsing: delete the temporary
@@ -169,8 +174,10 @@ StatusCode UpdateManagerSvc::initialize(){
 }
 
 StatusCode UpdateManagerSvc::stop(){
-  MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "--- stop ---" << endmsg;
+  if( m_outputLevel <= MSG::DEBUG ) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::DEBUG << "--- stop ---" << endmsg;
+  }
 
   if ( m_outputLevel <= MSG::DEBUG || ! m_dotDumpFile.empty() ) dump();
 
@@ -180,7 +187,8 @@ StatusCode UpdateManagerSvc::stop(){
 StatusCode UpdateManagerSvc::finalize(){
   // local finalization
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "--- finalize ---" << endmsg;
+  if( m_outputLevel <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
   // release the interfaces used
   if (m_dataProvider != NULL) m_dataProvider->release();
@@ -230,12 +238,15 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
          && cond_copy.compare(0,m_dataProviderRootName.size(),m_dataProviderRootName) == 0 ){
       cond_copy.erase(0,m_dataProviderRootName.size());
     }
-    log << MSG::DEBUG << "registering condition \"" << cond_copy
-        << "\" for object of type " << System::typeinfoName(mf->type()) << " at " << std::hex << mf->castToVoid() << endmsg;
+    if( m_outputLevel <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "registering condition \"" << cond_copy
+          << "\" for object of type " << System::typeinfoName(mf->type())
+          << " at " << std::hex << mf->castToVoid() << endmsg;
   }
   else {
-    log << MSG::DEBUG << "registering object of type " << System::typeinfoName(mf->type())
-        << " (without condition)" << endmsg;
+    if( m_outputLevel <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "registering object of type " << System::typeinfoName(mf->type())
+          << " (without condition)" << endmsg;
   }
 
   // find the object
@@ -313,9 +324,12 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
   }
-  MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "registering object at " << std::hex << obj << std::dec
-      << " for object of type " << System::typeinfoName(mf->type()) << " at " << std::hex << mf->castToVoid() << endmsg;
+  if( m_outputLevel <= MSG::VERBOSE ) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::VERBOSE << "registering object at " << std::hex << obj << std::dec
+        << " for object of type " << System::typeinfoName(mf->type()) << " at " << std::hex << mf->castToVoid() << endmsg;
+  }
+  
   // find the "condition"
   Item *cond_item = findItem(obj);
   if (!cond_item){ // Error!!!
@@ -360,15 +374,16 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
 
 #ifndef WIN32
   MsgStream log(msgSvc(),name());
-
-  log << MSG::VERBOSE << "newEvent(evtTime): acquiring mutex lock" << endmsg;
+  if ( m_outputLevel <= MSG::VERBOSE )
+    log << MSG::VERBOSE << "newEvent(evtTime): acquiring mutex lock" << endmsg;
   acquireLock();
 #endif
 
   // Check head validity
   if ( evtTime >= m_head_since && evtTime < m_head_until ) {
 #ifndef WIN32
-    log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
+    if ( m_outputLevel <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
     releaseLock();
 #endif
     return sc; // no need to update
@@ -414,12 +429,14 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
 
 #ifndef WIN32
   } catch (...) {
-    log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock (exception occurred)" << endmsg;
+    if ( m_outputLevel <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock (exception occurred)" << endmsg;
     releaseLock();
     throw;
   }
 
-  log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
+  if ( m_outputLevel <= MSG::VERBOSE )
+    log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
   releaseLock();
 #endif
 
@@ -430,9 +447,9 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
     throw GaudiException("Service offline","UpdateManagerSvc::update",StatusCode::FAILURE);
   }
 
-  if ( m_outputLevel <= MSG::DEBUG ) {
+  if ( m_outputLevel <= MSG::VERBOSE ) {
     MsgStream log(msgSvc(),name());
-    log << MSG::DEBUG << "Update specific object at " << instance << endmsg;
+    log << MSG::VERBOSE << "Update specific object at " << instance << endmsg;
   }
   if (detDataSvc() != NULL){
     if (detDataSvc()->validEventTime()) {
@@ -466,9 +483,9 @@ void UpdateManagerSvc::i_invalidate(void *instance){
     throw GaudiException("Service not initialized","UpdateManagerSvc::invalidate",StatusCode::FAILURE);
   }
 
-  if ( m_outputLevel <= MSG::DEBUG ) {
+  if ( m_outputLevel <= MSG::VERBOSE ) {
     MsgStream log(msgSvc(),name());
-    log << MSG::DEBUG << "Invalidate object at " << instance << endmsg;
+    log << MSG::VERBOSE << "Invalidate object at " << instance << endmsg;
   }
   Item *item = findItem(instance);
   if (item) {
@@ -572,9 +589,9 @@ void UpdateManagerSvc::i_unregister(void *instance){
     return;
   }
 
-  if ( m_outputLevel <= MSG::DEBUG ) {
+  if ( m_outputLevel <= MSG::VERBOSE ) {
     MsgStream log(msgSvc(),name());
-    log << MSG::DEBUG << "Unregister object at " << instance << endmsg;
+    log << MSG::VERBOSE << "Unregister object at " << instance << endmsg;
   }
 
   Item *item = findItem(instance);
@@ -624,19 +641,23 @@ void UpdateManagerSvc::dump(){
     (*dot_file) << "digraph " << name() << " {\n";
   }
 
-  log << MSG::DEBUG << "--- Dump" << endmsg;
-  log << MSG::DEBUG << "    " << m_all_items.size() << " items registered" << endmsg;
-  log << MSG::DEBUG << "     of which " << m_head_items.size() << " in the head" << endmsg;
-  log << MSG::DEBUG << "         head IOV = " << m_head_since << " - " << m_head_until << endmsg;
+  if ( m_outputLevel <= MSG::VERBOSE ) {
+    log << MSG::VERBOSE << "--- Dump" << endmsg;
+    log << MSG::VERBOSE << "    " << m_all_items.size() << " items registered" << endmsg;
+    log << MSG::VERBOSE << "     of which " << m_head_items.size() << " in the head" << endmsg;
+    log << MSG::VERBOSE << "         head IOV = " << m_head_since << " - " << m_head_until << endmsg;
+  }
 
   size_t cnt = 0, head_cnt = 0;
   for (Item::ItemList::iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-    log << MSG::DEBUG << "--item " << cnt++ << " " << std::hex << *i << std::dec;
-    if ((*i)->isHead()){
-      log << " (head)";
-      ++head_cnt;
+    if ( m_outputLevel <= MSG::VERBOSE ) {
+      log << MSG::VERBOSE << "--item " << cnt++ << " " << std::hex << *i << std::dec;
+      if ((*i)->isHead()){
+        log << " (head)";
+        ++head_cnt;
+      }
+      log << endmsg;
     }
-    log << endmsg;
 
     if (dot_file.get() != NULL) {
       // graph node for registered item (first part, label)
@@ -647,9 +668,11 @@ void UpdateManagerSvc::dump(){
     		  << "(" << (*i)->ptr << ")";
     }
 
-    log << MSG::DEBUG << "       ptr  = " << std::hex << (*i)->ptr << std::dec << endmsg;
+    if ( m_outputLevel <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "       ptr  = " << std::hex << (*i)->ptr << std::dec << endmsg;
     if ( !(*i)->path.empty() ) {
-      log << MSG::DEBUG << "       path = " << (*i)->path << endmsg;
+      if ( m_outputLevel <= MSG::VERBOSE )
+        log << MSG::VERBOSE << "       path = " << (*i)->path << endmsg;
       if (dot_file.get() != NULL) {
         // If we have the path, we can put it in the graph label
         (*dot_file) << "\\n" << (*i)->path;
@@ -667,20 +690,25 @@ void UpdateManagerSvc::dump(){
       (*dot_file) << "\"];\n";
     }
 
-    log << MSG::DEBUG << "        IOV = " << (*i)->since << " - " << (*i)->until << endmsg;
+    if ( m_outputLevel <= MSG::VERBOSE )
+      log << MSG::VERBOSE << "        IOV = " << (*i)->since << " - " << (*i)->until << endmsg;
     if ((*i)->memFuncs.size()){
-      log << MSG::DEBUG << "       depend on :" << endmsg;
+      if ( m_outputLevel <= MSG::VERBOSE )
+        log << MSG::VERBOSE << "       depend on :" << endmsg;
       for (Item::MembFuncList::iterator mfIt = (*i)->memFuncs.begin(); mfIt != (*i)->memFuncs.end(); ++mfIt){
-        log << MSG::DEBUG << std::hex << "                  ";
+        if ( m_outputLevel <= MSG::VERBOSE )
+          log << MSG::VERBOSE << std::hex << "                  ";
         for (Item::ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
-          log << " " << *itemIt;
+          if ( m_outputLevel <= MSG::VERBOSE )
+            log << " " << *itemIt;
           if (dot_file.get() != NULL) {
             // Add an arrow to the graph connecting the user Item to the
             // used Item
             (*dot_file) << "item_" << std::hex << *i << " -> " << "item_" << std::hex << *itemIt << ";\n";
           }
         }
-        log << std::dec << endmsg;
+        if ( m_outputLevel <= MSG::VERBOSE )
+          log << std::dec << endmsg;
       }
     }
   }
@@ -691,13 +719,15 @@ void UpdateManagerSvc::dump(){
     log << MSG::ALWAYS << "DOT file '" << m_dotDumpFile << "' written" << endmsg;
   }
 
-  log << MSG::DEBUG << "Found " << head_cnt << " head items: ";
-  if (m_head_items.size() == head_cnt){
-    log << "OK";
-  } else {
-    log << "MISMATCH!!!!!";
+  if ( m_outputLevel <= MSG::VERBOSE ) {
+      log << MSG::VERBOSE << "Found " << head_cnt << " head items: ";
+      if (m_head_items.size() == head_cnt){
+        log << "OK";
+      } else {
+        log << "MISMATCH!!!!!";
+      }
+      log << endmsg;
   }
-  log << endmsg;
 }
 
 
@@ -796,7 +826,8 @@ void UpdateManagerSvc::setValidity(const std::string path, const Gaudi::Time& si
 void UpdateManagerSvc::handle(const Incident &inc) {
   if ( inc.type() == IncidentType::BeginEvent ) {
     MsgStream log( msgSvc(), name() );
-    log << MSG::DEBUG << "New BeginEvent incident received" << endmsg;
+    if( m_outputLevel <= MSG::DEBUG )
+      log << MSG::DEBUG << "New BeginEvent incident received" << endmsg;
     StatusCode sc = UpdateManagerSvc::newEvent();
     if (!sc.isSuccess()) {
       log << MSG::FATAL << "***** The update failed. I schedule a stop of the run *****" << endmsg;

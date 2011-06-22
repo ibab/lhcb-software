@@ -1,4 +1,3 @@
-// $Id: TransportSvc.cpp,v 1.10 2009-04-17 12:47:39 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -293,7 +292,8 @@ StatusCode TransportSvc::finalize()
     { detSvc      () -> release()    ; m_detDataSvc       = 0 ; } 
   }  
   ///
-  log << MSG::DEBUG << "Service finalised successfully" << endmsg;
+  if ( MSG::DEBUG >= outputLevel() ) 
+    log << MSG::DEBUG << "Service finalised successfully" << endmsg;
   ///  
   return Service::finalize();
   ///

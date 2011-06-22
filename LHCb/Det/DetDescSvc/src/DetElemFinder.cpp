@@ -1,4 +1,3 @@
-// $Id: DetElemFinder.cpp,v 1.1 2006-10-11 13:41:05 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -12,7 +11,7 @@
 // local
 #include "DetElemFinder.h"
 
-DECLARE_SERVICE_FACTORY( DetElemFinder );
+DECLARE_SERVICE_FACTORY( DetElemFinder )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DetElemFinder
@@ -67,7 +66,8 @@ StatusCode DetElemFinder::initialize ( )
 
 	// local initialization
 	MsgStream log(msgSvc(),name());
-	log << MSG::DEBUG << "--- initialize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
   IDataProviderSvc *detSvc = 0;
   sc = service(m_detDataSvcName,detSvc,true);
@@ -104,12 +104,11 @@ StatusCode DetElemFinder::finalize ( )
 {
 	// local finalization
 	MsgStream log(msgSvc(),name());
-	log << MSG::DEBUG << "--- finalize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
-  //if (m_outputLevel <= MSG::DEBUG) {
   if ( m_dumpMap ) {
     for ( map_type::iterator i = m_map.begin(); i != m_map.end(); ++i ){
-      //log << MSG::DEBUG << i->first << " -> " << i->second->name() << endmsg;
       log << MSG::ALWAYS << i->first << " -> " << i->second->name() << endmsg;
     } 
   }
@@ -178,7 +177,8 @@ StatusCode DetElemFinder::detector_element_path(const IDetectorElement *de, std:
 StatusCode DetElemFinder::insert ( const IDetectorElement *de, const std::string &parent_path) {
 
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "Preocessing detector element " << de->name() << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "Processing detector element " << de->name() << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -197,7 +197,8 @@ StatusCode DetElemFinder::insert ( const IDetectorElement *de, const std::string
     return StatusCode::FAILURE;
   }
   else {
-    log << MSG::DEBUG << "Insert path \"" << path << "\"" << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Insert path \"" << path << "\"" << endmsg;
     m_map[path] = de;
   }
 

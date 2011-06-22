@@ -1,4 +1,3 @@
-// $Id: FakeEventTime.cpp,v 1.1 2006-09-26 10:45:48 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FakeEventTime );
+DECLARE_TOOL_FACTORY( FakeEventTime )
 
 
 //=============================================================================
@@ -50,7 +49,8 @@ StatusCode FakeEventTime::initialize ( ) {
   
   // local initialization
 	MsgStream log(msgSvc(),name());
-	log << MSG::DEBUG << "--- initialize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
   // Not really needed, just an example.
   sc = service(m_evtDataProviderName,m_evtDataProvider,true);
@@ -58,7 +58,8 @@ StatusCode FakeEventTime::initialize ( ) {
     log << MSG::ERROR << "Unable to get a handle to the event data service" << endmsg;
     return sc;
   } else {
-    log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_evtDataProviderName << '"' << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_evtDataProviderName << '"' << endmsg;
   }
 
   log << MSG::INFO << "Event times generated from " << m_startTime << " with steps of " << m_timeStep << endmsg;
@@ -72,7 +73,8 @@ StatusCode FakeEventTime::initialize ( ) {
 StatusCode FakeEventTime::finalize ( ) {
 	// local finalization
 	MsgStream log(msgSvc(),name());
-	log << MSG::DEBUG << "--- finalize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
 	// release the interfaces used
 	if (m_evtDataProvider != NULL) m_evtDataProvider->release();

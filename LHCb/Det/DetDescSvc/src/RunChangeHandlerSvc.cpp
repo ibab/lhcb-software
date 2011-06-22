@@ -1,4 +1,3 @@
-// $Id: RunChangeHandlerSvc.cpp,v 1.2 2009-02-04 18:02:28 marcocle Exp $
 // Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -12,7 +11,7 @@
 // local
 #include "RunChangeHandlerSvc.h"
 
-DECLARE_SERVICE_FACTORY( RunChangeHandlerSvc );
+DECLARE_SERVICE_FACTORY( RunChangeHandlerSvc )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RunChangeHandlerSvc
@@ -58,7 +57,8 @@ StatusCode RunChangeHandlerSvc::initialize(){
   if (!sc.isSuccess()) return sc;
   // local initialization
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "--- initialize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
   incidentSvc()->addListener(this, IncidentType::RunChange);
   // ensure that we can call evtProc() and updMgrSvc() while in handle
@@ -82,7 +82,8 @@ StatusCode RunChangeHandlerSvc::initialize(){
 StatusCode RunChangeHandlerSvc::finalize(){
   // local finalization
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "--- finalize ---" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
   if (m_incSvc)
     incidentSvc()->removeListener(this, IncidentType::RunChange);
@@ -103,7 +104,8 @@ StatusCode RunChangeHandlerSvc::finalize(){
 //=========================================================================
 void RunChangeHandlerSvc::handle(const Incident &inc) {
   MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << inc.type() << " incident received" << endmsg;
+  if( log.level() <= MSG::DEBUG )
+    log << MSG::DEBUG << inc.type() << " incident received" << endmsg;
 
   const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&inc);
   if (!rci) {
@@ -113,9 +115,11 @@ void RunChangeHandlerSvc::handle(const Incident &inc) {
   }
   
   if (m_currentRun != rci->runNumber()) {
-    log << MSG::DEBUG << "Change of run number detected " << m_currentRun;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::DEBUG << "Change of run number detected " << m_currentRun;
     m_currentRun = rci->runNumber();
-    log << "->" << m_currentRun << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << "->" << m_currentRun << endmsg;
 
     // loop over the object to update
     Conditions::iterator cond;
