@@ -4,6 +4,8 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Patrick Robbe
+ - remove cut tools and place them in the Gen/GenCuts package
 
 ! 2011-06-17 - Alex Grecu
  - patch PythiaProduction.cpp: comment IO_Ascii include as not used
