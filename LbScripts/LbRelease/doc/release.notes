@@ -1,3 +1,7 @@
+2011-06-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/AfsProjectSpace.py: fixed typo.
+
 2011-06-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/AfsProjectSpace.py: fixed size reported in GB.

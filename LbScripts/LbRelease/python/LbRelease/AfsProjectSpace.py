@@ -31,7 +31,7 @@ def check_space(thelog):
                 if space_left < 10.0 :
                     size_GB = convert(int(member[1]), "KB", "GB")
                     free_GB = convert(free_space, "KB", "GB")
-                    thelog.info('The space left for %s represents %s percent \n (Total is %s GB and free is %s GB)' %( member[0], str(round(space_left,2)), str(round(size_GB,3)), str(round(free_GB,3)))
+                    thelog.info('The space left for %s represents %s percent \n (Total is %s GB and free is %s GB)' % ( member[0], str(round(space_left,2)), str(round(size_GB,3)), str(round(free_GB,3))))
         else:
             break
 
