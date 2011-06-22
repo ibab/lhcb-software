@@ -200,10 +200,11 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
           int ncl = (*ib).clients.size();
           numClients += ncl;
           ++numBuffs;
+	  tot_prod[idx] += ctrl.tot_produced;
+	  num_cl[idx]   += ncl;
+	  num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
+
           min_prod[idx] = min(min_prod[idx],ctrl.tot_produced);
-          tot_prod[idx] = ctrl.tot_produced;
-          num_cl[idx]   = ncl;
-          num_sl[idx]   = ctrl.p_emax - ctrl.i_events;
 	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
 	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
           fspace[idx]   = min(fspace[idx],fsp);

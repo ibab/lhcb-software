@@ -203,10 +203,16 @@ int NodeStatsCollector::monitor() {
       log() << "Unknown exception while task information:" << endl;
     }
     if ( 0 != m_mbmSvc ) {
-      ::dis_update_service(m_mbmSvc);
+      int nclients = ::dis_update_service(m_mbmSvc);
+      if ( nclients == 0 ) {
+	log() << "No client was listening to my MBM information......" << std::endl;
+      }
     }
     if ( stat_delay<=0 ) {
-      ::dis_update_service(m_statSvc);
+      int nclients = ::dis_update_service(m_statSvc);
+      if ( nclients == 0 ) {
+	log() << "No client was listening to my node statistics information." << std::endl;
+      }
       stat_delay = m_statDelay;
     }
     ::dim_unlock();

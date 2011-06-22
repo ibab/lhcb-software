@@ -1,4 +1,4 @@
-// $Id: FarmDisplayBase.h,v 1.24 2010-10-15 10:53:54 frankb Exp $
+// $Id: FarmLineDisplay.h,v 1.24 2010-10-15 10:53:54 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,9 +12,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplayBase.h,v 1.24 2010-10-15 10:53:54 frankb Exp $
-#ifndef ROMON_FARMDISPLAY_H
-#define ROMON_FARMDISPLAY_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmLineDisplay.h,v 1.24 2010-10-15 10:53:54 frankb Exp $
+#ifndef ROMON_FARMDISPLAYBASE_H
+#define ROMON_FARMDISPLAYBASE_H 1
 
 // Framework includes
 #include "ROMon/PartitionListener.h"
@@ -43,12 +43,12 @@ namespace ROMon {
   class RecSubfarmDisplay;
   class SubfarmDisplay;
   class ROMonDisplay;
-  class FarmDisplayBase;
+  class FarmLineDisplay;
   class ProcFarm;
   class CPUfarm;
 
 
-  /**@class ProcessDisplay ROMon.h GaudiOnline/FarmDisplayBase.h
+  /**@class ProcessDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Display showing all processes on a given node.
    *
@@ -70,7 +70,7 @@ namespace ROMon {
     void updateContent(const ProcFarm& pf);
   };
 
-  /**@class CPUDisplay ROMon.h GaudiOnline/FarmDisplayBase.h
+  /**@class CPUDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Display showing all processes on a given node.
    *
@@ -92,7 +92,7 @@ namespace ROMon {
     void updateContent(const CPUfarm& pf);
   };
 
-  /**@class BufferDisplay ROMon.h GaudiOnline/FarmDisplayBase.h
+  /**@class BufferDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Internal MBM monitor display, when spying on individual nodes.
    *
@@ -115,7 +115,7 @@ namespace ROMon {
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
   };
 
-  /**@class CtrlNodeDisplay ROMon.h GaudiOnline/FarmDisplayBase.h
+  /**@class CtrlNodeDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Internal Task control display, when spying on individual nodes.
    *
@@ -146,34 +146,13 @@ namespace ROMon {
     static void tsDataHandler(void* tag, void* address, int* size);
   };
 
-  /**@class ClusterLine ROMon.h GaudiOnline/Display.h
+  /**@class FarmDisplayBase FarmDisplayBase.h GaudiOnline/FarmDisplayBase.h
    *
-   *   Display entry for the boot status of one subfarm
+   *   Basic display class for farm monitoring applications.
    *
    *   @author M.Frank
    */
-  class ClusterLine  {
-  protected:
-    std::string        m_name;
-    int                m_svc;
-    size_t             m_position;
-    FarmDisplayBase*   m_parent;
-    Nodeset*           m_cluster;
-    char*              m_ptr;
-
-  public:
-    ClusterLine(FarmDisplayBase* p, int pos, const std::string& n);
-    virtual ~ClusterLine();
-    const std::string& name() const           { return m_name;      }
-    const Nodeset* cluster() const            { return m_cluster;   }
-    size_t position() const                   { return m_position;  }
-    void check(time_t now);
-    void display();
-    /// DIM command service callback
-    static void dataHandler(void* tag, void* address, int* size);
-  };
-
-  class FarmDisplayShow : public InternalDisplay  {
+  class FarmDisplayBase : public InternalDisplay  {
   protected:
     enum { HLT_MODE, RECO_MODE, CTRL_MODE };
     ClusterDisplay*                  m_subfarmDisplay;
@@ -196,9 +175,9 @@ namespace ROMon {
     size_t                           m_subPosCursor;
 
     /// Standard constructor
-    FarmDisplayShow();
+    FarmDisplayBase();
     /// Standard destructor
-    virtual ~FarmDisplayShow();
+    virtual ~FarmDisplayBase();
 
     /// Get farm display name from cursor position
     virtual std::string currentDisplayName()  const = 0;
@@ -240,84 +219,5 @@ namespace ROMon {
     virtual int handleKeyboard(int key);
   };
 
-  /**@class FarmDisplayBase ROMon.h GaudiOnline/FarmDisplayBase.h
-   *
-   *   Monitoring display for the LHCb storage system.
-   *
-   *   @author M.Frank
-   */
-  class FarmDisplayBase : public FarmDisplayShow  {
-  protected:
-    typedef std::map<std::string, ClusterLine*> SubDisplays;
-    typedef std::vector<std::string> Farms;
-    SubDisplays                      m_farmDisplays;
-    std::auto_ptr<PartitionListener> m_listener;
-    std::string                      m_partition;
-    std::string                      m_match;
-    /// vector with all farm displays
-    Farms                            m_farms;
-    int                              m_height;
-    int                              m_width;
-    int                              m_dense;
-
-    ClusterLine* m_currentLine;
-
-    /// Keyboard rearm action
-    static int key_rearm (unsigned int fac, void* param);
-    /// Keyboard action
-    static int key_action(unsigned int fac, void* param);
-
-public:
-    /// Standard constructor
-    FarmDisplayBase(int argc, char** argv);
-
-    /// Standard destructor
-    virtual ~FarmDisplayBase();
-
-    /// Get the name of the currently selected cluster
-    virtual std::string selectedCluster() const;
-
-    /// Get the name of the currently selected cluster and node
-    virtual std::pair<std::string,std::string> selectedNode() const;
-
-    /// Number of sub-nodes in a cluster
-    size_t selectedClusterSize() const;
-
-    /// Handle keyboard interrupts
-    int handleKeyboard(int key);
-
-    /// Get farm display from cursor position
-    ClusterLine* currentDisplay()  const;
-
-    /// Get farm display name from cursor position
-    virtual std::string currentDisplayName()  const;
-
-    /// Accessor to sub-displays of main panel
-    SubDisplays& subDisplays() {  return m_farmDisplays; }
-
-    /// Accessor to current subfarm display
-    ClusterDisplay* subfarmDisplay() const {  return m_subfarmDisplay; }
-
-    /// Set cursor to position
-    virtual void set_cursor();
-
-    /// Set cursor to position
-    virtual void set_cursor(InternalDisplay* d) 
-    { this->InternalDisplay::set_cursor(d); }
-
-    /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
-    /// Connect to data resources
-    virtual void connect()  {  InternalDisplay::connect(); }
-    /// Connect to data sources
-    void connect(const std::vector<std::string>& farms);
-    /// DIM command service callback
-    virtual void update(const void* data);
-    /// Update display content
-    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
-
-    /// DIM command service callback
-    static void dnsDataHandler(void* tag, void* address, int* size);
-  };
 }      // End namespace ROMon
-#endif /* ROMON_FARMDISPLAY_H */
+#endif /* ROMON_FARMDISPLAYBASE_H */

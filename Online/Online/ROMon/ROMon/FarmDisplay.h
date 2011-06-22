@@ -17,135 +17,14 @@
 #define ROMON_FARMDISPLAY_H 1
 
 // Framework includes
-#include "ROMon/PartitionListener.h"
-#include "ROMon/InternalDisplay.h"
-#include "ROMon/HelpDisplay.h"
-#include "ROMon/ClusterDisplay.h"
-#include "ROMon/Constants.h"
-#include "CPP/Interactor.h"
+#include "ROMon/FarmDisplayBase.h"
 
-// C++ include files
-#include <map>
-#include <ctime>
-
-class Interactor;
-namespace SCR {
-  struct Display;
-  struct Pasteboard;
-  struct MouseEvent;
-}
 /*
  *   ROMon namespace declaration
  */
 namespace ROMon {
 
-  class ProcessDisplay;
-  class RecSubfarmDisplay;
-  class SubfarmDisplay;
-  class ROMonDisplay;
-  class FarmDisplay;
-  class ProcFarm;
-  class CPUfarm;
-
-
-  /**@class ProcessDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Display showing all processes on a given node.
-   *
-   *   @author M.Frank
-   */
-  class ProcessDisplay : public InternalDisplay {
-    /// Flag for various operation modes
-    int m_flag;
-  public:
-    /// Initializing constructor
-    ProcessDisplay(InternalDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=60,int width=132);
-    /// Standard destructor
-    virtual ~ProcessDisplay();
-    /// Update display content
-    virtual void update(const void* data);
-    /// Update display content
-    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
-    /// Update display content
-    void updateContent(const ProcFarm& pf);
-  };
-
-  /**@class CPUDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Display showing all processes on a given node.
-   *
-   *   @author M.Frank
-   */
-  class CPUDisplay : public InternalDisplay {
-    /// Node name
-    std::string  m_node;
-  public:
-    /// Initializing constructor
-    CPUDisplay(InternalDisplay* parent, const std::string& title, const std::string& node, int height=60,int width=132);
-    /// Standard destructor
-    virtual ~CPUDisplay();
-    /// Update display content
-    virtual void update(const void* data);
-    /// Update display content
-    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
-    /// Update display content
-    void updateContent(const CPUfarm& pf);
-  };
-
-  /**@class BufferDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Internal MBM monitor display, when spying on individual nodes.
-   *
-   *   @author M.Frank
-   */
-  class BufferDisplay : public InternalDisplay {
-  protected:
-    /// Node number in node set
-    int m_node;
-  public:
-    /// Initializing constructor
-    BufferDisplay(InternalDisplay* parent, const std::string& title);
-    /// Standard destructor
-    virtual ~BufferDisplay() {}
-    /// Set the node number for the display
-    void setNode(int which) { m_node = which; }
-    /// Update display content
-    virtual void update(const void* data);
-    /// Update display content
-    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
-  };
-
-  /**@class CtrlNodeDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Internal Task control display, when spying on individual nodes.
-   *
-   *   @author M.Frank
-   */
-  class CtrlNodeDisplay : public InternalDisplay {
-  protected:
-    /// Node number in node set
-    int m_node;
-    /// Node name if running standalone
-    std::string m_nodeName;
-  public:
-    /// Initializing constructor
-    CtrlNodeDisplay(InternalDisplay* parent, const std::string& title);
-    /// Standard destructor
-    virtual ~CtrlNodeDisplay() {}
-    /// Set the node number for the display
-    void setNode(int which) { m_node = which; }
-    /// Connect to data resources
-    virtual void connect()  {  InternalDisplay::connect(); }
-    /// Connect display to data sources
-    virtual void connect(const std::string& node);
-    /// Update display content
-    virtual void update(const void* data);
-    /// Update display content
-    virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
-    /// DIM command service callback
-    static void tsDataHandler(void* tag, void* address, int* size);
-  };
-
+#if 0
   class FarmDisplayShow : public InternalDisplay  {
   protected:
     enum { HLT_MODE, RECO_MODE, CTRL_MODE };
@@ -213,6 +92,7 @@ namespace ROMon {
     /// Handle common keyboard interrupts
     virtual int handleKeyboard(int key);
   };
+#endif
 
   /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
@@ -220,9 +100,8 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmDisplay : public FarmDisplayShow  {
+  class FarmDisplay : public FarmDisplayBase  {
   protected:
-    enum { HLT_MODE, RECO_MODE, CTRL_MODE };
     typedef std::map<std::string, InternalDisplay*> SubDisplays;
     typedef std::vector<std::string> Farms;
     SubDisplays                      m_farmDisplays;

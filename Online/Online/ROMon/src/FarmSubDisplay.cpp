@@ -277,14 +277,14 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   // If Result buffer is not in use
   if ( buf_clients[3] != 0 && buf_clients[2] == 0 )  {
     buf_clients[2] = buf_clients[3];
-    fspace[2]      = fspace[2];
-    fslots[2]      = fslots[2];
-    min_space[2]   = min_space[2];
-    min_slots[2]   = min_slots[2];
-    min_prod[2]    = min_prod[2];
-    evt_prod[2]    = evt_prod[2];
-    free_space[2]  = free_space[2];
-    free_slots[2]  = free_slots[2];
+    fspace[2]      = fspace[3];
+    fslots[2]      = fslots[3];
+    min_space[2]   = min_space[3];
+    min_slots[2]   = min_slots[3];
+    min_prod[2]    = min_prod[3];
+    evt_prod[2]    = evt_prod[3];
+    free_space[2]  = free_space[3];
+    free_slots[2]  = free_slots[3];
   }
 
   bool slots_min = fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN;

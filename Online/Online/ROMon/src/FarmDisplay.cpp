@@ -116,7 +116,7 @@ namespace {
 
 /// Standard constructor
 FarmDisplay::FarmDisplay(int argc, char** argv)
-  : FarmDisplayShow()
+  : FarmDisplayBase()
 {
   char txt[128];
   string anchor, prefix;
@@ -379,7 +379,7 @@ void FarmDisplay::update(const void* address) {
 
 /// Handle keyboard interrupts
 int FarmDisplay::handleKeyboard(int key)    {
-  if ( FarmDisplayShow::handleKeyboard(key) == WT_SUCCESS ) {
+  if ( FarmDisplayBase::handleKeyboard(key) == WT_SUCCESS ) {
     return WT_SUCCESS;
   }
   int cnt, col, row;
