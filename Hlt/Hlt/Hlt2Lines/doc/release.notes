@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-22 - Albert Puig
+ - Updated Hlt2RadiativeTopologicalLines.py with more cuts.
+
 ! 2011-06-21 - Benoit Viaud
  - One line was forgotten below. Added it.
 
