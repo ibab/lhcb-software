@@ -4,6 +4,7 @@
 
 // This include has been moved to Event/GenEvent package.
 // This file is provided for backward compatibility.
+#warning "You should now include GenEvent/HepMCUtils.h instead"
 #include "GenEvent/HepMCUtils.h"
 
 #endif // GENERATORS_HEPMCUTILS_H

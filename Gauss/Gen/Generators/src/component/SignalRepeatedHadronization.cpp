@@ -18,7 +18,7 @@
 // from Generators
 #include "Generators/IProductionTool.h"
 #include "Generators/IDecayTool.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SignalRepeatedHadronization

@@ -17,7 +17,7 @@
 // from Generators
 #include "Generators/IDecayTool.h"
 #include "Generators/IProductionTool.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 // local
 #include "SignalForcedFragmentation.h"

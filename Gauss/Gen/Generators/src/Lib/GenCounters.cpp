@@ -5,7 +5,7 @@
 #include "Generators/GenCounters.h"
 
 // Generators
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 // Boost
 #include <boost/array.hpp>

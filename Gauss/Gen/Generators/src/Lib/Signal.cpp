@@ -12,7 +12,7 @@
 // from Generators
 #include "Generators/IDecayTool.h"
 #include "Generators/GenCounters.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 // Function to test if a HepMC::GenParticle is Particle (or antiParticle) 
 struct isParticle : std::unary_function< const HepMC::GenParticle * , bool > {

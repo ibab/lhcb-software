@@ -18,7 +18,7 @@
 #include "Generators/IDecayTool.h"
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ExternalGenerator

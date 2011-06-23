@@ -9,7 +9,7 @@
 
 // from Generators
 #include "Generators/ISampleGenerationTool.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RepeatDecay

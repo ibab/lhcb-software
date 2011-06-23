@@ -5,6 +5,9 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 201-06-23 - Patrick Robbe
+ - clean header files
+
 ! 2011-06-22 - Patrick Robbe
  - Move IGenCutTool.h and IFullGenEventCutTool.h to MCInterfaces package
  - Move cut tools to a new Gen/GenCuts package

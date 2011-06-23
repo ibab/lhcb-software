@@ -20,7 +20,7 @@
 #include "Generators/IDecayTool.h" 
 #include "Generators/IVertexSmearingTool.h"
 #include "Generators/GenCounters.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 // Gaudi Common Flat Random Number generator
 #include "Generators/RandomForGenerator.h"
