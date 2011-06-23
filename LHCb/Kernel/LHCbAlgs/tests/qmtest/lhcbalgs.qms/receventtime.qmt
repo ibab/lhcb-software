@@ -34,16 +34,16 @@ EventDataSvc(ForceLeaves = True)
 findReferenceBlock("""
 ApplicationMgr       INFO Application Manager Started successfully
 LHCbAlgsTest::C...   INFO Adding RecHeader with event time 0.0
-EventClockSvc       DEBUG New BeginEvent incident received
 EventClockSvc.E...  DEBUG The object of type 'LHCb::RecHeader*' has been retrieved from TS at address 'Rec/Header'
+EventClockSvc       DEBUG New BeginEvent incident received
 EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.0
 LHCbAlgsTest::C...   INFO Adding RecHeader with event time 1.0
-EventClockSvc       DEBUG New BeginEvent incident received
 EventClockSvc.E...  DEBUG The object of type 'LHCb::RecHeader*' has been retrieved from TS at address 'Rec/Header'
+EventClockSvc       DEBUG New BeginEvent incident received
 EventClockSvc       DEBUG DetDataSvc::eventTime() -> 1.0
 LHCbAlgsTest::C...   INFO Adding RecHeader with event time 2.0
-EventClockSvc       DEBUG New BeginEvent incident received
 EventClockSvc.E...  DEBUG The object of type 'LHCb::RecHeader*' has been retrieved from TS at address 'Rec/Header'
+EventClockSvc       DEBUG New BeginEvent incident received
 EventClockSvc       DEBUG DetDataSvc::eventTime() -> 2.0
 """)
 </text></argument>

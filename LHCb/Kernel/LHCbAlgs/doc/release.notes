@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - Marco Cattaneo
+ - Update QMTest reference to follow verbosity changes in EventClockSvc
+
 !========================= LHCbAlgs v2r39 2011-06-14 =========================
 ! 2011-05-25 - Patrick Koppenburg
  - AlgorithmCorreations : Fix bug https://savannah.cern.ch/bugs/index.php?82587
