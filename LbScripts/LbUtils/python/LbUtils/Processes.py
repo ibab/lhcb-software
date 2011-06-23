@@ -162,11 +162,12 @@ class RetryCommand(object):
             sleep(self._sleeptime)
         return retval
 
-def averageLoad():
+def loadAverage():
     load = [ 1.0, 1.0, 1.0]
 
     if sys.platform != "win32" :
-        if os.path.exists("/proc/loadavg") :
-            pass
+        laf = "/proc/loadavg"
+        if os.path.exists(laf) :
+            load = [ float(x) for x in open(laf).read().split()[:3]]
 
     return load
