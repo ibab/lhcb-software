@@ -5,6 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - V. Gligorov
+ - Update default cut in Validate With TT to 3
+ - Fix conflicts caused in Hlt2Tracking by previous commits 
+
 ! 2011-06-22 - Benoit Viaud
  - Added SecondLoop Muons to Hlt2Tracking.py, plus the configurables of two new lines 
    using them for D0->HHMuMu
