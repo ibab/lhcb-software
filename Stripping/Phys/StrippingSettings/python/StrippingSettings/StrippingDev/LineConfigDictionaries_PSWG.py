@@ -1055,14 +1055,14 @@ Ccbar2Ppbar = {
                     'ProtonPT'         :  1900.  , # MeV
                     'ProtonP'          :    -2.  , # MeV
                     'ProtonTRCHI2DOF' :      5.  ,
-                    'ProtonPIDppi'     :    10.  , # CombDLL(p-pi)
-                    'ProtonPIDpK'      :     5.  , # CombDLL(p-K)
+                    'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
+                    'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
                     'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
                     'CombMinMass'      :  2750.  , # MeV, before Vtx fit
                     'MaxMass'          :  4000.  , # MeV, after Vtx fit
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
-                    'CCPT'             :  5000.    
+                    'CCPT'             :  6000.    
                    },
     'STREAMS' : [ 'CharmCompleteEvent' ] ,
     'WGs'    : [ 'PSWG' ]

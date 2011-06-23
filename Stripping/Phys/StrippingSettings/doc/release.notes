@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-23 - Jibo He
+ - LineConfigDictionaries_Charm.py
+   . DstarD02xx, prescales updated
+ - LineConfigDictionaries_PSWG.py 
+   . Ccbar2Ppbar, cuts tightened
+
 !========================= StrippingSettings v2r4 2011-06-21 =========================
 ! 2011-06-20 - Jibo He
  - LineConfigDictionaries_GLWG.py
