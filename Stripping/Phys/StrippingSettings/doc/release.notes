@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-06-23 - Sebastian Schleich
+ - removed superfluous phi-pt cut from BsPhiPhi stripping (retention unchanged, using TestMyStrippingLineOn2011Data.py)
 
 ! 2011-06-23 - Jibo He
  - LineConfigDictionaries_Charm.py
