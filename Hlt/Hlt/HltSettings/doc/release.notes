@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - V. Gligorov
+ - Add new "July2011" settings for running in summer/autumn 2011.
+
 ! 2011-06-20 - V. Gligorov
  - Add new charm Calibration NoBias line to Physics_May2011  
 
