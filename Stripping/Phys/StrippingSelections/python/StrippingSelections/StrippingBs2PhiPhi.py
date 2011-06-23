@@ -47,7 +47,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
     config_default = {
                   'KaonPT'              : 450      # MeV/c
                 , 'KaonIPCHI2'          : 3.5      # adimensional
-                , 'PhiPT'               : 950      # MeV/c
+                , 'PhiPT'               : 0        # MeV/c
                 , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
                 , 'PhiVertexCHI2pDOF'   : 25       # adimensional
                 , 'PhiMassWindow'       : 25       # MeV/cc

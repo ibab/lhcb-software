@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-23 - Sebastian Schleich
+ - removed superfluous phi-pt cut from BsPhiPhi stripping (retention unchanged, using TestMyStrippingLineOn2011Data.py)
+
 !========================= StrippingSelections v3r5 2011-06-21 =========================
 ! 2011-06-20 - Albert Puig
  - Fixed cut on the mass window of B2XGammaLines
