@@ -121,7 +121,7 @@ class Hlt2Conf(LHCbConfigurableUser):
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "DefaultVoidFilter"          : ''
-                , "Hlt2ForwardMaxVelo"         : 350
+                , "Hlt2ForwardMaxVelo"         : 1000
                 }
 
 ###################################################################################
