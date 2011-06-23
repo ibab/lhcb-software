@@ -5,6 +5,8 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - V. Gligorov
+ - Fx problems in TrackFittedBasicParticles caused by previous commits. 
 
 ! 2011-06-22 - Benoit Viaud
 - Add BiKalmanFittedSecondLoop Muons to TrackFittedBasicParticles.py
