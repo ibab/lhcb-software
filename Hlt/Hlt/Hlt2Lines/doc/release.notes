@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - Albert Puig
+ - Updated Hlt2B2XGammaLines.py to use PhotonsFromL0.
+
 ! 2011-06-22 - Albert Puig
  - Updated Hlt2RadiativeTopologicalLines.py with more cuts.
 
