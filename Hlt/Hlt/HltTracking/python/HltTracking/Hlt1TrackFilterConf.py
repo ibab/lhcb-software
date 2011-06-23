@@ -16,7 +16,7 @@ def ConfiguredTrackFilter( toolName, **args ):
 
 ## Configure tool, set the match chi2
 validate = "FastTTValidationTool/ValidateWithTT"
-ConfiguredTrackFilter( validate, MaxTTProj = 7 )
+ConfiguredTrackFilter( validate, MaxTTProj = 3 )
 
 ## Streamer symbol
 ValidateWithTT = "ValidateWithTT = execute( decodeTT ) * TC_FILTER_TR( '', '%s' )" \
