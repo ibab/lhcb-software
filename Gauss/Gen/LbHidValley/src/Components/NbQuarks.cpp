@@ -27,7 +27,7 @@
 // ============================================================================
 // Generators 
 // ============================================================================
-#include "Generators/IGenCutTool.h"
+#include "MCInterfaces/IGenCutTool.h"
 // ============================================================================
 /** @class NbQuarks NbQuarks.cpp
  *  Simple cut tool, based on the counting of b-quarks in the acceptance 

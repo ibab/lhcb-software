@@ -19,6 +19,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-06-23 - Patrick Robbe
+ - src/Components/NbQuarks.cpp: fix headers
+
 ! 2011-06-19 - Patrick Robbe
  - fix compilation warning in HidValley.cpp
  - add use LoKiGen in requirements because it has been removed
