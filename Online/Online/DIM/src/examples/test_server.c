@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 {
 	int i, id, *ptr;
 	char aux[80];
-	char name[84], name1[132];
+	char name[84];
 	int on = 0;
 	long dnsid = 0;
 	char extra_dns[128];
@@ -199,6 +199,7 @@ printf("Adding service %s\n",more_str[curr_more_index]);
 printf("Connecting New DNS \n");
 				for(i = 0; i < 10; i++)
 				{
+				        char name1[132];
 					sprintf(name1,"NewService%d",i);
 					NewIds[i] = dis_add_service_dns(dnsid, name1, "i", &NewData, sizeof(NewData), 
 						(void *)0, 0 );
