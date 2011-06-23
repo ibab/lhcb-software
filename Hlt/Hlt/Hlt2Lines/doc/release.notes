@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - Will Barter
+ - Added a new, alternative VHighPT Single Muon Line in Hlt2InclusiveMuonLines.py
+ - not currently used, there as a backup in case rate on current line is too high.
+
 ! 2011-06-23 - Albert Puig
  - Updated Hlt2B2XGammaLines.py to use PhotonsFromL0.
 

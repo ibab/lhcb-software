@@ -18,6 +18,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2SingleMuon'                : 1.0
                                    ,'Hlt2SingleMuonRateLimited'     : 'RATE(200)'
                                    ,'Hlt2SingleHighPTMuon'          : 1.0
+                                   ,'Hlt2SingleVHighPTMuon'          : 1.0
                                    ,'Hlt2SingleMuonLowPT'          : 0.1
                                    ,'Hlt2IncMuTrack'                : 1.0
                                    ,'Hlt2IncMuTrackNoIP'            : 1.0
@@ -31,6 +32,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'SingleMuonIP'        : 0.25     # mm
                   ,'SingleMuonIPChi2'    : 100
                   ,'SingleMuonHighPt'    : 10000     # MeV
+                  ,'SingleMuonVHighPt'    : 15000     # MeV
                   ,'SingleMuonLowPt'     : 4800     # MeV
                   # Mu+track cuts 
                   ,'MuTrackMuPt'         : 800       # MeV
@@ -181,6 +183,21 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                          , postscale = self.postscale
                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonHighPTDecision" : 50192 } )
+        #--------------------------------------------
+        
+        Hlt2SelSingleVHighPTMuon = Hlt2Member(   FilterDesktop
+                                                , "Filter"
+                                                , Code = "(PT>%(SingleMuonVHighPt)s*MeV)" % self.getProps()
+                                                , Inputs  = [BiKalmanFittedMuons]
+                                                , InputPrimaryVertices = "None"
+                                                , UseP2PVRelations = False
+                                                )
+        line = Hlt2Line( 'SingleMuonVHighPT'
+                         , prescale = self.prescale 
+                         , algos = [ BiKalmanFittedMuons, Hlt2SelSingleVHighPTMuon]
+                         , postscale = self.postscale
+                         )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonVHighPTDecision" : 50196} )
         #--------------------------------------------
                 
         Hlt2SelSingleLowPTMuon = Hlt2Member(   FilterDesktop
