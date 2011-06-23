@@ -50,7 +50,7 @@ namespace {
     ClientStat(const ClientStat& c) 
       : timesqr(c.timesqr), time(c.time), nevt(c.nevt), last(c.last)
     {tm[0]=c.tm[0];tm[1]=c.tm[1];}
-
+#ifndef __INTEL_COMPILER
     ClientStat& operator=(const ClientStat& c) {
       timesqr = c.timesqr; 
       time    = c.time; 
@@ -60,6 +60,7 @@ namespace {
       tm[1]   = c.tm[1];
       return *this;
     }
+#endif
     long long entries() const { return nevt;                        }
     double mean()       const { return time/double(nevt);           }
     double mean2()      const { return timesqr/double(nevt);        }
@@ -78,12 +79,14 @@ namespace {
     if ( m < 99.9999 ) fmt = " %10lld %5.2f %c%5.1f ";
     return ::sprintf(txt,fmt,cs->entries(),m, char(177), cs->sigma());
   }  
+
   size_t append(char* txt, const BufferStats& bs, const string& task) {
     BufferStats::const_iterator l = bs.find(task);
     if ( l == bs.end() ) return append(txt,0);
     const ClientStat& cs = (*l).second;
     return append(txt,&cs);
   }
+
   void makeNodeStatLine(char* txt, const char* nnam, const NodeStats& ns)   {
     size_t len = ::sprintf(txt,"%-10s ",nnam);
     NodeStats::const_iterator k;
