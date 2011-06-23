@@ -1,5 +1,3 @@
-// $Id: XmlGenericCnv.cpp,v 1.26 2009-12-05 14:46:03 dgolubko Exp $
-
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
 #include "DetDescCnv/XmlCnvException.h"
@@ -110,8 +108,7 @@ StatusCode XmlGenericCnv::finalize() {
 // -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
                                      DataObject*&    refpObject)  {
-  // creates a msg stream for debug purposes
-  //MsgStream log( msgSvc(), "XmlGenericCnv" );
+
   StatusCode sc = StatusCode::FAILURE;
    
   // maked sure the address is not null
@@ -125,17 +122,20 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 
   // displays the address for debug purposes 
   if ( isAString ) {
-    debug() << "Address for string: orig. path = " << addr->par()[2]
-            << ", ObjectName = " << addr->par()[1] << ", string = ";
-    if ( addr->par()[0].size() > 25 ) {
-      debug() << addr->par()[0].substr(0,22) << "...";
-    } else {
-      debug() << addr->par()[0];
+    if( m_msg->level() <= MSG::DEBUG ) {
+      debug() << "Address for string: orig. path = " << addr->par()[2]
+              << ", ObjectName = " << addr->par()[1] << ", string = ";
+      if ( addr->par()[0].size() > 25 ) {
+        debug() << addr->par()[0].substr(0,22) << "...";
+      } else {
+        debug() << addr->par()[0];
+      }
+      debug() << endmsg;
     }
-    debug() << endmsg;
   } else {
-    debug() << "Address: filename = " << addr->par()[0]
-            << ", ObjectName = " << addr->par()[1] << endmsg;
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "Address: filename = " << addr->par()[0]
+                << ", ObjectName = " << addr->par()[1] << endmsg;
   }
 
   std::string fileName = addr->par()[0];
@@ -171,8 +171,9 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
       if (list->item(index)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
         xercesc::DOMNode* childNode = list->item(index);
         xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
-        verbose() << "found element " << dom2Std (childElement->getNodeName())
-                  << " at top level of xml file." << endmsg;
+        if( m_msg->level() <= MSG::VERBOSE )
+          verbose() << "found element " << dom2Std (childElement->getNodeName())
+                    << " at top level of xml file." << endmsg;
         if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),DDDBString) ||
             0 == xercesc::XMLString::compareString(childElement->getNodeName(),materialsString)) {
           mainNode = childElement;
@@ -195,7 +196,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
         defaultMajorVersion = "v5";
         defaultMinorVersion = "0";
       }
-      debug() << "Detector Description Markup Language Version " << versionAttribute << endmsg;
+      if( m_msg->level() <= MSG::DEBUG )
+        debug() << "Detector Description Markup Language Version " << versionAttribute << endmsg;
       std::string::size_type dotPos = versionAttribute.find ('.');
       std::string majorVersion;
       std::string minorVersion = "0";
@@ -226,7 +228,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (macro->getAttribute (nameString));
           std::string value = dom2Std (macro->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          debug() << "Added DDDB Macro " << name << " = " << value << endmsg;
+          if( m_msg->level() <= MSG::VERBOSE )
+            verbose() << "Added DDDB Macro " << name << " = " << value << endmsg;
         }
         // deals with old parameter definitions
         // get the parameters
@@ -238,7 +241,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (parameter->getAttribute (nameString));
           std::string value = dom2Std (parameter->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          debug() << "Added DDDB Parameter " << name << " = " << value << endmsg;
+          if( m_msg->level() <= MSG::VERBOSE )
+            verbose() << "Added DDDB Parameter " << name << " = " << value << endmsg;
         }
         // retrieve the name of the object we want to create. Removes the leading
         // '/' if needed
@@ -255,7 +259,8 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           }
         }        
 
-        debug() << "getElementByID for " << objectName << endmsg;
+        if( m_msg->level() <= MSG::VERBOSE )
+          verbose() << "getElementByID for " << objectName << endmsg;
 
         // finds the corresponding node in the DOM tree
         XMLCh* nameString = xercesc::XMLString::transcode(objectName.c_str());
@@ -312,8 +317,6 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
                                              DataObject*& refpObject,
                                              IOpaqueAddress* address) {
-  // creates a msg stream for debug purposes
-  //MsgStream log( msgSvc(), "XmlGenericCnv" );
 
   // In case we are dealing with xml elements that can be extended (detelem
   // or condition to be short), the clid of the element needs to be checked
@@ -327,16 +330,13 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
     if (clsID != this->objType()) {
       IConverter* conv = this->conversionSvc()->converter(clsID);
       if (0 == conv) {
-        if (this->xmlSvc()->allowGenericCnv()) {
-          debug();
-        } else {
-          error();
+        if (false == this->xmlSvc()->allowGenericCnv()) {
+          error() << "No proper converter found for classID " << clsID
+                  << ", the default converter for " << dom2Std(tagName)
+                  << " will be used. This message may be ignored in case you are "
+                  << "fine with the default converter (ie you don't use the "
+                  << "content of the specific part)." << endmsg;
         }
-        *m_msg << "No proper converter found for classID " << clsID
-               << ", the default converter for " << dom2Std(tagName)
-               << " will be used. This message may be ignored in case you are "
-               << "fine with the default converter (ie you don't use the "
-               << "content of the specific part)." << endmsg;
       } else {
         converter = dynamic_cast <XmlGenericCnv*> (conv);
         if (0 == converter) {
@@ -496,12 +496,14 @@ XmlGenericCnv::createAddressForHref (std::string href,
   // expand environment variables in href
   std::string oldPath=href;
   if (AddressTools::hasEnvironmentVariable(href) ) {
-    verbose() << "Found environment variable in path " << href << endmsg;
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "Found environment variable in path " << href << endmsg;
     if (!AddressTools::expandAddress(href)) {
       throw XmlCnvException("XmlGenericCnv : unable to resolve path "+oldPath,
                             StatusCode::FAILURE);
     }
-    verbose() << "path expanded to " << href << endmsg;    
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "path expanded to " << href << endmsg;    
   }
   
   // The URL can be of the format
@@ -512,7 +514,8 @@ XmlGenericCnv::createAddressForHref (std::string href,
   // Is it a CondDB address ?
   bool condDB = m_have_CONDDB_StorageType && (0==href.find("conddb:/"));
   if (condDB) {
-    verbose() << "Href points to a conddb URL: " << href << endmsg;
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "Href points to a conddb URL: " << href << endmsg;
 
     // the href should have the format:
     // "conddb:/path/to/folder[:channel_id][#object_name]"
@@ -552,13 +555,15 @@ XmlGenericCnv::createAddressForHref (std::string href,
       entryName = "/" + path.substr(path.find_last_of('/')+1);
     }
 
-    verbose() << "Now build a CondDB address for path=" << path
-              << " channelId=" << channelId
-              << " and entryName=" << entryName << endmsg;
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "Now build a CondDB address for path=" << path
+                << " channelId=" << channelId
+                << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createCondDBAddress (path, entryName, channelId, clid);    
   } else {
-    verbose() << "Href points to a regular URL: " << href << endmsg;
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "Href points to a regular URL: " << href << endmsg;
     // here we deal with a regular URL
     // first parse the href to get entryName and location
     std::string::size_type poundPosition = href.find_last_of('#');
@@ -675,8 +680,9 @@ XmlGenericCnv::createAddressForHref (std::string href,
          && location[0] != '/' ) // avoid infinite loops
       return createAddressForHref(location + "#" + entryName.substr(1), clid, parent);
 
-    verbose() << "Now build an XML address for location=" << location
-              << " and entryName=" << entryName << endmsg;
+    if( m_msg->level() <= MSG::VERBOSE )
+      verbose() << "Now build an XML address for location=" << location
+                << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createXmlAddress (location, entryName, clid);  
   }
@@ -708,9 +714,10 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
                            sc);
   }
 
-  debug() << "New address created : location = "
-          << location << ", entry name = "
-          << entryName << " isString : " << isString << endmsg;
+  if( m_msg->level() <= MSG::VERBOSE )
+    verbose() << "New address created : location = "
+              << location << ", entry name = "
+              << entryName << " isString : " << isString << endmsg;
   return result;
 }
 
@@ -732,9 +739,10 @@ IOpaqueAddress* XmlGenericCnv::createCondDBAddress (std::string path,
     throw XmlCnvException ("XmlGenericCnv : Unable to create Address from href",
                            sc);
   }
-  debug() << "New address created : path = " << path
-          << ", channel id = " << channelId
-          << ", entry name = " << entryName << endmsg;
+  if( m_msg->level() <= MSG::VERBOSE )
+    verbose() << "New address created : path = " << path
+              << ", channel id = " << channelId
+              << ", entry name = " << entryName << endmsg;
   return result;
 }
 

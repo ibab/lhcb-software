@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2011-06-23 - Marco Cattaneo
+ - Protect DEBUG and VERBOSE messages
+ - Reduce DEBUG verbosity of XmlGenericCnv (moved to VERBOSE)
+
 !========================= DetDescCnv v4r13 2011-04-26 =========================
 ! 2011-04-19 - Marco Cattaneo
  - Fix defect 16169, UNINIT_CTOR in XmlMixtureCnv.cpp

@@ -154,7 +154,8 @@ StatusCode XmlSurfaceCnv::i_fillObj (xercesc::DOMElement* childElement,
   const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
   if( 0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
-    log << MSG::VERBOSE << "looking at tabprops" << endmsg;
+    if( log.level() <= MSG::DEBUG )
+      log << MSG::VERBOSE << "looking at tabprops" << endmsg;
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement->getAttribute (addressString));

@@ -1,5 +1,3 @@
-// $Id: XmlCatalogCnv.cpp,v 1.9 2009-04-17 12:25:18 cattanem Exp $
-
 // include files
 #include <stdlib.h>
 #include <iostream>
@@ -196,8 +194,9 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
         << endmsg;
     return StatusCode::FAILURE;
   }
-  log << MSG::VERBOSE << "tag is " << tagNameString
-      << ", clsID is " << clsID << endmsg;
+  if( log.level() <= MSG::VERBOSE )
+    log << MSG::VERBOSE << "tag is " << tagNameString
+        << ", clsID is " << clsID << endmsg;
   xercesc::XMLString::release(&tagNameString);
   checkConverterExistence(clsID);
   std::string entryName;
