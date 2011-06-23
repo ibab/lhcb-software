@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Transform4DTypes.h"
 
-#include "Generators/ExternalGenerator.h"
 #include "MCInterfaces/IGenCutTool.h"
 
 // Forward declaration

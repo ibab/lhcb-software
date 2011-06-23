@@ -4,8 +4,6 @@
 // local
 #include "UpsilonDaughtersInLHCb.h"
 
-#include "Generators/ExternalGenerator.h"
-
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Vector4DTypes.h"
@@ -19,7 +17,7 @@
 #include "HepMC/GenVertex.h"
 
 // from Generators
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 #include "Generators/IDecayTool.h"
 
 //-----------------------------------------------------------------------------

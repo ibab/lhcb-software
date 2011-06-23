@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Generators/IGenCutTool.h"
+#include "MCInterfaces/IGenCutTool.h"
 #include "GaudiKernel/Transform4DTypes.h"
 
 /** @class DaughtersInLHCb DaughtersInLHCb.h 

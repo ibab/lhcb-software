@@ -15,7 +15,7 @@
 #include "HepMC/GenVertex.h"
 
 // from Generators
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 #include "Generators/IDecayTool.h"
 
 //-----------------------------------------------------------------------------
