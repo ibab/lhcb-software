@@ -31,7 +31,7 @@ DECLARE_TOOL_FACTORY( FastTTValidationTool )
   declareProperty( "CentralHole"   , m_centralHole    =   50. * Gaudi::Units::mm );
   declareProperty( "HorizontalHole", m_horizontalHole =    3. * Gaudi::Units::mm );
   declareProperty( "MaxTTSize"     , m_maxTTSize      = 1100. * Gaudi::Units::mm );
-  declareProperty( "MaxTTProj"     , m_maxTTProj      =    7. * Gaudi::Units::mm );
+  declareProperty( "MaxTTProj"     , m_maxTTProj      =    3. * Gaudi::Units::mm );
 
 }
 //=============================================================================
