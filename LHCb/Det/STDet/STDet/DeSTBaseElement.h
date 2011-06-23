@@ -201,9 +201,11 @@ inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, Object
 
  try { 
    //   if (forceUpdate) updMgrSvc()->invalidate(this);
-   msg << MSG::DEBUG << "Registering conditions" << endmsg;
+   if( msg.level() <= MSG::DEBUG )
+     msg << MSG::DEBUG << "Registering conditions" << endmsg;
    updMgrSvc()->registerCondition(caller,object,mf);
-   msg << MSG::DEBUG << "Start first update" << endmsg;
+   if( msg.level() <= MSG::DEBUG )
+     msg << MSG::DEBUG << "Start first update" << endmsg;
    if (forceUpdate){
        sc = updMgrSvc()->update(caller);
        if (sc.isFailure()){
@@ -230,9 +232,11 @@ inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, const 
 
  try { 
    //if (forceUpdate) updMgrSvc()->invalidate(this);
-   msg << MSG::DEBUG << "Registering " << conditionName << " condition" << endmsg;
+   if( msg.level() <= MSG::DEBUG )
+     msg << MSG::DEBUG << "Registering " << conditionName << " condition" << endmsg;
    updMgrSvc()->registerCondition(caller,condition(conditionName).path(),mf);
-   msg << MSG::DEBUG << "Start first update" << endmsg;
+   if( msg.level() <= MSG::DEBUG )
+     msg << MSG::DEBUG << "Start first update" << endmsg;
    if (forceUpdate){
       sc = updMgrSvc()->update(caller);
       if (sc.isFailure()){

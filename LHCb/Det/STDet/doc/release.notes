@@ -3,6 +3,9 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2011-06-23 - Marco Cattaneo
+ - Protect creation of DEBUG MsgStream
+
 !========================= STDet v4r25 2011-04-04 =========================
 ! 2011-02-24 - Jeroen VAN TILBURG
  - Fix uninitialised variables warnings from Coverity report.
