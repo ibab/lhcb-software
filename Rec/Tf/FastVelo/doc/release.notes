@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - V. Gligorov
+ - Update default cut in FastTTValidation to 3.
+
 !========================= FastVelo v1r5 2011-02-28 =========================
 ! 2011-02-17 - Olivier Callot
  - Fix the order of initializers in FastVeloTrack to avoid a compiler warning.
