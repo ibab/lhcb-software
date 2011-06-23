@@ -8,7 +8,7 @@
 #include "GaudiKernel/Transform4DTypes.h"
 
 #include "Generators/ExternalGenerator.h"
-#include "Generators/IGenCutTool.h"
+#include "MCInterfaces/IGenCutTool.h"
 
 // Forward declaration
 class IDecayTool ;

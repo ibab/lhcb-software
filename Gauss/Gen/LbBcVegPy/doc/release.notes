@@ -3,6 +3,9 @@
 ! Responsible : Patrick ROBBE
 !=====================================================================
 
+! 2011-06-22 - Patrick Robbe
+ - src/component/BcDaugthersInLHCb.* : move to MCInterfaces package
+
 ! 2011-06-17 - Patrick Robbe
  - options/BcVegPy.opts/.py: activate generation of weighted events
 
