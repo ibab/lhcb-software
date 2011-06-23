@@ -1,5 +1,3 @@
-// $Id: DeOTLayer.cpp,v 1.13 2007-06-09 13:56:48 janos Exp $
-
 /// GaudiKernel
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -67,9 +65,11 @@ StatusCode DeOTLayer::initialize() {
   /// Update and chache planes
   MsgStream msg(msgSvc(), name() );
   try {
-    msg << MSG::DEBUG << "Registering conditions" << endmsg;
+    if( msg.level() <= MSG::DEBUG )
+      msg << MSG::DEBUG << "Registering conditions" << endmsg;
     updMgrSvc()->registerCondition(this,this->geometry(),&DeOTLayer::cachePlane);
-    msg << MSG::DEBUG << "Start first update" << endmsg;
+    if( msg.level() <= MSG::DEBUG )
+      msg << MSG::DEBUG << "Start first update" << endmsg;
     StatusCode sc = updMgrSvc()->update(this);
     if ( !sc.isSuccess() ) {
       return sc;

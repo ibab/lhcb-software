@@ -2,6 +2,10 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2011-06-23 - Marco Cattaneo
+ - Protect usage of DEBUG and VERBOSE messages
+ - Decrease DEBUG verbosity of DeOTModule, use VERBOSE instead
+
 !========================= OTDet v8r6 2011-06-14 =========================
 ! 2011-05-16 - Alexandr Kozlinskiy
  - Fixed bug with usage of calibration instead of status for channel status

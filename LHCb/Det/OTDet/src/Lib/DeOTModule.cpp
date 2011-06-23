@@ -1,4 +1,3 @@
-// $Id: DeOTModule.cpp,v 1.45 2010-02-03 08:30:06 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -131,7 +130,8 @@ StatusCode DeOTModule::initialize() {
   /// Register conditions with update manager svc
   MsgStream msg( msgSvc(), name() );
   try {
-    msg << MSG::DEBUG << "Registering conditions" << endmsg;
+    if( msg.level() <= MSG::VERBOSE )
+      msg << MSG::VERBOSE << "Registering conditions" << endmsg;
     updMgrSvc()->registerCondition( this, this->geometry()    , &DeOTModule::cacheInfo           );
     if ( hasCondition( m_statusName ) ) { ///< Only do this if condtion is in LHCBCOND
       m_status = condition( m_statusName );
@@ -141,9 +141,11 @@ StatusCode DeOTModule::initialize() {
       m_calibration = condition( m_calibrationName );
       updMgrSvc()->registerCondition( this, m_calibration.path(), &DeOTModule::calibrationCallback );
     } else {
-      msg << MSG::DEBUG << "Going to use DC06 defaults for RT-relation and T0s" << endmsg;
+      if( msg.level() <= MSG::VERBOSE )
+        msg << MSG::VERBOSE << "Going to use DC06 defaults for RT-relation and T0s" << endmsg;
     }
-    msg << MSG::DEBUG << "Start first update of conditions" << endmsg;
+    if( msg.level() <= MSG::VERBOSE )
+      msg << MSG::VERBOSE << "Start first update of conditions" << endmsg;
     StatusCode sc = updMgrSvc()->update( this );
     if ( !sc.isSuccess() ) {
       msg << MSG::WARNING << "Failed to update detector element " << this->name() 
@@ -322,7 +324,8 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     } //curling tracks
   } else {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Entry and exit points are not inside module. Failed to generate hits!" << endmsg;
+    if( msg.level() <= MSG::VERBOSE )
+      msg << MSG::DEBUG << "Entry and exit points are not inside module. Failed to generate hits!" << endmsg;
   }
 }
 
@@ -505,7 +508,8 @@ StatusCode DeOTModule::calibrationCallback() {
   /// Don't need to check if condition exists
   /// Callback will only be registered with ums if condition exists
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Updating Calibration parameters" << endmsg;
+  if( msg.level() <= MSG::DEBUG )
+    msg << MSG::DEBUG << "Updating Calibration parameters" << endmsg;
   try {
     const std::vector<double>& trParameters = 
       m_calibration->param< std::vector<double> >( "TRParameters" ); // in ns
@@ -565,7 +569,8 @@ StatusCode DeOTModule::statusCallback() {
   /// Don't need to check if condition exists
   /// Callback will only be registered with ums if condition exists
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Updating Status parameters" << endmsg;
+  if( msg.level() <= MSG::DEBUG )
+    msg << MSG::DEBUG << "Updating Status parameters" << endmsg;
   try {
     const std::vector<int>& statusflags = m_status->param< std::vector<int> >( "ChannelStatus" );
     if( statusflags.size() == nChannels() || statusflags.size() == MAXNUMCHAN ) // 1 t0 per channel
