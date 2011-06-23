@@ -1,4 +1,3 @@
-// $Id: VeloAlignCond.cpp,v 1.4 2009-07-27 10:36:15 jonrob Exp $
 #include "VeloDet/VeloAlignCond.h"
 
 #include "DetDesc/3DTransformationFunctions.h"
@@ -189,8 +188,9 @@ Gaudi::Transform3D VeloAlignCond::motionSystemTransform() const
 //=============================================================================
 StatusCode VeloAlignCond::makeMatrices()
 {
-  msg() << MSG::VERBOSE << "Making transformation matrix for \'" << name()
-        << "\' Correcting for motion system position." << endmsg ;
+  if( msg().level() <= MSG::VERBOSE )
+    msg() << MSG::VERBOSE << "Making transformation matrix for \'" << name()
+          << "\' Correcting for motion system position." << endmsg ;
   StatusCode sc = AlignmentCondition::makeMatrices() ;
   if( sc.isSuccess() ) {
     // The transform from the position of the sensors
@@ -207,8 +207,9 @@ StatusCode VeloAlignCond::makeMatrices()
 //=============================================================================
 void VeloAlignCond::updateParams(const Gaudi::Transform3D& matrixInv)
 {
-  msg() << MSG::VERBOSE << "Updating condition parameters for \'" << name()
-        << "\' Correcting for motion system position." << endmsg ;
+  if( msg().level() <= MSG::VERBOSE )
+    msg() << MSG::VERBOSE << "Updating condition parameters for \'" << name()
+          << "\' Correcting for motion system position." << endmsg ;
   // The transform from the position of the sensors
   Gaudi::Transform3D mstransform        = motionSystemTransform() ;
   // The transform from the alignment condition

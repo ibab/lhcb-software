@@ -1,4 +1,3 @@
-// $Id: $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -69,7 +68,7 @@ StatusCode DeVeloSensor::initialize()
 
   sc = DetectorElement::initialize();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to initialise DetectorElement" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DetectorElement" << endmsg;
     return sc;
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloSensor") == MSG::DEBUG  ) ;
@@ -94,7 +93,7 @@ StatusCode DeVeloSensor::initialize()
   if(m_debug)
     msg() << MSG::DEBUG
           << "Great grandparent of " << this->name() << " is "
-          << halfBox->name() <<endreq;
+          << halfBox->name() <<endmsg;
   m_halfBoxGeom = halfBox->geometry();
 
   if(m_debug)
@@ -106,12 +105,12 @@ StatusCode DeVeloSensor::initialize()
           << " PU " << isPileUp()
           << " Left " << m_isLeft
           << " Right " << isRight()
-          << " Downstream " << isDownstream() << endreq;
+          << " Downstream " << isDownstream() << endmsg;
 
   sc = registerConditionCallBacks();
   if (sc.isFailure()) {
     msg() << MSG::ERROR
-          << "Failure to register condition update call backs." << endreq;
+          << "Failure to register condition update call backs." << endmsg;
     return sc;
   }
 
@@ -233,7 +232,7 @@ StatusCode DeVeloSensor::intersectWithLine(const Gaudi::XYZPoint& point,
   if (fabs(denom) < epsilon) {
     msg() << MSG::ERROR
           << "Failed to compute intersection. Line parallel to sensor plane."
-          << endreq;
+          << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -276,7 +275,7 @@ StatusCode DeVeloSensor::registerConditionCallBacks() {
   if(!sc.isSuccess()) {
     msg() << MSG::ERROR
           << "Failed to update sensor conditions!"
-          << endreq;
+          << endmsg;
     return sc;
   }
 

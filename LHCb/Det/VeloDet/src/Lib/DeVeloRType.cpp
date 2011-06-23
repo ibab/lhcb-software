@@ -1,4 +1,3 @@
-// $Id: $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -168,7 +167,7 @@ StatusCode DeVeloRType::initialize()
 
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endmsg;
     return sc;
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloRType") == MSG::DEBUG  ) ;
@@ -200,7 +199,7 @@ StatusCode DeVeloRType::initialize()
   // first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update geometry cache." << endmsg;
     return sc;
   }
 
@@ -407,7 +406,7 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
     msg() << MSG::VERBOSE << "Residual; rPoint = " << rPoint << " strip " << strip
           << " rStrip = " << rStrip << " offset: " << offset <<  " residual " << residual
           << " sigma = " << sigma
-          << " chi2 = " << chi2 << endreq;
+          << " chi2 = " << chi2 << endmsg;
   }
 
 
@@ -420,7 +419,7 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
 void DeVeloRType::calcStripLimits()
 {
 
-  if(m_verbose) msg() << MSG::VERBOSE << "calcStripLimits" << endreq;
+  if(m_verbose) msg() << MSG::VERBOSE << "calcStripLimits" << endmsg;
   m_innerR = innerRadius() + m_innerPitch / 2;
   m_outerR = outerRadius() - m_outerPitch / 2;
 
@@ -522,7 +521,7 @@ void DeVeloRType::cornerLimits()
   if(m_debug) {
     msg() << MSG::DEBUG << "Cut off starts at x=" << m_cornerX1 << ",y=" << m_cornerY1
           << " and ends at x=" << m_cornerX2 << ",y=" << m_cornerY2
-          << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endreq;
+          << " gradient=" << m_gradCutOff << " intercept=" << m_intCutOff << endmsg;
   }
 }
 //==============================================================================
@@ -553,10 +552,10 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
             << " Solution 1: x=" << x1 << " y=" << y1
             << " Solution 2: x=" << x2 << " y=" << y2
             << " Chose: x=" << x << " y=" << y
-            << endreq;
+            << endmsg;
     }
   } else {
-    msg() << MSG::ERROR << "Unable to calculate corner intersect at r = " << r << endreq;
+    msg() << MSG::ERROR << "Unable to calculate corner intersect at r = " << r << endmsg;
   }
 }
 //==============================================================================
@@ -599,12 +598,12 @@ void DeVeloRType::BuildRoutingLineMap(){
             << " strip " << m_mapRoutingLineToStrip[routLine]
             << " +1024 line " << routLine+1024
             << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
-            << endreq;
+            << endmsg;
       msg() << MSG::VERBOSE << "Routing line " << routLine
             << " strip " << RoutingLineToStrip(routLine)
             << " chip channel " << RoutingLineToChipChannel(routLine)
             << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
-            << " from strip " << endreq;
+            << " from strip " << endmsg;
     }
   }
 }
@@ -815,13 +814,13 @@ StatusCode DeVeloRType::updateGeometryCache()
 
   StatusCode sc = updateStripRCache();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update strip r cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update strip r cache." << endmsg;
     return sc;
   }
 
   sc = updateZoneLimits();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update zone limit cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update zone limit cache." << endmsg;
     return sc;
   }
 

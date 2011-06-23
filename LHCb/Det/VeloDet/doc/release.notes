@@ -4,6 +4,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-06-23 - Marco Cattaneo
+ - Protect a few unprotected DEBUG and VERBOSE messages
+ - Change verbosity of DeVeloPhiType messages to VERBOSE
+ - Replace all endreq by endmsg
  - Update test reference to follow verbosity changes in UpdateManagerSvc
 
 !========================= VeloDet v13r14 2011-02-22 =========================

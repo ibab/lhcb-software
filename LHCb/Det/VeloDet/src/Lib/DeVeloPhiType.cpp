@@ -1,4 +1,3 @@
-// $Id: $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -110,7 +109,7 @@ StatusCode DeVeloPhiType::initialize()
 
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endreq;
+    msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endmsg;
     return sc;
   }
   m_debug   = (msgSvc()->outputLevel("DeVeloPhiType") == MSG::DEBUG  ) ;
@@ -142,7 +141,7 @@ StatusCode DeVeloPhiType::initialize()
 		    << m_phiOrigin/Gaudi::Units::degree
 		    << " at boundary " << phiAtBoundary/Gaudi::Units::degree
 		    << " and outside " << phi/Gaudi::Units::degree
-		    << endreq;
+		    << endmsg;
 
   // Angular coverage
   m_innerCoverage = param<double>("InnerCoverage");
@@ -176,7 +175,7 @@ StatusCode DeVeloPhiType::initialize()
   // first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update geometry cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update geometry cache." << endmsg;
     return sc;
   }
 
@@ -319,9 +318,9 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
     msg() << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/Gaudi::Units::degree
           << " radius " << localPoint.Rho()
           << " phiOffset " << phiOffset(radius)/Gaudi::Units::degree
-          << " phi corrected " << phi/Gaudi::Units::degree << endreq;
+          << " phi corrected " << phi/Gaudi::Units::degree << endmsg;
     msg() << MSG::VERBOSE << " strip " << strip << " closest strip " << closestStrip
-          << " fraction " << fraction <<endreq;
+          << " fraction " << fraction <<endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -354,7 +353,7 @@ StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start,
 StatusCode DeVeloPhiType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
   if(m_verbose) msg() << MSG::VERBOSE << "isInActiveArea: x=" << point.x() 
-		      << ",y=" << point.y() << endreq;
+		      << ",y=" << point.y() << endmsg;
   //  check boundaries....
   double radius=point.Rho();
   if(innerRadius() >= radius || outerRadius() <= radius) {
@@ -495,10 +494,10 @@ StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point,
   if(m_verbose) {
     msg() << MSG::VERBOSE << "Residual; sensor " << channel.sensor()
 	  << " strip " << strip
-	  << " x " << x << " y " << y << endreq;
+	  << " x " << x << " y " << y << endmsg;
     msg() << MSG::VERBOSE << " xNear " << xNear << " yNear " << yNear
 	  << " residual " << residual << " sigma = " << sigma
-	  << " chi2 = " << chi2 << endreq;
+	  << " chi2 = " << chi2 << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -549,22 +548,22 @@ void DeVeloPhiType::BuildRoutingLineMap(){
   unsigned int count=0;
   if(m_debug){
     msg() << MSG::DEBUG << "Building routing line map for sensor "
-	  << (this->sensorNumber()) << endreq;
+	  << (this->sensorNumber()) << endmsg;
   }
   for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine;++routLine,++count){
     if(0 == count%6){
-      if(m_debug) msg() << MSG::DEBUG << "Pattern of six ---------------------------------------\n";
+      if(m_verbose) msg() << MSG::VERBOSE << "Pattern of six ---------------------------------------\n";
     }
     strip=this->strip(routLine);
 
     m_mapStripToRoutingLine[strip]=routLine;
     m_mapRoutingLineToStrip[routLine]=strip;
 
-    if(m_debug) msg() << MSG::DEBUG << "Routing line " << routLine
+    if(m_verbose) msg() << MSG::VERBOSE << "Routing line " << routLine
 		      << " Patttern element " << (patternElement(routLine))
 		      << " number " << (patternNumber(routLine))
 		      << " strip " << strip
-		      << endreq;
+		      << endmsg;
   }
 }
 //==============================================================================
@@ -744,13 +743,13 @@ StatusCode DeVeloPhiType::updateGeometryCache()
 
   StatusCode sc = updatePhiCache();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update phi cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update phi cache." << endmsg;
     return sc;
   }
 
   sc = updateZoneLimits();
   if(!sc.isSuccess()) {
-    msg() << MSG::ERROR << "Failed to update zone limit cache." << endreq;
+    msg() << MSG::ERROR << "Failed to update zone limit cache." << endmsg;
     return sc;
   }
 

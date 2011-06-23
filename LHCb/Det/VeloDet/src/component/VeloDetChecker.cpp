@@ -1,4 +1,3 @@
-// $Id: VeloDetChecker.cpp,v 1.7 2008-03-28 16:31:15 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -397,7 +396,7 @@ void VeloDetChecker::CheckSensorGeometry() {
 // Produce ntuple containing x,y,z co-ordinates for all strips and readout info
 //==============================================================================
 void VeloDetChecker::CheckAllSensorGeometry() {
-  debug() << "==> TestAllSensors" << endreq;
+  debug() << "==> TestAllSensors" << endmsg;
   for(std::vector<DeVeloSensor*>::const_iterator iSens=m_velo->sensorsBegin(); 
       iSens != m_velo->sensorsEnd(); ++iSens) {
     const DeVeloSensor* sensor = (*iSens);
@@ -529,7 +528,7 @@ void VeloDetChecker::ScanXYPlaneOfSensors() {
 // Scan over surface of detectors
 //==============================================================================
 void VeloDetChecker::ScanXYPlaneOfSensor(const DeVeloSensor* sensor){
-  verbose() << "Scan XY Plane Of Sensor " << sensor->sensorNumber() << endreq;
+  verbose() << "Scan XY Plane Of Sensor " << sensor->sensorNumber() << endmsg;
   std::string sens=boost::lexical_cast<std::string>(sensor->sensorNumber());
   std::string scanTitle="ScanXYPlaneSensor" + sens;
   int range=50*m_scale;
@@ -542,7 +541,7 @@ void VeloDetChecker::ScanXYPlaneOfSensor(const DeVeloSensor* sensor){
       LHCb::VeloChannelID vcID;
       double offset,pitch;
       StatusCode sc=sensor->pointToChannel(Gaudi::XYZPoint(x,y,z),vcID,offset,pitch);
-      verbose() << "x=" << x << ",y=" << y << ",z=" << z << ",sc=" << sc << endreq;
+      verbose() << "x=" << x << ",y=" << y << ",z=" << z << ",sc=" << sc << endmsg;
       if(sc.isSuccess()) {
         plot2D(x,y,scanTitle,"Scan map of sensor "+sens,-50.,50.,-50.,50,nBins,nBins);
       }
