@@ -13,10 +13,10 @@
 
 // Kernel
 #include "MCInterfaces/IGenCutTool.h"
+#include "MCInterfaces/IDecayTool.h"
 
 // from Generators
 #include "Generators/IProductionTool.h"
-#include "Generators/IDecayTool.h"
 #include "GenEvent/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------

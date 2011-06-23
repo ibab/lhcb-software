@@ -12,10 +12,10 @@
 #include "GaudiKernel/ParticleProperty.h"
 // Kernal
 #include "MCInterfaces/IGenCutTool.h"
+#include "MCInterfaces/IDecayTool.h"
 
 // from Generators
 #include "Generators/IProductionTool.h"
-#include "Generators/IDecayTool.h"
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
 #include "GenEvent/HepMCUtils.h"

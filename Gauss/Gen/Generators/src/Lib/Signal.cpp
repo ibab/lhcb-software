@@ -10,7 +10,7 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 
 // from Generators
-#include "Generators/IDecayTool.h"
+#include "MCInterfaces/IDecayTool.h"
 #include "Generators/GenCounters.h"
 #include "GenEvent/HepMCUtils.h"
 

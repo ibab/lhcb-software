@@ -31,8 +31,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Vector4DTypes.h"
 
-// from GeneratorModules
-#include "Generators/IDecayTool.h"
+// from MCInterfaces
+#include "MCInterfaces/IDecayTool.h"
 
 // from EvtGen
 #include "EvtGenBase/EvtId.hh"

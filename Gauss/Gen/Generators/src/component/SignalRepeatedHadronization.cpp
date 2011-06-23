@@ -10,6 +10,7 @@
 // from Kernel
 #include "Kernel/ParticleID.h"
 #include "MCInterfaces/IGenCutTool.h"
+#include "MCInterfaces/IDecayTool.h"
 
 // From HepMC
 #include "HepMC/GenParticle.h"
@@ -17,7 +18,6 @@
 
 // from Generators
 #include "Generators/IProductionTool.h"
-#include "Generators/IDecayTool.h"
 #include "GenEvent/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 // from Generators
-#include "Generators/IDecayTool.h"
+#include "MCInterfaces/IDecayTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : StandAloneDecayTool

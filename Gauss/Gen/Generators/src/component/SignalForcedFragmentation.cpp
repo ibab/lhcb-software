@@ -13,9 +13,9 @@
 
 // from Kernel
 #include "MCInterfaces/IGenCutTool.h"
+#include "MCInterfaces/IDecayTool.h"
 
 // from Generators
-#include "Generators/IDecayTool.h"
 #include "Generators/IProductionTool.h"
 #include "GenEvent/HepMCUtils.h"
 

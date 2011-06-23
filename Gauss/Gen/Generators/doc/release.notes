@@ -7,6 +7,7 @@
 
 ! 201-06-23 - Patrick Robbe
  - clean header files
+ - move IDecayTool.h to MCInterfaces
 
 ! 2011-06-22 - Patrick Robbe
  - Move IGenCutTool.h and IFullGenEventCutTool.h to MCInterfaces package
