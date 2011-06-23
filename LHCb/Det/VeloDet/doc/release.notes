@@ -3,6 +3,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - Marco Cattaneo
+ - Update test reference to follow verbosity changes in UpdateManagerSvc
+
 !========================= VeloDet v13r14 2011-02-22 =========================
 ! 2011-02-16 - Chris Jones
  - Fix some resource leaks found by coverity
