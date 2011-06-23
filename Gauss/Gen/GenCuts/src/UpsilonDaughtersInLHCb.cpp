@@ -18,7 +18,7 @@
 
 // from Generators
 #include "GenEvent/HepMCUtils.h"
-#include "Generators/IDecayTool.h"
+#include "MCInterfaces/IDecayTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : UpsilonDaughtersInLHCb

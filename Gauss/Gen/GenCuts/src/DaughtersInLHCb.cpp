@@ -18,7 +18,6 @@
 
 // from Generators
 #include "GenEvent/HepMCUtils.h"
-#include "Generators/IDecayTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaughtersInLHCb
