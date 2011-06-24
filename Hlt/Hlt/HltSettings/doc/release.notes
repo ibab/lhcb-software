@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - V. Gligorov
+ - Add more MB charm triggers : LC -> LPi, D->3h
+ - Add new "supertight" semileptonic line with FD > 40mm cut
+ - Update cuts for D->4h to take into account the addition of
+   a slow pion
+
 ! 2011-06-24 - Johannes Albrecht
  - include single electron VHighPT
  - add new Psi2S high PT trigger
