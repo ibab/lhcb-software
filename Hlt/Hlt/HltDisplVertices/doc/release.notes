@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v3r4 2011-06-24 ===================
 ! 2011-06-24 - Victor Coco
  - add possibilty of different mass cut for double line and cut on at least 
    one out matter veto
