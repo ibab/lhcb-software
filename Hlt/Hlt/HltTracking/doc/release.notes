@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - V. Gligorov
+ - Fix more conflicts caused in Hlt2Tracking by previous commits
+ 
 ! 2011-06-23 - V. Gligorov
  - Add new prompt LambdaC trigger
  - Add new minimum bias charm triggers
