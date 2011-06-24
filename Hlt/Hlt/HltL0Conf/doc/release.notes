@@ -4,6 +4,10 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v3r0p1 2011-06-24 ===================
+! 2011-0x-zz - Gerhard Raven
+ - remove options from requirements
+
 !========================== HltL0Conf v3r0  2011-02-22 ===================
 ! 2011-02-18 - Gerhard Raven
  - move HltTrackFit into HltTracking
