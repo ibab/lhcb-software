@@ -23,7 +23,7 @@
 #include "RichPhotInfo.h"
 #include "RichPhotInfoAttach.h"
 
-RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase* gigabase,
+RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase *  /* gigabase  */,
                                                        const G4String& processName,
                                                        G4ProcessType   aType)
   : G4VDiscreteProcess(processName, aType ),
