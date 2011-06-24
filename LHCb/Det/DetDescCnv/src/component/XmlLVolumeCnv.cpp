@@ -335,8 +335,13 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
   std::string volName = dom2Std (element->getAttribute (nameString));
 
   m_numeral = dom2Std (element->getAttribute ( serialNumber ) );
-  if ( 0 != m_numeral.size() ) replaceTagInString( volName );
-
+  //  if ( 0 != m_numeral.size() ) replaceTagInString( volName );
+  if ( 0 != m_numeral.size() ) {
+    replaceTagInString( volName );
+    replaceTagInString( materialName);
+    
+  }
+  
   // processes the children. The dtd says we should find
   // ((%solid;, %transformation;?)?, (physvol | paramphysvol | surf)*)
   xercesc::DOMNodeList* childNodes = element->getChildNodes();
