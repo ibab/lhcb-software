@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - V. Heijne
+ - Hlt2DisplVerticesLines : Tighten cuts and redefinition PS lines
+
 ! 2011-06-24 - V. Gligorov
  - Add more MB charm triggers : LC -> LPi, D->3h
  - Add new "supertight" semileptonic line with FD > 40mm cut
