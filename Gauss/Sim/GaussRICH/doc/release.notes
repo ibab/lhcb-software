@@ -3,6 +3,10 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2011-6-24 - Sajan Easo
+- Minor changes to monitoring and analysis while reconstructing aerogel sub tiles.
+- Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest 
+  MCRichHit class.
 !2011-6-15 - Sajan Easo
 - Made the changes needed to simulate Aerogel sub tiles. This involves changes in 
   several files.  
