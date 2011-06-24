@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2011-06-24 - Olivier Deschamps 
+ - ICaloHypoEstimator : fix minor typo
+
+
 !========================= CaloInterfaces v8r2 2011-06-15 =========================
 ! 2011-06-14 - Olivier Deschamps 
  - add new interface : ICaloGammaPi0SeparationTool.h
