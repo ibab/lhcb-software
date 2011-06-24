@@ -10,8 +10,11 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                    ,'ChildIPChi2'          : 9   #
                    ,'LCDIRA'               : 0.99985    # 
                    ,'LCPT'                : 2500   # MeV
-                   ,'LCFDCHI2'               : 36 # 
-                   ,'LCVCHI2'                  : 15    
+                   ,'LCFDCHI2'               : 16 # 
+                   ,'LCVCHI2'                  : 15   
+                   ,'LCProtonPionID'        : 0
+                   ,'LCProtonKaonID'        : 0  
+                   ,'LCProtonP'             : 10000  
                    ## GEC
                    , 'GEC_Filter_NTRACK'        : True       # do or do not
                    , 'GEC_NTRACK_MAX'           : 120        # max number of tracks
@@ -29,6 +32,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedKaons,BiKalmanFittedProtons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichLowPTProtons
         from Configurables import TisTosParticleTagger      
  
         from Configurables import LoKi__VoidFilter as VoidFilter
@@ -70,11 +74,23 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                             BiKalmanFittedKaons.outputSelection(),
                                             BiKalmanFittedProtons.outputSelection() ])
 
+        _daughters_cut_rich = _daughters_cut + " & (P > %(LCProtonP)s) & (PIDp > %(LCProtonPionID)s) & ((PIDp - PIDK)> %(LCProtonKaonID)s)" % self.getProps()
+
+        Hlt2CharmHadLambdaC2KPPi_Rich = Hlt2Member( CombineParticles 
+                               , "CombineRich"    
+                               , DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc"
+                               , DaughtersCuts = { 'pi+' : _daughters_cut, 'K+' : _daughters_cut, 'p+' : _daughters_cut_rich }
+                               , CombinationCut = _combination_cut
+                               , MotherCut = _mother_cut
+                               , Inputs = [ BiKalmanFittedPions.outputSelection(), 
+                                            BiKalmanFittedKaons.outputSelection(),
+                                            BiKalmanFittedRichLowPTProtons.outputSelection() ])
+
         filterTOS_LC2KPPi = Hlt2Member( TisTosParticleTagger
                                 , 'Hlt1TOSFilter'
-                                , Inputs = [ Hlt2CharmHadLambdaC2KPPi ]
+                                , Inputs = [ Hlt2CharmHadLambdaC2KPPi_Rich ]
                                 , TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
-                              ) 
+                              )   
 
         filterLC2KPPi = Hlt2Member( FilterDesktop
                              , 'Filter'
@@ -91,6 +107,8 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                                         BiKalmanFittedKaons, 
                                                                         BiKalmanFittedProtons, 
                                             Hlt2CharmHadLambdaC2KPPi, 
+                                            BiKalmanFittedRichLowPTProtons,
+                                            Hlt2CharmHadLambdaC2KPPi_Rich,
                                             filterTOS_LC2KPPi,
                                             filterLC2KPPi ]
                         , postscale = self.postscale

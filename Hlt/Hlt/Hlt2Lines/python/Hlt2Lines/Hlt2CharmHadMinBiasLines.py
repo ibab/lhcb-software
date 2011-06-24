@@ -5,11 +5,11 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
     __slots__ = {  'LCMassWinLow'         : 2150   # MeV
                    ,'LCMassWinHigh'       : 2430   # MeV
-                   ,'LCChildTrChi2'              : 4      # 
-                   ,'LCChildPT'             : 300    # MeV
-                   ,'LCChildIPChi2'         : 4      #
-                   ,'LCDIRA'              : 0.9998 # 
-                   ,'LCPT'                : 1000   # MeV
+                   ,'LCChildTrChi2'       : 4      # 
+                   ,'LCChildPT'           : 300    # MeV
+                   ,'LCChildIPChi2'       : 4      #
+                   ,'LCDIRA'              : 0.9999 # 
+                   ,'LCPT'                : 2500   # MeV
                    ,'LCFDCHI2'            : 16     # 
                    ,'LCVCHI2'             : 20    
                    #
@@ -18,9 +18,12 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
                    , 'D0ChildTrChi2'      : 3
                    , 'D0ChildPT'          : 800
                    , 'D0PT'               : 2000
-                   , 'D0DIRA'             : 0.9995
+                   , 'D0DIRA'             : 0.9998
                    , 'D0TAU'              : 0.15 # ps 
                    , 'D0VCHI2'            : 15             
+                   #
+                   , 'DplusMassWinLow'    : 1765
+                   , 'DplusMassWinHigh'   : 2065
                    # 
                    , 'Prescale'         : { } 
                    , 'Postscale'        : { }
@@ -35,7 +38,9 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedSecondLoopPions,BiKalmanFittedSecondLoopKaons,BiKalmanFittedSecondLoopProtons
-        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedKaons
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions,BiKalmanFittedKaons,BiKalmanFittedProtons
+
+        from Hlt2SharedParticles.Lambda import LambdaLLTrackFitted
 
         # First the lambda C
         _daughters_cut_lc = "( TRCHI2DOF < %(LCChildTrChi2)s ) & ( PT > %(LCChildPT)s *MeV ) & ( MIPCHI2DV(PRIMARY) > %(LCChildIPChi2)s )" % self.getProps()
@@ -51,7 +56,10 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
                                , DaughtersCuts = { 'pi+' : _daughters_cut_lc, 'K+' : _daughters_cut_lc, 'p+' : _daughters_cut_lc }
                                , CombinationCut = _combination_cut_lc
                                , MotherCut = _mother_cut_lc
-                               , Inputs = [ BiKalmanFittedSecondLoopPions.outputSelection(), 
+                               , Inputs = [ BiKalmanFittedPions.outputSelection(),
+                                            BiKalmanFittedKaons.outputSelection(),
+                                            BiKalmanFittedProtons.outputSelection(),
+                                            BiKalmanFittedSecondLoopPions.outputSelection(), 
                                             BiKalmanFittedSecondLoopKaons.outputSelection(),
                                             BiKalmanFittedSecondLoopProtons.outputSelection() ])
 
@@ -80,6 +88,32 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
                                , CombinationCut = _combination_cut_d0
                                , MotherCut = _mother_cut_d0
                                , Inputs = [ BiKalmanFittedKaons.outputSelection()])
+
+        _combination_cut_dplus = "(AM>%(DplusMassWinLow)s*MeV) & (AM<%(DplusMassWinHigh)s*MeV)" % self.getProps()
+
+        # Now the D+->hhh
+        Hlt2CharmHadDplus2hhh = Hlt2Member( CombineParticles
+                               , "Combine"         
+                               , DecayDescriptors = [   "[D+ -> K- K+ pi+]cc",
+                                                        "[D+ -> K- pi+ pi+]cc",
+                                                        "[D+ -> K+ pi+ pi-]cc",
+                                                        "[D+ -> pi- pi+ pi+]cc"]
+                               , DaughtersCuts = { 'pi+' : _daughters_cut_lc, 'K+' : _daughters_cut_lc }
+                               , CombinationCut = _combination_cut_dplus
+                               , MotherCut = _mother_cut_lc
+                               , Inputs = [ BiKalmanFittedPions.outputSelection(),
+                                            BiKalmanFittedKaons.outputSelection()])
+
+        # Now Lc -> Lambda Pi
+        Hlt2CharmHadLambdaC2LambdaPi = Hlt2Member( CombineParticles
+                               , "Combine"
+                               , DecayDescriptor = "[Lambda_c+ -> Lambda0 pi+]cc"
+                               , DaughtersCuts = { 'Lambda0' : "(ALL)", 'pi+' : _daughters_cut_lc }
+                               , CombinationCut = _combination_cut_lc
+                               , MotherCut = _mother_cut_lc
+                               , Inputs = [ BiKalmanFittedPions.outputSelection(),
+                                            LambdaLLTrackFitted.outputSelection()])
+
         ###########################################################################
         # Define the Hlt2 Lines
         #
@@ -87,14 +121,14 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('CharmHadMinBiasLambdaC2KPPi'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')" 
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedSecondLoopPions, 
-                                            BiKalmanFittedSecondLoopKaons, 
-                                            BiKalmanFittedSecondLoopProtons, 
+                        , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedSecondLoopPions, 
+                                            BiKalmanFittedKaons, BiKalmanFittedSecondLoopKaons, 
+                                            BiKalmanFittedProtons, BiKalmanFittedSecondLoopProtons, 
                                             Hlt2CharmHadLambdaC2KPPi]
                         , postscale = self.postscale
                         )
 
-        line = Hlt2Line('CharmHadMinBiasD02KPi'
+        line2 = Hlt2Line('CharmHadMinBiasD02KPi'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')" 
                         , prescale = self.prescale
                         , algos = [ PV3D(), BiKalmanFittedPions, 
@@ -103,7 +137,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         )
 
-        line = Hlt2Line('CharmHadMinBiasD02KK'
+        line3 = Hlt2Line('CharmHadMinBiasD02KK'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')"
                         , prescale = self.prescale
                         , algos = [ PV3D(), BiKalmanFittedKaons,           
@@ -111,6 +145,26 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         )
 
+        line4 = Hlt2Line('CharmHadMinBiasDplus2hhh'
+                        , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')"
+                        , prescale = self.prescale
+                        , algos = [ PV3D(), BiKalmanFittedPions, 
+                                            BiKalmanFittedKaons,
+                                            Hlt2CharmHadDplus2hhh]
+                        , postscale = self.postscale
+                        ) 
+
+        line5 = Hlt2Line('CharmHadMinBiasLambdaC2LambdaPi'
+                        , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')"
+                        , prescale = self.prescale
+                        , algos = [ PV3D(), BiKalmanFittedPions,
+                                            LambdaLLTrackFitted, 
+                                            Hlt2CharmHadLambdaC2LambdaPi]
+                        , postscale = self.postscale
+                        )
+
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadMinBiasLambdaC2LambdaPiDecision" : 55337 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadMinBiasDplus2hhhDecision" : 55336 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadMinBiasD02KKDecision" :55335  } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadMinBiasD02KPiDecision" :55334  } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadMinBiasLambdaC2KPPiDecision" :55333  } )
