@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v5r13 2011-06-24 ===================
 ! 2011-06-24 - V. Heijne
  - Hlt2DisplVerticesLines : Tighten cuts and redefinition PS lines
 
