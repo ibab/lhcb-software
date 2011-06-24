@@ -6,7 +6,11 @@ $Id$
 !-----------------------------------------------------------------------------
 
 ! 2011-06-23 - V. Gligorov
- - Fx problems in TrackFittedBasicParticles caused by previous commits. 
+ - Add new prompt LambdaC trigger
+ - Add new minimum bias charm triggers
+
+! 2011-06-23 - V. Gligorov
+ - Fix problems in TrackFittedBasicParticles caused by previous commits. 
 
 ! 2011-06-22 - Benoit Viaud
 - Add BiKalmanFittedSecondLoop Muons to TrackFittedBasicParticles.py
