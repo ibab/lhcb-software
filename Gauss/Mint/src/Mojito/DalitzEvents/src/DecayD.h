@@ -12,14 +12,15 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
 
 //Event
 //#include "Event/HepMCEvent.h"
 
 //MINT
-#include "NamedParameter.h"
 #include "SignalGenerator.h"
 #include "IDalitzEvent.h"
+//#include "NamedParameter.h"
 
 //ROOT
 #include "TVector3.h"
@@ -28,6 +29,10 @@
 
 //#include "CLHEP/Vector/LorentzVector.h"
 #include "HepMC/GenEvent.h"
+#include "HepMC/GenParticle.h"
+#include "HepMC/GenVertex.h"
+
+
 //#include "Gen/HepMC.h"
 
 using namespace MINT;
@@ -40,9 +45,16 @@ public:
 	virtual ~DecayD();
 	HepMC::GenEvent* OutputHepMC();
 	void SetInputTextFile(std::string inputFile);
+	// Decay HepMC event in lab frame
 	void DecayEvent();
+	// Decay Event in parent Rest Frame
+	//void DecayEventRF();
+	std::map<int,TLorentzVector> DecayEventRF();
+
+
 	void setMothers3Momentum();
 	void SetMotherParticle(HepMC::GenParticle*);
+	//const TLorentzVector getDaugtherMom(unsigned int i);
 	const TLorentzVector& getDaugtherMom(unsigned int i);
 
 	void setdecayOutput();
@@ -67,12 +79,16 @@ public:
 	void Initalize();
 
 	void DecayOnlyDtoK3PiEvent();
+
+	void DecayWithBR(bool decayWithBR);
+
 private:
 	HepMC::GenEvent* m_evt;
 	std::string m_inputFileName;
 	IDalitzEvent* m_dE;
 	std::vector<int> m_pdgID; // Daughters PGD_ID
 	int m_mumPdgID;
+	bool m_decayWithBR;
 
 	SignalGenerator* m_sg;
 

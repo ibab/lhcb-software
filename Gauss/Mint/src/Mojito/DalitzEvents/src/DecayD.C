@@ -9,15 +9,20 @@
 
 //C++
 #include <iostream>
+#include <map>
 
 //#include "HepLorentzVector.h"
 #include "CLHEP/Vector/LorentzVector.h"
 #include "HepMC/SimpleVector.h"
 
+//ROOT
+#include "TRandom3.h"
+
 //MINT
 #include "SignalGenerator.h"
 #include "ParticlePropertiesList.h"
 
+using namespace std;
 using namespace CLHEP;
 using namespace HepMC;
 using namespace MINT;
@@ -74,12 +79,13 @@ void DecayD::setMothers3Momentum()
 	TVector3 mum3mom(px,py,pz);
 	m_dE->setMothers3Momentum(mum3mom);
 }
-
 const TLorentzVector& DecayD::getDaugtherMom(unsigned int i)
 {
-	 const TLorentzVector& prt_mom = m_dE->p(i+1); //p0 is a D which we are not interested in here
+	 const TLorentzVector& prt_mom = m_dE->p(1+i); //p0 is a D which we are not interested in here
+
 	 return prt_mom;
 }
+
 
 
 void DecayD::setdecayOutput()
@@ -89,7 +95,7 @@ void DecayD::setdecayOutput()
 	m_evt->add_vertex( v1 );
 
 	std::cout << "Set decay Input particle to Vertex"<< std::endl;
-	m_prt->set_status(3);
+	m_prt->set_status(1);
 	m_prt->print();
 	//Add D as input particle to the decay Vertex
 
@@ -102,7 +108,7 @@ void DecayD::setdecayOutput()
 		const TLorentzVector& prt_mom = getDaugtherMom(outPrt);
 
 		// Add particle to Vertex
-		v1->add_particle_out( new GenParticle( HepLorentzVector(prt_mom[0],prt_mom[1],prt_mom[2],prt_mom[3]), m_pdgID[outPrt], 1 ) );
+		v1->add_particle_out( new GenParticle( HepLorentzVector(prt_mom[0],prt_mom[1],prt_mom[2],prt_mom[3]), m_pdgID[outPrt], 209 ) );
 		// Remember if getting pdg_id default pdg_id[0] is D not wanted here.
 	}
 }
@@ -131,6 +137,8 @@ void DecayD::SetDalitzEvent(IDalitzEvent* dE)
 {
 	m_dE = dE;
 }
+
+
 void DecayD::Initalize()
 {
 	//ParticlePropertiesList pl();
@@ -138,8 +146,12 @@ void DecayD::Initalize()
 	std::cout <<"m_inputFileName " << m_inputFileName << std::endl;
 	MINT::NamedParameterBase::setDefaultInputFile(m_inputFileName);
 	NamedParameter<int> RandomSeed("RandomSeed", 0);
+	int RandSeed = RandomSeed;
+
 	NamedParameter<std::string> InputFileName("InputFileName", (std::string) "");
 	bool generateNew = (std::string) InputFileName == "";
+
+
 
 	NamedParameter<std::string> IntegratorEventFile("IntegratorEventFile"
 											, (std::string) "SignalIntegrationEvents.root"
@@ -168,6 +180,11 @@ void DecayD::Initalize()
 	m_sg = new SignalGenerator(pdg);
 }
 
+void DecayD::DecayWithBR(bool decayWithBR)
+{
+	m_decayWithBR = decayWithBR;
+}
+
 void DecayD::DecayEvent()
 {
 
@@ -183,6 +200,22 @@ void DecayD::DecayEvent()
 			{
 				std::cout << "Found D" << std::endl;
 				std::cout << "Decay Particle" << std::endl;
+
+				// If only Decay correct Branching Ratio of events
+				if (m_decayWithBR==true)
+				{
+					TRandom3* RandBR = new TRandom3(12);
+					double RandBRNum = RandBR->Rndm(0);
+					NamedParameter<double> BR("BR", 1.0);
+
+					// If the random number is larger than the Branching ratio
+					if (RandBRNum > BR)
+					{
+						std::cout<<"Do nothing as less than Branching Ratio"<<std::endl;
+						continue;
+					}
+
+				}
 				this->SetMotherParticle(*p);
 
 			//	m_evt->print();
@@ -203,6 +236,7 @@ void DecayD::DecayEvent()
 
 void DecayD::DecayOnlyDtoK3PiEvent()
 {
+//	std::cout << "Loop over particles" << std::endl;
 
 	for ( GenEvent::particle_const_iterator p = m_evt->particles_begin();
 			 p != m_evt->particles_end(); ++p )
@@ -210,15 +244,38 @@ void DecayD::DecayOnlyDtoK3PiEvent()
 		// Get particles pdg_id
 		int pdg_id = (*p)->pdg_id();
 
+	//	std::cout << "If particle is a D" << std::endl;
+
 		if (m_mumPdgID == pdg_id) // If particle is a D
 		{
+			std::cout << "Found D get vertex" << std::endl;
+
 			// Get Decay Vertex
 			GenVertex* v1 = (*p)->end_vertex();
+
+			(*p)->print();
+
+			if (v1==0)
+			{
+				m_evt->print();
+
+				std::cout << " No decay Vertex found" << std::endl;
+				continue;
+			}
+
+			std::cout << "Print Vertex" << std::endl;
+
+			v1->print();
+
+			std::cout << "Found vertex" << std::endl;
+
+			//std::cout << "Particles in " << v1->particles_in_size() << std::endl;
 
 			// Check 1 input particle and 4 output particles
 			if (v1->particles_in_size() == 1
 				&& v1->particles_out_size() == 4)
 			{
+				std::cout << "D vertex has 1 in particle and 4 out" << std::endl;
 
 				std::vector<int> k3PI_pdg = m_pdgID;
 				std::vector<int>::iterator k3PI_pdg_it;
@@ -226,6 +283,8 @@ void DecayD::DecayOnlyDtoK3PiEvent()
 				// iterate over output particles
 				for ( GenVertex::particles_out_const_iterator vout = v1->particles_in_const_begin() ; vout != v1->particles_in_const_end(); ++vout)
 				{
+					std::cout << "Output paticles" << std::endl;
+
 					// Iterate over K3PI output particles
 					for ( k3PI_pdg_it=k3PI_pdg.begin(); k3PI_pdg_it != k3PI_pdg.end(); ++k3PI_pdg_it)
 					{
@@ -233,6 +292,8 @@ void DecayD::DecayOnlyDtoK3PiEvent()
 						if ((*vout)->pdg_id() == (*k3PI_pdg_it))
 						{
 							k3PI_pdg.erase(k3PI_pdg_it); // Remove the found particle from list
+							std::cout << "Found a K or pi output paticle" << std::endl;
+
 							break;
 						}
 					}
@@ -241,6 +302,7 @@ void DecayD::DecayOnlyDtoK3PiEvent()
 
 				if (k3PI_pdg.size() == 0) // If all final state particles are found
 				{
+					std::cout << "Vector Size is Zero" << std::endl;
 
 					this->SetMotherParticle(*p);
 
@@ -276,3 +338,47 @@ void DecayD::DecayOnlyDtoK3PiEvent()
 		}
 	}
 }
+
+
+//void DecayD::DecayEventRF()
+map<int,TLorentzVector> DecayD::DecayEventRF()
+{
+			//	m_evt->print();
+			MINT::counted_ptr<IDalitzEvent> newEvt = m_sg->newEvent();
+			IDalitzEvent* dE = newEvt.get();
+			this->SetDalitzEvent(dE);
+//
+//			const TLorentzVector prt_mom = dE->p(1);
+//			std::cout << "Daughters Mom "<< prt_mom << std::endl;
+//
+//			const TLorentzVector prt_mom1 = m_dE->p(1);
+//			std::cout << "Daughters Mom "<< prt_mom1 << std::endl;
+//			std::cout << "Decay output Set "<< std::endl;
+
+			std::vector<int> dught_PID = this->GetDaughters_pgdID();
+
+
+			map<int,TLorentzVector> daughters;
+
+			int counter = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				if (dught_PID[i] == 211)
+				{
+					if (counter == 1)
+					{
+						dught_PID[i] = 21100;
+					}
+					counter++;
+				}
+				daughters[dught_PID[i]] = m_dE->p(i+1);
+			}
+
+			return daughters;
+}
+
+
+
+
+
+
