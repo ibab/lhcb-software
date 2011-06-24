@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Johannes Albrecht
+ - include single electron VHighPT
+ - add new Psi2S high PT trigger
+ - prescale prompt dimu and put exclusives in place
+
 ! 2011-06-23 - V. Gligorov
  - Add new prompt LambdaC trigger
  - Add new minimum bias charm triggers
