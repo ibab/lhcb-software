@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v8r2   2011-06-24 ==================
 ! 2011-06-22 - Albert Puig
  - Rewritten HltL0CaloCandidates to build clusters from L0CaloCandidates
    in an acceptable way.
