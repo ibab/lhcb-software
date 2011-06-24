@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Patrick Robbe
+ - Try to get rid of unused variables warning in assert
+
 ! 2011-06-19 - Patrick Robbe
  - src/EvtBaryonPCRFF.cpp
    src/EvtBlattWeisskopf.cpp
