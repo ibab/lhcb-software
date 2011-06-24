@@ -105,7 +105,7 @@ void MonHist::makeCounters()
 //      {
 //        delete m_rootobj;
 //      }
-      m_rootobj = tp = new TProfile("COUNTER_TO_RATE", "Counter to rate Profile",
+      m_rootobj = new TProfile("COUNTER_TO_RATE", "Counter to rate Profile",
           m_cntrmgr->m_counterMap.size()+8,0.0,m_cntrmgr->m_counterMap.size()+8);
     }
     tp = (TProfile*)m_rootobj;
