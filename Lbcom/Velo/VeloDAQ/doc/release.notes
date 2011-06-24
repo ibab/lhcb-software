@@ -3,6 +3,9 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2011-06-24 - Eduardo Rodrigues
+ - Protected unprotected debug messages
+
 !========================= VeloDAQ v6r3 2011-06-15 =========================
 ! 2011-04-27 - Tomasz Szumlak
  - fix of the problems reported by the coverity tool

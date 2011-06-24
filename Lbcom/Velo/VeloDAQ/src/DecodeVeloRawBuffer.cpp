@@ -67,7 +67,7 @@ StatusCode DecodeVeloRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug () << "==> Initialise" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug () << "==> Initialise" << endmsg;
 
   // check whether enforced bank version is supported
   if(m_forcedBankVersion) {
@@ -99,7 +99,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
 
   // fetch raw bank in any case
   if (!exist<LHCb::RawEvent>(m_rawEventLocation) ) {
-    if( msgLevel(MSG::DEBUG) )
+    if( msgLevel( MSG::DEBUG ) )
       debug() << "Raw Event not found in " << m_rawEventLocation << endmsg;
     createEmptyBanks();
     return StatusCode::SUCCESS;
@@ -130,7 +130,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
 //=============================================================================
 StatusCode DecodeVeloRawBuffer::finalize() {
 
-  debug () << "==> Finalise" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug () << "==> Finalise" << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -178,9 +178,9 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
       VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,
 					   m_assumeChipChannelsInRawBuffer,
 					   fastCont, byteCount);
-    if( nClusters == -1 ){
-      debug() << "Header error bit set in raw bank source ID " 
-	      << rb->sourceID() << endmsg;
+    if( nClusters == -1 ) {
+      if ( msgLevel( MSG::DEBUG ) ) debug() << "Header error bit set in raw bank source ID " 
+                                            << rb->sourceID() << endmsg;
       failEvent(format("Header error bit set in the VELO, bank source ID %i",
                        rb->sourceID()),
                 "HeaderErrorVeloBuffer",HeaderErrorBit,false);
@@ -188,10 +188,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
       continue;
     }
     if (rb->size() != byteCount) {      
-      debug() << "Byte count mismatch between RawBank size and decoded bytes." 
-	      << " RawBank: " << rb->size() 
-	      << " Decoded: " << byteCount 
-	      << endmsg;
+      if ( msgLevel( MSG::DEBUG ) ) debug() << "Byte count mismatch between RawBank size and decoded bytes." 
+                                            << " RawBank: " << rb->size() 
+                                            << " Decoded: " << byteCount 
+                                            << endmsg;
       failEvent(format("Raw data corruption in the VELO, bank source ID %i",
                        rb->sourceID()),
                 "CorruptVeloBuffer",CorruptVeloBuffer,false);
@@ -291,21 +291,21 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       continue;
     }
     if (rb->size() != byteCount) {      
-      debug() << "Byte count mismatch between RawBank size and decoded bytes." 
-	      << " RawBank: " << rb->size() 
-	      << " Decoded: " << byteCount 
-	      << endmsg;
+      if ( msgLevel( MSG::DEBUG ) ) debug() << "Byte count mismatch between RawBank size and decoded bytes." 
+                                            << " RawBank: " << rb->size() 
+                                            << " Decoded: " << byteCount 
+                                            << endmsg;
       failEvent(format("Raw data corruption in the VELO, bank source ID %i",
-		       rb->sourceID()),
-		"CorruptVeloBuffer",CorruptVeloBuffer,false);
+                       rb->sourceID()),
+                "CorruptVeloBuffer",CorruptVeloBuffer,false);
       unsigned int badSensor = sensor->sensorNumber();
       // assume all clusters from the bad sensor at the end 
       LHCb::VeloClusters::iterator iClus = clusters->begin();
       while( iClus != clusters->end() && 
-	     (*iClus)->channelID().sensor() != badSensor )  ++iClus;
+             (*iClus)->channelID().sensor() != badSensor )  ++iClus;
       clusters->erase(iClus,clusters->end());
     }
-
+    
   }
 
   if( clusters->size() > m_maxVeloClusters){
