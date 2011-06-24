@@ -5,6 +5,7 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v6r3  2011-06-24 ===================
 ! 2011-06-24 - V. Gligorov
  - Update definition of shared lambdas. Add 
  - PT > 500 MeV for both tracks
