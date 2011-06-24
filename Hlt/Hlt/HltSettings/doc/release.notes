@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-06-23 - V. Gligorov
+ - Add new prompt LambdaC trigger
+ - Add new minimum bias charm triggers
+
+! 2011-06-23 - V. Gligorov
  - Add new "July2011" settings for running in summer/autumn 2011.
 
 ! 2011-06-20 - V. Gligorov
