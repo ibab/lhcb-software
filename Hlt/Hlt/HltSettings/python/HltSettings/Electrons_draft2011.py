@@ -30,7 +30,7 @@ class Electrons_draft2011:
             #'Hlt2SingleTFElectron',     
             'Hlt2SingleElectronTFLowPt',     
             'Hlt2SingleElectronTFHighPt',
-            #'Hlt2SingleTFVHighPtElectron',
+            'Hlt2SingleTFVHighPtElectron',
             #'Hlt2TFElectronPlusTrack',
             #'Hlt2TFElectronPlusTrackNoIP'
             ]
