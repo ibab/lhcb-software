@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-23 - V. Gligorov
+ - Add new prompt LambdaC trigger
+ - Add new minimum bias charm triggers
+
 ! 2011-06-23 - Will Barter
  - Added a new, alternative VHighPT Single Muon Line in Hlt2InclusiveMuonLines.py
  - not currently used, there as a backup in case rate on current line is too high.
