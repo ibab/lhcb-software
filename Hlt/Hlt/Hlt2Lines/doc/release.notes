@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - V. Heijne
+ -  Hlt2DisplVerticesLines : Tighten cuts and redefinition PS lines
+
+
 ! 2011-06-24 - V. Gligorov
  - Hlt2CharmHadD02HHHHLines : commit slow pion tag for Tom
  - Hlt2CharmHadLambdaCLines : add PID cut on proton to improve retention
