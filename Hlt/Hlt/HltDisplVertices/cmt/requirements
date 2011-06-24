@@ -18,6 +18,7 @@ branches          cmt doc src
 use DaVinciKernel   v*    Phys
 use DetDesc v* Det
 use CaloDet             v* Det
+use LoKiHlt             v* Phys
 use VeloDet             v* Det
 use LoKiTrigger        v* Phys
 include_path      none

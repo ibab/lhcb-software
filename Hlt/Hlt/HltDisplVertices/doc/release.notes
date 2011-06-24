@@ -3,6 +3,12 @@
 ! Responsible : Neal Gauvin (Gueissaz)
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
+
+! 2011-06-24 - Victor Coco
+ - add possibilty of different mass cut for double line and cut on at least 
+   one out matter veto
+
+
 !========================== HltDisplVertices v3r3p2 2011-05-11 ===================
 ! 2011-05-11 - Victor Coco 
  - remove fragments and options directories

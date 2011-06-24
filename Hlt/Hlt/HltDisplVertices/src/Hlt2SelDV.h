@@ -45,37 +45,40 @@ private:
 
 
   //questions
-  bool IsAPointInDet( const LHCb::Particle *, int mode = 2,
-                      double range = 1*Gaudi::Units::mm );
+  bool IsAPointInDet( const LHCb::Particle *, int mode = 2);
+                      /*double range = 1*Gaudi::Units::mm */
   /// Is a point in the RF-Foil ?
-  bool IsInRFFoil( const Gaudi::XYZPoint & );
+  //bool IsInRFFoil( const Gaudi::XYZPoint & );
   /// Has a RecVertex a backward and a forward track ?
   bool HasBackAndForwardTracks( const LHCb::RecVertex* );
   /// Has a candidate a daughter muon ?
-  double HasMuons( const LHCb::Particle * );
+  //double HasMuons( const LHCb::Particle * );
   double GetSumPt( const LHCb::Particle * );
   double GetRFromBL( const Gaudi::XYZPoint& );
   void GetUpstreamPV(); ///< Get the Upstream PV
-  StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & );
-  StatusCode fillHeader( Tuple & );
-  StatusCode SaveCaloInfos( Tuple & );
-  StatusCode GetCaloInfos( std::string, double &, double & );
+  //StatusCode SaveGEC( Tuple &,  LHCb::Particle::ConstVector & );
+  //StatusCode fillHeader( Tuple & );
+  //StatusCode SaveCaloInfos( Tuple & );
+  //StatusCode GetCaloInfos( std::string, double &, double & );
 
   //Geometric tools
-  double Mult( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
-  double Mult( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
-  Gaudi::XYZPoint Plus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
-  Gaudi::XYZPoint Minus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
-  double Norm( const Gaudi::LorentzVector &);
-  double Norm( const Gaudi::XYZPoint &);
-  double Norm( const Gaudi::XYZVector &);
-  Gaudi::XYZPoint Normed( const Gaudi::LorentzVector &, double range = 1 );
-  double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint &);
+ //  double Mult( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
+//   double Mult( const Gaudi::LorentzVector &, const Gaudi::LorentzVector & );
+//   Gaudi::XYZPoint Plus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
+//   Gaudi::XYZPoint Minus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
+//   double Norm( const Gaudi::LorentzVector &);
+//   double Norm( const Gaudi::XYZPoint &);
+//   double Norm( const Gaudi::XYZVector &);
+//   Gaudi::XYZPoint Normed( const Gaudi::LorentzVector &, double range = 1 );
+  // double VertDistance( const Gaudi::XYZPoint &, const Gaudi::XYZPoint &);
 
   
   void InitialiseGeoInfo();///< Store geometry infos
   bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &);///<Point in material region in Left halfbox
   bool IsInMaterialBoxRight(const Gaudi::XYZPoint &);///<Point in material region in Right halfbox
+
+  bool parametricPrescaler( double mass , double r , int cand); ///<Return True if the vertex should be triggered
+  
 
   /***************************************************************//**
    * the type of R cut to be applied 
@@ -117,6 +120,8 @@ private:
   double m_MaxY;              ///< Max Y position     
   double m_MinZ;              ///< Min Z position     
   double m_MaxZ;              ///< Max Z position   
+  bool m_allOutDet;           ///< Should all candidates be out of materVeto? 
+  double m_PreyMinHighMass ;  ///< Minimum reconstructed mass of highest mass candidate  
   /***************************************************************//**
    * Remove vtx if in detector material ?
    * if = 0  : disabled
@@ -128,7 +133,6 @@ private:
    * if = 4 : 3 but range+3 if in RF foil.
    ******************************************************************/
   int m_RemVtxFromDet ;    
-  double m_DetDist;           ///< Min distance to det material 
   //Remove vtx if found in RF-Foil area, based on geometric cuts
   bool   m_RemFromRFFoil;
 
@@ -145,6 +149,7 @@ private:
   std::string m_Prey ;        ///< LHCb Name of the prey
   LHCb::ParticleID m_PreyID;  // PDG ID of this particle
   int    m_PreyPID ;          ///< PID of the prey (for MC and Gen use)
+  bool m_phaseSpacePS;
 
   struct sortPVdz {
     double refz; 
