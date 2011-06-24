@@ -8,6 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - V. Gligorov
+ - Hlt2CharmHadD02HHHHLines : commit slow pion tag for Tom
+ - Hlt2CharmHadLambdaCLines : add PID cut on proton to improve retention
+ - Hlt2CharmHadMinBiasLines : Add D->3h line with same cuts as LambdaC line,
+                              thanks to Hamish for providing a set of "safe" cuts
+                              for DP studies. Add LC->LPi line. 
+
 ! 2011-06-24 - Jibo He
  - Hlt2B2JpsiXLines
   . Tightened Bc2JpsiMuX
