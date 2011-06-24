@@ -35,10 +35,10 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 , 'TisTosParticleTaggerSpecs': {"Hlt1TrackMuonDecision%TOS":0 }	
 		, 'L0FILTER'                 : "Muon,Hadron"
                 , 'name_prefix'              : 'CharmSemilepD02HMuNu'
-                , 'Prescale'         : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'      : 0.05
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'    : 0.01
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'     : 0.05
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'   : 0.01
+                , 'Prescale'         : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'      : 1.0
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'    : 0.1
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'     : 1.0
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'   : 0.1
 				       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuTight' : 1.0
 		                       }
                 , 'Postscale'        : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'      : 1.0
