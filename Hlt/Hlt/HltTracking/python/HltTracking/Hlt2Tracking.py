@@ -76,6 +76,8 @@ from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
 from Hlt2Lines.Hlt2MuNTrackLines             import Hlt2MuNTrackLinesConf
 from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines           import Hlt2CharmSemilepD02HMuNuLinesConf
 from Hlt2Lines.Hlt2RadiativeTopoLines        import Hlt2RadiativeTopoConf
+from Hlt2Lines.Hlt2CharmHadLambdaCLines import Hlt2CharmHadLambdaCLinesConf
+from Hlt2Lines.Hlt2CharmHadMinBiasLines import Hlt2CharmHadMinBiasLinesConf
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -134,6 +136,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              , Hlt2MuNTrackLinesConf
                              , Hlt2CharmSemilepD02HMuNuLinesConf
                              , Hlt2RadiativeTopoConf
+                             , Hlt2CharmHadLambdaCLinesConf
+                             , Hlt2CharmHadMinBiasLinesConf
                              ]
     __slots__ = { "DataType"                        : '2010' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
