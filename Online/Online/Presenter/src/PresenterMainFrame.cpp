@@ -5007,8 +5007,8 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
                 , NULL ) ;
       }
     }
-  } 
 #endif  // end: not _WIN32
+  } 
 }
 
 //==============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Olivier Callot
+ - fix Windows compilation erors and warnings
+
 ! 2011-06-22 - Olivier Callot
  - Fix online history by run for runs multiple of 1000.
 

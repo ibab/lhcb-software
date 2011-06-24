@@ -412,7 +412,9 @@ int Elog::submit( std::string text ) {
 #define MAX(x,y) ((x)>(y)?(x):(y))
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define __alignof__(x) sizeof(x)
+#ifndef WIN32
 #define alloca(x) malloc(x)
+#endif
 #define ERANGE 34
 
 typedef unsigned int uint32_t;

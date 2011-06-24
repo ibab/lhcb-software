@@ -96,8 +96,8 @@ class PresenterInformation
   /// Get reference Run
   int referenceRun( ) const { return m_referenceRun; } ;
 
-  std::time_t startTimeC() const { return m_startTimeC; }
-  std::time_t endTimeC()   const { return m_endTimeC;   }
+  int startTimeC() const { return int(m_startTimeC); }
+  int endTimeC()   const { return int(m_endTimeC);   }
 
   void setOfflineContext( bool ctxt ) { m_offlineContext = ctxt; }
   bool offlineContext()               { return m_offlineContext; }

@@ -196,7 +196,7 @@ void DatabasePagePathDialog::ok()
             itDH != m_mainFrame->myPage().displayHistos().end();
             itDH++) {
         
-        if( 0 < (*itDH)->isOverlap()) {
+        if( (*itDH)->isOverlap()) {
           thereAreOverlaps = true;
         } else {
           if ( (*itDH)->hostingPad() ) {
