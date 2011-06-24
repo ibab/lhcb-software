@@ -7,6 +7,11 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2011-06-24 - R. Lefevre
+ - B2HHPi0Line : update mass windows
+
+
 ! 2011-06-24 - Grant McGregor
  - CharmSemilepD02HMuNu lines: presets set to original values so they can be modified
  in HltSettings

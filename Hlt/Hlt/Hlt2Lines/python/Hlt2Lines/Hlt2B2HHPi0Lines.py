@@ -19,10 +19,16 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
                     ,'Pi0MinPT_M'           : 2500      # MeV
                     ,'Pi0MinPT_R'           : 1500      # MeV
 
+                    ,'BMinAM_M'             : 3700      # MeV
+                    ,'BMaxAM_M'             : 6900      # MeV
+                    ,'BMinAM_R'             : 3700      # MeV
+                    ,'BMaxAM_R'             : 6900      # MeV
+                    
                     ,'BMinM_M'              : 4200      # MeV
                     ,'BMaxM_M'              : 6400      # MeV
                     ,'BMinM_R'              : 4200      # MeV
                     ,'BMaxM_R'              : 6400      # MeV
+                    
                     ,'BMinPT_M'             : 3000      # MeV
                     ,'BMinPT_R'             : 2500      # MeV
                     
@@ -78,8 +84,8 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             "rho(770)0" : "ALL" % self.getProps()
             ,"pi0"      : "(PT>%(Pi0MinPT_M)s *MeV)" % self.getProps()   
             } 
-            , CombinationCut = "(in_range(%(BMinM_M)s *MeV, AM, %(BMaxM_M)s *MeV))" % self.getProps()
-            , MotherCut      = "(PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_M)s) & (BPVDIRA>%(BMinDIRA_M)s)" % self.getProps()
+            , CombinationCut = "(in_range(%(BMinAM_M)s *MeV, AM, %(BMaxAM_M)s *MeV))" % self.getProps()
+            , MotherCut      = "(in_range(%(BMinM_M)s *MeV, M, %(BMaxM_M)s *MeV)) & (PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_M)s) & (BPVDIRA>%(BMinDIRA_M)s)" % self.getProps()
             , ParticleCombiners = {'' : 'TrgVertexFitter'}
             , Inputs = [ Hlt2Rho4HHPi0, MergedPi0s ])
         
@@ -113,8 +119,8 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             "rho(770)0" : "ALL" % self.getProps()
             ,"pi0"      : "(PT>%(Pi0MinPT_R)s *MeV)" % self.getProps()   
             }
-            , "CombinationCut" : "(in_range(%(BMinM_R)s *MeV, AM, %(BMaxM_R)s *MeV)) & (AMINCHILD(MINTREE('pi+'==ABSID,MIPCHI2DV(PRIMARY)))>%(PiMinIPChi2_R)s)" % self.getProps()
-            , "MotherCut"      : "(PT>%(BMinPT_R)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_R)s) & (BPVDIRA>%(BMinDIRA_R)s)" % self.getProps()
+            , "CombinationCut" : "(in_range(%(BMinAM_R)s *MeV, AM, %(BMaxAM_R)s *MeV)) & (AMINCHILD(MINTREE('pi+'==ABSID,MIPCHI2DV(PRIMARY)))>%(PiMinIPChi2_R)s)" % self.getProps()
+            , "MotherCut"      : "(in_range(%(BMinM_R)s *MeV, M, %(BMaxM_R)s *MeV)) & (PT>%(BMinPT_R)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_R)s) & (BPVDIRA>%(BMinDIRA_R)s)" % self.getProps()
             , "Inputs" : [ Hlt2Rho4HHPi0, ResolvedPi0s ]
             }
                    , postscale = self.postscale
