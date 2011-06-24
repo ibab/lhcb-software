@@ -73,29 +73,18 @@ def _name(i) :
     return 'Hlt1L0'+i+'Candidates' if i.startswith('All') else 'Hlt1L0'+i+'Decision'
 
 def _muon( channel ) :
-    from HltLine.HltDecodeRaw import DecodeL0MUON
-    from Configurables import HltL0MuonCandidates,L0MuonCandidatesFromRaw
-    name = _name(channel)
-    #note: explicitly set the OutputSelection so we can pick it up downstream...
-    return { channel : bindMembers(None, [ DecodeL0MUON,HltL0MuonCandidates(name, L0Channel = channel, OutputSelection = name)]) }
+    return { channel : None}
 
-def _calo( channel , calomaker ) :
+def _calo( channel ) :
     return {channel: None}
-    #from HltLine.HltDecodeRaw import DecodeL0CALO
-    #from Configurables import HltL0CaloCandidates
-    #name = _name(channel)
-    #note: explicitly set the OutputSelection so we can pick it up downstream...
-    #x = { channel: bindMembers(None,[ DecodeL0CALO,HltL0CaloCandidates(name, L0Channel = channel, OutputSelection = name) ]) }
-    #return x
 
 def _converter( channel ) :
-    from Configurables import ElectronSeedTool, HadronSeedTool
-    typeMapper =      { 'Hadron'       : lambda x : _calo( x, HadronSeedTool )
-                      , 'Electron'     : lambda x : _calo( x, ElectronSeedTool )
-                      , 'Photon'       : lambda x : _calo( x, ElectronSeedTool )
-                      , 'LocalPi0'     : lambda x : _calo( x, ElectronSeedTool )
-                      , 'GlobalPi0'    : lambda x : _calo( x, ElectronSeedTool)
-                      , 'Muon'         : lambda x : _muon( x)
+    typeMapper =      { 'Hadron'       : lambda x : _calo( x )
+                      , 'Electron'     : lambda x : _calo( x )
+                      , 'Photon'       : lambda x : _calo( x )
+                      , 'LocalPi0'     : lambda x : _calo( x )
+                      , 'GlobalPi0'    : lambda x : _calo( x )
+                      , 'Muon'         : lambda x : _muon( x )
                       }
     conditionMapper = { 'Electron(Et)' : 'Electron'
                       , 'Photon(Et)'   : 'Photon'

@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v6r11  2011-06-24 =================
+! 2011-06-24 - Gerhard Raven
+ - further clean up of HltL0CaloCandidates
+
 ! 2011-06-22 - Albert Puig
  - Bypassed HltL0Candidates in order to avoid calling old HltL0CaloCandidates.
 
