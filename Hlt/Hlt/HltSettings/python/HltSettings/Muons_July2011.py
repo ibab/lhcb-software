@@ -22,6 +22,7 @@ class Muons_July2011 :
             'Hlt2SingleMuon',
             #'Hlt2SingleMuonRateLimited',
             'Hlt2SingleMuonHighPT',
+            'Hlt2SingleMuonVHighPT',
             'Hlt2SingleMuonLowPT',
 
             'Hlt2DiMuon',  
