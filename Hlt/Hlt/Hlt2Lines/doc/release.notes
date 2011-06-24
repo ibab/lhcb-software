@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Johannes Albrecht
+ - Hlt2InclusiveDiMuonLines:
+   * Vanyas update to multi mu lines: tighten of cuts & add multiDiMu
+   * add Psi2SHighPT line
+
 ! 2011-06-23 - V. Gligorov
  - Add new prompt LambdaC trigger
  - Add new minimum bias charm triggers
