@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v13r8>2011-06-24 HltSys v13r8</A></H1><PRE>
+Update for summer/autum 2011 run after July 4th technical stop
+
 </PRE><H1><A NAME=v13r7>2011-06-20 HltSys v13r7</A></H1><PRE>
 
 Rebuild of v13r6 on top of lateste Phys.
