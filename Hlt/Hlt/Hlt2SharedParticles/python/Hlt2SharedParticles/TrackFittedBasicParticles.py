@@ -234,6 +234,16 @@ Hlt2BiKalmanFittedSecondLoopPions = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecon
                                             )
 ##########################################################################
 #
+# Make the second loop protons
+#
+Hlt2BiKalmanFittedSecondLoopProtons = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopProtons"
+                                            , Particle              =  "proton"
+                                            , Input                 =  BiKalmanFittedChargedSecondLoopProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedSecondLoopProtons/Particles'
+                                            , WriteP2PVRelations    =  False
+                                            ) 
+##########################################################################
+#
 # Make the second loop kaons
 #
 Hlt2BiKalmanFittedSecondLoopKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedSecondLoopKaons"
@@ -295,6 +305,7 @@ __all__ = ( 	'BiKalmanFittedMuons',
                 'BiKalmanFittedPions',
                 'BiKalmanFittedSecondLoopKaons',
                 'BiKalmanFittedSecondLoopPions',
+                'BiKalmanFittedSecondLoopProtons',
                 'BiKalmanFittedSecondLoopMuons',
                 'BiKalmanFittedDownPions',
                 'BiKalmanFittedProtons',
@@ -311,6 +322,7 @@ BiKalmanFittedPions         = bindMembers( None, [ BiKalmanFittedChargedProtoMak
 
 BiKalmanFittedSecondLoopKaons = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopKaons   ] ) 
 BiKalmanFittedSecondLoopPions = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopPions   ] )
+BiKalmanFittedSecondLoopProtons = bindMembers( None, [ BiKalmanFittedChargedSecondLoopProtoMaker , Hlt2BiKalmanFittedSecondLoopProtons   ] )
 BiKalmanFittedSecondLoopMuons = bindMembers( None, [ BiKalmanFittedMuonSecondLoopProtoMaker, Hlt2BiKalmanFittedSecondLoopMuons])
 
 BiKalmanFittedDownPions     = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownPions   ] )
