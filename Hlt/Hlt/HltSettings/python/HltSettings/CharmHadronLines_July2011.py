@@ -42,6 +42,12 @@ class CharmHadronLines :
                   ### from Hlt2CharmHadD2KS0HLines
                   , 'Hlt2CharmHadD2KS0H_D2KS0Pi'
                   , 'Hlt2CharmHadD2KS0H_D2KS0K'
+                  #LambdaC line
+                  , 'Hlt2CharmHadLambdaC2KPPi'  
+                  #Minimum bias line
+                  , 'Hlt2CharmHadMinBiasLambdaC2KPPi'   
+                  , 'Hlt2CharmHadMinBiasD02KPi'
+                  , 'Hlt2CharmHadMinBiasD02KK'
              ]
         
         return lines
