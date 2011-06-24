@@ -132,15 +132,15 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
                  
                  # TrackFitted Bc->Jpsi(MuMu)MuX
-                 , 'TFBc2JpsiMuX_BcUpperMass'         : 7000.  # MeV, Upper limit for partial rec.
-                 , 'TFBc2JpsiMuX_BcLowerMass'         : 3000.  # MeV, Lower limit for partial rec.
+                 , 'TFBc2JpsiMuX_BcUpperMass'         : 6400.  # MeV, Upper limit for partial rec.
+                 , 'TFBc2JpsiMuX_BcLowerMass'         : 3200.  # MeV, Lower limit for partial rec.
                  , 'TFBc2JpsiMuX_BcVtxCHI2'           :   25.  # adimentional
-                 , 'TFBc2JpsiMuX_BcPT'                : 4000.  # MeV, May incrase up to 5000 MeV if needed
-                 , 'TFBc2JpsiMuX_JpsiMassWindow'      :  250.  # MeV, about 10 sigma, may decread to 200
+                 , 'TFBc2JpsiMuX_BcPT'                : 5000.  # MeV, May incrase up to 5000 MeV if needed
+                 , 'TFBc2JpsiMuX_JpsiMassWindow'      :  220.  # MeV, about 10 sigma, may decread to 200
                  , 'TFBc2JpsiMuX_JpsiTightMassWindow' :  100.  # MeV, at least 3 sigma (30 MeV for Bc)
                  , 'TFBc2JpsiMuX_JpsiVtxCHI2'         :   20.  # adimentional
-                 , 'TFBc2JpsiMuX_MuonJpsiPT'          : 1000.  # MeV
-                 , 'TFBc2JpsiMuX_MuonBcPT'            : 1200.  # MeV
+                 , 'TFBc2JpsiMuX_MuonJpsiPT'          : 1200.  # MeV
+                 , 'TFBc2JpsiMuX_MuonBcPT'            : 2000.  # MeV
                  , 'TFBc2JpsiMuX_TrackCHI2DOF'        :   25.  # adimentional
                  # TrackFitted Bc->Jpsi(MuMu)H
                  , 'TFBc2JpsiH_BcMassWindow'        :  400.   # MeV, Mass window for Bc 

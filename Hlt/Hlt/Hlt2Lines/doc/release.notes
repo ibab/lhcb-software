@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Jibo He
+ - Hlt2B2JpsiXLines
+  . Tightened Bc2JpsiMuX
+
 ! 2011-06-24 - R. Lefevre
  - B2HHPi0Line : update mass windows
 
