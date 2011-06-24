@@ -382,20 +382,20 @@ StatusCode ZooWriter::execute()
 
     // write selected particle collections
     BOOST_FOREACH(ZooWriterContext::KnownSelection& s, sel()) {
-	if ( !exist<LHCb::Particles>( s.collection ) ) continue;
-	LHCb::Particles* parts = get<LHCb::Particles>( s.collection );
-	BOOST_FOREACH(LHCb::Particle* part, *parts) {
+	if ( !exist<LHCb::Particle::Range>( s.collection ) ) continue;
+	LHCb::Particle::Range parts = get<LHCb::Particle::Range>( s.collection );
+	BOOST_FOREACH(const LHCb::Particle* const part, parts) {
 	    s.pref->push_back(GetSaved(part));
 	}
     }
     
     //decay tree fitter
     BOOST_FOREACH(ZooWriterContext::KnownSelection& s, sel()) {
-      if ( !exist<LHCb::Particles>( s.collection ) ) continue;
+      if ( !exist<LHCb::Particle::Range>( s.collection ) ) continue;
       if (std::find(m_treefit_names.value().begin(), m_treefit_names.value().end(), s.name) != m_treefit_names.value().end())
 	{
-	  LHCb::Particles* parts = get<LHCb::Particles>( s.collection );
-	  BOOST_FOREACH(LHCb::Particle* part, *parts) {
+	  LHCb::Particle::Range parts = get<LHCb::Particle::Range>( s.collection );
+	  BOOST_FOREACH(const LHCb::Particle* const part, parts) {
 	    treeFit(part);
 	  }
       }
@@ -530,7 +530,7 @@ void ZooWriter::treeFit(const LHCb::Particle* p) {
   }
 }
 
-ZooP *ZooWriter::GetSaved(const LHCb::Particle* p)
+ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 {
     ZooP *&zp = objman()->getOrCreateMappingFor<ZooP>(p);
     if (zp) return zp;
@@ -1536,14 +1536,14 @@ void ZooWriter::writeLinks()
 {
     BOOST_FOREACH(const std::string& from, m_linkFromList.value()) {
 	// do not work on collections which do not exist
-	if (!exist<LHCb::Particles>(from)) continue;
-	const LHCb::Particles* parts_from = get<LHCb::Particles>(from);
+	if (!exist<LHCb::Particle::Range>(from)) continue;
+	const LHCb::Particle::Range parts_from = get<LHCb::Particle::Range>(from);
 	BOOST_FOREACH(const std::string& to, m_linkToList.value()) {
 	    // do not work on collections which do not exist
-	    if (!exist<LHCb::Particles>(to)) continue;
-	    const LHCb::Particles* parts_to = get<LHCb::Particles>(to);
+	    if (!exist<LHCb::Particle::Range>(to)) continue;
+	    const LHCb::Particle::Range parts_to = get<LHCb::Particle::Range>(to);
 
-	    BOOST_FOREACH(const LHCb::Particle* p_from, *parts_from) {
+	    BOOST_FOREACH(const LHCb::Particle* const p_from, parts_from) {
 		// make sure particle is saved and create a ZooLinks block if
 		// needed
 		ZooP* z_from = GetSaved(p_from);
@@ -1551,7 +1551,7 @@ void ZooWriter::writeLinks()
 		    const_cast<ZooLinks*>(z_from->Info<ZooLinks>()) :
 		    z_from->AddInfo<ZooLinks>(*objman());
 
-		BOOST_FOREACH(const LHCb::Particle* p_to, *parts_to) {
+		BOOST_FOREACH(const LHCb::Particle* const p_to, parts_to) {
 		    // do not link a particle to itself
 		    if (p_from == p_to) continue;
 		    // check here if there really is a link between p_from and *p_to

@@ -4,6 +4,11 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Paul Seyfert
+ - Switched from LHCb::Particles to LHCb::Particle::Range
+   (see https://savannah.cern.ch/bugs/?78611)
+   tested on DaVinci v28r3
+
 ! 2011-05-30 - Georg Alexander Krocker
  - Added SSP tag decision as individual decision so we can see which tagger is 
    run
