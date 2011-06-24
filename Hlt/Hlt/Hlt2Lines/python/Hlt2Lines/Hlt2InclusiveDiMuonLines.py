@@ -96,6 +96,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'UnbiasedPsi2SPt'         : 1000      # MeV
                    ,'UnbiasedPsi2SMuPt'       : 1500      # MeV
                    ,'UnbiasedPsi2SVertexChi2' :   25
+                   ,'UnbiasedPsi2SPtHigh'     : 3500      #MeV
                    
                    ,'UnbiasedBmmMinMass'      : 5200      # MeV
                    ,'UnbiasedBmmVertexChi2'   :   25
@@ -364,6 +365,24 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonPsi2SDecision": 50202 } )
+        
+        #--------------------------------------------
+        ''' 
+        unbiased Psi(2S) high PT
+        '''
+        line.clone( 'DiMuonPsi2SHighPT'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(ADMASS(3686.09*MeV)<%(UnbiasedPsi2SMassWindow)s*MeV) "\
+                                     "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2Tight)s )"\
+                                     "& (PT>%(UnbiasedPsi2SPtHigh)s*MeV) "\
+                                     "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedPsi2SMuPt)s*MeV) "\
+                                     "& (VFASPF(VCHI2PDOF)<%(UnbiasedPsi2SVertexChi2)s )" %  self.getProps() 
+                                 , 'PostMonitor' :
+                                     Hlt2Monitor( "M","M(#mu#mu)",3686,200,'M_out',nbins=25)
+                                 }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonPsi2SHighPTDecision": 50223 } )
         
         #--------------------------------------------
         '''
