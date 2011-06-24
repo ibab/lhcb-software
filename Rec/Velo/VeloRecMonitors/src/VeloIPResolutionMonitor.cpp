@@ -80,7 +80,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
   // Set histo dir
   setHistoTopDir( "Velo/" );
@@ -140,7 +140,7 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
 //=============================================================================
 StatusCode Velo::VeloIPResolutionMonitor::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
 
   counter( "Events Analysed" )++;
       

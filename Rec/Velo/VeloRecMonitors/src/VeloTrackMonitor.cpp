@@ -227,7 +227,8 @@ StatusCode Velo::VeloTrackMonitor::getVeloClusters ( ) {
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
   
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-    debug() << "No VeloClusters container found for this event !" << endmsg;
+    if ( m_debugLevel )
+      debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
     
   }
@@ -250,7 +251,8 @@ StatusCode Velo::VeloTrackMonitor::getVeloTracks ( ) {
     debug() << "Retrieving VeloTracks from " << m_trackCont << endmsg;
   
   if ( !exist<LHCb::Tracks>( m_trackCont ) ) {
-    debug() << "No VeloTracks container found for this event !" << endmsg;
+    if ( m_debugLevel )
+      debug() << "No VeloTracks container found for this event !" << endmsg;
     return StatusCode::FAILURE;
   }
   else {
@@ -304,14 +306,14 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     }
     
     //General track properties
-    if (m_debugLevel){
-      debug() << "ErrorFlag:" << track->flag() << endmsg;
-      debug() << "Track Type:" << track->type() << endmsg;
-      debug() << "Track History:"<< track->history() << endmsg;
-      if( m_trackCont != LHCb::TrackLocation::Velo)
-        debug() << "Momentum(GeV):" << track->p()/GeV << endmsg;
-      debug() << "Chi2/DoF per Track:" << track->chi2PerDoF() << endmsg;
-      debug() << "Tracks per container:" << m_tracks->size() << endmsg;
+    if ( m_debugLevel ) {
+      debug() << "ErrorFlag:" << track->flag() << std::endl
+              << "Track Type:" << track->type() << std::endl
+              << "Track History:"<< track->history() << endmsg;
+      if( m_trackCont != LHCb::TrackLocation::Velo )
+        debug() << "Momentum(GeV):" << track->p()/GeV << std::endl
+                << "Chi2/DoF per Track:" << track->chi2PerDoF() << std::endl
+                << "Tracks per container:" << m_tracks->size() << endmsg;
     }
     //theta, phi& p  plots
     //---------------------------
@@ -383,9 +385,9 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     unsigned int sensnmin=105, sensnmax=0;
     sensnmax= ((sensnpmax-64)>sensnrmax) ? (sensnpmax-64) : sensnrmax ;
     sensnmin= ((sensnpmin-64)<sensnrmin) ? (sensnpmin-64) : sensnrmin ;
-    debug()<<" zmin=" <<zmin <<" zmax="<<zmax<<" sensnmin="<<sensnmin<<" sensnmax="<<sensnmax<<endmsg;
-      
-
+    if ( m_debugLevel )
+      debug()<<" zmin=" <<zmin <<" zmax="<<zmax<<" sensnmin="<<sensnmin<<" sensnmax="<<sensnmax<<endmsg;      
+    
     //Evaluation of Number of reconstructed hits per track
     const int nVeloHits = std::count_if(vids.begin(), vids.end(),bind(&LHCbID::isVelo,_1));
     //Evaluation of Number of expected hits per track
@@ -402,24 +404,24 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     //Evaluation of expected hit per sensor
     //Loop over sensors
     for(unsigned int j=(sensnmin); j<=sensnmax; j++){
-      debug()<<"sensor number "<<j<<endmsg;
+      if ( m_debugLevel ) debug() <<"sensor number " << j << endmsg;
       bool nExpectedHits_sensorR = m_expectTool -> isInside(*track, j);
       if(nExpectedHits_sensorR == true) 
         N_exp[j]+=1;
-      debug()<<j <<" ==> N_exp "<<N_exp[j]<<endmsg;
+      if ( m_debugLevel ) debug() << j << " ==> N_exp " << N_exp[j] << endmsg;
       bool nExpectedHits_sensorP = m_expectTool -> isInside(*track, j+64);
       if(nExpectedHits_sensorP == true) 
         N_exp[j+64]+=1;
-      debug()<<j+64<<" ==> N_exp "<<N_exp[j]<<endmsg;
+      if ( m_debugLevel ) debug() << j+64 << " ==> N_exp " << N_exp[j] << endmsg;
     }//end of loop over sensors
 
     //Unbiased Residuals
     //------------------
     if(m_unbiasedResidualProfile){ 
-        
+      
       StatusCode sc2 = unbiasedResiduals (track);
       if ( !( sc2.isSuccess() ) ) {
-        debug() << "Unbiased residuals method" << endmsg;
+        if ( m_debugLevel ) debug() << "Unbiased residuals method" << endmsg;
         return StatusCode::SUCCESS;
       }
     }
@@ -463,8 +465,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
       const DeVeloSensor* sensor = m_veloDet->sensor(sensorID); 
 
       N_rec[sensorID]+=1;
-      debug()<<"N_rec "<<N_rec[sensorID]<<endmsg;
-
+      if ( m_debugLevel ) debug()<<"N_rec "<<N_rec[sensorID]<<endmsg;
+      
       //UsedSensor plot
       //---------------
       if ( sensor->isR() || sensor->isPhi() ) {
@@ -495,13 +497,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
       StatusCode sc3 = sensor -> residual( trackInterceptGlobal,track->slopes(), vcID,
                                            interStripFr, biasedResid, chi2 );
       if ( !( sc3.isSuccess() ) ) {
-        debug() << "Residual calculation failed for " 
-                << trackInterceptGlobal.x() << " "
-                << trackInterceptGlobal.y() << " "
-                << trackInterceptGlobal.z() << " "
-                << vcID << " "
-                << interStripFr << " "
-                << endmsg;
+        if ( m_debugLevel ) debug() << "Residual calculation failed for " 
+                                    << trackInterceptGlobal.x() << " "
+                                    << trackInterceptGlobal.y() << " "
+                                    << trackInterceptGlobal.z() << " "
+                                    << vcID << " "
+                                    << interStripFr << " "
+                                    << endmsg;
         continue;
       }
 
@@ -580,13 +582,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
         }//end pitch
         else {
           Warning("Pitch error",StatusCode::SUCCESS).ignore();
-          debug()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
+          if ( m_debugLevel ) debug()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
         }
         
         
       }//if m_biasedResidual
       else{
-        if(m_debugLevel)
+        if( m_debugLevel )
           debug()<< "Profiles for biased residual are not filled: m_biasedResidual == False" << endmsg;
       }  
       
@@ -693,7 +695,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
         sensnumber=(double) i;
         m_prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
       }
-      debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
+      if ( m_debugLevel )
+        debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
       if(N_exp[i+64]>=1){
         pseudoEfficiency_sens = N_rec[i+64] / N_exp[i+64];
         sensnumber=(double) i+64.;
@@ -786,7 +789,8 @@ Gaudi::XYZPoint Velo::VeloTrackMonitor::extrapolateToZ(LHCb::Track *track, doubl
 StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track ) 
 {
   if(track->checkFitHistory(Track::BiKalman) == true){
-    debug() << "Start Unbiased Residual method" << endmsg;    
+    if ( m_debugLevel )
+      debug() << "Start Unbiased Residual method" << endmsg;    
     // RESET AFTER CERTAIN EVENTS
     if ( m_event ==  m_resetProfile ) { m_prof_unsensors -> reset() ; } 
     // RESET AFTER CERTAIN EVENTS
@@ -835,13 +839,13 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       StatusCode sc3 = sensor->residual(trackInterceptGlobal,track->slopes(),
                                         vcID, interStripFr, UnbiasedResid, chi2);
       if ( !( sc3.isSuccess() ) ) {
-        debug() << "Residual calculation failed for "
-                << trackInterceptGlobal.x() << " "
-                << trackInterceptGlobal.y() << " "
-                << trackInterceptGlobal.z() << " "
-                << vcID << " "
-                << interStripFr << " "
-                << endmsg;
+        if ( m_debugLevel ) debug() << "Residual calculation failed for "
+                                    << trackInterceptGlobal.x() << " "
+                                    << trackInterceptGlobal.y() << " "
+                                    << trackInterceptGlobal.z() << " "
+                                    << vcID << " "
+                                    << interStripFr << " "
+                                    << endmsg;
         continue;
       }
       double pitch;
@@ -871,7 +875,7 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       
       else {
         Warning("Pitch error",StatusCode::SUCCESS).ignore();
-        debug()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
+        if ( m_debugLevel ) debug()<< "Pitch is" << pitch << " for sensorID " << sensorID << endmsg;
       }
       
     }//end of fit node

@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Eduardo Rodrigues
+ - Protected unprotected debug messages in VeloClusterMonitor,
+   VeloTrackMonitor and VeloIPResolutionMonitor
+
 !========================= VeloRecMonitors v2r13 2011-06-15 =========================
 ! 2011-05-31 - Marius Bjoernstad
  - Added a plot for number of clusters, with extended axis

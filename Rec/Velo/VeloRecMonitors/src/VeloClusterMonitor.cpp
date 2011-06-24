@@ -177,7 +177,7 @@ StatusCode Velo::VeloClusterMonitor::veloClusters() {
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
 
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-    debug() << "No VeloClusters container found for this event !" << endmsg;
+    if ( m_debugLevel ) debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
   }
   else {
