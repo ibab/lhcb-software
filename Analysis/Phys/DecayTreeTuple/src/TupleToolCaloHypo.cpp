@@ -31,7 +31,7 @@ TupleToolCaloHypo::TupleToolCaloHypo( const std::string& type,
   declareInterface<IParticleTupleTool>(this); 
   declareProperty("DataList",m_dataList);
   declareProperty("AllowBremHypo",m_brem = false);
-  declareProperty("AllowChargedHypo",m_charged=true);
+  declareProperty("AllowChargedHypo",m_charged=false);
   m_dataList.push_back( "All" );
 }
 
@@ -40,6 +40,9 @@ TupleToolCaloHypo::TupleToolCaloHypo( const std::string& type,
 StatusCode TupleToolCaloHypo::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   m_estimator = tool<ICaloHypoEstimator>("CaloHypoEstimator","CaloHypoEstimator",this);
+
+  info() << "Caution : this TupleTool may trigger part of Calo reconstruction - ONLY WORK ON DST" << endmsg;
+
   return StatusCode::SUCCESS;
 }
 

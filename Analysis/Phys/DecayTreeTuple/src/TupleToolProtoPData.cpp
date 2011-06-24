@@ -54,7 +54,6 @@ StatusCode TupleToolProtoPData::fill( const LHCb::Particle*
     var << (LHCb::ProtoParticle::additionalInfo) i;
     if( std::string::npos != var.str().find("ERROR") )continue;
     if( LHCb::CaloAlgUtils::StringMatcher( m_list , var.str() ) ){
-      info() << "keep " << var.str() << " because it is in the list : ' " << m_list << "'" << endmsg;
       double val = pp->info( (LHCb::ProtoParticle::additionalInfo) i , def);
       fill &= tuple->column( prefix+"_PP_"+var.str(), val );
     }

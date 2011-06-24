@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Olivier Deschamps
+  - restore doc/release.notes
+  - TupleToolProtoPData : fix info() verbosity
+  - TupleToolCaloHypo : change default properties (neutral only by default)
+
 ! 2011-06-17 - Andrew Powell
  - TupleToolRICHPid: Added track (x,y,z) and (rho,phi) entrance coordinates for each radiator   
 
@@ -25,6 +30,31 @@
 ! 2011-06-13 - Philip Hunt
  - Added MCTupleToolPrompt which flags whether a particle originates from a prompt charm
    decay based on the true lifetime of the ancestors.
+
+!========================= DecayTreeTuple v3r14p2 2011-05-24 =========================
+! 2011-05-23 - Albert Bursche
+ - Fixed segfault in TuplToolJetRelations. 
+   Dummy entries were not properly named.
+
+! 2011-05-20 - Albert Bursche
+ - Added TuplToolJetRelations and fixed segfault in TupleToolWZJets 
+   which was due to shadowing of m_Tuple variable in TupleToolJetsBase.
+
+
+!========================= DecayTreeTuple v3r14p1 2011-05-20 =========================
+! 2011-05-20 - Rob Lambert
+ - Revert bad behaviour of TupleToolGeometry with respect to refitting PVs.
+	 Introduced in previous version "2011-04-04 - Yuehong Xie"
+   bug #82482
+   Broke TupleToolGeometry on MicroDSTs and falls outside the established
+         refitting framework.
+   For the moment only refit if an option is set to true.
+   In the future this should be linked with Juan's refitting framework.
+   
+
+! 2011-05-17 - Albert Bursche
+ - Added TuplToolJetsBase and transferred much of the funtionality from TupleToolWZJets to it.
+   This is done in order to ease adding of more Jet related TupleTools in the near future.
 
 !========================== DecayTreeTuple v3r14 2011-04-29 =================
 ! 2011-04-26 - Patrick Koppenburg
