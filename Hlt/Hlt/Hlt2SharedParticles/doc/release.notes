@@ -5,6 +5,13 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - V. Gligorov
+ - Update definition of shared lambdas. Add 
+ - PT > 500 MeV for both tracks
+ - IPCHI2 > 36 for both tracks
+ - Mass window < 20 MeV
+ - Track Chi2 < 5 for both tracks  
+
 ! 2011-06-23 - V. Gligorov
  - Add new prompt LambdaC trigger
  - Add new minimum bias charm triggers
