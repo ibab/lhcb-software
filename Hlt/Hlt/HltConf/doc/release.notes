@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-06-23 - V. Gligorov
+ - Add new prompt LambdaC trigger
+ - Add new minimum bias charm triggers
+
+! 2011-06-23 - V. Gligorov
  - Restore commit of nVELO GEC from 06-21.
 
 ! 2011-06-22 - Albert Puig
