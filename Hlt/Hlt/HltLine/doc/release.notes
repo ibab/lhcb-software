@@ -5,6 +5,7 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
  
+!========================== HltLine v5r1p6 2011-06-24 ===================
 ! 2011-05-12 - Gerhard Raven
  - add generator for bindmember members
 
