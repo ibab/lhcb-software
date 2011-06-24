@@ -31,8 +31,7 @@ tuple.Branches = { "B"  : "["+bh+"]cc : "+decay.replace("^","") }
 from Configurables import TupleToolDecayTreeFitter
 tuple.B.ToolList +=  [ "TupleToolDecayTreeFitter/Fit",            # just a refit
                        "TupleToolDecayTreeFitter/MassFit",        # fit with J/psi mass constraint
-                       "TupleToolDecayTreeFitter/PVFit",          # fit with PV and J/psi constraint
-                       "TupleToolDecayTreeFitter/FullFit" ]       # fit with all constraints I can think of
+                       "TupleToolDecayTreeFitter/PVFit" ]       # fit with all constraints I can think of
 
 tuple.B.addTool(TupleToolDecayTreeFitter("MassFit"))
 tuple.B.MassFit.constrainToOriginVertex = False
@@ -43,10 +42,6 @@ tuple.B.PVFit.Verbose = True
 tuple.B.PVFit.constrainToOriginVertex = True
 tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)" ]
 
-tuple.B.addTool(TupleToolDecayTreeFitter("FullFit"))
-tuple.B.FullFit.Verbose = True
-tuple.B.FullFit.constrainToOriginVertex = True
-tuple.B.FullFit.daughtersToConstrain = [ bh, "J/psi(1S)" ]
 @endcode
     * 
     * - This will produce the following columns for the B (from this tool):
@@ -56,11 +51,6 @@ tuple.B.FullFit.daughtersToConstrain = [ bh, "J/psi(1S)" ]
     *     - B_PVFit_PERR B_PVFit_ctau B_PVFit_ctauErr B_PVFit_decayLength B_PVFit_decayLengthErr B_PVFit_J_psi_1S_ctau  
     *       B_PVFit_J_psi_1S_ctauErr B_PVFit_J_psi_1S_decayLength B_PVFit_J_psi_1S_decayLengthErr B_PVFit_KS0_ctau  
     *       B_PVFit_KS0_ctauErr B_PVFit_KS0_decayLength B_PVFit_KS0_decayLengthErr
-    *     - B_FullFit_status B_FullFit_nDOF B_FullFit_chi2_B B_FullFit_nIter B_FullFit_M 
-    *       B_FullFit_MERR B_FullFit_P B_FullFit_PERR 
-    *       B_FullFit_ctau B_FullFit_ctauErr B_FullFit_decayLength B_FullFit_decayLengthErr 
-    *       B_FullFit_J_psi_1S_ctau B_FullFit_J_psi_1S_ctauErr B_FullFit_J_psi_1S_decayLength B_FullFit_J_psi_1S_decayLengthErr 
-    *       B_FullFit_KS0_ctau B_FullFit_KS0_ctauErr B_FullFit_KS0_decayLength B_FullFit_KS0_decayLengthErr 
     *
     * \sa DecayTreeTuple
     *

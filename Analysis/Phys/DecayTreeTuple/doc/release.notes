@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Patrick Koppenburg
+ - src/TupleToolRecoStats.cpp : more stuff
+ - src/TupleToolDecayTreeFitter.h : better (?) doc
+
 ! 2011-06-24 - Olivier Deschamps
   - restore doc/release.notes
   - TupleToolProtoPData : fix info() verbosity

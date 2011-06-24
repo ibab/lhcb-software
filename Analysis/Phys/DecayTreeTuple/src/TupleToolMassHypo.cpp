@@ -114,7 +114,7 @@ double TupleToolMassHypo::recalculateMass(const possDecay& pd, const Gaudi::XYZP
     } 
     newM += mom ;
   }
-  verbose() << "New mass with " << combname << " is " << newM.M()  << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "New mass with " << combname << " is " << newM.M()  << endmsg ;
   return newM.M();
 }
 //=============================================================================
@@ -122,9 +122,9 @@ possDecayVec TupleToolMassHypo::getPossibilities(const LHCb::Particle::ConstVect
   possDecayVec possibilities;
   // loop over daghters
   for ( LHCb::Particle::ConstVector::const_iterator d1 = dv.begin() ; d1!=dv.end() ; ++d1){
-    verbose() << "getPossibilities Looping over " << (*d1)->particleID().pid() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "getPossibilities Looping over " << (*d1)->particleID().pid() << endmsg ;
     possibilities = increaseVector(*d1,possibilities);
-    verbose() << "getPossibilities Size of possibilities " << possibilities.size() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "getPossibilities Size of possibilities " << possibilities.size() << endmsg ;
   }
   if ((possibilities.size()>1) && (msgLevel(MSG::DEBUG) || m_first)) printVec(possibilities);
   if (m_first) m_first = false ;  
@@ -133,7 +133,7 @@ possDecayVec TupleToolMassHypo::getPossibilities(const LHCb::Particle::ConstVect
 //=============================================================================
 void TupleToolMassHypo::addPossPair(const LHCb::Particle* d, int pid, possDecay& pm){
   pm.push_back(possPair(d,pid));
-  verbose() << "addPossPair Added " << pid << " size: " << pm.size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "addPossPair Added " << pid << " size: " << pm.size() << endmsg ;
 }
 
 //=============================================================================

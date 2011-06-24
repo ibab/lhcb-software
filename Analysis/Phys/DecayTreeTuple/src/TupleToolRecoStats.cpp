@@ -67,10 +67,12 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
   const std::string prefix=fullName();
   
   bool test = true;
-  test &= tup->column(prefix+"ChargedProtos",number<LHCb::ProtoParticles>(LHCb::ProtoParticleLocation::Charged));
-  test &= tup->column(prefix+"NeutralProtos",number<LHCb::ProtoParticles>(LHCb::ProtoParticleLocation::Neutrals));
-  test &= tup->column(prefix+"BestTracks",number<LHCb::Tracks>(LHCb::TrackLocation::Default));
-
+  const LHCb::Track::Container* tracks =  get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
+  const LHCb::ProtoParticle::Container* charged = get<LHCb::ProtoParticle::Container>(LHCb::ProtoParticleLocation::Charged);
+  const LHCb::ProtoParticle::Container* neutrals = get<LHCb::ProtoParticle::Container>(LHCb::ProtoParticleLocation::Neutrals);
+  test &= tup->column(prefix+"ChargedProtos", charged->size());
+  test &= tup->column(prefix+"NeutralProtos", neutrals->size());
+  test &= tup->column(prefix+"BestTracks", tracks->size());
   if (isVerbose()){
     test &= tup->column(prefix+"MuonTracks",number<LHCb::Tracks>(LHCb::TrackLocation::Muon));
     test &= tup->column(prefix+"ITClusters",number<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters));
@@ -87,29 +89,30 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup)
     }
     int nSpd = m_l0BankDecoder->data("Spd(Mult)");
     test &= tup->column(prefix+"spdMult", nSpd);
-
     
-    const LHCb::Track::Container* tracks =  get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
-
     unsigned int nBack = 0;
     unsigned int nLong = 0;
+    unsigned int nLongGood = 0;
     int veloTracks = 0;
 
     // Protection from empty track container 
     if( tracks!=0 && tracks->size()>0 ) {
       LHCb::Tracks::const_iterator iterT = tracks->begin();
       for(; iterT != tracks->end() ;++iterT) {
-        if ((*iterT)->checkFlag( LHCb::Track::Backward) == true) ++nBack;
-        double chi2 = ((*iterT)->nDoF() > 0) ? (*iterT)->chi2()/(*iterT)->nDoF() : 999;
-        if ((*iterT)->checkType( LHCb::Track::Long) == true && chi2 < m_chi2) ++nLong;
+        if ((*iterT)->checkFlag( LHCb::Track::Backward)) ++nBack;
+        if ((*iterT)->checkType( LHCb::Track::Long )){
+          ++nLong;
+          double chi2 = ((*iterT)->nDoF() > 0) ? (*iterT)->chi2()/(*iterT)->nDoF() : 999;
+          if (chi2 < m_chi2) ++nLongGood;
+        }
       }
-      
       veloTracks = nVelo(tracks);
     }
-    
+
     test &= tup->column(prefix+"backwardTracks", nBack);
     test &= tup->column(prefix+"veloTracks", veloTracks);
-    test &= tup->column(prefix+"goodLongTracks", nLong);
+    test &= tup->column(prefix+"longTracks", nLong);
+    test &= tup->column(prefix+"goodLongTracks", nLongGood);
   }
   
   return StatusCode(test) ;
