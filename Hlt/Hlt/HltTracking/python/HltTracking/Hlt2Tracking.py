@@ -252,6 +252,24 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return self.getProp("__hlt2PhotonsFromL0Seq__")
     #############################################################################################
     #
+    # Electrons from L0 Candidates
+    #
+    def hlt2ElectronsFromL0(self):
+        """
+        Charged protoparticles
+        """
+        return self.getProp("__hlt2ElectronsFromL0Seq__")
+    #############################################################################################
+    #
+    # Pi0 from L0 Candidates
+    #
+    def hlt2Pi0FromL0(self):
+        """
+        Neutral protoparticles
+        """
+        return self.getProp("__hlt2Pi0FromL0Seq__")
+    #############################################################################################
+    #
     # Velo tracking for the PV making sequence
     #
     def hlt2VeloTracking(self):
