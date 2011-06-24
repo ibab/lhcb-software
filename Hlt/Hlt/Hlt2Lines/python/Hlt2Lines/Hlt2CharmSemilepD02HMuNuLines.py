@@ -1,6 +1,6 @@
 __author__  = 'Grant McGregor'
 __date__    = '$Date: 2011-03-15 13:53:00 $'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 ## ######################################################################
 ## Defines a configurable to define and configure Hlt2 lines for selecting
@@ -24,6 +24,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 , 'Pair_SumAPT_MIN'           : 2800.0 * MeV  
                 , 'D0_VCHI2PDOF_MAX'          : 10.0       # neuter
 		, 'D0_FD_MIN'                 : 4.0 * mm
+		, 'D0_FD_TIGHT_MIN'           : 40.0 * mm
                 , 'D0_P_MIN'                  : 20.0 * GeV
                 , 'D0_MCORR_MIN'              : 1400.0 * MeV
                 , 'D0_MCORR_MAX'              : 2700.0 * MeV 
@@ -34,25 +35,29 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 , 'TisTosParticleTaggerSpecs': {"Hlt1TrackMuonDecision%TOS":0 }	
 		, 'L0FILTER'                 : "Muon,Hadron"
                 , 'name_prefix'              : 'CharmSemilepD02HMuNu'
-                , 'Prescale'         : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'     : 1.0
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'   : 0.1
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'    : 1.0
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'  : 0.1
+                , 'Prescale'         : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'      : 0.05
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'    : 0.01
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'     : 0.05
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'   : 0.01
+				       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuTight' : 1.0
 		                       }
-                , 'Postscale'        : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'     : 1.0
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'   : 1.0
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'    : 1.0
-		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'  : 1.0
+                , 'Postscale'        : { 'Hlt2CharmSemilepD02HMuNu_D02KMuNu'      : 1.0
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'    : 1.0
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'     : 1.0
+		                       , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'   : 1.0
+				       , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuTight' : 1.0
                                        }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : { ## Signal line KMuNu
-                                     'Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision'     : 50860  
+                                     'Hlt2CharmSemilepD02HMuNu_D02KMuNuDecision'       : 50860  
 				     ## Wrong-sign line
-                                   , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWSDecision'   : 50861  
+                                   , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuWSDecision'     : 50861  
 				     ## Signal line PiMuNu
-                                   , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuDecision'    : 50862  
+                                   , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuDecision'      : 50862  
 				     ## Wrong-sign line
-                                   , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWSDecision'  : 50863
+                                   , 'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWSDecision'    : 50863
+				     ## Tight KMuNu line
+                                   , 'Hlt2CharmSemilepD02HMuNu_D02KMuNuTightDecision'  : 50864
                                    }
                   }
 
@@ -117,6 +122,44 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         # Construct a cut string for the vertexed combination.
         parentcuts = "(in_range(%(D0_MCORR_MIN)s,BPVCORRM,%(D0_MCORR_MAX)s))" \
 		     "& (BPVVD > %(D0_FD_MIN)s )" \
+                     "& (VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
+                     "& (BPVVDZ> %(D0_BPVVDZ_MIN)s )" \
+                     % self.getProps()
+
+        if extracuts and extracuts.has_key('MotherCut') :
+            parentcuts = parentcuts  + '&' + extracuts['MotherCut']
+
+        combineTwoBody = Hlt2Member( CombineParticles
+                                       , 'Combine'
+                                       , DecayDescriptors = decayDesc
+                                       , Inputs = inputSeq
+                                       , CombinationCut = combcuts
+                                       , MotherCut = parentcuts
+                                     )
+
+        combSeq = bindMembers( name, inputSeq + [ combineTwoBody ] )
+        return combSeq
+    # }
+
+    def __combineTight(self, name, inputSeq, decayDesc, extracuts = None) : # {
+        "Configure combinatorics.  Returns a bindMembers."
+        from HltLine.HltLine import Hlt2Member, bindMembers
+        from Configurables import FilterDesktop, CombineParticles
+
+        combcuts = "(AM< %(Pair_Mass_MAX)s )" \
+		   "& ((APT1+APT2)> %(Pair_SumAPT_MIN)s)" \
+                   "& (AP > %(D0_P_MIN)s)" \
+	           "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMAXDOCA_MAX)s )" \
+		   "& (AALLSAMEBPV)" \
+                   % self.getProps()
+
+        # extracuts allows additional cuts to be applied for special cases
+        if extracuts and extracuts.has_key('CombinationCut') :
+            combcuts = combcuts + '&' + extracuts['CombinationCut']
+
+        # Construct a cut string for the vertexed combination.
+        parentcuts = "(in_range(%(D0_MCORR_MIN)s,BPVCORRM,%(D0_MCORR_MAX)s))" \
+		     "& (BPVVD > %(D0_FD_TIGHT_MIN)s )" \
                      "& (VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
                      "& (BPVVDZ> %(D0_BPVVDZ_MIN)s )" \
                      % self.getProps()
@@ -212,9 +255,9 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         muonName = self.getProp('name_prefix') + 'Muons'
 	kaonName = self.getProp('name_prefix') + 'Kaons'
 	pionName = self.getProp('name_prefix') + 'Pions'
-	lclInputKaons = self.__inPartFilter(kaonName, [ BiKalmanFittedKaons], False )
-	lclInputPions = self.__inPartFilter(pionName, [ BiKalmanFittedPions], False )
-        lclInputMuons = self.__inPartFilter(muonName, [ BiKalmanFittedMuons], True )
+	lclInputKaons      = self.__inPartFilter(kaonName, [ BiKalmanFittedKaons], False )
+        lclInputMuons      = self.__inPartFilter(muonName, [ BiKalmanFittedMuons], True )
+	lclInputPions      = self.__inPartFilter(pionName, [ BiKalmanFittedPions], False )
 
         ## D0 -> mu+ K-/pi- lines and wrong-sign line
         ### ###############################################################
@@ -226,15 +269,24 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                                   	 , 'inList' : [ lclInputMuons, lclInputPions ] }
 	               , 'D02PiMuNuWS'  : {'descriptor' :  "[D0 -> mu+ pi+]cc"
                                   	 , 'inList' : [ lclInputMuons, lclInputPions ] }
+	               , 'D02KMuNuTight'  : {'descriptor' :  "[D0 -> mu+ K-]cc"
+                                  	 , 'inList' : [ lclInputMuons, lclInputKaons ] }
 	}
 
         for mode in decayModes.keys() : # {
             ## Combinatorics
 	    modeName = self.getProp('name_prefix') + '_' + mode
-            d02HMuNuComb = self.__combine(  name = modeName
-                                , inputSeq = decayModes[mode]['inList']
-                                , decayDesc = [ decayModes[mode]['descriptor'] ]
-                           )
+            
+	    if ( "Tight" in modeName):
+		    d02HMuNuComb = self.__combineTight(  name = modeName
+			    , inputSeq = decayModes[mode]['inList']
+			    , decayDesc = [ decayModes[mode]['descriptor'] ]
+			    )
+	    else:
+                    d02HMuNuComb = self.__combine(  name = modeName
+                            , inputSeq = decayModes[mode]['inList']
+                            , decayDesc = [ decayModes[mode]['descriptor'] ]
+                            )
             d02HMuNuSigSeq  = self.__filterHlt1TOS( modeName, d02HMuNuComb )
             d02HMuNuSigLine = self.__makeLine(modeName, algos = [ d02HMuNuSigSeq ])
 
