@@ -117,6 +117,7 @@ private:
   bool m_activateMinMomForTrackRecon;
   double m_minMomTracksForReconR1Gas;
   double m_minMomTracksForReconR2Gas;
+  double m_minMomTracksForReconAerogel;
   
 };
 #endif // RICHANALYSIS_RICHG4HITRECON_H

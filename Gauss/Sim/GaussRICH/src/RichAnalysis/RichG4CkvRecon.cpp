@@ -57,7 +57,10 @@ RichG4CkvRecon::RichG4CkvRecon()
    m_RichG4ReconHpd(0),
    m_curLocalHitCoord(-10000.,-10000.,-10000.0), m_curEmisPt(0,0,0),
    m_curTkMom(0,0,0),m_curGlobalHitPhCath(0,0,0),
-   m_curDetPoint(0,0,0), m_curReflPt(0,0,0) {
+   m_curDetPoint(0,0,0), m_curReflPt(0,0,0),
+   m_AgelNominalTileRefIndex(std::vector<double>(16)),
+   m_AgelNominalSubTileRefIndex(16,std::vector<double>(50))
+  {
 
   // In the above initialization the 2 and 300 are just
   // dummy parameters, the
@@ -86,7 +89,37 @@ RichG4CkvRecon::RichG4CkvRecon()
 
   m_agelnominalrefractiveindex = 1.0339124;
   m_c4f10nominalrefrativeindex = 1.0014069;
-
+  m_AgelNominalTileRefIndex[0]=1.0375;
+  m_AgelNominalTileRefIndex[1]=1.0375;
+  m_AgelNominalTileRefIndex[2]=1.0373;
+  m_AgelNominalTileRefIndex[3]=1.0359;
+  m_AgelNominalTileRefIndex[4]=1.0369;
+  m_AgelNominalTileRefIndex[5]=1.0376;
+  m_AgelNominalTileRefIndex[6]=1.0358;
+  m_AgelNominalTileRefIndex[7]=1.0367;
+  m_AgelNominalTileRefIndex[8]=1.0387;
+  m_AgelNominalTileRefIndex[9]=1.0377;
+  m_AgelNominalTileRefIndex[10]=1.0363;
+  m_AgelNominalTileRefIndex[11]=1.0385;
+  m_AgelNominalTileRefIndex[12]=1.0347;
+  m_AgelNominalTileRefIndex[13]=1.0382;
+  m_AgelNominalTileRefIndex[14]=1.0342;
+  m_AgelNominalTileRefIndex[15]=1.0376;
+  double asum=0.0;
+  
+  for (int i=0; i<16; ++i ) {
+    asum+= m_AgelNominalTileRefIndex[i];
+    
+    for (int j=0; j<50; ++j) {
+      m_AgelNominalSubTileRefIndex[i] [j] =  m_AgelNominalTileRefIndex[i];
+      
+    }
+    
+  }
+   m_AgelMeanNominalTileRefIndex=asum/16.0;
+  
+  
+  
 
   if( !Rich1DE ){
     RichG4CkvReconlog << MSG::ERROR
@@ -661,9 +694,22 @@ double  RichG4CkvRecon::CherenkovThetaFromReflPt(const Gaudi::XYZPoint & aReflPo
 }
 
 double RichG4CkvRecon::CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoint,
-                                               const Gaudi::XYZPoint & aEmisPt  )
+                                               const Gaudi::XYZPoint & aEmisPt ,
+                                               const int tilenum, const int subtilenum )
 {
-
+  double aTileRefIndexCorrectionFact=0.0;
+  
+  if(subtilenum < 0 ) {
+    aTileRefIndexCorrectionFact = acos(1.0/m_AgelMeanNominalTileRefIndex)-
+      acos(1.0/(m_AgelNominalTileRefIndex[tilenum]));
+    
+  }else {
+    aTileRefIndexCorrectionFact=acos(1.0/m_AgelMeanNominalTileRefIndex)-
+      acos(1.0/(m_AgelNominalSubTileRefIndex[tilenum] [subtilenum]));
+    
+  }
+  
+  
   m_curEmisPt = aEmisPt;
 
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -711,9 +757,9 @@ double RichG4CkvRecon::CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoin
 
   const double angleCorrection= aPhotDirAgelExit-angleIncident;
 
-  const double aCkvWithCorrection= aCkvWithoutCorrection-angleCorrection;
-
-
+  const double aCkvWithCorrection= 
+    (aCkvWithoutCorrection-angleCorrection) + aTileRefIndexCorrectionFact;
+  
   //     RichG4CkvReconlog<<MSG::INFO
   //                 <<"  Agel Ckv noCorr withcorr  "
   //                 <<  aCkvWithoutCorrection<<"   "

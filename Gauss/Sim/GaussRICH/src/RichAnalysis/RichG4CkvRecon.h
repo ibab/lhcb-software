@@ -161,7 +161,8 @@ public:
   }
 
   double CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoint,
-                                 const Gaudi::XYZPoint & aEmisPt );
+                                 const Gaudi::XYZPoint & aEmisPt,
+                                 const int tilenum, const int subtilenum  );
 
   RichG4ReconFlatMirr* getCurReconFlatMirr() {
     return m_CurReconFlatMirr;}
@@ -216,6 +217,10 @@ private:
   double m_c4f10nominalrefrativeindex;
   double m_agelnominalrefractiveindex;
   RichG4ReconFlatMirr* m_CurReconFlatMirr;
+  std::vector<double> m_AgelNominalTileRefIndex;
+  std::vector<std::vector<double> >m_AgelNominalSubTileRefIndex;
+  double m_AgelMeanNominalTileRefIndex;
+  
 };
 
 #endif // RICHANALYSIS_RICHG4CKVRECON_H

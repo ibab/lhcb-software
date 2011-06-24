@@ -207,7 +207,7 @@ StatusCode GetMCRichHitsAlg::execute()
           const int aeroSubTileID=  
                     aRMIdValues->Rich1AgelRadiatorNumToSubTileNumInFullTile(radID);          
 
-          if ( aeroID < 2*2*2*2*2 ) // Aerogel tile ID field has 5 bits allocated
+          if ( aeroID >=0 && aeroID < 2*2*2*2*2 ) // Aerogel tile ID field has 5 bits allocated
           {
             mchit->setAerogelTileID( aeroID );
             
@@ -221,9 +221,8 @@ StatusCode GetMCRichHitsAlg::execute()
           }
           if( (aeroSubTileID >=0)   && (aeroSubTileID < 2*2*2*2*2*2) ) 
                  // Aerogel Sub tile ID has 6 bits allocated
-            // commented out temporarily until new MCRichHit is available.
           {
-            //  mchit->setAerogelSubTileID ( aeroSubTileID);
+              mchit->setAerogelSubTileID ( aeroSubTileID);
           }
           
         }

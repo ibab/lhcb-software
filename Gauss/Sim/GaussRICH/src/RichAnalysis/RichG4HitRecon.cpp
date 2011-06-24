@@ -50,6 +50,7 @@ RichG4HitRecon::RichG4HitRecon( ):  m_RichG4CkvRec (0) ,
   // for test try 5 GeV
   m_minMomTracksForReconR1Gas=5000.0;
   m_minMomTracksForReconR2Gas=5000.0;
+  m_minMomTracksForReconAerogel=5000.0;
   
   m_MidRich1GasZ = (C4F10ZBeginAnalysis+C4F10ZEndAnalysis)*0.5;
 
@@ -274,17 +275,25 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
                   }
                 }
-                
+
+                  if(m_activateMinMomForTrackRecon ) {
+                    if( aChTrackTotMom <  m_minMomTracksForReconAerogel )  SelectThisHit= false;
+                    
+                  }
+
 
                 // skip out
-                itagel = NumTkIdRich1Agel+1;
+                  itagel = NumTkIdRich1Agel+1;
               }
+              
               
 
 
               itagel++;              
               
             }
+            
+            
             
 
             // now  for rich1gas saturated  hits
@@ -301,6 +310,7 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
                     if( aChTrackTotMom <  m_minMomTracksForReconR1Gas )  SelectThisHit= false;
                     
                   }
+
                   
                 }
 
@@ -860,6 +870,11 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
 
 
+              const int aAgelTilenum=aRMIdValues ->Rich1AgelRadiatorNumToFullTileNum(aRadiatornum);
+              
+              const int aAgelSubTilenum=aRMIdValues->Rich1AgelRadiatorNumToSubTileNumInFullTile(aRadiatornum);
+              
+
               aReflPointD1E3=  m_RichG4CkvRec->
                 ReconReflectionPointOnSPhMirror(  aDetPointFromPixelNum,
                                                   EmisPtUseAgelExit,aHitOnQwFromPixelNum,aRichDetNum, aSecMirrCopyNum);
@@ -958,55 +973,71 @@ void RichG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEvent,
 
               m_RichG4ReconResult->setckvAngleD1E3(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD1E3,
-                                                                                           EmisPtUseAgelExit ));
+                                                                                           EmisPtUseAgelExit,
+                                                                             aAgelTilenum,aAgelSubTilenum ));
               m_RichG4ReconResult->setckvAngleD2E3(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD2E3,
-                                                                                           EmisPtUseAgelExit));
+                                                                                           EmisPtUseAgelExit,
+                                                                              aAgelTilenum,aAgelSubTilenum));
               m_RichG4ReconResult->setckvAngleD3E3(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD3E3,
-                                                                                           EmisPtUseAgelExit ));
+                                                                                           EmisPtUseAgelExit, 
+                                                                             aAgelTilenum,aAgelSubTilenum ));
 
               m_RichG4ReconResult->setckvAngleD3E1(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD3E1,
-                                                                                           EmisPtUseTrueEmissPt ));
+                                                                                           EmisPtUseTrueEmissPt, 
+                                                                       aAgelTilenum,aAgelSubTilenum ));
 
               m_RichG4ReconResult->setckvAngleD3E2(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD3E2 ,
-                                                                                           EmisPtUseMidPtRadiatorZ ));
+                                                                        EmisPtUseMidPtRadiatorZ,
+                                                             aAgelTilenum,aAgelSubTilenum  ));
               m_RichG4ReconResult->setckvAngleD3E4(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD3E4 ,
-                                                                                           EmisPtUseMidPtRadiator ));
+                                                                          EmisPtUseMidPtRadiator,
+                                                                          aAgelTilenum,aAgelSubTilenum   ));
 
               m_RichG4ReconResult->setckvAngleD1E2(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD1E2,
-                                                                                           EmisPtUseMidPtRadiatorZ ));
+                                                               EmisPtUseMidPtRadiatorZ,
+                                                              aAgelTilenum,aAgelSubTilenum    ));
               m_RichG4ReconResult->setckvAngleD1E4(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD1E4,
-                                                                                           EmisPtUseMidPtRadiator ));
+                                                                                           EmisPtUseMidPtRadiator,
+                                                                 aAgelTilenum,aAgelSubTilenum        ));
               m_RichG4ReconResult->setckvAngleD4E1(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD4E1,
-                                                                                           EmisPtUseTrueEmissPt ));
+                                                                                           EmisPtUseTrueEmissPt,
+                                                          aAgelTilenum,aAgelSubTilenum         ));
               m_RichG4ReconResult->setckvAngleD4E3(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD4E3,
-                                                                                      EmisPtUseAgelExit ));
+                                                                                           EmisPtUseAgelExit,
+                                                        aAgelTilenum,aAgelSubTilenum     ));
 
               m_RichG4ReconResult->setckvAngleD4E2(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD4E2 ,
-                                                                                           EmisPtUseMidPtRadiatorZ ));
+                                                    EmisPtUseMidPtRadiatorZ,
+                            aAgelTilenum,aAgelSubTilenum     ));
               m_RichG4ReconResult->setckvAngleD4E4(
                                                    m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD4E4 ,
-                                                                                            EmisPtUseMidPtRadiator ));
+                                          EmisPtUseMidPtRadiator,
+                                          aAgelTilenum,aAgelSubTilenum     ));
 
               m_RichG4ReconResult->
                     setckvAngleD5E4 (m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD5E4,
-                                                                                             EmisPtUseMidPtRadiator));
+                                                                             EmisPtUseMidPtRadiator,
+                                                                  aAgelTilenum,aAgelSubTilenum  ));
               m_RichG4ReconResult->
-                    setckvAngleD5E3(m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD5E3, EmisPtUseAgelExit));
+                setckvAngleD5E3(m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD5E3, EmisPtUseAgelExit,
+                                         aAgelTilenum,aAgelSubTilenum      ));
               
               m_RichG4ReconResult->
-                  setckvAngleD6E3(m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD6E3, EmisPtUseAgelExit));
+                setckvAngleD6E3(m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD6E3, EmisPtUseAgelExit,
+                                           aAgelTilenum,aAgelSubTilenum       ));
               m_RichG4ReconResult->
-                setckvAngleD7E3(m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD7E3,EmisPtUseAgelExit));
+                setckvAngleD7E3(m_RichG4CkvRec->CherenkovThetaInAerogel(aReflPointD7E3,EmisPtUseAgelExit,
+                                          aAgelTilenum,aAgelSubTilenum    ));
 
 
 
