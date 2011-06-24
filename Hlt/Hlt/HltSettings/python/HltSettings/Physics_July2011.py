@@ -131,8 +131,8 @@ class Physics_July2011( object ):
                                                }
                        }
 
-        from Muons_draft2011 import Muons_draft2011
-        __update_conf__(thresholds,  Muons_draft2011().Thresholds() )
+        from Muons_July2011 import Muons_July2011
+        __update_conf__(thresholds,  Muons_July2011().Thresholds() )
 
         from Electrons_draft2011 import Electrons_draft2011
         __update_conf__(thresholds,  Electrons_draft2011().Thresholds() )
@@ -162,8 +162,8 @@ class Physics_July2011( object ):
         from Express_Hlt2_Sep10 import Express_Hlt2_Sep10
         hlt2.extend( Express_Hlt2_Sep10().ActiveHlt2Lines() )
 
-        from Muons_draft2011 import Muons_draft2011
-        hlt2.extend( Muons_draft2011().ActiveHlt2Lines() )
+        from Muons_July2011 import Muons_July2011
+        hlt2.extend( Muons_July2011().ActiveHlt2Lines() )
 
         from Electrons_draft2011 import Electrons_draft2011
         hlt2.extend( Electrons_draft2011().ActiveHlt2Lines() )
