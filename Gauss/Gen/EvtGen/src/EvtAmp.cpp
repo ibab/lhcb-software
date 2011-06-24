@@ -417,8 +417,8 @@ EvtAmp EvtAmp::contract(int i, const EvtAmp& a1,const EvtAmp& a2){
   
   //Do we need this method?
 
-  assert(a2._pstates>1&&a2._nontrivial==1);
-  assert(i<=a1._nontrivial);
+  assert(a2._pstates>1&&a2._nontrivial==1); _unused( a2 ) ;
+  assert(i<=a1._nontrivial); _unused( i ) ; _unused( a1 ) ;
 
   EvtAmp tmp;
   report(DEBUG,"EvtGen") << "EvtAmp::contract not written yet" << endl;

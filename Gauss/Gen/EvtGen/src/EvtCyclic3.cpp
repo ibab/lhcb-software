@@ -56,7 +56,7 @@ Index EvtCyclic3::permute(Index i, Perm p)
 
 Perm EvtCyclic3::permutation(Index i1,Index i2,Index i3)
 {
-  assert(i1 != i2  && i2 != i3 && i3 != i1);
+  assert(i1 != i2  && i2 != i3 && i3 != i1); _unused( i3 ) ;
   if(i1 == A) return (i2 == B) ? ABC : ACB;
   if(i1 == B) return (i2 == C) ? BCA : BAC;
   if(i1 == C) return (i2 == A) ? CAB : CBA;
