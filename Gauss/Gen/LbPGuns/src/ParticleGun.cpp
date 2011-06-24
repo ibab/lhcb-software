@@ -21,11 +21,11 @@
 // from Generators
 #include "Generators/IPileUpTool.h"
 #include "LbPGuns/IParticleGunTool.h"
-#include "Generators/IDecayTool.h"
+#include "MCInterfaces/IDecayTool.h"
 #include "Generators/IVertexSmearingTool.h"
-#include "Generators/IFullGenEventCutTool.h"
+#include "MCInterfaces/IFullGenEventCutTool.h"
 #include "Generators/GenCounters.h"
-#include "Generators/HepMCUtils.h"
+#include "GenEvent/HepMCUtils.h"
 
 // Gaudi Common Flat Random Number generator
 #include "Generators/RandomForGenerator.h"

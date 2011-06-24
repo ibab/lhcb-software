@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Patrick Robbe
+ - ParticleGun.cpp: use tool headers from MCInterfaces
+
 ! 2011-05-31 - Patrick Robbe
  - FlatNParticles, ParticleGun, FlatNParticles, RichPatternGun: adapt to use
    the new BeamParameters class.
