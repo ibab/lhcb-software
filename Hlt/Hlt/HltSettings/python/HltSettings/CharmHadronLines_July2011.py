@@ -48,6 +48,8 @@ class CharmHadronLines :
                   , 'Hlt2CharmHadMinBiasLambdaC2KPPi'   
                   , 'Hlt2CharmHadMinBiasD02KPi'
                   , 'Hlt2CharmHadMinBiasD02KK'
+                  , 'Hlt2CharmHadMinBiasDplus2hhh'
+                  , 'Hlt2CharmHadMinBiasLambdaC2LambdaPi'
              ]
         
         return lines
@@ -184,29 +186,42 @@ class CharmHadronLines :
                         , 'Postscale'               : { }
                     }
 
-                    , Hlt2CharmHadD02HHHHLinesConf : {
+                    , Hlt2CharmHadD02HHHHLinesConf : { 
                         ## 4Body
-                          'TrkPt_4Body'                 : 250.0 * MeV
-                        , 'TrkP_4Body'                  : 2000.0 * MeV
+                          'TrkPt_4Body'                 : 250.0 * MeV 
+                        , 'TrkP_4Body'                  : 2000.0 * MeV 
                         , 'TrkPVIPChi2_4Body'           : 1.7      # unitless
                         , 'TrkChi2_4Body'               : 5.0      # unitless
                         , 'PairMinDoca_4Body'           : 0.10 * mm
+                        , 'PairMaxDoca_4Body'           : 0.50 * mm
                         , 'VtxPVDispChi2_4Body'         : 100.0    # unitless
                         , 'VtxChi2_4Body'               : 20.0     # unitless
                         , 'DIPChi2_4Body'               : 25.0     # unitless
-                        , 'DSumPt_4Body'                : 2000.0 * MeV
-                        , 'MCOR_MAX_4Body'              : 3500.0 * MeV
-                        , 'Sig_M_MIN'                   : 1800.0 * MeV
-                        , 'Sig_M_MAX'                   : 1930.0 * MeV
-                        , 'WideMass_M_MIN'              : 1700.0 * MeV
-                        , 'WideMass_M_MAX'              : 2100.0 * MeV
+                        , 'BPVDIRA_4Body'               : 0.9995   # unitless
+                        , 'DSumPt_4Body'                : 3000.0 * MeV 
+                        , 'MCOR_MAX_4Body'              : 3500.0 * MeV 
+                        , 'Sig_M_MIN'                   : 1800.0 * MeV 
+                        , 'Sig_M_MAX'                   : 1930.0 * MeV 
+                        , 'WideMass_M_MIN'              : 1700.0 * MeV 
+                        , 'WideMass_M_MAX'              : 2100.0 * MeV 
+                        ## D* combination
+                        , 'TrkPt_SlowPion'              : 300.0 * MeV 
+                        , 'TrkP_SlowPion'               : 3000.0 * MeV 
+                        , 'TrkChi2_SlowPion'            : 100.0
+                        , 'PairMaxDoca_Dstar'           : 100.0 * mm
+                        , 'DeltaM_MIN'                  : 0.0 * MeV 
+                        , 'DeltaM_MAX'                  : 180.0 * MeV 
+                        , 'DeltaM_MINwide'              : 0.0 * MeV 
+                        , 'DeltaM_MAXwide'              : 180.0 * MeV 
+                        ## 2Body input for 4Body
                         , 'TrkChi2_2BodyFor4Body'       : 3.0      # unitless
+                        ## GECs
                         , 'GEC_Filter_NTRACK'           : True
-                        , 'GEC_NTRACK_MAX'              : 110
+                        , 'GEC_NTRACK_MAX'              : 110 
                         # prescales
-                        , 'Prescale'                  : {
-                                'Hlt2CharmHadD02HHHHWideMass'    : 0.1
-                        }
+                        , 'Prescale'                  : { 
+                                'Hlt2CharmHadD02HHHHWideMass'    : 0.1 
+                        }   
                     }
 
                     , Hlt2CharmHadD2KS0HLinesConf : {

@@ -30,6 +30,7 @@ class CharmLeptonic_July2011 :
             "Hlt2CharmSemilepD02HMuNu_D02KMuNuWS",
             "Hlt2CharmSemilepD02HMuNu_D02PiMuNu",
             "Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS",
+            "Hlt2CharmSemilepD02HMuNu_D02KMuNuTight",
 
             # mumuh and mumuhh 
             "Hlt2CharmSemilepD02HHMuMu",
@@ -79,9 +80,9 @@ class CharmLeptonic_July2011 :
 
         d.update({ Hlt2CharmSemilepD02HMuNuLinesConf : {
                'Prescale' : {
-                   'Hlt2CharmSemilepD02HMuNu_D02KMuNu'            : 0.1
+                   'Hlt2CharmSemilepD02HMuNu_D02KMuNu'            : 0.05
                 ,  'Hlt2CharmSemilepD02HMuNu_D02KMuNuWS'     : 0.01
-                ,  'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'           : 0.1
+                ,  'Hlt2CharmSemilepD02HMuNu_D02PiMuNu'           : 0.05
                 ,  'Hlt2CharmSemilepD02HMuNu_D02PiMuNuWS'     : 0.01 }
         }})
         
