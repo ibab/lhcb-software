@@ -177,36 +177,38 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    #       - 'DiMuonCharm_Lc_MassWindow'  
                    # ==========================================================
                    ## chi2(IP) for ``good-muons''      ## [  4 ->  9 ]
-                   'MultiMu_GoodMuon_Chi2_IP'   :   4         ,
-                   ## PT for ``tight'' muons           ## [ 1.2 GeV -> 1.4 GeV ]
-                   'MultiMu_TightMuon_PT'       :   1.25 * GeV ,
-                   ## chi2(IP) for ``tight-muons''     ## [ 25 -> 36 ]                   
-                   'MultiMu_TightMuon_Chi2_IP'  :  25         ,
+                   'MultiMu_GoodMuon_Chi2_IP'   :  16          ,
+                   ## PT for ``tight'' muons           ## [ 1.4 GeV -> 1.5 GeV ]
+                   'MultiMu_TightMuon_PT'       :   1.4 *  GeV ,
+                   ## chi2(IP) for ``tight-muons''     ## [ 25 -> 36 ]           
+                   'MultiMu_TightMuon_Chi2_IP'  :  36          ,
                    ## chi2(VX) for ``dimuons''         ## [ 16 ->  9 ]
-                   'MultiMu_DiMuon_Chi2_VX'     :  16         ,
-                   ## Decay flight significance for detached dimuon ## [ 5 -> 7 ]
-                   'MultiMu_DiMuon_DLS'         :   5         ,
-                   ## (half)mass-window for J/psi      ## [ 125 MeV -> 110 MeV ]
-                   'MultiMu_Psi1S_MassWindow'   : 125   * MeV ,
+                   'MultiMu_DiMuon_Chi2_VX'     :  12          ,
+                   ## PT for ``dimuons''         ## [ 0 GeV  ->  2 * GeV  ]
+                   'MultiMu_DiMuon_PT'          :   1.2 * GeV  ,
+                   ## Decay flight significance for detached dimuon ## [ 5 -> 9 ]
+                   'MultiMu_DiMuon_DLS'         :   6         ,
+                   ## (half)mass-window for J/psi      ## [ 120 MeV -> 100 MeV ]
+                   'MultiMu_Psi1S_MassWindow'   : 110   * MeV ,
                    ## (half)mass-window for psi(2S)    ## [ 125 MeV -> 110 MeV ]
-                   'MultiMu_Psi2S_MassWindow'   : 125   * MeV ,
-                   ## (half)mass-window for tau->3mu   ## [ 350 MeV -> 200 MeV ]
-                   'MultiMu_Tau3Mu_MassWindow'  : 350   * MeV ,
+                   'MultiMu_Psi2S_MassWindow'   : 110   * MeV ,
+                   ## (half)mass-window for tau->3mu   ## [ 300 MeV -> 200 MeV ]
+                   'MultiMu_Tau3Mu_MassWindow'  : 300   * MeV ,
                    ## max(PT) for 1-muon from tau      ## [ 1 GeV   -> 1.4 GeV ]
                    'MultiMu_Tau3Mu_max_PT'      :   1   * GeV ,
-                   ## pt(Gamma) for dimuon+gamma line  ## [ 2 GeV   -> 5   GeV ]
-                   'DiMuonGamma_Gamma_PT'       :   2   * GeV , 
+                   ## pt(Gamma) for dimuon+gamma line  ## [ 4 GeV   -> 8   GeV ]
+                   'DiMuonGamma_Gamma_PT'       :   4   * GeV , 
                    ## chi2(IP) for good pions, kaons and protons ## [ 9 -> 16 ]
                    'DiMuonCharm_Pion_Chi2_IP'   :   9 ,
                    'DiMuonCharm_Kaon_Chi2_IP'   :   9 ,
                    'DiMuonCharm_Proton_Chi2_IP' :   9 ,
                    ## PT of charm particle                [ 1.5 GeV -> 3.0 GeV ] 
-                   'DiMuonCharm_Charm_PT'       :   2 * GeV ,
+                   'DiMuonCharm_Charm_PT'       : 2.5 * GeV ,
                    ## (half) mass-windows for D0, D+, Ds+ , Lambda_c+ ## [ 75 MeV -> 55 MeV ]
-                   'DiMuonCharm_D0_MassWindow'  :  75 * MeV ,
-                   'DiMuonCharm_D_MassWindow'   :  75 * MeV ,
-                   'DiMuonCharm_Ds_MassWindow'  :  75 * MeV ,
-                   'DiMuonCharm_Lc_MassWindow'  :  75 * MeV ,
+                   'DiMuonCharm_D0_MassWindow'  :  65 * MeV ,
+                   'DiMuonCharm_D_MassWindow'   :  65 * MeV ,
+                   'DiMuonCharm_Ds_MassWindow'  :  65 * MeV ,
+                   'DiMuonCharm_Lc_MassWindow'  :  65 * MeV ,
                    }
 
     
@@ -707,14 +709,14 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         
         The parameters:
         
-        - MultiMu_GoodMuon_chi2_IP   : default    4 
-        - MultiMu_TightMuon_PT       : default    1.2 * GeV 
-        - MultiMu_TightMuon_chi2_IP  : default    9 
-        - MultiMu_DiMuon_Chi2_VX     : default   25 
-        - MultiMu_DiMuon_DLS         : default    5 
-        - MultiMu_Psi1S_MassWindow   : default  150 * MeV  
-        - MultiMu_Psi2S_MassWindow   : default  150 * MeV 
-        - MultiMu_Tau3Mu_MassWindow  : default  350 * MeV 
+        - MultiMu_GoodMuon_chi2_IP   : default    9 
+        - MultiMu_TightMuon_PT       : default    1.25 * GeV 
+        - MultiMu_TightMuon_chi2_IP  : default   25    
+        - MultiMu_DiMuon_Chi2_VX     : default   12
+        - MultiMu_DiMuon_DLS         : default    6 
+        - MultiMu_Psi1S_MassWindow   : default  110 * MeV  
+        - MultiMu_Psi2S_MassWindow   : default  120 * MeV 
+        - MultiMu_Tau3Mu_MassWindow  : default  300 * MeV 
         - MultiMu_Tau3Mu_max_PT      : default    1 * GeV 
 
         In addition, ``dimuon+X''-lines:
@@ -724,15 +726,15 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
         The parameters:
         
-        - DiMuonGamma_Gamma_PT        : default  2 * GeV 
+        - DiMuonGamma_Gamma_PT        : default  4   * GeV 
         - DiMuonCharm_Pion_Chi2_IP    : default  9 
         - DiMuonCharm_Kaon_Chi2_IP    : default  9 
         - DiMuonCharm_Proton_Chi2_IP  : default  9 
-        - DiMuonCharm_Charm_PT        : default  2 * GeV 
-        - DiMuonCharm_D0_MassWindow   : default 75 * MeV 
-        - DiMuonCharm_D_MassWindow    : default 75 * MeV 
-        - DiMuonCharm_Ds_MassWindow   : default 75 * MeV 
-        - DiMuonCharm_Lc_MassWindow   : default 75 * MeV 
+        - DiMuonCharm_Charm_PT        : default  2.5 * GeV 
+        - DiMuonCharm_D0_MassWindow   : default 65   * MeV 
+        - DiMuonCharm_D_MassWindow    : default 65   * MeV 
+        - DiMuonCharm_Ds_MassWindow   : default 65   * MeV 
+        - DiMuonCharm_Lc_MassWindow   : default 65   * MeV 
 
         """
         
@@ -772,7 +774,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             "psi             = ADMASS ( 'J/psi(1S)' ) < %(MultiMu_Psi1S_MassWindow)g "           ,
             "psi_prime       = ADMASS (   'psi(2S)' ) < %(MultiMu_Psi2S_MassWindow)g "           ,
             "dimuon_mass     = psi | psi_prime | ( M > 5 * GeV ) "                               ,
-            "dimuon          = dimuon_mass & ( VFASPF ( VCHI2 ) < %(MultiMu_DiMuon_Chi2_VX)g ) " ,            
+            "dimuon          = dimuon_mass &  ( PT > %(MultiMu_DiMuon_PT)g ) &( VFASPF ( VCHI2 ) < %(MultiMu_DiMuon_Chi2_VX)g ) " ,            
             "detached_dimuon = dimuon & ( BPVDLS > %(MultiMu_DiMuon_DLS)g ) "                    ,
             # related to dimuon+gamma
             "good_photons    = ( 'gamma' == ID ) & ( PT > %(DiMuonGamma_Gamma_PT)g ) "           ,
@@ -894,7 +896,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             ( AM12            > min_m12   ) & 
             AHASCHILD ( PT    > %(MultiMu_Tau3Mu_max_PT)g     ) 
             """ % self.getProps() ,
-            MotherCut       = " ( chi2vx < 30 ) & ( ctau > 40 * um ) "
+            MotherCut       = " ( chi2vx < 25 ) & ( ctau > 45 * um ) "
             )
         #
         ## maker of dimu plus mu cominations 
@@ -906,11 +908,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             DecayDescriptor = "[B_c+ -> J/psi(1S) mu+]cc" , 
             DaughtersCuts   = {
             'J/psi(1S)' : 'dimuon    & ( chi2vx <   10       ) ' ,
-            'mu+'       : 'goodTrack & ( PT     > 1.25 * GeV ) '
+            'mu+'       : 'goodTrack'
             } ,
             CombinationCut  = """
-            ACHILDCUT ( 1 , detached_dimuon ) |
-            ACHILDCUT ( 2 , tightMuon       )  
+            ( ACHILDCUT ( 1 , detached_dimuon ) & ACHILDCUT ( 2 , tightMuon ) )
             """,
             MotherCut       = " ALL  " 
             )
@@ -991,6 +992,28 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             MotherCut       = " ( chi2vx < 30 ) & ( ctau_charm > 100 * um ) "
             )
         
+        ## Maker of double dimuons 
+        di_2mu = Hlt2Member (
+            CombineParticles  , 
+            'DiDiMuonCombine' , 
+            Inputs          = [ DiMuons ]                            , 
+            Preambulo       = Preambulo                              ,
+            DecayDescriptor = ' chi_b0(2P) -> J/psi(1S) J/psi(1S)'   , 
+            CombinationCut  = " AALL "                               , 
+            MotherCut       = "  ALL "
+            )
+        
+        ## Maker of trimuons 
+        tri_muons = Hlt2Member (
+            CombineParticles  , 
+            'TriMuonCombine'  , 
+            Inputs          = [ TightMuons ]                         , 
+            Preambulo       = Preambulo                              ,
+            DecayDescriptor = '[B_c+ -> mu+ mu+ mu-]cc'              , 
+            CombinationCut  = " AALL "                               , 
+            MotherCut       = "  ALL "
+            )
+        
         ## make dimuon + charm combinations
         def dimu_charm_ ( charm , decay ) :
             return Hlt2Member (
@@ -1018,8 +1041,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             GoodMuons      ,    ## select good muons
             Check_3GoodMu  ,    ## require at least 3 good muons            
             TightMuons     ,    ## select tight muons 
-            Check_3TightMu ]    ## require at least 3 tight muons
-            + _filter_ ( Inputs = TightMuons ) ## select/copy tight muons (again)
+            Check_3TightMu ,    ## require at least 3 tight muons
+            tri_muons      ]
+            ## + _filter_ ( Inputs = TightMuons ) ## select/copy tight muons (again)
             )
         
         # =====================================================================
@@ -1035,8 +1059,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             Muons          ,  ## get muons 
             Check_4mu      ,  ## require at least 4 muons
             DiMuons        ,  ## get dimuons 
-            check_2dimu    ]  ## require at least two 'true' dimuons
-            + _filter_ ( Inputs = DiMuons ) ## select/copy dimuons (again)
+            check_2dimu    ,  ## require at least two 'true' dimuons
+            di_2mu
+            ]
+            ## + _filter_ ( Inputs = DiMuons ) ## select/copy dimuons (again)
             )
         
         # =====================================================================
@@ -1187,10 +1213,10 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update (
             {
             ## multi-muon lines 
-            "Hlt2TriMuonDetachedDecision"   : 50214 ,
-            "Hlt2DiMuonAndMuonDecision"     : 50215 ,
-            "Hlt2DoubleDiMuonDecision"      : 50216 , 
-            "Hlt2TriMuonTauDecision"        : 50217 ,
+            "Hlt2TriMuonDetachedDecision"      : 50214 ,
+            "Hlt2DiMuonAndMuonDecision"        : 50215 ,
+            "Hlt2DoubleDiMuonDecision"         : 50216 , 
+            "Hlt2TriMuonTauDecision"           : 50217 ,
             ## dimuon + gamma
             "Hlt2DiMuonAndGammaDecision"       : 50218 ,
             ## dimuon + charm
