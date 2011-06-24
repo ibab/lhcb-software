@@ -246,7 +246,7 @@ StatusCode VeloPixGaussMoni::velopixMCHitMonitor()
            0., 50., 100);       
       //Get the production vertex position
       const LHCb::MCVertex * 	myMVVert = myMCParticle->originVertex () ;
-      const LHCb::MCVertex * 	myPVVert = myMCParticle->primaryVertex () ;
+      //      const LHCb::MCVertex * 	myPVVert = myMCParticle->primaryVertex () ;
       
       plot2D(myMVVert->position().x(),myMVVert->position().y(), "MCVertexPosXY",
              "Position of production MC Vertex of MCParticles giving hits - XY [cm]",

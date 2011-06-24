@@ -6,6 +6,9 @@
 !               present detector simulation
 !-----------------------------------------------------------------------------
 
+! 2011-06-24 - Patrick Robbe 
+ - VeloPixGaussMoni.cpp: fix compilation warning
+
 !========================= GaussUMC v1r0 2009-11-25 ==========================
 
 ! 2009-10-05 - Victor Coco
