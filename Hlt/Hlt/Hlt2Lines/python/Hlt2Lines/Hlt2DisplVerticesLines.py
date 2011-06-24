@@ -183,30 +183,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2RV2P.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2RV2P']
         Hlt2RV2P.UseMap = True
 
-        #######################################################################
-        #Run Hlt2LonglivedParts : double LLP selection
-        Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
-        Hlt2DoubleLonglived.Inputs = [ Hlt2RV2P.Output ]
-        Hlt2DoubleLonglived.Output = 'Hlt2/Hlt2DoubleLonglived/Particles'
-        Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.MinNBCands = 2
-        Hlt2DoubleLonglived.AllOutDet = self.getProp('AllOutDet')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.PreyMinHighestMass = self.getProp('HighestMass')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
-        #Hlt2DoubleLonglived.PreyMinAngle = self.getProp('MinAngle')['Hlt2DoubleLonglived']
-        Hlt2DoubleLonglived.SaveOnTES = False
-        Hlt2DoubleLonglived.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2DoubleLonglived']
-
-        line = Hlt2Line('DisplVerticesDouble'
-                        , prescale = self.prescale
-                        , algos = DVSeq + [ Hlt2DoubleLonglived ]
-                        , postscale = self.getProp('PostScale')['Hlt2DoubleLonglived']
-                        )
-        
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDoubleDecision" : 50282 } )
-        
 
         #######################################################################
         ## Single LLP Selection
@@ -232,6 +208,33 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                                
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesHighMassSingleDecision" : 50281 } )
         
+        #######################################################################
+        #Run Hlt2LonglivedParts : double LLP selection
+        from Configurables import Hlt2SelDV
+        Hlt2DoubleLonglived = Hlt2SelDV("Hlt2DoubleLonglived")
+        Hlt2DoubleLonglived.Inputs = [ Hlt2RV2P.Output ]
+        Hlt2DoubleLonglived.Output = 'Hlt2/Hlt2DoubleLonglived/Particles'
+        Hlt2DoubleLonglived.RMin = self.getProp('RMin')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.MinNBCands = 2
+        Hlt2DoubleLonglived.AllOutDet = self.getProp('AllOutDet')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.PreyMinHighestMass = self.getProp('HighestMass')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.PreyMinMass = self.getProp('MinMass')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.PreyMinSumpt = self.getProp('MinSumpt')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.NbTracks = self.getProp('MinNbTracks')['Hlt2DoubleLonglived']
+        #Hlt2DoubleLonglived.PreyMinAngle = self.getProp('MinAngle')['Hlt2DoubleLonglived']
+        Hlt2DoubleLonglived.SaveOnTES = False
+        Hlt2DoubleLonglived.RemVtxFromDet = self.getProp('RemVtxFromDet')['Hlt2DoubleLonglived']
+
+        line = Hlt2Line('DisplVerticesDouble'
+                        , prescale = self.prescale
+                        , algos = DVSeq + [ Hlt2DoubleLonglived ]
+                        , postscale = self.getProp('PostScale')['Hlt2DoubleLonglived']
+                        )
+        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDoubleDecision" : 50282 } )
+        
+
+        ## Single LLP Selection
         #High FD:
         from Configurables import Hlt2SelDV
         from Configurables import Hlt2SelDV
