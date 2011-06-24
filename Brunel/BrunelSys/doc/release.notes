@@ -3,6 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- Changes to tests
+  . Add check of unprotected DEBUG and VERBOSE messages to brunelsys.qmt
+    (activated in debug mode only)
+
 </PRE><H1><A NAME=v40r0>2011-06-20 Brunel v40r0</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4,
  Rec v11r5 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
