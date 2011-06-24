@@ -52,8 +52,8 @@ class Muons_July2011 :
                        
             'Hlt2TriMuonDetached',
             'Hlt2TriMuonTau',
-            'Hlt2DiMuonAndMuon'
-            'Hlt2DoubleDiMuon'
+            'Hlt2DiMuonAndMuon',
+            'Hlt2DoubleDiMuon',
                  
             'Hlt2TFBc2JpsiMuX',
             'Hlt2TFBc2JpsiMuXSignal',
