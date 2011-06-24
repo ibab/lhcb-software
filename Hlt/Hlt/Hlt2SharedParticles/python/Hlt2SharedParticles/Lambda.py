@@ -17,10 +17,10 @@ __all__ = ( 'LambdaLLTrackFitted', 'LambdaDDTrackFitted' )
 # Standard Lambda: Fitted Long Tracks
 Hlt2SharedLambdaLLTrackFitted = Hlt2Member( CombineParticles, "LambdaLLTrackFitted"
                                             , DecayDescriptor = "[Lambda0 -> p+ pi-]cc" 
-                                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<20)",
-                                                                "p+"  : "(TRCHI2DOF<20)"} 
+                                            , DaughtersCuts = { "pi+" : "(TRCHI2DOF<5)&( MIPCHI2DV(PRIMARY) > 36 )&(PT > 500*MeV)",
+                                                                "p+"  : "(TRCHI2DOF<5)&( MIPCHI2DV(PRIMARY) > 36 )&(PT > 500*MeV)"} 
                                             , CombinationCut = "(ADAMASS('Lambda0')<50*MeV)"
-                                            , MotherCut = "(ADMASS('Lambda0')<100*MeV) & (VFASPF(VCHI2PDOF)<50)"
+                                            , MotherCut = "(ADMASS('Lambda0')<20*MeV) & (VFASPF(VCHI2PDOF)<20)"
                                             , Inputs = [ BiKalmanFittedPions, BiKalmanFittedProtons ]
                                             )
 
