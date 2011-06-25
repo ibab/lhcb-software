@@ -119,7 +119,7 @@ double EvtCGCoefSingle::coef(int J,int M,int j1,int j2,int m1,int m2){
 
 double& EvtCGCoefSingle::cg(int J,int M, int m1, int m2){
 
-  assert(M==m1+m2); _unused( m2 ) 
+  assert(M==m1+m2); _unused( m2 ) ;
   assert(abs(M)<=J);
   assert(J<=_Jmax);
   assert(J>=_Jmin);
