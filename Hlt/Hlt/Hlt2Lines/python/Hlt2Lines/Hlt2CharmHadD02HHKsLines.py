@@ -423,7 +423,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         ## D0 -> K_S K* construction sequences.
         ###################################################################
         combineKshhTFD2HHKsLL = self.__KshhTFDCombine(ksLLName
-                                        , [charmKshhTF2Body, charmKshhTFKsLL]
+                                        , [charmKshhTFKsLL, charmKshhTF2Body]
                                         , extracuts = { 'CombinationCut' : "(ADAMASS('D0')< %(KshhTFDwKsLLSymMassWin)s)" % self.getProps() } 
                                         )
 
