@@ -49,6 +49,7 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor( const std::string& name,
     ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator )
   , m_occupancyDenom(0)
+  , m_nstrips(180224) // (84 + 4) * 2048
 {
   declareProperty( "WriteXML", m_writeXML = false );
   declareProperty( "XMLDirectory", m_xmlDir = "." );
@@ -87,8 +88,6 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   // access to PVSS TELL1 names
   m_pvssTell1Names = tool<Velo::IPvssTell1Names>("Velo::PvssTell1Names","PvssTell1Names");
   
-  m_nstrips = 180224;
-
   // try to find TAE sample name in algo instance name (for histo titles)
   std::string tmpTae = name();
   size_t posPrev = tmpTae.find("Prev");
@@ -115,20 +114,18 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   m_occupanciesCh.resize(maxSensNum+1,0);
   m_stripOccupancyHistPerSensor.resize(maxSensNum+1,0);
   m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
-  h_veloOccVsBunchId.resize(2);
-  m_nClusters.resize(2);
+  
+  if ( m_useOdin ) {
+    m_veloOccVsBunchId.push_back(bookProfile1D("h_veloOccVsBunchId_ASide"
+          ,"Percentage Velo Occupancy vs LHC bunch-ID (ASide)"
+          ,-0.5,3563.5,3564));
+    m_veloOccVsBunchId.push_back(bookProfile1D("h_veloOccVsBunchId_CSide"
+          ,"Percentage Velo Occupancy vs LHC bunch-ID (CSide)"
+          ,-0.5,3563.5,3564));
 
-  m_histBCIDSpec = Gaudi::Utils::Aida2ROOT::aida2root(book1D("BCID Spectrum", "BCID Spectrum",-0.5,3563.5,3564));  
-
-  for (unsigned int lr=0;lr<h_veloOccVsBunchId.size();lr++){
-    std::string side="ASide";
-    if(lr) side="CSide";
-    std::string name = "h_veloOccVsBunchId_"+side;
-    std::string title= "Percentage Velo Occupancy vs LHC bunch-ID ("+side+")";
-    h_veloOccVsBunchId[lr] = bookProfile1D(name,title,-0.5,3563.5,3564);
+    m_histBCIDSpec = Gaudi::Utils::Aida2ROOT::aida2root(book1D("BCID Spectrum", "BCID Spectrum",-0.5,3563.5,3564));  
 
   }
-
 
   for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
       si != m_veloDet->sensorsEnd();
@@ -326,9 +323,7 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     getOdinBank();
   }
 
-  for(int i=0; i<2; i++){
-    m_nClusters[i]=0;
-  }
+  std::vector<unsigned int> nCLustersOnSide(2,0);
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
@@ -340,10 +335,9 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     unsigned int stripNumber   = cluster -> channelID().strip();
     unsigned int chipChannel   = veloSensor -> StripToChipChannel( stripNumber ); // 0 -> 2047
 
-    for(unsigned int isRight=0;isRight<2;isRight++){
-      //compare isRight with zero to get around windows warning, cast to bool
-      if((isRight!=0) != veloSensor->isRight()) continue;
-      m_nClusters[isRight]++;
+    if ( m_useOdin && 0 != m_odin ) {
+      // side is either 0 (left/A) or 1 (right/C)
+      ++nCLustersOnSide[(veloSensor->isRight() ? 1 : 0)];
     }
 
     // Produce occupancy plots
@@ -361,9 +355,11 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
 
     m_histBCIDSpec->Fill(m_odin->bunchId());    
 
-    for(int t=0; t<2; t++){
-      m_percOcc = ((m_nClusters[t])/(m_nstrips));  
-      h_veloOccVsBunchId[t]->fill(m_odin->bunchId(),m_percOcc*100.0);
+    // side is either 0 (left/A) or 1 (right/C)
+    for(unsigned int side=0; side<2; ++side){
+      // the number of strips is the same in both halves and half
+      // the total number of strips, occupancy is in %
+      m_veloOccVsBunchId[side]->fill(m_odin->bunchId(),nCLustersOnSide[side]/m_nstrips*2.0*100.0);
     }
   }
 

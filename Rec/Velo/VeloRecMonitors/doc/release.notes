@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-06-25 - Kurt Rinnert
+ - re-implementation of occupancy per bunch crossing ID in
+   VeloOccupancyMonitor: much cleaner code and fixes a bug that caused these
+   occupancies to be off by a factor of two.
+
 ! 2011-06-24 - Eduardo Rodrigues
  - Protected unprotected debug messages in VeloClusterMonitor,
    VeloTrackMonitor and VeloIPResolutionMonitor
@@ -48,7 +53,7 @@
 
 ! 2010-08-04 - Michael Alexander
  - VeloIPResolutionMonitor: added plots of mean and sigma of IPX and IPY Vs eta
-	 and phi to the	default monitoring plots.
+    and phi to the   default monitoring plots.
 
 
 !======================= VeloRecMonitors v2r10p1 2010-06-21 ===================
@@ -61,8 +66,8 @@
 !======================= VeloRecMonitors v2r10 2010-05-24 ====================
 ! 2010-05-22 - Michael Alexander
  - VeloIPResolutionMonitor:
-	- Made track and vertex locations configurable properties
- 	- Updated PV refitting to use PVOfflineTool
+   - Made track and vertex locations configurable properties
+   - Updated PV refitting to use PVOfflineTool
 
 ! 2010-05-10 - Kurt Rinnert
  - finer binning in occupancy spectra

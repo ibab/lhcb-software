@@ -60,7 +60,6 @@ namespace Velo
     // Data members
     std::string m_tae;
     LHCb::ODIN* m_odin;
-    std::vector< int > m_nClusters;
     LHCb::VeloClusters* m_clusters;
     
     TH1D* m_histOccSpectAll;
@@ -75,14 +74,13 @@ namespace Velo
     
     std::vector< TH1D* > m_stripOccupancyHistPerSensor;
     std::vector< TH1D* > m_channelOccupancyHistPerSensor;
-    std::vector< IProfile1D* > h_veloOccVsBunchId;
+    std::vector< IProfile1D* > m_veloOccVsBunchId;
    
     std::vector<Velo::Hist1D*> m_occupancies; 
     std::vector<Velo::Hist1D*> m_occupanciesCh; 
 
     unsigned int m_occupancyDenom;
-    double m_nstrips;
-    double m_percOcc; 
+    unsigned int m_nstrips;
    
     std::map<unsigned int, Condition> m_conditions; 
     
