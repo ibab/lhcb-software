@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-25 - Mat Charles
+ - Hlt2CharmHadD02HHKsLines : Rearrange order of inputs to reduce CPU time for
+   case where long but not downstream KS are used.
+
 !========================== Hlt2Lines v8r6 2011-06-24 ===================
 ! 2011-06-24 - V. Heijne
  -  Hlt2DisplVerticesLines : Tighten cuts and redefinition PS lines
