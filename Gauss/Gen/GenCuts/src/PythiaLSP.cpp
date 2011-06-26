@@ -88,7 +88,7 @@ bool PythiaLSP::applyCut( ParticleVector & /* theParticleVector */ ,
   }
 
   debug()<<"Found "<< LSP.size() <<" LSP's ";
-  if( LSP.size() < ( (int) abs(m_NbLSP) ) ){
+  if( LSP.size() < ( (unsigned int) abs(m_NbLSP) ) ){
     debug() << ": Not enough LSP in event !" << endmsg;
     return false;
   }

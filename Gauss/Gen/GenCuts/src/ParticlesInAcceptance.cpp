@@ -92,7 +92,7 @@ bool ParticlesInAcceptance::studyFullEvent( HepMCEvents * theEvents ,
     }
   }
   debug()<<"Found "<< Part.size() <<" wanted particles ";
-  if( Part.size() < ( (int) abs(m_NbPart) ) ){
+  if( Part.size() < ( (unsigned int) abs(m_NbPart) ) ){
     debug() << ": Not enough wanted particles in event !" << endmsg;
     return false;
   }
