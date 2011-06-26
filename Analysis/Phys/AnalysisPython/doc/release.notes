@@ -5,9 +5,19 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-06-26 - Vanya Belyaev
+
+ - ZipShelve:
+     print SORTED list of keys 
+
+! 2011-06-22 - Vanya Belyaev
+
+ - PyRoUts.py : more decorators 
+
 ! 2011-06-19 - Vanya Belyaev
 
- - more improvements for root-decorators 
+ - PyRoUts.py : more improvements for root-decorators 
+
  - cmt/requirements 
     version increment to v2r3 
 

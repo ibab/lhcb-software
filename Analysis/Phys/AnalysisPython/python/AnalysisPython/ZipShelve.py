@@ -238,9 +238,11 @@ class ZipShelf(shelve.Shelf):
     ## list the avilable keys 
     def __dir ( self ) :
         """
-        List the avilable keys
+        (Sorted) List the avilable keys
         """
-        for key in self : print key
+        keys_ = self.keys()
+        keys_.sort() 
+        for key in keys_ : print key
 
     ## list the avilable keys 
     def ls    ( self ) :

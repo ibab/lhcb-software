@@ -112,17 +112,22 @@ ROOT.TH1   . __iter__ = _axis_iter_2_
 
 # =============================================================================
 ## get item for the histogram 
-def _h1_get_item_ ( self , ibin ) :
+def _h_get_item_ ( h , ibin ) :
     """
     ``Get-item'' for the histogram :
     
     >>> histo = ...
     >>> ve    = histo[ibin]
+    
     """
-    if not ibin in self : raise IndexError 
-    val = self.GetBinContent ( ibin ) 
-    err = self.GetBinError   ( ibin ) 
+    #
+    if not ibin in h  : raise IndexError 
+    #
+    val = h.GetBinContent ( ibin ) 
+    err = h.GetBinError   ( ibin )
+    #
     return VE ( val , err * err ) 
+
 
 # =============================================================================
 ## histogram as function 
@@ -145,13 +150,17 @@ def _h1_call_ ( h1 , x ) :
     #
     return VE ( val , err * err ) 
 
-ROOT.TH1   . __getitem__  = _h1_get_item_
-ROOT.TH1F  . __getitem__  = _h1_get_item_
-ROOT.TH1D  . __getitem__  = _h1_get_item_
+ROOT.TH1F  . __getitem__  = _h_get_item_
+ROOT.TH1D  . __getitem__  = _h_get_item_
 ROOT.TH1   . __call__     = _h1_call_
-ROOT.TH1   . __len__      = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ()
-ROOT.TH1   .   size       = lambda s : len ( s ) 
-ROOT.TH1   . __contains__ = lambda s , i : 1<= i <= len ( s ) 
+
+ROOT.TH1   . __len__      = lambda s : s.size() 
+ROOT.TH1   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetBinsZ() 
+ROOT.TH1   . __contains__ = lambda s , i : 1 <= i <= s.size() 
+
+ROOT.TH2   . __contains__ = lambda s , i : 1 <= i <= s.size() 
+ROOT.TH2   . __len__      = lambda s : s.size() 
+ROOT.TH2   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ()
 
 
 # =============================================================================
@@ -181,6 +190,8 @@ def _h2_call_ ( h2 , x , y ) :
     return VE ( val , err * err ) 
 
 ROOT.TH2   . __call__     = _h2_call_
+ROOT.TH2F  . __getitem__  = _h_get_item_
+ROOT.TH2D  . __getitem__  = _h_get_item_
 
 # =============================================================================
 # iterate over items
@@ -574,6 +585,34 @@ def _h1_sub_ ( h1 , h2 ) :
     Subtract the histogram 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x-y ) 
+# =============================================================================
+##  Fraction of the histograms 
+def _h1_frac_ ( h1 , h2 ) :
+    """
+    ``Fraction'' the histogram h1/(h1+h2)
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
+# =============================================================================
+##  ``Asymmetry'' of the histograms 
+def _h1_asym_ ( h1 , h2 ) :
+    """
+    ``Fraction'' the histogram (h1-h2)/(h1+h2)
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
+# =============================================================================
+##  ``Chi2-tension'' of the histograms 
+def _h1_chi2_ ( h1 , h2 ) :
+    """
+    ``Chi2-tension'' the histogram
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
+# =============================================================================
+##  ``Average'' of the histograms 
+def _h1_mean_ ( h1 , h2 ) :
+    """
+    ``Chi2-tension'' the histogram
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) ) 
 
 # =============================================================================
 ## 'pow' the histograms 
@@ -598,11 +637,16 @@ def _h1_pow_ ( h1 , val ) :
     return result 
 
     
-ROOT.TH1.__div__  = _h1_div_
-ROOT.TH1.__mul__  = _h1_mul_
-ROOT.TH1.__add__  = _h1_add_
-ROOT.TH1.__sub__  = _h1_sub_
-ROOT.TH1.__pow__  = _h1_pow_
+ROOT.TH1.__div__   = _h1_div_
+ROOT.TH1.__mul__   = _h1_mul_
+ROOT.TH1.__add__   = _h1_add_
+ROOT.TH1.__sub__   = _h1_sub_
+ROOT.TH1.__pow__   = _h1_pow_
+
+ROOT.TH1.  frac    = _h1_frac_
+ROOT.TH1.  asym    = _h1_asym_
+ROOT.TH1.  chi2    = _h1_chi2_
+ROOT.TH1.  average = _h1_chi2_
 
 # =============================================================================
 ## operation with the histograms 
@@ -611,7 +655,7 @@ def _h2_oper_ ( h1 , h2 , oper ) :
     Operation with the histogram 
     """
     if                                 not h1.GetSumw2() : h1.Sumw2()
-    if hasattr ( h1 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
     result = h1.Clone( hID() )
     #
@@ -620,9 +664,10 @@ def _h2_oper_ ( h1 , h2 , oper ) :
         result.SetBinContent ( ix1 , iy1 , 0 ) 
         result.SetBinError   ( ix1 , iy1 , 0 )
         #
-        y2 = h2 ( x1.value() , y1.value() ) 
+        z2 = h2 ( x1.value() , y1.value() ) 
         #
-        v = oper ( y1 , y2 ) 
+        v = oper ( z1 , z2 )
+        print 'y1,y2,v :',  z1 , z2 , v 
         #
         result.SetBinContent ( ix1 , iy1 , v.value () ) 
         result.SetBinError   ( ix1 , iy1 , v.error () )
@@ -658,6 +703,34 @@ def _h2_sub_ ( h1 , h2 ) :
     Subtract the histogram 
     """
     return _h2_oper_ ( h1 , h2 , lambda x,y : x-y ) 
+# =============================================================================
+##  ``Fraction'' of the histograms 
+def _h2_frac_ ( h1 , h2 ) :
+    """
+    ``Fraction'' the histogram h1/(h1+h2)
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
+# =============================================================================
+##  ``Asymmetry'' of the histograms 
+def _h2_asym_ ( h1 , h2 ) :
+    """
+    ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
+# =============================================================================
+##  ``Chi2-tension'' the histograms 
+def _h2_chi2_ ( h1 , h2 ) :
+    """
+    ``Chi2-tension'' for the histograms 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
+# =============================================================================
+##  ``Average'' the histograms 
+def _h2_mean_ ( h1 , h2 ) :
+    """
+    ``Average'' for the histograms 
+    """
+    return _h2_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) )  
 
 # =============================================================================
 ## 'pow' the histograms 
@@ -686,6 +759,18 @@ ROOT.TH2.__mul__  = _h2_mul_
 ROOT.TH2.__add__  = _h2_add_
 ROOT.TH2.__sub__  = _h2_sub_
 ROOT.TH2.__pow__  = _h2_pow_
+
+ROOT.TH2.  frac    = _h2_frac_
+ROOT.TH2.  asym    = _h2_asym_
+ROOT.TH2.  chi2    = _h2_chi2_
+ROOT.TH2.  average = _h2_mean_
+
+
+def _h2_box_  ( self , opts = '' ) : return self.Draw( opts + 'box' )
+def _h2_lego_ ( self , opts = '' ) : return self.Draw( opts + 'lego')
+
+ROOT.TH2.  box  = _h2_box_
+ROOT.TH2.  lego = _h2_lego_
 
 
 # =============================================================================
