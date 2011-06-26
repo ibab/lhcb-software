@@ -5,7 +5,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-!========================== HltTracking v9r9   2011-06-24 ===================
+!========================== HltTracking v9r9   2011-06-26 ===================
+! 2011-06-26 - Gerhard Raven
+ - fix ValidateWithTT configuration
+
 ! 2011-06-24 - V. Gligorov
  - Fix more conflicts caused in Hlt2Tracking by previous commits
  
