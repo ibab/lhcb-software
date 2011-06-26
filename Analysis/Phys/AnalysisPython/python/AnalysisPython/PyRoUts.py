@@ -88,7 +88,7 @@ def _axis_iter_1_ ( a ) :
     >>> for i in axis : 
     """
     i = 1
-    s = a.GetNBins()
+    s = a.GetNbins()
     while i <= s :
         yield i
         i+=1        
@@ -220,6 +220,9 @@ def _h1_iteritems_ ( h1 ) :
         
         ix += 1
 
+ROOT.TH1F  . iteritems     = _h1_iteritems_
+ROOT.TH1D  . iteritems     = _h1_iteritems_
+
 # =============================================================================
 ## iterate over entries in 2D-histogram 
 def _h2_iteritems_ ( h2 ) :
@@ -256,7 +259,8 @@ def _h2_iteritems_ ( h2 ) :
             
         ix += 1 
         
-ROOT.TH2   . iteritems     = _h2_iteritems_
+ROOT.TH2F  . iteritems     = _h2_iteritems_
+ROOT.TH2D  . iteritems     = _h2_iteritems_
         
 # =============================================================================
 # Decorate fit results 
