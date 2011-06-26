@@ -3,6 +3,16 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-06-26 - Jibo He
+ - Move Stripping15 conf dicts from StrippingDev to Stripping15
+ - dbase/stripping15 generated
+ - dbase/strippingdev updated
+
+! 2011-06-24 - Jibo He
+ - LineConfigDictionaries_MiniBias.py
+  . Updated pre-scales according to the proposal of trigger
+
 ! 2011-06-23 - Sebastian Schleich
  - removed superfluous phi-pt cut from BsPhiPhi stripping (retention unchanged, using TestMyStrippingLineOn2011Data.py)
 
