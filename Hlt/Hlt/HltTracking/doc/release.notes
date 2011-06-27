@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-06-27 - Gerhard Raven
+ - remove debug printout...
+
 !========================== HltTracking v9r9   2011-06-26 ===================
 ! 2011-06-26 - Gerhard Raven
  - fix ValidateWithTT configuration
