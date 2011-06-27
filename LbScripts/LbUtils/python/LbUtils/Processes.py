@@ -163,6 +163,7 @@ class RetryCommand(object):
         return retval
 
 def loadAverage():
+    """ returns the load average on a linux machine for the last 1,5,15 minutes """
     load = [ 1.0, 1.0, 1.0]
 
     if sys.platform != "win32" :
