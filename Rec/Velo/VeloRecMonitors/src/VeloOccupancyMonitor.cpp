@@ -359,7 +359,7 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     for(unsigned int side=0; side<2; ++side){
       // the number of strips is the same in both halves and half
       // the total number of strips, occupancy is in %
-      m_veloOccVsBunchId[side]->fill(m_odin->bunchId(),nCLustersOnSide[side]/m_nstrips*2.0*100.0);
+      m_veloOccVsBunchId[side]->fill(m_odin->bunchId(),nCLustersOnSide[side]/(m_nstrips*0.5)*100.0);
     }
   }
 

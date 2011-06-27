@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-06-27 - Kurt Rinnert
+ - fixed integer division bug in new occpancy vs. BCID code
+
 ! 2011-06-25 - Kurt Rinnert
  - re-implementation of occupancy per bunch crossing ID in
    VeloOccupancyMonitor: much cleaner code and fixes a bug that caused these
