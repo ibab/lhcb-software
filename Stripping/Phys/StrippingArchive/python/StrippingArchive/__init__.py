@@ -62,10 +62,12 @@ def strippingArchive(stripping=None):
         #case insensitive for s
         if stripping[0]=='s':
             stripping='S'+stripping[1:]
-            return strippingArchive(stripping)
+            if stripping in _strippings:
+                return _strippings[stripping]
         elif stripping[0]=='S':
             stripping='s'+stripping[1:]
-            return strippingArchive(stripping)
+            if stripping in _strippings:
+                return _strippings[stripping]
         raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
     return _strippings[stripping]
 
@@ -81,9 +83,11 @@ def strippingDescription(stripping=None):
         #case insensitive for s
         if stripping[0]=='s':
             stripping='S'+stripping[1:]
-            return strippingArchive(stripping)
+            if stripping in _strippings:
+                return _stripping_help[stripping]
         elif stripping[0]=='S':
             stripping='s'+stripping[1:]
-            return strippingArchive(stripping)
+            if stripping in _strippings:
+                return _stripping_help[stripping]
         raise KeyError, stripping + ' is not known, call strippingDescription() with no arguement to get the full dictionary'
     return _stripping_help[stripping]
