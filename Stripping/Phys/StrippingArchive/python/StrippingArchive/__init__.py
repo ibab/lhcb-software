@@ -9,6 +9,7 @@ __all__ = ['strippingArchive', 'strippingDescription']
 #import known strippings
 import Stripping13
 import Stripping14
+import Stripping15
 
 #give a dictionary of strippings which use the same line builders
 _duplicate_strippings={ "Stripping13b"        : "Stripping13",
@@ -19,7 +20,8 @@ _duplicate_strippings={ "Stripping13b"        : "Stripping13",
 _stripping_help={"Stripping13"  : "2011 data taking, processing during the first half of 2011",
                  "Stripping13b" : "2011 data reprocessing, of the data in the first half of 2011",
                  "Stripping1Point4Tev" : "2011 data reprocessing, for data in 2011 taken at 1.4 TeV",
-                 "Stripping14" : "2010 data reprocessing, reprocessed in early 2011 with the 2010 dataset"
+                 "Stripping14" : "2010 data reprocessing, reprocessed in early 2011 with the 2010 dataset",
+                 "Stripping15" : "2011 data processing for data in 2011 taken after the June technical stop"
                  }
 
 #compile dictionary of all known strippings
@@ -55,6 +57,15 @@ def strippingArchive(stripping=None):
     if stripping is None:
         return dict(_strippings)
     if stripping not in _strippings:
+        if type(stripping) is not str:
+            raise TypeError, "Strippings must be strings, like Stripping15 for example"
+        #case insensitive for s
+        if stripping[0]=='s':
+            stripping='S'+stripping[1:]
+            return strippingArchive(stripping)
+        elif stripping[0]=='S':
+            stripping='s'+stripping[1:]
+            return strippingArchive(stripping)
         raise KeyError, stripping + ' is not known, call strippingArchive() with no arguement to get the full dictionary'
     return _strippings[stripping]
 
@@ -65,5 +76,14 @@ def strippingDescription(stripping=None):
     if stripping is None:
         return dict(_stripping_help)
     if stripping not in _strippings:
+        if type(stripping) is not str:
+            raise TypeError, "Strippings must be strings, like Stripping15 for example"
+        #case insensitive for s
+        if stripping[0]=='s':
+            stripping='S'+stripping[1:]
+            return strippingArchive(stripping)
+        elif stripping[0]=='S':
+            stripping='s'+stripping[1:]
+            return strippingArchive(stripping)
         raise KeyError, stripping + ' is not known, call strippingDescription() with no arguement to get the full dictionary'
     return _stripping_help[stripping]
