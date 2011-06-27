@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-06-27 - Olivier Callot
+ - Protect updateBanner is no banner pad. 
+ - Clear refresh when adding an histo to the page
+
 ! 2011-06-24 - Olivier Callot
  - fix Windows compilation erors and warnings
 

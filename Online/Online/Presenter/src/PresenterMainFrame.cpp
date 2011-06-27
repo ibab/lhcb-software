@@ -3624,6 +3624,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl){
   } catch (std::string sqlException) {
     onlH = NULL;
   }
+  if ( m_refreshingPage ) stopPageRefresh();
   m_presenterPage.addSimpleHisto( histogramUrl, onlH, currentPartition() );
 }
 

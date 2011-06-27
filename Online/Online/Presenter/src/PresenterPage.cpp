@@ -74,6 +74,12 @@ void PresenterPage::clear ( ) {
   }
   m_trends.clear();
   m_pads.clear();
+  m_bannerPad      = NULL;
+  m_bannerPageName = NULL;
+  m_bannerSource   = NULL;
+  m_lastName       = "";
+  m_lastTimePoint  = "";
+  m_lastDuration   = "";
 }
 
 //=========================================================================
@@ -1141,6 +1147,7 @@ void PresenterPage::drawBanner ( std::string name, std::string source ) {
 //  
 //=========================================================================
 void PresenterPage::updateBanner ( std::string source ) {
+  if ( NULL == m_bannerPad ) drawBanner( "", source );
   if ( "" == source || source.find("&") == source.size()-1 ) {
     char buf[40];
     time_t now = ::time(0);
