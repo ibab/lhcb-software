@@ -256,6 +256,14 @@ StatusCode RichParticleSearchMain::execute() {
     // Get refractive index of radiator required for mass calculations
     double refIndx = m_tkIndex->refractiveIndex(segment);
 
+    const Gaudi::XYZPoint trkentrypoint = segment->trackSegment().entryPoint();
+    const Gaudi::XYZPoint trkexitpoint = segment->trackSegment().exitPoint();
+    double trkenX = trkentrypoint.X();
+    double trkenY = trkentrypoint.Y();
+    double trkexX = trkexitpoint.X();
+    double trkexY = trkexitpoint.Y();
+    double rad_length = trkexitpoint.Z() - trkentrypoint.Z();
+
     // Separation or isolation of tracks
     double MinimumTrackSeperation = this->MinimumTrackSeparation(segment);
     if (MinimumTrackSeperation>m_IsoCut)
@@ -317,7 +325,8 @@ StatusCode RichParticleSearchMain::execute() {
           }
         }
 
-        if (PhotonCounter>150){
+        if (PhotonCounter>150)
+        {
           break;
         } //END photon cut
       }// end photon counter loop
@@ -426,6 +435,13 @@ StatusCode RichParticleSearchMain::execute() {
 						TrackTuple->column( "trackKey", trackKey);
 						TrackTuple->column( "runNumber", runNumber);
 						TrackTuple->column( "evtNumber", evtNumber);
+						// Photon Yield Info
+						TrackTuple->column( "trkenX",trkenX);
+						TrackTuple->column( "trkenY",trkenY);
+						TrackTuple->column( "trkexX",trkexX);
+						TrackTuple->column( "trkexY",trkexY);
+						TrackTuple->column( "rad_length",rad_length);
+
 
 						if ( m_useMCTruth )
 						{ // if use Truth information
