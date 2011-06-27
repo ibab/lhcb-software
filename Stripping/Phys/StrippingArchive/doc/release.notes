@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-27 - Rob Lambert
+ - Archive Stripping15 from StrippingSelections v3r5.
+
 !========================= StrippingArchive v1r1 2011-05-24 =========================
 ! 2011-05-26 - Rob Lambert
  - Update for modification of 1.4TeV streaming, now only one stream.
