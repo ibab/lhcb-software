@@ -4,6 +4,14 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+
+!========================= StrippingArchive v1r2 2011-06-27 =========================
+! 2011-06-27 - Rob Lambert
+ - Fixed a bug in case-insensitivity and tested helpful functions.
+
+! 2011-06-27 - Rob Lambert
+ - Added helpful functions and more documentation.
+
 ! 2011-06-27 - Rob Lambert
  - Archive Stripping15 from StrippingSelections v3r5.
 
