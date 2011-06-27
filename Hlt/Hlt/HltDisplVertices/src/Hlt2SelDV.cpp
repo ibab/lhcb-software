@@ -282,7 +282,7 @@ StatusCode Hlt2SelDV::execute() {
     
     //Is the particle close to the detector material ?
     if( m_allOutDet && indet ) continue;    
-    if( !m_allOutDet && not indet) oneOutMat=true;
+    if( !m_allOutDet && !indet) oneOutMat=true;
 
     if( mass < m_PreyMinMass || 
         nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
