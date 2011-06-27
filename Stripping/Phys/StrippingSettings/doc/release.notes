@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r4 2011-06-27 =========================
 ! 2011-06-26 - Jibo He
  - Move Stripping15 conf dicts from StrippingDev to Stripping15
  - dbase/stripping15 generated
@@ -22,7 +23,6 @@
  - LineConfigDictionaries_PSWG.py 
    . Ccbar2Ppbar, cuts tightened
 
-!========================= StrippingSettings v2r4 2011-06-21 =========================
 ! 2011-06-20 - Jibo He
  - LineConfigDictionaries_GLWG.py
    . Updated B2KShh
