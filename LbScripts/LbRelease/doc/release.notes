@@ -1,3 +1,8 @@
+2011-06-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: prepended "trunk" to the list of versions of a
+	package when printing it in XML or plain text.
+
 2011-06-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/rcs.py: report failure in the logger for the move action

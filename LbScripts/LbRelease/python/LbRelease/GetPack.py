@@ -1016,7 +1016,7 @@ class GetPack(Script):
             for package in self.args:
                 rep = self._getModuleRepo(package, isProject = False)
                 if rep:
-                    versions[package] = (rep.listVersions(package),
+                    versions[package] = (["trunk"] + rep.listVersions(package),
                                          guessDefaultVersion(package))
                 else:
                     self.log.warning("Unknown package '%s'!", package)
