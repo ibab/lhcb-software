@@ -39,8 +39,8 @@ class DV_draft2011 :
         # Prescale only the PS lines:
         # Hlt2SinglePSLonglived
         # Hlt2DoublePSLonglived
-        # Hlt2SinglePSLonglivedHighMass
-        # Hlt2SinglePSLonglivedHighFD
+        # Hlt2SinglePSLonglivedHighMass(PS of 0.02 give 0.1 Hz)
+        # Hlt2SinglePSLonglivedHighFD (PS of 0.02 give 0.1 Hz)
         # Hlt2SinglePSLonglivedMV
         ##########################################################################
         
@@ -119,11 +119,11 @@ class DV_draft2011 :
                               , 'Hlt2SingleLonglivedHighFD' : 1.
                               , 'Hlt2SingleLonglivedHighMass' : 1.
                               , 'Hlt2DoubleLonglived' : 1.
-                              , 'Hlt2SinglePSLonglived' : 1.
-                              , 'Hlt2DoublePSLonglived' : 1.
+                              , 'Hlt2SinglePSLonglived' : 0.0001
+                              , 'Hlt2DoublePSLonglived' : 0.01
                               , 'Hlt2SinglePSLonglivedHighMass' : 1.
                               , 'Hlt2SinglePSLonglivedHighFD' : 1.
-                              , 'Hlt2SinglePSLonglivedMV' : 1.
+                              , 'Hlt2SinglePSLonglivedMV' : 0.0006
 
                               }             
             # pre and post scales
