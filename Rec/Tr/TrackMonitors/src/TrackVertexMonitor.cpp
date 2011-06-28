@@ -39,6 +39,7 @@ private:
   std::string m_trackContainerName;
   std::string m_pvContainerName;
   double m_ipmax ;
+  double m_ipmaxprof ;
   double m_dzmax ;
   double m_rpvmax ;
   double m_zpvmin ;
@@ -68,6 +69,12 @@ private:
   AIDA::IHistogram1D* m_fastTrackLongitudinalIP ;
   AIDA::IProfile1D* m_fastTrackLongitudinalIPVsPhi ;
   AIDA::IProfile1D* m_fastTrackLongitudinalIPVsEta ;
+  AIDA::IHistogram1D* m_fastTrackXIP ;
+  AIDA::IProfile1D* m_fastTrackXIPVsPhi ;
+  AIDA::IProfile1D* m_fastTrackXIPVsEta ;
+  AIDA::IHistogram1D* m_fastTrackYIP ;
+  AIDA::IProfile1D* m_fastTrackYIPVsPhi ;
+  AIDA::IProfile1D* m_fastTrackYIPVsEta ;
  
   AIDA::IHistogram1D* m_twoprongMass ;
   AIDA::IHistogram1D* m_twoprongMomentum ;
@@ -97,6 +104,7 @@ TrackVertexMonitor::TrackVertexMonitor( const std::string& name,
   declareProperty( "TrackContainer", m_trackContainerName = LHCb::TrackLocation::Default  );
   declareProperty( "PVContainer", m_pvContainerName = LHCb::RecVertexLocation::Primary ) ;
   declareProperty( "MaxIP", m_ipmax = 0.5*Gaudi::Units::mm ) ;
+  declareProperty( "MaxIPProfile", m_ipmaxprof = 0.1*Gaudi::Units::mm ) ;
   declareProperty( "MaxDz", m_dzmax =   5*Gaudi::Units::mm ) ;
   declareProperty( "MaxRPV", m_rpvmax = 1*Gaudi::Units::mm ) ;
   declareProperty( "MinZPV", m_zpvmin = -20*Gaudi::Units::cm ) ;
@@ -143,6 +151,13 @@ StatusCode TrackVertexMonitor::initialize()
   m_fastTrackLongitudinalIPVsPhi = bookProfile1D("fast track longitudinal IP vs phi",
                                                  -Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
   m_fastTrackLongitudinalIPVsEta = bookProfile1D("fast track longitudinal IP vs eta",2.0,5.0,m_nprbins) ;
+ 
+  m_fastTrackXIP = book1D("fast track IP X","fast track IP X",-m_ipmax,m_ipmax) ;
+  m_fastTrackYIP = book1D("fast track IP Y","fast track IP Y",-m_ipmax,m_ipmax) ;
+  m_fastTrackXIPVsPhi = bookProfile1D("fast track IP X vs phi","fast track IP X vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackXIPVsEta = bookProfile1D("fast track IP X vs eta","fast track IP X vs eta",2.0,5.0,m_nprbins) ;
+  m_fastTrackYIPVsPhi = bookProfile1D("fast track IP Y vs phi","fast track IP Y vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
+  m_fastTrackYIPVsEta = bookProfile1D("fast track IP Y vs eta","fast track IP Y vs eta",2.0,5.0,m_nprbins) ;
 
   // impact parameter and vertex chisquare of the two highest Pt tracks
   m_twoprongMass      = book1D("twoprong mass (GeV)",0,10) ;
@@ -155,7 +170,7 @@ StatusCode TrackVertexMonitor::initialize()
   m_twoprongTau  = book1D("twoprong proper lifetime (ps)",-0.2,0.2) ;
   m_twoprongIPChisquare = book1D("twoprong IP chi2 per dof",0,10) ;
 
-  m_twoprongDocaVsEta = bookProfile1D("twoprong doca vs vs eta",2.0,5.0,m_nprbins) ;
+  m_twoprongDocaVsEta = bookProfile1D("twoprong doca vs eta",2.0,5.0,m_nprbins) ;
   m_twoprongDocaVsPhi = bookProfile1D("twoprong doca vs phi",-Gaudi::Units::pi,Gaudi::Units::pi,m_nprbins) ;
 
   m_velo = getDet<DeVelo>("/dd/Structure/LHCb/BeforeMagnetRegion/Velo" );
@@ -310,9 +325,9 @@ StatusCode TrackVertexMonitor::execute()
 	plot( dx.x(), "PV left-right delta x",-0.1,0.1) ;
 	plot( dx.y(), "PV left-right delta y",-0.1,0.1) ;
 	plot( dx.z(), "PV left-right delta z",-1,1) ;
-	if( std::abs( dx.y() ) < m_ipmax ) 
+	if( std::abs( dx.y() ) < m_ipmaxprof ) 
 	  profile1D( pv->position().z(), dx.y(),"PV left-right delta y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
-	if( std::abs( dx.x() ) < m_ipmax ) 
+	if( std::abs( dx.x() ) < m_ipmaxprof ) 
 	  profile1D( pv->position().z(), dx.x(),"PV left-right delta x versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
 	
 	// draw the pull of the difference
@@ -339,9 +354,9 @@ StatusCode TrackVertexMonitor::execute()
 	plot( dx.x(), "PV forward-backward delta x",-m_ipmax,m_ipmax) ;
 	plot( dx.y(), "PV forward-backward delta y",-m_ipmax,m_ipmax) ;
 	plot( dx.z(), "PV forward-backward delta z",-m_dzmax,m_dzmax) ;
-	if( std::abs( dx.y() ) < m_ipmax ) 
+	if( std::abs( dx.y() ) < m_ipmaxprof ) 
 	  profile1D( pv->position().z(), dx.y(),"PV forward-backward delta y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
-	if( std::abs( dx.x() ) < m_ipmax ) 
+	if( std::abs( dx.x() ) < m_ipmaxprof ) 
 	  profile1D( pv->position().z(), dx.x(),"PV forward-backward delta x versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
 	
 	// draw the pull of the difference
@@ -378,7 +393,7 @@ StatusCode TrackVertexMonitor::execute()
 	m_trackXIP->fill( dx ) ;
 	m_trackYIP->fill( dy ) ;
 	// apply a cut for the profiles
-	if( std::abs(dx) < m_ipmax && std::abs(dy) < m_ipmax ) {
+	if( std::abs(dx) < m_ipmaxprof && std::abs(dy) < m_ipmaxprof ) {
 	  double phi = p3.phi() ;
 	  double eta = p3.eta() ;
 	  m_trackXIPVsEta->fill(eta,dx) ;
@@ -433,14 +448,22 @@ StatusCode TrackVertexMonitor::execute()
 	  
 	  m_fastTrackTransverseIP->fill(iptrans ) ;
 	  m_fastTrackLongitudinalIP->fill(iplong ) ;
+	  m_fastTrackXIP->fill( dx ) ;
+	  m_fastTrackYIP->fill( dy ) ;
 	  // apply a cut for the profiles
-	  if( std::abs(iptrans) < m_ipmax && std::abs(iplong) < m_ipmax ) {
+	  if( std::abs(iptrans) < m_ipmaxprof && std::abs(iplong) < m_ipmaxprof ) {
 	    m_fastTrackTransverseIPVsEta->fill(eta,iptrans) ;
 	    m_fastTrackTransverseIPVsPhi->fill(phi,iptrans) ;
 	    m_fastTrackLongitudinalIPVsEta->fill(eta,iplong) ;
 	    m_fastTrackLongitudinalIPVsPhi->fill(phi,iplong) ;
 	  }
-	  
+	  if( std::abs(dx) < m_ipmaxprof && std::abs(dy) < m_ipmaxprof ) {
+	    m_fastTrackXIPVsEta->fill(eta,dx) ;
+	    m_fastTrackXIPVsPhi->fill(phi,dx) ;
+	    m_fastTrackYIPVsEta->fill(eta,dy) ;
+	    m_fastTrackYIPVsPhi->fill(phi,dy) ;
+	  }
+
 	  // The two-track cuts we only make for relatively heavy objects
 	  double mass = std::sqrt(highestmass2) ;
 	  m_twoprongMass->fill(mass / Gaudi::Units::GeV ) ;
