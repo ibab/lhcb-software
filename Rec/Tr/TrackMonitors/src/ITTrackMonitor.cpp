@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.11 2010-04-07 21:45:42 wouter Exp $
+// $Id: ITTrackMonitor.cpp,v 1.11 2010/04/07 21:45:42 wouter Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -7,7 +7,6 @@
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/SiChargeFun.h"
-#include "Event/Node.h"
 #include "Event/FitNode.h"
 #include "Event/STMeasurement.h"
 #include "Event/Measurement.h"
@@ -153,7 +152,10 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
   LHCb::Track::ConstNodeRange nodes = track.nodes() ;
   LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
   std::vector<const LHCb::STMeasurement*> measVector; measVector.reserve(24);
-
+  
+  enum { NumUniqueLayers = 3*4*4 } ;
+  std::vector< const LHCb::FitNode* > nodesByUniqueLayer[NumUniqueLayers] ;
+  
   unsigned int nHigh = 0u;
   for ( ; iNodes != nodes.end(); ++iNodes ) {
 
@@ -165,6 +167,9 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
 
       // unbiased residuals and biased residuals
       const STChannelID chan = hit->lhcbID().stID();
+      unsigned int uniquelayer = chan.detRegion()-1 + 4*( chan.layer() -1 + 4* (chan.station()-1) ) ;
+      nodesByUniqueLayer[ uniquelayer ].push_back( fNode ) ;
+
       plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),ittype+"/biasedResidual","biasedResidual",  -2., 2., 200 );
 
@@ -225,7 +230,42 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
   const double gm = SiChargeFun::generalizedMean(measVector.begin(), measVector.end()); 
   plot(gm,ittype+"/generalized mean","generalized mean charge",  0., 100, 200);
 
+  // make overlap histograms.
 
+  // TODO: this now creates one histogram per unique IT layer (all
+  // combined in one 2D histogram). for display in monitoring, these
+  // need to be combined in a small set of usefull histograms. I
+  // haven't quite figured out what is the right granularity. (Box
+  // seems fine, but 12 histos is too much.)
+  for(size_t ilay=0; ilay<NumUniqueLayers; ++ilay) { 
+    if( nodesByUniqueLayer[ilay].size() == 2 ) {
+      const LHCb::FitNode* firstnode = nodesByUniqueLayer[ilay].front() ;
+      const LHCb::FitNode* secondnode = nodesByUniqueLayer[ilay].back() ;
+      
+      if( firstnode->measurement().detectorElement() != 
+	  secondnode->measurement().detectorElement() ) {
+
+	if( firstnode->measurement().detectorElement()->geometry()->toGlobal(Gaudi::XYZPoint()).x() >
+	    secondnode->measurement().detectorElement()->geometry()->toGlobal(Gaudi::XYZPoint()).x() )
+	  std::swap( firstnode, secondnode ) ;
+	
+	int firstsign = firstnode->measurement().trajectory().direction(0).y() >0 ? 1 : -1 ;
+	int secondsign = secondnode->measurement().trajectory().direction(0).y() >0 ? 1 : -1 ;
+	double firstresidual  = firstsign * firstnode->residual() ;
+	double secondresidual =  secondsign * secondnode->residual() ;
+
+	double diff = firstresidual - secondresidual ;
+	
+	// let's still make the correction for the track angle, such that we really look in the wafer plane.
+	Gaudi::XYZVector localdir = 
+	  firstnode->measurement().detectorElement()->geometry()->toLocal( firstnode->state().slopes() ) ;
+	double localTx  = localdir.x()/localdir.z() ;
+	diff *= std::sqrt( 1+localTx*localTx) ;
+	plot2D( ilay, diff, "overlapResidualsByLayer","Overlap residuals by unique layer",
+		-0.5, NumUniqueLayers-0.5, -0.5, 0.5, NumUniqueLayers, 50 ) ;
+      }
+    }
+  }
 }
 
 std::string ITTrackMonitor::ITCategory(const std::vector<LHCb::LHCbID>& ids) const {
