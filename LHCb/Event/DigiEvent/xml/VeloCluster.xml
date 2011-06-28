@@ -27,9 +27,24 @@
                 ADCVector strips'
         initList='m_liteCluster(lCluster), m_stripValues(strips)' >
      </constructor>
-
+     
   &VeloClusterClass;
-
+  
+  <constructor desc = 'copy constructor'
+               initList = 'KeyedObject&lt;LHCb::VeloChannelID&gt;(),m_liteCluster(lCluster.m_liteCluster), m_stripValues(lCluster.m_stripValues) ' > 
+    <arg const = 'TRUE' name = "lCluster" type = "LHCb::VeloCluster" />
+  </constructor>
+  
+  <method desc= 'clone method'
+	  name = 'clone'
+	  const = 'TRUE'
+	  type = "LHCb::VeloCluster*"
+	  access = "PUBLIC">
+    <code>
+      return new LHCb::VeloCluster( *this );
+    </code>
+  </method>
+  
    <method
      name = "firstChannel"
      type="LHCb::VeloChannelID"
