@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-06-28 - Wouter Hulsbergen
+ - ITTrackMonitor: add histogram for overlaps
+ - TrackVertexMonitor: introduce cutoff for IP profiles to be more sensitive to mean
+
 !========================= TrackMonitors v1r32 2011-04-05 =========================
 ! 2011-03-11 - Mariusz Witek
  - Add PV cov matrix to Vertex Compare ntuple
