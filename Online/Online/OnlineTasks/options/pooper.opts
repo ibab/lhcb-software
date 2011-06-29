@@ -34,3 +34,4 @@ HLTRater.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
 HLTRater.ServicePattern      = "MON_<part>_hlt01_GauchoJob_00/Counter/";
 HLTRater.AdderClass          = "Counter";
 HLTRater.InDNS               = "mona08";
+HLTRater.TrendingOn          = false;
