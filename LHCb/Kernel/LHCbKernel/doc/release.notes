@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-06-29 - Eduardo Rodrigues
+ - Added new interfaces IVeloClusterSelector.h and IVeloChannelIDSelector.h
+
 ! 2011-05-09 - Chris Jones
  - Remove RICHDEBUG preprocessor directive. Use Gaudi NDEBUG instead.
 

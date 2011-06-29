@@ -46,6 +46,8 @@
 #include "Kernel/IReferenceRate.h"
 #include "Kernel/IAccept.h"
 #include "Kernel/Counters.h"
+#include "Kernel/IVeloClusterSelector.h"
+#include "Kernel/IVeloChannelIDSelector.h"
 
 #include "Kernel/RichParticleIDType.h"
 #include "Kernel/RichRadiatorType.h"
