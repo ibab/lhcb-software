@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-29 - V. Gligorov
+ - Hlt2diphotonDiMuonLines : Fix LowMultPhoton line to use Pi0 maker. 
+
 ! 2011-06-25 - Mat Charles
  - Hlt2CharmHadD02HHKsLines : Rearrange order of inputs to reduce CPU time for
    case where long but not downstream KS are used.
