@@ -224,7 +224,7 @@ genrss();
     htmlFile.write( "}\n")
 
     htmlFile.write( "function tooltipout(event,tooltip) {\n")
-    htmlFile.write( "  elem = document.getElementById(tooltip);\n");
+    htmlFile.write( "  elem = document.getElementById(tooltip);\n")
     htmlFile.write( '  elem.style.left=(-1000)+"px";'+" \n")
     htmlFile.write( '  elem.style.top=(-1000)+"px";'+" \n")
     htmlFile.write( '  elem.style.visibility="hidden";'+" \n")
@@ -681,7 +681,6 @@ genrss();
                     #Status=checkTestLogs(os.path.join(slotObj.wwwDir(), plat, slotObj.getName() + "." + day[:3]+'_'+proj.getTag()+'-'+plat))
                     Status=checkTestLogs(None, None, slotObj, proj, day[:3], plat, includePlatformInPrefix)
                     if time.strftime("%A") == day:
-                        pass
                         if nWarn != None:
                             build = (NoErr, nWarn)
                         else:
