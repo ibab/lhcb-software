@@ -14,10 +14,10 @@ lb.lines()[0].outputLocation()
 __author__ = "Rob Lambert rob.lambert@cern.ch"
 __date__ = "30/06/2010"
 
-__all__ = ('lineBuilder', 'buildStream','streamNames','cloneLinesFromStream','cloneStream','buildStreams','lineBuilderAndConf')
+__all__ = ('lineBuilder', 'buildStream','streamNames','cloneLinesFromStream','cloneStream','buildStreams','lineBuilderAndConf', 'outputLocations')
 
-from StrippingSettings.Utils import lineBuilderConfiguration
-from StrippingSettings.Utils import strippingConfiguration
+from StrippingSettings.Utils import lineBuilderConfiguration as _lbConf
+from StrippingSettings.Utils import strippingConfiguration as _sConf
 
 def lineBuilder(stripping, lineBuilderName, archive=None) :
     """
@@ -28,9 +28,9 @@ def lineBuilder(stripping, lineBuilderName, archive=None) :
     print lb.lines()
     This already configures the line builder with the stripping cuts
     """
-    from StrippingArchive import strippingArchive
     if isinstance(stripping, basestring) :
-        _config = lineBuilderConfiguration(stripping, lineBuilderName)
+        _config = _lbConf(stripping, lineBuilderName)
+        from StrippingArchive import strippingArchive
         archive=strippingArchive(stripping)
     else :
         _config = stripping[lineBuilderName]
@@ -49,9 +49,9 @@ def lineBuilderAndConf(stripping, lineBuilderName, archive=None):
     lines=builder("MyB0q2DplusMuX",config).lines()
     """
 
-    from StrippingArchive import strippingArchive
     if isinstance(stripping, basestring) :
-        _config = lineBuilderConfiguration(stripping, lineBuilderName)
+        _config = _lbConf(stripping, lineBuilderName)
+        from StrippingArchive import strippingArchive
         archive=strippingArchive(stripping)
     else :
         _config = stripping[lineBuilderName]
@@ -67,21 +67,20 @@ def buildStream(stripping, streamName = '', archive=None):
     or:
     >>> conf = strippingConfiguration('Stripping13')
     >>> streamDimuon = strippingStream(conf,'Dimuon')
-
+    
     """
 
     from StrippingConf.StrippingStream import StrippingStream
-    from StrippingSettings.Utils import strippingConfiguration
-    from StrippingArchive import strippingArchive
-
+    
     stream = StrippingStream( streamName )
-
+    
     if isinstance(stripping, basestring) :
-        _db = strippingConfiguration( stripping )
+        _db = _sConf( stripping )
+        from StrippingArchive import strippingArchive
         archive=strippingArchive(stripping)
     else :
         _db = stripping
-
+    
     for key in _db.keys():
         _conf = _db[key]
         if stream.name() in _conf['STREAMS']:
@@ -93,9 +92,8 @@ def streamNames(stripping) :
     """ return a list of all streams defined in a given stripping
     """
     from SelPy.utils import flattenList, removeDuplicates
-    from StrippingSettings.Utils import strippingConfiguration
     if isinstance(stripping, basestring) :
-        _db = strippingConfiguration( stripping )
+        _db = _sConf( stripping )
     else :
         _db = stripping
 
@@ -147,15 +145,15 @@ def buildStreams(stripping,archive=None) :
 
     """
     from StrippingConf.StrippingStream import StrippingStream
-    from StrippingArchive import strippingArchive
-
+    
     streams = {}
     if isinstance(stripping, basestring) :
-        scdb = strippingConfiguration(stripping)
+        scdb = _sConf(stripping)
+        from StrippingArchive import strippingArchive
         archive=strippingArchive(stripping)
     else :
         scdb = stripping
-
+    
     for k, v in scdb.iteritems() :
         if 'STREAMS' in v.keys() :
             for stream in v['STREAMS'] :
@@ -168,7 +166,7 @@ def buildStreams(stripping,archive=None) :
     builderMap = {}
     for builder in scdb.keys() :
         builderMap[builder] = lineBuilder(scdb, builder, archive)
-
+    
     strippingStreams=[]
     for stream, builderNames in streams.iteritems() :
         lines=[]
@@ -186,3 +184,40 @@ def lineBuilderClone(stripping, line=None, prefix='Clone', prescale=1.0, archive
     return _line.clone( prefix + _line.name().lstrip('Stripping'),
                                   prescale = _line.prescale()*prescale )
 
+def outputLocations(stripping, lineName, lines=[], archive=None):
+    '''
+    Return the output location(s) [as a list] of a given line in a given stripping
+    if lines is an empty list, outputLocations will instantiate the lines itself
+    or else it is assumed they are proper line objects with an outputLocation method
+    
+    e.g.:
+    
+    line=lineBuilder('Stripping15','B0q2DplusMuX')
+    oneline=line.lines()[0]
+    
+    location=outputLocations('Stripping15', 'B0q2DplusMuX', [oneline])
+    
+    Essentially it returns /Event/<stream>/Phys/<line>/Particles, avoiding the need for
+    the user to construct this manually
+    '''
+        
+    if isinstance(stripping, basestring) :
+        _db = _sConf( stripping )
+        from StrippingArchive import strippingArchive
+        archive=strippingArchive(stripping)
+    else :
+        _db = stripping
+    
+    if lineName not in _db:
+        raise KeyError, "the line "+lineName+" does not exist in the chosen stripping"
+    
+    if len(lines)==0:
+        _line=lineBuilder(_db, lineName, archive)
+        lines=_line.lines()
+    
+    retlist=[]
+    for aline in lines:
+        for stream in _db[lineName]['STREAMS']:
+            retlist.append('/Event/'+stream+'/'+aline.outputLocation().replace('/Event','').strip('/'))
+    
+    return retlist

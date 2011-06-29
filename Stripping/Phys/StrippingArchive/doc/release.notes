@@ -4,6 +4,12 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-06-29 - Rob Lambert
+ - Improved timing of some components by not importing certain modules unless really needed
+ - Added outputLocations as a utility to recover the full output location using the logic:
+    /Event/<stream>/Phys/<line>/Particles
+   Removes the need for users to do that themselves.
+
 !========================= StrippingArchive v1r2 2011-06-29 =========================
 ! 2011-06-29 - Rob Lambert
  - Added Stripping15 to test references
