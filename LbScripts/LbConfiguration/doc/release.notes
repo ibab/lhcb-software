@@ -1,3 +1,7 @@
+2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: implemented the genXMLConf function.
+
 2011-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: use LbConfiguration.Package to get the hat of the packages

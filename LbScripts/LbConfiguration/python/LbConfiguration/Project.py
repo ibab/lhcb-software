@@ -26,6 +26,7 @@ class ProjectConfException(Exception):
 class ProjectBaseConf(object):
     def __init__(self, projectname):
         """ default constructor """
+        self._propdict = {}
         self._name = projectname
         self._release_area = None
         if os.environ.has_key("LHCBRELEASES") :
@@ -33,6 +34,12 @@ class ProjectBaseConf(object):
         self._dist_loc = None
         if os.environ.has_key("LHCBTAR") :
             self._dist_loc = os.environ["LHCBTAR"]
+    def setProperty(self, name, value):
+        self._propdict[name] = value
+    def getProperty(self, name):
+        return self._propdict[name]
+    def delProperty(self, name):
+        del self._propdict[name]
     def Name(self):
         """ return original name """
         return self._name
@@ -44,10 +51,12 @@ class ProjectBaseConf(object):
         return self._name.upper()
     def setReleaseArea(self, release_area):
         self._release_area = release_area
+        self.setProperty("ReleaseArea", self._release_area)
     def ReleaseArea(self):
         return self._release_area
     def setDistLocation(self, dist_loc):
         self._dist_loc = dist_loc
+        self.setProperty("DistLocation", self._dist_loc)
     def DistLocation(self):
         return self._dist_loc
     def DistPrefix(self):
@@ -92,21 +101,25 @@ class ProjectConf(ProjectBaseConf):
     def setCMTExtraTags(self, taglist):
         """ set the list of CMTEXTRATAGS needed for the project build """
         self._cmtextratags = taglist
+        self.setProperty("CMTEXTRATAGS", self._cmtextratags)
     def addCMTExtraTags(self, *taglist):
         """ add tags to the list of CMTEXTRATAGS for the build """
         self._cmtextratags += taglist
+        self.setProperty("CMTEXTRATAGS", self._cmtextratags)
     def CMTExtraTags(self):
         """ return the list of CMTEXTRATAGS used for the build """
         return self._cmtextratags
     def setFullSize(self, size):
         """ set the foreseen fullsize of a project release """
         self._fullsize = size
+        self.setProperty("FullSize", self._fullsize)
     def FullSize(self):
         """ returns the foreseen fullsize of a project release """
         return self._fullsize
     def setBaseName(self, basename):
         """ set the base name for the project """
         self._basename = basename
+        self.setProperty("BaseName", self._basename)
     def BaseName(self):
         """ returns the base name of the project """
         return self._basename
@@ -121,6 +134,7 @@ class ProjectConf(ProjectBaseConf):
         """ disable the setenv Alias """
         self._setenvalias = False
         del self._aliases["setenv%s" % self._name]
+        self.setProperty("SetenvAlias", self._setenvalias)
     def enableSetupAlias(self):
         """ enable the Setup Alias """
         self._setupalias = True
@@ -129,25 +143,30 @@ class ProjectConf(ProjectBaseConf):
         """ disable the Setup Alias """
         self._setupalias = False
         del self._aliases["Setup%s" % self._name]
+        self.setProperty("SetupAlias", self._setupalias)
     def setSteeringPackage(self, packname):
         """ set the name of the steering package for the build """
         self._steeringpackage = packname
+        self.setProperty("SteeringPackage", self._steeringpackage)
     def SteeringPackage(self):
         """ returns the name of the steering package for the build """
         return self._steeringpackage
     def setApplicationPackage(self, packname):
         """set the name of the package which contains the application"""
         self._applicationpackage = packname
+        self.setProperty("ApplicationPackage", self._applicationpackage)
     def ApplicationPackage(self):
         return self._applicationpackage
     def setAFSVolumeName(self, volname):
         """set the name of the volume name to be used for new AFS volume"""
         self._afsvolumename = volname
+        self.setProperty("AFSVolumeName", self._afsvolumename)
     def AFSVolumeName(self):
         return self._afsvolumename
     def setAFSVolumeRoot(self, volroot):
         """set the name of the volume name to be used for new AFS volume"""
         self._afsvolumeroot = volroot
+        self.setProperty("AFSVolumeRoot", self._afsvolumeroot)
     def AFSVolumeRoot(self):
         return self._afsvolumeroot
     def setAFSLibrarianGroup(self, group):
@@ -158,12 +177,14 @@ class ProjectConf(ProjectBaseConf):
     def setExtraExe(self, exedict):
         """ set the list of extra executable to be build in the project """
         self._extraexe = exedict
+        self.setProperty("ExtraExe", self._extraexe)
     def addExtraExe(self, exename, taglist=None):
         """ add executables to the list of extra executables for the build """
         if taglist :
             self._extraexe[exename] = taglist
         else :
             self._extraexe[exename] = []
+        self.setProperty("ExtraExe", self._extraexe)
     def ExtraExe(self):
         """ return the list of extra executable used for the build """
         return self._extraexe
@@ -180,6 +201,7 @@ class ProjectConf(ProjectBaseConf):
         return tbname
     def setLCGTarBallName(self, name):
         self._lcgtarballname = name
+        self.setProperty("LCGTarBallName", self._lcgtarballname)
     def LCGTarBallName(self, version=None, cmtconfig=None, full=False):
         """ returns the name of the LCG tarball dependency """
         log = logging.getLogger()
@@ -216,6 +238,7 @@ class ProjectConf(ProjectBaseConf):
     def disableHasBinary(self):
         """ disable the binary nature of the project """
         self._hasbinary = False
+        self.setProperty("HasBinary", self._hasbinary)
     def hasBinary(self):
         """ Access function for the binary nature """
         return self._hasbinary
@@ -237,6 +260,33 @@ project_list = []
 for _proj in project_names:
     project_list.append(ProjectConf(_proj))
 del _proj#IGNORE:W0631
+
+# ------------------------------------------------------------------------------------
+# XML Tools
+
+import xml.dom
+
+
+def dumpXMLConf():
+    impl = xml.dom.getDOMImplementation()
+    doc  = impl.createDocument(None, "ProjectConfiguration", None)
+    de   = doc.documentElement
+    de.setAttribute("version", "1.0")
+    for p in project_list :
+        pe = doc.createElement("project")
+        pe.setAttribute("Name", p.Name())
+        de.appendChild(pe)
+        for prop in p._propdict.keys() :
+            ppe = doc.createElement(prop)
+            if type(p._propdict[prop]) is dict:
+                ppe.setAttribute("Type", "dict")
+            if type(p._propdict[prop]) is list:
+                ppe.setAttribute("Type", "list")
+            ppt = doc.createTextNode(str(p._propdict[prop]))
+            ppe.appendChild(ppt)
+            pe.appendChild(ppe)
+    return doc.toprettyxml()
+# ------------------------------------------------------------------------------------
 
 def getProject(projectname):
     """ return the static instance of the project configuration by name """
