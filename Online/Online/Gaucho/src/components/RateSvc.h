@@ -52,6 +52,7 @@ public:
   virtual StatusCode finalize();
   ISimpleTrendWriter* m_trender;
   IService *m_isvc ;
+  bool m_enableTrending;
 private:
   MyErrh *m_errh;
 
