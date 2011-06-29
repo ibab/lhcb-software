@@ -1,3 +1,34 @@
+2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r3
+
+	LbConfiguration:
+	* python/LbConfiguration/Project.py: implemented the genXMLConf function.
+	* python/LbConfiguration/SetupProject.py: use LbConfiguration.Package to get the hat of the packages
+	instead of a hardcoded dictionary (Marco Cl.).
+	* python/LbConfiguration/Repository.py: use svn.cern.ch instead of svnweb.cern.ch for the anonymous access.
+	* LbConfiguration/Repository.py : remove lbdirac repository (Joel)
+
+	LbRelease:
+	* python/LbRelease/GetPack.py: prepended "trunk" to the list of versions of a
+	package when printing it in XML or plain text (Marco Cl.).
+	* python/LbRelease/rcs.py: report failure in the logger for the move action
+	* python/LbRelease/AfsProjectSpace.py: fixed size reported in GB.
+	* scripts/buildGeneralDoc: script to be added to the (a)crontab to generate the
+	doxygen documentation of the released projects (Marco Cl.).
+
+	LbUtils:
+	* python/LbUtils/Processes.py: implemented the function loadAverage which return the list
+	of floats contained in /proc/loadavg.
+	* python/LbUtils/Processes.py: added the "report_failure" option to the callCommand function. It is is
+	True, the stdout and stderr of the failure are reported to to the logger. This only happens if the
+	return code of the command is different from 0.
+	* python/LbUtils/afs/volume.py: fixed ID() method. There was no return statement.
+	* python/LbUtils/Tar.py: factored out the guessing of the compression to place it
+	in the openTar function.
+	* LbUtils/python/LbUtils/SelfExtract.py: use compression type
+	* LbUtils/python/LbUtils/Tar.py: added compression type argument to createTarBall
+
 2011-06-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r2p1
