@@ -12,7 +12,11 @@ This is the first version of DaVinci to support the ROOT persistency framework.
 
 Stripping v2r4, Analysis v6r5, Hlt v13r7, Phys v12r5
 
-Otherwise no major changes. Packages which were previously included have been released with their respective projects.
+Otherwise no major changes. Several packages which were previously included explicitly in DaVinci have been released with their respective projects.
+
+DecayTreeTuple v3r15 has been included with this release to pick up a few minor changes and improvements along with some additional tools, e.g. calorimetry and MCTupleToolPrompt.
+
+In addition in the underlying projects there have been several additional functions added to StrippingArchive which should make life much easier for end-users.
 
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r4
