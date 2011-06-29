@@ -125,6 +125,7 @@ void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, co
       break;
     }
   case   C_FLOAT:
+  case C_RATEFLOAT:
     {
       m_contsiz    = 4;
       buffersize = 8;
@@ -132,6 +133,7 @@ void MonCounter::setup(MONTYPE typ, const void *data,const std::string& name, co
       break;
     }
   case   C_DOUBLE:
+  case C_RATEDOUBLE:
     {
       m_contsiz    = 8;
       buffersize = 8;
