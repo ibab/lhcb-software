@@ -1,7 +1,12 @@
 !--------------------------------------------------------------------------
 ! Package     : VeloAlgorithms
-! Responsible : Chris Parkes
+! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
+
+! 2011-06-28 - Eduardo Rodrigues
+ - Added new class VeloClusterContainerCopy: class to copy clusters from an
+   input container onto a new one applying a selection on the input clusters
+   (copied largely from STClusterContainerCopy)
 
 !========================= VeloAlgorithms v5r4 2011-06-15 =========================
 ! 2011-04-27 - Tomasz Szumlak
