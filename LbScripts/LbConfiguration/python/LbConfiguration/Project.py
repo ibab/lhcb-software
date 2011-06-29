@@ -426,7 +426,7 @@ Lbcom.setFullSize(1500000)#IGNORE:E0602
 
 # LbScripts
 LbScripts.setAFSVolumeName("LB")#IGNORE:E0602
-LbScripts.setFullSize(10000)#IGNORE:E0602
+LbScripts.setFullSize(20000)#IGNORE:E0602
 LbScripts.disableHasBinary()#IGNORE:E0602
 
 # LHCb

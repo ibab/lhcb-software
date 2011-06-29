@@ -1,5 +1,9 @@
 2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Project.py: increased the default size on AFS for LbScripts
+
+2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v6r3
 
 2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
