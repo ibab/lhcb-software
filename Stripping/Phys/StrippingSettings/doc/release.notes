@@ -4,12 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r4 2011-06-29 =========================
 ! 2011-06-28 - Jibo He
  - python/StrippingSettings/Stripping15/LineConfigDictionaries_PSWG.py
   . Remove CharmAssociative from Stripping15 due to the "configured twice" problem
   . dbase/stripping15 updated 
 
-!========================= StrippingSettings v2r4 2011-06-27 =========================
 ! 2011-06-26 - Jibo He
  - Move Stripping15 conf dicts from StrippingDev to Stripping15
  - dbase/stripping15 generated
