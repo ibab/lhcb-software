@@ -70,11 +70,11 @@ MonSubSys::~MonSubSys()
   lib_rtl_delete_lock (m_lockid);
 
 }
-void MonSubSys::makeRates()
+void MonSubSys::makeRates(unsigned long long dt)
 {
   if (m_RateMgr != 0)
   {
-    m_RateMgr->makeRates();
+    m_RateMgr->makeRates(dt);
   }
 }
 void MonSubSys::start()

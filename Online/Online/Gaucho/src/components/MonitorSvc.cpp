@@ -401,27 +401,27 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
     string newName = extract("COUNTER_TO_RATE", nam);
     if ( 0 == m_disableMonRate)
     {
-      if (m_CntrMgr == 0)
-      {
-        m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
-      }
-      m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
-      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
-      if (m_HistSubSys == 0)
-      {
-        m_HistSubSys = new MonSubSys(m_updateInterval);
-        m_HistSubSys->m_type = MONSUBSYS_Histogram;
-      }
-      addRate(m_HistSubSys,m_CntrMgr);
+//      if (m_CntrMgr == 0)
+//      {
+//        m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
+//      }
+//      m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
+//      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
+//      if (m_HistSubSys == 0)
+//      {
+//        m_HistSubSys = new MonSubSys(m_updateInterval);
+//        m_HistSubSys->m_type = MONSUBSYS_Histogram;
+//      }
+//      addRate(m_HistSubSys,m_CntrMgr);
 
 
       if (m_RateMgr == 0)
       {
         m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
       }
-      MonRate<T> *mr = new MonRate<T>("R"+newName,desc,var);
-      m_RateMgr->addRate(oname+"/R"+newName,desc,*mr);
-      m_InfoMap.insert(pair<string,void*>(oname+"/R"+newName,(void*)m_RateMgr));
+      MonRate<T> *mr = new MonRate<T>(oname+"/"+newName,desc,var);
+      m_RateMgr->addRate(oname+"/"+newName,desc,*mr);
+      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_RateMgr));
       if (m_CntrSubSys == 0)
       {
         m_CntrSubSys = new MonSubSys(m_CounterInterval);
@@ -533,18 +533,18 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
     //make newName unique!
     if ( 0 == m_disableMonRate)
     {
-      if (m_CntrMgr == 0)
-      {
-        m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
-      }
-      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
-      m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
-      if (m_HistSubSys == 0)
-      {
-        m_HistSubSys = new MonSubSys(m_updateInterval);
-        m_HistSubSys->m_type = MONSUBSYS_Histogram;
-      }
-      addRate(m_HistSubSys,m_CntrMgr);
+//      if (m_CntrMgr == 0)
+//      {
+//        m_CntrMgr = new CntrMgr(msgSvc(),"MonitorSvc",0);
+//      }
+//      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_CntrMgr));
+//      m_CntrMgr->addCounter(oname+"/"+newName,desc,var);
+//      if (m_HistSubSys == 0)
+//      {
+//        m_HistSubSys = new MonSubSys(m_updateInterval);
+//        m_HistSubSys->m_type = MONSUBSYS_Histogram;
+//      }
+//      addRate(m_HistSubSys,m_CntrMgr);
 
 
       if (m_RateMgr == 0)

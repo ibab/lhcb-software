@@ -50,4 +50,7 @@ macro_append  CounterTest_dependencies    " GauchoLib "
 application Cycler group=tests ../src/Test/Cycler.cpp
 macro_append  Cycler_dependencies    " GauchoLib "
 
+application RateTest group=tests ../src/Test/RateTest.cpp
+macro_append  RateTest_dependencies    " GauchoLib "
+
 ##macro_append Gaucho_shlibflags " -pthread " WIN32 ""

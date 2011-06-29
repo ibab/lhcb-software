@@ -8,11 +8,19 @@ RateMgr::~RateMgr()
 {
 }
 
-void RateMgr::makeRates()
+void RateMgr::makeRates(unsigned long long dt)
 {
   for (Rateit rateMapIt = m_rateMap.begin();rateMapIt != m_rateMap.end();rateMapIt++)
   {
     MonRateBase *i = rateMapIt->second;
-    i->makeRate(m_deltaT);
+    i->makeRate(dt);
+  }
+}
+void RateMgr::print()
+{
+  for (Rateit rateMapIt = m_rateMap.begin();rateMapIt != m_rateMap.end();rateMapIt++)
+  {
+    MonRateBase *i = rateMapIt->second;
+    printf("%s %f\n",i->name(), i->m_rate);
   }
 }

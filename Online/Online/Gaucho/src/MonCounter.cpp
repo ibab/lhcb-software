@@ -34,6 +34,14 @@ MonCounter::MonCounter(const std::string& name, const std::string& title, const 
 {
   setup(C_DOUBLE,data,name,title);
 }
+MonCounter::MonCounter(const std::string& name, const std::string& title, const float *data, MONTYPE typ )
+{
+  setup (typ,data,name,title);
+}
+MonCounter::MonCounter(const std::string& name, const std::string& title, const double *data, MONTYPE typ )
+{
+  setup (typ,data,name,title);
+}
 MonCounter::MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size)
 {
   setup(m_type,data,name,title,size);
@@ -220,13 +228,15 @@ int MonCounter::serialize(void* &ptr)
       *dst = *(long long*)m_contents;
       break;
     }
-  case   C_FLOAT:
+  case C_FLOAT:
+  case C_RATEFLOAT:
     {
       double *dst = (double *)AddPtr(pp,pp->dataoff);
       *dst = *(float*)m_contents;
       break;
     }
-  case   C_DOUBLE:
+  case C_DOUBLE:
+  case C_RATEDOUBLE:
     {
       double *dst = (double *)AddPtr(pp,pp->dataoff);
       *dst = *(double*)m_contents;
@@ -311,12 +321,13 @@ void MonCounter::create_OutputService(std::string infix)
       break;
     }
     case C_FLOAT:
+    case C_RATEFLOAT:
     {
       this->m_service = new DimService(nam.c_str(),*(float*)m_contents);
       break;
     }
     case C_DOUBLE:
-    case C_RATE:
+    case C_RATEDOUBLE:
     {
       this->m_service = new DimService(nam.c_str(),*(double*)m_contents);
       break;
@@ -374,6 +385,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
       break;
     }
     case C_FLOAT:
+    case C_RATEFLOAT:
     {
       h->name = nam;
       h->type = p->type;
@@ -382,7 +394,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
       break;
     }
     case C_DOUBLE:
-    case C_RATE:
+    case C_RATEDOUBLE:
     {
       h->name = nam;
       h->type = p->type;

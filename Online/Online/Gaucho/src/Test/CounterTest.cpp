@@ -71,9 +71,14 @@ int main(int , char *argv[]) // Taskname, DNS Node
         printf ("%f\n",(float)objs[i]->data);
         break;
       }
-      case C_RATE:
+      case C_RATEDOUBLE:
       {
         printf ("%f Hz\n",(double)objs[i]->data);
+        break;
+      }
+      case C_RATEFLOAT:
+      {
+        printf ("%f Hz\n",(float)objs[i]->data);
         break;
       }
       case C_INTSTAR:

@@ -57,12 +57,13 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
             break;
           }
         case C_FLOAT:
+        case C_RATEFLOAT:
           {
             *(float*)ps += *(float*)ph;
             break;
           }
         case C_DOUBLE:
-        case C_RATE:
+        case C_RATEDOUBLE:
           {
             *(double*)ps += *(double*)ph;
             break;

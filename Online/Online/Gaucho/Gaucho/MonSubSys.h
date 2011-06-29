@@ -87,7 +87,7 @@ public:
   int m_runno;
   bool m_expandnames;
   void removeAll();
-  void makeRates();
+  void makeRates(unsigned long long dt);
   void addRateMgr(RateMgr*);
 };
 

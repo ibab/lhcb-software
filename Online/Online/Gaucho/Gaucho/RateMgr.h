@@ -43,7 +43,8 @@ public:
     m_rateMap.clear();
   }
 
-  void makeRates();
+  void makeRates(unsigned long long dt);
+  void print();
 };
 
 #endif //GAUCHO_RATEMGR_H

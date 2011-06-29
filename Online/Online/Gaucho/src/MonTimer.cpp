@@ -21,7 +21,7 @@ void MonTimer::timerHandler ( void )
     m_Hsys->m_genSrv->setTime(m_dueTime);
     try
     {
-      m_Hsys->makeRates();
+      m_Hsys->makeRates(m_lastdelta);
       m_Hsys->m_genSrv->Serialize();
     }
     catch(const std::exception& e)

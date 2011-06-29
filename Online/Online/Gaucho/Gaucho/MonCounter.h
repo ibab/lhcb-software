@@ -43,7 +43,9 @@ public:
   MonCounter(const std::string& name, const std::string& title, const long *data );
   MonCounter(const std::string& name, const std::string& title, const long long *data );
   MonCounter(const std::string& name, const std::string& title, const float *data );
-  MonCounter(const std::string& name, const std::string& title, const double *data );
+  MonCounter(const std::string& name, const std::string& title, const double *data);
+  MonCounter(const std::string& name, const std::string& title, const float *data, MONTYPE typ );
+  MonCounter(const std::string& name, const std::string& title, const double *data, MONTYPE typ );
   MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size);
   MonCounter();
   void setup(MONTYPE typ, const void *ext, const std::string& name, const std::string& title);
