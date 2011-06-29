@@ -244,7 +244,7 @@ std::vector< std::vector< std::string > > ProblemDB::listOfProblems( const std::
 }
 
 //=========================================================================
-//  Read teh list of valid systems from the web.
+//  Read the list of valid systems from the web.
 //=========================================================================
 void ProblemDB::getSystems ( ) {
 
@@ -274,6 +274,8 @@ void ProblemDB::getSystems ( ) {
     while ( "" != line ) {
       std::string::size_type kk = line.find(" ");
       if ( std::string::npos == kk ) {
+        kk = line.find( 0x0D );
+        if ( std::string::npos != kk ) line = line.substr( 0, kk );
         m_systems.push_back( line );
         break;
       }
