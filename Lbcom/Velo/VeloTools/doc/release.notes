@@ -4,6 +4,11 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-06-30 - Eduardo Rodrigues
+ - Added tools VeloSelectClustersByChannel and VeloSelectChannelIDOnTrack.
+   They are used by the (new) algorithm VeloClusterContainerCopy to select
+   VELO clusters from an input container and write them to a new container.
+
 !========================= VeloTools v4r0 2010-12-15 =========================
 ! 2010-12-14 - Marco Cattaneo
  - Clean up requirements

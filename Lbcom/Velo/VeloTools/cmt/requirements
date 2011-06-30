@@ -16,6 +16,9 @@ use  Tell1Kernel     v*  DAQ
 use  VeloDet         v*  Det
 use  GaudiAlg        v*
 use  GaudiKernel     v*
+use  DigiEvent       v*  Event
+use  TrackEvent      v*  Event
+use  LHCbKernel      v*  Kernel
 
 # Component library building rule
 #============================================================================
