@@ -1,20 +1,20 @@
 from Brunel.Configuration import *
-from Configurables import Brunel, LHCbApp
+from Configurables import Brunel, LHCbApp, CondDB
 
 # For 2009 data
-importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
-LHCbApp().DDDBtag   = "head-20110303"
-LHCbApp().CondDBtag = "head-20110505"
+#importOptions("$APPCONFIGOPTS/Brunel/DataType-2009.py")
+#LHCbApp().DDDBtag   = "head-20110303"
+#LHCbApp().CondDBtag = "head-20110524"
 
 # For 2010 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
 #LHCbApp().DDDBtag   = "head-20110303"
-#LHCbApp().CondDBtag = "head-20110505"
+#LHCbApp().CondDBtag = "head-20110524"
 
 # For 2011 data
-#importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
-#LHCbApp().DDDBtag   = "head-20110302" 
-#LHCbApp().CondDBtag = "head-20110505"
+importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
+LHCbApp().DDDBtag   = "head-20110302" 
+LHCbApp().CondDBtag = "head-20110622"
 
 # No output files
 Brunel().OutputType = "None"

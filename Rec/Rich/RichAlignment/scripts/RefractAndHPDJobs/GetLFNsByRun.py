@@ -67,13 +67,15 @@ if not resultA['OK']:
 else:
 
   runs = resultA['Value']['Runs']
-  print runs
-  
+
   # Sort runs into numerical order
   runs.sort()
-  
+
   # Loop over runs
+  print runs
+  nRun = 0
   for run in runs :
+    nRun += 1
 
     type = 91000000 # EXPRESS Stream
     if year == 2009 : type = 90000000 # Use full stream for 2009
@@ -101,9 +103,9 @@ else:
           tmpLFNList += ["LFN:"+lfn]
       if len(tmpLFNList) > 0 :
         RunLFNs[run] = tmpLFNList
-        print "Selected", len(RunLFNs[run]), "LFNs for run", run, ConfigV
+        print "(", nRun, "of", len(runs), ") Selected", len(RunLFNs[run]), "LFNs for run", run, ConfigV
       else:
-        print "No data selected for run", run, ConfigV
+        print "(", nRun, "of", len(runs), ") No data selected for run", run, ConfigV
         
 if allOK :
     

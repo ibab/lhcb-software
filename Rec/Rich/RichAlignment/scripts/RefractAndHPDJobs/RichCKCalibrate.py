@@ -32,7 +32,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
 
             nFiles = len(lfns)
             if nFiles > nFilesMax : nFiles = nFilesMax
-            nFilesPerJob = nJobs(nFiles)
+            nFilesPerJob = filesPerJob(nFiles)
             nEventsPerJob = nFilesPerJob * nEventsTotal / nFiles
             print "Using", nFiles, "data file(s),", nEventsPerJob, "events per job"
 
@@ -50,7 +50,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v39r2' ) )
+                j = Job( application = Brunel( version = 'v39r4' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -92,15 +92,18 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 # Dirac backend
                 j.backend = Dirac()
 
+                # Enable automatic job re-submission
+                j.do_auto_resubmit = True
+
                 # Submit !!
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v39r2",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v39r4",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v39r2",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v39r4",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -114,10 +117,10 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # Number of target events to process
     if jobType == "RefInCalib" :
-        nEventsTotal    = 500000
+        nEventsTotal    = 1000000
         nFilesMax       = 150
     else:
-        nEventsTotal    = 500000
+        nEventsTotal    = 1000000
         nFilesMax       = 150
 
     # Base Job Name
@@ -141,19 +144,18 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #mySandBoxFLNs += [lfnname]
 
     # Custom DB slices for both job types (calibration and verification)
-    dbFiles  = [ ]
+    dbFiles = [ ]
 
-    # All years
-    #dbFiles += ["NewMDMSCondDB-28022011"]
+    # Corrections for old field map
+    #dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-13062011"]
+    #dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-13062011"]
+    #dbFiles += ["2011RootFiles-RunAligned-Sobel-AveragePol0-HPDAlign-14062011"]
 
-    # 2010 data only
-    dbFiles += ["New2010MirrorAlign-15042011"]
-    dbFiles += ["2010RootFiles-RunAligned-Sobel-Smoothed3hours-XYShiftsOnly-06052011"]
-
-    # Only for 2011 data IOVs cover everywhere
-    #dbFiles += ["Tracking-2011-v5.3-03052011"]
-    #dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed3hours-XYShiftsOnly-09052011"]
-    #dbFiles += ["2011MirrorAlign-09052011"]
+    # Corrections for new field map
+    #dbFiles += ["TrackNewFieldMap-v5.4series"]
+    #dbFiles += ["2011MirrorAlignNewFieldMap-16062011"]
+    dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-16062011"]
+    dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-16062011"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -162,7 +164,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        dbFiles += ["RefInCalib-New-2010-Calib-V1_BR-v39r1-21042011"]
+        dbFiles += ["RefInCalib-2011-V1_BR-v39r4-13062011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -208,7 +210,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     # Configure number of files and events per file
                     nFiles = len(lfns)
                     if nFiles > nFilesMax : nFiles = nFilesMax
-                    nFilesPerJob = nJobs(nFiles)
+                    nFilesPerJob = filesPerJob(nFiles)
                     nEventsPerJob = nFilesPerJob * nEventsTotal / nFiles
           
                     # Make a job object
@@ -260,6 +262,9 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     j.inputsandbox             = mySandBox
                     j.backend.inputSandboxLFNs = mySandBoxFLNs
 
+                    # Enable automatic job re-submission
+                    j.do_auto_resubmit = True
+
                     # Add to jobtree
                     addToJobTree(j,basejobname)
 
@@ -267,6 +272,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
                     print " -> Using", nFiles, "data file(s), max", nFilesPerJob, \
                           "file(s) per subjob,", nEventsPerJob, "events per job"
+
                     for f in j.inputdata.files : print "  ->", f.name
                     try:
                         j.submit()
@@ -306,6 +312,14 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     ckraws   = { }
     ckexpect = { }
 
+    # Max/min run range
+    #minMaxRun = [ 0, 99999999 ]
+    #minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
+    #minMaxRun = [ 91000, 99999999 ] # After TS
+    #minMaxRun = [ 90549, 90574 ]
+    #minMaxRun = [ 93098, 93127 ] # Fill 1855
+    minMaxRun = [ 93511, 93723 ] # Fills 1867, 1868 and 1871
+
     # Loop over jobs
     nFailedFits = 0
     print "Looping over the runs ..."
@@ -313,30 +327,34 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
         # Run Number
         run = int(getInfoFromJob(j,'Run'))
+        if run >= minMaxRun[0] and run <= minMaxRun[1] :
 
-        # Root file
-        rootfile = getRootFile(j)
+            # Root file
+            rootfile = getRootFile(j)
 
-        # Fits
-        fitResultRes = fitCKThetaHistogram(rootfile,run,rad)
-        fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1)
-        fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
+            # Fits
+            fitResultRes = fitCKThetaHistogram(rootfile,run,rad)
+            fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1)
+            fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
         
-        if fitResultRes['OK'] and fitResultRaw['OK'] and fitResultExp['OK'] :
-            scale = nScaleFromShift(fitResultRes,rad)
-            if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
-            if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
-            calibrations[run] = scale
-            ckmeans[run]  = fitResultRes['Mean']
-            cksigmas[run] = fitResultRes['Sigma']
-            ckraws[run]   = fitResultRaw['Mean']
-            ckexpect[run] = fitResultExp['Mean']
+            if fitResultRes['OK'] and fitResultRaw['OK'] and fitResultExp['OK'] :
+                scale = nScaleFromShift(fitResultRes,rad)
+                if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
+                if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
+                calibrations[run] = scale
+                ckmeans[run]  = fitResultRes['Mean']
+                cksigmas[run] = fitResultRes['Sigma']
+                ckraws[run]   = fitResultRaw['Mean']
+                ckexpect[run] = fitResultExp['Mean']
+            else:
+                nFailedFits += 1
+                print "WARNING : fits failed for run", run
+                print "        : CK resolution :", fitResultRes['Message']
+                print "        : CK theta      :", fitResultRaw['Message']
+                print "        : CK expected   :", fitResultExp['Message']
+
         else:
-            nFailedFits += 1
-            print "WARNING : fits failed for run", run
-            print "        : CK resolution :", fitResultRes['Message']
-            print "        : CK theta      :", fitResultRaw['Message']
-            print "        : CK expected   :", fitResultExp['Message']
+            print " -> Skipping run", run
 
     # Write out calibrations to a pickled python file
     calibfilename = "results/"+rad+"_"+getJobCaliName(jobs[0])+".pck.bz2"
@@ -377,6 +395,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         cksigma = cksigmas[run]
         raw     = ckraws[run]
         exp     = ckexpect[run]
+        # Write to text file
+        writeInfoToTextFile(textShifts,run,raw,exp,ckmean,cksigma,scale)
+        # plots
         runs.append(float(run))
         runsErr.append(0.0)
         scales.append(scale[0])
@@ -392,8 +413,6 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         # Fill 1D histo(s)
         scaleHist.Fill(scale[0])
         ckResHist.Fill(cksigma[0])
-        # Write to text file
-        writeInfoToTextFile(textShifts,run,raw,exp,ckmean,cksigma,scale)
 
     # Make the plots
     if len(runs) > 0 :
@@ -616,7 +635,9 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 
 def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
                               'PIC-USER','CNAF-USER','NIKHEF-USER','GRIDKA-USER']):
+    
     from Ganga.GPI import PhysicalFile, LogicalFile
+    import time
 
     if len(sites) == 0 :
         print 'ERROR : No sites requested'
@@ -630,6 +651,8 @@ def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
         # First upload one copy
         print "Uploading", pfn, "to", sites[0], lfn
         newlfn = PhysicalFile(pfn).upload(lfn,sites[0])
+        time.sleep(30)
+        
         if len(newlfn.getReplicas()) == 0:
             print "Problem uploading ..."
             OK = False
@@ -795,15 +818,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v39r2",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v39r4",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v39r2",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v39r4",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v39r2",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v39r4",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1210,9 +1233,11 @@ def deleteJobsWithBadRootFile(cjobs,rad='Rich1Gas'):
             print " -> Bad ROOT file. Will delete."
             djobs += [j]
 
-    print "Jobs to delete", djobs
-
-    for j in djobs : j.remove()
+    if len(djobs) == 0 :
+        print "No jobs to delete"
+    else:
+        print "Jobs to delete :", djobs
+        for j in djobs : j.remove()
 
 def checkInputDataReplicas(lfns):
     OK = True
@@ -1223,18 +1248,19 @@ def checkInputDataReplicas(lfns):
             OK = False
     return OK
 
-def nJobs(nFiles):
+def filesPerJob(nFiles):
     if nFiles == 1 : return 1
-    if nFiles == 2 : return 1
+    if nFiles == 2 : return 2
     if nFiles == 3 : return 2
     if nFiles == 4 : return 2
-    if nFiles == 5 : return 2
-    if nFiles < 20 : return 3
+    if nFiles == 5 : return 3
+    if nFiles < 20 : return 4
     return 5
 
-def removeCalibrationDataSet(name,BrunelVer="v39r2"):
+def removeCalibrationDataSet(name,BrunelVer="v39r4"):
     from Ganga.GPI import jobtree
-    js = getCalibrationJobList(name,statuscodes=['completed','running','submitted','failed'])
+    js = getCalibrationJobList(name,BrunelVer,
+                               statuscodes=['completed','running','submitted','failed'])
     for j in js : j.remove()
     path = '/RichCalibration/RefInCalib-'+name+'_BR-'+BrunelVer
     if jobtree.exists(path) : jobtree.rm(path)
