@@ -43,6 +43,7 @@ class Hadrons_July2011 :
             # B2HH
             'Hlt2B2HH',
             'Hlt2B2HHLTUnbiased',
+            'Hlt2B2HHLTUnbiasedDetached',
             # DiProtons
             'Hlt2DiProton',
             'Hlt2DiProtonTF',   
@@ -63,7 +64,7 @@ class Hadrons_July2011 :
 
         from Hlt2Lines.Hlt2B2HHLTUnbiasedLines import Hlt2B2HHLTUnbiasedLinesConf 
        
-        d = { Hlt2B2HHLTUnbiasedLinesConf : {'NetCut' : (1.0 + (0.85))*0.5 } }
+        d = { Hlt2B2HHLTUnbiasedLinesConf : {'NetCut' : (1.0 + (0.85))*0.5,'Prescale':{'Hlt2B2HHLTUnbiased' : 0.1} } }
  
         from TopoLines_July2011 import TopoLines
         d.update ( TopoLines().Thresholds() )
