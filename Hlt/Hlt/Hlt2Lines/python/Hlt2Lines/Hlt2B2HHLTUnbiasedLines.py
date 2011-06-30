@@ -18,6 +18,8 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                    ,'Expertise'          : '2010Tuning'
                    ,'NetCutNoPID'        :     (1.0 + ( 0.3))*0.5
                    ,'NetCut'             :     (1.0 + (-1.0))*0.5
+                   ,'Prescale'           : {}
+                   ,'Postscale'          : {}
                      }
     
 

@@ -24,7 +24,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 , 'Pair_SumAPT_MIN'           : 2800.0 * MeV  
                 , 'D0_VCHI2PDOF_MAX'          : 10.0       # neuter
 		, 'D0_FD_MIN'                 : 4.0 * mm
-		, 'D0_FD_TIGHT_MIN'           : 40.0 * mm
+		, 'D0_FD_TIGHT_MIN'           : 20.0 * mm
                 , 'D0_P_MIN'                  : 20.0 * GeV
                 , 'D0_MCORR_MIN'              : 1400.0 * MeV
                 , 'D0_MCORR_MAX'              : 2700.0 * MeV 
