@@ -94,8 +94,8 @@ class Muons_July2011 :
             ,'UnbiasedDiMuonLowMuPt'   : 0.0      # MeV
             ,'UnbiasedJPsiPt'          : 0.0      # MeV
             ,'UnbiasedJPsiMuPt'        : 0.0      # MeV
-            ,'UnbiasedJPsiMassWindow'  : 100      # MeV
-            ,'UnbiasedJPsiHighPt'      : 2500     # MeV
+            ,'UnbiasedJPsiMassWindow'  : 120      # MeV
+            ,'UnbiasedJPsiHighPt'      : 2000     # MeV
             ,'UnbiasedJPsiHighPTMassWindow' : 100
             ,'UnbiasedPsi2SPt'         : 2000      # MeV
             ,'UnbiasedPsi2SMuPt'       : 0.0      # MeV
