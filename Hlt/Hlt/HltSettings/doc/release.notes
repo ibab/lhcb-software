@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-06-30 - Johannes Albrecht
+ - review of electrons
+ - minor beautification of muons
+
 !========================== HltSettings v5r13 2011-06-24 ===================
 
 ! 2011-06-28 - Veerle Heijne
