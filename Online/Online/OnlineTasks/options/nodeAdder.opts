@@ -6,7 +6,8 @@ ApplicationMgr.ExtSvc               += {"MonitorSvc",
 					"AdderSvc/GauchoHistAdder",
 					"AdderSvc/GauchoCountAdder",
 					"AdderSvc/MEPrxHistAdder",
-					"AdderSvc/MEPrxCountAdder"
+					"AdderSvc/MEPrxCountAdder",
+					"AdderSvc/EVTProdCountAdder"
 					};
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -40,7 +41,13 @@ MEPrxCountAdder.ServicePattern     = "MON_<node>_MEPrx_(.*)/Counter/";
 MEPrxCountAdder.TaskPattern        = "<node>_MEPRx_";
 MEPrxCountAdder.AdderClass         = "Counter";
 
+EVTProdCountAdder.MyName             = "<node>_EVTProd";
+EVTProdCountAdder.ServicePattern     = "MON_<node>_EvtProd_(.*)/Counter/";
+EVTProdCountAdder.TaskPattern        = "<node>_EVTProd_";
+EVTProdCountAdder.AdderClass         = "Counter";
+
 MEPrxCountAdder.ReceiveTimeout     = 3;
 GauchoHistAdder.ReceiveTimeout     = 3;
 GauchoCountAdder.ReceiveTimeout    = 3;
 MEPrxHistAdder.ReceiveTimeout      = 3;
+EVTProdCountAdder.ReceiveTimeout   = 3;
