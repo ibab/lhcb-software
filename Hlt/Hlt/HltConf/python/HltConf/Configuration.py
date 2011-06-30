@@ -207,6 +207,7 @@ class HltConf(LHCbConfigurableUser):
                       , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
                       , 16 : "L0_CHANNEL_RE('.*NoSPD')" 
                       , 17 : "L0_CHANNEL_RE('.*,lowMult')"
+                      , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
                       , 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')"  # lumi stream
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global 
