@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-06-30 - V. Gligorov
+ - Hlt2CharmSemilepD02HMuNuLines : Loosen cut in tight line to 20mm.
+ - Hlt2B2HHLTUnbiasedLines : Add pre/postscales to slots.
+
 ! 2011-06-29 - V. Gligorov
  - Hlt2diphotonDiMuonLines : Fix LowMultPhoton line to use Pi0 maker. 
 
