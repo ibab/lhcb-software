@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
 
+! 2011-06-30 - Eduardo Rodrigues
+ - VeloClusterContainerCopy: tool made private
+
 ! 2011-06-28 - Eduardo Rodrigues
  - Added new class VeloClusterContainerCopy: class to copy clusters from an
    input container onto a new one applying a selection on the input clusters

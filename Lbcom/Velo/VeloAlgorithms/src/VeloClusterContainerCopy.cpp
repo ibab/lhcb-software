@@ -58,7 +58,7 @@ StatusCode VeloClusterContainerCopy::initialize()
   
   if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
   
-  m_clusterSelector = tool<IVeloClusterSelector>( m_selectorType, m_selectorName );
+  m_clusterSelector = tool<IVeloClusterSelector>( m_selectorType, m_selectorName, this );
   
   return StatusCode::SUCCESS;
 }
@@ -83,10 +83,9 @@ StatusCode VeloClusterContainerCopy::execute() {
       outputCont -> insert( newClus, (*iterC) -> channelID() );
       ++counter( "Selected" );
     }
+    ++counter( "Processed" );
   }
   
-  ++counter( "Processed" );
-
   return StatusCode::SUCCESS;
 }
 
