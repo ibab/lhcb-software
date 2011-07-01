@@ -14,7 +14,10 @@ public:
   ~CntrDescr(){deallocPtr(ptr);}
   std::string name;
   int type;
-  long long data;
+  int i_data;
+  long long l_data;
+  float f_data;
+  double d_data;
   void *ptr;
   int nel;
 };
@@ -47,6 +50,10 @@ public:
   MonCounter(const std::string& name, const std::string& title, const float *data, MONTYPE typ );
   MonCounter(const std::string& name, const std::string& title, const double *data, MONTYPE typ );
   MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size);
+  MonCounter(const std::string& name, const std::string& title, const int *data , int size);
+  MonCounter(const std::string& name, const std::string& title, const float *data , int size);
+  MonCounter(const std::string& name, const std::string& title, const long long *data , int size);
+  MonCounter(const std::string& name, const std::string& title, const double *data , int size);
   MonCounter();
   void setup(MONTYPE typ, const void *ext, const std::string& name, const std::string& title);
   void setup(MONTYPE typ, const void *data,const std::string& name, const std::string& title,int size);

@@ -12,7 +12,7 @@
 
 MonCounter::MonCounter()
 {
-  setup(H_ILLEGAL,0,0,0);
+  setup(H_ILLEGAL,0,"","");
 }
 MonCounter::MonCounter(const std::string& name, const std::string& title, const int *data )
 {
@@ -41,6 +41,34 @@ MonCounter::MonCounter(const std::string& name, const std::string& title, const 
 MonCounter::MonCounter(const std::string& name, const std::string& title, const double *data, MONTYPE typ )
 {
   setup (typ,data,name,title);
+}
+MonCounter::MonCounter(const std::string& name, const std::string& title, const int *data , int size)
+{
+  m_type = C_INTSTAR;
+  setup(m_type,data,name,title,size);
+  m_contsiz = size;
+  buffersize = size;
+}
+MonCounter::MonCounter(const std::string& name, const std::string& title, const float *data , int size)
+{
+  m_type = C_FLOATSTAR;
+  setup(m_type,data,name,title,size);
+  m_contsiz = size;
+  buffersize = size;
+}
+MonCounter::MonCounter(const std::string& name, const std::string& title, const long long *data , int size)
+{
+  m_type = C_LONGSTAR;
+  setup(m_type,data,name,title,size);
+  m_contsiz = size;
+  buffersize = size;
+}
+MonCounter::MonCounter(const std::string& name, const std::string& title, const double *data , int size)
+{
+  m_type = C_DOUBLESTAR;
+  setup(m_type,data,name,title,size);
+  m_contsiz = size;
+  buffersize = size;
 }
 MonCounter::MonCounter(const std::string& name, const std::string& title, const std::string& fmt, const void *data , int size)
 {
@@ -197,6 +225,10 @@ int MonCounter::serialize(void* &ptr)
   {
     return 0;
   }
+  if (m_contents == 0)
+  {
+    return 0;
+  }
   int titl = titlen();
   int naml = namelen();
   int hdrl = hdrlen();
@@ -248,6 +280,7 @@ int MonCounter::serialize(void* &ptr)
   case C_LONGSTAR:
   case C_FLOATSTAR:
   case C_DOUBLESTAR:
+  case C_RATEDOUBLESTAR:
   {
     void *dst = AddPtr(pp,pp->dataoff);
     memcpy(dst,m_contents,this->m_contsiz);
@@ -367,7 +400,10 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
     nam = (char*)AddPtr(p,p->nameoff);
   }
   CntrDescr *h = new CntrDescr;
-  h->data = 0;
+  h->i_data = 0;
+  h->l_data = 0;
+  h->f_data = 0.0;
+  h->d_data = 0.0;
   void * dat = AddPtr(p,p->dataoff);
   h->type = p->type;
   switch (p->type)
@@ -376,14 +412,14 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
     {
       h->name = nam;
       h->type = p->type;
-      h->data = *(int*)dat;
+      h->i_data = *(int*)dat;
       break;
     }
     case C_LONGLONG:
     {
       h->name = nam;
       h->type = p->type;
-      h->data = *(long long*)dat;
+      h->l_data = *(long long*)dat;
       break;
     }
     case C_FLOAT:
@@ -391,8 +427,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
     {
       h->name = nam;
       h->type = p->type;
-      float *a = (float*)&h->data;
-      *a = *(float*)dat;
+      h->f_data = *(float*)dat;
       break;
     }
     case C_DOUBLE:
@@ -400,8 +435,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
     {
       h->name = nam;
       h->type = p->type;
-      double *a = (double*)&h->data;
-      *a = *(double*)dat;
+      h->d_data = *(double*)dat;
       break;
     }
     case C_INTSTAR:

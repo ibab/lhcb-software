@@ -211,7 +211,7 @@ void RateSvc::makerate(MonMap* mmap)
       std::string sname;
       OUTServiceDescr *outs;
       outs = findOUTService(nams);
-      RateService *s;
+      RateService *s=0;
       if (outs != 0)
       {
         s = (RateService*) outs->m_svc;
@@ -227,7 +227,7 @@ void RateSvc::makerate(MonMap* mmap)
           this->m_outputServicemap.insert(OUTServicePair(nams, outs));
         }
       }
-      s->Updater(sizeof(rate));
+      if (s!=0) s->Updater(sizeof(rate));
       if (m_enableTrending)
       {
         m_trender->addEntry(nams, rate);

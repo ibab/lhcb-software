@@ -160,7 +160,9 @@ void MonitorSvc::undeclareInfo( const string& name, const IInterface*  owner)
     if (it != m_InfoMap.end())
     {
        RateMgr* rm = (RateMgr*)it->second;
-       rm->removeRate(newName);
+       MonRateBase *p=rm->removeRate(newName);
+       m_CntrSubSys->removeObj(p);
+       delete p;
     }
     return;
   }
@@ -205,7 +207,7 @@ void MonitorSvc::undeclareAll( const IInterface*  owner)
   strings.clear();
   if (m_RateMgr != 0)
   {
-    m_RateMgr->removeRateAll();
+    m_RateMgr->removeRateAll(m_CntrSubSys);
   }
   vector<MonObj*> v;
   if (m_HistSubSys != 0)
@@ -419,9 +421,11 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
       {
         m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
       }
-      MonRate<T> *mr = new MonRate<T>(oname+"/"+newName,desc,var);
-      m_RateMgr->addRate(oname+"/"+newName,desc,*mr);
-      m_InfoMap.insert(pair<string,void*>(oname+"/"+newName,(void*)m_RateMgr));
+      std::string nname;
+      nname = "R_"+oname+"/"+newName;
+      MonRate<T> *mr = new MonRate<T>(nname,desc,var);
+      m_RateMgr->addRate(nname,*mr);
+      m_InfoMap.insert(pair<string,void*>(nname,(void*)m_RateMgr));
       if (m_CntrSubSys == 0)
       {
         m_CntrSubSys = new MonSubSys(m_CounterInterval);
@@ -551,16 +555,28 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
       {
         m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
       }
-      MonRate<StatEntity> *mr = new MonRate<StatEntity>("R"+newName,desc,var);
-      m_RateMgr->addRate(oname+"/R"+newName,desc,*mr);
-      m_InfoMap.insert(pair<string,void*>(oname+"/R"+newName,(void*)m_RateMgr));
+//
+//      This is a real hack as some jerk has declared the member variables in StatEntity as private...
+//
+      long *se_ent = (long*)AddPtr(&var,0);
+      double *se_flg = (double*)AddPtr(&var,8);
+      std::string nname;
+      nname = "R_"+oname+"/"+newName+"-n_entries";
+      MonRate<long long> *mr1 = new MonRate<long long>(nname,desc,*se_ent);
+      m_RateMgr->addRate(nname,*mr1);
+      m_InfoMap.insert(pair<string,void*>(nname,(void*)m_RateMgr));
       if (m_CntrSubSys == 0)
       {
         m_CntrSubSys = new MonSubSys(m_CounterInterval);
         m_CntrSubSys->m_type = MONSUBSYS_Counter;
       }
       m_CntrSubSys->addRateMgr(m_RateMgr);
-      m_CntrSubSys->addObj(mr);
+      m_CntrSubSys->addObj(mr1);
+      nname = "R_"+oname+"/"+newName+"-flag";
+      MonRate<double> *mr2 = new MonRate<double>(nname,desc,*se_flg);
+      m_RateMgr->addRate(nname,*mr2);
+      m_InfoMap.insert(pair<string,void*>(nname,(void*)m_RateMgr));
+      m_CntrSubSys->addObj(mr2);
     }
     else
     {

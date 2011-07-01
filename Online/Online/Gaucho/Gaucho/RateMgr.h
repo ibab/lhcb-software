@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/StatEntity.h"
 #include "Gaucho/MonRate.h"
+#include "Gaucho/MonSubSys.h"
 
 #include <map>
 class IMessageSvc;
@@ -21,7 +22,11 @@ public:
   RateMgr(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~RateMgr();
 
-  void addRate(const std::string& countName, const std::string& , MonRateBase& count)
+//  void addRate(const std::string& countName, const std::string& , MonRateBase& count)
+//  {
+//    m_rateMap[countName] = &count;
+//  }
+  void addRate(const std::string& countName,  MonRateBase& count)
   {
     m_rateMap[countName] = &count;
   }
@@ -38,9 +43,25 @@ public:
     return 0;
   }
 
-  void removeRateAll ()
+  void removeRateAll (MonSubSys *s,bool del=true)
   {
-    m_rateMap.clear();
+    if (del)
+    {
+      Rateit rateMapIt;
+      rateMapIt = m_rateMap.begin();
+      while (rateMapIt != m_rateMap.end())
+      {
+        MonRateBase *p = rateMapIt->second;
+        m_rateMap.erase(rateMapIt);
+        s->removeObj(p);
+        delete p;
+        rateMapIt = m_rateMap.begin();
+      }
+    }
+    else
+    {
+      m_rateMap.clear();
+    }
   }
 
   void makeRates(unsigned long long dt);

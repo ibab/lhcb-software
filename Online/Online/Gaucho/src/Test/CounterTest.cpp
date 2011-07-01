@@ -52,33 +52,33 @@ int main(int , char *argv[]) // Taskname, DNS Node
     {
       case   C_INT:
       {
-        printf ("%d\n",(int)objs[i]->data);
+        printf ("%d\n",objs[i]->i_data);
         break;
       }
       case C_LONGLONG:
       {
-        printf ("%lld\n",(long long int)objs[i]->data);
+        printf ("%lld\n",objs[i]->l_data);
         break;
 
       }
       case C_FLOAT:
       {
-        printf ("%f\n",(float)objs[i]->data);
+        printf ("%f\n",objs[i]->f_data);
         break;
       }
       case C_DOUBLE:
       {
-        printf ("%f\n",(float)objs[i]->data);
+        printf ("%f\n",objs[i]->d_data);
         break;
       }
       case C_RATEDOUBLE:
       {
-        printf ("%f Hz\n",(double)objs[i]->data);
+        printf ("%f Hz\n",objs[i]->d_data);
         break;
       }
       case C_RATEFLOAT:
       {
-        printf ("%f Hz\n",(float)objs[i]->data);
+        printf ("%f Hz\n",objs[i]->f_data);
         break;
       }
       case C_INTSTAR:

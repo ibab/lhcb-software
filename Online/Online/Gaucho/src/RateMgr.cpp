@@ -21,6 +21,6 @@ void RateMgr::print()
   for (Rateit rateMapIt = m_rateMap.begin();rateMapIt != m_rateMap.end();rateMapIt++)
   {
     MonRateBase *i = rateMapIt->second;
-    printf("%s %f\n",i->name(), i->m_rate);
+    i->print();
   }
 }
