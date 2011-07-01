@@ -448,6 +448,17 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
   }
   m_CntrSubSys->addObj(cnt);
   m_InfoMap.insert(pair<string,void*>(oname+"/"+nam,(void*)m_CntrSubSys));
+  if (m_RateMgr == 0)
+  {
+    m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
+  }
+  std::string nname;
+  nname = "R_"+oname+"/"+nam;
+  MonRate<T> *mr = new MonRate<T>(nname,desc,var);
+  m_RateMgr->addRate(nname,*mr);
+  m_InfoMap.insert(pair<string,void*>(nname,(void*)m_RateMgr));
+  m_CntrSubSys->addRateMgr(m_RateMgr);
+  m_CntrSubSys->addObj(mr);
 }
 
 void MonitorSvc::i_unsupported(const string& nam, const type_info& typ, const IInterface* owner)
@@ -518,6 +529,46 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
   }
   m_InfoMap.insert(pair<string,void*>(oname+"/"+name,(void*)m_CntrSubSys));
   m_CntrSubSys->addObj(cnt);
+  if (m_RateMgr == 0)
+  {
+    m_RateMgr = new RateMgr(msgSvc(),"MonitorSvc",0);
+  }
+  std::string nname;
+  nname = "R_"+oname+"/"+name;
+  char fch = format[0];
+  fch = tolower(fch);
+  MonRateBase *mr;
+  switch (fch)
+  {
+    case 'x':
+    {
+      mr = new MonRateA<long long*>(nname,desc,format,(long long *)var,size);
+      break;
+    }
+    case 'i':
+    {
+      mr = new MonRateA<int*>(nname,desc,format,(int*)var,size);
+      break;
+    }
+    case 'f':
+    {
+      mr = new MonRateA<float*>(nname,desc,format,(float*)var,size);
+      break;
+    }
+    case 'd':
+    {
+      mr = new MonRateA<double*>(nname,desc,format,(double*)var,size);
+      break;
+    }
+    default:
+    {
+      return;
+    }
+  }
+  m_RateMgr->addRate(nname,*mr);
+  m_InfoMap.insert(pair<string,void*>(nname,(void*)m_RateMgr));
+  m_CntrSubSys->addRateMgr(m_RateMgr);
+  m_CntrSubSys->addObj(mr);
   return;
 }
 //
