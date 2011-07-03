@@ -548,6 +548,19 @@ if not hasattr ( HepMC.GenParticle , 'Range' ) :
 if not hasattr ( HepMC.GenVertex   , 'Range' ) :
     HepMC.GenVertex.Range   = Gaudi.NamedRange_( HepMC.GenVertex.ConstVector   ) 
 
+for r in ( HepMC.GenParticle.Range ,
+           HepMC.GenVertex.Range   ,
+           cpp.Gaudi.Range_ ( HepMC.GenParticle.ConstVector ) ,
+           cpp.Gaudi.Range_ ( HepMC.GenVertex.ConstVector   ) ) :
+
+    import LoKiCore.decorators as _LCD
+    
+    r.__iter__     = _LCD . _iter_1_
+    r.__getslice__ = _LCD . _slice_
+    r.__getitem__  =    r . __call__ 
+    r.__setitem__  =          None
+
+   
 if not hasattr ( LHCb.HepMCEvent , 'Container' ) :
     LHCb.HepMCEvent.Container = cpp.KeyedContainer(LHCb.HepMCEvent,'Containers::KeyedObjectManager<Containers::hashmap>')
 
@@ -586,6 +599,7 @@ _print_ . __doc__ += "\n" + LoKi.GenDecayChain.print_ . __doc__
 
 for t in ( HepMC.GenParticle             ,
            HepMC.GenParticle.Range       , 
+           cpp.Gaudi.Range_ ( HepMC.GenParticle.ConstVector ) ,
            HepMC.GenParticle.ConstVector ,
            HepMC.GenEvent                ,
            LHCb.HepMCEvent               ,

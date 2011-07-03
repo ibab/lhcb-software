@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-07-03 - Vanya Belyaev
+ - small polishing of python iterators 
+ - cmt/requirements
+     version incrment to v10r3
+
 !========================= LoKiGen v10r2 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
  - reduce compilation warnings for ICC compiler 
