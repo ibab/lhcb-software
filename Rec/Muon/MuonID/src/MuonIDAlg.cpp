@@ -1658,7 +1658,10 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(pMuid,p,closest_region);
-  if (myDist<=0) return Error(" Closest Distance < 0 ");
+  if (myDist<=0){
+    Warning("Closest Distance < 0 ",StatusCode::SUCCESS).ignore();
+    return StatusCode::FAILURE; 
+  }
 
   //EP: Store dist to fill Muon Track extra info
   m_dist_out=myDist;
@@ -1671,7 +1674,8 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
   // Find Landau's parameters for a given track:
   StatusCode sc = find_LandauParam(p, trackRegion, parMu, parNonMu);
   if (sc.isFailure()) {
-    return Error(" Find Landau Parameters: no valid region",sc,1);
+    Warning(" Find Landau Parameters: no valid region",StatusCode::SUCCESS).ignore();
+    return StatusCode::FAILURE;
   }
 
 
@@ -1718,7 +1722,10 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(pMuid,p,closest_region);
-  if (myDist<=0) return Error(" Closest Distance < 0 ");
+  if (myDist<=0){
+    Warning("Closest Distance < 0 ",StatusCode::SUCCESS).ignore();
+    return StatusCode::FAILURE; 
+  }
 
   //EP: Store dist to fill Muon Track extra info
   m_dist_out=myDist;
@@ -1729,6 +1736,12 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
 
   int region=trackRegion[1]; // M2
   if (region<0) region=trackRegion[2]; // M3
+  
+  if (region<0) {
+    Warning("calcMuonLL_tanhdist: no valid region",StatusCode::SUCCESS).ignore();
+    return StatusCode::FAILURE;
+  }
+
 
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
@@ -1788,8 +1801,11 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(pMuid,p,closest_region);
-  if (myDist<=0) return Error(" Closest Distance < 0 ");
-
+  if (myDist<=0){
+    Warning("Closest Distance < 0 ",StatusCode::SUCCESS).ignore();
+    return StatusCode::FAILURE; 
+  }
+  
   //EP: Store dist to fill Muon Track extra info
   m_dist_out=myDist;
 
@@ -1803,7 +1819,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   // Find Landau's parameters for a given track:
   StatusCode sc = find_LandauParam(p, trackRegion, parMu, parNonMu);
   if (sc.isFailure()) {
-    return Error(" Find Landau Parameters: no valid region",sc,1);
+    Warning(" Find Landau Parameters: no valid region",StatusCode::SUCCESS).ignore();
+    return StatusCode::FAILURE;
   }
 
   // Determine the momentum bin for this region
