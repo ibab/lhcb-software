@@ -101,8 +101,10 @@ def extendfile1 ( filename ) :
          0 == filename.find ( '/lhcb/MC/'   ) or \
          0 == filename.find ( '/lhcb/user/' ) : filename = 'LFN:' + filename 
     ##
-    return filename 
+    return filename
 
+
+_local_dict_ = {}
 # =============================================================================
 ## Helper function to 'extend' the short file name
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
@@ -111,17 +113,39 @@ def extendfile2 ( filename ) :
     """
     Helper function to 'extend' the short file name 
     """
-    if 0 <= filename.find(' ') : return filename
+    ##
+    if 0 <= filename.find(' '        ) : return filename
+    if 0 <= filename.find('DATAFILE=') : return filename
+    ##
     ## @see extendfile1 
     filename = extendfile1 ( filename ) 
-    ## 
-    pattern = "DATAFILE='%s' %s OPT='READ'"
-    typ     = "TYPE='POOL_ROOTTREE'"
+    ##
+    ##
     #
-    if 0 <= filename.find ( '.mdf' ) : typ = "SVC='LHCb::MDFSelector'"
-    if 0 <= filename.find ( '.raw' ) : typ = "SVC='LHCb::MDFSelector'"
+    # pattern = "DATAFILE='%s' %s OPT='READ'"
+    # typ     = "TYPE='POOL_ROOTTREE'"
     #
-    return pattern %  ( filename , typ )
+    # if 0 <= filename.find ( '.mdf' ) : typ = "SVC='LHCb::MDFSelector'"
+    # if 0 <= filename.find ( '.raw' ) : typ = "SVC='LHCb::MDFSelector'"
+    #
+    # return pattern %  ( filename , typ )
+    #
+    from GaudiConf import IOHelper
+    if 0 < filename.find ( '.mdf' ) or \
+       0 < filename.find ( '.raw' ) or \
+       0 < filename.find ( '.MDF' ) or \
+       0 < filename.find ( '.RAW' )    : 
+        ioh = IOHelper( Input = 'MDF'  , Output = 'ROOT' )
+    else :
+        ioh = IOHelper( Input = 'ROOT' , Output = 'ROOT' )
+        #
+    from GaudiPython.Bindings import _gaudi
+    iohstr = str(ioh) 
+    if not _gaudi and not _local_dict_.has_key( iohstr ) : 
+        ioh.setupServices ()
+        _local_dict_[ iohstr ] = 1
+    #
+    return ioh.dressFile ( filename , 'O')
 
 # =============================================================================
 ## Helper function to 'extend' the short file name

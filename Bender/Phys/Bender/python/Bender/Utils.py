@@ -157,6 +157,7 @@ def setData ( files , catalogs = [] ) :
     >>> USERSCRIPT.setData ( files , catalogs )
     
     """
+
     from GaudiPython.Bindings import _gaudi
     
     if   type ( files    ) is str   : files    =      [ files    ]
@@ -170,7 +171,7 @@ def setData ( files , catalogs = [] ) :
         catalogs = [ c for c in catalogs ] 
     
     if not _gaudi :               ## here we deal with configurables!
-        
+
         if files :
             
             from Bender.DataUtils import extendfile2

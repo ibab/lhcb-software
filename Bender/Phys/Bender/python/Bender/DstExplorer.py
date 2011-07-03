@@ -137,7 +137,7 @@ if '__main__' == __name__ :
         dest    = 'DataType'  ,
         type    = 'str'       , 
         help    = "``DataType''    attribute to be specified for DaVinci [default : %default]" ,
-        default = '2010'  
+        default = '2011'  
         )
     ## 
     parser.add_option (
@@ -156,6 +156,15 @@ if '__main__' == __name__ :
         dest    = 'OutputLevel'       ,
         help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %default]" ,
         default = 3                  
+        )
+    ## 
+    parser.add_option (
+        '-p'                          ,
+        '--persistency'               ,
+        type    = 'str'               , 
+        dest    = 'Persistency'       ,
+        help    = "``Persistency'' attribute for DaVinci [default : %default]" ,
+        default = 'ROOT'                  
         )
     ## 
     parser.add_option (
@@ -212,12 +221,12 @@ if '__main__' == __name__ :
     from Configurables       import DaVinci
     
     daVinci = DaVinci (
-        DataType   = options.DataType   ,
-        Simulation = options.Simulation ,
-        Lumi       = False              
+        DataType    = options.DataType    ,
+        Simulation  = options.Simulation  ,
+        Persistency = options.Persistency , 
+        Lumi        = False              
         )
 
-           
     ## Reset all DaVinci sequences 
     def _action ( ) :
         """
@@ -243,18 +252,22 @@ if '__main__' == __name__ :
             from Configurables import MessageSvc
             m = MessageSvc ( OutputLevel = options.OutputLevel )
             
+            from GaudiConf import IOHelper
+            ioh = IOHelper ( Input = options.Persistency ) 
+            ioh.setupServices()
+            
 
     appendPostConfigAction ( _action )
     
-    ## instantiate the application manager 
-    gaudi=appMgr()
-
     ## get xml-catalogs (if specified) 
     catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
     
     ## set input data
     setData ( arguments , catalogs  )
     
+    ## instantiate the application manager 
+    gaudi=appMgr ()
+
     ## initialize and read the first event
     gaudi.run(1)
 

@@ -81,14 +81,13 @@ import atexit
 atexit.register( _bender_at_exit_ )
 print 'Bender.Fixes: - add custom "atexit" handler'
 
-
 import GaudiPython.Bindings
 
 _EvtSel = GaudiPython.Bindings.iEventSelector
 
 if not hasattr ( _EvtSel , '_openNew_') :
     
-    def _openNew_ ( self, stream, typ = 'POOL_ROOT', opt = 'READ', sel = None, fun = None, collection = None ):
+    def _openNew_ ( self , stream , typ = 'ROOT', opt = 'READ', sel = None, fun = None, collection = None ):
         """
         Open the file(s) :
 
@@ -99,58 +98,29 @@ if not hasattr ( _EvtSel , '_openNew_') :
         >>> evtSel.open ( 'file.mdf' )                   ## open MDF file 
         
         """
-        
-        if typ == 'ROOT' :
-            self.g.declSvcType('RootEvtCnvSvc','DbEventCnvSvc')
-            self.g.service('RootEvtCnvSvc').DbType  = 'ROOT'
-            self.g.createSvc('RootEvtCnvSvc')
-            self.g.service('EventPersistencySvc').CnvServices = ['RootEvtCnvSvc']
-        elif typ == 'POOL_ROOT':
-            cacsvc = self.g.service('PoolDbCacheSvc')
-            if hasattr(cacsvc, 'Dlls') : cacsvc.Dlls += ['lcg_RootStorageSvc', 'lcg_XMLCatalog']
-            else :                       cacsvc.Dlls = ['lcg_RootStorageSvc', 'lcg_XMLCatalog']
-            cacsvc.OutputLevel = 4
-            cacsvc.DomainOpts    = [ 'Domain[ROOT_All].CLASS_VERSION=2 TYP=int',
-                                     'Domain[ROOT_Key].CLASS_VERSION=2 TYP=int',
-                                     'Domain[ROOT_Tree].CLASS_VERSION=2 TYP=int' ]
-            cacsvc.DatabaseOpts  = ['']
-            cacsvc.ContainerOpts = ['']
-            self.g.createSvc('PoolDbCacheSvc')
-            cnvSvcs = [('PoolRootEvtCnvSvc',     'POOL_ROOT'),
-                       ('PoolRootTreeEvtCnvSvc', 'POOL_ROOTTREE'),
-                       ('PoolRootKeyEvtCnvSvc',  'POOL_ROOTKEY')]
-            for svc in cnvSvcs :
-                self.g.declSvcType(svc[0], 'PoolDbCnvSvc')
-                cnvsvc = self.g.service(svc[0])
-                cnvsvc.DbType = svc[1]
-            self.g.service('EventPersistencySvc').CnvServices = [ svc[0] for svc in cnvSvcs ]
-            for svc in cnvSvcs :
-                self.g.createSvc(svc[0])
-                
-        self.g.service('EventDataSvc').RootCLID = 1
-        
-        if type(stream) != list : stream = [stream]
-        fixpart = "TYP=\'%s\' OPT=\'%s\'" % ( typ, opt )
-        if sel        : fixpart += " SEL=\'%s\'" % sel
-        if fun        : fixpart += " FUN=\'%s\'" % fun
-        if collection : fixpart += " COLLECTION=\'%s\'" % collection
 
-        cstream = [] 
+        print ' I AM OPEN-NEW'
+        
+        if typ == 'ROOT' and 'RootCnvSvc' not in self.g.ExtSvc :
+            self.g.ExtSvc   += [ 'Gaudi::RootCnvSvc/RootCnvSvc' ]
+            rsvc = self.g.service ( 'RootCnvSvc'          )
+            eps  = selg.g.service ( 'EventPersistencySvc' )
+            eps.CnvServices += [ 'RootCnvSvc' ]
+                        
+        if instance ( stream , tuple ) : stream = list ( stream )
+        if instance ( stream , str   ) : stream =      [ stream ] 
+
+        from Bender.DataUtils import extendfile2
+
+        files = []
         for f in stream :
+            ff = extendfile2 ( f )
+            if sel        : ff += " SEL=\'%s\'" % sel
+            if fun        : ff += " FUN=\'%s\'" % fun
+            if collection : ff += " COLLECTION=\'%s\'" % collection
+            files += [ ff ]
 
-            mask = "DATAFILE=\'%s\' %s "
-            ## prepend castor if needed 
-            if 0 == f.find('/castor') : f = 'castor:' + f
-
-            if 0 < f.find ( '.raw') or 0 < f.find ( '.mdf') :
-                cstream += [ "DATA=\'%s\' SVC='LHCb::MDFSelector' " % f ]                
-                if 'LHCb::RawDataCnvSvc' not in self.g.service('EventPersistencySvc').CnvServices :
-                    self.g.service('EventPersistencySvc').CnvServices.append ( 'LHCb::RawDataCnvSvc')
-                    self.g.createSvc('LHCb::RawDataCnvSvc')
-            else: 
-                cstream += ["DATAFILE=\'%s\' %s" % ( f, fixpart) ] 
-
-        self.Input = cstream
+        self.Input = files 
         self.reinitialize()
 
 

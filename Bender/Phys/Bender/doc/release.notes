@@ -24,6 +24,15 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v17r3 2011-07-03 ===========================
+
+! 2011-07-03 - Vanya Belyaev
+
+ - prepare new version, based on Davinci v28r4 
+   make few steps towards IOHelper 
+
+  - cmt/requirements 
+    version increment to v17r3
 
 ! ==================== Phys/Bender v17r2p1 2011-06-02 =========================
 
