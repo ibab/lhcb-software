@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file BenderExample/Bs2PhiGamma.py
 #
 #  Simple module to test/verify MC-association problem for the photons
@@ -21,7 +19,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -46,7 +44,7 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date$
@@ -161,8 +159,9 @@ def configure ( datafiles , catalogs  = [] ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'MC09' ,
-        Simulation = True   
+        DataType    = '2010' ,
+        Simulation  = True   ,
+        Persistency = 'ROOT'
         )
     
     from Configurables import HistogramPersistencySvc
@@ -184,13 +183,14 @@ def configure ( datafiles , catalogs  = [] ) :
         # print histos 
         HistoPrint     = True ,
         # input particles 
-        InputLocations = [
-        'StdLooseKaons'       ,
-        'StdLooseAllPhotons'
+        Inputs = [
+        'Phys/StdLooseKaons/Particles'      ,
+        'Phys/StdLooseAllPhotons/Particles'
         ]
         )
         
-    gaudi.addAlgorithm ( alg ) 
+    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    userSeq.Members += [ alg.name() ]
     
     return SUCCESS 
 
@@ -206,19 +206,11 @@ if '__main__' == __name__ :
     print ' Date    : %s ' %   __date__
     print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
-  
+    
     inputdata = [
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000311_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000312_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000313_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000314_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000315_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000316_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000317_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000318_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000319_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
-        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000322_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"]
-                
+        "/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00009752/0000/00009752_00000%03d_1.allstreams.dst" % i for i in range(1,205) 
+        ]
+    
     configure ( inputdata ) 
     
     run(500) 

@@ -19,7 +19,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Alexander KOZLINSKY  akozlins@gmail.com
@@ -45,7 +45,7 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date$
@@ -176,7 +176,7 @@ def configure ( datafiles , catalogs = [] ) :
     davinci = DaVinci (
         DataType      = '2010' ,
         PrintFreq     = 1000   ,
-        EvtMax        = -1     , 
+        Persistency   = 'ROOT' , 
         HistogramFile = 'Lam0_Akshay_Histos.root' ,
         Lumi          = False 
         )

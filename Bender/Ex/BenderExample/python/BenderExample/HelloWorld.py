@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $URL$
+# $Id$
 # =============================================================================
 ## @file BenderExample/HelloWorld.py
 #  The most trivial Bender-based : HelloWorld example
@@ -17,7 +17,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @date 2006-10-12
@@ -39,7 +39,7 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date$
@@ -81,8 +81,9 @@ def configure ( datafiles , catalogs = [] ) :
         
     from Configurables import DaVinci    
     daVinci = DaVinci (
-        DataType   = '2010' , # default  
-        Simulation = True   ) 
+        DataType    = '2010' ,
+        Persistency = 'ROOT' ,
+        Simulation  = True   ) 
     
     ## define the input data 
     setData ( datafiles , catalogs ) 

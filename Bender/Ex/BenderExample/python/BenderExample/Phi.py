@@ -17,7 +17,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -40,7 +40,7 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date$
@@ -109,8 +109,10 @@ def configure ( datafiles , catalogs  = [] ) :
     ##      
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = '2010' ,
-        Simulation = True   ) 
+        DataType    = '2010' ,
+        Simulation  = True   ,
+        Persistency = 'ROOT'
+        )
     
     from Configurables import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'Phi_Histos.root' ) 

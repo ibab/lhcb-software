@@ -18,7 +18,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campain of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -42,7 +42,7 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
                   $Revision$ 
@@ -83,11 +83,9 @@ class Dstar(Algo) :
 
         ## get D*+ 
         dstars = self.select ( 'dstar' , '[ D*(2010)+ -> ( D0 -> K- pi+ ) pi+]CC' )        
-        ## dstars = self.select ( 'dstar' , PALL )        
         if dstars.empty()   :
             return self.Warning ( 'No D*+ decays are found' , SUCCESS )
 
-        
         dm0 = ( M - M1  ) / GeV 
         dm1 = DTF_FUN ( dm0 , False )
         dm2 = DTF_FUN ( dm0 , True  )
@@ -106,11 +104,7 @@ class Dstar(Algo) :
             self.plot ( v1 - v2 , "delta delta-2" , -0.0025 , 0.0025 , 200 )
 
 
-        if len ( dstars ) :
-            self.setFilterPassed ( True  )
-        else :
-            self.setFilterPassed ( False )
-       
+        self.setFilterPassed ( not dstars.empty()  ) 
         
         return SUCCESS 
     
@@ -135,7 +129,7 @@ def configure ( datafiles , catalogs = [] ) :
     """
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters (
-        STRIP_Code = " HLT_PASS('StrippingDstarForPromptCharmDecision') " 
+        VOID_Code = " 0.5 < CONTAINS('/Event/Charm/Phys/DstarForPromptCharm/Particles') " 
         )
     ##
     ## 1. Static configuration using "Configurables"
@@ -151,14 +145,15 @@ def configure ( datafiles , catalogs = [] ) :
         ##
         Lumi            = True ,
         ##
-        DDDBtag   = "head-20101026" ,
-        CondDBtag = "head-20101112" 
+        Persistency = 'ROOT'
         )
+    
+    from Configurables import CondDB
+    CondDB ( UseLatestTags = ['2010'] )
     
     from Configurables import NTupleSvc
     ntSvc = NTupleSvc() 
     ntSvc.Output += [ "DSTAR DATAFILE='RealDstar_CHARM.root' TYPE='ROOT' OPT='NEW'" ]
-    
     
     ## define the input data:
     setData ( datafiles , catalogs )
@@ -178,8 +173,8 @@ def configure ( datafiles , catalogs = [] ) :
         NTupleLUN = 'DSTAR' ,   ## Logical unit for output file with N-tuples
         #
         ## RecoStripping-09 conventions! 
-        RootInTES =  '/Event/Charm/' , 
-        Inputs    = [ 'Phys/DstarForPromptCharm' ] ## input particles 
+        RootInTES =  '/Event/Charm'  , 
+        Inputs    = [ 'Phys/DstarForPromptCharm/Particles' ] ## input particles 
         )
     
     ## finally inform Application Manager about our algorithm
@@ -200,7 +195,6 @@ if '__main__' == __name__ :
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
     print '*'*120  
-
 
     files = [
         '/castor/cern.ch/grid/lhcb/data/2010/CHARM.MDST/00008383/0000/00008383_00000%03d_1.charm.mdst' % i for i in range(1,650) 
