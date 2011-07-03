@@ -437,14 +437,21 @@ if not hasattr ( LHCb.MCParticle , 'Range'       ) :
     LHCb.MCParticle.Range = cpp.Gaudi.NamedRange_ ( LHCb.MCParticle.ConstVector ) 
 if not hasattr ( LHCb.MCVertex   , 'Range'       ) :
     LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   )
+
+
+for r in ( LHCb.MCParticle.Range ,
+           LHCb.MCVertex.Range   ,
+           cpp.Gaudi.Range_ ( LHCb.MCParticle.ConstVector ) ,
+           cpp.Gaudi.Range_ ( LHCb.MCVertex.ConstVector   ) ) :
+
+    import LoKiCore.decorators as _LCD
     
+    r.__iter__     = _LCD . _iter_1_
+    r.__getslice__ = _LCD . _slice_
+    r.__getitem__  =    r . __call__ 
+    r.__setitem__  =          None
 
-LHCb.MCParticle .Range.__getitem__ = LHCb.MCParticle.Range.__call__
-LHCb.MCVertex   .Range.__getitem__ = LHCb.MCVertex  .Range.__call__
-
-LHCb.MCParticle .Range.__setitem__ = None 
-LHCb.MCVertex   .Range.__setitem__ = None
-
+    
 if not hasattr ( LHCb.MCParticle , 'Container' ) :
     LHCb.MCParticle.Container = cpp.KeyedContainer(LHCb.MCParticle,'Containers::KeyedObjectManager<Containers::hashmap>')
 

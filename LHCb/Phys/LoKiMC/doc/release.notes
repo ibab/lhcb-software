@@ -15,6 +15,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-07-03 - Vanya Belyaev
+
+ - small polishing of python iterators 
+
 ! 2011-06-20 - Vanya Belyaev
 
  - LoKi/MCDecayChain.h
