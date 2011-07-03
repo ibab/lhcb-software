@@ -363,11 +363,29 @@ if not hasattr ( LHCb.Particle , 'ConstVector' ) :
 if not hasattr ( LHCb.Particle , 'Range'       ) :
     LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector )
 
-LHCb.Particle.Range.__getitem__  = LHCb.Particle.Range.__call__
+if not hasattr ( LHCb.Vertex     , 'ConstVector' ) :
+    LHCb.Vertex.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
+if not hasattr ( LHCb.Vertex     , 'Range'       ) :
+    LHCb.Vertex.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Vertex.ConstVector )
 
-LHCb.Particle.Range.__setitem__  = None 
+if not hasattr ( LHCb.VertexBase , 'ConstVector' ) :
+    LHCb.VertexBase.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
+if not hasattr ( LHCb.VertexBase , 'Range'       ) :
+    LHCb.VertexBase.Range       = cpp.Gaudi.NamedRange_ ( LHCb.VertexBase.ConstVector )
 
 
+for r in ( LHCb.Particle.Range     ,
+           LHCb.VertexBase.Range   ,
+           cpp.Gaudi.Range_ ( LHCb.Particle.ConstVector   ) ,
+           cpp.Gaudi.Range_ ( LHCb.VertexBase.ConstVector ) ) :
+    
+     import LoKiCore.decorators as _LCD
+     
+     r.__iter__     = _LCD . _iter_1_
+     r.__getslice__ = _LCD . _slice_
+     r.__getitem__  =    r . __call__ 
+     r.__setitem__  =          None
+     
 if not hasattr ( LHCb.Particle , 'Container' ) :
     LHCb.Particle.Container = cpp.KeyedContainer(LHCb.Particle,'Containers::KeyedObjectManager<Containers::hashmap>')
 if not hasattr ( LHCb.Particle , 'Selection' ) :

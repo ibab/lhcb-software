@@ -32,6 +32,7 @@
   <class name = "LoKi::UniqueKeeper<LHCb::Track>"         />
   
   <class pattern   = "LoKi::Interface<*>"           />
+
   
   <class pattern   = "Gaudi::Range_<*LHCb::*Vertex*>"       />
   <class pattern   = "Gaudi::NamedRange_<*LHCb::*Vertex*>"  />
