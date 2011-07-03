@@ -300,9 +300,43 @@ if not hasattr ( _rb , '__iter__' ) or not hasattr ( _rb , '__getslice__' )    :
     if not hasattr ( _rb , '__iter__' ) or not hasattr ( _rb , '__getslice__' )    :
         
         _rb .__iter__     = LoKiCore.decorators._iter_1_  
-        _rb .__getslice__ = LoKiCore.decorators._slice_ 
+        _rb .__getslice__ = LoKiCore.decorators._slice_
+        
         print 'Bender.Fixes: - Fix the problem with Gaudi.RangeBase_ '
+
+import LoKiPhys.Phys
+import LoKiMC.MC 
+import LoKiGen.HepMC 
+
+for t in ( cpp.LHCb.Particle     ,
+           #cpp.LHCb.VertexBase   , 
+           cpp.LHCb.MCParticle   ,
+           cpp.LHCb.MCVertex     ,
+           cpp.HepMC.GenVertex   , 
+           cpp.HepMC.GenParticle ) : 
     
+    import LoKiCore.decorators
+    
+    t.Range.__iter__     = LoKiCore.decorators._iter_1_
+    t.Range.__getslice__ = LoKiCore.decorators._slice_
+
+for t in  ( cpp.Gaudi.Range_      ( cpp.std.vector('const LHCb::Particle*'     ) ) ,
+            cpp.Gaudi.Range_      ( cpp.std.vector('const LHCb::VertexBase*'   ) ) ,
+            cpp.Gaudi.NamedRange_ ( cpp.std.vector('const LHCb::VertexBase*'   ) ) ,
+            cpp.Gaudi.Range_      ( cpp.std.vector('const LHCb::MCParticle*'   ) ) ,
+            cpp.Gaudi.Range_      ( cpp.std.vector('const LHCb::MCVertex*'     ) ) ,
+            cpp.Gaudi.Range_      ( cpp.std.vector('const HepMC::GenParticle*' ) ) ,
+            cpp.Gaudi.Range_      ( cpp.std.vector('const HepMC::GenVertex*'   ) ) ) :
+    
+    import LoKiCore.decorators
+    
+    t.__iter__     = LoKiCore.decorators._iter_1_
+    t.__getslice__ = LoKiCore.decorators._slice_
+    
+    
+print 'Bender.Fixes: - Fix the problem with XXX.Range iterators/slices'
+    
+            
 print '*'*120
 
 # =============================================================================
