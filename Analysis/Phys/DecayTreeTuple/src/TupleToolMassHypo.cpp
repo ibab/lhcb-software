@@ -35,6 +35,7 @@ TupleToolMassHypo::TupleToolMassHypo( const std::string& type,
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "PIDReplacements", m_replace, "List of PID replacements as dictionary of strings");
+  declareProperty( "CC", m_revert = true, "Do cc by default");
 }
 
 //=============================================================================
@@ -46,20 +47,27 @@ StatusCode TupleToolMassHypo::initialize(){
   LHCb::IParticlePropertySvc* ppsvc = 
       svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
 
+  if (m_revert) info() << "Will apply cc on all replacement pairs" << endmsg ;
+
   for (std::map<std::string,std::string>::const_iterator iterS = m_replace.begin(); 
        iterS != m_replace.end(); ++iterS ){
-    debug() << iterS->first << " " <<  iterS->second << endmsg ;
     const LHCb::ParticleProperty* prop1 = ppsvc->find( iterS->first );
     const LHCb::ParticleProperty* prop2 = ppsvc->find( iterS->second );
     if (!prop1 || !prop2 ) {
       err() << "one of " << iterS->first << " " <<  iterS->second << " does nor exist" << endmsg ;
       return StatusCode::FAILURE ;
     }
-    m_massMap.insert(std::pair<int,double>(prop1->pdgID().pid(),prop1->mass()));
+    int pid = prop1->pdgID().pid() ;
+    if ( m_revert) pid = abs(pid);
+    m_massMap.insert(std::pair<int,double>(pid,prop1->mass()));
     m_massMap.insert(std::pair<int,double>(prop2->pdgID().pid(),prop2->mass()));
-    m_nameMap.insert(std::pair<int,std::string>(prop1->pdgID().pid(),Decays::escape(prop1->name())));
+    m_nameMap.insert(std::pair<int,std::string>(pid,Decays::escape(prop1->name())));
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Inserted name ``" << Decays::escape(prop1->name()) << "''" << endmsg ;
     m_nameMap.insert(std::pair<int,std::string>(prop2->pdgID().pid(),Decays::escape(prop2->name())));
-    m_replacePDG.insert( std::pair<int,int>( prop1->pdgID().pid(),prop2->pdgID().pid() ));
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Inserted name ``" << Decays::escape(prop2->name()) << "''" << endmsg ;
+    m_replacePDG.insert( std::pair<int,int>( pid,prop2->pdgID().pid() ));
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Inserted PID pair ``" << pid << "," 
+                                          << prop2->pdgID().pid() << "''" << endmsg ;
   } // iterS
   m_transporter = tool<IParticleTransporter>("ParticleTransporter:PUBLIC", this);
   return sc ;
@@ -89,9 +97,11 @@ StatusCode TupleToolMassHypo::fill( const LHCb::Particle*
   
   for (possDecayVec::const_iterator p = possibilities.begin() ; p!=possibilities.end() ; ++p){
     std::string combname ;
-    verbose() << "Old mass " << P->measuredMass()  << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Old mass " << P->measuredMass()  << endmsg ;
     double mass = recalculateMass(*p,P->referencePoint(),combname);
     test &= tuple->column( prefix+"_M_with"+combname, mass );
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Filled column ``" << prefix+"_M_with"+combname 
+                                          << "'' with mass " << mass << endmsg ;
   }//  
 
   return StatusCode(test);
@@ -101,18 +111,20 @@ double TupleToolMassHypo::recalculateMass(const possDecay& pd, const Gaudi::XYZP
                                           std::string& combname){
   Gaudi::LorentzVector newM ;
   for ( possDecay::const_iterator p = pd.begin() ; p != pd.end() ; ++p ){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Loop ``" << combname << "'' pid : ``" << p->second << "''"<< endmsg ;
     const LHCb::Particle* P  = p->first;
-    combname += "_"+m_nameMap[p->second] ;
+    if ( m_nameMap.find(p->second)!=m_nameMap.end()) combname += "_"+m_nameMap[p->second] ;
     LHCb::Particle transParticle;
     m_transporter->transport(P, pt.z(), transParticle);
     Gaudi::LorentzVector mom = transParticle.momentum();
-    if (P->particleID().pid()!=p->second){
+    if (P->particleID().pid()!=p->second || (m_revert && P->particleID().pid()!=-p->second)){
       double mm = m_massMap[p->second];
-      verbose() << "Momentum is " << mom << " new mass = " << mm << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Momentum is " << mom << " new mass = " << mm << endmsg ;
       mom.SetE(sqrt(mom.P2()+(mm*mm)));
-      verbose() << "New Momentum is " << mom << endmsg ;
-    } 
+      if (msgLevel(MSG::VERBOSE)) verbose() << "New Momentum is " << mom << endmsg ;
+    }
     newM += mom ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Total Momentum is now " << newM << endmsg ;
   }
   if (msgLevel(MSG::VERBOSE)) verbose() << "New mass with " << combname << " is " << newM.M()  << endmsg ;
   return newM.M();
@@ -140,7 +152,9 @@ void TupleToolMassHypo::addPossPair(const LHCb::Particle* d, int pid, possDecay&
 // multiplies the vector
 possDecayVec TupleToolMassHypo::increaseVector(const LHCb::Particle* d, possDecayVec& poss){
   int pid = d->particleID().pid();
-  verbose() << "increaseVector seeing a " << pid << endmsg ;
+  if (m_revert) pid = abs(pid);
+  if (msgLevel(MSG::VERBOSE)) verbose() << "increaseVector seeing a " 
+                                        << d->particleID().pid() << " treated as " << pid << endmsg ;
   possDecayVec tmp  ;
   if (poss.empty()){
     possDecay pm;
@@ -152,7 +166,7 @@ possDecayVec TupleToolMassHypo::increaseVector(const LHCb::Particle* d, possDeca
       tmp.push_back(pm2);
     }
   } else {
-    verbose() << "increaseVector with poss size " << poss.size() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "increaseVector with poss size " << poss.size() << endmsg ;
     for (possDecayVec::const_iterator i = poss.begin() ; i!=poss.end() ; ++i){
       possDecay pm = *i;
       addPossPair(d,pid,pm);

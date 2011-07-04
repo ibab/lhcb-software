@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-07-04 - Patrick Koppenburg
+ - TupleToolassHypo: Fix bug 83621
+   New behaviour: Now the tool does cc by default.
+
 !========================= DecayTreeTuple v3r15 2011-06-29 =========================
 ! 2011-06-24 - Patrick Koppenburg
  - src/TupleToolRecoStats.cpp : more stuff

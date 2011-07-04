@@ -20,7 +20,9 @@ typedef std::vector< possDecay > possDecayVec ;
  * \verbatim
 from configurables import TupleToolMassHypo
 Tuple.addTool(TupleToolMassHypo)
-Tuple.TupleToolMassHypo.PIDReplacements = { "pi+" : "p+", "pi-" : "p~-" }\endverbatim
+Tuple.TupleToolMassHypo.PIDReplacements = { "pi+" : "p+" }
+Tuple.TupleToolMassHypo.CC = True 
+\endverbatim
  * 
  * will create 4 new entries in the nTuple called KS0_M_with_piplus_piminus, 
  * KS0_M_with_piplus_p~minus, KS0_M_with_pplus_piminus, KS0_M_with_pplus_p~minus.
@@ -32,7 +34,7 @@ Tuple.TupleToolMassHypo.PIDReplacements = { "pi+" : "p+", "pi-" : "p~-" }\endver
  * 1) PIDReplacement is a python dictionary. To test two mass hypthesis replacements 
  *   for the same daughter you must used 2 tool instances. 
  *
- * 2) Unlike CombineParticles, PIDReplacements does not cc by default. You must declare all replacements.
+ * 2) When CC = True (default), PIDReplacements implies cc.
  *
  * \sa DecayTreeTuple
  *
@@ -64,6 +66,7 @@ private :
   void printVec(const possDecayVec&);
   std::map<std::string,std::string> m_replace ; ///< the PIDs to replace
   std::map<int,int> m_replacePDG ; ///< the PIDs to replace (as PDG codes)
+  bool m_revert ; ///< revert to positive PDG codes (default)
   bool m_first ;
   IParticleTransporter* m_transporter;
   std::map<int,double> m_massMap ;
