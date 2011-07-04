@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-07-04 - Gerhard Raven
+ - fix v8r6 tagline, remove newlines from Hlt2IncludeDiMuons.py (no actual changes!)
+
 ! 2011-06-30 - V. Gligorov
  - Hlt2CharmSemilepD02HMuNuLines : Loosen cut in tight line to 20mm.
  - Hlt2B2HHLTUnbiasedLines : Add pre/postscales to slots.
@@ -15,11 +18,11 @@
 ! 2011-06-29 - V. Gligorov
  - Hlt2diphotonDiMuonLines : Fix LowMultPhoton line to use Pi0 maker. 
 
+!========================== Hlt2Lines v8r6 2011-06-25 ===================
 ! 2011-06-25 - Mat Charles
  - Hlt2CharmHadD02HHKsLines : Rearrange order of inputs to reduce CPU time for
    case where long but not downstream KS are used.
 
-!========================== Hlt2Lines v8r6 2011-06-24 ===================
 ! 2011-06-24 - V. Heijne
  -  Hlt2DisplVerticesLines : Tighten cuts and redefinition PS lines
 
