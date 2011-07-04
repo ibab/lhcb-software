@@ -777,9 +777,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedKaons   as Kaons
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedProtons as Protons
         
-        Preambulo0 = [
-            "from LoKiCore.functions           import *" 
-            ]
+        Preambulo0 = [ "from LoKiCore.functions           import *" 
+                     , "from LoKiPhys.functions           import *"
+                     ]
         
         Preambulo  = Preambulo0 + [
             "goodTrack = TRCHI2DOF < 6 " , 
