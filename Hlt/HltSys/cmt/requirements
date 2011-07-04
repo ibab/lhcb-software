@@ -1,17 +1,16 @@
 package HltSys
-version           v13r8
+version           v13r9
 
 branches cmt doc 
 
 use Hlt1Lines           v6r11   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r3    Hlt   # Roel Aaij
-use Hlt2Lines           v8r6    Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt2Lines           v8r7    Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v6r3    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltBase             v12r1p1 Hlt   # Gerhard Raven
-use HltMonitor          v1r0    Hlt   # Roel Aaij
 use HltBeamGasAlley     v3r0    Hlt   # Plamen Hopchev
 use HltCommon           v8r2    Hlt   # Gerhard Raven
-use HltConf             v9r10   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v9r10p1 Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p2  Hlt   # Stephan Nies
 use HltDisplVertices    v3r4    Hlt   # Neil Gauvin, Victor Coco
 use HltGlobalMonitor    v3r8    Hlt   # Bruno de Paula
@@ -22,9 +21,9 @@ use HltMonitor          v1r0p1  Hlt   # Roel Aaij
 use HltRawData          v2r10p3 Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1   Hlt   # Patrick Koppenburg
-use HltSettings         v5r13   Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v5r14   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r9    Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r9p1  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r9    Hlt   # Gerhard Raven
 use LoKiTrigger         v12r3   Phys  # Vanya Belyaev
 use LoKiTracks          v2r1p1  Phys  # Vanya Belyaev
