@@ -1,15 +1,15 @@
 package MooreSys
-version v12r7
+version v12r8
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v12r7   Hlt
+use  Moore              v12r8   Hlt
 
 # Patches
-#TODO: add  VAVA's PATCH TO Tf/FastVelo
+use MuonID              v9r0p1  Muon
 
 # Declare this as a container package
 apply_pattern container_package
