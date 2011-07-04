@@ -6,6 +6,7 @@
 
 ! 2011-07-04 - Gerhard Raven
  - use 0x0035 in Physics_July2011 instead of 0x0036
+ - reduce Hlt(1|2)CommissioningLines from RATE(1) to RATE(0.01)
 
 ! 2011-06-30 - V. Gligorov
  - Prescale LT unbiased B2hh by 10

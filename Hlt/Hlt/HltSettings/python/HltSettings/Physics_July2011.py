@@ -56,6 +56,8 @@ class Physics_July2011( object ):
         from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
+        from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'      :  1700
                                                , 'AllL0_P'       : 10000
@@ -122,7 +124,8 @@ class Physics_July2011( object ):
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                                 'Hlt1MultiMuonNoIP'  : 0.0 }
                                                }
-               
+                       , Hlt1CommissioningsLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
+                       , Hlt2CommissioningsLinesConf : { 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
