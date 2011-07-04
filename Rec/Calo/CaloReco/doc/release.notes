@@ -5,6 +5,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-04 - Olivier Deschamps
+  - python/Configuration.py : apply default GlobalRecoConf settings for  chargedProtoPMaker (when activated on-demand in CaloProcessor)
+
 !========================= CaloReco v5r10 2011-06-15 =========================
 ! 2011-06-06 - Olivier Deschamps
   - python/Configuration.py :  consolid sequencer() methods

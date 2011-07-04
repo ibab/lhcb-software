@@ -38,6 +38,7 @@ from Reconstruction           import ( clusterReco    ,
 
 from Configurables            import CaloDigitConf
 from Configurables            import CaloPIDsConf
+from Configurables            import GlobalRecoConf
 from Configurables            import GaudiSequencer
 
 
@@ -418,7 +419,8 @@ class CaloProcessor( CaloRecoConf ):
     ## used configurables 
     __used_configurables__ = (
         (CaloPIDsConf,None ),
-        (CaloDigitConf,None )
+        (CaloDigitConf,None ),
+        (GlobalRecoConf,None)
 	)
 
 
@@ -653,10 +655,26 @@ class CaloProcessor( CaloRecoConf ):
             spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
             comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
 
-            # ChargedProtoP Maker on demand (not in any sequencer)
+            # ChargedProtoP Maker on demand (not in any sequencer)  ####
             maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , pdod )
-
-
+            # protoPMaker settings (from GlobalRecoConf)
+            from Configurables import DelegatingTrackSelector,GaudiSequencer
+            ppConf = GlobalRecoConf('DummyConf',RecoSequencer=GaudiSequencer('DummySeq')) 
+            ttypes = ppConf.getProp('TrackTypes')
+            tcuts  = ppConf.getProp('TrackCuts')            
+            maker.addTool( DelegatingTrackSelector, name="TrackSelector" )
+            maker.TrackSelector.TrackTypes = ttypes
+            from Configurables import TrackSelector
+            for type in ttypes : 
+                maker.TrackSelector.addTool(TrackSelector,name=type)
+                ts = getattr(maker.TrackSelector,type)
+                ts.TrackTypes = [type]
+                cuts = ppConf.getProp("TrackCuts")
+                if type in cuts :
+                    for name,cut in cuts[type].iteritems() :
+                        ts.setProp("Min"+name,cut[0])
+                        ts.setProp("Max"+name,cut[1])
+            #########################################
             if cloc != '' :
                 maker.Output = cloc
 
