@@ -8,6 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v8r7 2011-07-04 ===================
 ! 2011-07-04 - Gerhard Raven
  - fix v8r6 tagline, remove newlines from Hlt2IncludeDiMuons.py (no actual changes!)
  - add from LoKiPhys.functions import * to make sure TRCHI2DOF is known online....
