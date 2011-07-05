@@ -25,15 +25,16 @@ DECLARE_ALGORITHM_FACTORY( RawDataSize )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RawDataSize::RawDataSize( const std::string& name,
-                          ISvcLocator* pSvcLocator)
-  : HistoAlgBase       ( name , pSvcLocator ),
-    m_SmartIDDecoder   ( NULL  ),
-    m_RichSys          ( NULL  ),
-    m_taeEvents        ( 1, "" )
+  RawDataSize::RawDataSize( const std::string& name,
+                            ISvcLocator* pSvcLocator)
+    : HistoAlgBase       ( name , pSvcLocator ),
+      m_SmartIDDecoder   ( NULL  ),
+      m_RichSys          ( NULL  ),
+      m_taeEvents        ( 1, "" )
 {
-  declareProperty( "RawEventLocations", m_taeEvents   );
+  declareProperty( "RawEventLocations", m_taeEvents );
   declareProperty( "FillDetailedPlots", m_detailedPlots = false );
+  declareProperty( "WriteTextFile",     m_writeTextFile = false );
   setProperty( "HistoPrint", false );
 }
 
@@ -62,15 +63,23 @@ StatusCode RawDataSize::initialize()
 StatusCode RawDataSize::prebookHistograms()
 {
   const unsigned int nL1sMax = 30;
+
+  // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
                  "Average Size (32bit words) V L1 Copy Number",
                  -0.5, nL1sMax - 0.5, nL1sMax );
 
+  // size per L1 ingress
+  richProfile1D( HID("L1s/SizeVL1Ingress"),
+                 "Average Size (32bit words) V (L1 Copy Number)*10 + L1 Ingress",
+                 -0.5, nL1sMax*10 - 0.5, nL1sMax*10 );
+
+  // size per HPD
   const LHCb::RichSmartID::Vector & hpds = m_RichSys->allHPDRichSmartIDs();
   richProfile1D( HID("hpds/SizeVHPDCopyNumber"),
                  "Average Size (32bit words) V HPD Copy Number",
                  -0.5, hpds.size() - 0.5, hpds.size() );
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -80,7 +89,7 @@ void RawDataSize::initHPDMap( HPDWordMap & hpdMap )
   hpdMap.clear();
   // get list of all active HPDs
   const LHCb::RichSmartID::Vector & hpds = m_RichSys->activeHPDRichSmartIDs();
-  // Loop over all HPDs and init count to zero
+  // Loop over all HPDs and (re)set count to zero
   for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
         iHPD != hpds.end(); ++iHPD )
   {
@@ -148,14 +157,19 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       const Rich::DAQ::Level1CopyNumber l1CopyN  = m_RichSys->copyNumber(l1HardID);
       const Rich::DAQ::IngressMap & ingressMap   = iL1Map->second;
 
+      // Number words for this L1 board
       // Start with 1 word per HPD ingress header
-      unsigned int nL1Words(Rich::DAQ::NumIngressPerL1);
+      unsigned int nL1Words( ingressMap.size() );
 
       for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
             iIngressMap != ingressMap.end(); ++iIngressMap )
       {
         const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
         const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
+
+        // Number words for this L1 ingress
+        // Start with 1 for the header
+        unsigned int nIngressWords(1);
 
         for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
               iHPDMap != hpdMap.end(); ++iHPDMap )
@@ -165,20 +179,29 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
 
-          // Only use valid HPD blocks to include in HPD info plots
-          const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
+          // header+footer words for this HPD
+          unsigned int nHPDwords = ( hpdHeader.nHeaderWords() +
+                                     hpdFooter.nFooterWords() );
 
-          // words for this HPD
-          const unsigned int nHPDwords = ( hpdHeader.nHeaderWords() +
-                                           hpdFooter.nFooterWords() +
-                                           hpdHeader.nDataWords()   );
+          // count data words only for valid HPD data blocks
+          const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
+          if ( hpdOK ) nHPDwords += hpdHeader.nDataWords();
 
           // count words per L1 board
           nL1Words += nHPDwords;
 
-          if ( hpdOK ) { hpdWordMap[hpdID] = nHPDwords; }
+          // count words per ingress
+          nIngressWords += nHPDwords;
+
+          // count words per HPD (for valid SmartIDs)
+          if ( hpdID.isValid() ) hpdWordMap[hpdID] = nHPDwords;
 
         } // loop over HPDs
+
+        // fill ingress plot
+        richProfile1D( HID("L1s/SizeVL1Ingress") )
+          -> fill ( 10*l1CopyN.data() + ingressInfo.ingressHeader().ingressID().data(),
+                    nIngressWords );
 
       } // loop over ingresses
 
@@ -191,36 +214,102 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
         richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 ) -> fill ( nL1Words );
       }
 
+      // Cross check with L1 size direct from raw bank
+      // Know that occasionally get it wrong by 1 (to be understood)
+      // warning if any bigger
+      if ( nL1Words != l1SizeMap[l1HardID] )
+      {
+        std::ostringstream mess;
+        mess << "L1 size mis-match : HardwareID " << l1HardID
+             << " RawSize=" << l1SizeMap[l1HardID]
+             << " DecodedSize=" << nL1Words;
+        Warning( mess.str() ).ignore();
+      }
+
     } // loop over L1 boards
 
     // loop over HPDs
     for ( HPDWordMap::const_iterator iHPD = hpdWordMap.begin();
           iHPD != hpdWordMap.end(); ++iHPD )
     {
-      // use a try block in case of DB lookup errors
-      try
+      if ( iHPD->first.isValid() ) 
       {
-        const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(iHPD->first);
-        // fill plots
-        richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),iHPD->second);
-        if ( m_detailedPlots )
+        // use a try block in case of DB lookup errors
+        try
         {
-          const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
-          const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(iHPD->first);
-          std::ostringstream title, ID;
-          title << "# Words (32bit) : "
-                << iHPD->first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
-          ID << "hpds/HPDHardwareID" << hpdHardID;
-          richHisto1D( ID.str(), title.str(), -0.5, 35.5, 36 ) -> fill( iHPD->second );
+          const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(iHPD->first);
+          // fill plots
+          richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),iHPD->second);
+          if ( m_detailedPlots )
+          {
+            const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
+            const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(iHPD->first);
+            std::ostringstream title, ID;
+            title << "# Words (32bit) : "
+                  << iHPD->first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
+            ID << "hpds/HPDHardwareID" << hpdHardID;
+            richHisto1D( ID.str(), title.str(), -0.5, 35.5, 36 ) -> fill( iHPD->second );
+          }
         }
-      }
-      catch ( const GaudiException & excpt )
-      {
-        Error( excpt.message() ).ignore();
+        catch ( const GaudiException & excpt )
+        {
+          Error( excpt.message() ).ignore();
+        }
       }
     }
 
   } // raw event exists
 
   return StatusCode::SUCCESS;
+}
+
+StatusCode RawDataSize::finalize()
+{
+  using namespace Gaudi::Utils;
+
+  if ( m_writeTextFile )
+  {
+
+    // Open a text file
+    const std::string filename = name() + ".txt";
+    info() << "Writing numbers to text file " << filename << endmsg;
+    std::ofstream file(filename.c_str(),std::ios::app);
+
+    // load the HPD occ plot
+    TProfile * hist = Aida2ROOT::aida2root( richProfile1D(HID("hpds/SizeVHPDCopyNumber")) );
+
+    // loop over bins (ROOT numbers from 1 ....)
+    for ( int bin = 1; bin <= hist->GetNbinsX(); ++bin )
+    {
+      // Get HPD data
+      const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1);
+      const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
+      const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
+      const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
+      const Rich::DAQ::Level1HardwareID l1HardID = m_RichSys->level1HardwareID(l0ID);
+      const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
+      const Rich::DAQ::Level1Input l1Input       = m_RichSys->level1InputNum(hpdSmartID);
+
+      // HPD occ data from histogram
+      const double hpdOcc    ( hist->GetBinContent(bin) );
+      const double hpdOccErr ( hist->GetBinError(bin)   );
+
+      // write data to file
+      file << hpdCopyN.data() << " "
+           << hpdHardID.data() << " "
+           << l0ID.data() <<  " "
+           << l1HardID.data() <<  " "
+           << l1LogID.data() <<  " "
+           << l1Input.data() << " "
+           << l1Input.ingressID().data() << " "
+           << hpdOcc << " " << hpdOccErr
+           << std::endl;
+    }
+
+    // close the file
+    file.close();
+
+  }
+
+  return HistoAlgBase::finalize();
 }

@@ -310,13 +310,23 @@ class RichRecQCConf(RichConfigurableUser):
         if self.getProp("DataType") not in ["DC06"]:
 
             rawSeq = self.newSeq(sequence,"RichRawMoni")
+            rawSeq.IgnoreFilterPassed = True
             
             if "L1SizeMonitoring" in monitors :
                 
-                # Data Sizes
+                # Data Sizes - all events
                 from Configurables import Rich__DAQ__RawDataSize
                 dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
                 rawSeq.Members += [dataSize]
+
+                # Data size plots, L0 unbiased events
+                from Configurables import LoKi__HDRFilter, HltDecReportsDecoder, GaudiSequencer
+                lSeq = self.newSeq(sequence,"RichRawDataSizeL0Seq")
+                lSeq.ReturnOK = True
+                rawSeq.Members += [lSeq]
+                lSeq.Members += [ HltDecReportsDecoder(),
+                                  LoKi__HDRFilter("RichDataSizeL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
+                                  self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0") ]
 
             if "DBConsistencyCheck" in monitors :
 

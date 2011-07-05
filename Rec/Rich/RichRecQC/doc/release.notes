@@ -4,7 +4,15 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecQC v2r52 2011-06-15 =========================
+! 2011-07-05 - Chris Jones
+ - Small improvements to the data size monitor
+  - Fix a small bug in the size calculation when only 3 ingresses are active
+  - Add a new plot to give the average size by L1 ingress
+  - Add a few additional cross checks to the size calculation
+  - Add a second instance of the monitor to the python configuration that
+    runs on L0 selected events (no HLT bias).
+
+!======================== RichRecQC v2r52 2011-06-15 =========================
 ! 2011-05-28 - Chris Jones
  - Add "TrackMonitoring" to the list of Online histograms
 

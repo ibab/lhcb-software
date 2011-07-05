@@ -14,6 +14,7 @@
 
 // STL
 #include <sstream>
+#include <fstream>
 
 // RichKernel
 #include "RichKernel/RichHistoAlgBase.h"
@@ -25,6 +26,10 @@
 
 // Event model
 #include "Event/RawEvent.h"
+
+// Gaudi
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TProfile.h"
 
 namespace Rich
 {
@@ -52,6 +57,7 @@ namespace Rich
 
       virtual StatusCode initialize(); ///< Algorithm initialization
       virtual StatusCode execute();    ///< Algorithm execution
+      virtual StatusCode finalize();   ///< Algorithm finalize
 
     protected:
 
@@ -84,6 +90,9 @@ namespace Rich
 
       /// Flag to turn on filling of the individual HPD/L1 plots
       bool m_detailedPlots;
+
+      /// Flag to turn on the writing of the results to a text file
+      bool m_writeTextFile;
 
     };
 
