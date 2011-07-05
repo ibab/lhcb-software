@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-07-05 - Eric Van Herwijnen
+ - Fixed typo in Physics_July2011.
+
 !========================== HltSettings v5r14 2011-07-04 ===================
 ! 2011-07-04 - Gerhard Raven
  - use 0x0035 in Physics_July2011 instead of 0x0036
