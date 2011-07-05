@@ -45,7 +45,8 @@ const CLID& DeRich1::classID()
 
 StatusCode DeRich1::initialize()
 {
-  debug() << "Initialize " << name() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Initialize " << name() << endmsg;
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
@@ -55,9 +56,10 @@ StatusCode DeRich1::initialize()
   m_nominalCentreOfCurvatureBottom =
     Gaudi::XYZPoint( nominalCoC[0], -nominalCoC[1], nominalCoC[2] );
 
-  debug() << "Nominal centre of curvature"
-          << m_nominalCentreOfCurvatureTop << " , " << m_nominalCentreOfCurvatureBottom
-          << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal centre of curvature"
+            << m_nominalCentreOfCurvatureTop << " , " << m_nominalCentreOfCurvatureBottom
+            << endmsg;
 
   m_sphMirrorRadius = param<double>("SphMirrorRadius");
 
@@ -74,8 +76,9 @@ StatusCode DeRich1::initialize()
   m_nominalNormalTop    = m_nominalPlaneTop.Normal();
   m_nominalNormalBottom = m_nominalPlaneBottom.Normal();
 
-  debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalTop ) << " "
-          << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalTop ) << " "
+            << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
 
   const IPVolume* pvGasWindow( 0 );
   const IPVolume* pvRich1SubMaster = geometry()->lvolume()->pvolume("pvRich1SubMaster");
@@ -95,8 +98,9 @@ StatusCode DeRich1::initialize()
       {
         if ( (*matIter)->type() == "RINDEX" )
         {
-          debug() << "Loaded gas window refIndex from: " << (*matIter)->name()
-                  << endmsg;
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "Loaded gas window refIndex from: " << (*matIter)->name()
+                    << endmsg;
           m_gasWinRefIndex = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinRefIndex->valid() )
           {
@@ -137,8 +141,9 @@ StatusCode DeRich1::initialize()
   }
   else
   {
-    debug() << "Loaded spherical mirror reflectivity from: "
-            << sphMirrorReflLoc << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Loaded spherical mirror reflectivity from: "
+              << sphMirrorReflLoc << endmsg;
     m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
@@ -162,7 +167,8 @@ StatusCode DeRich1::initialize()
   }
   else
   {
-    debug() <<"Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() <<"Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
     m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {

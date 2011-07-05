@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------
 /** @file DeRichAerogelRadiator.cpp
  *
@@ -59,7 +60,9 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 {
 
   MsgStream msg = msgStream( "DeRichAerogelRadiator" );
-  msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
+
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
 
   StatusCode sc = DeRichSingleSolidRadiator::initialize();
   if ( sc.isFailure() ) return sc;
@@ -89,8 +92,10 @@ StatusCode DeRichAerogelRadiator::initialize ( )
        m_subtilecopynumber= atoi( name().substr(colpos+1).c_str() );
        m_subtileNumInTile = atoi( name().substr(colpos-2,2).c_str() );      
        m_tileNumber = atoi( name().substr(colpos-4,2).c_str() );
-       verbose()<<"DeRichAerogelRadiator Tile subtileNum and subtileCopy number "<<   m_tileNumber <<"   "
-             << m_subtileNumInTile <<"   "<<m_subtilecopynumber<<endreq;
+       if ( msgLevel(MSG::VERBOSE) )
+         verbose() << "DeRichAerogelRadiator Tile subtileNum and subtileCopy number " 
+                   << m_tileNumber <<"   "
+                   << m_subtileNumInTile <<"   "<<m_subtilecopynumber<<endreq;
        
      }else {
        fatal()<< "An Aerogel sub tile tile without a number!" << endmsg;  
@@ -129,7 +134,8 @@ StatusCode DeRichAerogelRadiator::initialize ( )
     return sc;
   }
 
-  msg << MSG::DEBUG << "Initialisation Complete " << myName() << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "Initialisation Complete " << myName() << endmsg;
 
   // return
   return sc;
@@ -161,7 +167,8 @@ DetectorElement* DeRichAerogelRadiator::deRich1() const
 //=========================================================================
 StatusCode DeRichAerogelRadiator::updateProperties ( )
 {
-  debug() << "Refractive index update triggered" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Refractive index update triggered" << endmsg;
 
   // load various parameters
   const double photonEnergyLowLimit     = deRich1()->param<double>("PhotonMinimumEnergyAerogel");
@@ -259,8 +266,9 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
     aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, curRindex ) );
   }
 
-  debug() << "Table in TabulatedProperty " << tabProp->name()
-          << " updated with " << momVect.size() << " bins" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Table in TabulatedProperty " << tabProp->name()
+            << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -297,8 +305,9 @@ calcRayleigh (const std::vector<double>& momVect,
     aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, pathlength ) );
   }
 
-  debug() << "Table in TabulatedProperty " << tabProp->name()
-          << " updated with " << momVect.size() << " bins" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Table in TabulatedProperty " << tabProp->name()
+            << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 
@@ -337,8 +346,9 @@ calcAbsorption (const std::vector<double>& momVect,
     aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, pathlength ) );
   }
 
-  debug() << "Table in TabulatedProperty " << tabProp->name()
-          << " updated with " << momVect.size() << " bins" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Table in TabulatedProperty " << tabProp->name()
+            << " updated with " << momVect.size() << " bins" << endmsg;
 
   return StatusCode::SUCCESS;
 }

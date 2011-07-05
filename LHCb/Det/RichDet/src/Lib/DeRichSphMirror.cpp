@@ -148,7 +148,8 @@ StatusCode DeRichSphMirror::updateGeometry()
     return StatusCode::FAILURE;
   }
 
-  debug() << "Initializing spherical mirror" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Initializing spherical mirror" << endmsg;
 
   // extract mirror number from detector element name
   const std::string::size_type pos2 = name().rfind(':');
@@ -246,9 +247,12 @@ StatusCode DeRichSphMirror::updateGeometry()
   m_mirrorCentre      = geometry()->toGlobal(m_localMirrorCentre);
   m_centreOfCurvature = geometry()->toGlobal(m_localOrigin);
 
-  debug() << "Mirror #" << m_mirrorNumber << " " << rich << " Radius:"
-          << m_radius << " Centre of curvature " << m_centreOfCurvature << endmsg;
-  debug() << "Centre of mirror " << m_mirrorCentre << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Mirror #" << m_mirrorNumber << " " << rich << " Radius:"
+            << m_radius << " Centre of curvature " << m_centreOfCurvature << endmsg;
+    debug() << "Centre of mirror " << m_mirrorCentre << endmsg;
+  }
 
   // the following lines can be uncommented for debuging
   // right and left middle points are for verification of the hex segment position
@@ -271,10 +275,12 @@ StatusCode DeRichSphMirror::updateGeometry()
     (Gaudi::XYZVector(-m_localMirrorCentre.x(),-m_localMirrorCentre.y(),
                       -m_localMirrorCentre.z()).unit() );
   m_centreNormal = geometry()->toGlobalMatrix()*localCentreNormal;
-  debug() << "Normal vector at the centre" << m_centreNormal << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Normal vector at the centre" << m_centreNormal << endmsg;
 
   m_centreNormalPlane = Gaudi::Plane3D(m_centreNormal, m_mirrorCentre);
-  verbose() << "centreNormalPlane " << m_centreNormalPlane << endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "centreNormalPlane " << m_centreNormalPlane << endmsg;
 
   Surface* surf( 0 );
   std::string surfLocation;
@@ -338,7 +344,8 @@ StatusCode DeRichSphMirror::updateGeometry()
       DataObject * pObj = obj;
       if ( pObj )
       {
-        verbose() << "Dynamic cast to surface " << pObj->name() << endmsg;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "Dynamic cast to surface " << pObj->name() << endmsg;
         surf = dynamic_cast<Surface*> (pObj);
       }
       else
@@ -385,10 +392,14 @@ StatusCode DeRichSphMirror::updateGeometry()
     return StatusCode::FAILURE;
   }
 
-  debug() << "Reflectivity is from TabProp "
-          << m_reflectivity->tabProperty()->name() << endmsg;
-  debug() << "Second volume is " << surf->secondVol() << endmsg;
-  verbose() << m_reflectivity->tabProperty() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Reflectivity is from TabProp "
+            << m_reflectivity->tabProperty()->name() << endmsg;
+    debug() << "Second volume is " << surf->secondVol() << endmsg;
+  }
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << m_reflectivity->tabProperty() << endmsg;
 
   m_firstUpdate = false;
 

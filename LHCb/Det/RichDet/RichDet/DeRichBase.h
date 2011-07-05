@@ -66,6 +66,16 @@ protected:
 
 protected:
 
+  /** Create a MsgStream object on the fly, when first needed
+   *
+   *  @return Reference to the predefined stream
+   */
+  inline MsgStream & msgStream() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), myName() );
+    return *m_msgStream;
+  }
+
   /** Predefined configurable message stream for the efficient printouts
    *
    *  @code
@@ -78,8 +88,7 @@ protected:
    */
   inline MsgStream & msgStream( const MSG::Level level ) const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), myName() );
-    return *m_msgStream << level ;
+    return msgStream() << level ;
   }
 
   /// shortcut for the method msgStream ( MSG::ALWAYS )
@@ -101,6 +110,25 @@ protected:
   MsgStream msgStream( const std::string & name ) const
   {
     return MsgStream( msgSvc(), name );
+  }
+
+  /// Return the current message level
+  inline MSG::Level msgLevel() const 
+  {
+    return msgStream().level(); 
+  }
+
+  /// Test the message level for the cached MsgStream object
+  inline bool msgLevel( const MSG::Level level ) const 
+  {
+    return msgLevel() <= level; 
+  }
+
+  /// Test the message level for a given MsgStream object
+  inline bool msgLevel( const MSG::Level level,
+                        MsgStream & msgStream ) const 
+  {
+    return msgStream.level() <= level; 
   }
 
 protected:

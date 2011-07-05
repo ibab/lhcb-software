@@ -64,7 +64,8 @@ DeRich::~DeRich()
 //=========================================================================
 StatusCode DeRich::initialize ( )
 {
-  debug() << "Initialize " << name() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Initialize " << name() << endmsg;
 
   if ( exists( "SphMirrorSegRows" ) )
   {
@@ -121,7 +122,8 @@ void DeRich::loadNominalHPDQuantumEff() const
   }
   else
   {
-    debug() << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
     m_nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
     if ( !m_nominalHPDQuantumEff->valid() )
     {
@@ -183,7 +185,8 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
                                   SmartRef<Condition> mirrorAlignCond,
                                   const std::string& Rvector ) const {
 
-  verbose() << "Misaligning " << mirrorID << " in " << myName() << endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Misaligning " << mirrorID << " in " << myName() << endmsg;
 
   std::map<int, IPVolume*> mirrors;
   const IPVolume* cpvMirror;
@@ -200,7 +203,6 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
       std::string mirrorName = pvMirror->name();
       if (mirrorName.find(mirrorID) != std::string::npos )
       {
-        //msg << MSG::VERBOSE << "Matched mirror " << mirrorName << endmsg;
         const std::string::size_type mpos = mirrorName.find(':');
         if ( std::string::npos == mpos )
         {
@@ -212,7 +214,8 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
       }
     }
   }
-  verbose() << "Found " << mirrors.size() << " mirrors" << endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Found " << mirrors.size() << " mirrors" << endmsg;
 
   std::vector<double> rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
   std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
@@ -252,7 +255,8 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     mirrors[mNum]->applyMisAlignment( matrix );
   }
 
-  debug() << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
   return StatusCode::SUCCESS;
 
 }

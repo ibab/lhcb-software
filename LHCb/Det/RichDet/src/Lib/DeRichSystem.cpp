@@ -64,7 +64,8 @@ StatusCode DeRichSystem::initialize()
 {
   setMyName("DeRichSystem");
 
-  debug() << "Initialize " << name() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Initialize " << name() << endmsg;
 
   // register for condition updates
   updMgrSvc()->registerCondition( this, 
@@ -118,7 +119,8 @@ DetectorElement * DeRichSystem::deRich( const Rich::DetectorType rich ) const
 //=========================================================================
 StatusCode DeRichSystem::buildHPDMappings()
 {
-  debug() << "Update triggered for HPD numbering maps" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Update triggered for HPD numbering maps" << endmsg;
 
   // clear maps and containers
   m_soft2hard.clear();
@@ -187,7 +189,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   if ( numbers->exists("InactiveHPDListInSmartIDs") )
   {
     // smartIDs
-    debug() << "Inactive HPDs are taken from the smartID list" << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Inactive HPDs are taken from the smartID list" << endmsg;
     const CondData& inactsHuman = numbers->paramVect<int>("InactiveHPDListInSmartIDs");
     inactiveHPDListInSmartIDs = true;
     inacts.reserve(inactsHuman.size());
@@ -205,7 +208,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   else
   {
     // hardware IDs
-    debug() << "Inactive HPDs are taken from the hardware list" << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Inactive HPDs are taken from the hardware list" << endmsg;
     inacts = numbers->paramVect<int>("InactiveHPDs");
   }
 
@@ -253,9 +257,10 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     const Rich::DAQ::HPDCopyNumber    copyN  ( *icopyN );
 
     // debug printout
-    verbose() << "PD     " << (int)hpdID << " " << hpdID
-              << " HPDhardID " << hardID << " L0 " << L0ID << " L1 HardID " << L1ID
-              << " L1 input " << L1IN << endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "PD     " << (int)hpdID << " " << hpdID
+                << " HPDhardID " << hardID << " L0 " << L0ID << " L1 HardID " << L1ID
+                << " L1 input " << L1IN << endmsg;
 
     // Sanity checks that this HPD is not already in the maps
     if ( m_soft2hard.find(hpdID) != m_soft2hard.end() )
@@ -301,7 +306,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       {
         m_inactiveHPDHardIDs.push_back  ( hardID );
         m_inactiveHPDSmartIDs.push_back ( hpdID  );
-        debug() << "PD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "PD " << hpdID << " hardID " << hardID << " is INACTIVE" << endmsg;
       }
     }
 
@@ -365,8 +371,9 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       const Rich::DAQ::Level1LogicalID  logID  ( boost::lexical_cast<int>(data.substr(0,slash)) );
       const Rich::DAQ::Level1HardwareID hardID ( boost::lexical_cast<int>(data.substr(slash+1)) );
       const Rich::DetectorType richTmp = this->richDetector(hardID);
-      debug() << richTmp << " L1 ID mapping : Logical=" << logID
-              << " Hardware=" << hardID << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << richTmp << " L1 ID mapping : Logical=" << logID
+                << " Hardware=" << hardID << endmsg;
       (m_l1LogToHard[rich])[logID]  = hardID;
       m_l1HardToLog[hardID]         = logID;
     }
@@ -385,13 +392,17 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     if ( m_l1H2CopyN.find(*iL1HID) == m_l1H2CopyN.end() )
     {
       m_l1H2CopyN[*iL1HID] = Rich::DAQ::Level1CopyNumber(m_firstL1CopyN);
-      debug() << "L1 Hardware ID " << *iL1HID << " -> Copy Number " << m_l1H2CopyN[*iL1HID] << endmsg;
       ++m_firstL1CopyN;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "L1 Copy Number " << m_l1H2CopyN[*iL1HID] 
+                << " -> HardwareID=" << *iL1HID << " LogicalID=" << level1LogicalID(*iL1HID) 
+                << endmsg;
     }
   }
 
-  debug() << "Built mappings for " << boost::format("%2i") % (m_l1IDs.size()-saveL1size)
-          << " L1 and " << nHPDs << " PDs in " << rich << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Built mappings for " << boost::format("%2i") % (m_l1IDs.size()-saveL1size)
+            << " L1 and " << nHPDs << " PDs in " << rich << endmsg;
 
   return StatusCode::SUCCESS;
 }

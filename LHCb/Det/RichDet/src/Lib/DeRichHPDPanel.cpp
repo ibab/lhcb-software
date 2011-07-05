@@ -65,7 +65,9 @@ StatusCode DeRichHPDPanel::initialize()
   setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichHPDPanel_NO_NAME" );
 
   MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
-  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
+
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
   // register UMS dependency on local geometry
   updMgrSvc()->registerCondition( this, geometry(), &DeRichHPDPanel::geometryUpdate );
@@ -517,8 +519,9 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
-      << " Panel" << (int)side() << " -------" << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
+        << " Panel" << (int)side() << " -------" << endmsg;
 
   m_pixelSize      = deRich1->param<double>("RichHpdPixelXsize");
   m_subPixelSize   = m_pixelSize/8.0;
@@ -528,9 +531,10 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
   m_pixelRows    = deRich1->param<int>("RichHpdNumPixelRow");
 
-  msg << MSG::DEBUG << "RichHpdPixelsize: " << m_pixelSize << " ActiveRadius: "
-      << activeRadius << " pixelRows: " << m_pixelRows << " pixelColumns: "
-      << m_pixelColumns << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "RichHpdPixelsize: " << m_pixelSize << " ActiveRadius: "
+        << activeRadius << " pixelRows: " << m_pixelRows << " pixelColumns: "
+        << m_pixelColumns << endmsg;
 
   m_HPDColumns  = param<int>("HPDColumns");
   m_HPDNumInCol = param<int>("HPDNumberInColumn");
@@ -538,8 +542,9 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
 
   m_HPDPitch = param<double>("HPDPitch");
   m_HPDColPitch = std::sqrt( 0.75 * m_HPDPitch*m_HPDPitch );
-  msg << MSG::DEBUG << "HPDColumns:" << nHPDColumns() << " HPDNumberInColumns:"
-      << nHPDsPerCol() << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "HPDColumns:" << nHPDColumns() << " HPDNumberInColumns:"
+        << nHPDsPerCol() << endmsg;
 
   if ( m_HPDColPitch  < activeRadius*2)
   {
@@ -571,8 +576,9 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   m_panelColumnSideEdge = HPD00u - 0.5*m_HPDColPitch;
   m_localOffset = fabs( m_panelColumnSideEdge );
 
-  msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
-      << m_panelColumnSideEdge << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
+        << m_panelColumnSideEdge << endmsg;
 
   m_panelStartColPosEven = HPD00v - 0.5*m_HPDPitch;
   m_panelStartColPosOdd  = HPD10v - 0.5*m_HPDPitch;
@@ -582,10 +588,11 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   if ( fabs( m_panelStartColPosOdd ) > m_panelStartColPos )
     m_panelStartColPos = fabs( m_panelStartColPosOdd );
 
-  msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
-      << " panelStartColPosOdd:" << m_panelStartColPosOdd
-      << " m_panelStartColPos:" << m_panelStartColPos
-      << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
+        << " panelStartColPosOdd:" << m_panelStartColPosOdd
+        << " m_panelStartColPos:" << m_panelStartColPos
+        << endmsg;
 
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
@@ -615,7 +622,8 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   }
 
   const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
-  msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
+  if ( msgLevel(MSG::VERBOSE,msg) )
+    msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
   if ( !siliconBox )
   {
@@ -643,16 +651,21 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   }
   const double winR = windowTicks[0];
 
-  msg << MSG::DEBUG << "Centre of HPDPanel : " << centreGlobal
-      << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#0 "
-      << geometry()->toLocal(DeHPD(0)->windowCentreInIdeal()) << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol()-1 << " "
-      << geometry()->toLocal(DeHPD(nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol() << " "
-      << geometry()->toLocal(DeHPD(nHPDsPerCol())->windowCentreInIdeal()) << endmsg;
-  msg << MSG::VERBOSE << "Ideal local centre of HPD#" << 2*nHPDsPerCol()-1 << " "
-      << geometry()->toLocal(DeHPD(2*nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "Centre of HPDPanel : " << centreGlobal
+        << endmsg;
+
+  if ( msgLevel(MSG::VERBOSE,msg) )
+  {
+    msg << MSG::VERBOSE << "Ideal local centre of HPD#0 "
+        << geometry()->toLocal(DeHPD(0)->windowCentreInIdeal()) << endmsg;
+    msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol()-1 << " "
+        << geometry()->toLocal(DeHPD(nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
+    msg << MSG::VERBOSE << "Ideal local centre of HPD#" << nHPDsPerCol() << " "
+        << geometry()->toLocal(DeHPD(nHPDsPerCol())->windowCentreInIdeal()) << endmsg;
+    msg << MSG::VERBOSE << "Ideal local centre of HPD#" << 2*nHPDsPerCol()-1 << " "
+        << geometry()->toLocal(DeHPD(2*nHPDsPerCol()-1)->windowCentreInIdeal()) << endmsg;
+  }
 
   // find the top of 3 HPDs to create a detection plane.
   const Gaudi::XYZPoint pointA( DeHPD(0)->windowCentreInIdeal() );
@@ -662,15 +675,18 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   const Gaudi::XYZPoint pointC( DeHPD(nHPDs()-nHPDsPerCol()/2)->windowCentreInIdeal() );
 
   m_detectionPlane = Gaudi::Plane3D(pointA,pointB,pointC);
-  msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
+  if ( msgLevel(MSG::VERBOSE,msg) )
+    msg << MSG::VERBOSE << "Detection plane        " << m_detectionPlane << endmsg;
 
   m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;
-  msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
+  if ( msgLevel(MSG::VERBOSE,msg) )
+    msg << MSG::VERBOSE << "Detection plane local  " << m_localPlane << endmsg;
   m_localPlaneNormal = m_localPlane.Normal();
 
   // store the z coordinate of the detection plane
   m_detPlaneZ = geometry()->toLocal(pointA).z();
-  msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
+  if ( msgLevel(MSG::VERBOSE,msg) )
+    msg << MSG::VERBOSE << "Local z coord of det plane " << m_detPlaneZ << endmsg;
 
   // localPlane2 is used when trying to locate the HPD row/column from
   // a point in the panel.
@@ -678,7 +694,8 @@ StatusCode DeRichHPDPanel::geometryUpdate ( )
   m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
   msg << MSG::VERBOSE << "Detection plane local2 " << m_localPlane2 << endmsg;
 
-  msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "Found " << m_DeHPDs.size() << " DeRichHPDs" << endmsg;
 
   // update transforms
   // create a transform with an offset to accommodate both detector panels in one histogram

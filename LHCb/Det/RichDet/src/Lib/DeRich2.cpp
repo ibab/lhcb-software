@@ -44,7 +44,8 @@ const CLID& DeRich2::classID()
 
 StatusCode DeRich2::initialize()
 {
-  debug() << "Initialize " << name() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Initialize " << name() << endmsg;
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
@@ -54,9 +55,10 @@ StatusCode DeRich2::initialize()
   m_nominalCentreOfCurvatureRight =
     Gaudi::XYZPoint( -nominalCoC[0], nominalCoC[1], nominalCoC[2] );
 
-  debug() << "Nominal centre of curvature"
-          << m_nominalCentreOfCurvatureLeft << " , " << m_nominalCentreOfCurvatureRight
-          << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal centre of curvature"
+            << m_nominalCentreOfCurvatureLeft << " , " << m_nominalCentreOfCurvatureRight
+            << endmsg;
 
   m_sphMirrorRadius = param<double>("SphMirrorRadius");
 
@@ -73,8 +75,9 @@ StatusCode DeRich2::initialize()
   m_nominalNormalLeft  = m_nominalPlaneLeft.Normal();
   m_nominalNormalRight = m_nominalPlaneRight.Normal();
 
-  debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalLeft ) << " "
-          << Gaudi::XYZVector( m_nominalNormalRight ) << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalLeft ) << " "
+            << Gaudi::XYZVector( m_nominalNormalRight ) << endmsg;
 
   const IPVolume* pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow:0");
   if ( pvGasWindow )
@@ -130,7 +133,8 @@ StatusCode DeRich2::initialize()
   }
   else
   {
-    debug() << "Loaded spherical mirror reflectivity from: "<<sphMirrorReflLoc<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Loaded spherical mirror reflectivity from: "<<sphMirrorReflLoc<<endmsg;
     m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
@@ -154,7 +158,8 @@ StatusCode DeRich2::initialize()
   }
   else
   {
-    debug() << "Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
     m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {

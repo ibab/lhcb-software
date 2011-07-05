@@ -122,7 +122,8 @@ const CLID& DeRichHPD::classID()
 StatusCode DeRichHPD::initialize ( )
 {
   MsgStream msg( msgSvc(), "DeRichHPD" );
-  msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
+  if ( msgLevel(MSG::DEBUG,msg) )
+    msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
 
   // store the name of the HPD, without the /dd/Structure part
   const std::string::size_type pos = name().find("HPD:");
@@ -233,7 +234,8 @@ ILHCbMagnetSvc * DeRichHPD::magSvc() const
 //=========================================================================
 StatusCode DeRichHPD::initHpdQuantumEff()
 {
-  debug() << "Updating Q.E. for HPD:" << m_number << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Updating Q.E. for HPD:" << m_number << endmsg;
 
   // If we own the function object, delete it first
   if ( m_ownHPDQEFunc ) delete m_hpdQuantumEffFunc;
@@ -335,7 +337,8 @@ StatusCode DeRichHPD::getParameters()
 //=========================================================================
 StatusCode DeRichHPD::updateGeometry()
 {
-  debug() << "Updating geometry transformations for HPD:" << m_number <<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Updating geometry transformations for HPD:" << m_number <<endmsg;
 
   // find the subMaster volume, normally the first physical volume
   const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
@@ -364,8 +367,6 @@ StatusCode DeRichHPD::updateGeometry()
     pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield")->lvolume()->solid();
 
   const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
-  //msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox "
-  //    << siliconSolid->name() << endmsg;
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
   if ( !siliconBox )
   {
@@ -397,7 +398,6 @@ StatusCode DeRichHPD::updateGeometry()
   m_winInRsq  = m_winInR*m_winInR;
   m_winOutR   = windowTicks[1];
   m_winOutRsq = m_winOutR*m_winOutR;
-  //msg << MSG::DEBUG << "winInR = " << m_winInR << " winOutR = " << m_winOutR << endmsg;
 
   // get kapton
   const IPVolume * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
@@ -432,7 +432,8 @@ StatusCode DeRichHPD::updateGeometry()
 //=================================================================================
 StatusCode DeRichHPD::updateDemagProperties()
 {
-  debug() << "Updating Demagnification properties for HPD:" << m_number << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Updating Demagnification properties for HPD:" << m_number << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
   for ( unsigned int field = 0; field<2; ++field )
@@ -565,7 +566,8 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
   const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc.str());
   m_MDMS_version[field] = ( m_demagConds[field]->exists("version") ?
                             m_demagConds[field]->param<int>("version") : 0 );
-  debug() << " -> Field " << field << " MDMS version = " << m_MDMS_version[field] << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " -> Field " << field << " MDMS version = " << m_MDMS_version[field] << endmsg;
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;

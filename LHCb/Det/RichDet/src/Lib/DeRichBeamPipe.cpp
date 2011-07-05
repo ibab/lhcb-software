@@ -1,3 +1,4 @@
+
 //=============================================================================
 /** @file DeRichBeamPipe.cpp
  *
@@ -43,8 +44,11 @@ const CLID& DeRichBeamPipe::classID()
 //=========================================================================
 StatusCode DeRichBeamPipe::initialize ( )
 {
-  debug() << "Initialize " << name() << endmsg;
-  debug() << geometry()->lvolume()->name() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Initialize " << name() << endmsg;
+    debug() << geometry()->lvolume()->name() << endmsg;
+  }
 
   m_solid = geometry()->lvolume()->solid();
 

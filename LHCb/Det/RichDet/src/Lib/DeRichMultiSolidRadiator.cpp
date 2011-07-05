@@ -61,7 +61,8 @@ StatusCode DeRichMultiSolidRadiator::initialize()
 //=========================================================================
 StatusCode DeRichMultiSolidRadiator::geometryUpdate()
 {
-  debug() << "Geometry update" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Geometry update" << endmsg;
 
   // clear up first
   m_solids.clear();
@@ -174,7 +175,8 @@ DeRichMultiSolidRadiator::addSubTileVolumes ( const ILVolume* lv,
         m_toLowLevel.push_back( ( (*stpviter)->matrix()) * tileTrans * toLowerLevel );
         m_toTopLevel.push_back( (toLowerLevel.Inverse()) * tileTransInv * ((*stpviter)->matrixInv()));
         m_solids.push_back( (*stpviter)->lvolume()->solid() );
-        debug() << "Storing aerogel sub tile pvolume " << (*stpviter)->name() << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Storing aerogel sub tile pvolume " << (*stpviter)->name() << endmsg;
         
         const std::string::size_type  pvolNameColPos = (*stpviter)->name().find(":");
         const std::string pvolNameSuffixA= (*stpviter)->name().substr(pvolNameColPos-4,4);
@@ -186,7 +188,8 @@ DeRichMultiSolidRadiator::addSubTileVolumes ( const ILVolume* lv,
                 << (*stpviter)->name() << endmsg;
           return StatusCode::FAILURE;
         }
-        debug() << " DeRichMultiSolidRadiator Loading " << curSubTileDeName << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << " DeRichMultiSolidRadiator Loading " << curSubTileDeName << endmsg;
         m_radiators.push_back( deRad );
        
         
@@ -222,7 +225,8 @@ DeRichMultiSolidRadiator::addFullTileVolumes ( const ILVolume* lv,
       m_toLowLevel.push_back( ((*pviter)->matrix()) * (toLowerLevel) );
       m_toTopLevel.push_back( (toLowerLevel.Inverse()) * ((*pviter)->matrixInv()) );
       m_solids.push_back( (*pviter)->lvolume()->solid() );
-      debug() << "Storing pvolume " << (*pviter)->name() << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Storing pvolume " << (*pviter)->name() << endmsg;
 
       // get the volume number
       const std::string::size_type numPos = (*pviter)->name().find(':');
@@ -243,7 +247,8 @@ DeRichMultiSolidRadiator::addFullTileVolumes ( const ILVolume* lv,
                 << (*pviter)->name() << endmsg;
         return StatusCode::FAILURE;
       }
-      debug() << "Loading " << radLoc << " " << tileNumStr << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Loading " << radLoc << " " << tileNumStr << endmsg;
       m_radiators.push_back( deRad );
 
       // Declare UMS dependencies
