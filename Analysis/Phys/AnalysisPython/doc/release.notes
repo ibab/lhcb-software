@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-07-05 - Vanya Belyaev
+ - fix in py-selector
+
 ! 2011-06-26 - Vanya Belyaev
 
  - ZipShelve:
