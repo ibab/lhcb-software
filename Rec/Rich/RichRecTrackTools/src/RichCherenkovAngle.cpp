@@ -100,7 +100,16 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
     if ( !useEmittedSpectrum ) 
       segment->setAverageCKTheta( id, 
                                   (LHCb::RichRecSegment::FloatType)(angle) );
-    
+
+    //if ( !useEmittedSpectrum ) 
+    //{
+    //  const double P = std::sqrt(segment->trackSegment().bestMomentum().mag2());
+    //  if ( segment->trackSegment().rich() == Rich::Rich2 && P > 90 * Gaudi::Units::GeV )
+    //  {
+    //    info() << id << "  P = " << P/1000 << " GeV  CKtheta = " << angle*1000 << " mrad" << endmsg; 
+    //  }
+    //}
+
     // return the newly calculated value
     return angle;
   }

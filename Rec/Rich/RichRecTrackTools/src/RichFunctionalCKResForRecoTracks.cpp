@@ -172,7 +172,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       }
       catch ( const TransportSvcException & excpt )
       {
-        Warning( "Problem computing radiation length" + excpt.message() ).ignore();
+        Warning( "Problem computing radiation length : " + excpt.message() ).ignore();
       }
       //-------------------------------------------------------------------------------
 
