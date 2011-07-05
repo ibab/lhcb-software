@@ -1164,6 +1164,8 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
           infoPersistent.insert( "3#Track.firstState.tx", float( firstState.tx() ) );
           infoPersistent.insert( "4#Track.firstState.ty", float( firstState.ty() ) );
           infoPersistent.insert( "5#Track.firstState.qOverP", float( firstState.qOverP() ) );
+          infoPersistent.insert( "6#Track.chi2PerDoF", float( candi->chi2PerDoF() ) );
+          infoPersistent.insert( "7#Track.nDoF", float( candi->nDoF() ) );
         }
       }    
     }    

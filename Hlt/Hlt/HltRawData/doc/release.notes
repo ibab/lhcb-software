@@ -4,6 +4,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+!========================== HltRawData v2r11 2011-07-05 ===================
+! 2011-07-05 - Gerhard Raven
+ - add chisq and dof for tracks to report
+
 !========================== HltRawData v2r10p3 2011-03-23 ===================
 ! 2011-03-23 - Gerhard Raven
  - fix warning which isn't really a warning
