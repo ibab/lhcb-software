@@ -415,16 +415,18 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 ##         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonUnbiasedJPsiLowDecision":  50204 } )
         
         #--------------------------------------------
+        def addPT( code, props, ptkey  ) :
+            if props[ptkey] > 0 :   code = code + "& (PT>%s*MeV)"% props[ptkey]
+            return code % props
+
         '''
         unbiased Zmm
         '''
         line.clone( 'DiMuonZ'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "(MM>%(UnbiasedZmmMinMass)s*MeV) "\
-                                 "& (PT>%(UnbiasedZmmPt)s*MeV) "% self.getProps() 
-                                 , 'PostMonitor' :
-                                 Hlt2Monitor( "M","M(#mu#mu)",90000,10000,'M_out',nbins=25)
-                                 }
+                    , Filter = { 'Code':  addPT("(MM>%(UnbiasedZmmMinMass)s*MeV)",self.getProps(),"UnbiasedZmmPt")
+                               , 'PostMonitor' : Hlt2Monitor( "M","M(#mu#mu)",90000,10000,'M_out',nbins=25)
+                               }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonZDecision":   50205 } )
@@ -434,10 +436,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY1'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': " (((MM>%(DY1MinMass)s*MeV) & (MM<%(DY1MinExcMass)s*MeV))| ((MM>%(DY1MaxExcMass)s*MeV))) "\
+                    , Filter = { 'Code': addPT( " ((MM>%(DY1MinMass)s*MeV) & ~in_range(%(DY1MinExcMass)s*MeV, MM,%(DY1MaxExcMass)s*MeV)) "\
                                  "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
-                                 "& (MINTREE('mu-'==ABSID,PT)>%(DY1MuPt)s*MeV)"\
-                                 "& (PT>%(DYPt)s*MeV) " % self.getProps() }
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(DY1MuPt)s*MeV)" , self.getProps(), "DYPt" ) }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY1Decision":   50206 } )
@@ -448,10 +449,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY2'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "  (MM>%(DY2MinMass)s*MeV) "\
+                    , Filter = { 'Code': addPT( "  (MM>%(DY2MinMass)s*MeV) "\
                                  "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
-                                 "& (MINTREE('mu-'==ABSID,PT)>%(DY2MuPt)s*MeV)"\
-                                 "& (PT>%(DYPt)s*MeV) " % self.getProps() }
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(DY2MuPt)s*MeV)",  self.getProps(), "DYPt" ) }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY2Decision":   50207 } )
@@ -463,9 +463,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY3'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "  (MM>%(DY3MinMass)s*MeV) "\
-                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
-                                 "& (PT>%(DYPt)s*MeV) " % self.getProps() }
+                    , Filter = { 'Code': addPT("  (MM>%(DY3MinMass)s*MeV) "\
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )", self.getProps(), "DYPt") }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY3Decision":   50208 } )
@@ -476,9 +475,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line.clone( 'DiMuonDY4'
                     , prescale = self.prescale 
-                    , Filter = { 'Code': "  (MM>%(DY4MinMass)s*MeV) "\
-                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )"\
-                                 "& (PT>%(DYPt)s*MeV) " % self.getProps() }
+                    , Filter = { 'Code': addPT("  (MM>%(DY4MinMass)s*MeV) "\
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2)s )", self.getProps(), "DYPt" ) }
                     , postscale = self.postscale
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDY4Decision":   50209 } )
