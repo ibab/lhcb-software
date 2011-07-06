@@ -779,6 +779,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         
         Preambulo0 = [ "from LoKiCore.functions           import *" 
                      , "from LoKiPhys.functions           import *"
+                     , "from GaudiKernel.PhysicalConstants import c_light"
                      ]
         
         Preambulo  = Preambulo0 + [
