@@ -5,7 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!========================== HltConf v9r10p1  2011-07-04 ===================
+!========================== HltConf v9r10p1  2011-07-06 ===================
+! 2011-07-06 - Gerhard Raven
+ - define Hlt1L0HighSumETJetDecision
+
 ! 2011-06-30 - Johannes Albrecht
  - add routing bit for diMuon 
 
