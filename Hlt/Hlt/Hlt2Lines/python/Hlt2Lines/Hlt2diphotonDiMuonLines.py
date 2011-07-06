@@ -29,7 +29,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons    
-        from Hlt2SharedParticles.Pi0 import AllPi0s
+        from Hlt2SharedParticles.Pi0 import AllPi0s,MergedPi0s,ResolvedPi0s
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         from Configurables import CombineParticles, FilterDesktop
         from Configurables import LoKi__VoidFilter as VoidFilter
@@ -81,7 +81,8 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                             , Inputs  = [ BiKalmanFittedPhotons ]
                             )
 
-        FilterPhVoid = VoidFilter('Hlt2LowMultPhotonFilter_nPi0', Code="(CONTAINS('Hlt2/" + AllPi0s.outputSelection()[0] + "/Particles')>0)|(CONTAINS('Hlt2/" + AllPi0s.outputSelection()[1] + "/Particles')>0)")
+        FilterPhFilter = Hlt2Member(FilterDesktop, "FilterPhFilter", Code = "PT>250*MeV", 
+                                    Inputs  = [MergedPi0s,ResolvedPi0s])
 
         FilterH = Hlt2Member(CombineParticles
                             , "FilterH"
@@ -123,7 +124,7 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Photon,lowMult')|L0_CHANNEL('DiEM,lowMult')"
-                       , algos = [ BiKalmanFittedPhotons,AllPi0s,FilterPhVoid ]  
+                       , algos = [ BiKalmanFittedPhotons,AllPi0s,FilterPhFilter ]  
                        , postscale = self.postscale
                        )
         line = Hlt2Line( 'LowMultElectron'
