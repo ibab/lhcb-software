@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v5r14 2011-07-05 ===================
+! 2011-07-06 - Gerhard Raven
+ - reduce L0Any, Beamgas, NoBias, add HighSumEtJet in Physics_July2011
+
 ! 2011-07-05 - Eric Van Herwijnen
  - Fixed typo in Physics_July2011.
 

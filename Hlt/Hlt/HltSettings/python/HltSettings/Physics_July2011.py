@@ -58,6 +58,8 @@ class Physics_July2011( object ):
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
+        from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
+        from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'      :  1700
                                                , 'AllL0_P'       : 10000
@@ -124,6 +126,20 @@ class Physics_July2011( object ):
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.01,
                                                                                 'Hlt1MultiMuonNoIP'  : 0.0 }
                                                }
+                       , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
+                                                                , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
+                                                                }
+                                               }
+                       , Hlt1BeamGasLinesConf : { 'Postscale'               : { 'Hlt1BeamGasNoBeamBeam1'           : 'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasNoBeamBeam2'           : 'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasBeam1'                 : 'RATE(2)'
+                                                                              , 'Hlt1BeamGasBeam2'                 : 'RATE(2)'
+                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam1' : 'RATE(2)'
+                                                                              , 'Hlt1BeamGasCrossingEnhancedBeam2' : 'RATE(2)'
+                                                                              , 'Hlt1BeamGasCrossingForcedReco'    : 'RATE(0.5)'
+                                                                              , 'Hlt1BeamGasCrossingParasitic'     : 'RATE(0.5)'
+                                                                              }
+                                                }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' } }
                        , Hlt2CommissioningLinesConf : { 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
@@ -131,7 +147,9 @@ class Physics_July2011( object ):
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
+                                               , 'MaxNoBiasRate' : 11.
                                                }
+                       , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 } } # for 0x0035, this is already done in L0
                        }
 
         from Muons_July2011 import Muons_July2011
@@ -200,6 +218,7 @@ class Physics_July2011( object ):
                  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
                  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
                  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
+                 , 'Hlt1L0HighSumETJet'
                  , 'Hlt1MBNoBias' 
                  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
                  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
