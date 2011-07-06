@@ -8,6 +8,7 @@
 !========================== Hlt1Lines v6r12  2011-07-06 =================
 ! 2011-07-06 - Gerhard Raven
  - define Hlt1L0HighSumETJet
+ - clean up Hlt1L0Lines
 
 !========================== Hlt1Lines v6r11  2011-06-24 =================
 ! 2011-06-24 - Gerhard Raven
