@@ -787,7 +787,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # related to tau->3mu 
             "ctau      = BPVLTIME ( ) * c_light   " ,
             "chi2vx    = VFASPF(VCHI2) "            , 
-            "min_m12   = 2* PDGM('mu+') + 3 * MeV " ,
+            "min_m12   = 2* PDGMASS('mu+') + 3 * MeV " ,
             # related to dimuons 
             "psi             = ADMASS ( 'J/psi(1S)' ) < %(MultiMu_Psi1S_MassWindow)g "           ,
             "psi_prime       = ADMASS (   'psi(2S)' ) < %(MultiMu_Psi2S_MassWindow)g "           ,
@@ -990,7 +990,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             CombinationCut  = """
             ( APT           > %(DiMuonCharm_Charm_PT)g      ) &
             ( AM12          < 1040 * MeV  )                   & 
-            in_range ( PDGM('D+') - %(DiMuonCharm_D_MassWindow)g , AM , PDGM('D_s+') - %(DiMuonCharm_D_MassWindow)g )
+            in_range ( PDGMASS('D+') - %(DiMuonCharm_D_MassWindow)g , AM , PDGMASS('D_s+') - %(DiMuonCharm_D_MassWindow)g )
             """ % self.getProps() ,
             MotherCut       = " ( chi2vx < 30 ) & ( ctau_charm > 100 * um ) "
             )
