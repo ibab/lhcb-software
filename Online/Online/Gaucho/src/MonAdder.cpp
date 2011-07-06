@@ -419,6 +419,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     DimBuffBase *pp = (DimBuffBase*)hstart;
     while (pp<bend)
     {
+      if (pp->reclen == 0) break;
       char *nam = (char*)AddPtr(pp,pp->nameoff);
 //      //printf("Histogram Name: %s\n",nam);
       std::string nams =nam;
