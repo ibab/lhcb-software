@@ -29,6 +29,7 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
   DimHistbuff1 *pp = (DimHistbuff1*)hstart;
   while (pp<bend)
   {
+    if (pp->reclen == 0) break;
     char *nam = (char*)AddPtr(pp,pp->nameoff);
     hmap.insert(std::make_pair(nam,pp));
     pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
