@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2011-07-06 - Gerhard Raven
+ - add check for multiple algorithms with the same output location
  
 !========================== HltLine v5r1p6 2011-06-24 ===================
 ! 2011-05-12 - Gerhard Raven

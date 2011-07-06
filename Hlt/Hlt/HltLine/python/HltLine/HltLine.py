@@ -475,6 +475,37 @@ def _checkSelections ( args      ,   # the dictionary with arguments
 #        if 'OutputSelection' in algos[i].Type.__slots__ : return i
 #    return None
 # =============================================================================
+def _getOutput(alg) :
+        from Configurables import LoKi__HltUnit
+        props = [ 'OutputSelection','Output','OutputLocation','TracksOutContainer','OutputTracksName','MatchOutput' ]
+        for i in props :
+            if hasattr ( type(alg) , i) and hasattr(alg,i) : return getattr(alg,i)
+        if type(alg) is LoKi__HltUnit and hasattr( alg, 'Code' ) :
+            ex = r"SINK\( *'(\w+)' *\)"
+            import re
+            _outputsel = None
+            for s in re.finditer(ex,getattr(alg,'Code')) :
+                 _outputsel =  s.group(1) 
+            if _outputsel : return _outputsel
+        return alg.name()
+
+def _CheckForOutputOverlap( alg ) :
+    if '_lookup' not in dir(_CheckForOutputOverlap) : _CheckForOutputOverlap._lookup = dict()
+    if '_dup' not in dir(_CheckForOutputOverlap) : _CheckForOutputOverlap._dup = dict()
+    _lookup =  _CheckForOutputOverlap._lookup
+    o = _getOutput( alg )
+    if not o : return 
+
+    #print 'checking %s:%s against %s items' % ( alg.name(), o , len(_lookup.keys()))
+    if o in _lookup.keys() :
+        algs = _lookup[o]
+        if alg.name() not in algs :
+            _lookup[o] += [ alg.name() ]
+            print '# WARNING: %s is output of %s' % ( o, _lookup[o] )
+    else :
+        _lookup[o] = [ alg.name() ]
+       
+
 ## Bind members to an HLT line
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
 #  @date   2008-09-16
@@ -571,6 +602,7 @@ class bindMembers (object) :
         else :
             self._outputsel = alg.name()
         self._InputOutputLocationMatchMaker(alg) 
+        _CheckForOutputOverlap(alg)
 
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
@@ -942,7 +974,7 @@ class Hlt1Line(object):
                         _add_to_hlt1_output_selections_ ( s.group(1) )
 
 
-        if self._outputsel is not None and self._outputsel!= decisionName( line ) :
+        if self._outputsel is not None and self._outputsel!= decisionName( line ) and not line.startswith('Lumi') :
             log.warning( "Line '%s' has a final output selection named '%s' -- this does not match the rules, TISTOS will not work for this line"%(line,self._outputsel) )
 
         # create the line configurable
