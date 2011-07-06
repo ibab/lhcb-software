@@ -75,7 +75,7 @@ def PV3D():
         Code = """
         execute( %(algo)s ) * VSOURCE( '%(tesInput)s' )
         >> VX_SINK( '%(hltProto)s' )
-        >> ( VX_BEAMSPOTRHO( 1 * mm ) < 0.5 * mm )
+        >> ( VX_BEAMSPOTRHO( 1 * mm ) < 0.3 * mm )
         >> RV_SINKTES( '%(tesFinal)s' )
         >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY

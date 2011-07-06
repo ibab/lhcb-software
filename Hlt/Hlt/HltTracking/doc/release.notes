@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltTracking v9r9p1 2011-07-04 ===================
+! 2011-07-06 - Gerhard Raven
+ - reduce PV window from 0.5 mm to 0.3 mm
+
 ! 2011-06-27 - Gerhard Raven
  - remove debug printout...
 
