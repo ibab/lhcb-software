@@ -44,7 +44,10 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
         #  How to deal with the MASKing ???
         #  Actually, we don't have to -- ODIN will do this 'upstream' of us ;-)
 
-        for (name,l0du) in [ ('L0Any','L0_DECISION_PHYSICS'),('L0AnyNoSPD',"L0_CHANNEL_RE('.*NoSPD')") ] :
+        for (name,l0du) in [ ('L0Any','L0_DECISION_PHYSICS')
+                           , ('L0AnyNoSPD',"L0_CHANNEL_RE('.*NoSPD')")
+                           , ('L0HighSumETJet',"L0_CHANNEL_RE('HighSumETJet')") 
+                           ] :
             l = Line(name ,  L0DU = l0du
                 , prescale = self.prescale
                 , postscale = self.postscale
