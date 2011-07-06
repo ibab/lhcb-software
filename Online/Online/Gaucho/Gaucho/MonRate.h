@@ -39,7 +39,6 @@ public:
     m_type  = C_RATEDOUBLESTAR;
     m_contsiz    = 0;
     m_addoff = 0;
-    m_contents = m_ratearr;
     m_service = 0;
     m_name = name;
     m_title = tit;
@@ -88,6 +87,7 @@ public:
     buffersize = allsiz;
     m_arrsiz = allsiz;
     m_ratearr = (double*)malloc(allsiz);
+    m_contents = m_ratearr;
   }
   virtual void makeRate(unsigned long long dt) = 0;
   virtual void print()=0;
