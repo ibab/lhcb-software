@@ -120,6 +120,7 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
         }
         default:
           {
+            printf("Unknown data type to add...%x\n",srch->type);
             break;
           }
       }
