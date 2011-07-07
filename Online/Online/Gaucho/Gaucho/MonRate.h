@@ -167,8 +167,10 @@ template <typename T> inline void MonRateA<T>::makeRate(unsigned long long dt)
   int i;
   for (i=0;i<m_nel;i++)
   {
-    m_ratearr[i] = (double)(m_ptr[i]);
-    m_ratearr[i] = (m_ratearr[i]-(double)m_lastCount[i])/dt;
+    long long tmp;
+    tmp = m_ptr[i]-m_lastCount[i];
+    m_ratearr[i] = (double)(tmp);
+    m_ratearr[i] = (m_ratearr[i])/dt;
     m_ratearr[i] *= 1.0e9;
     if (m_ratearr[i]<0.0)m_ratearr[i] = 0;
   }
@@ -178,8 +180,10 @@ template <typename T> inline void MonRateA<T>::makeRate(unsigned long long dt)
 
 template <typename T> inline void MonRate<T>::makeRate(unsigned long long dt)
 {
-  m_rate = (double)*m_ptr;
-  m_rate = (m_rate - m_lastCount)/dt;
+  T tmp;
+  tmp = *m_ptr-m_lastCount;
+  m_rate = (double)(tmp);
+  m_rate = m_rate/dt;
   if (m_rate <0.0)m_rate = 0.0;
   m_rate = m_rate*1.0e9;
   m_lastCount = *m_ptr;
