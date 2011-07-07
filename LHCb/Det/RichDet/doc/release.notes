@@ -4,6 +4,12 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-07-07 - Chris Jones
+ - Update the tile ID methods in DeRichAerogelRadiator to support better the
+   needs of Brunel, by making tileID() give a unique ID both when sub-tiles
+   are active and inactive. Add a new method primaryTileID() that returns the
+   primary (real) tile ID.
+
 ! 2011-07-05 - Chris Jones
  - Add new methods to DeRichBase to allow the output level to be checked, and
    thus debug and verbose printed to be suppressed when not activate.
@@ -11,8 +17,8 @@
 ! 2011-06-10 - Sajan Easo
  - For using the new version of database with aerogel sub tiles, 
    modifications made to DeRichAerogelRadiator
-   and DeRichMultiSolidRadiator. These are backward compatible and hence can be used
-   for old version of database without the aerogel sub tiles.
+   and DeRichMultiSolidRadiator. These are backward compatible and hence can 
+   be used for old version of database without the aerogel sub tiles.
 
 !========================= RichDet v16r4 2011-06-14 =========================
 ! 2011-05-25 - Chris Jones
