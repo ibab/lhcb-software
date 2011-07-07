@@ -55,9 +55,13 @@ public:
 
 void MEPSvc::filldata(const std::string &cnam,MonMap *mmap)
 {
+  filldata("Runable/",cnam,mmap);
+}
+void MEPSvc::filldata(const std::string &prefix,const std::string &cnam,MonMap *mmap)
+{
   MonMap::iterator it;
   DetData_T<long long>& lb = m_DetMap.find("LHCb")->second;
-  it = mmap->find("Runable/"+cnam);
+  it = mmap->find(prefix+cnam);
   if ( it != mmap->end() )
   {
     CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(it->second);
@@ -84,15 +88,56 @@ void MEPSvc::filldata(const std::string &cnam,MonMap *mmap)
     }
   }
 }
+void MEPSvc::fillrate(const std::string &prefix,const std::string &cnam,MonMap *mmap)
+{
+  MonMap::iterator it;
+  DetData_T<double>& lb = m_DetMap_rate.find("LHCb")->second;
+  it = mmap->find(prefix+cnam);
+  if ( it != mmap->end() )
+  {
+    CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(it->second);
+    double *p = (double*)h->ptr;
+    for (int i=0;i<h->nel;i++)
+    {
+      TellMap_T::iterator t=m_TellMap.find(i);
+      if (t != m_TellMap.end())
+      {
+//        printf("%d %s %s\n", i, t->second.det.c_str(),t->second.name.c_str());
+        DetData_T<double>& d= m_DetMap_rate.find(t->second.det)->second;
+        DetData_T<double>::iterator k = d.find(cnam);
+
+        if (k != d.end())
+        {
+          double pp;
+          pp = p[i];
+          k->second += pp;
+          lb[cnam] += pp;
+        }
+        else
+        {
+//          printf ("Cannot find %s in Detector Data Map\n",cnam.c_str());
+        }
+      }
+    }
+  }
+}
 void MEPSvc::fillsums()//const std::string &cnam,MonMap *mmap)
 {
   DetMap_T<long long>::iterator i;
+  DetMap_T<double>::iterator k;
 //  DetData_T<long long>& lb = m_DetMap.find("LHCb")->second;
   for (i=m_DetMap.begin();i!=m_DetMap.end();i++)
   {
     for (int j=0;j<5;j++)
     {
       i->second["TLostMEP"] += i->second[s_counterTypes[j]];
+    }
+  }
+  for (k=m_DetMap_rate.begin();k!=m_DetMap_rate.end();k++)
+  {
+    for (int j=0;j<5;j++)
+    {
+      k->second["TLostMEP"] += k->second[s_counterTypes[j]];
     }
   }
 }
@@ -109,52 +154,18 @@ StatusCode MEPSvc::start()
 }
 void MEPSvc::analyze(void *, int ,MonMap* mmap)
 {
-  unsigned long long tim = GetTime();
-  unsigned long long delta;
-  if (m_prevupdate == 0)
-  {
-    m_prevupdate = tim;
-    m_DetMap.Zero();
-    for(size_t i=0; i<s_counterTypes.size();i++)
-    {
-      filldata(s_counterTypes[i],mmap);
-    }
-    fillsums();
-  //  m_DetMap.dump();
-  //  m_DetMap_old.dump();
-    m_DetMap_old = m_DetMap;
-    return;
-  }
-  else
-  {
-    delta = tim - m_prevupdate;
-
-  }
-  m_prevupdate = tim;
   m_DetMap.Zero();
+  m_DetMap_rate.Zero();
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
     filldata(s_counterTypes[i],mmap);
+    fillrate(std::string("R_Runable/"),s_counterTypes[i],mmap);
   }
-//  m_DetMap.dump();
-//  m_DetMap_old.dump();
-  fillsums();
-  m_DetMap_diff = m_DetMap - m_DetMap_old;
-  m_DetMap_diff.NegSuppress();
-  m_DetMap_old = m_DetMap;
-  m_DetMap_diff.divide(m_DetMap_rate,delta);
-//  dump();
-//  m_DetMap.dump();
-//  printf("Rate Dump (delta-T = %f seconds)\n",(double)delta/1.0e9);
-//  m_DetMap_rate.dump();
   m_DetMap.Update();
+//  m_DetMap.dump();
+//  m_DetMap_rate.dump();
   m_DetMap_rate.Update();
   DetMap_T<double>::iterator ii = m_DetMap_rate.find(m_PartitionName/*"LHCb"*/);
-//  for (ii=m_DetMap_rate.begin();ii!= m_DetMap_rate.end();ii++)
-//    {
-//      printf("%s %s\n",ii->first.c_str(),m_PartitionName.c_str());//= m_DetMap_rate.find("m_PartitionName");
-//    }
-//  return;
   if (ii!=m_DetMap_rate.end())
   {
     DetData_T<double>::iterator jj = ii->second.find("rxOct");
@@ -268,14 +279,21 @@ void MEPSvc::fillTellMap()
   }
 
   DetData_T<long long> a;
+  DetData_T<double> f;
   for(size_t i=0; i<s_counterTypes.size();i++)
   {
     a[s_counterTypes[i]] = 0;
   }
+  for(size_t i=0; i<s_counterTypes.size();i++)
+  {
+    f[s_counterTypes[i]] = 0.0;
+  }
   for(StringMap::const_iterator i=s_nammap.begin(); i!=s_nammap.end();++i)
   {
     m_DetMap.insert(std::make_pair((*i).second,a));
+    m_DetMap_rate.insert(std::make_pair((*i).second,f));
   }
   m_DetMap.insert(std::make_pair("LHCb",a));
+  m_DetMap_rate.insert(std::make_pair("LHCb",f));
 }
 

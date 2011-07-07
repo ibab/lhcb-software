@@ -380,6 +380,8 @@ public:
   void fillTellMap ();
   void analyze(void *buff, int siz,MonMap* mmap);
   void filldata(const std::string &cnam,MonMap *mmap);
+  void filldata(const std::string &prefix,const std::string &cnam,MonMap *mmap);
+  void fillrate(const std::string &prefix,const std::string &cnam,MonMap *mmap);
   void dump();
   void fillsums();
   std::vector<std::string> m_tell1List;
