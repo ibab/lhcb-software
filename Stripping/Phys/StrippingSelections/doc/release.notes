@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-07 - Thomas Blake
+ - Added Reco11 test files from runs 93167 - 93170 (TCK 0x00730035)
+
+
 ! 2011-07-06 - Ulrich Kerzel
  - first version of stripping line for ChiC -> JPsi Gamma, JPsi -> MuMu, Gamma-> e e
 
