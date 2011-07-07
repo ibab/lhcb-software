@@ -25,12 +25,12 @@ DECLARE_ALGORITHM_FACTORY( RawDataSize )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  RawDataSize::RawDataSize( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-    : HistoAlgBase       ( name , pSvcLocator ),
-      m_SmartIDDecoder   ( NULL  ),
-      m_RichSys          ( NULL  ),
-      m_taeEvents        ( 1, "" )
+RawDataSize::RawDataSize( const std::string& name,
+                          ISvcLocator* pSvcLocator)
+  : HistoAlgBase       ( name , pSvcLocator ),
+    m_SmartIDDecoder   ( NULL  ),
+    m_RichSys          ( NULL  ),
+    m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents );
   declareProperty( "FillDetailedPlots", m_detailedPlots = false );
@@ -232,7 +232,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     for ( HPDWordMap::const_iterator iHPD = hpdWordMap.begin();
           iHPD != hpdWordMap.end(); ++iHPD )
     {
-      if ( iHPD->first.isValid() ) 
+      if ( iHPD->first.isValid() )
       {
         // use a try block in case of DB lookup errors
         try
@@ -265,51 +265,67 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
 StatusCode RawDataSize::finalize()
 {
-  using namespace Gaudi::Utils;
-
   if ( m_writeTextFile )
   {
 
-    // Open a text file
-    const std::string filename = name() + ".txt";
-    info() << "Writing numbers to text file " << filename << endmsg;
-    std::ofstream file(filename.c_str(),std::ios::app);
-
     // load the HPD occ plot
-    TProfile * hist = Aida2ROOT::aida2root( richProfile1D(HID("hpds/SizeVHPDCopyNumber")) );
-
-    // loop over bins (ROOT numbers from 1 ....)
-    for ( int bin = 1; bin <= hist->GetNbinsX(); ++bin )
+    TProfile * hist =
+      Gaudi::Utils::Aida2ROOT::aida2root( richProfile1D(HID("hpds/SizeVHPDCopyNumber")) );
+    if ( hist )
     {
-      // Get HPD data
-      const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1);
-      const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
-      const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
-      const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
-      const Rich::DAQ::Level1HardwareID l1HardID = m_RichSys->level1HardwareID(l0ID);
-      const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
-      const Rich::DAQ::Level1Input l1Input       = m_RichSys->level1InputNum(hpdSmartID);
 
-      // HPD occ data from histogram
-      const double hpdOcc    ( hist->GetBinContent(bin) );
-      const double hpdOccErr ( hist->GetBinError(bin)   );
+      // Open a text file
+      const std::string filename = name() + ".txt";
+      info() << "Writing HPD data to text file '" << filename << "'" << endmsg;
+      std::ofstream file(filename.c_str());
 
-      // write data to file
-      file << hpdCopyN.data() << " "
-           << hpdHardID.data() << " "
-           << l0ID.data() <<  " "
-           << l1HardID.data() <<  " "
-           << l1LogID.data() <<  " "
-           << l1Input.data() << " "
-           << l1Input.ingressID().data() << " "
-           << hpdOcc << " " << hpdOccErr
-           << std::endl;
-    }
+      // loop over bins (ROOT numbers from 1 ....)
+      for ( int bin = 1; bin <= hist->GetNbinsX(); ++bin )
+      {
 
-    // close the file
-    file.close();
+        // use a try block in case of DB lookup errors
+        try
+        {
 
-  }
+          // Get HPD data
+          const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1); // root labels bin numbers from 0
+          const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
+          const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
+          const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
+          const Rich::DAQ::Level1HardwareID l1HardID = m_RichSys->level1HardwareID(l0ID);
+          const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
+          const Rich::DAQ::Level1Input l1Input       = m_RichSys->level1InputNum(hpdSmartID);
 
+          // HPD occ data from histogram
+          const double hpdOcc    ( hist->GetBinContent(bin) );
+          const double hpdOccErr ( hist->GetBinError(bin)   );
+
+          // write data to file
+          file << hpdCopyN.data() << " "
+               << hpdHardID.data() << " "
+               << l0ID.data() << " "
+               << l1HardID.data() << " "
+               << l1LogID.data() << " "
+               << l1Input.data() << " "
+               << l1Input.ingressID().data() << " "
+               << hpdOcc << " " << hpdOccErr
+               << std::endl;
+
+        }
+        catch ( const GaudiException & excpt )
+        {
+          Error( excpt.message() ).ignore();
+        }
+
+      }
+
+      // close the file
+      file.close();
+
+    } // hist OK
+
+  } // write to text file
+
+  // return
   return HistoAlgBase::finalize();
 }

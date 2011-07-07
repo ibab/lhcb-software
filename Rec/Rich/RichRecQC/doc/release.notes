@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-07 - Chris Jones
+ - Some additional protections to the changes to the data size monitor
+ - Update the CHerenkov reconstruction monitor to create plots for individual
+   aerogel sub-tiles, when active.
+
 ! 2011-07-05 - Chris Jones
  - Small improvements to the data size monitor
   - Fix a small bug in the size calculation when only 3 ingresses are active

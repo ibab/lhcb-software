@@ -86,8 +86,8 @@ StatusCode RecoQC::initialize()
 StatusCode RecoQC::prebookHistograms()
 {
 
-  // Get aerogel tile IDs, if active
-  std::vector<int> tileIDs;
+  // Get aerogel tiles, if active
+  std::vector<const DeRichAerogelRadiator*> tiles;
   if ( m_rads[Rich::Aerogel] )
   {
     // Aerogel DetElem
@@ -95,12 +95,13 @@ StatusCode RecoQC::prebookHistograms()
       = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
     
     // List of active Aerogel tile IDs
+    tiles.reserve( aerogel->radiators().size() );
     for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
           dRad != aerogel->radiators().end(); ++dRad )
     {
       const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
       if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
-      tileIDs.push_back( d->tileID() );
+      tiles.push_back( d );
     }
   }
 
@@ -155,19 +156,39 @@ StatusCode RecoQC::prebookHistograms()
       if ( *rad == Rich::Aerogel )
       {
         // Book a few plots for each aerogel tile
-        for ( std::vector<int>::const_iterator tileID = tileIDs.begin();
-              tileID != tileIDs.end(); ++tileID )
+        for ( std::vector<const DeRichAerogelRadiator*>::const_iterator tile = tiles.begin();
+              tile != tiles.end(); ++tile )
         {
           std::ostringstream id,title;
-          id << "ckResAllTile" << *tileID;
-          title << "Rec-Exp Cktheta | All photons | Tile " << *tileID;
+
+          id.str("");
+          title.str("");
+          id << "subtiles/ckResAll-SubTile" << (*tile)->tileID();
+          title << "Rec-Exp Cktheta | All photons | SubTile " << (*tile)->tileID();
           richHisto1D( HID(id.str(),*rad), title.str(),
                        -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
                        "delta(Cherenkov theta) / rad" );
+
           id.str("");
           title.str("");
-          id << "thetaRecTile" << *tileID;
-          title << "Reconstructed Ch Theta | All photons | Tile " << *tileID;
+          id << "subtiles/thetaRec-SubTile" << (*tile)->tileID();
+          title << "Reconstructed Ch Theta | All photons | SubTile " << (*tile)->tileID();
+          richHisto1D( HID(id.str(),*rad), title.str(),
+                       m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+                       "Cherenkov Theta / rad" );
+
+          id.str("");
+          title.str("");
+          id << "tiles/ckResAll-Tile" << (*tile)->primaryTileID();
+          title << "Rec-Exp Cktheta | All photons | Tile " << (*tile)->primaryTileID();
+          richHisto1D( HID(id.str(),*rad), title.str(),
+                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                       "delta(Cherenkov theta) / rad" );
+
+          id.str("");
+          title.str("");
+          id << "tiles/thetaRec-Tile" << (*tile)->primaryTileID();
+          title << "Reconstructed Ch Theta | All photons | Tile " << (*tile)->primaryTileID();
           richHisto1D( HID(id.str(),*rad), title.str(),
                        m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
                        "Cherenkov Theta / rad" );
@@ -331,14 +352,18 @@ StatusCode RecoQC::execute()
         for ( Rich::RadIntersection::Vector::const_iterator intersect = intersects.begin();
               intersect != intersects.end(); ++intersect )
         {
-          const DeRichAerogelRadiator* d = 
+          const DeRichAerogelRadiator * d = 
             dynamic_cast<const DeRichAerogelRadiator*>((*intersect).radiator());
           if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
-          std::ostringstream ida,idb;
-          ida << "ckResAllTile" << d->tileID();
+          std::ostringstream ida,idb,idc,idd;
+          ida << "subtiles/ckResAll-SubTile" << d->tileID();
           richHisto1D(HID(ida.str(),rad))->fill(deltaTheta);
-          idb << "thetaRecTile" << d->tileID();
+          idb << "subtiles/thetaRec-SubTile" << d->tileID();
           richHisto1D(HID(idb.str(),rad))->fill(thetaRec);
+          idc << "tiles/ckResAll-Tile" << d->primaryTileID();
+          richHisto1D(HID(idc.str(),rad))->fill(deltaTheta);
+          idd << "tiles/thetaRec-Tile" << d->primaryTileID();
+          richHisto1D(HID(idd.str(),rad))->fill(thetaRec);
         }
       }
 
