@@ -1,0 +1,27 @@
+# bless some old v12r5 TCK for v12r8...
+
+
+
+bless = [ ( 'Calibration_VeloMicroBias', [ '3336d097506f653777f904586b585191'
+                                          , '82c17e438a7ae8ef75886a96516689ef'
+                                          , 'c4ace4aa078bec1fe5988d5a55b60c21'
+                                          , '8c928c174ee9c414f373002c6e143427'
+                                          , 'e49b7c6d8ee929d2b021f7b978746139'
+                                          , '00ec5561c0843f555cfc5335a880052e'
+                                          ] )
+        , ( 'PassThrough' , [ 'd7729757255943112dbfd53aca01c899'
+                             , '90f307c12f9b3380d345c60fbb95780a'
+                             , '4cf62439888c8abbef180bcfcafc9a18'
+                             ] )
+        ]
+
+x = createAccessSvcSingleton( cas = ConfigTarFileAccessSvc(Mode='ReadWrite'))
+for (tp, ids) in bless :
+    print tp
+    for id in ids :
+        print tp,id
+        c = x.resolveConfigTreeNode(id)
+        t = topLevelAlias('MOORE_v12r8',tp,c)
+        x.writeConfigTreeNodeAlias(t) 
+        print 'wrote %s' % t
+
