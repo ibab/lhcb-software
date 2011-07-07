@@ -14,6 +14,7 @@
 
 // STL
 #include <vector>
+#include <functional>
 
 // base class
 #include "RichKernel/RichToolBase.h"
@@ -30,6 +31,7 @@
 
 // from RichDet
 #include "RichDet/DeRichRadiator.h"
+#include "RichDet/DeRichMultiSolidRadiator.h"
 
 namespace Rich
 {
@@ -86,6 +88,30 @@ namespace Rich
 
     /// UMS update
     StatusCode radiatorUpdate();
+
+  private: // classes
+
+    /// Functor to sort RichSmartIDs by Rich then panel numbers
+    class SortByDistFromBeam : std::binary_function< const DeRichRadiator*, const DeRichRadiator*, bool >
+    {
+    public:
+      /** Sort operator for the rich radiators
+       *
+       *  Sorts into order of distance from beam line (x,y) = (0,0)
+       *
+       *  @param r1 First radiator
+       *  @param r2 Second radiator
+       *
+       *  @return bool indicating if r1 should be listed before r2
+       */
+      inline bool operator() ( const DeRichRadiator* r1, const DeRichRadiator* r2 ) const
+      {
+        const Gaudi::XYZPoint c1 ( r1->geometry()->toGlobal(Gaudi::XYZVector(0,0,0)) );
+        const Gaudi::XYZPoint c2 ( r2->geometry()->toGlobal(Gaudi::XYZVector(0,0,0)) );
+        return ( std::pow(c1.x(),2) + std::pow(c1.y(),2) <
+                 std::pow(c2.x(),2) + std::pow(c2.y(),2) );
+      }
+    };
 
   private:
 

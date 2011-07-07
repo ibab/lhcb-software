@@ -113,13 +113,17 @@ StatusCode Rich::MirrorSegFinder::loadMirrors( const Rich::DetectorType rich )
 
   // sort the mirrors
   std::stable_sort( m_sphMirrors[rich][0].begin(), 
-                    m_sphMirrors[rich][0].end(), SortByDistFromBeam() );
+                    m_sphMirrors[rich][0].end(), 
+                    SortByDistFromBeam() );
   std::stable_sort( m_sphMirrors[rich][1].begin(), 
-                    m_sphMirrors[rich][1].end(), SortByDistFromBeam() );
+                    m_sphMirrors[rich][1].end(), 
+                    SortByDistFromBeam() );
   std::stable_sort( m_secMirrors[rich][0].begin(), 
-                    m_secMirrors[rich][0].end(), SortByDistFromBeam() );
+                    m_secMirrors[rich][0].end(), 
+                    SortByDistFromBeam() );
   std::stable_sort( m_secMirrors[rich][1].begin(), 
-                    m_secMirrors[rich][1].end(), SortByDistFromBeam() );
+                    m_secMirrors[rich][1].end(), 
+                    SortByDistFromBeam() );
 
   // init the last found mirror vectors
   m_lastFoundMirror[rich][0][sph] = NULL;

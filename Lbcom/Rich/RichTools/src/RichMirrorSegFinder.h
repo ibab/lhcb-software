@@ -123,7 +123,7 @@ namespace Rich
        *  @param m1 First mirror
        *  @param m2 Second mirror
        *
-       *  @return bool indicating if p1 should be listed before p2
+       *  @return bool indicating if m1 should be listed before m2
        */
       inline bool operator() ( const DeRichSphMirror* m1, const DeRichSphMirror* m2 ) const
         {

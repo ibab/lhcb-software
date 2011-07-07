@@ -79,7 +79,6 @@ StatusCode Rich::RadiatorTool::finalize()
 //=============================================================================
 StatusCode Rich::RadiatorTool::radiatorUpdate()
 {
-  debug() << "Radiator information update" << endmsg;
 
   // RICH1 gas
   m_radiators[Rich::Rich1Gas].clear();
@@ -89,26 +88,32 @@ StatusCode Rich::RadiatorTool::radiatorUpdate()
   m_radiators[Rich::Rich2Gas].clear();
   m_radiators[Rich::Rich2Gas].push_back( getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) );
 
-  // Rich1 DetElem
-  const DetectorElement * rich1 = getDet<DetectorElement>(DeRichLocations::Rich1);
-
   // aerogel
   m_radiators[Rich::Aerogel].clear();
-  const IDetectorElement::IDEContainer& detelemsR1 = rich1->childIDetectorElements();
-  for ( IDetectorElement::IDEContainer::const_iterator det_it = detelemsR1.begin();
-        det_it != detelemsR1.end(); ++det_it )
+  const DeRichMultiSolidRadiator * aerogel
+    = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
+  m_radiators[Rich::Aerogel].reserve( aerogel->radiators().size() );
+  for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
+        dRad != aerogel->radiators().end(); ++dRad )
   {
-    const std::string& detName = (*det_it)->name();
-    if ( detName.find("AerogelT") != std::string::npos )
-      m_radiators[Rich::Aerogel].push_back( getDet<DeRichRadiator>(detName) );
+    m_radiators[Rich::Aerogel].push_back( *dRad );
   }
+  // Sort by distance from beam line
+  std::stable_sort( m_radiators[Rich::Aerogel].begin(),
+                    m_radiators[Rich::Aerogel].end(),
+                    SortByDistFromBeam() );
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Using the following DeRichRadiators :" << endmsg;
+    debug() << "Radiator information update" << endmsg;
+    debug() << " -> Using the following DeRichRadiators :" << endmsg;
     for ( unsigned int i=0; i<m_radiators.size(); ++i )
+    {
       for ( unsigned int j=0; j<m_radiators[i].size(); ++j )
-        debug() << "  " << m_radiators[i][j]->name() << endmsg;
+      {
+        debug() << "  -> " << m_radiators[i][j]->name() << endmsg;
+      }
+    }
   }
 
   return StatusCode::SUCCESS;
