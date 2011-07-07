@@ -32,6 +32,7 @@ config_default ={'PrescalepipiBox'     : 0.5
                  , 'PrescaleKmu_untagged_Box'    : 0.2
                  , 'PrescaleKpi_untagged_BoxMB' : 1
                  , 'Prescalepipi_untagged_BoxMB':1
+                 , 'PrescaleKpi_untagged_BoxMBTrEff' : 1
                  ,'DMassWin'           : 70.       # MeV
                  ,'DMassWinMuMuLow'    : -150.       #MeV
                  ,'DMassWinMuMuHigh'   : 300       #MeV
@@ -80,6 +81,7 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  , 'PrescaleKmu_untagged_Box'
                                  , 'PrescaleKpi_untagged_BoxMB'
                                  , 'Prescalepipi_untagged_BoxMB'
+                                 , 'PrescaleKpi_untagged_BoxMBTrEff' 
                                  ,'DMassWin'
                                  ,'DMassWinMuMuLow'
                                  ,'DMassWinMuMuHigh'
@@ -215,7 +217,11 @@ class StrippingDstarD02xxConf(LineBuilder):
         from StrippingConf.StrippingLine import bindMembers
         from StrippingConf.StrippingLine import StrippingLine
         suffix = ""
-        if minbias == True : suffix = "MB"
+        if minbias == 1 :
+            suffix = "MB"
+        elif minbias ==2 :
+            suffix = "MBTrEff"
+            
         xxCombSel= self.combinetwobody(name+suffix, config,xplus, xminus)
         combname = xplus+xminus
         pres = "Prescale"+combname+"_untagged_Box"
@@ -224,10 +230,14 @@ class StrippingDstarD02xxConf(LineBuilder):
         Xminus = xminus[0].upper() + xminus[1:]
         hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
         
-        if(minbias==True):
+        if(minbias==1):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMB",
                                               HLT = "HLT_PASS_RE('Hlt1(MB|L0).*Decision')",
                                               algos = [ xxCombSel ], prescale = config[ pres+"MB" ])
+        elif(minbias==2):
+            line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMBTrEff",
+                                              HLT = "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')",
+                                              algos = [ xxCombSel ], prescale = config[ pres+"MBTrEff" ])
         else :
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_Box",
                                               HLT = "HLT_PASS_RE('"+hltname+"')",
@@ -254,20 +264,21 @@ class StrippingDstarD02xxConf(LineBuilder):
 
         # Tagged lines
         
-        line_mumu_untagged_box  = self.baseLine_untagged(name,config,"mu",  "mu", False)
-        line_Kmu_untagged_box  = self.baseLine_untagged(name,config,"K",  "mu" ,  False)
-        line_pipi_untagged_box  = self.baseLine_untagged(name,config,"pi",  "pi", False)
-        line_Kpi_untagged_box  = self.baseLine_untagged(name,config,"K",  "pi",   False)
+        line_mumu_untagged_box  = self.baseLine_untagged(name,config,"mu",  "mu", 0)
+        line_Kmu_untagged_box  = self.baseLine_untagged(name,config,"K",  "mu" ,  0)
+        line_pipi_untagged_box  = self.baseLine_untagged(name,config,"pi",  "pi", 0)
+        line_Kpi_untagged_box  = self.baseLine_untagged(name,config,"K",  "pi",   0)
         #line_pimu_untagged_box = self.baseLine_untagged(name,config,"pi", "mu")
 
 
         # Untagged minimum bias lines for trigger efficiency estimate
         
-        line_Kpi_minbias =  self.baseLine_untagged(name,config,"K",  "pi", True)
-        line_pipi_minbias =  self.baseLine_untagged(name,config,"pi",  "pi",True)
-
+        line_Kpi_minbias =  self.baseLine_untagged(name,config,"K",  "pi",   1)
+        line_pipi_minbias =  self.baseLine_untagged(name,config,"pi",  "pi", 1)
         
-        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_mue_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias, line_pipi_minbias]
+        line_Kpi_minbias_treff =  self.baseLine_untagged(name,config,"K",  "pi",   2)
+        
+        lines = [line_pipi_box,  line_mumu_box, line_Kpi_box, line_mue_box, line_Kmu_box,line_mumu_untagged_box ,line_Kmu_untagged_box, line_pipi_untagged_box,line_Kpi_untagged_box, line_Kpi_minbias, line_pipi_minbias,  line_Kpi_minbias_treff]
         
         return lines
     
