@@ -7,6 +7,7 @@
 !========================== HltSettings v5r14 2011-07-07 ===================
 ! 2011-07-07 - Gerhard Raven
  - move Physics_July2011 to L0 0x0037
+ - update L0AnyNoSPD prescale to match new L0 prescale
 
 ! 2011-07-06 - Gerhard Raven
  - reduce L0Any, Beamgas, NoBias, add HighSumEtJet in Physics_July2011
