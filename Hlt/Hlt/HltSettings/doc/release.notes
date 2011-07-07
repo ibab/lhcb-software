@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2011-07-07 - Gerhard Raven
+ - update DY1 and DY2 prescales
 
 !========================== HltSettings v5r14 2011-07-07 ===================
 ! 2011-07-07 - Gerhard Raven

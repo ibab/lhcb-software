@@ -118,8 +118,8 @@ class Muons_July2011 :
                                , 'Hlt2DiMuonLowMass'         :  0   #was 0.002
                                , 'Hlt2DiMuonJPsi'            :  0.2
                                , 'Hlt2DiMuonPsi2S'           :  0.1
-                               , 'Hlt2DiMuonDY1'             :  0.0025
-                               ,'Hlt2DiMuonDY2'              :  0.02
+                               , 'Hlt2DiMuonDY1'             :  0.005
+                               , 'Hlt2DiMuonDY2'             :  0.03
                                , 'Hlt2DiMuonAndGamma'        :  0
                                }           
             }}
