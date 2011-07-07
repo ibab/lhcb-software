@@ -31,7 +31,9 @@ DECLARE_TOOL_FACTORY( UniformSmearVertex );
 UniformSmearVertex::UniformSmearVertex( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ) , 
+    m_rmaxsq( 0. ) , 
+    m_deltaz( 0. ) {
     declareInterface< IVertexSmearingTool >( this ) ;
     declareProperty( "RMax"   , m_rmax   =     1. * Gaudi::Units::mm ) ;
     declareProperty( "ZMin"   , m_zmin   = -1500. * Gaudi::Units::mm ) ;

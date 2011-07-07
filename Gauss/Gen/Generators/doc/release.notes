@@ -5,7 +5,10 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
-! 201-06-23 - Patrick Robbe
+! 2011-07-07 - Patrick Robbe
+ - Fix coverity warnings
+
+! 2011-06-23 - Patrick Robbe
  - clean header files
  - move IDecayTool.h to MCInterfaces
 

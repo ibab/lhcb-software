@@ -34,7 +34,8 @@ FixedLuminosity::FixedLuminosity( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ) ,
     m_numberOfZeroInteraction( 0 ) ,
-    m_nEvents( 0 ) {
+    m_nEvents( 0 ) ,
+    m_randSvc( 0 ) {
     declareInterface< IPileUpTool >( this ) ;
     declareProperty( "BeamParameters" , 
                      m_beamParameters = LHCb::BeamParametersLocation::Default ) ;

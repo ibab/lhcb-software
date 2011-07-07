@@ -33,6 +33,7 @@ ExternalGenerator::ExternalGenerator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent ) , 
+    m_productionTool( 0 ) ,
     m_decayTool( 0 ) , 
     m_cutTool  ( 0 ) , 
     m_ppSvc    ( 0 ) { 

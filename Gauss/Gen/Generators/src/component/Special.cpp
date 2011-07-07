@@ -173,8 +173,10 @@ void Special::generatePileUp() {
         tool< IProductionTool >( m_pileUpProductionToolName , this ) ;
   }
 
-  if ( 0 == m_pileUpProductionTool ) 
+  if ( 0 == m_pileUpProductionTool ) {
     fatal() << "No pile up production tool defined !" << endreq ;    
+    return ;  
+  }
 
   // initialize the production tool for pile up generation
   m_pileUpProductionTool -> initializeGenerator() ;

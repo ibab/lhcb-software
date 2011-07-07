@@ -26,7 +26,7 @@ Lhacontrol::~Lhacontrol() { }
 // access lhaparm in common
 void Lhacontrol::setlhaparm( int n , const std::string & value ) {
   char * arg = new char[ 20 ] ; 
-  strcpy( arg , value.c_str() ) ;
+  strncpy( arg , value.c_str() , value.size() ) ;
   if ( n < 1 || n > lenlhaparm() ) return ;
 #ifdef WIN32
   GSETLHAPARM( & n , arg , strlen( arg ) ) ;
