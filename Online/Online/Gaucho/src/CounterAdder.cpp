@@ -94,6 +94,7 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
           break;
         }
         case C_DOUBLESTAR:
+        case C_RATEDOUBLESTAR:
         {
           int n = (srch->reclen - srch->dataoff)/sizeof(double);
           int indx;

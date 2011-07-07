@@ -112,12 +112,14 @@ int main(int , char *argv[]) // Taskname, DNS Node
         break;
       }
       case C_DOUBLESTAR:
+      case C_RATEDOUBLESTAR:
       {
-        double *p = (double*)objs[i]->ptr;
+        double *pp = (double*)(objs[i]->ptr);
         int nel = objs[i]->nel;
         for (int j=0;j<nel;j++)
         {
-          printf("index %d value %f\n",j,p[j]);
+          double p = pp[j];
+          printf("index %d value %f\n",j,p);
         }
         break;
       }

@@ -466,6 +466,7 @@ void *MonCounter::de_serialize(void *ptr, char *nam)
       break;
     }
     case C_DOUBLESTAR:
+    case C_RATEDOUBLESTAR:
     {
       void *pp = AddPtr(p,p->dataoff);
       int bsiz = p->reclen - p->dataoff;

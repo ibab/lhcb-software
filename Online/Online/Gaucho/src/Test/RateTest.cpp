@@ -29,10 +29,10 @@ int main(int ,char**)
   rm.addRate("StatEntity",*r4);
   rm.addRate("long*",*r5);
   rm.addRate("int*",*r6);
-  dt = 10;
+  dt = 100000000;
   i = 30;
   j = 45;
-  d = 450.0;
+  d = 450000000.0;
   se++;
   rm.makeRates(dt);
   rm.print();
