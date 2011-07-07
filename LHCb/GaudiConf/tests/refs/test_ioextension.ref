@@ -138,7 +138,7 @@ MDF
 - test outputting files
 # Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
 # Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
-[<OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/Algmdf at 0x2514860>, <OutputStream/Algxdst at 0x2518fe0>, <RecordStream/FSROutputStreamAlgmdst at 0x251a730>, <RecordStream/FSROutputStreamAlgdst at 0x251b270>, <OutputStream/Algdigi at 0x2515410>, <OutputStream/AlgRAW at 0x24a3020>, <OutputStream/Algsim at 0x2516a10>, <OutputStream/Algmdst at 0x2515100>, <RecordStream/FSROutputStreamAlgdigi at 0x25156e0>, <OutputStream/Algsdst at 0x2517550>, <RecordStream/FSROutputStreamAlgxdst at 0x25192b0>, <RecordStream/FSROutputStreamAlgsim at 0x2516ce0>, <RecordStream/FSROutputStreamAlgsdst at 0x2517820>, <OutputStream/Algdst at 0x251afa0>]
+[<OutputStream/StrRAW at 0x1d9c2a40>, <OutputStream/Strmdf at 0x1d9bf230>, <OutputStream/Strdigi at 0x1d9bba20>, <RecordStream/FSROutputStreamStrdigi at 0x1d9a41b0>, <OutputStream/Strsim at 0x1d9b6260>, <RecordStream/FSROutputStreamStrsim at 0x1d9b4d60>, <OutputStream/Strsdst at 0x1d9b0b30>, <RecordStream/FSROutputStreamStrsdst at 0x1d9af3f0>, <OutputStream/Strxdst at 0x1d9617d0>, <RecordStream/FSROutputStreamStrxdst at 0x1d9a5d40>, <OutputStream/Strmdst at 0x1d9dd500>, <RecordStream/FSROutputStreamStrmdst at 0x1d998900>, <OutputStream/Strdst at 0x1d9a8950>, <RecordStream/FSROutputStreamStrdst at 0x1d9a8c60>, <OutputStream/Algmdf at 0x1d9a3160>, <OutputStream/Algxdst at 0x1d9aec70>, <RecordStream/FSROutputStreamAlgmdst at 0x1d996320>, <RecordStream/FSROutputStreamAlgdst at 0x1d96d6e0>, <OutputStream/Algdigi at 0x1d9be2d0>, <OutputStream/AlgRAW at 0x1d969310>, <OutputStream/Algsim at 0x1d9b9b30>, <OutputStream/Algmdst at 0x1d997610>, <RecordStream/FSROutputStreamAlgdigi at 0x1d9bc950>, <OutputStream/Algsdst at 0x1d9b45e0>, <RecordStream/FSROutputStreamAlgxdst at 0x1d9ae610>, <RecordStream/FSROutputStreamAlgsim at 0x1d9b6fb0>, <RecordStream/FSROutputStreamAlgsdst at 0x1d9b2d80>, <OutputStream/Algdst at 0x1d9e1a00>]
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
@@ -169,6 +169,31 @@ DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_R
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
 - test file extensions which should not be known
 ['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']
+- input card printing test
+from GaudiConf import IOExtension
+IOExtension("POOL").inputFiles([
+    "eggs.spam_.RAW",
+    "eggs.spam_.spam_.mdf",
+    "eggs.spam_.spam_.spam_.digi",
+    "eggs.spam_.spam_.spam_.spam_.sim",
+    "eggs.spam_.spam_.spam_.spam_.spam_.sdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst"
+    ])
+from GaudiConf import IOExtension
+IOExtension().inputFiles([
+    "eggs.spam_.RAW",
+    "eggs.spam_.spam_.mdf",
+    "eggs.spam_.spam_.spam_.digi",
+    "eggs.spam_.spam_.spam_.spam_.sim",
+    "eggs.spam_.spam_.spam_.spam_.spam_.sdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst"
+    ])
+(0, '# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning')
+(0, '# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning')
 =============================
 POOL
 =============================
@@ -309,7 +334,7 @@ MDF
 - test outputting files
 # Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
 # Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning
-[<OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/Algmdf at 0x2514860>, <OutputStream/Algxdst at 0x2518fe0>, <RecordStream/FSROutputStreamAlgmdst at 0x251a730>, <RecordStream/FSROutputStreamAlgdst at 0x251b270>, <OutputStream/Algdigi at 0x2515410>, <OutputStream/AlgRAW at 0x24a3020>, <OutputStream/Algsim at 0x2516a10>, <OutputStream/Algmdst at 0x2515100>, <RecordStream/FSROutputStreamAlgdigi at 0x25156e0>, <OutputStream/Algsdst at 0x2517550>, <RecordStream/FSROutputStreamAlgxdst at 0x25192b0>, <RecordStream/FSROutputStreamAlgsim at 0x2516ce0>, <RecordStream/FSROutputStreamAlgsdst at 0x2517820>, <OutputStream/Algdst at 0x251afa0>]
+[<OutputStream/StrRAW at 0x1d9c2a40>, <OutputStream/Strmdf at 0x1d9bf230>, <OutputStream/Strdigi at 0x1d9bba20>, <RecordStream/FSROutputStreamStrdigi at 0x1d9a41b0>, <OutputStream/Strsim at 0x1d9b6260>, <RecordStream/FSROutputStreamStrsim at 0x1d9b4d60>, <OutputStream/Strsdst at 0x1d9b0b30>, <RecordStream/FSROutputStreamStrsdst at 0x1d9af3f0>, <OutputStream/Strxdst at 0x1d9617d0>, <RecordStream/FSROutputStreamStrxdst at 0x1d9a5d40>, <OutputStream/Strmdst at 0x1d9dd500>, <RecordStream/FSROutputStreamStrmdst at 0x1d998900>, <OutputStream/Strdst at 0x1d9a8950>, <RecordStream/FSROutputStreamStrdst at 0x1d9a8c60>, <OutputStream/StrRAW at 0x1d9c2a40>, <OutputStream/Strmdf at 0x1d9bf230>, <OutputStream/Strdigi at 0x1d9bba20>, <RecordStream/FSROutputStreamStrdigi at 0x1d9a41b0>, <OutputStream/Strsim at 0x1d9b6260>, <RecordStream/FSROutputStreamStrsim at 0x1d9b4d60>, <OutputStream/Strsdst at 0x1d9b0b30>, <RecordStream/FSROutputStreamStrsdst at 0x1d9af3f0>, <OutputStream/Strxdst at 0x1d9617d0>, <RecordStream/FSROutputStreamStrxdst at 0x1d9a5d40>, <OutputStream/Strmdst at 0x1d9dd500>, <RecordStream/FSROutputStreamStrmdst at 0x1d998900>, <OutputStream/Strdst at 0x1d9a8950>, <RecordStream/FSROutputStreamStrdst at 0x1d9a8c60>, <OutputStream/Algmdf at 0x1d9a3160>, <OutputStream/Algxdst at 0x1d9aec70>, <RecordStream/FSROutputStreamAlgmdst at 0x1d996320>, <RecordStream/FSROutputStreamAlgdst at 0x1d96d6e0>, <OutputStream/Algdigi at 0x1d9be2d0>, <OutputStream/AlgRAW at 0x1d969310>, <OutputStream/Algsim at 0x1d9b9b30>, <OutputStream/Algmdst at 0x1d997610>, <RecordStream/FSROutputStreamAlgdigi at 0x1d9bc950>, <OutputStream/Algsdst at 0x1d9b45e0>, <RecordStream/FSROutputStreamAlgxdst at 0x1d9ae610>, <RecordStream/FSROutputStreamAlgsim at 0x1d9b6fb0>, <RecordStream/FSROutputStreamAlgsdst at 0x1d9b2d80>, <OutputStream/Algdst at 0x1d9e1a00>]
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' TYP='POOL_ROOTTREE' OPT='REC'
@@ -354,6 +379,31 @@ DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' TYP='POOL_R
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' TYP='POOL_ROOTTREE' OPT='REC'
 - test file extensions which should not be known
 ['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']
+- input card printing test
+from GaudiConf import IOExtension
+IOExtension("POOL").inputFiles([
+    "eggs.spam_.RAW",
+    "eggs.spam_.spam_.mdf",
+    "eggs.spam_.spam_.spam_.digi",
+    "eggs.spam_.spam_.spam_.spam_.sim",
+    "eggs.spam_.spam_.spam_.spam_.spam_.sdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst"
+    ])
+from GaudiConf import IOExtension
+IOExtension().inputFiles([
+    "eggs.spam_.RAW",
+    "eggs.spam_.spam_.mdf",
+    "eggs.spam_.spam_.spam_.digi",
+    "eggs.spam_.spam_.spam_.spam_.sim",
+    "eggs.spam_.spam_.spam_.spam_.spam_.sdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst"
+    ])
+(0, '# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning')
+(0, '# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning')
 =============================
 ROOT
 =============================
@@ -494,7 +544,7 @@ MDF
 - test outputting files
 # Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
 # Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
-[<OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/StrRAW at 0x2513f40>, <OutputStream/Strmdf at 0x2514e30>, <OutputStream/Strdigi at 0x2515c70>, <RecordStream/FSROutputStreamStrdigi at 0x2516740>, <OutputStream/Strsim at 0x2516fb0>, <RecordStream/FSROutputStreamStrsim at 0x2517280>, <OutputStream/Strsdst at 0x2517af0>, <RecordStream/FSROutputStreamStrsdst at 0x2517dc0>, <OutputStream/Strxdst at 0x2519580>, <RecordStream/FSROutputStreamStrxdst at 0x2519850>, <OutputStream/Strmdst at 0x251aa00>, <RecordStream/FSROutputStreamStrmdst at 0x251acd0>, <OutputStream/Strdst at 0x251b540>, <RecordStream/FSROutputStreamStrdst at 0x251b810>, <OutputStream/Algmdf at 0x2514860>, <OutputStream/Algxdst at 0x2518fe0>, <RecordStream/FSROutputStreamAlgmdst at 0x251a730>, <RecordStream/FSROutputStreamAlgdst at 0x251b270>, <OutputStream/Algdigi at 0x2515410>, <OutputStream/AlgRAW at 0x24a3020>, <OutputStream/Algsim at 0x2516a10>, <OutputStream/Algmdst at 0x2515100>, <RecordStream/FSROutputStreamAlgdigi at 0x25156e0>, <OutputStream/Algsdst at 0x2517550>, <RecordStream/FSROutputStreamAlgxdst at 0x25192b0>, <RecordStream/FSROutputStreamAlgsim at 0x2516ce0>, <RecordStream/FSROutputStreamAlgsdst at 0x2517820>, <OutputStream/Algdst at 0x251afa0>]
+[<OutputStream/StrRAW at 0x1d9c2a40>, <OutputStream/Strmdf at 0x1d9bf230>, <OutputStream/Strdigi at 0x1d9bba20>, <RecordStream/FSROutputStreamStrdigi at 0x1d9a41b0>, <OutputStream/Strsim at 0x1d9b6260>, <RecordStream/FSROutputStreamStrsim at 0x1d9b4d60>, <OutputStream/Strsdst at 0x1d9b0b30>, <RecordStream/FSROutputStreamStrsdst at 0x1d9af3f0>, <OutputStream/Strxdst at 0x1d9617d0>, <RecordStream/FSROutputStreamStrxdst at 0x1d9a5d40>, <OutputStream/Strmdst at 0x1d9dd500>, <RecordStream/FSROutputStreamStrmdst at 0x1d998900>, <OutputStream/Strdst at 0x1d9a8950>, <RecordStream/FSROutputStreamStrdst at 0x1d9a8c60>, <OutputStream/StrRAW at 0x1d9c2a40>, <OutputStream/Strmdf at 0x1d9bf230>, <OutputStream/Strdigi at 0x1d9bba20>, <RecordStream/FSROutputStreamStrdigi at 0x1d9a41b0>, <OutputStream/Strsim at 0x1d9b6260>, <RecordStream/FSROutputStreamStrsim at 0x1d9b4d60>, <OutputStream/Strsdst at 0x1d9b0b30>, <RecordStream/FSROutputStreamStrsdst at 0x1d9af3f0>, <OutputStream/Strxdst at 0x1d9617d0>, <RecordStream/FSROutputStreamStrxdst at 0x1d9a5d40>, <OutputStream/Strmdst at 0x1d9dd500>, <RecordStream/FSROutputStreamStrmdst at 0x1d998900>, <OutputStream/Strdst at 0x1d9a8950>, <RecordStream/FSROutputStreamStrdst at 0x1d9a8c60>, <OutputStream/StrRAW at 0x1d9c2a40>, <OutputStream/Strmdf at 0x1d9bf230>, <OutputStream/Strdigi at 0x1d9bba20>, <RecordStream/FSROutputStreamStrdigi at 0x1d9a41b0>, <OutputStream/Strsim at 0x1d9b6260>, <RecordStream/FSROutputStreamStrsim at 0x1d9b4d60>, <OutputStream/Strsdst at 0x1d9b0b30>, <RecordStream/FSROutputStreamStrsdst at 0x1d9af3f0>, <OutputStream/Strxdst at 0x1d9617d0>, <RecordStream/FSROutputStreamStrxdst at 0x1d9a5d40>, <OutputStream/Strmdst at 0x1d9dd500>, <RecordStream/FSROutputStreamStrmdst at 0x1d998900>, <OutputStream/Strdst at 0x1d9a8950>, <RecordStream/FSROutputStreamStrdst at 0x1d9a8c60>, <OutputStream/Algmdf at 0x1d9a3160>, <OutputStream/Algxdst at 0x1d9aec70>, <RecordStream/FSROutputStreamAlgmdst at 0x1d996320>, <RecordStream/FSROutputStreamAlgdst at 0x1d96d6e0>, <OutputStream/Algdigi at 0x1d9be2d0>, <OutputStream/AlgRAW at 0x1d969310>, <OutputStream/Algsim at 0x1d9b9b30>, <OutputStream/Algmdst at 0x1d997610>, <RecordStream/FSROutputStreamAlgdigi at 0x1d9bc950>, <OutputStream/Algsdst at 0x1d9b45e0>, <RecordStream/FSROutputStreamAlgxdst at 0x1d9ae610>, <RecordStream/FSROutputStreamAlgsim at 0x1d9b6fb0>, <RecordStream/FSROutputStreamAlgsdst at 0x1d9b2d80>, <OutputStream/Algdst at 0x1d9e1a00>]
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.RAW' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.digi' SVC='RootCnvSvc' OPT='REC'
@@ -553,3 +603,28 @@ DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.sdst' SVC='RootCn
 DATAFILE='eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst' SVC='RootCnvSvc' OPT='REC'
 - test file extensions which should not be known
 ['UNKNOWN', 'UNKNOWN', 'UNKNOWN', 'UNKNOWN']
+- input card printing test
+from GaudiConf import IOExtension
+IOExtension("ROOT").inputFiles([
+    "eggs.spam_.RAW",
+    "eggs.spam_.spam_.mdf",
+    "eggs.spam_.spam_.spam_.digi",
+    "eggs.spam_.spam_.spam_.spam_.sim",
+    "eggs.spam_.spam_.spam_.spam_.spam_.sdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst"
+    ])
+from GaudiConf import IOExtension
+IOExtension().inputFiles([
+    "eggs.spam_.RAW",
+    "eggs.spam_.spam_.mdf",
+    "eggs.spam_.spam_.spam_.digi",
+    "eggs.spam_.spam_.spam_.spam_.sim",
+    "eggs.spam_.spam_.spam_.spam_.spam_.sdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.xdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.mdst",
+    "eggs.spam_.spam_.spam_.spam_.spam_.spam_.spam_.spam_.dst"
+    ])
+(0, '# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning')
+(0, '# Warning, guessing type of SDST to be POOL use IOHelper instead to avoid this warning')

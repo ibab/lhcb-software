@@ -33,11 +33,16 @@ def testthisioh(ioh):
     print EventSelector().Input
     
     print ioh.selectorString()
-    print ioh.helperString()
-    import commands
-    print commands.getstatusoutput('python -c "'+ioh.selectorString().replace('"','\\"')+'"')
-    print commands.getstatusoutput("python -c '"+ioh.helperString()+"'")
+    for setPersistency in [True, False]:
+        print ioh.helperString(setPersistency=setPersistency)
 
+    import commands
+    
+    print commands.getstatusoutput('python -c "'+ioh.selectorString().replace('"','\\"')+'"')
+    
+    for setPersistency in [True, False]:
+        print commands.getstatusoutput("python -c '"+ioh.helperString(setPersistency=setPersistency)+"'")
+    
     print "- change service tests"
     
     ioh.changeServices()

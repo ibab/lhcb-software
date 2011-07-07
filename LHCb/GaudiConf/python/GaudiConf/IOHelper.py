@@ -387,7 +387,7 @@ class IOHelper(object):
         self.clearServices()
         self.setupServices()
     
-    def postConfigServices(self, eventSelector):
+    def postConfigServices(self):
         '''Services:  append a Post Config action to change the services, input and outpu
         this is a helper function for patching old software
         '''
@@ -537,14 +537,20 @@ class IOHelper(object):
         retstr+=' '*alen+']'
         return retstr
     
-    def _subHelperString(self,files):
+    def _subHelperString(self,files,setPersistency=False):
         '''Input:  return a string when the types of files are the same'''
         retstr=''
         type=self.detectFileType(files[0])
         if(type)=="MDF":
-            retstr+='IOHelper("MDF").inputFiles([\n'
+            if setPersistency:
+                retstr+='IOHelper("MDF","'+self._outputPersistency+'").inputFiles([\n'
+            else:
+                retstr+='IOHelper("MDF").inputFiles([\n'
         else:
-            retstr+="IOHelper().inputFiles([\n"
+            if setPersistency:
+                retstr+='IOHelper("'+self._inputPersistency+'","'+self._outputPersistency+'").inputFiles([\n'
+            else:
+                retstr+="IOHelper().inputFiles([\n"
         
         alen=4
         for file in files[:-1]:
@@ -555,8 +561,9 @@ class IOHelper(object):
         
         return retstr
     
-    def helperString(self, eventSelector=None):
+    def helperString(self, eventSelector=None, setPersistency=False):
         '''Input:  return a string of the IOHelper which could be used in a new-style gaudi card
+        if setPersistency is True, the given persistencies will be specified in the string
         '''
         
         if eventSelector is None:
@@ -586,7 +593,7 @@ class IOHelper(object):
         
         #then loop over the groups
         for agroup in grouped_files:
-            retstr+=self._subHelperString(agroup)+'\n'
+            retstr+=self._subHelperString(agroup,setPersistency)+'\n'
         
         return retstr
     
@@ -925,6 +932,34 @@ class IOExtension(object):
         
         return eventSelector
     
+    def extensionString(self,setPersistency=False,eventSelector=None):
+        '''Input:  return a string of the IOExtension which could be used in a new-style gaudi card
+        if setPersistency is True, the default persistency for DST-like files will be specified in the string'''
+        
+        if eventSelector is None:
+            from Gaudi.Configuration import EventSelector
+            eventSelector=EventSelector()
+            
+            
+        retstr='from GaudiConf import IOExtension\n'
+        
+        files=eventSelector.Input
+        if not len(files): return retstr+'IOExtension().inputFiles([])\n'
+
+        ioh=self.getIOHelper(files[0])
+        
+        if setPersistency:
+            retstr+='IOExtension("'+self._defaultPersistency+'").inputFiles([\n'
+        else:
+            retstr+="IOExtension().inputFiles([\n"
+        alen=4
+        for file in files[:-1]:
+            retstr+=' '*alen+'"'+ioh.undressFile(file)+'",\n'
+        for file in files[-1:]:
+            retstr+=' '*alen+'"'+ioh.undressFile(file)+'"\n'
+        retstr+=' '*alen+'])'
+        
+        return retstr
     
     ###############################################################
     #              Output

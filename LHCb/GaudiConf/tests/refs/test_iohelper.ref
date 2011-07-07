@@ -26,6 +26,12 @@ EventSelector().Input=[
     "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'"
     ]
 from GaudiConf import IOHelper
+IOHelper("POOL","POOL").inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+
+from GaudiConf import IOHelper
 IOHelper().inputFiles([
     "test1.blah",
     "test2.blah"
@@ -33,8 +39,9 @@ IOHelper().inputFiles([
 
 (0, '')
 (0, '')
+(0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b2adc7048c0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2ab79d7c8aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>]
 =============================
 POOL
 =============================
@@ -69,6 +76,12 @@ EventSelector().Input=[
     "DATAFILE='test2.blah' TYP='POOL_ROOT' OPT='READ'"
     ]
 from GaudiConf import IOHelper
+IOHelper("POOL","POOL").inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+
+from GaudiConf import IOHelper
 IOHelper().inputFiles([
     "test1.blah",
     "test2.blah"
@@ -76,8 +89,9 @@ IOHelper().inputFiles([
 
 (0, '')
 (0, '')
+(0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b2adc7048c0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b2adc934750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b2adc934a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b2adc934950>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b2adc934b50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2ab79d7c8aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>]
 =============================
 ROOT
 =============================
@@ -112,6 +126,12 @@ EventSelector().Input=[
     "DATAFILE='test2.blah' SVC='Gaudi::RootEvtSelector' OPT='READ'"
     ]
 from GaudiConf import IOHelper
+IOHelper("ROOT","ROOT").inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+
+from GaudiConf import IOHelper
 IOHelper().inputFiles([
     "test1.blah",
     "test2.blah"
@@ -119,8 +139,9 @@ IOHelper().inputFiles([
 
 (0, '')
 (0, '')
+(0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x4f4d960>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4f4ef00>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x4f4d960>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4f4ef00>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0xde34720>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xde35cc0>, <Gaudi::RootCnvSvc/RootCnvSvc at 0xde34720>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xde35cc0>]
 =============================
 MDF
 =============================
@@ -155,11 +176,18 @@ EventSelector().Input=[
     "DATAFILE='test2.blah' SVC='LHCb::MDFSelector' OPT='READ'"
     ]
 from GaudiConf import IOHelper
+IOHelper("MDF","MDF").inputFiles([
+    "test1.blah",
+    "test2.blah"
+    ])
+
+from GaudiConf import IOHelper
 IOHelper("MDF").inputFiles([
     "test1.blah",
     "test2.blah"
     ])
 
+(0, '')
 (0, '')
 (0, '')
 - change service tests

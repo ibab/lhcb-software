@@ -49,7 +49,18 @@ def testthisiox(iox):
     
     print "- test file extensions which should not be known"
     print [iox.detectFileType('ni'+file) for file in ext]
+
+    print "- input card printing test"
     
+    for setPersistency in [True, False]:
+        print iox.extensionString(setPersistency=setPersistency)
+    
+    import commands
+    
+    
+    for setPersistency in [True, False]:
+        print commands.getstatusoutput("python -c '"+iox.extensionString(setPersistency=setPersistency)+"'")
+
 
 for persistency in [None,'POOL','ROOT']:
     print '============================='
