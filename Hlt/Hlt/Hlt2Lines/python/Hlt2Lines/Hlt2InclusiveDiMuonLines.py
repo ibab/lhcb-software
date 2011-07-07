@@ -1153,6 +1153,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
+            PV3D()         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons
@@ -1173,6 +1174,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
+            PV3D()         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons
@@ -1194,6 +1196,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
+            PV3D()         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons
@@ -1215,6 +1218,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
+            PV3D()         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons

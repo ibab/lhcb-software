@@ -8,7 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== Hlt2Lines v8r7 2011-07-04 ===================
+!========================== Hlt2Lines v8r7 2011-07-07 ===================
+! 2011-07-07 - Gerhard Raven
+ - add missing PV3D in some Hlt2InclusiveDiMuonLines that use IP cuts
+
 ! 2011-07-06 - Gerhard Raven
  - remove PT cut if (and ONLY if) the comparison is to 0.
 
