@@ -17,38 +17,40 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #
 # import the SelectionSequence
 from DaVinci4.solutions.Bs2JpsiPhi import SeqBs2JpsiPhi
+from Configurables import DaVinci
 # get the GaudiSequencer with everything we need
 seq = SeqBs2JpsiPhi.sequence()
 #######################################################################
 #
 # Print Reconstructed Bs
 #
-from Configurables import PrintDecayTree, PrintDecayTreeTool, PhysDesktop
+from Configurables import PrintDecayTree, PrintDecayTreeTool
 tree = PrintDecayTree("PrintFoundBs")
 tree.Inputs = [ SeqBs2JpsiPhi.outputLocation() ]
 tree.addTool( PrintDecayTreeTool, name = "PrintDecay" )
 tree.PrintDecay.Information = "Name M P Px Py Pz Pt chi2"
+DaVinci().MoniSequence = [ tree ]      # The monitoring stuff
 #######################################################################
 #
-# Print  Print All True Bs
+# Print  Print All True Bs (only on MC)
 #
+"""
 from Configurables import PrintMCTree, PrintMCDecayTreeTool
 mctree = PrintMCTree("PrintTrueBs")
 mctree.addTool( PrintMCDecayTreeTool )
 mctree.PrintMCDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 mctree.ParticleNames = [  "B_s0", "B_s~0" ]
 mctree.Depth = 2  # down to the K and mu
+DaVinci().MoniSequence += [ tree ]      # The monitoring stuff
+"""
 #######################################################################
 #
 # Configure the application
 #
-from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ seq ]             # The selection sequence
-DaVinci().MoniSequence = [ tree, mctree ]      # The monitoring stuff
 DaVinci().HistogramFile = "DVHistos_5.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "MC09"                    # Default is "2010"
-DaVinci().Simulation   = True                  # It's MC
+DaVinci().DataType = "2011"                    # 
 #
 # Add our own stuff
 #

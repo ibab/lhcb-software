@@ -22,8 +22,7 @@ seq = SeqBs2JpsiPhi.sequence()
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_4.root"    # Histogram file
 DaVinci().EvtMax = 1000                          # Number of events
-DaVinci().DataType = "MC09"                    # Default is "MC09"
-DaVinci().Simulation   = True                  # It's MC
+DaVinci().DataType = "2011"                    # 
 #
 # Add our own stuff
 #

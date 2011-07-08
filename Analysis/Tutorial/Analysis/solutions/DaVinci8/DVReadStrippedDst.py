@@ -9,7 +9,7 @@
 
 from Gaudi.Configuration import *
 
-line = 'NeuroBayesMuMuLine'
+line = 'NeuroBayesMuMuJPsiNBLine'
 location = '/Event/Dimuon/Phys/'+line+'/Particles'
 
 MessageSvc().Format = "% F%80W%S%7W%R%T %0W%M"
@@ -68,8 +68,8 @@ DaVinci().appendToMainSequence( [ StripFilter( 'StripPassFilter', Code="HLT_PASS
 # from Configurables import PrintDecayTree
 # DaVinci().appendToMainSequence( [ PrintDecayTree( 'PrintDiMuons', Inputs = [ location ] ) ] )
 
-DaVinci().DataType = "2010"
-DaVinci().EvtMax = -1
+DaVinci().DataType = "2011"
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 100
 DaVinci().TupleFile = "Jpsi.root"
 

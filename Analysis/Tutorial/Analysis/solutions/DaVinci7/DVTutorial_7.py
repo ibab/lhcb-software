@@ -11,8 +11,8 @@ from Gaudi.Configuration import *
 #
 # Load the sequencer from Ex 4 and catch it
 #
-importOptions("$ANALYSISROOT/solutions/DaVinci4/TutorialSeq.py")
-tutorialseq = GaudiSequencer("TutorialSeq")
+from DaVinci4.solutions.Bs2JpsiPhi import SeqBs2JpsiPhi
+seq = SeqBs2JpsiPhi.sequence()
 #######################################################################
 #
 # DecayTreeTuple
@@ -20,10 +20,10 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple("TutorialTree")
 tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
-tuple.Inputs = [ "Phys/Bs2JpsiPhi/Particles" ]
+tuple.Inputs = [  SeqBs2JpsiPhi.outputLocation()]
 tuple.ToolList +=  [
-    "TupleToolMCTruth",
-    "TupleToolMCBackgroundInfo",
+#    "TupleToolMCTruth",
+#    "TupleToolMCBackgroundInfo",
     "TupleToolEventInfo",
 ]
 
@@ -34,7 +34,6 @@ LoKi_All.Variables =  {
       "P" : "P",
       "PT" : "PT"
 }
-tuple.addTool(LoKiTuple)
 
 #Configure the TupleToolTutorial
 
@@ -43,19 +42,21 @@ TutTool.absCharge=True #false by default
 
 # Configure the MCTruth information
 
-MCTruth=tuple.addTupleTool("TupleToolMCTruth")
-MCTruth.ToolList =  [
-    "MCTupleToolKinematic",
-    "MCTupleToolHierarchy" ]
+#MCTruth=tuple.addTupleTool("TupleToolMCTruth")
+#MCTruth.ToolList =  [
+#    "MCTupleToolKinematic",
+#    "MCTupleToolHierarchy" ]
 
 # Configure some branches
 
-tuple.addBranches=({
+tuple.Branches = {
     "B" :  "[B_s0]cc : [B_s0 -> (J/psi(1S) => mu+ mu-) (phi(1020) -> K+ K-)]cc",
     "KPlus" :  "[B_s0]cc -> (phi(1020) -> ^K+ K-) ? ",
     "KMinus" :  "[B_s0]cc -> (phi(1020) -> K+ ^K-) ? "
-    })
-
+    }
+tuple.addTool(TupleToolDecay("B"))
+tuple.addTool(TupleToolDecay("KPlus"))
+tuple.addTool(TupleToolDecay("KMinus"))
 LoKi_B=tuple.B.addTupleTool("LoKi::Hybrid::TupleTool/LoKi_B")
 
 LoKi_B.Variables =  {
@@ -86,17 +87,13 @@ from Configurables import DaVinci
 DaVinci().TupleFile = "Tutorial7.root"         # Ntuple
 DaVinci().HistogramFile='DVHistos.root'
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "MC09"                    # Default is "MC09"
-DaVinci().Simulation   = True                  # It's MC
+DaVinci().DataType = "2011"                    # Default is "MC09"
 #
 # Add our own stuff
 #
-DaVinci().UserAlgorithms = [ tutorialseq, tuple]
-DaVinci().MainOptions  = ""                    # None
+DaVinci().UserAlgorithms = [ seq, tuple]
 #
 #
-DaVinci().Hlt = True
-DaVinci().HltThresholdSettings = "Physics_320Vis_300L0_10Hlt1_Aug09"   # some settings. See HltConf for more.
 ########################################################################
 #
 # To run in shell :

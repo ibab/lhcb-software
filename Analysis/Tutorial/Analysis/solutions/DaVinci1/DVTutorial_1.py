@@ -29,13 +29,12 @@ tutalg.Inputs = [ "Phys/StdLooseMuons/Particles" ]
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_1.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "MC09"                    # Default is "DC06"
+DaVinci().DataType = "2011"                    # 
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
 #
 DaVinci().UserAlgorithms = [ tutorialseq ]
-DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
 # To run in shell :

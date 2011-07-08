@@ -52,19 +52,12 @@ from Configurables import DaVinci
 DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
 DaVinci().HistogramFile='DVHistos.root'
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "MC09"                    # 
-DaVinci().Simulation   = True                  # It's MC
+DaVinci().DataType = "2011"                    # 
 #
 # Add our own stuff
 #
 DaVinci().UserAlgorithms = [ seq ]             # The selection sequence
 DaVinci().MoniSequence = [ tuple, etuple ]
-#
-# Trigger (Restore when fixed on 2008 data)
-#
-DaVinci().Hlt = True
-DaVinci().HltThresholdSettings = "Physics_320Vis_300L0_10Hlt1_Aug09"   # some settings. See HltConf for more.
-DaVinci().ReplaceL0BanksWithEmulated = True  # to get L0 compatible with Hlt
 ########################################################################
 #
 # To run in shell :

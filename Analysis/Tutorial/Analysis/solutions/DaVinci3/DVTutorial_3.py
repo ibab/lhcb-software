@@ -48,8 +48,7 @@ tutorialseq.IgnoreFilterPassed = True # get all phis
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_3.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"                    # Default is "DC06"
-DaVinci().Simulation   = True                  # It's MC
+DaVinci().DataType = "2011"                    # 
 #
 # Add our own stuff
 #

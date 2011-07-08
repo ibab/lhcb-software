@@ -9,6 +9,11 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v10r2 2011-07-08 ================
+! 2011-07-08 - Patrick Koppenburg
+ - Remove obsolete Hlt settings
+ - Test and update all solutions (work with stripping 13 dimuon DSTs)
+
 !========================== Analysis v10r1 2011-03-25 ================
 ! 2011-03-25 - Patrick Koppenburg
  - One more change

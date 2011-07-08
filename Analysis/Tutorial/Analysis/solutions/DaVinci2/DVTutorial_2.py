@@ -19,7 +19,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 # 2) Add the Tutorial algorithm
 #
-from Configurables import TutorialAlgorithm, PhysDesktop
+from Configurables import TutorialAlgorithm
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
 tutorialseq.Members += [ jpsi2mumu ]
 jpsi2mumu.Inputs = [ "Phys/StdLooseMuons/Particles" ]
@@ -33,8 +33,7 @@ jpsi2mumu.MaxChi2 = 100
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_2.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"                    # Default is "DC06"
-DaVinci().Simulation   = True                  # It's MC
+DaVinci().DataType = "2011"                    # Default is "DC06"
 #
 # Add our own stuff
 #
