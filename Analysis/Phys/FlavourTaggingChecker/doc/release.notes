@@ -6,6 +6,18 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+
+! 2011-07-08 - Marc Grabalosa
+ - changes in root 
+  . src/Tagger* Changed cuts to new optimization/calibration
+  . new NeuralNets (old keep in extrann/Moriond2010)
+  . Added new variables to VtxTagger
+  . Added IPsign in all taggers
+  . SSK opt in Ds to PhiPi from data june 2011
+  . python/FlavourTaggign/Tuning.py added new cuts for opt/cal july2011
+  . Consistent with FTv12r4p3
+ - Increase to v6r7
+
 !========================== FlavourTaggingChecker v6r6p3 2011-04-29 ==========
 ! 2011-04-08 - Juan Palacios
  - src/BTaggingAnalysis.cpp
