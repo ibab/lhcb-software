@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-07-0 - Albert Puig
+ - Fixed passing of track location to CaloLines configurable in Hlt2Tracking.py
+
 !========================== HltTracking v9r9p1 2011-07-04 ===================
 ! 2011-07-06 - Gerhard Raven
  - reduce PV window from 0.5 mm to 0.3 mm

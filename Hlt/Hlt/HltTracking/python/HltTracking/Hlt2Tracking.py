@@ -1408,7 +1408,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         tracks = self.__hlt2StagedFastFit()
         # Create configurable
         from Configurables import CaloLines
-        seq = CaloLines('HLT2CaloLines', TrackLocations=[tracks]).sequence()
+        seq = CaloLines('HLT2CaloLines').sequence(tracks=[tracks.outputSelection()])
         bm_name    = self.__pidAlgosAndToolsPrefix()
         bm_members = [tracks, seq]
         bm_output = ''
