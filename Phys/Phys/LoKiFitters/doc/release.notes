@@ -5,6 +5,7 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiFitters v4r1p3 2011-07-08 =========================
 ! 2011-07-08 - Rob Lambert
  - Reduce m_prints to 1 for LoKi::VertexFitter
 
