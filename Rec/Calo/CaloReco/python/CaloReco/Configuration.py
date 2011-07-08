@@ -862,13 +862,13 @@ class CaloLines(LHCbConfigurableUser):
                                ,MakeExternalClustersWithTag = tagHighP
                                )
             
-            addAlgs( caloLines, hp.caloSequence() )
+            addAlgs( caloLines, hp.caloSequence(tracks=tracks) )
 
             if self.getProp('HighEtProtoPPrefix') == '' :
                 hploc = name+'HighPhoton/ProtoP'
             else :
                 hploc = self.getProp('HighEtProtoPPrefix')
-            addAlgs( caloLines, hp.neutralProtoSequence(protoPrefix = hploc )  )
+            addAlgs( caloLines, hp.neutralProtoSequence(protoPrefix = hploc, tracks=tracks )  )
 
         if self.getProp('LowPhoton') :
             context = self.getProp('Context')
@@ -884,12 +884,12 @@ class CaloLines(LHCbConfigurableUser):
                                ,PhotonPt = self.getProp('LowEt')
                                ,MakeExternalClustersWithTag = tagLowP
                                )
-            addAlgs( caloLines , lp.caloSequence() )
+            addAlgs( caloLines , lp.caloSequence(tracks=tracks) )
             if self.getProp('LowEtProtoPPrefix') == '' :
                 lploc = name+'LowPhoton/ProtoP'
             else :
                 lploc = self.getProp('LowEtProtoPPrefix')
-            addAlgs( caloLines ,  lp.neutralProtoSequence(protoPrefix=lploc))
+            addAlgs( caloLines ,  lp.neutralProtoSequence(protoPrefix=lploc, tracks=tracks))
             
 
         if self.getProp('LowElectron') :
@@ -907,12 +907,12 @@ class CaloLines(LHCbConfigurableUser):
                                ,ProtoOnDemand = pdod
                                ,MakeExternalClustersWithTag = tagLowE
                                )
-            addAlgs( caloLines , le.caloSequence())
+            addAlgs( caloLines , le.caloSequence(tracks=tracks))
             if self.getProp('LowEtProtoPPrefix') == '' :
                 leloc = name+'LowElectron/ProtoP'
             else :
                 leloc = self.getProp('LowEtProtoPPrefix')
-            addAlgs( caloLines , le.chargedProtoSequence(protoPrefix=leloc))
+            addAlgs( caloLines , le.chargedProtoSequence(protoPrefix=leloc, tracks=tracks))
 
 
         caloLines.IgnoreFilterPassed = True

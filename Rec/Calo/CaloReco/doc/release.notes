@@ -5,6 +5,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-08 - Albert Puig
+  - python/Configuration.py : correctly propagate track locations in CaloLines.
+
 ! 2011-07-04 - Olivier Deschamps
   - python/Configuration.py : apply default GlobalRecoConf settings for  chargedProtoPMaker (when activated on-demand in CaloProcessor)
 
