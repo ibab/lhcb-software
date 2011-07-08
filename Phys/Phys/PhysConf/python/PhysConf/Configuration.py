@@ -30,7 +30,7 @@ class PhysConf(LHCbConfigurableUser) :
 
     __slots__ = {
            "DataType"          : '2011'  # Data type
-        ,  "Simulation"        : True    # set to True to use SimCond
+        ,  "Simulation"        : False   # set to True to use SimCond
         ,  "InputType"         : 'DST'   # Data type
         ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.

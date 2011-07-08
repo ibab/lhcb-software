@@ -9,6 +9,7 @@
  - Disable by default the code that checks the MuonPID version and reruns
    unless DataType is MC09
  - Make default DataType 2011
+ - Set default Simulation setting to False in PhysConf
 
 !========================= PhysConf v1r9 2011-06-16 =========================
 ! 2011-06-02 - Vanya Belyaev
