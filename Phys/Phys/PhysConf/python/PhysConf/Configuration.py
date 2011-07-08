@@ -29,13 +29,13 @@ def configureEventTime() :
 class PhysConf(LHCbConfigurableUser) :
 
     __slots__ = {
-           "DataType"          : 'MC09'     # Data type, can be ['DC06','2008']
+           "DataType"          : '2011'  # Data type
         ,  "Simulation"        : True    # set to True to use SimCond
         ,  "InputType"         : 'DST'   # Data type
-        ,  "AllowPIDRerunning" : False   # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
+        ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.
         }
-    
+
     __used_configurables__ = (
         'CaloDstUnPackConf'   ,
         'OffLineCaloRecoConf' ,
@@ -101,7 +101,7 @@ class PhysConf(LHCbConfigurableUser) :
         # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility
         # is no longer needed
         inputtype = self.getProp('InputType').upper()
-        if inputtype != 'MDST' and self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
+        if self.getProp("DataType") == 'MC09' and inputtype != 'MDST' and self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
             
             from Configurables import DataObjectVersionFilter, MuonRec, TESCheck
             from MuonID import ConfiguredMuonIDs
