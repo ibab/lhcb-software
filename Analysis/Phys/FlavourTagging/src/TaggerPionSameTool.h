@@ -64,6 +64,7 @@ private:
   double m_ipPU_cut_pS, m_distPhi_cut_pS;
   double m_P0_Cal_pionS ;
   double m_P1_Cal_pionS ;
+  double m_P2_Cal_pionS ;
   double m_Eta_Cal_pionS ;
 };
 //===============================================================//

@@ -25,16 +25,16 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "NeuralNetName",m_NeuralNetName        = "NNetTool_MLP" );
   declareProperty( "Muon_AverageOmega", m_AverageOmega         = 0.33 );
 
-  declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.1 *GeV );
+  declareProperty( "Muon_Pt_cut",  m_Pt_cut_muon  = 1.2 *GeV );
   declareProperty( "Muon_P_cut",   m_P_cut_muon   = 0.0 *GeV );
   declareProperty( "Muon_IPs_cut", m_IPs_cut_muon = 0.0 );
-  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 2.2 );
-  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.0 );
+  declareProperty( "Muon_lcs_cut", m_lcs_cut_muon = 3.2 );
+  declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.5 );
   declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
   declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
-  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.311 ); 
-  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.36 ); 
-  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.316 ); 
+  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.304 ); 
+  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.10 ); 
+  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.303 ); 
 
   declareProperty( "Muon_ProbMin", m_ProbMin_muon = 0. ); //no cut
 
@@ -110,8 +110,8 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( P  < m_P_cut_muon ) continue;
     verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
 
-    //double cloneDist = proto->track()->info(LHCb::Track::CloneDist, -1.);
-    //if (cloneDist!=-1) continue;
+    double cloneDist = proto->track()->info(LHCb::Track::CloneDist, -1.);
+    if (cloneDist!=-1) continue;
 
     double lcs = proto->track()->chi2PerDoF();
     if(lcs>m_lcs_cut_muon) continue;
@@ -149,14 +149,15 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double IP, IPerr;
     m_util->calcIP(imuon, RecVert, IP, IPerr); //calculate IP
 
+    debug()<<"IP/IPerr: "<<IP/IPerr<<endmsg;
+    
     std::vector<double> NNinputs(10);
-    NNinputs.at(0) = m_util->countTracks(vtags);
+    //    NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;;
     NNinputs.at(2) = imuon->p()/GeV;
     NNinputs.at(3) = imuon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
     NNinputs.at(8) = allVtx.size();
-    NNinputs.at(9) = ncand;
     
     pn = m_nnet->MLPm( NNinputs );
     verbose() << " Muon pn="<< pn <<endreq;

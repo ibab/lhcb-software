@@ -42,9 +42,9 @@ public:
 private:
 
   double pol(double x, double a0, double a1=0, 
-	     double a2=0, double a3=0, double a4=0);
+             double a2=0, double a3=0, double a4=0);
   double combine(double p1, double p2, double p3=0.5,
-		 double p4=0.5, double p5=0.5, double p6=0.5);
+                 double p4=0.5, double p5=0.5, double p6=0.5, double p7=0.5);
 
   ITaggingUtils* m_util;
 
@@ -52,7 +52,9 @@ private:
   double m_lcs_Long_cut;
   double m_lcs_Upstream_cut;
   double m_lcs_vtxaddedtracks_cut;
-  double m_maxprobf;
+  double m_maxprobf, m_ptmin, m_ipsmin, m_dphimin;
+  
+
   bool m_noclones;
 
 };

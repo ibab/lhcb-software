@@ -29,6 +29,10 @@ SVertexOneSeedTool::SVertexOneSeedTool( const std::string& type,
   declareProperty( "lcs_Long_cut",     m_lcs_Long_cut     = 2.5 );
   declareProperty( "lcs_Upstream_cut", m_lcs_Upstream_cut = 5.0 );
   declareProperty( "lcs_vtxaddedtracks_cut", m_lcs_vtxaddedtracks_cut = 3.0 );
+  declareProperty( "MinSeedPtmin", m_ptmin = 0.1 );
+  declareProperty( "MinSeedIPSmin", m_ipsmin = 2.5 );
+  declareProperty( "MinSeedDphimin", m_dphimin = 0. );
+  //  declareProperty( "MinSeedProbability", m_maxprobf = 0.4 );
   declareProperty( "maxprobf", m_maxprobf = 0.4 );
   declareProperty( "noclones", m_noclones = true );
 
@@ -94,6 +98,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
     }
  
     m_util->calcIP(*jp, &RecVert, ipl, iperrl);
+    ipl=fabs(ipl);
     if( iperrl==0 ) continue;
     if( iperrl > 1.0 ) continue;                                //cut
     if( ipl/iperrl < 2.5 ) continue;                            //cut
@@ -113,6 +118,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       }
 
       m_util->calcIP(*kp, &RecVert, ips, iperrs);
+      ips=fabs(ips);
       if( iperrs ==0 ) continue;                                
       if( iperrs > 1.0 ) continue;                              //cut
       if( ips/iperrs < 2.5 ) continue;                          //cut
@@ -147,6 +153,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
 
       //if the couple is compatible with a Ks, drop it          //cut
       double mass = ((*jp)->momentum() + (*kp)->momentum()).M()/GeV;
+      if( mass<0.2) continue;
       if( mass > 0.490 && mass < 0.505 
           &&  (*jp)->particleID().abspid() == 211
           &&  (*kp)->particleID().abspid() == 211
@@ -157,22 +164,35 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
       debug() << "    seed found: ="<< vtx.position() <<endreq;
 
       //evaluate likelihood
-      double prob_chi2  = pol(vtx.chi2PerDoF(), 0.615074, -0.081797, 0.00421188);
-      double prob_ptmin = pol(std::min((*jp)->pt(), (*kp)->pt()) /GeV, 0.0662687, 1.10754, -0.350278);
-      double prob_ipmax = pol(std::max(ipl, ips), 0.763837, -0.0822829, -0.0154407);
-      double prob_ipsmin = 0;
+      double prob_chi2 = pol(vtx.chi2PerDoF(), 0.632154, -0.0421607, 0.00181837);
+      double ptmin = std::min((*jp)->pt(),(*kp)->pt()) /GeV;
+      double prob_ptmin = 0;
+      if (ptmin < m_ptmin) continue;
+      if (ptmin<1) prob_ptmin = pol(ptmin, 0.0144075, 1.28718, -0.477544);
+      else prob_ptmin = pol(ptmin, 0.536686, 0.382045, -0.0945185);
+      double ipmax = std::max(ipl, ips);
+      double prob_ipmax = 0;
+      if (ipmax<0.4) prob_ipmax = pol(ipmax, 0.490689, 1.21535, -1.87733);
+      else prob_ipmax = pol(ipmax, 0.790337, -0.229543, 0.00438416);
       double ipsmin= std::min(ipl/iperrl, ips/iperrs);
-      if (ipsmin<2.5) continue;
-      if(ipsmin<6) prob_ipsmin    = pol(ipsmin, -0.642335, 0.356381, -0.0239819);
-      else prob_ipsmin = pol(ipsmin, 0.536929, 0.0254873, -0.000439594);
-      double prob_deltaphi = pol(dphi, 0.699251, -0.19263, 0.00319839);
-      double prob_rdist;
-      if(rdist<1) prob_rdist= pol(rdist, 9.61771e-05, 0.936598, -0.433183);
-      else        prob_rdist= pol(rdist, 0.44296, 0.0956002, -0.0130237);
+      double prob_ipsmin = 0;
+      if (ipsmin < m_ipsmin) continue;
+      if (ipsmin<6) prob_ipsmin = pol(ipsmin, -0.442382, 0.326852, -0.0258772);
+      else prob_ipsmin = pol(ipsmin, 0.540565, 0.0130981, -0.000204322);
+      if(dphi < m_dphimin) continue;
+      double prob_deltaphi = pol(dphi, 0.611887, 0.0165528, -0.0398336);
+      double prob_rdist = pol(rdist, 0.673403, -0.0743514, 0.00646535);
+      double pointtheta = SVpoint.Theta();
+      double prob_pointtheta = 0;
+      if (pointtheta <0.05) prob_pointtheta = pol(pointtheta, 0.466409, 7.29019, -94.1293);
+      else prob_pointtheta = pol(pointtheta, 0.555528, 0.98924, -5.43018);
+      
+      debug()<<prob_chi2<< " "<<  prob_ptmin<<  " "<<    prob_ipmax<< " "
+             << prob_ipsmin<<  " "<< prob_deltaphi<<  " "<< prob_rdist<< " "<<prob_pointtheta<<endmsg;
       
       double probf = combine(prob_chi2,   prob_ptmin,    prob_ipmax,
-                             prob_ipsmin, prob_deltaphi, prob_rdist);
-      
+                             prob_ipsmin, prob_deltaphi, prob_rdist, prob_pointtheta);
+            
       debug()<<"      seed formed - probf: "<<probf<<endreq;
       if(probf>=maxprobf) {
         myseed=vtx;
@@ -183,7 +203,7 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
         debug() << "       === pt=" << p1->pt() <<endreq;
         debug() << "       === pt=" << p2->pt() <<endreq;
         //set seed position
-	SVpos.SetX((vtx.position()-RecVert.position()).x()/mm);
+        SVpos.SetX((vtx.position()-RecVert.position()).x()/mm);
         SVpos.SetY((vtx.position()-RecVert.position()).y()/mm);
         SVpos.SetZ((vtx.position()-RecVert.position()).z()/mm);
         debug()<<"       svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endreq;
@@ -217,13 +237,15 @@ std::vector<Vertex> SVertexOneSeedTool::buildVertex(const RecVertex& RecVert,
     if((*jpp)->proto()->track()->chi2PerDoF() > m_lcs_vtxaddedtracks_cut) continue;
     double ip, ipe;
     m_util->calcIP(*jpp, &RecVert, ip, ipe);
+    ip=fabs(ip);
     if( ipe==0 ) continue;
     if( ip/ipe < 3.5 ) continue; //cut
     if( ip < 0.1 ) continue;     //cut
     double ipSV, ipErrSV;
     m_util->calcIP( *jpp, &myseed, ipSV, ipErrSV );
+    ipSV=fabs(ipSV);
     verbose()<<" ipSV: "<<ipSV<<endreq;
-    if( ipSV > 0.7 ) continue;
+    if( ipSV > 0.9 ) continue;
     double docaSV, docaErrSV;
     m_util->calcDOCAmin( *jpp, p1, p2, docaSV, docaErrSV);
     verbose()<<" doca: "<<docaSV<<endreq;
@@ -249,8 +271,8 @@ double SVertexOneSeedTool::pol(double x, double a0, double a1,
 
 //======================================================================
 double SVertexOneSeedTool::combine(double p1, double p2, double p3,
-                                   double p4, double p5, double p6){
-  double probs = p1*p2*p3*p4*p5*p6;
-  double probb = (1-p1)*(1-p2)*(1-p3)*(1-p4)*(1-p5)*(1-p6);
+                                   double p4, double p5, double p6, double p7){
+  double probs = p1*p2*p3*p4*p5*p6*p7;
+  double probb = (1-p1)*(1-p2)*(1-p3)*(1-p4)*(1-p5)*(1-p6)*(1-p7);
   return probs / ( probs + probb );
 }

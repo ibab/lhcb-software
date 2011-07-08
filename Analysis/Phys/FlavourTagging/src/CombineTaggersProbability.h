@@ -34,7 +34,8 @@ public:
 
 private:
 
-  double m_ProbMin, m_omegascale, m_omegamaxbin;
+  double m_ProbMin, m_ProbMin_OS;
+  double m_omegascale, m_omegamaxbin;
   double m_P0_Cal_OS, m_P1_Cal_OS, m_Eta_Cal_OS;
 
 };

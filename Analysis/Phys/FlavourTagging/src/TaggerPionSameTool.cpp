@@ -34,11 +34,12 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_distPhi_cut", m_distPhi_cut_pS= 0.005 );
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 3.0);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 10.0);
-  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.425 ); 
-  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.89 ); 
-  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.415 ); 
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.470 ); 
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.614 ); 
+  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.94 ); 
+  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.448 ); 
   declareProperty( "PionSame_AverageOmega",   m_AverageOmega   = 0.40 );
-  declareProperty( "PionSame_ProbMin",     m_PionProbMin   = 0.53);
+  declareProperty( "PionSame_ProbMin",     m_PionProbMin   = 0.54);
 
   m_nnet = 0;
   m_util = 0;
@@ -159,37 +160,34 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
 
+    //calculate omega  
     double IP, IPerr;
+    m_util->calcIP(ipionS, RecVert, IP, IPerr);
     double B0the= ptotB.Theta();
     double B0phi= ptotB.Phi();
     double ang = asin((ipionS->pt())/(ipionS->p()));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
-    double dphi= std::min(fabs(ipionS->momentum().Phi()-B0phi), 
+    double dphi= std::min(fabs(ipionS->momentum().Phi()-B0phi),
                           6.283-fabs(ipionS->momentum().Phi()-B0phi));
     double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
-    //     debug()<<"   B0mass+pSS "<< (ptotB+ ipionS->momentum() ).M()
-    // 	   <<"   B0mass "<<B0mass
-    // 	   <<"        dQ"<<dQ/GeV<< endreq;
-
-    m_util->calcIP(ipionS, RecVert, IP, IPerr);
-
+    double dR = sqrt(deta*deta+dphi*dphi);
+    
     std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;
-    NNinputs.at(2) = ipionS->p()/GeV;
     NNinputs.at(3) = ipionS->pt()/GeV;
-    NNinputs.at(4) = IP/IPerr;
-    NNinputs.at(5) = deta;
-    NNinputs.at(6) = dphi;
+    NNinputs.at(4) = fabs(IP/IPerr);
+    NNinputs.at(5) = dR;
     NNinputs.at(7) = dQ/GeV;
     NNinputs.at(8) = allVtx.size();
-    NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPpS( NNinputs );
     verbose() << " Pion pn="<< pn <<endmsg;
 
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
-    pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
+    //pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
+    pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) - m_P2_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) * ((1-pn)-m_Eta_Cal_pionS);
+    
     debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
 
     if( pn < m_PionProbMin ) return tpionS;

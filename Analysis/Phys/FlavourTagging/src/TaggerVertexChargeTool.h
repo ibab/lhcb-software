@@ -56,6 +56,7 @@ private:
   std::string m_NeuralNetName;
   double m_AverageOmega, m_PowerK, m_MinimumVCharge;
   double m_ProbMin_vtx;
+  double m_Ptsum_vtx, m_Ptmean_vtx, m_IPSsum_vtx, m_DocaMaxsum_vtx, m_Psum_vtx, m_Msum_vtx;
   double m_P0_Cal_vtx ;
   double m_P1_Cal_vtx ;
   double m_Eta_Cal_vtx ;

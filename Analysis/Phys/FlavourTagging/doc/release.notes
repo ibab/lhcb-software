@@ -5,6 +5,16 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+
+! 2011-07-08 - Marc Grabalosa
+ - src/Tagger* Changed cuts to new optimization/calibration
+ - new NeuralNets (old keep in extrann/Moriond2010)
+ - Added new variables to VtxTagger
+ - Added IPsign in all taggers
+ - SSK opt in Ds to PhiPi from data june 2011
+ - python/FlavourTaggign/Tuning.py added new cuts for opt/cal july2011
+ - Increase to v12r5
+
 !========================== FlavourTagging v12r4p3 2011-03-29 ================
 ! 2011-04-08 - Juan Palacios
  - src/BTagging.cpp

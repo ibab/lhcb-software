@@ -36,9 +36,9 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
   declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 4. );
   declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 3.0 );
   declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.03 );
-  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.291 ); 
-  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 1.47 ); 
-  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.341 ); 
+  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.3305 ); 
+  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 1.09 ); 
+  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.345 ); 
 
   declareProperty( "Ele_ProbMin",  m_ProbMin_ele   = 0. ); //no cut
 
@@ -170,13 +170,13 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     m_util->calcIP(iele, RecVert, IP, IPerr);
 
     std::vector<double> NNinputs(10);
-    NNinputs.at(0) = m_util->countTracks(vtags);
+    //    NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;;
     NNinputs.at(2) = iele->p()/GeV;
     NNinputs.at(3) = iele->pt()/GeV;
+    //    NNinputs.at(4) = fabs(IP/IPerr);
     NNinputs.at(4) = IP/IPerr;
     NNinputs.at(8) = allVtx.size();
-    NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPe( NNinputs );
     verbose() << " Elec pn=" << pn << endreq;

@@ -33,11 +33,11 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
   declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 4.72 );
   declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= -0.005 );
-  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.359 ); 
-  declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.89 ); 
-  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.359 ); 
+  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.390 ); 
+  declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.90 ); 
+  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.362 ); 
   declareProperty( "Kaon_AverageOmega",  m_AverageOmega     = 0.33 );
-  declareProperty( "Kaon_ProbMin",  m_ProbMin_kaon  = 0.51 ); //no cut
+  declareProperty( "Kaon_ProbMin",  m_ProbMin_kaon  = 0.54 ); //no cut
 
   m_nnet = 0;
   m_util = 0;
@@ -157,7 +157,6 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     NNinputs.at(3) = ikaon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
     NNinputs.at(8) = allVtx.size();
-    NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPk( NNinputs );
 

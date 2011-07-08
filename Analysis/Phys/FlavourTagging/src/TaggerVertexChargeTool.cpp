@@ -29,13 +29,19 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); 
   declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
 
-  declareProperty( "Vtx_PowerK",       m_PowerK               = 0.4 );
-  declareProperty( "Vtx_MinimumVCharge", m_MinimumVCharge     = 0.17 );
-  declareProperty( "Vtx_ProbMin", m_ProbMin_vtx           = 0.53);
-  
-  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.451 ); 
-  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.358 ); 
-  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.398 ); 
+  declareProperty( "Vtx_PowerK",        m_PowerK              = 0.4 );
+  declareProperty( "Vtx_MinimumVCharge",m_MinimumVCharge      = 0.275 );
+  declareProperty( "Vtx_Ptsum",         m_Ptsum_vtx           = 1.5);
+  declareProperty( "Vtx_Ptmean",        m_Ptmean_vtx          = 0.);
+  declareProperty( "Vtx_IPSsum",        m_IPSsum_vtx          = 10);
+  declareProperty( "Vtx_DocaMaxsun",    m_DocaMaxsum_vtx      = 0.5);
+  declareProperty( "Vtx_Psum",          m_Psum_vtx            = 10);
+  declareProperty( "Vtx_Msum",          m_Msum_vtx            = 0.5);
+
+  declareProperty( "Vtx_ProbMin", m_ProbMin_vtx           = 0.54);
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.401 ); 
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.90 ); 
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.368 ); 
 
   //For CombinationTechnique: "Probability"
   declareProperty( "P0",           m_P0                   = 5.255669e-01 );
@@ -106,7 +112,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
-  double Vptmin = 0, Vipsmin = 0, Vflaglong = 0, Vdocamax = 0;
+  double Vptmean = 0, Vipsmean = 0, Vflaglong = 0, Vdocamax = 0;
   int vflagged = 0;
   Gaudi::LorentzVector SVmomentum;
   Particle::ConstVector::const_iterator ip;
@@ -117,10 +123,11 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     Vch += (*ip)->charge() * a;
     norm+= a;
     vflagged++;
-    Vptmin += (*ip)->pt()/GeV;
+    Vptmean += (*ip)->pt()/GeV;
     double minip, miniperr;
     m_util->calcIP(*ip, RecVert, minip, miniperr);
-    Vipsmin += minip/miniperr;
+    minip=fabs(minip);
+    Vipsmean += minip/miniperr;
     const Track* iptrack = (*ip)->proto()->track();
     if( iptrack->type()== Track::Long ) Vflaglong++;
     double docaSV, docaErrSV;
@@ -132,19 +139,25 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   if(norm) {
     Vch /= norm;
     if(fabs(Vch) < m_MinimumVCharge ) Vch = 0;
-    Vptmin  /= vflagged;
-    Vipsmin /= vflagged;
+    Vptmean  /= vflagged;
+    Vipsmean /= vflagged;
     Vdocamax/= vflagged;
   }
   debug()<<"Vch: "<<Vch<<endreq;
   if( Vch==0 ) return tVch;
 
-  //add tau of Bopp
+  //Variables of the SV                                                                                                                                               
   double SVP = SVmomentum.P()/1000;
   double SVM = SVmomentum.M()/1000;
   double SVGP = SVP/(0.16*SVM+0.12);
   double SVtau = sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
   debug()<<"BoppDir.Mag2: "<<sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+  if ( Vptmean < m_Ptmean_vtx)              return tVch;
+  if ( Vptmean*vflagged < m_Ptsum_vtx)      return tVch;
+  if (Vipsmean*vflagged < m_IPSsum_vtx)     return tVch;
+  if (Vdocamax*vflagged > m_DocaMaxsum_vtx) return tVch;
+  if (SVP < m_Psum_vtx ) return tVch;
+  if (SVM < m_Msum_vtx ) return tVch;
 
   //calculate omega
   debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
@@ -165,13 +178,10 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     NNinputs.at(1) = allVtx.size();
     NNinputs.at(2) = AXB0->pt()/GeV;;
     NNinputs.at(3) = vflagged;
-    NNinputs.at(4) = Vptmin;
-    NNinputs.at(5) = Vipsmin;
-    NNinputs.at(6) = Vdocamax;
-    NNinputs.at(7) = maxprobf;
-    NNinputs.at(8) = Vflaglong/(vflagged? vflagged:1);
+    NNinputs.at(4) = Vptmean;
+    NNinputs.at(5) = Vipsmean;
     NNinputs.at(9) = fabs(Vch);
-    NNinputs.at(10) = SVtau;
+    NNinputs.at(10) = SVM;
     pn = m_nnet->MLPvtx( NNinputs );
     omega = 1 - pn;
   }
