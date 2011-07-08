@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 using namespace Rich::Rec::TemplateRings;
-
+DECLARE_ALGORITHM_FACTORY(RichRingRecAlgBase) 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -39,7 +39,7 @@ StatusCode RichRingRecAlgBase::initialize()
   const StatusCode sc = Rich::Rec::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize RichRingRecAlgBase  " << endmsg;
+  debug() << "==>  Initialize RichRingRecAlgBase  " << endmsg;
   
   
     

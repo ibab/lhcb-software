@@ -15,7 +15,7 @@
 
 using namespace Rich::Rec::TemplateRings;
 
-
+DECLARE_TOOL_FACTORY(RichRingRecToolBase)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

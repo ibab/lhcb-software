@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 using namespace Rich::Rec::TemplateRings;
-
+DECLARE_ALGORITHM_FACTORY(RichRingRecTupleAlgBase)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
