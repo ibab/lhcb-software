@@ -1,5 +1,5 @@
 package DaVinciSys
-version           v28r4
+version           v28r5
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ use  DaVinci                 	v28r4   Phys
 use  DaVinciTests               v2r6
 
 #Other packages temporarily included
-use  DecayTreeTuple             v3r15    Phys
+# use  DecayTreeTuple             v3r15    Phys
 
 # Declare this as a container package
 apply_pattern container_package
