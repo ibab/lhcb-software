@@ -140,7 +140,7 @@ void DecayD::SetDalitzEvent(IDalitzEvent* dE)
 
 double DecayD::getWeight() const
 {
-	double weigth = m_dE->getWeight();
+	double weight = m_dE->getWeight();
 	return weight;
 }
 
