@@ -42,7 +42,7 @@ use LinkerInstances    v*    Event
 use SimComponents      v*    Sim            -no_auto_imports
 
 #-- Hlt
-use HltSys      v*
+# use HltSys      v*
 
 #-- Lbcom
 use LbcomSys    v*

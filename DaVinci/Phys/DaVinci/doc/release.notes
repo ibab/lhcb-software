@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-07-08 - Patrick Koppenburg
+ - Task 21169 : Remove all Hlt functionality
+
 !========================= DaVinci v28r4 2011-06-21 =========================
 ! 2011-06-13 - Rob Lambert
  - Modified configurable to use IOHelper where possible.
