@@ -5,6 +5,7 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r10 2011-07-08 =========================
 ! 2011-07-08 - Chris Jones
  - Disable by default the code that checks the MuonPID version and reruns
    unless DataType is MC09
