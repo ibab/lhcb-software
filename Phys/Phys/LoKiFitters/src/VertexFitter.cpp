@@ -627,7 +627,7 @@ LoKi::VertexFitter::VertexFitter
 /// The transport tolerance  
   , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
 /// number of prints 
-  , m_prints              ( 10 )
+  , m_prints              ( 1 )
 /// pure technical stuff: 
   , m_entries (   ) 
   , m_vertex  ( 0 )

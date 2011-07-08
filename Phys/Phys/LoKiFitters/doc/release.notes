@@ -4,6 +4,10 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2011-07-08 - Rob Lambert
+ - Reduce m_prints to 1 for LoKi::VertexFitter
+
 !========================== LoKiFitters v4r1p2 2011-03-06 =====================
 ! 2011-03-06 - Gerhard Raven
  - kill some more WARNING/ERROR printouts...
