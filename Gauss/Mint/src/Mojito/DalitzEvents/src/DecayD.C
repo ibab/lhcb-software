@@ -138,6 +138,16 @@ void DecayD::SetDalitzEvent(IDalitzEvent* dE)
 	m_dE = dE;
 }
 
+double DecayD::getWeight() const
+{
+	double weigth = m_dE->getWeight();
+	return weight;
+}
+
+double 	DecayD::getGeneratorPdfRelativeToPhaseSpace () const
+{
+	return m_dE->getGeneratorPdfRelativeToPhaseSpace();
+}
 
 void DecayD::Initalize()
 {

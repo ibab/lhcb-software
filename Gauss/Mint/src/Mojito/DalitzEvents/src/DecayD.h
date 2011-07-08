@@ -82,6 +82,10 @@ public:
 
 	void DecayWithBR(bool decayWithBR);
 
+	double getWeight () const;
+
+	double getGeneratorPdfRelativeToPhaseSpace () const;
+
 private:
 	HepMC::GenEvent* m_evt;
 	std::string m_inputFileName;
