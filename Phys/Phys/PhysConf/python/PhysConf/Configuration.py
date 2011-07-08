@@ -32,7 +32,7 @@ class PhysConf(LHCbConfigurableUser) :
            "DataType"          : 'MC09'     # Data type, can be ['DC06','2008']
         ,  "Simulation"        : True    # set to True to use SimCond
         ,  "InputType"         : 'DST'   # Data type
-        ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
+        ,  "AllowPIDRerunning" : False   # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.
         }
     
