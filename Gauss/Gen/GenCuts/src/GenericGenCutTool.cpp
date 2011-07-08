@@ -24,7 +24,7 @@
 // =============================================================================
 // Generators 
 // =============================================================================
-#include "MCInterfaces/IGenCutTool.h"
+#include "Generators/IGenCutTool.h"
 // =============================================================================
 // PartProp
 // =============================================================================
@@ -111,7 +111,9 @@ namespace LoKi
    *  @see IGenCutTool
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    */
-  class GenCutTool : public extends1<GaudiHistoTool,IGenCutTool>
+  class GenCutTool : 
+    public         GaudiHistoTool , 
+    public virtual     IGenCutTool
   {
     // friend factor for instantiation 
     friend class ToolFactory<LoKi::GenCutTool> ;
@@ -275,7 +277,8 @@ LoKi::GenCutTool::GenCutTool
 ( const std::string&  type   ,                     // the tool type (???)
   const std::string&  name   ,                     // the tool isntance name 
   const IInterface*   parent )                     // the tool parent
-  : base_class ( type , name , parent ) 
+// : base_class ( type , name , parent ) 
+  : GaudiHistoTool ( type , name , parent ) 
 // 
   , m_descriptor ( "<Invaild-Decay-Descriptor>" ) 
   , m_finder     ( s_TREE )
@@ -293,6 +296,9 @@ LoKi::GenCutTool::GenCutTool
   , m_histo3 ( 0 ) 
 //
 {
+  //
+  declareInterface<IGenCutTool>( this ) ;
+  //
   declareProperty 
     ( "Decay"           ,
       m_descriptor      , 
@@ -376,7 +382,7 @@ StatusCode LoKi::GenCutTool::decodeDescriptor ()  const
   //
   m_update_decay = true ;
   // get the factory:
-  Decays::IGenDecay* factory = get<Decays::IGenDecay>("LoKi::GenDecay", this ) ;
+  Decays::IGenDecay* factory = tool<Decays::IGenDecay>("LoKi::GenDecay", this ) ;
   // use the factory:
   Decays::IGenDecay::Tree tree = factory->tree ( m_descriptor ) ;
   if ( !tree ) 
@@ -404,9 +410,9 @@ StatusCode LoKi::GenCutTool::decodeCuts ()  const
   //
   // get the factory:
   LoKi::IGenHybridFactory* factory = 
-    get<LoKi::IGenHybridFactory>( m_factory , this ) ;
+    tool<LoKi::IGenHybridFactory>( m_factory , this ) ;
   // get the factory:
-  Decays::IGenDecay*       nodes = get<Decays::IGenDecay>("LoKi::GenDecay", this ) ;
+  Decays::IGenDecay*       nodes = tool<Decays::IGenDecay>("LoKi::GenDecay", this ) ;
   // 
   // decode cuts :
   for ( CMap::const_iterator entry = m_cuts.begin() ; 
@@ -451,7 +457,7 @@ StatusCode LoKi::GenCutTool::decodeHistos ()  const
   //
   // aquire the factory: 
   LoKi::IGenHybridFactory* factory = 
-    get<LoKi::IGenHybridFactory>( m_factory , this ) ;
+    tool<LoKi::IGenHybridFactory>( m_factory , this ) ;
   //
   StatusCode sc = factory -> get ( m_xaxis.title() , 
                                    m_x             , 
@@ -585,7 +591,7 @@ bool LoKi::GenCutTool::accept ( const HepMC::GenParticle* particle ) const
     m_histo2 -> fill ( x , y , result ) ;
   }
   //
-  return true ;
+  return result ;
 } 
 // ============================================================================
 // construct preambulo string 
@@ -638,27 +644,27 @@ StatusCode LoKi::GenCutTool::getEfficiency()
   TAxis* xaxis = h1 -> GetXaxis() ;
   TAxis* yaxis = h1 -> GetYaxis() ;
   //
-  unsigned int bad_bins  ;
-  unsigned int null_bins ;
+  unsigned int bad_bins  = 0 ;
+  unsigned int null_bins = 0 ;
   //
   for ( int ix = 1 ; ix <= xaxis->GetNbins() ; ++ix ) 
   {
     for ( int iy = 1 ; iy <= yaxis->GetNbins() ; ++iy ) 
     {
-      const double N  = h1 -> GetBinContent ( ix , iy ) ;
+      const double N  = (long) h1 -> GetBinContent ( ix , iy ) ;
       // const double Ne = h1 -> GetBinError   ( ix , iy ) ;
       //
-      if ( N < 0 || !non_integer ( N )  ) 
+      if ( N < 0  ) // || !non_integer ( N )  ) 
       {
         Warning ("Can't calculate the efficiency: illegal content N") ;
         ++bad_bins ;
         continue ;
       }
       //
-      const double n  = h2 -> GetBinContent ( ix , iy ) ;
+      const double n  = (long) h2 -> GetBinContent ( ix , iy ) ;
       // const double ne = h2 -> GetBinError   ( ix , iy ) ;
       //
-      if ( n < 0 || N < n || !non_integer ( N )  ) 
+      if ( n < 0 || N < n ) //  || !non_integer ( N )  ) 
       {
         Warning ("Can't calculate the efficicency: illegal content n") ;
         ++bad_bins ;
