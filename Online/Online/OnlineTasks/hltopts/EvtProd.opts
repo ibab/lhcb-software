@@ -18,3 +18,4 @@ Runable.Requirements         = {
 };
 HistogramPersistencySvc.OutputLevel  = 5;
 HistogramPersistencySvc.Warnings = false;
+MonitorSvc.CounterUpdateInterval = 5;
