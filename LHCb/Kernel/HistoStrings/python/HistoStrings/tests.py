@@ -31,7 +31,10 @@ def test1D() :
     h1.Fill ( 0.5 )
     
     print h1.toString()
-    print h1.fromString ( h1.toString() )
+    h1str = str(eval(h1.toString()))
+    print h1.fromString ( h1.toString())
+    print "From string: "+h1str
+    print h1.toString()
 
 
     print h1.toXml()
@@ -53,9 +56,11 @@ def test2D() :
     h3 = ROOT.TH2D('h3','my title 3 ', 10 , 0 , 1 , 10 , 0 , 2 )
 
     print h2.toXml()
+    print "From Xml:"
     print h2.fromXml ( h2.toXml() )
 
-    h3.fromString ( h2.toString() )
+    h3.fromString(str(eval(h2.toString())))
+    print "From string:"
     print h3.toString()
     
 

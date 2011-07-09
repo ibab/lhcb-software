@@ -71,19 +71,23 @@ namespace Gaudi
           inner = 
             ( ( str_p("edges") | "'edges'" | "\"edges\"" ) 
               >> ":" >> edges  [ top.val *= arg1 ] )
-            | ( 
-               ( str_p("nbins")  | "'nbins'"  | "\"nbins\""  ) 
-               >> ":" >> nbins [ top.val /= arg1 ]  >> ',' >>
-               ( str_p("low")    | "'low'"    | "\"low\""    ) 
-               >> ":" >> low   [ top.val -= arg1 ]  >> ',' >>
-               ( str_p("high")   | "'high'"   | "\"high\""   ) 
-               >> ":" >> high  [ top.val += arg1 ]  
-               ) ;
+            | list_p(inner_pair,','); 
+         
+          inner_pair =  
+               (( str_p("nbins")  | "'nbins'"  | "\"nbins\""  ) 
+               >> ":" >> nbins [ top.val /= arg1 ])
+               |
+               (( str_p("low")    | "'low'"    | "\"low\""    ) 
+               >> ":" >> low   [ top.val -= arg1 ])
+               |
+              (( str_p("high")   | "'high'"   | "\"high\""   ) 
+               >> ":" >> high  [ top.val += arg1 ]);
+
           
           result =            
             ( str_p("{") >> inner >> '}' ) |
             ( str_p("(") >> inner >> ')' ) |
-            ( str_p("[") >> inner >> ']' ) | inner ;
+            ( str_p("[") >> inner >> ']' );
         }
         //
         rule<ScannerT> const& start() const { return result ; }
@@ -92,14 +96,14 @@ namespace Gaudi
         RealGrammar<double>                    low    ;
         RealGrammar<double>                    high   ;
         IntGrammar<unsigned int>               nbins  ;
-        rule<ScannerT>                         inner  ;
+        rule<ScannerT>                         inner,  inner_pair;
         rule<ScannerT>                         result ;
       };  
       // ======================================================================
     } ;
     // ========================================================================
     class H1Grammar : public grammar 
-    <H1Grammar,ClosureGrammar<H1>::context_t>
+    <H1Grammar, ClosureGrammar<H1>::context_t>
     {
       // ======================================================================
     public:
@@ -113,15 +117,30 @@ namespace Gaudi
       {
         definition ( const H1Grammar& top ) 
         {
-          inner = 
-            ( str_p("name")  | "'name'"  | "\"name\""  ) 
-            >> ":" >> name   [ top.val *= arg1 ] >> ',' >>
-            ( str_p("title") | "'title'" | "\"title\"" ) 
-            >> ":" >> title  [ top.val /= arg1 ] >> ',' >> 
-            !( ( str_p("X") | "'X'" | "\"X\"" | "x" | "'x'" | "\"x\"" ) >> ':') 
-            >> edges [ top.val &= arg1 ] >> ',' >> 
-            ( str_p("bins") | "'bins'" | "\"bins\"" ) 
-            >> ':' >> bins  [ top.val += arg1 ] ;
+          inner = list_p(inner_pair,',');
+                     
+          inner_pair = 
+            ((str_p("name")  | "'name'"  | "\"name\""  ) 
+            >> ":" >> name   [ top.val *= arg1 ])
+            |
+            (( str_p("title") | "'title'" | "\"title\"" ) 
+            >> ":" >> title  [ top.val /= arg1 ])
+            |
+            (( str_p("X") | "'X'" | "\"X\"" | "x" | "'x'" | "\"x\"" ) >> ':' 
+            >> edges [ top.val &= arg1 ])
+            |
+            (( str_p("nbins")  | "'nbins'"  | "\"nbins\""  ) 
+               >> ":" >> nbins [ top.val |= arg1 ])
+            |
+            (( str_p("low")    | "'low'"    | "\"low\""    ) 
+               >> ":" >> low   [ top.val -= arg1 ])
+            |
+            (( str_p("high")   | "'high'"   | "\"high\""   ) 
+               >> ":" >> high  [ top.val ^= arg1 ])
+            |
+            (( str_p("bins") | "'bins'" | "\"bins\"" ) 
+            >> ':' >> bins  [ top.val += arg1 ]);
+
           
           result =            
             ( str_p("{") >> inner >> '}' ) |
@@ -132,11 +151,15 @@ namespace Gaudi
         rule<ScannerT> const& start() const { return result ; }
         //
         
-        StringGrammar   name  ;
-        StringGrammar   title ;
-        EdgeGrammar     edges ;
+        StringGrammar             name  ;
+        StringGrammar             title ;
+        EdgeGrammar               edges ;
+        RealGrammar<double>       low   ;
+        RealGrammar<double>       high  ;
+        IntGrammar<unsigned int>  nbins ;
+ 
         VectorGrammar< PairGrammar<RealGrammar<double>,RealGrammar<double> > > bins ;
-        rule<ScannerT>                         inner  ;
+        rule<ScannerT>                         inner, inner_pair;
         rule<ScannerT>                         result ;
       };  
       // ======================================================================
@@ -157,18 +180,24 @@ namespace Gaudi
       {
         definition ( const H2Grammar& top ) 
         {
-          inner = 
-            ( str_p("name")  | "'name'"  | "\"name\""  ) 
-            >> ":" >> name   [ top.val *= arg1 ] >> ',' >>
-            ( str_p("title") | "'title'" | "\"title\"" ) 
-            >> ":" >> title  [ top.val /= arg1 ] >> ',' >> 
-            !( ( str_p("X") | "'X'" | "\"X\"" | "x" | "'x'" | "\"x\"" ) >> ':') 
-            >> edges [ top.val &= arg1 ] >> ',' >>
-            !( ( str_p("Y") | "'Y'" | "\"Y\"" | "y" | "'y'" | "\"y\"" ) >> ':') 
-            >> edges [ top.val |= arg1 ] >> ',' >> 
-            ( str_p("bins") | "'bins'" | "\"bins\"" ) 
-            >> ':' >> bins  [ top.val += arg1 ] ;
-          
+          inner = list_p(inner_pair,',');
+                      
+          inner_pair = 
+            (( str_p("name")  | "'name'"  | "\"name\""  ) 
+            >> ":" >> name   [ top.val *= arg1 ])
+            |
+            (( str_p("title") | "'title'" | "\"title\"" ) 
+            >> ":" >> title  [ top.val /= arg1 ])
+            | 
+            (( str_p("X") | "'X'" | "\"X\"" | "x" | "'x'" | "\"x\"" ) >> ':' 
+            >> edges [ top.val &= arg1 ])
+            |
+            (( str_p("Y") | "'Y'" | "\"Y\"" | "y" | "'y'" | "\"y\"" ) >> ':' 
+            >> edges [ top.val |= arg1 ])
+            | 
+            (( str_p("bins") | "'bins'" | "\"bins\"" ) 
+            >> ':' >> bins  [ top.val += arg1 ]);
+
           result =            
             ( str_p("{") >> inner >> '}' ) |
             ( str_p("(") >> inner >> ')' ) |
@@ -182,7 +211,7 @@ namespace Gaudi
         StringGrammar   title ;
         EdgeGrammar     edges ;
         VectorGrammar< PairGrammar<RealGrammar<double>,RealGrammar<double> > > bins ;
-        rule<ScannerT>                         inner  ;
+        rule<ScannerT>                         inner, inner_pair  ;
         rule<ScannerT>                         result ;
       };  
       // ======================================================================

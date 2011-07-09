@@ -62,11 +62,21 @@ namespace
     //
     void setName  ( const std::string& value ) { m_name   = value ; }
     void setTitle ( const std::string& value ) { m_title  = value ; }
+
     void setEdges ( const Edges&       value ) { m_edges  = value ; }
+    void setHighEdge ( const double value ) { m_edges.setHighEdge(value ); }
+    void setLowEdge ( const double value ) { m_edges.setLowEdge(value ); }
+    void setNBins ( const unsigned int value ) { m_edges.setNBins(value );}
+    
+   
     void setBins  ( const Bins&        value ) { m_bins   = value ; }
     //
     H1& operator*=( const std::string& value ) { setName  ( value ) ; return *this ; }
     H1& operator/=( const std::string& value ) { setTitle ( value ) ; return *this ; }
+    H1& operator^=( const double value ) { setHighEdge(value) ; return *this ; }
+    H1& operator-=( const double value ) { setLowEdge(value) ; return *this ; }
+    H1& operator|=( const unsigned int value) { setNBins(value) ; return *this ; }
+    
     H1& operator&=( const Edges&       value ) { setEdges ( value ) ; return *this ; }
     H1& operator+=( const Bins&        value ) { setBins  ( value ) ; return *this ; }
     //

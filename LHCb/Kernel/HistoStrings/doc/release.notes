@@ -5,6 +5,19 @@
 ! Purpose     : Various histogram <---> string conversion functions 
 ! -----------------------------------------------------------------------------
 
+
+! 2011-07-09 - Vanya Belyaev
+
+ - Sascha has fixed orderintg problem with string representation  
+
+ - requirements 
+    version increment to v1r1 
+
+
 !===================== HistoStrings v1r0 2009-11-13 ===========================
 ! 2009-10-22 - Vanya Belyaev
  - the first commit into CVS 
+
+# =============================================================================
+# The END
+# =============================================================================
