@@ -217,6 +217,12 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /// the actual type of position iterator
+    typedef boost::spirit::position_iterator<std::string::const_iterator> IteratorT;
+    /// create the position iterator from the input
+    inline IteratorT createIterator( const std::string& input)
+    { return IteratorT ( input.begin(), input.end() ) ; }    
+    // ========================================================================
   } //                                          end of namespace Gaudi::Parsers 
   // ==========================================================================
 } //                                                     end of namespace Gaudi
@@ -233,8 +239,9 @@ namespace
     H1Grammar gr ;
     // check the parsing
     StatusCode sc  = 
-      parse ( input.begin() , input.end() ,
-              gr [var(h1) = arg1 ] ,
+      parse ( createIterator(input) , 
+              IteratorT     (     ) ,
+              gr [var(h1) = arg1 ]  ,
               SkipperGrammar() ).full  ;
     
     if ( sc.isFailure () ){ return sc ; }                  // REUTRN 
@@ -252,10 +259,11 @@ namespace
     H2Grammar gr ;
     // check the parsing
     StatusCode sc  = 
-      parse ( input.begin() , input.end() ,
-              gr [var(h2) = arg1 ] ,
+      parse ( createIterator(input) , 
+              IteratorT     (     ) ,
+              gr [var(h2) = arg1 ]  ,
               SkipperGrammar() ).full  ;
-
+    
     //
     if ( sc.isFailure () ){ return sc ; }                  // REUTRN 
     
