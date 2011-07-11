@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2011-07-11 - Albert Puig
+ - added thresholds for RadiativeTopo lines
+
 ! 2011-07-07 - Gerhard Raven
  - update DY1 and DY2 prescales
 
