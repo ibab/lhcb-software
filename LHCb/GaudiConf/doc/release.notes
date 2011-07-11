@@ -2,6 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v14r0p1 2011-07-11 =========================
 ! 2011-07-07 - Rob Lambert
  - Add extensionString to IOExtension, wrapper for helperString, 
    with IOExtension used instead.
