@@ -13,6 +13,8 @@ use  LoKiFitters                v4r1p3   Phys
 use  PhysConf                   v1r10    Phys
 use  DaVinciKernel              v10r2p1  Phys
 use  DaVinciTools               v22r8p1  Phys
+use  GaudiConf                  v14r0p1
+
 
 # Declare this as a container package
 apply_pattern container_package

@@ -3,7 +3,7 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v28r4>2011-05-24 DaVinci v28r4</A></H1><PRE>
+</PRE><H1><A NAME=v28r4p1>2011-11-11 DaVinci v28r4p1</A></H1><PRE>
 
 Test and development version to implement CPU improvements
 (Stripping 15 compatible) 
@@ -14,6 +14,7 @@ use  LoKiFitters                v4r1p3   Phys
 use  PhysConf                   v1r10    Phys
 use  DaVinciKernel              v10r2p1  Phys
 use  DaVinciTools               v22r8p1  Phys
+use  GaudiConf                  v14r0p1
 
 DaVinciKernel and DaVinciTools were taken from the v10r2b and v22r8b branches respectively, with the only change being that LoKi::VertexFitter is now the default offline fitter.
 
