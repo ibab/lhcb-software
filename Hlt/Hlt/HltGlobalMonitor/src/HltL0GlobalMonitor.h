@@ -55,6 +55,7 @@ private:
   AIDA::IHistogram1D* m_histL0EnabledHLT2;
 
   int m_events;
+  int m_nboflabels;
 
   unsigned int m_lastL0TCK;
 

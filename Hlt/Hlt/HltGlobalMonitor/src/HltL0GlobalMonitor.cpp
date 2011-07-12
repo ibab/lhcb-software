@@ -86,12 +86,7 @@ HltL0GlobalMonitor::~HltL0GlobalMonitor() {};
 StatusCode HltL0GlobalMonitor::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  m_L0Input         = book1D("L0 channel summary",-0.5,21.5,22);
-  m_histL0Enabled   = book1D("L0 channel summary, enabled",-0.5,21.5,22);
-  m_histL0Disabled  = book1D("L0 channel summary, disabled",-0.5,21.5,22);
-  m_histL0EnabledHLT1   = book1D("L0 channel summary, enabled, after HLT1",-0.5,21.5,22);
-  m_histL0EnabledHLT2   = book1D("L0 channel summary, enabled, after HLT2",-0.5,21.5,22);
+  m_nboflabels=0;
 
 
 // #if 0
@@ -174,15 +169,29 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
 
   //define the bin labels
   unsigned int L0TCK = l0du->tck();
-  if (L0TCK != m_lastL0TCK && m_L0Input!=0) {
+  if (L0TCK != m_lastL0TCK ) {
       std::vector< std::pair<unsigned, std::string> > labels;
       for(LHCb::L0DUChannel::Map::iterator i = channels.begin();i!=channels.end();++i){
+      	m_nboflabels++;
         std::string name=i->first;
         labels.push_back(std::make_pair( i->second->id(),name  ));
       }
-      labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
-      labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
-      labels.push_back(std::make_pair( 20, "L0 Global"));
+      labels.push_back(std::make_pair( m_nboflabels, "B1gas * ODIN BE"));
+      m_nboflabels++;
+      labels.push_back(std::make_pair( m_nboflabels, "B2gas * ODIN EB"));
+      m_nboflabels++;
+     labels.push_back(std::make_pair( m_nboflabels, "L0 Global"));
+      m_nboflabels++;      
+      double xmin;
+      double xmax;
+      xmin=-0.5;
+      xmax=(double)m_nboflabels-0.5;
+      m_L0Input         = book1D("L0 channel summary",xmin,xmax,m_nboflabels);
+      m_histL0Enabled   = book1D("L0 channel summary, enabled",xmin,xmax,m_nboflabels);
+      m_histL0Disabled  = book1D("L0 channel summary, disabled",xmin,xmax,m_nboflabels);
+      m_histL0EnabledHLT1   = book1D("L0 channel summary, enabled, after HLT1",xmin,xmax,m_nboflabels);
+      m_histL0EnabledHLT2   = book1D("L0 channel summary, enabled, after HLT2",xmin,xmax,m_nboflabels);
+
       setBinLabels( m_L0Input, labels );
       if( 0!=m_histL0Enabled) setBinLabels( m_histL0Enabled, labels );
       if( 0!=m_histL0Disabled) setBinLabels( m_histL0Disabled, labels );
@@ -227,20 +236,20 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
       }
       
 
-      if(id==16 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ){
-        fill( m_L0Input,           18, l0chan );
-        fill( m_histL0Enabled,     18, l0chan );
-        fill( m_histL0EnabledHLT1, 18, l0chan && hlt1 );
-        fill( m_histL0EnabledHLT2, 18, l0chan && hlt2 );
+      if(id==21 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ){
+        fill( m_L0Input,           m_nboflabels-3, l0chan );
+        fill( m_histL0Enabled,     m_nboflabels-3, l0chan );
+        fill( m_histL0EnabledHLT1, m_nboflabels-3, l0chan && hlt1 );
+        fill( m_histL0EnabledHLT2, m_nboflabels-3, l0chan && hlt2 );
         if(l0chan) odinBGas=true;
       }
       
 
-      if(id==17 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ){
-        fill( m_L0Input,           19, l0chan );
-        fill( m_histL0Enabled,     19, l0chan );
-        fill( m_histL0EnabledHLT1, 19, l0chan && hlt1 );
-        fill( m_histL0EnabledHLT2, 19, l0chan && hlt2 );
+      if(id==22 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ){
+        fill( m_L0Input,           m_nboflabels-2, l0chan );
+        fill( m_histL0Enabled,     m_nboflabels-2, l0chan );
+        fill( m_histL0EnabledHLT1, m_nboflabels-2, l0chan && hlt1 );
+        fill( m_histL0EnabledHLT2, m_nboflabels-2, l0chan && hlt2 );
         if(l0chan) odinBGas=true;
       }
       
@@ -248,17 +257,17 @@ void HltL0GlobalMonitor::monitorL0DU(const LHCb::L0DUReport* l0du) {
       //get the global L0 physics decision
       //enabled, non-beam gas channel which fired..
       if( i->second->decisionType() != LHCb::L0DUDecision::Disable 
-	  && id < 16 
+	  && id < 20 
 	  && l0chan ) l0Physics=true;
       
 
   }
   //fill the global L0 decision  
   if(odinBGas || l0Physics) {
-    fill( m_L0Input,           20,1);
-    fill( m_histL0Enabled,     20,1);
-    fill( m_histL0EnabledHLT1, 20,hlt1);
-    fill( m_histL0EnabledHLT2, 20,hlt2);
+    fill( m_L0Input,            m_nboflabels-1,1);
+    fill( m_histL0Enabled,      m_nboflabels-1,1);
+    fill( m_histL0EnabledHLT1,  m_nboflabels-1,hlt1);
+    fill( m_histL0EnabledHLT2,  m_nboflabels-1,hlt2);
   }
 
 };
