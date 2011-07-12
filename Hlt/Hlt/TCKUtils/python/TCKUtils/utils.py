@@ -10,6 +10,7 @@ from pprint import pprint
 ### add some decoration...
 MD5 = GaudiPython.gbl.Gaudi.Math.MD5
 MD5.__str__ = MD5.str
+MD5.__hash__ = lambda x : x.str().__hash__()
 GaudiPython.gbl.ConfigTreeNodeAlias.alias_type.__str__ = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type.str
 digest = MD5.createFromStringRep
 alias = GaudiPython.gbl.ConfigTreeNodeAlias.alias_type
@@ -224,11 +225,21 @@ class TreeNode(object) :
     #  use flyweight pattern, and use digest to identify objects...
     import weakref
     _pool = weakref.WeakValueDictionary()
+    _nreq = 0
+    _noid = 0
+    _cm = 0
     #  TODO: add functionality to flush _pool
     def __new__(cls, id = None) :
-        if not id: return object.__new__(cls)
+        TreeNode._nreq = TreeNode._nreq + 1
+        if not id: 
+            TreeNode._noid = TreeNode._noid+1 
+            return object.__new__(cls)
+        if type(id) != MD5 and type(id) != int :
+            print id,type(id)
+            id = digest(id)
         obj = TreeNode._pool.get( id )
         if not obj :
+            TreeNode._cm = TreeNode._cm+1 
             obj = AccessSvcSingleton().resolveConfigTreeNode(id)
             TreeNode._pool[id] = obj
         return obj
@@ -239,12 +250,22 @@ class PropCfg(object) :
     #  use flyweight pattern, and use digest to identify objects...
     import weakref
     _pool = weakref.WeakValueDictionary()
+    _nreq = 0
+    _noid = 0
+    _cm = 0
     #  TODO: make a singleton svc which we use to resolve IDs if not existent yet...
     #  TODO: add functionality to flush _pool
     def __new__(cls, id = None) :
-        if not id : return object.__new__(cls) # added to make it possible to recv in parent process...
+        PropCfg._nreq = PropCfg._nreq + 1
+        if not id : 
+            PropCfg._noid = PropCfg._noid +1
+            return object.__new__(cls) # added to make it possible to recv in parent process...
+        if type(id) != MD5 :
+            print id,type(id)
+            id = digest(id)
         obj = PropCfg._pool.get( id )
         if not obj :
+            PropCfg._cm = PropCfg._cm + 1
             x = AccessSvcSingleton().resolvePropertyConfig(id)
             obj = object.__new__(cls)
             obj.name = x.name()
@@ -271,6 +292,7 @@ class Tree(object):
         self.leaf = PropCfg( leaf ) if leaf.valid() else None
         self.nodes = [ Tree(id=id,parent=self) for id in node.nodes() ]
         #TODO: add direct access to leafs 'in' this tree by name
+        #      i.e. notify 'top level parent' of 'my' leafs...
     def prnt(self):
         s = ' --> ' + str(self.leaf.digest) if self.leaf else ''
         indent = self.depth*'   '
@@ -299,10 +321,17 @@ class Tree(object):
 
 
 # TODO: rewrite in terms of trees...
+#       that should make it a lot faster for almost identical 
+#       trees...
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
+    from time import clock
+    x = clock()
+    print 'requesting %s, %s' % (lhs,rhs)
     table = xget( [ lhs, rhs ] , cas ) 
+    print 'got tables; # entries: %s, %s : %s' % (len(table[lhs].keys()),len(table[rhs].keys()), clock()-x)
     setl = set( table[lhs].keys() )
     setr = set( table[rhs].keys() )
+    print 'got sets; # entries: %s, %s' % (len(setl),len(setr))
     onlyInLhs = setl - setr
     if len(onlyInLhs)>0 : 
         print 'only in %s: ' % lhs
@@ -311,8 +340,11 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
     if len(onlyInRhs)>0 : 
         print 'only in %s:'  % rhs
         for i in onlyInRhs : print '   ' + i
-    for i in setl & setr :
+    overlap = setl&setr
+    print 'got overlap : %s' % (len(overlap))
+    for i in overlap:
         (l,r) = ( table[lhs][i], table[rhs][i] )
+        #print '%d : %s : %s vs. %s'%(n,i,l.digest,r.digest)
         if l.digest != r.digest : 
             from difflib import unified_diff
             print ''.join( unified_diff(l.fmt(), r.fmt(), 
@@ -487,10 +519,15 @@ class RemoteAccess(object) :
         #print 'remote(%s) created at pid=%s' % (self,getpid())
         RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
     def rgetConfigTree( self, id ) :
-        #print 'remote(%s) at pid=%s: rgetConfigTree(%s)' % (self,getpid(),id)
+        print '>> remote(%s) at pid=%s: rgetConfigTree(%s)' % (self,getpid(),id)
+        from time import clock
+        x = clock()
         # maybe prefetch all leafs by invoking 
-        # RemoteAccess._svc.collectLeafRefs(id)
-        return Tree(id)
+        # benchmark result: makes no difference whatsoever...
+        #RemoteAccess._svc.collectLeafRefs(id)
+        t = Tree(id)
+        print '<< remote(%s) at pid=%s: rgetConfigTree(%s) : %s ' % (self,getpid(),id, clock()-x)
+        return t
     def rgetConfigurations( self ) :
         #print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
         svc = RemoteAccess._svc
@@ -688,7 +725,15 @@ def xget( ids , cas = ConfigAccessSvc() ) :
     if 'forest' not in dir(xget) : xget.forest = dict()
     fetch = [ id for id in ids if id not in xget.forest.keys() ]
     if fetch :
-        for t in fetch : xget.forest[t] = getConfigTree(t).leafs() 
+        for t in fetch : 
+            print 'xget::fetch(%s)'%t
+            from time import clock
+            x = clock()
+            tree = getConfigTree(t)
+            print 'got %s in %s' % (t, clock()-x)
+            x = clock()
+            xget.forest[t] = tree.leafs()
+            print 'got leafs in %s in %s ' % (t, clock()-x)
     forest = dict()
     for id in ids : forest[id] = xget.forest[id]
     return forest

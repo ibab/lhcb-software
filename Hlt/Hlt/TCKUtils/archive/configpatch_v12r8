@@ -25,3 +25,20 @@ for (tp, ids) in bless :
         x.writeConfigTreeNodeAlias(t) 
         print 'wrote %s' % t
 
+
+
+# kill LowMultPhoton
+
+
+def prescale_lowmultphoton(id,label,tck) :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+    patch = { 'id' : id
+            , 'updates' : { 'Hlt2LowMultPhotonPreScaler' : { 'AcceptFraction'  : '0.001' } }
+            , 'label' : '%s, Hlt2LowMultPhoton=0.001' % (label)
+            , 'cas'   : cas }
+	ids = { tck:  updateProperties( **patch ) }
+	createTCKEntries( ids, cas =  cas )
+
+
+prescale_lowmultphoton('3b738af40a733157ae40d6f20b670400','Default',0x00760037) 
+
