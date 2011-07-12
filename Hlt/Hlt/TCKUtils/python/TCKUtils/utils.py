@@ -324,14 +324,9 @@ class Tree(object):
 #       that should make it a lot faster for almost identical 
 #       trees...
 def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
-    from time import clock
-    x = clock()
-    print 'requesting %s, %s' % (lhs,rhs)
     table = xget( [ lhs, rhs ] , cas ) 
-    print 'got tables; # entries: %s, %s : %s' % (len(table[lhs].keys()),len(table[rhs].keys()), clock()-x)
     setl = set( table[lhs].keys() )
     setr = set( table[rhs].keys() )
-    print 'got sets; # entries: %s, %s' % (len(setl),len(setr))
     onlyInLhs = setl - setr
     if len(onlyInLhs)>0 : 
         print 'only in %s: ' % lhs
@@ -340,11 +335,8 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
     if len(onlyInRhs)>0 : 
         print 'only in %s:'  % rhs
         for i in onlyInRhs : print '   ' + i
-    overlap = setl&setr
-    print 'got overlap : %s' % (len(overlap))
-    for i in overlap:
+    for i in setl & setr :
         (l,r) = ( table[lhs][i], table[rhs][i] )
-        #print '%d : %s : %s vs. %s'%(n,i,l.digest,r.digest)
         if l.digest != r.digest : 
             from difflib import unified_diff
             print ''.join( unified_diff(l.fmt(), r.fmt(), 
@@ -519,14 +511,13 @@ class RemoteAccess(object) :
         #print 'remote(%s) created at pid=%s' % (self,getpid())
         RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
     def rgetConfigTree( self, id ) :
-        print '>> remote(%s) at pid=%s: rgetConfigTree(%s)' % (self,getpid(),id)
-        from time import clock
-        x = clock()
         # maybe prefetch all leafs by invoking 
         # benchmark result: makes no difference whatsoever...
         #RemoteAccess._svc.collectLeafRefs(id)
+        from time import clock
+        x = clock()
         t = Tree(id)
-        print '<< remote(%s) at pid=%s: rgetConfigTree(%s) : %s ' % (self,getpid(),id, clock()-x)
+        print '<< remote(%s) at pid=%s: rgetConfigTree(%s) : lookup time: %s s.' % (self,getpid(),id, clock()-x)
         return t
     def rgetConfigurations( self ) :
         #print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
@@ -725,15 +716,7 @@ def xget( ids , cas = ConfigAccessSvc() ) :
     if 'forest' not in dir(xget) : xget.forest = dict()
     fetch = [ id for id in ids if id not in xget.forest.keys() ]
     if fetch :
-        for t in fetch : 
-            print 'xget::fetch(%s)'%t
-            from time import clock
-            x = clock()
-            tree = getConfigTree(t)
-            print 'got %s in %s' % (t, clock()-x)
-            x = clock()
-            xget.forest[t] = tree.leafs()
-            print 'got leafs in %s in %s ' % (t, clock()-x)
+        for t in fetch : xget.forest[t] = getConfigTree(t).leafs()
     forest = dict()
     for id in ids : forest[id] = xget.forest[id]
     return forest
