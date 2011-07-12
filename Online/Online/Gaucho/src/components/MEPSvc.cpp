@@ -161,6 +161,7 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
     filldata(s_counterTypes[i],mmap);
     fillrate(std::string("R_Runable/"),s_counterTypes[i],mmap);
   }
+  this->fillsums();
   m_DetMap.Update();
 //  m_DetMap.dump();
 //  m_DetMap_rate.dump();
