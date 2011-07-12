@@ -8,7 +8,7 @@
  - fix caching: this didn't work due to a non-working default MD5.__hash__
    function. Defering MD5.__hash__ to the __hash__ of the string representation
    speeds up operations by almost an order of magnitude and reduces memory
-   use also by an order of magnitude...
+   use by a non-negligible amount...
 
 !========================== TCKUtils v1r9 2011-06-20 ===================
 ! 2011-05-30 - Gerhard Raven
