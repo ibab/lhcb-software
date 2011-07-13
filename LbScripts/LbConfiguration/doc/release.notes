@@ -1,3 +1,7 @@
+2011-07-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/eclipse (args): added $PYTHONPATH to $JYTHONPATH.
+
 2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: increased the default size on AFS for LbScripts

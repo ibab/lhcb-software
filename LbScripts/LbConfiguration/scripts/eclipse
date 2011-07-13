@@ -23,4 +23,10 @@ if [ "$SetupProjectStatus" != 0 ] ; then
     exit 1
 fi
 
+if [ -n "$JYPTHONPATH" ] ; then
+  export JYTHONPATH=${PYTHONPATH}:${JYTHONPATH}
+else 
+  export JYPTHONPATH=${PYTHONPATH}
+fi
+
 eclipse "${args[@]}"
