@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-07-13 - Vanya Belyaev
+
+ - small polishing of decorators 
+
 ! 2011-07-05 - Vanya Belyaev
  - fix in py-selector
 

@@ -43,7 +43,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT
-from   GaudiPython.Bindings import gbl as cpp 
+from   GaudiPython.Bindings   import gbl as cpp
 import LHCbMath.Types
 VE             = cpp.Gaudi.Math.ValueWithError
 ValueWithError = cpp.Gaudi.Math.ValueWithError
@@ -106,7 +106,7 @@ def _axis_iter_2_ ( h ) :
     while i <= s :
         yield i
         i+=1
-            
+
 ROOT.TAxis . __iter__ = _axis_iter_1_
 ROOT.TH1   . __iter__ = _axis_iter_2_
 
@@ -162,6 +162,7 @@ ROOT.TH2   . __contains__ = lambda s , i : 1 <= i <= s.size()
 ROOT.TH2   . __len__      = lambda s : s.size() 
 ROOT.TH2   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ()
 
+ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 # =============================================================================
 ## histogram as function 
@@ -207,8 +208,8 @@ def _h1_iteritems_ ( h1 ) :
     """
     ax = h1.GetXAxis()
     sx = ax.GetNbins()
-    ix = 1
-    while ix <= sx :
+
+    for ix in range (  ix , sx + 1 ) : 
         
         x   =       ax.GetBinCenter ( ix )
         xe  = 0.5 * ax.GetBinWidth  ( ix )
@@ -218,7 +219,6 @@ def _h1_iteritems_ ( h1 ) :
         
         yield ix, VE(x,xe*xe) , VE ( y,ye*ye)
         
-        ix += 1
 
 ROOT.TH1F  . iteritems     = _h1_iteritems_
 ROOT.TH1D  . iteritems     = _h1_iteritems_
@@ -239,13 +239,11 @@ def _h2_iteritems_ ( h2 ) :
     ay = h2.GetYaxis()
     sy = ay.GetNbins()
     
-    ix = 1
-    while ix <= sx :        
+    for ix in range( 1 , sx + 1 ) :  
         x   =       ax.GetBinCenter ( ix )
         xe  = 0.5 * ax.GetBinWidth  ( ix )
         #
-        iy  = 1
-        while iy <= sy :
+        for iy in range ( 1 , sy + 1 ) : 
             #
             y   =       ay.GetBinCenter  ( iy      )
             ye  = 0.5 * ay.GetBinWidth   ( iy      )
@@ -255,9 +253,7 @@ def _h2_iteritems_ ( h2 ) :
             #
             yield ix, iy, VE(x,xe*xe) , VE ( y,ye*ye) , VE( z,ze*ze) 
             #
-            iy += 1
             
-        ix += 1 
         
 ROOT.TH2F  . iteritems     = _h2_iteritems_
 ROOT.TH2D  . iteritems     = _h2_iteritems_
@@ -349,9 +345,9 @@ def histoGuess ( histo , mass , sigma ) :
     axis  = histo.GetXaxis()   
     for ibin in histo :
 
-        xbin = axis.GetBinCenter ( i )
+        xbin = axis.GetBinCenter   ( ibin )
         dx   = ( xbin - mass ) / sigma
-        val  = histo.GetBinContent( i )
+        val  = histo.GetBinContent ( ibin )
         
         if   abs ( dx ) < 2 :  ## +-2sigma
             tot0  += val 
@@ -524,6 +520,7 @@ def binomEff_h2 ( h1 , h2 ) :
         assert ( l1 <= l2 )
         #
         v = func ( l1 , l2 )
+        # print 'y1,y2,v :',  z1 , z2 , x1, y1 , v 
         #
         result.SetBinContent ( ix1 , iy1 , v.value () ) 
         result.SetBinError   ( ix1 , iy1 , v.error () ) 
@@ -671,7 +668,7 @@ def _h2_oper_ ( h1 , h2 , oper ) :
         z2 = h2 ( x1.value() , y1.value() ) 
         #
         v = oper ( z1 , z2 )
-        print 'y1,y2,v :',  z1 , z2 , v 
+        # print 'y1,y2,v :',  z1 , z2 , v 
         #
         result.SetBinContent ( ix1 , iy1 , v.value () ) 
         result.SetBinError   ( ix1 , iy1 , v.error () )
@@ -825,6 +822,10 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
         
     return gr
 
+
+# =============================================================================
+## further decoration
+import GaudiPython.HistoUtils 
 
 # =============================================================================
 if '__main__' == __name__ :
