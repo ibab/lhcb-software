@@ -4,6 +4,12 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v7r0 2011-07-13 =========================
+! 2011-07-13 - Gloria Corti
+ - Introduce new EM physics lists for LHCb: option1 with not cuts applied to 
+   reproduce behaviour of G4 9.2 and option1 with ad-hoc Multiple Scattering
+   Model. Use G4LHCblists package.
+
 ! 2011-05-23 - Gloria Corti
  - Remove factory for HadronPhysicsQGSC and HadronPhysicsQGSC_EFLOW hadronic
    physics lists no longer existing in G4 9.4.patch01

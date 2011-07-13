@@ -22,6 +22,8 @@
 #include "G4EmStandardPhysics_option3.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
+#include "G4EmStandardPhysics_option1LHCb.hh"
+#include "G4EmStandardPhysics_option1NoApplyCuts.hh"
 
 // Ion and hadrons
 #include "G4IonPhysics.hh"
@@ -59,6 +61,11 @@ typedef GiGaExtPhysics< G4EmStandardPhysics_option3 > EmStdOpt3PhysFactory;
 DECLARE_TOOL_FACTORY( EmStdOpt3PhysFactory );
 typedef GiGaExtPhysics< G4EmStandardPhysics > EmStdPhysFactory;
 DECLARE_TOOL_FACTORY( EmStdPhysFactory );
+
+typedef GiGaExtPhysics< G4EmStandardPhysics_option1LHCb > EmStdLHCbPhysFactory;
+DECLARE_TOOL_FACTORY( EmStdLHCbPhysFactory );
+typedef GiGaExtPhysics< G4EmStandardPhysics_option1NoApplyCuts > EmStdOpt1NoCutsPhysFactory;
+DECLARE_TOOL_FACTORY( EmStdOpt1NoCutsPhysFactory );
 
 typedef GiGaExtPhysics< G4EmExtraPhysics > EmExtraPhysFactory;
 DECLARE_TOOL_FACTORY( EmExtraPhysFactory );

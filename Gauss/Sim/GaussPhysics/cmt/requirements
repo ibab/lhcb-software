@@ -13,6 +13,7 @@ branches          cmt src doc
 #============================================================================
 use GaussTools         v*	Sim
 use G4physics_lists    v*	Geant4  
+use G4LHCblists        v*	Geant4  
 
 # Component library building rule
 #============================================================================
