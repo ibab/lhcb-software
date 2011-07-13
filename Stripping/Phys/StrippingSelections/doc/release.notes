@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-13 Xabier Cid & Diego Martinez
+ - Addition of Ks0->MuMu lines
+
+
 ! 2011-07-13 - Andrew Powell
  - Updates to python/StrippingSelections/StrippingNoPIDDstarWithD02RSKPi.py
 	 - Now ensure a unique line name for each derived instance of LineBuilder
