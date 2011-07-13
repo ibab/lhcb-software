@@ -10,7 +10,7 @@ Configurable for the RICH calibration using D*+ -> pi+ D0( K- pi+).
 Usage:
 
 from StrippingSelections import StrippingNoPIDDstarWithD02RSKPi
-confNoPIDDstarWithD02RSKPi = StrippingNoPIDDstarWithD02RSKPi.NoPIDDstarWithD02RSKPiConf('noPIDDstar',StrippingNoPIDDstarWithD02RSKPi.default_config)
+confNoPIDDstarWithD02RSKPi = StrippingNoPIDDstarWithD02RSKPi.NoPIDDstarWithD02RSKPiConf("StripDstarNoPIDsWithD02RSKPi",StrippingNoPIDDstarWithD02RSKPi.default_config)
 stream.appendLines( confNoPIDDstarWithD02RSKPi.lines() )
 
 Results from running over:
@@ -26,7 +26,8 @@ StrippingReport                                                INFO Event 100000
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
-from Configurables import FilterDesktop, CombineParticles
+## from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -107,14 +108,15 @@ class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
                                    config,
                                    Monitor=config['Monitor']
                                    )
-        
-        self.Dstar2D0Pi_line = StrippingLine('StripDstarNoPIDsWithD02RSKPiLine',
+
+        # 'StripDstarNoPIDsWithD02RSKPiLine'
+        self.Dstar2D0Pi_line = StrippingLine(name+'Line',
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selDstar2D0Pi)  
 
         self.registerLine(self.Dstar2D0Pi_line)
-        
+
 
 def D0 ( name,
          config,
@@ -124,7 +126,7 @@ def D0 ( name,
     Selection for D0
     """
     
-    _D0 = CombineParticles("StripD0")
+    _D0 = CombineParticles()
     _D0.DecayDescriptor = "[D0 -> K- pi+]cc"
     dauCutStr = "(PT > %(DaugPt)s) & (P > %(DaugP)s) & (TRCHI2DOF < %(DaugTrkChi2)s) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" %locals()['config']
     _D0.DaughtersCuts = { "K+" : dauCutStr,
@@ -162,7 +164,7 @@ def D0 ( name,
         >> EMPTY
             """
             
-    D0 = Selection("SelD02RSKPi",
+    D0 = Selection("SelD02RSKPiFor"+name,
                    Algorithm = _D0,
                    RequiredSelections = [StdNoPIDsKaons,
                                          StdNoPIDsPions])
@@ -176,7 +178,7 @@ def Dstar ( name,
     Selection for D*
     """
     
-    _DSt = CombineParticles("StripDSt")
+    _DSt = CombineParticles()
     _DSt.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
     slowPiCuts = "(PT>%(SlowPiPt)s) & (TRCHI2DOF < %(SlowPiTrkChi2)s)" %locals()['config']
     d0Cuts = "ALL"
@@ -214,7 +216,7 @@ def Dstar ( name,
         >> EMPTY
         """
         
-    DSt = Selection("SelDSt2D0Pi",
+    DSt = Selection("SelDSt2D0PiFor"+name,
                     Algorithm = _DSt,
                     RequiredSelections = [StdNoPIDsPions,
                                           D0Sel])
