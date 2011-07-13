@@ -65,7 +65,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"  : "Offline"  # The context within which to run
-       ,"DataType" : "2010"     # Data type, can be ['DC06','2008',2009','2010']
+       ,"DataType" : "2011"     # Data type, can be ['DC06','2008',2009','2010','2011']
        ,"MoniSequencer" : None  # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "ODIN",
@@ -317,6 +317,7 @@ class RichRecQCConf(RichConfigurableUser):
                 # Data Sizes - all events
                 from Configurables import Rich__DAQ__RawDataSize
                 dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
+                dataSize.FillDetailedPlots = self.getProp("Histograms") == "Expert"
                 rawSeq.Members += [dataSize]
 
                 # Data size plots, L0 unbiased events
@@ -324,9 +325,11 @@ class RichRecQCConf(RichConfigurableUser):
                 lSeq = self.newSeq(sequence,"RichRawDataSizeL0Seq")
                 lSeq.ReturnOK = True
                 rawSeq.Members += [lSeq]
+                dataSizeL0 = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0")
+                dataSizeL0.FillDetailedPlots = self.getProp("Histograms") == "Expert"
                 lSeq.Members += [ HltDecReportsDecoder(),
                                   LoKi__HDRFilter("RichDataSizeL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
-                                  self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0") ]
+                                  dataSizeL0 ]
 
             if "DBConsistencyCheck" in monitors :
 
@@ -542,16 +545,16 @@ class RichRecQCConf(RichConfigurableUser):
 
         # ----------------------------------------------------------------
         # Specially tuned aerogel monitor
-        #trackType = ['Forward','Match']
-        #name = "RiAeroMoni" + self.trackSelName(trackType)
-        #aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
-        #aeroMoni.HistoPrint = False
-        #aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
+        trackType = ['Forward','Match']
+        name = "RiAeroMoni" + self.trackSelName(trackType)
+        aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
+        aeroMoni.HistoPrint = False
+        aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
         #aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
-        #aeroMoni.TrackSelector.MinPCut = 10
-        #aeroMoni.MinBeta = self.getProp("MinTrackBeta")
+        aeroMoni.TrackSelector.MinPCut = 10
+        aeroMoni.MinBeta = self.getProp("MinTrackBeta")
         # Add to sequence
-        #sequence.Members += [aeroMoni]
+        sequence.Members += [aeroMoni]
         # ----------------------------------------------------------------
             
     ## Ion Feedback monitor

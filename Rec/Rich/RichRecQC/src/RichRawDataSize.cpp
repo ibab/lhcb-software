@@ -154,6 +154,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           iL1Map != l1Map.end(); ++iL1Map )
     {
       const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
+      const Rich::DetectorType rich              = m_RichSys->richDetector(l1HardID);
+      const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
       const Rich::DAQ::Level1CopyNumber l1CopyN  = m_RichSys->copyNumber(l1HardID);
       const Rich::DAQ::IngressMap & ingressMap   = iL1Map->second;
 
@@ -166,6 +168,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       {
         const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
         const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
+        const Rich::DAQ::L1IngressID ingressID = ingressInfo.ingressHeader().ingressID();
 
         // Number words for this L1 ingress
         // Start with 1 for the header
@@ -200,8 +203,17 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
         // fill ingress plot
         richProfile1D( HID("L1s/SizeVL1Ingress") )
-          -> fill ( 10*l1CopyN.data() + ingressInfo.ingressHeader().ingressID().data(),
-                    nIngressWords );
+          -> fill ( 10*l1CopyN.data() + ingressID.data(), nIngressWords );
+        if ( m_detailedPlots )
+        {
+          std::ostringstream ID, title;
+          ID << "L1s/" << rich 
+             << "/L1-HardID" << l1HardID << "LogID" << l1LogID << "Ingress" << ingressID;
+          title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID 
+                << " LogicalID " << l1LogID
+                << " Ingress " << ingressID;
+          richHisto1D( ID.str(), title.str(), -0.5, 200.5, 201 ) -> fill ( nIngressWords );
+        }
 
       } // loop over ingresses
 
@@ -209,8 +221,10 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       if ( m_detailedPlots )
       {
         std::ostringstream ID, title;
-        ID << "L1s/L1HardwareID" << l1HardID;
-        title << "Data Size (32bit words) : L1HardwareID " << l1HardID;
+        ID << "L1s/" << rich
+           << "/L1-HardID" << l1HardID << "LogID" << l1LogID;
+        title << "L1 Data Size (32bit words) | " << rich << " | HardwareID " << l1HardID 
+              << " LogicalID " << l1LogID;
         richHisto1D( ID.str(), title.str(), -0.5, 500.5, 501 ) -> fill ( nL1Words );
       }
 
@@ -220,7 +234,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       if ( nL1Words != l1SizeMap[l1HardID] )
       {
         std::ostringstream mess;
-        mess << "L1 size mis-match : HardwareID " << l1HardID
+        mess << "L1 size mis-match | HardwareID " << l1HardID
              << " RawSize=" << l1SizeMap[l1HardID]
              << " DecodedSize=" << nL1Words;
         Warning( mess.str() ).ignore();
@@ -244,10 +258,11 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           {
             const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
             const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(iHPD->first);
+            const Rich::DetectorType rich            = iHPD->first.rich();
             std::ostringstream title, ID;
-            title << "# Words (32bit) : "
+            title << "# Words (32bit) | "
                   << iHPD->first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
-            ID << "hpds/HPDHardwareID" << hpdHardID;
+            ID << "hpds/" << rich << "/HPDHardwareID" << hpdHardID;
             richHisto1D( ID.str(), title.str(), -0.5, 35.5, 36 ) -> fill( iHPD->second );
           }
         }

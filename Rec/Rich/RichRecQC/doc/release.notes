@@ -4,6 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-13 - Chris Jones
+ - Add L1 ingress detail plots to RawDataSize, showing the distribution of
+   event sizes for each ingress
+ - Update python configuration to activate detail plots in RawDataSize when
+   "Expert" histograms are selected.
+
 ! 2011-07-07 - Chris Jones
  - Some additional protections to the changes to the data size monitor
  - Update the CHerenkov reconstruction monitor to create plots for individual
