@@ -290,13 +290,13 @@ namespace Gaudi
       // ======================================================================
       /** constructor from all parameters 
        *  @param peak    the peak posiion 
-       *  @param sigma_L (left sigma)
-       *  @param sigma_R (right sigma)
+       *  @param sigma   ("mean" sigma)
+       *  @param phi     (mixing angle)
        */
       BifurcatedGauss 
-      ( const double peak       , 
-        const double sigma_L    , 
-        const double sigma_R    ) ;
+      ( const double peak  , 
+        const double sigma , 
+        const double asym  ) ;
       // ======================================================================
       /// destructor 
       ~BifurcatedGauss() ;
@@ -310,15 +310,16 @@ namespace Gaudi
       // ====================================================================== 
       double peak    () const { return m_peak    ; }
       double m0      () const { return peak()    ; }
-      double sigma_L () const { return m_sigma_L ; }
-      double sigma_R () const { return m_sigma_R ; }
+      double sigma   () const { return m_sigma   ; }
+      double asym    () const { return m_asym    ; }
       // ====================================================================== 
     public:
-      // ====================================================================== 
-      void setPeak    ( const double value ) { m_peak   = value  ; }
-      void setM0      ( const double value ) { setPeak ( value ) ; }
-      void setSigma_L ( const double value ) ;
-      void setSigma_R ( const double value ) ;
+      // ======================================================================
+      bool setPeak    ( const double value ) ;
+      bool setM0      ( const double value ) { return setPeak ( value ) ; }
+      bool setMass    ( const double value ) { return setPeak ( value ) ; }
+      bool setSigma   ( const double value ) ;
+      bool setAsym    ( const double value ) ;
       // ====================================================================== 
     public:
       // ====================================================================== 
@@ -337,10 +338,10 @@ namespace Gaudi
       // ======================================================================
       /// the peak position 
       double m_peak    ;      //                              the peak position 
-      /// (left) sigma 
-      double m_sigma_L ;      // (left) sigma 
-      /// (right) sigma 
-      double m_sigma_R ;      // (right) sigma
+      /// sigma 
+      double m_sigma   ;      // sigma 
+      /// asymmetry 
+      double m_asym    ;      // phi
       // ======================================================================
     } ;
     // ========================================================================
@@ -388,12 +389,13 @@ namespace Gaudi
       // ====================================================================== 
     public:
       // ====================================================================== 
-      void setPeak  ( const double value ) ;
-      void setM0    ( const double value ) { setPeak ( value ) ; }
-      void setSigma ( const double value ) ;
-      void setXi    ( const double value ) ;
-      void setRho_L ( const double value ) ;
-      void setRho_R ( const double value ) ;
+      bool setPeak  ( const double value ) ;
+      bool setM0    ( const double value ) { return setPeak ( value ) ; }
+      bool setMass  ( const double value ) { return setPeak ( value ) ; }
+      bool setSigma ( const double value ) ;
+      bool setXi    ( const double value ) ;
+      bool setRho_L ( const double value ) ;
+      bool setRho_R ( const double value ) ;
       // ====================================================================== 
     public:
       // ====================================================================== 
@@ -480,15 +482,17 @@ namespace Gaudi
       // ====================================================================== 
       double m0    () const { return m_m0       ; }
       double peak  () const { return   m0    () ; }
+      double mass  () const { return   m0    () ; }
       double sigma () const { return m_sigma    ; }
       double tau   () const { return m_tau      ; }
       // ====================================================================== 
     public:
       // ====================================================================== 
-      void setM0    ( const double value ) ;
-      void setPeak  ( const double value ) { setM0 ( value ) ; }
-      void setSigma ( const double value ) ;
-      void setTau   ( const double value ) ;
+      bool setM0    ( const double value ) ;
+      bool setPeak  ( const double value ) { return setM0 ( value ) ; }
+      bool setMass  ( const double value ) { return setM0 ( value ) ; }
+      bool setSigma ( const double value ) ;
+      bool setTau   ( const double value ) ;
       // ====================================================================== 
     public:
       // ====================================================================== 
@@ -568,11 +572,12 @@ namespace Gaudi
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================
-      void setM0    ( const double value ) ;
-      void setPeak  ( const double value ) { setM0 ( value ) ; }
-      void setSigma ( const double value ) ;
-      void setAlpha ( const double value ) ;
-      void setN     ( const double value ) ;
+      bool setM0    ( const double value ) ;
+      bool setPeak  ( const double value ) { return setM0 ( value ) ; }
+      bool setMass  ( const double value ) { return setPeak ( value ) ; }
+      bool setSigma ( const double value ) ;
+      bool setAlpha ( const double value ) ;
+      bool setN     ( const double value ) ;
       // ======================================================================
     public: 
       // ======================================================================
@@ -653,13 +658,14 @@ namespace Gaudi
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================    
-      void setM0      ( const double value ) ;
-      void setPeak    ( const double value ) { setM0 ( value ) ; }
-      void setSigma   ( const double value ) ;
-      void setAlpha_L ( const double value ) ;
-      void setN_L     ( const double value ) ;
-      void setAlpha_R ( const double value ) ;
-      void setN_R     ( const double value ) ;
+      bool setM0      ( const double value ) ;
+      bool setPeak    ( const double value ) { return setM0 ( value ) ; }
+      bool setMass    ( const double value ) { return setPeak ( value ) ; }
+      bool setSigma   ( const double value ) ;
+      bool setAlpha_L ( const double value ) ;
+      bool setN_L     ( const double value ) ;
+      bool setAlpha_R ( const double value ) ;
+      bool setN_R     ( const double value ) ;
       // ======================================================================    
     public: // 
       // ======================================================================
@@ -742,13 +748,14 @@ namespace Gaudi
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================    
-      void setM0      ( const double value ) { m_mean = value  ; }
-      void setMean    ( const double value ) { setM0 ( value ) ; }
-      void setPeak    ( const double value ) { setM0 ( value ) ; }
+      bool setM0      ( const double value ) ;
+      bool setMean    ( const double value ) { return setM0   ( value ) ; }
+      bool setPeak    ( const double value ) { return setM0   ( value ) ; }
+      bool setMass    ( const double value ) { return setPeak ( value ) ; }
       //
-      void setSigma   ( const double value ) ;
-      void setKappa3  ( const double value ) ;
-      void setKappa4  ( const double value ) ;
+      bool setSigma   ( const double value ) ;
+      bool setKappa3  ( const double value ) ;
+      bool setKappa4  ( const double value ) ;
       // ======================================================================    
     private:
       // ======================================================================
