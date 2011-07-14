@@ -1,13 +1,18 @@
 import sys, os
 
+class TerminalException(Exception): pass
+
 def getSize():
+    """
+    compute the proper horizontal and vertical character sizes of a terminal
+    """
     if sys.platform != "win32" :
         # Linux part
         def ioctl_GWINSZ(fd):
             try:
                 import fcntl, termios, struct
                 cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
-            except :
+            except TerminalException:
                 return None
             return cr
         cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
@@ -16,12 +21,12 @@ def getSize():
                 fd = os.open(os.ctermid(), os.O_RDONLY)
                 cr = ioctl_GWINSZ(fd)
                 os.close(fd)
-            except :
+            except TerminalException:
                 pass
         if not cr:
             try:
                 cr = (os.environ['LINES'], os.environ['COLUMNS'])
-            except :
+            except TerminalException:
                 cr = (25, 80)
         return int(cr[1]), int(cr[0])
     else :
@@ -32,9 +37,9 @@ def getSize():
         # stdout handle is -11
         # stderr handle is -12
 
-        h = windll.kernel32.GetStdHandle(-12)
+        h = windll.kernel32.GetStdHandle(-12) #@UndefinedVariable
         csbi = create_string_buffer(22)
-        res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
+        res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi) #@UndefinedVariable
 
         if res:
             import struct

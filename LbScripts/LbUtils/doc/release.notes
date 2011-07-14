@@ -1,3 +1,7 @@
+2011-07-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Terminal.py: added TermException to be used in that module.
+
 2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r3
