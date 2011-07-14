@@ -243,14 +243,23 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   }
 
   // clones
+  if ( !m_acceptClones && track->checkFlag(LHCb::Track::Clone) )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Track rejected due to clone flag" << endmsg;
+    return false;
+  }
   if ( m_cloneDistCutEnabled )
   {
-    const double cloneDist = track->info(LHCb::Track::CloneDist,9e99);
-    if ( !m_acceptClones && ( track->checkFlag(LHCb::Track::Clone) ||
-                              cloneDist < m_minCloneCut || cloneDist > m_maxCloneCut ) )
+    using namespace boost::numeric;
+    const double cloneDist = track->info(LHCb::Track::CloneDist,1e10);
+    if ( ( m_minCloneCut > bounds<double>::lowest()  && cloneDist < m_minCloneCut ) || 
+         ( m_maxCloneCut < bounds<double>::highest() && cloneDist > m_maxCloneCut ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed clone rejection" << endmsg;
+        verbose() << " -> Track clone distance " << cloneDist << " failed cut "
+                  << m_minCloneCut << " -> " << m_maxCloneCut
+                  << endmsg;
       return false;
     }
   }
@@ -354,14 +363,23 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   }
 
   // clones
+  if ( !m_acceptClones && !track->trackID().unique() )
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Track rejected due to clone flag" << endmsg;
+    return false;
+  }
   if ( m_cloneDistCutEnabled )
   {
-    if ( !m_acceptClones && ( !track->trackID().unique() ||
-                              track->cloneDist() < m_minCloneCut ||
-                              track->cloneDist() > m_maxCloneCut ) )
+    using namespace boost::numeric;
+    const double cloneDist = track->cloneDist();
+    if ( ( m_minCloneCut > bounds<double>::lowest()  && cloneDist < m_minCloneCut ) || 
+         ( m_maxCloneCut < bounds<double>::highest() && cloneDist > m_maxCloneCut ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track failed clone rejection" << endmsg;
+        verbose() << " -> Track clone distance " << cloneDist << " failed cut "
+                  << m_minCloneCut << " -> " << m_maxCloneCut
+                  << endmsg;
       return false;
     }
   }
