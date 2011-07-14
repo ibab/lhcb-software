@@ -7,9 +7,9 @@
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
-ulimit -d 1048576
-ulimit -m 1048576
-ulimit -v 1048576
+#ulimit -d 1048576
+#ulimit -m 1048576
+#ulimit -v 1048576
 
 test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
 
