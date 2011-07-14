@@ -845,7 +845,10 @@ class SetupProject:
                                   'CERN':[], # ['CASTOR'],
                                  }
         self.parser = self._prepare_parser()
-
+        self.overriding_projects = None
+        self.runtime_projects = None
+        self.search_path = None
+        self.user_area = None
 
     def __getattr__(self,attr):
         """
@@ -953,18 +956,18 @@ class SetupProject:
 
     def _write_script(self, data):
         close_output = False
-        if self.output:
+        if self.opts.output:
             if self.append:
-                self.output_file = open(self.output,"a")
+                self.output_file = open(self.opts.output,"a")
             else:
-                self.output_file = open(self.output,"w")
-            self.output = None # reset the option value to avoid to reuse it
+                self.output_file = open(self.opts.output,"w")
+            self.opts.output = None # reset the option value to avoid to reuse it
             close_output = True
-        elif self.mktemp:
+        elif self.opts.mktemp:
             fd, outname = mkstemp()
             self.output_file = os.fdopen(fd,"w")
             print outname
-            self.mktemp = None # reset the option value to avoid to reuse it
+            self.opts.mktemp = None # reset the option value to avoid to reuse it
             close_output = True
         # write the data
         self.output_file.write(data)
@@ -1311,7 +1314,7 @@ class SetupProject:
 
         # prepare use statementes for user-requested packages
         use_rexp = re.compile("^(?:([^/]*)/)?([^/ .]*)[ .]*([^ ]+)? *$")
-        for u in self.use:
+        for u in self.opts.use:
             m = use_rexp.match(u)
             if m: # handle the case of "use" string in the format "[Hat/]Package [version]"
                 hat, pack, ver = m.groups()
@@ -1645,7 +1648,7 @@ class SetupProject:
             self.overriding_projects.append(pi)
 
         # use LHCbGrid
-        if self.use_grid:
+        if self.opts.use_grid:
             auto_override_projects.append( ("LHCbGrid", ["LHCbGridSys"]) )
 
         # auto-override projects
@@ -1657,7 +1660,7 @@ class SetupProject:
                     self.overriding_projects.insert(0, makeProjectInfo(versions = vv,
                                                                        env = self.environment,
                                                                        ignore_not_ready = self.opts.ignore_not_ready))
-                    self.use += pkgs
+                    self.opts.use += pkgs
 
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
             self._verbose("Project %s %s uses %s policy"%(p.name,
