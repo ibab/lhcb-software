@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-07-14 - Chris Jones
+ - Add new method DeRichAerogelRadiator::subTile() that indicates if the 
+   detector element is subtile (true) or full primary tile (false)
+
 ! 2011-07-07 - Chris Jones
  - Update the tile ID methods in DeRichAerogelRadiator to support better the
    needs of Brunel, by making tileID() give a unique ID both when sub-tiles
