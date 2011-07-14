@@ -9,12 +9,6 @@ from LbConfiguration import createProjectMakefile, eclipseConfigurationAddPackag
 from LbConfiguration.Repository import repositories as __repositories__, SVNReposInfo, CVSReposInfo
 import rcs
 
-import __builtin__
-from LbConfiguration.Project import isProject
-if "set" not in dir(__builtin__):
-    # pylint: disable-msg=W0622
-    from sets import Set as set
-
 ## Class to select valid version tags according to LHCb policy
 class LHCbVersionFilter(object):
     def __init__(self, regexp = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?(?:-pre([0-9]+))?|(?:\w+_([0-9]{4})([0-9]{2})([0-9]{2})[a-z]?)'):
@@ -45,6 +39,7 @@ def guessDefaultVersion(package):
     If called from within a project, "cmt show versions <package>" return a list
     of possible versions of a package. We take the first one, if present.
     """
+    os.environ["PWD"] = os.getcwd() # ensure that we pass the right PWD to cmt
     out = Popen(["cmt", "show", "versions", package],
                 stdout = PIPE, stderr = PIPE).communicate()[0]
     try:
