@@ -133,6 +133,9 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   unsigned int totalIntersections( 0 );
 
   // loop over all volumes for given radiator
+  /** @todo With aerogel sub-tiles, there are now a lot of volumes
+   *        need to investigate a faster way to do this search than
+   *        just looping over them all */
   for ( RichRadiators::const_iterator iR = m_radiators[radiator].begin();
         iR != m_radiators[radiator].end(); ++iR )
   {

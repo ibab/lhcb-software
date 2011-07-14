@@ -92,7 +92,8 @@ namespace Rich
   private: // classes
 
     /// Functor to sort RichSmartIDs by Rich then panel numbers
-    class SortByDistFromBeam : std::binary_function< const DeRichRadiator*, const DeRichRadiator*, bool >
+    class SortByDistFromBeam : std::binary_function< const DeRichRadiator*, 
+                                                     const DeRichRadiator*, bool >
     {
     public:
       /** Sort operator for the rich radiators
