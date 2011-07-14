@@ -72,7 +72,7 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "TracklessRingPeakSearch","AerogelMonitoring",
+                                            "TracklessRingPeakSearch",
                                             "AlignmentMonitoring", "HPDIFBMonitoring",
                                             "HPDImageShifts", "RichFuncCKResPlots",
                                             "RichPixelPositions", "HPDHitPlots",
@@ -87,18 +87,18 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "DataDecodingErrors","AerogelMonitoring",
+                                            "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "OfflineExpress" : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "DataDecodingErrors","AerogelMonitoring",
+                                            "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "Online"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "AlignmentMonitoring","AerogelMonitoring" ],
+                                            "AlignmentMonitoring" ],
                        "None"           : [ ]
                        }
        ,"PidMomentumRanges": { "Expert"         : [ [2,100], [2,10], [10,70], [70,100] ],
@@ -203,14 +203,16 @@ class RichRecQCConf(RichConfigurableUser):
             mon.HistoProduce  = self.getProp("Histograms") != "None"
 
     ## Configure a default monitor algorithm of given type
-    def createMonitor(self,type,name,trackType=None,typeSelOnly=False):
+    def createMonitor(self,type,name,trackType=None,tkCuts="None"):
         mon = type(name)
         self.setHistosTupleOpts(mon)
         if self.isPropertySet("OutputLevel") : mon.OutputLevel = self.getProp("OutputLevel")
         if trackType != None :
             mon.addTool( self.richTools().trackSelector(nickname="TrackSelector",private=True), name="TrackSelector" )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
-        if typeSelOnly :
+        if tkCuts == "None" :
+            pass
+        elif tkCuts == "All" :
             bigvalue = 1e+30
             mon.TrackSelector.MinPCut    = 0
             mon.TrackSelector.MaxPCut    = bigvalue
@@ -225,6 +227,23 @@ class RichRecQCConf(RichConfigurableUser):
             mon.TrackSelector.MinGhostProbCut = -bigvalue
             mon.TrackSelector.MaxGhostProbCut =  bigvalue
             mon.TrackSelector.AcceptClones    = True
+        elif tkCuts == "Tight" :
+            bigvalue = 1e+30
+            mon.TrackSelector.MinPCut    = 0
+            mon.TrackSelector.MaxPCut    = bigvalue
+            mon.TrackSelector.MinPtCut   = 0
+            mon.TrackSelector.MaxPtCut   = bigvalue
+            mon.TrackSelector.MinChi2Cut = 0
+            mon.TrackSelector.MaxChi2Cut = 3
+            mon.TrackSelector.MinLikelihood   = -40
+            mon.TrackSelector.MaxLikelihood   =  bigvalue
+            mon.TrackSelector.MinCloneDistCut = 5000
+            mon.TrackSelector.MaxCloneDistCut =  bigvalue
+            mon.TrackSelector.MinGhostProbCut = -bigvalue
+            mon.TrackSelector.MaxGhostProbCut =  0.8
+            mon.TrackSelector.AcceptClones    = False
+        else:
+            raise RuntimeError("ERROR : Unknown track selection "+tkCuts)
         return mon
 
     ## Check a new sequence and add to main sequence
@@ -367,7 +386,8 @@ class RichRecQCConf(RichConfigurableUser):
             
         # Reconstruction monitoring
         if "PhotonMonitoring" in monitors :
-            self.recPerf(self.newSeq(sequence,"RichRecoMoni"))
+            self.recPerf(self.newSeq(sequence,"RichRecoMoni"),"None")
+            self.recPerf(self.newSeq(sequence,"RichRecoMoniTight"),"Tight")
 
         # Aerogel specific monitoring
         if "AerogelMonitoring" in monitors :
@@ -511,14 +531,14 @@ class RichRecQCConf(RichConfigurableUser):
             name = "Ri" + self.trackSelName(trackType) + "TrkEff"
 
             # Make a monitor alg
-            mon = self.createMonitor(Rich__Rec__MC__TrackSelEff,name,trackType,True)
+            mon = self.createMonitor(Rich__Rec__MC__TrackSelEff,name,trackType,tkCuts="All")
             #mon.HistoPrint = True
 
             # Add to sequence
             sequence.Members += [mon]
 
     ## Reconstruction performance
-    def recPerf(self,sequence):
+    def recPerf(self,sequence,tkCuts="None"):
 
         from Configurables import Rich__Rec__MC__RecoQC
 
@@ -527,9 +547,10 @@ class RichRecQCConf(RichConfigurableUser):
             
             # Construct the name for this monitor
             name = "RiCKRes" + self.trackSelName(trackType)
+            if tkCuts != "None" : name += tkCuts
             
             # Make a monitor alg
-            mon = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
+            mon = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType,tkCuts)
             mon.HistoPrint = False
             
             # cuts

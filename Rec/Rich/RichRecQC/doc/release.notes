@@ -7,8 +7,9 @@
 ! 2011-07-14 - Chris Jones
  - Update Cherenkov reconstruction monitor to only book and fill the aerogel
    subtile plots when subtiles are active.
- - Activate in the python options a new cherenkov angle monitor specifically
-   tuned for aerogel.
+ - Add new CK theta monitors with tight track quality cuts
+ - Extend the track selection efficiency monitor to include plots for the
+   track clone distance variable.
 
 ! 2011-07-13 - Chris Jones
  - Add L1 ingress detail plots to RawDataSize, showing the distribution of

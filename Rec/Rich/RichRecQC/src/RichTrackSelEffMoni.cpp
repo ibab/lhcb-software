@@ -74,6 +74,7 @@ void TrackSelEff::prebookHistograms( const std::string & tkClass )
                  "RICH Track Sel. Eff. V Chi^2 / D.O.F.", 0, 10, nBins1D() );
   richProfile1D( tkClass+"effVLikelihood", "RICH Track Sel. Eff. V Likelihood", -100, 0, nBins1D() );
   richProfile1D( tkClass+"effVGhostProb", "RICH Track Sel. Eff. V Ghost Probability", 0.0, 1.0, nBins1D() );
+  richProfile1D( tkClass+"effVCloneDist", "RICH Track Sel. Eff. V Clone Distance", 0.0, 6e3, nBins1D() );
 
   trackPlots( tkClass+"Selected/" );
   trackPlots( tkClass+"Rejected/" );
@@ -88,6 +89,7 @@ void TrackSelEff::trackPlots( const std::string & tag )
   richHisto1D( tag+"Chi2PDOF", "Track Chi^2 / D.O.F.", 0, 10, nBins1D() );
   richHisto1D( tag+"Likelihood", "Track Likelihood", -100, 0, nBins1D() );
   richHisto1D( tag+"GhostProb", "Track Ghost Probability", 0.0, 1.0, nBins1D() );
+  richHisto1D( tag+"CloneDist", "Track Clone Distance", 0.0, 6e3, nBins1D() );
 }
 
 // Main execution
@@ -173,13 +175,17 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
   // Make sure (MC) histos are booked
   if ( tkClass != "All/" ) prebookHistograms(tkClass);
 
+  // cache clone dist
+  const double cloneDist = track->info(LHCb::Track::CloneDist,5.5e3);
+
   // Efficiencies plots
   const double richEff = ( rTrack != NULL ? 100.0 : 0.0 );
-  richProfile1D( tkClass+"effVP"  )         -> fill ( track->p(),  richEff );
-  richProfile1D( tkClass+"effVPt" )         -> fill ( track->pt(), richEff );
-  richProfile1D( tkClass+"effVChi2PDOF" )   -> fill ( track->chi2PerDoF(), richEff );
+  richProfile1D( tkClass+"effVP"          ) -> fill ( track->p(),  richEff );
+  richProfile1D( tkClass+"effVPt"         ) -> fill ( track->pt(), richEff );
+  richProfile1D( tkClass+"effVChi2PDOF"   ) -> fill ( track->chi2PerDoF(), richEff );
   richProfile1D( tkClass+"effVLikelihood" ) -> fill ( track->likelihood(), richEff );
-  richProfile1D( tkClass+"effVGhostProb" )  -> fill ( track->ghostProbability(), richEff );
+  richProfile1D( tkClass+"effVGhostProb"  ) -> fill ( track->ghostProbability(), richEff );
+  richProfile1D( tkClass+"effVCloneDist"  ) -> fill ( cloneDist, richEff );
 
   // plot selection variables
   const std::string tag = ( rTrack != NULL ? tkClass+"Selected/" : tkClass+"Rejected/" );
@@ -188,6 +194,7 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
   richHisto1D( tag+"Chi2PDOF"   ) -> fill ( track->chi2PerDoF() );
   richHisto1D( tag+"Likelihood" ) -> fill ( track->likelihood() );
   richHisto1D( tag+"GhostProb"  ) -> fill ( track->ghostProbability() );
+  richHisto1D( tag+"CloneDist"  ) -> fill ( cloneDist );
 }
 
 const LHCb::RichRecTrack * TrackSelEff::getRichTrack( const LHCb::Track * track ) const
