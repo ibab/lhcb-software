@@ -23,10 +23,18 @@ if [ "$SetupProjectStatus" != 0 ] ; then
     exit 1
 fi
 
-if [ -n "$JYPTHONPATH" ] ; then
-  export JYTHONPATH=${PYTHONPATH}:${JYTHONPATH}
-else 
-  export JYPTHONPATH=${PYTHONPATH}
+# get user real name
+if which getent > /dev/null 2>&1 ; then
+    un=$(getent passwd $USER | cut -d: -f5 | cut -d, -f1)
+else
+    un=$USER
 fi
 
-eclipse "${args[@]}"
+# Prevent infinite recursion of the script if the gerenated
+# environment is frong (e.g. because of unsupported platform).
+if [ $0 == $(which eclipse) ] ; then
+    echo "ERROR: Cannot find Eclipse executable (unsupported platform?)"
+    exit 1
+fi
+
+eclipse "${args[@]}" -vmargs -Dpython.home="__pyclasspath__" -Duser.name="$un"

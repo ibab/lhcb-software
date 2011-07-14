@@ -1,3 +1,9 @@
+2011-07-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/eclipse (args): do not set $JYTHONPATH (done in the requirements of the Eclipse package).
+	Added a hack to set the user name to the full name instead of the login name.
+	Fixed the infinite recursion occurring when the Eclipse package is not correctly installed.
+
 2011-07-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/eclipse (args): added $PYTHONPATH to $JYTHONPATH.
