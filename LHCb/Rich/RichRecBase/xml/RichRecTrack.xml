@@ -245,7 +245,7 @@
 		type        = "LHCb::RichRecTrack::FloatType"
 		compression = "FALSE" 
 		desc        = "Clone Distance variable" 
-		init        = "FLT_MAX" 
+		init        = "1e10" 
 	/>
 
    	<attribute 
