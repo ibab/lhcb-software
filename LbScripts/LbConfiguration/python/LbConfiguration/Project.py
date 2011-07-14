@@ -285,7 +285,7 @@ def dumpXMLConf():
             ppt = doc.createTextNode(str(p._propdict[prop]))
             ppe.appendChild(ppt)
             pe.appendChild(ppe)
-    return doc.toprettyxml()
+    return doc.toprettyxml(encoding="UTF-8")
 # ------------------------------------------------------------------------------------
 
 def getProject(projectname):
