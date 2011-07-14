@@ -4,18 +4,22 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecSys v4r2 2011-06-15 =========================
+! 2011-07-14 - Chris Jones
+ - Increase slightly the size of the aerogel photon selection window for the
+   "Wide" photon selection
+
+!========================= RichRecSys v4r2 2011-06-15 ========================
 ! 2011-05-24 - Chris Jones
  - Small changes to the track selector cuts
   + Synchronises the cuts between various places.
   + Extend the max P cut to a very large (effectively +inf) value
 
-!========================= RichRecSys v4r1 2011-04-05 =========================
+!========================= RichRecSys v4r1 2011-04-05 ========================
 ! 2011-03-24 - Chris Jones
  - Increase a bit the size of the photon selection window for Rich1gas when 
    using the "Wide" photon selection criteria.
 
-!========================= RichRecSys v4r0 2011-02-28 =========================
+!========================= RichRecSys v4r0 2011-02-28 ========================
 ! 2011-02-17 - Chris Jones
  - Add new package - Rich/RichParticleSearch
  - Add new Photon Creator options for cuts tuned for the Particle Search.
