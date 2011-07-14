@@ -229,9 +229,9 @@ class RichRecQCConf(RichConfigurableUser):
             mon.TrackSelector.AcceptClones    = True
         elif tkCuts == "Tight" :
             bigvalue = 1e+30
-            mon.TrackSelector.MinPCut    = 0
+            mon.TrackSelector.MinPCut    = 10
             mon.TrackSelector.MaxPCut    = bigvalue
-            mon.TrackSelector.MinPtCut   = 0
+            mon.TrackSelector.MinPtCut   = 0.5
             mon.TrackSelector.MaxPtCut   = bigvalue
             mon.TrackSelector.MinChi2Cut = 0
             mon.TrackSelector.MaxChi2Cut = 3
