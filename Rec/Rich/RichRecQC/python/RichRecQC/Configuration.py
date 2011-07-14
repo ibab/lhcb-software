@@ -53,7 +53,7 @@ class RichRecQCConf(RichConfigurableUser):
                            "RichPhotonTrajectory", "RichStereoFitterTests",
                            "RichRayTracingTests", "RichDataObjectChecks",
                            "RichRecoTiming", "RichFuncCKResPlots",
-                           "RichPerfFromData"
+                           "RichPerfFromData","AerogelMonitoring"
                            ]
 
     ## Added monitors
@@ -72,7 +72,7 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "TracklessRingPeakSearch",
+                                            "TracklessRingPeakSearch","AerogelMonitoring",
                                             "AlignmentMonitoring", "HPDIFBMonitoring",
                                             "HPDImageShifts", "RichFuncCKResPlots",
                                             "RichPixelPositions", "HPDHitPlots",
@@ -87,18 +87,18 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "DataDecodingErrors",
+                                            "DataDecodingErrors","AerogelMonitoring",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "OfflineExpress" : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "DataDecodingErrors",
+                                            "DataDecodingErrors","AerogelMonitoring",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
                        "Online"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "AlignmentMonitoring" ],
+                                            "AlignmentMonitoring","AerogelMonitoring" ],
                        "None"           : [ ]
                        }
        ,"PidMomentumRanges": { "Expert"         : [ [2,100], [2,10], [10,70], [70,100] ],
@@ -369,6 +369,10 @@ class RichRecQCConf(RichConfigurableUser):
         if "PhotonMonitoring" in monitors :
             self.recPerf(self.newSeq(sequence,"RichRecoMoni"))
 
+        # Aerogel specific monitoring
+        if "AerogelMonitoring" in monitors :
+            self.aeroMoni(self.newSeq(sequence,"RichAeroMoni"))    
+
         # PID Performance
         if "PidMonitoring" in monitors :
             self.pidPerf(self.newSeq(sequence,"RichPIDMoni"))
@@ -543,16 +547,24 @@ class RichRecQCConf(RichConfigurableUser):
             # Add to sequence
             sequence.Members += [mon]
 
-        # ----------------------------------------------------------------
-        # Specially tuned aerogel monitor
+    ## Specially tuned aerogel monitor
+    def aeroMoni(self,sequence):
+        
+        from Configurables import Rich__Rec__MC__RecoQC
+                
         trackType = ['Forward','Match']
         name = "RiAeroMoni" + self.trackSelName(trackType)
+
         aeroMoni = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType)
         aeroMoni.HistoPrint = False
+
+        # Set options
         aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
         #aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
-        aeroMoni.TrackSelector.MinPCut = 10
+        aeroMoni.TrackSelector.MinPCut    = 10
+        aeroMoni.TrackSelector.MaxChi2Cut = 3
         aeroMoni.MinBeta = self.getProp("MinTrackBeta")
+
         # Add to sequence
         sequence.Members += [aeroMoni]
         # ----------------------------------------------------------------

@@ -23,20 +23,20 @@ using namespace Rich::Rec::MC;
 DECLARE_ALGORITHM_FACTORY( RecoQC )
 
 // Standard constructor, initializes variables
-RecoQC::RecoQC( const std::string& name,
-                ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richPartProp      ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_ckRes             ( NULL ),
-    m_richRecMCTruth    ( NULL ),
-    m_trSelector        ( NULL ),
-    m_isoTrack          ( NULL ),
-    m_fitter            ( NULL ),
-    m_minBeta           ( Rich::NRadiatorTypes, 0.9999 ),
-    m_maxBeta           ( Rich::NRadiatorTypes, 999.99 ),
-    m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
-    m_nSegs             ( Rich::NRadiatorTypes, 0 )
+  RecoQC::RecoQC( const std::string& name,
+                  ISvcLocator* pSvcLocator )
+    : HistoAlgBase        ( name, pSvcLocator ),
+      m_richPartProp      ( NULL ),
+      m_ckAngle           ( NULL ),
+      m_ckRes             ( NULL ),
+      m_richRecMCTruth    ( NULL ),
+      m_trSelector        ( NULL ),
+      m_isoTrack          ( NULL ),
+      m_fitter            ( NULL ),
+      m_minBeta           ( Rich::NRadiatorTypes, 0.9999 ),
+      m_maxBeta           ( Rich::NRadiatorTypes, 999.99 ),
+      m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
+      m_nSegs             ( Rich::NRadiatorTypes, 0 )
 {
   using namespace boost::assign;
 
@@ -91,9 +91,9 @@ StatusCode RecoQC::prebookHistograms()
   if ( m_rads[Rich::Aerogel] )
   {
     // Aerogel DetElem
-    const DeRichMultiSolidRadiator * aerogel 
+    const DeRichMultiSolidRadiator * aerogel
       = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
-    
+
     // List of active Aerogel tile IDs
     tiles.reserve( aerogel->radiators().size() );
     for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
@@ -131,11 +131,11 @@ StatusCode RecoQC::prebookHistograms()
       richHisto1D( HID("ckResAll",*rad), "Rec-Exp Cktheta | All photons",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
                    "delta(Cherenkov theta) / rad" );
-      richHisto1D( HID("thetaRecIsolated",*rad), 
+      richHisto1D( HID("thetaRecIsolated",*rad),
                    "Reconstructed Ch Theta | All photons | Isolated Tracks",
                    m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
                    "Cherenkov Theta / rad" );
-      richHisto1D( HID("ckResAllIsolated",*rad), 
+      richHisto1D( HID("ckResAllIsolated",*rad),
                    "Rec-Exp Cktheta | All photons | Isolated Tracks",
                    -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
                    "delta(Cherenkov theta) / rad" );
@@ -149,7 +149,7 @@ StatusCode RecoQC::prebookHistograms()
                    -0.5, 500.5, 501, "# Photon Candidates / Track Segment" );
       richHisto1D( HID("ckPullIso",*rad), "(Rec-Exp)/Res CKtheta | Isolated Tracks",
                    -4, 4, nBins1D(), "Cherenkov Theta pull" );
-      richProfile1D( HID("ckPullVthetaIso",*rad), 
+      richProfile1D( HID("ckPullVthetaIso",*rad),
                      "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
                      m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
                      "Cherenkov Theta / rad", "Cherenkov Theta pull" );
@@ -160,22 +160,6 @@ StatusCode RecoQC::prebookHistograms()
               tile != tiles.end(); ++tile )
         {
           std::ostringstream id,title;
-
-          id.str("");
-          title.str("");
-          id << "subtiles/ckResAll-SubTile" << (*tile)->tileID();
-          title << "Rec-Exp Cktheta | All photons | SubTile " << (*tile)->tileID();
-          richHisto1D( HID(id.str(),*rad), title.str(),
-                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
-                       "delta(Cherenkov theta) / rad" );
-
-          id.str("");
-          title.str("");
-          id << "subtiles/thetaRec-SubTile" << (*tile)->tileID();
-          title << "Reconstructed Ch Theta | All photons | SubTile " << (*tile)->tileID();
-          richHisto1D( HID(id.str(),*rad), title.str(),
-                       m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
-                       "Cherenkov Theta / rad" );
 
           id.str("");
           title.str("");
@@ -192,6 +176,26 @@ StatusCode RecoQC::prebookHistograms()
           richHisto1D( HID(id.str(),*rad), title.str(),
                        m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
                        "Cherenkov Theta / rad" );
+
+          if ( (*tile)->subTile() )
+          {
+            id.str("");
+            title.str("");
+            id << "subtiles/ckResAll-SubTile" << (*tile)->tileID();
+            title << "Rec-Exp Cktheta | All photons | SubTile " << (*tile)->tileID();
+            richHisto1D( HID(id.str(),*rad), title.str(),
+                         -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                         "delta(Cherenkov theta) / rad" );
+
+            id.str("");
+            title.str("");
+            id << "subtiles/thetaRec-SubTile" << (*tile)->tileID();
+            title << "Reconstructed Ch Theta | All photons | SubTile " << (*tile)->tileID();
+            richHisto1D( HID(id.str(),*rad), title.str(),
+                         m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+                         "Cherenkov Theta / rad" );
+          }
+
         }
       }
     }
@@ -352,14 +356,18 @@ StatusCode RecoQC::execute()
         for ( Rich::RadIntersection::Vector::const_iterator intersect = intersects.begin();
               intersect != intersects.end(); ++intersect )
         {
-          const DeRichAerogelRadiator * d = 
+          const DeRichAerogelRadiator * d =
             dynamic_cast<const DeRichAerogelRadiator*>((*intersect).radiator());
           if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
-          std::ostringstream ida,idb,idc,idd;
-          ida << "subtiles/ckResAll-SubTile" << d->tileID();
-          richHisto1D(HID(ida.str(),rad))->fill(deltaTheta);
-          idb << "subtiles/thetaRec-SubTile" << d->tileID();
-          richHisto1D(HID(idb.str(),rad))->fill(thetaRec);
+          if ( d->subTile() )
+          {
+            std::ostringstream ida,idb;
+            ida << "subtiles/ckResAll-SubTile" << d->tileID();
+            richHisto1D(HID(ida.str(),rad))->fill(deltaTheta);
+            idb << "subtiles/thetaRec-SubTile" << d->tileID();
+            richHisto1D(HID(idb.str(),rad))->fill(thetaRec);
+          }
+          std::ostringstream idc,idd;
           idc << "tiles/ckResAll-Tile" << d->primaryTileID();
           richHisto1D(HID(idc.str(),rad))->fill(deltaTheta);
           idd << "tiles/thetaRec-Tile" << d->primaryTileID();
@@ -424,11 +432,11 @@ StatusCode RecoQC::execute()
   for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
         rad != Rich::radiators().end(); ++rad )
   {
-    if ( m_rads[*rad] ) 
+    if ( m_rads[*rad] )
     {
       richHisto1D(HID("totalPhotons", *rad))->fill(photsPerRad[*rad]);
       richHisto1D(HID("totalSegments",*rad))->fill(segsPerRad[*rad]);
-    }    
+    }
   }
 
   return StatusCode::SUCCESS;

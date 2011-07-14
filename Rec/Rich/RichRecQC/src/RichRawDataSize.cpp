@@ -154,8 +154,6 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           iL1Map != l1Map.end(); ++iL1Map )
     {
       const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
-      const Rich::DetectorType rich              = m_RichSys->richDetector(l1HardID);
-      const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
       const Rich::DAQ::Level1CopyNumber l1CopyN  = m_RichSys->copyNumber(l1HardID);
       const Rich::DAQ::IngressMap & ingressMap   = iL1Map->second;
 
@@ -206,6 +204,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           -> fill ( 10*l1CopyN.data() + ingressID.data(), nIngressWords );
         if ( m_detailedPlots )
         {
+          const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
+          const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
           std::ostringstream ID, title;
           ID << "L1s/" << rich 
              << "/L1-HardID" << l1HardID << "LogID" << l1LogID << "Ingress" << ingressID;
@@ -220,6 +220,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       richProfile1D( HID("L1s/SizeVL1CopyNumber") ) -> fill ( l1CopyN.data(), nL1Words );
       if ( m_detailedPlots )
       {
+        const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
+        const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
         std::ostringstream ID, title;
         ID << "L1s/" << rich
            << "/L1-HardID" << l1HardID << "LogID" << l1LogID;
@@ -229,8 +231,6 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       }
 
       // Cross check with L1 size direct from raw bank
-      // Know that occasionally get it wrong by 1 (to be understood)
-      // warning if any bigger
       if ( nL1Words != l1SizeMap[l1HardID] )
       {
         std::ostringstream mess;
@@ -303,7 +303,7 @@ StatusCode RawDataSize::finalize()
         {
 
           // Get HPD data
-          const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1); // root labels bin numbers from 0
+          const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1); // convert bin number to copy number
           const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
           const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
           const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
