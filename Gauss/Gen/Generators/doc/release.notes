@@ -5,6 +5,11 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!======================= Generators v11r0 2011-07-15 =========================
+! 2011-07-15 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+
 ! 2011-07-07 - Patrick Robbe
  - Fix coverity warnings
 
@@ -27,20 +32,15 @@
 ! 2011-06-05 - Vanya Belyaev
 
  - add ``generic'' full-event cut:
-
    it analyses the event and accept them according to cuts.
-
      e.g. accept ebents with at least two J/psi :
- 
     xxx.Code = " count( 'J/psi(1S)' == GID ) > 1.5 "
-
      in a similar way one can use anyproerteis, including the acceptance
 
-
-
 ! 2011-05-31 - Victor Coco
- - BiasedBB: add some cuts on number of stable charged daugthers of the B and on 
-   minimal R displacement. By default gives the same result than without those cuts
+ - BiasedBB: add some cuts on number of stable charged daugthers of the B and 
+   on minimal R displacement. By default gives the same result than without 
+   those cuts
 
 ! 2011-05-31 - Patrick Robbe
  - SemilepCutForADS: fix warnings
@@ -69,11 +69,11 @@
  - src/component/CollidingBeams.cpp
      Adapt for new BeamParameters event model class
 
-!====================== Generators v10r10 2011-03-17 =========================
 ! 2011-05-23 - Alex T. Grecu
  - Replace HepMC::IO_Ascii with HepMC::IO_GenEvent in WriteHepMCAsciiFile 
    algorithm. This way Gauss may be used as MC generator for rivet analyses.
 
+!====================== Generators v10r10 2011-03-17 =========================
 ! 2011-03-16 - Alex Shires
  - Rename tool from DaughtersInLHCbAcceptance to DaughtersInLHCbAndWithMinP
 

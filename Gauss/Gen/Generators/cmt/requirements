@@ -51,3 +51,8 @@ apply_pattern library_stamps    library=GeneratorsLib
 #============================================================================
 macro_prepend HepMC_linkopts "-L$(HepMC_home)/lib -lHepMCfio " \
                        WIN32 "/LIBPATH:$(HepMC_home)/lib HepMCfio.lib"
+
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
+
