@@ -4,10 +4,15 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v2r7 2011-07-15 ========================
+! 2011-07-15 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+
 ! 2011-06-19 - Patrick Robbe
  - src/EvtMathematicaFn.cpp: fix compilation warning
 
-======================== EvtGenExtras v2r6 2011-04-13 ========================
+!======================= EvtGenExtras v2r6 2011-04-13 ========================
 ! 2011-22-02 - Nikolai Nikitin
  - Minor bug fix: optimization of the function for the maximum probability
    calculation
