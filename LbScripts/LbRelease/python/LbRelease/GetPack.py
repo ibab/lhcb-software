@@ -881,6 +881,8 @@ class GetPack(Script):
                 print "Checked out package %s %s (%d/%d)" % (pkg, done_packages[pkg][1],
                                                              current_count,
                                                              total_count)
+                # ensure that the previous message is printed at the right moment
+                sys.stdout.flush()
             except Skip:
                 skipped_packages[pkg] = vers
                 self.log.warning("Skipped package %s %s", pkg, vers)

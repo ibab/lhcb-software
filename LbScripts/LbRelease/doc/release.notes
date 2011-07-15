@@ -4,6 +4,8 @@
 	- Fixed bug #84193 (allow to use default versions in getpack batch mode)
 	  Added the possibility of using the 'special' version id '<default>', similar
 	  to 'trunk' but identifies the default version (from the project version).
+	- Fixed a bug in the progress report so that the messages appear in the
+	  right position also when the stdout is piped.
 
 2011-07-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
