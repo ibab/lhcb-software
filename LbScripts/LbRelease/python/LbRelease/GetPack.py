@@ -305,7 +305,7 @@ from LbConfiguration.Version import ParseSvnVersion
 class GetPack(Script):
     _version = ParseSvnVersion("$Id$", "$URL$")
     def __init__(self):
-        Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
+        Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'|'<default>'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
                                       "\n\t%prog [options] --project project version",
                               description = "script to checkout/update and cmt-configure packages"
@@ -483,8 +483,12 @@ class GetPack(Script):
             return None
 
     def checkout(self, package, version = "trunk"):
+        # Get the repository containing the package
         rep = self._getModuleRepo(package, isProject = False)
-        if version.lower() not in ["trunk", "head"]: # head is always valid
+        # The version names "trunk", "head" and "<default>" are treated in a special way:
+        # trunk and head are always valid, while <default> is replaced by the guessed default tag
+        # or trunk if no default is found.
+        if version.lower() not in ["trunk", "head", "<default>"]:
             versions = rep.listVersions(package)
             if not versions:
                 self.log.warning("No version found for package '%s', using 'trunk'" % package)
@@ -513,6 +517,10 @@ class GetPack(Script):
             else:
                 self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions, guessDefaultVersion(package))
+        elif version.lower() == "<default>":
+            # Use the default tag or trunk (if none found)
+            version = guessDefaultVersion(package) or "trunk"
+
         # Fix the case of the special version "head" (done here because we may have changed
         # the value of version since last time we checked)
         if version.lower() in ["trunk", "head"]:
@@ -870,7 +878,7 @@ class GetPack(Script):
                 # Progress report
                 current_count += 1
                 total_count = current_count + len(todo_packages)
-                print "Checked out package %s %s (%d/%d)" % (pkg, vers,
+                print "Checked out package %s %s (%d/%d)" % (pkg, done_packages[pkg][1],
                                                              current_count,
                                                              total_count)
             except Skip:

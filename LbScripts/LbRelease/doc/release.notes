@@ -1,3 +1,10 @@
+2011-07-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py:
+	- Fixed bug #84193 (allow to use default versions in getpack batch mode)
+	  Added the possibility of using the 'special' version id '<default>', similar
+	  to 'trunk' but identifies the default version (from the project version).
+
 2011-07-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py:
