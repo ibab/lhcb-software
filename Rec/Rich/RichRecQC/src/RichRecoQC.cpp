@@ -59,6 +59,8 @@ DECLARE_ALGORITHM_FACTORY( RecoQC )
   declareProperty( "MinRadSegs", m_minRadSegs = list_of (0)       (0)       (0)       );
   declareProperty( "MaxRadSegs", m_maxRadSegs = list_of (9999999) (9999999) (9999999) );
 
+  declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
+
   setProperty( "NBins2DHistos", 100 );
 }
 
@@ -88,7 +90,7 @@ StatusCode RecoQC::prebookHistograms()
 
   // Get aerogel tiles, if active
   std::vector<const DeRichAerogelRadiator*> tiles;
-  if ( m_rads[Rich::Aerogel] )
+  if ( m_aeroTilePlots && m_rads[Rich::Aerogel] )
   {
     // Aerogel DetElem
     const DeRichMultiSolidRadiator * aerogel
@@ -153,7 +155,7 @@ StatusCode RecoQC::prebookHistograms()
                      "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
                      m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
                      "Cherenkov Theta / rad", "Cherenkov Theta pull" );
-      if ( *rad == Rich::Aerogel )
+      if ( m_aeroTilePlots && *rad == Rich::Aerogel )
       {
         // Book a few plots for each aerogel tile
         for ( std::vector<const DeRichAerogelRadiator*>::const_iterator tile = tiles.begin();
@@ -348,7 +350,7 @@ StatusCode RecoQC::execute()
       }
 
       // Aerogel tiles
-      if ( Rich::Aerogel == rad )
+      if ( m_aeroTilePlots && Rich::Aerogel == rad )
       {
         // get the list of radiator intersections
         const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();

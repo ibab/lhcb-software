@@ -541,12 +541,13 @@ class RichRecQCConf(RichConfigurableUser):
     def recPerf(self,sequence,tkCuts="None"):
 
         from Configurables import Rich__Rec__MC__RecoQC
-
+        
         # Track Types
         for trackType in self.getHistoOptions("RecoTrackTypes") :
             
             # Construct the name for this monitor
-            name = "RiCKRes" + self.trackSelName(trackType)
+            tkShortName = self.trackSelName(trackType)
+            name = "RiCKRes" + tkShortName
             if tkCuts != "None" : name += tkCuts
             
             # Make a monitor alg
@@ -558,6 +559,9 @@ class RichRecQCConf(RichConfigurableUser):
 
             # Radiators
             mon.Radiators = self.usedRadiators()
+
+            # Make aerogel tile plots for long tracks only
+            if tkShortName == "Long" : mon.EnableAerogelTilePlots = True
 
             # Histogram ranges
             ckRange = self.getProp("CKThetaResRange")
@@ -581,6 +585,7 @@ class RichRecQCConf(RichConfigurableUser):
 
         # Set options
         aeroMoni.Radiators  = [ True, False, False ] # Only run on aerogel segments
+        aeroMoni.EnableAerogelTilePlots = True
         #aeroMoni.MaxRadSegs = [ 5, 0, 0, ]
         aeroMoni.TrackSelector.MinPCut    = 10
         aeroMoni.TrackSelector.MaxChi2Cut = 3

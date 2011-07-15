@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-15 - Chris Jones
+ - Enable aerogel tile and sub-tile plots in Rich::Rec::MC::RecoQC only for
+   instances running on 'Long' tracks.
+
 ! 2011-07-14 - Chris Jones
  - Update Cherenkov reconstruction monitor to only book and fill the aerogel
    subtile plots when subtiles are active.

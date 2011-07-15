@@ -115,6 +115,9 @@ namespace Rich
         /// Histogram ranges for CK resolution plots
         std::vector<double> m_ckResRange;
 
+        /// Enable aerogel tile plots
+        bool m_aeroTilePlots;
+
       };
 
     }
