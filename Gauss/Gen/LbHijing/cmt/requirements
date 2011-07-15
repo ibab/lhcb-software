@@ -4,7 +4,7 @@
 # Maintainer : Vincenzo Vagnoni
 #============================================================================
 package       LbHijing
-version       v6r0
+version       v6r1
 
 
 # Structure, i.e. directories to process. 
@@ -39,3 +39,8 @@ macro_append fflags "" \
       target-gcc3   " -fno-second-underscore "
 
 end_private
+
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
+
