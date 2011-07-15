@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-07-15 - Vanya Belyaev
+ - fix GenericFullEventCutTool
+
 ! 2011-07-08 - Vanya Belyaev
  - GenericCutTool.cpp
    fix many bugs ( thanks to Luigi Li Gioi ) 

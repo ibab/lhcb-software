@@ -43,7 +43,10 @@ namespace LoKi
    *  @see IFullGenEventCutTool
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    */
-  class FullGenEventCut : public extends1<LoKi::FilterTool,IFullGenEventCutTool>
+  class FullGenEventCut
+  // : public extends1<LoKi::FilterTool,IFullGenEventCutTool>
+    : public         LoKi::FilterTool
+    , public virtual IFullGenEventCutTool
   {
     // =========================================================================
     // friend factor for instantiation 
@@ -121,17 +124,22 @@ LoKi::FullGenEventCut::FullGenEventCut
 ( const std::string&  type   ,                         //    the tool type (???)
   const std::string&  name   ,                         // the tool isntance name 
   const IInterface*   parent )                         //        the tool parent
-  : base_class ( type , name , parent ) 
+// : base_class ( type , name , parent ) 
+  : LoKi::FilterTool ( type , name , parent ) 
 //
   , m_cutval   ( _BOOLC ( false )  ) 
 ///
 {
+  //
+  declareInterface<IFullGenEventCutTool> ( this ) ;
   //
   addToPreambulo ( "from LoKiGen.decorators     import *" ) ;
   addToPreambulo ( "from LoKiNumbers.decorators import *" ) ;
   addToPreambulo ( "from LoKiCore.functions     import *" ) ;
   addToPreambulo ( "from LoKiCore.math          import *" ) ;
   //
+  StatusCode sc = setProperty ( "Factory" , "LoKi::Hybrid::GenTool/GenFactory") ;
+  Assert ( sc.isSuccess() , "Unable to reset 'Factory' property" , sc ) ;
 }
 // ==============================================================================
 // destructor 
