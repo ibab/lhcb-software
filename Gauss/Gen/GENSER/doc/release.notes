@@ -4,22 +4,21 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-! 2011-06-09 - Vanya Belyaev
+!========================== GENSER v9r1 2011-07-15 ===========================
+! 2011-07-15 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
 
+! 2011-06-09 - Vanya Belyaev
  - improve the reading of LHA/LHE events 
 
 ! 2011-05-30 - Vanya Belyaev
-
- -  src/pythia6/GaussUserProcess.inc
-    src/pythia6/upevnt.F
-    src/pythia6/upinit.F 
-
-   add user process for Onia-pairs production 
-
+ - src/pythia6/GaussUserProcess.inc
+   src/pythia6/upevnt.F
+   src/pythia6/upinit.F 
+    add user process for Onia-pairs production 
  - cmt/requirements
-
     version increment to v9r1 
-
  
 !========================== GENSER v9r0 2011-04-12 ===========================
 ! 2011-02-11 - Patrick Robbe

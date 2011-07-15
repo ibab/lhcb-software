@@ -118,3 +118,7 @@ macro_remove fflags "" \
 macro_append fflags "" \
       target-gcc4   " -fsecond-underscore "
 
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
+
