@@ -4,8 +4,12 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v1r0 2011-07-15 ========================== 
 ! 2011-07-15 - Vanya Belyaev
  - fix GenericFullEventCutTool
+
+! 2011-07-13 - Gloria Corti
+ - Fix include of IGenCutTool.h from MCInterfaces instead of Generators
 
 ! 2011-07-08 - Vanya Belyaev
  - GenericCutTool.cpp
@@ -13,7 +17,6 @@
 
 ! 2011-06-23 - Patrick Robbe
  - clean header files
-
 
 ! 2011-06-22 - Patrick Robbe
  - first version of the package, collecting cut tools that were previously
