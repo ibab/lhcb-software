@@ -3,7 +3,7 @@
 # Maintainer : Patrick Robbe
 #============================================================================
 package     EvtGen
-version     v12r0
+version     v12r1
  
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -29,5 +29,10 @@ macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 #============================================================================
 apply_pattern linker_library  library=EvtGen
 apply_pattern linker_stamps   library=EvtGen
+
+
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
 
 
