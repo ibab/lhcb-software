@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LbHidValley
-version           v2r5
+version           v3r0
 
 # =============== structure ===================================================
 branches          cmt doc src options LbHidValley 
@@ -39,6 +39,10 @@ macro_append      HidValleylinkopts  " $(Boost_linkopts_program_options) "
 
 # private 
 # macro_prepend fincludes $(ppcmd)"$(GENSER_path)/include/pythia/$(pythia_native_version)/include"
+
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
 
 # =============================================================================
 # The END 

@@ -19,6 +19,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LbHidValley v3r0 2011-07-15 ========================
+! 2011-07-15 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+ - Increase version to v3r0 because of MCInterfaces
+
 ! 2011-06-23 - Patrick Robbe
  - src/Components/NbQuarks.cpp: fix headers
 
@@ -31,14 +37,11 @@
  - final check 
 
 ! 2011-04-17 - Vanya Belyaev
-
  - I think fianlly it works now :-) 
 
 ! 2011-04-16 - Vanya Belyaev
-
  - allow change the energy
    set the default energy 3.5 TeV/beam 
-
  - cmt/requirements 
    version increment to v2r5 
 
