@@ -8,6 +8,10 @@ ApplicationMgr.ExtSvc               += {
 ApplicationMgr.ExtSvc               += {
                                         "RateSvc/HLTRater"
                                        };
+ApplicationMgr.ExtSvc               += {
+					"GenStatSvc/EVTProd",
+					"GenStatSvc/DiskWR"
+                                       };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -35,3 +39,20 @@ HLTRater.ServicePattern      = "MON_<part>_hlt01_GauchoJob_00/Counter/";
 HLTRater.AdderClass          = "Counter";
 HLTRater.InDNS               = "mona08";
 HLTRater.TrendingOn          = false;
+
+EVTProd.MyName              = "<part>_X_EVTProd";
+EVTProd.ServicePrefix       = "<part>_EVTProd";
+EVTProd.PartitionName       = @OnlineEnv.PartitionName;
+EVTProd.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+EVTProd.ServicePattern      = "MON_<part>_hlt01_evtprod_00/Counter/";
+//EVTProd.AdderClass          = "Counter";
+EVTProd.InDNS               = "mona08";
+
+DiskWR.MyName              = "<part>_X_DiskWR";
+DiskWR.ServicePrefix       = "<part>_DiskWR";
+DiskWR.PartitionName       = @OnlineEnv.PartitionName;
+DiskWR.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+DiskWR.ServicePattern      = "MON_<part>_hlt01_DiskWR_00/Counter/";
+//DiskWR.AdderClass          = "Counter";
+DiskWR.InDNS               = "mona08";
+
