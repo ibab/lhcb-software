@@ -450,7 +450,7 @@ LoKi::Hybrid::GenTool::GenTool
   declareInterface<LoKi::IGenHybridFactory>( this ) ;
   //
   m_modules.push_back ( "LoKiGen.decorators"   ) ;
-  m_modules.push_back ( "LoKiGenMC.decorators" ) ;
+  // m_modules.push_back ( "LoKiGenMC.decorators" ) ;
   m_modules.push_back ( "LoKiCore.functions"   ) ;
   //
   declareProperty ( "Modules" , m_modules , "Python modules to be imported"          ) ;

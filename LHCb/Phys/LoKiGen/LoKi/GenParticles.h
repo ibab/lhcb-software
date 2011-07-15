@@ -1473,7 +1473,9 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the actual node
-      DecTree ( const iTree& node ) ;
+      DecTree ( const iTree& node , const bool autovalidate = true ) ;
+      /// constructor from the decay descriptor 
+      DecTree ( const std::string& descriptor ) ;
       /// MANDATORY: virtual destructor
       virtual ~DecTree() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -1505,6 +1507,8 @@ namespace LoKi
       // ======================================================================
       /// the decay tree itself
       Tree m_tree ;                                    // the decay tree itself
+      //
+      bool m_autovalidate ;
       // ======================================================================
     };
     // ========================================================================

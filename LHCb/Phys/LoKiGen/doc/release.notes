@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-07-15 - Alexey Novoselov
+ - add useful constructor for GDECTREE functors 
+
 ! 2011-07-03 - Vanya Belyaev
  - small polishing of python iterators 
  - cmt/requirements
