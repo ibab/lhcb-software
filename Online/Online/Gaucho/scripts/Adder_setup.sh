@@ -8,7 +8,7 @@
 #get online version
 
 export CMTCONFIG=$CMTDEB
-SetupOnline v4r54
+SetupOnline v4r56
 
 export UTGID=Adder
 export DIM_DNS_NODE=localhost
