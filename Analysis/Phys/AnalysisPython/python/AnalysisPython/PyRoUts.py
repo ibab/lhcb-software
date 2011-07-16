@@ -131,7 +131,7 @@ def _h_get_item_ ( h , ibin ) :
 
 # =============================================================================
 ## histogram as function 
-def _h1_call_ ( h1 , x ) :
+def _h1_call_ ( h1 , x , func = lambda s : s ) :
     """
     Histogram as function:
     
@@ -148,7 +148,7 @@ def _h1_call_ ( h1 , x ) :
     val = h1.GetBinContent ( ix ) 
     err = h1.GetBinError   ( ix )
     #
-    return VE ( val , err * err ) 
+    return func ( VE ( val , err * err ) ) 
 
 ROOT.TH1F  . __getitem__  = _h_get_item_
 ROOT.TH1D  . __getitem__  = _h_get_item_
@@ -166,7 +166,7 @@ ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 # =============================================================================
 ## histogram as function 
-def _h2_call_ ( h2 , x , y ) :
+def _h2_call_ ( h2 , x , y , func = lambda s : s ) :
     """
     Histogram as function:
     
@@ -188,11 +188,47 @@ def _h2_call_ ( h2 , x , y ) :
     val = h2.GetBinContent ( ix , iy ) 
     err = h2.GetBinError   ( ix , iy )
     #
-    return VE ( val , err * err ) 
+    return func ( VE ( val , err * err ) ) 
 
 ROOT.TH2   . __call__     = _h2_call_
 ROOT.TH2F  . __getitem__  = _h_get_item_
 ROOT.TH2D  . __getitem__  = _h_get_item_
+
+# =============================================================================
+## histogram as function 
+def _h3_call_ ( h3 , x , y , z , func = lambda s : s ) :
+    """
+    Histogram as function:
+    
+    >>> histo = ....
+    >>> ve    = histo ( x , y , z ) 
+    """    
+    #
+    if hasattr ( x , 'value' )  : return _h3_call_ ( h3 ,  x.value() , y          , z          )
+    if hasattr ( y , 'value' )  : return _h3_call_ ( h3 ,  x         , y.value () , z          )
+    if hasattr ( z , 'value' )  : return _h3_call_ ( h3 ,  x         , y          , z.value () )
+    #
+    ax = h3.GetXaxis (   )
+    ix = ax.FindBin  ( x )
+    if not  1 <= ix <= ax.GetNbins() : return VE ( 0, 0 )
+    #
+    ay = h3.GetYaxis (   )
+    iy = ay.FindBin  ( y )
+    if not  1 <= iy <= ay.GetNbins() : return VE ( 0, 0 )
+    ##
+    az = h3.GetZaxis (   )
+    iz = az.FindBin  ( z )
+    if not  1 <= iz <= az.GetNbins() : return VE ( 0, 0 )
+    ##
+    ##
+    val = h3.GetBinContent ( ix , iy , iz ) 
+    err = h3.GetBinError   ( ix , iy , iz )
+    #
+    return func ( VE ( val , err * err ) ) 
+
+ROOT.TH3   . __call__     = _h3_call_
+ROOT.TH3F  . __getitem__  = _h_get_item_
+ROOT.TH3D  . __getitem__  = _h_get_item_
 
 # =============================================================================
 # iterate over items
@@ -257,6 +293,51 @@ def _h2_iteritems_ ( h2 ) :
         
 ROOT.TH2F  . iteritems     = _h2_iteritems_
 ROOT.TH2D  . iteritems     = _h2_iteritems_
+
+# =============================================================================
+## iterate over entries in 3D-histogram 
+def _h3_iteritems_ ( h3 ) :
+    """
+    Iterate over histogram items:
+    
+    >>> h3 = ...
+    >>> for ix,iy,iz,x,y,z,V in h3 : ...
+    
+    """
+    ax = h3.GetXaxis()
+    sx = ax.GetNbins()
+
+    ay = h3.GetYaxis()
+    sy = ay.GetNbins()
+
+    az = h3.GetZaxis()
+    sz = ay.GetNbins()
+    
+    for ix in range( 1 , sx + 1 ) :
+        #
+        x   =       ax.GetBinCenter ( ix )
+        xe  = 0.5 * ax.GetBinWidth  ( ix )
+        #
+        for iy in range ( 1 , sy + 1 ) : 
+            #
+            y   =       ay.GetBinCenter  ( iy      )
+            ye  = 0.5 * ay.GetBinWidth   ( iy      )
+            #
+            for iz in range ( 1 , sz + 1 ) :
+                #
+                z   =       az.GetBinCenter  ( iz      )
+                ze  = 0.5 * az.GetBinWidth   ( iz      )
+                #
+                
+                v   =       h2.GetBinContent ( ix , iy , iz )
+                ve  =       h2.GetBinError   ( ix , iy , iz )
+                #
+                yield ix, iy, iz , VE(x,xe*xe) , VE ( y,ye*ye) , VE( z,ze*ze) , VE( v, ve ) 
+                #
+
+            
+ROOT.TH3F  . iteritems     = _h3_iteritems_
+ROOT.TH3D  . iteritems     = _h3_iteritems_
         
 # =============================================================================
 # Decorate fit results 
@@ -529,9 +610,46 @@ def binomEff_h2 ( h1 , h2 ) :
 
 ROOT.TH2.  binomEff    = binomEff_h2 
 
+# =============================================================================
+## calculate the efficiency histogram using the binomial erorrs 
+def binomEff_h3 ( h1 , h2 ) :
+    """
+    Calculate the efficiency histogram using the binomial erorrs
+    """
+    func = binomEff
+    #
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h1 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID () )
+    #
+    for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
+        #
+        assert ( _int ( v1 ) )
+        #
+        v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
+        assert ( _int ( v2 ) )
+        #
+        l1 = long ( v1.value () )
+        l2 = long ( v2.value ()  )
+        #
+        assert ( l1 <= l2 )
+        #
+        v = func ( l1 , l2 )
+        # print 'y1,y2,v :',  z1 , z2 , x1, y1 , v 
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , v.error () ) 
+        
+    return result 
+
+ROOT.TH3.  binomEff    = binomEff_h3 
+
 
 ROOT.TH1.__floordiv__  = binomEff_h1 
 ROOT.TH2.__floordiv__  = binomEff_h2
+ROOT.TH3.__floordiv__  = binomEff_h3
+
 
 # =============================================================================
 ## operation with the histograms 
@@ -748,7 +866,7 @@ def _h2_pow_ ( h1 , val ) :
         result.SetBinContent ( ix1 , iy1 , 0 ) 
         result.SetBinError   ( ix1 , iy1 , 0 )
         #
-        v = pow ( y1 , val ) 
+        v = pow ( z1 , val ) 
         #
         result.SetBinContent ( ix1 , iy1 , v.value () ) 
         result.SetBinError   ( ix1 , iy1 , v.error () )
@@ -773,6 +891,124 @@ def _h2_lego_ ( self , opts = '' ) : return self.Draw( opts + 'lego')
 ROOT.TH2.  box  = _h2_box_
 ROOT.TH2.  lego = _h2_lego_
 
+
+
+# =============================================================================
+## operation with the histograms 
+def _h3_oper_ ( h1 , h2 , oper ) :
+    """
+    Operation with the histogram 
+    """
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    #
+    for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , 0 )
+        #
+        v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
+        #
+        v = oper ( v1 , v2 )
+        # print 'y1,y2,v :',  z1 , z2 , v 
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
+        
+    return result
+
+
+# =============================================================================
+##  Division with the histograms 
+def _h3_div_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x/y ) 
+# =============================================================================
+##  Division with the histograms 
+def _h3_mul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x*y ) 
+# =============================================================================
+##  Addition with the histograms 
+def _h3_add_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x+y ) 
+# =============================================================================
+##  Subtraction of the histograms 
+def _h3_sub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x-y ) 
+# =============================================================================
+##  ``Fraction'' of the histograms 
+def _h3_frac_ ( h1 , h2 ) :
+    """
+    ``Fraction'' the histogram h1/(h1+h2)
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
+# =============================================================================
+##  ``Asymmetry'' of the histograms 
+def _h3_asym_ ( h1 , h2 ) :
+    """
+    ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
+# =============================================================================
+##  ``Chi2-tension'' the histograms 
+def _h3_chi2_ ( h1 , h2 ) :
+    """
+    ``Chi2-tension'' for the histograms 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
+# =============================================================================
+##  ``Average'' the histograms 
+def _h3_mean_ ( h1 , h2 ) :
+    """
+    ``Average'' for the histograms 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) )  
+
+# =============================================================================
+## 'pow' the histograms 
+def _h3_pow_ ( h1 , val ) :
+    """
+    ``pow'' the histogram 
+    """
+    if not h1.GetSumw2() : h1.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    #
+    for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
+        result.SetBinError   ( ix1 , iy1 , iz2 , 0 )
+        #
+        v = pow ( v1 , val ) 
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
+        
+    return result 
+    
+ROOT.TH3.__div__   = _h3_div_
+ROOT.TH3.__mul__   = _h3_mul_
+ROOT.TH3.__add__   = _h3_add_
+ROOT.TH3.__sub__   = _h3_sub_
+ROOT.TH3.__pow__   = _h3_pow_
+
+ROOT.TH3.  frac    = _h3_frac_
+ROOT.TH3.  asym    = _h3_asym_
+ROOT.TH3.  chi2    = _h3_chi2_
+ROOT.TH3.  average = _h3_mean_
 
 # =============================================================================
 ## make graph from data 
