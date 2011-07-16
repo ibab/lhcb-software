@@ -156,6 +156,24 @@ namespace Gaudi
        */
       ValueWithError asym ( const double          b ) const ;
       // ======================================================================
+    public: // NaN and Finite 
+      // ======================================================================
+      ///  finite ? 
+      bool isfinite () const ;      
+      ///  normal ? 
+      bool isnormal () const ;      
+      ///  check for NaN
+      bool isnan    () const ;
+      ///  check for inf
+      bool isinf    () const ;
+      // ======================================================================
+    public: // good ?
+      // ======================================================================
+      /// check for goodness: finite values and non-negative covariance 
+      bool isgood   () const { return isfinite () &&  0 <= m_cov2 ; }
+      /// check for goodness: finite values and non-negative covariance 
+      bool good     () const { return isgood   () ; }
+      // ======================================================================
     public: // helper functions for Python:
       // ======================================================================
       ///    a + right 
@@ -426,6 +444,19 @@ namespace Gaudi
     GAUDI_API
     ValueWithError log10
     ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /// check for NaN
+    inline bool isnan    ( const ValueWithError& v ) { return v.isnan    () ; }
+    /// finite ?
+    inline bool isfinite ( const ValueWithError& v ) { return v.isfinite () ; }
+    /// infinte ? 
+    inline bool isinf    ( const ValueWithError& v ) { return v.isinf    () ; }    
+    /// normal ?
+    inline bool isnormal ( const ValueWithError& v ) { return v.isnormal () ; }    
+    /// check for goodness 
+    inline bool isgood   ( const ValueWithError& v ) { return v.isgood   () ; }    
+    /// check for goodness 
+    inline bool good     ( const ValueWithError& v ) { return v.good     () ; }    
     // ========================================================================    
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================

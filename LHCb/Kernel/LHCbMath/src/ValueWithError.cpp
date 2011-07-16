@@ -22,6 +22,7 @@
 // Boost 
 // ============================================================================
 #include "boost/format.hpp"
+#include "boost/math/special_functions/fpclassify.hpp"
 // ============================================================================
 /** @file 
  *  Implementation file for class Gaudi::Math::ValueWithError
@@ -313,6 +314,42 @@ Gaudi::Math::ValueWithError::asym
 Gaudi::Math::ValueWithError 
 Gaudi::Math::ValueWithError::asym ( const double  b ) const 
 { return asym ( ValueWithError ( b ) ) ; }
+// =============================================================================
+// check for NaN
+// =============================================================================
+bool Gaudi::Math::ValueWithError::isnan    () const 
+{
+  return
+    boost::math::isnan    ( m_value ) ||
+    boost::math::isnan    ( m_cov2  )  ;
+}
+// =============================================================================
+// check for finiteness 
+// =============================================================================
+bool Gaudi::Math::ValueWithError::isfinite () const 
+{
+  return
+    boost::math::isfinite ( m_value ) && 
+    boost::math::isfinite ( m_cov2  )  ;
+}
+// =============================================================================
+// check for finiteness 
+// =============================================================================
+bool Gaudi::Math::ValueWithError::isnormal () const 
+{
+  return
+    boost::math::isnormal ( m_value ) && 
+    boost::math::isnormal ( m_cov2  )  ;
+}
+// =============================================================================
+// check for finiteness 
+// =============================================================================
+bool Gaudi::Math::ValueWithError::isinf () const 
+{
+  return
+    boost::math::isinf ( m_value ) ||
+    boost::math::isinf ( m_cov2  )  ;
+}
 // =============================================================================
 // for easy pythonization
 // =============================================================================
@@ -671,6 +708,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
 // ============================================================================
 #include "GaudiKernel/Parsers.h"
 #include "GaudiKernel/Grammars.h"
+#include "GaudiKernel/Parsers.icpp"
 // ============================================================================
 namespace Gaudi
 {
@@ -756,12 +794,12 @@ StatusCode Gaudi::Parsers::parse
   const std::string&           input  ) 
 {
   ValueWithErrorGrammar gr ;
-  
+  //
   return parse
-    ( input.begin () , 
-      input.end   () ,
-      gr[var(result)=arg1] , 
-      SkipperGrammar()).full;
+    ( createIterator ( input ) , 
+      IteratorT ()             ,
+      gr[var(result)=arg1]     , 
+      SkipperGrammar()         ).full ;
 }
 // =============================================================================
 /* parse the input string into the result 
@@ -776,11 +814,12 @@ StatusCode Gaudi::Parsers::parse
   const std::string&                        input  ) 
 {
   VectorGrammar<ValueWithErrorGrammar> gr ;
-  
-  return parse ( input.begin () , 
-                 input.end   () , 
-                 gr[var(result)=arg1],
-                 SkipperGrammar()).full;
+  // 
+  return parse 
+    ( createIterator ( input ) , 
+      IteratorT ()             ,
+      gr[var(result)=arg1]     ,
+      SkipperGrammar()         ) . full ;
 }
 // =============================================================================
 
