@@ -659,11 +659,11 @@ int MonHist::serialize(void* &ptr)
   }
   cpyName(nam);
   cpytitle(tit);
-  cpyBinLabels(xtits,m_Xlabels,m_nx);
   switch (m_type)
   {
     case   H_1DIM:
     {
+      cpyBinLabels(xtits,m_Xlabels,m_nx);
       pp->nentries = ((TH1D*)m_rootobj)->GetEntries();
       memcpy(ntries,m_hentries,m_blocksize);
       memcpy(errp,m_hsumw2,m_blocksize);
@@ -672,6 +672,7 @@ int MonHist::serialize(void* &ptr)
     }
     case H_2DIM:
     {
+      cpyBinLabels(xtits,m_Xlabels,m_nx);
       pp->nentries = ((TH2D*)m_rootobj)->GetEntries();
       memcpy(ntries,m_hentries,m_blocksize);
       memcpy(errp,m_hsumw2,m_blocksize);
@@ -682,6 +683,7 @@ int MonHist::serialize(void* &ptr)
     case H_PROFILE:
     case H_RATE:
     {
+      cpyBinLabels(xtits,m_Xlabels,m_nx);
       MyTProfile *h =  (MyTProfile*)m_rootobj;
       pp->nentries = ((TProfile*)m_rootobj)->GetEntries();
 
