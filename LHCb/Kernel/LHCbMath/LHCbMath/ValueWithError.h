@@ -132,6 +132,14 @@ namespace Gaudi
       double chi2 ( const ValueWithError& right ) const ;
       /// get chi2 distance 
       double chi2 ( const double          right ) const ;
+      /** get ``residual''
+       *  defined as  signed \f$\sqrt \chi^2 \f$
+       */
+      double residual ( const ValueWithError& right ) const ;
+      /** get ``residual''
+       *  defined as  signed \f$\sqrt \chi^2 \f$
+       */
+      double residual ( const double          right ) const ;
       // ======================================================================
     public:
       // ======================================================================

@@ -30,6 +30,26 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
 // ============================================================================
+// local namespace to hide the details 
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  const unsigned int _maxULPs = 10000 ;
+  // ==========================================================================
+  inline bool _equal ( const double value1 , 
+                       const double value2 ) 
+  { return value1 == value2 || 
+      Gaudi::Math::lomont_compare_double ( value1 ,value2 , _maxULPs ) ; }
+  // ==========================================================================
+  // check if the double value close to zero 
+  inline bool _zero  ( const double value ) { return _equal ( value , 0 ) ; }
+  // ==========================================================================
+  // check if the double value close to one 
+  inline bool _one   ( const double value ) { return _equal ( value , 1 ) ; }
+  // ========================================================================== 
+}
+// ============================================================================
 // constructor from the value and covariance 
 // ============================================================================
 Gaudi::Math::ValueWithError::ValueWithError 
@@ -233,9 +253,12 @@ Gaudi::Math::ValueWithError::mean
 double Gaudi::Math::ValueWithError::chi2 
 ( const Gaudi::Math::ValueWithError& b ) const
 {
+  //
+  if ( _equal ( value () , b.value() ) ) { return 0 ; } // RETURN
+  //
   const double s_cov2 = cov2() + b.cov2() ;
-  if      ( 0 >= s_cov2 ) { return -1 ; } // RETURN 
-
+  if ( 0 >= s_cov2 )                     { return -1 ; } // RETURN 
+  //
   const double diff = value() - b.value() ;  
   return diff*diff/s_cov2 ;
 }
@@ -244,9 +267,43 @@ double Gaudi::Math::ValueWithError::chi2
 // =============================================================================
 double Gaudi::Math::ValueWithError::chi2 ( const double b ) const
 {
-  if      ( 0 >= cov2 () ) { return -1 ; } // RETURN
+  //
+  if ( _equal ( value() , b ) ) { return  0 ; } // RETURN
+  //
+  if ( 0 >= cov2 ()           ) { return -1 ; } // RETURN
   const double diff = value() - b ;  
   return diff*diff/cov2() ;
+}
+// =============================================================================
+// evaluate residual: signed sqrt(chi2) 
+// =============================================================================
+double Gaudi::Math::ValueWithError::residual 
+( const Gaudi::Math::ValueWithError& b ) const
+{
+  //
+  if ( _equal ( value () , b.value() ) ) { return     0 ; } // RETURN
+  //
+  const double s_cov2 = cov2() + b.cov2() ;
+  if ( 0 >= s_cov2 )                     { return -1000 ; } // RETURN
+  //
+  const double diff = value() - b.value() ;  
+  //
+  return diff / std::sqrt ( s_cov2 ) ;
+}
+// =============================================================================
+// evaluate residual: signed sqrt(chi2) 
+// =============================================================================
+double Gaudi::Math::ValueWithError::residual 
+( const double b ) const
+{
+  //
+  if ( _equal ( value() , b ) ) { return     0 ; } // RETURN
+  //
+  if ( 0 >= cov2 () )           { return -1000 ; } // RETURN
+  //
+  const double diff = value() - b ;  
+  //
+  return diff / error () ;
 }
 // ============================================================================
 /*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
@@ -520,20 +577,6 @@ Gaudi::Math::ValueWithError Gaudi::Math::binomEff
   const double c2  = double ( n1 * n2 ) / N / N / N ;
   //
   return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
-}
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  const unsigned int _maxULPs = 10000 ;
-  // ==========================================================================
-  // check if the double value close to zero 
-  inline bool _zero ( const double value ) 
-  { return 0.0 == value || Gaudi::Math::lomont_compare_double ( value , 0.0 , _maxULPs ) ; }
-  // check if the double value close to one 
-  inline bool _one  ( const double value ) 
-  { return 1.0 == value || Gaudi::Math::lomont_compare_double ( value , 1.0 , _maxULPs ) ; }
-  // ==========================================================================
 }
 // ============================================================================
 /*  evaluate pow(a,b)
