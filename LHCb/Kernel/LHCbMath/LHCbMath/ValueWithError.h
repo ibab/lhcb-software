@@ -47,12 +47,14 @@ namespace Gaudi
       /// constructor from the value and covariance 
       ValueWithError ( const double value      = 0 , 
                        const double covariance = 0 ) ;
+      // ======================================================================
       /** constructor from the (value,error)-pair 
        *   - first  element is "value" 
        *   - second element is "error" 
        *  @param pair_  (value,error)-pair 
        */
       ValueWithError ( const std::pair<double,double>& pair_ ) ;
+      // ======================================================================
       /** constructor from string representation 
        *  - ( value +- error ) 
        *  - ( value  , error ) 
@@ -360,7 +362,7 @@ namespace Gaudi
     GAUDI_API
     ValueWithError abs 
     ( const ValueWithError& a ) ;
-    // ========================================================================    
+    // ========================================================================
     /** evaluate the binomial efficiency for Bernulli scheme 
      *  @param n (INPUT) number of 'success' 
      *  @param N (INPUT) total number 
@@ -368,6 +370,27 @@ namespace Gaudi
      */
     GAUDI_API
     ValueWithError binomEff   
+    ( const size_t n , 
+      const size_t N ) ;
+    // ========================================================================
+    /** evaluate the binomial efficiency interval using Wilson's prescription
+     *  @param n (INPUT) number of 'success' 
+     *  @param N (INPUT) total number 
+     *  @return the binomial efficiency 
+     */
+    GAUDI_API
+    ValueWithError wilsonEff   
+    ( const size_t n , 
+      const size_t N ) ;
+    // ========================================================================
+    /** evaluate the binomial efficiency interval 
+     *  using Agresti-Coull's prescription
+     *  @param n (INPUT) number of 'success' 
+     *  @param N (INPUT) total number 
+     *  @return the binomial efficiency 
+     */
+    GAUDI_API
+    ValueWithError agrestiCoullEff   
     ( const size_t n , 
       const size_t N ) ;
     // ========================================================================

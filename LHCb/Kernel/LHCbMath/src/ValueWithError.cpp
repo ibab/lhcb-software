@@ -18,6 +18,7 @@
 // local
 // ============================================================================
 #include "LHCbMath/ValueWithError.h"
+#include "LHCbMath/Power.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -48,6 +49,15 @@ namespace
   // check if the double value close to one 
   inline bool _one   ( const double value ) { return _equal ( value , 1 ) ; }
   // ========================================================================== 
+  /// helper wrapper 
+  inline double _pow ( const double v , const int n ) 
+  { 
+    return 
+      0 <= n ? 
+      Gaudi::Math::pow ( v , (unsigned long) n ) :
+      std::pow         ( v , n                 ) ; 
+  }
+  // ==========================================================================
 }
 // ============================================================================
 // constructor from the value and covariance 
@@ -567,14 +577,75 @@ Gaudi::Math::ValueWithError Gaudi::Math::binomEff
 ( const size_t n , 
   const size_t N ) 
 {
-  if  ( n >  N ) { return binomEff       ( N , n ) ; }
-  if  ( 0 == N ) { return ValueWithError ( 1 , 1 ) ; }
+  if       ( n >  N ) { return binomEff       ( N , n ) ; }
+  else if  ( 0 == N ) { return ValueWithError ( 1 , 1 ) ; }
   //
   const long n1 = 0 == n ? 1 :     n ;
   const long n2 = n == N ? 1 : N - n ;
   //
   const double eff = double ( n       ) / N         ;
   const double c2  = double ( n1 * n2 ) / N / N / N ;
+  //
+  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
+}
+// ============================================================================
+/*  evaluate the binomial efficiency interval using Wilson's prescription
+ *  @param n (INPUT) number of 'success' 
+ *  @param N (INPUT) total number 
+ *  @return the binomial efficiency 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::wilsonEff   
+( const size_t n , 
+  const size_t N ) 
+{
+  //
+  if      ( n >  N ) { return wilsonEff      ( N , n ) ; }
+  else if ( 0 == N ) { return ValueWithError ( 1 , 1 ) ; }
+  //
+  const long n1       = 0 == n ? 1 :     n ;
+  const long n2       = n == N ? 1 : N - n ;
+  //
+  const double p      = double ( n1 ) / N ;
+  const double q      = double ( n2 ) / N ;
+  //
+  const double kappa  =             1 ; // "1*sigma"
+  const double kappa2 = kappa * kappa ;
+  //
+  const double nK     = N + kappa2 ;
+  const double eff    = ( n + 0.5 * kappa2 ) / nK ;
+  //
+  const double prefix = kappa2 * N / ( nK * nK ) ;
+  const double c2     = prefix * ( q * p + 0.25 * kappa2 / N ) ;
+  //
+  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
+}
+// ============================================================================
+/*  evaluate the binomial efficiency interval using Agresti-Coull's prescription
+ *  @param n (INPUT) number of 'success' 
+ *  @param N (INPUT) total number 
+ *  @return the binomial efficiency 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::agrestiCoullEff   
+( const size_t n , 
+  const size_t N ) 
+{
+  //
+  if      ( n >  N ) { return wilsonEff      ( N , n ) ; }
+  else if ( 0 == N ) { return ValueWithError ( 1 , 1 ) ; }
+  //
+  const double kappa  =             1 ; // "1*sigma"
+  const double kappa2 = kappa * kappa ;
+  //
+  const double n1 = n + 0.5 * kappa2 ;
+  const double n2 = N +       kappa2 ;
+  //
+  const double p  = n1/n2 ;
+  const double q  = 1 - p ;
+  //
+  const double eff = p ;
+  const double c2  = kappa2 * p * q / n2 ;
   //
   return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
 }
@@ -589,13 +660,15 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
 ( const Gaudi::Math::ValueWithError& a , 
   const int                          b ) 
 {
+  //
   if      ( 0 == b         ) { return 1 ; }          // RETURN
   else if ( 1 == b         ) { return a ; }          // RETURN
-  else if ( 0 >= a.cov2 () || _zero ( a.cov2() ) )  
-  { return std::pow ( a.value() , b ) ; }            // RETURN
   //
-  const double v  =     std::pow ( a.value () , b     ) ;
-  const double e1 = b * std::pow ( a.value () , b - 1 ) ;
+  else if ( 0 >= a.cov2 () || _zero ( a.cov2() ) )  
+  { return _pow ( a.value() , b ) ;  }               // RETURN
+  //
+  const double v  =     _pow ( a.value () , b     ) ;
+  const double e1 = b * _pow ( a.value () , b - 1 ) ;
   //
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * a.cov2 () ) ;
   //

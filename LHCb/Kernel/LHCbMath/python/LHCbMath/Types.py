@@ -185,7 +185,7 @@ Gaudi.Math.asym              = Gaudi.Math.Functions.asym
 Gaudi.Math.binomEff          = Gaudi.Math.Functions.binomEff 
 
 
-## vetcors of vectors
+## vectors of vectors
 Gaudi.Vectors2       = std.vector( Gaudi.Vector2 )
 Gaudi.Vectors3       = std.vector( Gaudi.Vector3 )
 Gaudi.Vectors4       = std.vector( Gaudi.Vector4 )
