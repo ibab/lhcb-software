@@ -13,7 +13,8 @@
 
 <lcgdict>
   
-  <class    name = "Analysis::Selector" />
-  <class    name = "Analysis::Process"    />
+  <class    name = "Analysis::Selector"      />
+  <class    name = "Analysis::Process"       />
+  <class    name = "Analysis::RooMakeHistos" />
   
 </lcgdict> 

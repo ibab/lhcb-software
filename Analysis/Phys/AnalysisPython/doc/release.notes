@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+
+! 2011-07-17 - Vanya Belyaev
+ - more polishing of decorators, 
+   fix the problem with ``hidden'' createHistogram method 
+
 ! 2011-07-16 - Vanya Belyaev
 
  - more polishing of decorators 
