@@ -184,7 +184,6 @@ Gaudi.Math.frac              = Gaudi.Math.Functions.frac
 Gaudi.Math.asym              = Gaudi.Math.Functions.asym
 Gaudi.Math.binomEff          = Gaudi.Math.Functions.binomEff 
 
-
 ## vectors of vectors
 Gaudi.Vectors2       = std.vector( Gaudi.Vector2 )
 Gaudi.Vectors3       = std.vector( Gaudi.Vector3 )
@@ -890,6 +889,15 @@ def _fit_mass_ ( particle , mass )  :
     return (_fitted,_chi2)
 
 Gaudi.Math.ParticleParams.fitMass = _fit_mass_
+
+
+LHCb  = cpp.LHCb
+Gaudi.Math.round                 = LHCb.Math.round 
+Gaudi.Math.equal_to_int          = LHCb.Math.equal_to_int 
+Gaudi.Math.equal_to_uint         = LHCb.Math.equal_to_uint 
+Gaudi.Math.knuth_equal_to_double = LHCb.Math.knuth_equal_to_double
+__lomont = Gaudi.Math.lomont_compare_double
+Gaudi.Math.lomont_compare_double = __lomont
 
 # =============================================================================
 if '__main__' == __name__ :

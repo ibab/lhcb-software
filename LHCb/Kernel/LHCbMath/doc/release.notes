@@ -6,8 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
   
+! 2011-07-17 - Vanya Belyaev
+
+ - add rounding and related functions 
+
 ! 2011-07-16 - Vanya Belyaev
  - add ifnan/isfinite/isnormal/isinf checks for Gaudi::Math::ValueWithError
+
 
 ! 2011-07-13 - Vanya Belyaev
  - few fixes 

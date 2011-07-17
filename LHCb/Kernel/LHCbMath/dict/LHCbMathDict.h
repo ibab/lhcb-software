@@ -21,6 +21,7 @@
 #include "LHCbMath/Blind.h"
 #include "LHCbMath/EigenSystem.h"
 #include "LHCbMath/Functions.h"
+#include "LHCbMath/LHCbMath.h"
 #include <vector>
 #include <list>
 // ============================================================================

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+
 <!--- $Id: -->
 <!--- Author  : Juan PALACIOS -->
 <!--- Created : 2008-06-20 -->
+
 <lcgdict>
   <class name    = "Gaudi::Math::XYZLine"/>
   <class name    = "Gaudi::Math::Polar3DLine"/>
@@ -54,6 +56,12 @@
   <function name = "Gaudi::Math::wilsonEff"       />
   <function name = "Gaudi::Math::agrestiCoullEff" />
   
+  <function name    = "LHCb::Math::round"                  />
+  <function name    = "LHCb::Math::equal_to_int"           />
+  <function name    = "LHCb::Math::equal_to_uint"          />
+  <function name    = "LHCb::Math::knuth_equal_to_double"  />
+  <function name    = "Gaudi::Math::lomont_compare_double" />
+
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
     <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />
