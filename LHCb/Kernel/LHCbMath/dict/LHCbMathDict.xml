@@ -57,6 +57,8 @@
   <function name = "Gaudi::Math::agrestiCoullEff" />
   
   <function name    = "LHCb::Math::round"                  />
+  <function name    = "LHCb::Math::isint"                  />
+  <function name    = "LHCb::Math::islong"                 />
   <function name    = "LHCb::Math::equal_to_int"           />
   <function name    = "LHCb::Math::equal_to_uint"          />
   <function name    = "LHCb::Math::knuth_equal_to_double"  />

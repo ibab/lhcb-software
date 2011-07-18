@@ -6,7 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
   
+! 2011-07-18 - Vanya Belyaev
+
+ - add few more functions into dictionary 
+
 ! 2011-07-17 - Vanya Belyaev
+
 
  - add rounding and related functions 
 

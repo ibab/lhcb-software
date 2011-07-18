@@ -418,6 +418,20 @@ using namespace std;
         Rounder>::to<long>::type Converter ;
       return Converter::convert ( x ) ; 
     }    
+    // ========================================================================
+    /** is the value actually long ?
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2011-07-18
+     */
+    GAUDI_API
+    bool islong ( const double x ) ;
+    // ========================================================================
+    /** is the value actually int ?
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2011-07-18
+     */
+    GAUDI_API 
+    bool isint  ( const double x ) ;
     // ========================================================================    
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the integer 
@@ -427,15 +441,12 @@ using namespace std;
      *  @see LHCb::Math::mULPS_double
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
-     */        
-    inline bool equal_to_int 
+     */
+    GAUDI_API 
+    bool equal_to_int 
     ( const double       val                  , 
       const int          ref                  , 
-      const unsigned int mULPS = mULPS_double ) 
-    {
-      const double tmp = ref ;
-      return Gaudi::Math::lomont_compare_double ( val , tmp , mULPS ) ;
-    }
+      const unsigned int mULPS = mULPS_double ) ;
     // ========================================================================
     /** check if the double value is actually equal to the integer value  
      *  @param ref the reference integer  number 
@@ -463,14 +474,11 @@ using namespace std;
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-09-17
      */        
-    inline bool equal_to_uint 
+    GAUDI_API 
+    bool equal_to_uint 
     ( const double       val                  , 
       const unsigned int ref                  , 
-      const unsigned int mULPS = mULPS_double ) 
-    {
-      const double tmp = ref ;
-      return Gaudi::Math::lomont_compare_double ( val , tmp , mULPS ) ;
-    }
+      const unsigned int mULPS = mULPS_double ) ;
     // ========================================================================
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the unsigned integer 
