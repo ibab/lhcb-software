@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-07-18 - Vanya Belyaev
+
+ - add couple of counters to GEC-variables 
+ - version increment to v3r1 
+
 !========================= DSTWriters v3r0 2011-06-17 =========================
 ! 2011-06-10 - Rob Lambert
  - Fixed a problem with the new __dev__ dstwriter, causing the 

@@ -30,14 +30,21 @@ from microdstelements import  (CloneRecHeader,
 from GaudiConfUtils.ConfigurableGenerators import LoKi__CounterAlg as CounterAlg
 _gecConfig = CounterAlg(Preambulo = ["from LoKiTracks.decorators import *"],
                         Variables = {
-    "nSpd"          : "CONTAINS ( 'Raw/Spd/Digits' )          " ,
-    "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO ) " ,
-    "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG ) " ,
-    "nMuon"         : "CONTAINS ( 'Rec/Track/Muon' ) "          ,
-    "nOT"           : "CONTAINS ( 'Raw/OT/Times'    )"          ,
-    "nITClusters"   : "CONTAINS ( 'Raw/IT/Clusters' )"          ,
-    "nTTClusters"   : "CONTAINS ( 'Raw/TT/Clusters' )"          ,
-    "nVeloClusters" : "CONTAINS ( 'Raw/Velo/Clusters' )"
+    "nPV"           : "CONTAINS ( 'Rec/Vertex/Primary'            ) " ,
+    "nSpd"          : "CONTAINS ( 'Raw/Spd/Digits'                ) " ,
+    "nBest"         : "CONTAINS ( 'Rec/Track/Best'                ) " ,
+    "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO       ) " ,
+    "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG       ) " ,
+    "nUpstream"     : "TrNUM    ( 'Rec/Track/Best' , TrUPSTREAM   ) " ,
+    "nDownstream"   : "TrNUM    ( 'Rec/Track/Best' , TrDOWNSTREAM ) " ,    
+    "nTTrack"       : "TrNUM    ( 'Rec/Track/Best' , TrTTRACK     ) " ,
+    "nBack"         : "TrNUM    ( 'Rec/Track/Best' , TrBACKWARD   ) " ,
+    "nMuon"         : "CONTAINS ( 'Rec/Track/Muon'          ) " ,
+    "nOT"           : "CONTAINS ( 'Raw/OT/Times'            ) " ,
+    "nITClusters"   : "CONTAINS ( 'Raw/IT/Clusters'         ) " ,
+    "nTTClusters"   : "CONTAINS ( 'Raw/TT/Clusters'         ) " ,
+    "nVeloClusters" : "CONTAINS ( 'Raw/Velo/Clusters'       ) " , 
+    "nEcalClusters" : "CONTAINS ( 'Rec/Calo/EcalClusters'   ) " 
     })
 
 def microDSTElements() :
