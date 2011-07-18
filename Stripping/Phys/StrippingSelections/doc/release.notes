@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - S. Blusk
+ - Update of StrippingB2D3H.py, cuts tightened, reduction in timing and retention each by about 50%.
+ - Unbiased line prescale reduced from 0.3 to 0.15
+
 ! 2011-07-18 - Rob Lambert
  - Update TestSemileptonicsOnRealData.py
 
