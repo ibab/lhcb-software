@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseMuons.py,v 1.7 2009-08-04 09:05:31 jonrob Exp $ 
+# $Id: StdLooseMuons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseMuons.py
 #  configuration file for 'Standard Loose Muons' 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-01-14
+#  @author Patrick Koppenburg 
+#  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard Loose Muons'
+Configuration file for 'Standard Loose Muons wioth loose cuts'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__author__  = "Patrick Koppenburg "
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdLooseMuons' ,
@@ -19,22 +19,15 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombinedParticleMaker 
-from Configurables       import ProtoParticleMUONFilter
+from Configurables       import FilterDesktop
 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdLooseMuons',
-                                     Particle =  'muon'  )
-
-# configure the track selector
-selector = trackSelector ( algorithm ) 
-
-# protoparticle filter:
-fltr = protoFilter ( algorithm , ProtoParticleMUONFilter, 'Muon' )
-fltr.Selection = [ "RequiresDet='MUON' IsMuon=True" ]
+algorithm =  FilterDesktop( 'StdLooseMuons',
+                            Inputs = ["Phys/StdAllLooseMuons/Particles"],
+                            Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

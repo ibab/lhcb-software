@@ -28,7 +28,7 @@ StdVeryLooseLambdac2PKPi.DaughtersCuts = {
     "p+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPDV(PRIMARY)>0.05*mm))"
     }
 
-StdVeryLooseLambdac2PKPi.CombinationCut = "(ADAMASS('Lambda_c+')<150*MeV) & (APT>1.*GeV) & (ADOCACHI2CUT(50.,''))"
+StdVeryLooseLambdac2PKPi.CombinationCut = "(ADAMASS('Lambda_c+')<150*MeV) & (APT>1.*GeV)"
 StdVeryLooseLambdac2PKPi.MotherCut = "(VFASPF(VCHI2) < 30 )" 
 
 ## configure Data-On-Demand service 

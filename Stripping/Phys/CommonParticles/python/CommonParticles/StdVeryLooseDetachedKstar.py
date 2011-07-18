@@ -20,11 +20,11 @@ StdVeryLooseDetachedKst2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
 StdVeryLooseDetachedKst2Kpi.Inputs = ["Phys/StdLooseKaons/Particles",
                                       "Phys/StdLoosePions/Particles"]
 StdVeryLooseDetachedKst2Kpi.DaughtersCuts = {
-    "K+" :"(ISLONG) & (MIPCHI2DV(PRIMARY)>2.25)",
-    "pi-":"(ISLONG) & (MIPCHI2DV(PRIMARY)>2.25)"
+    "K+" :"(MIPCHI2DV(PRIMARY)>2.25)",
+    "pi-":"(MIPCHI2DV(PRIMARY)>2.25)"
     }
 
-StdVeryLooseDetachedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV) & (ADOCACHI2CUT(30,''))"
+StdVeryLooseDetachedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV)"
 StdVeryLooseDetachedKst2Kpi.MotherCut = "(VFASPF(VCHI2)<25)"
 
 locations = updateDoD(StdVeryLooseDetachedKst2Kpi)

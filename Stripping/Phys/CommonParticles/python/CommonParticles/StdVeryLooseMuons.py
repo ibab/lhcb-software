@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdVeryLooseMuons.py,v 1.1 2009-10-08 12:37:06 pkoppenb Exp $ 
+# $Id: StdLooseMuons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdVeryLooseMuons.py
-#  configuration file for 'Standard Very Loose Muons' 
-#  @author Patrick Koppenburg patrick.koppenburg@cern.ch
-#  @date 2009-10-08
+#  configuration file for 'Standard Loose Muons' 
+#  @author Patrick Koppenburg 
+#  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard Very Loose Muons'
+Configuration file for 'Standard Loose Muons woth loose cuts'
 """
-__author__  = "Patrick Koppenburg patrick.koppenburg@cern.ch"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__author__  = "Patrick Koppenburg "
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdVeryLooseMuons' ,
@@ -19,22 +19,15 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombinedParticleMaker 
-from Configurables       import ProtoParticleMUONFilter
+from Configurables       import FilterDesktop
 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdVeryLooseMuons',
-                                     Particle =  'muon'  )
-
-# configure the track selector
-selector = trackSelector ( algorithm ) 
-
-# protoparticle filter:
-fltr = protoFilter ( algorithm , ProtoParticleMUONFilter, 'Muon' )
-fltr.Selection = [ "RequiresDet='MUON' IsMuonLoose=True" ]
+algorithm =  FilterDesktop( 'StdVeryLooseMuons',
+                            Inputs = ["Phys/StdAllVeryLooseMuons/Particles"],
+                            Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

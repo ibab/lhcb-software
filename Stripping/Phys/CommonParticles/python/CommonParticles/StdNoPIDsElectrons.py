@@ -3,14 +3,14 @@
 # $Id: StdNoPIDsElectrons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsElectrons.py
-#  configuration file for 'Standard NoPIDs Pions' 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-01-14
+#  configuration file for 'Standard NoPIDs Electrons' 
+#  @author Patrick Koppenburg 
+#  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard NoPIDs Electrons'
+Configuration file for 'Standard NoPIDs Electrons wioth loose cuts'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
+__author__  = "Patrick Koppenburg "
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
@@ -18,23 +18,23 @@ __all__ = (
     'locations'
     )
 # =============================================================================
-from Gaudi.Configuration   import *
-from Configurables         import NoPIDsParticleMaker 
+from Gaudi.Configuration import *
+from Configurables       import FilterDesktop
+
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsElectrons'         ,
-                                DecayDescriptor = 'Electron' , Particle = 'electron'  )
-
-# configure the track selector
-selector = trackSelector ( algorithm ) 
+algorithm =  FilterDesktop( 'StdNoPIDsElectrons',
+                            Inputs = ["Phys/StdAllNoPIDsElectrons/Particles"],
+                            Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdNoPIDsElectrons = algorithm 
+
 
 ## ============================================================================
 if '__main__' == __name__ :

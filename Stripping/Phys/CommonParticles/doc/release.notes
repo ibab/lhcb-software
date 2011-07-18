@@ -8,6 +8,36 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-07-18 - Patrick Koppenburg
+*
+*  MAJOR CHANGE : PLEASE READ
+* 
+ - New Default Tracking cut removing clones
+ - New default PT>250MeV and IPCHI2>4 cut for all charged basic
+ - Added new StdAllLooseXxx and StdAllNoPIDsXxx (Xxx=Pions,Muons,Kaons,Protons,Electrons)
+   and StdAllVeryLooseMuons that do no implement PT>250MeV and IPCHI2>4 cut
+ - Changed StdLooseXxx, StdNoPIDsXxx and StdVeryLooseMuons to use the new particles 
+   and implement the new default cuts 
+   
+	  WARNING : Now all StdLooseXxx and StdNoPIDsXxx have PT>250MeV and IPCHI2>4
+
+ - The following intermediate states have been changed to use the new StdAll 
+   particles:
+
+	StdLooseDiElectron
+	StdLooseDiMuon
+	StdLooseDiMuonSameSign
+	StdLooseDstarWithD2HH (only slow pion)
+	StdLooseElectrons
+	StdLooseJpsi2ee
+	StdLooseJpsi2MuMu
+	StdMassConstrainedJpsi2MuMu
+	StdVeryLooseDiMuon
+
+   -> Hence they are still behaving like before
+
+ - Remove all ADOCACHI2 cuts now useless because of LoKi::VertexFitter use.
+
 !========================= CommonParticles v8r2 2011-06-21 =========================
 ! 2011-06-14 - Rolf Oldman
  - move pT cut before vertex fit in Kstar

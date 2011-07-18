@@ -16,7 +16,13 @@ __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2
 
 _locations = {} 
 
+from CommonParticles.StdAllNoPIDsMuons import *
+_locations.update ( locations )
+
 from CommonParticles.StdNoPIDsMuons import *
+_locations.update ( locations )
+
+from CommonParticles.StdAllLooseMuons import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseMuons import *

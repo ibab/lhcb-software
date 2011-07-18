@@ -20,6 +20,7 @@ __all__ = (
     'particles'     , ## locations, known for data-on-demand service
     'trackSelector' , ## get the track selector
     'protoFilter'   , ## filter for (charged) protoparticles
+    'defaultCuts'   , ## Default PT and IP cuts
     )
 # =============================================================================
 
@@ -31,12 +32,25 @@ from Configurables            import LHCbConfigurableUser
 # local storage of data-on-demand actions 
 _particles = {}
 
+# Default cuts
+_defaultCuts = "(PT>250*MeV) & (MIPCHI2DV(PRIMARY) > 4.)"
+
+# =============================================================================
+#  Default Cuts
+def defaultCuts():
+    """
+    Return string with default cuts
+    """
+    return _defaultCuts
+
+# =============================================================================
 # =============================================================================
 ## @class DefaultTrackingCuts
 #  Little class to hold default track selection criteria
 class DefaultTrackingCuts(LHCbConfigurableUser) :
     ## Configuration slots
-    __slots__ = { "Cuts"  :  { "Chi2Cut" : [ 0, 5 ] }, ## The cuts to apply
+    __slots__ = { "Cuts"  :  { "Chi2Cut" : [ 0, 5 ],
+                               "CloneDistCut" : [5000, 9e+99 ] }, ## The cuts to apply
                   "Types" :  ["Long"]  ## The track types to include
                   }
 
@@ -87,7 +101,9 @@ def trackSelector ( alg ,
     for name,cut in cuts.iteritems() :
         selector.setProp("Min"+name,cut[0])
         selector.setProp("Max"+name,cut[1])
-
+        if ( "CloneDistCut"==name): selector.setProp("AcceptClones",False)
+#    selector.MinPtCut = 100000000
+        
     return selector
 
 ## get the protoparticle filter

@@ -31,7 +31,7 @@ StdLooseKsLL.Inputs = [ "Phys/StdLoosePions/Particles" ]
 StdLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsLL.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 9.)" } 
-StdLooseKsLL.CombinationCut = "(ADAMASS('KS0') < 50.*MeV) & (ADOCACHI2CUT(30., ''))"
+StdLooseKsLL.CombinationCut = "(ADAMASS('KS0') < 50.*MeV)"
 StdLooseKsLL.MotherCut = "(ADMASS('KS0') < 35.*MeV) & (VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 
@@ -48,7 +48,7 @@ StdLooseKsDD.Inputs = [ "Phys/StdNoPIDsDownPions/Particles" ]
 StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
 
 StdLooseKsDD.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 4.)" } 
-StdLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 80.*MeV) & (ADOCACHI2CUT(30., ''))"
+StdLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 80.*MeV)"
 StdLooseKsDD.MotherCut = "(ADMASS('KS0') < 64.*MeV) & (VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 

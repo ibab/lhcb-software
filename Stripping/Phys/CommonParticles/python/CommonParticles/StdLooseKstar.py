@@ -9,7 +9,7 @@
 #  @date 2009-06-23
 # =============================================================================
 """
-Configuration file for 'Standard Loose Kstar'
+Configuration file for 'Standard Loose Kstar'. Lieftime unbiased.
 """
 __author__  = "Greig Cowan"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
@@ -26,10 +26,10 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLooseKstar2Kpi = CombineParticles ("StdLooseKstar2Kpi")
-StdLooseKstar2Kpi.Inputs = ["Phys/StdLooseKaons/Particles",
-                            "Phys/StdLoosePions/Particles"]
+StdLooseKstar2Kpi.Inputs = ["Phys/StdAllLooseKaons/Particles",
+                            "Phys/StdAllLoosePions/Particles"]
 StdLooseKstar2Kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
-StdLooseKstar2Kpi.CombinationCut = "(APT > 500.*MeV) & (ADAMASS('K*(892)0') < 300.*MeV) & (ADOCACHI2CUT(30., ''))"
+StdLooseKstar2Kpi.CombinationCut = "(APT > 500.*MeV) & (ADAMASS('K*(892)0') < 300.*MeV)"
 StdLooseKstar2Kpi.MotherCut = "(VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 

@@ -8,7 +8,7 @@
 #  @date 2009-06-23
 # =============================================================================
 """
-Configuration file for 'Standard Loose Phi2KK'
+Configuration file for 'Standard Loose Phi2KK'. Lieftime unbiased.
 """
 __author__  = "Greig Cowan"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
@@ -25,9 +25,9 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLoosePhi2KK = CombineParticles("StdLoosePhi2KK")
-StdLoosePhi2KK.Inputs = ["Phys/StdLooseKaons/Particles"]
+StdLoosePhi2KK.Inputs = ["Phys/StdLooseAllKaons/Particles"]
 StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
-StdLoosePhi2KK.CombinationCut = "(AM < 1100.*MeV) & (ADOCACHI2CUT(30., ''))"
+StdLoosePhi2KK.CombinationCut = "(AM < 1100.*MeV)"
 StdLoosePhi2KK.MotherCut = "(VFASPF(VCHI2) < 25.0)"
 
 ## configure Data-On-Demand service 

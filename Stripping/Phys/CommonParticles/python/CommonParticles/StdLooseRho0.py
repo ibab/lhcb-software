@@ -28,7 +28,7 @@ StdLooseRho0 = CombineParticles ( 'StdLooseRho0' )
 
 StdLooseRho0.Inputs  = [ "Phys/StdLoosePions/Particles" ]
 StdLooseRho0.DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc"
-StdLooseRho0.CombinationCut = "(ADAMASS('rho(770)0')<100*MeV) & (ADOCACHI2CUT(20, ''))"
+StdLooseRho0.CombinationCut = "(ADAMASS('rho(770)0')<100*MeV)"
 StdLooseRho0.MotherCut = "(BPVVDZ>0) & (VFASPF(VCHI2)<9) & (BPVDIRA>0.95) & (BPVVDCHI2>25)"
 
 ## configure Data-On-Demand service 

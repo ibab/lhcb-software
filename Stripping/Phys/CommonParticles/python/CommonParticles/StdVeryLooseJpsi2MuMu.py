@@ -27,7 +27,7 @@ from CommonParticles.Utils import *
 StdVeryLooseJpsi2MuMu = CombineParticles ("StdVeryLooseJpsi2MuMu")
 StdVeryLooseJpsi2MuMu.Inputs = ["Phys/StdVeryLooseMuons/Particles"]
 StdVeryLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
-StdVeryLooseJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 100.*MeV) & (ADOCACHI2CUT(30.,''))"
+StdVeryLooseJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 100.*MeV)"
 StdVeryLooseJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 

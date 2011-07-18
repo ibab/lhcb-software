@@ -8,7 +8,7 @@
 #  @date 2009-06-23
 # =============================================================================
 """
-Configuration file for 'Standard Loose Jpsi2MuMu'
+Configuration file for 'Standard Loose Jpsi2MuMu'. Lifetime unbiased.
 """
 __author__  = "Greig Cowan"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
@@ -25,9 +25,9 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLooseJpsi2MuMu = CombineParticles ("StdLooseJpsi2MuMu")
-StdLooseJpsi2MuMu.Inputs = ["Phys/StdLooseMuons/Particles"]
+StdLooseJpsi2MuMu.Inputs = ["Phys/StdAllLooseMuons/Particles"]
 StdLooseJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
-StdLooseJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 100.*MeV) & (ADOCACHI2CUT(30., ''))"
+StdLooseJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 100.*MeV)"
 StdLooseJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 

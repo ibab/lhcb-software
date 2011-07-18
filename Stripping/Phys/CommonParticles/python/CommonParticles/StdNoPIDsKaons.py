@@ -1,40 +1,40 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsKaons.py,v 1.5 2009-07-01 18:42:29 jonrob Exp $ 
+# $Id: StdNoPIDsKaons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdNoPIDsKaons.py
 #  configuration file for 'Standard NoPIDs Kaons' 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-01-14
+#  @author Patrick Koppenburg 
+#  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard NoPIDs Kaons'
+Configuration file for 'Standard NoPIDs Kaons wioth loose cuts'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__author__  = "Patrick Koppenburg "
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'StdNoPIDsKaons' ,
     'locations'
     )
 # =============================================================================
-from Gaudi.Configuration   import *
-from Configurables         import NoPIDsParticleMaker
+from Gaudi.Configuration import *
+from Configurables       import FilterDesktop
+
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsKaons' ,
-                                   Particle = 'kaon' )
-
-# configure the track selector
-selector = trackSelector ( algorithm ) 
+algorithm =  FilterDesktop( 'StdNoPIDsKaons',
+                            Inputs = ["Phys/StdAllNoPIDsKaons/Particles"],
+                            Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdNoPIDsKaons = algorithm 
+
 
 ## ============================================================================
 if '__main__' == __name__ :

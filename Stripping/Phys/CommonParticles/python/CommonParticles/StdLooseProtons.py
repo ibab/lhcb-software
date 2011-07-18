@@ -4,13 +4,13 @@
 # =============================================================================
 ## @file  CommonParticles/StdLooseProtons.py
 #  configuration file for 'Standard Loose Protons' 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-01-14
+#  @author Patrick Koppenburg 
+#  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard Loose Protons'
+Configuration file for 'Standard Loose Protons wioth loose cuts'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
+__author__  = "Patrick Koppenburg "
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
@@ -19,22 +19,15 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombinedParticleMaker 
-from Configurables       import ProtoParticleCALOFilter
+from Configurables       import FilterDesktop
 
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdLooseProtons',
-                                     Particle =  'proton'  )
-
-# configure the track selector
-selector = trackSelector ( algorithm ) 
-
-# protoparticle filter:
-fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Proton' )
-fltr.Selection = [ "RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" ]
+algorithm =  FilterDesktop( 'StdLooseProtons',
+                            Inputs = ["Phys/StdAllLooseProtons/Particles"],
+                            Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

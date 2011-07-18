@@ -41,7 +41,7 @@ StdLooseDplus2KPiPi.DaughtersCuts = {
 #Need an upper mass window of 100 MeV for background estimation
 #and a lower mass window of 200 to catch the D+ and Ds
 
-StdLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<200*MeV) & (APT>1.*GeV) & (ADOCACHI2CUT(50, ''))"
+StdLooseDplus2KPiPi.CombinationCut = "(ADAMASS('D_s+')<200*MeV) & (APT>1.*GeV)"
 StdLooseDplus2KPiPi.MotherCut = "(VFASPF(VCHI2) < 30 ) & (M < 2070.*MeV) " 
 
 ## configure Data-On-Demand service 

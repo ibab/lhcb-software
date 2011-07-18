@@ -17,8 +17,7 @@ import GaudiKernel.SystemOfUnits as Units
 
 StdLooseDiMuon = CombineParticles("StdLooseDiMuon")
 StdLooseDiMuon.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-StdLooseDiMuon.Inputs = ["Phys/StdLooseMuons/Particles"]
-StdLooseDiMuon.CombinationCut = "(ADOCACHI2CUT(30, ''))"
+StdLooseDiMuon.Inputs = ["Phys/StdAllLooseMuons/Particles"]
 StdLooseDiMuon.MotherCut = "(VFASPF(VCHI2) < 25)"
 locations = updateDoD(StdLooseDiMuon)
 

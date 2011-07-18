@@ -4,13 +4,13 @@
 # =============================================================================
 ## @file  CommonParticles/StdLooseKaons.py
 #  configuration file for 'Standard Loose Kaons' 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-01-14
+#  @author Patrick Koppenburg 
+#  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard Loose Kaons'
+Configuration file for 'Standard Loose Kaons wioth loose cuts'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
+__author__  = "Patrick Koppenburg "
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
@@ -19,19 +19,15 @@ __all__ = (
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import ProtoParticleCALOFilter, CombinedParticleMaker
+from Configurables       import FilterDesktop
+
 
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm = CombinedParticleMaker('StdLooseKaons',  Particle = 'kaon' )
-
-# configure the track selector
-selector = trackSelector ( algorithm ) 
-
-# protoparticle filter:
-fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Kaon' )
-fltr.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
+algorithm =  FilterDesktop( 'StdLooseKaons',
+                            Inputs = ["Phys/StdAllLooseKaons/Particles"],
+                            Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
@@ -39,12 +35,13 @@ locations = updateDoD ( algorithm )
 ## finally: define the symbol 
 StdLooseKaons = algorithm 
 
+
 ## ============================================================================
 if '__main__' == __name__ :
 
     print __doc__
     print __author__
-    print __version__    
+    print __version__
     print locationsDoD ( locations ) 
 
 # =============================================================================
