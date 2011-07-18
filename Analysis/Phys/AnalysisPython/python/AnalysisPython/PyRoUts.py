@@ -53,7 +53,7 @@ VE             = cpp.Gaudi.Math.ValueWithError
 SE             = cpp.StatEntity 
 ValueWithError = cpp.Gaudi.Math.ValueWithError
 binomEff       = cpp.Gaudi.Math.binomEff
-
+import math
 
 # =============================================================================
 ## global identifier for ROOT objects 
@@ -105,6 +105,22 @@ if not hasattr ( VE , 'isfinite' ) :
     _is_finite_ .__doc__ += '\n' + isfinite. __doc__
     VE.isfinite = _is_finite_
     
+# =============================================================================
+def _int ( ve , precision = 1.e-5 ) :
+    #
+    if isinstance ( ve ,  ( int , long ) ) : return true
+    #
+    if not hasattr ( ve , 'value' ) :
+        return _int ( VE ( ve , abs ( ve ) ) , precision )  
+    #
+    diff = max ( 1 , abs ( ve.value() ) ) * precision 
+    diff = min ( 0.1 , diff ) 
+    # 
+    if abs ( ve.value() - long ( ve.value() ) ) > diff : return False 
+    if abs ( ve.value() -        ve.cov2 ()   ) > diff : return False
+    #
+    return True 
+
 
 # =============================================================================
 # Decorate histogram axis and iterators 
@@ -144,6 +160,97 @@ def _h1_get_item_ ( h1 , ibin ) :
     err = h1.GetBinError   ( ibin )
     #
     return VE ( val , err * err )
+
+# ==========================================================================
+## get item for the 2D histogram 
+def _h1_set_item_ ( h1 , ibin , v ) :
+    """
+    ``Set-item'' for the 1D-histogram :
+    
+    >>> histo[ibin] = value 
+    
+    """
+    #
+    if   isinstance ( v , ( int , long ) ) :
+        
+        if   0  < v   : return _h1_set_item_ ( h1 , ibin , VE ( v , v ) )
+        elif 0 == v   : return _h1_set_item_ ( h1 , ibin , VE ( v , 1 ) )
+        else          : return _h1_set_item_ ( h1 , ibin , VE ( v , 0 ) )
+        
+    elif isinstance ( v , float ) :
+        
+        if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
+        else          : return _h1_set_item_ ( h1 , ibin , VE ( v , 0 ) )
+
+    ## check the validity of the bin 
+    if not ibin in h1 : raise IndexError 
+    #
+    h1.SetBinContent ( ibin , v.value () )
+    h1.SetBinError   ( ibin , v.error () )
+    
+ROOT.TH1F. __setitem__ = _h1_set_item_
+ROOT.TH1D. __setitem__ = _h1_set_item_
+
+# ==========================================================================
+## get item for the 2D histogram 
+def _h2_set_item_ ( h2 , ibin , v ) :
+    """
+    ``Set-item'' for the 2D-histogram :
+    
+    >>> histo[(ix,iy)] = value 
+    
+    """
+    #
+    if   isinstance ( v , ( int , long ) ) :
+        
+        if   0  < v   : return _h2_set_item_ ( h2 , ibin , VE ( v , v ) )
+        elif 0 == v   : return _h2_set_item_ ( h2 , ibin , VE ( v , 1 ) )
+        else          : return _h2_set_item_ ( h2 , ibin , VE ( v , 0 ) )
+        
+    elif isinstance ( v , float ) :
+        
+        if _int ( v ) : return _h2_set_item_ ( h2 , ibin , long ( v ) )
+        else          : return _h2_set_item_ ( h2 , ibin , VE ( v , 0 ) )
+
+    ## check the validity of the bin 
+    if not ibin in h2 : raise IndexError 
+    #
+    h2.SetBinContent ( ibin[0] , ibin[1] , v.value () )
+    h2.SetBinError   ( ibin[0] , ibin[1] , v.error () )
+    
+ROOT.TH2F. __setitem__ = _h2_set_item_
+ROOT.TH2D. __setitem__ = _h2_set_item_
+
+
+# ==========================================================================
+## get item for the 3D histogram 
+def _h3_set_item_ ( h3 , ibin , v ) :
+    """
+    ``Set-item'' for the 3D-histogram :
+    
+    >>> histo[(ix,iy,iz)] = value 
+    
+    """
+    #
+    if   isinstance ( v , ( int , long ) ) :
+        
+        if   0  < v   : return _h3_set_item_ ( h3 , ibin , VE ( v , v ) )
+        elif 0 == v   : return _h3_set_item_ ( h3 , ibin , VE ( v , 1 ) )
+        else          : return _h3_set_item_ ( h3 , ibin , VE ( v , 0 ) )
+        
+    elif isinstance ( v , float ) :
+        
+        if _int ( v ) : return _h3_set_item_ ( h3 , ibin , long ( v ) )
+        else          : return _h3_set_item_ ( h3 , ibin , VE ( v , 0 ) )
+
+    ## check the validity of the bin 
+    if not ibin in h3 : raise IndexError 
+    #
+    h3.SetBinContent ( ibin[0] , ibin[1] , ibin[2] , v.value () )
+    h3.SetBinError   ( ibin[0] , ibin[1] , ibin[2] , v.error () )
+    
+ROOT.TH3F. __setitem__ = _h3_set_item_
+ROOT.TH3D. __setitem__ = _h3_set_item_
 
 # =============================================================================
 ## get item for the 2D histogram 
@@ -749,21 +856,6 @@ def histoGuess ( histo , mass , sigma ) :
 
 
 ROOT.TH1.histoGuess = histoGuess
-
-# =============================================================================
-def _int ( ve , precision = 1.e-5 ) :
-    #
-    if not hasattr ( ve , 'value' ) :
-        return _int ( VE ( ve , abs ( ve ) ) , precision )  
-    #
-    diff = max ( 1 , abs ( ve.value() ) ) * precision 
-    diff = min ( 0.1 , diff ) 
-    # 
-    if abs ( ve.value() - long ( ve.value() ) ) > diff : return False 
-    if abs ( ve.value() -        ve.cov2 ()   ) > diff : return False
-    #
-    return True 
-
 
 # =============================================================================
 ## use likelihood in histogram fit ? 
@@ -1450,10 +1542,15 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () ) :
     ax  = self.GetXaxis()
     fun = _h1_as_fun_ ( self , func )
     #
-    return  ROOT.TF1  ( funID()       ,
-                        fun           ,
-                        ax.GetXmin () ,
-                        ax.GetXmax () )
+    f1  = ROOT.TF1  ( funID()       ,
+                      fun           ,
+                      ax.GetXmin () ,
+                      ax.GetXmax () )
+    
+    f1.SetNpx  ( 10 * ax.GetNbins() )
+    
+    return f1 
+    
 # =============================================================================
 ## construct function 
 def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
@@ -1468,18 +1565,23 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     #
     fun = _h2_as_fun_ ( self , func )
     #
-    return  ROOT.TF2  ( funID()       ,
-                        fun           ,
-                        ax.GetXmin () ,
-                        ax.GetXmax () ,
-                        ay.GetXmin () ,
-                        ay.GetXmax () ) 
+    f2  = ROOT.TF2  ( funID()       ,
+                      fun           ,
+                      ax.GetXmin () ,
+                      ax.GetXmax () ,
+                      ay.GetXmin () ,
+                      ay.GetXmax () ) 
+    
+    f2.SetNpx  ( 10 * ax.GetNbins() )
+    f2.SetNpy  ( 10 * ay.GetNbins() )
+    
+    return f2
 
     
-ROOT.TH1F . asFunc = _h1_as_tf1_ 
-ROOT.TH1D . asFunc = _h1_as_tf1_ 
-ROOT.TH2F . asFunc = _h2_as_tf2_ 
-ROOT.TH2D . asFunc = _h2_as_tf2_ 
+ROOT.TH1F . asTF1  = _h1_as_tf1_ 
+ROOT.TH1D . asTF1  = _h1_as_tf1_ 
+ROOT.TH2F . asTF2  = _h2_as_tf2_ 
+ROOT.TH2D . asTF2  = _h2_as_tf2_ 
 ROOT.TH1F . asFunc = _h1_as_fun_ 
 ROOT.TH1D . asFunc = _h1_as_fun_ 
 ROOT.TH2F . asFunc = _h2_as_fun_ 
