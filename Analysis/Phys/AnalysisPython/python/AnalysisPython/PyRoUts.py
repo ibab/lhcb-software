@@ -1464,10 +1464,10 @@ def h2_axes ( x_axis       ,
     if not name : name = hID() 
     #
     x_bins  = [ x_axis.GetBinLowEdge ( i ) for i in x_axis ]
-    x_bins +=   x_axis.GetXmax()
+    x_bins += [ x_axis.GetXmax() ]
     #
     y_bins  = [ y_axis.GetBinLowEdge ( i ) for i in y_axis ]
-    y_bins +=   y_axis.GetXmax()
+    y_bins += [ y_axis.GetXmax() ] 
     #
     from numpy import array
     #
@@ -1578,6 +1578,10 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     return f2
 
     
+ROOT.TH1F . asTF   = _h1_as_tf1_ 
+ROOT.TH1D . asTF   = _h1_as_tf1_ 
+ROOT.TH2F . asTF   = _h2_as_tf2_ 
+ROOT.TH2D . asTF   = _h2_as_tf2_ 
 ROOT.TH1F . asTF1  = _h1_as_tf1_ 
 ROOT.TH1D . asTF1  = _h1_as_tf1_ 
 ROOT.TH2F . asTF2  = _h2_as_tf2_ 
