@@ -10,7 +10,7 @@ def getSize():
         # Linux part
         def ioctl_GWINSZ(fd):
             try:
-                import fcntl, termios, struct
+                import fcntl, termios, struct #@UnresolvedImport
                 cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
             except TerminalException:
                 return None
