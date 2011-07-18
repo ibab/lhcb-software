@@ -356,8 +356,10 @@ def getTarFileName(basename, binaryname=None, tar_type="gz", dirname=None):
         filename = os.path.join(dirname, filename)
     return filename
 
-def copySources(sourcedirs, dest, symlinks=True, exclude=[]):
+def copySources(sourcedirs, dest, symlinks=True, exclude=None):
     global _tar_exclusion_list
+    if not exclude :
+        exclude = []
     for e in exclude :
         _tar_exclusion_list.append(e)
     for d in sourcedirs :
