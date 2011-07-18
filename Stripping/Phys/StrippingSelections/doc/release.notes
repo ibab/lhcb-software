@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-18 - Rob Lambert
+ - Update TestSemileptonicsOnRealData.py
+
 ! 2011-07-18 Francesco Dettori
  - Correction to small bug: D* mass win not in agreement with D0 one in 
    StrippingDstD0xx.py
