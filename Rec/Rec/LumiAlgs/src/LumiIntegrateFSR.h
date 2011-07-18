@@ -46,7 +46,7 @@ protected:
   virtual StatusCode add_fsr(LHCb::LumiIntegral* r, 
 			     std::string addr, 
 			     float factor, unsigned int key);           ///< add/subtr one FSR for consistent group
-  virtual StatusCode trigger_event(std::string addr, unsigned int key); ///< trigger database update
+  LHCb::TimeSpanFSR* trigger_event(std::string addr, unsigned int key); ///< trigger database update
   virtual void add_to_xml();          ///< add counters to xmlfile at Algorithm finalization
 
   std::vector<double> one_vector(std::vector<double> a, 
@@ -71,6 +71,9 @@ protected:
   std::string m_propertyConfigSvcName;          ///< TCK service
   std::string m_instanceName;                   ///< and name
   bool m_useOnline;                             ///< flag to use online partition of DB
+  bool m_accumulateMu;                          ///< flag to accumulate mu information
+  std::string m_muKeyName;                      ///< name of key for mu calculation
+  int m_MuKey;                                  ///< int value of key for mu calculation
 
 private:
   // database calibration factors

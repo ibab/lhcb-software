@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-07-18 - Jaap Panman
+ - add a method in LumiIntegrator to extract values of "mu" per raw file 
+   (under control of AccumulateMu and MuKeyName options, default is OFF)
+
 !========================= LumiAlgs v6r0 2011-06-10 =========================
 ! 2011-06-01 - Rob Lambert
  - Add more debug (verbose) information to FSRNavigator

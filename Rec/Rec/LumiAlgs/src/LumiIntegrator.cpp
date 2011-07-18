@@ -97,6 +97,79 @@ StatusCode LumiIntegrator::integrate( LHCb::LumiIntegral* fsr, std::vector<doubl
 }
 
 //=============================================================================
+// Accumulate mu values per file
+//=============================================================================
+StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral& fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> coeff, double f ){
+  return accumulate_mu( &fsr, timeSpanFSR, mukey, coeff, f );
+}
+
+StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> coeff, double f ){
+  // collect mu
+  ILumiIntegrator::muTuple mT;
+
+  mT.run = 0;  
+  mT.guid = "NF";
+  mT.time0 = 0;
+  mT.time1 = 0;
+  mT.deltaLumi = 0;
+  mT.norm = 0;
+  mT.mu = 0;
+
+  // run and file-id
+  const std::vector<unsigned int> runNumbers = fsr->runNumbers();
+  const std::vector<std::string> fileIDs = fsr->fileIDs();
+  if ( runNumbers.size() > 0 ) {
+    mT.run = runNumbers[0];
+    mT.guid = fileIDs[0];
+  }
+  // get fsr and get lumi and mu for this piece
+  double munorm = 0;
+  std::string thisCounter("NC");
+  int thisCoef(0);
+  LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
+  for ( int key = 0; key < int(coeff.size()) && key < LHCb::LumiCounters::LastGlobal; key++ ) {
+    if ( coeff[key] != 0 ) {
+      if ( fsr->hasInfo(key) ) {
+        LHCb::LumiIntegral::ValuePair value = fsr->info( key, defValue );
+        std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+        if ( value.first != -1 ) {
+          mT.deltaLumi += value.second * coeff[key] * f;
+	  if ( mukey == key ) {
+	    thisCounter = counterName;
+	    thisCoef = coeff[key];
+	    munorm = value.first;
+	    mT.norm = munorm;
+	    if ( munorm > 0 ) {
+	      mT.mu = value.second / munorm;
+	    } else {
+	      mT.mu = 0;
+	    }
+	  }
+        }
+      }
+    }
+  }
+  // time span
+  if ( timeSpanFSR != NULL ) {
+    mT.time0 = timeSpanFSR->earliest();
+    mT.time1 = timeSpanFSR->latest();
+  }
+  // accumulate
+  m_muTuple.push_back(mT);
+  // printout
+  info() << "MU: RUN " << mT.run  << " GUID " << mT.guid << " " 
+	 << "T " << mT.time0 << "-" << mT.time1 << " "
+	 << "dL " << mT.deltaLumi << " N " << mT.norm << " MU " << mT.mu << " " 
+	 << endmsg;
+
+  return StatusCode::SUCCESS; 
+}
+
+std::vector<ILumiIntegrator::muTuple> LumiIntegrator::muValues( ) {
+  return m_muTuple;
+}
+
+//=============================================================================
 // Set absolute scale
 //=============================================================================
 StatusCode LumiIntegrator::setAbsolute(double scale, double relerror) {

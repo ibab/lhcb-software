@@ -12,6 +12,7 @@
 // forward declarations
 namespace LHCb {
   class LumiFSR;
+  class TimeSpanFSR;
   class LumiIntegral;
 };
 
@@ -47,6 +48,12 @@ public:
   // Integrate Lumi FSR data with mask sum one scalar
   virtual StatusCode integrate( LHCb::LumiIntegral* fsr, std::vector<double> v , double f=1.0) = 0;
 
+  // Accumulate mu from Lumi FSR data with mask 
+  virtual StatusCode accumulate_mu( LHCb::LumiIntegral& fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> v , double f=1.0) = 0;
+ 
+  // Accumulate mu from Lumi FSR data with mask 
+  virtual StatusCode accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> v , double f=1.0) = 0;
+
   // Set absolute scale
   virtual StatusCode setAbsolute(double scale, double relerror) = 0;
 
@@ -70,6 +77,18 @@ public:
 
   // Check the event count for a file
   virtual bool checkEvents( ) const = 0;
+
+  struct muTuple{ 
+    unsigned long run;
+    std::string guid;
+    ulonglong time0;
+    ulonglong time1;
+    double deltaLumi;
+    double norm;
+    double mu;
+  };
+  // Get mu results
+  virtual std::vector<muTuple> muValues( ) = 0;
 
 protected:
 

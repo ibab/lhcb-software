@@ -8,6 +8,7 @@
 
 // event model
 #include "Event/LumiFSR.h"
+#include "Event/TimeSpanFSR.h"
 #include "Event/LumiIntegral.h"
 
 #include "ILumiIntegrator.h"            // Interface
@@ -46,6 +47,12 @@ public:
   // Integrate Lumi FSR data with mask sum one scalar
   StatusCode integrate( LHCb::LumiIntegral* fsr, std::vector<double> v, double f=1.0 );
 
+  // Accumulate mu from Lumi FSR data with mask 
+  StatusCode accumulate_mu( LHCb::LumiIntegral& fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> v, double f=1.0 );
+
+  // Accumulate mu from Lumi FSR data with mask 
+  StatusCode accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> v, double f=1.0 );
+
   // Set absolute scale
   StatusCode setAbsolute(double scale, double relerror);
 
@@ -69,10 +76,15 @@ public:
 
   // Check the event count for a file
   bool checkEvents( ) const;
+  
+  // Get mu results
+  std::vector<ILumiIntegrator::muTuple> muValues( );
 
-protected:
-
-private:
+ public:
+  
+ protected:
+  
+ private:
   std::string m_ToolName;                       // name of tool for normalization
 
   unsigned long m_count_files;                  // number of files
@@ -84,5 +96,7 @@ private:
   double m_lumi_rel_error;                      // absolute scale error
 
   LHCb::LumiIntegral m_LumiSum;                 // overall sum of FSRs
+
+  std::vector<ILumiIntegrator::muTuple> m_muTuple; // result of mu calculation
 };
 #endif // LUMIINTEGRATOR_H

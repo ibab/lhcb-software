@@ -47,6 +47,8 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   declareProperty( "AddBXTypes"         , m_addBXTypes ) ;
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
   declareProperty( "IntegratorToolName" , m_ToolName          = "LumiIntegrator" );
+  declareProperty( "AccumulateMu"       , m_accumulateMu      = false);
+  declareProperty( "MuKeyName"          , m_muKeyName         = "PoissonRZVelo" );
   
   declareProperty( "IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
   declareProperty( "InstanceName"              , m_instanceName = "Hlt1LumiODINFilter");
@@ -108,6 +110,13 @@ StatusCode LumiIntegrateFSR::initialize() {
   m_calibCollidingBunches = 1;
   m_calibRandomFrequencyBB = 1.;
 
+  // initialize the mu calculation
+  if ( m_accumulateMu ) {
+    m_MuKey = LHCb::LumiCounters::counterKeyToType(m_muKeyName);
+    info() << "Mu calculation: " 
+	   << " name: " << m_muKeyName << " KeyIntValue: " <<  m_MuKey
+	   << endmsg;
+  }
   // get the detectorDataSvc
   m_dds = detSvc();
   if (m_dds == NULL) {
@@ -163,6 +172,11 @@ StatusCode LumiIntegrateFSR::stop() {
   info() << "Integrated luminosity: " 
 	 << m_integratorTool->lumiValue() << " +/- "
 	 << m_integratorTool->lumiError() << " [pb-1]" << endmsg;
+
+  if ( m_accumulateMu ) {
+    std::vector<ILumiIntegrator::muTuple> mT = m_integratorTool->muValues( );
+    info() << "Mu Tuple created with size: " << mT.size() << endmsg; 
+  }
 
   if ( m_integratorTool->duplicates().size() > 0 ) {
     warning() << "Duplicate Files: " << m_integratorTool->duplicates() << endmsg;
@@ -249,10 +263,9 @@ StatusCode LumiIntegrateFSR::add_file() {
 
 	  // trigger database update using the timeSpan FSR
           // if no run number defined, there is no timespan FSR, so skip it
-          // todo: might want to check if lengths of containers are different
-          //       or always search for the GUID correspondence
+	  LHCb::TimeSpanFSR* timeSpanFSR = NULL;
           if ( checkfsr[fkey]->runNumbers().size() ) {
-            StatusCode sc = trigger_event(primaryFileRecordAddress, fkey_ts);
+            timeSpanFSR = trigger_event(primaryFileRecordAddress, fkey_ts);
             fkey_ts++;
           } else {
             warning() << "missing run number at keycount: " << fkey << " " << fkey_ts << " skip db update for this FSR" << endmsg;
@@ -312,6 +325,13 @@ StatusCode LumiIntegrateFSR::add_file() {
 		   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
 		   << " CollidingBunches " << m_calibCollidingBunches << endmsg;
 	  }
+	  // accumulate mu 
+	  if ( m_accumulateMu ) {
+	    m_integratorTool->accumulate_mu( *result, timeSpanFSR, m_MuKey, 
+					     one_vector(m_calibCoefficients, m_calibCoefficientsLog, 
+							LHCb::LumiMethods::PoissonOffset), 
+					     rel_scale );
+	      }
 	  delete result;
 	}
       }
@@ -342,9 +362,11 @@ StatusCode LumiIntegrateFSR::add_file() {
 }
 
 //=============================================================================
-StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress, unsigned int fkey ) {
+LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress, unsigned int fkey ) {
   StatusCode sc = StatusCode::SUCCESS;
 
+  // return object
+  LHCb::TimeSpanFSR* timeSpanFSR = NULL;
   // search for the TimeSpanFSR 
   std::string timeSpanRecordAddress(primaryFileRecordAddress);
   timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
@@ -354,7 +376,8 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
   // read TimeSpanFSR to prepare DB access 
   if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
     if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
-    return StatusCode::FAILURE;
+    // return StatusCode::FAILURE;
+    return timeSpanFSR;
   } else {
     if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
     LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
@@ -365,9 +388,10 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
     unsigned long tsfsr_len = timeSpanFSRs->size();
     if ( (unsigned long)fkey > tsfsr_len-1 ) { 
       warning() << "missing timeSpanFSR - use previous DB conditions" << endmsg;
-      return StatusCode::SUCCESS;
+      return timeSpanFSR;
+      // return StatusCode::SUCCESS;
     } 
-    LHCb::TimeSpanFSR* timeSpanFSR = tsfsr[fkey];
+    timeSpanFSR = tsfsr[fkey];
     ulonglong t0 = timeSpanFSR->earliest();
     ulonglong t1 = timeSpanFSR->latest();
     if ( msgLevel(MSG::DEBUG) ) {
@@ -377,7 +401,8 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
     if ( t0 == 0 && t1 == 0 ) {
       m_statusScale = 0;        // invalid luminosity: no time span
       error() << "ERROR: no time span defined " << endmsg;
-      return StatusCode::FAILURE;
+      return timeSpanFSR;
+      // return StatusCode::FAILURE;
     }
     // the TimeSpanFSRs have now been read -  fake event loop to get update of calibration constants
     m_dds->setEventTime(Gaudi::Time( (t1/2+t0/2)*1000 ));
@@ -388,7 +413,6 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
       error() << "ERROR updating luminosity constants from DB " << endmsg;
     }
   }    
-
   
   // look at the new DB parameters
   if ( msgLevel(MSG::DEBUG) ) {
@@ -423,7 +447,8 @@ StatusCode LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress
   // flag correct data
   m_statusScale *= m_databaseTool->StatusScale();
 
-  return StatusCode::SUCCESS;
+  return timeSpanFSR;
+  // return StatusCode::SUCCESS;
 }
 
 //=========================================================================
