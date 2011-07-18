@@ -42,7 +42,8 @@ __all__     = (
     'binomEff_h3'    , ## calculate binomial efficiency for 3D-ihstos
     #
     'makeGraph'      , ## make ROOT Graph from input data
-    'h2_axes'              ## book 2D-histogram from axes 
+    'h2_axes'        , ## book 2D-histogram from axes
+    've_adjust'      , ## adjust the efficiency to be in physical range 
     )
 # =============================================================================
 import ROOT
@@ -137,7 +138,7 @@ def _h1_get_item_ ( h1 , ibin ) :
     
     """
     #
-    if not ibin in h  : raise IndexError 
+    if not ibin in h1.GetXaxis() : raise IndexError 
     #
     val = h1.GetBinContent ( ibin ) 
     err = h1.GetBinError   ( ibin )
@@ -191,8 +192,9 @@ def _h1_iter_ ( h1 ) :
     
     >>> for i in h1 : print i 
     """
-    s = h1.GetNbins()
-    for i in range ( 1 , s + 1 ) : 
+    ax = h1.GetXaxis () 
+    sx = ax.GetNbins ()
+    for i in range ( 1 , sx + 1 ) : 
         yield i
 
 ROOT.TH1  . __iter__ = _h1_iter_ 
@@ -1178,8 +1180,6 @@ def _h2_lego_ ( self , opts = '' ) : return self.Draw( opts + 'lego')
 ROOT.TH2.  box  = _h2_box_
 ROOT.TH2.  lego = _h2_lego_
 
-
-
 # =============================================================================
 ## operation with the histograms 
 def _h3_oper_ ( h1 , h2 , oper ) :
@@ -1484,7 +1484,19 @@ ROOT.TH1F . asFunc = _h1_as_fun_
 ROOT.TH1D . asFunc = _h1_as_fun_ 
 ROOT.TH2F . asFunc = _h2_as_fun_ 
 ROOT.TH2D . asFunc = _h2_as_fun_ 
-    
+
+
+# =============================================================================
+## adjust the "efficiency"
+def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
+    """
+    Adjust the efficiency
+    """
+    if ve.value() < mn : ve.setValue ( mn )
+    if ve.value() > mx : ve.setValue ( mx )
+    #
+    return ve
+
 # =============================================================================
 ## further decoration
 import GaudiPython.HistoUtils 
