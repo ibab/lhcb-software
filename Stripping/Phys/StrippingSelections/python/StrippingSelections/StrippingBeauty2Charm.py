@@ -16,6 +16,8 @@ from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
+#from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
+#     StdAllNoPIDsProtons
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_B2DXBuilder import *
 
@@ -77,17 +79,14 @@ class Beauty2CharmConf(LineBuilder):
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 
         LineBuilder.__init__(self, moduleName, config)
-        modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
-            if i not in modules : modules.append(i)
 
         # pre-filter all inputs (nothing is looser than this)
         pions = filterInputs('Pi',[StdNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdNoPIDsKaons],config['ALL'])
 
         # pre-filter hard inputs (these could have been used in HLT2)
-        topoPions = topoInputs('Pi',[StdNoPIDsPions])
-        topoKaons = topoInputs('K',[StdNoPIDsKaons])
+        topoPions = topoInputs('Pi',[pions])
+        topoKaons = topoInputs('K',[kaons])
 
         # make D->X, etc. inputs
         d = DBuilder(pions,config['D2X'])

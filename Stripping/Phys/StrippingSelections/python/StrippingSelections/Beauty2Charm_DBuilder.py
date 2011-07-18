@@ -6,7 +6,7 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
-#from DecayFilter import DecayFilter
+from Beauty2Charm_ComboEngine import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -42,12 +42,15 @@ class DBuilder(object):
         dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
         min = 1864.84 - dm # D0 - dm
         max = 1864.84 + dm # D0 + dm
-        #massCuts = <ADD WM Functor code from Albert here!>
-        amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
-        mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
+        #amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
+        #mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
+        ce = ComboEngine([('pi+','pi-'),('K+','pi-'),('pi+','K-'),('K+','K-')],
+                         ['pi+','pi-'])
+        amass = "("+ce.getWMFunctor(min-10,max+10).replace('WM','AWM')+")"
+        mass = "("+ce.getWMFunctor(min,max)+")"
         protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],amass,mass,
                                   self.config)
-        return protoD2hh
+        return ce.mergedSelection(protoD2hh.name()+"Combo",min,max,protoD2hh)
         # Add Albert's ComboEngine stuff here!!!!
 
     def _makeD2hhh(self):
