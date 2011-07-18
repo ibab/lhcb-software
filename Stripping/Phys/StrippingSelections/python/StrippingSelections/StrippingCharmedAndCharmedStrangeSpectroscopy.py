@@ -47,9 +47,9 @@ from Configurables import LoKi__VoidFilter as VoidFilter
 from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from StrippingUtils.Utils import LineBuilder
  
-modules =  CoreFactory('CoreFactory').Modules
-for i in [ 'LoKiTrigger.decorators' ] :
-    if i not in modules : modules.append(i)
+#modules =  CoreFactory('CoreFactory').Modules
+#for i in [ 'LoKiTrigger.decorators' ] :
+#    if i not in modules : modules.append(i)
 
 default_name = 'CharmedAndCharmedStrangeSpectroscopyConf'
 class CharmedAndCharmedStrangeSpectroscopyConf( LineBuilder ):
@@ -175,7 +175,7 @@ def CombineDandTrack( name,
 def makeDp2KmPipPip( name ):
     DplusTracks = '(PT > 250*MeV) & (P > 3*GeV) & (P < 100*GeV) & (TRPCHI2 > 0.0001)'
     cut1 = "((CHILDCUT(MIPCHI2DV(PRIMARY) > 25.0, 1)) | (CHILDCUT(MIPCHI2DV(PRIMARY) > 25.0,2)) | (CHILDCUT(MIPCHI2DV(PRIMARY) > 25.0,3)))"
-    cut2 = "((CHILDCUT(PT > 0.6*GeV,1) & CHILDCUT(PT > 0.6*GeV,2)) | (CHILDCUT(PT > 0.6*GeV,3) & CHILDCUT(PT > 0.6*GeV,2)) | (CHILDCUT(PT > 0.6*GeV,3) & CHILDCUT(PT > 0.6*GeV,3)))"
+    cut2 = "((CHILDCUT(PT > 0.6*GeV,1) & CHILDCUT(PT > 0.6*GeV,2)) | (CHILDCUT(PT > 0.6*GeV,3) & CHILDCUT(PT > 0.6*GeV,2)) | (CHILDCUT(PT > 0.6*GeV,3) & CHILDCUT(PT > 0.6*GeV,1)))"
     Cut_Dplus = '(BPVDIRA > 0.99999) & (MIPCHI2DV(PRIMARY) < 16) & (BPVVDCHI2 > 25) & (VFASPF(VCHI2/VDOF)<8) & (PT > 2.5*GeV) & ' + cut1 + " & " + cut2 
     code = '(' + Cut_Dplus + '& CHILDCUT(' + DplusTracks + ',1) & CHILDCUT(' + DplusTracks + ',2) & CHILDCUT(' + DplusTracks + ',3))'
     DplusFilter = FilterDesktop( Code = code )
