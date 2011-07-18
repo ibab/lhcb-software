@@ -52,7 +52,7 @@ config_default ={'PrescalepipiBox'     : 0.5
                  ,'DVChi2'            :10. 
                  ,'PiMinPT'            : 110.       # MeV
                  ,'PiMaxIPCHI2'        : 10.         # adimensional
-                 ,'DstMassWin'         : 110.       # MeV
+                 ,'DstMassWin'         : 300.       # MeV
                  ,'DstD0DMWin'         : 10.        # MeV
                  ,'DstD0DMWinMuMu'      : 30.        # MeV  
                  ,'RequireHlt'         : 1          # 

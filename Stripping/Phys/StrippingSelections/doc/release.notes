@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-18 Francesco Dettori
+ - Correction to small bug: D* mass win not in agreement with D0 one in 
+   StrippingDstD0xx.py
+
 ! 2011-07-13 Xabier Cid & Diego Martinez
  - Addition of Ks0->MuMu lines
 
