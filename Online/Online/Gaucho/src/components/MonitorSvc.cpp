@@ -517,7 +517,7 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
 
   if (m_started)
   {
-//    //printf("Delcare Info called after start for Name %s\n",name.c_str());
+    //printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   if (0 != m_disableDeclareInfoFormat) return;
   MsgStream msg(msgSvc(),"MonitorSvc");
@@ -578,7 +578,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
 	  string oname = infoOwnerName(owner);
   if (m_started)
   {
-//    //printf("Delcare Info called after start for Name %s\n",name.c_str());
+    printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
    msg << MSG::INFO << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
@@ -657,7 +657,7 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
 
   if (m_started)
   {
-    msg << MSG::DEBUG << "Declare Info (Histogram) called after start for Name " << nam << endmsg;
+    msg << MSG::WARNING << "Declare Info (Histogram) called after start for Name " << nam << endmsg;
   }
   if (0 != m_disableDeclareInfoHistos)
   {
