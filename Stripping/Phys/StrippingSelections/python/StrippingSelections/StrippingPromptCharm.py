@@ -12,22 +12,13 @@
 #    - D+        -> K pi pi                    
 #    - Lambda_c+ -> p K pi                     
 #
+#  Also one has combinations:
+#    - Charm + Charm  (both Charm/Charm and Charm/anti-Charm)
+#    - Charm + Dimuon
+#
 #  The cuts more or less correspond to D*+ selection by Alexandr Kozlinzkiy.
 #  In addition the PT-cut for the long-lived charmed particle has been applied.
 #  Thanks to Marco Gersabeck & Harry Cliff for nice idea.
-#
-#  The performance with Reco09-Stripping13_SDSTs.py
-#  +--------------------------------+----------------+
-#  |  Stripping Line                |    Rate, [%]   |
-#  +--------------------------------+----------------+
-#  | StrippingD02HHForPromptCharm   | 2.891 +- 0.111 |
-#  | StrippingDstarForPromptCharm   | 0.614 +- 0.052 | 
-#  | StrippingDsForPromptCharm      | 0.231 +- 0.032 |
-#  | StrippingDForPromptCharm       | 1.132 +- 0.070 | 
-#  | StrippingLambdaCForPromptCharm | 0.135 +- 0.024 | 
-#  +--------------------------------+----------------+
-#  | Total                          | 4.375 +- 0.135 | 
-#  +--------------------------------+----------------+
 #
 # Usage:
 #
@@ -59,22 +50,13 @@ The attempt for coherent stripping of all stable charm hadrons
     - D+        -> K pi pi                          
     - Lambda_c+ -> p K pi                           
     
+  Also one has combinations:
+    - Charm + Charm  (both Charm/Charm and Charm/anti-Charm)
+    - Charm + DiMuon
+    
    The cuts more or less correspond to D*+ selection by Alexandr Kozlinzkiy
    In addition the PT-cut for the long-lived charmed particle has been applied
    Thanks to Marco Gersabeck & Harry Cliff for nice idea.
-
-   The performance with Reco09-Stripping13_SDSTs.py
-   +--------------------------------+----------------+
-   |  Stripping Line                |    Rate, [%]   |
-   +--------------------------------+----------------+
-   | StrippingD02HHForPromptCharm   | 2.891 +- 0.111 |
-   | StrippingDstarForPromptCharm   | 0.614 +- 0.052 | 
-   | StrippingDsForPromptCharm      | 0.231 +- 0.032 |
-   | StrippingDForPromptCharm       | 1.132 +- 0.070 | 
-   | StrippingLambdaCForPromptCharm | 0.135 +- 0.024 | 
-   +--------------------------------+----------------+
-   | Total                          | 4.375 +- 0.135 | 
-   +--------------------------------+----------------+
 
   Usage:
  
@@ -114,8 +96,12 @@ from StandardParticles      import ( StdNoPIDsPions     ,
                                      StdLoosePions      ,
                                      StdLooseKaons      ,
                                      StdLooseProtons    , 
-                                     StdLooseMuons      ) 
-
+                                     ## for onia, prompt
+                                     StdAllLooseMuons   ,
+                                     ## for soft pion from D*+
+                                     StdAllNoPIDsPions  )
+                                     
+                                     
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
@@ -128,12 +114,13 @@ _default_configuration_ = {
     #
     # Selection of basic particles 
     #
-    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) '        , 
-    'BasicCuts'       : ' & ( 9 < MIPCHI2DV()   ) '                       , 
-    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                       , 
-    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                       , 
-    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) ' , 
-    'SlowPionCuts'    : ' TRCHI2DOF < 5   '                               ,
+    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) '          , 
+    'BasicCuts'       : ' & ( 9 < MIPCHI2DV()   ) '                         , 
+    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                         , 
+    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                         , 
+    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '   , 
+    'SlowPionCuts'    : ' TRCHI2DOF < 5   '                                 ,
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
     #
     # Global Event cuts 
     #
@@ -153,7 +140,7 @@ _default_configuration_ = {
     # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
     "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
-    # dimuons:
+    # dimons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ] ,
@@ -212,7 +199,6 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         from copy import deepcopy
         _config = deepcopy ( _default_configuration_ )
-        _config.update ( config ) 
 
         if isinstance ( config , dict ):
             _config.update ( config )
@@ -248,6 +234,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         self._pioncuts     = self._basiccuts + _config.pop ( 'PionCuts'     , _default_configuration_ [ 'PionCuts'     ] )
         self._protoncuts   = self._basiccuts + _config.pop ( 'ProtonCuts'   , _default_configuration_ [ 'ProtonCuts'   ] )
         self._slowpioncuts =                   _config.pop ( 'SlowPionCuts' , _default_configuration_ [ 'SlowPionCuts' ] )
+        self._muoncuts     =                   _config.pop ( 'MuonCuts'     , _default_configuration_ [ 'MuonCuts'   ] )
         
         self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
 
@@ -390,6 +377,7 @@ class StrippingPromptCharmConf(LineBuilder) :
     def pionCuts     ( self ) : return self._pioncuts 
     def protonCuts   ( self ) : return self._protoncuts 
     def slowPionCuts ( self ) : return self._slowpioncuts 
+    def muonCuts     ( self ) : return self._muoncuts 
 
     ## get the selection of kaons 
     def kaons ( self ) :
@@ -605,7 +593,9 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## 
             Algorithm          = _DstarCombine ,
             ##
-            RequiredSelections = [ self.preD02HH() , StdNoPIDsPions ]
+            ## ATTENITON: we need slow prompt pions!
+            RequiredSelections = [ self.preD02HH() ,
+                                   StdAllNoPIDsPions ] ## slow prompt pion!
             )
         
         return self._add_selection ( 'DstarForPromptCharm_Selection' , sel ) 
@@ -869,7 +859,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## the decays to be reconstructed 
             DecayDescriptor = 'J/psi(1S) -> mu+ mu-' ,
             DaughtersCuts   = {
-            'mu+' : ' ( TRCHI2DOF < 5 ) & ISMUON '
+            'mu+' : self.muonCuts() 
             } , 
             Preambulo       = self.preambulo() , 
             ## combination cut 
@@ -884,8 +874,9 @@ class StrippingPromptCharmConf(LineBuilder) :
             'SelDiMuonFor' + self._name ,
             ##
             Algorithm          = _Combine   ,
-            ##
-            RequiredSelections = [ StdLooseMuons ]
+            #
+            ## ATTENTION: use 'AllLooseMuons' - we need prompt Onia!
+            RequiredSelections = [ StdAllLooseMuons ]
             )
         
         return self._add_selection ( 'DiMuon_Selection' , sel ) 

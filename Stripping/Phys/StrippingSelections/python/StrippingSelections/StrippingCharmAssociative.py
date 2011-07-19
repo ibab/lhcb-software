@@ -69,8 +69,12 @@ from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 #
-from PhysSelPython.Wrappers import   Selection    
-from StandardParticles      import   StdLooseMuons, StdLooseAllPhotons
+from PhysSelPython.Wrappers import   Selection
+
+#
+# Attention: we need prompt onia, thus "All" Loose muons here 
+from StandardParticles      import ( StdAllLooseMuons   , ## PROMPT muons!
+                                     StdLooseAllPhotons ) 
 
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -85,7 +89,8 @@ _default_configuration_ = {
     #
     ## Selection of basic particles 
     #
-    'PhotonCuts'      : ' PT > 4.0 * GeV  '                               , 
+    'PhotonCuts'      : ' PT > 4.0 * GeV  '                                 , 
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
     #
     ## Global Event cuts 
     #
@@ -191,7 +196,9 @@ class StrippingCharmAssociativeConf(LineBuilder) :
 
         self._name         = name
 
-        self._photoncuts   = _config.pop ( 'PhotonCuts'   , _default_configuration_ [ 'PhotonCuts'   ] )        
+        self._photoncuts   = _config.pop ( 'PhotonCuts'   , _default_configuration_ [ 'PhotonCuts' ] )        
+        self._muoncuts     = _config.pop ( 'MuonCuts'     , _default_configuration_ [ 'MuonCuts'   ] )
+
         self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
         
         self.DiMuonAndGammaPrescale = _config.pop ( 'DiMuonAndGammaPrescale' , _default_configuration_ [ 'DiMuonAndGammaPrescale' ] )
@@ -211,7 +218,10 @@ class StrippingCharmAssociativeConf(LineBuilder) :
     def preambulo    ( self ) : return self._Preambulo
 
     ## get photon cuts 
-    def photonCuts   ( self ) : return self._photoncuts 
+    def photonCuts   ( self ) : return self._photoncuts
+    
+    ## get muon cuts 
+    def muonCuts     ( self ) : return self._muoncuts 
 
     ## get the dimuons 
     def DiMuon ( self ) :
@@ -227,7 +237,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             ## the decays to be reconstructed
             DecayDescriptor = 'J/psi(1S) -> mu+ mu-' ,
             DaughtersCuts   = {
-            'mu+' : ' ( TRCHI2DOF < 5 ) & ISMUON '
+            'mu+' : self.muonCuts() 
             } , 
             Preambulo       = self.preambulo() ,
             #
@@ -237,15 +247,15 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             ##      mother cut 
             MotherCut       = " chi2vx < 20 " 
             )
-        
         ##
         sel = Selection (
             ##
             'SelDiMuonFor' + self._name ,
             ##
             Algorithm          = _Combine   ,
-            ##
-            RequiredSelections = [ StdLooseMuons ]
+            #
+            ## ATTENITON: we need PROMPT onia, thus 'AllMuons' are here
+            RequiredSelections = [ StdAllLooseMuons ]  ## we need 'All' muons 
             )
         
         return self._add_selection ( 'DiMuon_Selection' , sel )

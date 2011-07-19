@@ -4,6 +4,16 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - Vanya Belyaev
+
+  - CharmAssociative  & PromptCharm
+
+   avoid IP-cuts for three categories of particles : 
+
+    - use StdAllNoPIDsPions for slow pion from D*+ 
+    - use StdAllLooseMuons  for prompt onia 
+
+
 ! 2011-07-19 - Sebastian Schleich
  - remove obsolete 'CoreFactory' code from InclPhi stripping line according to Vanya's Mail to lhcb-stripping on 2011-07-18
 
