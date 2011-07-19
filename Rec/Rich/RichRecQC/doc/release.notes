@@ -7,6 +7,8 @@
 ! 2011-07-19 - Chris Jones
  - Add new flag "Simulation" to RichRecQCConf
  - Turn off monitors that require HLT DecReports, when running on MC data.
+ - Fix a small configuration bug, that leave to some monitoring sequence 
+   being included twice in the overall monitoring.
 
 ! 2011-07-15 - Chris Jones
  - Enable aerogel tile and sub-tile plots in Rich::Rec::MC::RecoQC only for

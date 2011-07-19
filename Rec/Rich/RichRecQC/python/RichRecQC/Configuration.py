@@ -344,9 +344,8 @@ class RichRecQCConf(RichConfigurableUser):
             # Data size plots, L0 unbiased events
             if not self.getProp("Simulation") :
                 from Configurables import LoKi__HDRFilter, HltDecReportsDecoder, GaudiSequencer
-                lSeq = self.newSeq(sequence,"RichRawDataSizeL0Seq")
+                lSeq = self.newSeq(rawSeq,"RichRawDataSizeL0Seq")
                 lSeq.ReturnOK = True
-                rawSeq.Members += [lSeq]
                 dataSizeL0 = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSizeL0")
                 dataSizeL0.FillDetailedPlots = self.getProp("Histograms") == "Expert"
                 lSeq.Members += [ HltDecReportsDecoder(),
@@ -646,16 +645,15 @@ class RichRecQCConf(RichConfigurableUser):
         if check in checks :
             from Configurables import ( Rich__Rec__HPDHitsMoni, GaudiSequencer, 
                                         LoKi__HDRFilter, HltDecReportsDecoder )
-            seq  = self.newSeq(sequence,check)
+            seq = self.newSeq(sequence,check)
             seq.IgnoreFilterPassed = True
             seq.Members += [ Rich__Rec__HPDHitsMoni("HPDHitsMoni") ]
             if not self.getProp("Simulation") :
-                lSeq = self.newSeq(sequence,check+"L0")
+                lSeq = self.newSeq(seq,check+"L0")
                 lSeq.ReturnOK = True
                 lSeq.Members += [ HltDecReportsDecoder(),
                                   LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
                                   Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
-                seq.Members  += [ lSeq ]
 
         check = "RichTrackGeometry"
         if check in checks :
