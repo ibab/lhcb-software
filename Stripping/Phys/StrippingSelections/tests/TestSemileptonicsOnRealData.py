@@ -20,24 +20,24 @@ confStrippingB0q2DplusMuX  = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf("B0q
 stream.appendLines( confStrippingB0q2DplusMuX.lines() )
 
 # Import your stripping lines
-#from StrippingSelections import StrippingBd2DstarTauNu
-#confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
-#stream.appendLines( confBd2DstarTauNu.lines() )
+from StrippingSelections import StrippingBd2DstarTauNu
+confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
+stream.appendLines( confBd2DstarTauNu.lines() )
 
 # Import your stripping lines
-#from StrippingSelections import StrippingB2XuMuNu
-#confB2XuMuNu = StrippingB2XuMuNu.B2XuMuNuBuilder("B2XuMuNu", StrippingB2XuMuNu.confdict)
-#stream.appendLines( confB2XuMuNu.lines() )
+from StrippingSelections import StrippingB2XuMuNu
+confB2XuMuNu = StrippingB2XuMuNu.B2XuMuNuBuilder("B2XuMuNu", StrippingB2XuMuNu.confdict)
+stream.appendLines( confB2XuMuNu.lines() )
 
 # Import your stripping lines
-#from StrippingSelections import StrippingB2DMuNuX
-#confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
-#stream.appendLines( confB2DMuNuX.lines() )
+from StrippingSelections import StrippingB2DMuNuX
+confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
+stream.appendLines( confB2DMuNuX.lines() )
 
 # Import your stripping lines
-#from StrippingSelections import StrippingDForBSemi
-#confDForBSemi = StrippingDForBSemi.DforBSemiLinesConf("DForBSemi", StrippingDForBSemi.confdict)
-#stream.appendLines( confDForBSemi.lines() )
+from StrippingSelections import StrippingDForBSemi
+confDForBSemi = StrippingDForBSemi.DforBSemiLinesConf("DForBSemi", StrippingDForBSemi.confdict)
+stream.appendLines( confDForBSemi.lines() )
 
 
 
