@@ -221,7 +221,7 @@ class RecMoniConf(LHCbConfigurableUser):
 
     _propertyDocDct = { 
         'MoniSequence' : """ List of subdetectors to monitor, default is all known """
-        ,'Histograms'  : """ Type of histograms """
+       ,'Histograms'   : """ Type of histograms """
        ,'CheckEnabled' : """ Flags whether a check sequence (with MC truth) is also enabled (default False) """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'Context'      : """ The context within which to run (default 'Offline') """
@@ -363,7 +363,7 @@ class RecMoniConf(LHCbConfigurableUser):
         if "RICH" in moniSeq and not self.getProp("CheckEnabled"):
             from Configurables import GaudiSequencer
             conf = RichRecQCConf(self.richMoniConfName)
-            self.setOtherProps(conf,["Histograms","Context","OutputLevel","DataType"])
+            self.setOtherProps(conf,["Histograms","Context","OutputLevel","DataType","Simulation"])
             conf.setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
             conf.setProp("WithMC", False)
             conf.RichPIDLocation = "Rec/Rich/PIDs"
