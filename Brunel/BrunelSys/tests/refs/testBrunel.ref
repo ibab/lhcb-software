@@ -77,7 +77,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v39r4
-                                          running on lxbuild163.cern.ch on Fri Jun 17 13:14:45 2011
+                                          running on lxbuild163.cern.ch on Tue Jul 19 18:31:30 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -87,7 +87,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -101,17 +101,17 @@ BrunelInit        SUCCESS ======================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: Brunel-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r4/data/PhotonPdf.root as CaloNeutralPIDs
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v8r4/data/CaloPIDs_DC09_v1.root as CaloPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r4/data/PhotonPdf.root as CaloNeutralPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r4/data/CaloPIDs_DC09_v1.root as CaloPIDs
 LumiSeq              INFO OR Member list: GaudiSequencer/LumiCounters, HltRoutingBitsFilter/LumiFilter, HltRoutingBitsFilter/PhysFilter, with context 'Offline'
 LumiCounters         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSequencer/LumiBeamCrossingSeq, GaudiSequencer/LumiBeam1Seq, GaudiSequencer/LumiBeam2Seq, GaudiSequencer/TimeSpanSeq, EventAccounting/EventAccount, with context 'Offline'
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam, with context 'Offline'
 FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r11p1/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20110302"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r11p1/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "head-20110524"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
@@ -149,7 +149,7 @@ RemoveHcalPacke...SUCCESS bankKiller : all banks of type 'HcalPacked' will be re
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
 DecodeVeloClusters   INFO Cancel processing of events with more than 10000 Velo clusters
-ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r11p1/db/ONLINE-2011.db/ONLINE"
+ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
 RecoVELOSeq          INFO Member list: FastVeloTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
@@ -159,10 +159,10 @@ RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c1_onemap_up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c2_onemap_up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c3_onemap_up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/c4_onemap_up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c1_onemap_up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_up.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
 TrackSeedPatSeq      INFO Member list: PatSeeding, with context 'Offline'
 TrackMatchPatSeq     INFO Member list: PatMatch, with context 'Offline'
@@ -394,41 +394,41 @@ ChargedProtoPAd...   INFO VELO dE/dx charge parameters : normalisation = 35.6 ra
 ChargedProtoPCo...   INFO Using retuned RICH el and mu DLL values in combined DLLs
 ANNGPIDSeq           INFO Member list: ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongGhost, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamGhost, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamGhost, with context 'Offline'
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Long_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Long_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Long_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Long_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Long_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Long_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Long_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Long_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Long_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Long_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Long_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Long_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Downstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Downstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Downstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Downstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Downstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Downstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Downstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Downstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Downstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Downstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Downstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Downstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Upstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Upstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Upstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Upstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Upstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Upstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Upstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Upstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Upstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Upstream_NeuroBayes.conf
  NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/releases/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Upstream_NeuroBayes.conf
+ /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Upstream_NeuroBayes.conf
 NeutralProtoPar...   INFO Member list: NeutralProtoPAlg/NeutralProtoPMaker, with context 'Offline'
 NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/Photons
 NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/MergedPi0s
@@ -447,8 +447,9 @@ CaloClustersMoni     INFO Member list: CaloClusterMonitor/EcalClusterMon, with c
 CaloHyposMoni        INFO Member list: CaloHypoMonitor/ElectronMon, CaloHypoMonitor/PhotonMon, CaloHypoMonitor/SplitPhotonMon, CaloHypoMonitor/MergedPi0Mon, with context 'Offline'
 ProtoElectronMon     INFO Will only look at track type(s) = [3, 5]
 CaloPIDsMoni         INFO Member list: CaloClusterMatchMonitor/PhotonMatchMon, CaloHypoMatchMonitor/ElectronMatchMon, CaloHypoMatchMonitor/BremMatchMon, CaloEMuPIDMon/CaloEMuPIDMonUncut, CaloEMuPIDMon/CaloEMuPIDMonSoft, CaloEMuPIDMon/CaloEMuPIDMonHard, with context 'Offline'
-MoniRICHSeq          INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
-RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, Rich::DAQ::DataDBCheck/RichRawDataDBCheck, Rich::HPDAnalysisAlg/RichHotPixels, Rich::DAQ::DataDecodingErrorMoni/RichDecodingErrors, with context 'Offline'
+MoniRICHSeq          INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichRawDataSizeL0Seq, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichRecoMoniTight, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
+RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, GaudiSequencer/RichRawDataSizeL0Seq, Rich::DAQ::DataDBCheck/RichRawDataDBCheck, Rich::HPDAnalysisAlg/RichHotPixels, Rich::DAQ::DataDecodingErrorMoni/RichDecodingErrors, with context 'Offline'
+RichRawDataSize...   INFO Member list: HltDecReportsDecoder, LoKi::HDRFilter/RichDataSizeL0Filter, Rich::DAQ::RawDataSize/RichRawDataSizeL0, with context 'Offline'
 RichHotPixels        INFO Loading HPD Analysis tools : [RichHotPixelFinder]
 RichPixelMoni        INFO Member list: Rich::Rec::MC::PixelQC/RichRecPixelQC, Rich::Rec::PixelClusterMoni/RichRecPixelClusters, with context 'Offline'
 RichTrackMoni        INFO Member list: Rich::Rec::MC::TrackSelEff/RiLongTrkEff, Rich::Rec::MC::TrackSelEff/RiForwardTrkEff, Rich::Rec::MC::TrackSelEff/RiMatchTrkEff, Rich::Rec::MC::TrackSelEff/RiKsTrackTrkEff, Rich::Rec::MC::TrackSelEff/RiVeloTTTrkEff, Rich::Rec::MC::TrackSelEff/RiSeedTrkEff, with context 'Offline'
@@ -472,6 +473,20 @@ RiCKResMatch.Tr...   INFO Track Selection : [Match]
 RiCKResKsTrack....   INFO Track Selection : [KsTrack]
 RiCKResVeloTT.T...   INFO Track Selection : [VeloTT]
 RiCKResSeed.Tra...   INFO Track Selection : [Seed]
+RichRecoMoniTight    INFO Member list: Rich::Rec::MC::RecoQC/RiCKResLongTight, Rich::Rec::MC::RecoQC/RiCKResForwardTight, Rich::Rec::MC::RecoQC/RiCKResMatchTight, Rich::Rec::MC::RecoQC/RiCKResKsTrackTight, Rich::Rec::MC::RecoQC/RiCKResVeloTTTight, Rich::Rec::MC::RecoQC/RiCKResSeedTight, with context 'Offline'
+RiCKResLongTigh...   INFO Track Selection : [Forward, Match]
+RiCKResLongTigh...   INFO  Forward     : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
+RiCKResLongTigh...   INFO  Match       : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
+RiCKResForwardT...   INFO Track Selection : [Forward]
+RiCKResForwardT...   INFO  Forward     : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
+RiCKResMatchTig...   INFO Track Selection : [Match]
+RiCKResMatchTig...   INFO  Match       : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
+RiCKResKsTrackT...   INFO Track Selection : [KsTrack]
+RiCKResKsTrackT...   INFO  KsTrack     : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
+RiCKResVeloTTTi...   INFO Track Selection : [VeloTT]
+RiCKResVeloTTTi...   INFO  VeloTT      : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
+RiCKResSeedTigh...   INFO Track Selection : [Seed]
+RiCKResSeedTigh...   INFO  Seed        : P = 1.00e+01->1.00e+30 GeV : Pt = 5.00e-01->1.00e+30 GeV : fitchi2 = 0.00e+00->3.00e+00 : Likelihood = -4.00e+01->1.00e+30 : CloneCut = 5.00e+03->1.00e+30 : GhostProb = -1.00e+30->8.00e-01
 RichPIDMoni          INFO Member list: Rich::Rec::MC::PIDQC/RiPIDMonLong2To100, Rich::Rec::MC::PIDQC/RiPIDMonLong2To10, Rich::Rec::MC::PIDQC/RiPIDMonLong10To70, Rich::Rec::MC::PIDQC/RiPIDMonLong70To100, with context 'Offline'
 RiPIDMonLong2To...   INFO Track Selection : [Forward, Match]
 RiPIDMonLong2To...   INFO  Forward     : P = 2.00e+00->1.00e+02 GeV
@@ -586,22 +601,29 @@ BremMatchMon      SUCCESS Booked 5 Histogram(s) : 1D=5
 CaloEMuPIDMonUncutSUCCESS Booked 6 Histogram(s) : 1D=6
 CaloEMuPIDMonSoft SUCCESS Booked 4 Histogram(s) : 1D=4
 CaloEMuPIDMonHard SUCCESS Booked 4 Histogram(s) : 1D=4
-RichRawDataSize   SUCCESS Booked 2 Histogram(s) : 1DProf=2
+RichRawDataSize   SUCCESS Booked 3 Histogram(s) : 1DProf=3
+RichRawDataSizeL0 SUCCESS Booked 3 Histogram(s) : 1DProf=3
 RichDecodingErrorsSUCCESS Booked 1 Histogram(s) : 1DProf=1
 RichRecPixelQC    SUCCESS Booked 6 Histogram(s) : 1D=6
 RichRecPixelClu...SUCCESS Booked 2 Histogram(s) : 1D=2
-RiLongTrkEff      SUCCESS Booked 17 Histogram(s) : 1D=12 1DProf=5
-RiForwardTrkEff   SUCCESS Booked 17 Histogram(s) : 1D=12 1DProf=5
-RiMatchTrkEff     SUCCESS Booked 17 Histogram(s) : 1D=12 1DProf=5
-RiKsTrackTrkEff   SUCCESS Booked 17 Histogram(s) : 1D=12 1DProf=5
-RiVeloTTTrkEff    SUCCESS Booked 17 Histogram(s) : 1D=12 1DProf=5
-RiSeedTrkEff      SUCCESS Booked 17 Histogram(s) : 1D=12 1DProf=5
+RiLongTrkEff      SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
+RiForwardTrkEff   SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
+RiMatchTrkEff     SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
+RiKsTrackTrkEff   SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
+RiVeloTTTrkEff    SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
+RiSeedTrkEff      SUCCESS Booked 20 Histogram(s) : 1D=14 1DProf=6
 RiCKResLong       SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
-RiCKResForward    SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
-RiCKResMatch      SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
-RiCKResKsTrack    SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
-RiCKResVeloTT     SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
-RiCKResSeed       SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
+RiCKResForward    SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResMatch      SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResKsTrack    SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResVeloTT     SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResSeed       SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResLongTight  SUCCESS Booked 74 Histogram(s) : 1D=71 1DProf=3
+RiCKResForwardT...SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResMatchTight SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResKsTrackT...SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResVeloTTTightSUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
+RiCKResSeedTight  SUCCESS Booked 42 Histogram(s) : 1D=39 1DProf=3
 ENNRingMoniAll    SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniBest   SUCCESS Booked 12 Histogram(s) : 1D=12
 ENNRingMoniIsol...SUCCESS Booked 12 Histogram(s) : 1D=12
@@ -631,7 +653,7 @@ MuEffMonitor      SUCCESS Booked 34 Histogram(s) : 1D=31 2D=3
 VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
 VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
-TrackVertexMonitorSUCCESS Booked 23 Histogram(s) : 1D=13 1DProf=10
+TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
 TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
 TrackAlignMonitor    INFO Number of elements in jacobian map: 0
 TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
@@ -679,7 +701,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -950,6 +972,9 @@ TimingAuditor.T...   INFO       CaloEMuPIDMonHard       |     0.000 |     0.000 
 TimingAuditor.T...   INFO     MoniRICHSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichRawMoni              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichRawDataSize         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RichRawDataSizeL0Seq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichDataSizeL0Filter   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RichRawDataSizeL0      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichRawDataDBCheck      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichHotPixels           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RichDecodingErrors      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -970,6 +995,13 @@ TimingAuditor.T...   INFO       RiCKResMatch            |     0.000 |     0.000 
 TimingAuditor.T...   INFO       RiCKResKsTrack          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResVeloTT           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiCKResSeed             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      RichRecoMoniTight        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RiCKResLongTight        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RiCKResForwardTight     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RiCKResMatchTight       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RiCKResKsTrackTight     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RiCKResVeloTTTight      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       RiCKResSeedTight        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichPIDMoni              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiPIDMonLong2To100      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       RiPIDMonLong2To10       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
