@@ -454,7 +454,7 @@ ROOT.TH3D  . __getitem__  = _h3_get_item_
 ROOT.TH1   . __call__     = _h1_call_
 
 ROOT.TH1   . __len__      = lambda s : s.size() 
-ROOT.TH1   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetBinsZ() 
+ROOT.TH1   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ() 
 ROOT.TH1   . __contains__ = lambda s , i : 1 <= i <= s.size() 
 
 ROOT.TH2   . __len__      = lambda s : s.size() 
