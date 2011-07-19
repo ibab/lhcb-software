@@ -165,9 +165,9 @@ StatusCode LoKi::ParticleClassificator::initialize ()
 StatusCode LoKi::ParticleClassificator::finalize() 
 {
   // statistics:
-  if ( msgLevel ( MSG::DEBUG ) ) 
+  if ( msgLevel ( MSG::DEBUG ) || propsPrint () )  
   {
-    MsgStream& log = debug () ;
+    MsgStream& log = propsPrint () ? info() : debug () ;
     if ( !m_shortLived.accepted().empty() ) 
     {
       log << "Short-Lived particles : " << std::endl ;

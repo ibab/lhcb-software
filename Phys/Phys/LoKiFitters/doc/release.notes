@@ -5,6 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - Vanya Belyaev
+
+ - fix problem with calculation of nDoF and chi2 
+ - cmt/requirments 
+    version increment to v4r2
+
 !========================= LoKiFitters v4r1p3 2011-07-08 =========================
 ! 2011-07-08 - Rob Lambert
  - Reduce m_prints to 1 for LoKi::VertexFitter

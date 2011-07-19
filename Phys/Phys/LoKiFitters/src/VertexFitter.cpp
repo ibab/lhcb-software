@@ -370,11 +370,11 @@ StatusCode LoKi::VertexFitter::fit
   const Entry&               entry = m_entries.back() ;
   const Gaudi::Vector3&      x     = entry.m_x         ;
   const Gaudi::SymMatrix3x3& c     = entry.m_c         ;
-  const double               chi2  = entry.m_chi2      ;
+  // const double               chi2  = entry.m_chi2      ;
   // update the vertex parameters:
   vertex.setPosition  ( Gaudi::XYZPoint ( x(0) , x(1) , x(2) ) ) ;
   vertex.setCovMatrix ( c    ) ;
-  vertex.setChi2      ( chi2 ) ;
+  vertex.setChi2      ( LoKi::KalmanFilter::chi2 ( m_entries ) ) ;
   vertex.setNDoF      ( LoKi::KalmanFilter::nDoF ( m_entries ) ) ;
   // fill the vertex 
   vertex.clearOutgoingParticles() ;
@@ -526,11 +526,12 @@ StatusCode LoKi::VertexFitter::add
   //
   const Gaudi::Vector3&      x     = entry.m_x         ;
   const Gaudi::SymMatrix3x3& c     = entry.m_c         ;
-  const double               chi2  = entry.m_chi2      ;
+  // const double               chi2  = entry.m_chi2      ;
   // update the vertex parameters:
   vertex.setPosition  ( Gaudi::XYZPoint ( x(0) , x(1) , x(2) ) ) ; 
   vertex.setCovMatrix ( c    ) ;
-  vertex.setChi2      ( chi2 ) ;
+  vertex.setChi2      ( LoKi::KalmanFilter::chi2 ( m_entries ) ) ;
+  vertex.setNDoF      ( LoKi::KalmanFilter::nDoF ( m_entries ) ) ;
   // fill the vertex 
   vertex.addToOutgoingParticles( particle ) ;
   // keep for future tracing
