@@ -252,7 +252,7 @@ def makeDstar(name, inputD0, preFitDstarMassCut, cutChi2, SoftPionCutPIDe, cutPT
     Given a list of D0, try to make D*+ -> D0 pi+
     """
     
-    _softPi = DataOnDemand(Location = 'Phys/StdLoosePions/Particles')
+    _softPi = DataOnDemand(Location = 'Phys/StdAllLoosePions/Particles')
     _cutsSoftPi = '( PIDe-PIDpi < %(SoftPionCutPIDe)s )' % locals()
     _cutsDstarComb = "ADAMASS('D*(2010)+') < %(preFitDstarMassCut)s *MeV" % locals()
     _cutsDstarMoth_base = '(PT > %(cutPT)s * MeV) & (VFASPF(VCHI2/VDOF) < %(cutChi2)s )' % locals()

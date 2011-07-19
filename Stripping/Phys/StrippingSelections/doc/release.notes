@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - Mat Charles
+ - Change from StdLoosePions to StdAllLoosePions for slow pion in StrippingDstarD2KShh.py
+
 ! 2011-07-19 - Vanya Belyaev
 
   - CharmAssociative  & PromptCharm
