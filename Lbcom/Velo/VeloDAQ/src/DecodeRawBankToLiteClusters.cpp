@@ -10,13 +10,14 @@ int VeloDAQ::decodeRawBankToLiteClusters (
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
     LHCb::VeloLiteCluster::FastContainer* clusters,
-    int& byteCount )
+    int& byteCount,
+    bool ignoreErrors )
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
 
   // only decode banks without errors
-  if ( decoder.hasError() ) { return -1; }
+  if ( decoder.hasError() && !ignoreErrors ) { return -1; }
 
   // decode the clusterpositions, create lite clusters and
   // append them to the container

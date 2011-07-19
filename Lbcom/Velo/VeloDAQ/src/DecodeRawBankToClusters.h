@@ -30,7 +30,8 @@ namespace VeloDAQ {
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
       LHCb::VeloClusters* clusters,
-      int& byteCount); 
+      int& byteCount,
+      bool ignoreErrors=false); 
   
   /**  Append  clusters to keyed container, bank version 3
    *   This function decodes the cluster position and adc counts
@@ -55,6 +56,7 @@ namespace VeloDAQ {
       const bool assumeChipChannels,
       LHCb::VeloClusters* clusters,
       int& byteCount,
-      std::string& errorMsg); 
+      std::string& errorMsg,
+      bool ignoreErrors=false); 
 }
 #endif // VELODAQ_DECODERAWBANKTOCLUSTERS_H

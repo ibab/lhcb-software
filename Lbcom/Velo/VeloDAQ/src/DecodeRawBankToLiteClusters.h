@@ -27,6 +27,7 @@ namespace VeloDAQ {
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
       LHCb::VeloLiteCluster::FastContainer* clusters,
-      int & bytesCount); 
+      int & bytesCount,
+      bool ignoreErrors); 
 }
 #endif // VELODAQ_DECODERAWBANKTOLITECLUSTERS_H

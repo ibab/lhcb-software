@@ -179,7 +179,7 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
     int nClusters = 
       VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,
           m_assumeChipChannelsInRawBuffer,
-          fastCont, byteCount);
+          fastCont, byteCount, m_ignoreErrors);
     if( nClusters == -1 && !m_ignoreErrors ) {
       if ( msgLevel( MSG::DEBUG ) ) debug() << "Header error bit set in raw bank source ID " 
         << rb->sourceID() << endmsg;
@@ -264,13 +264,13 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
         nClusters = 
           VeloDAQ::decodeRawBankToClustersV2(rawBank,sensor,
               m_assumeChipChannelsInRawBuffer,
-              clusters,byteCount);
+              clusters,byteCount,m_ignoreErrors);
         break;
       case VeloDAQ::v3:
         nClusters = 
           VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,
               m_assumeChipChannelsInRawBuffer,
-              clusters,byteCount,errorMsg);
+              clusters,byteCount,errorMsg,m_ignoreErrors);
         if ( !errorMsg.empty() ) {
           unsigned int msgCount = 0;
           if ( msgLevel(MSG::DEBUG) ) msgCount = 10;

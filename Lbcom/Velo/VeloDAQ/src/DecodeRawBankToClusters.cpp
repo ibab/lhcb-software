@@ -14,13 +14,14 @@ int VeloDAQ::decodeRawBankToClustersV2(
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
     LHCb::VeloClusters* clusters,
-    int& byteCount)
+    int& byteCount,
+    bool ignoreErrors)
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
 
   // only decode banks without errors
-  if ( decoder.hasError() ) { return -1; }
+  if ( decoder.hasError() && !ignoreErrors ) { return -1; }
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
@@ -88,13 +89,14 @@ int VeloDAQ::decodeRawBankToClustersV3(
     const bool assumeChipChannels,
     LHCb::VeloClusters* clusters,
     int& byteCount, 
-    std::string& errorMsg )
+    std::string& errorMsg,
+    bool ignoreErrors )
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
 
   // only decode banks without errors
-  if ( decoder.hasError() ) { return -1; }
+  if ( decoder.hasError() && !ignoreErrors ) { return -1; }
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
