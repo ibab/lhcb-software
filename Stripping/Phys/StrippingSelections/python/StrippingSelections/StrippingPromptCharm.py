@@ -114,8 +114,7 @@ from StandardParticles      import ( StdNoPIDsPions     ,
                                      StdLoosePions      ,
                                      StdLooseKaons      ,
                                      StdLooseProtons    , 
-                                     StdLooseMuons      ,
-                                     StdLooseAllPhotons ) 
+                                     StdLooseMuons      ) 
 
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -135,7 +134,6 @@ _default_configuration_ = {
     'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                       , 
     'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) ' , 
     'SlowPionCuts'    : ' TRCHI2DOF < 5   '                               ,
-    'PhotonCuts'      : ' PT > 3.0 * GeV  '                               , 
     #
     # Global Event cuts 
     #
@@ -156,9 +154,8 @@ _default_configuration_ = {
     "from GaudiKernel.PhysicalConstants import c_light" , 
     "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
     # dimuons:
-    "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV" ,
+    "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
-    "dimuon_tight  = (  ADMASS ('J/psi(1S)') <  70 * MeV ) | (  ADMASS ('psi(2S)') <  70 * MeV ) | ( M > 4.75 * GeV ) "
     ] ,
     ## monitoring ?
     'Monitor'     : False ,
@@ -170,8 +167,6 @@ _default_configuration_ = {
     'LamCPrescale'           : 1.0 ,
     'DiCharmPrescale'        : 1.0 , 
     'DiMuonAndCharmPrescale' : 1.0 , 
-    'DiMuonAndGammaPrescale' : 1.0 ,
-    'DoubleDiMuonPrescale'   : 1.0 
     }
 
 ## ============================================================================
@@ -185,8 +180,6 @@ class StrippingPromptCharmConf(LineBuilder) :
     """
     __configuration_keys__ = tuple ( _default_configuration_.keys() )
     
-    ## private set of selections 
-    __selections_ = {}
     
     ## get the default configuration 
     @staticmethod
@@ -215,17 +208,21 @@ class StrippingPromptCharmConf(LineBuilder) :
         if not name : name = 'PromptCharm'
         # check the names 
         if 'PromptCharm' != name :
-            log.warning ( 'The non-default name is specified' ) 
-            
+            log.warning ( 'The non-default name is specified "%s"' % name  ) 
+
         from copy import deepcopy
         _config = deepcopy ( _default_configuration_ )
         _config.update ( config ) 
-        
-        if self.__selections_.has_key ( name ) :
-            _dct = self.__selections_[name]
-            if _dct['CONFIG'] != _config :
-                raise AttributeError , 'Reconfiguration with same name and different config!'
-            
+
+        if isinstance ( config , dict ):
+            _config.update ( config )
+            LineBuilder.__init__( self , name , _config )
+        else :
+            LineBuilder.__init__( self , name ,  config )
+
+        ## private set of selections 
+        self.__selections_ = {}
+
         LineBuilder.__init__( self , name , _config )
 
         if not self.__selections_.has_key ( self.name() ) :
@@ -252,8 +249,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         self._protoncuts   = self._basiccuts + _config.pop ( 'ProtonCuts'   , _default_configuration_ [ 'ProtonCuts'   ] )
         self._slowpioncuts =                   _config.pop ( 'SlowPionCuts' , _default_configuration_ [ 'SlowPionCuts' ] )
         
-        self._photoncuts   =                   _config.pop ( 'PhotonCuts'   , _default_configuration_ [ 'PhotonCuts'   ] )
-
         self._checkPV      = _config.pop ( 'PrimaryVertices' , _default_configuration_ [ 'PrimaryVertices' ] )
 
         self.D0Prescale             = _config.pop ( 'D0Prescale'             , _default_configuration_ [ 'D0Prescale'             ] ) 
@@ -263,8 +258,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         self.LamCPrescale           = _config.pop ( 'LamCPrescale'           , _default_configuration_ [ 'LamCPrescale'           ] ) 
         self.DiCharmPrescale        = _config.pop ( 'DiCharmPrescale'        , _default_configuration_ [ 'DiCharmPrescale'        ] ) 
         self.DiMuonAndCharmPrescale = _config.pop ( 'DiMuonAndCharmPrescale' , _default_configuration_ [ 'DiMuonAndCharmPrescale' ] )
-        self.DiMuonAndGammaPrescale = _config.pop ( 'DiMuonAndGammaPrescale' , _default_configuration_ [ 'DiMuonAndGammaPrescale' ] )
-        self.DoubleDiMuonPrescale   = _config.pop ( 'DoubleDiMuonPrescale'   , _default_configuration_ [ 'DoubleDiMuonPrescale'   ] )
         
         self._Preambulo    = _config.pop ( 'Preambulo'       , _default_configuration_ [ 'Preambulo'       ] )
         self._monitor      = _config.pop ( 'Monitor'         , _default_configuration_ [ 'Monitor'         ] )
@@ -275,28 +268,34 @@ class StrippingPromptCharmConf(LineBuilder) :
         for line in self._lines_charm() :
             self.registerLine(line)
 
+
     ## get the selections
     def _selections_private ( self ) :
-
-        sel = self._selectios ( 'Selections' )
+                
+        sel = self._selections ( 'Selections' )
         if sel : return sel
         
-        sel =  [ self.D02HH () ,
-                 self.Dstar () ,
-                 self.Ds    () ,
-                 self.Dplus () ,
-                 self.LamC  () ]
+        sel =  [ self.D02HH          () ,
+                 self.Dstar          () ,
+                 self.Ds             () ,
+                 self.Dplus          () ,
+                 self.LamC           () ,
+                 self.DiMuon         () ,
+                 self.DiCharm        () ,
+                 self.DiMuonAndCharm () 
+                 ]
         
         return self._add_selection ( 'Selections' , sel )  
 
     ## get the selection, associated with some nickname name 
     def _selection ( self , nick ) :
         """
-        get the selection, associated with some nickname name
+        Get the selection, associated with some nickname name
         """
         
-        if not self.__selections_.has_key ( self.name() ) : self.__selections_[ self.name() ] = {} 
-        
+        if not self.__selections_.has_key ( self.name() ) :
+            self.__selections_[ self.name() ] = {} 
+            
         return self.__selections_[ self.name() ].get( nick , None ) 
     
     ## add the selection, associated with some nickname name 
@@ -358,17 +357,6 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self._checkPV      ,
             algos    = [ self.LamC () ]
             ) ,
-            ]
-        #
-        return self._add_selection ( 'CharmLines' , sel ) 
-    
-    ## get all dicharm lines 
-    def _lines_dicharm ( self ) :
-
-        sel = self._selection ( 'DiCharmLines' )
-        if sel : return sel 
-        
-        sel = [
             ##
             StrippingLine (
             "DiCharmFor" + self._name ,
@@ -384,22 +372,10 @@ class StrippingPromptCharmConf(LineBuilder) :
             algos    = [ self.DiMuonAndCharm () ]            
             ) ,
             ## 
-            StrippingLine (
-            "DiMuonAndGammaFor" + self._name ,
-            prescale = self.DiMuonAndGammaPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DiMuonAndGamma () ]            
-            ) ,
-            ##
-            StrippingLine (
-            "DoubleDiMuonFor" + self._name ,
-            prescale = self.DoubleDiMuonPrescale  , ## ATTENTION! Prescale here !!              
-            checkPV  = self._checkPV         ,
-            algos    = [ self.DoubleDiMuon () ]            
-            ) 
             ]
         #
-        return self._add_selection ( 'DiCharmLines' , sel ) 
+        return self._add_selection ( 'CharmLines' , sel ) 
+    
     
     ## get all stripping lines 
     def _lines_private ( self ) :
@@ -414,7 +390,6 @@ class StrippingPromptCharmConf(LineBuilder) :
     def pionCuts     ( self ) : return self._pioncuts 
     def protonCuts   ( self ) : return self._protoncuts 
     def slowPionCuts ( self ) : return self._slowpioncuts 
-    def photonCuts   ( self ) : return self._photoncuts 
 
     ## get the selection of kaons 
     def kaons ( self ) :
@@ -894,11 +869,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## the decays to be reconstructed 
             DecayDescriptor = 'J/psi(1S) -> mu+ mu-' ,
             DaughtersCuts   = {
-            'mu+' : ' TRCHI2DOF < 5 '
+            'mu+' : ' ( TRCHI2DOF < 5 ) & ISMUON '
             } , 
             Preambulo       = self.preambulo() , 
             ## combination cut 
-            CombinationCut  = " psi | psi_prime | ( AM > 4.5 * GeV ) " ,
+            CombinationCut  = " psi | psi_prime | ( AM > 4.9 * GeV ) " ,
             ##      mother cut 
             MotherCut       = " chi2vx < 20 " 
             )
@@ -918,7 +893,7 @@ class StrippingPromptCharmConf(LineBuilder) :
     ## get the dimuons & charn 
     def DiMuonAndCharm ( self ) :
         """
-        get charm & dimuon :
+        Get charm & dimuon :
         Select events with at leats one charm particle and
         at least one dimuon 
         """
@@ -948,73 +923,6 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         return self._add_selection( 'DiMuonAndCharm_Selection' , sel ) 
         
-
-    ## get the dimuons & charn 
-    def DiMuonAndGamma ( self ) :
-        """
-        get dimuon & gamma 
-        Select events with dimuon and high-pt photon 
-        at least one dimuon 
-        """
-        sel = self._selection ( 'DiMuonAndGamma_Selection' )
-        if sel : return sel 
-        
-        _Filter = CombineParticles (
-            ## 
-            DecayDescriptors = [
-            "chi_b2(1P)  -> J/psi(1S) gamma" ,
-            ] ,
-            ##
-            Preambulo = self.preambulo() ,
-            ## 
-            DaughtersCuts   = {
-            'J/psi(1S)' : " ( PT > 3.0 * GeV ) & ( chi2vx < 10 ) & dimuon_tight & ( MINTREE ( 'mu+'==ABSID , PT ) > 650*MeV ) & in_range ( -150*um, ctau, 150*um ) ",  
-            'gamma'     :  self.photonCuts ()
-            } ,
-            ## 
-            CombinationCut = " AALL "  ,
-            MotherCut      = "  ALL " 
-            )
-        
-        sel = Selection  (
-            "SelDiMuonAndGammaFor" + self._name  ,
-            Algorithm = _Filter ,
-            RequiredSelections = [
-            self.DiMuon      () ,
-            StdLooseAllPhotons  , 
-            ]
-            )
-        
-        return self._add_selection ( 'DiMuonAndGamma_Selection' , sel ) 
-    
-    ## get the double dimuons
-    def DoubleDiMuon ( self ) :
-        """
-        get 2xdimuon
-        Select events with two dimuons
-        at least one dimuon 
-        """
-        sel = self._selection ( 'DoubleDiMuon_Selection' )
-        if sel : return sel 
-        
-        _Filter = CombineParticles (
-            DecayDescriptors = [
-            "chi_b2(1P)  -> J/psi(1S) J/psi(1S)" ,
-            ] ,
-            CombinationCut = " AALL " ,
-            MotherCut      = "  ALL " 
-            )
-        
-        sel = Selection  (
-            "SelDoubleDiMuonFor" + self._name  ,
-            Algorithm = _Filter ,
-            RequiredSelections = [
-            self.DiMuon      () 
-            ]
-            )
-        
-        return self._add_selection ( 'DoubleDiMuon_Selection' , sel )
-    
     
 default_config = {
     'D0Prescale'             : 1.00 ,
@@ -1024,7 +932,6 @@ default_config = {
     'LamCPrescale'           : 1.00 ,
     'DiCharmPrescale'        : 1.00 ,
     'DiMuonAndCharmPrescale' : 1.00 ,
-    'DoubleDiMuonPrescale'   : 1.00 
     }
 
 # =============================================================================

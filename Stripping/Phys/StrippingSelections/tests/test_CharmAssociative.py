@@ -1,17 +1,17 @@
+
 #!/usr/bin/env python
 # =============================================================================
 
 from StrippingUtils import LineBuilderTests
 
 config_params = {
-    'D0Prescale'      : 1.00,
-    'DstarPrescale'   : 1.00,
-    'DsPrescale'      : 1.00,
-    'DplusPrescale'   : 1.00,
-    'LamCPrescale'    : 1.00
-  }
+    'DiMuonAndGammaPrescale' :   1.00 ,
+    'DoubleDiMuonPrescale'   :   1.00 , 
+    'PhotonCuts'             : ' PT > 4.0 * GeV  '  
+    }
 
-from StrippingSelections.StrippingPromptCharm import StrippingPromptCharmConf as builder
+
+from StrippingSelections.StrippingCharmAssociative import StrippingCharmAssociativeConf as builder
 
 def test_line_builder() :
     LineBuilderTests.test_line_builder(builder, config_params)

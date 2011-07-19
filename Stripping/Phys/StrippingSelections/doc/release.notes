@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - Vanya Belyaev
+
+ - Fix CharmAssociative : 
+
+     move DiMuonAndCharm into PromptCharm 
+	   move DiCharm        into PromptCharm 
+
+ - Add tests/test_CharmAssociative.py
+
 ! 2011-07-19 - Rob Lambert
  - Tightened PID cuts in StrippingB0q2DplusMuX to improve retention.
 
