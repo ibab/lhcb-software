@@ -87,7 +87,6 @@ DaVinci().appendToMainSequence( [MakePionsEtc] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
-DaVinci().MoniSequence += [ seq ]            # Append the TagCreator to DaVinci
 DaVinci().DataType = "2011"
 DaVinci().InputType = 'SDST'
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py")
