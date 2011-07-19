@@ -545,12 +545,21 @@ namespace LoKi
      *  @thanks Wouter Hulsbergen
      *  @thanks Fred Blanc 
      *  @param entries (input) vector of entries 
-     *  @return true of colelction of entries is OK 
+     *  @return number of degrees of freedom 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-09-26
      */
     GAUDI_API 
     int nDoF ( const Entries& entries ) ;
+    // ========================================================================
+    /** calculate the chi2 
+     *  @param entries (input) vector of entries 
+     *  @return chi2 of vertex 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-07-19
+     */
+    GAUDI_API 
+    double chi2 ( const Entries& entries ) ;
     // ========================================================================
   } //                                      end of namespace LoKi::KalmanFilter
   // ==========================================================================

@@ -33,6 +33,7 @@
   <function name = "LoKi::KalmanFilter::nGood"                />
   <function name = "LoKi::KalmanFilter::okForVertex"          />
   <function name = "LoKi::KalmanFilter::nDof"                 />
+  <function name = "LoKi::KalmanFilter::chi2"                 />
   
   <class    name = "LoKi::KalmanFilter::TrEntry4"                />
   <class    name = "std::vector<LoKi::KalmanFilter::TrEntry4>"   />

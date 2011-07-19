@@ -5,6 +5,16 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - Vanya Belyaev
+
+
+ - fix in KalmanFilter::nDoF calculation 
+   add    KalmanFilter::chi2 function 
+
+ - cmt/requirement 
+    version increment to v1r3
+
+
 !========================== KalmanFilter v1r2 2011-04-29 ===================
 ! 2011-04-26 - Marco Cattaneo
  - Add missing dependency on DaVinciInterfaces. Needed to get right build order

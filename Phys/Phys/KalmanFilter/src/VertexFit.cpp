@@ -953,8 +953,15 @@ int LoKi::KalmanFilter::nDoF
   for ( Entries::const_iterator ientry = entries.begin() ; 
         entries.end() != ientry ; ++ientry ) 
   {
-    // 3 DoFs per vertex 
-    if      ( ientry->m_type == ShortLivedParticle ) { result += 3 ; }
+    // 3 DoFs per vertex + dofs from the vertex 
+    if      ( ientry->m_type == ShortLivedParticle ) 
+    { 
+      result += 3 ;
+      // add nDoF form the vertex 
+      const LHCb::VertexBase* ev = 0 ;
+      if ( 0 != ientry->m_p0 ) { ev      = ientry->m_p0 -> endVertex () ; }
+      if ( 0 != ev           ) { result += ev->nDoF() ; }   
+    }
     // 2 DoFs for track 
     else if ( ientry->m_type == LongLivedParticle  ) { result += 2 ; }
   }
@@ -962,6 +969,43 @@ int LoKi::KalmanFilter::nDoF
   return result ;
 }
 // ========================================================================
+/*  calculate the chi2 
+ *  @param entries (input) vector of entries 
+ *  @return chi2 of vertex fit
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-07-19
+ */
+// ========================================================================
+double LoKi::KalmanFilter::chi2
+( const LoKi::KalmanFilter::Entries& entries ) 
+{
+  //
+  double result = 0 ;
+  //
+  /// get the last chi2 :
+  if ( !entries.empty() ) 
+  { 
+    const Entry& last   = entries.back () ;
+    result             += last.m_chi2     ;
+  }
+  //
+  for ( Entries::const_iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    if      ( ientry->m_type == ShortLivedParticle ) 
+    { 
+      // add chi2 from each vertex 
+      const LHCb::VertexBase* ev = 0 ;
+      if ( 0 != ientry->m_p0 ) { ev      = ientry->m_p0 -> endVertex () ; }
+      if ( 0 != ev           ) { result += ev -> chi2 () ; }   
+    }
+  }
+  //
+  return result ; 
+}
+// ============================================================================
+
+  
 
 // ============================================================================
 // The END 
