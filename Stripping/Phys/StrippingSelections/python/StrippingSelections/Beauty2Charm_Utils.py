@@ -49,7 +49,7 @@ def bMassCut(decay,window):
     '''Returns ADAMASS functor given decay desc. and mass window.'''
     dec = decay[0]
     where = dec.find('B')
-    if where < 0: print 'ERROR! No B in descriptor "%s"' % dec
+    if where < 0: return "(ADAMASS('Lambda_b0') < %s)" % window
     b = dec[where:where+2]
     if b is 'B0': # Also include B_s for neutral B's!
         b_s = b[0]+'_s'+b[-1]

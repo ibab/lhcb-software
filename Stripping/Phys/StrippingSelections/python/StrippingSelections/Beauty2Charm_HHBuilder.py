@@ -11,11 +11,12 @@ from Beauty2Charm_ComboEngine import *
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class HHBuilder(object):
-    '''Produces all HH di-mesons for the Beauty2Charm module.'''
+    '''Produces all HH quasi-particles for the Beauty2Charm module.'''
 
-    def __init__(self,pions,kaons,ks,pi0,config):
+    def __init__(self,pions,kaons,protons,ks,pi0,config):
         self.pions = filterInputs("HHPions",[pions],config['DAUGHTERS'])
         self.kaons = filterInputs("HHKaons",[kaons],config['DAUGHTERS'])
+        self.protons = filterInputs("HHProtons",[protons],config['DAUGHTERS'])
         self.ks    = ks
         self.pi0   = pi0
         self.config = config
@@ -25,6 +26,8 @@ class HHBuilder(object):
         self.rho0 = self._makeRho0([self.pipi])
         self.kstar0 = self._makeKstar0([self.kpi])
         self.phi = self._makePhi([self.kk])
+        self.ppi = self._makePPi()
+        self.pk = self._makePK()
 
     def _makeX2HH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HH selections.'''
@@ -68,6 +71,16 @@ class HHBuilder(object):
 
     def _makePhi(self,kk):
         return filterSelection('PHI',self._massWindow('PHI','phi(1020)'),kk)
+
+    def _makePPi(self):
+        '''Makes X -> p+ pi- + c.c.'''
+        return self._makeX2HH('X2PPi',['[Lambda0 -> p+ pi-]cc'],'(AM < 6*GeV)',
+                              self.config,[self.pions,self.protons])
+
+    def _makePK(self):
+        '''Makes X -> p+ K- + c.c.'''
+        return self._makeX2HH('X2PK',['[Lambda0 -> p+ K-]cc'],'(AM < 6*GeV)',
+                              self.config,[self.kaons,self.protons])
 
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

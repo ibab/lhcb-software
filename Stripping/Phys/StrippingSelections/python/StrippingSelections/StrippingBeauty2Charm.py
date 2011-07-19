@@ -22,6 +22,7 @@ from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_B2DXBuilder import *
+from Beauty2Charm_Lb2XBuilder import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -79,6 +80,14 @@ config = {
     'ASUMPT_MIN'    : '1000*MeV',
     'MIPCHI2DV_MIN' : 4
     },
+    'LC2X' : { # Cuts for all Lambda_c's used in all lines
+    'ASUMPT_MIN'    : '1500*MeV',
+    'AMAXDOCA_MAX'  : '1.0*mm',
+    'VCHI2DOF_MAX'  : 30,
+    'BPVVDCHI2_MIN' : 36,
+    'BPVDIRA_MIN'   : 0, 
+    'MASS_WINDOW'   : '200*MeV'
+    },
     "Prescales" : { # Prescales for individual lines
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
@@ -90,17 +99,16 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar','HH',
-                              'Prescales','GECNTrkMax')
+                              'LC2X','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
-        from Configurables import LoKi__VoidFilter as VoidFilter
-        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-
+        
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter all inputs (nothing is looser than this)
         pions = filterInputs('Pi',[StdNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdNoPIDsKaons],config['ALL'])
+        protons = filterInputs('P',[StdNoPIDsProtons],config['ALL'])
         ks_dd = filterInputs('KS0_DD',[dataOnDemand("StdLooseKsDD")],
                                        config['KS0']) 
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
@@ -121,13 +129,20 @@ class Beauty2CharmConf(LineBuilder):
         dst = DstarBuilder(d.hh,pions,config['Dstar'])
 
         # X -> hh
-        hh = HHBuilder(pions,kaons,{"DD":[ks_dd],"LL":[ks_ll]}, 
+        hh = HHBuilder(pions,kaons,protons,{"DD":[ks_dd],"LL":[ks_ll]}, 
                        {"Merged":[pi0_merged],"Resolved":[pi0_resolved]},
                        config['HH'])
+
+        # Lc -> X
+        lc = LcBuilder(pions,kaons,protons,config['LC2X'])
 
         # make B->DX
         b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,hh,config['B2X'])
         self._makeLines(b2dx.lines,config)
+
+        # Lb -> X
+        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,config['B2X'])
+        self._makeLines(lb2x.lines,config)
         
     def _makeLine(self,protoLine,config):
         tmpSel = Selection(protoLine.selection.name()+'FilterALL',
