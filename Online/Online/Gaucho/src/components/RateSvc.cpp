@@ -130,7 +130,10 @@ void RateSvc::makerate(MonMap* mmap)
       if (s!=0) s->Updater(sizeof(rate));
       if (m_enableTrending)
       {
-        m_trender->addEntry(nams, rate);
+        std::string tnam;
+        size_t i=nams.find('/');
+        tnam = nams.substr(i);
+        m_trender->addEntry(tnam, rate);
       }
     }
   }
