@@ -492,12 +492,71 @@ def _h3_contains_ ( s , ibin ) :
            ibin[1] in s.GetYaxis() and \
            ibin[2] in s.GetZaxis()
 
+
 ROOT.TH3   . __contains__ = _h3_contains_
 ROOT.TH3F  . __contains__ = _h3_contains_
 ROOT.TH3D  . __contains__ = _h3_contains_
 
 
 ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
+
+
+# =============================================================================
+## find bin in 1D-histogram
+def _h1_find_ ( h1 , x ) :
+    """
+    Find the bin in 1D-histogram
+
+    >>> ibin = h1.findBin ( x ) 
+    """
+    if hasattr ( x , 'value' ) : x = x.value()
+    #
+    ax = h1.GetXaxis()
+    #
+    return ax.FindBin ( x )
+# =============================================================================
+## find bin in 2D-histogram
+def _h2_find_ ( h2 , x , y ) :
+    """
+    Find the bin in 3D-histogram
+
+    >>> ibin = h2.findBin ( x , y ) 
+    """
+    if hasattr ( x , 'value' ) : x = x.value()
+    if hasattr ( y , 'value' ) : y = y.value()
+    #
+    ax = h2.GetXaxis()
+    ay = h2.GetYaxis()
+    #
+    return  ( ax.FindBin ( x ) ,
+              ay.FindBin ( y ) )
+# =============================================================================
+## find bin in 3D-histogram
+def _h3_find_ ( h3 , x , y ) :
+    """
+    Find the bin in 3D-histogram
+
+    >>> ibin = h3.findBin ( x , y , z ) 
+    """
+    if hasattr ( x , 'value' ) : x = x.value()
+    if hasattr ( y , 'value' ) : y = y.value()
+    if hasattr ( z , 'value' ) : z = z.value()
+    #
+    ax = h3.GetXaxis()
+    ay = h3.GetYaxis()
+    az = h3.GetZaxis()
+    #
+    return  ( ax.FindBin ( x ) ,
+              ay.FindBin ( y ) ,
+              az.FindBin ( z ) )
+
+
+ROOT.TH1F . findBin  = _h1_find_
+ROOT.TH1D . findBin  = _h1_find_
+ROOT.TH2F . findBin  = _h2_find_
+ROOT.TH2D . findBin  = _h2_find_
+ROOT.TH3F . findBin  = _h3_find_
+ROOT.TH3D . findBin  = _h3_find_
 
 # =============================================================================
 ## histogram as function 

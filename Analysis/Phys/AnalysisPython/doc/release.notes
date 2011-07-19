@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-07-19 - Vanya Belyaev
+
+ - decorate findBin functions 
+
 
 ! 2011-07-17 - Vanya Belyaev
  - more polishing of decorators, 
