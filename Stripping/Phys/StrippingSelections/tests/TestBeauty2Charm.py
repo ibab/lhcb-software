@@ -40,7 +40,7 @@ sr = StrippingReport(Selections=sc.selections())
 DaVinci().PrintFreq = 1000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 #DaVinci().ETCFile = "etc.root"
-DaVinci().EvtMax = 5000
+DaVinci().EvtMax = 5
 DaVinci().EventPreFilters = [filterHLT]
 DaVinci().appendToMainSequence([sc.sequence()])
 DaVinci().appendToMainSequence([sr])
@@ -50,6 +50,6 @@ DaVinci().DataType = "2010"
 DaVinci().InputType = 'SDST'
 
 EventSelector().Input = [
-    "DATAFILE='PFN:/vols/lhcbdisk03/mwillia1/00008375_00044647_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"
+    "DATAFILE='PFN:/u/lhcb-home/apuig/Charm/cmtuser/DaVinci_v28r4p1/Phys/StrippingSelections/cmt/dsts/00010035_00002581_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"
     ]
 FileCatalog().Catalogs = ["xmlcatalog_file:pool_xml_catalog.xml"]
