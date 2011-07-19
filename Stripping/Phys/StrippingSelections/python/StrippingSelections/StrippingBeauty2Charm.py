@@ -20,6 +20,7 @@ from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 #from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
 #     StdAllNoPIDsProtons
 from Beauty2Charm_DBuilder import *
+from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_B2DXBuilder import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
@@ -68,6 +69,16 @@ config = {
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '50*MeV'
     },
+    "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
+    'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
+    'DAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV'},
+    'AMAXDOCA_MAX'  : '1.0*mm',
+    'VCHI2DOF_MAX'  : 30,
+    'BPVVDCHI2_MIN' : 36,
+    'BPVDIRA_MIN'   : 0,
+    'ASUMPT_MIN'    : '1000*MeV',
+    'MIPCHI2DV_MIN' : 4
+    },
     "Prescales" : { # Prescales for individual lines
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
@@ -78,7 +89,7 @@ config = {
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar',
+    __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar','HH',
                               'Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
@@ -109,9 +120,14 @@ class Beauty2CharmConf(LineBuilder):
                      config['D2X'])
         dst = DstarBuilder(d.hh,pions,config['Dstar'])
 
+        # X -> hh
+        hh = HHBuilder(pions,kaons,{"DD":[ks_dd],"LL":[ks_ll]}, 
+                       {"Merged":[pi0_merged],"Resolved":[pi0_resolved]},
+                       config['HH'])
+
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,config['B2X'])
-        self._makeLines(b2dx.lines(),config)
+        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,hh,config['B2X'])
+        self._makeLines(b2dx.lines,config)
         
     def _makeLine(self,protoLine,config):
         tmpSel = Selection(protoLine.selection.name()+'FilterALL',
