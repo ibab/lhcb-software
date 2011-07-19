@@ -280,8 +280,8 @@ flavor_runtime_equivalence = {
                              }
 
 supported_compilers = {
-                       "slc6"   : [ "gcc44"],
-                       "slc5"   : ["gcc43", "icc11"] ,
+                       "slc6"   : ["gcc44", "gcc45"],
+                       "slc5"   : ["gcc43", "gcc45", "icc11"] ,
                        "slc4"   : ["gcc34"],
                        "slc3"   : ["gcc323"],
                        "win32"  : ["vc71", "vc9"],
@@ -292,6 +292,9 @@ supported_compilers = {
                        }
 class NativeMachine:
     def __init__(self):
+        """
+        constructor
+        """
         self._arch = None
         self._ostype = None
         self._machine = None
@@ -422,6 +425,11 @@ class NativeMachine:
 
         return osver
     def nativeCompilerVersion(self, position=None):
+        """
+        return the native compiler version
+        @param position: if not None returns up to the nth position. ie for gcc 3.4.5 with
+        position=2, it returns 3.4
+        """
         if not self._compversion :
             if self._ostype == "Windows" :
                 self._compversion = "vc9"
@@ -544,7 +552,11 @@ class NativeMachine:
         return compatibles
 
     def CMTSupportedConfig(self, debug=False):
-        """ returns the list of supported CMT configs among the compatible ones"""
+        """
+        returns the list of supported CMT configs among the compatible ones. This
+        means the ones which are shipped and usable on a local site.
+        @param debug: if True returns also the debug configs. Otherwise only the opt ones.
+        """
         compatibles = self.CMTCompatibleConfig(debug)
         supported = []
         for c in compatibles :
@@ -555,6 +567,7 @@ class NativeMachine:
         """
         Returns the native configuration if possible. Guess also the compiler
         on linux platforms
+        @param debug: if True returns also the debug configs. Otherwise only the opt ones.
         """
         comp = self.nativeCompiler()
         mach = self.machine()
@@ -563,6 +576,9 @@ class NativeMachine:
                             compiler=comp, debug=debug)
         return natconf
     def DiracPlatform(self):
+        """
+        return Dirac-style platform
+        """
         platformlist = [ platform.system(), platform.machine() ]
         if self.OSType() == "Linux" :
             # get version of highest libc installed
@@ -669,6 +685,9 @@ class NativeMachine:
 
         return res
     def LSBDistributorID(self):
+        """
+        wrapper around lsb_release -i
+        """
         if not self._lsb_distributor_id and self.OSType() == "Linux" :
             if os.path.exists("/usr/bin/lsb_release") :
                 lsbstr = os.popen("lsb_release -i").read()[:-1]
@@ -676,6 +695,9 @@ class NativeMachine:
                     self._lsb_distributor_id = lsbstr.split(":")[-1].strip()
         return self._lsb_distributor_id
     def LSBDescription(self):
+        """
+        wrapper around lsb_release -d
+        """
         if not self._lsb_description and self.OSType() == "Linux" :
             if os.path.exists("/usr/bin/lsb_release") :
                 lsbstr = os.popen("lsb_release -d").read()[:-1]
@@ -683,6 +705,9 @@ class NativeMachine:
                     self._lsb_description = lsbstr.split(":")[-1].strip()
         return self._lsb_description
     def LSBRelease(self):
+        """
+        wrapper around lsb_release -r
+        """
         if not self._lsb_release and self.OSType() == "Linux" :
             if os.path.exists("/usr/bin/lsb_release") :
                 lsbstr = os.popen("lsb_release -r").read()[:-1]
@@ -690,6 +715,9 @@ class NativeMachine:
                     self._lsb_release = lsbstr.split(":")[-1].strip()
         return self._lsb_release
     def LSBCodeName(self):
+        """
+        wrapper around lsb_release -c
+        """
         if not self._lsb_codename and self.OSType() == "Linux" :
             if os.path.exists("/usr/bin/lsb_release") :
                 lsbstr = os.popen("lsb_release -c").read()[:-1]
