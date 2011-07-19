@@ -77,15 +77,16 @@ confdict={
                  'KPT'         : 300, #MeV
                  'KIP'         : 0.03, #mm
                  'KPidPi'      : -5,
+                 'KPidPi2'   : -5,
                  'KPidMu'      : -40,
                  'KPidP'       : -40,
-                 'KTrChi2'     : 16,
+                 'KTrChi2'     : 10, #set in the common particles
                  'KIPChi2'     : 4,
                  #pion parameters
                  'PiPidK'      : -40,
                  'PiIP'        : 0.01, #mm
                  'PiPidMu'     : -5,
-                 'PiTrChi2'    : 16,
+                 'PiTrChi2'    : 10, #set in the common particles
                  'PiIPChi2'    : 4,
                  #D-resonance parameters
                  'DPT'         : 1000, #MeV
@@ -101,19 +102,20 @@ confdict={
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 500, #MeV
-                 'MuPidPi'     : -1.,
+                 'MuPidPi'     : 1., #reduce pion feedthrough to 1%
                  'MuPidK'      : -5,
                  'MuTrChi2'    : 5,
                  #kaon parameters
                  'KPT'         : 400, #MeV
                  'KIP'         : 0.04, #mm
-                 'KPidPi'      : 0,
+                 'KPidPi'      : 5,
+                 'KPidPi2'     : 10, #Kaon with same charge as pion
                  'KPidMu'      : 5,
                  'KPidP'       : -10,
                  'KTrChi2'     : 5,
                  'KIPChi2'     : 4,
                  #pion parameters
-                 'PiPidK'      : -10,
+                 'PiPidK'      : -5,
                  'PiIP'        : 0.04, #mm
                  'PiPidMu'     : -5,
                  'PiTrChi2'    : 10,
@@ -139,6 +141,7 @@ confdict={
                  'KPT'         : 400, #MeV
                  'KIP'         : 0.03, #mm
                  'KPidPi'      : 7,
+                 'KPidPi2'     : 7, #Kaon with same charge as pion
                  'KPidMu'      : 10,
                  'KPidP'       : -10,
                  'KTrChi2'     : 3,
@@ -247,6 +250,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         'KPT',
         'KIP',
         'KPidPi',
+        'KPidPi2',
         'KPidMu',
         'KPidP',
         'KTrChi2',
@@ -309,6 +313,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
                   "& (BPVDIRA > 0.99) "\
                   "& (BPVVDZ  > 1.0*mm) "\
                   "& (BPVVDCHI2 > %(D_BPVVDCHI2)s ) "\
+                  "& ((CHILD(2,PIDK-PIDpi)) > %(KPidPi2)s)  "\
                   ")" % config
 
                   #"& (VFASPF(VCHI2/VDOF) < 16.0) "\
