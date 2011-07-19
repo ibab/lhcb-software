@@ -1,5 +1,6 @@
 2011-07-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/generateLogin: fixed the SP_PROMPT present by mistake in the generated cache.
 	* python/LbConfiguration/Platform.py: added support for gcc45 for both slc6 and slc5. Only for CERN
 	for the moment. It is not available in the distributed ones yet.
 

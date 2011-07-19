@@ -345,6 +345,8 @@ def fixPython(filename):
     out.close()
 
 def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None, building=False, withoutpython=False):
+    if "SP_PROMPT" in os.environ.keys() :
+        del os.environ["SP_PROMPT"]
     location = None
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
