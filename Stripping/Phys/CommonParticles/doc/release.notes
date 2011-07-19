@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-07-19 - Patrick Koppenburg
+ - Remove unused StdVeryLooseDplus, D0, Lambdac
+
 ! 2011-07-18 - Patrick Koppenburg
 *
 *  MAJOR CHANGE : PLEASE READ

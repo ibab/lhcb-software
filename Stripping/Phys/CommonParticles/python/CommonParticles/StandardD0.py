@@ -22,9 +22,6 @@ _locations.update ( locations )
 from CommonParticles.StdLooseD02HH import *
 _locations.update ( locations )
 
-from CommonParticles.StdVeryLooseD02HH import *
-_locations.update ( locations )
-
 # redefine the locations 
 locations = _locations
 

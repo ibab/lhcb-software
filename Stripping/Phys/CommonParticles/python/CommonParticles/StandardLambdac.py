@@ -19,9 +19,6 @@ _locations = {}
 from CommonParticles.StdLooseLambdac import *
 _locations.update ( locations )
 
-from CommonParticles.StdVeryLooseLambdac import *
-_locations.update ( locations )
-
 # redefine the locations 
 locations = _locations
 
