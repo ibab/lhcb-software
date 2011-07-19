@@ -20,6 +20,14 @@ class B2DXBuilder(object):
         self.dst = dst
         self.d0h_d02hh = self._makeB2D0H('D2HH',self.d.hh)
         self.dh_d2hhh = self._makeB02DH('D2HHH',self.d.hhh)
+        self.dh_d2ksh_ll = self._makeB02DH('D2KSH_LL',self.d.ksh_ll)
+        self.dh_d2ksh_dd = self._makeB02DH('D2KSH_DD',self.d.ksh_dd)
+        self.d0h_d02kshh_ll = self._makeB2D0H('D2KSHH_LL',self.d.kshh_ll)
+        self.d0h_d02kshh_dd = self._makeB2D0H('D2KSHH_DD',self.d.kshh_dd)
+        self.d0h_d02pi0hh_resolved = self._makeB2D0H('D2Pi0HH_Resolved',self.d.pi0hh_resolved)
+        self.d0h_d02pi0hh_merged = self._makeB2D0H('D2Pi0HH_Merged',self.d.pi0hh_merged)
+        self.dh_d2pi0hhh_resolved = self._makeB02DH('D2Pi0HHH_Resolved',self.d.pi0hhh_resolved)
+        self.dh_d2pi0hhh_merged = self._makeB02DH('D2Pi0HHH_Merged',self.d.pi0hhh_merged) 
         self.d0h_d02hhhh = self._makeB2D0H('D2HHHH',self.d.hhhh)
         self.dstdk = self._makeB2DstDK()
 
@@ -38,6 +46,54 @@ class B2DXBuilder(object):
                      'PrescaleKey': 'D2HHHTIS'})
         sels.append({'Selection': self.dh_d2hhh['WS']['TOS'],
                      'PrescaleKey': 'D2HHHWS'})
+        # B->DH, D->KSH, KS->LL
+        sels.append({'Selection': self.dh_d2ksh_ll['RS']['TOS'],
+                     'PrescaleKey': 'D2KSHLL'})
+        sels.append({'Selection': self.dh_d2ksh_ll['RS']['TIS'],
+                     'PrescaleKey': 'D2KSHLLTIS'})
+        sels.append({'Selection': self.dh_d2ksh_ll['WS']['TOS'],
+                     'PrescaleKey': 'D2KSHLLWS'})
+        # B->DH, D->KSH, KS->DD
+        sels.append({'Selection': self.dh_d2ksh_dd['RS']['TOS'],
+                     'PrescaleKey': 'D2KSHDD'})
+        sels.append({'Selection': self.dh_d2ksh_dd['RS']['TIS'],
+                     'PrescaleKey': 'D2KSHDDTIS'})
+        sels.append({'Selection': self.dh_d2ksh_dd['WS']['TOS'],
+                     'PrescaleKey': 'D2KSHDDWS'})
+        # B->DH, D->KSHH, KS->LL
+        sels.append({'Selection': self.d0h_d02kshh_ll['RS']['TOS'],
+                     'PrescaleKey': 'D2KSHHLL'})
+        sels.append({'Selection': self.d0h_d02kshh_ll['RS']['TIS'],
+                     'PrescaleKey': 'D2KSHHLLTIS'})
+        # B->DH, D->KSHH, KS->DD
+        sels.append({'Selection': self.d0h_d02kshh_dd['RS']['TOS'],
+                     'PrescaleKey': 'D2KSHHDD'})
+        sels.append({'Selection': self.d0h_d02kshh_dd['RS']['TIS'],
+                     'PrescaleKey': 'D2KSHHDDTIS'})
+        # B->DH, D->Pi0HHH, Pi0->Resolved
+        sels.append({'Selection': self.dh_d2pi0hhh_resolved['RS']['TOS'],
+                     'PrescaleKey': 'D2Pi0HHHResolved'})
+        sels.append({'Selection': self.dh_d2pi0hhh_resolved['RS']['TIS'],
+                     'PrescaleKey': 'D2Pi0HHHResolvedTIS'})
+        sels.append({'Selection': self.dh_d2pi0hhh_resolved['WS']['TOS'],
+                     'PrescaleKey': 'D2Pi0HHHResolvedWS'})
+        # B->DH, D->Pi0HHH, Pi0->Merged
+        sels.append({'Selection': self.dh_d2pi0hhh_merged['RS']['TOS'],
+                     'PrescaleKey': 'D2Pi0HHHMerged'})
+        sels.append({'Selection': self.dh_d2pi0hhh_merged['RS']['TIS'],
+                     'PrescaleKey': 'D2Pi0HHHMergedTIS'})
+        sels.append({'Selection': self.dh_d2pi0hhh_merged['WS']['TOS'],
+                     'PrescaleKey': 'D2Pi0HHHMergedWS'})
+        # B->DH, D->Pi0HH, Pi0->Resolved
+        sels.append({'Selection': self.d0h_d02pi0hh_resolved['RS']['TOS'],
+                     'PrescaleKey': 'D2Pi0HHResolved'})
+        sels.append({'Selection': self.d0h_d02pi0hh_resolved['RS']['TIS'],
+                     'PrescaleKey': 'D2Pi0HHResolvedTIS'})
+        # B->DH, D->Pi0HH, Pi0->Merged
+        sels.append({'Selection': self.d0h_d02pi0hh_merged['RS']['TOS'],
+                     'PrescaleKey': 'D2Pi0HHMerged'})
+        sels.append({'Selection': self.d0h_d02pi0hh_merged['RS']['TIS'],
+                     'PrescaleKey': 'D2Pi0HHMergedTIS'})
         # B->D0H, D0-HHHH
         sels.append({'Selection': self.d0h_d02hhhh['RS']['TOS'],
                      'PrescaleKey': 'D2HHHH'})

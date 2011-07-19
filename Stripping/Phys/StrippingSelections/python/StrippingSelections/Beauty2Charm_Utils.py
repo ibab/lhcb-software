@@ -16,7 +16,7 @@ def filterSelection(name,code,inputs):
 
 def filterInputs(tag,inputs,config):
     '''Filter input particles.'''
-    code = LoKiCuts(['TRCHI2DOF','PT','P','MIPCHI2DV'],config).code()
+    code = LoKiCuts(['TRCHI2DOF','PT','P','MIPCHI2DV','MASS','Pi0CL_1','Pi0CL_2'],config).code()
     return filterSelection(tag+'Inputs',code,inputs)
 
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
