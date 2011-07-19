@@ -24,90 +24,65 @@ class B2DXBuilder(object):
         self.dh_d2ksh_dd = self._makeB02DH('D2KSH_DD',self.d.ksh_dd)
         self.d0h_d02kshh_ll = self._makeB2D0H('D2KSHH_LL',self.d.kshh_ll)
         self.d0h_d02kshh_dd = self._makeB2D0H('D2KSHH_DD',self.d.kshh_dd)
-        self.d0h_d02pi0hh_resolved = self._makeB2D0H('D2Pi0HH_Resolved',self.d.pi0hh_resolved)
-        self.d0h_d02pi0hh_merged = self._makeB2D0H('D2Pi0HH_Merged',self.d.pi0hh_merged)
-        self.dh_d2pi0hhh_resolved = self._makeB02DH('D2Pi0HHH_Resolved',self.d.pi0hhh_resolved)
-        self.dh_d2pi0hhh_merged = self._makeB02DH('D2Pi0HHH_Merged',self.d.pi0hhh_merged) 
+        self.d0h_d02pi0hh_resolved = self._makeB2D0H('D2Pi0HH_Resolved',
+                                                     self.d.pi0hh_resolved)
+        self.d0h_d02pi0hh_merged = self._makeB2D0H('D2Pi0HH_Merged',
+                                                   self.d.pi0hh_merged)
+        self.dh_d2pi0hhh_resolved = self._makeB02DH('D2Pi0HHH_Resolved',
+                                                    self.d.pi0hhh_resolved)
+        self.dh_d2pi0hhh_merged = self._makeB02DH('D2Pi0HHH_Merged',
+                                                  self.d.pi0hhh_merged) 
         self.d0h_d02hhhh = self._makeB2D0H('D2HHHH',self.d.hhhh)
         self.dstdk = self._makeB2DstDK()
 
-    def selections(self):
-        '''Returns all selections that are to be made into lines.'''
-        sels = []
+    def lines(self):
+        '''Returns all proto-lines that are to be made into lines.'''
+        lines = []
+        
         # B->D0H, D0->HH
-        sels.append({'Selection': self.d0h_d02hh['RS']['TOS'],
-                     'PrescaleKey': 'D2HH'})
-        sels.append({'Selection': self.d0h_d02hh['RS']['TIS'],
-                     'PrescaleKey': 'D2HHTIS'})
+        lines.append(ProtoLine(self.d0h_d02hh['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.d0h_d02hh['RS']['TIS'],1.0))
         # B->DH, D->HHH
-        sels.append({'Selection': self.dh_d2hhh['RS']['TOS'],
-                     'PrescaleKey': 'D2HHH'})
-        sels.append({'Selection': self.dh_d2hhh['RS']['TIS'],
-                     'PrescaleKey': 'D2HHHTIS'})
-        sels.append({'Selection': self.dh_d2hhh['WS']['TOS'],
-                     'PrescaleKey': 'D2HHHWS'})
+        lines.append(ProtoLine(self.dh_d2hhh['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.dh_d2hhh['RS']['TIS'],1.0))
+        lines.append(ProtoLine(self.dh_d2hhh['WS']['TOS'],0.1))
         # B->DH, D->KSH, KS->LL
-        sels.append({'Selection': self.dh_d2ksh_ll['RS']['TOS'],
-                     'PrescaleKey': 'D2KSHLL'})
-        sels.append({'Selection': self.dh_d2ksh_ll['RS']['TIS'],
-                     'PrescaleKey': 'D2KSHLLTIS'})
-        sels.append({'Selection': self.dh_d2ksh_ll['WS']['TOS'],
-                     'PrescaleKey': 'D2KSHLLWS'})
+        lines.append(ProtoLine(self.dh_d2ksh_ll['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.dh_d2ksh_ll['RS']['TIS'],1.0))
+        lines.append(ProtoLine(self.dh_d2ksh_ll['WS']['TOS'],0.1))
         # B->DH, D->KSH, KS->DD
-        sels.append({'Selection': self.dh_d2ksh_dd['RS']['TOS'],
-                     'PrescaleKey': 'D2KSHDD'})
-        sels.append({'Selection': self.dh_d2ksh_dd['RS']['TIS'],
-                     'PrescaleKey': 'D2KSHDDTIS'})
-        sels.append({'Selection': self.dh_d2ksh_dd['WS']['TOS'],
-                     'PrescaleKey': 'D2KSHDDWS'})
+        lines.append(ProtoLine(self.dh_d2ksh_dd['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.dh_d2ksh_dd['RS']['TIS'],1.0))
+        lines.append(ProtoLine(self.dh_d2ksh_dd['WS']['TOS'],0.1))
         # B->DH, D->KSHH, KS->LL
-        sels.append({'Selection': self.d0h_d02kshh_ll['RS']['TOS'],
-                     'PrescaleKey': 'D2KSHHLL'})
-        sels.append({'Selection': self.d0h_d02kshh_ll['RS']['TIS'],
-                     'PrescaleKey': 'D2KSHHLLTIS'})
+        lines.append(ProtoLine(self.d0h_d02kshh_ll['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.d0h_d02kshh_ll['RS']['TIS'],1.0))
         # B->DH, D->KSHH, KS->DD
-        sels.append({'Selection': self.d0h_d02kshh_dd['RS']['TOS'],
-                     'PrescaleKey': 'D2KSHHDD'})
-        sels.append({'Selection': self.d0h_d02kshh_dd['RS']['TIS'],
-                     'PrescaleKey': 'D2KSHHDDTIS'})
+        lines.append(ProtoLine(self.d0h_d02kshh_dd['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.d0h_d02kshh_dd['RS']['TIS'],1.0))
         # B->DH, D->Pi0HHH, Pi0->Resolved
-        sels.append({'Selection': self.dh_d2pi0hhh_resolved['RS']['TOS'],
-                     'PrescaleKey': 'D2Pi0HHHResolved'})
-        sels.append({'Selection': self.dh_d2pi0hhh_resolved['RS']['TIS'],
-                     'PrescaleKey': 'D2Pi0HHHResolvedTIS'})
-        sels.append({'Selection': self.dh_d2pi0hhh_resolved['WS']['TOS'],
-                     'PrescaleKey': 'D2Pi0HHHResolvedWS'})
+        lines.append(ProtoLine(self.dh_d2pi0hhh_resolved['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.dh_d2pi0hhh_resolved['RS']['TIS'],1.0))
+        lines.append(ProtoLine(self.dh_d2pi0hhh_resolved['WS']['TOS'],0.1))
         # B->DH, D->Pi0HHH, Pi0->Merged
-        sels.append({'Selection': self.dh_d2pi0hhh_merged['RS']['TOS'],
-                     'PrescaleKey': 'D2Pi0HHHMerged'})
-        sels.append({'Selection': self.dh_d2pi0hhh_merged['RS']['TIS'],
-                     'PrescaleKey': 'D2Pi0HHHMergedTIS'})
-        sels.append({'Selection': self.dh_d2pi0hhh_merged['WS']['TOS'],
-                     'PrescaleKey': 'D2Pi0HHHMergedWS'})
+        lines.append(ProtoLine(self.dh_d2pi0hhh_merged['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.dh_d2pi0hhh_merged['RS']['TIS'],1.0))
+        lines.append(ProtoLine(self.dh_d2pi0hhh_merged['WS']['TOS'],0.1))
         # B->DH, D->Pi0HH, Pi0->Resolved
-        sels.append({'Selection': self.d0h_d02pi0hh_resolved['RS']['TOS'],
-                     'PrescaleKey': 'D2Pi0HHResolved'})
-        sels.append({'Selection': self.d0h_d02pi0hh_resolved['RS']['TIS'],
-                     'PrescaleKey': 'D2Pi0HHResolvedTIS'})
+        lines.append(ProtoLine(self.d0h_d02pi0hh_resolved['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.d0h_d02pi0hh_resolved['RS']['TIS'],1.0))
         # B->DH, D->Pi0HH, Pi0->Merged
-        sels.append({'Selection': self.d0h_d02pi0hh_merged['RS']['TOS'],
-                     'PrescaleKey': 'D2Pi0HHMerged'})
-        sels.append({'Selection': self.d0h_d02pi0hh_merged['RS']['TIS'],
-                     'PrescaleKey': 'D2Pi0HHMergedTIS'})
+        lines.append(ProtoLine(self.d0h_d02pi0hh_merged['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.d0h_d02pi0hh_merged['RS']['TIS'],1.0))
         # B->D0H, D0-HHHH
-        sels.append({'Selection': self.d0h_d02hhhh['RS']['TOS'],
-                     'PrescaleKey': 'D2HHHH'})
-        sels.append({'Selection': self.d0h_d02hhhh['RS']['TIS'],
-                     'PrescaleKey': 'D2HHHHTIS'})
+        lines.append(ProtoLine(self.d0h_d02hhhh['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.d0h_d02hhhh['RS']['TIS'],1.0))
         # B->D*DK
-        sels.append({'Selection': self.dstdk['RS']['TOS'],
-                     'PrescaleKey': 'D2HHH'})
-        sels.append({'Selection': self.dstdk['RS']['TIS'],
-                     'PrescaleKey': 'D2HHHTIS'})
-        sels.append({'Selection': self.dstdk['WS']['TOS'],
-                     'PrescaleKey': 'D2HHHWS'})
+        lines.append(ProtoLine(self.dstdk['RS']['TOS'],1.0))
+        lines.append(ProtoLine(self.dstdk['RS']['TIS'],1.0))
+        lines.append(ProtoLine(self.dstdk['WS']['TOS'],0.1))
 
-        return sels
+        return lines
            
     def _makeB02DH(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- + c.c.'''

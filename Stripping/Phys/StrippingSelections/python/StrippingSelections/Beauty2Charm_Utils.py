@@ -3,10 +3,26 @@
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers import Selection, MergedSelection
+from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+
+class ProtoLine(object):
+    '''Stores selections, prescales, etc. that will become lines.'''
+    def __init__(self,sel,pre=1.0):
+        self.selection = sel
+        self.pre = pre
+
+    def name(self): return self.selection.name()+'Line'
+
+    def prescale(self,config):
+        if not self.name() in config.keys(): return self.pre
+        else: return config[self.name()]
+
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+
+def dataOnDemand(loc): return DataOnDemand(Location="Phys/%s/Particles"%loc)
 
 def filterSelection(name,code,inputs):
     print 'filterSelection:',name,code
@@ -16,7 +32,8 @@ def filterSelection(name,code,inputs):
 
 def filterInputs(tag,inputs,config):
     '''Filter input particles.'''
-    code = LoKiCuts(['TRCHI2DOF','PT','P','MIPCHI2DV','MASS','Pi0CL_1','Pi0CL_2'],config).code()
+    code = LoKiCuts(['TRCHI2DOF','PT','P','MIPCHI2DV','MM','CHILDCL1',
+                     'CHILDCL2'],config).code()
     return filterSelection(tag+'Inputs',code,inputs)
 
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter

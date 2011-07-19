@@ -41,9 +41,9 @@ class LoKiCuts(object):
                 'SUMPT'     : "SUMTREE(PT,ISBASIC,0.0)",
                 'BPVIPCHI2' : 'BPVIPCHI2()',
                 'BPVLTIME'  : 'BPVLTIME()',
-                'MASS'      : 'MM',
-                'Pi0CL_1'   : 'CHILD(CL,1)',
-                'Pi0CL_2'   : 'CHILD(CL,2)'
+                'MM'        : 'MM',
+                'CHILDCL1'  : 'CHILD(CL,1)',
+                'CHILDCL2'  : 'CHILD(CL,2)'
                 }
                 
     def __init__(self,cuts,config):

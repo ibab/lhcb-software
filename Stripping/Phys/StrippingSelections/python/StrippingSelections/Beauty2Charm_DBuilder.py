@@ -47,11 +47,19 @@ class DBuilder(object):
         return Selection(name+'Beauty2Charm',Algorithm=cp,
                          RequiredSelections=[self.pions]+extrainputs)
 
+    def _massWindow(self,which):
+        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
+        if which is 'D0':
+            min = 1864.84 - dm # D0 - dm
+            max = 1864.84 + dm # D0 + dm
+        else:
+            min = 1869.62 - dm # D+ - dm
+            max = 1968.49 + dm # Ds+ + dm
+        return (min,max,units)
+
     def _makeD2hh(self):
         '''Makes D->hh'''
-        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        min = 1864.84 - dm # D0 - dm
-        max = 1864.84 + dm # D0 + dm
+        min,max,units = self._massWindow('D0')
         #amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         #mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
         ce = ComboEngine([('pi+','pi-'),('K+','pi-'),('pi+','K-'),('K+','K-')],
@@ -65,9 +73,7 @@ class DBuilder(object):
 
     def _makeD2hhh(self):
         '''Makes D->hhh'''
-        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        min = 1869.62 - dm # D+ - dm
-        max = 1968.49 + dm # Ds+ + dm
+        min,max,units = self._massWindow('D+')
         #massCuts = <ADD WM Functor code from Albert here!>
         amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
@@ -76,55 +82,49 @@ class DBuilder(object):
         return protoD2hhh
         # Add Albert's ComboEngine stuff here!!!!
 
-    def _makeD2KSh(self,extrainputs):
+    def _makeD2KSh(self,which):
         '''Makes D->Ksh'''
-        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        min = 1869.62 - dm # D+ - dm
-        max = 1968.49 + dm # Ds+ + dm
+        min,max,units = self._massWindow('D+')
         #massCuts = <ADD WM Functor code from Albert here!>
         amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
-        protoD2Ksh = self._makeD2X('D2KSH_'+extrainputs,['[D+ -> KS0 pi+]cc'],amass,
-                                   mass,self.config,self.ks[extrainputs])
+        protoD2Ksh = self._makeD2X('D2KSH_'+which,['[D+ -> KS0 pi+]cc'],
+                                   amass,mass,self.config,self.ks[which])
         return protoD2Ksh
         # Add Albert's ComboEngine stuff here!!!!
 
-    def _makeD2KShh(self,extrainputs):
+    def _makeD2KShh(self,which):
         '''Makes D->Kshh'''
-        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        min = 1864.84 - dm # D0 - dm
-        max = 1864.84 + dm # D0 + dm
+        min,max,units = self._massWindow('D0')
         #massCuts = <ADD WM Functor code from Albert here!>
         amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
-        protoD2Kshh = self._makeD2X('D2KSHH_'+extrainputs,['[D0 -> KS0 pi+ pi-]cc'],amass,
-                                   mass,self.config,self.ks[extrainputs])
+        protoD2Kshh = self._makeD2X('D2KSHH_'+which,['[D0 -> KS0 pi+ pi-]cc'],
+                                    amass,mass,self.config,self.ks[which])
         return protoD2Kshh
         # Add Albert's ComboEngine stuff here!!!!
 
-    def _makeD2Pi0hhh(self,extrainputs):
+    def _makeD2Pi0hhh(self,which):
         '''Makes D->Pi0hhh'''
-        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        min = 1869.62 - dm # D+ - dm
-        max = 1968.49 + dm # Ds+ + dm
+        min,max,units = self._massWindow('D+')
         #massCuts = <ADD WM Functor code from Albert here!>
         amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
-        protoD2Pi0hhh = self._makeD2X('D2Pi0HHH_'+extrainputs,['[D+ -> pi0 pi+ pi- pi+]cc'],amass,
-                                   mass,self.config,self.pi0[extrainputs])
+        protoD2Pi0hhh = self._makeD2X('D2Pi0HHH_'+which,
+                                      ['[D+ -> pi0 pi+ pi- pi+]cc'],amass,
+                                      mass,self.config,self.pi0[which])
         return protoD2Pi0hhh          
         # Add Albert's ComboEngine stuff here!!!!
 
-    def _makeD2Pi0hh(self,extrainputs):
+    def _makeD2Pi0hh(self,which):
         '''Makes D->Pi0hh'''
-        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        min = 1864.84 - dm # D0 - dm
-        max = 1864.84 + dm # D0 + dm
+        min,max,units = self._massWindow('D0')
         #massCuts = <ADD WM Functor code from Albert here!>
         amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
-        protoD2Pi0hh = self._makeD2X('D2Pi0HH_'+extrainputs,['[D0 -> pi0 pi+ pi-]cc'],amass,
-                                   mass,self.config,self.pi0[extrainputs])
+        protoD2Pi0hh = self._makeD2X('D2Pi0HH_'+which,
+                                     ['[D0 -> pi0 pi+ pi-]cc'],amass,
+                                     mass,self.config,self.pi0[which])
         return protoD2Pi0hh    
         # Add Albert's ComboEngine stuff here!!!!
 
@@ -132,9 +132,7 @@ class DBuilder(object):
         '''Makes D->hhhh'''
         conf = deepcopy(self.config)
         conf['ASUMPT_MIN'] = self.config['4H_ASUMPT_MIN']
-        dm,units = LoKiCuts.cutValue(conf['MASS_WINDOW'])
-        min = 1864.84 - dm # D0 - dm
-        max = 1864.84 + dm # D0 + dm
+        min,max,units = self._massWindow('D0')
         #massCuts = <ADD WM Functor code from Albert here!>
         amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
