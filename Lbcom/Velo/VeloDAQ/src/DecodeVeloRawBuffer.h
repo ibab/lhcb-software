@@ -123,5 +123,8 @@ private:
   /// 10 is added to it if the message level is debug
   unsigned int m_errorCount;
 
+  /// if true, clusters will be decoded even in the presence of errors
+  bool m_ignoreErrors;
+
 };
 #endif // DECODEVELORAWBUFFER_H
