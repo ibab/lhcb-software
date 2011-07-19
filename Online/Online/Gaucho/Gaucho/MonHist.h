@@ -50,8 +50,10 @@ private:
   int m_blocksize;
   TAxis *m_Xaxis;
   TAxis *m_Yaxis;
-  char **m_Xlabels;
-  char **m_Ylabels;
+//  char **m_Xlabels;
+//  char **m_Ylabels;
+  std::vector<std::string> m_Xlabels;
+  std::vector<std::string> m_Ylabels;
   int m_xlablen;
   int m_ylablen;
   IMessageSvc* m_msgsvc;
@@ -59,7 +61,7 @@ private:
   void setup(IMessageSvc* msgSvc, const std::string& source, const AIDA::IBaseHistogram *aidahist);
   void setup(IMessageSvc* msgSvc);
   void setup(IMessageSvc* msgSvc, const std::string& source,const std::string& desc, const StatEntity *se);
-  void cpyBinLabels(char *,char**, int);
+  void cpyBinLabels(char *,std::vector<std::string>&, int);
 public:
   MonHist();
   MonHist(IMessageSvc* msgSvc, const std::string& source, const AIDA::IBaseHistogram *aidahist);
@@ -77,7 +79,7 @@ public:
   int type() const {return m_type;};
   void *cpyName(void*) const;
   void *cpytitle(void *ptr) const;
-  int GetBinLabels(TAxis *ax, char ***labs);
+  int GetBinLabels(TAxis *ax, std::vector<std::string>&);
   static void SetBinLabels(TAxis *ax, char *l);
   void makeCounters();
   void List();

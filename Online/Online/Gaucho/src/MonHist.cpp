@@ -50,8 +50,8 @@ void MonHist::_clear()
  m_blocksize = 0;
  m_Xaxis = 0;
  m_Yaxis = 0;
- m_Xlabels = 0;
- m_Ylabels = 0;
+ m_Xlabels.clear();
+ m_Ylabels.clear();
  m_xlablen = 0;
  m_ylablen = 0;
   m_msgsvc = 0;
@@ -271,13 +271,15 @@ void MonHist::resetup(void)
     case H_2DIM:
     case H_PROFILE:
     {
-      deallocPtr(m_Xlabels);
+      m_Xlabels.clear();
+      m_Ylabels.clear();
+//      deallocPtr(m_Xlabels);
 //      if (m_Xlabels != 0)
 //      {
 //        free (m_Xlabels);
 //        m_Xlabels = 0;
 //      }
-      deallocPtr(m_Ylabels);
+//      deallocPtr(m_Ylabels);
 //      if (m_Ylabels != 0)
 //      {
 //        free (m_Ylabels);
@@ -377,14 +379,14 @@ void MonHist::setup(IMessageSvc* msgs)
   m_xmax = m_Xaxis->GetXmax();
   m_ny = 0;
   m_ylablen = 0;
-  m_Xlabels = 0;
-  m_Ylabels = 0;
+  m_Xlabels.clear();
+  m_Ylabels.clear();
   switch (m_type)
   {
     case H_1DIM:
     {
       m_buffersize = 2*m_blocksize;
-      m_xlablen = GetBinLabels(m_Xaxis,&m_Xlabels);
+      m_xlablen = GetBinLabels(m_Xaxis,m_Xlabels);
       m_hdrlen += m_xlablen;
       break;
     }
@@ -392,7 +394,7 @@ void MonHist::setup(IMessageSvc* msgs)
     case H_RATE:
     {
       m_buffersize = 4*m_blocksize;
-      m_xlablen = GetBinLabels(m_Xaxis,&m_Xlabels);
+      m_xlablen = GetBinLabels(m_Xaxis,m_Xlabels);
       m_hdrlen += m_xlablen;
       break;
     }
@@ -403,8 +405,8 @@ void MonHist::setup(IMessageSvc* msgs)
       m_ymax = m_Yaxis->GetXmax();
       m_hdrlen = sizeof(DimHistbuff2)+titlen()+1+namelength()+1;
       m_buffersize = 2*m_blocksize;
-      m_xlablen = GetBinLabels(m_Xaxis,&m_Xlabels);
-      m_ylablen = GetBinLabels(m_Yaxis,&m_Ylabels);
+      m_xlablen = GetBinLabels(m_Xaxis,m_Xlabels);
+      m_ylablen = GetBinLabels(m_Yaxis,m_Ylabels);
       m_hdrlen += m_xlablen;
       m_hdrlen += m_ylablen;
       break;
@@ -423,16 +425,10 @@ MonHist::~MonHist()
 {
   Bool_t dirstat = TH1::AddDirectoryStatus();
   TH1::AddDirectory(kFALSE);
-  if (m_Xlabels != 0)
-  {
-    free(m_Xlabels);
-    m_Xlabels = 0;
-  }
-  if (m_Ylabels != 0)
-  {
-    free(m_Ylabels);
-    m_Ylabels = 0;
-  }
+  m_Xlabels.clear();
+  m_Ylabels.clear();
+  m_xlablen = 0;
+  m_ylablen = 0;
   if (m_rootobj !=0)
   {
     if (m_type == H_RATE) delete m_rootobj;
@@ -446,7 +442,30 @@ MonHist::~MonHist()
   TH1::AddDirectory(dirstat);
 }
 
-int MonHist::GetBinLabels(TAxis *ax, char ***labs)
+//int MonHist::GetBinLabels(TAxis *ax, char ***labs)
+//{
+//  int l=0;
+//  int i;
+//  int nbin=ax->GetNbins();
+//  for (i = 1; i < (nbin+1) ; ++i)
+//  {
+//    char *binLab = (char*)ax->GetBinLabel(i);
+//    l += strlen(binLab);
+//  }
+//  if (l>0)
+//  {
+//    *labs = (char**)malloc(nbin*sizeof(char*));
+//    char **lab = *labs;
+//    for (i=1;i<nbin+1;i++)
+//    {
+//      (lab)[i-1] = (char*)ax->GetBinLabel(i);
+////      printf("Bin %d Label %s\n",i,lab[i-1]);
+//    }
+//    l+= nbin+1;
+//  }
+//  return l;
+//}
+int MonHist::GetBinLabels(TAxis *ax, std::vector<std::string> &labs)
 {
   int l=0;
   int i;
@@ -458,11 +477,11 @@ int MonHist::GetBinLabels(TAxis *ax, char ***labs)
   }
   if (l>0)
   {
-    *labs = (char**)malloc(nbin*sizeof(char*));
-    char **lab = *labs;
+//    *labs = (char**)malloc(nbin*sizeof(char*));
+//    char **lab = *labs;
     for (i=1;i<nbin+1;i++)
     {
-      (lab)[i-1] = (char*)ax->GetBinLabel(i);
+      labs.push_back(ax->GetBinLabel(i));
 //      printf("Bin %d Label %s\n",i,lab[i-1]);
     }
     l+= nbin+1;
@@ -717,20 +736,36 @@ int MonHist::serialize(void* &ptr)
   ptr = (void*)((char*)ptr+siz);
   return siz;
 }
-void MonHist::cpyBinLabels(char* dst, char **src, int nlab)
+//void MonHist::cpyBinLabels(char* dst, char **src, int nlab)
+//{
+//  if (src == 0 ) return;
+//  int i;
+//  int leni;
+//  for (i=0;i<nlab;i++)
+//  {
+//    leni = strlen(src[i]);
+//    strcpy(dst,src[i]);
+//    dst[leni] = 0;
+//    dst += leni+1;
+//  }
+//  return;
+//}
+
+void MonHist::cpyBinLabels(char* dst, std::vector<std::string> &src, int nlab)
 {
-  if (src == 0 ) return;
+  if (src.empty() ) return;
   int i;
   int leni;
   for (i=0;i<nlab;i++)
   {
-    leni = strlen(src[i]);
-    strcpy(dst,src[i]);
+    leni = strlen(src[i].c_str());
+    strcpy(dst,src[i].c_str());
     dst[leni] = 0;
     dst += leni+1;
   }
   return;
 }
+
 void MonHist::List()
 {
   std::string typ;
