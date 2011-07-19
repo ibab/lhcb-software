@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-19 - Chris Jones
+ - Add new flag "Simulation" to RichRecQCConf
+ - Turn off monitors that require HLT DecReports, when running on MC data.
+
 ! 2011-07-15 - Chris Jones
  - Enable aerogel tile and sub-tile plots in Rich::Rec::MC::RecoQC only for
    instances running on 'Long' tracks.

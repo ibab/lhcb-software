@@ -32,7 +32,7 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## Possible used Configurables
     __used_configurables__ = [ (RichAlignmentConf,None) ]
-    # __used_configurables__ = [ (RichAlignmentConf,None), ('RichPIDQCConf',None) ]
+    #__used_configurables__ = [ (RichAlignmentConf,None), ('RichPIDQCConf',None) ]
 
     ## Default Histogram set
     __default_histo_set__ = "OfflineFull"
@@ -65,7 +65,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"  : "Offline"  # The context within which to run
-       ,"DataType" : "2011"     # Data type, can be ['DC06','2008',2009','2010','2011']
+       ,"DataType" : "2011"     # Data type, can be ['2008',2009','2010','2011']
        ,"MoniSequencer" : None  # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "ODIN",
@@ -81,7 +81,8 @@ class RichRecQCConf(RichConfigurableUser):
                                             "RichPhotonSignal", "RichTrackCKResolutions",
                                             "RichPhotonGeometry", "PhotonRecoEfficiency",
                                             "RichPhotonTrajectory", "RichStereoFitterTests"
-                                            #,"RichRayTracingTests","RichDataObjectChecks","RichRecoTiming"
+                                            #,"RichRayTracingTests","RichDataObjectChecks",
+                                            #"RichRecoTiming"
                                             ],
                        "OfflineFull"    : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "HotPixelFinder", "PidMonitoring",
@@ -108,7 +109,8 @@ class RichRecQCConf(RichConfigurableUser):
                                }
        ,"MinTrackBeta"     : [ 0.9999, 0.9999, 0.9999 ]
        ,"PidTrackTypes":  { "Expert"         : [ ["All"],["Forward","Match"],
-                                                 ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ],
+                                                 ["Forward"],["Match"],["KsTrack"],
+                                                 ["VeloTT"],["Seed"] ],
                             "OfflineFull"    : [ ["Forward","Match"] ],
                             "OfflineExpress" : [ ["Forward","Match"] ],
                             "Online"         : [ ["Forward","Match"] ]
@@ -143,6 +145,7 @@ class RichRecQCConf(RichConfigurableUser):
        ,"Histograms"    : "OfflineFull"
        ,"NTupleProduce" : False
        ,"WithMC"        : False # set to True to use MC truth
+       ,'Simulation'    : False # MC or real data (default)
        ,"OutputLevel"   : INFO  # The output level to set all algorithms and tools to use
        ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
        ,"RichPIDLocation" : "Rec/Rich/PIDs" # Location of RichPID data objects to monitor
@@ -208,7 +211,8 @@ class RichRecQCConf(RichConfigurableUser):
         self.setHistosTupleOpts(mon)
         if self.isPropertySet("OutputLevel") : mon.OutputLevel = self.getProp("OutputLevel")
         if trackType != None :
-            mon.addTool( self.richTools().trackSelector(nickname="TrackSelector",private=True), name="TrackSelector" )
+            mon.addTool( self.richTools().trackSelector(nickname="TrackSelector",private=True),
+                         name="TrackSelector" )
             if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
         if tkCuts == "None" :
             pass
@@ -326,20 +330,19 @@ class RichRecQCConf(RichConfigurableUser):
         monitors = self.getHistoOptions("Monitors")
   
         # Some monitoring of raw information
-        if self.getProp("DataType") not in ["DC06"]:
-
-            rawSeq = self.newSeq(sequence,"RichRawMoni")
-            rawSeq.IgnoreFilterPassed = True
+        rawSeq = self.newSeq(sequence,"RichRawMoni")
+        rawSeq.IgnoreFilterPassed = True
             
-            if "L1SizeMonitoring" in monitors :
-                
-                # Data Sizes - all events
-                from Configurables import Rich__DAQ__RawDataSize
-                dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
-                dataSize.FillDetailedPlots = self.getProp("Histograms") == "Expert"
-                rawSeq.Members += [dataSize]
+        if "L1SizeMonitoring" in monitors :
 
-                # Data size plots, L0 unbiased events
+            # Data Sizes - all events
+            from Configurables import Rich__DAQ__RawDataSize
+            dataSize = self.createMonitor(Rich__DAQ__RawDataSize,"RichRawDataSize")
+            dataSize.FillDetailedPlots = self.getProp("Histograms") == "Expert"
+            rawSeq.Members += [dataSize]
+
+            # Data size plots, L0 unbiased events
+            if not self.getProp("Simulation") :
                 from Configurables import LoKi__HDRFilter, HltDecReportsDecoder, GaudiSequencer
                 lSeq = self.newSeq(sequence,"RichRawDataSizeL0Seq")
                 lSeq.ReturnOK = True
@@ -350,27 +353,27 @@ class RichRecQCConf(RichConfigurableUser):
                                   LoKi__HDRFilter("RichDataSizeL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
                                   dataSizeL0 ]
 
-            if "DBConsistencyCheck" in monitors :
+        if "DBConsistencyCheck" in monitors :
+            
+            # Data base consistency
+            from Configurables import Rich__DAQ__DataDBCheck
+            dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
+            rawSeq.Members += [dbCheck]
 
-                # Data base consistency
-                from Configurables import Rich__DAQ__DataDBCheck
-                dbCheck = self.createMonitor(Rich__DAQ__DataDBCheck,"RichRawDataDBCheck")
-                rawSeq.Members += [dbCheck]
+        if "HotPixelFinder" in monitors :
 
-            if "HotPixelFinder" in monitors :
+            # Hot pixel finder
+            from Configurables import Rich__HPDAnalysisAlg
+            hotpix = self.createMonitor(Rich__HPDAnalysisAlg,"RichHotPixels")
+            hotpix.HPDAnalysisTools = ["RichHotPixelFinder"]
+            rawSeq.Members += [hotpix]
 
-                # Hot pixel finder
-                from Configurables import Rich__HPDAnalysisAlg
-                hotpix = self.createMonitor(Rich__HPDAnalysisAlg,"RichHotPixels")
-                hotpix.HPDAnalysisTools = ["RichHotPixelFinder"]
-                rawSeq.Members += [hotpix]
+        if "DataDecodingErrors" in monitors :
 
-            if "DataDecodingErrors" in monitors :
-
-                # Decoding error summaries
-                from Configurables import Rich__DAQ__DataDecodingErrorMoni
-                daqErrs = self.createMonitor(Rich__DAQ__DataDecodingErrorMoni,"RichDecodingErrors")
-                rawSeq.Members += [daqErrs]
+            # Decoding error summaries
+            from Configurables import Rich__DAQ__DataDecodingErrorMoni
+            daqErrs = self.createMonitor(Rich__DAQ__DataDecodingErrorMoni,"RichDecodingErrors")
+            rawSeq.Members += [daqErrs]
 
         # ODIN
         if "ODIN" in monitors :
@@ -644,13 +647,15 @@ class RichRecQCConf(RichConfigurableUser):
             from Configurables import ( Rich__Rec__HPDHitsMoni, GaudiSequencer, 
                                         LoKi__HDRFilter, HltDecReportsDecoder )
             seq  = self.newSeq(sequence,check)
-            lSeq = self.newSeq(sequence,check+"L0")
-            lSeq.ReturnOK = True
             seq.IgnoreFilterPassed = True
-            lSeq.Members += [ HltDecReportsDecoder(),
-                              LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
-                              Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
-            seq.Members  += [ Rich__Rec__HPDHitsMoni("HPDHitsMoni"), lSeq ]
+            seq.Members += [ Rich__Rec__HPDHitsMoni("HPDHitsMoni") ]
+            if not self.getProp("Simulation") :
+                lSeq = self.newSeq(sequence,check+"L0")
+                lSeq.ReturnOK = True
+                lSeq.Members += [ HltDecReportsDecoder(),
+                                  LoKi__HDRFilter("HPDHitL0Filter",Code="HLT_PASS_SUBSTR('Hlt1L0')"),
+                                  Rich__Rec__HPDHitsMoni("HPDL0HitsMoni") ]
+                seq.Members  += [ lSeq ]
 
         check = "RichTrackGeometry"
         if check in checks :
@@ -836,3 +841,4 @@ class RichRecQCConf(RichConfigurableUser):
             # Set options
             #self.setOtherProps(pidqcConf,['OutputLevel','Context'])
             #pidqcConf.setProp("CalibSequencer",pidSeq)
+            
