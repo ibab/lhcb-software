@@ -177,6 +177,7 @@ void MinuitParameterSet::fillNtp(TFile*& ntpFile, TNtupleD*& ntp) const{
   int n=0;
   for(unsigned int i=0; i < size(); i++){
     if(0 == getParPtr(i)) continue;
+    if(0 != getParPtr(i)->iFixInit()) continue;
     array[n++] = getParPtr(i)->mean();
     array[n++] = getParPtr(i)->meanInit();
     array[n++] = getParPtr(i)->err();

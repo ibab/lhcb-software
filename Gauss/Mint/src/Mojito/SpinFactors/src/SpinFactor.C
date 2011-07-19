@@ -1,14 +1,19 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:12 GMT
 #include "SpinFactor.h"
+#include "Utils.h"
 #include <algorithm> // for swap
+#include <cstdlib>
 
 using namespace std;
 using namespace MINT;
 
 void SpinFactor::normalOrder( const_counted_ptr<AssociatedDecayTree>& a
 			      , const_counted_ptr<AssociatedDecayTree>& b){
-  // forget it for now.
+  // forget it for now. Sorting done (more conistently) 
+  // by "standardSort" called from AmpInitialiser
+  // (algorithm in DecayTreeComparisons.h)
+  // Just didn't have the guts to remove this, yet.
   return;
   
   // heavier first:
@@ -74,4 +79,12 @@ double SpinFactor::mRes(const AssociatedDecayTreeItem& adt){
   return adt.mRes(getEvent());
 }
 
-
+void SpinFactor::printParsing(std::ostream& os) const{
+  for(int i=0; i < _nFinal; i++){
+    if(0 == fsPS[i]) continue;
+    if(i > 0) os << ", ";
+    os << " fsPs[" << anythingToString(i) << "] ="
+       << fsPS[i]->getVal().name();
+  }
+  os << endl;
+}

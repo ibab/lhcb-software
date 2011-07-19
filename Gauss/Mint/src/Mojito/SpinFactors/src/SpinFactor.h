@@ -9,6 +9,7 @@
 #include "ISpinFactor.h"
 #include "counted_ptr.h"
 #include <string>
+#include <iostream>
 
 class SpinFactor 
 : public DalitzEventAccess
@@ -65,6 +66,8 @@ class SpinFactor
     , _nFinal(other._nFinal)
     , fsPS(other._nFinal, (MINT::const_counted_ptr<AssociatedDecayTree>) 0)
     {}
+  virtual void printYourself(std::ostream& os=std::cout) const=0;
+  virtual void printParsing(std::ostream& os=std::cout) const;
   virtual ~SpinFactor(){}
   virtual const DecayTree& exampleDecay()=0;
   virtual std::string name() const=0;

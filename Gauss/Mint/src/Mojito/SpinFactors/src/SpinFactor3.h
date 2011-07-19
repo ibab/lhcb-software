@@ -5,6 +5,7 @@
 
 #include "SpinFactor.h"
 #include "counted_ptr.h"
+#include <iostream>
 
 class SpinFactor3 : public SpinFactor{
  protected:
@@ -46,6 +47,7 @@ class SpinFactor3 : public SpinFactor{
   virtual std::string name() const{
     return "SpinFactor3(" + theDecay().oneLiner() + ")";
   }
+  virtual void printYourself(std::ostream& os = std::cout)const;
   virtual ~SpinFactor3(){}
 };
 

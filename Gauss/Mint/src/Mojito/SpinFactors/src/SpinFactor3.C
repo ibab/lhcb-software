@@ -82,18 +82,22 @@ bool SpinFactor3::parseTree(){
 
   normalOrder(fsPS[1], fsPS[2]);
 
-  cout << "INFO in SpinFactor3::parseTree():\n"
-       << "    > parsed the following tree "
-       << theDecay().oneLiner() << " like this:\n"
-       << "    > R =  " << R->getVal().name()
-       << ", fsPS[0]=C= " << fsPS[0]->getVal().name()
-       << ", fsPS[1]=A= " << fsPS[1]->getVal().name()
-       << ", fsPS[2]=B= " << fsPS[2]->getVal().name()
-       << endl;
+  printYourself();
 
   setSpin();
   return true;
 
+}
+
+void SpinFactor3::printYourself(std::ostream& os)const{
+  os << "INFO in SpinFactor3::parseTree():\n"
+     << "    > parsed the following tree "
+     << theDecay().oneLiner() << " like this:\n"
+     << "    > R =  " << R->getVal().name()
+     << ", fsPS[0]=C= " << fsPS[0]->getVal().name()
+     << ", fsPS[1]=A= " << fsPS[1]->getVal().name()
+     << ", fsPS[2]=B= " << fsPS[2]->getVal().name()
+     << endl;
 }
 
 double SpinFactor3::getVal(){

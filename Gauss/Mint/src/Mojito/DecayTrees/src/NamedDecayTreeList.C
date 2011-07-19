@@ -230,6 +230,7 @@ int NamedDecayTreeList::make4BodyList(){
   makeKKpipiList();
   makeK3piList();
   makeKsPiPiPizeroList();
+  make4PiList();
 
   return _trees.size();
 }
@@ -1613,6 +1614,104 @@ int NamedDecayTreeList::makeKsPiPiPizeroList() {
 
   return _trees.size();
 
+}
+//=========================================================================
+// create the decay of the type D0-> pi pi pi pi
+//=========================================================================
+int NamedDecayTreeList::make4PiList() {
+// T.McKetterick
+bool dbThis=false;
+ 
+DecayTree* dk=0;
+
+//D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [S-WAVE]
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 20213)->addDgtr(211, 113)->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "first decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [D-WAVE decay of a1]
+  dk = new DecayTree(421);
+  DecayTree* a1 = new DecayTree(20213);
+  a1->getVal().setL(2);
+  a1->addDgtr(211, 113)->addDgtr(211, -211);
+  dk->addDgtr(-211), dk->addDgtr(a1);
+  add(*dk);
+  if(dbThis) cout << "first decay: " << *dk << endl;
+  delete a1;
+  delete dk;
+
+//This has been commented out because it doesn't make
+//sense that there is an overall spin 2 decaying to an overall spin1
+//D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [D-WAVE]
+//  dk = new DecayTree(421);
+//  dk->addDgtr(-211, 20213)->addDgtr(211,113)->addDgtr(211, -211);
+//  dk->getVal().setL(2);
+//  add(*dk);
+//  if(dbThis) cout << "first decay: " << *dk << endl;
+//  delete dk;
+
+//D0 -> a1(1260)pi-, a1(1260)->sigma_1 pi+, rho->pi+pi- 
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 20213)->addDgtr(211,999001)->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "second decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> rho(770)rho(770), rho(770)->pi+pi-  [S-WAVE]
+  dk = new DecayTree(421);
+  dk->addDgtr(113)->addDgtr(211, -211);
+  dk->addDgtr(113)->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "third decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> rho(770)rho(770), rho(770)->pi+pi-  [P-WAVE]
+  dk = new DecayTree(421);
+  dk->addDgtr(113)->addDgtr(211, -211);
+  dk->addDgtr(113)->addDgtr(211, -211);
+  dk->getVal().setL(1);
+  add(*dk);
+  if(dbThis) cout << "third decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> rho(770)rho(770), rho(770)->pi+pi-  [D-WAVE]
+  dk = new DecayTree(421);
+  dk->addDgtr(113)->addDgtr(211, -211);
+  dk->addDgtr(113)->addDgtr(211, -211);
+  dk->getVal().setL(2);
+  add(*dk);
+  if(dbThis) cout << "third decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> f0(980)pi-pi+, f0(980)->pi+pi-  
+//Adding no resonant decays to help with the spin factors
+  dk = new DecayTree(421);
+  dk->addDgtr(9010221)->addDgtr(211, -211);
+  dk->addDgtr(9993)->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "fourth decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> f2(1270)pi-pi+, f2(1270)->pi+pi-
+//Adding no resonant decays to help with the spin factors  
+  dk = new DecayTree(421);
+  dk->addDgtr(225)->addDgtr(211, -211);
+  dk->addDgtr(9993)->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "fifth decay: " << *dk << endl;
+  delete dk;
+
+//D0 -> sigma_1 pi-pi+, sigma_1->pi+pi-  
+  dk = new DecayTree(421);
+  dk->addDgtr(999001)->addDgtr(211, -211);
+  dk->addDgtr(211, -211);
+  add(*dk);
+  if(dbThis) cout << "sixth decay: " << *dk << endl;
+  delete dk;
+
+return _trees.size();
 }
 
 std::ostream& operator<<(std::ostream& os, const NamedDecayTreeList& ndtl){

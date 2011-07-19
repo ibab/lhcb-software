@@ -33,6 +33,7 @@ class NamedDecayTreeList{
   int makeKKpipiList();
   int makeK3piList();
   int makeKsPiPiPizeroList();
+  int make4PiList();
   // ---------------
 
   int add_SpinZero_forAll(); // bgTest

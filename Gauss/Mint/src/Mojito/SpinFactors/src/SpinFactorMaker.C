@@ -26,6 +26,10 @@ void PrintAllSpinFactors(std::ostream& out){
       << SF_DtoAP0_AtoVP1_VtoP2P3::getExampleDecay()
       << " -------------------- " << std::endl;
 
+  out << " SF_DtoAP0_AtoVP1Dwave_VtoP2P3:\n"
+      << SF_DtoAP0_AtoVP1Dwave_VtoP2P3::getExampleDecay()
+      << " -------------------- " << std::endl;
+
   out << " SF_DtoAP0_AtoSP1_StoP2P3:\n"
       << SF_DtoAP0_AtoSP1_StoP2P3::getExampleDecay()
       << " -------------------- " << std::endl;
@@ -131,6 +135,13 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< thisDcy << std::endl;
     }
     return new SF_DtoAP0_AtoVP1_VtoP2P3(events, thisDcy);
+  }else if( equalBySVPAT_L(SF_DtoAP0_AtoVP1Dwave_VtoP2P3::getExampleDecay()
+			   , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoAP0_AtoVP1Dwave_VtoP2P3(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoAP0_AtoSP1_StoP2P3::getExampleDecay()
 			   , thisDcy) ){
     if(dbThis){
