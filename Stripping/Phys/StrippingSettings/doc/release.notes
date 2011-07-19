@@ -4,6 +4,19 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Jibo He
+ - python/StrippingSettings/Stripping16
+  . Start Stripping16 based on Stripping15
+ - LineConfigDictionaries_Charm.py
+  . Updated PromptCharm, DstarD02xx
+ - LineConfigDictionaries_Semileptonic.py
+  . Updated B0q2DplusMuX
+ - LineConfigDictionaries_PSWG.py
+  . ChiCJPsiGammaConversion, CharmAssociative added but commented out due to problem
+ - LineConfigDictionaries_Calib.py
+  . NoPIDDstarWithD02RSKPi commented out due to problem
+
+
 !========================= StrippingSettings v2r4 2011-06-29 =========================
 ! 2011-06-28 - Jibo He
  - python/StrippingSettings/Stripping15/LineConfigDictionaries_PSWG.py
