@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-19 - Sebastian Schleich
+ - remove obsolete 'CoreFactory' code from InclPhi stripping line according to Vanya's Mail to lhcb-stripping on 2011-07-18
+
 ! 2011-07-19 - Vanya Belyaev
 
  - Fix CharmAssociative : 

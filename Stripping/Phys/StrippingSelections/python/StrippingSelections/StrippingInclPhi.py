@@ -79,10 +79,10 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons
 
-from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-modules =  CoreFactory('CoreFactory').Modules
-for i in [ 'LoKiTrigger.decorators' ] :
-  if i not in modules : modules.append(i)
+#from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+#modules =  CoreFactory('CoreFactory').Modules
+#for i in [ 'LoKiTrigger.decorators' ] :
+#  if i not in modules : modules.append(i)
 
 
 
