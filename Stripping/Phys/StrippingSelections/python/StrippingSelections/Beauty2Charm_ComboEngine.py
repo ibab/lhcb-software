@@ -41,6 +41,7 @@ class ComboEngine(object):
     decayList = [tuple(d) for d in decayList]
     self._decayCombos = self._getValidCombos(decayList, inputDecay)
     self.decayList = decayList
+    self.referenceDecay = inputDecay
 
   def mergedSelection(self, name, massLow, massHigh, inputSelection):
     return MergedSelection("%s" % name, RequiredSelections=self.unmergedSelection(name, massLow, massHigh, inputSelection).values())
@@ -113,13 +114,20 @@ class ComboEngine(object):
         validDecayName = ''.join(validDecay)
         wmSel = wmSelections[''.join(self._unsignDecay(validDecay))]
         _subsAlgo = SubstitutePID("%s_SubsAlg_%s" % (name, validDecayName),
-                                  Code="DECTREE( 'Charm ->%s' )" % (' Xq '*nDaughters), 
+                                  Code="DECTREE( 'Charm -> %s' )" % (' '.join(self.referenceDecay)), 
                                   Substitutions={})
         _subsAlgo.MaxChi2PerDoF = -666
-        for i, daughter in enumerate(validDecay):
-          subsString = 'Charm -> ' + ' '.join([' %s%s ' % (("^" if i==j else ""), d) for j, d in enumerate(['Xq']*nDaughters)])
-          _subsAlgo.Substitutions[subsString] = daughter
-        print 'Combo:', 'alg =', _subsAlgo
+        mySubs = {}
+        for i, validDaughter in enumerate(validDecay):
+          if validDaughter == self.referenceDecay[i]:
+            continue
+          if not validDaughter in mySubs:
+            mySubs[validDaughter] = self.referenceDecay[:]
+          mySubs[validDaughter][i] = '^'+ mySubs[validDaughter][i]
+        for sub, descriptor in mySubs.items():
+          subsString = 'Charm -> ' + ' '.join(descriptor)
+          _subsAlgo.Substitutions[subsString] = sub
+        #print 'Combo:', 'alg =', _subsAlgo
         print 'subs:', _subsAlgo.Substitutions
         print 'code:', _subsAlgo.Code
         sel = Selection("%sSel_%s" % (name, validDecayName), Algorithm=_subsAlgo, RequiredSelections=[wmSel])
