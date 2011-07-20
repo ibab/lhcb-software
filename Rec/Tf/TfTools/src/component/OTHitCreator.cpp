@@ -64,13 +64,13 @@ namespace Tf
       mutable SortedHitContainer m_sortedhits ; // hits sorted in x. I hope I can get rid of it.
       mutable OTHitRange m_hitrange ;           // these are pointers in the global list of hits, used for navigation
       mutable bool m_isloaded ;
-      const OTDet::RtRelation* m_rtrel;		// pointer to custom rt relation (if non-null)
+      const OTDet::RtRelation* m_rtrel;  // pointer to custom rt relation (if non-null)
     } ;
 
     OTModule::OTModule(const DeOTModule& detelement,
-		    const OTDet::RtRelation* rtrel )
+                       const OTDet::RtRelation* rtrel )
       : Envelope<DeOTModule>(detelement), m_det(&detelement),
-	m_isloaded(false), m_rtrel(rtrel)
+        m_isloaded(false), m_rtrel(rtrel)
     {
       // we'll take this away at some point. it is just for understanding the profiles. FIXME.
       m_ownedhits.reserve(128) ;
@@ -78,7 +78,7 @@ namespace Tf
     }
 
     struct compareHitX {
-       bool operator()(const Tf::OTHit* lhs, const Tf::OTHit* rhs) const { return lhs->xT() < rhs->xT() ; }
+      bool operator()(const Tf::OTHit* lhs, const Tf::OTHit* rhs) const { return lhs->xT() < rhs->xT() ; }
     };
 
     /// Decode this module
@@ -94,8 +94,8 @@ namespace Tf
         size_t numhits = otlitetimes.size() ;
         m_ownedhits.reserve( numhits ) ;
         // put if-statement before loop to fork only once
-	if (0 == m_rtrel) {
-	  // don't use custom rt relation - drift times are on
+        if (0 == m_rtrel) {
+          // don't use custom rt relation - drift times are on
           if( tmin < tmax ) {
             for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
                  ihit != otlitetimes.end(); ++ihit) {
@@ -108,9 +108,9 @@ namespace Tf
                  ihit != otlitetimes.end(); ++ihit)
               m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
           }
-       	} else {
-	  // use custom rt relation - drift times are off
-	  const OTDet::RtRelation& rtrel = *m_rtrel;
+        } else {
+          // use custom rt relation - drift times are off
+          const OTDet::RtRelation& rtrel = *m_rtrel;
           if( tmin < tmax ) {
             for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
                  ihit != otlitetimes.end(); ++ihit) {
@@ -123,7 +123,7 @@ namespace Tf
                  ihit != otlitetimes.end(); ++ihit)
               m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit,rtrel) ) ;
           }
-	}
+        }
 
         // create the sorted hits
         m_sortedhits.reserve(m_ownedhits.size()) ;
@@ -170,9 +170,9 @@ namespace Tf
                 aregion = new OTRegionImp(regionid,*this) ;
                 insert( aregion ) ;
               }
-	      size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
+              size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
               aregion->insert( moduleindex, new HitCreatorGeom::OTModule(**imodule,
-				      m_parent->getRtRelation()) ) ;
+                                                                         m_parent->getRtRelation()) ) ;
               ++nummodules ;
             }
       for(RegionContainer::iterator ireg = regions().begin() ; ireg != regions().end() ; ++ireg)
@@ -241,9 +241,9 @@ namespace Tf
     declareProperty( "TMax",m_tmax ) ;
     declareProperty( "NoDriftTimes", m_noDriftTimes = false );
     declareProperty( "ForceDriftRadius",
-		    m_forceDriftRadius = 0. * Gaudi::Units::mm );
+                     m_forceDriftRadius = 0. * Gaudi::Units::mm );
     declareProperty( "ForceResolution",
-		    m_forceResolution = 5. * Gaudi::Units::mm / std::sqrt(12.) );
+                     m_forceResolution = 5. * Gaudi::Units::mm / std::sqrt(12.) );
     declareProperty("RawBankDecoder",m_otdecoder) ;
   }
 
@@ -286,7 +286,7 @@ namespace Tf
       // because we then trigger non-convergence of the Newton-Raphson method
       // in RtRelation...
       const double vdrift = m_otdetector->modules().front()->rtRelation().rmax() /
-	      (4e-6 * Gaudi::Units::s);
+        (4e-6 * Gaudi::Units::s);
       // need a vector to construct polynomial approximation to the tweaked
       // rt relation; rtrelpoly: t(r) = rtrelpoly[0] + rtrelpoly[1] * r + ...
       // a linear approximation does the job
@@ -296,28 +296,28 @@ namespace Tf
       // construct new r-t relation - all drift times are mapped to
       // m_forceDriftRadius and the resolution is set to m_forceResolution
       m_rtrel = new OTDet::RtRelation(m_otdetector->modules().front()->rtRelation().rmax(),
-				      rtrelpoly, m_forceResolution);
+                                      rtrelpoly, m_forceResolution);
       /* if we run without drift times, this should appear in the log */
       info() << "Drift times are not used, drift radius set to " <<
-	      m_forceDriftRadius / Gaudi::Units::mm <<
-	      " mm, resolution set to " << m_forceResolution / Gaudi::Units::mm
-	      << " mm." << endreq;
+        m_forceDriftRadius / Gaudi::Units::mm <<
+        " mm, resolution set to " << m_forceResolution / Gaudi::Units::mm
+             << " mm." << endreq;
       info() << "rt relation gives: r(2ns) = " <<
-	      m_rtrel->radius(2.) / Gaudi::Units::mm << " mm, r(40ns) " <<
-	      m_rtrel->radius(40.) / Gaudi::Units::mm << " mm." << endreq;
+        m_rtrel->radius(2.) / Gaudi::Units::mm << " mm, r(40ns) " <<
+        m_rtrel->radius(40.) / Gaudi::Units::mm << " mm." << endreq;
     } else {
-	/* we want a message if we run in debugging mode, just to make
-	 * sure we're aware of what we're doing */
-	debug() << "Drift times are used." << endreq;
+      /* we want a message if we run in debugging mode, just to make
+       * sure we're aware of what we're doing */
+      debug() << "Drift times are used." << endreq;
     }
-    
+
     // we may need to register to the conditions of all modules instead
     updMgrSvc()->registerCondition( this, const_cast<IGeometryInfo*>(m_otdetector->geometry()),
-				    &OTHitCreator::updateGeometry );
-    
+                                    &OTHitCreator::updateGeometry );
+
     return sc ;
   }
-  
+
   StatusCode OTHitCreator::finalize()
   {
     if (m_detectordata) m_detectordata->clearEvent();
@@ -330,7 +330,7 @@ namespace Tf
   }
 
   StatusCode OTHitCreator::updateGeometry()
-  { 
+  {
     IDetDataSvc* detDataSvc(0) ;
     service("DetectorDataSvc",detDataSvc, true).ignore() ;
     debug() << "In OTHitCreator::updateGeometry() " << detDataSvc->eventTime() << endreq ;
@@ -344,7 +344,10 @@ namespace Tf
 
   void OTHitCreator::handle ( const Incident& incident )
   {
-    if ( IncidentType::BeginEvent == incident.type() ) m_detectordata->clearEvent() ;
+    if ( IncidentType::BeginEvent == incident.type() )
+    {
+      if ( m_detectordata ) m_detectordata->clearEvent() ;
+    }
   }
 
   Tf::OTHitRange OTHitCreator::hits(const TStationID iStation,
@@ -385,10 +388,10 @@ namespace Tf
   }
 
   Tf::OTHitRange OTHitCreator::hitsLocalXRange( const TStationID iStation,
-						const TLayerID iLayer,
-						const OTRegionID iRegion,
-						const double xmin,
-						const double xmax ) const
+                                                const TLayerID iLayer,
+                                                const OTRegionID iRegion,
+                                                const double xmin,
+                                                const double xmax ) const
   {
     const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hitsLocalXRange(xmin,xmax) ;
@@ -442,14 +445,14 @@ namespace Tf
   { return m_rtrel; }
 
 
-// RestUsed flag for all OT hits
+  // RestUsed flag for all OT hits
   void OTHitCreator::resetUsedFlagOfHits() const
-   {
-     Tf::OTHitRange hits = m_detectordata->hits() ;
-   
-     for( Tf::OTHits::const_iterator it = hits.begin(); it != hits.end() ; ++it){
-       const Tf::OTHit* hit = (*it);
-       hit->resetUsedFlag();
-     }
-   }
+  {
+    Tf::OTHitRange hits = m_detectordata->hits() ;
+
+    for( Tf::OTHits::const_iterator it = hits.begin(); it != hits.end() ; ++it){
+      const Tf::OTHit* hit = (*it);
+      hit->resetUsedFlag();
+    }
+  }
 }
