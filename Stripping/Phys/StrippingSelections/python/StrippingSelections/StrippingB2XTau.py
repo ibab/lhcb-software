@@ -25,6 +25,7 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
                     'MASS_HIGH_B'                   : '6000', # MeV
                     'MCOR_LOW_B'                    : '4000', # MeV
                     'MCOR_HIGH_B'                   : '7000', # MeV
+                    'MIPCHI2_B'                     : '150',  # dimensionless 
                     #
                     'PT_TAU'                        : '1500', # MeV
                     'VCHI2_TAU'                     : '20',   # dimensionless
@@ -106,6 +107,7 @@ class B2XTauConf(LineBuilder) :
                                 'MASS_HIGH_B',
                                 'MCOR_LOW_B',
                                 'MCOR_HIGH_B',
+                                'MIPCHI2_B',
                                 #   
                                 'PT_TAU',
                                 'VCHI2_TAU',
@@ -280,6 +282,7 @@ class B2XTauConf(LineBuilder) :
         _bcut    = "(VFASPF(VCHI2PDOF)  <   "   + config['VCHI2_B']       + ") & "\
                    "(BPVDIRA            >   "   + config['DIRA_B']        + ") & "\
                    "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & "\
+                   "(BPVIPCHI2()        <   "   + config['MIPCHI2_B']     + ") & "\
                    "(in_range("+config['MCOR_LOW_B']+"*MeV,MCOR,"+config['MCOR_HIGH_B']+"*MeV))"    
     
         _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> tau+ mu-]cc"],
