@@ -341,7 +341,7 @@ void MonHist::setup(IMessageSvc* msgs)
       m_namelen = m_name.length();
       m_title = rhist->GetTitle();
       m_bookopts = std::string(rhist->GetOption());
-      m_title = m_title+"/:/:/:"+m_bookopts;
+      m_title = m_title+MonHist::optsep+m_bookopts;
       m_titlen = m_title.length();
       m_blocksize = rhist->fN*sizeof(double);
       m_hdrlen = sizeof(DimHistbuff1)+titlen()+1+namelength()+1;
@@ -359,9 +359,8 @@ void MonHist::setup(IMessageSvc* msgs)
       m_title = rhist->GetTitle();
       m_bookopts = std::string(rhist->GetOption());
 //      printf("+++++++++++++++++++++++++++++++2Dim Histogram. Name %s, Title %s \n",m_name, m_title);
-      m_title = m_title+"/:/:/:"+m_bookopts;
+      m_title = m_title+MonHist::optsep+m_bookopts;
       m_titlen = m_title.length();
-      m_titlen = m_title.length()+strlen("/:/:/:")+m_bookopts.length();
       m_Xaxis =  rhist->GetXaxis();
       m_Yaxis = rhist->GetYaxis();
       m_blocksize = rhist->fN*sizeof(double);
@@ -379,6 +378,7 @@ void MonHist::setup(IMessageSvc* msgs)
   m_xmax = m_Xaxis->GetXmax();
   m_ny = 0;
   m_ylablen = 0;
+  m_xlablen = 0;
   m_Xlabels.clear();
   m_Ylabels.clear();
   switch (m_type)
