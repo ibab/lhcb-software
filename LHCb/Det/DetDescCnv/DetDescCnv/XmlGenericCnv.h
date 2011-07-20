@@ -1,5 +1,3 @@
-// $Id: XmlGenericCnv.h,v 1.11 2009-05-04 14:57:08 ocallot Exp $
-
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
 
@@ -250,7 +248,8 @@ protected:
  
   MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }  
  
-
+  inline bool msgLevel( const MSG::Level level ) const { return m_msg->level() <= level; }
+  
 private:
 
   // Constant strings for element and parameter names

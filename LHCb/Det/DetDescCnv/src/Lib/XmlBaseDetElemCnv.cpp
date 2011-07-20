@@ -117,11 +117,11 @@ XmlBaseDetElemCnv::~XmlBaseDetElemCnv () {
 StatusCode XmlBaseDetElemCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Initializing converter for class ID " << classID() << endmsg;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
-      if( m_msg->level() <= MSG::VERBOSE )
+      if( msgLevel(MSG::VERBOSE) )
         verbose() << "Generic conversion status: "
                   << (unsigned int)m_doGenericCnv << endmsg;
     }
@@ -135,7 +135,7 @@ StatusCode XmlBaseDetElemCnv::initialize() {
 // -----------------------------------------------------------------------
 StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
                                            DataObject* refpObject) {
-  if( m_msg->level() <= MSG::VERBOSE )
+  if( msgLevel(MSG::VERBOSE) )
     verbose() << "Method fillObjRefs() starting" << endmsg;
   // processes the base class
   StatusCode sc = XmlGenericCnv::fillObjRefs ( childElement, refpObject );
@@ -161,7 +161,7 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
     return sc;
   }
   // returns
-  if( m_msg->level() <= MSG::VERBOSE )
+  if( msgLevel(MSG::VERBOSE) )
     verbose() << "Method fillObjRefs() ending" << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -173,7 +173,7 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
 StatusCode XmlBaseDetElemCnv::i_createObj (xercesc::DOMElement* element,
                                            DataObject*& refpObject) {
   // creates an object for the node found
-  if( m_msg->level() <= MSG::VERBOSE )
+  if( msgLevel(MSG::VERBOSE) )
     verbose() << "Normal generic detector element conversion" << endmsg;
   std::string elementName = dom2Std (element->getAttribute(nameString));
   refpObject = new DetectorElement (elementName);
@@ -238,7 +238,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       dom2Std (childElement->getAttribute (rpathString));
     std::string namePath =
       dom2Std (childElement->getAttribute (npathString));
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "GI volume        : " << logVolName    << endmsg
                 << "GI support       : " << support       << endmsg
                 << "GI rpath         : " << replicaPath   << endmsg
@@ -275,7 +275,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
             *replica = '\0';
             i = (unsigned int)atol (buf);
             repPath.push_back (i);
-            if( m_msg->level() <= MSG::VERBOSE )
+            if( msgLevel(MSG::VERBOSE) )
               verbose() << "Found replica number " << repPath.back() << endmsg;
             replica = buf;
             i = 0;
@@ -300,35 +300,35 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
              (alignmentinfoString, tagName)) {
     // Everything is in the attributes
     std::string condition = dom2Std (childElement->getAttribute (conditionString));
-    if( m_msg->level() <= MSG::DEBUG )
+    if( msgLevel(MSG::DEBUG) )
       debug()  << "Create AlignmentInfo with condition : " << condition  << endmsg;
     dataObj->createAlignment(condition);
   } else if (0 == xercesc::XMLString::compareString
              (calibrationinfoString, tagName)) {
     // Everything is in the attributes
     std::string condition = dom2Std (childElement->getAttribute (conditionString));
-    if( m_msg->level() <= MSG::DEBUG )
+    if( msgLevel(MSG::DEBUG) )
       debug() << "Create CalibrationInfo with condition : " << condition  << endmsg;
     dataObj->createCalibration(condition);
   } else if (0 == xercesc::XMLString::compareString
              (readoutinfoString, tagName)) {
     // Everything is in the attributes
     std::string condition = dom2Std (childElement->getAttribute (conditionString));
-    if( m_msg->level() <= MSG::DEBUG )
+    if( msgLevel(MSG::DEBUG) )
       debug() << "Create ReadOutInfo with condition : " << condition  << endmsg;
     dataObj->createReadOut(condition);
   } else if (0 == xercesc::XMLString::compareString
              (slowcontrolinfoString, tagName)) {
     // Everything is in the attributes
     std::string condition = dom2Std (childElement->getAttribute (conditionString));
-    if( m_msg->level() <= MSG::DEBUG )
+    if( msgLevel(MSG::DEBUG) )
       debug() << "Create SlowControlInfo with condition : " << condition  << endmsg;
     dataObj->createSlowControl(condition);
   } else if (0 == xercesc::XMLString::compareString
              (fastcontrolinfoString, tagName)) {
     // Everything is in the attributes
     std::string condition = dom2Std (childElement->getAttribute (conditionString));
-    if( m_msg->level() <= MSG::DEBUG )
+    if( msgLevel(MSG::DEBUG) )
       debug() << "Create FastControlInfo with condition : " << condition  << endmsg;
     dataObj->createFastControl(condition);
   } else if (0 == xercesc::XMLString::compareString(tagName, specificString)) {
@@ -412,7 +412,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         }
         dataObj->addParam<std::string>(name,value,comment);
       }
-      if( m_msg->level() <= MSG::VERBOSE )
+      if( msgLevel(MSG::VERBOSE) )
         verbose() << "Added user parameter " << name << " with value "
                   << value << ", type " << type << " and comment \"" << comment
                   << "\"" << endmsg;
@@ -442,7 +442,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         }
       }
       // adds the new parameterVector to the detectorElement
-      if( m_msg->level() <= MSG::VERBOSE ) {
+      if( msgLevel(MSG::VERBOSE) ) {
         verbose() << "Adding user parameter vector " << name
                   << " with values ";
         std::vector<std::string>::iterator it2;
@@ -468,7 +468,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
 
     std::string name = dom2Std(childElement->getAttribute(nameString));
     std::string path = dom2Std(childElement->getAttribute(conditionString));
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Create SmartRef<Condition> : \"" << name << "\" -> " << path  << endmsg;
     dataObj->createCondition(name,path);
 

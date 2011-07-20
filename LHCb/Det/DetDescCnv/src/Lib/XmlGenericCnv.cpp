@@ -122,7 +122,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 
   // displays the address for debug purposes 
   if ( isAString ) {
-    if( m_msg->level() <= MSG::DEBUG ) {
+    if( msgLevel(MSG::DEBUG) ) {
       debug() << "Address for string: orig. path = " << addr->par()[2]
               << ", ObjectName = " << addr->par()[1] << ", string = ";
       if ( addr->par()[0].size() > 25 ) {
@@ -133,7 +133,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
       debug() << endmsg;
     }
   } else {
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Address: filename = " << addr->par()[0]
                 << ", ObjectName = " << addr->par()[1] << endmsg;
   }
@@ -171,7 +171,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
       if (list->item(index)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
         xercesc::DOMNode* childNode = list->item(index);
         xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
-        if( m_msg->level() <= MSG::VERBOSE )
+        if( msgLevel(MSG::VERBOSE) )
           verbose() << "found element " << dom2Std (childElement->getNodeName())
                     << " at top level of xml file." << endmsg;
         if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),DDDBString) ||
@@ -228,7 +228,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (macro->getAttribute (nameString));
           std::string value = dom2Std (macro->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          if( m_msg->level() <= MSG::VERBOSE )
+          if( msgLevel(MSG::VERBOSE) )
             verbose() << "Added DDDB Macro " << name << " = " << value << endmsg;
         }
         // deals with old parameter definitions
@@ -241,7 +241,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           std::string name = dom2Std (parameter->getAttribute (nameString));
           std::string value = dom2Std (parameter->getAttribute (valueString));
           xmlSvc()->addParameter(name, value);
-          if( m_msg->level() <= MSG::VERBOSE )
+          if( msgLevel(MSG::VERBOSE) )
             verbose() << "Added DDDB Parameter " << name << " = " << value << endmsg;
         }
         // retrieve the name of the object we want to create. Removes the leading
@@ -259,7 +259,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           }
         }        
 
-        if( m_msg->level() <= MSG::VERBOSE )
+        if( msgLevel(MSG::VERBOSE) )
           verbose() << "getElementByID for " << objectName << endmsg;
 
         // finds the corresponding node in the DOM tree
@@ -496,13 +496,13 @@ XmlGenericCnv::createAddressForHref (std::string href,
   // expand environment variables in href
   std::string oldPath=href;
   if (AddressTools::hasEnvironmentVariable(href) ) {
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Found environment variable in path " << href << endmsg;
     if (!AddressTools::expandAddress(href)) {
       throw XmlCnvException("XmlGenericCnv : unable to resolve path "+oldPath,
                             StatusCode::FAILURE);
     }
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "path expanded to " << href << endmsg;    
   }
   
@@ -514,7 +514,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
   // Is it a CondDB address ?
   bool condDB = m_have_CONDDB_StorageType && (0==href.find("conddb:/"));
   if (condDB) {
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Href points to a conddb URL: " << href << endmsg;
 
     // the href should have the format:
@@ -555,14 +555,14 @@ XmlGenericCnv::createAddressForHref (std::string href,
       entryName = "/" + path.substr(path.find_last_of('/')+1);
     }
 
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Now build a CondDB address for path=" << path
                 << " channelId=" << channelId
                 << " and entryName=" << entryName << endmsg;
     // Then build a new Address
     return createCondDBAddress (path, entryName, channelId, clid);    
   } else {
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Href points to a regular URL: " << href << endmsg;
     // here we deal with a regular URL
     // first parse the href to get entryName and location
@@ -680,7 +680,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
          && location[0] != '/' ) // avoid infinite loops
       return createAddressForHref(location + "#" + entryName.substr(1), clid, parent);
 
-    if( m_msg->level() <= MSG::VERBOSE )
+    if( msgLevel(MSG::VERBOSE) )
       verbose() << "Now build an XML address for location=" << location
                 << " and entryName=" << entryName << endmsg;
     // Then build a new Address
@@ -714,7 +714,7 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
                            sc);
   }
 
-  if( m_msg->level() <= MSG::VERBOSE )
+  if( msgLevel(MSG::VERBOSE) )
     verbose() << "New address created : location = "
               << location << ", entry name = "
               << entryName << " isString : " << isString << endmsg;
@@ -739,7 +739,7 @@ IOpaqueAddress* XmlGenericCnv::createCondDBAddress (std::string path,
     throw XmlCnvException ("XmlGenericCnv : Unable to create Address from href",
                            sc);
   }
-  if( m_msg->level() <= MSG::VERBOSE )
+  if( msgLevel(MSG::VERBOSE) )
     verbose() << "New address created : path = " << path
               << ", channel id = " << channelId
               << ", entry name = " << entryName << endmsg;

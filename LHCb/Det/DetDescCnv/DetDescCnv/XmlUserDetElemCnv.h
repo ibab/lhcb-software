@@ -1,5 +1,3 @@
-// $ID: $
-
 #ifndef DETDESCCNV_XMLUSERDETELEMCNV_H
 #define DETDESCCNV_XMLUSERDETELEMCNV_H 1
 
@@ -119,8 +117,8 @@ template <class DeType>
 StatusCode
 XmlUserDetElemCnv<DeType>::i_createObj(xercesc::DOMElement* /* element */,
                                        DataObject*& refpObject) {
-  debug() << "entering i_createObj" << endreq;
-  
+  if( msgLevel(MSG::DEBUG) ) debug() << "entering i_createObj" << endmsg;
+
   // creates an object for the node found
   refpObject = new DeType();
 
