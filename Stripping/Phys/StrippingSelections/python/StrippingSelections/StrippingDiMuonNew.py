@@ -109,19 +109,19 @@ config_default= {
         'DiMuonHighMass_checkPV'                   : False    ,
         
         'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
-        'DiMuonHighMass_MuonP'                     : -8000.   , 
+        'DiMuonHighMass_MuonP'                     :  8000.   , # MeV 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
         'DiMuonHighMass_MinMass'                   :  8500.   , # MeV
         'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
         'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
 
         # DiMuon High Mass Same Sign line
-        'DiMuonHighMassSameSign_Prescale'          :     0.5  ,
+        'DiMuonHighMassSameSign_Prescale'          :     0.2  ,
         'DiMuonHighMassSameSign_Postscale'         :     1.   ,
         'DiMuonHighMassSameSign_checkPV'           : False    ,
 
         # DiMuon Low Mass line
-        'DiMuonLowMass_Prescale'                   :     1.   ,
+        'DiMuonLowMass_Prescale'                   :     0.   ,
         'DiMuonLowMass_Postscale'                  :     1.   ,
         'DiMuonLowMass_checkPV'                    : False    , 
         
@@ -138,7 +138,7 @@ config_default= {
         'Jpsi2MuMu_checkPV'                        : False    ,
         
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
-        'Jpsi2MuMu_MuonP'                          :  8000.   ,  # MeV
+        'Jpsi2MuMu_MuonP'                          : 10000.   ,  # MeV
         'Jpsi2MuMu_MuonPIDmu'                      :     0.   , 
         'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
         'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
@@ -153,10 +153,10 @@ config_default= {
 
         'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
         'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
-        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           : 10000.   ,  # MeV
         'Psi2MuMu_MuonPIDmu'                       :     0.   , 
         'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMu_PT'                              :  3000.   ,   # MeV
         
@@ -181,8 +181,8 @@ config_default= {
         'Jpsi2MuMuDetached_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMuDetached_MuonPIDmu'                      :    -5.   , 
         'Jpsi2MuMuDetached_MuonTRCHI2DOF'                  :     5.   , 
-        'Jpsi2MuMuDetached_MinMass'                        :  2976.916,  # MeV
-        'Jpsi2MuMuDetached_MaxMass'                        :  3216.916,  # MeV
+        'Jpsi2MuMuDetached_MinMass'                        :  2996.916,  # MeV
+        'Jpsi2MuMuDetached_MaxMass'                        :  3196.916,  # MeV
         'Jpsi2MuMuDetached_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
         'Jpsi2MuMuDetached_DLS'                            :     3.   ,
@@ -193,10 +193,10 @@ config_default= {
 
         'Psi2MuMuDetached_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
         'Psi2MuMuDetached_MuonPT'                          :   500.   ,  # MeV
-        'Psi2MuMuDetached_MuonP'                           : -8000.   ,  # MeV, no cut now
+        'Psi2MuMuDetached_MuonP'                           :  8000.   ,  # MeV, no cut now
         'Psi2MuMuDetached_MuonPIDmu'                       :    -5.   , 
         'Psi2MuMuDetached_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMuDetached_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
         'Psi2MuMuDetached_DLS'                             :     5.   
@@ -347,7 +347,7 @@ config_microDST= {
         'Psi2MuMuDetached_MassWindow'                      :   120.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
-        'Psi2MuMuDetached_DLS'                             :     5.   
+        'Psi2MuMuDetached_DLS'                             :     5.
         }
 
 from Gaudi.Configuration import *

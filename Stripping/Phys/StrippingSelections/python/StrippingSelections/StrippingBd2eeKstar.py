@@ -187,7 +187,7 @@ def makeEE( name,
             eeMaxMass
             ):
 
-    from StandardParticles import StdLooseElectrons as ElectronsForBd2eeKstar
+    from StandardParticles import StdAllLooseElectrons as ElectronsForBd2eeKstar
     
     ElectronCut = "(PT> %(ElectronPT)s *MeV) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (PIDe>%(ElectronPIDepi)s) " % locals()
     

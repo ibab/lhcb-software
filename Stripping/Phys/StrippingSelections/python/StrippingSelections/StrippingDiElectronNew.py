@@ -428,7 +428,7 @@ def filterBiasedDiElectron( name,
                             eePT
                             ):
     
-    _StdLooseDiElectronSameSign = DataOnDemand( Location = 'Phys/StdLooseDiElectron/Particles' )
+    _StdLooseDiElectron = DataOnDemand( Location = 'Phys/StdLooseDiElectron/Particles' )
     
     ElectronCut = "(MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)"\
                   " & (MINTREE('e+'==ABSID,P) > %(ElectronP)s *MeV)"\
@@ -442,7 +442,7 @@ def filterBiasedDiElectron( name,
     
     return Selection( name + "_SeleeSS",
                       Algorithm = _ee,
-                      RequiredSelections = [ _StdLooseDiElectronSameSign ]
+                      RequiredSelections = [ _StdLooseDiElectron ]
                       )
 
 

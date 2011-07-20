@@ -142,7 +142,7 @@ def makeBc2JpsiMu( name,
     #---------------------------
     # Muon
     #---------------------------        
-    from StandardParticles import StdNoPIDsMuons
+    from StandardParticles import StdAllNoPIDsMuons as NoPIDsMuonsForBc2JpsiMu
     
     # MuBc Cut
     MuonBcCut = "(PT > %(MuonBcPT)s *MeV) & (P > %(MuonBcP)s *MeV) & (TRCHI2DOF < %(MuonBcTRCHI2DOF)s)" % locals()
@@ -151,7 +151,7 @@ def makeBc2JpsiMu( name,
     
     SelMuonBc = Selection("SelMuonBc_"+name,
                           Algorithm = _MuonBcFilter,
-                          RequiredSelections = [ StdNoPIDsMuons ])
+                          RequiredSelections = [ NoPIDsMuonsForBc2JpsiMu ])
     
     
     #---------------------------

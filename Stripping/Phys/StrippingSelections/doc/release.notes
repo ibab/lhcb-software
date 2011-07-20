@@ -4,7 +4,16 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================= StrippingSelections v3r6 2011-07-20 =========================! 2011-07-20 - Rob Lambert
+! 2011-07-20 - Jibo He
+ - Tighten DiMuonNew, Ccbar2PpbarNew
+ - Updated to use "All"
+   . StrippingBc2JpsiMuXNew
+   . StrippingBc2JpsiHNew
+   . StrippingBd2eeKstar
+   . StrippingBd2JpsieeKstar
+
+!========================= StrippingSelections v3r6 2011-07-20 =========================
+! 2011-07-20 - Rob Lambert
  - Use RECSUMMARY for GEC to avoid loading the raw event
 
 ! 2011-07-20 - Will Barter

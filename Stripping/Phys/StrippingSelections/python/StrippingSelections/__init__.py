@@ -19,6 +19,7 @@ import StrippingBs2PhiMuMu
 import StrippingBs2JpsiPhiPrescaledAndDetatched
 import StrippingB2hhLTUnbiased
 import StrippingNeuroBayesMuMu
+import StrippingChiCJPsiGammaConversion
 import StrippingB2nbody
 import StrippingTwoBody_prompt
 import StrippingHb2Charged2Body

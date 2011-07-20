@@ -186,7 +186,7 @@ def makeBc2JpsiH( name,
     #---------------------------
     # Pion or Kaon
     #---------------------------        
-    from StandardParticles import StdNoPIDsPions
+    from StandardParticles import StdAllNoPIDsPions as NoPIDsPionsForBc2JpsiH
 
     # Pion Cut
     PionCut = "(PT > %(PionPT)s *MeV) & (P > %(PionP)s *MeV) & (TRCHI2DOF < %(PionTRCHI2DOF)s)" % locals()
@@ -195,7 +195,7 @@ def makeBc2JpsiH( name,
     
     SelPion = Selection("SelPion_"+name,
                         Algorithm = _PionFilter,
-                        RequiredSelections = [ StdNoPIDsPions ])
+                        RequiredSelections = [ NoPIDsPionsForBc2JpsiH ])
 
     
     #---------------------------
