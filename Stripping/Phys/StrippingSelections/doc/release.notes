@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+ - CharmAssociative : fix multiline string 
+
+
 ! 2011-07-20 - Ulrich Kerzel
 - for ChiCConversion line
    - change from StdNoPIDsElectrons to StdAllNoPIDsElectrons

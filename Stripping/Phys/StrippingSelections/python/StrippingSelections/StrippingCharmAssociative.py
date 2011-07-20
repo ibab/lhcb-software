@@ -279,12 +279,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             Preambulo = self.preambulo() ,
             ## 
             DaughtersCuts   = {
-            'J/psi(1S)' : """
-            ( PT     > 3.0 * GeV ) &
-            ( chi2vx < 10        ) &
-            dimuon_tight           &
-            ( MINTREE ( 'mu+' == ABSID , PT ) > 900*MeV ) 
-            """ ,  
+            'J/psi(1S)' : " ( PT > 3.0 * GeV ) & ( chi2vx < 10 ) & dimuon_tight & ( MINTREE ( 'mu+' == ABSID , PT ) > 900*MeV ) " ,  
             'gamma'     :  self.photonCuts ()
             } ,
             ## 
