@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Grant McGregor
+  - StrippingDstarD02KMuNu StdLoosePions changed to StdAllLoosePions
+
 ! 2011-07-20 - Vanya Belyaev
  
  - CharmAssociative : adjust the cuts 

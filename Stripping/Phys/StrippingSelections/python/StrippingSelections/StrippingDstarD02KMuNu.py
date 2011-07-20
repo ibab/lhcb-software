@@ -31,7 +31,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseMuons, StdLooseKaons, StdLoosePions
+from StandardParticles import StdLooseMuons, StdLooseKaons, StdAllLoosePions
 
 default_config = {'TRACK_Chi2' : 3.,
     'KAON_PIDK' : 5.,
@@ -221,14 +221,14 @@ def makePions(name,
 	  PION_PIDmu) :
     """
     Create pions for D*->D0 pi
-    Starts from StandardParticles/StdLoosePions
+    Starts from StandardParticles/StdAllLoosePions
     name     : name of the Selection.
     """
     _code = "(TRCHI2DOF < %(TRACK_Chi2)s ) & ( %(PION_PIDmu)s < PIDpi - PIDmu) " % locals()
     _pionFilter = FilterDesktop (Code = _code ) 
     return Selection (name,
 	              Algorithm = _pionFilter,
-		      RequiredSelections = [StdLoosePions]) 
+		      RequiredSelections = [StdAllLoosePions]) 
 
 def makeD02KMuNuRS(name,
                    muonSel,
