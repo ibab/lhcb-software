@@ -3,6 +3,20 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v28r4p2>2011-07-22 DaVinci v28r4p2</A></H1><PRE>
+
+Possible production version for CPU improvements in Stripping16 (july 2011)
+
+It was decided to as yet not move to LoKi::VertexFitter
+ 
+Several packages have been additionally included in this release:
+use  DecayTreeTuple             v3r15    Phys
+use  PhysConf                   v1r10    Phys
+use  GaudiConf                  v14r0p1
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r4p2
+
 </PRE><H1><A NAME=v28r4p1>2011-11-11 DaVinci v28r4p1</A></H1><PRE>
 
 Test and development version to implement CPU improvements
@@ -19,7 +33,7 @@ use  GaudiConf                  v14r0p1
 DaVinciKernel and DaVinciTools were taken from the v10r2b and v22r8b branches respectively, with the only change being that LoKi::VertexFitter is now the default offline fitter.
 
 For more details see:
-https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r4
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r4p1
 
 </PRE><H1><A NAME=v28r4>2011-05-24 DaVinci v28r4</A></H1><PRE>
 
