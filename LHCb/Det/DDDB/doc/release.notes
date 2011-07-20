@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2011-07-20 - Marco Cattaneo
+ - Update database tags for SQLDDDB v6r13:
+   . LHCBCOND, 2011: head-20110622
+   . LHCBCOND, 2010, 2009: head-20110614
+
 !========================= DDDB v1r45 2011-06-14 =========================
 ! 2011-05-24 - Marco Cattaneo
  - Update database tags for SQLDDDB v6r10:
