@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Rob Lambert
+ - Use StdAllLooseMuons in B0q2DplusMuX
+
 ! 2011-07-20 - Grant McGregor
   - StrippingDstarD02KMuNu StdLoosePions changed to StdAllLoosePions
 

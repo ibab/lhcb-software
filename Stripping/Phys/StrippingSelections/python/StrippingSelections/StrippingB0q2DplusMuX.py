@@ -371,8 +371,12 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         from PhysSelPython.Wrappers import Selection
-        from StandardParticles import StdLooseMuons
-
+        import StandardParticles
+        if hasattr(StandardParticles,"StdAllLooseMuons"):
+            from StandardParticles import StdAllLooseMuons as StdLooseMuons
+        else:
+            from StandardParticles import StdLooseMuons
+        
         MuForB0q = FilterDesktop(Code=self.MuCut)
         SelMuForB0q = Selection("SelMuFor"+self._name,
                                 Algorithm=MuForB0q, RequiredSelections = [StdLooseMuons])
