@@ -14,7 +14,7 @@
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -204,6 +204,28 @@ if not hasattr ( Gaudi.Math , 'blind' ) :
         
 ## @see Gaudi::Math::blind
 blind     = Gaudi.Math.blind
+
+## 
+cpp.Rndm
+
+# =============================================================================
+## helper function to create ``smart'' RecSumary functor 
+#  @see HASRECSUMMARY
+#  @see    RECSUMMARY
+#  @see      CONTAINS
+def  recSummary ( index , location ) :
+    """
+    Helper function to create ``smart'' RecSummary-fucntor
+    
+    result = has summary  ? summary : contains
+    
+    """
+    #
+    from LoKiCore.functions import switch
+    #
+    return switch ( HASRECSUMMARY ( index      ) ,
+                    RECSUMMARY    ( index , -1 ) ,
+                    CONTAINS      ( location   ) )  
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -20,6 +20,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+ - add helper functor for ``smart'' creation of RecSummary functors 
+ - cmt/requirements
+   version increment to v10r1 
+
 !========================= LoKiNumbers v10r0 2011-04-04 =========================
 ! 2011-04-02 - Vanya Belyaev
  - add tests for round/jbit/jbits functions 
@@ -42,8 +48,8 @@
 
 !========================= LoKiNumbers v9r5 2011-02-22 =========================
 ! 2011-02-12 - Vanya Belyaev
- - add COUNTER & STAT symbols 
- - cmt/requirements
+ - add COUNTER & STAT symbols
+  - cmt/requirements
    version increment to v9r5
 
 !========================= LoKiNumbers v9r4 2010-10-25 =========================
