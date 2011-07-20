@@ -154,14 +154,14 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       if nDigits is not None:
         if _filter != "":
           _filter+=" & "
-        _filter += "(CONTAINS('Raw/Spd/Digits') < %s)" %nDigits
+        _filter += "( switch ( HASRECSUMMARY('nSpdHits'), RECSUMMARY('nSpdHits') < %s, CONTAINS('Raw/Spd/Digits') < %s ) )" %(nDigits,nDigits)
 
       nClusters = config["MaxITClusters"]
       if nClusters is not None:
         if _filter != "":
           _filter+=" & "
-        _filter += "(CONTAINS('Raw/IT/Clusters') < %s)" %nClusters
-
+        _filter += " ( switch ( HASRECSUMMARY('nITClusters'), RECSUMMARY('nITClusters') < %s, CONTAINS('Raw/IT/Clusters') < %s ) )" %(nClusters,nClusters)
+      
       nVELO = config["MaxVeloTracks"]
       if nVELO is not None:
         if _filter != "":

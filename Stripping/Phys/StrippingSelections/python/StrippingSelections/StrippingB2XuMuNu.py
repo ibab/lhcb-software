@@ -3,7 +3,6 @@ __author__ = ['Phillip Urquijo, Alessandra Borgia']
 __date__ = '08/05/2010'
 __version__ = '$Revision: 1.4 $'
 
-
 '''
 B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 '''
@@ -192,6 +191,20 @@ confdict= {
     "XMuMassUpper"        : 5500 # MeV
     }
 
+location_to_summary={'Raw/Spd/Digits':'nSPDhits',
+                     'Raw/IT/Clusters':'nITClusters'
+                     }
+
+def cutContainsOrSummary(location, value):
+    if 'Raw' not in location:
+        location='Raw/'+location
+        location=location.replace('//','/')
+    cutstr=" ( switch ( HASRECSUMMARY('%s'), RECSUMMARY('%s') < %d, CONTAINS('%s') < %d ) )"%(location_to_summary[location],
+                                                                                              location_to_summary[location],
+                                                                                              value,
+                                                                                              location,
+                                                                                              value)
+    return cutstr
 
 from Gaudi.Configuration import *
 from StrippingUtils.Utils import LineBuilder
@@ -350,10 +363,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -366,10 +379,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -382,10 +395,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -398,10 +411,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -414,10 +427,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &"""+
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -430,10 +443,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &"""+
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -446,10 +459,10 @@ class B2XuMuNuBuilder(LineBuilder):
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
-                                       """ ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &"""+
+                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
+                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
+                                       ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },

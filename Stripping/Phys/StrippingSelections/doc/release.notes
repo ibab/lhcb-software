@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Rob Lambert
+ - Use RECSUMMARY for GEC to avoid loading the raw event
 
 ! 2011-07-20 - Will Barter
  - Updated to use "All" particle types in Electroweak lines:

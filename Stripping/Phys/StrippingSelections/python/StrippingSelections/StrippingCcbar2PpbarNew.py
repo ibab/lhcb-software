@@ -110,7 +110,7 @@ class Ccbar2PpbarConf(LineBuilder):
         self.line = StrippingLine( self.name+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
-                                   FILTER = { 'Code'       : "( CONTAINS('Raw/Spd/Digits')<%(SpdMultForCcbarCut)s )" % locals(), 
+                                   FILTER = { 'Code'       : " ( switch ( HASRECSUMMARY('nSpdHits'), RECSUMMARY('nSpdHits') < %(SpdMultForCcbarCut)s, CONTAINS('Raw/Spd/Digits') < %(SpdMultForCcbarCut)s ) )" % locals(), 
                                               'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
                                                                'from LoKiCore.functions    import *' ]
                                               },
