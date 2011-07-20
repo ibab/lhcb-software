@@ -7,6 +7,7 @@
 
 ! 2011-07-20 - Rob Lambert
  - Move to OfflineDeterministicPrescaler
+ - And allow backwards compatibility!
 
 !========================== StrippingConf v4r2 2011-03-28 ====================
 

@@ -15,7 +15,12 @@ from copy import deepcopy
 from GaudiConf.Configuration import *
 from GaudiConfUtils import isConfigurable
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
-from Configurables import OfflineDeterministicPrescaler as Scaler
+import Configurables
+if hasattr(Configurables,"OfflineDeterministicPrescaler"):
+    from Configurables import OfflineDeterministicPrescaler as Scaler
+else:
+    from Configurables import DeterministicPrescaler as Scaler
+
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
