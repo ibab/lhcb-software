@@ -75,7 +75,7 @@ config = {
     'DAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV'},
     'AMAXDOCA_MAX'  : '1.0*mm',
     'VCHI2DOF_MAX'  : 30,
-    'BPVVDCHI2_MIN' : 36,
+    'BPVVDCHI2_MIN' : 36, #Hidden cut on B FD Chi2 do we really want this? 
     'BPVDIRA_MIN'   : 0,
     'ASUMPT_MIN'    : '1000*MeV',
     'MIPCHI2DV_MIN' : 4
@@ -84,7 +84,7 @@ config = {
     'ASUMPT_MIN'    : '1500*MeV',
     'AMAXDOCA_MAX'  : '1.0*mm',
     'VCHI2DOF_MAX'  : 30,
-    'BPVVDCHI2_MIN' : 36,
+    'BPVVDCHI2_MIN' : 36, 
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '200*MeV'
     },
