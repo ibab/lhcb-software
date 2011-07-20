@@ -267,7 +267,7 @@ LoKi::Vertices::BeamSpotRho::operator()
 // ============================================================================
 std::ostream& LoKi::Vertices::BeamSpotRho::fillStream( std::ostream& s ) const 
 {
-  s << "VX_BEAMSPOTRHO('" << resolverBound() << "'" ;
+  s << "VX_BEAMSPOTRHO(" << resolverBound()   << "" ;
   if ( s_CONDNAME != condName() ) { s << ",'" << condName() << "'" ; }
   return s << ")" ;
 }

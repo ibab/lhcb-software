@@ -24,6 +24,19 @@
 // ============================================================================
 /** @file 
  *  Implementation file for various sinks
+ * 
+ *  This file is part of LoKi project: 
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ * 
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyav@physics.syr.edu
  *  @author Roel Aaij roel.aaij@cern.ch
  *  @date 2011-03-17
@@ -33,27 +46,27 @@
 // ============================================================================
 LoKi::Vertices::SinkTES::SinkTES 
 ( const std::string&            path )
-   : LoKi::Vertices::SinkTES::_Sink () 
-   , m_path    ( path ) 
+  : LoKi::Vertices::SinkTES::_Sink () 
+  , m_path    ( path  ) 
 {
-   // get GaudiAlgorithm 
-   GaudiAlgorithm*  alg = LoKi::AlgUtils::getGaudiAlg( *this, true ) ;
-   Assert ( 0 != alg    , "GaudiAlgorithm points to NULL!" ) ;
-   // get IAlgorithm 
-   IAlgorithm*     ialg = LoKi::AlgUtils::getAlg( *this ) ;
-   Assert ( alg == ialg ,
-            "GaudiAlgorithm is not *my* IAlgorithm" ) ;
-   //
-   m_alg = alg;
+  // get GaudiAlgorithm 
+  GaudiAlgorithm*  alg = LoKi::AlgUtils::getGaudiAlg( *this, true ) ;
+  Assert ( 0 != alg    , "GaudiAlgorithm points to NULL!" ) ;
+  // get IAlgorithm 
+  IAlgorithm*     ialg = LoKi::AlgUtils::getAlg( *this ) ;
+  Assert ( alg == ialg ,
+           "GaudiAlgorithm is not *my* IAlgorithm" ) ;
+  //
+  m_alg = alg;
 }
 // ============================================================================
 // copy constructor
 // ============================================================================
 LoKi::Vertices::SinkTES::SinkTES 
 ( const LoKi::Vertices::SinkTES& right ) 
-   : LoKi::AuxFunBase               ( right ) 
-   , LoKi::Vertices::SinkTES::_Sink ( right ) 
-   , m_path    ( right.m_path    ) 
+  : LoKi::AuxFunBase               ( right ) 
+  , LoKi::Vertices::SinkTES::_Sink ( right ) 
+  , m_path    ( right.m_path    ) 
 {
    // get GaudiAlgorithm 
    GaudiAlgorithm*  alg = LoKi::AlgUtils::getGaudiAlg( *this, true ) ;
@@ -73,34 +86,39 @@ LoKi::Vertices::SinkTES::~SinkTES(){}
 // ============================================================================
 LoKi::Vertices::SinkTES::result_type 
 LoKi::Vertices::SinkTES::operator()
-   ( LoKi::Vertices::SinkTES::argument a ) const 
+  ( LoKi::Vertices::SinkTES::argument a ) const 
 {
-   //
-   Assert ( 0 != alg() , "Invalid setup" ) ;
-   //
-   Assert ( !m_path.empty() , "No TES location is specified!" ) ;
-   //
-   LHCb::RecVertices* out = new LHCb::RecVertices();
-   //
-   alg()->put(out,m_path);
-   //
-   BOOST_FOREACH( const LHCb::VertexBase* vx, a ) {
-      const LHCb::RecVertex* tmp = dynamic_cast< const LHCb::RecVertex* >( vx );
-      Assert( 0 != tmp, "VertexBase is not a RecVertex" );
-      LHCb::RecVertex* rvx = tmp->clone();
-      out->insert( rvx );
-   }
-   //
-   return a;
+  //
+  Assert ( 0 != alg()      , "Invalid setup" ) ;
+  //
+  Assert ( !m_path.empty() , "No TES location is specified!" ) ;
+  //
+  LHCb::RecVertices* out = new LHCb::RecVertices();
+  //
+  alg() -> put ( out , m_path ) ;
+  //
+  for ( LHCb::VertexBase::ConstVector::const_iterator iv = 
+          a.begin() ; a.end() != iv ; ++iv ) 
+  {
+    //
+    const LHCb::VertexBase* vx = *iv ;
+    if ( 0 == vx ) { continue ; }                                // CONTINUE 
+    //
+    const LHCb::RecVertex* rv = dynamic_cast<const LHCb::RecVertex*> ( vx ) ;
+    //
+    Assert ( 0 != rv , "VertexBase is not a RecVertex" );        // ASSERT 
+    //
+    out -> insert ( rv -> clone () ) ;
+  }
+  //
+  return a;
 }
 // ============================================================================
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::SinkTES::fillStream ( std::ostream& o ) const 
-{
-   return o << "RV_SINKTES('" << m_path << "')";
-}
+{ return o << "RV_SINKTES('" << m_path << "')" ; }
 // ============================================================================
 // The END 
 // ============================================================================
