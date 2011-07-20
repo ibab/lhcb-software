@@ -13,6 +13,26 @@ __version__ = '$Revision: 1.1 $'
 __all__ = ('StrippingChiCJPsiGammaConversionConf',
            'makeMuMu')
 
+#config_params =  {
+#    'trackChi2'               :    5.0
+#    , 'JPsiMassMin'           :    3.04 # GeV
+#    , 'JPsiMassMax'           :    3.14 # GeV
+#    , 'JPsiVertexChi2'        :   25.0
+#    , 'NBCutJPsi'             :    0.7
+#    , 'ExpertiseJPsi'         : 'Muon/mumu_net_noip.nb'
+#    , 'NBVersionJPsi'         : "TuneSep2010"
+#    , 'eDLLe'                 :  -5.0
+#    , 'GammaEEMass'           :   7.0 #MeV
+#    , 'GammaEEChi2'           :   2.0
+#    , 'GammaEETau'            :   0.1  #ps
+#    , 'mMinChiCRaw'           :   2.9 #GeV
+#    , 'mMaxChiCRaw'           :   4.1 #GeV
+#    , 'mMinChiCFit'           :   3.0 #GeV
+#    , 'mMaxChiCFit'           :   4.0 #GeV
+#    , 'PrescaleChiC'          :   1.0
+#    , 'PostscaleChiC'         :   1.0
+#    }
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -163,7 +183,7 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
 
         # imports
         from Configurables          import NoPIDsParticleMaker
-        from CommonParticles.Utils  import *
+        from CommonParticles.Utils  import trackSelector, updateDoD
         from PhysSelPython.Wrappers import MergedSelection
 
         #
@@ -180,7 +200,7 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
 
 
         # switch off Bremsstrahlung correction until fully tuned
-        algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsElectrons'    , DecayDescriptor = 'Electron' , Particle = 'electron'  )
+        algorithm =  NoPIDsParticleMaker ( 'StdAllNoPIDsElectrons'    , DecayDescriptor = 'Electron' , Particle = 'electron'  )
         algorithm.AddBremPhotonTo = []
         
         algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsUpElectrons'  , DecayDescriptor = 'Electron' , Particle = 'electron'  )
@@ -190,11 +210,11 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
         algorithm.AddBremPhotonTo = []
 
         # all required electrons
-        from CommonParticles import StdNoPIDsDownElectrons, StdNoPIDsUpElectrons, StdNoPIDsVeloElectrons 
+        from CommonParticles import StdNoPIDsDownElectrons, StdNoPIDsUpElectrons,StdNoPIDsVeloElectrons 
 
-        eLong        = DataOnDemand('Phys/StdNoPIDsElectrons/Particles')
+        eLong        = DataOnDemand('Phys/StdAllNoPIDsElectrons/Particles')
         eUp          = DataOnDemand('Phys/StdNoPIDsUpElectrons/Particles')
-        eDown        = DataOnDemand('Phys/StdNoPIDsDownElectrons/Particles')
+        eDown        = DataOnDemand('Phys/StdoPIDsDownElectrons/Particles')
         eTtrack      = DataOnDemand('Phys/StdNoPIDsTtrackElectrons/Particles')
         allElectrons = MergedSelection('allElectrons', RequiredSelections = [eLong, eUp, eDown, eTtrack])
         

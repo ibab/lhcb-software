@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Ulrich Kerzel
+- for ChiCConversion line
+   - change from StdNoPIDsElectrons to StdAllNoPIDsElectrons
+   - the other Std...Electrons seem unchanged??
+   - remove "import *" and only inport trackSelector, updateDoD
+   - add cut dictionary as comment into the line
+
 ! 2011-07-19 - Mat Charles
  - Change from StdLoosePions to StdAllLoosePions for slow pion in StrippingDstarD2KShh.py
 
