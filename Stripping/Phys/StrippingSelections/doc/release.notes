@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Michel De Cian
+ - Tightened selection for J/psi in StrippingTrackEffMuonTT
+
 
 !========================= StrippingSelections v3r6 2011-07-20 =========================
 

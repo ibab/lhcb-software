@@ -26,7 +26,7 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Michel De Cian']
-__date__ = '11/03/2011'
+__date__ = '20/07/2011'
 __version__ = '$Revision: 1.1 $'
 
 
@@ -69,6 +69,52 @@ from Configurables import (MuonCombRec,
 
 
 default_name = 'TrackEffMuonTT'
+
+default_config = {
+    'JpsiMassWin'                 : 500,
+    'UpsilonMassWin'              : 1500,
+    'ZMassWin'                    : 40000,
+    'BMassWin'                    : 500,
+    'JpsiMuonTTPT'                : 0,
+    'UpsilonMuonTTPT'             : 500,
+    'ZMuonTTPT'                   : 500,
+    'JpsiLongPT'                  : 1300,
+    'UpsilonLongPT'               : 1000,
+    'ZLongPT'                     : 10000,
+    'JpsiPT'                      : 1000,
+    'UpsilonPT'                   : 0,
+    'ZPT'                         : 0,
+    'JpsiLongMuonMinIP'           : 0.5,
+    'UpsilonLongMuonMinIP'        : 0,
+    'ZLongMuonMinIP'              : 0,
+    'JpsiMINIP'                   : 3,
+    'UpsilonMINIP'                : 10000, #this is a dummy
+    'ZMINIP'                      : 10000, #this is a dummy
+    'BJpsiKMINIP'                 : 10000, #this is a dummy
+    'JpsiLongMuonTrackCHI2'       : 5,
+    'UpsilonLongMuonTrackCHI2'    : 5,
+    'ZLongMuonTrackCHI2'          : 5,
+    'VertexChi2'                  : 5,
+    'LongMuonPID'                 : 2,
+    'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
+    'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+    'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+    'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0},
+    'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
+    'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
+    'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
+    'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0},
+    'JpsiPrescale'                : 1,
+    'UpsilonPrescale'             : 1,
+    'ZPrescale'                   : 1,
+    'BJpsiKPrescale'              : 1,
+    'Postscale'                   : 1
+    }
+
+
+
+
+
 
 class StrippingTrackEffMuonTTConf(LineBuilder) :
     """
@@ -123,6 +169,10 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                               'JpsiLongMuonMinIP',
                               'UpsilonLongMuonMinIP',
                               'ZLongMuonMinIP',
+                              'JpsiMINIP',
+                              'UpsilonMINIP',
+                              'ZMINIP',
+                              'BJpsiKMINIP',
                               'JpsiLongMuonTrackCHI2',
                               'UpsilonLongMuonTrackCHI2',
                               'ZLongMuonTrackCHI2',
@@ -231,7 +281,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                                longPT = config['JpsiLongPT'], 
                                                                longMuonPID = config['LongMuonPID'],
                                                                longMuonMinIP = config['JpsiLongMuonMinIP'],
-                                                               longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
+                                                               longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'],
+                                                               motherMinIP = config['JpsiMINIP'])
         # J/psi -> mu mu, probe-and-tag
         self.makeJpsiMuMuTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeJpsiMuMuTrackEff2', 
                                                                resonanceName = 'J/psi(1S)',
@@ -246,7 +297,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                                longPT = config['JpsiLongPT'], 
                                                                longMuonPID = config['LongMuonPID'],
                                                                longMuonMinIP = config['JpsiLongMuonMinIP'],
-                                                               longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
+                                                               longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'],
+                                                               motherMinIP = config['JpsiMINIP'])
         # ##################################################################################################################
         # # Upsilon -> mu mu, tag-and-probe
         self.makeUpsilonMuMuTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeUpsilonMuMuTrackEff1', 
@@ -262,7 +314,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                                   longPT = config['UpsilonLongPT'], 
                                                                   longMuonPID = config['LongMuonPID'],
                                                                   longMuonMinIP = config['UpsilonLongMuonMinIP'],
-                                                                  longMuonTrackCHI2 = config['UpsilonLongMuonTrackCHI2'])
+                                                                  longMuonTrackCHI2 = config['UpsilonLongMuonTrackCHI2'],
+                                                                  motherMinIP = config['UpsilonMINIP'])
         # Upsilon -> mu mu, probe-and-tag
         self.makeUpsilonMuMuTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeUpsilonMuMuTrackEff2', 
                                                                   resonanceName = 'Upsilon(1S)',
@@ -277,7 +330,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                                   longPT = config['UpsilonLongPT'], 
                                                                   longMuonPID = config['LongMuonPID'],
                                                                   longMuonMinIP = config['UpsilonLongMuonMinIP'],
-                                                                  longMuonTrackCHI2 = config['UpsilonLongMuonTrackCHI2'])
+                                                                  longMuonTrackCHI2 = config['UpsilonLongMuonTrackCHI2'],
+                                                                  motherMinIP = config['UpsilonMINIP'])
         # ##################################################################################################################
         # Z -> mu mu, tag-and-probe
         self.makeZMuMuTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeZMuMuTrackEff1', 
@@ -293,7 +347,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                             longPT = config['ZLongPT'], 
                                                             longMuonPID = config['LongMuonPID'],
                                                             longMuonMinIP = config['ZLongMuonMinIP'],
-                                                            longMuonTrackCHI2 = config['ZLongMuonTrackCHI2'])
+                                                            longMuonTrackCHI2 = config['ZLongMuonTrackCHI2'],
+                                                            motherMinIP = config['ZMINIP'])
         # Z -> mu mu, probe-and-tag
         self.makeZMuMuTrackEff2 = makeResonanceMuMuTrackEff(name+'_MakeZMuMuTrackEff2', 
                                                             resonanceName = 'Z0',
@@ -308,7 +363,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                             longPT = config['ZLongPT'], 
                                                             longMuonPID = config['LongMuonPID'],
                                                             longMuonMinIP = config['ZLongMuonMinIP'],
-                                                            longMuonTrackCHI2 = config['ZLongMuonTrackCHI2'])
+                                                            longMuonTrackCHI2 = config['ZLongMuonTrackCHI2'],
+                                                            motherMinIP = config['ZMINIP'])
         # ##################################################################################################################
         # B -> J/psi K exclusive, tag-and-probe
         self.makeJpsiMuMuForBJpsiKTrackEff1 = makeResonanceMuMuTrackEff(name+'_MakeJpsiMuMuForBJpsiKTrackEff1', 
@@ -324,7 +380,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                                         longPT = config['JpsiLongPT'], 
                                                                         longMuonPID = config['LongMuonPID'],
                                                                         longMuonMinIP = config['JpsiLongMuonMinIP'],
-                                                                        longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
+                                                                        longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'],
+                                                                        motherMinIP = config['BJpsiKMINIP'])
         self.makeBJpsiKTrackEff1 = makeBJpsiKTrackEff(name+'_MakeBJpsiKTrackEff1',
                                                       JpsiSel = self.makeJpsiMuMuForBJpsiKTrackEff1,
                                                       KSel = self.SelHlt2BJpsiKK,
@@ -346,7 +403,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
                                                                         longPT = config['JpsiLongPT'], 
                                                                         longMuonPID = config['LongMuonPID'],
                                                                         longMuonMinIP = config['JpsiLongMuonMinIP'],
-                                                                        longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'])
+                                                                        longMuonTrackCHI2 = config['JpsiLongMuonTrackCHI2'],
+                                                                        motherMinIP = config['BJpsiKMINIP'])
         
         self.makeBJpsiKTrackEff2 = makeBJpsiKTrackEff(name+'_MakeBJpsiKTrackEff2',
                                                       JpsiSel = self.makeJpsiMuMuForBJpsiKTrackEff2,
@@ -453,8 +511,9 @@ def selFilterLongPartsMu(name, IPcut):
     """
     Filter = FilterDesktop()
     FilterLongPartsMu = Filter.configurable(name+"FilterLongPartsMu")
-    FilterLongPartsMu.Code = "(ISMUON) & (P > 8000) & (PT > 1300) & (PIDmu > 0.0) & (TRCHI2DOF < 3.0) & (MIPDV(PRIMARY) > %(IPcut)s)" %locals()
-#
+    FilterLongPartsMu.Code = "(ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 1300*MeV) & (MIPDV(PRIMARY) > 0.5) & (TRCHI2DOF < 2.0) & (MIPCHI2DV(PRIMARY) > 200)" %locals()
+    # These cuts are now tighter than the trigger that follows
+
     return Selection(name+"_SelFilterLongPartsMu", Algorithm = FilterLongPartsMu, RequiredSelections = [StdLooseMuons])
 # ########################################################################################
 def selFilterLongPartsK(name):
@@ -715,7 +774,7 @@ def chargeFilter(name, trackAlgo,  partSource, charge):
 # Resonance maker, that fits two muons to a resonance (J/psi, Upsilon, Z)
 # ########################################################################################    
 def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, minusCharge, 
-                              mode, massWin, vertexChi2, resonancePT, muonTTPT, longPT, longMuonPID, longMuonMinIP, longMuonTrackCHI2):    
+                              mode, massWin, vertexChi2, resonancePT, muonTTPT, longPT, longMuonPID, longMuonMinIP, longMuonTrackCHI2, motherMinIP):    
     """
     Create and return a Resonance -> mu mu Selection object, with one track a long track
     and the other a MuonTT track.
@@ -732,6 +791,7 @@ def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, 
     muonTTPT             : Pt of MuonTT-track muon
     longPT               : Pt of Long-track muon
     longMuonPID          : CombDLL(mu-pi) of long-track muon
+    motherMinIP          : Minimal IP of the mother
     NOT IMPLEMENTED YET:
     longMuonMinIPCHI2    : MinIPCHI2 of long-track muon
     longMuonTrackCHI2    : Track-Chi2 of long-track muon
@@ -750,7 +810,7 @@ def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, 
                                          "mu-"	:	"(PT > %(longPT)s) & (PIDmu > %(longMuonPID)s)"  % locals() }
 
         MuonTTResonance.CombinationCut = "ADAMASS('%(resonanceName)s') < %(massWinCombCut)s" % locals()
-        MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s)" % locals()
+        MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s) & (MIPDV(PRIMARY) < %(motherMinIP)s)" % locals()
     
         return Selection( name, Algorithm = MuonTTResonance, RequiredSelections = [minusCharge, plusCharge] )
      
@@ -759,7 +819,7 @@ def makeResonanceMuMuTrackEff(name, resonanceName, decayDescriptor, plusCharge, 
                                          "mu+"	:	"(PT > %(longPT)s) & (PIDmu > %(longMuonPID)s)"  % locals() }
 
         MuonTTResonance.CombinationCut = "ADAMASS('%(resonanceName)s') < %(massWinCombCut)s" % locals()
-        MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s)" % locals()
+        MuonTTResonance.MotherCut = "(ADMASS('%(resonanceName)s') < %(massWin)s) & (VFASPF(VCHI2/VDOF) < %(vertexChi2)s) & (MIPDV(PRIMARY) < %(motherMinIP)s)" % locals()
         
         return Selection( name, Algorithm = MuonTTResonance, RequiredSelections = [plusCharge, minusCharge] )
     
