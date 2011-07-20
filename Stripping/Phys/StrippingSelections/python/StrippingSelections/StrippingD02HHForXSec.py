@@ -22,6 +22,7 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
+import StandardParticles
 if hasattr(StandardParticles, "StdAllLoosePions"):
   from StandardParticles import StdAllLoosePions as StdAllLoosePions
 else:
