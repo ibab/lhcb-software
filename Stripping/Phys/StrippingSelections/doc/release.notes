@@ -4,6 +4,18 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - V. Gligorov
+ - Use "All" particle types in 
+   StrippingD02MuMu.py
+   StrippingD2HHLTUnbiased.py
+   StrippingD2hh.py
+   
+   StrippingDstarD02Kpipi0.py
+   StrippingDstarD02xx.py
+   StrippingDstarVeryLooseWithD02Kpi.py
+   StrippingNoPIDDstarWithD02RSKPi.py
+   StrippingTwoBody_prompt.py 
+
 ! 2011-07-20 - Rob Lambert
  - Use StdAllLooseMuons in B0q2DplusMuX
 
