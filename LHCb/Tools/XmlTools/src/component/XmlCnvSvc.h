@@ -301,6 +301,9 @@ private:
   MsgStream& error()   const { return *m_msg << MSG::ERROR; }  
  
   MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
+
+  inline bool msgLevel( const MSG::Level level ) const { return m_msg->level() <= level; }
+  
 };
 
 #endif    // DETDESCCNV_XMLCNVSVC_H

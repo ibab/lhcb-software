@@ -1,5 +1,3 @@
-// $Id: XmlParserSvc.cpp,v 1.21 2009-05-05 09:26:45 ocallot Exp $
-
 // Include Files
 #include <limits.h>
 #include <memory> // for auto_ptr with gcc 4.3
@@ -120,7 +118,7 @@ StatusCode XmlParserSvc::initialize( ) {
         return sc;
       }
       m_parser->setEntityResolver(m_resolver->resolver());
-      debug() << "using the xercesc::EntityResolver provided by " << m_resolverName << endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << "using the xercesc::EntityResolver provided by " << m_resolverName << endmsg;
     }
   } else {
     error() << "Could not create xercesc::XercesDOMParser" << endmsg;
@@ -187,7 +185,7 @@ IDetDataSvc *XmlParserSvc::detDataSvc() {
       throw GaudiException("Can't locate service " + m_detDataSvcName,
                            name(),StatusCode::FAILURE);
     } else {
-      debug() << "Successfully located service " << m_detDataSvcName << endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Successfully located service " << m_detDataSvcName << endmsg;
     }
   }
   return m_detDataSvc;
@@ -235,7 +233,7 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
     m_parser->reset();
     // parses the file
     try {
-      debug() << "parsing file " << fileName << endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << "parsing file " << fileName << endmsg;
       longlong start1 = 0;
       longlong start2 = 0;
       if ( m_measureTime ) {
@@ -309,7 +307,7 @@ IOVDOMDocument* XmlParserSvc::parseString (std::string source) {
                                             "");
     // parses the file
     m_parser->parse(inputSource);
-    debug() << "parsing xml string..." << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "parsing xml string..." << endmsg;
     xercesc::DOMDocument *doc = m_parser->adoptDocument();
     // returns the parsed document if successful
     if (doc != 0) {

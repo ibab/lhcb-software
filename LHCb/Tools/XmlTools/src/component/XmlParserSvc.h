@@ -172,6 +172,8 @@ private:
 
   MsgStream& error()   { return *m_msg << MSG::ERROR; }  
   
+  inline bool msgLevel( const MSG::Level level ) const { return m_msg->level() <= level; }
+
 private:
 
   /// the actual DOM parser

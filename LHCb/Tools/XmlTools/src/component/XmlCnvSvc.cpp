@@ -1,5 +1,3 @@
-// $Id: XmlCnvSvc.cpp,v 1.14 2009-05-05 09:26:45 ocallot Exp $
-
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -132,7 +130,7 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
                                     IOpaqueAddress*& refpAddress) 
 {
   // First check that requested address is of type XML_StorageType
-  verbose() << "Create an XML address" << endmsg;
+  if( msgLevel(MSG::VERBOSE) ) verbose() << "Create an XML address" << endmsg;
   if( XML_StorageType != svc_type ) {
     error() 
 	<< "Cannot create addresses of type " << (int)svc_type 
@@ -157,15 +155,15 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
   if( 0 < pos && pos < source.length() ) source.erase( 0, pos );
   if( source.find("<?xml") == 0 ) {
     isString = 1;
-    verbose() 
+    if( msgLevel(MSG::VERBOSE) ) verbose() 
 	<< "XML source beginning by \"<?xml\" is interpreted"
 	<< " as an XML string" << endmsg;
   } else {
     isString = ipar[0];
     if( isString == 0 ) {
-      verbose() << "XML source is an XML file name" << endmsg;
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "XML source is an XML file name" << endmsg;
     } else if( isString == 1 ) { 
-      verbose() << "XML source is an XML string" << endmsg;
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "XML source is an XML string" << endmsg;
     } else {
       error() 
 	  << "Cannot create address: invalid ipar[0] value = "
@@ -198,7 +196,7 @@ IOVDOMDocument* XmlCnvSvc::parse (const char* fileName) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parse(fileName);
   }
-  debug() << "null result returned in parse" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "null result returned in parse" << endmsg;
   return 0;
 }
 
@@ -213,23 +211,23 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
   if( m_dtdLocation != "" ) {
     std::string::size_type dtdPos = source.find( ".dtd" );
     if( dtdPos < source.length() ) {
-      verbose() 
+      if( msgLevel(MSG::VERBOSE) ) verbose() 
           << "Set correct DTD location in the string to be parsed" << endmsg;
       std::string::size_type quotePos;
       if( source[dtdPos+4] == '\'' ) {
         quotePos = source.substr(0,dtdPos).rfind("\'");
         source.insert( quotePos+1, m_dtdLocation+"/" );
-        verbose() << "DTD literal is now: " 
+        if( msgLevel(MSG::VERBOSE) ) verbose() << "DTD literal is now: " 
             << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
             << endmsg;
       } else if ( source[dtdPos+4] == '\"' ) {
         quotePos = source.substr(0,dtdPos).rfind("\"");
         source.insert( quotePos+1, m_dtdLocation+"/" );
-        verbose() << "DTD literal is now: " 
+        if( msgLevel(MSG::VERBOSE) ) verbose() << "DTD literal is now: " 
             << source.substr(quotePos,dtdPos+6-quotePos+m_dtdLocation.length())
             << endmsg;
       } else {
-        verbose()
+        if( msgLevel(MSG::VERBOSE) ) verbose()
             << "Bad DTD literal in the string to be parsed: do nothing" 
             << endmsg;
       }
@@ -240,7 +238,7 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parseString (source);
   }
-  debug() << "null result returned in parseString" << endmsg;
+  if( msgLevel(MSG::DEBUG) )  debug() << "null result returned in parseString" << endmsg;
   return 0;
 
 }
