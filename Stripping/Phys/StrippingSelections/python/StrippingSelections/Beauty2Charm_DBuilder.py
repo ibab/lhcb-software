@@ -63,6 +63,7 @@ class DBuilder(object):
         #amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
         #mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
         ce = ComboEngine([('pi+','pi-'),('K+','pi-'),('pi+','K-'),('K+','K-')],
+                         #ce = ComboEngine([('pi+','pi-')],
                          ['pi+','pi-'])
         amass = "("+ce.getWMFunctor(min,max).replace('WM','AWM')+")"
         #mass = "("+ce.getWMFunctor(min,max)+")"
@@ -70,18 +71,23 @@ class DBuilder(object):
         protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],amass,mass,
                                   self.config)
         return ce.mergedSelection(protoD2hh.name()+"Combo",min,max,protoD2hh)
-        # Add Albert's ComboEngine stuff here!!!!
 
     def _makeD2hhh(self):
         '''Makes D->hhh'''
         min,max,units = self._massWindow('D+')
         #massCuts = <ADD WM Functor code from Albert here!>
-        amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
-        mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
-        protoD2hhh = self._makeD2X('D2HHH',['[D+ -> pi+ pi+ pi-]cc'],amass,
+        #amass = 'in_range(%d*%s,AM,%d*%s)' % (min-10,units,max+10,units)
+        #mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
+        ce = ComboEngine([('pi+','pi+','pi-'),('pi+','pi+','K-'),
+                          ('K+','pi+','pi-'),('K+','pi+','K-'),
+                          ('K+','K+','pi-')],['pi+','pi+','pi-'])
+        amass = "("+ce.getWMFunctor(min,max).replace('WM','AWM')+")"
+        #mass = "("+ce.getWMFunctor(min,max)+")"
+        mass = "(M < 10*GeV)"
+        # ADD BACK CC!!!!!!!
+        protoD2hhh = self._makeD2X('D2HHH',['D+ -> pi+ pi+ pi-'],amass,
                                    mass,self.config)
-        return protoD2hhh
-        # Add Albert's ComboEngine stuff here!!!!
+        return ce.mergedSelection(protoD2hhh.name()+"Combo",min,max,protoD2hhh)
 
     def _makeD2KSh(self,which):
         '''Makes D->Ksh'''

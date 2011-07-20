@@ -148,8 +148,13 @@ class Beauty2CharmConf(LineBuilder):
         tmpSel = Selection(protoLine.selection.name()+'FilterALL',
                            Algorithm=FilterDesktop(Code='ALL'),
                            RequiredSelections=[protoLine.selection])
-        filter = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" \
-                 % config['GECNTrkMax']
+
+        filter = {'Code' :
+                  "(TrSOURCE('Rec/Track/Best')) >> TrLONG >> (TrSIZE < %s )" \
+                  % config['GECNTrkMax'],
+                  'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                  'from LoKiCore.functions    import *' ]
+                  }        
         line = StrippingLine(protoLine.name(),protoLine.prescale(config),
                              selection=tmpSel,checkPV=True,FILTER=filter,
                              HLT="HLT_PASS_RE('Hlt2(Topo|IncPhi).*Decision')")

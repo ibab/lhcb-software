@@ -115,9 +115,13 @@ class ComboEngine(object):
         _subsAlgo = SubstitutePID("%s_SubsAlg_%s" % (name, validDecayName),
                                   Code="DECTREE( 'Charm ->%s' )" % (' Xq '*nDaughters), 
                                   Substitutions={})
+        _subsAlgo.MaxChi2PerDoF = -666
         for i, daughter in enumerate(validDecay):
           subsString = 'Charm -> ' + ' '.join([' %s%s ' % (("^" if i==j else ""), d) for j, d in enumerate(['Xq']*nDaughters)])
           _subsAlgo.Substitutions[subsString] = daughter
+        print 'Combo:', 'alg =', _subsAlgo
+        print 'subs:', _subsAlgo.Substitutions
+        print 'code:', _subsAlgo.Code
         sel = Selection("%sSel_%s" % (name, validDecayName), Algorithm=_subsAlgo, RequiredSelections=[wmSel])
         algoList.append(sel)
         #mySelections[validDecayName] = sel
