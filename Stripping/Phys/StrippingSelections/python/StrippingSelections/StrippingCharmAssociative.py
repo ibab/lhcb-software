@@ -108,11 +108,13 @@ _default_configuration_ = {
     "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
     #
     ## dimuons:
-    "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV"         ,
-    "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV"         ,
-    "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV "        ,
-    "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV "        ,
-    "dimuon_heavy    = M > 4.8 * GeV "                              ,
+    "psi             = ADAMASS ( 'J/psi(1S)'  ) < 125 * MeV"         ,
+    "psi_prime       = ADAMASS (   'psi(2S)'  ) < 125 * MeV"         ,
+    "mu2_tight       = ( chi2vx < 10    ) & ( MINTREE ( 'mu+' == ABSID , PT ) > 900 * MeV ) " ,
+    "dimu_tight      = ( PT > 3.0 * GeV ) & mu2_tight " ,
+    "psi_tight       = ( ADMASS ( 'J/psi(1S)' ) < 100 * MeV ) & dimu_tight " ,
+    "psi_prime_tight = ( ADMASS (   'psi(2S)' ) < 100 * MeV ) & dimu_tight " ,
+    "dimuon_heavy    = ( M > 4.9 * GeV ) & dimu_tight "                      ,
     "dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy " ,
     ] ,
     #
@@ -279,7 +281,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             Preambulo = self.preambulo() ,
             ## 
             DaughtersCuts   = {
-            'J/psi(1S)' : " ( PT > 3.0 * GeV ) & ( chi2vx < 10 ) & dimuon_tight & ( MINTREE ( 'mu+' == ABSID , PT ) > 900*MeV ) " ,  
+            'J/psi(1S)' : " dimuon_tight " ,  
             'gamma'     :  self.photonCuts ()
             } ,
             ## 
@@ -378,11 +380,15 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         
         return sel 
     
-
-
+    
+# =============================================================================
 default_config = {
+    #
     'DiMuonAndGammaPrescale' : 1.00 ,
-    'DoubleDiMuonPrescale'   : 1.00 
+    'DoubleDiMuonPrescale'   : 1.00 , 
+    #
+    'PhotonCuts'    : ' PT > 4.0 * GeV  ' , 
+    'MuonCuts'      : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' 
     }    
 # =============================================================================
 if '__main__' == __name__ :
