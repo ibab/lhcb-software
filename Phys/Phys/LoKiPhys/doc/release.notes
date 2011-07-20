@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+ - add BeamLine functions from LoKiTrigger 
+
 ! 2011-07-03 - Vanya Belyaev
 
  - minor polishing of iterators 

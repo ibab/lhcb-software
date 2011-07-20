@@ -37,6 +37,8 @@
 #include "LoKi/Particles34.h"
 #include "LoKi/Particles37.h"
 // ============================================================================
+#include "LoKi/BeamLineFunctions.h"
+// ============================================================================
 #include "LoKi/IDecay.h"
 #include "LoKi/FinderDict.h"
 #include "LoKi/Decays.h"

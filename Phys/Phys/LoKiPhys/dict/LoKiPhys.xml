@@ -196,19 +196,25 @@
     <class pattern="LoKi::Legacy::*">
       <method name="=" />
     </class>
-
-
+    
     <class pattern="LoKi::Vertices::RecVertex2TrackMin">
       <method name="="     />
       <field name="m_fun" />
     </class>
+    
     <class pattern="LoKi::Vertices::RecVertex2TrackHas">
       <method name="="     />
       <field name="m_cut" />
     </class>
+
     <class pattern="LoKi::Vertices::RecVertex2TrackNum">
       <method name="="     />
       <field name="m_cut" />
+    </class>
+
+    <class name ="LoKi::Vertices::BeamSpot">
+      <method name="=" />
+      <field  name="m_condition" />
     </class>
     
   </exclusion>
