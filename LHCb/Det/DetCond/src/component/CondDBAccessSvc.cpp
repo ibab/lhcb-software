@@ -106,8 +106,8 @@ StatusCode CondDBAccessSvc::initialize(){
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
-
-  log << MSG::DEBUG << "Initialize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initialize" << endmsg;
 
   if (m_connectionTimeOutProp) {
     m_connectionTimeOut = boost::posix_time::seconds(m_connectionTimeOutProp);
@@ -140,7 +140,8 @@ StatusCode CondDBAccessSvc::initialize(){
 
   // set up cache if needed
   if (m_useCache) {
-    log << MSG::DEBUG << "Initialize CondDB cache." << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Initialize CondDB cache." << endmsg;
     m_cache = new CondDBCache(MsgStream(msgSvc(), name() + ".Cache"),
                               m_cacheHL, m_cacheLL);
     if (m_cache == NULL) {
@@ -152,7 +153,8 @@ StatusCode CondDBAccessSvc::initialize(){
     m_cache->setSilentConflicts(m_queryGranularity > 0);
 
   } else {
-    log << MSG::DEBUG << "CondDB cache not needed" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "CondDB cache not needed" << endmsg;
     m_cache = NULL;
   }
   if ( m_xmlDirectMapping && ! m_useCache ) {
@@ -161,10 +163,12 @@ StatusCode CondDBAccessSvc::initialize(){
     return StatusCode::FAILURE;
   }
 
-  if (!m_heartBeatCondition.empty()) {
-    log << MSG::DEBUG << "Using heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+    if (!m_heartBeatCondition.empty()) {
+      log << MSG::DEBUG << "Using heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
+    }
   }
-
+  
   return sc;
 }
 
@@ -172,8 +176,10 @@ StatusCode CondDBAccessSvc::initialize(){
 // finalize
 //=============================================================================
 StatusCode CondDBAccessSvc::finalize(){
-  MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalize" << endmsg;
+  if( UNLIKELY( m_outputLevel <= MSG::DEBUG ) ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::DEBUG << "Finalize" << endmsg;
+  }
 
   // stop TimeOut thread
   if (NULL != m_timeOutCheckerThread.get()) {
@@ -199,8 +205,11 @@ StatusCode CondDBAccessSvc::finalize(){
 // Connect to the database
 //=============================================================================
 StatusCode CondDBAccessSvc::i_initializeConnection(){
-  MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
+  if( UNLIKELY( m_outputLevel <= MSG::DEBUG ) ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
+  }
+  
   StatusCode sc = i_openConnection();
   if (!sc.isSuccess()) return sc;
 
@@ -231,18 +240,22 @@ StatusCode CondDBAccessSvc::i_openConnection(){
         }
       }
 
-      log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
       cool::IDatabaseSvc &dbSvc = m_coolConfSvc->databaseSvc();
-      log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
-
-      log << MSG::DEBUG << "Opening connection" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+        log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
+        log << MSG::DEBUG << "Opening connection" << endmsg;
+      }
       m_db = dbSvc.openDatabase(connectionString(),m_readonly);
 
     }
     else {
-      log << MSG::VERBOSE << "Database connection already established!" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "Database connection already established!" << endmsg;
     }
-    log << MSG::DEBUG << "Retrieve the root folderset." << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Retrieve the root folderset." << endmsg;
     m_rootFolderSet = m_db->getFolderSet("/");
   }
   //  catch ( cool::DatabaseDoesNotExist &e ) {
@@ -319,13 +332,15 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
 
   DataBaseOperationLock dbLock(this);
 
-  log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+    log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
   /// @TODO: check all sub-nodes to validate the tag and not only the root
   if (m_rootFolderSet) {
     // HEAD tags are always good
     //if ( (tag.empty()) || (tag == "HEAD") ) return StatusCode::SUCCESS;
     if ( cool::IHvsNode::isHeadTag(tag) ) {
-      log << MSG::VERBOSE << "\"" << tag << "\" is a HEAD tag: OK" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "\"" << tag << "\" is a HEAD tag: OK" << endmsg;
       return StatusCode::SUCCESS;
     }
     // try to resolve the tag (it cannot be checked)
@@ -337,10 +352,12 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
       } catch (coral::AttributeException) { // FIXME: COOL bug #38422
         // to be ignored: it means that the tag exists, but somewhere else.
       }
-      log << MSG::VERBOSE << "\"" << tag << "\" found: OK" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "\"" << tag << "\" found: OK" << endmsg;
       return StatusCode::SUCCESS;
     } catch (cool::TagNotFound &) {
-      log << MSG::VERBOSE << "\"" << tag << "\" NOT found" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "\"" << tag << "\" NOT found" << endmsg;
       return StatusCode::FAILURE;
     }
     catch (cool::TagRelationNotFound &e) {
@@ -601,13 +618,15 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
 
   DataBaseOperationLock dbLock(this);
   try {
-    log << MSG::DEBUG << "entering tagLeafNode: \"" << path << '"' << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "entering tagLeafNode: \"" << path << '"' << endmsg;
 
     cool::IFolderPtr folder = m_db->getFolder(path);
     if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
       log << MSG::WARNING << "Not tagging leaf node \"" << path << "\": single-version" << endmsg;
     } else {
-      log << MSG::DEBUG << "Tagging leaf node \"" << path << "\": " << tagName << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Tagging leaf node \"" << path << "\": " << tagName << endmsg;
       folder->tagCurrentHead(tagName, description);
     }
 
@@ -798,7 +817,7 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
         sinceWhen -= when % m_queryGranularity;
         untilWhen = sinceWhen + m_queryGranularity;
 
-        if (m_outputLevel <= MSG::DEBUG) {
+        if( UNLIKELY( m_outputLevel <= MSG::DEBUG ) ) {
           MsgStream log(msgSvc(),name());
           log << MSG::DEBUG << "Retrieving conditions in range "
               << sinceWhen << " - " << untilWhen << endmsg;
@@ -944,7 +963,7 @@ const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
       // no heart beat condition: the database is always valid
       m_latestHeartBeat = cool::ValidityKeyMax;
     } else {
-      if (m_outputLevel <= MSG::DEBUG) {
+      if( UNLIKELY( m_outputLevel <= MSG::DEBUG ) ) {
         MsgStream log(msgSvc(),name());
         log << MSG::DEBUG << "Retrieving heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
       }
@@ -964,7 +983,7 @@ const cool::ValidityKey& CondDBAccessSvc::i_latestHeartBeat()
         cannotGetHeartBeatError(this, m_heartBeatCondition);
         m_latestHeartBeat = 1; // not set to 0 to avoid another search in the database
       }
-      if (m_outputLevel <= MSG::DEBUG) {
+      if( UNLIKELY( m_outputLevel <= MSG::DEBUG ) ) {
         MsgStream log(msgSvc(),name());
         log << MSG::DEBUG << "Latest heart beat at " << m_latestHeartBeat << endmsg;
       }
@@ -988,7 +1007,8 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
                                            std::vector<std::string> &folders,
                                            std::vector<std::string> &foldersets) {
   MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
 
   folders.clear();
   foldersets.clear();
@@ -998,7 +1018,8 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
     if (!m_noDB) { // If I have the DB I always use it!
       DataBaseOperationLock dbLock(this);
       if (database()->existsFolderSet(path)) {
-        log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
+        if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+          log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
 
         cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
 
@@ -1006,7 +1027,8 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
         std::vector<std::string> fldrset_names = folderSet->listFolderSets();
 
         for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
-          log << MSG::DEBUG << *f << endmsg;
+          if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+            log << MSG::DEBUG << *f << endmsg;
           // Check if folder is tagged with a tag set to load db with.
           cool::IFolderPtr folder = database()->getFolder(*f);
           if (folder->versioningMode() == cool::FolderVersioning::MULTI_VERSION){
@@ -1014,8 +1036,9 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
               folder->resolveTag(tag());
               folders.push_back(f->substr(f->rfind('/')+1));
             } catch (cool::TagRelationNotFound &) {
-              log << MSG::DEBUG << "Tag '" << tag()
-                  << "' relation was not found for ': "<< *f << "' folder" << endmsg;
+              if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+                log << MSG::DEBUG << "Tag '" << tag()
+                    << "' relation was not found for ': "<< *f << "' folder" << endmsg;
             } catch (cool::ReservedHeadTag &) {
               //to be ignored: 'HEAD' tag is in every node
               folders.push_back(f->substr(f->rfind('/')+1));
@@ -1033,12 +1056,16 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
         }
 
         for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
-          log << MSG::DEBUG << *f << endmsg;
+          if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+            log << MSG::DEBUG << *f << endmsg;
           foldersets.push_back(f->substr(f->rfind('/')+1));
         }
 
-        log << MSG::DEBUG << "got " << folders.size() << " sub folders" << endmsg;
-        log << MSG::DEBUG << "got " << foldersets.size() << " sub foldersets" << endmsg;
+        if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+          log << MSG::DEBUG << "got " << folders.size() << " sub folders" << endmsg;
+          log << MSG::DEBUG << "got " << foldersets.size() << " sub foldersets" << endmsg;
+        }
+        
       } else {
         // cannot get the sub-nodes of a folder!
         return StatusCode::FAILURE;

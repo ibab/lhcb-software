@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2011-07-20 - Marco Cattaneo
+ - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
+   it, also using UNLIKELY macro 
+
 !========================= DetCond v12r19 2011-06-14 =========================
 ! 2011-06-06 - Illya Shapoval
  - Another minor add-on for the 'UseLatestTags' warning output case.

@@ -77,9 +77,10 @@ StatusCode CondDBSQLiteCopyAccSvc::initialize(){
     }
 
     // copy the source file
-    log << MSG::DEBUG << "Copying "
-        << m_source_path << " -> "
-        << m_dest_path << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Copying "
+          << m_source_path << " -> "
+          << m_dest_path << endmsg;
     boost::filesystem::copy_file(m_source_path,m_dest_path);
 
   }

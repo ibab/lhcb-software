@@ -46,7 +46,8 @@ StatusCode CondDBReplayAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "==> Initialize" << endmsg;
 
   const bool create = true;
   m_reader = svc<ICondDBReader>(m_readerName,create);
@@ -104,7 +105,8 @@ StatusCode CondDBReplayAlg::initialize() {
 //=============================================================================
 StatusCode CondDBReplayAlg::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "==> Execute" << endmsg;
 
   info() << "Replaying database operations ..." << endmsg;
   ICondDBReader::DataPtr data;
@@ -151,7 +153,8 @@ StatusCode CondDBReplayAlg::execute() {
 //=============================================================================
 StatusCode CondDBReplayAlg::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

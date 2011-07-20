@@ -110,8 +110,8 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
-
-  log << MSG::DEBUG << "Initialize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initialize" << endmsg;
 
   if (m_readersDeclatations.empty()) {
     log << MSG::ERROR << "No CondDBReader has been specified"
@@ -148,7 +148,7 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
     ReaderInfo ri(reader_name, reader_iov.first, reader_iov.second);
     m_readers.insert(std::make_pair(ri.until,ri));
   }
-  if (outputLevel() <= MSG::DEBUG) {
+  if( UNLIKELY( outputLevel() <= MSG::DEBUG ) ) {
     log << MSG::DEBUG << "Configured CondDBReaders:" << endmsg;
     ReadersType::iterator r;
     for (r = m_readers.begin(); r != m_readers.end(); ++r) {
@@ -167,8 +167,10 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
 // finalize
 //=============================================================================
 StatusCode CondDBTimeSwitchSvc::finalize(){
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Finalize" << endmsg;
+  if( UNLIKELY( outputLevel() <= MSG::DEBUG ) ) {
+    MsgStream log(msgSvc(), name());
+    log << MSG::DEBUG << "Finalize" << endmsg;
+  }
 
   // release all the loaded CondDBReader services
   m_readers.clear();

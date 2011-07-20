@@ -51,7 +51,8 @@ StatusCode CondDBGenericCnv::initialize() {
     return sc;
   } else {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endmsg;
   }
   // Get a pointer to the CondDBReader (implemented by the conversion service)
   sc = conversionSvc()->queryInterface(ICondDBReader::interfaceID(),(void**)&m_condDBReader);
@@ -100,10 +101,11 @@ void CondDBGenericCnv::setObjValidity(Gaudi::Time &since, Gaudi::Time &till, Dat
 
     // I cannot set the validity range
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::DEBUG
-        << "Created object (CLID = " << pObject->clID()
-        << ") does not implement IValidity: cannot set validity"
-        << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG
+          << "Created object (CLID = " << pObject->clID()
+          << ") does not implement IValidity: cannot set validity"
+          << endmsg;
   }
 }
 
@@ -130,7 +132,8 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::Cha
 //=========================================================================
 StatusCode CondDBGenericCnv::getChildNodes(const std::string &path,std::vector<std::string> &node_names){
   MsgStream log(msgSvc(),"CondDBGenericCnv");
-  log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
 
   return m_condDBReader->getChildNodes(path,node_names);
 }

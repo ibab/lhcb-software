@@ -25,14 +25,16 @@ CondDBCache::CondDBCache(const MsgStream& log, size_t highLvl, size_t lowLvl):
     m_log << MSG::WARNING << "High level <= low level : low level forced to 0" << endmsg;
     m_lowLvl = 0;
   }
-  m_log << MSG::DEBUG << "Cache initialized with high/low levels = " <<
-    m_highLvl << '/' << m_lowLvl << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Cache initialized with high/low levels = " <<
+      m_highLvl << '/' << m_lowLvl << endmsg;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 CondDBCache::~CondDBCache() {
-  m_log << MSG::DEBUG << "Cache deleted. Level was = " << m_level << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Cache deleted. Level was = " << m_level << endmsg;
 }
 
 //=========================================================================
@@ -42,12 +44,14 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObject &obj
   // increment object count and check the limit
   if ( m_level >= highLevel() ){
     // needs clean up
-    m_log << MSG::DEBUG << "Level above max threshold" << endmsg;
+    if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+      m_log << MSG::DEBUG << "Level above max threshold" << endmsg;
     clean_up();
   }
-  m_log << MSG::DEBUG << "Insert  Folder '" << folder->fullPath()
-        << "', IOV : " << obj.since() << " - " << obj.until()
-        << ", channel : " << channel << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Insert  Folder '" << folder->fullPath()
+          << "', IOV : " << obj.since() << " - " << obj.until()
+          << ", channel : " << channel << endmsg;
 
   FolderIdType id(folder->fullPath());
   StorageType::iterator f = m_cache.find(id);
@@ -129,7 +133,8 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
   // increment object count and check the limit
   if ( m_level >= highLevel() ){
     // needs clean up
-    m_log << MSG::DEBUG << "Level above max threshold" << endmsg;
+    if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+      m_log << MSG::DEBUG << "Level above max threshold" << endmsg;
     clean_up();
   }
   StorageType::iterator f = m_cache.find(path);
@@ -156,9 +161,11 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
     if ( i->iov.second == cool::ValidityKeyMax && i->iov.first < since ) {
       // solvable conflict
       if (iov_before) *iov_before = i->iov;
-      m_log << MSG::DEBUG << "Solvable conflict found: old until = " << i->iov.second << endmsg;
+      if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+        m_log << MSG::DEBUG << "Solvable conflict found: old until = " << i->iov.second << endmsg;
       i->iov.second = since;
-      m_log << MSG::DEBUG << "                         new until = " << i->iov.second << endmsg;
+      if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+        m_log << MSG::DEBUG << "                         new until = " << i->iov.second << endmsg;
     } else {
       // conflict not solvable
       m_log << MSG::WARNING << "Unsolvable conflict found: item not inserted" << endmsg;
@@ -180,8 +187,9 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
                       const cool::ChannelId &channel,
                       cool::ValidityKey &since, cool::ValidityKey &until,
                       std::string &descr, ICondDBReader::DataPtr &payload ) {
-  m_log << MSG::DEBUG << "Request Folder '" << path
-        << "'  @ " << when << " channel " << channel;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Request Folder '" << path
+          << "'  @ " << when << " channel " << channel;
   m_lastRequestedTime = when;
   StorageType::iterator folder = m_cache.find(path);
   if (folder != m_cache.end()) {
@@ -277,8 +285,10 @@ void CondDBCache::clean_up(){
   float score = 0;
   size_t old_level = level();
 
-  m_log << MSG::DEBUG << "Start cleaning up (level = " << level() << ")" << endmsg;
-  m_log << MSG::DEBUG << "            Last requested time = " << m_lastRequestedTime << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) ) {
+    m_log << MSG::DEBUG << "Start cleaning up (level = " << level() << ")" << endmsg;
+    m_log << MSG::DEBUG << "            Last requested time = " << m_lastRequestedTime << endmsg;
+  }
   // collect all items info in order
   StorageType::iterator folder;
   for ( folder = m_cache.begin() ; folder != m_cache.end() ; ++folder ) {
@@ -287,18 +297,22 @@ void CondDBCache::clean_up(){
 
     CondFolder::StorageType::iterator ch;
     ItemListType::iterator i;
-    m_log << MSG::DEBUG << "Folder " << folder->first << endmsg;
+    if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+      m_log << MSG::DEBUG << "Folder " << folder->first << endmsg;
     for ( ch = folder->second.items.begin(); ch != folder->second.items.end() ; ++ch ){
-      m_log << MSG::DEBUG << " channel : " << ch->first << endmsg;
+      if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+        m_log << MSG::DEBUG << " channel : " << ch->first << endmsg;
       for ( i = ch->second.begin(); i != ch->second.end() ; ++i ){
-        m_log << MSG::DEBUG << "  IOV : " << i->iov.first << " - " << i->iov.second << endmsg;
+        if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+          m_log << MSG::DEBUG << "  IOV : " << i->iov.first << " - " << i->iov.second << endmsg;
         if ( ! (i->iov.first <= m_lastRequestedTime && i->iov.second > m_lastRequestedTime) ) {
           if ( m_lastRequestedTime < i->iov.first ) {
             score = (float)m_lastRequestedTime - i->iov.first;
           } else {
             score = (float)i->iov.second - m_lastRequestedTime;
           }
-          m_log << MSG::DEBUG << "     score = " << score << endmsg;
+          if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+            m_log << MSG::DEBUG << "     score = " << score << endmsg;
           all_items.push_back(
              std::make_pair(score,
                 std::make_pair(&folder->second,
@@ -310,21 +324,24 @@ void CondDBCache::clean_up(){
   }
   std::sort(all_items.begin(),all_items.end());
 
-  m_log << MSG::DEBUG << "Remove items" << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Remove items" << endmsg;
   // remove items
   _vec_t::iterator it = all_items.begin();
   while ( m_level > m_lowLvl && it != all_items.end()) {
-    m_log << MSG::DEBUG << "Remove item since " << it->second.second.first <<
-      " channel " << it->second.second.second <<
-      // " from '" << it->second.first->path << "'" <<
-      " (score =" << it->first << ")" << endmsg;
+   if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+     m_log << MSG::DEBUG << "Remove item since " << it->second.second.first <<
+       " channel " << it->second.second.second <<
+       // " from '" << it->second.first->path << "'" <<
+       " (score =" << it->first << ")" << endmsg;
     // folder                    when
     it->second.first->erase(it->second.second.first,it->second.second.second);
     --m_level;
     ++it;
   }
 
-  m_log << MSG::DEBUG << "Remove empty folders:" << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Remove empty folders:" << endmsg;
   // remove empty folders
   std::vector<FolderIdType> to_remove;
   for ( StorageType::iterator i = m_cache.begin(); i != m_cache.end(); ++i ) {
@@ -333,11 +350,13 @@ void CondDBCache::clean_up(){
     }
   }
   for ( std::vector<FolderIdType>::iterator i = to_remove.begin(); i != to_remove.end(); ++i ) {
-    m_log << MSG::DEBUG << "   " << *i << endmsg;
+    if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+      m_log << MSG::DEBUG << "   " << *i << endmsg;
     m_cache.erase(m_cache.find(*i));
   }
-  m_log << MSG::DEBUG << "Clean up finished (level = " << level() << ")" << endmsg;
-  if ( old_level == level() ) {
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << MSG::DEBUG << "Clean up finished (level = " << level() << ")" << endmsg;
+  if ( UNLIKELY(old_level == level()) ) {
     m_log << MSG::WARNING << "No item removed: I increase high threshold" << endmsg;
     setHighLevel(highLevel()+(highLevel()-lowLevel())/10+1);
     m_log << MSG::WARNING << "New threshold = " << highLevel() << endmsg;

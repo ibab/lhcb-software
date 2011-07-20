@@ -46,8 +46,8 @@ StatusCode CondDBLogger::initialize(){
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
-
-  log << MSG::DEBUG << "Initialize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initialize" << endmsg;
 
   if ( m_loggedReaderName.empty() ){
     log << MSG::ERROR << "Property LoggedReader is not set." << endmsg;
@@ -60,7 +60,8 @@ StatusCode CondDBLogger::initialize(){
     log << MSG::ERROR << "Could not locate " << m_loggedReaderName << endmsg;
     return sc;
   }
-  log << MSG::DEBUG << "Retrieved '" << m_loggedReaderName  << "'" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Retrieved '" << m_loggedReaderName  << "'" << endmsg;
 
   // Set the default value of the file name if not specified.
   if ( m_logFileName.empty() ){
@@ -75,7 +76,8 @@ StatusCode CondDBLogger::initialize(){
     log << MSG::ERROR << "Problems opening " << m_logFileName << endmsg;
     return StatusCode::FAILURE;
   }
-  log << MSG::DEBUG << "File '" << m_logFileName << "' opened for writing." << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "File '" << m_logFileName << "' opened for writing." << endmsg;
 
   (*m_logFile) << "INI: " << Gaudi::Time::current().ns() << " " << name() << " logging " << m_loggedReaderName << std::endl;
 
@@ -87,7 +89,8 @@ StatusCode CondDBLogger::initialize(){
 //=============================================================================
 StatusCode CondDBLogger::finalize(){
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Finalize" << endmsg;
 
   if ( m_loggedReader ) {
     m_loggedReader->release();

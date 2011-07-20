@@ -44,7 +44,8 @@ StatusCode LoadDDDB::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "==> Initialize" << endmsg;
 
   std::vector<LHCb::CondDBNameTagPair> tmp;
   svc<ICondDBInfo>("CondDBCnvSvc",true)->defaultTags(tmp);
@@ -62,7 +63,7 @@ StatusCode LoadDDDB::initialize() {
 //=============================================================================
 StatusCode LoadDDDB::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   info() << "Loading the DDDB" << endmsg;
 
@@ -96,7 +97,7 @@ StatusCode LoadDDDB::execute() {
 //=============================================================================
 StatusCode LoadDDDB::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

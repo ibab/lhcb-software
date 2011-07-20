@@ -59,7 +59,8 @@ StatusCode RelyConverter::initialize() {
     return sc;
   } else {
     MsgStream log(msgSvc(),"RelyConverter");
-    log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc" << endmsg;
   }
   return sc;
 }
@@ -78,7 +79,8 @@ StatusCode RelyConverter::finalize() {
 StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress, DataObject *&pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
-  log << MSG::DEBUG << "entering createObj" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "entering createObj" << endmsg;
 
   StatusCode sc = i_delegatedCreation(pAddress,pObject,CreateObject);
   if (sc.isFailure()){
@@ -95,7 +97,8 @@ StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress, DataObject *&pObj
 StatusCode RelyConverter::fillObjRefs (IOpaqueAddress* pAddress, DataObject *pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
-  log << MSG::DEBUG << "entering fillObjRefs" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "entering fillObjRefs" << endmsg;
 
   StatusCode sc = i_delegatedCreation(pAddress,pObject,FillObjectRefs);
   if (sc.isFailure()){
@@ -112,7 +115,8 @@ StatusCode RelyConverter::fillObjRefs (IOpaqueAddress* pAddress, DataObject *pOb
 StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
-  log << MSG::DEBUG << "Method updateObj starting" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Method updateObj starting" << endmsg;
 
   DataObject* pNewObject; // create a new object and copy it to the old version
   StatusCode sc = i_delegatedCreation(pAddress,pNewObject,CreateObject);
@@ -143,7 +147,8 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
   // Delete the useless Condition
   delete pNewVDO;
 
-  log << MSG::DEBUG << "Object successfully updated" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Object successfully updated" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -153,7 +158,8 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
 StatusCode RelyConverter::updateObjRefs (IOpaqueAddress* pAddress, DataObject *pObject)
 {
   MsgStream log(msgSvc(),"RelyConverter");
-  log << MSG::DEBUG << "entering updateObjRefs" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "entering updateObjRefs" << endmsg;
 
   StatusCode sc = i_delegatedCreation(pAddress,pObject,UpdateObjectRefs);
   if (sc.isFailure()){
@@ -196,7 +202,8 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   std::string description;
   Gaudi::Time since,until;
 
-  log << MSG::DEBUG << "Entering \"i_delegatedCreation\"" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Entering \"i_delegatedCreation\"" << endmsg;
 
   std::string path = pAddress->par()[0];
   std::string data_field_name = "data";
@@ -218,7 +225,8 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   if ( !data ) {
     switch (op) {
     case CreateObject:
-      log << MSG::DEBUG << "Path points to a FolderSet: create a directory" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Path points to a FolderSet: create a directory" << endmsg;
 
       // I hit a FolderSet!!! I handle it here (at least for the moment, since it's the only CondDB real converter)
       pObject = new DataObject();
@@ -227,7 +235,8 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
     case FillObjectRefs:
       {
-        log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
+        if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+          log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
 
         // find subnodes
         std::vector<std::string> children;
@@ -251,24 +260,28 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
           par[1] = *c;
           unsigned long ipar[2] = { 0,0 };
 
-          log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;
+          if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+            log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;
           sc = conversionSvc()->addressCreator()->createAddress(CONDDB_StorageType,
                                                                 CLID_Catalog,
                                                                 par,
                                                                 ipar,
                                                                 childAddress);
           if ( !sc.isSuccess() ) return sc;
-          log << MSG::VERBOSE << "Address created" << endmsg;
+          if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+            log << MSG::VERBOSE << "Address created" << endmsg;
 
           sc = dataManager()->registerAddress(pAddress->registry(), *c, childAddress);
           if ( !sc.isSuccess() ) return sc;
-          log << MSG::VERBOSE << "Address registered" << endmsg;
+          if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+            log << MSG::VERBOSE << "Address registered" << endmsg;
         }
       }
       break;
 
     case UpdateObjectRefs:
-      log << MSG::DEBUG << "Update references not supported for FolderSet" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Update references not supported for FolderSet" << endmsg;
       break;
     }
 
@@ -283,7 +296,8 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
 
   // Create temporary address for the relevant type and classID
   IOpaqueAddress *tmpAddress;
@@ -313,15 +327,17 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   tmpAddress->addRef();
   if ( pAddress->registry() ){
-    log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()
-        << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()
+          << endmsg;
   } else {
     log << MSG::WARNING << "the address does not have a registry" << endmsg;
   }
   tmpAddress->setRegistry(pAddress->registry());
   if (tmpAddress->registry()) {
-    log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier()
-        << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier()
+          << endmsg;
   } else {
     log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
   }
@@ -345,11 +361,13 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   }
 
   if (op == CreateObject){
-    log << MSG::DEBUG << "Setting object validity" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Setting object validity" << endmsg;
     setObjValidity(since,until,pObject);
 
   }
-  log << MSG::DEBUG << "New object successfully created" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "New object successfully created" << endmsg;
 
   return StatusCode::SUCCESS;
 }

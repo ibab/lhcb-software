@@ -39,7 +39,8 @@ StatusCode CondDBCnvSvc::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Specific initialization starting" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Specific initialization starting" << endmsg;
 
   // Locate the Database Access Service
   sc = service(m_dbReaderName,m_dbReader,true);
@@ -47,9 +48,11 @@ StatusCode CondDBCnvSvc::initialize()
     log << MSG::ERROR << "Could not locate " << m_dbReaderName << endmsg;
     return sc;
   }
-  log << MSG::DEBUG << "Retrieved " << m_dbReaderName << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Retrieved " << m_dbReaderName << endmsg;
 
-  log << MSG::DEBUG << "Specific initialization completed" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Specific initialization completed" << endmsg;
   return sc;
 }
 
@@ -59,7 +62,8 @@ StatusCode CondDBCnvSvc::initialize()
 StatusCode CondDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalizing" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Finalizing" << endmsg;
   if (m_dbReader) m_dbReader->release();
   return base_class::finalize();
 }
@@ -78,7 +82,8 @@ StatusCode CondDBCnvSvc::createAddress( long svc_type,
 
   // First check that requested address is of type CONDDB_StorageType
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "entering createAddress" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "entering createAddress" << endmsg;
   if ( svc_type!= CONDDB_StorageType ) {
     log << MSG::ERROR
         << "Cannot create addresses of type " << (int)svc_type

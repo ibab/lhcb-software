@@ -379,7 +379,8 @@ private:
 
     void operator () ()
     {
-      log << MSG::VERBOSE << "Starting" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "Starting" << endmsg;
 
       boost::system_time last_access = m_owner->lastAccess();
 
@@ -393,7 +394,8 @@ private:
           // An early exit must be triggered by a call to this->interrupt(), which
           // will produce an exception during the sleep.
           boost::thread::sleep(next_check);
-          log << MSG::VERBOSE << "Time-out reached (" << next_check << ")" << endmsg;
+          if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+            log << MSG::VERBOSE << "Time-out reached (" << next_check << ")" << endmsg;
 
           boost::mutex::scoped_lock busy_lock(m_owner->m_busy);
 
@@ -414,7 +416,8 @@ private:
 
           } else {
 
-            log << MSG::VERBOSE << "Wait more" << endmsg;
+            if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+              log << MSG::VERBOSE << "Wait more" << endmsg;
 
             // schedule the next check for last_access + dt
             next_check = last_access = m_owner->lastAccess();
@@ -424,7 +427,8 @@ private:
       }
       // Ignore the exception since it is used only to exit from the loop.
       catch (boost::thread_interrupted&) {}
-      log << MSG::VERBOSE << "Stopping" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "Stopping" << endmsg;
     }
   };
 

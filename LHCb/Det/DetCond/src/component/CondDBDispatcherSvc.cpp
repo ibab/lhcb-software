@@ -46,8 +46,8 @@ StatusCode CondDBDispatcherSvc::initialize(){
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
-
-  log << MSG::DEBUG << "Initialize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initialize" << endmsg;
 
   // locate the main access service
   sc = service(m_mainAccessSvcName,m_mainDB,true);
@@ -75,7 +75,8 @@ StatusCode CondDBDispatcherSvc::initialize(){
     }
 
     m_alternatives[altPath] = svcPtr;
-    log << MSG::DEBUG << "Retrieved '" << svcName << "' (for path '" << altPath << "')" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Retrieved '" << svcName << "' (for path '" << altPath << "')" << endmsg;
 
   }
 
@@ -87,7 +88,8 @@ StatusCode CondDBDispatcherSvc::initialize(){
 //=============================================================================
 StatusCode CondDBDispatcherSvc::finalize(){
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Finalize" << endmsg;
 
   if (m_mainDB) {
     m_mainDB->release();
@@ -109,16 +111,18 @@ StatusCode CondDBDispatcherSvc::finalize(){
 ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) const {
   MsgStream log(msgSvc(), name() );
 
-  log << MSG::VERBOSE << "Get alternative DB for '" << path << "'" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+    log << MSG::VERBOSE << "Get alternative DB for '" << path << "'" << endmsg;
   if ( path.empty() || (path == "/") ) {
-    log << MSG::VERBOSE << "Root node: using '" << m_mainAccessSvcName << "'" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+      log << MSG::VERBOSE << "Root node: using '" << m_mainAccessSvcName << "'" << endmsg;
     return m_mainDB;
   }
 
   // loop over alternatives
   std::map<std::string,ICondDBReader*>::const_reverse_iterator alt;
   for ( alt = m_alternatives.rbegin(); alt != m_alternatives.rend(); ++alt ) {
-    if ( m_outputLevel <= MSG::VERBOSE ) {
+    if( UNLIKELY( m_outputLevel <= MSG::VERBOSE ) ) {
       log << MSG::VERBOSE << "Comparing with " << alt->first << endmsg;
     }
     // FIXME: (MCl) wrong logic
@@ -127,7 +131,7 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) cons
     //     Should not match
     if ( ( path.size() >= alt->first.size() ) &&
          ( path.substr(0,alt->first.size()) == alt->first ) ){
-      if ( m_outputLevel <= MSG::VERBOSE ) {
+      if( UNLIKELY( m_outputLevel <= MSG::VERBOSE ) ) {
         IService *svc = dynamic_cast<IService*>(alt->second);
         log << MSG::VERBOSE << "Using '" ;
         if (svc) log << svc->name();
@@ -139,7 +143,8 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) cons
     }
   }
 
-  log << MSG::VERBOSE << "Not found: using '" << m_mainAccessSvcName << "'" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+    log << MSG::VERBOSE << "Not found: using '" << m_mainAccessSvcName << "'" << endmsg;
   return m_mainDB;
 }
 

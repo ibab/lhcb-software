@@ -43,8 +43,8 @@ StatusCode CondDBLayeringSvc::initialize(){
   if (sc.isFailure()) return sc;
 
   MsgStream log(msgSvc(), name() );
-
-  log << MSG::DEBUG << "Initialize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initialize" << endmsg;
 
   // locate all the AccessSvcs layers
   std::vector<std::string>::iterator lname;
@@ -58,7 +58,8 @@ StatusCode CondDBLayeringSvc::initialize(){
     }
 
     m_layers.push_back(svcPtr);
-    log << MSG::DEBUG << "Retrieved '" << *lname << "'" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Retrieved '" << *lname << "'" << endmsg;
 
   }
 
@@ -70,8 +71,9 @@ StatusCode CondDBLayeringSvc::initialize(){
 //=============================================================================
 StatusCode CondDBLayeringSvc::finalize(){
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalize" << endmsg;
-
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Finalize" << endmsg;
+  
   std::vector<ICondDBReader*>::iterator layer;
   for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
     if ( *layer ) (*layer)->release();

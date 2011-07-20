@@ -126,7 +126,8 @@ namespace
       localSite(theSite),
       log(msgSvc,"ReplicaSortAlg")
     {
-      log << MSG::VERBOSE << "Constructor" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+        log << MSG::VERBOSE << "Constructor" << endmsg;
     }
 
     /// Destructor.
@@ -138,18 +139,18 @@ namespace
     /// Main function
     virtual void sort (std::vector< const coral::IDatabaseServiceDescription * > &replicaSet)
     {
-      if ( log.level() <= MSG::VERBOSE ) {
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) ) {
         log << MSG::VERBOSE << "Original list" << endmsg;
         replicaSet_t::iterator i;
         for ( i = replicaSet.begin(); i != replicaSet.end(); ++i ) {
           log << MSG::VERBOSE << " " << (*i)->serviceParameter((*i)->serverNameParam()) << endmsg;
         }
-      }
 
-      log << MSG::VERBOSE << "Sorting..." << endmsg;
+        log << MSG::VERBOSE << "Sorting..." << endmsg;
+      }
       std::sort(replicaSet.begin(),replicaSet.end(),Comparator(localSite));
 
-      if ( log.level() <= MSG::VERBOSE ) {
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) ) {
         log << MSG::VERBOSE << "Sorted list" << endmsg;
         replicaSet_t::iterator i;
         for ( i = replicaSet.begin(); i != replicaSet.end(); ++i ) {
@@ -209,14 +210,17 @@ StatusCode COOLConfSvc::initialize(){
 
   MsgStream log(msgSvc(), name() );
 
-  log << MSG::DEBUG << "Initialize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initialize" << endmsg;
 
   if ( ! m_coolApplication.get() ) {
 
-    log << MSG::DEBUG << "Initializing COOL Application" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Initializing COOL Application" << endmsg;
     m_coolApplication.reset(new cool::Application);
 
-    log << MSG::DEBUG << "Getting CORAL Connection Service configurator" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Getting CORAL Connection Service configurator" << endmsg;
     coral::IConnectionServiceConfiguration &connSvcConf =
       m_coolApplication->connectionSvc().configuration();
 
@@ -246,7 +250,8 @@ StatusCode COOLConfSvc::initialize(){
 
     if ( ! m_coralConnCleanUp ) {
 
-      log << MSG::DEBUG << "Disabling CORAL connection automatic clean up" << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Disabling CORAL connection automatic clean up" << endmsg;
       connSvcConf.disablePoolAutomaticCleanUp();
       connSvcConf.setConnectionTimeOut( 0 );
 
@@ -270,7 +275,8 @@ StatusCode COOLConfSvc::initialize(){
 //=============================================================================
 StatusCode COOLConfSvc::finalize(){
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Finalize" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Finalize" << endmsg;
   m_coolApplication.reset();
   m_replicaSortAlg.reset();
   return base_class::finalize();
