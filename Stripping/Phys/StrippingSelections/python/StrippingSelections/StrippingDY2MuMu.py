@@ -10,7 +10,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseMuons
+from StandardParticles import StdAllLooseMuons
 
 confdict_DY2MuMu={
     'DY2MuMu1Line_psPrescale'    : .02
@@ -198,10 +198,10 @@ def makeDY2MuMu1(name, _DY1MassCut, _mucut1) :
                            MotherCut = _DY1MassCut,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = StdLooseMuons
+    _stdallloosemuons = StdAllLooseMuons
     return Selection ( name,
                        Algorithm = _DY1,
-                       RequiredSelections = [_stdloosemuons])
+                       RequiredSelections = [_stdallloosemuons])
 
 
 def makeDY2MuMu2(name, _DY2MassCut, _mucut2) :
@@ -211,10 +211,10 @@ def makeDY2MuMu2(name, _DY2MassCut, _mucut2) :
                            MotherCut = _DY2MassCut,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = StdLooseMuons
+    _stdallloosemuons = StdAllLooseMuons
     return Selection ( name,
                        Algorithm = _DY2,
-                       RequiredSelections = [_stdloosemuons])
+                       RequiredSelections = [_stdallloosemuons])
 
 
 def makeDY2MuMu3(name, _DY3MassCut, _mucut2) :
@@ -224,10 +224,10 @@ def makeDY2MuMu3(name, _DY3MassCut, _mucut2) :
                            MotherCut = _DY3MassCut,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = StdLooseMuons
+    _stdallloosemuons = StdAllLooseMuons
     return Selection ( name,
                        Algorithm = _DY3,
-                       RequiredSelections = [_stdloosemuons])
+                       RequiredSelections = [_stdallloosemuons])
 
 
 def makeDY2MuMu4(name, _DY4MassCut, _mucut2) :
@@ -237,7 +237,7 @@ def makeDY2MuMu4(name, _DY4MassCut, _mucut2) :
                            MotherCut = _DY4MassCut,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = StdLooseMuons
+    _stdallloosemuons = StdAllLooseMuons
     return Selection ( name,
                        Algorithm = _DY4,
-                       RequiredSelections = [_stdloosemuons])
+                       RequiredSelections = [_stdallloosemuons])

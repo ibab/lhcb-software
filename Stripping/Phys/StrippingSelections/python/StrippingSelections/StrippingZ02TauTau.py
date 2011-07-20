@@ -11,7 +11,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdLooseMuons, StdLooseElectrons
+from StandardParticles import StdAllNoPIDsPions, StdAllLooseMuons, StdAllLooseElectrons
 
 confdict_Z02TauTau={
     'Z02TauTauLinePrescale'    : 1.0 
@@ -84,11 +84,11 @@ def makeZ02TauTau(name, _Z0MinMass, _mucut, _picut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = StdLooseMuons
-    _stdnopidspions = StdNoPIDsPions
+    _stdallloosemuons = StdAllLooseMuons
+    _stdallnopidspions = StdAllNoPIDsPions
     return Selection ( name,
                        Algorithm = _Z0,
-                       RequiredSelections = [_stdloosemuons, _stdnopidspions])
+                       RequiredSelections = [_stdallloosemuons, _stdallnopidspions])
 
 def makeZ02TauTau_ss(name, _Z0MinMass, _mucut, _picut) :
     _Z0 = CombineParticles(DecayDescriptor = '[Z0 -> mu+ pi+]cc',
@@ -99,8 +99,8 @@ def makeZ02TauTau_ss(name, _Z0MinMass, _mucut, _picut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
-    _stdloosemuons = StdLooseMuons
-    _stdnopidspions = StdNoPIDsPions
+    _stdallloosemuons = StdAllLooseMuons
+    _stdallnopidspions = StdAllNoPIDsPions
     return Selection ( name,
                        Algorithm = _Z0,
-                       RequiredSelections = [_stdloosemuons, _stdnopidspions])
+                       RequiredSelections = [_stdallloosemuons, _stdallnopidspions])

@@ -10,7 +10,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdTightElectrons, StdNoPIDsElectrons
+from StandardParticles import StdTightElectrons, StdAllNoPIDsElectrons
 
 confdict_DY2ee={
     'DY2eeLine1Prescale'    : .05 
@@ -153,7 +153,7 @@ def makeDY2ee_NoPIDs(name, _massCutN, _ecutN) :
                            MotherCut = _massCutN,
                            WriteP2PVRelations = False
                            )
-    _NoPIDsElectrons = StdNoPIDsElectrons
+    _AllNoPIDsElectrons = StdAllNoPIDsElectrons
     return Selection ( name,
                        Algorithm = _DY2ee_NoPIDs,
-                       RequiredSelections = [_NoPIDsElectrons])
+                       RequiredSelections = [_AllNoPIDsElectrons])

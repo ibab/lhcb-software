@@ -9,7 +9,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseMuons
+from StandardParticles import StdAllLooseMuons
 
 confdict_MuMuSS={
     'MuMuSSLine1Prescale' : .01
@@ -122,7 +122,7 @@ def makeMuMuSS(name, _MuMuSSMassCut, _mucut) :
                                MotherCut = _MuMuSSMassCut,
                                WriteP2PVRelations = False
                                )
-    _stdloosemuons = StdLooseMuons
+    _stdallloosemuons = StdAllLooseMuons
     return Selection ( name,
                        Algorithm = _MuMuSS,
-                       RequiredSelections = [_stdloosemuons])
+                       RequiredSelections = [_stdallloosemuons])

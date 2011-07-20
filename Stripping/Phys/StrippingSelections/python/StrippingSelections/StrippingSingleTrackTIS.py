@@ -10,7 +10,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsMuons
+from StandardParticles import StdAllNoPIDsMuons
 
 confdict_SingleTrackTIS = { 'LowPtPrescale'     : .01
                             , 'LowPtPostscale'  : 1.0
@@ -44,7 +44,7 @@ class SingleTrackTISConf(LineBuilder) :
 
         # Low Pt line
         self.selLowPtNoPIDs = makeFilter( self._myname + "LowPtNoPIDs"
-                                          , StdNoPIDsMuons
+                                          , StdAllNoPIDsMuons
                                           , "from LoKiTracks.decorators import *"
                                           , _LowPtCutTight
                                           )
@@ -67,7 +67,7 @@ class SingleTrackTISConf(LineBuilder) :
 
         # High Pt line
         self.selHighPtNoPIDs = makeFilter( self._myname + "HighPtNoPIDs"
-                                           , StdNoPIDsMuons
+                                           , StdAllNoPIDsMuons
                                            , "from LoKiTracks.decorators import *"
                                            , _HighPtCutTight
                                            )

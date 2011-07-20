@@ -8,7 +8,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsElectrons
+from StandardParticles import StdAllNoPIDsElectrons
 
 confdict_We={
     'WeLinePrescale'    : 1.0 
@@ -73,7 +73,7 @@ class WeConf(LineBuilder) :
 
 def makeWe(name, eCut) :
     _We = FilterDesktop(Code = eCut)
-    _NoPIDsElectrons = StdNoPIDsElectrons
+    _AllNoPIDsElectrons = StdAllNoPIDsElectrons
     return Selection ( name,
                        Algorithm = _We,
-                       RequiredSelections = [_NoPIDsElectrons])
+                       RequiredSelections = [_AllNoPIDsElectrons])

@@ -3,7 +3,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsElectrons
+from StandardParticles import StdAllNoPIDsElectrons
 
 confdict_Z02ee={
     'Z02eeLinePrescale'    : 1.0 
@@ -61,7 +61,7 @@ def makeZ02ee(name, _Z0MinMass, _ecut) :
                            MotherCut = _Z0MinMass,
                            WriteP2PVRelations = False
                            )
-    _NoPIDsElectrons = StdNoPIDsElectrons
+    _AllNoPIDsElectrons = StdAllNoPIDsElectrons
     return Selection ( name,
                        Algorithm = _Z02ee,
-                       RequiredSelections = [_NoPIDsElectrons])
+                       RequiredSelections = [_AllNoPIDsElectrons])

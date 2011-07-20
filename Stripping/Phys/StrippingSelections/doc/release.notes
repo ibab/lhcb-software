@@ -5,6 +5,18 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2011-07-20 - Will Barter
+ - Updated to use "All" particle types in Electroweak lines:
+    StrippingMuMuSS.py 
+		StrippingZ02ee.py
+		StrippingDY2ee.py
+	  StrippingSingleTrackTIS.py
+	  StrippingZ02MuMu.py
+		StrippingDY2MuMu.py
+	  StrippingWe.py
+	  StrippingZ02TauTau.py
+    StrippingWMu.py
+
 ! 2011-07-20 - Johannes Albrecht & Matt Jaffe
  - tidy cuts in TriMuons for tau23mu
  - adapt Ds23pi and Ds2PhiPi in HyperCPX
