@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-07-20 - Marco Cattaneo
+ - In LHCbExclusions.py, exclude from QMTest log file comparisons INFO messages
+   that have been removed in Gaudi HEAD but still exist in Gaudi v22r2. Can be
+   be removed when LHCb stack is released on next Gaudi
+
 !========================= GaudiConf v14r0p1 2011-07-11 =========================
 ! 2011-07-07 - Rob Lambert
  - Add extensionString to IOExtension, wrapper for helperString, 
