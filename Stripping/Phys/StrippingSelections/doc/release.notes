@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2011-07-20 - Johannes Albrecht & Matt Jaffe
+ - tidy cuts in TriMuons for tau23mu
+ - adapt Ds23pi and Ds2PhiPi in HyperCPX
+
 ! 2011-07-20 - Michel De Cian
  - Tightened selection for J/psi in StrippingTrackEffMuonTT
 
