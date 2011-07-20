@@ -4,7 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
 !========================= StrippingSelections v3r6 2011-07-20 =========================
+
+! 2011-07-20 - Johannes Albrecht
+ - add very detached dimuon line
+ - tighten Bs2mumu line
+
 ! 2011-07-20 - Sebastian Schleich
  - adapt BsPhiPhi line to fit new StdLoosePhi
 
