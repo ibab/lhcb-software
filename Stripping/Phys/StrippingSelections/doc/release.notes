@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Ulrich Kerzel
+- B2hh LTUnbiased line:
+  - change to StdAllKaons
+- update TestCPWGGammaLoop.py script
+
 ! 2011-07-20 - Vanya Belyaev
 
  - CharmAssociative : fix multiline string 

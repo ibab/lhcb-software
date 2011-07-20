@@ -120,10 +120,10 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         motherCut = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s)"   % locals()
             
             
-        from StandardParticles import StdNoPIDsKaons
+        from StandardParticles import StdAllNoPIDsKaons
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         kaonFilter = FilterDesktop(Code = kaonCut)
-        myKaons    = Selection(Name+'KaonSel', Algorithm = kaonFilter, RequiredSelections = [StdNoPIDsKaons])
+        myKaons    = Selection(Name+'KaonSel', Algorithm = kaonFilter, RequiredSelections = [StdAllNoPIDsKaons])
 
         _Bs = CombineParticles (DecayDescriptor = "B_s0 -> K+ K-",
                                 CombinationCut  = combCut,
