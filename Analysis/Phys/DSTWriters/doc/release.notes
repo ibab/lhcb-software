@@ -4,6 +4,7 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v3r1 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Suppress several counters from the GEC variables where duplicated in RecSummary.
 
