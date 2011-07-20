@@ -134,16 +134,56 @@ class PhysConf(LHCbConfigurableUser) :
         """
         dataOnDemand service
         """
-        DataOnDemandSvc().NodeMap['/Event/Rec']            = 'DataObject'
-        DataOnDemandSvc().NodeMap['/Event/Rec/Muon']       = 'DataObject'
-        DataOnDemandSvc().NodeMap['/Event/Rec/Rich']       = 'DataObject'
-        DataOnDemandSvc().NodeMap['/Event/Phys']           = 'DataObject'
-        DataOnDemandSvc().NodeMap['/Event/Relations/Phys'] = 'DataObject'
+        dataOnDemand = DataOnDemandSvc()
+        
+        dataOnDemand.NodeMap['/Event/Rec']            = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Rec/Muon']       = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Rec/Rich']       = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Phys']           = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Relations/Phys'] = 'DataObject'
         
         # raw event, not for DC06
         importOptions("$STDOPTS/DecodeRawEvent.py")
-
-        DataOnDemandSvc().OutputLevel = 1
+        
+        if 'MDST' != self.getProp('InputType').upper() :
+            
+            log.info('PhysConf: Configure Filtering of Primary Vertices')
+            from Configurables import LoKi__VoidFilter
+            
+            original = '/Event/Rec/Vertex/Primary'
+            filtered = '/Event/Rec/Vertex/FilteredPrimary'
+            
+            fltr = LoKi__VoidFilter(
+                ##
+                "FilteredPrimaryVertices" ,
+                ##
+                Code = """
+                VSOURCE        ( '%s' )
+                >>  ( high_mult | beam_line )
+                >>  RV_SINKTES ( '%s' )
+                >> ~VEMPTY
+                """   % ( original , filtered ) ,
+                ##
+                Preambulo = [
+                "from LoKiPhys.decorators     import *" ,
+                "from LoKiTracks.decorators   import *" ,
+                ## keep for some time, remove later
+                #      the needed part is being moved now into LoKiPhys 
+                "from LoKiTrigger.decorators  import *" ,
+                "from LoKiCore.functions      import *" ,
+                #
+                ## 1) count total number of tracks in PV 
+                # "high_mult = 8 <= NTRACKS " ,
+                ## 2) count only LONG tracks in PV                 
+                "high_mult = 8 <= RV_TrNUM  ( TrLONG ) " ,
+                ## require good beam-line alignment
+                "beam_line = VX_BEAMSPOTRHO ( 1 * mm ) < 0.5 * mm " ,
+                ]
+                )
+            dataOnDemand.AlgMap[ filtered ] = fltr.getFullName() 
+            dataOnDemand.Dump = True
+            
+        dataOnDemand.OutputLevel = 1
 
 #
 # LoKi

@@ -5,6 +5,19 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+ - prepare machinery for filteriung of primary vertices
+
+    '/Event/Rec/Vertex/FilteredPrimary'
+
+   criteria:
+
+     - N_long tracks in vertex > 8 or beam_line < 0.5 * mm 
+
+ - cmt/requirements 
+    version increment  to v1r11
+
 !========================= PhysConf v1r10 2011-07-08 =========================
 ! 2011-07-08 - Chris Jones
  - Disable by default the code that checks the MuonPID version and reruns
