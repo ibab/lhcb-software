@@ -38,4 +38,8 @@ ecs.EventTimeDecoder.TimeStep =  10 * unit.s
 #MessageSvc(setVerbose = ["VeloAlignCond"])
 </text></argument>
 <argument name="reference"><text>../data/VeloAlignCondUpdates.ref</text></argument>
+<argument name="validator"><text>
+from GaudiConf.QMTest.LHCbExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
 </extension>
