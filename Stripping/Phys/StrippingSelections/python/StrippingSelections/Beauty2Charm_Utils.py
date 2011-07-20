@@ -39,11 +39,15 @@ def filterInputs(tag,inputs,config):
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
 
+def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
+    return "(PT > 500*MeV) & (P > 5000*MeV) & (BPVVDCHI2 > 1000) & (MIPCHI2DV(PRIMARY) > 4)"
+
 def topoInputs(tag,inputs):
     '''Selects tracks that could have been used by the Topo.'''
     return filterSelection(tag+'TopoInputs',topoInputsCuts(),inputs)
 
-def hasTopoChild(): return "AHASCHILD(ISBASIC & " + topoInputsCuts() + ")"
+#Allow for KS topo children...
+def hasTopoChild(): return "AHASCHILD((ISBASIC & " + topoInputsCuts() + ")|((ABSID=='KS0') & "+topoKSInputsCuts() +"))"
 
 def bMassCut(decay,window):
     '''Returns ADAMASS functor given decay desc. and mass window.'''
