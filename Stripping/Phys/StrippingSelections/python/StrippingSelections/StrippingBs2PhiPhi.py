@@ -26,8 +26,14 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseKaons
 
+import StandardParticles
+if hasattr(StandardParticles, "StdAllLooseKaons"):
+  from StandardParticles import StdAllLooseKaons as MyLooseKaons
+  print "importing StdAllLooseKaons as MyLooseKaons"
+else:
+  from StandardParticles import StdLooseKaons as MyLooseKaons
+  print "importing StdLooseKaons as MyLooseKaons"
 
 class StrippingBs2PhiPhiConf(LineBuilder):
 
@@ -118,7 +124,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 	    Bs2PhiPhiLooseDetachedPhi2KK = Selection(
 		name+ "_LoosePhi2KK",
 		Algorithm = _Bs2PhiPhiLooseDetachedPhi2KK,
-		RequiredSelections = [StdLooseKaons])
+		RequiredSelections = [MyLooseKaons])
 	    Bs2PhiPhi = Selection(
 		 name,
 		 Algorithm = _Bs2PhiPhi,

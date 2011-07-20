@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Sebastian Schleich
+ - adapt BsPhiPhi line to fit new StdLoosePhi
+
 ! 2011-07-20 - V. Gligorov
  - Use "All" particle types in 
    StrippingD02MuMu.py
