@@ -31,7 +31,7 @@ from GaudiConfUtils.ConfigurableGenerators import LoKi__CounterAlg as CounterAlg
 _gecConfig = CounterAlg(Preambulo = ["from LoKiTracks.decorators import *"],
                         Variables = {
     "nPV"           : "CONTAINS ( 'Rec/Vertex/Primary'            ) " ,
-    "nSpd"          : "CONTAINS ( 'Raw/Spd/Digits'                ) " ,
+#    "nSpd"          : "CONTAINS ( 'Raw/Spd/Digits'                ) " , #duplicated in RecHeader
     "nBest"         : "CONTAINS ( 'Rec/Track/Best'                ) " ,
     "nVelo"         : "TrNUM    ( 'Rec/Track/Best' , TrVELO       ) " ,
     "nLong"         : "TrNUM    ( 'Rec/Track/Best' , TrLONG       ) " ,
@@ -40,10 +40,10 @@ _gecConfig = CounterAlg(Preambulo = ["from LoKiTracks.decorators import *"],
     "nTTrack"       : "TrNUM    ( 'Rec/Track/Best' , TrTTRACK     ) " ,
     "nBack"         : "TrNUM    ( 'Rec/Track/Best' , TrBACKWARD   ) " ,
     "nMuon"         : "CONTAINS ( 'Rec/Track/Muon'          ) " ,
-    "nOT"           : "CONTAINS ( 'Raw/OT/Times'            ) " ,
-    "nITClusters"   : "CONTAINS ( 'Raw/IT/Clusters'         ) " ,
-    "nTTClusters"   : "CONTAINS ( 'Raw/TT/Clusters'         ) " ,
-    "nVeloClusters" : "CONTAINS ( 'Raw/Velo/Clusters'       ) " , 
+#    "nOT"           : "CONTAINS ( 'Raw/OT/Times'            ) " ,
+#    "nITClusters"   : "CONTAINS ( 'Raw/IT/Clusters'         ) " , #duplicated in RecHeader
+#    "nTTClusters"   : "CONTAINS ( 'Raw/TT/Clusters'         ) " , #duplicated in RecHeader
+#    "nVeloClusters" : "CONTAINS ( 'Raw/Velo/Clusters'       ) " , #duplicated in RecHeader
     "nEcalClusters" : "CONTAINS ( 'Rec/Calo/EcalClusters'   ) " 
     })
 
