@@ -13,6 +13,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+  - HybridBase.h
+
+    allow multline code to be used...
+    remove '\n' , '\\n', etc..
+  
+
 ! 2011-06-20 - Vanya Belyaev
 
  - LoKi/NodeGrammar.h
