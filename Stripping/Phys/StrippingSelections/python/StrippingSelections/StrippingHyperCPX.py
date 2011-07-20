@@ -150,12 +150,15 @@ _default_configuration_ = {
     'ProtonCuts' : ' ( TRCHI2DOF < 5 ) & ( 0 < PIDp  - PIDpi ) & ( BPVIPCHI2() > 12 ) ' , 
     'MuonCuts'   : ' ( TRCHI2DOF < 5 ) & ISMUON                & ( BPVIPCHI2() > 12 ) ' ,                
     'PionCuts'   : ' ( TRCHI2DOF < 5 )                         & ( BPVIPCHI2() > 12 ) ' ,
+    'MuonCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 5 ) & ISMUON                & ( BPVIPCHI2() > 9 ) ' ,                
+    'PionCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 5 )                         & ( BPVIPCHI2() > 9 ) ' ,
     #
     'SigmaCTau'  :   5 *         mm ,
     'SigmaMass'  : 250 *        MeV ,
     #
-    'DsCTau'     : 50 * micrometer ,#JAAJ: change to 50?
-    'DsMass'     : 250 *        MeV ,
+    'DsCTau'     : 200 * micrometer ,
+    'Ds23PiMass'     : 80 *        MeV ,
+    'Ds2PhiPiMass'     : 250 *        MeV,
     #
     'DplusCTau'  : 200 * micrometer ,
     'DplusMass'  : 250 *        MeV ,
@@ -173,16 +176,17 @@ _default_configuration_ = {
     "from GaudiKernel.PhysicalConstants import c_light" , 
     ## use the embedded cut for chi2(LifetimeFit)<9
     "ctau   = BPVLTIME ( 9 ) * c_light "  ,
+    "ctau_forDs   = BPVLTIME ( 225 ) * c_light "  ,
     ## phi(1020) mass-window 
     "phi    = in_range ( 920 * MeV , AM23 , 1120 * MeV )"
-    ] ,
+    ] , 
     #
     # Prescales
     #
     'SigmaPrescale' : 1.0 ,
     'DplusPrescale' : 1.0 ,
     'DsPrescale'    : 1.0 ,
-    'Ds3PiPrescale': 1.0 ,
+    'Ds3PiPrescale' : 0.2 ,
     }
 
 # =============================================================================
@@ -201,9 +205,8 @@ class StrippingHyperCPXConf(LineBuilder) :
     def defaultConfiguration( key = None ) :
         """
         Get the defualt configurtaion
-        
         >>> conf = StrippingHyperCPXConf.defaultConfiguration()
-        
+     
         Get the elements of default configurtaion:
         
         >>> SigmaPrescale = StrippingHyperCPXConf.defaultConfiguration( 'SigmaPrescale' )
@@ -290,26 +293,26 @@ class StrippingHyperCPXConf(LineBuilder) :
             ] ,
             #
             DaughtersCuts = {
-            'pi+' :                           self._config['PionCuts']
+            'pi+' :                           self._config['PionCuts_forTau23Mu']
             } , 
             #
             Preambulo        =                self._config [ 'Preambulo' ] , 
             # 
             CombinationCut  = """
-            ( APT > 2 * GeV           ) &
-            ( ADAMASS ( 'D_s+' ) < %s ) & phi 
-            """                              % self._config[ 'DsMass' ]  , 
+                        ( ADAMASS ( 'D_s+' ) < %s ) & phi 
+            """                              % self._config[ 'Ds2PhiPiMass' ]  , 
             #
             MotherCut       = """
             ( chi2vx < 25 ) &
-            ( ctau   > %s   )
-            """                              % self._config['DplusCTau']
+            ( ctau_forDs   > %s   ) &
+            ( BPVIPCHI2() < 225 )
+            """                              % self._config['DsCTau']
             )
         
         self.PhiPi = Selection (
             'SelDs2PhiPiFor' + self.name()  ,
             Algorithm  = _PhiPiAlg    ,
-            RequiredSelections = [ self.twoMuons () ,
+            RequiredSelections = [ self.twoMuons_forTau23Mu () ,
                                    StdLoosePions    ]
             )
         
@@ -341,20 +344,20 @@ class StrippingHyperCPXConf(LineBuilder) :
             DecayDescriptors = [" [ D_s+  -> pi+ pi+ pi- ]cc " ] ,
             #
             DaughtersCuts = {
-            'pi+' :                           self._config['PionCuts']
+            'pi+' :                           self._config['PionCuts_forTau23Mu']
             } , 
             #
             Preambulo        =                self._config [ 'Preambulo' ] , 
             # 
             CombinationCut  = """
-            ( APT > 2 * GeV           ) &
-            ( ADAMASS ( 'D_s+' ) < %s ) & phi 
-            """                              % self._config[ 'DsMass' ]  , 
+                        ( ADAMASS ( 'D_s+' ) < %s ) & phi 
+            """                              % self._config[ 'Ds23PiMass' ]  , 
             #
             MotherCut       = """
             ( chi2vx < 25 ) &
-            ( ctau   > %s   )
-            """                              % self._config['DplusCTau']
+            ( ctau_forDs   > %s   ) &
+            ( BPVIPCHI2() < 225 )
+            """                              % self._config['DsCTau']
             )
         
        
@@ -445,8 +448,38 @@ class StrippingHyperCPXConf(LineBuilder) :
             )
         #
         return self.TwoMuons
-    
-       ## get all stripping lines 
+
+
+    ## get the muon selection for Tau->3mu Ds Normalization Channels
+    def twoMuons_forTau23Mu ( self ) :
+        """
+        Get the proton selection
+        """
+        if hasattr ( self , 'TwoMuons_forTau23Mu' ) : return self.TwoMuons_forTau23Mu 
+        
+        _MuonFilter_forTau23Mu = FilterDesktop (
+            Code = " ( 'mu+' == ABSID ) & " + self._config['MuonCuts_forTau23Mu'] 
+            )
+        
+        self.Muons_forTau23Mu = Selection (
+            'Sel_T23Mu_MuonsFor' + self.name ()  ,
+            Algorithm          = _MuonFilter_forTau23Mu ,
+            RequiredSelections = [ StdLooseMuons ]
+            )
+        
+        ## require at least 2 muons 
+        self.TwoMuons_forTau23Mu = VoidEventSelection (
+            "Two_T23Mu_MuonsFor" + self.name()   ,
+            Code      = """
+            CONTAINS('%s') > 1.5
+            """       % self.Muons_forTau23Mu.outputLocation() , 
+            RequiredSelection = self.Muons_forTau23Mu 
+            )
+        #
+        return self.TwoMuons_forTau23Mu
+     
+
+    ## get all stripping lines 
     def _lines_private ( self ) :
         
         if hasattr ( self , '_Lines' ) : return self._Lines
@@ -490,7 +523,7 @@ class StrippingHyperCPXConf(LineBuilder) :
 default_config = {
     'SigmaPrescale'  : 1.00 ,
     'DsPrescale'     : 1.00 ,
-    'Ds3PiPrescale'  : 1.00 ,
+    'Ds3PiPrescale'  : 0.2 ,
     'DplusPrescale'  : 1.00 ,
     }
 
