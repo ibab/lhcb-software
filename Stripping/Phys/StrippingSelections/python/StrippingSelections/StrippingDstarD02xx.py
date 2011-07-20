@@ -134,10 +134,10 @@ class StrippingDstarD02xxConf(LineBuilder):
         xx_comb = CombineParticles( config['prefix']+xx_name )
 
         inputLoc = {
-             "pi" : "Phys/StdNoPIDsPions/Particles"
-            ,"mu" : "Phys/StdLooseMuons/Particles"
-            ,"K" : "Phys/StdLooseKaons/Particles"
-            ,"e" : "Phys/StdLooseElectrons/Particles"
+             "pi" : "Phys/StdAllNoPIDsPions/Particles"
+            ,"mu" : "Phys/StdAllLooseMuons/Particles"
+            ,"K" : "Phys/StdAllLooseKaons/Particles"
+            ,"e" : "Phys/StdAllLooseElectrons/Particles"
             }
         req_sel = []
         if xplus != xminus :
@@ -190,7 +190,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         dstar = self.combineDstar(name, config)
         combname = xplus+xminus
         dstar_box = dstar.clone(name+config['prefix']+"Dst2PiD02"+combname+"D0PiComb" )
-        dst_req_sel = [DataOnDemand( "Phys/StdNoPIDsPions/Particles" ) ,
+        dst_req_sel = [DataOnDemand( "Phys/StdAllNoPIDsPions/Particles" ) ,
                        DataOnDemand( "Phys/StdNoPIDsUpPions/Particles"),
                        xxCombSel]
         

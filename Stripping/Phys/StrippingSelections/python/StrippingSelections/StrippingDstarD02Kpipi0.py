@@ -16,8 +16,8 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
-from StandardParticles import ( StdNoPIDsPions,
-                                StdNoPIDsKaons,
+from StandardParticles import ( StdAllNoPIDsPions,
+                                StdAllNoPIDsKaons,
                                 StdLooseMergedPi0,
                                 StdLooseResolvedPi0 )
 
@@ -79,7 +79,7 @@ def makeD02kpipi0(name) :
 
     return Selection("D02Kpipi0For" + name, 
                      Algorithm = d0, 
-                     RequiredSelections = [ pi0sel, StdNoPIDsPions, StdNoPIDsKaons ] )
+                     RequiredSelections = [ pi0sel, StdAllNoPIDsPions, StdAllNoPIDsKaons ] )
 
 def makeDstar2Dpi(name, dsel) : 
     
@@ -96,4 +96,4 @@ def makeDstar2Dpi(name, dsel) :
     
     return Selection("Dstar2DpiWith" + dsel.name() + "For" + name, 
                      Algorithm = dstar, 
-                     RequiredSelections = [StdNoPIDsPions, dsel] )
+                     RequiredSelections = [StdAllNoPIDsPions, dsel] )

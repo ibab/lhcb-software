@@ -11,7 +11,7 @@ Stripping lines for D* and D0 with D0 -> mu mu.
 Control channel: D0 -> pi+ pi- (prescaled)
 
 Cuts:
-  * Particles input: StdLooseMuons, StdNoPIDsPions, StdNoPIDsKaons
+  * Particles input: StdAllLooseMuons, StdAllNoPIDsPions, StdAllNoPIDsKaons
   * Track-Chi2/NDOF of the D0 daughters < 5
   * Pt of the D0 daughters > 1 GeV (configurable)
   * IP chi2 of the D0 daughters > 1 (configurable)
@@ -58,7 +58,7 @@ from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
-from StandardParticles import StdNoPIDsPions, StdLooseMuons
+from StandardParticles import StdAllNoPIDsPions, StdAllLooseMuons
 
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -115,10 +115,10 @@ class D02MuMuConf(LineBuilder) :
 
         # D0 and D* selections
         from PhysSelPython.Wrappers import Selection
-        D02MuMuSelection = Selection(name + "_D02MuMuSelection", Algorithm = CombineD0, RequiredSelections = [ StdLooseMuons ])
-        DstD02MuMuSelection = Selection(name + "_DstD02MuMuSelection", Algorithm = CombineDst, RequiredSelections = [ StdLooseMuons, StdNoPIDsPions, D02MuMuSelection ])
-        D02PiPiSelection = Selection(name + "_D02PiPiSelection", Algorithm = CombineD0, RequiredSelections = [ StdNoPIDsPions ])
-        DstD02PiPiSelection = Selection(name + "_DstD02PiPiSelection", Algorithm = CombineDst, RequiredSelections = [ StdNoPIDsPions, D02PiPiSelection ])
+        D02MuMuSelection = Selection(name + "_D02MuMuSelection", Algorithm = CombineD0, RequiredSelections = [ StdAllLooseMuons ])
+        DstD02MuMuSelection = Selection(name + "_DstD02MuMuSelection", Algorithm = CombineDst, RequiredSelections = [ StdAllLooseMuons, StdAllNoPIDsPions, D02MuMuSelection ])
+        D02PiPiSelection = Selection(name + "_D02PiPiSelection", Algorithm = CombineD0, RequiredSelections = [ StdAllNoPIDsPions ])
+        DstD02PiPiSelection = Selection(name + "_DstD02PiPiSelection", Algorithm = CombineDst, RequiredSelections = [ StdAllNoPIDsPions, D02PiPiSelection ])
 
         self.lineD02MuMu = StrippingLine(name + "Line",
           algos = [ D02MuMuSelection ],

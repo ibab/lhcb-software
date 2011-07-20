@@ -215,7 +215,7 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
-	from StandardParticles import StdLooseKaons, StdLoosePions
+	from StandardParticles import StdAllLooseKaons, StdAllLoosePions
         
         D02Kpi = CombineParticles(DecayDescriptors = ["[D0 -> K- pi+]cc", "[D0 -> K+ pi-]cc"],  # includes WS (DCS) combination
         	 DaughtersCuts = {
@@ -228,7 +228,7 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
                 
         SelD02Kpi = Selection("SelD02Kpi"+self._name,
                               Algorithm=D02Kpi,
-                              RequiredSelections = [StdLooseKaons,StdLoosePions])
+                              RequiredSelections = [StdAllLooseKaons,StdAllLoosePions])
         
         self.D0Sel=SelD02Kpi
     
@@ -240,7 +240,7 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
-	from StandardParticles import StdLoosePions
+	from StandardParticles import StdAllLoosePions
         
         Dstar = CombineParticles(DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc", 
         	DaughtersCuts = {
@@ -253,7 +253,7 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         
         SelDstar = Selection("SelDstar"+self._name,
                                     Algorithm=Dstar,
-                                    RequiredSelections = [self.D0Sel,StdLoosePions])
+                                    RequiredSelections = [self.D0Sel,StdAllLoosePions])
         
         self.DstarSel=SelDstar
     

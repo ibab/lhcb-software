@@ -11,7 +11,7 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
+from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 
 default_config = { 'DaugPtMin': 800.,
            'DaugPtMax': 1500.,
@@ -107,8 +107,8 @@ class D2hhConf(LineBuilder) :
 
         LineBuilder.__init__(self, name, config)
 
-        stdNoPIDsKaons = StdNoPIDsKaons
-        stdNoPIDsPions = StdNoPIDsPions
+        stdNoPIDsKaons = StdAllNoPIDsKaons
+        stdNoPIDsPions = StdAllNoPIDsPions
 
         d2kpi_name = name+'PromptD2KPi'
         d0RS_name =  name+'PromptD0RS'

@@ -31,7 +31,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
+from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 
 
 default_config =  {
@@ -166,8 +166,8 @@ def D0 ( name,
             
     D0 = Selection("SelD02RSKPiFor"+name,
                    Algorithm = _D0,
-                   RequiredSelections = [StdNoPIDsKaons,
-                                         StdNoPIDsPions])
+                   RequiredSelections = [StdAllNoPIDsKaons,
+                                         StdAllNoPIDsPions])
     return D0
     
 def Dstar ( name,
@@ -218,7 +218,7 @@ def Dstar ( name,
         
     DSt = Selection("SelDSt2D0PiFor"+name,
                     Algorithm = _DSt,
-                    RequiredSelections = [StdNoPIDsPions,
+                    RequiredSelections = [StdAllNoPIDsPions,
                                           D0Sel])
     
     return DSt

@@ -21,7 +21,7 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
+from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons
 
 class StrippingD2HHLTUnbiasedConf(LineBuilder): # {
 
@@ -54,8 +54,8 @@ class StrippingD2HHLTUnbiasedConf(LineBuilder): # {
         d02HH_name = name + 'D02HH'
         dstar_name  = name + 'Dstar2D0Pi_D02HH'
 
-        self.inPions = StdNoPIDsPions
-        self.inKaons = StdNoPIDsKaons
+        self.inPions = StdAllNoPIDsPions
+        self.inKaons = StdAllNoPIDsKaons
 
         self.selD02HH = makeD02HH( d02HH_name
                                    , inputSel = [ self.inPions, self.inKaons ]
@@ -208,7 +208,7 @@ default_config = {
                   , 'Dstar_AMDiff_MAX'          : 160.0*MeV
                   , 'Dstar_MDiff_MAX'           : 155.0*MeV
                   , 'Dstar_VCHI2VDOF_MAX'       : 100.0
-                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
+                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1(MB|CharmCalibrationNoBias).*')"
                   #
                   , 'PrescaleD02HH'             :   1.0
                   , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
