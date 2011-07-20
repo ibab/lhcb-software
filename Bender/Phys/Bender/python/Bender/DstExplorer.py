@@ -192,7 +192,7 @@ if '__main__' == __name__ :
     if options.OutputLevel < 0 : options.OutputLevel = 0
     if options.Quiet and 4 > options.OutputLevel :
         options.OutputLevel = 4
-        
+
     print 120*'*'
     if options.Quiet :
         print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
@@ -205,7 +205,15 @@ if '__main__' == __name__ :
     print 120*'*'
     
     ## Files must be specfied are mandatory!
-    if not arguments : parser.error('No input files are specified') 
+    if not arguments :
+        parser.error('No input files are specified') 
+
+
+    if options.Simulation and '2009' == options.DataType :
+        options.DataType = 'MC09'
+    if options.Simulation and '2010' == options.DataType :
+        options.DataType = 'MC10'
+            
 
     #
     ## start the actual action:
@@ -219,6 +227,7 @@ if '__main__' == __name__ :
     
     from Gaudi.Configuration import * 
     from Configurables       import DaVinci
+
     
     daVinci = DaVinci (
         DataType    = options.DataType    ,
@@ -226,6 +235,22 @@ if '__main__' == __name__ :
         Persistency = options.Persistency , 
         Lumi        = False              
         )
+    
+    if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
+        #
+        ## try to use the latest availabel tags:
+        #
+        from Configurables import CondDB    
+        CondDB ( UseLatestTags = [ options.DataType ] )
+        import os 
+        if os.environ.has_key('LHCBGRIDSYSROOT') :
+            if os.environ.has_key('LHCBGRIDCONFIGROOT') :
+                if os.path.exists ( os.environ['LHCBGRIDSYSROOT'] )  :
+                    if os.path.exists ( os.environ['LHCBGRIDCONFIGROOT'] )  :
+                        #
+                        ## Use Oracle if possible
+                        CondDB ( UseOracle = True  )
+
 
     ## Reset all DaVinci sequences 
     def _action ( ) :
