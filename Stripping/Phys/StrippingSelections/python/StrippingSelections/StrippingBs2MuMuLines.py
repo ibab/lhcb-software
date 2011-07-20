@@ -16,6 +16,7 @@ __date__ = '19/07/2010'
 __version__ = '$Revision: 1.2 $'
 
 __all__ = ('Bs2MuMuLinesConf',
+           'config_default',
            'makeDefault',
            'makeBs2mmWide',
            'makeLoose',
@@ -82,13 +83,13 @@ class Bs2MuMuLinesConf(LineBuilder) :
         'DefaultLinePostscale'   : 1,
         'Bs2mmWideLinePrescale'  : 1,
         'Bs2mmWideLinePostscale'  : 1,
-        'LooseLinePrescale'      : 0.05,
+        'LooseLinePrescale'      : 0.02,
         'LooseLinePostscale'     : 1,
         'JPsiLinePrescale'       : 1,
         'JPsiLinePostscale'      : 1,
         'JPsiLooseLinePrescale'  : 0.1,
         'JPsiLooseLinePostscale' : 1,
-        'JPsiPromptLinePrescale' : 0.01,
+        'JPsiPromptLinePrescale' : 0.005,
         'JPsiPromptLinePostscale': 1,
         
         'MuIPChi2_loose'        :  9,
@@ -195,7 +196,7 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuNoMuID.ReFitPVs = True
-    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 5 )" }
+    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )" }
     Bs2MuMuNoMuID.CombinationCut = "(ADAMASS('B_s0')<600*MeV)"\
                                    "& (AMAXDOCA('')<0.3*mm)"
 
@@ -230,8 +231,8 @@ def makeBs2mmWide(name) :
     Bs2MuMuWideMass.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuWideMass.ReFitPVs = True
-    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 5 )" }
-    Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<2400*MeV)"\
+    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 4 )" }
+    Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                                      "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2MuMuWideMass.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
@@ -310,7 +311,7 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
     DetachedJPsi.ReFitPVs = True
-    DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 5 ) "\
+    DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
                                     "& (MIPCHI2DV(PRIMARY)> 25.)"}
                                  
     DetachedJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV) "\
@@ -382,7 +383,7 @@ def makePromptJPsi(name) :
     PromptJPsi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     PromptJPsi.OfflineVertexFitter.useResonanceVertex = False
     PromptJPsi.ReFitPVs = True
-    PromptJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 5 ) "}
+    PromptJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "}
     
     PromptJPsi.CombinationCut = "(ADAMASS('J/psi(1S)')<100*MeV) "\
                                 "& (AMAXDOCA('')<0.3*mm)"
