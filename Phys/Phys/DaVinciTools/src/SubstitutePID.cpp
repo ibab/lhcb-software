@@ -7,6 +7,11 @@
 #include "LoKi/IDecay.h"
 #include "LoKi/Decays.h"
 #include "LoKi/select.h"
+#include "LoKi/ParticleProperties.h"
+// ============================================================================
+// Boost
+// ============================================================================
+#include <boost/foreach.hpp>
 // ============================================================================
 // local
 // ============================================================================
@@ -116,6 +121,9 @@ private:
   // ==========================================================================
   // perform the actual sustitution 
   unsigned int substitute ( LHCb::Particle* p0 ) ;
+  // ==========================================================================
+  // perform correction of 4-momentum of the particle
+  unsigned int correctP4 ( LHCb::Particle* p0 ) ; 
   // ==========================================================================
 private:
   // ==========================================================================
@@ -309,7 +317,7 @@ unsigned int SubstitutePID::substitute ( LHCb::Particle* p )
   if ( 0 == p ) { return 0 ; }
   //
   unsigned int substituted = 0 ;
-  //
+
   for ( Substitutions::iterator isub = m_subs.begin() ; 
         m_subs.end() != isub ; ++isub ) 
   {
@@ -325,15 +333,51 @@ unsigned int SubstitutePID::substitute ( LHCb::Particle* p )
       if ( 0 == pf  ) { continue ; }
       LHCb::Particle* pf_ = const_cast<LHCb::Particle*>( pf ) ;
       if ( 0 == pf_ ) { continue ; }
-      //
       pf_ ->setParticleID ( isub -> m_pid ) ;
+      //
       ++substituted    ;   
       ++(isub->m_used) ;
     }
   }
+  if ( 0 < substituted ) {
+    correctP4( p ) ;
+  }
   //
   return substituted ;
   //
+}
+// ============================================================================
+// perform recursive 4-momentum correction
+// ============================================================================
+unsigned int SubstitutePID::correctP4 ( LHCb::Particle* p )
+{
+  if ( 0 == p ) { return 0 ; }
+  //
+  const SmartRefVector<LHCb::Particle> daughters = p->daughters() ;
+  if ( !daughters.empty() ) {
+    double energySum = 0.0, pxSum = 0.0, pySum = 0.0, pzSum = 0.0;
+    BOOST_FOREACH( const LHCb::Particle* daughter, daughters ) {
+      correctP4( const_cast<LHCb::Particle*>(daughter) ) ;
+      energySum += daughter->momentum().E() ;
+      pxSum += daughter->momentum().Px();
+      pySum += daughter->momentum().Py();
+      pzSum += daughter->momentum().Pz();
+    }    
+    // Correct momentum
+    Gaudi::LorentzVector oldMom = p->momentum () ;
+    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
+    newMom.SetXYZT ( pxSum , pySum , pzSum , energySum ) ;
+    p->setMomentum(newMom) ;
+    p->setMeasuredMass(newMom.M());
+  } else {
+    double newMass = LoKi::Particles::massFromPID ( p->particleID() ) ;
+    Gaudi::LorentzVector oldMom = p->momentum () ;
+    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
+    newMom.SetXYZT ( oldMom.Px() , oldMom.Py() , oldMom.Pz() , ::sqrt( oldMom.P2() + newMass*newMass ) ) ;
+    p->setMomentum(newMom) ;
+    p->setMeasuredMass(newMass);
+  }
+  return 1 ;
 }
 // ============================================================================
 /// the factory 
