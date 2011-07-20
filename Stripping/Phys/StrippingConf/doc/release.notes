@@ -5,6 +5,7 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r2p1 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Move to OfflineDeterministicPrescaler
  - And allow backwards compatibility!
