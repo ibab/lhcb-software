@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r40 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Add OfflineDeterministicPrescaler (for now just a copy of DeterministicPrescaler)
 
