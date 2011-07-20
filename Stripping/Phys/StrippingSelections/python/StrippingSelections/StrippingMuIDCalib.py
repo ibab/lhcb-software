@@ -15,11 +15,9 @@ The stripping report with config_params as full DST is:
 
 '''
 
-
 __author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'D.Milanes', 'MuID Team' ]
 __date__    = '20/07/2011'
 __version__ = '$Revision: 1.4 $'
-
 
 #config_params = {     #for mDST
 #    'PromptPrescale'           : 0.3,
@@ -52,7 +50,7 @@ __version__ = '$Revision: 1.4 $'
 #    }
 
 config_params = {    
-    'PromptPrescale'           : 0.08,
+    'PromptPrescale'           : 0., #not used anymore
     'DetachedPrescale'         : 1.,
     'DetachedNoMIPPrescale'    : 0.3,
     'DetachedNoMIPHiPPrescale' : 1.,
