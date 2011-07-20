@@ -154,7 +154,7 @@ confdict = {
     #
     # Selection of basic particles 
     #
-    'GoodMuons'        : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  6 ) " ,
+    'GoodMuons'        : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 5  ) & ( BPVIPCHI2 () >  9 ) " ,
     'GoodMuonsForBc' : " ( BPVIPCHI2 () >  9 ) " ,
     'TightMuons'   : " ( PT > 1.9 * GeV ) & ( BPVIPCHI2 () > 25 ) " ,
     #
@@ -292,7 +292,7 @@ class StrippingTriMuonsConf(LineBuilder) :
         """
         if hasattr ( self , 'ThreeGoodMuons_EventSelection' ) :
             return self.ThreeGoodMuons_EventSelection
-        
+
         _goodmu = self.goodMuons()
         
         ## require at least 3 good muons
@@ -359,8 +359,8 @@ class StrippingTriMuonsConf(LineBuilder) :
             )
         
         return self.ThreeGoodMuonsForBc_EventSelection
-    
 
+ 
     # =========================================================================
     # get good muons 
     # =========================================================================
@@ -451,12 +451,13 @@ class StrippingTriMuonsConf(LineBuilder) :
             ## 
             ## 
             CombinationCut  = """
-            ( ADAMASS('tau+') < 400 * MeV ) & AHASCHILD ( PT > 1 * GeV )  
+            ( ADAMASS('tau+') < 400 * MeV ) 
             """ , ## wide mass-combination + PT-cuts 
             ##
             MotherCut       = """
-            ( chi2vx < 25 ) &
-            ( ctau   > 70 * micrometer )
+            ( chi2vx < 20 ) &
+            ( ctau   > 100 * micrometer ) &
+            ( BPVIPCHI2() < 225 )
             """ 
             )
         
