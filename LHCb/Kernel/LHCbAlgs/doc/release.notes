@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-07-20 - Rob Lambert
+ - Add OfflineDeterministicPrescaler (for now just a copy of DeterministicPrescaler)
+
 ! 2011-06-23 - Marco Cattaneo
  - Update QMTest reference to follow verbosity changes in EventClockSvc
 
