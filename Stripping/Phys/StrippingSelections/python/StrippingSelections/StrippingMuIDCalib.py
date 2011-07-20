@@ -17,8 +17,8 @@ The stripping report with config_params as full DST is:
 
 
 __author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'D.Milanes', 'MuID Team' ]
-__date__    = '25/05/2011'
-__version__ = '$Revision: 1.3 $'
+__date__    = '20/07/2011'
+__version__ = '$Revision: 1.4 $'
 
 
 #config_params = {     #for mDST
@@ -36,13 +36,28 @@ __version__ = '$Revision: 1.3 $'
 #    'PISMUONFromLambdacPrescale' : 0.
 #    }
 
-config_params = {      #for fullDST
-    'PromptPrescale'           : 0.,
-    'DetachedPrescale'         : 0.,
+#config_params = {      #for fullDST
+#    'PromptPrescale'           : 0.,
+#    'DetachedPrescale'         : 0.,
+#    'DetachedNoMIPPrescale'    : 0.3,
+#    'DetachedNoMIPHiPPrescale' : 1., 
+#    'DetachedNoMIPKPrescale'   : 1.,
+#    'FromLambdacPrescale'      : 0.,
+#    'KFromLambdacPrescale'     : 1.,
+#    'PiFromLambdacPrescale'    : 1.,
+#    'PFromLambdacPrescale'     : 1.,
+#    'KISMUONFromLambdacPrescale' : 1.,
+#    'PiISMUONFromLambdacPrescale': 1.,
+#    'PISMUONFromLambdacPrescale' : 1.
+#    }
+
+config_params = {    
+    'PromptPrescale'           : 0.08,
+    'DetachedPrescale'         : 1.,
     'DetachedNoMIPPrescale'    : 0.3,
-    'DetachedNoMIPHiPPrescale' : 1., 
+    'DetachedNoMIPHiPPrescale' : 1.,
     'DetachedNoMIPKPrescale'   : 1.,
-    'FromLambdacPrescale'      : 0.,
+    'FromLambdacPrescale'      : 1.,
     'KFromLambdacPrescale'     : 1.,
     'PiFromLambdacPrescale'    : 1.,
     'PFromLambdacPrescale'     : 1.,
@@ -50,7 +65,6 @@ config_params = {      #for fullDST
     'PiISMUONFromLambdacPrescale': 1.,
     'PISMUONFromLambdacPrescale' : 1.
     }
-
 
 __all__     = ( 'MuIDCalibConf',
                 'makePromptSelection',
@@ -70,7 +84,7 @@ from Configurables import LoKi__VoidFilter as VoidFilter
 from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons, StdNoPIDsMuons, StdNoPIDsPions, StdNoPIDsProtons
-from StandardParticles import StdTightKaons, StdTightPions, StdTightProtons
+from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsMuons, StdAllNoPIDsPions, StdAllNoPIDsProtons
 
 
 default_name = 'MuIDCalib'
@@ -93,17 +107,14 @@ class MuIDCalibConf( LineBuilder ):
         LineBuilder.__init__( self, name, config )
 
 
-        self.selStdNoPIDMuons   = StdNoPIDsMuons 
-        self.selStdNoPIDKaons   = StdNoPIDsKaons 
-        self.selStdNoPIDPions   = StdNoPIDsPions
-        self.selStdNoPIDProtons = StdNoPIDsProtons
-
-        #self.selStdTightPions   = StdTightPions 
-        #self.selStdTightKaons   = StdTightKaons 
-        #self.selStdTightProtons = StdTightProtons 
+        self.selStdAllNoPIDMuons = StdAllNoPIDsMuons 
+        self.selStdNoPIDMuons    = StdNoPIDsMuons 
+        self.selStdNoPIDKaons    = StdNoPIDsKaons 
+        self.selStdNoPIDPions    = StdNoPIDsPions
+        self.selStdNoPIDProtons  = StdNoPIDsProtons
 
 
-        self.sel_Prompt  = makePromptSelection( name + "_Combine", self.selStdNoPIDMuons )
+        self.sel_Prompt  = makePromptSelection( name + "_Combine", self.selStdAllNoPIDMuons )
         self.line_Prompt = StrippingLine( name + '_JpsiNoPID', prescale = config[ 'PromptPrescale' ], selection = self.sel_Prompt ) 
 
         self.sel_Detached  = makeDetachedSelection( name + "_FromBCombine", self.selStdNoPIDMuons )
