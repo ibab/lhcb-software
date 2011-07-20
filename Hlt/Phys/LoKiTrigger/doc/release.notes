@@ -5,6 +5,14 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+ - move BeamLineFunctions.h into Phys/LoKiPhys
+     enabling "Hlt-free" DaVinci 
+
+ - cmt/requirements 
+     version increment to v12r4 
+
 !========================== LoKiTrigger v12r3 2011-06-24 ===================
 ! 2011-06-07 - Vanya Belyaev
  - fix almost all ICC warnings 
@@ -20,7 +28,6 @@
    many thanks to Steve Blusk for pointing to the problem 
 
  - cmt/requirements 
-
      version increment to v12r3 
   
 !========================== LoKiTrigger v12r2 2011-05-04 ===================

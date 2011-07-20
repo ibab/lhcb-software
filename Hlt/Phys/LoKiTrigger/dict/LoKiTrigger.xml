@@ -117,16 +117,10 @@
   <class name = "LoKi::RecVertices::MaxDOCAChi2" />
   <class name = "LoKi::RecVertices::DOCACut"     />
   
-  <!-- BeamSpot functions -->
-  <class name = "LoKi::Vertices::BeamSpotRho"     />
-  <class name = "LoKi::Vertices::BeamSpot"        />
   
   <exclusion>
     <class name="LoKi::Stages::HistoryRegex" >
       <field name = "m_expression"/>
-    </class>
-    <class name="LoKi::Vertices::BeamSpotRho" >
-      <field name = "m_condition"/>
     </class>
   </exclusion>
 
