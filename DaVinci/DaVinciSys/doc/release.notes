@@ -12,6 +12,8 @@ It was decided to as yet not move to LoKi::VertexFitter
 Several packages have been additionally included in this release:
 use  DecayTreeTuple             v3r15    Phys
 use  PhysConf                   v1r10    Phys
+use  DSTWriters                 v3r1     Phys
+use  LHCbAlgs                   v2r40    Kernel
 use  GaudiConf                  v14r0p1
 
 For more details see:
