@@ -4,6 +4,14 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-07-20 - Vanya Belyaev
+
+ -  re-add the GEC-counters using smart helper function recSummary
+    Thanks to Gerhard for nice A-class idea (as usual)
+
+ - version increment to v3r2 
+
+
 !========================= DSTWriters v3r1 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Suppress several counters from the GEC variables where duplicated in RecSummary.
