@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - V. Gligorov
+ - Tighten StrippingB2XTau
+
 ! 2011-07-20 - Jibo He
  - Tighten DiMuonNew, Ccbar2PpbarNew
  - Updated to use "All"
