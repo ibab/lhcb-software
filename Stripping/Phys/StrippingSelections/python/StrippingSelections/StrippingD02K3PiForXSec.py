@@ -20,6 +20,12 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
+import StandardParticles
+if hasattr(StandardParticles, "StdAllLoosePions"):
+  from StandardParticles import StdAllLoosePions as StdAllLoosePions
+else:
+  from StandardParticles import StdNoPIDsPions as StdAllLoosePions
+#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdAllLoosePions
 from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
 from GaudiKernel.SystemOfUnits import *
 from copy import copy
@@ -247,7 +253,7 @@ def makeDstar2D0pi(moduleName, d0Sel, config):
   return Selection(
     'Dstar2D0pi_D02K3PiFor'+moduleName
     ,Algorithm=_dstar
-    ,RequiredSelections=[StdNoPIDsPions, d0Sel]
+    ,RequiredSelections=[StdAllLoosePions, d0Sel]
     )
 
 default_config = {
