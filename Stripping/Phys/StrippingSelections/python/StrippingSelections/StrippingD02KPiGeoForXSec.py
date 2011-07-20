@@ -23,6 +23,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
 #from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
+import StandardParticles
 if hasattr(StandardParticles, "StdAllLoosePions"):
   from StandardParticles import StdAllLoosePions as StdAllLoosePions
 else:
