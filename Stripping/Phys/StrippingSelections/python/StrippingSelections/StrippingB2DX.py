@@ -39,9 +39,9 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
 from StandardParticles import ( StdNoPIDsPions,
                                 StdNoPIDsKaons,
-                                StdLooseKaons,
                                 StdNoPIDsDownPions,
                                 StdNoPIDsProtons,
+                                StdAllNoPIDsPions,
                                 StdLooseMergedPi0,
                                 StdLooseResolvedPi0 )
 
@@ -372,10 +372,12 @@ class B2DXConf(LineBuilder) :
         LineBuilder.__init__(self, moduleName, config)
 
         from Configurables import LoKi__VoidFilter as VoidFilter
-        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-        modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
-            if i not in modules : modules.append(i)
+
+#        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+#        modules = CoreFactory('CoreFactory').Modules
+#        for i in ['LoKiTrigger.decorators']:
+#            if i not in modules : modules.append(i)
+#            if i in modules : modules.remove(i)
 
         Ks = makeKs(moduleName, config["KsCuts"])
 
@@ -920,7 +922,6 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Sel) :
     checkConfig(__configuration_keys__, config)
 
     _Kaon = StdNoPIDsKaons
-#    _Kaon = StdLooseKaons
     _Pion = StdNoPIDsPions
     _Pi0  = Pi0Sel
 
@@ -961,7 +962,6 @@ def makeD2KPiPi0WS(moduleName, pi0name, config, Pi0Sel) :
     checkConfig(__configuration_keys__, config)
 
     _Kaon = StdNoPIDsKaons
-#    _Kaon = StdLooseKaons
     _Pion = StdNoPIDsPions
     _Pi0  = Pi0Sel
 
@@ -1004,7 +1004,7 @@ def makeD2hhhh(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = StdNoPIDsPions
+    StdPi = StdAllNoPIDsPions  # Because of low Pt cut
     StdK  = StdNoPIDsKaons
 
     DaughtercutPion = "((TRCHI2DOF<%(DauChi2Max)s) & " \
@@ -1053,7 +1053,7 @@ def makeD2hhhhWS(moduleName, config) :
 
     checkConfig(__configuration_keys__, config)
 
-    StdPi = StdNoPIDsPions
+    StdPi = StdAllNoPIDsPions  # Because of low Pt cut
     StdK  = StdNoPIDsKaons
 
     DaughtercutPion = "((TRCHI2DOF<%(DauChi2Max)s) & " \
@@ -1416,7 +1416,7 @@ def makeB02DPiWS(moduleName, DName, DSel, DWSSel, config ) :
 
 def makeUnbiasedB2DPi(moduleName, DName, DSel, config ) :
 
-    StdPi  = StdNoPIDsPions
+    StdPi  = StdAllNoPIDsPions  # Because of no IPchi2 cut
 
     Bachelorcut = "((TRCHI2DOF<%(BachelorChi2Max)s) & " \
     "(PT > %(BachelorPtMin)s*MeV) & (P > %(BachelorPMin)s*MeV) & " \
