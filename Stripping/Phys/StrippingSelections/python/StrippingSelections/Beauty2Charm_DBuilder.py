@@ -64,8 +64,9 @@ class DBuilder(object):
         #mass = 'in_range(%d*%s,M,%d*%s)' % (min,units,max,units)
         ce = ComboEngine([('pi+','pi-'),('K+','pi-'),('pi+','K-'),('K+','K-')],
                          ['pi+','pi-'])
-        amass = "("+ce.getWMFunctor(min-10,max+10).replace('WM','AWM')+")"
-        mass = "("+ce.getWMFunctor(min,max)+")"
+        amass = "("+ce.getWMFunctor(min,max).replace('WM','AWM')+")"
+        #mass = "("+ce.getWMFunctor(min,max)+")"
+        mass = "(M < 10*GeV)"
         protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],amass,mass,
                                   self.config)
         return ce.mergedSelection(protoD2hh.name()+"Combo",min,max,protoD2hh)

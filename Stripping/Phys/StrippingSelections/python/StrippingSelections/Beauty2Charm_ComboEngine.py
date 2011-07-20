@@ -43,7 +43,7 @@ class ComboEngine(object):
     self.decayList = decayList
 
   def mergedSelection(self, name, massLow, massHigh, inputSelection):
-    return MergedSelection("%s" % name, RequiredSelections=self.unmergedSelection(name, self._decayCombos, massLow, massHigh, inputSelection).values())
+    return MergedSelection("%s" % name, RequiredSelections=self.unmergedSelection(name, massLow, massHigh, inputSelection).values())
     
   def unmergedSelection(self, name, massLow, massHigh, inputSelection):
     return self._buildAlgorithmChain(name, self._decayCombos, massLow, massHigh, inputSelection)
@@ -119,9 +119,9 @@ class ComboEngine(object):
           subsString = 'Charm -> ' + ' '.join([' %s%s ' % (("^" if i==j else ""), d) for j, d in enumerate(['Xq']*nDaughters)])
           _subsAlgo.Substitutions[subsString] = daughter
         sel = Selection("%sSel_%s" % (name, validDecayName), Algorithm=_subsAlgo, RequiredSelections=[wmSel])
-        algoList.append()
+        algoList.append(sel)
         #mySelections[validDecayName] = sel
-      mySelections[nominalDecayName] = MergedSelection("%sSel_%s" % (name, nominalDecayName), RequiredSelections=algoList)
+      mySelections[nominalDecayName] = MergedSelection("%sMSel_%s" % (name, nominalDecayName), RequiredSelections=algoList)
     return mySelections
   
   def _buildUnsignedWMFunctor(self, decayCombos, massLow, massHigh):

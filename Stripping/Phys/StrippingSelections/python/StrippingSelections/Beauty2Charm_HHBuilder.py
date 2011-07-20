@@ -60,7 +60,7 @@ class HHBuilder(object):
         momCuts = "ALL" #LoKiCuts(['BPVDIRA'],config).code()
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
-        print 'makeX2HH',name,'combo:',comboCuts,'mom:',momCuts
+        print 'makeXPLUS2HH',name,'combo:',comboCuts,'mom:',momCuts
         return Selection(name+'Beauty2Charm',Algorithm=cp,
                          RequiredSelections=inputs)
 
@@ -91,23 +91,28 @@ class HHBuilder(object):
 
     def _makeKPi0(self):
         '''Makes X -> K+pi0 + c.c.'''
+        inputs = self.pi0["Merged"]+self.pi0["Resolved"]+[self.kaons]
         return self._makeXPLUS2HH('X2KPi0',['[K*(892)+ -> K+ pi0]cc'],
-                              '(AM < 6*GeV)',self.config,
-                              self.pi0["Merged"]+self.pi0["Resolved"]+[self.kaons])
+                                  '(AM < 6*GeV)',self.config,inputs)
+
 
     def _makePiPi0(self):
         '''Makes X -> pi+pi0'''
+        inputs = [self.pions] +self.pi0["Merged"]+self.pi0["Resolved"]
         return self._makeXPLUS2HH('X2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
-                              '(AM < 6*GeV)',self.config,[self.pions]+self.pi0["Merged"]+self.pi0["Resolved"])
+                                  '(AM < 6*GeV)',self.config,inputs)
 
     def _makeRhoPlus(self,pipi0):
-        return filterSelection('RHO+',self._massWindow('RHO','rho(770)+'),pipi0)
+        return filterSelection('RHO+',self._massWindow('RHO','rho(770)+'),
+                               pipi0)
 
     def _makeKstarPlus_KSpi(self,kspi):
-        return filterSelection('KST_KSPI',self._massWindow('KST','K*(892)+'),kspi)
+        return filterSelection('KST_KSPI',self._massWindow('KST','K*(892)+'),
+                               kspi)
 
     def _makeKstarPlus_KPi0(self,kpi0):
-        return filterSelection('KST_KPI0',self._massWindow('KST','K*(892)+'),kpi0)
+        return filterSelection('KST_KPI0',self._massWindow('KST','K*(892)+'),
+                               kpi0)
 
     def _makeRho0(self,pipi):
         return filterSelection('RHO0',self._massWindow('RHO','rho(770)0'),pipi)
@@ -127,6 +132,5 @@ class HHBuilder(object):
         '''Makes X -> p+ K- + c.c.'''
         return self._makeX2HH('X2PK',['[Lambda0 -> p+ K-]cc'],'(AM < 6*GeV)',
                               self.config,[self.kaons,self.protons])
-
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
