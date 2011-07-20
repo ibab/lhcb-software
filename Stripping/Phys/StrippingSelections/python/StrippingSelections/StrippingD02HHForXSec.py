@@ -22,8 +22,13 @@ from LHCbKernel.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingUtils.Utils import LineBuilder
+if hasattr(StandardParticles, "StdAllLoosePions"):
+  from StandardParticles import StdAllLoosePions as StdAllLoosePions
+else:
+  from StandardParticles import StdNoPIDsPions as StdAllLoosePions
+#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdAllLoosePions
 from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
-
+from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
 class StrippingD02HHForXSecConf(LineBuilder): # {
 
     __configuration_keys__ = (   'Daug_PT_MIN'
@@ -54,6 +59,7 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
         dstar_name  = name + 'Dstar2D0Pi_D02HH'
 
         self.inPions = StdNoPIDsPions
+        self.inDstarPions = StdAllLoosePions
         self.inKaons = StdNoPIDsKaons
 
         self.selD02HH = makeD02HH( d02HH_name
@@ -79,7 +85,7 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
 
 
         self.selDstar2D0Pi_D02HH = makeDstar2D0Pi( dstar_name
-                    , inputSel = [ self.inPions, self.selD02HH ]
+                    , inputSel = [ self.inDstarPions, self.selD02HH ]
                     , Daug_TRCHI2DOF_MAX  = config['Daug_TRCHI2DOF_MAX']
                     , Dstar_AMDiff_MAX    = config['Dstar_AMDiff_MAX']
                     , Dstar_VCHI2VDOF_MAX = config['Dstar_VCHI2VDOF_MAX']
