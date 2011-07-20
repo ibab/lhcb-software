@@ -5,6 +5,13 @@ Purpose     : LHCb stripping packages
 
 </PRE><H1><A NAME=v2r4>2011-06-21 StrippingSys v2r4 </A></H1><PRE>
 
+Stripping for 2011 processing attempt to reduce the CPU and retention (stripping16)
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v2r5
+
+</PRE><H1><A NAME=v2r4>2011-06-21 StrippingSys v2r4 </A></H1><PRE>
+
 Stripping for 2011 processing post technical stop of June (stripping15)
 
 Stripping now inherits for Lbcom to fix dependency issues in testing stripping lines.
