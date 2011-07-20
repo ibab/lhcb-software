@@ -3,4 +3,8 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/test.opts</text></set></argument>
   <argument name="reference"><text>../refs/test.ref</text></argument>
+  <argument name="validator"><text>
+from GaudiConf.QMTest.LHCbExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
 </extension>

@@ -4,6 +4,10 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2011-07-20 - Marco Cattaneo
+ - In daqutils.basictest:
+   use GaudiConf.QMTest.LHCbExclusions in validateWithReference 
+
 !========================= DAQUtils v1r4 2010-05-24 ==========================
 ! 2010-05-22 - Olivier Deschamps
   - ODINTimeFilter: fix eventNumber format (and Windows warning)
