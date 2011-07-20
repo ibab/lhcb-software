@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r5 2011-07-20 =========================
 ! 2011-07-20 - Jibo He
  - python/StrippingSettings/Stripping16
   . Start Stripping16 based on Stripping15
