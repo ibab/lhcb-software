@@ -38,10 +38,11 @@
 	  access = "PUBLIC"
 	  />
 
-      <location name="Velo2D"    place="Hlt/Vertex/PV2D"     />
-      <location name="Velo3D"    place="Hlt/Vertex/PV3D"     />
-      <location name="Primary"   place="Rec/Vertex/Primary"    />
-      <location name="V0"        place="Rec/Vertex/V0"    />
+      <location name="Velo2D"            place="Hlt/Vertex/PV2D"     />
+      <location name="Velo3D"            place="Hlt/Vertex/PV3D"     />
+      <location name="Primary"           place="Rec/Vertex/Primary"    />
+      <location name="FilteredPrimary"   place="Rec/Vertex/FilteredPrimary"    />
+      <location name="V0"                place="Rec/Vertex/V0"    />
       <enum
         desc="Describe how the vertex was made (NEED MORE)"
         name="RecVertexType"
