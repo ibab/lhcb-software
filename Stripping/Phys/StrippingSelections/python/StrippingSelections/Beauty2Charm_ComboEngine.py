@@ -119,8 +119,8 @@ class ComboEngine(object):
         _subsAlgo.MaxChi2PerDoF = -666
         mySubs = {}
         for i, validDaughter in enumerate(validDecay):
-          if validDaughter == self.referenceDecay[i]:
-            continue
+          #if validDaughter == self.referenceDecay[i]:
+          #  continue
           if not validDaughter in mySubs:
             mySubs[validDaughter] = self.referenceDecay[:]
           mySubs[validDaughter][i] = '^'+ mySubs[validDaughter][i]
