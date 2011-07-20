@@ -4,7 +4,7 @@ version           v28r4p2
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v28r4p1   Phys
+use  DaVinci                 	v28r4p2   Phys
 use  DaVinciTests               v2r6
 
 #Other packages temporarily included
@@ -13,6 +13,7 @@ use  LoKiFitters                v4r1p3   Phys
 use  PhysConf                   v1r10    Phys
 use  DaVinciKernel              v10r2p1  Phys
 use  DaVinciTools               v22r8p1  Phys
+use  LHCbAlgs                   v2r40    Kernel
 use  GaudiConf                  v14r0p1
 
 
