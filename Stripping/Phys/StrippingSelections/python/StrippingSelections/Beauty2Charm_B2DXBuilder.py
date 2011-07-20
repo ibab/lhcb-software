@@ -25,6 +25,7 @@ class B2DXBuilder(object):
         self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
+        self._makeB02DHH('D2HHH',self.d.hhh)# B0  -> D+-(HHH) (HH)-+   (+WS) 
         # B -> D(KSH) X (LL & DD)
         self._makeB02DH('D2KSH_LL',self.d.ksh_ll) # B0  -> D+-(KSLLH) H-+ (+WS)
         self._makeB02DH('D2KSH_DD',self.d.ksh_dd) # B0  -> D+-(KSDDH) H-+ (+WS)
@@ -37,7 +38,7 @@ class B2DXBuilder(object):
         # B+- -> D0(Pi0HH) H+- (resolved & merged)
         self._makeB2D0H('D2Pi0HH_Resolved',self.d.pi0hh_resolved)
         self._makeB2D0H('D2Pi0HH_Merged',self.d.pi0hh_merged)
-        # B0 -> D+-(Pi0H) H-+  (resolved & merged) (+WS)
+        # B0 -> D+-(Pi0HHH) H-+  (resolved & merged) (+WS)
         self._makeB02DH('D2Pi0HHH_Resolved',self.d.pi0hhh_resolved)
         self._makeB02DH('D2Pi0HHH_Merged',self.d.pi0hhh_merged) 
          
@@ -55,7 +56,27 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b02dh_rs['TOS'],1.0))
         self.lines.append(ProtoLine(b02dh_rs['TIS'],1.0))
         self.lines.append(ProtoLine(b02dh_ws['TOS'],0.1))
-    
+   
+    def _makeB02DHH(self,dname,d2x):
+        '''Makes RS and WS B0 -> D + h- h0 + c.c.'''
+        decays = {'B02DPiPi0': ["[B0 -> D- rho(770)+]cc"],
+                  'B02DKsPi' : ["[B0 -> D- K*(892)+]cc"],
+                  'B02DKPi0' : ["[B0 -> D- K*(892)+]cc"]}
+        inputs = {'B02DPiPi0': [d2x,self.hh.pipi0],
+                  'B02DKsPi' : [d2x,self.hh.kspi],
+                  'B02DKPi0'  : [d2x,self.hh.kpi0]}
+        b02dhh_rs = makeB2XMerged('B02DHH',decays,dname,inputs,self.config)
+        decays = {'B02DPiPi0WS': ["[B0 -> D- rho(770)-]cc"],
+                  'B02DKsPiWS' : ["[B0 -> D- K*(892)-]cc"],
+                  'B02DKPi0WS' : ["[B0 -> D- K*(892)-]cc"]}
+        inputs = {'B02DPiPi0WS': [d2x,self.hh.pipi0],
+                  'B02DKsPiWS' : [d2x,self.hh.kspi],
+                  'B02DKPi0WS' : [d2x,self.hh.kpi0]}
+        b02dhh_ws = makeB2XMerged('B02DHHWS',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b02dhh_rs['TOS'],1.0))
+        self.lines.append(ProtoLine(b02dhh_rs['TIS'],1.0))
+        self.lines.append(ProtoLine(b02dhh_ws['TOS'],0.1))
+ 
     def _makeB2D0H(self,dname,d2x):
         '''Makes RS B+ -> D0 h+ (h=pi,K) + c.c.'''
         decays = {'B2D0Pi': ["B+ -> D0 pi+","B- -> D0 pi-"],
