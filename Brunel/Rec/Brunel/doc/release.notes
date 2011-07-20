@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
     other new plots in efficiency and resolution monitors
   . Add new profile histograms in TrackVertexMonitor
   . Add histogram for overlaps in ITTrackMonitor
+  . Use latest LHCBCOND tags from SQLDDDB v6r13
+    (introduces new field map by default for 2011 data) 
 
 </PRE><H1><A NAME=v40r0>2011-06-20 Brunel v40r0</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4,
