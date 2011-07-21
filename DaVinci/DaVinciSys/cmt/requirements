@@ -11,7 +11,7 @@ use  DaVinciTests               v2r6
 use  DecayTreeTuple             v3r15    Phys
 use  PhysConf                   v1r10    Phys
 use  DSTWriters                 v3r1     Phys
-use  DaVinciTools               v22r8p2  Phys
+use  DaVinciTools               v22r9    Phys
 use  LHCbAlgs                   v2r40    Kernel
 use  GaudiConf                  v14r0p1
 
