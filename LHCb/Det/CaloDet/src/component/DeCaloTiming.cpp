@@ -1,4 +1,3 @@
-// $Id: DeCaloTiming.cpp,v 1.4 2009-04-17 13:41:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +58,7 @@ StatusCode DeCaloTiming::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   //get DeCalorimeter
   if ( "Ecal" == m_detectorName ) {
@@ -144,7 +143,8 @@ StatusCode DeCaloTiming::initialize() {
     else{
       dt = shoot();
     }
-    debug() << num << " Delta time for cellID " << id << " : " << dt << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << num << " Delta time for cellID " << id << " : " << dt << endmsg;
     (*icell).setDeltaTime ( dt ) ; // add delta time (ns)
 
     cellids.push_back( id.index()      );
@@ -169,9 +169,7 @@ StatusCode DeCaloTiming::initialize() {
 //=============================================================================
 StatusCode DeCaloTiming::execute() {
 
-  debug() << "==> Execute" << endmsg;
-
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -181,7 +179,7 @@ StatusCode DeCaloTiming::execute() {
 //=============================================================================
 StatusCode DeCaloTiming::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.116 2010-03-19 22:22:54 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2011-07-20 - Marco Cattaneo
+ - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
+   it, also using UNLIKELY macro 
 
 !========================= CaloDet v10r10 2011-02-22 =========================
 ! 2011-01-31 - Olivier Deschamps

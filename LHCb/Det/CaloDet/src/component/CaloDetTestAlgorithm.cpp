@@ -1,4 +1,3 @@
-// $Id: CaloDetTestAlgorithm.cpp,v 1.8 2009-04-17 13:41:04 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -65,9 +64,7 @@ CaloDetTestAlgorithm::~CaloDetTestAlgorithm() {}
 // ============================================================================
 StatusCode CaloDetTestAlgorithm::initialize() 
 {
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
@@ -75,7 +72,8 @@ StatusCode CaloDetTestAlgorithm::initialize()
 
 
   DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
-  debug() << "Detector element found at " << calo << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Detector element found at " << calo << endmsg;
 
 
   // channel
@@ -110,9 +108,7 @@ StatusCode CaloDetTestAlgorithm::initialize()
 // ============================================================================
 StatusCode CaloDetTestAlgorithm::finalize() 
 {
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   
   /// finalize the base class 
   return GaudiAlgorithm::finalize();

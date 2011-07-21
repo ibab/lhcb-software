@@ -1,4 +1,3 @@
-// $Id: DeCaloCalib.cpp,v 1.4 2009-04-17 13:41:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +64,7 @@ StatusCode DeCaloCalib::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   //get DeCalorimeter
   if ( "Ecal" == m_detectorName ) {
@@ -140,7 +139,7 @@ StatusCode DeCaloCalib::initialize() {
 //=============================================================================
 StatusCode DeCaloCalib::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // update at each event ?
   if(m_update)update();
@@ -153,7 +152,7 @@ StatusCode DeCaloCalib::execute() {
 //=============================================================================
 StatusCode DeCaloCalib::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
@@ -184,7 +183,8 @@ void DeCaloCalib::update() {
     else
       dt = m_shoot();
     
-    debug() << num << " Calibration constant for cellID " << id << " : " << dt << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << num << " Calibration constant for cellID " << id << " : " << dt << endmsg;
     (*icell).setCalibration ( dt ) ; //
     cellids.push_back( id.index()      );
     cellind.push_back( num             );
