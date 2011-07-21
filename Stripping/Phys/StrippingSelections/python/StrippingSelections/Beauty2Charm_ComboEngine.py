@@ -92,6 +92,7 @@ class ComboEngine(object):
     return [d.replace('+','').replace('-','') for d in myDecay]
     
   def _buildAlgorithmChain(self, name, decayCombos, massLow, massHigh, inputSelection):
+    print 'build shit!!!!'
     uniqueCombos = []
     for nominalDecay, validDecays in decayCombos.items():
       uniqueCombos.extend(validDecays)
@@ -102,6 +103,7 @@ class ComboEngine(object):
       functor = self._buildUnsignedWMFunctor({combo: [combo]}, massLow, massHigh)
       _filter = FilterDesktop("%s_WMFilter_%s" % (name, comboName),
                               Code=functor)
+      print '_filter', _filter
       wmSelections[comboName] = Selection("%s_WMSel_%s" % (name, comboName),
                                       Algorithm=_filter,
                                       RequiredSelections=[inputSelection])
@@ -131,9 +133,14 @@ class ComboEngine(object):
         print 'subs:', _subsAlgo.Substitutions
         print 'code:', _subsAlgo.Code
         sel = Selection("%sSel_%s" % (name, validDecayName), Algorithm=_subsAlgo, RequiredSelections=[wmSel])
+        sel = Selection(name+'Sel_'+validDecayName+'Filter',
+                        Algorithm=FilterDesktop('DummyName',Code='(in_range(1764.84, MM, 1964.84))'),
+                        RequiredSelections=[sel]) # hi
         algoList.append(sel)
         #mySelections[validDecayName] = sel
+      print 'algoList',algoList
       mySelections[nominalDecayName] = MergedSelection("%sMSel_%s" % (name, nominalDecayName), RequiredSelections=algoList)
+    print 'mySelections', mySelections
     return mySelections
   
   def _buildUnsignedWMFunctor(self, decayCombos, massLow, massHigh):
