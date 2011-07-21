@@ -197,7 +197,7 @@ namespace Tf
   template<class Trait>
   StatusCode STHitCreator<Trait>::updateGeometry()
   {
-    debug() << "In STHitCreator::updateGeometry()" << endreq ;
+    if(msgLevel(MSG::DEBUG)) debug() << "In STHitCreator::updateGeometry()" << endreq ;
     if(m_detectordata) {
       m_detectordata->clearEvent();
       delete m_detectordata ;

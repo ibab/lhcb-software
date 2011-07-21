@@ -308,7 +308,7 @@ namespace Tf
     } else {
       /* we want a message if we run in debugging mode, just to make
        * sure we're aware of what we're doing */
-      debug() << "Drift times are used." << endreq;
+      if(msgLevel(MSG::DEBUG)) debug() << "Drift times are used." << endreq;
     }
 
     // we may need to register to the conditions of all modules instead
@@ -333,7 +333,7 @@ namespace Tf
   {
     IDetDataSvc* detDataSvc(0) ;
     service("DetectorDataSvc",detDataSvc, true).ignore() ;
-    debug() << "In OTHitCreator::updateGeometry() " << detDataSvc->eventTime() << endreq ;
+    if(msgLevel(MSG::DEBUG)) debug() << "In OTHitCreator::updateGeometry() " << detDataSvc->eventTime() << endreq ;
     if(m_detectordata) {
       m_detectordata->clearEvent();
       delete m_detectordata ;

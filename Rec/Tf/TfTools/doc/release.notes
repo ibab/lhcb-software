@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2011-07-21 - Alexandr Kozlinskiy
+ - Added if(msgLevel(MSG::DEBUG)) test for debug message.
+
 ! 2011-07-20 - Chris Jones
  - Protect OTHitCreator::handle from dereferencing a NULL m_detectordata
    pointer.

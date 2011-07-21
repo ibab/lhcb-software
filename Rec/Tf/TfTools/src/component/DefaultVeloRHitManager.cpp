@@ -36,7 +36,7 @@ StatusCode DefaultVeloRHitManager::initialize()
   StatusCode sc = DefaultVeloHitManager<DeVeloRType,VeloRHit,4>::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-  debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -46,7 +46,7 @@ StatusCode DefaultVeloRHitManager::initialize()
 //=============================================================================
 StatusCode DefaultVeloRHitManager::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
   return DefaultVeloHitManager<DeVeloRType,VeloRHit,4>::finalize();  // must be called after all other actions
