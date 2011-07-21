@@ -25,9 +25,9 @@ config_default =  { 'LinePrescale'     :    1.   ,
                     'LinePostscale'    :    1.   ,
                     
                     'SpdMult'          :   300.  , # dimensionless, Spd Multiplicy cut 
-                    'ProtonPT'         :  1900.  , # MeV
-                    'ProtonP'          :    -2.  , # MeV
-                    'ProtonTRCHI2DOF' :      5.  ,
+                    'ProtonPT'         :  1950.  , # MeV
+                    'ProtonP'          :    10.  , # GeV
+                    'ProtonTRCHI2DOF' :      4.  ,
                     'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
                     'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
                     'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
@@ -35,7 +35,7 @@ config_default =  { 'LinePrescale'     :    1.   ,
                     'MaxMass'          :  4000.  , # MeV, after Vtx fit
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
-                    'CCPT'             :  6000.    
+                    'CCPT'             :  7000.    
                     }
 
 config_exclusive =  {
@@ -137,7 +137,7 @@ def makePP( name,
 
     from StandardParticles import StdTightProtons as ProtonsForCcbar2Ppbar
     
-    ProtonCut = "(PT > %(ProtonPT)s *MeV) & (TRCHI2DOF < %(ProtonTRCHI2DOF)s) & ((PIDp-PIDpi) > %(ProtonPIDppi)s) & ((PIDp-PIDK) > %(ProtonPIDpK)s)" % locals()
+    ProtonCut = "(PT > %(ProtonPT)s *MeV) & (P > %(ProtonP)s *GeV) & (TRCHI2DOF < %(ProtonTRCHI2DOF)s) & ((PIDp-PIDpi) > %(ProtonPIDppi)s) & ((PIDp-PIDK) > %(ProtonPIDpK)s)" % locals()
     CombCut = "(in_range( %(CombMinMass)s *MeV, AM, %(CombMaxMass)s *MeV))" % locals()
     MomCut = "(VFASPF(VCHI2)< %(VtxCHI2)s) & (in_range( %(MinMass)s *MeV, MM, %(MaxMass)s *MeV))" % locals() 
     

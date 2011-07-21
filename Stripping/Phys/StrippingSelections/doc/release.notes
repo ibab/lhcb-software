@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Jibo He
+ - Tighten Ccbar2PpbarNew further, add P cut on proton
+
 ! 2011-07-21 - V. Gligorov
  - Tighten StrippingB2XTau
 
