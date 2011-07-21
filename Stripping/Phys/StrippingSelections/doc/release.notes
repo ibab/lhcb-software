@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Nicola Mangiafave
+ - StrippingBuToKX3872:
+   . Filter and copy the vertices with NTRACKS > 6
+   . Change StdLoosePions in StdAllLoosePions
+   . Tighten and add cuts.
+
 ! 2011-07-21 - Anton Poluektov 
  - StrippingB2DX: move LambdaB mass window to higher masses (5100-6200 MeV)
 
