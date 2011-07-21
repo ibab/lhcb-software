@@ -4,6 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r6 2011-07-21 =========================
 ! 2011-07-21 - Andrew Powell
  - Fix bug in StrippingNoPIDDstarWithD02RSKPi.py monitoring and configured default prescales
  - Updated particle containers to 'All'type in StrippingV0ForPID.py and configured default prescales
@@ -39,7 +40,6 @@
    . StrippingBd2eeKstar
    . StrippingBd2JpsieeKstar
 
-!========================= StrippingSelections v3r6 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Use RECSUMMARY for GEC to avoid loading the raw event
 
