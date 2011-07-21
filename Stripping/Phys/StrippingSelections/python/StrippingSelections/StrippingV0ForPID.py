@@ -13,7 +13,7 @@
 # pre-scale.
 # 
 #
-# Acknowledgemens:
+# Acknowledgements:
 #
 # Vanya Belyaev
 # The selection cuts used in this series of lines are essentially a tightened
@@ -35,11 +35,9 @@ Usage:
 
 >>> stream = ...
 
->>> from StrippingSelections.StrippingV0ForPID import StrippingV0ForPIDConf
+>>> from StrippingSelections import StrippingV0ForPID
 
->>> conf = {}
-
->>> V0ForPID = StrippingV0ForPIDConf ( 'noPIDV0', config = conf )
+>>> V0ForPID = StrippingV0ForPID.StrippingV0ForPIDConf ('noPIDV0',StrippingV0ForPID.default_config)
 
 >>> stream.appendLines( V0ForPID.lines() )
 
@@ -103,14 +101,14 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand        
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdNoPIDsDownPions, StdNoPIDsProtons, StdNoPIDsDownProtons
+from StandardParticles import StdAllNoPIDsPions, StdNoPIDsDownPions, StdAllNoPIDsProtons, StdNoPIDsDownProtons
 
 #import logging
 #log = logging.getLogger('StrippingPromptCharm')
 
 # =============================================================================
-## Define the default configuration 
-_default_configuration_ = {
+## Define the default configuration
+default_config = {
     'TrackChi2'            :  5       ,          ## Track Chi2/ndof quality 
     'VertexChi2'           :  16      ,          ## Cut on Vertex chi2-quality
     'DeltaMassK0S'         :  50 * MeV,          ## Mass-window (half)-width for K0S 
@@ -147,14 +145,14 @@ _default_configuration_ = {
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
     ] ,
-    'KS0LL_Prescale'           : 0.008 , 
-    'KS0DD_Prescale'           : 0.009 , 
-    'LamLL_Prescale_LoP'       : 0.033 , 
-    'LamLL_Prescale_HiP'       : 0.270 , 
-    'LamDD_Prescale'           : 0.032 , 
-    'LamLLIsMUON_Prescale_LoP' : 1.000 , 
-    'LamLLIsMUON_Prescale_HiP' : 1.000 , 
-    'LamDDIsMUON_Prescale'     : 1.000  
+    'KS0LL_Prescale'           : 0.007 ,
+    'KS0DD_Prescale'           : 0.008 , 
+    'LamLL_Prescale_LoP'       : 0.027 , 
+    'LamLL_Prescale_HiP'       : 0.308 ,
+    'LamDD_Prescale'           : 0.033 , 
+    'LamLLIsMUON_Prescale_LoP' : 1.000 ,
+    'LamLLIsMUON_Prescale_HiP' : 1.000 ,
+    'LamDDIsMUON_Prescale'     : 1.000   
 
     }
 
@@ -163,14 +161,14 @@ class StrippingV0ForPIDConf(LineBuilder) :
     """
     Helper class to configure 'V0ForPID'-lines
     """
-    __configuration_keys__ = tuple ( _default_configuration_.keys() )
+    __configuration_keys__ = tuple ( default_config.keys() )
 
     ## get the default configuration 
     #@staticmethod
     def defaultConfiguration( key = None ) :
         
         from copy import deepcopy
-        _config = deepcopy ( _default_configuration_ )
+        _config = deepcopy ( default_config )
         if key : return _config[ key ]
         return _config
     
@@ -179,59 +177,44 @@ class StrippingV0ForPIDConf(LineBuilder) :
         """
         Constructor
         """        
-        from copy import deepcopy
-        _config = deepcopy ( _default_configuration_ )
-        _config.update ( config )
-
-        LineBuilder.__init__( self , name , _config )
-        
-        keys = _config.keys()
-        for key in keys :
-            
-            if not key in _default_configuration_ :
-                raise KeyError("Invalid key is specified: '%s'" % key )
-            
-            val = _config[key]
-            #if val != _default_configuration_ [ key ] : 
-            #    log.warning ('StrippingV0ForPID: new configuration: %-16s : %s ' %( key , _config[key] ) )
-
+                
         self._name            = name
 
-        self._trackChi2       = _config.pop ( 'TrackChi2'    ,    _default_configuration_ [ 'TrackChi2'      ] )
-        self._vertexChi2      = _config.pop ( 'VertexChi2'   ,    _default_configuration_ [ 'VertexChi2'     ] )
-        self._deltaMassK0S    = _config.pop ( 'DeltaMassK0S' ,    _default_configuration_ [ 'DeltaMassK0S'   ] )
-        self._deltaMassLambda = _config.pop ( 'DeltaMassLambda' , _default_configuration_ [ 'DeltaMassLambda'] )
-        self._maxZ            = _config.pop ( 'MaxZ' ,            _default_configuration_ [ 'MaxZ'           ] )
-        self._daughtersIPChi2 = _config.pop ( 'DaughtersIPChi2' , _default_configuration_ [ 'DaughtersIPChi2'] )
-        self._lTimeFitChi2    = _config.pop ( 'LTimeFitChi2' ,    _default_configuration_ [ 'LTimeFitChi2'   ] )
+        self._trackChi2       = config[ 'TrackChi2' ]
+        self._vertexChi2      = config[ 'VertexChi2' ]
+        self._deltaMassK0S    = config[ 'DeltaMassK0S' ]
+        self._deltaMassLambda = config[ 'DeltaMassLambda' ]
+        self._maxZ            = config[ 'MaxZ' ]
+        self._daughtersIPChi2 = config[ 'DaughtersIPChi2' ]
+        self._lTimeFitChi2    = config[ 'LTimeFitChi2' ]
         
-        self._wrongMassK0S       = _config.pop ( 'WrongMassK0S' ,     _default_configuration_ [ 'WrongMassK0S'      ] )
-        self._wrongMassK0S_DD    = _config.pop ( 'WrongMassK0S_DD' ,  _default_configuration_ [ 'WrongMassK0S_DD'   ] )
-        self._wrongMassLambda    = _config.pop ( 'WrongMassLambda' ,  _default_configuration_ [ 'WrongMassLambda'   ] )
-        self._wrongMassLambda_DD = _config.pop ( 'WrongMassLambda_DD',_default_configuration_ [ 'WrongMassLambda_DD'] )
+        self._wrongMassK0S       = config[ 'WrongMassK0S' ]
+        self._wrongMassK0S_DD    = config[ 'WrongMassK0S_DD' ]
+        self._wrongMassLambda    = config[ 'WrongMassLambda' ]
+        self._wrongMassLambda_DD = config[ 'WrongMassLambda_DD' ] 
         
-        self._cTauK0S        = _config.pop ( 'CTauK0S',         _default_configuration_ [ 'CTauK0S'        ] )
-        self._cTauK0S_DD     = _config.pop ( 'CTauK0S_DD' ,     _default_configuration_ [ 'CTauK0S_DD'     ] )
-        self._cTauLambda0    = _config.pop ( 'CTauLambda0' ,    _default_configuration_ [ 'CTauLambda0'    ] )
-        self._cTauLambda0_DD = _config.pop ( 'CTauLambda0_DD' , _default_configuration_ [ 'CTauLambda0_DD' ] )
+        self._cTauK0S        = config[ 'CTauK0S' ]
+        self._cTauK0S_DD     = config[ 'CTauK0S_DD' ]
+        self._cTauLambda0    = config[ 'CTauLambda0' ]
+        self._cTauLambda0_DD = config[ 'CTauLambda0_DD' ]
 
-        self._protonIsmuon   = _config.pop ( 'Proton_IsMUONCut',_default_configuration_ [ 'Proton_IsMUONCut'] )
+        self._protonIsmuon   = config[ 'Proton_IsMUONCut' ]
         
-        self._KS0LLPrescale            = _config.pop ( 'KS0LL_Prescale',           _default_configuration_ ['KS0LL_Prescale'          ] )
-        self._KS0DDPrescale            = _config.pop ( 'KS0DD_Prescale',           _default_configuration_ ['KS0DD_Prescale'          ] )
-        self._LamLLPrescale_HiP        = _config.pop ( 'LamLL_Prescale_HiP',       _default_configuration_ ['LamLL_Prescale_HiP'      ] )
-        self._LamLLPrescale_LoP        = _config.pop ( 'LamLL_Prescale_LoP',       _default_configuration_ ['LamLL_Prescale_LoP'      ] )
-        self._LamDDPrescale            = _config.pop ( 'LamDD_Prescale',           _default_configuration_ ['LamDD_Prescale'          ] )
-        self._LamLLIsMUONPrescale_HiP  = _config.pop ( 'LamLLIsMUON_Prescale_HiP', _default_configuration_ ['LamLLIsMUON_Prescale_HiP'] )
-        self._LamLLIsMUONPrescale_LoP  = _config.pop ( 'LamLLIsMUON_Prescale_LoP', _default_configuration_ ['LamLLIsMUON_Prescale_LoP'] )
-        self._LamDDIsMUONPrescale      = _config.pop ( 'LamDDIsMUON_Prescale',     _default_configuration_ ['LamDDIsMUON_Prescale'    ] )
+        self._KS0LLPrescale            = config[ 'KS0LL_Prescale' ]
+        self._KS0DDPrescale            = config[ 'KS0DD_Prescale' ] 
+        self._LamLLPrescale_HiP        = config[ 'LamLL_Prescale_HiP' ]
+        self._LamLLPrescale_LoP        = config[ 'LamLL_Prescale_LoP' ]
+        self._LamDDPrescale            = config[ 'LamDD_Prescale' ]
+        self._LamLLIsMUONPrescale_HiP  = config[ 'LamLLIsMUON_Prescale_HiP' ]
+        self._LamLLIsMUONPrescale_LoP  = config[ 'LamLLIsMUON_Prescale_LoP' ]
+        self._LamDDIsMUONPrescale      = config[ 'LamDDIsMUON_Prescale' ]
 
-        self._monitor      = _config.pop ( 'Monitor',      _default_configuration_ [ 'Monitor'     ] )
-        self._hlt          = _config.pop ( 'HLT',          _default_configuration_ [ 'HLT'         ] )
-        self._Preambulo    = _config.pop ( 'Preambulo'   , _default_configuration_ [ 'Preambulo'   ] )
+        self._monitor      = config[ 'Monitor' ]
+        self._hlt          = config[ 'HLT' ]
+        self._Preambulo    = config[ 'Preambulo' ]
         
-        if _config :
-            raise KeyError('Invalid keys are specified for configuration: %s ' % _config.keys() )
+       
+        LineBuilder.__init__( self , name , config )
         
         for line in self._lines_inner() :
             self.registerLine(line)
@@ -356,7 +339,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
         
         self.K0S_LL = Selection("SelK0S2PiPi_LL_" + self._name,
                                 Algorithm = _K0S,
-                                RequiredSelections = [ StdNoPIDsPions ]) 
+                                RequiredSelections = [ StdAllNoPIDsPions ]) 
             
         return self.K0S_LL
 
@@ -441,7 +424,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
 
         self.Lam0_LL = Selection("SelLam02PPi_LL",
                                  Algorithm = _Lam0,
-                                 RequiredSelections = [ StdNoPIDsPions, StdNoPIDsProtons ]) 
+                                 RequiredSelections = [ StdAllNoPIDsPions, StdAllNoPIDsProtons ]) 
 
         return self.Lam0_LL
 

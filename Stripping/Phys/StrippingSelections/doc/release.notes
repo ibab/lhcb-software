@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Andrew Powell
+ - Fix bug in StrippingNoPIDDstarWithD02RSKPi.py monitoring and configured default prescales
+ - Updated particle containers to 'All'type in StrippingV0ForPID.py and configured default prescales
+
 ! 2011-07-21 - Rob Lambert
  - I had a crazy bug in the line B0q2DplusMuX, CHILD(2,functor) rather than CHILD(functor,2) I have no idea what this was doing...
 

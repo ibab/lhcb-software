@@ -56,7 +56,7 @@ default_config =  {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 1.00           ## unitless
+    , 'Prescale'         : 0.40           ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False           ## Activate the monitoring?
@@ -147,7 +147,7 @@ def D0 ( name,
     _D0.MotherCut = mothercut %locals()['config']
     
     if Monitor != None :    
-        _D0.Preambulo    += [
+        _D0.Preambulo    = [
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
@@ -197,7 +197,7 @@ def Dstar ( name,
     _DSt.MotherCut =  mothercut %locals()['config']
     
     if Monitor != None :    
-        _DSt.Preambulo    += [
+        _DSt.Preambulo    = [
             ## define historam type (shortcut)
             "Histo  = Gaudi.Histo1DDef"  ,
             ## monitor LL-case
