@@ -25,7 +25,7 @@ from CommonParticles.Utils import *
 ## ============================================================================
 ## create the algorithm 
 StdLoosePhi2KK = CombineParticles("StdLoosePhi2KK")
-StdLoosePhi2KK.Inputs = ["Phys/StdLooseAllKaons/Particles"]
+StdLoosePhi2KK.Inputs = ["Phys/StdAllLooseKaons/Particles"]
 StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-" 
 StdLoosePhi2KK.CombinationCut = "(AM < 1100.*MeV)"
 StdLoosePhi2KK.MotherCut = "(VFASPF(VCHI2) < 25.0)"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #$Id: test_load_modules.py,v 1.1 2010-04-22 14:44:53 jpalac Exp $
 '''
-Test loading various CommonParticles in the Analysis environment. Needs to be extended.
+Test loading various CommonParticles in the Stripping environment. Needs to be extended.
 '''
 __author__ = 'Juan Palacios juan.palacios@nikhef.nl'
 

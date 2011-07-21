@@ -28,6 +28,9 @@ _locations.update ( locations )
 from CommonParticles.StdLooseMuons import *
 _locations.update ( locations )
 
+from CommonParticles.StdAllVeryLooseMuons import *
+_locations.update ( locations )
+
 from CommonParticles.StdVeryLooseMuons import *
 _locations.update ( locations )
 
