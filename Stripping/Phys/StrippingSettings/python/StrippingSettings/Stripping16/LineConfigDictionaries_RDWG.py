@@ -482,7 +482,7 @@ B2XTau = {
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Semileptonic' ],
     'CONFIG' :    {
-    'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
+       'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
     'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
     'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
     'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
@@ -500,6 +500,7 @@ B2XTau = {
     'MASS_HIGH_B'                   : '6000', # MeV
     'MCOR_LOW_B'                    : '4000', # MeV
     'MCOR_HIGH_B'                   : '7000', # MeV
+    'MIPCHI2_B'                     : '150',  # dimensionless 
     #
     'PT_TAU'                        : '1500', # MeV
     'VCHI2_TAU'                     : '20',   # dimensionless
@@ -532,5 +533,5 @@ B2XTau = {
     'B2TauMu_TISLinePrescale'           : 1,
     'B2TauMu_TISLinePostscale'          : 1,
     'B2DMu_TISLinePrescale'             : 1,
-    'B2DMu_TISLinePostscale'            : 1}
+    'B2DMu_TISLinePostscale'            : 1 }
     }

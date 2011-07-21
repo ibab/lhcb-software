@@ -858,7 +858,7 @@ Bc2JpsiHDetached = {
 BuToKX3872 = {
     'BUILDERTYPE'	: 'StrippingBu2KX3872Conf',
     'CONFIG' : {
-        'Prescale_BuToKX3872'    : 1.0,
+     'Prescale_BuToKX3872'    : 1.0,
     'Postscale_BuToKX3872'   : 1.0,
 
     'Prescale_BuToKX3872Loose'    : 1.0,
@@ -875,15 +875,15 @@ BuToKX3872 = {
     'Bu_Comb_MassWindowLoose'    : 500.0,
     'Bu_MassWindow'              : 400.0,
     'Bu_MassWindowLoose'         : 400.0,
-    'Bu_VertexCHI2'              :   5.0,
-    'Bu_VertexCHI2Loose'         :   7.0,
+    'Bu_VertexCHI2'              :   4.0,
+    'Bu_VertexCHI2Loose'         :   5.0,
     'Bu_IPCHI2'                  :  15.0,
     'Bu_IPCHI2Loose'             :  20.0,
-    'Bu_FlightCHI2'              :  30.0,
-    'Bu_FlightCHI2Loose'         :  20.0,
+    'Bu_FlightCHI2'              :  40.0,
+    'Bu_FlightCHI2Loose'         :  30.0,
     'Bu_DIRA'                    :   0.9995,
     'Bu_DIRALoose'               :   0.9995,
-   
+
     # X3872 / Psi(2S) cuts
     'X3872_Comb_MassWindow'      : 180.0,
     'X3872_Comb_MassWindowLoose' : 220.0,
@@ -896,12 +896,14 @@ BuToKX3872 = {
     'Track_CHI2nDOF'       : 4.0,
 
     # Kaon cuts
-    'Kaon_MinIPCHI2'       : 4.5,
-    'Kaon_MinIPCHI2Loose'  : 4.0,
+    'Kaon_MinIPCHI2'       : 6.0,
+    'Kaon_MinIPCHI2Loose'  : 5.0,
+    'Kaon_PT'              : 200.0,
+    'Kaon_PTLoose'         : 150.0,
 
     # Pion cuts
-    'Pion_MinIPCHI2'       : 4.5,
-    'Pion_MinIPCHI2Loose'  : 4.0,
+    'Pion_MinIPCHI2'       : 6.0,
+    'Pion_MinIPCHI2Loose'  : 5.0,
 
     # JPsi cuts
     'JPsi_MassWindow'       :  70.0,
@@ -910,11 +912,11 @@ BuToKX3872 = {
     'JPsi_VertexCHI2Loose'  :  10.0,
 
     # Muon cuts
-    'Muon_MinIPCHI2'        :   1.5,
-    'Muon_MinIPCHI2Loose'   :   1.5,
+    'Muon_MinIPCHI2'        :   3.0,
+    'Muon_MinIPCHI2Loose'   :   2.0,
     'Muon_PT'               : 500.0,
     'Muon_IsMuon'           : True
-        },
+     },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]
     }

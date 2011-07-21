@@ -68,13 +68,48 @@ D02MuMu = {
 ## Test:  Yes
 PromptCharm = {
     'BUILDERTYPE' : 'StrippingPromptCharmConf', 
-    'CONFIG'      : { 'DiCharmPrescale'        : 1.0 ,
-                      'DiMuonAndCharmPrescale' : 1.0 ,
-                      'DiMuonAndGammaPrescale' : 1.0 ,
-                      'DoubleDiMuonPrescale'   : 1.0 ,
-                      ##  allow to move up to 4 GeV or even 5 GeV
-                      'PhotonCuts'  : " PT > 3 * GeV "
-                      },
+    'CONFIG'      : {
+    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) '          , 
+    'BasicCuts'       : ' & ( 9 < MIPCHI2DV()   ) '                         , 
+    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                         , 
+    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                         , 
+    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '   , 
+    'SlowPionCuts'    : ' TRCHI2DOF < 5   '                                 ,
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
+    #
+    # Global Event cuts 
+    #
+    'PrimaryVertices' : True , 
+    #
+    # Technicalities:
+    #
+    'Preambulo'       : [
+    # the D0 decay channels
+    "pipi   = DECTREE ('[D0]cc -> pi- pi+   ') " ,
+    "kk     = DECTREE ('[D0]cc -> K-  K+    ') " ,
+    "kpi    = DECTREE ('[D0    -> K-  pi+]CC') " ,
+    # number of kaons in final state (as CombinationCuts)
+    "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
+    # shortcut for chi2 of vertex fit 
+    'chi2vx = VFASPF(VCHI2) '                    , 
+    # shortcut for the c*tau
+    "from GaudiKernel.PhysicalConstants import c_light" , 
+    "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    # dimons:
+    "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
+    "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
+    ] ,
+    ## monitoring ?
+    'Monitor'     : False ,
+    ## pescales 
+    'D0Prescale'             : 1.0 ,
+    'DstarPrescale'          : 1.0 ,
+    'DsPrescale'             : 1.0 ,
+    'DplusPrescale'          : 1.0 ,
+    'LamCPrescale'           : 1.0 ,
+    'DiCharmPrescale'        : 1.0 , 
+    'DiMuonAndCharmPrescale' : 1.0
+    },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
     }
@@ -395,46 +430,47 @@ D2XMuMuMicro = {
 DstarD02xx = {
     'BUILDERTYPE' : 'StrippingDstarD02xxConf',
     'CONFIG':  {
-                 'PrescalepipiBox'               :    1.
-                 , 'PrescalemumuBox'             :    1.
-                 , 'PrescaleKpiBox'              :    1.
-                 , 'PrescaleemuBox'              :    0.
-                 , 'PrescaleeKBox'               :    1.
-                 , 'PrescaleepiBox'              :    1.
-                 , 'PrescalepimuBox'             :    1.
-                 , 'PrescaleKmuBox'              :    1.
-                 , 'Prescalepipi_untagged_Box'   :    0.2
-                 , 'Prescalemumu_untagged_Box'   :    1.
-                 , 'PrescaleKpi_untagged_Box'    :    0.2
-                 , 'Prescalepimu_untagged_Box'   :    1.
-                 , 'PrescaleKmu_untagged_Box'    :    0.2
-                 , 'PrescaleKpi_untagged_BoxMB'  :    1.
-                 , 'Prescalepipi_untagged_BoxMB' :    1.
-                 , 'DMassWin'                    :   70.        # MeV
-                 , 'DMassWinMuMuLow'             : -150.        # MeV
-                 , 'DMassWinMuMuHigh'            :  300         # MeV
-                 , 'DMassWinEMu'                 :  300         # MeV
-                 , 'doca'                        :    0.1       # mm
-                 , 'XminPT'                      :  750.        # MeV
-                 , 'XmaxPT'                      : 1100.        # MeV
-                 , 'XminP'                       : 4000.        # MeV
-                 , 'XTrackChi2'                  :    5.        # adimensional
-                 , 'XTrackChi2Pi'                :    7.        # adimensional
-                 , 'XminIPChi2'                  :    3         # adimensional
-                 , 'XmaxIPChi2'                  :    8         # adimensional
-                 , 'DMinFlightChi2'              :   20.
-                 , 'DDira'                       :    0.9997    # adimensional
-                 , 'D0MinPT'                     : 1800.        # MeV
-                 , 'DMaxIPChi2'                  :   15.
-                 , 'DVChi2'                      :   10.
-                 , 'PiMinPT'                     :  110.        # MeV
-                 , 'PiMaxIPCHI2'                 :   10.        # adimensional
-                 , 'DstMassWin'                  :  110.        # MeV
-                 , 'DstD0DMWin'                  :   10.        # MeV
-                 , 'DstD0DMWinMuMu'              :   30.        # MeV
-                 , 'RequireHlt'                  :    1         #
-                 , 'prefix'                      : ''
-                 },
+                   'PrescalepipiBox'     : 0.5
+                 , 'PrescalemumuBox'     : 1.
+                 , 'PrescaleKpiBox'    : 0.3
+                 , 'PrescaleemuBox'    : 1.
+                 , 'PrescaleeKBox'    : 1.
+                 , 'PrescaleepiBox'    : 1.
+                 , 'PrescalepimuBox'    : 1.
+                 , 'PrescaleKmuBox'    : 1.
+                 , 'Prescalepipi_untagged_Box'     : 0.2
+                 , 'Prescalemumu_untagged_Box'     : 1.
+                 , 'PrescaleKpi_untagged_Box'    : 0.2
+                 , 'Prescalepimu_untagged_Box'    : 1.
+                 , 'PrescaleKmu_untagged_Box'    : 0.2
+                 , 'PrescaleKpi_untagged_BoxMB' : 1
+                 , 'Prescalepipi_untagged_BoxMB':1
+                 , 'PrescaleKpi_untagged_BoxMBTrEff' : 1
+                 ,'DMassWin'           : 70.       # MeV
+                 ,'DMassWinMuMuLow'    : -150.       #MeV
+                 ,'DMassWinMuMuHigh'   : 300       #MeV
+                 ,'DMassWinEMu'        : 300
+                 ,'doca'               : 0.1        # mm
+                 ,'XminPT'             : 750.       # MeV
+                 ,'XmaxPT'             : 1100.      # MeV
+                 ,'XminP'              : 4000.      # MeV
+                 ,'XTrackChi2'         : 5.        # adimensional
+                 ,'XTrackChi2Pi'         : 7.        # adimensional
+                 ,'XminIPChi2'         : 3        # adimensional
+                 ,'XmaxIPChi2'         : 8        # adimensional
+                 ,'DMinFlightChi2'    :  20.
+                 ,'DDira'              : 0.9997     # adimensional
+                 ,'D0MinPT'            : 1800.      # MeV
+                 ,'DMaxIPChi2'        :15.
+                 ,'DVChi2'            :10. 
+                 ,'PiMinPT'            : 110.       # MeV
+                 ,'PiMaxIPCHI2'        : 10.         # adimensional
+                 ,'DstMassWin'         : 300.       # MeV
+                 ,'DstD0DMWin'         : 10.        # MeV
+                 ,'DstD0DMWinMuMu'      : 30.        # MeV  
+                 ,'RequireHlt'         : 1          # 
+                 ,'prefix'         : '' 
+                   },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ]
     }

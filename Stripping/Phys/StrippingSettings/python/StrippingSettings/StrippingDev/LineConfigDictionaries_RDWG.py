@@ -151,22 +151,43 @@ HyperCP = {
     'ProtonCuts' : ' ( TRCHI2DOF < 5 ) & ( 0 < PIDp  - PIDpi ) & ( BPVIPCHI2() > 12 ) ' , 
     'MuonCuts'   : ' ( TRCHI2DOF < 5 ) & ISMUON                & ( BPVIPCHI2() > 12 ) ' ,                
     'PionCuts'   : ' ( TRCHI2DOF < 5 )                         & ( BPVIPCHI2() > 12 ) ' ,
+    'MuonCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 5 ) & ISMUON                & ( BPVIPCHI2() > 9 ) ' ,                
+    'PionCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 5 )                         & ( BPVIPCHI2() > 9 ) ' ,
+    #
     'SigmaCTau'  :   5 *         mm ,
     'SigmaMass'  : 250 *        MeV ,
-    'DsCTau'     : 100 * micrometer ,
-    'DsMass'     : 250 *        MeV ,
+    #
+    'DsCTau'     : 200 * micrometer ,
+    'Ds23PiMass'     : 80 *        MeV ,
+    'Ds2PhiPiMass'     : 250 *        MeV,
+    #
     'DplusCTau'  : 200 * micrometer ,
     'DplusMass'  : 250 *        MeV ,
+    #
+    # ``Global Event Cuts''
+    #
     'PrimaryVertices' : True ,
+    #
+    # Technicalities:
+    #
     'Preambulo'       : [
+    # shortcut for chi2 of vertex fit 
     'chi2vx = VFASPF(VCHI2) '                    , 
+    # shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light" , 
+    ## use the embedded cut for chi2(LifetimeFit)<9
     "ctau   = BPVLTIME ( 9 ) * c_light "  ,
+    "ctau_forDs   = BPVLTIME ( 225 ) * c_light "  ,
+    ## phi(1020) mass-window 
     "phi    = in_range ( 920 * MeV , AM23 , 1120 * MeV )"
-    ] ,
+    ] , 
+    #
+    # Prescales
+    #
     'SigmaPrescale' : 1.0 ,
     'DplusPrescale' : 1.0 ,
     'DsPrescale'    : 1.0 ,
+    'Ds3PiPrescale' : 0.2
     },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
@@ -461,7 +482,7 @@ B2XTau = {
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Semileptonic' ],
     'CONFIG' :    {
-    'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
+       'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
     'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
     'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
     'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
@@ -479,6 +500,7 @@ B2XTau = {
     'MASS_HIGH_B'                   : '6000', # MeV
     'MCOR_LOW_B'                    : '4000', # MeV
     'MCOR_HIGH_B'                   : '7000', # MeV
+    'MIPCHI2_B'                     : '150',  # dimensionless 
     #
     'PT_TAU'                        : '1500', # MeV
     'VCHI2_TAU'                     : '20',   # dimensionless
@@ -511,5 +533,5 @@ B2XTau = {
     'B2TauMu_TISLinePrescale'           : 1,
     'B2TauMu_TISLinePostscale'          : 1,
     'B2DMu_TISLinePrescale'             : 1,
-    'B2DMu_TISLinePostscale'            : 1}
+    'B2DMu_TISLinePostscale'            : 1 }
     }

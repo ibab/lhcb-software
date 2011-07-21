@@ -35,7 +35,7 @@ NeuroBayesMuMu = {
 
 MicroDSTNeuroBayesMuMu = {
     'BUILDERTYPE' : 'StrippingNeuroBayesMuMuConf',
-    'CONFIG' : {'trackChi2'           :    5.0
+    'CONFIG' : {'trackChi2'         :    5.0
               , 'MuMuMassMin'       :    0.0
               , 'MuMuMassMax'       :   12.0
               , 'MuMuMassHighMin'   :    8.5
@@ -63,6 +63,30 @@ MicroDSTNeuroBayesMuMu = {
     'WGs'    : [ 'PSWG' ]
     }
 
+## ChiCJPsiGammaConversion = {
+##     'BUILDERTYPE' : 'StrippingChiCJPsiGammaConversionConf',
+##     'CONFIG' : {
+##           'trackChi2'             :    5.0
+##         , 'JPsiMassMin'           :    3.04
+##         , 'JPsiMassMax'           :    3.14
+##         , 'JPsiVertexChi2'        :   25.0
+##         , 'NBCutJPsi'             :    0.7
+##         , 'ExpertiseJPsi'         : 'Muon/mumu_net_noip.nb'
+##         , 'NBVersionJPsi'         : "TuneSep2010"
+##         , 'GammaEEMass'           :   7.0
+##         , 'GammaEEChi2'           :   2.0
+##         , 'GammaEETau'            :   0.02
+##         , 'eDLLe'                 :  -5.0
+##         , 'mMinChiCRaw'           :   2.9
+##         , 'mMaxChiCRaw'           :   4.1
+##         , 'mMinChiCFit'           :   3.0
+##         , 'mMaxChiCFit'           :   4.0
+##         , 'PrescaleChiC'          :   1.0
+##         , 'PostscaleChiC'         :   1.0
+##           },
+##     'STREAMS' : [ 'DiMuon' ],
+##     'WGs'    : [ 'PSWG' ]   
+##     }
 
 
 B2twobody = {
@@ -438,7 +462,7 @@ JpsiMuMuforD0MuMu = {
 FullDSTDiMuon = {
     'BUILDERTYPE'	:	'DiMuonConf',
     'CONFIG'	: {
-            'MicroDST'                                 :  False   ,
+        'MicroDST'                                 :  False   ,
                 
         # DiMuon line
         'DiMuon_Prescale'                          :     1.   ,
@@ -492,19 +516,19 @@ FullDSTDiMuon = {
         'DiMuonHighMass_checkPV'                   : False    ,
         
         'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
-        'DiMuonHighMass_MuonP'                     : -8000.   , 
+        'DiMuonHighMass_MuonP'                     :  8000.   , # MeV 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
         'DiMuonHighMass_MinMass'                   :  8500.   , # MeV
         'DiMuonHighMass_VCHI2PDOF'                 :    20.   ,
         'DiMuonHighMass_PT'                        : -1000.   , # MeV, no cut now 
 
         # DiMuon High Mass Same Sign line
-        'DiMuonHighMassSameSign_Prescale'          :     0.5  ,
+        'DiMuonHighMassSameSign_Prescale'          :     0.2  ,
         'DiMuonHighMassSameSign_Postscale'         :     1.   ,
         'DiMuonHighMassSameSign_checkPV'           : False    ,
 
         # DiMuon Low Mass line
-        'DiMuonLowMass_Prescale'                   :     1.   ,
+        'DiMuonLowMass_Prescale'                   :     0.   ,
         'DiMuonLowMass_Postscale'                  :     1.   ,
         'DiMuonLowMass_checkPV'                    : False    , 
         
@@ -521,7 +545,7 @@ FullDSTDiMuon = {
         'Jpsi2MuMu_checkPV'                        : False    ,
         
         'Jpsi2MuMu_MuonPT'                         :   650.   ,  # MeV
-        'Jpsi2MuMu_MuonP'                          :  8000.   ,  # MeV
+        'Jpsi2MuMu_MuonP'                          : 10000.   ,  # MeV
         'Jpsi2MuMu_MuonPIDmu'                      :     0.   , 
         'Jpsi2MuMu_MuonTRCHI2DOF'                  :     5.   , 
         'Jpsi2MuMu_MinMass'                        :  3010.   ,  # MeV
@@ -536,10 +560,10 @@ FullDSTDiMuon = {
 
         'Psi2MuMu_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
         'Psi2MuMu_MuonPT'                          :  1000.   ,  # MeV
-        'Psi2MuMu_MuonP'                           :  8000.   ,  # MeV
+        'Psi2MuMu_MuonP'                           : 10000.   ,  # MeV
         'Psi2MuMu_MuonPIDmu'                       :     0.   , 
         'Psi2MuMu_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMu_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMu_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMu_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMu_PT'                              :  3000.   ,   # MeV
         
@@ -576,10 +600,10 @@ FullDSTDiMuon = {
 
         'Psi2MuMuDetached_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
         'Psi2MuMuDetached_MuonPT'                          :   500.   ,  # MeV
-        'Psi2MuMuDetached_MuonP'                           : -8000.   ,  # MeV, no cut now
+        'Psi2MuMuDetached_MuonP'                           :  8000.   ,  # MeV, no cut now
         'Psi2MuMuDetached_MuonPIDmu'                       :    -5.   , 
         'Psi2MuMuDetached_MuonTRCHI2DOF'                   :     5.   , 
-        'Psi2MuMuDetached_MassWindow'                      :   120.   ,  # MeV
+        'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
         'Psi2MuMuDetached_DLS'                             :     5.   
@@ -834,7 +858,7 @@ Bc2JpsiHDetached = {
 BuToKX3872 = {
     'BUILDERTYPE'	: 'StrippingBu2KX3872Conf',
     'CONFIG' : {
-        'Prescale_BuToKX3872'    : 1.0,
+     'Prescale_BuToKX3872'    : 1.0,
     'Postscale_BuToKX3872'   : 1.0,
 
     'Prescale_BuToKX3872Loose'    : 1.0,
@@ -851,15 +875,15 @@ BuToKX3872 = {
     'Bu_Comb_MassWindowLoose'    : 500.0,
     'Bu_MassWindow'              : 400.0,
     'Bu_MassWindowLoose'         : 400.0,
-    'Bu_VertexCHI2'              :   5.0,
-    'Bu_VertexCHI2Loose'         :   7.0,
+    'Bu_VertexCHI2'              :   4.0,
+    'Bu_VertexCHI2Loose'         :   5.0,
     'Bu_IPCHI2'                  :  15.0,
     'Bu_IPCHI2Loose'             :  20.0,
-    'Bu_FlightCHI2'              :  30.0,
-    'Bu_FlightCHI2Loose'         :  20.0,
+    'Bu_FlightCHI2'              :  40.0,
+    'Bu_FlightCHI2Loose'         :  30.0,
     'Bu_DIRA'                    :   0.9995,
     'Bu_DIRALoose'               :   0.9995,
-   
+
     # X3872 / Psi(2S) cuts
     'X3872_Comb_MassWindow'      : 180.0,
     'X3872_Comb_MassWindowLoose' : 220.0,
@@ -872,12 +896,14 @@ BuToKX3872 = {
     'Track_CHI2nDOF'       : 4.0,
 
     # Kaon cuts
-    'Kaon_MinIPCHI2'       : 4.5,
-    'Kaon_MinIPCHI2Loose'  : 4.0,
+    'Kaon_MinIPCHI2'       : 6.0,
+    'Kaon_MinIPCHI2Loose'  : 5.0,
+    'Kaon_PT'              : 200.0,
+    'Kaon_PTLoose'         : 150.0,
 
     # Pion cuts
-    'Pion_MinIPCHI2'       : 4.5,
-    'Pion_MinIPCHI2Loose'  : 4.0,
+    'Pion_MinIPCHI2'       : 6.0,
+    'Pion_MinIPCHI2Loose'  : 5.0,
 
     # JPsi cuts
     'JPsi_MassWindow'       :  70.0,
@@ -886,11 +912,11 @@ BuToKX3872 = {
     'JPsi_VertexCHI2Loose'  :  10.0,
 
     # Muon cuts
-    'Muon_MinIPCHI2'        :   1.5,
-    'Muon_MinIPCHI2Loose'   :   1.5,
+    'Muon_MinIPCHI2'        :   3.0,
+    'Muon_MinIPCHI2Loose'   :   2.0,
     'Muon_PT'               : 500.0,
     'Muon_IsMuon'           : True
-        },
+     },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]
     }
@@ -1052,9 +1078,9 @@ Ccbar2Ppbar = {
                     'LinePostscale'    :    1.   ,
                     
                     'SpdMult'          :   300.  , # dimensionless, Spd Multiplicy cut 
-                    'ProtonPT'         :  1900.  , # MeV
-                    'ProtonP'          :    -2.  , # MeV
-                    'ProtonTRCHI2DOF' :      5.  ,
+                    'ProtonPT'         :  1950.  , # MeV
+                    'ProtonP'          :    10.  , # GeV
+                    'ProtonTRCHI2DOF' :      4.  ,
                     'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
                     'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
                     'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
@@ -1062,7 +1088,7 @@ Ccbar2Ppbar = {
                     'MaxMass'          :  4000.  , # MeV, after Vtx fit
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
-                    'CCPT'             :  6000.    
+                    'CCPT'             :  7000.    
                    },
     'STREAMS' : [ 'CharmCompleteEvent' ] ,
     'WGs'    : [ 'PSWG' ]
@@ -1103,18 +1129,46 @@ Ccbar2Baryons = {
     'WGs'    : ['PSWG']
     }
 
-CharmAssociative = {
-    'BUILDERTYPE'  :'StrippingCharmAssociativeConf',
-    'CONFIG'  : { 'DiCharmPrescale'        : 1.0 ,
-                  'DiMuonAndCharmPrescale' : 1.0 ,
-                  'DiMuonAndGammaPrescale' : 1.0 ,
-                  'DoubleDiMuonPrescale'   : 1.0 ,
-                  ##  allow to move up to 4 GeV or even 5 GeV
-                  'PhotonCuts'  : " PT > 3 * GeV "
-                  },
-    'STREAMS' : [ 'Dimuon' ] ,
-    'WGs'     : [ 'PSWG'    ]
-    }
+## CharmAssociative = {
+##     'BUILDERTYPE'  :'StrippingCharmAssociativeConf',
+##     'CONFIG'  : {
+##     'PhotonCuts'      : ' PT > 4.0 * GeV  '                                 , 
+##     'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' , 
+##     #
+##     ## Global Event cuts 
+##     #
+##     'PrimaryVertices' : True , 
+##     #
+##     ## Technicalities:
+##     #
+##     'Preambulo'       : [
+##     #
+##     ## shortcut for chi2 of vertex fit 
+##     'chi2vx = VFASPF(VCHI2) '                    ,
+##     #
+##     ## shortcut for the c*tau
+##     "from GaudiKernel.PhysicalConstants import c_light" , 
+##     "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+##     #
+##     ## dimuons:
+##     "psi             = ADAMASS ( 'J/psi(1S)' ) < 150 * MeV"         ,
+##     "psi_prime       = ADAMASS (   'psi(2S)' ) < 150 * MeV"         ,
+##     "psi_tight       =  ADMASS ( 'J/psi(1S)' ) < 100 * MeV "        ,
+##     "psi_prime_tight =  ADMASS (   'psi(2S)' ) < 100 * MeV "        ,
+##     "dimuon_heavy    = M > 4.8 * GeV "                              ,
+##     "dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy " ,
+##     ] ,
+##     #
+##     ## monitoring ?
+##     'Monitor'     : False ,
+##     #
+##     ## pescales 
+##     'DiMuonAndGammaPrescale' : 1.0 ,
+##     'DoubleDiMuonPrescale'   : 1.0
+##     },
+##     'STREAMS' : [ 'Leptonic' ] ,
+##     'WGs'     : [ 'PSWG'    ]
+##     }
 
 HeavyBaryon = {
     'BUILDERTYPE'  : 'HeavyBaryonsConf',

@@ -37,38 +37,38 @@ D02KPiPi0 = {
    'WGs' : ['ALL']
 }
 
-NoPIDDstarWithD02RSKPi = {
-    'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
-    'CONFIG' : {
-    'DaugPt'           : 250 * MeV      ## GeV
-    , 'DaugP'            : 2.0 * GeV      ## GeV
-    , 'DaugIPChi2'       : 16             ## unitless
-    , 'DaugTrkChi2'      : 5              ## unitless
-    , 'D0MassWin'        : 75 * MeV       ## MeV
-    , 'D0Pt'             : 1.5 * GeV      ## GeV
-    , 'D0VtxChi2Ndof'    : 13             ## unitless
-    , 'D0FDChi2'         : 49             ## unitless
-    , 'D0BPVDira'        : 0.9999         ## unitless
-    , 'D0IPChi2'         : 30             ## unit
-    , 'SlowPiPt'         : 150 * MeV      ## MeV
-    , 'SlowPiTrkChi2'    : 5              ## unitless
-    , 'DstarPt'          : 2.2 * GeV      ## GeV
-    , 'DstarVtxChi2Ndof' : 13             ## unitless
-    , 'DeltaM_Min'       : 130 * MeV      ## MeV
-    , 'DeltaM_Max'       : 155 * MeV      ## MeV
-    ##
-    , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
-    , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
-    , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
-    ##
-    , 'Prescale'         : 1.00           ## unitless
-    , 'Postscale'        : 1.00           ## unitless
-    ##
-    , 'Monitor'          : False           ## Activate the monitoring?
-    },
-    'STREAMS' : [ 'Calibration' ],
-    'WGs'    : ['ALL']
-    }
+## NoPIDDstarWithD02RSKPi = {
+##     'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
+##     'CONFIG' : {
+##     'DaugPt'           : 250 * MeV      ## GeV
+##     , 'DaugP'            : 2.0 * GeV      ## GeV
+##     , 'DaugIPChi2'       : 16             ## unitless
+##     , 'DaugTrkChi2'      : 5              ## unitless
+##     , 'D0MassWin'        : 75 * MeV       ## MeV
+##     , 'D0Pt'             : 1.5 * GeV      ## GeV
+##     , 'D0VtxChi2Ndof'    : 13             ## unitless
+##     , 'D0FDChi2'         : 49             ## unitless
+##     , 'D0BPVDira'        : 0.9999         ## unitless
+##     , 'D0IPChi2'         : 30             ## unit
+##     , 'SlowPiPt'         : 150 * MeV      ## MeV
+##     , 'SlowPiTrkChi2'    : 5              ## unitless
+##     , 'DstarPt'          : 2.2 * GeV      ## GeV
+##     , 'DstarVtxChi2Ndof' : 13             ## unitless
+##     , 'DeltaM_Min'       : 130 * MeV      ## MeV
+##     , 'DeltaM_Max'       : 155 * MeV      ## MeV
+##     ##
+##     , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
+##     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
+##     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
+##     ##
+##     , 'Prescale'         : 1.00           ## unitless
+##     , 'Postscale'        : 1.00           ## unitless
+##     ##
+##     , 'Monitor'          : False           ## Activate the monitoring?
+##     },
+##     'STREAMS' : [ 'Calibration' ],
+##     'WGs'    : ['ALL']
+##     }
 
 # NoPID Inclusive Phi Lines
 # A. Powell & S. Schleich
@@ -245,39 +245,44 @@ TrackEffMuonTT = {
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
-    'CONFIG' : {'JpsiMassWin'                 : 500,
-                'UpsilonMassWin'              : 1500,
-                'ZMassWin'                    : 40000,
-                'BMassWin'                    : 500,
-                'JpsiMuonTTPT'                : 0,
-                'UpsilonMuonTTPT'             : 500,
-                'ZMuonTTPT'                   : 500,
-                'JpsiLongPT'                  : 1000,
-                'UpsilonLongPT'               : 1000,
-                'ZLongPT'                     : 10000,
-                'JpsiPT'                      : 1000,
-                'UpsilonPT'                   : 0,
-                'ZPT'                         : 0,
-                'JpsiLongMuonMinIP'           : 0.1,
-                'UpsilonLongMuonMinIP'        : 0,
-                'ZLongMuonMinIP'              : 0,
-                'JpsiLongMuonTrackCHI2'       : 5,
-                'UpsilonLongMuonTrackCHI2'    : 5,
-                'ZLongMuonTrackCHI2'          : 5,
-                'VertexChi2'                  : 5,
-                'LongMuonPID'                 : 0,
-                'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
-                'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
-                'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
-                'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0},
-                'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
-                'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
-                'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
-                'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0},
-                'JpsiPrescale'                : 1,
-                'UpsilonPrescale'             : 1,
-                'ZPrescale'                   : 1,
-                'BJpsiKPrescale'              : 1,
-                'Postscale'                   : 1
-                }
+    'CONFIG' : {
+    'JpsiMassWin'                 : 500,
+    'UpsilonMassWin'              : 1500,
+    'ZMassWin'                    : 40000,
+    'BMassWin'                    : 500,
+    'JpsiMuonTTPT'                : 0,
+    'UpsilonMuonTTPT'             : 500,
+    'ZMuonTTPT'                   : 500,
+    'JpsiLongPT'                  : 1300,
+    'UpsilonLongPT'               : 1000,
+    'ZLongPT'                     : 10000,
+    'JpsiPT'                      : 1000,
+    'UpsilonPT'                   : 0,
+    'ZPT'                         : 0,
+    'JpsiLongMuonMinIP'           : 0.5,
+    'UpsilonLongMuonMinIP'        : 0,
+    'ZLongMuonMinIP'              : 0,
+    'JpsiMINIP'                   : 3,
+    'UpsilonMINIP'                : 10000, #this is a dummy
+    'ZMINIP'                      : 10000, #this is a dummy
+    'BJpsiKMINIP'                 : 10000, #this is a dummy
+    'JpsiLongMuonTrackCHI2'       : 5,
+    'UpsilonLongMuonTrackCHI2'    : 5,
+    'ZLongMuonTrackCHI2'          : 5,
+    'VertexChi2'                  : 5,
+    'LongMuonPID'                 : 2,
+    'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
+    'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+    'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+    'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0},
+    'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
+    'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
+    'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
+    'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0},
+    'JpsiPrescale'                : 1,
+    'UpsilonPrescale'             : 1,
+    'ZPrescale'                   : 1,
+    'BJpsiKPrescale'              : 1,
+    'Postscale'                   : 1
+    }
     }

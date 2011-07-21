@@ -67,7 +67,7 @@ Bd2DstarMuNu = {
 B0q2DplusMuX = {
     'BUILDERTYPE' : 'B0q2DplusMuXAllLinesConf',
     'CONFIG' : {
-    'Presel' : { 'Prescale'    : 0.02 ,
+        'Presel' : { 'Prescale'    : 0.02 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 500, #MeV
@@ -78,15 +78,16 @@ B0q2DplusMuX = {
                  'KPT'         : 300, #MeV
                  'KIP'         : 0.03, #mm
                  'KPidPi'      : -5,
+                 'KPidPi2'   : -5,
                  'KPidMu'      : -40,
                  'KPidP'       : -40,
-                 'KTrChi2'     : 16,
+                 'KTrChi2'     : 10, #set in the common particles
                  'KIPChi2'     : 4,
                  #pion parameters
                  'PiPidK'      : -40,
                  'PiIP'        : 0.01, #mm
                  'PiPidMu'     : -5,
-                 'PiTrChi2'    : 16,
+                 'PiTrChi2'    : 10, #set in the common particles
                  'PiIPChi2'    : 4,
                  #D-resonance parameters
                  'DPT'         : 1000, #MeV
@@ -97,24 +98,25 @@ B0q2DplusMuX = {
                  'B_VPCHI2'    : 0.000250,
                  'B_BPVDIRA'   : 0.997
                  },
-    
-    'Tuned'   : { 'Prescale'    : 1.0 ,
+
+           'Tuned'   : { 'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 500, #MeV
-                 'MuPidPi'     : -1.,
+                 'MuPidPi'     : 1., #reduce pion feedthrough to 1%
                  'MuPidK'      : -5,
                  'MuTrChi2'    : 5,
                  #kaon parameters
                  'KPT'         : 400, #MeV
                  'KIP'         : 0.04, #mm
-                 'KPidPi'      : 0,
+                 'KPidPi'      : 5,
+                 'KPidPi2'     : 10, #Kaon with same charge as pion
                  'KPidMu'      : 5,
                  'KPidP'       : -10,
                  'KTrChi2'     : 5,
                  'KIPChi2'     : 4,
                  #pion parameters
-                 'PiPidK'      : -10,
+                 'PiPidK'      : -5,
                  'PiIP'        : 0.04, #mm
                  'PiPidMu'     : -5,
                  'PiTrChi2'    : 10,
@@ -128,8 +130,8 @@ B0q2DplusMuX = {
                  'B_VPCHI2'    : 0.010,
                  'B_BPVDIRA'   : 0.9980
                  },
-
-    'MC09'   : { 'Prescale'    : 1.0 ,
+ 
+     'MC09'   : { 'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 600, #MeV
@@ -140,6 +142,7 @@ B0q2DplusMuX = {
                  'KPT'         : 400, #MeV
                  'KIP'         : 0.03, #mm
                  'KPidPi'      : 7,
+                 'KPidPi2'     : 7, #Kaon with same charge as pion
                  'KPidMu'      : 10,
                  'KPidP'       : -10,
                  'KTrChi2'     : 3,
@@ -158,8 +161,8 @@ B0q2DplusMuX = {
                  #B-resonance parameters
                  'B_VPCHI2'    : 0.0150,
                  'B_BPVDIRA'   : 0.9980
-                 }                 
-    },
+                  }
+        },
     'STREAMS' : [ 'Semileptonic' ],
     'WGs'    : ['Semileptonic'] 
     }
