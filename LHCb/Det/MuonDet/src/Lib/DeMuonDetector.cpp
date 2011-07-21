@@ -1,5 +1,3 @@
-// $Id: DeMuonDetector.cpp,v 1.55 2010-03-17 16:19:06 cattanem Exp $
-
 // Include files
 #include "MuonChamberLayout.h"
 #include "MuonDet/DeMuonDetector.h"
@@ -51,7 +49,8 @@ const CLID& DeMuonDetector::clID () const
 StatusCode DeMuonDetector::initialize()
 {
 
-  msgStream() << MSG::VERBOSE << "Initializing the detector" <<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
+    msgStream() << MSG::VERBOSE << "Initializing the detector" <<endmsg;
 
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) {
@@ -75,11 +74,12 @@ StatusCode DeMuonDetector::initialize()
   //fill geo info
   fillGeoInfo();
   fillGeoArray();
-msgStream()<<MSG::VERBOSE<<" ecco qui 111 "<<
-m_stationBox[0][0]<<" "<<
-m_stationBox[0][1]<<" "<<
-m_stationBox[0][2]<<" "<<
-m_stationBox[0][3]<<" "<<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
+    msgStream()<<MSG::VERBOSE<<" ecco qui 111 "<<
+      m_stationBox[0][0]<<" "<<
+      m_stationBox[0][1]<<" "<<
+      m_stationBox[0][2]<<" "<<
+      m_stationBox[0][3]<<" "<<endmsg;
   //Initialize vectors containing Detector informations
   CountDetEls();
   //  delete tLay;
@@ -243,9 +243,10 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
   }
 
   if(!isIn) {
-    msgStream() << MSG::DEBUG <<
-      "Smart seek didn't work. Perform loop on all chambers :( !!! "
-                <<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      msgStream() << MSG::DEBUG <<
+        "Smart seek didn't work. Perform loop on all chambers :( !!! "
+                  <<endmsg;
     int msta(0),mreg(0),mchm(0);
     //Getting stations
     IDetectorElement::IDEContainer::const_iterator itSt;
@@ -274,8 +275,9 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
                 chamberNumber = pCh->chamberNumber();
                 //mchm;
                 regNum = mreg;
-                msgStream() << MSG::DEBUG << "Hit found in chamber C: " <<
-                  chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endmsg;
+                if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+                  msgStream() << MSG::DEBUG << "Hit found in chamber C: " <<
+                    chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endmsg;
                 return sc;
               }
               mchm++;
@@ -577,7 +579,8 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
  //  if(!myGap) {
   if(!isIn) {
-  msgStream() << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      msgStream() << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endmsg;
     m_hitNotInGap++;	 
     return tmpPair;
   }
@@ -689,7 +692,8 @@ StatusCode DeMuonDetector::Tile2XYZ(LHCb::MuonTileID tile,
   StatusCode sc = StatusCode::FAILURE;
 
   //Ask the chamber Layout about the tile.
-  msgStream() << MSG::DEBUG <<"Calling Tile2XYZpos method!"<<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    msgStream() << MSG::DEBUG <<"Calling Tile2XYZpos method!"<<endmsg;
 
   sc = m_chamberLayout->Tile2XYZpos(tile,x,dx,y,dy,z,dz);
 
@@ -1054,11 +1058,12 @@ void DeMuonDetector::fillGeoArray()
   MuonLayout layoutInner=m_chamberLayout->layout(0);
   MuonLayout layoutOuter=m_chamberLayout->layout(3);
   int station=0;
-  msgStream()<<MSG::DEBUG<< "layout inner "<<
-    layoutInner.xGrid()<<" "<<  layoutInner.yGrid()<<endmsg;
-
-  msgStream()<<MSG::DEBUG<< "layout outer "<<
-    layoutOuter.xGrid()<<" "<<  layoutOuter.yGrid()<<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) {
+    msgStream()<<MSG::DEBUG<< "layout inner "<<
+      layoutInner.xGrid()<<" "<<  layoutInner.yGrid()<<endmsg;
+    msgStream()<<MSG::DEBUG<< "layout outer "<<
+      layoutOuter.xGrid()<<" "<<  layoutOuter.yGrid()<<endmsg;
+  }
 
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
     //get the dimensions of the inner rectangular
@@ -1195,12 +1200,13 @@ if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZP
     m_stationBox[station][3]=maxY;
 
 
-    msgStream()<<MSG::VERBOSE<<" station  inner "<<station<<" "<<
-      m_stationBox[station][0]<<
-      " "<<m_stationBox[station][1]<<
-      " station  outer "<<station<<" "<<
-      m_stationBox[station][2]<<
-      " "<<m_stationBox[station][3]<<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
+      msgStream()<<MSG::VERBOSE<<" station  inner "<<station<<" "<<
+        m_stationBox[station][0]<<
+        " "<<m_stationBox[station][1]<<
+        " station  outer "<<station<<" "<<
+        m_stationBox[station][2]<<
+        " "<<m_stationBox[station][3]<<endmsg;
 
     station++;
   }

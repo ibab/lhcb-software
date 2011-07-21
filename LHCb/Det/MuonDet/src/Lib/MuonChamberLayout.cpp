@@ -1,4 +1,3 @@
-// $Id: MuonChamberLayout.cpp,v 1.37 2010-03-17 16:19:08 cattanem Exp $
 // Include files
 
 // Gaudi
@@ -331,11 +330,12 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
 
 
   } else {
-    msgStream()<<MSG::DEBUG<< "Chamber " << chN
-               << " in R" << reg
-               << " xIndex " << fx
-               << " yIndex " << fy
-               << " is not in TES/xml. " <<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      msgStream()<<MSG::DEBUG<< "Chamber " << chN
+                 << " in R" << reg
+                 << " xIndex " << fx
+                 << " yIndex " << fy
+                 << " is not in TES/xml. " <<endmsg;
   }
 
   return;
@@ -348,8 +348,9 @@ int MuonChamberLayout::findRegion(int chamber) const {
     if(chamber < offset[reg]) break;
   }
   if(reg>3){
-    msgStream()<<MSG::DEBUG<<"Region not found for chamber: "<<chamber<<
-      ". Go back and check the code!"<<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+      msgStream()<<MSG::DEBUG<<"Region not found for chamber: "<<chamber<<
+        ". Go back and check the code!"<<endmsg;
     reg = -1;
   }
   return reg;
@@ -980,7 +981,8 @@ StatusCode MuonChamberLayout::getXYZChamberTile(const LHCb::MuonTileID& tile,
   unsigned int station = tile.station();
   unsigned int region  = tile.region();
 
-  msgStream() << MSG::DEBUG<<" Get XYZ Chamber Tile " <<chamberNum<<" "<<station<<" "<<region<<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    msgStream() << MSG::DEBUG<<" Get XYZ Chamber Tile " <<chamberNum<<" "<<station<<" "<<region<<endmsg;
 
   StatusCode sc = getXYZChamber(station,region,chamberNum,
                                 x,deltax,y,deltay,z,deltaz,toGlob);
@@ -1574,7 +1576,10 @@ void MuonChamberLayout::localToglobal(IGeometryInfo* gInfo,
   GcrnY = gInfo->toGlobal(corn).y();
   GcrnZ = gInfo->toGlobal(corn).z();
 
-  msgStream() << MSG::DEBUG << "Local to Global: gCtr:: "<<GctrX<<" "<<GctrY<<" "<<GctrZ<<" ; gCrn:: "<<GcrnX<<" "<<GcrnY<<" "<<GcrnZ<<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+    msgStream() << MSG::DEBUG
+                << "Local to Global: gCtr:: "<<GctrX<<" "<<GctrY<<" "<<GctrZ
+                <<" ; gCrn:: "<<GcrnX<<" "<<GcrnY<<" "<<GcrnZ<<endmsg;
 
   dx = fabs(GctrX - GcrnX);
   dy = fabs(GctrY - GcrnY);

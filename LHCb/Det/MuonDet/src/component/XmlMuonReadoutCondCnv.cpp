@@ -1,5 +1,3 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.11 2010-03-17 16:19:10 cattanem Exp $
-
 // Include files
 #include <vector>
 
@@ -169,8 +167,9 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   // gets the element's name
   const XMLCh* tagName = childElement->getNodeName();
 
-  log << MSG::DEBUG << "Processing element "
-      << dom2Std(tagName) << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Processing element "
+        << dom2Std(tagName) << endmsg;
   /*
         <!--
              ReadoutType      : either Anode or Cathode (must be defined)
@@ -262,10 +261,10 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
       return StatusCode::FAILURE;
     }
 
-    log << MSG::DEBUG << "ReadoutType "
-        << rType <<endmsg;
-    log << MSG::DEBUG << "Efficiency "
-        << eff  <<endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+      log << MSG::DEBUG << "ReadoutType " << rType <<endmsg;
+      log << MSG::DEBUG << "Efficiency " << eff  <<endmsg;
+    }
 
     // index is the number of the readout
     int index;
@@ -274,7 +273,8 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
       log << MSG::WARNING << "Failed to create a new readout" << endmsg;
     }
 
-    log << MSG::DEBUG << "Readout index is :" << index << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Readout index is :" << index << endmsg;
 
     dataObj->setEfficiency(  atof(eff.c_str()), index);
     dataObj->setSyncDrift(    atof(syncD.c_str()), index);
@@ -319,8 +319,10 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
   // need to split clSzX and clPrX into component parts 
   // should be a comma seperated list
   
-  log << MSG::DEBUG << "Cluster size (X) " << clSzX << endmsg;
-  log << MSG::DEBUG << "Cluster Prob (X) " << clPrX << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+    log << MSG::DEBUG << "Cluster size (X) " << clSzX << endmsg;
+    log << MSG::DEBUG << "Cluster Prob (X) " << clPrX << endmsg;
+  }
   
   std::string::size_type cPos = clSzX.find(',');
   std::string sCurr;
@@ -351,15 +353,18 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
   unsigned int i;
   for(i=0; i < clProb.size(); ++i){
     dataObj->addClusterX(clSize[i],clProb[i],index);
-    log << MSG::DEBUG << "Clusters (X) " << clSize[i]
-        << ","<< clProb[i] << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Clusters (X) " << clSize[i]
+          << ","<< clProb[i] << endmsg;
   }
   
   clSize.clear();
   clProb.clear();
 
-  log << MSG::DEBUG << "Cluster size (Y) " << clSzY << endmsg;
-  log << MSG::DEBUG << "Cluster Prob (Y) " << clPrY << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+    log << MSG::DEBUG << "Cluster size (Y) " << clSzY << endmsg;
+    log << MSG::DEBUG << "Cluster Prob (Y) " << clPrY << endmsg;
+  }
   
   cPos = clSzY.find(',');
   while( cPos != std::string::npos ){
@@ -386,8 +391,9 @@ XmlMuonReadoutCondCnv::setClusterSizes(MuonReadoutCond* dataObj,
   }
   for(i=0; i<clProb.size(); ++i){
     dataObj->addClusterY(clSize[i],clProb[i],index);
-    log << MSG::DEBUG << "Clusters (Y) " << clSize[i]
-        << ","<< clProb[i] << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+      log << MSG::DEBUG << "Clusters (Y) " << clSize[i]
+          << ","<< clProb[i] << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -404,8 +410,10 @@ XmlMuonReadoutCondCnv::setJitterVector(MuonReadoutCond* dataObj,
   // need to split clSzX and clPrX into component parts 
   // should be a comma seperated list
   
-  log << MSG::DEBUG << "Jitter Min " << jitterMin << endmsg;
-  log << MSG::DEBUG << "jitter Max " << jitterMax << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+    log << MSG::DEBUG << "Jitter Min " << jitterMin << endmsg;
+    log << MSG::DEBUG << "jitter Max " << jitterMax << endmsg;
+  }
   
   std::string::size_type cPos = jitterValues.find(',');
   std::string sCurr;

@@ -1,4 +1,3 @@
-// $Id: XmlMuonL1BoardCnv.cpp,v 1.6 2010-03-17 16:19:09 cattanem Exp $
 // Include files 
 
 #include <string>
@@ -169,15 +168,18 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     std::vector<long> ODEListValue;
     StatusCode sc=splitList(ODEList,ODEListValue);
     if(sc.isFailure())return sc;  
-    msg<<MSG::DEBUG<<" read in "<<ODEList<<endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg<<MSG::DEBUG<<" read in "<<ODEList<<endmsg;
     if(ODEListValue.size()!=NumLink){
       msg<<MSG::ERROR<<
         " something wrong in Tell1 - ODE connectiom description "<<endmsg;
       return StatusCode::FAILURE;
     }
     for( unsigned int i =0; i<NumLink;i++){
-      msg<<MSG::DEBUG<<" link "<<i<<" ODE "<<ODEListValue[i]<<endmsg;
-      msg<<MSG::DEBUG<<" ODEList length "<<ODEList.size()<<" "<<ODEListValue.size()<<endmsg;
+      if( UNLIKELY( msg.level() <= MSG::DEBUG ) ) {
+        msg<<MSG::DEBUG<<" link "<<i<<" ODE "<<ODEListValue[i]<<endmsg;
+        msg<<MSG::DEBUG<<" ODEList length "<<ODEList.size()<<" "<<ODEListValue.size()<<endmsg;
+      }
       dataObj->setLinkConnection(i,ODEListValue[i]);      
       //      msg<<MSG::INFO<<" ode "<<i<<" "<<ODEListValue[i]<<endmsg;
       if(ODEListValue[i]>0){        
@@ -190,13 +192,15 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     unsigned int iODE=0;
     
     for(unsigned int i=0; i < nodeChildren->getLength(); ++i){   
-      msg << MSG::VERBOSE << "Processing child "<<
-        dom2Std(nodeChildren->item(i)->getNodeName())<<endmsg;
+      if( UNLIKELY( msg.level() <= MSG::VERBOSE ) ) 
+        msg << MSG::VERBOSE << "Processing child "<<
+          dom2Std(nodeChildren->item(i)->getNodeName())<<endmsg;
       if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
          dom2Std(ODEReferenceString)){
         
-        msg << MSG::VERBOSE << "Processing element "
-            << dom2Std(ODEReferenceString) <<" "<<iODE<< endmsg;
+        if( UNLIKELY( msg.level() <= MSG::VERBOSE ) ) 
+          msg << MSG::VERBOSE << "Processing element "
+              << dom2Std(ODEReferenceString) <<" "<<iODE<< endmsg;
         xercesc::DOMNamedNodeMap* attributes =      
           nodeChildren->item(i)->getAttributes();
         xercesc::DOMNode* odeNode = attributes->
@@ -216,16 +220,18 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
       //   <<" "<<location1<<" "<<dataObj->name()<<endmsg;
       dataObj->addODE(ODEListValue[iODE],
                            OdeReference.substr(poundPosition + 1));
-      msg << MSG::VERBOSE <<ODEListValue[iODE]<<" "<<
-        OdeReference.substr(poundPosition + 1)<<endmsg;
+      if( UNLIKELY( msg.level() <= MSG::VERBOSE ) ) 
+        msg << MSG::VERBOSE <<ODEListValue[iODE]<<" "<<
+          OdeReference.substr(poundPosition + 1)<<endmsg;
       iODE++;
       
     }
     
     else if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
             dom2Std(TSLayoutString)){
-      msg << MSG::VERBOSE << "Processing element "<<
-        dom2Std(TSLayoutString)<<endmsg;
+      if( UNLIKELY( msg.level() <= MSG::VERBOSE ) ) 
+        msg << MSG::VERBOSE << "Processing element "<<
+          dom2Std(TSLayoutString)<<endmsg;
       
       xercesc::DOMNamedNodeMap* attributes =      
         nodeChildren->item(i)->getAttributes();
@@ -244,8 +250,9 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         getNamedItem(TSLayoutYString);
       long TSYValue = atol(dom2Std (TSLayoutYNode
                                      ->getNodeValue()).c_str()); ;
-	msg<<MSG::VERBOSE<<"layout "<<TSXValue<<" "<<TSYValue<<
-        " "<<TSRegionValue<<endmsg;	
+      if( UNLIKELY( msg.level() <= MSG::VERBOSE ) ) 
+        msg<<MSG::VERBOSE<<"layout "<<TSXValue<<" "<<TSYValue<<
+          " "<<TSRegionValue<<endmsg;	
       dataObj->addLayout(TSRegionValue,TSXValue,TSYValue);
       
     }
