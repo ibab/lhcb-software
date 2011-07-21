@@ -121,14 +121,14 @@ protected:
   /// Test the message level for the cached MsgStream object
   inline bool msgLevel( const MSG::Level level ) const 
   {
-    return msgLevel() <= level; 
+    return UNLIKELY( msgLevel() <= level ); 
   }
 
   /// Test the message level for a given MsgStream object
   inline bool msgLevel( const MSG::Level level,
                         MsgStream & msgStream ) const 
   {
-    return msgStream.level() <= level; 
+    return UNLIKELY( msgStream.level() <= level ); 
   }
 
 protected:

@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-07-21 - Chris Jones
+ - Add the UNLIKELY macro to the msgLevel methods in DeRichBase
+ - Add a little extra protection to casts in DeRichBeamPipe to 
+   appease coverity
+
 ! 2011-07-14 - Chris Jones
  - Add new method DeRichAerogelRadiator::subTile() that indicates if the 
    detector element is subtile (true) or full primary tile (false)
