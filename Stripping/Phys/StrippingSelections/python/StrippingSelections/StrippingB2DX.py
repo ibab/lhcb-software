@@ -273,9 +273,9 @@ config = {                                  # Default configuration dictionary
 	      "IPChi2Max"          : 16.,           # chi2 of B impact parameter to the related PV
 	      "LTMin"              : 0.2,           # Minimum B lifetime
 	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
-	      "CombMassMin"        : 4800,          # Lower mass of a combination (MeV)
-	      "CombMassMax"        : 5900,          # Upper mass of a combination (MeV) 
-	      "APtMin"		   : 1500.,            # Minumum Pt of a combination (MeV)
+	      "CombMassMin"        : 5100,          # Lower mass of a combination (MeV)
+	      "CombMassMax"        : 6200,          # Upper mass of a combination (MeV) 
+	      "APtMin"		   : 1500.,         # Minumum Pt of a combination (MeV)
 	    }, 
 	    "LambdaB2DphCuts" : {                   # LambdaB->D(hh)ppi and LambdaB->D(hh)pK cuts 
 	      "VtxChi2Max"         : 9.,            # LambdaB vertex Chi2
