@@ -455,9 +455,9 @@ StatusCode STEfficiency::finalize()
                   m_binNumber);
 	      if ( i == presentCut )
         {
-          verbose() << nick << ' ' << eff
-                    << " +/- " << err << " (found " << nFound
-                    << " for cut " << m_spacialCut[i] << ")" << endmsg;
+          if(msgLevel(MSG::VERBOSE)) verbose() << nick << ' ' << eff
+                                             << " +/- " << err << " (found " << nFound
+                                             << " for cut " << m_spacialCut[i] << ")" << endmsg;
 		  
           ST::ITDetectorPlot::Bins theBins = prop.toBins(channelID); 
           if ( nExpected > m_minExpected )

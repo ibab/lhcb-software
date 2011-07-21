@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-07-21 - Alexandr Kozlinskiy
+ - Added if(msgLevel(MSG::DEBUG)) to all debug messages.
+
 ! 2011-06-28 - Wouter Hulsbergen
  - ITTrackMonitor: add histogram for overlaps
  - TrackVertexMonitor: introduce cutoff for IP profiles to be more sensitive to mean

@@ -50,7 +50,7 @@ VertexCompare::~VertexCompare() {};
 //=============================================================================
 StatusCode VertexCompare::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // Must be executed first
-  if(sc.isFailure()) debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   if( ! m_forcedBtool ) {
@@ -76,7 +76,7 @@ StatusCode VertexCompare::initialize() {
 // Main execution
 //=============================================================================
 StatusCode VertexCompare::execute() {
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   std::vector<LHCb::RecVertex*> vecOfVertices1;
   std::vector<LHCb::RecVertex*> vecOfVertices2;
@@ -298,7 +298,7 @@ StatusCode VertexCompare::execute() {
 //=============================================================================
 StatusCode VertexCompare::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
   info() << " ============================================" << endreq;

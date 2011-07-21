@@ -50,7 +50,7 @@ StatusCode PitchResTool::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-  debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   m_extrapolator = tool<ITrackExtrapolator>(m_trackExtrapolatorName);
 
@@ -62,7 +62,7 @@ StatusCode PitchResTool::initialize()
 //=============================================================================
 StatusCode PitchResTool::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
   return GaudiTool::finalize();  // must be called after all other actions

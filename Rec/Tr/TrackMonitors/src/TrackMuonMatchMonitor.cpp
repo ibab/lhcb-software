@@ -108,12 +108,12 @@ StatusCode TrackMuonMatchMonitor::execute() {
   const LHCb::MuonCoords* coords = NULL;
   
   if ( ! exist<LHCb::MuonCoords>("Raw/Muon/Coords")) {
-    debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug()<<" Container Raw/Muon/Coords doesn't exist"<<endmsg;
     return StatusCode::SUCCESS;
   }
   coords = get<LHCb::MuonCoords>("Raw/Muon/Coords");
   if( coords == NULL || coords->size() == 0 ) {
-    debug() << " No hits retrieved , skip event" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << " No hits retrieved , skip event" << endmsg;
     return StatusCode::SUCCESS;    
   }
 
@@ -130,7 +130,7 @@ StatusCode TrackMuonMatchMonitor::execute() {
       if(sc.isSuccess()) muonhits.push_back( muonhit ) ;
     }
   
-  debug()<<" Found "<<tTracks.size() << " tracks in the container "<<endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << " Found " << tTracks.size() << " tracks in the container " << endmsg;
   BOOST_FOREACH( const LHCb::Track* track, tTracks) {
     if( track->hasT() &&
 	track->chi2PerDoF() <5 &&

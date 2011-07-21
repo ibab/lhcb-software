@@ -79,7 +79,7 @@ StatusCode PVResMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode PVResMonitor::execute() {
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   // Event
   m_nevt++;
@@ -102,7 +102,7 @@ StatusCode PVResMonitor::execute() {
     return StatusCode::SUCCESS; // return SUCCESS anyway
   }
 
-  if(debugLevel())
+  if(msgLevel(MSG::DEBUG))
     debug() << trackLoc << " # tracks: " << vecOfTracks.size() << "  # vertices: " << vecOfVertices.size() << endmsg;
 
   // Fill reconstructed PV info
@@ -133,7 +133,8 @@ StatusCode PVResMonitor::execute() {
     } //end of while
     std::sort(rvect.begin(), rvect.end());
 
-    if (debugLevel()) debug() << "No of randoms " << rvect.size() << "   and tracks " << nTracks << endmsg;
+    if(msgLevel(MSG::DEBUG))
+      debug() << "No of randoms " << rvect.size() << "   and tracks " << nTracks << endmsg;
 
     int prev_size = int(halfTracks2.size());
     SmartRefVector< LHCb::Track >  vtx_tracks = pv->tracks();
@@ -177,9 +178,9 @@ StatusCode PVResMonitor::execute() {
   std::vector<int> link1, link2;
   if (halfVrt1.size()!=0)    matchByDistance(fullVrt, halfVrt1, link1);
   if (halfVrt2.size()!=0)    matchByDistance(fullVrt, halfVrt2, link2);
-  if (debugLevel()) debug() << "Number of full  vertices " << fullVrt.size()  << endmsg;
-  if (debugLevel()) debug() << "Number of half  vertices " << halfVrt1.size() << endmsg;
-  if (debugLevel()) debug() << "Number of half2 vertices " << halfVrt2.size() << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Number of full  vertices " << fullVrt.size()  << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Number of half  vertices " << halfVrt1.size() << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Number of half2 vertices " << halfVrt2.size() << endmsg;
 
   for (halfIter=fullVrt.begin(); halfIter!=fullVrt.end(); halfIter++){
     LHCb::RecVertex vrtf = *halfIter;
@@ -259,7 +260,7 @@ StatusCode PVResMonitor::execute() {
 //=============================================================================
 StatusCode PVResMonitor::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
   info() << " ============================================" << endreq;
@@ -334,7 +335,7 @@ StatusCode PVResMonitor::finalize() {
 //=============================================================================
 void  PVResMonitor::matchByDistance(std::vector<LHCb::RecVertex>& vertfull, std::vector<LHCb::RecVertex>& verthalf, std::vector<int>& link) {
 
-  if (verthalf.size()>vertfull.size() && debugLevel()) debug() << "half.size > full.size" << endmsg;
+  if (verthalf.size() > vertfull.size() && msgLevel(MSG::DEBUG)) debug() << "half.size > full.size" << endmsg;
   for(int imc=0; imc<(int)vertfull.size(); imc++) {
 //     if ( mcpvvec[imc].indexRecPVInfo  > -1) continue;
     double mindist = 999999.;
@@ -347,13 +348,13 @@ void  PVResMonitor::matchByDistance(std::vector<LHCb::RecVertex>& vertfull, std:
         indexrec = irec;
       }
     }
-    if(debugLevel()) debug() << "original vertex " << imc << " linked to " << indexrec << " half vertex." << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "original vertex " << imc << " linked to " << indexrec << " half vertex." << endmsg;
     link.push_back(indexrec);
   }
 
   for(int imc=0; imc<(int)vertfull.size(); imc++) {
     int count = std::count(link.begin(), link.end(), imc);
-    if (count >1 && debugLevel()) debug() << "linked twice to vertex " << imc << endmsg;
+    if (count > 1 && msgLevel(MSG::DEBUG)) debug() << "linked twice to vertex " << imc << endmsg;
   }
 }
 
@@ -393,7 +394,7 @@ bool PVResMonitor::getInputTracks( std::vector<LHCb::Track*>& vecOfTracks,  std:
   }
 
   if ( tracksName == "none" ) {
-    debug() << " Tracks not specified " << tracksName << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " Tracks not specified " << tracksName << endreq;
     return false;
   }
 
@@ -404,7 +405,7 @@ bool PVResMonitor::getInputTracks( std::vector<LHCb::Track*>& vecOfTracks,  std:
   try {
     usedtracks   = get<LHCb::Tracks>( tracksName );
   } catch (...) {
-    debug() << " No tracks at " << tracksName << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " No tracks at " << tracksName << endreq;
     return false;
   }
 
@@ -434,7 +435,7 @@ bool PVResMonitor::getInputVertices( std::vector<LHCb::RecVertex*>& vecOfVertice
   }
 
   if ( verticesName == "none" ) {
-    debug() << " Vertices not specified " << verticesName << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " Vertices not specified " << verticesName << endreq;
     return false;
   }
 
@@ -443,7 +444,7 @@ bool PVResMonitor::getInputVertices( std::vector<LHCb::RecVertex*>& vecOfVertice
   try {
     recoVertices  = get<LHCb::RecVertices>( verticesName );
   } catch (...) {
-    debug() << " No vertices at " << verticesName << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " No vertices at " << verticesName << endreq;
     return false;
   }
 

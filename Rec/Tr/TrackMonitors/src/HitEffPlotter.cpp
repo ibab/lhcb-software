@@ -45,7 +45,7 @@ StatusCode HitEffPlotter::initialize()
     StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
     if (sc.isFailure()) return sc;  // error printed already by GaudiHistoAlg
 
-    debug() << "==> Initialize" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
     m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
     m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
@@ -103,7 +103,7 @@ template<size_t N> void HitEffPlotter::plot(
 //=============================================================================
 StatusCode HitEffPlotter::execute()
 {
-    debug() << "==> Execute" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
     const LHCb::Tracks* tracks = get<LHCb::Tracks>(m_inputCollection);
     BOOST_FOREACH(const LHCb::Track* tr, *tracks) {
@@ -167,7 +167,7 @@ StatusCode HitEffPlotter::execute()
 //=============================================================================
 StatusCode HitEffPlotter::finalize()
 {
-    debug() << "==> Finalize" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
     return GaudiHistoAlg::finalize();  // must be called after all other actions

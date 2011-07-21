@@ -251,7 +251,7 @@ void OTTrackMonitor::initPointers(int index) {
 //=============================================================================
 StatusCode OTTrackMonitor::initialize()
 {
-  debug() << "------------ TrackMonitor::initialize() / start -------" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "------------ TrackMonitor::initialize() / start -------" << endmsg;
 
   StatusCode statusCode = GaudiHistoAlg::initialize(); // must be executed first
 
@@ -338,12 +338,10 @@ StatusCode OTTrackMonitor::initialize()
     histEventAverageTimeResidual = book("eventavtimeres", "event average time residual",
                                         -10, 10);
   }
-  
 
-  
-  debug() << "------------ TrackMonitor::initialize() / end ---------" << endmsg;
-  
-return statusCode;
+  if(msgLevel(MSG::DEBUG)) debug() << "------------ TrackMonitor::initialize() / end ---------" << endmsg;
+
+  return statusCode;
 }
 
 //=============================================================================
@@ -380,7 +378,7 @@ void OTTrackMonitor::plotProf1D(AIDA::IProfile1D* hist, double x, double y, doub
 //=========================================================================
 StatusCode OTTrackMonitor::execute()
 {
-  debug() << "------------ TrackMonitor::execute() / start ----------" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "------------ TrackMonitor::execute() / start ----------" << endmsg;
 
   ++m_numEvents;
 
@@ -619,7 +617,7 @@ StatusCode OTTrackMonitor::execute()
   if(!m_isOnline)
     setNormalization(histModuleOutlierOccupancy);
 
-  debug() << "------------ TrackMonitor::execute() / end ------------" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "------------ TrackMonitor::execute() / end ------------" << endmsg;
 
   return StatusCode::SUCCESS;
 }

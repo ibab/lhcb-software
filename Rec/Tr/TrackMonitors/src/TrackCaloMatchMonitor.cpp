@@ -165,7 +165,7 @@ StatusCode TrackCaloMatchMonitor::initialize()
   m_dyVsTxPr = bookProfile1D("dyVsTx","dy versus tx",-0.6,0.6) ;
   m_dyVsTyPr = bookProfile1D("dyVsTy","dy versus ty",-0.3,0.3) ;
   
-  debug() << "CaloDet: center = " 
+  if(msgLevel(MSG::DEBUG)) debug() << "CaloDet: center = " 
 	  << m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()) 
 	  << " zoffset: " << m_caloDet->zOffset()
 	  << " geometric Z: " << m_geometricZ

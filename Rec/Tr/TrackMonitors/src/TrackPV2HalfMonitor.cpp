@@ -224,8 +224,8 @@ StatusCode TrackPV2HalfAlignMonitor::execute()
 
     if( leftoutvtxvec.size()==1 && rightoutvtxvec.size()==1 && rightvertex && leftvertex ) {
       
-      debug() <<"Found " <<n_goodrightPV << " Right PV and "<<
-        n_goodleftPV << " Left PV"<<endmsg; 
+      if(msgLevel(MSG::DEBUG)) debug() << "Found " << n_goodrightPV << " Right PV and "
+        << n_goodleftPV << " Left PV" << endmsg;
       
       Gaudi::XYZVector dx = leftvertex->position() - rightvertex->position() ;
       plot( dx.x(), "Left-Right PV delta x ",-m_limdpvx,m_limdpvx,100) ;

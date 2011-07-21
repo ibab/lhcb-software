@@ -105,7 +105,7 @@ StatusCode TrackExpectedHitsXYZTool::initialize()
     StatusCode sc = GaudiTool::initialize(); // must be executed first
     if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-    debug() << "==> Initialize" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
     m_hitManagerT = tool<Tf::TStationHitManager<PatForwardHit> >(
 	    "PatTStationHitManager");
@@ -129,7 +129,7 @@ StatusCode TrackExpectedHitsXYZTool::initialize()
 //=============================================================================
 StatusCode TrackExpectedHitsXYZTool::finalize()
 {
-    debug() << "==> Finalize" << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
     return GaudiTool::finalize();  // must be called after all other actions
