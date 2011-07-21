@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 //Include files
 // ============================================================================
@@ -484,7 +483,7 @@ StatusCode LHCb::ParticlePropertySvc::rebuild ()
   if ( sc.isFailure() ) { return sc ; }                             // RETURN 
   /// some debug printout
   MsgStream log ( msgSvc() , name() ) ;
-  log << MSG::DEBUG 
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) ) log << MSG::DEBUG 
       << " All:   "   << m_vector   .size () 
       << " By Name: " << m_nameMap  .size () 
       << " By PID: "  << m_pidMap   .size () 
@@ -812,7 +811,7 @@ StatusCode LHCb::ParticlePropertySvc::setAntiParticles ()
     pp -> setAntiParticle ( anti ) ;
     if ( 0 != pp && 0 != pp->antiParticle() ) 
     {
-      log << MSG::VERBOSE
+      if( UNLIKELY( log.level() <= MSG::VERBOSE ) ) log << MSG::VERBOSE
           << "Antiparticle for \n" <<  (* pp)
           << " is set to be    \n" <<  (*(pp->antiParticle())) << endmsg ;
     }
@@ -843,7 +842,7 @@ bool LHCb::ParticlePropertySvc::diff
   if ( d ) 
   {
     MsgStream log ( msgSvc () , name () ) ;
-    log << MSG::DEBUG 
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) ) log << MSG::DEBUG 
         << " Change the properties of '" << n.name() << "'/" << n.pid().pid() 
         << std::endl << " New: " << n
         << std::endl << " Old: " << o 
@@ -901,10 +900,9 @@ std::string LHCb::ParticlePropertySvc::cc ( const std::string& decay ) const
       m_ccMap [ ic -> second ] = ic -> first  ;
     }
     MsgStream log ( msgSvc() , name() ) ;
-    log  << MSG::DEBUG ;
-    if ( log.isActive() ) 
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) )
     {
-      log << " CC-map is " << std::endl ;
+      log << MSG::DEBUG << " CC-map is " << std::endl ;
       Gaudi::Utils::toStream ( m_ccMap , log.stream() ) ;
       log << endmsg ;
     }
