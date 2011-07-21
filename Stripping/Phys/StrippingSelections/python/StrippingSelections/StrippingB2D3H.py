@@ -43,19 +43,21 @@ __all__ = ('B2D3HAllLinesConf',
 confdict =  {
         "PionMinP"             : 2000.,
         "PionMaxP"             : 500000.,
-        "PionMinPT"            : 300.,
+        "PionMinPT"            : 250.,
         "PionMinPTtight"       : 500.,      
-        "PionMinIPChisq"       : 9.0,
+        "PionMinIPChisq"       : 6.25,
         "PionPiDDLL"           : 12,
         "KaonMinP"             : 2000.,
         "KaonMaxP"             : 500000.,
-        "KaonMinPT"            : 300.,
+        "KaonMinPT"            : 250.,
         "KaonMinPTtight"       : 500.,        
-        "KaonMinIPChisq"       : 9.0,
+        "KaonMinIPChisq"       : 6.25,
+        "KaonPiDDLL"           : -5,
         "ProtonMinP"             : 2000.,
         "ProtonMaxP"             : 500000.,
-        "ProtonMinPT"            : 300.,
-        "ProtonMinIPChisq"       : 9.0,
+        "ProtonMinPT"            : 250.,
+        "ProtonMinIPChisq"       : 6.25,
+        "ProtonPiDDLL"           : -5,
         "MinPT"                : 300.,
         "TrkChisq"             : 4.0,
         "TrkChisqtight"        : 4.0,        
@@ -65,9 +67,9 @@ confdict =  {
         "Bach3HMinPT"          : 1000.0, 
         "Bach3HIP2PV"          : 0.0,
         "Bach3HIPChisq2PV"     : 9.0,
-        "Bach3HVtxSepChisq"    : 49.0,
+        "Bach3HVtxSepChisq"    : 36.0,
         "Bach3HDiraPV"         : 0.98,
-        "Bach3HZVtxSep"        : 2.0,
+        "Bach3HZVtxSep"        : 0.0,
         "Bach3HDRPV"           : 0.1,
         "DMinPT"               : 1250,
         "DVtxChisq"            : 8.0,
@@ -77,10 +79,10 @@ confdict =  {
         "tightDMassWindow"     : 40,
         "DDocaMax"             : 0.35,
         "DIP2PV"               : 0.0,
-        "DIPChisq2PV"          : 9.0,
+        "DIPChisq2PV"          : 4.0,
         "DVtxSepChisq"         : 49.0,
         "DDiraPV"              : 0.98,
-        "DZVtxSep"             : 2.0,
+        "DZVtxSep"             : 0.0,
         "DDRPV"                : 0.1,
         "DStarMassWindow"      : 50,
         "DStarMinPT"           : 1000,
@@ -189,10 +191,12 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                               "KaonMinPT",
                               "KaonMinPTtight",
                               "KaonMinIPChisq",
+                              "KaonPiDDLL",
                               "ProtonMinP" ,
                               "ProtonMaxP" ,
                               "ProtonMinPT",
                               "ProtonMinIPChisq",
+                              "ProtonPiDDLL",
                               "MinPT",
                               "TrkChisq",
                               "TrkChisqtight",
@@ -273,9 +277,9 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
 
         from Configurables import LoKi__VoidFilter as VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-        modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
-          if i not in modules : modules.append(i)
+        #modules = CoreFactory('CoreFactory').Modules
+        #for i in ['LoKiTrigger.decorators']:
+        #  if i not in modules : modules.append(i)
         self.EventFilter = "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %s )" % config['MaxTracks']
 
         # First filter pions
@@ -421,21 +425,24 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
 
         # Filter LT Unbiased D+, the children don't suffer from lifetime biases since also prompt D's have a lifetime
         self.selUnbiasedDch = makeDMeson( 'UnbiasedForB2D3H'+name,
-                                  pionSel = self.selTightPions,
-                                  kaonSel = self.selTightKaons,
-                                  DMassWindow = config['DMassWindow'],
-                                  DsMassWindow = config['DsMassWindow'],
-                                  DDocaMax = config['DDocaMax'],
-                                  DMinPT = config['DMinPT'],
-                                  MinPT = config['MinPT'],
-                                  DIP2PV = 0, #should never change  
-                                  DIPChisq2PV = 0, #should never change  
-                                  DVtxChisq = config['DVtxChisq'],
-                                  DVtxSepChisq = 0, #should never change 
-                                  DDiraPV = config['DDiraPV'],
-                                  DZVtxSep = 0, #should never change  
-                                  DDRPV = 0 #should never change       
-                                  )
+                                          pionSel = self.selTightPions,
+                                          kaonSel = self.selTightKaons,
+                                          DMassWindow = config['DMassWindow'],
+                                          DsMassWindow = config['DsMassWindow'],
+                                          DDocaMax = config['DDocaMax'],
+                                          DMinPT = config['DMinPT'],
+                                          MinPT = config['MinPT'],
+                                          DIP2PV = 0, #should never change  
+                                          DIPChisq2PV = 0, #should never change  
+                                          DVtxChisq = config['DVtxChisq'],
+                                          DVtxSepChisq = 0, #should never change 
+                                          DDiraPV = config['DDiraPV'],
+                                          DZVtxSep = 0, #should never change  
+                                          DDRPV = 0, #should never change       
+                                          PionMinIPChisq = config['PionMinIPChisq'],
+                                          PionPiDDLL = 10000.0,
+                                          KaonPiDDLL = -10000.0
+                                          )
         # Filter D+
         self.selDch = makeDMeson( 'ForB2D3H'+name,
                                   pionSel = self.selPions,
@@ -451,7 +458,10 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                   DVtxSepChisq = config['DVtxSepChisq'],
                                   DDiraPV = config['DDiraPV'],
                                   DZVtxSep = config['DZVtxSep'],
-                                  DDRPV = config['DDRPV']      
+                                  DDRPV = config['DDRPV'],
+                                  PionMinIPChisq = config['PionMinIPChisq'],
+                                  PionPiDDLL = config['PionPiDDLL'],
+                                  KaonPiDDLL = config['KaonPiDDLL']
                                   )
 
         # Filter Lambda_c+
@@ -469,7 +479,10 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                       DVtxSepChisq = config['DVtxSepChisq'],
                                       DDiraPV = config['DDiraPV'],
                                       DZVtxSep = config['DZVtxSep'],
-                                      DDRPV = config['DDRPV']      
+                                      DDRPV = config['DDRPV'],
+                                       PionMinIPChisq = config['PionMinIPChisq'],
+                                       PionPiDDLL = config['PionPiDDLL'],
+                                       KaonPiDDLL = config['KaonPiDDLL']
                                       ) 
 
 
@@ -487,7 +500,10 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                   DVtxSepChisq = config['DVtxSepChisq'],
                                   DDiraPV = config['DDiraPV'],
                                   DZVtxSep = config['DZVtxSep'],
-                                  DDRPV = config['DDRPV']      
+                                  DDRPV = config['DDRPV'],
+                                  PionMinIPChisq = config['PionMinIPChisq'],
+                                  PionPiDDLL = config['PionPiDDLL'],
+                                  KaonPiDDLL = config['KaonPiDDLL']
                                   )
 
         # Filter Dstar
@@ -1055,13 +1071,13 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
                                                      FILTER = self.EventFilter
                                                      )
 
-        self.StrippingAllUnbiasedB2DPiPiPiLine = StrippingLine('AllUnbiasedB2DPiPiPiLine'+name,
-                                                    prescale = config['UnbiasedB2DPiPiPiAll_Prescale'],
-                                                    postscale = config['UnbiasedB2DPiPiPiAll_Postscale'],
-                                                    #algos = [ self.EventFilter, self.UnbiasedB2DPiPiPiHLT1HLT2TIS]
-                                                    selection = self.UnbiasedB2DPiPiPiHLT1HLT2TIS, 
-                                                    FILTER = self.EventFilter
-                                                    )
+        #self.StrippingAllUnbiasedB2DPiPiPiLine = StrippingLine('AllUnbiasedB2DPiPiPiLine'+name,
+        #                                            prescale = config['UnbiasedB2DPiPiPiAll_Prescale'],
+        #                                            postscale = config['UnbiasedB2DPiPiPiAll_Postscale'],
+        #                                            #algos = [ self.EventFilter, self.UnbiasedB2DPiPiPiHLT1HLT2TIS]
+        #                                            selection = self.UnbiasedB2DPiPiPiHLT1HLT2TIS, 
+        #                                            FILTER = self.EventFilter
+        #                                            )
 
         self.StrippingAllB2DPiPiPiLine = StrippingLine('AllB2DPiPiPiLine'+name,
                                                     prescale = config['B2DPiPiPiAll_Prescale'],
@@ -1252,7 +1268,7 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
 
         self.registerLine ( self.StrippingAllB2D0PiPiPiLine )	
         self.registerLine ( self.StrippingAllB2D0KPiPiLine )
-        self.registerLine ( self.StrippingAllUnbiasedB2DPiPiPiLine )                       
+        #self.registerLine ( self.StrippingAllUnbiasedAB2DPiPiPiLine )                       
         self.registerLine ( self.StrippingAllB2DPiPiPiLine )                       
         self.registerLine ( self.StrippingAllB2DKPiPiLine )                       
         self.registerLine ( self.StrippingAllB2DStarPiPiPiLine )                       
@@ -1454,6 +1470,7 @@ def makePiPiPi( name,
     Bach3HDRPV            : Minimum DR vertex separation from PV
     """
 
+    
     _a1Alg = CombineParticles(name)
     _a1Alg.DecayDescriptor = "[a_1(1260)+ -> pi+ pi- pi+]cc" 
     _a1Alg.CombinationCut = "( (AM < %(Bach3HMassWindow)s *MeV) & (APT > %(Bach3HMinPT)s *MeV)" \
@@ -1463,6 +1480,7 @@ def makePiPiPi( name,
                        " & (BPVDIRA > %(Bach3HDiraPV)s ) & (BPVVDZ> %(Bach3HZVtxSep)s *mm) & (BPVVDRHO > %(Bach3HDRPV)s *mm) " \
                        " & (MIPDV(PRIMARY)> %(Bach3HIP2PV)s *mm))" % locals()
 
+    
     selName = 'Sel'+name    
     PiPiPiSelection = Selection(selName,
                                 Algorithm = _a1Alg,
@@ -1589,7 +1607,10 @@ def makeD0Meson(name,
                 DVtxSepChisq, 
                 DDiraPV, 
                 DZVtxSep,
-                DDRPV
+                DDRPV,
+                PionMinIPChisq,
+                PionPiDDLL,
+                KaonPiDDLL
                 ):
     """
     Create and return D0 Selection object.
@@ -1613,38 +1634,51 @@ def makeD0Meson(name,
     DDRPV            : Minimum DR vertex separation from PV
     """
 
+    _d2kpi = DataOnDemand(Location = "Phys/StdLooseD02KPi/Particles")
+    _d2pipi = DataOnDemand(Location = "Phys/StdLooseD02PiPi/Particles")
+    _d2kk = DataOnDemand(Location = "Phys/StdLooseD02KK/Particles")
+    _d2kpiDCS = DataOnDemand(Location = "Phys/StdLooseD02KPiDCS/Particles")
+                
+    _dFilterCode = "(PT>%(DMinPT)s*MeV)"%locals()
+    _dFilterCode += "& (BPVVDZ> %(DZVtxSep)s *mm)"%locals()
+    _dFilterCode += "& (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s)"%locals()
+    _dFilterCode += "& (BPVVDCHI2 > %(DVtxSepChisq)s) "%locals()
+    _dFilterCode += "& (BPVDIRA > %(DDiraPV)s) "%locals()
+    _dFilterCode += "& (BPVVDRHO > %(DDRPV)s *mm)"%locals()
+    _dFilterCode += "& (MIPDV(PRIMARY)> %(DIP2PV)s*mm)"%locals()
 
-    _dMassWindow = "(ADAMASS('D0') < %(DMassWindow)s *MeV ) " %locals()
+    _trkFilterCode = "CHILDCUT(PT > %(MinPT)s *MeV, 1)" %locals()
+    _trkFilterCode += "& CHILDCUT(PT > %(MinPT)s *MeV, 2)" %locals()
+    _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 1)" %locals()
+    _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 2)" %locals()
+    _pidpiPass = "(MAXTREE(ABSID=='PI+',PIDK)<%(PionPiDDLL)s)"%locals()
 
-    _dFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
-                    " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
-                    "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s ) & (BPVVDRHO > %(DDRPV)s *mm)"   \
-                    "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
-    
-    # D0 -->Pi- Pi+
-    _d2pipi = CombineParticles("PiPi"+name)
-    _d2pipi.DecayDescriptors = [ "D0 -> pi- pi+" ]
-    dauCut = "PT > %(MinPT)s *MeV" %locals()
-    _d2pipi.DaughtersCuts =  { "pi+"      : dauCut,
-                               "K+"       : dauCut }
-                                  
-    
-    _d2pipi.CombinationCut = "(" + _dMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
-                              " & ACUTDOCA( %(DDocaMax)s *mm, '' )  )" %locals()
-    _d2pipi.MotherCut = _dFilterCode %locals()    
-    D2PiPiSelection = Selection("D2PiPiSel"+name, Algorithm = _d2pipi, RequiredSelections = [pionSel]) 
+    _dMassWindow = "(ADMASS('D0') < %(DMassWindow)s *MeV ) " %locals()
 
-    # D0 -->K- Pi+ 
-    _d2kpi = _d2pipi.clone("KPi"+name, DecayDescriptors = [ "[D0 -> K- pi+]cc" ] )
-    D2KPiSelection = Selection("D2KPiSel"+name, Algorithm = _d2kpi, RequiredSelections = [ pionSel, kaonSel ] )
+
+    # D0 -->K- Pi+
+    _code0 = _dMassWindow + " & " + _dFilterCode +" & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D02KPiSel"+name
+    _d02kpiFilter = FilterDesktop('FilterFor'+theName,Code = _code0)    
+    D2KPiSelection = Selection(theName, Algorithm = _d02kpiFilter, RequiredSelections = [_d2kpi]) 
+
+    # D0 -->K- Pi+
+    _code1 = _dMassWindow + " & " + _dFilterCode +" & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D02PiPiSel"+name
+    _d02pipiFilter = FilterDesktop('FilterFor'+theName,Code = _code1)    
+    D2PiPiSelection = Selection(theName, Algorithm = _d02pipiFilter, RequiredSelections = [_d2pipi]) 
 
     # D0 -->K- K+
-    _d2kk = _d2pipi.clone("KK"+name, DecayDescriptors = [ "D0 -> K- K+" ] )
-    D2KKSelection = Selection("D2KKSel"+name, Algorithm = _d2kk, RequiredSelections = [ kaonSel ] )
+    _code2 = _dMassWindow + " & " + _dFilterCode + " & " + _trkFilterCode
+    theName = "D02KKSel"+name
+    _d2kkFilter = FilterDesktop('FilterFor'+theName, Code = _code2)    
+    D2KKSelection = Selection(theName, Algorithm = _d2kkFilter, RequiredSelections = [_d2kk]) 
 
-    # D0 -->K- Pi+ 
-    _d2kpiDCS = _d2pipi.clone("KPiDCS"+name, DecayDescriptors = [ "[D0 -> K+ pi-]cc" ] )
-    D2KPiDCSSelection = Selection("D2KPiDCSSel"+name, Algorithm = _d2kpiDCS, RequiredSelections = [ pionSel, kaonSel ] )
+    # D0 -->K+ Pi- (DCS)
+    _code3 = _dMassWindow + " & " + _dFilterCode +" & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D02KPiDCSSel"+name
+    _d02kpiDCSFilter = FilterDesktop('FilterFor'+theName,Code = _code3)    
+    D2KPiDCSSelection = Selection(theName, Algorithm = _d02kpiDCSFilter, RequiredSelections = [_d2kpiDCS]) 
 
     selName = "MergedSel" + name
     _d0m = MergedSelection(selName, RequiredSelections = [D2PiPiSelection, D2KPiSelection, D2KKSelection, D2KPiDCSSelection] )    
@@ -1688,6 +1722,41 @@ def makeDStarMeson(name,
     """
 
 
+
+    _dst2kpipi = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPi/Particles")
+    _dst2pipipi = DataOnDemand(Location = "Phys/StdLooseDstarWithD02PiPi/Particles")
+    _dst2kkpi = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KK/Particles")
+    _dst2kpipiDCS = DataOnDemand(Location = "Phys/StdLooseDstarWithD02KPiDCS/Particles") 
+   
+    
+    # D*+ -->(K- Pi+) Pi+
+    theName = "Dst2KPiPiSel"+name
+    _d2kpipiFilter = FilterDesktop('FilterFor'+theName, Code = '(ALL)')    
+    D2KPiPiSelection = Selection(theName, Algorithm = _d2kpipiFilter, RequiredSelections = [_dst2kpipi]) 
+
+    # D*+ -->(Pi- Pi+) Pi+
+    theName = "Dst2PiPiPiSel"+name
+    _d2pipipiFilter = FilterDesktop('FilterFor'+theName, Code = '(ALL)')    
+    D2PiPiPiSelection = Selection(theName, Algorithm = _d2pipipiFilter, RequiredSelections = [_dst2pipipi]) 
+
+    # D*+ -->(K- K+) Pi+
+    theName = "Dst2KKPiSel"+name
+    _d2kkpiFilter = FilterDesktop('FilterFor'+theName, Code = '(ALL)')    
+    D2KKPiSelection = Selection(theName, Algorithm = _d2kkpiFilter, RequiredSelections = [_dst2kkpi]) 
+
+    # D*+ -->(K+ Pi-) Pi+
+    theName = "Dst2KPiPiDCSSel"+name
+    _d2kpipidcsFilter = FilterDesktop('FilterFor'+theName, Code = '(ALL)')    
+    D2KPiPiDCSSelection = Selection(theName, Algorithm = _d2kpipidcsFilter, RequiredSelections = [_dst2kpipiDCS]) 
+
+    selName = 'MergedSel'+name
+    _dm = MergedSelection(selName, RequiredSelections = [ D2KPiPiSelection, D2KKPiSelection, D2PiPiPiSelection, D2KPiPiDCSSelection])
+    return _dm
+
+
+
+    ####
+
     
     _dMassWindow = "(ADAMASS('D*(2010)+') < %(DStarMassWindow)s *MeV ) " %locals()
     _dFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DStarMinPT)s *MeV) " \
@@ -1719,7 +1788,10 @@ def makeDMeson(name,
                DVtxSepChisq, 
                DDiraPV, 
                DZVtxSep,
-               DDRPV
+               DDRPV,
+               PionMinIPChisq,
+               PionPiDDLL,
+               KaonPiDDLL
                 ):
     """
     Create and return D+, Ds+ Selection object.
@@ -1745,48 +1817,55 @@ def makeDMeson(name,
     DDRPV            : Minimum DR vertex separation from PV
     """
 
-    _dMassWindow = "(ADAMASS('D+') < %(DMassWindow)s *MeV ) " %locals()
-    _dsMassWindow = "(ADAMASS('D_s+') < %(DsMassWindow)s *MeV ) "  %locals()
-    _danddsMassWindow = "( (ADAMASS('D+') < %(DMassWindow)s *MeV) | (ADAMASS('D_s+') < %(DsMassWindow)s *MeV) )"  %locals()
+    _dMassWindow = "(ADMASS('D+') < %(DMassWindow)s *MeV)" %locals()
+    _dsMassWindow = "(ADMASS('D_s+') < %(DsMassWindow)s *MeV)"  %locals()
+    _danddsMassWindow = "( (ADMASS('D+') < %(DMassWindow)s *MeV) | (ADMASS('D_s+') < %(DsMassWindow)s *MeV) )"  %locals()
 
-    _dFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
-                    " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
-                    "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s ) & (BPVVDRHO > %(DDRPV)s *mm)"   \
-                    "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
+
+    _dFilterCode = "(PT>%(DMinPT)s*MeV)"%locals()
+    _dFilterCode += "& (BPVVDZ> %(DZVtxSep)s *mm)"%locals()
+    _dFilterCode += "& (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s)"%locals()
+    _dFilterCode += "& (BPVVDCHI2 > %(DVtxSepChisq)s) "%locals()
+    _dFilterCode += "& (BPVDIRA > %(DDiraPV)s) "%locals()
+    _dFilterCode += "& (BPVVDRHO > %(DDRPV)s *mm)"%locals()
+    _dFilterCode += "& (MIPDV(PRIMARY)> %(DIP2PV)s*mm)"%locals()
+    _dFilterCode += "& (2 > NINGENERATION(PT<%(MinPT)s *MeV, 1))"%locals()
+
+    _trkFilterCode = "CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 1)" %locals()
+    _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 2)" %locals()
+    _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 3)" %locals()
+    _pidpiPass = "(MAXTREE(ABSID=='PI+',PIDK)<%(PionPiDDLL)s)"%locals()
+
+    _d2kpipi = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
+    _d2pipipi = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi/Particles")
+    _d2kkpi = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
+    _d2kpipiOS = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi/Particles") 
+   
     
     # D+ -->K- Pi+ Pi+
-    name2 = "KPiPi"+name
-    _d2kpipi = CombineParticles(name2)
-    dauCut = "PT > %(MinPT)s *MeV" %locals()
-    _d2kpipi.DaughtersCuts =  { "pi+"      : dauCut,
-                               "K+"       : dauCut }
-                                  
-    _d2kpipi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc" 
-    _d2kpipi.CombinationCut = "(" + _dMassWindow + " & (APT > %(DMinPT)s  *MeV) " \
-                              " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
-    _d2kpipi.MotherCut = _dFilterCode %locals()    
-    D2KPiPiSelection = Selection("D2KPiPiSel"+name, Algorithm = _d2kpipi, RequiredSelections = [pionSel, kaonSel]) 
+    _code0 = _dMassWindow + " & " + _dFilterCode +" & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D2KPiPiSel"+name
+    _d2kpipiFilter = FilterDesktop('FilterFor'+theName,Code = _code0)    
+    D2KPiPiSelection = Selection(theName, Algorithm = _d2kpipiFilter, RequiredSelections = [_d2kpipi]) 
 
 
     # D+ -->K- K+ Pi+ OR D_s+ -->K- K+ Pi+   
-    _d2kkpi = _d2kpipi.clone("KKPi"+name, DecayDescriptors = [ "[D+ -> K- K+ pi+]cc" ])
-    _d2kkpi.CombinationCut = "(" + _danddsMassWindow + " & (APT > %(DMinPT)s  *MeV) " \
-                              " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
-    D2KKPiSelection = Selection("D2KKPiSel"+name, Algorithm = _d2kkpi, RequiredSelections = [pionSel, kaonSel])
-    
+    _code1 = _danddsMassWindow + " & " + _dFilterCode + " & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D2KKPiSel"+name
+    _d2kkpiFilter = FilterDesktop('FilterFor'+theName, Code = _code1)    
+    D2KKPiSelection = Selection(theName, Algorithm = _d2kkpiFilter, RequiredSelections = [_d2kkpi]) 
 
-    # D+ -->Pi- Pi+ Pi+ OR D_s+ -->Pi- Pi+ Pi+       
-    _d2pipipi = _d2kkpi.clone("PiPiPi"+name, DecayDescriptors = [ "[D+ -> pi- pi+ pi+]cc" ])
-    _d2pipipi.CombinationCut = "(" + _dsMassWindow + " & (APT > %(DMinPT)s  *MeV) " \
-                              " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
-    D2PiPiPiSelection = Selection("D2PiPiPiSel"+name, Algorithm = _d2pipipi, RequiredSelections = [pionSel])
+    # D_s+ -->Pi- Pi+ Pi+  (don't see need for D+ --> PiPiPi)
+    _code2 = _dsMassWindow + " & " +_dFilterCode + " & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D2PiPiPiSel"+name
+    _d2pipipiFilter = FilterDesktop('FilterFor'+theName, Code = _code2)    
+    D2PiPiPiSelection = Selection(theName, Algorithm = _d2pipipiFilter, RequiredSelections = [_d2pipipi]) 
 
-    # D_s+ -->K+ Pi- Pi+   
-    _d2kpipiOppSignPi = _d2kpipi.clone("KKPiOppSignPi"+name, DecayDescriptors = [ "[D+ -> K+ pi- pi+]cc" ])
-    _d2kpipiOppSignPi.CombinationCut = "(" + _dsMassWindow + " & (APT > %(DMinPT)s  *MeV)" \
-                                       " & (ANUM(PT < %(MinPT)s *MeV) <= 1) & ACUTDOCA( %(DDocaMax)s *mm, '' ) )" %locals()
-
-    D2KPiPiOppSignPiSelection = Selection("D2KPiPiOppSignPiSel"+name, Algorithm = _d2kpipiOppSignPi, RequiredSelections = [pionSel, kaonSel])
+    # D+ -->K- Pi+ Pi+ (OS)
+    _code3 = _dsMassWindow + " & " + _dFilterCode + " & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "D2KPiPiOSSel"+name
+    _d2kpipiOSFilter = FilterDesktop('FilterFor'+theName, Code = _code3)    
+    D2KPiPiOppSignPiSelection = Selection(theName, Algorithm = _d2kpipiOSFilter, RequiredSelections = [_d2kpipiOS]) 
 
 
     selName = 'MergedSel'+name
@@ -1808,7 +1887,10 @@ def makeLambdaC(name,
                 DVtxSepChisq, 
                 DDiraPV, 
                 DZVtxSep,
-                DDRPV
+                DDRPV,
+                PionMinIPChisq,
+                PionPiDDLL,
+                KaonPiDDLL
                 ):
     """
     Create and return D+, Ds+ Selection object.
@@ -1835,27 +1917,33 @@ def makeLambdaC(name,
     DDRPV            : Minimum DR vertex separation from PV
     """
 
-    _lambdaMassWindow = "(ADAMASS('Lambda_c+') < %(DMassWindow)s *MeV ) " %locals()
-    _lambdaFilterCode = "((VFASPF(VCHI2/VDOF)< %(DVtxChisq)s ) & (PT > %(DMinPT)s *MeV) " \
-                    " & (BPVVDZ> %(DZVtxSep)s *mm) & (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s )" \
-                    "& (BPVVDCHI2 > %(DVtxSepChisq)s ) & (BPVDIRA > %(DDiraPV)s ) & (BPVVDRHO > %(DDRPV)s *mm)"   \
-                    "& (MIPDV(PRIMARY)> %(DIP2PV)s *mm)) "  %locals()
-    
-    # Lambda_C+ -->P+ K- Pi+ 
-    name2 = "PKPi"+name
-    _lambdac2pkpi = CombineParticles(name2)
-    dauCut = "PT > %(MinPT)s *MeV" %locals()
-    _lambdac2pkpi.DaughtersCuts =  { "pi+"      : dauCut,
-                                     "K+"       : dauCut ,
-                                     "p+"       : dauCut }
-                                  
-    _lambdac2pkpi.DecayDescriptor = "[Lambda_c+ -> p+ K- pi+]cc" 
-    _lambdac2pkpi.CombinationCut = "(" + _lambdaMassWindow + " & (APT > %(DMinPT)s  *MeV) & (ANUM(PT < %(MinPT)s *MeV) <= 1) & ACUTDOCA( %(DDocaMax)s *mm, '') )" %locals()
-    _lambdac2pkpi.MotherCut = _lambdaFilterCode %locals()    
-    LambdaC2PKPiSelection = Selection("LambdaC2PKPiSel"+name, Algorithm = _lambdac2pkpi, RequiredSelections = [pionSel, kaonSel, protonSel]) 
+    _lc = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi/Particles")
+
+    _dFilterCode = "(PT>%(DMinPT)s*MeV)"%locals()
+    _dFilterCode += "& (BPVVDZ> %(DZVtxSep)s *mm)"%locals()
+    _dFilterCode += "& (MIPCHI2DV(PRIMARY) > %(DIPChisq2PV)s)"%locals()
+    _dFilterCode += "& (BPVVDCHI2 > %(DVtxSepChisq)s) "%locals()
+    _dFilterCode += "& (BPVDIRA > %(DDiraPV)s) "%locals()
+    _dFilterCode += "& (BPVVDRHO > %(DDRPV)s *mm)"%locals()
+    _dFilterCode += "& (MIPDV(PRIMARY)> %(DIP2PV)s*mm)"%locals()
+    _dFilterCode += "& (2 > NINGENERATION(PT<%(MinPT)s *MeV, 1))"%locals()
+
+    _trkFilterCode = "CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 1)" %locals()
+    _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 2)" %locals()
+    _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 3)" %locals()
+    _pidpiPass = "(MAXTREE(ABSID=='PI+',PIDK)<%(PionPiDDLL)s)"%locals()
+
+
+    _lcMassWindow = "(ADMASS('Lambda_c+') < %(DMassWindow)s *MeV ) " %locals()
     
 
-    return LambdaC2PKPiSelection
+    # Lambda_C+ -->P+ K- Pi+ 
+    _code0 = _lcMassWindow + " & " + _dFilterCode +" & " + _trkFilterCode + " & " + _pidpiPass
+    theName = "Lc2pKPiSel"+name
+    _lc2pkpiFilter = FilterDesktop('FilterFor'+theName,Code = _code0)    
+    Lc2pKPiSelection = Selection(theName, Algorithm = _lc2pkpiFilter, RequiredSelections = [_lc]) 
+
+    return Lc2pKPiSelection
 
 def makeXccMeson(name,dstarSel,dSel):
     '''Creates and returns the X(cc) hybrid meson selection object from D* and D selection objects.'''
@@ -1924,10 +2012,13 @@ def makeB2D3H( name,
     _b2d3h.CombinationCut = combCut  % locals()
 
     _b2d3h.MotherCut = "( (VFASPF(VCHI2/VDOF)< %(BVtxChisq)s ) & (PT > %(BMinPT)s *MeV) " \
-                       " & (DZ > %(BDZVtxSep)s *mm) & (NINGENERATION( (PT < %(MinPT)s *MeV) , 2) <= 1)" \
+                       " & (DZ > %(BDZVtxSep)s *mm) " \
                        " & (BPVVDZ> %(BZVtxSep)s *mm) & (BPVVDRHO > %(BDRPV)s *mm) & (MIPCHI2DV(PRIMARY)< %(BIPChisq2PV)s )" \
                        " & (BPVVDCHI2 > %(BVtxSepChisq)s ) & (BPVDIRA > %(BDiraPV)s )"   \
                        " & (MIPDV(PRIMARY)< %(BIP2PV)s *mm) )" % locals()
+
+
+    #(NINGENERATION( (PT < %(MinPT)s *MeV) , 2) <= 1)" \
 
     selName = 'Sel'+name
     if dSel == hhhSel:
