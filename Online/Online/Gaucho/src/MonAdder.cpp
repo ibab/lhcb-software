@@ -314,8 +314,9 @@ void MonAdder::TimeoutHandler()
     if (d->last_update < this->m_reference)
     {
 //      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
-      printf("Timeout from source %s expected %lli last received %lli\n",
-          d->m_Info->m_TargetService.c_str(), m_reference,d->last_update);
+      printf("Timeout from source %s (PID = %d) expected %lli last received %lli\n",
+          d->m_Info->m_TargetService.c_str(),d->m_pid, m_reference,d->last_update);
+      d->m_timeouts++;
       if (d->m_buffer != 0)
       {
         add(d->m_buffer,d->m_bufsiz,d->m_Info);
@@ -362,6 +363,8 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   {
     buff = isvcd->CpyBuffer(buff,siz);
   }
+  isvcd->m_pid = DimClient::getServerPid();
+  isvcd->m_timeouts = 0;
 //  printf("Received data from %s\n",h->m_TargetService.c_str());
   m_expected = m_inputServicemap.size();
   long long current  = (m_IsEOR) ? header->run_number : header->ser_tim;

@@ -53,6 +53,8 @@ public:
   long long last_update;
   void *m_buffer;
   int m_bufsiz;
+  int m_pid;
+  int m_timeouts;
   INServiceDescr(char *name, MonInfo* info, std::string tsk)
   {
     m_serviceName = name;
@@ -61,6 +63,8 @@ public:
     task = tsk;
     m_buffer = 0;
     m_bufsiz = 0;
+    m_pid = -1;
+    m_timeouts = 0;
   }
   void *CpyBuffer(void *buff, int siz)
   {
