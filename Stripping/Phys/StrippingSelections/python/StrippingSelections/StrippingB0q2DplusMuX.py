@@ -313,7 +313,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
                   "& (BPVDIRA > 0.99) "\
                   "& (BPVVDZ  > 1.0*mm) "\
                   "& (BPVVDCHI2 > %(D_BPVVDCHI2)s ) "\
-                  "& ((CHILD(2,PIDK-PIDpi)) > %(KPidPi2)s)  "\
+                  "& ((CHILD(PIDK-PIDpi,2)) > %(KPidPi2)s)  "\
                   ")" % config
 
                   #"& (VFASPF(VCHI2/VDOF) < 16.0) "\

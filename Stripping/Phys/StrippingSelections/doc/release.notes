@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Rob Lambert
+ - I had a crazy bug in the line B0q2DplusMuX, CHILD(2,functor) rather than CHILD(functor,2) I have no idea what this was doing...
+
 ! 2011-07-21 - Steve Blusk
  - StrippingB2D3H
  - Update to use StdLooseD+, D0 and Lambda_c
