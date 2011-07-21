@@ -1076,9 +1076,9 @@ Ccbar2Ppbar = {
                     'LinePostscale'    :    1.   ,
                     
                     'SpdMult'          :   300.  , # dimensionless, Spd Multiplicy cut 
-                    'ProtonPT'         :  1900.  , # MeV
-                    'ProtonP'          :    -2.  , # MeV
-                    'ProtonTRCHI2DOF' :      5.  ,
+                    'ProtonPT'         :  1950.  , # MeV
+                    'ProtonP'          :    10.  , # GeV
+                    'ProtonTRCHI2DOF' :      4.  ,
                     'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
                     'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
                     'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
@@ -1086,7 +1086,7 @@ Ccbar2Ppbar = {
                     'MaxMass'          :  4000.  , # MeV, after Vtx fit
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
-                    'CCPT'             :  6000.    
+                    'CCPT'             :  7000.    
                    },
     'STREAMS' : [ 'CharmCompleteEvent' ] ,
     'WGs'    : [ 'PSWG' ]

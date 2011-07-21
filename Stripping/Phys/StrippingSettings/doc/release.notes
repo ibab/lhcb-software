@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Jibo He
+ - LineConfigDictionaries_PSWG.py
+  . Update Ccbar2Ppbar
+
 ! 2011-07-20 - Jibo He
  - LineConfigDictionaries_PSWG.py
   . Update DiMuon
