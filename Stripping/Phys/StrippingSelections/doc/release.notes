@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Liming Zhang
+ - Updated StrippingD0ForBXX.py: pion from Dst changed to StdAllLoosePions
+
 !========================= StrippingSelections v3r6 2011-07-21 =========================
 ! 2011-07-21 - Andrew Powell
  - Fix bug in StrippingNoPIDDstarWithD02RSKPi.py monitoring and configured default prescales

@@ -10,7 +10,7 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseKaons, StdLooseProtons
+from StandardParticles import StdLoosePions, StdLooseKaons, StdLooseProtons, StdAllLoosePions
 
 
 name = 'confD0forBXX'
@@ -21,7 +21,7 @@ __all__ = ('D0forBXXConf',
            'confdict')
 
 confdict =  {
-    "PreScale"      : 0.015   # adimensiional        
+    "PreScale"      : 0.010   # adimensiional        
     ,"PreScaleRS"   : 1.0    # adimensiional
     ,"PreScaleWS"   : 0.2    # adimensiional
     ,"MINIPCHI2"     : 9.0   # adimensiional
@@ -88,11 +88,11 @@ class D0forBXXLinesConf(LineBuilder):
 
         self.seldstrs = makeDst2D0Pi("DstRSwD0K2Pi" + name,
                                   DecayDescriptor = '[D*(2010)+ -> D0 pi+]cc',
-                                  DaughterLists = [ self.seld02k2pi, StdLoosePions ])
+                                  DaughterLists = [ self.seld02k2pi, StdAllLoosePions ])
 
         self.seldstws = makeDst2D0Pi("DstWSwD0K2Pi" + name,
                                      DecayDescriptor = '[D*(2010)- -> D0 pi-]cc',
-                                     DaughterLists = [ self.seld02k2pi, StdLoosePions ])
+                                     DaughterLists = [ self.seld02k2pi, StdAllLoosePions ])
                                      
         self.seldstrs_tos = TOSFilter( "DstRSwD0K2Pi_TOS" + name,
                                      self.seldstrs,
