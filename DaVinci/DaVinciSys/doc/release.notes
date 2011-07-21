@@ -14,7 +14,10 @@ use  DecayTreeTuple             v3r15    Phys
 use  PhysConf                   v1r10    Phys
 use  DSTWriters                 v3r1     Phys
 use  LHCbAlgs                   v2r40    Kernel
+use  DaVinciTools               v22r8p2  Phys
 use  GaudiConf                  v14r0p1
+
+The branches with LoKi::VertexFitter changed were not taken this time around.
 
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r4p2
