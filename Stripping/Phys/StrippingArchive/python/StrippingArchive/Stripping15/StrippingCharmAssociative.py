@@ -91,7 +91,7 @@ from StrippingUtils.Utils import LineBuilder
 import logging
 log = logging.getLogger( 'StrippingCharmAssociative' )
 
-from StrippingSelections.StrippingPromptCharm import ( _default_configuration_ ,
+from StrippingArchive.Stripping15.StrippingPromptCharm import ( _default_configuration_ ,
                                                        default_config          ) 
 
 
