@@ -3,6 +3,7 @@ __author__ = ['Phillip Urquijo, Alessandra Borgia']
 __date__ = '08/05/2010'
 __version__ = '$Revision: 1.4 $'
 
+
 '''
 B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 '''
@@ -30,38 +31,34 @@ B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 #  determine the background. We anticipate that this analysis
 #  will require of order 1fb-1.
 #
-#  The lines are as follows with rates, timing and prescale respectively
-#  having used the dsts
-#  (RUN_79646_RealData+Reco06-Stripping10_90000000_SDST.py)
-#
-#  Stripping 13, with requirements that the
+#  Stripping XX, with requirements that the
 #  rate <0.05% and timing <1ms/evt.
 #  
-#  LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
+#  LINES: Prescale [adimensional]
 #  
 #  Pi line: B0->pi+ mu- nu signal line.
-#  Rate = 0.044, Timing = 0.642 , Prescale = 0.1
+#  Prescale = 0.02
 #  
 #  Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-#  Rate = 0.042, Timing = 0.649, Prescale = 0.2
+#  Prescale = 0.05
 #  
 #  K line: Bs0->K+ mu- nu signal line.
-#  Rate = 0.046, Timing = 0.225, Prescale = 0.2
+#  Prescale = 0.07
 #  
 #  K SS line:: Bs0->K+ mu+ nu Background to the K line.
-#  Rate = 0.045, Timing = 0.150, Prescale = 0.15
+#  Prescale = 0.06
 #  
 #  Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
-#  Rate = 0.048, Timing = 0.799, Prescale = 0.3
+#  Prescale = 0.1
 #  
 #  Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
-#  Rate = 0.045, Timing = 0.991, Prescale= 0.5
+#  Prescale= 0.2
 #  
 #  K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through K*(892).
-#  Rate = 0.046, Timing = 0.777, Prescale= 0.8
+#  Prescale= 0.25
 #  
 #  K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the K* line.
-#  Rate = 0.046, Timing = 0.272, Prescale= 1
+#  Prescale= 0.5
 # =============================================================================
 ## 
 
@@ -86,37 +83,36 @@ hence large data samples are required to accurately
 determine the background. We anticipate that this analysis
 will require of order 1fb-1.
 
-Stripping 13, with requirements that the
+Stripping XX, with requirements that the
 rate <0.05% and timing <1ms/evt.
 
-LINES: (Rate [%], Timing [ms/evt], Prescale [adimensional]
-
+LINES: Prescale [adimensional]
 Pi line: B0->pi+ mu- nu signal line.
-Rate = 0.044, Timing = 0.642 , Prescale = 0.1
+Prescale = 0.02
 
 Pi SS line:: B0->pi+ mu+ nu Background to the pi line.
-Rate = 0.042, Timing = 0.649, Prescale = 0.2
+Prescale = 0.05
 
 K line: Bs0->K+ mu- nu signal line.
-Rate = 0.046, Timing = 0.225, Prescale = 0.2
+Prescale = 0.07
 
 K SS line:: Bs0->K+ mu+ nu Background to the K line.
-Rate = 0.045, Timing = 0.150, Prescale = 0.15
+Prescale = 0.06
 
 Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
-Rate = 0.048, Timing = 0.799, Prescale = 0.3
+Prescale = 0.15
 
 Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
-Rate = 0.045, Timing = 0.991, Prescale= 0.5
+Prescale= 0.2
 
 K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through K*(892).
-Rate = 0.046, Timing = 0.777, Prescale= 0.8
+Prescale= 0.25
 
 K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the K* line.
-Rate = 0.046, Timing = 0.272, Prescale= 1
+Prescale= 0.5
 =============================================================================
  
-Last modification $Date: 2011-03-22 $
+Last modification $Date: 2011-07-21 $
                by $Author: aborgia $
 """
 
@@ -191,20 +187,6 @@ confdict= {
     "XMuMassUpper"        : 5500 # MeV
     }
 
-location_to_summary={'Raw/Spd/Digits':'nSPDhits',
-                     'Raw/IT/Clusters':'nITClusters'
-                     }
-
-def cutContainsOrSummary(location, value):
-    if 'Raw' not in location:
-        location='Raw/'+location
-        location=location.replace('//','/')
-    cutstr=" ( switch ( HASRECSUMMARY('%s'), RECSUMMARY('%s') < %d, CONTAINS('%s') < %d ) )"%(location_to_summary[location],
-                                                                                              location_to_summary[location],
-                                                                                              value,
-                                                                                              location,
-                                                                                              value)
-    return cutstr
 
 from Gaudi.Configuration import *
 from StrippingUtils.Utils import LineBuilder
@@ -343,7 +325,7 @@ class B2XuMuNuBuilder(LineBuilder):
         from PhysSelPython.Wrappers import DataOnDemand
         return StrippingLine(self._name+'Bd2PiLine',
                              # HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             prescale = 0.1,
+                             prescale = 0.02,
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
@@ -358,15 +340,15 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.2,
+        return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.05,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -374,15 +356,15 @@ class B2XuMuNuBuilder(LineBuilder):
 
     def _Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.3,
+        return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.15,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -390,15 +372,15 @@ class B2XuMuNuBuilder(LineBuilder):
         
     def _RhoWS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 0.2,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -406,15 +388,15 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KLine', prescale = 0.2,
+        return StrippingLine(self._name+'Bs2KLine', prescale = 0.07,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &""" +
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -422,15 +404,15 @@ class B2XuMuNuBuilder(LineBuilder):
     
     def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.15,
+        return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.06,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &"""+
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -438,15 +420,15 @@ class B2XuMuNuBuilder(LineBuilder):
 
     def _Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KstarLine', prescale = 0.8,
+        return StrippingLine(self._name+'Bs2KstarLine', prescale = 0.25,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &"""+
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
@@ -454,15 +436,15 @@ class B2XuMuNuBuilder(LineBuilder):
 
     def _KstarSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 1.,
+        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 0.5,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
                                        ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &"""+
-                                       cutContainsOrSummary('Raw/Spd/Digits', 500)
-                                       +" & "+cutContainsOrSummary('Raw/IT/Clusters', 1000)
-                                       ,
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
+                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
                                                        'from LoKiCore.functions    import *' ]
                                        },
