@@ -4,8 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r2p1 2011-07-21 =========================
 ! 2011-07-21 - Rob Lambert
- - Fix mixed importing of lines from outside StrippingArchive for StrippingPromptCharm
+ - Fix mixed importing of lines from outside StrippingArchive for StrippingPromptCharm in Stripping15
 
 !========================= StrippingArchive v1r2 2011-06-29 =========================
 ! 2011-06-29 - Rob Lambert
