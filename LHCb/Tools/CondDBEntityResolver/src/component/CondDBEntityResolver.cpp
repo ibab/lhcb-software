@@ -63,7 +63,8 @@ StatusCode CondDBEntityResolver::initialize ( ) {
   if ( ! sc.isSuccess() ) return sc;
 
   MsgStream log(msgSvc(), name() );
-  log << MSG::DEBUG << "Initializing..." << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Initializing..." << endmsg;
 
   // Initialize the Xerces-C++ XML subsystem
   try {
@@ -76,7 +77,8 @@ StatusCode CondDBEntityResolver::initialize ( ) {
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << "Successfully initialized." << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "Successfully initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -118,7 +120,8 @@ ICondDBReader *CondDBEntityResolver::condDBReader() {
                            name(),StatusCode::FAILURE);
     } else {
       MsgStream log(msgSvc(), name());
-      log << MSG::DEBUG << "Successfully located service " << m_condDBReaderName << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Successfully located service " << m_condDBReaderName << endmsg;
     }
   }
   return m_condDBReader;
@@ -134,7 +137,8 @@ IDetDataSvc *CondDBEntityResolver::detDataSvc() {
                            name(),StatusCode::FAILURE);
     } else {
       MsgStream log(msgSvc(), name());
-      log << MSG::DEBUG << "Successfully located service " << m_detDataSvcName << endmsg;
+      if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+        log << MSG::DEBUG << "Successfully located service " << m_detDataSvcName << endmsg;
     }
   }
   return m_detDataSvc;
@@ -162,12 +166,14 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
   cool::ChannelId channel = 0;
   size_t column_pos = path.find(":");
   if ( column_pos != path.npos ) { // It means that I have another ':' in the path
-    log << MSG::DEBUG << "Found channel id in the URI" << endmsg;
     std::istringstream oss(path.substr(column_pos+1));
     oss >> channel;
     path = path.substr(0,column_pos);
-    log << MSG::DEBUG << "path   = " << path << endmsg;
-    log << MSG::DEBUG << "ch. id = " << channel << endmsg;
+    if( UNLIKELY( log.level() <= MSG::DEBUG ) ) {
+      log << MSG::DEBUG << "Found channel id in the URI" << endmsg;
+      log << MSG::DEBUG << "path   = " << path << endmsg;
+      log << MSG::DEBUG << "ch. id = " << channel << endmsg;
+    }
   }
   // work-around a path like "conddb:path/to/folder" should be interpreted as "conddb:/path/to/folder"
   if (path[0] != '/') path = "/" + path;
@@ -249,11 +255,13 @@ xercesc::InputSource *CondDBEntityResolver::resolveEntity(const XMLCh *const, co
     xercesc::XMLString::release(&cString);
   }
 
-  log << MSG::DEBUG << "systemId = \"" << systemIdString << "\"" << endmsg;
+  if( UNLIKELY( log.level() <= MSG::DEBUG ) )
+    log << MSG::DEBUG << "systemId = \"" << systemIdString << "\"" << endmsg;
 
   if ( systemIdString.find("conddb:") != 0 ) {
     // the string does not start with "conddb:", so I cannot handle it
-    log << MSG::VERBOSE << "Not a conddb URL" << endmsg;
+    if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
+      log << MSG::VERBOSE << "Not a conddb URL" << endmsg;
     // tell XercesC to use the default action
     return NULL;
   }
