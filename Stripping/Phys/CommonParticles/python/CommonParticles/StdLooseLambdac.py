@@ -24,13 +24,13 @@ StdLooseLambdac2PKPi.Inputs = [ "Phys/StdLooseKaons/Particles",
 
 StdLooseLambdac2PKPi.DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc" 
 StdLooseLambdac2PKPi.DaughtersCuts = {
-    "K+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))", 
-    "pi+" : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))",
-    "p+"  : "((PT >250*MeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4.))"
+    "K+"  : "(P > 2*GeV)", 
+    "pi+" : "(P > 2*GeV)",
+    "p+"  : "(P > 2*GeV)"
     }
 
-StdLooseLambdac2PKPi.CombinationCut = "(ADAMASS('Lambda_c+')<150*MeV) & (APT>1.*GeV)"
-StdLooseLambdac2PKPi.MotherCut = "(VFASPF(VCHI2) < 30 )" 
+StdLooseLambdac2PKPi.CombinationCut = "((ADAMASS('Lambda_c+')<110*MeV) & (APT>1.*GeV) & (ADOCAMAX('')<0.5*mm))"
+StdLooseLambdac2PKPi.MotherCut = "((VFASPF(VCHI2) < 30) & (ADMASS('Lambda_c+')<100*MeV) & (BPVVDCHI2>36) & (BPVDIRA>0.98))" 
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseLambdac2PKPi )

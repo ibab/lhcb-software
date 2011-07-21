@@ -29,18 +29,18 @@ from CommonParticles.Utils import *
 ## create the algorithm 
 StdLooseD02KPi = CombineParticles ( 'StdLooseD02KPi' )
 
-StdLooseD02KPi.Inputs = [ "Phys/StdNoPIDsKaons/Particles",
-                          "Phys/StdNoPIDsPions/Particles" ]
+StdLooseD02KPi.Inputs = [ "Phys/StdLooseKaons/Particles",
+                          "Phys/StdLoosePions/Particles" ]
 StdLooseD02KPi.DecayDescriptor = "[D0 -> K- pi+]cc" 
 
-StdLooseD02KPi.DaughtersCuts = { "K+" : "(PT>250*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
-                                 "pi+" : "(PT>250*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"}
+StdLooseD02KPi.DaughtersCuts = { "K+" : "(P>2*GeV)",
+                                 "pi+" : "(P>2*GeV)"}
 
 #for the mass window, need 100 MeV above the Ds mass for clean background estimation, but only need 
 #~100 MeV below since the lower mass sideband will be for the crystal ball only. 
 
-StdLooseD02KPi.CombinationCut = "(APT>1*GeV) & (ADAMASS('D0')<200*MeV)"
-StdLooseD02KPi.MotherCut = "(VFASPF(VCHI2)<10) & (M > 1760*MeV)"
+StdLooseD02KPi.CombinationCut = "(((APT>1*GeV) | (ASUM(PT)>1.2*GeV)) & (ADAMASS('D0')<110*MeV) & (ADOCA(1,2)<0.5*mm))"
+StdLooseD02KPi.MotherCut = "((VFASPF(VCHI2)<10) & (ADMASS('D0')<100*MeV) & (BPVVDCHI2>36))"
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdLooseD02KPi )
@@ -49,7 +49,6 @@ locations = updateDoD ( StdLooseD02KPi )
 ## PiPi
 StdLooseD02PiPi = StdLooseD02KPi.clone("StdLooseD02PiPi")
 StdLooseD02PiPi.DecayDescriptor = "[D0 -> pi- pi+]cc"
-StdLooseD02PiPi.Inputs = [ "Phys/StdNoPIDsPions/Particles" ]
 
 ## configure Data-On-Demand service 
 locations.update( updateDoD ( StdLooseD02PiPi ) )
@@ -58,7 +57,6 @@ locations.update( updateDoD ( StdLooseD02PiPi ) )
 ## KK
 StdLooseD02KK = StdLooseD02KPi.clone("StdLooseD02KK")
 StdLooseD02KK.DecayDescriptor = "[D0 -> K- K+]cc"
-StdLooseD02KK.Inputs = [ "Phys/StdNoPIDsKaons/Particles" ]
 
 ## configure Data-On-Demand service 
 locations.update( updateDoD ( StdLooseD02KK ) )
@@ -67,8 +65,6 @@ locations.update( updateDoD ( StdLooseD02KK ) )
 ## Doubly Cabibbo suppressed
 StdLooseD02KPiDCS = StdLooseD02KPi.clone("StdLooseD02KPiDCS")
 StdLooseD02KPiDCS.DecayDescriptor = "[D0 -> K+ pi-]cc" 
-StdLooseD02KPiDCS.Inputs = [ "Phys/StdNoPIDsKaons/Particles",
-                             "Phys/StdNoPIDsPions/Particles" ]
 
 ## configure Data-On-Demand service 
 locations.update( updateDoD ( StdLooseD02KPiDCS ) )
