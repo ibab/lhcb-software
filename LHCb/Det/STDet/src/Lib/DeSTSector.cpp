@@ -1,4 +1,3 @@
-// $Id: DeSTSector.cpp,v 1.63 2010-02-26 09:25:24 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -213,8 +212,9 @@ double DeSTSector::sectorNoise() const
   else
   {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::DEBUG << number << " strips out of " << nStrip()
-            << " are not taken into account" << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << number << " strips out of " << nStrip()
+          << " are not taken into account" << endmsg;
     return sum / number;
   }
 }
@@ -256,9 +256,10 @@ double DeSTSector::beetleNoise(const unsigned int& beetle) const
   else
   {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::DEBUG << number << " strips out of "
-        << LHCbConstants::nStripsInBeetle
-        << " are not taken into account" << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << number << " strips out of "
+          << LHCbConstants::nStripsInBeetle
+          << " are not taken into account" << endmsg;
     return sum / number;
   }
 }
@@ -318,9 +319,10 @@ double DeSTSector::portNoise(const unsigned int& beetle,
   else
   {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::DEBUG << number << " strips out of "
-        << LHCbConstants::nStripsInPort
-        << " are not taken into account" << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << number << " strips out of "
+          << LHCbConstants::nStripsInPort
+          << " are not taken into account" << endmsg;
     return sum / number;
   }
 }
@@ -446,8 +448,9 @@ double DeSTSector::cmSectorNoise() const
   else
   {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::DEBUG << number << " strips out of " << nStrip()
-            << " are not taken into account" << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << number << " strips out of " << nStrip()
+          << " are not taken into account" << endmsg;
     return sum / number;
   }
 }
@@ -489,9 +492,10 @@ double DeSTSector::cmBeetleNoise(const unsigned int& beetle) const
   else
   {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::DEBUG << number << " strips out of "
-        << LHCbConstants::nStripsInBeetle
-        << " are not taken into account" << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << number << " strips out of "
+          << LHCbConstants::nStripsInBeetle
+          << " are not taken into account" << endmsg;
     return sum / number;
   }
 }
@@ -551,9 +555,10 @@ double DeSTSector::cmPortNoise(const unsigned int& beetle,
   else
   {
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::DEBUG << number << " strips out of "
-        << LHCbConstants::nStripsInPort
-        << " are not taken into account" << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << number << " strips out of "
+          << LHCbConstants::nStripsInPort
+          << " are not taken into account" << endmsg;
     return sum / number;
   }
 }
@@ -916,7 +921,8 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
 
   if (sectorStatus() != DeSTSector::OK){
     // if the sector is not ok nothing to be done
-    msg << MSG::DEBUG << "Sector is off anyway: set request ignored " << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << "Sector is off anyway: set request ignored " << endmsg;
   }
   else {
     if (newStatus == DeSTSector::OK){
@@ -947,8 +953,9 @@ void DeSTSector::setStripStatus( const unsigned int strip,
 
   if(sectorStatus() != DeSTSector::OK || beetleStatus(strip) != DeSTSector::OK){
     // if the sector is not ok nothing to be done
-    msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored " 
-        << endmsg;
+    if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+      msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored " 
+          << endmsg;
   }
   else {
     if (newStatus == DeSTSector::OK){
