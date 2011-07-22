@@ -148,6 +148,8 @@ def printProjects():
 def findAllDatabases( distArea ):
     here = os.getcwd()
     os.chdir( os.environ.get( distArea ) )
+    if distArea != "LHCBTAR" :
+        os.chdir(os.pardir)
     print 'Processing all databases in ', os.getcwd()
 
     # Find all databases
