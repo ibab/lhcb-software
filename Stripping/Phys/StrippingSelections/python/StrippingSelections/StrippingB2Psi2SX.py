@@ -16,6 +16,7 @@ __author__ = ['Fred Blanc - Neus Lopez March']
 __date__ = '16/2/2011'
 __version__ = '$Revision: 1.0 $'
 
+
 __all__ = ('B2Psi2SXConf',
            'makePions',
            'makeJpsi',
@@ -33,9 +34,11 @@ __all__ = ('B2Psi2SXConf',
            )
 
 
+
+
 config_params = {'PionsTRCHI2DOF': 5,
-                 'Psi2SJpsiMIPCHI2DV' : 4 ,
-                 'Psi2SPiMIPCHI2DV':4 ,
+#                 'Psi2SJpsiMIPCHI2DV' : 9 ,
+                 'Psi2SPiMIPCHI2DV':9 , #before 4
                  'Psi2SAM23down': 400,
                  'Psi2SAM23up': 800,
                  'Psi2SAPT': 500,
@@ -58,7 +61,7 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'KstPIDpi': 10, #new 10
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.4,
+                 'incl_LinePrescale':0.5, #0.1
                  'incl_LinePostscale':1,
                  'BsMassCutDownPre':5000,
                  'BsMassCutUpPre':5650,
@@ -68,22 +71,23 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'sig_LinePrescale': 1,
                  'sig_LinePostscale': 1,
                  'ChKPT': 500 ,
-                 'K_LinePrescale': 1,
+                 'K_LinePrescale': 1, #0.5
                  'K_LinePostscale': 1,
-                 'Kstar_LinePrescale': 1,
+                 'Kstar_LinePrescale': 1, #0.5
                  'Kstar_LinePostscale': 1,
                  'MINTREEPT2' : 1000,
                  'BKsVCHI2PDOF': 10,
                  'Ks_LinePrescale': 1,
                  'Ks_LinePostscale':1
-                                  }
+                 }                                                   
+
 
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StandardParticles import StdLoosePions
-from StandardParticles import StdLooseMuons
-from StandardParticles import StdLooseKaons
+from StandardParticles import StdAllLoosePions
+from StandardParticles import StdAllLooseMuons
+from StandardParticles import StdAllLooseKaons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -92,7 +96,7 @@ from StrippingUtils.Utils import LineBuilder
 class B2Psi2SXConf(LineBuilder) :
   
     __configuration_keys__ = ('PionsTRCHI2DOF',
-                              'Psi2SJpsiMIPCHI2DV',
+#                              'Psi2SJpsiMIPCHI2DV',
                               'Psi2SPiMIPCHI2DV',
                               'Psi2SAM23down',
                               'Psi2SAM23up',
@@ -159,7 +163,7 @@ class B2Psi2SXConf(LineBuilder) :
         self.selPsi2S2JpsiPiPi = makePsi2S(self.name + '_Psi2SJpsiPiPi',
                                            Pions = self.selPions,
                                            Jpsi = self.selJpsi,
-                                           Psi2SJpsiMIPCHI2DV = config['Psi2SJpsiMIPCHI2DV'],
+#                                           Psi2SJpsiMIPCHI2DV = config['Psi2SJpsiMIPCHI2DV'],
                                            Psi2SPiMIPCHI2DV = config['Psi2SPiMIPCHI2DV'], 
                                            Psi2SAM23down = config['Psi2SAM23down'], 
                                            Psi2SAM23up = config['Psi2SAM23up'], 
@@ -309,7 +313,7 @@ def makePions(name,
               PionsTRCHI2DOF #<5
               ):
 
-    _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+    _stdLoosePions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
     _code = "(TRCHI2DOF < %(PionsTRCHI2DOF)s)"  % locals()
     _Pions = FilterDesktop(Code = _code)
     
@@ -335,7 +339,7 @@ def makeJpsi(name):
 def makePsi2S(name,
               Pions,
               Jpsi,
-              Psi2SJpsiMIPCHI2DV, # 4
+              #Psi2SJpsiMIPCHI2DV, # 4
               Psi2SPiMIPCHI2DV, #4
               Psi2SAM23down, #>400 
               Psi2SAM23up, #<800 
@@ -345,7 +349,8 @@ def makePsi2S(name,
               PIDpi #10
               ) :
 
-    _daughtersCuts = { "J/psi(1S)" : "MIPCHI2DV(PRIMARY) > %(Psi2SJpsiMIPCHI2DV)s" % locals(), "pi+" : "MIPCHI2DV(PRIMARY) > %(Psi2SPiMIPCHI2DV)s" % locals()}
+   # _daughtersCuts = { "J/psi(1S)" : "MIPCHI2DV(PRIMARY) > %(Psi2SJpsiMIPCHI2DV)s" % locals(), "pi+" : "MIPCHI2DV(PRIMARY) > %(Psi2SPiMIPCHI2DV)s" % locals()}
+    _daughtersCuts = {  "pi+" : "MIPCHI2DV(PRIMARY) > %(Psi2SPiMIPCHI2DV)s" % locals()}
     _preVertexCuts = "(AM23>%(Psi2SAM23down)s*MeV) & (AM23<%(Psi2SAM23up)s*MeV)&(APT>%(Psi2SAPT)s*MeV) & (ADAMASS('psi(2S)') < %(Psi2SADAMASS)s*MeV)" % locals()
     _motherCuts = "(VFASPF(VCHI2/VDOF) < %(Psi2SVFASPF)s)  & (MINTREE('pi-'==ABSID, PIDK) < %(PIDpi)s) & (MINTREE('pi+'==ABSID, PIDK) < %(PIDpi)s)" % locals()
     _Psi2S = CombineParticles( DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-",
@@ -368,7 +373,7 @@ def makeChK(name,
             ChKPID #>-2
             ) :
     
-    _stdChK = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+    _stdChK = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
     _code = "(TRCHI2DOF < %(ChKTRCHI2DOF)s) & (PIDK > %(ChKPID)s)"  % locals()
     _ChKFilter = FilterDesktop(Code = _code)
     
