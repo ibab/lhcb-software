@@ -26,7 +26,7 @@ from LHCbKernel.Configuration import *  #check if needed
 
 
 defaultConfig = {
-      'BVXCHI2NDOF'        : 4.0           # dimensionless
+      'BVXCHI2NDOF'        : 8         # dimensionless
     , 'BIPCHI2'            : 9.0           # dimensionless
     , 'BDIRA'              : 0.999968      # dimensionless
     , 'BFDCHI2'            : 100.0         # dimensionless
@@ -42,6 +42,10 @@ defaultConfig = {
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV      
     , 'KstarplusWINDOW'    : 300.0         # MeV      
+    , 'KsWINDOW'           : 30.0          # MeV     
+    , 'LambdaWINDOW'       : 30.0          # MeV    
+    , 'LongLivedPT'        : 500.0          # MeV  
+    , 'LongLivedTau'        : 2          # ps 
 }
 
 
@@ -73,6 +77,10 @@ class B2XMuMuConf(LineBuilder) :
         , 'DplusLOWERMASS'
         , 'DplusUPPERMASS'
         , 'KstarplusWINDOW'
+        , 'KsWINDOW'
+        , 'LambdaWINDOW'
+        , 'LongLivedPT'
+        , 'LongLivedTau'
     )
 
     def __init__(self, name, config) :
@@ -88,6 +96,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Kaons = self.__NoPIDKaons__(config)
         self.Pions = self.__NoPIDPions__(config)       
         self.Kshort = self.__Kshort__(config)
+        self.Lambda = self.__Lambda__(config)
         self.Pi0 = self.__Pi0__(config)
         self.Phi = self.__Phi__(self.Kaons, config)
         self.Rho = self.__Rho__(self.Pions, config)
@@ -96,7 +105,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
 
         self.Bs = self.__Bs__(self.Dimuon, self.Kaons, self.Pions,
-                              self.Kshort, self.Phi, self.Rho,
+                              self.Kshort, self.Lambda, self.Phi, self.Rho,
                               self.Kstar, self.Kstar2KsPi,
                               self.Kstar2KPi0, config)
 
@@ -222,7 +231,9 @@ class B2XMuMuConf(LineBuilder) :
         Returns the KaonPion cut string
         """
         _KsCuts = """
-        (MIPCHI2DV(PRIMARY) > %(KpiMINIPCHI2)s )
+        (ADMASS('KS0') < %(KsWINDOW)s* MeV) &
+        (PT > %(LongLivedPT)s *MeV) &
+        (BPVLTIME() > %(LongLivedTau)s *ps)
         """ % conf
         return _KsCuts
 
@@ -234,19 +245,46 @@ class B2XMuMuConf(LineBuilder) :
         _ksdd = AutomaticData(Location = 'Phys/StdLooseKsDD/Particles')
         _ksll = AutomaticData(Location = 'Phys/StdLooseKsLL/Particles')
         _filter_ksdd = FilterDesktop(Code = self.__KsCuts__(conf))
-        _filter_ksll = FilterDesktop(Code = self.__KsCuts__(conf))
-        
+        _filter_ksll = FilterDesktop(Code = self.__KsCuts__(conf))        
         _selksdd = Selection("Selection_"+self.name+"_Ksdd",
                              RequiredSelections = [ _ksdd ] ,
                              Algorithm = _filter_ksdd)
         _selksll = Selection("Selection_"+self.name+"_Ksll",
                              RequiredSelections = [ _ksll ] ,
                              Algorithm = _filter_ksll)
+
         _sel = MergedSelection("Selection_"+self.name+"_Kshort",
                                RequiredSelections = [ _selksdd, _selksll ])
         return _sel
 
+    def __LambdaCuts__(self, conf):
+        """
+        Returns the Lambda cut string
+        """
+        _LambdaCuts = """
+        (ADMASS('Lambda0') < %(LambdaWINDOW)s *MeV) & 
+        (PT > %(LongLivedPT)s *MeV) &
+        (BPVLTIME() > %(LongLivedTau)s *ps)
+        """ % conf
+        return _LambdaCuts
 
+    def __Lambda__(self, conf):
+        """
+        Filter Lambda from StdLooseLambda
+        """  
+        _lambdadd = AutomaticData(Location = 'Phys/StdLooseLambdaDD/Particles')
+        _lambdall = AutomaticData(Location = 'Phys/StdLooseLambdaLL/Particles')
+        _filter_lambdadd = FilterDesktop(Code = self.__LambdaCuts__(conf))
+        _filter_lambdall = FilterDesktop(Code = self.__LambdaCuts__(conf))        
+        _sellambdadd = Selection("Selection_"+self.name+"_Lambdadd",
+                             RequiredSelections = [ _lambdadd ] ,
+                             Algorithm = _filter_lambdadd)
+        _sellambdall = Selection("Selection_"+self.name+"_Lambdall",
+                             RequiredSelections = [ _lambdall ] ,
+                             Algorithm = _filter_lambdall)
+        _sel = MergedSelection("Selection_"+self.name+"_Lambda",
+                               RequiredSelections = [ _sellambdadd, _sellambdall ])
+        return _sel
 
     def __Pi0Cuts__(self, conf):
         """
@@ -261,21 +299,15 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Pi0__(self, conf):
         """
-        Filter kshort from Std Pi0
+        Filter Pi0 from Std Pi0
         """  
-        _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0/Particles')
         _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0/Particles')
-        _filter_pi0merged = FilterDesktop(Code = self.__Pi0Cuts__(conf))
         _filter_pi0resolved = FilterDesktop(Code = self.__Pi0Cuts__(conf))
         
-        _selpi0merged = Selection("Selection_"+self.name+"_Pi0merged",
-                                  RequiredSelections = [ _pi0merged ] ,
-                                  Algorithm = _filter_pi0merged)
-        _selpi0resolved = Selection("Selection_"+self.name+"_pi0resolved",
-                                    RequiredSelections = [ _pi0resolved ] ,
-                                    Algorithm = _filter_pi0resolved)
-        _sel = MergedSelection("Selection_"+self.name+"_Pizero",
-                               RequiredSelections = [ _selpi0merged, _selpi0resolved ])
+
+        _sel = Selection("Selection_"+self.name+"_pi0resolved",
+                              RequiredSelections = [ _pi0resolved ] ,
+                              Algorithm = _filter_pi0resolved)
         return _sel
 
 
@@ -413,7 +445,7 @@ class B2XMuMuConf(LineBuilder) :
 
 
 
-    def __Bs__(self, Dimuon, Kaons, Pions, Kshort, Phi, Rho, Kstar, Kstar2KsPi, Kstar2KPi0, conf):
+    def __Bs__(self, Dimuon, Kaons, Pions, Kshort, Lambda, Phi, Rho, Kstar, Kstar2KsPi, Kstar2KPi0, conf):
         """
         Make and return a Bs selection
         """      
@@ -425,13 +457,14 @@ class B2XMuMuConf(LineBuilder) :
                                       "B0 -> J/psi(1S) KS0",
                                       "[B+ -> J/psi(1S) K+]cc",
                                       "[B+ -> J/psi(1S) pi+]cc",
-                                      "[B+ -> J/psi(1S) K*(892)+]cc"]
+                                      "[B+ -> J/psi(1S) K*(892)+]cc",
+                                      "[Lambda_b0 -> J/psi(1S) Lambda0]cc"]
         
-        _b2xmumu.CombinationCut = "(AM > 5000.0 *MeV) & (AM < 7000.0 *MeV)"
+        _b2xmumu.CombinationCut = "(AM > 4900.0 *MeV) & (AM < 7000.0 *MeV)"
         _b2xmumu.MotherCut = self.__BsCuts__(conf)
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
-                                         RequiredSelections = [Kaons, Pions, Kshort,
+                                         RequiredSelections = [Kaons, Pions, Kshort, Lambda,
                                                                Phi, Rho, Kstar,
                                                                Kstar2KsPi, Kstar2KPi0])
         sel = Selection( "Selection_"+self.name+"_bs2xmumu",
