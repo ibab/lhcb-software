@@ -19,38 +19,9 @@ __author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'D.Milanes',
 __date__    = '20/07/2011'
 __version__ = '$Revision: 1.4 $'
 
-#config_params = {     #for mDST
-#    'PromptPrescale'           : 0.3,
-#    'DetachedPrescale'         : 1.,
-#    'DetachedNoMIPPrescale'    : 0.,
-#    'DetachedNoMIPHiPPrescale' : 0., 
-#    'DetachedNoMIPKPrescale'   : 0.,
-#    'FromLambdacPrescale'      : 1.,
-#    'KFromLambdacPrescale'     : 0.,
-#    'PiFromLambdacPrescale'    : 0.,
-#    'PFromLambdacPrescale'     : 0.,
-#    'KISMUONFromLambdacPrescale' : 0.,
-#    'PiISMUONFromLambdacPrescale': 0.,
-#    'PISMUONFromLambdacPrescale' : 0.
-#    }
-
-#config_params = {      #for fullDST
-#    'PromptPrescale'           : 0.,
-#    'DetachedPrescale'         : 0.,
-#    'DetachedNoMIPPrescale'    : 0.3,
-#    'DetachedNoMIPHiPPrescale' : 1., 
-#    'DetachedNoMIPKPrescale'   : 1.,
-#    'FromLambdacPrescale'      : 0.,
-#    'KFromLambdacPrescale'     : 1.,
-#    'PiFromLambdacPrescale'    : 1.,
-#    'PFromLambdacPrescale'     : 1.,
-#    'KISMUONFromLambdacPrescale' : 1.,
-#    'PiISMUONFromLambdacPrescale': 1.,
-#    'PISMUONFromLambdacPrescale' : 1.
-#    }
 
 config_params = {    
-    'PromptPrescale'           : 0., #not used anymore
+    'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
     'DetachedPrescale'         : 1.,
     'DetachedNoMIPPrescale'    : 0.3,
     'DetachedNoMIPHiPPrescale' : 1.,
@@ -230,9 +201,9 @@ def makeDetachedNoMIPSelection( name, muons ):
     TAG:: IsMuon and P>6Gev and Pt>1.5 GeV & IpChi2>10
     '''
     #(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) &
-    mucocut = '(P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>25)'
-    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),1)) "
-    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),2)) "
+    mucocut = '(P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>10)'
+    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>25),1)) "
+    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>25),2)) "
 
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
@@ -249,9 +220,9 @@ def makeDetachedNoMIPNoPCutSelection( name, muons ):
     TAG:: IsMuon and P>6Gev and Pt>1.5 GeV & IpChi2>10
     '''
     #(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) & '(P>3*GeV) & (PT>800*MeV)
-    mucocut = '(TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>25)'
-    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),1)) "
-    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),2)) "
+    mucocut = '(TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>10)'
+    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>25),1)) "
+    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>25),2)) "
 
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
@@ -268,9 +239,9 @@ def makeDetachedNoMIPHiPSelection( name, muons ):
     TAG:: IsMuon and P>6Gev and Pt>1.5 GeV & IpChi2>10
     '''
     #(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) &
-    mucocut = '(P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>25)'
-    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),1)) "
-    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>10),2)) "
+    mucocut = '(P>3*GeV) & (PT>800*MeV) & (TRCHI2DOF<3) & (ISLONG) & (MIPCHI2DV(PRIMARY)>10)'
+    tag1cuts = " (CHILDCUT(ISMUON,1)) & (CHILDCUT((P>6*GeV),1)) & (CHILDCUT((PT>1.5*GeV),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>25),1)) "
+    tag2cuts = " (CHILDCUT(ISMUON,2)) & (CHILDCUT((P>6*GeV),2)) & (CHILDCUT((PT>1.5*GeV),2)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>25),2)) "
 
     probe1cuts = "(CHILDCUT(P>40*GeV,1))"
     probe2cuts = "(CHILDCUT(P>40*GeV,2))"
