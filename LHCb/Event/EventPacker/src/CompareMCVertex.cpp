@@ -1,4 +1,3 @@
-// $Id: CompareMCVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Boost
@@ -39,7 +38,7 @@ CompareMCVertex::~CompareMCVertex() {}
 //=============================================================================
 StatusCode CompareMCVertex::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   LHCb::MCVertices* old  = get<LHCb::MCVertices>( m_inputName  );
   LHCb::MCVertices* test = get<LHCb::MCVertices>( m_testName  );

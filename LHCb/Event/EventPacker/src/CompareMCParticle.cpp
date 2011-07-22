@@ -1,4 +1,3 @@
-// $Id: CompareMCParticle.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +35,7 @@ CompareMCParticle::~CompareMCParticle() {}
 //=============================================================================
 StatusCode CompareMCParticle::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   LHCb::MCParticles* old  = get<LHCb::MCParticles>( m_inputName  );
   LHCb::MCParticles* test = get<LHCb::MCParticles>( m_testName  );

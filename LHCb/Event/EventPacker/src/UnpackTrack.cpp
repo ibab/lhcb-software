@@ -183,7 +183,8 @@ StatusCode UnpackTrack::execute() {
       if ( 0 != ancest ) {   
         SmartRef<LHCb::Track> myAncestor( ancest );
         track->addToAncestors( ancest );
-        debug() << "Add ancestor for track " << track->key() << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "Add ancestor for track " << track->key() << endmsg;
       }
     }
   }

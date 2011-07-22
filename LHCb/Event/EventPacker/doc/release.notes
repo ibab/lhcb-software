@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+
 !========================= EventPacker v2r9 2011-04-26 =========================
 ! 2011-04-19 - Olivier Callot
  - Fix the ownership (memory leak) in WritePackedDst::storeInBlob
