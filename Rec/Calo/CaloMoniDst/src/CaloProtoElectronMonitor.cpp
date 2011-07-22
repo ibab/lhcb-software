@@ -1,4 +1,3 @@
-// $Id: CaloProtoElectronMonitor.cpp,v 1.3 2010/05/20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloProtoElectronMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloProtoElectronMonitor )
 
 
 //=============================================================================
@@ -58,7 +57,7 @@ StatusCode CaloProtoElectronMonitor::initialize() {
   StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   if( !m_tracks.empty() )info() << "Will only look at track type(s) = " << m_tracks << endmsg;
   else 
@@ -92,14 +91,13 @@ StatusCode CaloProtoElectronMonitor::initialize() {
 //=============================================================================
 StatusCode CaloProtoElectronMonitor::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   // get input data
   if( !exist<LHCb::ProtoParticles> ( inputData() ) ){
-    debug() << "no protoP container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "no protoP container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS ;
   };
   
@@ -221,7 +219,7 @@ StatusCode CaloProtoElectronMonitor::execute() {
 //=============================================================================
 StatusCode CaloProtoElectronMonitor::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return CaloMoniAlg::finalize();  // must be called after all other actions
 }

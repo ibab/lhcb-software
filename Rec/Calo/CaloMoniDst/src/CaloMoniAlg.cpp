@@ -1,4 +1,3 @@
-// $Id: CaloMoniAlg.cpp,v 1.15 2010/05/20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloMoniAlg );
+DECLARE_ALGORITHM_FACTORY( CaloMoniAlg )
 
 
 //=============================================================================
@@ -77,9 +76,12 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
 
   m_histoList.push_back( "All" );
   StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
-  sc.isSuccess() ? 
-    debug() << "HistoTopDir set to 'CaloMoniDst/' " << endmsg :
-    warning() << "HistoTopDir setProperty failed " << endmsg ;      
+  if( sc.isSuccess() ) {
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "HistoTopDir set to 'CaloMoniDst/' " << endmsg;
+  } else {
+    warning() << "HistoTopDir setProperty failed " << endmsg ;
+  }
 
   // Areas
   m_nAreas = 1 << (CaloCellCode::BitsArea +1);
@@ -109,7 +111,7 @@ StatusCode CaloMoniAlg::initialize() {
   StatusCode sc = Calo2Dview::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by Calo2Dview
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
 
   if( m_split && m_splitSides ){
@@ -122,7 +124,7 @@ StatusCode CaloMoniAlg::initialize() {
 
 StatusCode CaloMoniAlg::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return Calo2Dview::finalize();
 }

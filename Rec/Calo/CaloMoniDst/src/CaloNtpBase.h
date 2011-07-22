@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef CALONTPBASE_H 
 #define CALONTPBASE_H 1
 

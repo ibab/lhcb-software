@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloNtpBase );
+DECLARE_ALGORITHM_FACTORY( CaloNtpBase )
 
 
 //=============================================================================
@@ -62,7 +61,7 @@ StatusCode CaloNtpBase::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_calo = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
 
@@ -148,7 +147,8 @@ bool CaloNtpBase::hypoProcessing(const LHCb::CaloHypo* hypo) {
 bool CaloNtpBase::eventProcessing() {
   // get input data
   if( !exist<LHCb::ProtoParticles> ( m_input ) ){
-    debug() << "no protoP container found at " << m_input << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "no protoP container found at " << m_input << endmsg;
     return false ;
   };
 
@@ -191,7 +191,8 @@ return m_tracks.empty() ? true : false;
 //=============================================================================
 StatusCode CaloNtpBase::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Finalize" << endmsg;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }

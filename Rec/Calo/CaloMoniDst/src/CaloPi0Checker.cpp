@@ -1,5 +1,3 @@
-// $Id: CaloPi0Checker.cpp,v 1.8 2010/04/09 13:42:05 rlambert Exp $
-
 // ============================================================================
 // Include files
 // ============================================================================
@@ -206,6 +204,6 @@ StatusCode CaloPi0Checker::execute(){
 
 
 StatusCode CaloPi0Checker::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

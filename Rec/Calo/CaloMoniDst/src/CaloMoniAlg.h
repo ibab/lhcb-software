@@ -112,7 +112,8 @@ public:
 
 
     if( m_splitSides){
-      debug() << "Booking histogram1D per calo side" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Booking histogram1D per calo side" << endmsg;
       for(unsigned int i = 0;i <2 ;++i){
         std::string side = (i==0) ? "C-side" : "A-side";
         GaudiAlg::HistoID id(side + "/" + hid);
@@ -121,7 +122,8 @@ public:
       }      
     }
     else if(m_split){
-      debug() << "Booking histogram1D per calo area" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Booking histogram1D per calo area" << endmsg;
       for(unsigned int i = 0;i != m_nAreas;++i){
         // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
         std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), i );
@@ -131,7 +133,8 @@ public:
         h1[id] = book1D( id, tit, low, high, bins );
       }
     }
-    debug() << "Booking histogram1D for whole calo" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Booking histogram1D for whole calo" << endmsg;
     h1[hid] = book1D( hid, titl, low, high, bins );
   }
   
@@ -145,7 +148,8 @@ public:
                       const unsigned long binsy=100 ){ 
     if(!doHisto(hid))return;
     if( m_splitSides ){
-      debug() << "Booking histogram2D per calo side" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Booking histogram2D per calo side" << endmsg;
       for(unsigned int i = 0;i <2 ;++i){
         std::string side = (i==0) ? "C-side" : "A-side";
         GaudiAlg::HistoID id(side + "/" + hid);
@@ -154,7 +158,8 @@ public:
       }
     }
     else if( m_split ){
-      debug() << "Booking histogram2D per calo region" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Booking histogram2D per calo region" << endmsg;
       for(unsigned int i = 0;i != m_nAreas;++i){
         std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), i );
         if( !validArea( area ))continue;
@@ -163,7 +168,8 @@ public:
         h2[id] = book2D( id, tit, lowx, highx, binsx, lowy, highy, binsy );
       }
     }
-    debug() << "Booking histogram2D for whole calo" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Booking histogram2D for whole calo" << endmsg;
     h2[hid] = book2D( hid, titl, lowx, highx, binsx, lowy, highy, binsy );
   }
   
@@ -233,9 +239,11 @@ public:
     }
     else if( m_split && !(cellID == LHCb::CaloCellID()) ) {
       std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), cellID.area() );
-      debug() << "Filling histogram2D per calo region " << cellID << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Filling histogram2D per calo region " << cellID << endmsg;
       if( validArea( area ) ){
-        debug() << "valid area " << area << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "valid area " << area << endmsg;
         GaudiAlg::HistoID id(area + "/" + hid);
         IHistogram1D* hh = h1[id];
         if( NULL == hh )return;

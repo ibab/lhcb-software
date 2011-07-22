@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.94 2010-06-05 18:18:10 rlambert Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
 
 !========================= CaloMoniDst v5r7 2011-02-25 =========================
 ! 2011-02-07 - Olivier Deschamps

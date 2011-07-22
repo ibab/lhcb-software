@@ -28,7 +28,7 @@
 // local
 #include "CaloPhotonChecker.h"
 
-DECLARE_ALGORITHM_FACTORY( CaloPhotonChecker );
+DECLARE_ALGORITHM_FACTORY( CaloPhotonChecker )
 
 // ============================================================================
 /** @file
@@ -168,7 +168,8 @@ StatusCode CaloPhotonChecker::initialize()
   Gaudi::Plane3D spdFront = m_spd->plane( CaloPlane::Front );
   Gaudi::XYZVector normal = spdFront.Normal();
   m_zConv = - spdFront.HesseDistance() /normal.Z(); 
-  debug() <<  "z conversion definition is set to SPD front : " << m_zConv << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() <<  "z conversion definition is set to SPD front : " << m_zConv << endmsg;
   
 //----- Tool recovery
 
@@ -263,7 +264,7 @@ StatusCode CaloPhotonChecker::initialize()
 // ============================================================================
 StatusCode CaloPhotonChecker::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
 
   info() << "************* Photon Monitoring *****************"<<endmsg;
@@ -297,7 +298,8 @@ StatusCode CaloPhotonChecker::finalize()
     double effnoconv=(m_lh_mcg_noconv>0) ? m_lh_recsig_noconv[i]/m_lh_mcg_noconv : 0.;
     double effconv=(m_lh_mcg_conv>0) ? m_lh_recsig_conv[i]/m_lh_mcg_conv : 0.;
     double pur=(m_lh_recsig[i]+m_lh_recbkg[i]>0) ? m_lh_recsig[i]/(m_lh_recsig[i]+m_lh_recbkg[i]) : 0. ;
-    double purnoconv=(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]>0) ? m_lh_recsig_nospd[i]/(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]) : 0. ;
+    double purnoconv = 
+      (m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]>0) ? m_lh_recsig_nospd[i]/(m_lh_recsig_nospd[i]+m_lh_recbkg_nospd[i]) : 0. ;
     double purconv=(m_lh_recsig_spd[i]+m_lh_recbkg_spd[i]>0) ?m_lh_recsig_spd[i]/(m_lh_recsig_spd[i]+m_lh_recbkg_spd[i]) : 0. ;
 
     fill(m_effpur,pur,eff,1.);
@@ -346,7 +348,8 @@ StatusCode CaloPhotonChecker::execute()
     return Warning("NO MC information",StatusCode::SUCCESS);  
   LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
   
-  debug()<< "MC Particles extracted from event : " << mcParts->size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<< "MC Particles extracted from event : " << mcParts->size() << endmsg;
   
   for(MCParticles::const_iterator iter = mcParts->begin(); mcParts->end()!=iter; ++iter){
     SmartRef<LHCb::MCParticle> part=*iter;
@@ -364,8 +367,9 @@ StatusCode CaloPhotonChecker::execute()
     double  mu = 0;
     Gaudi::Math::intersection<Line,Gaudi::Plane3D,Gaudi::XYZPoint>(line, m_ecalPlane ,cross,mu);
     const Gaudi::XYZPoint hit = cross;
-    debug() << "MC part momentum " << part->momentum() 
-            << " crosses Ecal Plane at point "<< cross << " -> cellID : " << m_ecal->Cell( hit ) << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "MC part momentum " << part->momentum() 
+              << " crosses Ecal Plane at point "<< cross << " -> cellID : " << m_ecal->Cell( hit ) << endmsg;
     if( !m_ecal->valid( m_ecal->Cell( hit ) ) )continue; // Ecal acceptance.
 
     // Conversion 
@@ -374,7 +378,8 @@ StatusCode CaloPhotonChecker::execute()
     for(SmartRefVector<LHCb::MCVertex>::const_iterator iver=decays.begin(); decays.end()!=iver;++iver){
       if( (*iver)->position().z() < decay.Z() ) decay = (*iver)->position();
     }
-    debug() << "MC gamma endVertex.z() " << decay.Z() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "MC gamma endVertex.z() " << decay.Z() << endmsg;
 
     // belong to a merged pi0 ?
     bool isMerged=false;
@@ -401,15 +406,17 @@ StatusCode CaloPhotonChecker::execute()
                                      m_ecal->cellSize(m_ecal->Cell( hit2 )))/2.;
           if (distance<param) {
             isMerged=true;
-            debug() <<"Pi0->Merged Photon :  distance="<<distance
-                 <<"  < Criteria="<<param<<" mm"<<endmsg;
+            if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+              debug() <<"Pi0->Merged Photon :  distance="<<distance
+                      <<"  < Criteria="<<param<<" mm"<<endmsg;
           }
         }
       }
     }
 
     if (isMerged) {
-      debug() <<"Merged Pi0 photons removed from Signal sample"<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() <<"Merged Pi0 photons removed from Signal sample"<<endmsg;
       continue;
     }
     m_nMCPhotons++;
@@ -422,16 +429,19 @@ StatusCode CaloPhotonChecker::execute()
       m_lh_mcg++;
       if ( decay.Z() > m_zConv) {
         m_lh_mcg_noconv++;
-        debug() << " Not converted " << m_zConv << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << " Not converted " << m_zConv << endmsg;
       }
       else {
         m_lh_mcg_conv++;
-        debug() << " converted " << m_zConv << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << " converted " << m_zConv << endmsg;
       }
     }
   }
   
-  debug() << " MC part all/no-conv/conv" << m_lh_mcg << "/"<<m_lh_mcg_noconv<<"/"<<m_lh_mcg_conv<< endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " MC part all/no-conv/conv" << m_lh_mcg << "/"<<m_lh_mcg_noconv<<"/"<<m_lh_mcg_conv<< endmsg;
   
 
 
@@ -440,7 +450,8 @@ StatusCode CaloPhotonChecker::execute()
 
   const Hypos *hypos = get<Hypos>( inputData() );
   if( 0 == hypos ) {
-    debug() <<"No input Data: "<<inputData()<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() <<"No input Data: "<<inputData()<<endmsg;
     return StatusCode::FAILURE ;
   }
 
@@ -456,7 +467,8 @@ StatusCode CaloPhotonChecker::execute()
   for(Hypos::const_iterator iter=hypos->begin(); hypos->end()!=iter;++iter){
     // skip nulls
      if( 0 == *iter ) {
-       debug() <<"empty CaloHypo : skipping"<<endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug() <<"empty CaloHypo : skipping"<<endmsg;
       continue ;
      }
      
@@ -467,7 +479,8 @@ StatusCode CaloPhotonChecker::execute()
      m_nCandidates++;
 
 // Transverse Momentum
-     debug() << "==> Processing new CaloHypo : Et=" << momentum.momentum().pt() << endmsg;
+     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+       debug() << "==> Processing new CaloHypo : Et=" << momentum.momentum().pt() << endmsg;
      if ( momentum.momentum().pt() < m_etmin ) continue;
 
      if (hypo->clusters().size()!=1){
@@ -499,7 +512,8 @@ StatusCode CaloPhotonChecker::execute()
      
     // Energy
      double energy = momentum.momentum().e();
-     debug() << "- Energy [MeV]=" << energy << endmsg;
+     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+       debug() << "- Energy [MeV]=" << energy << endmsg;
 
      // Chi2
      double chi2;
@@ -511,11 +525,13 @@ StatusCode CaloPhotonChecker::execute()
      else {
        chi2 = range.front().weight();
      }
-     debug() << " - Chi2        ="<<chi2<<endmsg;
+     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+       debug() << " - Chi2        ="<<chi2<<endmsg;
      
      // Cell seed
      double eSeed = energy>0.?(seed->e())/energy:-1.;
-     debug()<<" - Seed Energy ="<<eSeed<<endmsg;
+     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+       debug()<<" - Seed Energy ="<<eSeed<<endmsg;
      
      //Spd hit and Prs deposit
      Line line( Gaudi::XYZPoint(0.,0.,0.) , momentum.momentum().Vect() );
@@ -540,7 +556,8 @@ StatusCode CaloPhotonChecker::execute()
 	   			eSpd=(*digit)->e();
         }
        }
-       debug() <<" - SPD "<<cellSpd<<" Energy  ="<<eSpd<<endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug() <<" - SPD "<<cellSpd<<" Energy  ="<<eSpd<<endmsg;
      }
 
      if( !(LHCb::CaloCellID() == cellPrs) ){
@@ -551,7 +568,8 @@ StatusCode CaloPhotonChecker::execute()
           ePrs=(*digit)->e();
         }
        }
-       debug()<<" - PRS "<<cellPrs<<" Energy  ="<<ePrs<<endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug()<<" - PRS "<<cellPrs<<" Energy  ="<<ePrs<<endmsg;
      }
 
      // ***
@@ -577,15 +595,18 @@ StatusCode CaloPhotonChecker::execute()
 
      for( MCTable::iterator mc = grange.begin() ; grange.end() != mc ; ++mc ) {
      	 if( 0 == mc->to() )  continue ; 
-	     debug()<<"mctruth : --> pid="<<mc->to()->particleID().pid() <<" weight="<<mc->weight()<<endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug()<<"mctruth : --> pid="<<mc->to()->particleID().pid() <<" weight="<<mc->weight()<<endmsg;
        if( !(m_gammaID == mc->to()->particleID())  )continue;
 	     if( mc->weight()<wmax ) continue;
        wmax=mc->weight();
        SmartRef<LHCb::MCParticle> mcpart=mc->to();
 
-       debug()<< "A MC-gamma matches the hypo "  << endmsg;       
-       debug()<< " Energy :  "  <<mcpart->momentum().e() << endmsg;       
-
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+         debug()<< "A MC-gamma matches the hypo "  << endmsg;       
+         debug()<< " Energy :  "  <<mcpart->momentum().e() << endmsg;       
+       }
+       
        isPhoton=true;
        SmartRef<LHCb::MCVertex> vertex=mcpart->originVertex();
        if ( 0==vertex ) {
@@ -597,7 +618,8 @@ StatusCode CaloPhotonChecker::execute()
        dr=vertex->position().Rho();
        dz=vertex->position().z();
        de=fabs(energy - mcpart->momentum().e())/energy;
-       debug() <<"Gamma parameters : dr="<<dr<<" - dz="<<dz<<" - de="<<de<<endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug() <<"Gamma parameters : dr="<<dr<<" - dz="<<dz<<" - de="<<de<<endmsg;
 
        SmartRefVector<LHCb::MCVertex> decays=mcpart->endVertices();
        for(SmartRefVector<LHCb::MCVertex>::const_iterator viter=decays.begin();decays.end()!=viter;++viter){
@@ -630,8 +652,9 @@ StatusCode CaloPhotonChecker::execute()
                                         m_ecal->cellSize(m_ecal->Cell( hit2)))/2.;
              if (distance<param) {
                isMerged=true;
-               debug() <<"Pi0->Merged Photon :  distance="<<distance
-                       <<"  < Criteria="<<param<<" mm"<<endmsg;
+               if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+                 debug() <<"Pi0->Merged Photon :  distance="<<distance
+                         <<"  < Criteria="<<param<<" mm"<<endmsg;
              }
            }
          }
@@ -642,9 +665,11 @@ StatusCode CaloPhotonChecker::execute()
      if ( de < m_de && ((m_dr<0)||(dr<m_dr)) && ((m_dz<0)||(dz<m_dz)) && isPhoton && !isMerged){
        m_nPhotons++;
        isSignal=true;
-       debug() <<"Candidate is Signal according to MC"<<endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug() <<"Candidate is Signal according to MC"<<endmsg;
      }else{
-       debug() <<"Candidate is Background according to MC (photon, merged)"<< isPhoton << " " << isMerged << endmsg;
+       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+         debug() <<"Candidate is Background according to MC (photon, merged)"<< isPhoton << " " << isMerged << endmsg;
      }
      
 
@@ -751,7 +776,8 @@ std::vector<AIDA::IHistogram2D*> CaloPhotonChecker::defHisto(
     histo = book2D(histoname,histoname,
 		   (int)(xmin),(int)(xmax),bin,
 		   0., 6.,6);
-    debug() <<"booking Histo ..."<<histoname<<endmsg; 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() <<"booking Histo ..."<<histoname<<endmsg; 
     histoList.push_back(histo);
   }
   return histoList;

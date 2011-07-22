@@ -1,4 +1,3 @@
-// $Id: CaloClusterMonitor.cpp,v 1.13 2010/03/08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -92,7 +91,7 @@ private:
 private:
 };
 
-DECLARE_ALGORITHM_FACTORY( CaloClusterMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloClusterMonitor )
 
 // ============================================================================
 // standard execution method
@@ -101,19 +100,22 @@ StatusCode CaloClusterMonitor::execute(){
   typedef const LHCb::CaloCluster::Container Clusters;
 
 
-  debug() << " Producing histo " << produceHistos() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Producing histo " << produceHistos() << endmsg;
   // produce histos ?
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
   // get input data
   if( !exist<Clusters>(inputData() )){
-    debug() << "No cluster container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No cluster container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   
   Clusters* clusters = get<Clusters> ( inputData() );
   if ( clusters->empty() ){
-    debug() << "No cluster found in " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No cluster found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -157,6 +159,6 @@ StatusCode CaloClusterMonitor::execute(){
 
 
 StatusCode CaloClusterMonitor::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

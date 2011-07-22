@@ -12,7 +12,7 @@
 #include "Event/MCParticle.h"
 
 
-DECLARE_ALGORITHM_FACTORY( CaloHypoNtp );
+DECLARE_ALGORITHM_FACTORY( CaloHypoNtp )
 
 
 CaloHypoNtp::CaloHypoNtp( const std::string &name, ISvcLocator *pSvcLocator )
@@ -235,7 +235,7 @@ StatusCode CaloHypoNtp::execute(){
 }
 
 StatusCode CaloHypoNtp::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return GaudiTupleAlg::finalize();
 }
 

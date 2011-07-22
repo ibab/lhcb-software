@@ -1,4 +1,3 @@
-// $Id: CaloPIDsChecker.cpp,v 1.8 2009/09/07 10:40:25 dgolubko Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -304,7 +303,8 @@ StatusCode CaloPIDsChecker::divide( AIDA::IHistogram1D *hh1
   const IAxis &axis2 = hh2->axis();
   const IAxis &axis3 = hh3->axis();
   const int nBins = axis3.bins();
-  debug() << "DIVIDE nbins " << nBins << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "DIVIDE nbins " << nBins << endmsg;
   
   if (( axis1.bins() != nBins ) || ( axis2.bins() != nBins ))
   { return Error( "Different histogram specifications" );

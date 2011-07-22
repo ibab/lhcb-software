@@ -77,7 +77,7 @@ StatusCode SpdMonitor::initialize()
 // ============================================================================
 StatusCode SpdMonitor::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   info() << "Number of Events Analyzed : " << m_nEvents << endmsg;
 
   return CaloMoniAlg::finalize() ;
@@ -95,10 +95,11 @@ StatusCode SpdMonitor::finalize()
 StatusCode SpdMonitor::execute()
 {   
   
-  debug() << "==> Execute " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute " << endmsg;
 
   if( !exist<CaloDigits>( CaloDigitLocation::Spd ) ){
-    debug() << "No Table container found at " << CaloDigitLocation::Spd << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No Table container found at " << CaloDigitLocation::Spd << endmsg;
     return StatusCode::SUCCESS;
   }
   digitsSpd = get<CaloDigits>( CaloDigitLocation::Spd );  

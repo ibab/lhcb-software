@@ -1,4 +1,3 @@
-// $Id: CaloElectronNtp.cpp,v 1.1 2010/05/20 09:55:38 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloElectronNtp );
+DECLARE_ALGORITHM_FACTORY( CaloElectronNtp )
 
 
 //=============================================================================
@@ -95,7 +94,8 @@ StatusCode CaloElectronNtp::execute() {
 
   // get input data
   if( !exist<LHCb::ProtoParticles> ( m_input ) ){
-    debug() << "no protoP container found at " << m_input << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "no protoP container found at " << m_input << endmsg;
     return StatusCode::SUCCESS ;
   };
   

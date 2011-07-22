@@ -1,4 +1,3 @@
-// $Id: CaloHypoMonitor.cpp,v 1.13 2010/03/08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -130,15 +129,17 @@ StatusCode CaloHypoMonitor::execute(){
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   // get input data
   if( !exist<Hypos> ( inputData() ) ){
-    debug() << "no hypo container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "no hypo container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS ;
   };
 
   Hypos *hypos = get<Hypos> ( inputData() );
   // check data
   if ( hypos -> empty() ){
-   debug() << "No hypo found in " << inputData() << endmsg;
-   return StatusCode::SUCCESS;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No hypo found in " << inputData() << endmsg;
+    return StatusCode::SUCCESS;
   }  
   // get functor
   LHCb::CaloDataFunctor::DigitFromCalo spd( DeCalorimeterLocation::Spd );
@@ -203,6 +204,6 @@ StatusCode CaloHypoMonitor::execute(){
 
 
 StatusCode CaloHypoMonitor::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

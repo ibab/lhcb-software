@@ -1,4 +1,3 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.11 2010/03/08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -91,9 +90,9 @@ private:
   CaloClusterMatchMonitor &operator=( const CaloClusterMatchMonitor& );
 };
  
-DECLARE_ALGORITHM_FACTORY( CaloClusterMatchMonitor );
+DECLARE_ALGORITHM_FACTORY( CaloClusterMatchMonitor )
 
- // ============================================================================
+// ============================================================================
 // standard execution method
 // ============================================================================
 StatusCode CaloClusterMatchMonitor::execute()
@@ -108,7 +107,8 @@ StatusCode CaloClusterMatchMonitor::execute()
 // check relations
   if ( inputs().empty() ) return Error( "No input data are specified" );
   if( !exist<Table>( inputData() ) ){
-    debug() << "No Table container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No Table container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }  
   Table *table = get<Table>( inputData() );
@@ -143,6 +143,6 @@ StatusCode CaloClusterMatchMonitor::execute()
 
 
 StatusCode CaloClusterMatchMonitor::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

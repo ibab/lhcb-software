@@ -1,6 +1,3 @@
-// $Id: CaloPi0Monitor.cpp,v 1.18 2010/05/20 09:55:38 odescham Exp $
-// ============================================================================
-// CVS tag $Name:  $, version $Revision: 1.18 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -118,7 +115,8 @@ StatusCode CaloPi0Monitor::execute()
        inputs().end() != input; ++input ){
 
     if( !exist<Hypos> ( *input ) ){
-      debug() << "no hypo container found at " << *input << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "no hypo container found at " << *input << endmsg;
       continue;
     };
 
@@ -225,6 +223,6 @@ StatusCode CaloPi0Monitor::execute()
 
 
 StatusCode CaloPi0Monitor::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

@@ -1,29 +1,3 @@
-// $Id: CaloClusterChecker.cpp,v 1.4 2009/03/05 15:52:51 odescham Exp $
-// ============================================================================
-// CVS tag $Name:  $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: CaloClusterChecker.cpp,v $
-// Revision 1.4  2009/03/05 15:52:51  odescham
-// new splitArea functionality
-//
-// Revision 1.3  2009/02/20 18:03:24  odescham
-// prepare for DQ
-//
-// Revision 1.2  2008/09/09 15:37:23  odescham
-// review
-//
-// Revision 1.1  2007/07/25 19:49:12  odescham
-// major release : see doc
-//
-// Revision 1.5  2005/11/07 12:16:38  odescham
-// v2r0 - adapt to the new Track Event Model
-//
-// Revision 1.4  2005/05/13 12:58:35  cattanem
-// fixes for windows
-//
-// Revision 1.3  2005/05/08 09:58:24  ibelyaev
-//  remove associators, update options
-//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -165,6 +139,6 @@ StatusCode CaloClusterChecker::execute()
 
 
 StatusCode CaloClusterChecker::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

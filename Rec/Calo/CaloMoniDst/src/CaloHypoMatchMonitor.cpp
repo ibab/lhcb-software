@@ -1,4 +1,3 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.10 2010/03/08 01:38:28 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -109,7 +108,8 @@ StatusCode CaloHypoMatchMonitor::execute()
   if ( inputs().empty() ) return Error( "No input data are specified" );
   // check relations
   if( !exist<Table>( inputData() ) ){
-    debug() << "No Table container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No Table container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }  
   Table *table = get<Table>( inputData() );
@@ -145,6 +145,6 @@ StatusCode CaloHypoMatchMonitor::execute()
 
 
 StatusCode CaloHypoMatchMonitor::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

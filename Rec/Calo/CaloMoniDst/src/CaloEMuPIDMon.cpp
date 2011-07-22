@@ -198,7 +198,8 @@ CaloEMuPIDMon::CaloEMuPIDMon( const std::string &name, ISvcLocator *isvc )
   declareProperty( "nEventMin",       m_nEventMin = 200,   "minimal number of events to check");
   declareProperty( "useIsMuonLoose",  m_muonLoose = true,  "use IsMuonLoose instead of IsMuon for muon selection");
 
-  // DG: on SLC5 I get 'warning: type qualifiers ignired on function return type' if I combine the two follwing lines in one call (?)
+  // DG: on SLC5 I get 'warning: type qualifiers ignired on function return type'
+  // if I combine the two follwing lines in one call (?)
   std::vector<std::string> histoList = boost::assign::list_of<std::string>("All");
   setProperty( "histoList",           histoList);
   setProperty( "removeFromHistoList", std::vector<std::string>() );
@@ -210,7 +211,7 @@ CaloEMuPIDMon::CaloEMuPIDMon( const std::string &name, ISvcLocator *isvc )
  *  error messages if the difference exceeds NSigmaThreshold's  */
 StatusCode CaloEMuPIDMon::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
 // dummy method -- commented out for the time being
 //if (counter("nEvents").nEntries() >= m_nEventMin)
@@ -223,7 +224,8 @@ StatusCode CaloEMuPIDMon::finalize()
  */
 StatusCode CaloEMuPIDMon::check()
 {
-  debug() << "check not implemented yet" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "check not implemented yet" << endmsg;
   return StatusCode::SUCCESS;
 }
 /**

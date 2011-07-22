@@ -8,7 +8,7 @@
 #include "Event/RecVertex.h"
 #include "Event/L0DUReport.h"
 
-DECLARE_ALGORITHM_FACTORY( CaloPi0Ntp );
+DECLARE_ALGORITHM_FACTORY( CaloPi0Ntp )
 
 
 CaloPi0Ntp::CaloPi0Ntp( const std::string &name, ISvcLocator *pSvcLocator )
@@ -328,7 +328,7 @@ StatusCode CaloPi0Ntp::execute(){
 }
 
 StatusCode CaloPi0Ntp::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return GaudiTupleAlg::finalize();
 }
 

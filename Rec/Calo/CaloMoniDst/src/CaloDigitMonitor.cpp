@@ -113,20 +113,24 @@ StatusCode CaloDigitMonitor::initialize(){
 // ============================================================================
 StatusCode CaloDigitMonitor::execute(){
   typedef const LHCb::CaloDigit::Container Digits;
-  debug() << name() << " execute " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << name() << " execute " << endmsg;
   
   // produce histos ?
-  debug() << " Producing histo " << produceHistos() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Producing histo " << produceHistos() << endmsg;
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
   // get input data
   if( !exist<Digits>(inputData())){
-    debug() << "no digit container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "no digit container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   Digits* digits = get<Digits> ( inputData() );
   if ( digits -> empty() ){
-    debug() << "No hypo found in " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No hypo found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }  
   
@@ -153,14 +157,16 @@ StatusCode CaloDigitMonitor::execute(){
     
     
     if (m_spectrum) {
-      if ( msgLevel( MSG::DEBUG) )debug() << "Filling cell by cell histograms" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Filling cell by cell histograms" << endmsg;
       int col = id.col();
       int row = id.row();
       std::ostringstream tit;
       tit << detData() << " channel : " << id;
       std::string unit = detData() + "Cells/" + id.areaName() + "/" 
         + Gaudi::Utils::toString(row) + ";" + Gaudi::Utils::toString(col);
-      if ( msgLevel( MSG::VERBOSE) )verbose() << " et  " << et << " cell " << unit << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " et  " << et << " cell " << unit << endmsg;
       if( detData() == "Prs") 
         plot1D(e , unit, tit.str() , m_energyMin, m_energyMax, m_energyBin);
       else
@@ -172,6 +178,7 @@ StatusCode CaloDigitMonitor::execute(){
 }
 
 StatusCode CaloDigitMonitor::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Finalize" << endmsg;
   return CaloMoniAlg::finalize();
 }

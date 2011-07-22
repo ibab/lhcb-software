@@ -1,4 +1,3 @@
-// $Id: CaloEFlowAlg.cpp,v 1.5 2010/01/28 17:30:59 odescham Exp $
 // Include files 
 
 // from GaudiKernel
@@ -17,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloEFlowAlg );
+DECLARE_ALGORITHM_FACTORY( CaloEFlowAlg )
 
 
 //=============================================================================
@@ -49,7 +48,8 @@ CaloEFlowAlg::CaloEFlowAlg( const std::string& name,
   else if(detData()== "Prs"  ){setInputData( LHCb::CaloDigitLocation::Prs  );}
   else if(detData()== "Spd"  ){setInputData( LHCb::CaloDigitLocation::Spd  );}
 
-  debug() << " setting default detector name " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " setting default detector name " << endmsg;
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
   m_detectorName = name.substr( index, 4 ); 
   if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";
@@ -66,7 +66,7 @@ CaloEFlowAlg::~CaloEFlowAlg() {}
 // Initialization
 //=============================================================================
 StatusCode CaloEFlowAlg::initialize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
@@ -86,7 +86,7 @@ StatusCode CaloEFlowAlg::initialize() {
 
   hBook1( "4", detData() + " : # of Digits"   ,  m_calo->numberOfCells(),  0, m_calo->numberOfCells()   );
   
-  debug()  << " initialized" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()  << " initialized" << endmsg;
   
   return  StatusCode::SUCCESS;
 }
@@ -96,7 +96,7 @@ StatusCode CaloEFlowAlg::initialize() {
 //=============================================================================
 StatusCode CaloEFlowAlg::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   if (m_simulation==false) {
     LHCb::ODIN* evt = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
@@ -104,54 +104,64 @@ StatusCode CaloEFlowAlg::execute() {
       warning() << " NO ODIN BANK IN THIS EVENT" << endmsg;
       return StatusCode::SUCCESS;
     }
-    debug() << "Event: " << evt->eventNumber()
-            << " Run: " << evt->runNumber() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Event: " << evt->eventNumber()
+              << " Run: " << evt->runNumber() << endmsg;
     
     const LHCb::ODIN::BXTypes bxtype =  evt->bunchCrossingType();
     unsigned int tae = evt->timeAlignmentEventWindow();
     unsigned int trigger = evt->triggerType();
 
-    debug() << " TAE " << tae
-            << " BXType " << bxtype
-            << " trigger type " << trigger
-            << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << " TAE " << tae
+              << " BXType " << bxtype
+              << " trigger type " << trigger
+              << endmsg;
     
     if (tae!=0 && m_ignoreTAE) {
-      debug() << " TAE WINDOW SET TO " << tae << " WILL SKIP THE EVENT " << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << " TAE WINDOW SET TO " << tae << " WILL SKIP THE EVENT " << endmsg;
       return StatusCode::SUCCESS;
     }
     if (bxtype!=3 && m_ignoreNonBeamCrossing) {
       //3 =  BeamCrossing
-      debug() << " BEAM CROSSING TYPE IS " << bxtype << " WILL SKIP THE EVENT " << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << " BEAM CROSSING TYPE IS " << bxtype << " WILL SKIP THE EVENT " << endmsg;
       return StatusCode::SUCCESS;
     }
     if (trigger!=1 && m_ignoreNonPhysicsTrigger){
       //1 = PhysicsTrigger
-      debug() << " TRIGGER TYPE IS " << trigger << " WILL SKIP THE EVENT " << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << " TRIGGER TYPE IS " << trigger << " WILL SKIP THE EVENT " << endmsg;
       return StatusCode::SUCCESS;
     }
-    debug() << " TAE " << tae
-            << " BXType " << bxtype
-            << " trigger type " << trigger
-            << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << " TAE " << tae
+              << " BXType " << bxtype
+              << " trigger type " << trigger
+              << endmsg;
   }
   
 
   typedef const LHCb::CaloDigit::Container Digits;
-  if ( msgLevel(MSG::DEBUG) )debug() << name() << " execute " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << name() << " execute " << endmsg;
   
   // produce histos ?
-  if ( msgLevel(MSG::DEBUG) )debug() << " Producing histo " << produceHistos() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Producing histo " << produceHistos() << endmsg;
   if ( !produceHistos() ) return StatusCode::SUCCESS;
   
   // get input data
   if( !exist<Digits>( inputData() )){
-    debug() << "no digit container found at " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "no digit container found at " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   Digits* digits = get<Digits> ( inputData() );
   if ( digits -> empty() ){
-    if ( msgLevel(MSG::DEBUG) )debug() << "No digit found in " << inputData() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No digit found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -168,11 +178,12 @@ StatusCode CaloEFlowAlg::execute() {
     double            e      = (*digit)->e();
     double            et     = e * m_calo->cellSine( id );
 
-    if ( msgLevel(MSG::VERBOSE) )
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
       verbose() << " before thresholds :  cellID " << id.index() << " e " << e << " et " << et << endmsg;
 
-    debug() << "thresholds are EMin " << m_eFilterMin << " EMax " <<m_eFilterMax
-            << " EtMin " << m_etFilterMin << " EtMax " << m_etFilterMax << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "thresholds are EMin " << m_eFilterMin << " EMax " <<m_eFilterMax
+              << " EtMin " << m_etFilterMin << " EtMax " << m_etFilterMax << endmsg;
     
     
     double pedShift = m_calo->pedestalShift();
@@ -187,7 +198,8 @@ StatusCode CaloEFlowAlg::execute() {
     if( et < m_etFilterMin && m_etFilterMin!=-999) continue;
     if( et > m_etFilterMax && m_etFilterMax!=-999) continue;
 
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " cellID " << id.index() << " e " << e << " et " << et << endmsg;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+      verbose() << " cellID " << id.index() << " e " << e << " et " << et << endmsg;
     
     count( id );    
     if(doHisto("1")) fillCalo2D("1", id , 1. , detData() + " digits position 2D view");
@@ -200,13 +212,14 @@ StatusCode CaloEFlowAlg::execute() {
  
 
   if (m_mctruth) {
-    debug() << "LOOKING FOR MCTRUTH" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "LOOKING FOR MCTRUTH" << endmsg;
  //   std::string nameOfMCDigits = "MC/" + m_detectorName + "/Digits";
 //    typedef const LHCb::MCCaloDigit::Container MCDigits;
     // Get the MCDigits
 //    MCDigits* digits = get<MCDigits> (eventSvc(),LHCb::MCCaloDigitLocation::Prs);
  //   if( 0 == digits ) {
-  //    error() << "Cannot locate MCCaloHits in " << m_calo << endreq;
+  //    error() << "Cannot locate MCCaloHits in " << m_calo << endmsg;
   //    return StatusCode::FAILURE ;
    // }
     std::string nameOfMCHits = m_slot + "MC/" + m_detectorName + "/Hits";
@@ -214,17 +227,18 @@ StatusCode CaloEFlowAlg::execute() {
     // Get the MCHits
     MCHits* hits = get<MCHits> (eventSvc(),nameOfMCHits);
     if( 0 == hits ) {
-      error() << "Cannot locate MCCaloHits in " << m_calo << endreq;
+      error() << "Cannot locate MCCaloHits in " << m_calo << endmsg;
       return StatusCode::FAILURE ;
     }
     typedef const LHCb::MCParticle::Container MCParticles;
     // Get the MCParticles
     MCParticles* mcparts = get<MCParticles> (eventSvc(), LHCb::MCParticleLocation::Default );//"Event/MC/Particles");//
     if( 0 == mcparts ) {
-      error() << "Cannot locate mcParts in "<< m_calo << endreq;
+      error() << "Cannot locate mcParts in "<< m_calo << endmsg;
       return StatusCode::FAILURE ;
     }
-    debug() << "hits " << hits << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "hits " << hits << endmsg;
 
    // for ( MCDigits::const_iterator digit = digits->begin(); digits->end() != digit ; ++digits ){
     //  if (0==*digit) continue;
@@ -236,18 +250,21 @@ StatusCode CaloEFlowAlg::execute() {
       if ( 0 == *hit ) continue;
       
       const LHCb::CaloCellID  id     = (*hit)->cellID();
-      debug() << "*hit " << *hit << " id " << id << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "*hit " << *hit << " id " << id << endmsg;
       bool isvalid = m_calo->valid(id) && !m_calo->isPinId( id );
       if( isvalid == false ) continue ;
       
       double e = (*hit)->activeE();
       
-      if ( msgLevel(MSG::VERBOSE) )verbose() << " cellID " << id.index() << " e " << e  << endmsg;        
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " cellID " << id.index() << " e " << e  << endmsg;        
       
-      debug() << " part " << (*hit)->particle() << endmsg;
-      debug() << " partID " << (*hit)->particle()->particleID().pid()
-              << " origin vtx " << (*hit)->particle()->originVertex()->position() << endmsg;
-      
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+        debug() << " part " << (*hit)->particle() << endmsg;
+        debug() << " partID " << (*hit)->particle()->particleID().pid()
+                << " origin vtx " << (*hit)->particle()->originVertex()->position() << endmsg;
+      }
       
       int pid = (*hit)->particle()->particleID().pid();
       
@@ -278,7 +295,7 @@ StatusCode CaloEFlowAlg::execute() {
 //=============================================================================
 StatusCode CaloEFlowAlg::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return CaloMoniAlg::finalize();  // must be called after all other actions
 }
