@@ -315,7 +315,7 @@ void MonAdder::TimeoutHandler()
     {
 //      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
       d->m_timeouts++;
-      printf("Timeout from source %s (PID = %d) expected %lli last received %lli\n cons. TMO %d",
+      printf("Timeout from source %s (PID = %d) expected %lli last received %lli cons. TMO %d\n ",
           d->m_Info->m_TargetService.c_str(),d->m_pid, m_reference,d->last_update,d->m_timeouts);
       if (d->m_buffer != 0)
       {
