@@ -1,8 +1,8 @@
 
 
 __author__ = 'Susan Haines'
-__date__ = '25/02/2011'
-__version__ = '$Revision: 1.5 $'
+__date__ = '22/07/2011'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Bu->D0(KShh)h stripping selection using LoKi::Hybrid and python
@@ -189,11 +189,11 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         #define cuts
         #LL selection cuts
         self.LLPi_FilterCut = "(P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_LL)s)"%config
-        self.KSLL_CombCut = "(ADAMASS('KS0') < 35.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<1.5)"
-        self.KSLL_MotherCut = "(ADMASS('KS0') < 30.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_LL)s) & (BPVVDCHI2 > %(KSFlightCHI2_LL)s)"%config
+        self.KSLL_CombCut = "(ADAMASS('KS0') < 25.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<1.5)"
+        self.KSLL_MotherCut = "(ADMASS('KS0') < 20.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_LL)s) & (BPVVDCHI2 > %(KSFlightCHI2_LL)s)"%config
         self.D_LL_DaughterCut = "(P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(DdaughterIPCHI2_LL)s) "%config
-        self.D_LL_CombCut = "(ADAMASS('D0') < 55.*MeV) & (ADOCACUT(1.8, 'LoKi::TrgDistanceCalculator'))"
-        self.D_LL_MotherCut = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_LL)s)"%config
+        self.D_LL_CombCut = "(ADAMASS('D0') < 38.*MeV) & (ADOCACUT(1.8, 'LoKi::TrgDistanceCalculator'))"
+        self.D_LL_MotherCut = "(ADMASS('D0') < 33.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_LL)s)"%config
         self.B_LL_BachCut = "(PT > %(BachPt_LL)s *GeV ) & (P > 2.*GeV) & (P < 100.*GeV) &  (TRCHI2DOF<5.) & (BPVIPCHI2() > %(BachIPCHI2_LL)s )"%config
         self.B_LL_CombCut = "(ADAMASS('B+') < 505.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.5)"
         self.B_LL_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF)<%(BVertexCHI2_LL)s) & (BPVIPCHI2() < %(BIPCHI2_LL)s) & (BPVVDCHI2 > %(BFlightCHI2_LL)s) & (BPVDIRA > %(BDIRA_LL)s)"%config
@@ -201,11 +201,11 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
 
         #DD selection cuts
         self.DDPi_FilterCut = "(ISDOWN) & (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_DD)s)  & ((-PIDK) > 0.)"%config
-        self.KSDD_CombCut = "(ADAMASS('KS0') < 50.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
-        self.KSDD_MotherCut = "(ADMASS('KS0') < 42.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s) & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)" %config
+        self.KSDD_CombCut = "(ADAMASS('KS0') < 40.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
+        self.KSDD_MotherCut = "(ADMASS('KS0') < 28.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s) & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)" %config
         self.D_DD_DaughterCut = " (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(DdaughterIPCHI2_DD)s)"%config
-        self.D_DD_CombCut = "(ADAMASS('D0') < 65.*MeV) & (ADOCACUT(9.2, 'LoKi::TrgDistanceCalculator'))"
-        self.D_DD_MotherCut = "(ADMASS('D0') < 60.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_DD)s)"%config
+        self.D_DD_CombCut = "(ADAMASS('D0') < 45.*MeV) & (ADOCACUT(9.2, 'LoKi::TrgDistanceCalculator'))"
+        self.D_DD_MotherCut = "(ADMASS('D0') < 40.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_DD)s)"%config
         self.B_DD_BachCut = "(PT > %(BachPt_DD)s *GeV) & (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(BachIPCHI2_DD)s)"%config 
         self.B_DD_CombCut = "(ADAMASS('B+') < 505.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.5)"
         self.B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)& (BPVDIRA > %(BDIRA_DD)s)"%config
@@ -225,11 +225,13 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
 ##     Define the GEC on number of long tracks, needed in order to control
 ##     the time for the combinatorics (D in particular)
 ##     '''
- 
         B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 250",
-                                             'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+                                               'Preambulo' : ["from LoKiTracks.decorators import *"]}
         B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 250",
-                                             'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+                                               'Preambulo' : ["from LoKiTracks.decorators import *"]}
+        
+##        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "RECSUMMARY ( LHCb.RecSummary.nLongTracks , -1 ) < 250"}
+##        B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "RECSUMMARY ( LHCb.RecSummary.nLongTracks , -1 ) < 250"}
 
         #Stripping lines
         self.Line_LL_Bu2D0h_D02KShh = StrippingLine(self._myname+'Bu2D0h_D02KShh_KSLL'
@@ -283,8 +285,14 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         '''
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
-
-        from StandardParticles import StdNoPIDsPions as MyStdPions_KS2PiPi_LL_noPID
+	
+	import StandardParticles
+	if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+		from StandardParticles import StdAllNoPIDsPions as MyStdPions_KS2PiPi_LL_noPID
+	else:
+  		from StandardParticles import StdNoPIDsPions as MyStdPions_KS2PiPi_LL_noPID
+        
+	#from StandardParticles import StdAllNoPIDsPions as MyStdPions_KS2PiPi_LL_noPID
 
         LLPionFilterForBu2D0h_D02KShh = FilterDesktop(Code = self.LLPi_FilterCut)
         
@@ -330,11 +338,6 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
                                                  CombinationCut = self.KSLL_CombCut,
                                                  MotherCut = self.KSLL_MotherCut)
 
-#        from Configurables import LoKi__VertexFitter
-#        lvf = LoKi__VertexFitter()
-#        KSLLForBu2D0h_D02KShh.addTool(lvf)
-#        KSLLForBu2D0h_D02KShh.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
-
         SelKSLLForBu2D0h_D02KShh = Selection(self._myname+"SelKSLLForBu2D0h_D02KShh", Algorithm=KSLLForBu2D0h_D02KShh,
                                                RequiredSelections = [self.FilteredPions_KSLL_noPID]
                                                )
@@ -355,11 +358,6 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
                                                  DaughtersCuts = {"pi+" : "ALL"},
                                                  CombinationCut = self.KSDD_CombCut,
                                                  MotherCut = self.KSDD_MotherCut)
-
-#        from Configurables import LoKi__VertexFitter
-#        lvf = LoKi__VertexFitter()
-#        KSDDForBu2D0h_D02KShh.addTool(lvf)
-#        KSDDForBu2D0h_D02KShh.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
         
         SelKSDDForBu2D0h_D02KShh = Selection(self._myname+"SelKSDDForBu2D0h_D02KShh", Algorithm=KSDDForBu2D0h_D02KShh,
                                                RequiredSelections = [self.FilteredPions_KSDD_noPID]
@@ -377,8 +375,19 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
 
-        from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_LL
-        from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_LL
+	import StandardParticles
+	if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+		from StandardParticles import StdAllNoPIDsPions as MyStdLoosePions_D2KShh_LL
+	else:
+       		from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_LL
+
+	if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+		from StandardParticles import StdAllNoPIDsKaons as MyStdLooseKaons_D2KShh_LL
+	else:
+       		from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_LL
+
+        #from StandardParticles import StdAllNoPIDsPions as MyStdLoosePions_D2KShh_LL
+        #from StandardParticles import StdAllNoPIDsKaons as MyStdLooseKaons_D2KShh_LL
 
         DForBu2D0h_D02KShh_KSLL = CombineParticles(DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"],
                                                    DaughtersCuts  = {"pi+" : self.D_LL_DaughterCut
@@ -387,11 +396,6 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
                                                   },
                                                    CombinationCut =  self.D_LL_CombCut,
                                                    MotherCut      =  self.D_LL_MotherCut)
-
-#        from Configurables import LoKi__VertexFitter
-#        lvf = LoKi__VertexFitter()
-#        DForBu2D0h_D02KShh_KSLL.addTool(lvf)
-#        DForBu2D0h_D02KShh_KSLL.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
   
         SelDForBu2D0h_D02KShh_KSLL = Selection(self._myname+"SelDForBu2D0h_D02KShh_KSLL", Algorithm=DForBu2D0h_D02KShh_KSLL,
                                                  RequiredSelections = [self.SelKSLL_Bu2D0h_noPID, MyStdLoosePions_D2KShh_LL, MyStdLooseKaons_D2KShh_LL ])
@@ -408,8 +412,19 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
         import GaudiKernel.SystemOfUnits as Units
         from PhysSelPython.Wrappers import Selection
         
-        from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_DD
-        from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_DD
+	import StandardParticles
+	if hasattr(StandardParticles, "StdAllNoPIDsPions"):
+		from StandardParticles import StdAllNoPIDsPions as MyStdLoosePions_D2KShh_DD
+	else:
+       		from StandardParticles import StdNoPIDsPions as MyStdLoosePions_D2KShh_DD
+
+	if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+		from StandardParticles import StdAllNoPIDsKaons as MyStdLooseKaons_D2KShh_DD
+	else:
+       		from StandardParticles import StdNoPIDsKaons as MyStdLooseKaons_D2KShh_DD
+	
+        #from StandardParticles import StdAllNoPIDsPions as MyStdLoosePions_D2KShh_DD
+        #from StandardParticles import StdAllNoPIDsKaons as MyStdLooseKaons_D2KShh_DD
 
         DForBu2D0h_D02KShh_KSDD = CombineParticles(DecayDescriptors = ["[D0 -> KS0 pi+ pi-]cc", "[D0 -> KS0 K+ pi-]cc","[D0 -> KS0 K+ K-]cc"],
                                                    DaughtersCuts  = {"pi+" : self.D_DD_DaughterCut
@@ -418,11 +433,6 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
                                                    },
                                                    CombinationCut =  self.D_DD_CombCut,
                                                    MotherCut      =  self.D_DD_MotherCut)
-
-#        from Configurables import LoKi__VertexFitter
-#        lvf = LoKi__VertexFitter()
-#        DForBu2D0h_D02KShh_KSDD.addTool(lvf)
-#        DForBu2D0h_D02KShh_KSDD.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
         
         SelDForBu2D0h_D02KShh_KSDD = Selection(self._myname+"SelDForBu2D0h_D02KShh_KSDD", Algorithm=DForBu2D0h_D02KShh_KSDD,
                                                  RequiredSelections = [self.SelKSDD_Bu2D0h_noPID, MyStdLoosePions_D2KShh_DD, MyStdLooseKaons_D2KShh_DD])
@@ -451,11 +461,6 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
                                        CombinationCut =  self.B_LL_CombCut,
                                        MotherCut = self.B_LL_MotherCut )
 
-#        from Configurables import LoKi__VertexFitter
-#        lvf = LoKi__VertexFitter()
-#        Bu2D0h_KSLL.addTool(lvf)
-#        Bu2D0h_KSLL.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
-        
         SelBu2D0h_KSLL = Selection(self._myname+"SelBu2D0h_KSLL", Algorithm=Bu2D0h_KSLL,
                                     RequiredSelections = [self.MergedD0_KShh_noPID_LL, MyStdNoPIDKaons_BDh_LL, MyStdNoPIDPions_BDh_LL])
         
@@ -483,11 +488,6 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
                                       },
                                        CombinationCut = self.B_DD_CombCut,
                                        MotherCut = self.B_DD_MotherCut)
-
-#        from Configurables import LoKi__VertexFitter
-#        lvf = LoKi__VertexFitter()
-#        Bu2D0h_KSDD.addTool(lvf)
-#        Bu2D0h_KSDD.ParticleCombiners.update({'':lvf, 'Offline':lvf}) 
 
         SelBu2D0h_KSDD = Selection(self._myname+"SelBu2D0h_KSDD", Algorithm=Bu2D0h_KSDD,
                                     RequiredSelections = [self.MergedD0_KShh_noPID_DD, MyStdNoPIDKaons_BDh_DD, MyStdNoPIDPions_BDh_DD])

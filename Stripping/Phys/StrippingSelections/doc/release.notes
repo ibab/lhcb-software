@@ -3,6 +3,13 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-07-22 - Susan Haines
+ - StrippingBu2D0h_D02KShh_NoPID and StrippingBu2D0h_D02KShh_NoPID_WS
+ - Updated particles to 'All' type
+ - Preambulo LoKiTrigger -> LoKiTracks for GECs
+ - Tightened D and KS mass windows
+
 ! 2011-07-22 - Thomas Latham
  - StrippingB2KShh.py
  - Update pions and kaons to 'All' type (new pT cut in StdLooseXXX kills too
