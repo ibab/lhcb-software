@@ -1,4 +1,3 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.23 2008-10-27 13:00:25 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +23,7 @@
 // 2004-01-16 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( MuonDigitToRawBuffer );
+DECLARE_ALGORITHM_FACTORY( MuonDigitToRawBuffer )
 
 using namespace LHCb;
 
@@ -49,8 +48,7 @@ StatusCode MuonDigitToRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-
-  debug() << "==> Initialise" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialise" << endmsg;
   m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
   m_TotL1Board=(m_muonDet->getDAQInfo())->TotTellNumber();
   m_M1Tell1=(m_muonDet->getDAQInfo())->M1TellNumber();
@@ -70,7 +68,8 @@ StatusCode MuonDigitToRawBuffer::initialize() {
     
   }
   
-  debug()<<"board number "<<m_TotL1Board<<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug()<<"board number "<<m_TotL1Board<<endmsg;
   
   
   return StatusCode::SUCCESS;
@@ -80,8 +79,7 @@ StatusCode MuonDigitToRawBuffer::initialize() {
 //=============================================================================
 StatusCode MuonDigitToRawBuffer::execute() {
  
-
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
  
   //MuonBankVersion::versions v;
   // v=m_vtype;
@@ -93,7 +91,7 @@ StatusCode MuonDigitToRawBuffer::execute() {
     if(sc.isFailure())return sc;
   }
   
-  debug()<<" exit "<<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<" exit "<<endmsg;
   return StatusCode::SUCCESS;
 };
 
@@ -103,7 +101,7 @@ StatusCode MuonDigitToRawBuffer::execute() {
 StatusCode MuonDigitToRawBuffer::finalize() {
 
   
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 
 }
@@ -116,25 +114,25 @@ StatusCode MuonDigitToRawBuffer::finalize() {
   std::vector<unsigned int> list_of_pads;
   //maxPads=0;  
   SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
-  //debug()<<"----- start a trigger sector cross ---------"<<endreq;
-  //debug()<<TSPath<<" "<<TS->numberOfOutputSignal()<<endreq;
+  //debug()<<"----- start a trigger sector cross ---------"<<endmsg;
+  //debug()<<TSPath<<" "<<TS->numberOfOutputSignal()<<endmsg;
   //debug()<<" seq ";
   //std::vector<unsigned int>::iterator idebug;
   //for(idebug=TSDigit.begin();idebug<TSDigit.end();idebug++){
   //  debug()<<" "<<*idebug;    
   //} 
-  //debug()<<endreq;
+  //debug()<<endmsg;
   
   if(TS->numberOfLayout()==2){
     //how many subsector????
     int NX=TS->gridXLayout(1);    
     int NY=TS->gridYLayout(0);
     int Nsub=NX*NY;
-    //debug()<<"number NX NY "<<NX<<" "<<NY<<endreq;   
+    //debug()<<"number NX NY "<<NX<<" "<<NY<<endmsg;   
     //maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);   
     // work on sub sector 
     if(Nsub>8){
-      err()<<"error the dimensioning of the TS subsector is wrong "<<endreq;
+      err()<<"error the dimensioning of the TS subsector is wrong "<<endmsg;
       return list_of_pads;
     
     }
@@ -154,14 +152,14 @@ StatusCode MuonDigitToRawBuffer::finalize() {
         (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
       int my=TS->gridYOutputChannel(index)/
         (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endreq;     
+      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endmsg;     
       int Msub=mx+my*NX;
       // horizntal o vertical?
       bool horizontal=false;
       if(TS->layoutOutputChannel(index)==0)horizontal=true;
       if(horizontal)horiz[Msub].push_back(*it);
       else hvert[Msub].push_back(*it);
-      // debug()<<" horizontal ? "<<     horizontal<<endreq;      
+      // debug()<<" horizontal ? "<<     horizontal<<endmsg;      
     }
     // now the address of fired pads..
     for(int i=0;i<Nsub;i++){
@@ -169,7 +167,7 @@ StatusCode MuonDigitToRawBuffer::finalize() {
       std::vector<unsigned int>::iterator itx;
       std::vector<unsigned int>::iterator ity;
       //debug 
-      //debug()<<" sub matrix "<<i<<endreq;
+      //debug()<<" sub matrix "<<i<<endmsg;
       //debug()<<" horizontal sequence ";
       
       // for(itx=horiz[i].begin();
@@ -177,13 +175,13 @@ StatusCode MuonDigitToRawBuffer::finalize() {
       // {
       //  debug()<<*itx<<" ";        
       //}
-      //debug()<<endreq;
+      //debug()<<endmsg;
       //debug()<<" vertical sequence ";
       
       //for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
       //  debug()<<*ity<<" ";        
       //}
-      //debug()<<endreq;      
+      //debug()<<endmsg;      
       //end debug
       unsigned int y_index=0;
       unsigned int subY=i/NX;
@@ -200,7 +198,7 @@ StatusCode MuonDigitToRawBuffer::finalize() {
             if(*itx!=0){
               unsigned int address=offsetX+x_index+
                 (offsetY+y_index)*(TS->gridXLayout(0));             
-              //      debug()<<" result of the address "<<address<<endreq;              
+              //      debug()<<" result of the address "<<address<<endmsg;              
               list_of_pads.push_back(address);              
             }            
           }     
@@ -214,7 +212,7 @@ StatusCode MuonDigitToRawBuffer::finalize() {
     for(it=TSDigit.begin();it<TSDigit.end();it++,index++){
       unsigned int address=index;
       if(*it!=0){list_of_pads.push_back(address);
-      //      debug()<<" result of the address "<<address<<endreq;
+      //      debug()<<" result of the address "<<address<<endmsg;
       } 
     }    
   }
@@ -261,7 +259,7 @@ StatusCode MuonDigitToRawBuffer::ProcessDC06()
     //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
     unsigned int bankLenght=0;
     unsigned int bankLenPad=0;
-    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endreq;    
+    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endmsg;    
     if(i>=m_M1Tell1)bankLenPad=(m_padInL1[i].size()+1)*16;
     
     unsigned int bankLenAdd=odeInTell1*8+8*totalChInL1;
@@ -422,14 +420,14 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
     //the algo if (odeInTell1+2*totalChInL1+0.5*totalChInL1)/4
     unsigned int bankLenght=0;
     unsigned int bankLenPad=0;
-    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endreq;    
+    //  info()<<" pad lenght "<<i<<" "<<m_padInL1[i].size()<<endmsg;    
     bankLenPad=(m_padInL1[i].size()+1)*16+16;
     totalChInL1=(m_digitsInL1[i].size());
     unsigned int bankLenHit=16*totalChInL1+16*4;
     
     if(totHit!= totalChInL1){
-      err()<< " wrong # hit in L1: cross check failed"<<endreq;
-      err()<<totHit<<" "<<totalChInL1<<endreq;
+      err()<< " wrong # hit in L1: cross check failed"<<endmsg;
+      err()<<totHit<<" "<<totalChInL1<<endmsg;
       
       return StatusCode::FAILURE;
     }
@@ -457,7 +455,8 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
     
     bank<<padSize;
     bank<<evt;
-    debug()<< i<<" pad size "<<padSize<<" "<<bankLenPad<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<< i<<" pad size "<<padSize<<" "<<bankLenPad<<endmsg;
     
     for(std::vector<unsigned int>::iterator itPad=m_padInL1[i].begin();
         itPad<m_padInL1[i].end();itPad++){
@@ -483,7 +482,8 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
         for(hit_counter=0;  hit_counter<pp_counter[pp_data];hit_counter++)
           {
              short hit=(short) (*itHit);
-             debug()<<"'digit written "<<(hit&0x0FFF)<<endreq;
+             if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+               debug()<<"'digit written "<<(hit&0x0FFF)<<endmsg;
              bank<<hit;
              itHit++;
              
@@ -497,8 +497,8 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
 //     bank<<(short)pp_counter[0];
 //     unsigned int hit_counter=1;
 //     unsigned int pp_data=0;
-//     info()<<" pp data "<<pp_counter[0]<<" "<<pp_counter[1]<<" "<<pp_counter[2]<<" "<<pp_counter[3]<<endreq;
-//     info()<<" data in bank "<<(bank.dataBank())[1]<<endreq;
+//     info()<<" pp data "<<pp_counter[0]<<" "<<pp_counter[1]<<" "<<pp_counter[2]<<" "<<pp_counter[3]<<endmsg;
+//     info()<<" data in bank "<<(bank.dataBank())[1]<<endmsg;
     
 //     for(std::vector<unsigned int>::iterator itHit=m_digitsInL1[i].begin();
 //         itHit<m_digitsInL1[i].end();itHit++){
@@ -580,10 +580,12 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitDC06()
     long L1Number=0;
     long ODENumber=0;    
     long DigitOutputPosition=(m_muonDet->getDAQInfo())->DAQaddressInODE(digitTile,L1Number,ODENumber,false); 
-    if( DigitOutputPosition>=192)info()<<" che diavolo succede "<<endreq;
+    if( DigitOutputPosition>=192)info()<<" che diavolo succede "<<endmsg;
     
-    debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
-    debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ){
+      debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
+      debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;
+    }
     unsigned int digitInDAQ=0;
     MuonHLTDigitFormat temp(MuonBankVersion::DC06);
     temp.setAddress(DigitOutputPosition);
@@ -594,7 +596,7 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitDC06()
     m_digitsInODE[ODENumber-1].push_back(digitInDAQ);  
     firedInODE[ODENumber-1]++; 
   }  
-  //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
+  //  debug()<<" tot ODE "<<m_TotODEBoard<<endmsg;
   
   for(unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
     std::stable_sort(m_digitsInODE[i].begin(),
@@ -622,7 +624,8 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
     unsigned int iODE=0;
     for(iODE=0;iODE<ODE_in_L1;iODE++){
 
-      debug()<<" start a new ODE "<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<" start a new ODE "<<endmsg;
       
       unsigned int odenumber=(m_muonDet->getDAQInfo())->getODENumberInTell1(i,iODE)-1;;
       
@@ -631,7 +634,7 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
       SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);  
       // how many digit in the TS?
       TSInODE=ode->getTSNumber();
-      debug()<<"TS "<<TSInODE<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<"TS "<<TSInODE<<endmsg;
       
       std::string  TSPath= cablingBasePath+ode->getTSName(0);
       SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
@@ -642,10 +645,11 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
       else{
         maxPads=channelInTS;         
       }
-      debug()<<" max pad "<<maxPads<<" "<<channelInTS<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<" max pad "<<maxPads<<" "<<channelInTS<<endmsg;
       
       std::vector<unsigned int> list_input(channelInTS,0); 
-      //debug()<<" channelInTS "<<channelInTS<<endreq;      
+      //debug()<<" channelInTS "<<channelInTS<<endmsg;      
       //build header == channels fired for each ode
       unsigned int TSnumberInODE=0;
       std::vector<unsigned int>::iterator itDigit;
@@ -654,17 +658,18 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
           itDigit++){
         MuonHLTDigitFormat temp(*itDigit,MuonBankVersion::DC06);
         unsigned int address=temp.getAddress();
-        debug()<<address<<" "<<channelInTS<<" "<<TSInODE<<" "<<TSnumberInODE<<endreq;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug()<<address<<" "<<channelInTS<<" "<<TSInODE<<" "<<TSnumberInODE<<endmsg;
         
         if(itDigit==m_digitsInODE[odenumber].begin()){
            TSnumberInODE=address/channelInTS;
         }
-        //debug()<<" address "<<address<<" "<<TSnumberInODE<<endreq;
+        //debug()<<" address "<<address<<" "<<TSnumberInODE<<endmsg;
         bool swap=true;
         
         if(channelInTS*(TSnumberInODE+1)<=address||
            itDigit==m_digitsInODE[odenumber].end()-1){
-          // info()<<" entra qui "<<TSnumberInODE<<endreq;
+          // info()<<" entra qui "<<TSnumberInODE<<endmsg;
           if(itDigit==(m_digitsInODE[odenumber].end()-1)&&
              address<channelInTS*(TSnumberInODE+1)) {            
               list_input[address-channelInTS*TSnumberInODE]=1;
@@ -672,12 +677,13 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
           }          
           std::string TSPath=cablingBasePath+
             ode->getTSName(TSnumberInODE);     
-          // debug()<<" TSPath "<<  TSPath <<endreq;          
+          // debug()<<" TSPath "<<  TSPath <<endmsg;          
           std::vector<unsigned int> resultsAddress=
             (m_muonDet->getDAQInfo())->padsinTS(list_input, 
                      TSPath);
           //store the output
-          debug()<<"size "<<resultsAddress.size()<<endreq;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+            debug()<<"size "<<resultsAddress.size()<<endmsg;
           
           if(resultsAddress.size()){            
             for(std::vector<unsigned int>::iterator itpad=
@@ -695,24 +701,28 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
           for(itClear= list_input.begin();itClear<list_input.end();itClear++){
             *itClear=0;            
           } 
-          debug()<<" qui qui "<<swap<<endreq;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+            debug()<<" qui qui "<<swap<<endmsg;
           
           TSnumberInODE=address/channelInTS;
           if(swap) {  
-              debug()<<"adding in position "<<
-            address-channelInTS*TSnumberInODE
-                 <<" "<<address<<endreq;
-              debug()<< list_input.size()<<endreq;
+            if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+              debug()<<"adding in position "<<address-channelInTS*TSnumberInODE
+                     <<" "<<address<<endmsg;
+              debug()<< list_input.size()<<endmsg;
+            }
               
              list_input[address-channelInTS*TSnumberInODE]=1;
              //add the pads mechanism....
              if(itDigit==m_digitsInODE[odenumber].end()-1){
-               debug()<<" before "<<endreq;
+               if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+                 debug()<<" before "<<endmsg;
                
                 std::vector<unsigned int> resultsAddress=
                (m_muonDet->getDAQInfo())->padsinTS(list_input, 
                         TSPath); 
-                debug()<<" after "<<endreq;
+                if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+                  debug()<<" after "<<endmsg;
                 if(resultsAddress.size()){            
                   for(std::vector<unsigned int>::iterator itpad=
                         resultsAddress.begin();
@@ -730,7 +740,7 @@ StatusCode MuonDigitToRawBuffer::ProcessPads()
       }
       padsInTell1=padsInTell1+maxPads*TSInODE;
       
-      debug()<<" eccoci "<<endreq;      
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<" eccoci "<<endmsg;      
     }    
   }
    return StatusCode::SUCCESS;
@@ -752,11 +762,14 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitV1()
     unsigned int ODEAdd=0;
     
     long DigitOutputPosition=(m_muonDet->getDAQInfo())->DAQaddressInL1(digitTile,L1Number,ODENumber,ODEAdd);   
-    debug()<<" L1 add "<<L1Number<<" "<<ODENumber<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" L1 add "<<L1Number<<" "<<ODENumber<<endmsg;
     
     long DigitOutputPositionInODE=(m_muonDet->getDAQInfo())->DAQaddressInODE(digitTile,L1Number,ODENumber,false); 
-    debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
-    debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+      debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
+      debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;    
+    }
 unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
     unsigned int digitInDAQ=0;
     MuonHLTDigitFormat temp(MuonBankVersion::v1);
@@ -765,7 +778,8 @@ unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
     digitInDAQ=temp.getWord();
     m_digitsInL1[L1Number].push_back(digitInDAQ); 
     firedInPP[L1Number*4+pp_num]++;
-    debug()<<" pp "<<pp_num<<" "<<L1Number<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" pp "<<pp_num<<" "<<L1Number<<endmsg;
     //     debug()<<" digit word "<<L1Number-1<<" "<<ODENumber-1<<" "<<
     //       temp.getAddress()<<endmsg;    
     MuonHLTDigitFormat tempode(MuonBankVersion::v1);
@@ -779,16 +793,18 @@ unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
 
     
   }  
-  //  debug()<<" tot ODE "<<m_TotODEBoard<<endreq;
+  //  debug()<<" tot ODE "<<m_TotODEBoard<<endmsg;
  
   
   for(unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
- debug()<<" start sorting "<<m_digitsInL1[i].size()<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" start sorting "<<m_digitsInL1[i].size()<<endmsg;
     std::stable_sort(m_digitsInL1[i].begin(),
                      m_digitsInL1[i].end(),SortDigitInL1());    
   } 
   for(unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
-    debug()<<" start sorting "<<m_digitsInODE[i].size()<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" start sorting "<<m_digitsInODE[i].size()<<endmsg;
     std::stable_sort(m_digitsInODE[i].begin(),
                      m_digitsInODE[i].end(),SortDigitInODE());    
   }

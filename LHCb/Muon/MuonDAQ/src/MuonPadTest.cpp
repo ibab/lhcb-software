@@ -1,4 +1,3 @@
-// $Id: MuonPadTest.cpp,v 1.3 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 // 2006-03-19 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( MuonPadTest );
+DECLARE_ALGORITHM_FACTORY( MuonPadTest )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +36,7 @@ StatusCode MuonPadTest::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   m_MuonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
   if(!m_MuonBuffer)info()<<" error "<<endmsg;
 
@@ -49,7 +48,7 @@ StatusCode MuonPadTest::initialize() {
 //=============================================================================
 StatusCode MuonPadTest::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   std::vector<LHCb::MuonTileID> decodingTile;
 	m_MuonBuffer->getPads(decodingTile);
@@ -57,28 +56,32 @@ StatusCode MuonPadTest::execute() {
   SmartDataPtr<LHCb::MuonCoords> coord(eventSvc(),
                                  LHCb::MuonCoordLocation::MuonCoords);
   LHCb::MuonCoords::iterator icoord;
-  debug()<<" coord "<<coord->size()<<endreq;
-  debug()<<" pad "<<decodingTile.size()<<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug()<<" coord "<<coord->size()<<endmsg;
+    debug()<<" pad "<<decodingTile.size()<<endmsg;
+  }
   for(icoord=coord->begin();icoord<coord->end();icoord++){
     LHCb::MuonTileID tileCoord=(*icoord)->key();
     if(tileCoord.station()>0){
-      debug()<< "["  <<  tileCoord.layout() << ","
-            <<  tileCoord.station() << ","
-            <<  tileCoord.region() << ","
-            <<  tileCoord.quarter() << ","
-            <<  tileCoord.nX() << ","
-            <<  tileCoord.nY() << "]"<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<< "["  <<  tileCoord.layout() << ","
+               <<  tileCoord.station() << ","
+               <<  tileCoord.region() << ","
+               <<  tileCoord.quarter() << ","
+               <<  tileCoord.nX() << ","
+               <<  tileCoord.nY() << "]"<<endmsg;
       
       bool found=false;      
       for(ipad=decodingTile.begin();ipad<decodingTile.end();ipad++){
         if(*ipad==tileCoord){
-          debug()<<" found the matching coord "<<
-            "["  <<  ipad->layout() << ","
-                <<  ipad->station() << ","
-                <<  ipad->region() << ","
-                <<  ipad->quarter() << ","
-                <<  ipad->nX() << ","
-                <<  ipad->nY() << "]"<<endreq;            
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+            debug()<<" found the matching coord "<<
+              "["  <<  ipad->layout() << ","
+                   <<  ipad->station() << ","
+                   <<  ipad->region() << ","
+                   <<  ipad->quarter() << ","
+                   <<  ipad->nX() << ","
+                   <<  ipad->nY() << "]"<<endmsg;            
           found=true;
           break;          
         }        
@@ -88,7 +91,7 @@ StatusCode MuonPadTest::execute() {
            &&(tileCoord.region()==0||tileCoord.region()==1)&&
            ((*icoord)->uncrossed()))continue;
         info()<< " not found the tile "<<tileCoord.station()<<" "<<
-          tileCoord.region()<<" "<<(*icoord)->uncrossed()<<endreq;
+          tileCoord.region()<<" "<<(*icoord)->uncrossed()<<endmsg;
       }
     }    
   }
@@ -101,7 +104,7 @@ StatusCode MuonPadTest::execute() {
 //=============================================================================
 StatusCode MuonPadTest::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

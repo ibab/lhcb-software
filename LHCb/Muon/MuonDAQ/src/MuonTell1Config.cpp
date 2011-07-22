@@ -1,4 +1,3 @@
-// $Id: MuonTell1Config.cpp,v 1.1 2008-04-02 11:53:40 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonTell1Config );
+DECLARE_TOOL_FACTORY( MuonTell1Config )
 
 
 //=============================================================================
@@ -85,7 +84,7 @@ StatusCode  MuonTell1Config::configTell1(int Tell1){
   long HitInODE=0;  
   long TUType=0;
   long pad_off=0;
-  //  info()<<l1<<" l1 "<<endreq;
+  //  info()<<l1<<" l1 "<<endmsg;
   
   for(int link=0;link<24;link++){   
     TUType=0;   
@@ -95,8 +94,9 @@ StatusCode  MuonTell1Config::configTell1(int Tell1){
     data.setPadOffset(link,pad_off); 
     data.setHitOffset(link,HitInODE);
     
-    debug()<<" link connected ?"<<l1->isLinkConnected(link)<<" "<<
-      l1->getLinkConnection(link)<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" link connected ?"<<l1->isLinkConnected(link)<<" "<<
+        l1->getLinkConnection(link)<<endmsg;
     
     if(l1->isLinkConnected(link)){ 
       unsigned int ode_num=m_muonDet->getDAQInfo()->
@@ -106,7 +106,8 @@ StatusCode  MuonTell1Config::configTell1(int Tell1){
       MuonTSMap* ts=m_muonDet->getDAQInfo()->getTSMap(l1, ode,0);
       long padInTS=ts->numberOfPad();      
       long padInODE=padInTS*ode->getTSNumber();
-      debug()<<padInTS<<" "<<padInODE<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<padInTS<<" "<<padInODE<<endmsg;
       
       pad_off=pad_off+padInODE;
       HitInODE=192+HitInODE;
@@ -114,14 +115,15 @@ StatusCode  MuonTell1Config::configTell1(int Tell1){
       char tsName[20];
       //name=tsName;
       strcpy(tsName, TSName.c_str());
-      debug()<<" ts name "<<tsName<<" ciao"<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<" ts name "<<tsName<<" ciao"<<endmsg;
       std::vector<std::pair<std::string,long> >::iterator itName;
       for(itName=TUName.begin();itName<TUName.end();itName++){
         if(TSName==(*itName).first)TUType=(*itName).second;
         
       }
 
-      debug()<<" TUTYPE "<<TUType<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<" TUTYPE "<<TUType<<endmsg;
       
     }
     data.setPadTU(link,TUType);
@@ -129,7 +131,7 @@ StatusCode  MuonTell1Config::configTell1(int Tell1){
   
 
   info()<<" Printing Tell1 # "<<Tell1<<" configuration \n";
-  info()<<data<<endreq;
+  info()<<data<<endmsg;
   return sc;
   
 

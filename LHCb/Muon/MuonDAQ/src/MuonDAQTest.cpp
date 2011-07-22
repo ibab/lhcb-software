@@ -1,4 +1,3 @@
-// $Id: MuonDAQTest.cpp,v 1.4 2008-04-02 11:52:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 // 2005-10-19 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( MuonDAQTest );
+DECLARE_ALGORITHM_FACTORY( MuonDAQTest )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +36,7 @@ StatusCode MuonDAQTest::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   m_MuonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
   if(!m_MuonBuffer)info()<<" error "<<endmsg;
   
@@ -49,35 +48,36 @@ StatusCode MuonDAQTest::initialize() {
 //=============================================================================
 StatusCode MuonDAQTest::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   SmartDataPtr<LHCb::MuonDigits> digit(eventSvc(),
                                  LHCb::MuonDigitLocation::MuonDigit);
   LHCb::MuonDigits::iterator idigit;
   for(idigit=digit->begin();idigit<digit->end();idigit++){    
     LHCb::MuonTileID digitTile=(*idigit)->key();
-    debug()<< "["  <<  digitTile.layout() << ","
-          <<  digitTile.station() << ","
-          <<  digitTile.region() << ","
-          <<  digitTile.quarter() << ","
-          <<  digitTile.nX() << ","
-          <<  digitTile.nY() << "]" <<"time "<<(*idigit)->TimeStamp()<<
-      endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<< "["  <<  digitTile.layout() << ","
+             <<  digitTile.station() << ","
+             <<  digitTile.region() << ","
+             <<  digitTile.quarter() << ","
+             <<  digitTile.nX() << ","
+             <<  digitTile.nY() << "]" <<"time "<<(*idigit)->TimeStamp()<<
+        endmsg;
   }
     std::vector<LHCb::MuonTileID> decodingTile;
 	m_MuonBuffer->getTile(decodingTile);
     std::vector<LHCb::MuonTileID>::iterator jitile;
     for(jitile=decodingTile.begin();jitile<decodingTile.end();jitile++){
       LHCb::MuonTileID digitTile=(*jitile);
-      verbose()<<
-        " ;ist of tile "<<
-        (unsigned int) digitTile<<endmsg;
-      debug()<< "["  <<  digitTile.layout() << ","
-            <<  digitTile.station() << ","
-            <<  digitTile.region() << ","
-            <<  digitTile.quarter() << ","
-            <<  digitTile.nX() << ","
-            <<  digitTile.nY() << "]" <<endmsg;      
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+        verbose()<<" ;ist of tile "<< (unsigned int) digitTile<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<< "["  <<  digitTile.layout() << ","
+               <<  digitTile.station() << ","
+               <<  digitTile.region() << ","
+               <<  digitTile.quarter() << ","
+               <<  digitTile.nX() << ","
+               <<  digitTile.nY() << "]" <<endmsg;      
     }  
   
     std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator ji;
@@ -89,12 +89,13 @@ StatusCode MuonDAQTest::execute() {
       LHCb::MuonTileID digitTile=digit.first;
       unsigned int time = digit.second;
       //info()<<" alesia "<<(unsigned int) digitTile<<endmsg;
-      debug()<< "["  <<  digitTile.layout() << ","
-            <<  digitTile.station() << ","
-            <<  digitTile.region() << ","
-            <<  digitTile.quarter() << ","
-            <<  digitTile.nX() << ","
-            <<  digitTile.nY() << "]" <<" time "<<time<<endmsg;      
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<< "["  <<  digitTile.layout() << ","
+               <<  digitTile.station() << ","
+               <<  digitTile.region() << ","
+               <<  digitTile.quarter() << ","
+               <<  digitTile.nX() << ","
+               <<  digitTile.nY() << "]" <<" time "<<time<<endmsg;      
     }  
     for(idigit=digit->begin();idigit<digit->end();idigit++){    
       LHCb::MuonTileID digitTile=(*idigit)->key();
@@ -106,12 +107,12 @@ StatusCode MuonDAQTest::execute() {
         if(digitTile==digitTileDecoded){
           if(time!=(*idigit)->TimeStamp()){
 	    err()<<"time not correct "<<
-            time<<" "<<(*idigit)->TimeStamp()<<endreq;
+            time<<" "<<(*idigit)->TimeStamp()<<endmsg;
           }else{ found=true;}  
       }
       
       }
-      if(!found)info()<<" not found the digit "<<endreq;
+      if(!found)info()<<" not found the digit "<<endmsg;
       
     }
     
@@ -125,7 +126,7 @@ StatusCode MuonDAQTest::execute() {
 //=============================================================================
 StatusCode MuonDAQTest::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

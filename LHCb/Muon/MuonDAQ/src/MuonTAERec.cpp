@@ -1,4 +1,3 @@
-// $Id: MuonTAERec.cpp,v 1.1 2009-04-28 10:10:12 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonTAERec );
+DECLARE_ALGORITHM_FACTORY( MuonTAERec )
 
 
 //=============================================================================
@@ -44,7 +43,7 @@ StatusCode MuonTAERec::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   m_muonDetector=getDet<DeMuonDetector>
     (DeMuonLocation::Default);
   
@@ -53,7 +52,7 @@ StatusCode MuonTAERec::initialize() {
   if(m_muonDetector==NULL){
     error() << 
       "Could not read /dd/Structure/LHCb/DownstreamRegion/Muon from TDS "
-        << endreq;
+        << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -66,8 +65,9 @@ StatusCode MuonTAERec::initialize() {
   if(rootInTES()!="")m_ignoreExecution=true;
   //if TAE mode use the pribate tool to reset the meomory.
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer",this);
-  if(!m_muonBuffer)info()<<"error retrieving the tool "<<endreq;
-  debug()<<" station number "<<m_NStation<<" "<<m_NRegion <<endreq;
+  if(!m_muonBuffer)info()<<"error retrieving the tool "<<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<<" station number "<<m_NStation<<" "<<m_NRegion <<endmsg;
   m_offsetLoc[0]="Prev7/";
   m_offsetLoc[1]="Prev6/";
   m_offsetLoc[2]="Prev5/";
@@ -94,7 +94,7 @@ StatusCode MuonTAERec::initialize() {
 //=============================================================================
 StatusCode MuonTAERec::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;  
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;  
   MuonCoords *coords = new MuonCoords;
   if(!m_ignoreExecution){
       // need to loop over input vector of MuonDigits
@@ -113,30 +113,34 @@ StatusCode MuonTAERec::execute() {
    
     StatusCode sc=m_muonBuffer->getTileAndTDC(raw,decoding,m_offsetLoc[7+i] );
     if(sc.isFailure()){
-      error()<<" error in decoding the muon raw data "<<endreq;
+      error()<<" error in decoding the muon raw data "<<endmsg;
       return sc;
     }
-    debug()<<decoding.size()<<" digits in input "<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<decoding.size()<<" digits in input "<<endmsg;
   
     for(it = decoding.begin(); it != decoding.end(); it++){
 
       // set the time taking into account the BX. must be unsigned...
       std::vector< std::pair<LHCb::MuonTileID,unsigned int> >::iterator icheck;
       bool add=true;
-     //info()<<" digit in input "<<(*it).first<<endreq;      
+     //info()<<" digit in input "<<(*it).first<<endmsg;      
       for(icheck= m_logChannels.begin();icheck!= m_logChannels.end();icheck++){
          if ( (*it).first  ==  (*icheck).first ) {
-           verbose()<<" found double hit check time "<< (*it).second+(7+i)*16<<" "<<(*icheck).second<<endreq;
+           if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+             verbose()<<" found double hit check time "<< (*it).second+(7+i)*16<<" "<<(*icheck).second<<endmsg;
            //take only the first one 
            unsigned int tone=(*it).second;
            tone=tone+(7+i)*16;
            if(tone> (*icheck).second){
              add =false;            
-		verbose()<<" so keep the existing one and not add the new one "<<endreq;
+             if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+               verbose()<<" so keep the existing one and not add the new one "<<endmsg;
              break;
              
            }else{
-             verbose()<<"remove the old one  "<<m_logChannels.size()<<endreq;
+             if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+               verbose()<<"remove the old one  "<<m_logChannels.size()<<endmsg;
              m_logChannels.erase(icheck);
              
            }
@@ -146,8 +150,9 @@ StatusCode MuonTAERec::execute() {
       if(add){
          (*it).second += (7+i)*16;
          std::pair<LHCb::MuonTileID,unsigned int>  ch((*it).first, (*it).second );
-         verbose()<<"adding digit  "<<(*it).first<<" to toal number "
-                  <<m_logChannels.size()<<endreq;        
+         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+           verbose()<<"adding digit  "<<(*it).first<<" to toal number "
+                    <<m_logChannels.size()<<endmsg;        
          m_logChannels.push_back(ch);
       }
     }
@@ -157,7 +162,7 @@ StatusCode MuonTAERec::execute() {
                                    unsigned int> >::iterator itest;
                                 
 //for(    itest=m_logChannels.begin();itest<m_logChannels.end();itest++){
-//info()<<" lisat dei digit "<<(*itest).first<<endreq;
+//info()<<" lisat dei digit "<<(*itest).first<<endmsg;
 //}
   int station;
 
@@ -168,14 +173,15 @@ StatusCode MuonTAERec::execute() {
       // get mapping of input to output from region
       // in fact we are reversing the conversion done in the digitisation  
       int NLogicalMap = m_muonDetector->getLogMapInRegion(station,region);
-      verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endreq;    
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endmsg;    
       if(1 == NLogicalMap){
         // straight copy of the input + making SmartRefs to the MuonDigits
         StatusCode sc = addCoordsNoMap(coords,m_logChannels,station,region);
         if(!sc.isSuccess()){
           error()
               << "Failed to map digits to coords in a one to one manner"
-              << endreq;
+              << endmsg;
           return sc;
         }
       }else{  
@@ -184,7 +190,7 @@ StatusCode MuonTAERec::execute() {
           addCoordsCrossingMap(coords,m_logChannels,station,region);
         if(!sc.isSuccess()){error()
               << "Failed to map digits to coords by crossing strips"
-              << endreq;
+              << endmsg;
           return sc;
         }
       }
@@ -206,7 +212,7 @@ StatusCode MuonTAERec::execute() {
 //=============================================================================
 StatusCode MuonTAERec::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   release(    m_muonBuffer);
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
@@ -228,7 +234,8 @@ StatusCode MuonTAERec::addCoordsNoMap(MuonCoords *coords,
     if( (iD->first).station() == static_cast<unsigned int>(station) &&
         (iD->first).region() == static_cast<unsigned int>(region) ){
       // make the coordinate to be added to coords
-      verbose()<<" digit tile "<<iD->first<<endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose()<<" digit tile "<<iD->first<<endmsg;
       
       MuonCoord *current = new MuonCoord();
       
@@ -243,7 +250,7 @@ StatusCode MuonTAERec::addCoordsNoMap(MuonCoords *coords,
       
       // need to clear the layer and readout bits
       MuonTileID pad = iD->first;
-      verbose()<<pad<<endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose()<<pad<<endmsg;
       
       // as no change between digit and coord in this mapping key is the same
       coords->insert(current,pad);
@@ -264,7 +271,7 @@ StatusCode MuonTAERec::addCoordsCrossingMap(MuonCoords *coords,
   // need to calculate the shape of the horizontal and vertical logical strips
   //  if( 2 != m_muonDetector->getLogMapInRegion(station,region) ){
   // log << MSG::ERROR << "There are " << pRegion->numberLogicalMap()
-  //     << " logical maps, I expect either 1 or 2" << endreq;
+  //     << " logical maps, I expect either 1 or 2" << endmsg;
   //}
 
   // get local MuonLayouts for strips
@@ -288,7 +295,7 @@ StatusCode MuonTAERec::addCoordsCrossingMap(MuonCoords *coords,
       } else {
         error()
             << "MuonDigits in list are not compatable with expected shapes"
-            << (*it)<<endreq;
+            << (*it)<<endmsg;
       }    
     }
   }
@@ -312,9 +319,10 @@ StatusCode MuonTAERec::addCoordsCrossingMap(MuonCoords *coords,
         current->setDigitTile(link);     
         current->setDigitTDC1((iOne->first).second);
         current->setDigitTDC2((iTwo->first).second);
-        verbose() << " Made an crossed pad " << pad 
-            << " from " << (iOne->first) << " and "
-            << (iTwo->first) << endreq;
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+          verbose() << " Made an crossed pad " << pad 
+                    << " from " << (iOne->first) << " and "
+                    << (iTwo->first) << endmsg;
       
         // as no change between digit and coord in this mapping key is the same
         coords->insert(current,pad);
@@ -342,8 +350,8 @@ if(!m_ignoreUncrossedStrips){
       current->setDigitTile(link);
       current->setDigitTDC1((iOne->first).second);
 
-      verbose() << " Found an uncrossed pad type 1 " << pad 
-          << endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " Found an uncrossed pad type 1 " << pad << endmsg;
 
       coords->insert(current,pad);
     }
@@ -364,8 +372,8 @@ if(!m_ignoreUncrossedStrips){
       link.push_back((iTwo->first).first);
       current->setDigitTile(link);     
 
-      verbose() << " Found an uncrossed pad type 2 " << pad 
-          << endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " Found an uncrossed pad type 2 " << pad << endmsg;
 
       coords->insert(current,pad);      
 

@@ -1,4 +1,3 @@
-// $Id: MuonRec.cpp,v 1.7 2008-10-23 13:42:17 asatta Exp $
 // Include files 
 #include <cstdio>
 
@@ -16,7 +15,7 @@ using namespace LHCb;
 // 22/03/2002 : David Hutchcroft
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( MuonRec );
+DECLARE_ALGORITHM_FACTORY( MuonRec )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -44,7 +43,7 @@ StatusCode MuonRec::initialize() {
   StatusCode sc=GaudiAlgorithm::initialize();
   if(sc.isFailure())return sc;
 
-  debug() << "==> Initialise" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialise" << endmsg;
   m_muonDetector=getDet<DeMuonDetector>
     (DeMuonLocation::Default);
   
@@ -52,7 +51,7 @@ StatusCode MuonRec::initialize() {
   
   if(m_muonDetector==NULL){
     error() << "Could not read /dd/Structure/LHCb/DownstreamRegion/Muon from TDS" 
-        << endreq;
+        << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -65,11 +64,11 @@ StatusCode MuonRec::initialize() {
   if(m_forceResetDAQ){
     //if TAE mode use the pribate tool to reset the meomory.
     m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer",this);
-    if(!m_muonBuffer)info()<<"error retrieving the toll "<<endreq;
+    if(!m_muonBuffer)info()<<"error retrieving the toll "<<endmsg;
   }else{
     //if not TAE mode use the public tool
     m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-    if(!m_muonBuffer)info()<<"error retrieving the toll "<<endreq;
+    if(!m_muonBuffer)info()<<"error retrieving the toll "<<endmsg;
   }
   
   
@@ -86,7 +85,8 @@ StatusCode MuonRec::initialize() {
     }  else
       return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
   
-  debug()<<" station number "<<m_NStation<<" "<<m_NRegion <<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<<" station number "<<m_NStation<<" "<<m_NRegion <<endmsg;
   return StatusCode::SUCCESS;
 };
 
@@ -95,8 +95,7 @@ StatusCode MuonRec::initialize() {
 //=============================================================================
 StatusCode MuonRec::execute() {
 
-
-  debug() << "==> Execute" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // need to loop over input vector of MuonDigits
   // and make output vectors of MuonCoords one for each station
@@ -105,10 +104,11 @@ StatusCode MuonRec::execute() {
 
   StatusCode sc=	m_muonBuffer->getTileAndTDC(decoding);
   if(sc.isFailure()){
-    error()<<" error in decoding the muon raw data "<<endreq;
+    error()<<" error in decoding the muon raw data "<<endmsg;
     return sc;
   }
-  debug()<<decoding.size()<<" digits in input "<<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<<decoding.size()<<" digits in input "<<endmsg;
   
   int station;
   MuonCoords *coords = new MuonCoords; 
@@ -119,7 +119,8 @@ StatusCode MuonRec::execute() {
       // get mapping of input to output from region
       // in fact we are reversing the conversion done in the digitisation
       int NLogicalMap = m_muonDetector->getLogMapInRegion(station,region);     
-      verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endmsg;
       
       if(1 == NLogicalMap){
         // straight copy of the input + making SmartRefs to the MuonDigits
@@ -127,7 +128,7 @@ StatusCode MuonRec::execute() {
         if(!sc.isSuccess()){
           error()
               << "Failed to map digits to coords in a one to one manner"
-              << endreq;
+              << endmsg;
           return sc;
         }
       }else{
@@ -136,7 +137,7 @@ StatusCode MuonRec::execute() {
           addCoordsCrossingMap(coords,decoding,station,region);
         if(!sc.isSuccess()){error()
               << "Failed to map digits to coords by crossing strips"
-              << endreq;
+              << endmsg;
           return sc;
         }
       }
@@ -152,7 +153,7 @@ StatusCode MuonRec::execute() {
 //=============================================================================
 StatusCode MuonRec::finalize() {
 
-  debug() << "==> Finalize" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   if(m_forceResetDAQ){
     release(	m_muonBuffer);
     
@@ -176,7 +177,8 @@ StatusCode MuonRec::addCoordsNoMap(MuonCoords *coords,
     if( (iD->first).station() == static_cast<unsigned int>(station) &&
         (iD->first).region() == static_cast<unsigned int>(region) ){
       // make the coordinate to be added to coords
-      verbose()<<" digit tile "<<iD->first<<endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose()<<" digit tile "<<iD->first<<endmsg;
       
       MuonCoord *current = new MuonCoord();
       
@@ -191,7 +193,7 @@ StatusCode MuonRec::addCoordsNoMap(MuonCoords *coords,
       
       // need to clear the layer and readout bits
       MuonTileID pad = iD->first;
-      verbose()<<pad<<endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose()<<pad<<endmsg;
       
       // as no change between digit and coord in this mapping key is the same
       coords->insert(current,pad);
@@ -212,7 +214,7 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
   // need to calculate the shape of the horizontal and vertical logical strips
   //  if( 2 != m_muonDetector->getLogMapInRegion(station,region) ){
   // log << MSG::ERROR << "There are " << pRegion->numberLogicalMap()
-  //     << " logical maps, I expect either 1 or 2" << endreq;
+  //     << " logical maps, I expect either 1 or 2" << endmsg;
   //}
 
   // get local MuonLayouts for strips
@@ -236,7 +238,7 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
       } else {
         error()
             << "MuonDigits in list are not compatable with expected shapes"
-            << (*it)<<endreq;
+            << (*it)<<endmsg;
       }    
     }
   }
@@ -268,9 +270,10 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
         iOne->second = true;
         iTwo->second = true;
         
-        verbose() << " Made an crossed pad " << pad 
-            << " from " << (iOne->first) << " and "
-            << (iTwo->first) << endreq;
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+          verbose() << " Made an crossed pad " << pad 
+                    << " from " << (iOne->first) << " and "
+                    << (iTwo->first) << endmsg;
       }
     }
   }
@@ -290,8 +293,8 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
       current->setDigitTile(link);
       current->setDigitTDC1((iOne->first).second);
 
-      verbose() << " Found an uncrossed pad type 1 " << pad 
-          << endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " Found an uncrossed pad type 1 " << pad << endmsg;
 
       coords->insert(current,pad);
     }
@@ -312,8 +315,8 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
       link.push_back((iTwo->first).first);
       current->setDigitTile(link);     
 
-      verbose() << " Found an uncrossed pad type 2 " << pad 
-          << endreq;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " Found an uncrossed pad type 2 " << pad << endmsg;
 
       coords->insert(current,pad);      
 

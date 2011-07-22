@@ -4,6 +4,11 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() and verbose() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
+
 !========================= MuonDAQ v4r9 2011-04-26 =========================
 ! 2011-04-24 - Alessia Satta
  - Fix an error message due to a mismatch of the IDE and Tell1 firmware
