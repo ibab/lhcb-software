@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Albert Puig
+ - Added default config dict to B2XGammaLines + tightened cuts.
+
 ! 2011-07-21 - Liming Zhang
  - Updated StrippingD0ForBXX.py: pion from Dst changed to StdAllLoosePions
 
