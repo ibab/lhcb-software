@@ -116,7 +116,7 @@ public:
 
   void updateDrawingOptions();
 
-  void fillTrendingPlots ( int startTime, int endTime, bool update=false );
+  void fillTrendingPlots ( unsigned int startTime, unsigned int endTime, bool update=false );
 
   void prepareDisplayHistos();
   

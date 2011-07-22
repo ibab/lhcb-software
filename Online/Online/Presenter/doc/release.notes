@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Olivier Callot
+ - Adapt to Trending v2r0 (int -> unsigned int)
+
 ! 2011-06-29 - Olivier Callot
  - Make problem database report working with old server
 

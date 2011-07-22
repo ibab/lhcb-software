@@ -950,7 +950,7 @@ void PresenterPage::updateDrawingOptions ( ) {
 //=========================================================================
 //  Fill the trend plots. Start and end time in integer. If endTime is zero, startTime is an offset
 //=========================================================================
-void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update ) {
+void PresenterPage::fillTrendingPlots ( unsigned int startTime, unsigned int endTime, bool update ) {
   std::cout << "  ++ Trending size " << m_trends.size() << std::endl;
   if ( m_trends.size() == 0 ) return;
   
@@ -974,7 +974,7 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
     PresenterGaudi::trendingTool->tags( tags );
     
     int lastTagVersion   = PresenterGaudi::trendingTool->tagVersion();
-    int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
+    unsigned int firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
     std::cout << "Select for time range: " << startTime << " to " << endTime 
               << " last Tag version " << lastTagVersion << " starts at " << firstTimeThisTag << std::endl;
 
@@ -1000,7 +1000,7 @@ void PresenterPage::fillTrendingPlots ( int startTime, int endTime, bool update 
       firstTimeThisTag = PresenterGaudi::trendingTool->firstTimeThisTag();
     }
     
-    int theTime = startTime;
+    unsigned int theTime = startTime;
     std::vector<TrendData>::iterator itT;
     
     while ( currVersion <= lastTagVersion ) {
