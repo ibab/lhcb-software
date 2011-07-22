@@ -43,7 +43,12 @@ class LoKiCuts(object):
                 'BPVLTIME'  : 'BPVLTIME()',
                 'MM'        : 'MM',
                 'CHILDCL1'  : 'CHILD(CL,1)',
-                'CHILDCL2'  : 'CHILD(CL,2)'
+                'CHILDCL2'  : 'CHILD(CL,2)',
+                'PIDK'      : 'PIDK',
+                'PIDp'      : 'PIDp',
+                'BPVVDRHO'  : 'BPVVDRHO',
+                'BPVVDZ'    : 'BPVVDZ',
+                'DOCAMAX'    : 'DOCAMAX' 
                 }
                 
     def __init__(self,cuts,config):

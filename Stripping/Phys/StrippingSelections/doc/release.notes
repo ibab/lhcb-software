@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-22 S. Blusk
+   - Updates to StrippingBeauty, add Beauty2Charm_Dfilter, Beauthy2Charm_HHHBuilder
+   - modifications to some LokiCuts, Utils
+
 ! 2011-07-22 - Paula Alvarez
  - StrippingBs2Kst0Kst0.py
  - new cut parameter in confdict

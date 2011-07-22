@@ -20,7 +20,9 @@ from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
      StdAllNoPIDsProtons
 from Beauty2Charm_DBuilder import *
+from Beauty2Charm_DFilter import *
 from Beauty2Charm_HHBuilder import *
+from Beauty2Charm_HHHBuilder import *
 from Beauty2Charm_B2DXBuilder import *
 from Beauty2Charm_Lb2XBuilder import *
 
@@ -81,6 +83,31 @@ config = {
     'ASUMPT_MIN'    : '1000*MeV',
     'MIPCHI2DV_MIN' : 4
     },
+    "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
+    'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
+    'KDAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
+    'PiDAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
+    'pDAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
+    'AMAXDOCA_MAX'  : '0.35*mm',
+    'VCHI2DOF_MAX'  : 8,
+    'BPVVDCHI2_MIN' : 36, 
+    'BPVDIRA_MIN'   : 0.98,
+    'ASUMPT_MIN'    : '1250*MeV',
+    'MIPCHI2DV_MIN' : 6.25,
+    'BPVVDRHO_MIN'   : '0.1*mm',
+    'BPVVDZ_MIN'   : '2.0*mm'
+    },
+    "DTIGHT" : { # Tight Cuts on D mesons for B-->D+3H lines
+    'MIPCHI2DV_MIN' : 4,
+    'MM_MIN'        : {'D':'1800*MeV','D0':'1790*MeV','Dst':'1950*MeV','Lc':'2216*MeV'},
+    'MM_MAX'        : {'D':'2040*MeV','D0':'1940*MeV','Dst':'2050*MeV','Lc':'2356*MeV'},
+    'VCHI2DOF_MAX'  : 8,
+    'BPVVDCHI2_MIN' : 49,
+    'MIPCHI2DV_MIN' : 0.0,
+    'BPVDIRA_MIN'   : 0.98,
+    'BPVVDRHO_MIN'   : '0.1*mm',
+    'BPVVDZ_MIN'   : '0.0*mm'
+    },
     'LC2X' : { # Cuts for all Lambda_c's used in all lines
     'ASUMPT_MIN'    : '1500*MeV',
     'AMAXDOCA_MAX'  : '1.0*mm',
@@ -99,8 +126,8 @@ config = {
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar','HH',
-                              'LC2X','Prescales','GECNTrkMax')
+    __configuration_keys__ = ('ALL','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
+                              'DTIGHT','LC2X','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -122,6 +149,7 @@ class Beauty2CharmConf(LineBuilder):
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
         topoKaons = topoInputs('K',[kaons])
+        topoProtons = topoInputs('P',[protons])
 
         # make D->X, etc. inputs
         d = DBuilder(pions, {"DD":[ks_dd],"LL":[ks_ll]}, 
@@ -134,15 +162,22 @@ class Beauty2CharmConf(LineBuilder):
                        {"Merged":[pi0_merged],"Resolved":[pi0_resolved]},
                        config['HH'])
 
+        # X -> hhh
+        hhh = HHHBuilder(pions,kaons,protons,config['HHH'])
+
         # Lc -> X
         lc = LcBuilder(pions,kaons,protons,config['LC2X'])
 
+
+        # Filter D,D0,D* and Lc with tighter cuts
+        df = DFilter(d,dst,lc,config['DTIGHT'])
+
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,hh,config['B2X'])
+        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,hh,df,hhh,config['B2X'])
         self._makeLines(b2dx.lines,config)
 
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,config['B2X'])
+        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,df,hhh,config['B2X'])
         self._makeLines(lb2x.lines,config)
         
     def _makeLine(self,protoLine,config):

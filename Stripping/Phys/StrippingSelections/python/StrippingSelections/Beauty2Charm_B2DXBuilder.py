@@ -12,14 +12,19 @@ from Beauty2Charm_Utils import *
 class B2DXBuilder(object):
     '''Makes all B->DX decays for the Beauty2Charm module.'''
 
-    def __init__(self,d,dst,topoPions,topoKaons,hh,config):
+    def __init__(self,d,dst,topoPions,topoKaons,hh,df,hhh,config):
         self.config = config
         self.topoPions = topoPions
         self.topoKaons = topoKaons
         self.d = d
         self.dst = dst
         self.hh = hh
-        self.lines = []     
+        self.hhh = hhh
+        self.fhhh = df.fhhh
+        self.fhh = df.fhh
+        self.fdst = df.fdst
+        self.lines = []        
+
         # B -> D0(HH) X
         self._makeB2D0H('D2HH',self.d.hh)   # B+- -> D0(HH)  H+-
         self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
@@ -41,6 +46,21 @@ class B2DXBuilder(object):
         # B0 -> D+-(Pi0HHH) H-+  (resolved & merged) (+WS)
         self._makeB02DH('D2Pi0HHH_Resolved',self.d.pi0hhh_resolved)
         self._makeB02DH('D2Pi0HHH_Merged',self.d.pi0hhh_merged) 
+
+        # B -> D0(HH) 3h
+        self._makeB2D0HHH('',self.fhh)   # B+- -> D0(HH)  H+H-H+
+        # B -> D(HHH) 3h
+        self._makeB02DHHH('',self.fhhh)   # B+- -> D0(HH)  H+H-H+
+        # B -> D*(D0pi) 3h
+        self._makeB02DstHHH('',self.fdst)   # B+- -> D0(HH)  H+H-H+
+        # B -> D+ D-
+        self._makeB2DD('',self.fhhh)   # B0(s)- -> D(s) D(s)
+        # B- -> D- D0
+        self._makeB2D0D('', self.fhhh, self.fhh)   # B0(s)- -> D(s) D0
+        # B -> D*+ D-
+        self._makeB2DstD(self.fhhh, self.fdst)   # B0(s)- -> D*(D0pi) D(s)
+
+
          
     def _makeB02DH(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
@@ -113,4 +133,99 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b2dstdk_rs['TIS'],1.0))
         self.lines.append(ProtoLine(b2dstdk_ws['TOS'],0.1))
 
+
+    # SB ------------------
+    def _makeB02DHHH(self,dname,d2x):
+        '''Makes RS and WS B0 -> D + h- + c.c.'''
+        pipipi = self.hhh.pipipi
+        kpipi = self.hhh.kpipi
+        decays = {'B02DPiPiPi': ["[B0 -> D- a_1(1260)+]cc"], 'B02DKPiPi': ["[B0 -> D- K_1(1270)+]cc"]}
+        inputs = {'B02DPiPiPi': [d2x,pipipi], 'B02DKPiPi': [d2x,kpipi]}
+        b02dhhh_rs = makeB2XMerged('B02DHHH',decays,dname,inputs,self.config)
+        decays = {'B02DPiPiPiWS': ["[B0 -> D- a_1(1260)-]cc"],
+                  'B02DKPiPiWS': ["[B0 -> D- K_1(1270)-]cc"]}
+        inputs = {'B02DPiPiPiWS': [d2x,pipipi], 'B02DKPiPiWS': [d2x,kpipi]}
+        b02dhhh_ws = makeB2XMerged('B02DHHHWS',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b02dhhh_rs['TOS'],1.0))
+        self.lines.append(ProtoLine(b02dhhh_rs['TIS'],1.0))
+        self.lines.append(ProtoLine(b02dhhh_ws['TOS'],0.1))
+
+    def _makeB02DstHHH(self,dname,dstar):
+        '''Makes RS and WS B0 -> D + h- + c.c.'''
+        pipipi = self.hhh.pipipi
+        kpipi = self.hhh.kpipi
+        decays = {'B02DstPiPiPi': ["[B0 -> D*(2010)- a_1(1260)+]cc"], 'B02DstKPiPi': ["[B0 -> D*(2010)- K_1(1270)+]cc"]}
+        inputs = {'B02DstPiPiPi': [dstar,pipipi], 'B02DstKPiPi': [dstar,kpipi]}
+        b02dsthhh_rs = makeB2XMerged('B02DstHHH',decays,dname,inputs,self.config)
+        decays = {'B02DstPiPiPiWS': ["[B0 -> D*(2010)+ a_1(1260)+]cc"], 'B02DstKPiPi': ["[B0 -> D*(2010+- K_1(1270)+]cc"]}
+        inputs = {'B02DstPiPiPiWS': [dstar,pipipi], 'B02DstKPiPiWS': [dstar,kpipi]}
+        b02dsthhh_ws = makeB2XMerged('B02DstHHHWS',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b02dsthhh_rs['TOS'],1.0))
+        self.lines.append(ProtoLine(b02dsthhh_rs['TIS'],1.0))
+        self.lines.append(ProtoLine(b02dsthhh_ws['TOS'],0.1))
+
+    def _makeB02DstHHH(self,dname,d2x):
+        '''Makes RS and WS B0 -> D*+ h-h+h- + c.c.'''
+        pipipi = self.hhh.pipipi
+        kpipi = self.hhh.kpipi
+        decays = {'B02DstPiPiPi': ["[B0 -> D*(2010)- a_1(1260)+]cc"], 'B02DstKPiPi': ["[B0 -> D*(2010)- K_1(1270)+]cc"]}
+        inputs = {'B02DstPiPiPi': [d2x,pipipi], 'B02DstKPiPi': [d2x,kpipi]}
+        b02dsthhh_rs = makeB2XMerged('B02DstHHH',decays,dname,inputs,self.config)
+        decays = {'B02DstPiPiPiWS': ["[B0 -> D*(2010)- a_1(1260)-]cc"],
+                  'B02DstKPiPiWS': ["[B0 -> D*(2010)- K_1(1270)-]cc"]}
+        inputs = {'B02DstPiPiPiWS': [d2x,pipipi], 'B02DstKPiPiWS': [d2x,kpipi]}
+        b02dsthhh_ws = makeB2XMerged('B02DstHHHWS',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b02dsthhh_rs['TOS'],1.0))
+        self.lines.append(ProtoLine(b02dsthhh_rs['TIS'],1.0))
+        self.lines.append(ProtoLine(b02dsthhh_ws['TOS'],0.1))
+
+ 
+    def _makeB2D0HHH(self,dname,d2x):
+        '''Makes RS B+ -> D0 h+h-h+ (h=pi,K) + c.c.'''
+        pipipi = self.hhh.pipipi
+        kpipi = self.hhh.kpipi
+        decays = {'B2D0PiPiPi': ["B+ -> D0 a_1(1260)+","B- -> D0 a_1(1260)-"],
+                  'B2D0KPiPi' : ["B+ -> D0 K_1(1270)+","B- -> D0 K_1(1270)-"]}
+        inputs = {'B2D0PiPiPi': [d2x,pipipi],'B2D0KPiPi': [d2x,kpipi]}
+        b2d03h = makeB2XMerged('B2D03H',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2d03h['TOS'],1.0))
+        self.lines.append(ProtoLine(b2d03h['TIS'],1.0))
+
+    def _makeB2DD(self,dname,d2x):
+        '''Makes RS and WS B0 -> D+D- + c.c.'''
+        decays = {'B2DD': ["B0 -> D- D+"] }
+        inputs = {'B2DD': [d2x]}
+        b2dd_rs = makeB2XMerged('B2DD',decays,dname,inputs,self.config)
+        decays = {'B2DDWS': ["[B0 -> D+ D+]cc"] }
+        inputs = {'B2DDWS': [d2x]}
+        b2dd_ws = makeB2XMerged('B2DDWS',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2dd_rs['TOS'],1.0))
+        self.lines.append(ProtoLine(b2dd_rs['TIS'],1.0))
+        self.lines.append(ProtoLine(b2dd_ws['TOS'],0.1))
+
+    def _makeB2D0D(self,dname,d2x,d0):
+        '''Makes B+ -> D+ D0'''
+        decays = {'B2D0D': ["[B- -> D0 D-]cc"] }
+        inputs = {'B2D0D': [d2x, d0]}
+        b2d0d = makeB2XMerged('B2D0D',decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2d0d['TOS'],1.0))
+        self.lines.append(ProtoLine(b2d0d['TIS'],1.0))
+
+
+    def _makeB2DstD(self, d2x,dstar):
+        '''Makes the RS and WS B+ -> D*+- D-+ + c.c.'''
+        decays = {'B2DstD':["[B0 -> D*(2010)- D+]cc"]}
+        inputs = {'B2DstD':[d2x, dstar]}
+        b2dstd_rs = makeB2XMerged('B2DstD',decays,'',inputs,
+                                  self.config)
+        decays = {'B2DstDWS':["[B0 -> D*(2010)- D-]cc"]}
+        inputs = {'B2DstDWS':[d2x, dstar]}
+        b2dstd_ws = makeB2XMerged('B2DstDWS',decays,'',inputs,
+                                  self.config)
+        self.lines.append(ProtoLine(b2dstd_rs['TOS'],1.0))
+        self.lines.append(ProtoLine(b2dstd_rs['TIS'],1.0))
+        self.lines.append(ProtoLine(b2dstd_ws['TOS'],0.1))
+
+    # SB ------------------
+    
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
