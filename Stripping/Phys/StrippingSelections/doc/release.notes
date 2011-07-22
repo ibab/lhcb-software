@@ -14,6 +14,10 @@
  - Updated StdLooseMuons-> StdAllLooseMuons
  - changes in default confdict: new prescales + tightened cuts
 
+! 2011-07-22 - Liming Zhang
+ - Update StrippingB2DMuNuX.py and StrippingDForBSemi.py
+ - new lines D0(->KK)MuXNu and Ds(->PhiPi)MuXNu
+
 ! 2011-07-22 - Sebastian Bachmann
  - StrippingX2D0D0.py
  - Updated particle containers to 'All' type

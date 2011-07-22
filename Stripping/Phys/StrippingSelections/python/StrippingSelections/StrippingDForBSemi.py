@@ -17,11 +17,11 @@ __all__ = ('DforBSemiLinesConf',
            'confdict')
 
 confdict = {
-     "DpPreScale"    : 0.04
-    ,"DsPreScale"    : 0.04   
-    ,"LcPreScale"    : 0.08   
+     "DpPreScale"    : 0.02
+    ,"DsPreScale"    : 0.02   
+    ,"LcPreScale"    : 0.05   
     ,"MINIPCHI2"     : 9.0    # adimensiional
-    ,"TRCHI2"        : 5.0   # adimensiional
+    ,"TRCHI2"        : 4.0   # adimensiional
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
     ,"PT"            : 300.0  # MeV

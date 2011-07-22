@@ -21,8 +21,10 @@ __all__ = ('B2DMuNuXAllLinesConf',
            'confdict')
 
 confdict = {
-    "MINIPCHI2"      : 9.0    # adimensiional
-    ,"TRCHI2"        : 5.0    # adimensiional
+    "PrescalD0Mu"    : 0.5
+    ,"MINIPCHI2"      : 9.0    # adimensiional
+    ,"TRCHI2"        : 4.0    # adimensiional
+    ,"TRCHI2Loose"   : 5.0    # adimensiional    
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
     ,"MuonIPCHI2"    : 4.00   # adimensiional
@@ -39,6 +41,10 @@ confdict = {
     ,"BVCHI2DOF"     : 6.0    # adimensiional
     ,"DZ"            : 0.0    #mm
     ,"DDocaChi2Max"  : 20     #adimensiional
+    ,"MINIPCHI2Loose" : 4.0   #adimensiional
+    ,"KaonPIDKloose" : -5     #adimensiional
+    ,"PhiVCHI2"      :25.0    #adimensiional
+    ,"PhiMassWin"    :60      #adimensiional
     }
    
 
@@ -47,8 +53,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
     """
 
     __configuration_keys__ = (
-         "MINIPCHI2"     
-        ,"TRCHI2"        
+        "PrescalD0Mu" 
+        ,"MINIPCHI2"     
+        ,"TRCHI2"     
+        ,"TRCHI2Loose"   
         ,"KaonPIDK"      
         ,"PionPIDK"      
         ,"MuonIPCHI2"    
@@ -64,7 +72,11 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"BDIRA"         
         ,"BVCHI2DOF"     
         ,"DZ"            
-        ,"DDocaChi2Max"  
+        ,"DDocaChi2Max"
+        ,"MINIPCHI2Loose"
+        ,"KaonPIDKloose"
+        ,"PhiVCHI2"
+        ,"PhiMassWin"
         )
 
     __confdict__={}
@@ -80,12 +92,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                   RequiredSelections = [StdLooseMuons])
 
         self.selmuonhighPT = Selection( "MuhighPTfor" + name,
-                                  Algorithm = FilterDesktop( Code = "(PT>1.2*GeV)" ),
+                                  Algorithm = FilterDesktop( Code = "(TRCHI2DOF < %(TRCHI2)s) & (PT>1.2*GeV) & (MIPCHI2DV(PRIMARY)> 9.0)" % self.__confdict__ ),
                                   RequiredSelections = [self.selmuon])
 
         self.selmuontight = Selection( "Mutightfor" + name,
                                   Algorithm = FilterDesktop( Code = "(MIPCHI2DV(PRIMARY)> 100)" ),
                                   RequiredSelections = [self.selmuonhighPT])
+
+        self.selmuonnew = Selection( "Munewfor" + name,
+                                  Algorithm = FilterDesktop( Code = "(MIPCHI2DV(PRIMARY)> 9.0) & (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__ ),
+                                  RequiredSelections = [self.selmuon])
 
         self.selmuonTOS = TOSFilter( "MuTOS" + name,
                                      self.selmuontight,
@@ -99,9 +115,25 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                   Algorithm = self._pionFilter(),
                                   RequiredSelections = [StdLoosePions])
         
+        self.selPionloose = Selection( "Piloosefor" + name,
+                                  Algorithm = self._pionlooseFilter(),
+                                  RequiredSelections = [StdLoosePions])
+
+        self.selKaonloose = Selection( "Kloosefor" + name,
+                                  Algorithm = self._kaonlooseFilter(),
+                                  RequiredSelections = [StdLooseKaons])
+
+        self.selphi2kk = Selection( "Phi2KKfor" + name,
+                                    Algorithm = self._Phi2KKFilter(),
+                                    RequiredSelections = [self.selKaonloose] )
+        
         self.seld02kpi = Selection( "D02KPifor" + name,
                                     Algorithm = self._D02KPiFilter(),
                                     RequiredSelections = [self.selKaon, self.selPion] )
+
+        self.seld02kk = Selection( "D02KKfor" + name,
+                                    Algorithm = self._D02KKFilter(),
+                                    RequiredSelections = [self.selKaon] )
 
         self.seld02k3pi = Selection( "D02K3Pifor" + name,
                                     Algorithm = self._D02K3PiFilter(),
@@ -119,6 +151,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                      Algorithm = self._Lc2PKPiFilter(),
                                      RequiredSelections = [self.selKaon, self.selPion, StdLooseProtons ] )
         
+        self.selds2phipi = Selection( "Ds2PhiPifor" + name,
+                                     Algorithm = self._Ds2PhiPiFilter(),
+                                     RequiredSelections = [self.selphi2kk, self.selPionloose] )
+
         self.selb2D0MuX = makeb2DMuX('b2D0MuX' + name,
                                  DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
                                  MuSel = self.selmuonhighPT, 
@@ -127,6 +163,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )
+
+        self.selb2D0MuXKK = makeb2DMuX('b2D0MuXKK' + name,
+                                 DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.seld02kk,
+                                 BVCHI2DOF = config['BVCHI2DOF'],
+                                 BDIRA = config['BDIRA'],
+                                 DZ = config['DZ']
+                                 )                   
+                                               
         self.selb2D0MuXK3Pi = makeb2DMuX('b2D0MuXK3Pi' + name,
                                  DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
                                  MuSel = self.selmuonTOS, 
@@ -138,7 +184,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
         self.selb2DpMuX = makeb2DMuX('b2DpMuX' + name,
                                  DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                 MuSel = self.selmuon, 
+                                 MuSel = self.selmuonnew, 
                                  DSel = self.seldp2kpipi,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
@@ -147,29 +193,44 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
         self.selb2DsMuX = makeb2DMuX('b2DsMuX' + name,
                                  DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                 MuSel = self.selmuon, 
+                                 MuSel = self.selmuonnew, 
                                  DSel = self.selds2kkpi,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )
+                                 
         self.selb2LcMuX = makeb2DMuX('b2LcMuX' + name,
                                  DecayDescriptors = [ '[Lambda_b0 -> Lambda_c+ mu-]cc', '[Lambda_b0 -> Lambda_c+ mu+]cc'],
-                                 MuSel = self.selmuon, 
+                                 MuSel = self.selmuonnew, 
                                  DSel = self.sellambdac,
                                  BVCHI2DOF = config['BVCHI2DOF'],
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )         
         
+        self.selb2DsMuXPhiPi = makeb2DMuX('b2DsMuXPhiPi' + name,
+                                 DecayDescriptors = [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.selds2phipi,
+                                 BVCHI2DOF = config['BVCHI2DOF'],
+                                 BDIRA = config['BDIRA'],
+                                 DZ = config['DZ']
+                                 )
+
+
         self.b2D0MuXLine = StrippingLine('b2D0MuX' + name + 'Line'
                                           #, HLT     = " HLT_PASS_RE('Hlt.*(Muon|MuTrack).*Decision') "
-                                          , prescale = 1
+                                          , prescale = config['PrescalD0Mu']
                                           , selection = self.selb2D0MuX
+                                          )
+
+        self.b2D0MuXKKLine = StrippingLine('b2D0MuXKK' + name + 'Line'
+                                          , prescale = 1
+                                          , selection = self.selb2D0MuXKK
                                           )
         
         self.b2D0MuXK3PiLine = StrippingLine('b2D0MuXK3Pi' + name + 'Line'
-#                                         , HLT     = " HLT_PASS_RE('Hlt.*(Muon|MuTrack).*Decision') "
                                          , prescale = 1
                                          , selection = self.selb2D0MuXK3Pi
                                          )
@@ -189,17 +250,22 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          , selection = self.selb2LcMuX
                                          )
 
+        self.b2DsMuXPhiPiLine = StrippingLine('b2DsMuXPhiPi' + name + 'Line'
+                                         , prescale = 1
+                                         , selection = self.selb2DsMuXPhiPi
+                                         )
+
         
         self.registerLine(self.b2D0MuXLine)        
         self.registerLine(self.b2DpMuXLine)
         self.registerLine(self.b2DsMuXLine)
         self.registerLine(self.b2LcMuXLine)
         self.registerLine(self.b2D0MuXK3PiLine)
-
-
+        self.registerLine(self.b2D0MuXKKLine)
+        self.registerLine(self.b2DsMuXPhiPiLine)
 
     def _muonFilter( self ):
-        _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
+        _code = "(PT > %(MuonPT)s *MeV) & (P> 3.0*GeV) & (TRCHI2DOF< %(TRCHI2Loose)s) & (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(PIDmu)s)" % self.__confdict__
         _mu = FilterDesktop( Code = _code )
         return _mu        
 
@@ -215,6 +281,31 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _ka = FilterDesktop( Code = _code )
         return _ka 
   
+    def _kaonlooseFilter( self ):
+        _code = "  (TRCHI2DOF < %(TRCHI2Loose)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
+        _kal = FilterDesktop( Code = _code )
+        return _kal 
+
+    def _pionlooseFilter( self ):
+        _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s)" % self.__confdict__
+        _pil = FilterDesktop( Code = _code )
+        return _pil
+
+
+    def _Phi2KKFilter( self ):
+        _decayDescriptors = [ '[phi(1020) -> K- K+]cc' ]
+        _combinationCut = "(ADAMASS('phi(1020)') < %(PhiMassWin)s *MeV) & (AM < 1050.*MeV)" % self.__confdict__
+        _motherCut = "(VFASPF(VCHI2) < %(PhiVCHI2)s) " % self.__confdict__
+        _phi2kk = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                            
+        return _phi2kk
+    
+
+
+
     def _D02KPiFilter( self ):
         _decayDescriptors = [ '[D0 -> K- pi+]cc' ]
         _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
@@ -224,6 +315,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                            
         return _d02kpi
+  
+    def _D02KKFilter( self ):
+        _decayDescriptors = [ 'D0 -> K- K+' ]
+        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+        _d02kk = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                            
+        return _d02kk
 
     def _D02K3PiFilter( self ):
         _decayDescriptors = [ '[D0 -> K- pi+ pi- pi+]cc' ]
@@ -274,6 +375,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                     MotherCut = _motherCut)                                                         
         return _lambdac
         
+    def _Ds2PhiPiFilter( self ):
+        _decayDescriptors = [ '[D+ -> phi(1020) pi+]cc' ]
+        _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 800.*MeV) & (ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2)> %(MINIPCHI2Loose)s) " % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
+                     "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+        _ds2phipi = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                      CombinationCut = _combinationCut,
+                                      MotherCut = _motherCut)                             
+        return _ds2phipi
 
 
 def makeb2DMuX(name,
