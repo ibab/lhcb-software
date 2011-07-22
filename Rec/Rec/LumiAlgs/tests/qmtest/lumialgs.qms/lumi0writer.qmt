@@ -5,4 +5,8 @@
     <text>../../job/Lumi0Writer.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/lumi0writer.ref</text></argument>
+  <argument name="validator"><text>
+from LumiAlgs.QMTest.LumiAlgsExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
 </extension>

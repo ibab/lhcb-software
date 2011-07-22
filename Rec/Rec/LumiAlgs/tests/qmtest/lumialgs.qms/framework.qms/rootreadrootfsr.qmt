@@ -10,4 +10,8 @@
 	<tuple><text>lumialgs.framework.rootfsrwriter</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="reference"><text>../refs/rootreadrootfsr.ref</text></argument>
+  <argument name="validator"><text>
+from LumiAlgs.QMTest.LumiAlgsExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
 </extension>

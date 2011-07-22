@@ -5,4 +5,8 @@
     <text>../../job/LumiFsrReader.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/lumi5fsrreader.ref</text></argument>
+  <argument name="validator"><text>
+from LumiAlgs.QMTest.LumiAlgsExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
 </extension>

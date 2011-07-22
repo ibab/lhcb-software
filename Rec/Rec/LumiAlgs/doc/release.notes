@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Add LHCbExclusions for reference file comparisons of all QM tests, ensures
+   forward compatibility of tests with next Gaudi version
+
 ! 2011-07-18 - Jaap Panman
  - add a method in LumiIntegrator to extract values of "mu" per raw file 
    (under control of AccumulateMu and MuKeyName options, default is OFF)
