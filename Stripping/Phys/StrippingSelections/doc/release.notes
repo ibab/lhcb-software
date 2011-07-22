@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-22 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ - tightened pipi resonance mass cut in 4pi mode
+ - tightened B mass lower bound in 3pi mode
+
 ! 2011-07-21 - Albert Puig
  - Added default config dict to B2XGammaLines + tightened cuts.
 
