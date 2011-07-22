@@ -61,45 +61,45 @@ config_params = {'muPID':0.,
                  'BsMassCutDownPost':5150, #before 5100
                  'BsMassCutUpPost':5500,  #before 5550
                  'BsVCHI2PDOF':10,
-                 'sig_PrescaledLinePrescale':1,
+                 'sig_PrescaledLinePrescale':0.5, #before 1.
                  'sig_PrescaledLinePostscale':1,
                  'sig_DetatchedLinePrescale':1,
                  'sig_DetatchedLinePostscale':1,
                  'BPVLTIME_unbiased': None,
                  'MINTREEPT':1000, #before 1000
                  'MINTREEPT2':1500, #before 1000
-                 'sig_UnbiasedLinePrescale':1,
-                 'sig_UnbiasedLinePostscale':1,
+#                 'sig_UnbiasedLinePrescale':1,
+#                 'sig_UnbiasedLinePostscale':1,
                  'ChKPT':500,
-                 'K_PrescaledLinePrescale':0.3,
+                 'K_PrescaledLinePrescale':0.2, #before 0.3
                  'K_PrescaledLinePostscale':1,
                  'K_DetatchedLinePrescale':1,
                  'K_DetatchedLinePostscale':1,
-                 'K_UnbiasedLinePrescale':1,
-                 'K_UnbiasedLinePostscale':1,
+#                 'K_UnbiasedLinePrescale':0.7, #before 1.
+#                 'K_UnbiasedLinePostscale':1,
                  'KstarPT': 2,
                  'Kstar_PrescaledLinePrescale':0.1,
                  'Kstar_PrescaledLinePostscale':1,
                  'Kstar_DetatchedLinePrescale':1,
                  'Kstar_DetatchedLinePostscale':1,
-                 'Kstar_UnbiasedLinePrescale':1,
-                 'Kstar_UnbiasedLinePostscale':1,
+#                 'Kstar_UnbiasedLinePrescale':0.6, #before 1
+#                 'Kstar_UnbiasedLinePostscale':1,
                  'BKsVCHI2PDOF':10,
                  'Ks_PrescaledLinePrescale':1,
                  'Ks_PrescaledLinePostscale':1,
                  'Ks_DetatchedLinePrescale':1,
-                 'Ks_DetatchedLinePostscale':1,
-                 'Ks_UnbiasedLinePrescale':1,
-                 'Ks_UnbiasedLinePostscale':1
+                 'Ks_DetatchedLinePostscale':1
+#                 'Ks_UnbiasedLinePrescale':1,
+#                 'Ks_UnbiasedLinePostscale':1
                  }
 
 
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StandardParticles import StdLoosePions
-from StandardParticles import StdLooseMuons
-from StandardParticles import StdLooseKaons
+from StandardParticles import StdAllLoosePions
+from StandardParticles import StdAllLooseMuons
+from StandardParticles import StdAllLooseKaons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -144,29 +144,29 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               'BPVLTIME_unbiased',
                               'MINTREEPT',
                               'MINTREEPT2',
-                              'sig_UnbiasedLinePrescale',
-                              'sig_UnbiasedLinePostscale',
+#                              'sig_UnbiasedLinePrescale',
+#                              'sig_UnbiasedLinePostscale',
                               'ChKPT',
                               'K_PrescaledLinePrescale',
                               'K_PrescaledLinePostscale',
                               'K_DetatchedLinePrescale',
                               'K_DetatchedLinePostscale',
-                              'K_UnbiasedLinePrescale',
-                              'K_UnbiasedLinePostscale',
+#                              'K_UnbiasedLinePrescale',
+#                              'K_UnbiasedLinePostscale',
                               'KstarPT',
                               'Kstar_PrescaledLinePrescale',
                               'Kstar_PrescaledLinePostscale',
                               'Kstar_DetatchedLinePrescale',
                               'Kstar_DetatchedLinePostscale',
-                              'Kstar_UnbiasedLinePrescale',
-                              'Kstar_UnbiasedLinePostscale',
+#                              'Kstar_UnbiasedLinePrescale',
+#                              'Kstar_UnbiasedLinePostscale',
                               'BKsVCHI2PDOF',
                               'Ks_PrescaledLinePrescale',
                               'Ks_PrescaledLinePostscale',
                               'Ks_DetatchedLinePrescale',
-                              'Ks_DetatchedLinePostscale',
-                              'Ks_UnbiasedLinePrescale',
-                              'Ks_UnbiasedLinePostscale'
+                              'Ks_DetatchedLinePostscale'
+#                              'Ks_UnbiasedLinePrescale',
+#                              'Ks_UnbiasedLinePostscale'
                               )
 
     def __init__(self, name, config) :
@@ -315,11 +315,11 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                           MINTREEPT = config['MINTREEPT']
                                                           )
         
-        self.Bs2Psi2SPhi_unbiased_line = StrippingLine(sig_unbiased_name + "Line",
-                                                       prescale = config['sig_UnbiasedLinePrescale'],
-                                                       postscale = config['sig_UnbiasedLinePostscale'],
-                                                       selection = self.selBs2Psi2SPhiUnbiased
-                                                       )
+#        self.Bs2Psi2SPhi_unbiased_line = StrippingLine(sig_unbiased_name + "Line",
+#                                                       prescale = config['sig_UnbiasedLinePrescale'],
+#                                                       postscale = config['sig_UnbiasedLinePostscale'],
+#                                                       selection = self.selBs2Psi2SPhiUnbiased
+#                                                       )
         
 #####################
 ### Bu->Psi(2S)K+ ###
@@ -372,11 +372,11 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                       MINTREEPT2 = config['MINTREEPT2']
                                                       )
         
-        self.Bu2Psi2SK_unbiased_line = StrippingLine(K_unbiased_name + "Line",
-                                                     prescale = config['K_UnbiasedLinePrescale'],
-                                                     postscale = config['K_UnbiasedLinePostscale'],
-                                                     selection = self.selBu2Psi2SKUnbiased
-                                                     )
+#        self.Bu2Psi2SK_unbiased_line = StrippingLine(K_unbiased_name + "Line",
+#                                                     prescale = config['K_UnbiasedLinePrescale'],
+#                                                     postscale = config['K_UnbiasedLinePostscale'],
+#                                                     selection = self.selBu2Psi2SKUnbiased
+#                                                     )
 
 #####################
 ### B0->Psi(2S)K*  ##
@@ -428,11 +428,11 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                               KstarPT = config['KstarPT']
                                                               )
         
-        self.Bd2Psi2SKstar_unbiased_line = StrippingLine(Kstar_unbiased_name + "Line",
-                                                         prescale = config['Kstar_UnbiasedLinePrescale'],
-                                                         postscale = config['Kstar_UnbiasedLinePostscale'],
-                                                         selection = self.selBd2Psi2SKstarUnbiased
-                                                         )
+#        self.Bd2Psi2SKstar_unbiased_line = StrippingLine(Kstar_unbiased_name + "Line",
+#                                                         prescale = config['Kstar_UnbiasedLinePrescale'],
+#                                                         postscale = config['Kstar_UnbiasedLinePostscale'],
+#                                                         selection = self.selBd2Psi2SKstarUnbiased
+#                                                         )
         
 #####################
 ### Bd->Psi(2S)KS ###
@@ -483,11 +483,11 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                         MINTREEPT = config['MINTREEPT']
                                                         )
         
-        self.Bd2Psi2SKs_unbiased_line = StrippingLine(Ks_unbiased_name + "Line",
-                                                      prescale = config['Ks_UnbiasedLinePrescale'],
-                                                      postscale = config['Ks_UnbiasedLinePostscale'],
-                                                      selection = self.selBd2Psi2SKsUnbiased
-                                                      )
+#        self.Bd2Psi2SKs_unbiased_line = StrippingLine(Ks_unbiased_name + "Line",
+#                                                      prescale = config['Ks_UnbiasedLinePrescale'],
+#                                                      postscale = config['Ks_UnbiasedLinePostscale'],
+#                                                      selection = self.selBd2Psi2SKsUnbiased
+#                                                      )
         
 
         self.registerLine(self.InclPsi2SToMuMu_line)
@@ -495,17 +495,17 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
               
         self.registerLine(self.Bs2Psi2SPhi_prescaled_line)
         self.registerLine(self.Bs2Psi2SPhi_detatched_line)
-        self.registerLine(self.Bs2Psi2SPhi_unbiased_line)
+#        self.registerLine(self.Bs2Psi2SPhi_unbiased_line)
         
-        self.registerLine(self.Bu2Psi2SK_unbiased_line)
+#        self.registerLine(self.Bu2Psi2SK_unbiased_line)
         self.registerLine(self.Bu2Psi2SK_detatched_line)
         self.registerLine(self.Bu2Psi2SK_prescaled_line)
         
-        self.registerLine(self.Bd2Psi2SKstar_unbiased_line)
+#        self.registerLine(self.Bd2Psi2SKstar_unbiased_line)
         self.registerLine(self.Bd2Psi2SKstar_detatched_line)
         self.registerLine(self.Bd2Psi2SKstar_prescaled_line)
         
-        self.registerLine(self.Bd2Psi2SKs_unbiased_line)
+#        self.registerLine(self.Bd2Psi2SKs_unbiased_line)
         self.registerLine(self.Bd2Psi2SKs_detatched_line)
         self.registerLine(self.Bd2Psi2SKs_prescaled_line)
         
@@ -518,7 +518,7 @@ def makePsi2S2MuMu(name,
                    ) :
 
 
-    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
     _daughtersCuts = {"mu+":"PIDmu > %(muPID)s"% locals(),"mu-":"PIDmu>%(muPID)s"% locals()}
     _preVertexCuts = "(ADAMASS('psi(2S)')<%(Psi2SMassWin)s*MeV) & (ADOCACHI2CUT( %(Psi2SADOCACHI2CUT)s ,''))" % locals()
     _motherCuts = "(VFASPF(VCHI2/VDOF) < %(Psi2SVFASPF)s) & (MFIT)" % locals()
@@ -539,7 +539,7 @@ def makeChK(name,
             ChKPID #>-2
             ) :
     
-    _stdChK = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+    _stdChK = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
     _code = "(TRCHI2DOF < %(ChKTRCHI2DOF)s) & (PIDK > %(ChKPID)s)"  % locals()
     _ChKFilter = FilterDesktop(Code = _code)
 
