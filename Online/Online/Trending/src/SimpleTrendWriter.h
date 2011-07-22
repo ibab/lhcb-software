@@ -42,7 +42,6 @@ private:
   std::string m_fileName;
   bool m_fileIsOpen;
   bool m_tagChanged;
-  int m_tagVersion;
   std::vector<std::string> m_tags;
   std::vector<float>       m_values;
 };

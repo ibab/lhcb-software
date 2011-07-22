@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include "Trending/TrendParams.h"
+
 /** @class TrendWriter TrendWriter.h
  *  
  *
@@ -18,44 +20,45 @@
  *  @date   2011-03-18
  */
 class TrendWriter {
-public: 
-
-#include "TrendParams.h"
+public:
 
   /// Standard constructor
   TrendWriter( );
 
   ~TrendWriter( ); ///< Destructor
 
-  bool openWrite( std::string name, std::vector<std::string> tags, int version = 1 );
+  bool openWrite( std::string name, std::vector<std::string> tags );
 
   bool setThresholds( std::vector<float> thresholds );
   
   bool setThreshold( std::string tag, float thr );
   
-  bool write( std::vector<float> values, int time = 0 );
+  bool write( std::vector<float> values, unsigned int time = 0 );
   
   void closeFile();
 
 private:
 
-  bool loadTags( int wantedVersion );
+  bool loadLastTags( );
   
   bool nextDataBlock( );
 
-  void createDirectoryRecord ( DirectoryRecord* dir, int time);
+  void createDirectoryRecord ( DirectoryRecord* dir );
   
-  int  unpackAnEvent ( );
+  bool readDirectoryRecord ( long address );
+
+  unsigned int unpackAnEvent ( );
   
-  void writeEntry ( int now, std::vector<float>& data, bool forceWrite );
+  void writeEntry ( unsigned int now, std::vector<float>& data, bool writeEachEntry );
 
-  void addDataEntry( int now, std::vector<float>& data, bool forceWrite, bool full );
+  void addDataEntry( unsigned int now, std::vector<float>& data, bool writeEachEntry, bool full );
 
-  bool getDataContaining ( int time );
+  void getDataContaining ( unsigned int time );
 
-  bool  nextEvent( int& time, std::vector<float>& data ) ;
+  bool nextEvent( unsigned int& time, std::vector<float>& data ) ;
 
 private:
+  bool                     m_debug;
   bool                     m_forWriting;
   Header                   m_tagHeader;
   std::vector<std::string> m_tags;
@@ -74,15 +77,15 @@ private:
   int                      m_ptData;
   bool                     m_hasSelection;
   int                      m_requestedTagNumber;
-  int                      m_maxTime;
   int                      m_tagNumber;
-  int                      m_lastTime;
+  unsigned int             m_lastTime;
 };
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TrendWriter::TrendWriter( ) :
-  m_forWriting( false )
+  m_debug( false )
+  , m_forWriting( false )
   , m_firstDirAddress( -1 )
   , m_tagAddressInFile( -1 )
   , m_dirAddressInFile( -1 )
@@ -90,10 +93,14 @@ TrendWriter::TrendWriter( ) :
   , m_file( NULL )
   , m_hasSelection( false )
   , m_requestedTagNumber( -1 )
-  , m_maxTime(  0x7fffffff )   // maximum time value...
-  , m_lastTime( 0x7fffffff )
+  , m_lastTime( 0xffffffff )
 {
-
+  m_data.size       = 0;
+  m_data.data[0].i  = 0;
+  m_dir.size        = 0;
+  m_dir.nextAddress = 0;
+  m_dir.nbEntries   = 0;
+  m_dir.entry[0].firstTime = 0;
 }
 //=============================================================================
 // Destructor
@@ -106,7 +113,7 @@ TrendWriter::~TrendWriter() {
 //=========================================================================
 //  Open the Trending file for writing
 //=========================================================================
-bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, int version ) {
+bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
 
   if ( NULL != m_file ) {
     std::cout << "TrendWriter::openWrite: file already opened!" << std::endl;
@@ -132,6 +139,11 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, in
     return false;
   }  
 
+  if ( 0 == tags.size() ) {
+    std::cout << "TrendWriter::openWrite: You need to specify a non-empty list of tags." << std::endl;
+    return false;
+  }  
+
   std::string fileFullName =  name + ".trend";
   if ( name[0] != '/' ) fileFullName = TREND_AREA + name + ".trend";
 
@@ -145,12 +157,17 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, in
       std::cout << "TrendWriter::openWrite: Can not create file " << fileFullName << std::endl;
       return false;
     }
+    m_tagHeader.version = 0;
   } else {
-    if ( !loadTags( -1 ) ) return false;   // Get the latest tags, return an error if...
+    if ( !loadLastTags( ) ) {
+      closeFile();
+      return false;   // Get the latest tags, return an error if...
+    }
+    readDirectoryRecord( m_firstDirAddress );
   }
   m_forWriting = true;
 
-  //== First check for consistency: Same tags and version, or new version.
+  //== First check for consistency: Same tags.
 
   bool isDifferent = false;
   unsigned int kk;
@@ -161,23 +178,14 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, in
       if ( tags[kk] != m_tags[kk] ) isDifferent = true;
     }
   }
-  if ( 0 >= version && version != m_tagHeader.version ) isDifferent = true;
-
   if ( !isDifferent ) return true;
-
-  //== Is the requested vesion higher?
-  if ( version <= m_tagHeader.version ) {
-    std::cout << "TrendWriter::openWrite: The list of tags is incompatible with the one in the file. "
-              << "Specify a new version greater than " << m_tagHeader.version << std::endl;
-    return false;
-  }
 
   //== Get to end of file and create new tag record.
 
   fseek( m_file, 0, SEEK_END );
   long newAddress = ftell( m_file );
   m_tagHeader.type    = TYPE_TAG;
-  m_tagHeader.version = short(version);
+  m_tagHeader.version = m_tagHeader.version + 1;
   m_tagHeader.nextAddress = 0L;
 
   //== Compute the length of the tag strings, and copy them in a temp buffer
@@ -203,7 +211,6 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, in
   fwrite( &m_tagHeader, sizeof( Header ), 1, m_file );
   fwrite( tagBuffer, 1, tagLength, m_file );
   free( tagBuffer );
-
   m_firstDirAddress = ftell( m_file );  //== First directory block is after tag block.
 
   //== Update the previous tag record if any, now that the new one is on file.
@@ -219,14 +226,16 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags, in
     tagHeader.nextAddress = newAddress;
     fseek( m_file, m_tagAddressInFile, SEEK_SET );
     fwrite( &tagHeader, 1, sizeof( Header ), m_file );
-    fseek( m_file, newAddress, SEEK_SET );
   }
-  fflush( m_file);  // force writing on disk.
-
   m_tagAddressInFile = newAddress;
 
-  return true;
+  //== Create a directory record
+  fseek( m_file, m_dirAddressInFile, SEEK_SET );
+  createDirectoryRecord( &m_dir );
+  m_ptDir = 0;
+  fflush( m_file);  // force writing on disk.
 
+  return true;
 }
 //=========================================================================
 //  Set the thresholds for all variables
@@ -261,7 +270,7 @@ bool TrendWriter::setThreshold ( std::string tag, float thr) {
 //=========================================================================
 //  Store an event in the file
 //=========================================================================
-bool TrendWriter::write( std::vector<float> data, int now ) {
+bool TrendWriter::write( std::vector<float> data, unsigned int now ) {
 
   if ( NULL == m_file || !m_forWriting ) {
     std::cout << "TrendWriter::write: File not opened for writing!" << std::endl;
@@ -277,28 +286,21 @@ bool TrendWriter::write( std::vector<float> data, int now ) {
 
   //== Get the last entry before that time. First open the first dir if needed.
   if ( 0 > m_dirAddressInFile ) {
-    m_dirAddressInFile = m_firstDirAddress;
-    m_dir.size = 0;
-    fseek( m_file, m_dirAddressInFile, SEEK_SET );
-    fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-    if ( 0 == m_dir.size ) {       // No directory block. Create one...
-      fseek( m_file, m_dirAddressInFile, SEEK_SET );
-      createDirectoryRecord( &m_dir, now );
+    if ( !readDirectoryRecord( m_firstDirAddress ) ) {
+      fseek( m_file, m_firstDirAddress, SEEK_SET );
+      createDirectoryRecord( &m_dir );
     }
   }
 
   //== Check if the time is accessible from the current directory, i.e. after first and before last
   bool hasDataAfter = false;
-  if ( now < m_lastTime ) {   // New entry is not after the last written -> Find where to write
+  if ( now < m_lastTime ) {   // First call, or new entry is not after the last written -> Find where to write
+    if ( m_debug ) std::cout << "TrendWriter::write Position file for time = " << now << std::endl;
     getDataContaining( now );
-
     if ( 0 != m_dir.entry[m_ptDir+1].firstTime ) {
       hasDataAfter = true;
     }
-    if ( 0 == m_dir.entry[m_ptDir].firstTime ) { // No data block at all
-      m_dataAddressInFile = ftell( m_file );  // As we have just read the directory, this is the free position...
-      m_data.size = 0;
-    } else {
+    if ( 0 != m_dir.entry[0].firstTime ) { // No data block at all
       while ( m_data.data[m_ptData].i < now &&
               m_data.data[m_ptData].i > 0 ) unpackAnEvent( );
       if ( m_data.data[m_ptData].i != 0 ) hasDataAfter = true;
@@ -310,7 +312,7 @@ bool TrendWriter::write( std::vector<float> data, int now ) {
   if ( !hasDataAfter ) {
     writeEntry( now, data, true );
   } else {   //== Data after: Save context, read all data, and rewrite them after.
-
+    std::cout << "TrendWriter::write - We have data after " << now << std::endl;
     long savedDirAdd  = m_dirAddressInFile;
     long savedDataAdd = m_dataAddressInFile;
     int  savedPtDir   = m_ptDir;
@@ -319,20 +321,17 @@ bool TrendWriter::write( std::vector<float> data, int now ) {
     std::vector<int> savedTime;
     std::vector< std::vector<float> > savedData;
     m_hasSelection = true;
-    m_maxTime = 0x7fffffff;
-    int tTime;
+    unsigned int tTime;
     std::vector<float> tData( m_nbTag );
     while( nextEvent( tTime, tData ) ) {
       savedTime.push_back( tTime );
       savedData.push_back( tData );
     }
 
-    m_dirAddressInFile  = savedDirAdd;
     m_dataAddressInFile = savedDataAdd;
+    readDirectoryRecord( savedDirAdd );
     m_ptDir  = savedPtDir;
     m_ptData = savedPtData;
-    fseek( m_file, m_dirAddressInFile, SEEK_SET );
-    fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
     //== Clear the directory as if there was no data after
     m_dir.nbEntries = m_ptDir+1;
     m_dir.nextAddress = 0L;
@@ -362,24 +361,25 @@ bool TrendWriter::write( std::vector<float> data, int now ) {
 //=========================================================================
 //  Write one entry at the current position in the file.
 //=========================================================================
-void TrendWriter::writeEntry( int now, std::vector<float>& data, bool forceWrite ) {
+void TrendWriter::writeEntry( unsigned int now, std::vector<float>& data, bool writeEachEntry ) {
   if ( 0 != m_dir.entry[m_ptDir].firstTime ) {  // There is some data block...
 
     //== If we don't have enough space, create a new data record.
     if ( m_data.size > sizeof(DataRecord) - (m_nbTag+m_nbMask+2)* sizeof(int) ) {
-      if ( !forceWrite) {
+      if ( !writeEachEntry ) {  // Used when including an entry in the middle, for performance reasons
         fseek( m_file, m_dataAddressInFile, SEEK_SET );
         fwrite( &m_data, 1, sizeof(DataRecord), m_file );
       }
-      m_dataAddressInFile = ftell( m_file );  // After the last data block
+      m_dataAddressInFile += sizeof(DataRecord);
       m_data.size = 0;
+      m_data.data[0].i = 0;
       m_ptData    = 0;
       m_ptDir++;
       if ( m_ptDir == MAX_ENTRY-1 ) {
         long newDirAddress = m_dataAddressInFile;  // This is the next free in file, as obtained above.
         // Create a new fresh directrory block at the current location
         DirectoryRecord newDir;
-        createDirectoryRecord( &newDir, now );
+        createDirectoryRecord( &newDir );
 
         // update old dir to have the chaining, include tag of first in next
         m_dir.nextAddress  = newDirAddress;
@@ -388,33 +388,39 @@ void TrendWriter::writeEntry( int now, std::vector<float>& data, bool forceWrite
         fwrite( &m_dir, sizeof(DirectoryRecord), 1, m_file );
 
         // re-read the new dir block to be positioned for the next data.
-        m_dirAddressInFile = newDirAddress;
-        fseek( m_file, m_dirAddressInFile, SEEK_SET );
-        fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+        readDirectoryRecord( newDirAddress );
         m_dataAddressInFile = ftell( m_file );
-        m_ptDir = 0;
         m_dir.nbEntries = 0;
+        m_ptDir = 0;
       }
       m_dir.nbEntries++;
       m_dir.entry[m_ptDir].firstTime = now;
       m_dir.entry[m_ptDir].fileOffset = m_dataAddressInFile - m_dirAddressInFile;
-      if ( forceWrite ) {
+      if ( writeEachEntry ) {
         fseek( m_file, m_dirAddressInFile, SEEK_SET );
         fwrite( &m_dir, 1, sizeof(DirectoryRecord), m_file );
       }
     }
+  } else {
+    m_dir.entry[m_ptDir].firstTime = now;
+    fseek( m_file, m_dirAddressInFile , SEEK_SET );
+    fwrite( &m_dir, sizeof(DirectoryRecord), 1, m_file );
   }
 
   bool full = ( 0 == m_ptData );
-  addDataEntry( now, data, forceWrite, full );
+  addDataEntry( now, data, writeEachEntry, full );
 }
 //=========================================================================
-//  Write a data item, with zero suppression if needed. Negative threshold = fraction.
+//  Write a data item, with zero suppression if needed. Negative threshold = fraction. 
+//  Space in the buffer is guaranteed
 //=========================================================================
-void TrendWriter::addDataEntry( int now, std::vector<float>& data, bool forceWrite, bool full ){
-    
+void TrendWriter::addDataEntry( unsigned int now, std::vector<float>& data, bool writeEachEntry, bool full ){
+  int prevPtData = m_ptData;
+
+  if ( m_debug ) std::cout << "TrendWriter::addDataEntry m_ptData " << m_ptData << std::endl;
+
   m_data.data[m_ptData++].i = now;
-  int mask = 0;
+  unsigned int mask = 0;
   int maskAddr = m_ptData;
   int nbItem = 0;
   m_ptData += m_nbMask;  // first word to write
@@ -446,21 +452,22 @@ void TrendWriter::addDataEntry( int now, std::vector<float>& data, bool forceWri
     m_data.size         = sizeof( int ) * (m_ptData+3);   // +3 as 8 bytes header + 1 extra int with a zero...
     m_data.type         = TYPE_DATA;
     m_data.version      = m_tagHeader.version;
-    if ( forceWrite ) {
+    if ( writeEachEntry ) {
+      if ( m_debug ) std::cout << "TrendWriter::addDataEntry m_dataAddressInFile = " << m_dataAddressInFile << std::endl;
       fseek( m_file, m_dataAddressInFile, SEEK_SET );
       fwrite( &m_data, 1, sizeof(DataRecord), m_file );
       fflush( m_file );
     }
   } else {
-    m_ptData = m_ptData - m_nbMask - 1;  // restore the data pointer.
-    m_data.data[m_ptData].i = 0;   // tag the end of the data block!
+    m_ptData = prevPtData;        // restore the data pointer.
+    m_data.data[m_ptData].i = 0;  // tag the end of the data block!
   }
 }
 
 //=========================================================================
 //  Get the next event block.
 //=========================================================================
-bool TrendWriter::nextEvent( int& time, std::vector<float>& data ) {
+bool TrendWriter::nextEvent( unsigned int& time, std::vector<float>& data ) {
 
   if ( !m_hasSelection ) {
     std::cout << "TrendWriter::nextEvent: no previous selection!" << std::endl;
@@ -469,12 +476,6 @@ bool TrendWriter::nextEvent( int& time, std::vector<float>& data ) {
   //== Do we need to read the next block
   if ( 0 ==  m_data.data[m_ptData].i ) {
     if ( !nextDataBlock() ) return false;
-  }
-
-  //== is it after the last wanted time...
-  if ( m_maxTime < m_data.data[m_ptData].i ) {
-    m_hasSelection = false;
-    return false;
   }
 
   //== Make sure the output has enough memory...
@@ -511,28 +512,26 @@ void TrendWriter::closeFile() {
   m_tagAddressInFile  = -1;
   m_dirAddressInFile  = -1;
   m_dataAddressInFile = -1;
+  m_lastTime = 0xffffffff;
 }
 //=========================================================================
 //  Read the latest tags..
 //=========================================================================
-bool TrendWriter::loadTags( int wantedVersion ) {
+bool TrendWriter::loadLastTags( ) {
 
   if ( NULL == m_file ) {
     std::cout << "TrendWriter::loadTags: file not opened!" << std::endl;
     return false;
   }
-  long nextTagAddress = 0;
-  m_tagHeader.version = -999;
-  while ( m_tagHeader.version != wantedVersion ) {
-    fseek( m_file, nextTagAddress, SEEK_SET );
+  while ( true ) {
+    fseek( m_file, m_tagAddressInFile, SEEK_SET );
     int nRead = fread( &m_tagHeader, 1, sizeof( Header ), m_file );
     if ( sizeof( Header ) != nRead ) {
       std::cout << "TrendWriter::openWrite: Error reading the header of the tag block: read " << nRead << " bytes" << std::endl;
       return false;
     }
-    m_tagAddressInFile = ftell( m_file ) - sizeof( Header );
-    nextTagAddress = m_tagHeader.nextAddress;
-    if ( 0 == nextTagAddress ) break;
+    if ( 0 == m_tagHeader.nextAddress) break;
+    m_tagAddressInFile = m_tagHeader.nextAddress;
   }
   int nToRead = m_tagHeader.size - sizeof( Header );
 
@@ -543,7 +542,6 @@ bool TrendWriter::loadTags( int wantedVersion ) {
     free( temp );
     return false;
   }
-
   m_firstDirAddress = ftell( m_file );  //== First directory block is after tag block.
 
   m_tags.clear();
@@ -562,7 +560,6 @@ bool TrendWriter::loadTags( int wantedVersion ) {
   }
   m_nbTag = m_tags.size();
   m_nbMask = (m_nbTag/32) + 1;
-
   free( temp );  // release memory...
 
   return true;
@@ -573,13 +570,10 @@ bool TrendWriter::loadTags( int wantedVersion ) {
 //  Directory record should be OK... Internal function.
 //=========================================================================
 bool TrendWriter::nextDataBlock ( ) {
-
-  if ( m_ptDir == m_dir.nbEntries - 1 ) {
+  
+  if ( m_ptDir >= m_dir.nbEntries - 1 ) {
     if ( 0 == m_dir.nextAddress ) return false;  // no more data
-    m_dirAddressInFile = m_dir.nextAddress;
-    fseek( m_file, m_dirAddressInFile, SEEK_SET );
-    fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-    m_ptDir = 0;
+    readDirectoryRecord( m_dir.nextAddress );
   } else {
     m_ptDir++;
   }
@@ -595,44 +589,43 @@ bool TrendWriter::nextDataBlock ( ) {
 //=========================================================================
 // Create an empty directory record. Tag the first entry...
 //=========================================================================
-void TrendWriter::createDirectoryRecord ( DirectoryRecord* dir, int now ) {
+void TrendWriter::createDirectoryRecord ( DirectoryRecord* dir ) {
   dir->size        = sizeof( DirectoryRecord );
   dir->type        = TYPE_DIR;
   dir->version     = m_tagHeader.version;
   dir->nextAddress = 0L;
   dir->nbEntries   = 1;
-  dir->entry[0].firstTime = now;
-  dir->entry[0].fileOffset = dir->size;
-  for ( unsigned int kk = 1 ; MAX_ENTRY > kk ; ++kk ) {
+  for ( unsigned int kk = 0 ; MAX_ENTRY > kk ; ++kk ) {
     dir->entry[kk].firstTime = 0;
     dir->entry[kk].fileOffset = 0;
   }
+  dir->entry[0].fileOffset = sizeof(DirectoryRecord);
   fwrite( dir, sizeof(DirectoryRecord), 1, m_file );
 }
 
 //=========================================================================
 //  Find the proper directory and data block containing a given time.
 //=========================================================================
-bool TrendWriter::getDataContaining ( int time ) {
+void TrendWriter::getDataContaining ( unsigned int time ) {
   //== Is it before the first entry in the current directory?
   if ( time < m_dir.entry[0].firstTime ) {
     if ( m_dirAddressInFile != m_firstDirAddress ) {
-      m_dirAddressInFile = m_firstDirAddress;
-      fseek( m_file, m_dirAddressInFile, SEEK_SET );
-      fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+      readDirectoryRecord( m_firstDirAddress );
     }
   }
-  m_ptDir = 0;
-  if ( 0 == m_dir.entry[0].firstTime ) return false;  // empty file
-
+  m_ptData    = 0;
+  m_ptDir     = 0;
+  m_data.size = 0;
+  m_data.data[0].i = 0;
+  
   while ( 0 !=   m_dir.entry[m_ptDir+1].firstTime &&
           time > m_dir.entry[m_ptDir+1].firstTime    ) {
-    if ( m_ptDir == m_dir.nbEntries-1 ) {
-      if ( 0 == m_dir.nextAddress ) return false;  // no more data
-      m_dirAddressInFile = m_dir.nextAddress;
-      fseek( m_file, m_dirAddressInFile, SEEK_SET );
-      fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-      m_ptDir = 0;
+    if ( m_ptDir >= m_dir.nbEntries-1 ) {
+      if ( 0 == m_dir.nextAddress ) { // Next block indicated, but not available! This is a BUG!
+        if ( 0 != m_ptDir ) m_ptDir--;
+        break;
+      }
+      readDirectoryRecord( m_dir.nextAddress );
     } else {
       m_ptDir++;
     }
@@ -642,14 +635,12 @@ bool TrendWriter::getDataContaining ( int time ) {
     fseek( m_file, m_dataAddressInFile, SEEK_SET );
     fread( &m_data, 1, sizeof( DataRecord ), m_file );
   }
-  m_ptData = 0;
-  return true;
 }
 //=========================================================================
 //  Unpack an event in the data block. return the time of the event
 //=========================================================================
-int TrendWriter::unpackAnEvent ( ) {
-  int time = m_data.data[m_ptData++].i;
+unsigned int TrendWriter::unpackAnEvent ( ) {
+  unsigned int time = m_data.data[m_ptData++].i;
   int ptMask = m_ptData;
   m_ptData  += m_nbMask;
   int mask = 0;
@@ -661,6 +652,17 @@ int TrendWriter::unpackAnEvent ( ) {
     mask = mask>>1;
   }
   return time;
+}
+
+//=========================================================================
+//  Read a directory record
+//=========================================================================
+bool TrendWriter::readDirectoryRecord ( long address ) {
+  m_dirAddressInFile = address;
+  m_ptDir = 0;
+  fseek( m_file, m_dirAddressInFile, SEEK_SET );
+  int size = fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+  return size == sizeof(DirectoryRecord);
 }
 //=============================================================================
 

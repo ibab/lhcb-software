@@ -28,7 +28,6 @@ SimpleTrendWriter::SimpleTrendWriter( const std::string& type,
   , m_fileName( "" )
   , m_fileIsOpen( false )
   , m_tagChanged( false )
-  , m_tagVersion( 0 )
 {
   declareInterface<ISimpleTrendWriter>(this);
 }
@@ -57,13 +56,12 @@ void SimpleTrendWriter::setPartitionAndName( std::string& partition, std::string
   bool status = m_trend->openRead( m_fileName );
   if ( status ) {
     m_trend->tags( m_tags );  // get the tags;
-    m_tagVersion = m_trend->tagVersion();
     m_values.resize( m_tags.size(), 0. );
     m_tagChanged = false;
 
     //== get the most recent values. 
 
-    int start = m_trend->firstTimeThisTag();
+    unsigned int start = m_trend->firstTimeThisTag();
     if ( m_trend->select( start ) ) {
       while( m_trend->nextEvent( start, m_values ) ) { }
     }
@@ -92,16 +90,15 @@ void SimpleTrendWriter::addEntry( std::string tag, double value ) {
   m_tagChanged = true;    
 }
 //=========================================================================
-//  Write teh event in the file. Update the tags if needed.
+//  Write the event in the file. Update the tags if needed.
 //=========================================================================
 void SimpleTrendWriter::saveEvent ( ) {
   if ( m_tagChanged ) {
     if ( m_fileIsOpen ) close();
-    m_tagVersion += 1;
   }
   
   if ( !m_fileIsOpen ) {
-    m_fileIsOpen = m_trend->openWrite( m_fileName, m_tags, m_tagVersion );
+    m_fileIsOpen = m_trend->openWrite( m_fileName, m_tags );
     if ( !m_fileIsOpen ) {
       error() << "Can't open file " << m_fileName << " for writing" << endmsg;
       return;

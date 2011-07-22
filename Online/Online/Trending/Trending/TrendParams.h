@@ -22,9 +22,8 @@ struct DataRecord {
   short         type;
   short         version;
   union {
-    int   i;
-    float f;  
-  }             data[DATA_SIZE];
+    unsigned int i;
+    float f;         } data[DATA_SIZE];
 };
 
 //== structure of the directory record
@@ -36,9 +35,8 @@ struct DirectoryRecord {
   long           nextAddress;
   int            nbEntries;
   struct DirEntry {
-    int firstTime;
-    int fileOffset; 
-  }              entry[MAX_ENTRY];
+    unsigned int firstTime;
+    int fileOffset;         } entry[MAX_ENTRY];
 };
 
 enum recordType { TYPE_TAG, TYPE_DIR, TYPE_DATA };

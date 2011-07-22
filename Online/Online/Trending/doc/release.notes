@@ -4,6 +4,14 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+!============================== 2011-07-22 v2r0 ==============================
+! 2011-07-22 - Olivier Callot
+ - Rewrite seriously the tool: Use the small object TrendWriter in the tool
+ - Change somewhatthe interface: 
+      The time becomes an unsigned int.
+      The version number as argument to the openWrite is removed. Version is automatic.
+      Version number changed.
+
 ! 2011-06-10 - Olivier Callot
  - Remove the 'extern "C"' before the declaration of the main in the two applicattions
 

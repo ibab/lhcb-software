@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Usage : " << argv[0] << " fileName" << std::endl;
     std::cout << "        fileName  is the file to extract, e.g. LHCb_HLT" << std::endl;
     exit( 0 );
-  }  
+  }
   bool verbose = (argc == 3 );
   DumpTrendingFile dump( trendTool );
   dump.dump( std::string( argv[1]), verbose );
@@ -44,13 +44,13 @@ int main(int argc, char* argv[]) {
 // Standard constructor, initializes variables
 //=============================================================================
 DumpTrendingFile::DumpTrendingFile(  ITrendingTool* trend ) :
-  m_trend( trend ) 
+  m_trend( trend )
 {
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-DumpTrendingFile::~DumpTrendingFile() {} 
+DumpTrendingFile::~DumpTrendingFile() {}
 
 
 //=========================================================================
@@ -65,6 +65,9 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
     return;
   }
   char line[2048];
+
+  int maxPrint = 100;
+  if ( verbose ) maxPrint = 100000000;
 
   long nextTags = 1;
   m_tagAddressInFile = 0;
@@ -87,7 +90,7 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
       free( temp );
       return;
     }
-    
+
     m_firstDirAddress = ftell( m_file );  //== First directory block is after tag block.
     m_tags.clear();
     char* p = temp;
@@ -99,82 +102,117 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
       nn -= ll;
       m_tags.push_back( tag );
       m_lastData.push_back( 0. );
-      if ( verbose ) std::cout << "   loaded tag " << m_tags.size() << " = '" << tag 
+      if ( verbose ) std::cout << "   loaded tag " << m_tags.size() << " = '" << tag
                                << "'   rest " << nn << " bytes." << std::endl;
     }
     m_nbTag = m_tags.size();
     m_nbMask = (m_nbTag/32) + 1;
     free( temp );  // release memory...
-    
-    //== read the first directory record...
-    m_dirAddressInFile = m_firstDirAddress;
-    fseek( m_file, m_dirAddressInFile, SEEK_SET );
-    fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-    
-    std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version 
-              << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
+    m_dir.nextAddress = m_firstDirAddress;
 
-    for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
-      sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
-               m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  m_dir.entry[kk].fileOffset );
-      std::cout << line << std::endl;
-    }
-    std::cout << "*** Data analysis *** " << std::endl;
-    int firstTime = 0;
-    for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
-      m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[kk].fileOffset;
-      fseek( m_file, m_dataAddressInFile, SEEK_SET );
-      fread( &m_data, 1, sizeof(DataRecord), m_file );
-      sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d", 
-               kk,  m_dir.entry[kk].firstTime,
-               m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  
-               m_dir.entry[kk].fileOffset,
-               m_data.size, m_data.type, m_data.version );
-      std::cout << line << std::endl;
-      m_ptData = 0;
-      int maxPtData = ( int(m_data.size)-8 ) /4;
-      if ( m_data.data[m_ptData].i < firstTime ||
-           m_dir.entry[kk].firstTime < firstTime ) {
-        std::cout << " -- Time ordering   " << firstTime << " = " <<  m_trend->timeString( firstTime ) 
-                  << " ** After **" << std::endl;
+    while ( 0 != m_dir.nextAddress ) {
+
+      m_dirAddressInFile = m_dir.nextAddress;
+      fseek( m_file, m_dirAddressInFile, SEEK_SET );
+      fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+
+      std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version
+                << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
+      if ( m_dir.nbEntries > MAX_ENTRY ) return;
+      for ( int kk = 0 ; kk <= m_dir.nbEntries ; ++kk ) {
+        sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
+                 m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  m_dir.entry[kk].fileOffset );
+        std::cout << line << std::endl;
       }
-      firstTime = m_data.data[m_ptData].i;
-      if ( firstTime != m_dir.entry[kk].firstTime ) {
-        std::cout << " -- First time data " << firstTime << " = " << m_trend->timeString( firstTime )
-                  << " ** Mismatch ** " << std::endl;
-      }
-      while ( m_ptData < maxPtData ) {
-        int time = m_data.data[m_ptData++].i;
-        if ( 0 == time ) {
-          if ( m_ptData != maxPtData ) {
-            std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words" << std::endl;
+      std::cout << "*** Data analysis *** " << std::endl;
+      unsigned int firstTime = 0;
+      for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
+        m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[kk].fileOffset;
+        fseek( m_file, m_dataAddressInFile, SEEK_SET );
+        fread( &m_data, 1, sizeof(DataRecord), m_file );
+        sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                 kk,  m_dir.entry[kk].firstTime,
+                 m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                 m_dir.entry[kk].fileOffset,
+                 m_data.size, m_data.type, m_data.version );
+        bool headPrinted = false;
+        m_ptData = 0;
+        int maxPtData = ( int(m_data.size)-8 ) /4;
+        if ( m_data.data[m_ptData].i < firstTime ||
+             m_dir.entry[kk].firstTime < firstTime ) {
+          if ( !headPrinted ) {
+            std::cout << line << std::endl;
+            headPrinted = true;
           }
-          break;
+          std::cout << " -- Time ordering   " << firstTime << " = " <<  m_trend->timeString( firstTime )
+                    << " ** After **" << std::endl;
         }
-        int ptMask = m_ptData;
-        m_ptData  += m_nbMask;
-        int mask = 0;
-        int nbData = 0;
-        for ( int kk = 0 ; m_nbTag > kk ; ++kk ) {
-          if ( 0 == kk%32 ) mask = m_data.data[ptMask++].i;
-          if ( mask & 1 ) {
-            m_lastData[kk] = m_data.data[m_ptData++].f;
-            ++nbData;
+        firstTime = m_data.data[m_ptData].i;
+        if ( firstTime != m_dir.entry[kk].firstTime ) {
+          if ( !headPrinted ) {
+            std::cout << line << std::endl;
+            headPrinted = true;
           }
-          mask = mask>>1;
+          std::cout << " -- First time data " << firstTime << " = " << m_trend->timeString( firstTime )
+                    << " ** Mismatch ** " << std::endl;
         }
-        if ( time < firstTime ) {
-          std::cout << " ** Mismatch time ordering: Previous " << firstTime << " current " << time << " = "
-                    << m_trend->timeString( time ) << " read " << nbData << " values, next pointer " << m_ptData 
-                    << std::endl;
-        } else if ( time - firstTime > 3600 ) {
-          std::cout << " ** Gap>1 hour from " << firstTime << " = " << m_trend->timeString( firstTime ) << std::endl
-                    << "                 to " << time << " = " << m_trend->timeString( time ) << std::endl;
-        } else if ( verbose ) {
-          std::cout << "     data at " << time << " = " << m_trend->timeString( time ) 
-                    << " nb " << nbData << std::endl;
+        while ( m_ptData < maxPtData ) {
+          int prevPt = m_ptData;
+          unsigned int time = m_data.data[m_ptData++].i;
+          if ( 0 == time ) {
+            if ( m_ptData != maxPtData ) {
+              if ( !headPrinted ) {
+                std::cout << line << std::endl;
+                headPrinted = true;
+              }
+              std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words" << std::endl;
+            }
+            break;
+          }
+          int ptMask = m_ptData;
+          m_ptData  += m_nbMask;
+          int mask = 0;
+          int nbData = 0;
+          for ( int kk = 0 ; m_nbTag > kk ; ++kk ) {
+            if ( 0 == kk%32 ) mask = m_data.data[ptMask++].i;
+            if ( mask & 1 ) {
+              m_lastData[kk] = m_data.data[m_ptData++].f;
+              ++nbData;
+            }
+            mask = mask>>1;
+          }
+          if ( time < firstTime ) {
+            if ( !headPrinted ) {
+              std::cout << line << std::endl;
+              headPrinted = true;
+            }
+            std::cout << " ** Mismatch time ordering: Previous " << firstTime << " current " << time << " = "
+                      << m_trend->timeString( time ) << " read " << nbData << " values, next pointer " << m_ptData
+                      << std::endl;
+            maxPrint--;
+          } else if ( time - firstTime > 3600*24 ) {
+            if ( !headPrinted ) {
+              std::cout << line << std::endl;
+              headPrinted = true;
+            }
+            std::cout << " ** Gap>1 day from " << firstTime << " = " << m_trend->timeString( firstTime ) << std::endl
+                      << "                to " << time << " = " << m_trend->timeString( time ) << std::endl;
+            maxPrint--;
+          } else if ( verbose ) {
+            if ( !headPrinted ) {
+              std::cout << line << std::endl;
+              headPrinted = true;
+            }
+            std::cout << "     data at " << time << " = " << m_trend->timeString( time )
+                      << " nb " << nbData << " prevPt " << prevPt << std::endl;
+            maxPrint--;
+          }
+          firstTime = time;
+          if ( maxPrint < 0 ) {
+            std::cout << "**** Too many errors... Abort ****" << std::endl;
+            return;
+          }
         }
-        firstTime = time;
       }
     }
   }

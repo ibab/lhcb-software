@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_ITrendingTool ( "ITrendingTool", 1, 1 );
+static const InterfaceID IID_ITrendingTool ( "ITrendingTool", 2, 1 );
 
 /** @class ITrendingTool ITrendingTool.h Trending/ITrendingTool.h
  *  This is the abstract interface for the trending tool.
@@ -28,11 +28,9 @@ public:
    * Open a trend file for writing.
    * @param name     is the file name. It will be put in the standard Trend directory.
    * @param tags     is a vector of names of the variables to store.
-   * @param version  defines the version of the list of tags used. If tgas are changed, a new version
-   *                 should be specified.
    * @return false if a problem, message in the log file.
    */
-  virtual bool openWrite( std::string name, std::vector<std::string> tags, int version = 1 ) = 0;
+  virtual bool openWrite( std::string name, std::vector<std::string> tags ) = 0;
 
   /**
    * Set the thresholds for storing new values. Default is no threshold
@@ -55,7 +53,7 @@ public:
    * @param time : Time for these values. By default this is now.
    * @return false if a problem. Message in the log file.
    */
-  virtual bool write( std::vector<float> values, int time = 0 ) = 0;
+  virtual bool write( std::vector<float> values, unsigned int time = 0 ) = 0;
 
   /**
    * Close the file. This is done anyway in the destructor
@@ -84,7 +82,7 @@ public:
    * @param tag     : tag of the variable. Absent means no selection, use then nextBlock
    * @return false if a problem, message in the log file.
    */
-  virtual bool select( int startTime, int endTime = 0, std::string tag = "" ) = 0;
+  virtual bool select( unsigned int startTime, unsigned int endTime = 0, std::string tag = "" ) = 0;
 
   /**
    * returns in turns all the values for teh selected tag.
@@ -92,7 +90,7 @@ public:
    * @param value : value of the tag at this time
    * @return true as long as there is a new value.
    */
-  virtual bool nextValue( int& time, float& value ) = 0;
+  virtual bool nextValue( unsigned int& time, float& value ) = 0;
 
   /**
    * returns in turns all the entries.
@@ -100,14 +98,14 @@ public:
    * @param value : vector of value at this time
    * @return true as long as there is a new value.
    */
-  virtual bool nextEvent( int& time, std::vector<float>& values ) = 0;
+  virtual bool nextEvent( unsigned int& time, std::vector<float>& values ) = 0;
 
   /**
    * returns a string containing the time in readable format
    * @param time : integer valeu
    * @return a string
    */
-  virtual std::string timeString( int time ) = 0;
+  virtual std::string timeString( unsigned int time ) = 0;
 
   /**
    * returns the version of the tags currently in use
@@ -117,7 +115,7 @@ public:
   /**
    * returns the first time for this tag version
    */
-  virtual int firstTimeThisTag() = 0;
+  virtual unsigned int firstTimeThisTag() = 0;
 
 };
 #endif // TRENDING_ITRENDINGTOOL_H

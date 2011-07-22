@@ -93,7 +93,7 @@ void ExtractFromTrendingFile::extract( std::string file, std::string tag, std::s
     return;
   }
   
-  int time;
+  unsigned int time;
   float value;
   while( m_trend->nextValue( time, value ) ) {
     std::string iso =  m_trend->timeString( time );

@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Trending/ITrendingTool.h"            // Interface
+#include "Trending/TrendWriter.h"            // Tool for writing
 
 /** @class TrendingTool TrendingTool.h
  *  
@@ -25,13 +26,13 @@ public:
 
   virtual ~TrendingTool( ); ///< Destructor
 
-  bool openWrite( std::string name, std::vector<std::string> tags, int version = 1 );
+  bool openWrite( std::string name, std::vector<std::string> tags );
 
   bool setThresholds( std::vector<float> thresholds );
   
   bool setThreshold( std::string tag, float thr );
   
-  bool write( std::vector<float> values, int time = 0 );
+  bool write( std::vector<float> values, unsigned int time = 0 );
   
   void closeFile();
   
@@ -39,17 +40,17 @@ public:
 
   bool tags( std::vector<std::string>& tags, int version = -1 );
   
-  bool select( int startTime, int endTime, std::string tag );
+  bool select( unsigned int startTime, unsigned int endTime, std::string tag );
   
-  bool nextValue( int& time, float& value );
+  bool nextValue( unsigned int& time, float& value );
 
-  bool nextEvent( int& time, std::vector<float>& values );
-
-  std::string timeString( int time );
+  bool nextEvent( unsigned int& time, std::vector<float>& data );
+  
+  std::string timeString( unsigned int time );
 
   int tagVersion();
 
-  int firstTimeThisTag();
+  unsigned int firstTimeThisTag();
 
 private:
 
@@ -57,17 +58,13 @@ private:
 
   bool nextDataBlock( );
 
-  void createDirectoryRecord ( DirectoryRecord* dir, int time);
+  bool getDataContaining ( unsigned int time );
   
-  bool getDataContaining ( int time );
-  
-  int  unpackAnEvent ( );
-  
-  void writeEntry ( int now, std::vector<float>& data, bool forceWrite );
-
-  void addDataEntry( int now, std::vector<float>& data, bool forceWrite, bool full );
+  unsigned int unpackAnEvent ( );
   
 private:
+  TrendWriter              m_trendWriter;
+
   bool                     m_forWriting;
   Header                   m_tagHeader;
   std::vector<std::string> m_tags;
@@ -86,9 +83,9 @@ private:
   int                      m_ptData;
   bool                     m_hasSelection;
   int                      m_requestedTagNumber;
-  int                      m_maxTime;
+  unsigned int             m_maxTime;
   int                      m_tagNumber;
-  int                      m_lastTime;
-  int                      m_firstTimeThisTag;
+  unsigned int             m_lastTime;
+  unsigned int             m_firstTimeThisTag;
 };
 #endif // TRENDINGTOOL_H
