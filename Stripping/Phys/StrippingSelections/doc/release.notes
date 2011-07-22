@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-22 - Paula Alvarez
+ - StrippingBs2Kst0Kst0.py
+ - new cut parameter in confdict
+
 ! 2011-07-22 - Paul Seyfert
  - StrippingTrackEffVeloMuon.py
  - new cut parameter in confdict
