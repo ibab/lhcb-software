@@ -59,27 +59,31 @@ Bd2KstarMuMu = {
 
 
 # B2XMuMu for RD
-# P. Schaak, M. Patel & T.Blake
+# P. Schaak, M. Patel, P. Owen & T.Blake
 
 B2XMuMu =  {
     'BUILDERTYPE' : 'B2XMuMuConf',
     'CONFIG' : {
-    'BVXCHI2NDOF'        : 4.0           # dimensionless
-    , 'BIPCHI2'            : 9.0           # dimensionless 
+    'BVXCHI2NDOF'          : 8             # dimensionless
+    , 'BIPCHI2'            : 9.0           # dimensionless
     , 'BDIRA'              : 0.999968      # dimensionless
     , 'BFDCHI2'            : 100.0         # dimensionless
     , 'KpiMINIPCHI2'       : 9.0           # dimensionless
-    , 'KpiTRACKCHI2'       : 4.0           # dimensionless         
-    , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless       
-    , 'MuonMINIPCHI2'      : 16.0           # dimensionless      
-    , 'MuonTRACKCHI2'      : 4.0           # dimensionless    
-    , 'MuonPID'            : 0.0           # dimensionless            
-    , 'DimuonVXCHI2NDOF'   : 9.0           # dimensionless 
-    , 'DimuonUPPERMASS'    : 5050.0        # MeV      
-    , 'Pi0MINPT'           : 800.0         # MeV  
+    , 'KpiTRACKCHI2'       : 4.0           # dimensionless    
+    , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
+    , 'MuonMINIPCHI2'      : 16.0          # dimensionless
+    , 'MuonTRACKCHI2'      : 4.0           # dimensionless
+    , 'MuonPID'            : 0.0           # dimensionless
+    , 'DimuonVXCHI2NDOF'   : 9.0           # dimensionless
+    , 'DimuonUPPERMASS'    : 5050.0        # MeV
+    , 'Pi0MINPT'           : 800.0         # MeV
     , 'DplusLOWERMASS'     : 1600.0        # MeV
-    , 'DplusUPPERMASS'     : 2300.0        # MeV 
-    , 'KstarplusWINDOW'    : 300.0         # MeV
+    , 'DplusUPPERMASS'     : 2300.0        # MeV      
+    , 'KstarplusWINDOW'    : 300.0         # MeV      
+    , 'KsWINDOW'           : 30.0          # MeV     
+    , 'LambdaWINDOW'       : 30.0          # MeV    
+    , 'LongLivedPT'        : 500.0         # MeV  
+    , 'LongLivedTau'        : 2            # ps 
     },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
