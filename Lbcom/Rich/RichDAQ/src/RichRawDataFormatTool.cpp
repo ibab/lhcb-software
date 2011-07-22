@@ -22,11 +22,11 @@ using namespace Rich::DAQ;
 DECLARE_TOOL_FACTORY( RawDataFormatTool )
 
 // private namespace
-  namespace
-  {
-    /// Default 'fake' HPD RichSmartID
-    static const LHCb::RichSmartID s_fakeHPDID( Rich::Rich1,Rich::top,0,0 );
-  }
+namespace
+{
+  /// Default 'fake' HPD RichSmartID
+  static const LHCb::RichSmartID s_fakeHPDID( Rich::Rich1,Rich::top,0,0 );
+}
 
 // Standard constructor
 RawDataFormatTool::RawDataFormatTool( const std::string& type,
@@ -55,7 +55,7 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "CheckODINEventIDs",  m_checkODINEventsIDs = false  );
   declareProperty( "CheckRICHEventIDs",  m_checkRICHEventsIDs = true   );
   declareProperty( "CheckBXIDs",         m_checkBxIDs         = true   );
-  declareProperty( "CheckHPDL1IDs",      m_hpdL1check         = true   );
+  declareProperty( "CheckHPDL1IDs",      m_hpdL1check         = false  );
   declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false  );
   declareProperty( "VerboseErrors",      m_verboseErrors      = false  );
   declareProperty( "ActiveRICHes",       m_richIsActive                );
@@ -85,14 +85,17 @@ StatusCode RawDataFormatTool::initialize()
 
   // if suppression is less than max possible number of (ALICE) hits, print a message.
   if ( m_maxHPDOc < BitsPerDataWord * MaxDataSizeALICE )
-  {
     info() << "Will suppress HPDs with more than " << m_maxHPDOc << " digits" << endmsg;
-  }
 
-  if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endmsg;
+  // messages if optional features are enabled
+  if ( m_extendedFormat ) 
+    info() << "Will encode RawEvent using extended HPD format" << endmsg;
+  if ( m_decodeUseOdin )
+    info() << "ODIN integrity checks are enabled" << endmsg;
+  if ( m_hpdL1check )
+    info() << "HPD L1 ID checks are enabled" << endmsg;
 
-  //if ( m_decodeUseOdin )
-  //  Warning( "ODIN integrity checks are enabled",          StatusCode::SUCCESS ).ignore();
+  // warnings if checks are disabled
   if ( !m_checkDataIntegrity )
     Warning( "HPD Data integrity checks are disabled",     StatusCode::SUCCESS ).ignore();
   if ( m_checkODINEventsIDs )
@@ -101,8 +104,6 @@ StatusCode RawDataFormatTool::initialize()
     Warning( "Internal RICH Event ID checks are disabled", StatusCode::SUCCESS ).ignore();
   if ( !m_checkBxIDs )
     Warning( "Header BX ID checks are disabled",           StatusCode::SUCCESS ).ignore();
-  if ( !m_hpdL1check )
-    Warning( "HPD L1 ID checks are disabled",           StatusCode::SUCCESS ).ignore();
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
