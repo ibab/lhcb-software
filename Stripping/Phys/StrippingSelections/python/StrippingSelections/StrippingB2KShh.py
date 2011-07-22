@@ -19,7 +19,18 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseKaons
+
+import StandardParticles
+
+if hasattr(StandardParticles, "StdAllLoosePions"):
+  from StandardParticles import StdAllLoosePions as Pions
+else:
+  from StandardParticles import StdLoosePions as Pions
+
+if hasattr(StandardParticles, "StdAllLooseKaons"):
+  from StandardParticles import StdAllLooseKaons as Kaons
+else:
+  from StandardParticles import StdLooseKaons as Kaons
 
 default_config = {'Trk_Chi2'         		: 4.0,
                   'KS_DD_MassWindow' 		: 30.0,
@@ -114,10 +125,10 @@ class B2KShhConf(LineBuilder) :
         ll_name = name+'LL'
 
         GECCode = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < %s" % config['GEC_MaxTracks'],
-	           'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+	           'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
-	self.pions = StdLoosePions
-	self.kaons = StdLooseKaons
+	self.pions = Pions
+	self.kaons = Kaons
 
         self.makeKS2DD( 'KSfor'+dd_name, config )
         self.makeKS2LL( 'KSfor'+ll_name, config )

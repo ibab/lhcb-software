@@ -3,6 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-07-22 - Thomas Latham
+ - StrippingB2KShh.py
+ - Update pions and kaons to 'All' type (new pT cut in StdLooseXXX kills too
+   many events in corners of Dalitz plots)
+ - Change LoKiTrigger to LoKiTracks in GEC filter preambulo.
+
 ! 2011-07-22 - Andreas Jaeger
  - StrippingTrackEffDownMuon.py
  - Updated StdLooseMuons-> StdAllLooseMuons
