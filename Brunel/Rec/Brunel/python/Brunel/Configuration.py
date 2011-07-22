@@ -259,6 +259,7 @@ class Brunel(LHCbConfigurableUser):
             notPhysSeq.Members = [ physFilter ]
 
             brunelSeq.Members += [ lumiSeq, notPhysSeq ]
+            #brunelSeq.Members += [ lumiSeq ]
 
         # Do not process events flagged as error in Hlt, but still write procstatus
         if vetoHltErrorEvents:
@@ -526,7 +527,7 @@ class Brunel(LHCbConfigurableUser):
             GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
             richMoniConf = RichRecQCConf(self.richMoniConfName)
             self.setOtherProps(richMoniConf, ["Histograms","Context","OutputLevel",
-                                              "DataType","WithMC"] )
+                                              "DataType","WithMC","Simulation"] )
             richMoniConf.setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
         if expert:
