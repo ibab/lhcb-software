@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-22 - Greig Cowan
+ - Updated some beta_s config dictionaries in StrippingDev.
+
 !========================= StrippingSettings v2r5 2011-07-22 =========================
 ! 2011-07-21 - Jibo He
  - LineConfigDictionaries_PSWG.py

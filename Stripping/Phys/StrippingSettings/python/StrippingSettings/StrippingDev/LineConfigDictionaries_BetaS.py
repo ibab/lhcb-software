@@ -184,19 +184,18 @@ BetaSBs2JpsieePhi = {
 BetaSQ2B = {
     'WGs'		: ['betas'],
     'BUILDERTYPE' 	: 'B2Quasi2BodyConf',
-    'CONFIG'  : {'Q2BPrescale'     : 1.,
-                 'Q2BResMinPT'     : 1000.,
-                 'Q2BResMinP'      : 10.,
-                 'Q2BResMaxMass'   : 1000.,
-                 'Q2BResVtxChiDOF' : 9.,
-                 'Q2BBMinM'        : 2500.,
-                 'Q2BBMaxM'        : 5700.,
-                 'Q2BBMinCorrM4pi' : 4000.,
-                 'Q2BBMinCorrM3pi' : 4600.,
-                 'Q2BBMaxCorrM'    : 7000.,
-                 'Q2BBVtxChi2DOF'  : 9.,
-                 'Q2BBMinTrkPT'    : 1000.
-                 },
+    'CONFIG' : {'Q2BPrescale'     : 1.,
+                'Q2BResMinPT'     : 1000.,
+                'Q2BResMinP'      : 10.,
+                'Q2BResMaxMass'   : 1100.,
+                'Q2BResVtxChiDOF' : 9.,
+                'Q2BBMinM4pi'     : 2500.,
+                'Q2BBMinM3pi'     : 4000.,
+                'Q2BBMaxM'        : 5700.,
+                'Q2BBMinCorrM4pi' : 4000.,
+                'Q2BBMinCorrM3pi' : 4600.,
+                'Q2BBMaxCorrM'    : 7000.,
+                'Q2BBVtxChi2DOF'  : 9.},
     'STREAMS' : [ 'Bhadron' ]
     }
 
@@ -377,7 +376,7 @@ BetaSBs2ChicPhi_Chic2PiPiPiPi = {
     'STREAMS' : [ 'Bhadron' ]
     }
 
-Bs2Q2Body4pi = {
+BetaSBs2Q2Body4pi = {
     'WGs'	:	['betas'],
     'BUILDERTYPE'	: 'Bs2Q2Body4piConf',
     'CONFIG'  : {'Q2BPrescale'     : 1.,
