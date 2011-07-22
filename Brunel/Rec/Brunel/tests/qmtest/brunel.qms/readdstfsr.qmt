@@ -3,6 +3,12 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/test-FSR.py</text></set></argument>
   <argument name="reference"><text>../refs/test-FSR.ref</text></argument>
+  <argument name="validator"><text>
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  LineSkipper(["DEBUG  'CnvServices':"])
+validateWithReference(preproc = preprocessor)
+</text></argument>
   <argument name="prerequisites"><set>
     <tuple><text>brunel.brunel-fest09</text><enumeral>PASS</enumeral></tuple>
   </set></argument>

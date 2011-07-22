@@ -9,11 +9,12 @@
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
+  LineSkipper(["DEBUG  'CnvServices':"]) + \
   LineSkipper(["ServiceManager      DEBUG"]) + \
   LineSkipper(["VERBOSE ServiceLocatorHelper"]) + \
-  LineSkipper(["RootCnvSvc"]) + \
   LineSkipper(["RootEvtSelector"]) + \
-  LineSkipper(["PoolDb"]) + \
+  LineSkipper(["RootCnvSvc"]) + \
+  LineSkipper(["PoolDbBaseCnv"]) + \
   LineSkipper(["PoolRoot"]) + \
   LineSkipper(["POOL"]) + \
   LineSkipper(["FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/00000000-0000-0000-0000-000000000000#"])
