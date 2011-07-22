@@ -1,5 +1,3 @@
-// $Id: TrackBuildCloneTable.cpp,v 1.4 2009-11-11 12:47:10 cattanem Exp $
-
 #include "TrackBuildCloneTable.h"
 
 using namespace LHCb;
@@ -29,8 +27,8 @@ StatusCode TrackBuildCloneTable::initialize()
   m_extrapolator = tool<ITrackExtrapolator>(m_extraType);
 
   info() << "Will build clone table for z=" << m_zStates
-         << "mm at '" << m_outputLocation << "'" << endreq;
-  info() << "Max Kullbeck Liebler Distance = " << m_klCut << endreq;
+         << "mm at '" << m_outputLocation << "'" << endmsg;
+  info() << "Max Kullbeck Liebler Distance = " << m_klCut << endmsg;
 
   return sc;
 }
@@ -50,7 +48,8 @@ StatusCode TrackBuildCloneTable::execute()
   for ( Tracks::const_iterator iT = inCont->begin();
         iT != inCont->end(); ++iT )
   {
-    debug() << "Track " << (*iT)->key() << " " << (*iT)->history() << endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Track " << (*iT)->key() << " " << (*iT)->history() << endmsg;
 
     // make working track object, directly in the vector
     tracks.push_back( CloneTrack(*iT) );
@@ -65,7 +64,8 @@ StatusCode TrackBuildCloneTable::execute()
 
       // only take ones that are close in z
       if ( fabs( cState.z() - *iZ ) > m_maxDz ) continue ;
-      debug() << " -> Found state closest to z=" << *iZ << " at z=" << cState.z() << endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << " -> Found state closest to z=" << *iZ << " at z=" << cState.z() << endmsg;
 
       // clone state
       State tmpState ( cState );
@@ -86,7 +86,8 @@ StatusCode TrackBuildCloneTable::execute()
   } // inCont
 
   // loop over the working objects
-  debug() << "Looping over all Track pairs to find clones :-" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Looping over all Track pairs to find clones :-" << endmsg;
   for ( CloneTrack::Vector::const_iterator iterC1 = tracks.begin();
         iterC1 != tracks.end(); ++iterC1 )
   {
@@ -118,7 +119,7 @@ StatusCode TrackBuildCloneTable::execute()
               debug() << " -> Tracks " << (*iterC1).track->key() << " and "
                       << (*iterC2).track->key() << " both have a state at z=" << *iZ
                       << " KL-dist=" << dist
-                      << endreq;
+                      << endmsg;
           }
         }
       } // z states
@@ -128,10 +129,10 @@ StatusCode TrackBuildCloneTable::execute()
         if ( msgLevel(MSG::DEBUG) )
         {
           debug() << "  -> Possible clones Track1 : key = " << iterC1->track->key()
-                  << " history = " << iterC1->track->history() << endreq;
+                  << " history = " << iterC1->track->history() << endmsg;
           debug() << "                     Track2 : key = " << iterC2->track->key()
-                  << " history = " << iterC2->track->history() << endreq;
-          debug() << "                            : KL distance = " << overall_dist << endreq;
+                  << " history = " << iterC2->track->history() << endmsg;
+          debug() << "                            : KL distance = " << overall_dist << endmsg;
         }
         // fill twice, for each way around for the track pair
         myLink.link( iterC1->track, iterC2->track, overall_dist );

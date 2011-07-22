@@ -1,6 +1,3 @@
-// $Id: TrackRemoveDoubleHits.cpp,v 1.7 2009-11-11 12:47:10 cattanem Exp $
-//
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackRemoveDoubleHits
 //
@@ -19,7 +16,7 @@
 // Declare
 //===========================================================================
 // Declaration of the algorithm factory
-DECLARE_ALGORITHM_FACTORY ( TrackRemoveDoubleHits );
+DECLARE_ALGORITHM_FACTORY ( TrackRemoveDoubleHits )
 //===========================================================================
 
 //===========================================================================
@@ -69,7 +66,7 @@ TrackRemoveDoubleHits::~TrackRemoveDoubleHits ( ) {
 //===========================================================================
 StatusCode TrackRemoveDoubleHits::initialize ( ) {
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return Error( "Failed to initialize" );
@@ -97,9 +94,8 @@ StatusCode TrackRemoveDoubleHits::initialize ( ) {
   info() << "Double OT hit: will remove both LHCbIDs from the track."
 	 << endmsg;
 
-  debug() << "TrackRemoveDoubleHits initialized successfully" << endmsg;    
-
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "TrackRemoveDoubleHits initialized successfully" << endmsg;    
     m_nTTHits = 0;
     m_nITHits = 0;
     m_nOTHits = 0;
@@ -115,7 +111,8 @@ StatusCode TrackRemoveDoubleHits::initialize ( ) {
 //===========================================================================
 StatusCode TrackRemoveDoubleHits::execute ( ) {
 
-  debug() << "TrackRemoveDoubleHits starting execution" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "TrackRemoveDoubleHits starting execution" << endmsg;
 
   // Get the tracks
   m_tracks = get<LHCb::Tracks>( m_tracksPath );  

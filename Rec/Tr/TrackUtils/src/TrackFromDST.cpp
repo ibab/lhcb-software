@@ -1,4 +1,3 @@
-// $Id: TrackFromDST.cpp,v 1.5 2008-04-22 08:33:16 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackFromDST );
+DECLARE_ALGORITHM_FACTORY( TrackFromDST )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +39,7 @@ StatusCode TrackFromDST::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   
   m_debugLevel = msgLevel( MSG::DEBUG );
   
@@ -73,7 +72,7 @@ StatusCode TrackFromDST::execute()
   
   if ( m_debugLevel ) debug() << "# of Tracks in input container \""
                               << m_tracksInContainer
-                              << "\" = " << inTracks -> size() << endreq;
+                              << "\" = " << inTracks -> size() << endmsg;
   
   // Separate the tracks according to their History flag
   // ---------------------------------------------------
@@ -114,7 +113,8 @@ TracksMap TrackFromDST::classifyTracks( LHCb::Tracks*& inTracks )
        if ( (*iTrack)->history() == LHCb::Track::PatKShort ) {
 	 tMap[LHCb::Track::PatDownstream].push_back( *iTrack );
        } else {
-	 debug() << "Invalid track type " << (*iTrack)->history() << endmsg;
+         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+           debug() << "Invalid track type " << (*iTrack)->history() << endmsg;
        }  
   }
 
@@ -142,7 +142,7 @@ void TrackFromDST::outputTracks( const std::vector<LHCb::Track*>& tracks,
   
   if ( m_debugLevel )
     debug() << "Stored " << tracksOutCont -> size() 
-            << " tracks in " << path << endreq;  
+            << " tracks in " << path << endmsg;  
 }
 
 //=============================================================================
@@ -150,7 +150,8 @@ void TrackFromDST::outputTracks( const std::vector<LHCb::Track*>& tracks,
 //=============================================================================
 StatusCode TrackFromDST::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

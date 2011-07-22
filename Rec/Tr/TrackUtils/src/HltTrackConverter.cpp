@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltTrackConverter );
+DECLARE_ALGORITHM_FACTORY( HltTrackConverter )
 
 
 //=============================================================================
@@ -114,20 +113,22 @@ StatusCode HltTrackConverter::initializeTriggerLists()
 {
   std::vector<std::string> m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
   std::vector<std::string> m_hlt2_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt2SelectionID");
-  debug()<< "Available Hlt1 Triggers\n";
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< "Available Hlt1 Triggers\n";
   for (std::vector<std::string>::iterator it = m_hlt1_init.begin();it!=m_hlt1_init.end();++it)
     {
       m_HltLines.push_back(*it);
-      debug()<< *it << "\n";
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< *it << "\n";
     }
-  debug() << endmsg;
-  debug()<< "Available Hlt2 Triggers\n";
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << endmsg;
+    debug()<< "Available Hlt2 Triggers\n";
+  }
   for (std::vector<std::string>::iterator it = m_hlt2_init.begin();it!=m_hlt2_init.end();++it)
     {
       m_HltLines.push_back(*it);
-      debug()<< *it << "\n";
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< *it << "\n";
     }
-  debug () << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug () << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -236,7 +237,8 @@ void  HltTrackConverter::RemoveClones(LHCb::Track::Vector& tracks) const
       tracks.push_back(*it) ;
     }
   }
-  debug() << "CloneRemoval kept " << tracks.size() << " out of " << alltracks.size() << " tracks." << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "CloneRemoval kept " << tracks.size() << " out of " << alltracks.size() << " tracks." << endmsg ;
 }
 
 StatusCode HltTrackConverter::execute() 
@@ -249,7 +251,7 @@ StatusCode HltTrackConverter::execute()
   LHCb::Track::Vector tracks ;
   const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>(LHCb::HltSelReportsLocation::Default);
   if ( msgLevel(MSG::DEBUG) ) 
-    debug() << "Retrieved HltSelReports with size: " << selReports->size() << endreq ;
+    debug() << "Retrieved HltSelReports with size: " << selReports->size() << endmsg ;
   for (std::vector<std::string>::const_iterator s = m_HltLines.begin();s!= m_HltLines.end();++s) {
     const LHCb::HltObjectSummary*  selReport =  selReports->selReport(*s);
     if (selReport)
@@ -262,7 +264,9 @@ StatusCode HltTrackConverter::execute()
        it != tracks.end(); ++it) 
     trackcontainer->insert( *it ) ;
 
-  debug() << "Inserting track collection with "  << trackcontainer->size() <<" tracks to " << m_ConvertedTracksDestignation << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Inserting track collection with "  << trackcontainer->size()
+            <<" tracks to " << m_ConvertedTracksDestignation << endmsg;
   put(trackcontainer,m_ConvertedTracksDestignation );
   return StatusCode::SUCCESS;
 }
@@ -281,14 +285,16 @@ namespace {
 
 void HltTrackConverter::executeRecursive(LHCb::Track::Vector& tracks, const LHCb::HltObjectSummary& SelRep) const
 {
-  debug() << "called executeRecursive(" <<  SelRep << ");" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "called executeRecursive(" <<  SelRep << ");" << endmsg;
   SmartRefVector <LHCb::HltObjectSummary> substructure = SelRep.substructure();
   for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator child = substructure.begin();child!=substructure.end();++child)
     if( *child ) executeRecursive(tracks, **child);
 
-  if (SelRep.summarizedObjectCLID() ==  LHCb::Track::classID() )  
-    debug() << "found track" << endmsg; //never prints anything
-  else
+  if (SelRep.summarizedObjectCLID() ==  LHCb::Track::classID() ) {
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "found track" << endmsg; //never prints anything
+  } else
     if (m_requireTrackClassID) return; 
 
   // collect the LHCbIDs
@@ -297,7 +303,7 @@ void HltTrackConverter::executeRecursive(LHCb::Track::Vector& tracks, const LHCb
   for (std::vector<LHCb::LHCbID>::iterator it = LhcbIDs.begin();it!=LhcbIDs.end();++it)
     if (m_UseHitsFromLookupTable[it->detectorType()]) {
       if( it->isOT() && it->otID().straw()==0 ) 
-	warning() << "Skipping invalid LHCbID: " << *it << endreq ;
+	warning() << "Skipping invalid LHCbID: " << *it << endmsg ;
       else {
 	acceptedlhcbids.push_back(*it) ;
 	if ( msgLevel(MSG::DEBUG) ) 
@@ -330,7 +336,7 @@ void HltTrackConverter::executeRecursive(LHCb::Track::Vector& tracks, const LHCb
 	if( aninfo != numericalInfo.end() ) 
 	  (state.*(ifield->function))( aninfo->second ); 
 	else {
-	  warning() << "Cannot find numerical info for field " << ifield->name << endreq ;
+	  warning() << "Cannot find numerical info for field " << ifield->name << endmsg ;
 	  stateIsValid = false ;
 	}
       }

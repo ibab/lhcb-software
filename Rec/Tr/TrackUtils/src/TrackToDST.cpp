@@ -1,10 +1,3 @@
-// $Id: TrackToDST.cpp,v 1.14 2009-11-11 12:47:10 cattanem Exp $
-//
-// This File contains the implementation of the TsaEff
-// C++ code for 'LHCb Tracking package(s)'
-//
-
-
 // BOOST
 #include <boost/assign/list_of.hpp> // for 'map_list_of()
 // Gaudi
@@ -18,7 +11,7 @@ using namespace LHCb;
 using namespace std;
 using namespace boost::assign; // bring 'map_list_of()' into scope
 
-DECLARE_ALGORITHM_FACTORY( TrackToDST );
+DECLARE_ALGORITHM_FACTORY( TrackToDST )
 
 TrackToDST::TrackToDST(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -144,8 +137,9 @@ void TrackToDST::cleanStates(Track* aTrack, const SLocations& loc) const{
       tempCont.push_back(state->clone());
     else if( *iterL!= LHCb::State::V0Vertex) {
       Warning("Failed to find state - more info in DEBUG",StatusCode::SUCCESS,1).ignore();
-      debug() << "Missing state at " << *iterL << " on track " << aTrack->key() 
-              << " of type " << aTrack->type() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Missing state at " << *iterL << " on track " << aTrack->key() 
+                << " of type " << aTrack->type() << endmsg;
     }
   } // loca
 

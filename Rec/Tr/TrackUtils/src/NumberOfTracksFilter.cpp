@@ -1,4 +1,3 @@
-// $Id: NumberOfTracksFilter.cpp,v 1.2 2009-11-11 12:47:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( NumberOfTracksFilter );
+DECLARE_ALGORITHM_FACTORY( NumberOfTracksFilter )
 
 
 //=============================================================================

@@ -1,4 +1,3 @@
-// $Id: TrackAddNNGhostId.cpp,v 1.2 2009-10-23 12:21:32 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@
 using namespace LHCb;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackAddNNGhostId );
+DECLARE_ALGORITHM_FACTORY( TrackAddNNGhostId )
 
 
 //=============================================================================

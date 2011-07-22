@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
+
 !========================= TrackUtils v1r42 2011-06-15 =========================
 ! 2011-06-14 - Wouter Hulsbergen
  - TrackEventCloneKiller:

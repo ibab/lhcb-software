@@ -1,4 +1,3 @@
-// $Id: HltInsertTrackErrParam.cpp,v 1.2 2009-11-11 12:47:10 cattanem Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h"
 #include <math.h>
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltInsertTrackErrParam );
+DECLARE_ALGORITHM_FACTORY( HltInsertTrackErrParam )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -55,7 +54,7 @@ StatusCode HltInsertTrackErrParam::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   printParams( m_xParams, "X");
   printParams( m_yParams, "Y");
@@ -95,7 +94,7 @@ void HltInsertTrackErrParam::printParams( std::vector<double>& params,
 //=============================================================================
 StatusCode HltInsertTrackErrParam::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   /// @todo Should use some HltAlgorithm method to get access to tracks anywhere
 
@@ -219,7 +218,7 @@ StatusCode HltInsertTrackErrParam::insertParamInState( LHCb::State* state ){
 //  Finalize
 //=============================================================================
 StatusCode HltInsertTrackErrParam::finalize() {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

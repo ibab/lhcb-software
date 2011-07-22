@@ -1,9 +1,3 @@
-// $Id: TrackCloneCleaner.cpp,v 1.4 2009-11-11 12:47:10 cattanem Exp $
-//
-// This File contains the implementation of the TsaEff
-// C++ code for 'LHCb Tracking package(s)'
-//
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -12,7 +6,7 @@
 using namespace LHCb;
 using namespace boost::lambda;
 
-DECLARE_ALGORITHM_FACTORY( TrackCloneCleaner );
+DECLARE_ALGORITHM_FACTORY( TrackCloneCleaner )
 
 TrackCloneCleaner::TrackCloneCleaner(const std::string& name,
                                      ISvcLocator* pSvcLocator):
@@ -40,7 +34,7 @@ StatusCode TrackCloneCleaner::execute()
   Tracks* trackCont = get<Tracks>(m_inputLocation);
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Found " << trackCont->size() << " Tracks at " << m_inputLocation << endreq;
+    verbose() << "Found " << trackCont->size() << " Tracks at " << m_inputLocation << endmsg;
   }
 
   // Get the clone libnker info
@@ -84,13 +78,13 @@ StatusCode TrackCloneCleaner::execute()
                 << " " << iterW->track->history()
                 << " chi2=" << iterW->chi2()
                 << " nMeas=" << iterW->nLHCbIDs()
-                << endreq;
+                << endmsg;
     }
 
     // skips if already tagged as a rejected clone
     if ( iterW->clone )
     {
-      verbose() << " -> Already flagged as a clone. Skipping" << endreq;
+      verbose() << " -> Already flagged as a clone. Skipping" << endmsg;
       continue;
     }
 
@@ -106,7 +100,7 @@ StatusCode TrackCloneCleaner::execute()
         {
           verbose() << " -> Clone track key=" << cloneTrack->key() << " " << cloneTrack->history()
                     << " dist=" << dist
-                    << endreq;
+                    << endmsg;
         }
         // check clone cut
         if ( dist < m_cloneCut )
@@ -123,7 +117,7 @@ StatusCode TrackCloneCleaner::execute()
               {
                 verbose() << "  -> Flagging track " << iter->track
                           << " key=" << iter->track->key() << " "
-                          << iter->track->history() << " as a clone" << endreq;
+                          << iter->track->history() << " as a clone" << endmsg;
               }
               iter->track->addInfo( LHCb::Track::CloneDist, dist );
             }

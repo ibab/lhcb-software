@@ -1,4 +1,3 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.15 2009-06-26 13:04:06 wouter Exp $
 // Include files 
 // -------------
 // from STD
@@ -26,7 +25,7 @@
 // Update for speed and clone rate
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackEventCloneKiller );
+DECLARE_ALGORITHM_FACTORY( TrackEventCloneKiller )
 
 
 //=============================================================================
@@ -79,7 +78,7 @@ StatusCode TrackEventCloneKiller::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   
   m_debugLevel = msgLevel( MSG::DEBUG );
   
@@ -197,7 +196,7 @@ StatusCode TrackEventCloneKiller::execute() {
 			  << " tracks, identified "
 			  << ( allTracks.size()  - nUnique ) << " clones of which " 
 			  << nFiltered << " were not stored."
-			  << endreq;
+			  << endmsg;
 	  }
   }
 
@@ -220,7 +219,7 @@ void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
     LHCb::Tracks* inTracks = get<LHCb::Tracks>( *itInCont);
 
     if( m_debugLevel) debug() << "# Tracks in " << *itInCont
-			      << " = " << inTracks -> size() << endreq;
+			      << " = " << inTracks -> size() << endmsg;
 
     allTracks.reserve( allTracks.size() + inTracks->size());
     // loop over container
@@ -242,14 +241,14 @@ void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
     ++itInCont;
   }
   if ( m_debugLevel ) debug() << "-> total # of tracks retrieved = "
-                              << allTracks.size() << endreq;
+                              << allTracks.size() << endmsg;
 };
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode TrackEventCloneKiller::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   m_cloneFinder.release().ignore() ;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };

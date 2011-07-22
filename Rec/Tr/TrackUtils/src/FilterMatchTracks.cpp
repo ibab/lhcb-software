@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FilterMatchTracks );
+DECLARE_ALGORITHM_FACTORY( FilterMatchTracks )
 
 
 //=============================================================================
@@ -54,7 +53,8 @@ StatusCode FilterMatchTracks::execute() {
   LHCb::Tracks* forward = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
   LHCb::Tracks* match   = get<LHCb::Tracks>( LHCb::TrackLocation::Match   );
   
-  debug() << "Comparing " << forward->size() << " forward to " << match->size() << " match tracks" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Comparing " << forward->size() << " forward to " << match->size() << " match tracks" << endmsg;
 
   for ( LHCb::Tracks::iterator itForward = forward->begin(); forward->end() != itForward; ++itForward ) {
     for ( LHCb::Tracks::iterator itMatch = match->begin();  match->end() != itMatch; ++itMatch ) {
@@ -62,18 +62,22 @@ StatusCode FilterMatchTracks::execute() {
       LHCb::Track* myMatch = *itMatch;
       unsigned int nCommon = (*itForward)->nCommonLhcbIDs( *myMatch );
       if ( nCommon ==  (*itMatch)->nLHCbIDs() ) {
-        debug() << "Tracks forward " << (*itForward)->key() << " is containing match track " 
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "Tracks forward " << (*itForward)->key() << " is containing match track " 
                 << (*itMatch)->key() << " .";
         if ( m_filter ) {
           match->erase( itMatch );
           itMatch = match->begin() - 1; //== re-initialize the iterator
-          debug() << " Match track removed.";
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+            debug() << " Match track removed.";
         }
-        debug() << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << endmsg;
       }
     }
   }
-  debug() << "After filter, rests " << match->size() << " match tracks to fit" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "After filter, rests " << match->size() << " match tracks to fit" << endmsg;
 
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,3 @@
-// $Id: CreateFastTrackCollection.cpp,v 1.2 2009-04-07 09:35:07 mschille Exp $
 #include "GaudiKernel/AlgFactory.h"
 
 #include "CreateFastTrackCollection.h"
@@ -14,7 +13,7 @@
 // 2009-02-25 : Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CreateFastTrackCollection );
+DECLARE_ALGORITHM_FACTORY( CreateFastTrackCollection )
 
 
 //=============================================================================
@@ -42,7 +41,7 @@ StatusCode CreateFastTrackCollection::initialize()
     StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
     if (sc.isFailure()) return sc;  // error printed already by GaudiAlgorithm
 
-    debug() << "==> Initialize" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
     // verify job options
     if (m_inputLocations.empty()) {
@@ -74,18 +73,18 @@ StatusCode CreateFastTrackCollection::initialize()
 //=============================================================================
 StatusCode CreateFastTrackCollection::execute()
 {
-    debug() << "==> Execute" << endmsg;
-    if (!m_slowContainer) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
+  if (!m_slowContainer) {
 	// create output container and put it on TES
-	SharedObjectsContainer<LHCb::Track> *out =
+    SharedObjectsContainer<LHCb::Track> *out =
 	    new SharedObjectsContainer<LHCb::Track>;
-	put(out, m_outputLocation);
+    put(out, m_outputLocation);
 	// get all input containers in turn and put track pointers into output
-	BOOST_FOREACH(const std::string& src, m_inputLocations) {
+    BOOST_FOREACH(const std::string& src, m_inputLocations) {
 	    LHCb::Tracks *input = get<LHCb::Tracks>(src);
 	    out->insert(input->begin(), input->end());
-	}
-    } else {
+    }
+  } else {
 	// count tracks so that we can make an output container of the
 	// right size
 	std::size_t ntracks = 0;
@@ -117,9 +116,9 @@ StatusCode CreateFastTrackCollection::execute()
 //=============================================================================
 StatusCode CreateFastTrackCollection::finalize()
 {
-    debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
-    return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 // vim:tw=78:sw=4:ft=cpp
