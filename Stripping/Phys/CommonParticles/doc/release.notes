@@ -8,12 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticles v8r3 2011-07-22 =========================
 ! 2011-07-21 - Patrick Koppenburg
  - Fix tests:
    . StdAllVeryLooseMuons were not defined in StandardMuons
    . Typo in StdLoosePhi2KK (dangerous!)
 
-!========================= CommonParticles v8r3 2011-07-20 =========================
 ! 2011-07-19 - Patrick Koppenburg
  - Remove unused StdVeryLooseDplus, D0, Lambdac
 
