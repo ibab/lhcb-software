@@ -5,6 +5,8 @@ canvas        = None
 runInfoCacheName = "RunInfoCache.pck.bz2"
 runInfoCacheLoaded = False
 runInfoCache  = { }
+#histoBase = 'RICH/RiCKResLong/'
+histoBase = 'RICH/RiCKResLongTight/'
 
 # ====================================================================================
 # Main Methods
@@ -50,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v39r4' ) )
+                j = Job( application = Brunel( version = 'v40r0' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -99,11 +101,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v39r4",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v40r0",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v39r4",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v40r0",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -135,27 +137,28 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # List of DB related options to add to extraopts
     dbopts = [ ]
 
-    # Main DB
-    #mainLHCbCond = "LHCBCOND_NewRichAlign_head20100730.db"
-    #dbopts += ["CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+mainLHCbCond+"/LHCBCOND\"\n"]
+    # Main DBs
+    # LHCbCond
+    Cond = "LHCBCOND-AeroSubTiles-20110709.db"
+    dbopts += ["CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+Cond+"/LHCBCOND\"\n"]
     #dbopts += ["LHCbApp().CondDBtag = \"HEAD\"\n"]
-    #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+mainLHCbCond
-    #uploadFile("databases/"+mainLHCbCond,lfnname)
-    #mySandBoxFLNs += [lfnname]
+    lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
+    uploadFile("databases/"+Cond,lfnname)
+    mySandBoxFLNs += [lfnname]
+    # DDDB
+    Cond = "DDDB-AeroSubTiles-20110709.db"
+    dbopts += ["CondDB().PartitionConnectionString[\"DDDB\"] = \"sqlite_file:"+Cond+"/DDDB\"\n"]
+    #dbopts += ["LHCbApp().DDDBtag = \"HEAD\"\n"]
+    lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
+    uploadFile("databases/"+Cond,lfnname)
+    mySandBoxFLNs += [lfnname]
 
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
-    # Corrections for old field map
-    #dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-13062011"]
-    #dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-13062011"]
-    #dbFiles += ["2011RootFiles-RunAligned-Sobel-AveragePol0-HPDAlign-14062011"]
-
-    # Corrections for new field map
-    #dbFiles += ["TrackNewFieldMap-v5.4series"]
-    #dbFiles += ["2011MirrorAlignNewFieldMap-16062011"]
-    dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-16062011"]
-    dbFiles += ["2011RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-16062011"]
+    # Corrections
+    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-19072011"]
+    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-19072011"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -164,7 +167,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        dbFiles += ["RefInCalib-2011-V1_BR-v39r4-13062011"]
+        dbFiles += ["RefInCalib-2011-V1_BR-v40r0-13062011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -314,11 +317,11 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
     # Max/min run range
     #minMaxRun = [ 0, 99999999 ]
-    #minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
+    minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
     #minMaxRun = [ 91000, 99999999 ] # After TS
     #minMaxRun = [ 90549, 90574 ]
     #minMaxRun = [ 93098, 93127 ] # Fill 1855
-    minMaxRun = [ 93511, 93723 ] # Fills 1867, 1868 and 1871
+    #minMaxRun = [ 93511, 93723 ] # Fills 1867, 1868 and 1871
 
     # Loop over jobs
     nFailedFits = 0
@@ -646,25 +649,27 @@ def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
     # Check if file has any replicas to start with
     res = LogicalFile(lfn).getReplicas()
     OK = True
-    if len(res) == 0 :
+    if len(res) < len(sites) :
+
+        print "Uploading", pfn, "to", sites[0], lfn
 
         # First upload one copy
-        print "Uploading", pfn, "to", sites[0], lfn
-        newlfn = PhysicalFile(pfn).upload(lfn,sites[0])
-        time.sleep(30)
-        
-        if len(newlfn.getReplicas()) == 0:
-            print "Problem uploading ..."
-            OK = False
-        else:
-            print "Upload SUCCESSFUL"
+        if len(res) == 0 :
+            newlfn = PhysicalFile(pfn).upload(lfn,sites[0])
+            time.sleep(30)
+            if len(newlfn.getReplicas()) == 0:
+                print "Problem uploading ..."
+                OK = False
+
+        if OK :
+            print " -> Upload SUCCESSFUL"
             # Replicate to requested sites
             for site in sites :
                 try:
-                    print ' -> Replicating to', site
+                    print '  -> Replicating to', site
                     LogicalFile(lfn).replicate(site)
                 except Exception,e:
-                    print '  -> ERROR Replication FAILED'
+                    print '   -> ERROR Replication FAILED'
                     
     else:
         print lfn, "already exists as", res
@@ -818,15 +823,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v39r4",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v40r0",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v39r4",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v40r0",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v39r4",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v40r0",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -936,7 +941,7 @@ def fitCKExpectedHistogram(rootfile,run,rad='Rich1Gas'):
         minEntries = 100
         
         # Get the histogram
-        histName = 'RICH/RiCKResLong/'+rad+'/thetaExpect'
+        histName = globals()["histoBase"]+rad+'/thetaExpect'
         hist = rootfile.Get(histName)
         if not hist:
             
@@ -1014,7 +1019,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
         minEntries = 10000
 
         # Get the histogram
-        histName = 'RICH/RiCKResLong/'+rad+'/'+plot
+        histName = globals()["histoBase"]+rad+'/'+plot
         hist = rootfile.Get(histName)
         if not hist :
             
@@ -1227,7 +1232,7 @@ def deleteJobsWithBadRootFile(cjobs,rad='Rich1Gas'):
         # Root file
         rootfile = getRootFile(j)
 
-        histName = 'RICH/RiCKResLong/'+rad+'/thetaExpect'
+        histName = globals()["histoBase"]+rad+'/thetaExpect'
         hist = rootfile.Get(histName)
         if not hist :
             print " -> Bad ROOT file. Will delete."
@@ -1249,15 +1254,20 @@ def checkInputDataReplicas(lfns):
     return OK
 
 def filesPerJob(nFiles):
-    if nFiles == 1 : return 1
-    if nFiles == 2 : return 2
-    if nFiles == 3 : return 2
-    if nFiles == 4 : return 2
-    if nFiles == 5 : return 3
-    if nFiles < 20 : return 4
-    return 5
+    if nFiles == 1  : return 1
+    if nFiles == 2  : return 2
+    if nFiles == 3  : return 2
+    if nFiles == 4  : return 2
+    if nFiles == 5  : return 3
+    if nFiles == 6  : return 3
+    if nFiles == 7  : return 3
+    if nFiles == 8  : return 4
+    if nFiles == 9  : return 3
+    if nFiles == 10 : return 5
+    if nFiles < 20  : return 5
+    return 6
 
-def removeCalibrationDataSet(name,BrunelVer="v39r4"):
+def removeCalibrationDataSet(name,BrunelVer="v40r0"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import CondDBUI
-#from PyCool import cool
+from PyCool import cool
 import os
 import datetime
 
@@ -32,6 +32,7 @@ def genXML(root,cond):
     return data
 
 def addToDB(startTime,stopTime,rootToFiles,condPath,db):
+    #start = 0
     start = getUNIXTime(startTime) 
     #stop  = cool.ValidityKeyMax
     stop = getUNIXTime(stopTime)
@@ -70,10 +71,35 @@ def fileMD5(file):
 #dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
 #dbFileName = "2011MirrorAlign"
 
+# Mirror alignment with new field map
+#upAlign    = "/usera/jonesc/NFS/DetDB/2011MirrorsNewFieldMap/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2011MirrorsNewFieldMap/MagDown"
+#dbFileName = "2011MirrorAlignNewFieldMap"
+
 # Move HPD Occupancies
-upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
-dnAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
-dbFileName = "MoveHPDOccs"
+#upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
+#dnAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
+#dbFileName = "MoveHPDOccs"
+
+# L1 Mappings
+#upAlign = "/usera/jonesc/NFS/DetDB/L1Mapping"
+#dnAlign = "/usera/jonesc/NFS/DetDB/L1Mapping"
+#dbFileName = "DetNumbers"
+
+# MDMS
+#upAlign = "/usera/jonesc/NFS/DetDB/MDMS"
+#dnAlign = "/usera/jonesc/NFS/DetDB/MDMS"
+#dbFileName = "MDMS-NoHPDOcc"
+
+# Old HPD Occ values
+#upAlign = "/usera/jonesc/NFS/DetDB/OldHPDOcc"
+#dnAlign = "/usera/jonesc/NFS/DetDB/OldHPDOcc"
+#dbFileName = "OldHPDOccs"
+
+# Aero sub tiles
+upAlign = "/usera/jonesc/tmp/tar_Aerogel"
+dnAlign = "/usera/jonesc/tmp/tar_Aerogel"
+dbFileName = "AeroSubTiles"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -88,19 +114,19 @@ field = { }
 
 # 2010                     Year  Month  Day   Hour  Min  Sec
 field[ datetime.datetime(  2010,   4,    5,    1,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,   4,    6,    2,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,   5,    2,   18,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,   5,    3,   01,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,   5,    8,   20,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,   5,   14,   11,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,   5,   15,   15,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,   5,   19,    4,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,   7,   13,    3,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,   7,   28,   20,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,   8,   18,    7,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,   8,   29,   16,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2010,   9,   22,   15,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2010,  10,   24,    8,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   4,    6,    2,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   5,    2,   18,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   5,    3,   01,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   5,    8,   20,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   5,   14,   11,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   5,   15,   15,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   5,   19,    4,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   7,   13,    3,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   7,   28,   20,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   8,   18,    7,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   8,   29,   16,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2010,   9,   22,   15,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,  10,   24,    8,    0,   0  ) ] = dnAlign
 # End of 2010
 #stop = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
 
@@ -110,8 +136,13 @@ field[ datetime.datetime(  2011,   3,   26,   18,   20,   0  ) ] = upAlign
 field[ datetime.datetime(  2011,   3,   27,   21,   15,   0  ) ] = dnAlign
 field[ datetime.datetime(  2011,   4,   15,    2,   40,   0  ) ] = upAlign
 field[ datetime.datetime(  2011,   4,   26,   23,   20,   0  ) ] = dnAlign
+field[ datetime.datetime(  2011,   6,   11,    2,    0,   0  ) ] = upAlign
+
 # End of 2011
-stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
+#stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
+
+# Long way away ...
+stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
 
 # Open a new DB file
 fulDBname = dbFileName + "-" + dateString() + ".db"

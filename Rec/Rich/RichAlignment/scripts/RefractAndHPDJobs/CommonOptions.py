@@ -4,17 +4,20 @@ from Configurables import Brunel, LHCbApp, CondDB
 # For 2009 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2009.py")
 #LHCbApp().DDDBtag   = "head-20110303"
-#LHCbApp().CondDBtag = "head-20110524"
+#LHCbApp().CondDBtag = "head-20110622"
 
 # For 2010 data
 #importOptions("$APPCONFIGOPTS/Brunel/DataType-2010.py")
 #LHCbApp().DDDBtag   = "head-20110303"
-#LHCbApp().CondDBtag = "head-20110524"
+#LHCbApp().CondDBtag = "head-20110622"
 
 # For 2011 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
 LHCbApp().DDDBtag   = "head-20110302" 
 LHCbApp().CondDBtag = "head-20110622"
+# Aerogel Sub Tiles
+CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
+CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
 
 # No output files
 Brunel().OutputType = "None"
@@ -25,7 +28,7 @@ Brunel().RecoSequence = ["Decoding","VELO","TT","IT","OT","Tr","Vertex","RICH"]
 from Configurables import RichRecSysConf
 rConf = RichRecSysConf("RichOfflineRec")
 
-# Disable Aerogel (Not being calibrated)
+# Which radiators
 #rConf.Radiators = [ "Rich1Gas","Rich2Gas" ]
 
 # Photon selection options
@@ -44,7 +47,7 @@ from Configurables import RichRecQCConf
 rMoni = RichRecQCConf("OfflineRichMoni")
 rMoni.removeMonitors ( ["HPDIFBMonitoring","PidMonitoring","TracklessRingAngles"] )
 # Open up the CK res plot range, for the Wide photon selection
-rMoni.CKThetaResRange = [ 0.03, 0.008, 0.004 ]
+rMoni.CKThetaResRange = [ 0.045, 0.008, 0.004 ]
 # Add HPD occ plots
 rMoni.addMonitor("HPDHitPlots")
 
