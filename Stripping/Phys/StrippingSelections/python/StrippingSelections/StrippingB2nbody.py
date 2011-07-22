@@ -170,7 +170,7 @@ confdict={'2body':confdict_2body, '3body':confdict_3body}
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, MergedSelection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, MergedSelection, DataOnDemand, VoidEventSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
@@ -397,7 +397,7 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
 
 
 
-    # Define the particles (skip D_s+ since it's called D+)
+    # Define the particles
     particles=[]
     if doPi: particles.append(particle(        "pi+"       ,1,  +1,  0))
     if doPi: particles.append(particles[-1].CP("pi-"       ))
@@ -517,7 +517,14 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
 
     #make a selection
     _B=CombineParticles(DecayDescriptors = descriptors, CombinationCut = _combinationCuts, MotherCut = _motherCuts)
-    return Selection(name, Algorithm = _B, RequiredSelections = [InputSel] )
+
+    #make a preselection
+    _presel=VoidEventSelection("preselFor"+name,
+                               Code="(CONTAINS('%s')> %3.1f)"%(InputSel.outputLocation(),nbody-0.5 ),
+                               RequiredSelection=InputSel
+                               )
+
+    return Selection(name, Algorithm = _B, RequiredSelections = [_presel] )
 
 from StandardParticles import StdLoosePions
 def makePi(name, MinPiPt, MinPiIPChi2DV, MaxPiChi2, MinPiPIDK, MinPiPIDp) :
