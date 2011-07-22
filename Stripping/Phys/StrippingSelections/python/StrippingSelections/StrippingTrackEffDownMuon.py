@@ -33,7 +33,8 @@ import GaudiKernel.ProcessJobOptions
 from GaudiKernel.SystemOfUnits import mm
 
 from GaudiConfUtils.ConfigurableGenerators import TisTosParticleTagger
-from StandardParticles import StdLooseMuons
+from StandardParticles import StdAllLooseMuons
+#from StandardParticles import StdLooseMuons
 from Configurables import GaudiSequencer
 from Configurables import TrackToDST
 from Configurables import TrackSys
@@ -50,17 +51,17 @@ from SelPy.utils import ( UniquelyNamedObject,
 #name = "TrackEffDownMuonLine"
 
 confdict={
-			'MuMom':		1000.	# MeV
-		,	'MuTMom':		100.	# MeV
+			'MuMom':		2000.	# MeV
+		,	'MuTMom':		200.	# MeV
 		,	'TrChi2':		10.	# MeV
 		,	'MassPreComb':		2000.	# MeV
 		,	'MassPostComb':		200.	# MeV
 		,	'Doca':			5.	# mm
 		,	'VertChi2':		25.	# adimensional
-                ,       'DataType':             '2010'        
-		,	'NominalLinePrescale':  1.
+                ,       'DataType':             '2011'        
+		,	'NominalLinePrescale':  0.2 # proposal: 0.2 to stay below 0.15% retention rate 
 		,	'NominalLinePostscale': 1.
-		,	'ValidationLinePrescale': 0.5
+		,	'ValidationLinePrescale':0.003 #0.5 in stripping15: 0.1 gives 1.42% retention rate
 		,	'ValidationLinePostscale': 1.
 		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 		,	'HLT1PassOnAll': True
@@ -246,7 +247,8 @@ def selHlt1Jpsi(name, HLT1TisTosSpecs, HLT1PassOnAll):
    Hlt1Jpsi.PassOnAll = HLT1PassOnAll
    #Hlt1Jpsi.PassOnAll = True # TESTING!
    #
-   return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ StdLooseMuons ])
+   return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ StdAllLooseMuons ])
+   #return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ StdLooseMuons ])
 
 #########################################################
 def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):

@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-07-22 - Andreas Jaeger
+ - StrippingTrackEffDownMuon.py
+ - Updated StdLooseMuons-> StdAllLooseMuons
+ - changes in default confdict: new prescales + tightened cuts
+
 ! 2011-07-22 - Sebastian Bachmann
  - StrippingX2D0D0.py
  - Updated particle containers to 'All' type
