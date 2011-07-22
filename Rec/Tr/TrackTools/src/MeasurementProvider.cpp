@@ -1,4 +1,3 @@
-// $Id: MeasurementProvider.cpp,v 1.46 2010-04-13 09:17:45 cocov Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -25,7 +24,7 @@ using namespace LHCb;
 // 2005-04-14 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MeasurementProvider );
+DECLARE_TOOL_FACTORY( MeasurementProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -70,7 +69,8 @@ MeasurementProvider::~MeasurementProvider() {};
 //=============================================================================
 StatusCode MeasurementProvider::initialize() 
 {
-  debug() << "MeasurementProvider::initialize()" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "MeasurementProvider::initialize()" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
@@ -122,9 +122,9 @@ StatusCode MeasurementProvider::initialize()
 
 StatusCode MeasurementProvider::finalize() 
 {
-  
-  debug() << "In MeasurementProvider::finalize. Releasing tool handles." << endreq ;
-  StatusCode sc = GaudiTool::finalize() ;
+  StatusCode sc;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "In MeasurementProvider::finalize. Releasing tool handles." << endmsg ;
   // make sure to release all toolhandles
   if(!m_ignoreVelo) {
     sc = m_veloRProvider.release() ;
@@ -152,6 +152,7 @@ StatusCode MeasurementProvider::finalize()
     sc = m_muonProvider.release() ;
     if (sc.isFailure()) return sc;
   }
+  sc = GaudiTool::finalize() ;
   return sc ;
 }
 
@@ -179,7 +180,7 @@ StatusCode MeasurementProvider::load( Track& track ) const
                 << " channelID, detectorType = "
                 << id.channelID() << " , " << id.detectorType()
                 << "  -> Measurement loading skipped for this LHCbID!"
-                << endreq;
+                << endmsg;
     } else newids.push_back( id ) ;
   }
   

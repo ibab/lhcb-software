@@ -1,4 +1,3 @@
-// $Id: TrackPtKick.cpp,v 1.14 2008-07-19 20:35:46 cattanem Exp $
 // Include files
 // -------------
 
@@ -28,7 +27,7 @@
 // 2006-07-24 : M Needham - tune for DC 06
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackPtKick );
+DECLARE_TOOL_FACTORY( TrackPtKick )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -68,7 +67,7 @@ StatusCode TrackPtKick::initialize()
   
   info() << " Pt kick parameters(" << m_ParabolicCorrection.size()
          << ") ==" <<m_ParabolicCorrection[0] << " + " 
-         << m_ParabolicCorrection[1] <<" tx^2 " <<endreq;
+         << m_ParabolicCorrection[1] <<" tx^2 " <<endmsg;
 
   sc = determineFieldPolarity();
   if (sc.isFailure()){
@@ -151,7 +150,7 @@ StatusCode TrackPtKick::calculate( const LHCb::State* tState,
   }  
   else {
     // can't estimate momentum or charge
-    error() << "B integral is 0!" << endreq;
+    error() << "B integral is 0!" << endmsg;
     sc = StatusCode::FAILURE;
   }
 

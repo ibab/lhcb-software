@@ -1,4 +1,3 @@
-// $Id: StandaloneMuonRec.cpp,v 1.18 2010-03-02 11:19:18 gligorov Exp $
 // Include files 
 
 #include <algorithm>
@@ -27,7 +26,7 @@
 // 2011-03-03 : Paul Seyfert
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( StandaloneMuonRec );
+DECLARE_ALGORITHM_FACTORY( StandaloneMuonRec )
 
 using namespace LHCb;
 
@@ -57,7 +56,7 @@ StatusCode StandaloneMuonRec::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // Counters
   m_countEvents = 0;
@@ -81,10 +80,10 @@ StatusCode StandaloneMuonRec::initialize() {
   //retrieve the pointer to the tool to convert tileID to x,y,z in a fast way (using a LUT)
 
   m_iPosTool  = tool<IMuonFastPosTool>( "MuonFastPosTool" );
-  if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
+  if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endmsg;
 
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-  if(!m_muonBuffer)info()<<"error retrieving the decoding tool "<<endreq;
+  if(!m_muonBuffer)info()<<"error retrieving the decoding tool "<<endmsg;
 
 
   //all geometry stuff
@@ -109,7 +108,8 @@ StatusCode StandaloneMuonRec::initialize() {
   m_stationL1Start[0]=0;
   
   for(int station=0;station<5;station++){
-    debug()<<"station number "<<station<<endreq;    
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug()<<"station number "<<station<<endmsg;    
     std::string cablingBasePath=getBasePath(station);    
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
@@ -123,7 +123,7 @@ StatusCode StandaloneMuonRec::initialize() {
     m_stationL1Stop[station]= m_totL1Board ;    
   }
   //skip M1 in the decoding and reconstruction
-  debug()<<"boards "<<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<"boards "<<endmsg;
   
   m_L1BoardStart=4;  
   m_L1BoardStop= m_totL1Board; 
@@ -134,27 +134,30 @@ StatusCode StandaloneMuonRec::initialize() {
     m_station.push_back( StandaloneMuonStationRec(msgSvc()));
     for(unsigned int region = 0 ; region < m_nRegion ; region++ ){      
       //set some parameters 
-      debug()<<station<<" "<<region<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<station<<" "<<region<<endmsg;
       m_station[station].region().push_back( new StandaloneMuonRegion() );
     }
   }
   
   //set some usefull info about the layout of the muon system
 
-  debug()<<"boards "<<endreq;  
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<"boards "<<endmsg;  
   for(unsigned int station=0;station<m_nStation;station++){
     for(unsigned int region = 0 ; region < m_nRegion ; region++ ){
       unsigned int numLayout=m_muonDetector->getLogMapInRegion(station,region);
       StandaloneMuonRegion *r = m_station[station].region(region);
       r->setLayoutNumber(numLayout);
-      debug()<<"numLayout "<<numLayout<<endreq;  
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<"numLayout "<<numLayout<<endmsg;  
       for(unsigned int which_layout=0;which_layout<numLayout;which_layout++){
         int xMap=m_muonDetector->getLayoutX (which_layout, station,region);          
         int yMap=m_muonDetector->getLayoutY (which_layout, station,region); 
         r-> setLayoutGridX(which_layout,(unsigned int) xMap);
         r-> setLayoutGridY(which_layout,(unsigned int) yMap); 
       }
-      debug()<<"numLayout "<<numLayout<<endreq;  
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<"numLayout "<<numLayout<<endmsg;  
       if(numLayout>1){
         int gridx1=r-> layoutGridX(0);
         int gridx2=r-> layoutGridX(1);
@@ -202,7 +205,7 @@ StatusCode StandaloneMuonRec::initialize() {
 
     m_station[station].setZ( zSta );
     //set cut for muon reconstruction
-    debug()<<" station "<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<" station "<<endmsg;
     
     if(station==1){
       m_station[station].setMaxY(60.0,0);
@@ -244,7 +247,7 @@ StatusCode StandaloneMuonRec::initialize() {
 //=============================================================================
 StatusCode StandaloneMuonRec::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   setFilterPassed(true);
 
@@ -337,7 +340,8 @@ StatusCode StandaloneMuonRec::execute() {
   }
   
   m_muonTracks.clear();
-  debug()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<<" stored candidates "<<m_countMuonCandidates<<endmsg; 
   
   return StatusCode::SUCCESS;
 };
@@ -347,7 +351,7 @@ StatusCode StandaloneMuonRec::execute() {
 //=============================================================================
 StatusCode StandaloneMuonRec::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   //to avoid menmory leak delete the regions created in initialize
   std::vector<StandaloneMuonStationRec>::iterator itSt;
   for (itSt=m_station.begin();itSt<m_station.end();itSt++){
@@ -358,9 +362,9 @@ StatusCode StandaloneMuonRec::finalize() {
     }    
   }
   
-  info () << "Number of events processed: " << double(m_countEvents) << endreq;
+  info () << "Number of events processed: " << double(m_countEvents) << endmsg;
   info () << "Average number of muon tracks: " 
-          << double(m_countMuCandidates)/double(m_countEvents) << endreq;
+          << double(m_countMuCandidates)/double(m_countEvents) << endmsg;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };
@@ -394,7 +398,8 @@ StatusCode StandaloneMuonRec::decodeBuffer() {
     }
     
     it=it+4*skip;
-    verbose()<<" skipping "<< skip <<" bytes words "<<endreq;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+      verbose()<<" skipping "<< skip <<" bytes words "<<endmsg;
     
     // how many ODE in this tell1?
     unsigned int nODE=m_ODENumberInTell1[(*itB)->sourceID()];
@@ -525,7 +530,7 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
           // set flags to used on iOne and iTwo
                 //    info()<<"crossed "<<pad.station()<<" "<<
         //   pad.nX()<<" "<<pad.nY()<<" "<<
-         //  x<<" "<<y<<endreq;
+         //  x<<" "<<y<<endmsg;
           itTileX->second = true;
           itTileY->second = true;                                    
         }
@@ -562,7 +567,7 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
           
           m_iPosTool-> calcTilePos(pad,x, dx,y, dy,z, dz);
           thisRegion->addPoint( x, y,pad );          
-//               info()<<"pad "<<pad.station()<<" "<<x<<" "<<y<<endreq;
+//               info()<<"pad "<<pad.station()<<" "<<x<<" "<<y<<endmsg;
           
           //          padTiles.push_back( pad );
         }
@@ -593,7 +598,7 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
           
           m_iPosTool-> calcTilePos(pad,x, dx,y, dy,z, dz);
           thisRegion->addPoint( x, y,pad );          
-//                   info()<<"pad "<<pad.station()<<" "<<x<<" "<<y<<endreq;
+//                   info()<<"pad "<<pad.station()<<" "<<x<<" "<<y<<endmsg;
           //          padTiles.push_back( pad );
             
         }
@@ -653,13 +658,13 @@ StatusCode StandaloneMuonRec::muonSearch()
     for(itM5=thisRegion->points().begin();itM5<thisRegion->points().end();
         itM5++){
       //serach coincidence in M4
-      //info()<<"seed "<<(*itM5).x()<<" "<<(*itM5).y()<<endreq;          
+      //info()<<"seed "<<(*itM5).x()<<" "<<(*itM5).y()<<endmsg;          
       StandaloneMuonPoint* bestCandidateM4=NULL;
       double x=(*itM5).x()*m_station[3].z()/m_station[4].z();
       double y=(*itM5).y()*m_station[3].z()/m_station[4].z();        
       unsigned int regionM5=(*itM5).tile().region();
       m_station[3].findCoincidence(x,y,regionM5,bestCandidateM4);
-      // info()<<"M4 concidence "<<x<<" "<<y<<" "<<bestCandidateM4<<endreq;
+      // info()<<"M4 concidence "<<x<<" "<<y<<" "<<bestCandidateM4<<endmsg;
       
       if(bestCandidateM4==NULL)continue;
 
@@ -682,7 +687,7 @@ StatusCode StandaloneMuonRec::muonSearch()
       StandaloneMuonPoint* bestCandidateM3=NULL;
       unsigned int regionM4=(bestCandidateM4)->tile().region();
       m_station[2].findCoincidence(x,y,regionM4,bestCandidateM3);
-      //            info()<<"M3 concidence "<<bestCandidateM3<<endreq;
+      //            info()<<"M3 concidence "<<bestCandidateM3<<endmsg;
       
       if(bestCandidateM3==NULL)continue;      
 
@@ -706,29 +711,29 @@ StatusCode StandaloneMuonRec::muonSearch()
       m_station[1].findCoincidence(x,y,regionM3,bestCandidateM2);
       if(bestCandidateM2==NULL)continue;
 
-      //            info()<<"M2 concidence "<<bestCandidateM2<<endreq;
+      //            info()<<"M2 concidence "<<bestCandidateM2<<endmsg;
 
-      /*      info()<<" muon  M5 "<<(*itM5).x()<<" "<<(*itM5).y()<<endreq;
+      /*      info()<<" muon  M5 "<<(*itM5).x()<<" "<<(*itM5).y()<<endmsg;
       //info()<<" muon  M4 "<<bestCandidateM4->x()<<" "<<
-      //  bestCandidateM4->y()<<endreq;
+      //  bestCandidateM4->y()<<endmsg;
       //info()<<" muon  M3 "<<bestCandidateM3->x()<<" "<<
-       // bestCandidateM3->y()<<endreq;
+       // bestCandidateM3->y()<<endmsg;
       //info()<<" muon  M2 "<<bestCandidateM2->x()<<" "<<
-      //bestCandidateM2->y()<<endreq;*/
+      //bestCandidateM2->y()<<endmsg;*/
 
       //create the muon track
-      //info()<<"ciao "<<m_muonTracks.size()<<endreq;
+      //info()<<"ciao "<<m_muonTracks.size()<<endmsg;
       StandaloneMuonTrack muon;
       muon.setPoint(1,*bestCandidateM2);
       muon.setPoint(2,*bestCandidateM3);
       muon.setPoint(3,*bestCandidateM4);
       muon.setPoint(4,*itM5);
-      //info()<<"ciao prima "<<m_muonTracks.size()<<endreq;
+      //info()<<"ciao prima "<<m_muonTracks.size()<<endmsg;
       m_muonTracks.push_back(muon);      
-      //info()<<"ciao dopo "<<m_muonTracks.size()<<endreq;
+      //info()<<"ciao dopo "<<m_muonTracks.size()<<endmsg;
     }    
   }  
-  //info()<<"fine "<<m_muonTracks.size()<<endreq;
+  //info()<<"fine "<<m_muonTracks.size()<<endmsg;
   return StatusCode::SUCCESS;
   
 };
@@ -832,7 +837,7 @@ StatusCode StandaloneMuonRec::printOut()
       itMuonTrack->point(1).y()<<" "<<
       itMuonTrack->point(2).x()<< " "<<itMuonTrack->point(2).y()<<" "<<
       itMuonTrack->point(3).x()<< " "<<itMuonTrack->point(3).y()<<" "<<
-      itMuonTrack->point(4).x()<< " "<<itMuonTrack->point(4).y()<<endreq;
+      itMuonTrack->point(4).x()<< " "<<itMuonTrack->point(4).y()<<endmsg;
   }  
   return StatusCode::SUCCESS;
   
@@ -881,7 +886,8 @@ StatusCode StandaloneMuonRec::initializeLogChanDecoding()
   unsigned int countL1=0;
   
   for(int station=0;station<5;station++){
-    debug()<<"station number "<<station<<endreq;    
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<"station number "<<station<<endmsg;    
     std::string cablingBasePath=getBasePath(station);    
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
@@ -892,7 +898,8 @@ StatusCode StandaloneMuonRec::initializeLogChanDecoding()
     if(station==0)m_M1Tell1=cabling->getNumberOfL1Board();
     
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
-      debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
       std::string L1path=cablingBasePath+ cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
       unsigned totODE=0;
@@ -924,7 +931,7 @@ StatusCode StandaloneMuonRec::initializeLogChanDecoding()
           unsigned int digitOffSetY=0;          
           SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);
           for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
+            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
             unsigned int layout=TSMap->layoutOutputChannel(i);
             unsigned int  layoutX=TSMap->gridXLayout(layout);
             unsigned int  layoutY=TSMap->gridYLayout(layout);            
@@ -958,8 +965,9 @@ StatusCode StandaloneMuonRec::createCoordsFromLC(int istation)
   double x, dx, y, dy, z, dz;
 
   for(unsigned int iregion=0;iregion<m_nRegion;iregion++){
-    verbose()<<"readout "<< istation<<" "<<iregion<<" "<<
-      m_station[istation].region(iregion)->layoutNumber()<<endreq;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+      verbose()<<"readout "<< istation<<" "<<iregion<<" "<<
+        m_station[istation].region(iregion)->layoutNumber()<<endmsg;
     
     if(m_station[istation].region(iregion)->layoutNumber()==1){
       //already pads!!!!
@@ -971,16 +979,16 @@ StatusCode StandaloneMuonRec::createCoordsFromLC(int istation)
         
         m_iPosTool-> calcTilePos(*itTile,x, dx,y, dy,z, dz);
         
-        //          info()<<istation<<" "<<iregion<<" "<<x<<" "<<y<<endreq;
+        //          info()<<istation<<" "<<iregion<<" "<<x<<" "<<y<<endmsg;
         thisRegion->addPoint( x, y,  *itTile );
       }        
       //info()<<"no crossing "<<istation<<" "<<iregion<<" "<<
-      //  ((m_station[istation].region(iregion))->tiles()).size()<<endreq;
+      //  ((m_station[istation].region(iregion))->tiles()).size()<<endmsg;
     }else if(m_station[istation].region(iregion)->layoutNumber()==2){
       //strips: need to crsso 2 layout!!!
       crossStrips(istation,iregion);
       //verbose()<<"crossing "<<istation<<" "<<iregion<<" "<<
-      //  ((m_station[istation].region(iregion))->tiles()).size()<<endreq;
+      //  ((m_station[istation].region(iregion))->tiles()).size()<<endmsg;
     }      
   }
   

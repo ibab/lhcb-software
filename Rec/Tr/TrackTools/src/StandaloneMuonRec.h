@@ -1,4 +1,3 @@
-// $Id: StandaloneMuonRec.h,v 1.8 2010-02-12 07:49:12 graven Exp $
 #ifndef STANDALONEMUON_H 
 #define STANDALONEMUON_H 1
 

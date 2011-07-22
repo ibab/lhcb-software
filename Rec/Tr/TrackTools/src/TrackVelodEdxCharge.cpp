@@ -4,9 +4,6 @@
  *
  * Implementation file for tool TrackVelodEdxCharge
  *
- * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.9 2010-03-25 09:22:10 dhcroft Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
  */
@@ -21,7 +18,7 @@
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackVelodEdxCharge );
+DECLARE_TOOL_FACTORY( TrackVelodEdxCharge )
 
 //-----------------------------------------------------------------------------
 
@@ -63,7 +60,7 @@ StatusCode TrackVelodEdxCharge::initialize()
 
   info() << "VELO dE/dx charge parameters :"
          << " normalisation = " << m_Normalisation
-         << " ratio = " << m_Ratio <<endreq;
+         << " ratio = " << m_Ratio <<endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -77,7 +74,7 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   if ( !track ) return Warning( "Null track pointer passed" );
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Trying Track " << track->key() << endreq;
+    debug() << "Trying Track " << track->key() << endmsg;
 
   // get the measurements for the track
   typedef LHCb::Track::MeasurementContainer TkMeas ;
@@ -85,7 +82,7 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   if ( measurements.empty() ) return Warning( "Track has no Measurements" );
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Found " << measurements.size() << " Measurements" << endreq;
+    debug() << " -> Found " << measurements.size() << " Measurements" << endmsg;
 
   // Fill a temp vector with the velo clusters
   std::vector<const LHCb::VeloMeasurement*> veloMeas; veloMeas.reserve(32);
@@ -105,7 +102,7 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
 
   // how many charges where found
   if ( msgLevel(MSG::DEBUG) ){
-    debug() << "  -> Found " << veloMeas.size() << endreq;
+    debug() << "  -> Found " << veloMeas.size() << endmsg;
   }
 
   if ( !veloMeas.empty() ){
@@ -115,7 +112,7 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   {
     // no velo clusters found
     if ( msgLevel(MSG::DEBUG) )
-    debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endreq; 
+    debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endmsg; 
     return StatusCode::FAILURE;
   }
 

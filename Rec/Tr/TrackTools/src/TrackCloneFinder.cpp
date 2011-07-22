@@ -1,4 +1,3 @@
-// $Id: TrackCloneFinder.cpp,v 1.16 2009-11-12 16:25:33 kholubye Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -22,7 +21,7 @@
 // 2009-09-10: Kostyantyn Holubyev
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackCloneFinder );
+DECLARE_TOOL_FACTORY( TrackCloneFinder )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -95,7 +94,7 @@ bool TrackCloneFinder::flagClones( LHCb::Track& track1,
 	track1.setFlag( LHCb::Track::Clone, true );
     } else {
         if ( m_debugLevel ) 
-            debug() << "At least one of the tracks is not fitted, selecting a clone randomly" << endreq; 
+            debug() << "At least one of the tracks is not fitted, selecting a clone randomly" << endmsg; 
         // for fast reco sequence the clone killer is run before the fit,
         // so chi2 is not available. However, in most cases the decision is
         // made using the number n of LHCb IDs, so for the rare case when n1==n2
@@ -119,7 +118,7 @@ bool TrackCloneFinder::areClones( const LHCb::Track& track1,
     debug() << "Looking at tracks " << track1.key() << " in "
             << track1.parent() -> name() << " and "
             << track2.key() << " in "
-            << track2.parent() -> name() << endreq;
+            << track2.parent() -> name() << endmsg;
   }
   
   //If we want to speed up the time for clonesearch we can look only on clones
@@ -140,7 +139,7 @@ bool TrackCloneFinder::areClones( const LHCb::Track& track1,
       theyAreClones = nHitsCommon > m_matchingFractionT*nTrackMin ;
     }
     
-    if ( m_debugLevel ) debug() << "-> areClones = " << theyAreClones << endreq;
+    if ( m_debugLevel ) debug() << "-> areClones = " << theyAreClones << endmsg;
   }
   return theyAreClones ;
 }

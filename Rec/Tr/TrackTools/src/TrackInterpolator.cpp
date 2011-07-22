@@ -1,4 +1,3 @@
-// $Id: TrackInterpolator.cpp,v 1.11 2009-10-30 14:39:39 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -33,7 +32,7 @@ using namespace LHCb;
 // 2006-10-06 : Jeroen van Tilburg
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackInterpolator );
+DECLARE_TOOL_FACTORY( TrackInterpolator )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -131,9 +130,10 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
     state = extrapolationnode->state() ;
     sc = m_extrapolator -> propagate( state, z ) ;
     if( !sc.isSuccess() ) {
-      debug() << "Failure with normal extrapolator: z_target = " << z 
-	      << " track type = " << track.type() << std::endl
-	      << "state = " << extrapolationnode->state() << endmsg ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Failure with normal extrapolator: z_target = " << z 
+                << " track type = " << track.type() << std::endl
+                << "state = " << extrapolationnode->state() << endmsg ;
       return Warning("Failure extrapolating outside measurement range",StatusCode::FAILURE,0) ;
     }
     return sc ;
@@ -145,7 +145,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   
   if( (z-nodeNext->z()) * (z-nodePrev->z()) > 0 ) {
     error() << "logic failure in locating nodes: " 
-	    << z << ", " << nodePrev->z() << "," << nodeNext->z() << endreq ;
+	    << z << ", " << nodePrev->z() << "," << nodeNext->z() << endmsg ;
     return StatusCode::FAILURE ;
   }
   
@@ -167,16 +167,18 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   // extrapolate the upstream and downstream states
   sc = m_extrapolator -> propagate( stateDown, z );  
   if( sc.isFailure() ) {
-    debug() << "Error propagating downstream state to z = " << z << std::endl
-	    << "state = " << stateDown << endreq ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Error propagating downstream state to z = " << z << std::endl
+              << "state = " << stateDown << endmsg ;
     return Warning("Failure propagating downstream state",StatusCode::FAILURE,0) ;
   }
   
   sc = m_extrapolator -> propagate( stateUp  , z );
   if( sc.isFailure() ) {
-    debug() << "Error propagating upstream state to z = " << z 
-	    << " tracktype = " << track.type() << std::endl 
-	    << "state = " << stateUp << endreq ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Error propagating upstream state to z = " << z 
+              << " tracktype = " << track.type() << std::endl 
+              << "state = " << stateUp << endmsg ;
     return Warning("Failure propagating upstream state",StatusCode::FAILURE,0) ;    
   }
   
@@ -203,7 +205,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   stateX = stateC * ((invStateDownC * stateDownX) + (invStateUpC * stateUpX)) ;
   state.setZ( z );   
 
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "filteredstate A: "
   	    << stateUpX << std::endl
   	    << "filteredstate B: "
@@ -213,7 +215,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   	    << "smoothed state B: "
   	    << nodeNext->state() 
   	    << "interpolated state: "
-  	    << state << endreq ;
+  	    << state << endmsg ;
 
   return StatusCode::SUCCESS;
 };

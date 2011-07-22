@@ -1,5 +1,3 @@
-// $Id: OTMeasurementProvider.cpp,v 1.6 2009-07-08 14:14:52 wouter Exp $
-
 /** @class OTMeasurementProvider OTMeasurementProvider.cpp
  *
  * Implementation of VeloRMeasurementProvider tool
@@ -45,7 +43,7 @@ public:
                           const LHCb::ZTrajectory& reftraj) const ;
 
   StatusCode load( LHCb::Track&  ) const {
-    info() << "sorry, MeasurementProviderBase::load not implemented" << endreq ;
+    info() << "sorry, MeasurementProviderBase::load not implemented" << endmsg ;
     return StatusCode::FAILURE ;
   }
 
@@ -62,7 +60,7 @@ private:
 //=============================================================================
 
 
-DECLARE_TOOL_FACTORY( OTMeasurementProvider );
+DECLARE_TOOL_FACTORY( OTMeasurementProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -117,7 +115,7 @@ inline LHCb::OTMeasurement* OTMeasurementProvider::otmeasurement( const LHCb::LH
 {
   LHCb::OTMeasurement* meas(0) ;
   if( !id.isOT() ) {
-    error() << "Not an OT measurement" << endreq ;
+    error() << "Not an OT measurement" << endmsg ;
   } else {
     LHCb::OTChannelID otid = id.otID() ;
     const DeOTModule* module = m_det->findModule( otid ) ;
@@ -172,7 +170,7 @@ double OTMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const
   double z(0) ;
   LHCb::OTChannelID otid = id.otID() ;
   const DeOTModule* module = m_det->findModule(otid) ;
-  if(module==0) error() << "Cannot find OT module for ID = " << otid << endreq ;
+  if(module==0) error() << "Cannot find OT module for ID = " << otid << endmsg ;
   else {
     // It would be nice if there were a short cut ...
     double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;

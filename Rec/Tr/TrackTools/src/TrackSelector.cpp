@@ -20,7 +20,7 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( TrackSelector );
+DECLARE_TOOL_FACTORY( TrackSelector )
 
 //-----------------------------------------------------------------------------
 
@@ -94,7 +94,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
       verbose() << "Trying Track " << aTrack.key() << " " << aTrack.type();
       if ( !aTrack.states().empty() )
         verbose() << " P=" << aTrack.p() << " Pt=" << aTrack.pt();
-      verbose()  << endreq;
+      verbose()  << endmsg;
     }
 
     // NDOF
@@ -102,7 +102,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( ndof < m_minNDoF || ndof > m_maxNDoF )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> NDoF " << aTrack.nDoF() << " failed cut" << endreq;
+        verbose() << " -> NDoF " << aTrack.nDoF() << " failed cut" << endmsg;
       return false;
     }
 
@@ -112,7 +112,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
          (m_minChi2Cut>=0 && (chi2 < m_minChi2Cut || aTrack.nDoF()<=0 ) ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
+        verbose() << " -> Chi^2 " << chi2 << " failed cut" << endmsg;
       return false;
     }
 
@@ -120,22 +120,22 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if(kalfit) {
       if( m_maxChi2Velo > 0 && (chi2=kalfit->chi2Velo().chi2PerDoF()) > m_maxChi2Velo ) {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> Velo Chi^2 " << chi2 << " failed cut" << endreq;
+          verbose() << " -> Velo Chi^2 " << chi2 << " failed cut" << endmsg;
         return false;
       }
       if( m_maxChi2Upstream > 0 && (chi2=kalfit->chi2Upstream().chi2PerDoF()) > m_maxChi2Upstream ) {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> Upstream Chi^2 " << chi2 << " failed cut" << endreq;
+          verbose() << " -> Upstream Chi^2 " << chi2 << " failed cut" << endmsg;
         return false;
       }
       if( m_maxChi2Downstream > 0 && (chi2=kalfit->chi2Downstream().chi2PerDoF()) > m_maxChi2Downstream ) {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> Downstream Chi^2 " << chi2 << " failed cut" << endreq;
+          verbose() << " -> Downstream Chi^2 " << chi2 << " failed cut" << endmsg;
         return false;
       }
       if( m_maxChi2Match > 0 && (chi2=kalfit->chi2Match().chi2PerDoF()) > m_maxChi2Match ) {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> Match Chi^2 " << chi2 << " failed cut" << endreq;
+          verbose() << " -> Match Chi^2 " << chi2 << " failed cut" << endmsg;
         return false;
       }
     }
@@ -145,7 +145,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( p < m_minPCut || ( m_maxPCut > 0 && p > m_maxPCut) )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> P " << aTrack.p() << " failed cut" << endreq;
+        verbose() << " -> P " << aTrack.p() << " failed cut" << endmsg;
       return false;
     }
 
@@ -154,7 +154,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( pt < m_minPtCut || ( m_maxPtCut > 0 && pt > m_maxPtCut ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
+        verbose() << " -> Pt " << aTrack.pt() << " failed cut" << endmsg;
       return false;
     }
 
@@ -166,7 +166,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( eta < m_minEtaCut || eta > m_maxEtaCut )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> #eta " << eta << " failed cut" << endreq;
+        verbose() << " -> #eta " << eta << " failed cut" << endmsg;
       return false;
     }
 
@@ -202,7 +202,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( nMeas < m_minHitCut || nMeas > m_maxHitCut )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> #hits " << nMeas << " failed cut" << endreq;
+        verbose() << " -> #hits " << nMeas << " failed cut" << endmsg;
       return false;
     }
 
@@ -210,7 +210,7 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( !checkNHits(aTrack) ) return false;
 
     // if get here track is selected !
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endmsg;
 
   }
   catch ( const GaudiException & excpt )
@@ -257,25 +257,25 @@ bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
     if ( numVeloPhi < m_minNVeloPhiHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> #velo phi " << numVeloPhi << " failed cut" << endreq;
+        verbose() << " -> #velo phi " << numVeloPhi << " failed cut" << endmsg;
       return false;
     }
     if ( numVeloR < m_minNVeloRHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> #velo R " << numVeloR << " failed cut" << endreq;
+        verbose() << " -> #velo R " << numVeloR << " failed cut" << endmsg;
       return false;
     }
     if ( numOT < m_minNOTHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> #OT " << numOT << " failed cut" << endreq;
+        verbose() << " -> #OT " << numOT << " failed cut" << endmsg;
       return false;
     }
     if ( numTT < m_minNTTHits )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> #TT " << numTT << " failed cut" << endreq;
+        verbose() << " -> #TT " << numTT << " failed cut" << endmsg;
       return false;
     }
 
@@ -284,7 +284,7 @@ bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
       int numVeloHoles = hitpattern.numVeloHoles() ;
       if( numVeloHoles > m_maxNVeloHoles ) {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> #VeloHoles " << numVeloHoles << " failed cut" << endreq;
+          verbose() << " -> #VeloHoles " << numVeloHoles << " failed cut" << endmsg;
         return false;
       }
     }

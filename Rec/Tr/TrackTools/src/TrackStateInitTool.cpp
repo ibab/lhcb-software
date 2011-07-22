@@ -7,7 +7,7 @@
 // 2009-03-02 : Pavel Krokovny
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackStateInitTool ) ;
+DECLARE_TOOL_FACTORY( TrackStateInitTool )
 
 TrackStateInitTool::TrackStateInitTool( const std::string& type,
 					const std::string& name,
@@ -278,7 +278,7 @@ StatusCode TrackStateInitTool::initializeRefStates(LHCb::Track& ,
 						   LHCb::ParticleID) const
 {
   error() << "TrackStateInitTool::initializeRefStates. Code was copied from TrackMasterFitter. Let's leave it there."
-	  << endreq ;
+	  << endmsg ;
   return StatusCode::FAILURE ;
 }
 

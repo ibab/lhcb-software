@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
+
 !========================= TrackTools v4r6 2011-05-15 =========================
 ! 2011-05-15 - Thomas Blake
  - Changed message level of message in MuonTTTrack

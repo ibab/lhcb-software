@@ -1,4 +1,3 @@
-// $Id: TrackNNGhostId.cpp,v 1.5 2009-10-31 15:00:26 smenzeme Exp $
 // Include files 
 #include "Event/Track.h"
 //#include "Kernel/HitPattern.h"
@@ -30,7 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackNNGhostId );
+DECLARE_TOOL_FACTORY( TrackNNGhostId )
 
 
 //=============================================================================
@@ -241,7 +240,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
 //=============================================================================
 StatusCode TrackNNGhostId::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   delete m_readerVelo;
   delete m_readerUpstream;

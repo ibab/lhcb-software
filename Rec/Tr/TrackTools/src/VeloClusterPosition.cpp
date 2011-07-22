@@ -1,4 +1,3 @@
-// $Id: VeloClusterPosition.cpp,v 1.26 2010-04-12 13:03:46 szumlat Exp $
 // Include files
 
 // stl
@@ -30,7 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( VeloClusterPosition );
+DECLARE_TOOL_FACTORY( VeloClusterPosition )
 
 using namespace boost::assign;
 
@@ -76,7 +75,7 @@ VeloClusterPosition::~VeloClusterPosition(){
 //=============================================================================
 StatusCode VeloClusterPosition::initialize()
 {
-  debug()<< " ==> initialize() " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> initialize() " <<endmsg;
   //
   StatusCode sc=GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
@@ -122,8 +121,10 @@ StatusCode VeloClusterPosition::initialize()
     ++it;
     ++value;
   }
-  debug()<< " Parametrisation proj angles bins: " << m_projAngles.size() <<endmsg;
-  debug()<< (m_projAngles.size()) << " vs. " << (m_p0Values.size()) <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug()<< " Parametrisation proj angles bins: " << m_projAngles.size() <<endmsg;
+    debug()<< (m_projAngles.size()) << " vs. " << (m_p0Values.size()) <<endmsg;
+  }
   assert(m_projAngles.size()==m_p0Values.size());
   assert(m_projAngles.size()==m_p1Values.size());
   
@@ -141,7 +142,7 @@ StatusCode VeloClusterPosition::initialize()
 //=============================================================================
 StatusCode VeloClusterPosition::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   if(m_p0!=0) {delete m_p0; m_p0=0;}
   if(m_p1!=0) {delete m_p1; m_p0=0;}
 

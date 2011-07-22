@@ -20,7 +20,7 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( DelegatingTrackSelector );
+DECLARE_TOOL_FACTORY( DelegatingTrackSelector )
 
 //-----------------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ bool DelegatingTrackSelector::accept ( const Track& aTrack ) const
   {
     verbose() << "Trying Track " << aTrack.key() << " " << aTrack.type()
               << " P=" << aTrack.p() << " Pt=" << aTrack.pt()
-              << endreq;
+              << endmsg;
   }
 
   // return
@@ -52,7 +52,8 @@ ITrackSelector * DelegatingTrackSelector::trackSelector( const LHCb::Track& aTra
   {
     std::ostringstream name;
     name << aTrack.type();
-    debug() << "Getting selector for " << name.str() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Getting selector for " << name.str() << endmsg;
     if ( !name.str().empty() )
     {
       selector = m_trSels[aTrack.type()] = tool<ITrackSelector>( "TrackSelector", name.str(), this );

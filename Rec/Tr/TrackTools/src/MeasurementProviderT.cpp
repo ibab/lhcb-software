@@ -1,4 +1,3 @@
-// $Id: MeasurementProviderT.cpp,v 1.18 2009-07-08 14:14:52 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -45,7 +44,7 @@ public:
   virtual double nominalZ( const LHCb::LHCbID& id ) const  ;
 
   StatusCode load( LHCb::Track&  ) const {
-    info() << "sorry, MeasurementProviderBase::load not implemented" << endreq ;
+    info() << "sorry, MeasurementProviderBase::load not implemented" << endmsg ;
     return StatusCode::FAILURE ;
   }
 
@@ -139,13 +138,13 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
 {
   LHCb::Measurement* meas(0) ;
   if ( !T::checkType(id) ) {
-    error() << "Not a velo measurement" << endreq ;
+    error() << "Not a velo measurement" << endmsg ;
   } else {
     const typename T::ClusterType* clus = clusters()->object( T::channelId(id) );
     if (clus) {
       meas = new typename T::MeasurementType( *clus, *m_det, *m_positiontool );
     } else {
-      error() << "Cannot find cluster for id " << id << endreq ;
+      error() << "Cannot find cluster for id " << id << endmsg ;
     }
   }
   return meas ;
@@ -165,7 +164,7 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
     meas = measurement( id, localY ) ;
   } else {
     if ( !T::checkType(id) ) {
-      error() << "Not a velo measurement" << endreq ;
+      error() << "Not a velo measurement" << endmsg ;
     } else {
       const typename T::ClusterType* clus = clusters()->object( T::channelId(id) );
       if (clus) {
@@ -173,7 +172,7 @@ LHCb::Measurement* MeasurementProviderT<T>::measurement( const LHCb::LHCbID& id,
         LHCb::StateVector refvector = reftraj.stateVector(z) ;
         meas = new typename T::MeasurementType( *clus, *m_det, *m_positiontool, refvector);
       } else {
-        error() << "Cannot find cluster for id " << id << endreq ;
+        error() << "Cannot find cluster for id " << id << endmsg ;
       }
     }
   }
@@ -379,14 +378,14 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::TTLite>::measu
 
   LHCb::Measurement* meas(0) ;
   if ( !TTLite::checkType(id) ) {
-    error() << "Not correct measurement" << endreq ;
+    error() << "Not correct measurement" << endmsg ;
   } else {
     TTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );
     if (clus != clusters()->end()){
       meas = new TTLite::MeasurementType( *clus, *m_det, *m_positiontool );
     }
     else {
-      error() << "Cannot find cluster for id " << id << endreq ;
+      error() << "Cannot find cluster for id " << id << endmsg ;
     }
   }
   return meas ;
@@ -405,7 +404,7 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::TTLite>::measu
     meas = measurement( id, localY ) ;
   } else {
     if ( !TTLite::checkType(id) ) {
-      error() << "Not correct measurement" << endreq ;
+      error() << "Not correct measurement" << endmsg ;
     } else {
       TTLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );     
       if (clus != clusters()->end()){
@@ -414,7 +413,7 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::TTLite>::measu
         meas = new TTLite::MeasurementType( *clus, *m_det, *m_positiontool, refvector );
       }
       else {
-        error() << "Cannot find cluster for id " << id << endreq ;
+        error() << "Cannot find cluster for id " << id << endmsg ;
       }
     }
   }
@@ -489,14 +488,14 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::ITLite>::measu
 
   LHCb::Measurement* meas(0) ;
   if ( !ITLite::checkType(id) ) {
-    error() << "Not correct measurement" << endreq ;
+    error() << "Not correct measurement" << endmsg ;
   } else {
     ITLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( TTLite::channelId(id) );
     if (clus != clusters()->end()){
       meas = new ITLite::MeasurementType( *clus, *m_det, *m_positiontool );
     }
     else {
-      error() << "Cannot find cluster for id " << id << endreq ;
+      error() << "Cannot find cluster for id " << id << endmsg ;
     }
   }
   return meas ;
@@ -515,7 +514,7 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::ITLite>::measu
     meas = measurement( id, localY ) ;
   } else {
     if ( !ITLite::checkType(id) ) {
-      error() << "Not correct measurement" << endreq ;
+      error() << "Not correct measurement" << endmsg ;
     } else {
       ITLite::ClusterContainerType::const_iterator clus = clusters()->find<LHCb::STLiteCluster::findPolicy>( ITLite::channelId(id) );
       if (clus != clusters()->end()){
@@ -524,7 +523,7 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::ITLite>::measu
         meas = new ITLite::MeasurementType( *clus, *m_det, *m_positiontool, refvector);
       }
       else {
-        error() << "Cannot find cluster for id " << id << endreq;
+        error() << "Cannot find cluster for id " << id << endmsg;
       }
     }
   }

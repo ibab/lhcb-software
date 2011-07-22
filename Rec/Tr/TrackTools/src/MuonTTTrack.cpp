@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonTTTrack );
+DECLARE_ALGORITHM_FACTORY( MuonTTTrack )
 
 
 //=============================================================================

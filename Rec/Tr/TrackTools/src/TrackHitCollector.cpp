@@ -1,4 +1,3 @@
-// $Id: TrackHitCollector.cpp,v 1.2 2010-02-01 15:55:31 mschille Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -94,7 +93,7 @@ StatusCode TrackHitCollector::initialize()
     StatusCode sc = GaudiTool::initialize(); // must be executed first
     if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-    debug() << "==> Initialize" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
     m_hitManagerT = tool<Tf::TStationHitManager<PatForwardHit> >(
 	    "PatTStationHitManager");
@@ -124,10 +123,9 @@ StatusCode TrackHitCollector::initialize()
 //=============================================================================
 StatusCode TrackHitCollector::finalize()
 {
-    debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
-
-    return GaudiTool::finalize();  // must be called after all other actions
+  return GaudiTool::finalize();  // must be called after all other actions
 }
 
 StatusCode TrackHitCollector::execute(
@@ -173,7 +171,7 @@ StatusCode TrackHitCollector::execute(
 	    ; // not implemented yet
 	}
     } catch (CollectionFailure f) {
-	info() << f.what() << endreq;
+	info() << f.what() << endmsg;
 	return StatusCode::FAILURE;
     }
     updateWithProperResiduals(ids, tr);

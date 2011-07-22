@@ -1,4 +1,3 @@
-// $Id: StandaloneMuonStationRec.h,v 1.4 2007-09-07 19:49:24 sandra Exp $
 #ifndef STANDALONEMUONSTATIONREC_H 
 #define STANDALONEMUONSTATIONREC_H 1
 
@@ -62,7 +61,7 @@ StandaloneMuonPoint*& ref ) {
           m_region[region]->points().end() != itP; itP++ ) {
 //      log<<MSG::INFO<<region<<" "<<itP->x()<<" "<<
 //	itP->y()<<" "<<x- itP->x()<<" "<<y- 
-//      itP->y()<<endreq;
+//      itP->y()<<endmsg;
       if(fabs(x- itP->x())<1000){
         double deltaY = fabs(y- itP->y());
         if(fabs(deltaY)<fabs(deltaYmin)-10){
@@ -84,7 +83,7 @@ StandaloneMuonPoint*& ref ) {
   
 
   if(candidate!=NULL){
-//	log<<MSG::INFO<<" fine "<<deltaYmin<<" "<<deltaXmin<<endreq;
+//	log<<MSG::INFO<<" fine "<<deltaYmin<<" "<<deltaXmin<<endmsg;
   if(fabs(deltaYmin)<m_Ymax[regionBefore]&&
      fabs(deltaXmin)<m_Xmax[regionBefore]){      
     ref=candidate;      

@@ -1,5 +1,3 @@
- // $Id: VeloPixLiteMeasurementProvider.cpp,v 1.1 2010-04-13 09:17:45 cocov Exp $
-
 /** @class VeloPixLiteMeasurementProvider VeloPixLiteMeasurementProvider.cpp
  *
  * Implementation of VeloPixLiteMeasurementProvider tool
@@ -56,7 +54,7 @@ public:
   
 
   StatusCode load( LHCb::Track&  ) const {
-    info() << "sorry, MeasurementProviderBase::load not implemented" << endreq ;
+    info() << "sorry, MeasurementProviderBase::load not implemented" << endmsg ;
     return StatusCode::FAILURE ;
   }
 
@@ -78,7 +76,7 @@ private:
 //=============================================================================
 
 
-DECLARE_TOOL_FACTORY( VeloPixLiteMeasurementProvider );
+DECLARE_TOOL_FACTORY( VeloPixLiteMeasurementProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -142,7 +140,7 @@ LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCb
 {
   LHCb::Measurement* meas(0) ;
   if( !id.isVeloPix() ) {
-    error() << "Not a VeloPix measurement" << endreq ;
+    error() << "Not a VeloPix measurement" << endmsg ;
   } else {
     const LHCb::VeloPixLiteCluster* clus = 
       clusters()->object( id.velopixID () );
@@ -151,7 +149,7 @@ LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCb
         LHCb::VeloPixLiteMeasurement::Y : LHCb::VeloPixLiteMeasurement::X ;
       meas = new LHCb::VeloPixLiteMeasurement(  *m_det,*clus, *m_positiontool , dir);
     } else {
-      error() << "Cannot find cluster for id " << id << endreq ;
+      error() << "Cannot find cluster for id " << id << endmsg ;
     }
   }
   return meas ;
@@ -166,7 +164,7 @@ LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCb
 {
   LHCb::Measurement* meas(0) ;
   if( !id.isVeloPix() ) {
-    error() << "Not a VeloPix measurement" << endreq ;
+    error() << "Not a VeloPix measurement" << endmsg ;
   } else {
     const LHCb::VeloPixLiteCluster* clus = 
       clusters()->object( id.velopixID () );
@@ -178,7 +176,7 @@ LHCb::Measurement* VeloPixLiteMeasurementProvider::measurement( const LHCb::LHCb
       LHCb::StateVector refvector = reftraj.stateVector(z) ;
       meas = new LHCb::VeloPixLiteMeasurement(  *m_det, *clus,*m_positiontool, dir, refvector );
     } else {
-      error() << "Cannot find cluster for id " << id << endreq ;
+      error() << "Cannot find cluster for id " << id << endmsg ;
     }
   }
   return meas ;
@@ -202,7 +200,8 @@ void VeloPixLiteMeasurementProvider::addToMeasurements( const std::vector<LHCb::
                                                  const LHCb::ZTrajectory& reftraj) const
 {
     
-  debug()<<" VeloPixLiteMeasurementProvider makes 2 measurements for each LHCbID, one X one Y"<<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<<" VeloPixLiteMeasurementProvider makes 2 measurements for each LHCbID, one X one Y"<<endmsg;
   for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
        id != lhcbids.end(); ++id) {
     measurements.push_back( measurement(*id,reftraj,false) )  ;

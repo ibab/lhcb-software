@@ -1,5 +1,3 @@
- // $Id: MuonMeasurementProvider.cpp,v 1.10 2009-12-20 09:52:55 svecchi Exp $
-
 /** @class MuonMeasurementProvider MuonMeasurementProvider.cpp
  *
  * Implementation of VeloRMeasurementProvider tool
@@ -53,7 +51,7 @@ public:
   
 
   StatusCode load( LHCb::Track&  ) const {
-    info() << "sorry, MeasurementProviderBase::load not implemented" << endreq ;
+    info() << "sorry, MeasurementProviderBase::load not implemented" << endmsg ;
     return StatusCode::FAILURE ;
   }
 
@@ -73,7 +71,7 @@ private:
 //=============================================================================
 
 
-DECLARE_TOOL_FACTORY( MuonMeasurementProvider );
+DECLARE_TOOL_FACTORY( MuonMeasurementProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -111,20 +109,23 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const LHCb::LHCbID& id,
 {
   LHCb::Measurement* meas(0) ;
   if( !id.isMuon() ) {
-    error() << "Not a Muon measurement" << endreq ;
+    error() << "Not a Muon measurement" << endmsg ;
   } else {
     LHCb::MuonTileID muid = id.muonID();
     double x,y,z,dx,dy,dz;
     StatusCode sc = m_det->Tile2XYZ(muid,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
       Warning("Failed to get x,y,z of tile ",sc).ignore();
-      if(msgLevel(MSG::DEBUG)) debug() << "Failed to get x,y,z of tile " << muid << endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Failed to get x,y,z of tile " << muid << endmsg;
     } else {
       LHCb::MuonMeasurement::MuonMeasurementType dir = localY ? 
         LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
       meas = new LHCb::MuonMeasurement(id,*m_det,Gaudi::XYZPoint(x,y,z),dx,dy, dir);
-      debug() << " Created muon measurement! " << muid << " x "<< x<<" y "<<y<<" z "<<z
-              <<" dx "<<dx<<" dy "<<dy<<" dz "<<dz << endreq; 
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << " Created muon measurement! " << muid
+                << " x "<< x<<" y "<<y<<" z "<<z
+                <<" dx "<<dx<<" dy "<<dy<<" dz "<<dz << endmsg; 
     }
   }
   return meas ;
@@ -151,13 +152,13 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const std::vector< LHCb
   
   for( std::vector<LHCb::LHCbID>::const_iterator id = ids.begin() ; id != ids.end(); ++id) {
     if( !id->isMuon() ) {
-      error() << "Not a Muon measurement" << endreq ;
+      error() << "Not a Muon measurement" << endmsg ;
     } else {
       LHCb::MuonTileID muid = id->muonID();
       StatusCode sc = m_det->Tile2XYZ(muid,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
         Warning("Failed to get x,y,z of tile ",sc).ignore();
-        if(msgLevel(MSG::DEBUG)) debug() << "Failed to get x,y,z of tile " << muid << endreq;
+        if(msgLevel(MSG::DEBUG)) debug() << "Failed to get x,y,z of tile " << muid << endmsg;
       } else {
         m_padx.push_back(x);
         m_pady.push_back(y);
@@ -201,22 +202,23 @@ LHCb::Measurement* MuonMeasurementProvider::measurement( const std::vector< LHCb
     }
   }
   if(!Cid.muonID().isValid()){
-    error() << " IMPOSSIBLE to Create muon measurement from a cluster of "<<m_padx.size()<<" hits ! " << Cid.muonID()<<endreq;
-    error() << " x "<< Cx<<" +/- "<<Cdx<<" in the range ["<<m_hit_minx<<","<<m_hit_maxx<<"] "<<endreq;
-    error() << " y "<< Cy<<" +/- "<<Cdy<<" in the range ["<<m_hit_miny<<","<<m_hit_maxy<<"] "<<endreq;
-    error() << " z "<< Cz<<" +/- "<<Cdz<<" in the range ["<<m_hit_minz<<","<<m_hit_maxz<<"] "<<endreq;
+    error() << " IMPOSSIBLE to Create muon measurement from a cluster of "<<m_padx.size()<<" hits ! " << Cid.muonID()<<endmsg;
+    error() << " x "<< Cx<<" +/- "<<Cdx<<" in the range ["<<m_hit_minx<<","<<m_hit_maxx<<"] "<<endmsg;
+    error() << " y "<< Cy<<" +/- "<<Cdy<<" in the range ["<<m_hit_miny<<","<<m_hit_maxy<<"] "<<endmsg;
+    error() << " z "<< Cz<<" +/- "<<Cdz<<" in the range ["<<m_hit_minz<<","<<m_hit_maxz<<"] "<<endmsg;
   }
   
   
   LHCb::MuonMeasurement::MuonMeasurementType dir = localY ? LHCb::MuonMeasurement::Y : LHCb::MuonMeasurement::X ;
   meas = new LHCb::MuonMeasurement(Cid,*m_det,Gaudi::XYZPoint(Cx,Cy,Cz),Cdx,Cdy, dir);
 
-  debug() << " Created muon measurement from a cluster of "<<m_padx.size()<<" hits ! " << Cid.muonID()<<endreq;
-  debug() << " x "<< Cx<<" +/- "<<Cdx<<" in the range ["<<m_hit_minx<<","<<m_hit_maxx<<"] "<<endreq;
-  debug() << " y "<< Cy<<" +/- "<<Cdy<<" in the range ["<<m_hit_miny<<","<<m_hit_maxy<<"] "<<endreq;
-  debug() << " z "<< Cz<<" +/- "<<Cdz<<" in the range ["<<m_hit_minz<<","<<m_hit_maxz<<"] "<<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << " Created muon measurement from a cluster of "<<m_padx.size()<<" hits ! " << Cid.muonID()<<endmsg;
+    debug() << " x "<< Cx<<" +/- "<<Cdx<<" in the range ["<<m_hit_minx<<","<<m_hit_maxx<<"] "<<endmsg;
+    debug() << " y "<< Cy<<" +/- "<<Cdy<<" in the range ["<<m_hit_miny<<","<<m_hit_maxy<<"] "<<endmsg;
+    debug() << " z "<< Cz<<" +/- "<<Cdz<<" in the range ["<<m_hit_minz<<","<<m_hit_maxz<<"] "<<endmsg;
+  }
   
-
   return meas ;
 }
 
@@ -241,7 +243,8 @@ void MuonMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>
   
   if(!m_clusterize){
     
-    debug()<<" MuonMeasurementProvider makes measurements for each LHCbID"<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" MuonMeasurementProvider makes measurements for each LHCbID"<<endmsg;
     
     for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
          id != lhcbids.end(); ++id) {
@@ -250,7 +253,8 @@ void MuonMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>
     }
   }else{
 
-    debug()<<" MuonMeasurementProvider makes measurements for each CLUSTER of LHCbIDs"<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<" MuonMeasurementProvider makes measurements for each CLUSTER of LHCbIDs"<<endmsg;
     std::vector<LHCb::LHCbID> lhcbids_byStation[5];
     
     for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ; id != lhcbids.end(); ++id) {
@@ -262,7 +266,8 @@ void MuonMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>
     }
     
     for( int iMS=0; iMS<5; ++iMS) {
-      debug()<<" Station M"<<iMS<<" lhcbIDS "<<lhcbids_byStation[iMS].size()<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<" Station M"<<iMS<<" lhcbIDS "<<lhcbids_byStation[iMS].size()<<endmsg;
       if(lhcbids_byStation[iMS].size()!=0){        
         measurements.push_back( measurement(lhcbids_byStation[iMS],reftraj,false) )  ;
         measurements.push_back( measurement(lhcbids_byStation[iMS],reftraj,true) )  ;

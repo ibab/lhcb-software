@@ -70,7 +70,7 @@ protected:
     if ( !m_selTypes[type] ) 
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track type " << aTrack.type() << " is rejected" << endreq;
+        verbose() << " -> Track type " << aTrack.type() << " is rejected" << endmsg;
       OK = false;
     }
     return OK;

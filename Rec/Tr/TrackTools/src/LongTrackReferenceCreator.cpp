@@ -1,5 +1,3 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.21 2009-07-08 14:14:52 wouter Exp $
-
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -21,7 +19,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( LongTrackReferenceCreator );
+DECLARE_TOOL_FACTORY( LongTrackReferenceCreator )
 
 //=============================================================================
 // 
@@ -80,7 +78,7 @@ StatusCode LongTrackReferenceCreator::execute( LHCb::Track& track ) const
 
   // first fix the momentum of states on the track. need to make sure this works for Velo-TT as well.
   if( track.states().empty() ) {
-    error() << "Track has no states. Cannot create reference states" << endreq ;
+    error() << "Track has no states. Cannot create reference states" << endmsg ;
     sc = StatusCode::FAILURE ;
   } else {
     // first need to make sure all states already on track have

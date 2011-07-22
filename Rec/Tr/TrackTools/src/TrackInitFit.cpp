@@ -1,4 +1,3 @@
-// $Id: TrackInitFit.cpp,v 1.2 2009-11-14 16:20:57 kholubye Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +11,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TrackInitFit );
+DECLARE_TOOL_FACTORY( TrackInitFit )
 
 
 //=============================================================================
@@ -39,7 +38,7 @@ TrackInitFit::~TrackInitFit() {}
 //=============================================================================
 StatusCode TrackInitFit::initialize() {
 
-  info() << "==> Initialize " << endreq;
+  info() << "==> Initialize " << endmsg;
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -55,8 +54,7 @@ StatusCode TrackInitFit::initialize() {
 //=============================================================================
 StatusCode TrackInitFit::fit( LHCb::Track& track, LHCb::ParticleID pid ) {
     
-  if (msgLevel( MSG::DEBUG )) 
-    debug() << "==> Execute " << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute " << endmsg;
   
   // simply init
   StatusCode sc = m_initTrack->fit(track);

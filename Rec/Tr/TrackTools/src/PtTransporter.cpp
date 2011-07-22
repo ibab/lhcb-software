@@ -1,4 +1,3 @@
-// $Id: PtTransporter.cpp,v 1.6 2008-08-21 18:13:19 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PtTransporter );
+DECLARE_TOOL_FACTORY( PtTransporter )
 
 
 //=============================================================================
@@ -46,7 +45,7 @@ StatusCode PtTransporter::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
 
   return StatusCode::SUCCESS;
@@ -57,8 +56,7 @@ StatusCode PtTransporter::initialize()
 //=============================================================================
 StatusCode PtTransporter::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiTool::finalize();  // must be called after all other actions
 }

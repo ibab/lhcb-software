@@ -1,4 +1,3 @@
-// $Id: TrajectoryProvider.cpp,v 1.13 2009-07-08 14:14:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -24,7 +23,7 @@ using namespace LHCb;
 // 2006-02-17 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrajectoryProvider );
+DECLARE_TOOL_FACTORY( TrajectoryProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -116,8 +115,8 @@ std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const LHCbID& id,
     return m_otDet -> trajectory( id, offset );
   default:
 		error() << "LHCbID is of unknown type!"
-            << " (type is " << id.detectorType() << ")" << endreq
-            << " -> do not know how to create a Trajectory!" << endreq;
+            << " (type is " << id.detectorType() << ")" << endmsg
+            << " -> do not know how to create a Trajectory!" << endmsg;
 		return std::auto_ptr<Trajectory>( NULL );
   }
 };
