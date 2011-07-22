@@ -13,7 +13,7 @@
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import OfflineVertexFitter, CombineParticles	
+from Configurables import CombineParticles	
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from Configurables import ChargedProtoParticleMaker, NoPIDsParticleMaker, DataOnDemandSvc, DelegatingTrackSelector, TrackSelector, CombinedParticleMaker, BestPIDParticleMaker
 from Configurables import FastVeloTracking
