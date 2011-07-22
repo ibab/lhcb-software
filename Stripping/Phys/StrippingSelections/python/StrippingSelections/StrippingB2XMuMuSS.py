@@ -236,9 +236,9 @@ def makeB2PiMuMuOS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, 
     Makes the B+ -> pi+ mu+ mu- 
     """
 
-    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
+    _combcut = "((ADAMASS('B+') < %(BMassWin)s *MeV) | (ADAMASS('B_c+') < %(BMassWin)s *MeV) ) & "\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
-
+   
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
               "(BPVIPCHI2()< %(BIPCHI2)s) & "\
               "(BPVDIRA > %(BDIRA)s)" % locals()
@@ -257,7 +257,7 @@ def makeB2PiMuMuSS(name, pionSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, 
     Makes the B- -> pi+ mu- mu-
     """
     
-    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
+    _combcut = "((ADAMASS('B+') < %(BMassWin)s *MeV) | (ADAMASS('B_c+') < %(BMassWin)s *MeV)) & "\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
@@ -278,7 +278,7 @@ def makeB2KMuMuOS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, D
     Makes the B+ -> K+ mu+ mu-
     """
     
-    _combcut = "(ADAMASS('B+') < %(BMassWin)s *MeV) & "\
+    _combcut = "((ADAMASS('B+') < %(BMassWin)s *MeV) | (ADAMASS('B_c+') < %(BMassWin)s *MeV) ) & "\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\
@@ -299,7 +299,7 @@ def makeB2KMuMuSS(name, kaonSel, muonSel, BMassWin, BVCHI2DOF, BIPCHI2, BDIRA, D
     Makes the B- -> K+ mu- mu-
     """
     
-    _combcut = "(ADAMASS('B-') < %(BMassWin)s *MeV) & "\
+    _combcut = "((ADAMASS('B+') < %(BMassWin)s *MeV) | (ADAMASS('B_c+') < %(BMassWin)s *MeV) ) & "\
                "(AM23 > %(DimuonMass)s *MeV)" % locals()
     
     _bcut   = "(VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s) & "\

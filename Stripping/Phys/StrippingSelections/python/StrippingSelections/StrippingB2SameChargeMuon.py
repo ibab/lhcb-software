@@ -4,7 +4,7 @@
 Module for construction of Majoranne study
 '''
 
-__author__=['Wenbin Qian']
+__author__=['Wenbin Qian, Fred Blanc']
 __date__ = '01/05/2011'
 __version__= '$Revision: 1.0 $'
 
@@ -59,6 +59,8 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
         self._makeB2DpMuMu([self.MuonList,self.DpList])
 
         self._makeB2DsMuMu([self.MuonList,self.DsList])
+
+        self._makeBc2DsMuMu([self.MuonList,self.DsList])
     
     def _MuonFilter( self ):       
         Muoncut = "(TRCHI2DOF < 5.0) & (PIDmu > 0.0)  & (MIPCHI2DV(PRIMARY) > 4.0) & (PT > 300*MeV)"
@@ -119,8 +121,8 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
     def _DpMaker( self , inputList):
         Dp2kpipi = CombineParticles( 
                                      DecayDescriptor = "[D+ -> K- pi+ pi+]cc",
-                                     CombinationCut = "(ADAMASS('D+') < 100*MeV)",
-                                     MotherCut = "(ADMASS('D+') < 80*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)" ,
+                                     CombinationCut = "(ADAMASS('D+') < 300*MeV)",
+                                     MotherCut = "(ADMASS('D+') < 250*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)" ,
                                      ReFitPVs = False)
         return Selection ( self.name+"Dp2kpipi",
                            Algorithm = Dp2kpipi,
@@ -190,3 +192,19 @@ class StrippingB2SameChargeMuonConf(LineBuilder):
                                      , algos = [ B2DsMuMu ]
                                      )
         self.registerLine(B2DsMuMuLine)
+
+    def _makeBc2DsMuMu(self,inputList):
+        combineBcDs = CombineParticles( 
+                                       DecayDescriptor = "[B_c- -> D_s+ mu- mu-]cc",
+                                       CombinationCut = "(ADAMASS('B_c+')< 400*MeV)",
+                                       MotherCut = "(ADMASS('B_c+')< 300*MeV) & (VFASPF(VCHI2/VDOF) < 6.0) & (BPVDIRA> 0.9999)" ,
+                                       ReFitPVs = False)
+        Bc2DsMuMu = Selection ( self.name+"Bc2DsMuMu",
+                                Algorithm = combineBcDs,
+                                RequiredSelections = inputList)
+        
+        Bc2DsMuMuLine = StrippingLine(self.name+"Bc2DsMuMuLine"
+                                      , prescale = 1
+                                      , algos = [ Bc2DsMuMu ]
+                                      )
+        self.registerLine(Bc2DsMuMuLine)

@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-07-022- Wenbin Qian
+
+Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
 
 ! 2011-07-22 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
