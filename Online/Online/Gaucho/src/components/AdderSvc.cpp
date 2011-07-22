@@ -253,7 +253,7 @@ StatusCode AdderSvc::start()
   m_EoRadder->m_servicePattern = m_ServicePattern+std::string("EOR");
   m_EoRadder->m_noRPC = true;
   m_EoRadder->setIsSaver(m_isSaver);
-  m_EoRadder->m_rectmo = 5*m_recvtmo;
+  m_EoRadder->m_rectmo = 500*m_recvtmo;
   m_EoRadder->Configure();
   m_AdderSys->Add(m_EoRadder);
   if (m_isSaver)
