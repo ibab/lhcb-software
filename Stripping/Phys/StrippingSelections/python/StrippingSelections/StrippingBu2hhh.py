@@ -11,7 +11,7 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Irina Nasteva', 'Jussara Miranda']
-__date__ = '26/05/2011'
+__date__ = '22/07/2011'
 __version__ = '$Revision: 1.0 $'
 
 __all__ = ('Bu2hhhBuilder',
@@ -21,20 +21,20 @@ __all__ = ('Bu2hhhBuilder',
 
 
 config_params = {
-    'MaxTrSIZE'             : 450 ,      ## GEC  maximim Rec/Track/Best TrSIZE
+    'MaxTrSIZE'             : 450 ,      ## GEC maximim Rec/Track/Best TrSIZE
     '_h_PT'                 : 100. ,     ## tracks min PT
     '_h_P'                  : 1500. ,    ## tracks min P  
     '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
     '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
-    '_3h_DOCA'              : .2 ,      ## max DOCA between h and 2h 
+    '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h 
     '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
-    '_3h_DIRA'              : .9999 ,    ## min cos angle between 3h momentum and PV decay direction   
+    '_3h_DIRA'              : .99998 ,   ## min cos angle between 3h momentum and PV decay direction   
     '_3h_FDCHI2'            : 500. ,     ## min 3h FDCHI2 wrt best 3h PV  
     '_3h_PVDOCAmin'         : 3.0 ,      ## min value of the 3h doca wrt any PV
     '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2 
     '_3h_IPCHI2'            : 10. ,      ## max 3h IP CHI2 wrt best 3h PV
     '_3h_PT'                : 1000. ,    ## min 3h PT   
-    '_3h_PTsum'             : 4000. ,    ## min of 3h tracks PT sum 
+    '_3h_PTsum'             : 4250. ,    ## min of 3h tracks PT sum 
     '_3h_Psum'              : 20000. ,   ## min of 3h tracks P sum 
     '_3h_PVIPCHI2sum'       : 500. ,     ## min of the 3h tracks IP wrt best 3h PV
     '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
@@ -42,9 +42,9 @@ config_params = {
     '_3h_CORRMmax'          : 7000. ,    ## max corrected mass for 3h candidate  
     '_3h_CORRMmin'          : 4000. ,    ## min corrected mass for 3h candidate   
     '_3hKKK_Mmax'           : 6300. ,    ## max 3h mass for inclusive KKK line       
-    '_3hKKK_Mmin'           : 5000. ,    ## min 3h mass for inclusive KKK line
-    '_3hpph_deltaMmax'      : 200,       ## max 3h mass difference for inclusive pph line
-    '_3hpph_deltaMmin'      : 400,       ## min 3h mass difference for inclusive pph line 
+    '_3hKKK_Mmin'           : 5050. ,    ## min 3h mass for inclusive KKK line
+    '_3hpph_deltaMmax'      : 400,       ## max 3h mass difference for inclusive ppK line
+    '_3hpph_deltaMmin'      : 200,       ## min 3h mass difference for inclusive ppK line 
     'KKK_inclLinePrescale'  : 1.0,
     'KKK_inclLinePostscale' : 1.0,
     'pph_inclLinePrescale'  : 1.0,
@@ -58,7 +58,20 @@ B+ -> h+h-h+ channels
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StandardParticles                     import StdNoPIDsKaons, StdTightProtons, StdNoPIDsPions
+
+import StandardParticles
+
+if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
+  from StandardParticles import StdAllNoPIDsKaons as StdNoPIDsKaons
+else:
+  from StandardParticles import StdNoPIDsKaons as StdNoPIDsKaons
+
+if hasattr(StandardParticles, "StdAllTightProtons"):
+  from StandardParticles import StdAllTightProtons as StdTightProtons
+else:
+  from StandardParticles import StdTightProtons as StdTightProtons
+
+
 
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
@@ -262,37 +275,36 @@ def makepph_incl(name,
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s)" % locals(),
-		      "pi+" :  "(PT > %(_h_PT)s*MeV) \
+		      "K+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s)" % locals()}
     _combinationCut = "(AM < (5279.15 + %(_3hpph_deltaMmax)s)*MeV) \
                      & (AM > (5279.15 - %(_3hpph_deltaMmin)s)*MeV) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
-    _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),PT) > %(_3h_PTmax)s*MeV) \
+    _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
 		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
-		& (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(_3h_PTsum)s*MeV) \
-		& (SUMTREE(P,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(_3h_Psum)s*MeV) \
-		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(_3h_PVIPCHI2sum)s) \
-		& (MINTREE(((ABSID=='p+') |(ABSID=='p~-') |('pi+'==ABSID) | ('pi-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
+		& (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PTsum)s*MeV) \
+		& (SUMTREE(P,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_Psum)s*MeV) \
+		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
+		& (MINTREE(((ABSID=='p+') |(ABSID=='p~-') |('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
 		& (abs(CHILD(1,Q) + CHILD(2,Q) + CHILD(3,Q))== %(_3h_Charge)s ) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
    
     _pph=CombineParticles()
-    _pph.DecayDescriptors  = ["[B+ -> p+ p~- pi+]cc"]
+    _pph.DecayDescriptors  = ["[B+ -> p+ p~- K+]cc"]
     _pph.MotherCut         = _motherCut
     _pph.CombinationCut    = _combinationCut
     _pph.DaughtersCuts     = _daughtersCuts
 
     return Selection ( name,
                        Algorithm = _pph,
-                       RequiredSelections = [StdNoPIDsPions,StdTightProtons])
-
+                       RequiredSelections = [StdNoPIDsKaons,StdTightProtons])
 
 
 def globalEventCutFilter(name, 
@@ -301,13 +313,12 @@ def globalEventCutFilter(name,
   
   if MaxTrSIZE == None : return None
   
+  _code = ""
   from Configurables import LoKi__VoidFilter as VoidFilter
   from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
   modules = CoreFactory('CoreFactory').Modules
   for i in ['LoKiTrigger.decorators']:
      if i not in modules : modules.append(i)
-  
-  _code = ""
   if MaxTrSIZE != None : _code += "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTrSIZE)s )" % locals()
   globalFilter= VoidFilter(name)
   globalFilter.Code = _code
