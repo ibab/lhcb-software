@@ -46,7 +46,8 @@ confdict={
 			"TrChi2Mu":		5.	# adimensional
 		,	"JpsiPt":		0.5	# GeV
 		,	"TrPt":			100.	# MeV
-		,	"TrP":			7.	# GeV
+		,	"TrP":			5.	# GeV
+		,	"LongP":		7.	# GeV
 		,	"MuDLL":		1.	# adimensional
 		,	"VertChi2":		2.	# adimensional
 		,	"MassPreComb":		1000.	# MeV
@@ -68,6 +69,7 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 				'JpsiPt',
 				'TrPt',
 				'TrP',
+				'LongP',
 				'MuDLL',
 				'VertChi2',
 				'MassPreComb',
@@ -89,7 +91,7 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 	self.TisTosPreFilter2Jpsi = selHlt2Jpsi('TisTosFilter2Jpsifor'+name, hlt1Filter = self.TisTosPreFilter1Jpsi, HLT2TisTosSpecs = config['HLT2TisTosSpecs'], HLT2PassOnAll = config['HLT2PassOnAll'])
 
 	# CHECK FOR TAG-TRACKS
-	muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s) & (PIDmu > %(MuDLL)s)" % config
+	muCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(LongP)s) & (PIDmu > %(MuDLL)s)" % config
 	vmCut = "((TRCHI2DOF < %(TrChi2Mu)s)) & (PT > %(TrPt)s) & (P > %(TrP)s)" % config
         self.longbothJpsi = longtrackFilter( name+'LongJpsiBoth', trackAlgo = 'LongMu', partSource = StdLooseMuons, muCut = muCut)
 	self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.longbothJpsi, charge = -1, vmCut = vmCut, muCut = muCut)
