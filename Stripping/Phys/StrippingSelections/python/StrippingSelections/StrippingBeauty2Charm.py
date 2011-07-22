@@ -15,10 +15,10 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
+#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
-#from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
-#     StdAllNoPIDsProtons
+from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
+     StdAllNoPIDsProtons
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_B2DXBuilder import *
@@ -52,7 +52,7 @@ config = {
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV',
-    '4H_ASUMPT_MIN' : '2000*MeV' 
+    '4H_ASUMPT_MIN' : '1500*MeV' 
     },
     "B2X" : { # Cuts made on all B's used in all lines
     'AMAXDOCA_MAX'  : '1.0*mm',
@@ -106,9 +106,9 @@ class Beauty2CharmConf(LineBuilder):
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter all inputs (nothing is looser than this)
-        pions = filterInputs('Pi',[StdNoPIDsPions],config['ALL'])
-        kaons = filterInputs('K',[StdNoPIDsKaons],config['ALL'])
-        protons = filterInputs('P',[StdNoPIDsProtons],config['ALL'])
+        pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
+        kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
+        protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
         ks_dd = filterInputs('KS0_DD',[dataOnDemand("StdLooseKsDD")],
                                        config['KS0']) 
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
