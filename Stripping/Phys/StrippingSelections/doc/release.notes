@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-22 - Greig Cowan
+ - Turned off some B2JpsiX "Unbiased" stripping lines to reduce rate.
+ - Converted appropriate lines to use StdAllLooseXXX particles.
+
 ! 2011-07-22 - Benoit Viaud
  - StrippingDstarPromptWithD02HHHH.py and StrippingD2XMuMuSS.py
  - For both: Updated particle containers to 'All' type

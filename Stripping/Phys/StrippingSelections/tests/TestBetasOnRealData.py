@@ -12,6 +12,8 @@ stream = StrippingStream("Betas")
 
 BetaSconfigs = [
         'BetaS',
+	]
+'''
         'BetaSPsi2S',
         'BetaSPsi2SMuMu',
         'BetaSBs2JpsieePhi',
@@ -24,7 +26,7 @@ BetaSconfigs = [
         'BetaSBs2ChicPhi_Chic2PiPiPiPi',
 	'Bs2Q2Body4pi'
         ]
-
+'''
 for config in BetaSconfigs:
         stream.appendLines( lineBuilder('strippingdev', config).lines() )
 
@@ -73,11 +75,11 @@ CondDB().IgnoreHeartBeat = True
 
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 50000
+DaVinci().EvtMax = 25000
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-DaVinci().appendToMainSequence( [ ac ] )
+#DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType  = "2011"
 DaVinci().InputType = "SDST"
 

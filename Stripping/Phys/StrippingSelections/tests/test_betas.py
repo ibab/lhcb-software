@@ -169,17 +169,17 @@ configJpsieePhi = {
 # Fred Blanc
 from StrippingSelections.StrippingB2CharmlessQuasi2Body import B2Quasi2BodyConf
 configQ2B = {'Q2BPrescale'     : 1.,
-                 'Q2BResMinPT'     : 1000.,
-                 'Q2BResMinP'      : 10.,
-                 'Q2BResMaxMass'   : 1100.,
-                 'Q2BResVtxChiDOF' : 9.,
-                 'Q2BBMinM'        : 2500.,
-                 'Q2BBMaxM'        : 5700.,
-                 'Q2BBMinCorrM4pi' : 4000.,
-                 'Q2BBMinCorrM3pi' : 4600.,
-                 'Q2BBMaxCorrM'    : 7000.,
-                 'Q2BBVtxChi2DOF'  : 9.,
-                 'Q2BBMinTrkPT'    : 1000.}
+                'Q2BResMinPT'     : 1000.,
+                'Q2BResMinP'      : 10.,
+                'Q2BResMaxMass'   : 1100.,
+                'Q2BResVtxChiDOF' : 9.,
+                'Q2BBMinM4pi'     : 2500.,
+                'Q2BBMinM3pi'     : 4000.,
+                'Q2BBMaxM'        : 5700.,
+                'Q2BBMinCorrM4pi' : 4000.,
+                'Q2BBMinCorrM3pi' : 4600.,
+                'Q2BBMaxCorrM'    : 7000.,
+                'Q2BBVtxChi2DOF'  : 9.}
 
 # Sebastian Schleich
 from StrippingSelections.StrippingBs2PhiPhi import StrippingBs2PhiPhiConf
@@ -381,12 +381,12 @@ def test_line_builder() :
     b = StrippingBs2PhiKstConf( "Bs2PhiKst", configBs2PhiKst )
     for line in b.lines():
         print line.outputLocation()
-   
+    
     LineBuilderTests.test_line_builder(B2Quasi2BodyConf, configQ2B )
     b = B2Quasi2BodyConf( "Q2B", configQ2B )
     for line in b.lines():
         print line.outputLocation()
-	
+    	
     LineBuilderTests.test_line_builder(Bs2Q2Body4piConf, configBs2Q2Body4pi )
     b = Bs2Q2Body4piConf( "BsQ2B", configBs2Q2Body4pi )
     for line in b.lines():

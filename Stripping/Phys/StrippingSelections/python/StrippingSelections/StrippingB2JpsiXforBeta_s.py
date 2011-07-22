@@ -19,8 +19,9 @@ __all__ = ('B2JpsiXforBeta_sConf')
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from StandardParticles import StdLoosePions
-from StandardParticles import StdNoPIDsKaons
-from StandardParticles import StdLooseKaons
+from StandardParticles import StdAllLoosePions
+from StandardParticles import StdAllNoPIDsKaons
+from StandardParticles import StdAllLooseKaons
 from StandardParticles import StdLooseResolvedEta
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -50,11 +51,11 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
 
         self.KaonList = self.createSubSel( OutputList = "KaonsForBetaS" + self.name,
-                                        InputList = StdLooseKaons,
+                                        InputList = StdAllLooseKaons,
                                         Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > -2)" % self.config )
         
         self.NoPIDKaonList = self.createSubSel( OutputList = "NoPIDKaonsForBetaS" + self.name,
-                                            InputList = StdNoPIDsKaons,
+                                            InputList = StdAllNoPIDsKaons,
                                             Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s)" % self.config )
 
         self.PhiList = self.createSubSel( OutputList = "Phi2KKForBetaS" + self.name,
@@ -198,7 +199,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     
         self.registerLine(Bu2JpsiKPrescaledLine)
         self.registerLine(Bu2JpsiKDetachedLine)
-        self.registerLine(Bu2JpsiKUnbiasedLine)
+        #self.registerLine(Bu2JpsiKUnbiasedLine)
 
 
     def makeBu2JpsiH( self ):
@@ -235,7 +236,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         self.registerLine(Bs2JpsiPhiPrescaledLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
-        self.registerLine(Bs2JpsiPhiUnbiasedLine)
+        #self.registerLine(Bs2JpsiPhiUnbiasedLine)
 
 
     def makeBd2JpsiKstar( self ):
@@ -263,7 +264,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         self.registerLine(Bd2JpsiKstarPrescaledLine)
         self.registerLine(Bd2JpsiKstarDetachedLine)
-        self.registerLine(Bd2JpsiKstarUnbiasedLine)
+        #self.registerLine(Bd2JpsiKstarUnbiasedLine)
 
     def makeBd2JpsiKs( self ):
         Bd2JpsiKs = self.createCombinationSel( OutputList = "Bd2JpsiKS" + self.name,
@@ -288,7 +289,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         self.registerLine(Bd2JpsiKsPrescaledLine)
         self.registerLine(Bd2JpsiKsDetachedLine)
-        self.registerLine(Bd2JpsiKsUnbiasedLine)
+        #self.registerLine(Bd2JpsiKsUnbiasedLine)
 
     def makeBs2Jpsif0( self ):
         '''Note: the input list is already heavily lifetime biased'''
@@ -347,5 +348,5 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                                Cuts = "(PT > 3.*GeV) & (MINTREE('eta'==ABSID, PT) > 2000.*MeV)" ) ] )
         self.registerLine(Bs2JpsiEtaPrescaledLine)
         self.registerLine(Bs2JpsiEtaDetachedLine)
-        self.registerLine(Bs2JpsiEtaUnbiasedLine)
+        #self.registerLine(Bs2JpsiEtaUnbiasedLine)
 
