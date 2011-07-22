@@ -4,7 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
-!========================= PatAlgorithms v4r13 2011-06-15 =========================
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() and verbose() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
+
+!========================= PatAlgorithms v4r13 2011-06-15 ====================
 ! 2011-06-11 - Manuel Tobias Schiller
  - PatSeedingTool: revert back to old (pre-early data) tuning, and make
    current tuning available as early data tuning again - the old tuning turned

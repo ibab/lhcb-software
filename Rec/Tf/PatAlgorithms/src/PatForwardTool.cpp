@@ -88,7 +88,7 @@ StatusCode PatForwardTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
 
   m_tHitManager  = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
@@ -195,9 +195,11 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
         if ( minOTX <= nbHit || inCenter ) {
           xCandidates.push_back( temp );
-          debug() << "+++ Store candidate " << xCandidates.size()-1 << endmsg;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+            debug() << "+++ Store candidate " << xCandidates.size()-1 << endmsg;
         } else {
-          debug() << " --- not enough hits " << nbHit << endmsg;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+            debug() << " --- not enough hits " << nbHit << endmsg;
         }
       }
 
@@ -228,9 +230,10 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
 
   for ( itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
-    debug() << "--- Candidate " << itL - xCandidates.begin()
-            << "  X cord size " << (*itL).coordEnd() - (*itL).coordBegin()
-            << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "--- Candidate " << itL - xCandidates.begin()
+              << "  X cord size " << (*itL).coordEnd() - (*itL).coordBegin()
+              << endmsg;
 
     PatFwdHits::iterator itH;
     for ( itH = (*itL).coordBegin(); (*itL).coordEnd() != itH ; ++itH ) {
@@ -250,7 +253,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     
     double tol = m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
 
-    debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
 
     if ( !fillStereoList( temp, tol ) ) continue; // Get the stereo coordinates
 
@@ -275,7 +279,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     double yTol = m_yCompatibleTolFinal;
     if ( !m_fwdTool->removeYIncompatible( temp, yTol, minPlanes ) ) continue;
     temp.cleanCoords();
-    debug() << "  ... Y is compatible" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "  ... Y is compatible" << endmsg;
 
     double quality = 0.;
 
@@ -283,12 +288,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     PatFwdPlaneCounter fullCount( temp.coordBegin(), temp.coordEnd() );
     int nbY = fullCount.nbStereo();
     if ( 4 > nbY ) {
-      debug() << "Not enough Y planes : " << nbY << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Not enough Y planes : " << nbY << endmsg;
       continue;
     }
 
     if ( m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
-      debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
       continue;
     }
 
@@ -309,11 +316,13 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     bool inCenter = m_centerOTYSize > fabs( temp.y( 0. ) );
     if ( !inCenter ) {
       if ( m_minHits > nbHit ){
-        debug() << "  --- Not enough hits : " << nbHit << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "  --- Not enough hits : " << nbHit << endmsg;
         continue;
       }
       if ( temp.nbIT() == 0 && temp.nbOT() < m_minOTHits ) {
-        debug() << " Too few OT for OT only track : " << temp.nbOT() << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << " Too few OT for OT only track : " << temp.nbOT() << endmsg;
         continue;
       }
     }
@@ -366,7 +375,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     double bestQuality = 1000.;
     int maxOT = 0;
 
-    debug() << "Require enough planes : " << minPlanes << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Require enough planes : " << minPlanes << endmsg;
     std::vector<PatFwdTrackCandidate> tempCandidates( goodCandidates );
     goodCandidates.clear();
     for ( itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
@@ -375,8 +385,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         goodCandidates.push_back( *itL );
         if ( (*itL).quality() < bestQuality ) bestQuality = (*itL).quality();
       } else {
-        debug() << "Ignore candidate " << itL-tempCandidates.begin()
-                << " : not enough planes = " << tmp.nbDifferent() << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "Ignore candidate " << itL-tempCandidates.begin()
+                  << " : not enough planes = " << tmp.nbDifferent() << endmsg;
       }
     }
     // remove worst quality
@@ -388,8 +399,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         goodCandidates.push_back( *itL );
         if ( 2*(*itL).nbIT() + (*itL).nbOT() > maxOT ) maxOT =  2*(*itL).nbIT()+(*itL).nbOT();
       } else {
-        debug() << "Ignore candidate " << itL-tempCandidates.begin()
-                << " : quality too low = " << (*itL).quality() << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "Ignore candidate " << itL-tempCandidates.begin()
+                  << " : quality too low = " << (*itL).quality() << endmsg;
       }
     }
     // remove if sensibly less OT
@@ -401,13 +413,15 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       if ( 2*(*itL).nbIT() + (*itL).nbOT() > maxOT ) {
         goodCandidates.push_back( *itL );
       } else {
-        debug() << "Ignore candidate " << itL-tempCandidates.begin()
-                << " : not enough OT = " << (*itL).nbOT() << " mini " << maxOT << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "Ignore candidate " << itL-tempCandidates.begin()
+                  << " : not enough OT = " << (*itL).nbOT() << " mini " << maxOT << endmsg;
       }
     }
   }
 
-  debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
   //=== Store tracks...
   for ( itL = goodCandidates.begin(); goodCandidates.end() != itL; ++itL ) {
     LHCb::Track* fwTra = tr->clone();
@@ -472,10 +486,11 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     if ( NULL != m_addTTClusterTool ) {
       StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
       if (sc.isFailure())
-        debug()<<" Failure in adding TT clusters to track"<<endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug()<<" Failure in adding TT clusters to track"<<endmsg;
     }
   }
-  debug() << "Finished track" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
   return StatusCode::SUCCESS;
 }
 //=========================================================================
@@ -629,11 +644,12 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   int minYPlanes = 4;
   double maxSpread = 3.;
 
-  debug() << "List size = " << temp.size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "List size = " << temp.size() << endmsg;
   if ( minYPlanes > (int)temp.size() ) return false;
 
 
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     for ( itH = temp.begin(); temp.end() != itH; ++itH ) {
       PatFwdHit* hit = *itH;
       debug() << format( " Selected:  Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d typ%2d Prev%2d Next%2d",
@@ -659,7 +675,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     double spread = maxSpread;
     if ((*itP)->hit()->type() == Tf::RegionID::OT) spread += 1.5;  // OT drift ambiguities...
 
-    if ( msgLevel( MSG::VERBOSE) ){
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
                            (*itP)->projection(), (*itE)->projection(),
                            (*itE)->projection() - (*itP)->projection(), spread );
@@ -669,7 +685,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     if (  spread < (*itE)->projection() - (*itP)->projection() ) {
       while( spread < (*itE)->projection() - (*itP)->projection() ) itP++;
       --itP; // as there will be a ++ in the loop !
-      verbose() << "   not enough planes in spread" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << "   not enough planes in spread" << endmsg;
       continue;
     }
 
@@ -680,10 +697,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     PatFwdPlaneCounter planeCount( itP, itE );
     //== Enough different planes
     if ( minYPlanes > planeCount.nbDifferent() ) {
-      debug() << "   Not enough y planes : " << planeCount.nbDifferent() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "   Not enough y planes : " << planeCount.nbDifferent() << endmsg;
       continue;
     }
-    verbose() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << endmsg;
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and minXPlanes conditions are met.
@@ -692,8 +710,9 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     while ( itP <= itE - minYPlanes && itF < temp.end() ) {
       planeCount.removeHit( *itP );
       ++itP;
-      verbose() << " try to extend from itP : " << (*itP)->projection()
-                << " itF " << (*itF)->projection() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << " try to extend from itP : " << (*itP)->projection()
+                  << " itF " << (*itF)->projection() << endmsg;
       while ( itF < temp.end() &&
               spread > (*itF)->projection() - (*itP)->projection() ) {
         planeCount.addHit( *itF++ );
@@ -703,7 +722,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
     double x1 = (*itB)->projection();
     double x2 = (*(itE-1))->projection();
-    if ( msgLevel( MSG::VERBOSE )  ) {
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                            x1, x2, itE-itB, pc.nbDifferent(), spread)
@@ -726,10 +745,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   if ( minYPlanes > (int)bestList.size() ) return false;
-  debug() << "...Selected " << bestList.size() << " hits from " << (*bestList.begin())->projection()
-          << " to " << (*bestList.rbegin())->projection() << endmsg;
 
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "...Selected " << bestList.size() << " hits from "
+            << (*bestList.begin())->projection()
+            << " to " << (*bestList.rbegin())->projection() << endmsg;
 
   for ( itP = bestList.begin(); bestList.end() != itP; ++itP ) {
     track.addCoord( *itP );
@@ -793,9 +813,10 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   double maxRange = m_rangePerMeV / minMom;
 
   if ( 0 != track.qOverP() && !m_withoutBField) {
-    debug() << "   xExtrap = " << xExtrap
-            << " q/p " << track.qOverP()
-            << " predict " << xExtrap + (m_rangePerMeV * track.qOverP()) << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "   xExtrap = " << xExtrap
+              << " q/p " << track.qOverP()
+              << " predict " << xExtrap + (m_rangePerMeV * track.qOverP()) << endmsg;
     xExtrap += m_rangePerMeV * track.qOverP();
     maxRange = m_minRange + m_rangeErrorFraction * m_rangePerMeV * fabs( track.qOverP() );
   }
@@ -803,8 +824,9 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   double minProj  = xExtrap - maxRange;
   double maxProj  = xExtrap + maxRange;
 
-  debug() << "Search X coordinates, xMin " << minProj
-          << " xMax " << maxProj << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Search X coordinates, xMin " << minProj
+            << " xMax " << maxProj << endmsg;
 
 
   fillXList( track, minProj, maxProj );
@@ -831,7 +853,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       continue;
     }
 
-    if ( msgLevel( MSG::VERBOSE ) ){
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
                            (*itP)->projection(), (*itE)->projection(),
                            (*itE)->projection() - (*itP)->projection(), spread )<<endmsg;
@@ -843,10 +865,11 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     PatFwdPlaneCounter planeCount( itP, itE );
     //== Enough different planes
     if ( minXPlanes > planeCount.nbDifferent() ) {
-      verbose() << "   Not enough x planes : " << planeCount.nbDifferent() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << "   Not enough x planes : " << planeCount.nbDifferent() << endmsg;
       continue;
     }
-    verbose() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << endmsg;
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and minXPlanes conditions are met.
@@ -864,7 +887,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
     double x1 = (*itB)->projection();
     double x2 = (*(itE-1))->projection();
-    if ( msgLevel( MSG::VERBOSE )  ) {
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                            x1, x2, itE-itB, pc.nbDifferent(), spread)

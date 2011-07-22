@@ -51,7 +51,7 @@ PatAddTTCoord::~PatAddTTCoord() {}
 StatusCode PatAddTTCoord::initialize ( ) {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_ttHitManager = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 
@@ -89,8 +89,9 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
   for ( PatTTHits::iterator itT = myTTHits.begin(); myTTHits.end() != itT; ++itT ) {
 
     // ----------------------------------
-    if (  msgLevel( MSG::DEBUG ) ) debug() << "--- Adding Hit in Layer: " << (*itT)->planeCode()
-                                           << " with projection: " << (*itT)->projection() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "--- Adding Hit in Layer: " << (*itT)->planeCode()
+              << " with projection: " << (*itT)->projection() << endmsg;
     // ----------------------------------
 
     track.addToLhcbIDs( (*itT)->hit()->lhcbID() );
@@ -122,7 +123,8 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   double bestChi2 = m_maxChi2Tol + m_maxChi2Slope/(p - m_maxChi2POffset);
   double chi2  = 0.;
 
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "--- Entering addTTClusters ---" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "--- Entering addTTClusters ---" << endmsg;
 
   // -- Get the container with all the hits compatible with the tack
   selectHits(selected, state, p);
@@ -165,8 +167,9 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     if ( myTtCoords.size() > goodTT.size() ) continue;
 
     // ----------------------------------
-    if (  msgLevel( MSG::DEBUG ) ) debug() << "Start fit, first proj " << firstProj << " nbPlane " << nbPlane
-                           << " size " << goodTT.size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Start fit, first proj " << firstProj << " nbPlane " << nbPlane
+              << " size " << goodTT.size() << endmsg;
     // ----------------------------------
 
     // -- Set variables for the chi2 calculation
@@ -183,7 +186,7 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     if ( bestChi2 > chi2 && goodTT.size() >= myTtCoords.size() ) {
 
       // ----------------------------------
-      if ( msgLevel( MSG::DEBUG ) ) printInfo(goodTT, dist, chi2, state);
+      if( UNLIKELY( msgLevel(MSG::DEBUG) )) printInfo(goodTT, dist, chi2, state);
       // ----------------------------------
       myTtCoords = goodTT;
       bestChi2 = chi2;
@@ -208,9 +211,10 @@ void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, co
   double xTol = m_xTol + m_xTolSlope / p;
   selected.clear();
 
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "State z " << state.z() << " x " << state.x() 
-                                        << " y " << state.y() << " tx " << state.tx() << " ty " 
-                                        << state.ty() << " p " << p << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "State z " << state.z() << " x " << state.x() 
+            << " y " << state.y() << " tx " << state.tx() << " ty " 
+            << state.ty() << " p " << p << endmsg;
 
   Tf::TTStationHitManager<PatTTHit>::HitRange hits = m_ttHitManager->hits();
 

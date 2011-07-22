@@ -60,7 +60,7 @@ StatusCode PatForward::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_trackSelector = NULL;
   if (m_trackSelectorName != "None") {
@@ -290,7 +290,8 @@ StatusCode PatForward::execute() {
         }
         if ( nb0   > nb1   + m_deltaNumberInT  ||
              nbTT0 > nbTT1 + m_deltaNumberInTT   ) {
-          debug() << "    erase " << (*itT1)->key() << " and restart " << endmsg;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+            debug() << "    erase " << (*itT1)->key() << " and restart " << endmsg;
           outputTracks->erase( itT1 );
           itT  = outputTracks->begin();
           itT1 = itT;
@@ -298,7 +299,8 @@ StatusCode PatForward::execute() {
         }
         if ( nb1   > nb0   + m_deltaNumberInT  ||
              nbTT1 > nbTT0 + m_deltaNumberInTT    ) {
-          debug() << "    erase " << (*itT)->key() << " and restart " << endmsg;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+            debug() << "    erase " << (*itT)->key() << " and restart " << endmsg;
           outputTracks->erase( itT );
           itT  = outputTracks->begin();
           itT1 = itT;

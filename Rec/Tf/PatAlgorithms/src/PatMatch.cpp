@@ -38,7 +38,7 @@ StatusCode PatMatch::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_matchTool = tool<IMatchTool>("PatMatchTool", this);
   return StatusCode::SUCCESS;
@@ -68,7 +68,7 @@ StatusCode PatMatch::execute()
 //=============================================================================
 StatusCode PatMatch::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

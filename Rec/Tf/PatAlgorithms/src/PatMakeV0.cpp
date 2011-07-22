@@ -111,7 +111,7 @@ StatusCode PatMakeV0::initialize() {
   m_bestchi2Select = book(1820, " Selected :  chi2 distribution", 0.,10.,10);
   m_zRecSelect     = book(1830, " Selected : Reco z Loc of Ks Vtx (mm)",-100.,2500.,260);
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   //the particle property service is initialised with the properties in condDB
   LHCb::IParticlePropertySvc* ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
@@ -131,14 +131,14 @@ StatusCode PatMakeV0::initialize() {
 //=============================================================================
 StatusCode PatMakeV0::execute() {
 
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   LHCb::Tracks* downs  = get<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Start from " << downs->size() << " downstream tracks." << endmsg;
 
   LHCb::RecVertices* primaryVertices = get<LHCb::RecVertices>( LHCb::RecVertexLocation::Velo3D );
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Found " << primaryVertices->size() << " primary vertices" << endmsg;
 
   m_outputContainer = new LHCb::Tracks();
@@ -161,7 +161,7 @@ StatusCode PatMakeV0::execute() {
     double trackMomentum=1./fabs(m_state.qOverP());
     bool tooLowMom = trackMomentum < m_pMinRich1;
     if(tooLowMom){
-      if( msgLevel(MSG::DEBUG) ) {
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
         debug() << " ... track " << (*itT)->key() << " skipped " << endmsg;
         debug() << format( "   p%10.2f ",trackMomentum) << " is too low momentum " << endmsg;
       }
@@ -179,7 +179,7 @@ StatusCode PatMakeV0::execute() {
     // check track phase space
     bool skipTrk=checkPhaseSpaceAtOrigin();
     if(skipTrk) {
-      if( msgLevel(MSG::DEBUG) ) {
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
         debug() << " ... track " << (*itT)->key() 
                 << " not in phase space at origin " << endmsg;
         debug() << format( "   x%7.2f y%7.2f tx%8.4f ty%8.4f",
@@ -219,12 +219,12 @@ StatusCode PatMakeV0::execute() {
 
     if(charge > 0) {
       // positive tracks
-      if( msgLevel(MSG::DEBUG) )
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << "Selected + track " << (*itT)->key() << endmsg;
       m_pos.push_back( temp );
     } else {
       // negative tracks
-      if( msgLevel(MSG::DEBUG) )
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << "Selected - track " << (*itT)->key() << endmsg;
       m_neg.push_back( temp );
     }
@@ -252,22 +252,22 @@ StatusCode PatMakeV0::execute() {
     for (unsigned int iNeg=0;iNeg<m_neg.size(); iNeg++){
 
       // Full Reco
-      if( msgLevel(MSG::DEBUG) )
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << " try pos " << iPos << " neg " << iNeg
                 << " = seed " << m_pos[iPos].track->key() 
                 << " and " << m_neg[iNeg].track->key() << endmsg;
 
       StatusCode  sc= intersection( m_pos[iPos], m_neg[iNeg] );
       if ( sc.isFailure() ) {
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << " ... Failure for intersection" << endmsg;
         continue;
       }
 
       StatusCode sc1b =improveVTX(  m_pos[iPos], m_neg[iNeg] );
       if( sc1b.isFailure() ){
-        if( msgLevel(MSG::DEBUG) )
-          debug () << " ... failure for improveVtx" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+           debug () << " ... failure for improveVtx" << endmsg;
         continue;
       }
 
@@ -295,7 +295,7 @@ StatusCode PatMakeV0::execute() {
       //    double zV=m_zV0Vtx; // with old storeV0Info method
       m_plotChi2->fill(m_chiSq);
       if(m_chiSq  > m_chi2VtxLim) {
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "    .. V0 vertex has bad chiSq, skip solution  "
                   << m_chiSq << endmsg;
         continue;  // to speed up computing
@@ -307,7 +307,7 @@ StatusCode PatMakeV0::execute() {
 
         //  if(fabs(m_xImpact) > m_impactParV0 || fabs(m_yImpact) > m_impactParV0 ) {} // CHANGE from dec. 2007
 
-        if( msgLevel(MSG::DEBUG) ) {
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
           debug() << "... V0  has too small impact parameter=" 
                   << impactV0 << "  (mm), skip solution  " << endmsg;
           debug() << "... impact x = " << m_xImpact << ",  y = "
@@ -320,7 +320,7 @@ StatusCode PatMakeV0::execute() {
       // coupure en  zVtx  ******** MOST DRAMATIC CUT **********
       double primOK =CheckPrimaryVtx( m_pos[iPos], m_neg[iNeg] );
       if( primOK < m_primVtxOKLim ) {
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << " ... V0  has primOK too small : " << primOK
                   << " , skip solution" << endmsg;
         continue;
@@ -342,7 +342,7 @@ StatusCode PatMakeV0::execute() {
       bool testMass=(testMassK0 || testMassLambda || testMassLambdaBar);
 
       if( !testMass ) {
-        if( msgLevel(MSG::DEBUG) ) {
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
           debug() << "   ... no invariant mass in any V0 window : " << endmsg;
           debug() << "   ... ....     Ks  = "<< m_invariantKsMass << " MeV " <<endmsg;
           debug() << "   ... .... Lambda  = "<< m_invariantLambdaMass << " MeV " <<endmsg;
@@ -356,7 +356,7 @@ StatusCode PatMakeV0::execute() {
       // coupure en impact au "vrai VTX"
       double impactCurrentNormed = NormedSmallestImpactParameter();
       if( impactCurrentNormed > m_impactCurNormLim ) {
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "   ... too small V0 impact parameter "
                   << impactCurrentNormed << endmsg;
         continue;
@@ -367,7 +367,7 @@ StatusCode PatMakeV0::execute() {
       m_vtxMomAngAll->fill(angle*1000.);  // plot mrd
 
       if(angle > m_angleCut) {
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "   ... too large angle  V0 (momentum,line of flight) "
                   << angle  << endmsg;
         continue;
@@ -377,7 +377,7 @@ StatusCode PatMakeV0::execute() {
       double ptRec=sqrt(m_V0Mom[1]*m_V0Mom[1]+m_V0Mom[2]*m_V0Mom[2]);
       m_ptRec->fill(ptRec/1000.);   //plot GeV
       if( ptRec<m_cutPt ) {
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "   ... too small  V0 transverse momentum "
                   << m_chiSq << endmsg;
         continue;
@@ -419,7 +419,7 @@ StatusCode PatMakeV0::execute() {
         storeV0Info(vtxLoc,primOK,codeSolMass);
         m_angle=vtxMomAngle(primaryVertices);
         iNeg_rem=iNeg;
-        if( msgLevel(MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "  +++ Good solution found" << endmsg;
       }
     }        // end (inner) loop on 0 < trks
@@ -446,7 +446,8 @@ StatusCode PatMakeV0::execute() {
 void PatMakeV0::selectSols(){
   m_selected.clear();
 
-  debug() << " nSolutions " << m_solutions.size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " nSolutions " << m_solutions.size() << endmsg;
 
   // select as solution for the pair the best V0 vtx fit chi2
   // on the negative track (positive is already single by construction)
@@ -477,7 +478,8 @@ void PatMakeV0::selectSols(){
 
   if(m_selected.size() > 0 ) m_nSolSelect->fill((double) m_selected.size() );
 
-  debug() << "   Selected " << m_selected.size() << "  V0 candidates" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "   Selected " << m_selected.size() << "  V0 candidates" << endmsg;
 
   for ( itS = m_selected.begin(); m_selected.end() != itS; ++itS ) {
     PatV0Candidate& cand = (*itS);
@@ -504,9 +506,10 @@ void PatMakeV0::selectSols(){
 
     m_bestchi2Select->fill( cand.chi2() );
     m_zRecSelect->fill( cand.zVtxKs() );
-    debug() << "   Pos " << cand.posTrk()->key()
-            << " Neg " << cand.negTrk()->key()
-            << " z " << cand.zVtxKs() << " mass " << cand.massKs() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "   Pos " << cand.posTrk()->key()
+              << " Neg " << cand.negTrk()->key()
+              << " z " << cand.zVtxKs() << " mass " << cand.massKs() << endmsg;
     // provisional output
     LHCb::Track* sel = cand.negTrk()->clone();
     m_outputContainer->add( sel );
@@ -1139,9 +1142,11 @@ StatusCode PatMakeV0::MakeV0(const LHCb::Track * posTrack,const LHCb::Track * ne
   v0->momB()(1)=  m_momTrackMinus[2]/pMinus;
   v0->momB()(2)=  -1./pMinus;
 
-  verbose() <<v0->position().z()<<" vertex of v0 " <<endmsg;
-
-  verbose()<<"ks mass sq is " <<  m_invariantKsMass <<" same as " << v0->mass(m_Pion, m_Pion) <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+    verbose() <<v0->position().z()<<" vertex of v0 " <<endmsg;
+    verbose()<<"ks mass sq is " <<  m_invariantKsMass <<" same as "
+             << v0->mass(m_Pion, m_Pion) <<endmsg;
+  }
 
   //Discussion point : Is it possible to include the off diagonal components using your algorithm
   Gaudi::SymMatrix3x3 locErrors;
@@ -1175,7 +1180,7 @@ StatusCode PatMakeV0::MakeV0(const LHCb::Track * posTrack,const LHCb::Track * ne
 //=============================================================================
 StatusCode PatMakeV0::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }

@@ -1,4 +1,3 @@
-// $Id: FastFwdTool.cpp,v 1.15 2010-04-22 08:08:11 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -25,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_TOOL_FACTORY( FastFwdTool );
+DECLARE_TOOL_FACTORY( FastFwdTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -317,7 +316,7 @@ bool FastFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   while ( maxChi2 < highestChi2 && minPlanes <= planeCount.nbDifferent() ) {
 
     if (!fitXProjection( track, itBeg, itEnd, true )) {
-      if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endreq;
+      if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endmsg;
       return false;
     }
 
@@ -414,7 +413,7 @@ bool FastFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   while ( highestChi2 > maxChi2 ) {
     //== Improve X parameterisation    
     if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) {
-      if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endreq;
+      if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endmsg;
       return false;
     }
     for ( unsigned int kk = 0; 10 > kk; ++kk ) {
@@ -430,12 +429,13 @@ bool FastFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
         line.addPoint( dz, dist, w );
       }
       if (!line.solve()) {
-        if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endreq;
+        if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endmsg;
         return false;
       }
       double day = line.ax();
       double dby = line.bx();
-      verbose() << "    day " << day << " dby " << dby << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << "    day " << day << " dby " << dby << endmsg;
 
       track.updateParameters( 0., 0., 0., 0., day, dby );
       updateHitsForTrack( track, track.coordBegin(), track.coordEnd() );
@@ -585,7 +585,8 @@ double FastFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
   double dist      = distAtMagnetCenter( track );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
   totChi2 = dist * dist / errCenter;
-  debug() << "   chi2 magnet center " << totChi2 << " dist " << dist << " err " << errCenter << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "   chi2 magnet center " << totChi2 << " dist " << dist << " err " << errCenter << endmsg;
 
   PatFwdHits::iterator itH;
   for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
@@ -651,7 +652,8 @@ void FastFwdTool::setRlDefault( PatFwdTrackCandidate& track,
 
     std::sort( temp.begin(), temp.end(), Tf::increasingByX<PatForwardHit>() );
 
-    if ( msgLevel( MSG::DEBUG ) ) debug() << "-- Hit of plane " << planeCode << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "-- Hit of plane " << planeCode << endmsg;
 
     double prevDistM = 10.;
     double prevDistP = 10.;
@@ -682,7 +684,7 @@ void FastFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       prevDistP = distP;
       prevDistM = distM;
 
-      if ( msgLevel( MSG::DEBUG ) ) {
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
         debug() << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
                            hit->z(), hit->x(), hit->hit()->region(),
                            hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;

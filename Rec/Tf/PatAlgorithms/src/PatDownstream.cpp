@@ -108,7 +108,7 @@ StatusCode PatDownstream::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_ttHitManager = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 
@@ -340,7 +340,8 @@ StatusCode PatDownstream::execute() {
 
     }
   }
-  debug() << "Found " << finalTracks->size() << " tracks." << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Found " << finalTracks->size() << " tracks." << endmsg;
 
   if ( m_doTiming ) m_timerTool->stop( m_downTime );
    
@@ -353,7 +354,7 @@ StatusCode PatDownstream::execute() {
 //=============================================================================
 StatusCode PatDownstream::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

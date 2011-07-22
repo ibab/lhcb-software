@@ -56,7 +56,7 @@ StatusCode PatMatchTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_addTTClusterTool = tool<IAddTTClusterTool>( "PatAddTTCoord" );
 
@@ -125,7 +125,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
     LHCb::Track* vTr = (*itM).vTr();
     LHCb::Track* sTr = (*itM).sTr();
     
-    if(msgLevel( MSG::DEBUG )) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug() << "Candidate Velo " << vTr->key() << " used " << veloUsed[ vTr->key()] 
               << " Seed " << sTr->key() << " used " << seedUsed[ sTr->key()] 
               << " dist " << (*itM).dist() << endmsg;
@@ -158,7 +158,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
 //=============================================================================
 StatusCode PatMatchTool::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   
   return GaudiTool::finalize();
 }
@@ -262,7 +262,7 @@ void PatMatchTool::makeTrack( const LHCb::Track& velo,
     quality2=0;
     StatusCode sc = this->matchSingle( veloTrack, tTrack, matchedTrack, quality );
     if(sc.isFailure()) 
-      if(msgLevel( MSG::DEBUG )) debug()<<"matching failed !"<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<"matching failed !"<<endmsg;
 
     return sc;
   }

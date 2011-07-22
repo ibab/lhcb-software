@@ -1,4 +1,3 @@
-// $Id: FastForwardTool.cpp,v 1.17 2010-01-19 13:04:43 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -26,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_TOOL_FACTORY( FastForwardTool );
+DECLARE_TOOL_FACTORY( FastForwardTool )
 
 
 //=============================================================================
@@ -100,7 +99,7 @@ StatusCode FastForwardTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
 
   m_tHitManager  = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
@@ -962,7 +961,7 @@ bool FastForwardTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   while ( maxChi2 < highestChi2 && minPlanes <= planeCount.nbDifferent() ) {
     if (!m_fwdTool->fitXProjection( track, track.coordBegin(), track.coordEnd(), true )) {
-      if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endreq;
+      if ( isDebug ) info() << "Abandon: Matrix not positive definite." << endmsg;
       return false;
     }
     if ( isDebug ) {

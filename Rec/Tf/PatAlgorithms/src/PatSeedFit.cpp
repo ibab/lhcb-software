@@ -59,7 +59,7 @@ StatusCode PatSeedFit::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_patSeedTool = tool<PatSeedTool>("PatSeedTool", this);
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT);
@@ -76,8 +76,7 @@ StatusCode PatSeedFit::initialize()
 //=============================================================================
 StatusCode PatSeedFit::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiTool::finalize();  // must be called after all other actions
 }

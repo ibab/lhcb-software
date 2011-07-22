@@ -324,7 +324,8 @@ unsigned PatSeedingTool::prepareHits()
       // otherwise use PatQuality from patreco
       //  if (tF->info(LHCb::Track::PatQuality, -1.) < m_discardPatQual) continue;
       //}
-      debug() << "*** Found bad PatFwd track, re-marking hits unused. ";
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "*** Found bad PatFwd track, re-marking hits unused. ";
       const std::vector<LHCb::LHCbID>& ids = tF->lhcbIDs();
       int nHits = 0;
       BOOST_FOREACH(const LHCb::LHCbID id, ids) {
@@ -337,7 +338,8 @@ unsigned PatSeedingTool::prepareHits()
           }
         }
       }
-      debug() << nHits << " hits marked." << endreq;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << nHits << " hits marked." << endmsg;
     }
   }
 
@@ -454,8 +456,9 @@ StatusCode PatSeedingTool::performTracking(
       if (0 == state) return StatusCode::SUCCESS;
       
       Warning("Skipping very hot event!",StatusCode::SUCCESS,1).ignore();
-      if(msgLevel(MSG::DEBUG)) debug() << "Skipping very hot event! (" << nHitsIT << " IT hits "
-                                       << nHitsOT << " OT hits)" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Skipping very hot event! (" << nHitsIT << " IT hits "
+                << nHitsOT << " OT hits)" << endmsg;
       // Create a ProcStatus if it does not already exist
       LHCb::ProcStatus* procStat =
         getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
@@ -596,7 +599,7 @@ void PatSeedingTool::collectPerRegion(
         findXCandidates(lay, reg | (reginc1 << 3u) | (reginc2 << 6u),
                         pool, candsT2, state);
 
-        if ( msgLevel( MSG::DEBUG ) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "Found " << pool.size()
                   << " x candidates" << endmsg;
 
@@ -973,9 +976,9 @@ void PatSeedingTool::collectITOT(
 	      }
 
 	      if ( m_printing ) {
-		info() << "--- IT point -- " << endmsg;
-		BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
-		  debugFwdHit( hit, info() );
+          info() << "--- IT point -- " << endmsg;
+          BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+            debugFwdHit( hit, info() );
 	      }
 	    }
 	  }
@@ -1054,8 +1057,8 @@ void PatSeedingTool::collectITOT(
 	      if (!hit->hit()->isYCompatible(yPred, m_yTolSensArea)) continue;
 	      if ( m_enforceIsolation && !isIsolated(it, rangeXX) ) continue;
 	      if ( m_printing ) {
-		info() << "Add coord ";
-		debugFwdHit( hit, info() );
+          info() << "Add coord ";
+          debugFwdHit( hit, info() );
 	      }
 	      track.addCoord( hit );
 	      dirty = true;
@@ -1324,14 +1327,15 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
   out->setHistory( LHCb::Track::PatSeeding );
   out->setPatRecStatus( LHCb::Track::PatRecIDs );
 
-  debug() << "==== Storing track " << outputTracks.size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==== Storing track " << outputTracks.size() << endmsg;
   BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
     out->addToLhcbIDs( hit->hit()->lhcbID() );
     //== Tag used coordinates
     hit->hit()->setStatus(Tf::HitBase::UsedByPatSeeding);
     hit->setIsUsed(true);
   }
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
       debugFwdHit( hit, debug() );
   }
