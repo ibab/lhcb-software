@@ -20,9 +20,9 @@ __all__ = ('B2nbodyConf',
            'makeDS')
 
 confdict_2body = {'nbody':              2,
-                  'MinBMass':        4500.0,
+                  'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
-                  'MinBPt':          2000.0,
+                  'MinBPt':          5000.0,
                   'MaxBVertChi2DOF':   10.0,
                   'MinBPVVDChi2':     225.0,
                   'MaxBPVIPChi2':      15.0,
@@ -43,13 +43,19 @@ confdict_2body = {'nbody':              2,
                   'doDS':            True,
                   'MinPiPt':         1500.0,
                   'MinPiIPChi2DV':     25.0,
-                  'MaxPiChi2':          5.0,
+                  'MaxPiChi2':          4.0,
+                  'MinPiPIDK':          2.0,
+                  'MinPiPIDp':          2.0,
                   'MinKPt':          1500.0,
                   'MinKIPChi2DV':      25.0,
-                  'MaxKChi2':           5.0,
+                  'MaxKChi2':           4.0,
+                  'MinKPIDPi':          2.0,
+                  'MinKPIDp':           2.0,
                   'MinpPt':          1500.0,
                   'MinpIPChi2DV':      25.0,
-                  'MaxpChi2':           5.0,
+                  'MaxpChi2':           4.0,
+                  'MinpPIDPi':          2.0,
+                  'MinpPIDK':           2.0,
                   'MaxKsDeltaM':       40.0,
                   'MinKsPt':         1500.0,
                   'MaxKsVertChi2DOF':  10.0,
@@ -57,7 +63,7 @@ confdict_2body = {'nbody':              2,
                   'MinKsIPChi2':        0.0,
                   'MinKsDauPt':       200.0,
                   'MinKsDauIPChi2':    16.0,
-                  'MaxKsDauTrkChi2':   10.0,
+                  'MaxKsDauTrkChi2':    5.0,
                   'MaxLmDeltaM':       15.0,
                   'MinLmPt':         1500.0,
                   'MaxLmVertChi2DOF':  10.0,
@@ -67,9 +73,9 @@ confdict_2body = {'nbody':              2,
                   'MinLmPiPt':        100.0,
                   'MinLmPrtIPChi2':     4.0,
                   'MinLmPiIPChi2':     16.0,
-                  'MaxLmPrtTrkChi2':   10.0,
-                  'MaxLmPiTrkChi2':    10.0,
-                  'MaxDzDeltaM':      40.0,
+                  'MaxLmPrtTrkChi2':    5.0,
+                  'MaxLmPiTrkChi2':     5.0,
+                  'MaxDzDeltaM':       40.0,
                   'MinDzPt':         1500.0,
                   'MaxDzVertChi2DOF':  10.0,
                   'MinDzPVVDChi2':    225.0,
@@ -77,35 +83,41 @@ confdict_2body = {'nbody':              2,
                   'MinDzDauPt':       250.0,
                   'MinDzDauIPChi2':     9.0,
                   'MaxDzDauTrkChi2':    5.0,
-                  'MinDzPIDK':         -5.0,
+                  'MinDzPiPIDK':       -5.0,
+                  'MinDzKPIDPi':       -5.0,
                   'MaxDpDeltaM':       40.0,
                   'MinDpPt':         1500.0,
                   'MaxDpVertChi2DOF':  10.0,
                   'MinDpPVVDChi2':    225.0,
-                  'MinDpIPChi2':        0.0,
+                  'MinDpIPChi2':        9.0,
                   'MinDpDauPt':       250.0,
                   'MinDpDauIPChi2':     9.0,
                   'MaxDpDauTrkChi2':    5.0,
-                  'MinDpPIDK':         -5.0,
+                  'MinDpKPIDPi':       -5.0,
+                  'MinDpPiPIDK':       -5.0,
                   'MaxDsDeltaM':       40.0,
                   'MinDsPt':         1500.0,
                   'MaxDsVertChi2DOF':  10.0,
                   'MinDsPVVDChi2':    225.0,
-                  'MinDsIPChi2':        0.0,
+                  'MinDsIPChi2':        9.0,
                   'MinDsDauPt':       250.0,
                   'MinDsDauIPChi2':     9.0,
                   'MaxDsDauTrkChi2':    5.0,
-                  'MinDsPIDK':         -5.0,
+                  'MinDsKmPIDPi':      -5.0,
+                  'MinDsKpPIDPi':       0.0,
+                  'MinDsPiPIDK':       -5.0,
                   'MaxLcDeltaM':       40.0,
                   'MinLcPt':         1500.0,
                   'MaxLcVertChi2DOF':  10.0,
                   'MinLcPVVDChi2':    225.0,
-                  'MinLcIPChi2':        0.0,
+                  'MinLcIPChi2':        9.0,
                   'MinLcDauPt':       250.0,
                   'MinLcDauIPChi2':     9.0,
                   'MaxLcDauTrkChi2':    5.0,
-                  'MinLcPIDK':         -5.0,
-                  'MinLcPIDp':         -5.0,
+                  'MinLcKPIDPi':       -5.0,
+                  'MinLcpPIDPi':        0.0,
+                  'MinLcpPIDK':         0.0,
+                  'MinLcPiPIDK':       -5.0,
                   'MaxPhDeltaM':       30.0,
                   'MinPhPt':         1500.0,
                   'MaxPhVertChi2DOF':  10.0,
@@ -113,7 +125,7 @@ confdict_2body = {'nbody':              2,
                   'MinPhIPChi2':       16.0,
                   'MinPhDauPt':       500.0,
                   'MinPhDauIPChi2':     9.0,
-                  'MaxPhDauTrkChi2':   10.0,
+                  'MaxPhDauTrkChi2':    5.0,
                   'MaxKSDeltaM':      150.0,
                   'MinKSPt':         2000.0,
                   'MaxKSVertChi2DOF':  10.0,
@@ -122,6 +134,8 @@ confdict_2body = {'nbody':              2,
                   'MinKSDauPt':       500.0,
                   'MinKSDauIPChi2':    16.0,
                   'MaxKSDauTrkChi2':    5.0,
+                  'MinKSKPIDPi':        0.0,
+                  'MinKSPiPIDK':        0.0,
                   'MaxJpDeltaM':     3000.0,
                   'MinJpPt':         1000.0,
                   'MaxJpVertChi2DOF':  10.0,
@@ -129,7 +143,7 @@ confdict_2body = {'nbody':              2,
                   'MinJpIPChi2':        0.0,
                   'MinJpDauPt':       500.0,
                   'MinJpDauIPChi2':     0.0,
-                  'MaxJpDauTrkChi2':   10.0,
+                  'MaxJpDauTrkChi2':    5.0,
                   'MaxDSDeltaM':      153.0,
                   'MinDSPt':         1500.0,
                   'MaxDSVertChi2DOF':  10.0,
@@ -165,17 +179,17 @@ from StrippingUtils.Utils import LineBuilder
 class B2nbodyConf(LineBuilder) :
     __configuration_keys__ = ('nbody','MinBMass','MaxBMass','MinBPt','MaxBVertChi2DOF','MinBPVVDChi2','MaxBPVIPChi2','MinBPVDIRA','MinNvc',
                               'doPi','doK','dop','doKs','doLm','doDz','doDp','doDs','doLc','doPh','doKS','doJp','doDS',
-                              'MinPiPt','MinPiIPChi2DV','MaxPiChi2',
-                              'MinKPt','MinKIPChi2DV','MaxKChi2',
-                              'MinpPt','MinpIPChi2DV','MaxpChi2',
+                              'MinPiPt','MinPiIPChi2DV','MaxPiChi2','MinPiPIDK','MinPiPIDp',
+                              'MinKPt','MinKIPChi2DV','MaxKChi2','MinKPIDPi','MinKPIDp',
+                              'MinpPt','MinpIPChi2DV','MaxpChi2','MinpPIDPi','MinpPIDK',
                               'MaxKsDeltaM','MinKsPt','MaxKsVertChi2DOF','MinKsPVVDChi2','MinKsIPChi2','MinKsDauPt','MinKsDauIPChi2','MaxKsDauTrkChi2',
                               'MaxLmDeltaM','MinLmPt','MaxLmVertChi2DOF','MinLmPVVDChi2','MinLmIPChi2','MinLmPrtPt','MinLmPiPt','MinLmPrtIPChi2','MinLmPiIPChi2','MaxLmPrtTrkChi2','MaxLmPiTrkChi2',
-                              'MaxDzDeltaM','MinDzPt','MaxDzVertChi2DOF','MinDzPVVDChi2','MinDzIPChi2','MinDzDauPt','MinDzDauIPChi2','MaxDzDauTrkChi2','MinDzPIDK',
-                              'MaxDpDeltaM','MinDpPt','MaxDpVertChi2DOF','MinDpPVVDChi2','MinDpIPChi2','MinDpDauPt','MinDpDauIPChi2','MaxDpDauTrkChi2','MinDpPIDK',
-                              'MaxDsDeltaM','MinDsPt','MaxDsVertChi2DOF','MinDsPVVDChi2','MinDsIPChi2','MinDsDauPt','MinDsDauIPChi2','MaxDsDauTrkChi2','MinDsPIDK',
-                              'MaxLcDeltaM','MinLcPt','MaxLcVertChi2DOF','MinLcPVVDChi2','MinLcIPChi2','MinLcDauPt','MinLcDauIPChi2','MaxLcDauTrkChi2','MinLcPIDK','MinLcPIDp',
+                              'MaxDzDeltaM','MinDzPt','MaxDzVertChi2DOF','MinDzPVVDChi2','MinDzIPChi2','MinDzDauPt','MinDzDauIPChi2','MaxDzDauTrkChi2','MinDzKPIDPi','MinDzPiPIDK',
+                              'MaxDpDeltaM','MinDpPt','MaxDpVertChi2DOF','MinDpPVVDChi2','MinDpIPChi2','MinDpDauPt','MinDpDauIPChi2','MaxDpDauTrkChi2','MinDpKPIDPi','MinDpPiPIDK',
+                              'MaxDsDeltaM','MinDsPt','MaxDsVertChi2DOF','MinDsPVVDChi2','MinDsIPChi2','MinDsDauPt','MinDsDauIPChi2','MaxDsDauTrkChi2','MinDsKmPIDPi','MinDsKpPIDPi','MinDsPiPIDK',
+                              'MaxLcDeltaM','MinLcPt','MaxLcVertChi2DOF','MinLcPVVDChi2','MinLcIPChi2','MinLcDauPt','MinLcDauIPChi2','MaxLcDauTrkChi2','MinLcKPIDPi','MinLcpPIDPi','MinLcpPIDK','MinLcPiPIDK',
                               'MaxPhDeltaM','MinPhPt','MaxPhVertChi2DOF','MinPhPVVDChi2','MinPhIPChi2','MinPhDauPt','MinPhDauIPChi2','MaxPhDauTrkChi2',
-                              'MaxKSDeltaM','MinKSPt','MaxKSVertChi2DOF','MinKSPVVDChi2','MinKSIPChi2','MinKSDauPt','MinKSDauIPChi2','MaxKSDauTrkChi2',
+                              'MaxKSDeltaM','MinKSPt','MaxKSVertChi2DOF','MinKSPVVDChi2','MinKSIPChi2','MinKSDauPt','MinKSDauIPChi2','MaxKSDauTrkChi2','MinKSKPIDPi','MinKSPiPIDK',
                               'MaxJpDeltaM','MinJpPt','MaxJpVertChi2DOF','MinJpPVVDChi2','MinJpIPChi2','MinJpDauPt','MinJpDauIPChi2','MaxJpDauTrkChi2',
                               'MaxDSDeltaM','MinDSPt','MaxDSVertChi2DOF','MinDSPVVDChi2','MinDSIPChi2','MinDSPiPt','MinDSPiIPChi2','MaxDSPiTrkChi2','MaxDSD0DeltaM',
                               'MinDSD0Pt','MaxDSD0VertChi2DOF','MinDSD0PVVDChi2','MinDSD0IPChi2','MinDSD0DauPt','MinDSD0DauIPChi2','MaxDSD0DauTrkChi2')
@@ -187,15 +201,21 @@ class B2nbodyConf(LineBuilder) :
         self.selPi = makePi( 'PiFor'+name,
                              MinPiPt      =config['MinPiPt'],
                              MinPiIPChi2DV=config['MinPiIPChi2DV'],
-                             MaxPiChi2    =config['MaxPiChi2'])
+                             MaxPiChi2    =config['MaxPiChi2'],
+                             MinPiPIDK    =config['MinPiPIDK'],
+                             MinPiPIDp    =config['MinPiPIDp'])
         self.selK = makeK( 'KFor'+name,
                              MinKPt      =config['MinKPt'],
                              MinKIPChi2DV=config['MinKIPChi2DV'],
-                             MaxKChi2    =config['MaxKChi2'])
+                             MaxKChi2    =config['MaxKChi2'],
+                             MinKPIDPi   =config['MinKPIDPi'],
+                             MinKPIDp    =config['MinKPIDp'])
         self.selp = makep( 'pFor'+name,
                              MinpPt      =config['MinpPt'],
                              MinpIPChi2DV=config['MinpIPChi2DV'],
-                             MaxpChi2    =config['MaxpChi2'])
+                             MaxpChi2    =config['MaxpChi2'],
+                             MinpPIDPi   =config['MinpPIDPi'],
+                             MinpPIDK    =config['MinpPIDK'])
         self.selKs = makeKs('KsFor'+name,
                             MaxKsDeltaM     =config['MaxKsDeltaM'],    
                             MinKsPt         =config['MinKsPt'],        
@@ -226,7 +246,8 @@ class B2nbodyConf(LineBuilder) :
                             MinDzDauPt      =config['MinDzDauPt'],     
                             MinDzDauIPChi2  =config['MinDzDauIPChi2'], 
                             MaxDzDauTrkChi2 =config['MaxDzDauTrkChi2'],
-                            MinDzPIDK       =config['MinDzPIDK'])
+                            MinDzKPIDPi     =config['MinDzKPIDPi'],
+                            MinDzPiPIDK     =config['MinDzPiPIDK'])
         self.selDp = makeDp('DpFor'+name,
                             MaxDpDeltaM     =config['MaxDpDeltaM'],   
                             MinDpPt         =config['MinDpPt'],        
@@ -236,7 +257,8 @@ class B2nbodyConf(LineBuilder) :
                             MinDpDauPt      =config['MinDpDauPt'],     
                             MinDpDauIPChi2  =config['MinDpDauIPChi2'], 
                             MaxDpDauTrkChi2 =config['MaxDpDauTrkChi2'],
-                            MinDpPIDK       =config['MinDpPIDK'])
+                            MinDpKPIDPi     =config['MinDpKPIDPi'],
+                            MinDpPiPIDK     =config['MinDpPiPIDK'])
         self.selDs = makeDs('DsFor'+name,
                             MaxDsDeltaM     =config['MaxDsDeltaM'],   
                             MinDsPt         =config['MinDsPt'],        
@@ -246,7 +268,9 @@ class B2nbodyConf(LineBuilder) :
                             MinDsDauPt      =config['MinDsDauPt'],     
                             MinDsDauIPChi2  =config['MinDsDauIPChi2'], 
                             MaxDsDauTrkChi2 =config['MaxDsDauTrkChi2'],
-                            MinDsPIDK       =config['MinDsPIDK'])
+                            MinDsKmPIDPi    =config['MinDsKmPIDPi'],
+                            MinDsKpPIDPi    =config['MinDsKpPIDPi'],
+                            MinDsPiPIDK     =config['MinDsPiPIDK'])
         self.selLc = makeLc('LcFor'+name,
                             MaxLcDeltaM     =config['MaxLcDeltaM'],   
                             MinLcPt         =config['MinLcPt'],        
@@ -256,8 +280,10 @@ class B2nbodyConf(LineBuilder) :
                             MinLcDauPt      =config['MinLcDauPt'],     
                             MinLcDauIPChi2  =config['MinLcDauIPChi2'], 
                             MaxLcDauTrkChi2 =config['MaxLcDauTrkChi2'],
-                            MinLcPIDK       =config['MinLcPIDK'],
-                            MinLcPIDp       =config['MinLcPIDp'])
+                            MinLcKPIDPi     =config['MinLcKPIDPi'],
+                            MinLcpPIDPi     =config['MinLcpPIDPi'],
+                            MinLcpPIDK      =config['MinLcpPIDK'],
+                            MinLcPiPIDK     =config['MinLcPiPIDK'])
         self.selPh = makePh('PhFor'+name,
                             MaxPhDeltaM     =config['MaxPhDeltaM'],     
                             MinPhPt         =config['MinPhPt'],         
@@ -275,7 +301,9 @@ class B2nbodyConf(LineBuilder) :
                             MinKSIPChi2     =config['MinKSIPChi2'],     
                             MinKSDauPt      =config['MinKSDauPt'],      
                             MinKSDauIPChi2  =config['MinKSDauIPChi2'],  
-                            MaxKSDauTrkChi2 =config['MaxKSDauTrkChi2'])
+                            MaxKSDauTrkChi2 =config['MaxKSDauTrkChi2'],
+                            MinKSKPIDPi     =config['MinKSKPIDPi'],
+                            MinKSPiPIDK     =config['MinKSPiPIDK'])
         self.selJp = makeJp('JpFor'+name,
                             MaxJpDeltaM     =config['MaxJpDeltaM'],     
                             MinJpPt         =config['MinJpPt'],         
@@ -490,26 +518,32 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
     return Selection(name, Algorithm = _B, RequiredSelections = [InputSel] )
 
 from StandardParticles import StdLoosePions
-def makePi(name, MinPiPt, MinPiIPChi2DV, MaxPiChi2) :
+def makePi(name, MinPiPt, MinPiIPChi2DV, MaxPiChi2, MinPiPIDK, MinPiPIDp) :
     _code =  "(PT > %(MinPiPt)s*MeV)"%locals()
     _code+="& (MIPCHI2DV(PRIMARY) > %(MinPiIPChi2DV)s)"%locals()
     _code+="& (TRCHI2DOF<%(MaxPiChi2)s)"%locals()
+    _code+="& (PIDpi-PIDK > %(MinPiPIDK)s)"%locals()
+    _code+="& (PIDpi-PIDp > %(MinPiPIDp)s)"%locals()
     _PiFilter=FilterDesktop(Code=_code)
     return Selection (name,  Algorithm = _PiFilter, RequiredSelections = [StdLoosePions])
                         
 from StandardParticles import StdLooseKaons
-def makeK(name, MinKPt, MinKIPChi2DV, MaxKChi2) :
+def makeK(name, MinKPt, MinKIPChi2DV, MaxKChi2, MinKPIDPi, MinKPIDp) :
     _code =  "(PT > %(MinKPt)s*MeV)"%locals()
     _code+="& (MIPCHI2DV(PRIMARY) > %(MinKIPChi2DV)s)"%locals()
     _code+="& (TRCHI2DOF<%(MaxKChi2)s)"%locals()
+    _code+="& (PIDK-PIDpi > %(MinKPIDPi)s)"%locals()
+    _code+="& (PIDK-PIDp > %(MinKPIDp)s)"%locals()
     _KFilter=FilterDesktop(Code=_code)
     return Selection (name,  Algorithm = _KFilter, RequiredSelections = [StdLooseKaons])
                         
 from StandardParticles import StdLooseProtons
-def makep(name, MinpPt, MinpIPChi2DV, MaxpChi2) :
+def makep(name, MinpPt, MinpIPChi2DV, MaxpChi2, MinpPIDPi, MinpPIDK) :
     _code =  "(PT > %(MinpPt)s*MeV)"%locals()
     _code+="& (MIPCHI2DV(PRIMARY) > %(MinpIPChi2DV)s)"%locals()
     _code+="& (TRCHI2DOF<%(MaxpChi2)s)"%locals()
+    _code+="& (PIDp-PIDpi > %(MinpPIDPi)s)"%locals()
+    _code+="& (PIDp-PIDK > %(MinpPIDK)s)"%locals()
     _pFilter=FilterDesktop(Code=_code)
     return Selection (name,  Algorithm = _pFilter, RequiredSelections = [StdLooseProtons])
 
@@ -550,7 +584,7 @@ def makeLm(name, MaxLmDeltaM, MinLmPt, MaxLmVertChi2DOF, MinLmPVVDChi2, MinLmIPC
     _LmMerged = MergedSelection( "MergedLmFor" + name, RequiredSelections = [_stdLmDD,_stdLmLL] )
     return Selection (name, Algorithm = _LmFilter, RequiredSelections = [_LmMerged])
 
-def makeDz(name, MaxDzDeltaM, MinDzPt, MaxDzVertChi2DOF, MinDzPVVDChi2, MinDzIPChi2, MinDzDauPt, MinDzDauIPChi2, MaxDzDauTrkChi2, MinDzPIDK):
+def makeDz(name, MaxDzDeltaM, MinDzPt, MaxDzVertChi2DOF, MinDzPVVDChi2, MinDzIPChi2, MinDzDauPt, MinDzDauIPChi2, MaxDzDauTrkChi2, MinDzKPIDPi,MinDzPiPIDK):
     _code = "(PT>%(MinDzPt)s*MeV)"%locals()
     _code+="& (VFASPF(VCHI2/VDOF)<%(MaxDzVertChi2DOF)s)"%locals()
     _code+="& (BPVVDCHI2>%(MinDzPVVDChi2)s)"%locals()
@@ -562,12 +596,13 @@ def makeDz(name, MaxDzDeltaM, MinDzPt, MaxDzVertChi2DOF, MinDzPVVDChi2, MinDzIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxDzDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxDzDauTrkChi2)s , 2 )"%locals()
     _code+="& (ADMASS('D0') < %(MaxDzDeltaM)s*MeV)"%locals()
-    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDzPIDK)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDzKPIDPi)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDpi-PIDK > %(MinDzPiPIDK)s , 2 )"%locals()
     _DzFilter = FilterDesktop(Code = _code)
     _stdDz = DataOnDemand(Location = "Phys/StdLooseD02KPi/Particles")
     return Selection (name, Algorithm = _DzFilter, RequiredSelections = [_stdDz])
 
-def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPChi2, MinDpDauPt, MinDpDauIPChi2, MaxDpDauTrkChi2, MinDpPIDK):
+def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPChi2, MinDpDauPt, MinDpDauIPChi2, MaxDpDauTrkChi2, MinDpKPIDPi, MinDpPiPIDK):
     _code = "(PT>%(MinDpPt)s*MeV)"%locals()
     _code+="& (VFASPF(VCHI2/VDOF)<%(MaxDpVertChi2DOF)s)"%locals()
     _code+="& (BPVVDCHI2>%(MinDpPVVDChi2)s)"%locals()
@@ -582,12 +617,14 @@ def makeDp(name, MaxDpDeltaM, MinDpPt, MaxDpVertChi2DOF, MinDpPVVDChi2, MinDpIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxDpDauTrkChi2)s , 2 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxDpDauTrkChi2)s , 3 )"%locals()
     _code+="& (ADMASS('D+') < %(MaxDpDeltaM)s*MeV)"%locals()
-    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDpPIDK)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDpKPIDPi)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDpi-PIDK > %(MinDpPiPIDK)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDpi-PIDK > %(MinDpPiPIDK)s , 3 )"%locals()
     _DpFilter = FilterDesktop(Code = _code)
     _stdDp = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
     return Selection (name, Algorithm = _DpFilter, RequiredSelections = [_stdDp])
 
-def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPChi2, MinDsDauPt, MinDsDauIPChi2, MaxDsDauTrkChi2, MinDsPIDK):
+def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPChi2, MinDsDauPt, MinDsDauIPChi2, MaxDsDauTrkChi2, MinDsKmPIDPi, MinDsKpPIDPi,MinDsPiPIDK):
     _code = "(PT>%(MinDsPt)s*MeV)"%locals()
     _code+="& (VFASPF(VCHI2/VDOF)<%(MaxDsVertChi2DOF)s)"%locals()
     _code+="& (BPVVDCHI2>%(MinDsPVVDChi2)s)"%locals()
@@ -602,13 +639,14 @@ def makeDs(name, MaxDsDeltaM, MinDsPt, MaxDsVertChi2DOF, MinDsPVVDChi2, MinDsIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxDsDauTrkChi2)s , 2 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxDsDauTrkChi2)s , 3 )"%locals()
     _code+="& (ADMASS('D_s+') < %(MaxDsDeltaM)s*MeV)"%locals()
-    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsPIDK)s , 1 )"%locals()
-    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsPIDK)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsKmPIDPi)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinDsKpPIDPi)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDpi-PIDK > %(MinDsPiPIDK)s , 3 )"%locals()
     _DsFilter = FilterDesktop(Code = _code)
-    _stdDs = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
+    _stdDs = DataOnDemand(Location = "Phys/StdLooseDsplus2KKPi/Particles")
     return Selection (name, Algorithm = _DsFilter, RequiredSelections = [_stdDs])
 
-def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPChi2, MinLcDauPt, MinLcDauIPChi2, MaxLcDauTrkChi2, MinLcPIDK, MinLcPIDp):
+def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPChi2, MinLcDauPt, MinLcDauIPChi2, MaxLcDauTrkChi2, MinLcKPIDPi, MinLcpPIDPi, MinLcpPIDK, MinLcPiPIDK):
     _code = "(PT>%(MinLcPt)s*MeV)"%locals()
     _code+="& (VFASPF(VCHI2/VDOF)<%(MaxLcVertChi2DOF)s)"%locals()
     _code+="& (BPVVDCHI2>%(MinLcPVVDChi2)s)"%locals()
@@ -623,8 +661,10 @@ def makeLc(name, MaxLcDeltaM, MinLcPt, MaxLcVertChi2DOF, MinLcPVVDChi2, MinLcIPC
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxLcDauTrkChi2)s , 2 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxLcDauTrkChi2)s , 3 )"%locals()
     _code+="& (ADMASS('Lambda_c+') < %(MaxLcDeltaM)s*MeV)"%locals()
-    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinLcPIDK)s , 1 )"%locals()
-    _code+="& CHILDCUT ( PIDp-PIDpi > %(MinLcPIDp)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinLcKPIDPi)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDp-PIDpi > %(MinLcpPIDPi)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDp-PIDK > %(MinLcpPIDK)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDpi-PIDK > %(MinLcPiPIDK)s , 3 )"%locals()
     _LcFilter = FilterDesktop(Code = _code)
     _stdLc = DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi/Particles")
     return Selection (name, Algorithm = _LcFilter, RequiredSelections = [_stdLc])
@@ -646,7 +686,7 @@ def makePh(name, MaxPhDeltaM, MinPhPt, MaxPhVertChi2DOF, MinPhPVVDChi2, MinPhIPC
     _stdPh = DataOnDemand(Location = "Phys/StdLooseDetachedPhi2KK/Particles")
     return Selection (name, Algorithm = _PhFilter, RequiredSelections = [_stdPh])
 
-def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPChi2, MinKSDauPt, MinKSDauIPChi2, MaxKSDauTrkChi2):
+def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPChi2, MinKSDauPt, MinKSDauIPChi2, MaxKSDauTrkChi2, MinKSKPIDPi, MinKSPiPIDK):
     _code =  "(ADMASS('K*(892)0') < %(MaxKSDeltaM)s*MeV)"%locals()
     _code+="& ( PT > %(MinKSPt)s )"%locals()
     _code+="& ( VFASPF(VCHI2/VDOF) < %(MaxKSVertChi2DOF)s )"%locals()
@@ -658,6 +698,8 @@ def makeKS(name, MaxKSDeltaM, MinKSPt, MaxKSVertChi2DOF, MinKSPVVDChi2, MinKSIPC
     _code+="& CHILDCUT ( PT > %(MinKSDauPt)s , 2 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 1 )"%locals()
     _code+="& CHILDCUT ( TRCHI2DOF < %(MaxKSDauTrkChi2)s , 2 )"%locals()
+    _code+="& CHILDCUT ( PIDK-PIDpi > %(MinKSKPIDPi)s , 1 )"%locals()
+    _code+="& CHILDCUT ( PIDpi-PIDK > %(MinKSPiPIDK)s , 2 )"%locals()
     _KSFilter = FilterDesktop(Code = _code)
     _stdKS = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles")
     return Selection (name, Algorithm = _KSFilter, RequiredSelections = [_stdKS])

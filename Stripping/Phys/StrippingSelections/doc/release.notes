@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2011-07-22 Rolf Oldeman
+- Updated B2nbody to allow for extra PID cuts
+- Updated confdicts for B2twobody and B2threebody to reduce retention
+
 ! 2011-07-022- Wenbin Qian
 
 Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
