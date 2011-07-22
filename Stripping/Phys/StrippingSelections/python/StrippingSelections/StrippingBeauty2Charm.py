@@ -52,7 +52,8 @@ config = {
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV',
-    '4H_ASUMPT_MIN' : '1500*MeV' 
+    '4H_ASUMPT_MIN' : '1500*MeV',
+    '4H_2PT_MIN'    : '350*MeV' 
     },
     "B2X" : { # Cuts made on all B's used in all lines
     'AMAXDOCA_MAX'  : '1.0*mm',

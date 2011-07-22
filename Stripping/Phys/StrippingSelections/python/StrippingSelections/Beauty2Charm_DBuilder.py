@@ -53,7 +53,9 @@ class DBuilder(object):
     def _makeD2X(self,name,decays,wm,useMaxIPChi2,config,extrainputs=[]):
         ''' Makes all D -> X selections.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),wm,hasTopoChild()]
-        # require at least one daughter to IP chi2 > D min FD chi2
+        if config.has_key('ANUMPT'):
+            comboCuts.append('(ANUM(PT > %s) > 1)'%config['ANUMPT'])
+        # require at least one daughter to IP chi2 > D min FD chi2        
         if useMaxIPChi2:
             comboCuts.append("AHASCHILD(MIPCHI2DV(PRIMARY) > %s)" \
                              % config['BPVVDCHI2_MIN'])
@@ -191,6 +193,7 @@ class DBuilder(object):
         '''Makes D->hhhh'''
         conf = deepcopy(self.config)
         conf['ASUMPT_MIN'] = self.config['4H_ASUMPT_MIN']
+        conf['ANUMPT'] = self.config['4H_2PT_MIN']
         min,max = self._massWindow('D0')
         decays = [['pi+','pi+','pi-','pi-'],
                   ['pi+','pi+','K-','pi-'],['pi+','pi+','pi-','K-'],
