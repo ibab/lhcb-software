@@ -4,9 +4,6 @@
  *
  *  Header file for RichSmartID conversion utilities
  *
- *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.11 2009-08-27 19:12:07 rogers Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
  *  @edits: Young Min Kim (s0679231@sms.ed.ac.uk) on 13/06/2008

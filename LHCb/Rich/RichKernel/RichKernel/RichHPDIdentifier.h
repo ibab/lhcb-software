@@ -4,9 +4,6 @@
  *
  *  Header file for Rich::DAQ::HPDIdentifier
  *
- *  CVS Log :-
- *  $Id: RichHPDIdentifier.h,v 1.7 2010-01-14 12:49:33 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   27/04/2007
  */
