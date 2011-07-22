@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r5 2011-07-22 =========================
 ! 2011-07-21 - Jibo He
  - LineConfigDictionaries_PSWG.py
   . Update Ccbar2Ppbar
@@ -17,7 +18,6 @@
   . Update TrackEffMuonTT
  - dbase/stripping16 updated 
 
-!========================= StrippingSettings v2r5 2011-07-20 =========================
 ! 2011-07-20 - Jibo He
  - python/StrippingSettings/Stripping16
   . Start Stripping16 based on Stripping15
