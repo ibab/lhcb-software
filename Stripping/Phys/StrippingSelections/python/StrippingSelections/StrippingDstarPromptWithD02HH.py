@@ -1,7 +1,7 @@
 # $Id: StrippingDstarPromptWithD02HH.py,v 1.7 2010-09-04 22:12:02 pxing Exp $
 
 __author__ = ['Philip Xing', 'Patrick Spradlin']
-__date__ = '2011.02.24'
+__date__ = '2011.07.22'
 __version__ = '$Revision: 1.8 $'
 
 __all__ = ( 'StrippingDstarPromptWithD02HHConf' )
@@ -47,7 +47,7 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions
+from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
 default_config = { 'DaugPt'            : 0.9 * GeV,
@@ -99,8 +99,8 @@ class StrippingDstarPromptWithD02HHConf(LineBuilder) :
 
         LineBuilder.__init__(self, name, config)
 
-        stdNoPIDsKaons = StdNoPIDsKaons
-        stdNoPIDsPions = StdNoPIDsPions
+        stdNoPIDsKaons = StdAllNoPIDsKaons
+        stdNoPIDsPions = StdAllNoPIDsPions
         #---------------------------------------
         # D0 -> hh' selections
         self.selD0KPi = makeD2hh( name + 'D02RSKPi',

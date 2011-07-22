@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-07-22 - Philip Xing
+ - StrippingDstarPromptWithD02HH.py, updated particle containers to 'All' type
+
 ! 2011-07-22 - Neus Lopez March
  - Turned off some B2Psi2SX "Unbiased" stripping lines to reduce rate.
  - Converted appropriate lines to use StdAllLooseXXX particles.
