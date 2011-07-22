@@ -5,7 +5,7 @@ There is no constraint on X
 '''
 
 __author__ = ['Sebastian Bachmann']
-__date__ = '05/25/2011'
+__date__ = '07/22/2011'
 __version__ = '$Revision: 1.1 $'
 
 __all__ = ('X2D0D0Conf',
@@ -76,8 +76,8 @@ def makeD02HH(name, D0MassWin, D0PT, D0VtxChi2Ndof, D0daughterPT, D0daughterP, D
                                   )
 
 
-    _stdTightKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
-    _stdTightPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
+    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
 
     return Selection (name,
                       Algorithm = _D0Filter,
