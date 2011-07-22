@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-07-22 S. Blusk
+	- Minor update to Beauty2Charm_B2DXBuilder to include B+ -> D0 D+ and B- -->D0D-  
+
+! 2011-07-22 S. Blusk
    - Updates to StrippingBeauty, add Beauty2Charm_Dfilter, Beauthy2Charm_HHHBuilder
    - modifications to some LokiCuts, Utils
 
