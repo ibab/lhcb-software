@@ -1,4 +1,3 @@
-// $Id: Track2Calo.cpp,v 1.4 2010-02-13 00:34:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +61,8 @@ bool Track2Calo::match(const LHCb::Track* track, std::string det,CaloPlane::Plan
   m_state  = caloState(plane, delta, pid);
   m_cell   = m_calo->Cell( m_state.position() );
   m_valid  = m_calo->valid( m_cell );
-  debug() << " Track2Calo setting [" << *track <<","<< det<<"] status : " <<m_status << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Track2Calo setting [" << *track <<","<< det<<"] status : " <<m_status << endmsg;
   return m_status;
 }
 //=============================================================================

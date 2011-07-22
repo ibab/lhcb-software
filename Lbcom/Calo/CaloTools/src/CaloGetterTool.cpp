@@ -1,4 +1,3 @@
-// $Id: CaloGetterTool.cpp,v 1.6 2009-09-16 16:07:07 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -68,7 +67,8 @@ CaloGetterTool::~CaloGetterTool() {}
 StatusCode CaloGetterTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  debug() << "Initialize Calo2Calo tool " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Initialize Calo2Calo tool " << endmsg;
   //
   m_provider["Ecal"] = tool<ICaloDataProvider>( "CaloDataProvider" , "EcalDataProvider" );
   m_provider["Hcal"] = tool<ICaloDataProvider>( "CaloDataProvider" , "HcalDataProvider" );

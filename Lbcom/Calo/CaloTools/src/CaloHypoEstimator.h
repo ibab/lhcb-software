@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef CALOHYPOESTIMATOR_H 
 #define CALOHYPOESTIMATOR_H 1
 
@@ -43,7 +42,8 @@ public:
   virtual double data(const LHCb::CaloHypo* hypo ,CaloDataType::DataType type, double def = 0);
 
   virtual void handle(const Incident&  ) { 
-    debug() << "IIncident Svc reset" << endmsg; 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "IIncident Svc reset" << endmsg; 
     clean();
   } 
   virtual ICaloHypo2Calo* hypo2Calo(){return m_toCalo;};  

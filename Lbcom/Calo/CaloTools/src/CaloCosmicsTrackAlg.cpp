@@ -1,4 +1,3 @@
-// $Id: CaloCosmicsTrackAlg.cpp,v 1.8 2009-08-10 11:55:13 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +49,7 @@ StatusCode CaloCosmicsTrackAlg::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleeAlg
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // tools
   m_caloTrack = tool<ICaloCosmicsTrackTool>(m_trackToolType , "TrackTool", this);
@@ -76,7 +75,7 @@ StatusCode CaloCosmicsTrackAlg::initialize() {
 //=============================================================================
 StatusCode CaloCosmicsTrackAlg::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
 
   if(m_monitor){
@@ -95,7 +94,8 @@ StatusCode CaloCosmicsTrackAlg::execute() {
   // process tracking
   StatusCode esc = m_caloTrack->processing();
   if(!m_caloTrack->tracked()){
-    debug() << "No track reconstructed" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No track reconstructed" << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -107,7 +107,7 @@ StatusCode CaloCosmicsTrackAlg::execute() {
 
   
   // Checks
-  if ( msgLevel(MSG::DEBUG) ) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     debug() << " Track ---- " << endmsg;
     debug() << " backward  : "<< track->checkFlag(LHCb::Track::Backward) << endmsg;
     debug() << " Timed : " << track->checkFlag(LHCb::Track::Selected) << " / " << m_caloTrack->timed() << endmsg;
@@ -168,6 +168,6 @@ StatusCode CaloCosmicsTrackAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CaloCosmicsTrackAlg::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }

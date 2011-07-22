@@ -1,4 +1,3 @@
-// $Id: CaloCosmicsTool.cpp,v 1.11 2010-06-10 12:06:29 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -152,7 +151,8 @@ StatusCode CaloCosmicsTool::initialize(){
     }
     k++;
   }
-  debug() << "Requested time slots : " << m_slots << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Requested time slots : " << m_slots << endmsg;
   
 
   // get detector element
@@ -172,12 +172,15 @@ StatusCode CaloCosmicsTool::initialize(){
   m_delta = m_calo->plane(CaloPlane::Front).HesseDistance()-
     m_calo->plane(CaloPlane::Back).HesseDistance();
   m_delta *= m_calo->plane(CaloPlane::Front).Normal().Z();
-  debug() << " m_det : " << m_det << " m_delta = " << m_delta << " cos(tilt) = " 
-          <<  m_calo->plane(CaloPlane::Front).Normal().Z() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " m_det : " << m_det << " m_delta = " << m_delta << " cos(tilt) = " 
+            <<  m_calo->plane(CaloPlane::Front).Normal().Z() << endmsg;
 
   // get the decoding tool for each time slot
   for(std::vector<std::string>::iterator islot = m_slots.begin(); islot != m_slots.end() ;  ++islot){
-    debug() << "Loading : decoding tool for slot " << *islot << " : '" << m_det << "ReadoutTool" <<  *islot << "'" <<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Loading : decoding tool for slot " << *islot << " : '"
+              << m_det << "ReadoutTool" <<  *islot << "'" <<endmsg;
     this->setProperty("RootInTES","");
     if(*islot != "T0")this->setProperty("RootInTES",*islot);
      m_daqs[*islot] = tool<ICaloDataProvider>( m_readoutTool , m_det + "ReadoutTool" + *islot , this );
@@ -191,7 +194,8 @@ StatusCode CaloCosmicsTool::initialize(){
 //=============================================================================
 StatusCode CaloCosmicsTool::processing(){
 
-  debug() << " Process " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Process " << name() << endmsg;
 
   // default
   m_phi      = -999;
@@ -275,15 +279,18 @@ StatusCode CaloCosmicsTool::zSup(){
     LHCb::CaloAdc sumADC(cell , sum);
     m_zsupADCs.push_back( sumADC );                // vector of ADC sum over consecutive BX (after Z-sup)
     if( sum > m_max.adc() )m_max = sumADC;    // maximal ADC
-    debug() << name() 
-            << " : cell = " << sumADC.cellID() 
-            << " ADCsum =  " << sumADC.adc() 
-            << " max =  " << m_max.adc() 
-            << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << name() 
+              << " : cell = " << sumADC.cellID() 
+              << " ADCsum =  " << sumADC.adc() 
+              << " max =  " << m_max.adc() 
+              << endmsg;
     
   }
 
-  debug() << "Zero suppression : " << m_zsupADCs.size() << " among " << adcs.size() << " digits " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Zero suppression : " << m_zsupADCs.size() << " among "
+            << adcs.size() << " digits " << endmsg;
 
   if( m_zsupADCs.size() == 0){
     info() << "No digit left after Zero-suppression" <<endmsg;
@@ -328,7 +335,8 @@ StatusCode CaloCosmicsTool::fit2D(){
     swa += w*a;
   }}
 
-  debug() << "Point : " << ref.X()  << " " << ref.Y() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Point : " << ref.X()  << " " << ref.Y() << endmsg;
 
 
   if( sw<=0 ){
@@ -336,7 +344,8 @@ StatusCode CaloCosmicsTool::fit2D(){
     return StatusCode::FAILURE;
   }
   else{
-    debug() << "1st pass " << swa/sw << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "1st pass " << swa/sw << endmsg;
   }
   
   // Built the 2D line
@@ -344,7 +353,8 @@ StatusCode CaloCosmicsTool::fit2D(){
   double norm = sqrt(1.+tan(swa/sw)*tan(swa/sw));
   Gaudi::XYZVector vec(1./norm, tan(swa/sw)/norm , 0.);
   Gaudi::Math::XYZLine   line(ref, vec);
-  debug() << "Line parameters " << vec.X() << " " << vec.Y() << " " << vec.Z() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Line parameters " << vec.X() << " " << vec.Y() << " " << vec.Z() << endmsg;
   // Collect data along the 2D cosmics line (+- tolerance)
   double x   = 0;
   double y   = 0;
@@ -358,7 +368,9 @@ StatusCode CaloCosmicsTool::fit2D(){
     Gaudi::XYZPoint pos = m_calo->cellCenter( cell );
     pos.SetZ( ref.Z() );
     double ip = Gaudi::Math::impactParameter<Gaudi::XYZPoint, Gaudi::Math::XYZLine>(pos, line)/size;
-    debug() << "--> " << cell << " ip = " << ip << " x = "<<  pos.X() << " y = " << pos.Y() << " z=  " << pos.Z() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "--> " << cell << " ip = " << ip << " x = "<<  pos.X()
+              << " y = " << pos.Y() << " z=  " << pos.Z() << endmsg;
     if(fabs(ip) < m_tol){
       m_cosmicsADCs.push_back( *id );
       m_adcSum += (*id).adc();
@@ -374,7 +386,8 @@ StatusCode CaloCosmicsTool::fit2D(){
   m_kernel = kernel / (double) m_adcSum;
   
 
-  debug() << " m_cosmicsADCs.size() " << m_cosmicsADCs.size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " m_cosmicsADCs.size() " << m_cosmicsADCs.size() << endmsg;
   if(m_cosmicsADCs.size()== 0){
     Warning( "Empty 2D segment - fit failed").ignore();
     return StatusCode::FAILURE;
@@ -382,14 +395,18 @@ StatusCode CaloCosmicsTool::fit2D(){
 
   // ADC sum thresholds
   if( m_adcSum < m_minD || m_adcSum > m_maxD){
-    debug() << "ADC sum " << m_adcSum << " outside the requested range [" << m_minD << "," << m_maxD <<"]" <<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "ADC sum " << m_adcSum << " outside the requested range ["
+              << m_minD << "," << m_maxD <<"]" <<endmsg;
     return StatusCode::FAILURE;
   }
 
   // Multiplicity thresholds
   if( (int) m_cosmicsADCs.size() < m_minM || (int) m_cosmicsADCs.size() > m_maxM ){
-    debug() << "Segment #digits " << m_cosmicsADCs.size() << " outside the requested range " 
-            << m_minM << "," << m_maxM << "]" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Segment #digits " << m_cosmicsADCs.size()
+              << " outside the requested range " 
+              << m_minM << "," << m_maxM << "]" << endmsg;
     return StatusCode::FAILURE;
   }  
 
@@ -402,10 +419,12 @@ StatusCode CaloCosmicsTool::fit2D(){
   double ex = ssx2/N/N;   // error on x
   double ey = ssx2/N/N;   // error on y
   double ez =  m_delta*m_delta/12./N; // error on z
-  debug() << "Delta = " << m_delta << " z  = " << z <<  "+-" << sqrt(ez) << endmsg;
-  debug() << "x = " << x << " +- " << sqrt(ex) << endmsg;
-  debug() << "y = " << y << " +- " << sqrt(ey) << endmsg;  
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "Delta = " << m_delta << " z  = " << z <<  "+-" << sqrt(ez) << endmsg;
+    debug() << "x = " << x << " +- " << sqrt(ex) << endmsg;
+    debug() << "y = " << y << " +- " << sqrt(ey) << endmsg;  
+  }
+  
   m_refPoint.SetX(x);
   m_refPoint.SetY(y);
   m_refPoint.SetZ(z);
@@ -448,15 +467,18 @@ StatusCode CaloCosmicsTool::fit2D(){
     sw  += w;
     swa += w*a;
     sws2 += w*w*s2;
-    debug() << "a = " << a << " w = " << w << " sw = " << sw << " swa = " << swa << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "a = " << a << " w = " << w << " sw = " << sw << " swa = " << swa << endmsg;
   }
   m_phi   = swa / sw;          // best phi
   if(m_phi<0)m_phi += acos(-1.);
   m_sPhi = sws2 /sw/sw; //  phi variance
 
-  debug() << "2nd pass " << m_phi << " +- " << sqrt(m_sPhi) << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "2nd pass " << m_phi << " +- " << sqrt(m_sPhi) << endmsg;
   m_bound = std::make_pair(m_calo->cellCenter( idMin), m_calo->cellCenter( idMax) );   // extrema of the track segment
-  debug() << "END OF TRAJECTORY RECONSTRUCTION" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "END OF TRAJECTORY RECONSTRUCTION" << endmsg;
   m_tracked = true;
   return StatusCode::SUCCESS;
 }
@@ -498,7 +520,8 @@ StatusCode CaloCosmicsTool::timing(){
       if(b1+b2 == 0 )continue;
       N++;
       double asy = ( b1 -  b2 ) / ( b1 + b2 );
-      debug() << "R = " << asy << " b1 = " << b1 << "b2 = " << b2 << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "R = " << asy << " b1 = " << b1 << "b2 = " << b2 << endmsg;
       sb1 += b1;
       sb2 += b2;
       rm  += asy;
@@ -519,8 +542,10 @@ StatusCode CaloCosmicsTool::timing(){
     tdm *= m_Rmean[id];
     m_td[id] = (dl>0) ?  (td-tdm)/dl : 0.;
     m_Rmean2[id] -= m_Rmean[id]*m_Rmean[id];
-    debug() << "<R>(  " << id << ") = "<< m_Rmean[id] << endmsg;
-    debug() << "sigma(R)^2("<< id << ") = " << m_Rmean2[id] << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+      debug() << "<R>(  " << id << ") = "<< m_Rmean[id] << endmsg;
+      debug() << "sigma(R)^2("<< id << ") = " << m_Rmean2[id] << endmsg;
+    }
     if(sb1+sb2!=0)m_R[id]      = (sb1-sb2)/(sb1+sb2)      ;  // asymmetry of the average
     m_slotSum[id] = sb1+sb2;
     if(  sb1+sb2 >= maxSum){
@@ -633,7 +658,7 @@ StatusCode CaloCosmicsTool::tupling(unsigned int unit){
 //=============================================================================
 StatusCode CaloCosmicsTool::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiTupleTool::finalize();  // must be called after all other actions
 }

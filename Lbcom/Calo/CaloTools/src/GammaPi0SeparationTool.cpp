@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -55,7 +54,7 @@ StatusCode GammaPi0SeparationTool::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   /// Retrieve geometry of detector
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -94,7 +93,7 @@ StatusCode GammaPi0SeparationTool::initialize() {
 //=============================================================================
 StatusCode GammaPi0SeparationTool::finalize() {
 
-  debug() << "==> Finalize" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   StatusCode sc = GaudiTool::finalize(); // must be executed first
 
   m_reader0.reset(0);
@@ -110,7 +109,8 @@ StatusCode GammaPi0SeparationTool::finalize() {
 
 
 double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
-  debug()<<"Inside isPhoton ------"<<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug()<<"Inside isPhoton ------"<<endmsg;
   m_data.clear();
 
   double pt = LHCb::CaloMomentum(hypo).pt();
@@ -139,7 +139,8 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
   } 
   else{
     tmva_output = -9999;
-    debug()<<"Outside range of pt"<<endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug()<<"Outside range of pt"<<endmsg;
   }   
 
   return tmva_output;
@@ -151,7 +152,8 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
                                               double& Eseed, double& E2, double& ePrs, int& area) {
 
   m_data.clear();
-  debug()<<"Inside ClusterVariables ------"<<endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug()<<"Inside ClusterVariables ------"<<endmsg;
   fr2 = cluster->position().spread()(0,0)+cluster->position().spread()(1,1);
   fasym = (cluster->position().spread()(0,1))/
     (sqrt( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) ));
@@ -233,11 +235,12 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   const LineType line =  LineType(m_vertex , direction );
   double mu=0;
   if( !Gaudi::Math::intersection<LineType,Gaudi::Plane3D, Gaudi::XYZPoint>( line , m_planePrs , prsPoint , mu) )
-    warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endreq;
+    warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endmsg;
   const LHCb::CaloCellID cellPrs = m_prs->Cell( prsPoint );
   
   if( !exist<CaloDigits>( CaloDigitLocation::Prs ) ){
-    debug() << "No Table container found at " << CaloDigitLocation::Prs << endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "No Table container found at " << CaloDigitLocation::Prs << endmsg;
     //return StatusCode::SUCCESS;
   }
   CaloDigits* digitsPrs = get<CaloDigits>(CaloDigitLocation::Prs);

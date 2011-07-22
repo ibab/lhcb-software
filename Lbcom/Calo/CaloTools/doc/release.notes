@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
 
 ! 2011-06-17 - Olivier Deschamps
   - fix window compilation warning

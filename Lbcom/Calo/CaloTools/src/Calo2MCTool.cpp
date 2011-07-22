@@ -1,4 +1,3 @@
-// $Id: Calo2MCTool.cpp,v 1.7 2009-11-27 07:46:16 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -159,7 +158,8 @@ void Calo2MCTool::addProto(const LHCb::ProtoParticle* proto, const LHCb::Particl
   }
   if(ok)m_protos.push_back( proto ) ;
   if(!ok){
-    debug() << "ProtoParticle appears twice in the same decay chain" << endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "ProtoParticle appears twice in the same decay chain" << endmsg;
     counter("ProtoParticle appears twice in the same decay chain" ) += 1.;
   }
   
@@ -213,7 +213,8 @@ void Calo2MCTool::addHypo(const LHCb::CaloHypo* hypo){
   }
   if(ok)m_hypos.push_back( hypo ) ;
   if(!ok){
-    debug() << "CaloHypo appears twice in the same decay chain" << endreq;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "CaloHypo appears twice in the same decay chain" << endmsg;
     counter("CaloHypo appears twice in the same decay chain" )+=1;
   }
   
@@ -269,7 +270,8 @@ void Calo2MCTool::addCluster(const LHCb::CaloCluster*   cluster  ){
   
   if(ok) m_clusters.push_back( cluster ) ;
   if(!ok){
-    debug() << "Warning : CaloCluster appears twice in the same decay chain" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Warning : CaloCluster appears twice in the same decay chain" << endmsg;
     counter( "Warning : CaloCluster appears twice in the same decay chain" )+=1;
   }
   

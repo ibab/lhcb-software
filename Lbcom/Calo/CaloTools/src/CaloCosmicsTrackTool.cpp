@@ -1,4 +1,3 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.11 2009-08-06 18:07:06 smenzeme Exp $
 // Include files 
 
 // From std
@@ -116,13 +115,18 @@ StatusCode CaloCosmicsTrackTool::processing() {
   //
   StatusCode esc = ecal()->processing();
   StatusCode hsc = hcal()->processing();
-  if(esc.isFailure() )debug() << "EcalCosmic processing failed"<<endmsg;
-  if(hsc.isFailure() )debug() << "HcalCosmic processing failed"<<endmsg;
+  if(esc.isFailure() )
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "EcalCosmic processing failed"<<endmsg;
+  if(hsc.isFailure() )
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "HcalCosmic processing failed"<<endmsg;
   
 
   if( !ecal()->tracked() || !hcal()->tracked() ){
-    debug() << "Cannot reconstruct Cosmics (Ecal/Hcal):("
-            <<ecal()->tracked()<<"/"<<hcal()->tracked()<<")"<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Cannot reconstruct Cosmics (Ecal/Hcal):("
+              <<ecal()->tracked()<<"/"<<hcal()->tracked()<<")"<<endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -213,7 +217,8 @@ StatusCode CaloCosmicsTrackTool::matching(){
   double d2 = (dX*dX+dY*dY);
   m_sPhi = (d2 !=0) ? dY*dY/d2/d2*s2X + dX*dX/d2/d2*s2Y :  acos(-1.)*acos(-1.);
 
-  debug() << " Phi = " << m_phi << " +- " << m_sPhi << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Phi = " << m_phi << " +- " << m_sPhi << endmsg;
   // Chi2 = (phi-phi_eca<l)^2/sig^2 + (phi-phi_hcal)^2/sig^2 
   double ePhi = ecal()->phi();
   double hPhi = hcal()->phi();
@@ -233,7 +238,8 @@ StatusCode CaloCosmicsTrackTool::matching(){
 
 
 
-  debug() << " Chi2 = " << m_chi2 << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Chi2 = " << m_chi2 << endmsg;
 
   if(m_chi2 > m_chi2max)return StatusCode::FAILURE;
   if(m_chi2 < m_chi2min)return StatusCode::FAILURE;
@@ -278,10 +284,12 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
   const LHCb::CaloCellID hPId =  hcal()->det()->Cell( hP );
   const LHCb::CaloCellID eMId =  ecal()->det()->Cell( eM );
   const LHCb::CaloCellID hMId =  hcal()->det()->Cell( hM );
-  debug() << "Closest Points " << eP << "/" << hP <<endmsg;
-  debug() << "--> " << ePId << "/" << hPId <<endmsg;  
-  debug() << "Farest Points " << eM << "/" << hM <<endmsg;
-  debug() << "--> " << eMId << "/" << hMId <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "Closest Points " << eP << "/" << hP <<endmsg;
+    debug() << "--> " << ePId << "/" << hPId <<endmsg;  
+    debug() << "Farest Points " << eM << "/" << hM <<endmsg;
+    debug() << "--> " << eMId << "/" << hMId <<endmsg;
+  }
   //
   std::vector<pointPair> points; // position and variance
   double ePSig = ecal()->det()->cellSize(ePId)*m_fac;
@@ -360,13 +368,15 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
     Ey += -p.first.Y()/sig2Y;
   }
 
-  debug() << "(A->E)x " << Ax << " " << Bx << " " << Cx << " " << Dx << " " << Ex << endmsg;
-  debug() << "(A->E)y " << Ay << " " << By << " " << Cy << " " << Dy << " " << Ey << endmsg;
-  
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "(A->E)x " << Ax << " " << Bx << " " << Cx << " " << Dx << " " << Ex << endmsg;
+    debug() << "(A->E)y " << Ay << " " << By << " " << Cy << " " << Dy << " " << Ey << endmsg;
+  }
   
   m_tx = -(Dx*Cx-Bx*Ex)/(Ax*Dx-Bx*Bx);
   m_ty = -(Dy*Cy-By*Ey)/(Ay*Dy-By*By);
-  debug() << "tx = " << m_tx << "  ty = " << m_ty << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "tx = " << m_tx << "  ty = " << m_ty << endmsg;
   double x0   =  (Bx*Cx-Ax*Ex)/(Ax*Dx-Bx*Bx);
   double y0   =  (By*Cy-Ay*Ey)/(Ay*Dy-By*By);
 
@@ -403,16 +413,18 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
   m_refPointCov[1](0,0)= hcal()->referencePointVariance().X();  // APPROXIMATIVE ERROR
   m_refPointCov[1](1,1)= hcal()->referencePointVariance().Y();  // APPROXIMATIVE ERROR
 
-  debug() << " Ecal Reference Point : (" 
-          << ecal()->referencePoint().X() << ","
-          << ecal()->referencePoint().Y() << ","
-          << ecal()->referencePoint().Z() << ") "
-          << "  -> Fit3D : (" 
-          << ex << ","
-          << ey  << ","
-          << ecal()->referencePoint().Z() << ") " << endmsg;
-  debug() << " Theta = " << m_theta << endmsg;
-
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << " Ecal Reference Point : (" 
+            << ecal()->referencePoint().X() << ","
+            << ecal()->referencePoint().Y() << ","
+            << ecal()->referencePoint().Z() << ") "
+            << "  -> Fit3D : (" 
+            << ex << ","
+            << ey  << ","
+            << ecal()->referencePoint().Z() << ") " << endmsg;
+    debug() << " Theta = " << m_theta << endmsg;
+  }
+  
   m_slopes = Gaudi::XYZVector( m_tx, m_ty , m_dir );
   m_slopesCov(0,0) = m_stx;
   m_slopesCov(1,1) = m_sty;  

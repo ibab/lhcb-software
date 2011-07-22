@@ -311,13 +311,19 @@ void L0Calo2CaloTool::collectTell1s
                 << " dr =" << dr << ":" << m_calo->cellCenter( dr ) << endmsg;
   
     if ( m_calo->valid(ul) ) out_cells.insert( ul );
-    else debug() << "ul cell " << ul << " invalid" << endmsg;
+    else
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "ul cell " << ul << " invalid" << endmsg;
 
     if ( m_calo->valid(ur) ) out_cells.insert( ur );
-    else debug() << "ur cell " << ur << " invalid" << endmsg;
+    else
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "ur cell " << ur << " invalid" << endmsg;
 
     if ( m_calo->valid(dr) ) out_cells.insert( dr );
-    else debug() << "dr cell " << dr << " invalid" << endmsg;
+    else
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "dr cell " << dr << " invalid" << endmsg;
 
 
     /** find all neighbours for the given set of cells for the givel level

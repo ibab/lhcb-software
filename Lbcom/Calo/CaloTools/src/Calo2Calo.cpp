@@ -1,4 +1,3 @@
-// $Id: Calo2Calo.cpp,v 1.9 2009-09-16 16:07:06 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -57,7 +56,8 @@ Calo2Calo::~Calo2Calo() {}
 StatusCode Calo2Calo::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  debug() << "Initialize Calo2Calo tool " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Initialize Calo2Calo tool " << endmsg;
   
   // get getter tool
   m_getter = tool<ICaloGetterTool>("CaloGetterTool",m_getterName,this);
@@ -178,7 +178,8 @@ Calo2Calo::cellIDs ( const LHCb::CaloCellID& fromId ,
         && (m_toCalo == "Ecal" || m_toCalo == "Prs" || m_toCalo == "Spd") ) 
       || m_fromCalo == m_toCalo ){
     toId.setCalo( CaloCellCode::CaloNumFromName( m_toCalo ));
-    debug() << "Add cell from trivial mapping" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Add cell from trivial mapping" << endmsg;
     return addCell( toId , m_toCalo);
   }
   
