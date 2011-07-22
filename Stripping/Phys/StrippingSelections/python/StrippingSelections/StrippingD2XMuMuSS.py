@@ -23,7 +23,7 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'KaonMINIPCHI2' : 6     ,    #adminensional
                   'KaonTRCHI2'    : 8     ,    #adminensional
 
-                  'MINIPCHI2_CS_hhmumu' : 1 , #adminensional
+                  'MINIPCHI2_CS_hhmumu' : 1. , #adminensional
                   'PT_CS_hhmumu' : 400 , #MeV
                   
                   'DimuonMass'    : 250.  ,    #MeV
@@ -70,6 +70,7 @@ from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseMuons, StdNoPIDsPions, StdNoPIDsKaons
+from StandardParticles import StdAllLooseKaons, StdAllLoosePions, StdAllLooseMuons, StdAllNoPIDsPions, StdAllNoPIDsKaons
 
 name = "D2XMuMu"
 
@@ -928,7 +929,7 @@ def makeKaonsForhhmumu(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2, KaonTRCHI2)
 
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdLooseKaons ] )
+                     RequiredSelections = [ StdAllLooseKaons ] )
 
 
 #####################################################
@@ -945,7 +946,7 @@ def makeMuonsForhhmumu(name, MuonP, MuonPT, MuonMINIPCHI2, MuonTRCHI2):
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdLooseMuons ] )
+                     RequiredSelections = [ StdAllLooseMuons ] )
 
 #####################################################
 def makePionsForhhmumu(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2):
@@ -961,7 +962,7 @@ def makePionsForhhmumu(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2):
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdLoosePions ] )
+                     RequiredSelections = [ StdAllLoosePions ] )
 
 
 
@@ -979,7 +980,7 @@ def makeKaonsForCS(name, KaonP, KaonPT, KaonMINIPCHI2, KaonTRCHI2):
 
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdNoPIDsKaons ] )
+                     RequiredSelections = [ StdAllNoPIDsKaons ] )
 
 
 #####################################################
@@ -996,7 +997,7 @@ def makePionsForCS(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2):
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdNoPIDsPions ] )
+                     RequiredSelections = [ StdAllNoPIDsPions ] )
 
 
 

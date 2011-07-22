@@ -148,27 +148,27 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       if nLong is not None:
         if _filter != "":
           _filter+=" & "
-        _filter += "(TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s))" %nLong
+        _filter += "( RECSUMMARY(LHCb.RecSummary.nLongTracks,-1) < %s )" %nLong
           
       nDigits = config["MaxSpdDigits"]
       if nDigits is not None:
         if _filter != "":
           _filter+=" & "
-        _filter += "( switch ( HASRECSUMMARY('nSpdHits'), RECSUMMARY('nSpdHits') < %s, CONTAINS('Raw/Spd/Digits') < %s ) )" %(nDigits,nDigits)
+        _filter += "( RECSUMMARY(LHCb.RecSummary.nSpdhits,-1) < %s )" %nDigits
 
       nClusters = config["MaxITClusters"]
       if nClusters is not None:
         if _filter != "":
           _filter+=" & "
-        _filter += " ( switch ( HASRECSUMMARY('nITClusters'), RECSUMMARY('nITClusters') < %s, CONTAINS('Raw/IT/Clusters') < %s ) )" %(nClusters,nClusters)
+        _filter += " ( RECSUMMARY(LHCb.RecSummary.nITClusters,-1) < %s )" %nClusters
       
       nVELO = config["MaxVeloTracks"]
       if nVELO is not None:
         if _filter != "":
           _filter+=" & "
-        _filter += "(TrSOURCE('Rec/Track/Best') >> TrVELO >> (TrSIZE < %s))" %nVELO
+        _filter += "( RECSUMMARY(LHCb.RecSummary.nVeloTracks,-1) < %s )" %nVELO
       if _filter=="": _filter=None # no filters
-           
+
     self.line_tagged_d02hhhh = StrippingLine(
       moduleName+"Line"
       ,prescale=config['Prescale']
@@ -176,7 +176,6 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,selection=selPromptDstar
       ,checkPV=config['CheckPV']
       ,FILTER=_filter)
-
     self.registerLine(self.line_tagged_d02hhhh)
     
 def makeD02hhhh (
@@ -201,7 +200,9 @@ def makeD02hhhh (
   ):
   """Creates a D0->hhhh Selection object, merging D0->K3pi CF
   , D0->K3pi DCS, D0->KKpipi and D0->4pi, with cuts for physics analysis.
-  Uses StandardParticle objects 'StdNoPIDsKaons' and 'StdNoPIDsPions'
+  Uses StandardParticle objects 'StdAllNoPIDsKaons' and 'StdAllNoPIDsPions'
+  for lines without PID cuts, and 'StdAllLooseKaons' and 'StdAllLoosePions'
+  for line with PID cuts.
   Arguments:
     - moduleName : name of Selection
     - combMassWin : mass window cut on combination (MeV/c^2)
@@ -247,15 +248,15 @@ def makeD02hhhh (
     _pionCuts="(PIDK<%(pionPIDK)s) & (HASRICH) & " %locals()
     _pionCuts+=_pionCutsOLD
 
-  from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons
-  from StandardParticles import StdLoosePions, StdLooseKaons
+  from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons
+  from StandardParticles import StdAllLoosePions, StdAllLooseKaons
 
-  _kaons = StdNoPIDsKaons
-  _pions = StdNoPIDsPions
+  _kaons = StdAllNoPIDsKaons
+  _pions = StdAllNoPIDsPions
   if applyKaonPIDK:
-    _kaons = StdLooseKaons
+    _kaons = StdAllLooseKaons
   if applyPionPIDK:
-    _pions = StdLoosePions
+    _pions = StdAllLoosePions
 
   _d02k3pi = CombineParticles (DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc"
                                ,CombinationCut = _prefitCuts
@@ -323,7 +324,7 @@ def makePromptDstar(
 
    """Creates a D*->D0pi Selection object
   , with cuts for physics analysis.
-  Uses DataOnDemand objects 'Phys/StdNoPIDPions and Phys/StdNoPIDsUpPions'
+  Uses StandardParticles 'Phys/StdAllNoPIDPions and Phys/StdAllNoPIDsUpPions'
   Arguments:
   -  name : name of Selection
   - selection : D0 Selection object
@@ -349,7 +350,7 @@ Note that the delta mass is defined here as the difference between the D* and D0
                  "(VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s)" %locals()
    _slowPionCuts = "(TRCHI2DOF<%(trackChi2DOF)s) & (PT>%(slowPionPt)s)" %locals()
 
-   from StandardParticles import StdNoPIDsPions
+   from StandardParticles import StdAllNoPIDsPions
   
    _dstar = CombineParticles (
      DecayDescriptor="[D*(2010)+ -> D0 pi+]cc"
@@ -361,6 +362,6 @@ Note that the delta mass is defined here as the difference between the D* and D0
    _selDstar = Selection(
      'PromptDstarFor'+moduleName
      ,Algorithm=_dstar
-     ,RequiredSelections=[StdNoPIDsPions, selection]
+     ,RequiredSelections=[StdAllNoPIDsPions, selection]
      )
    return _selDstar
