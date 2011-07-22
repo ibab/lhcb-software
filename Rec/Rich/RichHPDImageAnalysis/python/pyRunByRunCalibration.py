@@ -32,19 +32,23 @@ def initialise():
         # Initialise a few things
         from Configurables import DDDBConf, CondDB, LHCbApp, CondDBAccessSvc
         cDB = CondDB()
+
+        #DDDBConf(DataType = "2009")
+        #LHCbApp().DDDBtag   = "head-20110303"
+        #LHCbApp().CondDBtag = "head-20110524"
         
         #DDDBConf(DataType = "2010")
         #LHCbApp().DDDBtag   = "head-20110303"
-        #LHCbApp().CondDBtag = "head-20110505"
+        #LHCbApp().CondDBtag = "head-20110524"
         
         DDDBConf(DataType = "2011")
         LHCbApp().DDDBtag   = "head-20110302"
-        LHCbApp().CondDBtag = "head-20110505"
+        LHCbApp().CondDBtag = "head-20110622"
 
         # Move HPD Occs
-        cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
-                                     ConnectionString="sqlite_file:/usera/jonesc/cmtuser/Rec_HEAD/Rich/RichAlignment/scripts/RefractAndHPDJobs/databases/MoveHPDOccs-11052011.db/LHCBCOND",
-                                     DefaultTAG="HEAD"))
+        #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
+        #                             ConnectionString="sqlite_file:/usera/jonesc/cmtuser/Rec_HEAD/Rich/RichAlignment/scripts/RefractAndHPDJobs/databases/MoveHPDOccs-11052011.db/LHCBCOND",
+        #                             DefaultTAG="HEAD"))
 
         # Set message level to info and above only
         msgSvc().setOutputLevel(3)
@@ -216,9 +220,13 @@ def getUNIXTime(dtime):
     return int( (t+offset) * 1e9 )
 
 def correctStartTime(time):
-    startTimeOffset = 0
-    #startTimeOffset = int( 5 * 1e9 )
-    return time - startTimeOffset
+    TimeOffset = 0
+    #TimeOffset = int( 5 * 1e9 )
+    return time - TimeOffset
+
+def correctStopTime(time):
+    TimeOffset = int( 5 * 60 * 1e9 )
+    return time + TimeOffset
 
 def stringsMD5(strings):
     string = ''
@@ -440,16 +448,21 @@ def runToFill(run):
 
 def runAll(files='2011RootFiles.txt'):
 
+    # HPD Occupancies
     calibrationByRuns(rootfiles=files,followType="Smoothed",
-                      fitType='Sobel',smoothSigmaHours=3,
+                      fitType='Sobel',smoothSigmaHours=0.5,
                       createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
-
-    calibrationByFills(rootfiles=files,followType="Smoothed",
-                      fitType='Sobel',smoothSigmaHours=12,
-                      createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
- 
+    # HPD image shifts - follow runs
+    calibrationByRuns(rootfiles=files,followType="Smoothed",
+                      fitType='Sobel',smoothSigmaHours=1,
+                      createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
+    # HPD image shifts - averages
+    #calibrationByRuns(rootfiles=files,followType="Average",
+    #                  fitType='Sobel',smoothSigmaHours=1,
+    #                  createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
+    
 def calibrationByRuns(rootfiles='2011RootFiles.txt',
-                      fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=3,
+                      fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=1,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours,
                        createShiftUpdate,createMagUpdate,createHPDOccUpdate)
@@ -592,21 +605,23 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
             else:
 
                 # No fitting so fake it
-                plotData[hpdID][flag] = { "FitOK"   : True,
+                plotData[hpdID][flag] = { "FitOK"   : False,
                                           "ShiftR"  : (0,0),
                                           "ShiftX"  : (0,0),
                                           "ShiftY"  : (0,0),
                                           "Radius"  : (0,0) }                
 
             # HPD occupancy info
-            occ    = 0
-            occErr = 0
+            occ = (0,0)
+            ok  = False
             if createHPDOccUpdate :
-                occPlot = file.Get('RICH/HPDHitsMoni/NumHits_HPDCopyN_'+str(hpdID))
+                occPlot = file.Get('RICH/HPDL0HitsMoni/NumHits_HPDCopyN_'+str(hpdID))
                 if occPlot :
-                    occ    = occPlot.GetMean()
-                    occErr = occPlot.GetMeanError()
-            plotData[hpdID][flag]["Occupancy"] = (occ,occErr)
+                    if occPlot.GetEntries() >= 10 :
+                        occ = ( occPlot.GetMean(), occPlot.GetMeanError() )
+                        ok = True
+            plotData[hpdID][flag]["Occupancy"] = occ
+            plotData[hpdID][flag]["OccOK"]     = ok
 
             # Save the DB values for plotting
             dbShift = siAlign.paramAsDoubleVect("dPosXYZ")
@@ -715,7 +730,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
             rPlots[polarity].SetLineColor(dataColor)
             oPlots[polarity] = TH1D( polarity+"-Occupancy"+str(hpd),
                                      polarity+" Occupancy : Copy Number "+idS, 101, -0.5, 100.5 )
-            oPlots[polarity].GetXaxis().SetTitle("HPD Occupancy")
+            oPlots[polarity].GetXaxis().SetTitle("Occupancy / # hits")
             oPlots[polarity].SetMarkerColor(dataColor)
             oPlots[polarity].SetLineColor(dataColor)
             xPlotsS[polarity] = TH1D( polarity+"-XShiftsSmooth"+str(hpd),
@@ -735,9 +750,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
             rPlotsS[polarity].SetLineColor(smoothColor)
             oPlotsS[polarity] = TH1D( polarity+"-OccupancySmooth"+str(hpd),
                                       polarity+" Occupancy : Copy Number "+idS, 101, -0.5, 100.5 )
-            oPlotsS[polarity].GetXaxis().SetTitle("HPD Occupancy")
-            oPlotsS[polarity].SetMarkerColor(dataColor)
-            oPlotsS[polarity].SetLineColor(dataColor)
+            oPlotsS[polarity].GetXaxis().SetTitle("Occupancy / # hits")
+            oPlotsS[polarity].SetMarkerColor(smoothColor)
+            oPlotsS[polarity].SetLineColor(smoothColor)
 
         for fl in sorted(data.keys()):
 
@@ -751,7 +766,12 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
                 if avTime > minMaxAvTime[1] : minMaxAvTime[1] = avTime
 
                 values = data[fl]
-                if values['FitOK'] :
+                ok = False
+                if createShiftUpdate or createMagUpdate : ok = values['FitOK']
+                if createHPDOccUpdate : ok = values['OccOK']
+                if createHPDOccUpdate and ( createShiftUpdate or createMagUpdate ) :
+                    ok = values['FitOK'] and values['OccOK']
+                if ok :
 
                     # Field Polarity
                     polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
@@ -918,11 +938,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
                                         vOcc[polarity], vTimeErr[polarity], vOccErr[polarity] )
                 plotOcc.SetTitle( polarity+" HPD Occupancy : Copy Number "+idS )
                 plotOcc.GetXaxis().SetTitle(type+" Average time (secs since UNIX epoch)")
-                plotOcc.GetYaxis().SetTitle("Occupancy")
+                plotOcc.GetYaxis().SetTitle("Occupancy / # hits")
                 plotOcc.SetMarkerColor(dataColor)
                 plotOcc.SetLineColor(dataColor)
                 FitOcc = TF1("AverageHPDOcc"+polarity+idS,"pol"+str(pol),minMaxAvTime[0],minMaxAvTime[1])
-                FitOcc.SetParName(0,"Fitted Occupancy / mm")
+                FitOcc.SetParName(0,"Fitted Occupancy / # hits")
                 FitOcc.SetLineColor(dataColor)
                 plotOcc.Fit(FitOcc,"QRS")
                 plotOcc.Draw("ALP")
@@ -1015,9 +1035,12 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
                 mdmsConds[pol][rich(hpd)][panel(hpd)] = getHPDmagCond(pol,gbl.Rich.DAQ.HPDCopyNumber(copyN))
 
         # HPD Occupancies
-        hpdOccs = { }
+        hpdOccs          = { }
         hpdOccs["Rich1"] = { }
         hpdOccs["Rich2"] = { }
+
+        # Have some HPDs with Occ data for this run/fill
+        hpdOccDataOK = False
         
         # Loop over HPDs
         for hpdID in sorted(alignData[flag].keys()):
@@ -1036,7 +1059,12 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
             # Get the offsets
             text = basename
             haveupdate = True
-            if   followType == "FollowMovements" and values["FitOK"]:
+            ok = False
+            if createShiftUpdate or createMagUpdate : ok = values['FitOK']
+            if createHPDOccUpdate : ok = values['OccOK']
+            if createHPDOccUpdate and ( createShiftUpdate or createMagUpdate ) :
+                ok = values['FitOK'] and values['OccOK']
+            if   followType == "FollowMovements" and ok :
                 xOff = values["ShiftX"][0]
                 yOff = values["ShiftY"][0]
                 radF = values["Radius"][0]
@@ -1089,6 +1117,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
             # HPD Occ
             hpdOccs[R][smartID.key()] = occ
+            if occ > 0 : hpdOccDataOK = True
 
         # Create HPD.xml updates (RICH2 demag)
         if createMagUpdate :
@@ -1101,43 +1130,57 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
         # Create HPDOccupancies.xml
         if createHPDOccUpdate :
-            for R in ["Rich1","Rich2"] :
-                XmlPath = "/Conditions/"+R+"/Environment/HPDOccupancies.xml"
-                if XmlPath not in alignments.keys() : alignments[XmlPath] = xmlHeader() + '\n'
-                alignments[XmlPath] += xmlHPDOccs(hpdOccs[R])
+            if hpdOccDataOK :
+                for R in ["Rich1","Rich2"] :
+                    XmlPath = "/Conditions/"+R+"/Environment/HPDOccupancies.xml"
+                    if XmlPath not in alignments.keys() : alignments[XmlPath] = xmlHeader() + '\n'
+                    alignments[XmlPath] += xmlHPDOccs(hpdOccs[R])
+            else :
+                print "  -> HPD Occupancy data missing .... skipped"
                 
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
-        stopTime  = cool.ValidityKeyMax
+        #stopTime  = cool.ValidityKeyMax
+        stopTime  = correctStopTime( unixStopTime )
+        # End of 2009
+        #stopTime = getUNIXTime( datetime.datetime( 2009, 12, 31, 23, 59, 59 ) )
         # End of 2010
         #stopTime = getUNIXTime( datetime.datetime( 2010, 12, 31, 23, 59, 59 ) )
         # End of 2011
         #stopTime = getUNIXTime( datetime.datetime( 2011, 12, 31, 23, 59, 59 ) )
+        # Long way away ...
+        #stopTime = getUNIXTime( datetime.datetime( 2100, 12, 31, 23, 59, 59 ) )
 
         # Loop over XML files in the fitted DB
-        for xmlpath in alignments.keys() :
+        if flag > 0 :
             
-            # The XML data
-            alignment = alignments[xmlpath]
-            # Add the XML footer to the XML data
-            alignment += xmlFooter()
+            for xmlpath in alignments.keys() :
+            
+                # The XML data
+                alignment = alignments[xmlpath]
+                # Add the XML footer to the XML data
+                alignment += xmlFooter()
 
-            # First time, create the paths in the DB
-            if xmlpath not in createdPaths:
-                print "  -> Creating DB path", xmlpath 
-                db.createNode(xmlpath)
-                createdPaths += [xmlpath]
+                # First time, create the paths in the DB
+                if xmlpath not in createdPaths:
+                    print "  -> Creating DB path", xmlpath 
+                    db.createNode(xmlpath)
+                    createdPaths += [xmlpath]
 
-            # Check MD5
-            mdsum = stringMD5(alignment)
-            if xmlpath not in alignMDsums : alignMDsums[xmlpath] = 0
+                # Check MD5
+                mdsum = stringMD5(alignment)
+                if xmlpath not in alignMDsums : alignMDsums[xmlpath] = 0
 
-            # If this alignment is different to the last, update
-            if mdsum != alignMDsums[xmlpath] :
-                db.storeXMLString( xmlpath, alignment, startTime, stopTime )
-                alignMDsums[xmlpath] = mdsum
-            else:
-                print "  -> Alignment for", xmlpath, "same as previous -> No update"
+                # If this alignment is different to the last, update
+                if mdsum != alignMDsums[xmlpath] :
+                    db.storeXMLString( xmlpath, alignment, startTime, stopTime )
+                    alignMDsums[xmlpath] = mdsum
+                else:
+                    print "  -> Alignment for", xmlpath, "same as previous -> No update"
+                    
+        else:
+            
+            print " -> Skipping", type, flag, "from DB slice update"
 
     print "Done ..."
 
@@ -1169,18 +1212,15 @@ def labelDataDB(polarity,alignColor,smoothColor):
 def printCanvas(tag=''):
     canvas = rootCanvas()
     canvas.Update()
-    imageType = imageFileName.split(".")[1]
-    canvas.Print(imageFileName+tag,imageType)
-    if tag == '[' or tag == '{' :
-        print "Printing to", globals()["imageFileName"]
-    elif tag == ']' or tag == '}' :
-        if imageType == "ps" :
-            import os
-            imageBase = imageFileName.split(".")[0]
-            print " -> Converting to PDF"
-            os.system('convert '+imageFileName+" "+imageBase+".pdf")
-            os.remove(imageFileName)
-        print "Printing done ..."
+    splits = imageFileName.split(".")
+    nsplits = len(splits)
+    if nsplits == 0 :
+        print "ERROR : No image type extension on file name", imageFileName
+    else:
+        imageType = splits[nsplits-1]
+        if tag == '[' or tag == '{' : print "Printing to", imageFileName
+        canvas.Print(imageFileName+tag,imageType)
+        if tag == ']' or tag == '}' : print "Printing done ..."
         
 def rootCanvas():
     from ROOT import TCanvas
@@ -1189,7 +1229,7 @@ def rootCanvas():
         rootStyle.applyRootStyle()
         globals()["canvas"] = TCanvas("CKCanvas","CKCanvas",1050,750)
     return globals()["canvas"]
-
+        
 def xmlHPDOccs(hpdOccs):
     occS = ""
     for hpd in sorted(hpdOccs.keys()) :
