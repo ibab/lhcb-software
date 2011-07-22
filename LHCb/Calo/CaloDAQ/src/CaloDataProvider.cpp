@@ -1,4 +1,3 @@
-// $Id: 
 // Include files 
 
 // from Gaudi
@@ -12,7 +11,7 @@
 // 2005-01-10 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( CaloDataProvider );
+DECLARE_TOOL_FACTORY( CaloDataProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -47,7 +46,8 @@ StatusCode CaloDataProvider::finalize ( ) {
 StatusCode CaloDataProvider::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << endmsg;
 
   if ( "Ecal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -80,7 +80,8 @@ StatusCode CaloDataProvider::initialize ( ) {
   m_adcs.reserve( nCells + nPins  );
   m_digits.reserve( nCells );
   clear();
-  debug() << " Initialisation OK" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << " Initialisation OK" << endmsg;
   return StatusCode::SUCCESS;
 }
 

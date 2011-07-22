@@ -1,4 +1,3 @@
-// $Id: CompareCaloDigits.cpp,v 1.8 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // STL
@@ -18,7 +17,7 @@
 // 2003-11-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CompareCaloDigits );
+DECLARE_ALGORITHM_FACTORY( CompareCaloDigits )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,7 +40,7 @@ CompareCaloDigits::~CompareCaloDigits() {};
 //=============================================================================
 StatusCode CompareCaloDigits::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   std::string ecalName = LHCb::CaloDigitLocation::Ecal;
   std::string hcalName = LHCb::CaloDigitLocation::Hcal;
@@ -85,9 +84,10 @@ void CompareCaloDigits::compareContainers ( LHCb::CaloDigits* dig1,
             << dig2->registry()->identifier() << " : " << dig2->size() 
             << endmsg;
   } else {
-    debug() << "Comparing " << dig1->name()
-            << " and " << dig2->name()
-            << " both sizes = " << dig2->size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Comparing " << dig1->name()
+              << " and " << dig2->name()
+              << " both sizes = " << dig2->size() << endmsg;
   }
   
   LHCb::CaloDigits::const_iterator it1, it2;
@@ -103,10 +103,11 @@ void CompareCaloDigits::compareContainers ( LHCb::CaloDigits* dig1,
                  (*it1)->e()/Gaudi::Units::MeV - (*it2)->e()/Gaudi::Units::MeV )
              << endmsg;
     } else {
-      verbose() << (*it1)->cellID() << " "
-                << (*it2)->cellID() << "  E " 
-                << (*it1)->e()/Gaudi::Units::MeV  << " " 
-                << (*it2)->e()/Gaudi::Units::MeV << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << (*it1)->cellID() << " "
+                  << (*it2)->cellID() << "  E " 
+                  << (*it1)->e()/Gaudi::Units::MeV  << " " 
+                  << (*it2)->e()/Gaudi::Units::MeV << endmsg;
     }
     if ( (*it1)->cellID() ==  (*it2)->cellID() ) {
       it1++;

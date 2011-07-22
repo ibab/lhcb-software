@@ -1,4 +1,3 @@
-// $Id: CaloAdcFromRaw.cpp,v 1.3 2009-10-12 16:03:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloAdcFromRaw );
+DECLARE_ALGORITHM_FACTORY( CaloAdcFromRaw )
 
 
 //=============================================================================
@@ -84,8 +83,8 @@ CaloAdcFromRaw::~CaloAdcFromRaw() {}
 StatusCode CaloAdcFromRaw::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // get detector elements
   if( m_caloName == "")return Error("Unknown calo detector name " + m_detectorName,StatusCode::FAILURE);
@@ -102,7 +101,7 @@ StatusCode CaloAdcFromRaw::initialize() {
 //=============================================================================
 StatusCode CaloAdcFromRaw::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // ADCs (ecal/hcal/prs)
   if( m_location != ""  && m_data->getBanks()){
@@ -110,7 +109,8 @@ StatusCode CaloAdcFromRaw::execute() {
     put( outs , m_location);
     const CaloVector<LHCb::CaloAdc>& adcs = m_data->adcs();
 
-    debug() << " #ADCS " << adcs.size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << " #ADCS " << adcs.size() << endmsg;
     for(CaloVector<LHCb::CaloAdc>::const_iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
       LHCb::CaloAdc adc = *iadc;
       LHCb::CaloCellID id = adc.cellID();
@@ -127,7 +127,7 @@ StatusCode CaloAdcFromRaw::execute() {
       if( value > satur      )value = satur;
       if( value < -m_offset  )value = -m_offset;
       LHCb::CaloAdc* out = new LHCb::CaloAdc( id, value);
-      if ( msgLevel( MSG::DEBUG) )
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << "Inserting : " << id << " adc = " << value << "  =  " << adc.adc() << " / " << calib 
                 << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endmsg;
       try{
@@ -166,7 +166,7 @@ StatusCode CaloAdcFromRaw::execute() {
       if( value > satur)value = satur;
       if( value < 0  )value = 0;
       LHCb::L0CaloAdc* out = new LHCb::L0CaloAdc( id, value);
-      if ( msgLevel( MSG::DEBUG) )
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << "Inserting : " << id << " l0adc = " << value << "  =  " << adc.adc() << " / " << calib 
                 << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endmsg;
 
@@ -201,7 +201,7 @@ StatusCode CaloAdcFromRaw::execute() {
       if(value < 0)value = 0;
       if( 1 == value){
         LHCb::L0PrsSpdHit* out = new LHCb::L0PrsSpdHit( id );
-        if ( msgLevel( MSG::DEBUG) )
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "Inserting : " << id << " bit = " << value 
                   << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endmsg;
 
@@ -230,7 +230,7 @@ StatusCode CaloAdcFromRaw::execute() {
 //=============================================================================
 StatusCode CaloAdcFromRaw::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

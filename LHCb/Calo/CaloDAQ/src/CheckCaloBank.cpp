@@ -1,6 +1,3 @@
-// $Id: 
-
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // local
@@ -15,7 +12,7 @@
 // ============================================================================
 
 // MANDATORY!!!
-DECLARE_ALGORITHM_FACTORY( CheckCaloBank );
+DECLARE_ALGORITHM_FACTORY( CheckCaloBank )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -77,11 +74,13 @@ StatusCode CheckCaloBank::execute() {
   bool trig = ( 0 == (rawEvt->banks( m_trig )).size() ) ?  false : true ;
   bool bank = ( 0 == (rawEvt->banks( m_bank )).size() ) ?  false : true ;
   
-  debug() << "TYPE of Calo Bank to be checked : " << m_typ << " " << trig << " " << bank <<endmsg;
-  if(trig ||  bank ){
-    debug() << " Calo Banks with 'compressed' format exist - Do nothing" << endmsg;
-  }else{
-    debug() << " Calo Banks with 'compressed' format DOESN'T exist - Will be created from PACKED banks" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "TYPE of Calo Bank to be checked : " << m_typ << " " << trig << " " << bank <<endmsg;
+    if(trig ||  bank ){
+      debug() << " Calo Banks with 'compressed' format exist - Do nothing" << endmsg;
+    }else{
+      debug() << " Calo Banks with 'compressed' format DOESN'T exist - Will be created from PACKED banks" << endmsg;
+    }
   }
   
   if(trig && bank)setFilterPassed(false);// no need to rebuilt 'compressed' bank

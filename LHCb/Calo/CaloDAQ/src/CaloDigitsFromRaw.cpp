@@ -1,4 +1,3 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.20 2009-11-24 19:53:42 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 // 2003-11-18 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitsFromRaw );
+DECLARE_ALGORITHM_FACTORY( CaloDigitsFromRaw )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -74,7 +73,8 @@ CaloDigitsFromRaw::~CaloDigitsFromRaw() {};
 StatusCode CaloDigitsFromRaw::initialize ( ) {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << endmsg;
   // get DeCalorimeter
   if( 2 == m_detectorNum ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -114,10 +114,14 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
     error()<< "CaloDigitsFromRaw configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endmsg;
     return StatusCode::FAILURE;
   }
-  if( m_digitOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES at " 
-                            << rootInTES() + m_outputDigits + m_extension << endmsg;
-  if( m_adcOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloAdcs on TES at "
-                          << rootInTES() + m_outputADCs + m_extension << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    if( m_digitOnTES )
+      debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES at " 
+              << rootInTES() + m_outputDigits + m_extension << endmsg;
+    if( m_adcOnTES )
+      debug() <<  "CaloDigitsFromRaw will produce CaloAdcs on TES at "
+              << rootInTES() + m_outputADCs + m_extension << endmsg;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -126,7 +130,7 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
 //=============================================================================
 StatusCode CaloDigitsFromRaw::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   if       ( 0 == m_detectorNum ) {
     convertSpd ( 3.2 * Gaudi::Units::MeV );
@@ -167,7 +171,8 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
     } 
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << m_outputDigits + m_extension << " CaloDigit container size " << digits->size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << m_outputDigits + m_extension << " CaloDigit container size " << digits->size() << endmsg;
   }
 
   if(m_adcOnTES){
@@ -192,7 +197,8 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
       } 
 
     }
-    debug() <<  m_outputADCs + m_extension << " CaloAdc container size " << adcs->size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() <<  m_outputADCs + m_extension << " CaloAdc container size " << adcs->size() << endmsg;
   }
 
   if(m_statusOnTES)m_spdTool->putStatusOnTES();
@@ -230,12 +236,13 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
         delete dig;
       } 
 
-
-      verbose() << "ID " << dig->cellID() << " energy " << dig->e() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << "ID " << dig->cellID() << " energy " << dig->e() << endmsg;
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << m_outputDigits+ m_extension << " CaloDigit container size " << digits->size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << m_outputDigits+ m_extension << " CaloDigit container size " << digits->size() << endmsg;
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
 
   }
@@ -246,7 +253,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
     put( adcs ,  m_outputADCs+ m_extension ); 
     const std::vector<LHCb::CaloAdc>& allAdcs = m_energyTool->adcs( );
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
-        for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allAdcs.begin();
+    for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allAdcs.begin();
           allAdcs.end() != itA; ++itA ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
 
@@ -263,11 +270,13 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
         status.addStatus( tell1 ,LHCb::RawBankReadoutStatus::DuplicateEntry);
         delete adc;
       } 
-
-
-      verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endmsg;
+      
+      
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+        verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endmsg;
     }
-    debug() << " CaloAdc container '"  << m_outputADCs+ m_extension  << "' -> size = " << adcs->size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << " CaloAdc container '"  << m_outputADCs+ m_extension  << "' -> size = " << adcs->size() << endmsg;
 
 
     // PinDiode ADC (possibly in a different container)
@@ -300,10 +309,12 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
           delete pinAdc;
         }
 
-        verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endmsg;
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+          verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endmsg;
       }
-      debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName + m_extension
-              << "' -> size = " << pinAdcs->size() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName + m_extension
+                << "' -> size = " << pinAdcs->size() << endmsg;
     }
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
   }

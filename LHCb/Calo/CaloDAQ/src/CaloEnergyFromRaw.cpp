@@ -1,4 +1,3 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.31 2010-03-02 17:35:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +11,7 @@
 // 2005-01-10 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( CaloEnergyFromRaw );
+DECLARE_TOOL_FACTORY( CaloEnergyFromRaw )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -47,7 +46,8 @@ StatusCode CaloEnergyFromRaw::finalize ( ) {
 StatusCode CaloEnergyFromRaw::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize " << name() << " Det = "<< m_detectorName << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << " Det = "<< m_detectorName << endmsg;
 
   if ( "Ecal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -75,7 +75,8 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
   m_pinData.reserve( nPins );
   m_data.reserve( nCells );
   m_digits.reserve( nCells );
-  debug() << "Got detector element for " << m_detectorName << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Got detector element for " << m_detectorName << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -151,7 +152,8 @@ const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
   bool found   = false;
   if(m_getRaw)getBanks();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    debug() << "The banks container is empty"<< endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "The banks container is empty"<< endmsg;
   }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -164,13 +166,15 @@ const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
 
       decoded = getData ( *itB );
       if( !decoded ){
-        debug() <<"Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
-                << " -> incomplete data - May be corrupted"<< endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() <<"Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+                  << " -> incomplete data - May be corrupted"<< endmsg;
       }
     } 
   }
   if( !found ){
-    debug() <<"rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() <<"rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
   }
   
   return m_data ;
@@ -227,8 +231,9 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
   int sourceID       = bank->sourceID();
 
 
-  if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
-                                      << " version " << version << " size " << size << endmsg;  
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "Decode bank " << bank << " source " << sourceID 
+            << " version " << version << " size " << size << endmsg;  
 
 
   if(0 == size)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Empty );
@@ -286,8 +291,9 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if(msgLevel(MSG::DEBUG))debug() << nCards << " FE-Cards are expected to be readout : " 
-                                    << feCards << " in Tell1 bank " << sourceID << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << nCards << " FE-Cards are expected to be readout : " 
+              << feCards << " in Tell1 bank " << sourceID << endmsg;
     int prevCard = -1;
     while( 0 != size ) {
       // Skip 
@@ -389,8 +395,9 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     // Get the FE-Cards associated to that bank (via condDB)
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
-    if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
-                                        << feCards << " in Tell1 bank " << sourceID << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << nCards << " FE-Cards are expected to be readout : " 
+              << feCards << " in Tell1 bank " << sourceID << endmsg;
     int prevCard = -1;
     while( 0 != size ) {
       // Skip

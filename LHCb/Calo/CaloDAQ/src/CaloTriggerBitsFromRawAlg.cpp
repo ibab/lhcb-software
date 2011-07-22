@@ -1,4 +1,3 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.9 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloTriggerBitsFromRawAlg );
+DECLARE_ALGORITHM_FACTORY( CaloTriggerBitsFromRawAlg )
 
 
 //=============================================================================
@@ -53,7 +52,8 @@ StatusCode CaloTriggerBitsFromRawAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << endmsg;
 
   m_l0BitTool = tool<ICaloTriggerBitsFromRaw>( m_toolType, m_toolName , this);
   return StatusCode::SUCCESS;
@@ -64,7 +64,7 @@ StatusCode CaloTriggerBitsFromRawAlg::initialize() {
 //=============================================================================
 StatusCode CaloTriggerBitsFromRawAlg::execute() {
 
-  debug() << "==> Execute"  <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute"  <<endmsg;
   //*** create the output container
   LHCb::L0PrsSpdHits* newL0Bits = new LHCb::L0PrsSpdHits();
   put( newL0Bits , m_outputData );
@@ -99,7 +99,8 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
   }
   
   if(m_statusOnTES)m_l0BitTool->putStatusOnTES();
-  debug() << " L0PrsSpdHits container size " << newL0Bits->size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " L0PrsSpdHits container size " << newL0Bits->size() << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -108,7 +109,7 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
 //=============================================================================
 StatusCode CaloTriggerBitsFromRawAlg::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

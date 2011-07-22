@@ -1,4 +1,3 @@
-// $Id: CaloReadoutTool.h,v 1.12 2009-10-12 16:03:54 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -71,7 +70,8 @@ public:
   // =========================================================================
   /// Inform that a new incident has occurred
   virtual void handle(const Incident& /* inc */ ) { 
-    debug() << "IIncident Svc reset" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "IIncident Svc reset" << endmsg;
     m_getRaw = true ;  
   } 
   // =========================================================================

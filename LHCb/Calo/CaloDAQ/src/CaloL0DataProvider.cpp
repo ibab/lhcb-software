@@ -1,4 +1,3 @@
-// $Id: 
 // Include files 
 
 // from Gaudi
@@ -12,7 +11,7 @@
 // 2005-01-10 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( CaloL0DataProvider );
+DECLARE_TOOL_FACTORY( CaloL0DataProvider )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -47,7 +46,8 @@ StatusCode CaloL0DataProvider::finalize ( ) {
 StatusCode CaloL0DataProvider::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << endmsg;
 
   if ( "Ecal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -78,7 +78,8 @@ StatusCode CaloL0DataProvider::initialize ( ) {
   long nPins  = m_calo->numberOfPins();
   m_adcs.reserve( nCells + nPins  );
   clear();
-  debug() << " Initialisation OK" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " Initialisation OK" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -192,13 +193,15 @@ bool CaloL0DataProvider::decodeTell1 (int source) {
       decoded = decodeBank ( *itB );
     }
     if( !decoded ){
-      debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
-              << " -> incomplete data - May be corrupted"<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+                << " -> incomplete data - May be corrupted"<<endmsg;
     }
     m_tell1s++; // count the number of decoded TELL1
   }
   if( !found ){
-    debug() <<"rawBank sourceID : " + Gaudi::Utils::toString(source) + " has not been found"<< endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() <<"rawBank sourceID : " + Gaudi::Utils::toString(source) + " has not been found"<< endmsg;
   }
   return decoded;
 }
@@ -320,7 +323,9 @@ bool CaloL0DataProvider::decodeBank( LHCb::RawBank* bank ){
               size--;
             }
 
-            if( offset == 0)debug() << "Data word : " << lastData << endmsg;
+            if( offset == 0)
+              if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+                debug() << "Data word : " << lastData << endmsg;
 
             LHCb::CaloCellID id = LHCb::CaloCellID();
             if(bitNum < chanID.size())id= chanID[ bitNum ];
@@ -483,7 +488,8 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl( ctrl,sourceID );
-      debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;      
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;      
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
       // look for the FE-Card in the Tell1->cards vector

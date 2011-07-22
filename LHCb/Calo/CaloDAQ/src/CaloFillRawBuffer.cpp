@@ -1,4 +1,3 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.17 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -59,7 +58,7 @@ StatusCode CaloFillRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_calo = getDet<DeCalorimeter>( m_detectorLocation );
 
@@ -106,7 +105,7 @@ StatusCode CaloFillRawBuffer::initialize() {
 //=============================================================================
 StatusCode CaloFillRawBuffer::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
   
   for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
     m_banks[kk].clear( );
@@ -143,7 +142,7 @@ StatusCode CaloFillRawBuffer::execute() {
   m_totTrigSize += totTrigSize;
   m_nbEvents++;
 
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     debug() << "Bank sizes: ";
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
       debug() << format( "%2d:%4d+%4d ", kk, m_banks[kk].size(),
@@ -153,7 +152,7 @@ StatusCode CaloFillRawBuffer::execute() {
             << " + trigger " << totTrigSize << endmsg;
   }
 
-  if ( MSG::VERBOSE >= msgLevel() ) {
+  if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
       verbose() << "DATA bank : " << kk << endmsg;
       int kl = 0;
@@ -313,11 +312,10 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       m_banks[kTell1][sizeIndex] |= (sizeAdc << 7) + sizeTrig;
       m_totTrigSize += sizeTrig;
       
-      if ( msgLevel( MSG::DEBUG ) ) {
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << format( "Tell1 %2d card %3d pattern %8x patTrig %8x size Adc %2d Trig %2d",
                            kTell1, cardNum, pattern, patTrig, sizeAdc, sizeTrig )
                 << endmsg;
-      }
     }
   }
 

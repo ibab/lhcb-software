@@ -1,4 +1,3 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.11 2009-10-12 16:03:54 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloTriggerAdcsFromRawAlg );
+DECLARE_ALGORITHM_FACTORY( CaloTriggerAdcsFromRawAlg )
 
 
 //=============================================================================
@@ -54,7 +53,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" <<  endmsg;  
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" <<  endmsg;
   m_l0AdcTool = tool<ICaloTriggerAdcsFromRaw>( m_toolType , m_toolName, this);
   return StatusCode::SUCCESS;
 }
@@ -64,7 +63,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::initialize() {
 //=============================================================================
 StatusCode CaloTriggerAdcsFromRawAlg::execute() {
 
-  debug() << "==> Execute"  <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute"  <<endmsg;
 
   //*** create the output container
   LHCb::L0CaloAdcs* newL0Adcs = new LHCb::L0CaloAdcs();
@@ -92,8 +91,9 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
       delete adc;
     }     
   }
-  debug() << " L0CaloAdcs container" << m_outputData 
-          <<" size " << newL0Adcs->size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << " L0CaloAdcs container" << m_outputData 
+            <<" size " << newL0Adcs->size() << endmsg;
   
   //*** get the PinDiode data and fill the output container
   // MUST BE AFTER STANDARD ADCs
@@ -121,8 +121,9 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
     }
 
     }
-    debug() << " PinDiode : L0CaloAdcs container " << m_pinContainer 
-            << " size " << newL0Adcs->size() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << " PinDiode : L0CaloAdcs container " << m_pinContainer 
+              << " size " << newL0Adcs->size() << endmsg;
   }
 
   if(m_statusOnTES)m_l0AdcTool->putStatusOnTES();  
@@ -134,7 +135,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
 //=============================================================================
 StatusCode CaloTriggerAdcsFromRawAlg::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

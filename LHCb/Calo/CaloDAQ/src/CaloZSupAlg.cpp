@@ -1,5 +1,3 @@
-// $Id: CaloZSupAlg.cpp,v 1.16 2009-11-24 19:53:42 odescham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -17,7 +15,7 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloZSupAlg );
+DECLARE_ALGORITHM_FACTORY( CaloZSupAlg )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -91,15 +89,16 @@ StatusCode CaloZSupAlg::initialize() {
     error() << "CaloZSupAlg configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endmsg;
     return StatusCode::FAILURE;
   }  
-  if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES" 
-                            << rootInTES() + m_outputDigitData + m_extension
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES" 
+                              << rootInTES() + m_outputDigitData + m_extension
+                              << endmsg;
+    if( m_adcOnTES )debug() <<  "CaloZSupAlg will produce CaloAdcs on TES" 
+                            << rootInTES() + m_outputADCData + m_extension
                             << endmsg;
-  if( m_adcOnTES )debug() <<  "CaloZSupAlg will produce CaloAdcs on TES" 
-                          << rootInTES() + m_outputADCData + m_extension
-                          << endmsg;
-  
+     debug() << " get DeCalorimeter from " << m_detectorName << endmsg;
+  }
   // Retrieve the calorimeter we are working with.
-  debug() << " get DeCalorimeter from " << m_detectorName << endmsg;
   m_calo = getDet<DeCalorimeter>( m_detectorName );  
   m_numberOfCells = m_calo->numberOfCells();
   m_pedShift      = m_calo->pedestalShift();

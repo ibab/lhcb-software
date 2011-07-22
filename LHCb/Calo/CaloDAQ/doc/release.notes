@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() and verbose() messages only when output level requires it,
+   also using UNLIKELY macro
+
 !========================= CaloDAQ v4r22 2011-04-04 =========================
 ! 2011-03-23 - Olivier Deschamps
   - fix compilation warning

@@ -1,4 +1,3 @@
-// $Id: CaloReadoutTool.cpp,v 1.43 2010-03-02 17:35:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloReadoutTool );
+DECLARE_TOOL_FACTORY( CaloReadoutTool )
 
 
 //=============================================================================
@@ -50,7 +49,8 @@ CaloReadoutTool::~CaloReadoutTool() {}
 StatusCode CaloReadoutTool::initialize(){
      StatusCode sc = GaudiTool::initialize();
      if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-     debug() << "==> Initialize " << name() << endmsg;
+     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+       debug() << "==> Initialize " << name() << endmsg;
      IIncidentSvc* inc = incSvc() ;
      if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
      return sc;
@@ -74,7 +74,9 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    if(m_first)debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" <<rootInTES()<< m_raw <<endmsg;
+    if(m_first)
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" <<rootInTES()<< m_raw <<endmsg;
     m_first=false;
     return false;
   }

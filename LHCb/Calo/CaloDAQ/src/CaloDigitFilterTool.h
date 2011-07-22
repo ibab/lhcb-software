@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef CALODIGITFILTERTOOL_H 
 #define CALODIGITFILTERTOOL_H 1
 
@@ -53,7 +52,8 @@ public:
   double offsetRMS(LHCb::CaloCellID id);    
     
   virtual void handle(const Incident& /* inc */ ) { 
-    debug() << "IIncident Svc reset" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "IIncident Svc reset" << endmsg;
     m_reset = true ;  
   } 
 

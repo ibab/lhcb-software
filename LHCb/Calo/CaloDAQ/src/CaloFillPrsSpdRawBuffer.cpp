@@ -1,4 +1,3 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.16 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -16,7 +15,7 @@
 // 2005-01-04 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CaloFillPrsSpdRawBuffer );
+DECLARE_ALGORITHM_FACTORY( CaloFillPrsSpdRawBuffer )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,7 +45,7 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
 
@@ -81,7 +80,7 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
 //=============================================================================
 StatusCode CaloFillPrsSpdRawBuffer::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
  
   for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
     m_banks[kk].clear( );
@@ -112,12 +111,14 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
     int version = m_dataCodingType;
     if ( 2 == version ) version = 1;
-    debug() << "Data bank coding type : " << m_dataCodingType << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Data bank coding type : " << m_dataCodingType << endmsg;
     rawEvent->addBank( board, m_bankType, version, m_banks[kk] );
     totDataSize += m_banks[kk].size();
     m_dataSize[kk] += m_banks[kk].size();
     if ( 3 > m_dataCodingType ) {
-      debug() << "Trigger bank coding type : " << m_dataCodingType << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Trigger bank coding type : " << m_dataCodingType << endmsg;
       rawEvent->addBank( board, m_triggerBankType, m_dataCodingType , m_trigBanks[kk] );
       totTrigSize += m_trigBanks[kk].size();
     } 
@@ -128,7 +129,7 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   m_totTrigSize += totTrigSize;
   m_nbEvents++;
 
-  if ( MSG::DEBUG >= msgLevel() ) {
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     board = 0;
     debug() << "Bank sizes: ";
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
@@ -140,7 +141,7 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
             << " + trigger " << totTrigSize << endmsg;
   }
 
-  if ( MSG::VERBOSE >= msgLevel() ) {
+  if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
     board = 0;
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
       verbose() << "DATA bank : " << board << endmsg;

@@ -1,4 +1,3 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.11 2010-03-22 17:01:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloDataProviderFromTES );
+DECLARE_TOOL_FACTORY( CaloDataProviderFromTES )
 
 
 //=============================================================================
@@ -73,7 +72,8 @@ StatusCode CaloDataProviderFromTES::finalize ( ) {
 StatusCode CaloDataProviderFromTES::initialize ( ) {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "==> Initialize " << name() << endmsg;
 
   // fill incident listener
   IIncidentSvc* inc = incSvc() ;
@@ -114,7 +114,8 @@ StatusCode CaloDataProviderFromTES::initialize ( ) {
 
   //
 
-  debug() << " Initialisation OK" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << " Initialisation OK" << endmsg;
   return StatusCode::SUCCESS;
 }
 

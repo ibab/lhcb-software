@@ -1,4 +1,3 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.32 2010-03-02 17:35:35 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -45,7 +44,8 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
-  debug() << "==> Initialize " << name() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "==> Initialize " << name() << endmsg;
 
   m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
   m_packedType = LHCb::RawBank::PrsPacked;
@@ -118,7 +118,8 @@ const LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int sou
   int sourceID     ;
   if(m_getRaw)getBanks();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    debug() << "The banks container is empty" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "The banks container is empty" << endmsg;
   }else{    
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); itB != m_banks->end() ; ++itB ) {
       sourceID       = (*itB)->sourceID();
@@ -127,13 +128,15 @@ const LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int sou
       if(checkSrc( sourceID ))continue;
       decoded = getData ( *itB );
       if( !decoded ){
-        debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
-                << " -> incomplete data - May be corrupted" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+          debug() << "Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+                  << " -> incomplete data - May be corrupted" << endmsg;
       }
     } 
   }
   if( !found ){
-    debug() << "rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
   }
   return m_data;
 }
