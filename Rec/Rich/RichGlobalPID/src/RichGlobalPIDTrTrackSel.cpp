@@ -89,6 +89,12 @@ StatusCode TrackSel::eventInit()
   }
 
   // Check the number of input raw tracks
+  if ( 0 == trackCreator()->nInputTracks() )
+  {
+    richStatus()->setEventOK( false );
+    deleteGPIDEvent();
+    return Warning("No raw input tracks -> Stopped",StatusCode::SUCCESS,0);
+  }
   if ( trackCreator()->nInputTracks() > m_maxInputTracks ) 
   {
     procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ReachedTrTrackLimit",
@@ -107,8 +113,8 @@ StatusCode TrackSel::eventInit()
   {
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS,0);
-  } 
+    return Warning("No tracks selected for processing -> Stopped",StatusCode::SUCCESS,0);
+  }
   else if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
     procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ReachedRichTrackLimit",

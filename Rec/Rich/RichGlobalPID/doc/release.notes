@@ -4,7 +4,12 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
-!========================= RichGlobalPID v3r15 2011-06-15 =========================
+! 2011-07-22 - Chris Jones
+ - Fine tune the event 'abort' messages in TrackSel to distinguish between
+   the cases where there are no tracks in the input container, from the case
+   when no tracks where selected for RICH processing.
+
+!======================= RichGlobalPID v3r15 2011-06-15 ======================
 ! 2011-05-07 - Chris Jones
  - Update MultiStepTool to not rely on RichGlobalPID to Track mapping via key.
  - Update TrackSelUsingPIDs to not rely on RichRecTrack to RichPID mapping
