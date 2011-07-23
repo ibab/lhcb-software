@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-22 - Cibran Santamarina
+ - StrippingBs2PhiKst0.py
+ - new cut parameter in confdict
+
 ! 2011-07-22 S. Blusk
 	- Minor update to Beauty2Charm_B2DXBuilder to include B+ -> D0 D+ and B- -->D0D-  
 

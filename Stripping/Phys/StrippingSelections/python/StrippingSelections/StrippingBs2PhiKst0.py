@@ -9,8 +9,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Cibran Santamarina']
-__date__ = '21/02/2011'
-__version__= '1.0'
+__date__ = '22/07/2011'
+__version__= '2.0'
 
 __all__=('StrippingBs2PhiKstConf',
          'makeBs2PhiKst',
@@ -59,6 +59,7 @@ class StrippingBs2PhiKstConf(LineBuilder):
           "KaonPIDK",
           "PionPT",
           "PionIPCHI2",
+          "PionPIDK",
           "PhiVCHI2",
           "PhiPT",
           "PhiMassWin",
@@ -76,6 +77,7 @@ class StrippingBs2PhiKstConf(LineBuilder):
           ,     "KaonPIDK"              : 0.    # adimensional
           ,     "PionPT"                : 500.0 # MeV
           ,     "PionIPCHI2"            : 9.    # adimensional
+          ,     "PionPIDK"              : 10.    # adimensional
           ,     "PhiVCHI2"              : 9.    # adimensional
           ,     "PhiPT"                 : 900.0 # MeV
           ,     "PhiMassWin"            : 25.0  # MeV
@@ -101,6 +103,7 @@ class StrippingBs2PhiKstConf(LineBuilder):
                                         KaonIPCHI2 = config['KaonIPCHI2'],
                                         PionPT = config['PionPT'],
                                         PionIPCHI2 = config['PionIPCHI2'],
+                                        PionPIDK = config['PionPIDK'],
                                         KstarPT = config["KstarPT"],
                                         KaonPIDK = config['KaonPIDK'],
                                         KstarVCHI2 = config['KstarVCHI2'],
@@ -173,6 +176,7 @@ def makeKst2Kpi(name,
                 KaonIPCHI2,
                 PionPT,
                 PionIPCHI2,
+                PionPIDK,
                 KstarPT,
                 KaonPIDK,
                 KstarVCHI2,
@@ -187,6 +191,7 @@ def makeKst2Kpi(name,
     KaonIPCHI2       : Minimum impact parameter chi2 of K.
     PionPT           : Minimum transverse momentum of pi (MeV).
     PionIPCHI2       : Minimum impact parameter chi2 of pi.
+    PionPIDK         : Maximum PID_{K-pi} of pi.
     KstarPT          : Minimum transverse momentum of Kstar (MeV).
     KaonPIDK         : Minimum PID_{K-pi} of K.
     KstarVCHI2       : Maximum Kstar vertex chi2 per degree of freedom.
@@ -195,7 +200,7 @@ def makeKst2Kpi(name,
 
 
     KstarCuts = "(INTREE((ABSID=='K+') & (PT > %(KaonPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (PIDK > %(KaonPIDK)s) ))"\
-        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) ))"\
+        "& (INTREE((ABSID=='pi-') & (PT > %(PionPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(PionIPCHI2)s) & (PIDK < %(PionPIDK)s) ))"\
         "& (ADMASS('K*(892)0') < %(KstarMassWin)s *MeV)"\
         "& (BPVDIRA > 0) & (VFASPF(VCHI2/VDOF)< %(KstarVCHI2)s) & (PT > %(KstarPT)s *MeV)"% locals()
 
