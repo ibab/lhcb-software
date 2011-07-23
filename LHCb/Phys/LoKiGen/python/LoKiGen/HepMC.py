@@ -85,6 +85,9 @@ if not hasattr ( HepMC.GenParticle , '__daughter__'  ) :
     HepMC.GenParticle  . __daughter__  = child 
 
 
+HepMC.GenParticle. __call__    = child
+HepMC.GenParticle. __getitem__ = child
+
 # =============================================================================
 ## Get all 'in'-particles for the given HepMC::Vertex
 def particles_in ( v ) :
