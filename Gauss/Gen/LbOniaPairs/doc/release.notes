@@ -6,6 +6,10 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+!======================== LbOniaPairs v1r0 2011-07-23 =========================
+! 2011-06-09 - Gloria Corti
+ - Do not build the package on WinXp as pythia6 itself is not built on it.
+
 ! 2011-05-30 - Vanya Belyaev
  - the first import 
    

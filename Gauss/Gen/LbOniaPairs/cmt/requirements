@@ -31,9 +31,10 @@ apply_pattern     linker_library    library=LbOniaPairsLib
 
 macro_append      LbOniaPairs_dependencies " LbOniaPairsLib " 
 
-private           
 # =============================================================================
+apply_pattern disable_package_on platform=target-winxp
 
+# =============================================================================
 # private 
 # macro_prepend fincludes $(ppcmd)"$(GENSER_path)/include/pythia/$(pythia_native_version)/include"
 
