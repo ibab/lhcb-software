@@ -27,31 +27,33 @@ confdict_2body = {'nbody':              2,
                   'MinBPVVDChi2':     225.0,
                   'MaxBPVIPChi2':      15.0,
                   'MinBPVDIRA':         0.0,
-                  'MinNvc':             2,
-                  'doPi':            True,
-                  'doK':             True,
-                  'dop':             True,
-                  'doKs':            True,
-                  'doLm':            True,
-                  'doDz':            True,
-                  'doDp':            True,
-                  'doDs':            True,
-                  'doLc':            True,
-                  'doPh':            True,
-                  'doKS':            True,
-                  'doJp':            True,
-                  'doDS':            True,
-                  'MinPiPt':         1500.0,
+                  'MaxMass':         6000.0,
+                  'MaxNtrk':              8,
+                  'MinNvc':               2,
+                  'doPi':              True,
+                  'doK':               True,
+                  'dop':               True,
+                  'doKs':              True,
+                  'doLm':              True,
+                  'doDz':              True,
+                  'doDp':              True,
+                  'doDs':              True,
+                  'doLc':              True,
+                  'doPh':              True,
+                  'doKS':             False,
+                  'doJp':              True,
+                  'doDS':              True,
+                  'MinPiPt':         1000.0,
                   'MinPiIPChi2DV':     25.0,
                   'MaxPiChi2':          4.0,
                   'MinPiPIDK':          2.0,
                   'MinPiPIDp':          2.0,
-                  'MinKPt':          1500.0,
+                  'MinKPt':          1000.0,
                   'MinKIPChi2DV':      25.0,
                   'MaxKChi2':           4.0,
                   'MinKPIDPi':          2.0,
                   'MinKPIDp':           2.0,
-                  'MinpPt':          1500.0,
+                  'MinpPt':          1000.0,
                   'MinpIPChi2DV':      25.0,
                   'MaxpChi2':           4.0,
                   'MinpPIDPi':          2.0,
@@ -164,9 +166,9 @@ confdict_2body = {'nbody':              2,
 
 confdict_3body=confdict_2body.copy()
 confdict_3body['nbody']=3
-confdict_3body['doKS']=False
-confdict={'2body':confdict_2body, '3body':confdict_3body}
-
+confdict_4body=confdict_2body.copy()
+confdict_4body['nbody']=4
+confdict={'2body':confdict_2body, '3body':confdict_3body, '4body':confdict_4body }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -174,10 +176,9 @@ from PhysSelPython.Wrappers import Selection, MergedSelection, DataOnDemand, Voi
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-#name = "B2nbody"
 
 class B2nbodyConf(LineBuilder) :
-    __configuration_keys__ = ('nbody','MinBMass','MaxBMass','MinBPt','MaxBVertChi2DOF','MinBPVVDChi2','MaxBPVIPChi2','MinBPVDIRA','MinNvc',
+    __configuration_keys__ = ('nbody','MinBMass','MaxBMass','MinBPt','MaxBVertChi2DOF','MinBPVVDChi2','MaxBPVIPChi2','MinBPVDIRA','MaxMass','MaxNtrk','MinNvc',
                               'doPi','doK','dop','doKs','doLm','doDz','doDp','doDs','doLc','doPh','doKS','doJp','doDS',
                               'MinPiPt','MinPiIPChi2DV','MaxPiChi2','MinPiPIDK','MinPiPIDp',
                               'MinKPt','MinKIPChi2DV','MaxKChi2','MinKPIDPi','MinKPIDp',
@@ -354,6 +355,8 @@ class B2nbodyConf(LineBuilder) :
                                      MinBPVVDChi2   =config['MinBPVVDChi2'],   
                                      MaxBPVIPChi2   =config['MaxBPVIPChi2'],   
                                      MinBPVDIRA     =config['MinBPVDIRA'],     
+                                     MaxMass        =config['MaxMass'],
+                                     MaxNtrk        =config['MaxNtrk'],
                                      MinNvc         =config['MinNvc'],
                                      doPi           =config['doPi'],
                                      doK            =config['doK'],
@@ -375,19 +378,21 @@ class B2nbodyConf(LineBuilder) :
 
 
 def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,KSSel,JpSel,DSSel,
-                nbody,MinBMass,MaxBMass,MinBPt,MaxBVertChi2DOF,MinBPVVDChi2,MaxBPVIPChi2,MinBPVDIRA,MinNvc,
+                nbody,MinBMass,MaxBMass,MinBPt,MaxBVertChi2DOF,MinBPVVDChi2,MaxBPVIPChi2,MinBPVDIRA,MaxMass,MaxNtrk,MinNvc,
                 doPi,doK,dop,doKs,doLm,doDz,doDp,doDs,doLc,doPh,doKS,doJp,doDS):
 
     # Define a class that contains all relevant particle properties
     class particle:
-        def __init__(self,name,nvc,q,b):
+        def __init__(self,name,m,ntrk,nvc,q,b):
             self.name=name
+            self.m=m            #mass
+            self.ntrk=ntrk      # number of charged tracks in fian state
             self.nvc=nvc        # number of vertex-contraining (pseudo)tracks
             self.Q=q            # electrical charge
             self.B=b            # baryon number
             self.cp=self
         def CP(self,name):
-            p= particle(name,self.nvc,-self.Q,-self.B)
+            p= particle(name,self.m,self.ntrk,self.nvc,-self.Q,-self.B)
             p.cp=self
             self.cp=p
             return p
@@ -399,44 +404,43 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
 
     # Define the particles
     particles=[]
-    if doPi: particles.append(particle(        "pi+"       ,1,  +1,  0))
+    if doPi: particles.append(particle(        "pi+"       , 139.6,1,1,  +1,  0))
     if doPi: particles.append(particles[-1].CP("pi-"       ))
-    if doK:  particles.append(particle(        "K+"        ,1,  +1,  0))
+    if doK:  particles.append(particle(        "K+"        , 493.7,1,1,  +1,  0))
     if doK:  particles.append(particles[-1].CP("K-"        ))
-    if dop:  particles.append(particle(        "p+"        ,1,  +1, +1))
+    if dop:  particles.append(particle(        "p+"        , 938.3,1,1,  +1, +1))
     if dop:  particles.append(particles[-1].CP("p~-"       ))
-    if doKs: particles.append(particle(        "KS0"       ,0,   0,  0))
-    if doLm: particles.append(particle(        "Lambda0"   ,0,   0, +1))
+    if doKs: particles.append(particle(        "KS0"       , 497.6,2,0,   0,  0))
+    if doLm: particles.append(particle(        "Lambda0"   ,1115.7,2,0,   0, +1))
     if doLm: particles.append(particles[-1].CP("Lambda~0"  ))
-    if doDz: particles.append(particle(        "D0"        ,1,   0,  0))
+    if doDz: particles.append(particle(        "D0"        ,1864.8,2,1,   0,  0))
     if doDz: particles.append(particles[-1].CP("D~0"       ))
-    if doDp: particles.append(particle(        "D+"        ,1,  +1,  0))
+    if doDp: particles.append(particle(        "D+"        ,1869.6,3,1,  +1,  0))
     if doDp: particles.append(particles[-1].CP("D-"        ))
-    if doDs: particles.append(particle(        "D_s+"      ,1,  +1,  0))
+    if doDs: particles.append(particle(        "D_s+"      ,1968.5,3,1,  +1,  0))
     if doDs: particles.append(particles[-1].CP("D_s-"      ))
-    if doLc: particles.append(particle(        "Lambda_c+" ,1,  +1, +1))
+    if doLc: particles.append(particle(        "Lambda_c+" ,2286.5,3,1,  +1, +1))
     if doLc: particles.append(particles[-1].CP("Lambda_c~-"))
-    if doPh: particles.append(particle(        "phi(1020)" ,2,   0,  0))
-    if doKS: particles.append(particle(        "K*(892)0"  ,2,   0,  0))
+    if doPh: particles.append(particle(        "phi(1020)" ,1019.5,2,2,   0,  0))
+    if doKS: particles.append(particle(        "K*(892)0"  , 895.9,2,2,   0,  0))
     if doKS: particles.append(particles[-1].CP("K*(892)~0" ))
-    if doJp: particles.append(particle(        "J/psi(1S)" ,2,   0,  0))
-    if doDS: particles.append(particle(        "D*(2010)+" ,2,  +1,  0))
+    if doJp: particles.append(particle(        "J/psi(1S)" ,3096.9,2,2,   0,  0))
+    if doDS: particles.append(particle(        "D*(2010)+" ,2010.2,3,2,  +1,  0))
     if doDS: particles.append(particles[-1].CP("D*(2010)-" ))
 
-    #go through all combinations
-    combs=[]
-    if nbody==2:
-        for i1,p1 in enumerate(particles):
-            for i2,p2 in enumerate(particles):
-                if i2<i1: continue
-                combs.append((p1,p2))
-    if nbody==3:
-        for i1,p1 in enumerate(particles):
-            for i2,p2 in enumerate(particles):
-                for i3,p3 in enumerate(particles):
-                    if i2<i1 or i3<i2: continue
-                    combs.append((p1,p2,p3))
-                    
+    # in itertools only since python 2.7
+    def combinations_with_replacement(iterable, r):
+        pool = tuple(iterable)
+        n = len(pool)
+        if not n and r: return
+        indices = [0] * r
+        yield tuple(pool[i] for i in indices)
+        while True:
+            for i in reversed(range(r)):
+                if indices[i] != n - 1: break
+            else: return
+            indices[i:] = [indices[i] + 1] * (r - i)
+            yield tuple(pool[i] for i in indices)
 
     #alphabetically ordered name of particles
     def pname(ps):
@@ -449,7 +453,15 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
         return result[:-1]
 
     descriptors = []
-    for comb in combs:
+    for comb in combinations_with_replacement(particles,nbody):
+        #check for the mass
+        m=0
+        for p in comb: m+=p.m
+        if m>MaxMass: continue
+        #check for the number of tracks in the final state
+        ntrk=0
+        for p in comb: ntrk+=p.ntrk
+        if ntrk>MaxNtrk: continue
         #check for the number of vertex-constraining (pseudo)tracks
         nvc=0
         for p in comb: nvc+=p.nvc
@@ -472,12 +484,18 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
         if mother=="": continue
 
         #check if final state is CP eigenstate
-        CP=False
-        ps=[]
-        for p in comb:
-            if not p.isCP(): ps.append(p)
-        if len(ps)==0:CP=True
-        if len(ps)==2 and ps[0].name==ps[1].cp.name : CP=True
+        ps=[p for p in comb if not p.isCP()]
+        while True:
+            doagain=False
+            for p in ps:
+                if ps.count(p.cp)>0:
+                    ps.remove(p)
+                    ps.remove(p.cp)
+                    doagain=True
+                    break
+            if not doagain: break
+        if len(ps)==0: CP=True
+        else: CP=False
         
         #for B0 non-CP combinations come twice. 
         if mother=="B0" and not CP:
@@ -487,8 +505,10 @@ def makeB2nbody(name,PiSel,KSel,pSel,KsSel,LmSel,DzSel,DpSel,DsSel,LcSel,PhSel,K
         #build the decay descriptor
         descriptor=mother+" -> "+pname(comb)
         if not CP:descriptor="["+descriptor+"]cc"
-        #print "DESCRIPTOR:",descriptor
         descriptors.append(descriptor)
+
+    print "%s: %d channels"%(name,len(descriptors))
+    #for descriptor in descriptors: print "DESCRIPTOR:",descriptor
 
 
     #make a merge of the input selections
