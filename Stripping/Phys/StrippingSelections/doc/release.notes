@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-23 S. Blusk
+	- Fix bug in Beauty2Charm_B2DXBuilder -  B+ -> D0 D+ and B- -->D0D-  Decay Descriptor
+
 ! 2011-07-22 - Cibran Santamarina
  - StrippingBs2PhiKst0.py
  - new cut parameter in confdict

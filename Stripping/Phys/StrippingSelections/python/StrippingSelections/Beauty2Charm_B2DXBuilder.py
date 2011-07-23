@@ -205,7 +205,7 @@ class B2DXBuilder(object):
 
     def _makeB2D0D(self,dname,d2x,d0):
         '''Makes B+ -> D+ D0'''
-        decays = {'B2D0D': ["[B- -> D0 D-","B+ -> D0 D+"] }
+        decays = {'B2D0D': ["B- -> D0 D-","B+ -> D0 D+"] }
         inputs = {'B2D0D': [d2x, d0]}
         b2d0d = makeB2XMerged('B2D0D',decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d0d['TOS'],1.0))
