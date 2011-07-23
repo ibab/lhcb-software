@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package       LbPythia
-version       v9r2
+version       v10r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -32,3 +32,8 @@ library       LbPythia          component/*.cpp
 apply_pattern component_library library=LbPythia 
 apply_pattern linker_library    library=LbPythiaLib 
 apply_pattern library_stamps    library=LbPythiaLib 
+
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
+

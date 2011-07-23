@@ -4,6 +4,11 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v10r0 2011-07-23 =========================
+! 2011-07-23 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+
 ! 2011-06-22 - Patrick Robbe
  - remove cut tools and place them in the Gen/GenCuts package
 
