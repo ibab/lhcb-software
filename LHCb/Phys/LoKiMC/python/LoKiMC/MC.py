@@ -120,6 +120,8 @@ if not hasattr ( LHCb.MCParticle ,   'daughter'   ) :
 if not hasattr ( LHCb.MCParticle , '__daughter__' ) :
     LHCb.MCParticle  . __daughter__ = child 
 
+LHCb.MCParticle.__call__    = child
+LHCb.MCParticle.__getitem__ = child
 
 # =============================================================================
 ## Get all children from the given LHCb::MCParticle 
