@@ -4,6 +4,11 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================== LbPGuns v2r0 2011-07-23 ==========================
+! 2011-07-15 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+
 ! 2011-06-24 - Patrick Robbe
  - ParticleGun.cpp: use tool headers from MCInterfaces
 
