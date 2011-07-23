@@ -109,6 +109,11 @@ if not hasattr ( LHCb.Particle ,   'daughter'   ) :
 if not hasattr ( LHCb.Particle , '__daughter__' ) :
     LHCb.Particle  . __daughter__ = child 
 
+
+LHCb . Particle . __call__    = child  
+LHCb . Particle . __getitem__ = child  
+
+
 # =============================================================================
 ## Get all descendants from the given LHCb::Particle 
 def descendants ( o ) :
