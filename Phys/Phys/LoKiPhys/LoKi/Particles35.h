@@ -112,11 +112,11 @@ namespace LoKi
       // ======================================================================
       /// constructor from protoparticle-function
       TrackFun 
-      ( const LoKi::BasicFunctors<LHCb::Track>::Function& fun , 
-        const double                                     bad ) ;
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun , 
+        const double                                             bad ) ;
       /// constructor from protoparticle-function
       TrackFun 
-      ( const LoKi::BasicFunctors<LHCb::Track>::Function& fun ) ;
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun ) ;
       /// MANDATORY: virtual destructor 
       virtual ~TrackFun() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -134,7 +134,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// the functor itself 
-      LoKi::Assignable<LoKi::BasicFunctors<LHCb::Track>::Function>::Type m_fun ;
+      LoKi::Assignable<LoKi::BasicFunctors<const LHCb::Track*>::Function>::Type m_fun ;
       /// bad value 
       double               m_bad ;                        // bad value 
       // ======================================================================
@@ -154,7 +154,7 @@ namespace LoKi
       // ======================================================================
       /// constructor from protoparticle-function
       TrackCut 
-      ( const LoKi::BasicFunctors<LHCb::Track>::Predicate& cut ) ;
+      ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ) ;
       /// MANDATORY: virtual destructor 
       virtual ~TrackCut() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -172,7 +172,7 @@ namespace LoKi
     private:
       // ======================================================================
       /// the functor itself 
-      LoKi::Assignable<LoKi::BasicFunctors<LHCb::Track>::Predicate>::Type m_cut ;
+      LoKi::Assignable<LoKi::BasicFunctors<const LHCb::Track*>::Predicate>::Type m_cut ;
       // ======================================================================
     } ;  
     // ========================================================================

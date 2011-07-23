@@ -123,8 +123,8 @@ std::ostream& LoKi::Particles::ProtoPCut::fillStream ( std::ostream& s ) const
 // constructor from protoparticle-function
 // ============================================================================
 LoKi::Particles::TrackFun::TrackFun 
-( const LoKi::BasicFunctors<LHCb::Track>::Function& fun , 
-  const double                                      bad ) 
+( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun , 
+  const double                                             bad ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun  ( fun ) 
   , m_bad  ( bad ) 
@@ -133,7 +133,7 @@ LoKi::Particles::TrackFun::TrackFun
 // constructor from protoparticle-function
 // ============================================================================
 LoKi::Particles::TrackFun::TrackFun 
-( const LoKi::BasicFunctors<LHCb::Track>::Function& fun )
+( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_fun  ( fun ) 
   , m_bad  ( LoKi::Constants::NegativeInfinity ) 
@@ -155,24 +155,28 @@ LoKi::Particles::TrackFun::result_type
 LoKi::Particles::TrackFun::operator() 
   ( LoKi::Particles::TrackFun::argument p ) const
 {
+  //
   if ( 0 == p ) 
   {
     Error ("LHCb::Particle* points to NULL, return 'bad'") ;
     return m_bad ;                                                   // RETURN
   }
+  //
   const LHCb::ProtoParticle* pp = p->proto() ;
   if ( 0 == pp ) 
   {
     Error ("LHCb::ProtoParticle* points to NULL, return 'bad'") ;
     return m_bad ;                                                   // RETURN
   }
+  //
   const LHCb::Track* track = pp->track() ;
   if ( 0 == pp ) 
   {
     Error ("LHCb::Track* points to NULL, return 'bad'") ;
     return m_bad ;                                                   // RETURN
   }
-  return m_fun ( *track ) ;                                          // RETURN
+  //
+  return m_fun ( track ) ;                                          // RETURN
 }
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -190,7 +194,7 @@ std::ostream& LoKi::Particles::TrackFun::fillStream ( std::ostream& s ) const
 // constructor from protoparticle-function
 // ============================================================================
 LoKi::Particles::TrackCut::TrackCut 
-( const LoKi::BasicFunctors<LHCb::Track>::Predicate& cut )
+( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate() 
   , m_cut  ( cut ) 
 {}
@@ -211,24 +215,28 @@ LoKi::Particles::TrackCut::result_type
 LoKi::Particles::TrackCut::operator() 
   ( LoKi::Particles::TrackCut::argument p ) const
 {
+  //
   if ( 0 == p ) 
   {
     Error ("LHCb::Particle* points to NULL, return 'false'") ;
     return false ;                                                   // RETURN
   }
+  //
   const LHCb::ProtoParticle* pp = p->proto () ;
   if ( 0 == pp ) 
   {
     Error ("LHCb::ProtoParticle* points to NULL, return 'false'") ;
     return false ;                                                   // RETURN
   }
+  //
   const LHCb::Track* track = pp->track () ;
   if ( 0 == pp ) 
   {
     Error ("LHCb::Track* points to NULL, return 'false'") ;
     return false ;                                                   // RETURN
   }
-  return m_cut ( *track ) ;                                          // RETURN
+  //
+  return m_cut ( track ) ;                                          // RETURN
 }
 // ============================================================================
 // OPTIONAL: nice printout 

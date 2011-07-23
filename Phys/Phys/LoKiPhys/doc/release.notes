@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-23 - Vanya Belyaev
+
+ - fix signature of TRFUN/TRCUT adapters 
+
 ! 2011-07-20 - Vanya Belyaev
 
  - add BeamLine functions from LoKiTrigger 
