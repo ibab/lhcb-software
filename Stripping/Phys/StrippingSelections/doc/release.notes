@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-23 - Anton Poluektov 
+  - Add LoKiTrack.decorator in StrippingB2DX.py
+
 ! 2011-07-23 S. Benson
 	- StrippingBs2Q2B.py
         - Removed track pt cuts that are now included in standard particles. Also removed corrected mass cuts

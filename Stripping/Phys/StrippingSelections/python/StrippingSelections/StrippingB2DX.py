@@ -498,7 +498,10 @@ class B2DXConf(LineBuilder) :
         	line = StrippingLine(BSidebandSel.name()+"Line", prescale = config["Prescales"][name] ,
                                  selection = BSidebandSel,
                                  checkPV = config["CheckPV"],
-                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                 FILTER = {
+                                   "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                   "Preambulo" : [ "from LoKiTracks.decorators import *" ]
+                                 }, 
                                  HLT = config["HLT"] )
         	self.registerLine( line )
 
@@ -512,7 +515,10 @@ class B2DXConf(LineBuilder) :
         	    line = StrippingLine(sel.name()+"Line", prescale = config["Prescales"][name] ,
                                  selection = BSidebandSel,
                                  checkPV = config["CheckPV"],
-                                 FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                 FILTER = {
+                                   "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                   "Preambulo" : [ "from LoKiTracks.decorators import *" ]
+                                 }, 
                                  HLT = config["HLT"] )
         	    self.registerLine( line )
 
@@ -529,7 +535,10 @@ class B2DXConf(LineBuilder) :
         line = StrippingLine(LambdaBSidebandSel.name()+"Line", prescale = config["Prescales"]["Lambda"] ,
                              selection = LambdaBSidebandSel,
                              checkPV = config["CheckPV"],
-                             FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"], 
+                             FILTER = {
+                                 "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"], 
+                                 "Preambulo" : [ "from LoKiTracks.decorators import *" ]
+                             }, 
                              HLT = config["HLT"] )
 
         self.registerLine( line )
@@ -543,7 +552,10 @@ class B2DXConf(LineBuilder) :
         line = StrippingLine(moduleName + "WithUnbiasedB2DPiLine", prescale = config["Prescales"]["Unbiased"] ,
                              selection = HLT2TIS,
                              checkPV = config["CheckPV"],
-                             FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Unbiased"] )
+                             FILTER = {
+                                 "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Unbiased"], 
+                                 "Preambulo" : [ "from LoKiTracks.decorators import *" ]
+                             } ) 
         self.registerLine( line )
 
 
