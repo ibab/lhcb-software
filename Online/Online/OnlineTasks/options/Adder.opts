@@ -84,7 +84,7 @@ EVTProdCountAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_EVTProd/C
 EVTProdCountAdder.AdderClass          = "Counter";
 EVTProdCountAdder.InDNS               = "<node>";
 
-MEPrxCountAdder.ReceiveTimeout     = 12;
+MEPrxCountAdder.ReceiveTimeout     = 4;
 EVTProdCountAdder.ReceiveTimeout   = 12;
 DiskWRCountAdder.ReceiveTimeout   = 12;
 GauchoHistAdder.ReceiveTimeout     = 12;

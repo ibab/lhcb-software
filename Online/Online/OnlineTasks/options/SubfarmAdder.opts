@@ -71,7 +71,7 @@ DiskWRCountAdder.ServicePattern        = "MON_<node>[0-9][0-9]_DiskWR/Counter/";
 DiskWRCountAdder.AdderClass            = "Counter";
 DiskWRCountAdder.InDNS                 = "<node>";
 
-MEPrxCountAdder.ReceiveTimeout     = 6;
+MEPrxCountAdder.ReceiveTimeout     = 3;
 GauchoHistAdder.ReceiveTimeout     = 6;
 GauchoCountAdder.ReceiveTimeout    = 6;
 MEPrxHistAdder.ReceiveTimeout      = 6;

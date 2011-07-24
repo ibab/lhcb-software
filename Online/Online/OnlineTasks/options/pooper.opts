@@ -41,7 +41,7 @@ HLTRater.InDNS               = "mona08";
 HLTRater.TrendingOn          = false;
 
 EVTProd.MyName              = "<part>_X_EVTProd";
-EVTProd.ServicePrefix       = "<part>_EVTProd";
+EVTProd.ServicePrefix       = "Stat/<part>_X_EVTProd";
 EVTProd.PartitionName       = @OnlineEnv.PartitionName;
 EVTProd.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
 EVTProd.ServicePattern      = "MON_<part>_hlt01_evtprod_00/Counter/";
@@ -49,7 +49,7 @@ EVTProd.ServicePattern      = "MON_<part>_hlt01_evtprod_00/Counter/";
 EVTProd.InDNS               = "mona08";
 
 DiskWR.MyName              = "<part>_X_DiskWR";
-DiskWR.ServicePrefix       = "<part>_DiskWR";
+DiskWR.ServicePrefix       = "Stat/<part>_X_DiskWR";
 DiskWR.PartitionName       = @OnlineEnv.PartitionName;
 DiskWR.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
 DiskWR.ServicePattern      = "MON_<part>_hlt01_DiskWR_00/Counter/";
