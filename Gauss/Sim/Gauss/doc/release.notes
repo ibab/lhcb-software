@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v40r1 2011-07-25 ============================
+! 2011-07-25 - Gloria Corti
+ - Remove conditional build of generators packages as now pattern to prevent 
+   building them on windows is in packages themselves
+ - Use Geant4Files for G4 9.4
+
 ! 2011-06-21 - Rob Lambert
  - Add Persistency to Configurable, to support ROOT persistency.
  - use IOHelper to define outStream.

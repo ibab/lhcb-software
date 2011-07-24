@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v40r0
+version v40r1
 
 #============================================================================
 #-- Structure
@@ -15,10 +15,10 @@ branches src doc options cmt job python
 
 #-- Databases
 use DDDB               v*     Det            -no_auto_imports
-use ParamFiles         v8r3                  -no_auto_imports
+use ParamFiles         v8r4                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
 use DecFiles           v23r*  Gen            -no_auto_imports
-use Geant4Files	       v92r0	             -no_auto_imports
+use Geant4Files	       v94r0	             -no_auto_imports
 use MIBData            v3r2                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
 use BcVegPyData        v2r0                  -no_auto_imports
@@ -51,25 +51,18 @@ use SimComponents      v*     Sim            -no_auto_imports
 
 #== From GAUSS project =====================================================
 
-#-- Generator
+#-- Generators
 use LbPGuns            v*     Gen            -no_auto_imports 
 use LbMIB              v*     Gen            -no_auto_imports
 use LbPythia           v*     Gen            -no_auto_imports
 
 #-- Not built on Windows
-macro LbHerwig_use    "LbHerwig     v*  Gen  -no_auto_imports"  WIN32 ""
-macro LbBcVegPy_use   "LbBcVegPy    v*  Gen  -no_auto_imports"  WIN32 ""
-macro LbHidValley_use "LbHidValley  v*  Gen  -no_auto_imports"  WIN32 ""
-macro LbAlpGen_use    "LbAlpGen     v*  Gen  -no_auto_imports"  WIN32 ""
-macro LbHijing_use    "LbHijing     v*  Gen  -no_auto_imports"  WIN32 ""
-macro LbPythia8_use   "LbPythia8    v*  Gen  -no_auto_imports"  WIN32 ""
-use ${LbHerwig_use}
-use ${LbBcVegPy_use}
-use ${LbHidValley_use}
-#use ${LbAlpGen_use}                    # TEMPORARILY OFF
-use ${LbHijing_use}
-use ${LbPythia8_use}
-
+use LbHerwig           v*     Gen            -no_auto_imports
+use LbBcVegPy          v*     Gen            -no_auto_imports
+use LbHidValley        v*     Gen            -no_auto_imports
+#use LbAlpGen           v*     Gen            -no_auto_imports # OFF for now
+use LbHijing           v*     Gen            -no_auto_imports
+use LbPythia8          v*     Gen            -no_auto_imports
 
 #-- Simulation
 use GiGaCnv              v*    Sim   -no_auto_imports
