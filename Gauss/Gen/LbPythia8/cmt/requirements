@@ -3,7 +3,7 @@
 # Maintainer : Patrick Robbe
 #============================================================================
 package       LbPythia8
-version       v2r1p1
+version       v2r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -33,3 +33,6 @@ apply_pattern library_stamps    library=LbPythia8Lib
 #============================================================================
 set PYTHIA8XML $(pythia8_home)/xmldoc
 
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp

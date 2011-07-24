@@ -4,6 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v2r2 2011-07-24 =========================
+! 2011-07-24 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+
 !======================== LbPythia8 v2r1p1 2010-05-09 ========================
 ! 2010-05-09 - Gloria CORTI
  - Fix problem for setting options in event types for Pythia8. As the options
