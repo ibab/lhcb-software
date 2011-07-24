@@ -691,7 +691,7 @@ def _h1_iteritems_ ( h1 ) :
     ax = h1.GetXaxis()
     sx = ax.GetNbins()
 
-    for ix in range (  ix , sx + 1 ) : 
+    for ix in range ( 1  , sx + 1 ) : 
         
         x   =       ax.GetBinCenter ( ix )
         xe  = 0.5 * ax.GetBinWidth  ( ix )
@@ -1102,7 +1102,7 @@ def _h1_oper_ ( h1 , h2 , oper ) :
         #
         v = VE ( oper ( y1 , y2 ) ) 
         #
-        if v.isfinite() : continue 
+        if not v.isfinite() : continue 
         #
         result.SetBinContent ( i1 , v.value () ) 
         result.SetBinError   ( i1 , v.error () )
