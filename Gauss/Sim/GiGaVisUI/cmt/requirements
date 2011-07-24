@@ -1,6 +1,6 @@
 # =============================================================================
 package GiGaVisUI
-version v5r1
+version v5r2
 
 # =============== package structure ===========================================
 branches         cmt src doc
@@ -21,6 +21,10 @@ set  G4DAWNFILE_DEST_DIR       "../job/"
 set  G4DAWNFILE_PS_VIEWER      "gv"
 set  G4DAWN_MULTI_WINDOW       "1"
 set  G4DAWNFILE_MULTI_WINDOW   "1"
+
+# do not build on windows
+#============================================================================
+apply_pattern disable_package_on platform=target-winxp
 
 # ============================================================================
 # The END 

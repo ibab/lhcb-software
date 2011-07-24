@@ -5,6 +5,11 @@
 ! Purpose     : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!======================= GiGaVisUI v5r2 2011-07-25 ===========================
+! 2011-07-25 - Gloria Corti
+ - Apply pattern not to build on windows, so that conditional use can be
+   removed from GaussSys
+
 !======================= GiGaVisUI v5r1 2008-12-08 ===========================
 ! 2008-12-08 - Gloria CORTI from Marco PAPPAGALLO
  - Fix for error message:
