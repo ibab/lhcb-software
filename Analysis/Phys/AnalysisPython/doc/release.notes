@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-07-24 - Vanya Belyaev
+ - minor fix 
+
 ! 2011-07-19 - Vanya Belyaev
 
  - decorate findBin functions 

@@ -104,7 +104,10 @@ if not hasattr ( VE , 'isfinite' ) :
         return isfinite ( s.value () )  and isfinite ( s.cov2 () )     
     _is_finite_ .__doc__ += '\n' + isfinite. __doc__
     VE.isfinite = _is_finite_
-    
+
+SE.__repr__ = lambda s : 'Stat: '+ s.toString()
+SE.__str__  = lambda s : 'Stat: '+ s.toString()
+
 # =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
     #
@@ -685,7 +688,7 @@ def _h1_iteritems_ ( h1 ) :
     >>> for i,x,y in h1 : ...
     
     """
-    ax = h1.GetXAxis()
+    ax = h1.GetXaxis()
     sx = ax.GetNbins()
 
     for ix in range (  ix , sx + 1 ) : 
@@ -1650,6 +1653,30 @@ ROOT.TH1D . asFunc = _h1_as_fun_
 ROOT.TH2F . asFunc = _h2_as_fun_ 
 ROOT.TH2D . asFunc = _h2_as_fun_ 
 
+# =======================================================================
+## calculate the difference between two histograms 
+def _h_diff_ ( h1 , h2 , func = lambda s1,s2 : (s1/s2).value() ) :
+    """
+    Estimate the difference between two histograms 
+    """
+    
+    se = SE()
+    
+    for bin in h1 :
+        
+        v1 = h1 [ bin ] 
+        v2 = h2 [ bin ] 
+        
+        se += func ( v1 , v2 )
+        
+    return se 
+
+ROOT.TH1F.histoDiff = _h_diff_
+ROOT.TH1D.histoDiff = _h_diff_
+ROOT.TH2F.histoDiff = _h_diff_
+ROOT.TH2D.histoDiff = _h_diff_
+ROOT.TH3F.histoDiff = _h_diff_
+ROOT.TH3D.histoDiff = _h_diff_
 
 # =============================================================================
 ## adjust the "efficiency"
