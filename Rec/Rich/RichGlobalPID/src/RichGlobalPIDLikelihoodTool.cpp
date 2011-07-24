@@ -747,12 +747,7 @@ double LikelihoodTool::logLikelihood() const
 double LikelihoodTool::logExp( const double x ) const
 {
   double res(0);
-  if ( x > limitD )
-  {
-    // Very very rarely called in this regime, so just use the full fat version
-    res = std::log( std::exp(x) - 1.0 );
-  }
-  else 
+  if ( x <= limitD )
   {
     // A collection of rational power series covering the important range
     // note by construction this function should never be called for x < limitA
@@ -762,7 +757,7 @@ double LikelihoodTool::logExp( const double x ) const
     const double xxxx  = xx*xx;
     const double xxxxx = xx*xxx; 
     
-    if ( x > limitC )
+    if      ( x > limitC )
     {
       res = (-5.751779337152293 - 261.58791552313113*x -
              1610.1902353909695*xx - 291.61172549536417*xxx +
@@ -794,6 +789,11 @@ double LikelihoodTool::logExp( const double x ) const
       // should never get here. But just in case ...
       res = std::log( std::exp(x) - 1.0 );
     }
+  }
+  else
+  {
+    // Very very rarely called in this regime, so just use the full fat version
+    res = std::log( std::exp(x) - 1.0 );
   }
   return res;
 }
