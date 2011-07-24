@@ -6,6 +6,10 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!========================= GiGa v19r8p1 2011-07-25 ===========================
+! 2010-11-13 - Chris Jones
+ - Fix printing in GiGaFieldMgrBase.cpp
+
 !======================= GiGa v19r8 2010-03-22 ===============================
 ! 2010-03-08 - Silvia Miglioranzi
  - Modified GiGaExtPhysics to set the verbose level of the Physics constructor 
