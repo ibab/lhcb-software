@@ -28,6 +28,7 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichIsolatedTrack.h"
 #include "RichRecBase/IRichStereoFitter.h"
+#include "RichKernel/RichHPDIdentifier.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
@@ -117,6 +118,9 @@ namespace Rich
 
         /// Enable aerogel tile plots
         bool m_aeroTilePlots;
+
+        /// Enable per PD resolution plots
+        bool m_pdResPlots;
 
       };
 

@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-24 - Chris Jones
+ - Remove "DBConsistencyCheck" from the list of monitors run Online. 
+ - Add optional (disabled by default) per PD resolution plots to RecoQC.
+ - Reduce a message in RichDataDBCheck from Error to Warning.
+
 ! 2011-07-19 - Chris Jones
  - Add new flag "Simulation" to RichRecQCConf
  - Turn off monitors that require HLT DecReports, when running on MC data.

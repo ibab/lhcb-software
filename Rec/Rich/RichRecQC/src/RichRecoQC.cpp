@@ -61,6 +61,8 @@ DECLARE_ALGORITHM_FACTORY( RecoQC )
 
   declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
 
+  declareProperty( "EnablePerPDPlots", m_pdResPlots = false );
+
   setProperty( "NBins2DHistos", 100 );
 }
 
@@ -407,6 +409,19 @@ StatusCode RecoQC::execute()
                        -m_ckResRange[rad], m_ckResRange[rad], nBins1D() ) -> fill( deltaTheta );
         }
       } // MC is available
+
+      // Plots per PD
+      if ( m_pdResPlots )
+      {
+        const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
+        const Rich::DAQ::HPDIdentifier hid(hpdID);
+        std::ostringstream id,title;
+        id << "hpds/" << hid.number();
+        title << "Rec-Exp Cktheta | All photons | " << hpdID;
+        richHisto1D( HID(id.str(),rad), title.str(), 
+                     -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
+                     "delta(Cherenkov theta) / rad" ) -> fill( deltaTheta );
+      }
 
     } // photon loop
 
