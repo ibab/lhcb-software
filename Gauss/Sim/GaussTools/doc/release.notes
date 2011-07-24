@@ -4,12 +4,17 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v16r0 2011-07-24 ========================
 ! 2011-06-19 - Patrick Robbe
  - src/Components/RadLengthColl.cpp: fix compilation warning 
+
 ! 2011-05-11 - Sajan Easo
- - Added few lines for using MAPMT simulation in RICH. These changes are completely compatible with
+ - Added few lines for using MAPMT simulation in RICH. These changes are 
+   completely compatible with
    using HPDs in the sense that one can continue to use the HPDs. 
-- a Minor bug fix in GiGaRunActionSequence.cpp where the EndofRunAction using BeginofRunAction is avoided.
+ - a Minor bug fix in GiGaRunActionSequence.cpp where the EndofRunAction
+   using BeginofRunAction is avoided.
+
 ! 2011-04-28 - Silvia Miglioranzi
  - Tool to calulate the material budget was added:
    RadLengthColl.cpp
