@@ -8,75 +8,60 @@ branches cmt doc
 #==================================================================
 
 # Temporarly for Gauss v40r1 as not in LHCb v32r4
-use MCInterfaces          v1r14       Kernel  
-
+use MCInterfaces        v1r14   Kernel  
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v40r1 Sim"  WIN32 ""
-use ${Gauss_use} 
+use Gauss               v40r1   Sim
 
 # Generator packages: Basic configuration
-use GenCuts   v1r0  Gen
-macro GENSER_use        "GENSER       v9r0    Gen"  WIN32 ""
-macro EvtGen_use        "EvtGen       v12r0   Gen"  WIN32 ""
-macro EvtGenExtras_use  "EvtGenExtras v2r6    Gen"  WIN32 ""
-macro Generators_use    "Generators   v10r10  Gen"  WIN32 ""
-macro LbPythia_use      "LbPythia     v9r0p1  Gen"  WIN32 ""
-use ${GENSER_use}
-use ${EvtGen_use}
-use ${EvtGenExtras_use}
-use ${Generators_use}
-use ${LbPythia_use}
+use GenCuts             v1r0    Gen
+use GENSER              v9r1    Gen
+use EvtGen              v12r1   Gen
+use EvtGenExtras        v2r7    Gen
+use Generators          v11r0   Gen
+use LbPythia            v10r0   Gen
 
 # Generators packages: extensions to Pythia6
-macro LbAlpGen_use      "LbAlpGen     v1r0    Gen"  WIN32 ""
-macro BcVegPy_use       "BcVegPy      v2r1    Gen"  WIN32 ""
-macro LbBcVegPy_use     "LbBcVegPy    v3r1    Gen"  WIN32 ""
-macro LbHidValley_use   "LbHidValley  v2r4    Gen"  WIN32 ""
-#use ${LbAlpGen_use}
-use ${BcVegPy_use}
-use ${LbBcVegPy_use}
-use ${LbHidValley_use}
-use LbOniaPairs         v1r0   Gen
+#use LbAlpGen             v1r0    Gen   # OFF for the moment
+use BcVegPy              v3r0    Gen
+use LbBcVegPy            v4r0    Gen
+use LbHidValley          v3r0    Gen
+use LbOniaPairs          v1r0    Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-macro LbHerwig_use      "LbHerwig     v6r0p1  Gen"  WIN32 ""
-macro LbPythia8_use     "LbPythia8    v2r1p1  Gen"  WIN32 ""
-use ${LbHerwig_use}
-use ${LbPythia8_use}
+use LbHerwig             v6r1    Gen
+use LbPythia8            v2r2    Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
-macro LbHijing_use      "LbHijing     v6r0    Gen"  WIN32 ""
-use ${LbHijing_use}
+use   LbHijing          v6r1    Gen
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use LbMIB               v4r1      Gen
+use   LbMIB             v5r0    Gen
 
-# Generators packages: LHCb particle gun generator: temporarly off on Win32
-macro LbPGuns_use       "LbPGuns v1r2    Gen"  WIN32 ""
-use ${LbPGuns_use}
+# Generators packages: LHCb particle gun generator
+use   LbPGuns           v2r0    Gen
 
 # Simulation basic packages
-use GiGa        	v19r8	  Sim     
+use GiGa        	v19r8p1	  Sim     
 use GiGaCnv     	v18r7	  Sim
 use SimSvc              v5r2      Sim
-macro GiGaVisUI_use     "GiGaVisUI    v5r1    Sim"  WIN32 ""
-use ${GiGaVisUI_use} 
+use GiGaVisUI           v5r2      Sim
 use VisSvc              v5r5      Vis 
 use ClhepTools          v2r1p1    Tools
 
 # Simulation specialized packages
 use GaussKine           v4r0      Sim
-use GaussAlgs		v3r4      Sim
-use GaussTools          v15r4     Sim
+use GaussAlgs		v4r0      Sim
+use GaussTools          v16r0     Sim
 use GaussRICH		v11r3     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r3	  Sim
 use GaussPhysics	v6r5	  Sim
-use GaussUMC            v1r0      Sim
+use GaussUMC            v1r1      Sim
+use GaussCherenkov      v1r0      Sim
 
 # Monitoring packages
-use GaussMonitor	v6r6      Sim
+use GaussMonitor	v6r8      Sim
 use CaloMoniSim         v4r0      Calo
 use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r5p1    Muon
@@ -88,7 +73,7 @@ use BlsMoniSim          v1r1      Bls
 #use GDMLG4Writer        v2r0      Sim
 
 # Visualization configuration
-use XmlVis              v1r12      Vis
+use XmlVis              v1r13      Vis
 
 # Test packages for new releases or installations on new platforms
 use GenTests            v1r5      Gen
