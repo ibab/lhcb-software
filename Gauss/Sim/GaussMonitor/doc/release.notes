@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r8 2011-07-24 =========================
 ! 2011-06-18 - Patrick Robbe
  - src/ProductionAsymmetry.cpp, src/GenMonitorAlg.cpp, 
    src/GeneratorAnalysis.cpp, src/ProductionAnalysis.cpp:
