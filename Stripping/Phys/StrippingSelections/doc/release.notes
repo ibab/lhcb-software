@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-07-23 S. Blusk
+	- Fix bug in StrippingB2D3H.py (PI+ --> pi+)
+
+
 ! 2011-07-23 - Rolf Oldeman
   - updated B2nbody to allow 4-body final states
   - included confdict for 4-body decays

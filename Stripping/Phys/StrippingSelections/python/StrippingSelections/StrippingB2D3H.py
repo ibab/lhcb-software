@@ -1651,7 +1651,7 @@ def makeD0Meson(name,
     _trkFilterCode += "& CHILDCUT(PT > %(MinPT)s *MeV, 2)" %locals()
     _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 1)" %locals()
     _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 2)" %locals()
-    _pidpiPass = "(MAXTREE(ABSID=='PI+',PIDK)<%(PionPiDDLL)s)"%locals()
+    _pidpiPass = "(MAXTREE(ABSID=='pi+',PIDK)<%(PionPiDDLL)s)"%locals()
 
     _dMassWindow = "(ADMASS('D0') < %(DMassWindow)s *MeV ) " %locals()
 
@@ -1834,7 +1834,7 @@ def makeDMeson(name,
     _trkFilterCode = "CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 1)" %locals()
     _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 2)" %locals()
     _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 3)" %locals()
-    _pidpiPass = "(MAXTREE(ABSID=='PI+',PIDK)<%(PionPiDDLL)s)"%locals()
+    _pidpiPass = "(MAXTREE(ABSID=='pi+',PIDK)<%(PionPiDDLL)s)"%locals()
 
     _d2kpipi = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
     _d2pipipi = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi/Particles")
@@ -1931,7 +1931,7 @@ def makeLambdaC(name,
     _trkFilterCode = "CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 1)" %locals()
     _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 2)" %locals()
     _trkFilterCode += "& CHILDCUT(MIPCHI2DV ( PRIMARY ) > %(PionMinIPChisq)s , 3)" %locals()
-    _pidpiPass = "(MAXTREE(ABSID=='PI+',PIDK)<%(PionPiDDLL)s)"%locals()
+    _pidpiPass = "(MAXTREE(ABSID=='pi+',PIDK)<%(PionPiDDLL)s)"%locals()
 
 
     _lcMassWindow = "(ADMASS('Lambda_c+') < %(DMassWindow)s *MeV ) " %locals()
