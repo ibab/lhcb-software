@@ -34,7 +34,8 @@ class LoKiCuts(object):
                 'PT'        : 'PT',
                 'MIPCHI2DV' : 'MIPCHI2DV(PRIMARY)',
                 'ASUMPT'    : 'ASUM(PT)',
-                'AMAXDOCA'  : "AMAXDOCA('LoKi::TrgDistanceCalculator')",
+                'AMAXDOCA'  : "ACUTDOCA(%s,'LoKi::TrgDistanceCalculator')",
+                #'AMAXDOCA' : "AMAXDOCA('LoKi::TrgDistanceCalculator')" 
                 'VCHI2DOF'  : "VFASPF(VCHI2/VDOF)",
                 'BPVVDCHI2' : 'BPVVDCHI2',
                 'BPVDIRA'   : 'BPVDIRA',
@@ -48,7 +49,7 @@ class LoKiCuts(object):
                 'PIDp'      : 'PIDp',
                 'BPVVDRHO'  : 'BPVVDRHO',
                 'BPVVDZ'    : 'BPVVDZ',
-                'DOCAMAX'    : 'DOCAMAX' 
+                'DOCAMAX'   : 'DOCAMAX' 
                 }
                 
     def __init__(self,cuts,config):
@@ -63,6 +64,8 @@ class LoKiCuts(object):
     def _getCut(self,cut):
         cuts = []
         fun = self.functors[cut]
+        if cut is 'AMAXDOCA': # Use ACUTDOCA instead (slightly faster)
+            return [fun%self.config[cut+'_MAX']]        
         for key,val in self.config.iteritems():
             if key.startswith(cut+'_'):                
                 if key.endswith('MIN'): cuts.append(fun+'>'+str(val))

@@ -16,7 +16,8 @@ class HHHBuilder(object):
     def __init__(self,pions,kaons,protons,config):
         self.pions = filterInputs("HHHPions",[pions],config['PiDAUGHTERS'])
         self.kaons = filterInputs("HHHKaons",[kaons],config['KDAUGHTERS'])
-        self.protons = filterInputs("HHHProtons",[protons],config['pDAUGHTERS'])
+        self.protons = filterInputs("HHHProtons",[protons],
+                                    config['pDAUGHTERS'])
         self.config = config
         self.pipipi = self._makePiPiPi()
         self.kpipi = self._makeKPiPi()
@@ -26,19 +27,13 @@ class HHHBuilder(object):
     def _makeX2HHH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HHH selections with charged tracks only.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
-        # require at least one daughter to IP chi2 > D min FD chi2
-        #comboCuts.append("AHASCHILD(MIPCHI2DV(PRIMARY) > %s)" \
-        #                 % config['BPVVDCHI2_MIN'])
         comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
         momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
-        print 'makeX2HHH',name,'combo:',comboCuts,'mom:',momCuts
         return Selection(name+'Beauty2Charm',Algorithm=cp,
                          RequiredSelections=inputs)
-
-
 
     def _makePiPiPi(self):
         '''Makes X -> pi+pi-pi+'''
@@ -62,6 +57,5 @@ class HHHBuilder(object):
         return self._makeX2HHH('X2ppbarK',['[Xi_c+ -> p+ p~- K+]cc'],
                               '(AM < 5*GeV)',self.config,
                               [self.kaons,self.protons])
-
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

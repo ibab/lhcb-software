@@ -25,9 +25,6 @@ class LcBuilder(object):
         comboCuts = [LoKiCuts(['ASUMPT'],self.config).code(),
                      "(ADAMASS('Lambda_c+') < %s*%s) " % (dm+10,units),
                      hasTopoChild()]
-        # require at least one daughter to IP chi2 > Lc min FD chi2
-        comboCuts.append("AHASCHILD(MIPCHI2DV(PRIMARY) > %s)" \
-                         % self.config['BPVVDCHI2_MIN'])
         comboCuts.append(LoKiCuts(['AMAXDOCA'],self.config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
         momCuts = ["(ADMASS('Lambda_c+') < %s*%s) " % (dm,units),
@@ -36,7 +33,6 @@ class LcBuilder(object):
         momCuts = LoKiCuts.combine(momCuts)
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=["[Lambda_c+ -> p+ K- pi+]cc"])
-        print 'makeLc2pKpi','combo:',comboCuts,'mom:',momCuts
         return Selection('Lc2PKPiBeauty2Charm',Algorithm=cp,
                          RequiredSelections=[self.pions,self.kaons,
                                              self.protons])
@@ -86,19 +82,23 @@ class Lb2XBuilder(object):
         kpipi = self.hhh.kpipi
         ppbarpi = self.hhh.ppbarpi
         ppbark = self.hhh.ppbark
-        decays = {'Lb2LcPiPiPi': ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
-                  'Lb2LcKPiPi' : ["[Lambda_b0 -> Lambda_c+ K_1(1270)-]cc"],
+        decays = {'Lb2LcPiPiPi'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
+                  'Lb2LcKPiPi'   : ["[Lambda_b0 -> Lambda_c+ K_1(1270)-]cc"],
                   'Lb2LcppbarPi' : ["[Lambda_b0 -> Lambda_c+ Xi_c~-]cc"],
-                  'Lb2LcppbarK' : ["[Lambda_b0 -> Lambda_c+ Xi_c~-]cc"]}
-        inputs = {'Lb2LcPiPiPi': [self.flc,pipipi], 'Lb2LcKPiPi': [self.flc,kpipi],
-                  'Lb2LcppbarPi': [self.flc,ppbarpi], 'Lb2LcppbarK': [self.flc,ppbark]}
+                  'Lb2LcppbarK'  : ["[Lambda_b0 -> Lambda_c+ Xi_c~-]cc"]}
+        inputs = {'Lb2LcPiPiPi'  : [self.flc,pipipi],
+                  'Lb2LcKPiPi'   : [self.flc,kpipi],
+                  'Lb2LcppbarPi' : [self.flc,ppbarpi],
+                  'Lb2LcppbarK'  : [self.flc,ppbark]}
         rs = makeB2XMerged('Lb2LcHHH',decays,'Lc2PKPi',inputs,self.config)
-        decays = {'Lb2LcPiPiPiWS': ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
-                  'Lb2LcKPiPiWS' : ["[Lambda_b0 -> Lambda_c+ K_1(1270)+]cc"],
+        decays = {'Lb2LcPiPiPiWS'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
+                  'Lb2LcKPiPiWS'   : ["[Lambda_b0 -> Lambda_c+ K_1(1270)+]cc"],
                   'Lb2LcppbarPiWS' : ["[Lambda_b0 -> Lambda_c+ Xi_c+]cc"],
-                  'Lb2LcppbarKWS' : ["[Lambda_b0 -> Lambda_c+ Xi_c+]cc"]}
-        inputs = {'Lb2LcPiPiPiWS':[self.flc,pipipi], 'Lb2LcKPiPiWS':[self.flc,kpipi],
-                  'Lb2LcppbarPiWS': [self.flc,ppbarpi], 'Lb2LcppbarKWS': [self.flc,ppbark]}
+                  'Lb2LcppbarKWS'  : ["[Lambda_b0 -> Lambda_c+ Xi_c+]cc"]}
+        inputs = {'Lb2LcPiPiPiWS'  : [self.flc,pipipi],
+                  'Lb2LcKPiPiWS'   : [self.flc,kpipi],
+                  'Lb2LcppbarPiWS' : [self.flc,ppbarpi],
+                  'Lb2LcppbarKWS'  : [self.flc,ppbark]}
         ws = makeB2XMerged('Lb2LcHHHWS',decays,'Lc2PKPi',inputs,self.config)
         self.lines.append(ProtoLine(rs['TOS'],1.0))
         self.lines.append(ProtoLine(rs['TIS'],1.0))

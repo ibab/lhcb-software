@@ -44,17 +44,18 @@ config = {
     },
     "Pi0" : { # Cuts made on all pi0's
     'PT_MIN'        : '500*MeV',
+    'P_MIN'         : '2000*MeV',
     'CHILDCL1_MIN'  : 0.25,
     'CHILDCL2_MIN'  : 0.25
     },
     "D2X" : { # Cuts made on all D's used in all lines 
-    'ASUMPT_MIN'    : '1500*MeV',
+    'ASUMPT_MIN'    : '1800*MeV',
     'AMAXDOCA_MAX'  : '1.0*mm',
     'VCHI2DOF_MAX'  : 30,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV',
-    '4H_ASUMPT_MIN' : '1500*MeV',
+    '4H_ASUMPT_MIN' : '1800*MeV',
     '4H_2PT_MIN'    : '350*MeV' 
     },
     "B2X" : { # Cuts made on all B's used in all lines
@@ -85,40 +86,46 @@ config = {
     },
     "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
     'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
-    'KDAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
-    'PiDAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
-    'pDAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
+    'KDAUGHTERS'    : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
+    'PiDAUGHTERS'   : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
+    'pDAUGHTERS'    : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
     'AMAXDOCA_MAX'  : '0.35*mm',
     'VCHI2DOF_MAX'  : 8,
     'BPVVDCHI2_MIN' : 36, 
     'BPVDIRA_MIN'   : 0.98,
     'ASUMPT_MIN'    : '1250*MeV',
     'MIPCHI2DV_MIN' : 6.25,
-    'BPVVDRHO_MIN'   : '0.1*mm',
-    'BPVVDZ_MIN'   : '2.0*mm'
+    'BPVVDRHO_MIN'  : '0.1*mm',
+    'BPVVDZ_MIN'    : '2.0*mm'
     },
     "DTIGHT" : { # Tight Cuts on D mesons for B-->D+3H lines
     'MIPCHI2DV_MIN' : 4,
-    'MM_MIN'        : {'D':'1800*MeV','D0':'1790*MeV','Dst':'1950*MeV','Lc':'2216*MeV'},
-    'MM_MAX'        : {'D':'2040*MeV','D0':'1940*MeV','Dst':'2050*MeV','Lc':'2356*MeV'},
+    'MM_MIN'        : {'D':'1800*MeV','D0':'1790*MeV','Dst':'1950*MeV',
+                       'Lc':'2216*MeV'},
+    'MM_MAX'        : {'D':'2040*MeV','D0':'1940*MeV','Dst':'2050*MeV',
+                       'Lc':'2356*MeV'},
     'VCHI2DOF_MAX'  : 8,
     'BPVVDCHI2_MIN' : 49,
     'MIPCHI2DV_MIN' : 0.0,
     'BPVDIRA_MIN'   : 0.98,
-    'BPVVDRHO_MIN'   : '0.1*mm',
-    'BPVVDZ_MIN'   : '0.0*mm'
+    'BPVVDRHO_MIN'  : '0.1*mm',
+    'BPVVDZ_MIN'    : '0.0*mm'
     },
     'LC2X' : { # Cuts for all Lambda_c's used in all lines
-    'ASUMPT_MIN'    : '1500*MeV',
+    'ASUMPT_MIN'    : '1800*MeV',
     'AMAXDOCA_MAX'  : '1.0*mm',
     'VCHI2DOF_MAX'  : 30,
     'BPVVDCHI2_MIN' : 36, 
     'BPVDIRA_MIN'   : 0, 
-    'MASS_WINDOW'   : '200*MeV'
+    'MASS_WINDOW'   : '100*MeV'
     },
     "Prescales" : { # Prescales for individual lines
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
+    'B02DHD2Pi0HHH_MergedBeauty2CharmTOSLine'   : 0.1,
+    'B02DHD2Pi0HHH_MergedBeauty2CharmTISLine'   : 0.1,
+    'B02DHD2Pi0HHH_ResolvedBeauty2CharmTOSLine' : 0.1,
+    'B02DHD2Pi0HHH_ResolvedBeauty2CharmTISLine' : 0.1
     },
     'GECNTrkMax'   : 500
     }
@@ -190,10 +197,13 @@ class Beauty2CharmConf(LineBuilder):
                   % config['GECNTrkMax'],
                   'Preambulo' : [ "from LoKiTracks.decorators import *",
                                   'from LoKiCore.functions    import *' ]
-                  }        
+                  }
+        hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
+              "(HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision') | "\
+              "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
         line = StrippingLine(protoLine.name(),protoLine.prescale(config),
                              selection=tmpSel,checkPV=True,FILTER=filter,
-                             HLT="HLT_PASS_RE('Hlt2(Topo|IncPhi).*Decision')")
+                             HLT=hlt)
         self.registerLine(line)
 
     def _makeLines(self,lines,config):

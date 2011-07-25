@@ -19,10 +19,9 @@ class DFilter(object):
         self.d0pi = dst.d0pi
         self.pkpi = lc.pkpi
         self.config = config
-        self.tightCuts = [LoKiCuts(['MIPCHI2DV','VCHI2DOF','BPVVDCHI2','MIPCHI2DV',
-                                    'BPVDIRA','BPVVDRHO','BPVVDZ'],config).code()]
-        
-
+        self.tightCuts = [LoKiCuts(['MIPCHI2DV','VCHI2DOF','BPVVDCHI2',
+                                    'MIPCHI2DV','BPVDIRA','BPVVDRHO','BPVVDZ'],
+                                   config).code()]
         self.fhhh = self._makeFiltCharm(self.hhh,'DFilt','D')
         self.fhh = self._makeFiltCharm(self.hh,'D0Filt','D0')
         self.fdst = self._makeFiltCharm(self.d0pi,'DstFilt','Dst')
@@ -35,11 +34,10 @@ class DFilter(object):
         dCuts.append(self._massWindow(tag))
         dCuts = LoKiCuts.combine(dCuts)
         return filterSelection(name,dCuts,[input])
-
         
     def _massWindow(self,which):
-        return "(M > %s) & (M < %s)"%(self.config['MM_MIN'][which], self.config['MM_MAX'][which])
-
+        return "(M > %s) & (M < %s)" % (self.config['MM_MIN'][which],
+                                        self.config['MM_MAX'][which])
     
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
