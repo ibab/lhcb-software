@@ -91,13 +91,10 @@ StatusCode UnpackTrack::execute() {
     int lastId  = src.lastId;
     if ( dst->sizeId() > 65535 ) {
       //== Protections for wraping of the index, a short unsigned int.
-      if ( src.firstId == 0 && itS != dst->begin() ) {   // we wrapped just at a track boundary
-        firstIdHigh += 0x10000;
-        lastIdHigh  += 0x10000;
-      }
       firstId = firstIdHigh + src.firstId; 
       lastId  = lastIdHigh  + src.lastId;
       if ( lastId < firstId ) {  // we wrapped in the track
+        info() << "** ID index wrapped, first/last Id = " << firstId << " " << lastId << endmsg;
         lastIdHigh  += 0x10000;
         firstIdHigh += 0x10000;
         lastId = lastIdHigh  + src.lastId;
@@ -120,13 +117,10 @@ StatusCode UnpackTrack::execute() {
     int lastState  = src.lastState;
     if ( dst->sizeState() > 65535 ) {
       //== Protections for wraping of the index, a short unsigned int.
-      if ( src.firstState == 0 && itS != dst->begin() ) {   // we wrapped just at a track boundary
-        firstStateHigh += 0x10000;
-        lastStateHigh  += 0x10000;
-      }
       firstState = firstStateHigh + src.firstState; 
       lastState  = lastStateHigh  + src.lastState;
       if ( lastState < firstState ) {  // we wrapped in the track
+        info() << "** State index wrapped, first/last = " << firstState << " " << lastState << endmsg;
         lastStateHigh  += 0x10000;
         firstStateHigh += 0x10000;
         lastState = lastStateHigh  + src.lastState;
@@ -142,13 +136,10 @@ StatusCode UnpackTrack::execute() {
     int lastExtra  = src.lastExtra;
     if ( dst->sizeExtra() > 65535 ) {
       //== Protections for wraping of the index, a short unsigned int.
-      if ( src.firstExtra == 0 && itS != dst->begin() ) {   // we wrapped just at a track boundary
-        firstExtraHigh += 0x10000;
-        lastExtraHigh  += 0x10000;
-      }
       firstExtra = firstExtraHigh + src.firstExtra; 
       lastExtra  = lastExtraHigh  + src.lastExtra;
       if ( lastExtra < firstExtra ) {  // we wrapped in the track
+        info() << "** Extra index wrapped, first/last = " << firstExtra << " " << lastExtra << endmsg;
         lastExtraHigh  += 0x10000;
         firstExtraHigh += 0x10000;
         lastExtra = lastExtraHigh  + src.lastExtra;
