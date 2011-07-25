@@ -294,16 +294,22 @@ StatusCode HltSelReportsDecoder::execute() {
       {
       case LHCb::CLID_Track:
         {      
-          if( stdInfo.size()>=6 ){
+         if( stdInfo.size()>=6 ){
 
-            infoPersistent.insert( "0#Track.firstState.z", floatFromInt(stdInfo[0]) ); 
-            infoPersistent.insert( "1#Track.firstState.x", floatFromInt(stdInfo[1]) ); 
-            infoPersistent.insert( "2#Track.firstState.y", floatFromInt(stdInfo[2]) ); 
-            infoPersistent.insert( "3#Track.firstState.tx", floatFromInt(stdInfo[3]) ); 
-            infoPersistent.insert( "4#Track.firstState.ty", floatFromInt(stdInfo[4]) ); 
-            infoPersistent.insert( "5#Track.firstState.qOverP", floatFromInt(stdInfo[5]) ); 
-	    
-          } else {
+            infoPersistent.insert( "0#Track.firstState.z", floatFromInt(stdInfo[0]) );
+            infoPersistent.insert( "1#Track.firstState.x", floatFromInt(stdInfo[1]) );
+            infoPersistent.insert( "2#Track.firstState.y", floatFromInt(stdInfo[2]) );
+            infoPersistent.insert( "3#Track.firstState.tx", floatFromInt(stdInfo[3]) );
+            infoPersistent.insert( "4#Track.firstState.ty", floatFromInt(stdInfo[4]) );
+            infoPersistent.insert( "5#Track.firstState.qOverP", floatFromInt(stdInfo[5]) );  
+            
+            if (stdInfo.size>=8) {
+                  infoPersistent.insert( "6#Track.chi2PerDoF", float( stdInfo[6] ) );
+                  infoPersistent.insert( "7#Track.nDoF", float( stdInfo[7] ) );
+            }
+        
+         } else {
+
 
             std::ostringstream mess;
             mess  << " wrong number of StdInfo on Track " << stdInfo.size();
