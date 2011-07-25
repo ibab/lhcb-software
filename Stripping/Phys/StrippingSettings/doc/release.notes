@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r5 2011-07-25 =========================
 ! 2011-07-25 - Thomas Blake
  - Updated stripping definitions for striping 16
 
@@ -19,7 +20,6 @@
 ! 2011-07-22 - Greig Cowan
  - Updated some beta_s config dictionaries in StrippingDev.
 
-!========================= StrippingSettings v2r5 2011-07-22 =========================
 ! 2011-07-21 - Jibo He
  - LineConfigDictionaries_PSWG.py
   . Update Ccbar2Ppbar
