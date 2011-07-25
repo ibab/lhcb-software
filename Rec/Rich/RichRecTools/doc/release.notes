@@ -4,7 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!========================= RichRecTools v4r16 2011-04-27 =========================
+! 2011-07-25 - Chris Jones
+ - Add some missing debug message protection
+
+!====================== RichRecTools v4r16 2011-04-27 =========================
 ! 2011-04-14 - Chris Jones
  - Remove some DC06 specific hacks.
 

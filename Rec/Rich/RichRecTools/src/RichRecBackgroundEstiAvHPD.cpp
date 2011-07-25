@@ -278,9 +278,11 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
         //verbose() << "  -> Aborting iterations" << endmsg;
         cont = false;
       }
-      if ( iter > m_maxBkgIterations ) cont = false;
 
+      // Final protection against infinite loops
+      if ( iter > m_maxBkgIterations ) cont = false;
       ++iter;
+
     } // end while loop
 
       // Finally, fill background estimates

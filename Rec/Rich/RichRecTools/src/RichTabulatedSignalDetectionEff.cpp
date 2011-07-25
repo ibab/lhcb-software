@@ -75,9 +75,6 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
   m_traceModeRad[Rich::Rich1Gas] = tmpMode;
   m_traceModeRad[Rich::Rich2Gas] = tmpMode;
-  debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
-  debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
-  debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
   // Quartz window eff
   const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
@@ -89,8 +86,14 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_qEffPedLoss = qEff * pLos;
 
   // Informational Printout
-  debug() << " HPD quartz window efficiency = " << qEff << endmsg
-          << " Digitisation pedestal eff.   = " << pLos << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
+    debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
+    debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
+    debug() << " HPD quartz window efficiency = " << qEff << endmsg
+            << " Digitisation pedestal eff.   = " << pLos << endmsg;
+  }
 
   // return  
   return sc;
@@ -159,7 +162,11 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     m_last_hypo    = hypo;
     m_last_ring    = ckRing( segment, hypo );
   }
-  if ( !m_last_ring ) { debug() << " -> No Ring" << endmsg; return 0; }
+  if ( !m_last_ring ) 
+  { 
+    if ( msgLevel(MSG::DEBUG) ) debug() << " -> No Ring" << endmsg; 
+    return 0;
+  }
 
   typedef Rich::Map<const LHCb::RichSmartID,unsigned int> HPDCount;
   typedef Rich::Map<const DeRichSphMirror *,unsigned int> MirrorCount;
@@ -231,7 +238,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   else
   {
     primMirrRefl = 1;
-    Warning( "No primary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS );
+    Warning( "No primary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS ).ignore();
   }
 
   // Weighted secondary mirror reflectivity
