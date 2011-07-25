@@ -38,6 +38,7 @@
 #include "HadronPhysicsQGSP.hh"
 #include "HadronPhysicsQGSP_BERT.hh"
 #include "HadronPhysicsQGSP_BERT_HP.hh"
+#include "HadronPhysicsQGSP_BERT_CHIPS.hh"
 
 // FTFP hadrons
 #include "HadronPhysicsFTFP_BERT.hh"
@@ -88,6 +89,8 @@ typedef GiGaExtPhysics< HadronPhysicsQGSP_BERT > HadPhysQGSP_BERTFactory;
 DECLARE_TOOL_FACTORY( HadPhysQGSP_BERTFactory );
 typedef GiGaExtPhysics< HadronPhysicsQGSP_BERT_HP > HadPhysQGSP_BERT_HPFactory;
 DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
+typedef GiGaExtPhysics< HadronPhysicsQGSP_BERT_CHIPS > HadPhysQGSP_BERT_CHIPSFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_CHIPSFactory );
 
 typedef GiGaExtPhysics< HadronPhysicsFTFP_BERT > HadPhysFTFP_BERTFactory;
 DECLARE_TOOL_FACTORY( HadPhysFTFP_BERTFactory );
@@ -139,6 +142,27 @@ public:
   }
 };
 
+template <>
+class GiGaExtPhysicsExtender<G4EmStandardPhysics_option1NoApplyCuts> {
+public:
+  inline void addPropertiesTo(AlgTool */*tool*/) {
+    // No specific properties
+  }
+  inline G4EmStandardPhysics_option1NoApplyCuts *newInstance(const std::string &name, int verbosity) const {
+    return new G4EmStandardPhysics_option1NoApplyCuts(verbosity, name);
+  }
+};
+
+template <>
+class GiGaExtPhysicsExtender<G4EmStandardPhysics_option1LHCb> {
+public:
+  inline void addPropertiesTo(AlgTool */*tool*/) {
+    // No specific properties
+  }
+  inline G4EmStandardPhysics_option1LHCb *newInstance(const std::string &/*name*/, int verbosity) const {
+    return new G4EmStandardPhysics_option1LHCb(verbosity);
+  }
+};
 
 template <>
 class GiGaExtPhysicsExtender<G4DecayPhysics> {
@@ -222,6 +246,20 @@ public:
   }
   inline HadronPhysicsQGSP_BERT_HP *newInstance(const std::string &name, int /*verbosity*/) const {
     return new HadronPhysicsQGSP_BERT_HP(name, m_quasiElastic);
+  }
+private:
+  bool m_quasiElastic;
+};
+
+template <>
+class GiGaExtPhysicsExtender<HadronPhysicsQGSP_BERT_CHIPS> {
+public:
+  inline void addPropertiesTo(AlgTool *tool) {
+    tool->declareProperty("QuasiElastic", m_quasiElastic = true,
+                          "Parameter 'quasiElastic' for the constructor of HadronPhysicsQGSP_BERT_HP");
+  }
+  inline HadronPhysicsQGSP_BERT_CHIPS *newInstance(const std::string &name, int /*verbosity*/) const {
+    return new HadronPhysicsQGSP_BERT_CHIPS(name, m_quasiElastic);
   }
 private:
   bool m_quasiElastic;
