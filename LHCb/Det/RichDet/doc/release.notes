@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r5 2011-07-25 =========================
 ! 2011-07-21 - Chris Jones
  - Add the UNLIKELY macro to the msgLevel methods in DeRichBase
  - Add a little extra protection to casts in DeRichBeamPipe to 
