@@ -1,7 +1,6 @@
-# $Id: requirements,v 1.71 2010-03-18 12:40:32 ibelyaev Exp $ 
 # =============================================================================
-package  CaloDet 
-version           v10r10
+package           CaloDet 
+version           v10r11
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet dict
