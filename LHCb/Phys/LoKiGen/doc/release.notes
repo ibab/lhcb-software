@@ -13,12 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r3 2011-07-25 =========================
 ! 2011-07-25 - Vanya Belyaev
-
  - fix ICC compliler warning
 
 ! 2011-07-23 - Vanya Belyaev
-
  - more decorators for HepMC.GenParticle 
 
 ! 2011-07-15 - Alexey Novoselov
@@ -26,8 +25,6 @@
 
 ! 2011-07-03 - Vanya Belyaev
  - small polishing of python iterators 
- - cmt/requirements
-     version incrment to v10r3
 
 !========================= LoKiGen v10r2 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
