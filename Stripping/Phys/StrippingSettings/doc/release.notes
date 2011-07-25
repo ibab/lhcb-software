@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-25 - Greig Cowan
+ - Updated some beta_s config dictionaries in StrippingDev.
+
 ! 2011-07-22 - Greig Cowan
  - Updated some beta_s config dictionaries in StrippingDev.
 
