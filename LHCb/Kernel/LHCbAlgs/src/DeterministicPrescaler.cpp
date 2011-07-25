@@ -91,7 +91,8 @@ DeterministicPrescaler::update(Property&)
             : m_accFrac>=1 ? boost::integer_traits<uint32_t>::const_max 
             : boost::uint32_t( m_accFrac*boost::integer_traits<uint32_t>::const_max ) 
             );
-    debug() << "frac: " << m_accFrac << " acc: 0x" << std::hex << m_acc << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "frac: " << m_accFrac << " acc: 0x" << std::hex << m_acc << endmsg;
 }
 
 StatusCode

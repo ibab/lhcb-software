@@ -1,4 +1,3 @@
-// $Id: OdinTimeDecoder.cpp,v 1.5 2010-05-18 21:48:51 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -83,14 +82,17 @@ Gaudi::Time OdinTimeDecoder::getTime ( ) const {
   LHCb::ODIN *odin = getODIN();
 
   if (odin) {
-    debug() << "GPS Time = " << odin->gpsTime() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "GPS Time = " << odin->gpsTime() << endmsg;
 
     // Check the run number in ODIN
     if (m_currentRun != odin->runNumber()) {
-      debug() << "Firing " << IncidentType::RunChange << " incident. Old run="
-              << m_currentRun;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Firing " << IncidentType::RunChange << " incident. Old run="
+                << m_currentRun;
       m_currentRun = odin->runNumber();
-      debug() << ", new run=" << m_currentRun << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << ", new run=" << m_currentRun << endmsg;
       incSvc()->fireIncident(RunChangeIncident(name(),m_currentRun));
     }
 

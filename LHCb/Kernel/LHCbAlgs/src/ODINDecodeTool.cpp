@@ -1,4 +1,3 @@
-// $Id: ODINDecodeTool.cpp,v 1.3 2009-11-09 18:28:15 marcocle Exp $
 // Include files
 #include "ODINCodecBaseTool.h"
 #include "GaudiKernel/SerializeSTL.h"
@@ -121,16 +120,18 @@ void ODINDecodeTool::execute() {
   if (exist<LHCb::ODIN>(m_odinLocation)) {
     if (m_force) {
       // Use the already registered object
-      debug() << "Modify existing ODIN object" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Modify existing ODIN object" << endmsg;
       odin = get<LHCb::ODIN>(m_odinLocation);
     } else {
       // ODIN already there and we are not supposed to touch it
-      debug() << "Keep existing ODIN object" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Keep existing ODIN object" << endmsg;
       return;
     }
   }
 
-  debug() << "Getting RawEvent" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Getting RawEvent" << endmsg;
   LHCb::RawEvent* rawEvent = NULL;
   for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
     if (exist<LHCb::RawEvent>(*p)){

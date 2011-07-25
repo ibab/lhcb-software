@@ -1,4 +1,3 @@
-// $Id: FilterByRunEvent.cpp,v 1.6 2010-05-18 21:33:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +40,7 @@ FilterByRunEvent::~FilterByRunEvent() {}
 StatusCode FilterByRunEvent::execute()
 {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // code goes here  
   setFilterPassed(!m_passSelect);

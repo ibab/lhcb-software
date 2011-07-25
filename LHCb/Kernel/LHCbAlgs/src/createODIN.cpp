@@ -1,4 +1,3 @@
-// $Id: createODIN.cpp,v 1.2 2008-07-21 14:45:52 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +48,7 @@ StatusCode createODIN::initialize() {
 //=============================================================================
 StatusCode createODIN::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // OdinTimeDecoder internally calls getODIN() when getTime() is invoked
   m_decoder->getTime();

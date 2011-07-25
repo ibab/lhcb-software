@@ -92,7 +92,8 @@ void DQFilter::i_propUpdate(Property&) {
 
 StatusCode DQFilter::i_checkFlags()
 {
-  verbose() << "Updating Data Quality flags" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+    verbose() << "Updating Data Quality flags" << endmsg;
   m_bad = false;
   typedef std::map<std::string, int> flags_t;
   const flags_t &flags = m_flags->param<flags_t>("map");
@@ -101,7 +102,8 @@ StatusCode DQFilter::i_checkFlags()
     if (m_ignoredFlags.find(to_lower_copy(f->first)) == m_ignoredFlags.end())
       m_bad = (f->second != 0); // no need to consider the previous value of m_bad because we do an early exit
     else {
-      debug() << "Ignoring flag: " << f->first << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Ignoring flag: " << f->first << endmsg;
     }
   }
   // we successfully updated the m_bad state

@@ -1,4 +1,3 @@
-// $Id: PostScaler.cpp,v 1.4 2009-03-17 10:58:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -53,11 +52,16 @@ StatusCode PostScaler::execute() {
     Rndm::Numbers random(randSvc(), Rndm::Flat(0.0,100.));
     if ( random ){
       double r = random() ;
-      verbose() << "Random number thrown: " << r << endmsg;
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+        verbose() << "Random number thrown: " << r << endmsg;
       if ( r > m_percentPass ) {
-        verbose() << "Random filter failed" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+          verbose() << "Random filter failed" << endmsg;
         accepted = false ;
-      } else verbose() << "Random filter passed" << endmsg;
+      } else {
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+          verbose() << "Random filter passed" << endmsg;
+      }
     }
   }
   
@@ -65,17 +69,22 @@ StatusCode PostScaler::execute() {
   if (m_forcedReduction > 1.){
     m_eventNumber = tool<IEventCounter>( "EvtCounter" );
     long m_event = m_eventNumber->getEventCounter() ;
-    verbose() << "event number is now " << m_event << endmsg;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+      verbose() << "event number is now " << m_event << endmsg;
   
     double max_evts = (double)m_event/m_forcedReduction + m_margin ;
     //  max_evts = max_evts + 3*sqrt(max_evts);  /// 3 sigma security
     if ( m_nEvents > max_evts ) {
-      verbose() << "Filter not passed as " << m_nEvents
-              << " > " << max_evts << " (reduction 1/" << m_forcedReduction  
-              << " + " << m_margin 
-              << ")" << endmsg;    
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+        verbose() << "Filter not passed as " << m_nEvents
+                  << " > " << max_evts << " (reduction 1/" << m_forcedReduction  
+                  << " + " << m_margin 
+                  << ")" << endmsg;    
       accepted = false ;
-    } else verbose() << "Filter passed." << endmsg;
+    } else {
+      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+        verbose() << "Filter passed." << endmsg;
+    }
   }
   
   // event passed

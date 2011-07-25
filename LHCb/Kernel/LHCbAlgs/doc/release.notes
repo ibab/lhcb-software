@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-07-25 - Marco Cattaneo
+ - Create debug() and verbose() messages only when output level requires it,
+   also using UNLIKELY macro
+
 !========================= LHCbAlgs v2r40 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Add OfflineDeterministicPrescaler (for now just a copy of DeterministicPrescaler)

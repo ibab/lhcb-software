@@ -1,4 +1,3 @@
-// $Id: MemoryTool.cpp,v 1.11 2009-12-07 18:18:01 cattanem Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -115,7 +114,8 @@ void MemoryTool::execute() {
   {
     // NB: I hate StatEntity::reset, use == instead!
     *m_delMem = StatEntity() ;
-    debug()  << "Reset Delta Virtual Memory counter" << endmsg ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug()  << "Reset Delta Virtual Memory counter" << endmsg ;
   } 
   // Fill the counter for "valid" previous measurements
   if   ( 0 != m_totMem ) { *m_totMem += memMB ; }
@@ -157,9 +157,10 @@ void MemoryTool::execute() {
   {
     Warning ( "Total Memory for the event exceeds 3*sigma" , 
               StatusCode::SUCCESS , m_maxPrint     ).ignore() ;    
-    debug () << " Total Memory : " << memMB 
-             << " Mean : ("        << m_totMem->flagMean () 
-             << "+-"               << m_totMem->flagRMS() << ")" << endmsg ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug () << " Total Memory : " << memMB 
+               << " Mean : ("        << m_totMem->flagMean () 
+               << "+-"               << m_totMem->flagRMS() << ")" << endmsg ;
   }
   // check the particular event
   if ( 0  <= m_prev                      && 
@@ -170,10 +171,11 @@ void MemoryTool::execute() {
        deltaMem > m_delMem->flagMean() + 3 * m_delMem->flagRMS () ) 
   {
     Warning ( "Delta Memory for the event exceeds 3*sigma" , 
-              StatusCode::SUCCESS , m_maxPrint     ).ignore() ;    
-    debug () << " Delta Memory : "  << deltaMem
-             << " Mean : ("         << m_delMem->flagMean () 
-             << "+-"                << m_delMem->flagRMS() << ")" << endmsg ;
+              StatusCode::SUCCESS , m_maxPrint     ).ignore() ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug () << " Delta Memory : "  << deltaMem
+               << " Mean : ("         << m_delMem->flagMean () 
+               << "+-"                << m_delMem->flagRMS() << ")" << endmsg ;
   }
   /// check the tendency: 
   if ( ( ( 0 < m_check && 0 == m_counter % m_check ) || 1 == m_check  ) && 
@@ -185,9 +187,10 @@ void MemoryTool::execute() {
   {
     Warning ( "Mean 'Delta-Memory' exceeds 3*sigma" , 
               StatusCode::SUCCESS , m_maxPrint     ).ignore() ;
-    debug () << " Memory Leak? "
-             << "("  << m_delMem->flagMean() 
-             << "+-" << m_delMem->flagMeanErr() << ")" << endmsg ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug () << " Memory Leak? "
+               << "("  << m_delMem->flagMean() 
+               << "+-" << m_delMem->flagMeanErr() << ")" << endmsg ;
   }
   
 }

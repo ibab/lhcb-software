@@ -1,4 +1,3 @@
-// $Id: EventCountHisto.cpp,v 1.1 2009-02-11 17:12:33 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +40,7 @@ StatusCode EventCountHisto::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); 
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -51,7 +50,7 @@ StatusCode EventCountHisto::initialize() {
 //=============================================================================
 StatusCode EventCountHisto::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // code goes here  
 
@@ -66,7 +65,7 @@ StatusCode EventCountHisto::execute() {
 //=============================================================================
 StatusCode EventCountHisto::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   info() <<  m_nEvents << " events processed" << endmsg;
 

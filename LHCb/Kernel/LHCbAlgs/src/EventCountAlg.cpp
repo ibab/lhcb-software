@@ -1,4 +1,3 @@
-// $Id: EventCountAlg.cpp,v 1.3 2010-05-18 21:33:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +53,7 @@ StatusCode EventCountAlg::initialize() {
   if(!sc.isSuccess() || m_incSvc== NULL) return StatusCode::FAILURE;
   m_incSvc->addListener( this, IncidentType::BeginEvent);
   
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -63,10 +62,6 @@ StatusCode EventCountAlg::initialize() {
 // Main execution
 //=============================================================================
 StatusCode EventCountAlg::execute() {
-
-  //debug() << "==> Execute" << endmsg;
-
-  // code goes here  
 
   m_nExecuted++;
 
@@ -79,7 +74,7 @@ StatusCode EventCountAlg::execute() {
 //=============================================================================
 StatusCode EventCountAlg::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   //create the statEntity
   //                                                     entries    flag          flag2      min, max
   StatEntity anent(
