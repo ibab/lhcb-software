@@ -13,23 +13,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r2 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
-
   - HybridBase.h
-
     allow multline code to be used...
     remove '\n' , '\\n', etc..
-  
 
 ! 2011-06-20 - Vanya Belyaev
-
  - LoKi/NodeGrammar.h
-
    fix coverity report 16248 
-
- - cmt/requirements 
-
-    version increment to v11r2
 
 !========================= LoKiCore v11r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
