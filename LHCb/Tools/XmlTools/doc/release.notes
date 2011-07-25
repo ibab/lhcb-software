@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!========================= XmlTools v6r5 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - Protect unprotected usage of MSG::DEBUG and MSG::VERBOSE
 
