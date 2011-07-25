@@ -113,6 +113,16 @@ class RichRecSysConf(RichConfigurableUser):
         if not self.isPropertySet("RecoSequencer") :
             raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
+
+        # Change default cuts for 2009 and 2010 data.
+        # need to find a cleaner way to handle this sort of thing longer term
+        dataType = self.getProp("DataType")
+        if dataType == "2009" or dataType == "2010":
+            self.gpidConfig().MaxUsedPixels = 20000
+            if self.getProp("Context") == "Offline" :
+                self.trackConfig().MaxUsedTracks = 500
+            else:
+                self.trackConfig().MaxUsedTracks = 400
         
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])

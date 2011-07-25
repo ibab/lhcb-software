@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2011-07-25 - Chris Jones
+ - Loosen off the abort cuts for 2011+ data. No changes for 2010 or 2009 (at 
+   the moment)
+  + MaxUsedTracks set to 1000(Offline) or 500(HLT)
+  + MaxPixels set to 30000 everywhere (previous 20000 in global PID)
+
 ! 2011-07-14 - Chris Jones
  - Increase slightly the size of the aerogel photon selection window for the
    "Wide" photon selection

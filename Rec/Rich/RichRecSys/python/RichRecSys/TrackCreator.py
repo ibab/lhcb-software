@@ -41,8 +41,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # default values
         self.setRichDefaults ( "MaxInputTracks", { "Offline" : 99999, 
                                                    "HLT"     : 99999 } )
-        self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 500, 
-                                                   "HLT"     : 400 } )
+        self.setRichDefaults ( "MaxUsedTracks",  { "Offline" : 1000, 
+                                                   "HLT"     : 500 } )
         self.setRichDefault ( "TrackCuts", "Offline",
                               { "Forward" : { "Chi2Cut" : [0,10], "PCut" : [0,9999999] },
                                 "Match"   : { "Chi2Cut" : [0,10], "PCut" : [0,9999999] },
