@@ -2,6 +2,7 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!========================= STDet v4r26 2011-07-25 =========================
 ! 2011-06-23 - Marco Cattaneo
  - Protect creation of DEBUG MsgStream
 
