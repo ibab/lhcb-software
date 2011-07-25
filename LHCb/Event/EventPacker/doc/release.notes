@@ -4,9 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v2r10 2011-07-25 =========================
 ! 2011-07-25 - Olivier Callot
- - Fix the UnpackTrack problem: An overprotection made in some cases the offset in case of 
-   wrapping of the (16 bit) index to increase twice, accessing random locations.
+ - Fix the UnpackTrack problem: An overprotection made in some cases the offset in case
+   of wrapping of the (16 bit) index to increase twice, accessing random locations.
 
 ! 2011-07-22 - Marco Cattaneo
  - Create debug() messages only when output level requires it,
