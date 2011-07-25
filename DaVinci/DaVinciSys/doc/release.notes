@@ -3,9 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v28r4p2>2011-07-22 DaVinci v28r4p2</A></H1><PRE>
+</PRE><H1><A NAME=v28r4p2>2011-07-25 DaVinci v28r4p2</A></H1><PRE>
 
-Possible production version for CPU improvements in Stripping16 (july 2011)
+Test (patch) version, not for production, to test/validate CPU 
+improvements in Stripping16 (july 2011)
 
 It was decided to as yet not move to LoKi::VertexFitter
  
@@ -15,6 +16,7 @@ use  PhysConf                   v1r10    Phys
 use  DSTWriters                 v3r1     Phys
 use  LHCbAlgs                   v2r40    Kernel
 use  DaVinciTools               v22r9    Phys
+use  LoKiNumbers                v10r1    Phys
 use  GaudiConf                  v14r0p1
 
 The branches with LoKi::VertexFitter changed were not taken this time around.

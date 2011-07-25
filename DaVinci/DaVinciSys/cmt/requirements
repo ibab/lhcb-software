@@ -13,6 +13,7 @@ use  PhysConf                   v1r10    Phys
 use  DSTWriters                 v3r1     Phys
 use  DaVinciTools               v22r9    Phys
 use  LHCbAlgs                   v2r40    Kernel
+use  LoKiNumbers                v10r1    Phys
 use  GaudiConf                  v14r0p1
 
 
