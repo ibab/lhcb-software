@@ -1,5 +1,5 @@
-package MuonDAQ
-version           v4r9
+package           MuonDAQ
+version           v4r10
 
 # ================ structure ===========================================
 branches src Event MuonDAQ cmt doc
