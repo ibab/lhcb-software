@@ -1,4 +1,3 @@
-! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,22 +14,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiMC v10r2 2011-07-25 =========================
 ! 2011-07-23 - Vanya Belyaev
  - more decorators for LHCb.MCParticle 
 
 ! 2011-07-03 - Vanya Belyaev
-
  - small polishing of python iterators 
 
 ! 2011-06-20 - Vanya Belyaev
-
  - LoKi/MCDecayChain.h
-
     fix Coverity reports 22945/22946 
-
- - cmt/requirements
-
-    version increment to v10r2 
 
 !========================= LoKiMC v10r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
