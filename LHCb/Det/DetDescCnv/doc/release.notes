@@ -3,9 +3,12 @@
 ! Responsible : Marco Clemencic, Juan Palacios
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
+
+!========================= DetDescCnv v4r14 2011-07-25 =========================
 ! 2011-06-24 - Sajan Easo
-  - Modified XmlLVolumeCnv.cpp to be able to use the string '-KEY-' in material names in DB,
-    similar to what is done for logvol names.
+  - Modified XmlLVolumeCnv.cpp to be able to use the string '-KEY-' in material names
+    in DB, similar to what is done for logvol names.
+
 ! 2011-06-23 - Marco Cattaneo
  - Protect DEBUG and VERBOSE messages
  - Reduce DEBUG verbosity of XmlGenericCnv (moved to VERBOSE)

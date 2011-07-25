@@ -1,7 +1,6 @@
-# $Id: requirements,v 1.44 2009-12-05 14:46:03 dgolubko Exp $ 
 # =============================================================================
-package       DetDescCnv
-version           v4r13
+package           DetDescCnv
+version           v4r14
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src
