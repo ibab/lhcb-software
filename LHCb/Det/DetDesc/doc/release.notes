@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+!========================= DetDesc v18r27 2011-07-25 =========================
 ! 2011-06-22 - Marco Cattaneo
  - Protect unprotected debug and verbose printout
 
