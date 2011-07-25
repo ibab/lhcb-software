@@ -172,7 +172,8 @@ StatusCode AlgBase<FINDER>::richInit()
 
   // Make sure RichRecPixels are available
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
-  debug() << "Found in total " << richPixels()->size() << " RichRecPixels" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found in total " << richPixels()->size() << " RichRecPixels" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -218,7 +219,8 @@ StatusCode AlgBase<FINDER>::saveRings() const
   LHCb::RichRecRings * rings = getRings( m_ringLocation );
   const unsigned int nRingsBefore = rings->size();
 
-  debug() << "Found " << m_finder->rings().size() << " ENN ring candidates" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found " << m_finder->rings().size() << " ENN ring candidates" << endmsg;
 
   // loop over final rings
   for ( ENNRingFinder::Finder::Ring::Vector::const_iterator iRing = m_finder->rings().begin();
@@ -362,7 +364,8 @@ bool AlgBase<FINDER>::addDataPoints( ) const
 
   if ( range.size() < 3 )
   {
-    debug() <<  "Too few hits (<3) to find any rings" << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() <<  "Too few hits (<3) to find any rings" << endmsg;
   }
   else
   {
@@ -395,10 +398,13 @@ bool AlgBase<FINDER>::addDataPoints( ) const
     if ( m_finder->hits().size() > m_maxHitsEvent )
     {
       m_finder->hits().clear();
-      std::ostringstream mess;
-      mess << "# hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
-           << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
-      debug() <<  mess.str() << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        std::ostringstream mess;
+        mess << "# hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
+             << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
+        debug() <<  mess.str() << endmsg;
+      }
     }
     else
     {
