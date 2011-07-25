@@ -70,7 +70,8 @@ Stripping_BdToKstarMuMu_TestDictonary = {
 
     # Muon cuts
     'Muon_MinIPCHI2'      :    9.0,
-    'Muon_IsMuon'         :   False
+    'Muon_IsMuon'         :   False,
+    'MuonNoPIDs_PIDmu'    :    0.0
     }
 
 class StrippingBdToKstarMuMuConf(LineBuilder):
@@ -131,7 +132,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         
         # Muon cuts
         'Muon_MinIPCHI2',
-        'Muon_IsMuon'
+        'Muon_IsMuon',
+	'MuonNoPIDs_PIDmu'
         )
 
     def __init__(self, name, config):
@@ -181,7 +183,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         self.PionCut = TrackCuts + " & " + HadronCuts
         
         self.MuonCut = TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s)" %config
-        
+
         #if(config["Muon_IsMuon"]):
         #    self.MuonCut += " & (ISMUON)"
 
@@ -207,9 +209,17 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
             
         Sel_DiMuon   = self.__Selection_CreateDiMuon__(self.name, self.DiMuonCut, self.MuonCut, config['Muon_IsMuon'] )
         Sel_DiMuonSS = self.__Selection_CreateDiMuonSS__(self.name, self.DiMuonCut, self.MuonCut, config['Muon_IsMuon'] ) 
+        Sel_DiMuonLowP = self.__Selection_CreateDiMuonLowP__(self.name, self.DiMuonCut, self.MuonCut, config['Muon_IsMuon'], config['MuonNoPIDs_PIDmu'] ) 
+       
+        Sel_DiMuonSSLowP = self.__Selection_CreateDiMuonSSLowP__(self.name, self.DiMuonCut, self.MuonCut, config['Muon_IsMuon'], config['MuonNoPIDs_PIDmu']  ) 
+       
 
         Sel_BdToKstarMuMu = self.__Selection_CreateBdToKstarMuMu__(self.name, [Sel_DiMuon, Sel_Kstar], self.BdCombCut, self.BdCut)
         Sel_BdToKstarMuMuSS = self.__Selection_CreateBdToKstarMuMu__(self.name + "SS", [Sel_DiMuonSS, Sel_Kstar], self.BdCombCut, self.BdCut)
+        Sel_BdToKstarMuMuLowP = self.__Selection_CreateBdToKstarMuMu__(self.name+"LowP", [Sel_DiMuonLowP, Sel_Kstar], self.BdCombCut, self.BdCut)
+       
+        Sel_BdToKstarMuMuSSLowP = self.__Selection_CreateBdToKstarMuMu__(self.name + "SSLowP", [Sel_DiMuonSSLowP, Sel_Kstar], self.BdCombCut, self.BdCut)
+     
 
         Sel_BuToKMuMu = self.__Selection_CreateBuToKMuMu__(self.name, [Sel_DiMuon, Sel_Kaon], self.BdCombCut, self.BdCut)
         Sel_BuToKMuMuSS = self.__Selection_CreateBuToKMuMu__(self.name + "SS", [Sel_DiMuonSS, Sel_Kaon], self.BdCombCut, self.BdCut)
@@ -235,6 +245,28 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
                                               postscale = config['Postscale_BdToKstarMuMuSS'],
                                               selection = Sel_BdToKstarMuMuSS )
         self.registerLine(Line_BdToKstarMuMuSS)
+
+
+        ## --- Bd -> K* mu mu (low p ) line --- 
+        Line_BdToKstarMuMuLowP_Name = self.BdToKstarMuMuLineName + "LowPLine"
+        Line_BdToKstarMuMuLowP = StrippingLine( Line_BdToKstarMuMuLowP_Name,
+                                                prescale = config['Prescale_BdToKstarMuMu'],
+                                                postscale = config['Postscale_BdToKstarMuMu'],
+                                                selection = Sel_BdToKstarMuMuLowP )
+        self.registerLine(Line_BdToKstarMuMuLowP)        
+        
+
+                
+        ## --- Bd -> K* mu mu SS (low p ) line --- 
+
+        Line_BdToKstarMuMuSSLowP_Name = self.BdToKstarMuMuLineName + "SSLowPLine"
+        Line_BdToKstarMuMuSSLowP = StrippingLine( Line_BdToKstarMuMuSSLowP_Name,
+                                              prescale = config['Prescale_BdToKstarMuMuSS'],
+                                              postscale = config['Postscale_BdToKstarMuMuSS'],
+                                              selection = Sel_BdToKstarMuMuSSLowP )
+        self.registerLine(Line_BdToKstarMuMuSSLowP)
+
+
         
         ## --- Bu -> K mu mu (default) line --- 
         Line_BuToKMuMu_Name = self.BuToKMuMuLineName + "Line"
@@ -249,7 +281,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         Line_BuToKMuMuSS = StrippingLine( Line_BuToKMuMuSS_Name,
                                           prescale = config['Prescale_BuToKMuMuSS'],
                                           postscale = config['Postscale_BuToKMuMuSS'],
-                                          selection =  Sel_BuToKMuMuSS)
+        selection =  Sel_BuToKMuMuSS)
         self.registerLine(Line_BuToKMuMuSS)
 
         self.printCuts()
@@ -257,6 +289,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
     def printCuts(self):
         
         '''Print the compiled cut values'''
+
         print "-----------------------------------------"
         print "--  Bd -> K* mu mu stripping line cuts --"
         print "-----------------------------------------"
@@ -416,6 +449,68 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         from PhysSelPython.Wrappers import Selection
         SelDiMuonSS = Selection("Sel_" + lName + "_DiMuonSS", Algorithm = CombineDiMuonSS, RequiredSelections = [ Muons ] )
         return SelDiMuonSS
+
+
+    def __Selection_CreateDiMuonLowP__(self, lName, DiMuonCuts, MuonCuts, IsMuonFlag, MuonPIDmu ):
+        '''
+        Create a new dimuon from scratch
+        '''
+        from StandardParticles import StdNoPIDsMuons, StdVeryLooseMuons
+        
+
+        #_requires =  [StdNoPIDsMuons, StdVeryLooseMuons] 
+        _requires =  [StdNoPIDsMuons] 
+
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+
+        CombineDiMuonLowP = CombineParticles()
+        CombineDiMuonLowP.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
+        CombineDiMuonLowP.DaughtersCuts = {  "mu+" : MuonCuts , "mu-" : MuonCuts }
+        if IsMuonFlag :
+            CombineDiMuonLowP.CombinationCut =  "( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,1) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,2) &  ACHILDCUT(ISMUON, 1) & ACHILDCUT(PIDmu > "+str(MuonPIDmu) + " ,2) ) | ( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,2) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,1) &  ACHILDCUT(ISMUON, 2) & ACHILDCUT(PIDmu > "+ str(MuonPIDmu) +" ,1) )"
+
+        else:
+            CombineDiMuonLowP.CombinationCut =  "( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,1) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,2) &  ACHILDCUT(ISMUONLOOSE, 1) & ACHILDCUT(PIDmu > "+str(MuonPIDmu) + " ,2) ) | ( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,2) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,1) &  ACHILDCUT(ISMUONLOOSE, 2) & ACHILDCUT(PIDmu > "+ str(MuonPIDmu) +" ,1) )"
+
+        CombineDiMuonLowP.MotherCut     = DiMuonCuts
+
+        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
+        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        
+        from PhysSelPython.Wrappers import Selection
+        SelDiMuonLowP = Selection("Sel_" + lName + "_DiMuonLowP", Algorithm = CombineDiMuonLowP ,RequiredSelections = _requires )
+        return SelDiMuonLowP
+
+    def __Selection_CreateDiMuonSSLowP__(self, lName, DiMuonCuts, MuonCuts, IsMuonFlag, MuonPIDmu):
+        '''
+        Clone the StdVeryLooseDiMuon to build same sign candidates
+        '''
+        from StandardParticles import StdNoPIDsMuons, StdVeryLooseMuons
+        _requires =  [StdNoPIDsMuons] 
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        muhigh = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) '
+        mulow = '(0.5>PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) &  ( PIDmu > 3.0 )' 
+        CombineDiMuonSSLowP = CombineParticles()
+        CombineDiMuonSSLowP.DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
+        CombineDiMuonSSLowP.DaughtersCuts = { "mu+" : MuonCuts,  "mu-": MuonCuts  }
+        
+        if IsMuonFlag:
+            CombineDiMuonSSLowP.CombinationCut =  "( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,1) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,2) &  ACHILDCUT(ISMUON, 1) & ACHILDCUT(PIDmu > "+str(MuonPIDmu) +",2) ) | ( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,2) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,1) &  ACHILDCUT(ISMUON, 2) & ACHILDCUT(PIDmu > "+str(MuonPIDmu) + " ,1) )"
+        else:
+            CombineDiMuonSSLowP.CombinationCut =  "( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,1) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,2) &  ACHILDCUT(ISMUONLOOSE, 1) & ACHILDCUT(PIDmu > 0.0 ,2) ) | ( ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)>0.5,2) & ACHILDCUT(PPINFO(LHCb.ProtoParticle.InAccMuon,-1)<0.5,1) &  ACHILDCUT(ISMUONLOOSE, 2) & ACHILDCUT(PIDmu > 0.0 ,1) )"
+       
+        CombineDiMuonSSLowP.MotherCut     = DiMuonCuts
+
+        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
+        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        
+        from PhysSelPython.Wrappers import Selection
+        SelDiMuonSSLowP = Selection("Sel_" + lName + "_DiMuonSSLowP", Algorithm = CombineDiMuonSSLowP, RequiredSelections = _requires )
+        return SelDiMuonSSLowP
+
+
+
+
 
 ##  from CommonParticles.StdVeryLooseDiMuon import StdVeryLooseDiMuon
 ##         from CommonParticles.StdLooseDimuon import StdLooseDiMuon
