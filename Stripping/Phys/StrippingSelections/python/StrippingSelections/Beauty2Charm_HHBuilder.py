@@ -6,7 +6,22 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
-from Beauty2Charm_ComboEngine import *
+from Configurables import SubstitutePID
+from Configurables import SubPIDMMFilter
+
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+
+def subPID(name,p,d,inputs):
+    sub = SubstitutePID(name+'SubPIDBeauty2Charm',
+                        Code="DECTREE('X0 -> X+ X-')")
+    sub.MaxChi2PerDoF = -666
+    sub.Substitutions = {'X0 -> ^X+ X-' : d[0],'X0 -> X+ ^X-' : d[1],
+                         'X0 -> X+ X-'  : p}
+    sel = Selection(name+'Beauty2CharmSel',Algorithm=sub,
+                    RequiredSelections=inputs)
+    filter = "INTREE(ID=='%s') & INTREE(ID=='%s') & INTREE(ID=='%s')" \
+             % (p,d[0],d[1])
+    return filterSelection(name,filter,[sel])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -24,14 +39,13 @@ class HHBuilder(object):
         #self.kspi = self._makeKsPi()
         #self.kpi0 = self._makeKPi0()
         #self.pipi0 = self._makePiPi0()
-        self.kpi = self._makeKPi()
-        self.kk = self._makeKK()
+        self.kpi = self._makeKPi(self.pipi)
+        self.kk = self._makeKK(self.pipi)
         self.rhoplus = self._makeRhoPlus()
         self.kstplus_kspi = self._makeKstarPlus_KSpi()
         self.kstplus_kpi0 = self._makeKstarPlus_KPi0()
         self.kstar0 = self._makeKstar0([self.kpi])
-        self.ppi = self._makePPi()
-        self.pk = self._makePK()
+        self.ph = self._makePH()
         #self.phi = self._makePhi([self.kk])
         #self.rho0 = self._makeRho0([self.pipi])
 
@@ -67,16 +81,21 @@ class HHBuilder(object):
         return self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
                               '(AM < 5*GeV)',self.config,[self.pions])
 
-    def _makeKPi(self):
+    def _makeKPi(self,pipi):
         '''Makes X -> K+pi- + c.c.'''
-        return self._makeX2HH('X2KPi',['[K*(892)0 -> K+ pi-]cc'],
-                              '(AM < 5*GeV)',self.config,
-                              [self.pions,self.kaons])
+        sel1 = subPID('X2KPi','K*(892)0',['K+','pi-'],[pipi])
+        sel2 = subPID('X2KPiBar','K*(892)~0',['pi+','K-'],[pipi])
+        return MergedSelection('X2KPiBeauty2Charm',
+                               RequiredSelections=[sel1,sel2])
+        #return self._makeX2HH('X2KPi',['[K*(892)0 -> K+ pi-]cc'],
+        #                      '(AM < 5*GeV)',self.config,
+        #                      [self.pions,self.kaons])
     
-    def _makeKK(self):
-        '''Makes X -> K+K-'''
-        return self._makeX2HH('X2KK',['phi(1020) -> K+ K-'],
-                              '(AM < 5*GeV)',self.config,[self.kaons])
+    def _makeKK(self,pipi):
+        '''Makes X -> K+K-.'''
+        return subPID('X2KK','phi(1020)',['K+','K-'],[pipi])
+        #return self._makeX2HH('X2KK',['phi(1020) -> K+ K-'],
+        #                      '(AM < 5*GeV)',self.config,[self.kaons])
 
     def _makeKsPi(self):
         '''Makes X -> Ks0pi- + c.c.'''
@@ -126,14 +145,17 @@ class HHBuilder(object):
     #def _makePhi(self,kk):
     #    return filterSelection('PHI',self._massWindow('PHI','phi(1020)'),kk)
 
-    def _makePPi(self):
-        '''Makes X -> p+ pi- + c.c.'''
-        return self._makeX2HH('X2PPi',['[Lambda0 -> p+ pi-]cc'],'(AM < 6*GeV)',
-                              self.config,[self.pions,self.protons])
-
-    def _makePK(self):
-        '''Makes X -> p+ K- + c.c.'''
-        return self._makeX2HH('X2PK',['[Lambda0 -> p+ K-]cc'],'(AM < 6*GeV)',
-                              self.config,[self.kaons,self.protons])
+    def _makePH(self):
+        '''Makes X -> p+ h- + c.c.'''
+        sel = self._makeX2HH('X2PPi',['Lambda0 -> pi+ pi-'],
+                             '(AM < 5*GeV)',
+                             self.config,[self.pions])
+        decays = [['p+','pi-'],['pi+','p~-'],['p+','K-'],['K+','p~-']]
+        filter = SubPIDMMFilter('X2PHSubPIDBeauty2Charm',Code='ALL',
+                                MinMM=0,MaxMM=5000,PIDs=decays)
+        presel = Selection('X2PHSubPIDSelBeauty2Charm',Algorithm=filter,
+                           RequiredSelections=[sel])
+        filter =  "INTREE(ABSID=='p+') & (M < 5*GeV)"
+        return filterSelection('X2PH',filter,[presel])
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

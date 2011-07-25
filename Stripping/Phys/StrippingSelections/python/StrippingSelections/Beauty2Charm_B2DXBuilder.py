@@ -135,7 +135,7 @@ class B2DXBuilder(object):
         '''Makes the RS B0 -> D0 D0 K*'''
         decays = {'B2DDKst':["B0 -> D0 D0 K*(892)0",
                              "B0 -> D0 D0 K*(892)~0"]}
-        inputs = {'B2DDKst':[self.d.hh,self.hh.kpi]}
+        inputs = {'B2DDKst':[self.d.hh,self.hh.kstar0]}
         b2ddkst = makeB2XMerged('B2DDKst',decays,'D2HH',inputs,
                                 self.config)
         self.lines.append(ProtoLine(b2ddkst['TOS'],1.0))

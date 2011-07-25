@@ -107,9 +107,8 @@ class Lb2XBuilder(object):
     def _makeLb2D0PH(self):
         '''Makes RS Lb -> D0(HH) p+- H-+ + c.c.'''
         decs = ["Lambda_b0 -> D0 Lambda0","Lambda_b0 -> D0 Lambda~0"]
-        decays = {'Lb2D0PPi': decs, 'Lb2D0PK' : decs}
-        inputs = {'Lb2D0PPi': [self.d0,self.hh.ppi],
-                  'Lb2D0PK' : [self.d0,self.hh.pk]}
+        decays = {'Lb2D0PH': decs}
+        inputs = {'Lb2D0PH': [self.d0,self.hh.ph]}
         rs = makeB2XMerged('Lb2D0PH',decays,'D02HH',inputs,self.config)
         self.lines.append(ProtoLine(rs['TOS'],1.0))
         self.lines.append(ProtoLine(rs['TIS'],1.0))
