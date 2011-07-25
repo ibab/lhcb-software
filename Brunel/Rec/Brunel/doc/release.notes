@@ -7,6 +7,8 @@ Purpose: LHCb reconstruction program
   . Add monitoring of Rich Raw data size on L0 selected events (no HLT bias)
   . Add new set of Rich CK theta monitors with tight track quality cuts and
     other new plots in efficiency and resolution monitors
+  . Fine tune event 'abort' messages from Rich track selection
+  . Switch off Rich monitors the require HltDecReports when Simulation=True
   . Add new profile histograms in TrackVertexMonitor
   . Add histogram for overlaps in ITTrackMonitor
   . Use latest LHCBCOND tags from SQLDDDB v6r13
