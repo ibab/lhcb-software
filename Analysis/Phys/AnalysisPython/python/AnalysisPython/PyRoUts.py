@@ -1689,6 +1689,76 @@ def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
     #
     return ve
 
+
+# =============================================================================
+## iterator for RooArgList 
+def _ral_iter_ ( self ) :
+    """
+    Iterator for RooArgList:
+
+    >>> arg_list = ...
+    >>> for p in arg_list : print p
+    
+    """
+    l = len ( self )
+    for i in range ( 0 , l )  : yield self[i]
+
+## some decoration over RooArgList 
+ROOT.RooArgList . __len__       = lambda s   : s.getSize()
+ROOT.RooArgList . __contains__  = lambda s,i :  0<= i < len(s)
+ROOT.RooArgList . __iter__      = _ral_iter_ 
+
+# =============================================================================
+## ``easy'' print of RooFitResult
+def _rfr_print_ ( self , opts = 'v' ) :
+    """
+    Easy print of RooFitResult
+    """
+    self.Print( opts )
+    return 'RooFitResult'
+
+## get parameters from RooFitResult
+def _rfr_params_ ( self ) :
+    """
+    GetParameters from RooFitResult:
+
+    >>> result = ...
+    >>> params = results
+    >>> print params
+    
+    """
+    pars  = self.floatParsFinal()
+    pars_ = {}
+    for p in pars :
+        pars_ [ p.GetName() ] = p.as_VE(), p
+    return pars_
+
+## get parameter by name  from RooFitResult
+def _rfr_param_  ( self , pname ) :
+    """
+    Get Parameter from RooFitResult by name 
+
+    >>> result = ...
+    >>> signal = results.param('Signa,')
+    >>> print signal
+    """
+    p = self.parameters()[ pname ] 
+    return p 
+
+## some decoration over RooFitResult
+ROOT.RooFitResult . __repr__   = _rfr_print_
+ROOT.RooFitResult . __str__    = _rfr_print_
+ROOT.RooFitResult . __call__   = _rfr_param_
+ROOT.RooFitResult . parameters = _rfr_params_
+ROOT.RooFitResult . params     = _rfr_params_
+ROOT.RooFitResult . param      = _rfr_param_
+ROOT.RooFitResult . parameter  = _rfr_param_
+ROOT.RooFitResult . parValue   = lambda s,n : s.parameter(n)[0]
+
+## decorate RooRealVar:
+ROOT.RooRealVar   . as_VE = lambda s :  VE( s.getVal () , s.getError()**2 )
+ROOT.RooRealVar   . ve    = lambda s :      s.as_VE  () 
+
 # =============================================================================
 ## further decoration
 import GaudiPython.HistoUtils 

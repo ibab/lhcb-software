@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-07-25 - Vanya Belyaev
+
+ - PyRoUts: a bit more decorators 
+
 ! 2011-07-24 - Vanya Belyaev
  - minor fix 
 
