@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2011-07-25 - Marco Cattaneo
+ - Protect creation of DEBUG msg streams by test on output level
+
 !========================= MDF v3r30 2011-04-28 ==============================
 ! 2011-04-28 - Markus Frank
  - Improve handling (and printouts) when files get retired.

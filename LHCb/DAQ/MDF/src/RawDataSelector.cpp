@@ -1,4 +1,3 @@
-// $Id: RawDataSelector.cpp,v 1.24 2009-04-17 13:24:36 cattanem Exp $
 //====================================================================
 //  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -105,7 +104,8 @@ StatusCode RawDataSelector::initialize()  {
   }
   m_rootCLID = eds->rootCLID();
   eds->release();
-  log << MSG::DEBUG << "Selection CLID:" << m_rootCLID << endmsg;
+  if( UNLIKELY(log.level() <= MSG::DEBUG) )
+    log << MSG::DEBUG << "Selection CLID:" << m_rootCLID << endmsg;
   if ( !m_trgMask.empty() ) {
     log << MSG::INFO << "Trigger mask: " << std::hex;
     for(size_t i=0; i<m_trgMask.size(); ++i) 

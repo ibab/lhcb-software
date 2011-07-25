@@ -1,4 +1,3 @@
-// $Id: MDFIO.cpp,v 1.36 2009-07-28 17:36:35 snies Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -150,7 +149,8 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         const OnlineRunInfo* odin_info = odin[0]->begin<OnlineRunInfo>();
         MDFHeader::SubHeader inf = hdrBank->begin<MDFHeader>()->subHeader();
         MsgStream log1(m_msgSvc, m_parent);
-        log1 << MSG::DEBUG << "Creating MDF/DAQ[DAQ_STATUS_BANK] with ODIN information." << endmsg;
+        if( UNLIKELY(log1.level() <= MSG::DEBUG) )
+          log1 << MSG::DEBUG << "Creating MDF/DAQ[DAQ_STATUS_BANK] with ODIN information." << endmsg;
         inf.H1->setTriggerMask(trMask);
         inf.H1->setRunNumber(odin_info->Run);
         inf.H1->setOrbitNumber(odin_info->Orbit);
@@ -163,7 +163,8 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
     MsgStream msg(m_msgSvc, m_parent);
     RawEvent privateBank;                         // This holds the two temporary banks
     std::vector<RawEvent*> theRawEvents;          // Keep pointer on found events
-    msg << MSG::DEBUG << "Found a TAE event. scan for various BXs" << endmsg;
+    if( UNLIKELY(msg.level() <= MSG::DEBUG) )
+      msg << MSG::DEBUG << "Found a TAE event. scan for various BXs" << endmsg;
 
     // prepare the bank containing information for each BX
     // Maximum +-7 crossings, due to hardware limitation of derandomisers = 15 consecutive BX
@@ -191,7 +192,8 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
         size_t l = rawEventLengthTAE(rawEvt); 
         ctrlData.push_back(l);                 // size of this BX information
         offset += l;
-        msg << MSG::DEBUG << "Found RawEvent in " << loc << ", size =" << l << endmsg;
+        if( UNLIKELY(msg.level() <= MSG::DEBUG) )
+          msg << MSG::DEBUG << "Found RawEvent in " << loc << ", size =" << l << endmsg;
       }
     }
     len = ctrlData.size();
@@ -247,8 +249,9 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
       if ( !sc.isSuccess() ) {
         msg << MSG::ERROR << "Failed write data to output device." << endmsg;
       }
-      msg << MSG::DEBUG << "Wrote TAE event of length:" << total 
-        << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
+      if( UNLIKELY(msg.level() <= MSG::DEBUG) )
+        msg << MSG::DEBUG << "Wrote TAE event of length:" << total 
+            << " bytes from " << theRawEvents.size() << " Bxs" << endmsg;
       privateBank.removeBank( ctrlBank );
       privateBank.removeBank( hdrBank );
       return sc;
@@ -670,7 +673,8 @@ MDFDescriptor LHCb::MDFIO::readBanks(void* const ioDesc, bool dbg)   {
     return MDFDescriptor(0,-1);
   }
   MsgStream log(m_msgSvc, m_parent);
-  log << MSG::DEBUG << "Cannot read " << rawSize << " bytes of header data." << endmsg;
+  if( UNLIKELY(log.level() <= MSG::DEBUG) )
+    log << MSG::DEBUG << "Cannot read " << rawSize << " bytes of header data." << endmsg;
   return MDFDescriptor(0,-1);
 }
 

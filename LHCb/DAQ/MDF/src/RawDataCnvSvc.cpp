@@ -1,4 +1,3 @@
-// $Id: RawDataCnvSvc.cpp,v 1.38 2009-10-08 15:15:41 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -342,10 +341,10 @@ RawDataCnvSvc::unpackMEP(const MDFDescriptor& dat, const string& loc, RawEvent* 
             return error("Failed to access raw event at:"+obj_loc);
           }
         }
-	log << MSG::DEBUG
-	    << "unpackMEP: Filling banks for " << obj_loc << " " << r->clID() 
-	    << " " << " [" << (*it).second.size() << " banks] (" << loc << ") " 
-	    << (void*)r << "<>" << (void*)raw << endmsg;
+        if( UNLIKELY(log.level() <= MSG::DEBUG) ) log << MSG::DEBUG
+           << "unpackMEP: Filling banks for " << obj_loc << " " << r->clID()
+           << " " << " [" << (*it).second.size() << " banks] (" << loc << ") "
+           << (void*)r << "<>" << (void*)raw << endmsg;
         sc = adoptBanks(r,(*it).second);
         if ( sc.isSuccess() )  {
           continue;
