@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-07-25 - Vanya Belyaev
+
+ - fix ICC compliler warning
+
 ! 2011-07-23 - Vanya Belyaev
 
  - more decorators for HepMC.GenParticle 
