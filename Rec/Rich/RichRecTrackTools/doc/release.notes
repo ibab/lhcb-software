@@ -4,7 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-! 2011-07--14 - Chris Jones
+! 2011-07-25 - Chris Jones
+ - Add some missing protection to verbose printout messages
+
+! 2011-07-14 - Chris Jones
  - Fix a problem with the track selector when trying to apply a clone distance
    cut.
 

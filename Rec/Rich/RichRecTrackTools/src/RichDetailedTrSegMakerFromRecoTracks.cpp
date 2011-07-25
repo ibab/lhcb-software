@@ -801,7 +801,8 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   const double initialZ = state->z();
 
   // move state to be on the inside of the mirror
-  verbose() << "    --> Moving state first to be inside mirror" << endmsg;
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "    --> Moving state first to be inside mirror" << endmsg;
   sc = sc && moveState( state, state->z() - m_mirrShift[rich], refState );
   bool correct = false;
 
@@ -848,7 +849,7 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
   if ( fabs(stateToMove->z() - z) > m_minZmove )
   {
 
-    // debug printout
+    // verbose printout
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "    --> Extrapolating state from "
@@ -885,7 +886,7 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
       }
     }
 
-    // debug printout
+    // verbose printout
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "                            to   "
