@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r7 2011-07-25 =========================
 ! 2011-07-14 - Chris Jones
  - Set default clone distance variable to 1e10, instead of FLT_MAX, to avoid
    problems in the track selectors later on.
