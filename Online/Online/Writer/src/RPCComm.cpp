@@ -268,7 +268,7 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
  * Checks the XML RPC response string for an error code.
  * @Return 0 if no error
  * @Return 1 in case of an unknown/unmanaged error 
- * @Return 2 in case of run closed
+ * @Return 2 in case of run closed or worse
  */
 int RPCComm::isError(char *response)
 {
@@ -294,7 +294,7 @@ int RPCComm::isError(char *response)
   if(responseStr.find("faultCode") > len)
     return 0;
 
-  /* Check for the first value. Must be 1 */
+  /* By default, cause an unmanage but retryable error and wait for action from the piquet/export. */
   return 1;
   /*Dump the whole response if fault found.*/
 }
@@ -413,7 +413,6 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
 
   return file;
 }
-
 
 
 URL::URL(const char *url)

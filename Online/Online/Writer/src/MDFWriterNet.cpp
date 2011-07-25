@@ -679,6 +679,12 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
   static int nbLate=0;
   unsigned int runNumber = getRunNumber(mHeader, len);
+  if (runNumber == -1) { 
+      *m_log << MSG::FATAL << WHERE 
+             << "Event with runnumber == -1 received. Not forwarding."
+             << endmsg;
+      return StatusCode::SUCCESS;
+  }
 
   // If we get a newer run number, start a timeout on the open files of the previous runs. 
   if(m_currentRunNumber < runNumber) {
@@ -829,6 +835,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
   // If we can interpret the header, we perform all statistic computing. 
   // Else we just go to the next event.
+  // Note that this is after that the event was written, so statistic information is always right.
+  // The aim here is not to check data integrity or not, just if we can decode the header, if its
+  // version is correct.
   if( checkHeader(mHeader, len)) {
     // check type of event
     if( checkForPhysStat(mHeader, len)) {
