@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-25 - Chris Jones
+ - Add some missing debug printout protection to RichPIDQC
+
 ! 2011-07-24 - Chris Jones
  - Remove "DBConsistencyCheck" from the list of monitors run Online. 
  - Add optional (disabled by default) per PD resolution plots to RecoQC.

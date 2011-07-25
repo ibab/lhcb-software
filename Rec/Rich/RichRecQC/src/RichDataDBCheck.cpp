@@ -105,9 +105,9 @@ StatusCode DataDBCheck::execute()
           const Level0ID         db_l0ID      = m_RichSys->level0ID(hpdID);
 
           // compare to that in the data itself
-          compare( "Level1HardwareID-Data-DB", hpdID, l0ID, l1HardID,  db_l1HardID );
-          compare( "Level1Input-Data-DB",      hpdID, l0ID, l1Input,   db_l1Input  );
-          compare( "Level0ID-Data-DB",         hpdID, l0ID, l0ID,      db_l0ID     );
+          compare( "Level1HardwareID-Data-DB", hpdID, l0ID, l1HardID, db_l1HardID );
+          compare( "Level1Input-Data-DB",      hpdID, l0ID, l1Input,  db_l1Input  );
+          compare( "Level0ID-Data-DB",         hpdID, l0ID, l0ID,     db_l0ID     );
 
           // Internal consistency checks
           // Get l1HardID from RICH and l1LogicalID

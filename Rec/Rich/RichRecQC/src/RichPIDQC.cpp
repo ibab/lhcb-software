@@ -124,7 +124,6 @@ StatusCode PIDQC::initialize()
 // Main execution
 StatusCode PIDQC::execute()
 {
-  debug() << "Execute" << endmsg;
 
   // Load RichPID data
   if ( !loadPIDData() || m_richPIDs.empty() ) return StatusCode::SUCCESS;
@@ -235,7 +234,8 @@ StatusCode PIDQC::execute()
       mcpid = m_mcTruth->mcParticleType(track);
       if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
       {
-        debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
         mcpid = Rich::BelowThreshold;
       }
       if ( mcpid != Rich::Unknown &&
@@ -522,7 +522,8 @@ PIDQC::TkTally PIDQC::countTracks( const std::string & location )
 {
   TkTally tally;
   LHCb::Tracks * tracks = get<LHCb::Tracks>( location );
-  debug() << "Found " << tracks->size() << " Tracks at " << location << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found " << tracks->size() << " Tracks at " << location << endmsg;
   for ( LHCb::Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
