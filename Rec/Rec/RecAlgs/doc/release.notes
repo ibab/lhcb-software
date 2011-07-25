@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-07-25 - Chris Jones
+ - Add "Hlt" to the list of sub-systems ProcStatAbortMoni knows about
+
 !========================= RecAlgs v2r4 2011-06-15 =========================
 ! 2011-06-15 - Patrick Koppenburg
  - AddProcStatus : algorithm that adds an entry in procstatus
