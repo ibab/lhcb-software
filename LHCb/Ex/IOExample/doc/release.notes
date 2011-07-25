@@ -4,6 +4,7 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+!========================= IOExample v4r1 2011-07-25 =========================
 ! 2011-07-25 - Marco Cattaneo
  - Add ioexample.testunpacktrack test, tests that UnpackTrack algorithm works
    on a track container that has more than 65k LHCbIDs
