@@ -2,6 +2,7 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================= OTDet v8r7 2011-07-25 =========================
 ! 2011-06-23 - Marco Cattaneo
  - Protect usage of DEBUG and VERBOSE messages
  - Decrease DEBUG verbosity of DeOTModule, use VERBOSE instead
