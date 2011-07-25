@@ -1,6 +1,4 @@
 ! -----------------------------------------------------------------------------
-! $Id$
-! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiNumbers
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Set of dictionaries for LoKi functions 
@@ -20,11 +18,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiNumbers v10r1 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
-
  - add helper functor for ``smart'' creation of RecSummary functors 
- - cmt/requirements
-   version increment to v10r1 
 
 !========================= LoKiNumbers v10r0 2011-04-04 =========================
 ! 2011-04-02 - Vanya Belyaev
