@@ -5,6 +5,7 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+!========================= CondDBEntityResolver v5r3 2011-07-25 ==============
 ! 2011-07-21 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
    it, also using UNLIKELY macro 
