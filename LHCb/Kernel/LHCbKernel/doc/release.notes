@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r2 2011-07-25 =========================
 ! 2011-06-29 - Eduardo Rodrigues
  - Added new interfaces IVeloClusterSelector.h and IVeloChannelIDSelector.h
 
