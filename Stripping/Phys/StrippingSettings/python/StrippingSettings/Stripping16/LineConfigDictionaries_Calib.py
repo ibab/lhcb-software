@@ -224,21 +224,23 @@ TrackEffVeloMuon = {
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
-    'CONFIG' : {        "TrChi2Mu":             5.      # adimensional
-                ,       "JpsiPt":               0.5     # GeV
-                ,       "TrPt":                 100.    # MeV
-                ,       "TrP":                  7.      # GeV
-                ,       "MuDLL":                1.      # adimensional
-                ,       "VertChi2":             2.      # adimensional
-                ,       "MassPreComb":          1000.   # MeV
-                ,       "MassPostComb":         400.    # MeV
-                ,       "Prescale":             1.      # MeV
-                ,       "Postscale":            1.      # MeV
-                ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-                ,       'HLT1PassOnAll': True
-                ,       'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-                ,       'HLT2PassOnAll': False
-                        }
+    'CONFIG' : {
+    "TrChi2Mu":		5.	# adimensional
+    ,	"JpsiPt":		0.5	# GeV
+    ,	"TrPt":			100.	# MeV
+    ,	"TrP":			5.	# GeV
+    ,	"LongP":		7.	# GeV
+    ,	"MuDLL":		1.	# adimensional
+    ,	"VertChi2":		2.	# adimensional
+    ,	"MassPreComb":		1000.	# MeV
+    ,	"MassPostComb":		400.	# MeV
+    ,	"Prescale":		1.	# adimensional
+    ,	"Postscale":		1.	# adimensional
+    ,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+    ,	'HLT1PassOnAll': True
+    ,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
+    ,	'HLT2PassOnAll': False
+    }
     }
 
 TrackEffMuonTT = {
