@@ -59,11 +59,11 @@ class IOHelper(object):
                         
     b) LHCbApp          Setup the services, may need slots to do the steering
     
-    b) Brunel.          Use ioh.outStream to define the single output file
+    c) Brunel.          Use ioh.outStream to define the single output file
                         
-    c) DaVinci.         BaseDSTWriter will use ioh.outputAlgs for each output file
+    d) DaVinci.         BaseDSTWriter will use ioh.outputAlgs for each output file
     
-    d) Stand-alone user. Needs to create the file list to be passed to IOHelper.
+    e) Stand-alone user. Needs to create the file list to be passed to IOHelper.
                          Adds ioh.outputAlgs to any of their personal sequencers not based on the BaseDSTwriter
                          Uses ioh.postConfigServices on old software stacks
     
@@ -423,13 +423,13 @@ class IOHelper(object):
     
     def detectFileType(self, filestring):
         '''Filenames:  Go from connection string to persistency type'''
-        for type in self._inputSvcTypDict:
-            if self._inputSvcTypDict[type] in filestring:
-                return type
+        for atype in self._inputSvcTypDict:
+            if self._inputSvcTypDict[atype] in filestring:
+                return atype
         
-        for type in self._outputSvcTypDict:
-            if self._outputSvcTypDict[type] in filestring:
-                return type
+        for atype in self._outputSvcTypDict:
+            if self._outputSvcTypDict[atype] in filestring:
+                return atype
         
         return "UNKNOWN"
     
@@ -469,12 +469,15 @@ class IOHelper(object):
         If an event selector is passed, that one will be modified
         
         '''
+        #don't do anything if _my_ type is MDF to avoid overwiting everything forever
+        if self._inputPersistency=="MDF":
+            return eventSelector
+        
         if eventSelector is None:
             from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
         
-        #don't do anything if _my_ type is MDF to avoid overwiting everything forever
-        if self._inputPersistency=="MDF":
+        if type(eventSelector.Input) is not list:
             return eventSelector
         
         eventSelector.Input=self.convertConnectionStrings(eventSelector.Input, "I")
@@ -493,6 +496,9 @@ class IOHelper(object):
         If clear is True the original Inputs are overwritten.
         If clear is False the original Inputs are also kept.
         '''
+
+        if type(files) is not list:
+            raise TypeError, "You need to pass a list of files to InputFiles, you have passed a "+str(type(files))+" instead"
         
         if eventSelector is None:
             from Gaudi.Configuration import EventSelector
@@ -528,6 +534,8 @@ class IOHelper(object):
         retstr+=').Input=[\n'
         
         files=eventSelector.Input
+        if files is not None and type(files) is not list:
+            raise TypeError, "The EventSelector does not have a list of input files"
         
         alen=4
         for file in files[:-1]:
@@ -540,8 +548,8 @@ class IOHelper(object):
     def _subHelperString(self,files,setPersistency=False):
         '''Input:  return a string when the types of files are the same'''
         retstr=''
-        type=self.detectFileType(files[0])
-        if(type)=="MDF":
+        atype=self.detectFileType(files[0])
+        if(atype)=="MDF":
             if setPersistency:
                 retstr+='IOHelper("MDF","'+self._outputPersistency+'").inputFiles([\n'
             else:
@@ -573,20 +581,23 @@ class IOHelper(object):
         retstr='from GaudiConf import IOHelper\n'
         
         files=eventSelector.Input
+        if files is not None and type(files) is not list:
+            raise TypeError, "The EventSelector does not have a list of input files"
+        
         if not len(files): return retstr+'IOHelper().inputFiles([])\n'
         
         #needs to be more complicated to handle MDF and Root files
         #first group into lists of the different types
-        type=self.detectFileType(files[0])
+        atype=self.detectFileType(files[0])
         grouped_files=[[]]
         group=0
         for file in files:
             newtype=self.detectFileType(file)
-            if newtype==type:
+            if newtype==atype:
                 grouped_files[group].append(file)
                 continue
             
-            type=newtype
+            atype=newtype
             group=group+1
             grouped_files.append([])
             grouped_files[group].append(file)
@@ -920,6 +931,9 @@ class IOExtension(object):
         #print eventSelector
         #print eventSelector.__slots__
         
+        if type(files) is not list:
+            raise TypeError, "You need to pass a list of input files, but you passed a "+str(type(files))+ " instead"
+        
         if eventSelector is None:
             from Gaudi.Configuration import EventSelector
             eventSelector=EventSelector()
@@ -944,8 +958,10 @@ class IOExtension(object):
         retstr='from GaudiConf import IOExtension\n'
         
         files=eventSelector.Input
+        if files is not None and type(files) is not list:
+            raise TypeError, "The EventSelector does not have a list of input files"
         if not len(files): return retstr+'IOExtension().inputFiles([])\n'
-
+        
         ioh=self.getIOHelper(files[0])
         
         if setPersistency:
