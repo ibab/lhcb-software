@@ -3,6 +3,7 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v9r6 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
    it, also using UNLIKELY macro 
