@@ -15,7 +15,7 @@
  *  from Configurables import SubPIDMMFilter
  * 
  *  alg = SubPIDMMFilter('D2HH', Code="ALL", MinMM=1764, MaxMM=1964,
- *                       PIDs = ['K+','pi+'])
+ *                       PIDs = [['K+','pi+']])
  *  
  *  @endcode 
  *
