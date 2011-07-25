@@ -1,5 +1,5 @@
-package DAQUtils
-version v1r4
+package           DAQUtils
+version           v1r5
 
 branches cmt doc Event src tests
 
