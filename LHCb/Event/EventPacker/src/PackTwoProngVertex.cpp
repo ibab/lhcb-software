@@ -1,4 +1,3 @@
-// $Id: PackTwoProngVertex.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -56,7 +55,8 @@ StatusCode PackTwoProngVertex::execute() {
   {
     LHCb::TwoProngVertex*      vert = *itV;
     LHCb::PackedTwoProngVertex pVert;
-    debug() << "Found vertex key " << (*itV)->key() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      debug() << "Found vertex key " << (*itV)->key() << endmsg;
     pVert.key        = vert->key();
     pVert.technique  = vert->technique();
     pVert.chi2       = pack.fltPacked( vert->chi2() );
