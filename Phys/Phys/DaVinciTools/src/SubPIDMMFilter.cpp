@@ -46,16 +46,16 @@ public:
   virtual StatusCode filter(const LHCb::Particle::ConstVector& input, 
 			    LHCb::Particle::ConstVector& filtered);
 
-  bool substitute(LHCb::Particle* p);
+  bool substitute(LHCb::Particle* p,int which);
 
 private:
   SubPIDMMFilter();
   SubPIDMMFilter(const SubPIDMMFilter&);
   SubPIDMMFilter& operator=(const SubPIDMMFilter&);     
 
-  std::vector<std::string> m_names;
-  std::vector<LHCb::ParticleID> m_pids;
-  std::vector<double> m_masses;
+  std::vector<std::vector<std::string> > m_names;
+  std::vector<std::vector<LHCb::ParticleID> > m_pids;
+  std::vector<std::vector<double> > m_masses;
   double m_mmMin;
   double m_mmMax;
 };
@@ -65,11 +65,15 @@ SubPIDMMFilter::~SubPIDMMFilter(){}
 StatusCode SubPIDMMFilter::initialize() {
   StatusCode sc = FilterDesktop::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
-  int size = m_names.size();
-  m_masses.resize(size); m_pids.resize(size);
-  for(int i = 0; i < size; i++){
-    m_masses[i] = LoKi::Particles::massFromName(m_names[i]);
-    m_pids[i] = LoKi::Particles::pidFromName(m_names[i]);
+  int size1 = m_names.size();
+  m_masses.resize(size1); m_pids.resize(size1);
+  for(int i = 0; i < size1; i++){
+    int size2 = m_names[i].size();
+    m_masses[i].resize(size2); m_pids[i].resize(size2);
+    for(int j = 0; j < size2; j++){
+      m_masses[i][j] = LoKi::Particles::massFromName(m_names[i][j]);
+      m_pids[i][j] = LoKi::Particles::pidFromName(m_names[i][j]);
+    }
   }
   return StatusCode::SUCCESS ;
 } 
@@ -80,7 +84,7 @@ SubPIDMMFilter::SubPIDMMFilter(const std::string& name,ISvcLocator* pSvc):
   FilterDesktop(name,pSvc), m_mmMin(0), m_mmMax(0){
   declareProperty("MinMM", m_mmMin, "min MM value to filter on");
   declareProperty("MaxMM", m_mmMax, "max MM value to filter on");
-  declareProperty("PIDs", m_names, "list of PIDs (names) to use");
+  declareProperty("PIDs", m_names, "list of list of PIDs (names) to use");
 }
 
 StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input, 
@@ -89,22 +93,25 @@ StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
   filtered.reserve(input.size());
   LoKi::select(input.begin(),input.end(), 
 	       std::back_inserter(filtered),predicate());
+  int size = m_pids.size();
   for(LHCb::Particle::ConstVector::const_iterator ip = filtered.begin(); 
       filtered.end() != ip; ++ip) {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
-    LHCb::DecayTree tree(*p);
-    if(!substitute(tree.head())) return StatusCode::FAILURE;
-    double mm = tree.head()->measuredMass(); 
-    if(mm > m_mmMin && mm < m_mmMax){
-      markNewTree(tree.head()); // mark & store new decay tree          
-      output.push_back  ( tree.release () ) ;
+    for(int i = 0; i < size; i++){
+      LHCb::DecayTree tree(*p);
+      if(!substitute(tree.head(),i)) return StatusCode::FAILURE;
+      double mm = tree.head()->measuredMass(); 
+      if(mm > m_mmMin && mm < m_mmMax){
+	markNewTree(tree.head()); // mark & store new decay tree          
+	output.push_back  ( tree.release () ) ;
+      }
     }
   }
   return StatusCode::SUCCESS ;
 }
 
-bool SubPIDMMFilter::substitute(LHCb::Particle* p){
+bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which){
   if ( 0 == p ) { return false; }
   const SmartRefVector<LHCb::Particle> daughters = p->daughters();
   Gaudi::LorentzVector newMom,oldMom;
@@ -113,8 +120,8 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p){
     int index = 0;
     BOOST_FOREACH(const LHCb::Particle* daughter, daughters ) {
       LHCb::Particle *d = const_cast<LHCb::Particle*>(daughter);
-      d->setParticleID(m_pids[index]);
-      double newMass = m_masses[index];
+      d->setParticleID(m_pids[which][index]);
+      double newMass = m_masses[which][index];
       oldMom = d->momentum();
       newMom = Gaudi::LorentzVector();
       newMom.SetXYZT(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
@@ -140,6 +147,7 @@ StatusCode SubPIDMMFilter::_saveInTES () { return DVAlgorithm::_saveInTES() ; }
 void SubPIDMMFilter::writeEmptyTESContainers() { 
   DVAlgorithm::writeEmptyTESContainers() ; 
 }
+
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY(SubPIDMMFilter)
 // ============================================================================
