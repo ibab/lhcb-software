@@ -6,6 +6,7 @@
 
 ! 2011-07-25 - Chris Jones
  - Add some missing debug printout protection to RichPIDQC
+ - Add more options plots to RecoQC to show the resolutions per PD column
 
 ! 2011-07-24 - Chris Jones
  - Remove "DBConsistencyCheck" from the list of monitors run Online. 

@@ -61,7 +61,8 @@ DECLARE_ALGORITHM_FACTORY( RecoQC )
 
   declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
 
-  declareProperty( "EnablePerPDPlots", m_pdResPlots = false );
+  declareProperty( "EnablePerPDPlots",    m_pdResPlots    = false );
+  declareProperty( "EnablePerPDColPlots", m_pdColResPlots = false );
 
   setProperty( "NBins2DHistos", 100 );
 }
@@ -411,18 +412,30 @@ StatusCode RecoQC::execute()
       } // MC is available
 
       // Plots per PD
-      if ( m_pdResPlots )
+      if ( UNLIKELY ( m_pdResPlots ) )
       {
         const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
         const Rich::DAQ::HPDIdentifier hid(hpdID);
         std::ostringstream id,title;
-        id << "hpds/" << hid.number();
+        id << "PDs/" << hid.number();
         title << "Rec-Exp Cktheta | All photons | " << hpdID;
         richHisto1D( HID(id.str(),rad), title.str(), 
                      -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                      "delta(Cherenkov theta) / rad" ) -> fill( deltaTheta );
       }
-
+      if ( UNLIKELY ( m_pdColResPlots ) )
+      {
+        const LHCb::RichSmartID hpdID = photon->geomPhoton().smartID().pdID();
+        std::ostringstream id,title,col;
+        col << hpdID.rich() << "-" << Rich::text(hpdID.rich(),hpdID.panel())
+            << "-Col" << hpdID.pdCol();
+        id << "PDCols/" << col.str();
+        title << "Rec-Exp Cktheta | All photons | " << col.str();
+        richHisto1D( HID(id.str(),rad), title.str(), 
+                     -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
+                     "delta(Cherenkov theta) / rad" ) -> fill( deltaTheta );
+      }
+      
     } // photon loop
 
     richHisto1D(HID("totalPhotonsPerSeg",rad))->fill((double)segment->richRecPhotons().size());

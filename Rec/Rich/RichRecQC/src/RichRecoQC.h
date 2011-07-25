@@ -122,6 +122,9 @@ namespace Rich
         /// Enable per PD resolution plots
         bool m_pdResPlots;
 
+        /// Enable per PD column resolution plots
+        bool m_pdColResPlots;
+
       };
 
     }
