@@ -4,6 +4,7 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v3r2 2011-07-25 =========================
 ! 2011-06-22 - Marco Cattaneo
  - Protect unprotected debug and verbose printout
 
