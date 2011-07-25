@@ -2,6 +2,7 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!========================= VeloDet v13r15 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - In velodet.veloaligncond.updates test, use GaudiConf.QMTest.LHCbExclusions
    in validateWithReference to facilitate migration to new software stack
