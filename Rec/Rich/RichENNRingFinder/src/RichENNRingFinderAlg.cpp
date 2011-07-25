@@ -245,7 +245,8 @@ StatusCode AlgBase<FINDER>::saveRings() const
     LHCb::RichRecRing * newRing = new LHCb::RichRecRing();
 
     // Add pixels to this ring
-    verbose() << "  Ring has " << (*iRing).Hits.size() << " associated Hits" << endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "  Ring has " << (*iRing).Hits.size() << " associated Hits" << endmsg;
     for ( ENNRingFinder::Finder::Hit::PtnVector::const_iterator iHit = (*iRing).Hits.begin();
           iHit != (*iRing).Hits.end(); ++iHit )
     {

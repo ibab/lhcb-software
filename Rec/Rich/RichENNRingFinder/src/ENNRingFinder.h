@@ -267,8 +267,7 @@ namespace Rich
                                             const Hit & hit )
       {
         /** @todo Improve this calculation */
-        const double prob = ( hit.nAssRings > 0 ? 1.0/hit.nAssRings : 0.0 );
-        return prob;
+        return ( hit.nAssRings > 0 ? 1.0/hit.nAssRings : 0.0 );
       }
 
     }
