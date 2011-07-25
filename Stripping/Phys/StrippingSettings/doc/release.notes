@@ -1,8 +1,11 @@
-! -----------------------------------------------------------------------------
+ -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSettings
 ! Responsible : Anton Poluektov
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-07-25 - Thomas Blake
+ - Replicated beta_s config to Stripping16
 
 ! 2011-07-25 - Greig Cowan
  - Updated some beta_s config dictionaries in StrippingDev.
