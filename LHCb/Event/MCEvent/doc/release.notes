@@ -2,9 +2,12 @@
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+!========================= MCEvent v2r21 2011-07-25 =========================
 ! 2011-06-17 - Sajan Easo
 - Added the bit flags for Aerogel Subtiles in MCRichHit. 
   This is using existing , but so far unused,  bits in the history code. 
+
 !========================= MCEvent v2r20 2011-06-14 =========================
 ! 2011-05-31 - Magnus Lieng
  - Added MCBcmDigit.xml, CLID 3000
