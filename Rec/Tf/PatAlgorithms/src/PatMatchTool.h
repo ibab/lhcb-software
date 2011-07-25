@@ -111,6 +111,7 @@ private:
   // use tool for momentum parametrisation
   std::string m_fastMomentumToolName;
   bool m_addTT;
+  bool m_writeNNVariables;
   
   ITrackMomentumEstimate *m_fastMomentumTool;
   

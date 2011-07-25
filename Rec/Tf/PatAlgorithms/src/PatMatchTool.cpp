@@ -38,8 +38,8 @@ PatMatchTool::PatMatchTool( const std::string& type,
   declareProperty( "MagnetBend"      , m_magnetBend    =-1000. * Gaudi::Units::mm   );
   declareProperty( "maxMatchChi2"    , m_maxChi2       = 4                          );
   declareProperty( "FastMomentumToolName",	m_fastMomentumToolName	= "FastMomentumEstimate" );
-  declareProperty( "AddTTClusters"   , m_addTT = true );
-  
+  declareProperty( "AddTTClusters"   , m_addTT            = true                    );
+  declareProperty( "writeNNVariables", m_writeNNVariables = true                    );
 
 }
 //=============================================================================
@@ -143,8 +143,12 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
     if(m_addTT){
       StatusCode sc = m_addTTClusterTool->addTTClusters( *match );
       if ( sc.isFailure() ) 
-	Warning("adding TT clusters failed!",sc).ignore();
+        Warning("adding TT clusters failed!",sc).ignore();
     }
+
+    // added for NNTools -- check how many tracks have common hits
+    // This is always 1.0 as we require that velo and seed tracks are used only once.
+    if( m_writeNNVariables == true) match->addInfo(LHCb::Track::NCandCommonHits, 1.0);
 
     matchs.insert( match);
 
