@@ -1,4 +1,3 @@
-// $Id: MagFieldReader.cpp,v 1.17 2009-06-12 12:57:17 cattanem Exp $
 // Include files 
 #include "Riostream.h"
 // from Gaudi
@@ -28,7 +27,7 @@
 // 07/2007: Adlene Hicheur, added B field integral testing Ntuple
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( MagFieldReader );
+DECLARE_ALGORITHM_FACTORY( MagFieldReader )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -59,7 +58,8 @@ StatusCode MagFieldReader::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "FieldReader intialize() has been called" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "FieldReader intialize() has been called" << endmsg;
   
   m_pIMF = svc<IMagneticFieldSvc>( m_FieldServiceName, true );
   // m_pIAF = svc<IMagneticFieldSvc>( "AnalyticFieldSvc", true );
@@ -77,7 +77,8 @@ StatusCode MagFieldReader::execute() {
   
   // Print out info messages with the field value at different locations.
 
-  debug() << "m_pIMF = " << m_pIMF << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    debug() << "m_pIMF = " << m_pIMF << endmsg;
 
   Tuple nt1 = nTuple( 10, "Field", CLID_ColumnWiseTuple );
 
@@ -112,15 +113,13 @@ StatusCode MagFieldReader::execute() {
      Gaudi::XYZPoint P02( 0.0, 0.0, z);
       m_pIMF->fieldVector( P0, B );
   
-
-      debug() << "Magnetic Field at ("
-              << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
-              << (B.x())/Gaudi::Units::tesla << ", "
-              << (B.y())/Gaudi::Units::tesla << ", "
-              << (B.z())/Gaudi::Units::tesla << " Tesla " 
-              << endmsg;
-
-
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Magnetic Field at ("
+                << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
+                << (B.x())/Gaudi::Units::tesla << ", "
+                << (B.y())/Gaudi::Units::tesla << ", "
+                << (B.z())/Gaudi::Units::tesla << " Tesla " 
+                << endmsg;
   }
 
 

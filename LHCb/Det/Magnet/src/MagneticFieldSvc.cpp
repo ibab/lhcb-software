@@ -1,5 +1,3 @@
-// $Id: MagneticFieldSvc.cpp,v 1.55 2010-05-26 11:31:47 cattanem Exp $
-
 // Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -26,7 +24,7 @@
  *  Updated and further developed - Marco Cattaneo
  */
 
-DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
+DECLARE_SERVICE_FACTORY( MagneticFieldSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -224,7 +222,8 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 
   if( m_forcedScaleFactor > 9998. ) {
     scaleFactor = 1.;
-    log << MSG::DEBUG << "Scale factor set to default = " << scaleFactor << endmsg;
+    if( UNLIKELY(log.level() <= MSG::DEBUG) )
+      log << MSG::DEBUG << "Scale factor set to default = " << scaleFactor << endmsg;
    }
   
   m_magFieldGrid.setScaleFactor( scaleFactor ) ;
@@ -262,8 +261,8 @@ StatusCode MagneticFieldSvc::i_updateConditions()
 //=============================================================================
 {
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "updateConditions called" << endmsg;
-
+  if( UNLIKELY(log.level() <= MSG::DEBUG) )
+    log << MSG::DEBUG << "updateConditions called" << endmsg;
 
   if (m_forcedToUseDownMap && m_forcedToUseUpMap)
     log << MSG::WARNING 
@@ -317,7 +316,8 @@ StatusCode MagneticFieldSvc::i_updateConditions()
       sc = m_mapFileNames.size() == 1 ?
         m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
         m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
-      log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
+      if( UNLIKELY(log.level() <= MSG::DEBUG) )
+        log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
     }
   }
   

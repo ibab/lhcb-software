@@ -1,5 +1,3 @@
-// $Id: BdlTool.cpp,v 1.7 2009-06-12 12:57:17 cattanem Exp $
-
 // Include files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -18,7 +16,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this tool
 
-DECLARE_TOOL_FACTORY( BdlTool );
+DECLARE_TOOL_FACTORY( BdlTool )
 
 // Standard Constructor
 BdlTool::BdlTool( const std::string& type,
@@ -39,7 +37,7 @@ StatusCode BdlTool::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // retrieve pointer to magnetic field service
   m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true ); 

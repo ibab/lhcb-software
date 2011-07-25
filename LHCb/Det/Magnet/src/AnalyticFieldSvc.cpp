@@ -30,7 +30,7 @@
 //#define NREG 16
 
 
-DECLARE_SERVICE_FACTORY( AnalyticFieldSvc );
+DECLARE_SERVICE_FACTORY( AnalyticFieldSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -92,12 +92,14 @@ StatusCode AnalyticFieldSvc::initialize()
   
   status = GetParam();
   if ( status.isSuccess() ) {
-    log << MSG::DEBUG << "B maps read successfully" << endmsg;
+    if( UNLIKELY(log.level() <= MSG::DEBUG) )
+      log << MSG::DEBUG << "B maps read successfully" << endmsg;
  
     return status;
   }
   else {
-    log << MSG::DEBUG << "B maps failed" << endmsg;
+    if( UNLIKELY(log.level() <= MSG::DEBUG) )
+      log << MSG::DEBUG << "B maps failed" << endmsg;
     return StatusCode::FAILURE;
   }
 
