@@ -244,7 +244,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
           }
         }
         const int ngoodPhot = goodPhotons.size();
-        debug() << "goodPhotons.size() = " << goodPhotons.size() << endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "goodPhotons.size() = " << goodPhotons.size() << endmsg;
 
         m_RadiusGuess = 0;
         if ( ngoodPhot > 0 )
@@ -299,8 +300,11 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
         {
           const double xphot = recRing.ringPoints()[index].localPosition().X();
           const double yphot = recRing.ringPoints()[index].localPosition().Y();
-          const double sep   = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + std::pow(yphot-YcenterFitted(),2));
-          debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" << NsigRcut*RadiusErrorPhot << endmsg;
+          const double sep   = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + 
+                                                        std::pow(yphot-YcenterFitted(),2));
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" 
+                    << NsigRcut*RadiusErrorPhot << endmsg;
           if(fabs(sep)<NsigRcut*RadiusErrorPhot) goodPhotonsTmp.push_back(*iPhot);
         }
         goodPhotons = goodPhotonsTmp;
@@ -308,7 +312,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
       //filter according to number of photons
       int ngoodPhot=goodPhotons.size();
-      debug() << "goodPhotons.size() = " << goodPhotons.size() << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "goodPhotons.size() = " << goodPhotons.size() << endmsg;
       if ( ngoodPhot >= config.minRingPhotons &&
            ngoodPhot <  s_NmaxFitPhot )
       {
