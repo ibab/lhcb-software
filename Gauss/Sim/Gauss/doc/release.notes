@@ -9,6 +9,15 @@
  - Remove conditional build of generators packages as now pattern to prevent 
    building them on windows is in packages themselves
  - Use Geant4Files for G4 9.4
+ - Introduce example on how to read directly files with simulation information
+   with Gauss and execute monitoring phase. This file, GaussRead.py has been 
+   adapted by Mark Whitehead from Gloria's template and provide a guideline. 
+   Its functionality will be integrated and provided by the Gauss configurable
+   in a future release.
+ - Options for using new physics lists by G4 9.4 for LHCb:
+   . G4PL_QGSP_BERT_CHIPS: for better Kaons cross sections
+   . G4PL_LHEP_EmNoCuts:   to have Opt1 reproducing G4 9.2 behaviour
+   . G4PL_LHEP_EmLHCb:     for better MS description
 
 ! 2011-06-21 - Rob Lambert
  - Add Persistency to Configurable, to support ROOT persistency.
