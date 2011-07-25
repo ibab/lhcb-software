@@ -5,6 +5,142 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v32r5>2011-07-26 LHCbSys v32r5</A></H1><PRE>
+This version uses Gaudi v22r2 and LCG_60a
+Production version for 2011 data in August 2011
+Development release for commissioning of end of 2011 reprocessing and MC11
+
+- Packages modified: CaloDAQ v4r23, CaloInterfaces v8r3, DAQUtils v1r5, 
+    MDF v3r31, CaloDet v10r11, DDDB v1r46, DetCond v12r20, DetDesc v18r27,
+    DetDescCnv v4r14, DetDescSvc v3r2, Magnet v7r2, MuonDet v9r6, OTDet v8r7,
+    RichDet v16r5, STDet v4r26, VeloDet v13r15, DigiEvent v2r19,
+    EventPacker v2r10, MCEvent v2r21, RecEvent v2r38, IOExample v4r1,
+    GaudiConf v14r1, HistoStrings v1r1, LHCbAlgs v2r41, LHCbKernel v13r3,
+    LHCbMath v3r26, MCInterfaces v1r14, PartProp v1r10, MuonDAQ v4r10,
+    LoKiCore v11r2, LoKiGen v10r3, LoKiMC v10r2, LoKiNumbers v10r1,
+    RichRecBase v4r7, CondDBEntityResolver v5r3, XmlTools v6r5
+
+- In Calo/CaloInterfaces v8r3
+  . ICaloHypoEstimator : fix minor typo
+
+- DAQ/DAQUtils v1r5
+  . In daqutils.basictest:
+    use GaudiConf.QMTest.LHCbExclusions in validateWithReference
+
+- In Det/DDDB v1r46
+  . Update database tags for SQLDDDB v6r14:
+    o DDDB,     2011: head-20110722
+    o DDDB,     2010: head-20110721
+    o LHCBCOND, 2011: head-20110722
+    o LHCBCOND, 2010, 2009: head-20110614
+
+-In Det/DetDescCnv v4r14
+ . XmlLVolumeCnv.cpp:
+   o modified to be able to use the string '-KEY-' in material names
+     in DB, similar to what is done for logvol names.
+   o Reduce DEBUG verbosity (moved to VERBOSE)
+
+- In Det/OTDet v8r7
+  . Decrease DEBUG verbosity of DeOTModule, use VERBOSE instead
+
+- In Det/RichDet v16r5
+  . Add the UNLIKELY macro to the msgLevel methods in DeRichBase
+  . Add a little extra protection to casts in DeRichBeamPipe to appease coverity
+  . Add new method DeRichAerogelRadiator::subTile() that indicates if the
+    detector element is subtile (true) or full primary tile (false)
+  . Update the tile ID methods in DeRichAerogelRadiator to support better the
+    needs of Brunel, by making tileID() give a unique ID both when sub-tiles
+    are active and inactive. Add a new method primaryTileID() that returns the
+    primary (real) tile ID.
+  . Add new methods to DeRichBase to allow the output level to be checked, and
+    thus debug and verbose printed to be suppressed when not activate.
+  . For using the new version of database with aerogel sub tiles,
+    modifications made to DeRichAerogelRadiator and DeRichMultiSolidRadiator.
+    These are backward compatible and hence can be used for old version of
+    database without the aerogel sub tiles.
+
+- In Det/VeloDet v13r15
+  . In velodet.veloaligncond.updates test, use GaudiConf.QMTest.LHCbExclusions
+    in validateWithReference to facilitate migration to new software stack
+  . Change verbosity of DeVeloPhiType messages to VERBOSE
+  . Update test reference to follow verbosity changes in UpdateManagerSvc
+
+- In Event/DigiEvent v2r19
+  . Added copy constructor and clone method to VeloCluster class
+
+- In Event/EventPacker v2r10
+  . Fix the UnpackTrack problem seen in Reco10 DaVinci monitoring: 
+    An overprotection made in some cases the offset in case of wrapping of the
+    (16 bit) index to increase twice, accessing random locations.
+
+- In Event/MCEvent v2r21
+  . Added the bit flags for Aerogel Subtiles in MCRichHit.
+    This is using existing , but so far unused,  bits in the history code.
+
+- In Event/RecEvent v2r38
+  . RecVertex.xml : define location for filtered primary vertices
+  . ProtoParticle.xml : add gamma/pi0 separation variable
+
+- In Ex/IOExample v4r1
+  . Add ioexample.testunpacktrack test, tests that UnpackTrack algorithm works
+    on a track container that has more than 65k LHCbIDs
+
+- In GaudiConf v14r1
+  . Plug a hole in IOHelper which was trying to convertSelector on a strange type
+    Change MDF logic slightly
+  . In LHCbExclusions.py, exclude from QMTest log file comparisons INFO messages
+    that have been removed in Gaudi HEAD but still exist in Gaudi v22r2. Can be
+    be removed when LHCb stack is released on next Gaudi
+
+- In Kernel/HistoStrings v1r1
+  . Fixed ordering problem with string representation
+
+- In Kernel/LHCbKernel v13r3
+  . Added new interfaces IVeloClusterSelector.h and IVeloChannelIDSelector.h
+
+- In Kernel/LHCbMath v3r26
+  . Add few more functions into dictionary
+  . Add rounding and related functions
+  . Add ifnan/isfinite/isnormal/isinf checks for Gaudi::Math::ValueWithError
+  . Add few useful math functions...
+
+- In Kernel/MCInterfaces v1r14
+  . Move IDecayTool.h, IGenCutTool.h and IFullGenEventCutTool.h interface headers
+    from Gen/Generators here to be accessible from other projects than Gauss
+
+- In Phys/LoKiCore v11r2
+  . HybridBase.h: allow multline code to be used... remove '\n' , '\\n', etc..
+  . LoKi/NodeGrammar.h: fix coverity report 16248
+
+- In Phys/LoKiGen v10r3
+  . More decorators for HepMC.GenParticle
+  . Add useful constructor for GDECTREE functors
+  . Small polishing of python iterators
+
+-In Phys/LoKiMC v10r2
+  . More decorators for LHCb.MCParticle
+  . Small polishing of python iterators
+  . LoKi/MCDecayChain.h: fix Coverity reports 22945/22946
+
+- In Phys/LoKiNumbers v10r1
+  . Add helper functor for ``smart'' creation of RecSummary functors
+
+- In Rich/RichRecBase v4r7
+  . Set default clone distance variable to 1e10, instead of FLT_MAX, to avoid
+    problems in the track selectors later on.
+
+- In Det/VeloDet v13r15, Muon/MuonDAQ v4r10
+  . Replace all endreq by endmsg
+
+- In Calo/CaloDAQ v4r23, DAQ/MDF v3r31, Det/CaloDet v10r11, Det/DetCond v12r20,
+     Det/DetDesc v18r27, Det/DetDescCnv v4r14, Det/DetDescSvc v3r2,
+     Det/Magnet v7r2, Det/MuonDet v9r6, Det/OTDet v8r7, Det/STDet v4r26,
+     Det/VeloDet v13r15, Event/EventPacker v2r10, Kernel/LHCbAlgs v2r41,
+     Kernel/PartProp v1r10, Muon/MuonDAQ v4r10, Tools/CondDBEntityResolver v5r3,
+     Tools/XmlTools v6r5
+  . Create debug() and/or verbose() messages only when output level requires it,
+    also using UNLIKELY macro
+
 </PRE><H1><A NAME=v32r4>2011-06-15 LHCbSys v32r4</A></H1><PRE>
 This version uses Gaudi v22r2 and LCG_60a
 Production version for 2011 data after July 2011 technical stop
