@@ -4,6 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r6 2011-07-26 =========================
 ! 2011-07-26 S. Blusk
  - Remove second occurrence of MIPCHI2DV_MIN in "DTIGHT" in StrippingBeauty2Charm.py
 
@@ -32,9 +33,6 @@
 
 ! 2011-07-26 - Alexandr Kozlinskiy
  - Simplified decay descriptors in StrippingD02MuMu.
-
-!========================= StrippingSelections v3r6 2011-07-25 =========================
-
 
 ! 2011-07-23 S. Blusk
  - Added lines with soft muon reconstruction for K* mu mu 
