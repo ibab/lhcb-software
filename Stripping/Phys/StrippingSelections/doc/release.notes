@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-26 Mike Williams
+ - Beauty2Charm udpates (nothing major).
+
 ! 2011-07-26 - Thomas Blake
  - Small modifications to several lines 
   . B2XMuMuSS renamed global 'name' as 'default_name' 
