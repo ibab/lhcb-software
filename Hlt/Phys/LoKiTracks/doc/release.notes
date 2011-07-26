@@ -7,6 +7,7 @@
 
 ! 2011-07-26 - Rob Lambert
  - Add recSummaryTrack, copy of recSummary, but with TrNUM functors
+ - fixed a missing import...
 
 !========================== LoKiTracks v2r1p1 2011-06-24 ===================
 ! 2011-06-05 - Vanya Belyaev

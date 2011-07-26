@@ -234,6 +234,7 @@ def  recSummaryTrack ( index , trtype, location='Rec/Track/Best' ) :
     #
     from LoKiCore.functions import switch
     #
+    from LoKiNumbers.functions import (HASRECSUMMARY, RECSUMMARY)
     return switch ( HASRECSUMMARY ( index      ) ,
                     RECSUMMARY    ( index , -1 ) ,
                     TrNUM      ( location , trtype  ) )  
