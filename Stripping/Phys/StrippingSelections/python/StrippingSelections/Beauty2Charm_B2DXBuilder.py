@@ -202,7 +202,7 @@ class B2DXBuilder(object):
         decays = {'B2D0PiPiPi': ["B+ -> D0 a_1(1260)+","B- -> D0 a_1(1260)-"],
                   'B2D0KPiPi' : ["B+ -> D0 K_1(1270)+","B- -> D0 K_1(1270)-"]}
         inputs = {'B2D0PiPiPi': [d2x,pipipi],'B2D0KPiPi': [d2x,kpipi]}
-        b2d03h = makeB2XMerged('B2D03H',decays,dname,inputs,self.config)
+        b2d03h = makeB2XMerged('B2D0HHH',decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d03h['TOS'],1.0))
         self.lines.append(ProtoLine(b2d03h['TIS'],1.0))
 

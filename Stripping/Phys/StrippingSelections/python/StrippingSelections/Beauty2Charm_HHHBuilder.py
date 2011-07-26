@@ -28,8 +28,10 @@ class HHHBuilder(object):
         ''' Makes all X -> HHH selections with charged tracks only.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
         comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
+        numPassPtCut = "(ANUM(PT < %s) <= 1)" %(config['PTMIN1'])
+        comboCuts.append(numPassPtCut)
         comboCuts = LoKiCuts.combine(comboCuts)
-        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA','MIPCHI2DV','BPVVDRHO','BPVVDZ'],config).code()
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
         return Selection(name+'Beauty2Charm',Algorithm=cp,
@@ -37,25 +39,29 @@ class HHHBuilder(object):
 
     def _makePiPiPi(self):
         '''Makes X -> pi+pi-pi+'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['A1'])
         return self._makeX2HHH('X2PiPiPi',['[a_1(1260)+ -> pi+ pi- pi+]cc'],
-                              '(AM < 3*GeV)',self.config,[self.pions])
+                              massWindow,self.config,[self.pions])
 
     def _makeKPiPi(self):
         '''Makes X -> K+pi-pi+ + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['K1'])
         return self._makeX2HHH('X2KPiPi',['[K_1(1270)+ -> K+ pi- pi+]cc'],
-                              '(AM < 3*GeV)',self.config,
+                              massWindow,self.config,
                               [self.pions,self.kaons])
 
     def _makeppbarPi(self):
         '''Makes X -> p pbar-pi+ + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PPH'])
         return self._makeX2HHH('X2ppbarPi',['[Xi_c+ -> p+ p~- pi+]cc'],
-                              '(AM < 5*GeV)',self.config,
+                              massWindow,self.config,
                               [self.pions,self.protons])
 
     def _makeppbarK(self):
         '''Makes X -> p pbar-K+ + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PPH'])
         return self._makeX2HHH('X2ppbarK',['[Xi_c+ -> p+ p~- K+]cc'],
-                              '(AM < 5*GeV)',self.config,
+                              massWindow,self.config,
                               [self.kaons,self.protons])
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

@@ -30,7 +30,12 @@ class DFilter(object):
     def _makeFiltCharm(self,input,name,tag):                        
         x = self.tightCuts
         dCuts = deepcopy(x)
-        # Create Tight D+- Mesons
+        childPIDp = "(NINGENERATION( ('p+'==ABSID) & (PIDp < %s), 1) < 1 )"%(self.config['pPIDp_MIN'])
+        childPIDK = "(NINGENERATION( ('K+'==ABSID) & (PIDK < %s), 1) < 1 )"%(self.config['KPIDK_MIN'])
+        childPIDpi = "(NINGENERATION( ('pi+'==ABSID) & (PIDK > %s), 1) < 1 )"%(self.config['piPIDK_MAX'])
+        dCuts.append(childPIDK )
+        dCuts.append(childPIDpi )
+        dCuts.append(childPIDp )        # Create Tight D+- Mesons
         dCuts.append(self._massWindow(tag))
         dCuts = LoKiCuts.combine(dCuts)
         return filterSelection(name,dCuts,[input])

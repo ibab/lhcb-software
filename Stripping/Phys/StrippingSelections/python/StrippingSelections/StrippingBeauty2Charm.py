@@ -86,17 +86,18 @@ config = {
     },
     "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
     'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
-    'KDAUGHTERS'    : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
-    'PiDAUGHTERS'   : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
-    'pDAUGHTERS'    : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
-    'AMAXDOCA_MAX'  : '0.35*mm',
+    'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
+    'PiDAUGHTERS'   : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
+    'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
+    'AMAXDOCA_MAX'  : '0.40*mm',
     'VCHI2DOF_MAX'  : 8,
     'BPVVDCHI2_MIN' : 36, 
     'BPVDIRA_MIN'   : 0.98,
     'ASUMPT_MIN'    : '1250*MeV',
-    'MIPCHI2DV_MIN' : 6.25,
+    'MIPCHI2DV_MIN' : 0.0,
     'BPVVDRHO_MIN'  : '0.1*mm',
-    'BPVVDZ_MIN'    : '2.0*mm'
+    'BPVVDZ_MIN'    : '2.0*mm',
+    'PTMIN1'       : '300*MeV'
     },
     "DTIGHT" : { # Tight Cuts on D mesons for B-->D+3H lines
     'MIPCHI2DV_MIN' : 4,
@@ -109,7 +110,10 @@ config = {
     'MIPCHI2DV_MIN' : 0.0,
     'BPVDIRA_MIN'   : 0.98,
     'BPVVDRHO_MIN'  : '0.1*mm',
-    'BPVVDZ_MIN'    : '0.0*mm'
+    'BPVVDZ_MIN'    : '0.0*mm',
+    'piPIDK_MAX'    : 12,
+    'pPIDp_MIN'    : -6,
+    'KPIDK_MIN'    : -6
     },
     'LC2X' : { # Cuts for all Lambda_c's used in all lines
     'ASUMPT_MIN'    : '1800*MeV',
