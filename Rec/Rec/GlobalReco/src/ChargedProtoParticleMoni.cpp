@@ -167,6 +167,21 @@ StatusCode ChargedProtoParticleMoni::execute()
                type.str()+"protosWithVELOdEdx",
                "% ProtoParticles with VELO dE/dx info V Momentum", 0*GeV, 100*GeV, 100 );
 
+    // Muon consistency checks
+    if ( ( proto->hasInfo(LHCb::ProtoParticle::MuonPIDStatus) ||
+           proto->hasInfo(LHCb::ProtoParticle::MuonMuLL)      ||
+           proto->hasInfo(LHCb::ProtoParticle::MuonBkgLL)     ||
+           proto->hasInfo(LHCb::ProtoParticle::MuonNShared) )
+         && !proto->muonPID() )
+    {
+      Warning( "ProtoParticle has MuonPIDStatus but no NuonPID SmartRef" ).ignore();
+    }
+    if ( proto->muonPID() &&
+         !proto->muonPID()->IsMuonLoose() && proto->muonPID()->IsMuon() )
+    {
+      Warning( "ProtoParticle MuonPID has IsMuonLoose=False but IsMuon=True" ).ignore();
+    }
+
   }
 
   // return
@@ -190,10 +205,11 @@ ChargedProtoParticleMoni::getProto( const LHCb::ProtoParticles * protos,
 
     // First try using same track key convention
     proto = protos->object(track->key());
-    if ( ! (proto && proto->track() == track) ) 
+    if ( !proto || proto->track() != track ) 
     {
 
       // Key convention failed, so try direct search
+      proto = NULL;
       for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
             iP != protos->end(); ++iP )
       {
@@ -202,11 +218,11 @@ ChargedProtoParticleMoni::getProto( const LHCb::ProtoParticles * protos,
           proto = *iP;
           break;
         }
-      }
+      } // loop over protos
 
-    }
+    } // not found via key
 
-  }
+  } // track OK
 
   return proto;
 }

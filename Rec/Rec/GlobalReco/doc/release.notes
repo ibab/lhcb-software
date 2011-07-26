@@ -4,15 +4,19 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-! 2011-06-17 - Olivier Deschamps
- - NeutralProtoPAlg : add pi0/gamma separation variable (requires CaloInterfaces v8r2 - CaloTool v6r2 and RecEvent r124994)
+! 2011-07-26 - Chris Jones
+ - Some minor improvements to the charged ProtoParticle monitor
 
-!========================= GlobalReco v6r37p1 2011-06-15 =========================
+! 2011-06-17 - Olivier Deschamps
+ - NeutralProtoPAlg : add pi0/gamma separation variable (requires 
+   CaloInterfaces v8r2 - CaloTool v6r2 and RecEvent r124994)
+
+!========================= GlobalReco v6r37p1 2011-06-15 =====================
 ! 2011-06-07 - Olivier Deschamps
  - NeutralProtoPAlg : reduce verbosity in case of partial Calo reconstruction
 
 
-!========================= GlobalReco v6r37 2011-04-27 =========================
+!========================= GlobalReco v6r37 2011-04-27 =======================
 ! 2011-04-16 - Chris Jones
  - Remove from ChargedProtoParticleMaker the option to reuse an existing
    TES location
@@ -31,8 +35,8 @@
  - ChargedParticleMaker
   . Added new properties Inputs and Output, mirroring InputTrackLocation and
     OutputProtoParticleLocation respectively. If InputTrackLocation or 
-    OutputProtoParticleLocation are set, issue warning. If both old and new mirror
-    properties are set, return ERROR in initializaiton.
+    OutputProtoParticleLocation are set, issue warning. If both old and new 
+    mirror properties are set, return ERROR in initializaiton.
  - Add QM test suite
   . Single test to check configuration above.
  - Increase to v6r35.
@@ -41,7 +45,7 @@
  - Update Expert histogram python options to adapt to changes in ANN training
    tool algorithm configuration
 
-!========================= GlobalReco v6r34 2011-01-17 =========================
+!======================= GlobalReco v6r34 2011-01-17 =========================
 ! 2011-01-14 - Chris Jones
  - Add new ANN PID Probabilities to the ProtoParticle Tuple
 
