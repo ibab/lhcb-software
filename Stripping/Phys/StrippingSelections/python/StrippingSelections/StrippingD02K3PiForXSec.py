@@ -108,7 +108,7 @@ class D02K3PiForXSecConf(LineBuilder):
     from Configurables import LoKi__VoidFilter as VoidFilter
     from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
     modules = CoreFactory('CoreFactory').Modules
-    for i in ['LoKiTrigger.decorators']:
+    for i in ['LoKiTrigger.decorators', 'LoKiNumbers.decorators']:
       if i not in modules : modules.append(i)
       
     selD02K3Pi = makeD02K3Pi(moduleName, config['D0Cuts'])
@@ -131,25 +131,25 @@ class D02K3PiForXSecConf(LineBuilder):
        if nLong is not None:
          if _filter != "":
            _filter+=" & "
-         _filter += "(TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s))" %nLong
+         _filter += "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" %nLong
          
        nDigits = config["MaxSpdDigits"][name]
        if nDigits is not None:
          if _filter != "":
            _filter+=" & "
-         _filter += "( switch ( HASRECSUMMARY('nSpdHits'), RECSUMMARY('nSpdHits') < %s, CONTAINS('Raw/Spd/Digits') < %s ) )" %(nDigits,nDigits)
+         _filter += "( recSummary(LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits') < %s ) " %nDigits
 
        nClusters = config["MaxITClusters"][name]
        if nClusters is not None:
          if _filter != "":
            _filter+=" & "
-         _filter += " ( switch ( HASRECSUMMARY('nITClusters'), RECSUMMARY('nITClusters') < %s, CONTAINS('Raw/IT/Clusters') < %s ) )" %(nClusters,nClusters)
+         _filter += " ( recSummary(LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters') < %s ) )" %nClusters
 
        nVELO = config["MaxVeloTracks"][name]
        if nVELO is not None:
          if _filter != "":
            _filter+=" & "
-         _filter += "(TrSOURCE('Rec/Track/Best') >> TrVELO >> (TrSIZE < %s))" %nVELO
+         _filter += "(recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) < %s)" %nVELO
        
      _line = StrippingLine(sel.name()+"Line"
                            ,prescale = config['Prescale'][name]

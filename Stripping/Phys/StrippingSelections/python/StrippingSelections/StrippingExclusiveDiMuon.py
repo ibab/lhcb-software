@@ -27,10 +27,10 @@ class ExclusiveDiMuonConf(LineBuilder) :
     
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
-
+        
         self._myname = name
         
-        ExclusiveDiMuonNumTracksGEC = {'Code' : "(TrNUM('Rec/Track/Best', TrLONG) <= 5) & (TrNUM('Rec/Track/Best', TrLONG) >= 1)",
+        ExclusiveDiMuonNumTracksGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) <= 5) & (recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) >= 1)",
                                        'Preambulo' : ["from LoKiTrigger.decorators import *"]}
         
 

@@ -225,9 +225,9 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
 ##     Define the GEC on number of long tracks, needed in order to control
 ##     the time for the combinatorics (D in particular)
 ##     '''
-        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 250",
+        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 250)",
                                                'Preambulo' : ["from LoKiTracks.decorators import *"]}
-        B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 250",
+        B2Dh_D2KShh_StrippingNumTracksGECDD = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 250)",
                                                'Preambulo' : ["from LoKiTracks.decorators import *"]}
         
 ##        B2Dh_D2KShh_StrippingNumTracksGECLL = {'Code' : "RECSUMMARY ( LHCb.RecSummary.nLongTracks , -1 ) < 250"}

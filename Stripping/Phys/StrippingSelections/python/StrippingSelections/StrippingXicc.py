@@ -52,7 +52,7 @@ class XiccBuilder(LineBuilder) :
         # Set up global event cuts.
         # Conceptually these come first, although the place where they're
         # inserted into the line is at the bottom of the code.
-        _globalEventCuts = "( CONTAINS ('Rec/Track/Long') < %(LongTrackGEC)s )" % config
+        _globalEventCuts = "(recSummary (LHCb.RecSummary.nLongTracks, 'Rec/Track/Long') < %(LongTrackGEC)s )" % config
 
         # Pick up standard kaons, pions
         # Filter them for use as daughter particles:

@@ -613,8 +613,9 @@ class DiMuonConf(LineBuilder):
                                              prescale  = config['DiMuonNoPV_Prescale'],
                                              postscale = config['DiMuonNoPV_Postscale'],
                                              checkPV   = False,
-                                             FILTER = { 'Code'       : "CONTAINS('Rec/Vertex/Primary')<0.5" , 
+                                             FILTER = { 'Code'       : "recSummary(LHCb.RecSummary.nPVs, 'Rec/Vertex/Primary')<0.5" , 
                                                         'Preambulo'  : [ 'from LoKiTracks.decorators import *' ,
+                                                                         'from LoKiNumbers.decorators    import *',
                                                                          'from LoKiCore.functions    import *' ]
                                                         },
                                              selection = self.SelDiMuonExclusive

@@ -280,7 +280,7 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         #modules = CoreFactory('CoreFactory').Modules
         #for i in ['LoKiTrigger.decorators']:
         #  if i not in modules : modules.append(i)
-        self.EventFilter = "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %s )" % config['MaxTracks']
+        self.EventFilter = "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" % config['MaxTracks']
 
         # First filter pions
         self.selPions = makePions( 'PionsForB2D3H'+name,
@@ -1309,8 +1309,8 @@ def MyEventFilter(name, MaxTracks):
 
 
     _eventFilter = VoidFilter("EventfilterFor"+name)
-    _eventFilter.Code =  "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %(MaxTracks)s )" %locals()
-
+    _eventFilter.Code =  "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(MaxTracks)s )" %locals()
+    
     return _eventFilter
 
 def makeTISTOSSel(name, sel, trigger ) : 

@@ -328,12 +328,13 @@ class B2XuMuNuBuilder(LineBuilder):
                              prescale = 0.02,
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bd2PiMuNu()])
@@ -344,12 +345,13 @@ class B2XuMuNuBuilder(LineBuilder):
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bd2PiMuNuSS()])
@@ -360,12 +362,13 @@ class B2XuMuNuBuilder(LineBuilder):
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bu2RhoMuNu()])
@@ -376,12 +379,13 @@ class B2XuMuNuBuilder(LineBuilder):
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bu2RhoMuNuWS()])
@@ -392,12 +396,13 @@ class B2XuMuNuBuilder(LineBuilder):
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bs2KMuNu()])
@@ -408,44 +413,47 @@ class B2XuMuNuBuilder(LineBuilder):
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bs2KMuNuSS()])
-
+    
     def _Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KstarLine', prescale = 0.25,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bs2KstarMuNu()])
-
+    
     def _KstarSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 0.5,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              FILTER = {'Code' :
                                        """
-                                       ( TrSOURCE ( 'Rec/Track/Best'  , TrVELO ) >> ( TrSIZE<50 ) ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) &
-                                       ( CONTAINS ( 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( CONTAINS ( 'Raw/IT/Clusters' ) < 1000 )
+                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
                                        """ ,
                                        'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                                       'from LoKiNumbers.decorators    import *',
                                                        'from LoKiCore.functions    import *' ]
                                        },
                              algos = [ self._Bs2KstarMuNuSS()])

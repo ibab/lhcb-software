@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-26 - Rob Lambert
+ - Modified everything to use recSummary. Will then contact authors.
+
 ! 2011-07-26 - Anton Poluektov 
  - Update StrippingB2DX: 
    * ParticleAdder instead of MomentumCombiner for rho+ and kstar+ 

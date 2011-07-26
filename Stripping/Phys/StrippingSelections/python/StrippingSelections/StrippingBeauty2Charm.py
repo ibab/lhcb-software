@@ -198,7 +198,7 @@ class Beauty2CharmConf(LineBuilder):
                            RequiredSelections=[protoLine.selection])
 
         filter = {'Code' :
-                  "(TrSOURCE('Rec/Track/Best')) >> TrLONG >> (TrSIZE < %s )" \
+                  "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" \
                   % config['GECNTrkMax'],
                   'Preambulo' : [ "from LoKiTracks.decorators import *",
                                   'from LoKiCore.functions    import *' ]

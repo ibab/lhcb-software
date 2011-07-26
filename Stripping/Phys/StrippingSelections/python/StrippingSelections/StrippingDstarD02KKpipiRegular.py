@@ -137,7 +137,7 @@ class StrippingDstarD02KKpipiRegularConf(LineBuilder): # {
         self.line_Dstar2D0Pi_D02KKpipi = StrippingLine( dstar_name + 'Line',
                                          prescale   = config['LinePrescale'],
                                          postscale = config['LinePostscale'],
-                                         FILTER = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )"% config['NTracksLim'], 
+                                         FILTER = "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )"% config['NTracksLim'], 
                                          algos = [ self.selDstar2D0Pi_D02KKpipi ]
                                         )
         self.registerLine(self.line_Dstar2D0Pi_D02KKpipi)

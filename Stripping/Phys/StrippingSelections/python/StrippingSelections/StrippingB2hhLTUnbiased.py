@@ -164,12 +164,12 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
     
     #def SpdMultFilterLoose(self):
     #    return LoKi__VoidFilter("SpdMultFilterLoose",
-    #                            Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMultLoose)s )" % self.getProps()
+    #                            Code = "( recSummary(LHCb.RecSummary.nSpd,'Raw/Spd/Digits')<%(SpdMultLoose)s )" % self.getProps()
     #                            )
     #
     #def SpdMultFilter(self):
     #    return LoKi__VoidFilter("SpdMultFiltere",
-    #                            Code = "( CONTAINS('Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
+    #                            Code = "( recSummary(LHCb.RecSummary.nSpd,'Raw/Spd/Digits')<%(SpdMult)s )" % self.getProps()
     #                            ) 
     
     

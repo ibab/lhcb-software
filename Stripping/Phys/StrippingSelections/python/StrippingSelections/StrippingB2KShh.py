@@ -124,7 +124,7 @@ class B2KShhConf(LineBuilder) :
         dd_name = name+'DD'
         ll_name = name+'LL'
 
-        GECCode = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < %s" % config['GEC_MaxTracks'],
+        GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
 	           'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
 	self.pions = Pions

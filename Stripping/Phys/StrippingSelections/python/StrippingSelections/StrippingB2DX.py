@@ -499,7 +499,7 @@ class B2DXConf(LineBuilder) :
                                  selection = BSidebandSel,
                                  checkPV = config["CheckPV"],
                                  FILTER = {
-                                   "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                   "Code" : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" % config["MaxTracksInEvent"][name], 
                                    "Preambulo" : [ "from LoKiTracks.decorators import *" ]
                                  }, 
                                  HLT = config["HLT"] )
@@ -516,7 +516,7 @@ class B2DXConf(LineBuilder) :
                                  selection = BSidebandSel,
                                  checkPV = config["CheckPV"],
                                  FILTER = {
-                                   "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"][name], 
+                                   "Code" : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" % config["MaxTracksInEvent"][name], 
                                    "Preambulo" : [ "from LoKiTracks.decorators import *" ]
                                  }, 
                                  HLT = config["HLT"] )
@@ -536,7 +536,7 @@ class B2DXConf(LineBuilder) :
                              selection = LambdaBSidebandSel,
                              checkPV = config["CheckPV"],
                              FILTER = {
-                                 "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Lambda"], 
+                                 "Code" : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" % config["MaxTracksInEvent"]["Lambda"], 
                                  "Preambulo" : [ "from LoKiTracks.decorators import *" ]
                              }, 
                              HLT = config["HLT"] )
@@ -553,7 +553,7 @@ class B2DXConf(LineBuilder) :
                              selection = HLT2TIS,
                              checkPV = config["CheckPV"],
                              FILTER = {
-                                 "Code" : "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" % config["MaxTracksInEvent"]["Unbiased"], 
+                                 "Code" : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" % config["MaxTracksInEvent"]["Unbiased"], 
                                  "Preambulo" : [ "from LoKiTracks.decorators import *" ]
                              } ) 
         self.registerLine( line )

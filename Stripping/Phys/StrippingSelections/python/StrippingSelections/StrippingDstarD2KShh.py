@@ -93,9 +93,9 @@ class DstarD2KShhBuilder(LineBuilder) :
 
         # Set up global event cuts.
         # Conceptually these come first, although the place where they're
-        # inserted into the line is at the bottom of the code.
-        _globalEventCuts = "( CONTAINS ('Rec/Track/Long') < %(LongTrackGEC)s )" % config
-
+        # inserted into the line is at the bottom of the code. 
+        _globalEventCuts = "( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(LongTrackGEC)s )" % config
+        
         # All lines start with one of: KS->LL, KS->DD
         self.selKSLL = makeKS('KsLLFor'+name, "Phys/StdLooseKsLL/Particles", -1000.0,  650.0, config['KSLLCutDIRA'], config['KSLLCutMass'], config['KSLLCutFDChi2'])
         self.selKSDD = makeKS('KsDDFor'+name, "Phys/StdLooseKsDD/Particles",     0.0, 2300.0, config['KSDDCutDIRA'], config['KSDDCutMass'], config['KSDDCutFDChi2'])

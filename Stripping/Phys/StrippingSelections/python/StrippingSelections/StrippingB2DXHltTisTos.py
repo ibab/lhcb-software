@@ -103,7 +103,7 @@ class B2DXHltTisTosConf(LineBuilder):
         tmpSel = Selection(sel.name()+'FilterALL',
                            Algorithm=FilterDesktop(Code='ALL'),
                            RequiredSelections=[sel])
-        filter = "TrSOURCE('Rec/Track/Best') >> TrLONG >> (TrSIZE < %s )" \
+        filter = "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" \
                  % config['GECNTrkMax']        
         line = StrippingLine(sel.name()+'Line',
                              prescale=config['Prescales'][tag],
