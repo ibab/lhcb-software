@@ -4,6 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2011-07-26 - Marco Cattaneo
+ - In PatAlgConf.py, apply global global event cuts taken from
+   TrackSys().GlobalCuts to PatSeeding and PatForward. If GEC on Velo hits is
+   set, cut on Velo tracks in PatForward is removed
+ - In PatSeedingTool, skip event processing if the VELO ProcStatus abort is set.
+   Switched on by new option "AbortOnVeloAbort", true by default
+
 ! 2011-07-25 - Jeroen Van Tilburg
  - Added NCandCommonHits to TrackInfo field for calculation of ghost prob.
 

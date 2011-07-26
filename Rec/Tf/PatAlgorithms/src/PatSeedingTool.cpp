@@ -181,8 +181,9 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "OTIsolation",		m_OTIsolation		=   20. * Gaudi::Units::mm );
   declareProperty( "Cosmics",			m_cosmics		= false );
   // maximal occupancy
-  declareProperty( "MaxITHits",			m_maxITHits		= 3000 );
-  declareProperty( "MaxOTHits",			m_maxOTHits		= 10000 );
+  declareProperty( "MaxITHits",			   m_maxITHits        = 3000 );
+  declareProperty( "MaxOTHits",			   m_maxOTHits        = 10000 );
+  declareProperty( "AbortOnVeloAbort", m_abortOnVeloAbort = true );
 
   declareProperty( "OnlyGood",          m_onlyGood              = false  );
   declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      ); 
@@ -439,8 +440,18 @@ StatusCode PatSeedingTool::performTracking(
                                            std::vector<LHCb::Track*>& outputTracks,
                                            const LHCb::State* state )
 {
-  {
-    // protect against very hot events
+  // Create a ProcStatus if it does not already exist
+  LHCb::ProcStatus* procStat =
+    getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
+
+  // Do not process if Velo has aborted
+  if( m_abortOnVeloAbort && procStat->subSystemAbort("VELO") ) {
+    Warning("Skipping event aborted by Velo",StatusCode::SUCCESS,0).ignore();
+    return StatusCode::SUCCESS;
+  }
+
+  // protect against very hot events
+  if( m_maxITHits < 999999 && m_maxOTHits < 999999 ) {
     unsigned nHitsIT = 0, nHitsOT = 0;
     for (unsigned sta = 0; sta < m_nSta; ++sta) {
       for (unsigned lay = 0; lay < m_nLay; ++lay) {
@@ -454,20 +465,17 @@ StatusCode PatSeedingTool::performTracking(
     if (nHitsIT > m_maxITHits || nHitsOT > m_maxOTHits) {
       // in L0 confirmation context, we just return to save time
       if (0 == state) return StatusCode::SUCCESS;
-      
+
       Warning("Skipping very hot event!",StatusCode::SUCCESS,1).ignore();
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << "Skipping very hot event! (" << nHitsIT << " IT hits "
                 << nHitsOT << " OT hits)" << endmsg;
-      // Create a ProcStatus if it does not already exist
-      LHCb::ProcStatus* procStat =
-        getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
       // give some indication that we had to skip this event
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
       procStat->addAlgorithmStatus( name(), "Tracking", "TooManyHits",
                                     ETooManyHits, true );
-      
+
       return StatusCode::SUCCESS;
     }
   }

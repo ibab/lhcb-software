@@ -311,6 +311,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     // maximum number of hits per subdetector
     unsigned m_maxITHits;
     unsigned m_maxOTHits;
+    bool m_abortOnVeloAbort;
 
     // Re-using of hits on PatForward tracks
     bool m_onlyGood;

@@ -10,6 +10,11 @@ class ForwardConf(object):
     
     PFAlg.addTool( PatForwardTool,"PatForwardTool" )
     self.configureTool(PFAlg.PatForwardTool)
+    globalCuts = TrackSys().getProp("GlobalCuts")
+    if("IT" in globalCuts): PFAlg.maxITHits = globalCuts["IT"]
+    if("OT" in globalCuts): PFAlg.maxOTHits = globalCuts["OT"]
+    # Remove velo track cut if hits already suppressed in Velo decoding
+    if("Velo" in globalCuts): PFAlg.MaxNVelo = 999999
     
   def configureTool(self, PFTool):
     PFTool.AddTTClusterName = "PatAddTTCoord"
@@ -47,7 +52,9 @@ class SeedingConf(object):
       SeedTool.zMagnet = 0.
       SeedTool.FieldOff = True
       SeedTool.MinMomentum = 5e4
-    
+    globalCuts = TrackSys().getProp("GlobalCuts")
+    if("IT" in globalCuts): SeedTool.MaxITHits = globalCuts["IT"]
+    if("OT" in globalCuts): SeedTool.MaxOTHits = globalCuts["OT"]
 
 class CosmicConf(object):
   '''Configure for cosmics'''
