@@ -222,6 +222,8 @@ TrNUM          = LoKi.Tracks.TESCounter
 #  @see HASRECSUMMARY
 #  @see    RECSUMMARY
 #  @see      TrNUM
+#  @author rlambert
+#  @date  26.11.2011
 def  recSummaryTrack ( index , trtype, location='Rec/Track/Best' ) :
     """
     Helper function to create ``smart'' RecSummary-fucntor
