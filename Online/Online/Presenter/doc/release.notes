@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-07-26 - Olivier Callot
+ - Keep the current file as base for history mode 'set file'
+ - Don't use the page name for Elog posting if the page is an alarm page
+ - Try to protect more the analysis alarm DIM handling
+
 ! 2011-07-22 - Olivier Callot
  - Adapt to Trending v2r0 (int -> unsigned int)
 

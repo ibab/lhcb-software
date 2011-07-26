@@ -1497,6 +1497,9 @@ void PresenterMainFrame::handleCommand(Command cmd) {
       fileInfo.fFileTypes = fileTypes;
       fileInfo.fIniDir = StrDup(m_savesetPath.c_str());
       fileInfo.SetMultipleSelection(false);
+      if ( !m_savesetFileName.empty() ) {
+        fileInfo.fIniDir = StrDup( m_savesetFileName.c_str() );
+      }
 
       std::cout << "*** Start the FileDialog ***" << std::endl;
       new TGFileDialog(fClient->GetRoot(),this,kFDOpen,&fileInfo);
@@ -1841,7 +1844,10 @@ void PresenterMainFrame::reportToLog() {
       //== get name of Data Manager on shift
       ShiftDB shiftdb ;
       username =  shiftdb.getCurrentDataManager().c_str();
-      if ( "/Shift/" == m_currentPageName.substr(0, 7) ) {
+
+      if ( m_groupPages.empty() && !m_alarmPages.empty() ) { // This is an alarm page?
+        system = "";
+      } else if ( "/Shift/" == m_currentPageName.substr(0, 7) ) {
         system   = m_currentPageName.substr( 7 );
         system   = system.substr( 0, system.find( ':' ));
         int def = -1;
@@ -1919,7 +1925,11 @@ void PresenterMainFrame::reportToLog() {
       if ( 2 != isOK &&
            logbook == "Shift"    &&
            !m_pbdbConfig.empty()    ) {
-        std::string title = subject + " (from Presenter page " + m_currentPageName + ")";
+        std::string title = subject;
+        if ( !m_groupPages.empty() ) {
+          title = subject + " (from Presenter page " + m_currentPageName + ")";
+        }
+        
         std::string severity = ""; //"Report";
         ProblemDB myProblem( m_pbdbConfig, m_rundbConfig );
         std::string link( linkText );
@@ -5079,6 +5089,7 @@ std::string PresenterMainFrame::timeStamp ( ) {
 void PresenterMainFrame::reAccessPage( ) {
   if ( !m_loadingPage ) {
     m_reAccess = false;
+    m_loadingPage = true;
     std::string prevstatusText;
     if ( displayMode() == pres::Alarm ) { // clear page if an alarm was displayed
       removeHistogramsFromPage();
@@ -5087,21 +5098,20 @@ void PresenterMainFrame::reAccessPage( ) {
       prevstatusText = getStatusBarText(2);
     }
     setStatusBarText("Analysis Alarms have changed! reloading them...", 2);
-    std::cout << "sleep 3" << std::endl;
-    sleep(3); // give time to analysis to end
     std::cout << "Refresh alarm list from database" << std::endl;
     m_alarmDisplay->listAlarmsFromHistogramDB();
     setStatusBarText(prevstatusText.c_str(),2);
     std::cout << "$$reAccess: refresh histDb" << std::endl;
     histogramDB()->refresh();
     clearAlarmPages();
+    m_loadingPage = false;
     if ( m_refreshingPage ) {
       std::string name = m_presenterPage.name();
       std::string timePoint = m_presenterInfo.rwTimePoint();
       std::string pastDuration = m_presenterInfo.rwPastDuration();
-      std::cout << "** Force reload page " << name << " time " << timePoint << " duration " << pastDuration << std::endl;    
+      std::cout << "** Force reload page " << name << " time " << timePoint << " duration " << pastDuration << std::endl;
       loadSelectedPageFromDB( name, timePoint, pastDuration );
-    } 
+    }
   } else {
     m_reAccess = true;
     std::cout << "Will reAccess the page later" << std::endl;

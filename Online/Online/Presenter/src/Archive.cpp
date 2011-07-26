@@ -315,21 +315,18 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
   boost::posix_time::ptime endTime;
   bool isEFF = (taskname == pres::s_efftask);
 
-  if ("Now" == endTimeIsoString)
-    endTime =
-      boost::posix_time::ptime(boost::posix_time::second_clock::local_time());
-  else
-    endTime =
-      boost::posix_time::ptime
-      (boost::posix_time::from_iso_string(endTimeIsoString));
-
+  if ("Now" == endTimeIsoString) {
+    endTime = boost::posix_time::ptime(boost::posix_time::second_clock::local_time());
+  } else {
+    endTime = boost::posix_time::ptime(boost::posix_time::from_iso_string(endTimeIsoString));
+  }
+  
   //if (m_verbosity >= pres::Verbose)
   std::cout << "Archive::findSavesets: " << taskname
             << " timePoint " << to_iso_string(endTime)
             << " pastDuration " << durationTimeString << std::endl;
 
-  boost::posix_time::time_duration
-    timeDuration(boost::posix_time::duration_from_string(durationTimeString));
+  boost::posix_time::time_duration timeDuration(boost::posix_time::duration_from_string(durationTimeString));
   boost::posix_time::ptime startTime = endTime - timeDuration;
 
   boost::gregorian::date startDate(startTime.date());
@@ -348,14 +345,11 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
     --foundSavesetsIt;
     while ( foundSavesetsIt >= m_foundSavesets.begin()) {
       TObjArray* fileDateMatchGroup = 0;
-      fileDateMatchGroup =
-        pres::s_fileDateRegexp.MatchS((*foundSavesetsIt).leaf());
-      if (fileDateMatchGroup->GetEntriesFast() >4 ) {
+      fileDateMatchGroup = pres::s_fileDateRegexp.MatchS((*foundSavesetsIt).leaf());
+      if (fileDateMatchGroup->GetEntriesFast() > 4 ) {
         // the array contains the matched strings +2
-        taskNameFound =
-          (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
-        fileTimeFound =
-          (((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data();
+        taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
+        fileTimeFound = (((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data();
         fileTime = boost::posix_time::from_iso_string(fileTimeFound);
 
         bool acceptSvs =
@@ -364,17 +358,14 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
         // (histograms not reset during run)
         if (isEFF) {
           if (fileDateMatchGroup->GetEntriesFast() >5 )
-            acceptSvs &=
-              ( (((TObjString *)fileDateMatchGroup->At(4))->GetString()) ==
-                pres::s_eor );
+            acceptSvs &= ( (((TObjString *)fileDateMatchGroup->At(4))->GetString()) == pres::s_eor );
           else acceptSvs = false;
         }
 
         if (acceptSvs) {
           if ( ( fileTime <= endTime ) && ( fileTime >= startTime ) ) {
             //if (m_verbosity >= pres::Verbose)
-            std::cout << "using file: " << (*foundSavesetsIt).leaf()
-                      << std::endl ;
+            std::cout << "using file: " << (*foundSavesetsIt).leaf() << std::endl ;
             foundRootFiles.push_back(*foundSavesetsIt);
           } else if (fileTime < startTime) {
             if (fileDateMatchGroup) {

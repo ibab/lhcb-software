@@ -186,7 +186,7 @@ void AlarmDisplay::infoHandler() {
   std::cout << "$$AlarmDisplay::InfoHandler: List of Analysis Alarms has changed, alarm refreshing enabled=" 
             << m_enabled <<std::endl;
   
-  if(m_enabled) {
+  if ( m_enabled ) {
     m_mainFrame->reAccessPage();
   }
   std::cout << "$$AlarmDisplay::InforHandler teminated." << std::endl;
