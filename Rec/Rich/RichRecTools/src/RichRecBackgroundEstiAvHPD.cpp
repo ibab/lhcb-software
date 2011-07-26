@@ -209,17 +209,17 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack * trac
         debug() << "  -> Segment " << (*segment)->key() << " " << rich 
                 << " " << (*segment)->trackSegment().radiator()
                 << " DetPhots=" << detPhots << endmsg;
-      
+
       // Tally total expected hits for each PD
-      m_geomEff->geomEfficiency(*segment,id); // needed to ensure map below is filled
-      LHCb::RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
-      for ( LHCb::RichRecSegment::PDGeomEffs::iterator iPD = hypoMap.begin();
+      //m_geomEff->geomEfficiency(*segment,id); // needed to ensure map below is filled
+      const LHCb::RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
+      for ( LHCb::RichRecSegment::PDGeomEffs::const_iterator iPD = hypoMap.begin();
             iPD != hypoMap.end(); ++iPD )
       {
         const double sig = detPhots * iPD->second; // expected signal for this PD
         (m_expPDsignals[rich])[ LHCb::RichSmartID(iPD->first) ] += sig;
         if ( msgLevel(MSG::DEBUG) )
-          debug() << "   -> " << iPD->first << " " << sig << endmsg;
+          debug() << "   -> " << LHCb::RichSmartID(iPD->first) << " " << sig << endmsg;
       }
       
     } // loop over segments
