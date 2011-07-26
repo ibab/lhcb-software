@@ -11,8 +11,8 @@ Purpose: LHCb reconstruction program
   . Switch off Rich monitors the require HltDecReports when Simulation=True
   . Add new profile histograms in TrackVertexMonitor
   . Add histogram for overlaps in ITTrackMonitor
-  . Use latest LHCBCOND tags from SQLDDDB v6r13
-    (introduces new field map by default for 2011 data) 
+  . Use latest DDDB and LHCBCOND tags from SQLDDDB v6r14
+    (new field map by default for 2011 data, new Rich aerogel geometry) 
 
 - Changes to QMTests:
   . Add check of unprotected DEBUG and VERBOSE messages to brunel2011magdown.qmt
