@@ -4,6 +4,17 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2011-07-26 - Olivier Callot
+ - Adapt to the new trending tool
+
+! 2011-06-21 - Olivier Callot
+ - Detect bad hlt nodes (less than 10% of the share in event rate, less than 6 moore)
+   and indicate to the display that he has to do something by prefixed characters
+   in the node name: "-" for the number of Moore, "+" for the event rate
+
+ - Detect that a monitoring task consumes less than 50 Hz when the whole monitoring
+   system sees more than 1 kHz. A '+' is prefixed on the bad node. 
+
 !============================== v2r7 2011-05-02 ==============================
 ! 2011-04-08 - Olivier Callot
  - Fix properly the case where a node doesn't send updated information.

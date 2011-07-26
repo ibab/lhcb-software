@@ -38,7 +38,7 @@ typedef ROMon::Node::Tasks         Tasks;
 #define EVT_BUFFER   'E'
 #define SND_BUFFER   'S'
 
-#define MAXLINE 53
+#define MAXLINE 61
 #define MAXTASK 60
 //-----------------------------------------------------------------------------
 // Implementation file for class : ROFarmMonitor
@@ -197,7 +197,7 @@ void ROFarmMonitor::initialize ( ) {
       tags.push_back( "HLT input rate" );
       tags.push_back( "HLT output rate" );
       tags.push_back( "Number of tasks" );
-      bool status = myPart->trendWriter->openWrite( myPart->name + "_FarmMonitor", tags, 2 ) ;
+      bool status = myPart->trendWriter->openWrite( myPart->name + "_FarmMonitor", tags ) ;
       if ( !status ) std::cerr << "Trend file open error" << std::endl ;
 
       std::vector<float> thresholds;
@@ -374,6 +374,8 @@ void ROFarmMonitor::update( )   {
     std::vector<RONodeCounter> prevCounters = (*itP)->prevCounters;
     unsigned int lPrefx = (*itP)->name.length()+7;  // task name prefixed by partition + _MONA08
 
+    int nbHltNodes = 0;
+
     for ( std::vector<Descriptor*>::iterator itD = m_datas.begin(); m_datas.end() != itD; ++itD ) {
       const ROMon::Nodeset* ns = (*itD)->data<const ROMon::Nodeset>();
       if ( 0 != ns ) {
@@ -394,7 +396,8 @@ void ROFarmMonitor::update( )   {
           if ( 2 < m_print ) std::cout << "   Update time " << newTime << std::endl;
 
           if ( isHlt || isCalib ) {
-
+            if ( isHlt ) nbHltNodes++;
+            
             RONodeCounter cntr( (*n).name );
             const Buffers& buffs = *(*n).buffers();
             for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
@@ -569,14 +572,39 @@ void ROFarmMonitor::update( )   {
       std::vector<RONodeCounter>::iterator itN;
       RONodeCounter blank( "" );
       (*itS++)->update( sumHlt );
+
+      //== Detect nodes with bad counters: tasks, event rate, send rate.
+
+      int minEventRate = 0.1 * sumHlt.evtRate() / nbHltNodes;
+      if ( minEventRate < 20 ) minEventRate = 0;  // low rate -> some farms without MEP!
+      int minMooreTask = 7;
+      
+      std::vector<RONodeCounter> badCounters;
+      for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
+        std::string badName = "";
+        if ( (*itN).evtRate() < minEventRate ) badName = badName + "+";
+        if ( (*itN).tsk()     < minMooreTask ) badName = badName + "-";
+        if ( "" != badName ) {
+          badName = badName + (*itN).name();
+          RONodeCounter badGuy( badName.c_str() );
+          badGuy.sum( *itN );          
+          badCounters.push_back( badGuy );
+        }
+      }
+      hltCounters = badCounters;
+      
       //== If too many lines, compress: sum nodes in sub-farms.
       if ( MAXLINE-2 < hltCounters.size() ) {
         if ( 2 < m_print ) std::cout << "Compress by farm " << std::endl;
         std::vector<RONodeCounter> farmCounters;
         std::string farmName = "";
         for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
-          if ( (*itN).name().substr(0,6) != farmName ) {
-            farmName = (*itN).name().substr(0,6);
+          std::string myName =  (*itN).name();
+          int ll = 6;
+          if ( myName[0] == '-' ) ++ll;
+          if ( myName[0] == '+' ) ++ll;
+          if ( myName.substr(0,ll) != farmName ) {
+            farmName = (*itN).name().substr(0,ll);
             RONodeCounter farm( farmName.c_str() );
             farmCounters.push_back( farm );
           }
@@ -584,7 +612,7 @@ void ROFarmMonitor::update( )   {
         }
         hltCounters = farmCounters;
       }
-
+      
       if ( 2 < m_print ) std::cout << "Update services " << std::endl;
 
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
@@ -600,9 +628,18 @@ void ROFarmMonitor::update( )   {
 
       itS = (*itP)->moniServices.begin();
       if ( 0 < sumMon.tsk() ) {
+        int minRate = 50;
+        if ( sumMon.conRate() < 1000 ) minRate = 0;
         if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( sumMon );
         for ( itN = monCounters.begin(); monCounters.end() != itN; ++itN ) {
-          if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( *itN );
+          if ( (*itN).conRate() < minRate ) {
+            std::string badGuy = "+" + (*itN).name();
+            RONodeCounter tmp( badGuy.c_str() );
+            tmp.sum(*itN);
+            if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( tmp );
+          } else {
+            if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( *itN );
+          }
         }
       }
 
