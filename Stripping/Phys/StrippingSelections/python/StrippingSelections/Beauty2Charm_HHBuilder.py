@@ -79,7 +79,7 @@ class HHBuilder(object):
     def _makePiPi(self):
         '''Makes X -> pi+pi-'''
         return self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
-                              '(AM < 5*GeV)',self.config,[self.pions])
+                              '(AM < 5.2*GeV)',self.config,[self.pions])
 
     def _makeKPi(self,pipi):
         '''Makes X -> K+pi- + c.c.'''
@@ -100,7 +100,7 @@ class HHBuilder(object):
     def _makeKsPi(self):
         '''Makes X -> Ks0pi- + c.c.'''
         return self._makeXPLUS2HH('X2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
-                                  '(AM < 5*GeV)',self.config,
+                                  '(AM < 5.2*GeV)',self.config,
                                   self.ks["DD"]+self.ks["LL"]+[self.pions]) 
 
     def _makeKPi0(self):
@@ -155,7 +155,8 @@ class HHBuilder(object):
                                 MinMM=0,MaxMM=5000,PIDs=decays)
         presel = Selection('X2PHSubPIDSelBeauty2Charm',Algorithm=filter,
                            RequiredSelections=[sel])
-        filter =  "INTREE(ABSID=='p+') & (M < 5*GeV)"
+        filter =  "INTREE((ABSID=='p+') & (P > %s)) & (M < 5.2*GeV)" \
+                 % self.config['pP_MIN']
         return filterSelection('X2PH',filter,[presel])
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

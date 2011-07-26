@@ -23,8 +23,11 @@ class B2DXBuilder(object):
         self.fhhh = df.fhhh
         self.fhh = df.fhh
         self.fdst = df.fdst
+        self.d2hh_biased = df.hh_biased
+        self.d2hhh_biased = df.hhh_biased
+        self.dst_biased = df.dst_biased
         self.lines = []        
-
+        
         # B -> D0(HH) X
         self._makeB2D0H('D2HH',self.d.hh)   # B+- -> D0(HH)  H+-
         self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
@@ -120,11 +123,12 @@ class B2DXBuilder(object):
         '''Makes the RS and WS B+ -> D*+- D-+ K+ + c.c.'''
         decays = {'B2DstDK':["[B+ -> D*(2010)+ D- K+]cc",
                              "[B+ -> D*(2010)- D+ K+]cc"]}
-        inputs = {'B2DstDK':[self.dst.d0pi,self.d.hhh,self.topoKaons]}
+        inputs = {'B2DstDK':[self.dst_biased,self.d2hhh_biased,self.topoKaons]}
         b2dstdk_rs = makeB2XMerged('B2DstDK',decays,'Dst2D0PiD2HHH',inputs,
                                    self.config)
         decays = {'B2DstDKWS':["[B+ -> D*(2010)+ D+ K+]cc"]}
-        inputs = {'B2DstDKWS':[self.dst.d0pi,self.d.hhh,self.topoKaons]}
+        inputs = {'B2DstDKWS':[self.dst_biased,self.d2hhh_biased,
+                               self.topoKaons]}
         b2dstdk_ws = makeB2XMerged('B2DstDKWS',decays,'Dst2D0PiD2HHH',
                                    inputs,self.config)
         self.lines.append(ProtoLine(b2dstdk_rs['TOS'],1.0))
@@ -135,7 +139,7 @@ class B2DXBuilder(object):
         '''Makes the RS B0 -> D0 D0 K*'''
         decays = {'B2DDKst':["B0 -> D0 D0 K*(892)0",
                              "B0 -> D0 D0 K*(892)~0"]}
-        inputs = {'B2DDKst':[self.d.hh,self.hh.kstar0]}
+        inputs = {'B2DDKst':[self.d2hh_biased,self.hh.kstar0]}
         b2ddkst = makeB2XMerged('B2DDKst',decays,'D2HH',inputs,
                                 self.config)
         self.lines.append(ProtoLine(b2ddkst['TOS'],1.0))

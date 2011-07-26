@@ -54,18 +54,17 @@ config = {
     'VCHI2DOF_MAX'  : 30,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
-    'MASS_WINDOW'   : '100*MeV',
-    '4H_ASUMPT_MIN' : '1800*MeV',
-    '4H_2PT_MIN'    : '350*MeV' 
+    'MASS_WINDOW'   : '100*MeV'
     },
-    "B2X" : { # Cuts made on all B's used in all lines
+    "B2X" : { # Cuts made on all B's and Lb's used in all lines
     'AMAXDOCA_MAX'  : '1.0*mm',
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 30,
     'BPVIPCHI2_MAX' : 25,
     'BPVLTIME_MIN'  : '0.3*ps',
     'BPVDIRA_MIN'   : 0.999,
-    'MASS_WINDOW'   : '500*MeV'
+    'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
+    'AM_MAX'        : '7000*MeV'
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
     'AMAXDOCA_MAX'  : '1.0*mm',
@@ -76,13 +75,13 @@ config = {
     },
     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
     'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
-    'DAUGHTERS'     : {'PT_MIN':'250*MeV','P_MIN':'2000*MeV'},
-    'AMAXDOCA_MAX'  : '1.0*mm',
-    'VCHI2DOF_MAX'  : 30,
-    'BPVVDCHI2_MIN' : 36, #Hidden cut on B FD Chi2 do we really want this? 
+    'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV'},
+    'AMAXDOCA_MAX'  : '0.5*mm',
+    'VCHI2DOF_MAX'  : 16,
+    'BPVVDCHI2_MIN' : 16, 
     'BPVDIRA_MIN'   : 0,
     'ASUMPT_MIN'    : '1000*MeV',
-    'MIPCHI2DV_MIN' : 4
+    'pP_MIN'        : '5000*MeV' # for pH only (obviously)
     },
     "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
     'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
@@ -91,7 +90,7 @@ config = {
     'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
     'AMAXDOCA_MAX'  : '0.40*mm',
     'VCHI2DOF_MAX'  : 8,
-    'BPVVDCHI2_MIN' : 36, 
+    'BPVVDCHI2_MIN' : 16, 
     'BPVDIRA_MIN'   : 0.98,
     'ASUMPT_MIN'    : '1250*MeV',
     'MIPCHI2DV_MIN' : 0.0,
@@ -152,8 +151,10 @@ class Beauty2CharmConf(LineBuilder):
                                        config['KS0']) 
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
                              config['KS0'])
-        pi0_merged   = filterInputs('Pi0_Merged',[StdLooseMergedPi0],
-                                    config['Pi0'])
+        conf = {}
+        for k,v in config['Pi0'].iteritems():
+            if k.find('CHILD') < 0: conf[k] = v
+        pi0_merged   = filterInputs('Pi0_Merged',[StdLooseMergedPi0],conf)
         pi0_resolved = filterInputs('Pi0_Resolved',[StdLooseResolvedPi0],
                                     config['Pi0'])
 
@@ -161,7 +162,7 @@ class Beauty2CharmConf(LineBuilder):
         topoPions = topoInputs('Pi',[pions])
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
-
+        
         # make D->X, etc. inputs
         d = DBuilder(pions, {"DD":[ks_dd],"LL":[ks_ll]}, 
                      {"Merged":[pi0_merged],"Resolved":[pi0_resolved]},

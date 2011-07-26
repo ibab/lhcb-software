@@ -50,7 +50,8 @@ class Lb2XBuilder(object):
         self.flc = df.flc
         self.topoPions = topoPions
         self.topoKaons = topoKaons
-        self.config = config
+        self.config = deepcopy(config)
+        self.config['AM_MIN'] = '5200*MeV'
         self.lines = []
         # Lb -> Lc+- H-+ (+WS)
         self._makeLb2LcH()
@@ -74,7 +75,6 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(rs['TOS'],1.0))
         self.lines.append(ProtoLine(rs['TIS'],1.0))
         self.lines.append(ProtoLine(ws['TOS'],0.1))
-
 
     def _makeLb2LcHHH(self):
         '''Make RS and WS Lb -> Lc HHH (H=pi,K) + cc.'''

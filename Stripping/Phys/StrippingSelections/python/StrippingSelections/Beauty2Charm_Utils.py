@@ -50,21 +50,13 @@ def hasTopoChild():
     return "AHASCHILD((ISBASIC & "+topoInputsCuts()+")|((ABSID=='KS0') & "\
            +topoKSInputsCuts() +"))"
 
+def hasTopoChildren():
+    return "NINTREE((ISBASIC & "+topoInputsCuts()+")|((ABSID=='KS0') & "\
+           +topoKSInputsCuts() +")) > 1"
+
 def has1TrackChild():
     return "INTREE(ISBASIC & (P>10000*MeV) & (PT>1700*MeV) & (TRCHI2DOF<2.5) "\
            "& (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
-
-def bMassCut(decay,window):
-    '''Returns ADAMASS functor given decay desc. and mass window.'''
-    dec = decay[0]
-    where = dec.find('B')
-    if where < 0: return "(ADAMASS('Lambda_b0') < %s)" % window
-    b = dec[where:where+2]
-    if b is 'B0': # Also include B_s for neutral B's!
-        b_s = b[0]+'_s'+b[-1]
-        return "((ADAMASS('%s') < %s) | (ADAMASS('%s') < %s))" \
-               % (b,window,b_s,window)
-    else: return "(ADAMASS('%s') < %s)" % (b,window)
 
 def makeTISTOSFilter(name,tistos):
     specs = {'Hlt2Topo(2|3|4)Body.*Decision%'+tistos:0,
@@ -88,9 +80,9 @@ def tisTosSelection(sel, tistos):
 
 def makeB2X(name,decay,inputs,config):
     '''Makes all B -> X selections.'''
-    comboCuts = LoKiCuts.combine([bMassCut(decay,config['MASS_WINDOW']),
-                                  LoKiCuts(['AMAXDOCA'],config).code()])
+    comboCuts = LoKiCuts(['AM','AMAXDOCA'],config).code()
     momCuts = [LoKiCuts(['SUMPT','VCHI2DOF'],config).code(),has1TrackChild(),
+               hasTopoChildren(),
                LoKiCuts(['BPVIPCHI2','BPVLTIME','BPVDIRA'],config).code()]
     momCuts = LoKiCuts.combine(momCuts)
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,

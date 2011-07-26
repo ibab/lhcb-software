@@ -61,16 +61,12 @@ class DBuilder(object):
         self.pi0hhh_merged = self._makeD2Pi0hhh("Merged")
         self.pi0hhh_resolved = self._makeD2Pi0hhh("Resolved")
 
-    def _makeD2X(self,name,decays,wm,useIPChi2,config,extrainputs=[]):
+    def _makeD2X(self,name,decays,wm,config,extrainputs=[]):
         ''' Makes all D -> X selections.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),wm,hasTopoChild()]
-        if config.has_key('ANUMPT'):
-            comboCuts.append('(ANUM(ISBASIC & (PT > %s))>1)'%config['ANUMPT'])
         comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
         momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
-        if useIPChi2:
-            momCuts = LoKiCuts.combine([momCuts,'MIPCHI2DV(PRIMARY)>4'])
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
         return  Selection('Proto'+name+'Beauty2Charm',Algorithm=cp,
@@ -91,7 +87,7 @@ class DBuilder(object):
         min,max  = self._massWindow('D0')
         decays = [['pi+','pi-'],['pi+','K-'],['K+','pi-'],['K+','K-']]
         wm = awmFunctor(decays,min,max)
-        protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],wm,True,self.config)
+        protoD2hh = self._makeD2X('D2HH',['D0 -> pi+ pi-'],wm,self.config)
         return subPIDSels(decays,'D2HH','',min,max,[protoD2hh])
 
     def _makeD2hhh(self):
@@ -102,10 +98,10 @@ class DBuilder(object):
                   ['pi+','K+','pi-'],['pi+','K+','K-'],
                   ['K+','K+','pi-']]
         wm = awmFunctor(decays,min,max)
-        protoDp2hhh = self._makeD2X('D+2HHH',['D+ -> pi+ pi+ pi-'],wm,False,
+        protoDp2hhh = self._makeD2X('D+2HHH',['D+ -> pi+ pi+ pi-'],wm,
                                     self.config)
         psels = subPIDSels(decays,'D+2HH','',min,max,[protoDp2hhh])
-        protoDm2hhh = self._makeD2X('D-2HHH',['D- -> pi- pi- pi+'],wm,False,
+        protoDm2hhh = self._makeD2X('D-2HHH',['D- -> pi- pi- pi+'],wm,
                                     self.config)
         msels = subPIDSels(getCCs(decays),'D-2HHH','',min,max,[protoDm2hhh])
         return MergedSelection('D2HHHBeauty2Charm',
@@ -117,10 +113,10 @@ class DBuilder(object):
         decays = [['KS0','pi+'],['KS0','K+']]
         wm = awmFunctor(decays,min,max)
         protoDp2Ksh = self._makeD2X('D+2KsH_'+which,['D+ -> KS0 pi+'],
-                                    wm,False,self.config,self.ks[which])
+                                    wm,self.config,self.ks[which])
         psels = subPIDSels(decays,'D+2KsH',which,min,max,[protoDp2Ksh])
         protoDm2Ksh = self._makeD2X('D-2KsH_'+which,['D- -> KS0 pi-'],
-                                    wm,False,self.config,self.ks[which])
+                                    wm,self.config,self.ks[which])
         msels = subPIDSels(getCCs(decays),'D-2KsH',which,min,max,[protoDm2Ksh])
         return MergedSelection('D2Ks%sHBeauty2Charm'%which,
                                RequiredSelections=[psels,msels])
@@ -132,15 +128,12 @@ class DBuilder(object):
                   ['KS0','K+','pi-'],['KS0','K+','K-']]
         wm = awmFunctor(decays,min,max)
         protoD2Kshh = self._makeD2X('D2KSHH_'+which,['D0 -> KS0 pi+ pi-'],
-                                    wm,True,self.config,self.ks[which])
+                                    wm,self.config,self.ks[which])
         return subPIDSels(decays,'D2KsHH',which,min,max,[protoD2Kshh])
   
     def _makeD2Pi0hhh(self,which):
         '''Makes D->Pi0hhh'''        
         min,max = self._massWindow('D+')
-        conf = deepcopy(self.config)
-        conf['ASUMPT_MIN'] = self.config['4H_ASUMPT_MIN']
-        conf['ANUMPT'] = self.config['4H_2PT_MIN']
         decays = [['pi0','pi+','pi+','pi-'],['pi0','pi+','pi+','K-'],
                   ['pi0','K+','pi+','pi-'],['pi0','K+','pi+','K-'],
                   ['pi0','pi+','K+','pi-'],['pi0','pi+','K+','K-'],
@@ -148,11 +141,11 @@ class DBuilder(object):
         wm = awmFunctor(decays,min,max)
         protoDp2pi0hhh = self._makeD2X('D+2Pi0HHH_'+which,
                                        ['D+ -> pi0 pi+ pi+ pi-'],
-                                       wm,False,conf,self.pi0[which])
+                                       wm,self.config,self.pi0[which])
         psels = subPIDSels(decays,'D+2Pi0HHH',which,min,max,[protoDp2pi0hhh])
         protoDm2pi0hhh = self._makeD2X('D-2Pi0HHH_'+which,
                                        ['D- -> pi0 pi- pi- pi+'],
-                                       wm,False,conf,self.pi0[which])
+                                       wm,self.config,self.pi0[which])
         msels = subPIDSels(getCCs(decays),'D-2Pi0HHH',which,min,max,
                           [protoDm2pi0hhh])
         return MergedSelection('D2Pi0%sHHHBeauty2Charm'%which,
@@ -165,14 +158,11 @@ class DBuilder(object):
                   ['pi0','K+','pi-'],['pi0','K+','K-']]
         wm = awmFunctor(decays,min,max)
         protoD2pi0hh = self._makeD2X('D2Pi0HH_'+which,['D0 -> pi0 pi+ pi-'],
-                                     wm,True,self.config,self.pi0[which])
+                                     wm,self.config,self.pi0[which])
         return subPIDSels(decays,'D2Pi0HH',which,min,max,[protoD2pi0hh])
     
     def _makeD2hhhh(self):
         '''Makes D->hhhh'''
-        conf = deepcopy(self.config)
-        conf['ASUMPT_MIN'] = self.config['4H_ASUMPT_MIN']
-        conf['ANUMPT'] = self.config['4H_2PT_MIN']
         min,max = self._massWindow('D0')
         decays = [['pi+','pi+','pi-','pi-'],
                   ['pi+','pi+','K-','pi-'],['pi+','pi+','pi-','K-'],
@@ -181,7 +171,7 @@ class DBuilder(object):
                   ['pi+','K+','K-','pi-'],['pi+','K+','pi-','K-']]
         wm = awmFunctor(decays,min,max)
         protoD2hhhh = self._makeD2X('D2HHHH',['D0 -> pi+ pi+ pi- pi-'],wm,
-                                    True,conf)
+                                    self.config)
         return subPIDSels(decays,'D2HHHH','',min,max,[protoD2hhhh])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
