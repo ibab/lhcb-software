@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-26 - Alexandr Kozlinskiy
+ - Simplified decay descriptors in StrippingD02MuMu.
 
 !========================= StrippingSelections v3r6 2011-07-25 =========================
 ! 2011-07-23 S. Blusk

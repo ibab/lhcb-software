@@ -101,14 +101,14 @@ class D02MuMuConf(LineBuilder) :
         # D0 combine
         from Configurables import CombineParticles
         CombineD0 = CombineParticles( name + "_CombineD0" )
-        CombineD0.DecayDescriptors = [ "[D0 -> mu+ mu-]cc", "[D0 -> pi+ pi-]cc" ]
+        CombineD0.DecayDescriptors = [ "D0 -> mu+ mu-", "D0 -> pi+ pi-" ]
         CombineD0.DaughtersCuts = { "mu+" : D0DaughtersCutsMuons, "pi+" : D0DaughtersCutsPion }
         CombineD0.CombinationCut = D0CombinationCut
         CombineD0.MotherCut = D0MotherCut
 
         # D* combine
         CombineDst = CombineParticles( name + "_CombineDst" )
-        CombineDst.DecayDescriptor = "[D*(2010)+ -> D0 pi+]cc"
+        CombineDst.DecayDescriptors = [ "D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-" ]
         CombineDst.DaughtersCuts = { "pi+" : DstarDaughtersCutsPion }
         CombineDst.CombinationCut = DstarCombinationCut
         CombineDst.MotherCut = DstarMotherCut
