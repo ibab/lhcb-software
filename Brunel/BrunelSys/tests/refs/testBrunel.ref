@@ -47,6 +47,7 @@
 # \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-FilterBeforeFit          = True
+# |-GlobalCuts               = {}  (default: {})
 # |-ExpertTracking           = []  (default: [])
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
@@ -71,13 +72,13 @@
 # DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/Weights#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/DAQ/RawEvent#1']
 # DstWriter.OptItemList=['/Event/Phys/Selections#1']
 # No Writer defined for DIGI
-# WARNING: Using default tag head-20110302 for partition DDDB
-# WARNING: Using default tag head-20110622 for partition LHCBCOND
+# WARNING: Using default tag head-20110722 for partition DDDB
+# WARNING: Using default tag head-20110722 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v39r4
-                                          running on lxbuild163.cern.ch on Wed Jul 20 10:31:29 2011
+                                          running on lxbuild163.cern.ch on Tue Jul 26 17:30:24 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -110,9 +111,9 @@ FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20110302"
+DDDB                 INFO Using TAG "head-20110722"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20110622"
+LHCBCOND             INFO Using TAG "head-20110722"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 LumiBeam2Seq         INFO Member list: LoKi::ODINFilter/FilterBeam2, HltLumiSummaryDecoder/LumiDecodeBeam2, FilterOnLumiSummary/LumiFilterBeam2, LumiAccounting/LumiCountBeam2, with context 'Offline'
@@ -148,7 +149,7 @@ HcalFillRawBuffer    INFO Data coding type 1
 RemoveHcalPacke...SUCCESS bankKiller : all banks of type 'HcalPacked' will be removed.
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
-DecodeVeloClusters   INFO Cancel processing of events with more than 10000 Velo clusters
+DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo clusters
 ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
 RecoVELOSeq          INFO Member list: FastVeloTracking, with context 'Offline'
