@@ -48,7 +48,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseMuons
 
-name = "B2XMuMuSS"
+default_name = "B2XMuMuSS"
 
 class B2XMuMuSSConf(LineBuilder) :
     """

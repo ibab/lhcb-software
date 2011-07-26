@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-26 - Thomas Blake
+ - Small modifications to several lines 
+  . B2XMuMuSS renamed global 'name' as 'default_name' 
+  . V0ForPID  use false/true rather than none for monitor
+  . CCbarPPbar RecSummary fix
+
 ! 2011-07-26 S. Blusk
 	- Update StrippingBeauty2Charm (add cut on ptmin)
   - Beauty2Charm_HHHBuilder (loosen cuts, use MassWindow)

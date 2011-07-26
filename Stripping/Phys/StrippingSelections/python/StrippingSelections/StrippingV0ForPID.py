@@ -319,7 +319,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._k0s_motherCut()
             )
 
-        if self._monitor != None :
+        if self._monitor == True :
             _K0S.Preambulo       += [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -361,7 +361,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._k0s_motherCut()
             )
 
-        if self._monitor != None :
+        if self._monitor == True :
             _K0SDD.Preambulo       += [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -403,7 +403,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._lam0_motherCut()
             )
 
-        if  self._monitor != None :
+        if  self._monitor == True :
             _Lam0.Preambulo       += [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -446,7 +446,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             MotherCut       = self._lam0_motherCut()        
             )
 
-        if  self._monitor != None :
+        if  self._monitor == True :
             _Lam0DD.Preambulo       += [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -482,7 +482,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._k0s_bin1Cut_LL()
             )
 
-        if self._monitor != None :
+        if self._monitor == True :
             _K0S_LL_Bin1_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -518,7 +518,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._k0s_bin1Cut_DD()
             )
 
-        if self._monitor != None :
+        if self._monitor == True :
             _K0S_DD_Bin1_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -556,7 +556,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._lam0_bin1Cut_LL()
             )
         
-        if self._monitor != None :
+        if self._monitor == True :
             _Lam0_LL_Bin1_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -593,7 +593,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._lam0_bin2Cut_LL()
             )
 
-        if self._monitor != None :
+        if self._monitor == True :
             _Lam0_LL_Bin2_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -631,7 +631,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._lam0_bin1Cut_LL_IsMUON()
             )
 
-        if self._monitor != None :
+        if self._monitor == True :
             _Lam0_LL_Bin1_IsMUON_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -668,7 +668,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._lam0_bin2Cut_LL_IsMUON()
             )
         
-        if self._monitor != None :
+        if self._monitor == True :
             _Lam0_LL_Bin2_IsMUON_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -707,7 +707,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._lam0_bin1Cut_DD()
             )
         
-        if self._monitor != None :
+        if self._monitor == True :
             _Lam0_DD_Bin1_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
@@ -746,7 +746,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             Code         = self._lam0_bin1Cut_LL_IsMUON()
             )
         
-        if self._monitor != None :
+        if self._monitor == True :
             _Lam0_DD_Bin1_IsMUON_Filter.Preambulo    = [
                 ## define historam type (shortcut)
                 "Histo  = Gaudi.Histo1DDef"  ,
