@@ -17,7 +17,7 @@ use  DSTWriters                 v3r1     Phys
 use  LHCbAlgs                   v2r40    Kernel
 use  DaVinciTools               v22r9    Phys
 use  LoKiNumbers                v10r1    Phys
-use  LoKiTrack                  v2r2     Phys
+use  LoKiTracks                 v2r2     Phys
 use  GaudiConf                  v14r0p1
 
 The branches with LoKi::VertexFitter changed were not taken this time around.
