@@ -4,7 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-26 - Thomas Blake
+ - Cloned stripping16 dbase as strippingdev
+
 !========================= StrippingSettings v2r5 2011-07-25 =========================
+
 ! 2011-07-25 - Thomas Blake
  - Updated stripping definitions for striping 16
 
