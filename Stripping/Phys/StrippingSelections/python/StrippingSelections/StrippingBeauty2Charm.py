@@ -99,7 +99,6 @@ config = {
     'PTMIN1'       : '300*MeV'
     },
     "DTIGHT" : { # Tight Cuts on D mesons for B-->D+3H lines
-    'MIPCHI2DV_MIN' : 4,
     'MM_MIN'        : {'D':'1800*MeV','D0':'1790*MeV','Dst':'1950*MeV',
                        'Lc':'2216*MeV'},
     'MM_MAX'        : {'D':'2040*MeV','D0':'1940*MeV','Dst':'2050*MeV',

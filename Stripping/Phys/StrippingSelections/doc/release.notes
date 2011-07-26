@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-26 S. Blusk
+ - Remove second occurrence of MIPCHI2DV_MIN in "DTIGHT" in StrippingBeauty2Charm.py
+
 ! 2011-07-26 - Rob Lambert
  - Modified everything to use recSummary. Will then contact authors.
 
