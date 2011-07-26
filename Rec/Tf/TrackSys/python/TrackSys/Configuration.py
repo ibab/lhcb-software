@@ -27,7 +27,8 @@ class TrackSys(LHCbConfigurableUser):
        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
        ,"DataType": "2011" # propagated from Brunel(), used to determine which monitors to run
        ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType
-       ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType 
+       ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType
+       ,"GlobalCuts"  : {}     # global event cuts for tracking
         }
     
     ## Possible expert options
@@ -36,8 +37,12 @@ class TrackSys(LHCbConfigurableUser):
 
     ## Default track pattern recognition algorithms to run in 2010
     DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
+    ## Default global cuts before 2011
+    DefaultGlobalCuts_old      = {}
     ## Default track pattern recognition algorithms to run in 2011
     DefaultPatRecAlgorithms    = ["FastVelo","Forward","PatSeed","PatMatch","Downstream","VeloTT"]
+    ## Default global cuts from 2011
+    DefaultGlobalCuts          = { 'Velo':6000, 'IT':999999, 'OT':999999 }
     ## Default track 'extra info' algorithms to run
     DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
     ## Cosmic track pattern recognition algorithms to run
@@ -68,6 +73,13 @@ class TrackSys(LHCbConfigurableUser):
            for prop in self.getProp("ExpertTracking"):
                if prop not in self.KnownExpertTracking:
                    raise RuntimeError("Unknown expertTracking option '%s'"%prop)
+           if len(self.getProp("GlobalCuts")) == 0 :
+               if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :  
+                 self.setProp("GlobalCuts",self.DefaultGlobalCuts_old)
+               else:
+                 self.setProp("GlobalCuts",self.DefaultGlobalCuts)
+           if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
+               self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
       else:         
            if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
                self.setProp("TrackPatRecAlgorithms",self.CosmicPatRecAlgorithms)

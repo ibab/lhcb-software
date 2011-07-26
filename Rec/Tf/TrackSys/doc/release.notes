@@ -4,6 +4,15 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2011-07-26 - Marco Cattaneo
+ - Add new slot TrackSys().GlobalCuts. It consists of a dictionary which is
+   then used to set global event cuts on the number of hits used in the
+   tracking. Default values are { 'Velo':6000, 'IT':999999, 'OT':999999 },
+   except for DataTypes MC09,2008,2009,2010,Upgrade where the defaults are
+   those defined in the algorithms
+ - Cut on number of Velo clusters is defined by setting MaxVeloClusters
+   property of DecodeVeloRawBuffer in VeloTracking.py 
+
 !========================= TrackSys v6r2 2011-05-10 =========================
 ! 2011-05-10 - Marco Cattaneo
  - Add switch to apply fiducial time window in OTRawBankDecoder. Default is to

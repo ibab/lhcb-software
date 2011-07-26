@@ -36,13 +36,16 @@ def RecoTracking(exclude=[]):
    
    # Which algs to run ?
    trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
-   
+
    if "Velo" or "FastVelo" in trackAlgs :
       GaudiSequencer("RecoDecodingSeq").Members += [ DecodeVeloRawBuffer("DecodeVeloClusters")]
 
       veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
       veloClusters.DecodeToVeloLiteClusters = True;
       veloClusters.DecodeToVeloClusters     = True;
+      globalCuts = TrackSys().getProp("GlobalCuts")
+      if( "Velo" in globalCuts ) :
+          veloClusters.MaxVeloClusters =  globalCuts["Velo"]
       
    GaudiSequencer("RecoDecodingSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters"),
                                                    RawBankToSTLiteClusterAlg("CreateTTLiteClusters")]
