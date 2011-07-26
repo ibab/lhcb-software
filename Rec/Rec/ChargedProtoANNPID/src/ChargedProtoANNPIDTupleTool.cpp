@@ -122,7 +122,7 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   // MC variables
   const LHCb::MCParticle * mcPart = m_truth->mcParticle(track);
   sc = sc && tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0 );
-  sc = sc && tuple->column( "MCParticleP",    mcPart ? mcPart->p() : -999 );
+  sc = sc && tuple->column( "MCParticleP",    mcPart ? mcPart->p()  : -999 );
   sc = sc && tuple->column( "MCParticlePt",   mcPart ? mcPart->pt() : -999 );
   sc = sc && tuple->column( "MCVirtualMass",  mcPart ? mcPart->virtualMass() : -999 );
 

@@ -4,16 +4,21 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= ChargedProtoANNPID v1r4 2011-04-05 =========================
+! 2011-05-25 - Chris Jones
+ - Add the flag '-2' when creating NeuroBayes Experts, which in future NB 
+   releases (10.12 onwards) should suppress the messages from NB when loading
+   the expertise files.
+
+!==================== ChargedProtoANNPID v1r4 2011-04-05 =====================
 ! 2011-03-17 - Chris Jones
  - Fix icc11 compilation issue with last commit
 
-!========================= ChargedProtoANNPID v1r3p1 2011-03-17 =========================
+!==================== ChargedProtoANNPID v1r3p1 2011-03-17 ===================
 
 ! 2011-03-16 - Chris Jones
  - Add protection against NaN and infinite input variables
 
-!========================= ChargedProtoANNPID v1r3 2011-02-28 =========================
+!==================== ChargedProtoANNPID v1r3 2011-02-28 =====================
 
 ! 2011-02-17 - Chris Jones
  - Fix unchecked StatusCode in ChargedProtoANNPIDTrainingTuple

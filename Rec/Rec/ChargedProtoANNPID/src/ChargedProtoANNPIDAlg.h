@@ -125,8 +125,8 @@ namespace ANNGlobalPID
                      const ChargedProtoANNPIDAlgBase::IntInputs inputs,
                      const ChargedProtoANNPIDAlgBase *          parent )
         : ANNHelper ( inputs, parent ),
-          m_expert  ( new Expert(paramFileName.c_str()) ),
-          m_inArray ( new float[inputs.size()]          )
+          m_expert  ( new Expert(paramFileName.c_str(),-2) ),
+          m_inArray ( new float[inputs.size()]             )
       { }
       /// Destructor
       virtual ~NeuroBayesANN() { delete m_expert; delete[] m_inArray; }
