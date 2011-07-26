@@ -12,7 +12,8 @@ Purpose: LHCb reconstruction program
   . Add new profile histograms in TrackVertexMonitor
   . Add histogram for overlaps in ITTrackMonitor
   . Use latest DDDB and LHCBCOND tags from SQLDDDB v6r14
-    (new field map by default for 2011 data, new Rich aerogel geometry) 
+    (new field map by default for 2011 data, new Rich aerogel geometry)
+  . Set global event cut on number of Velo hits to 6000 for 2011 data type
 
 - Changes to QMTests:
   . Add check of unprotected DEBUG and VERBOSE messages to brunel2011magdown.qmt
