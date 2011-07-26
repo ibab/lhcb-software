@@ -1,4 +1,3 @@
-// $Id: HltSelReportsDecoder.cpp,v 1.5 2010-03-03 03:56:04 tskwarni Exp $
 // Include files 
 #include "boost/format.hpp"
 
@@ -303,7 +302,7 @@ StatusCode HltSelReportsDecoder::execute() {
             infoPersistent.insert( "4#Track.firstState.ty", floatFromInt(stdInfo[4]) );
             infoPersistent.insert( "5#Track.firstState.qOverP", floatFromInt(stdInfo[5]) );  
             
-            if (stdInfo.size>=8) {
+            if (stdInfo.size()>=8) {
                   infoPersistent.insert( "6#Track.chi2PerDoF", float( stdInfo[6] ) );
                   infoPersistent.insert( "7#Track.nDoF", float( stdInfo[7] ) );
             }
