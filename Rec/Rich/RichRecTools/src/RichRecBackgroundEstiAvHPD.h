@@ -27,6 +27,7 @@
 // Interfaces
 #include "RichRecBase/IRichPixelBackgroundEsti.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichRecBase/IRichGeomEff.h"
 
 namespace Rich
 {
@@ -106,6 +107,9 @@ namespace Rich
 
       /// Pointers to expected track signal tool
       const IExpectedTrackSignal * m_tkSignal;
+
+      /// Geometrical efficiency tool
+      const IGeomEff * m_geomEff;
 
       /// Maximum number of iterations in background normalisation
       int m_maxBkgIterations;

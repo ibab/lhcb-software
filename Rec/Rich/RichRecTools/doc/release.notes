@@ -5,6 +5,10 @@
 !------------------------------------------------------------------------------
 
 ! 2011-07-25 - Chris Jones
+ - Fix a bug in BackgroundEstiAvHPD that resulted in the background terms to
+   not be computed (i.e. 0) for the first background iteration each event...
+
+! 2011-07-25 - Chris Jones
  - Add some missing debug message protection
 
 !====================== RichRecTools v4r16 2011-04-27 =========================
