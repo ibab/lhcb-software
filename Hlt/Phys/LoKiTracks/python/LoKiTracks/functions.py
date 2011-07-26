@@ -218,6 +218,26 @@ TrSIZE         = LoKi.Functors.Size  ( _T ) ()
 TrNUM          = LoKi.Tracks.TESCounter
 
 # =============================================================================
+## helper function to create ``smart'' RecSumary functor 
+#  @see HASRECSUMMARY
+#  @see    RECSUMMARY
+#  @see      TrNUM
+def  recSummaryTrack ( index , trtype, location='Rec/Track/Best' ) :
+    """
+    Helper function to create ``smart'' RecSummary-fucntor
+    
+    result = has summary  ? summary : contains
+    
+    """
+    #
+    from LoKiCore.functions import switch
+    #
+    return switch ( HASRECSUMMARY ( index      ) ,
+                    RECSUMMARY    ( index , -1 ) ,
+                    TrNUM      ( location , trtype  ) )  
+
+# 
+# =============================================================================
 if __name__ == '__main__' :
     print '*'*120
     print                      __doc__
