@@ -940,7 +940,11 @@ def makeD2KPiPi0(moduleName, pi0name, config, Pi0Sel) :
     _DDauKineCut = "(PT> %(DauPtMin)s *MeV) & (P> %(DauPMin)s *MeV)" % config
     _DDauChi2Cut = "(MIPCHI2DV(PRIMARY)> %(DauMIPChi2Min)s ) & (TRCHI2DOF< %(DauChi2Max)s )" % config
     _DDauCut = "( " + _DDauKineCut + " & " + _DDauChi2Cut + " )"
-    _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV) & (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % config
+    
+    if _Pi0 == StdLooseResolvedPi0 : 
+	_Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV) & (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % config
+    else : 
+	_Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
 
     _DCombCut = \
     "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
@@ -980,7 +984,11 @@ def makeD2KPiPi0WS(moduleName, pi0name, config, Pi0Sel) :
     _DDauKineCut = "(PT> %(DauPtMin)s *MeV) & (P> %(DauPMin)s *MeV)" % config
     _DDauChi2Cut = "(MIPCHI2DV(PRIMARY)> %(DauMIPChi2Min)s ) & (TRCHI2DOF< %(DauChi2Max)s )" % config
     _DDauCut = "( " + _DDauKineCut + " & " + _DDauChi2Cut + " )"
-    _Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV) & (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % config
+
+    if _Pi0 == StdLooseResolvedPi0 : 
+	_Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV) & (CHILD(CL,1)> %(PhotonCL)s) & (CHILD(CL,2)> %(PhotonCL)s)" % config
+    else : 
+	_Pi0Cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
 
     _DCombCut = \
     "(AM> %(CombMassMin)s *MeV) & (AM< %(CombMassMax)s *MeV) & " \
@@ -1252,7 +1260,7 @@ def makeRhoCharged(moduleName, Pi0Sel, config) :
     Pi0cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
 
     Rho = CombineParticles("CombineRhoChargedFor" + moduleName)
-    Rho.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+    Rho.ParticleCombiners.update ( { '' : 'ParticleAdder' } )
 
     Rho.DecayDescriptors = [ "[rho(770)+ -> pi+ pi0]cc" ]
     Rho.DaughtersCuts =  { "pi+"        : Daughtercut,
@@ -1281,7 +1289,7 @@ def makeKstarCharged(moduleName, Pi0Sel, config) :
     Pi0cut = "(PT> %(Pi0PtMin)s *MeV) & (P> %(Pi0PMin)s *MeV)" % config
 
     Kstar = CombineParticles("CombineKstarChargedFor" + moduleName)
-    Kstar.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+    Kstar.ParticleCombiners.update ( { '' : 'ParticleAdder' } )
 
     Kstar.DecayDescriptors = [ "[K*(892)+ -> K+ pi0]cc" ]
     Kstar.DaughtersCuts =  { "K+"        : Daughtercut,
