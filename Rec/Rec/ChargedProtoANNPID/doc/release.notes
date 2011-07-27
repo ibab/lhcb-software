@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r5 2011-07-27 =========================
 ! 2011-05-25 - Chris Jones
  - Add the flag '-2' when creating NeuroBayes Experts, which in future NB 
    releases (10.12 onwards) should suppress the messages from NB when loading
