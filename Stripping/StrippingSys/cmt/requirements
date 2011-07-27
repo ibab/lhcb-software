@@ -1,5 +1,5 @@
 package StrippingSys
-version           v2r5
+version           v2r5p1
 
 branches doc cmt tests
 
@@ -12,7 +12,6 @@ use  StandardParticles           v2r0     Phys   # Juan Palacios
 ####################################################################
 # Internal Packages
 use  DisplVertices 		 v7r6	  Phys	 # Neal Gauvin
-use  HighPtJets			 v1r3     Phys   # Marcin Kucharczyk
 use  MvaPreSelB2DH               v1r1     Phys   # Sajan Easo
 
 ####################################################################
