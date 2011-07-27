@@ -28,7 +28,7 @@ use MuonTrackRec         v3r5    Muon # Giacomo Graziani
 use ChargedProtoANNPID   v1r5    Rec  # Chris Jones
 use GlobalReco           v6r38   Rec  # Chris Jones
 use LumiAlgs             v6r1    Rec  # Jaap Panman
-use RecAlgs              v2r2    Rec  # Marco Cattaneo
+use RecAlgs              v2r5    Rec  # Marco Cattaneo
 use RecConf		 v2r2	 Rec  # Rob Lambert
 use RecInterfaces        v1r0    Rec  # Chris Jones
 
