@@ -7,6 +7,11 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-07-27
+  - Added basic input selection for reconstrucuted jets.
+  - Added basic configuration for ParticelFlow algorithm.
+Both are hardly tuned but used in the example configuration in JetAccessoriesMC/doc
+
 ! 2011-06-01 - Victor Coco
  - Introduction of ParticleFlow4Jets algorithm, remove fragment folder
 
