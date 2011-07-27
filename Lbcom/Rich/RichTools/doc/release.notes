@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r36 2011-07-27 =========================
 ! 2011-07-07 - Chris Jones
  - Fix the way the aerogel tiles are loaded in the radiator tool, to work
    properly when sub-tiles are active in the DDDB.
