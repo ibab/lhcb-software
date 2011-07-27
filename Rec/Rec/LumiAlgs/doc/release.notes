@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v6r1 2011-07-27 =========================
 ! 2011-07-22 - Marco Cattaneo
  - Add LHCbExclusions for reference file comparisons of all QM tests, ensures
    forward compatibility of tests with next Gaudi version
