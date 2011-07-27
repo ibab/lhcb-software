@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+!========================= RichAlignment v1r4 2011-07-27 =========================
+! 2011-07-22 - Chris Jones
+ - various script improvements 
+
 !========================= RichAlignment v1r3p1 2011-04-27 =========================
 ! 2011-06-07 - Matt Coombes
  - Changed default Rich1 Histogram ranges from 10mrads to 5mrads
