@@ -149,21 +149,25 @@ StatusCode PhotonCreatorBase::initialize()
   {
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    debug() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
-            << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
-            << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma "
-            << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
+              << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
+              << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma "
+              << endmsg;
   }
 
-  debug() << "Maximum HPD pixels (Aero/R1Gas/R2Gas) = " << m_maxHPDOccForReco << endmsg;
-
   m_pidTypes = m_richPartProp->particleTypes();
-  debug() << "Particle types considered = " << m_pidTypes << endmsg;
 
-  debug() << "Maximum number of photon candidates per event = " << m_maxPhotons << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "Maximum HPD pixels (Aero/R1Gas/R2Gas) = " << m_maxHPDOccForReco << endmsg;
 
-  if ( m_rejAeroPhotsIfGas )
-    debug() << "Will reject Aerogel photons if pixel has a Rich1 Gas photon" << endmsg;
+    debug() << "Particle types considered = " << m_pidTypes << endmsg;
+    
+    debug() << "Maximum number of photon candidates per event = " << m_maxPhotons << endmsg;
+
+    if ( m_rejAeroPhotsIfGas )
+      debug() << "Will reject Aerogel photons if pixel has a Rich1 Gas photon" << endmsg;
+  }
 
   return sc;
 }
