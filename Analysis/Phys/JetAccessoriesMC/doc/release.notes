@@ -7,6 +7,13 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-04-19 - Albert Bursche
+
+Added configuration for jet matching. (Example file and call-graph in doc.)
+Added DeltaR matching.
+Added MCtruth matching to HepMCJets2Jets.
+
+
 !========================== JetAccessoriesMC v1r0 2011-04-29 ==================
 ! 2011-04-19 - Victor Coco, Cédric Potterat
  - Introduction of ZPlusJetHepMCSelector algorithm 

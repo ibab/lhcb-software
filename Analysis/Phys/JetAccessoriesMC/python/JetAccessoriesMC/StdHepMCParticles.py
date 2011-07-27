@@ -59,7 +59,7 @@ class StdHepMCParticlesConf() :
         self.Alg = self.configure()
 
     def configure (self):
-        algorithm =  LoKi__ParticleMaker ( self.name )
+        algorithm =  LoKi__ParticleMaker ( self.name )#,OutputLevel = VERBOSE)
         algorithm.ParticleMaker = 'LoKi__HepMCParticleMaker'
         algorithm.addTool ( LoKi__HepMCParticleMaker )
         for slot in self.__confdict__.keys():

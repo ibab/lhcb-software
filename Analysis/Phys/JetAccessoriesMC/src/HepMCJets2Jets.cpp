@@ -31,6 +31,8 @@
 #include "LoKi/LoKiPhys.h"
 #include <GaudiKernel/IIncidentListener.h>
 #include <GaudiKernel/IIncidentSvc.h>
+#include "Kernel/IParticle2MCAssociator.h"
+
 // ============================================================================
 // LoKiGen 
 // ============================================================================
@@ -76,6 +78,10 @@ namespace LoKi
       , m_tables()
       , m_reporter(0)
       , m_matcher(0)
+      , m_MatchingMethod(uninitialised)	
+      , m_p2mcAssoc(0)
+      , m_p2mcAssocType("DaVinciSmartAssociator")
+  
     {
       //
       declareInterface<IJets2Jets>(this);
@@ -86,6 +92,8 @@ namespace LoKi
       m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
       m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
       declareProperty("RelTableLocations",  m_tables );
+      declareProperty("MatchingMethod", m_MatchingMethodString = "measured",
+		      "Possible values : 'measured', and 'MCtrue'");
     } 
     /// virtual protected destructor 
   virtual ~HepMCJets2Jets() {} 
@@ -120,8 +128,15 @@ namespace LoKi
     IIncidentSvc* m_incSvc;
     
     mutable bool m_loaded ;
+    std::string m_MatchingMethodString;
+    enum MatchingMethod { uninitialised = false,
+			  measured,
+			  MCtrue};
+    MatchingMethod m_MatchingMethod;
+    bool initMethod();
+    IParticle2MCAssociator* m_p2mcAssoc;
+    std::string m_p2mcAssocType;
 
-    
     // ========================================================================
     // ========================================================================
   };
@@ -157,8 +172,12 @@ StatusCode LoKi::HepMCJets2Jets::initialize()
   m_matcher->addRef() ;
 
   m_loaded = false ;
-  
-  return (0!=m_reporter && 0!=m_matcher && 0!= m_incSvc && 0!= m_loki) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+ 
+  if  (m_MatchingMethodString == "MCtrue") // have to use string here because initMethod() hasn't been called yet
+    m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, this);
+
+
+  return (0!=m_reporter && 0!=m_matcher && 0!= m_incSvc && 0!= m_loki&&initMethod()) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 
 }
 
@@ -200,15 +219,11 @@ void LoKi::HepMCJets2Jets::makeRelation( const IJets2Jets::Jets& StdPrimaryJets
   // Table to get the HepMCParticle from the StdHepMCParticle
 	typedef LHCb::Relation2D<LHCb::Particle,HepMC::GenParticle*>  Table2DHepMC2Part ;
 
-  // create the relation table and register it into TES 
-  // IJets2Jets::Table* table = new IJets2Jets::Table() ;
-  
-
+ 
   LHCb::HepMC2MC2D* tableHepMC2MC = 
     get<LHCb::HepMC2MC2D> ( LHCb::HepMC2MCLocation::Default ) ;
     
   LoKi::MCMatch mc = this->matcher();
-
 
   Table2DHepMC2Part* table_togetHepMC = get<Table2DHepMC2Part>(m_tableHepMC2StdHepMC);
   // Loop over the StdJets
@@ -246,16 +261,24 @@ void LoKi::HepMCJets2Jets::makeRelation( const IJets2Jets::Jets& StdPrimaryJets
       {
         
         if (0 ==(*idaug_secjet)) { continue ;}
-        if(StdMC_fromGen(*idaug_secjet)){
+        if(StdMC_fromGen(*idaug_secjet))
+	  {
+	  if (m_MatchingMethod==measured)
            weight_jetsec_jetprim += E(*idaug_secjet)/E(*primjet);
-        }
+	  if (m_MatchingMethod==MCtrue)
+	    {
+	      debug()<< "Matching reco particle to MC thruth." << endmsg;
+	      Assert( m_p2mcAssoc, "The DaVinci smart associator hasn't been initialized!");
+	      weight_jetsec_jetprim += m_p2mcAssoc->relatedMCP(*idaug_secjet)->momentum().E()/E(*primjet);
+	    }
+	  }
+        
       }
       
       if(weight_jetsec_jetprim>0) table.relate(*primjet,*secjet,weight_jetsec_jetprim);
     }
   }
 
-  //return (*table) ;
 }
 void LoKi::HepMCJets2Jets::addTables(LoKi::MCMatchObj* matcher) const 
 {
@@ -272,6 +295,21 @@ void LoKi::HepMCJets2Jets::addTables(LoKi::MCMatchObj* matcher) const
     }
   }
   m_loaded = true ;
+}
+bool LoKi::HepMCJets2Jets::initMethod()
+{
+  if (m_MatchingMethodString =="measured")
+    {
+      m_MatchingMethod = measured;
+      return true;
+    }
+   if (m_MatchingMethodString =="MCtrue")
+     {
+      m_MatchingMethod = MCtrue;
+      return true;
+    }
+    m_MatchingMethod = uninitialised;
+   return false;
 }
 
 

@@ -1,0 +1,125 @@
+digraph tesmap {
+ranksep=2.0
+StdHepMCPartons [shape=box];
+StdHepMCParticlesAll [shape=box];
+StdHepMCParticles [shape=box];
+
+StdHepMCPartonsTES [label="Phys/StdHepMCPartons/Particles",style=bold];
+StdHepMCParticlesAllTES [label="Phys/StdHepMCParticlesAll/Particles",style=bold];
+StdHepMCParticlesTES  [label="Phys/StdHepMCParticles/Particles",style=bold];
+ 
+StdHepMCPartonsRelTES  [label="Relations/Phys/StdHepMCParton2HepMC"];
+StdHepMCParticlesAllRelTES  [label="Relations/Phys/StdHepMC2HepMCAll"];
+StdHepMCParticlesRelTES [label="Relations/Phys/StdHepMC2HepMC"];
+
+StdHepMCPartons -> StdHepMCPartonsRelTES
+StdHepMCParticlesAll -> StdHepMCParticlesAllRelTES
+StdHepMCParticles ->  StdHepMCParticlesRelTES
+StdHepMCPartons->StdHepMCPartonsTES;
+StdHepMCParticlesAll->StdHepMCParticlesAllTES;
+StdHepMCParticles->StdHepMCParticlesTES;
+
+MCPartFilter [shape=box];
+SelectedTracks [shape=box];
+ParticleFlow [shape=box];
+
+MCPartFilterTES [label="Phys/FilteredStableParticles/Particles",style=bold];
+SelectedTracksTES [label="Phys/SelectedTracks/Particles",style=bold];
+ParticleFlowTES [label="Phys/ParticleFlow/Particles",style=bold];
+
+StdHepMCParticlesTES -> MCPartFilter;
+MCPartFilter->MCPartFilterTES;
+SelectedTracks->SelectedTracksTES;
+ParticleFlow->ParticleFlowTES;
+
+StdPartonicJets [shape=box];
+StdHepMCAllJets [shape=box];
+StdHepMCJets [shape=box];
+StdJets [shape=box];
+StdPFJets [shape=box];
+
+StdPartonicJetsTES [label="Phys/StdPartonicJets/Particles",style=bold];
+StdHepMCAllJetsTES [label="Phys/StdHepMCAllJets/Particles",style=bold];
+StdHepMCJetsTES [label="Phys/StdHepMCJets/Particles",style=bold];
+StdJetsTES [label="Phys/StdJets/Particles",style=bold];
+StdPFJetsTES [label="Phys/StdPFJets/Particles",style=bold];
+
+StdHepMCPartonsTES -> StdPartonicJets;
+StdPartonicJets -> StdPartonicJetsTES;
+StdHepMCParticlesAllTES -> StdHepMCAllJets;
+StdHepMCAllJets->StdHepMCAllJetsTES;
+
+MCPartFilterTES -> StdHepMCJets
+StdHepMCJets->StdHepMCJetsTES;
+
+SelectedTracksTES -> StdJets
+StdJets->StdJetsTES;
+
+ParticleFlowTES -> StdPFJets;
+StdPFJets->StdPFJetsTES;
+
+Parton2StdHepMCAllJets [shape=box];
+StdPartonicJetsTES->Parton2StdHepMCAllJets;
+StdHepMCAllJetsTES->Parton2StdHepMCAllJets;
+StdHepMCParticlesRelTES->Parton2StdHepMCAllJets;
+Parton2StdHepMCAllJetsTES [label="Relations/Phys/StdPartonicJetsJets2StdHepMCAllJets",style=bold];
+Parton2StdHepMCAllJets -> Parton2StdHepMCAllJetsTES
+
+StdHepMCAllJets2StdJetsMCtrue [shape=box];
+StdHepMCAllJets2StdJetsMCtrueTES [label="Relations/Phys/StdHepMCAllJets2StdJetsMCtrue",style=bold];
+StdHepMCAllJets2StdJetsMCtrue-> StdHepMCAllJets2StdJetsMCtrueTES
+StdHepMCAllJetsTES -> StdHepMCAllJets2StdJetsMCtrue;
+//StdHepMCParticlesRelTES -> StdHepMCAllJets2StdJetsMCtrue [color=red];
+StdHepMCParticlesAllRelTES -> StdHepMCAllJets2StdJetsMCtrue ;//[color=blue];
+StdJetsTES  -> StdHepMCAllJets2StdJetsMCtrue;
+
+StdHepMCAllJets2StdJetsDeltaR [shape=box];
+StdHepMCAllJets2StdJetsDeltaRTES [label="Relations/Phys/StdHepMCAllJets2StdJetsDeltaR",style=bold];
+StdHepMCAllJets2StdJetsDeltaR-> StdHepMCAllJets2StdJetsDeltaRTES
+StdHepMCAllJetsTES -> StdHepMCAllJets2StdJetsDeltaR;
+StdJetsTES  -> StdHepMCAllJets2StdJetsDeltaR;
+
+StdHepMCAllJets2StdJetsmeasured [shape=box];
+StdHepMCAllJets2StdJetsmeasuredTES [label="Relations/Phys/StdHepMCAllJets2StdJetsmeasured",style=bold];
+StdHepMCAllJets2StdJetsmeasured-> StdHepMCAllJets2StdJetsmeasuredTES
+StdHepMCAllJetsTES -> StdHepMCAllJets2StdJetsmeasured;
+//StdHepMCParticlesRelTES -> StdHepMCAllJets2StdJetsmeasured [color=red];
+StdHepMCParticlesAllRelTES -> StdHepMCAllJets2StdJetsmeasured; //[color=blue];
+StdJetsTES  -> StdHepMCAllJets2StdJetsmeasured;
+
+Parton2StdHepMCJets [shape=box];
+StdPartonicJetsTES->Parton2StdHepMCJets;
+StdHepMCJetsTES->Parton2StdHepMCJets;
+StdHepMCParticlesRelTES->Parton2StdHepMCJets;
+Parton2StdHepMCJetsTES [label="Relations/Phys/StdPartonicJetsJets2StdHepMCJets",style=bold];
+Parton2StdHepMCJets -> Parton2StdHepMCJetsTES
+
+StdHepMCJets2StdJetsMCtrue [shape=box];
+StdHepMCJets2StdJetsMCtrueTES [label="Relations/Phys/StdHepMCJets2StdJetsMCtrue",style=bold];
+StdHepMCJets2StdJetsMCtrue-> StdHepMCJets2StdJetsMCtrueTES
+StdHepMCJetsTES -> StdHepMCJets2StdJetsMCtrue;
+StdHepMCParticlesRelTES -> StdHepMCJets2StdJetsMCtrue;
+StdJetsTES  -> StdHepMCJets2StdJetsMCtrue;
+
+StdHepMCJets2StdJetsDeltaR [shape=box];
+StdHepMCJets2StdJetsDeltaRTES [label="Relations/Phys/StdHepMCJets2StdJetsDeltaR",style=bold];
+StdHepMCJets2StdJetsDeltaR-> StdHepMCJets2StdJetsDeltaRTES
+StdHepMCJetsTES -> StdHepMCJets2StdJetsDeltaR;
+StdJetsTES  -> StdHepMCJets2StdJetsDeltaR;
+
+StdHepMCJets2StdJetsmeasured [shape=box];
+StdHepMCJets2StdJetsmeasuredTES [label="Relations/Phys/StdHepMCJets2StdJetsmeasured",style=bold];
+StdHepMCJets2StdJetsmeasured-> StdHepMCJets2StdJetsmeasuredTES
+StdHepMCJetsTES -> StdHepMCJets2StdJetsmeasured;
+StdHepMCParticlesRelTES -> StdHepMCJets2StdJetsmeasured;
+StdJetsTES  -> StdHepMCJets2StdJetsmeasured;
+
+
+
+
+
+
+//StdHepMCPartons [label="Relations/Phys/StdHepMCParton2HepMCZ"];
+//PartonConfZJet -> StdHepMCParton2;
+
+}
