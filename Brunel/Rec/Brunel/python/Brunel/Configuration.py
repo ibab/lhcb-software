@@ -128,6 +128,20 @@ class Brunel(LHCbConfigurableUser):
 
     def defineOptions(self):
 
+        # Kept for Dirac backward compatibility
+        if self.getProp( "NoWarnings" ) :
+            log.warning("Brunel().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Brunel().ProductionMode=True instead")
+            self.setProp( "ProductionMode", True )
+            
+        # Special settings for production
+        if self.getProp( "ProductionMode" ) :
+            if not self.isPropertySet( "OutputLevel" ) :
+                self.setProp("OutputLevel", ERROR)
+            if not LHCbApp().isPropertySet( "TimeStamp" ) :
+                LHCbApp().setProp( "TimeStamp", True )
+            if not self.isPropertySet( "PrintFreq" ) :
+                self.setProp("PrintFreq", 1000)
+
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in self.KnownInputTypes:
             raise TypeError( "Invalid inputType '%s'"%inputType )
@@ -340,17 +354,6 @@ class Brunel(LHCbConfigurableUser):
         
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
-
-        # Kept for Dirac backward compatibility
-        if self.getProp( "NoWarnings" ) :
-            log.warning("Brunel().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Brunel().ProductionMode=True instead")
-            self.setProp( "ProductionMode", True )
-            
-        # Special settings for production
-        if self.getProp( "ProductionMode" ) :
-            self.setProp("OutputLevel", ERROR)
-            if not LHCbApp().isPropertySet( "TimeStamp" ) :
-                LHCbApp().setProp( "TimeStamp", True )
 
         # OutputLevel
         self.setOtherProp(LHCbApp(),"OutputLevel")

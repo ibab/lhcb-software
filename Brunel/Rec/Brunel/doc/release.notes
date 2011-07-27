@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to Brunel configurable:
+  . When ProductionMode=True, print the event number only every 1000 events
+
 - Changes to references to reflect changes in Brunel v40r1 output:
   . Add monitoring of Rich Raw data size on L0 selected events (no HLT bias)
   . Add new set of Rich CK theta monitors with tight track quality cuts and
@@ -14,6 +17,8 @@ Purpose: LHCb reconstruction program
   . Use latest DDDB and LHCBCOND tags from SQLDDDB v6r14
     (new field map by default for 2011 data, new Rich aerogel geometry)
   . Set global event cut on number of Velo hits to 6000 for 2011 data type
+  . Loosen the Rich abort cuts for 2011+ data: MaxUsedTracks set to 1000,
+    MaxPixels set to 30000 everywhere (previously 20000 in global PID)
 
 - Changes to QMTests:
   . Add check of unprotected DEBUG and VERBOSE messages to brunel2011magdown.qmt
