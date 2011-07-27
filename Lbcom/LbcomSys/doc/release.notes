@@ -6,6 +6,58 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v10r5>2011-07-28 LbcomSys v10r5</A></H1><PRE>
+This version uses Gaudi v22r2 and LHCb v32r5
+
+- Production release for 2011 August data, 
+             developments for 2011 MC and end of year reprocessing
+
+- Packages updated: CaloTools v6r3, HltDAQ v2r11, L0Calo v11r4, L0DU v10r16,
+    RichDAQ v3r33, RichTools v2r36, STDAQ v3r27, VeloAlgorithms v5r5,
+    VeloDAQ v6r4, VeloTools v4r1
+
+- In Calo/CaloTools v6r3
+  . Replace all endreq by endmsg
+  . Fix windows compilation warning
+
+- Hlt/HltDAQ v2r11
+  . Updated HltSelReportsDecoder to get Chi2PerDoF and nDoF from the SelReports
+
+- In L0/L0Calo v11r4
+  . L0CaloAlg.cpp: switch default from UseNewElectron = False (2010 and 2009 
+    data types) to True (2011 data)
+
+- In L0/L0DU v10r16
+  . Configuration.py: set new electron/photon L0 Calo algorithm depending
+    on the data type
+
+- In Rich/RichDAQ v3r33
+  . Disable by default decoding check that compares L1 number in data for each
+    HPD to the database.
+
+- Rich/RichTools v2r36
+  . Fix the way the aerogel tiles are loaded in the radiator tool, to work
+    properly when sub-tiles are active in the DDDB.
+
+- In Velo/VeloAlgorithms v5r5
+  . Added new class VeloClusterContainerCopy: class to copy clusters from an
+    input container onto a new one applying a selection on the input clusters
+    (copied largely from STClusterContainerCopy)
+
+- In Velo/VeloDAQ v6r4
+  . Added switch to ZS decoder to allow decoding of clusters in the presence of
+    errors for expert debugging.
+  . Protected unprotected debug messages
+
+- In Velo/VeloTools v4r1
+  . Added tools VeloSelectClustersByChannel and VeloSelectChannelIDOnTrack.
+    They are used by the (new) algorithm VeloClusterContainerCopy to select
+    VELO clusters from an input container and write them to a new container.
+
+- In Calo/CaloTools v6r3, ST/STDAQ v3r27
+  . Protect unprotected MSG::DEBUG, also using UNLIKELY macro
+
+
 </PRE><H1><A NAME=v10r4>2011-06-16 LbcomSys v10r4</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r4
 
