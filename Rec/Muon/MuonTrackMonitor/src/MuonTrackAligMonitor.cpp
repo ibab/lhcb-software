@@ -1,4 +1,3 @@
-// $Id: MuonTrackAligMonitor.cpp,v 1.1 2010-05-05 07:57:01 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +64,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonTrackAligMonitor );
+DECLARE_ALGORITHM_FACTORY( MuonTrackAligMonitor )
 
 
 MuonTrackAligMonitor::MuonTrackAligMonitor( const std::string& name,
@@ -97,7 +96,7 @@ StatusCode MuonTrackAligMonitor::initialize() {
 
   m_muonDet = getDet<DeMuonDetector>(DeMuonLocation::Default); 
   if(!m_muonDet){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }  
   m_zM1 = m_muonDet->getStationZ(0) / mm;
@@ -219,12 +218,12 @@ StatusCode MuonTrackAligMonitor::initialize() {
 
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator" ,this );
   if(!m_extrapolator){
-    err()<<"error retrieving the Extrapolator Tool"<<endreq;
+    err()<<"error retrieving the Extrapolator Tool"<<endmsg;
     return StatusCode::FAILURE;
   } 
   m_chi2Calculator    = tool<ITrackChi2Calculator>( m_Chi2CalculatorName, "Chi2Calculator", this );
   if(!m_chi2Calculator){
-    err()<<"error retrieving the Chi2Calculator Tool"<<endreq;
+    err()<<"error retrieving the Chi2Calculator Tool"<<endmsg;
     return StatusCode::FAILURE;
   } 
 
@@ -249,8 +248,9 @@ StatusCode MuonTrackAligMonitor::execute() {
     const LHCb::Track *longTrack = (*ip)->idTrack();
     
     if(!muTrack) {
-      debug() << "no muon track associated to MuonPID object (ismuon="<< (*ip)->IsMuon()
-              <<")... skipping" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "no muon track associated to MuonPID object (ismuon="<< (*ip)->IsMuon()
+                <<")... skipping" << endmsg;
       continue;
     }
     
@@ -259,9 +259,12 @@ StatusCode MuonTrackAligMonitor::execute() {
       continue;
     }
     
-    debug() << "LongTrack p "<<longTrack->p()/GeV<<endmsg;
-    debug() << "LongTrack chi2 "<<longTrack->chi2PerDoF()<<" dof "<<longTrack->nDoF()<<endmsg;
-    debug() << "MuonTrack chi2 "<<muTrack->chi2PerDoF()<<" dof "<<muTrack->nDoF()<<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+      debug() << "LongTrack p "<<longTrack->p()/GeV<<endmsg;
+      debug() << "LongTrack chi2 "<<longTrack->chi2PerDoF()<<" dof "<<longTrack->nDoF()<<endmsg;
+      debug() << "MuonTrack chi2 "<<muTrack->chi2PerDoF()<<" dof "<<muTrack->nDoF()<<endmsg;
+    }
+    
     if( longTrack->p()/GeV > m_pCut && 
         longTrack->chi2PerDoF() < m_chi2nCut && 
         muTrack->chi2PerDoF()   < m_chi2nCut &&
@@ -273,19 +276,22 @@ StatusCode MuonTrackAligMonitor::execute() {
       LHCb::ParticleID pid(13);
       StatusCode sc = m_extrapolator->propagate(longState,m_zM1,pid);
       if ( sc.isFailure() ) {
-        debug() << "Extrapolating longState to z = " << m_zM1 << " failed " << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "Extrapolating longState to z = " << m_zM1 << " failed " << endmsg;
         Warning("Extrapolating a muon longState to z failed ");
         continue;
       }
       sc = m_extrapolator->propagate(muState,m_zM1,pid);
       if ( sc.isFailure() ) {
-        debug() << "Extrapolating muState to z = " << m_zM1 << " failed " << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "Extrapolating muState to z = " << m_zM1 << " failed " << endmsg;
         Warning("Extrapolating a muon muState to z failed ");
         continue;
       }
-      debug()<<" Extrapolation to z "<<m_zM1<<
-        " long = ("<<longState.x()<<","<<longState.y()<<")"<<
-        " muon = ("<<muState.x()<<","<<muState.y()<<")"<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug()<<" Extrapolation to z "<<m_zM1<<
+          " long = ("<<longState.x()<<","<<longState.y()<<")"<<
+          " muon = ("<<muState.x()<<","<<muState.y()<<")"<<endmsg;
       
       double chi2;
       if(m_notOnline) {
@@ -302,7 +308,8 @@ StatusCode MuonTrackAligMonitor::execute() {
         continue;
       }
       if(chi2 > m_chi2matchCut ) {
-        debug()<<" matching chisquare not satisfactory "<<chi2<<endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug()<<" matching chisquare not satisfactory "<<chi2<<endmsg;
         continue;        
       }
       
@@ -362,11 +369,13 @@ StatusCode MuonTrackAligMonitor::execute() {
             continue;
           }
           vchambers = m_muonDet->Tile2Chamber( tile );
-          
-          debug() << "*** tile position ***" << tile << endreq;
-          debug() << " x = " << x << " y = " << y << " z = " << z << endreq;
-          debug() << " region " << tile.region() <<" station " << tile.station() << endreq;
-          debug() << "*********************" << tile << endreq;
+
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+            debug() << "*** tile position ***" << tile << endmsg;
+            debug() << " x = " << x << " y = " << y << " z = " << z << endmsg;
+            debug() << " region " << tile.region() <<" station " << tile.station() << endmsg;
+            debug() << "*********************" << tile << endmsg;
+          }
 
           for (int i=0; i<2; i++){
 

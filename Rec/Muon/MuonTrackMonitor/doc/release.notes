@@ -4,6 +4,10 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-07-27 - Marco Cattaneo
+ - Protect unprotected MSG::DEBUG, also using UNLIKELY macro
+ - Replace all endreq by endmsg
+
 !========================= MuonTrackMonitor v2r2 2011-04-27 =========================
 ! 2011-04-22 - Marco Cattaneo
  - Disable use of TisTosTool in MuEffMonitor when DoTrigger property is True.

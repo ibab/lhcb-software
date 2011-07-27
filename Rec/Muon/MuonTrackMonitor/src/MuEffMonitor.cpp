@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // from Gaudi
@@ -73,7 +72,8 @@ StatusCode MuEffMonitor::initialize() {
 
   StatusCode sc = GaudiHistoAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
-  debug()   << " MuEffMonitor v1r0  ==> Initialize " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug()   << " MuEffMonitor v1r0  ==> Initialize " << endmsg;
 
   GaudiAlg::HistoID  name;
   m_notOnline = (m_histoLevel != "Online"); 
@@ -142,7 +142,7 @@ StatusCode MuEffMonitor::initialize() {
   // Tracks extrapolator Tool:
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName, "MuEffExtrap",this );
   if (!m_extrapolator){
-    err()<<" error retrieving the Extrapolator Tool"<<endreq;
+    err()<<" error retrieving the Extrapolator Tool"<<endmsg;
     return StatusCode::FAILURE;
   } 
 
@@ -160,7 +160,7 @@ StatusCode MuEffMonitor::execute() {
   
   bool passed = true;
   
-  debug() << " ==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " ==> Execute" << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS ;
   setFilterPassed(false);
@@ -200,10 +200,11 @@ StatusCode MuEffMonitor::execute() {
   if (exist<LHCb::Tracks>(LHCb::TrackLocation::Default)) trTracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
 
   if (!trTracks){
-    error() << " ==> Failed to get Track container " << (LHCb::TrackLocation::Default) << endreq;
+    error() << " ==> Failed to get Track container " << (LHCb::TrackLocation::Default) << endmsg;
     return StatusCode::FAILURE;
   }
-  debug() << " ==> number of tracks " << trTracks->size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << " ==> number of tracks " << trTracks->size() << endmsg;
   
   // ----------------------------------------------
   // BEGIN long Tracks loop
@@ -226,14 +227,14 @@ StatusCode MuEffMonitor::execute() {
     // get state closest state to M1
     m_stateP = &(pTrack->closestState(m_stationZ[0]));
     if (!m_stateP) {
-      error() << " ==> Failed to get state from track " << endreq;
+      error() << " ==> Failed to get state from track " << endmsg;
       continue;
     }
     
     // get state in zero position 
     m_stateP0 = &(pTrack->firstState()); 
     if (!m_stateP0) {
-      error() << " ==> Failed to get stateP0 from track " << endreq;
+      error() << " ==> Failed to get stateP0 from track " << endmsg;
       continue;
     }
     
@@ -287,7 +288,9 @@ StatusCode MuEffMonitor::execute() {
           m_SeleTIS = (int)SeleTIS;
           m_SeleTOS = (int)SeleTOS;
           m_SeleTOB = (int)( SeleDec && !SeleTIS && !SeleTOS );
-          debug() << " ==> SeleTrk HLT Trigger = " << SeleDec <<" "<< m_SeleTIS <<" "<< m_SeleTOS <<" "<< m_SeleTOB << endmsg;
+          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+            debug() << " ==> SeleTrk HLT Trigger = " << SeleDec <<" "<< m_SeleTIS
+                    <<" "<< m_SeleTOS <<" "<< m_SeleTOB << endmsg;
         }
         
       }
@@ -299,7 +302,8 @@ StatusCode MuEffMonitor::execute() {
 
    if (m_notOnline) m_nMuPreS->fill(m_nTrk);   
 
-  debug()  << " ==> after tracks loop: # Mu Can PreSel "<< m_nTrk << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug()  << " ==> after tracks loop: # Mu Can PreSel "<< m_nTrk << endmsg;
 
   fillHistos();    
 
@@ -331,7 +335,7 @@ StatusCode MuEffMonitor::LoadMuonGeometry(){
   int i=0;
   while(i<m_NStation){
     m_stationNames.push_back(basegeometry.getStationName(i));
-    //debug()   <<"pippo station "<<i<<" "<<m_stationNames[i]<<endreq;
+    //debug()   <<"pippo station "<<i<<" "<<m_stationNames[i]<<endmsg;
     i++;
   }
 
@@ -357,7 +361,7 @@ StatusCode MuEffMonitor::LoadMuonGeometry(){
       m_padSizeY[station * m_NRegion + region]=m_mudet->getPadSizeY(station,region);
 
       if(m_padSizeX[station * m_NRegion + region]==0){
-        error() << " ==> Muon Chamber Pad Size could not be retrieved !!" <<  endreq;
+        error() << " ==> Muon Chamber Pad Size could not be retrieved !!" <<  endmsg;
         return StatusCode::FAILURE;
       }
     }
@@ -393,7 +397,7 @@ StatusCode MuEffMonitor::DoTrigger(){
   bool L0Decision = false;
 
   if (!exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ) {
-    error() << " ==> L0DUReport not found in " << LHCb::L0DUReportLocation::Default << endreq;
+    error() << " ==> L0DUReport not found in " << LHCb::L0DUReportLocation::Default << endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -404,12 +408,12 @@ StatusCode MuEffMonitor::DoTrigger(){
   
    //Protect against missing Hlt output:
   if (!exist<HltDecReports>(LHCb::HltDecReportsLocation::Default) ) {
-    error() << " ==> HltDecReports not found in " << LHCb::HltDecReportsLocation::Default << endreq;
+    error() << " ==> HltDecReports not found in " << LHCb::HltDecReportsLocation::Default << endmsg;
     return StatusCode::SUCCESS;
   }
   
   if (!exist<HltSelReports>(LHCb::HltSelReportsLocation::Default) ) {
-    error() << " ==> HltSelReports not found in " << LHCb::HltSelReportsLocation::Default << endreq;
+    error() << " ==> HltSelReports not found in " << LHCb::HltSelReportsLocation::Default << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -436,7 +440,7 @@ StatusCode MuEffMonitor::fillCoordVectors(){
   if( exist<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords) ) 
       coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( !coords ) {
-   err() << " ==> Cannot retrieve MuonCoords " << endreq;
+   err() << " ==> Cannot retrieve MuonCoords " << endmsg;
    return StatusCode::FAILURE;
   }
 
@@ -450,7 +454,7 @@ StatusCode MuEffMonitor::fillCoordVectors(){
 
       StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
-        warning() << " Failed to get x,y,z of tile " << tile << endreq; 
+        warning() << " Failed to get x,y,z of tile " << tile << endmsg; 
         continue; 
       }
       m_coordPos[station*m_NRegion+region].push_back(coordExtent_(x,dx,y,dy,z,dz,*iCoord));
