@@ -1,7 +1,7 @@
 package HltSys
 version           v13r9
 
-branches cmt doc 
+branches cmt doc
 
 use Hlt1Lines           v6r12   Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht, Roel Aaij
 use Hlt1Muons           v1r3    Hlt   # Roel Aaij
@@ -26,10 +26,9 @@ use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r9p1  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r9    Hlt   # Gerhard Raven
 use LoKiTrigger         v12r3   Phys  # Vanya Belyaev
-use LoKiTracks          v2r1p1  Phys  # Vanya Belyaev
 use BBDecTreeTool       v1r2    Phys  # Mike Williams
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary 
+# Allow the generation of QMTest summary
 apply_pattern QMTestSummarize

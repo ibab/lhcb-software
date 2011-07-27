@@ -3,7 +3,9 @@ Package: HltSys
 Package Coordinator: P. Koppenburg, Gerhard Raven
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
-         LHCb High Level Trigger 
+         LHCb High Level Trigger
+
+Remove Phys/LoKiTracks, now in PhysSys
 
 </PRE><H1><A NAME=v13r9>2011-07-04 HltSys v13r8</A></H1><PRE>
 Minor tweaks of v13r8
@@ -21,7 +23,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
 
 </PRE><H1><A NAME=v13r5>2011-05-10 HltSys v13r5p1</A></H1><PRE>
 ! 2011-05-10 - Gerhard Raven
- - Minor bug fixes and tweaks 
+ - Minor bug fixes and tweaks
 
 </PRE><H1><A NAME=v13r5>2011-05-04 HltSys v13r5</A></H1><PRE>
 ! 2011-05-04 - Gerhard Raven
@@ -120,7 +122,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
  - plain rebuild on top of Phys v9r7
 
 </PRE><H1><A NAME=v10r4p1>2010-06-04 HltSys v10r4p1</A></H1><PRE>
- - small changes to Jun10 settings, now corresponds to the  
+ - small changes to Jun10 settings, now corresponds to the
    TCKs in TCK/HltTCK v1r16
 
 </PRE><H1><A NAME=v10r4>2010-05-27 HltSys v10r4</A></H1><PRE>
@@ -144,7 +146,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
  - minor changes wrt. v9r2, final (?) tweaks before datataking
 
 </PRE><H1><A NAME=v9r2>2010-02-27 HltSys v9r2</A></H1><PRE>
- - release on LHCb v29r2. 
+ - release on LHCb v29r2.
 
 </PRE><H1><A NAME=v9r1>2010-02-17 HltSys v9r1</A></H1><PRE>
  - release on LHCb v29r1
@@ -155,9 +157,9 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
  - HltLine now unified with SelectionLine, HLT now depends on PHYS!
  - modified L0DU configuration in Hlt. Only one L0DU configuration
    known at a time, produces an error if L0DU in inputdata does not match
-   the expectations. Added utilities in TCKUtils to update an Hlt 
+   the expectations. Added utilities in TCKUtils to update an Hlt
    configuration with a new L0DU configuration.
- - HltAlgorithm now inherits from Hlt::IUnit interface, allows use 
+ - HltAlgorithm now inherits from Hlt::IUnit interface, allows use
    of LoKi based Hlt1 filters
  - Improved monitoring, including Hlt2
  - Proper Express Lines setup
@@ -169,8 +171,8 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
    pick up fractions of decisions.
  - update cached values of B-field, velo position when needed
  - monitoring updates
- - add dispatching ANN service 
-    
+ - add dispatching ANN service
+
 
 </PRE><H1><A NAME=v8r1>2009-12-11 HltSys v8r1</A></H1><PRE>
  Production release on  v28r5 with minor changes
@@ -187,16 +189,16 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
  - RoutingBitsWriter now always run
    . See https://savannah.cern.ch/bugs/index.php?59607
  - Update of Ecal alley
- 
+
 </PRE><H1><A NAME=v7r3>2009-11-21 HltSys v7r3</A></H1><PRE>
- - version based on LHCb v28r3, updates to HltMuon, Hlt1Lines 
-   and HltSettings to fix three small issues, see release 
+ - version based on LHCb v28r3, updates to HltMuon, Hlt1Lines
+   and HltSettings to fix three small issues, see release
    notes of the three packages involved.
 
 </PRE><H1><A NAME=v7r2>2009-11-13 HltSys v7r2</A></H1><PRE>
- - Version based on v28r2 for first beam 
+ - Version based on v28r2 for first beam
  - New ODIN type
- - Hlt2 TES renaming 
+ - Hlt2 TES renaming
  - New lines
  - Lumi restructure
 
@@ -204,7 +206,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
  - Restructure of Settings and configuration
  - HltSelChecker completely rewritten. Now does MC09.
  - Addition of B2DX lines
- - Renaming of XGamma lines 
+ - Renaming of XGamma lines
 
 </PRE><H1><A NAME=v7r0>2009-10-17 HltSys v7r0</A></H1><PRE>
  - HltTrhesholdSettings now specified HltType and L0TCK, thesholds
@@ -224,7 +226,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
 </PRE><H1><A NAME=v6r6>2009-08-11 HltSys v6r6</A></H1><PRE>
  - Hlt2 framework for thresholds now complete
  - Include making of particles into lines
- - Restructing of dependencies, some python has been moved  
+ - Restructing of dependencies, some python has been moved
 
 </PRE><H1><A NAME=v6r5>2009-07-23 HltSys v6r5</A></H1><PRE>
  - Setup framework for Hlt2 thresholds. Not yet complete.
@@ -250,7 +252,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
 
 </PRE><H1><A NAME=v6r0>2009-04-08 HltSys v6r0</A></H1><PRE>
  - Hlt2 selections rewritten to use Hlt2 lines (Vava & Gerhard)
- - Do not create new Hlt2SelXxx.py files anymore. 
+ - Do not create new Hlt2SelXxx.py files anymore.
 
 </PRE><H1><A NAME=v5r2>2009-03-23 HltSys v5r2</A></H1><PRE>
  - Topological trigger released
@@ -306,7 +308,7 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
 </PRE><H1><A NAME=v4r1>2008-08-29 HltSys v4r1</A></H1><PRE>
 
  This version uses LHCb v25r0 and Gaudi v20r2
- . Many changes to get pythonized configuration. 
+ . Many changes to get pythonized configuration.
  . Prepare for working version in the pit.
  . New packages HltConf, HltHidValley
 
@@ -316,23 +318,23 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
  - Remove HltInit from Hlt.opts
 
 ! 2008-08-26 - Jaap Panman
- - add a list of histos to plot to HltLumiReadHistos.py 
+ - add a list of histos to plot to HltLumiReadHistos.py
 
 ! 2008-08-25 - Jaap Panman
  - add HltLumiReadHistos.py to read back lumi-nano files
  - modify HltLumiAlleyConfSequence.py to write nano files
- - corresponding updates to HltLumiAlleyonly.opts, HltJob_readLumi.opts, 
+ - corresponding updates to HltLumiAlleyonly.opts, HltJob_readLumi.opts,
 	 HltJob_readLumiPy.opts Hlt1_onlyLumi.opts
 
 ! 2008-08-20 - Gerhard Raven
- - replace HltAlleys by Hlt1Global following TISTOS naming convention 
+ - replace HltAlleys by Hlt1Global following TISTOS naming convention
  - include HltInit.opts in Hlt1.opts (TODO: rename Hlt1Init once
    it isn't used externally anymore)
  - use GaudiPoolDbRoot.opts directly instead of obsolete DstDicts.opts
  - rename HltLumiFillRawBuffer with HltLumiWriter
  - make sure PV2D is available in MuHad alley
  - add HltConf to requirements
- - first python config: lumi 
+ - first python config: lumi
  - make sure that 'prepare' doesn't require positive inputs
 
 ! 2008-08-18 - Sandra Amato
@@ -341,23 +343,23 @@ Dummy release to pick up the latest Phys for DaVinci, 2011 reprocessing and 2010
 </PRE><H1><A NAME=v4r0>2008-08-06 HltSys v4r0</A></H1><PRE>
 
  This version uses LHCb v25r0 and Gaudi v20r2
- . Many changes for Gaudi state machine and use of TCK. 
+ . Many changes for Gaudi state machine and use of TCK.
  . Hlt1: New packages HltEcalAlley, HltLuminosity, HltGlobalMonitor, HltRawData
- . Hlt2: Removed all .opts files and replaced by .py. 
+ . Hlt2: Removed all .opts files and replaced by .py.
 
 ! 2008-08-13 - Jaap Panman
- - add options files for onlyLumi 
+ - add options files for onlyLumi
 
 ! 2008-08-08 - Tomasz Skwarnicki
- - add Hlt1PhotonDiTrackDecision to HltInit.opts 
+ - add Hlt1PhotonDiTrackDecision to HltInit.opts
 
 !========================== HltSys v4r0 2008-08-06 ===================
 ! 2008-08-06 - Patrick Koppenburg
- - L0.opts : Flag it as temporary. Will be removed in next version. 
+ - L0.opts : Flag it as temporary. Will be removed in next version.
 
 ! 2008-08-05 - Patrick Koppenburg
  - UGLY PATCH in HltRecoSequence.opts
-/// PATCH /// @todo remove                                                                                                                  
+/// PATCH /// @todo remove
 HltRecoCALOSeq.Members -= { "GaudiSequencer/HltCaloDigits" };
 
  => remove when new CaloReco is out.
@@ -386,7 +388,7 @@ HltRecoCALOSeq.Members -= { "GaudiSequencer/HltCaloDigits" };
  - add Hlt1Hadron*InternalMonitor.opts and split velo reco in tracks in PVs
 
 ! 2008-07-22 - Gerhard Raven
- - remove obsolete options in HltMainSequence 
+ - remove obsolete options in HltMainSequence
 
 ! 2008-07-18 - Gerhard Raven
  - and put it back after removing the spurious dependency on Online (Gaucho)...
@@ -411,8 +413,8 @@ HltRecoCALOSeq.Members -= { "GaudiSequencer/HltCaloDigits" };
  This version uses LHCb v24r0
  . Many preparations for Gaudi state machine
  . Adabatic improvements in Hlt1 and 2.
- . No dependency on HltEnums in Hlt2 anymore. 
- . Change of naming conventions following 
+ . No dependency on HltEnums in Hlt2 anymore.
+ . Change of naming conventions following
 https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
 
 ! 2008-07-17 - Jaap Panman
@@ -454,7 +456,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
  - HltRecoSequence has now the guide (Hlt1) and full (Hlt1,Hlt2) reconstruction
  - changed muon,hadron,ele,photon,muhad alleys to use Hlt1 reconstruction
  - hadron alley uses now hlt1,hlt2 reco
- - change the name of the mathing: VeloT->VeloTDist, PatMatch ->VeloT 
+ - change the name of the mathing: VeloT->VeloTDist, PatMatch ->VeloT
 
 ! 2008-06-25 - Gerhard Raven
  - Renamed SelectionID to Hlt1SelectionID
@@ -477,7 +479,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
 </PRE><H1><A NAME=v3r3>2008-06-09 HltSys v3r3</A></H1><PRE>
  This version uses LHCb v23r7.
  . Use of IANNSvc to get IDs and names from a service
- . Systematically used in HLT2.  
+ . Systematically used in HLT2.
 
 !2008-06-12 - Mariusz Witek
   - Modified PatPV3D options in HltRecoSequence due to PatPV changes
@@ -492,7 +494,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
   - Hlt1HadronSequence.opts : default hadron sequence: via guided forward
   - Hlt1HadronForwardSequence.opts: via forward
 	- Hlt1HadronViaTSequence.opts: via T, small update
-  - Do not confirm the muons if they are done (solved a bug)	
+  - Do not confirm the muons if they are done (solved a bug)
   - Hlt1MuTrackSequence - latest opts from Antonio
 
 !2008-06-04 - Johannes Albrecht
@@ -514,7 +516,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
  - Added Fidel package
 
 </PRE><H1><A NAME=v3r2>2008-04-25 HltSys v3r2</A></H1><PRE>
- This version uses LHCb v23r5. 
+ This version uses LHCb v23r5.
 
 
 ! 2008-05-14 - Jaap Panman
@@ -524,7 +526,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
  - added HltPatSeedSequence.opts (manages Pat and PatDownstream)
 
 
- - Splitting of Hlt in Hlt1 and Hlt2. Still ongoing. 
+ - Splitting of Hlt in Hlt1 and Hlt2. Still ongoing.
    . Hlt2 completely rewritten
 
 ! 2008-05-07 - Gerhard Raven
@@ -550,13 +552,13 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
 	- HltMuonAlleyConfSequece - 8 separate alleys for the single(2) and puredimuon(2)+ l0+l0-dimuon(2) + l0+musegment-dimuon(2)
 
 ! 2008-04-15 - Patrick Koppenburg
- - Big reshuffling of option files. 
+ - Big reshuffling of option files.
    -> Rename alleys to Hlt1 and selections to Hlt2.
-   -> Be able to run Hlt1 and Hlt2 seperately. 
-   
-  To run all Hlt include: 
+   -> Be able to run Hlt1 and Hlt2 seperately.
+
+  To run all Hlt include:
   (this is backward compatible with other options in DaVinci)
- 
+
   #include "$HLTSYSROOT/options/Hlt.opts"
 
   To run only alleys:
@@ -567,7 +569,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
 
   #include "$HLTSYSROOT/options/Hlt2.opts"
 
-  in the first two cases make sure the required L0 data is present 
+  in the first two cases make sure the required L0 data is present
   (if not rerun L0)
 
   Details of commit:
@@ -576,7 +578,7 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
   . options/Hlt1.opts : new options to run alleys
   . options/Hlt2.opts : new options to run selections
   . options/HltMainSequence.opts : options common to Hlt1 and Hlt2. Included
-      by both. Take care when changing. Make sure changes work for both 
+      by both. Take care when changing. Make sure changes work for both
       trigger levels.
 
 ! 2008-04-08- Jose A. Hernando
@@ -594,13 +596,13 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
 
 ! 2008-03-18 - Sandra Amato
   - In HltMuonAlleyConfSequence.opts:
-    fixed abs value in the cut of RZVelo Matching with T 
-    changed the filter in L0PT : 
+    fixed abs value in the cut of RZVelo Matching with T
+    changed the filter in L0PT :
     L0MuonSingle.FilterDescriptor = {"PT0,||>,1300"}
 
 </PRE><H1><A NAME=v3r1>2008-02-06 HltSys v3r1</A></H1><PRE>
- This version uses LHCb v23r4. 
- - First release of HLT using LoKi::Hybrid. Users can start tuning their cuts now! 
+ This version uses LHCb v23r4.
+ - First release of HLT using LoKi::Hybrid. Users can start tuning their cuts now!
    See the tutorial at https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial4
  - HltSelChecker revisited. Now uses DecayTreeTuple.
  - New tools for configuration (TCK, etc)
@@ -624,26 +626,26 @@ https://twiki.cern.ch/twiki//bin/view/LHCb/HltTriggerSelectionNamingConvention
 
 !- 2008-02-14 Gerhard Raven
   - start migration from HltSequencer to the upgraded GaudiSequencer
-    (note that the # of entries in eg. DimuonFromL0Single drops, but the 
+    (note that the # of entries in eg. DimuonFromL0Single drops, but the
      # of passed remains the same -- this is probably due to a bug in the
-     not-shortcircuit logic in OR mode of HltSequencer which is fixed 
+     not-shortcircuit logic in OR mode of HltSequencer which is fixed
      in GaudiSequencer)
 
 !- 2008-02-12 Jose A. Hernando
-  - HltHadAlleyConfSequence: 
+  - HltHadAlleyConfSequence:
       . two triggers in single and dihadron triggers, no optimized for eff vs ret jet, rate of the hadron has been duplicated in L0 10 kHz, while gaining all possible efficiency in the B-->hh.
       . remove max value of the IP cut
 
 </PRE><H1><A NAME=v3r0>2008-02-05 HltSys v3r0</A></H1><PRE>
-This version uses LHCb v23r3. 
- - There has been a major cleanup of the code in the alleys. 
- - The selections now include the inclusive muon selections. But the rate is still unreasonable. 
+This version uses LHCb v23r3.
+ - There has been a major cleanup of the code in the alleys.
+ - The selections now include the inclusive muon selections. But the rate is still unreasonable.
  - First version of HltKshort, but not yet run.
 
 !========================== HltSys v3r0 2007-02-05 ===================
 ! 2008-02-04 - Tomasz Skwarnicki
   - Fix HltL0TriggerSequence to restore ability to Tis/Tos L0 Trigger
-  - Fix HltAlleys in HltSelections.opts to refer to the one in Hlt.opts 
+  - Fix HltAlleys in HltSelections.opts to refer to the one in Hlt.opts
 
 ! 2008-01-30 - Jose A. Hernando
   - Replaceing distance by IsMuon in MuonAlley
@@ -670,7 +672,7 @@ version migtated to Tf.
  - options to run the HLT muon, and hadron in the Tf
 
 ! 2007-12-11 - Gerhard Raven
- - make options consistent with current code: 
+ - make options consistent with current code:
     Hlt{Ele,MuHad,Phi}AlleyConfSequence.opts, HltRecoCheck.opts
 
 ! 2007-12-06 - Jose A. Hernando
@@ -687,7 +689,7 @@ version migtated to Tf.
 
 This version uses LHCb v22r11
 
-  - Online benchmark version. Last version using Pat. 
+  - Online benchmark version. Last version using Pat.
 
 !========================== HltSys v1r11 2007-11-14 ===================
 
@@ -706,7 +708,7 @@ This version uses LHCb v22r11
 ! 2007-10-30 - Sandra Amato
  - HltMuonAlleyConfSequence.opts: removed Pre-trigger and forward reco.
               changed the name of L0MuonAndTConf to TTrackAndDistCut.
- - Hlt.opts: substitute 
+ - Hlt.opts: substitute
    HltSelectionDataToTes.Copy+={"MuonsForwardSingle" ,"DiMuonsForward"};
    by
    HltSelectionDataToTes.Copy+={"MuonAndTVelo", "DiMuonAndTVelo"};
@@ -716,7 +718,7 @@ This version uses LHCb v22r11
    by
    HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonAndTVelo";
    HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonAndTVelo";
- 
+
 ! 2007-10-29 - Hugo Ruiz
  - add HltMuHadAlleyConfSequence.opts with options for Muon+Hadron Alley
  - Hlt.opts: add Muon+Hadron Alley in sequence
@@ -728,8 +730,8 @@ This version uses LHCb v22r11
 This version uses LHCb v22r10
 
   - Minor release for DaVinci v19r6. All big developments will go into the
-    next release v2r0. 
-  - Changes in Hlt options and HltSelections to reflect changes in Muon 
+    next release v2r0.
+  - Changes in Hlt options and HltSelections to reflect changes in Muon
     alleys.
   - Bug fix in ecal alley options
 
@@ -748,7 +750,7 @@ This version uses LHCb v22r10
  - Remove many obsolete opts files!
 
 ! 2007-10-10 - Tomasz Skwarnicki
- - HltMuonAlleyConfSequence.opts, HltL0TriggerSequence.opts: rename all "Rec/..." to "Hlt/..." for track & vertex locations  
+ - HltMuonAlleyConfSequence.opts, HltL0TriggerSequence.opts: rename all "Rec/..." to "Hlt/..." for track & vertex locations
 
 ! 2007-10-10 - Jose A. Hernando
  - HltRecoSequence.opts: make PatVeloRTracking and PatPV2D a separate instance of HLT
@@ -777,7 +779,7 @@ This version uses Gaudi v19r4 and LHCb v22r9
 
 ! 2007-09-20 Tomasz Skwarnicki
  - add HltEleAlleyConfSequence and HltPhoAlleySequence (new Ecal trigger prototypes)
- - change HltMuonAlleyConfSequence to properly initialize L0 tracks in Single Muon Alley 
+ - change HltMuonAlleyConfSequence to properly initialize L0 tracks in Single Muon Alley
    via merge of L0TriggerMuon and L0TriggerMuonNoGlob
 
 ! 2007-09-11 Tomasz Skwarnicki
@@ -799,7 +801,7 @@ This version uses Gaudi v19r4 and LHCb v22r9
    to fix the problem with corrupted selection summaries
  - add HltL0TriggerSequence with conversion of all L0 triggers to Hlt summaries (for L0 TisTosing)
    use standard summary names: L0TriggerXXX where XXX is the name of "L0Channel" with 1st letter
-   capitalized; 
+   capitalized;
    remove such conversions from Dimuon and Had Alleys and make them use standard L0 names
 
 ! 2007-08-15 - Patrick Koppenburg
@@ -833,14 +835,14 @@ HltSys options:
 (In Hlt.opts)
 
 ! 2007-07-26 - Alessia Satta
- - Correct trigger condition initialization in muon alley 
+ - Correct trigger condition initialization in muon alley
    ( thanks to sandra)
 
 ! 2007-07-23 - Patrick Koppenburg
  - Moved inclusion of explicit selections to HltSelections package
 
 ! 2007-07-20 - Alessia Satta
- - Options to store the summary for muon alley and to provide muon on TES 
+ - Options to store the summary for muon alley and to provide muon on TES
    for HltSelections and change L0DU setting
 
 ! 2007-07-16 - Patrick Koppenburg
@@ -864,16 +866,16 @@ HltSys options:
    ordering a little.
 
 ! 2007-07-05 J.A. Hernando
-	- options/HltJob.opts to run Hlt in an application (DaVinci, Moore, etc)	
+	- options/HltJob.opts to run Hlt in an application (DaVinci, Moore, etc)
   - options/HltJobProfile.opts to run Hlt hadron alley and do time profile
-  - options/raw06_minbias_1.opts datacards for L0 stripped raw data lumi2 
+  - options/raw06_minbias_1.opts datacards for L0 stripped raw data lumi2
 
 ! 2007-07-02 J.A. Hernando
 	- options/Hlt.opts, HltMuonAlleyConfSequence, recuperating muon alley conf sequence
 
 ! 2007-06-20 J.A. Hernando
-  modified to use HltBase 
-  - options/Hlt.opts HltReco.opts HltMuonAlleySequence.opts HltHadAlleyConfSequence.opts  
+  modified to use HltBase
+  - options/Hlt.opts HltReco.opts HltMuonAlleySequence.opts HltHadAlleyConfSequence.opts
 
 </PRE><H1><A NAME=v1r7>2007-06-18 HltSys v1r7</A></H1><PRE>
 This version uses Gaudi v19r4 and LHCb v22r6
@@ -881,7 +883,7 @@ This version uses Gaudi v19r4 and LHCb v22r6
   - Only minor changes. Some typo-fixes in HltSelections.
 
   - New Setup to allow a quick development of cuts.
-    . New packages LoKiHybridBase, LoKiTrack, LoKiMCHybrid, LoKiTrHybrid, 
+    . New packages LoKiHybridBase, LoKiTrack, LoKiMCHybrid, LoKiTrHybrid,
       LoKIArrayFunctors.
     . HltBase moved here.
 
@@ -892,16 +894,16 @@ HltSys options:
 </PRE><H1><A NAME=v1r6>2007-05-25 HltSys v1r6</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r5
 
-Packages modified: HltSelections v5r2, HltTracking v1r3p1, 
+Packages modified: HltSelections v5r2, HltTracking v1r3p1,
 HltL0Conf v1r1, HltL0MuonConf v1r0 (new)
 
-- J.A. Hernando 24/5/07 In HltSys/options 
+- J.A. Hernando 24/5/07 In HltSys/options
   * it uses LHCb v22r5, REC v4r5 *
   . HltFullReco.opts HltReco.opts changed options to use PatVeloTT v2r11
 
 - In HltSys options
   . Added temporary clone killer in HltProtoParticles
-  . Added HltSelectionsDecision algorithm in selections 
+  . Added HltSelectionsDecision algorithm in selections
 
 </PRE><H1><A NAME=v1r5>2007-04-26 HltSys v1r5</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4
@@ -982,7 +984,7 @@ Packages modified: HltCaloAlley v1r2, HltCommon v1r3, HltHadAlley v1r2,
 
 - In HltHadAlley v1r2
   . Fixes to compile with new base classes
-                   
+
 - In HltMuonAlley v1r3
   . src/*DiMuons.cpp chaning info() to debug() for dd printout
 
@@ -1019,7 +1021,7 @@ Packages modified: HltCaloAlley v1r1, HltCommon v1r2, HltMuon v1r2,
 </PRE><H1><A NAME=v1r0>2006-12-06 HltSys v1r0</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12.
 
-It contains the Hlt packages previously in Rec v3r14, as well as the first 
+It contains the Hlt packages previously in Rec v3r14, as well as the first
 public version of HltCaloAlley
 
 </PRE>
