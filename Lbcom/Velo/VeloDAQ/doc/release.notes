@@ -3,6 +3,7 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r4 2011-07-27 =========================
 ! 2011-07-19 - Kurt Rinnert
  - added swtich to ZS decoder to allow decoding of clusters in the presence of
    errors for expert debugging.
