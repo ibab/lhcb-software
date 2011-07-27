@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r53 2011-07-27 =========================
 ! 2011-07-25 - Chris Jones
  - Add some missing debug printout protection to RichPIDQC
  - Add more optional (disabled by default) plots to RecoQC to show the 
