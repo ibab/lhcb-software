@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-07-27 - Marco Cattaneo
+ - Protect an unproteted DEBUG message
+
 ! 2011-07-25 - Chris Jones
  - Add "Hlt" to the list of sub-systems ProcStatAbortMoni knows about
 

@@ -1,4 +1,3 @@
-// $Id: RecInit.cpp,v 1.8 2009-03-05 14:51:27 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -59,7 +58,7 @@ StatusCode RecInit::initialize()
   const StatusCode sc = LbAppInit::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   // Private tool to plot the memory usage
   m_memoryTool = tool<IGenericTool>( "MemoryTool", "BrunelMemory", this, true );
