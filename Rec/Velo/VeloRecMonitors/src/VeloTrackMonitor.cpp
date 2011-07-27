@@ -545,7 +545,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
           }
 
           // transform to VELO half phi state
-          verbose() << "Phi local is " << phi_state * degree << endmsg;
+          if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+            verbose() << "Phi local is " << phi_state * degree << endmsg;
           Gaudi::RhoZPhiPoint phiStateLoc;
           phiStateLoc.SetRho( 1. );
           phiStateLoc.SetPhi( phi_state * degree );
@@ -558,7 +559,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
           phiStateGlobal = phiSensor->localToGlobal( phiStateLocal );
           Gaudi::XYZPoint phiStateHalf = phiSensor->localToVeloHalfBox( phiStateLocal );
           double phi_state_half = phiStateHalf.Phi() / degree;
-          verbose() << "Phi half is " << phi_state_half  << endmsg;
+          if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+            verbose() << "Phi half is " << phi_state_half  << endmsg;
           // phi sensor numbering is 64-105, filled into 42-83
           m_prof_res[ n_sen - 22 ]->fill( phi_state_half, biasedResid / um ); 
         }

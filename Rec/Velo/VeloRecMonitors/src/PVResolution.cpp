@@ -72,8 +72,6 @@ public:
   virtual StatusCode execute();    ///< Algorithm execution
 
 private:
-  bool printDebug()   const {return msgLevel(MSG::DEBUG);};
-  bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   void fill_ntuplePV(std::vector<LHCb::RecVertex> outvec, std::string name);       ///< Fill vertex information
   
   void fill_ntuplePVMC(std::vector<LHCb::RecVertex> outvec, 
@@ -259,8 +257,9 @@ StatusCode PVResolution::execute()
 
   if ( exist<LHCb::ODIN>( LHCb::ODINLocation::Default )){
     LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-    debug() << "Run "    << odin->runNumber()
-           << ", Event " << odin->eventNumber() << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Run "    << odin->runNumber()
+              << ", Event " << odin->eventNumber() << endmsg;
     m_runodin=odin->runNumber();
     m_eventodin= odin->eventNumber();
     m_bunchid= odin->bunchId();

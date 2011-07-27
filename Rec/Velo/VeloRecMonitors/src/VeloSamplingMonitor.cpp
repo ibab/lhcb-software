@@ -1,4 +1,3 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.11 2009-10-12 17:14:11 krinnert Exp $
 // Include files
 // -------------
 
@@ -23,7 +22,7 @@
 
 // Declaration of the Algorithm Factory
 namespace Velo {
-  DECLARE_ALGORITHM_FACTORY( VeloSamplingMonitor );
+  DECLARE_ALGORITHM_FACTORY( VeloSamplingMonitor )
 }
 
 //=============================================================================
@@ -76,7 +75,8 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   m_hClusADCSampBotC = book2D( histIDBase + "BC", histTitleBase + "Bottom, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   m_hClusADCSampBotA = book2D( histIDBase + "BA", histTitleBase + "Bottom, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   if ( m_useNZS ) {
-    m_hChanADCSamp = book2D( "ChanADCSamp", "Channel ADC values versus sampling index", -0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51 );
+    m_hChanADCSamp = book2D( "ChanADCSamp", "Channel ADC values versus sampling index",
+                             -0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51 );
   }
   
   m_histClusADCSampAll = Gaudi::Utils::Aida2ROOT::aida2root(
@@ -152,7 +152,8 @@ Velo::VeloSamplingMonitor::veloClusters( std::string samplingLocation ) {
     debug() << "Retrieving VeloClusters from " << tesPath << endmsg;
 
   if ( !exist<LHCb::VeloClusters>( tesPath ) ) {
-    debug() << "No VeloClusters container found for this event !" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No VeloClusters container found for this event !" << endmsg;
     return 0;
   }
   else {
@@ -178,7 +179,8 @@ Velo::VeloSamplingMonitor::veloTell1Data( std::string samplingLocation ) {
     debug() << "Retrieving VeloTell1Data from " << tesPath << endmsg;
   
   if ( !exist<LHCb::VeloTELL1Datas>( tesPath ) ) {
-    debug() << "No VeloTell1Data container found for this event !" << endmsg; 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No VeloTell1Data container found for this event !" << endmsg; 
     return 0;
   }
   else {

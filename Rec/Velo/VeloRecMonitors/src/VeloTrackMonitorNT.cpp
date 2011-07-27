@@ -1,4 +1,3 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.7 2010-03-26 10:26:52 szumlat Exp $
 // Include files 
 
 
@@ -45,7 +44,7 @@ using namespace std;
  
 typedef IVeloClusterPosition::Direction Direction;
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitorNT );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitorNT )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -796,7 +795,8 @@ const LHCb::MCHit* VeloTrackMonitorNT::getAssocMCHit(const LHCb::VeloCluster* cl
 //============================================================================
 VeloChannelID VeloTrackMonitorNT::weightedMean(const VeloCluster* cluster, double& isp)
 {
-  debug()<< " ==> weightedMean() " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug()<< " ==> weightedMean() " <<endmsg;
   //
   StatusCode sc;
   int strips=cluster->size();
@@ -809,7 +809,8 @@ VeloChannelID VeloTrackMonitorNT::weightedMean(const VeloCluster* cluster, doubl
     sc=sensor->channelDistance(cluster->channels()[0], 
                                cluster->channels()[strip], intDistance);
     sc.ignore();
-    debug()<< " int distance: " << intDistance <<endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug()<< " int distance: " << intDistance <<endmsg;
     centre+=(static_cast<float>(intDistance+100))*
             cluster->stripValues()[strip].second;
     totalCharge+=cluster->stripValues()[strip].second;
@@ -817,7 +818,8 @@ VeloChannelID VeloTrackMonitorNT::weightedMean(const VeloCluster* cluster, doubl
   centre/=totalCharge;
   centre-=100;
   intDistance=static_cast<int>(LHCb::Math::round(centre));
-  debug()<< " centre: " << centre <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug()<< " centre: " << centre <<endmsg;
   isp=centre-intDistance;
   VeloChannelID intDistanceID;
   sc=sensor->neighbour(cluster->channels()[0], intDistance, intDistanceID);

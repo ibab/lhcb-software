@@ -1,4 +1,3 @@
-// $Id: VeloIPResolutionMonitorNT.cpp,v 1.18 2010/04/02 16:09:45 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitorNT.h"
 
@@ -110,7 +109,8 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
   if( !exist<RecVertices>( m_vertexLocation ) ){
     string counterName = string("No data at ") + m_vertexLocation ;
     counter( counterName )++;
-    debug() << "No data at " << m_vertexLocation << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No data at " << m_vertexLocation << endmsg;
     return StatusCode::SUCCESS;
   }
   const RecVertices* pvs = get<RecVertices>( m_vertexLocation );
@@ -293,7 +293,9 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
       for( IMaterialLocator::Intersections::iterator intersectionIt = intersections.begin() ;
            intersectionIt != intersections.end() ; ++ intersectionIt ){
         double deltaZ = intersectionIt->z2 - intersectionIt->z1 ;
-        double distance = std::sqrt( std::pow( deltaZ, 2 ) + std::pow( intersectionIt->ty*deltaZ, 2 ) + std::pow( intersectionIt->tx*deltaZ, 2 ) ) ;
+        double distance = std::sqrt( std::pow( deltaZ, 2 ) + 
+                                     std::pow( intersectionIt->ty*deltaZ, 2 ) +
+                                     std::pow( intersectionIt->tx*deltaZ, 2 ) ) ;
         xOverX0 += distance/intersectionIt->material->radiationLength() ;
         distances.push_back( distance ) ;
         X0s.push_back( intersectionIt->material->radiationLength() ) ;
@@ -364,7 +366,8 @@ StatusCode Velo::VeloIPResolutionMonitorNT::finalize() {
 
 StatusCode Velo::VeloIPResolutionMonitorNT::calculateIPs( const RecVertex* pv, const Track* track,
                                                           double& ip3d, double& ip3dsigma, double& ipx, double& ipxsigma,
-                                                          double& ipy, double& ipysigma, State& stateAtPVZ, State& POCAtoPVstate ){
+                                                          double& ipy, double& ipysigma,
+                                                          State& stateAtPVZ, State& POCAtoPVstate ){
 
   bool isSuccess( true ) ;
 

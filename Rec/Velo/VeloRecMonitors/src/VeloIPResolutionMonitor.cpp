@@ -1,4 +1,3 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.18 2010/04/02 16:09:45 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -30,7 +29,7 @@ using namespace std ;
 // Declaration of the Algorithm Factory
 namespace Velo
 {
-  DECLARE_ALGORITHM_FACTORY( VeloIPResolutionMonitor );
+  DECLARE_ALGORITHM_FACTORY( VeloIPResolutionMonitor )
 }
 
 
@@ -148,7 +147,8 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   if( !exist<RecVertices>( m_vertexLocation ) ){
     string counterName = string("No vertices at ") + m_vertexLocation ;
     counter( counterName )++;
-    debug() << "No vertices at " << m_vertexLocation << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No vertices at " << m_vertexLocation << endmsg;
     return StatusCode::SUCCESS;
   }
   const RecVertices* pvs = get<RecVertices>( m_vertexLocation );  

@@ -1,4 +1,3 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.12 2010-03-15 09:05:34 jmylroie Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -38,7 +37,7 @@
 // Declaration of the Algorithm Factory
 namespace Velo 
 {
-  DECLARE_ALGORITHM_FACTORY( VeloExpertClusterMonitor );
+  DECLARE_ALGORITHM_FACTORY( VeloExpertClusterMonitor )
 }
 
 //using namespace LHCb;
@@ -128,7 +127,8 @@ StatusCode Velo::VeloExpertClusterMonitor::execute() {
   if ( m_debugLevel ) debug() << "==> Execute" << endmsg;
 
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-    debug() << "No VeloClusters container found for this event !" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No VeloClusters container found for this event !" << endmsg;
     return StatusCode::FAILURE;
     
   }
@@ -141,7 +141,8 @@ StatusCode Velo::VeloExpertClusterMonitor::execute() {
 
 
   if ( !exist<LHCb::Tracks>( m_trackCont ) ) {
-    debug() << "No VeloTracks container found for this event !" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No VeloTracks container found for this event !" << endmsg;
     //    return StatusCode::FAILURE;
   }
   else {
@@ -160,49 +161,60 @@ StatusCode Velo::VeloExpertClusterMonitor::execute() {
 // Loop over cluster container
 //=============================================================================
 StatusCode Velo::VeloExpertClusterMonitor::loopClusters (){
-  debug() << " ==> plotClusters " << endmsg;
-  debug() << "Before making itereators" << endmsg;
+
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << " ==> plotClusters " << endmsg;
+    debug() << "Before making itereators" << endmsg;
+  }
+  
   LHCb::VeloClusters::const_iterator itClusters ;
 
-  
   std::string dirName;
   //   //=========================
   //   //loop for the raw clusters
   //   //=========================
   
-  debug() << "Before Loop over raw clusters" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Before Loop over raw clusters" << endmsg;
   for (itClusters = m_clusters->begin();itClusters != m_clusters->end(); ++itClusters ) {
-    debug() << "Loop over raw clusters" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Loop over raw clusters" << endmsg;
     LHCb::VeloCluster* cluster = *itClusters;
 
     LHCb::VeloChannelID vcID = cluster->channelID();
 
     if (m_RZones||m_PhiZones||m_Expert){
-      debug() << "Loop over raw clusters 3" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Loop over raw clusters 3" << endmsg;
       LHCb::VeloChannelID idfilter = cluster->channelID();
-      debug() << "Loop over raw clusters 4" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Loop over raw clusters 4" << endmsg;
       unsigned int zone = (m_veloDet->sensor(cluster->channelID().sensor())->zoneOfStrip(cluster->channelID().strip()));  
       if(idfilter.isRType() && (m_RZones||m_Expert)){
-        debug() << "\t-> is r type" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "\t-> is r type" << endmsg;
         boost::format fmtEvt ( "raw/non_corr/r_zone_%03d" ) ;
         fmtEvt % zone ;
         dirName = fmtEvt.str() ;
-        debug() << "----------Expert Mode------------" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "----------Expert Mode------------" << endmsg;
         plotCluster(cluster,dirName);
       }
       else if (idfilter.isPhiType() && (m_PhiZones||m_Expert)){
-        debug() << "\t-> is phi type" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "\t-> is phi type" << endmsg;
         boost::format fmtEvt ( "raw/non_corr/phi_zone_%03d" ) ;
         fmtEvt % zone ;
         dirName = fmtEvt.str() ;
-        debug() << "----------Expert Mode------------" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "----------Expert Mode------------" << endmsg;
         plotCluster(cluster,dirName);
       }
     }
     
     
-    
-    debug() << "Plot RAW clusters" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Plot RAW clusters" << endmsg;
     plotCluster(cluster,"raw");
   }
   return StatusCode::SUCCESS;
@@ -213,14 +225,16 @@ StatusCode Velo::VeloExpertClusterMonitor::loopClusters (){
 StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
   
  
-  debug() << "Before making itereators" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Before making itereators" << endmsg;
   LHCb::Tracks::const_iterator itT ; 
   
   // //    loop for the rec track clusters
   std::string dirName;
   for (itT = tracks->begin();itT != tracks->end(); ++itT ) {
     LHCb::Track* track = *itT;
-    debug() << "Loop over Tracks" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Loop over Tracks" << endmsg;
     const std::vector< LHCb::LHCbID > & trackID = track->lhcbIDs() ;
     Gaudi::XYZVector slope= track->slopes();
     double theta = slope.Theta();
@@ -228,7 +242,8 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
     std::vector<LHCb::LHCbID>::const_iterator iID;
     std::vector<LHCb::LHCbID>::const_iterator imatchID;
     for (iID=trackID.begin(); iID!=trackID.end(); ++iID) {
-      debug()<<"==> Loop over track IDs"<<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug()<<"==> Loop over track IDs"<<endmsg;
       if((*iID).isVelo()) {
         const LHCb::VeloChannelID vcID = (*iID).veloID();
         LHCb::VeloCluster *cluster = m_clusters->object( vcID );
@@ -241,7 +256,8 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
         if(idfilter.isRType()&& (m_Matching||m_Expert)){
           // add loop over track to get the relevent phi sensor cluster
           for (imatchID=iID; imatchID!=trackID.end(); ++imatchID) {
-            debug() << "\t==> Second Loop over tracks for matching points" << endmsg;
+            if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+              debug() << "\t==> Second Loop over tracks for matching points" << endmsg;
             const LHCb::VeloChannelID vcmatchID = (*imatchID).veloID();
             LHCb::VeloCluster *cluster_match = m_clusters->object( vcmatchID );
             LHCb::VeloChannelID idfilter_match = cluster_match->channelID();
@@ -251,7 +267,8 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
             const DeVeloPhiType* associated_sensor =  r_to_match->associatedPhiSensor();
             unsigned int phisenNo = associated_sensor->sensorNumber();
             unsigned int rsenNo = r_to_match->sensorNumber();
-            debug() << "\t==> R sensor found to then match to: "<< rsenNo << endmsg;            
+            if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+              debug() << "\t==> R sensor found to then match to: "<< rsenNo << endmsg;            
             if (phisenNo== init_sensor ){
             }
           }
@@ -292,7 +309,8 @@ StatusCode Velo::VeloExpertClusterMonitor::loopTracks (){
 
 StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluster,std::string ClusterType,
                                                        double theta,double prap){
-  debug() << " ==> plotClusters " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << " ==> plotClusters " << endmsg;
 
   LHCb::VeloChannelID idtemp = cluster->channelID();
   int clsens = idtemp.sensor();
@@ -363,7 +381,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
         plotRPhiRange(cluster,idtemp,corr_adc,"/corr",corr_clsize,ClusterType,theta);
       }
     }
-    debug() << "\t ->plot adc and size for all" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "\t ->plot adc and size for all" << endmsg;
     plotSensorsADC(adc,"/non_corr",ClusterType,clsens);
     if(m_plotClSize)    plotSensorsSize(clsize,"/non_corr",ClusterType,clsens);
     if(theta!=-400.){
@@ -421,7 +440,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
                                                           double adc, std::string path,
                                                           double clsize,std::string ClusterType,
                                                           double theta){
-  debug() << "\t ->plotRPhiRang function" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "\t ->plotRPhiRang function" << endmsg;
   int clsens = idtemp.sensor();
   int clstr = idtemp.strip();
   int rsensnum = 0;
@@ -431,7 +451,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
   double corr_clsize(0);
   corr_clsize =  clsize*cos(theta);
   if(idtemp.isRType()&&(m_RRange||m_BothRange || m_Expert)) {
-    debug() << "\t\t ->rtype sensor" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "\t\t ->rtype sensor" << endmsg;
     const DeVeloRType *rsens = m_veloDet->rSensor(clsens);
     rsensnum = clsens;
     boost::format fmtEvt ( "adc_cluster_sen_%03d" ) ;
@@ -440,7 +461,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
     double rad_step = 43/m_i_max;
     
     for(int i = 0;i<m_i_max;i++){
-      debug() << "\t\t\t ->for loop of rad" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "\t\t\t ->for loop of rad" << endmsg;
       double max_radius = 7+((i+1)*rad_step);
       double min_radius = 7+(i*rad_step);
       std::string radiusName;
@@ -448,7 +470,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       double radius = rsens->rOfStrip(clstr,r_strfr);
       
       if(radius<max_radius && radius>min_radius){
-        debug() << "\t\t\t\t ->if in rad range" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "\t\t\t\t ->if in rad range" << endmsg;
         boost::format fmtEvt ( "/r_range/adc_cluster_r_max_%03d" ) ;
         fmtEvt % max_radius ;
         const std::string radiusname = fmtEvt.str() ;        
@@ -468,13 +491,15 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
     if(m_plotClSize)          plotSensorsSize(corr_clsize,"/corr",ClusterType,clsens);
         }
   } else if(idtemp.isPhiType()&&(m_PhiRange || m_BothRange||m_Expert)) {
-    debug() << "\t ->Phi Type sensor" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "\t ->Phi Type sensor" << endmsg;
     const DeVeloPhiType *psens = m_veloDet->phiSensor(clsens);
     phisensnum = clsens;
 
        double phi_step = Gaudi::Units::pi/m_i_max;
     for(int i = 1;i<(m_i_max+1);i++){
-      debug() << "\t\t ->for loop of Phi" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "\t\t ->for loop of Phi" << endmsg;
       double max_phi = -Gaudi::Units::pi+phi_step*(i+1);
       double min_phi = -Gaudi::Units::pi+phi_step*(i);
       std::string phiName;
@@ -482,7 +507,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
       double phi_strfr = cluster->interStripFraction();
       double phi = psens->idealPhi(clstr,phi_strfr);
       if(phi<max_phi && phi>min_phi){
-        debug() << "\t\t\t ->in phi range" << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "\t\t\t ->in phi range" << endmsg;
         boost::format fmtEvt ( "/phi_range/adc_cluster_phi_max_%03d" ) ;
         fmtEvt % max_phi ;
         phiname = fmtEvt.str() ;
@@ -505,7 +531,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
 // plot all sensors ADCs
 //============================================================================
 StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::string corr,std::string& ClusterType,int sensor_num){
-  debug() << "\t ->plotSensorsADC" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "\t ->plotSensorsADC" << endmsg;
   int  sensor(0);
   if (sensor_num<106){
     if (sensor_num>41){
@@ -533,7 +560,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsSize( double& clsize,
                                                             std::string corr,
                                                             std::string& ClusterType,
                                                             int sensor_num ) {
-  debug() << "\t ->plotSensorSize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "\t ->plotSensorSize" << endmsg;
   plot1D(clsize, ClusterType+corr+"/cluster_size", "Cluster Size ", -0.5, 9.5, 10);
   if(sensor_num!= -400){
     std::string senName;
@@ -551,7 +579,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotAngles( double& adc,
                                                        std::string& range,
                                                        std::string& ClusterType,
                                                        int sensor_num ) {
-  debug() << "\t -> plotAngles" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "\t -> plotAngles" << endmsg;
   plot1D(adc, ClusterType+range, "Cluster ADC ", 0, 100, 100);
   if(sensor_num!= -400){
     std::string senName;

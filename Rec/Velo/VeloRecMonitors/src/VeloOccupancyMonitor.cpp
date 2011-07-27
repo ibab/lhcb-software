@@ -1,4 +1,3 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.23 2010-05-10 15:01:18 krinnert Exp $
 // Include files 
 // -------------
 
@@ -39,7 +38,7 @@
 
 // Declaration of the Algorithm Factory
 namespace Velo {
-  DECLARE_ALGORITHM_FACTORY( VeloOccupancyMonitor );
+  DECLARE_ALGORITHM_FACTORY( VeloOccupancyMonitor )
 }
 
 //=============================================================================
@@ -302,7 +301,8 @@ void Velo::VeloOccupancyMonitor::getOdinBank() {
 
   m_odin = 0;
   if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
-    debug() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
   } else {
     m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
   }
