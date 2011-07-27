@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v32r5>2011-07-26 LHCbSys v32r5</A></H1><PRE>
-This version uses Gaudi v22r2 and LCG_60a
+This version uses Gaudi v22r2 and LCG_60b
 Production version for 2011 data in August 2011
 Development release for commissioning of end of 2011 reprocessing and MC11
 
@@ -18,7 +18,8 @@ Development release for commissioning of end of 2011 reprocessing and MC11
     GaudiConf v14r1, HistoStrings v1r1, LHCbAlgs v2r41, LHCbKernel v13r3,
     LHCbMath v3r26, MCInterfaces v1r14, PartProp v1r10, MuonDAQ v4r10,
     LoKiCore v11r2, LoKiGen v10r3, LoKiMC v10r2, LoKiNumbers v10r1,
-    RichRecBase v4r7, CondDBEntityResolver v5r3, XmlTools v6r5
+    RichRecBase v4r7, CondDBEntityResolver v5r3, XmlTools v6r5,
+    XMLSummaryKernel v1r1
 
 - In Calo/CaloInterfaces v8r3
   . ICaloHypoEstimator : fix minor typo
@@ -107,6 +108,10 @@ Development release for commissioning of end of 2011 reprocessing and MC11
 - In Kernel/MCInterfaces v1r14
   . Move IDecayTool.h, IGenCutTool.h and IFullGenEventCutTool.h interface headers
     from Gen/Generators here to be accessible from other projects than Gauss
+
+- In Kernel/XMLSummaryKernel v1r1
+  . Fix bug in XMLSummary where a dummy input file was filled even if there 
+    was no input defined or used
 
 - In Phys/LoKiCore v11r2
   . HybridBase.h: allow multline code to be used... remove '\n' , '\\n', etc..

@@ -94,7 +94,7 @@ use MCInterfaces          v1r14   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r10   Kernel  # Vanya Belyaev 
 use Relations             v6r0p1  Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r2    Kernel  # Rob Lambert
-use XMLSummaryKernel      v1r0p2  Kernel  # Rob Lambert
+use XMLSummaryKernel      v1r1    Kernel  # Rob Lambert
 
 use L0Base                v1r3    L0      # Julien Cogan
 use L0Interfaces          v1r8    L0      # Olivier Deschamps
