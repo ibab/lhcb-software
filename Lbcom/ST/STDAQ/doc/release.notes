@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : ST/STDAQ
-! Responsible : Jeroen Van Tilburg, Matt Needham
+! Responsible : Greig Cowan
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!========================= STDAQ v3r27 2011-07-27 =========================
 ! 2011-07-27 - Marco Cattaneo
  - Protect unprotected MSG::DEBUG, also using UNLIKELY macro
 
