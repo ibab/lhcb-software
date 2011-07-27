@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.159 2010-06-21 08:11:16 cattanem Exp $
+!----------------------------------------------------------------------------
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+!========================= L0Calo v11r4 2011-07-27 =========================
 ! 2011-06-17 - Patrick Robbe
  - L0CaloAlg.cpp: switch default from UseNewElectron = False (2010
    and 2009 data types) to True (2011 data)
