@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r2 2011-07-27 =========================
 ! 2011-07-19 - Chris Jones
  - propagate "Simulation" flag to RichRecQCConf Configurable.
 
