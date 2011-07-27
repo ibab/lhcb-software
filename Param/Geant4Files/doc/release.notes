@@ -4,6 +4,18 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
+!======================== Geant4Files v94r0 2011-07-27 =======================
+! 2011-07-27 - Gloria CORTI
+ - Adapt soft links to data file for Geant4 9.4 with new versions for
+   . G4EMLOW(6.2->6.19)
+   . G4NDL(3.13->3.14)
+   . PhotonEvaporation(2.0->2.1)
+   . RadioactiveDecay(3.2->3.3)
+   and new data files
+   . RealSurface1.0
+   . G4NEUTRONXS1.0
+   . G4PII1.2
+
 !======================== Geant4Files v92r0 2009-11-03 =======================
 ! 2009-11-03 - Gloria CORTI
  - Adapt soft links to data file for Geant4 9.2:

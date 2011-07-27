@@ -3,24 +3,28 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package           Geant4Files
-version           v92r0
+version           v94r0
 
 # Structure 
 #============================================================================
 branches          cmt doc data
 
-include_path      none
-
-#-- Set data file address
+#-- Set data file addresses
+#============================================================================
 set G4DATA            "$(GEANT4FILESROOT)/data"
-set G4LEVELGAMMADATA  "$(G4DATA)/PhotonEvaporation2.0"
+set G4LEVELGAMMADATA  "$(G4DATA)/PhotonEvaporation2.1"
 
-set G4RADIOACTIVEDATA "$(G4DATA)/RadioactiveDecay3.2"
+set G4RADIOACTIVEDATA "$(G4DATA)/RadioactiveDecay3.3"
 
-set G4LEDATA          "$(G4DATA)/G4EMLOW6.2"
+set G4LEDATA          "$(G4DATA)/G4EMLOW6.19"
 
-set G4NEUTRONHPDATA   "$(G4DATA)/G4NDL3.13"
+set G4NEUTRONHPDATA   "$(G4DATA)/G4NDL3.14"
 
 set G4ABLADATA        "$(G4DATA)/G4ABLA3.0"
 
+set G4REALSURFACEDATA "$(G4DATA)/RealSurface1.0"
+
+set G4NEUTRONXSDATA   "$(G4DATA)/G4NEUTRONXS1.0"
+
+set G4PIIDATA         "$(G4DATA)/G4PII1.2"
 
