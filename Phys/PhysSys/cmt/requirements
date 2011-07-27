@@ -1,5 +1,5 @@
 package PhysSys
-version           v12r5
+version           v12r6
 
 branches doc cmt
 
@@ -22,6 +22,7 @@ use  VertexFit			v6r7p2   Phys    # Yuehong Xie
 use  LoKiFitters                v4r1p2   Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r11p1  Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
+use  HighPtJets                 v1r3     Phys    # Marcin Kucharczyk
 
 #===================================================================
 use LoKiUtils                   v1r1p1   Phys    # Vanya Belyaev
@@ -30,6 +31,7 @@ use LoKiArrayFunctors           v10r0    Phys    # Vanya Belyaev
 use LoKiPhys                    v10r2    Phys    # Vanya Belyaev
 use LoKiProtoParticles          v2r0p1   Phys    # Vanya Belyaev
 use LoKi                        v9r0     Phys    # Vanya Belyaev
+use LoKiTracks                  v2r2     Phys    # Vanya Belyaev
 use KalmanFilter                v1r2     Phys    # Vanya Belyaev
 
 #===================================================================
