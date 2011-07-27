@@ -10,7 +10,7 @@
 #include <boost/lambda/lambda.hpp>
 using namespace boost::lambda ;
 
-DECLARE_TOOL_FACTORY( DetailedMaterialLocator );
+DECLARE_TOOL_FACTORY( DetailedMaterialLocator )
 
 DetailedMaterialLocator::DetailedMaterialLocator( const std::string& type,
 							    const std::string& name,
@@ -28,7 +28,8 @@ DetailedMaterialLocator::DetailedMaterialLocator( const std::string& type,
 
 StatusCode DetailedMaterialLocator::initialize()
 {
-  debug() << "DetailedMaterialLocator::initialize() " << m_minRadThickness << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "DetailedMaterialLocator::initialize() " << m_minRadThickness << endmsg ;
   StatusCode sc = MaterialLocatorBase::initialize();
   if( !sc.isSuccess() ) return Error("Failed to initialize base class",sc) ;
   
@@ -38,8 +39,6 @@ StatusCode DetailedMaterialLocator::initialize()
   // if it is zero, the transport services uses the 'standard' geometry
   IDetectorElement* mainvolume =  m_geometrypath.empty() ? 0 : getDet<IDetectorElement>(m_geometrypath) ;
   m_geometry = mainvolume ? mainvolume->geometry() : 0 ;
-
-  printProps( MSG::DEBUG );
 
   return sc;
 }
@@ -68,7 +67,7 @@ size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const G
                                      << " and " << start.z() + vect.z() 
                                      << ", since it reaches outside LHCb" 
                                      << "start = " << start 
-                                     << " vect= " << vect << endreq ;
+                                     << " vect= " << vect << endmsg ;
   } else {
     try {
       const char chronotag[] = "DetailedMaterialLocator" ;
@@ -83,7 +82,7 @@ size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const G
     } catch (GaudiException& exception) {
       error() << "caught transportservice exception " << exception << std::endl
 	      << "propagating pos/vec: "
-	      << start << " / " << vect << endreq ;
+	      << start << " / " << vect << endmsg ;
       throw exception ;
     }
   }

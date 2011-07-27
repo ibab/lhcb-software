@@ -1,4 +1,3 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.23 2010-04-07 21:08:38 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -13,7 +12,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TrackLinearExtrapolator );
+DECLARE_TOOL_FACTORY( TrackLinearExtrapolator )
 
 //=============================================================================
 // Propagate a state vector from zOld to zNew
@@ -28,7 +27,7 @@ StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   // Bail out if already at destination
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::propagationTolerance ) { 
-    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
     if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     return StatusCode::SUCCESS ;
   }

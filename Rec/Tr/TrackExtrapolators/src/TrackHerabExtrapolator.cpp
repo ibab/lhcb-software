@@ -1,5 +1,3 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.28 2010-04-07 21:08:38 wouter Exp $
-
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -13,7 +11,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TrackHerabExtrapolator );
+DECLARE_TOOL_FACTORY( TrackHerabExtrapolator )
 
 /** @file TrackHerabExtrapolator.cpp
  *
@@ -44,7 +42,7 @@ TrackHerabExtrapolator::TrackHerabExtrapolator(const std::string& type,
 
 StatusCode TrackHerabExtrapolator::initialize() 
 {
-  info() << "ExtrapolatorID=" << m_extrapolatorID << endreq ;
+  info() << "ExtrapolatorID=" << m_extrapolatorID << endmsg ;
   return TrackFieldExtrapolatorBase::initialize() ;
 }
 
@@ -64,7 +62,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   // Bail out if already at destination
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::propagationTolerance ) { 
-    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
     if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     return StatusCode::SUCCESS ;
   }
@@ -201,7 +199,7 @@ void TrackHerabExtrapolator::rk5order(
 
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   qp    = p_in[4];
@@ -460,7 +458,7 @@ void TrackHerabExtrapolator::rk5fast(
   //----------------------------------------------------------------
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   qp    = p_in[4];
@@ -625,7 +623,7 @@ void TrackHerabExtrapolator::rk5fast(                 // Without derivatives
 
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   qp    = p_in[4];
@@ -738,7 +736,7 @@ void TrackHerabExtrapolator::rk5numde(   // Numerical Derivatives ( quite slow )
 
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   qp    = p_in[4];
@@ -806,7 +804,7 @@ void TrackHerabExtrapolator::rk4order(
   //----------------------------------------------------------------
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   double qp    = p_in[4];
@@ -1012,7 +1010,7 @@ void TrackHerabExtrapolator::rk4fast(
   //----------------------------------------------------------------
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   qp    = p_in[4];
@@ -1131,7 +1129,7 @@ void TrackHerabExtrapolator::rk4fast(                // Without derivatives
 
   if (msgLevel(MSG::DEBUG)){
     debug() << format( "rk5order  zIn %8.1f zOut %8.1f X %7.1f y %7.1f ", 
-                     z_in, z_out, p_in[0], p_in[1]) << endreq;
+                     z_in, z_out, p_in[0], p_in[1]) << endmsg;
   }
 
   qp    = p_in[4];

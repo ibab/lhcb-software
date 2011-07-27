@@ -1,5 +1,3 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.16 2010-04-07 21:08:38 wouter Exp $
-
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -14,7 +12,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TrackKiselExtrapolator );
+DECLARE_TOOL_FACTORY( TrackKiselExtrapolator )
 
 /** @file
  *
@@ -50,7 +48,7 @@ StatusCode TrackKiselExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   // Bail out if already at destination
   const double dz = zNew - zOld;
   if( std::abs(dz) < TrackParameters::propagationTolerance ) { 
-    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
     if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     return StatusCode::SUCCESS ;
   }

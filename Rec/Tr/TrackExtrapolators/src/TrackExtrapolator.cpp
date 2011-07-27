@@ -1,4 +1,3 @@
-// $Id: TrackExtrapolator.cpp,v 1.29 2010-04-07 21:08:22 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -141,9 +140,10 @@ StatusCode TrackExtrapolator::propagate( State& state,
   Warning( "Cannot propagate state to Z at given point. See debug for details",
            StatusCode::SUCCESS, 0 ).ignore();
   
-  debug() << " can not propagate state at " << state.z()
-          << " to point at z " << point.z()
-          << " of pid " << pid.pid() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << " can not propagate state at " << state.z()
+            << " to point at z " << point.z()
+            << " of pid " << pid.pid() << endmsg;
 
   return sc;
 }
@@ -198,7 +198,8 @@ StatusCode TrackExtrapolator::propagate( State& state,
       if( sc.isFailure() ) {
         Warning( "Failed to propagate to given z. See debug for details",StatusCode::SUCCESS,0 ).ignore();
         
-        debug() << "Failed to propagate to z = " << ztarget << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "Failed to propagate to z = " << ztarget << endmsg;
         break ;
       }
     }

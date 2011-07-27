@@ -1,5 +1,3 @@
-// $Id: TrackSimpleExtraSelector.cpp,v 1.5 2010-04-07 21:08:38 wouter Exp $
-
 #include "TrackSimpleExtraSelector.h"
 
 // from Gaudi
@@ -8,7 +6,7 @@
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-DECLARE_TOOL_FACTORY( TrackSimpleExtraSelector );
+DECLARE_TOOL_FACTORY( TrackSimpleExtraSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables

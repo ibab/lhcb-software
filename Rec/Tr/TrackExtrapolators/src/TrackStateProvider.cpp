@@ -1,5 +1,3 @@
-// $Id: TrackStateProvider.cpp,v 1.16 2010-04-07 21:08:22 wouter Exp $
-
 // Include files
 // -------------
 // from Gaudi
@@ -215,7 +213,7 @@ namespace {
   }
 }
 
-DECLARE_TOOL_FACTORY( TrackStateProvider );
+DECLARE_TOOL_FACTORY( TrackStateProvider )
 
 //=============================================================================
 // TrackStateProvider constructor.

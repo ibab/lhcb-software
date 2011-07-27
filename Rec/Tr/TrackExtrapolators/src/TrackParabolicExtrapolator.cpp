@@ -23,7 +23,7 @@ using namespace Gaudi::Units;
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TrackParabolicExtrapolator );
+DECLARE_TOOL_FACTORY( TrackParabolicExtrapolator )
 
 //=============================================================================
 // TrackParabolicExtrapolator constructor.
@@ -54,7 +54,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   // Bail out if already at destination
   const double dz = zNew - zOld;
   if( std::abs(dz) < TrackParameters::propagationTolerance ) { 
-    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
+    if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
     // Reset the transport matrix
     if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     return StatusCode::SUCCESS ;

@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2011-07-27 - Marco Cattaneo
+ - Protect unprotected MSG::DEBUG, also using UNLIKELY macro
+ - Remove explicit calls to PrintProps (already done in base class)
+ - Replace all endreq by endmsg
+ - Fix some icc remarks (unnecessary ; after DECLARE_TOOL_FACTORY macro)
+
 !========================= TrackExtrapolators v2r30 2011-03-01 =========================
 ! 2011-01-31 - Wouter Hulsbergen
  - fixed bug in TrackStateProvider

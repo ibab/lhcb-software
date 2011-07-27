@@ -41,9 +41,11 @@ StatusCode TrackFieldExtrapolatorBase::initialize()
 	&LHCb::MagneticFieldGrid::fieldVector :
 	&LHCb::MagneticFieldGrid::fieldVectorClosestPoint ;
       
-      debug() << "UseGridInterpolation: " << m_useGridInterpolation << endreq ;
-      debug() << "Field in center of magnet (in Tesla): "
-	      << fieldVector( Gaudi::XYZPoint( 0, 0, 5000) ) / Gaudi::Units::tesla << endreq ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+        debug() << "UseGridInterpolation: " << m_useGridInterpolation << endmsg ;
+        debug() << "Field in center of magnet (in Tesla): "
+                << fieldVector( Gaudi::XYZPoint( 0, 0, 5000) ) / Gaudi::Units::tesla << endmsg ;
+      }
     }
   }
   m_numFieldCalls = 0 ;
@@ -56,6 +58,7 @@ StatusCode TrackFieldExtrapolatorBase::initialize()
 //=============================================================================
 StatusCode TrackFieldExtrapolatorBase::finalize()
 {
-  debug() << "Number of field calls: " << m_numFieldCalls << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Number of field calls: " << m_numFieldCalls << endmsg ;
   return TrackExtrapolator::finalize();
 }

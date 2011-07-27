@@ -205,7 +205,7 @@ namespace HeunEuler {
 // *********************************************************************************************************
 
 
-DECLARE_TOOL_FACTORY( TrackRungeKuttaExtrapolator );
+DECLARE_TOOL_FACTORY( TrackRungeKuttaExtrapolator )
 
 
 TrackRungeKuttaExtrapolator::~TrackRungeKuttaExtrapolator()
@@ -242,13 +242,15 @@ TrackRungeKuttaExtrapolator::TrackRungeKuttaExtrapolator(const std::string& type
 StatusCode
 TrackRungeKuttaExtrapolator::finalize()
 {
-  debug() << "Number of calls:     " << m_numcalls << endreq ;
-  debug() << "Min step length:     " << m_totalstats.minstep << endreq ;
-  debug() << "Max step length:     " << m_totalstats.maxstep << endreq ;
-  debug() << "Av step length:      " << m_totalstats.sumstep/(m_totalstats.numstep-m_totalstats.numfailedstep) << endreq ;  
-  debug() << "Av num step:         " << m_totalstats.numstep/double(m_numcalls) << endreq ;
-  debug() << "Fr. failed steps:    " << m_totalstats.numfailedstep/double(m_totalstats.numstep) << endreq ;
-  debug() << "Fr. increased steps: " << m_totalstats.numincreasedstep/double(m_totalstats.numstep) << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "Number of calls:     " << m_numcalls << endmsg ;
+    debug() << "Min step length:     " << m_totalstats.minstep << endmsg ;
+    debug() << "Max step length:     " << m_totalstats.maxstep << endmsg ;
+    debug() << "Av step length:      " << m_totalstats.sumstep/(m_totalstats.numstep-m_totalstats.numfailedstep) << endmsg ;  
+    debug() << "Av num step:         " << m_totalstats.numstep/double(m_numcalls) << endmsg ;
+    debug() << "Fr. failed steps:    " << m_totalstats.numfailedstep/double(m_totalstats.numstep) << endmsg ;
+    debug() << "Fr. increased steps: " << m_totalstats.numincreasedstep/double(m_totalstats.numstep) << endmsg ;
+  }
   
   return TrackFieldExtrapolatorBase::finalize() ;
 }
@@ -257,7 +259,8 @@ StatusCode
 TrackRungeKuttaExtrapolator::initialize()
 {
   StatusCode sc = TrackFieldExtrapolatorBase::initialize();
-  debug() << "Using RK scheme: " << m_rkscheme << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Using RK scheme: " << m_rkscheme << endmsg ;
   if(        m_rkscheme == "CashKarp" ) {
     m_a  = CashKarp::a ;
     m_b4 = CashKarp::b4 ; 
@@ -289,7 +292,7 @@ TrackRungeKuttaExtrapolator::initialize()
     m_firstSameAsLast = false ;
     m_numStages = 2 ;
   } else {
-    error() << "No such RK scheme: \"" << m_rkscheme << "\"" << endreq ;
+    error() << "No such RK scheme: \"" << m_rkscheme << "\"" << endmsg ;
     sc = StatusCode::FAILURE ;
   }
   
@@ -473,21 +476,24 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 
     // final check: bail out for vertical or looping tracks
     if( std::abs( state.tx() ) > m_maxSlope || std::abs( state.ty() ) > m_maxSlope ) {
-      debug() << "State has very large slope, probably curling: tx, ty = "
-	      << state.tx() << ", " << state.ty() 
-	      << " z_origin, target, current: "
-	      << zout - totalStep << " " << zout << " " << state.z 
-	      << endreq ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "State has very large slope, probably curling: tx, ty = "
+                << state.tx() << ", " << state.ty() 
+                << " z_origin, target, current: "
+                << zout - totalStep << " " << zout << " " << state.z 
+                << endmsg ;
       rc = RKCurling ;
     } else if( std::abs(state.qop * rkcache.stage[0].Bfield.y() ) > m_maxCurvature ) {
-      debug() << "State has too small curvature radius: "
-	      << state.qop * rkcache.stage[0].Bfield.y() 
-	      << " z_origin, target, current: "
-	      << zout - totalStep << " " << zout << " " << state.z 
-	      << endreq ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "State has too small curvature radius: "
+                << state.qop * rkcache.stage[0].Bfield.y() 
+                << " z_origin, target, current: "
+                << zout - totalStep << " " << zout << " " << state.z 
+                << endmsg ;
       rc = RKCurling ;
     } else if( stats.numfailedstep + rkcache.step  >= m_maxNumRKSteps ) {
-      debug() << "Exceeded max numsteps. " << endreq ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Exceeded max numsteps. " << endmsg ;
       rc = RKExceededMaxNumSteps ;
     }
   }
@@ -506,7 +512,7 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
 						  RKCache& cache) const 
 {
   //  debug() << "z-component of input: " 
-  // 	 << pin.z << " " << dz << endreq ;
+  // 	 << pin.z << " " << dz << endmsg ;
   RKTrackVector k[7] ;
   size_t firststage(0) ;
   

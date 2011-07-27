@@ -183,13 +183,14 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
       debug() << "Trajectory approximation: numnodes=" << nodes.size() 
 	      << ", deviation=" << worstdeviation 
 	      << " at z= " << 0.5*(worstnode->z()+next(worstnode)->z())
-	      << endreq ;
+	      << endmsg ;
       for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
 	LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z() ) ) ;
-	debug() << "interval: "
-		<< "(" << inode->z() << ", " << nextnode->z() << ")"
-		<< " ---> midpoint deviation: " 
-		<< pointerror(*inode,*nextnode,midpoint) << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "interval: "
+            << "(" << inode->z() << ", " << nextnode->z() << ")"
+            << " ---> midpoint deviation: " 
+            << pointerror(*inode,*nextnode,midpoint) << endmsg ;
       }
     }
     
@@ -204,7 +205,7 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
       catch (GaudiException& exception) {
 	error() << "propagating pos1, pos2: "
 		<< p1 << " " << p2 << " "
-		<< traj.beginPoint() << " " << traj.endPoint() << endreq ;
+		<< traj.beginPoint() << " " << traj.endPoint() << endmsg ;
 	throw exception ;
       }
       intersepts.insert(intersepts.end(),tmpintersepts.begin(),tmpintersepts.end()) ;

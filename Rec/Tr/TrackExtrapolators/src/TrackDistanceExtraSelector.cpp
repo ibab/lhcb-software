@@ -1,5 +1,3 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.9 2010-04-07 21:08:38 wouter Exp $
-
 // Include files
 
 // from Gaudi
@@ -12,7 +10,7 @@
 // local
 #include "TrackDistanceExtraSelector.h" 
 
-DECLARE_TOOL_FACTORY( TrackDistanceExtraSelector );
+DECLARE_TOOL_FACTORY( TrackDistanceExtraSelector )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -54,8 +52,10 @@ StatusCode TrackDistanceExtraSelector::initialize()
   m_longDistanceExtrapolator = tool<ITrackExtrapolator>( m_longDistanceExtrapolatorType,
 							 "LongDistanceExtrapolator", this );
   
-  debug() << "Short distance extrapolator: " << m_shortDistanceExtrapolator->type() << endreq ;
-  debug() << "Long distance extrapolator: " << m_longDistanceExtrapolator->type() << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "Short distance extrapolator: " << m_shortDistanceExtrapolator->type() << endmsg ;
+    debug() << "Long distance extrapolator: " << m_longDistanceExtrapolator->type() << endmsg ;
+  }
   
   return StatusCode::SUCCESS;
 }

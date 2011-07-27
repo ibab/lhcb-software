@@ -97,7 +97,7 @@ namespace MaterialLocatorUtils {
   }
 }
 
-DECLARE_TOOL_FACTORY( SimplifiedMaterialLocator );
+DECLARE_TOOL_FACTORY( SimplifiedMaterialLocator )
 
 SimplifiedMaterialLocator::SimplifiedMaterialLocator( const std::string& type,
 								const std::string& name,
@@ -110,7 +110,8 @@ SimplifiedMaterialLocator::SimplifiedMaterialLocator( const std::string& type,
 
 StatusCode SimplifiedMaterialLocator::initialize()
 {  
-  debug() << "SimplifiedMaterialLocator::initialize()" << endreq ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "SimplifiedMaterialLocator::initialize()" << endmsg ;
   StatusCode sc = MaterialLocatorBase::initialize();
   if( sc.isSuccess() ) {
     
@@ -118,17 +119,16 @@ StatusCode SimplifiedMaterialLocator::initialize()
     IDataProviderSvc*  detsvc  = services->detSvc();
     SmartDataPtr<const ILVolume> tgvol(detsvc,m_tgvolname) ;
     if( 0== tgvol ) {
-      error() << "Did not find TrackfitGeometry volume " << m_tgvolname << endreq ;
+      error() << "Did not find TrackfitGeometry volume " << m_tgvolname << endmsg ;
       sc = StatusCode::FAILURE ;
     } else {
-      debug() << "Found TrackfitGeometry volume with " << tgvol->pvolumes().size() << " daughters." << endreq ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Found TrackfitGeometry volume with " << tgvol->pvolumes().size() << " daughters." << endmsg ;
       for( ILVolume::PVolumes::const_iterator it = tgvol->pvBegin() ;
 	   it != tgvol->pvEnd() ; ++it) 
 	m_volumes.push_back( new MaterialLocatorUtils::PVolumeWrapper(**it) ) ;
     }
   } 
-
-  printProps( MSG::DEBUG );
   
   return sc;
 }
