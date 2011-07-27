@@ -4,6 +4,9 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+! 2011-07-27 - Olivier Callot
+ - Fix some Windows compilation warnings.
+
 ! 2011-07-26 - Olivier Callot
  - Adapt to the new trending tool
 

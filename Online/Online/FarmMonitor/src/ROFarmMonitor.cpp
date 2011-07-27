@@ -201,9 +201,10 @@ void ROFarmMonitor::initialize ( ) {
       if ( !status ) std::cerr << "Trend file open error" << std::endl ;
 
       std::vector<float> thresholds;
-      thresholds.push_back( -0.003 );   // nominal 90kHz -> error 300/90000 = 3 per mil.
-      thresholds.push_back( -0.001 );   // nominal 1MHz  -> error 1 per mil
-      thresholds.push_back( -0.02  );   // nominal 3kHz  -> error 2%
+
+      thresholds.push_back( -0.003f );   // nominal 90kHz -> error 300/90000 = 3 per mil.
+      thresholds.push_back( -0.001f );   // nominal 1MHz  -> error 1 per mil
+      thresholds.push_back( -0.02f  );   // nominal 3kHz  -> error 2%
       thresholds.push_back( 0.5    );   // integer
       myPart->trendWriter->setThresholds( thresholds );
     }
@@ -225,7 +226,7 @@ void ROFarmMonitor::initialize ( ) {
   m_stateName.push_back( "ERROR" );
 
   m_lastTime = System::currentTime( System::microSec );
-  m_offsetTime = m_lastTime / 100000000;
+  m_offsetTime = int( m_lastTime / 100000000 );
   m_offsetTime = 100 * m_offsetTime;
   std::cout << "Initialized OK," << m_partitions.size() << " partitions" << std::endl;
 }
@@ -338,7 +339,7 @@ void ROFarmMonitor::update( )   {
   longlong now = System::currentTime( System::microSec );
   float dt = float( .000001 * ( now - m_lastTime ) );
   m_lastTime = now;
-  int tagTime = now/1000000 - m_offsetTime;
+  int tagTime = int(now/1000000) - m_offsetTime;
 
   std::cout << "Time " << tagTime <<  "  dt " << dt << std::endl;
 
