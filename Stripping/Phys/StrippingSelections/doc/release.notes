@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSelections v3r6 2011-07-26 =========================
+! 2011-07-27 M. Williams
+- Update for pi0's in Beauty2Charm to avoid NULL child error message.
+
 ! 2011-07-26 S. Blusk
  - Remove second occurrence of MIPCHI2DV_MIN in "DTIGHT" in StrippingBeauty2Charm.py
 
