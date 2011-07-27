@@ -5,6 +5,147 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v11r6>2011-07-27 RecSys v11r6</A></H1><PRE>
+This version uses Gaudi v22r2 and LHCb v32r5
+
+- Production release for 2011 August data, 
+             developments for 2011 MC and end of year reprocessing
+
+- Packages updated: CaloMoniDst v5r8, CaloReco v5r11, HltMonitors v1r4,
+    MuonID v9r0p2, MuonTrackMonitor v2r3, ChargedProtoANNPID v1r5,
+    GlobalReco v6r38, LumiAlgs v6r1, RecAlgs v2r5, RecConf v2r2, 
+    RichAlignment v1r4, RichENNRingFinder v1r3, RichGlobalPID v3r16,
+    RichHPDImageAnalysis v1r8, RichRecQC v2r53, RichRecStereoTools v1r8,
+    RichRecSys v4r3, RichRecTrackTools v1r30, PatAlgorithms v4r14,
+    TfTools v1r15, TrackSys v6r3, TrackExtrapolators v2r31, TrackMonitors v1r33,
+    TrackTools v4r7, TrackUtils v1r43, VeloRecMonitors v2r14 
+
+- In Calo/CaloReco v5r11
+  . python/Configuration.py :
+    o correctly propagate track locations in CaloLines.
+    o apply default GlobalRecoConf settings for chargedProtoPMaker
+      (when activated on-demand in CaloProcessor)
+
+- In Hlt/HltMonitors v1r4
+  . Fix uninitialised m_disabled.
+
+- In Muon/MuonID v9r0p1
+  . Change error by warning when no correct region is obtained for DLL calculation
+- Rec/ChargedProtoANNPID v1r5
+  . Add the flag '-2' when creating NeuroBayes Experts, which in future NB
+    releases (10.12 onwards) should suppress the messages from NB when loading
+    the expertise files.
+
+- In Rec/GlobalReco v6r38
+  . Some minor improvements to the charged ProtoParticle monitor
+  . NeutralProtoPAlg : add pi0/gamma separation variable
+
+- In Rec/LumiAlgs v6r1
+  . Add LHCbExclusions for reference file comparisons of all QM tests, ensures
+    forward compatibility of tests with next Gaudi version
+  . Add a method in LumiIntegrator to extract values of "mu" per raw file
+    (under control of AccumulateMu and MuKeyName options, default is OFF)
+
+- In Rec/RecAlgs v2r5
+  . Add "Hlt" to the list of sub-systems ProcStatAbortMoni knows about
+
+- In Rec/RecConf v2r2 
+  . Propagate "Simulation" flag to RichRecQCConf Configurable.
+
+- In Rich/RichAlignment v1r4, Rich/RichHPDImageAnalysis v1r8
+  . Various script improvements
+
+- In Rich/RichGlobalPID v3r16
+  . Fine tune LikelihoodTool::logExp for better branch prediction
+  . Fine tune the event 'abort' messages in TrackSel to distinguish between
+    the cases where there are no tracks in the input container, from the case
+    when no tracks where selected for RICH processing.
+
+- In Rich/RichRecQC v2r53
+  . Remove "DBConsistencyCheck" from the list of monitors run Online.
+  . Add optional (disabled by default) per PD resolution plots to RecoQC.
+  . Reduce a message in RichDataDBCheck from Error to Warning.
+  . Add new flag "Simulation" to RichRecQCConf
+  . Turn off monitors that require HLT DecReports, when running on MC data.
+  . Enable aerogel tile and sub-tile plots in Rich::Rec::MC::RecoQC only for
+    instances running on 'Long' tracks.
+  . Add new CK theta monitors with tight track quality cuts
+  . Extend the track selection efficiency monitor to include plots for the
+    track clone distance variable.
+  . Add L1 ingress detail plots to RawDataSize, showing the distribution of
+    event sizes for each ingress
+  . Update python configuration to activate detail plots in RawDataSize when
+    "Expert" histograms are selected.
+  . Update the Cherenkov reconstruction monitor to create plots for individual
+    aerogel sub-tiles, when active.
+  . Small improvements to the data size monitor
+    o Fix a small bug in the size calculation when only 3 ingresses are active
+    o Add a new plot to give the average size by L1 ingress
+    o Add a few additional cross checks to the size calculation
+    o Add a second instance of the monitor to the python configuration that
+      runs on L0 selected events (no HLT bias).
+
+- In Rich/RichRecSys v4r3
+  . Loosen off the abort cuts for 2011+ data. No changes for 2010 or 2009
+    o MaxUsedTracks set to 1000(Offline) or 500(HLT)
+    o MaxPixels set to 30000 everywhere (previous 20000 in global PID)
+  . Increase slightly the size of the aerogel photon selection window for the
+    "Wide" photon selection
+
+- In Rich/RichRecTrackTools v1r30
+  . Fix a problem with the track selector when trying to apply a clone distance
+    cut.
+
+- In Tf/PatAlgorithms v4r14,
+  . In PatAlgConf.py, apply global global event cuts taken from
+    TrackSys().GlobalCuts to PatSeeding and PatForward. If GEC on Velo hits is
+    set, cut on Velo tracks in PatForward is removed
+  . In PatSeedingTool, skip event processing if the VELO ProcStatus abort is set.
+    Switched on by new option "AbortOnVeloAbort", true by default
+  . Added NCandCommonHits to TrackInfo field for calculation of ghost prob.
+
+- In Tf/TfTools v1r15
+  . Protect OTHitCreator::handle from dereferencing a NULL m_detectordata
+    pointer.
+
+- In Tf/TrackSys v6r3
+  . Add new slot TrackSys().GlobalCuts. It consists of a dictionary which is
+    then used to set global event cuts on the number of hits used in the
+    tracking. Default values are { 'Velo':6000, 'IT':999999, 'OT':999999 },
+    except for DataTypes MC09,2008,2009,2010,Upgrade where the defaults are
+    those defined in the algorithms
+  . Cut on number of Velo clusters is defined by setting MaxVeloClusters
+    property of DecodeVeloRawBuffer in VeloTracking.py
+
+- In Tr/TrackExtrapolators v2r31
+  . Remove explicit calls to PrintProps (already done in base class)
+  . Fix some icc remarks
+
+- In Tr/TrackMonitors v1r33
+  . ITTrackMonitor: add histogram for overlaps
+  . TrackVertexMonitor: introduce cutoff for IP profiles to be more sensitive
+                        to mean
+
+- In Velo/VeloRecMonitors v2r14 
+  . Fixed integer division bug in new occpancy vs. BCID code
+  . Re-implementation of occupancy per bunch crossing ID in
+    VeloOccupancyMonitor: much cleaner code and fixes a bug that caused these
+    occupancies to be off by a factor of two.
+  . Protected unprotected debug messages in VeloClusterMonitor,
+    VeloTrackMonitor and VeloIPResolutionMonitor
+
+- In Calo/CaloMoniDst v5r8, Calo/CaloReco v5r11, Muon/MuonTrackMonitor v2r3,
+     Rec/RecAlgs v2r5, Rich/RichENNRingFinder v1r3, Rich/RichRecQC v2r53,
+     Rich/RichRecStereoTools v1r8, Rich/RichRecTrackTools v1r30,
+     Tf/PatAlgorithms v4r14, Tf/TfTools v1r15, Tr/TrackExtrapolators v2r31,
+     Tr/TrackMonitors v1r33, Tr/TrackTools v4r7, Tr/TrackUtils v1r43,
+     Velo/VeloRecMonitors v2r14 
+  . Create debug(), verbose() messages only when output level requires it
+
+- In Calo/CaloMoniDst v5r8, Muon/MuonTrackMonitor v2r3, Tf/PatAlgorithms v4r14,
+     Tr/TrackExtrapolators v2r31, Tr/TrackTools v4r7, Tr/TrackUtils v1r43
+  . Replace all endreq by endmsg
+
 </PRE><H1><A NAME=v11r5>2011-06-15 RecSys v11r5</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r4
 
