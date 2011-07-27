@@ -3,6 +3,7 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r16 2011-07-27 =========================
 ! 2011-06-17 - Patrick Robbe
  - Configuration.py: set new electron/photon L0 Calo algorithm depending
    on the data type
