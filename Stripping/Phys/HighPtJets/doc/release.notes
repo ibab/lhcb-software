@@ -5,6 +5,13 @@
 
 !==================== Phys/HighPtJets v1r3 2011-01-21 =======================
 
+! 2011-07-27 - Marcin Kucharczyk
+ - Remove HighPtJetSelection.cpp and HighPtJetSelection.h in order to move 
+   the package to Phys
+ - Increase to v1r4
+
+!==================== Phys/HighPtJets v1r3 2011-01-21 =======================
+
 ! 2011-01-05 - Juan Palacios
  - Remove call to DVAlgorithm::desktop().
  - Increase to v1r3
