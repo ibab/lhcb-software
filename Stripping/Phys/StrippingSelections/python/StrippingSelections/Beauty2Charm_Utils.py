@@ -36,6 +36,14 @@ def filterInputs(tag,inputs,config):
                     config).code()
     return filterSelection(tag+'Inputs',code,inputs)
 
+def filterPi0s(which,inputs,config):
+    cuts = ['PT','P']
+    if which is 'Resolved':
+        cuts.append('CHILDCL1')
+        cuts.append('CHILDCL2')
+    code = LoKiCuts.combine(["ABSID==111",LoKiCuts(cuts,config).code()])
+    return filterSelection('Pi0'+which+'Inputs',code,inputs)
+
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
 

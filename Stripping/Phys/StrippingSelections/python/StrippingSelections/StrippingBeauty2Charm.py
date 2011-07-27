@@ -150,12 +150,9 @@ class Beauty2CharmConf(LineBuilder):
                                        config['KS0']) 
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
                              config['KS0'])
-        conf = {}
-        for k,v in config['Pi0'].iteritems():
-            if k.find('CHILD') < 0: conf[k] = v
-        pi0_merged   = filterInputs('Pi0_Merged',[StdLooseMergedPi0],conf)
-        pi0_resolved = filterInputs('Pi0_Resolved',[StdLooseResolvedPi0],
-                                    config['Pi0'])
+        pi0_merged   = filterPi0s('Merged',[StdLooseMergedPi0],config['Pi0'])
+        pi0_resolved = filterPi0s('Resolved',[StdLooseResolvedPi0],
+                                  config['Pi0'])
 
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
