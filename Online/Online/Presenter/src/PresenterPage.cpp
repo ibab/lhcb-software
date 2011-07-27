@@ -356,7 +356,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
       break;
     }
     if ( foundTheTask ) {
-      int timeout = 10 + 0.1 * (*itT).histos.size();
+      int timeout = 10 + (*itT).histos.size()/10;
       std::cout << "Search for services of task " << (*itT).location << " with timeout " << timeout << std::endl;
       HistTask myHists( (*itT).location, "", timeout );
       
@@ -917,7 +917,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
   for ( std::vector<PadContent>::iterator itP = m_pads.begin(); m_pads.end() != itP; ++itP ) {
     if ( 2 > (*itP).objects.size() || (*itP).hasTitle ) continue;
     (*itP).pad->cd();
-    float yMin =  1.0 - 0.05 * ( ((*itP).objects.size()+1)/2 );
+    float yMin =  1.0f - 0.05f * ( ((*itP).objects.size()+1)/2 );
     std::cout << "Legend for " << (*itP).objects.size() << " plots, ymin " << yMin << std::endl;
     TLegend* leg = new TLegend( 0.0, yMin, 1.0, 1.0 );
     leg->SetNColumns( 2 );

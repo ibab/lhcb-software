@@ -227,7 +227,7 @@ void DisplayHistogram::draw( TCanvas * editorCanvas , double xlow , double ylow 
     pad->SetFillColor( 10 );
     pad->Draw();
     if ( 0 < m_nOverlap ) {
-      float topMargin = 0.1 + 0.05 * ( m_nOverlap/2 );
+      float topMargin = 0.1f + 0.05f * ( m_nOverlap/2 );
       pad->SetTopMargin( topMargin );
     }
   }
@@ -782,8 +782,8 @@ void DisplayHistogram::createGraph( TrendData& aTrend, bool update ) {
 
   //== Set good defaults if not set by the individual histogram
   createDummyHisto();
-  m_rootHistogram->GetXaxis()->SetLabelOffset( 0.03 );
-  m_rootHistogram->GetXaxis()->SetLabelSize( 0.03 );
+  m_rootHistogram->GetXaxis()->SetLabelOffset( 0.03f );
+  m_rootHistogram->GetXaxis()->SetLabelSize( 0.03f );
 
   double yMin = aTrend.min;
   double yMax = aTrend.max;
