@@ -21,7 +21,7 @@ using namespace std;
 namespace {
   /// @FIXME: (MCl) work-around to fix the warning
   ///
-  ///   warning: deprecated conversion from string constant to œôòøchar*œôòù
+  ///   warning: deprecated conversion from string constant to â€˜char*â€™
   ///
   /// that occurs when a string constant (e.g.: "abc", "") is passed to a function
   /// expecting char *
@@ -48,6 +48,7 @@ XMLSummarySvc::XMLSummarySvc(const std::string& name, ISvcLocator* svc )
     m_freq(-1),
     m_configured(false),
     m_stopped(false),
+    m_hasinput(false),
     m_fidMap()
 {
 
@@ -171,7 +172,10 @@ XMLSummarySvc::finalize()
   //IInterface* iface = Gaudi::createApplicationMgr();
   //SmartIF<IProperty> appmgr(iface);
   
-  //int gaudiReturn=returnCode.value();//Gaudi::getAppReturnCode(this);//getProperty(this,"ReturnCode");//Gaudi::getAppReturnCode(m_propertyMgr);
+  //int gaudiReturn=returnCode.value();
+  //Gaudi::getAppReturnCode(this);
+  //getProperty(this,"ReturnCode");
+  //Gaudi::getAppReturnCode(m_propertyMgr);
   log << MSG::DEBUG << "gaudi return code" << gaudiReturn << endmsg;
   
   
@@ -257,6 +261,7 @@ void XMLSummarySvc::handle( const Incident& incident )
       status="part";
       //update current filename and GUID
       filename=m_filename=incident.source();
+      m_hasinput=true;
     }
   else if(incident.type()==IncidentType::BeginOutputFile)
     {
@@ -269,6 +274,8 @@ void XMLSummarySvc::handle( const Incident& incident )
     {
       status="full";
       filename=m_filename=incident.source();
+      m_hasinput=true;
+      
     }
   else if(incident.type()==IncidentType::EndOutputFile)
     {
@@ -280,7 +287,8 @@ void XMLSummarySvc::handle( const Incident& incident )
     {
       status="fail";
       filename=m_filename=incident.source();
-
+      m_hasinput=true;
+      
     }
   else if(incident.type()==IncidentType::FailOutputFile)
     {
@@ -306,18 +314,26 @@ void XMLSummarySvc::handle( const Incident& incident )
       addevents=1;
       filename=incident.source();
     }
-  //actually add to the summary
-  std::string GUID=file2GUID(filename);
-  if(incident.type()!=IncidentType::EndEvent && incident.type()!=IncidentType::BeginEvent)
-    log << MSG::VERBOSE << method <<"(" << filename << "," << GUID << "," << status << "," << addevents << ")" << endmsg;
   
-  PyObject_CallMethod(m_summary,
-		      chr(method.c_str()),
-		      chr("s,s,s,d"),
-		      chr(filename.c_str()),
-		      chr(GUID.c_str()),
-		      chr(status.c_str()),
-		      double(addevents));
+  
+  //only fill input if there is input to fill!, i.e. if EndEvent but not m_hasinput, then skip it
+  if(incident.type()!=IncidentType::EndEvent || m_hasinput)
+  {
+  
+    //actually add to the summary
+    std::string GUID=file2GUID(filename);
+    if(incident.type()!=IncidentType::EndEvent && incident.type()!=IncidentType::BeginEvent)
+      log << MSG::VERBOSE << method <<"(" << filename << "," << GUID << "," << status << "," << addevents << ")" << endmsg;
+    
+    PyObject_CallMethod(m_summary,
+                        chr(method.c_str()),
+                        chr("s,s,s,d"),
+                        chr(filename.c_str()),
+                        chr(GUID.c_str()),
+                        chr(status.c_str()),
+                        double(addevents));
+  }
+  
   fillUsage();
   m_handled++;
   

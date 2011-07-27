@@ -146,7 +146,9 @@ private:
   ///has stop been called?
   bool m_stopped;
   
-
+  ///has at least one input file been opened in this job?
+  bool m_hasinput;
+  
   ///counters are filled in the finalise method, using these internal functions
   StatusCode fillcounters();
   StatusCode fillcounter(const NameStatTypePair & count);
