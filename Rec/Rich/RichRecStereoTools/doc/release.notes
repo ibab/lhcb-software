@@ -4,6 +4,7 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+!========================= RichRecStereoTools v1r8 2011-07-27 =========================
 ! 2011-07-25 - Chris Jones
  - Add missing protection to some debug messages.
 
