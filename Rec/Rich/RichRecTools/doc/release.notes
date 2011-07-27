@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r17 2011-07-27 =========================
 ! 2011-07-27 - Chris Jones
  - Various clean ups in BackgroundEstiAvHPD. The fix to a 'bug'
    //m_geomEff->geomEfficiency(*segment,id);
