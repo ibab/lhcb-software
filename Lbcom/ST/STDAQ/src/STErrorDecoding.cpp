@@ -1,4 +1,3 @@
-// $Id: STErrorDecoding.cpp,v 1.7 2008-08-15 08:21:44 mneedham Exp $
 // Include files 
 
 
@@ -46,7 +45,7 @@ StatusCode STErrorDecoding::execute() {
 
   // in fact all the work is delegated to the base class
 
-  debug() << "==> Execute " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute " << endmsg;
 
   STTELL1BoardErrorBanks* errorBanks = getErrorBanks();
 

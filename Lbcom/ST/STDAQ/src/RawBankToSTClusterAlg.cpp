@@ -1,5 +1,3 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.54 2009-10-26 14:24:59 jvantilb Exp $
-
 #include <algorithm>
 
 // from Gaudi
@@ -118,10 +116,12 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   // vote on the pcns
   const unsigned int pcn = pcnVote(tBanks);
-  debug() << "PCN was voted to be " << pcn << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "PCN was voted to be " << pcn << endmsg;
   if (pcn == STDAQ::inValidPcn && !m_skipErrors) {
     counter("skipped Banks") += tBanks.size();
-    debug() << "PCN vote failed with " << tBanks.size() << endmsg; 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "PCN vote failed with " << tBanks.size() << endmsg; 
     return Warning("PCN vote failed", StatusCode::SUCCESS ,2 );
   }
     
@@ -158,7 +158,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // get verion of the bank
     const STDAQ::version bankVersion = forceVersion() ? STDAQ::version(m_forcedVersion): STDAQ::version((*iterBank)->version());
 
-    debug() << "decoding bank version " << bankVersion << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "decoding bank version " << bankVersion << endmsg;
 
     bool recover = false;
     if (decoder.hasError() == true && !m_skipErrors){
@@ -192,7 +193,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
         bankList.push_back((*iterBank)->sourceID());
         std::string errorBankMsg = "PCNs out of sync, sourceID " +
         boost::lexical_cast<std::string>((*iterBank)->sourceID());
-        debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
         Warning(errorBankMsg, StatusCode::SUCCESS, 2).ignore();
         ++counter("skipped Banks");
         continue; 
@@ -280,7 +282,8 @@ void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
     clusCont->insert(newCluster,nearestChan.first);
   }   
   else {
-    debug() << "Cluster already exists not inserted: " << aBoard->boardID()<< " " <<  aWord.channelID() << endmsg;  
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Cluster already exists not inserted: " << aBoard->boardID()<< " " <<  aWord.channelID() << endmsg;  
     Warning("Failed to insert cluster --> exists in container", StatusCode::SUCCESS , 100);
     delete newCluster; 
   }

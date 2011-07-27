@@ -1,5 +1,3 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.30 2009-11-11 12:20:55 mneedham Exp $
-
 #include <algorithm>
 
 
@@ -181,11 +179,12 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
     // make some consistancy checks
     if ((iterDecoder->second.size() - 1u  < aWord.pseudoSize())) {
       unsigned int fracStrip = aWord.fracStripBits();
-      debug() << "adc values do not match ! " << iterDecoder->second.size()-1u << " "
-              << aWord.pseudoSize() << " offline chan "
-              << aBoard->DAQToOffline(fracStrip,bankVersion,STDAQ::StripRepresentation(aWord.channelID())) 
-              << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
-              << endmsg ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "adc values do not match ! " << iterDecoder->second.size()-1u << " "
+                << aWord.pseudoSize() << " offline chan "
+                << aBoard->DAQToOffline(fracStrip,bankVersion,STDAQ::StripRepresentation(aWord.channelID())) 
+                << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
+                << endmsg ;
       Warning("ADC values do not match", StatusCode::SUCCESS,2);
       ok = false;
       break;
@@ -193,7 +192,8 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
 
     // decode the channel
     if (aBoard->validChannel(aWord.channelID()) == false){
-      debug() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
       Warning("Invalid tell1 channel", StatusCode::SUCCESS,2); 
       ok = false;
       break;
@@ -204,8 +204,9 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
   // final check that we read the total number of bytes in the bank
   if (ok && (unsigned int)iterDecoder.bytesRead() != bankSize){
     ok = false;
-    debug() << "Inconsistant byte count " << aBoard->boardID() << " Read: "  << iterDecoder.bytesRead()
-                << " Expected: " << bankSize << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Inconsistant byte count " << aBoard->boardID() << " Read: "  << iterDecoder.bytesRead()
+              << " Expected: " << bankSize << endmsg;
     Warning("Inconsistant byte count", StatusCode::SUCCESS);
   }
 
@@ -248,7 +249,7 @@ LHCb::STTELL1BoardErrorBanks* STDecodingBaseAlg::getErrorBanks() const{
 
 StatusCode STDecodingBaseAlg::decodeErrors() const{
 
- debug() << "==> Execute " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute " << endmsg;
 
  // get the raw event + odin info
  RawEvent* raw = get<RawEvent>(RawEventLocation::Default );
@@ -260,14 +261,16 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
  const std::vector<LHCb::RawBank*>& itf = raw->banks(LHCb::RawBank::BankType(m_errorType)); 
  
  if (itf.size() == 0u){
-   debug() <<"event has no error banks " << endmsg;
+   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+     debug() <<"event has no error banks " << endmsg;
  }
  else {
     ++counter("events with error banks");
     counter("total # error banks") += itf.size(); 
  }
 
- debug() << "Starting to decode " << itf.size() << detType() <<"Error bank(s)" <<  endmsg;
+ if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+   debug() << "Starting to decode " << itf.size() << detType() <<"Error bank(s)" <<  endmsg;
   
  for( std::vector<LHCb::RawBank*>::const_iterator itB = itf.begin(); itB != itf.end(); ++itB ) {
 
@@ -300,8 +303,9 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
      continue;
    }
 
-   debug() << "Decoding bank number of type "<< detType() << "Error (TELL1 ID: " <<  (*itB)->sourceID() 
-           << ", Size: " <<  (*itB)->size() << " bytes)" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Decoding bank number of type "<< detType() << "Error (TELL1 ID: " <<  (*itB)->sourceID() 
+              << ", Size: " <<  (*itB)->size() << " bytes)" << endmsg;
 
        
    // make an empty tell1 data object
@@ -310,7 +314,8 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
    
    for (unsigned int ipp = 0; ipp < STDAQ::npp && w != bankEnd ; ++ipp ){
 
-     debug() << "#######  Parsing now data from PP " << ipp << " #####################"<< endmsg; 
+     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+       debug() << "#######  Parsing now data from PP " << ipp << " #####################"<< endmsg; 
 
      // we must find 5 words
      if (bankEnd - w < 5 ){
