@@ -114,8 +114,12 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
 
       m_dirAddressInFile = m_dir.nextAddress;
       fseek( m_file, m_dirAddressInFile, SEEK_SET );
-      fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
-
+      unsigned int nn = fread( &m_dir, 1, sizeof(DirectoryRecord), m_file );
+      if ( nn < sizeof(DirectoryRecord) ) {
+        std::cout << "*** Requested " << sizeof(DirectoryRecord) << " bytes, read " << nn << " in directory" << std::endl;
+        break;
+      }
+        
       std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version
                 << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
       if ( m_dir.nbEntries > MAX_ENTRY ) return;

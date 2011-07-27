@@ -29,7 +29,7 @@ protected:
             &year, &aTm.tm_mon, &aTm.tm_mday, &aTm.tm_hour, &aTm.tm_min, &aTm.tm_sec );
     aTm.tm_year = year - 1900;
     aTm.tm_mon -= 1;    
-    int cTime = ::mktime( &aTm );
+    int cTime = int( ::mktime( &aTm ) );
     return cTime;
   }
   

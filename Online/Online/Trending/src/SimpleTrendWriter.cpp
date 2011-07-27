@@ -81,12 +81,12 @@ void SimpleTrendWriter::startEvent( ) {
 void SimpleTrendWriter::addEntry( std::string tag, double value ) {
   for ( unsigned int i = 0; m_tags.size() > i; ++i ) {
     if ( tag == m_tags[i] ) {
-      m_values[i] = value;
+      m_values[i] = float(value);
       return;
     }
   }
   m_tags.push_back( tag );
-  m_values.push_back( value );
+  m_values.push_back( float(value) );
   m_tagChanged = true;    
 }
 //=========================================================================

@@ -4,7 +4,11 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
-!============================== 2011-07-22 v2r0 ==============================
+!============================== 2011-07-27 v2r0 ==============================
+! 2011-07-27 - Olivier Callot
+ - Fix a bug in hadling multiple of 32 tags.
+ - Fix a few compilation warning on Windows.
+
 ! 2011-07-22 - Olivier Callot
  - Rewrite seriously the tool: Use the small object TrendWriter in the tool
  - Change somewhatthe interface: 

@@ -405,6 +405,7 @@ void TrendWriter::writeEntry( unsigned int now, std::vector<float>& data, bool w
     m_dir.entry[m_ptDir].firstTime = now;
     fseek( m_file, m_dirAddressInFile , SEEK_SET );
     fwrite( &m_dir, sizeof(DirectoryRecord), 1, m_file );
+    m_ptData = 0;
   }
 
   bool full = ( 0 == m_ptData );
@@ -444,7 +445,7 @@ void TrendWriter::addDataEntry( unsigned int now, std::vector<float>& data, bool
       mask = 0;
     }
   }
-  if ( (data.size()%32) != 31 ) m_data.data[maskAddr].i = mask;
+  if ( (data.size()%32) != 0 ) m_data.data[maskAddr].i = mask;  // Except if written at end of loop...
   m_data.data[m_ptData].i = 0;   // tag the end of the data block!
 
   if ( 0 < nbItem ) {
