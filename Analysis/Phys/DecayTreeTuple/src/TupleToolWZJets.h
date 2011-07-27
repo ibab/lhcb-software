@@ -59,6 +59,7 @@ private:
   bool StoreAdditionalJets(const IJetMaker::Jets& AddJets);
   bool MatchAndStoreIsoJets(const IJetMaker::Jets& IsoJets);
   bool WriteJetComparisonToTuple(const LHCb::Particle*jet,std::string prefix);
+  void addBasicParticles(std::map<int,int>& particleCharges, LHCb::Particles& myParts, LHCb::Particle::ConstVector parts);
 };
 
 #endif // TUPLETOOLWZJETS_H

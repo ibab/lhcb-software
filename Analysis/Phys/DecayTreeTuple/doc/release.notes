@@ -3,6 +3,12 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2011-07-27 - Albert Bursche
+  Overhaul of the TupleToolJets family	
+    - added support for 'ExtraWeights' to TupleToolJetRelations
+    - fixed missing TupleToolJetsBase::initialize in TupleToolJetRelations
+    - improved handling of non-basic particles in TupleToolWZJets
+
 
 ! 2011-07-04 - Patrick Koppenburg
  - TupleToolassHypo: Fix bug 83621

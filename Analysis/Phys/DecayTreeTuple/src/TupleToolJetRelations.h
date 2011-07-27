@@ -32,6 +32,9 @@ private:
   bool furtherAway (LHCb::Particle& a,LHCb::Particle& b)
   {return DeltaR(*m_p,a)>DeltaR(*m_p,b);}
   bool fill(unsigned int i,const IJets2Jets::Table::Entry *e);
+  std::map<std::string,std::string> m_ExtraTableLocations;
+  std::map<std::string,IJets2Jets::Table*> m_ExtraTables;
+  StatusCode getTable(std::string loc,IJets2Jets::Table*&tab);
 };
 
 #endif // TUPLETOOLJETRELATIONS_H

@@ -187,13 +187,16 @@ LHCb::Particles& TupleToolWZJets::GetParticles()
   //(other filters can be applied with a filter desktop before running the tuple)
   LHCb::Particles&  myParts = *new  LHCb::Particles();
   std::map<int,int> particleCharges = boost::assign::map_list_of(-1,0)(0,0)(1,0); //counter
-  for(LHCb::Particle::ConstVector::const_iterator parts = inputParts.begin(); parts != inputParts.end(); ++parts)
-    if (!isParticleInDecay(*parts))
-    {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Adding Particle of type " << (*parts)->particleID ()  << " to the collection."<< endmsg;
-      myParts.insert(new LHCb::Particle(**parts));
-      particleCharges[(*parts)->charge()]++;
-    }
+  addBasicParticles(particleCharges, myParts,inputParts);
+    
+    //  for(LHCb::Particle::ConstVector::const_iterator parts = inputParts.begin(); parts != inputParts.end(); ++parts)
+    //    if (!isParticleInDecay(*parts))
+    //    {
+    //      if ( msgLevel(MSG::DEBUG) ) debug() << "Adding Particle of type " << (*parts)->particleID ()  << " to the collection."<< endmsg;
+    //      //      myParts.insert(new LHCb::Particle(**parts));
+    //      //      particleCharges[(*parts)->charge()]++;
+    //      addBasicParticles(particleCharges, myParts,parts)
+    //    }
   if (m_verbose)
     {
       (*m_tuple)->column( m_prefix+"_ChargedTracksUsed",particleCharges[-1]+particleCharges[+1]);
@@ -204,6 +207,23 @@ LHCb::Particles& TupleToolWZJets::GetParticles()
   
   return myParts;
 }
+void TupleToolWZJets::addBasicParticles(std::map<int,int>& particleCharges, 
+					LHCb::Particles& myParts,
+					LHCb::Particle::ConstVector  inputParts)
+{
+  for(LHCb::Particle::ConstVector::const_iterator parts = inputParts.begin(); parts != inputParts.end(); ++parts)
+    if ((*parts)->isBasicParticle ())
+      {
+      if (!isParticleInDecay(*parts))
+	{
+	  myParts.insert(new LHCb::Particle(**parts));
+	  particleCharges[(*parts)->charge()]++;
+	}
+      }
+    else
+      addBasicParticles(particleCharges, myParts,(*parts)->daughtersVector());
+}
+
 void TupleToolWZJets::AddDecProducts(LHCb::Particles& myParts)
 {
   int PartID = 0; // counter for decay product (needed later when matching IsoJets)
