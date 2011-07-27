@@ -21,15 +21,15 @@ using namespace Rich::Rec;
 DECLARE_TOOL_FACTORY( BackgroundEstiAvHPD )
 
 // Standard constructor, initializes variables
-BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : Rich::Rec::ToolBase ( type, name, parent ),
-    m_tkSignal       ( NULL          ),
-    m_geomEff        ( NULL          ),
-    m_obsPDsignals   ( Rich::NRiches ),
-    m_expPDsignals   ( Rich::NRiches ),
-    m_expPDbkg       ( Rich::NRiches )
+  BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+    : Rich::Rec::ToolBase ( type, name, parent ),
+      m_tkSignal       ( NULL          ),
+      m_geomEff        ( NULL          ),
+      m_obsPDsignals   ( Rich::NRiches ),
+      m_expPDsignals   ( Rich::NRiches ),
+      m_expPDbkg       ( Rich::NRiches )
 {
   // Define interface for this tool
   declareInterface<IPixelBackgroundEsti>(this);
@@ -69,8 +69,8 @@ StatusCode BackgroundEstiAvHPD::initialize()
 void BackgroundEstiAvHPD::computeBackgrounds() const
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Computing backgrounds using ALL " 
-            << richTracks()->size() << " tracks" << endmsg; 
+    debug() << "Computing backgrounds using ALL "
+            << richTracks()->size() << " tracks" << endmsg;
 
   // General init
   richInit();
@@ -91,8 +91,8 @@ void BackgroundEstiAvHPD::computeBackgrounds() const
 void BackgroundEstiAvHPD::computeBackgrounds( const LHCb::RichRecTrack::Vector & tracks ) const
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Computing backgrounds using " 
-            << tracks.size() << " SELECTED tracks" << endmsg; 
+    debug() << "Computing backgrounds using "
+            << tracks.size() << " SELECTED tracks" << endmsg;
 
   // General init
   richInit();
@@ -159,7 +159,7 @@ void BackgroundEstiAvHPD::fillObservedSignalMap() const
 void BackgroundEstiAvHPD::fillExpectedSignalMap() const
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Filling expected signals maps" << endmsg;
+    debug() << "Filling expected signals map for ALL tracks" << endmsg;
   // loop over segments
   for ( LHCb::RichRecTracks::const_iterator track = richTracks()->begin();
         track != richTracks()->end(); ++track )
@@ -170,6 +170,8 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap() const
 
 void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack::Vector & tracks ) const
 {
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Filling expected signals map for selected tracks" << endmsg;
   // loop over segments
   for ( LHCb::RichRecTrack::Vector::const_iterator track = tracks.begin();
         track != tracks.end(); ++track )
@@ -183,46 +185,52 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack * trac
   if ( track )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Track " << track->key() << " " << track->inUse() 
+      debug() << " -> Track " << track->key() << " " << track->inUse()
               << " " << track->currentHypothesis()
               << endmsg;
 
     // skip tracks not in use
-    if ( !track->inUse() ) return;
-    
-    // Current best hypothesis for this track
-    const Rich::ParticleIDType id = track->currentHypothesis();
-    
-    // skip tracks below threshold, as they for sure contribute nothing to the signal
-    if ( Rich::BelowThreshold == id ) return;
-    
-    for ( LHCb::RichRecTrack::Segments::const_iterator segment = track->richRecSegments().begin();
-          segment != track->richRecSegments().end(); ++segment )
+    if ( track->inUse() )
     {
-      // Expected detectable emitted photons for this segment
-      const double detPhots = m_tkSignal->nDetectablePhotons(*segment,id);
 
-      // which RICH
-      const Rich::DetectorType rich = (*segment)->trackSegment().rich();
+      // Current best hypothesis for this track
+      const Rich::ParticleIDType id = track->currentHypothesis();
 
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "  -> Segment " << (*segment)->key() << " " << rich 
-                << " " << (*segment)->trackSegment().radiator()
-                << " DetPhots=" << detPhots << endmsg;
-
-      // Tally total expected hits for each PD
-      //m_geomEff->geomEfficiency(*segment,id); // needed to ensure map below is filled
-      const LHCb::RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
-      for ( LHCb::RichRecSegment::PDGeomEffs::const_iterator iPD = hypoMap.begin();
-            iPD != hypoMap.end(); ++iPD )
+      // skip tracks below threshold, as they for sure contribute nothing to the signal
+      if ( Rich::BelowThreshold != id )
       {
-        const double sig = detPhots * iPD->second; // expected signal for this PD
-        (m_expPDsignals[rich])[ LHCb::RichSmartID(iPD->first) ] += sig;
-        if ( msgLevel(MSG::DEBUG) )
-          debug() << "   -> " << LHCb::RichSmartID(iPD->first) << " " << sig << endmsg;
-      }
-      
-    } // loop over segments
+
+        for ( LHCb::RichRecTrack::Segments::const_iterator segment = track->richRecSegments().begin();
+              segment != track->richRecSegments().end(); ++segment )
+        {
+          // Expected detectable emitted photons for this segment
+          const double detPhots = m_tkSignal->nDetectablePhotons(*segment,id);
+
+          // which RICH
+          const Rich::DetectorType rich = (*segment)->trackSegment().rich();
+
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "  -> Segment " << (*segment)->key() << " " << rich
+                    << " " << (*segment)->trackSegment().radiator()
+                    << " DetPhots=" << detPhots << endmsg;
+
+          // Tally total expected hits for each PD
+          //m_geomEff->geomEfficiency(*segment,id); // needed to ensure map below is filled
+          const LHCb::RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
+          for ( LHCb::RichRecSegment::PDGeomEffs::const_iterator iPD = hypoMap.begin();
+                iPD != hypoMap.end(); ++iPD )
+          {
+            const double sig = detPhots * iPD->second; // expected signal for this PD
+            (m_expPDsignals[rich])[ LHCb::RichSmartID(iPD->first) ] += sig;
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << "   -> " << LHCb::RichSmartID(iPD->first) << " DetPhots=" << sig << endmsg;
+          }
+
+        } // loop over segments
+
+      } // Hypo OK
+
+    } // track in use
 
   } // track OK
 
@@ -250,7 +258,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
       int nBelow(0), nAbove(0);
       double tBelow = 0.0;
       for ( PDsignals::const_iterator iPD = m_obsPDsignals[*iRich].begin();
-            iPD !=  m_obsPDsignals[*iRich].end(); ++iPD )
+            iPD != m_obsPDsignals[*iRich].end(); ++iPD )
       {
         const LHCb::RichSmartID& pd = iPD->first;
         double & bkg                = (m_expPDbkg[*iRich])[pd];
@@ -287,7 +295,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
       } // end loop over signal PDs
 
       if ( msgLevel(MSG::DEBUG) )
-        debug() << " -> Above = " << nAbove << " Below = " << nBelow << endmsg;
+        debug() << "  -> Above = " << nAbove << " Below = " << nBelow << endmsg;
 
       if ( nBelow > 0 && nAbove > 0 )
       {
@@ -295,7 +303,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
         // calculate the amount of signal below per above HPD
         rnorm = tBelow / ( static_cast<double>(nAbove) );
         if ( msgLevel(MSG::DEBUG) )
-          debug() << "  -> Correction factor per HPD above = " << rnorm << endmsg;
+          debug() << "   -> Correction factor per HPD above = " << rnorm << endmsg;
       }
       else
       {
@@ -304,8 +312,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
       }
 
       // Final protection against infinite loops
-      if ( iter > m_maxBkgIterations ) cont = false;
-      ++iter;
+      if ( ++iter > m_maxBkgIterations ) cont = false;
 
     } // end while loop
 
@@ -329,7 +336,21 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Overall backgrounds RICH1/2 : " << bckEstimate << endmsg;
+    for ( Rich::Detectors::const_iterator iRich = detectors().begin();
+          iRich != detectors().end(); ++iRich )
+    {
+      debug() << "Overall backgrounds " << *iRich << " " << bckEstimate[*iRich] << endmsg;
+      // loop over HPDs with signal and print the backgrounds
+      for ( PDsignals::iterator iPD = m_expPDbkg[*iRich].begin();
+            iPD != m_expPDbkg[*iRich].end(); ++iPD )
+      {
+        const LHCb::RichSmartID id = iPD->first;
+        double bkg1(iPD->second);
+        double bkg2((m_obsPDsignals[*iRich])[id] - (m_expPDsignals[*iRich])[id]);
+        if ( bkg2<0 ) bkg2 = 0;
+        debug() << "  " << id << " bkg1 = " << bkg1 << " bkg2 = " << bkg2 << endmsg;
+      }
+    }
   }
 
 }
@@ -345,6 +366,7 @@ void BackgroundEstiAvHPD::pixelBackgrounds() const
 
     // background for this HPD
     const double rbckexp = (m_obsPDsignals[det])[pd] - (m_expPDsignals[det])[pd];
+    //const double rbckexp = (m_expPDbkg[det])[pd];
 
     // Save this value in the pixel
     double bkg = ( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
@@ -355,13 +377,12 @@ void BackgroundEstiAvHPD::pixelBackgrounds() const
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Pixel " << (*pixel)->hpdPixelCluster()
-                << " rbckexp " << rbckexp
                 << " Obs "  << (m_obsPDsignals[det])[pd]
                 << " Exp "  << (m_expPDsignals[det])[pd]
                 << " bkg "  << (*pixel)->currentBackground()
                 << endmsg;
     }
-    
+
   } // loop over pixels
 
 }

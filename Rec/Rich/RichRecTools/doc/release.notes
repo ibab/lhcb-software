@@ -4,6 +4,12 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2011-07-27 - Chris Jones
+ - Various clean ups in BackgroundEstiAvHPD. The fix to a 'bug'
+   //m_geomEff->geomEfficiency(*segment,id);
+   is commented out until the impact othe change on the PID performance is
+   fully understood.
+
 ! 2011-07-25 - Chris Jones
  - Add some missing debug message protection
 
