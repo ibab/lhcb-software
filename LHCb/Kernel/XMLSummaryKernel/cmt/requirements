@@ -1,11 +1,10 @@
-# $Id: requirements,v 1.5 2009-09-20 12:38:39 cattanem Exp $
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
 #
 
 #============================================================================
-package XMLSummaryKernel 
-version v1r0p2
+package           XMLSummaryKernel 
+version           v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================

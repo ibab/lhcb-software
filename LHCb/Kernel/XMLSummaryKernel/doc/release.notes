@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r1 2011-07-27 =========================
 ! 2011-07-27 - Rob Lambert
  - Fix bug in XMLSummary where a dummy input file was filled even if there 
    was no input defined or used
