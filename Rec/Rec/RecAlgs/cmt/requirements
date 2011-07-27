@@ -2,8 +2,8 @@
 # Created    : 2003-06-23
 # Maintainer : Marco CATTANEO
 #============================================================================
-package         RecAlgs
-version           v2r4
+package           RecAlgs
+version           v2r5
 
 branches        cmt doc src
 include_path    none
