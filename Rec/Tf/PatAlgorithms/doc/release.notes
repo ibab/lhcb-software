@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r14 2011-07-27 =========================
 ! 2011-07-26 - Marco Cattaneo
  - In PatAlgConf.py, apply global global event cuts taken from
    TrackSys().GlobalCuts to PatSeeding and PatForward. If GEC on Velo hits is
