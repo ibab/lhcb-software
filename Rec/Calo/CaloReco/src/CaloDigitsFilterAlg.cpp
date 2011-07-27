@@ -1,4 +1,3 @@
-// $Id: CaloDigitsFilterAlg.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -21,7 +20,7 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitsFilterAlg );
+DECLARE_ALGORITHM_FACTORY( CaloDigitsFilterAlg )
 
 // ============================================================================
 /** Standard constructor
@@ -183,9 +182,10 @@ StatusCode CaloDigitsFilterAlg::execute()
   
   const unsigned int kept = digits->size() ;
   
-  debug () << "'"        << m_inputData << "' : "
-           << " Kept  "  << kept        << " digits from " 
-           << all        << endmsg ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug () << "'"        << m_inputData << "' : "
+             << " Kept  "  << kept        << " digits from " 
+             << all        << endmsg ;
   
   return StatusCode::SUCCESS ;
 };

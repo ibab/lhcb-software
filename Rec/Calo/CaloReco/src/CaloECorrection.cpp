@@ -1,4 +1,3 @@
-// $Id: CaloECorrection.cpp,v 1.10 2010-05-20 09:47:06 odescham Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -13,7 +12,7 @@
  *  @author Deschamps Olivier
  */
 
-DECLARE_TOOL_FACTORY( CaloECorrection );
+DECLARE_TOOL_FACTORY( CaloECorrection )
 
 // ============================================================================
 /*  Standard constructor

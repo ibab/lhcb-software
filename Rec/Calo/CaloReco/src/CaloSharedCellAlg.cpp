@@ -1,4 +1,3 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.12 2010-03-12 23:44:24 odescham Exp $ 
 // ===========================================================================
 // Include files
 // from GaudiKernel
@@ -33,7 +32,7 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloSharedCellAlg );
+DECLARE_ALGORITHM_FACTORY( CaloSharedCellAlg )
 
 // ============================================================================
 // Standard creator, initializes variables
@@ -80,7 +79,7 @@ CaloSharedCellAlg::~CaloSharedCellAlg() {};
 // ============================================================================
 StatusCode CaloSharedCellAlg::initialize() 
 {
-  debug() << "==> Initialise" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialise" << endmsg;
   ///
   StatusCode sc = GaudiAlgorithm::initialize();
   ///
@@ -104,7 +103,7 @@ StatusCode CaloSharedCellAlg::execute()
   using namespace SharedCells     ;
   using namespace LHCb::CaloDigitStatus ;
   
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
   //
 
   // useful typedefs
@@ -198,7 +197,7 @@ StatusCode CaloSharedCellAlg::execute()
 
 StatusCode CaloSharedCellAlg::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

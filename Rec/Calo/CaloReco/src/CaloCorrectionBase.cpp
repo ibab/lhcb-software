@@ -1,4 +1,3 @@
-// $Id: CaloCorrectionBase.cpp,v 1.2 2010-05-27 07:36:46 odescham Exp $
 // Include files 
 
 #include "GaudiKernel/ToolFactory.h" 
@@ -12,7 +11,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloCorrectionBase );
+DECLARE_TOOL_FACTORY( CaloCorrectionBase )
 
 
 //=============================================================================
@@ -87,14 +86,15 @@ StatusCode CaloCorrectionBase::initialize() {
   if( m_hypos.empty() )return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; 
   
   // debug printout of all allowed hypos 
-  debug() << " List of allowed hypotheses : " << endmsg;
-  for( Hypotheses::const_iterator it = m_hypos.begin() ; m_hypos.end() != it ; ++it ){ 
-    debug ()  <<  " -->" << *it  << endmsg ; 
-  };
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << " List of allowed hypotheses : " << endmsg;
+    for( Hypotheses::const_iterator it = m_hypos.begin() ; m_hypos.end() != it ; ++it ){ 
+      debug ()  <<  " -->" << *it  << endmsg ; 
+    }
 
-
-  for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
-    debug() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+    for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
+      debug() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+    }
   }
 
   // get external tools
@@ -129,8 +129,9 @@ StatusCode CaloCorrectionBase::finalize() {
     if( !vec.empty() ){
       int func = (int) vec[0];
       int dim  = (int) vec[1];
-      debug() << " o  '" << type <<"'  correction as a '" << CaloCorrection::funcName[ func ] 
-             << "' function of " << dim << " parameters" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << " o  '" << type <<"'  correction as a '" << CaloCorrection::funcName[ func ] 
+                << "' function of " << dim << " parameters" << endmsg;
     }else
       warning() << " o '" << type << "' correction HAS NOT BEEN APPLIED  (badly configured)" << endmsg;
   }
@@ -141,14 +142,16 @@ StatusCode CaloCorrectionBase::finalize() {
 
 //=============================================================================©©ﬁ
 StatusCode CaloCorrectionBase::setDBParams(){
-  debug() << "Get params from CondDB condition = " << m_conditionName << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Get params from CondDB condition = " << m_conditionName << endmsg;
   m_params.clear();
   registerCondition(m_conditionName, m_cond, &CaloCorrectionBase::updParams);
   return runUpdate();  
 }
 // ============================================================================
 StatusCode CaloCorrectionBase::setOptParams(){
-  debug() << "Get params from options - no condition '" << m_conditionName << "'" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "Get params from options - no condition '" << m_conditionName << "'" << endmsg;
   if( m_optParams.empty() )return Warning("No parameters - no correction to be applied",StatusCode::SUCCESS);
   m_params.clear();
   for(std::map<std::string, std::vector<double> >::iterator p = m_optParams.begin() ; m_optParams.end() != p ; ++p){
@@ -162,7 +165,8 @@ StatusCode CaloCorrectionBase::setOptParams(){
 }
 // ============================================================================
 StatusCode CaloCorrectionBase::updParams(){
-  debug() << "updParams() called" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "updParams() called" << endmsg;
   if ( !m_cond ) return Error("Condition points to NULL", StatusCode::FAILURE);
 
   // toDo
@@ -331,8 +335,9 @@ void CaloCorrectionBase::checkParams(){
       warning() << " o Parameters for correction '"<< type << "' are badly defined : [ " << vec << " ]"<< endmsg;
       m_params[ type ].clear();
     }else{
-      debug() << " o Will apply correction '" << type <<"' as a '" << CaloCorrection::funcName[ func ] 
-             << "' function of " << dim << " parameters" << endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << " o Will apply correction '" << type <<"' as a '" << CaloCorrection::funcName[ func ] 
+                << "' function of " << dim << " parameters" << endmsg;
     }
   }
 }

@@ -1,4 +1,3 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.28 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -116,7 +115,7 @@ CaloMergedPi0Alg::~CaloMergedPi0Alg() {};
 StatusCode CaloMergedPi0Alg::initialize()
 {
 
-  debug()<< "==> Initialise" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< "==> Initialise" << endmsg;
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() )

@@ -1,4 +1,3 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.15 2010-06-01 08:09:48 graven Exp $ 
 //  ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -32,7 +31,7 @@
  */
 // ===========================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloClusterCovarianceAlg );
+DECLARE_ALGORITHM_FACTORY( CaloClusterCovarianceAlg )
 
 // ============================================================================
 /** Standard constructor
@@ -155,8 +154,7 @@ StatusCode CaloClusterCovarianceAlg::finalize()
 // ===========================================================================
 StatusCode CaloClusterCovarianceAlg::execute() 
 {
-
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
   
   // useful typedefs
   typedef LHCb::CaloClusters        Clusters ;
@@ -191,21 +189,21 @@ StatusCode CaloClusterCovarianceAlg::execute()
     StatusCode sc =   tagger () -> tag    ( *cluster ) ; 
     if( sc.isFailure() ){
       Error("Error from tagger, skip cluster ", sc ).ignore() ; 
-      debug() << *cluster << endmsg ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << *cluster << endmsg ;
       continue ; 
     }
 
     sc = cov    () -> process( *cluster ) ;    
     if( sc.isFailure() ){ 
       Error("Error from cov,    skip cluster ", sc, 0 ).ignore() ; 
-      debug() << *cluster << endmsg ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << *cluster << endmsg ;
       continue ; 
     }
 
     sc = spread () -> process( *cluster ) ;
     if( sc.isFailure() ){ 
       Error("Error from spread, skip cluster ", sc, 0 ).ignore() ; 
-      debug() << *cluster << endmsg ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << *cluster << endmsg ;
       continue ; 
     }
   }

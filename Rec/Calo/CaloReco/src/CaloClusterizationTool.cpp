@@ -1,4 +1,3 @@
-// $Id: CaloClusterizationTool.cpp,v 1.10 2010-03-12 23:44:24 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -30,7 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloClusterizationTool );
+DECLARE_TOOL_FACTORY( CaloClusterizationTool )
 
 // ============================================================================
 inline bool CaloClusterizationTool::isLocMax
@@ -332,9 +331,10 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     // Test if cells are tagged in this pass
     if ( itTagLastClustered == itTagFirst && m_release ){
       const long number = taggedCellsSeq.end() - itTagLastClustered ;
-      debug() << " TAGGING NOT FULL - Remain "
-              << boost::lexical_cast<std::string> ( number  )
-              << " not clustered cells" << endmsg ;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << " TAGGING NOT FULL - Remain "
+                << boost::lexical_cast<std::string> ( number  )
+                << " not clustered cells" << endmsg ;
       itTagLastClustered = taggedCellsSeq.end();
     }
     if( itTagLastClustered == itTagFirst )m_release = true; // try additional passes releasing appliRulesTagger criteria

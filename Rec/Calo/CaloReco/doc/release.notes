@@ -1,15 +1,18 @@
-! $Id: release.notes,v 1.191 2010-06-01 08:09:47 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-27 - Marco Cattaneo
+ - Protect unprotected MSG::DEBUG, also using UNLIKELY macro
+
 ! 2011-07-08 - Albert Puig
   - python/Configuration.py : correctly propagate track locations in CaloLines.
 
 ! 2011-07-04 - Olivier Deschamps
-  - python/Configuration.py : apply default GlobalRecoConf settings for  chargedProtoPMaker (when activated on-demand in CaloProcessor)
+  - python/Configuration.py : apply default GlobalRecoConf settings for
+    chargedProtoPMaker (when activated on-demand in CaloProcessor)
 
 !========================= CaloReco v5r10 2011-06-15 =========================
 ! 2011-06-06 - Olivier Deschamps

@@ -1,4 +1,3 @@
-// $Id: CaloElectronAlg.cpp,v 1.20 2010-03-08 01:19:40 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -40,7 +39,7 @@
  *  @date 31/03/2002 
  */
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( CaloElectronAlg );
+DECLARE_ALGORITHM_FACTORY( CaloElectronAlg )
 // ============================================================================
 /*  Standard constructor
  *  @param name algorithm name 
@@ -231,7 +230,7 @@ private:
 // ============================================================================
 StatusCode CaloElectronAlg::finalize() 
 {
-  debug()<<"Finalize"<<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<"Finalize"<<endmsg;
   
   // clear containers
   m_selectors             .clear () ;
@@ -342,7 +341,8 @@ CaloElectronAlg::execute()
     
   } // end of the loop over all clusters
   
-  debug () << " # of created Electron Hypos is  " << hypos->size() << endmsg ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug () << " # of created Electron Hypos is  " << hypos->size() << endmsg ;
   
   counter ( m_inputData + "=>" + m_outputData) += hypos->size() ;
     

@@ -1,4 +1,3 @@
-// $Id: CaloLCorrection.cpp,v 1.9 2009-06-22 13:06:32 cattanem Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -14,7 +13,7 @@
  *  @author Xxxx XXXXX xxx@xxx.com 
  */
 
-DECLARE_TOOL_FACTORY( CaloLCorrection );
+DECLARE_TOOL_FACTORY( CaloLCorrection )
 
 // ============================================================================
 /** Standard constructor
@@ -174,14 +173,16 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;
 
-  debug() << "Hypothesis :" << hypo->hypothesis() << endmsg;
-  debug()     << " ENE  " << hypo->position ()->e() <<  " "
-              << "xg "   << xg <<  " "<< "yg "   << yg <<  endmsg;
-  debug()     << "zg "   << pos->z() << " " 
-              << "z0 "   << z0 <<  " "
-              << "DeltaZ "   << dzfps <<  " "
-              << "zCor "   << zCor 
-              << endmsg ;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "Hypothesis :" << hypo->hypothesis() << endmsg;
+    debug() << " ENE  " << hypo->position ()->e() <<  " "
+            << "xg "   << xg <<  " "<< "yg "   << yg <<  endmsg;
+    debug() << "zg "   << pos->z() << " " 
+            << "z0 "   << z0 <<  " "
+            << "DeltaZ "   << dzfps <<  " "
+            << "zCor "   << zCor 
+            << endmsg ;
+  }
   
   hypo -> position() -> setZ( zCor ) ;
 

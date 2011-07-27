@@ -1,4 +1,3 @@
-// $Id: CaloCorrectionBase.h,v 1.1 2010-05-20 09:47:06 odescham Exp $
 #ifndef CALOCORRECTIONBASE_H 
 #define CALOCORRECTIONBASE_H 1
 
@@ -122,8 +121,9 @@ public:
     if(force)m_useCondDB = true;
     // get parameters from DB or options
     if ( !existDet<DataObject>( m_conditionName)  ){
-      debug() << "Initialize :  Condition '" << m_conditionName
-              << "' not found -- apply options parameters !" << endmsg; 
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+        debug() << "Initialize :  Condition '" << m_conditionName
+                << "' not found -- apply options parameters !" << endmsg; 
       m_useCondDB = false;
     }
     return m_useCondDB ? setDBParams() : setOptParams();
