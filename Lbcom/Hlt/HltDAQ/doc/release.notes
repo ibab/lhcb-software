@@ -4,11 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
-!========================= HltDAQ v2r10 2011-06-15 =========================
+!========================= HltDAQ v2r11 2011-07-27 =========================
 ! 2011-07-25 - Eric van Herwijnen
  - Added a few lines from Gerhard to HltSelReportsDecoder to be able to get Chi2PerDoF 
    and nDoF from the SelReports
 
+!========================= HltDAQ v2r10 2011-06-15 =========================
 ! 2011-06-13 - Tomasz Skwarnicki
  - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid 
    per event, for odd number of hit sequences saved. 
