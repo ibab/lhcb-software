@@ -4,8 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-07-28 - Olivier Callot
+ - Report to the Problem database with severity 'Report'
+
 ! 2011-07-27 - Olivier Callot
- - Fix some warnings for teh Windows compiler
+ - Fix some warnings for the Windows compiler
 
 ! 2011-07-26 - Olivier Callot
  - Keep the current file as base for history mode 'set file'

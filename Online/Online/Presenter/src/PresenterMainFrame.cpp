@@ -1930,7 +1930,7 @@ void PresenterMainFrame::reportToLog() {
           title = subject + " (from Presenter page " + m_currentPageName + ")";
         }
         
-        std::string severity = ""; //"Report";
+        std::string severity = "Report";
         ProblemDB myProblem( m_pbdbConfig, m_rundbConfig );
         std::string link( linkText );
         if ( "" == message ) message = title;
