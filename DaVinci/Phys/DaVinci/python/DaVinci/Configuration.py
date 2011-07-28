@@ -360,16 +360,7 @@ class DaVinci(LHCbConfigurableUser) :
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType
-    
-    def _hltCondDBHack(self) :
-        cdb = self.getProp("CondDBtag")
-        if not isNewCondDBTag(cdb) :
-            if cdb == '' : cdb = 'default'
-            log.info('CondDB '+ cdb + ' tag considered old. Setting HltReferenceRateSvc().UseCondDB = False')
-            from Configurables import HltReferenceRateSvc
-            HltReferenceRateSvc().UseCondDB = False
-        else :
-            log.info('CondDB ' + cdb + ' tag considered NEW.')
+
 ################################################################################
 # Ntuple files
 #
@@ -614,7 +605,6 @@ class DaVinci(LHCbConfigurableUser) :
             
         if inputType != 'MDST' :
             self._decReports()
-            self._hltCondDBHack()
         else :
             L0Conf()
             
