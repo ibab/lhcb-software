@@ -3,12 +3,11 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
-!==================== Phys/HighPtJets v1r3 2011-07-27 =======================
+!========================= HighPtJets v1r4 2011-07-28 =========================
 
 ! 2011-07-27 - Marcin Kucharczyk
  - Remove HighPtJetSelection.cpp and HighPtJetSelection.h in order to move 
    the package to Phys
- - Increase to v1r4
 
 !==================== Phys/HighPtJets v1r3 2011-01-21 =======================
 
