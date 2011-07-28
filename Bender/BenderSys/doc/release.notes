@@ -24,6 +24,15 @@
 </PRE>
 
 <H1>
+<A NAME=v17r3p1>2011-07-28 Bender v17r3p1 based on the DaVinci v28r4p2</A>
+</H1>	
+
+<PRE>		
+The version is similar to v17r3, but it is based on new Davinci v28r4p2.
+The experimental module TisTos has been exported from Mu2 and DiCharm. 
+</PRE>
+
+<H1>
 <A NAME=v17r3>2011-07-03 Bender v17r3 based on the DaVinci v28r4</A>
 </H1>	
 
