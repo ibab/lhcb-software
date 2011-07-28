@@ -37,38 +37,40 @@ D02KPiPi0 = {
    'WGs' : ['ALL']
 }
 
-## NoPIDDstarWithD02RSKPi = {
-##     'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
-##     'CONFIG' : {
-##     'DaugPt'           : 250 * MeV      ## GeV
-##     , 'DaugP'            : 2.0 * GeV      ## GeV
-##     , 'DaugIPChi2'       : 16             ## unitless
-##     , 'DaugTrkChi2'      : 5              ## unitless
-##     , 'D0MassWin'        : 75 * MeV       ## MeV
-##     , 'D0Pt'             : 1.5 * GeV      ## GeV
-##     , 'D0VtxChi2Ndof'    : 13             ## unitless
-##     , 'D0FDChi2'         : 49             ## unitless
-##     , 'D0BPVDira'        : 0.9999         ## unitless
-##     , 'D0IPChi2'         : 30             ## unit
-##     , 'SlowPiPt'         : 150 * MeV      ## MeV
-##     , 'SlowPiTrkChi2'    : 5              ## unitless
-##     , 'DstarPt'          : 2.2 * GeV      ## GeV
-##     , 'DstarVtxChi2Ndof' : 13             ## unitless
-##     , 'DeltaM_Min'       : 130 * MeV      ## MeV
-##     , 'DeltaM_Max'       : 155 * MeV      ## MeV
-##     ##
-##     , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
-##     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
-##     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
-##     ##
-##     , 'Prescale'         : 1.00           ## unitless
-##     , 'Postscale'        : 1.00           ## unitless
-##     ##
-##     , 'Monitor'          : False           ## Activate the monitoring?
-##     },
-##     'STREAMS' : [ 'Calibration' ],
-##     'WGs'    : ['ALL']
-##     }
+# A. Powell
+
+NoPIDDstarWithD02RSKPi = {
+    'BUILDERTYPE' : 'NoPIDDstarWithD02RSKPiConf',
+    'CONFIG' : {
+    'DaugPt'           : 250 * MeV      ## GeV
+    , 'DaugP'            : 2.0 * GeV      ## GeV
+    , 'DaugIPChi2'       : 16             ## unitless
+    , 'DaugTrkChi2'      : 5              ## unitless
+    , 'D0MassWin'        : 75 * MeV       ## MeV
+    , 'D0Pt'             : 1.5 * GeV      ## GeV
+    , 'D0VtxChi2Ndof'    : 13             ## unitless
+    , 'D0FDChi2'         : 49             ## unitless
+    , 'D0BPVDira'        : 0.9999         ## unitless
+    , 'D0IPChi2'         : 30             ## unit
+    , 'SlowPiPt'         : 150 * MeV      ## MeV
+    , 'SlowPiTrkChi2'    : 5              ## unitless
+    , 'DstarPt'          : 2.2 * GeV      ## GeV
+    , 'DstarVtxChi2Ndof' : 13             ## unitless
+    , 'DeltaM_Min'       : 130 * MeV      ## MeV
+    , 'DeltaM_Max'       : 155 * MeV      ## MeV
+    ##
+    , 'DCS_WrongMass'    : 25 * MeV       ## MeV (3 sigma veto)
+    , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
+    , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
+    ##
+    , 'Prescale'         : 0.40           ## unitless
+    , 'Postscale'        : 1.00           ## unitless
+    ##
+    , 'Monitor'          : False           ## Activate the monitoring?
+    },
+    'STREAMS' : [ 'Calibration' ],
+    'WGs'    : ['ALL']
+    }
 
 # NoPID Inclusive Phi Lines
 # A. Powell & S. Schleich
@@ -126,15 +128,15 @@ V0ForPID = {
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
     ] ,
-    'KS0LL_Prescale'           : 0.008 , 
-    'KS0DD_Prescale'           : 0.009 , 
-    'LamLL_Prescale_LoP'       : 0.033 , 
-    'LamLL_Prescale_HiP'       : 0.270 , 
-    'LamDD_Prescale'           : 0.032 , 
-    'LamLLIsMUON_Prescale_LoP' : 1.000 , 
-    'LamLLIsMUON_Prescale_HiP' : 1.000 , 
-    'LamDDIsMUON_Prescale'     : 1.000  
-    },
+    'KS0LL_Prescale'           : 0.007 ,
+    'KS0DD_Prescale'           : 0.008 , 
+    'LamLL_Prescale_LoP'       : 0.027 , 
+    'LamLL_Prescale_HiP'       : 0.308 ,
+    'LamDD_Prescale'           : 0.033 , 
+    'LamLLIsMUON_Prescale_LoP' : 1.000 ,
+    'LamLLIsMUON_Prescale_HiP' : 1.000 ,
+    'LamDDIsMUON_Prescale'     : 1.000   
+     },
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
     }

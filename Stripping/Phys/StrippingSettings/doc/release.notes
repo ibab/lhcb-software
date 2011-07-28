@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-28 - Thomas Blake
+ - Updated Calibration stream definition for RICH group. 
+
+
 !========================= StrippingSettings v2r5 2011-07-26 =========================
 ! 2011-07-26 - Thomas Blake
  - Cloned stripping16 dbase as strippingdev
