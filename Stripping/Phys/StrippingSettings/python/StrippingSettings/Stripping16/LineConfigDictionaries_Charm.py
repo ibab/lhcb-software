@@ -754,9 +754,9 @@ JpsiMuMuforD0MuMu = {
                     'Jpsi2MuMuForD0mumu_BPVVDCHI2'             :   20.    ,
                     'Jpsi2MuMuForD0mumu_BPVDIRA'               : 0.9997   ,
                     'Jpsi2MuMuForD0mumu_BPVIPCHI2'             : 15.      ,
-                    'Jpsi2MuMuForD0mumu_MuonMaxBPVIPCHI2'          : 8.       ,
-                    'Jpsi2MuMuForD0mumu_MuonMaxPT'                 : 1100.    
+                    'Jpsi2MuMuForD0mumu_MuonMaxBPVIPCHI2'      : 8.       ,
+                    'Jpsi2MuMuForD0mumu_MuonMaxPT'             : 1100.    
                     },
-    'STREAMS' : [ 'Charm' ],
-    'WGs'    : [ 'PSWG' ]
+    'STREAMS' : [ 'Dimuon' ],
+    'WGs'    : [ 'Charm' ]
     }
