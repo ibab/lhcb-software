@@ -1,6 +1,5 @@
 project DAVINCI
 
-use HLT       HLT_v13r7
 use ANALYSIS  ANALYSIS_v6r5
 use STRIPPING STRIPPING_v2r5
 
