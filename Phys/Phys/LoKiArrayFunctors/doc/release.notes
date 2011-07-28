@@ -5,6 +5,7 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r0p1 2011-07-28 =========================
 ! 2011-06-17 - Vanya Belyaev
  - fif doca-chi2 issue:
 
