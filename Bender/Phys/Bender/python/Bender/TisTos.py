@@ -1,0 +1,599 @@
+#!/usr/bin/env python
+# =============================================================================
+# @file Bender/TisTos.py
+#
+# Decorate the algorithm with helper methods for TisTosTob'ing 
+#  
+#
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>``Python-based Interactive Environment for Smart and Friendly 
+#   Physics Analysis''</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  ``C++ ToolKit for Smart and Friendly Physics Analysis''
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the smear campaign of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
+# @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+# @date   2011-06-21
+#
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
+# =============================================================================
+"""
+Decorate the algorithm with helper methods for TisTosTob'ing 
+
+This file is a part of BENDER project:
+    ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the LoKi project:
+    ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement 
+with the smear campain of Dr.O.Callot et al.: 
+    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+"""
+# =============================================================================
+__version__ = "$Revision$"
+__author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
+__date__    = "2011-06-07"
+# =============================================================================
+__all__= (
+    'decision'     , ## collect trigger decisions
+    'trgDecs'      , ## print trigger statistics 
+    'tistos'       , ## fill N-tuple with TisTos information
+    )
+# ==============================================================================
+from LoKiCore.basic import cpp
+from Bender.Main    import SUCCESS, Algo 
+# ==============================================================================
+ITriggerSelectionTisTos = cpp.ITriggerSelectionTisTos
+# ==============================================================================
+## Collect important trigger lines
+#
+#  @code
+#
+#  particles = ...
+#  for D in particles : 
+#      self.decisions ( D               ,
+#                       triggers        ,
+#                       self.l0tistos   ,
+#                       self.tistos     )
+#
+#  @endcode 
+#
+#  "triggers" here is in/out-argument (dictionary) that accumulates the
+#  information abot trigger lines ...
+#
+#  Technically it is useful to keep it as ``per-particle-type''
+#  dictionary
+#
+#  @code
+#
+#  def initialize ( self ) :
+#     ...
+#     self.triggers        = {}
+#     self.triggers['B']   = {}
+#     self.triggers['H']   = {}
+#     self.triggers['ppi'] = {}
+#     ...
+#
+#  def analyse ( self ) :
+#     ...
+#
+#     particles = ...
+#     for B in particles : 
+#         self.decisions ( B                  ,
+#                          self.triggers['B'] ,
+#                          self.l0tistos      ,
+#                          self.tistos        )
+#     ...
+#
+#  @endcode 
+#
+#
+#  @param p        (input)         the particle
+#  @param triggers (update/output) the triggers
+#  @param l0tistos (input)         the tool for L0-tistos 
+#  @param   tistos (input)         the tool for Hlt1/Hlt2-tistos
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-21
+def decisions ( self             ,
+                p                ,
+                triggers         , 
+                l0tistos  = None ,
+                tistos    = None ) : 
+    """
+    Collect the important trigger lines
+
+    ... 
+    particles = ...
+    for D in particles : 
+        self.decisions ( D               ,
+        triggers        ,
+        self.l0tistos   ,
+        self.tistos     )
+        
+    ``triggers'' here is in/out-argument (dictionary) that accumulates the
+    information abot trigger lines ...
+    
+    Technically it is useful to keep it as ``per-particle-type''
+    dictionary
+    
+    def initialize ( self ) :
+        ...
+        self.triggers        = {}
+        self.triggers['B']   = {}
+        self.triggers['H']   = {}
+        self.triggers['psi'] = {}
+        ...
+        return SUCCESS
+    
+    def analyse ( self ) :
+        ... 
+        particles = ...
+        for B in particles : 
+            self.decisions ( B                  ,
+                             self.triggers['B'] ,
+                             self.l0tistos      ,
+                             self.tistos        )
+        ...
+        return SUCCESS
+    """
+    
+    if not triggers.has_key ( 'L0_TOS'   ) : triggers [ 'L0_TOS'   ] = {}
+    if not triggers.has_key ( 'L0_TIS'   ) : triggers [ 'L0_TIS'   ] = {}
+    if not triggers.has_key ( 'Hlt1_TOS' ) : triggers [ 'Hlt1_TOS' ] = {}
+    if not triggers.has_key ( 'Hlt1_TIS' ) : triggers [ 'Hlt1_TIS' ] = {}
+    if not triggers.has_key ( 'Hlt2_TOS' ) : triggers [ 'Hlt2_TOS' ] = {}
+    if not triggers.has_key ( 'Hlt2_TIS' ) : triggers [ 'Hlt2_TIS' ] = {}
+
+
+    if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
+    if not   tistos and hasattr ( self ,   'tistos' ) :   tistos = self.  tistos
+    
+    if not l0tistos : return self.Error ( 'decisions: Invalid "l0tistos"-argument ')
+    if not   tistos : return self.Error ( 'decisions: Invalid   "tistos"-argument ')
+    
+            
+    if hasattr ( p , 'particle' ) : p = p.particle()
+    
+    
+    trigs = l0tistos.triggerSelectionNames ( p  , 'L0.*Decision'  ,
+                                             ITriggerSelectionTisTos.kTrueRequired , ## decision 
+                                             ITriggerSelectionTisTos.kAnything     , ## TIS
+                                             ITriggerSelectionTisTos.kTrueRequired , ## TOS
+                                             ITriggerSelectionTisTos.kAnything     ) ## TPS
+    
+    tos = triggers['L0_TOS'] 
+    if not tos.has_key('TOTAL') : tos['TOTAL']  = 1
+    else                        : tos['TOTAL'] += 1
+    for t in trigs :
+        if not tos.has_key(t) : tos[t]  = 1 
+        else                  : tos[t] += 1
+        
+    
+    trigs = l0tistos.triggerSelectionNames ( p  , 'L0.*Decision'  ,
+                                             ITriggerSelectionTisTos.kTrueRequired , ## decision 
+                                             ITriggerSelectionTisTos.kTrueRequired , ## TIS
+                                             ITriggerSelectionTisTos.kAnything     , ## TOS
+                                             ITriggerSelectionTisTos.kAnything     ) ## TPS
+    tis = triggers['L0_TIS']
+    if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
+    else                        : tis['TOTAL'] += 1
+    for t in trigs :
+        if not tis.has_key(t) : tis[t]  = 1 
+        else                  : tis[t] += 1 
+
+
+    for i in ( 'Hlt1' , 'Hlt2' ) :
+        
+        trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
+                                               ITriggerSelectionTisTos.kTrueRequired , ## decision 
+                                               ITriggerSelectionTisTos.kAnything     , ## TIS
+                                               ITriggerSelectionTisTos.kTrueRequired , ## TOS
+                                               ITriggerSelectionTisTos.kAnything     ) ## TPS
+        tos = triggers[ i + '_TOS'] 
+        if not tos.has_key('TOTAL') : tos['TOTAL']  = 1
+        else                        : tos['TOTAL'] += 1
+        for t in trigs :
+            if not tos.has_key(t) : tos[t]  = 1 
+            else                  : tos[t] += 1 
+        
+        trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
+                                               ITriggerSelectionTisTos.kTrueRequired , ## decision 
+                                               ITriggerSelectionTisTos.kTrueRequired , ## TIS
+                                               ITriggerSelectionTisTos.kAnything     , ## TOS
+                                               ITriggerSelectionTisTos.kAnything     ) ## TPS
+        tis = triggers[ i + '_TIS']
+        if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
+        else                        : tis['TOTAL'] += 1
+        for t in trigs :
+            if not tis.has_key(t) : tis[t]  = 1 
+            else                  : tis[t] += 1 
+            
+    return SUCCESS
+
+
+# ============================================================================
+## print the trigger decisions, collected by ``decisions'' method
+#
+#  @code
+#
+#   self.trgDecs ( self.triggers )
+#
+#  @endcode 
+#  
+#  @param p        (input)         the particle
+#  @param triggers (update/output) the triggers
+#  @param l0tistos (input)         the tool for L0-tistos 
+#  @param   tistos (input)         the tool for Hlt1/Hlt2-tistos
+#  @param   dbname (input)         the name of output shelve-file
+#
+#  It also dumps the statistics into shelve data base 
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-21 
+def trgDecs ( self            ,
+              triggers = None ,
+              db_name  = ''   ) :
+    """
+    
+    Print trigger decisions, collected by ``decisions'' method
+    It also dumps the statistics into shelve data base 
+    ...
+    self.trgDec ( self.triggers )
+    ... 
+    
+    """
+    if not triggers and hasattr ( self , 'triggers' ) : triggers = self.triggers
+        
+    if not isinstance ( triggers , dict ) : 
+        return self.Warning ( 'Invalid argument "triggers"' , SUCCESS )
+            
+    for part in triggers :
+        
+        trigs = self.triggers[part]
+        
+        print 90*'*'
+        print ' Triggers for ', part 
+        print 90*'*'
+        
+        if not isinstance ( trigs , dict ) : 
+            self.Warning ( 'Invalid key "%s"' % part  , SUCCESS )
+            continue
+        
+        tkeys = trigs.keys()
+        tkeys.sort()
+        
+        for k in tkeys :
+            
+            trg = trigs[ k ]
+            
+            print k , part, '  #lines:', len(trg)
+            keys = trg.keys()
+            keys.sort() 
+            for k in keys :
+                print ' %6.2f  %s ' % ( float(trg[k])/trg['TOTAL']*100 , k )
+
+
+    print 90*'*'
+
+    import shelve
+    if not db_name : db_name = self.name () + '_tistos'
+    db = shelve.open( db_name )
+    db [ 'tistos' ] = triggers
+    db.close()
+    
+    return SUCCESS
+
+# =============================================================================
+## fill TisTos information to N-tuple 
+#
+#  @code
+#
+#    particles = ...
+#
+#    for D in particles : 
+#        self.tisTos ( D     ,
+#                      tup   ,
+#                      'D0_' ,
+#                      lines             ,
+#                      self.l0tistos     ,
+#                      self.tistos       )
+#  @endcode
+# 
+#  "lines" here is a dictionary of lines (or regex-patterns) with
+#   following keys:
+#   - <c>L0TOS</c> 
+#   - <c>L0TIS</c>
+#   - <c>Hlt1TOS</c>
+#   - <c>Hlt1TIS</c>
+#   - <c>Hlt2TOS</c>
+#   - <c>Hlt2TIS</c>
+#
+#  e.g.
+#  @code
+#    lines = {}
+#    lines ['L0TOS'  ] = 'L0HadronDecision'
+#    lines ['L0TIS'  ] = 'L0(Hadron|Muon|DiMuon)Decision'
+#    lines ['Hlt1TOS'] = ...
+#    lines ['Hlt1TIS'] = 'Hlt1Topo.*Decision'
+#    lines ['Hlt2TOS'] = ...
+#    lines ['Hlt2TIS'] = ...
+#
+#  @endcode
+#
+#  Technically it is useful to keep it as ``per-particle-type''
+#  dictionary
+#
+#  @code
+#
+#  def initialize ( self ) :
+#     ...
+#     self.lines           = {}
+#     self.lines ['B'  ]   = {}
+#     self.lines ['B'  ]['L0TOS'] = ...
+#     self.lines ['B'  ]['L0TOS'] = ...
+#     ...
+#     self.lines ['psi']   = {}
+#     self.lines ['psi']['L0TOS'] = ...
+#     ...
+#
+#  def analyse ( self )
+#
+#    particles = ...
+#
+#    for B in particles : 
+#        self.tisTos ( B     ,
+#                      tup   ,
+#                      'B0_' ,
+#                      self.lines['B']   ,
+#                      self.l0tistos     ,
+#                      self.tistos       )
+#  @endcode
+#
+#
+#  The function adds few columns to n-tuple, themost important are:
+#   - "label"l0tos_1   : corresponds to   'L0-TOS'  
+#   - "label"l0tis_2   : corresponds to   'L0-TIS'  
+#   - "label"l1tos_1   : corresponds to 'Hlt1-TOS'  
+#   - "label"l1tis_2   : corresponds to 'Hlt1-TIS'  
+#   - "label"l2tos_1   : corresponds to 'Hlt2-TOS'  
+#   - "label"l2tis_2   : corresponds to 'Hlt2-TIS'
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-21  
+def tisTos ( self             ,
+             p                ,
+             ntuple           ,
+             label            , 
+             lines            , 
+             l0tistos  = None ,
+             tistos    = None ) :
+    """
+    Fill TisTos information into n-tuple
+    
+    for d in particles : 
+       self.tisTos ( d     ,
+                     tup   ,
+                    'd0_' ,
+                    self.lines ['D0'] , 
+                    self.l0tistos     ,
+                    self.tistos       )
+    
+
+  
+    ``lines'' here is a dictionary of lines (or regex-patterns) with
+    following keys:
+    - L0TOS
+    - L0TIS
+    - Hlt1TOS
+    - Hlt1TIS
+    - Hlt2TOS
+    - Hlt2TIS
+    
+    e.g.
+    
+    lines = {}
+    lines ['L0TOS'  ] = 'L0HadronDecision'
+    lines ['L0TIS'  ] = 'L0(Hadron|Muon|DiMuon)Decision'
+    lines ['Hlt1TOS'] = ...
+    lines ['Hlt1TIS'] = 'Hlt1Topo.*Decision'
+    lines ['Hlt2TOS'] = ...
+    lines ['Hlt2TIS'] = ...
+    
+    Technically it is useful to keep it as ``per-particle-type'' dictionary
+    
+    def initialize ( self ) :
+        ...
+        self.lines           = {}
+        self.lines ['B'  ]   = {}
+        self.lines ['B'  ]['L0TOS'] = ...
+        self.lines ['B'  ]['L0TOS'] = ...
+        ...
+        self.lines ['psi']   = {}
+        self.lines ['psi']['L0TOS'] = ...
+        ...
+        return SUCCESS
+    
+    def analyse ( self ) : 
+        
+        particles = ...
+        
+        for B in particles : 
+            self.tisTos ( B     ,
+                          tup   ,
+                          'B0_' ,
+                          self.lines['B']   , 
+                          self.l0tistos     ,
+                          self.tistos       )
+
+        ...
+        return SUCCESS
+    
+    The function adds few columns to n-tuple, themost important are
+    <label>l0tos_1  that corresponds to   'L0-TOS'  
+    <label>l0tis_2  that corresponds to   'L0-TIS'  
+    <label>l1tos_1  that corresponds to 'Hlt1-TOS'  
+    <label>l1tis_2  that corresponds to 'Hlt1-TIS'  
+    <label>l2tos_1  that corresponds to 'Hlt2-TOS'  
+    <label>l2tis_2  that corresponds to 'Hlt2-TIS'
+    
+    """
+    if hasattr ( p , 'particle' ) :  p = p.particle()
+    
+    if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
+    if not   tistos and hasattr ( self ,   'tistos' ) :   tistos = self.  tistos
+    
+    #
+    ## start actual Tis/Tos/Tob'ing
+    #
+    l0_tos     = l0tistos.triggerTisTos ( p , lines [ 'L0TOS'   ]  )
+    l0_tis     = l0tistos.triggerTisTos ( p , lines [ 'L0TIS'   ]  )
+    
+    l1_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt1TOS' ]  )
+    l1_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt1TIS' ]  )
+    
+    l2_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TOS' ]  )
+    l2_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TIS' ]  )
+    
+    ntuple.column ( label + 'l0tos_1' , l0_tos.tos      () , 0 , 1 )
+    ntuple.column ( label + 'l0tis_1' , l0_tos.tis      () , 0 , 1 )
+    ntuple.column ( label + 'l0dec_1' , l0_tos.decision () , 0 , 1 )
+    
+    ntuple.column ( label + 'l0tos_2' , l0_tis.tos      () , 0 , 1 )
+    ntuple.column ( label + 'l0tis_2' , l0_tis.tis      () , 0 , 1 )
+    ntuple.column ( label + 'l0dec_2' , l0_tis.decision () , 0 , 1 )
+    
+    ntuple.column ( label + 'l1tos_1' , l1_tos.tos      () , 0 , 1 )
+    ntuple.column ( label + 'l1tis_1' , l1_tos.tis      () , 0 , 1 )
+    ntuple.column ( label + 'l1dec_1' , l1_tos.decision () , 0 , 1 )
+    
+    ntuple.column ( label + 'l1tos_2' , l1_tis.tos      () , 0 , 1 )
+    ntuple.column ( label + 'l1tis_2' , l1_tis.tis      () , 0 , 1 )
+    ntuple.column ( label + 'l1dec_2' , l1_tis.decision () , 0 , 1 )
+    
+    ntuple.column ( label + 'l2tos_1' , l2_tos.tos      () , 0 , 1 )
+    ntuple.column ( label + 'l2tis_1' , l2_tos.tis      () , 0 , 1 )
+    ntuple.column ( label + 'l2dec_1' , l2_tos.decision () , 0 , 1 )
+    
+    ntuple.column ( label + 'l2tos_2' , l2_tis.tos      () , 0 , 1 )
+    ntuple.column ( label + 'l2tis_2' , l2_tis.tis      () , 0 , 1 )
+    ntuple.column ( label + 'l2dec_2' , l2_tis.decision () , 0 , 1 )
+    
+    return SUCCESS
+
+# =============================================================================
+## initialize TisTos, acquire tools, etc...
+#  helper methdod to initialize TisTosTob'ing machinery
+#
+#  @code
+#
+#  def initialize ( self ) :
+#
+#     ... 
+#     lines           = {}
+#     lines ['B'  ]   = {}
+#     lines ['B'  ]['L0TOS'] = ...
+#     lines ['B'  ]['L0TOS'] = ...
+#     ...
+#     lines ['psi']   = {}
+#     lines ['psi']['L0TOS'] = ...
+#     ...
+#     triggers        = {}
+#     triggers['B']   = {}
+#     triggers['psi'] = {}
+#     ...
+#     sc = self.tisTos_initialize ( triggers , lines  )
+#
+#  @endcode 
+# 
+#  @param triggers dictionnary to collect trigger line statistics
+#  @param lines    dictionnary for TisTosTobing
+#  
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-21  
+# 
+def _tisTosInit ( self , triggers = {} , lines = {} ) :
+    """
+    Initialize tis-tos machinery, acquire tools, etc...  
+    """
+    
+    ## locate tools 
+    self.l0tistos  = self.tool ( cpp.ITriggerTisTos , 'L0TriggerTisTos' , parent = self )  
+    self.tistos    = self.tool ( cpp.ITriggerTisTos ,   'TriggerTisTos' , parent = self )
+    
+    self.tistos   . setOfflineInput()
+    self.l0tistos . setOfflineInput()
+    
+    self.triggers = {}
+    
+    from copy import deepcopy
+    if triggers : self.triggers = deepcopy ( triggers )  
+    if lines    : self.lines    = deepcopy ( lines    )
+
+    return SUCCESS 
+
+
+# =============================================================================
+## finalize  TisTos
+#  helper methdod to finalize TisTosTob'ing machinery
+#
+#  @code
+#
+#  def finalize ( self ) :
+#
+#     ... 
+#     sc = self.tisTos_finalize ()
+#
+#  @endcode 
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-21  
+# 
+def _tisTosFini ( self , triggers = None ) :
+    """
+    Finalize tis-tos machinery 
+    """
+    
+    if not triggers and hasattr ( self , 'triggers' ) : triggers = self.triggers
+    
+    trgDecs ( self , triggers )
+
+    if hasattr ( self , 'l0tistos' ) : self . l0tistos = None
+    if hasattr ( self ,   'tistos' ) : self .   tistos = None
+    
+    return SUCCESS 
+    
+# =============================================================================
+Algo.decisions         =  decisions
+Algo.trgDecs           =  trgDecs 
+Algo.tisTos            =  tisTos 
+Algo.tisTos_initialize = _tisTosInit
+Algo.tisTos_finalize   = _tisTosFini
+# =============================================================================
+if '__main__' == __name__ :
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print ' Symbols : ' , __all__    
+    print 80*'*'
+    
+# =============================================================================
+# The END 
+# =============================================================================
