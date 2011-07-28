@@ -4,6 +4,14 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-28 - Jibo He
+ - LineConfigDictionaries_PSWG.py
+   . Enabled ChiCJPsiGammaConversion and CharmAssociative
+ - LineConfigDictionaries_Charm.py
+   . Moved JpsiMuMuforD0MuMu from PSWG
+ - LineConfigDictionaries_GLWG.py
+   . Updated Hb2Charged2Body
+
 ! 2011-07-28 - Thomas Blake
  - Added 50% prescale in TrackEffVeloMuon and Jpsi line of MuonTT
 

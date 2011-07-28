@@ -20,7 +20,7 @@ Hb2Charged2Body = {
     'BUILDERTYPE' : 'Hb2Charged2BodyLines',
     'CONFIG'      : {
     'PrescaleB2Charged2Body'   : 1,      'PrescaleB2PPbar' : 1,
-    'MinPTB2Charged2Body'      : 1000,    'MinPTB2PPbar' : 900,
+    'MinPTB2Charged2Body'      : 1100,    'MinPTB2PPbar' : 900,
     'MinIPB2Charged2Body'      : 0.12,
     'MinIPChi2B2Charged2Body'  : 100,     'MinIPChi2B2PPbar' : 9,
     'TrChi2'                   : 5,
@@ -42,7 +42,7 @@ Hb2Charged2Body = {
     },
     'STREAMS'     : [ 'Bhadron' ],
     'WGs'         : ['GammaFromLoops']
-       }
+    }
 
 ##
 ## B->hh, lifetime  unbiased
