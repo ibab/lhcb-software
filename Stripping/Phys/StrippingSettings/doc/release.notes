@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-07-28 - Thomas Blake
+ - Updated configuration for TrackEffDownMuon for Stripping 16
+
+! 2011-07-28 - Thomas Blake
  - Updated Calibration stream definition for RICH group. 
 
 

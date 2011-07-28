@@ -203,23 +203,24 @@ TrackEffDownMuon = {
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
-    'CONFIG' : {'MuMom':                1000.   # MeV
-                ,       'MuTMom':               100.    # MeV
-                ,       'TrChi2':               10.     # MeV
-                ,       'MassPreComb':          2000.   # MeV
-                ,       'MassPostComb':         200.    # MeV
-                ,       'Doca':                 5.      # mm
-                ,       'VertChi2':             25.     # adimensional
-                ,       'DataType':             '2011'        
-                ,       'NominalLinePrescale':  1.
-                ,       'NominalLinePostscale': 1.
-                ,       'ValidationLinePrescale': 0.1
-                ,       'ValidationLinePostscale': 1.
-                ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-                ,       'HLT1PassOnAll': True
-                ,       'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-                ,       'HLT2PassOnAll': False
-                } 
+    'CONFIG' : {
+    	'MuMom':		2000.	# MeV
+        ,	'MuTMom':		200.	# MeV
+        ,	'TrChi2':		10.	# MeV
+        ,	'MassPreComb':		2000.	# MeV
+        ,	'MassPostComb':		200.	# MeV
+        ,	'Doca':			5.	# mm
+        ,	'VertChi2':		25.	# adimensional
+        ,       'DataType':             '2011'        
+        ,	'NominalLinePrescale':  0.2 # proposal: 0.2 to stay below 0.15% retention rate 
+        ,	'NominalLinePostscale': 1.
+        ,	'ValidationLinePrescale':0.003 #0.5 in stripping15: 0.1 gives 1.42% retention rate
+        ,	'ValidationLinePostscale': 1.
+        ,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+        ,	'HLT1PassOnAll': True
+        ,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
+        ,	'HLT2PassOnAll': False
+        } 
     }
 
 TrackEffVeloMuon = { 
