@@ -17,8 +17,8 @@ This version uses Gaudi v22r2 and LHCb v32r5
     RichAlignment v1r4, RichENNRingFinder v1r3, RichGlobalPID v3r16,
     RichHPDImageAnalysis v1r8, RichRecQC v2r53, RichRecStereoTools v1r8,
     RichRecSys v4r3, RichRecTrackTools v1r30, PatAlgorithms v4r14,
-    TfTools v1r15, TrackSys v6r3, TrackExtrapolators v2r31, TrackMonitors v1r33,
-    TrackTools v4r7, TrackUtils v1r43, VeloRecMonitors v2r14 
+    TfTools v1r15, TrackSys v6r3, TrackExtrapolators v2r31, TrackFitEvent v5r11,
+    TrackMonitors v1r33, TrackTools v4r7, TrackUtils v1r43, VeloRecMonitors v2r14
 
 - In Calo/CaloReco v5r11
   . python/Configuration.py :
@@ -120,6 +120,10 @@ This version uses Gaudi v22r2 and LHCb v32r5
 - In Tr/TrackExtrapolators v2r31
   . Remove explicit calls to PrintProps (already done in base class)
   . Fix some icc remarks
+
+- In Tr/TrackFitEvent v5r11
+  . Use trajectory.endRange/beginRange instead of module().wireLength
+    to improve performance
 
 - In Tr/TrackMonitors v1r33
   . ITTrackMonitor: add histogram for overlaps
