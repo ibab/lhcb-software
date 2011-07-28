@@ -63,28 +63,42 @@ class TrackSys(LHCbConfigurableUser):
          self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms_old)
     
       if "cosmics" not in self.getProp("SpecialData"):
-           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
-               if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :  
-                 self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms_old)
-               else:
-                 self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
-           if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
-               self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
-           for prop in self.getProp("ExpertTracking"):
-               if prop not in self.KnownExpertTracking:
-                   raise RuntimeError("Unknown expertTracking option '%s'"%prop)
-           if len(self.getProp("GlobalCuts")) == 0 :
-               if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :  
-                 self.setProp("GlobalCuts",self.DefaultGlobalCuts_old)
-               else:
-                 self.setProp("GlobalCuts",self.DefaultGlobalCuts)
-           if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
-               self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
-      else:         
-           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
-               self.setProp("TrackPatRecAlgorithms",self.CosmicPatRecAlgorithms)
-           if len(self.getProp("ExpertTracking")) == 0 :
-               self.setProp("ExpertTracking",self.CosmicExpertTracking)
+          # Defaults changes starting in 2011
+          if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :
+              defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms_old
+              defaultGlobalCuts       = self.DefaultGlobalCuts_old
+          else:
+              defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms
+              defaultGlobalCuts       = self.DefaultGlobalCuts
+
+          if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
+              self.setProp("TrackPatRecAlgorithms",defaultPatRecAlgorithms)
+          if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
+              self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
+          for prop in self.getProp("ExpertTracking"):
+              if prop not in self.KnownExpertTracking:
+                  raise RuntimeError("Unknown expertTracking option '%s'"%prop)
+          if len(self.getProp("GlobalCuts")) == 0 :
+              self.setProp("GlobalCuts",defaultGlobalCuts)
+          else:
+              globalCuts = self.getProp("GlobalCuts")
+              for key in globalCuts:
+                  if key not in ["Velo","IT","OT"]:
+                      raise RuntimeError("Invalid key for TrackSys().GlobalCuts: '%s'"%key)
+              for key in defaultGlobalCuts:
+                  if key not in globalCuts:
+                      globalCuts[key] = defaultGlobalCuts[key]
+              log.warning("Using non-default global tracking cuts: '%s'"%globalCuts)
+              self.setProp("GlobalCuts",globalCuts)
+          
+          if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
+              self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
+      else:
+          # Cosmics case
+          if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
+              self.setProp("TrackPatRecAlgorithms",self.CosmicPatRecAlgorithms)
+          if len(self.getProp("ExpertTracking")) == 0 :
+              self.setProp("ExpertTracking",self.CosmicExpertTracking)
                                                                
 
     ## @brief Shortcut to the fieldOff option
