@@ -3,7 +3,18 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-Adding Phys/HighPtJets v1r3, and Phys/LoKiTracks v2r2
+</PRE><H1><A NAME=v12r5>2011-06-16 Phys v12r5 </A></H1><PRE>
+- Based on LHCb v32r5. Stripping16 version, hopefully.
+
+New packages: Phys/HighPtJets v1r3, and Phys/LoKiTracks v2r2
+
+CPU improvements made for Stripping16 releases, such as:
+  . supression of many warnings in Phys/LoKiFitters
+  . addition of the recSummary and recSummaryTrack functors to cut on RecSummary info
+  . supression of MuonID object recreation for datatype!=MC09
+
+Other minor changes, for more information see here:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Phys&version=v12r6
 
 </PRE><H1><A NAME=v12r5>2011-06-16 Phys v12r5 </A></H1><PRE>
 - Based on LHCb v32r4. Stripping13/14/15 compatible patches.
