@@ -3,6 +3,16 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v6r6>2011-07-29 Analysis v6r6 </A></H1><PRE>
+
+Based on Phys v12r6, patch for the 2011 Stripping16.
+
+Small optimization in Phys/DstWriters v3r1 to remove MicroDst components already
+in the RecSummary.
+
+Pretty much only bugfixes and minor improvements elsewhere, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Analysis&version=v6r6
+
 </PRE><H1><A NAME=v6r5>2011-06-17 Analysis v6r5 </A></H1><PRE>
 
 Based on Phys v12r5, patch for the 2011 processing post-june-technical stop.
