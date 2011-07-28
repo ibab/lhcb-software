@@ -676,6 +676,7 @@ public:
   unsigned int m_trendDuration;
   unsigned int m_trendEnd;
   bool m_reAccess;
+  bool m_idle;
 
   /// Display page name in status bar and load comments
   void displayStatusAndComments( OnlineHistPage * page ) ;

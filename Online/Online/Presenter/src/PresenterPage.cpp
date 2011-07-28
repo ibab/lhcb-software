@@ -793,7 +793,6 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
   if ( nRow * nCol < nbPlots ) nRow++;
 
   std::cout << "For " << nbPlots << " plots, nCol " << nCol << " nRow " << nRow << std::endl;
-  editorCanvas->Clear();
 
   int row = nRow-1;
   int col = 0;
@@ -806,6 +805,10 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
       double xHig = xLow + cSize;
       double yLow = row * rSize;
       double yHig = yLow + rSize;
+      if ( NULL != m_bannerPad ) {
+        yLow = 0.95 * yLow;
+        yHig = 0.95 * yHig;
+      }
       (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
       col += 1;
       if ( nCol == col ) {
@@ -820,6 +823,10 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
       double xHig = xLow + cSize;
       double yLow = row * rSize;
       double yHig = yLow + rSize;
+      if ( NULL != m_bannerPad ) {
+        yLow = 0.95 * yLow;
+        yHig = 0.95 * yHig;
+      }
       (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
       col += 1;
       if ( nCol == col ) {

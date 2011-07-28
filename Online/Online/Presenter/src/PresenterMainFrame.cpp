@@ -155,7 +155,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_intervalPickerData(NULL),
   m_reAccess( false )
 {
-
+  m_idle = false;
   // only one presenter session allowed: Save in a global variable the current one.
   if (gPresenter) { return; }
   gPresenter = this;
@@ -201,6 +201,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
 
   m_trendDuration = 600;
   m_trendEnd      = 0;
+  m_idle = true;
 }
 
 //==============================================================================
@@ -1645,9 +1646,11 @@ void PresenterMainFrame::setDatabaseMode(const pres::DatabaseMode & databaseMode
 // Change the mode of the presenter
 //=============================================================================
 void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
+  m_idle = false;
   switch ( pMode ) {
   case pres::Init:
     buildGUI();
+    m_idle = true;
     return;
   case pres::Batch:
     gROOT->SetBatch() ;
@@ -1682,6 +1685,8 @@ void PresenterMainFrame::setPresenterMode(const pres::PresenterMode & pMode) {
     break;
   }
   if ( ! isBatch() ) reconfigureGUI();
+  m_idle = true;
+  if ( m_reAccess ) reAccessPage();
 }
 
 //=============================================================================
@@ -3642,6 +3647,8 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl){
 // Display a list of histograms, with automatic pad assignment 
 //=========================================================================
 void PresenterMainFrame::displaySimpleHistos ( ) {
+  m_loadingPage = true;
+  std::string bannerText = "";
   if ( ( pres::EditorOnline  == presenterMode() ) ||
        ( pres::Online        == presenterMode() )   ) {
     std::string partition = currentPartition();
@@ -3655,8 +3662,18 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
     m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
   } else {
     m_presenterPage.loadFromArchive( m_archive, pres::s_startupFile, m_savesetFileName );
+    bannerText = m_savesetFileName;
   }
+  std::string header = "Simple edited display";
+  if ( m_displayMode == pres::Alarm ) header = "Analysis alarm";
+
+  editorCanvas->Clear();
+  editorCanvas->cd();
+  
+  m_presenterPage.drawBanner( header, bannerText );
   m_presenterPage.simpleDisplay( editorCanvas );
+  m_loadingPage = false;
+  if ( m_reAccess ) reAccessPage();
 }
 //==============================================================================
 // Add dim histogram to page
@@ -4650,7 +4667,7 @@ void PresenterMainFrame::refreshPage( ) {
     stopPageRefresh();
     return;
   }
-  if ( m_refreshingPage ) refreshPageForced();
+  if ( m_refreshingPage && m_idle ) refreshPageForced();
 }
 
 //=========================================================================
@@ -5087,11 +5104,11 @@ std::string PresenterMainFrame::timeStamp ( ) {
 //  Complete the alarm handling: Immediately, or delayed if refreshing
 //=========================================================================
 void PresenterMainFrame::reAccessPage( ) {
-  if ( !m_loadingPage ) {
+  if ( !m_loadingPage && m_idle ) {
     m_reAccess = false;
     m_loadingPage = true;
     std::string prevstatusText;
-    if ( displayMode() == pres::Alarm ) { // clear page if an alarm was displayed
+    if ( m_displayMode == pres::Alarm ) { // clear page if an alarm was displayed
       removeHistogramsFromPage();
       prevstatusText ="List of Analysis Alarms has been updated";
     } else {

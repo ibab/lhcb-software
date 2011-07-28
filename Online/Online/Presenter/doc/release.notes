@@ -6,6 +6,7 @@
 
 ! 2011-07-28 - Olivier Callot
  - Report to the Problem database with severity 'Report'
+ - Banner page on alarm display, and when editing pages
 
 ! 2011-07-27 - Olivier Callot
  - Fix some warnings for the Windows compiler
