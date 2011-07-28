@@ -3,9 +3,67 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-- Changes to tests
-  . Add check of unprotected DEBUG and VERBOSE messages to brunelsys.qmt
-    (activated in debug mode only)
+</PRE><H1><A NAME=v40r1>2011-07-29 Brunel v40r1</A></H1><PRE>
+This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5,
+ Rec v11r6 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2011 August processing (Reco11a)
+
+- Changes to Brunel configurable:
+  . When ProductionMode=True, print the event number only every 1000 events
+  . Add new slot TrackSys().GlobalCuts, sets global tracking cuts (TrackSys v6r3)
+
+- Persistency changes
+  . Add pi0/gamma separation variable to neutral ProtoParticle ExtraInfo
+    (GlobalReco v6r38, CaloInterfaces v8r2, CaloTool v6r2, RecEvent v2r38)  
+
+- New functionality
+  . Add support to per tile Rich1 aeorogel calibration
+    (RichTools v2r36, RichDet v16r5
+
+- New tuning
+  . New default tracking cuts for 2011+ data (PatAlgorithms v4r14, TrackSys v6r3)
+    o No tracks of any kind reconstructed if more than 6000 Velo clusters
+    o Remove cut on max IT and OT hits in PatForward and PatSeeding
+  . Loosen the Rich reconstruction abort cuts for 2011+ data (RichRecSys v4r3)
+    o MaxUsedTracks set to 1000 (was 500)
+    o MaxPixels set to 30000 everywhere (previous 20000 in global PID)
+  . Increase slightly the size of the aerogel photon selection window for the
+    "Wide" photon selection
+  . Set default clone distance variable to 1e10, instead of FLT_MAX, to avoid
+    problems in the track selectors later on (RichRecBase v4r7)
+  . Speed improvements:
+    o Fine tune LikelihoodTool::logExp for better branch prediction
+      (RichGlobalPID v3r16)
+    o Use trajectory.endRange/beginRange instead of module().wireLength
+      (TrackFitEvent v5r11)
+    o Protect many unprotected debug and verbose messages
+  . Use latest DDDB and LHCBCOND tags from SQLDDDB v6r14
+    (new field map by default for 2011 data, new Rich aerogel geometry)
+
+- Bug fixes
+  . Fix a problem with the track selector when trying to apply a clone distance
+    cut (RichRecTrackTools v1r30)
+  . Protect OTHitCreator::handle from dereferencing a NULL m_detectordata
+    pointer (TfTools v1r15)
+
+- Changes to monitoring
+  . Some minor improvements to the charged ProtoParticle monitor
+    (GlobalReco v6r38)
+  . Add "Hlt" to the list of sub-systems ProcStatAbortMoni knows about
+    (RecAlgs v2r5)
+  . Fine tune the event 'abort' messages from Rich (RichGlobalPID v3r16)
+  . Many updates to Rich monitors, see RichRecQC v2r53 release notes
+  . Disable by default Rich decoding check that compares L1 number in data for
+    each HPD to the database (RichDAQ v3r33)
+  . ITTrackMonitor: add histogram for overlaps (TrackMonitors v1r33)
+  . TrackVertexMonitor: introduce cutoff for IP profiles to be more sensitive
+    to mean (TrackMonitors v1r33)
+
+- Changes to QMTests:
+  . Add check of unprotected DEBUG and VERBOSE messages to brunelsys.qmt and
+    brunel2011magdown.qmt (activated in debug mode only); increase timeout of
+    brunel2011magdown.qmt test to 2400 sec.
 
 </PRE><H1><A NAME=v40r0>2011-06-20 Brunel v40r0</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4,
