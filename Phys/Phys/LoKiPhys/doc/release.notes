@@ -5,6 +5,7 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r3 2011-07-28 =========================
 ! 2011-07-23 - Vanya Belyaev
 
  - fix signature of TRFUN/TRCUT adapters 
@@ -16,8 +17,6 @@
 ! 2011-07-03 - Vanya Belyaev
 
  - minor polishing of iterators 
- - cmt/requirements 
-    version increment to v10r3 
 
 !========================= LoKiPhys v10r2 2011-06-16 =========================
 ! 2011-06-06 - Vanya Belyaev
