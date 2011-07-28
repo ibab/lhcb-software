@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-29 - Jibo He
+ - Moved b->2,3,4 body from PSWG to GTWG
+
 ! 2011-07-28 - Anton Poluektov 
  - Update Stripping16/LineConfigDictionaries_GTWG.py
    . Only b2twobody for now (need to add 3, 4-body)
