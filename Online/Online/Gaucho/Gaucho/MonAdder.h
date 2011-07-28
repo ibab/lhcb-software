@@ -11,6 +11,7 @@
 #include "RTL/rtl.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/AddTimer.h"
+#include"Gaucho/BRTL_Lock.h"
 #define ADD_HISTO 1
 #define ADD_COUNTER 2
 
@@ -182,8 +183,8 @@ public:
 //  std::string m_NamePrefix;
   DimBuffBase *m_oldProf;
 public:
-  lib_rtl_lock_t m_lockid;
-  lib_rtl_lock_t m_maplock;
+  BRTLLock *m_lockid;
+  BRTLLock m_maplock;
   bool m_dohisto;
   bool m_timeout;
   AIDA::IHistogram1D *m_histo;
@@ -212,7 +213,7 @@ public:
   {
     if (p)
     {
-      lib_rtl_create_lock(0,&m_lockid);
+      m_lockid = new BRTLLock();
     }
     m_isSaver = p;
     return;
@@ -221,7 +222,7 @@ public:
   {
     if (m_lockid != 0)
     {
-      int status = lib_rtl_lock(m_lockid);
+      int status = m_lockid->lockMutex();
       return status;
     }
     return 0;
@@ -230,7 +231,7 @@ public:
   {
     if (m_lockid != 0)
     {
-      int status = lib_rtl_unlock(m_lockid);
+      int status = m_lockid->unlockMutex();
       return status;
     }
     return 0;
@@ -238,29 +239,13 @@ public:
 
   int LockMap()
   {
-    if (m_maplock != 0)
-    {
-      int status;
-      status = lib_rtl_lock(m_maplock);
+      int status = m_maplock.lockMutex();
       return status;
-    }
-    else
-    {
-      return 0;
-    }
   };
   int UnLockMap()
   {
-    if (m_maplock != 0)
-    {
-      int status;
-      status = lib_rtl_unlock(m_maplock);
-      return status;
-    }
-    else
-    {
-      return 0;
-    }
+    int status = m_maplock.unlockMutex();
+    return status;
   };
   void dumpServices();
   void start();

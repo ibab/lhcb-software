@@ -4,6 +4,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "PubSvc.h"
+#include "Gaucho/COutService.h"
 // Forward declarations
 class MonAdder;
 class AdderSys;

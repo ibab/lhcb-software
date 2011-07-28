@@ -13,6 +13,7 @@
 EoEIncidentListener::EoEIncidentListener(const std::string& , ISvcLocator* svcloc, long  )
 {
   m_MonSvc = 0;
+  m_executing = false;
   svcloc->service("IncidentSvc",incs,true);
   incs->addListener(this,"DAQ_END_EVENT");
   incs->addListener(this,"DAQ_BEGIN_EVENT");
@@ -30,6 +31,13 @@ void EoEIncidentListener::handle(const Incident &i)
 {
   if (i.type() == "DAQ_END_EVENT")
   {
+    if (!m_executing)
+    {
+      printf("-----------------EoE Handler called without executing event... NOT unlocking Monitor system\n");
+      m_executing = false;
+      return;
+    }
+    m_executing = false;
     m_MonSvc->UnLock();
 //    printf("-----------------EoE Handler Monitor System UN-LockED\n");
   }

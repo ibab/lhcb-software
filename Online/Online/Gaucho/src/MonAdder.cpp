@@ -28,8 +28,8 @@ MonAdder::MonAdder()
   m_usedSize    = 0;
   m_reference   = -1;
   m_expandRate  = false;
-  m_lockid      = 0;
-  m_maplock     = 0;
+//  m_lockid      = 0;
+//  m_maplock     = 0;
   m_IsEOR       = false;
   m_added       = 0;
   m_noRPC       = false;
@@ -76,7 +76,7 @@ void MonAdder::Configure()
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
   m_outsvcname = m_name+m_serviceName;
-  lib_rtl_create_lock(0,&m_maplock);
+//  BRTL_create_mutex(&m_maplock);
   m_ser = new AddSerializer((ObjMap*)&m_hmap);
   m_rpc = 0;
   if (!m_noRPC)
@@ -91,7 +91,8 @@ void MonAdder::Configure()
       nam = m_name+"/Counter/HistCommand";
     }
     m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
-    m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", this->m_maplock, 0/*this->m_lockid*/);
+    m_maplock.m_name = nam;
+    m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", &m_maplock, 0/*this->m_lockid*/);
   }
 }
 

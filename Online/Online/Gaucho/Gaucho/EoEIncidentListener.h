@@ -22,6 +22,7 @@ public:
   void setMonitorSvc(IGauchoMonitorSvc* );
   virtual ~EoEIncidentListener();
   void handle(const Incident&);
+  bool m_executing;
 private:
   IGauchoMonitorSvc *m_MonSvc;
   IIncidentSvc *incs;

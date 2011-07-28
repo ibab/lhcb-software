@@ -25,7 +25,7 @@ MonSubSys::MonSubSys(int intv)
   m_lockcount=0;
   m_unlockcount=0;
 //  lib_rtl_create_lock(pid,&m_lockid);
-  lib_rtl_create_lock(0,&m_lockid);
+//  BRTL_create_mutex(&m_lockid);
   m_rpc = 0;
   m_ser = 0;
   m_RPCser = 0;
@@ -67,7 +67,7 @@ MonSubSys::~MonSubSys()
 
   unLock();
   MonSys::m_instance().remSubSys(this);
-  lib_rtl_delete_lock (m_lockid);
+//  lib_rtl_delete_lock (m_lockid);
 
 }
 void MonSubSys::makeRates(unsigned long long dt)
@@ -194,6 +194,7 @@ void MonSubSys::setup(char *n, bool expandnames)
   if (m_RPCser == 0) m_RPCser = new ObjSerializer(&m_Objmap,m_expandnames);
   if (m_rpc == 0) m_rpc = new ObjRPC(m_RPCser, (char*)nam.c_str(), (char*)"I:1;C",(char*)"C");
   nam = std::string("MON_")+m_pname+"/"+m_name+"/Data";
+  m_lockid.m_name = nam;
   if (m_ser == 0) m_ser = new ObjSerializer(&m_Objmap,m_expandnames);
   if ( m_genSrv == 0) m_genSrv = new ObjService(m_ser,(char*)nam.c_str(),(char*)"C",(void*)&mpty, 4);
   if (m_expandnames)
@@ -240,12 +241,12 @@ void MonSubSys::EORUpdate(int runo)
 }
 int MonSubSys::Lock(void)
 {
-  int status = 0;
-  while (status != 1)
+  int status = 1;
+  while (status != 0)
   {
 //    printf("Locking subsustem %s\n",m_name.c_str());
-    status = lib_rtl_lock(m_lockid);
-    if (status != 1)
+    status = m_lockid.lockMutex();
+    if (status != 0)
     {
 //      printf("Status from lock not success......\n");
     }
@@ -263,14 +264,14 @@ int MonSubSys::Lock(void)
 int MonSubSys::unLock(void)
 {
 //  printf("Monitor Sub System Un-Locking\n");
-  int status = 0;
+  int status = 1;
   m_lockcnt--;
   m_unlockcount++;
-  while (status != 1)
+  while (status != 0)
   {
 //    printf("UNLocking subsustem %s\n",m_name.c_str());
-    status = lib_rtl_unlock(m_lockid);
-    if (status != 1)
+    status = m_lockid.unlockMutex();
+    if (status != 0)
     {
 //      printf("Status from unlock not success......\n");
     }

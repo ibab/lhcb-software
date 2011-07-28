@@ -3,18 +3,19 @@
 #include "dim/dis.hxx"
 #include "Gaucho/RPCdefs.h"
 #include "Gaucho/ObjSerializer.h"
+#include "Gaucho/BRTL_Lock.h"
 class ObjRPC : public DimRpc
 {
 protected:
   int buffersize;
   void *buffer;
   ObjSerializer *s;
-  void *m_maplockid;
-  void *m_objlockid;
+  BRTLLock *m_maplockid;
+  BRTLLock *m_objlockid;
 public:
   ObjRPC();
   ObjRPC(ObjSerializer *, char *, char *, char*);
-  ObjRPC(ObjSerializer *, char *, char *, char*, void*, void *);
+  ObjRPC(ObjSerializer *, char *, char *, char*, BRTLLock*, BRTLLock *);
   virtual ~ObjRPC();
   void rpcHandler();
 };

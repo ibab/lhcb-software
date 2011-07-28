@@ -48,7 +48,7 @@ public:
 //  int buffersize;
   void *buffer;
   int m_numObjs;
-  lib_rtl_lock_t m_lockid;
+  BRTLLock m_lockid;
   ObjMap m_Objmap;
   ObjRPC *m_rpc;
   ObjSerializer *m_ser;

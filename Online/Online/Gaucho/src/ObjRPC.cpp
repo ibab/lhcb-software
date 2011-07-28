@@ -20,7 +20,7 @@ ObjRPC::ObjRPC(ObjSerializer *srv, char *n, char *f_in, char *f_out) : DimRpc(n,
   m_maplockid = 0;
   m_objlockid = 0;
 }
-ObjRPC::ObjRPC(ObjSerializer *srv, char *n, char *f_in, char *f_out, void *mlid, void *olid) : DimRpc(n, f_in, f_out)
+ObjRPC::ObjRPC(ObjSerializer *srv, char *n, char *f_in, char *f_out, BRTLLock *mlid, BRTLLock *olid) : DimRpc(n, f_in, f_out)
 {
   s = srv;
   buffersize = 0;
@@ -51,7 +51,7 @@ void ObjRPC::rpcHandler()
   siz = sizeof(RPCReply);
   if (m_maplockid !=0)
   {
-    lib_rtl_lock(m_maplockid);
+    m_maplockid->lockMutex();
   }
   switch (Comm)
   {
@@ -64,12 +64,12 @@ void ObjRPC::rpcHandler()
       nams = Strsplit(hlist,(char*)"\n");
       if (m_objlockid != 0)
       {
-        lib_rtl_lock(m_objlockid);
+        m_objlockid->lockMutex();
       }
       ptr = s->SerializeObj(*nams,pp,bs);
       if (m_objlockid != 0)
       {
-        lib_rtl_unlock(m_objlockid);
+        m_objlockid->unlockMutex();
       }
       siz = bs;
       status = 0;
@@ -82,9 +82,9 @@ void ObjRPC::rpcHandler()
       int bs = siz;
       dyn_string *nams;
       nams = Strsplit(hlist,(char*)"\n");
-      if (m_objlockid != 0) lib_rtl_lock(m_objlockid);
+      if (m_objlockid != 0) m_objlockid->lockMutex();
       ptr = s->SerializeObj(*nams,pp,bs,true);
-      if (m_objlockid != 0) lib_rtl_unlock(m_objlockid);
+      if (m_objlockid != 0) m_objlockid->unlockMutex();
       siz = bs;
       status = 0;
       break;
@@ -95,12 +95,12 @@ void ObjRPC::rpcHandler()
       void *pp;
       if (m_objlockid != 0)
       {
-        lib_rtl_lock(m_objlockid);
+        m_objlockid->lockMutex();
       }
       ptr = s->SerializeObj(pp,bs,true);
       if (m_objlockid != 0)
       {
-        lib_rtl_unlock(m_objlockid);
+        m_objlockid->unlockMutex();
       }
       siz = bs;
       status = 0;
@@ -112,12 +112,12 @@ void ObjRPC::rpcHandler()
       void *pp;
       if (m_objlockid != 0)
       {
-        lib_rtl_lock(m_objlockid);
+        m_objlockid->lockMutex();
       }
       ptr = s->SerializeObj(pp,bs);
       if (m_objlockid != 0)
       {
-        lib_rtl_unlock(m_objlockid);
+        m_objlockid->unlockMutex();
       }
       siz = bs;
       status = 0;
@@ -146,7 +146,7 @@ void ObjRPC::rpcHandler()
       free(ptr);
       if (m_maplockid !=0)
       {
-        lib_rtl_unlock(m_maplockid);
+        m_maplockid->unlockMutex();
       }
       return;
       break;
@@ -154,7 +154,7 @@ void ObjRPC::rpcHandler()
   }
   if (m_maplockid !=0)
   {
-    lib_rtl_unlock(m_maplockid);
+    m_maplockid->unlockMutex();
   }
 
   reply = (RPCReply*)ptr;

@@ -229,6 +229,7 @@ StatusCode UpdateAndReset::execute()
   int runno;
   unsigned int tck;
   ulonglong gps;
+  this->EoEInc->m_executing = true;
   m_pGauchoMonitorSvc->Lock();
 //  printf("+++++++++++++++++++++++++++++ UPDATE AND RESET Monitor System LockED\n");
   getEventChar(runno,tck,gps);
@@ -303,10 +304,10 @@ StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "finalizing...." << endreq;
-  if (m_stopdone)
-  {
-    return StatusCode::SUCCESS;
-  }
+//  if (m_stopdone)
+//  {
+//    return StatusCode::SUCCESS;
+//  }
 //  else if ( 1 == m_saveHistograms )
 //  {
 //     m_eorNumber=m_runNumber;

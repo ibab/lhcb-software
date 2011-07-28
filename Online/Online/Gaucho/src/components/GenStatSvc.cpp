@@ -73,7 +73,7 @@ void GenStatSvc::analyze(void *, int ,MonMap* mmap)
     void *dat = AddPtr(b,b->dataoff);
     snam = m_prefix+"/"+n;
     COutServiceBase *ob;
-    OUTS::iterator it = this->m_outmap.find(snam);
+    COUTServiceMap::iterator it = this->m_outmap.find(snam);
     ob = it->second;
     if(it == m_outmap.end())
     {
@@ -151,7 +151,7 @@ GenStatSvc::GenStatSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,s
 
 GenStatSvc::~GenStatSvc()
 {
-  OUTS::iterator i;
+  COUTServiceMap::iterator i;
   for (i=m_outmap.begin();i!=m_outmap.end();i++)
   {
     delete i->second;
