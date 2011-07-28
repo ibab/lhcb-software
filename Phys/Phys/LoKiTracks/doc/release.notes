@@ -1,0 +1,181 @@
+! $Id$
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiTracks
+! Responsible : Vanya Belyaev
+! Purpose     : track-related functors for LoKi-framework 
+! -----------------------------------------------------------------------------
+
+!========================= LoKiTracks v2r2 2011-07-26 =========================
+! 2011-07-26 - Rob Lambert
+ - Add recSummaryTrack, copy of recSummary, but with TrNUM functors
+ - fixed a missing import...
+
+!========================== LoKiTracks v2r1p1 2011-06-24 ===================
+! 2011-06-05 - Vanya Belyaev
+
+ - fix ICC warnings  
+
+ - cmt/requirements 
+
+     version increment to v2r1p1
+
+!========================== LoKiTracks v2r1 2011-03-29 ===================
+! 2011-03-18 - Vanya Belyaev
+ - add few symbols:
+    TrPX 
+    TrPY 
+    TrPZ
+    TrHAST
+    TrHASVELO
+    TrHASTT
+
+ - TrackEngineActor:
+
+      add protectetion against double lock 
+
+ - cmt/requirements 
+
+     version increment to v2r1 
+
+!========================== LoKiTracks v2r0 2011-03-17 ===================
+! 2011-03-10 - Vanya Belyaev
+
+ - kill bad concept of 'Element'-functor 
+ - cmt/requirements 
+     version increment to v2r0 
+
+!========================== LoKiTracks v1r8 2011-02-10 ===================
+! 2011-02-09 - Vanya Belyaev
+
+ - LoKi::Tracks::CountIDs
+     fix bug #77979 
+
+ - cmt/requirements 
+     version increment to v1r8 
+
+
+!========================== LoKiTracks v1r7 2011-02-07 ===================
+! 2011-02-02 - Vanya Belyaev
+
+ - add new symbol to get effective number of T-hits:  2x#IT + #OT
+     TrNHITS    ( for Johannes ) 
+     TrTNORMIDC ( for Vava ) 
+  
+
+! 2011-01-30 - Vanya BELYAEV 
+
+ - new symbol TrNVELOMISS 
+
+! 2011-01-30 - Vanya BELYAEV
+
+ - new symbol TrCHI2PDOF 
+
+     new symbol for Vava & Roel 
+
+ - cmt/requirements 
+     version increment to v1r7 
+
+!========================== LoKiTracks v1r6 2011-01-20 ===================
+! 2011-01-20 - Vanya Belyaev
+
+ - add TrFILTER
+
+ - cmt/requirements 
+
+    version increment to v1r6
+
+
+!========================== LoKiTracks v1r5 2011-01-18 ===================
+! 2011-01-12 - Vanya Belyaev
+
+ - add more symbols to access extra-info:
+
+   ## @see LoKi::Cuts::TrPATQUALITY 
+   TrPATQUALITY    = LoKi.Tracks.Info  ( LHCb.Track.PatQuality       , -1000 ) 
+   ## @see LoKi::Cuts::TrMATCHCHI2
+   TrMATCHCHI2     = LoKi.Tracks.Info  ( LHCb.Track.MatchChi2        , -1000 ) 
+   ## @see LoKi::Cuts::TrFITVELOCHI2
+   TrFITVELOCHI2   = LoKi.Tracks.Info  ( LHCb.Track.FitVeloChi2      , -1000 )
+   ## @see LoKi::Cuts::TrFITVELONDOF
+   TrFITVELONDOF   = LoKi.Tracks.Info  ( LHCb.Track.FitVeloNDoF      , -1000 )
+   ## @see LoKi::Cuts::TrFITTCHI2
+   TrFITTCHI2      = LoKi.Tracks.Info  ( LHCb.Track.FitTChi2         , -1000 )
+   ## @see LoKi::Cuts::TrFITTNDOF
+   TrFITTNDOF      = LoKi.Tracks.Info  ( LHCb.Track.FitTNDoF         , -1000 )
+   ## @see LoKi::Cuts::TrFITMATCHCHI2
+   TrFITMATCHCHI2  = LoKi.Tracks.Info  ( LHCb.Track.FitMatchChi2     , -1000 )
+   ## @see LoKi::Cuts::TrTSALIKELIHOOD
+   TrTSALIKELIHOOD = LoKi.Tracks.Info  ( LHCb.Track.TsaLikelihood    , -1000 )
+   ## @see LoKi::Cuts::TrCLONEDIST
+   TrCLONEDIST     = LoKi.Tracks.Info  ( LHCb.Track.CloneDist        , 1.e+9 ) 
+  
+ - cmt/requirements 
+
+    version increment to v1r5 
+
+!========================== LoKiTracks v1r4 2010-12-16 ===================
+! 2010-12-09 - Vanya Belyaev
+
+ - add new symbol TrCOV2 to access the elements of covarinace matrix :
+
+   // use the first state :
+
+   const TrCOV2 covXX_1 = TrCOV2(0,0) ;
+
+   // use specific state 
+
+   const TrCOV2 covXX_2 = TrCOV2( LHCb::State::AtTT , 0 , 0 ) ;
+
+   // use satte closest to certain Z 
+
+   const double z       = ...   
+   const TrCOV2 covXX_3  = TrCOV2( z , 0 , 0 ) ;
+
+ - cmt/requirements
+
+     version increment to v1r4 
+
+
+!========================== LoKiTracks v1r3 2010-12-08 ===================
+! 2010-10-24 - Vanya Belyaev
+
+   - add new symbol TrNUM ( void -> double ) 
+
+      Code = " TrNUM ( 'Rec/Track/Best' , TrLONG ) < 200 "
+
+ - cmt/requirements
+     version increment to v1r3 
+
+
+!========================== LoKiTracks v1r2 2010-10-04 ===================
+! 2010-09-29 - Vanya Belyaev
+ - fix for new structire of modules in LoKiCore 
+ - cmt/requirements
+     version increment to v1r2 
+
+!========================== LoKiTracks v1r1 2010-09-09 ===================
+! 2010-08-31 - Vanya Belyaev
+
+ - LoKiTracks/decorators.py
+    fix a bug with proir decorations of 'CutVal's
+
+ - cmt/requirements 
+    version increment to v1r1 
+
+!========================== LoKiTracks v1r0 2010-08-26 ===================
+! 2010-08-11 - Vanya Belyaev
+
+ - fix the problems with  "new" treatment of interfaces
+
+! 2010-08-05 - Vanya Belyaev
+ - add factory 
+
+! 2010-08-01 - Vanya Belyaev
+ - minor fix 
+
+! 2010-07-18 - Vanya Belyaev
+ - the first import  
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
