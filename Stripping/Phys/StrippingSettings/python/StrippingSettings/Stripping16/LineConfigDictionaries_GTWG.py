@@ -12,9 +12,118 @@ StrippingSelections file containing the line builder instance.
 
 from GaudiKernel.SystemOfUnits import *
 
+Beauty2Charm = {
+    'BUILDERTYPE' : 'Beauty2CharmConf',
+    'CONFIG' : {
+      "ALL" : { # Cuts made on all charged input particles in all lines
+      'TRCHI2DOF_MAX' : 4,
+      'PT_MIN'        : '100*MeV',
+      'P_MIN'         : '1000*MeV',
+      'MIPCHI2DV_MIN' : 4
+      },
+      "KS0" : { # Cuts made on all K shorts
+      'PT_MIN'        : '250*MeV',
+      'MIPCHI2DV_MIN' : 4,
+      'MM_MIN'        : '467.*MeV',
+      'MM_MAX'        : '527.*MeV'
+      },
+      "Pi0" : { # Cuts made on all pi0's
+      'PT_MIN'        : '500*MeV',
+      'P_MIN'         : '2000*MeV',
+      'CHILDCL1_MIN'  : 0.25,
+      'CHILDCL2_MIN'  : 0.25
+      },
+      "D2X" : { # Cuts made on all D's used in all lines 
+      'ASUMPT_MIN'    : '1800*MeV',
+      'AMAXDOCA_MAX'  : '1.0*mm',
+      'VCHI2DOF_MAX'  : 30,
+      'BPVVDCHI2_MIN' : 36,
+      'BPVDIRA_MIN'   : 0, 
+      'MASS_WINDOW'   : '100*MeV'
+      },
+      "B2X" : { # Cuts made on all B's and Lb's used in all lines
+      'AMAXDOCA_MAX'  : '1.0*mm',
+      'SUMPT_MIN'     : '5000*MeV',
+      'VCHI2DOF_MAX'  : 30,
+      'BPVIPCHI2_MAX' : 25,
+      'BPVLTIME_MIN'  : '0.3*ps',
+      'BPVDIRA_MIN'   : 0.999,
+      'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
+      'AM_MAX'        : '7000*MeV'
+      },
+      "Dstar" : { # Cuts made on all D*'s used in all lines 
+      'AMAXDOCA_MAX'  : '1.0*mm',
+      'VCHI2DOF_MAX'  : 30,
+      'BPVVDCHI2_MIN' : 36,
+      'BPVDIRA_MIN'   : 0, 
+      'MASS_WINDOW'   : '50*MeV'
+      },
+      "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
+      'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
+      'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV'},
+      'AMAXDOCA_MAX'  : '0.5*mm',
+      'VCHI2DOF_MAX'  : 16,
+      'BPVVDCHI2_MIN' : 16, 
+      'BPVDIRA_MIN'   : 0,
+      'ASUMPT_MIN'    : '1000*MeV',
+      'pP_MIN'        : '5000*MeV' # for pH only (obviously)
+      },
+      "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
+      'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
+      'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
+      'PiDAUGHTERS'   : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
+      'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
+      'AMAXDOCA_MAX'  : '0.40*mm',
+      'VCHI2DOF_MAX'  : 8,
+      'BPVVDCHI2_MIN' : 16, 
+      'BPVDIRA_MIN'   : 0.98,
+      'ASUMPT_MIN'    : '1250*MeV',
+      'MIPCHI2DV_MIN' : 0.0,
+      'BPVVDRHO_MIN'  : '0.1*mm',
+      'BPVVDZ_MIN'    : '2.0*mm',
+      'PTMIN1'       : '300*MeV'
+      },
+      "DTIGHT" : { # Tight Cuts on D mesons for B-->D+3H lines
+      'MM_MIN'        : {'D':'1800*MeV','D0':'1790*MeV','Dst':'1950*MeV',
+                         'Lc':'2216*MeV'},
+      'MM_MAX'        : {'D':'2040*MeV','D0':'1940*MeV','Dst':'2050*MeV',
+                         'Lc':'2356*MeV'},
+      'VCHI2DOF_MAX'  : 8,
+      'BPVVDCHI2_MIN' : 49,
+      'MIPCHI2DV_MIN' : 0.0,
+      'BPVDIRA_MIN'   : 0.98,
+      'BPVVDRHO_MIN'  : '0.1*mm',
+      'BPVVDZ_MIN'    : '0.0*mm',
+      'piPIDK_MAX'    : 12,
+      'pPIDp_MIN'    : -6,
+      'KPIDK_MIN'    : -6
+      },
+      'LC2X' : { # Cuts for all Lambda_c's used in all lines
+      'ASUMPT_MIN'    : '1800*MeV',
+      'AMAXDOCA_MAX'  : '1.0*mm',
+      'VCHI2DOF_MAX'  : 30,
+      'BPVVDCHI2_MIN' : 36, 
+      'BPVDIRA_MIN'   : 0, 
+      'MASS_WINDOW'   : '100*MeV'
+      },
+      "Prescales" : { # Prescales for individual lines
+      # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
+      # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
+      'B02DHD2Pi0HHH_MergedBeauty2CharmTOSLine'   : 0.1,
+      'B02DHD2Pi0HHH_MergedBeauty2CharmTISLine'   : 0.1,
+      'B02DHD2Pi0HHH_ResolvedBeauty2CharmTOSLine' : 0.1,
+      'B02DHD2Pi0HHH_ResolvedBeauty2CharmTISLine' : 0.1
+      },
+      'GECNTrkMax'   : 500
+    }, 
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs' : [ 'GammaFromTrees' ]
+}
+
 B2DX = {
     'BUILDERTYPE' : 'B2DXConf',
-    'CONFIG' : {                            # Default configuration dictionary
+    'CONFIG' : {                                  # Default configuration dictionary
+
     	    "KstarCuts" : {                 # Kstar->Kpi cuts 
     	      "DauChi2Max"   : 4.,          # maximum track chi2
     	      "DauPtMin"     : 300.,        # track Pt cut (MeV)
@@ -237,9 +346,9 @@ B2DX = {
 	      "IPChi2Max"          : 16.,           # chi2 of B impact parameter to the related PV
 	      "LTMin"              : 0.2,           # Minimum B lifetime
 	      "DIRAMin"            : 0.9999,        # DIRA of the B to the related PV
-	      "CombMassMin"        : 4800,          # Lower mass of a combination (MeV)
-	      "CombMassMax"        : 5900,          # Upper mass of a combination (MeV) 
-	      "APtMin"		   : 1500.,            # Minumum Pt of a combination (MeV)
+	      "CombMassMin"        : 5100,          # Lower mass of a combination (MeV)
+	      "CombMassMax"        : 6200,          # Upper mass of a combination (MeV) 
+	      "APtMin"		   : 1500.,         # Minumum Pt of a combination (MeV)
 	    }, 
 	    "LambdaB2DphCuts" : {                   # LambdaB->D(hh)ppi and LambdaB->D(hh)pK cuts 
 	      "VtxChi2Max"         : 9.,            # LambdaB vertex Chi2
@@ -281,7 +390,7 @@ B2DX = {
 	      "Unbiased" : 0.1, 
 	    }, 
 	    "CheckPV"	       : True,              # PV requirement
-	    "HLT"              : "HLT_PASS_RE('Hlt2Topo.*Decision')", # HLT filter
+	    "HLT"              : "HLT_PASS_RE('Hlt2Topo.*Decision')", 
 #	    "HLT"              : None, 
 	    "MaxTracksInEvent" : {                  # GECs for individual lines (max. number of long tracks)
 	      "D2hh"     : 500, 
@@ -300,52 +409,8 @@ B2DX = {
 	      "Lambda"   : 500, 
 	      "Unbiased" : 500
 	    }, 
- 	    "MergedLines" : True                    # If True, lines with the same D mode are merged
+ 	    "MergedLines" : True                    # If True, lines with the same D mode a merged
 	},
-    'STREAMS' : [ 'Bhadron' ],
-    'WGs' : [ 'GammaFromTrees' ]
-}
-
-
-B2DXHltTisTos = {
-    'BUILDERTYPE' : 'B2DXHltTisTosConf',
-    'CONFIG' : {                    # Default configuration dictionary
-	'TrkChi2Max'   : 4,         # Max track chi2/ndof
-	'BCuts' : {
-	    'TauMin'       : 0.3,
-	    'IPChi2Max'    : 25,
-	    'DIRAMin'      : 0.999,
-	    'VChi2Max'     : 30,
-	    'PTSumMin'     : 5000,
-	    'BMassWindow'  : 500
-	},
-	'BachCuts' : {
-	    'IPChi2Min'    : 4,
-	    'PTMin'        : 500,
-	    'PMin'         : 5000
-	},
-	'DCuts' : {
-	    'DauPTMin'     : 100,     
-	    'DauPMin'      : 1000,
-	    'DauIPChi2Min' : 4,
-	    'SumPTMin'     : 1500,
-	    'IPChi2Min'    : 0,
-	    'MaxDauIPChi2Min' : 36,
-	    'VChi2Max'     : 30,
-	    'DMassWindow'  : 100,
-	    'FDChi2Min'    : 36,
-	    'DOCAMax'      : 1.0
-	},
-	"Prescales" : {             # Prescales for individual lines
-	    "D2hh"         : 1.,
-	    "D2hhTIS"      : 1.,
-	    "D2hhWS"       : 0.1,
-	    "D2hhh"        : 1.,
-	    "D2hhhTIS"     : 1., 
-	    "D2hhhWS"      : 0.1, 
-	},
-	'GECNTrkMax'   : 500
-    }, 
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
 }
@@ -366,7 +431,7 @@ B2D3H = {
     'BUILDERTYPE' : 'B2D3HAllLinesConf',
 
     'CONFIG' : {
-    "PionMinP"             : 2000.,
+        "PionMinP"             : 2000.,
         "PionMaxP"             : 500000.,
         "PionMinPT"            : 250.,
         "PionMinPTtight"       : 500.,      
@@ -445,7 +510,7 @@ B2D3H = {
         "WSB2D3H_Postscale"             : 1.0,
         "B2DStarDKAll_Prescale"          : 1.0,
         "B2DStarDKAll_Postscale"         : 1.0
-        }, 
+    }, 
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
 }
@@ -533,3 +598,153 @@ Bu2D0h_D02KShh_NoPID_WS = {
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
 }
+
+B2nbody = {
+    'BUILDERTYPE' : 'B2nbodyConf',
+    'CONFIG' :   {'nbody':                2,
+                  'MinBMass':        4700.0,
+                  'MaxBMass':        8000.0,
+                  'MinBPt':          5000.0,
+                  'MaxBVertChi2DOF':   10.0,
+                  'MinBPVVDChi2':     225.0,
+                  'MaxBPVIPChi2':      15.0,
+                  'MinBPVDIRA':         0.0,
+                  'MaxMass':         6000.0,
+                  'MaxNtrk':              8,
+                  'MinNvc':               2,
+                  'doPi':              True,
+                  'doK':               True,
+                  'dop':               True,
+                  'doKs':              True,
+                  'doLm':              True,
+                  'doDz':              True,
+                  'doDp':              True,
+                  'doDs':              True,
+                  'doLc':              True,
+                  'doPh':              True,
+                  'doKS':             False,
+                  'doJp':              True,
+                  'doDS':              True,
+                  'MinPiPt':         1000.0,
+                  'MinPiIPChi2DV':     25.0,
+                  'MaxPiChi2':          4.0,
+                  'MinPiPIDK':          2.0,
+                  'MinPiPIDp':          2.0,
+                  'MinKPt':          1000.0,
+                  'MinKIPChi2DV':      25.0,
+                  'MaxKChi2':           4.0,
+                  'MinKPIDPi':          2.0,
+                  'MinKPIDp':           2.0,
+                  'MinpPt':          1000.0,
+                  'MinpIPChi2DV':      25.0,
+                  'MaxpChi2':           4.0,
+                  'MinpPIDPi':          2.0,
+                  'MinpPIDK':           2.0,
+                  'MaxKsDeltaM':       40.0,
+                  'MinKsPt':         1000.0,
+                  'MaxKsVertChi2DOF':  10.0,
+                  'MinKsPVVDChi2':    400.0,
+                  'MinKsIPChi2':        0.0,
+                  'MinKsDauPt':       200.0,
+                  'MinKsDauIPChi2':    16.0,
+                  'MaxKsDauTrkChi2':    5.0,
+                  'MaxLmDeltaM':       15.0,
+                  'MinLmPt':         1000.0,
+                  'MaxLmVertChi2DOF':  10.0,
+                  'MinLmPVVDChi2':    400.0,
+                  'MinLmIPChi2':        0.0,
+                  'MinLmPrtPt':       500.0,
+                  'MinLmPiPt':        100.0,
+                  'MinLmPrtIPChi2':     4.0,
+                  'MinLmPiIPChi2':     16.0,
+                  'MaxLmPrtTrkChi2':    5.0,
+                  'MaxLmPiTrkChi2':     5.0,
+                  'MaxDzDeltaM':       40.0,
+                  'MinDzPt':         1000.0,
+                  'MaxDzVertChi2DOF':  10.0,
+                  'MinDzPVVDChi2':    225.0,
+                  'MinDzIPChi2':        0.0,
+                  'MinDzDauPt':       250.0,
+                  'MinDzDauIPChi2':     9.0,
+                  'MaxDzDauTrkChi2':    5.0,
+                  'MinDzPiPIDK':       -5.0,
+                  'MinDzKPIDPi':       -5.0,
+                  'MaxDpDeltaM':       40.0,
+                  'MinDpPt':         1000.0,
+                  'MaxDpVertChi2DOF':  10.0,
+                  'MinDpPVVDChi2':    225.0,
+                  'MinDpIPChi2':        9.0,
+                  'MinDpDauPt':       250.0,
+                  'MinDpDauIPChi2':     9.0,
+                  'MaxDpDauTrkChi2':    5.0,
+                  'MinDpKPIDPi':       -5.0,
+                  'MinDpPiPIDK':       -5.0,
+                  'MaxDsDeltaM':       40.0,
+                  'MinDsPt':         1000.0,
+                  'MaxDsVertChi2DOF':  10.0,
+                  'MinDsPVVDChi2':    225.0,
+                  'MinDsIPChi2':        9.0,
+                  'MinDsDauPt':       250.0,
+                  'MinDsDauIPChi2':     9.0,
+                  'MaxDsDauTrkChi2':    5.0,
+                  'MinDsKmPIDPi':      -5.0,
+                  'MinDsKpPIDPi':       0.0,
+                  'MinDsPiPIDK':       -5.0,
+                  'MaxLcDeltaM':       40.0,
+                  'MinLcPt':         1000.0,
+                  'MaxLcVertChi2DOF':  10.0,
+                  'MinLcPVVDChi2':    225.0,
+                  'MinLcIPChi2':        9.0,
+                  'MinLcDauPt':       250.0,
+                  'MinLcDauIPChi2':     9.0,
+                  'MaxLcDauTrkChi2':    5.0,
+                  'MinLcKPIDPi':       -5.0,
+                  'MinLcpPIDPi':        0.0,
+                  'MinLcpPIDK':         0.0,
+                  'MinLcPiPIDK':       -5.0,
+                  'MaxPhDeltaM':       30.0,
+                  'MinPhPt':         1000.0,
+                  'MaxPhVertChi2DOF':  10.0,
+                  'MinPhPVVDChi2':    100.0,
+                  'MinPhIPChi2':       16.0,
+                  'MinPhDauPt':       300.0,
+                  'MinPhDauIPChi2':     9.0,
+                  'MaxPhDauTrkChi2':    5.0,
+                  'MaxKSDeltaM':      150.0,
+                  'MinKSPt':         2000.0,
+                  'MaxKSVertChi2DOF':  10.0,
+                  'MinKSPVVDChi2':    100.0,
+                  'MinKSIPChi2':       16.0,
+                  'MinKSDauPt':       500.0,
+                  'MinKSDauIPChi2':    16.0,
+                  'MaxKSDauTrkChi2':    5.0,
+                  'MinKSKPIDPi':        0.0,
+                  'MinKSPiPIDK':        0.0,
+                  'MaxJpDeltaM':     3000.0,
+                  'MinJpPt':         1000.0,
+                  'MaxJpVertChi2DOF':  10.0,
+                  'MinJpPVVDChi2':     16.0,
+                  'MinJpIPChi2':        0.0,
+                  'MinJpDauPt':       500.0,
+                  'MinJpDauIPChi2':     0.0,
+                  'MaxJpDauTrkChi2':    5.0,
+                  'MaxDSDeltaM':      153.0,
+                  'MinDSPt':         1000.0,
+                  'MaxDSVertChi2DOF':  10.0,
+                  'MinDSPVVDChi2':      0.0,
+                  'MinDSIPChi2':        0.0,
+                  'MinDSPiPt':        100.0,
+                  'MinDSPiIPChi2':      0.0,
+                  'MaxDSPiTrkChi2':     5.0,
+                  'MaxDSD0DeltaM':     40.0,
+                  'MinDSD0Pt':        500.0,
+                  'MaxDSD0VertChi2DOF':10.0,
+                  'MinDSD0PVVDChi2':  225.0,
+                  'MinDSD0IPChi2':      0.0,
+                  'MinDSD0DauPt':     250.0,
+                  'MinDSD0DauIPChi2':   9.0,
+                  'MaxDSD0DauTrkChi2':  5.0
+                  },
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs' : [ 'GammaFromTrees' ]
+    }

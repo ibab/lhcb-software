@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-28 - Anton Poluektov 
+ - Update Stripping16/LineConfigDictionaries_GTWG.py
+   . Only b2twobody for now (need to add 3, 4-body)
+
 ! 2011-07-28 - Jibo He
  - LineConfigDictionaries_PSWG.py
    . Enabled ChiCJPsiGammaConversion and CharmAssociative
