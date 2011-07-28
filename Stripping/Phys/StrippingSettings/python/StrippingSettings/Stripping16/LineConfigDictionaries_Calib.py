@@ -237,7 +237,7 @@ TrackEffVeloMuon = {
     ,	"VertChi2":		2.	# adimensional
     ,	"MassPreComb":		1000.	# MeV
     ,	"MassPostComb":		400.	# MeV
-    ,	"Prescale":		1.	# adimensional
+    ,	"Prescale":		0.5	# adimensional
     ,	"Postscale":		1.	# adimensional
     ,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
     ,	'HLT1PassOnAll': True
@@ -284,7 +284,7 @@ TrackEffMuonTT = {
     'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
     'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
     'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0},
-    'JpsiPrescale'                : 1,
+    'JpsiPrescale'                : 0.5,
     'UpsilonPrescale'             : 1,
     'ZPrescale'                   : 1,
     'BJpsiKPrescale'              : 1,
