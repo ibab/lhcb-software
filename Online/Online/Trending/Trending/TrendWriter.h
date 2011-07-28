@@ -371,8 +371,8 @@ void TrendWriter::writeEntry( unsigned int now, std::vector<float>& data, bool w
         fwrite( &m_data, 1, sizeof(DataRecord), m_file );
       }
       m_dataAddressInFile += sizeof(DataRecord);
-      m_data.size = 0;
-      m_data.data[0].i = 0;
+      m_data.size = 12;  // 8 bytes header plus 4 bytes for the zero 
+      for ( int k = 0; DATA_SIZE > k ; ++k ) m_data.data[k].i = 0;
       m_ptData    = 0;
       m_ptDir++;
       if ( m_ptDir == MAX_ENTRY-1 ) {

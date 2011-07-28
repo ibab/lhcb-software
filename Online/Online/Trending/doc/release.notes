@@ -4,7 +4,11 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
-!============================== 2011-07-27 v2r0 ==============================
+!============================== 2011-07-28 v2r0 ==============================
+! 2011-07-28 - Olivier Callot
+ - Improve the dump tool
+ - Zeroes the data buffer in the writer, to make debug easier...
+
 ! 2011-07-27 - Olivier Callot
  - Fix a bug in hadling multiple of 32 tags.
  - Fix a few compilation warning on Windows.

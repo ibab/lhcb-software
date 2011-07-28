@@ -102,13 +102,15 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
       nn -= ll;
       m_tags.push_back( tag );
       m_lastData.push_back( 0. );
-      if ( verbose ) std::cout << "   loaded tag " << m_tags.size() << " = '" << tag
+      std::cout << "   loaded tag " << m_tags.size() << " = '" << tag
                                << "'   rest " << nn << " bytes." << std::endl;
     }
     m_nbTag = m_tags.size();
     m_nbMask = (m_nbTag/32) + 1;
     free( temp );  // release memory...
     m_dir.nextAddress = m_firstDirAddress;
+
+    std::cout << "Loaded " << m_nbTag << " tags. nbMask " << m_nbMask << std::endl;
 
     while ( 0 != m_dir.nextAddress ) {
 
@@ -119,32 +121,35 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
         std::cout << "*** Requested " << sizeof(DirectoryRecord) << " bytes, read " << nn << " in directory" << std::endl;
         break;
       }
-        
+
       std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version
                 << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
       if ( m_dir.nbEntries > MAX_ENTRY ) return;
-      for ( int kk = 0 ; kk <= m_dir.nbEntries ; ++kk ) {
-        sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
-                 m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  m_dir.entry[kk].fileOffset );
-        std::cout << line << std::endl;
+      if ( verbose ) {
+        for ( int kk = 0 ; kk <= m_dir.nbEntries ; ++kk ) {
+          sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
+                   m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),  m_dir.entry[kk].fileOffset );
+          std::cout << line << std::endl;
+        }
       }
+
       std::cout << "*** Data analysis *** " << std::endl;
       unsigned int firstTime = 0;
       for ( int kk = 0 ; kk < m_dir.nbEntries ; ++kk ) {
         m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[kk].fileOffset;
         fseek( m_file, m_dataAddressInFile, SEEK_SET );
         fread( &m_data, 1, sizeof(DataRecord), m_file );
-        sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
-                 kk,  m_dir.entry[kk].firstTime,
-                 m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
-                 m_dir.entry[kk].fileOffset,
-                 m_data.size, m_data.type, m_data.version );
         bool headPrinted = false;
         m_ptData = 0;
         int maxPtData = ( int(m_data.size)-8 ) /4;
         if ( m_data.data[m_ptData].i < firstTime ||
              m_dir.entry[kk].firstTime < firstTime ) {
           if ( !headPrinted ) {
+            sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                     kk,  m_dir.entry[kk].firstTime,
+                     m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                     m_dir.entry[kk].fileOffset,
+                     m_data.size, m_data.type, m_data.version );
             std::cout << line << std::endl;
             headPrinted = true;
           }
@@ -154,39 +159,64 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
         firstTime = m_data.data[m_ptData].i;
         if ( firstTime != m_dir.entry[kk].firstTime ) {
           if ( !headPrinted ) {
+            sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                     kk,  m_dir.entry[kk].firstTime,
+                     m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                     m_dir.entry[kk].fileOffset,
+                     m_data.size, m_data.type, m_data.version );
             std::cout << line << std::endl;
             headPrinted = true;
           }
           std::cout << " -- First time data " << firstTime << " = " << m_trend->timeString( firstTime )
                     << " ** Mismatch ** " << std::endl;
         }
+        int lastGood = 0;
+        int lastLastGood = 0;
         while ( m_ptData < maxPtData ) {
           int prevPt = m_ptData;
           unsigned int time = m_data.data[m_ptData++].i;
           if ( 0 == time ) {
             if ( m_ptData != maxPtData ) {
               if ( !headPrinted ) {
+                sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                         kk,  m_dir.entry[kk].firstTime,
+                         m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                         m_dir.entry[kk].fileOffset,
+                         m_data.size, m_data.type, m_data.version );
                 std::cout << line << std::endl;
                 headPrinted = true;
               }
-              std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words" << std::endl;
+              std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words at " << m_ptData 
+                        << " last good " << lastGood << std::endl;
+              if ( maxPtData > m_ptData && maxPtData-m_ptData < 10 ) {
+                for ( int kl = lastGood; maxPtData >= kl ; ++kl ) {
+                  std::cout << "   at " << kl << " data " << m_data.data[kl].i << std::endl;
+                }
+              }
             }
             break;
           }
+          lastGood = lastLastGood;
+          lastLastGood = prevPt;
           int ptMask = m_ptData;
           m_ptData  += m_nbMask;
           int mask = 0;
           int nbData = 0;
-          for ( int kk = 0 ; m_nbTag > kk ; ++kk ) {
-            if ( 0 == kk%32 ) mask = m_data.data[ptMask++].i;
+          for ( int ll = 0 ; m_nbTag > ll ; ++ll ) {
+            if ( 0 == ll%32 ) mask = m_data.data[ptMask++].i;
             if ( mask & 1 ) {
-              m_lastData[kk] = m_data.data[m_ptData++].f;
+              m_lastData[ll] = m_data.data[m_ptData++].f;
               ++nbData;
             }
             mask = mask>>1;
           }
           if ( time < firstTime ) {
             if ( !headPrinted ) {
+              sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                       kk,  m_dir.entry[kk].firstTime,
+                       m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                       m_dir.entry[kk].fileOffset,
+                       m_data.size, m_data.type, m_data.version );
               std::cout << line << std::endl;
               headPrinted = true;
             }
@@ -196,6 +226,11 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
             maxPrint--;
           } else if ( time - firstTime > 3600*24 ) {
             if ( !headPrinted ) {
+              sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                       kk,  m_dir.entry[kk].firstTime,
+                       m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                       m_dir.entry[kk].fileOffset,
+                       m_data.size, m_data.type, m_data.version );
               std::cout << line << std::endl;
               headPrinted = true;
             }
@@ -204,6 +239,11 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
             maxPrint--;
           } else if ( verbose ) {
             if ( !headPrinted ) {
+              sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
+                       kk,  m_dir.entry[kk].firstTime,
+                       m_trend->timeString( m_dir.entry[kk].firstTime ).c_str(),
+                       m_dir.entry[kk].fileOffset,
+                       m_data.size, m_data.type, m_data.version );
               std::cout << line << std::endl;
               headPrinted = true;
             }
