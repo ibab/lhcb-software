@@ -3,6 +3,24 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v22r3>2011-07-29 Boole v22r3</A></H1><PRE>
+This version uses projects LCGCMT 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Development release for 2011 simulation.
+
+ - Changes to configuration
+   . Use new electron/photon L0 Calo algorithm for 2011 data type (old
+     algorithm still used for 2010 and 2009) (L0Calo v11r4, L0DU v10r16)
+
+ - Changes in functionality
+   . Add support for Rich1 Aerogel tile by tile calibration
+     (RochTools v2r36, RichDet v16r5, MCEvent v2r21)
+
+ - New tuning
+   . Protect many unprotected debug and verbose messages
+
+
 </PRE><H1><A NAME=v22r2>2011-06-20 Boole v22r2</A></H1><PRE>
 This version uses projects LCGCMT 60b, Gaudi v22r2, LHCb v32r4, Lbcom v10r4
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
