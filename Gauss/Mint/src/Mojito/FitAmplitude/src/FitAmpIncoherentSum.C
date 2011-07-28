@@ -251,6 +251,9 @@ FitAmpIncoherentSum::makeIntegCalculator(){
     l->addAmps( (_fitAmps[i]),  (_fitAmps[i]));
   }
 
+  cout << "setting efficiency in integCalculator to " 
+       << _efficiency.get() << endl;
+
   l->setEfficiency(_efficiency);
   return l;
 }

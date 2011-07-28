@@ -17,7 +17,6 @@ bool DalitzPdfBase::getNorm(){
       _integrating = false;
       return false;
     }
-    
     _mcint.initialise(evtPtr->eventPattern()
 		      , this
 		      , _generator

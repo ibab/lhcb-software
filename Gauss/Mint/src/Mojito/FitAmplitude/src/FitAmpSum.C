@@ -268,6 +268,9 @@ counted_ptr<IntegCalculator> FitAmpSum::makeIntegCalculator(){
     }
   }
 
+  cout << "setting efficiency in integCalculator to " 
+       << _efficiency.get() << endl;
+
   l->setEfficiency(_efficiency);
   return l;
 }

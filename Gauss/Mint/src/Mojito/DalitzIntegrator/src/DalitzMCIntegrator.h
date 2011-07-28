@@ -3,7 +3,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:02 GMT
 
-#include "IGetRealEvent.h"
+#include "IGetDalitzEvent.h"
 #include "IDalitzIntegrator.h"
 
 #include "DalitzEventPattern.h"
@@ -15,6 +15,10 @@
 
 #include "IEventGenerator.h"
 
+#include "DalitzHistoSet.h"
+#include "IGetDalitzEvent.h"
+#include "DalitzEventAccess.h"
+
 /*
   WARNING: This piece of code is much slower and less accurate than
   "FastAmplitudeIntegrator", as used by DalitzPdfBaseFastInteg.
@@ -22,15 +26,27 @@
  */
 
 class DalitzMCIntegrator : virtual public IDalitzIntegrator{
+
+  class integrationWeight : virtual public IGetDalitzEvent, public DalitzEventAccess{
+    IGetDalitzEvent* _externalPdf;
+  public:
+    integrationWeight(IDalitzEventList* list
+		      , IGetDalitzEvent* externalPdf);
+    void setWeight(IGetDalitzEvent* pdf);
+    double RealVal();
+  };
+
   mutable double _mean, _variance;
   const static int _minEvents=1000;
   int _numEvents;
+  double _weightSum;
 
   bool _initialised;
  protected:
 
   DalitzEventPattern _pat;
-  MINT::IGetRealEvent<IDalitzEvent>* _w;
+  IGetDalitzEvent* _w;
+  integrationWeight _iw;
   DalitzEventPtrList _events;
   TRandom* _rnd;
   double _precision;
@@ -83,6 +99,13 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
   }
 
   virtual void doFinalStats(MINT::Minimiser* mini=0);
+
+  DalitzHistoSet histoSet(){
+    double den= getVal();
+    den *= _weightSum;
+    if(den <= 0) den=1;
+    return _events.reWeightedHistoSet(&_iw)/den;
+  }
 
 };
 #endif

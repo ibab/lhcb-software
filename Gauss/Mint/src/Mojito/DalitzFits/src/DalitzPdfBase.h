@@ -13,6 +13,7 @@
 #include "IDalitzPdf.h"
 
 #include "DalitzMCIntegrator.h"
+#include "DalitzHistoSet.h"
 
 class DalitzPdfBase : 
 public MINT::PdfBase<IDalitzEvent>
@@ -56,6 +57,9 @@ public MINT::PdfBase<IDalitzEvent>
   virtual double getVal_withPs(IDalitzEvent* evt);
 
   double RealVal(){return getVal();}// implements MINT::IGetRealEvent
+
+  DalitzHistoSet histoSet(){return _mcint.histoSet() * numEvents();}
+
 };
 
 #endif

@@ -4,12 +4,35 @@
 #include <iostream>
 #include <string>
 
-#include "GaussFct.h"
+//#include "GaussFct.h"
 #include "TH1F.h"
 #include "TFile.h"
 
+#include "counted_ptr.h"
+
 using namespace std;
 using namespace MINT;
+
+int testCountedPtr(){
+
+  counted_ptr<double> pd(new double(3));
+  
+  cout << "got here" << endl;
+
+  counted_ptr<double> pd2(pd);
+
+  cout << "and here, 2 " << endl;
+
+  counted_ptr<double> pd3;
+
+  cout << " and here 3 " << endl;
+  pd3 = pd2;
+
+
+  cout << " andto the end!" << endl;
+
+  return 0;
+}
 
 int testStringStuff(){
   string abc = "abcdefg";
@@ -25,6 +48,7 @@ int testStringStuff(){
   return 0;
 }
 
+/*
 int testGauss(){
   
   GaussFct g(0, 1, 0, 1);
@@ -48,10 +72,12 @@ int testGauss(){
   return 0;
 
 }
+*/
 
 int main(){
+  return testCountedPtr();
   //  return testStringStuff();
-  return testGauss();
+  // return testGauss();
 }
 
 //
