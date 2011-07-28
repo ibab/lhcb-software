@@ -24,6 +24,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v17r3p1 2011-07-28 =========================
+
+! 2011-07-28 - Vanya Belyaev
+
+ - add the experimenal module TisTos, that allows realtively ``easy'' 
+   manipulaton with TisTos information. At leats it happes to be 
+   very useful for all my studies...
+
 ! 2011-07-20 - Vanya Belyaev
 
  -  polish a bit dst-explorer for more agressive choice of db-tags :
@@ -32,7 +40,7 @@
      try to use Oracle if posisble 
 
 - cmt/requirements 
-    version increment to v17r4
+    version increment to v17r3p1
 
 ! ==================== Phys/Bender v17r3 2011-07-03 ===========================
 
