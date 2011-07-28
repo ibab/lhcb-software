@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r11 2011-07-28 =========================
 ! 2011-06-20 - Alexandr Kozlinskiy
  - Use trajector.endRange/beginRange instead of module().wireLingth
    to improve performance.
