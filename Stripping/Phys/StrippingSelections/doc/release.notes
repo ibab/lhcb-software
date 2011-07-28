@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSelections v3r6 2011-07-26 =========================
+
+! 2011-07-28 - Cibran Santamarina
+ - Fix an error in StrippingBs2PhiKst0.py
+
 ! 2011-07-27 M. Williams
 - Update for pi0's in Beauty2Charm to avoid NULL child error message.
 

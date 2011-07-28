@@ -9,8 +9,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Cibran Santamarina']
-__date__ = '22/07/2011'
-__version__= '2.0'
+__date__ = '28/07/2011'
+__version__= '2.1'
 
 __all__=('StrippingBs2PhiKstConf',
          'makeBs2PhiKst',
@@ -154,13 +154,12 @@ def makePhi2KK( name,
     """
 
     _params = locals()
-    _code = "  (MINTREE('K+'==ABSID, PIDK) > %(KaonPIDK)s)" \
-        "& (PT > %(KaonPT)s *MeV)" \
-        "& (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s)" \
-        "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
-        "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
-        "& (PT > %(PhiPT)s *MeV)" \
-        "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
+    _code = " (MINTREE('K+'==ABSID,PIDK)> %(KaonPIDK)s)"    \
+            "& (MINTREE(ABSID=='K+',PT)> %(KaonPT)s *MeV)"  \
+            "& (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s)"        \
+            "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
+            "& (PT > %(PhiPT)s *MeV)" \
+            "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
     print 'makeJpsiPhi2KK Code =', _code
     StdLoosePhi2KK = DataOnDemand(Location = "Phys/StdLoosePhi2KK/Particles")
     _phiFilter = FilterDesktop("PhiFilterForBs2JpsiPhi",
