@@ -7,6 +7,7 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v1r1 2011-07-28 =========================
 ! 2011-07-27
   - Added basic input selection for reconstrucuted jets.
   - Added basic configuration for ParticelFlow algorithm.
