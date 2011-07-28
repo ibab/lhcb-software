@@ -18,7 +18,7 @@ from Configurables import CheatedSelection
 cheatsel = CheatedSelection("CheatedSelection")
 cheatsel.InputLocations = [ "Phys/TaggingPions" ]
 cheatsel.AssociatorInputData = [ "Phys/CheatedSelection/Particles" ]
-cheatsel.OutputLevel = 4
+cheatsel.OutputLevel = 6
 
 ########################################################################
 #
@@ -52,6 +52,7 @@ DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().DataType = "2010"
 DaVinci().CondDBtag = 'sim-20101026-vc-md100'
+DaVinci().DDDBtag = "head-20100407"
 DaVinci().Simulation    = True
 from Configurables import StoreExplorerAlg, PrintDecayTree
 PrintDecayTree().InputLocations = [ location ] 
@@ -66,9 +67,9 @@ DaVinci().MoniSequence = [   #PrintDecayTree()
 #
 # example data file
 # bsjpsiphi
-DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 #DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007386/0000/00007386_00000244_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
+DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007405/0000/00007405_00000257_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 from Configurables import CondDB
-CondDB().LocalTags['SIMCOND'] = ['simpatch-20100827']
-
+#CondDB().LocalTags['SIMCOND'] = ['simpatch-20100827']
+CondDB().LocalTags['SIMCOND'] = ['sim-20100429-vc-md100']
