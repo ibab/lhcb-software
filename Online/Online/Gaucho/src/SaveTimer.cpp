@@ -32,9 +32,10 @@ SaveTimer::~SaveTimer( )
 void SaveTimer::timerHandler ( void )
 {
   if (m_Adder->m_inputServicemap.empty()) return;
-  if (m_Adder->m_lockid != 0)
-  {
-    RTL::Lock alock(m_Adder->m_lockid);
+  m_Adder->Lock();
+//  if (m_Adder->m_lockid != 0)
+//  {
+//    RTL::Lock alock(m_Adder->m_lockid);
     if (m_Adder->m_usedSize == 0)
     {
       return;
@@ -49,12 +50,13 @@ void SaveTimer::timerHandler ( void )
       m_bsiz = m_Adder->m_usedSize;
     }
     memcpy(m_buffadd,m_Adder->m_buffer,m_bsiz);
-  }
-  else
-  {
-    printf("ERROR !!!!!!!!!!!!!!!!!!!! Bad Logic... running a SaveTimer without an adder lock...\n");
-    return;
-  }
+    m_Adder->UnLock();
+//  }
+//  else
+//  {
+//    printf("ERROR !!!!!!!!!!!!!!!!!!!! Bad Logic... running a SaveTimer without an adder lock...\n");
+//    return;
+//  }
   SavetoFile(m_buffadd);
 }
 //void SaveTimer::Stop()
