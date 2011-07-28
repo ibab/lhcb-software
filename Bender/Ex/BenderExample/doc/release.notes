@@ -22,6 +22,16 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+!  ====================== Ex/BenderExample v17r3p2 2011-07-28 =================
+
+! 2011-07-28 - Vanya Belyaev
+
+	- add new examples on TisTosTob'ing
+	
+       TisTosLines : how to get the list of trigger lines relavnt for TisTossing
+       TisTosGet   : how to get the TisTos flags for given set of lines 
+
+
 !  ====================== Ex/BenderExample v17r3 2011-07-03 ===================
 
 ! 2011-07-03 - Vanya Belyaev
