@@ -324,7 +324,7 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         self.BCut = "("\
                     "in_range(2200.*MeV,M,6300.*MeV) & "\
                     "(VFASPF(VPCHI2)> %(B_VPCHI2)s ) & "\
-                    "((CHILD(1,VFASPF(VZ))-VFASPF(VZ))>0*mm) "\
+                    "((CHILD(VFASPF(VZ),1)-VFASPF(VZ))>0*mm) "\
                     "& (BPVDIRA> %(B_BPVDIRA)s ) "\
                     "& (BPVVDCHI2>1) "\
                     ")"  % config

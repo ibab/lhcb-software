@@ -65,9 +65,9 @@ class XiccBuilder(LineBuilder) :
 
         # Some generic cuts for Xicc. Vertex chi2 cut depends on number of daughters (2 dau => 1 NDF; 3 dau => 3 NDF; 4 dau => 5 NDF)
         _strCutComb = '(APT>2000.0*MeV)'
-        _strCutMoth2 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<20.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(1,VFASPF(VZ)) - VFASPF(VZ) > 0.01*mm) )'
-        _strCutMoth3 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<30.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(1,VFASPF(VZ)) - VFASPF(VZ) > 0.01*mm) )'
-        _strCutMoth4 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<60.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(1,VFASPF(VZ)) - VFASPF(VZ) > 0.01*mm) )'
+        _strCutMoth2 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<20.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(VFASPF(VZ),1) - VFASPF(VZ) > 0.01*mm) )'
+        _strCutMoth3 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<30.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(VFASPF(VZ),1) - VFASPF(VZ) > 0.01*mm) )'
+        _strCutMoth4 = '( (BPVDIRA > 0.999) & (VFASPF(VCHI2)<60.0) & (BPVVDCHI2 > 16) & (M < 4500*MeV) & (CHILD(VFASPF(VZ),1) - VFASPF(VZ) > 0.01*mm) )'
 
         # Combine Lambda with pion to make Xi-
         self.stdLambdaLL = DataOnDemand(Location = 'Phys/StdLooseLambdaLL/Particles')

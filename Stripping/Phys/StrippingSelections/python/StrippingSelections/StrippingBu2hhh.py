@@ -234,7 +234,7 @@ def makeKKK_incl(name,
 		& (SUMTREE(P,((ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_Psum)s*MeV) \
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE((('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
-		& (abs(CHILD(1,Q) + CHILD(2,Q) + CHILD(3,Q))== %(_3h_Charge)s ) \
+		& (abs(CHILD(Q,1) + CHILD(Q,2) + CHILD(Q,1))== %(_3h_Charge)s ) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
    
     _KKK=CombineParticles()
@@ -293,7 +293,7 @@ def makepph_incl(name,
 		& (SUMTREE(P,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_Psum)s*MeV) \
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE(((ABSID=='p+') |(ABSID=='p~-') |('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
-		& (abs(CHILD(1,Q) + CHILD(2,Q) + CHILD(3,Q))== %(_3h_Charge)s ) \
+		& (abs(CHILD(Q,1) + CHILD(Q,2) + CHILD(Q,3))== %(_3h_Charge)s ) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
    
     _pph=CombineParticles()

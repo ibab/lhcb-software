@@ -155,7 +155,7 @@ def CombineDandTrack( name,
                       decay,
                       DSel,
                       KPiSel ):
-    Cut_Ds = '(M > 0.0*GeV) & (M<3.5*GeV) & ~INTREE( THASINFO( LHCb.Track.CloneDist ) )'
+    Cut_Ds = '(M > 0.0*GeV) & (M<3.5*GeV) & ~INTREE( (HASTRACK)&(THASINFO( LHCb.Track.CloneDist )) )'
     if ( name.endswith( "Ds2D0K" ) or name.endswith( "Dj2DstarpPim" ) or name.endswith( "Dj2D0Pip" ) or name.endswith( "Dj2DpPim" ) ) :
         Cut_Ds += ' & (LV02>0.0)'
     if ( name.endswith( "Dj2DstarpPim" )  ) :

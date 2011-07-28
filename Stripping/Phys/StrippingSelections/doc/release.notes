@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-28 - Thomas Blake
+ - Several small changes related to use of CHILD functor and protection of TRACK and PROTO functors 
+   . python/StrippingSelections/StrippingB0q2DplusMuX.py
+   . python/StrippingSelections/StrippingCharmedAndCharmedStrangeSpectroscopy.py
+   . python/StrippingSelections/StrippingXicc.py
+   . python/StrippingSelections/StrippingB2hhLTUnbiased.py
+   . python/StrippingSelections/StrippingBu2hhh.py
+
+
 !========================= StrippingSelections v3r6 2011-07-26 =========================
 
 ! 2011-07-28 - Cibran Santamarina

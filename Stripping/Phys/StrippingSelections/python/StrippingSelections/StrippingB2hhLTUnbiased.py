@@ -115,7 +115,7 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         from GaudiKernel.SystemOfUnits import GeV
         
         
-        kaonCut   = "ISLONG & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s*GeV) & (P> %(DaughterPMin)s*GeV)"                              % locals()
+        kaonCut   = "(ISLONG) & (HASRICH) & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s*GeV) & (P> %(DaughterPMin)s*GeV)"                              % locals()
         combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s)"                                                % locals()
         motherCut = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s)"   % locals()
             
