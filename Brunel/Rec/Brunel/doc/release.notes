@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v40r1>2011-07-29 Brunel v40r1</A></H1><PRE>
+This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5,
+ Rec v11r6 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2011 August processing (Reco11a)
+
 - Changes to Brunel configurable:
   . When ProductionMode=True, print the event number only every 1000 events
 
