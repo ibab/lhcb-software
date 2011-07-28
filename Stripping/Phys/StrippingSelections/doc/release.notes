@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-29 - Jibo He
+ - Added StrippingBeauty2Charm to __init__.py  
+
 ! 2011-07-28 - Thomas Blake
  - Several small changes related to use of CHILD functor and protection of TRACK and PROTO functors 
    . python/StrippingSelections/StrippingB0q2DplusMuX.py
