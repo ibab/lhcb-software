@@ -395,6 +395,13 @@ for r in ( LHCb.Particle.Range     ,
 LHCb.Particle.Container = cpp.KeyedContainer(LHCb.Particle,'Containers::KeyedObjectManager<Containers::hashmap>')
 LHCb.Particle.Selection = cpp.SharedObjectsContainer (LHCb.Particle) 
 
+def _iter_LPS_ ( self ) :
+    s = len( self )
+    for i in range(0,s):
+        yield self.at( i )
+        
+LHCb.Particle.Selection.__iter__ =  _iter_LPS_
+
 # =============================================================================
 ## define various printers 
 def _print_ ( self                                     ,
