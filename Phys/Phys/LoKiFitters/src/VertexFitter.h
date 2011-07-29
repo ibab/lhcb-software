@@ -591,6 +591,8 @@ namespace LoKi
     bool m_use_threebody_branch  ; // use the special branch for three-body decays 
     /// use the special branch for  four-body decays 
     bool m_use_fourbody_branch   ; // use the special branch for  four-body decays 
+    /// allow "rho+"-like particles 
+    bool m_use_rho_like_branch   ; // allow "rho+"-like particles 
     /// transport tolerance 
     double m_transport_tolerance ; // the transport tolerance 
     /// # of prints 

@@ -104,8 +104,10 @@ StatusCode LoKi::VertexFitter::_load
   if ( m_entries.empty() ) 
   { return _Warning ( "_load(): no valid data found"   , InvalidData ) ; } // RETURN 
   //
-  if ( !LoKi::KalmanFilter::okForVertex ( m_entries ) ) 
-  { return _Error("Input set could not be verticized"  , InvalidData ) ; }
+  if ( !LoKi::KalmanFilter::okForVertex ( m_entries ) &&
+       ( !m_use_rho_like_branch || 
+         !LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ) )
+  { return _Error( "Input set could not be verticized"  , InvalidData ) ; }
   //
   return StatusCode::SUCCESS ;
 } 
@@ -171,6 +173,15 @@ StatusCode LoKi::VertexFitter::_iterate
   // inverse covariance matrix for the position  
   const Gaudi::SymMatrix3x3* ci = &m_seedci ;
   //
+  const bool two_prongs   = 
+    m_use_twobody_branch    && LoKi::KalmanFilter::twoProngs   ( m_entries ) ;
+  const bool three_prongs = 
+    m_use_threebody_branch  && LoKi::KalmanFilter::threeProngs ( m_entries ) ;
+  const bool four_prongs  = 
+    m_use_fourbody_branch   && LoKi::KalmanFilter::fourProngs  ( m_entries ) ;
+  const bool rho_like     = 
+    m_use_rho_like_branch   && LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ;
+  //
   for ( size_t iIter = 1 ; iIter <= nIterMax ; ++iIter ) 
   {    
     // make a proper transportation 
@@ -188,9 +199,7 @@ StatusCode LoKi::VertexFitter::_iterate
     // start the kalman filter 
     bool special = false ;
     // A) the simplest case: 2 body fit 
-    if      ( m_use_twobody_branch  && 
-              2 == m_entries.size() && 
-              2 == LoKi::KalmanFilter::nGood ( m_entries ) )  
+    if      ( two_prongs ) 
     {
       sc = LoKi::KalmanFilter::step ( m_entries[0] , 
                                       m_entries[1] , *chi2 ) ;
@@ -198,9 +207,7 @@ StatusCode LoKi::VertexFitter::_iterate
       else { _Warning ( "Error from three-body Kalman step" , sc ) ; }      
     }
     // B) use three-body branch 
-    else if ( m_use_threebody_branch  && 
-              3 == m_entries.size()   && 
-              3 == LoKi::KalmanFilter::nGood ( m_entries ) )  
+    else if ( three_prongs ) 
     {
       sc = LoKi::KalmanFilter::step ( m_entries[0] , 
                                       m_entries[1] ,
@@ -209,9 +216,7 @@ StatusCode LoKi::VertexFitter::_iterate
       else { _Warning ( "Error from three-body Kalman step" , sc ) ; }      
     }
     // C) use four-body branch 
-    else if ( m_use_fourbody_branch  && 
-              4 == m_entries.size()  && 
-              4 == LoKi::KalmanFilter::nGood ( m_entries ) )  
+    else if ( four_prongs ) 
     {
       sc = LoKi::KalmanFilter::step ( m_entries[0] , 
                                       m_entries[1] ,
@@ -219,6 +224,13 @@ StatusCode LoKi::VertexFitter::_iterate
                                       m_entries[3] , *chi2 ) ;
       if ( sc.isSuccess() ) { special = true ; }
       else { _Warning ( "Error from  four-body Kalman step" , sc ) ; }      
+    }
+    // D) use ``rho+-Like'' branch 
+    else if ( rho_like ) 
+    {
+      sc = LoKi::KalmanFilter::stepRho ( m_entries , *chi2 ) ;
+      if ( sc.isSuccess() ) { special = true ; }
+      else { _Warning ( "Error from  rho+-like Kalman step" , sc ) ; }      
     }
     //
     if ( special && sc.isSuccess () ) 
@@ -230,7 +242,7 @@ StatusCode LoKi::VertexFitter::_iterate
       chi2 = &last.m_chi2 ;
     }
     //
-    // D) general case (of failure of any N-body specialiation) 
+    // D) general case (or failure of any N-body specialiation) 
     //
     if  ( !special || sc.isFailure()  ) 
     {
@@ -251,18 +263,13 @@ StatusCode LoKi::VertexFitter::_iterate
       }
     }
     //
-    // kalman smooth : could it be moved just before evalCov ? 
-    // @todo study the possibility to move smoothig out of iteration loop
-    sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
-    if ( sc.isFailure() ) 
-    { _Warning ( "_iterate(): problem with smoother", sc ) ; }
-    //
     // distance in the absolute position 
     const double d1 = ROOT::Math::Mag        ( (*x) - x0 ) ;
     // distance in the chi2 units 
     const double d2 = ROOT::Math::Similarity ( (*x) - x0 , *ci ) ;
     if ( d2 < 0 ) 
     { _Warning ( "_iterate: negative chi2 detected, ignore" , sc ) ; }
+    //
     // termination conditions:
     //
     //  (1) STOP if the distance is sufficiently small 
@@ -272,6 +279,15 @@ StatusCode LoKi::VertexFitter::_iterate
     if ( d1 < m_DistanceMax || ( 1 < iIter && 0 <= d2 && d2 < m_DistanceChi2 ) )
     {
       //    
+      // kalman smooth : could it be moved just before evalCov ? 
+      // @todo study the possibility to move smoothig out of iteration loop
+      sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
+      if ( sc.isFailure() ) 
+      { 
+        _Warning ( "_iterate(): problem with smoother", sc ) ; 
+        continue ; // CONTINUE: continue iterations in case smoother fails 
+      }
+      //
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
       { _Warning ( "_iterate(): problems with covariances" , sc ) ; }
@@ -299,10 +315,10 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
        s_small2 < Gaudi::Math::min_diagonal ( c ) && 
        s_large2 > Gaudi::Math::max_diagonal ( c )   ) 
   {
-    // use the vertex parameters as proper seed 
-    Gaudi::Math::geo2LA ( p , m_seed ) ;
+    // use the vertex parameters as the proper seed 
+    Gaudi::Math::geo2LA  ( p , m_seed ) ;
     int ifail = 0 ;
-    m_seedci = c.Inverse( ifail ) ;
+    m_seedci = c.Inverse ( ifail ) ;
     if ( !ifail ) 
     {
       // properly scale the seed matrix 
@@ -313,6 +329,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   //
   StatusCode sc = LoKi::KalmanFilter::seed 
     ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
+  //
   if ( sc.isFailure() ) 
   { 
     m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
@@ -620,15 +637,17 @@ LoKi::VertexFitter::VertexFitter
   , m_seedZmax            (  3.0 * Gaudi::Units::meter      ) 
   , m_seedRho             ( 50.0 * Gaudi::Units::centimeter )
 /// Use the special branch for   two-body decays ?
-  , m_use_twobody_branch   ( false   ) // Use the special branch for   two-body decays?
+  , m_use_twobody_branch   ( true   ) // Use the special branch for   two-body decays?
 /// Use the special branch for three-body decays ?
-  , m_use_threebody_branch ( false   ) // Use the special branch for three-body decays?
+  , m_use_threebody_branch ( true   ) // Use the special branch for three-body decays?
 /// Use the special branch for  four-body decays ?
-  , m_use_fourbody_branch  ( false   ) // Use the special branch for  four-body decays?
+  , m_use_fourbody_branch  ( true   ) // Use the special branch for  four-body decays?
+/// Allow "rho+"-like particles ?
+  , m_use_rho_like_branch  ( true   ) // allow "rho+"-like particles ?
 /// The transport tolerance  
   , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
 /// number of prints 
-  , m_prints              ( 1 )
+  , m_prints              ( 2 )
 /// pure technical stuff: 
   , m_entries (   ) 
   , m_vertex  ( 0 )
@@ -674,9 +693,9 @@ LoKi::VertexFitter::VertexFitter
       m_use_fourbody_branch  , 
       "Use the special branch for  four-body decays" ) ;
   declareProperty 
-    ( "UseTwoBodyBranch"   , 
-      m_use_twobody_branch , 
-      "Use the special branch for two-body decays" ) ;
+    ( "AllowRhoPlusLikeParticle"  , 
+      m_use_rho_like_branch       , 
+      "Allow ``rho+''-like particles?" ) ;
   declareProperty 
     ( "TransportTolerance"  , 
       m_transport_tolerance , 
