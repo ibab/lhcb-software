@@ -87,6 +87,9 @@ StatusCode RecSummaryAlg::execute()
     // Load the reconstructed tracks
     const LHCb::Tracks * tracks = get<LHCb::Tracks>(m_trackLoc);
 
+    // Save total number of tracks
+    summary->addInfo( LHCb::RecSummary::nTracks, tracks->size() );
+
     // Count each track type
     int nLong(0), nDownstream(0), nUpstream(0), nT(0), nBack(0);
     for ( LHCb::Tracks::const_iterator iTk = tracks->begin();
@@ -101,7 +104,7 @@ StatusCode RecSummaryAlg::execute()
     }
     const int nVelo = m_countVeloTracks->nObj(tracks);
 
-    // Save track info to summary
+    // Save track info by type to summary
     summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
     summary->addInfo( LHCb::RecSummary::nDownstreamTracks, nDownstream );
     summary->addInfo( LHCb::RecSummary::nUpstreamTracks,   nUpstream );

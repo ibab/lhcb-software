@@ -86,6 +86,7 @@ StatusCode TimingTuple::execute()
   fillTuple(tuple, "MuonCoordsS4", summary->info(LHCb::RecSummary::nMuonCoordsS4,-999) );
   fillTuple(tuple, "MuonTracks", summary->info(LHCb::RecSummary::nMuonTracks,-999) );
 
+  fillTuple(tuple, "BestTracks", summary->info(LHCb::RecSummary::nTracks,-999) );
   fillTuple(tuple, "BackwardTracks", summary->info(LHCb::RecSummary::nBackTracks,-999) );
   fillTuple(tuple, "VeloTracks", summary->info(LHCb::RecSummary::nVeloTracks,-999) );
   fillTuple(tuple, "LongTracks", summary->info(LHCb::RecSummary::nLongTracks,-999) );
