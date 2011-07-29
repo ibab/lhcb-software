@@ -32,3 +32,5 @@ except ImportError:
 from Common import createProjectMakefile
 from Common import stringVersion2Tuple
 from Common import versionSort
+
+from Thread import LockOnPrintThread
