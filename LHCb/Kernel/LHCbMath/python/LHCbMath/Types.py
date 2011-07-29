@@ -438,17 +438,17 @@ def _eigen_2_ ( self , sorted = True ) :
     >>> values, vectors = mtrx.eigenVectors( sorted = True )
     
     """
-    if   2 == mtrx.kCols :
+    if   2 == self.kCols :
         _values  = Gaudi.Vector2  ()
         _vectors = Gaudi.Vectors2 ()
-    elif 3 == mtrx.kCols :
+    elif 3 == self.kCols :
         _values  = Gaudi.Vector3  ()
         _vectors = Gaudi.Vectors3 ()
-    elif 4 == mtrx.kCols :
+    elif 4 == self.kCols :
         _values  = Gaudi.Vector4  ()
         _vectors = Gaudi.Vectors4 ()
     else :
-        raise AttributeError, "Not implemented for dimention: %s" % mtrx.kCols
+        raise AttributeError, "Not implemented for dimention: %s" % self.kCols
     
     st = Gaudi.Math.EigenSystems.eigenVectors ( self , _values , _vectors , sorted )
     if st.isFailure () :
