@@ -1,0 +1,9 @@
+Package     : Hlt/IndepenceTests
+Package Coordinator : Eric van Herwijnen
+Purpose     : HLT application to rest indepence of Hlt lines
+
+========================== IndependenceTests v12r7 2011-07-29 ===========
+! 2011-07-29 - Eric van Herwijnen
+ - First release: took original code from Roel Aaij and put it in svn.
+
+
