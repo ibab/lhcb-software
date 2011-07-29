@@ -5,6 +5,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-29 - Vanya Belyaev
+
+ - add possibility to evaluate vertex for ``rho+''-like particles 
+
+
 !========================= KalmanFilter v1r2p1 2011-07-28 =========================
 ! 2011-07-19 - Vanya Belyaev
 

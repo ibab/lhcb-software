@@ -1,3 +1,4 @@
+// $Id:$ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,6 +28,12 @@
 // ============================================================================
 #include "KalmanFilter/ErrorCodes.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/array.hpp"
+#include "boost/static_assert.hpp"
+#include "boost/lambda/bind.hpp"
+// ============================================================================
 /** @file 
  *
  *  Implementation file for functions from namespace LoKi::KalmanFilter
@@ -45,6 +52,10 @@
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-04-12
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ========================================================================-===
 // the purely internal program 
@@ -52,8 +63,13 @@
 namespace 
 {
   // ==========================================================================
-  /// inverse "large" error in position: used to avoid singularity 
-  const double s_ERROR2_i =  1.0 / Gaudi::Math::pow ( 20.0 * Gaudi::Units::cm , 2 ) ;
+  /// inverse "large" error in position: used to avoid singularity
+  const boost::array<double,3> s_ERROR2_i  = { { 
+      1.0 / Gaudi::Math::pow ( 15.0 * Gaudi::Units::cm , 2 ) ,
+      1.0 / Gaudi::Math::pow ( 15.0 * Gaudi::Units::cm , 2 ) ,
+      1.0 / Gaudi::Math::pow ( 30.0 * Gaudi::Units::cm , 2 ) } } ;
+  // 
+  const double s_ERROR = 30 * Gaudi::Units::cm ;
   // ==========================================================================
   /// "smooth" the singular values 
   template <class T, unsigned int D>
@@ -63,12 +79,14 @@ namespace
     const double                                            error = -1 ) 
   {
     //
-    const double error2_i = 
-      error <= 0.0 ? 
-      s_ERROR2_i   :
-      std::min ( 1.0 / Gaudi::Math::pow ( error , 2 ) , s_ERROR2_i ) ;
-    //
-    for ( unsigned i = 0 ; i < D ; ++i ) { mtrx(i,i) += error2_i ; }
+    const double err2 = error * error ;
+    for ( unsigned int i = 0 ; i < D ; ++i ) 
+    { 
+      mtrx(i,i) += 
+        error <= 0.0 ? 
+        s_ERROR2_i [ i ]  :
+        std::min ( 1.0 / err2 , s_ERROR2_i [ i ] ) ;  
+    }
   }
   // ==========================================================================
   /** make Z-projection of the particle 
@@ -141,18 +159,24 @@ namespace
   {
     //
     // make the proper projection (if required) 
-     if ( LoKi::KalmanFilter::LongLivedParticle == type ) 
+    if ( LoKi::KalmanFilter::LongLivedParticle == type ) 
     { _project_Z_ ( entry ) ; }
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
     //
     if ( LoKi::KalmanFilter::GammaLikeParticle  == type ) 
-    {
-      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ;
+    { 
+      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ; 
+      entry.m_vxi ( 0 , 0 ) = s_ERROR2_i [ 0 ] ;
+      entry.m_vxi ( 1 , 1 ) = s_ERROR2_i [ 1 ]  ;
+      entry.m_vxi ( 2 , 2 ) = s_ERROR2_i [ 2 ] ;
     }
     else if ( LoKi::KalmanFilter::DiGammaLikeParticle  == type ) 
     {
-      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ;      
+      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ; 
+      entry.m_vxi ( 0 , 0 ) = s_ERROR2_i [ 0 ] ;
+      entry.m_vxi ( 1 , 1 ) = s_ERROR2_i [ 1 ] ;
+      entry.m_vxi ( 2 , 2 ) = s_ERROR2_i [ 2 ] ;
     }
     else if ( LoKi::KalmanFilter::LongLivedParticle == type  
               || 
@@ -326,7 +350,82 @@ StatusCode LoKi::KalmanFilter::step
   return step ( entry , xx , ci , chi2 ) ;
 }
 // ============================================================================
-// make one step of Kalman filter q
+namespace 
+{
+  // ==========================================================================
+  template <class T, class T1, unsigned int D>
+  ROOT::Math::SVector<T,D>
+  _update_ 
+  ( const ROOT::Math::SVector<T,D>&  v , 
+    const ROOT::Math::SVector<T1,D>& a ) { return v * (v*a) ; }
+  // ==========================================================================
+}
+// ============================================================================
+/*  make the special step of Kalman filter for ``rho+''-like combination 
+ *  @param entries (update)  the entries 
+ *  @param chi2    (input)   the initial chi2 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::stepRho
+( LoKi::KalmanFilter::Entries& entries , 
+  const double                 chi2    ) 
+{
+  //
+  if  ( !rhoPlusLike ( entries ) ) 
+  { return StatusCode ( ErrorInInputData , true ) ; }         // RETURN 
+  //
+  Gaudi::SymMatrix3x3   ci ;
+  Gaudi::Vector3      seed ;
+  // construct the seed from the data 
+  Gaudi::Math::setToScalar ( ci , 0.0 ) ;
+  for ( Entries::const_iterator it = entries.begin() ; 
+        entries.end() != it ; ++it ) 
+  {
+    //
+    // if ( !it->regular() ) { continue ; } // CONTINUE 
+    //
+    ci   += it->m_vxi                ;
+    seed += it->m_vxi * it -> m_parx ;
+  }
+  //
+  int ifail =  0  ;
+  Gaudi::SymMatrix3x3  c = ci.Inverse ( ifail ) ;
+  //
+  if ( 0 != ifail ) 
+  { 
+    // try to recover using "soft" constraints 
+    _smooth ( ci ) ;
+    //
+    ifail =  0  ; 
+    c = ci.Inverse ( ifail ) ;
+    if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+  }
+  //
+  Gaudi::Vector3 x = c * seed ; 
+  //
+  for ( Entries::iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    //
+    ientry -> m_x     =    x ;
+    ientry -> m_ci    =   ci ;
+    ientry -> m_c     =    c ;
+    ientry -> m_chi2  = chi2 ;
+    //
+    ientry -> m_q     =  ientry -> m_parq ;
+    //
+    // do we need these lines ?
+    const Gaudi::Vector3 dx = ientry -> m_parx - x ;  
+    ientry -> m_q -= ientry -> m_p.posMomCovMatrix() * ( ientry->m_vxi * dx ) ;
+  }      
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// make one step of Kalman filter 
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
 ( LoKi::KalmanFilter::Entry&  entry , 
@@ -707,7 +806,7 @@ StatusCode LoKi::KalmanFilter::seed
         entries.end() != it ; ++it ) 
   {
     //
-    if ( ! it->regular() ) { continue ; } // CONTINUE 
+    // if ( !it->regular() ) { continue ; } // CONTINUE 
     //
     ci   += it->m_vxi                ;
     seed += it->m_vxi * it -> m_parx ;
@@ -715,6 +814,7 @@ StatusCode LoKi::KalmanFilter::seed
   //
   int ifail =  0  ;
   Gaudi::SymMatrix3x3  c = ci.Inverse ( ifail ) ;
+  //
   if ( 0 != ifail ) 
   { 
     // try to recover using "soft" constraints 
@@ -934,6 +1034,70 @@ bool LoKi::KalmanFilter::okForVertex
   return 2 <= nLong ;
 }
 // ============================================================================
+/*  check if the collection of entries is ``two-prong''-particle 
+ *  @return true of collection of entries is OK 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-24
+ */   
+// ============================================================================
+bool LoKi::KalmanFilter::twoProngs 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{ return 2 == entries.size() && 2 == nGood ( entries ) ; }
+// ============================================================================
+/*  check if the collection of entries is ``three-prong''-particle 
+ *  @return true of collection of entries is OK 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-24
+ */   
+// ============================================================================
+bool LoKi::KalmanFilter::threeProngs 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{ return 3 == entries.size() && 3 == nGood ( entries ) ; }
+// ============================================================================
+/*  check if the collection of entries is ``four-prong''-particle 
+ *  @return true of collection of entries is OK 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-24
+ */   
+// ============================================================================
+bool LoKi::KalmanFilter::fourProngs 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{ return 4 == entries.size() && 4 == nGood ( entries ) ; }
+// ============================================================================
+/*  check if the collection of entries is ``rho+''-like particle 
+ *   - exactly one long-lived particle (track) 
+ *   - the rest are ``gamma/di-gamma''-like particles 
+ *  @return true of collection of entries is OK 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2010-08-24
+ */   
+// ============================================================================
+bool  LoKi::KalmanFilter::rhoPlusLike 
+( const LoKi::KalmanFilter::Entries& entries ) 
+{
+  //
+  if ( 2 > entries.size() ) { return false ; }
+  //
+  unsigned short nLong  = 0 ;
+  unsigned short nGamma = 0 ;
+  //
+  for ( Entries::const_iterator ientry = entries.begin() ; 
+        entries.end() != ientry ; ++ientry ) 
+  {
+    //
+    switch ( ientry->m_type ) 
+    {
+    case GammaLikeParticle   : ++nGamma ; break ;  
+    case DiGammaLikeParticle : ++nGamma ; break ;  
+    case LongLivedParticle   : ++nLong  ; break ;
+    default                  :            break ;
+    } 
+    //
+  }
+  //
+  return 1 == nLong && ( nLong + nGamma ) == entries.size() ;
+}  
+// ============================================================================
 /*  calculate number degrees of freedom for vertex fit 
  *  @thanks Yuehong Xie 
  *  @thanks Wouter Hulsbergen
@@ -947,6 +1111,8 @@ bool LoKi::KalmanFilter::okForVertex
 int LoKi::KalmanFilter::nDoF 
 ( const LoKi::KalmanFilter::Entries& entries ) 
 {
+  //
+  if ( rhoPlusLike ( entries ) ) { return 0 ; }
   //
   int result = -3 ;
   //

@@ -1,3 +1,4 @@
+// $Id:$ 
 // ============================================================================
 #ifndef LOKIFITTERS_KALMANFILTER_H 
 #define LOKIFITTERS_KALMANFILTER_H 1
@@ -44,6 +45,10 @@ class IParticleTransporter ;
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2006-04-12
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 
@@ -229,6 +234,10 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      /// is it the liong lived entry ? 
+      bool isLong  () const { return LongLivedParticle  == m_type ; }
+      /// is it the liong lived entry ? 
+      bool isShort () const { return ShortLivedParticle == m_type ; }
       /// is it the regular entry ? 
       bool regular () const { return !special() ; }
       /// is it the special entry ? 
@@ -238,6 +247,8 @@ namespace LoKi
           GammaLikeParticle   == m_type || 
           DiGammaLikeParticle == m_type ;
       }
+      /// is it the liong lived entry ? 
+      bool isType  ( ParticleType t ) const { return t == m_type ; }
       // ======================================================================
     } ;
     // ========================================================================
@@ -455,6 +466,18 @@ namespace LoKi
       LoKi::KalmanFilter::Entry&  entry4 , 
       const double                chi2   ) ;
     // ========================================================================    
+    /** make the special step of Kalman filter for rho+-ilke combination 
+     *  @param entries (update)  the entries 
+     *  @param chi2    (input)   the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    GAUDI_API 
+    StatusCode stepRho
+    ( LoKi::KalmanFilter::Entries& entries , 
+      const double                 chi2    ) ;
+    // ========================================================================    
     /** make one step of Kalman filter 
      *  @param entry (update)       measurement to be updated 
      *  @param x     (input)        the initial position of the vertex 
@@ -539,6 +562,40 @@ namespace LoKi
      */   
     GAUDI_API 
     bool okForVertex ( const Entries& entries ) ;
+    // ========================================================================
+    /** check if the collection of entries is ``rho+''-like 
+     *   - exactly one long-lived particle (track) 
+     *   - and the cetrain amount of ``gamma/di-gamma''-like particles 
+     *  @return true of collection of entries is OK 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-24
+     */   
+    GAUDI_API 
+    bool rhoPlusLike ( const Entries& entries ) ;
+    // ========================================================================
+    /** check if the collection of entries is ``two-prong''-particle 
+     *  @return true of collection of entries is OK 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-24
+     */   
+    GAUDI_API 
+    bool twoProngs ( const Entries& entries ) ;
+    // ========================================================================
+    /** check if the collection of entries is ``three-prong''-particle 
+     *  @return true of collection of entries is OK 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-24
+     */   
+    GAUDI_API 
+    bool threeProngs  ( const Entries& entries ) ;
+    // ========================================================================
+    /** check if the collection of entries is ``four-prong''-particle 
+     *  @return true of collection of entries is OK 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2010-08-24
+     */   
+    GAUDI_API 
+    bool fourProngs  ( const Entries& entries ) ;
     // ========================================================================
     /** calculate number degrees of freedom for vertex fit 
      *  @thanks Yuehong Xie 
