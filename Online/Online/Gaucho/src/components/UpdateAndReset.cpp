@@ -229,8 +229,8 @@ StatusCode UpdateAndReset::execute()
   int runno;
   unsigned int tck;
   ulonglong gps;
-  this->EoEInc->m_executing = true;
   m_pGauchoMonitorSvc->Lock();
+  this->EoEInc->m_executing = true;
 //  printf("+++++++++++++++++++++++++++++ UPDATE AND RESET Monitor System LockED\n");
   getEventChar(runno,tck,gps);
   if (m_runNumber == 0)
