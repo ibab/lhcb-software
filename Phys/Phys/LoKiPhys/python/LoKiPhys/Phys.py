@@ -390,11 +390,10 @@ for r in ( LHCb.Particle.Range     ,
      r.__getslice__ = _LCD . _slice_
      r.__getitem__  =    r . __call__ 
      r.__setitem__  =          None
-     
-if not hasattr ( LHCb.Particle , 'Container' ) :
-    LHCb.Particle.Container = cpp.KeyedContainer(LHCb.Particle,'Containers::KeyedObjectManager<Containers::hashmap>')
-if not hasattr ( LHCb.Particle , 'Selection' ) :
-    LHCb.Particle.Selection = cpp.SharedObjectsContainer (LHCb.Particle) 
+
+
+LHCb.Particle.Container = cpp.KeyedContainer(LHCb.Particle,'Containers::KeyedObjectManager<Containers::hashmap>')
+LHCb.Particle.Selection = cpp.SharedObjectsContainer (LHCb.Particle) 
 
 # =============================================================================
 ## define various printers 

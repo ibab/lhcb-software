@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-07-29 - Vanya Belyaev
+ - fix in LHCb.Particle.Selection decorators 
+
 !========================= LoKiPhys v10r3 2011-07-28 =========================
 ! 2011-07-23 - Vanya Belyaev
 
