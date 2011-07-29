@@ -19,6 +19,7 @@ std::ostream& LHCb::RecSummary::fillStream(std::ostream& s) const
 
   s << " nPVs = " << info( LHCb::RecSummary::nPVs, 0 );
 
+  s << " nTracks = " << info( LHCb::RecSummary::nTracks, 0 );
   s << " nLongTracks = " << info( LHCb::RecSummary::nLongTracks, 0 );
   s << " nDownstreamTracks = " << info( LHCb::RecSummary::nDownstreamTracks, 0 );
   s << " nUpstreamTracks = " << info( LHCb::RecSummary::nUpstreamTracks, 0 );

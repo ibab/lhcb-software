@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-07-29 - Chris Jones
+ - Add the total number of tracks to the RecSummary information
+
 !========================= RecEvent v2r38 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
  - RecVertex.xml : define location for filtered primary vertices 

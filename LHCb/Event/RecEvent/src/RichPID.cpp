@@ -63,7 +63,7 @@ std::ostream& LHCb::RichPID::fillStream( std::ostream& s ) const
   s << "[ ";
 
   // Formatting strings
-  const std::string sF = "%7.3f";
+  const std::string sF = "%6.2f";
 
   // PID type
   s << "Key=" << key() << " " << pidType();
@@ -71,9 +71,9 @@ std::ostream& LHCb::RichPID::fillStream( std::ostream& s ) const
   // Track info
   if ( track() )
   {
-    s << " | Track Key=" << track()->key() << " " << track()->type()
-      << " Ptot = " << boost::format(sF) % (track()->p()/Gaudi::Units::GeV)
-      << " GeV/c";
+    s << " | Tk " << track()->key() << " " << track()->type()
+      << " " << boost::format(sF) % (track()->p()/Gaudi::Units::GeV)
+      << " GeV";
   }
   else
   {
@@ -81,27 +81,30 @@ std::ostream& LHCb::RichPID::fillStream( std::ostream& s ) const
   }
 
   // Active radiators
-  s << " | Active Rads =";
+  s << " |";
   if ( usedAerogel()  ) { s << " " << Rich::text(Rich::Aerogel);  }
   if ( usedRich1Gas() ) { s << " " << Rich::text(Rich::Rich1Gas); }
   if ( usedRich2Gas() ) { s << " " << Rich::text(Rich::Rich2Gas); }
 
   // Mass thresholds
-  s << " | Thresholds = ";
+  s << " | Thres ";
   for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
         ipid != Rich::particles().end(); ++ipid )
   {
     const std::string T = isAboveThreshold(*ipid) ? "T" : "F";
-    s << T << " ";
+    s << T;// << " ";
   }
 
   // DLL values
-  s << " | DLLs(el,mu,pi,ka,pr,bt) =";
+  s << " | DLLs ";
   for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
         ipid != Rich::particles().end(); ++ipid )
   {
     s << " " << boost::format(sF)%(particleDeltaLL(*ipid));
   }
+
+  // Best ID
+  s << " | " << bestParticleID();
 
   // return message stream
   return s << " ]";

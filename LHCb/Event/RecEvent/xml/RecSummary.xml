@@ -35,6 +35,7 @@
          <enumval name="nVeloTracks"        value="13"   desc="Number of reconstructed VELO Tracks"/>
          <enumval name="nTTracks"           value="14"   desc="Number of reconstructed T-station Tracks"/>
          <enumval name="nBackTracks"        value="15"   desc="Number of reconstructed VELO backwards Tracks"/>
+         <enumval name="nTracks"            value="16"   desc="Number of reconstructed Tracks"/>
          <enumval name="nRich1Hits"         value="20"   desc="Number of hits in RICH1"/>
          <enumval name="nRich2Hits"         value="21"   desc="Number of hits in RICH2"/>
          <enumval name="nVeloClusters"      value="30"   desc="Number of VELO clusters"/>
