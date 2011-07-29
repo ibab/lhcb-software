@@ -7,6 +7,7 @@ branches doc cmt
 #=======================================================
 
 use  Moore              v12r8   Hlt
+use  IndependenceTests  v1r0    Hlt
 
 # Patches
 use MuonID              v9r0p1  Muon
