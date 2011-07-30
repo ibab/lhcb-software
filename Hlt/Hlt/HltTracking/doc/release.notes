@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-07-30 - Roel Aaij
+ - L0CaloCandidates in Hlt1TrackUpgradeConf.py now uses L0 FullCalo as input.
+
 ! 2011-07-0 - Albert Puig
  - Fixed passing of track location to CaloLines configurable in Hlt2Tracking.py
 

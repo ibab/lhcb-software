@@ -148,13 +148,16 @@ def VeloCandidates( lineName ):
 # L0CaloCandidates as Hlt::Candidates
 # ==============================================================================
 from Configurables import Hlt__L0Calo2Candidate
+from HltLine.HltDecodeRaw import DecodeL0FullCALO
+
 def L0CaloCandidates( lineName ):
-    ## L0Calo -> Candidate
+    ## L0Calo -> Candidate,
+    ## This hardcoded location is not pretty...
     selection = 'CaloCandidates%s' % lineName
     caloCandidates = Hlt__L0Calo2Candidate(
         'L0Calo2Candidates%s' % lineName,
+        InputSelection  = 'Trig/L0/FullCalo',
         OutputSelection = selection )
-    from HltLine.HltDecodeRaw import DecodeL0CALO
-    bm = bindMembers ( None , [ DecodeL0CALO, caloCandidates ] )
+    bm = bindMembers ( None , [ DecodeL0FullCALO, caloCandidates ] )
     return "L0CaloCandidates = execute( %s ) * SELECTION( '%s' )" % \
            ( [ m.getFullName() for m in bm.members() ], selection )
