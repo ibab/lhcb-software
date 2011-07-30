@@ -75,7 +75,8 @@ def checkOrDiff(package, versions=[], dodiff=True):
     
     path1=lbsvn.url(package,versions[0])
     path2=lbsvn.url(package,versions[1])
-    diffs=commands.getoutput("svn diff --summarize "+path1+' '+path2).strip()
+    diffs=callCommand("svn","diff","--summarize",path1,path2)[0].strip()
+    #diffs=commands.getoutput("svn diff --summarize "+path1+' '+path2).strip()
     diffs='\n'.join([line.strip() for line in diffs.split('\n') if "/usr/bin/xauth:  error in locking authority file" not in line])
     #replace path with package to avoid annoying svn diff format
     while path1 in diffs:

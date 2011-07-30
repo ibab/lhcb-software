@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+"""
+A script to check if the tags listed in a specific requirements file really exist
+Then to iterate through the tags and print the differences, including the release notes.
+
+"""
+import threading, thread, string, sys, Queue
+
+from LbRelease.SvnTools.Project import *
+from LbRelease.SvnTools.Package import *
+from LbUtils import LockOnPrintThread
+#from LbUtils.CMT.Parse import *
+#from LbRelease.SvnTools.Package import lbsvn
+
+
+def usage():
+    print sys.argv[0] + '[-P][-r] <package> <version1> [<version2>] [--help]'
+    print 'checks that all tags which are cmt-used by the package do exist, and list the diffs between them'
+    print '(1) '+sys.argv[0]+' Rec v11r0 v11r1 #diffs between two versions'
+    print '(2) '+sys.argv[0]+' Rec v11r1 v11r1b #diffs between two branches'
+    print '(2) '+sys.argv[0]+' RecSys v11r1 v11r1b #diffs between two branches, using the container directly'
+    print '(3) '+sys.argv[0]+' Rec v11r1 #diffs between the tags used and the trunk of each package, like cmpPackageWithTrunk'
+    print '(4) '+sys.argv[0]+' Rec v11r1 trunk #the version and trunk are treated as two branches'
+    #print '(5) '+sys.argv[0]+'[-P] Rec v11r2 #start from the project and guess the container'
+    #print '(6) '+sys.argv[0]+'[-rP] Rec v11r2 #start from the project, and recurse to all sub projects'
+    print '--help for more information' 
+
+
+def info():
+    doc='''
+    This script uses modules for connection to the RCS (SVN) provided by lbscripts
+    It is multi-threaded to reduce the waiting time in connection and handshake with the repository.
+    
+    As a release-manager tool it is provided to speed up the consistency checking of a package before release,
+    (3) '''+sys.argv[0]+''' RecSys v11r1 #gives the same functionality as cmpPackageWithTrunk --all,
+        but without the need to getpack anything.
+        benchmarking shows the wall time for the check is reduced from ~250 seconds to ~10 seconds
+    It also provides a means of comparing two branches, which is otherwise quite difficult from the repository.
+    '''
+    print doc
+    
+def checkUsage():
+    if len([m for m in sys.argv if m in ['--help', '-h', '-help', '-H', '--h']]):
+        usage()
+        info()
+        sys.exit(0)
+    if len(sys.argv)<3:
+        print 'Error, not enough arguements'
+        usage()
+        sys.exit(1)
+    if len(sys.argv)>5 or (len(sys.argv)==5 and sys.argv[1] not in ['-rP', '-P']):
+        print 'Error, too many arguements'
+        usage()
+        sys.exit(1)
+    if len(sys.argv)==4 and sys.argv[3]==sys.argv[2] or len(sys.argv)==5 and sys.argv[4]==sys.argv[3]:
+        print 'Error, you gave two identical package tags'
+        usage()
+        sys.exit(1)
+    
+
+    
+
+if __name__=='__main__':
+    
+    #parse arguements
+    checkUsage()
+
+    start=1
+    if sys.argv[1] in ['-P', '-rP']:
+        start=2
+        
+    package=sys.argv[start]
+    version1=sys.argv[start+1]
+    
+    version2=None
+    toppackage=[]
+    if(len(sys.argv)==start+3):
+        version2=sys.argv[start+2]
+    
+    project=False
+    
+    if "-P" in sys.argv or ["-rP"] in sys.argv:
+        project=True
+    else:
+        project=isProject(package,version1)
+    
+    if project:
+        package,version1=translateProject(package,version1)
+        package,version2=translateProject(package,version2)
+        diffProject(package, [version1,version2])
+        package=containerFromProject(package,version1)
+    
+    topversion=[version1,version2]
+        
+    
+    diffContainer(package,topversion)
+
+

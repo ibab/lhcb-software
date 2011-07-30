@@ -1,0 +1,127 @@
+#!/usr/bin/python
+"""
+A script to check if the tags listed in a specific requirements file really exist
+Will also check if the tags are the latest versions or not if --diffs is passed.
+
+"""
+import threading, thread, string, sys, Queue
+
+from LbRelease.SvnTools.Project import *
+from LbRelease.SvnTools.Package import *
+from LbUtils import LockOnPrintThread
+from LbUtils.CMT.Parse import *
+from LbRelease.SvnTools.Package import lbsvn
+
+def usage():
+    print sys.argv[0] + ' <package> [<version>] [--diffs]'
+    print 'checks that all tags which are cmt-used by the package do exist'
+    print 'optional --diffs as the last arguement also prints differences between this tag and the trunk'
+    print 'e.g. '+sys.argv[0]+' RecSys v11r0 --diffs'
+    print 'e.g. '+sys.argv[0]+' Rec v11r0 --diffs'
+
+def checkUsage():
+    if len(sys.argv)>4 or len(sys.argv)<2:
+        usage()
+        sys.exit(1)
+    if ('--help') in sys.argv:
+        usage()
+        sys.exit(0)
+
+
+
+if __name__=='__main__':
+
+    #parse arguements
+    checkUsage()
+    
+    package=sys.argv[1]
+    version='trunk'
+    if len(sys.argv)>2:
+        if sys.argv[2]!='--diffs':
+            version=sys.argv[2]
+    project=False
+    
+    if "-P" in sys.argv:
+        project=True
+    else:
+        project=isProject(package,version)
+    
+    if project:
+        package,version=translateProject(package,version)
+        re=checkProject(package,version)
+        print re
+        if "Error" in re:
+            sys.exit(1)
+        if '--diffs' in sys.argv:
+            diffProject(package, [version,'trunk'])
+        else:
+            tagpath=lbsvn.url(package,version, isProject=True)
+            projcmt=getProjectCmt(tagpath)
+            package_versions=parseReq(projcmt)
+            for pack in package_versions:
+                if '*' in package_versions[pack]:
+                    package_versions[pack]="trunk"
+            #check tags exist which are in the project.cmt
+            checkProject(package, version)
+            correct_version={}
+            packagePool=Queue.Queue()
+            for pack in package_versions:
+                pack,v=translateProject(pack,package_versions[pack])
+                correct_version[pack]=v
+                packagePool.put(pack)
+
+            lock=thread.allocate_lock()
+
+            def method(self, pack):
+                return checkProject(pack, self.package_versions[pack])
+
+            thethreads=[]
+            for i in range(20):
+                t=LockOnPrintThread(packagePool,lock)
+                thethreads.append(t)
+                t.package_versions=correct_version
+                t.method=method
+                t.start()
+
+            #wait for completion
+            for t in thethreads:
+                while not t.done:
+                    pass
+        
+        
+        package=containerFromProject(package,version)
+    
+    
+    #prepare 
+    if not lbsvn.hasVersion(package, version):
+        raise AttributeError, ('You gave a package or version which does not exist')
+    tagpath=lbsvn.url(package,version)
+    requirements=getRequirements(tagpath)
+    
+    #parser requirements file
+    package_versions=parseReq(requirements)
+    package_versions[package]=version
+    for pack in package_versions:
+        if '*' in package_versions[pack]:
+            package_versions[pack]="trunk"
+    
+    #create list of packages as a queue
+    packagePool=Queue.Queue()
+    
+    for package in package_versions:
+        packagePool.put(package)
+    
+    def method(self,package):
+        '''Check if the package exists and optionally print also the diffs with the trunk'''
+        versions=[self.package_versions[package],'trunk']
+        return checkOrDiff(package,versions,self.diffs)
+    
+    #loop over threads, see the class for more details
+    lock=thread.allocate_lock()
+    for i in range(20):
+        t = LockOnPrintThread( packagePool,lock)
+        t.package_versions=package_versions
+        t.diffs=('--diffs' in sys.argv)
+        t.method=method
+        t.start()
+    
