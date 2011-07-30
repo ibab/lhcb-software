@@ -1,3 +1,10 @@
+
+
+! 2011-07-30 - Rob Lambert
+ - Added SvnTools module, with Package and Project sub-modules
+   handle interfacing with SVN to understand the CMT structure
+
+
 2011-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/usedProjects: fixed usedProjects to work for a local installation.
