@@ -4,10 +4,13 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
-! 2011-04-06 -  Roel Aaij
+! 2011-07-30 - Roel Aaij
+ - Fix dictionary
+
+! 2011-04-06 - Roel Aaij
  - Update to configuration function.
 
-! 2011-05-31 -  Roel Aaij
+! 2011-05-31 - Roel Aaij
  - Several updates/fixes
    - Move configuration into a function in FileStager.Configuration named
      configureFileStager
@@ -15,7 +18,7 @@
    - Use boost::uintmax_t for all size related operations
    - Remove compile-time dependency on gfal, lcg_utils and cgsisoap
 
-! 2011-05-22 -  Roel Aaij
+! 2011-05-22 - Roel Aaij
  - Add check for correct file size of existing file in keep file mode.
 
 ! 2011-04-23 - Roel Aaij
