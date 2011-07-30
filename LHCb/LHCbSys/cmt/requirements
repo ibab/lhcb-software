@@ -132,6 +132,7 @@ use TsaKernel             v3r6    Tf      # Matt Needham
 use CondDBEntityResolver  v5r3    Tools   # Marco Clemencic
 use CondDBUI              v3r10   Tools   # Marco Clemencic
 use XmlTools              v6r5    Tools   # Marco Clemencic
+use FileStager            v1r2    Tools   # Roel Aaij
 
 use TrackInterfaces       v4r19   Tr      # Matt Needham
 use TrackKernel           v1r7    Tr      # Wouter Hulsbergen
