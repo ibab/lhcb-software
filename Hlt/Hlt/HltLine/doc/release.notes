@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2011-07-30 - Roel Aaij
+ - Add DecodeL0FullCALO to HltDecodeRaw.py
+
 ! 2011-07-06 - Gerhard Raven
  - add check for multiple algorithms with the same output location
  
