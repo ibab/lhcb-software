@@ -1,0 +1,185 @@
+!-----------------------------------------------------------------------------
+! Package     : FileStager
+! Responsible : Roel Aaij
+! Purpose     : Create local copies of files from the grid at runtime.
+!-----------------------------------------------------------------------------
+
+! 2011-04-06 -  Roel Aaij
+ - Update to configuration function.
+
+! 2011-05-31 -  Roel Aaij
+ - Several updates/fixes
+   - Move configuration into a function in FileStager.Configuration named
+     configureFileStager
+   - Remove old configuration options
+   - Use boost::uintmax_t for all size related operations
+   - Remove compile-time dependency on gfal, lcg_utils and cgsisoap
+
+! 2011-05-22 -  Roel Aaij
+ - Add check for correct file size of existing file in keep file mode.
+
+! 2011-04-23 - Roel Aaij
+ - Fixes for new boost version
+
+! 2011-01-28 - Roel Aaij
+ - Add a check to keep files before we kill ourselves...
+
+! 2011-01-26 - Roel Aaij
+ - Fix and update for KeepFiles
+
+! 2011-01-26 - Roel Aaij
+ - Added simple KeepFiles functionality to the FileStager,
+   use with care. Multiple instances on one machine with
+   KeepFiles is not supported
+
+! 2010-11-18 - Roel Aaij
+ - Fixes and additions to FileStagerSvc
+
+! 2010-09-28 - Roel Aaij
+ - Fixed castor pfn creation
+
+! 2010-09-24 - Roel Aaij
+ - Added quotes to the command string and replaced castor: by rfio: to make rfstat work
+
+! 2010-08-04 - Roel Aaij
+ - Fixes to rfstat and pfns starting with root:
+
+! 2010-07-24 - Roel Aaij
+ - Removed usage of rfio_stat function. The rfstat command is now
+   called instead.
+ - Although using the function is a more elegant solution and requires
+   fewer lines, getting it to compile and link the correct libraries
+   is very nontrivial. There are problems with --as-needed having to be
+   removed and being needed to make gfal_stat work....
+ - Trying to fix problems with gfal_stat call, probably due to wrong
+   linkage due to removal of --as-needed
+ - Updated requirements to add castor include dir to cppflags
+
+! 2010-07-22 - Roel Aaij
+ - Use rfio_stat for files on castor
+
+! 2010-07-21 - Roel Aaij
+ - Use a signal to test if the main PID is running instead of
+   checking /proc/PID
+
+! 2010-07-21 - Roel Aaij
+ - Added handling of PFNs starting with rfio: and castor:
+
+! 2010-07-14 - Roel Aaij
+ - Try to copy files several times.
+    
+ - To be done: refactor retry staging after failure because
+   of overlaps with more attempts to copy
+
+! 2010-06-22 - Roel Aaij
+ - Update to remove files when something has gone wrong
+
+! 2010-06-21 - Roel Aaij
+ - Bugfix for descriptor parsing and bhadron lfns + catalog at Cern
+ - Fix a regression in the regex
+ - Output "remote" filename when gfal_stat has failed.
+
+! 2010-06-19 - Roel Aaij
+ - PFN parsing fixes
+
+! 2010-06-18 - Roel Aaij
+ - Fix manipulation of pfns for castor case
+ - = added to regex to parse castor turls
+ - Adapted changes to personal coding style
+
+! 2010-06-18 - Gerhard Raven
+ - Use boost::iostreams on top of popen
+   cosmetic changes to FileStager.py
+
+! 2010-06-18 - Roel Aaij
+ - Fixed reference leak reported by Gerhard
+ - Another attempt to properly disconnect files
+
+! 2010-06-16 - Roel Aaij
+ - Don't fail if we cannot make a remote descriptor
+
+! 2010-06-15 - Roel Aaij
+ - Disabled disconnecting files
+ - Updated regex to accept : in the descriptor
+
+! 2010-06-14 - Roel Aaij
+ - Update to disconnect messages
+
+! 2010-06-13 - Roel Aaij
+ - Change verbosity from warning to debug because if fires
+   from output files.
+ - Fix for local staging
+ - More debug output
+ - Implement proper disconnecting of files when they are removed
+ - Update message level to verbose for some output
+
+ - Attempt to fix bug:
+   - If the stager had staged more than 1 file ahead and was
+     waiting for a close when a local filename was requested,
+     previous files would not be properly deleted and the
+     stage thread never notified, resulting in an infinite
+     wait.
+
+! 2010-06-12 - Roel Aaij
+ - Looks like I finally got all the test cases to work!
+ - Setup testcases for LFN, LFN with catalog, SURL and raw.
+   bugfixes for some cases.
+
+! 2010-06-11 - Roel Aaij
+ - More attempted bug fix
+ - Attempted bug fix for double open
+ - Fix to work around PoolDbDataConnection exception. It is
+   slightly hacky.
+ - Added refactored garbage collector process
+
+! 2010-06-09 - Roel Aaij
+ - Removed useless files
+ - The FileCatalog is now used to stage from the PFN if
+   an LFN is in the catalog.
+ - Staging LFN's also works.
+ - Better error handling.
+ - descriptors are parsed to make sure the right copy command is called
+    - rfio for castor
+    - dccp for {gsi}dcap
+    - cp for file: if an option is set
+    - lcg-cp for lfns or guids
+ - If the copy fails, the original descriptor is used.
+ - Retry staging after failure is untested. Threading issues might make
+   the gfal_stat commands unstable. This only works in the beginning,
+   because the database thread is not running yet.
+
+! 2010-06-07 - Roel Aaij
+ - Made changes to try and work around gfal threadsafety issues
+
+! 2010-06-06 - Roel Aaij
+ - Looks like it works!
+ - First commit of my version, compiles, but link errors to lcg_cpx
+
+! 2010-05-26 - Roel Aaij
+ - Massive repository cleanup
+ - Indentation updated
+
+! 2010-05-20 - Daniela Remenska
+ - Merged contents with Gerhard's changes
+
+! 2010-05-11 - Gerhard Raven
+ - Various changed, updates and fixes for use in ganga
+
+! 2010-05-10 - Daniela Remenska
+ - Removed Form(..) usage from ROOT library
+
+! 2010-04-21 - Daniela Remenska
+ - Some minor modifications. LinkExtractorTool should be stateless.
+
+! 2010-04-13 - Daniela Remenska
+ - Included garbage collector as a separate application
+ - Minor updates + separate ETC link extraction tool + garbage collector
+
+! 2010-04-09 - Daniela Remenska
+ - Files that were missing + StagerChronoSvc to monitor config/run phases separately
+ - StagedDataStreamTool not needed, instead, a local reference is passed
+   to StagedIODataManager on the fly
+ - Added GaudiUtils
+
+! 2010-03-22 - Roel Aaij
+ - Initial commit

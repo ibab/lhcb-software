@@ -1,0 +1,54 @@
+package           FileStager
+version           v1r2
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc dict src python FileStager 
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package         v1r*    Hat
+use     GaudiKernel      v*
+use     GaudiSvc         v*
+use     GaudiUtils       v*
+
+apply_pattern install_more_includes more=FileStager
+apply_pattern application_path
+
+## applications
+application           garbage              "../src/gc/garbage.cpp"
+macro_append garbage_use_linkopts "${Boost_linkopts_program_options}"
+
+macro_append FileStager_cppflags "-Wno-missing-field-initializers"
+
+macro_append Boost_linkopts " $(Boost_linkopts_iostreams) "
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          FileStager    ../src/Lib/*.cpp
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=FileStager
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                       \
+                  dictionary=FileStager                                   \
+                  headerfiles=$(FILESTAGERROOT)/dict/FileStagerDict.h     \
+                  selectionfile=$(FILESTAGERROOT)/dict/FileStagerDict.xml \
+                  options="-U__MINGW32__"
+
+#============================================================================
+# Python modules
+#============================================================================
+apply_pattern install_python_modules
+
+#============================================================================
+# Private cmt modules
+#============================================================================
+private
+use Boost v* LCG_Interfaces
+end_private
