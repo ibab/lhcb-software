@@ -27,9 +27,9 @@ std::string Kali::kalify ( const std::string& input ,
   if ( std::string::npos != input.find ( kali  ) ) { return input ; }
   //
   if ( 0 == input.find ( "/Event/" ) ) 
-  { return "/Event/" + kali + input.substr( 7 ) ; }
+  { return "/Event/" + kali + "/" + input.substr( 7 ) ; }
   //
-  return "/Event/" + kali + input ;
+  return "/Event/" + kali + "/" + input ;
 }
 // ============================================================================
 // The END 

@@ -461,14 +461,19 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         The configuration of femto-DST
         """
         from Gaudi.Configuration import OutputStream
-
-        return OutputStream (
-            'FMDST', 
-            ItemList =  [
+        
+        items =  [
             # general 
             "/Event#1"                 ,
             "/Event/DAQ#1"             ,
             "/Event/DAQ/ODIN#1"        ,
+            # event header for time decoder
+            "/Event/Rec/Header#1"      ,
+            ## GEC counters 
+            "/Event/Counters#1"        , 
+            "/Event/Counters/Kali#1"
+            ]
+        calos = [
             # calorimeter 
             "/Event/Raw#1"             , 
             "/Event/Raw/Spd#1"         ,
@@ -478,21 +483,28 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             "/Event/Raw/Ecal#1"        ,
             "/Event/Raw/Ecal/Digits#1" ,
             "/Event/Raw/Hcal#1"        ,
-            "/Event/Raw/Hcal/Digits#1" ,
+            "/Event/Raw/Hcal/Digits#1" 
+            ]
+        tracks = [
             # tracks, e.g. for electrons  
             "/Event/Rec#1"             ,
             "/Event/Rec/Track#1"       ,
             "/Event/Rec/Track/Best#1"  ,
-            # event header for time decoder
-            "/Event/Rec/Header#1"      ,
-            ## GEC counters 
-            "/Event/Counters#1"        , 
-            "/Event/Counters/Kali#1"   
-            ] ,
+            ] 
+
+        if not self.getProp ( 'DestroyTES' ) :
+            calos  = [ i.replace('/Event/Raw', '/Event/Kali/Raw') for i in calos  ]
+            tracks = [ i.replace('/Event/Rec', '/Event/Kali/Rec') for i in tracks ]
+
+        item_list  = items + calos + tracks 
+        
+        return OutputStream (
+            'FMDST', 
+            ItemList = item_list ,
             # 
             Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')
             , AcceptAlgs  = self.getProp ( 'DestroyList' )
-            , RequireAlgs =              [ 'Destroyer' ] 
+            , RequireAlgs =              [ 'Destroyer'   ] 
             )
 
                 
@@ -579,7 +591,9 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         
         if not self.getProp ( 'FirstPass') :
             from Configurables import Kali__MakeDir
-            algs += [ Kali__MakeDir( 'DirMaker' ) ]
+            algs += [ Kali__MakeDir  ( 'DirMaker' ) ]
+            from Configurables import Kali__DataMove
+            algs += [ Kali__DataMove ( 'DataMove' ) ]
             
         algs += [ kaliSeq ]
 
@@ -588,9 +602,12 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         
         ## 7. Destroy TES if needed 
         if self.getProp ( 'DestroyTES' ) or self.getProp ( 'DestroyList' ) :
-            from Configurables import Kali__Destroyer
+            from Configurables import Kali__Destroyer, Kali__Cloner
             tesList = [ 'Phys/' + loc + '/Particles' for loc in self.getProp('DestroyList') ]
-            destroyer = Kali__Destroyer (
+
+            
+            Processor = Kali__Destroyer if self.getProp ( 'DestroyTES' ) else Kali__Cloner 
+            destroyer = Processor (
                 'Destroyer'                             ,
                 Particles = tesList                     , 
                 Destroy   = self.getProp('DestroyTES' )  
@@ -634,9 +651,9 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             algs += [ destroyer ]
             
         if self.getProp( 'DestroyTES' ) :
-            _log.warning ( "KaliPi0: TES containers will be destroyed" )
+            _log.warning ( "KaliPi0: TES containers will be destroyed " )
         else :
-            _log.warning ( "KaliPi0: TES containers will be preserved" )        
+            _log.warning ( "KaliPi0: TES containers will be copied    " )        
             
 
         from Configurables import DaVinci
@@ -669,7 +686,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             Lumi            = False                         ,
             EnableUnpack    = unPack 
             ) 
-
+        
         ## 7. The configuration of femtoDST
         fmDST = self.fmDst()
         from Gaudi.Configuration import ApplicationMgr 

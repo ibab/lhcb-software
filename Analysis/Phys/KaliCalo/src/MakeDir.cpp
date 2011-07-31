@@ -27,7 +27,15 @@ namespace Kali
       //
       for ( std::vector<std::string>::const_iterator item = 
               m_locations.begin() ; m_locations.end() != item ; ++item ) 
-      { put ( new DataObject() , *item ) ; }
+      {
+//         StatusCode sc = evtSvc()->unregisterObject ( *item ) ;
+//         if ( sc.isFailure() ) 
+//         {
+//           Warning ( "Unable to unreguster: " + (*item) , sc ) ;
+//           continue ;
+//         }
+        put ( new DataObject() , *item ) ; 
+      }
       //
       return StatusCode::SUCCESS ;
     } 
@@ -44,8 +52,14 @@ namespace Kali
       , m_locations () 
     {
       //
-      m_locations.push_back ( "Rec/ProtoP" ) ;
-      m_locations.push_back ( "Rec/Calo"   ) ;
+      m_locations.push_back ( "/Event/Rec/ProtoP" ) ;
+      m_locations.push_back ( "/Event/Rec/Calo"   ) ;
+      m_locations.push_back ( "/Event/Rec/Track"  ) ;
+      m_locations.push_back ( "/Event/Raw"        ) ;
+      m_locations.push_back ( "/Event/Raw/Spd"    ) ;
+      m_locations.push_back ( "/Event/Raw/Prs"    ) ;
+      m_locations.push_back ( "/Event/Raw/Ecal"   ) ;
+      m_locations.push_back ( "/Event/Raw/HCal"   ) ;
       //
       declareProperty 
         ( "Locations" , 

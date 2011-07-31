@@ -55,17 +55,23 @@ import KaliCalo.ZipShelve        as ZipShelve
 ##    )
 
 kali = secondPass (
+    ## 
+    DestroyTES = False , 
     ## ``Physics''
     PtGamma          = 250 * MeV ,
     Pi0Cut           = "PT > 550 * MeV",
     ## IO 
-    NTuple           = "KaliPi0_Tuples_2k+10.root" , 
-    FemtoDST         = "KaliPi0_2k+10.fmDST"       ,
+    NTuple           = "KaliPi0_Tuples_2k+11.root" , 
+    FemtoDST         = "KaliPi0_2k+11.fmDST"       ,
     ## general 
     DataType         = '2010',
     PrintFreq        =  1000 ,
     EvtMax           =  -1
     )
+
+from Configurables import CondDB
+CondDB ( UseLatestTags = ['2011'] )
+
 
 # =============================================================================
 ## the actual job steering 
@@ -90,13 +96,16 @@ if '__main__' == __name__ :
     
     ## === OR with test fmDSTs
     evtSel = gaudi.evtSel()
-    castor   =  'castor:/castor/cern.ch/user/d/dsavrina/1759/'
-    pattern  =  '%d/outputdata/KaliPi0_2010test.fmDST'
-    evtSel.open ( [ castor+pattern%i for i in range(0,3) ] )
 
+    #castor   =  'castor:/castor/cern.ch/grid'
+    #pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
+    #evtSel.open ( [ castor+pattern%i for i in range(1,10) ] )
 
+    evtSel.open ( 'KaliPi0_2k+10.fmDST_1')
+    
     ## run 100 events
     gaudi.run(-1)
+
     
     from   KaliCalo.FitUtils import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 
