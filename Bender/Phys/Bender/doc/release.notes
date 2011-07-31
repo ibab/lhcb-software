@@ -24,6 +24,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-07-31 - Vanya Belyaev
+
+ - remove LoKiTrigger 
+
 ! 2011-07-30 - Vanya Belyaev
 
  - fix the default shell for scripts to /bin/sh 

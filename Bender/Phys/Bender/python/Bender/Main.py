@@ -80,9 +80,12 @@ cpp.Gaudi.createApplicationMgr
 from LoKiCore.decorators          import *
 from LoKiPhys.decorators          import *
 from LoKiArrayFunctors.decorators import *
-from LoKiTrigger.decorators       import *
 from LoKiAlgo.decorators          import *
 from LoKiCore.functions           import *
+
+#from LoKiTrigger.decorators        import *
+#from LoKiTracks.decorators         import *
+#from LoKiProtoParticles.decorators import *
 
 # =============================================================================
 from Gaudi.Configuration import importOptions
