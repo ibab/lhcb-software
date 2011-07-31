@@ -139,11 +139,11 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,trackChi2DOF = config['TrackChi2DOF']
       )
 
-    _filter = None
+    _GECfilter = None
 
     if config['ApplyGECs']:
       _filter = ""
-       
+    
       nLong = config["MaxLongTracks"]
       if nLong is not None:
         if _filter != "":
@@ -167,15 +167,22 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
         if _filter != "":
           _filter+=" & "
         _filter += "( recSummaryTrack(LHCb.RecSummary.nVeloTracks,TrVELO) < %s )" %nVELO
-      if _filter=="": _filter=None # no filters
 
+
+      if _filter != "":
+        _GECfilter = {'Code' : _filter,
+                      'Preambulo' : ["from LoKiTracks.decorators import *",
+                                     'from LoKiCore.functions    import *']
+                      }
+        
+        
     self.line_tagged_d02hhhh = StrippingLine(
       moduleName+"Line"
       ,prescale=config['Prescale']
       ,postscale=config['Postscale']
       ,selection=selPromptDstar
       ,checkPV=config['CheckPV']
-      ,FILTER=_filter)
+      ,FILTER=_GECfilter)
     self.registerLine(self.line_tagged_d02hhhh)
     
 def makeD02hhhh (

@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-31 - Benoit Viaud
+ - Updated StrippingDstarPromptWithD02HHHH.py 
+ - Turned GEC filter into a dict. of 
+   {"Code":"..","Preambulo":["from LoKiTracks.decorators import *"]}
+   so that RecSummary-related changes work (see 2011-07-26). 
+
 ! 2011-07-29 - Jibo He
  - Added StrippingBeauty2Charm to __init__.py  
 
