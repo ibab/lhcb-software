@@ -4,6 +4,10 @@
 ! Purpose     : Produce an HTML file every day with a summary of the run
 !-----------------------------------------------------------------------------
 
+! 2011-07-31 - Olivier Callot
+ - Back to old PbDb API. 
+ - Argument is used to prefix the file name, for several reports at different time.
+
 ! 2011-06-16 - Olivier Callot
  - use the new api 'activity' of the problem database.
 

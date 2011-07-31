@@ -20,7 +20,7 @@ public:
 
   virtual ~DailyReport( ); ///< Destructor
 
-  void build( int argc );
+  void build( int argc, char** argv );
   
 protected:
 

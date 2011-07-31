@@ -29,7 +29,7 @@ DailyReport::~DailyReport() {}
 //=========================================================================
 //
 //=========================================================================
-void DailyReport::build ( int argc ) {
+void DailyReport::build ( int argc, char** argv ) {
 
   std::cout << "Argc = " << argc << std::endl;
 
@@ -67,7 +67,7 @@ void DailyReport::build ( int argc ) {
   //== Make a dummy file for the 'tomorrow' link
   std::string path = "/group/online/www/DailyReport/";
 
-  if ( 1 < argc ) path = path + "test-";
+  if ( 1 < argc ) path = path + std::string( argv[1]) + "-";
 
   std::string nextFileName = path + tomorrow + ".html";
 
@@ -198,7 +198,8 @@ void DailyReport::listOnePiquet ( std::string name ) {
   fprintf( m_web, "<H3>%s : %s </H3>", name.c_str(), piquet.c_str() );
 
   std::vector< std::vector< std::string > > problems;
-  ProblemDB pbdb( "devweb01.lbdaq.cern.ch", "8000" ); //"lbproblems.cern.ch" );
+  //ProblemDB pbdb( "devweb01.lbdaq.cern.ch", "8000" ); //"lbproblems.cern.ch" );
+  ProblemDB pbdb( "lbproblems.cern.ch" );
   std::vector< std::string > histAlarms;
 
   if ( name == "VELO Piquet" ) {
@@ -383,10 +384,10 @@ char* DailyReport::html( std::string src ) {
     else if ( tmp == '>' ) out = strcpy( out, "&gt;" ) + 4;
     else if ( tmp == '&' ) out = strcpy( out, "&amp;" ) + 5;
     else if ( tmp == 'h' ) {
-      std::cout << "Test link " << *in << *(in+1) << *(in+2) << *(in+3) << *(in+4) << *(in+5) << std::endl;
+      //std::cout << "Test link " << *in << *(in+1) << *(in+2) << *(in+3) << *(in+4) << *(in+5) << std::endl;
       if ( 0 == strncmp( in, "ttp://",  6 ) ||
            0 == strncmp( in, "ttps://", 7 )  ) { /// link!
-        std::cout << "Found link" << in << std::endl;
+        std::cout << "Found link h" << in << std::endl;
         size_t len = strcspn( in, " ,;)\n" );
         std::string link( in-1, in+len );
         link = "<a href=""" + link + ">"+link+"</a>";
@@ -415,9 +416,9 @@ void DailyReport::extractFromElog ( std::string logbook, std::string system, boo
 }
 //=============================================================================
 
-int main(int argc, char** ) {
+int main(int argc, char** argv) {
   DailyReport report;
-  report.build( argc );
+  report.build( argc, argv );
   return 1;
 }
 //=============================================================================

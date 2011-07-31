@@ -85,7 +85,22 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
     return ;
   }
 
+  /*
   webStream << "GET /api/activity/  HTTP/1.0\r\n"
+            << "Host:" << m_address << "\r\n"
+            << "\r\n" << std::flush ;
+  */
+  std::cout << "** get problems from database **" << std::endl;
+  
+  webStream << "GET /api/search/?_inline=True&system_visible=True" ;
+
+  // Take date of tomorrow to have list of opened problems
+  boost::posix_time::ptime now =
+    boost::posix_time::second_clock::local_time() ;
+  boost::gregorian::date day = now.date() + boost::gregorian::date_duration( 1 ) ;
+
+  webStream << "&open_or_closed_gte=" << boost::gregorian::to_iso_extended_string( day )
+            << " HTTP/1.0\r\n"
             << "Host:" << m_address << "\r\n"
             << "\r\n" << std::flush ;
 
@@ -115,6 +130,8 @@ void ProblemDB::getListOfProblems( std::vector< std::vector< std::string > > &pr
       // Now parse each line (there should be actually only one line
       // in the server answer, otherwise it is over-written
       std::istringstream is( "{\"problem\":" + line + "}" ) ;
+
+      std::cout << line << std::endl;
 
       try {
         boost::property_tree::json_parser::read_json( is , problem_tree ) ;

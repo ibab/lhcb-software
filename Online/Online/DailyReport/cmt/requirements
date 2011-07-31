@@ -39,6 +39,6 @@ macro_append Boost_linkopts ' $(Boost_linkopts_system) '
 macro_append Boost_linkopts ' $(Boost_linkopts_regex) '
 # Remove very annoying boost warnings
 private
-macro_append presenter_cppflags "-isystem $(Boost_home)/include/boost-$(Boost_file_version)" \
+macro_append DailyReport_cppflags "-isystem $(Boost_home)/include/boost-$(Boost_file_version)" \
   WIN32 " /wd4503 /wd4800 -D_WIN32_WINNT=0x0501 "
 
