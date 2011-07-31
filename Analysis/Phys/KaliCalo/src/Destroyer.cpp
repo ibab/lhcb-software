@@ -4,31 +4,7 @@
 // ============================================================================
 // STD & STL 
 // ============================================================================
-#include <set>
-// ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/AlgFactory.h"
-// ============================================================================
-// GaudiAlg 
-// ============================================================================
-#include "GaudiAlg/GaudiAlgorithm.h"
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/CaloHypo.h"
-#include "Event/CaloCluster.h"
-#include "Event/CaloDigit.h"
-// ============================================================================
-#include "Event/CaloDataFunctor.h"
-// ============================================================================
-#include "Event/ProtoParticle.h"
-// ============================================================================
-// CaloInterfaces
-// ============================================================================
-#include "CaloInterfaces/ICaloDigits4Track.h"
-// ============================================================================
-// Relations 
+// Relations
 // ============================================================================
 #include "Relations/IRelationWeighted2D.h"
 // ============================================================================
@@ -42,111 +18,21 @@
 #include "LoKi/Objects.h"
 #include "LoKi/Photons.h"
 // ============================================================================
-namespace Kali 
-{
-  // ==========================================================================
-  /** @class Destroyer 
-   *  TES destroyer for Kali
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   */
-  class Destroyer : public GaudiAlgorithm
-  {
-    // ========================================================================
-    /// the friend factory for instantiation
-    friend class AlgFactory<Kali::Destroyer> ;            // the friend factory
-    // ========================================================================
-  public:
-    // ========================================================================
-    /// initialize 
-    virtual StatusCode initialize () ;
-    /// the only one essential method 
-    virtual StatusCode execute    () ;
-    /// finalize 
-    virtual StatusCode finalize   () ;
-    // ========================================================================
-  protected:
-    // ========================================================================
-    /** standard destructor 
-     *  @param name (INPUT) the algorithm instance name 
-     *  @param pSvc (INPUT) the pointer to Service Locator 
-     */
-    Destroyer ( const std::string& name ,     //    the algorithm instance name 
-                ISvcLocator*       pSvc )     // the pointer to Service Locator 
-      : GaudiAlgorithm( name , pSvc ) 
-      , m_particles ()
-      , m_destroy   ( true )
-      , m_toolNames ()
-      , m_tools ()
-      , m_bremNames ()
-      , m_brems ()  
-    {
-      //
-      declareProperty 
-        ( "Particles" , 
-          m_particles , 
-          "The list of input TES locations for particles" );
-      declareProperty
-        ( "Destroy" ,
-          m_destroy , 
-          "Destroy the content of TES containers" ) ->
-        declareUpdateHandler(&Destroyer::updateDestroy, this ) ;
-      //
-      m_toolNames.push_back ( "SpdEnergyForTrack/SpdDigits"   ) ;
-      m_toolNames.push_back ( "PrsEnergyForTrack/PrsDigits"   ) ;
-      m_toolNames.push_back ( "EcalEnergyForTrack/EcalDigits" ) ;
-      m_toolNames.push_back ( "HcalEnergyForTrack/HcalDigits" ) ;
-      declareProperty 
-        ( "Digits4Track" , 
-          m_toolNames ,
-          "Tools to collect the Calo-digits for the track" );
-      m_bremNames.push_back ( "SpdEnergyForTrack/BremSpdDigits"   ) ;
-      m_bremNames.push_back ( "PrsEnergyForTrack/BremPrsDigits"   ) ;
-      m_bremNames.push_back ( "EcalEnergyForTrack/BremEcalDigits" ) ;
-      declareProperty 
-        ( "BremDigits4Track" , 
-          m_bremNames ,
-          "Tools to collect the Brem-digits for the track" );
-      // ======================================================================
-    }
-    /// virtual & protected destructor 
-    virtual ~Destroyer() {}                   // virtual & protected destructor 
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constructor is disabled 
-    Destroyer ();                        // the default constructor is disabled 
-    /// the copy constructor is disabled 
-    Destroyer ( const Destroyer& );        // the cpoy  constructor is disabled     
-    /// the assignement operator is disabled 
-    Destroyer& operator=( const Destroyer& );    // the assignement is disabled
-    // ========================================================================
-  public:
-    // ========================================================================
-    /// Update handler for the property
-    void updateDestroy ( Property& /* p */ ) ;
-    // ========================================================================
-  private:
-    // ========================================================================
-    typedef std::vector<std::string> Locations ;
-    /// the list of input locations for particles 
-    Locations m_particles ;        // the list of input locations for particles 
-    /// flag to actually destroy TES 
-    bool      m_destroy   ;                    //  flag to actually destroy TES 
-    // ========================================================================
-    typedef std::vector<std::string>              Names ;
-    typedef std::vector<const ICaloDigits4Track*> Tools ;
-    /// the list of tools to accumulate the digits  
-    Names m_toolNames ;           // the list of tools to accumulate the digits  
-    /// the list of tools to accumulate the digits  
-    Tools m_tools     ;           // the list of tools to accumulate the digits  
-    /// tools for brem-digits collection 
-    Names m_bremNames ;                     // tools for brem-digits collection 
-    /// tools for brem-digits collection 
-    Tools m_brems     ;                     // tools for brem-digits collection 
-    // ========================================================================
-  };
-  // ==========================================================================
-} //                                                      end of namespace Kali
+// Local/Kali
+// ============================================================================
+#include "Destroyer.h"
+// ============================================================================
+/** @file 
+ *  Implementation file for class Kali::Destroyer
+ *
+ *  @see Kali::Destroyer 
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date xxxx-xx-xx
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
 // ============================================================================
 // Update handler for the property
 // ============================================================================
@@ -196,11 +82,15 @@ StatusCode Kali::Destroyer::initialize ()
   return StatusCode::SUCCESS ;
 }    
 // ============================================================================
-// the only one essential method 
+// collect all ``interesting'' digits & tracks 
 // ============================================================================
-StatusCode Kali::Destroyer::execute () 
+StatusCode Kali::Destroyer::collect 
+( LHCb::CaloDigit::Set&    digits , 
+  Kali::Destroyer::TRACKS& tracks ) const 
 {
-  
+  //
+  // input particles:
+  //
   LHCb::Particle::ConstVector      particles ;
   
   for ( Locations::const_iterator iparticle = m_particles.begin() ; 
@@ -219,14 +109,9 @@ StatusCode Kali::Destroyer::execute ()
   
   // ==========================================================================
   counter ( "# particles" ) += particles.size() ;
-  
   if  ( particles.empty() ) 
-  {
-    setFilterPassed ( false ) ;
-    return Warning ( "No Input particles has been found", StatusCode::SUCCESS ) ;
-  }
-  
-  setFilterPassed ( true ) ;
+  { return Warning ( "No Input particles has been found", StatusCode::SUCCESS ) ; }
+  // 
   
   // get the protoparticles 
   LHCb::ProtoParticle::ConstVector protos ;
@@ -238,12 +123,14 @@ StatusCode Kali::Destroyer::execute ()
   counter ("# protos" ) += protos . size() ;
   
   // get the tracks:
-  LHCb::Track::ConstVector tracks ;
+  LHCb::Track::ConstVector tracks_ ;
   LoKi::Extract::tracks_if 
     ( particles.begin() , 
       particles.end  () , 
-      std::back_inserter ( tracks ) , 
+      std::back_inserter ( tracks_ ) , 
       LoKi::Objects::_ALL_ ) ;
+  //
+  tracks.insert ( tracks_.begin() , tracks_.end() ) ;
   counter ("# tracks" ) += tracks . size() ;
   
   // collect all hypos 
@@ -261,8 +148,6 @@ StatusCode Kali::Destroyer::execute ()
   counter ("# hypos"  ) += hypos  . size() ;
   
   // collect all digits: 
-  LHCb::CaloDigit::Set digits ;
-  
   for ( Hypos::const_iterator ihypo = hypos.begin() ; 
         hypos.end() != ihypo ; ++ihypo ) 
   {
@@ -293,7 +178,7 @@ StatusCode Kali::Destroyer::execute ()
   // 1. for tracks, pickup the digits 
   LHCb::CaloDigit::Set trdigits ;
   
-  for ( LHCb::Track::ConstVector::const_iterator itrack = tracks.begin() ; 
+  for ( TRACKS::iterator itrack = tracks.begin() ; 
         tracks.end() != itrack ; ++itrack ) 
   {
     const LHCb::Track* track = *itrack ;
@@ -346,7 +231,7 @@ StatusCode Kali::Destroyer::execute ()
         LoKi::Photons::getDigits ( hypo , trdigits ) ;
       }
     }
-    // 1.e collect digits from "the nearest" electon hypo 
+    // 1e. collect digits from "the nearest" electon hypo 
     if ( 0 != elTable ) 
     {
       LHCb::Calo2Track::ITrHypoTable::Range r = elTable->relations ( track ) ;
@@ -366,8 +251,17 @@ StatusCode Kali::Destroyer::execute ()
   
   counter ( "#alldigit "      ) += digits.size() ;
   
-  if ( !m_destroy ) { return StatusCode::SUCCESS ; }
-
+  return StatusCode::SUCCESS ;
+  
+}
+// ============================================================================
+// destroy all ``interesting'' digits & tracks 
+// ============================================================================
+StatusCode Kali::Destroyer::destroy
+( LHCb::CaloDigit::Set&    digits , 
+  Kali::Destroyer::TRACKS& tracks ) const 
+{
+  
   // ==========================================================================
   // destroy tracks 
   // ==========================================================================
@@ -383,16 +277,16 @@ StatusCode Kali::Destroyer::execute ()
   {
     const LHCb::Track* track = *ifind ;
     if ( 0 == track ) { continue ; }
-    LHCb::Track::ConstVector::const_iterator itrack = 
-      std::find ( tracks.begin() , tracks.end() , track ) ;
-    if ( tracks.end() != itrack ) { ++ifind ; continue ; }
+    // 
+    if ( tracks.end() != tracks.find( track ) )
+    { ++ifind ; continue ; }                               // CONTINUE 
     //
     ttracks->erase ( *ifind ) ;
     //
     ifind = ttracks->begin() ;
   }
   const std::size_t trk2 = ttracks->size() ;
-  
+  //
   counter ( "#trk 1"        ) +=              trk1 ;
   counter ( "#trk 2"        ) +=              trk2 ;
   counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ;
@@ -413,7 +307,7 @@ StatusCode Kali::Destroyer::execute ()
   digs.push_back ( d3 ) ;
   Digits* d4 = get<Digits> ( LHCb::CaloDigitLocation::Hcal ) ;
   digs.push_back ( d4 ) ;
-
+  
   size_t size1 = 0 ;
   size_t size2 = 0 ;
   
@@ -467,6 +361,128 @@ StatusCode Kali::Destroyer::execute ()
   counter ( "#digs Ecal"    ) += d3 -> size() ;
   counter ( "#digs Hcal"    ) += d4 -> size() ;
 
+  return StatusCode::SUCCESS ;        
+}
+// ============================================================================
+// copy all ``interesting'' digits  
+// ============================================================================
+StatusCode Kali::Destroyer::copy
+( LHCb::CaloDigit::Set&    digits , 
+  Kali::Destroyer::TRACKS& tracks ) const 
+{
+  // ==========================================================================
+  // copy tracks 
+  // ==========================================================================
+  LHCb::Track::Container* otracks = 
+    get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
+  //
+  LHCb::Track::Container* ntracks = new LHCb::Track::Container() ;
+  put ( ntracks ,        kalify ( LHCb::TrackLocation::Default ) ) ;
+  //
+  for ( TRACKS::iterator itrack = tracks.begin() ;
+        tracks.end() != itrack ; ++itrack ) 
+  {
+    const LHCb::Track* track = *itrack ;
+    if ( 0       == track           ) { continue ; }
+    if ( otracks != track->parent() ) { continue ; }
+    //
+    ntracks->insert ( track->cloneWithKey() ) ; // CLONE WITH KEY !!!
+  }
+  //
+  const std::size_t trk1 = otracks->size() ;
+  const std::size_t trk2 = ntracks->size() ;
+  //
+  counter ( "#trk 1"        ) +=              trk1 ;
+  counter ( "#trk 2"        ) +=              trk2 ;
+  counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ;
+  
+  // ==========================================================================
+  // copy digits 
+  // ==========================================================================
+  
+  typedef LHCb::CaloDigit::Container          Digits ;
+  
+  typedef std::map<std::string,const Digits*> DIGITS ;
+  
+  DIGITS odigs ;
+  
+  Digits* d1 = get<Digits> ( LHCb::CaloDigitLocation::Spd  ) ;
+  odigs [ LHCb::CaloDigitLocation::Spd  ] =  d1  ;
+  Digits* d2 = get<Digits> ( LHCb::CaloDigitLocation::Prs  ) ;
+  odigs [ LHCb::CaloDigitLocation::Prs  ] =  d2  ;
+  Digits* d3 = get<Digits> ( LHCb::CaloDigitLocation::Ecal ) ;
+  odigs [ LHCb::CaloDigitLocation::Ecal ] =  d3  ;
+  Digits* d4 = get<Digits> ( LHCb::CaloDigitLocation::Hcal ) ;
+  odigs [ LHCb::CaloDigitLocation::Hcal ] =  d4  ;
+
+  
+  size_t size1 = 0 ;
+  size_t size2 = 0 ;
+  
+  for ( DIGITS::const_iterator ic = odigs.begin() ; odigs.end() != ic ; ++ic ) 
+  {
+    const std::string& loc  = ic->first   ;
+    const Digits*      digs = ic->second  ;
+    if ( 0 == digs ) { continue ; }
+    //
+    Digits* ndigs = new Digits()   ;   // create new container 
+    put ( ndigs , kalify ( loc ) ) ;   // register it in TES 
+    //
+    size1 += digs->size() ;
+    //
+    for ( LHCb::CaloDigit::Set::iterator idig = 
+            digits.begin() ; digits.end() != idig ;  ++idig ) 
+    {
+      const LHCb::CaloDigit* dig = *idig ;
+      if ( 0    == dig           ) { continue ; }
+      if ( digs != dig->parent() ) { continue ; }
+      //
+      ndigs->insert ( dig->clone() ) ; // CLONE WITH THE KEY
+    }
+    //
+    size2 += ndigs->size() ;
+    //
+  }
+  
+  counter ( "#dig 1"        ) +=               size1 ;
+  counter ( "#dig 2"        ) +=               size2 ;
+  counter ( "#dig 2/dig 1"  ) += double(size2)/size1 ;
+  
+  return StatusCode::SUCCESS ;        
+}
+// ============================================================================
+// the only one essential method 
+// ============================================================================
+StatusCode Kali::Destroyer::execute () 
+{ 
+  // collect all interetsing digits 
+  LHCb::CaloDigit::Set     digits ;
+  // collect all interesting tracks 
+  TRACKS                   tracks ;
+  
+  // 
+  // collect info 
+  StatusCode sc = collect ( digits , tracks ) ;
+  if ( sc.isFailure() ) 
+  {
+    Warning ("Error from collect", sc ) ;
+    setFilterPassed ( false ) ;
+    return StatusCode::SUCCESS ;
+  }
+  //
+  const bool OK = !digits.empty() || !tracks.empty();
+  //
+  // destroy TES
+  sc = destroy ( digits , tracks ) ;
+  if ( sc.isFailure() ) 
+  {
+    Warning ("Error from destroy", sc ) ;
+    setFilterPassed ( false ) ;
+    return StatusCode::SUCCESS ;
+  }
+  //
+  setFilterPassed  ( OK ) ;
+  //
   return StatusCode::SUCCESS ;        
 }    
 // ===========================================================================
