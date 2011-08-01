@@ -39,13 +39,26 @@ public:
    */
   virtual bool setThresholds( std::vector<float> thresholds ) = 0;
 
-  /*
+  /**
    * Set the threshold for a single tag.
    * @param tag : name of the tag to which a threshold should be applied
    * @param thr : value of teh threshold
    * @return fals in case of problems, message in the log file.
    */
   virtual bool setThreshold( std::string tag, float thr ) = 0;
+
+  /**
+   * Set the time onto which one average before writing an entry
+   * @param seconds: size ogf teh averaging interval in seconds.
+   */
+  virtual void setAverageTime( unsigned int seconds ) = 0;
+
+  /**
+   * Add the value of the specified tag to the average. Store if time has expired
+   * @param tag   : name of the tag
+   * @param value : value to be added for this tag
+   */
+  virtual void addValue( std::string tag, float value ) = 0;
 
   /**
    * Store an array of values at the specified time

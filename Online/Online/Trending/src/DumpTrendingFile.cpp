@@ -125,6 +125,13 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
       std::cout << "*** Directory: size " << m_dir.size << " type " << m_dir.type << " version " << m_dir.version
                 << " next " << m_dir.nextAddress << " nbEntries " << m_dir.nbEntries << std::endl;
       if ( m_dir.nbEntries > MAX_ENTRY ) return;
+      /*
+      if ( 0 == m_dir.nextAddress ) {
+        verbose = true;
+        maxPrint = 10000000;
+      }
+      */
+      
       if ( verbose ) {
         for ( int kk = 0 ; kk <= m_dir.nbEntries ; ++kk ) {
           sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,

@@ -96,6 +96,8 @@ StatusCode TestTrend::initialize() {
   status = m_trend->setThreshold( "Var_21", 0.2f );
   if ( !status ) return StatusCode::FAILURE;
 
+  m_trend->setAverageTime( 1 );
+
   m_event = 0;
 
   m_simple = tool<ISimpleTrendWriter>( "SimpleTrendWriter" );
@@ -123,7 +125,6 @@ StatusCode TestTrend::execute() {
   if ( !status) return StatusCode::FAILURE;
   
   double value = m_event;
-  
   m_simple->startEvent();
   m_simple->addEntry( std::string( "Variable 1"), value );
   m_simple->addEntry( std::string( "Variable 2"), value + 1000. );
@@ -132,7 +133,6 @@ StatusCode TestTrend::execute() {
   m_simple->addEntry( std::string( "Variable 5"), value + 4000. );
   m_simple->addEntry( std::string( "Variable 6"), value + 5000. );
   m_simple->saveEvent();
-
   return StatusCode::SUCCESS;
 }
 

@@ -33,6 +33,10 @@ public:
   
   bool setThreshold( std::string tag, float thr );
   
+  void setAverageTime( unsigned int seconds );
+
+  void addValue( std::string tag, float value );
+
   bool write( std::vector<float> values, unsigned int time = 0 );
   
   void closeFile();
@@ -53,7 +57,7 @@ private:
 
   void addDataEntry( unsigned int now, std::vector<float>& data, bool writeEachEntry, bool full );
 
-  void getDataContaining ( unsigned int time );
+  bool getDataContaining ( unsigned int time );
 
   bool nextEvent( unsigned int& time, std::vector<float>& data ) ;
 
@@ -79,6 +83,9 @@ private:
   int                      m_requestedTagNumber;
   int                      m_tagNumber;
   unsigned int             m_lastTime;
+  unsigned int             m_averageTime;
+  std::vector<float>       m_sumForAverage;
+  std::vector<int>         m_nbForAverage;
 };
 //=============================================================================
 // Standard constructor, initializes variables
@@ -94,6 +101,7 @@ TrendWriter::TrendWriter( ) :
   , m_hasSelection( false )
   , m_requestedTagNumber( -1 )
   , m_lastTime( 0xffffffff )
+  , m_averageTime( 0 )
 {
   m_data.size       = 0;
   m_data.data[0].i  = 0;
@@ -196,10 +204,14 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
   m_tags.clear();
   m_thresholds.clear();
   m_lastData.clear();
+  m_sumForAverage.clear();
+  m_nbForAverage.clear();
   for ( kk = 0; tags.size() > kk; ++kk ) {
     m_tags.push_back( tags[kk] );
     m_thresholds.push_back( 0. );     // default threshold
     m_lastData.push_back( 0. );       // previous value of data
+    m_sumForAverage.push_back( 0. );
+    m_nbForAverage.push_back( 0 );
     strcpy( p, tags[kk].c_str() );
     p = p + strlen( p ) + 1;
   }
@@ -267,6 +279,37 @@ bool TrendWriter::setThreshold ( std::string tag, float thr) {
   return false;
 }
 
+
+//=========================================================================
+//  Set the time onto which one averages before writing
+//=========================================================================
+void TrendWriter::setAverageTime ( unsigned int delta ) {
+  m_averageTime = delta;
+}
+
+//=========================================================================
+//  Add a avlue to the average. If time is later than needed, write.
+//=========================================================================
+void TrendWriter::addValue ( std::string tag, float value ) {
+  if ( 0 == m_averageTime ) return;
+  unsigned int now = (int)::time( 0 );
+  if ( now < m_lastTime ) m_lastTime = now;  //== First entry, m_lastTime is VERY far in the future
+  if ( now > m_lastTime + m_averageTime ) {
+    std::vector<float> dum( m_tags.size(), 0. );
+    write( dum, now );                                //== write the current average...
+    for ( unsigned int k1 = 0; m_tags.size() > k1 ; ++k1 ) {
+      m_sumForAverage[k1] = 0.;
+      m_nbForAverage[k1]  = 0;
+    }
+  }
+  for ( unsigned int k2 = 0; m_tags.size() > k2; ++k2 ) {
+    if ( m_tags[k2] == tag ) {
+      m_sumForAverage[k2] += value;
+      m_nbForAverage[k2]  += 1;
+    }
+  }
+}
+
 //=========================================================================
 //  Store an event in the file
 //=========================================================================
@@ -292,19 +335,47 @@ bool TrendWriter::write( std::vector<float> data, unsigned int now ) {
     }
   }
 
+  //== IF average is requested, sum and create an entry if needed...
+
+  if ( m_averageTime > 0 ) { //== Compute averages and store
+    if ( now < m_lastTime ) m_lastTime = now;  //== First entry, m_lastTime is VERY far in the future
+    if ( now < m_lastTime + m_averageTime ) {  //== Still in accumulation time
+      for ( unsigned int k1 = 0 ; m_tags.size() > k1 ; ++k1 ) {
+        m_sumForAverage[k1] += data[k1];
+        m_nbForAverage[k1]++;
+      }
+      return true;
+    }
+
+    //== Compute averages. If any computed, store
+    int nbNew = 0;
+    for ( unsigned int k2 = 0; m_tags.size() > k2 ; ++k2 ) {
+      if ( m_nbForAverage[k2] > 0 ) {
+        m_sumForAverage[k2] = m_sumForAverage[k2]/m_nbForAverage[k2];
+        nbNew++;
+      } else {
+        m_sumForAverage[k2] = m_lastData[k2];
+      }
+    }
+    if ( 0 < nbNew ) {
+      unsigned int tt = m_lastTime + m_averageTime;
+      getDataContaining( tt );
+      writeEntry( tt, m_sumForAverage, true );
+      m_lastTime = now;
+    }
+    for ( unsigned int k3 = 0 ; m_tags.size() > k3 ; ++k3 ) {
+      m_sumForAverage[k3] = data[k3];
+      m_nbForAverage[k3]  = 1;
+    }
+    return true;
+  }
+      
   //== Check if the time is accessible from the current directory, i.e. after first and before last
+
   bool hasDataAfter = false;
   if ( now < m_lastTime ) {   // First call, or new entry is not after the last written -> Find where to write
     if ( m_debug ) std::cout << "TrendWriter::write Position file for time = " << now << std::endl;
-    getDataContaining( now );
-    if ( 0 != m_dir.entry[m_ptDir+1].firstTime ) {
-      hasDataAfter = true;
-    }
-    if ( 0 != m_dir.entry[0].firstTime ) { // No data block at all
-      while ( m_data.data[m_ptData].i < now &&
-              m_data.data[m_ptData].i > 0 ) unpackAnEvent( );
-      if ( m_data.data[m_ptData].i != 0 ) hasDataAfter = true;
-    }
+    hasDataAfter = getDataContaining( now );
   }
   
   //== We are positionned after the last entry before. If no data after, this is simple.
@@ -548,6 +619,8 @@ bool TrendWriter::loadLastTags( ) {
   m_tags.clear();
   m_thresholds.clear();
   m_lastData.clear();
+  m_sumForAverage.clear();
+  m_nbForAverage.clear();
   char* p = temp;
   while ( 0 < nn ) {
     std::string tag( p );
@@ -558,6 +631,8 @@ bool TrendWriter::loadLastTags( ) {
     m_tags.push_back( tag );
     m_thresholds.push_back( 0. );
     m_lastData.push_back( 0. );
+    m_sumForAverage.push_back( 0. );
+    m_nbForAverage.push_back( 0 );
   }
   m_nbTag = m_tags.size();
   m_nbMask = (m_nbTag/32) + 1;
@@ -607,7 +682,8 @@ void TrendWriter::createDirectoryRecord ( DirectoryRecord* dir ) {
 //=========================================================================
 //  Find the proper directory and data block containing a given time.
 //=========================================================================
-void TrendWriter::getDataContaining ( unsigned int time ) {
+bool TrendWriter::getDataContaining ( unsigned int time ) {
+  bool hasDataAfter = false;
   //== Is it before the first entry in the current directory?
   if ( time < m_dir.entry[0].firstTime ) {
     if ( m_dirAddressInFile != m_firstDirAddress ) {
@@ -616,8 +692,6 @@ void TrendWriter::getDataContaining ( unsigned int time ) {
   }
   m_ptData    = 0;
   m_ptDir     = 0;
-  m_data.size = 0;
-  m_data.data[0].i = 0;
   
   while ( 0 !=   m_dir.entry[m_ptDir+1].firstTime &&
           time > m_dir.entry[m_ptDir+1].firstTime    ) {
@@ -631,11 +705,20 @@ void TrendWriter::getDataContaining ( unsigned int time ) {
       m_ptDir++;
     }
   }
+  if ( 0 != m_dir.entry[m_ptDir+1].firstTime )  hasDataAfter = true;
+  
   if ( m_dataAddressInFile != m_dirAddressInFile + m_dir.entry[m_ptDir].fileOffset ) {
     m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[m_ptDir].fileOffset;
     fseek( m_file, m_dataAddressInFile, SEEK_SET );
+    m_data.size = 0;
+    m_data.data[0].i = 0;  // in case of read error.
     fread( &m_data, 1, sizeof( DataRecord ), m_file );
   }
+  //== Skip to the correct event entry
+  while ( m_data.data[m_ptData].i < time && 
+          m_data.data[m_ptData].i > 0      ) unpackAnEvent( );
+  if ( m_data.data[m_ptData].i != 0 ) hasDataAfter = true;
+  return hasDataAfter;
 }
 //=========================================================================
 //  Unpack an event in the data block. return the time of the event

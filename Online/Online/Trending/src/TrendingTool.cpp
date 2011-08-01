@@ -66,6 +66,20 @@ bool TrendingTool::setThreshold ( std::string tag, float thr) {
 }
 
 //=========================================================================
+//  Set the averaging time
+//=========================================================================
+void TrendingTool::setAverageTime ( unsigned int seconds  ) {
+  m_trendWriter.setAverageTime( seconds );  
+}
+
+//=========================================================================
+//  Add an entry for a single tag, mainly for averaging
+//=========================================================================
+void TrendingTool::addValue( std::string tag, float value ) {
+  m_trendWriter.addValue( tag, value );
+}
+
+//=========================================================================
 //  Store an event in the file
 //=========================================================================
 bool TrendingTool::write( std::vector<float> data, unsigned int now ) {

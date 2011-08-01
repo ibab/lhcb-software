@@ -4,7 +4,14 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
-!============================== 2011-07-28 v2r0 ==============================
+!============================== 2011-08-01 v2r0 ==============================
+! 2011-08-01 - Olivier Callot
+ - New functions in the interface to write average values
+  * setAverageTime( unsigned int delta ) : set the interval time in second for average
+  * addValue( std::string tag, float value ) : Store this value for this tag in average mode
+  Note that the standard write ( std::vector<float>, unsigned int time ) works also in average 
+  mode, i.e. all tags are averaged. This is to be used if you ha ve new values for all your tags.
+
 ! 2011-07-28 - Olivier Callot
  - Improve the dump tool
  - Zeroes the data buffer in the writer, to make debug easier...

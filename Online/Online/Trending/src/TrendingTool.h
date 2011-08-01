@@ -32,6 +32,10 @@ public:
   
   bool setThreshold( std::string tag, float thr );
   
+  void setAverageTime( unsigned int seconds );
+
+  void addValue( std::string tag, float value );
+
   bool write( std::vector<float> values, unsigned int time = 0 );
   
   void closeFile();
