@@ -59,11 +59,12 @@ namespace Kali
       , m_kaliHat   ( "Kali" ) 
     {
       //
-      m_locations.push_back ( LHCb::TrackLocation     ::Default ) ;
-      m_locations.push_back ( LHCb::CaloDigitLocation ::Spd     ) ;
-      m_locations.push_back ( LHCb::CaloDigitLocation ::Prs     ) ;
-      m_locations.push_back ( LHCb::CaloDigitLocation ::Ecal    ) ;
-      m_locations.push_back ( LHCb::CaloDigitLocation ::Hcal    ) ;
+      //
+      m_locations.push_back ( LHCb::TrackLocation     :: Default ) ;
+      m_locations.push_back ( LHCb::CaloDigitLocation :: Spd     ) ;
+      m_locations.push_back ( LHCb::CaloDigitLocation :: Prs     ) ;
+      m_locations.push_back ( LHCb::CaloDigitLocation :: Ecal    ) ;
+      m_locations.push_back ( LHCb::CaloDigitLocation :: Hcal    ) ;
       //
       declareProperty 
         ( "Locations" , 
@@ -97,14 +98,15 @@ namespace Kali
 // ============================================================================
 StatusCode Kali::DataMove::execute()  
 {
-  //
+  //  
   for (  std::vector<std::string>::const_iterator ites = m_locations.begin() ; 
          m_locations.end() != ites ; ++ites ) 
   {
     std::string loc = Kali::kalify ( *ites , m_kaliHat ) ;
+    //
     if ( !exist<DataObject>( loc ) ) 
     { 
-      Warning ( "Location does not exist: '" + loc + "'") ;
+      Warning ( "Location does not exist: '" + loc + "'" , StatusCode::SUCCESS , 2 ) ;
       continue ;                                                 // CONTINUE 
     }
     //
@@ -119,6 +121,8 @@ StatusCode Kali::DataMove::execute()
     // register it at "standard" location 
     put ( obj , *ites ) ;
   }
+  //
+  setFilterPassed ( true ) ;
   //
   return StatusCode::SUCCESS ;
   //

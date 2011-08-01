@@ -10,6 +10,10 @@
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
+// Local
+// ============================================================================
+#include "Kali.h"
+// ============================================================================
 namespace Kali 
 {
   // ==========================================================================
@@ -26,14 +30,15 @@ namespace Kali
     {
       //
       for ( std::vector<std::string>::const_iterator item = 
-              m_locations.begin() ; m_locations.end() != item ; ++item ) 
+              m_locations1.begin() ; m_locations1.end() != item ; ++item ) 
       {
-//         StatusCode sc = evtSvc()->unregisterObject ( *item ) ;
-//         if ( sc.isFailure() ) 
-//         {
-//           Warning ( "Unable to unreguster: " + (*item) , sc ) ;
-//           continue ;
-//         }
+        if ( exist<DataObject>( Kali::kalify ( *item ) ) ) 
+        { put ( new DataObject() , *item ) ; }
+      }
+      //
+      for ( std::vector<std::string>::const_iterator item = 
+              m_locations2.begin() ; m_locations2.end() != item ; ++item ) 
+      {
         put ( new DataObject() , *item ) ; 
       }
       //
@@ -49,21 +54,27 @@ namespace Kali
     MakeDir  ( const std::string& name ,  // algorithm instance name 
                ISvcLocator*       pSvc )  // poiunetr to Service locator
       : GaudiAlgorithm ( name , pSvc ) 
-      , m_locations () 
+      , m_locations1 () 
+      , m_locations2 () 
     {
       //
-      m_locations.push_back ( "/Event/Rec/ProtoP" ) ;
-      m_locations.push_back ( "/Event/Rec/Calo"   ) ;
-      m_locations.push_back ( "/Event/Rec/Track"  ) ;
-      m_locations.push_back ( "/Event/Raw"        ) ;
-      m_locations.push_back ( "/Event/Raw/Spd"    ) ;
-      m_locations.push_back ( "/Event/Raw/Prs"    ) ;
-      m_locations.push_back ( "/Event/Raw/Ecal"   ) ;
-      m_locations.push_back ( "/Event/Raw/HCal"   ) ;
+      m_locations1.push_back ( "/Event/Rec/Track"  ) ;
+      m_locations1.push_back ( "/Event/Raw"        ) ;
+      m_locations1.push_back ( "/Event/Raw/Spd"    ) ;
+      m_locations1.push_back ( "/Event/Raw/Prs"    ) ;
+      m_locations1.push_back ( "/Event/Raw/Ecal"   ) ;
+      m_locations1.push_back ( "/Event/Raw/Hcal"   ) ;
+      //
+      m_locations2.push_back ( "/Event/Rec/ProtoP" ) ;
+      m_locations2.push_back ( "/Event/Rec/Calo"   ) ;
       //
       declareProperty 
-        ( "Locations" , 
-          m_locations , 
+        ( "Locations1" , 
+          m_locations1  , 
+          "The list of locations to be created" ) ;
+      declareProperty 
+        ( "Locations2" , 
+          m_locations2  , 
           "The list of locations to be created" ) ;
     }
     /// virtual & protected destructor 
@@ -81,7 +92,8 @@ namespace Kali
   private:
     // ========================================================================
     /// The list of locations to be created
-    std::vector<std::string> m_locations ; // List of locations to be created
+    std::vector<std::string> m_locations1 ; // List of locations to be created
+    std::vector<std::string> m_locations2 ; // List of locations to be created
     // ========================================================================
   } ;
   // ==========================================================================

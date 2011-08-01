@@ -468,6 +468,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             "/Event/DAQ#1"             ,
             "/Event/DAQ/ODIN#1"        ,
             # event header for time decoder
+            "/Event/Rec#1"             ,
             "/Event/Rec/Header#1"      ,
             ## GEC counters 
             "/Event/Counters#1"        , 
@@ -491,18 +492,18 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             "/Event/Rec/Track#1"       ,
             "/Event/Rec/Track/Best#1"  ,
             ] 
-
+        
         if not self.getProp ( 'DestroyTES' ) :
             calos  = [ i.replace('/Event/Raw', '/Event/Kali/Raw') for i in calos  ]
             tracks = [ i.replace('/Event/Rec', '/Event/Kali/Rec') for i in tracks ]
 
         item_list  = items + calos + tracks 
-        
+
         return OutputStream (
             'FMDST', 
             ItemList = item_list ,
             # 
-            Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')
+            Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='NEW'" % self.getProp('FemtoDST')
             , AcceptAlgs  = self.getProp ( 'DestroyList' )
             , RequireAlgs =              [ 'Destroyer'   ] 
             )
@@ -706,7 +707,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         ## 9. the final decoration
         from Configurables import DataOnDemandSvc
-        dod = DataOnDemandSvc  ( Dump = True )
+        #dod = DataOnDemandSvc  ( Dump = True )
+        dod = DataOnDemandSvc  ( Dump = False )
 
 
 ## =============================================================================

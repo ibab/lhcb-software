@@ -266,30 +266,35 @@ StatusCode Kali::Destroyer::destroy
   // destroy tracks 
   // ==========================================================================
   
-  LHCb::Track::Container* ttracks = 
-    get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
-  
-  const std::size_t trk1 = ttracks->size() ;
-  
-  if ( tracks.empty() ) { ttracks->clear() ; } // ATTENTION!!!  
-  LHCb::Track::Container::iterator ifind = ttracks->begin() ;
-  while ( ifind != ttracks->end() ) 
+  if ( exist<LHCb::Track::Container>( LHCb::TrackLocation::Default ) ) 
   {
-    const LHCb::Track* track = *ifind ;
-    if ( 0 == track ) { continue ; }
-    // 
-    if ( tracks.end() != tracks.find( track ) )
-    { ++ifind ; continue ; }                               // CONTINUE 
+    
+    LHCb::Track::Container* ttracks = 
+      get<LHCb::Track::Container>( LHCb::TrackLocation::Default ) ;
+    
+    const std::size_t trk1 = ttracks->size() ;
+    
+    if ( tracks.empty() ) { ttracks->clear() ; } // ATTENTION!!!  
+    LHCb::Track::Container::iterator ifind = ttracks->begin() ;
+    while ( ifind != ttracks->end() ) 
+    {
+      const LHCb::Track* track = *ifind ;
+      if ( 0 == track ) { continue ; }
+      // 
+      if ( tracks.end() != tracks.find( track ) )
+      { ++ifind ; continue ; }                               // CONTINUE 
+      //
+      ttracks->erase ( *ifind ) ;
+      //
+      ifind = ttracks->begin() ;
+    }
+    const std::size_t trk2 = ttracks->size() ;
     //
-    ttracks->erase ( *ifind ) ;
-    //
-    ifind = ttracks->begin() ;
+    counter ( "#trk 1"        ) +=              trk1 ;
+    counter ( "#trk 2"        ) +=              trk2 ;
+    counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ; 
+    
   }
-  const std::size_t trk2 = ttracks->size() ;
-  //
-  counter ( "#trk 1"        ) +=              trk1 ;
-  counter ( "#trk 2"        ) +=              trk2 ;
-  counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ;
   
   // ==========================================================================
   // destroy digits
@@ -373,8 +378,8 @@ StatusCode Kali::Destroyer::copy
   // ==========================================================================
   // copy tracks 
   // ==========================================================================
-  LHCb::Track::Container* otracks = 
-    get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
+  // LHCb::Track::Container* otracks = 
+  //   get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
   //
   LHCb::Track::Container* ntracks = new LHCb::Track::Container() ;
   put ( ntracks ,        kalify ( LHCb::TrackLocation::Default ) ) ;
@@ -384,17 +389,17 @@ StatusCode Kali::Destroyer::copy
   {
     const LHCb::Track* track = *itrack ;
     if ( 0       == track           ) { continue ; }
-    if ( otracks != track->parent() ) { continue ; }
+    // if ( otracks != track->parent() ) { continue ; }
     //
     ntracks->insert ( track->cloneWithKey() ) ; // CLONE WITH KEY !!!
   }
   //
-  const std::size_t trk1 = otracks->size() ;
+  // const std::size_t trk1 = otracks->size() ;
   const std::size_t trk2 = ntracks->size() ;
   //
-  counter ( "#trk 1"        ) +=              trk1 ;
+  // counter ( "#trk 1"        ) +=              trk1 ;
   counter ( "#trk 2"        ) +=              trk2 ;
-  counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ;
+  // counter ( "#trk 2/trk 1"  ) +=  0 < trk1 ? double(trk2)/trk1 : 1.0 ;
   
   // ==========================================================================
   // copy digits 
