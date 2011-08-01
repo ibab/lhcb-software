@@ -22,7 +22,7 @@ DECLARE_SERVICE_FACTORY(XmlCnvSvc)
 // -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
   ConversionSvc(name, svc, XML_StorageType),
-  m_msg( 0 ) {
+  m_msg( 0 ), m_parserSvc(0) {
   
   // gets the AllowGenericConversion property value
   declareProperty ("AllowGenericConversion", m_genericConversion = false);
