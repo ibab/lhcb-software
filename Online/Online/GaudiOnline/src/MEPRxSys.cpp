@@ -241,7 +241,7 @@ int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc,
   int s = ::recvmsg(sockfd, &msg, ioflags | MSG_DONTWAIT);
   *whentsc = rdtsc();
   if (s <= 0) {
-    if (errno == EAGAIN || EINTR)
+    if (errno == EAGAIN || errno == EINTR)
       return 0;
     return s;
   }
@@ -268,9 +268,11 @@ int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc,
     if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_TIMESTAMP)
       tv = (struct timeval *) CMSG_DATA(cmsg);
   }
-  if (tv) {
+  if (tv) 
     *when = 1000000 * tv->tv_sec + tv->tv_usec;
-  } 
+  else 
+    *when = 0;
+  
   return s;
 #endif // ifndef _WIN32
 }

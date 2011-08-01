@@ -1,6 +1,6 @@
 //	============================================================
 //
-//	MEPRxSvc.h
+//	MPRxSvc.h
 //	------------------------------------------------------------
 //
 //	Package   : GaudiOnline
@@ -96,6 +96,8 @@ namespace LHCb  {
     bool                        m_expectOdin;
     bool                        m_createDAQErrorMEP;
     bool                        m_createODINMEP; // fake ODIN MEP for timepix testbeam only!
+    bool                        m_resetCounterOnRunChange;
+    bool                        m_alwaysSendMEPReq; // send a MEP request for every event (complete or not)
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 
@@ -112,7 +114,7 @@ namespace LHCb  {
     u_int32_t                   m_partitionID;
     u_int32_t                   m_IPOdin;
     u_int32_t                   m_odinIPAddr;
-    unsigned int                m_maxEventAge; // (in millis)
+    unsigned int                m_maxEventAge; // milliseconds
     u_int8_t                   *m_trashCan;
     std::string                 m_rxIPAddr;
     std::string                 m_IPNameOdin;
@@ -184,6 +186,9 @@ namespace LHCb  {
     IHistogram1D                *m_complTimeSock; // how long to complete an evt
     IHistogram1D                *m_idleTimeSock;  // how long between two evts
     IHistogram1D		*m_L0IDDiff ; //L0ID gap between two evts
+    u_int64_t                   m_runNumber;
+    u_int64_t                   m_tLastRx;   // time of last fragment of last received event in us
+    u_int64_t                   m_tLastComp; // time of last completed event in us
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -206,7 +211,7 @@ namespace LHCb  {
     int       sourceAddr(u_int32_t i)       {  return m_srcAddr[i];   }
     int64_t   addIncompleteEvent()          {  return m_incEvt++;     }
     int64_t   totWrongPartID()              {  return m_totWrongPartID;  }   
-    RXIT ageRx();
+    RXIT oldestRx();
     static bool cmpL0ID(MEPRx *r, u_int32_t id);
     void removePkt(void);
     StatusCode setupMEPReq(const std::string& odinName);
