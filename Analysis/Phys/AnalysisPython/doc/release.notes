@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-08-01 - Vanya Belyaev
+
+ - PyRoUts.py: few minor fixes 
+
 !========================= AnalysisPython v2r4 2011-07-28 =========================
 ! 2011-07-25 - Vanya Belyaev
 
