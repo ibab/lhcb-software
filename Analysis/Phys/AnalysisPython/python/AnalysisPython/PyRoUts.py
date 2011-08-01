@@ -842,19 +842,18 @@ ROOT.TFitResultPtr.__getitem__  = _fit_get_item_
 ROOT.TFitResultPtr.__call__     = _fit_get_item_ 
 ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() ) 
 
-
 # =============================================================================
 ## get the guess for three major parameters of the histogram:
 #    - number of signal events
-#    - backhround level under the signal (per bin)
+#    - background level under the signal (per bin)
 #    - background slope
 def histoGuess ( histo , mass , sigma ) :
     """
     Get the guess for three major parameters of the histogram:
     - number of signal events
-    - backhround level under the signal (per bin)
+    - background level under the signal (per bin)
     - background slope
-    - minimal and maximal slopes to ensure 'positive' background
+    - (minimal and maximal slopes to ensure 'positive' background)
 
     >>> histo = ...
     >>> signal, background, slope, slope_min, slope_max = histoGuess ( histo , mass , sigma )
@@ -1193,6 +1192,7 @@ def _h1_pow_ ( h1 , val ) :
 
 ROOT.TH1._oper_    = _h1_oper_
 
+ROOT.TH1.__div__   = _h1_div_
 ROOT.TH1.__mul__   = _h1_mul_
 ROOT.TH1.__add__   = _h1_add_
 ROOT.TH1.__sub__   = _h1_sub_
@@ -1654,10 +1654,12 @@ ROOT.TH2F . asFunc = _h2_as_fun_
 ROOT.TH2D . asFunc = _h2_as_fun_ 
 
 # =======================================================================
-## calculate the difference between two histograms 
+## calculate the ``difference'' between two histograms 
 def _h_diff_ ( h1 , h2 , func = lambda s1,s2 : (s1/s2).value() ) :
     """
-    Estimate the difference between two histograms 
+    Estimate the ``difference'' between two histograms
+
+    
     """
     
     se = SE()
@@ -1671,6 +1673,7 @@ def _h_diff_ ( h1 , h2 , func = lambda s1,s2 : (s1/s2).value() ) :
         
     return se 
 
+
 ROOT.TH1F.histoDiff = _h_diff_
 ROOT.TH1D.histoDiff = _h_diff_
 ROOT.TH2F.histoDiff = _h_diff_
@@ -1678,6 +1681,23 @@ ROOT.TH2D.histoDiff = _h_diff_
 ROOT.TH3F.histoDiff = _h_diff_
 ROOT.TH3D.histoDiff = _h_diff_
 
+
+# =============================================================================
+## perform some accumulation for the histogram 
+def _h_accumulate_ ( h                         ,
+                     func = lambda s,v : s + v ,
+                     init = VE ()              ) :
+    """
+    Accumulate the function value over the histogram
+
+    >>> h =...
+    >>> sum = h.accumulate() 
+    """
+    result = init
+    for i in h : result = func ( result , h[i] )
+    return result 
+
+ROOT.TH1.accumulate = _h_accumulate_ 
 # =============================================================================
 ## adjust the "efficiency"
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
