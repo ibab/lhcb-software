@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2011-08-01 - Marco Cattaneo
+ - Fix UNINIT_CTOR coverity bug 19530
+
 !========================= XmlTools v6r5 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - Protect unprotected usage of MSG::DEBUG and MSG::VERBOSE
