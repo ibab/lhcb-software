@@ -6,6 +6,14 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-08-01 - Vanya Belyaev
+
+ - ValuaWithError:
+    
+    fix few primitive operation: 
+      self-addition, self-subtraction, self-multiplication and self-division
+   
+
 ! 2011-07-29 - Vanya Belyaev
 
  - Types.py

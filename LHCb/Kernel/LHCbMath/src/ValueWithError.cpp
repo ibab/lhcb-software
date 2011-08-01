@@ -111,6 +111,14 @@ Gaudi::Math::ValueWithError&
 Gaudi::Math::ValueWithError::operator+= 
 ( const Gaudi::Math::ValueWithError& right )                             // += 
 {
+  //
+  if ( &right == this ) 
+  {
+    m_value *= 2  ;
+    m_cov2  *= 4  ;
+    return  *this ;
+  }
+  //
   m_value += right.m_value ;
   m_cov2  += right.m_cov2  ;
   return *this ;
@@ -122,6 +130,14 @@ Gaudi::Math::ValueWithError&
 Gaudi::Math::ValueWithError::operator-= 
 ( const Gaudi::Math::ValueWithError& right )                              // -= 
 {
+  //
+  if ( &right == this ) 
+  {
+    m_value = 0   ;
+    m_cov2  = 0   ;
+    return  *this ;
+  }
+  //
   m_value -= right.m_value ;
   m_cov2  += right.m_cov2  ;
   return *this ;
@@ -133,6 +149,14 @@ Gaudi::Math::ValueWithError&
 Gaudi::Math::ValueWithError::operator*= 
 ( const Gaudi::Math::ValueWithError& right )                              // *= 
 {
+  if ( &right == this ) 
+  {
+    const double a = value() ;
+    m_value  =     a * a ;
+    m_cov2  *= 4 * a * a ;
+    return  *this ;
+  }
+  //
   const double _a2 =       m_value *       m_value ;
   const double _b2 = right.m_value * right.m_value ;
   m_cov2  *= _b2                 ;
@@ -147,6 +171,13 @@ Gaudi::Math::ValueWithError&
 Gaudi::Math::ValueWithError::operator/= 
 ( const Gaudi::Math::ValueWithError& right )                              // /= 
 {
+  if ( &right == this ) 
+  {
+    m_value  =  1 ;
+    m_cov2   =  0 ;
+    return  *this ;
+  }
+  //
   const double _a2 =       m_value *       m_value ;
   const double _b2 = right.m_value * right.m_value ;
   const double _b4 = _b2 * _b2 ;
