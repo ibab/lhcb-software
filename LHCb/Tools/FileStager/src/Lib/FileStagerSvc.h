@@ -153,7 +153,7 @@ private:
 
    boost::uintmax_t diskspace() const;
 
-   void restart( const std::string& filename );
+   void restartStaging( const std::string& filename );
 
    void removeFile( const_original_iterator it );
 

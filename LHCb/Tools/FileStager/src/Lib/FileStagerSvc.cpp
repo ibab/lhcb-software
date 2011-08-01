@@ -207,7 +207,7 @@ StatusCode FileStagerSvc::getLocal( const string& filename, string& local )
    if ( !m_thread ) {
       // retry
       if ( m_retry ) {
-         restart( filename );
+         restartStaging( filename );
       } else {
          local = filename;
          warning() << "Not retrying staging, returning original filename" << endmsg;
@@ -489,7 +489,7 @@ boost::uintmax_t FileStagerSvc::diskspace() const
 }
 
 //=============================================================================
-void FileStagerSvc::restart( const string& filename )
+void FileStagerSvc::restartStaging( const string& filename )
 {
    if ( m_thread ) {
       m_thread->interrupt();
@@ -606,6 +606,11 @@ StatusCode FileStagerSvc::garbage()
    m_garbagePID = fork();
    if ( m_garbagePID < 0 ) {
       error() << "Failed to fork the garbage collector" << endmsg;
+
+      // delete memory reserved for args
+      for ( size_t i = 0; i < n; ++i ) delete[] args[ i ];
+      delete[] args;
+
       return StatusCode::FAILURE;
    } else if ( m_garbagePID == 0 ) {
 
@@ -620,13 +625,19 @@ StatusCode FileStagerSvc::garbage()
 
       execvp( m_garbageCommand.c_str(), args );
 
-      // exec should not return, but we got something, send it to the parent.
+      // exec should not return, but we got something.
+      // delete memory reserved for args
+      for ( size_t i = 0; i < n; ++i ) delete[] args[ i ];
+      delete[] args;
+
+      // send what we go to the parent.
       write( pipefds[ 1 ], &errno, sizeof( int ) );
       _exit( 0 );
    } else {
-       
+      // delete memory reserved for args
       for ( size_t i = 0; i < n; ++i ) delete[] args[ i ];
       delete[] args;
+
       int count = 0, err = 0;
        
       // Close the wrong end of the pipe.

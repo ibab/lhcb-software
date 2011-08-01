@@ -72,7 +72,7 @@ bool File::exists() const
 }
 
 //=============================================================================
-unsigned long File::size() const
+boost::uintmax_t  File::size() const
 {
    if ( !m_size ) {
       if ( m_command.find( "rfcp" ) != string::npos ) {

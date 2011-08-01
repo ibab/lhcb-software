@@ -21,8 +21,6 @@ apply_pattern application_path
 application           garbage              "../src/gc/garbage.cpp"
 macro_append garbage_use_linkopts "${Boost_linkopts_program_options}"
 
-macro_append FileStager_cppflags "-Wno-missing-field-initializers"
-
 macro_append Boost_linkopts " $(Boost_linkopts_iostreams) "
 
 #============================================================================
