@@ -3,13 +3,8 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
-// ============================================================================
-// DaVinci Kernel 
-// ============================================================================
+#include "LoKi/MCMatchObj.h" 
 #include "Kernel/IJets2Jets.h"            // Interface
-// ============================================================================
-// Event 
-// ============================================================================
 #include "Event/Particle.h"
 #include "LoKi/Kinematics.h"
 #include "LoKi/Geometry.h"

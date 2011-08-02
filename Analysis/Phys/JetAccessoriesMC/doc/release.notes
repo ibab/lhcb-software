@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-08-02 - Albert Bursche
+
+Hopefully fixed problem in windows nightlies
+
 !========================= JetAccessoriesMC v1r1 2011-07-28 =========================
 ! 2011-07-27 - Albert Bursche
 
