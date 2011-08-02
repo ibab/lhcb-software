@@ -41,9 +41,7 @@ macro_append find_mismatches_dependencies DecisionMap
 # =============== LCG Dictionaries ==========================================
 apply_pattern     reflex_dictionary                             \
                   dictionary=Mismatches                          \
-#                  headerfiles=$(INDEPENCETESTSROOT)/WriteMismatches/dict/Mismatches.h     \
- #                 selectionfile=$(INDEPENCETESTSROOT)/WriteMismatches/dict/Mismatches.xml \
-		  headerfiles=../WriteMismatches/dict/Mismatches.h     \
+		          headerfiles=../WriteMismatches/dict/Mismatches.h     \
                   selectionfile=../WriteMismatches/dict/Mismatches.xml \
                   options="-U__MINGW32__"
 
