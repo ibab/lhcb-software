@@ -1,4 +1,3 @@
-// $Id: FakeEventTime.h,v 1.2 2008-07-21 14:52:40 cattanem Exp $
 #ifndef FAKEEVENTTIME_H 
 #define FAKEEVENTTIME_H 1
 
@@ -40,15 +39,7 @@ public:
 private:
   
   // ---------- data members ----------
-  // --- names ---
-  /// Name of the Data Provider (set by the option EvtDataSvc, by default "EventDataSvc").
-  std::string m_evtDataProviderName;
 
-  // --- services ---
-  /// Handle to the Data Provider interface of EventDataSvc (where to find the time... in the future).
-  IDataProviderSvc *m_evtDataProvider;
-
-  // --- misc ---
   /// First event time (when simluating them).
   /// Set by the option StartTime (default = 0)
   long long m_startTime;

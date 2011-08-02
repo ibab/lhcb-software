@@ -28,8 +28,6 @@ FakeEventTime::FakeEventTime( const std::string& type,
 {
   declareInterface<IEventTimeDecoder>(this);
 
-  declareProperty("EventDataSvc",     m_evtDataProviderName = "EventDataSvc"    );
-
   // properties used to generate fake times
   declareProperty("StartTime",       m_startTime = 0);
   declareProperty("TimeStep",        m_timeStep  = 0);
@@ -52,16 +50,6 @@ StatusCode FakeEventTime::initialize ( ) {
   if( log.level() <= MSG::DEBUG )
     log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
-  // Not really needed, just an example.
-  sc = service(m_evtDataProviderName,m_evtDataProvider,true);
-  if (!sc.isSuccess()) {
-    log << MSG::ERROR << "Unable to get a handle to the event data service" << endmsg;
-    return sc;
-  } else {
-    if( log.level() <= MSG::DEBUG )
-      log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_evtDataProviderName << '"' << endmsg;
-  }
-
   log << MSG::INFO << "Event times generated from " << m_startTime << " with steps of " << m_timeStep << endmsg;
 
   return StatusCode::SUCCESS;
@@ -75,9 +63,6 @@ StatusCode FakeEventTime::finalize ( ) {
 	MsgStream log(msgSvc(),name());
   if( log.level() <= MSG::DEBUG )
     log << MSG::DEBUG << "--- finalize ---" << endmsg;
-
-	// release the interfaces used
-	if (m_evtDataProvider != NULL) m_evtDataProvider->release();
 
   return AlgTool::finalize();
 }
