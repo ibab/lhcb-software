@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2011-08-02 - Gerhard Raven
+ - update VdM config
 
 ! 2011-07-11 - Albert Puig
  - added thresholds for RadiativeTopo lines
