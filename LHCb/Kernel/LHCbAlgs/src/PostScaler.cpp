@@ -26,6 +26,7 @@ PostScaler::PostScaler( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_nEvents(0)
   , m_nEventsAll(0)
+  , m_eventCounter(0)
 {
   
   declareProperty("PercentPass", m_percentPass=100.0 );
@@ -38,6 +39,20 @@ PostScaler::PostScaler( const std::string& name,
 // Destructor
 //=============================================================================
 PostScaler::~PostScaler() {}
+
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode PostScaler::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Initialize" << endmsg;
+
+  if (m_forcedReduction > 1.)
+    m_eventCounter = tool<IEventCounter>( "EvtCounter" );
+
+  return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 // Main execution
@@ -67,8 +82,7 @@ StatusCode PostScaler::execute() {
   
   // Event number fraction method
   if (m_forcedReduction > 1.){
-    m_eventNumber = tool<IEventCounter>( "EvtCounter" );
-    long m_event = m_eventNumber->getEventCounter() ;
+    long m_event = m_eventCounter->getEventCounter() ;
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
       verbose() << "event number is now " << m_event << endmsg;
   

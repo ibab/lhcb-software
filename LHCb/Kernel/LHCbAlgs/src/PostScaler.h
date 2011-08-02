@@ -25,6 +25,7 @@ public:
 
   virtual ~PostScaler( ); ///< Destructor
 
+  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
@@ -36,6 +37,6 @@ private:
   DoubleProperty m_percentPass;      ///< Minimal reduction rate to achieve (statistics mode)
   double      m_forcedReduction;     ///< Percentage of events that should be passed (random number mode)
   double      m_margin;              ///< Safety margin (accept if acc events < m_event/m_forcedReduction + m_margin)
-  IEventCounter* m_eventNumber ;
+  IEventCounter* m_eventCounter ;
 };
 #endif // CMT_POSTSCALER_H

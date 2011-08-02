@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-08-02 - Marco Cattaneo
+ - Fix tiny bug in PostScaler.cpp: in case ForcedReduction property was set
+   (i.e. not equal to 1.), event count used was not counting first event
+
 !========================= LHCbAlgs v2r41 2011-07-25 =========================
 ! 2011-07-25 - Marco Cattaneo
  - Create debug() and verbose() messages only when output level requires it,
