@@ -1,4 +1,3 @@
-// $Id: OTRawBankDecoder.cpp,v 1.26 2010-03-02 12:02:03 akozlins Exp $
 // Include files
 #include <algorithm>
 #include <numeric>
@@ -45,11 +44,18 @@ namespace OTRawBankDecoderHelpers
   {
   public:
     Module() : m_detelement(0), m_channelmap(0), m_data(0), m_tdcconversion(0), m_size(0),
-	m_bankversion(OTBankVersion::UNDEFINED), m_isdecoded(false) 
+               m_bankversion(OTBankVersion::UNDEFINED), m_isdecoded(false) 
     { m_ottimes.reserve(16) ; }
     void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; m_tdcconversion = 0; }
-    void setData( unsigned int size, const unsigned short* data, int bankversion, double tdcconversion, const std::pair<double,double>& window) { 
-      m_size = size ;  m_data = data ; m_bankversion = bankversion ; m_tdcconversion = tdcconversion; m_window = window;}
+    void setData( unsigned int size, const unsigned short* data,
+                  int bankversion, double tdcconversion,
+                  const std::pair<double,double>& window) { 
+      m_size = size;
+      m_data = data;
+      m_bankversion = bankversion;
+      m_tdcconversion = tdcconversion;
+      m_window = window;
+    }
     bool isDecoded() const { return m_isdecoded ; }
     void setIsDecoded(bool b=true) { m_isdecoded = b ; }
     const unsigned short* data() const { return m_data ; }
@@ -233,7 +239,10 @@ namespace OTRawBankDecoderHelpers
           imod != det.modules().end(); ++imod) {
         Module& amodule = module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ;
         amodule.setDetElement(**imod) ;
-        amodule.setChannelMap( channelmap.module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ) ;
+        amodule.setChannelMap( channelmap.module((*imod)->stationID(),
+                                                 (*imod)->layerID(),
+                                                 (*imod)->quarterID(),
+                                                 (*imod)->moduleID()   ) ) ;
       }
     }
     
@@ -266,7 +275,7 @@ namespace OTRawBankDecoderHelpers
 //using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( OTRawBankDecoder );
+DECLARE_TOOL_FACTORY( OTRawBankDecoder )
   
 
 //=============================================================================
@@ -278,6 +287,7 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_detectordata(0),
     m_otdet(0),
+    m_channelmaptool(0),
     m_timewindow(999*Gaudi::Units::ns,-999*Gaudi::Units::ns),
     m_timePerBX(25*Gaudi::Units::ns),
     m_countsPerBX(64),
@@ -330,7 +340,7 @@ StatusCode OTRawBankDecoder::initialize()
   m_nsPerTdcCount = m_timePerBX/ double(m_countsPerBX);
   
   if( m_forcebankversion != OTBankVersion::UNDEFINED ) {
-    warning() << "Forcing bank version to be " << m_forcebankversion << endreq ;
+    warning() << "Forcing bank version to be " << m_forcebankversion << endmsg ;
   }
   
   info() << " countsPerBX = " << m_countsPerBX 
@@ -342,7 +352,7 @@ StatusCode OTRawBankDecoder::initialize()
   info() << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Finalize
@@ -404,7 +414,7 @@ StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const LHCb::RawBank& bank, int
   }
   
   if(idata != end) {
-    warning() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
+    warning() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endmsg ;
     decodingerror = true ;
   }
   
@@ -490,7 +500,7 @@ StatusCode OTRawBankDecoder::decodeGolHeaders(const LHCb::RawEvent& event) const
     // Report the number of banks
     if (msgLevel(MSG::DEBUG)) 
       debug() << "Decoding GOL headers in OTRawBankDecoder. Number of OT banks is " 
-              << OTBanks.size() << endreq ;
+              << OTBanks.size() << endmsg ;
     
     for (std::vector<LHCb::RawBank*>::const_iterator  ibank = OTBanks.begin();
          ibank != OTBanks.end() ; ++ibank) {

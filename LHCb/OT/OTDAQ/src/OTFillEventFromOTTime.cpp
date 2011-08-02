@@ -1,4 +1,3 @@
-// $Id: OTFillEventFromOTTime.cpp,v 1.9 2008-05-06 11:48:57 wouter Exp $
 // Include files
 
 // Gaudi
@@ -34,7 +33,7 @@
 using namespace LHCb;
 
 // Declaration of the algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTFillEventFromOTTime );
+DECLARE_ALGORITHM_FACTORY( OTFillEventFromOTTime )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -49,7 +48,7 @@ OTFillEventFromOTTime::OTFillEventFromOTTime( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-OTFillEventFromOTTime::~OTFillEventFromOTTime(){}; 
+OTFillEventFromOTTime::~OTFillEventFromOTTime(){}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -78,7 +77,7 @@ StatusCode OTFillEventFromOTTime::initialize() {
 //=============================================================================
 StatusCode OTFillEventFromOTTime::execute() 
 {
-  warning() << "Please do not use. Must be adapted to new decoding first." << endreq ;
+  warning() << "Please do not use. Must be adapted to new decoding first." << endmsg ;
   // Retrieve the RawEvent
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
  

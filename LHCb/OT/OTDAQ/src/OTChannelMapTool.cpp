@@ -1,4 +1,3 @@
-// $Id: OTChannelMapTool.cpp,v 1.9 2009-02-02 13:39:41 janos Exp $
 // Include files
 // from STD
 #include <sstream>
@@ -58,7 +57,7 @@ private:
 //=============================================================================
 // Declaration in the Tool Factory
 //=============================================================================
-DECLARE_TOOL_FACTORY( OTChannelMapTool );
+DECLARE_TOOL_FACTORY( OTChannelMapTool )
   
 
 //=============================================================================
@@ -93,7 +92,7 @@ StatusCode OTChannelMapTool::initialize()
   updateChannelMap() ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 
 void OTChannelMapTool::setBankVersion( int bankversion ) const
@@ -237,7 +236,7 @@ void OTChannelMapTool::updateChannelMap() const
   // now fill the decoding table for each layout
   for( LayoutMap::const_iterator it = layoutmap.begin(); it != layoutmap.end(); ++it) {
     if ( msgLevel( MSG::DEBUG ) ) debug() << "Number of modules of type " << it->first 
-                                          << " is " << it->second.size() << endreq ;
+                                          << " is " << it->second.size() << endmsg ;
 
     // create a new module
     OTDAQ::ChannelMap::Module module ;

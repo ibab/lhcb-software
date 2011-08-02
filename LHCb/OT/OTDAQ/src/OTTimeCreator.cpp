@@ -1,4 +1,3 @@
-// $Id: OTTimeCreator.cpp,v 1.24 2009-02-02 13:39:42 janos Exp $
 // Include files
 // from STD
 #include <sstream>
@@ -26,7 +25,7 @@
 using namespace LHCb;
  
 // Declaration of the tool Factory
-DECLARE_ALGORITHM_FACTORY( OTTimeCreator );
+DECLARE_ALGORITHM_FACTORY( OTTimeCreator )
 
 
 //=============================================================================
@@ -43,7 +42,7 @@ OTTimeCreator::OTTimeCreator(const std::string& name, ISvcLocator* pSvcLocator)
 //=============================================================================
 // Destructor
 //=============================================================================
-OTTimeCreator::~OTTimeCreator() {}; 
+OTTimeCreator::~OTTimeCreator() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -59,7 +58,7 @@ StatusCode OTTimeCreator::initialize() {
   m_decoder.retrieve().ignore();
 
   return sc;
-};
+}
 
 StatusCode OTTimeCreator::finalize() {
   m_decoder.release().ignore();

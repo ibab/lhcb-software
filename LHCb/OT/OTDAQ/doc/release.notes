@@ -1,6 +1,12 @@
-Package         : OTDAQ
-Package manager : J.Amoraal
 !------------------------------------------------------------------------------
+! Package         : OTDAQ
+! Package manager : J.Amoraal
+!------------------------------------------------------------------------------
+
+! 2011-08-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR warnings from Coverity
+ - Replace all endreq by endmsg
+ - Fix some trivial icc remarks
 
 !========================= OTDAQ v7r10 2011-05-06 =========================
 ! 2010-05-05 - Gerhard Raven

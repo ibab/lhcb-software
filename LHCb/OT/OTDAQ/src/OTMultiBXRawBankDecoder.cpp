@@ -131,7 +131,7 @@ namespace LocalHelpers
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( OTMultiBXRawBankDecoder );
+DECLARE_TOOL_FACTORY( OTMultiBXRawBankDecoder )
   
 
 //=============================================================================
@@ -169,7 +169,7 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
   for( std::vector<std::string>::const_iterator ilocation = m_rawEventLocations.begin() ;
        ilocation != m_rawEventLocations.end(); ++ilocation) 
     msg << "\'" << *ilocation << "\', " ;
-  info() << msg.str() << endreq ;
+  info() << msg.str() << endmsg ;
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -179,7 +179,7 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
     error() << "Failed to retieve decoder" << endmsg ;
     return sc ;
   } else {
-    info() << "retrieved single BX decoder: " << m_decoder->type() << "/" << m_decoder->name() << endreq ;
+    info() << "retrieved single BX decoder: " << m_decoder->type() << "/" << m_decoder->name() << endmsg ;
   }
 
   // Setup incident services
@@ -189,7 +189,7 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
   m_hitdata = new LocalHelpers::DetectorHitData() ;
   
   return sc ;
-};
+}
 
 //=============================================================================
 // Finalize
@@ -258,7 +258,7 @@ StatusCode OTMultiBXRawBankDecoder::decodeAll() const
 	int index = atoi( &((*ilocation)[pos+4]) ) ;
 	eventoffset = index * 25*Gaudi::Units::ns ;
       }
-      debug() << *ilocation << " ----> time offset = " << eventoffset << endreq ;
+      debug() << *ilocation << " ----> time offset = " << eventoffset << endmsg ;
       
       // now set up the decoder for this event. without this call, it would just take the default event location.
       sc = m_decoder->decodeGolHeaders( *event ) ;
@@ -316,7 +316,7 @@ LHCb::OTLiteTime OTMultiBXRawBankDecoder::time( LHCb::OTChannelID channel ) cons
   LHCb::OTLiteTime rc ;
   if( jhit != moduledata.end() ) rc = *jhit ;
   else {
-    error() << "Cannot find channel in list of hits" << endreq ;
+    error() << "Cannot find channel in list of hits" << endmsg ;
   }
   return rc ;
 }

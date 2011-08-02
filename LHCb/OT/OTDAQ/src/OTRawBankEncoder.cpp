@@ -42,7 +42,7 @@ namespace OTDAQ {
   size_t objectSize = sizeof( t );
   buffer.resize( objectSize +curSize );
   std::memcpy( &buffer.front() + curSize, &t, objectSize );
- };
+ }
 
  struct CompareChannel {
    bool operator()( const OTDAQ::RawHit& lhs, const OTDAQ::RawHit& rhs ) {
@@ -155,12 +155,12 @@ namespace OTDAQ {
 }
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( OTRawBankEncoder );
+DECLARE_TOOL_FACTORY( OTRawBankEncoder )
 
 OTRawBankEncoder::OTRawBankEncoder( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ), m_channelmaptool(0)
 {
   declareInterface<IOTRawBankEncoder>(this);
   declareProperty( "AddEmptyBanks"   , m_addEmptyBanks = true                               );

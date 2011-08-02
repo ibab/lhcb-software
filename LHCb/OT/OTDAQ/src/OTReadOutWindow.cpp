@@ -1,5 +1,3 @@
-// $Id: OTReadOutWindow.cpp,v 1.6 2006-07-21 08:04:27 janos Exp $
-
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -16,7 +14,7 @@
  */
 
 // Declaration of the tool Factory
-DECLARE_TOOL_FACTORY( OTReadOutWindow );
+DECLARE_TOOL_FACTORY( OTReadOutWindow )
 
 OTReadOutWindow::OTReadOutWindow(const std::string& type, 
                                  const std::string& name, 

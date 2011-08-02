@@ -84,6 +84,6 @@ private:
 inline size_t OTRawBankEncoder::channelToBank( const LHCb::OTChannelID& channel ) const {
   /// Tells1 start from 1 and go to 48
   return ( ( channel.station() - 1 )*16 + channel.layer()*4 + ( channel.quarter() + 1 ) );
-};
+}
 
 #endif // OTRAWBANKENCODER_H
