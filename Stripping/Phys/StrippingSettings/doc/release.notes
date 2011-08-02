@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-08-02 - Jibo He
+ - LineConfigDictionaries_GTWG.py
+   . Pre-scale all B2DX, B2D3H lines by a factor of 10 further. 
+
+! 2011-08-02 - Jibo He
  - LineConfigDictionaries_GLWG.py
    . Updated B2hhh
  - Updated dbase of Stripping16
