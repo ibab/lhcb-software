@@ -13,14 +13,6 @@ TimingAuditor.TIMER                                            INFO   DaVinciIni
 TimingAuditor.TIMER                                            INFO   FilteredEventSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO    DaVinciEventInitSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO     PhysInitSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO      ReRunMuonPID             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       MuonPIDVersionCheck     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       TESCheckRawEvent        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       MuonRec                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       MuonIDSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO        MuonIDAlg              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       CProtoPAddNewMuon       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO       CProtoPCombDLLNewMuon   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO     AnalysisInitSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO    DaVinciAnalysisSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO     DaVinciUserSequence       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

@@ -14,15 +14,11 @@
 <argument name="validator"><text>
 findReferenceBlock("""
 DaVinciInitAlg                                              SUCCESS 500 events processed
-DaVinciInitAlg                                              SUCCESS ==================================================================
-DaVinciInitAlg                                              SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Events"                                        |       500 |        500 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 """, stdout, result, causes, signature_offset = 0, id='Events')
 findReferenceBlock("""
-CountParticles                                              SUCCESS Number of counters : 55
+CountParticles                                              SUCCESS Number of counters : 48
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/StdLTUnbiasedJpsi2MuMu"                 |       500 |         45 |   0.090000 |    0.29309 |      0.0000 |      2.0000 |
+ | "# Phys/StdLTUnbiasedJpsi2MuMu"                 |       500 |         44 |   0.088000 |    0.29027 |      0.0000 |      2.0000 |
 """, stdout, result, causes, signature_offset = 0, id='Particles')
 countErrorLines({"FATAL":0})
 </text></argument>

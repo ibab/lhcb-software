@@ -11,11 +11,11 @@
 findReferenceBlock("""
 BachelorMuForTestsSUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/StdLooseMuons"                          |         8 |          8 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "# input particles"                             |         8 |          8 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- |*"#accept"                                       |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
- |*"#passed"                                       |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
- |*"efficiency"                                    |         8 |          5 |(  62.5000 +- 17.1163  )%|   -------   |   -------   |
+ | "# Phys/StdLooseMuons"                          |         2 |          2 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |         2 |          2 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#accept"                                       |         2 |          2 |(  100.000 +- 50.0000  )%|   -------   |   -------   |
+ |*"#passed"                                       |         2 |          2 |(  100.000 +- 50.0000  )%|   -------   |   -------   |
+ |*"efficiency"                                    |         2 |          2 |(  100.000 +- 50.0000  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>
