@@ -20,8 +20,11 @@ CaloDataProvider::CaloDataProvider( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : CaloReadoutTool ( type, name , parent )
+    ,m_pedShift(0.0)
     ,m_adcs()
-    ,m_digits(){
+    ,m_digits()
+    ,m_tell1s(0)
+{
   declareInterface<ICaloDataProvider>(this);
   
   // set default detectorName

@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( CaloTriggerAdcsFromRawAlg )
 //=============================================================================
 CaloTriggerAdcsFromRawAlg::CaloTriggerAdcsFromRawAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_l0AdcTool(0)
 {
   declareProperty("OutputData"  , m_outputData  );  
   declareProperty( "Extension"  ,  m_extension = "" );

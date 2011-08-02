@@ -25,7 +25,8 @@ DECLARE_ALGORITHM_FACTORY( CaloAdcFromRaw )
 //=============================================================================
 CaloAdcFromRaw::CaloAdcFromRaw( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ){
+  : GaudiAlgorithm ( name , pSvcLocator ), m_calo(0), m_data(0), m_l0data(0)
+{
   declareProperty("AdcLocation"        , m_location = "");
   declareProperty("L0AdcLocation"      , m_l0Location = "");
   declareProperty("L0BitLocation"      , m_l0BitLocation = "");

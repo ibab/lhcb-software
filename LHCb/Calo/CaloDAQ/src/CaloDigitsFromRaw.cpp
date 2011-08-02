@@ -20,7 +20,8 @@ DECLARE_ALGORITHM_FACTORY( CaloDigitsFromRaw )
 //=============================================================================
 CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) 
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_spdTool(0), m_energyTool(0), m_calo(0)
 {  
   m_detectorNum = CaloCellCode::CaloNumFromName( name ) ;
   if ( m_detectorNum < 0 || m_detectorNum >= (int) CaloCellCode::CaloNums ) 

@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -13,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloDigitFilterTool );
+DECLARE_TOOL_FACTORY( CaloDigitFilterTool )
 
 
 //=============================================================================
@@ -31,7 +30,10 @@ CaloDigitFilterTool::CaloDigitFilterTool( const std::string& type,
     m_calo(NULL),
     m_caloName("None"),
     m_scalingMethod(0),
+    m_mOffs(0.0),
+    m_nMask(0),
     m_scaling("None"),
+    m_offsetRMS(0.0),
     m_reset(true),
     m_scale(0){
   declareInterface<ICaloDigitFilterTool>(this);

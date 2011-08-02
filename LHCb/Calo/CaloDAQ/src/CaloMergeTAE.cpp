@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergeTAE );
 //=============================================================================
 CaloMergeTAE::CaloMergeTAE( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_calo(0)
 {
 
   declareProperty("MergeSlots"     , m_slots);

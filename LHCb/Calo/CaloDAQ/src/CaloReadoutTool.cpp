@@ -25,6 +25,8 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_banks(0)
+  , m_calo(0)
   , m_packed(false)
   , m_ok(false)
   , m_first(true)

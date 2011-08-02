@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloDigitFilterAlg );
+DECLARE_ALGORITHM_FACTORY( CaloDigitFilterAlg )
 
 
 //=============================================================================
@@ -22,7 +21,7 @@ DECLARE_ALGORITHM_FACTORY( CaloDigitFilterAlg );
 //=============================================================================
 CaloDigitFilterAlg::CaloDigitFilterAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_filter(0)
 {
   declareProperty("EcalFilter" ,m_ecal = 0x3); // 1 = Mask , 2=Offset , 3 = both, 0 = none
   declareProperty("HcalFiltert",m_hcal = 0x3); // 1 = Mask , 2=Offset , 3 = both, 0 = none

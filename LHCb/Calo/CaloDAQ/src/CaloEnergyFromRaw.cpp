@@ -19,7 +19,7 @@ DECLARE_TOOL_FACTORY( CaloEnergyFromRaw )
 CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : CaloReadoutTool ( type, name , parent )
+  : CaloReadoutTool ( type, name , parent ), m_pedShift(0.0)
 {
   declareInterface<ICaloEnergyFromRaw>(this);
   

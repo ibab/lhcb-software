@@ -25,6 +25,8 @@ CaloDataProviderFromTES::CaloDataProviderFromTES( const std::string& type,
   : GaudiTool ( type, name , parent )
   ,m_adcs()
   ,m_digits()
+  ,m_calo(0)
+  ,m_banks(0)
   ,m_digCont(NULL)
   ,m_adcCont(NULL)
   ,m_ok(false)
