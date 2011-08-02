@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-02 - Jibo He
+ - LineConfigDictionaries_GLWG.py
+   . Updated B2hhh
+ - Updated dbase of Stripping16
+
 ! 2011-07-29 - Jibo He
  - Moved b->2,3,4 body from PSWG to GTWG
 
