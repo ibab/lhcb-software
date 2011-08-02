@@ -10,15 +10,13 @@ from Beauty2Charm_LoKiCuts import LoKiCuts
 
 class ProtoLine(object):
     '''Stores selections, prescales, etc. that will become lines.'''
-    def __init__(self,sel,pre=1.0):
-        self.selection = sel
+    def __init__(self,sels,pre=1.0):
+        self.selections = sels
         self.pre = pre
 
-    def name(self): return self.selection.name()+'Line'
-
-    def prescale(self,config):
-        if not self.name() in config['Prescales'].keys(): return self.pre
-        else: return config['Prescales'][self.name()]
+    def prescale(self,line,config):
+        if not line.name() in config['Prescales'].keys(): return self.pre
+        else: return config['Prescales'][line.name()]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -88,8 +86,8 @@ def tisTosSelection(sel, tistos):
 
 def makeB2X(name,decay,inputs,config):
     '''Makes all B -> X selections.'''
-    comboCuts = LoKiCuts(['AM','AMAXDOCA'],config).code()
-    momCuts = [LoKiCuts(['SUMPT','VCHI2DOF'],config).code(),has1TrackChild(),
+    comboCuts = LoKiCuts(['SUMPT','AM','AMAXDOCA'],config).code()
+    momCuts = [LoKiCuts(['VCHI2DOF'],config).code(),has1TrackChild(),
                hasTopoChildren(),
                LoKiCuts(['BPVIPCHI2','BPVLTIME','BPVDIRA'],config).code()]
     momCuts = LoKiCuts.combine(momCuts)
@@ -98,17 +96,23 @@ def makeB2X(name,decay,inputs,config):
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
 def makeB2XMerged(name,decays,xtag,inputs,config):
-    '''Merges B->X selections.  Returns the TIS and TOS merged selections.'''
+    '''Merges B->X selections.  Returns the TIS and TOS selections.  The name
+    is misleading as the selections are not actually merged.  They used to be;
+    however, this was slow so now they are returned as lists.
+    '''
     tosSels = []
     tisSels = []
     for tag, decay in decays.iteritems():
         sname = tag+xtag+'Beauty2Charm'
-        sel = makeB2X(sname+'Sel',decay,inputs[tag],config)
+        if len(decays) > 1: sname += 'Sel'
+        sel = makeB2X(sname,decay,inputs[tag],config)
         tosSels.append(tisTosSelection(sel,'TOS'))
         tisSels.append(tisTosSelection(sel,'TIS'))
     sname = name+xtag+'Beauty2Charm'
-    tos = MergedSelection(sname+'TOS',RequiredSelections=tosSels)
-    tis = MergedSelection(sname+'TIS',RequiredSelections=tisSels)
-    return {'TOS':tos,'TIS':tis}
+    return {'TOS':tosSels,'TIS':tisSels}
+    #if len(decays) == 1: return {'TOS':tosSels[0],'TIS':tisSels[0]}
+    #tos = MergedSelection(sname+'TOS',RequiredSelections=tosSels)
+    #tis = MergedSelection(sname+'TIS',RequiredSelections=tisSels)
+    #return {'TOS':tos,'TIS':tis}
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

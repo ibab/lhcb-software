@@ -124,10 +124,14 @@ config = {
     "Prescales" : { # Prescales for individual lines
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
-    'B02DHD2Pi0HHH_MergedBeauty2CharmTOSLine'   : 0.1,
-    'B02DHD2Pi0HHH_MergedBeauty2CharmTISLine'   : 0.1,
-    'B02DHD2Pi0HHH_ResolvedBeauty2CharmTOSLine' : 0.1,
-    'B02DHD2Pi0HHH_ResolvedBeauty2CharmTISLine' : 0.1
+    'B02DPiD2Pi0HHH_MergedBeauty2CharmTOSLine'   : 0.1,
+    'B02DKD2Pi0HHH_MergedBeauty2CharmTOSLine'    : 0.1,
+    'B02DPiD2Pi0HHH_MergedBeauty2CharmTISLine'   : 0.1,
+    'B02DKD2Pi0HHH_MergedBeauty2CharmTISLine'    : 0.1,
+    'B02DPiD2Pi0HHH_ResolvedBeauty2CharmTOSLine' : 0.1,
+    'B02DKD2Pi0HHH_ResolvedBeauty2CharmTOSLine'  : 0.1,
+    'B02DPiD2Pi0HHH_ResolvedBeauty2CharmTISLine' : 0.1,
+    'B02DKD2Pi0HHH_ResolvedBeauty2CharmTISLine'  : 0.1
     },
     'GECNTrkMax'   : 500
     }
@@ -176,7 +180,6 @@ class Beauty2CharmConf(LineBuilder):
         # Lc -> X
         lc = LcBuilder(pions,kaons,protons,config['LC2X'])
 
-
         # Filter D,D0,D* and Lc with tighter cuts
         df = DFilter(d,dst,lc,config['DTIGHT'])
 
@@ -189,23 +192,28 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(lb2x.lines,config)
         
     def _makeLine(self,protoLine,config):
-        tmpSel = Selection(protoLine.selection.name()+'FilterALL',
-                           Algorithm=FilterDesktop(Code='ALL'),
-                           RequiredSelections=[protoLine.selection])
+        for line in protoLine.selections:
+            tmpSel = Selection(line.name()+'FilterALL',
+                               Algorithm=FilterDesktop(Code='ALL'),
+                               RequiredSelections=[line])
 
-        filter = {'Code' :
-                  "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" \
-                  % config['GECNTrkMax'],
-                  'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                  'from LoKiCore.functions    import *' ]
-                  }
-        hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
-              "(HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision') | "\
-              "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
-        line = StrippingLine(protoLine.name(),protoLine.prescale(config),
-                             selection=tmpSel,checkPV=True,FILTER=filter,
-                             HLT=hlt)
-        self.registerLine(line)
+            filter = {'Code' :
+                      #"(TrSOURCE('Rec/Track/Best')) >> TrLONG >> "\
+                      #"(TrSIZE < %s )" \
+                      "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)"\
+                      " < %s )" \
+                      % config['GECNTrkMax'],
+                      'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                      'from LoKiCore.functions    import *' ]
+                      }
+            hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
+                  "(HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision') | "\
+                  "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
+            sline = StrippingLine(line.name()+'Line',
+                                  protoLine.prescale(line,config),
+                                  selection=tmpSel,checkPV=True,FILTER=filter,
+                                  HLT=hlt)
+            self.registerLine(sline)
 
     def _makeLines(self,lines,config):
         for line in lines: self._makeLine(line,config)

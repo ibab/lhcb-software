@@ -44,15 +44,15 @@ class DFilter(object):
         dCuts.append(childPIDp )        # Create Tight D+- Mesons
         dCuts.append(self._massWindow(tag))
         dCuts = LoKiCuts.combine(dCuts)
-        return filterSelection(name,dCuts,[input])
+        return [filterSelection(name,dCuts,input)]
         
     def _massWindow(self,which):
         return "(M > %s) & (M < %s)" % (self.config['MM_MIN'][which],
                                         self.config['MM_MAX'][which])
 
     def _makeBiased(self,name,inputs):
-        return filterSelection(name+'Biased','(MIPCHI2DV(PRIMARY) > 4)',
-                               [inputs])
+        return [filterSelection(name+'Biased','(MIPCHI2DV(PRIMARY) > 4)',
+                                inputs)]
     
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 

@@ -44,10 +44,10 @@ class HHBuilder(object):
         self.rhoplus = self._makeRhoPlus()
         self.kstplus_kspi = self._makeKstarPlus_KSpi()
         self.kstplus_kpi0 = self._makeKstarPlus_KPi0()
-        self.kstar0 = self._makeKstar0([self.kpi])
+        self.kstar0 = self._makeKstar0(self.kpi)
         self.ph = self._makePH()
-        #self.phi = self._makePhi([self.kk])
-        #self.rho0 = self._makeRho0([self.pipi])
+        self.phi = self._makePhi(self.kk)
+        self.rho0 = self._makeRho0(self.pipi)
 
     def _makeX2HH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HH selections with charged tracks only.'''
@@ -78,72 +78,68 @@ class HHBuilder(object):
 
     def _makePiPi(self):
         '''Makes X -> pi+pi-'''
-        return self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
-                              '(AM < 5.2*GeV)',self.config,[self.pions])
+        return [self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
+                              '(AM < 5.2*GeV)',self.config,[self.pions])]
 
     def _makeKPi(self,pipi):
         '''Makes X -> K+pi- + c.c.'''
-        sel1 = subPID('X2KPi','K*(892)0',['K+','pi-'],[pipi])
-        sel2 = subPID('X2KPiBar','K*(892)~0',['pi+','K-'],[pipi])
-        return MergedSelection('X2KPiBeauty2Charm',
-                               RequiredSelections=[sel1,sel2])
-        #return self._makeX2HH('X2KPi',['[K*(892)0 -> K+ pi-]cc'],
-        #                      '(AM < 5*GeV)',self.config,
-        #                      [self.pions,self.kaons])
+        sel1 = subPID('X2KPi','K*(892)0',['K+','pi-'],pipi)
+        sel2 = subPID('X2KPiBar','K*(892)~0',['pi+','K-'],pipi)
+        return [sel1,sel2]
+        #return MergedSelection('X2KPiBeauty2Charm',
+        #                       RequiredSelections=[sel1,sel2])
     
     def _makeKK(self,pipi):
         '''Makes X -> K+K-.'''
-        return subPID('X2KK','phi(1020)',['K+','K-'],[pipi])
-        #return self._makeX2HH('X2KK',['phi(1020) -> K+ K-'],
-        #                      '(AM < 5*GeV)',self.config,[self.kaons])
+        return [subPID('X2KK','phi(1020)',['K+','K-'],pipi)]
 
     def _makeKsPi(self):
         '''Makes X -> Ks0pi- + c.c.'''
-        return self._makeXPLUS2HH('X2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
-                                  '(AM < 5.2*GeV)',self.config,
-                                  self.ks["DD"]+self.ks["LL"]+[self.pions]) 
+        return [self._makeXPLUS2HH('X2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
+                                   '(AM < 5.2*GeV)',self.config,
+                                   self.ks["DD"]+self.ks["LL"]+[self.pions])]
 
     def _makeKPi0(self):
         '''Makes X -> K+pi0 + c.c.'''
         inputs = self.pi0["Merged"]+self.pi0["Resolved"]+[self.kaons]
-        return self._makeXPLUS2HH('X2KPi0',['[K*(892)+ -> K+ pi0]cc'],
-                                  '(AM < 5*GeV)',self.config,inputs,True)
+        return [self._makeXPLUS2HH('X2KPi0',['[K*(892)+ -> K+ pi0]cc'],
+                                   '(AM < 5*GeV)',self.config,inputs,True)]
 
     def _makePiPi0(self):
         '''Makes X -> pi+pi0'''
         inputs = [self.pions] +self.pi0["Merged"]+self.pi0["Resolved"]
-        return self._makeXPLUS2HH('X2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
-                                  'AM < 5*GeV',self.config,inputs,True)
+        return [self._makeXPLUS2HH('X2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
+                                   'AM < 5*GeV',self.config,inputs,True)]
 
     def _makeRhoPlus(self):
         inputs = [self.pions] +self.pi0["Merged"]+self.pi0["Resolved"]
-        return self._makeXPLUS2HH('RHO2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
-                                  self._massWindow('RHO','rho(770)+'),
-                                  self.config,inputs,True)
+        return [self._makeXPLUS2HH('RHO2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
+                                   self._massWindow('RHO','rho(770)+'),
+                                   self.config,inputs,True)]
 
     def _makeKstarPlus_KSpi(self):
         inputs = self.ks["DD"]+self.ks["LL"]+[self.pions]
-        return self._makeXPLUS2HH('Kst2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
-                                  self._massWindow('KST','K*(892)+'),
-                                  self.config,inputs)
+        return [self._makeXPLUS2HH('Kst2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
+                                   self._massWindow('KST','K*(892)+'),
+                                   self.config,inputs)]
 
     def _makeKstarPlus_KPi0(self):
         inputs = self.pi0["Merged"]+self.pi0["Resolved"]+[self.kaons]
-        return self._makeXPLUS2HH('Kst2KPi0',['[K*(892)+ -> K+ pi0]cc'],
-                                  self._massWindow('KST','K*(892)+'),
-                                  self.config,inputs,True)
+        return [self._makeXPLUS2HH('Kst2KPi0',['[K*(892)+ -> K+ pi0]cc'],
+                                   self._massWindow('KST','K*(892)+'),
+                                   self.config,inputs,True)]
 
-    # currently not in use
-    #def _makeRho0(self,pipi):
-    #   return filterSelection('RHO0',self._massWindow('RHO','rho(770)0'),pipi)
+    def _makeRho0(self,pipi):
+        mass = self._massWindow('RHO','rho(770)0').replace('ADAMASS','ADMASS')
+        return [filterSelection('RHO',mass,pipi)]
 
     def _makeKstar0(self,kpi):
         mass = self._massWindow('KST','K*(892)0').replace('ADAMASS','ADMASS')
-        return filterSelection('K*0',mass,kpi)
+        return [filterSelection('K*0',mass,kpi)]
 
-    # currently not in use
-    #def _makePhi(self,kk):
-    #    return filterSelection('PHI',self._massWindow('PHI','phi(1020)'),kk)
+    def _makePhi(self,kk):
+        mass = self._massWindow('PHI','phi(1020)').replace('ADAMASS','ADMASS')
+        return [filterSelection('PHI',mass,kk)]
 
     def _makePH(self):
         '''Makes X -> p+ h- + c.c.'''
@@ -157,6 +153,6 @@ class HHBuilder(object):
                            RequiredSelections=[sel])
         filter =  "INTREE((ABSID=='p+') & (P > %s)) & (M < 5.2*GeV)" \
                  % self.config['pP_MIN']
-        return filterSelection('X2PH',filter,[presel])
+        return [filterSelection('X2PH',filter,[presel])]
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

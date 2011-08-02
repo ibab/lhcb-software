@@ -19,10 +19,10 @@ class HHHBuilder(object):
         self.protons = filterInputs("HHHProtons",[protons],
                                     config['pDAUGHTERS'])
         self.config = config
-        self.pipipi = self._makePiPiPi()
-        self.kpipi = self._makeKPiPi()
-        self.ppbarpi = self._makeppbarPi()
-        self.ppbark = self._makeppbarK()
+        self.pipipi = [self._makePiPiPi()]
+        self.kpipi = [self._makeKPiPi()]
+        self.ppbarpi = [self._makeppbarPi()]
+        self.ppbark = [self._makeppbarK()]
 
     def _makeX2HHH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HHH selections with charged tracks only.'''
@@ -31,7 +31,8 @@ class HHHBuilder(object):
         numPassPtCut = "(ANUM(PT < %s) <= 1)" %(config['PTMIN1'])
         comboCuts.append(numPassPtCut)
         comboCuts = LoKiCuts.combine(comboCuts)
-        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA','MIPCHI2DV','BPVVDRHO','BPVVDZ'],config).code()
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA','MIPCHI2DV',
+                            'BPVVDRHO','BPVVDZ'],config).code()
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
         return Selection(name+'Beauty2Charm',Algorithm=cp,
