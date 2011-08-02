@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-02 - Anton Poluektov 
+ - LineConfigDictionaries_GTWG.py
+   . Prescale of Unbiased line in B2DX is back to 0.1
+
 ! 2011-08-02 - Jibo He
  - LineConfigDictionaries_GTWG.py
    . Pre-scale all B2DX, B2D3H lines by a factor of 10 further. 
