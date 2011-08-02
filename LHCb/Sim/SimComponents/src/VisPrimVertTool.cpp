@@ -1,4 +1,3 @@
-// $Id: VisPrimVertTool.cpp,v 1.1 2007-01-12 10:10:52 cattanem Exp $
 // Include files 
 
 // local
@@ -20,7 +19,7 @@
 // 2004-03-18 : Christian Jacoby (LPHE, EPFL, Lausanne)
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( VisPrimVertTool );
+DECLARE_TOOL_FACTORY( VisPrimVertTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -43,7 +42,7 @@ StatusCode VisPrimVertTool::initialize() {
   
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc ;
-  debug() << "==> MCParticleMaker:Initialising" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Initialize" << endmsg;
 
   return sc;
 }
@@ -54,7 +53,7 @@ StatusCode VisPrimVertTool::initialize() {
 
 bool VisPrimVertTool::isB( const LHCb::MCVertex* pv ) const { 
   if ( !pv->isPrimary() ){
-    Error("Input vertex is not a primary") ;
+    Error("Input vertex is not a primary").ignore() ;
   }
 
   LHCb::MCParticles* MCPartCtnr = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
@@ -66,7 +65,7 @@ bool VisPrimVertTool::isB( const LHCb::MCVertex* pv ) const {
     }
   }
   return false;
-}; // isB
+} // isB
 
 //=============================================================================
 //-----------------------------------------------------------------------------
@@ -74,7 +73,7 @@ bool VisPrimVertTool::isB( const LHCb::MCVertex* pv ) const {
 //-----------------------------------------------------------------------------
 long VisPrimVertTool::countVisTracks( const LHCb::MCVertex* pv ) const { 
   if ( !pv->isPrimary() ){
-    Error("Input vertex is not a primary") ;
+    Error("Input vertex is not a primary").ignore() ;
   }
 
   LHCb::MCParticles* MCPartCtnr = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
@@ -97,7 +96,7 @@ long VisPrimVertTool::countVisTracks( const LHCb::MCVertex* pv ) const {
     }
   }
   return countTracks; 
-}; // countVisTracks
+} // countVisTracks
 
 //=============================================================================
 //-----------------------------------------------------------------------------
@@ -112,5 +111,4 @@ long VisPrimVertTool::countVertices() const {
   }
   return nVertices;
   
-} ;// countVertices
-
+} // countVertices

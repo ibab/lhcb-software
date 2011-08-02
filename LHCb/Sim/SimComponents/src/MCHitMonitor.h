@@ -49,7 +49,7 @@ public:
 private:
 
   /// init histograms
-  StatusCode initHistograms();
+  void initHistograms();
 
   /// fill histograms
   StatusCode fillHistograms(const LHCb::MCHit* aHit) const;

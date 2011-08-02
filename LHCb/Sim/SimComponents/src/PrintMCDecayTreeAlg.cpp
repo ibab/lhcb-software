@@ -1,4 +1,3 @@
-// $Id: PrintMCDecayTreeAlg.cpp,v 1.3 2008-04-11 08:21:50 jpalac Exp $
 // Include files 
 #include <stdlib.h>
 
@@ -18,7 +17,7 @@
 // Implementation file for class : PrintMCDecayTreeAlg
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PrintMCDecayTreeAlg );
+DECLARE_ALGORITHM_FACTORY( PrintMCDecayTreeAlg )
 
 
 //=============================================================================
@@ -38,7 +37,7 @@ PrintMCDecayTreeAlg::PrintMCDecayTreeAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrintMCDecayTreeAlg::~PrintMCDecayTreeAlg() {}; 
+PrintMCDecayTreeAlg::~PrintMCDecayTreeAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -47,21 +46,23 @@ StatusCode PrintMCDecayTreeAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialise" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialise" << endmsg;
 
   m_printTool = tool<IPrintMCDecayTreeTool>( m_printToolName, this );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode PrintMCDecayTreeAlg::execute() {
   
-  debug() << "==> Execute" << endreq;
-
-  verbose() << "Getting MCParticles from " << m_particleLocation << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "==> Execute" << endmsg;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+      verbose() << "Getting MCParticles from " << m_particleLocation << endmsg;
+  }
 
   LHCb::MCParticles* parts = 
     get<LHCb::MCParticles>( m_particleLocation);
@@ -74,14 +75,14 @@ StatusCode PrintMCDecayTreeAlg::execute() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode PrintMCDecayTreeAlg::finalize() {
 
-  debug() << "==> Finalize" << endreq;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();
 }

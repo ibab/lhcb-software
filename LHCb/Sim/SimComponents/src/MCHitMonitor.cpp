@@ -1,4 +1,3 @@
-// $Id: MCHitMonitor.cpp,v 1.7 2009-02-18 15:33:02 mneedham Exp $
 //
 // This File contains the implementation of the MCHitMonitor
 //
@@ -35,7 +34,7 @@
 
 // Needed for the creation of MCHitMonitor objects.
 #include "GaudiKernel/AlgFactory.h"
-DECLARE_ALGORITHM_FACTORY( MCHitMonitor );
+DECLARE_ALGORITHM_FACTORY( MCHitMonitor )
 
 //_________________________________________________
 /// MCHitMonitor
@@ -46,7 +45,7 @@ DECLARE_ALGORITHM_FACTORY( MCHitMonitor );
 
 MCHitMonitor::MCHitMonitor(const std::string& name,
 		     ISvcLocator* pSvcLocator):
-  GaudiHistoAlg(name, pSvcLocator)
+  GaudiHistoAlg(name, pSvcLocator), m_selector(0)
 {
   /// MCHitMonitor constructor
   this->declareProperty("mcPathString", m_MCHitPath="");
@@ -81,14 +80,14 @@ StatusCode MCHitMonitor::initialize()
   m_selector = tool<IMCParticleSelector>(m_selectorName, m_selectorName, this);
 
   // initialize histograms
-  sc = this->initHistograms();
+  this->initHistograms();
 
   m_energyVec.reserve(m_nToCollect);
 
   return StatusCode::SUCCESS;  
 }
 
-StatusCode MCHitMonitor::initHistograms()
+void MCHitMonitor::initHistograms()
 {
   /// Intialize histograms
   std::string tPath = this->histoPath()+"/"; 
@@ -121,7 +120,7 @@ StatusCode MCHitMonitor::initHistograms()
 
  }//loop stations
 
- return StatusCode::SUCCESS;
+ return;
 }
  
 StatusCode MCHitMonitor::execute()
@@ -136,7 +135,7 @@ StatusCode MCHitMonitor::execute()
   // loop over hits fill some histograms
   LHCb::MCHits::const_iterator iHit = hitsCont->begin() ;
   for ( ; iHit != hitsCont->end(); ++iHit ) {
-    fillHistograms(*iHit);
+    fillHistograms(*iHit).ignore();
   } // loop hits
 
   return StatusCode::SUCCESS;
@@ -163,11 +162,7 @@ StatusCode MCHitMonitor::fillHistograms(const LHCb::MCHit* aHit) const{
 
   // check 1 can find pointer to MCparticle
   const LHCb::MCParticle* aParticle = aHit->mcParticle();
-  
-  if (!aParticle){
-    err() << "failed to find MCParticle" <<endreq;
-    return StatusCode::FAILURE;
-  }
+  if (!aParticle) return Error("failed to find MCParticle");
 
   const LHCb::MCVertex* vertex = aParticle->originVertex();
   if (vertex){
@@ -187,7 +182,7 @@ StatusCode MCHitMonitor::fillHistograms(const LHCb::MCHit* aHit) const{
   const int iStation = getStationID(mcHitPoint.z());
 
   if (iStation<0) {
-     err() << "failed to get station number for z " << mcHitPoint.z() << endreq;
+     err() << "failed to get station number for z " << mcHitPoint.z() << endmsg;
      return StatusCode::FAILURE;
   } 
 

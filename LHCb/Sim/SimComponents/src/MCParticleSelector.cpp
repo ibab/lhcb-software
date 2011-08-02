@@ -1,5 +1,3 @@
-// $Id: MCParticleSelector.cpp,v 1.13 2008-12-12 12:41:37 cattanem Exp $
-
 #include "Event/MCParticle.h"
 
 // Gaudi
@@ -10,7 +8,7 @@
 #include "boost/limits.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 
-DECLARE_TOOL_FACTORY ( MCParticleSelector );
+DECLARE_TOOL_FACTORY ( MCParticleSelector )
 
 MCParticleSelector::MCParticleSelector( const std::string& type,
                                         const std::string& name,
@@ -44,14 +42,14 @@ StatusCode MCParticleSelector::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // printout selection criteria
-  info() << "MCParticle Momentum cut     : " << m_pMin/Gaudi::Units::GeV << " GeV/c < P < " << m_pMax << " GeV/c" << endreq;
-  info() << "           Beta * gamma cut : " << m_betaGammaMin << " < beta*gamma" << endreq;
-  info() << "           Eta cut          : " << m_etaMin << " < P < " << m_etaMax << endreq;
-  if ( m_rejectElectrons ) info() << "           Will reject electrons" << endreq;
-  if ( m_selBprods       ) info() << "           Will only select B decay products" << endreq;
-  if ( m_rejectInteractions ) info() << "           Will reject particles from interations before z=" << m_zInteraction << endreq;
-  if ( !m_selCharged ) info() << "           Will reject charged particles" << endreq;
-  if ( !m_selNeutral ) info() << "           Will reject neutral particles" << endreq;
+  info() << "MCParticle Momentum cut     : " << m_pMin/Gaudi::Units::GeV << " GeV/c < P < " << m_pMax << " GeV/c" << endmsg;
+  info() << "           Beta * gamma cut : " << m_betaGammaMin << " < beta*gamma" << endmsg;
+  info() << "           Eta cut          : " << m_etaMin << " < P < " << m_etaMax << endmsg;
+  if ( m_rejectElectrons ) info() << "           Will reject electrons" << endmsg;
+  if ( m_selBprods       ) info() << "           Will only select B decay products" << endmsg;
+  if ( m_rejectInteractions ) info() << "           Will reject particles from interations before z=" << m_zInteraction << endmsg;
+  if ( !m_selCharged ) info() << "           Will reject charged particles" << endmsg;
+  if ( !m_selNeutral ) info() << "           Will reject neutral particles" << endmsg;
 
   return sc;
 }

@@ -1,4 +1,3 @@
-// $Id: DumpHepMCTree.cpp,v 1.2 2009-01-08 09:44:37 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -48,13 +47,13 @@ protected:
 // ============================================================================
 // Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( DumpHepMCTree );
+DECLARE_ALGORITHM_FACTORY( DumpHepMCTree )
 // ============================================================================
 StatusCode DumpHepMCTree::execute() 
 {
   // get the stream
   MsgStream& log = info() ;
-  log << " Tree dump [cut-off at " << m_levels << " levels] " << endreq ;
+  log << " Tree dump [cut-off at " << m_levels << " levels] " << endmsg ;
   //
   for( Addresses::const_iterator ia = m_addresses.begin() ; 
        m_addresses.end() != ia ; ++ia ) 
@@ -63,7 +62,7 @@ StatusCode DumpHepMCTree::execute()
     LHCb::HepMCEvents* events = get<LHCb::HepMCEvents>( *ia ) ;
     if( 0 == events ) { continue ; }
     //
-    log << " Container '"  << *ia << "' " << endreq ;
+    log << " Container '"  << *ia << "' " << endmsg ;
     for ( LHCb::HepMCEvents::const_iterator ie = events->begin() ; 
           events->end() != ie ; ++ie ) 
     {
@@ -73,7 +72,7 @@ StatusCode DumpHepMCTree::execute()
       if ( 0 == evt   ) { continue ; }                     // CONTINUE 
       log << " #particles/vertices : "
           << evt->particles_size() << "/" 
-          << evt->vertices_size() << endreq ;
+          << evt->vertices_size() << endmsg ;
       
       HepMC::GenVertex* signal = evt->signal_process_vertex() ;
       if ( 0 == signal ) 
@@ -88,9 +87,9 @@ StatusCode DumpHepMCTree::execute()
       { printDecay ( signal , log.stream() , 0 ) ; }
     }
   }
-  log << endreq ;
+  log << endmsg ;
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 /** print the decay tree of the particle 
  *  @param vertex  pointer to the vertex to be printed 
@@ -112,7 +111,7 @@ StatusCode DumpHepMCTree::printDecay
   for ( ; begin != end ; ++begin ) 
   { DumpHepMCDecay::printDecay ( *begin , stream , level ) ; }
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
 /// The END 
 // ============================================================================

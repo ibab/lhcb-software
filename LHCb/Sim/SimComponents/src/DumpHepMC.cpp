@@ -1,4 +1,3 @@
-// $Id: DumpHepMC.cpp,v 1.1 2008-07-23 17:38:05 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,7 +24,7 @@
 
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( DumpHepMC );
+DECLARE_ALGORITHM_FACTORY( DumpHepMC )
 
 // ============================================================================
 /** standard constructor 
@@ -45,7 +44,7 @@ DumpHepMC::DumpHepMC ( const std::string& name ,
   m_addresses.push_back( LHCb::HepMCEventLocation::Default ) ;  // default!
   // define the property 
   declareProperty ("Addresses" , m_addresses ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -72,12 +71,13 @@ StatusCode DumpHepMC::execute()
        m_addresses.end() != ia ; ++ia ) 
   {
     //
-    debug () << " Inspect the container '" << *ia << "'" << endreq ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug () << " Inspect the container '" << *ia << "'" << endmsg ;
     LHCb::HepMCEvents* events = get<LHCb::HepMCEvents>( *ia ) ;
     if( 0 == events ) { continue ; }
     //
     info  () << " HepMC container '" << *ia << "' \t has " 
-             << events->size() << " event(s) " << endreq ;
+             << events->size() << " event(s) " << endmsg ;
     for ( LHCb::HepMCEvents::const_iterator ie = events->begin() ; 
           events->end() != ie ; ++ie ) 
     {
@@ -86,7 +86,7 @@ StatusCode DumpHepMC::execute()
       log << "  Generator '" << event->generatorName() << "'" << std::endl ;
       if ( log.isActive() ) 
         { orderedPrint( event->pGenEvt() , log.stream() ) ; }
-      log << endreq ;
+      log << endmsg ;
     }
   };
   

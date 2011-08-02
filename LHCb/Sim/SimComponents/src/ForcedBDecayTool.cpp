@@ -1,4 +1,3 @@
-// $Id: ForcedBDecayTool.cpp,v 1.5 2008-12-15 07:11:20 cattanem Exp $
 #include "ForcedBDecayTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
@@ -11,7 +10,7 @@
 using namespace LHCb;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( ForcedBDecayTool );
+DECLARE_TOOL_FACTORY( ForcedBDecayTool )
 
 //=============================================================================
 ForcedBDecayTool::ForcedBDecayTool( const std::string& type,
@@ -57,8 +56,8 @@ MCParticle* ForcedBDecayTool::associatedofHEP(HepMC::GenParticle* hepmcp) {
   int mid = hepmcp->pdg_id();
 //   double mothmom = hepmcp->momentum().mag();
 //   double moththeta = hepmcp->momentum().theta();
-//   debug()<<mid<<"  mothmom="<<mothmom<<"   moththeta="<<moththeta<<endreq;
-//   debug()<< hepmcp->production_vertex ()->position().z()<<endreq;
+//   debug()<<mid<<"  mothmom="<<mothmom<<"   moththeta="<<moththeta<<endmsg;
+//   debug()<< hepmcp->production_vertex ()->position().z()<<endmsg;
 
   MCParticles::const_iterator imc;
 //   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {

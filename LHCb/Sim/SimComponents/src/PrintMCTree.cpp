@@ -1,8 +1,7 @@
-// $Id: PrintMCTree.cpp,v 1.2 2009-01-08 09:44:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // from PartProp
 #include "Kernel/IParticlePropertySvc.h"
@@ -21,7 +20,7 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( PrintMCTree );
+DECLARE_ALGORITHM_FACTORY( PrintMCTree )
 
 
 //=============================================================================
@@ -49,10 +48,10 @@ StatusCode PrintMCTree::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   if (m_particleNames.empty()){
-    fatal() << "You need to give a list of particles" << endreq;
+    fatal() << "You need to give a list of particles" << endmsg;
     return StatusCode::FAILURE ;
   }
   
@@ -73,51 +72,55 @@ StatusCode PrintMCTree::initialize() {
     m_particleIDs.push_back(pid);
   }
 
-  info() << "Will print tree for MC particles " << m_particleNames << endreq;
+  info() << "Will print tree for MC particles " << m_particleNames << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode PrintMCTree::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   LHCb::MCParticles* kmcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
 
   std::vector<LHCb::MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
-  debug() << "There are " <<  mcparts.size() << " MC particles" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "There are " <<  mcparts.size() << " MC particles" << endmsg;
 
   bool printed = false ;
   std::vector<LHCb::MCParticle*>::iterator MCP;
   for (MCP=mcparts.begin() ; MCP!=mcparts.end() ; ++MCP ){
     int pid = (*MCP)->particleID().pid() ;
-    verbose() << "MC Particle is a " << pid << endreq ;
+    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
+      verbose() << "MC Particle is a " << pid << endmsg ;
     std::vector<int>::iterator PID;
     for (PID=m_particleIDs.begin() ; PID!=m_particleIDs.end() ; ++PID ){
       if ( pid==(*PID)) {
-        info() << "Printing MC tree for particle with ID " << pid << endreq ;
+        info() << "Printing MC tree for particle with ID " << pid << endmsg ;
         m_printMCTree->printTree( (*MCP), m_depth ) ;
         printed = true ;
         break ;
       }  
     }
   }
-  if (!printed) debug() << "No MC particles found to print in a tree" << endreq;
+
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    if (!printed) debug() << "No MC particles found to print in a tree" << endmsg;
   
   setFilterPassed(printed);
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode PrintMCTree::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

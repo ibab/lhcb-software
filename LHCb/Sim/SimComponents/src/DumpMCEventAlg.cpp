@@ -37,7 +37,7 @@ DumpMCEventAlg::DumpMCEventAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-DumpMCEventAlg::~DumpMCEventAlg() {}; 
+DumpMCEventAlg::~DumpMCEventAlg() {}
 
 //=============================================================================
 // Initialization
@@ -49,7 +49,7 @@ StatusCode DumpMCEventAlg::initialize() {
   m_checker = tool<ICheckTool>( "CheckMCEventTool" );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -95,6 +95,6 @@ StatusCode DumpMCEventAlg::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

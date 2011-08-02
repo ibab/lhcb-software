@@ -1,4 +1,3 @@
-// $Id: PrintMCDecayTreeTool.cpp,v 1.5 2009-01-08 09:44:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +24,7 @@
 
 // Declaration of the AlgTool Factory
 
-DECLARE_TOOL_FACTORY( PrintMCDecayTreeTool );
+DECLARE_TOOL_FACTORY( PrintMCDecayTreeTool )
 
 using namespace Gaudi::Units;
 
@@ -90,7 +89,7 @@ StatusCode PrintMCDecayTreeTool::initialize( void ){
     else if( tok=="IDCL" )  m_keys.push_back(idcl);
     else
       err() << "Unknown output key '" << tok << "'. Ignoring it."
-            << endreq;
+            << endmsg;
     if( pos != std::string::npos ) oldpos = pos+1;
     else                           oldpos = pos;
   }
@@ -101,12 +100,12 @@ StatusCode PrintMCDecayTreeTool::initialize( void ){
   else if (m_energyUnit == MeV) m_energyUnitName = "MeV" ;
   else if (m_energyUnit <= 0) {
     err() << "You have chosen a unit for energies: " 
-          << m_energyUnit << endreq;
+          << m_energyUnit << endmsg;
     return StatusCode::FAILURE ;
   } 
   else {
     warning() << "You have chosen a non-standard unit for energies: " 
-              << m_energyUnit << endreq;
+              << m_energyUnit << endmsg;
     m_energyUnitName = "???" ;
   }
   if (m_lengthUnit == mm) m_lengthUnitName = "mm" ;
@@ -114,12 +113,12 @@ StatusCode PrintMCDecayTreeTool::initialize( void ){
   else if (m_lengthUnit == m) m_lengthUnitName = "m" ;
   else if (m_lengthUnit <= 0) {
     err() << "You have chosen a unit for lengths: " 
-          << m_lengthUnit << endreq;
+          << m_lengthUnit << endmsg;
     return StatusCode::FAILURE ;
   } 
   else {
     warning() << "You have chosen a non-standard unit for lengths: " 
-              << m_lengthUnit << endreq;
+              << m_lengthUnit << endmsg;
     m_lengthUnitName = "??" ;
     
   }
@@ -310,7 +309,7 @@ void PrintMCDecayTreeTool::printTree( const LHCb::MCParticle* mother,
   MsgStream log(msgSvc(), name());
 
   if( !mother ) {
-    err() << "printTree called with NULL MCParticle" << endreq;
+    err() << "printTree called with NULL MCParticle" << endmsg;
     return;
   }
 
@@ -319,7 +318,7 @@ void PrintMCDecayTreeTool::printTree( const LHCb::MCParticle* mother,
 
   log.setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, "", maxDepth, log );
-  log << endreq;
+  log << endmsg;
 }
 //=============================================================================
 // printAncestor (MCParticle)
@@ -353,7 +352,7 @@ void PrintMCDecayTreeTool::printAsTree( const LHCb::MCParticle::ConstVector &eve
         ((*i)->originVertex()->mother() == NULL) )
       printDecayTree( *i, "", m_depth, log );
   }
-  log << endreq;
+  log << endmsg;
 }
 //=============================================================================
 // printAsTree (MCParticle) (KeyedContainer)
@@ -372,7 +371,7 @@ void PrintMCDecayTreeTool::printAsTree( const LHCb::MCParticles& event )
         ((*i)->originVertex()->mother() == NULL) )
       printDecayTree( *i, "", m_depth, log );
   }
-  log << endreq;
+  log << endmsg;
 }
 //=============================================================================
 // printDecayTree (MCParticle)
@@ -413,7 +412,7 @@ void PrintMCDecayTreeTool::printAsList( const LHCb::MCParticle::ConstVector &eve
   LHCb::MCParticle::ConstVector::const_iterator i;
   for( i=event.begin(); i!=event.end(); i++, c++ )
     printInfo( "", *i, log );
-  log << endreq;
+  log << endmsg;
 }
 //=============================================================================
 // printAsList (MCParticle) (KeyedContainer)
@@ -428,7 +427,7 @@ void PrintMCDecayTreeTool::printAsList( const LHCb::MCParticles &event)
   LHCb::MCParticles::const_iterator i;
   for( i=event.begin(); i!=event.end(); i++, c++ )
     printInfo( "", *i, log );
-  log << endreq;
+  log << endmsg;
 }
 //=============================================================================
 //=============================================================================

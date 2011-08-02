@@ -1,4 +1,3 @@
-// $Id: EvtTypeSvc.cpp,v 1.4 2009-03-09 13:04:16 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -48,7 +47,7 @@ EvtTypeSvc::EvtTypeSvc( const std::string& name, ISvcLocator* svc )
 //=============================================================================
 // Destructor
 //=============================================================================
-EvtTypeSvc::~EvtTypeSvc() {}; 
+EvtTypeSvc::~EvtTypeSvc() {}
 
 //=============================================================================
 // QueryInterface
@@ -106,11 +105,11 @@ StatusCode EvtTypeSvc::finalize()
 {
 
   MsgStream msg( msgSvc(), name() );
-
-  msg << MSG::DEBUG << "==> Finalize" << endmsg;
-  
-  msg << MSG::DEBUG << "Table size before clean up" << m_evtTypeInfos.size()
-      << endmsg;
+  if( msg.level() <= MSG::DEBUG ) {
+    msg << MSG::DEBUG << "==> Finalize" << endmsg;
+    msg << MSG::DEBUG << "Table size before clean up" << m_evtTypeInfos.size()
+        << endmsg;
+  }
   
   // Clean up list of evttypes
   while( !m_evtTypeInfos.empty() ) {
@@ -119,8 +118,9 @@ StatusCode EvtTypeSvc::finalize()
     delete anEvtType;
   }
   
-  msg << MSG::DEBUG << "Table size after clean up" << m_evtTypeInfos.size()
-      << endmsg;
+  if( msg.level() <= MSG::DEBUG )
+    msg << MSG::DEBUG << "Table size after clean up" << m_evtTypeInfos.size()
+        << endmsg;
   
   return Service::finalize();
   
@@ -183,18 +183,23 @@ StatusCode EvtTypeSvc::parseFile( const std::string input )
     m_evtTypeInfos.push_back(entry);
   }
 
-  msg << MSG::DEBUG << "Read   " << nlines << " entries in file " << endmsg;
-  msg << MSG::DEBUG << "Stored " << m_evtTypeInfos.size() 
+  if( msg.level() <= MSG::DEBUG ) {
+    msg << MSG::DEBUG << "Read   " << nlines << " entries in file " << endmsg;
+    msg << MSG::DEBUG << "Stored " << m_evtTypeInfos.size() 
       << " entries in table" << endmsg;
-  msg << MSG::VERBOSE << "List of entries: EvtType, NickName, DecayDescriptor"
-      << std::endl;
-  for( EvtTypeInfos::const_iterator iEntry = m_evtTypeInfos.begin();
-       m_evtTypeInfos.end() != iEntry; ++iEntry ) {
-    msg << MSG::VERBOSE << (*iEntry)->evtCode() << token
-        << (*iEntry)->nickName() << token
-        << (*iEntry)->decayDescriptor() << std::endl;
+    if( msg.level() <= MSG::VERBOSE ) {
+      msg << MSG::VERBOSE 
+          << "List of entries: EvtType, NickName, DecayDescriptor"
+          << std::endl;
+      for( EvtTypeInfos::const_iterator iEntry = m_evtTypeInfos.begin();
+           m_evtTypeInfos.end() != iEntry; ++iEntry ) {
+        msg << MSG::VERBOSE << (*iEntry)->evtCode() << token
+            << (*iEntry)->nickName() << token
+            << (*iEntry)->decayDescriptor() << std::endl;
+      }
+      msg << MSG::VERBOSE << endmsg;
+    }
   }
-  msg << MSG::VERBOSE << endmsg;
 
   return StatusCode::SUCCESS;
 }

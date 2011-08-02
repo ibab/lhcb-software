@@ -3,9 +3,6 @@
  *
  *  Implementation file for class : MCReconstructible
  *
- *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.13 2009-07-09 09:43:08 odescham Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
  */
@@ -26,7 +23,7 @@
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MCReconstructible );
+DECLARE_TOOL_FACTORY( MCReconstructible )
 
 //=============================================================================
 // Standard constructor, initializes variables

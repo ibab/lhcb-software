@@ -1,5 +1,3 @@
-// $Id: DumpHepMCDecay.cpp,v 1.2 2009-01-08 09:44:37 cattanem Exp $
-
 // Include files 
 #include "boost/lexical_cast.hpp"
 
@@ -25,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DumpHepMCDecay ) ;
+DECLARE_ALGORITHM_FACTORY( DumpHepMCDecay )
 
 
 //=============================================================================

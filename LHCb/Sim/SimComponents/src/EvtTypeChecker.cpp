@@ -1,4 +1,3 @@
-// $Id: EvtTypeChecker.cpp,v 1.5 2007-05-29 08:48:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +52,7 @@ StatusCode EvtTypeChecker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // Retrieve the EvtTypeSvc here so that it is always done at initialization
   m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );
@@ -76,7 +75,7 @@ StatusCode EvtTypeChecker::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Set the decay descriptor of the MCdecayFinder tool based on the evtCode,
@@ -103,14 +102,14 @@ StatusCode EvtTypeChecker::setDecayToFind( const int evtCode ) {
   m_evtCode  = evtCode;   // in case called when reading data
      
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode EvtTypeChecker::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   // Counter of events processed
   m_nEvents++;
@@ -132,14 +131,14 @@ StatusCode EvtTypeChecker::execute() {
   } 
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode EvtTypeChecker::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   std::string decayAnalyzed = "Unknown";
   if( 0 != m_mcFinder ) {
