@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( MuonRec )
 MuonRec::MuonRec( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-   m_NStation(0), m_NRegion(0)
+    m_NStation(0), m_NRegion(0), m_muonDetector(0), m_muonBuffer(0)
 {
   m_forceResetDAQ=false;
   if(context()=="TAE")  m_forceResetDAQ=true;
@@ -44,17 +44,9 @@ StatusCode MuonRec::initialize() {
   if(sc.isFailure())return sc;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialise" << endmsg;
-  m_muonDetector=getDet<DeMuonDetector>
-    (DeMuonLocation::Default);
-  
-  // TDS path to the Muon system  is of the form /dd/Structure/LHCb/Muon
-  
-  if(m_muonDetector==NULL){
-    error() << "Could not read /dd/Structure/LHCb/DownstreamRegion/Muon from TDS" 
-        << endmsg;
-    return StatusCode::FAILURE;
-  }
-
+  m_muonDetector=getDet<DeMuonDetector>(DeMuonLocation::Default);
+  if(m_muonDetector==NULL)
+    return Error("Could not read /dd/Structure/LHCb/DownstreamRegion/Muon from TDS");
 
   m_NStation = 0;
   m_NRegion = 0;
@@ -62,13 +54,13 @@ StatusCode MuonRec::initialize() {
   m_NStation= basegeometry.getStations();
   m_NRegion = basegeometry.getRegions();
   if(m_forceResetDAQ){
-    //if TAE mode use the pribate tool to reset the meomory.
+    //if TAE mode use the private tool to reset the meomory.
     m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer",this);
-    if(!m_muonBuffer)info()<<"error retrieving the toll "<<endmsg;
+    if(!m_muonBuffer) return Error("Cannot create private MuonRawBuffer tool");
   }else{
     //if not TAE mode use the public tool
     m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-    if(!m_muonBuffer)info()<<"error retrieving the toll "<<endmsg;
+    if(!m_muonBuffer) return Error("Cannot retrieve MuonRawBuffer tool");
   }
   
   

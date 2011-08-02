@@ -22,7 +22,7 @@ DECLARE_TOOL_FACTORY( MuonTell1Config )
 MuonTell1Config::MuonTell1Config( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ), m_muonDet(0)
 {
   declareInterface<IMuonTell1Config>(this);
 
@@ -35,9 +35,10 @@ MuonTell1Config::~MuonTell1Config() {} ;
 StatusCode MuonTell1Config::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
-  
-  if (!sc) return sc;
+  if(sc.isFailure())return sc;
+
   m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
+  if(!m_muonDet) return Error("Could not locate Muon detector element");
   
   
   TUName.push_back(std::pair<std::string,long>("TSM2R1Map1",0));

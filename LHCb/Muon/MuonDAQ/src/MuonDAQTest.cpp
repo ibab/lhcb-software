@@ -20,7 +20,7 @@ DECLARE_ALGORITHM_FACTORY( MuonDAQTest )
 //=============================================================================
 MuonDAQTest::MuonDAQTest( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_MuonBuffer(0)
 {
 
 }
@@ -38,9 +38,10 @@ StatusCode MuonDAQTest::initialize() {
   
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
   m_MuonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-  if(!m_MuonBuffer)info()<<" error "<<endmsg;
-  
-  return StatusCode::SUCCESS;
+  if(m_MuonBuffer)
+    return sc;
+  else
+    return Error("Could not instantiate MuonRawBuffer tool");
 };
 
 //=============================================================================
