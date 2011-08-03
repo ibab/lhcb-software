@@ -3,6 +3,10 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2011-08-03 - Gerhard Raven
+ - create Aug2011 from Jul2011: 
+     add Hlt2Lumi, remove Hlt2ExpressHLT1Physics, fix prescale of Hlt2LowMultPhoton
+
 ! 2011-08-02 - Gerhard Raven
  - update VdM config
 
