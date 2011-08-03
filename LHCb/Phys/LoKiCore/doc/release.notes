@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-08-03 - Gerhard Raven
+ - fix Gaudi State Machine protocol errors
+
 !========================= LoKiCore v11r2 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
   - HybridBase.h

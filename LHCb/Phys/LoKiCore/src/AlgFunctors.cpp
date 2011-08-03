@@ -206,7 +206,8 @@ namespace
       } 
     }
     //
-    if ( Gaudi::StateMachine::RUNNING != _a -> FSMState() ) 
+    if ( Gaudi::StateMachine::RUNNING != _a -> FSMState() &&
+                  Gaudi::StateMachine::RUNNING == LoKi::Services::instance().lokiSvc()->FSMState() )
     { 
       // start it! 
       StatusCode sc = _a->sysStart() ;
