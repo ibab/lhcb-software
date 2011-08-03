@@ -1,22 +1,13 @@
 package DaVinciSys
-version           v28r4p2
+version           v28r5
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v28r4p2   Phys
-use  DaVinciTests               v2r6
+use  DaVinci                 	v28r5   Phys
+use  DaVinciTests               v2r7
 
 #Other packages temporarily included
-use  DecayTreeTuple             v3r15    Phys
-use  PhysConf                   v1r10    Phys
-use  DSTWriters                 v3r1     Phys
-use  DaVinciTools               v22r9    Phys
-use  LHCbAlgs                   v2r40    Kernel
-use  LoKiNumbers                v10r1    Phys
-use  LoKiTracks                 v2r2     Phys
-use  GaudiConf                  v14r0p1
-
 
 # Declare this as a container package
 apply_pattern container_package

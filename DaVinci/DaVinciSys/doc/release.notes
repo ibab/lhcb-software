@@ -3,6 +3,17 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v28r5>2011-08-03 DaVinci v28r5</A></H1><PRE>
+
+Production version for Stripping16, depends on Stripping v2r5p1, Analysis v6r6, Phys v12r6
+
+Previous timing improvements were approved for use, this version of DaVinci should
+be at least 25% faster in the Stripping than the last version.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v28r5
+
+
 </PRE><H1><A NAME=v28r4p2>2011-07-25 DaVinci v28r4p2</A></H1><PRE>
 
 Test (patch) version, not for production, to test/validate CPU 
