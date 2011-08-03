@@ -4,6 +4,15 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-03 - Jibo He
+ - LineConfigDictionaries_GTWG.py
+   . Updated B->2,3,4 boday conf dict, and pre-scaled them by 0.5. 
+ - LineConfigDictionaries_PSWG.py
+   . Moved Ccbar2Ppar to Charm mDST
+   . Corrected the stream of ChiCJPsiGammaConversion from "DiMuon" to "Dimuon".
+ - Updated dbase of Stripping16 
+ - Copied conf dict in Stripping16 to StrippingDev  
+
 ! 2011-08-02 - Anton Poluektov 
  - LineConfigDictionaries_GTWG.py
    . Prescale of Unbiased line in B2DX is back to 0.1

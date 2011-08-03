@@ -20,7 +20,7 @@ Hb2Charged2Body = {
     'BUILDERTYPE' : 'Hb2Charged2BodyLines',
     'CONFIG'      : {
     'PrescaleB2Charged2Body'   : 1,      'PrescaleB2PPbar' : 1,
-    'MinPTB2Charged2Body'      : 1000,    'MinPTB2PPbar' : 900,
+    'MinPTB2Charged2Body'      : 1100,    'MinPTB2PPbar' : 900,
     'MinIPB2Charged2Body'      : 0.12,
     'MinIPChi2B2Charged2Body'  : 100,     'MinIPChi2B2PPbar' : 9,
     'TrChi2'                   : 5,
@@ -42,7 +42,7 @@ Hb2Charged2Body = {
     },
     'STREAMS'     : [ 'Bhadron' ],
     'WGs'         : ['GammaFromLoops']
-       }
+    }
 
 ##
 ## B->hh, lifetime  unbiased
@@ -73,35 +73,36 @@ B2hhLTUnbiased = {
 ##
 B2hhh = {
     'BUILDERTYPE' : 'Bu2hhhBuilder',
-    'CONFIG'      : { 'MaxTrSIZE'             : 450 ,      ## GEC  maximim Rec/Track/Best TrSIZE
-                      '_h_PT'                 : 100. ,     ## tracks min PT
-                      '_h_P'                  : 1500. ,    ## tracks min P
-                      '_h_IPCHI2'             : 1. ,       ## min tracks PI wrt OWNPV
-                      '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
-                      '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h
-                      '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
-                      '_3h_DIRA'              : .9999 ,    ## min cos angle between 3h momentum and PV decay direction
-                      '_3h_FDCHI2'            : 500. ,     ## min 3h FDCHI2 wrt best 3h PV
-                      '_3h_PVDOCAmin'         : 3.0 ,      ## min value of the 3h doca wrt any PV
-                      '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2
-                      '_3h_IPCHI2'            : 10. ,      ## max 3h IP CHI2 wrt best 3h PV
-                      '_3h_PT'                : 1000. ,    ## min 3h PT
-                      '_3h_PTsum'             : 4000. ,    ## min of 3h tracks PT sum
-                      '_3h_Psum'              : 20000. ,   ## min of 3h tracks P sum
-                      '_3h_PVIPCHI2sum'       : 500. ,     ## min of the 3h tracks IP wrt best 3h PV
-                      '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-                      '_3h_Charge'            : 1 ,        ## 3h tracks charge sum ==+-1
-                      '_3h_CORRMmax'          : 7000. ,    ## max corrected mass for 3h candidate
-                      '_3h_CORRMmin'          : 4000. ,    ## min corrected mass for 3h candidate
-                      '_3hKKK_Mmax'           : 6300. ,    ## max 3h mass for inclusive KKK line
-                      '_3hKKK_Mmin'           : 5000. ,    ## min 3h mass for inclusive KKK line
-                      '_3hpph_deltaMmax'      : 200,       ## max 3h mass difference for inclusive pph line
-                      '_3hpph_deltaMmin'      : 400,       ## min 3h mass difference for inclusive pph line
-                      'KKK_inclLinePrescale'  : 1.0,
-                      'KKK_inclLinePostscale' : 1.0,
-                      'pph_inclLinePrescale'  : 1.0,
-                      'pph_inclLinePostscale' : 1.0 
-                      },
+    'CONFIG'      : {
+    'MaxTrSIZE'             : 450 ,      ## GEC maximim Rec/Track/Best TrSIZE
+    '_h_PT'                 : 100. ,     ## tracks min PT
+    '_h_P'                  : 1500. ,    ## tracks min P
+    '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
+    '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
+    '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h
+    '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
+    '_3h_DIRA'              : .99998 ,   ## min cos angle between 3h momentum and PV decay direction
+    '_3h_FDCHI2'            : 500. ,     ## min 3h FDCHI2 wrt best 3h PV
+    '_3h_PVDOCAmin'         : 3.0 ,      ## min value of the 3h doca wrt any PV
+    '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2
+    '_3h_IPCHI2'            : 10. ,      ## max 3h IP CHI2 wrt best 3h PV
+    '_3h_PT'                : 1000. ,    ## min 3h PT
+    '_3h_PTsum'             : 4250. ,    ## min of 3h tracks PT sum
+    '_3h_Psum'              : 20000. ,   ## min of 3h tracks P sum
+    '_3h_PVIPCHI2sum'       : 500. ,     ## min of the 3h tracks IP wrt best 3h PV
+    '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
+    '_3h_Charge'            : 1 ,        ## 3h tracks charge sum ==+-1
+    '_3h_CORRMmax'          : 7000. ,    ## max corrected mass for 3h candidate
+    '_3h_CORRMmin'          : 4000. ,    ## min corrected mass for 3h candidate
+    '_3hKKK_Mmax'           : 6300. ,    ## max 3h mass for inclusive KKK line
+    '_3hKKK_Mmin'           : 5050. ,    ## min 3h mass for inclusive KKK line
+    '_3hpph_deltaMmax'      : 400,       ## max 3h mass difference for inclusive ppK line
+    '_3hpph_deltaMmin'      : 200,       ## min 3h mass difference for inclusive ppK line
+    'KKK_inclLinePrescale'  : 1.0,
+    'KKK_inclLinePostscale' : 1.0,
+    'pph_inclLinePrescale'  : 1.0,
+    'pph_inclLinePostscale' : 1.0 
+    },
     'STREAMS' : [ 'Bhadron' ],
     'WGs'    : ['GammaFromLoops']
     }

@@ -85,7 +85,7 @@ ChiCJPsiGammaConversion = {
         , 'PrescaleChiC'          :   1.0
         , 'PostscaleChiC'         :   1.0
           },
-    'STREAMS' : [ 'DiMuon' ],
+    'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]   
     }
 
@@ -798,7 +798,7 @@ Ccbar2Ppbar = {
                     'VtxCHI2'          :     9.  , # dimensionless
                     'CCPT'             :  7000.    
                    },
-    'STREAMS' : [ 'CharmCompleteEvent' ] ,
+    'STREAMS' : [ 'Charm' ] ,
     'WGs'    : [ 'PSWG' ]
 }
 

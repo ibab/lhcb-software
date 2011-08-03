@@ -739,5 +739,24 @@ D2HHLTUnbiased = {
     'STREAMS' : [ 'MiniBias' ]
     }
 
-
-
+JpsiMuMuforD0MuMu = {
+    'BUILDERTYPE'	: 'JpsiMuMuforD0MuMuConf',
+    'CONFIG'	: { 'Jpsi2MuMuForD0mumu_Prescale'              :     1.   ,
+                    'Jpsi2MuMuForD0mumu_Postscale'             :     1.   ,
+                    'Jpsi2MuMuForD0mumu_MuonPT'                :  750.    ,
+                    'Jpsi2MuMuForD0mumu_MuonP'                 : 5000.    ,
+                    'Jpsi2MuMuForD0mumu_MuonTRCHI2DOF'         :   5.     ,
+                    'Jpsi2MuMuForD0mumu_MuonBPVIPCHI2'         :   3.     ,
+                    'Jpsi2MuMuForD0mumu_MinMass'               : 3000     , 
+                    'Jpsi2MuMuForD0mumu_MaxMass'               : 3180     ,
+                    'Jpsi2MuMuForD0mumu_VCHI2PDOF'             :  10.     ,
+                    'Jpsi2MuMuForD0mumu_PT'                    : 1800.    , 
+                    'Jpsi2MuMuForD0mumu_BPVVDCHI2'             :   20.    ,
+                    'Jpsi2MuMuForD0mumu_BPVDIRA'               : 0.9997   ,
+                    'Jpsi2MuMuForD0mumu_BPVIPCHI2'             : 15.      ,
+                    'Jpsi2MuMuForD0mumu_MuonMaxBPVIPCHI2'      : 8.       ,
+                    'Jpsi2MuMuForD0mumu_MuonMaxPT'             : 1100.    
+                    },
+    'STREAMS' : [ 'Dimuon' ],
+    'WGs'    : [ 'Charm' ]
+    }
