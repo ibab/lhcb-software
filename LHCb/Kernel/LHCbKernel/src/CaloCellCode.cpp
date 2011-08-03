@@ -158,9 +158,6 @@ const std::string& CaloCellCode::caloArea ( const int calo , const int area )
 int CaloCellCode::caloArea ( const int calo , const std::string& area )
 {
   //
-  if      ( 0        >  calo ) { return -1 ; }
-  else if ( CaloNums <= calo ) { return -1 ; }
-  //
   switch  ( calo )
   {
   case HcalCalo :
