@@ -151,7 +151,7 @@ class D02K3PiForXSecConf(LineBuilder):
            _filter+=" & "
          _filter += "(recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) < %s)" %nVELO
 
-     if _filter!="" and config['ApplyGECs'][name]:
+     if _filter is not None and _filter!="" and config['ApplyGECs'][name]:
          _filter={"Code":_filter, "Preambulo": ["from LoKiTracks.decorators import *", "from LoKiNumbers.decorators import *"]}
 
      _line = StrippingLine(sel.name()+"Line"
@@ -159,7 +159,7 @@ class D02K3PiForXSecConf(LineBuilder):
                            ,postscale = config['Postscale'][name]
                            ,selection = sel
                            ,checkPV = config['CheckPV'][name]
-                           ,FILTER = {"Code":_filter}
+                           ,FILTER = _filter
                            ,HLT = config['HltFilter'][name])
      if name=='Untagged': self.line_untagged=_line
      else: self.line_tagged=_line

@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-08-03 - Rob Lambert
+- Fixed bug in StrippingD02K3PiForXSec.py
+
+! 2011-08-03 - Rob Lambert
 - Fixed LoKi Trigger->LoKiTracks and added preabulo where they are needed.. I think...
 
 
