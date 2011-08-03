@@ -19,7 +19,7 @@ from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 #from StandardParticles import StdLooseMergedPi0, StdLooseResolvedPi0
 
 # Default configuration dictionary
-config = {                             
+config = {
     'TrkChi2Max'   : 4,         # Max track chi2/ndof
     'BCuts' : {
     'TauMin'       : 0.3,
@@ -35,7 +35,7 @@ config = {
     'PMin'         : 5000
     },
     'DCuts' : {
-    'DauPTMin'     : 100,     
+    'DauPTMin'     : 100,
     'DauPMin'      : 1000,
     'DauIPChi2Min' : 4,
     'SumPTMin'     : 1500,
@@ -51,8 +51,8 @@ config = {
     "D2hhTIS"      : 1.,
     "D2hhWS"       : 0.1,
     "D2hhh"        : 1.,
-    "D2hhhTIS"     : 1., 
-    "D2hhhWS"      : 0.1, 
+    "D2hhhTIS"     : 1.,
+    "D2hhhWS"      : 0.1,
     },
     'GECNTrkMax'   : 500
     }
@@ -60,14 +60,14 @@ config = {
 class B2DXHltTisTosConf(LineBuilder):
     __configuration_keys__ = ('TrkChi2Max','BCuts','BachCuts','DCuts',
                               'Prescales','GECNTrkMax')
-    
+
     def __init__(self, moduleName, config) :
         from Configurables import LoKi__VoidFilter as VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 
         LineBuilder.__init__(self, moduleName, config)
         modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
+        for i in ['LoKiTracks.decorators']:
             if i not in modules : modules.append(i)
 
         dcuts = config['DCuts']
@@ -103,8 +103,10 @@ class B2DXHltTisTosConf(LineBuilder):
         tmpSel = Selection(sel.name()+'FilterALL',
                            Algorithm=FilterDesktop(Code='ALL'),
                            RequiredSelections=[sel])
-        filter = "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" \
-                 % config['GECNTrkMax']        
+        filter = {"Code": "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )" \
+                 % config['GECNTrkMax']        ,
+                 "Preambulo" : ["from LoKiTracks.decorators import *"]
+                 }
         line = StrippingLine(sel.name()+'Line',
                              prescale=config['Prescales'][tag],
                              selection=tmpSel,
@@ -147,7 +149,7 @@ def makeD2XSel(name, config, decay):
     momCut = dmassStr('ADMASS',which,dmassWindow)+' & '
     momCut +="(VFASPF(VCHI2/VDOF)<%(VChi2Max)s) & (BPVVDCHI2 > %(FDChi2Min)s)"\
               "& (BPVIPCHI2() > %(IPChi2Min)s)" % config
-    
+
     d2hh = CombineParticles(DecayDescriptors=[decay],DaughtersCuts=dauCuts,
                             CombinationCut=comboCut,MotherCut=momCut)
 
@@ -204,24 +206,24 @@ def makeB2DhSel(name, decay, dsel, bcuts, bchcuts):
         where = dec.find('K')
         bach = dec[where:where+2]
     else: print 'ERROR! No pi or K found in descriptor "%s"' % dec
-        
+
     input = [dsel]
     if bach.find('K') >= 0: input.append(StdNoPIDsKaons)
     elif bach.find('pi') >= 0: input.append(StdNoPIDsPions)
-    
+
     bachCut = "((TRCHI2DOF<%(TrkChi2Max)s) & " \
               "(PT > %(PTMin)s*MeV) & (P > %(PMin)s*MeV) & " \
               "(MIPCHI2DV(PRIMARY) > %(IPChi2Min)s))" % bchcuts
     bachCuts = {bach:bachCut}
     momCut = "(SUMTREE(PT,((ABSID=='K+')|(ABSID=='pi+')),0.0) > %s*MeV)" \
-               % bcuts['PTSumMin'] 
+               % bcuts['PTSumMin']
     comboCut = dmassStr('ADAMASS',which,int(bcuts['BMassWindow']))
     momCut += " & ((VFASPF(VCHI2/VDOF)<%(VChi2Max)s)  & " \
               "(BPVIPCHI2() < %(IPChi2Max)s) & (BPVLTIME()>%(TauMin)s*ps)  & "\
               "(BPVDIRA > %(DIRAMin)s))" % bcuts
-    
+
     b2dh = CombineParticles(DecayDescriptors=decay,DaughtersCuts=bachCuts,
-                            CombinationCut=comboCut,MotherCut=momCut)    
+                            CombinationCut=comboCut,MotherCut=momCut)
     return Selection(name,Algorithm=b2dh,RequiredSelections=input)
 
 def makeTISTOSFilter(name,specs):
@@ -262,7 +264,7 @@ def makeB2DhMerged(name,moduleName,decays,dname,dsels,bcuts,bchcuts):
 
 def makeB02DhRS(moduleName,dname,dsel,bcuts,bchcuts):
     '''Makes all B0 -> D+h (h=pi-,K-) + c.c.'''
-    decays = {'B02DPi': ["[B0 -> D- pi+]cc"], 
+    decays = {'B02DPi': ["[B0 -> D- pi+]cc"],
               'B02DK' : ["[B0 -> D- K+]cc"]}
     dsels = {'B02DPi':dsel,'B02DK':dsel}
     return makeB2DhMerged('B02Dh',moduleName,decays,dname,dsels,bcuts,bchcuts)
@@ -279,7 +281,7 @@ def makeB02DhWS(moduleName,dname,dsel,dwssel,bcuts,bchcuts):
              'B02DKWS':dsel, 'B02DWSK':dwssel, 'B02DWSKWS':dwssel}
     return makeB2DhMerged('B02DhWS',moduleName,decays,dname,dsels,bcuts,
                           bchcuts)
-    
+
 def makeB2D0hRS(moduleName,dname,dsel,bcuts,bchcuts):
     '''Makes all B+ -> D0h+ (h=pi,K) + c.c.'''
     decays = {'B2DPi': ["[B+ -> D~0 pi+]cc","[B+ -> D0 pi+]cc"],

@@ -47,7 +47,7 @@ class D02K3PiForXSecConf(LineBuilder):
   Exports as instance data members:
     makeD02K3Pi     : nominal D0 -> K3Pi Selection object
     makeDstar2Dpi   : nominal D*+ -> D0(K-pi+pi-pi+)pi+  Selection object
-    
+
     signal_line_untagged : StrippingLine made out of makeD02K3Pi
     signal_line_tagged : StrippingLine made out of makeDstar2Dpi
     lines                  : List of lines, [line_untagged
@@ -62,9 +62,9 @@ class D02K3PiForXSecConf(LineBuilder):
                  ,'DauPtThreeTracks'
                  ,'DauPtTwoTracks'
                  ,'DauPtOneTrack'
-                 
+
                  ,'DauP'
-                
+
                  ,'DauIPchi2AllTracks'
                  ,'DauIPchi2ThreeTracks'
                  ,'DauIPchi2TwoTracks'
@@ -75,13 +75,13 @@ class D02K3PiForXSecConf(LineBuilder):
                  ,'VtxChi2DOF'
 
                  ,'DauTrackChi2DOF'
-                 
+
                  ,'ApplyKaonPIDK'
                  ,'KaonPIDK'
                  ,'ApplyPionPIDK'
                  ,'PionPIDK'
                  ),
-   
+
     'DstarCuts' : ( 'CombDeltaMLower'
                     ,'CombDeltaMUpper'
                     ,'DeltaMLower'
@@ -104,20 +104,20 @@ class D02K3PiForXSecConf(LineBuilder):
 
   def __init__(self, moduleName, config):
     LineBuilder.__init__(self, moduleName, config)
-    
+
     from Configurables import LoKi__VoidFilter as VoidFilter
     from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
     modules = CoreFactory('CoreFactory').Modules
-    for i in ['LoKiTrigger.decorators', 'LoKiNumbers.decorators']:
+    for i in ['LoKiTracks.decorators', 'LoKiNumbers.decorators']:
       if i not in modules : modules.append(i)
-      
+
     selD02K3Pi = makeD02K3Pi(moduleName, config['D0Cuts'])
     selDstar2D0pi = makeDstar2D0pi(moduleName, selD02K3Pi
                                    ,config['DstarCuts'])
 
     _lines = {"Untagged" : selD02K3Pi
               ,"Tagged" : selDstar2D0pi }
-    
+
     self.line_untagged=None
     self.line_tagged=None
 
@@ -126,13 +126,13 @@ class D02K3PiForXSecConf(LineBuilder):
      if config['ApplyGECs'][name]:
 
        _filter = ""
-       
+
        nLong = config["MaxLongTracks"][name]
        if nLong is not None:
          if _filter != "":
            _filter+=" & "
          _filter += "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" %nLong
-         
+
        nDigits = config["MaxSpdDigits"][name]
        if nDigits is not None:
          if _filter != "":
@@ -150,17 +150,20 @@ class D02K3PiForXSecConf(LineBuilder):
          if _filter != "":
            _filter+=" & "
          _filter += "(recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) < %s)" %nVELO
-       
+
+     if _filter!="" and config['ApplyGECs'][name]:
+         _filter={"Code":_filter, "Preambulo": ["from LoKiTracks.decorators import *", "from LoKiNumbers.decorators import *"]}
+
      _line = StrippingLine(sel.name()+"Line"
                            ,prescale = config['Prescale'][name]
                            ,postscale = config['Postscale'][name]
                            ,selection = sel
                            ,checkPV = config['CheckPV'][name]
-                           ,FILTER = _filter
+                           ,FILTER = {"Code":_filter}
                            ,HLT = config['HltFilter'][name])
      if name=='Untagged': self.line_untagged=_line
      else: self.line_tagged=_line
-        
+
     self.registerLine(self.line_untagged)
     self.registerLine(self.line_tagged)
 
@@ -177,7 +180,7 @@ def makeD02K3Pi(moduleName, config):
                              ,'ApplyPionPIDK', 'PionPIDK'
                              )
   checkConfig(__configuration_keys__, config)
-    
+
   _prefitCuts = "(ADAMASS('D0')<%(CombMassWin)s) & " \
                 "(ADOCAMAX('LoKi::TrgDistanceCalculator')<%(MaxDOCA)s) & " \
                 "(ANUM(BPVIPCHI2()>%(DauIPchi2AllTracks)s)==4) & " \
@@ -189,7 +192,7 @@ def makeD02K3Pi(moduleName, config):
                 "(ANUM(PT>%(DauPtThreeTracks)s)>=3) & " \
                 "(ANUM(PT>%(DauPtTwoTracks)s)>=2) & " \
                 "(ANUM(PT>%(DauPtOneTrack)s)>=1)" %config
-  
+
   _motherCuts = "(ADMASS('D0')<%(MassWin)s) & " \
                 "(DOCAMAX<%(MaxDOCA)s) & " \
                 "(BPVVDCHI2>%(FDchi2)s) & " \
@@ -199,12 +202,12 @@ def makeD02K3Pi(moduleName, config):
               "(PT>%(DauPtAllTracks)s) & " \
               "(P>%(DauP)s) & " \
               "(BPVIPCHI2()>%(DauIPchi2AllTracks)s)" %config
-  
+
   _pionCuts = "(TRCHI2DOF<%(DauTrackChi2DOF)s) & " \
               "(PT>%(DauPtAllTracks)s) & " \
               "(P>%(DauP)s) & " \
               "(BPVIPCHI2()>%(DauIPchi2AllTracks)s)" %config
-  
+
   if config['ApplyKaonPIDK']:
     _kaonCutsOLD=copy(_kaonCuts)
     _kaonCuts="(PIDK>%(KaonPIDK)s) & (HASRICH) & " %config
@@ -232,24 +235,24 @@ def makeDstar2D0pi(moduleName, d0Sel, config):
                              ,'VtxChi2DOF'
                              )
   checkConfig(__configuration_keys__, config)
-  
+
   _prefitCuts = "(AM-AMAXCHILD(M,'D0'==ABSID)-145.4*MeV>%(CombDeltaMLower)s) & " \
                 "(AM-AMAXCHILD(M,'D0'==ABSID)-145.4*MeV<%(CombDeltaMUpper)s) & " \
                 "(ADOCAMAX('')<%(DOCA)s)" %config
-  
+
   _motherCuts = "(M-MAXTREE('D0'==ABSID,M)-145.4*MeV>%(DeltaMLower)s) & " \
                 "(M-MAXTREE('D0'==ABSID,M)-145.4*MeV<%(DeltaMUpper)s) & " \
                 "(DOCAMAX<%(DOCA)s) & " \
                 "(VFASPF(VCHI2/VDOF)<%(VtxChi2DOF)s)" %config
-  
+
   _slowPiCuts = "(TRCHI2DOF<%(SlowPiTrackChi2DOF)s)" %config
-  
+
   _dstar = CombineParticles ( DecayDescriptor="[D*(2010)+ -> D0 pi+]cc"
                               ,CombinationCut = _prefitCuts
                               ,MotherCut = _motherCuts
                               ,DaughtersCuts = {"D0":"ALL", "pi+" : _slowPiCuts}
                               )
-  
+
   return Selection(
     'Dstar2D0pi_D02K3PiFor'+moduleName
     ,Algorithm=_dstar
@@ -288,7 +291,7 @@ default_config = {
   ,'HltFilter' : {'Tagged' : "HLT_PASS_RE('Hlt1MB.*')"
                   ,'Untagged' : "HLT_PASS_RE('Hlt1MB.*')"
                   }
-  ,'CheckPV' : {'Tagged' : True 
+  ,'CheckPV' : {'Tagged' : True
                 ,'Untagged' : True }
   ,'Prescale' : {'Tagged' : 1
                   ,'Untagged' : 1 }
@@ -296,12 +299,12 @@ default_config = {
                    ,'Untagged' : 1 }
   ,'ApplyGECs' : {'Tagged' : False
                   ,'Untagged' : False }
-  ,'MaxLongTracks' : {'Tagged' : None 
+  ,'MaxLongTracks' : {'Tagged' : None
                       ,'Untagged' : None},
   'MaxSpdDigits' : {'Tagged' : None
                     ,'Untagged' : None },
   'MaxITClusters' : {'Tagged' : None
                      ,'Untagged' : None },
   'MaxVeloTracks' : {'Tagged' : None
-                     , 'Untagged' : None },    
+                     , 'Untagged' : None },
   }

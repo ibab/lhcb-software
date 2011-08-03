@@ -4,20 +4,24 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-03 - Rob Lambert
+- Fixed LoKi Trigger->LoKiTracks and added preabulo where they are needed.. I think...
+
+
 ! 2011-08-02 - M. Williams
 - Removed MergedSelection usage from Beauty2Charm.
 
 ! 2011-07-31 - Benoit Viaud
- - Updated StrippingDstarPromptWithD02HHHH.py 
- - Turned GEC filter into a dict. of 
+ - Updated StrippingDstarPromptWithD02HHHH.py
+ - Turned GEC filter into a dict. of
    {"Code":"..","Preambulo":["from LoKiTracks.decorators import *"]}
-   so that RecSummary-related changes work (see 2011-07-26). 
+   so that RecSummary-related changes work (see 2011-07-26).
 
 ! 2011-07-29 - Jibo He
- - Added StrippingBeauty2Charm to __init__.py  
+ - Added StrippingBeauty2Charm to __init__.py
 
 ! 2011-07-28 - Thomas Blake
- - Several small changes related to use of CHILD functor and protection of TRACK and PROTO functors 
+ - Several small changes related to use of CHILD functor and protection of TRACK and PROTO functors
    . python/StrippingSelections/StrippingB0q2DplusMuX.py
    . python/StrippingSelections/StrippingCharmedAndCharmedStrangeSpectroscopy.py
    . python/StrippingSelections/StrippingXicc.py
@@ -39,9 +43,9 @@
 ! 2011-07-26 - Rob Lambert
  - Modified everything to use recSummary. Will then contact authors.
 
-! 2011-07-26 - Anton Poluektov 
- - Update StrippingB2DX: 
-   * ParticleAdder instead of MomentumCombiner for rho+ and kstar+ 
+! 2011-07-26 - Anton Poluektov
+ - Update StrippingB2DX:
+   * ParticleAdder instead of MomentumCombiner for rho+ and kstar+
      (get rid of warnings about missing particle transporter)
    * Remove photon CL cut for merged pi0s
 
@@ -49,8 +53,8 @@
  - Beauty2Charm udpates (nothing major).
 
 ! 2011-07-26 - Thomas Blake
- - Small modifications to several lines 
-  . B2XMuMuSS renamed global 'name' as 'default_name' 
+ - Small modifications to several lines
+  . B2XMuMuSS renamed global 'name' as 'default_name'
   . V0ForPID  use false/true rather than none for monitor
   . CCbarPPbar RecSummary fix
 
@@ -63,7 +67,7 @@
  - Simplified decay descriptors in StrippingD02MuMu.
 
 ! 2011-07-23 S. Blusk
- - Added lines with soft muon reconstruction for K* mu mu 
+ - Added lines with soft muon reconstruction for K* mu mu
 
 ! 2011-07-23 S. Blusk
 	- Fix bug in StrippingB2D3H.py (PI+ --> pi+)
@@ -73,7 +77,7 @@
   - updated B2nbody to allow 4-body final states
   - included confdict for 4-body decays
 
-! 2011-07-23 - Anton Poluektov 
+! 2011-07-23 - Anton Poluektov
   - Add LoKiTrack.decorator in StrippingB2DX.py
 
 ! 2011-07-23 S. Benson
@@ -88,7 +92,7 @@
  - new cut parameter in confdict
 
 ! 2011-07-22 S. Blusk
-	- Minor update to Beauty2Charm_B2DXBuilder to include B+ -> D0 D+ and B- -->D0D-  
+	- Minor update to Beauty2Charm_B2DXBuilder to include B+ -> D0 D+ and B- -->D0D-
 
 ! 2011-07-22 S. Blusk
    - Updates to StrippingBeauty, add Beauty2Charm_Dfilter, Beauthy2Charm_HHHBuilder
@@ -181,7 +185,7 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
    . Change StdLoosePions in StdAllLoosePions
    . Tighten and add cuts.
 
-! 2011-07-21 - Anton Poluektov 
+! 2011-07-21 - Anton Poluektov
  - StrippingB2DX: move LambdaB mass window to higher masses (5100-6200 MeV)
 
 ! 2011-07-21 - Jibo He
@@ -203,7 +207,7 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
 
 ! 2011-07-20 - Will Barter
  - Updated to use "All" particle types in Electroweak lines:
-    StrippingMuMuSS.py 
+    StrippingMuMuSS.py
 		StrippingZ02ee.py
 		StrippingDY2ee.py
 	  StrippingSingleTrackTIS.py
@@ -228,16 +232,16 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
  - adapt BsPhiPhi line to fit new StdLoosePhi
 
 ! 2011-07-20 - V. Gligorov
- - Use "All" particle types in 
+ - Use "All" particle types in
    StrippingD02MuMu.py
    StrippingD2HHLTUnbiased.py
    StrippingD2hh.py
-   
+
    StrippingDstarD02Kpipi0.py
    StrippingDstarD02xx.py
    StrippingDstarVeryLooseWithD02Kpi.py
    StrippingNoPIDDstarWithD02RSKPi.py
-   StrippingTwoBody_prompt.py 
+   StrippingTwoBody_prompt.py
 
 ! 2011-07-20 - Rob Lambert
  - Use StdAllLooseMuons in B0q2DplusMuX
@@ -246,11 +250,11 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
   - StrippingDstarD02KMuNu StdLoosePions changed to StdAllLoosePions
 
 ! 2011-07-20 - Vanya Belyaev
- 
- - CharmAssociative : adjust the cuts 
 
-! 2011-07-20 - Anton Poluektov 
-  - StrippingB2DX.py: 
+ - CharmAssociative : adjust the cuts
+
+! 2011-07-20 - Anton Poluektov
+  - StrippingB2DX.py:
     * Use StdAllNoPIDsPions in D->hhhh and unbiased lines
     * Remove unnecessary LokiTrigger decorators
 
@@ -261,7 +265,7 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
 
 ! 2011-07-20 - Vanya Belyaev
 
- - CharmAssociative : fix multiline string 
+ - CharmAssociative : fix multiline string
 
 
 ! 2011-07-20 - Ulrich Kerzel
@@ -278,10 +282,10 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
 
   - CharmAssociative  & PromptCharm
 
-   avoid IP-cuts for three categories of particles : 
+   avoid IP-cuts for three categories of particles :
 
-    - use StdAllNoPIDsPions for slow pion from D*+ 
-    - use StdAllLooseMuons  for prompt onia 
+    - use StdAllNoPIDsPions for slow pion from D*+
+    - use StdAllLooseMuons  for prompt onia
 
 
 ! 2011-07-19 - Sebastian Schleich
@@ -289,10 +293,10 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
 
 ! 2011-07-19 - Vanya Belyaev
 
- - Fix CharmAssociative : 
+ - Fix CharmAssociative :
 
-     move DiMuonAndCharm into PromptCharm 
-	   move DiCharm        into PromptCharm 
+     move DiMuonAndCharm into PromptCharm
+	   move DiCharm        into PromptCharm
 
  - Add tests/test_CharmAssociative.py
 
@@ -307,7 +311,7 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
  - Update TestSemileptonicsOnRealData.py
 
 ! 2011-07-18 Francesco Dettori
- - Correction to small bug: D* mass win not in agreement with D0 one in 
+ - Correction to small bug: D* mass win not in agreement with D0 one in
    StrippingDstD0xx.py
 
 ! 2011-07-13 Xabier Cid & Diego Martinez
@@ -319,7 +323,7 @@ Update B2SameChargeMuon and B2XMuMuSS lines to include Bc studies
 	 - Now ensure a unique line name for each derived instance of LineBuilder
    - Updated to use GaudiConfUtils.ConfigurableGenerators version of CombineParticles
 
-! 2011-07-07 - Francesco Dettori 
+! 2011-07-07 - Francesco Dettori
   - Adding Dst2PiD02KPi_untagged_BoxMBTrEff which follows Hlt2CharmHadMinBiasD02KPiDecision trigger
     for trigger eff. estimation in D0->mumu search.
 

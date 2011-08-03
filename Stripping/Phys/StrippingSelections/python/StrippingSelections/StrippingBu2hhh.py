@@ -317,7 +317,7 @@ def globalEventCutFilter(name,
   from Configurables import LoKi__VoidFilter as VoidFilter
   from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
   modules = CoreFactory('CoreFactory').Modules
-  for i in ['LoKiTrigger.decorators']:
+  for i in ['LoKiTracks.decorators']:
      if i not in modules : modules.append(i)
   if MaxTrSIZE != None : _code += "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTrSIZE)s )" % locals()
   globalFilter= VoidFilter(name)

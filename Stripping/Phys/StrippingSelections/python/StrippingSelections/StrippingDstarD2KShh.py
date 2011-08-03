@@ -93,9 +93,10 @@ class DstarD2KShhBuilder(LineBuilder) :
 
         # Set up global event cuts.
         # Conceptually these come first, although the place where they're
-        # inserted into the line is at the bottom of the code. 
-        _globalEventCuts = "( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(LongTrackGEC)s )" % config
-        
+        # inserted into the line is at the bottom of the code.
+        _globalEventCuts = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(LongTrackGEC)s )" % config,
+                            "Preambulo": ["from LoKiTracks.decorators import *"]}
+
         # All lines start with one of: KS->LL, KS->DD
         self.selKSLL = makeKS('KsLLFor'+name, "Phys/StdLooseKsLL/Particles", -1000.0,  650.0, config['KSLLCutDIRA'], config['KSLLCutMass'], config['KSLLCutFDChi2'])
         self.selKSDD = makeKS('KsDDFor'+name, "Phys/StdLooseKsDD/Particles",     0.0, 2300.0, config['KSDDCutDIRA'], config['KSDDCutMass'], config['KSDDCutFDChi2'])
@@ -251,7 +252,7 @@ def makeDstar(name, inputD0, preFitDstarMassCut, cutChi2, SoftPionCutPIDe, cutPT
     """
     Given a list of D0, try to make D*+ -> D0 pi+
     """
-    
+
     _softPi = DataOnDemand(Location = 'Phys/StdAllLoosePions/Particles')
     _cutsSoftPi = '( PIDe-PIDpi < %(SoftPionCutPIDe)s )' % locals()
     _cutsDstarComb = "ADAMASS('D*(2010)+') < %(preFitDstarMassCut)s *MeV" % locals()

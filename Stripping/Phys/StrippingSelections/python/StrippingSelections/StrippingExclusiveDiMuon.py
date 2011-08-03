@@ -13,7 +13,7 @@ from StrippingUtils.Utils import LineBuilder
 
 
 confdict_ExclusiveDiMuon={
-    'ExclusiveDiMuonPrescale'    : 1.0 
+    'ExclusiveDiMuonPrescale'    : 1.0
     ,  'ExclusiveDiMuonPostscale'   : 1.0
     }
 
@@ -24,15 +24,15 @@ class ExclusiveDiMuonConf(LineBuilder) :
     __configuration_keys__ = ('ExclusiveDiMuonPrescale',
                               'ExclusiveDiMuonPostscale',
                               )
-    
+
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
-        
+
         self._myname = name
-        
+
         ExclusiveDiMuonNumTracksGEC = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) <= 5) & (recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) >= 1)",
-                                       'Preambulo' : ["from LoKiTrigger.decorators import *"]}
-        
+                                       'Preambulo' : ["from LoKiTracks.decorators import *"]}
+
 
 
         self.ExclusiveDiMuon_line = StrippingLine(self._myname+"BackgroundLine",
@@ -42,7 +42,7 @@ class ExclusiveDiMuonConf(LineBuilder) :
                                                   HLT = "HLT_PASS('Hlt1MBNoBiasDecision')",
                                                   FILTER =  ExclusiveDiMuonNumTracksGEC
                                                   )
-        
+
         self.registerLine(self.ExclusiveDiMuon_line)
-        
-      
+
+

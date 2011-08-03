@@ -32,7 +32,7 @@ from PhysSelPython.Wrappers import Selection, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import checkConfig, LineBuilder
 from copy import copy
-  
+
 moduleName='DstarPromptWithD02HHHH'
 
 class DstarPromptWithD02HHHHConf(LineBuilder):
@@ -61,44 +61,44 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
     ,'D0MassWin'
     ,'DelmLower'
     ,'DelmUpper'
-                            
+
     ,'DstarDOCA'
     ,'D0MaxDOCA'
-                            
+
     ,'D0DauPt'
     ,'D0DauP'
     ,'D0Pt'
     ,'DstarPt'
     ,'SlowPionPt'
-                            
+
     ,'DstarVtxChi2DOF'
     ,'D0VtxChi2DOF'
-                            
+
     ,'D0DauMaxIPChi2'
     ,'D0DauIPChi2'
     ,'D0FDChi2'
     ,'D0IPChi2'
 
     ,'D0DIRA'
-                            
+
     ,'TrackChi2DOF'
 
     ,'ApplyKaonPIDK'
     ,'KaonPIDK'
-    
+
     ,'ApplyPionPIDK'
     ,'PionPIDK'
 
     ,'CheckPV'
-    
+
     ,'ApplyGECs'
     ,'MaxLongTracks'
     ,'MaxVeloTracks'
     ,'MaxSpdDigits'
     ,'MaxITClusters'
-    
+
     ,'Prescale'
-    ,'Postscale'                            
+    ,'Postscale'
     )
 
   def __init__(self, moduleName, config):
@@ -113,7 +113,7 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,dauPt = config['D0DauPt']
       ,dauMom = config['D0DauP']
       ,vtxChi2DOF = config['D0VtxChi2DOF']
-      ,FDChi2 = config['D0FDChi2'] 
+      ,FDChi2 = config['D0FDChi2']
       ,IPChi2 = config['D0IPChi2']
       ,dauMaxIPChi2 = config['D0DauMaxIPChi2']
       ,dauIPChi2 = config['D0DauIPChi2']
@@ -143,13 +143,13 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
 
     if config['ApplyGECs']:
       _filter = ""
-    
+
       nLong = config["MaxLongTracks"]
       if nLong is not None:
         if _filter != "":
           _filter+=" & "
         _filter += "( recSummaryTrack(LHCb.RecSummary.nLongTracks,TrLONG) < %s )" %nLong
-          
+
       nDigits = config["MaxSpdDigits"]
       if nDigits is not None:
         if _filter != "":
@@ -161,7 +161,7 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
         if _filter != "":
           _filter+=" & "
         _filter += " ( recSummary(LHCb.RecSummary.nITClusters,'Raw/IT/Clusters') < %s )" %nClusters
-      
+
       nVELO = config["MaxVeloTracks"]
       if nVELO is not None:
         if _filter != "":
@@ -172,10 +172,11 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       if _filter != "":
         _GECfilter = {'Code' : _filter,
                       'Preambulo' : ["from LoKiTracks.decorators import *",
+                                     'from LoKiNumbers.decorators    import *',
                                      'from LoKiCore.functions    import *']
                       }
-        
-        
+
+
     self.line_tagged_d02hhhh = StrippingLine(
       moduleName+"Line"
       ,prescale=config['Prescale']
@@ -184,7 +185,7 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,checkPV=config['CheckPV']
       ,FILTER=_GECfilter)
     self.registerLine(self.line_tagged_d02hhhh)
-    
+
 def makeD02hhhh (
   moduleName
   ,combMassWin
@@ -239,7 +240,7 @@ def makeD02hhhh (
                 "(BPVVDCHI2>%(FDChi2)s) & (BPVIPCHI2()<%(IPChi2)s) & " \
                 "(BPVDIRA>%(DIRA)s) & (ADMASS('D0')<%(massWin)s) & " \
                 "(PT>%(pt)s)" %locals()
-  
+
   _kaonCuts = "(TRCHI2DOF<%(trackChi2DOF)s)" \
               " &(PT>%(dauPt)s)&(P>%(dauMom)s)" \
               " & (MIPCHI2DV(PRIMARY)>%(dauIPChi2)s)" \
@@ -295,7 +296,7 @@ def makeD02hhhh (
   _d02fourpi = copy(_d02k3pi)
   _d02fourpi.DecayDescriptor="D0 -> pi+ pi- pi+ pi-"
   _d02fourpi.DaughtersCuts={'pi+' : _pionCuts}
-  
+
   _selD02FourPi = Selection('D02FourPiFor'+moduleName
                            ,Algorithm=_d02fourpi
                            ,RequiredSelections=[_pions])
@@ -314,7 +315,7 @@ def makeD02hhhh (
                            )
 
   return _d0Sel
-                                              
+
 def makePromptDstar(
   moduleName
   ,selection
@@ -351,14 +352,14 @@ Note that the delta mass is defined here as the difference between the D* and D0
                  "(AM-AMAXCHILD(M,'D0'==ABSID)-145.4*MeV<%(combDelmUpper)s) & " \
                  "(APT>%(pt)s) & " \
                  "(AMAXDOCA('')<%(DOCA)s)" %locals()
- 
+
    _motherCuts = "(M-MAXTREE(M,'D0'==ABSID)-145.4*MeV>%(delmLower)s) & " \
                  "(M-MAXTREE(M,'D0'==ABSID)-145.4*MeV<%(delmUpper)s) & " \
                  "(VFASPF(VCHI2/VDOF)<%(vertexChi2DOF)s)" %locals()
    _slowPionCuts = "(TRCHI2DOF<%(trackChi2DOF)s) & (PT>%(slowPionPt)s)" %locals()
 
    from StandardParticles import StdAllNoPIDsPions
-  
+
    _dstar = CombineParticles (
      DecayDescriptor="[D*(2010)+ -> D0 pi+]cc"
      ,CombinationCut = _prefitCuts

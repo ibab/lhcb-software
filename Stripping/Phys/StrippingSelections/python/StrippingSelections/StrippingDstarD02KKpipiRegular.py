@@ -1,8 +1,8 @@
 '''
 Module for construction of D*+->D0pi+, D0->K+K-pi+pi- stripping Selections and StrippingLines.
-Use REGULAR cuts. 
+Use REGULAR cuts.
 Provides functions to build the D*+ and the D0 selections.
-Provides class StrippingDstarD02KKpipiRegularConf, which constructs the Selections and 
+Provides class StrippingDstarD02KKpipiRegularConf, which constructs the Selections and
 StrippingLines given a configuration dictionary.
 Exported symbols (use python help!):
    - StrippingDstarD02KKpipiRegularConf
@@ -34,12 +34,12 @@ class StrippingDstarD02KKpipiRegularConf(LineBuilder): # {
     Constructs  the  D*+->D0pi+, D0->K+K-pi+pi- Selection and StrippingLine from a configuration dictionary.
     Use REGULAR cuts.
     Usage:
-    
+
     stream = StrippingStream(....)
     config_params = {...}
 
 
-    from StrippingSelections.StrippingDstarD02KKpipiRegular import  StrippingDstarD02KKpipiRegularConf 
+    from StrippingSelections.StrippingDstarD02KKpipiRegular import  StrippingDstarD02KKpipiRegularConf
     confTest = StrippingDstarD02KKpipiRegularConf('StrippingDstarD02KKpipiRegularTest', config_params)
     stream.appendLines( confTest.lines() )
 
@@ -64,7 +64,7 @@ class StrippingDstarD02KKpipiRegularConf(LineBuilder): # {
                               'DMothMIPCHI2DVmax',
                               'DMothBPVVDmin',
                               'DMothBPVDCHI2min',
-                              'DMothBPVVDZmin',  
+                              'DMothBPVVDZmin',
                               'DMothVFASPFmax',
                               'DstarCombMassWind',
                               'DstarCombAMAXDOCAmax',
@@ -89,11 +89,11 @@ class StrippingDstarD02KKpipiRegularConf(LineBuilder): # {
         from Configurables import LoKi__VoidFilter as VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
+        for i in ['LoKiTracks.decorators']:
             if i not in modules : modules.append(i)
 
 
-        d02KKpipi_name = 'D0For'+name 
+        d02KKpipi_name = 'D0For'+name
         dstar_name  = name
 
         self.inPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
@@ -125,19 +125,20 @@ class StrippingDstarD02KKpipiRegularConf(LineBuilder): # {
                    DstarCombMassWind = config['DstarCombMassWind'],
                    DstarCombAMAXDOCAmax = config['DstarCombAMAXDOCAmax'],
                    DstarMothVFASPFmax = config['DstarMothVFASPFmax'],
-                   DstarMothPTmin = config['DstarMothPTmin'], 
+                   DstarMothPTmin = config['DstarMothPTmin'],
                    DstarMothDMmin = config['DstarMothDMmin'],
                    DstarMothDMmax = config['DstarMothDMmax'],
                    DstarMothSlpiMIPDVmax = config['DstarMothSlpiMIPDVmax'],
                    DstarMothSlpiMIPCHI2DVmax = config['DstarMothSlpiMIPCHI2DVmax'],
                    DstarMothSlpiPTmin = config['DstarMothSlpiPTmin']
                                                    )
-                                                  
+
 
         self.line_Dstar2D0Pi_D02KKpipi = StrippingLine( dstar_name + 'Line',
                                          prescale   = config['LinePrescale'],
                                          postscale = config['LinePostscale'],
-                                         FILTER = "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )"% config['NTracksLim'], 
+                                         FILTER = { "Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s )"% config['NTracksLim'],
+                                                   "Preambulo":["from LoKiTracks.decorators import *"]},
                                          algos = [ self.selDstar2D0Pi_D02KKpipi ]
                                         )
         self.registerLine(self.line_Dstar2D0Pi_D02KKpipi)
@@ -164,8 +165,8 @@ def makeD02KKpipi( name,
                DMothMIPCHI2DVmax,
                DMothBPVVDmin,
                DMothBPVDCHI2min,
-               DMothBPVVDZmin,  
-               DMothVFASPFmax,               
+               DMothBPVVDZmin,
+               DMothVFASPFmax,
                decDescriptors = [ "[D0 -> K+ K- pi+ pi-]cc"]
              ) : # {
 
@@ -175,25 +176,25 @@ def makeD02KKpipi( name,
     Starts from DataOnDemand 'Phys/StdLooseKaons' and 'Phys/StdLoosePions'.
     Arguments:
     name                                       : name of the Selection.
-    TrackChi2max                         : Maximum track-fit chi2 for D0's daughters 
+    TrackChi2max                         : Maximum track-fit chi2 for D0's daughters
     DDauKPTmin                          : Minimum PT for D0's Kaon daughters
     DDauKPmin                            : Minimum P for D0's Kaon daughters
     DDauPiPTmin                          : Minimum PT for D0's Pion daughters
-    DDauPiPmin                            : Minimum P for D0's Pion daughters       
-    DDauKDelPIDmin                    : Minimum (PIDK-PIDpi) for D0's Kaon daughters 
+    DDauPiPmin                            : Minimum P for D0's Pion daughters
+    DDauKDelPIDmin                    : Minimum (PIDK-PIDpi) for D0's Kaon daughters
     DDauPiDelPIDmin                    : Minimum (PIDpi-PIDK) for D0's Pion daughters
-    DCombMassWind                    : Mass window selecting KKpipi combinations 
-    DCombAMAXDOCAmax,       : Max value of the highest of the 6 DOCAs of the 6 pairs one can form out of the 4 f-state particles. 
+    DCombMassWind                    : Mass window selecting KKpipi combinations
+    DCombAMAXDOCAmax,       : Max value of the highest of the 6 DOCAs of the 6 pairs one can form out of the 4 f-state particles.
     DMothPTmin                           : Minimum D0 PT
     DMothBPVDIRAmin               : Min value of the cosine of the angle between the D momentum and reconstructed line of flight
-    DMothMIPDVmax                   : Max value of the D0 impact parameter wrt to the PV to which it is associated.                
-    DMothMIPCHI2DVmax           : Max value of the Chi2 of this IP 
-    DMothBPVVDmin                   : Min value of the Chi2 of the D0 flying distance. 
+    DMothMIPDVmax                   : Max value of the D0 impact parameter wrt to the PV to which it is associated.
+    DMothMIPCHI2DVmax           : Max value of the Chi2 of this IP
+    DMothBPVVDmin                   : Min value of the Chi2 of the D0 flying distance.
     DMothBPVDCHI2min              : Max value of the Chi2 of this flying distance.
-    DMothBPVVDZmin                 : D0 has to fly toward the detector  
+    DMothBPVVDZmin                 : D0 has to fly toward the detector
     DMothVFASPFmax                 : Maximum value of the D0 vertex chi2 value
- 
-    """ 
+
+    """
 
 
 
@@ -245,23 +246,23 @@ def makeDstar2D0Pi( name,
     DstarCombMassWind                   :   Mass Window selecting the D0+Slow pion combinations
     DstarCombAMAXDOCAmax       :   Maximum value of the DOCA between the D0 and the pion
     DstarMothVFASPFmax                :   Max value of the Chi2 of the Dstar vertex
-    DstarMothPTmin                          :   Minimum Dstar PT 
+    DstarMothPTmin                          :   Minimum Dstar PT
     DstarMothDMmin                         :   Lower bound of the (M_Dstar-M_D0) window
     DstarMothDMmax                        :   Upper bound of the (M_Dstar-M_D0) window
     DstarMothSlpiMIPDVmax            :   Max value of the IP of the slow pion wrt PV
     DstarMothSlpiMIPCHI2DVmax    :   Max value of the chi2 on this IP
-    DstarMothSlpiPTmin                    :   Min value of the slow pion PT 
+    DstarMothSlpiPTmin                    :   Min value of the slow pion PT
     """
 
 
 
     _DstarCombCut = "(ADAMASS('D*(2010)+')<%(DstarCombMassWind)s*MeV) & ( AMAXDOCA('')<%(DstarCombAMAXDOCAmax)s*mm )"%locals()
-    _DstarMotherCut_VCHI2 = "( VFASPF(VCHI2/VDOF) < %(DstarMothVFASPFmax)s )"%locals()   
+    _DstarMotherCut_VCHI2 = "( VFASPF(VCHI2/VDOF) < %(DstarMothVFASPFmax)s )"%locals()
     _DstarMotherCut_PT = "(PT > %(DstarMothPTmin)s*MeV)"% locals()
     _DstarMotherCut_DM = "(MM - CHILD(MM,1) > %(DstarMothDMmin)s*MeV) & (MM - CHILD(MM,1) < %(DstarMothDMmax)s*MeV)"% locals()
     _DstarMotherCut_SlpiIPandPT = "( CHILD(MIPDV(PRIMARY),2) < %(DstarMothSlpiMIPDVmax)s*mm) & (CHILD(MIPCHI2DV(PRIMARY),2) < %(DstarMothSlpiMIPCHI2DVmax)s ) & ( CHILD(PT,2) > %(DstarMothSlpiPTmin)s*MeV)"% locals()
 
-    _DstarMotherCut =  "( " + _DstarMotherCut_PT + " & " + _DstarMotherCut_DM  +" & "+_DstarMotherCut_SlpiIPandPT +" & " +  _DstarMotherCut_VCHI2 +" )" 
+    _DstarMotherCut =  "( " + _DstarMotherCut_PT + " & " + _DstarMotherCut_DM  +" & "+_DstarMotherCut_SlpiIPandPT +" & " +  _DstarMotherCut_VCHI2 +" )"
 
 
     _Dstar = CombineParticles(

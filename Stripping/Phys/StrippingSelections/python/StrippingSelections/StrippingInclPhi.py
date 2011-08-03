@@ -81,7 +81,7 @@ from StandardParticles import StdNoPIDsKaons
 
 #from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 #modules =  CoreFactory('CoreFactory').Modules
-#for i in [ 'LoKiTrigger.decorators' ] :
+#for i in [ 'LoKiTracks.decorators' ] :
 #  if i not in modules : modules.append(i)
 
 
