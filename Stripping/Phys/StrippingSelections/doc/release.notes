@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+!========================= StrippingSelections v3r7 2011-08-03 =========================
 ! 2011-08-03 - Rob Lambert
 - Fixed bug in StrippingD02K3PiForXSec.py
 
