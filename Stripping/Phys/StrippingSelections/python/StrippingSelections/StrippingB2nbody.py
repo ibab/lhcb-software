@@ -43,6 +43,7 @@ confdict_2body = {'nbody':              2,
                   'doKS':             False,
                   'doJp':              True,
                   'doDS':              True,
+                  'prescale':           0.5,
                   'MinPiPt':         1000.0,
                   'MinPiIPChi2DV':     25.0,
                   'MaxPiChi2':          4.0,
@@ -179,7 +180,7 @@ from StrippingUtils.Utils import LineBuilder
 
 class B2nbodyConf(LineBuilder) :
     __configuration_keys__ = ('nbody','MinBMass','MaxBMass','MinBPt','MaxBVertChi2DOF','MinBPVVDChi2','MaxBPVIPChi2','MinBPVDIRA','MaxMass','MaxNtrk','MinNvc',
-                              'doPi','doK','dop','doKs','doLm','doDz','doDp','doDs','doLc','doPh','doKS','doJp','doDS',
+                              'doPi','doK','dop','doKs','doLm','doDz','doDp','doDs','doLc','doPh','doKS','doJp','doDS','prescale',
                               'MinPiPt','MinPiIPChi2DV','MaxPiChi2','MinPiPIDK','MinPiPIDp',
                               'MinKPt','MinKIPChi2DV','MaxKChi2','MinKPIDPi','MinKPIDp',
                               'MinpPt','MinpIPChi2DV','MaxpChi2','MinpPIDPi','MinpPIDK',
@@ -372,7 +373,9 @@ class B2nbodyConf(LineBuilder) :
                                      doJp           =config['doJp'],
                                      doDS           =config['doDS'])
 
-        self.line = StrippingLine(name+"Line", selection = self.selB2nbody)
+        self.line = StrippingLine(name+"Line",
+                                  selection = self.selB2nbody,
+                                  prescale = config['prescale'])
         self.registerLine(self.line)
 
 
