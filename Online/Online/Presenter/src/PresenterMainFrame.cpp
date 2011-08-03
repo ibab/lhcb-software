@@ -202,6 +202,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_trendDuration = 600;
   m_trendEnd      = 0;
   m_idle = true;
+  m_oldProcessing = "";
+  m_oldEventType  = "";
 }
 
 //==============================================================================
@@ -3640,7 +3642,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl){
     onlH = NULL;
   }
   if ( m_refreshingPage ) stopPageRefresh();
-  m_presenterPage.addSimpleHisto( histogramUrl, onlH, currentPartition() );
+  m_presenterPage.addSimpleHisto( histogramUrl, onlH, m_histogramDB, currentPartition() );
 }
 
 //=========================================================================
@@ -3666,6 +3668,12 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
   }
   std::string header = "Simple edited display";
   if ( m_displayMode == pres::Alarm ) header = "Analysis alarm";
+  bool status = m_presenterPage.buildAnalysisHistos( m_analysisLib, false );  // Only after histos are loaded...
+  if ( !status ) {
+    std::cout << "Load references for analysis, and rebuild..." << std::endl;
+    m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
+    m_presenterPage.buildAnalysisHistos( m_analysisLib, false );
+  }
 
   editorCanvas->Clear();
   editorCanvas->cd();
@@ -4193,9 +4201,15 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           std::cout << "Load archive, global time '" <<  m_presenterInfo.globalTimePoint()
                     << "' duration '" << m_presenterInfo.globalPastDuration() << "'" << std::endl;
 
+          bool hasChanged = false;
+          if ( m_presenterInfo.processing() != m_oldProcessing ||
+               m_presenterInfo.eventType()  != m_oldEventType    ) hasChanged = true;
+          m_oldProcessing = m_presenterInfo.processing();
+          m_oldEventType  = m_presenterInfo.eventType();          
+
           m_presenterPage.loadFromArchive( m_archive,
                                            m_presenterInfo.globalTimePoint(),
-                                           m_presenterInfo.globalPastDuration() );
+                                           m_presenterInfo.globalPastDuration(), hasChanged );
 
           if ( m_referencesOverlayed ) m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
           

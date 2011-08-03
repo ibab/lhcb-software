@@ -85,7 +85,9 @@ void PresenterPage::clear ( ) {
 //=========================================================================
 //  Add a simple histo to the page
 //=========================================================================
-void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, std::string partition ) {
+void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, OnlineHistDB* histDB, std::string partition ) {
+  std::vector<OnlineHistogram*> anaHistos;
+  anaHistos.reserve( 100 ); // avoid relocation
   std::cout << "addSimpleHisto: name " << dimName << std::endl;
   std::string task = dimName.substr( 0, dimName.find( '/' ) );
   task = task.substr( task.find('_')+1 );  // remove partition
@@ -127,35 +129,41 @@ void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH,
     }
     return;
   }
-  
-  if ( NULL == onlH ) temp.setIdentifier( ident );
-  bool existed = false;
-  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-    if ( (*itT).name == task ) {
-      for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
-            (*itT).histos.end() != itH; ++itH ) {
-        if ( ident == (*itH).identifier() ) {
-          std::cout << "              already existing " << ident << std::endl;
+
+  if ( onlH->isAnaHist() ) {
+    anaHistos.push_back( onlH );
+    processAnalysisHistos( anaHistos, histDB );
+  } else {
+    if ( NULL == onlH ) temp.setIdentifier( ident );
+    bool existed = false;
+    for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+      if ( (*itT).name == task ) {
+        for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
+              (*itT).histos.end() != itH; ++itH ) {
+          if ( ident == (*itH).identifier() ) {
+            std::cout << "              already existing " << ident << std::endl;
+            existed = true;
+            break;
+          }
+        }
+        if ( !existed ) {  
+          (*itT).histos.push_back( temp );
           existed = true;
+          std::cout << task << " ++ Histo   " << ident << std::endl;
           break;
         }
       }
-      if ( !existed ) {  
-        (*itT).histos.push_back( temp );
-        existed = true;
-        std::cout << task << " ++ Histo   " << ident << std::endl;
-        break;
-      }
+    }
+    if ( !existed ) {
+      TaskHistos newTask;
+      newTask.name = task;
+      newTask.dead = false;
+      newTask.histos.push_back( temp );
+      m_tasks.push_back( newTask );
+      std::cout << task << " ** Histo   " << ident << std::endl;
     }
   }
-  if ( !existed ) {
-    TaskHistos newTask;
-    newTask.name = task;
-    newTask.dead = false;
-    newTask.histos.push_back( temp );
-    m_tasks.push_back( newTask );
-    std::cout << task << " ** Histo   " << ident << std::endl;
-  }
+  
 }
 //=========================================================================
 //  Prepare the histogram descriptions for access
@@ -260,6 +268,13 @@ void PresenterPage::prepareAccess( OnlineHistDB* histDB, std::string& partition 
       anaHistos.push_back( myHist );
     }
   }
+  processAnalysisHistos( anaHistos, histDB );
+}
+
+//=========================================================================
+//  Process teh analysis histogram, recursively
+//=========================================================================
+void PresenterPage::processAnalysisHistos ( std::vector<OnlineHistogram*>& anaHistos, OnlineHistDB* histDB ) {
 
   //== Post process the analysis histograms as they can be nested
 
@@ -648,7 +663,8 @@ bool PresenterPage::buildAnalysisHistos (OMAlib* analysisLib, bool update ) {
 //=========================================================================
 void PresenterPage::loadFromArchive( Archive* archive,
                                      const std::string & timePoint,
-                                     const std::string & pastDuration ) {
+                                     const std::string & pastDuration,
+                                     bool hasChanged) {
   std::cout << "Load from Archive, time  Point " << timePoint
             << " pastDuration " << pastDuration << std::endl;
   for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
@@ -661,6 +677,8 @@ void PresenterPage::loadFromArchive( Archive* archive,
                     (*m_tasks.begin()).name == m_lastName &&
                     timePoint               == m_lastTimePoint &&
                     pastDuration            == m_lastDuration );
+  if ( hasChanged ) keepOpen = false;
+  
   if ( m_tasks.size() > 0 ) {
     m_lastName  =  (*m_tasks.begin()).name;
   } else {
@@ -781,8 +799,12 @@ void PresenterPage::resetOffsetHistograms ( ) {
 //=========================================================================
 void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
   int nbPlots = 0;
-  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-    nbPlots += (*itT).histos.size();
+  if ( m_analysis.empty() ) {
+    for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+      nbPlots += (*itT).histos.size();
+    } 
+  } else {
+    nbPlots += m_analysis.size();
   }
   for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
     nbPlots += (*itF).histos.size();
@@ -798,9 +820,29 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
   int col = 0;
   double rSize = 1./nRow;
   double cSize = 1./nCol;
-  
-  for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
-    for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin(); (*itT).histos.end() != itH; ++itH ) {
+
+  if ( m_analysis.empty() ) {
+    for ( std::vector<TaskHistos>::iterator itT = m_tasks.begin(); m_tasks.end() != itT; ++itT ) {
+      for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin(); (*itT).histos.end() != itH; ++itH ) {
+        double xLow = col * cSize;
+        double xHig = xLow + cSize;
+        double yLow = row * rSize;
+        double yHig = yLow + rSize;
+        if ( NULL != m_bannerPad ) {
+          yLow = 0.95 * yLow;
+          yHig = 0.95 * yHig;
+        }
+        (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+        (*itH).setDisplayOptions();
+        col += 1;
+        if ( nCol == col ) {
+          col = 0;
+          row--;
+        }
+      }
+    }
+  } else {
+    for ( std::vector<AnalysisHisto>::iterator itH = m_analysis.begin(); m_analysis.end() != itH; ++itH ) {
       double xLow = col * cSize;
       double xHig = xLow + cSize;
       double yLow = row * rSize;
@@ -809,7 +851,8 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
         yLow = 0.95 * yLow;
         yHig = 0.95 * yHig;
       }
-      (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      (*itH).displayHisto->draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      (*itH).displayHisto->setDisplayOptions();
       col += 1;
       if ( nCol == col ) {
         col = 0;
@@ -828,6 +871,7 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
         yHig = 0.95 * yHig;
       }
       (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      (*itH).setDisplayOptions();
       col += 1;
       if ( nCol == col ) {
         col = 0;

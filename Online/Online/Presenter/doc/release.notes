@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-08-03 - Olivier Callot
+ - Display correctly alarms from virtual histograms
+
+! 2011-08-02 - Olivier Callot
+ - Force reload of history file is event type or processing have chnaged
+
 ! 2011-07-28 - Olivier Callot
  - Report to the Problem database with severity 'Report'
  - Banner page on alarm display, and when editing pages

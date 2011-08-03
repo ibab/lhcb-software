@@ -69,7 +69,7 @@ public:
   void clear();
 
   //== Add a simple histo on the page
-  void addSimpleHisto ( std::string dimName, OnlineHistogram* onlH=NULL, std::string partition="LHCb" );
+  void addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, OnlineHistDB* histDB, std::string partition="LHCb" );
   
   //== Set the DIM browser
   void setDimBrowser( DimBrowser* br )  { m_dimBrowser = br; }
@@ -102,11 +102,14 @@ public:
   //== Give the (first) DisplayHistogram for the specified TGraph
   DisplayHistogram* displayHisto( TGraph* hist );
 
+  void processAnalysisHistos( std::vector<OnlineHistogram*>& anaHistos, OnlineHistDB* histDB );
+
   bool buildAnalysisHistos (OMAlib* analysisLib, bool update );
 
   void loadFromArchive( Archive* archive, 
                         const std::string & timePoint,
-                        const std::string & pastDuration );
+                        const std::string & pastDuration,
+                        bool hasChanged = false );
 
   //== Handle the offset histograms
   void setOffsetHistograms();

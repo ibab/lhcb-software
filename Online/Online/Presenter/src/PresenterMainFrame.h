@@ -677,6 +677,8 @@ public:
   unsigned int m_trendEnd;
   bool m_reAccess;
   bool m_idle;
+  std::string m_oldProcessing;
+  std::string m_oldEventType;
 
   /// Display page name in status bar and load comments
   void displayStatusAndComments( OnlineHistPage * page ) ;
