@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+
+!========================= StrippingSettings v2r6 2011-08-03 =========================
 ! 2011-08-03 - Jibo He
  - LineConfigDictionaries_GTWG.py
    . Updated B->2,3,4 boday conf dict, and pre-scaled them by 0.5. 
