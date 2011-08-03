@@ -7,6 +7,8 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+! 2011-08-03 - Gerhard Raven
+ - add Hlt2Lumi, remove Hlt1Lumi from Hlt2Transparent
 
 !========================== Hlt2Lines v8r7 2011-07-07 ===================
 ! 2011-07-07 - Gerhard Raven
