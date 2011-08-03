@@ -207,10 +207,10 @@ void MonAdder::TaskDied(std::string & task)
 void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &ServiceName)
 {
   int status;
+//  printf("Comparing %s with Pattern %s...",ServiceName.c_str(),this->m_servicePattern.c_str());
   status = boost::regex_search(ServiceName, m_serviceexp);
   if (status)
   {
-//    printf("Comparing %s with Pattern %s...",ServiceName.c_str(),this->m_servicePattern.c_str());
 //    printf("SUCCESS\n");
     INServiceMap::iterator i;
     i = m_inputServicemap.find(ServiceName);
@@ -240,6 +240,10 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
       }
     }
     DimServer::start();
+  }
+  else
+  {
+//    printf("Not Interesting\n");
   }
 }
 void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName)

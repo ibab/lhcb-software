@@ -21,6 +21,7 @@ void HAdderServInfoHandler::infoHandler(void)
 
   if (strcmp(input, "DEAD") == 0)
   {
+    printf("Service Info Handler from %s DEAD\n",taskname.c_str());
     return;
   }
   ::lib_rtl_output(LIB_RTL_INFO,"New Message from Service List Service %s data:\n%s\n",
@@ -62,6 +63,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
 
   if (strcmp(input, "DEAD") == 0)
   {
+    printf("Task Info Handler from DNS DEAD\n");
     return;
   }
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
@@ -81,11 +83,17 @@ void HAdderTaskInfoHandler::infoHandler(void)
 
     for (adder = l.begin(); adder != l.end(); adder++)
     {
+//      printf ("Checking Server Name %s...",server.c_str());
       (*adder)->TaskName(server, tskname, tgen);
       if (tskname != "")
       {
+//        printf("... Found\n");
         tname = tskname;
         fnd = true;
+      }
+      else
+      {
+//        printf("...NOT Found...\n");
       }
     }
     if (fnd)
