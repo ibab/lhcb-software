@@ -307,6 +307,8 @@ LoKi::Scalers::RateLimitV::RateLimitV
   {
   case LoKi::Scalers::RandomPhasePeriodicLimiter : 
     m_next += m_interval * m_uniform ( m_next ) ; break ;
+  case LoKi::Scalers::RandomLimiter : 
+    m_next += 1 + m_interval * -std::log ( m_uniform ( m_next ) ) ; break ;
   default:
     m_next += 1 ; // wait at least one tick
   }

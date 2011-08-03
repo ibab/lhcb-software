@@ -15,6 +15,7 @@
 
 ! 2011-08-03 - Gerhard Raven
  - fix Gaudi State Machine protocol errors
+ - (attempt to) kill the 'initial spike' in the random rate limiter
 
 !========================= LoKiCore v11r2 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
