@@ -4,7 +4,8 @@ from Configurables import HltANNSvc
 # quick hack to make sure Hlt2Global is OK...
 Hlt2ID = HltANNSvc().Hlt2SelectionID
 if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
-Hlt2ID.update(  { 'Hlt2PileUpDecision'                    : 65534 } )
+Hlt2ID.update(  { 'Hlt2PileUpDecision'                    : 65534
+                , "Hlt2LumiDecision"                      : 65533 } )
 
 HltANNSvc().Hlt1SelectionID = {
     # Global
@@ -177,7 +178,6 @@ HltANNSvc().Hlt1SelectionID = {
     'CaloCandidatesSingleElectronNoIP'      :10120,
     'VeloCandidatesTrackForwardPassThrough' :10121,
     'VeloCandidatesTrackForwardPassThroughLoose' :10122,
-
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2

@@ -5,6 +5,11 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r10p2  2011-08-03 ===================
+! 2011-08-03 - Gerhard Raven
+ - add id for Hlt2Lumi, unify routing bit 34 and lumi bank killer predicate,
+   and update for dedicated Hlt2Lumi...
+
 !========================== HltConf v9r10p1  2011-07-06 ===================
 ! 2011-07-06 - Gerhard Raven
  - define Hlt1L0HighSumETJetDecision

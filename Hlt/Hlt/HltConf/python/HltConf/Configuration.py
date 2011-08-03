@@ -41,6 +41,7 @@ class HltConf(LHCbConfigurableUser):
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
                 , 'SkipHltRawBankOnRejectedEvents' : False
+                , "LumiBankKillerPredicate"        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"  
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
@@ -209,8 +210,8 @@ class HltConf(LHCbConfigurableUser):
                       , 17 : "L0_CHANNEL_RE('.*,lowMult')"
                       , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
                       , 32 : "HLT_PASS('Hlt1Global')"
-                      , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')"  # lumi stream
-                      , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global 
+                      , 33 : "HLT_PASS_RE('^Hlt[12]Lumi.*Decision$')"  # lumi stream
+                      , 34 : " ~ ( %s ) " % self.getProp('LumiBankKillerPredicate') #  this must be the opposite of the LumiStripper, i.e. if 34 is set, the event should NEVER be a nanoevent...
                       , 35 : "HLT_PASS_SUBSTR('Hlt1BeamGas')" # beamgas stream
                       , 36 : "scale(%s,RATE(%s))" % ( "HLT_PASS_RE('Hlt2Express.*Decision')", self.getProp('ExpressStreamRateLimit') )  # express stream
                       , 37 : "HLT_PASS_RE('Hlt1(?!BeamGas).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global # full stream
@@ -647,7 +648,7 @@ class HltConf(LHCbConfigurableUser):
                 
             EndMembers += [ HltLumiWriter()
                           , Sequence( 'LumiStripper' , Members = 
-                                      [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
+                                      [ HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate')  ) 
                                       , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
                                       , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                       ])
