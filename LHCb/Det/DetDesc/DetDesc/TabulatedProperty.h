@@ -1,14 +1,13 @@
-// $Id: TabulatedProperty.h,v 1.6 2005-12-07 13:19:07 cattanem Exp $
 #ifndef     DETDESC_TABULATEDPROPERTY_H
 #define     DETDESC_TABULATEDPROPERTY_H 1 
 /// STL
 #include <vector> 
+#include <iostream> 
 /// GaudiKernel
-#include "DetDesc/ValidDataObject.h"
+#include "GaudiKernel/MsgStream.h"
 /// DetDesc
+#include "DetDesc/ValidDataObject.h"
 #include "DetDesc/CLIDTabulatedProperty.h"
-///
-class MsgStream    ;
 ///
 
 /** @class TabulatedProperty TabulatedProperty.h DetDesc/TabulatedProperty.h
@@ -91,20 +90,59 @@ private:
   Table       m_table ;
   ///
 };
-///
-#include "DetDesc/TabulatedProperty.icpp"
-///
+///////////////////////////////////////////////////////////////////////////////////////////////
+inline std::ostream& operator<<( std::ostream& os , const TabulatedProperty& tp )
+{ return tp.fillStream( os ); }
+///////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const TabulatedProperty& tp )
+{ return tp.fillStream( os ); }
+///////////////////////////////////////////////////////////////////////////////////////////////
+inline std::ostream& operator<<( std::ostream& os , const TabulatedProperty* tp )
+{ return tp ? (os<<*tp) : (os<<" TabulatedProperty* points to NULL!"<<std::endl) ; }
+///////////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const TabulatedProperty* tp )
+{ return tp ? (os<<*tp) : (os<<" TabulatedProperty* points to NULL!"<<endmsg   ) ; }
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+inline const std::string&                TabulatedProperty::type    () const { return m_type; }
+///////////////////////////////////////////////////////////////////////////////////////////////
+inline TabulatedProperty&                TabulatedProperty::setType ( const std::string& T )
+{ m_type = T ; return *this; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline const std::string&                TabulatedProperty::xAxis   () const { return m_xAxis; } 
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline TabulatedProperty&                TabulatedProperty::setXAxis( const std::string& T )
+{ m_xAxis = T ; return *this; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline const std::string&                TabulatedProperty::yAxis   () const { return m_yAxis; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline TabulatedProperty&                TabulatedProperty::setYAxis( const std::string& T )
+{ m_yAxis = T ; return *this; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline       TabulatedProperty::Table&   TabulatedProperty::table ()       { return m_table  ; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline const TabulatedProperty::Table&   TabulatedProperty::table () const { return m_table  ; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline TabulatedProperty::operator       TabulatedProperty::Table&()       { return table () ; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+inline TabulatedProperty::operator const TabulatedProperty::Table&() const { return table () ; }
+////////////////////////////////////////////////////////////////////////////////////////////////
+/** Fill a table from the function 
+    @param func  The function. It could the the type of function, pointer to function, 
+    STL adaptor for member function, STL functional or any type of functor
+    or function object   
+    @param first "Iterator"(in STL sence) to a  first   element in a "sequence" 
+    @param last  "Iterator"(in STL sence) to a (last+1) element in a "sequence" 
+*/
+template< class Func , class Iter> 
+inline const StatusCode TabulatedProperty::fill( Func func , Iter first , Iter last )
+{
+  table().clear();
+  while( first != last )
+    { table().push_back( Entry( *first , func(*first) ) ) ; ++first ; }
+  return StatusCode::SUCCESS;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif  //  DETDESC_TABULATEDPROPERTY_H
-
-
-
-
-
-
-
-
-
-
-
-

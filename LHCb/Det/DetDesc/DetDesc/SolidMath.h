@@ -1,10 +1,8 @@
-// $Id: SolidMath.h,v 1.8 2007-09-20 15:13:21 wouter Exp $
 // ============================================================================
 #ifndef DETDESC_SOLIDMATH_H 
 #define DETDESC_SOLIDMATH_H 1
 // Include files
 #include "DetDesc/ISolid.h" 
-#include "DetDesc/SolidTicks.h"
 
 /** @file SolidMath.h
  *  
@@ -109,7 +107,7 @@ namespace SolidTicks
     // sphere with non-positive radius is not able to intersect the line! 
     if( r2 <= 0     ) { return 0 ; } 
     // line with null direction vector does not  intersect the sphere! 
-    double v2 = vect.mag2(); 
+    double v2 = vect.mag2();
     if( v2 <= 0     ) { return 0 ; }
     double p2 = point.mag2()    ; 
     double pv = point.Dot(vect) ; 

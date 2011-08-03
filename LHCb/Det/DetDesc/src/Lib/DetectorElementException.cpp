@@ -1,10 +1,8 @@
-// $Id: DetectorElementException.cpp,v 1.6 2009-04-17 08:54:24 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 // DetDesc 
 #include "DetDesc/DetectorElementException.h"
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/DetectorElement.icpp"
 
 //////////////////////////////////////////////////////////////////////////////
 DetectorElementException::DetectorElementException

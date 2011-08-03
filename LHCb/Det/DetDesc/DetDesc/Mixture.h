@@ -1,6 +1,3 @@
-// $Id: Mixture.h,v 1.15 2008-10-28 12:04:37 cattanem Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
@@ -157,6 +154,41 @@ private:
   
 };
 
-#include "DetDesc/Mixture.icpp"
+#include "GaudiKernel/SystemOfUnits.h"
+
+/////////////////////////////////////////////////////////////////////////////////
+inline int    Mixture::nOfItems() const { return m_elements.size(); }
+/// Effective A is returned /////////////////////////////////////////////////////
+inline double Mixture::A()        const { return m_A    ; }
+/// Effective A is computed, can't be set explicitly ////////////////////////////
+inline void   Mixture::setA( const double /*value*/ ){}
+/// Effective Z is returned /////////////////////////////////////////////////////
+inline double Mixture::Z()        const { return m_Z    ; }
+/// Effective Z is computed, can't be set explicitly ////////////////////////////
+inline void   Mixture::setZ( const double /*value*/ ){} 
+/// Effective I is returned                          ////////////////////////////
+inline double Mixture::I()        const { return m_I    ; }  
+// Effective I is computed, can't be set explicitly ////////////////////////////
+inline void   Mixture::setI( const double /*value*/ ){} 
+
+/// Parameters for density effect correction are set and returned ////////////////
+inline double Mixture::C()        const { return m_C    ; }
+inline void   Mixture::setC( const double /*value*/ ){}
+inline double Mixture::a()        const { return m_a    ; }
+inline void   Mixture::seta( const double /*value*/ ){}
+inline double Mixture::m()        const { return m_m    ; }
+inline void   Mixture::setm( const double /*value*/ ){}
+inline double Mixture::X0()        const { return m_X0    ; }
+inline void   Mixture::setX0( const double /*value*/ ){}
+inline double Mixture::X1()        const { return m_X1    ; }
+inline void   Mixture::setX1( const double /*value*/ ){}
+
+
+/// Effective N is returned
+inline double Mixture::N()        const { return m_A*Gaudi::Units::mole/Gaudi::Units::g; }  
+/////////////////////////////////////////////////////////////////////////////////
+inline const Mixture::Elements& Mixture::elements() const { return m_elements ; }
+inline       Mixture::Elements& Mixture::elements()       { return m_elements ; }
+/////////////////////////////////////////////////////////////////////////////////
 
 #endif // DETDESC_MIXTURE_H

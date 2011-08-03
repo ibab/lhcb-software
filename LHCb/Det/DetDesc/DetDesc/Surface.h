@@ -1,4 +1,3 @@
-// $Id: Surface.h,v 1.4 2008-10-28 12:04:37 cattanem Exp $
 #ifndef     DETDESC_SURFACE_H 
 #define     DETDESC_SURFACE_H  1
 /// STL
@@ -6,11 +5,11 @@
 /// GaudiKernel
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/MsgStream.h"
 /// DetDesc
 #include "DetDesc/CLIDSurface.h"
 ///
 class TabulatedProperty;
-class MsgStream;
 /// 
 
 /** @class Surface Surface.h DetDesc/Surface.h
@@ -87,15 +86,55 @@ private:
   Tables       m_props      ; /// tables of properties 
   ///
 };
-///
-#include "DetDesc/Surface.icpp"
-///
+/////////////////////////////////////////////////////////////////////////
+inline std::ostream& operator<<( std::ostream& os , const Surface& surf )        
+{ return surf.fillStream( os ); }
+/////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const Surface& surf )          
+{ return surf.fillStream( os ); }
+/////////////////////////////////////////////////////////////////////////
+inline std::ostream& operator<<( std::ostream& os , const Surface* surf )          
+{ return surf ? (os<<*surf) : (os<<" Surface* points to NULL!"<<std::endl) ; }
+/////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const Surface* surf )           
+{ return surf ? (os<<*surf) : (os<<" Surface* points to NULL!"<<endmsg) ; }
+/////////////////////////////////////////////////////////////////////////
 
-#endif  //  DETDESC_SURFACE_H 
 
+/// "model" //////////////////////////////////////////////////////////////
+inline unsigned int Surface::   model     () const { return m_model;  }  
+//////////////////////////////////////////////////////////////////////////
+inline Surface&     Surface::setModel     ( const unsigned int val )
+{ m_model  = val ; return *this; }  
+/// "finish" /////////////////////////////////////////////////////////////
+inline unsigned int Surface::   finish    () const { return m_finish; }
+//////////////////////////////////////////////////////////////////////////
+inline Surface&     Surface::setFinish    ( const unsigned int val ) 
+{ m_finish = val ; return *this; }  
+/// "type" ///////////////////////////////////////////////////////////////
+inline unsigned int Surface::   type      () const { return m_type  ; }
+//////////////////////////////////////////////////////////////////////////
+inline Surface&     Surface::setType      ( const unsigned int val ) 
+{ m_type   = val ; return *this; }  
+/// "value" - (NB: ugly name!) ///////////////////////////////////////////
+inline double       Surface::   value     () const { return m_value ; }
+//////////////////////////////////////////////////////////////////////////
+inline Surface&     Surface::setValue     ( const double       val ) 
+{ m_value  = val ; return *this; }  
+/// name of first  physical volume ///////////////////////////////////////
+inline const std::string& Surface::   firstVol  () const { return m_firstVol ; }
+//////////////////////////////////////////////////////////////////////////
+inline Surface&           Surface::setFirstVol  ( const std::string& val ) 
+{ m_firstVol  = val ; return *this; }  
+/// name of second physical volume ///////////////////////////////////////
+inline const std::string& Surface::   secondVol () const { return m_secondVol; }
+//////////////////////////////////////////////////////////////////////////
+inline Surface&           Surface::setSecondVol ( const std::string& val ) 
+{ m_secondVol = val ; return *this; }  
+/// tables of optical prorties ///////////////////////////////////////////
+inline const Surface::Tables& Surface::tabulatedProperties() const { return m_props; }
+//////////////////////////////////////////////////////////////////////////
+inline       Surface::Tables& Surface::tabulatedProperties()       { return m_props; }
+//////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
+#endif  //  DETDESC_SURFACE_H

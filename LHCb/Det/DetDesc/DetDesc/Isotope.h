@@ -1,4 +1,3 @@
-// $Id: Isotope.h,v 1.13 2008-10-28 12:04:36 cattanem Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -85,8 +84,33 @@ protected:
   double m_X1;
   
 };
-///
-#include "DetDesc/Isotope.icpp"
-///
+
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::A() const { return m_A; }
+inline void   Isotope::setA( const double value ) { m_A = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::Z() const { return m_Z; }
+inline void   Isotope::setZ( const double value ) { m_Z = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::I() const { return m_I; }
+inline void   Isotope::setI( const double value ) { m_I = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::C() const { return m_C; }
+inline void   Isotope::setC( const double value ) { m_C = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::a() const { return m_a; }
+inline void   Isotope::seta( const double value ) { m_a = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::m() const { return m_m; }
+inline void   Isotope::setm( const double value ) { m_m = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::X0() const { return m_X0; }
+inline void   Isotope::setX0( const double value ) { m_X0 = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::X1() const { return m_X1; }
+inline void   Isotope::setX1( const double value ) { m_X1 = value; }
+///////////////////////////////////////////////////////////////////////////
+inline double Isotope::N() const { return m_A*Gaudi::Units::mole/Gaudi::Units::g; }
+///////////////////////////////////////////////////////////////////////////
 
 #endif // DETDESC_ISOTOPE_H

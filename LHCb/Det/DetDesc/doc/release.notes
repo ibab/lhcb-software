@@ -3,6 +3,12 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2011-08-03 - Marco Cattaneo
+ - Remove files DetDesc/*.icpp, moving code directly into corresponding .h,
+   since they were not used anywhere else and makes it consistent with standard
+   LHCb style. Fixes circular include dependencies, coverity issues 15520,
+   15526, 15527, 15528, 15529, 15530, 15531, 15532
+
 !========================= DetDesc v18r27 2011-07-25 =========================
 ! 2011-06-22 - Marco Cattaneo
  - Protect unprotected debug and verbose printout
