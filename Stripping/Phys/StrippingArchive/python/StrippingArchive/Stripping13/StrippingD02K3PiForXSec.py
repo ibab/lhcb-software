@@ -102,7 +102,7 @@ class D02K3PiForXSecConf(LineBuilder):
     from Configurables import LoKi__VoidFilter as VoidFilter
     from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
     modules = CoreFactory('CoreFactory').Modules
-    for i in ['LoKiTrigger.decorators']:
+    for i in ['LoKiTracks.decorators']:
       if i not in modules : modules.append(i)
       
     selD02K3Pi = makeD02K3Pi(moduleName, config['D0Cuts'])

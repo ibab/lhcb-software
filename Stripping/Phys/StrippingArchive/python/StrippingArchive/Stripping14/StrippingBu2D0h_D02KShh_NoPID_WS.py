@@ -228,9 +228,9 @@ class StrippingBu2D0h_D02KShh_NoPID_WSConf(LineBuilder):
 ##     '''
  
         B2Dh_D2KShh_StrippingNumTracksGECLL_WS = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 180",
-                                             'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+                                             'Preambulo' : ["from LoKiTracks.decorators import *"]}
         B2Dh_D2KShh_StrippingNumTracksGECDD_WS = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < 180",
-                                             'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+                                             'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         #Stripping lines
         self.Line_LL_Bu2D0h_D02KShh_WS = StrippingLine(self._myname+'Bu2D0h_D02KShh_KSLL_WS'

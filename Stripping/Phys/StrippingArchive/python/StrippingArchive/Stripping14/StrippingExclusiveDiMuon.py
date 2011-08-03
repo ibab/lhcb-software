@@ -31,7 +31,7 @@ class ExclusiveDiMuonConf(LineBuilder) :
         self._myname = name
         
         ExclusiveDiMuonNumTracksGEC = {'Code' : "(TrNUM('Rec/Track/Best', TrLONG) <= 5) & (TrNUM('Rec/Track/Best', TrLONG) >= 1)",
-                                       'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+                                       'Preambulo' : ["from LoKiTracks.decorators import *"]}
         
 
 

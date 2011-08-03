@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Rob Lambert
+ - Fix LoKiTrigger -> LoKiTracks
+
 !========================= StrippingArchive v1r2p1 2011-07-21 =========================
 ! 2011-07-21 - Rob Lambert
  - Fix mixed importing of lines from outside StrippingArchive for StrippingPromptCharm in Stripping15

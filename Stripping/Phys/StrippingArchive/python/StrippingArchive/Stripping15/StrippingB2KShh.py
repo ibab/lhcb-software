@@ -114,7 +114,7 @@ class B2KShhConf(LineBuilder) :
         ll_name = name+'LL'
 
         GECCode = {'Code' : "TrNUM('Rec/Track/Best', TrLONG) < %s" % config['GEC_MaxTracks'],
-	           'Preambulo' : ["from LoKiTrigger.decorators import *"]}
+	           'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
 	self.pions = StdLoosePions
 	self.kaons = StdLooseKaons

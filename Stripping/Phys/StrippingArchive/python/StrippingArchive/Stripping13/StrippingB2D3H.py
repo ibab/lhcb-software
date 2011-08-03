@@ -270,7 +270,7 @@ class B2D3HAllLinesConf( LineBuilder ):  #ADDED LINE (CHANGED OBJECT TO LINEBUIL
         from Configurables import LoKi__VoidFilter as VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
+        for i in ['LoKiTracks.decorators']:
           if i not in modules : modules.append(i)
         self.EventFilter = "TrSOURCE('Rec/Track/Best', TrLONG) >> (TrSIZE < %s )" % config['MaxTracks']
 
@@ -1205,7 +1205,7 @@ def MyEventFilter(name, MaxTracks):
     from Configurables import LoKi__VoidFilter as VoidFilter
     from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
     modules = CoreFactory('CoreFactory').Modules
-    for i in ['LoKiTrigger.decorators']:
+    for i in ['LoKiTracks.decorators']:
       if i not in modules : modules.append(i)
 
 

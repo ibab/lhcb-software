@@ -67,7 +67,7 @@ class B2DXHltTisTosConf(LineBuilder):
 
         LineBuilder.__init__(self, moduleName, config)
         modules = CoreFactory('CoreFactory').Modules
-        for i in ['LoKiTrigger.decorators']:
+        for i in ['LoKiTracks.decorators']:
             if i not in modules : modules.append(i)
 
         dcuts = config['DCuts']

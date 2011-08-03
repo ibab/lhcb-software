@@ -36,7 +36,7 @@ from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
 from StrippingUtils.Utils import LineBuilder
  
 modules =  CoreFactory('CoreFactory').Modules
-for i in [ 'LoKiTrigger.decorators' ] :
+for i in [ 'LoKiTracks.decorators' ] :
     if i not in modules : modules.append(i)
 
 name = 'CharmedAndCharmedStrangeSpectroscopyConf'
