@@ -4,10 +4,10 @@ Package Coordinator : Bruno Souza de Paula
 Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
-!========================== HltGlobalMonitor v3r8   2011-07-11 ===================
 ! 2011-07-12 - Eric van Herwijnen 
  - Modify HltL0GlobalMonitor, add new L0 channels for Hlt shift page 4 histos
- 
+!========================== HltGlobalMonitor v3r8   2011-07-11 ===================
+
 ! 2011-04-03 - Eric van Herwijnen 
  - Add resolver position monitoring histograms
 
