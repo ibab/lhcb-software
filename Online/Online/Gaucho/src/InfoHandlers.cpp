@@ -22,6 +22,13 @@ void HAdderServInfoHandler::infoHandler(void)
   if (strcmp(input, "DEAD") == 0)
   {
     printf("Service Info Handler from %s DEAD\n",taskname.c_str());
+    Adderlist_t::iterator adder;
+    Adderlist_t& l = AdderSys::Instance().gg_AdderList;
+    taskname = taskname.substr(0, taskname.find("/SERVICE_LIST"));
+    for (adder = l.begin(); adder != l.end(); adder++)
+    {
+      (*adder)->TaskDied(taskname);
+    }
     return;
   }
   ::lib_rtl_output(LIB_RTL_INFO,"New Message from Service List Service %s data:\n%s\n",
