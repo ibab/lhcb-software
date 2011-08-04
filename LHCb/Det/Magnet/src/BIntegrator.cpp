@@ -1,4 +1,3 @@
-// $Id: BIntegrator.cpp,v 1.8 2009-06-12 12:57:16 cattanem Exp $
 // Include files 
 // -------------
 
@@ -29,7 +28,7 @@ DECLARE_TOOL_FACTORY( BIntegrator );
 BIntegrator::BIntegrator( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ), m_pIMF(0)
 {
   declareInterface<IBIntegrator>(this);
 

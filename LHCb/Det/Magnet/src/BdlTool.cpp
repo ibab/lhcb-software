@@ -23,7 +23,7 @@ BdlTool::BdlTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent)
   : GaudiTool( type, name, parent ),
-    m_magFieldSvc(0)
+    m_BdlTrack(0.0), m_zHalfBdlTrack(0.0), m_magFieldSvc(0)
 {
   declareInterface<IBdlTool>(this);
 

@@ -187,9 +187,10 @@ double MultipleMagneticFieldSvc::signedRelativeCurrent() const
   int numFields = 0;
   std::vector<ILHCbMagnetSvc*>::const_iterator field;
   
-  for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) 
+  for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
+    ++numFields;
     sumScale += (*field)->signedRelativeCurrent();
-  
+  }
   
   if( numFields != 0 )
     scale = sumScale/numFields;
