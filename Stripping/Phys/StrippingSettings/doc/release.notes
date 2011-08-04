@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-04 - Thomas Blake
+ - Added Ks 2 mu mu lines missing from LineConfigDictionaris_RDWG
+ - Added ntrack cut in B2nbody lines from LineConfigDictionaries_GTWG 
 
 !========================= StrippingSettings v2r6 2011-08-03 =========================
 ! 2011-08-03 - Jibo He
