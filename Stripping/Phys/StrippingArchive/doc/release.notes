@@ -4,13 +4,13 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r3 2011-08-04 =========================
 ! 2011-08-04 - Rob Lambert
  - Add Stripping16 to tests
 
 ! 2011-07-21 - Rob Lambert
  - Add Stripping16 to archive definition
 
-!========================= StrippingArchive v1r3 2011-08-03 =========================
 ! 2011-07-21 - Rob Lambert
  - Fix LoKiTrigger -> LoKiTracks
 
