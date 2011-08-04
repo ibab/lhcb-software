@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-04 - Rob Lambert
+- Add StrippingKS0MuMuLines to __init__ 
 
 !========================= StrippingSelections v3r7 2011-08-03 =========================
 ! 2011-08-03 - Rob Lambert
