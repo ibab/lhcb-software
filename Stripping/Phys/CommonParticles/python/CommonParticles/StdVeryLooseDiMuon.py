@@ -7,7 +7,7 @@ __date__ = '07/07/2009'
 
 
 from Gaudi.Configuration import *
-from Configurables import CombineParticles 
+from Configurables import CombineParticles
 from CommonParticles.Utils import *
 import GaudiKernel.SystemOfUnits as Units
 
@@ -18,7 +18,7 @@ import GaudiKernel.SystemOfUnits as Units
 StdVeryLooseDiMuon = CombineParticles("StdVeryLooseDiMuon")
 StdVeryLooseDiMuon.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
 StdVeryLooseDiMuon.Inputs = ["Phys/StdAllVeryLooseMuons/Particles"]
-StdVeryLooseDiMuon.CombinationCut = "(ADAMASS('J/psi(1S)') < 3000.*MeV)"
+StdVeryLooseDiMuon.CombinationCut = "(ADAMASS('J/psi(1S)') < 3000.*MeV) & (ADOCACHI2CUT(30, ''))"
 StdVeryLooseDiMuon.MotherCut = "(VFASPF(VCHI2) < 25.)"
 locations = updateDoD(StdVeryLooseDiMuon)
 
@@ -29,5 +29,5 @@ if '__main__' == __name__ :
     print __author__
     print __version__
     print locationsDoD ( locations )
-    
+
 

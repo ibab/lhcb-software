@@ -24,7 +24,7 @@ StdVeryLooseDetachedKst2Kpi.DaughtersCuts = {
     "pi-":"(MIPCHI2DV(PRIMARY)>2.25)"
     }
 
-StdVeryLooseDetachedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV)"
+StdVeryLooseDetachedKst2Kpi.CombinationCut = "(ADAMASS('K*(892)0')<300*MeV) & (ADOCACHI2CUT(30, ''))"
 StdVeryLooseDetachedKst2Kpi.MotherCut = "(VFASPF(VCHI2)<25)"
 
 locations = updateDoD(StdVeryLooseDetachedKst2Kpi)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdMassConstrainedJpsi2MuMu.py,v 1.2 2010-09-05 20:36:44 gcowan Exp $ 
+# $Id: StdMassConstrainedJpsi2MuMu.py,v 1.2 2010-09-05 20:36:44 gcowan Exp $
 # =============================================================================
 ## @file  CommonParticles/StdMassConstrainedJpsi2MuMu.py
 #  configuration file for 'Standard mass constrained Jpsi2MuMu'
@@ -25,12 +25,12 @@ from CommonParticles.Utils import *
 ## ============================================================================
 StdMassConstrainedJpsi2MuMu = CombineParticles("StdMassConstrainedJpsi2MuMu")
 StdMassConstrainedJpsi2MuMu.Inputs = ["Phys/StdAllLooseMuons/Particles"]
-StdMassConstrainedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" 
+StdMassConstrainedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
 StdMassConstrainedJpsi2MuMu.DaughtersCuts = { 'mu+' : 'PIDmu > 0' }
-StdMassConstrainedJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 80.*MeV)"
+StdMassConstrainedJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 80.*MeV) & (ADOCACHI2CUT(20, ''))"
 StdMassConstrainedJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 16.) & (MFIT)"
 
-## configure Data-On-Demand service 
+## configure Data-On-Demand service
 locations = updateDoD ( StdMassConstrainedJpsi2MuMu )
 
 ## ============================================================================
@@ -39,4 +39,4 @@ if '__main__' == __name__ :
     print __doc__
     print __author__
     print __version__
-    print locationsDoD ( locations ) 
+    print locationsDoD ( locations )

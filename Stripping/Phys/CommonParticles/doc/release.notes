@@ -8,10 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-03 - Rob Lambert
+ - Add in ADOCACHI2 to all two body decays, add EOL native everywhere
+
 !========================= CommonParticles v8r4 2011-08-03 =========================
 
 ! 2011-08-03 - Rob Lambert
- - Rolf added back in the ACOCACHI2 cuts to Ks and lambda, it improves the timing by a lot.
+ - Rolf added back in the ADOCACHI2 cuts to Ks and lambda, it improves the timing by a lot.
 
 !========================= CommonParticles v8r3 2011-07-22 =========================
 ! 2011-07-21 - Patrick Koppenburg
@@ -25,17 +28,17 @@
 ! 2011-07-18 - Patrick Koppenburg
 *
 *  MAJOR CHANGE : PLEASE READ
-* 
+*
  - New Default Tracking cut removing clones
  - New default PT>250MeV and IPCHI2>4 cut for all charged basic
  - Added new StdAllLooseXxx and StdAllNoPIDsXxx (Xxx=Pions,Muons,Kaons,Protons,Electrons)
    and StdAllVeryLooseMuons that do no implement PT>250MeV and IPCHI2>4 cut
- - Changed StdLooseXxx, StdNoPIDsXxx and StdVeryLooseMuons to use the new particles 
-   and implement the new default cuts 
-   
+ - Changed StdLooseXxx, StdNoPIDsXxx and StdVeryLooseMuons to use the new particles
+   and implement the new default cuts
+
 	  WARNING : Now all StdLooseXxx and StdNoPIDsXxx have PT>250MeV and IPCHI2>4
 
- - The following intermediate states have been changed to use the new StdAll 
+ - The following intermediate states have been changed to use the new StdAll
    particles:
 
 	StdLooseDiElectron
@@ -78,7 +81,7 @@
 
 ! 2011-02-21 - Juan Palacios
  - StdLooseKs, StdVeryLooseD02HH, StdLooseDstarWithD2HH, StdLooseD02HH
-  . Bug fix: locations map was being over-written, keeping info for last 
+  . Bug fix: locations map was being over-written, keeping info for last
     common particles only.
  - All CommonParticles
   . Set complete InputLocations paths: "Phys/<alg name>/Particles"
@@ -118,7 +121,7 @@
 
 ! 2010-10-01 - Jibo He
  - python/CommonParticles/StdLooseDiMuon.py
-   . Removed mass cut 
+   . Removed mass cut
  - python/CommonParticles/StdLooseDiMuonSameSign.py
    + Added same sign loose dimuon
 
@@ -132,31 +135,31 @@
 
 ! 2010-09-20 - Juan Palacios
  - python/CommonParticles/StdLooseRho0.py
-  . Remove StdLooseRho0.DaughtersCuts =  { "pi+" : "TRUE"  }. This cut is 
+  . Remove StdLooseRho0.DaughtersCuts =  { "pi+" : "TRUE"  }. This cut is
     unnecessary and doesn't work anyway.
 
 ! 2010-09-20 - Thomas Blake
  - Updated to use ADCOACHI2CUT instead of ADOCACHI2
 
 ! 2010-09-17 - Thomas Blake
- - Updated trackSelector cuts for StdNoPIDsDowns{Pions/Protons} to 
+ - Updated trackSelector cuts for StdNoPIDsDowns{Pions/Protons} to
    Chi2Cut < 10
  - Added ADOCACHI2 cuts to numerous common particles and removed
    explicit track chi2 requirements.
  - Updated StdLooseLambdac to use StdLoose particles.
 
 ! 2010-09-17 - Greig Cowan
- - Added ADOCACHI2 cuts to most of the common particles to speed up their 
+ - Added ADOCACHI2 cuts to most of the common particles to speed up their
    creation. Also removed TRCHI2NDOF cuts since defaults are now set to <5.
 
 ! 2010-09-16 - Chris Jones
  - Update the default tracking cuts as applied to all common particles, via
    the DefaultTrackingCuts Configurable in Utils.py
-   Previously the default was for no additional track selection cuts to be 
+   Previously the default was for no additional track selection cuts to be
    applied when creating Particles from ProtoParticles. Now the default cut
    is chi^2 < 5
  - I also removed the method useCutSet, which is really redundant as the default
-   cuts can just be set directly. Also, doing this should really be 
+   cuts can just be set directly. Also, doing this should really be
    discouraged and removing the method does this ...
 
 ! 2010-09-09 - Juan Palacios
@@ -181,8 +184,8 @@
 ! 2010-08-24 Greig Cowan
  - Added new StdMassConstrainedJpsi2MuMu for use by beta_s B2JpsiX selections.
 
-! 2010-08-24 Yasmine Amhis 
-  - Change  track chi2/ndof (20 -> 10) cut of pions and proton in StdLooseLambda.py 
+! 2010-08-24 Yasmine Amhis
+  - Change  track chi2/ndof (20 -> 10) cut of pions and proton in StdLooseLambda.py
 
 ! 2010-08-11 - Ulrich Kerzel
 - Add StdNoPIDsElectrons for Upstream, Downstream and VELO tracks
@@ -190,7 +193,7 @@
 
 ! 2010-08-10 - V. Gligorov
  - Add a generic D+->hhh to StdLooseDplus, using the WM functors to prevent multiple
-   combinatorics.  
+   combinatorics.
 
 !========================== CommonParticles v7r3 2010-06-24 ===================
 
@@ -252,7 +255,7 @@
  - Added StdVeryLooseDstarWithD2HH (Marta Calvi)
 
 ! 2009-12-14 - Anton Poluektov
- - Added StdVeryLooseD0HH, StdVeryLooseDplus and StdVeryLooseLambdac by Liming Zhang. 
+ - Added StdVeryLooseD0HH, StdVeryLooseDplus and StdVeryLooseLambdac by Liming Zhang.
 
 ! 2009-12-09 - Patrick Koppenburg
  - New StdLooseDiElectron, a copy of the StdLooseDiMuon
@@ -288,9 +291,9 @@
 !========================= CommonParticles v6r0 2009-07-21 ===================
 
 ! 2009-07-21 - Chris Jones
- - Update Track selection so default cuts set is now NULL (I.e. no cuts) 
+ - Update Track selection so default cuts set is now NULL (I.e. no cuts)
    following requests from the physics working groups.
- 
+
    This can be changed via :-
 
    from CommonParticles.Utils import DefaultTrackingCuts
@@ -326,12 +329,12 @@
  - Add StdLooseDiMuon to StandardDiMuon
 
 ! 2009-07-08 - Chris Jones
- - Update Track selection to make it easy for users to re-define the default 
+ - Update Track selection to make it easy for users to re-define the default
    cuts in their DaVinci.py options files, e.g. :-
 
      from CommonParticles.Utils import DefaultTrackingCuts
      DefaultTrackingCuts().Cuts  = { } # Make default no cuts
-     DefaultTrackingCuts().Types = ["Long"] 
+     DefaultTrackingCuts().Types = ["Long"]
 
 ! 2009-07-07 - Rob Lambert
  - Added a StdLooseDiMuon. Cuts are:-
@@ -345,13 +348,13 @@
  - Increment to v6r0
 
 ! 2009-07-01 - Chris Jones
- - Add loose(ish) track selection cuts to all Standard charged Particles. 
+ - Add loose(ish) track selection cuts to all Standard charged Particles.
    Cuts are :-
      Chi^2 / d.o.f. < 10
      Likilihood > -100
      CloneDist > -1e10
      GhostProb < 0.99
-   Current cuts are just a suggestion (motivated by those used in the RICH 
+   Current cuts are just a suggestion (motivated by those used in the RICH
    reconstruction) and included as a starting point for discussion with the
    physics working groups.
 
@@ -361,16 +364,16 @@
  - Added vertex chi2 cut to StdLooseJpsi2MuMu and StdLoosePhi2KK.
 
 ! 2009-06-28 - Greig Cowan
- - Removed StdLooseUnbiasedPhi2KK. Added StdLooseDetachedPhi with K IP cut. New 
-   StdLoosePhi2KK only has upper mass window on the phi. New StdLooseJpsi2MuMu 
+ - Removed StdLooseUnbiasedPhi2KK. Added StdLooseDetachedPhi with K IP cut. New
+   StdLoosePhi2KK only has upper mass window on the phi. New StdLooseJpsi2MuMu
    only has mass window. StdLooseKstar added to be compatible with beta_s
    roadmap Bd2JspiKstar selection. Appropriate stripping and ccbar selections
    have been updated to use these particles and have been successfully tested.
 
 !========================== CommonParticles v5r3 2009-06-23 ===================
 ! 2009-06-12 - Patrick Koppenburg
- - Adapt NoPIDs options not to use obsolete options UseDownstreamTracks 
-   and similar. Requires tag pkoppenb_20090612 of ParticleMaker. 
+ - Adapt NoPIDs options not to use obsolete options UseDownstreamTracks
+   and similar. Requires tag pkoppenb_20090612 of ParticleMaker.
  - Increment to v5r3
 
 !========================== CommonParticles v5r2 2009-06-03 ==================
@@ -379,10 +382,10 @@
  - Using StdNoPIDsDownPions for the KsDD.
 
 ! 2009-05-21 - Greig Cowan
- - Reverted StdLooseJpsi2MuMu to only make the loose Jpsi's. The FilterDesktop code 
-   for the lifetime unbiased Jpsi has been moved into it's own file: 
-   StdLTUnbiasedJpsi2MuMu.py. This particle has been added to StandardJpsi.py. The 
-   lifetime unbiased selection is based on the one in described in LHCb-2009-025 
+ - Reverted StdLooseJpsi2MuMu to only make the loose Jpsi's. The FilterDesktop code
+   for the lifetime unbiased Jpsi has been moved into it's own file:
+   StdLTUnbiasedJpsi2MuMu.py. This particle has been added to StandardJpsi.py. The
+   lifetime unbiased selection is based on the one in described in LHCb-2009-025
    and the beta_s roadmap.
 
 ! 2009-05-21 - Vanya BELYAEV
@@ -400,7 +403,7 @@
     the charged D and Ds at this loose level. The mass window is large enough to accomodate
     both, as described in the log entry below. If your selection is broken, just switch
     to StdLooseDplus. You will also need to change the Ds to a D+ in your decay
-    descriptors. 
+    descriptors.
 
 ! 2009-05-20 - V. Gligorov
   - Updated the cuts for the standard D0 to bring it into line with what will be
@@ -431,11 +434,11 @@
 
 !========================== CommonParticles v5r0p1 2009-04-08 ================
 
-! 2008-04-03 - Olivier Deschamps 
+! 2008-04-03 - Olivier Deschamps
  - adapt options and python to change in calo ParticleMaker (property name changes for pi0Makers)
 
 ! 2009-03-25 - Patrick Koppenburg
- - Bug fix in StdLooseD02HH : All states except D0->Kpi were called Standard 
+ - Bug fix in StdLooseD02HH : All states except D0->Kpi were called Standard
 	 instead of Std.
 
 !========================== CommonParticles v5r0 2009-03-01 ==================
@@ -447,12 +450,12 @@
  - PhysDesktop() -> PhysDesktop
 
 ! 2009-02-18 - Patrick Koppenburg
- - Move all intermediate states to python 
+ - Move all intermediate states to python
  - They are now based on Hlt2, not DC06 anymore
  - Most of this is untested
  - Removed all options/Standard*.opts
  - Removed options/StandardOptions.py (requires latest version of AnalysisConf)
- - Keep only DC06 stuff in options/ 
+ - Keep only DC06 stuff in options/
  - options/ directory declared obsolete. Do not edit.
  - Increment to v5r0
 
@@ -463,7 +466,7 @@
  - The first attempt to provide 'configurables' for standard particles.
    all modules configurables are available in python/CommonParticles directory.
 
-   Basic: 
+   Basic:
 
       StdLoosePions
       StdLooseKaons
@@ -483,60 +486,60 @@
       StdNoPIDsProtons
       StdNoPIDsElectrons
 
-      StdLoosePhotons 
-      StdLooseCnvPhotons 
-      StdLooseAllPhotons 
-	
+      StdLoosePhotons
+      StdLooseCnvPhotons
+      StdLooseAllPhotons
+
    Collections:
 
-      StandardPions 
+      StandardPions
       StandardKaons
-      StandardMuons 
+      StandardMuons
       StandardProtons
  		  StandardElectrons
   	  StandardPhotons
-      StandardBasicCharged 
+      StandardBasicCharged
       StandardBasicNeutral
       StandardBasic
 
-   
-   The usage is fairly trivial, e.g.: 
-     
-     import CommonParticles.StdLoosePions 
 
-   or: 
+   The usage is fairly trivial, e.g.:
+
+     import CommonParticles.StdLoosePions
+
+   or:
 
      import CommonParticles.StandardMuons
 
-   or: 
+   or:
 
-     import CommonParticles.StandardBasic 
+     import CommonParticles.StandardBasic
 
 
    The loaded content could always be inspected using:
 
-     from CommonParticles.Utils import locationsDoD 
-     print locationsDoD() 
+     from CommonParticles.Utils import locationsDoD
+     print locationsDoD()
 
-   Also one can always get the actial algorithms(configurables), 
+   Also one can always get the actial algorithms(configurables),
    which are responsible for the given equipped locations:
- 
-     >>>  from CommonParticles.Utils import particles 
-     >>>  parts = particles() 
+
+     >>>  from CommonParticles.Utils import particles
+     >>>  parts = particles()
      >>>  for location in parts :
-          ... print 'location :'      % location 
+          ... print 'location :'      % location
           ... conf = parts[location]
-          ... print ' configurable: ' % conf.name() 
- 
+          ... print ' configurable: ' % conf.name()
+
 
    Each file can be inspected from the common line:
-  
-       python StandardBasicCharged.py 
+
+       python StandardBasicCharged.py
 
 
-   cmt/requirments: 
+   cmt/requirments:
 
-    version increment to  v4r2 
+    version increment to  v4r2
 
 
 ! 2009-01-09 - Patrick Koppenburg for Diego Martinez Santos
@@ -561,13 +564,13 @@
 !========================== CommonParticles v4r1 2008-09-10 ===================
 
 ! 2008-09-09 - Patrick Koppenburg
- - Standard pions : added some more 
+ - Standard pions : added some more
 
 !========================== CommonParticles v4r0 2008-08-05 ===================
 ! 2008-07-11 - Patrick Koppenburg
  - Copied all Standard*.opts to StandradDC06*.opts. These are now obsolete
    and will not be touched.
- - The remaining Standard*.opts can be translated to Standard*.py. 
+ - The remaining Standard*.opts can be translated to Standard*.py.
  - Increment to v4r0
 
 !========================== CommonParticles v3r13 2008-07-11 ==================
@@ -577,7 +580,7 @@
 !========================== CommonParticles v3r12 2008-04-24 ==================
 
 ! 2008-04-11 - Patrick Koppenburg
- - No tabs in options 
+ - No tabs in options
 
 ! 2008-03-14 - Patrick Koppenburg
  - do not print options
@@ -668,7 +671,7 @@
 
 ! 2007-01-16 - Juan PALACIOS
   - Remove src/CommonParticles_load.cpp and _dll.cpp
- 
+
 ! 2007-01-16 - P. Koppenburg
   - options/StandardD0.opts
     . Apply Pt cut before vertex fit not after.
@@ -679,9 +682,9 @@
 ! 2006-12-22 - Juan Palacios for Andy Powell
 
   - options/StandardD0.opts
-    . New D0 types: 
+    . New D0 types:
       Replace StdLooseD02KKPiPi for StdLooseD02KKPiPiNoCC and
-      StdLooseD02KPiPiPi for StdLooseD02KPiPiPiCA. 
+      StdLooseD02KPiPiPi for StdLooseD02KPiPiPiCA.
       Remove StdLooseD02KPiPiPiDCS.
 
   - cmt/requirements
@@ -691,7 +694,7 @@
   - Apply an (temporary) correction on Brem. energy
 
 ! 2006-12-12 - Jan Amoraal
-  - Relax Jpsi VChi2 cut, from 6 -> 15, for Flavour Tagging WG 
+  - Relax Jpsi VChi2 cut, from 6 -> 15, for Flavour Tagging WG
 
 ! 2006-12-12 - Juan PALACIOS
 
@@ -716,11 +719,11 @@
     . Increment version to v3r5
 
 ! 2006-11-28 - Olivier Deschamps
-  - fix  StandardResolvedPi0s.optsS & standardMergedPi0s.opts 
+  - fix  StandardResolvedPi0s.optsS & standardMergedPi0s.opts
 ! 2006-11-28 - Juan PALACIOS
-  - options/ 
+  - options/
   add StandardResolvedPi0s.optsS & standardMergedPi0s.opts
-  update StandardPhotons.opts  
+  update StandardPhotons.opts
 
 !========================== CommonParticles v3r4 2006-11-16 ===================
 
@@ -796,7 +799,7 @@
   - options
     . new files for standard electrons, muons, pions, kaons, protons, and
       photons a la DC06.
-    . StandardParticles.opts now includes these files. 
+    . StandardParticles.opts now includes these files.
     . Photons not ready yet so commented out.
     . Electrons missing AddBremPhoton functionality
 
@@ -842,13 +845,13 @@
 
 ! 2006-05-20 - V. Gligorov
   - options/StandardD0.opts
-    . Restored pt cut on D0 to 1000 MeV 
+    . Restored pt cut on D0 to 1000 MeV
 
 ! 2006-05-19 - P. Koppenburg
   - options/DVTestStandardParticles.opts
   - options/StandardOptions.opts
     . Added StandardDplus
-  - options/StandardKstar.opts 
+  - options/StandardKstar.opts
     . Window widened to +/-300MeV
 
 ! 2006-05-19 - V. Gligorov
@@ -866,7 +869,7 @@
   - options/StandardRho0.opts
     . New options.
 
-! 2006-05-18 - P. Koppenburg 
+! 2006-05-18 - P. Koppenburg
   - options/StandardKs.opts
     . Added options by Cristina Lazzeroni
   - options/StandardD0.opts
@@ -877,13 +880,13 @@
     . Test D0->KsHH
 
 !========================== CommonParticles v2r1 2006-04-28 ===================
-! 2006-04-28 - P. Koppenburg 
+! 2006-04-28 - P. Koppenburg
   - options/StandardDstar.opts
     . Bug fix: Chi2 and mass difference were cut actually ignored
     . Change mass difference cut from 10 to 20 MeV
 
 !========================== CommonParticles v2r0 2006-02-03 ===================
-! 2006-01-31 - P. Koppenburg 
+! 2006-01-31 - P. Koppenburg
   - options/MergedPi0Alg.opts
   - options/ResolvedPi0Alg.opts
   - options/ProducePairPhotons.opts
@@ -922,7 +925,7 @@
 !==================== CommonParticle v1r5 2004-06-04 ========================
 ! 2004-06-03 - P. Koppenburg for O. Deschamps
  - MergedPi0Alg.opts
-    . MergedPi0Alg.ParMas={ 1.008 , 0.0658E-03 , 0.1276E-04 }; 
+    . MergedPi0Alg.ParMas={ 1.008 , 0.0658E-03 , 0.1276E-04 };
       because of new calo calibration
 
 ! 2004-05-11 - P. Koppenburg for O. Deschamps
@@ -932,7 +935,7 @@
 
 !==================== CommonParticle v1r4 2004-05-05 ========================
 ! 2004-04-28 - R.Beneyton
- - ProducePairPhoton (h/src/opts): update to new DVAlg 
+ - ProducePairPhoton (h/src/opts): update to new DVAlg
     . getInput, loadtools in code with flag off
     . DecayDescriptor, Outputlocation in opts files
 
