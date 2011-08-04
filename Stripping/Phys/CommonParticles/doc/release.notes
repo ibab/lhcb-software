@@ -8,10 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticles v8r4 2011-08-04 =========================
 ! 2011-08-03 - Rob Lambert
  - Add in ADOCACHI2 to all two body decays, add EOL native everywhere
-
-!========================= CommonParticles v8r4 2011-08-03 =========================
 
 ! 2011-08-03 - Rob Lambert
  - Rolf added back in the ADOCACHI2 cuts to Ks and lambda, it improves the timing by a lot.
