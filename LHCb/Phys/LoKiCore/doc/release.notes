@@ -3,15 +3,19 @@
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : The core part of LoKi project
 ! -----------------------------------------------------------------------------
-! 
-!   This file is a part of LoKi project - 
+!
+!   This file is a part of LoKi project -
 !     "C++ ToolKit  for Smart and Friendly Physics Analysis"
-! 
+!
 !   The package has been designed with the kind help from
-!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-!   contributions and advices from G.Raven, J.van Tilburg, 
+!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+!   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2011-08-05 - Marco Clemencic
+ - Modified the implementation of LoKi::TES::Stat to be independent of the
+   signature of the getters in StatEntity.
 
 ! 2011-08-03 - Gerhard Raven
  - fix Gaudi State Machine protocol errors
@@ -25,37 +29,37 @@
 
 ! 2011-06-20 - Vanya Belyaev
  - LoKi/NodeGrammar.h
-   fix coverity report 16248 
+   fix coverity report 16248
 
 !========================= LoKiCore v11r1 2011-06-14 =========================
 ! 2011-06-05 - Vanya Belyaev
  - reduce number of warnings for ICC compiler
- - add base class LoKi::FilterTool 
+ - add base class LoKi::FilterTool
 
 ! 2011-06-04 - Vanya Belyaev
- - add utilities for better printout of decay trees 
- - cmt/requirements 
-    version increment to v11r1 
+ - add utilities for better printout of decay trees
+ - cmt/requirements
+    version increment to v11r1
 
 !========================= LoKiCore v11r0 2011-04-04 =========================
 ! 2011-04-02 - Vanya Belyaev
 
- - add few functors (& corresponding decorators) for 
-    - round   ( bases on LHCb::Math::round ) 
-    - jbit    ( based on Gaudi::Math::bit  ) 
-    - jbits   ( based on Gaudi::Math::bits ) 
+ - add few functors (& corresponding decorators) for
+    - round   ( bases on LHCb::Math::round )
+    - jbit    ( based on Gaudi::Math::bit  )
+    - jbits   ( based on Gaudi::Math::bits )
 
 ! 2011-03-30 - Vanya Belyaev
- - add "modulo" -operator for functors 
+ - add "modulo" -operator for functors
    it acts according to the rule:
-     ( f % n )  ( x )  =def=  " LHCb::Math::round ( f ( x ) ) % n " 
+     ( f % n )  ( x )  =def=  " LHCb::Math::round ( f ( x ) ) % n "
 
 ! 2011-03-29 - Vanya Belyaev
  - Kinematics.h
-   fix LaTeX typos in doxygen comments 
+   fix LaTeX typos in doxygen comments
 
 ! 2011-03-28 - Vanya Belyaev
- - add "fetch" decorator 
+ - add "fetch" decorator
 
 ! 2011-03-27 - Vanya Belyaev
  - add "Fetch" vector-function
@@ -65,25 +69,25 @@
      HASRECSUMMARY & RECSUMMARY symbols for Sophie Redford & Andy Powell
 
 ! 2011-03-18 - Vanya Belyaev
- - add protection against the double locking 
+ - add protection against the double locking
 
 ! 2011-03-15 - Vanya Belyaev
  - fix the names for FUnOps:
-     Reflex now ignores the names prepended by single underscore... :-( 
+     Reflex now ignores the names prepended by single underscore... :-(
      fix it...
  - optimize the "set-difference" and "set-intersection"
 
 ! 2011-03-10 - Vanya Belyaev
  - Kill the concept of "Element"
- - Add more "streamer" functions 
- - add IUpdateManagerSvc  
+ - Add more "streamer" functions
+ - add IUpdateManagerSvc
 
 ! 2011-03-02 - Vanya Belyaev
- - fix non proper decorators for streamer functors 
+ - fix non proper decorators for streamer functors
 
 !========================= LoKiCore v10r9 2011-02-22 =========================
 ! 2011-02-17 - Vanya Belyaev
- - TES.cpp 
+ - TES.cpp
     fix thettypo, causing the compilation problem for VC9
 
 ! 2011-02-14 - Juan Palacios
@@ -97,26 +101,26 @@
 
 ! 2011-02-12 - Vanya Belyaev
 
- - add new algorithm LoKi::CounterAlg 
+ - add new algorithm LoKi::CounterAlg
 
     it allows to evaluate certains funtions and store results in TES
-    
-   *  @code 
-   * 
+
+   *  @code
+   *
    *    myCnt.Variables = {
-   *       'nSpd'           : "CONTAINS('Raw/Spd/Digits')" , 
-   *       'nVelo'          : "TrSOURCE('Rec/Track/Best', TrVELO) >> TrSIZE " , 
-   *       'hasTrueMCDecay' : "MCSOURCE('MC/Particles','[B_s0 -> J/psi(1S) phi(1020)]CC') >> MCSIZE" , 
-   *       'GEC-loose'      : "ACCEPT('Hlt::GEC/AcceptGESLoose')"     
+   *       'nSpd'           : "CONTAINS('Raw/Spd/Digits')" ,
+   *       'nVelo'          : "TrSOURCE('Rec/Track/Best', TrVELO) >> TrSIZE " ,
+   *       'hasTrueMCDecay' : "MCSOURCE('MC/Particles','[B_s0 -> J/psi(1S) phi(1020)]CC') >> MCSIZE" ,
+   *       'GEC-loose'      : "ACCEPT('Hlt::GEC/AcceptGESLoose')"
    *     }
    *
-   *    ## use non-standard location: 
+   *    ## use non-standard location:
    *    myCnt.Location = "/Event/MyCounters"
    *
-   *  @endcode 
+   *  @endcode
 
-   In particular it could be very useful for storing some event 
-   information on microDST 
+   In particular it could be very useful for storing some event
+   information on microDST
 
 
 ! 2011-02-10 - Gerhard Raven
@@ -128,42 +132,42 @@
 
  - add "rigth-side" form of gate for pipes, maps, fun&cut-vals :
 
-        gate >> stream 
+        gate >> stream
 
-        gate *  stream  
+        gate *  stream
 
 
 ! 2011-02-03 - Vanya Belyaev
 
  - Timers.h, Timers.cpp
 
-   new files for implementation of "timers": 
+   new files for implementation of "timers":
 
-    timer ( functor , "name" ) 
-
-  or: 
-
-    timer ( "name" , functor ) 
+    timer ( functor , "name" )
 
   or:
 
-    timer( "name" ) % functor 
+    timer ( "name" , functor )
 
- - cmt/requirements 
+  or:
+
+    timer( "name" ) % functor
+
+ - cmt/requirements
 
      version increment to v10r9
 
 !========================= LoKiCore v10r8 2011-01-31 =========================
 ! 2011-01-26 - Vanya Belyaev
  - LoKi/GetN.h
-    new class to get all N-body combinations from some array 
- 
+    new class to get all N-body combinations from some array
+
 ! 2011-01-20 - Vanya Belyaev
  - src/ParticleProperties.cpp
-    fix bug in antiParticle function. 
+    fix bug in antiParticle function.
     Thanks to Marco & Coverity
 
- - cmt/requirements 
+ - cmt/requirements
      version increment to v10r8
 
 ! 2011-01-14 - Marco Cattaneo
@@ -172,33 +176,33 @@
 !========================= LoKiCore v10r7 2010-12-08 =========================
 ! 2010-12-06 - Vanya Belyaev
 
- - Info/ExtraInfo/InfoOps 
-   functions.py & decorators.py 
+ - Info/ExtraInfo/InfoOps
+   functions.py & decorators.py
 
-     add "logging"-functors & functions 
+     add "logging"-functors & functions
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v10r7 
+     version increment to v10r7
 
 !========================= LoKiCore v10r6 2010-11-27 =========================
 ! 2010-11-23 - Vanya Belyaev
- - add LoKi::transform 
+ - add LoKi::transform
 
 ! 2010-11-19 - Vanya Belyaev
- - improve dumping 
+ - improve dumping
 
 ! 2010-11-18 - Vanya Belyaev
- - add Cause 
+ - add Cause
    thanks to Roel Aaij
 
 ! 2010-11-18 - Vanya Belyaev
- - improve Dump,Dump_ & dump 
+ - improve Dump,Dump_ & dump
 
 ! 2010-11-17 - Vanya Belyaev
- - for Hlt: add Gate & Dump : 
+ - for Hlt: add Gate & Dump :
 
- - cmt/requirements 
+ - cmt/requirements
    version increment to v10r6
 
 !========================= LoKiCore v10r5 2010-10-25 =========================
@@ -208,28 +212,28 @@
 
  - simplify the decorators for the primitive types
 
-    void -> double 
-    void -> bool 
+    void -> double
+    void -> bool
 
 
 ! 2010-10-24 - Vanya Belyaev
 
- - add the concept of 'stable' particle in decay tree 
+ - add the concept of 'stable' particle in decay tree
 
 ! 2010-10-10 - Vanya Belyaev
 
- - add new symbols BLIND & XBLIND 
+ - add new symbols BLIND & XBLIND
 
- - cmt/requirements 
-   version increment to v10r5 
+ - cmt/requirements
+   version increment to v10r5
 
 
 ! =========================== LoKiCore v10r4 2010-09-27 =======================
 ! 2010-09-27 - Vanya Belyaev
  - remove usage of obsolete python module 'sets'
- - decouple LoKiCore.functions and LoKiCore.decorators 
- - cmt/requirements 
-   version increment to v10r4 
+ - decouple LoKiCore.functions and LoKiCore.decorators
+ - cmt/requirements
+   version increment to v10r4
 
 ! =========================== LoKiCore v10r3 2010-08-25 =======================
 ! 2010-08-24 - Gerhard Raven
@@ -237,17 +241,17 @@
 
 ! 2010-08-06 - Vanya Belyaev
 
- - more fixed in doxygenurl module 
+ - more fixed in doxygenurl module
 
 ! 2010-08-06 - Vanya Belyaev
- - fix errors in documentation 
-   
+ - fix errors in documentation
+
 
 ! 2010-08-05 - Vanya Belyaev
- - one more fix for const-pipes & sources 
+ - one more fix for const-pipes & sources
 
 ! 2010-08-04 - Vanya Belyaev
- - fix const-pipes 
+ - fix const-pipes
 
 
 ! 2010-08-02 - Vanya Belyaev
@@ -255,67 +259,67 @@
  - LoKi/Status.h
    src/Status.cpp
 
-    new functors, needed for Global Event Cuts in Hlt, see task #16675 
+    new functors, needed for Global Event Cuts in Hlt, see task #16675
 
 ! 2010-07-30 - Vanya Belyaev
  - Cast.h
    Const.h
    apply.h
 
-      solve the problem with const/non-const ambiguity 
+      solve the problem with const/non-const ambiguity
 
 ! 2010-07-29 - Vanya Belyaev
 
  - LoKi/Streamers.h
    LoKi/apply.h
 
-    minor modification for streamers 
+    minor modification for streamers
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v10r3 
+     version increment to v10r3
 
 ! =========================== LoKiCore v10r2 2010-06-19 =======================
 ! 2010-06-19 - Vanya Belyaev
 
  - Primitives:
-    fix the MAJOR bug in boolean operators 
-    the bug has been incrodiced recently with 
-    reshuffling of lines in Primitives 
+    fix the MAJOR bug in boolean operators
+    the bug has been incrodiced recently with
+    reshuffling of lines in Primitives
 
 ! 2010-06-05 - Vanya Belyaev
 
  - add more operations with streamers :
 
      union
-     intersection 
+     intersection
      difference
-     sym_difference 
-     incldues 
+     sym_difference
+     incldues
 
- - reshuffle many lines in decorators 
+ - reshuffle many lines in decorators
 
 ! 2010-06-04 - Vanya Belyaev
 
  - LoKi/Constants.h
 
-    redefine some numerical 'InvalidConstants' 
+    redefine some numerical 'InvalidConstants'
 
 
 ! 2010-06-02 - Vanya Belyaev
- 
- - LoKi/Kinematics.h 
+
+ - LoKi/Kinematics.h
 
     add functions for evaluation of ``transversity-angles''
 
 
 ! 2010-06-01 - Vanya Belyaev
 
- - add more functions for decay finders 
+ - add more functions for decay finders
 
 ! 2010-05-30 - Vanya Belyaev
 
- - small polishing of functions 
+ - small polishing of functions
 
 ! 2010-05-29 - Vanya Belyaev
 
@@ -323,9 +327,9 @@
 
      add more methods ...
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version inrement to v10r2 
+    version inrement to v10r2
 
 
 ! =========================== LoKiCore v10r1 2010-05-21 =======================
@@ -342,27 +346,27 @@
 
  - Scalers.cpp:
 
-    fix compilation warnings for slc4-ia32 platform 
+    fix compilation warnings for slc4-ia32 platform
 
 ! 2010-04-06 - Vanya Belyaev
 
-     remove LoKi::Range, replace it by Gaudi::Range 
+     remove LoKi::Range, replace it by Gaudi::Range
 
-   FIXME: remove temporary iteration over ranges 
-    
+   FIXME: remove temporary iteration over ranges
+
       uncomment the lines in LoKiCore.decorator after
-       fix in Gaudi::RangeBase_ 
+       fix in Gaudi::RangeBase_
 
- - cmt/requirements 
-    
-     version increment to v10r0 
+ - cmt/requirements
+
+     version increment to v10r0
 
 ! 2010-04-06 - Vanya Belyaev
 
- - new functions for object decorations 
+ - new functions for object decorations
 	 + new operators for particle pids ...
-   + new shifters (streamers) 
-  
+   + new shifters (streamers)
+
 
 ! =========================== LoKiCore v9r13p1 2010-04-30 =======================
 ! 2010-04-17 - Gerhard Raven
@@ -372,21 +376,21 @@
 ! 2010-04-14 - Vanya Belyaev
 
   Listener + Scalers:
-    fix compilation warnings for slc4-platform 
+    fix compilation warnings for slc4-platform
 
 ! =========================== LoKiCore v9r13 2010-04-07 =======================
 ! 2010-04-04 - Vanya Belyaev
 
- - few fixes into LoKi::Listener  
- - add enum instead of boolean argumetn for RateLimit/RateLimitV 
-    ( needed for Moore) 
+ - few fixes into LoKi::Listener
+ - add enum instead of boolean argumetn for RateLimit/RateLimitV
+    ( needed for Moore)
 
 
-! 2010-04-04 - Vanya Belyaev 
+! 2010-04-04 - Vanya Belyaev
 
- - LoKi/Listener.h, src/Listener.cpp 
+ - LoKi/Listener.h, src/Listener.cpp
 
-    helper class for listeting incidents 
+    helper class for listeting incidents
 
  - LoKi::Scalers::RateLimitV
 
@@ -396,12 +400,12 @@
 
  - LoKiCore/DataUtils.py
 
-    few helper utilities for Bender 
+    few helper utilities for Bender
 
- - cmt/requirements 
-    
-     version increment to v9r13 
-   
+ - cmt/requirements
+
+     version increment to v9r13
+
 ! =========================== LoKiCore v9r12 2010-03-17 =======================
 ! 2010-03-15 - Vanya Belyaev
 
@@ -411,53 +415,53 @@
 
      >>> symbol = ...
 
-     >>> getURL ( symbol ) 
+     >>> getURL ( symbol )
 
 
  - provide new functions for automatic building of documentations
 
-    from LoKiCore.decorators import getSymbols, buildDoc 
+    from LoKiCore.decorators import getSymbols, buildDoc
 
-     >>> i,t = getSymbols ( modules ) 
-     >>> docs = buildDoc ( i , t ) 
+     >>> i,t = getSymbols ( modules )
+     >>> docs = buildDoc ( i , t )
 
-  
+
 
 ! 2010-03-08 - Vanya Belyaev
 
- - python/LoKiCore/decorators.py 
+ - python/LoKiCore/decorators.py
 
-    fix a bug 
+    fix a bug
 
 ! 2010-03-07 - Vanya Belyaev
 
- - add the helper function 
+ - add the helper function
 
        in_list         ( the typical usage:  " in_list ( PID , [11, 13] ) ")
 
   Decorate properly equality and non-equality, now one can do :
-         
+
       ODIN_RUN == [1,2,3,4]
 
       ODIN_RUN != [1,2,3,4]
 
-      in_range ( 20 , ODIN_RUN , 3425 ) 
-     ~in_range ( 20 , ODIN_RUN , 3425 ) 
+      in_range ( 20 , ODIN_RUN , 3425 )
+     ~in_range ( 20 , ODIN_RUN , 3425 )
 
-      in_list  ( ODIN_RUN , [1,2,3,4] ) 
-     ~in_list  ( ODIN_RUN , [1,2,3,4] ) 
+      in_list  ( ODIN_RUN , [1,2,3,4] )
+     ~in_list  ( ODIN_RUN , [1,2,3,4] )
 
-      in_list  ( ODIN_RUN ,  1,2,3,4  ) 
-     ~in_list  ( ODIN_RUN ,  1,2,3,4  ) 
-        
+      in_list  ( ODIN_RUN ,  1,2,3,4  )
+     ~in_list  ( ODIN_RUN ,  1,2,3,4  )
+
  - re-code the lines for creation of STL-containers form python lists
-   the generic function is: 
+   the generic function is:
 
-       vct_from_list 
+       vct_from_list
 
- - cmt/requirements 
+ - cmt/requirements
 
-       version increment to v9r12 
+       version increment to v9r12
 
 ! =========================== LoKiCore v9r11p1 2010-04-02 =======================
 ! 2010-04-02 - Gerhard Raven
@@ -468,93 +472,93 @@
 ! 2010-02-13 - Vanya Belyaev
  - LoKi/TES.h & TES.cpp
     new "void"-functors:
-        EXISTS    LoKi::TES::Exists   to check existence of object in TES 
-        CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES 
+        EXISTS    LoKi::TES::Exists   to check existence of object in TES
+        CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES
 
- - cmt/requirements 
-    version incremement to v9r11  
+ - cmt/requirements
+    version incremement to v9r11
 
 ! =========================== LoKiCore v9r10 2010-01-20 =======================
 ! 2010-01-13 - Vanya Belyaev
  - Reporter.cpp
-     fix the probelm with return valeus for Asser/Exception methods 
-      Gaudi fix #61116 
+     fix the probelm with return valeus for Asser/Exception methods
+      Gaudi fix #61116
 
 ! 2010-01-13 - Marco Cattaneo
  - Remove test on GaudiCommon::Exception return code, to follow Gaudi fix #61116
 
 ! 2010-01-03 - Vanya Belyaev
- - Primitives/VoidPrimitives: 
- 
-     1. make use of new (Lomont) comparsions of ploating point numbers 
-     2. remove all EqualToInt, EqualToUInt functors... (not needed anymore) 
+ - Primitives/VoidPrimitives:
+
+     1. make use of new (Lomont) comparsions of ploating point numbers
+     2. remove all EqualToInt, EqualToUInt functors... (not needed anymore)
 
  - cmt/requirements
-     version increment to v9r10 
- 
+     version increment to v9r10
+
 ! 2009-12-17 - Vanya BELYAEV
  - python/LoKiCore/functions.py
     add helper function uints to create std::vector<unsigned int>
  - LoKi/FilterAlg.h
-    enabel access to "updated" flags to allow 
+    enabel access to "updated" flags to allow
     the proper reset of functors at finalization
  - src/Components/VoidFilter.cpp
      add proper finalization method with resetting of functor
  - cmt/requirements
-     version increment to v9r9 
+     version increment to v9r9
 
 ! =========================== LoKiCore v9r8 2009-12-11 ========================
 ! 2009-12-06 - Vanya Belyaev
 
   - add generic "prescalers"   ( see task #12978)
-  - add comparison with vectors of doubles/ints 
- 
+  - add comparison with vectors of doubles/ints
+
 
 ! 2009-12-03 - Vanya Belyaev
 
- - add a sequencing of nodes (thanks to Rob Lambert) 
+ - add a sequencing of nodes (thanks to Rob Lambert)
 
 ! 2009-12-03 - Vanya Belyaev
 
    fix a bug in "pre-cooking" of decay descriptor before parsing.
 
-   Many thanks to Rob Lambert for pointing the problem & Dima Golubkov for 
+   Many thanks to Rob Lambert for pointing the problem & Dima Golubkov for
    solution
 
 ! 2009-11-29 - Vanya Belyaev
 
- - fix a bug for "range" functions 
+ - fix a bug for "range" functions
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v9r8 
+     version increment to v9r8
 
 ! =========================== LoKiCore v9r7 2009-11-27 ========================
 ! 2009-11-25 - Vanya Belyaev
  - src/FilterAlg.cpp
-    fix a bug  for decoding of "Code" and "Preambulo" properties 
+    fix a bug  for decoding of "Code" and "Preambulo" properties
 
  - cmt/requirements
-    version increment to v9r7 
+    version increment to v9r7
 
 ! =========================== LoKiCore v9r6 2009-11-22 ========================
 ! 2009-11-21 - Vanya Belyaev
 
 
- - LoKi/Primitives.h, 
+ - LoKi/Primitives.h,
    LoKi/VoidPrimitives.h,
    LoKi/FuncOps.h
 
-   add new functor LoKi::InRange 
+   add new functor LoKi::InRange
 
   Use in python:
-  
-      >>>  cut = in_range ( PT , 1 * GeV , 5 * GeV ) 
-  
 
- - cmt/requirements 
+      >>>  cut = in_range ( PT , 1 * GeV , 5 * GeV )
 
-    version increment to v9r6 
+
+ - cmt/requirements
+
+    version increment to v9r6
 
 
 
@@ -568,19 +572,19 @@
  - HybridBase:
       add more printout for python exceptions for easier debugging
 
- 
+
 ! 2009-09-27 - Vanya BELYAEV
- - fix small incorrectness 
+ - fix small incorrectness
 
 ! 2009-09-26 - Vanya BELYAEV
  - python/LoKiCore/dcorators.py
     fix for the chaneg in new Reflex/PyROOT:
-      now Reflex/PyROOT renames C++ methods "CLASS::__ne__" & "CLASS::__eq__" to 
-      Python "CLASS.__cpp_ne__" and "CLASS.__cpp_eq__" , andprovides its own 
-     "__ne__" and "__eq__" 
+      now Reflex/PyROOT renames C++ methods "CLASS::__ne__" & "CLASS::__eq__" to
+      Python "CLASS.__cpp_ne__" and "CLASS.__cpp_eq__" , andprovides its own
+     "__ne__" and "__eq__"
 
- - cmt/requirements 
-     version increment to v9r5 
+ - cmt/requirements
+     version increment to v9r5
 
 ! =========================== LoKiCore v9r4 2009-09-02 ========================
 ! 2009-09-02 - Marco Cattaneo
@@ -598,118 +602,118 @@
 
           e.g.  ~(pi+)
 
-   It is done to avoid the ambiguity due to  neutralinos: "~chi_10" 
+   It is done to avoid the ambiguity due to  neutralinos: "~chi_10"
 
 
 ! 2009-08-11 - Vanya BELYAEV
 
- - small polishing for typededs 
- - version increment to v9r4 
+ - small polishing for typededs
+ - version increment to v9r4
 
 ! =========================== LoKiCore v9r3 2009-06-29 ========================
 ! 2009-06-28 - Vanya Belyaev
 
- - improvement for DecayFinder 
+ - improvement for DecayFinder
 
 
 ! 2009-06-28 - Vanya Belyaev
 
- - add the patch to #bug 48914 
- 
-    LoKi/ConstReference.h  : new concept of "const-reference" 
+ - add the patch to #bug 48914
+
+    LoKi/ConstReference.h  : new concept of "const-reference"
                                 (instead of Reference<const TYPE>)
- 
-    LoKi/Field.h  : make proper disptach to ConstReference 
+
+    LoKi/Field.h  : make proper disptach to ConstReference
 
  - cmt/requirement
- 
-    version increment to v9r3 
+
+    version increment to v9r3
 
 
 ! =========================== LoKiCore v9r2 2009-06-16 ========================
 ! 2009-06-13 - Gerhard Raven
- - allow to reduce printout 
+ - allow to reduce printout
 
 ! 2009-06-11 - Vanya BELYAEV
  - Kernel/BiFunctions.h
-      fix for win32 platform 
+      fix for win32 platform
 
 ! 2009-06-02 - Vanya BELYAEV
- - polishing for trees 
+ - polishing for trees
 
 ! 2009-05-28 - Vanya BELYAEV
- - fix error for gcc4.3 compiler 
-   add the default node  &default tree properties  
- 
+ - fix error for gcc4.3 compiler
+   add the default node  &default tree properties
+
 ! 2009-05-27 - Vanya BELYAEV
  - python/LoKiCore/Vectors.py
-     helper module to simplify operations 
+     helper module to simplify operations
      the with Gaudi::XYZPoint/XYZVector/LorentzVector
 
  - cmt/requirements
-     version increment to v9r2 
+     version increment to v9r2
 
 ! =========================== LoKiCore v9r1 2009-05-25 ========================
 ! 2009-05-23 - Vanya BELYAEV
- - eliminate duplicated lines 
+ - eliminate duplicated lines
 
 ! 2009-05-14 - Vanya Belyaev
- - clean-up the trees  
+ - clean-up the trees
 
 ! 2009-05-09 - Vanya BELYAEV
- - remove unnesesary std:unary/binary function 
- - decrease the dictionary 
+ - remove unnesesary std:unary/binary function
+ - decrease the dictionary
  - cmt/requirements
-     version increment to v9r1 
+     version increment to v9r1
 
 ! =========================== LoKiCore v9r0 2009-05-07 ========================
 ! 2009-05-06 - Vanya BELYAEV
- - few improvements for new decay finder 
+ - few improvements for new decay finder
 
 ! 2009-04-17 - Marco Cattaneo
  - Replace endreq with endmsg
 
 ! 2009-03-24 - Vanya BELYAEV
- - fix misprint for the default CoreFactory 
+ - fix misprint for the default CoreFactory
 
 ! 2009-03-22 - Vanya BELYAEV
- - more flexible&robust monitoring 
+ - more flexible&robust monitoring
 
 ! 2009-03-20 - Vanya BELYAEV
  - LoKi/HistoBook.h
-     add more methods for histogram booking 
-     (needed for monitoring functors) 
+     add more methods for histogram booking
+     (needed for monitoring functors)
 
-- cmt/requirements 
-     version increment to v9r0 
+- cmt/requirements
+     version increment to v9r0
 
 ! =========================== LoKiCore v8r1 2009-01-08 ========================
 ! 2008-12-18 - Vanya Belyaev
 
- - fixes for the trees 
+ - fixes for the trees
 
 ! 2008-12-17 - Vanya Belyaev
 
- - add the dictionaries for the trees 
-   fix many tiny bugs 
+ - add the dictionaries for the trees
+   fix many tiny bugs
 
 
 ! 2008-12-13 - Vanya BELYAEV
 
  - LoKi/iTree.h
-   add typedef for the actual particld type 
-   (the request from Sascha Mazurov for new decay finder) 
+   add typedef for the actual particld type
+   (the request from Sascha Mazurov for new decay finder)
 
 ! 2008-11-29 - Vanya BELYAEV
 
  - few fixes for gcc43 fompiler,
    essentially Reflex does not like boost::is_convertible..
-   
+
    The C++ code is OK, but Reflex complains..
-   (Btw the situation is teh samew with VC71 - C++ is fine, 
+   (Btw the situation is teh samew with VC71 - C++ is fine,
    but Reflex does nto like it)
 
-   TEMPORARY: LoKi::Convertible is using teh sam eimplementation 
+   TEMPORARY: LoKi::Convertible is using teh sam eimplementation
    for win323 and GCC
 
 
@@ -725,41 +729,41 @@
 
  - LoKi/Filters.h
 
-   add Empty&Size functors 
+   add Empty&Size functors
 
- - cmt/requirmeents 
+ - cmt/requirmeents
 
-   version increment to v8r1 
+   version increment to v8r1
 
 ! 2008-11-19 - Vanya Belyaev
 
  - src/FilterAlg.cpp
 
-   enforce the execution of "decode" method within the 
-   AlgContext guard  
- 
-  
+   enforce the execution of "decode" method within the
+   AlgContext guard
+
+
 ! 2008-11-18 - Vanya Belyaev
 
  - src/HybridBase.cpp
    substitute WARNING-messages for PyLocals/PyGlobals with INFO-messages
 
- - cmt/requirements 
-   version increment to v8r0p1 
- 
+ - cmt/requirements
+   version increment to v8r0p1
+
 
 ! =========================== LoKiCore v8r0 2008-11-17 ========================
 ! 2008-11-11 - Vanya BELYAEV
  - bug fix in LoKi/BiFunctions.h
 
 ! 2008-11-09 - Vanya BELYAEV
- - bug fix in LoKi/iTree.h 
+ - bug fix in LoKi/iTree.h
 
 ! 2008-10-31 - Vanya BELYAEV
- - fixes for stange behavour of Reflex in LCG-preview 
+ - fixes for stange behavour of Reflex in LCG-preview
 
 ! 2008-10-29 - Vanya BELYAEV
- - few fixes to please gcc43 
+ - few fixes to please gcc43
 
 ! 2008-10-27 - Marco Cattaneo
  - Add a missing include in iNode.cpp and iTree.h to please gcc43
@@ -769,96 +773,96 @@
 
 ! 2008-10-19 - Vanya BELYAEV
  - 1) MANY improvements in the area of functors which gets 'void' ( "sources")
-   2) redesign of python decorators 
-   3) "algorithm"-functors 
+   2) redesign of python decorators
+   3) "algorithm"-functors
    4) "CoreFactory" for following functors:
-    
-       void -> bool 
-       void -> double 
-       double -> bool 
-       double -> double 
+
+       void -> bool
+       void -> double
+       double -> bool
+       double -> double
        std::vector<double> -> std::vector<double>
        std::vector<double> -> double
        void -> std::vector<double>
 
-    4) generic "LoKi::VoidFilter" algorithm, based on "CoreFactory" 
- 
- - cmt/requirement 
-     increment the major version 
+    4) generic "LoKi::VoidFilter" algorithm, based on "CoreFactory"
+
+ - cmt/requirement
+     increment the major version
 
 
 ! 2008-10-12 - Vanya BELYAEV
  - src/HybridBase.cpp
-   add some treatment for the python  code strings, namely 
+   add some treatment for the python  code strings, namely
    the trings are trimmed and the paired quotes are removed.
    This is appears to be rather important for HLT
- 
+
 ! 2008-10-03 - Vanya BELYAEV
  - LoKi/FuncOps.h
-   add possibility to create "binary"-switches in python, 
+   add possibility to create "binary"-switches in python,
 
     condition ? condidition1 : condition2
 
   Of course formally it acts accoring to the rule
-   
-    (condition&&contion1)||(!condition&&condition2) 
- 
-  but keeping it in a dictiory very useful, since it allows 
-  in python to create it using the ordinary "switch" function 
+
+    (condition&&contion1)||(!condition&&condition2)
+
+  but keeping it in a dictiory very useful, since it allows
+  in python to create it using the ordinary "switch" function
   from the module LoKiCore.functions:
 
     cut0= ...
     cut1=...
     cut2=...
 
-    cut = switch (cut0,cut1,cut2)     
+    cut = switch (cut0,cut1,cut2)
 
  - cmt/requirements
-    version increment to v7r9 
+    version increment to v7r9
 
 
 ! =========================== LoKiCore v7r8 2008-09-30 ========================
 
 ! 2008-10-01 - Vanya BELYAEV
- 
- - LoKi/FilterAlg.h, src/Filteralg.cpp 
 
-    add the property "Preambulo" to provide few python lines 
-    to be executed BEFORE the evaluation of the actual code 
+ - LoKi/FilterAlg.h, src/Filteralg.cpp
+
+    add the property "Preambulo" to provide few python lines
+    to be executed BEFORE the evaluation of the actual code
 
 ! 2008-09-23 - Vanya BELYAEV
 
- - LoKi/FilterAlg.h, src/Filteralg.cpp 
+ - LoKi/FilterAlg.h, src/Filteralg.cpp
 
-    New helper base class LoKi::FilterAlg for the implementation of 
-    the various C++-algorithms which require the access to LoKi/Bender 
+    New helper base class LoKi::FilterAlg for the implementation of
+    the various C++-algorithms which require the access to LoKi/Bender
     "hybrid" factories.
 
 ! 2008-09-21 - Vanya BELYAEV
- - add the function for evalaution of Armenteros-Podolaski variable 
+ - add the function for evalaution of Armenteros-Podolaski variable
 
 ! 2008-09-21 - Vanya BELYAEV
 
- - comparisons with the integers 
- - cmt/requirements 
-     version increment to v7r8 
+ - comparisons with the integers
+ - cmt/requirements
+     version increment to v7r8
 
 ! =========================== LoKiCore v7r7 2008-09-04 ========================
 ! 2008-08-04 - Vanya BELYAEV
 
- - LoKi/Trees.h, 
-   LoKi/Trees.icpp 
+ - LoKi/Trees.h,
+   LoKi/Trees.icpp
 
-     fix wrong signature of constructor for Marked_ 
+     fix wrong signature of constructor for Marked_
 
- - src/Component/LoKiSvc.cpp 
+ - src/Component/LoKiSvc.cpp
 
     add more "protected" words/symbols for CC-utility
 
 
 ! 2008-08-02 - Vanya BELYAEV
 
- - fix LaTeX expresssions inside Doxygen comments 
+ - fix LaTeX expresssions inside Doxygen comments
 
 ! 2008-07-28 - Vanya BELYAEV
 
@@ -876,44 +880,44 @@
 
  - LoKi/Kinematics.h, src/Kinematics.cpp
 
-   - reimplement of 2-argument LoKi::Kinematics::decayAngle in terms 
+   - reimplement of 2-argument LoKi::Kinematics::decayAngle in terms
      of 3-argument form in terms of Lorentz invariants
      (no "boost" are used).
-  
-     The old implementation (with "boost") is available 
-     under the name LoKi::Kinematics::decayAngle_ 
- 
-   - add new functions:  
+
+     The old implementation (with "boost") is available
+     under the name LoKi::Kinematics::decayAngle_
+
+   - add new functions:
 
      For evaluation of angle "chi" between the decay planes.
-     The implemntation is doen completely in terms of 
+     The implemntation is doen completely in terms of
      Lorenzt invarinats and does nto use any "boost":
 
-       LoKi::Kinematics::cosDecayAngleChi 
-       LoKi::Kinematics::sinDecayAngleChi 
-       LoKi::Kinematics::decayAngleChi 
+       LoKi::Kinematics::cosDecayAngleChi
+       LoKi::Kinematics::sinDecayAngleChi
+       LoKi::Kinematics::decayAngleChi
 
-     For evaluation of energy and 3-momentum magnitude of one 
+     For evaluation of energy and 3-momentum magnitude of one
      particle in the reference system of another particle:
 
-       LoKi::Kinematics::restMomentum 
-       LoKi::Kinematics::restEnergy 
-  
- - LoKi/Report.h,
-   LoKi/ErrorReport.h 
+       LoKi::Kinematics::restMomentum
+       LoKi::Kinematics::restEnergy
 
-       some ironing of status codes 
-  
+ - LoKi/Report.h,
+   LoKi/ErrorReport.h
+
+       some ironing of status codes
+
 
 ! =========================== LoKiCore v7r6 2008-07-27 ========================
 ! 2008-07-26 - Vanya BELYAEV
 
- - Extract the type definitions from LoKi/Knematics into 
+ - Extract the type definitions from LoKi/Knematics into
    the separate light file LoKi/KinTypes.h
 
  - add LoKi/Tensors.h, src/Tensors.cpp
    - the implementation of Levy-Civita symbols.
- 
+
 
 ! 2008-07-22 - Vanya BELYAEV
  - LoKi/CCCmp.h
@@ -921,34 +925,34 @@
    LoKi/ILoKiSvc.h
    src/CC.cpp
    src/Components/LoKiSvc.cpp
- 
+
    add functionality to build "charge-conjugated" strings, decays, etc...
 
  - cmt/requirements
-   version increment to v7r6 
+   version increment to v7r6
 
 ! 2008-07-21 - Vanya BELYAEV
 
  - src/HybridBase.cpp
    Explicitly remove '\n' from the code...
-   
+
  - cmt/requirements
-   version increment to v7r5p1 
+   version increment to v7r5p1
 
 ! =========================== LoKiCore v7r5 2008-07-16 ========================
 ! 2008-07-10 - Vanya BELYAEV
- - LoKi/Algs.h:  fix the compilation warning 
+ - LoKi/Algs.h:  fix the compilation warning
 
 
 ! 2008-07-09 - Vanya BELYAEV
 
- - LoKi/shifts.h 
+ - LoKi/shifts.h
     fix the  shifting function for signed types..
 
- - LoKi/iNode.h, LoKi/Nodes.h, 
+ - LoKi/iNode.h, LoKi/Nodes.h,
    LoKi/Tree.h, LoKi/Trees.icpp
    src/Nodes.cpp
-   
+
     many fixes for decay finder
 
  - LoKi/Algs.h
@@ -956,14 +960,14 @@
      new algorithms for "inclusive" matching...
 
  - cmt/requirements
-   
-     version increment to v7r5 
+
+     version increment to v7r5
 
 
 ! =========================== LoKiCore v7r4 2008-06-30 ========================
 ! 2008-06-26 - Vanya BELYAEV
  - src/Components/LoKiSvc.cpp
-   change the default name for defautl reporter from 
+   change the default name for defautl reporter from
    "LoKiSvc.ERROR" to "LoKiSvc.REPORT"
 
 ! 2008-06-12 - Vanya BELYAEV
@@ -974,7 +978,7 @@
  A LoKi/Nodes.h
  A LoKi/Trees.h
  A LoKi/Trees.icpp
- A LoKi/iNode.h 
+ A LoKi/iNode.h
  A LoKi/iTree.h
  A src/Nodes.cpp
  A src/Trees.cpp
@@ -983,8 +987,8 @@
 
  - fix many Doxygen warnings (many thanks to Marco Cattaneo)
 
- - cmt/requirements 
-    version increment to v7r4 
+ - cmt/requirements
+    version increment to v7r4
 
 ! =========================== LoKiCore v7r3 2008-05-29 ========================
 ! 2008-05-28 - Marco Cattaneo
@@ -996,10 +1000,10 @@
 ! =========================== LoKiCore v7r2 2008-04-10 ========================
 ! 2008-04-10 - Vanya BELYAEV
  - src/ParticleProperties.cpp
-      fix a stupid bug with antiParticles 
+      fix a stupid bug with antiParticles
 
 ! 2008-04-02 - Marco Cattaneo
- - Remove LoKi/StdMath.h and LoKi/EqualTo.h. 
+ - Remove LoKi/StdMath.h and LoKi/EqualTo.h.
    Functionality moved to LHCbMath/LHCbMath.h, in LHCb::Math namespace.
 
 ! 2008-04-02 - Vanya BELYAEV
@@ -1009,27 +1013,27 @@
 
 ! 2008-03-30 - Vanya BELYAEV
  - many small changes & fixes:
-   - introduce the specialized printout for boolean constants 
-   - add __rshift__ stremer operators for the functors 
+   - introduce the specialized printout for boolean constants
+   - add __rshift__ stremer operators for the functors
    - add random number service into Services
    - implements the proper interface dispatches for LoKi-service
-      from now, SmartIF<...> allows to extract 
+      from now, SmartIF<...> allows to extract
       many othe rinterfaces from LoKi::ILoKiSvc
-   - remove the empty file LoKi/Maths.h 
+   - remove the empty file LoKi/Maths.h
    - add "HugeChi2"and "HugeDistance" into LoKi/Constants.h
    - add LoKi/Random.h and src/Random.cpp files
       new "random" functors:
-      1. LoKi::Random::Numbers 
-      2. LoKi::Random::Uniform 
+      1. LoKi::Random::Numbers
+      2. LoKi::Random::Uniform
       3. LoKi::Random::Gaussian
-      4  LoKi::Random::Rand 
+      4  LoKi::Random::Rand
 
 ! 2008-03-12 - Vanya BELYAEV
  - src/Components/Reporter.cpp
      fix the unchecked StatusCode
- - python/LoKiCore/functions.py 
+ - python/LoKiCore/functions.py
      add alias "debug" for creation of monitored functors
- 
+
 !=========================== LoKiCore v7r1 2008-02-29  ========================
 ! 2008-02-29 - Vanya BELYAEV
 
@@ -1039,39 +1043,39 @@
    python/LoKiCore/functions.py
 
      introduce one more concept for "self-monitored" functors:
-     the meta-functor which prints the result of another functor 
+     the meta-functor which prints the result of another functor
      this is supposed to be very useful for HLT debugging
 
        fun1 = monitor( fun )
 
-     here "fun1" evaluated functor "fun", but also print 
+     here "fun1" evaluated functor "fun", but also print
      the result to std::cout
 
      one can insert monitor into any expression:
 
        monitor(MAXTREE("D0"==ABSID,BPVVDCHI2))>16
- 
+
       the function could be nested (if needed)
 
        monitor(monitor(MAXTREE("D0"==ABSID,monitor(BPVVDCHI2)))>16)
 
-     for usage with LoKHybrid one also need to import this function 
+     for usage with LoKHybrid one also need to import this function
      with LoKiCore.functions module:
 
       ToolSvc.MyFactory.Modules += { "LoKiCore.functions"} ;
-   
-    
+
+
 
 ! 2008-02-19 - Vanya BELYAEV
  - python/LoKiCore/functions.py
-    fix many tiny typos 
+    fix many tiny typos
 
-! 2008-02-18 - Vanya BELYAEV 
+! 2008-02-18 - Vanya BELYAEV
  - src/HybridBase.cpp
-   return Error in the case of errors.. 
+   return Error in the case of errors..
 
-! 2008-02-11 - Vanya BELYAEV 
- - various minor fixes 
+! 2008-02-11 - Vanya BELYAEV
+ - various minor fixes
 
 ! 2008-02-05 - Vanya BELYAEV
  - python/LoKiCore/functions.py
@@ -1081,17 +1085,17 @@
 
 
 ! 2008-01-23 - Vanya BELYAEV
- - src/HybridBase.cpp 
+ - src/HybridBase.cpp
     imporove the (buggy) printout of "context" field..
 
 ! 2008-01-17 - Vanya BELYAEV
  - LoKi/Range.h
-   Fix the problem with reverse iterators. 
+   Fix the problem with reverse iterators.
    Many thanks to Wauter Hulsbergen for spotting the problem.
 
 ! 2008-01-15 - Vanya BELYAEV
  - src/LoKiHybridBase.cpp
-    force the loading/initialization of LoKi Service 
+    force the loading/initialization of LoKi Service
  - cmnt/requirements
     version increment to v7r1
 
@@ -1100,39 +1104,39 @@
  - LoKi/HybridBsse.h
    src/HybridBase.cpp
     1) put more structure into the python pseudocode, generated on-flight.
-    2) add the possibility to add "local" python pseudo-code 
-       (referred here as "context") 
+    2) add the possibility to add "local" python pseudo-code
+       (referred here as "context")
 
 ! 2007-12-11 - Vanya BELYAEV
  - LoKi/BasicFunctors.h
    add new structure "Assignable" to
-   obtain the "assignable" functor type from 
+   obtain the "assignable" functor type from
    the abstract "functor" base (actually it saves a lot of typing)
  - LoKi/FilterOps.h
-   clean up 
+   clean up
 
 
 ! 2007-12-09 - Vanya BELYAEV
- - 1) prepare for context-dependent functors (needed for HLT) 
-   2) implemenet "source"&"info" functional-operations  (a'la Gerhard) 
+ - 1) prepare for context-dependent functors (needed for HLT)
+   2) implemenet "source"&"info" functional-operations  (a'la Gerhard)
 
 ! 2007-12-05 - Vanya BELYAEV
-  
+
  - LoKi/FuncOps.h
-    add the decorators for "sources"  
+    add the decorators for "sources"
 
 ! 2007-12-05 - Vanya BELYAEV
  - LoKi/AuxFunBase.h, src/AuxFunBase.cpp
-   prepare for the context functors 
+   prepare for the context functors
 
 ! 2007-12-05 - Vanya BELYAEV
  - remove the dictionaries for LHCb::ParticleID class
 
-! 2007-11-30 - Vanya BELYAEV  
- - new MAJOR version of LoKi  
+! 2007-11-30 - Vanya BELYAEV
+ - new MAJOR version of LoKi
    Many new concepts from Gerhard for functional programming
-   essentially the whole "functor"-business is reqritten 
- - cmt/requirements 
+   essentially the whole "functor"-business is reqritten
+ - cmt/requirements
    version incrmeent to v7r0
 
 !=========================== LoKiCore v6r1p1 2007-10-19 ======================
@@ -1141,8 +1145,8 @@
 
 !=========================== LoKiCore v6r1 2007-10-08 ======================
 ! 2007-10-07 - Vanya BELYAEV
- - cmt/requirements 
-     use new pattern for python modules 
+ - cmt/requirements
+     use new pattern for python modules
 
 ! 2007-10-02 - Marco Cattaneo
  - In LoKi/Math.h, interface to GaudiKernel/cbrt.h rather Gaudi::Math::cbrt
@@ -1153,32 +1157,32 @@
    . No implicit construction of ParticleID from int
 
 ! 2007-08-20 - Vanya Belyaev
- - increment the major version to v6r0 
+ - increment the major version to v6r0
 
 ! 2007-07-25 - Vanya BELYAEV
- - few minor fixes due to Liniux ocmpiler 
- - move the "hybrid" stuff from LoKiHybridBase 
+ - few minor fixes due to Liniux ocmpiler
+ - move the "hybrid" stuff from LoKiHybridBase
 
 
-! 2007-07-23 - Vanya BELYAEV 
-  - many fixes and reshufling of the code 
+! 2007-07-23 - Vanya BELYAEV
+  - many fixes and reshufling of the code
   - improve in doxygen comments
   - reduce the numebr of included headers to speedup the compilation
-  - new functionality 
-     LoKi/Monitoring.h : 
-      three new  metafunctions, Counter, Stat and Plot for self-monitoring 
-      Many thanks to Hugo RUIZ! 
-     LoKi/Info.f and LoKi/ExtraInfo.h 
-      generic utilities and functors for manipulation with "extraInfo" data 
+  - new functionality
+     LoKi/Monitoring.h :
+      three new  metafunctions, Counter, Stat and Plot for self-monitoring
+      Many thanks to Hugo RUIZ!
+     LoKi/Info.f and LoKi/ExtraInfo.h
+      generic utilities and functors for manipulation with "extraInfo" data
       members
     LoKi/ILoKiSvc and LoKi/Services.h
       add access to AlgContext Service
 
- - cmt/requirements 
+ - cmt/requirements
     version increment to v3r1
 
 
-! 2007-06-27 - Vanya BELYAEV 
+! 2007-06-27 - Vanya BELYAEV
 
  - LoKi/Reference.h
     fix a compilation problem for Reflex dictionaries at Win32 platform
@@ -1190,16 +1194,16 @@
 
  - many changes: preparation for the next major LoKi release.
  - also make few important fixes:
-     
-     1) split verrylarge files into mor emanageable pieces 
-     2) make possible to reuse full LoKi functionality for 
-        functions with two arguments (needed for HLT purposes) using nice trick 
+
+     1) split verrylarge files into mor emanageable pieces
+     2) make possible to reuse full LoKi functionality for
+        functions with two arguments (needed for HLT purposes) using nice trick
         "twho is just the special case of one"
-     3) Make LoKi much more flexible with respect to argument types, 
+     3) Make LoKi much more flexible with respect to argument types,
         up to now it was too "pointer-oriented".
 
   New files:
-  
+
   1) LoKi/BiFunctions.h
      the base for 2-argument functions: "tho is just the special case of one"
   2) LoKi/Field.h
@@ -1209,11 +1213,11 @@
   4) LoKi/Primitives.h
      collection of primitive function (former part of LoKi/Functions.h)
   5) LoKi/Reference.h
-     important class to consider references as object 
+     important class to consider references as object
   6) LoKi/same.h
-     fixes for non-pointer argument 
+     fixes for non-pointer argument
   7) LoKi/valid.h
-     fixes for non-pointer argument 
+     fixes for non-pointer argument
 
    Modified files:
 
@@ -1223,13 +1227,13 @@
  python/LoKiCore/decorators.py
  python/LoKiCore/functions.py
  src/AuxFunBase.cpp
- 
+
 ! 2007-06-01 - Vanya BELYAEV
 
  - many changes: preparation for the next major LoKi version
    now all LoKi's dictionaries are build with the packages
 
- - New files (mainly copy from LoKiDict&Bender) 
+ - New files (mainly copy from LoKiDict&Bender)
 
     LoKi/Calls.h
     LoKi/Dicts.h
@@ -1263,8 +1267,8 @@
     src/ParticleProperties.cpp
     src/Print.cpp
 
- - cmt/requirement version increment to v3r0 
- 
+ - cmt/requirement version increment to v3r0
+
 !=========================== LoKiCore v2r1 2007-03-05 ======================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete LoKiCore_load.cpp file
@@ -1277,7 +1281,7 @@
 ! 2007-01-20 - Vanya BELYAEV
  - LoKi/Keeper.h
    LoKi/UniqueKeeper.h
-     add the method "clear()" to clear the underlying container 
+     add the method "clear()" to clear the underlying container
 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
@@ -1285,24 +1289,24 @@
 
 !========================== LoKiCore v1r9 2006-11-27 ========================
 ! 2006-11-25 - Vanya BELYAEV
- - many improvents in Doxygen documentation for nested namespaces 
- - remove semicolons after the namespace 
- - cmt/requirements 
-   version incrmeent to v1r9 
+ - many improvents in Doxygen documentation for nested namespaces
+ - remove semicolons after the namespace
+ - cmt/requirements
+   version incrmeent to v1r9
 
 !========================== LoKiCore v1r8 2006-11-10 ========================
 ! 2006-11-09 - Vanya BELYAEV
- - reshuffle welcome and good bye messages. 
-   they are explicitely enabled only if LoKi service is instantiated 
- - cmt/requirments 
-   version increment to v1r8 
+ - reshuffle welcome and good bye messages.
+   they are explicitely enabled only if LoKi service is instantiated
+ - cmt/requirments
+   version increment to v1r8
 
 !========================== LoKiCore v1r7p2 2006-11-06 ======================
 ! 2006-11-06 - Vanya BELYAEV
  - LoKi/RangeList.h
     add missing desctructor ( thanks to Reflex!)
- - cmt/requirements 
-    version increment to v1r7p2 
+ - cmt/requirements
+    version increment to v1r7p2
 
 !========================== LoKiCore v1r7p1 2006-10-30 ======================
 ! 2006-10-27 - Vanya BELYAEV
@@ -1311,55 +1315,55 @@
 
       remove protected destructor for LoKi::BaseRange_ class to please Reflex
 
- + huge amount of tiny fixes to suppress warnings on SLC4 platform 
+ + huge amount of tiny fixes to suppress warnings on SLC4 platform
 
- - cmt/requirements 
+ - cmt/requirements
 
-      version increment to v1r7p1 
+      version increment to v1r7p1
 
 
 !=========================== LoKiCore v1r7 2006-10-12 =========================
 ! 2006-10-11 - Vanya BELYAEV
- - LoKi/Function.h, 
+ - LoKi/Function.h,
    LoKi/Operators.h
-     make the operators (both equality and non-equality) to be more 
+     make the operators (both equality and non-equality) to be more
      efficient.
 
 ! 2006-10-10 - Vanya BELYAEV
  - LoKi/GetType.h
-      new functor to "strip-down" the type 
+      new functor to "strip-down" the type
       (remove all qualifiers [*,&,const])
- - LoKi/Functions.h 
+ - LoKi/Functions.h
    LoKi/GetType.h
    LoKi/Keeper.h
    LoKi/LoKiCore.h
    LoKi/NamedRange.h
    LoKi/Range.h
    LoKi/UniqueKeeper.h
-   
-      many tiny fixes to improve functionality of python/reflex dictionaries 
+
+      many tiny fixes to improve functionality of python/reflex dictionaries
 
 ! 2006-10-05 - Vanya BELYAEV
  - LoKi/FuncAdapters.h
    LoKi/Functions.h
    LoKi/Power.h
      Fix compilation warnings for slc4_ia32_gcc345 platform
- - cmt/requirements 
-     version increment to v1r7 
+ - cmt/requirements
+     version increment to v1r7
 
 !=========================== LoKiCore v1r6 2006-09-01 =========================
 ! 2006-09-01 - Vanya BELYAEV
- - add a fictive base class LoKi::RangeBase_ to all ranges 
+ - add a fictive base class LoKi::RangeBase_ to all ranges
    ( to simplify the python manipulations)
-    
+
  - LoKi/WrongMass.h, src/WrongMass.cpp
-  add 2 functions for kinematcs with "wrong" mass. 
+  add 2 functions for kinematcs with "wrong" mass.
 
 ! 2006-08-28 - Vanya BELYAEV
  - LoKi/Interface.h
-	 fix a problem with reference counters... 
- - cmt/requirements 
-   version increment to v1r6 
+	 fix a problem with reference counters...
+ - cmt/requirements
+   version increment to v1r6
 
 !=========================== LoKiCore v1r5p2 2006-07-12 =======================
 ! 2006-07-12 - Marco Cattaneo
@@ -1370,7 +1374,7 @@
  - Remove Welcome and Goodbye printout
 
 ! 2006-06-27 - Vanya BELYAEV
- - Reduce the Welcome printout 
+ - Reduce the Welcome printout
 
 !=========================== LoKiCore v1r5 2006-06-09 =========================
 ! 2006-06-02 - Vanya BELYAEV
@@ -1378,19 +1382,19 @@
    and some of them has real sence! (bugs have been detected nad fixed)
 
 ! 2006-05-26 - Vanya BELYAEV
- - LoKi/Interface.h 
-    fix the serious problem with the incorrect assignement from raw pointer 
-  
-      Bottom line: for any "smart pointer" ( and class LoKi::Interface *IS* a 
-      kind of "smart pointer") one *MUST* be very carefull with all 
-      copy&assigements - all cases must to be implemented explicitely, 
-      without the compiler generated defaults. 
-   
+ - LoKi/Interface.h
+    fix the serious problem with the incorrect assignement from raw pointer
+
+      Bottom line: for any "smart pointer" ( and class LoKi::Interface *IS* a
+      kind of "smart pointer") one *MUST* be very carefull with all
+      copy&assigements - all cases must to be implemented explicitely,
+      without the compiler generated defaults.
+
 ! 2006-05-23 - Vanya Belyaev
- - LoKi/Print.h 	
-      minor fix for the printout of unsigned types 
+ - LoKi/Print.h
+      minor fix for the printout of unsigned types
  - cmt/requirements
-      version increment 
+      version increment
 
 !=========================== LoKiCore v1r4 2006-05-08 =========================
 ! 2006-05-08 - Marco Cattaneo
@@ -1399,110 +1403,110 @@
 
 !=========================== LoKiCore v1r3 2006-05-02 =========================
 ! 2006-05-02 - Vanya Belyaev
-  - src/Components/LoKiSvc.cpp 
-    bug fix with creation/release of reporter 
- -  *ALL* files are modified (actually censored). 
+  - src/Components/LoKiSvc.cpp
+    bug fix with creation/release of reporter
+ -  *ALL* files are modified (actually censored).
 
 ! 2006-04-20 - Vanya BELYAEV
  - src/Components/LoKiCvc.cpp
-     add the boolean flag to instantiate ToolSvc and ParticlePropertySvc 
-     if not done yet.. 
- - cmt/requirements 
-     version increment to v1r3 
+     add the boolean flag to instantiate ToolSvc and ParticlePropertySvc
+     if not done yet..
+ - cmt/requirements
+     version increment to v1r3
 
 !=========================== LoKiCore v1r2 2006-04-19 =========================
 ! 2006-04-19 - Vanya BELYAEV
  - LoKi/Geometry.h
    src/Geometry.cpp
     - fix a bug in the method signature (It returns NOTHING!!!)
- - LoKi/ConstIterator.h, 
-   LoKi/ConstView.h 
-    - fix some strange compilation error... 
- - cmt/requirements 
-    - version increment to v1r2 
+ - LoKi/ConstIterator.h,
+   LoKi/ConstView.h
+    - fix some strange compilation error...
+ - cmt/requirements
+    - version increment to v1r2
 
 !=========================== LoKiCore v1r1 2006-03-28 =========================
 ! 2006-03-14 - Vanya BELYAEV
- - LoKi/AddRef.h, 
+ - LoKi/AddRef.h,
    LoKi/Release.h
    LoKi/Interface.h
-   LoKi/Convertible.h 
-     useful utilities 
+   LoKi/Convertible.h
+     useful utilities
 
 ! 2006-03-08 - Vanya BELYAEV
  - LoKi/WrongMass.h, src/WrongMass.cpp
-   few useful functions LoKi::Kinematics::WorngMass, which 
-   allows to use "wrong" mass hypothesis for 
+   few useful functions LoKi::Kinematics::WorngMass, which
+   allows to use "wrong" mass hypothesis for
    evaluation of kinematical quantities.
- 
-   const LHCb::Particle* p1 = ... ; 
+
+   const LHCb::Particle* p1 = ... ;
    const LHCb::Particle* p2 = ... ;
-  
+
    // evaluate the invariant mass using the muon hypotheses:
-   const double mass =  
-      LoKi::Kinematics::wrongMass ( p1->momentum() , "mu+" , 
+   const double mass =
+      LoKi::Kinematics::wrongMass ( p1->momentum() , "mu+" ,
                                     p2->momentum() , "mu-" ) ;
 
 
 ! 2006-03-07 - Vanya BELYAEV
  - LoKi/Kinematics.h
    src/Kinematics.cpp
-      minor polishing and  reshuffling inbetween *.h and *.cpp files 
- - LoKi/FuncCast.h 
-      4 new adapter functions, which *COULD* be very useful later 
+      minor polishing and  reshuffling inbetween *.h and *.cpp files
+ - LoKi/FuncCast.h
+      4 new adapter functions, which *COULD* be very useful later
       in generic Bender/Python loops (and almost useless in C++ code)
 
 
 ! 2006-02-22 - Vanya BELYAEV
  - LoKi/Keeper.h
    LoKi/UniqueKeeper.h
-   two new templated container adapters, 
-   which are useful to keep valid 
+   two new templated container adapters,
+   which are useful to keep valid
    pointer "const OBJECT*"
-   The containers implements rudimentaty STL interface 
+   The containers implements rudimentaty STL interface
    which is simultaneously "vector"-like and "set"-like
    By construction, the containers hold *ONLY* valid objects.
-   The difference: UniqueKeeper<OBBJECT> contains no duplicates 
-   (it is based on std::set), while Keeper<OBJECT> may contains 
-   duplicates. From technicla point of view UniqueKeeper is always 
-   sorted, thats why std::binary_search could be efficiently  
-   applied  
+   The difference: UniqueKeeper<OBBJECT> contains no duplicates
+   (it is based on std::set), while Keeper<OBJECT> may contains
+   duplicates. From technicla point of view UniqueKeeper is always
+   sorted, thats why std::binary_search could be efficiently
+   applied
 
 
 !=========================== LoKiCore v1r0 2006-01-24 =========================
 ! 2006-02-16 - Vanya BELYAEV
  - LoKi/Print.h
    src/Print.cpp
-   few pure technical but useful utilities to 
-   print maps/hashmaps/container/SmartRef/SmartRefVector and 
-   to convert them into the strings  
+   few pure technical but useful utilities to
+   print maps/hashmaps/container/SmartRef/SmartRefVector and
+   to convert them into the strings
 
 ! 2006-02-09 - Vanya BELYAEV
- - minor fix in LoKi::Objects namespace - add 
+ - minor fix in LoKi::Objects namespace - add
    constant objects specicializtaion for <const void*> type
-   to improve a little bit the client code 
+   to improve a little bit the client code
 
 ! 2006-02-08 - Vanya BELYAEV
  - LoKi/Objects.h
-   new file with contains new trivial objects for VERY efficient 
-   implementation of LoKi::Extract functions 
+   new file with contains new trivial objects for VERY efficient
+   implementation of LoKi::Extract functions
  - LoKi/LokiCore.h
-   add new incldue 
+   add new incldue
 
 ! 2006-01-23 - Vanya BELYAEV
  - New import: the core part of restructurized LoKi project
-	
-   The package contains the event-model independent parts of LoKi project: 
 
-     - the basic types functors 
-        -- functions 
-        -- predicates  
+   The package contains the event-model independent parts of LoKi project:
+
+     - the basic types functors
+        -- functions
+        -- predicates
      - the core functionality and the basic elements:
-        -- combiners, selectors 
+        -- combiners, selectors
         -- selection algorihtms
         -- access to the services
         -- error/exception handling and monitoring
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
