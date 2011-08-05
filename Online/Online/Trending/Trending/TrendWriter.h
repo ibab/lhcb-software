@@ -133,7 +133,7 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
   for ( std::vector<std::string>::const_iterator itS = tags.begin(); tags.end() > itS+1; ++itS ) {
     for ( std::vector<std::string>::const_iterator itS1 = itS+1; tags.end() != itS1 ; ++itS1 ) {
       if ( *itS == *itS1 ) {
-        std::cout << "TrendWriter::openWrite: tag " << itS-tags.begin() << " and "
+        std::cout << "TrendWriter::openWrite: ERROR tag " << itS-tags.begin() << " and "
                   << itS1-tags.begin() << " are identical : " << *itS << std::endl;
         isBad = true;
       }
@@ -142,13 +142,13 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
   if ( isBad ) return true;
   unsigned int maxSize = (unsigned int)(0.1 * DATA_SIZE);
   if ( maxSize < tags.size() ) {
-    std::cout << "TrendWriter::openWrite: Requested to store " << tags.size() 
+    std::cout << "TrendWriter::openWrite: ERROR Requested to store " << tags.size() 
               << " tags, maximum allowed " << maxSize << std::endl;
     return false;
   }  
 
   if ( 0 == tags.size() ) {
-    std::cout << "TrendWriter::openWrite: You need to specify a non-empty list of tags." << std::endl;
+    std::cout << "TrendWriter::openWrite: ERROR You need to specify a non-empty list of tags." << std::endl;
     return false;
   }  
 
@@ -162,7 +162,7 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
     mode = "w+";
     m_file = fopen( fileFullName.c_str(), mode.c_str() );
     if ( 0 == m_file ) {
-      std::cout << "TrendWriter::openWrite: Can not create file " << fileFullName << std::endl;
+      std::cout << "TrendWriter::openWrite: ERROR Can not create file " << fileFullName << std::endl;
       return false;
     }
     m_tagHeader.version = 0;
@@ -231,7 +231,7 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
     Header tagHeader;
     int nRead = fread( &tagHeader, 1, sizeof( Header ), m_file );
     if ( sizeof( Header ) != nRead ) {
-      std::cout << "TrendWriter::openWrite: Error reading the header of the tag block: read "
+      std::cout << "TrendWriter::openWrite: ERROR reading the header of the tag block: read "
                 << nRead << " bytes" << std::endl;
       return false;
     }

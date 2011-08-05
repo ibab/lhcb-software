@@ -85,7 +85,7 @@ void SimpleTrendWriter::addEntry( std::string tag, double value ) {
       return;
     }
   }
-  info() << "Add new tag " << tag << endmsg;
+  error() << "Add new tag ='" << tag << "' value " << value << endmsg;
   m_tags.push_back( tag );
   m_values.push_back( float(value) );
   m_tagChanged = true;    
