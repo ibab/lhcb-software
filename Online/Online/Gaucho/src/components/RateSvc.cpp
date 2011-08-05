@@ -143,6 +143,87 @@ void RateSvc::makerate(MonMap* mmap)
   }
 }
 
+void RateSvc::makecounters(MonMap* mmap)
+{
+#define MAX_SERVICE_SIZE 128
+  MonMap::iterator it;
+  DimBuffBase *b;
+  for (it=mmap->begin();it!= mmap->end();it++)
+  {
+    b = (DimBuffBase*)it->second;
+    std::string snam;
+    char *n = (char*)AddPtr(b,b->nameoff);
+    void *dat = AddPtr(b,b->dataoff);
+    snam = m_prefix+"/"+n;
+    COutServiceBase *ob;
+    COUTServiceMap::iterator it = this->m_outmap.find(snam);
+    ob = it->second;
+    if(it == m_outmap.end())
+    {
+      ob = 0;
+    }
+    switch(b->type)
+    {
+      case   C_INT:
+      {
+        COutService<int> *os;
+        if (ob == 0)
+        {
+          ob = os = new COutService<int>(snam);
+          m_outmap[snam] = os;
+        }
+        os = (COutService<int> *)ob;
+        int *d = (int*)dat;;
+        os->Update(*d);
+        break;
+      }
+      case   C_LONGLONG:
+      {
+        COutService<long long> *os;
+        if (ob == 0)
+        {
+          ob = os  = new COutService<long long>(snam);
+          m_outmap[snam] = os;
+        }
+        os = (COutService<long long> *)ob;
+        long long *d = (long long *)dat;;
+        os->Update(*d);
+        break;
+      }
+      case   C_FLOAT:
+      {
+        COutService<float> *os;
+        if (ob == 0)
+        {
+          ob = os = new COutService<float>(snam);
+          m_outmap[snam] = os;
+        }
+        os = (COutService<float> *)ob;
+        float *d = (float*)dat;;
+        os->Update(*d);
+        break;
+      }
+      case   C_DOUBLE:
+      {
+        COutService<double> *os;
+        if (ob == 0)
+        {
+          ob = os = new COutService<double>(snam);
+          m_outmap[snam] = os;
+        }
+        os = (COutService<double> *)ob;
+        double *d = (double*)dat;;
+        os->Update(*d);
+        break;
+      }
+      default:
+      {
+        break;
+      }
+    }
+  }
+}
+
 
 
 RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
@@ -152,6 +233,8 @@ RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
   // load trending tool
   sl->getService( "ToolSvc" , m_isvc ) ;
 //  printf("%x\n",isvc);
+  declareProperty("ServicePrefix",          m_prefix       = "");
+  m_outmap.clear();
   m_trender = 0;//dynamic_cast< ISimpleTrendWriter * >( intf ) ;
   m_oldProf = 0;
 }
@@ -211,6 +294,7 @@ StatusCode RateSvc::initialize()
 //  ToolSvc()->retrieveTool ( “SimpleTrendWriter”, m_trender, 0, true   );
 //  m_trender=tool<ISimpleTrendWriter>("SimpleTrendWriter");
   PubSvc::initialize();
+  StringReplace(m_prefix,"<part>",m_PartitionName);
   std::string syst = "HLT";
   if (m_enableTrending)
   {
@@ -224,6 +308,7 @@ StatusCode RateSvc::initialize()
     if (m_trender != 0)
     {
       m_trender->initialize();
+      m_trender->setAverageTime(20);
       m_trender->setPartitionAndName(this->m_PartitionName,syst);
     }
   }

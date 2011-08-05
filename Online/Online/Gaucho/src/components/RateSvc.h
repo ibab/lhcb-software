@@ -5,6 +5,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "PubSvc.h"
 #include "Gaucho/COutService.h"
+#include <vector>
 // Forward declarations
 class MonAdder;
 class AdderSys;
@@ -36,6 +37,7 @@ typedef std::map<std::string, OUTServiceDescr*> OUTServiceMap;
 typedef std::pair<std::string, OUTServiceDescr*> OUTServicePair;
 typedef OUTServiceMap::iterator OUTServIter;
 class ISimpleTrendWriter;
+
 class RateSvc : public PubSvc
 {
 public:
@@ -44,6 +46,7 @@ public:
   StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   StatusCode start();
   void makerate(MonMap* mmap);
+  void makecounters(MonMap* mmap);
   void *m_oldProf;
   void analyze(void *buff, int siz,MonMap* mmap);
   OUTServiceMap m_outputServicemap;
@@ -54,6 +57,7 @@ public:
   ISimpleTrendWriter* m_trender;
   IService *m_isvc ;
   bool m_enableTrending;
+  COUTServiceMap m_outmap;
 private:
   MyErrh *m_errh;
 

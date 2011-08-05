@@ -47,6 +47,7 @@ public:
   std::string m_AdderClass;
   std::string m_myservicename;
   bool m_started;
+  std::string m_prefix;
   unsigned long long m_prevupdate;
 };
 #endif // ONLINE_GAUCHO_PUBSVC_H

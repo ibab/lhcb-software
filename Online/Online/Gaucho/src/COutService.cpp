@@ -8,7 +8,7 @@
 #include "Gaucho/COutService.h"
 template <typename T> COutService<T>::COutService(std::string nam):COutServiceBase(nam)
 {
-  printf("New Output Service %s of type %s\n",nam.c_str(),typeid(T).name());
+  printf("New Standard Output Service %s of type %s\n",nam.c_str(),typeid(T).name());
   m_data = -1;
   m_serv = new DimService(m_nam.c_str(),m_data);
 }
