@@ -85,6 +85,7 @@ void SimpleTrendWriter::addEntry( std::string tag, double value ) {
       return;
     }
   }
+  info() << "Add new tag " << tag << endmsg;
   m_tags.push_back( tag );
   m_values.push_back( float(value) );
   m_tagChanged = true;    
@@ -101,13 +102,15 @@ void SimpleTrendWriter::setAverageTime( unsigned int seconds ) {
 //=========================================================================
 void SimpleTrendWriter::saveEvent ( ) {
   if ( m_tagChanged ) {
+    info() << "Closing file as tags have changed." << endmsg;
     if ( m_fileIsOpen ) close();
   }
   
   if ( !m_fileIsOpen ) {
     m_fileIsOpen = m_trend->openWrite( m_fileName, m_tags );
     if ( !m_fileIsOpen ) {
-      error() << "Can't open file " << m_fileName << " for writing" << endmsg;
+      error() << "Can't open file " << m_fileName << " for writing" 
+              << " Tag size " << m_tags.size() << endmsg;
       return;
     }
   } 
