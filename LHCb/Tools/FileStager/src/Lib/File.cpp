@@ -90,6 +90,7 @@ boost::uintmax_t  File::size() const
 
 namespace {
 
+#ifndef WIN32
 boost::uintmax_t get_size( const string& command, const unsigned int lineno ) {
    FILE* pipe = 0;
    vector< string > lines;
@@ -116,5 +117,10 @@ boost::uintmax_t get_size( const string& command, const unsigned int lineno ) {
       return boost::lexical_cast< boost::uintmax_t >( match[ 1 ].str() ) / 1024;
    }
 }
+#else
+boost::uintmax_t get_size( const string& , const unsigned int ) {
+   return 0;
+}
+#endif
 
 } // anonymous namespace

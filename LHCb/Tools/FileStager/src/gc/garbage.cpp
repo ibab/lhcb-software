@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#ifndef WIN32
 // boost
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -13,11 +14,8 @@ namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 using boost::posix_time::seconds;
 
-using namespace std ;
-
-
-// global dirs
-string tmpdir;
+// Need a global here to allow cleanup to be called using signal
+std::string tmpdir;
 
 void cleanup( int )
 {
@@ -25,9 +23,17 @@ void cleanup( int )
    fs::remove_all( tmpdir );
    exit( 0 );
 }
+#endif
+
+using namespace std ;
 
 int main( int argc, char* argv[] )
 {
+
+#ifdef WIN32
+   cout << "Windows is not supported." << endl;
+   return -1;
+#else
    // Setup the command line option parser
    po::options_description config("Possible options");
    config.add_options()
@@ -57,7 +63,6 @@ int main( int argc, char* argv[] )
       return 0;
    }
 
-   // Open the input file
    try {
       tmpdir = vm[ "tmpdir" ].as< string >();
    } catch ( const boost::bad_any_cast& e ) {
@@ -91,5 +96,6 @@ int main( int argc, char* argv[] )
    cleanup( 0 );
 
    return 0;
+#endif
 }
 

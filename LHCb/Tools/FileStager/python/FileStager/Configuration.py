@@ -1,6 +1,9 @@
 
 
 def configureFileStager( keep = False, tmpdir = None ):
+    import os
+    if os.name != 'posix': return
+    
     from Gaudi.Configuration import ApplicationMgr, EventSelector
     from Configurables import FileStagerSvc
     from Configurables import Gaudi__StagedIODataManager as IODataManager

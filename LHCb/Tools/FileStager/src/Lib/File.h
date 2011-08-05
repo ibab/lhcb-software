@@ -5,6 +5,7 @@
 #include <boost/optional.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/condition_variable.hpp>
 #include <boost/cstdint.hpp>
 
 /** @class File File.h

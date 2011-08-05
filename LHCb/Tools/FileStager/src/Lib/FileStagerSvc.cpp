@@ -1,5 +1,11 @@
-// system
+#ifndef WIN32
+// system headers
 #include <sys/statvfs.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
 
 // stdlib
 #include <iostream>
@@ -8,12 +14,6 @@
 #include <sstream>
 #include <string>
 
-// system headers
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
 // Gaudi
 #include "GaudiKernel/SvcFactory.h"
 #include <GaudiUtils/IIODataManager.h>
@@ -21,6 +21,7 @@
 // STL
 #include <vector>
 
+#ifndef WIN32
 // boost
 #include <boost/range.hpp>
 #include <boost/regex.hpp>
@@ -33,6 +34,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/stream.hpp>
+#endif
 
 // local
 #include "File.h"
@@ -44,15 +46,19 @@
 // 2009-11-21 : Roel Aaij
 //-----------------------------------------------------------------------------
 
+#ifndef WIN32
 namespace fs = boost::filesystem;
 namespace ba = boost::algorithm;
 namespace pt = boost::posix_time;
 namespace bio = boost::iostreams;
+namespace {
+   using namespace boost;
+   using namespace assign;
+}
+#endif
 
 namespace {
    using Gaudi::IIODataManager;
-   using namespace boost;
-   using namespace assign;
    using std::string;
    using std::stringstream;
    using std::vector;
@@ -92,6 +98,7 @@ FileStagerSvc::~FileStagerSvc()
 
 }
 
+#ifndef WIN32
 //=============================================================================
 StatusCode FileStagerSvc::initialize()
 {
@@ -171,7 +178,6 @@ StatusCode FileStagerSvc::finalize()
                    << strerror( err ) << endmsg;
       }
    }
-
    if ( !sc.isSuccess() ) {
       return sc;
    } else {
@@ -795,3 +801,97 @@ bool FileStagerSvc::createLFN( string& remote, string& command )
    command = "lcg-cp -V lhcb";
    return true;
 }
+
+#else
+// Dummy implementations for compilation on Windows
+//=============================================================================
+StatusCode FileStagerSvc::initialize()
+{
+   error() << "The FileStager does not work on Windows, please disable it." << endmsg;
+   return StatusCode::FAILURE;
+}
+
+//=============================================================================
+StatusCode FileStagerSvc::finalize()
+{
+   return Service::finalize();
+}
+
+//=============================================================================
+StatusCode FileStagerSvc::getLocal( const string&, string& )
+{
+   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+StatusCode FileStagerSvc::addFiles( const vector< string >& )
+{
+   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+StatusCode FileStagerSvc::clearFiles()
+{
+   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+void FileStagerSvc::stage()
+{
+
+}
+
+//=============================================================================
+boost::uintmax_t FileStagerSvc::diskspace() const
+{
+   return 0;
+}
+
+//=============================================================================
+void FileStagerSvc::restartStaging( const string& )
+{
+
+}
+
+//=============================================================================
+void FileStagerSvc::removeFile( const_original_iterator )
+{
+
+}
+
+//=============================================================================
+void FileStagerSvc::removeFiles()
+{
+
+}
+
+//=============================================================================
+void FileStagerSvc::removePrevious( const_original_iterator )
+{
+
+}
+
+//=============================================================================
+StatusCode FileStagerSvc::garbage()
+{
+   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+File* FileStagerSvc::createFile( const string& )
+{
+   return 0;
+}
+
+//=============================================================================
+bool FileStagerSvc::createPFN( string&, string& )
+{
+   return false;
+}
+
+//=============================================================================
+bool FileStagerSvc::createLFN( string&, string& )
+{
+   return false;
+}
+#endif
