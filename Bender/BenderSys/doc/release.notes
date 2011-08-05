@@ -24,13 +24,21 @@
 </PRE>
 
 
-<H1>
+<A NAME=v17r4>2011-08-05 Bender v17r4 based on the DaVinci v28r5</A>
+</H1>	
+
+<PRE>		
+The version is very IDENITICAL to v17r3p3, but it is based on fresh 
+DaVinci v28r5 
+</PRE>
+
 <A NAME=v17r3p3>2011-08-01 Bender v17r3p3 based on the DaVinci v28r4p2</A>
 </H1>	
 
 <PRE>		
 The version is very similar to v17r3p2, with few minor fixes
 </PRE>
+
 
 <H1>
 <A NAME=v17r3p2>2011-07-28 Bender v17r3p2 based on the DaVinci v28r4p2</A>
