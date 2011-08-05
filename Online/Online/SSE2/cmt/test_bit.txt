@@ -1,0 +1,66 @@
+    19: extern "C" int test_bit(__m128i s, int b)  {
+00403D20 55               push        ebp  
+00403D21 8B EC            mov         ebp,esp 
+00403D23 83 E4 F0         and         esp,0FFFFFFF0h 
+00403D26 83 EC 2C         sub         esp,2Ch 
+00403D29 A1 A0 95 40 00   mov         eax,dword ptr [___security_cookie (4095A0h)] 
+
+00403D2E 89 44 24 28      mov         dword ptr [esp+28h],eax 
+    20:   //return _mm_movemask_epi8(_mm_cmpeq_epi16(_mm_and_si128(s,bit128[b]),bit128[b]));
+    21:   return 0 != (s.m128i_u32[b/32]&(1<<(b%32)));
+00403D32 8B 45 08         mov         eax,dword ptr [ebp+8] 
+00403D35 8B C8            mov         ecx,eax 
+00403D37 81 E1 1F 00 00 80 and         ecx,8000001Fh 
+00403D3D 56               push        esi  
+00403D3E 66 0F 7F 44 24 10 movdqa      xmmword ptr [esp+10h],xmm0 
+00403D44 79 05            jns         test_bit+2Bh (403D4Bh) 
+00403D46 49               dec         ecx  
+00403D47 83 C9 E0         or          ecx,0FFFFFFE0h 
+00403D4A 41               inc         ecx  
+00403D4B 99               cdq              
+00403D4C 83 E2 1F         and         edx,1Fh 
+00403D4F 03 C2            add         eax,edx 
+00403D51 BE 01 00 00 00   mov         esi,1 
+00403D56 D3 E6            shl         esi,cl 
+    22: }
+00403D58 8B 4C 24 2C      mov         ecx,dword ptr [esp+2Ch] 
+00403D5C C1 F8 05         sar         eax,5 
+00403D5F 23 74 84 10      and         esi,dword ptr [esp+eax*4+10h] 
+00403D63 F7 DE            neg         esi  
+00403D65 1B F6            sbb         esi,esi 
+00403D67 F7 DE            neg         esi  
+00403D69 8B C6            mov         eax,esi 
+
+00403D6B E8 D7 00 00 00   call        __security_check_cookie (403E47h) 
+00403D70 5E               pop         esi  
+00403D71 8B E5            mov         esp,ebp 
+00403D73 5D               pop         ebp  
+00403D74 C3               ret              
+
+
+    19: extern "C" int test_bit(__m128i s, int b)  {
+00403D20 55               push        ebp  
+00403D21 8B EC            mov         ebp,esp 
+00403D23 83 E4 F0         and         esp,0FFFFFFF0h 
+00403D26 83 EC 10         sub         esp,10h 
+00403D29 A1 A0 95 40 00   mov         eax,dword ptr [___security_cookie (4095A0h)] 
+
+00403D2E 89 44 24 0C      mov         dword ptr [esp+0Ch],eax 
+    20:   return _mm_movemask_epi8(_mm_cmpeq_epi16(_mm_and_si128(s,bit128[b]),bit128[b]));
+00403D32 8B 45 08         mov         eax,dword ptr [b] 
+    21:   //return 0 != (s.m128i_u32[b/32]&(1<<(b%32)));
+    22: }
+00403D35 8B 4C 24 0C      mov         ecx,dword ptr [esp+0Ch] 
+00403D39 C1 E0 04         shl         eax,4 
+00403D3C 05 B0 A0 40 00   add         eax,offset bit128 (40A0B0h) 
+00403D41 66 0F 6F 08      movdqa      xmm1,xmmword ptr [eax] 
+00403D45 66 0F DB C1      pand        xmm0,xmm1 
+00403D49 66 0F 75 C1      pcmpeqw     xmm0,xmm1 
+00403D4D 66 0F D7 C0      pmovmskb    eax,xmm0 
+
+00403D51 E8 F1 00 00 00   call        __security_check_cookie (403E47h) 
+00403D56 8B E5            mov         esp,ebp 
+00403D58 5D               pop         ebp  
+00403D59 C3               ret              
+
+

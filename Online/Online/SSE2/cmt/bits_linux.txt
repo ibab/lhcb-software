@@ -1,0 +1,245 @@
+[frankm@gw01 SSE]$ objdump -S -d b.o
+
+b.o:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 <set_bit>:
+   0:   66 0f 6f 07             movdqa (%rdi),%xmm0
+   4:   48 63 f6                movslq %esi,%rsi
+   7:   48 c1 e6 04             shl    $0x4,%rsi
+   b:   66 0f eb 86 00 00 00    por    0x0(%rsi),%xmm0
+  12:   00
+  13:   c3                      retq
+  14:   66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+  1a:   66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+0000000000000020 <test_bit>:
+  20:   48 63 f6                movslq %esi,%rsi
+  23:   66 0f 6f 07             movdqa (%rdi),%xmm0
+  27:   48 c1 e6 04             shl    $0x4,%rsi
+  2b:   66 0f 6f 8e 00 00 00    movdqa 0x0(%rsi),%xmm1
+  32:   00
+  33:   66 0f db c1             pand   %xmm1,%xmm0
+  37:   66 0f 75 c1             pcmpeqw %xmm1,%xmm0
+  3b:   66 0f d7 c0             pmovmskb %xmm0,%eax
+  3f:   c3                      retq
+
+0000000000000040 <match_bit_mask>:
+  40:   66 0f 6f 0e             movdqa (%rsi),%xmm1
+  44:   66 0f 6f 07             movdqa (%rdi),%xmm0
+  48:   66 0f db c1             pand   %xmm1,%xmm0
+  4c:   66 0f 75 c1             pcmpeqw %xmm1,%xmm0
+  50:   66 0f d7 c0             pmovmskb %xmm0,%eax
+  54:   c3                      retq
+  55:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+  5a:   66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+0000000000000060 <init_bits>:
+  60:   66 0f ef c0             pxor   %xmm0,%xmm0
+  64:   53                      push   %rbx
+  65:   31 f6                   xor    %esi,%esi
+  67:   bf 01 00 00 00          mov    $0x1,%edi
+  6c:   0f 1f 40 00             nopl   0x0(%rax)
+  70:   89 f1                   mov    %esi,%ecx
+  72:   48 89 f2                mov    %rsi,%rdx
+  75:   48 89 f0                mov    %rsi,%rax
+  78:   83 e1 1f                and    $0x1f,%ecx
+  7b:   89 fb                   mov    %edi,%ebx
+  7d:   48 83 c6 01             add    $0x1,%rsi
+  81:   48 c1 e2 04             shl    $0x4,%rdx
+  85:   48 c1 e8 05             shr    $0x5,%rax
+  89:   d3 e3                   shl    %cl,%ebx
+  8b:   48 81 fe 80 00 00 00    cmp    $0x80,%rsi
+  92:   66 0f e7 82 00 00 00    movntdq %xmm0,0x0(%rdx)
+  99:   00
+  9a:   89 9c 82 00 00 00 00    mov    %ebx,0x0(%rdx,%rax,4)
+  a1:   75 cd                   jne    70 <init_bits+0x10>
+  a3:   5b                      pop    %rbx
+  a4:   c3                      retq
+
+
+
+
+[frankm@gw01 SSE]$ objdump -S -d b.o
+
+b.o:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 <init_bits>:
+   0:   53                      push   %rbx
+   1:   31 f6                   xor    %esi,%esi
+   3:   bf 01 00 00 00          mov    $0x1,%edi
+   8:   0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
+   f:   00
+  10:   48 89 f2                mov    %rsi,%rdx
+  13:   89 f1                   mov    %esi,%ecx
+  15:   89 fb                   mov    %edi,%ebx
+  17:   48 c1 e2 04             shl    $0x4,%rdx
+  1b:   83 e1 1f                and    $0x1f,%ecx
+  1e:   48 8d 82 00 00 00 00    lea    0x0(%rdx),%rax
+  25:   d3 e3                   shl    %cl,%ebx
+  27:   c7 40 0c 00 00 00 00    movl   $0x0,0xc(%rax)
+  2e:   c7 40 08 00 00 00 00    movl   $0x0,0x8(%rax)
+  35:   c7 40 04 00 00 00 00    movl   $0x0,0x4(%rax)
+  3c:   c7 82 00 00 00 00 00    movl   $0x0,0x0(%rdx)
+  43:   00 00 00
+  46:   48 89 f2                mov    %rsi,%rdx
+  49:   48 83 c6 01             add    $0x1,%rsi
+  4d:   48 c1 ea 05             shr    $0x5,%rdx
+  51:   48 81 fe 80 00 00 00    cmp    $0x80,%rsi
+  58:   89 1c 90                mov    %ebx,(%rax,%rdx,4)
+  5b:   75 b3                   jne    10 <init_bits+0x10>
+  5d:   5b                      pop    %rbx
+  5e:   c3                      retq
+  5f:   90                      nop
+
+0000000000000060 <match_bit_mask>:
+  60:   8b 16                   mov    (%rsi),%edx
+  62:   89 d0                   mov    %edx,%eax
+  64:   23 07                   and    (%rdi),%eax
+  66:   39 c2                   cmp    %eax,%edx
+  68:   74 06                   je     70 <match_bit_mask+0x10>
+  6a:   31 c0                   xor    %eax,%eax
+  6c:   c3                      retq
+  6d:   0f 1f 00                nopl   (%rax)
+  70:   8b 56 04                mov    0x4(%rsi),%edx
+  73:   89 d0                   mov    %edx,%eax
+  75:   23 47 04                and    0x4(%rdi),%eax
+  78:   39 c2                   cmp    %eax,%edx
+  7a:   75 ee                   jne    6a <match_bit_mask+0xa>
+  7c:   8b 56 08                mov    0x8(%rsi),%edx
+  7f:   89 d0                   mov    %edx,%eax
+  81:   23 47 08                and    0x8(%rdi),%eax
+  84:   39 c2                   cmp    %eax,%edx
+  86:   75 e2                   jne    6a <match_bit_mask+0xa>
+  88:   8b 46 0c                mov    0xc(%rsi),%eax
+  8b:   89 c2                   mov    %eax,%edx
+  8d:   23 57 0c                and    0xc(%rdi),%edx
+  90:   39 d0                   cmp    %edx,%eax
+  92:   0f 94 c0                sete   %al
+  95:   0f b6 c0                movzbl %al,%eax
+  98:   c3                      retq
+  99:   0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+
+00000000000000a0 <test_bit>:
+  a0:   8d 56 1f                lea    0x1f(%rsi),%edx
+  a3:   85 f6                   test   %esi,%esi
+  a5:   89 f0                   mov    %esi,%eax
+  a7:   0f 49 d6                cmovns %esi,%edx
+  aa:   c1 f8 1f                sar    $0x1f,%eax
+  ad:   c1 e8 1b                shr    $0x1b,%eax
+  b0:   c1 fa 05                sar    $0x5,%edx
+  b3:   8d 0c 06                lea    (%rsi,%rax,1),%ecx
+  b6:   48 63 d2                movslq %edx,%rdx
+  b9:   83 e1 1f                and    $0x1f,%ecx
+  bc:   29 c1                   sub    %eax,%ecx
+  be:   b8 01 00 00 00          mov    $0x1,%eax
+  c3:   d3 e0                   shl    %cl,%eax
+  c5:   85 04 97                test   %eax,(%rdi,%rdx,4)
+  c8:   0f 95 c0                setne  %al
+  cb:   0f b6 c0                movzbl %al,%eax
+  ce:   c3                      retq
+  cf:   90                      nop
+
+00000000000000d0 <set_bit>:
+  d0:   8d 56 1f                lea    0x1f(%rsi),%edx
+  d3:   85 f6                   test   %esi,%esi
+  d5:   89 f0                   mov    %esi,%eax
+  d7:   0f 49 d6                cmovns %esi,%edx
+  da:   c1 f8 1f                sar    $0x1f,%eax
+  dd:   c1 e8 1b                shr    $0x1b,%eax
+  e0:   c1 fa 05                sar    $0x5,%edx
+  e3:   8d 0c 06                lea    (%rsi,%rax,1),%ecx
+  e6:   48 63 d2                movslq %edx,%rdx
+  e9:   83 e1 1f                and    $0x1f,%ecx
+  ec:   29 c1                   sub    %eax,%ecx
+  ee:   b8 01 00 00 00          mov    $0x1,%eax
+  f3:   d3 e0                   shl    %cl,%eax
+  f5:   09 04 97                or     %eax,(%rdi,%rdx,4)
+  f8:   66 0f 6f 07             movdqa (%rdi),%xmm0
+  fc:   c3                      retq
+[frankm@gw01 SSE]$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

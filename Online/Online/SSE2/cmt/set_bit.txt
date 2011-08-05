@@ -1,0 +1,50 @@
+    24: extern "C" __m128i set_bit(__m128i& s, int b)  {
+00401630 55               push        ebp  
+00401631 8B EC            mov         ebp,esp 
+00401633 83 E4 F0         and         esp,0FFFFFFF0h 
+00401636 83 EC 10         sub         esp,10h 
+00401639 A1 A0 95 40 00   mov         eax,dword ptr [___security_cookie (4095A0h)] 
+    25:   return _mm_or_si128(s,bit128[b]);
+0040163E 8B 4D 08         mov         ecx,dword ptr [ebp+8] 
+00401641 66 0F 6F 09      movdqa      xmm1,xmmword ptr [ecx] 
+00401645 89 44 24 0C      mov         dword ptr [esp+0Ch],eax 
+00401649 8B 45 0C         mov         eax,dword ptr [b] 
+    26: }
+0040164C 8B 4C 24 0C      mov         ecx,dword ptr [esp+0Ch] 
+00401650 C1 E0 04         shl         eax,4 
+00401653 05 B0 A0 40 00   add         eax,offset bit128 (40A0B0h) 
+00401658 66 0F 6F 00      movdqa      xmm0,xmmword ptr [eax] 
+0040165C 66 0F EB C8      por         xmm1,xmm0 
+00401660 66 0F 6F C1      movdqa      xmm0,xmm1 
+00401664 E8 DE 27 00 00   call        __security_check_cookie (403E47h) 
+00401669 8B E5            mov         esp,ebp 
+0040166B 5D               pop         ebp  
+0040166C C3               ret              
+
+
+
+    24: extern "C" __m128i set_bit(__m128i& s, int b)  {
+    25:   //return _mm_or_si128(s,bit128[b]);
+    26:   s.m128i_u32[b/32] |= (1<<(b%32));
+00403BC0 8B 4C 24 08      mov         ecx,dword ptr [esp+8] 
+00403BC4 8B C1            mov         eax,ecx 
+00403BC6 99               cdq              
+00403BC7 83 E2 1F         and         edx,1Fh 
+00403BCA 03 C2            add         eax,edx 
+00403BCC 8B 54 24 04      mov         edx,dword ptr [esp+4] 
+00403BD0 C1 F8 05         sar         eax,5 
+00403BD3 81 E1 1F 00 00 80 and         ecx,8000001Fh 
+00403BD9 56               push        esi  
+00403BDA 8D 04 82         lea         eax,[edx+eax*4] 
+00403BDD 79 05            jns         set_bit+24h (403BE4h) 
+00403BDF 49               dec         ecx  
+00403BE0 83 C9 E0         or          ecx,0FFFFFFE0h 
+00403BE3 41               inc         ecx  
+00403BE4 BE 01 00 00 00   mov         esi,1 
+00403BE9 D3 E6            shl         esi,cl 
+00403BEB 09 30            or          dword ptr [eax],esi 
+    27:   return s;
+00403BED 66 0F 6F 02      movdqa      xmm0,xmmword ptr [edx] 
+00403BF1 5E               pop         esi  
+    28: }
+00403BF2 C3               ret           

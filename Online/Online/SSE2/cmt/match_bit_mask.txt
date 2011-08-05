@@ -1,0 +1,123 @@
+    21: extern "C" int match_bit_mask(const __m128i& a, const __m128i& mask)  {
+00404910 53               push        ebx  
+00404911 8B DC            mov         ebx,esp 
+00404913 83 EC 08         sub         esp,8 
+00404916 83 E4 F0         and         esp,0FFFFFFF0h 
+00404919 83 C4 04         add         esp,4 
+0040491C 55               push        ebp  
+0040491D 8B 6B 04         mov         ebp,dword ptr [ebx+4] 
+00404920 89 6C 24 04      mov         dword ptr [esp+4],ebp 
+00404924 8B EC            mov         ebp,esp 
+00404926 83 EC 30         sub         esp,30h 
+00404929 A1 5C A5 40 00   mov         eax,dword ptr [___security_cookie (40A55Ch)] 
+0040492E 89 45 FC         mov         dword ptr [ebp-4],eax 
+    22: #ifdef _USE_SSE2
+    23:   return _mm_movemask_epi8(_mm_cmpeq_epi16(_mm_and_si128(a,mask),mask));
+00404931 8B 43 0C         mov         eax,dword ptr [mask] 
+00404934 66 0F 6F 00      movdqa      xmm0,xmmword ptr [eax] 
+00404938 8B 4B 08         mov         ecx,dword ptr [a] 
+0040493B 66 0F 6F 09      movdqa      xmm1,xmmword ptr [ecx] 
+0040493F 66 0F DB C8      pand        xmm1,xmm0 
+00404943 66 0F 7F 4D E0   movdqa      xmmword ptr [ebp-20h],xmm1 
+00404948 8B 53 0C         mov         edx,dword ptr [mask] 
+0040494B 66 0F 6F 02      movdqa      xmm0,xmmword ptr [edx] 
+0040494F 66 0F 6F 4D E0   movdqa      xmm1,xmmword ptr [ebp-20h] 
+00404954 66 0F 75 C8      pcmpeqw     xmm1,xmm0 
+00404958 66 0F 7F 4D D0   movdqa      xmmword ptr [ebp-30h],xmm1 
+0040495D 66 0F 6F 45 D0   movdqa      xmm0,xmmword ptr [ebp-30h] 
+00404962 66 0F D7 C0      pmovmskb    eax,xmm0 
+    24: #else
+    25:   return 1;
+    26: #endif
+    27: }
+00404966 8B 4D FC         mov         ecx,dword ptr [ebp-4] 
+00404969 E8 90 01 00 00   call        __security_check_cookie (404AFEh) 
+0040496E 8B E5            mov         esp,ebp 
+00404970 5D               pop         ebp  
+00404971 8B E3            mov         esp,ebx 
+00404973 5B               pop         ebx  
+00404974 C3               ret              
+
+optimized:
+
+    21: extern "C" int match_bit_mask(const __m128i& a, const __m128i& mask)  {
+00403BB0 55               push        ebp  
+00403BB1 8B EC            mov         ebp,esp 
+00403BB3 83 E4 F0         and         esp,0FFFFFFF0h 
+00403BB6 83 EC 10         sub         esp,10h 
+00403BB9 A1 80 95 40 00   mov         eax,dword ptr [___security_cookie (409580h)] 
+    22: #ifdef _USE_SSE2
+    23:   return _mm_movemask_epi8(_mm_cmpeq_epi16(_mm_and_si128(a,mask),mask));
+00403BBE 8B 4D 08         mov         ecx,dword ptr [ebp+8] 
+00403BC1 66 0F 6F 09      movdqa      xmm1,xmmword ptr [ecx] 
+00403BC5 89 44 24 0C      mov         dword ptr [esp+0Ch],eax 
+00403BC9 8B 45 0C         mov         eax,dword ptr [mask] 
+00403BCC 66 0F 6F 00      movdqa      xmm0,xmmword ptr [eax] 
+    24: #else
+    25:   return 1;
+    26: #endif
+    27: }
+00403BD0 8B 4C 24 0C      mov         ecx,dword ptr [esp+0Ch] 
+00403BD4 66 0F DB C8      pand        xmm1,xmm0 
+00403BD8 66 0F 75 C8      pcmpeqw     xmm1,xmm0 
+00403BDC 66 0F D7 C1      pmovmskb    eax,xmm1 
+00403BE0 E8 82 01 00 00   call        __security_check_cookie (403D67h) 
+00403BE5 8B E5            mov         esp,ebp 
+00403BE7 5D               pop         ebp  
+00403BE8 C3               ret              
+
+
+
+    28: extern "C" int match_bit_mask(const __m128i& a, const __m128i& mask)  {
+    29: #ifdef _USE_SSE2
+    30:   return _mm_movemask_epi8(_mm_cmpeq_epi16(_mm_and_si128(a,mask),mask));
+    31: #else
+    32:   unsigned int* ua = (unsigned int*)&a;
+    33:   unsigned int* um = (unsigned int*)&mask;
+    34:   return (ua[0]&um[0])==um[0] && (ua[1]&um[1])==um[1] && (ua[2]&um[2])==um[2] && (ua[3]&um[3])==um[3];
+00403BB0 8B 44 24 08      mov         eax,dword ptr [esp+8] 
+00403BB4 8B 4C 24 04      mov         ecx,dword ptr [esp+4] 
+00403BB8 8B 10            mov         edx,dword ptr [eax] 
+00403BBA 56               push        esi  
+00403BBB 8B 31            mov         esi,dword ptr [ecx] 
+00403BBD 23 F2            and         esi,edx 
+00403BBF 3B F2            cmp         esi,edx 
+00403BC1 75 2B            jne         match_bit_mask+3Eh (403BEEh) 
+00403BC3 8B 50 04         mov         edx,dword ptr [eax+4] 
+00403BC6 8B 71 04         mov         esi,dword ptr [ecx+4] 
+00403BC9 23 F2            and         esi,edx 
+00403BCB 3B F2            cmp         esi,edx 
+00403BCD 75 1F            jne         match_bit_mask+3Eh (403BEEh) 
+00403BCF 8B 50 08         mov         edx,dword ptr [eax+8] 
+00403BD2 8B 71 08         mov         esi,dword ptr [ecx+8] 
+00403BD5 23 F2            and         esi,edx 
+00403BD7 3B F2            cmp         esi,edx 
+00403BD9 75 13            jne         match_bit_mask+3Eh (403BEEh) 
+00403BDB 8B 40 0C         mov         eax,dword ptr [eax+0Ch] 
+00403BDE 8B 49 0C         mov         ecx,dword ptr [ecx+0Ch] 
+00403BE1 23 C8            and         ecx,eax 
+00403BE3 3B C8            cmp         ecx,eax 
+00403BE5 75 07            jne         match_bit_mask+3Eh (403BEEh) 
+00403BE7 B8 01 00 00 00   mov         eax,1 
+00403BEC 5E               pop         esi  
+    35: #endif
+    36: }
+00403BED C3               ret              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
