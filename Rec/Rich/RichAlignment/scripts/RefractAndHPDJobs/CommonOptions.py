@@ -13,11 +13,11 @@ from Configurables import Brunel, LHCbApp, CondDB
 
 # For 2011 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
-LHCbApp().DDDBtag   = "head-20110302" 
-LHCbApp().CondDBtag = "head-20110622"
+LHCbApp().DDDBtag   = "head-20110722" 
+LHCbApp().CondDBtag = "head-20110722"
 # Aerogel Sub Tiles
-CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
-CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
+#CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
+#CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
 
 # No output files
 Brunel().OutputType = "None"
@@ -63,3 +63,12 @@ from Configurables import Rich__HPDImage__Summary
 imageSummary = Rich__HPDImage__Summary("RichHPDImageSummary")
 imageSummary.Keep2DHistograms = True
 imageSummary.FinalHPDFit = False
+
+# Enable extra histos for the Long Track resolution monitors
+from Configurables import Rich__Rec__MC__RecoQC
+long = Rich__Rec__MC__RecoQC("RiCKResLong")
+long.EnablePerPDPlots    = True
+long.EnablePerPDColPlots = True
+longT = Rich__Rec__MC__RecoQC("RiCKResLongTight")
+longT.EnablePerPDPlots    = True
+longT.EnablePerPDColPlots = True

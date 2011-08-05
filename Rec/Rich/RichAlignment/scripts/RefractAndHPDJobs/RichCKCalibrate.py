@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v40r0' ) )
+                j = Job( application = Brunel( version = 'v40r1' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -101,11 +101,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v40r0",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v40r1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v40r0",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v40r1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -139,27 +139,29 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # Main DBs
     # LHCbCond
-    Cond = "LHCBCOND-AeroSubTiles-20110709.db"
-    dbopts += ["CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+Cond+"/LHCBCOND\"\n"]
-    #dbopts += ["LHCbApp().CondDBtag = \"HEAD\"\n"]
-    lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
-    uploadFile("databases/"+Cond,lfnname)
-    mySandBoxFLNs += [lfnname]
+    #Cond = "LHCBCOND-AeroSubTiles-20110709.db"
+    #dbopts += ["CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+Cond+"/LHCBCOND\"\n"]
+    ##dbopts += ["LHCbApp().CondDBtag = \"HEAD\"\n"]
+    #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
+    #uploadFile("databases/"+Cond,lfnname)
+    #mySandBoxFLNs += [lfnname]
     # DDDB
-    Cond = "DDDB-AeroSubTiles-20110709.db"
-    dbopts += ["CondDB().PartitionConnectionString[\"DDDB\"] = \"sqlite_file:"+Cond+"/DDDB\"\n"]
-    #dbopts += ["LHCbApp().DDDBtag = \"HEAD\"\n"]
-    lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
-    uploadFile("databases/"+Cond,lfnname)
-    mySandBoxFLNs += [lfnname]
+    #Cond = "DDDB-AeroSubTiles-20110709.db"
+    #dbopts += ["CondDB().PartitionConnectionString[\"DDDB\"] = \"sqlite_file:"+Cond+"/DDDB\"\n"]
+    ##dbopts += ["LHCbApp().DDDBtag = \"HEAD\"\n"]
+    #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
+    #uploadFile("databases/"+Cond,lfnname)
+    #mySandBoxFLNs += [lfnname]
 
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
     # Corrections
-    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-19072011"]
-    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-19072011"]
-
+    #dbFiles += ["2011MirrorAlign-01082011"]
+    #dbFiles += ["RefInCalib-2011_BR-v40r0-02082011"]
+    #dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-02082011"]
+    #dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-02082011"]
+ 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
         dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
@@ -281,7 +283,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         j.submit()
                     except Exception,e:
                         print "WARNING : Job not submitted"
-                        j.remove()
+                        j.remove()          
 
 def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
@@ -323,6 +325,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     #minMaxRun = [ 93098, 93127 ] # Fill 1855
     #minMaxRun = [ 93511, 93723 ] # Fills 1867, 1868 and 1871
 
+    # Bad runs to always skip
+    badRuns = [ 89537 ]
+
     # Loop over jobs
     nFailedFits = 0
     print "Looping over the runs ..."
@@ -330,7 +335,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
 
         # Run Number
         run = int(getInfoFromJob(j,'Run'))
-        if run >= minMaxRun[0] and run <= minMaxRun[1] :
+        if run >= minMaxRun[0] and run <= minMaxRun[1] and run not in badRuns :
 
             # Root file
             rootfile = getRootFile(j)
@@ -355,6 +360,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
                 print "        : CK resolution :", fitResultRes['Message']
                 print "        : CK theta      :", fitResultRaw['Message']
                 print "        : CK expected   :", fitResultExp['Message']
+
+            # Close the root file
+            rootfile.Close()
 
         else:
             print " -> Skipping run", run
@@ -524,6 +532,8 @@ def refractiveIndexControl(jobs,rad='Rich1Gas'):
         else:
             print " -> Fit failed -", fitResult['Message']
 
+        rootfile.Close()
+
     graph = TGraphErrors( len(x),x,y,xe,ye )
     graph.SetTitle( rad+" (n-1) Control plot" )
     graph.GetXaxis().SetTitle("(n-1) Scale factor")
@@ -578,7 +588,9 @@ def expectedCKTheta(jobs,rad='Rich1Gas'):
             runsErr.append(0.0)
             exp.append(mean)
             expErr.append(err)
-                    
+    
+        rootfile.Close()
+                
     # Make a plot
     graph = TGraphErrors( len(runs),runs,exp,runsErr,expErr )
     graph.SetTitle( rad+" <Expected CK theta> by Run" )
@@ -620,6 +632,8 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
             recoErr.append(float(fitResult['Mean'][1]))
         else:
             print " -> Fit failed -", fitResult['Message']
+
+        rootfile.Close()
             
     # Make a plot
     graph = TGraphErrors( len(runs),runs,reco,runsErr,recoErr )
@@ -675,6 +689,12 @@ def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
         print lfn, "already exists as", res
 
     return OK
+
+def uploadDBs(dbFiles=[]):
+    for dbFile in dbFiles :
+        lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+dbFile
+        if not uploadFile("databases/"+dbFile,lfnname) : return False
+    return True
 
 def addToJobTree(j,dir):
     from Ganga.GPI import jobtree
@@ -823,15 +843,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v40r0",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v40r0",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v40r0",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -954,7 +974,7 @@ def fitCKExpectedHistogram(rootfile,run,rad='Rich1Gas'):
             # Add Run number to page
             addRunToPlot(run)
             # Print
-            printCanvas()
+            #printCanvas()
                 
             # Basic check on the histograms before fitting
             entries = hist.GetEntries()
@@ -975,7 +995,7 @@ def fitCKExpectedHistogram(rootfile,run,rad='Rich1Gas'):
 
     return result
 
-def fitCKForFile(filename,plot='ckResAll'):
+def fitCKForFile(filename,plot='ckResAll',outfile="CKFit.pdf"):
 
     from ROOT import TFile, TH1F, TF1, TH1, TText, gROOT
 
@@ -988,7 +1008,7 @@ def fitCKForFile(filename,plot='ckResAll'):
     else:
 
         # Start a PDF file
-        globals()["imageFileName"] = "results/"+"CKFit.pdf"
+        globals()["imageFileName"] = "results/"+outfile
         printCanvas('[')
 
         fitResult1 = fitCKThetaHistogram(file,0,'Rich1Gas',plot)
@@ -1130,7 +1150,8 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
                     addRunToPlot(run)
             
                 # Print to file
-                printCanvas()
+                if plot == 'ckResAll' :
+                    printCanvas()
     
                 # Results of the fit
                 if fitOK :
@@ -1238,6 +1259,8 @@ def deleteJobsWithBadRootFile(cjobs,rad='Rich1Gas'):
             print " -> Bad ROOT file. Will delete."
             djobs += [j]
 
+        rootfile.Close()
+
     if len(djobs) == 0 :
         print "No jobs to delete"
     else:
@@ -1267,7 +1290,7 @@ def filesPerJob(nFiles):
     if nFiles < 20  : return 5
     return 6
 
-def removeCalibrationDataSet(name,BrunelVer="v40r0"):
+def removeCalibrationDataSet(name,BrunelVer="v40r1"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])

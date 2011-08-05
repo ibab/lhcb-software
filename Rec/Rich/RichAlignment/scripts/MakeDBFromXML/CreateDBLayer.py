@@ -34,8 +34,7 @@ def genXML(root,cond):
 def addToDB(startTime,stopTime,rootToFiles,condPath,db):
     #start = 0
     start = getUNIXTime(startTime) 
-    #stop  = cool.ValidityKeyMax
-    stop = getUNIXTime(stopTime)
+    stop  = getUNIXTime(stopTime)
     print " -> Condition", condPath, "updated"
     db.storeXMLString( condPath, genXML(rootToFiles,condPath), start, stop )
 
@@ -67,9 +66,9 @@ def fileMD5(file):
 #dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
-#upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
-#dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
-#dbFileName = "2011MirrorAlign"
+upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
+dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
+dbFileName = "2011MirrorAlign"
 
 # Mirror alignment with new field map
 #upAlign    = "/usera/jonesc/NFS/DetDB/2011MirrorsNewFieldMap/MagUp"
@@ -97,9 +96,9 @@ def fileMD5(file):
 #dbFileName = "OldHPDOccs"
 
 # Aero sub tiles
-upAlign = "/usera/jonesc/tmp/tar_Aerogel"
-dnAlign = "/usera/jonesc/tmp/tar_Aerogel"
-dbFileName = "AeroSubTiles"
+#upAlign = "/usera/jonesc/tmp/tar_Aerogel"
+#dnAlign = "/usera/jonesc/tmp/tar_Aerogel"
+#dbFileName = "AeroSubTiles"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -113,7 +112,7 @@ field = { }
 #field[ datetime.datetime(  2009,   9,    1,    1,    0,   0  ) ] = dnAlign
 
 # 2010                     Year  Month  Day   Hour  Min  Sec
-field[ datetime.datetime(  2010,   4,    5,    1,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2010,   4,    5,    1,    0,   0  ) ] = upAlign
 #field[ datetime.datetime(  2010,   4,    6,    2,    0,   0  ) ] = dnAlign
 #field[ datetime.datetime(  2010,   5,    2,   18,    0,   0  ) ] = dnAlign
 #field[ datetime.datetime(  2010,   5,    3,   01,    0,   0  ) ] = upAlign
@@ -137,12 +136,14 @@ field[ datetime.datetime(  2011,   3,   27,   21,   15,   0  ) ] = dnAlign
 field[ datetime.datetime(  2011,   4,   15,    2,   40,   0  ) ] = upAlign
 field[ datetime.datetime(  2011,   4,   26,   23,   20,   0  ) ] = dnAlign
 field[ datetime.datetime(  2011,   6,   11,    2,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2011,   7,   27,    0,   30,   0  ) ] = dnAlign
 
 # End of 2011
 #stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
+#stop = cool.ValidityKeyMax
 
 # Open a new DB file
 fulDBname = dbFileName + "-" + dateString() + ".db"

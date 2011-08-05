@@ -4,13 +4,15 @@ from Configurables import Brunel, UpdateManagerSvc, CondDB, CondDBAccessSvc, LHC
 
 importOptions("CommonOptions.py")
 
-CondDB().PartitionConnectionString["LHCBCOND"] = "sqlite_file:databases/LHCBCOND-AeroSubTiles-20110709.db/LHCBCOND"
-CondDB().PartitionConnectionString["DDDB"]     = "sqlite_file:databases/DDDB-AeroSubTiles-20110709.db/DDDB"
+#CondDB().PartitionConnectionString["LHCBCOND"] = "sqlite_file:databases/LHCBCOND-AeroSubTiles-20110709.db/LHCBCOND"
+#CondDB().PartitionConnectionString["DDDB"]     = "sqlite_file:databases/DDDB-AeroSubTiles-20110709.db/DDDB"
 
 #importOptions("$APPCONFIGOPTS/UseOracle.py")
 
-#importOptions("/usera/jonesc/MyDataOptions/Collisions10/Raw/RUN_76997_RealData_90000000_RAW_PFNs.py")
-importOptions("/usera/jonesc/MyDataOptions/Collisions11/Raw/RUN_91732_PFNs.py")
+# For testing only
+CondDB().IgnoreHeartBeat = True
+
+importOptions("/usera/jonesc/MyDataOptions/Collisions11/Raw/RUN_97487_PFNs.py")
 
 from Configurables import Brunel
 

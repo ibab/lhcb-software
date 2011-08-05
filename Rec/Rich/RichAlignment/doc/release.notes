@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-07-24 - Chris Jones
+ - Various improvements to the alignment scripts.
+
 !========================= RichAlignment v1r4 2011-07-27 =========================
 ! 2011-07-22 - Chris Jones
  - various script improvements 
