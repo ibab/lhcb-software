@@ -3,7 +3,7 @@
 fitter        = None
 imageFileName = ''
 canvas        = None
-tempDir       = "/var/nwork/pciy/jonesc/tmp/HPDImageAlign"
+tempDir       = "/var/nwork/pciy/jonesc/tmp/RichCalib"
 initialised   = False
 
 def initialise():
@@ -42,8 +42,10 @@ def initialise():
         #LHCbApp().CondDBtag = "head-20110524"
         
         DDDBConf(DataType = "2011")
-        LHCbApp().DDDBtag   = "head-20110302"
-        LHCbApp().CondDBtag = "head-20110622"
+        #LHCbApp().DDDBtag   = "head-20110302"
+        #LHCbApp().CondDBtag = "head-20110622"
+        LHCbApp().DDDBtag   = "head-20110722" 
+        LHCbApp().CondDBtag = "head-20110722"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -315,9 +317,9 @@ def getRunFillData(rootfiles):
             if run in runTimeCache.keys() : res = runTimeCache[run]
 
             if not res['OK'] :
+                print "  -> Need to query the Bookkeeping DB ..."
                 from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
                 nTries = 0
-                print "  -> Need to query the Bookkeeping DB ..."
                 while not res['OK'] and nTries < 10:
                     nTries = nTries + 1
                     if nTries > 1 :
@@ -446,7 +448,7 @@ def runToFill(run):
         DIRAC.exit(1)
     return fill
 
-def runAll(files='2011RootFiles.txt'):
+def runAll(files='2011-RootFiles.txt'):
 
     # HPD Occupancies
     calibrationByRuns(rootfiles=files,followType="Smoothed",
@@ -454,26 +456,27 @@ def runAll(files='2011RootFiles.txt'):
                       createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
     # HPD image shifts - follow runs
     calibrationByRuns(rootfiles=files,followType="Smoothed",
-                      fitType='Sobel',smoothSigmaHours=1,
+                      fitType='Sobel',smoothSigmaHours=1.5,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
     # HPD image shifts - averages
-    #calibrationByRuns(rootfiles=files,followType="Average",
-    #                  fitType='Sobel',smoothSigmaHours=1,
-    #                  createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
+    calibrationByRuns(rootfiles=files,followType="Average",
+                      fitType='Sobel',smoothSigmaHours=1.5,
+                      createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
     
-def calibrationByRuns(rootfiles='2011RootFiles.txt',
+def calibrationByRuns(rootfiles='2011-RootFiles.txt',
                       fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=1,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
     return calibration(rootfiles,'Run',fitType,followType,pol,smoothSigmaHours,
                        createShiftUpdate,createMagUpdate,createHPDOccUpdate)
 
-def calibrationByFills(rootfiles='2011RootFiles.txt',
+def calibrationByFills(rootfiles='2011-RootFiles.txt',
                        fitType="Sobel",followType="Smoothed",pol=0,smoothSigmaHours=12,
                        createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=True):    
     return calibration(rootfiles,'Fill',fitType,followType,pol,smoothSigmaHours,
                        createShiftUpdate,createMagUpdate,createHPDOccUpdate)
 
-def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShiftUpdate,createMagUpdate,createHPDOccUpdate):
+def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
+                createShiftUpdate,createMagUpdate,createHPDOccUpdate):
 
     from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3, TH2D, TH1D
     import GaudiPython
@@ -489,6 +492,10 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
     if fitType not in ["Sobel","SimpleChi2","FastRingFit","CppFit"]:
         raise Exception("Unknown Fit Mode "+fitType)
+
+    # Polarities to consider
+    polarities = ['MagAll']
+    if createMagUpdate : polarities = ['MagDown','MagUp','MagOff']
                        
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
@@ -641,15 +648,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
     # Fitters
     avTrendFit = { }
-    avTrendFit['MagDown'] = { }
-    avTrendFit['MagUp']   = { }
-    avTrendFit['MagOff']  = { }
+    for polarity in polarities : avTrendFit[polarity] = { }
     
     # Smoothers
     smoothers = { }
-    smoothers['MagDown'] = { }
-    smoothers['MagUp']   = { }
-    smoothers['MagOff']  = { }
+    for polarity in polarities : smoothers[polarity] = { }
     
     # base name
     basename = rootfiles.split(".")[0]+"-"+type+"Aligned-"+fitType+"-"+followType
@@ -681,23 +684,41 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
         minMaxAvTime = [1e9,-1e9]
 
         from array import array
-        vflag      = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vflagerr   = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vshiftR    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vshiftRerr = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vshiftX    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vshiftXerr = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vshiftY    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vshiftYerr = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        dbX        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        dbY        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        dbR        = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vTime      = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vTimeErr   = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vRadius    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vRadErr    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vOcc       = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
-        vOccErr    = { 'MagDown' : array('d'), 'MagUp' : array('d'), 'MagOff' : array('d') }
+        vflag      = {  }
+        vflagerr   = {  }
+        vshiftR    = {  }
+        vshiftRerr = {  }
+        vshiftX    = {  }
+        vshiftXerr = {  }
+        vshiftY    = {  }
+        vshiftYerr = {  }
+        dbX        = {  }
+        dbY        = {  }
+        dbR        = {  }
+        vTime      = {  }
+        vTimeErr   = {  }
+        vRadius    = {  }
+        vRadErr    = {  }
+        vOcc       = {  }
+        vOccErr    = {  }
+        for polarity in polarities :
+            vflag      [polarity] = array('d')
+            vflagerr   [polarity] = array('d')
+            vshiftR    [polarity] = array('d')
+            vshiftRerr [polarity] = array('d')
+            vshiftX    [polarity] = array('d')
+            vshiftXerr [polarity] = array('d')
+            vshiftY    [polarity] = array('d')
+            vshiftYerr [polarity] = array('d')
+            dbX        [polarity] = array('d')
+            dbY        [polarity] = array('d')
+            dbR        [polarity] = array('d')
+            vTime      [polarity] = array('d')
+            vTimeErr   [polarity] = array('d')
+            vRadius    [polarity] = array('d')
+            vRadErr    [polarity] = array('d')
+            vOcc       [polarity] = array('d')
+            vOccErr    [polarity] = array('d')
 
         dataColor   = 1
         splineColor = 2
@@ -712,7 +733,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
         yPlotsS = { }
         rPlotsS = { }
         oPlotsS = { }
-        for polarity in ['MagDown','MagUp','MagOff']:
+        for polarity in polarities:
             xPlots[polarity] = TH1D( polarity+"-XShifts"+str(hpd),
                                      polarity+" X-Shifts : Copy Number "+idS, 100, -1.0, 1.0 )
             xPlots[polarity].GetXaxis().SetTitle("X Shifts / mm")
@@ -729,7 +750,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
             rPlots[polarity].SetMarkerColor(dataColor)
             rPlots[polarity].SetLineColor(dataColor)
             oPlots[polarity] = TH1D( polarity+"-Occupancy"+str(hpd),
-                                     polarity+" Occupancy : Copy Number "+idS, 101, -0.5, 100.5 )
+                                     polarity+" Occupancy : Copy Number "+idS, 51, -0.5, 50.5 )
             oPlots[polarity].GetXaxis().SetTitle("Occupancy / # hits")
             oPlots[polarity].SetMarkerColor(dataColor)
             oPlots[polarity].SetLineColor(dataColor)
@@ -749,7 +770,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
             rPlotsS[polarity].SetMarkerColor(smoothColor)
             rPlotsS[polarity].SetLineColor(smoothColor)
             oPlotsS[polarity] = TH1D( polarity+"-OccupancySmooth"+str(hpd),
-                                      polarity+" Occupancy : Copy Number "+idS, 101, -0.5, 100.5 )
+                                      polarity+" Occupancy : Copy Number "+idS, 51, -0.5, 50.5 )
             oPlotsS[polarity].GetXaxis().SetTitle("Occupancy / # hits")
             oPlotsS[polarity].SetMarkerColor(smoothColor)
             oPlotsS[polarity].SetLineColor(smoothColor)
@@ -775,6 +796,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
                     # Field Polarity
                     polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
+                    if followType == "Average" : polarity = 'MagAll'
 
                     # Fill arrays
                     vflag[polarity].append(fl)
@@ -806,7 +828,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
                 print "Skipping data from", type, fl, "from fit"
 
         # Loop over polarities
-        for polarity in ['MagDown','MagUp','MagOff']:
+        for polarity in polarities:
 
             # If we have data, fill it properly
             if len(vTime[polarity]) > 0:
@@ -1002,6 +1024,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
         # Get field polarity
         polarity = runFillData[type+"Data"][flag]["FieldPolarity"]
+        if followType == "Average" : polarity = 'MagAll'
                 
         print " -> Creating alignment update for", type, flag, polarity, \
               "( #", nflag, "of", len(alignData.keys()), ")"
@@ -1024,15 +1047,15 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
 
         # MDMS conditions
         mdmsConds = { }
-        #for pol in ["MagDown","MagUp","MagOff"]:
-        for pol in ["MagDown","MagUp"]:
-            mdmsConds[pol] = { }
-            for r in ["Rich1","Rich2"] :
-                mdmsConds[pol][r] = { }
-                for p in ["P0","P1"] : mdmsConds[pol][r][p] = { }
-            for copyN in [0,100,210,351]:
-                hpd = richSystem().richSmartID( gbl.Rich.DAQ.HPDCopyNumber(copyN) )
-                mdmsConds[pol][rich(hpd)][panel(hpd)] = getHPDmagCond(pol,gbl.Rich.DAQ.HPDCopyNumber(copyN))
+        if createMagUpdate :
+            for pol in ["MagDown","MagUp"]:
+                mdmsConds[pol] = { }
+                for r in ["Rich1","Rich2"] :
+                    mdmsConds[pol][r] = { }
+                    for p in ["P0","P1"] : mdmsConds[pol][r][p] = { }
+                for copyN in [0,100,210,351]:
+                    hpd = richSystem().richSmartID( gbl.Rich.DAQ.HPDCopyNumber(copyN) )
+                    mdmsConds[pol][rich(hpd)][panel(hpd)] = getHPDmagCond(pol,gbl.Rich.DAQ.HPDCopyNumber(copyN))
 
         # HPD Occupancies
         hpdOccs          = { }
@@ -1137,11 +1160,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,createShi
                     alignments[XmlPath] += xmlHPDOccs(hpdOccs[R])
             else :
                 print "  -> HPD Occupancy data missing .... skipped"
-                
+
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
-        #stopTime  = cool.ValidityKeyMax
-        stopTime  = correctStopTime( unixStopTime )
+        stopTime  = cool.ValidityKeyMax
+        #stopTime  = correctStopTime( unixStopTime )
         # End of 2009
         #stopTime = getUNIXTime( datetime.datetime( 2009, 12, 31, 23, 59, 59 ) )
         # End of 2010
