@@ -31,6 +31,8 @@ public:
   
   virtual void addEntry( std::string tag, double value );
   
+  virtual void setAverageTime( unsigned int seconds );
+
   virtual void saveEvent();
   
   virtual void close();

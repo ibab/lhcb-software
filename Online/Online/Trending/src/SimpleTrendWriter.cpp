@@ -89,6 +89,13 @@ void SimpleTrendWriter::addEntry( std::string tag, double value ) {
   m_values.push_back( float(value) );
   m_tagChanged = true;    
 }
+
+//=========================================================================
+//  Set the time for averaging
+//=========================================================================
+void SimpleTrendWriter::setAverageTime( unsigned int seconds ) {
+  m_trend->setAverageTime( seconds );
+}
 //=========================================================================
 //  Write the event in the file. Update the tags if needed.
 //=========================================================================

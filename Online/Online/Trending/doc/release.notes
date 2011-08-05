@@ -4,7 +4,10 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
-!============================== 2011-08-01 v2r0 ==============================
+!============================== 2011-08-05 v2r0 ==============================
+! 2011-08-05 - Olivier Callot
+ - Add the setAverageTime to the SimpleTrendWriter interface and tool
+
 ! 2011-08-01 - Olivier Callot
  - New functions in the interface to write average values
   * setAverageTime( unsigned int delta ) : set the interval time in second for average

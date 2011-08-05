@@ -29,6 +29,8 @@ public:
   
   virtual void addEntry( std::string tag, double value ) = 0;
   
+  virtual void setAverageTime( unsigned int seconds ) = 0;
+
   virtual void saveEvent() = 0;
   
   virtual void close() = 0;
