@@ -23,35 +23,38 @@ class AlarmDisplay : public DimInfo {
                PresenterInformation* presInfo,
                TGListTree* listView) : 
     DimInfo((const char*) "OMA/DBDrivenAnalysisTask/LHCb/MESSAGES", 
-	    (char*) ""),
+            (char*) ""),
     m_mainFrame(mainFrame),
     m_presenterInfo(presInfo),
     m_enabled(false),
     m_listView(listView),
     m_filterCriteria(AllHistograms),
     m_nAlarms(0), m_nWarning(0), m_nArchived(0) { ; } ;
-    
-    
-    virtual ~AlarmDisplay( ) {} ///< Destructor 
-    inline void enable(bool state) {m_enabled=state;}
-    inline void setFilterCriteria(FilterCriteria filterCriteria) { m_filterCriteria = filterCriteria;}
-    
-    void listAlarmsFromHistogramDB();
-    void loadSelectedAlarmFromDB(int msgId);
-    
-    virtual void infoHandler(); 
-    
-    
- private:
-    PresenterMainFrame* m_mainFrame;
-    PresenterInformation* m_presenterInfo ;
-    bool m_enabled;
-    TGListTree* m_listView;
-    FilterCriteria m_filterCriteria;
-    std::vector<int> m_alarmMessageIDs;
-    int m_msgBoxReturnCode;
-    int m_nAlarms;
-    int m_nWarning;
-    int m_nArchived;
+  
+  
+  virtual ~AlarmDisplay( ) {} ///< Destructor 
+  inline void enable(bool state) {m_enabled=state;}
+  inline void setFilterCriteria(FilterCriteria filterCriteria) { m_filterCriteria = filterCriteria;}
+  
+  void listAlarmsFromHistogramDB();
+  void loadSelectedAlarmFromDB(int msgId);
+  
+  void clearAlarm();  
+  
+  virtual void infoHandler();
+
+private:
+  PresenterMainFrame* m_mainFrame;
+  PresenterInformation* m_presenterInfo ;
+  bool m_enabled;
+  TGListTree* m_listView;
+  FilterCriteria m_filterCriteria;
+  std::vector<int> m_alarmMessageIDs;
+  int m_msgBoxReturnCode;
+  int m_nAlarms;
+  int m_nWarning;
+  int m_nArchived;
+
+  int m_lastMsgId;
 };
 #endif // ALARMDISPLAY_H

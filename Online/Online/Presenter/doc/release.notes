@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-08-06 - Olivier Callot
+ - Prepared the interface for clearing monitoring alarms
+
+! 2011-08-06 - Olivier Callot
+ - Fixed several crashes when editing pages: Histogram deletion is dangerous!
+
 ! 2011-08-03 - Olivier Callot
  - Display correctly alarms from virtual histograms
 

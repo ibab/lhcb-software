@@ -185,7 +185,7 @@ void DisplayHistogram::normalizeReference ( ) {
 //  Creata a dummy histogram...
 //=========================================================================
 void DisplayHistogram::createDummyHisto( std::string title ) {
-  if ( NULL != m_rootHistogram ) delete m_rootHistogram;
+  //deleteRootHist();
 
   std::string histoName = m_identifier;
   unsigned int pos = histoName.find( "/" );   // remove the task name prefix
@@ -836,8 +836,7 @@ void DisplayHistogram::createGraph( TrendData& aTrend, bool update ) {
   (( TAttMarker ) (*m_rootHistogram)).Copy( *m_timeGraph ) ;
   (( TAttLine )   (*m_rootHistogram)).Copy( *m_timeGraph ) ;
 
-  delete m_rootHistogram;
-  m_rootHistogram = 0;
+  deleteRootHist();
 
   if ( update && m_hostingPad != NULL ) {
     m_hostingPad->Modified();

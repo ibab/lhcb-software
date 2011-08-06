@@ -242,6 +242,7 @@ public:
   void clearHistos();
   void unclearHistosIfNeeded() {if (m_clearedHistos) clearHistos();}
   void clearAlarmPages() { m_alarmPages.clear();}
+  void clearAlarm( Int_t item );
   void loadNextPage();
   void loadPreviousPage();
   void nextInterval();

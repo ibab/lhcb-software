@@ -69,7 +69,7 @@ void PresenterPage::clear ( ) {
     delete (*itA).displayHisto;
   }
   m_analysis.clear();
-  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
+  for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) { 
     (*itF).histos.clear();
   }
   m_trends.clear();
@@ -130,7 +130,7 @@ void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH,
     return;
   }
 
-  if ( onlH->isAnaHist() ) {
+  if ( NULL != onlH && onlH->isAnaHist() ) {
     anaHistos.push_back( onlH );
     processAnalysisHistos( anaHistos, histDB );
   } else {
@@ -390,7 +390,7 @@ void PresenterPage::loadFromDIM( std::string& partition, bool update, std::strin
       for ( std::vector<DisplayHistogram>::iterator itH = (*itT).histos.begin();
             (*itT).histos.end() != itH; ++itH ) {
         if ( !update && NULL != (*itH).rootHist() ) {   // cleanup before access...
-          delete (*itH).rootHist();
+          //delete (*itH).rootHist();
           (*itH).setRootHist( NULL );
         }
         std::string histoName = (*itH).identifier();

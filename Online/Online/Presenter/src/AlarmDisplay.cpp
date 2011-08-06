@@ -95,6 +95,7 @@ void AlarmDisplay::listAlarmsFromHistogramDB() {
   if (Batch != m_mainFrame->presenterMode()) {
     m_mainFrame->GetClient()->NeedRedraw(m_listView);
   }
+  m_lastMsgId = -1;
 };
 
 
@@ -110,6 +111,7 @@ void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
       if (message.isAbort()) {
         error=true;
       } else {
+        m_lastMsgId = msgId;
         //== save context
         bool globalHistoryByRunFlag =  m_presenterInfo-> globalHistoryByRun();
         std::string previousSaveset = m_mainFrame->savesetFileName();
@@ -192,3 +194,16 @@ void AlarmDisplay::infoHandler() {
   std::cout << "$$AlarmDisplay::InforHandler teminated." << std::endl;
 }
 
+
+//=========================================================================
+//  Clear the selected alarm
+//=========================================================================
+void AlarmDisplay::clearAlarm( ) {
+  std::cout << "Clear alarm for message " << m_lastMsgId << std::endl;
+  OMAMessage message( m_lastMsgId, *(m_mainFrame->histogramDB()));
+  if ( message.isactive () ) {
+    std::cout << "Should clear alarm for " << message.hIdentifier() << std::endl;
+  } else {
+    std::cout << "Alarm is not active. Ignore" << std::endl;
+  }
+}

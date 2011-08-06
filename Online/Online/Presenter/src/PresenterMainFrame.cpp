@@ -1592,7 +1592,6 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     m_trendEnd      = 0;
     refreshPageForced();
     break;
-
   default:
     if (m_verbosity >= pres::Debug)
       std::cout << "zut. TGButton WidgetId from gTQSender is corrupt"
@@ -4853,7 +4852,14 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
                                       "loadWebPage(Int_t)" );
             } else {
               m_histomenu -> DeleteEntry( 2 ) ;
-              m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
+              if ( pres::Alarm == displayMode() ) {
+                m_histomenu -> AddEntry( "Clear the alarm" , 2 ) ;
+                m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
+                                        "PresenterMainFrame" , this,
+                                        "clearAlarm(Int_t)" );
+              } else {
+                m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
+              }
             }
             break;
           }
@@ -5053,6 +5059,12 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
   } 
 }
 
+//=========================================================================
+//  
+//=========================================================================
+void PresenterMainFrame::clearAlarm ( Int_t item ) {
+  if ( 2 == item ) m_alarmDisplay->clearAlarm();
+}
 //==============================================================================
 // Display a dialog box to add a trending histo to the database
 //==============================================================================
