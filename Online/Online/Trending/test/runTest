@@ -3,13 +3,13 @@ runit()
 {
 cat >/tmp/${USER}_Test.opts <<END-OF-OPTS
 ApplicationMgr.TopAlg                = {"TestTrend"};
-ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.EvtMax                = 1000;
 ApplicationMgr.HistogramPersistency  = "NONE";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
-EventSelector.PrintFreq              = 10000;
-EventSelector.Input                  = {"DATA='PFN:file:///daqarea/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97584/097584_0000000023.raw' SVC='LHCb::MDFSelector'"};
+EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = {"DATA='PFN:file:///daqarea/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/98065/098065_0000000023.raw' SVC='LHCb::MDFSelector'"};
 TestTrend.MyTrend.OutputLevel        = 3;
 END-OF-OPTS
 #

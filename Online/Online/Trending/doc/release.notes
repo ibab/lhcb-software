@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !============================== 2011-08-05 v2r0 ==============================
+! 2011-08-06 - Olivier Callot
+ - Fix the problem of re-opening the file with different tags.
+
 ! 2011-08-05 - Olivier Callot
  - Add the setAverageTime to the SimpleTrendWriter interface and tool
 

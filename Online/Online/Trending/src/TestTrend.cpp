@@ -132,6 +132,17 @@ StatusCode TestTrend::execute() {
   m_simple->addEntry( std::string( "Variable 4"), value + 3000. );
   m_simple->addEntry( std::string( "Variable 5"), value + 4000. );
   m_simple->addEntry( std::string( "Variable 6"), value + 5000. );
+
+  if ( m_event > 500 ) {
+    m_simple->addEntry( std::string( "Variable 7"), value + 6000. );
+    if ( m_event > 600 ) {
+      m_simple->addEntry( std::string( "Variable 8"), value + 7000. );
+      if ( m_event > 700 ) {
+        m_simple->addEntry( std::string( "Variable 9"), value + 8000. );
+      }
+    }
+  }
+
   m_simple->saveEvent();
   return StatusCode::SUCCESS;
 }

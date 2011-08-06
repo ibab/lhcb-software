@@ -94,7 +94,7 @@ TrendWriter::TrendWriter( ) :
   m_debug( false )
   , m_forWriting( false )
   , m_firstDirAddress( -1 )
-  , m_tagAddressInFile( -1 )
+  , m_tagAddressInFile( 0 )
   , m_dirAddressInFile( -1 )
   , m_dataAddressInFile( -1 )
   , m_file( NULL )
@@ -124,7 +124,7 @@ TrendWriter::~TrendWriter() {
 bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
 
   if ( NULL != m_file ) {
-    std::cout << "TrendWriter::openWrite: file already opened!" << std::endl;
+    std::cout << "TrendWriter::openWrite: ERROR file already opened!" << std::endl;
     return false;
   }
 
@@ -139,7 +139,7 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
       }
     }
   }
-  if ( isBad ) return true;
+  if ( isBad ) return false;
   unsigned int maxSize = (unsigned int)(0.1 * DATA_SIZE);
   if ( maxSize < tags.size() ) {
     std::cout << "TrendWriter::openWrite: ERROR Requested to store " << tags.size() 
@@ -192,6 +192,9 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
 
   fseek( m_file, 0, SEEK_END );
   long newAddress = ftell( m_file );
+
+  if ( m_debug ) std::cout << "End of file at " << newAddress << " to create tag block there" << std::endl;
+
   m_tagHeader.type    = TYPE_TAG;
   m_tagHeader.version = m_tagHeader.version + 1;
   m_tagHeader.nextAddress = 0L;
@@ -224,6 +227,7 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
   fwrite( tagBuffer, 1, tagLength, m_file );
   free( tagBuffer );
   m_firstDirAddress = ftell( m_file );  //== First directory block is after tag block.
+  m_dirAddressInFile = m_firstDirAddress;
 
   //== Update the previous tag record if any, now that the new one is on file.
   if ( newAddress != 0 ) {
@@ -232,7 +236,7 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
     int nRead = fread( &tagHeader, 1, sizeof( Header ), m_file );
     if ( sizeof( Header ) != nRead ) {
       std::cout << "TrendWriter::openWrite: ERROR reading the header of the tag block: read "
-                << nRead << " bytes" << std::endl;
+                << nRead << " bytes" << " at address " << m_tagAddressInFile << std::endl;
       return false;
     }
     tagHeader.nextAddress = newAddress;
@@ -246,6 +250,9 @@ bool TrendWriter::openWrite( std::string name, std::vector<std::string> tags ) {
   createDirectoryRecord( &m_dir );
   m_ptDir = 0;
   fflush( m_file);  // force writing on disk.
+
+  if ( m_debug ) std::cout << "openWrite: After new tag block: dir add " << m_dirAddressInFile 
+                           << " data " << m_dataAddressInFile << std::endl;
 
   return true;
 }
@@ -581,7 +588,7 @@ void TrendWriter::closeFile() {
     if ( 0 != status ) std::cout << "TrendWriter::closeFile: fclose returned status " << status << std::endl;
     m_file = NULL;
   }
-  m_tagAddressInFile  = -1;
+  m_tagAddressInFile  =  0;
   m_dirAddressInFile  = -1;
   m_dataAddressInFile = -1;
   m_lastTime = 0xffffffff;
@@ -606,8 +613,8 @@ bool TrendWriter::loadLastTags( ) {
     m_tagAddressInFile = m_tagHeader.nextAddress;
   }
   int nToRead = m_tagHeader.size - sizeof( Header );
-
   char* temp = (char*)malloc( nToRead );
+  if ( m_debug ) std::cout << "loadLastTags: read " << nToRead << " bytes at " << m_tagAddressInFile << std::endl;
   int nn = fread( temp, 1, nToRead, m_file );
   if ( nn != nToRead ) {
     std::cout << "TrendWriter::openWrite: reading tags, need " << nToRead << " bytes, received " << nn << std::endl;
@@ -615,6 +622,7 @@ bool TrendWriter::loadLastTags( ) {
     return false;
   }
   m_firstDirAddress = ftell( m_file );  //== First directory block is after tag block.
+  if ( m_debug ) std::cout << "loadLastTags: directory address " << m_firstDirAddress << std::endl;
 
   m_tags.clear();
   m_thresholds.clear();
@@ -677,6 +685,7 @@ void TrendWriter::createDirectoryRecord ( DirectoryRecord* dir ) {
   }
   dir->entry[0].fileOffset = sizeof(DirectoryRecord);
   fwrite( dir, sizeof(DirectoryRecord), 1, m_file );
+  m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[m_ptDir].fileOffset;
 }
 
 //=========================================================================
@@ -705,7 +714,11 @@ bool TrendWriter::getDataContaining ( unsigned int time ) {
       m_ptDir++;
     }
   }
-  if ( 0 != m_dir.entry[m_ptDir+1].firstTime )  hasDataAfter = true;
+  if ( 0 != m_dir.entry[m_ptDir+1].firstTime )  {
+    hasDataAfter = true;
+    if ( m_debug ) std::cout << "getDataContaining: ptDir " << m_ptDir << " enty times " << m_dir.entry[m_ptDir].firstTime 
+                             << " " << m_dir.entry[m_ptDir+1].firstTime << std::endl;
+  }
   
   if ( m_dataAddressInFile != m_dirAddressInFile + m_dir.entry[m_ptDir].fileOffset ) {
     m_dataAddressInFile = m_dirAddressInFile + m_dir.entry[m_ptDir].fileOffset;
@@ -715,9 +728,10 @@ bool TrendWriter::getDataContaining ( unsigned int time ) {
     fread( &m_data, 1, sizeof( DataRecord ), m_file );
   }
   //== Skip to the correct event entry
-  while ( m_data.data[m_ptData].i < time && 
-          m_data.data[m_ptData].i > 0      ) unpackAnEvent( );
+  while ( m_data.data[m_ptData].i <= time && 
+          m_data.data[m_ptData].i >  0      ) unpackAnEvent( );
   if ( m_data.data[m_ptData].i != 0 ) hasDataAfter = true;
+  if ( m_debug ) std::cout << "getDataCOntaining: m_ptData " << m_ptData << " time " << m_data.data[m_ptData].i << std::endl;
   return hasDataAfter;
 }
 //=========================================================================
