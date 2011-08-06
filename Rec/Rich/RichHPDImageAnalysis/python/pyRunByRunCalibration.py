@@ -184,10 +184,12 @@ def rich(hpd):
 def panel(hpd):
     return "P"+str(hpd.panel())
 
-def xmlHeader():
+def xmlHeader(type,flag):
     return """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
+
+<!-- """+type+""" """+str(flag)+""" -->
 """
 
 def xmlFooter():
@@ -795,8 +797,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
                 if ok :
 
                     # Field Polarity
-                    polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
-                    if followType == "Average" : polarity = 'MagAll'
+                    polarity = 'MagAll'
+                    if createMagUpdate : polarity = runFillData[type+"Data"][fl]["FieldPolarity"]
 
                     # Fill arrays
                     vflag[polarity].append(fl)
@@ -1023,9 +1025,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         nflag += 1
 
         # Get field polarity
-        polarity = runFillData[type+"Data"][flag]["FieldPolarity"]
-        if followType == "Average" : polarity = 'MagAll'
-                
+        polarity = 'MagAll'
+        if createMagUpdate : polarity = runFillData[type+"Data"][flag]["FieldPolarity"]
+             
         print " -> Creating alignment update for", type, flag, polarity, \
               "( #", nflag, "of", len(alignData.keys()), ")"
 
@@ -1123,8 +1125,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
                 alignPath = siliconAlignmentFilePath(copyNumber)
         
                 # Get alignment XML file
-                if alignPath not in alignments.keys() : alignments[alignPath] = xmlHeader()
-        
+                if alignPath not in alignments.keys() : alignments[alignPath] = ""
+       
                 # Add alignments for this HPD
                 alignments[alignPath] += hpdXMLComment(copyNumber,text)
                 alignments[alignPath] += siAlign.toXml() + '\n'
@@ -1146,7 +1148,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         if createMagUpdate :
             for R in ["Rich2"] :
                 XmlPath = "/Conditions/"+R+"/Environment/HPD.xml"
-                if XmlPath not in alignments.keys() : alignments[XmlPath] = xmlHeader() + '\n'
+                if XmlPath not in alignments.keys() : alignments[XmlPath] = ""
                 for pol in ["MagDown","MagUp"]:
                     for P in ["P0","P1"] : 
                         alignments[XmlPath] += mdmsConds[pol][R][P].toXml() + '\n\n'
@@ -1156,7 +1158,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
             if hpdOccDataOK :
                 for R in ["Rich1","Rich2"] :
                     XmlPath = "/Conditions/"+R+"/Environment/HPDOccupancies.xml"
-                    if XmlPath not in alignments.keys() : alignments[XmlPath] = xmlHeader() + '\n'
+                    if XmlPath not in alignments.keys() : alignments[XmlPath] = ""
                     alignments[XmlPath] += xmlHPDOccs(hpdOccs[R])
             else :
                 print "  -> HPD Occupancy data missing .... skipped"
@@ -1181,8 +1183,6 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
             
                 # The XML data
                 alignment = alignments[xmlpath]
-                # Add the XML footer to the XML data
-                alignment += xmlFooter()
 
                 # First time, create the paths in the DB
                 if xmlpath not in createdPaths:
@@ -1196,7 +1196,8 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
 
                 # If this alignment is different to the last, update
                 if mdsum != alignMDsums[xmlpath] :
-                    db.storeXMLString( xmlpath, alignment, startTime, stopTime )
+                    fullalignxml = xmlHeader(type,flag) + alignment + xmlFooter()
+                    db.storeXMLString( xmlpath, fullalignxml, startTime, stopTime )
                     alignMDsums[xmlpath] = mdsum
                 else:
                     print "  -> Alignment for", xmlpath, "same as previous -> No update"
@@ -1258,7 +1259,8 @@ def xmlHPDOccs(hpdOccs):
     for hpd in sorted(hpdOccs.keys()) :
         if occS != "" : occS += " "
         occS += str(int32(hpd)) + "/" + str( '%g' % hpdOccs[hpd] )
-    return """<condition classID="5" name="AverageHPDOccupancies">
+    return """
+<condition classID="5" name="AverageHPDOccupancies">
 <paramVector name="Occupancies" type="std::string" comment="Average HPD occupancy">""" + occS + """</paramVector>
 </condition>
 """
