@@ -94,9 +94,9 @@ function page_form($page,$mode) {
     for ($i=1;$i<=$maxf;$i++) {
       echo "<tr>";
       if ($i<= $_POST["NHISTO"]) 
-        printf("<td>Pad ID <input readonly type='text' size=3 name='SHID_SH${i}' value='%s'></td>",
+        printf("<td>Pad ID <input readonly type='text' size=6 name='SHID_SH${i}' value='%s'></td>",
                $_POST["SHID_SH${i}"]);
-      printf("<td>Histogram ID <input type='text' size=5 name='HISTO_SH${i}' value='%s'></td>",
+      printf("<td>Histogram ID <input type='text' size=9 name='HISTO_SH${i}' value='%s'></td>",
              $_POST["HISTO_SH${i}"]);
       $padFields= sprintf("<td>X min <input type='text' size=4 name='CENTER_X_SH${i}' value='%.3f'></td>".
                           "<td>Y min <input type='text' size=4 name='CENTER_Y_SH${i}' value='%.3f'></td>".
@@ -104,7 +104,7 @@ function page_form($page,$mode) {
                           "<td>Y max <input type='text' size=4 name='SIZE_Y_SH${i}' value='%.3f'></td>",
                           $_POST["CENTER_X_SH${i}"],$_POST["CENTER_Y_SH${i}"],
                           $_POST["SIZE_X_SH${i}"],$_POST["SIZE_Y_SH${i}"]);
-      $ovFields = sprintf("<td colspan=4> Overlap on Pad ID <input type='text' size=4 name='MOTHERH_SH${i}' value=%d>".
+      $ovFields = sprintf("<td colspan=4> Overlap on Pad ID <input type='text' size=6 name='MOTHERH_SH${i}' value=%d>".
                           " order <input type='text' size=1 name='IOVERLAP_SH${i}' value=%d></td>",
                           $_POST["MOTHERH_SH${i}"],$_POST["IOVERLAP_SH${i}"]);
       $delField= ($i<=$_POST["NHISTO"] ?  
