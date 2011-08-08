@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-08-08 - Patrick Koppenburg
+ - Move IGetLumiParameters.h from LumiAlgs to here so it can
+   be used elsewhere. Task 21133.
+
 ! 2011-08-03 - Marco Cattaneo
  - Fix coverity defect 10625, DEADCODE in CaloCellCode.cpp
  - Fix coverity defect 22929, UNINIT_CTOR in LbAppInit
