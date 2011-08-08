@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-09 - Jibo He
+ - Added new test sample, Reco11, Run97120
+
 ! 2011-08-04 - Rob Lambert
 - Add StrippingKS0MuMuLines to __init__ 
 
