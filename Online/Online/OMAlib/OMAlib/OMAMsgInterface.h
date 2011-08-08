@@ -79,7 +79,7 @@ private:
   void sendLine(std::string line, 
                 OMAMessage::OMAMsgLevel level);
   bool raiseAlarm(OMAMessage& message);
-  bool lowerAlarm(OMAMessage& message);
+  bool lowerAlarm(OMAMessage& message, bool exte=false, bool removed=false);
   void publishMessage(OMAMessage* &msg);
   void unpublishMessage(OMAMessage* &msg);
   void updateDIMservice(std::string svcString);

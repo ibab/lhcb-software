@@ -100,12 +100,26 @@ void OMAMsgInterface:: startMessagePublishing() {
   }
 }
 
-// connect messages to current HistDB session
+// connect messages to current HistDB session and resync (alarms could have been modified by Presenter/user code)
 void OMAMsgInterface::updateMessages() {
   if(m_histDB && "noMessage" != m_anaTaskname) {
     std::vector<OMAMessage*>::iterator iM;
     for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
       (*iM)->updateEnv(m_histDB);
+      bool wasactive=(*iM)->isactive();
+      (*iM)->load();
+      if ((*iM)->isAbort()) { // message has been removed outside this program: unpublish and erase it from cache
+        if(wasactive) {
+          lowerAlarm( (**iM), true, true );
+          unpublishMessage(*iM);
+        }
+        iM = m_MessageStore.erase(iM);
+      }
+      else if(wasactive && false == (*iM)->isactive()) {
+        // message has been disabled outside this program: unpublish
+        lowerAlarm( (**iM), true, false );
+        unpublishMessage(*iM);
+      }
     }
   }
 }
@@ -289,7 +303,7 @@ bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
 
 
 
-bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
+bool OMAMsgInterface::lowerAlarm(OMAMessage& message, bool exte, bool removed) {
   std::stringstream msgId;
   std::stringstream anaId;
   msgId << message.id();
@@ -312,11 +326,20 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
     sendLine("    in analysis " +  message.ananame() , OMAMessage::INFO ); 
   if(!message.hIdentifier().empty())
     sendLine("   on histogram " + message.hIdentifier(),  OMAMessage::INFO);
-  sendLine(   "   after analyzing  saveset " + m_savesetName, OMAMessage::INFO);
-  sendLine( std::string(message.levelString()) + " has gone" , OMAMessage::INFO);
+  if (exte) {
+    std::string operation = removed ? "removed" : "disabled";
+    sendLine( std::string(message.levelString()) + " has been " + operation + " manually by operator" , OMAMessage::INFO);
+    sendLine("===================================================================", OMAMessage::INFO );
+  }
+  else {
+    sendLine(   "   after analyzing  saveset " + m_savesetName, OMAMessage::INFO);
+    sendLine( std::string(message.levelString()) + " has gone" , OMAMessage::INFO);
+  }
   sendLine("===================================================================", OMAMessage::INFO );
   return true;
 }
+
+
 
 // publishing alarms through DIM:
 
