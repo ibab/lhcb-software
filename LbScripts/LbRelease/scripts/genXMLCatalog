@@ -146,7 +146,9 @@ try:
         done = os.system("lhcb-proxy-init")
         
     if depth > 1:
-        from DIRAC.LHCbSystem.Utilities.AncestorFiles import getAncestorFiles
+        from DIRAC.Core.Base import Script
+        from LHCbDIRAC.NewBookkeepingSystem.Client.AncestorFiles import getAncestorFiles
+        Script.parseCommandLine( ignoreErrors = True )
         # Seems getAncestrorFiles only works for one file...
         #result = getAncestorFiles(lfnList,depth)
         #if not result['OK']:
@@ -202,8 +204,8 @@ try:
             print "Add",catOption,"to your list of options file"
     else:
         print "Error getting the list of PFNs"
-except:
-    print "Exception caught while creating catalog or option file"
+except Exception, e:
+    print "Exception caught while creating catalog or option file:",e
     rc = 1
 
 if verbose:
