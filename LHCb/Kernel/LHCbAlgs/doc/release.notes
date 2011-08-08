@@ -4,6 +4,13 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-08-08 - Patrick Koppenburg
+ - New algorithm OfflineRateLimiter that limits the rate wrt to some
+   trigger line. Allows to keep 1 Hz of NoBias in te stripping 
+   irrespective of the actual input rate.\
+ - OfflineDeterministicParescaler : made some methods and properties
+   protected to allow OfflineRateLimiter to inherit from them.
+
 ! 2011-08-02 - Marco Cattaneo
  - Fix tiny bug in PostScaler.cpp: in case ForcedReduction property was set
    (i.e. not equal to 1.), event count used was not counting first event

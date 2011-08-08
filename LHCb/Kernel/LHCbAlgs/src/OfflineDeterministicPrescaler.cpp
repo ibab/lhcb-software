@@ -2,12 +2,6 @@
 
 #include <math.h>
 
-// from Boost
-#include "boost/integer/integer_mask.hpp"
-#include "boost/integer_traits.hpp"
-using boost::uint32_t;
-using boost::uint64_t;
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -73,8 +67,8 @@ DECLARE_ALGORITHM_FACTORY( OfflineDeterministicPrescaler )
 OfflineDeterministicPrescaler::OfflineDeterministicPrescaler(const std::string& name, ISvcLocator* pSvcLocator) :
     GaudiAlgorithm(name, pSvcLocator) 
   , m_acc(boost::integer_traits<uint32_t>::const_max)
-  , m_initial(0)
   , m_counter(0)
+  , m_initial(0)
 {
   declareProperty( "AcceptFraction" , m_accFrac = 1 )->declareUpdateHandler( &OfflineDeterministicPrescaler::update, this);
 }
@@ -83,15 +77,11 @@ OfflineDeterministicPrescaler::~OfflineDeterministicPrescaler( )
 {
 }
 
-void 
-OfflineDeterministicPrescaler::update(Property&) 
+void OfflineDeterministicPrescaler::update(Property&) 
 {
-    m_acc = ( m_accFrac<=0 ? 0 
-            : m_accFrac>=1 ? boost::integer_traits<uint32_t>::const_max 
-            : boost::uint32_t( m_accFrac*boost::integer_traits<uint32_t>::const_max ) 
-            );
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "frac: " << m_accFrac << " acc: 0x" << std::hex << m_acc << endmsg;
+  update();
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    debug() << "frac: " << m_accFrac << " acc: 0x" << std::hex << m_acc << endmsg;
 }
 
 StatusCode
@@ -111,8 +101,7 @@ OfflineDeterministicPrescaler::initialize()
   return sc;
 }
 
-bool 
-OfflineDeterministicPrescaler::accept(const LHCb::RecHeader& header)  const
+bool OfflineDeterministicPrescaler::accept(const LHCb::RecHeader& header)  const
 {
   uint32_t x = m_initial;
   x = mix64( x, header.gpsTime() );
@@ -130,12 +119,15 @@ OfflineDeterministicPrescaler::accept(const LHCb::RecHeader& header)  const
   return x < m_acc;
 }
 
-StatusCode
-OfflineDeterministicPrescaler::execute()
-{
-  bool acc =(    ( m_acc == boost::integer_traits<uint32_t>::const_max ) 
+bool OfflineDeterministicPrescaler::accept()  const{
+  return (    ( m_acc == boost::integer_traits<uint32_t>::const_max ) 
               || ( m_acc !=0 && accept( *get<LHCb::RecHeader> ( LHCb::RecHeaderLocation::Default )))
-            );
+              );
+}
+
+
+StatusCode OfflineDeterministicPrescaler::execute(){
+  bool acc = accept();
   setFilterPassed(acc);
   *m_counter += acc;
   if (msgLevel(MSG::DEBUG)) debug() << (acc?"Accepted":"Rejected") << endmsg ;
