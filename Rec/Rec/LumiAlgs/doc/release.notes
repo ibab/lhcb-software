@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-08-08 - Patrick Koppenburg
+ - Moved src/IGetLumiParameters.h to LHCbKernel, and 
+	 changed src/GetLumiParameters.h accordingly. Task 21133.
+
 !========================= LumiAlgs v6r1 2011-07-27 =========================
 ! 2011-07-22 - Marco Cattaneo
  - Add LHCbExclusions for reference file comparisons of all QM tests, ensures
