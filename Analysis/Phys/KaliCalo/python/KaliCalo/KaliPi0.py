@@ -62,7 +62,7 @@ kali = secondPass (
     Pi0Cut           = "PT > 550 * MeV",
     ## IO 
     NTuple           = "KaliPi0_Tuples_2k+11.root" , 
-    FemtoDST         = "KaliPi0_2k+11.fmDST_new"   ,
+    FemtoDST         = "KaliPi0_2k+11.fmDST"   ,
     ## general 
     DataType         = '2010',
     PrintFreq        =  1000 ,
@@ -98,11 +98,11 @@ if '__main__' == __name__ :
     
     evtSel = gaudi.evtSel()
     
-    #castor   =  'castor:/castor/cern.ch/grid'
-    #pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
-    #evtSel.open ( [ castor+pattern%i for i in range(1,10) ] )
+    castor   =  'castor:/castor/cern.ch/grid'
+    pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
+    evtSel.open ( [ castor+pattern%i for i in range(1,10) ] )
     
-    evtSel.open ( 'KaliPi0_2k+11.fmdst_test')
+    #evtSel.open ( 'KaliPi0_2k+11.fmdst_test')
     
     ## run 100 events
     gaudi.run(5000)

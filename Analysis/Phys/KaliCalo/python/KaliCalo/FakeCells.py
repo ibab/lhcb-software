@@ -95,6 +95,53 @@ class RectRings( object ) :
                         row ,
                         col ) 
     
+# =============================================================================
+## "JacquesCells"
+#  @author Daria SAVRINA Daria.Savrina@cern.ch 
+#  @date 2011-08-08
+class JacquesCells( object ) :
+    """
+    Zones defined by Jacque for ageing compensation
+    """
+    def __call__ ( self , cell ) :
+
+        i  = cell.row()   
+        j  = cell.col()
+        a  = cell.area()
+            
+        ## Inner
+        if a == 2:
+            col = 1
+            row = int(i-14)/12
+                           
+        ## Middle
+        if a == 1:
+            col = j - 31.5
+            row = i - 32
+
+            col = abs(col)       ## symmetric
+            col = int(col)/16    ## 4 groups
+
+            row = int(row)/12      ## 4 groups
+            row = row+2
+            
+        ## Outer
+        if a == 0:
+            col = j - 31.5
+            row = i - 31.5 
+        
+            col = abs(col)
+            col = int(col)/8
+        
+            if abs(row) < 10: row = math.copysign(1,row)
+            else: row = math.copysign(2,row)
+            row = int(row+2)
+    
+        return CellID ( cell.calo() ,
+                        a ,
+                        row ,
+                        col )
+
 
 # =============================================================================
 ## ``Un-group'' the cells

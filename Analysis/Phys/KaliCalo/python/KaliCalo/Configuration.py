@@ -428,6 +428,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         else :
             _log.warning ("KaliPi0: Albert's trick is deactivated")
             
+        if self.getProp('FemtoDST'):
+            _log.warning ("KaliPi0: FemtoDSTs will be produced")
+        else:
+            _log.warning ("KaliPi0: NO FemtoDSTs will be produced!!!")
+
         if self.getProp ( 'Histograms' ) :
             _log.warning ( "KaliPi0: Monitoring histograms are   activated") 
         else :
@@ -689,10 +694,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             ) 
         
         ## 7. The configuration of femtoDST
-        fmDST = self.fmDst()
-        from Gaudi.Configuration import ApplicationMgr 
+        if self.getProp('FemtoDST'):
+            fmDST = self.fmDst()
+            from Gaudi.Configuration import ApplicationMgr 
         
-        ApplicationMgr ( OutStream = [ fmDST ] )     
+            ApplicationMgr ( OutStream = [ fmDST ] )     
             
         ## 8. The configuration of NTuples & Monitoring Histograms   
         from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
