@@ -1,4 +1,6 @@
+2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* cmt/requirements: release of version v4r4
 
 ! 2011-07-30 - Rob Lambert
  - Added svnCheckTags and svnDiffTags script using new svn modules

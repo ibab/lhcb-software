@@ -1,10 +1,14 @@
-2011-07-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmt/requirements: release of version v3r4
 
 ! 2011-07-29 - Rob Lambert
  - python/LbUtils/Thread.py
  - new module for threading methods in scripts
  - python/LbUtils/CMT/Parse.py
  - new module for parsing files created or needed by cmt
+
+2011-07-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Terminal.py: added TermException to be used in that module.
 

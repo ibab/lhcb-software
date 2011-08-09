@@ -21,10 +21,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '110629'
+script_version = '110709'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v6r3"
+lbscripts_version = "v6r4"
 compat_version = None
 line_size = 120
 #-----------------------------------------------------------------------------------
