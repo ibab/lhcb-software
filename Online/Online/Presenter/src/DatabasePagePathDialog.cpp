@@ -201,6 +201,11 @@ void DatabasePagePathDialog::ok()
         } else {
           if ( (*itDH)->hostingPad() ) {
             (*itDH)->hostingPad()->GetPadPar(xlow, ylow, xup, yup);
+            //== Restore the 100% y size dur to the banner
+            if ( m_mainFrame->myPage().hasBanner() ) {
+              ylow = ylow / 0.95;
+              yup  = yup  / 0.95;
+            }
             std::cout << "Store histo id '" << (*itDH)->histo()->hid() << "'" << std::endl;
             OnlineHistogram* onlineHistogram = page->addHistogram( (*itDH)->histo(),
                                                                    (float)xlow , (float)ylow, (float)xup, (float)yup);

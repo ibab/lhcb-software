@@ -101,7 +101,9 @@ public:
   int nOverlap() { return m_nOverlap; }
 
   void saveOptionsToDB( TPad* pad );
-  bool updateDBOption( std::string opt, void* value, bool isDefault);
+  bool updateDBOption( std::string opt, int* value, bool isDefault);
+  bool updateDBOption( std::string opt, float* value, bool isDefault);
+  bool updateDBOption( std::string opt, std::string* value, bool isDefault);
 
   bool isOverlap() { return m_isOverlap; }
   bool hasTitle() { return m_hasTitle; }

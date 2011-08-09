@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-08-09 - Olivier Callot
+ - Fix saving of pages in database, namely stat pave. Correct .95 due to banner
+
 ! 2011-08-06 - Olivier Callot
  - Prepared the interface for clearing monitoring alarms
 

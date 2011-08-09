@@ -130,6 +130,8 @@ public:
   void drawBanner( std::string name, std::string source );
   
   void updateBanner( std::string source="" );
+
+  bool hasBanner() { return NULL != m_bannerPad; }
   
 protected:
 

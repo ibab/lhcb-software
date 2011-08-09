@@ -203,6 +203,10 @@ void AlarmDisplay::clearAlarm( ) {
   OMAMessage message( m_lastMsgId, *(m_mainFrame->histogramDB()));
   if ( message.isactive () ) {
     std::cout << "Should clear alarm for " << message.hIdentifier() << std::endl;
+    message.disable();
+    message.store();
+    m_mainFrame->histogramDB()->commit();
+    std::cout << "Alarm cleared I hope " << message.hIdentifier() << std::endl;
   } else {
     std::cout << "Alarm is not active. Ignore" << std::endl;
   }

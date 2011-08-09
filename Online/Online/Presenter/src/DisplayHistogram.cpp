@@ -393,7 +393,7 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
     gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
     gStyle->SetOptStat( statOpt );
     m_statPave = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
-
+    std::cout << "StatPave = " << m_statPave << std::endl;
     if (m_statPave) {
       double x1=m_statPave->GetX1NDC();
       double x2=m_statPave->GetX2NDC();
@@ -925,10 +925,9 @@ void DisplayHistogram::saveOptionsToDB ( TPad* pad ) {
     // through the web interface
 
     TPaveStats* stats = (TPaveStats*)m_rootHistogram->GetListOfFunctions() ->FindObject("stats");
-    // if histogram has not been plotted (or has been plotted without stats),
-    // do nothing
+    // if histogram has not been plotted (or has been plotted without stats), do nothing
     if (stats && m_statPave && stats != m_statPave ) {
-      std::cout << "Update state pave " << std::endl;
+      std::cout << "Update state pave add " << m_statPave << std::endl;
 
       iopt = (int) stats->GetOptStat();
       // 111110 seems to be hardcoded in root
@@ -945,8 +944,8 @@ void DisplayHistogram::saveOptionsToDB ( TPad* pad ) {
       fopt = float(stats->GetY2NDC() - stats->GetY1NDC());
       out |= updateDBOption("STAT_Y_SIZE", &fopt,
                             TMath::Abs(fopt - (m_statPave->GetY2NDC()-m_statPave->GetY1NDC())) <0.001);
-      delete m_statPave;
-      m_statPave = (TPaveStats*)stats->Clone();
+      //delete m_statPave;
+      //m_statPave = (TPaveStats*)stats->Clone();
     }
 
 
@@ -1076,7 +1075,7 @@ void DisplayHistogram::saveOptionsToDB ( TPad* pad ) {
 //=========================================================================
 //  Update the option
 //=========================================================================
-bool DisplayHistogram::updateDBOption( std::string opt, void* value, bool isDefault) {
+bool DisplayHistogram::updateDBOption( std::string opt, int* value, bool isDefault) {
   if ( 0 == m_onlineHist  ) return false ;
 
   bool update = false;
@@ -1088,7 +1087,47 @@ bool DisplayHistogram::updateDBOption( std::string opt, void* value, bool isDefa
   }
   if ( update ) {
     out = m_onlineHist->setDisplayOption(opt, value);
-    std::cout << "Changed option " << opt << " to " << value << std::endl;
+    std::cout << "Database option " << opt << " set to " << *value << " isDefault " << isDefault << std::endl;
+  }
+  return out;
+}
+
+//=========================================================================
+//  Update the option
+//=========================================================================
+bool DisplayHistogram::updateDBOption( std::string opt, float* value, bool isDefault) {
+  if ( 0 == m_onlineHist  ) return false ;
+
+  bool update = false;
+  bool out = false;
+  if ( m_onlineHist->isSetDisplayOption(opt) ) {
+    update = m_onlineHist->changedDisplayOption( opt, value);
+  } else if (!isDefault) {
+    update=true;
+  }
+  if ( update ) {
+    out = m_onlineHist->setDisplayOption(opt, value);
+    std::cout << "Database option " << opt << " set to " << *value << " isDefault " << isDefault << std::endl;
+  }
+  return out;
+}
+
+//=========================================================================
+//  Update the option
+//=========================================================================
+bool DisplayHistogram::updateDBOption( std::string opt, std::string* value, bool isDefault) {
+  if ( 0 == m_onlineHist  ) return false ;
+
+  bool update = false;
+  bool out = false;
+  if ( m_onlineHist->isSetDisplayOption(opt) ) {
+    update = m_onlineHist->changedDisplayOption( opt, value);
+  } else if (!isDefault) {
+    update=true;
+  }
+  if ( update ) {
+    out = m_onlineHist->setDisplayOption(opt, value);
+    std::cout << "Database option " << opt << " set to " << *value << " isDefault " << isDefault << std::endl;
   }
   return out;
 }
