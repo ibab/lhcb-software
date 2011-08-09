@@ -9,14 +9,17 @@ Stripping selections or Minimum Bias physics.
 # Begin StrippingMinBias.py
 
 config_params = { "NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))",
-                  "NoBiasLine_Prescale" : 0.01,
+                  "NoBiasLine_Rate" : 1,
+                  "NoBiasLine_Limiter" : "Hlt1MBNoBiasODINFilter",
                   "L0AnyLine_RE"        : "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
-                  "L0AnyLine_Prescale"  : 0.01 }
+                  "L0AnyLine_Rate"  : 1,
+                  "L0AnyLine_Limiter" : "Hlt1L0AnyRateLimitedPostScaler"}
 
 __all__ = ('MiniBiasConf' )
 
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
 class MiniBiasConf(LineBuilder) :
     """
@@ -26,31 +29,37 @@ class MiniBiasConf(LineBuilder) :
     L0AnyLine = None
 
     __configuration_keys__ = ( 
-      "NoBiasLine_RE",
-      "NoBiasLine_Prescale" ,
-      "L0AnyLine_RE",
-      "L0AnyLine_Prescale" 
-      )
+        "NoBiasLine_RE",
+        "NoBiasLine_Rate" ,
+        "NoBiasLine_Limiter",
+        "L0AnyLine_RE",
+        "L0AnyLine_Rate",
+        "L0AnyLine_Limiter"
+        )
 
     def __init__(self, name, config):
       LineBuilder.__init__(self, name, config)
-      NoBiasLine_name = "MBNoBias"
-      L0AnyLine_name = "Hlt1L0Any"
-      
-      self.NoBiasLine = StrippingLine(NoBiasLine_name
-                                      , HLT =  config["NoBiasLine_RE"]
-                                      , checkPV = False
-                                      , prescale = config['NoBiasLine_Prescale']
-                                      , postscale = 1
-                                    )
-      
-      self.L0AnyLine = StrippingLine(L0AnyLine_name
-                                      , HLT =  config["L0AnyLine_RE"]
-                                      , checkPV = False
-                                      , prescale = config['L0AnyLine_Prescale']
-                                      , postscale = 1
-                                    )
-      
-      self.registerLine( self.NoBiasLine )
-      self.registerLine( self.L0AnyLine )
+      self.NoBiasLine = self._makeLine("MBNoBias",
+                                       config["NoBiasLine_RE"],
+                                       config["NoBiasLine_Limiter"],
+                                       config["NoBiasLine_Rate"])
+      self.NoBiasLine = self._makeLine("Hlt1L0Any",
+                                       config["L0AnyLine_RE"],
+                                       config["L0AnyLine_Limiter"],
+                                       config["L0AnyLine_Rate"])
+
+    def _makeLine(self,name,RE,limiter,rate):
+      from Configurables import OfflineRateLimiter  
+         
+      orl = OfflineRateLimiter(name+"ORL",
+                               HltLimiter = limiter,  
+                               Rate = rate)
+
+      line = StrippingLine(name
+                           , HLT =  RE
+                           , checkPV = False
+                           , algos = [ orl ] )
+
+      self.registerLine( line )
+      return line
 
