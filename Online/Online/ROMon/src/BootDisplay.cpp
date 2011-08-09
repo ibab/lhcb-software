@@ -359,6 +359,7 @@ int BootDisplay::key_rearm (unsigned int /* fac */, void* param)  {
 int BootDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
   int key = ::scrc_read_keyboard(0,0);
   if (!key) return WT_SUCCESS;
+  RTL::Lock lock(screenLock());
   return s_fd->handleKeyboard(key);
 }
 
@@ -415,7 +416,6 @@ int BootDisplay::showClusterWindow(const BootClusterLine* line) {
 
 /// Handle keyboard interrupts
 int BootDisplay::handleKeyboard(int key)    {
-  RTL::Lock lock(screenLock());
   try {
     switch (key)    {
     case CTRL_W:

@@ -362,6 +362,7 @@ int FarmStatDisplay::key_rearm (unsigned int /* fac */, void* param)  {
 int FarmStatDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
   int key = ::scrc_read_keyboard(0,0);
   if (!key) return WT_SUCCESS;
+  RTL::Lock lock(screenLock());
   return s_fd->handleKeyboard(key);
 }
 
@@ -416,7 +417,6 @@ int FarmStatDisplay::showClusterWindow(const FarmStatClusterLine* line) {
 
 /// Handle keyboard interrupts
 int FarmStatDisplay::handleKeyboard(int key)    {
-  RTL::Lock lock(screenLock());
   try {
     switch (key)    {
     case CTRL_W:

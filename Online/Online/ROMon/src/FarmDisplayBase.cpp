@@ -140,7 +140,7 @@ int FarmDisplayBase::showHelpWindow() {
 int FarmDisplayBase::showSubfarm()    {
   //ClusterLine* d = 0;
   string dnam = currentDisplayName();
-  RTL::Lock unlock(screenLock(),true);  
+  //RTL::Lock lock(screenLock());//,true);  
   if ( m_subfarmDisplay ) {
     DisplayUpdate update(this,true);
     m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_sysDisplay.get());
@@ -447,7 +447,6 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
 
 /// Handle keyboard interrupts
 int FarmDisplayBase::handleKeyboard(int key)    {
-  RTL::Lock lock(screenLock());
   try {
     switch (key)    {
     case CTRL_W:

@@ -973,7 +973,10 @@ void ClusterLine::dataHandler(void* tag, void* address, int* size) {
     if ( l->m_ptr ) delete [] l->m_ptr;
     l->m_ptr = ptr;
     l->m_cluster = (Nodeset*)((char*)l->m_ptr + sizeof(int));
-    l->display();
+    {
+      //RTL::Lock lock(InternalDisplay::screenLock());
+      l->display();
+    }
   }
 }
 
@@ -1146,6 +1149,7 @@ int FarmLineDisplay::key_rearm (unsigned int /* fac */, void* param)  {
 int FarmLineDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
   int key = ::scrc_read_keyboard(0,0);
   if (!key) return WT_SUCCESS;
+  RTL::Lock lock(screenLock());
   return s_fd->handleKeyboard(key);
 }
 
@@ -1240,7 +1244,6 @@ int FarmLineDisplay::handleKeyboard(int key)    {
     return WT_SUCCESS;
   }
   ClusterLine* d = 0;
-  RTL::Lock lock(screenLock());
   try {
     switch (key)    {
     case MOVE_UP:
@@ -1282,6 +1285,7 @@ void FarmLineDisplay::handle(const Event& ev) {
   SubDisplays::iterator k;
   const MouseEvent* m = 0;
 
+  DimLock dim_lock;
   RTL::Lock lock(screenLock());
   switch(ev.eventtype) {
   case ScrMouseEvent:
