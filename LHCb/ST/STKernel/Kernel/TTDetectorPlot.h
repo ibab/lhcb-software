@@ -22,17 +22,17 @@ namespace ST
 
 public:
 
-    typedef struct {
+    struct Bins{
       int  xBin;
       int beginBinY;
       int endBinY;
-    } Bins;
+    };
 
     TTDetectorPlot(const std::string& name, const std::string& title,
                    const unsigned int xBinsPerSector = 1u);
 
     ~TTDetectorPlot();
-
+    typedef Bins Bins;
     Bins toBins(const DeTTSector* sector) const;
          
   };

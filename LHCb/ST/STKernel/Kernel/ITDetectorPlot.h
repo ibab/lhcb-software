@@ -24,16 +24,16 @@ namespace ST
 
 public:
 
-    typedef struct {
+    struct Bins {
       double xBin;
       int yBin;
-    } Bins;
+    };
 
     ITDetectorPlot(const std::string& name, const std::string& title,
                    const unsigned int xBinsPerSector = 1u);
 
     ~ITDetectorPlot();
-
+    typedef Bins Bins;
     Bins toBins(const LHCb::STChannelID& chan) const;
          
   private:

@@ -3,6 +3,9 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2011-08-09 Mark Tobin
+ - Fix so that dictionary generated properly for DectectorPlot classes.
+
 !========================= STKernel v2r5 2010-10-25 =========================
 
 ! 2010-10-14 Mark Tobin

@@ -32,7 +32,6 @@ struct _Instantiations{
   ST::ITDetectorPlot m_itdetPlot;
   ST::TTDetectorPlot m_ttdetPlot;
 
-
 }; 
 
 #endif // DICT_STKERNELDICT_H

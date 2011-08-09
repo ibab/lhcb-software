@@ -13,6 +13,8 @@
   <class name = "STDAQ::StripRepresentation" />
   <class name = "ST::ITDetectorPlot" />
   <class name = "ST::TTDetectorPlot" />
+  <struct name = "ST::TTDetectorPlot::Bins" />
+  <struct name = "ST::ITDetectorPlot::Bins" />
   <class name = "std::pair<STTell1ID, unsigned int>" /> 
 
   <enum pattern = "STDAQ::version" />
