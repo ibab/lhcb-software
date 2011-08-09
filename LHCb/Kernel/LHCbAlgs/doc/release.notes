@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-08-09 - Patrick Koppenburg
+ - Add 'Hz' to messages to be clear
+
 ! 2011-08-08 - Patrick Koppenburg
  - New algorithm OfflineRateLimiter that limits the rate wrt to some
    trigger line. Allows to keep 1 Hz of NoBias in te stripping 

@@ -26,7 +26,7 @@ OfflineRateLimiter::OfflineRateLimiter( const std::string& name,
 {
   declareProperty("HltLimiter",m_hltLimiter = "Hlt1MBNoBiasODINFilter",
                   "Reference Hlt rate limiter");
-  declareProperty("Rate",m_rate = 1.,"Rate to achieve");
+  declareProperty("Rate",m_rate = 1.,"Rate to achieve [Hz]");
 }
 //=============================================================================
 // Destructor
@@ -47,7 +47,7 @@ StatusCode OfflineRateLimiter::initialize() {
   if (m_rate<0) Exception("Negative Rate requested");
   
   info() << "Will attempt to reduce events from " << m_hltLimiter 
-         << " to a rate of " << m_rate << endmsg;
+         << " to a rate of " << m_rate << " Hz" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -74,7 +74,7 @@ void OfflineRateLimiter::handle() {
     info() << "Rate of " << m_hltLimiter << " in TCK " 
            << m_tck << " is " 
            << randomRate
-           << " -> Need to reduce by factor " << m_accFrac << endmsg ;
+           << " Hz -> Need to reduce by factor " << m_accFrac << endmsg ;
   }
   return ;
 }
