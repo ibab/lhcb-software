@@ -220,7 +220,7 @@ class LoKi_Filters ( object ) :
                 )
             if self.__MC_Preambulo : _mc.Preambulo = self.__MC_Preambulo
             if self.__MC_Location  : _mc.Location  = self.__MC_Location
-            _seq += [ _odin ]
+            _seq += [ _mc ]
             
         if self.__GEN_Code   :
             #
@@ -231,7 +231,7 @@ class LoKi_Filters ( object ) :
                 )
             if self.__GEN_Preambulo : _gen.Preambulo = self.__GEN_Preambulo
             if self.__GEN_Location  : _gen.Location  = self.__GEN_Location
-            _seq += [ _odin ]
+            _seq += [ _gen ]
 
         if self.__ODIN_Code :
             #

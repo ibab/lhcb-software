@@ -5,11 +5,17 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-08-09 - Vanya Belyaev
+
+ - Filters.py:
+
+    fix bugs in tretament of MC_Code and GEN_Code 
+
 ! 2011-07-20 - Vanya Belyaev
 
- - prepare machinery for filteriung of primary vertices
+ - prepare machinery for filtering of primary vertices
 
-    '/Event/Rec/Vertex/FilteredPrimary'
+     '/Event/Rec/Vertex/FilteredPrimary'
 
    criteria:
 
