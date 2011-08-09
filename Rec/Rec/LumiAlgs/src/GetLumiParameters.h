@@ -5,7 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "IGetLumiParameters.h"            // Interface
+#include "Kernel/IGetLumiParameters.h"            // Interface
 
 // CondDB
 #include "DetDesc/Condition.h"
