@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-08-09 Mark Tobin
+ - Cache tell1 parameters in noise calculation tool.
+ - Add option to select calibration step(s) in noise calculation tool.
+
 !========================= STTools v4r7 2011-02-25 =========================
 ! 2010-10-15 Mark Tobin
  - Bug fix in CMS noise tool.

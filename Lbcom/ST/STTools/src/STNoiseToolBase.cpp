@@ -80,6 +80,9 @@ ST::STNoiseToolBase::STNoiseToolBase( const std::string& type,
   // Use number of events per strip in noise calculations
   declareProperty("UseEventsPerStrip", m_evtsPerStrip = false);
 
+  // Choose selected steps (for CCEScan)
+  declareProperty("Steps", m_steps);
+  
 }
 
 StatusCode ST::STNoiseToolBase::initialize() {
@@ -93,30 +96,27 @@ StatusCode ST::STNoiseToolBase::initialize() {
   m_selectedTells = false;
   if ( m_limitToTell.size() > 0 ) {
     m_selectedTells = true;
-    sort(m_limitToTell.begin(), m_limitToTell.end());
+    std::sort(m_limitToTell.begin(), m_limitToTell.end());
   }
-
+  m_selectedSteps = false;
+  if(m_steps.size() > 0) {
+    m_selectedSteps = true;
+    std::sort(m_steps.begin(), m_steps.end());
+  }
   // Get the tell1 mapping from source ID to tell1 number
+  IUpdateManagerSvc* mgrSvc=svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
-
     unsigned int TELL1SourceID = (*itT).first;
-    m_rawPedestalMap[TELL1SourceID].resize(3072, 0.0);
-    m_rawMeanMap[TELL1SourceID].resize(3072, 0.0);
-    m_rawMeanSqMap[TELL1SourceID].resize(3072, 0.0);
-    m_rawNoiseMap[TELL1SourceID].resize(3072, 0.0);
-    m_rawNEventsPP[TELL1SourceID].resize(4,0);
-
-    m_cmsMeanMap[TELL1SourceID].resize(3072, 0.0);
-    m_cmsMeanSqMap[TELL1SourceID].resize(3072, 0.0);
-    m_cmsNoiseMap[TELL1SourceID].resize(3072, 0.0);
-    m_cmsNEventsPP[TELL1SourceID].resize(4,0);
-    
-    m_nEvents[TELL1SourceID].resize(3072, std::make_pair(0,0));
-
-    if(m_readPedestals | m_readThresholds) readTELL1Parameters(TELL1SourceID);
-
+    resetNoiseCounters(TELL1SourceID);
+    std::string condPath = m_condPath + "/TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
+    mgrSvc->registerCondition(this, condPath, &ST::STNoiseToolBase::cacheTELL1Parameters);
   }
+  StatusCode mgrSvcStatus=mgrSvc->update(this);
+  if(mgrSvcStatus.isFailure()){
+    return ( Error("Failed first UMS update", mgrSvcStatus) );
+  }
+
   m_firstEvent = true;
   m_eventNumber = 0;
   m_runNumber = 0;
@@ -127,18 +127,49 @@ StatusCode ST::STNoiseToolBase::initialize() {
   }
   return StatusCode::SUCCESS;
 }
+// Reset all noise counters (@ initialise or after change in conditions)
+void ST::STNoiseToolBase::resetNoiseCounters( const unsigned int TELL1SourceID ){
 
+  debug() << "Resetting noise counters for " << TELL1SourceID << endmsg;
+  m_rawPedestalMap[TELL1SourceID].resize(3072, 0.0);
+  m_rawMeanMap[TELL1SourceID].resize(3072, 0.0);
+  m_rawMeanSqMap[TELL1SourceID].resize(3072, 0.0);
+  m_rawNoiseMap[TELL1SourceID].resize(3072, 0.0);
+  m_rawNEventsPP[TELL1SourceID].resize(4,0);
+    
+  m_cmsMeanMap[TELL1SourceID].resize(3072, 0.0);
+  m_cmsMeanSqMap[TELL1SourceID].resize(3072, 0.0);
+  m_cmsNoiseMap[TELL1SourceID].resize(3072, 0.0);
+  m_cmsNEventsPP[TELL1SourceID].resize(4,0);
+    
+  m_nEvents[TELL1SourceID].resize(3072, std::make_pair(0,0));
+
+}
 //=============================================================================
 // Destructor
 //=============================================================================
 ST::STNoiseToolBase::~STNoiseToolBase() {} 
 
 //==============================================================================
-// Read TELL1 parameters from conditions data base
+// Read+cache TELL1 parameters from conditions data base
 //==============================================================================
+StatusCode ST::STNoiseToolBase::cacheTELL1Parameters() {
+  info() << "==> Caching TELL1 parameters" << endmsg;
+  // initialise condition updates
+  if(m_readPedestals | m_readThresholds) {
+    std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+    for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
+      unsigned int TELL1SourceID = (*itT).first;
+      resetNoiseCounters(TELL1SourceID);
+      readTELL1Parameters(TELL1SourceID);
+    }
+  }
+  return StatusCode::SUCCESS;
+}
 void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) {
+  debug() << "Reading TELL1 parameters for " << TELL1SourceID << endmsg;
   m_pedestalMaps[TELL1SourceID].resize(1);
-  std::string condPath = m_condPath + "/" + "TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
+  std::string condPath = m_condPath + "/TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
   debug() << "Getting condition: " << condPath << endmsg;
   Condition* condition = getDet<Condition>(condPath);
   if(condition != 0) {
@@ -187,10 +218,11 @@ StatusCode ST::STNoiseToolBase::updateNoise() {
   if(newEvent || newRun) {
     m_eventNumber = eventNumber;
     m_runNumber = runNumber;
-    if(newRun) {
-      // TO DO: reset counters at the start of a run
-    }
     m_tell1WithNZS.clear();
+    if(m_selectedSteps) {
+      const unsigned int step = odin->calibrationStep();
+      if(!binary_search(m_steps.begin(), m_steps.end(), step)) return StatusCode::SUCCESS;
+    }
     this->calculateNoise();
   } else {
     return Warning( "You should only call updateNoise once per event" , StatusCode::SUCCESS , 0);

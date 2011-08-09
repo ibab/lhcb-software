@@ -144,6 +144,9 @@ namespace ST {
     /// Return an iterator corresponding to the source ID of the last TELL1 in the event containing an NZS bank
     virtual std::vector<unsigned int>::const_iterator tell1WithNZSEnd( ) const;
 
+    /// Return the path for the conditions database
+    virtual std::string conditionsPath() const { return m_condPath; };
+
   public:
 
     virtual std::vector<double> rawMean(const unsigned int TELL) const = 0;//{return m_meanMap->find(TELL);} ;
@@ -205,6 +208,9 @@ namespace ST {
     std::vector< unsigned int > m_limitToTell;/// List of TELL1s to look at
     bool   m_selectedTells;///< Use only selected TELL1s
     
+    std::vector<unsigned int> m_steps;/// List of steps to look at (useful for CCEScan)
+    bool m_selectedSteps;///< Use only selected steps
+
     bool m_countRoundRobin;///< True if you want to plot number of events per PP in round robin
     void countRoundRobin(unsigned int TELL1SourceID, unsigned int PP);///< Plot histogram of number of round robin events
 
@@ -233,8 +239,15 @@ namespace ST {
     /// Keep running total of number of PPs which send the NZS banks
     AIDA::IHistogram2D* m_2d_nEventsPerPP;
     
-    // Read the TELL1 parameters from the conditions database
+  private:
+    /// Cache the TELL1 parameters
+    virtual StatusCode cacheTELL1Parameters();
+
+    /// Read the TELL1 parameters from the conditions database for a given TELL1
     void readTELL1Parameters(const unsigned int TELL1SourceID);
+
+    /// Reset noise counters for a given tell1 during initialise or after change in TELL1 conditions
+    void resetNoiseCounters(const unsigned int TELL1SourceID);
 
   };
 }
