@@ -17,8 +17,10 @@
 
 // AIDA/root histograms
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IHistogram2D.h"
 #include "GaudiUtils/Aida2ROOT.h"
 #include "TProfile.h"
+#include "TH2D.h"
 
 // standard
 #include "gsl/gsl_math.h"
@@ -80,6 +82,7 @@ StatusCode STNZSMonitor::initialize() {
   m_skipEvents = m_noiseTool->skipEvents();
 
   // Select small number of TELL1s (useful for debugging) then book histograms
+  m_nTELL1s = readoutTool()->nBoard();
   m_selectedTells = false;
   if ( m_limitToTell.size() > 0 ) {
     m_selectedTells = true;
@@ -112,6 +115,15 @@ void STNZSMonitor::bookHistograms() {
     std::string pedHistoTitle = "Pedestal for " + detType() + "TELL" + strTellID;
     m_pedestalHistos[sourceID] = bookProfile1D(pedHistoID, pedHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
   }
+  m_2d_NoisePerLinkVsTell1 = 
+    Gaudi::Utils::Aida2ROOT::aida2root( book2D("Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+  m_1dp_AvNoisePerTell1 = bookProfile1D("Average Noise vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
+  m_2d_PedestalPerLinkVsTell1 = 
+    Gaudi::Utils::Aida2ROOT::aida2root( book2D("Pedestal per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+  m_1dp_AvPedestalPerTell1 = bookProfile1D("Average Pedestal vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
+  m_2d_NormalisationPerLinkVsTell1 = 
+    Gaudi::Utils::Aida2ROOT::aida2root( book2D("Normalisation", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
+
 }
 
 StatusCode STNZSMonitor::execute() { 
@@ -193,31 +205,58 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle)
   
     // Loop over strips in tell1
     unsigned int strip=0;
-    std::vector<double>::const_iterator itPed;
+    std::vector<double>::const_iterator itPedBegin;
     std::vector<double>::const_iterator itPedEnd;
     
-    std::vector<double>::const_iterator itNoise;
+    std::vector<double>::const_iterator itNoiseBegin;
     std::vector<double>::const_iterator itNoiseEnd;
     if(m_rawNoise) {
-      itPed = m_noiseTool->pedestalBegin(sourceID);
+      itPedBegin = m_noiseTool->pedestalBegin(sourceID);
       itPedEnd = m_noiseTool->pedestalEnd(sourceID);
-      itNoise = m_noiseTool->rawNoiseBegin(sourceID);
+      itNoiseBegin = m_noiseTool->rawNoiseBegin(sourceID);
       itNoiseEnd = m_noiseTool->rawNoiseEnd(sourceID);
     } else {
-      itPed = m_noiseTool->cmsMeanBegin(sourceID);
+      itPedBegin = m_noiseTool->cmsMeanBegin(sourceID);
       itPedEnd = m_noiseTool->cmsMeanEnd(sourceID);
-      itNoise = m_noiseTool->cmsNoiseBegin(sourceID);
+      itNoiseBegin = m_noiseTool->cmsNoiseBegin(sourceID);
       itNoiseEnd = m_noiseTool->cmsNoiseEnd(sourceID);
     }
+    unsigned int tell1 = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
+    std::vector<double>::const_iterator itNoise = itNoiseBegin;
+    std::vector<double>::const_iterator itPed = itPedBegin;
     for(; itNoise != itNoiseEnd; ++itNoise, ++itPed, ++strip) {
       noiseHist->fill( strip, (*itNoise) );
       pedestalHist->fill( strip, (*itPed) );
+      if((*itNoise) > 1e-4) {
+        m_1dp_AvNoisePerTell1->fill(tell1,(*itNoise));
+        m_1dp_AvPedestalPerTell1->fill(tell1,(*itPed));
+      }
     }
     if(updateTitle) {
       TProfile* profNoise = Gaudi::Utils::Aida2ROOT::aida2root ( noiseHist );
       std::string title=profNoise->GetTitle();
       title += " "+m_odinEvent;
       profNoise->SetTitle(title.c_str());
+    }
+    strip = 0;
+    for(unsigned int link=0; link < STDAQ::noptlinks*STDAQ::nports; link++) {
+      itNoise = itNoiseBegin+link*LHCbConstants::nStripsInPort;
+      itNoiseEnd = itNoise + LHCbConstants::nStripsInPort;
+      itPed = itPedBegin+link*LHCbConstants::nStripsInPort;
+      double sumNoise = 0; double sumPed = 0; int nChan=0;
+      for(; itNoise != itNoiseEnd; ++itNoise, ++itPed, ++strip) {
+        if((*itNoise) > 1e-4) {
+          nChan += 1;
+          sumNoise += (*itNoise);
+          sumPed += (*itPed);
+        }
+      }
+      if(nChan > 0) {
+        int bin = m_2d_NoisePerLinkVsTell1->FindBin(tell1, link);
+        m_2d_NoisePerLinkVsTell1->SetBinContent(bin , sumNoise/nChan);
+        m_2d_PedestalPerLinkVsTell1->SetBinContent( bin, sumPed/nChan);
+        m_2d_NormalisationPerLinkVsTell1->SetBinContent( bin, 1.);
+      }
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);

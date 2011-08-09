@@ -34,6 +34,7 @@ namespace ST {
     ISTNoiseCalculationTool* m_noiseTool; ///< Tool to calculate noise
     std::string m_noiseToolType; ///< Tool type (default is STNoiseCalculationTool)
     std::string m_noiseToolName; ///< Tool name (default is TTNoiseCalculationTool)
+
   };
 }
 #endif // STNOISECALCULATION_H

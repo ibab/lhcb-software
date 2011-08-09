@@ -191,7 +191,7 @@ void ST::STBadChannelFinder::findBadChannels() {
     std::vector<double>::const_iterator itNoiseBegin = m_noiseTool->rawNoiseBegin(sourceID);
     for(unsigned int optLink=0; optLink < STDAQ::noptlinks; ++optLink) {
       for(unsigned int port=0; port < STDAQ::nports; ++port) {
-        unsigned int TELL1Channel = optLink*LHCbConstants::nStripsInBeetle+ port*LHCbConstants::nStripsInPort;
+        unsigned int TELL1Channel = optLink*LHCbConstants::nStripsInBeetle+port*LHCbConstants::nStripsInPort;
         std::vector<double>::const_iterator itNoise = itNoiseBegin+TELL1Channel;
         std::vector<double>::const_iterator itNoiseEnd = itNoiseBegin+TELL1Channel+STDAQ::nstrips;
         calcSlope(itNoise, itNoiseEnd); 

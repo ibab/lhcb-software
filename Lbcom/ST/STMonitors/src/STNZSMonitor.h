@@ -24,6 +24,8 @@ namespace ST {
   class ISTNoiseCalculationTool;
 }
 
+class TH2D;
+
 class STNZSMonitor : public ST::HistoAlgBase {
 
 public:
@@ -46,7 +48,7 @@ private:
   //const std::string   m_basenameNoiseHisto; 
   int                 m_evtNumber;
 
-  
+  unsigned int m_nTELL1s; ///< Number of TELL1 boards expected.
 
   // jobOptions:
 
@@ -80,6 +82,15 @@ private:
 
   /// Map of pedestal histograms booked in initialize
   std::map<int, AIDA::IProfile1D*> m_pedestalHistos;
+
+  TH2D* m_2d_NoisePerLinkVsTell1;///< 2d map of noise vs link
+  AIDA::IProfile1D* m_1dp_AvNoisePerTell1;///< Average noise in each tell1
+
+  TH2D* m_2d_PedestalPerLinkVsTell1;///< 2d map of pedestal vs link
+  AIDA::IProfile1D* m_1dp_AvPedestalPerTell1;///< Average pedestal in each tell1
+
+  /// 2d map used for normalisation of noise, pedestal plots as 2d profile histograms are not supported by online monitoring
+  TH2D* m_2d_NormalisationPerLinkVsTell1;
 
   ST::ISTNoiseCalculationTool* m_noiseTool; ///< Tool to calculate noise
   std::string m_noiseToolType; ///< Tool type (default is STNoiseCalculationTool)

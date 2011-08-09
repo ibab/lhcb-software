@@ -4,6 +4,8 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+#include "DetDesc/Condition.h"
+
 // local
 #include "STNoiseCalculation.h"
 #include "Kernel/ISTNoiseCalculationTool.h"

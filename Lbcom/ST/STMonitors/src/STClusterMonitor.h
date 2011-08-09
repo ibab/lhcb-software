@@ -132,7 +132,6 @@ namespace ST
 
     /// Hitmaps
     AIDA::IHistogram2D* m_2d_hitmap;///< Cluster hitmap
-//     AIDA::IHistogram2D* m_2d_clSize_map;///< Cluster size map
     AIDA::IProfile2D* m_2dp_clSize_map;///< Cluster size map
     AIDA::IProfile1D* m_prof_sectorMPVs;///< Sector MPV vs arbitrary sector number 
     AIDA::IProfile1D* m_prof_sectorTruncMean1;///< Sector MPV calculated using truncated mean losing first and last 15%
