@@ -3,6 +3,11 @@ Author Jonas Rademacker
 Original author of MINT Dr. Jonas Rademacker.
 Matt Coombes has task of implementing MINT into LHCb framework.
 
+10-08-2011 - Matt Coombes
+- Included models folder containing 3 current models to be used in production
+- Implemented model naming format clearly visible and consistent with EvtModel
+
+  
 18-07-2011 - Matt Coombes
 - Cleaned up Dalitz Event removed DecayD.C and .h
   Instead use exterior interface to interact directly with Gauss
