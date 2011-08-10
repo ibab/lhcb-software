@@ -56,7 +56,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
   int run = -1;
-  int ev = -1;
+  ulonglong ev = 0;
   int bcid = -1;
   int bctyp = -1;
   unsigned int odintck = 0; 
@@ -66,6 +66,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   Gaudi::Time gtime ;
   unsigned int nPVs = 0 ;
   double mu = -1.;
+  int triggerType = -1;
   if ( "" == m_pvLocation){
     const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
     m_pvLocation = oo->primaryVertexLocation();
@@ -85,6 +86,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     gpstime = odin->gpsTime();
     gtime = odin->eventTime();
     bctyp = odin->bunchCrossingType() ;
+    triggerType = odin->triggerType() ;
   } else {
     Error("Can't get LHCb::ODINLocation::Default (" +
 	  LHCb::ODINLocation::Default + ")" );
@@ -112,7 +114,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   bool test = true;
   test &= tuple->column( prefix+"runNumber", run );
   if (!m_mu.empty()) test &= tuple->column( prefix+"Mu", mu );
-  test &= tuple->column( prefix+"eventNumber", ev );
+  test &= tuple->column( prefix+"eventNumber", (double)ev );
   test &= tuple->column( prefix+"BCID", bcid );
   test &= tuple->column( prefix+"BCType", bctyp );
   test &= tuple->column( prefix+"OdinTCK", odintck );
@@ -126,6 +128,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"GpsHour", gtime.hour(false) );
     test &= tuple->column( prefix+"GpsMinute", gtime.minute(false) );
     test &= tuple->column( prefix+"GpsSecond", gtime.second(false)+gtime.nsecond()/1000000000. );
+    test &= tuple->column( prefix+"TriggerType", triggerType );
   }
   test &= tuple->column( prefix+"Primaries", nPVs );
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
