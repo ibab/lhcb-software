@@ -4,7 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!========================= RichKernel v7r44 2011-06-14 =========================
+! 2011-08-10 - Chris Jones
+ - Move RichKernel/IHpdUkL1DisableTool.h to Panoptes project, as it is
+   not used anywhere else.
+
+!==================== RichKernel v7r44 2011-06-14 ======================
 ! 2011-05-23 - Chris Jones
  - Add a workaround to RichConfigurableUser to deal with the fact that
    _context_defaults_ is a singleton between all instances.
