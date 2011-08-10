@@ -1,0 +1,44 @@
+Description of models implemented in MINT
+
+Include where possible date of model written to MINT
+
+
+*=====================================================
+*Date:
+*FileName: 
+*Committed by:
+*Decay:
+*Version:
+*Paper:
+*
+*Tested:
+*Comments:
+*
+*======================================================
+
+*=====================================================
+*Date: 10/08/2011
+*FileName: D_K3pi_v10
+*Committed: Matt Coombes
+*Decay: [D0 -> K- pi+ pi- pi+]cc
+*Version:10
+*Paper: ###
+*
+*Tested: Yes. 10/08/2011
+*Comments: 
+*
+*======================================================
+
+*=====================================================
+*Date: 10/08/2011
+*FileName: D_4pi_v10
+*Committed: Matt Coombes
+*Decay: [D0 -> pi- pi+ pi- pi+]cc
+*Version:10
+*Paper: ###
+*
+*Tested: Yes. 10/08/2011
+
+*Comments: 
+*
+*======================================================

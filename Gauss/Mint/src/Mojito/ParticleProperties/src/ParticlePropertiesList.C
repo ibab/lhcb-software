@@ -4,7 +4,10 @@
 #include "NamedParameter.h"
 
 #include <string>
+#include <fstream>
+//#include <sstream>
 #include <cstdio>
+#include <stdlib.h>
 
 using namespace std;
 using namespace MINT;
@@ -93,8 +96,20 @@ void ParticlePropertiesList::fillDirList(){
       //      cout << "just pushed back " << userDir.getVal() << endl;
     }
   }
+
+  // Get directory to MINTROOT
+  system("echo $MINTROOT > MINTROOT.txt");
+  std::string MintRoot;
+  ifstream file("MINTROOT.txt");
+  std::string line;
+  while ( getline(file, line))
+	{
+	  MintRoot= line;
+	}
+
+
   _dirList.push_back("./");
-  _dirList.push_back("$MINTROOT/src/Mojito/ParticleProperties/src/");
+  _dirList.push_back(MintRoot+"/src/Mojito/ParticleProperties/src/");
   _dirList.push_back("../../../Mojito/ParticleProperties/src/");
   _dirList.push_back("../../ParticleProperties/src/");
   _dirList.push_back("../ParticleProperties/src/");
@@ -123,11 +138,12 @@ FILE* ParticlePropertiesList::findFiles(){
   return f;
 }
 FILE* ParticlePropertiesList::findThisFile(const std::string& fname){
-  bool verbose=false;
+  bool verbose=true;
   for(std::vector<std::string>::const_iterator it = dirList().begin();
       it != dirList().end();
       it++){
-    std::string tryThisDir = (*it);
+
+	std::string tryThisDir = (*it);
     std::string fullFname = tryThisDir + fname;
     if(verbose)cout << "INFO in ParticlePropertiesList: trying: " << fullFname << endl;
     FILE* f=fopen(fullFname.c_str(), "r");
@@ -136,6 +152,7 @@ FILE* ParticlePropertiesList::findThisFile(const std::string& fname){
 	   << fullFname << endl;
       return f;
     }
+
   }
   cout << "ERROR in ParticlePropertiesList::findFile()"
        << "\n  > having trouble finding file"
