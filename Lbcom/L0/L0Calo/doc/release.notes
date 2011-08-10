@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2011-08-10 - Patrick Robbe
+ - L0CaloPRSResetMonitor.h/.cpp: new monitoring algorithm to handle
+   automatically the PRS reset in case of board missing
+
 !========================= L0Calo v11r4 2011-07-27 =========================
 ! 2011-06-17 - Patrick Robbe
  - L0CaloAlg.cpp: switch default from UseNewElectron = False (2010
