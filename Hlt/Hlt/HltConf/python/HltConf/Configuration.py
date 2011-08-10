@@ -245,7 +245,7 @@ class HltConf(LHCbConfigurableUser):
                       , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
                       , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
                       , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|Dst2|DisplVertices).*Decision')" 
-                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!PassThrough).*Decision')"
+                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                       , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
                       , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi).*Decision')"
                       , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
