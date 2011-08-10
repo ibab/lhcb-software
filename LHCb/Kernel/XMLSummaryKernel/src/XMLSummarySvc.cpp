@@ -90,7 +90,7 @@ XMLSummarySvc::initialize()
 
   //prepare the incident service
   sc = prepareIncSvc(); 
-  if (!sc.isSuccess()) log << MSG::WARNING << "could not init incSvc" << endmsg;
+  if (UNLIKELY(!sc.isSuccess())) log << MSG::WARNING << "could not init incSvc" << endmsg;
   
   //prepare the IODataManager service
   sc=service("IODataManager", m_ioDataManager);//, false);//,false);
@@ -238,7 +238,7 @@ void XMLSummarySvc::handle( const Incident& incident )
 
   MsgStream log( msgSvc(), name() );
   
-  if (!isConfigured())
+  if (UNLIKELY(!isConfigured()))
   {
     log << MSG::DEBUG << "the summary object is no longer available " 
         << incident.type() << " Ignored" << endmsg;
@@ -273,6 +273,7 @@ void XMLSummarySvc::handle( const Incident& incident )
   else if(incident.type()==IncidentType::EndInputFile)
     {
       status="full";
+      //use end name so that no race conditions occur between end file and end event
       filename=m_filename=incident.source();
       m_hasinput=true;
       
@@ -286,7 +287,9 @@ void XMLSummarySvc::handle( const Incident& incident )
   else if(incident.type()==IncidentType::FailInputFile)
     {
       status="fail";
-      filename=m_filename=incident.source();
+      //do not update filename, so that end events are never attributed
+      //to failed files, possibly could produce a race condition
+      filename=incident.source();
       m_hasinput=true;
       
     }
@@ -296,6 +299,8 @@ void XMLSummarySvc::handle( const Incident& incident )
       method="fill_output";
       filename=incident.source();
     }
+  // perhaps BeginEvent should also change the active file to wherever
+  // /Event is stored ...
   //else if(incident.type()==IncidentType::BeginEvent)
   //  {
   //    status="part";
@@ -322,7 +327,7 @@ void XMLSummarySvc::handle( const Incident& incident )
   
     //actually add to the summary
     std::string GUID=file2GUID(filename);
-    if(incident.type()!=IncidentType::EndEvent && incident.type()!=IncidentType::BeginEvent)
+    if(UNLIKELY(incident.type()!=IncidentType::EndEvent && incident.type()!=IncidentType::BeginEvent))
       log << MSG::VERBOSE << method <<"(" << filename << "," << GUID << "," << status << "," << addevents << ")" << endmsg;
     
     PyObject_CallMethod(m_summary,
@@ -370,7 +375,7 @@ void XMLSummarySvc::handle( const Incident& incident )
 StatusCode XMLSummarySvc::fillcounters()
 {
 
-  if (!isConfigured())
+  if (UNLIKELY(!isConfigured()))
   {
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
@@ -397,7 +402,7 @@ StatusCode XMLSummarySvc::fillcounters()
 
 StatusCode XMLSummarySvc::fillcounter(const NameStatTypePair & count)
 {
-  if (!isConfigured())
+  if (UNLIKELY(!isConfigured()))
   {
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
@@ -470,7 +475,7 @@ StatusCode XMLSummarySvc::writeXML(MSG::Level lev)
     log << lev << "no xml file to be written " << m_xmlfile << endmsg;
     return StatusCode::SUCCESS;
   }
-  if (!isConfigured())
+  if (UNLIKELY(!isConfigured()))
   {
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
@@ -487,7 +492,7 @@ StatusCode XMLSummarySvc::writeXML(MSG::Level lev)
 StatusCode XMLSummarySvc::printXML(MSG::Level lev) const
 {
   MsgStream log( msgSvc(), name() );
-  if (!isConfigured())
+  if (UNLIKELY(!isConfigured()))
   {
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
     log << lev << "xml file not written as PyObject was lost" << endmsg; 
@@ -597,7 +602,7 @@ std::string XMLSummarySvc::AFN2name(const std::string & filename) const
 StatusCode XMLSummarySvc::fillUsage()
 {
 
-  if (!isConfigured())
+  if (UNLIKELY(!isConfigured()))
   {
     MsgStream log( msgSvc(), name() );
     log << MSG::DEBUG << "the summary object is no longer available" << endmsg;
