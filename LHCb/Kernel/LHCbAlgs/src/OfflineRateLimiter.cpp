@@ -10,7 +10,6 @@
 //
 // 2011-08-05 : Patrick Koppenburg
 //-----------------------------------------------------------------------------
-
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( OfflineRateLimiter );
 
@@ -43,7 +42,6 @@ StatusCode OfflineRateLimiter::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_glp = tool<IGetLumiParameters>("GetLumiParameters",this); // make it private
-  m_glp->init( "PropertyConfigSvc",m_hltLimiter, true );
   if (m_rate<0) Exception("Negative Rate requested");
   
   info() << "Will attempt to reduce events from " << m_hltLimiter 
