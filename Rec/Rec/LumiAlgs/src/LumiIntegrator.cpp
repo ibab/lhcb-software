@@ -99,11 +99,13 @@ StatusCode LumiIntegrator::integrate( LHCb::LumiIntegral* fsr, std::vector<doubl
 //=============================================================================
 // Accumulate mu values per file
 //=============================================================================
-StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral& fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> coeff, double f ){
+StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral& fsr, LHCb::TimeSpanFSR* 
+                                          timeSpanFSR, int mukey, std::vector<double> coeff, double f ){
   return accumulate_mu( &fsr, timeSpanFSR, mukey, coeff, f );
 }
 
-StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, std::vector<double> coeff, double f ){
+StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpanFSR* timeSpanFSR, int mukey, \
+                                          std::vector<double> coeff, double f ){
   // collect mu
   ILumiIntegrator::muTuple mT;
 
@@ -134,17 +136,17 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
         std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
         if ( value.first != -1 ) {
           mT.deltaLumi += value.second * coeff[key] * f;
-	  if ( mukey == key ) {
-	    thisCounter = counterName;
-	    thisCoef = coeff[key];
-	    munorm = value.first;
-	    mT.norm = munorm;
-	    if ( munorm > 0 ) {
-	      mT.mu = value.second / munorm;
-	    } else {
-	      mT.mu = 0;
-	    }
-	  }
+          if ( mukey == key ) {
+            thisCounter = counterName;
+            thisCoef = coeff[key];
+            munorm = value.first;
+            mT.norm = munorm;
+            if ( munorm > 0 ) {
+              mT.mu = value.second / munorm;
+            } else {
+              mT.mu = 0;
+            }
+          }
         }
       }
     }
@@ -158,9 +160,9 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
   m_muTuple.push_back(mT);
   // printout
   info() << "MU: RUN " << mT.run  << " GUID " << mT.guid << " " 
-	 << "T " << mT.time0 << "-" << mT.time1 << " "
-	 << "dL " << mT.deltaLumi << " N " << mT.norm << " MU " << mT.mu << " " 
-	 << endmsg;
+         << "T " << mT.time0 << "-" << mT.time1 << " "
+         << "dL " << mT.deltaLumi << " N " << mT.norm << " MU " << mT.mu << " " 
+         << endmsg;
 
   return StatusCode::SUCCESS; 
 }

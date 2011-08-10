@@ -15,6 +15,7 @@
 #include "Kernel/IPropertyConfigSvc.h"
 #include "Kernel/TCK.h"
 #include "GaudiKernel/SmartDataPtr.h" 
+#include "Kernel/IRateFromTCK.h"
 
 /** @class GetLumiParameters GetLumiParameters.h
  *
@@ -81,14 +82,12 @@ public:
     return m_statusScale;
   };                         
 protected:
-  virtual StatusCode registerDB();   	        ///< register DB conditions
+  virtual StatusCode registerDB();              ///< register DB conditions
   virtual StatusCode processDB();               ///< DB checking code
-  virtual double rateFromTCK(unsigned int tck); ///< get the lumi rate from the TCK
   SmartIF<IDetDataSvc> m_dds;                   ///< DetectorDataSvc
 
 private:
   std::string m_ToolName;                       ///< name of tool 
-  bool m_initialized;                           ///< flag
 
   StatusCode i_cacheRelativeData();             ///< Function extracting data from Condition
   StatusCode i_cacheRelativeDataLog();          ///< Function extracting data from Condition
@@ -133,10 +132,9 @@ private:
   long 	 m_B2WrongBucketFlag;     		          ///< filling scheme data
   long 	 m_onlineCollidingBunches;              ///< number of colliding bunches
 
-  mutable IPropertyConfigSvc * m_propertyConfigSvc;
-  std::string m_propertyConfigSvcName;
   std::string m_instanceName;
   bool m_useOnline;                             ///< flag to use online partition of DB
+  IRateFromTCK* m_tckReader ; ///< Property Config Service
 
 };
 #endif // GETLUMIPARAMETERS_H

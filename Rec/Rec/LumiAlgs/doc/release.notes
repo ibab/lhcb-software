@@ -1,8 +1,16 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/LumiAlgs
 ! Responsible : Jaap Panman
-! Purpose     : Accounting of LumiSummaries (offline code)
+! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+
+! 2011-08-10 - Patrick Koppenburg
+ - Task #21133:
+   . Moved GetLumiParameters::rateFromTCK to RateFromTCK (LHCbAlgs)
+   . Adapt GetLumiParameters to use this tool
+     . Remove duplicate defined interfaces
+ - Cleanup:
+   . LumiMergeFSR, LumiIntegrator, DumpFSR: indent properly. Protect a few debug() 
 
 ! 2011-08-09 - Patrick Koppenburg
  - GetLumiParameters.cpp: Bug #85240

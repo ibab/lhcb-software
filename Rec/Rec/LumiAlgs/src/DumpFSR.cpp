@@ -276,71 +276,71 @@ void DumpFSR::write_file( ) {
       std::vector< std::string > addresses = m_navigatorTool->navigate(fileRecordRoot, m_FSRName);
       for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
           iAddr != addresses.end() ; ++iAddr ){
-	std::string lumiRecordAddress = *iAddr;
-	// read LumiFSR 
-	if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
-	  Warning("A lumi record was not found").ignore();
-	  if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
-	} else {
-	  LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
-	  LHCb::LumiFSRs::iterator lufsr;
-	  for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
-	    outfile << lumiRecordAddress << ": LumiFSR: " << *(*lufsr) << std::endl;
-	  }
-	}
+        std::string lumiRecordAddress = *iAddr;
+        // read LumiFSR 
+        if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+          Warning("A lumi record was not found").ignore();
+          if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
+        } else {
+          LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+          LHCb::LumiFSRs::iterator lufsr;
+          for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
+            outfile << lumiRecordAddress << ": LumiFSR: " << *(*lufsr) << std::endl;
+          }
+        }
       }
 
       // make an inventory of the FileRecord store (LowLumi)
       addresses = m_navigatorTool->navigate(fileRecordRoot, m_LowFSRName);
       for(std::vector< std::string >::iterator iAddr = addresses.begin() ; 
           iAddr != addresses.end() ; ++iAddr ){
-	std::string lumiRecordAddress = *iAddr;
-	// read LumiFSR 
-	if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
-	  Warning("A lumi record was not found").ignore();
-	  if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
-	} else {
-	  LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
-	  LHCb::LumiFSRs::iterator lufsr;
-	  for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
-	    outfile << lumiRecordAddress << ": LumiLowFSR: " << *(*lufsr) << std::endl;
-	  }
-	}
+        std::string lumiRecordAddress = *iAddr;
+        // read LumiFSR 
+        if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress) ) {
+          Warning("A lumi record was not found").ignore();
+          if ( msgLevel(MSG::DEBUG) ) debug() << lumiRecordAddress << " not found" << endmsg ;
+        } else {
+          LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, lumiRecordAddress);
+          LHCb::LumiFSRs::iterator lufsr;
+          for ( lufsr = lumiFSRs->begin(); lufsr != lumiFSRs->end(); lufsr++ ) {
+            outfile << lumiRecordAddress << ": LumiLowFSR: " << *(*lufsr) << std::endl;
+          }
+        }
       }
   
       // EventCountFSRs
       std::vector< std::string > evAddresses = m_navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
       for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
           iAddr != evAddresses.end() ; ++iAddr ){
-	std::string eventCountRecordAddress = *iAddr;
-	// read EventCountFSR 
-	if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
-	  Warning("An EventCount Record was not found").ignore();
-	  if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
-	} else {
-	  LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
-	  // look at the EventCountFSR
+        std::string eventCountRecordAddress = *iAddr;
+        // read EventCountFSR 
+        if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
+          Warning("An EventCount Record was not found").ignore();
+          if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
+        } else {
+          LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
+          // look at the EventCountFSR
           outfile << eventCountRecordAddress << ": EventCountFSR: " << *eventCountFSR << std::endl;
-	}
+        }
       }  
   
       // TimeSpanFSRs
       std::vector< std::string > tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
       for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; 
           iAddr != tsAddresses.end() ; ++iAddr ){
-	std::string timeSpanRecordAddress = *iAddr;
-	// read TimeSpanFSR 
-	if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
-	  Warning("A TimeSpan Record was not found").ignore();
-	  if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
-	} else {
-	  LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
-	  // look at all TimeSpanFSRs (normally only one)
-	  LHCb::TimeSpanFSRs::iterator tsfsr;
-	  for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
-	    outfile << timeSpanRecordAddress << ": TimeSpanFSR: " << *(*tsfsr) << std::endl;
-	  }
-	}
+        std::string timeSpanRecordAddress = *iAddr;
+        // read TimeSpanFSR 
+        if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+          Warning("A TimeSpan Record was not found").ignore();
+          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " not found" << endmsg ;
+        } else {
+          LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+          // look at all TimeSpanFSRs (normally only one)
+          LHCb::TimeSpanFSRs::iterator tsfsr;
+          for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+            outfile << timeSpanRecordAddress << ": TimeSpanFSR: " << *(*tsfsr) << std::endl;
+          }
+        }
       }
   
       // close output file
