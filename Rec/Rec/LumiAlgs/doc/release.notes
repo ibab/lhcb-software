@@ -4,6 +4,20 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-08-09 - Patrick Koppenburg
+ - GetLumiParameters.cpp: Bug #85240
+   rename method init(..) to initialise and push the properties
+   passed to that method to this class. Change 
+   LumiCheckCondDB and GetIntegratedLuminosity.cpp accordingly.
+   . Move UseOnline property to tool in LumiIntegratorConf
+
+ - GetLumiParameters and GetIntegratedLuminosity.cpp:
+   . Indent properly
+   . Protect debug() and verbose()
+   . Added doxygen comment
+   . Make a few methods inline and const
+   Why do we have coding conventions?
+
 ! 2011-08-08 - Patrick Koppenburg
  - Moved src/IGetLumiParameters.h to LHCbKernel, and 
 	 changed src/GetLumiParameters.h accordingly. Task 21133.

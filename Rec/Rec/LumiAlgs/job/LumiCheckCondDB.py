@@ -20,14 +20,17 @@ from Configurables import CondDB
 LHCbApp().CondDBtag = 'lumi-20110131'
 
 #--- determine application to run
-from Configurables import LumiAlgsConf, LumiCheckCondDB
+from Configurables import LumiAlgsConf, LumiCheckCondDB, GetLumiParameters
 
 # standard sequence from configurable
 sequence = GaudiSequencer("CheckDB")
 
 # normalization of BeamCrossing
 seqMembers=[]
-seqMembers.append( LumiCheckCondDB('CheckCondDB', UseOnline=False, ) )
+lcc = LumiCheckCondDB('CheckCondDB' )
+ToolSvc().addTool(GetLumiParameters, "lumiDatabaseTool")
+ToolSvc().lumiDatabaseTool.UseOnline = False 
+seqMembers.append( lcc )
 sequence.Members = seqMembers
 sequence.MeasureTime = True
 sequence.ModeOR = False

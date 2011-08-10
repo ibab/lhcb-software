@@ -54,11 +54,8 @@ private:
   unsigned long long m_startTime;               ///< start probing database here
   unsigned long long m_numberSteps;             ///< number of steps checked
   unsigned long long m_stepHours;               ///< number of hours per step
-  bool m_useOnline;                             ///< flag to use online partition of DB
 
   // database conditions and calibration factors
-  std::string m_propertyConfigSvcName;
-  std::string m_instanceName;
   IGetLumiParameters *m_databaseTool;           ///< tool to query luminosity database
   mutable IIncidentSvc* m_incSvc ;              ///< the incident service 
 

@@ -68,9 +68,6 @@ protected:
   std::vector<std::string> m_BXTypes;           ///< list of bunch crossing types
   std::vector<std::string> m_addBXTypes;        ///< list of bunch crossing types to be added
   std::vector<std::string> m_subtractBXTypes;   ///< list of bunch crossing types to be subtracted
-  std::string m_propertyConfigSvcName;          ///< TCK service
-  std::string m_instanceName;                   ///< and name
-  bool m_useOnline;                             ///< flag to use online partition of DB
   bool m_accumulateMu;                          ///< flag to accumulate mu information
   std::string m_muKeyName;                      ///< name of key for mu calculation
   int m_MuKey;                                  ///< int value of key for mu calculation

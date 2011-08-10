@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( LumiCheckCondDB );
 // Standard constructor, initializes variables
 //=============================================================================
 LumiCheckCondDB::LumiCheckCondDB( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
+                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_incSvc(0)
 {
@@ -34,9 +34,6 @@ LumiCheckCondDB::LumiCheckCondDB( const std::string& name,
   declareProperty( "NumberSteps"        , m_numberSteps       = 80  );
   declareProperty( "StepHours"          , m_stepHours         = 72  );
 
-  declareProperty( "IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
-  declareProperty( "InstanceName"              , m_instanceName = "Hlt1LumiODINFilter");
-  declareProperty( "UseOnline"                 , m_useOnline    = true);
 }
 //=============================================================================
 // Destructor
@@ -52,8 +49,7 @@ StatusCode LumiCheckCondDB::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   
   // prepare database tool
-  m_databaseTool = tool<IGetLumiParameters>( "GetLumiParameters" , "lumiDatabaseTool" );
-  m_databaseTool->init( m_propertyConfigSvcName, m_instanceName, m_useOnline );
+  m_databaseTool = tool<IGetLumiParameters>( "GetLumiParameters" , "lumiDatabaseTool" ); // public
 
   // get the detectorDataSvc
   m_dds = detSvc();
@@ -124,11 +120,11 @@ void LumiCheckCondDB::handle( const Incident& incident )
   //check extended file incidents are defined
 #ifdef GAUDI_FILE_INCIDENTS
   if(incident.type()==IncidentType::BeginInputFile)
-    {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "==> Incident: BeginInputFile" << endmsg;
-      // check the DB in file-open mode
-      StatusCode rc = checkDB("BeginInputFile");
-    }
+  {
+    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Incident: BeginInputFile" << endmsg;
+    // check the DB in file-open mode
+    StatusCode rc = checkDB("BeginInputFile");
+  }
 #endif
 
 }

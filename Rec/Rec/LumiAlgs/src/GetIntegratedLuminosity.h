@@ -19,7 +19,8 @@
 #include "LumiIntegrator.h"
 
 /** @class GetIntegratedLuminosity GetIntegratedLuminosity.h
- *   
+ *
+ *  Returns integrated luminosity
  *
  *  @author Yasmine Amhis
  *  @date   2010-05-26

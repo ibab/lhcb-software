@@ -50,9 +50,6 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   declareProperty( "AccumulateMu"       , m_accumulateMu      = false);
   declareProperty( "MuKeyName"          , m_muKeyName         = "PoissonRZVelo" );
   
-  declareProperty( "IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
-  declareProperty( "InstanceName"              , m_instanceName = "Hlt1LumiODINFilter");
-  declareProperty( "UseOnline"                 , m_useOnline    = true);
 }
 //=============================================================================
 // Destructor
@@ -69,22 +66,22 @@ StatusCode LumiIntegrateFSR::initialize() {
 
   // initialize lists - the order is important: the first is the one to normalize to
   if (m_addBXTypes.empty()) {
-      m_addBXTypes.push_back("NoBeam");
+    m_addBXTypes.push_back("NoBeam");
   }
   if (m_subtractBXTypes.empty()) {
-      m_subtractBXTypes.push_back("Beam1");
-      m_subtractBXTypes.push_back("Beam2");
+    m_subtractBXTypes.push_back("Beam1");
+    m_subtractBXTypes.push_back("Beam2");
   }
   // ensure consistency
   m_BXTypes.push_back(m_PrimaryBXType);
   info() << "Primary  BXType " << m_PrimaryBXType << endmsg;
   for(std::vector< std::string >::iterator bx = m_addBXTypes.begin() ; 
-          bx!= m_addBXTypes.end() ; ++bx ){  
+      bx!= m_addBXTypes.end() ; ++bx ){  
     info() << "Add      BXType " << (*bx) << endmsg;
     if ( (*bx) != "None" ) m_BXTypes.push_back(*bx);
   }
   for(std::vector< std::string >::iterator bx = m_subtractBXTypes.begin() ; 
-          bx!= m_subtractBXTypes.end() ; ++bx ){  
+      bx!= m_subtractBXTypes.end() ; ++bx ){  
     info() << "Subtract BXType " << (*bx) << endmsg;
     if ( (*bx) != "None" ) m_BXTypes.push_back(*bx);
   }
@@ -114,8 +111,8 @@ StatusCode LumiIntegrateFSR::initialize() {
   if ( m_accumulateMu ) {
     m_MuKey = LHCb::LumiCounters::counterKeyToType(m_muKeyName);
     info() << "Mu calculation: " 
-	   << " name: " << m_muKeyName << " KeyIntValue: " <<  m_MuKey
-	   << endmsg;
+           << " name: " << m_muKeyName << " KeyIntValue: " <<  m_MuKey
+           << endmsg;
   }
   // get the detectorDataSvc
   m_dds = detSvc();
@@ -127,8 +124,7 @@ StatusCode LumiIntegrateFSR::initialize() {
   m_dds->setEventTime(Gaudi::Time( 1000 ));
 
   // prepare database tool
-  m_databaseTool = tool<IGetLumiParameters>( "GetLumiParameters" , "lumiDatabaseTool" );
-  m_databaseTool->init( m_propertyConfigSvcName, m_instanceName, m_useOnline );
+  m_databaseTool = tool<IGetLumiParameters>( "GetLumiParameters" , "lumiDatabaseTool" );  // public
 
   return StatusCode::SUCCESS;
 }
@@ -157,21 +153,21 @@ StatusCode LumiIntegrateFSR::stop() {
   info() << "========== Integrating luminosity normalization: START ==========" << endmsg;
 
   // use tool to count events for this file
-  debug() << "number of events seen: " << m_integratorTool->events( ) << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "number of events seen: " << m_integratorTool->events( ) << endmsg;
 
   // integrate all FSRs in one go
   add_file();
 
   // use tool to get summary for this file
-  debug() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "integrated normalization: " << m_integratorTool->integral( ) << endmsg;
 
   // declare statEntities for xml output and print list of counters
   add_to_xml();
 
   // final results
   info() << "Integrated luminosity: " 
-	 << m_integratorTool->lumiValue() << " +/- "
-	 << m_integratorTool->lumiError() << " [pb-1]" << endmsg;
+         << m_integratorTool->lumiValue() << " +/- "
+         << m_integratorTool->lumiError() << " [pb-1]" << endmsg;
 
   if ( m_accumulateMu ) {
     std::vector<ILumiIntegrator::muTuple> mT = m_integratorTool->muValues( );
@@ -205,13 +201,14 @@ void LumiIntegrateFSR::add_to_xml() {
       LHCb::LumiIntegral::ValuePair value = m_integratorTool->integral().info( key, defValue );
       std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
       if ( value.first != -1 ) {
-        debug() << "counter " << counterName << ": " << key << " " << value.first << " " << value.second << endmsg;
+        if (msgLevel(MSG::DEBUG)) debug() << "counter " << counterName << ": " 
+                                          << key << " " << value.first << " " << value.second << endmsg;
         StatEntity statEntity( value.first, value.second, value.second, 0, 0 );
         if ( m_counterSummarySvc != NULL ) {
           m_counterSummarySvc->addCounter(name(), counterName, statEntity, 
                                           Gaudi::CounterSummary::SaveAlwaysStatEntity);
-          debug() << "declared counter: " << key << endmsg;
-	}
+          if (msgLevel(MSG::DEBUG)) debug() << "declared counter: " << key << endmsg;
+        }
       }
     }
   }
@@ -222,7 +219,7 @@ void LumiIntegrateFSR::add_to_xml() {
   StatEntity statEntityLumi( 1, lumi, lumi_error, 0, 0 );
   if ( m_counterSummarySvc != NULL ) {
     m_counterSummarySvc->addCounter(name(), "Luminosity", statEntityLumi, 
-				    Gaudi::CounterSummary::SaveAlwaysStatEntity);
+                                    Gaudi::CounterSummary::SaveAlwaysStatEntity);
   }
 }
 
@@ -259,16 +256,17 @@ StatusCode LumiIntegrateFSR::add_file() {
         if ( msgLevel(MSG::DEBUG) ) debug() << primaryFileRecordAddress << " found" << endmsg ;
         long fkey_ts = 0;
         LHCb::LumiFSRs::iterator checkfsr = lumiFSRs->begin();
-	for ( unsigned int fkey = 0; fkey != lumiFSRs->size(); fkey++ ) {
+        for ( unsigned int fkey = 0; fkey != lumiFSRs->size(); fkey++ ) {
 
-	  // trigger database update using the timeSpan FSR
+          // trigger database update using the timeSpan FSR
           // if no run number defined, there is no timespan FSR, so skip it
-	  LHCb::TimeSpanFSR* timeSpanFSR = NULL;
+          LHCb::TimeSpanFSR* timeSpanFSR = NULL;
           if ( checkfsr[fkey]->runNumbers().size() ) {
             timeSpanFSR = trigger_event(primaryFileRecordAddress, fkey_ts);
             fkey_ts++;
           } else {
-            warning() << "missing run number at keycount: " << fkey << " " << fkey_ts << " skip db update for this FSR" << endmsg;
+            warning() << "missing run number at keycount: " << fkey << " " << fkey_ts 
+                      << " skip db update for this FSR" << endmsg;
           }
 
       	  // initialize integral with the primary BX
@@ -278,68 +276,69 @@ StatusCode LumiIntegrateFSR::add_file() {
       	  std::string fileRecordAddress("undefined");
       	  for ( std::vector< std::string >::iterator bx = m_BXTypes.begin() ; bx!= m_BXTypes.end() ; ++bx ){  
       	    // construct the right name of the containers
-	    std::string fileRecordAddress(primaryFileRecordAddress);
-	    fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), (*bx) );
-	    if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address" << fileRecordAddress << endmsg; 
+            std::string fileRecordAddress(primaryFileRecordAddress);
+            fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), (*bx) );
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address" << fileRecordAddress << endmsg; 
       	    float factor = 0;     // indicates the primary BX - already used
       	    if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
       	      factor = 1.;
       	    if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) {
       	      factor = -1.;
-	      if ( m_calibRelative[LHCb::LumiMethods::CorrectionFlag] != 0) {
-		factor = 0;      // no subtraction of EE
-	      }
-	    }
+              if ( m_calibRelative[LHCb::LumiMethods::CorrectionFlag] != 0) {
+                factor = 0;      // no subtraction of EE
+              }
+            }
       	    if ( factor != 0) {
-	      StatusCode sc =  add_fsr(result, fileRecordAddress, factor, fkey);
-	      if (sc.isFailure()) {
-		m_statusScale = 0;    // invalid luminosity
-		error() << "ERROR summing bunch crossing types for luminosity " << endmsg;
-	      }
-	    }
-	  }
+              StatusCode sc =  add_fsr(result, fileRecordAddress, factor, fkey);
+              if (sc.isFailure()) {
+                m_statusScale = 0;    // invalid luminosity
+                error() << "ERROR summing bunch crossing types for luminosity " << endmsg;
+              }
+            }
+          }
 
-	  // apply calibration
-	  debug() << "Result for this file (before calibration): " << *result << endmsg;
-	  result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
-	  verbose() << "Result for this file (after calibration): " << *result << endmsg;
-	  // simple summing per counter
-	  if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
-	    m_statusScale = 0;        // invalid luminosity
-	    error() << "ERROR summing result using tool " << endmsg;
-	  }
-	  // summing of integral
-	  long old_n_runs = n_runs;
-	  if ( result->runNumbers().size() ) n_runs = result->runNumbers()[0];
-	  else n_runs = 0;
-	  double old_scale = rel_scale;
-	  rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
-	  if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
-								m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
-					    rel_scale ) == StatusCode::FAILURE ) {
-	    m_statusScale = 0;        // invalid luminosity
-	    error() << "ERROR integrating luminosity result" << endmsg;
-	  }
-	  if ( old_scale != rel_scale || old_n_runs != n_runs ) {
-	    info() << "run: " << result->runNumbers()
-		   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
-		   << " CollidingBunches " << m_calibCollidingBunches << endmsg;
-	  }
-	  // accumulate mu 
-	  if ( m_accumulateMu ) {
-	    m_integratorTool->accumulate_mu( *result, timeSpanFSR, m_MuKey, 
-					     one_vector(m_calibCoefficients, m_calibCoefficientsLog, 
-							LHCb::LumiMethods::PoissonOffset), 
-					     rel_scale );
-	      }
-	  delete result;
-	}
+          // apply calibration
+          if (msgLevel(MSG::DEBUG)) debug() << "Result for this file (before calibration): " << *result << endmsg;
+          result->scale(one_vector(m_calibRelative, m_calibRelativeLog, LHCb::LumiMethods::PoissonOffset));
+          verbose() << "Result for this file (after calibration): " << *result << endmsg;
+          // simple summing per counter
+          if ( m_integratorTool->integrate( *result ) == StatusCode::FAILURE ) {
+            m_statusScale = 0;        // invalid luminosity
+            error() << "ERROR summing result using tool " << endmsg;
+          }
+          // summing of integral
+          long old_n_runs = n_runs;
+          if ( result->runNumbers().size() ) n_runs = result->runNumbers()[0];
+          else n_runs = 0;
+          double old_scale = rel_scale;
+          rel_scale = m_calibRevolutionFrequency * m_calibCollidingBunches / m_calibRandomFrequencyBB;
+          if ( m_integratorTool->integrate( *result, one_vector(m_calibCoefficients, 
+                                                                m_calibCoefficientsLog, LHCb::LumiMethods::PoissonOffset), 
+                                            rel_scale ) == StatusCode::FAILURE ) {
+            m_statusScale = 0;        // invalid luminosity
+            error() << "ERROR integrating luminosity result" << endmsg;
+          }
+          if ( old_scale != rel_scale || old_n_runs != n_runs ) {
+            info() << "run: " << result->runNumbers()
+                   << " RandomFrequencyBB " << m_calibRandomFrequencyBB 
+                   << " CollidingBunches " << m_calibCollidingBunches << endmsg;
+          }
+          // accumulate mu 
+          if ( m_accumulateMu ) {
+            m_integratorTool->accumulate_mu( *result, timeSpanFSR, m_MuKey, 
+                                             one_vector(m_calibCoefficients, m_calibCoefficientsLog, 
+                                                        LHCb::LumiMethods::PoissonOffset), 
+                                             rel_scale );
+          }
+          delete result;
+        }
       }
       
       // set absolute scales for tool
       double abs_scale = m_statusScale * m_calibScale;
       m_integratorTool->setAbsolute(abs_scale, m_calibScaleError);
-      debug() << "Intermediate Integrated luminosity: " << m_integratorTool->lumiValue() << endmsg;
+      if (msgLevel(MSG::DEBUG)) debug() << "Intermediate Integrated luminosity: " 
+                                        << m_integratorTool->lumiValue() << endmsg;
     }
   }
   // set absolute scales for tool
@@ -406,7 +405,7 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
     }
     // the TimeSpanFSRs have now been read -  fake event loop to get update of calibration constants
     m_dds->setEventTime(Gaudi::Time( (t1/2+t0/2)*1000 ));
-    debug() << " creating new event " << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << " creating new event " << endmsg;
     sc = updMgrSvc()->newEvent();
     if (sc.isFailure()) {
       m_statusScale = 0;        // invalid luminosity
@@ -468,8 +467,8 @@ std::vector<double> LumiIntegrateFSR::one_vector(std::vector<double> a,
 
 //=============================================================================
 StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result, 
-			       std::string fileRecordAddress, 
-				     float factor, unsigned int fkey ) {
+                                     std::string fileRecordAddress, 
+                                     float factor, unsigned int fkey ) {
 
   // read LumiFSR 
   if ( !exist<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress) ) {
@@ -499,16 +498,16 @@ StatusCode LumiIntegrateFSR::add_fsr(LHCb::LumiIntegral* result,
       LHCb::LumiFSR::ExtraInfo::iterator infoIter;
       LHCb::LumiFSR::ExtraInfo  fsrInfo = lumiFSR->extraInfo();
       for (infoIter = fsrInfo.begin(); infoIter != fsrInfo.end(); infoIter++) {
-    	// get the key and value of the input info
-    	int key = infoIter->first;
-    	LHCb::LumiFSR::ValuePair values = infoIter->second;
-    	int incr = values.first;
-    	longlong count = values.second;
-    	const std::string keyName = LHCb::LumiCounters::counterKeyToString(key);
-    	int keyInt = LHCb::LumiCounters::counterKeyToType(keyName);
-    	verbose() << "READ key: " << key 
-    		  << " name: " << keyName << " KeyInt: " << keyInt 
-    		  << " increment: " << incr << " integral: " << count << endmsg;
+        // get the key and value of the input info
+        int key = infoIter->first;
+        LHCb::LumiFSR::ValuePair values = infoIter->second;
+        int incr = values.first;
+        longlong count = values.second;
+        const std::string keyName = LHCb::LumiCounters::counterKeyToString(key);
+        int keyInt = LHCb::LumiCounters::counterKeyToType(keyName);
+        verbose() << "READ key: " << key 
+                  << " name: " << keyName << " KeyInt: " << keyInt 
+                  << " increment: " << incr << " integral: " << count << endmsg;
       }
     } else {
       if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << " READ FSR: " << *lumiFSR << endmsg; 

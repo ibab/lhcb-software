@@ -18,6 +18,8 @@
 
 /** @class GetLumiParameters GetLumiParameters.h
  *
+ *  Tool that returns all info needed for luminosity calculation 
+ *
  *  @author Jaap Panman
  *  @date   2009-03-16
  */
@@ -30,24 +32,54 @@ public:
 
   virtual ~GetLumiParameters( );                ///< Destructor
 
-  StatusCode init( std::string propertyConfigSvcName,
-		   std::string instanceName, 
-		   bool useOnline );            ///< Init DB access
+  StatusCode initialize();                      ///< Init DB access
   
-  unsigned int getTCK();              	        ///< retrieve TCK
   long CollidingBunches();                      ///< retrieve number of colliding bunches
-  double OdinFraction();       	                ///< retrieve Odin Random BB fraction
-  double HLTRandomRate();      	                ///< retrieve random rate in HLT
-  double LHCFrequency();       	                ///< retrieve revolution frequency
   double RandomRateBB();       	                ///< retrieve random bunch-bunch rate in HLT
-  std::vector<double> CalibRelative();          ///< relative calibration factors
-  std::vector<double> CalibCoefficients();      ///< usage factors
-  std::vector<double> CalibRelativeLog();       ///< relative calibration factors
-  std::vector<double> CalibCoefficientsLog();   ///< usage factors
-  double CalibScale();                          ///< absolute scale
-  double CalibScaleError();                     ///< absolute scale error
-  double StatusScale();                         ///< status scale flag
-
+  /// retrieve TCK
+  inline unsigned int getTCK() const  {
+    return m_triggerTCK;
+  };              	        
+  /// retrieve Odin Random BB fraction
+  inline double OdinFraction() const {
+    return m_odinFraction;
+  };       	           
+  /// retrieve random rate in HLT      
+  inline double HLTRandomRate()const  {
+    return m_rateHLT;
+  };      	                
+  /// retrieve revolution frequency
+  inline double LHCFrequency() const {
+    return m_calibRevolutionFrequency;
+  };       	               
+  /// relative calibration factors
+  inline std::vector<double> CalibRelative() const {
+    return m_calibRelative;
+  };          
+  /// usage factors
+  inline std::vector<double> CalibCoefficients()const {
+    return m_calibCoefficients;
+  };      
+  /// relative calibration factors
+  inline std::vector<double> CalibRelativeLog()const{
+    return m_calibRelativeLog;
+  };       
+  /// usage factors
+  inline std::vector<double> CalibCoefficientsLog()const  {
+    return m_calibCoefficientsLog;
+  };   
+  /// absolute scale
+  inline double CalibScale()const {
+    return m_calibScale;
+  };                      
+  /// absolute scale error    
+  inline double CalibScaleError()const {
+    return m_calibScaleError;
+  };                     
+  /// status scale flag
+  inline double StatusScale() const {
+    return m_statusScale;
+  };                         
 protected:
   virtual StatusCode registerDB();   	        ///< register DB conditions
   virtual StatusCode processDB();               ///< DB checking code
@@ -94,11 +126,11 @@ private:
   double m_odinFraction;                        ///< fraction of total spent during BB
   double m_rateHLT;                             ///< random lumi rate set by HLT line
   double m_rateBB;                              ///< random lumi rate set by HLT line for BB
-  long 	 m_B1NBunches;            		///< filling scheme data
-  long 	 m_B2NBunches;            		///< filling scheme data
-  long 	 m_NCollidingBunches;     		///< filling scheme data
-  long 	 m_B1WrongBucketFlag;     		///< filling scheme data
-  long 	 m_B2WrongBucketFlag;     		///< filling scheme data
+  long 	 m_B1NBunches;            		          ///< filling scheme data
+  long 	 m_B2NBunches;            		          ///< filling scheme data
+  long 	 m_NCollidingBunches;     		          ///< filling scheme data
+  long 	 m_B1WrongBucketFlag;     		          ///< filling scheme data
+  long 	 m_B2WrongBucketFlag;     		          ///< filling scheme data
   long 	 m_onlineCollidingBunches;              ///< number of colliding bunches
 
   mutable IPropertyConfigSvc * m_propertyConfigSvc;

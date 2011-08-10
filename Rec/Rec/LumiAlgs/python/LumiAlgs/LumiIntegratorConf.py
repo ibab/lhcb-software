@@ -9,7 +9,7 @@ from GaudiConf.Configuration import *
 from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer as Sequence
-from Configurables import LumiIntegrateFSR, LumiReadBackFSR
+from Configurables import LumiIntegrateFSR, LumiReadBackFSR, GetLumiParameters
 from Configurables import GetIntegratedLuminosity
 
 
@@ -36,19 +36,21 @@ class LumiIntegratorConf(LHCbConfigurableUser):
 
     # normalization of BeamCrossing
     seqMembers=[]
-    seqMembers.append( LumiIntegrateFSR('IntegrateBeamCrossing',
-                                        PrimaryBXType = 'BeamCrossing',
-                                        AddBXTypes = ['NoBeam'],
-                                        SubtractBXTypes = ['Beam1','Beam2'],
-                                        IntegratorToolName = 'IntegrateBeamCrossing',
-                                        UseOnline = self.getProp('UseOnline'),
-                                        ))
+    lifsr = LumiIntegrateFSR('IntegrateBeamCrossing',
+                             PrimaryBXType = 'BeamCrossing',
+                             AddBXTypes = ['NoBeam'],
+                             SubtractBXTypes = ['Beam1','Beam2'],
+                             IntegratorToolName = 'IntegrateBeamCrossing')
+    ToolSvc().addTool(GetLumiParameters, "lumiDatabaseTool") # This is a public tool
+    ToolSvc().lumiDatabaseTool.UseOnline = self.getProp('UseOnline') 
+    seqMembers.append( lifsr )
+    
     if ( self.isPropertySet('TupleFile') and self.getProp("TupleFile") != "" ):
       seqMembers.append( GetIntegratedLuminosity('GetIntegratedLuminosity',
                                                  IntegratorToolName = 'IntegrateBeamCrossing',
                                                  WriteCountersDetails = False
                                                  ))
-
+      
     sequence.Members = seqMembers
     sequence.MeasureTime = True
     sequence.ModeOR = False
