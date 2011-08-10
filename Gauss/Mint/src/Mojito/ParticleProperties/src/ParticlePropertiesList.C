@@ -94,6 +94,7 @@ void ParticlePropertiesList::fillDirList(){
     }
   }
   _dirList.push_back("./");
+  _dirList.push_back("$MINTROOT/src/Mojito/ParticleProperties/src/");
   _dirList.push_back("../../../Mojito/ParticleProperties/src/");
   _dirList.push_back("../../ParticleProperties/src/");
   _dirList.push_back("../ParticleProperties/src/");
