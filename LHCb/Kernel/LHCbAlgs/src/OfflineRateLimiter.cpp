@@ -20,7 +20,7 @@ DECLARE_ALGORITHM_FACTORY( OfflineRateLimiter );
 OfflineRateLimiter::OfflineRateLimiter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : OfflineDeterministicPrescaler ( name , pSvcLocator )
-  , m_glp(0)
+  , m_tckReader(0)
   , m_tck(0)
 {
   declareProperty("HltLimiter",m_hltLimiter = "Hlt1MBNoBiasODINFilter",
@@ -40,9 +40,9 @@ StatusCode OfflineRateLimiter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by OfflineDeterministicPrescaler
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  m_glp = tool<IGetLumiParameters>("GetLumiParameters",this); // make it private
   if (m_rate<0) Exception("Negative Rate requested");
+
+  m_tckReader = tool<IRateFromTCK>("RateFromTCK",this); // make it private
   
   info() << "Will attempt to reduce events from " << m_hltLimiter 
          << " to a rate of " << m_rate << " Hz" << endmsg;
@@ -54,11 +54,11 @@ StatusCode OfflineRateLimiter::initialize() {
 // Not an Incident
 //=============================================================================
 void OfflineRateLimiter::handle() {  
-  if (m_tck == m_glp->getTCK()) return ;
+  if (m_tck == m_tckReader->getTCK()) return ;
   
   boost::uint32_t savedAcc = m_acc;
-  m_tck = m_glp->getTCK() ;
-  double randomRate = m_glp->HLTRandomRate() ;
+  m_tck = m_tckReader->getTCK() ;
+  double randomRate = m_tckReader->rateFromTCK(m_hltLimiter) ;
   if ( randomRate > 0) {
     m_accFrac = m_rate/randomRate ;
   } else {

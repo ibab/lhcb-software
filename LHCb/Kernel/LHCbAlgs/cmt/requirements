@@ -19,11 +19,12 @@ use LHCbKernel v* Kernel -no_auto_imports
 use DAQEvent   v* Event
 use RecEvent   v* Event
 use DetDesc    v* Det
+use HltInterfaces v* Kernel -no_auto_imports
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library LHCbAlgs ../src/*.cpp -import=LHCbKernel
+library LHCbAlgs ../src/*.cpp -import=LHCbKernel -import=HltInterfaces
 
 #============================================================================
 # define component library link options

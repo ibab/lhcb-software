@@ -6,7 +6,7 @@
 // from Gaudi
 #include "OfflineRateLimiter.h"
 #include "OfflineDeterministicPrescaler.h"
-#include "Kernel/IGetLumiParameters.h"
+#include "Kernel/IRateFromTCK.h"
 /** @class OfflineRateLimiter OfflineRateLimiter.h
  *
  *  Algorithm to ``rate limit'' a line in the stripping. 
@@ -40,7 +40,7 @@ protected:
 private:
   void handle();
 
-  IGetLumiParameters* m_glp ; ///< Property Config Service
+  IRateFromTCK* m_tckReader ; ///< Property Config Service
   std::string m_hltLimiter ;  ///< Line wrt to which one wants to scale
   double m_rate ;             ///< Target rate
   unsigned int m_tck ;        ///< Last TCK seen
