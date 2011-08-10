@@ -8,9 +8,11 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IGetLumiParameters ( "IGetLumiParameters", 1, 0 );
+static const InterfaceID IID_IGetLumiParameters ( "IGetLumiParameters", 1, 1 );
 
 /** @class IGetLumiParameters IGetLumiParameters.h
+ *
+ *  Interface for Luminosity parameters tool
  *
  *  @author Jaap Panman
  *  @date   2010-11-20
@@ -22,9 +24,9 @@ public:
 
   virtual unsigned int getTCK() const = 0;                            ///< retrieve TCK
   virtual long CollidingBunches() = 0;                                ///< retrieve number of colliding bunches
-  virtual double OdinFraction() const  = 0;       		                  ///< retrieve Odin Random BB fraction
-  virtual double HLTRandomRate() const  = 0;      		                  ///< retrieve random rate in HLT
-  virtual double LHCFrequency()  const = 0;       		                  ///< retrieve revolution frequency
+  virtual double OdinFraction() const  = 0;                           ///< retrieve Odin Random BB fraction
+  virtual double HLTRandomRate() const  = 0;                          ///< retrieve random rate in HLT
+  virtual double LHCFrequency()  const = 0;                           ///< retrieve revolution frequency
   virtual double RandomRateBB() = 0;                                  ///< retrieve random bunch-bunch rate in HLT
   virtual std::vector<double> CalibRelative() const = 0;          	  ///< relative calibration factors
   virtual std::vector<double> CalibCoefficients()  const= 0;      	  ///< usage factors

@@ -1,11 +1,15 @@
 !--------------------------------------------------------------------------
-! Package LHCbKernel
+! Package Kernel/LHCbKernel
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-08-10 - Patrick Koppenburg
+ - New interface IRateFromTCK to allow doing the non-lumi tasks
+   from IGetLumiParameters. Task #21133
+
 ! 2011-08-09 - Patrick Koppenburg
- - IGetLumiParameters.cpp: Bug #85240
+ - IGetLumiParameters.h: Bug #85240
 	. Remove init() method
 	. Make a few methods const
 
