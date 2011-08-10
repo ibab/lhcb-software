@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-08-10 - Patrick Koppenburg
+ - TupleToolEventInfo : 
+   . store event number as double to fix Bug #84257
+   . Add trigger type in verbose mode.
 
 !========================= DecayTreeTuple v3r16 2011-07-28 =========================
 ! 2011-07-27 - Albert Bursche
