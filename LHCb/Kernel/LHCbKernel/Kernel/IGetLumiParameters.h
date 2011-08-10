@@ -20,22 +20,18 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IGetLumiParameters; }
 
-  virtual StatusCode init( std::string propertyConfigSvcName,
-			   std::string instanceName, 
-			   bool useOnline ) = 0;                ///< Init DB access
-
-  virtual unsigned int getTCK() = 0;                            ///< retrieve TCK
-  virtual long CollidingBunches() = 0;                          ///< retrieve number of colliding bunches
-  virtual double OdinFraction() = 0;       		        ///< retrieve Odin Random BB fraction
-  virtual double HLTRandomRate() = 0;      		        ///< retrieve random rate in HLT
-  virtual double LHCFrequency() = 0;       		        ///< retrieve revolution frequency
-  virtual double RandomRateBB() = 0;       		        ///< retrieve random bunch-bunch rate in HLT
-  virtual std::vector<double> CalibRelative() = 0;          	///< relative calibration factors
-  virtual std::vector<double> CalibCoefficients() = 0;      	///< usage factors
-  virtual std::vector<double> CalibRelativeLog() = 0;       	///< relative calibration factors
-  virtual std::vector<double> CalibCoefficientsLog() = 0;   	///< usage factors
-  virtual double CalibScale() = 0;                          	///< absolute scale
-  virtual double CalibScaleError() = 0;                     	///< absolute scale error
-  virtual double StatusScale() = 0;                          	///< status scale flag
+  virtual unsigned int getTCK() const = 0;                            ///< retrieve TCK
+  virtual long CollidingBunches() = 0;                                ///< retrieve number of colliding bunches
+  virtual double OdinFraction() const  = 0;       		                  ///< retrieve Odin Random BB fraction
+  virtual double HLTRandomRate() const  = 0;      		                  ///< retrieve random rate in HLT
+  virtual double LHCFrequency()  const = 0;       		                  ///< retrieve revolution frequency
+  virtual double RandomRateBB() = 0;                                  ///< retrieve random bunch-bunch rate in HLT
+  virtual std::vector<double> CalibRelative() const = 0;          	  ///< relative calibration factors
+  virtual std::vector<double> CalibCoefficients()  const= 0;      	  ///< usage factors
+  virtual std::vector<double> CalibRelativeLog() const = 0;       	  ///< relative calibration factors
+  virtual std::vector<double> CalibCoefficientsLog() const = 0;   	  ///< usage factors
+  virtual double CalibScale()  const= 0;                          	  ///< absolute scale
+  virtual double CalibScaleError()  const= 0;                     	  ///< absolute scale error
+  virtual double StatusScale() const = 0;                          	  ///< status scale flag
 };
 #endif // IGETLUMIPARAMETERS_H
