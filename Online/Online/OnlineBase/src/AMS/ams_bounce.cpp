@@ -41,7 +41,7 @@ static void help() {
 extern "C" int amsc_bounce(int argc, char **argv)  {
   void* dummy;
   size_t rsize;
-  std::string amsname, target;
+  std::string amsname, my_name, target;
   char node[20], source[80];
   int  length=256, loop=100000, substatus;
   char wmessage [SIZE], rmessage [SIZE];
@@ -54,6 +54,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   cli.getopt("turns",1,loop);
   cli.getopt("length",1,length);
 
+  my_name = amsname;
   if ( length==0 ) length=10;
   if (length > SIZE) length = SIZE;
   ::printf (" Starting ams test task (%s) %s for %d turns\n",
@@ -67,8 +68,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
     ::printf ("Can't initialise ams\n");
     ::exit (ams_status);
   }
-  amsc_get_node( node );
-
+  amsc_get_node(node);
   // receive some messages and bounce them
   int  wsize =  length;
   int mx_loop = (fanout) ? loop : loop;
@@ -109,17 +109,18 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       char* p = source, *q = source;
       while ( (p=strchr(p,':')) ) *p++ = 0, q = p; 
       if ( 0 == q ) q = source;
-      ::printf("%s %d / %d -- Last msg from:%s\n", amsname.c_str(), loop, mx_loop, q);
+      ::printf("%s %d / %d -- Last msg from:%s\n", 
+	       my_name.c_str(), loop, mx_loop, q);
       ::fflush(stdout);
     }
     if (mx_loop == 0 ) {
-      ::printf ("%s AMS Test successfully ended.\n", amsname.c_str());
-      ::printf ("%s Exiting....\n", amsname.c_str());
+      ::printf ("%s AMS Test successfully ended.\n", my_name.c_str());
+      ::printf ("%s Exiting....\n", my_name.c_str());
       ::fflush(stdout);
       ::lib_rtl_sleep(1000);
       ::amsc_close();
       ::lib_rtl_sleep(1000);
-      ::printf ("%s Shutdown done....\n", amsname.c_str());
+      ::printf ("%s Shutdown done....\n", my_name.c_str());
       ::fflush(stdout);
       ::exit(0);
       goto Done;
