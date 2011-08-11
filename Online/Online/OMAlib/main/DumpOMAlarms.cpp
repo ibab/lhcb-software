@@ -1,5 +1,8 @@
 // $Id: DumpOMAlarms.cpp,v 1.8 2010-09-21 10:39:50 ggiacomo Exp $
 #include <iostream>
+#ifndef _WIN32
+#include <stdlib.h>
+#endif
 #include <map>
 #include <cstdlib>
 
@@ -17,7 +20,6 @@ std::string DBuser = "HIST_READER";
 std::string DBpw = "READER";
 bool clear=false;
 bool AllAlarms=false;
-std::map<int, bool> msgFilter;
 
 OnlineHistDB *HistDB= NULL;
 
@@ -50,11 +52,15 @@ int main(int narg,char **argv ) {
   
   if(clear && DBuser == "HIST_READER") {
     DBuser ="HIST_WRITER";
-    cout << "Enter the " << DBuser <<" password on "<<DB<<" for clearing alarms:";
+#ifdef _WIN32
+    cout << "Enter the HIST_WRITER password on "<<DB<<" for clearing alarms:";
     cin >> DBpw;
     cout<<endl;
+#else
+    char* pass =getpass("Enter the HIST_WRITER password for clearing alarms:");   
+    DBpw=pass;
   }
-
+#endif
 
   // connect to DB
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
@@ -65,54 +71,69 @@ int main(int narg,char **argv ) {
   }
 
   std::vector<int> messID;
- 
-  std::cout <<" You have "<< HistDB->getMessages(messID,AnaTask)
-            <<" messages from ";
-  if (AnaTask == "any") 
-    std::cout << "all Online Monitoring Analysis";
-  else 
-    std::cout << "Analysis "<< AnaTask;
-  std::cout <<std::endl<<std::endl;
+  std::vector<OMAMessage*> fltMessages;
+  std::vector<OMAMessage*>::iterator iM;
 
+  int ntot=HistDB->getMessages(messID,AnaTask);
+  int nactive=0;
   int nFltMsg=0;
   for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
     OMAMessage* message = new OMAMessage(*im, *HistDB);
+    if (message->isactive() && 
+        (System == "any" || std::string(message->concernedSystem()) == System) )  nactive++;
     bool dump=true;
     if ( !message->isactive() && !AllAlarms) dump=false;
     if ( Anaid >0 && (int) message->anaId() != Anaid) dump=false;
     if ( Msgid >0 && (int) message->id() != Msgid) dump=false;
     if ( System != "any" && std::string(message->concernedSystem()) != System) dump=false;
-    msgFilter[*im]=dump;
-    if (dump) {
-      message->dump(&(std::cout));
+    if(dump) {
+      fltMessages.push_back(message);
       nFltMsg++;
+    }      
+    else {
+      delete message;
     }
-    delete message;
   }
-  std::cout <<" There are "<< nFltMsg  <<" messages filtered according to your request" <<std::endl;
+
+  std::cout <<" You have "<< nactive
+            <<" active messages ( + "<< (ntot-nactive) <<
+    " archived messages) from ";
+  if (AnaTask == "any") 
+    std::cout << "all Online Monitoring Analysis";
+  else 
+    std::cout << "Analysis "<< AnaTask;
+  std::cout <<std::endl<< nFltMsg  <<" messages filtered according to your request:" <<std::endl<<std::endl;
+
+  for (iM=fltMessages.begin(); iM != fltMessages.end(); iM++) {
+    (*iM)->dump(&(std::cout));
+  }
+
   if (clear && nFltMsg ) {
     std::string answer;
     cout << "Are you sure you want to clear these alarms? (Y/N)";
     cin >> answer;
     int nClrMsg=0;
     if (answer == "Y") {
-      for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
-        if (msgFilter[*im]) {
-          OMAMessage* message = new OMAMessage(*im, *HistDB);
-          cout << "removing message "<< *im <<endl;
-          nClrMsg++;
-          message->remove();
-          delete message;
-        }
+      for (iM=fltMessages.begin(); iM != fltMessages.end(); iM++) {
+        OMAMessage* message = *iM;
+        cout << "removing message "<< message->id() <<endl;
+        nClrMsg++;
+        message->remove();
+        delete message;
       }
       cout << nClrMsg << " messages have been cleared"<<endl;
       HistDB->commit();
     }
     else {
-      cout << "Messages NOT cleared"<<endl;
+      cout << "******  warning: Messages NOT cleared (to clear them, answer 'Y' next time) *********** " <<endl;
     }
   }
-
+  else {
+    for (iM=fltMessages.begin(); iM != fltMessages.end(); iM++) {
+      OMAMessage* message = *iM;
+      if(message) delete message;
+    }
+  }
 
   delete HistDB;
   return 0;

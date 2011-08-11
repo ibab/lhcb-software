@@ -3,6 +3,9 @@
 ! Purpose     : Online Monitoring Analysis library
 
 
+! 20110811
+- minor improvements to DumpOMAlarms
+
 ! 20110808
 - automatic tasks now resync with DB before any new analysis (allow alarms to be manipulated outside analysis task, i.e. from Presenter)
 
