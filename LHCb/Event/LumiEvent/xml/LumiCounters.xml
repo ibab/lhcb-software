@@ -27,9 +27,9 @@
         strTypConv = 'TRUE'
         access="PUBLIC" >
         <enumval name="PUMult"        	value = "0"   desc="number of PU hits"/>
-        <enumval name="RZVelo"        	value = "1"   desc="number of RZVelo tracks"/>
+        <enumval name="RZVelo"        	value = "1"   desc="number of Velo tracks"/>
         <enumval name="RZVeloBW"      	value = "2"   desc="number of backward RZVelo tracks"/>
-        <enumval name="Velo"          	value = "3"   desc="number of 3D Velo tracks"/>
+        <enumval name="Velo"          	value = "3"   desc="number of Velo tracks pointing to IR"/>
         <enumval name="Muon"          	value = "4"   desc="number of muon tracks"/>
         <enumval name="BKMuon"        	value = "5"   desc="number of muon tracks NOT pointing to PV"/>
         <enumval name="SPDMult"       	value = "6"   desc="number of SPD hits"/>
@@ -39,12 +39,13 @@
         <enumval name="PV2D"          	value = "10"  desc="number of 2D vertices"/>
         <enumval name="PV3D"          	value = "11"  desc="number of 3D vertices"/>
         <enumval name="PU"            	value = "13"  desc="number of PU vertices"/>
+        <enumval name="Vertex"        	value = "14"  desc="number of vertices accepted in IR"/>
         <enumval name="Method"        	value = "20"  desc="method: 0 or missing is random method"/>
         <enumval name="Random"        	value = "21"  desc="random method: 0 or missing is L0 method"/>
         <enumval name="PoissonPUMult"   value = "50"  desc="number of times PU hits over threshold"/>
-        <enumval name="PoissonRZVelo"   value = "51"  desc="number of times RZVelo tracks over threshold"/>
+        <enumval name="PoissonRZVelo"   value = "51"  desc="number of times Velo tracks over threshold"/>
         <enumval name="PoissonRZVeloBW" value = "52"  desc="number of times backward RZVelo tracks over threshold"/>
-        <enumval name="PoissonVelo"     value = "53"  desc="number of times 3D Velo tracks over threshold"/>
+        <enumval name="PoissonVelo"     value = "53"  desc="number of times Velo tracks pointing to IR over threshold"/>
         <enumval name="PoissonMuon"     value = "54"  desc="number of times muon tracks over threshold"/>
         <enumval name="PoissonBKMuon"   value = "55"  desc="number of times muon tracks NOT pointing to PV over threshold"/>
         <enumval name="PoissonSPDMult"  value = "56"  desc="number of times SPD hits over threshold"/>
@@ -54,6 +55,7 @@
         <enumval name="PoissonPV2D"     value = "60"  desc="number of times2D vertices over threshold"/>
         <enumval name="PoissonPV3D"     value = "61"  desc="number of times 3D vertices over threshold"/>
         <enumval name="PoissonPU"       value = "63"  desc="number of times PU vertices over threshold"/>
+        <enumval name="PoissonVertex"   value = "64"  desc="number of times vertices in IR range over threshold"/>
         <enumval name="PoissonMethod"   value = "70"  desc="method: 0 or missing is random method"/>
         <enumval name="PoissonRandom"   value = "71"  desc="random method: 0 or missing is L0 method"/>
         <enumval name="Unknown"         value = "98"  desc="unknown value"/>
