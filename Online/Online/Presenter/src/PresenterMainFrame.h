@@ -416,6 +416,8 @@ public:
     m_presenterInfo.setEventType( eventType ); 
   }
 
+  void getDatabaseWriter( std::string& pass, std::string& user, std::string& name );
+
  private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;

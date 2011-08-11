@@ -200,14 +200,24 @@ void AlarmDisplay::infoHandler() {
 //=========================================================================
 void AlarmDisplay::clearAlarm( ) {
   std::cout << "Clear alarm for message " << m_lastMsgId << std::endl;
-  OMAMessage message( m_lastMsgId, *(m_mainFrame->histogramDB()));
-  if ( message.isactive () ) {
-    std::cout << "Should clear alarm for " << message.hIdentifier() << std::endl;
-    message.disable();
-    message.store();
-    m_mainFrame->histogramDB()->commit();
-    std::cout << "Alarm cleared I hope " << message.hIdentifier() << std::endl;
-  } else {
-    std::cout << "Alarm is not active. Ignore" << std::endl;
+
+  std::string dbPassword, dbUsername, dbName;
+  m_mainFrame->getDatabaseWriter( dbPassword, dbUsername, dbName );
+  std::cout << "Database " << dbName << " user " << dbUsername << " pass ******** " << std::endl;
+  if ( dbName != "" ) {
+    OnlineHistDB* writeDb = new OnlineHistDB( dbPassword, dbUsername, dbName );
+  
+    OMAMessage message( m_lastMsgId, *writeDb );
+    if ( message.isactive () ) {
+      std::cout << "Should clear alarm for " << message.hIdentifier() << std::endl;
+      message.disable();
+      message.store();
+      writeDb->commit();
+      std::cout << "Alarm cleared I hope " << message.hIdentifier() << std::endl;
+    } else {
+      std::cout << "Alarm is not active. Ignore" << std::endl;
+    }
+    delete writeDb;
   }
+  listAlarmsFromHistogramDB();
 }

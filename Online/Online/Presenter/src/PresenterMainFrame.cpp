@@ -5161,3 +5161,21 @@ void PresenterMainFrame::reAccessPage( ) {
   }     
 }
 //=========================================================================
+
+//=========================================================================
+//  
+//=========================================================================
+void PresenterMainFrame::getDatabaseWriter ( std::string& pass, std::string& user, std::string& name ) {
+  std::map<std::string*, std::string*>::iterator dbCreds;
+  for (dbCreds = m_knownDbCredentials.begin();
+       dbCreds != m_knownDbCredentials.end(); ++dbCreds) {
+    if ( (*(*dbCreds).first) == "HIST_WRITER" ){
+      user = "HIST_WRITER";
+      pass = *(*dbCreds).second;
+      name = *m_knownDatabases[0];
+      return;
+    }
+  }
+  user = "";
+  name = "";
+}
