@@ -40,6 +40,8 @@ private:
   IHistogram1D*            m_histPilErrorC  ;
   IHistogram1D*            m_histPigErrorC  ;
 
+  IHistogram1D*            m_histTotalCount ;
+  IHistogram1D*            m_histErrorCount ;
 
   std::string              m_referenceDataSuffix ;
   std::string              m_checkDataSuffix ;
