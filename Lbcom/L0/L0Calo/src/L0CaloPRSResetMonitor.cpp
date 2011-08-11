@@ -93,9 +93,9 @@ StatusCode L0CaloPRSResetMonitor::execute() {
 
   if ( 0 == candidates ) return StatusCode::SUCCESS ;
 
-  m_nEvents++ ;
-
   int card( 0 ) ;
+
+  bool oneElectronFound = false ;
 
   // Loop over the candidates
   for ( cand = candidates -> begin() ; candidates -> end() != cand ; 
@@ -106,11 +106,17 @@ StatusCode L0CaloPRSResetMonitor::execute() {
     if ( theCand -> type() != L0DUBase::CaloType::Electron ) 
       continue ;
     
+    oneElectronFound = true ;
+
     // Find the candidate board number
     card = m_ecal -> cardNumber( theCand -> id() ) ;
     if ( 0 != m_electronCounter.count( card ) ) 
       m_electronCounter[ card ] = m_electronCounter[ card ] + 1 ;
   }
+
+  if ( ! oneElectronFound ) return StatusCode::SUCCESS ;
+
+  m_nEvents++ ;
 
   // Analyse counters at the requested frequency
   if ( m_nEvents % m_updateFrequency == 0 ) {
