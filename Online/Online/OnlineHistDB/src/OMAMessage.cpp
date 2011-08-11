@@ -97,6 +97,7 @@ void OMAMessage::load() {
   if( 0 == m_ID) return; // not present in HistDB
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OMAMessage::load";
+  m_isAbort=true;
   std::string command =
     "BEGIN ONLINEHISTDB.GETMESSAGE(:id, theHName => :hn, theSaveSet => :ss";
   command += "  ,theTask => :tk, theAnalysisTask => :atk";
@@ -129,10 +130,8 @@ void OMAMessage::load() {
     myOCIBindInt   (stmt,":nre", m_nretrig);
     myOCIBindInt   (stmt,":isa", isactive);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt) ) {
-      if (m_anaid < 0) {
-        m_isAbort=true;
-      }
-      else {
+      if (m_anaid >= 0) { 
+        m_isAbort=false;
         m_histo = m_histo_null ? "" : std::string((const char *) HNAME);
         m_saveSet= m_saveset_null ? "" : std::string((const char *) SAVESET);
         m_taskName = m_taskName_null ? "" : std::string((const char *) TASK);
@@ -142,7 +141,7 @@ void OMAMessage::load() {
         m_ananame = std::string(m_ananame_null!=0 ? "" : (const char*)ANANAME);
         m_active = (isactive != 0);
         m_dbsync=true;
-        m_isAbort=false;
+
         if (!m_anaid_null)
           getAnaComment(m_anaid);
         else
