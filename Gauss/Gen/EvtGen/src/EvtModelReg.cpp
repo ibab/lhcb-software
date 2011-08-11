@@ -135,6 +135,11 @@
 
 #include "EvtGenModels/EvtBaryonPCR.hh"
 
+#include "EvtGenModels/EvtBcToNPi.hh"
+#include "EvtGenModels/EvtBcPsiNPi.hh"
+#include "EvtGenModels/EvtBcBsNPi.hh"
+#include "EvtGenModels/EvtBcBsStarNPi.hh"
+
 //#include "EvtGenModels/EvtJetSetCDF.hh"
 //#include "EvtGenModels/EvtJscontCDF.hh"
 
@@ -280,6 +285,10 @@ EvtModelReg::EvtModelReg(const std::list<EvtDecayBase*>* extraModels)
     modelist.registerModel(new EvtPVVCPLH);
     modelist.registerModel(new EvtSSD_DirectCP);
 
+    modelist.registerModel(new EvtBcToNPi(true)); // true = print author info
+    modelist.registerModel(new EvtBcPsiNPi);
+    modelist.registerModel(new EvtBcBsNPi);
+    modelist.registerModel(new EvtBcBsStarNPi);
 
 #ifndef EVTSTANDALONE
     cout << "Will registerModel EvtJetSet"<<endl;
