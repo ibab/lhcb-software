@@ -4,6 +4,15 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-08-11 - Jaap Panman
+ - add a filter algorithm FilterFillingScheme 
+   . filters on the presence of buckets in a given beam for a given magnet 
+     polarity
+   . this needs the online partition of the CondDB filling scheme data (2011 
+     onward)
+ - activate this filer for 2011 MAGUUP data Beam1, Beam2 in Brunel sequences 
+   (in Configuration.py)
+
 ! 2011-08-10 - Patrick Koppenburg
  - Task #21133:
    . Moved GetLumiParameters::rateFromTCK to RateFromTCK (LHCbAlgs)

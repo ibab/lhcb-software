@@ -33,7 +33,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
-       ,"DataType"      : "2010"     # Data type, can be ['DC06','2008','MC09','2009','2010']
+       ,"DataType"      : "2011"     # Data type, can be ['DC06','2008','MC09','2009','2010', '2011']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"MergeFSR"      : False      # merge FSRs into one container (incompatible with Integrate)
@@ -70,7 +70,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
         - to keep code clean it is better to use for earlier versions of Moore only the other FSR -
         '''
         from Configurables import ( LumiAccounting,
-                                    HltLumiSummaryDecoder, FilterOnLumiSummary, GaudiSequencer )
+                                    HltLumiSummaryDecoder, FilterOnLumiSummary, FilterFillingScheme,
+                                    GaudiSequencer )
         from Configurables import LoKi__ODINFilter  as ODINFilter
         # Create sub-sequences according to BXTypes
         crossings = self.getProp("BXTypes")
@@ -88,6 +89,21 @@ class LumiAlgsConf(LHCbConfigurableUser):
             seqMembers.append( methodfilter )
 
             if not self.getProp("Simulation"):
+                # add fillingscheme filter
+                OppositeBeam = '0' # default is no action
+                if i == 'Beam1': OppositeBeam = '2'
+                if i == 'Beam2': OppositeBeam = '1'
+                
+                if OppositeBeam != '0':
+                    fillingfilter = FilterFillingScheme('Filling'+i, 
+                                                        Beam = OppositeBeam,                       # check the opposite beam
+                                                        MagnetState = 'UP',                        # only for magnet UP
+                                                        BXOffset = -1,                             # check earlier bunch
+                                                        OutputLevel = self.getProp("OutputLevel"), # self.getProp("OutputLevel")
+                                                        )
+                    seqMembers.append( fillingfilter )
+                                                    
+                
                 accounting = LumiAccounting('LumiCount'+i,
                                             OutputDataContainer = "/FileRecords/LumiFSR"+i,
                                             OutputLevel = self.getProp("OutputLevel") )
