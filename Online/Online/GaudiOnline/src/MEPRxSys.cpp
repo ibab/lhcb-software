@@ -268,10 +268,12 @@ int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc,
     if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_TIMESTAMP)
       tv = (struct timeval *) CMSG_DATA(cmsg);
   }
-  if (tv) 
+  if (tv) {
     *when = 1000000 * tv->tv_sec + tv->tv_usec;
+    if (*when == 0) *when = 1; // paranoid sanity check for wrap-around, because *when == 0 signals error
+  }
   else 
-    *when = 0;
+    errstr = "timevalue = NULL";
   
   return s;
 #endif // ifndef _WIN32
@@ -521,7 +523,7 @@ int rx_select(int sockfd, int sec)
   int maxfd = sockfd + 1;
   int n;
   
-  n = select(maxfd, &rfds, NULL, NULL, &timeout);
+   n = select(maxfd, &rfds, NULL, NULL, &timeout);
 #ifdef _WIN32
   if (n == SOCKET_ERROR) return -1;
 #else

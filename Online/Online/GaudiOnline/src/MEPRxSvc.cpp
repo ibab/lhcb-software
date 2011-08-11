@@ -99,7 +99,6 @@ namespace LHCb  {
     int             m_refCount;
     int             m_spaceSize;
     unsigned long   m_age;
-    int             m_tick;
     int             m_nSrc;
     int             m_nrx;
     // run-time
@@ -166,7 +165,8 @@ namespace LHCb  {
     }
     // Run the application in synchonous mode
     int runSynchronous() {
-      int status = spaceRearm(0);
+      int status = spaceRearm(0);      
+      m_log << MSG::ERROR << "useless call from the framework" << endmsg;
       return (status == MBM_NORMAL) ? spaceAction() : status;
     }
     void multipleSrc(int srcid ) {
@@ -448,6 +448,8 @@ int MEPRx::spaceAction() {
   MBM::EventDesc& dsc = event();
   MEPEVENT* e = (MEPEVENT*)dsc.data;
   MEPEvent* m = (MEPEvent*)e->data;
+  
+  //m_log << MSG::ERROR << m_nrx <<  m_nSrc << endmsg;
   if (m_nrx != m_nSrc) incompleteEvent();
   /// Add MDF bank
   u_int8_t *buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN; 
@@ -474,7 +476,7 @@ int MEPRx::spaceAction() {
   // m_parent->m_complTimeTSC->fill(1.0 * (m_hdrtsc - m_firsthdrtsc), 1.0);
   m_parent->m_complTimeSock->fill(1.0 * (m_age), 1.0);
   m_parent->m_L0IDDiff->fill(1.0 * m_l0ID - m_prevL0ID, 1.0); //XXX JC
-  m_parent->m_tLastComp = m_parent->m_tLastRx; // us
+  m_parent->m_tLastComp = m_parent->m_tLastAdded; // us
   m_prevL0ID=m_l0ID;
   return sc;
 }
@@ -510,6 +512,9 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
     ERRMSG(m_log,"failed to receive message");
     return MEP_ADD_ERROR;
   }   
+  if (m_tCurFrag == 0) {
+    ERRMSG(m_log, errstr);
+  }
   MEPHdr *newhdr = (MEPHdr*) ((u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN);
   m_parent->m_rxOct[srcid] += len;
   m_parent->m_totRxOct += len;
@@ -534,9 +539,10 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
   m_parent->m_totRxEvt += m_pf;
   m_parent->m_rxMEP[srcid]++;
   m_parent->m_totRxMEP++;
-  m_parent->m_tLastRx = rxtim;
+  m_parent->m_tLastAdded = rxtim;
   m_partID = hdr->m_partitionID;
   m_age = m_tCurFrag - m_tFirstFrag;
+  // if (m_nrx == m_nSrc) m_log << MSG::ERROR << m_nrx <<  m_nSrc << endmsg;
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
@@ -601,7 +607,6 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("maxErrors", m_maxErrors = 50);
   declareProperty("nErrorSamples", m_nErrorSamples = 10);
   declareProperty("errorCheckInterval", m_errorCheckInterval = -1); // ms
-  declareProperty("RTTCCompat", m_RTTCCompat = false);
   declareProperty("createDAQErrorMEP", m_createDAQErrorMEP = false);
   declareProperty("createODINMEP", m_createODINMEP = false);
   declareProperty("resetCounterOnRunChange", m_resetCounterOnRunChange = true);
@@ -612,6 +617,8 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
   m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
   m_runNumber = 0; // when this becomes a problem I have hopefully something more interesting to do...
+  m_tLastAdded = 0; // us
+  m_tLastRx = 0;  // us
 }
 
 // Standard Destructor
@@ -767,7 +774,23 @@ void MEPRxSvc::freeRx() {
   }
 }
 
-void MEPRxSvc::forceEvent(RXIT &dsc) {
+void MEPRxSvc::forceEvent(RXIT &dsc, ForceReason reason) {
+  MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
+  switch (reason) {
+  case TIME_OUT: 
+    log << MSG::ERROR << "Time-out for event " << (*dsc)->m_l0ID << " started at " << (*dsc)->m_tFirstFrag <<
+      " last fragment received " << m_tLastRx << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) << " > limit" 
+	<< endmsg; 
+    break;
+  case NO_BUFFER:
+    log << MSG::ERROR << "Flush oldest event " << (*dsc)->m_l0ID << " started at " << (*dsc)->m_tFirstFrag <<
+      " last fragment received " <<  m_tLastRx << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) 
+	<< endmsg; 
+    break;
+  case END_OF_RUN:
+    log << MSG::ERROR << "Flush remaining events because of end of run" << endmsg;
+    break;
+  }
   (*dsc)->spaceAction();
   m_usedDsc.push_back(*dsc);
   m_workDsc.erase(dsc);
@@ -805,6 +828,7 @@ StatusCode MEPRxSvc::run() {
   for (;;) {
     int n = 0;
     if (m_ebState == RUNNING) {
+      checkTimeOut();
       n = MEPRxSys::rx_select(m_dataSock, m_MEPRecvTimeout);  
     }
     if (n ==  -1) {
@@ -827,7 +851,7 @@ StatusCode MEPRxSvc::run() {
 	  upda->update(0).ignore();
 	}
 	for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); w=m_workDsc.begin()) {
-          forceEvent(w);
+          forceEvent(w, END_OF_RUN);
 	}
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
@@ -835,7 +859,7 @@ StatusCode MEPRxSvc::run() {
       // we had a timeout - all events go up by the select timeoutvalue (which is in seconds!)
       for(RXIT w = m_workDsc.begin(); w != m_workDsc.end(); w=m_workDsc.begin()) 
 	(*w)->m_age += 1000000 * m_MEPRecvTimeout; 
-      ageEvents();
+      checkTimeOut();
       if (--ncrh == 0) {
         log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << 
 	  " free buffers. ";
@@ -851,20 +875,18 @@ StatusCode MEPRxSvc::run() {
       }
       continue;
     }
-    ageEvents();
-    u_int64_t tsc, rxtim;
+    u_int64_t tsc;
     std::string errstr;
     int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK, &tsc, 
-				 &rxtim, errstr);
+				 &m_tLastRx, errstr);
     if (len < 0) {
       if (!MEPRxSys::rx_would_block()) 
         ERRMSG(log,"recvmsg");
       continue;
     }
+    if (m_tLastRx == 0) 
+      ERRMSG(log, errstr);    
     
-    if (errstr != "") {
-      log << MSG::DEBUG << errstr << endmsg;
-    }
     m_totRxPkt++; 
     // Don't have sourceID yet, count per source later...
     m_numMEPRecvTimeouts = 0;
@@ -894,18 +916,14 @@ StatusCode MEPRxSvc::run() {
         // not found - get a new descriptor
         RXIT oldest = oldestRx();
 	// how long since we completed the last event?
-	m_idleTimeSock->fill(double(rxtim - m_tLastComp), 1.0);
+	m_idleTimeSock->fill(double(m_tLastRx - m_tLastComp), 1.0);
         try {
           if (m_freeDsc.empty()) {
-            forceEvent(oldest);
+            forceEvent(oldest, NO_BUFFER);
             freeRx(); // only if not in separate thread	    
           }
-	  // only necessary if multithreading
-          while (m_freeDsc.empty()) MEPRxSys::microsleep(100); 
-          lib_rtl_lock(m_freeDscLock);
           rx = m_freeDsc.back();
           m_freeDsc.pop_back();
-          lib_rtl_unlock(m_freeDscLock);
           rx->m_l0ID = mephdr->m_l0ID;
           RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),
 			       mephdr->m_l0ID,MEPRx::cmpL0ID);
@@ -919,7 +937,7 @@ StatusCode MEPRxSvc::run() {
       } 
     }
     m_rxPkt[srcid]++; // recieved packets per source
-    int rc = (*rxit)->addMEP(m_dataSock, mephdr, srcid, tsc, rxtim); 
+    int rc = (*rxit)->addMEP(m_dataSock, mephdr, srcid, tsc, m_tLastRx); 
     if ((*rxit)->m_runNumber != m_runNumber) {
       m_runNumber = (*rxit)->m_runNumber;
       log << MSG::DEBUG << "run-change detected - new run# " << m_runNumber << endmsg;
@@ -1143,11 +1161,12 @@ int MEPRxSvc::getSrcID(u_int32_t addr)  {
   return i->second;
 }
 
-void MEPRxSvc::ageEvents() {
+void MEPRxSvc::checkTimeOut() {
+  if (m_maxEventAge == 0 || m_tLastAdded == 0) return;
  ageloop:
-  for (RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
+  for (RXIT w = m_workDsc.begin(); w != m_workDsc.end(); ++w) {
     if ((m_tLastRx - (*w)->m_tFirstFrag)  > m_maxEventAge) { 
-      forceEvent(w);
+      forceEvent(w, TIME_OUT);
       freeRx(); // only if not in separate thread
       goto ageloop;
     }    

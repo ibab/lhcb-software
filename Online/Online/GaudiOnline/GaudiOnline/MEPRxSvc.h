@@ -78,6 +78,7 @@ namespace LHCb  {
 
   protected:
     enum EvtBuilderState { NOT_READY, READY, RUNNING, STOPPED };
+    enum ForceReason { END_OF_RUN, TIME_OUT, NO_BUFFER };
 
     bool m_LocalTest;   /*To tell to run locally for testing. */
     int m_DestTestPort;     /*udp test ports */
@@ -187,8 +188,9 @@ namespace LHCb  {
     IHistogram1D                *m_idleTimeSock;  // how long between two evts
     IHistogram1D		*m_L0IDDiff ; //L0ID gap between two evts
     u_int64_t                   m_runNumber;
-    u_int64_t                   m_tLastRx;   // time of last fragment of last received event in us
-    u_int64_t                   m_tLastComp; // time of last completed event in us
+    u_int64_t                   m_tLastAdded;   // time of last added fragment in us
+    u_int64_t                   m_tLastComp;    // time of last completed event in us
+    u_int64_t                   m_tLastRx;      // time of last received frament in us
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -217,7 +219,7 @@ namespace LHCb  {
     StatusCode setupMEPReq(const std::string& odinName);
     StatusCode sendMEPReq(int);
     void freeRx(void);
-    void forceEvent(RXIT &);
+    void forceEvent(RXIT &, enum ForceReason reason);
     int getSrcID(u_int32_t);
     StatusCode checkProperties();
     StatusCode error(const std::string& msg);
@@ -230,7 +232,7 @@ namespace LHCb  {
     void publishCounters(void);
     void publishHists(void);
     void handle(const Incident&); 
-    void ageEvents(void);
+    void checkTimeOut(void);
     int checkPartitionID(u_int32_t addr, struct MEPHdr *);
     void cryError(void);
     void truncatedPkt(struct RTL::IPHeader *);
