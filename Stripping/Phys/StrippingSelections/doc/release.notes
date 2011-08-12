@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-12 - Jon Harrison
+ - Added two stripping lines for tau LFV and BNV decays in StrippingTau2PMuMu.py
+
 ! 2011-08-09 - Patrick Koppenburg
  - Use OfflineRateLimiter to MB lines. Task 21133.
 
