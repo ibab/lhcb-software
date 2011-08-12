@@ -32,7 +32,6 @@ VeloMuonBuilder::VeloMuonBuilder( const std::string& name, ISvcLocator* pSvcLoca
   declareProperty( "chamberhit"      , m_chamberhit = true );
   declareProperty( "distancecut"     , m_distancecut = 3000000 );
   declareProperty( "xscale"          , m_xscale = 0.06);
-  declareProperty( "chiweight"       , m_chiweight = 0.1);
   declareProperty( "lhcbids"         , n_lhcbids = 4);
   declareProperty( "cut"       , m_distcutmultiplyer =1);
   declareProperty( "MaxVeloTracks" , m_maxvelos = 1000 );
@@ -280,7 +279,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
 
         aCopy->setType(LHCb::Track::Long);
-        sc = m_tracksFitter->fit(*aCopy,LHCb::ParticleID(13));
+        //sc = m_tracksFitter->fit(*aCopy,LHCb::ParticleID(13));
         if (sc.isFailure()) {delete aCopy; aCopy=NULL;continue;}
 
         aCopy->clearAncestors();
@@ -289,7 +288,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
         aCopy->addToAncestors(*muonIter);
       }
 
-      float weight = float(weighteddistance * (1-m_chiweight) + m_chiweight * aCopy->chi2());
+      float weight = float(weighteddistance);
       if (weight<minweight) {
         // -- if we created a Track and want to use another one. then we should delete the old one
         if (goodCopy) delete goodCopy;
@@ -309,6 +308,8 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
     goodCopy->addInfo(4444,1);
     goodCopy->addInfo(4445,mindist);
     goodCopy->addInfo(4446,minreg);
+    sc = m_tracksFitter->fit(*goodCopy,LHCb::ParticleID(13));
+    
     trackvector->add(goodCopy);
     goodCopy=NULL; // clean up
   }

@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-08-11 - Paul Seyfert
+ - VeloMuonBuilder: move trackfit after selection of the best candidate
+                   - tiny impact on efficiency and ghost rate
+                   - large reduction of CPU consumption
+
 !========================= TrackTools v4r7 2011-07-27 =========================
 ! 2011-07-22 - Marco Cattaneo
  - Create debug() messages only when output level requires it,
