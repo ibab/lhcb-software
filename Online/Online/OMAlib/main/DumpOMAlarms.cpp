@@ -59,12 +59,11 @@ int main(int narg,char **argv ) {
 #else
     char* pass =getpass("Enter the HIST_WRITER password for clearing alarms:");   
     DBpw=pass;
-  }
 #endif
-
+  }
   // connect to DB
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
-
+  
   if (!HistDB) {
     cout << "ERROR: failed to connect to HistDB" << endl;
     return 1;
