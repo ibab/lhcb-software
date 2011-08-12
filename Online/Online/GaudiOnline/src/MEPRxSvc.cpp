@@ -875,10 +875,11 @@ StatusCode MEPRxSvc::run() {
       }
       continue;
     }
-    u_int64_t tsc;
+    u_int64_t tsc, _tmp;
     std::string errstr;
     int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK, &tsc, 
-				 &m_tLastRx, errstr);
+				 &_tmp, errstr);
+    if (_tmp > m_tLastRx) m_tLastRx = _tmp;
     if (len < 0) {
       if (!MEPRxSys::rx_would_block()) 
         ERRMSG(log,"recvmsg");
@@ -910,7 +911,7 @@ StatusCode MEPRxSvc::run() {
       rxit = --m_workDsc.end();
     } else {
       rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(), 
-			 mephdr->m_l0ID,MEPRx::cmpL0ID);
+			 mephdr->m_l0ID, MEPRx::cmpL0ID);
       if (rxit == m_workDsc.end() || (*rxit)->m_l0ID != mephdr->m_l0ID) {
 	
         // not found - get a new descriptor
