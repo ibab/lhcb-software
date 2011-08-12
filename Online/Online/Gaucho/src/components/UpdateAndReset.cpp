@@ -163,7 +163,11 @@ StatusCode UpdateAndReset::start()
   {
     serviceParts = Strsplit((char*)m_utgid.c_str(), (char*)"_");
     partName = serviceParts->at(0);
-    taskName = serviceParts->at(1);
+    if (partName=="CALD0701")
+    {
+       partName="LHCb";
+    }
+    taskName = m_MyName;
   }
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
   infoName = partName+"/"+taskName+"/SAVESETLOCATION";
