@@ -43,6 +43,8 @@ __all__     = (
     #
     'makeGraph'      , ## make ROOT Graph from input data
     'h2_axes'        , ## book 2D-histogram from axes
+    'h1_axis'        , ## book 1D-histogram from axis 
+    'axis_bins'      , ## convert list of bin edges to axis
     've_adjust'      , ## adjust the efficiency to be in physical range 
     )
 # =============================================================================
@@ -1475,7 +1477,6 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
             _x += [   k  ]
             _y += [ x[k] ] 
         return makeGraph ( _x , _y )
-
         
     if  not x : raise TypeError, "X is not a proper vector!"
     if  not y : raise TypeError, "Y is not a proper vector!"
@@ -1538,6 +1539,50 @@ def h2_axes ( x_axis       ,
                        len ( x_bins ) - 1 , array ( x_bins , dtype='d' ) ,
                        len ( y_bins ) - 1 , array ( y_bins , dtype='d' ) ) 
 
+
+# =============================================================================
+## make 1D-histogram from axis
+def h1_axis ( axis         ,
+              title = '1D' , 
+              name  = None ) :
+    """
+    Make 1D-histogram with binning deifned by already created axes
+    
+    >>> axis = ...
+    >>> h1 = h1_axes ( axis , title = 'MyHisto' ) 
+    
+    """
+    #
+    if not name : name = hID() 
+    #
+    bins  = [ axis.GetBinLowEdge ( i ) for i in axis ]
+    bins += [ axis.GetXmax() ]
+    #
+    from numpy import array
+    #
+    return ROOT.TH1F ( name  ,
+                       title ,
+                       len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
+
+
+# =============================================================================
+## make axis form bins 
+def axis_bins ( bins         ) :
+    """
+    Make axis according to the binning 
+    
+    >>> bins = [ ... ] 
+    >>> axis = axis_bins ( bins )  
+    
+    """
+    #
+    assert ( 1 < len ( bins ) )
+    #
+    from numpy import array
+    #
+    return ROOT.TAxis ( 
+        len ( bins ) - 1 , array ( bins , dtype='d' )
+        ) 
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 
