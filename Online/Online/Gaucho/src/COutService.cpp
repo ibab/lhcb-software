@@ -21,7 +21,7 @@ template <> COutService<double>::COutService(std::string nam) : COutServiceBase(
 {
   m_data = -1;
   printf("New SPECIAL Output Service %s of type double\n",nam.c_str());
-  m_serv = new DimService(m_nam.c_str(),(float&)m_data);
+  m_serv = new DimService(m_nam.c_str(),"F",0,0);//(float&)m_data);
 }
 
 template <> COutService<long long>::COutService(std::string nam) : COutServiceBase(nam)
@@ -36,7 +36,7 @@ template <> void COutService<double>::Update(double &d)
   float dat;
   dat = (float)d;
   printf("SPECIAL Update Output Service %s of type double\n", m_nam.c_str());
-  m_serv->updateService(dat);
+  m_serv->updateService(&dat,sizeof(float));
 }
 
 template <> void COutService<long long>::Update(long long &d)
