@@ -15,7 +15,7 @@ def parseReq(requirements, token='use', default_version="*"):
     projver={}
     for req in requirements:
         aproj=''
-        aver=star
+        aver=default_version
         req=req.strip()
         #ignore lines
         if 'use' not in req:
