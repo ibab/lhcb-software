@@ -11,6 +11,8 @@
 #include "PageDescriptionTextView.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
+#include "Elog.h"
+#include "ShiftDB.h"
 
 using namespace pres;
 
@@ -213,7 +215,22 @@ void AlarmDisplay::clearAlarm( ) {
       message.disable();
       message.store();
       writeDb->commit();
-      std::cout << "Alarm cleared I hope " << message.hIdentifier() << std::endl;
+      std::cout << "Alarm cleared in the database" << message.hIdentifier() << std::endl;
+
+      Elog myElog( m_mainFrame->logbookConfig(), 8080 );
+      myElog.setCredential( "common", "Common!" );
+      myElog.setLogbook( "Shift" );
+      ShiftDB shiftdb ;
+      std::string username =  shiftdb.getCurrentDataManager();
+      myElog.addAttribute( "Author", username );
+      std::string system = message.concernedSystem();
+      if ( system.empty() ) system = "LHCb";
+      myElog.addAttribute( "System", system );
+      std::string body = "DM cleared Analysis message: " + std::string( message.msgtext() );
+      myElog.addAttribute( "Run", "" );
+      std::cout << "send to Elog " << std::endl;
+      int number = myElog.submit( body );
+      std::cout << "=== Elog produced entry " << number << std::endl;
     } else {
       std::cout << "Alarm is not active. Ignore" << std::endl;
     }

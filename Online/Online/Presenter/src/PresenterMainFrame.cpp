@@ -4852,7 +4852,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
                                       "loadWebPage(Int_t)" );
             } else {
               m_histomenu -> DeleteEntry( 2 ) ;
-              if ( pres::Alarm == displayMode() ) {
+              if ( pres::Alarm == displayMode() && m_shiftCrew ) {
                 m_histomenu -> AddEntry( "Clear the alarm" , 2 ) ;
                 m_histomenu -> Connect( m_histomenu , "Activated(Int_t)",
                                         "PresenterMainFrame" , this,

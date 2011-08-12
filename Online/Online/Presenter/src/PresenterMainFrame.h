@@ -186,8 +186,8 @@ public:
   void setVerbosity(const pres::MsgLevel & verbosity); ///< Set verbosity level 
 
   /// Set logbook configuration
-  void setLogbookConfig(const std::string & logBookConfig) { 
-    m_logBookConfig = logBookConfig ; } ;
+  void setLogbookConfig(const std::string & logBookConfig) { m_logBookConfig = logBookConfig ; }
+  std::string logbookConfig() { return m_logBookConfig; }
 
   /// Set the problem database configuration
   void setPbdbConfig(const std::string & pbdbConfig) { m_pbdbConfig = pbdbConfig ; } ;
@@ -418,6 +418,8 @@ public:
 
   void getDatabaseWriter( std::string& pass, std::string& user, std::string& name );
 
+  void setShiftCrew( bool crew ) { m_shiftCrew = crew; }  
+
  private:
   UInt_t            m_initWidth;
   UInt_t            m_initHeight;
@@ -454,6 +456,7 @@ public:
   std::string       m_message;
 
   bool m_editingAllowed;
+  bool m_shiftCrew;
 
   void cleanHistogramDB();
 

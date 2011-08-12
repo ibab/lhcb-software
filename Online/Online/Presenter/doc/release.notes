@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-08-12 - Olivier Callot
+ - Log in the logbook when a monitoring alarm is cleared.
+ - Clearing alarm available only if shift-crew = true in the configuration
+
 ! 2011-08-11 - Olivier Callot
  - Clear the monitoring alarm with a right click when displayed.
 

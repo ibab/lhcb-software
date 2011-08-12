@@ -172,6 +172,7 @@ int main(int argc, char* argv[]) {
       ("offline-context,K", value<bool>()->default_value( false ), "Running in offline context, for file access" )
       ("offline-event-type,Z", value<std::string>()->default_value( "EXPRESS" ), "Event type offline" )
       ("offline-processing,W", value<std::string>()->default_value( "Reco10" ), "Processing version" )
+      ("shift-crew,w", value<bool>()->default_value( false ), "Version fo rteh shift crew" )
       ;
 
     // program argument -> histo list
@@ -334,9 +335,14 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setPresenterMode( pres::Online ) ;
     }
 
-    if (startupSettings.count("partition"))
+    if (startupSettings.count("partition")) {
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
+    }
 
+    if (startupSettings.count("shift-crew")) {  
+      presenterMainFrame.setShiftCrew(startupSettings["shift-crew"].as<bool>());
+    }
+    
     //== Database mode
     if (startupSettings.count("login") &&
         ("batch" != startupSettings["mode"].as<std::string>())) {
