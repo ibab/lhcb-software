@@ -8,16 +8,20 @@ version           v1r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src 
+branches          cmt doc src Mint 
+
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-# use   Package      v1r*    Hat
 use           GaudiAlg          v*
 use ROOT              v*  LCG_Interfaces  -no_auto_imports
 
-include_path      none
+#============================================================================
+# Include directories
+#============================================================================
+apply_pattern install_more_includes more=Mint
+
 #===========================================================================
 # Component library building rule
 #============================================================================
@@ -54,15 +58,21 @@ library          Mint    Mint/Events/src/*.C           \
                          Mojito/Zemach/src/*.C \
                          Mojito/Symmetries/src/*.C \
                          Mojito/SpinFactors/src/*.C 
+
 #============================================================================
 # define component library link options
 #============================================================================
-
-macro_append     ROOT_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad" WIN32 " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib libMathCore.lib libCore.lib libGpad.lib"
-#===========================================================================
 apply_pattern component_library    library=Mint
 
+macro            Mint_linkopts " -lMint "
 
+# -- Need more things from ROOT
+private
+macro_append     ROOT_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad" \
+                 WIN32 " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib libMathCore.lib libCore.lib libGpad.lib"
+
+# -- Private header files
+private
 include_dirs 	$(MINTROOT)/src/Mint/Utils/src
 include_dirs 	$(MINTROOT)/src/Mint/Events/src
 include_dirs 	$(MINTROOT)/src/Mint/IReturnIntefaces/src
@@ -75,7 +85,6 @@ include_dirs    $(MINTROOT)/src/Mint/NamedParameter/src
 
 #===========
 # MINT DALITZ
-
 
 include_dirs  $(MINTROOT)/src/Mojito/Amplitudes/src
 include_dirs  $(MINTROOT)/src/Mojito/BetterMC/src  
@@ -101,3 +110,4 @@ include_dirs  $(MINTROOT)/src/Mojito/stuff/src
 include_dirs  $(MINTROOT)/src/Mojito/Zemach/src
 include_dirs  $(MINTROOT)/src/Mojito/Symmetries/src
 include_dirs  $(MINTROOT)/src/Mojito/SpinFactors/src
+end_private

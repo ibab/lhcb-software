@@ -1,0 +1,27 @@
+!-----------------------------------------------------------------------------
+! Package     : Gen/Mint
+! Responsible : Matt Coombes
+! Author      : Jonas Rademacker
+! Purpose     : Original author of MINT Dr. Jonas Rademacker.
+!               Matt Coombes has task of implementing MINT into LHCb framework.
+!-----------------------------------------------------------------------------
+
+
+! 10-08-2011 - Matt Coombes
+ - Edited ParticlePropertiesList.C to find .cvs files using $MINTROOT
+ - Added MoelNotes.txt to describe the models included within MINT
+ - Included models folder containing 3 current models to be used in production
+ - Implemented model naming format clearly visible and consistent with EvtModel
+
+  
+! 18-07-2011 - Matt Coombes
+ - Cleaned up Dalitz Event removed DecayD.C and .h
+  Instead use exterior interface to interact directly with Gauss
+
+! 06-07-2011 - Matt Coombes
+ - Replaced Mojito Makefile with a new Makefile from Jonas
+ - Updated MINT version to most recent local improvements by Jonas.
+
+! 03-04-2011 - Matt Coombes
+ - First Added MINT to LHCb framework
+!=============================================================================
