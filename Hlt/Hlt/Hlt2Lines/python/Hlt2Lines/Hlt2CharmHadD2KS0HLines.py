@@ -2,7 +2,7 @@ __author__  = [ 'Sam Gregson' ]
 
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from GaudiKernel.SystemOfUnits import MeV
+from GaudiKernel.SystemOfUnits import MeV, mm
 
 ## Create a python class that inherits from HltLinesConfigurableUser
 class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
@@ -10,23 +10,25 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
    # define some values so that they are not hard-coded
     __slots__ = {
                   ## KS0 daughter pion cuts
-                    'KS0DaugTrackChi2' : 5.0
-                  , 'KS0DaugMIPChi2'   : 90.0
+                    'KS0DaugTrackChi2' : 4.0
+                  , 'KS0DaugMIPChi2'   : 45.0
                   ## KS0 mother cuts
-                  , 'KS0VertexChi2'    : 15.0
-                  , 'KS0PT'            : 800.0 * MeV
+                  , 'KS0VertexChi2'    : 12.0
+                  , 'KS0PT'            : 700.0 * MeV
+                  , 'KS0MIPChi2'       : 8
+                  , 'ZDiff'       : 10 * mm   
 
                   ## Bachelor pion cuts
                   , 'BachPionP'         : 4500.0 * MeV
                   , 'BachPionPT'        : 450.0 * MeV
-                  , 'BachPionTrackChi2' : 5.0
-                  , 'BachPionMIPChi2'   : 30.0
+                  , 'BachPionTrackChi2' : 4.0
+                  , 'BachPionMIPChi2'   : 10.0
 
                   ## Bachelor kaon cuts
                   , 'BachKaonP'         : 4500.0 * MeV
                   , 'BachKaonPT'        : 450. * MeV
-                  , 'BachKaonTrackChi2' : 5.0
-                  , 'BachKaonMIPChi2'   : 30.0
+                  , 'BachKaonTrackChi2' : 4.0
+                  , 'BachKaonMIPChi2'   : 10.0
 
                   ## D meson cuts
                   ## Combo cuts
@@ -35,9 +37,10 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                   ## Mother cuts
                   , 'DMesonMotherLowMass'    : 1770.0 * MeV
                   , 'DMesonMotherHighMass'   : 2070.0 * MeV
-                  , 'DMesonMotherVertexChi2' : 15.0
-                  , 'DMesonMotherMIPChi2'    : 25.0
-                  , 'DMesonMotherPT'         : 1800.0 * MeV
+                  , 'DMesonMotherVertexChi2' : 12.0
+                  , 'DMesonMotherMIPChi2'    : 20.0
+                  , 'DMesonMotherPT'         : 1000.0 * MeV
+                 
                   , 'TisTosParticleTaggerSpecs': { "Hlt1Track.*Decision%TOS":0 }
                   , 'name_prefix'              : 'CharmHadD2KS0H'
                   ## prescales
@@ -65,7 +68,8 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                  "& (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s)" \
                  "& (PT > %(KS0PT)s)" \
                  "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1)" \
-                 "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2)" % self.getProps()
+                 "& CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2)" \
+                 "& (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)" % self.getProps()
 
 
         # Define the HLT2 member with it's necessary inputs
@@ -142,7 +146,8 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         mothercuts = "in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s)" \
                      "& (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s)" \
                      "& (PT > %(DMesonMotherPT)s)" \
-                     "& (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)"  % self.getProps()
+                     "& (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" \
+                     "& ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(ZDiff)s)" % self.getProps()
 
         # Daughter cuts defined in bachelor pion/kaon filter      
         
