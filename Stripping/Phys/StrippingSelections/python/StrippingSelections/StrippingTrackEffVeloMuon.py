@@ -318,23 +318,19 @@ def trackingPreFilter(name, prefilter):
    VeloMuonBuilder1 = VeloMuonBuilder("VeloMuonBuilder")
    VeloMuonBuilder1.OutputLevel = 6
    VeloMuonBuilder1.MuonLocation = "Hlt1/Track/MuonSeg"
-   VeloMuonBuilder1.VeloLocation = "Rec/Track/FittedVelo"
+   VeloMuonBuilder1.VeloLocation = "Rec/Track/UnFittedVelo"
    VeloMuonBuilder1.lhcbids = 4
    VeloMuonBuilder1.OutputLocation = "Rec/VeloMuon/Tracks"
 
    preve = TrackPrepareVelo("preve")
    preve.inputLocation = "Rec/Track/Velo"
-   preve.outputLocation = "Rec/Track/UnfittedPreparedVelo"
+   preve.outputLocation = "Rec/Track/UnFittedVelo"
    preve.bestLocation = ""
-   vefit = ConfiguredFit("vefit","Rec/Track/UnfittedPreparedVelo")
-   vefit.TracksOutContainer = "Rec/Track/FittedVelo"
-   vefit.addTool(TrackMasterFitter, name = 'Fitter')
-   ConfiguredFastFitter( getattr(vefit,'Fitter'))
-	
+
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
                          Members = [ DecodeVeloRawBuffer(name+"VeloDecoding",DecodeToVeloLiteClusters=True,DecodeToVeloClusters=True),
 			         FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
-				 preve,vefit, 
+				 preve, 
 				 StandaloneMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
 
    return GSWrapper(name="WrappedVeloMuonTracking",
