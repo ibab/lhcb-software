@@ -62,7 +62,8 @@ StatusCode RawDataSize::initialize()
 
 StatusCode RawDataSize::prebookHistograms()
 {
-  const unsigned int nL1sMax = 30;
+  const unsigned int nL1sMax = m_RichSys->level1HardwareIDs().size();
+  const unsigned int nHPDs   = m_RichSys->allHPDRichSmartIDs().size();
 
   // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
@@ -75,10 +76,9 @@ StatusCode RawDataSize::prebookHistograms()
                  -0.5, nL1sMax*10 - 0.5, nL1sMax*10 );
 
   // size per HPD
-  const LHCb::RichSmartID::Vector & hpds = m_RichSys->allHPDRichSmartIDs();
   richProfile1D( HID("hpds/SizeVHPDCopyNumber"),
                  "Average Size (32bit words) V HPD Copy Number",
-                 -0.5, hpds.size() - 0.5, hpds.size() );
+                 -0.5, nHPDs - 0.5, nHPDs );
 
   return StatusCode::SUCCESS;
 }

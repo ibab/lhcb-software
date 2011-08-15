@@ -27,6 +27,9 @@
 // Event
 #include "Event/ODIN.h"
 
+// RichDet
+#include "RichDet/DeRichSystem.h"
+
 // boost
 #include "boost/assign/list_of.hpp"
 
@@ -59,11 +62,18 @@ namespace Rich
       virtual StatusCode execute   ();    // Algorithm execution
 
     protected:
-      
+
       /// Pre-Book all (non-MC) histograms
       virtual StatusCode prebookHistograms();
 
     private:
+
+      /// Fill the plots for the given L1ID and error code
+      void fillPlots( const Rich::DAQ::Level1CopyNumber logID,
+                      const int errorCode,
+                      const bool error,
+                      AIDA::IProfile1D * h1D,
+                      AIDA::IHistogram2D * h2D );
 
       /// Make plots for given L1 board
       StatusCode makePlots( const Rich::DAQ::IngressMap & inMap,
@@ -72,13 +82,16 @@ namespace Rich
       /// Get histo labels
       const Rich::HistoAlgBase::BinLabels & labels();
 
-      /// Get histogram
+      /// Get the 1D histogram
       AIDA::IProfile1D * getHisto( const int l1ID );
-      
+
     private: // data
 
       /// Raw Buffer Decoding tool
       const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+
+      /// Pointer to RICH system detector element
+      const DeRichSystem * m_RichSys;
 
     };
 

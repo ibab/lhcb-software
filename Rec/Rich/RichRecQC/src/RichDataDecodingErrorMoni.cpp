@@ -23,7 +23,9 @@ DECLARE_ALGORITHM_FACTORY( DataDecodingErrorMoni )
   DataDecodingErrorMoni::DataDecodingErrorMoni( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
     : HistoAlgBase ( name, pSvcLocator ),
-      m_decoder    ( NULL ) { }
+      m_decoder    ( NULL ),
+      m_RichSys    ( NULL )
+{ }
 
 // Destructor
 DataDecodingErrorMoni::~DataDecodingErrorMoni() { }
@@ -37,6 +39,9 @@ StatusCode DataDecodingErrorMoni::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
+
+  // RichDet
+  m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   return sc;
 }
@@ -53,9 +58,21 @@ const Rich::HistoAlgBase::BinLabels & DataDecodingErrorMoni::labels()
 
 StatusCode DataDecodingErrorMoni::prebookHistograms()
 {
-  richProfile1D( HID("decodingErrors"), 
-                 "DAQ Decoding Error Rates (%)", 0.5, 6.5, 6,
+  const unsigned int nlabels = labels().size();
+  const unsigned int nL1s    = m_RichSys->level1HardwareIDs().size();
+
+  richProfile1D( HID("decodingErrors"),
+                 "DAQ Decoding Error Rates (%)",
+                 0.5, nlabels + 0.5, nlabels,
                  "DAQ Decoding Error Types", "Error Rate (%)", labels() );
+
+  richHisto2D( HID("decodingErrorsByBoard"),
+               "DAQ Decoding Error Rates by UKL1 Board (%)",
+               0.5, nL1s    + 0.5, nL1s,
+               0.5, nlabels + 0.5, nlabels,
+               "UKL1 Copy Number", "",
+               "Error Rate (%)", BinLabels(), labels() );
+
   return StatusCode::SUCCESS;
 }
 
@@ -83,18 +100,18 @@ StatusCode DataDecodingErrorMoni::execute()
   return sc;
 }
 
-AIDA::IProfile1D * 
+AIDA::IProfile1D *
 DataDecodingErrorMoni::getHisto( const int l1ID )
 {
   AIDA::IProfile1D * histo(NULL);
-  if ( l1ID < 0 ) 
+  if ( l1ID < 0 )
   {
     histo = richProfile1D( HID("decodingErrors") );
   }
   else
   {
     std::ostringstream id,title;
-    id << "decodingErrors-L1hardID" << l1ID;
+    id << "L1s/decodingErrors-L1hardID" << l1ID;
     title << "L1-HardwareID " << l1ID << " DAQ Decoding Error Rates (%)";
     histo = richProfile1D( HID(id.str()), title.str(), 0.5, 6.5, 6,
                            "DAQ Decoding Error Types", "Error Rate (%)", labels() );
@@ -108,9 +125,18 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  // Histo
-  AIDA::IProfile1D * histo = getHisto(l1ID);
-  if ( !histo ) return Error( "Null Decoding Error Histogram Pointer" );
+  // Get the Histos as needed
+  AIDA::IProfile1D   * h1D = getHisto(l1ID);
+  AIDA::IHistogram2D * h2D = ( l1ID != -1 ? NULL :
+                               richHisto2D( HID("decodingErrorsByBoard") ) );
+
+  // Get L1 Copy Number
+  Rich::DAQ::Level1CopyNumber copyN;
+  if ( l1ID != -1 )
+  {
+    const Rich::DAQ::Level1HardwareID hID( l1ID );
+    copyN = m_RichSys->copyNumber(hID);
+  }
 
   // Get the ODIN
   const LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
@@ -123,10 +149,10 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
     const Rich::DAQ::L1IngressHeader & ingressHeader = ingressInfo.ingressHeader();
 
     // Check if all HPDs are suppressed
-    histo -> fill( 1, ingressHeader.hpdsSuppressed() ? 100.0 : 0.0 );
+    fillPlots( copyN, 1, ingressHeader.hpdsSuppressed() ? 100.0 : 0.0, h1D, h2D );
 
     // Check BX ID between Rich and ODIN
-    histo -> fill( 2, BXID(odin->bunchId()) != ingressHeader.bxID() ? 100.0 : 0.0 );
+    fillPlots( copyN, 2, BXID(odin->bunchId()) != ingressHeader.bxID() ? 100.0 : 0.0, h1D, h2D );
 
     // Loop over HPDs in this ingress
     for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
@@ -134,21 +160,37 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
     {
       const bool inhibit = (*iHPD).second.header().inhibit();
       // inhibited HPDs
-      histo -> fill( 3, inhibit ? 100.0 : 0.0 );
+      fillPlots( copyN, 3, inhibit ? 100.0 : 0.0, h1D, h2D );
       if ( !inhibit )
       {
         // Invalid HPD (BD lookup error)
-        histo  -> fill( 4, !(*iHPD).second.hpdID().isValid() ? 100.0 : 0.0 );
+        fillPlots( copyN, 4, !(*iHPD).second.hpdID().isValid() ? 100.0 : 0.0, h1D, h2D );
         // Event IDs
-        histo -> fill( 5,
-                       (*iIn).second.ingressHeader().eventID() !=
-                       (*iHPD).second.header().eventID() ? 100.0 : 0.0 );
+        fillPlots( copyN, 5,
+                   ( (*iIn).second.ingressHeader().eventID() !=
+                     (*iHPD).second.header().eventID() ? 100.0 : 0.0 ), h1D, h2D );
         // HPD header in extended mode
-        histo -> fill( 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0 );
+        fillPlots( copyN, 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0, h1D, h2D );
       }
     } // loop over HPDs
 
   } // ingresses
 
   return sc;
+}
+
+void DataDecodingErrorMoni::fillPlots( const Rich::DAQ::Level1CopyNumber copyN,
+                                       const int errorCode,
+                                       const bool error,
+                                       AIDA::IProfile1D * h1D,
+                                       AIDA::IHistogram2D * h2D )
+{
+  if ( h1D ) 
+  {
+    h1D->fill( errorCode, error ? 100.0 : 0.0 );
+  }
+  if ( h2D ) 
+  {
+    if ( error ) { h2D->fill( copyN.data(), errorCode ); }
+  }
 }

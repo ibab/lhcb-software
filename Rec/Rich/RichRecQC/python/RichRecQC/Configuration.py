@@ -397,7 +397,8 @@ class RichRecQCConf(RichConfigurableUser):
 
         # PID Performance
         if "PidMonitoring" in monitors :
-            self.pidPerf(self.newSeq(sequence,"RichPIDMoni"))
+            self.pidPerf(self.newSeq(sequence,"RichPIDMoni"),False,"RiPIDMon")
+            #self.pidPerf(self.newSeq(sequence,"RichPIDMoniDLL"),True,"RiPIDMonDLL")
 
         # Trackless rings angles
         if "TracklessRingAngles" in monitors :
@@ -486,7 +487,7 @@ class RichRecQCConf(RichConfigurableUser):
         sequence.Members += [ self.createMonitor(Rich__Rec__PixelClusterMoni,"RichRecPixelClusters") ]
 
     ## Run the PID Performance monitors
-    def pidPerf(self,sequence):
+    def pidPerf(self,sequence,useDLLcut=False,basename="RiPIDMon"):
 
         from Configurables import ( Rich__Rec__MC__PIDQC )
 
@@ -499,7 +500,7 @@ class RichRecQCConf(RichConfigurableUser):
                 # Construct the name for this monitor out of the track types
                 # and momentum range
                 tkName = self.trackSelName(trackType)
-                name = "RiPIDMon" + tkName + `pRange[0]` + "To" + `pRange[1]`
+                name = basename + tkName + `pRange[0]` + "To" + `pRange[1]`
 
                 # Make a monitor alg
                 pidMon = self.createMonitor(Rich__Rec__MC__PIDQC,name,trackType)
@@ -507,6 +508,8 @@ class RichRecQCConf(RichConfigurableUser):
                 # Trackselector momentum cuts
                 pidMon.TrackSelector.MinPCut = pRange[0]
                 pidMon.TrackSelector.MaxPCut = pRange[1]
+
+                if useDLLcut : pidMon.KaonDLLCut = 0;
 
                 # RichPID location
                 pidMon.InputPIDs = self.getProp("RichPIDLocation")

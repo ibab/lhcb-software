@@ -42,7 +42,7 @@ DECLARE_ALGORITHM_FACTORY( PIDQC )
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = false );
+  declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = true );
   declareProperty( "IgnoreMCThresholds", m_ignoreMCThres     = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = 9999999 );
@@ -51,7 +51,7 @@ DECLARE_ALGORITHM_FACTORY( PIDQC )
   m_requiredRads[Rich::Rich2Gas] = false;
   declareProperty( "RequiredRads", m_requiredRads );
   declareProperty( "ApplyMCPSel", m_mcPsel = false );
-  declareProperty( "ExpertPlots", m_expertPlots = false );
+  declareProperty( "ExpertPlots", m_expertPlots = true );
 
   // Initialise summary information
   for ( int i = 0; i<6; ++i )
@@ -101,22 +101,22 @@ StatusCode PIDQC::initialize()
   }
 
   // Warn if ignoring threshold information
-  if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information",
-                                    StatusCode::SUCCESS ).ignore();
-  if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information",
-                                    StatusCode::SUCCESS ).ignore();
+  //if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information",
+  //                                  StatusCode::SUCCESS ).ignore();
+  //if ( m_ignoreMCThres )   Warning( "Ignoring MC threshold information",
+  //                                  StatusCode::SUCCESS ).ignore();
 
   // Warn if using kaon DLL cut
-  if ( m_dllKaonCut < 9999991 )
-    Warning( "Applying kaon selection dll(kaon) < " +
-             boost::lexical_cast<std::string>(m_dllKaonCut),
-             StatusCode::SUCCESS ).ignore();
+  //if ( m_dllKaonCut < 9999991 )
+  //  Warning( "Applying kaon selection dll(kaon) > " +
+  //          boost::lexical_cast<std::string>(m_dllKaonCut),
+  //          StatusCode::SUCCESS ).ignore();
 
   // Warn if using pion DLL cut
-  if ( m_dllPionCut < 9999991 )
-    Warning( "Applying pion selection dll(pion) < " +
-             boost::lexical_cast<std::string>(m_dllPionCut),
-             StatusCode::SUCCESS ).ignore();
+  //if ( m_dllPionCut < 9999991 )
+  //  Warning( "Applying pion selection dll(pion) > " +
+  //           boost::lexical_cast<std::string>(m_dllPionCut),
+  //           StatusCode::SUCCESS ).ignore();
 
   return sc;
 }
@@ -232,7 +232,8 @@ StatusCode PIDQC::execute()
     {
       // Get true track type from MC
       mcpid = m_mcTruth->mcParticleType(track);
-      if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
+      //if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
+      if ( mcpid == Rich::Unknown )
       {
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
@@ -246,7 +247,7 @@ StatusCode PIDQC::execute()
         if ( msgLevel(MSG::DEBUG) )
         {
           debug() << "MCPID below threshold :-" << endmsg;
-          print ( debug(), iPID, pid, mcpid );
+          //print ( debug(), iPID, pid, mcpid );
         }
         mcpid = Rich::BelowThreshold;
       }
@@ -260,20 +261,18 @@ StatusCode PIDQC::execute()
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "RecoPID below threshold :-" << endmsg;
-        print ( debug(), iPID, pid, mcpid );
+        //print ( debug(), iPID, pid, mcpid );
       }
       pid = Rich::BelowThreshold;
     }
 
     // some verbose printout
     if ( msgLevel(MSG::VERBOSE) ) { print ( verbose(), iPID, pid, mcpid ); }
+    //print ( info(), iPID, pid, mcpid );
 
     // MC Truth
     if ( m_truth )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "  MCID        = " << mcpid << endmsg;
-
       // Fill plots in PID performance tool
       if ( mcpid != Rich::Unknown &&
            pid   != Rich::Unknown )
@@ -350,45 +349,47 @@ StatusCode PIDQC::finalize()
     {
       for ( iRec = 0; iRec<6; ++iRec )
       {
-        eff[iRec] = ( trueTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/trueTot[iRec] : 0 );
-        purity[iRec] = ( recTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/recTot[iRec] : 0 );
+        eff[iRec]    = ( trueTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/trueTot[iRec] : 0 );
+        purity[iRec] = ( recTot[iRec]>0  ? 100*m_sumTab[iRec][iRec]/recTot[iRec]  : 0 );
       }
 
-      // Kaon Pion seperation
+      // Kaon / Pion seperation
+      const double truePi = ( m_ignoreRecoThres ? trueTot[Rich::Pion] : trueTotExcludeX[Rich::Pion] );
+      const double trueKa = ( m_ignoreRecoThres ? trueTot[Rich::Kaon] : trueTotExcludeX[Rich::Kaon] );
       double kaonIDEff[2];
-      kaonIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+      kaonIDEff[0] = ( trueKa>0 ?
                        100*( m_sumTab[Rich::Kaon][Rich::Kaon] +
                              m_sumTab[Rich::Kaon][Rich::Proton] ) /
-                       trueTotExcludeX[Rich::Kaon] : 0 );
-      kaonIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                       sqrt( kaonIDEff[0]*(100.-kaonIDEff[0])/
-                             trueTotExcludeX[Rich::Kaon] ) : 0 );
+                       trueKa : 0 );
+      kaonIDEff[1] = ( trueKa>0 ?
+                       std::sqrt( kaonIDEff[0]*(100.-kaonIDEff[0])/
+                                  trueKa ) : 0 );
       double kaonMisIDEff[2];
-      kaonMisIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+      kaonMisIDEff[0] = ( trueKa>0 ?
                           100*( m_sumTab[Rich::Kaon][Rich::Electron] +
                                 m_sumTab[Rich::Kaon][Rich::Muon] +
                                 m_sumTab[Rich::Kaon][Rich::Pion] ) /
-                          trueTotExcludeX[Rich::Kaon] : 0 );
-      kaonMisIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                          sqrt( kaonMisIDEff[0]*(100.-kaonMisIDEff[0])/
-                                trueTotExcludeX[Rich::Kaon] ) : 0 );
+                          trueKa : 0 );
+      kaonMisIDEff[1] = ( trueKa>0 ?
+                          std::sqrt( kaonMisIDEff[0]*(100.-kaonMisIDEff[0])/
+                                     trueKa ) : 0 );
       double piIDEff[2];
-      piIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
+      piIDEff[0] = ( truePi>0 ?
                      100*( m_sumTab[Rich::Pion][Rich::Electron] +
                            m_sumTab[Rich::Pion][Rich::Muon] +
                            m_sumTab[Rich::Pion][Rich::Pion] ) /
-                     trueTotExcludeX[Rich::Pion] : 0 );
-      piIDEff[1] =  ( trueTotExcludeX[Rich::Pion]>0 ?
-                      sqrt( piIDEff[0]*(100.-piIDEff[0])/
-                            trueTotExcludeX[Rich::Pion] ) : 0 );
+                     truePi : 0 );
+      piIDEff[1] =  ( truePi>0 ?
+                      std::sqrt( piIDEff[0]*(100.-piIDEff[0])/
+                                 truePi ) : 0 );
       double piMisIDEff[2];
-      piMisIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
+      piMisIDEff[0] = ( truePi>0 ?
                         100*( m_sumTab[Rich::Pion][Rich::Kaon] +
                               m_sumTab[Rich::Pion][Rich::Proton] ) /
-                        trueTotExcludeX[Rich::Pion] : 0 );
-      piMisIDEff[1] = ( trueTotExcludeX[Rich::Pion]>0 ?
-                        sqrt( piMisIDEff[0]*(100.-piMisIDEff[0])/
-                              trueTotExcludeX[Rich::Pion] ) : 0 );
+                        truePi : 0 );
+      piMisIDEff[1] = ( truePi>0 ?
+                        std::sqrt( piMisIDEff[0]*(100.-piMisIDEff[0])/
+                                   truePi ) : 0 );
 
       // Scale entries to percent of total number of entries
       for ( iTrue = 0; iTrue<6; ++iTrue )
@@ -554,11 +555,16 @@ bool PIDQC::selectTracks( const LHCb::Track * track )
 void PIDQC::print( MsgStream & msg,
                    LHCb::RichPID * iPID,
                    const Rich::ParticleIDType pid,
-                   const Rich::ParticleIDType mcpid  ) const
+                   const Rich::ParticleIDType mcpid ) const
 {
   msg << *iPID << endmsg;
-  msg << "  RecoPID     = " << pid << endmsg;
-  msg << "  MCID        = " << mcpid << endmsg;
+  msg << "  (Reco/MC) PID = " << pid;
+  if ( pid == Rich::BelowThreshold )
+    msg << " (" << iPID->bestParticleID() << ")";
+  msg << " / " << mcpid;
+  if ( mcpid == Rich::BelowThreshold )
+    msg << " (" << m_mcTruth->mcParticleType(iPID->track()) << ")";
+  msg << endmsg;
 }
 
 const Rich::Rec::IPIDPlots * PIDQC::plotsTool( const Rich::ParticleIDType mcpid )

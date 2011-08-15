@@ -4,7 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecQC v2r53 2011-07-27 =========================
+! 2011-08-15 - Chris Jones
+ - Various improvements to the PID monitor (work in progress).
+ - Add a 2D plot to the decoding errors monitor to show the number of each 
+   error type, for each L1 board, by copy number.
+ - Get the number L1 boards from DeRichSystem, instead of hard coding them.
+
+!======================== RichRecQC v2r53 2011-07-27 =========================
 ! 2011-07-25 - Chris Jones
  - Add some missing debug printout protection to RichPIDQC
  - Add more optional (disabled by default) plots to RecoQC to show the 
