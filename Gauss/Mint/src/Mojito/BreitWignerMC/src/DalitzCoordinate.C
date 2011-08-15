@@ -22,6 +22,7 @@ DalitzCoordinate::DalitzCoordinate()
   , _val(-9999)
 {
   (*this)[0] = -9999;
+  makeName();
 }
 
 DalitzCoordinate::DalitzCoordinate(int i, int j)
@@ -33,6 +34,7 @@ DalitzCoordinate::DalitzCoordinate(int i, int j)
   (*this)[0] = i;
   (*this)[1] = j;
   sort(this->begin(), this->end());
+  makeName();
 }
 DalitzCoordinate::DalitzCoordinate(int i, int j, int k)
   : vector<int>(3)
@@ -44,6 +46,7 @@ DalitzCoordinate::DalitzCoordinate(int i, int j, int k)
   (*this)[1] = j;
   (*this)[2] = k;
   sort(this->begin(), this->end());
+  makeName();
 }
 
 DalitzCoordinate::DalitzCoordinate(const std::vector<int>& other)
@@ -53,12 +56,14 @@ DalitzCoordinate::DalitzCoordinate(const std::vector<int>& other)
   , _val(-9999)
 {
   sort(this->begin(), this->end());
+  makeName();
 }
 DalitzCoordinate::DalitzCoordinate(const DalitzCoordinate& other)
   : vector<int>( (vector<int>) other)
   , _mi(other._mi)
   , _ma(other._ma)
   , _val(other._val)
+  , _name(other._name)
 {
 }
 
@@ -69,7 +74,7 @@ DalitzCoordinate& DalitzCoordinate::operator=(const DalitzCoordinate& other)
   _mi  = other._mi;
   _ma  = other._ma;
   _val = other._val;
-
+  _name = other._name;
   return *this;
 }
 
@@ -116,7 +121,11 @@ std::vector<DalitzCoordinate> DalitzCoordinate::split(int n) const{
 }
 
 
-std::string DalitzCoordinate::name() const{
+const std::string& DalitzCoordinate::name() const{
+  return _name;
+}
+
+std::string& DalitzCoordinate::makeName(){
   std::stringstream strm;
   strm << "sij(";
   for(unsigned int i=0; i < this->size(); i++){
@@ -126,7 +135,8 @@ std::string DalitzCoordinate::name() const{
   strm << ")";
   std::string ing;
   strm >> ing;
-  return ing;
+  _name = ing;
+  return _name;
 }
 std::string DalitzCoordinate::nameFileSave() const{
   std::stringstream strm;

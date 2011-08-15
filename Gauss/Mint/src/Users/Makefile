@@ -13,6 +13,7 @@ MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
 
 LIBS += -lMinuit
+LIBS += -lprofiler
 
 PROG = $(shell grep -l main *.C | sed 's/\.C//g')
 

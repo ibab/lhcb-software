@@ -82,6 +82,21 @@ bool IntegCalculator::add(const const_counted_ptr<IntegCalculator>& other){
   return true;
 }
 
+bool IntegCalculator::append(const IntegCalculator& other){
+  bool sc=true;
+  sc |= withEff().append(other.withEff());
+  sc |= noEff().append(other.noEff());
+  return sc;
+}
+bool IntegCalculator::append(const IntegCalculator* other){
+  if(0 != other) return append(*other);
+  return true;
+}
+bool IntegCalculator::append(const const_counted_ptr<IntegCalculator>& other){
+  if(0 != other) return append(*other);
+  return true;
+}
+
 int IntegCalculator::numEvents()const{
   int Nw = withEff().numEvents();
   int Nn = noEff().numEvents();

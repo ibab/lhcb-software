@@ -396,6 +396,29 @@ DalitzHistoSet DiskResidentEventList::weightedHistoSet() const{
   }
   return hs;
 }
+DalitzHistoSet DiskResidentEventList::reWeightedHistoSet(IGetDalitzEvent* w) const{
+  // mainly for diagnostics
+  DalitzHistoSet hs;
+  if(0 == w) return hs;
+  for(unsigned int i=0; i< this->size(); i++){
+    w->setEvent(this->getEventCopy(i).get());
+    hs.addEvent(this->getREvent(i), w->RealVal());
+    w->resetEventRecord();
+  }
+  return hs;
+}
+
+DalitzHistoSet DiskResidentEventList::weighedReWeightedHistoSet(IGetDalitzEvent* w) const{
+  // mainly for diagnostics
+  DalitzHistoSet hs;
+  if(0 == w) return hs;
+  for(unsigned int i=0; i< this->size(); i++){
+    w->setEvent(this->getEventCopy(i).get());
+    hs.addEvent(this->getREvent(i), w->RealVal() * (this->getREvent(i)->getWeight()));
+    w->resetEventRecord();
+  }
+  return hs;
+}
 
 bool DiskResidentEventList::makePlots(const std::string& filename){
   histoSet().save(filename);

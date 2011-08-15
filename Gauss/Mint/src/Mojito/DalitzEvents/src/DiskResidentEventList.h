@@ -5,6 +5,7 @@
 
 #include "IDalitzEvent.h"
 #include "IDalitzEventList.h"
+#include "IGetDalitzEvent.h"
 #include "DalitzEvent.h"
 #include "DalitzEventPattern.h"
 #include "DalitzHistoSet.h"
@@ -87,6 +88,9 @@ class DiskResidentEventList : virtual public IDalitzEventList{
 
   DalitzHistoSet histoSet() const;
   DalitzHistoSet weightedHistoSet()const;
+  DalitzHistoSet reWeightedHistoSet(IGetDalitzEvent* w) const;
+  DalitzHistoSet weighedReWeightedHistoSet(IGetDalitzEvent* w) const;
+
   bool makePlots(const std::string& filename);
 
 

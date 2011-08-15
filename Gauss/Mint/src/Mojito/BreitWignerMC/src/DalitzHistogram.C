@@ -21,6 +21,8 @@
 #include "TTree.h"
 #include "TBranch.h"
 #include "TObjArray.h"
+#include "TH1D.h"
+#include "TH2D.h"
 
 using namespace std;
 using namespace MINT;
@@ -31,7 +33,7 @@ DalitzHistogram::DalitzHistogram()
 {
 }
 
-DalitzHistogram::DalitzHistogram(const DalitzCoordinate& c
+DalitzHistogram::DalitzHistogram(const DalitzCoordSet& c
 				 , const DalitzEventPattern& pat
 				 , int bins
 				 , double units
@@ -49,7 +51,7 @@ DalitzHistogram::DalitzHistogram(TTree* t)
 {
   double *u = 0;
   int    *n = 0;
-  TH1D   *h = 0;
+  TH1   *h = 0;
   std::vector<int> *c=0, *p=0;
 
   cout << "show event" << endl;
@@ -65,7 +67,7 @@ DalitzHistogram::DalitzHistogram(TTree* t)
 
   _units = *u;
   _nbins = *n;
-  counted_ptr<TH1D> hptr((TH1D*) h->Clone());
+  counted_ptr<TH1> hptr((TH1*) h->Clone());
   _h = hptr;
   _c = *c;
   _pat = *p;
@@ -96,7 +98,7 @@ DalitzHistogram::DalitzHistogram(const DalitzHistogram& other)
 {
   bool dbThis=false;
   if(0 != other._h){
-    _h = counted_ptr<TH1D>((TH1D*) other._h->Clone());
+    _h = counted_ptr<TH1>((TH1*) other._h->Clone());
     _h->SetDirectory(0);
   }
   if(dbThis){
@@ -108,10 +110,10 @@ DalitzHistogram::DalitzHistogram(const DalitzHistogram& other)
 
 DalitzHistogram& DalitzHistogram::operator=(const DalitzHistogram& other){
   if(0 != other.histo()){
-    _h = counted_ptr<TH1D>((TH1D*) other.histo()->Clone());
+    _h = counted_ptr<TH1>((TH1*) other.histo()->Clone());
     _h->SetDirectory(0);
   }else{
-    _h = counted_ptr<TH1D>(0);
+    _h = counted_ptr<TH1>(0);
   }
   _nbins = other._nbins;
   _c     = other._c;
@@ -121,37 +123,42 @@ DalitzHistogram& DalitzHistogram::operator=(const DalitzHistogram& other){
   _patForTree = other._patForTree;
   return *this;
 }
-void DalitzHistogram::init(const DalitzCoordinate& c_in
+void DalitzHistogram::init(const DalitzCoordSet& c_in
 			   , const DalitzEventPattern& pat_in
 			   , int bins
 			   , double units
 			   ){
+
+  // this needs to change!
   _c   = c_in;
   _pat = pat_in;
   _nbins = bins;
   _units = units;
   _patForTree = _pat.getVectorOfInts();
 
-  double eps   = 0.1;
-
-  double mi = _pat.sijMin(c_in)/_units;
-  double ma = _pat.sijMax(c_in)/_units;
-
-  mi -= (ma-mi)*eps;
-  ma += (ma-mi)*eps;
-
-  _c.setMin(mi);
-  _c.setMax(ma);
+  double mi=0, ma=0;
+  for(std::map<DalitzCoordKey, DalitzCoordinate>::iterator it = _c.begin();
+      it != _c.end(); it++){
+    double eps   = 0.1;
+    
+    mi = _pat.sijMin(it->second)/_units;
+    ma = _pat.sijMax(it->second)/_units;
+    
+    mi -= (ma-mi)*eps;
+    ma += (ma-mi)*eps;
+    
+    it->second.setMin(mi);
+    it->second.setMax(ma);
+  }
 
   makeName();
 
   counted_ptr<TH1D> local_h(new TH1D(name().c_str(), name().c_str()
 				     , _nbins, mi, ma));
-  _h = local_h;
-  _h->SetDirectory(0);
-  _h->SetNameTitle(hname().c_str(), htitle().c_str());
-  _h->Sumw2();
-  _h->SetLineWidth(2);
+  local_h->SetDirectory(0);
+  local_h->SetNameTitle(hname().c_str(), htitle().c_str());
+  local_h->Sumw2();
+  local_h->SetLineWidth(2);
 
   std::string unitsName;
   if     (_units == TeV*TeV) unitsName = "TeV^2";
@@ -164,7 +171,7 @@ void DalitzHistogram::init(const DalitzCoordinate& c_in
   }
 
   std::string XLabel = _c.name() + " [" + unitsName + "]";
-  _h->GetXaxis()->SetTitle(XLabel.c_str());
+  local_h->GetXaxis()->SetTitle(XLabel.c_str());
 
   double bw = (ma - mi)/((double)_nbins);
   char s[100]={'\0'};
@@ -172,7 +179,10 @@ void DalitzHistogram::init(const DalitzCoordinate& c_in
   std::string st(s);
   std::string YLabel = "Events / " + st + " " + unitsName;
 
-  _h->GetYaxis()->SetTitle(YLabel.c_str());
+  local_h->GetYaxis()->SetTitle(YLabel.c_str());
+
+  _h = local_h;
+
   return;
 }
 				 
@@ -229,7 +239,7 @@ void DalitzHistogram::multiply(const DalitzHistogram& multiplyWith){
 	   << " no histogram myself - treating myself as zero."
 	   << endl;
     }
-    _h = counted_ptr<TH1D>((TH1D*) multiplyWith.histo()->Clone());
+    _h = counted_ptr<TH1>((TH1*) multiplyWith.histo()->Clone());
     _h->SetDirectory(0);
     _c = multiplyWith._c;
     makeName();
@@ -265,7 +275,7 @@ void DalitzHistogram::divide(const DalitzHistogram& divideBy){
 	   << " no histogram myself - treating myself as zero."
 	   << endl;
     }
-    _h = counted_ptr<TH1D>((TH1D*) divideBy.histo()->Clone());
+    _h = counted_ptr<TH1>((TH1*) divideBy.histo()->Clone());
     _h->SetDirectory(0);
     _c = divideBy._c;
     makeName();
@@ -285,7 +295,8 @@ void DalitzHistogram::divide(const DalitzHistogram& divideBy){
 }
 void DalitzHistogram::addEvent(const IDalitzEvent* evtPtr, double weight){
   if(0 == evtPtr) return;
-  _h->Fill(evtPtr->sij(_c)/_units, weight);
+  // needs to change!!
+  _h->Fill(evtPtr->sij(_c.begin()->second)/_units, weight);
 }
 
 void DalitzHistogram::scale(double sf){
@@ -322,9 +333,9 @@ TTree* DalitzHistogram::makeTree() const{
   _tree = new TTree((name()).c_str(), (name()).c_str());
   _tree->Branch("units", const_cast<double*> (&_units));
   _tree->Branch("nbins", const_cast<int*>(&_nbins));
-  cout << "TH1D pointer: " << (TH1D*) const_cast<TH1D*>( (TH1D*) (_h.get()))
+  cout << "TH1 pointer: " << (TH1*) const_cast<TH1*>( (TH1*) (_h.get()))
        << endl;
-  _tree->Branch("h", (TH1D*) const_cast<TH1D*>( (TH1D*) (_h.get())));
+  _tree->Branch("h", (TH1*) const_cast<TH1*>( (TH1*) (_h.get())));
   _tree->Branch("c", const_cast<std::vector<int>*>((std::vector<int>*)&_c));
   _tree->Branch("pat", const_cast<std::vector<int>*>(&_patForTree));
   return _tree;
@@ -447,7 +458,7 @@ bool DalitzHistogram::saveValues(const std::string& inDir) const{
  
   n_units = _units;
   n_nbins  = _nbins;
-  n_c     = (std::vector<int>) _c;
+  n_c     = (std::vector<int>) _c.begin()->first; // needs to change
   //  cout << "pat = " << _pat << endl;
   n_pat   = _pat.getVectorOfInts();
   // cout << "n_pat = " << n_pat << endl;
@@ -501,7 +512,7 @@ bool DalitzHistogram::retrieveValues(const std::string& fromDirectory
   _units = n_units;
   _nbins = n_nbins;
   DalitzCoordinate co(n_c.getVector());
-  _c = co;
+  _c = (DalitzCoordSet) co;
   DalitzEventPattern pa(n_pat.getVector());
   _pat = pa;
   //cout << "after reading in, the pattern is " << _pat << endl;
@@ -524,14 +535,14 @@ bool DalitzHistogram::retrieveHisto(const std::string& fromDir
   std::string fn = histoFileName(fromDir, theName);
   //  _name = theName();
   TFile f(fn.c_str(), "READ");
-  TH1D* th = (TH1D*) f.Get(hname().c_str());
+  TH1* th = (TH1*) f.Get(hname().c_str());
   if(0 == th){
     cout << "ERROR in DalitzHistogram::retrieveHisto"
 	 << "\n\t can't find histogram " << hname()
 	 << "\n\t in file " << fn << endl;
     throw "errorRetrievingHisto";
   }
-  counted_ptr<TH1D> cth((TH1D*) th->Clone());
+  counted_ptr<TH1> cth((TH1*) th->Clone());
   cth->SetDirectory(0);
   _h = cth;
   f.Close();
@@ -553,8 +564,8 @@ bool DalitzHistogram::drawWithFit(const DalitzHistogram& fit
   string fname = baseName + _c.nameFileSave() + "." + format;
   TCanvas can;
 
-  counted_ptr<TH1D> h_c( (TH1D*) histo()->Clone());
-  counted_ptr<TH1D> fit_c( (TH1D*) fit.histo()->Clone());
+  counted_ptr<TH1> h_c( (TH1*) histo()->Clone());
+  counted_ptr<TH1> fit_c( (TH1*) fit.histo()->Clone());
 
   double maxiThis = h_c->GetMaximum();//Stored();
   double maxiThat = fit_c->GetMaximum();//Stored();
@@ -571,4 +582,17 @@ bool DalitzHistogram::drawWithFit(const DalitzHistogram& fit
   can.Print(fname.c_str());
   return true;
 }
-//
+
+void DalitzCoordSet::print(std::ostream& os) const{
+  os << this->name();
+}
+
+
+// ----
+
+std::ostream& operator<<(std::ostream& os, const DalitzCoordSet& dcs){
+  dcs.print(os);
+  return os;
+}
+
+// =====

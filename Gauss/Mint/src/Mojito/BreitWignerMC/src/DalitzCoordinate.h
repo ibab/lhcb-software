@@ -8,9 +8,15 @@
 #include "Permutation.h"
 
 #include <iostream>
+#include <string>
+
+typedef std::vector<int> DalitzCoordKey;
 
 class DalitzCoordinate : public std::vector<int>{
   double _mi, _ma, _val;
+  std::string _name;
+  std::string& makeName();
+
  public:
 
   DalitzCoordinate();
@@ -38,12 +44,15 @@ class DalitzCoordinate : public std::vector<int>{
   std::vector<DalitzCoordinate> split(int n) const;
   
   void print(std::ostream& os = std::cout) const;
-  std::string name() const;
+  const std::string& name() const;
   std::string nameFileSave() const;
   
   bool sameIndices(const DalitzCoordinate& rhs) const;
   bool operator==(const DalitzCoordinate& rhs) const;
   bool operator!=(const DalitzCoordinate& rhs) const;
+
+  const DalitzCoordKey& myKey() const{return *this;}
+
 };
 std::ostream& operator<<(std::ostream& os, const DalitzCoordinate& c);
 

@@ -18,11 +18,14 @@
 #include "IFastAmplitudeIntegrable.h"
 #include "IIntegrationCalculator.h"
 
+#include "ILookLikeFitAmpSum.h"
+
 #include "FitAmpList.h"
 
 class FitAmpIncoherentSum 
-: virtual public MINT::IGetRealEventWithSmoothy<IDalitzEvent>
+: virtual public MINT::IGetRealEvent<IDalitzEvent>
 , virtual public IFastAmplitudeIntegrable
+, virtual public ILookLikeFitAmpSum
 , public FitAmpList
 {
  protected:
@@ -109,8 +112,10 @@ class FitAmpIncoherentSum
   double getVal();
   double getVal(IDalitzEvent* evt);
 
+  /*
   double getSmootherLargerVal();
   double getSmootherLargerVal(IDalitzEvent* evt);
+  */
 
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
@@ -118,18 +123,24 @@ class FitAmpIncoherentSum
   virtual double Prob(){
     return getVal();
   }
+
+  /*
   virtual double SmootherLargerProb(){
     return getSmootherLargerVal();
   }
+  */
 
   virtual double RealVal(){
     return Prob();
   }
+
+  /*
   virtual double SmootherLargerRealVal(){
     return SmootherLargerProb();
   }
+  */
 
-  MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
+  virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
     makeEventGenerator(TRandom* rnd=gRandom){
     MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
       ptr(new DalitzBWBoxSet(makeBWBoxes(rnd)));

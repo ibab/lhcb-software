@@ -484,6 +484,28 @@ DalitzHistoSet DalitzEventList::weightedHistoSet() const{
   }
   return hs;
 }
+DalitzHistoSet DalitzEventList::reWeightedHistoSet(IGetDalitzEvent* w){
+  // mainly for diagnostics
+  DalitzHistoSet hs;
+  if(0 == w) return hs;
+  for(unsigned int i=0; i< this->size(); i++){
+    w->setEvent( &((*this)[i]));
+    hs.addEvent(&((*this)[i]), w->RealVal());
+    w->resetEventRecord();
+  }
+  return hs;
+}
+
+DalitzHistoSet DalitzEventList::weighedReWeightedHistoSet(IGetDalitzEvent* w){
+  DalitzHistoSet hs;
+  if(0 == w) return hs;
+  for(unsigned int i=0; i< this->size(); i++){
+    w->setEvent( &((*this)[i]));
+    hs.addEvent(&((*this)[i]), w->RealVal() * ((*this)[i]).getWeight());
+    w->resetEventRecord();
+  }
+  return hs;
+}
 
 bool DalitzEventList::makePlots(const std::string& filename) const{
   histoSet().save(filename);

@@ -46,7 +46,7 @@ class DalitzArea{
   // Can remove the latter copy once the DalitzEvent
   // constructor can take some 'coordinate set' or so.
 
-  mutable std::map<std::vector<int>, DalitzCoordinate*> _coords;
+  mutable std::map<DalitzCoordKey, DalitzCoordinate*> _coords;
   mutable DalitzCoordinate _t01, _s12, _s23, _s34, _t40;
   // mutable for debug - remove this and const in makeCoordinate map.
 

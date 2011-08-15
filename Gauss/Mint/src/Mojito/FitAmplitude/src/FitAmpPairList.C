@@ -137,6 +137,35 @@ bool FitAmpPairList::add(const FitAmpPairList& otherList){
 
 }
 
+bool FitAmpPairList::append(MINT::const_counted_ptr<FitAmpPairList> otherListPtr){
+  return append(*otherListPtr);
+}
+bool FitAmpPairList::append(const FitAmpPairList* otherListPtr){
+  return append(*otherListPtr);
+}
+bool FitAmpPairList::append(const FitAmpPairList& otherList){
+  // WARNING: this will reset everything to zero.
+
+  for(unsigned int i=0; i< otherList.size(); i++){
+    this->push_back(otherList[i]);
+  }
+  this->reset();
+
+  return true;
+
+}
+bool FitAmpPairList::reset(){
+  _Nevents=0;
+  _sum=0;
+  _sumsq=0;
+  _psSum=0;
+  _psSumSq=0;
+  _cov.reset();
+  _singleAmpFractions.clear();
+  _interferenceFractions.clear();
+
+  return true;
+}
 int FitAmpPairList::numEvents() const{
   return _Nevents;
 }

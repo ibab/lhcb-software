@@ -44,7 +44,7 @@ class FitAmpPairList
   bool makeDirectory(const std::string& asSubdirOf=".")const;
   virtual double oldVariance() const;
 
-
+  bool reset();
  public:
   FitAmpPairList();
   FitAmpPairList(const FitAmpPairList& other);
@@ -60,6 +60,10 @@ class FitAmpPairList
   virtual bool add(const FitAmpPairList& otherList);
   virtual bool add(const FitAmpPairList* otherListPtr);
   virtual bool add(MINT::const_counted_ptr<FitAmpPairList> otherListPtr);
+
+  virtual bool append(const FitAmpPairList& otherListPtr);
+  virtual bool append(const FitAmpPairList* otherListPtr);
+  virtual bool append(MINT::const_counted_ptr<FitAmpPairList> otherListPtr);
 
   virtual int numEvents() const;
   virtual double integral() const;

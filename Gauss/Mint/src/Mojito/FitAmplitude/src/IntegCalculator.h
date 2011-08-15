@@ -46,6 +46,10 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual bool add(const IntegCalculator* other);
   virtual bool add(const MINT::const_counted_ptr<IntegCalculator>& other);
 
+  virtual bool append(const IntegCalculator& other);
+  virtual bool append(const IntegCalculator* other);
+  virtual bool append(const MINT::const_counted_ptr<IntegCalculator>& other);
+
   virtual int numEvents()   const;
   virtual double integral() const;
   virtual double variance() const;

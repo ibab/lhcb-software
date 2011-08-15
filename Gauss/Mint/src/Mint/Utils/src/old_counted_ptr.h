@@ -28,104 +28,84 @@
 
 //#define NO_MEMBER_TEMPLATES
 
-//#include <iostream>
-
 namespace MINT{
 
 class counted_ptr_counter{
  public:
-  counted_ptr_counter(unsigned c = 1) : count(c) {}
+  counted_ptr_counter(void* p = 0, unsigned c = 1) : ptr(p), count(c) {}
+  void*       ptr;
   unsigned    count;
 };
 
 
 template <typename X> class counted_ptr
 {
-
- public: // many of these should be protected, but doesn't work.
-  X* ptr;
+ public:
+    // itsCounter, aquire, release SHOULD be private, but then things like
+    // counted_ptr<IDalitzEvent> = sth that is counted_ptr<DalitzEvent>
+    // don't work - I think it's a compiler limitation.
   counted_ptr_counter* itsCounter;
- 
-  bool ok() const{
-    return (0 != itsCounter) && (0 != ptr);
-  }
 
-  void acquire(const counted_ptr<X>& other) throw()
-  { // increment the count
-    // std::cout << "acquiring" << std::endl;
-    itsCounter = other.itsCounter;
-    ptr = other.ptr;
-    if (ok()) ++(itsCounter->count);
-  }
-  
-  template<typename Y>
-  void acquire(const counted_ptr<Y>& other) throw()
-  { // increment the count
-    // std::cout << "acquiring different type" << std::endl;
-    itsCounter = other.itsCounter;
-    ptr = (X*) (other.ptr);
-    if (ok()) ++(itsCounter->count);
-  }
-  
-  void release()
-  { // decrement the count, delete if it is 0
-    // std::cout << "releasing" << std::endl;
-    if (ok()) {
-      if (--(itsCounter->count) == 0) {
-	delete ptr;
-	delete itsCounter;
-      }
-      ptr=0;
-      itsCounter = 0;
+    void acquire(counted_ptr_counter* c) throw()
+    { // increment the count
+        itsCounter = c;
+        if (c) ++(c->count);
     }
-  }
 
- counted_ptr(X* p = 0) // allocate a new counter
-   : ptr(p)
-    , itsCounter(0){
-    if (p){
-      itsCounter = new counted_ptr_counter(1);
-      ptr = p;
+    void release()
+    { // decrement the count, delete if it is 0
+        if (itsCounter) {
+            if (--itsCounter->count == 0) {
+                delete (X*)(itsCounter->ptr);
+                delete itsCounter;
+            }
+            itsCounter = 0;
+        }
     }
-  }
+
+ public:
+  typedef X element_type;
+  
+  explicit counted_ptr(X* p = 0) // allocate a new counter
+    : itsCounter(0) {if (p) itsCounter = new counted_ptr_counter(p);}
   ~counted_ptr()
     {release();}
   counted_ptr(const counted_ptr& r) throw()
-    {
-      // std::cout << "copy-constructing" << std::endl;
-      acquire(r);
-    }
+    {acquire(r.itsCounter);}
   counted_ptr& operator=(const counted_ptr& r)
     {
-      // std::cout << "copy- = " << std::endl;
       if (this != &r) {
 	release();
-	acquire(r);
+	acquire(r.itsCounter);
       }
       return *this;
     }
   
 #ifndef NO_MEMBER_TEMPLATES
     //template <class Y> friend class counted_ptr<Y>; // jr
-    template <typename Y> counted_ptr(const counted_ptr<Y>& r) throw()
+    template <class Y> counted_ptr(const counted_ptr<Y>& r) throw()
         {
-	  // std::cout << "copy-constructing other" << std::endl;
-	  acquire(r);
+	  // with this trick we check (I hope) if the conversion
+	  // is legal (jr):
+	  static_cast<X*>(r.get());
+	  acquire(r.itsCounter);
 	}
-    template <typename Y> counted_ptr& operator=(const counted_ptr<Y>& r)
+    template <class Y> counted_ptr& operator=(const counted_ptr<Y>& r)
     {
-      if ((void*)this != (void*) (&r)) {
+        if (this != &r) {
+	  // with this trick we check (I hope) if the conversion
+	  // is legal (jr):
+	  static_cast<X*>(r.get());
 	  release();
-	  // std::cout << "copy = other" << std::endl;
-	  acquire(r);
+	  acquire(r.itsCounter);
         }
         return *this;
     }
 #endif // NO_MEMBER_TEMPLATES
 
-    X* get()const throw(){return (this->ok() ? static_cast<X*>(ptr) : 0);}
-    X& operator*()  const throw(){return *(static_cast<X*>(get()));}
-    X* operator->() const throw(){return static_cast<X*>(get());}
+    X& operator*()  const throw(){return *(static_cast<X*>(itsCounter->ptr));}
+    X* operator->() const throw(){return static_cast<X*>(itsCounter->ptr);}
+    X* get()        const throw(){return ((itsCounter) ? static_cast<X*>(itsCounter->ptr) : 0);}
     bool unique()   const throw()
         {return (itsCounter ? itsCounter->count == 1 : true);}
 
@@ -152,16 +132,8 @@ template <typename X> class counted_ptr
 
 template <typename X> class const_counted_ptr : public counted_ptr<X>{
  public:    
-  bool ok() const{
-    return counted_ptr<X>::ok();
-  }
-  void acquire(const counted_ptr<X>& c) throw(){
+  void acquire(counted_ptr_counter* c) throw(){
     counted_ptr<X>::acquire(c);}
-  
-  template<typename Y>
-    void acquire(const counted_ptr<Y>& other) throw(){
-    counted_ptr<X>::acquire(other);}
-
   void release(){
     counted_ptr<X>::release();}
 
@@ -179,7 +151,7 @@ template <typename X> class const_counted_ptr : public counted_ptr<X>{
     {
       if (this != &r) {
 	release();
-	acquire(r);
+	acquire(r.itsCounter);
       }
       return *this;
     }
@@ -187,41 +159,53 @@ template <typename X> class const_counted_ptr : public counted_ptr<X>{
     {
       if (this != &r) {
 	release();
-	acquire(r);
+	acquire(r.itsCounter);
       }
       return *this;
     }
   
-  template <typename Y> const_counted_ptr(const const_counted_ptr<Y>& r) throw()
+#ifndef NO_MEMBER_TEMPLATES
+  template <class Y> const_counted_ptr(const const_counted_ptr<Y>& r) throw()
     {
-      acquire(r);
+      // with this trick we check (I hope) if the conversion
+      // is legal (jr):
+      static_cast<X*>(r.get());
+      acquire(r.itsCounter);
     }
-  template <typename Y> const_counted_ptr(const counted_ptr<Y>& r) throw()
+  template <class Y> const_counted_ptr(const counted_ptr<Y>& r) throw()
     {
-      acquire(r);
+      // with this trick we check (I hope) if the conversion
+      // is legal (jr):
+      static_cast<X*>(r.get());
+      acquire(r.itsCounter);
     }
-  template <typename Y> const_counted_ptr& operator=(const const_counted_ptr<Y>& r)
+  template <class Y> const_counted_ptr& operator=(const const_counted_ptr<Y>& r)
     {
       if (this != &r) {
+	// with this trick we check (I hope) if the conversion
+	// is legal (jr):
+	static_cast<X*>(r.get());
 	release();
-	acquire(r);
+	acquire(r.itsCounter);
       }
       return *this;
     }
   template <class Y> const_counted_ptr& operator=(const counted_ptr<Y>& r)
     {
       if (this != &r) {
+	// with this trick we check (I hope) if the conversion
+	// is legal (jr):
+	static_cast<X*>(r.get());
 	release();
-	acquire(r);
+	acquire(r.itsCounter);
       }
       return *this;
     }
+#endif // NO_MEMBER_TEMPLATES
+    const X& operator*()  const throw(){return *(static_cast<X*>(this->itsCounter->ptr));}
+    const X* operator->() const throw(){return static_cast<X*>(this->itsCounter->ptr);}
+    const X* get()        const throw(){return ((this->itsCounter) ? static_cast<X*>(this->itsCounter->ptr) : 0);}
 
-  const X* get() const throw(){return (this->ok() ? static_cast<const X*>(this->ptr) : 0);}
-  
-  const X& operator*()  const throw(){return *(static_cast<const X*>(get()));}
-  const X* operator->() const throw(){return static_cast<const X*>(get());}
-  
 };
 
 }// namespace MINT

@@ -119,6 +119,8 @@ double Chi2Box::weightedMC2() const{
   return _weightMC_Squared;
 }
 double Chi2Box::rmsMC(int Ntotal) const{
+  return weightedMC2();
+  /*
   bool dbThis=false;
   double dN = (double) Ntotal;
   double msq = weightedMC2() /(dN);
@@ -130,6 +132,7 @@ double Chi2Box::rmsMC(int Ntotal) const{
 	 << endl;
   }
   return (msq - m*m) * dN;
+  */
 }
 void Chi2Box::print(std::ostream& os) const{
   os << "box: with area " << _area;

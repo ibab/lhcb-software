@@ -349,10 +349,10 @@ bool FitAmpPairCovariance::make2NCovariance(){
   TMatrixT<float> mean_x(_myList->size()*2, 1);
   TMatrixTSym<float> mean_xy(_myList->size()*2);
 
-  mean_x = _sum_x;
+  mean_x  = _sum_x;
   mean_x *= 1./dN;
 
-  mean_xy = _sum_xy;
+  mean_xy  = _sum_xy;
   mean_xy *= 1./dN;
 			    
   for(unsigned int i=0; i < _myList->size()*2; i++){
@@ -564,6 +564,24 @@ bool FitAmpPairCovariance::isValid()const{
   //if((unsigned int) _sum_x.GetNcols() != 2*size()) return false;
   return true;
 }
+
+bool FitAmpPairCovariance::clearAll(){
+  _Nevents=0;
+  _needToRecalculate=true;
+  resize();
+  if(0 != this->size()){
+    _sum_x  *= 0;
+    _sum_xy *= 0;
+  }
+  return 0;
+}
+bool FitAmpPairCovariance::reset(){
+  clearAll();
+  resize();
+  return true;
+}
+
+
 bool FitAmpPairCovariance::makeDirectory(const std::string& asSubdirOf)const{
   /*
     A mode is created from or'd permission bit masks defined

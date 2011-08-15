@@ -8,7 +8,7 @@
 #include "IDalitzEvent.h"
 #include "IUnweightedEventGenerator.h"
 
-#include "IGetRealEventWithSmoothy.h"
+#include "IGetRealEvent.h"
 #include "DalitzEventPtrList.h"
 
 #include "counted_ptr.h"
@@ -25,7 +25,7 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   double _maxWeightEstimate;
   double _maxWeightInSample;
 
-  MINT::IGetRealEventWithSmoothy<IDalitzEvent>* _ampSum;
+  MINT::IGetRealEvent<IDalitzEvent>* _ampSum;
 
   bool _ready;
   std::vector<double> _volumeProbs;
@@ -49,7 +49,7 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
 
   double findMaxInList(double& sampleMax);
  public:
-  DalitzBWBoxSet(MINT::IGetRealEventWithSmoothy<IDalitzEvent>* amps=0
+  DalitzBWBoxSet(MINT::IGetRealEvent<IDalitzEvent>* amps=0
 		 , TRandom* r=gRandom);
   DalitzBWBoxSet(TRandom* r);
   DalitzBWBoxSet(const DalitzBWBoxSet& other);

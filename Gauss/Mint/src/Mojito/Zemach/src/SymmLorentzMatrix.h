@@ -102,6 +102,9 @@ class SymmLorentzMatrix{
     return vec.T()*T() - vec.X()*X() - vec.Y()*Y() -vec.Z()*Z();
   }
   SymmLorentzMatrix Contract_1(const SymmLorentzMatrix& M){
+    // One pair of indices gets contracted. Since
+    // both matrices are symmetric, it doesnt matter which.
+    //
     // O^{mu alpha} g_{alpha beta} M^{beta nu} = R^{mu nu}
     // O^{mu alpha} M_{beta}^{nu}
     SymmLorentzMatrix R;
@@ -113,6 +116,10 @@ class SymmLorentzMatrix{
     return R;
   }
   double Contract_2(const SymmLorentzMatrix& M){
+    // Both pairs of indices are contracted.
+    // since the matrices are symmetric, it does
+    // not matter which index from this with which form M.
+    //
     // O^{mu alpha} g_{alpha beta} M^{beta nu} g_{mu nu}
     SymmLorentzMatrix R(Contract_1(M));
     // R^{mu nu} R_{mu nu}

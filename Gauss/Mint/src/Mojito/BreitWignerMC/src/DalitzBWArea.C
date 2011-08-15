@@ -112,13 +112,13 @@ void DalitzBWArea::makeCoord(int i, int j){
   DalitzCoordinate c(i, j);
   counted_ptr<IGenFct> fcn(new FlatFct(c));
   std::pair<DalitzCoordinate, counted_ptr<IGenFct> > p (c, fcn);
-  _coords[c] = p;
+  _coords[c.myKey()] = p;
 }
 void DalitzBWArea::makeCoord(int i, int j, int k){
   DalitzCoordinate c(i, j, k);
   counted_ptr<IGenFct> fcn(new FlatFct(c));
   std::pair<DalitzCoordinate, counted_ptr<IGenFct> > p (c, fcn);
-  _coords[c] = p;
+  _coords[c.myKey()] = p;
 }
 
 void DalitzBWArea::setFcn(const DalitzCoordinate& c, const counted_ptr<IGenFct>& fct){
@@ -163,7 +163,7 @@ DalitzBWArea::~DalitzBWArea(){
 
 std::pair<DalitzCoordinate, counted_ptr<IGenFct> >& 
 DalitzBWArea::sf(const DalitzCoordinate& c){
-  map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::iterator it = _coords.find(c);
+  map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::iterator it = _coords.find(c.myKey());
   if(it == _coords.end()){
     cout << "ERROR in DalitzBWArea::sf"
 	 << " unknown coordinate: " << c
@@ -175,8 +175,8 @@ DalitzBWArea::sf(const DalitzCoordinate& c){
 
 const std::pair<DalitzCoordinate, counted_ptr<IGenFct> >& 
 DalitzBWArea::sf(const DalitzCoordinate& c) const{
-  map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::iterator it = 
-    _coords.find(c);
+  map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::iterator it = 
+    _coords.find(c.myKey());
   if(it == _coords.end()){
     cout << "ERROR in DalitzBWArea::sf"
 	 << " unknown coordinate: " << c
@@ -223,7 +223,8 @@ bool DalitzBWArea::isInside(const DalitzEvent& evt
     return false;
   }
   //cout << " Made Coordinate map " << endl;
-  for(map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
+  std::vector<int> mappedValues;
+  for(map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     if(dbThis) {
@@ -232,7 +233,10 @@ bool DalitzBWArea::isInside(const DalitzEvent& evt
 	   << "  newer " << evt.sij(it->second.first.mapMe(mapping))
 	   << endl;
    }
-    double val = evt.sij(mapping.mapValues(it->second.first));
+    // the following line is instead of the also possible, nicer looking, 
+    // but malloc-intensive evt.sij(mapping.mapValues(it->second.first))
+    mapping.mapValues(it->second.first, mappedValues);
+    double val = evt.sij(mappedValues);
     if(val < it->second.first.min() || val >= it->second.first.max()) return false;
   }
   //cout << "returning true" << endl;
@@ -242,7 +246,7 @@ bool DalitzBWArea::isInside(const DalitzCoordinate& dc) const{
 
   //cout << " Made Coordinate map " << endl;
   double val = dc.val();
-  map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator it = _coords.find(dc);
+  map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator it = _coords.find(dc);
   if(it == _coords.end()){
     cout << "ERROR in DalitzBWArea::isInside - unknown coordinate "
 	 << dc << endl;
@@ -273,7 +277,7 @@ double DalitzBWArea::size() const{
   cout << " e.g. _s12 " << _s12 << endl;
   cout << "_madeCMap = " << _madeCMap << endl;
   */
-  for(map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator it = _coords.begin();
+  for(map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator it = _coords.begin();
       it != _coords.end(); it++){
 
     p *= (it->second.first.max() -  it->second.first.min());
@@ -295,7 +299,7 @@ double DalitzBWArea::genValue(const IDalitzEvent* evtPtr) const{
   if(0 == evtPtr) return 0;
   double p=1;
 
-  for(map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
+  for(map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     //DalitzCoordinate c =  it->second.first;
@@ -326,7 +330,7 @@ double DalitzBWArea::genValue(const IDalitzEvent* evtPtr
 
   double p=1;
 
-  for(map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
+  for(map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     DalitzCoordinate c =  it->second.first;
@@ -370,7 +374,7 @@ double DalitzBWArea::genValueRho(const IDalitzEvent* evtPtr) const{
   }
   double p=1;
 
-  for(map<std::vector<int>, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
+  for(map<DalitzCoordKey, pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     DalitzCoordinate c =  it->second.first;
@@ -408,11 +412,11 @@ double DalitzBWArea::integral() const{
   return _areaIntegral;
 }
   
-counted_ptr<DalitzEvent> DalitzBWArea::tryEventForOwner() const{
+counted_ptr<DalitzEvent> DalitzBWArea::tryEventForOwner(const Permutation& mapping) const{
   bool dbThis = false;
-  if(_pat.numDaughters() == 3) return try3Event();
+  if(_pat.numDaughters() == 3) return try3Event(mapping);
   if(_pat.numDaughters() == 4){
-    counted_ptr<DalitzEvent> evtPtr(try4Event());
+    counted_ptr<DalitzEvent> evtPtr(try4Event(mapping));
     if(dbThis && 0 != evtPtr) cout << " DalitzBWArea::makeEventForOwner() "
 				   << " returning event with weight " 
 				   << evtPtr->getWeight()
@@ -425,10 +429,10 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryEventForOwner() const{
   return counted_ptr<DalitzEvent>(0);
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::try3Event() const{
+counted_ptr<DalitzEvent> DalitzBWArea::try3Event(const Permutation& mapping) const{
   bool dbThis=false;
 
-  counted_ptr<DalitzEvent> evtPtr(try3EventWithPhaseSpace());
+  counted_ptr<DalitzEvent> evtPtr(try3EventWithPhaseSpace(mapping));
   if(dbThis && 0 != evtPtr){
     cout << "weight in DalitzBWArea::make3Event() " 
 	 << evtPtr->getWeight() << endl;
@@ -436,14 +440,14 @@ counted_ptr<DalitzEvent> DalitzBWArea::try3Event() const{
   return evtPtr;
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::try4Event() const{
+counted_ptr<DalitzEvent> DalitzBWArea::try4Event(const Permutation& mapping) const{
   bool dbThis=false;
 
   counted_ptr<DalitzEvent> evtPtr(0);
   if(unWeightPs()){
-    evtPtr = make4EventWithPhaseSpace();
+    evtPtr = make4EventWithPhaseSpace(mapping);
   }else{
-    evtPtr = try4EventWithPhaseSpace();
+    evtPtr = try4EventWithPhaseSpace(mapping);
   }
   if(dbThis && 0 != evtPtr){
     cout << "weight in DalitzBWArea::make4Event() " 
@@ -454,17 +458,18 @@ counted_ptr<DalitzEvent> DalitzBWArea::try4Event() const{
 
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::make4EventWithPhaseSpace() const{
+counted_ptr<DalitzEvent> DalitzBWArea::make4EventWithPhaseSpace(const Permutation& mapping) const{
   double nt;
-  return make4EventWithPhaseSpace(nt);
+  return make4EventWithPhaseSpace(nt, mapping);
 }
-counted_ptr<DalitzEvent> DalitzBWArea::make4EventWithPhaseSpace(double& nTries) const{
+counted_ptr<DalitzEvent> DalitzBWArea::make4EventWithPhaseSpace(double& nTries
+								, const Permutation& mapping) const{
   int nearInfinity = 100000000;
   counted_ptr<DalitzEvent> evtPtr(0);
   nTries=0;
   double maxW=-9999;
   do{
-    evtPtr = try4EventWithPhaseSpace(maxW);
+    evtPtr = try4EventWithPhaseSpace(maxW, mapping);
     nTries++;
     if(nTries > nearInfinity){
       cout << "DalitzBWArea::makeEventWithPhaseSpace() "
@@ -733,18 +738,20 @@ int DalitzBWArea::ResonanceConfigurationNumber() const{
   }
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::try4EventWithPhaseSpace() const{
+counted_ptr<DalitzEvent> DalitzBWArea::try4EventWithPhaseSpace(const Permutation& mapping) const{
   double maxWeight;
-  return try4EventWithPhaseSpace(maxWeight);
+  return try4EventWithPhaseSpace(maxWeight, mapping);
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace() const{
+counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(const Permutation& mapping) const{
   double maxWeight;
-  return tryFlat4EventWithPhaseSpace(maxWeight);
+  return tryFlat4EventWithPhaseSpace(maxWeight, mapping);
 }
+
 
 counted_ptr<DalitzEvent> 
-DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
+DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight
+				      , const Permutation& mapping) const{
   //  return counted_ptr<DalitzEvent>(0);
   //}
 
@@ -754,14 +761,18 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     cout << " trying to make event with phase space for "
 	 << *this
 	 << endl;
-  }  
-  TGenPhaseSpaceWithRnd gps(_rnd);
-
-  TLorentzVector mumsP4;
+  }
+  // hoping to save some allocation time
+  // through use of static:
+  static TGenPhaseSpaceWithRnd gps(_rnd);
+  static TLorentzVector mumsP4;
   mumsP4.SetXYZM(0, 0, 0, _pat[0].mass());
 
-  vector<TLorentzVector> p4_final(5);
-  TLorentzVector p4_inter[4];
+  static vector<TLorentzVector> p4_final(5);
+  static vector<TLorentzVector> p4_finalMapped(5);
+  static DalitzEventPattern patMapped;
+
+  static TLorentzVector p4_inter[4];
 
   counted_ptr<DalitzEvent> nullEvtPtr(0);
   counted_ptr<DalitzEvent> returnEvent(0);
@@ -780,14 +791,16 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     double s12       = sf(1,2).second->coordTransformToS(rho12);
 
     if(s12 < 0) return nullEvtPtr;
-    if(sqrt(s12) < _pat[1].mass() + _pat[2].mass()) return nullEvtPtr;
+    double m12 = sqrt(s12);
+    if(m12 < _pat[1].mass() + _pat[2].mass()) return nullEvtPtr;
 
     double rho34     = sf(3,4).second->generateRho(_rnd);
     double s34       = sf(3,4).second->coordTransformToS(rho34);
 
     if(s34 < 0) return nullEvtPtr;
-    if(sqrt(s34) < _pat[3].mass() + _pat[4].mass()) return nullEvtPtr;
-    if(sqrt(s12) + sqrt(s34) > _pat[0].mass())return nullEvtPtr;
+    double m34 = sqrt(s34);
+    if(m34 < _pat[3].mass() + _pat[4].mass()) return nullEvtPtr;
+    if(m12 + m34 > _pat[0].mass())return nullEvtPtr;
     
     double s12Min  = sf(1,2).second->getCoordinate().min();
     double s12Max  = sf(1,2).second->getCoordinate().max();
@@ -808,8 +821,8 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     
     // D->s12, s34
     
-    dgt[0] = sqrt(s12);
-    dgt[1] = sqrt(s34);
+    dgt[0] = m12;
+    dgt[1] = m34;
     mumsP4.SetXYZM(0, 0, 0, _pat[0].mass());
     p4_final[0] = mumsP4;
     
@@ -827,8 +840,8 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     p4_inter[1] = *(gps.GetDecay(1));
     
     double ps1 = phaseSpaceIntegral2body(_pat[0].mass()
-					, sqrt(s12)
-					, sqrt(s34));
+					, m12
+					, m34);
     maxWeight *= phaseSpaceIntegral2body(_pat[0].mass()
 					 ,sqrt(s12Min)
 					 ,sqrt(s34Min));
@@ -842,7 +855,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     p4_final[1] = *(gps.GetDecay(0));
     p4_final[2] = *(gps.GetDecay(1));
     
-    double ps2 = phaseSpaceIntegral2body(sqrt(s12)
+    double ps2 = phaseSpaceIntegral2body(m12
 					 , _pat[1].mass()
 					 , _pat[2].mass());
     maxWeight *= phaseSpaceIntegral2body(sqrt(s12Max)
@@ -859,7 +872,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     p4_final[3] = *(gps.GetDecay(0));
     p4_final[4] = *(gps.GetDecay(1));
     
-    double ps3 = phaseSpaceIntegral2body(sqrt(s34)
+    double ps3 = phaseSpaceIntegral2body(m34
 					 , _pat[3].mass()
 					 , _pat[4].mass());
     maxWeight *= phaseSpaceIntegral2body(sqrt(s34Max)
@@ -872,7 +885,9 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     
     double w = fct_12 * fct_34 * ps;
 
-    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(_pat, p4_final));
+    mapP4(p4_final, mapping, p4_finalMapped);
+    mapping.mapOrder(_pat, patMapped);
+    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(patMapped, p4_finalMapped));
     if(thisEvent->makeCalculate4BodyProps().phaseSpaceFactor() <= 0.0){
       Calculate4BodyProps c4bp = thisEvent->makeCalculate4BodyProps();
       cout << "WARNING in DalitzBWArea::try4EventWithPhaseSpace:"
@@ -899,19 +914,21 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     double rho123    = sf(1,2,3).second->generateRho(_rnd);
     double s123      = sf(1,2,3).second->coordTransformToS(rho123);
     if(s123 < 0) return nullEvtPtr;
-    if(sqrt(s123) + _pat[4].mass() >  _pat[0].mass()) return nullEvtPtr;
-    if(sqrt(s123) <  _pat[1].mass() + _pat[2].mass() + _pat[3].mass()){
+    double m123 = sqrt(s123);
+    if(m123 + _pat[4].mass() >  _pat[0].mass()) return nullEvtPtr;
+    if(m123 <  _pat[1].mass() + _pat[2].mass() + _pat[3].mass()){
       return nullEvtPtr;
     }
 
     double rho12     = sf(1,2).second->generateRho(_rnd);
     double s12       = sf(1,2).second->coordTransformToS(rho12);
     if(s12 < 0) return nullEvtPtr;
-    if(sqrt(s12) + _pat[3].mass() > sqrt(s123))return nullEvtPtr;
-    if(sqrt(s12) + _pat[3].mass() + _pat[4].mass() > _pat[0].mass() ){
+    double m12 = sqrt(s12);
+    if(m12 + _pat[3].mass() > m123)return nullEvtPtr;
+    if(m12 + _pat[3].mass() + _pat[4].mass() > _pat[0].mass() ){
       return nullEvtPtr;
     }
-    if(sqrt(s12) < _pat[1].mass() + _pat[2].mass()) return nullEvtPtr;
+    if(m12 < _pat[1].mass() + _pat[2].mass()) return nullEvtPtr;
     
     double s123Min = sf(1,2,3).second->getCoordinate().min();
     double s123Max = sf(1,2,3).second->getCoordinate().max();
@@ -931,7 +948,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
 
     // D->s123, m4
     
-    dgt[0] = sqrt(s123);
+    dgt[0] = m123;
     dgt[1] = _pat[4].mass();
     mumsP4.SetXYZM(0, 0, 0, _pat[0].mass());
     p4_final[0] = mumsP4;
@@ -942,7 +959,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     p4_final[4] = *(gps.GetDecay(1));
     
     double ps1 = phaseSpaceIntegral2body(_pat[0].mass()
-					, sqrt(s123)
+					, m123
 					, _pat[4].mass());
     maxWeight *= phaseSpaceIntegral2body(_pat[0].mass()
 					 ,sqrt(s123Min)
@@ -950,15 +967,15 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     
     if(ps1 <=0) return nullEvtPtr;
     // s123 -> s12, m3
-    dgt[0] = sqrt(s12);
+    dgt[0] = m12;
     dgt[1] = _pat[3].mass();
     if(! gps.SetDecay(p4_inter[0], 2, dgt)) return nullEvtPtr;
     gps.Generate();
     p4_inter[1] = *(gps.GetDecay(0));
     p4_final[3] = *(gps.GetDecay(1));
     
-    double ps2 = phaseSpaceIntegral2body(sqrt(s123)
-				  , sqrt(s12)
+    double ps2 = phaseSpaceIntegral2body(m123
+				  , m12
 				  , _pat[3].mass());
     maxWeight *= phaseSpaceIntegral2body(sqrt(s123Max)
 				     ,sqrt(s12Min)
@@ -973,7 +990,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     p4_final[1] = *(gps.GetDecay(0));
     p4_final[2] = *(gps.GetDecay(1));
     
-    double ps3 = phaseSpaceIntegral2body(sqrt(s12)
+    double ps3 = phaseSpaceIntegral2body(m12
 					 , _pat[1].mass()
 					 , _pat[2].mass());
     maxWeight *= phaseSpaceIntegral2body(sqrt(s12Max)
@@ -986,11 +1003,15 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
 
     double w = fct_123 * fct_12 * ps;
 
-    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(_pat, p4_final));
+    mapP4(p4_final, mapping, p4_finalMapped);
+    mapping.mapOrder(_pat, patMapped);
+    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(patMapped
+						       , p4_finalMapped));
     if(thisEvent->makeCalculate4BodyProps().phaseSpaceFactor() <= 0.0){
-      cout << "made 'good' event with bad phase space"
-	   << " for sqrt(s123) " << sqrt(s123)
-	   << " , sqrt(s12) " << sqrt(s12)
+      cout << "WARNING in DalitzBWArea::try4EventWithPhaseSpace (2): "
+	   << " made 'good' event with bad phase space"
+	   << " for sqrt(s123) " << sqrt(s123) << " = " << m123
+	   << " , sqrt(s12) " << sqrt(s12) << " = " << m12
 	   << " , sqrt(s12) + m3 " << sqrt(s12) + _pat[3].mass()
 	   << " , sqrt(s123) + m4 " << sqrt(s123) + _pat[4].mass()
 	   << " and m(D) " << _pat[0].mass()
@@ -1003,11 +1024,12 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight) const{
     thisEvent->setWeight(w);
     returnEvent = thisEvent;
   }
-  if(dbThis)cout << " got new event with weight " << returnEvent->getWeight() << endl;
+  if(dbThis)cout << " got new event with weight " 
+		 << returnEvent->getWeight() << endl;
   return returnEvent;
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(double& maxWeight) const{
+counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(double& maxWeight, const Permutation& mapping) const{
   //  return counted_ptr<DalitzEvent>(0);
   //}
 
@@ -1023,8 +1045,9 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(double& maxWe
   TLorentzVector mumsP4;
   mumsP4.SetXYZM(0, 0, 0, _pat[0].mass());
 
-  vector<TLorentzVector> p4_final(5);
-  TLorentzVector p4_inter[4];
+  static vector<TLorentzVector> p4_final(5), p4_finalMapped(5);
+  static TLorentzVector p4_inter[4];
+  static DalitzEventPattern patMapped;
 
   counted_ptr<DalitzEvent> nullEvtPtr(0);
   counted_ptr<DalitzEvent> returnEvent(0);
@@ -1132,9 +1155,12 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(double& maxWe
     
     double w = fct_12 * fct_34 * ps;
 
-    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(_pat, p4_final));
+    mapP4(p4_final, mapping, p4_finalMapped);
+    mapping.mapOrder(_pat, patMapped);
+    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(patMapped, p4_finalMapped));
     if(thisEvent->makeCalculate4BodyProps().phaseSpaceFactor() <= 0.0){
-      cout << "made 'good' event with bad phase space"
+      cout << "WARNING in tryFlat4EventWithPhaseSpace: "
+	   << " made 'good' event with bad phase space"
 	   << endl;
       return nullEvtPtr;
     }
@@ -1232,9 +1258,13 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(double& maxWe
 
     double w = fct_123 * fct_12 * ps;
 
-    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(_pat, p4_final));
+    mapP4(p4_final, mapping, p4_finalMapped);
+    mapping.mapOrder(_pat, patMapped);
+
+    counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(patMapped, p4_finalMapped));
     if(thisEvent->makeCalculate4BodyProps().phaseSpaceFactor() <= 0.0){
-      cout << "made 'good' event with bad phase space"
+      cout << "Warning in tryFlat4EventWithPhaseSpace " 
+	   << " made 'good' event with bad phase space"
 	   << " for sqrt(s123) " << sqrt(s123)
 	   << " , sqrt(s12) " << sqrt(s12)
 	   << " , sqrt(s12) + m3 " << sqrt(s12) + _pat[3].mass()
@@ -1253,11 +1283,12 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryFlat4EventWithPhaseSpace(double& maxWe
   return returnEvent;
 }
 
-counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace() const{
+counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace(const Permutation& mapping) const{
   double maxWeight;
-  return try3EventWithPhaseSpace(maxWeight);
+  return try3EventWithPhaseSpace(maxWeight, mapping);
 }
-counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace(double& maxWeight) const{
+counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace(double& maxWeight
+							       , const Permutation& mapping) const{
 
   bool dbThis=false;
 
@@ -1272,8 +1303,9 @@ counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace(double& maxWeight
   TLorentzVector mumsP4;
   mumsP4.SetXYZM(0, 0, 0, _pat[0].mass());
 
-  vector<TLorentzVector> p4_final(4);
-  TLorentzVector p4_inter[1];
+  static vector<TLorentzVector> p4_final(4), p4_finalMapped(4);
+  static TLorentzVector p4_inter[1];
+  static DalitzEventPattern patMapped;
 
   counted_ptr<DalitzEvent> nullEvtPtr(0);
   counted_ptr<DalitzEvent> returnEvent(0);
@@ -1349,9 +1381,13 @@ counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace(double& maxWeight
 				       , _pat[1].mass()
 				       , _pat[2].mass());
   
-  counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(_pat, p4_final));
+  mapP4(p4_final, mapping, p4_finalMapped);
+  mapping.mapOrder(_pat, patMapped);
+  counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(patMapped
+						     , p4_finalMapped));
   if(thisEvent->phaseSpace() <= 0.0){
-    cout << "made 'good' event with bad phase space"
+    cout << "WARNING in try3EventWithPhaseSpace: "
+	 << " made 'good' event with bad phase space"
 	 << " , sqrt(s12) " << sqrt(s12)
 	 << " , sqrt(s12) + m3 " << sqrt(s12) + _pat[3].mass()
 	 << " and m(D) " << _pat[0].mass()
@@ -1371,7 +1407,7 @@ counted_ptr<DalitzEvent> DalitzBWArea::try3EventWithPhaseSpace(double& maxWeight
 
 void DalitzBWArea::print(std::ostream& os) const{
   os << "Area size: " << size() << endl;
-  for(std::map<std::vector<int>, std::pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator
+  for(std::map<DalitzCoordKey, std::pair<DalitzCoordinate, counted_ptr<IGenFct> > >::const_iterator
 	it =_coords.begin();
       it != _coords.end();
       it++){

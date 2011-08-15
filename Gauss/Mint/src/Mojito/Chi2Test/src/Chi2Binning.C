@@ -3,12 +3,87 @@
 #include "Chi2Binning.h"
 #include "Chi2Box.h"
 #include "Chi2BoxSet.h"
+
+#include "DalitzHistoStackSet.h"
+
+#include "TCanvas.h"
+#include "TH1D.h"
+
 #include <algorithm>
 #include <iostream>
 
 using namespace MINT;
 using namespace std;
 
+int* Chi2Binning::__colourPalette=0;
+int  Chi2Binning::__Ncol=256;
+
+void Chi2Binning::makeColourPaletteBlueGrey(){
+  static const int NRGBs = 7;
+  if(0 != __colourPalette) delete[] __colourPalette;
+  __colourPalette = new int[__Ncol];
+
+  Double_t stops[NRGBs] = { 0.00, 0.10, 0.25, 0.45, 0.60, 0.75, 1.00 };
+  Double_t red[NRGBs]   = { 0.85, 0.00, 0.00, 0.00, 0.80, 0.80, 0.99 };
+  Double_t green[NRGBs] = { 0.85, 0.80, 0.40, 0.40, 0.80, 0.00, 0.00 };
+  Double_t blue[NRGBs]  = { 0.85, 0.85, 0.80, 0.00, 0.00, 0.00, 0.00 };
+  Int_t Fi = TColor::CreateGradientColorTable(NRGBs
+					    , stops
+					    , red, green, blue
+					    , __Ncol);
+
+  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+}
+void Chi2Binning::makeColourPaletteBlueWhite(){
+  static const int NRGBs = 7;
+  if(0 != __colourPalette) delete[] __colourPalette;
+  __colourPalette = new int[__Ncol];
+
+  Double_t stops[NRGBs] = { 0.00, 0.10, 0.25, 0.45, 0.60, 0.75, 1.00 };
+  Double_t red[NRGBs]   = { 1.00, 0.00, 0.00, 0.00, 0.97, 0.97, 0.10 };
+  Double_t green[NRGBs] = { 1.00, 0.97, 0.30, 0.40, 0.97, 0.00, 0.00 };
+  Double_t blue[NRGBs]  = { 1.00, 0.97, 0.97, 0.00, 0.00, 0.00, 0.00 };
+  Int_t Fi = TColor::CreateGradientColorTable(NRGBs
+					    , stops
+					    , red, green, blue
+					    , __Ncol);
+
+  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+}
+void Chi2Binning::makeColourPaletteRGB(){
+  static const int NRGBs = 5;
+  
+  if(0 != __colourPalette) delete[] __colourPalette;
+  __colourPalette = new int[__Ncol];
+  
+  Double_t red[NRGBs]   = {0., 0.0, 1.0, 1.0, 1.0};
+  Double_t green[NRGBs] = {0., 0.0, 0.0, 1.0, 1.0};
+  Double_t blue[NRGBs]  = {0., 1.0, 0.0, 0.0, 1.0};
+  Double_t stops[NRGBs] = {0., .25, .50, .75, 1.0};
+  Int_t Fi = TColor::CreateGradientColorTable(NRGBs
+					      , stops
+					      , red, green, blue
+					      , __Ncol);
+  
+  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+}
+void Chi2Binning::makeColourPalette(){
+  makeColourPaletteBlueGrey();
+  //makeColourPaletteRGB();
+  //makeColourPaletteBlueWhite();
+}
+
+int* Chi2Binning::getColourPalette(){
+  if(0 == __colourPalette) makeColourPalette();
+  return __colourPalette;
+}
+
+Chi2Binning::Chi2Binning()
+  : _nData(0)
+  , _nMC(0)
+  , _totalMCWeight(0)
+{
+}
 int Chi2Binning::createBinning(IDalitzEventList* events
 			       , int minPerBin
 			       , int maxPerBin
@@ -43,6 +118,7 @@ int Chi2Binning::mergeBoxes(Chi2BoxSet& boxes, int minPerBin){
   
   return _boxSets.size();
 }
+
 
 Chi2BoxSet Chi2Binning::splitBoxes(IDalitzEventList* events
 				   , int maxPerBin
@@ -136,16 +212,15 @@ void Chi2Binning::fillMC(IDalitzEventList* mc
   mc->Start();
   pdf->setEventRecord(mc);
   int counter=0;
-  int printevery=1000;
+  int printevery=10000;
   while(mc->Next()){
     counter++;
     bool printit = (0 == counter%printevery);
     if(printit) cout << "...fillMC filling event number " << counter;
-    
     IDalitzEvent* evt = mc->getEvent();
     double weight = pdf->getVal_noPs() * evt->getWeight() / 
       evt->getGeneratorPdfRelativeToPhaseSpace();
-
+    
     if(printit) cout << ", with weight " << weight << endl;
     int n=0;
     for(unsigned int i=0; i < _boxSets.size(); i++){
@@ -156,11 +231,21 @@ void Chi2Binning::fillMC(IDalitzEventList* mc
 	break;
       }
     }
-    //    cout << "event " << counter << " in " << n << " box sets" << endl;
+    if(dbThis){
+      cout << "event " << counter << " in " << n << " out of " << numBins()
+	   << " box sets" << endl;
+      if(0 == n) evt->print();
+      cout << "mc weight now: " << _totalMCWeight << endl;
+    }
   }
+  if(dbThis) cout << "Total MC weight: " << _totalMCWeight << endl;
   pdf->resetEventRecord();
 }
 
+void Chi2Binning::sortByChi2(){
+  lessByChi2BoxSetChi2 sorter;
+  stable_sort(_boxSets.rbegin(), _boxSets.rend(), sorter);
+}
 double Chi2Binning::setEventsAndPdf(IDalitzEventList* data
 				    , IDalitzEventList* mc
 				    , IDalitzPdf* pdf
@@ -182,6 +267,10 @@ double Chi2Binning::setEventsAndPdf(IDalitzEventList* data
   fillData(data);
   if(dbThis) cout << "...done that - now the MC" << endl;
   fillMC(mc, pdf);
+  if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
+  setBoxesNormFactors();
+  if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
+  sortByChi2();
   if(dbThis) cout << " Chi2Binning::setEventsAndPdf done" << endl;
   return 0;
 }
@@ -202,83 +291,162 @@ void Chi2Binning::setFas(IFastAmplitudeIntegrable* fas){
     _boxSets[i].setIIntegrationCalculator(fap);
   }
 }
+
+void Chi2Binning::print(std::ostream& os) const{
+
+  int nDataCheck=0;
+  double nMCCheck=0;
+  double chi2sum=0;
+  double sumVarData =0;
+  double sumVarMC   =0;
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    int n_data =  _boxSets[i].nData();
+    nDataCheck += n_data;
+    double weight_mc = _boxSets[i].weightedMC() * normFactor();
+    nMCCheck += weight_mc;
+    
+    double var_mc_noNorm = _boxSets[i].rmsMC(_nMC);
+    double var_mc = var_mc_noNorm* normFactor()*normFactor();
+    double varData_expected = weight_mc;
+    sumVarData += varData_expected;
+    sumVarMC   += var_mc;
+    double chi2 = chi2_ofBin(i);
+    chi2sum += chi2;
+
+    os << " bin " << i;
+    os << "  data " <<  _boxSets[i].nData();
+    os << ", mcweight " << _boxSets[i].weightedMC() * normFactor();
+    os << ", (nMC " << _boxSets[i].nMC() << ")";
+    os << ", chi2 " << chi2 << endl;
+    _boxSets[i].printBoxInfo(os);
+  }
+  os << "\n=========================================================="<< endl;
+  os << "chi2 / nbins = " << chi2sum << " / " << numBins() 
+     << " = " << chi2sum/numBins() << endl;
+  os << "===========================================================" << endl;
+  os << " total data weight: " << nDataCheck
+     << " .. _nData = " << _nData
+     << " should be same as normalised total MC weight = " << nMCCheck
+     << " (un-normalised = " << _totalMCWeight << ")"
+     << endl;
+  if(sumVarMC > sumVarData){
+    os << "Severe WARNING in Chi2Binning::getChi2_perBin()"
+       << "\n error on difference between data and MC dominated by MC"
+       << "\n mean data variance: " << sumVarData/numBins()
+       << ", ... mc: " << sumVarMC/numBins()
+       << ".\n Get more MC!"
+       << endl;
+  }  
+}
+
+double Chi2Binning::normFactor() const{
+  return ((double)_nData)/_totalMCWeight;
+}
+
+void Chi2Binning::setBoxesNormFactors(){
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    _boxSets[i].setNormFactor(normFactor());
+  }
+}
+
+double Chi2Binning::chi2_ofBin(unsigned int i) const{
+  if(i > _boxSets.size()) return -9999;
+  return _boxSets[i].chi2(normFactor());
+}
 double Chi2Binning::getChi2_perBin() const{
-  bool dbThis=true;
-  if(dbThis) cout << "Chi2Binning::getChi2_perBin()" << endl;
   if(_nMC <= 0) return -9999;
   if(_nData <=0 ) return -9999;
   if(_totalMCWeight <= 0.0) return -9999;
 
   double sum=0;
-  
-  double sumVarData = 0;
-  double sumVarMC = 0;
-
-  double normFactor = ((double)_nData)/_totalMCWeight;
-  if(dbThis) cout << "normFactor: " << normFactor << endl;
-  // this was written late at night - need to check:
-
-  int nDataCheck=0;
-  double nMCCheck=0;
   for(unsigned int i=0; i < _boxSets.size(); i++){
-    if(dbThis) cout << " bin " << i;
-    int n_data =  _boxSets[i].nData();
-    nDataCheck += n_data;
-
-    if(dbThis) cout << "  data " << n_data;
-    // double var_data = n_data;
-
-    double weight_mc = _boxSets[i].weightedMC() * normFactor;
-
-    nMCCheck += weight_mc;
-
-    if(dbThis) cout << ", mcweight " << weight_mc;
-    if(dbThis) cout << ", (nMC " << _boxSets[i].nMC() << ")";
-    double var_mc_noNorm = _boxSets[i].rmsMC(_nMC);
-    double var_mc = var_mc_noNorm* normFactor*normFactor;
-    double varData_expected = weight_mc;
-
-    double varData;
-    if(0 != varData_expected) varData = varData_expected;
-    else varData = n_data;
-
-    sumVarData += varData_expected;
-    sumVarMC   += var_mc;
-   
-    double var = varData + var_mc;
-    //    if(dbThis) cout << " var " << var << ", no norm: " << var_mc_noNorm;
-    if(dbThis) cout << ", sigma " << sqrt(var);
-    double delta_N = n_data - weight_mc;
-    double dNSq = delta_N * delta_N;
-    double chi2;
-    if( dNSq < var * 1.e-20) chi2=0; // catches legit. 0-entry cases
-    else chi2 = dNSq / var;
-    if(dbThis) cout << ", chi2 " << chi2 << endl;
-    if(dbThis) _boxSets[i].printBoxInfo();
+    double chi2 = chi2_ofBin(i);
     sum += chi2;
-  }
-
-  if(dbThis){
-    cout << " total data weight: " << nDataCheck
-	 << " .. _nData = " << _nData
-	 << " should be same as normalised total MC weight = " << nMCCheck
-      	 << " (un-normalised = " << _totalMCWeight << ")"
-	 << endl;
-  }
-  if(sumVarMC > sumVarData){
-    cout << "Severe WARNING in Chi2Binning::getChi2_perBin()"
-	 << "\n error on difference between data and MC dominated by MC"
-	 << "\n mean data variance: " << sumVarData/_boxSets.size()
-	 << ", ... mc: " << sumVarMC/_boxSets.size()
-	 << ".\n Get more MC!"
-	 << endl;
   }
 
   return sum/numBins();
 }
+double Chi2Binning::getMaxChi2() const{
+  double max=-1;
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    double chi2 = chi2_ofBin(i);
+    if(chi2 > max) max=chi2;
+  }
+  return max;
+}
 
 int Chi2Binning::numBins() const{
   return _boxSets.size();
+}
+/*
+void Chi2Binning::setHistoColours(){
+  double maxChi2 = getMaxChi2();
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    double chi2 = chi2_ofBin(i);
+    int colIndex = (chi2/maxChi2)*__Ncol;
+    int col = (getColourPalette())[colIndex];
+    _boxSets[i].setHistoColour(col);
+  }
+}
+*/
+void Chi2Binning::setHistoColours(){
+  double maxChi2 = getMaxChi2();
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    double chi2 = chi2_ofBin(i);
+    int colIndex = (chi2/maxChi2)*(__Ncol-1);
+    int col = (getColourPalette())[colIndex];
+    _boxSets[i].setHistoColour(col);
+  }
+}
+DalitzHistoStackSet Chi2Binning::getDataHistoStack(){
+  setHistoColours();
+  DalitzHistoStackSet hstack;
+
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    hstack.add(_boxSets[i].histoData());
+  }
+  double mx = getMaxChi2();
+  if(mx > 20) mx=20;
+  hstack.setColourPalette(__Ncol, __colourPalette, mx);
+  //cout << "printing newly made data histo stack" << endl;
+  //hstack.draw("experimental_chi2DataHisto");
+  return hstack;
+}
+DalitzHistoStackSet Chi2Binning::getMCHistoStack(){
+  setHistoColours();
+  DalitzHistoStackSet hstack;
+
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    hstack.add(_boxSets[i].histoMC());
+  }
+  double mx = getMaxChi2();
+  if(mx > 20) mx=20;
+
+  hstack.setColourPalette(__Ncol, __colourPalette, mx);
+  //  cout << "printing newly made MC histo stack" << endl;
+  // hstack.draw("experimental_chi2MCHisto");
+  return hstack;
+}
+
+counted_ptr<TH1D> Chi2Binning::getChi2Distribution() const{
+  int nbins=100;
+  double from=0, to=getMaxChi2();
+  cout << "from " << from << " to " << to << endl;
+  counted_ptr<TH1D> h(new TH1D("chi2 distribution", "chi2 distribution"
+			       , nbins, from, to));
+  h->SetDirectory(0);
+  for(unsigned int i=0; i < _boxSets.size(); i++){
+    //cout << "filling chi2 " << _boxSets[i].chi2() << endl;
+    h->Fill(_boxSets[i].chi2());
+  }
+  return h;
+}
+void Chi2Binning::drawChi2Distribution(const std::string& fname)const{
+  TCanvas can;
+  can.SetLogy();
+  counted_ptr<TH1D> h(getChi2Distribution());
+  h->Draw();
+  can.Print(fname.c_str());
 }
 
 bool lessByChi2BoxData::operator()(const Chi2Box& a, const Chi2Box& b) const{
@@ -286,4 +454,13 @@ bool lessByChi2BoxData::operator()(const Chi2Box& a, const Chi2Box& b) const{
   return a.nData() < b.nData();
 }
 
+bool lessByChi2BoxSetChi2::operator()(const Chi2BoxSet& a, const Chi2BoxSet& b) const{
+
+  return a.chi2() < b.chi2();
+}
+
+std::ostream& operator<<(std::ostream& os, const Chi2Binning& c2b){
+  c2b.print(os);
+  return os;
+}
 //

@@ -34,9 +34,13 @@ class MappedDalitzArea{
 
   bool allConsecutive() const;
   bool allStandardised() const;
-  static std::vector<TLorentzVector> mapP4(DalitzEvent evt
+  static std::vector<TLorentzVector> mapP4(const DalitzEvent& evt
 					   , const Permutation& mapping
 					   );
+  static std::vector<TLorentzVector>& mapP4(const DalitzEvent& evt
+					    , const Permutation& mapping
+					    , std::vector<TLorentzVector>& p4
+					    );
  public:
   MappedDalitzArea();
   MappedDalitzArea(const DalitzEventPattern& pat

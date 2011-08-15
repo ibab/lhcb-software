@@ -196,13 +196,21 @@ void MappedDalitzArea::applyLimits(){
   _area.encloseInPhaseSpaceArea();
 }
 
-vector<TLorentzVector> MappedDalitzArea::mapP4(DalitzEvent evt
+vector<TLorentzVector> MappedDalitzArea::mapP4(const DalitzEvent& evt
 					       , const Permutation& mapping
 					       ){
+  vector<TLorentzVector> p4(evt.eventPattern().size());
+  return mapP4(evt, mapping, p4);
+}
 
+vector<TLorentzVector>& MappedDalitzArea::mapP4(const DalitzEvent& evt
+						, const Permutation& mapping
+						, vector<TLorentzVector>& p4
+						){
+  
   unsigned int n = evt.eventPattern().size();
-
-  vector<TLorentzVector> p4(n);
+  p4.resize(n);
+  
   for(unsigned int i=0; i < n; i++){
     int mappedIndex = mapping[i];
     if(mappedIndex < 0 || mappedIndex + 1 > (int) n){
@@ -222,8 +230,8 @@ counted_ptr<DalitzEvent> MappedDalitzArea::makeEventForOwner() const{
   if(0 == mappedEvt){
     return mappedEvt;
   }
-  vector<TLorentzVector> p4 = 
-    mapP4( *mappedEvt, _inverseMapping );
+  static vector<TLorentzVector> p4; 
+  mapP4( *mappedEvt, _inverseMapping, p4 );
   
   counted_ptr<DalitzEvent> evt(new DalitzEvent(_pat, p4));
   return evt;

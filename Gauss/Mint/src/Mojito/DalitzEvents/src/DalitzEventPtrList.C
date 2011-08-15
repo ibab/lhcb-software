@@ -200,6 +200,18 @@ DalitzHistoSet DalitzEventPtrList::reWeightedHistoSet(IGetDalitzEvent* w) const{
   return hs;
 }
 
+DalitzHistoSet DalitzEventPtrList::weighedReWeightedHistoSet(IGetDalitzEvent* w) const{
+  // mainly for diagnostics
+  DalitzHistoSet hs;
+  if(0 == w) return hs;
+  for(unsigned int i=0; i< this->size(); i++){
+    w->setEvent( &(*(*this)[i]));
+    hs.addEvent(&(*(*this)[i]), w->RealVal() * (*(*this)[i]).getWeight());
+    w->resetEventRecord();
+  }
+  return hs;
+}
+
 
 bool DalitzEventPtrList::save(const std::string& fname)const{
   return saveAsNtuple(fname);

@@ -23,6 +23,7 @@ double d4body_by_ds12(Double_t* x, Double_t* p){
   bool dbThis=false;
   double s12 = x[0];
   if(s12 < 0) return 0;
+  double m12 = sqrt(s12);
   double mum = p[0];
   double m1  = p[1];
   double m2  = p[2];
@@ -38,8 +39,8 @@ double d4body_by_ds12(Double_t* x, Double_t* p){
 
   PhaseSpaceIntegral3body p3;
 
-  double p3val = p3.getVal(mum, sqrt(s12), m3, m4);
-  double p2val = phaseSpaceIntegral2body(sqrt(s12), m1, m2);
+  double p3val = p3.getVal(mum, m12, m3, m4);
+  double p2val = phaseSpaceIntegral2body(m12, m1, m2);
   if(dbThis){
     cout << " d4body_by_ds12: returning " << p2val << " * " << p3val
 	 << " = " << p2val * p3val
@@ -53,6 +54,7 @@ double d3body_by_ds12(Double_t* x, Double_t* p){
 
   double s12 = x[0];
   if(s12 < 0) return 0;
+  double m12 = sqrt(s12);
   double mum = p[0];
   double m1  = p[1];
   double m2  = p[2];
@@ -63,8 +65,8 @@ double d3body_by_ds12(Double_t* x, Double_t* p){
 		  << m2 << ", "
 		  << m3 << endl;
 
-  return phaseSpaceIntegral2body(mum, sqrt(s12), m3)
-    *    phaseSpaceIntegral2body(sqrt(s12), m1, m2);
+  return phaseSpaceIntegral2body(mum, m12, m3)
+    *    phaseSpaceIntegral2body(m12, m1, m2);
 }
 
 double d_ps4_by_ds12ds34_withFct(Double_t* x, Double_t* p) {
@@ -77,26 +79,28 @@ double d_ps4_by_ds12ds34_withFct(Double_t* x, Double_t* p) {
 
   
   if(s12 < 0) return 0;
-  if(sqrt(s12) < p[1] + p[2]) return 0;
+  double m12 = sqrt(s12);
+  if(m12 < p[1] + p[2]) return 0;
 
   if(s34 < 0) return 0;
-  if(sqrt(s34) < p[3] + p[4]) return 0;
-  if(sqrt(s12) + sqrt(s34) > p[0]) return 0;
+  double m34 = sqrt(s34);
+  if(m34 < p[3] + p[4]) return 0;
+  if(m12 + m34 > p[0]) return 0;
   
 
   double ps1 = phaseSpaceIntegral2body(p[0]
-				      , sqrt(s12)
-				      , sqrt(s34));
+				      , m12
+				      , m34);
 
   if(ps1 <=0) return 0;
     
-  double ps2 = phaseSpaceIntegral2body(sqrt(s12)
+  double ps2 = phaseSpaceIntegral2body(m12
 				       , p[1]
 				       , p[2]);
   
   if(ps2 <=0) return 0;
     
-  double ps3 = phaseSpaceIntegral2body(sqrt(s34)
+  double ps3 = phaseSpaceIntegral2body(m34
 				       , p[3]
 				       , p[4]);
   if(ps3 <=0) return 0;
@@ -120,28 +124,30 @@ double d_ps4_by_ds123ds12_withFct(Double_t* x, Double_t* p){
 
   
   if(s123 < 0) return 0;
-  if(sqrt(s123) + p[4] > p[0]) return 0;
-  if(sqrt(s123) < p[1] + p[2] + p[3]) return 0;
+  double m123 = sqrt(s123);
+  if(m123 + p[4] > p[0]) return 0;
+  if(m123 < p[1] + p[2] + p[3]) return 0;
   
   if(s12 < 0) return 0;
-  if(sqrt(s12) + p[3] > sqrt(s123))return 0;
-  if(sqrt(s12) < p[1] + p[2]) return 0;
+  double m12 = sqrt(s12);
+  if(m12 + p[3] > m123)return 0;
+  if(m12 < p[1] + p[2]) return 0;
   
 
   double ps1 = phaseSpaceIntegral2body(p[0]
-				       , sqrt(s123)
+				       , m123
 				       , p[4]);
 
   if(ps1 <=0) return 0;
 
     
-  double ps2 = phaseSpaceIntegral2body(sqrt(s123)
+  double ps2 = phaseSpaceIntegral2body(m123
 				       , sqrt(s12)
 				       , p[3]);
 
   if(ps2 <=0) return 0;
 
-  double ps3 = phaseSpaceIntegral2body(sqrt(s12)
+  double ps3 = phaseSpaceIntegral2body(m12
 				  , p[1]
 				  , p[2]);
 
@@ -154,7 +160,7 @@ double d_ps4_by_ds123ds12_withFct(Double_t* x, Double_t* p){
 
 }
 
-
+/* now inlined, see header.
 double phaseSpaceIntegral2body(const DalitzEventPattern& _pat){
   if(_pat.size() != 3){
     cout << "phaseSpaceIntegral2body: wrong pattern " << _pat << endl;
@@ -175,6 +181,7 @@ double phaseSpaceIntegral2body(double mum, double d1, double d2){
   return pi * sqrt(la)/(2*mum*mum);
   
 }
+*/
 
 
 PhaseSpaceIntegral3body::PhaseSpaceIntegral3body(){
@@ -330,20 +337,22 @@ double PhaseSpaceIntegral4body::getValCheck(double mum, double d1
 }
 
 
-PhaseSpaceIntegral4bodyWith_s12s34::PhaseSpaceIntegral4bodyWith_s12s34(IGenFct* s12f
-								       , IGenFct* s34f
-								       , const DalitzEventPattern& pat
-								       )
+PhaseSpaceIntegral4bodyWith_s12s34::
+PhaseSpaceIntegral4bodyWith_s12s34(IGenFct* s12f
+				   , IGenFct* s34f
+				   , const DalitzEventPattern& pat
+				   )
   : _s12Fct(s12f)
   , _s34Fct(s34f)
   , _pat(pat)
 {
 }
 
-PhaseSpaceIntegral4bodyWith_s123s12::PhaseSpaceIntegral4bodyWith_s123s12(IGenFct* s123f
-								       , IGenFct* s12f
-								       , const DalitzEventPattern& pat
-								       )
+PhaseSpaceIntegral4bodyWith_s123s12::
+PhaseSpaceIntegral4bodyWith_s123s12(IGenFct* s123f
+				    , IGenFct* s12f
+				    , const DalitzEventPattern& pat
+				    )
   : _s123Fct(s123f)
   , _s12Fct(s12f)
   , _pat(pat)

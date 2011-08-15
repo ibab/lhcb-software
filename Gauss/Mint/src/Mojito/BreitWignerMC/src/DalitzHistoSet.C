@@ -24,7 +24,7 @@ DalitzHistoSet::DalitzHistoSet()
 }
 
 DalitzHistoSet::DalitzHistoSet(const DalitzHistoSet& other)
-  :  std::map< std::vector<int>, DalitzHistogram>( other)
+  :  std::map< DalitzCoordSet, DalitzHistogram>( other)
   , _tree(0)
 {
   makeName();
@@ -49,7 +49,7 @@ void DalitzHistoSet::add(const DalitzHistogram& histo, double weight){
   return;
 }
 void DalitzHistoSet::add(const DalitzHistoSet& hL, double weight){
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator it = hL.begin();
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator it = hL.begin();
       it != hL.end();
       it++){
     this->add(it->second, weight);
@@ -61,7 +61,7 @@ void DalitzHistoSet::multiply(const DalitzHistogram& histo){
   return;
 }
 void DalitzHistoSet::multiply(const DalitzHistoSet& hL){
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator it = hL.begin();
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator it = hL.begin();
       it != hL.end();
       it++){
     this->multiply(it->second);
@@ -73,7 +73,7 @@ void DalitzHistoSet::divide(const DalitzHistogram& histo){
   return;
 }
 void DalitzHistoSet::divide(const DalitzHistoSet& hL){
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator it = hL.begin();
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator it = hL.begin();
       it != hL.end();
       it++){
     this->divide(it->second);
@@ -86,7 +86,7 @@ void DalitzHistoSet::addEvent(const IDalitzEvent* evtPtr, double weight){
   int ndgtr(evtPtr->eventPattern().numDaughters());
   if(this->empty() && ndgtr > 2) makeHistograms(evtPtr->eventPattern());
 
-  for(map< std::vector<int>, DalitzHistogram>::iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -97,7 +97,7 @@ void DalitzHistoSet::addEvent(const IDalitzEvent* evtPtr, double weight){
 
 void DalitzHistoSet::scale(double sf){
   if(this->empty()) return;
-  for(map< std::vector<int>, DalitzHistogram>::iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -108,7 +108,7 @@ void DalitzHistoSet::scale(double sf){
 
 void DalitzHistoSet::setNormFactor(double sf){
   if(this->empty()) return;
-  for(map< std::vector<int>, DalitzHistogram>::iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -119,7 +119,7 @@ void DalitzHistoSet::setNormFactor(double sf){
 
 void DalitzHistoSet::setTitle(const std::string& title){
   if(this->empty()) return;
-  for(map< std::vector<int>, DalitzHistogram>::iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -127,10 +127,33 @@ void DalitzHistoSet::setTitle(const std::string& title){
   }
   return;
 }
+void DalitzHistoSet::setFillColour(Color_t fcolor){
+  if(this->empty()) return;
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
+	it = this->begin();
+      it != this->end();
+      it++){
+    it->second.histo()->SetFillColor(fcolor);
+  }
+  return;
+}
+void DalitzHistoSet::setLineColour(Color_t fcolor){
+  if(this->empty()) return;
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
+	it = this->begin();
+      it != this->end();
+      it++){
+    it->second.histo()->SetLineColor(fcolor);
+    it->second.histo()->SetLineWidth(2);
+  }
+  return;
+}
+
+
 
 void DalitzHistoSet::clearAllHistos(){
   if(this->empty()) return;
-  for(map< std::vector<int>, DalitzHistogram>::iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -155,7 +178,7 @@ const std::string& DalitzHistoSet::dirName() const{
 bool DalitzHistoSet::save(const std::string& filename) const{
   TFile f(filename.c_str(), "RECREATE");
   f.cd();
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -214,7 +237,7 @@ bool DalitzHistoSet::saveAsDir(const std::string& asSubdirOf) const{
   std::string dir = asSubdirOf + "/" + dirName();
   
   std::vector<std::string> directoryList;
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -267,7 +290,7 @@ bool DalitzHistoSet::retrieveFromDir(const std::string& asSubdirOf){
   }
   if(dbThis){
     cout << "after adding:" << endl;
-    for(std::map< std::vector<int>, DalitzHistogram>::const_iterator it =
+    for(std::map< DalitzCoordSet, DalitzHistogram>::const_iterator it =
 	  this->begin(); it != this->end(); it++){
       cout << "\n" << it->second.pattern() << endl;
     }
@@ -281,7 +304,7 @@ bool DalitzHistoSet::draw(const std::string& baseName
 			  , const std::string& format
 			  ) const{
   bool sc=true;
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator 
 	it = this->begin();
       it != this->end();
       it++){
@@ -295,11 +318,11 @@ bool DalitzHistoSet::drawWithFit(const DalitzHistoSet& fit
 				 , const std::string& format // ="eps"
 				 ) const{
   bool sc=true;
-  for(map< std::vector<int>, DalitzHistogram>::const_iterator 
+  for(map< DalitzCoordSet, DalitzHistogram>::const_iterator 
 	it = this->begin();
       it != this->end();
       it++){
-    map< vector<int>, DalitzHistogram >::const_iterator jt 
+    map< DalitzCoordSet, DalitzHistogram >::const_iterator jt 
       = fit.find(it->first);
     if(jt == fit.end()) continue;
     sc &= it->second.drawWithFit(jt->second, baseName, format);

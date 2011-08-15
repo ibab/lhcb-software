@@ -3,16 +3,18 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
 
+#include "Rtypes.h"
+
 #include <map>
 #include <string>
 #include "DalitzEventPattern.h"
 #include "DalitzHistogram.h"
-
+#include "DalitzCoordSet.h"
 
 class TTree;
 class IDalitzEvent;
 
-class DalitzHistoSet : public std::map< std::vector<int>, DalitzHistogram>{
+class DalitzHistoSet : public std::map< DalitzCoordSet, DalitzHistogram>{
   mutable TTree* _tree;
   std::string _name;
   void makeHistograms(const DalitzEventPattern& pat);
@@ -55,6 +57,8 @@ class DalitzHistoSet : public std::map< std::vector<int>, DalitzHistogram>{
   
 
   void setTitle(const std::string& title);
+  void setFillColour(Color_t fcolor);
+  void setLineColour(Color_t fcolor);
 
   DalitzHistoSet& operator*=(double sf);
   DalitzHistoSet operator*(double sf) const;

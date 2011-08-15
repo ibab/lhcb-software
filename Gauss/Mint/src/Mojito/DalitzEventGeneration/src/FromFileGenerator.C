@@ -81,3 +81,14 @@ bool FromFileGenerator::saveFile(){
 bool FromFileGenerator::closeFile(){
   return _dL.Close();
 }
+
+DiskResidentEventList& FromFileGenerator::getEventList(){
+  return _dL;
+}
+const DiskResidentEventList& FromFileGenerator::getEventList() const{
+  return _dL;
+}
+
+
+//======
+//

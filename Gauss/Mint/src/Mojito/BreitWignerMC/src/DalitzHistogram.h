@@ -6,12 +6,14 @@
 #include "TH1D.h"
 
 #include "DalitzCoordinate.h"
+#include "DalitzCoordSet.h"
 #include "DalitzEventPattern.h"
 #include "counted_ptr.h"
 #include "CLHEPPhysicalConstants.h"
 
 #include "TTree.h"
 #include "TBranch.h"
+#include "TH1.h"
 
 #include <string>
 
@@ -21,8 +23,8 @@ class DalitzHistogram{
  private:
   double _units;
   int _nbins;
-  MINT::counted_ptr<TH1D> _h;
-  DalitzCoordinate _c;
+  MINT::counted_ptr<TH1> _h;
+  DalitzCoordSet _c;
   DalitzEventPattern _pat;
   std::string _name;
   mutable TTree* _tree;
@@ -43,7 +45,7 @@ class DalitzHistogram{
 
  public:
   DalitzHistogram();
-  DalitzHistogram(const DalitzCoordinate& c
+  DalitzHistogram(const DalitzCoordSet& c
 		  , const DalitzEventPattern& p
 		  , int bins=200
 		  , double units=GeV*GeV
@@ -59,7 +61,7 @@ class DalitzHistogram{
   //TTree* makeTree() const;
   //TTree* ttree() const;
 
-  void init(const DalitzCoordinate& c, const DalitzEventPattern& p
+  void init(const DalitzCoordSet& c, const DalitzEventPattern& p
 	    , int bins = 100
 	    , double units = GeV*GeV
 	    );
@@ -75,10 +77,10 @@ class DalitzHistogram{
 
   void addEvent(const IDalitzEvent* evtPtr, double weight=1);
 
-  MINT::const_counted_ptr<TH1D> histo() const{return _h;}
-  MINT::counted_ptr<TH1D> histo() {return _h;}
-  const DalitzCoordinate& coord() const{return _c;}
-  DalitzCoordinate& coord() {return _c;}
+  MINT::const_counted_ptr<TH1> histo() const{return _h;}
+  MINT::counted_ptr<TH1> histo() {return _h;}
+  const DalitzCoordSet& coord() const{return _c;}
+  DalitzCoordSet& coord() {return _c;}
 
   void scale(double sf);
   void setTitle(const std::string& title);

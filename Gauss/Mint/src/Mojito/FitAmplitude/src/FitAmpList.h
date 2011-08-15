@@ -19,7 +19,7 @@
 
 
 #include "IGetRealEvent.h"
-#include "IGetRealEventWithSmoothy.h"
+#include "IGetRealEvent.h"
 #include "IGetComplexEvent.h"
 #include "IIntegrationCalculator.h"
 
@@ -132,11 +132,11 @@ class FitAmpList
 			 , MINT::IGetRealEvent<IDalitzEvent>* pdf
 			 , double nSigma=2);
   
-  DalitzBWBoxSet makeBWBoxes( MINT::IGetRealEventWithSmoothy<IDalitzEvent>* pdf
+  DalitzBWBoxSet makeBWBoxes( MINT::IGetRealEvent<IDalitzEvent>* pdf
 			      , TRandom* rnd=gRandom
 			      );
   DalitzBWBoxSet makeBWBoxes(const DalitzEventPattern& pat
-			     , MINT::IGetRealEventWithSmoothy<IDalitzEvent>* pdf
+			     , MINT::IGetRealEvent<IDalitzEvent>* pdf
 			     , TRandom* rnd=gRandom);
 
 

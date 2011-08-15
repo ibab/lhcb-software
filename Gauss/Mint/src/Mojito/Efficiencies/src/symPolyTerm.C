@@ -134,7 +134,7 @@ void symPolyTerm::print(std::ostream& os)const{
 }
 
 double symPolyTerm::eval(double x, double y)const{
-  std::vector<const double* > ptrs(2);
+  static std::vector<const double* > ptrs(2);
   ptrs[0] = &x;
   ptrs[1] = &y;
   return eval(ptrs);
@@ -148,7 +148,7 @@ double symPolyTerm::eval(double x, double y, double z)const{
 }
 double symPolyTerm::eval(double x, double y, double z
 			 , double u)const{
-  std::vector<const double* > ptrs(4);
+  static std::vector<const double* > ptrs(4);
   ptrs[0] = &x;
   ptrs[1] = &y;
   ptrs[2] = &z;
@@ -167,7 +167,7 @@ double symPolyTerm::eval(double x, double y, double z
 }
 double symPolyTerm::eval(double x, double y, double z
 			 , double u, double v, double w)const{
-  std::vector<const double* > ptrs(6);
+  static std::vector<const double* > ptrs(6);
   ptrs[0] = &x;
   ptrs[1] = &y;
   ptrs[2] = &z;
@@ -178,15 +178,47 @@ double symPolyTerm::eval(double x, double y, double z
 }
 
 double symPolyTerm::eval(const std::vector<double>& x)const{
-  std::vector<const double* > ptrs(x.size());
-  for(unsigned int i=0; i < x.size(); i++) ptrs[i] = &(x[i]);
-  return eval(ptrs);
+ if(x.size() != _powers.size()){
+    cout << "symPolyTerm::eval: size mismatch|!!!"
+	 << " me: " << _powers.size() << " vs x: " << x.size()
+	 << "\n _powers: " << _powers
+	 << "\n x: " << x
+	 << endl;
+    throw "can't deal with this";
+  }
+
+  double sum(0);
+  for(unsigned int i = 0; i < _allPermutations.size(); i++){
+    const std::vector<int>& thisPerm(_allPermutations[i]);
+    double prod(1);
+    for(unsigned int j = 0; j < thisPerm.size(); j++){
+      prod *= pow((x[j]), thisPerm[j]);
+    }
+    sum += prod;
+  }
+  return sum;
 }
 
 double symPolyTerm::eval(const std::vector<double* >& x)const{
-  std::vector<const double* > ptrs(x.size());
-  for(unsigned int i=0; i < x.size(); i++) ptrs[i] = (x[i]);
-  return eval(ptrs);
+  if(x.size() != _powers.size()){
+    cout << "symPolyTerm::eval: size mismatch|!!!"
+	 << " me: " << _powers.size() << " vs x: " << x.size()
+	 << "\n _powers: " << _powers
+	 << "\n x: " << x
+	 << endl;
+    throw "can't deal with this";
+  }
+
+  double sum(0);
+  for(unsigned int i = 0; i < _allPermutations.size(); i++){
+    const std::vector<int>& thisPerm(_allPermutations[i]);
+    double prod(1);
+    for(unsigned int j = 0; j < thisPerm.size(); j++){
+      prod *= pow((*(x[j])), thisPerm[j]);
+    }
+    sum += prod;
+  }
+  return sum;
 }
 
 double symPolyTerm::eval(const std::vector<const double* >& x)const{

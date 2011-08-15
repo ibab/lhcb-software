@@ -5,6 +5,16 @@
 using namespace std;
 
 int Permutation::dummy = -9999;
+Permutation* Permutation::__unit(0);
+
+const Permutation& Permutation::unity(){
+  if(0 == __unit){
+    __unit = new Permutation();
+    __unit->makeUnity();
+  }
+  return *__unit;
+}
+
 
 int& Permutation::y_of_x(int i){
   if(i >= (int) _v.size() || i < 0){
@@ -23,15 +33,6 @@ const int& Permutation::y_of_x(int i) const{
     return dummy;
   }
   return _v[i];
-}
-
-std::vector<int>  Permutation::mapValues(const std::vector<int>& in) const{
-  vector<int> out(in.size());
-  
-  for(unsigned int i=0; i < in.size(); i++){
-    out[i] = y_of_x(in[i]);
-  }
-  return out;
 }
 
 void Permutation::reset(int n){

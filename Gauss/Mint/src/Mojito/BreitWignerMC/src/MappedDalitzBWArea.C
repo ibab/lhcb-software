@@ -244,13 +244,23 @@ void MappedDalitzBWArea::applyLimits(){
   }
 }
 
+/*
 vector<TLorentzVector> MappedDalitzBWArea::mapP4(const DalitzEvent& evt
-					       , const Permutation& mapping
-					       ){
+						  , const Permutation& mapping
+						  ){
+  vector<TLorentzVector> p4(evt.eventPattern().size());
+  return mapP4(evt, mapping, p4);
+}
+
+std::vector<TLorentzVector>& 
+MappedDalitzBWArea::mapP4(const DalitzEvent& evt
+			  , const Permutation& mapping
+			  , std::vector<TLorentzVector>& p4
+			  ){
 
   unsigned int n = evt.eventPattern().size();
+  p4.resize(n);
 
-  vector<TLorentzVector> p4(n);
   for(unsigned int i=0; i < n; i++){
     int mappedIndex = mapping[i];
     if(mappedIndex < 0 || mappedIndex + 1 > (int) n){
@@ -264,27 +274,34 @@ vector<TLorentzVector> MappedDalitzBWArea::mapP4(const DalitzEvent& evt
   }
   return p4;
 }
-
+*/
 counted_ptr<DalitzEvent> MappedDalitzBWArea::tryEventForOwner() const{
   bool dbThis=false;
-  if(dbThis) cout << "Hello from MappedDalitzBWArea::tryEventForOwner()" << endl;
-
-  counted_ptr<DalitzEvent> mappedEvt( _area.tryEventForOwner());
-  if(0 == mappedEvt){
-    return mappedEvt;
+  if(dbThis){ 
+    cout << "Hello from MappedDalitzBWArea::tryEventForOwner()" 
+	 << endl;
   }
-  vector<TLorentzVector> p4(mapP4( *mappedEvt, _inverseMapping ));
-  
-  counted_ptr<DalitzEvent> evt(new DalitzEvent(_pat, p4));
-  evt->setWeight(mappedEvt->getWeight());
-
-  return evt;
+  counted_ptr<DalitzEvent> evt( _area.tryEventForOwner(_inverseMapping));
 
   /*
-    alternative option
-    mappedEvt->mapMe(_inverseMapping);
-    return mappedEvt;
+  if(dbThis && 0 != evt){
+    counted_ptr<DalitzEvent> mappedEvt( _area.tryEventForOwner());
+    if(0 == mappedEvt){
+      return mappedEvt;
+    }
+    static vector<TLorentzVector> p4;
+    mapP4( *mappedEvt, _inverseMapping, p4);
+    
+    counted_ptr<DalitzEvent> evtCheck(new DalitzEvent(_pat, p4));
+    evtCheck->setWeight(mappedEvt->getWeight());
+
+    cout << "compare new, old event and weight: "
+	 << "\n\t new: " << *evt
+	 << "\n\t old: " << *evtCheck
+	 << endl;
+  }
   */
+  return evt;
 }
 
 double MappedDalitzBWArea::genValue(const DalitzEvent& evt) const{

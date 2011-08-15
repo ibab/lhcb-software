@@ -8,6 +8,7 @@
 #include "EventList.h"
 #include "IDalitzEvent.h"
 #include "IDalitzEventList.h"
+#include "IGetDalitzEvent.h"
 #include "DalitzEvent.h"
 #include "DalitzEventPattern.h"
 //#include "IDalitzEventAccess.h"
@@ -78,6 +79,9 @@ class DalitzEventList
 
   DalitzHistoSet histoSet() const;
   DalitzHistoSet weightedHistoSet() const;
+  DalitzHistoSet reWeightedHistoSet(IGetDalitzEvent* w) ;
+  DalitzHistoSet weighedReWeightedHistoSet(IGetDalitzEvent* w) ;
+
   bool makePlots(const std::string& filename) const;
 
  /*

@@ -23,11 +23,16 @@ class Permutation{
 
   // end data members
 
+  static Permutation* __unit;
+  
+
   static int dummy;
   int& y_of_x(int i);
   const int& y_of_x(int i) const;
 
  public:
+
+  static const Permutation& unity();
 
   void swap(int x1, int x2, int sgn=1);
   void set(const std::vector<int>& v, int sgn=1);
@@ -61,12 +66,30 @@ class Permutation{
     return y_of_x(i);
   }
 
-  std::vector<int> mapValues(const std::vector<int>& in) const;
+  std::vector<int>& mapValues(const std::vector<int>& in
+			      , std::vector<int>& out) const{
+    // same as mapValues below, except no new vector needs allocating
+    // good when time is precious...
+    if(this->isUnity()){
+      out = in;
+      return out;
+    }
 
+    out.resize(in.size());
+    for(unsigned int i=0; i < in.size(); i++){
+      out[i] = y_of_x(in[i]);
+    }
+    return out;
+  }
+  std::vector<int> mapValues(const std::vector<int>& in) const{
+    std::vector<int> out(in.size());
+    return mapValues(in, out);
+  }
 
   template<typename T>
-    std::vector<T> mapOrder(const std::vector<T>& in) const{
-    std::vector<T> out(in.size());
+    std::vector<T>& mapOrder(const std::vector<T>& in
+			    , std::vector<T>& out) const{
+    out.resize(in.size());
     unsigned int to = in.size();
     if(in.size() > this->size()){
       to = this->size();
@@ -76,8 +99,12 @@ class Permutation{
     for(unsigned int i=0; i < to; i++){
       out[y_of_x(i)] = in[i];
     }
-    return out;
-    
+    return out;    
+  }
+  template<typename T>
+    std::vector<T> mapOrder(const std::vector<T>& in) const{
+    std::vector<T> out(in.size());
+    return mapOrder(in, out);
   }
 
   int nPermutations() const;

@@ -144,8 +144,8 @@ void DalitzArea::makeMiMa(){
 }
 
 void DalitzArea::encloseInPhaseSpaceArea(double safetyFactor){
-  makeCoordinateMap();
-  for(map<vector<int>, DalitzCoordinate*>::const_iterator 
+  if(! _madeCMap) makeCoordinateMap();
+  for(map<DalitzCoordKey, DalitzCoordinate*>::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     double psMin = _pat.sijMin(it->first)/safetyFactor;
@@ -163,7 +163,7 @@ void DalitzArea::encloseInPhaseSpaceArea(double safetyFactor){
 
 void DalitzArea::setAllLimitsToPhaseSpaceArea(double safetyFactor){
   makeCoordinateMap();
-  for(map<vector<int>, DalitzCoordinate*>::const_iterator 
+  for(map<DalitzCoordKey, DalitzCoordinate*>::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     double psMin = _pat.sijMin(it->first)/safetyFactor;
@@ -215,9 +215,9 @@ bool DalitzArea::isInside(const IDalitzEvent& evt) const{
   if(! compatiblePattern(evt.eventPattern())){
     return false;
   }
-  makeCoordinateMap();
+  if(! _madeCMap) makeCoordinateMap();
   //cout << " Made Coordinate map " << endl;
-  for(map<vector<int>, DalitzCoordinate*>::const_iterator 
+  for(map<DalitzCoordKey, DalitzCoordinate* >::const_iterator 
 	it = _coords.begin();
       it != _coords.end(); it++){
     double val = evt.sij(it->first);
@@ -228,7 +228,7 @@ bool DalitzArea::isInside(const IDalitzEvent& evt) const{
 }
 bool DalitzArea::isInside(const DalitzCoordinate& dc) const{
 
-  makeCoordinateMap();
+  if(! _madeCMap) makeCoordinateMap();
   //cout << " Made Coordinate map " << endl;
   double val = dc.val();
   if(_coords[dc]->min() <= val && _coords[dc]->max() > val){

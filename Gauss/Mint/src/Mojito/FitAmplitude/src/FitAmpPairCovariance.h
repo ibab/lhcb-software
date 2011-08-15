@@ -49,6 +49,8 @@ class FitAmpPairCovariance{
   bool makeFractionSumCovariance();
   bool makeIntegralCovariance();
 
+  bool clearAll();
+
   bool makeDirectory(const std::string& asSubdirOf=".") const;
   std::string dirName(const std::string& asSubdirOf=".") const;
   std::string matrix_x_fname(const std::string& asSubdirOf=".") const;
@@ -66,6 +68,7 @@ class FitAmpPairCovariance{
 		       , const FitAmpPairList* newList);
 
   bool add(const FitAmpPairCovariance& other);
+  bool reset();
 
   bool addLastEventFromList();
   bool calculateAll();

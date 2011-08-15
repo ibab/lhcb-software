@@ -58,6 +58,7 @@ public MINT::EventPtrList<IDalitzEvent, DalitzEvent>
   DalitzHistoSet histoSet() const;
   DalitzHistoSet weightedHistoSet() const;
   DalitzHistoSet reWeightedHistoSet(IGetDalitzEvent* w) const;
+  DalitzHistoSet weighedReWeightedHistoSet(IGetDalitzEvent* w) const;
 
   bool save(const std::string& fname = "DalitzEvents.root") const;
   bool fromFile(const std::string& fname = "DalitzEvents.root");

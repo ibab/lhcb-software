@@ -94,9 +94,8 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpIncoherentSum& other)
   , IEventAccess<IDalitzEvent>()
   , IReturnReal()
   , IGetRealEvent<IDalitzEvent>()
-  , IReturnRealWithSmoothy()
-  , IGetRealEventWithSmoothy<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
+  , ILookLikeFitAmpSum()
   , IDalitzEventAccess()
     //  , DalitzEventAccess()
   , FitAmpList(other)
@@ -108,6 +107,7 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpList& other)
   , IReturnReal()
   , IGetRealEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
+  , ILookLikeFitAmpSum()
   , IDalitzEventAccess()
     //  , DalitzEventAccess()
   , FitAmpList(other)
@@ -193,6 +193,8 @@ double FitAmpIncoherentSum::getVal(){
   return efficiency()*sum;
 
 }
+
+/*
 double FitAmpIncoherentSum::getSmootherLargerVal(IDalitzEvent* evt){
   //  bool dbthis=false;
   this->setEvent(evt);
@@ -237,7 +239,7 @@ double FitAmpIncoherentSum::getSmootherLargerVal(){
   return efficiency()*sum;
 
 }
-
+*/
 
 counted_ptr<IIntegrationCalculator> 
 FitAmpIncoherentSum::makeIntegrationCalculator(){
@@ -251,8 +253,13 @@ FitAmpIncoherentSum::makeIntegCalculator(){
     l->addAmps( (_fitAmps[i]),  (_fitAmps[i]));
   }
 
-  cout << "setting efficiency in integCalculator to " 
-       << _efficiency.get() << endl;
+  cout << "FitAmpIncoherentSum: setting efficiency POINTER "
+       << " in integCalculator to " 
+       << _efficiency.get();
+  if(0 == _efficiency.get()){
+    cout << " (0 means no pointer, 100% efficiency).";
+  }
+  cout << endl;
 
   l->setEfficiency(_efficiency);
   return l;

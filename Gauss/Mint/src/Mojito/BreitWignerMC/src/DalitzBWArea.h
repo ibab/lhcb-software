@@ -41,14 +41,14 @@ class DalitzBWArea{
 
   int ResonanceConfigurationNumber()const;
 
-  MINT::counted_ptr<DalitzEvent> try3Event() const;
-  MINT::counted_ptr<DalitzEvent> try4Event() const;
-  MINT::counted_ptr<DalitzEvent> make4EventWithPhaseSpace() const;
-  MINT::counted_ptr<DalitzEvent> make4EventWithPhaseSpace(double& nTries) const;
-  MINT::counted_ptr<DalitzEvent> try4EventWithPhaseSpace(double& maxWeight) const;
-  MINT::counted_ptr<DalitzEvent> try4EventWithPhaseSpace() const;
-  MINT::counted_ptr<DalitzEvent> try3EventWithPhaseSpace(double& maxWeight) const;
-  MINT::counted_ptr<DalitzEvent> try3EventWithPhaseSpace() const;
+  MINT::counted_ptr<DalitzEvent> try3Event(const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> try4Event(const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> make4EventWithPhaseSpace(const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> make4EventWithPhaseSpace(double& nTries, const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> try4EventWithPhaseSpace(double& maxWeight, const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> try4EventWithPhaseSpace(const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> try3EventWithPhaseSpace(double& maxWeight, const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> try3EventWithPhaseSpace(const Permutation& mapping=Permutation::unity()) const;
 
   std::pair<DalitzCoordinate, MINT::counted_ptr<IGenFct> >& 
     sf(const DalitzCoordinate& c);
@@ -68,9 +68,39 @@ class DalitzBWArea{
 
   double MC4Integral(double& prec) const;
   double MC4IntegralNoTransform(double& prec) const;
-  MINT::counted_ptr<DalitzEvent> tryFlat4EventWithPhaseSpace(double& maxWeight) const;
-  MINT::counted_ptr<DalitzEvent> tryFlat4EventWithPhaseSpace() const;
+  MINT::counted_ptr<DalitzEvent> tryFlat4EventWithPhaseSpace(double& maxWeight, const Permutation& mapping=Permutation::unity()) const;
+  MINT::counted_ptr<DalitzEvent> tryFlat4EventWithPhaseSpace(const Permutation& mapping=Permutation::unity()) const;
   double genValueRho(const IDalitzEvent* evtPtr) const;
+  
+
+  std::vector<TLorentzVector>& mapP4(const std::vector<TLorentzVector>& v_in
+				     , const Permutation& mapping
+				     , std::vector<TLorentzVector>& v_out
+				     ) const{
+    unsigned int n = v_in.size();
+    if(mapping.isUnity()) v_out = v_in;
+    return v_out;
+
+    v_out.resize(n); 
+    for(unsigned int i=0; i < n; i++){
+      int mappedIndex = mapping[i];
+      if(mappedIndex < 0 || mappedIndex + 1 > (int) n){
+	std::cout << "ERROR in DalitzBWArea::mapP4()"
+		  << "\n   Index out of range: " << mappedIndex
+		  << " not in [0, " <<   n-1
+		  << std::endl;
+	throw "index out of range.";
+      }
+      v_out[mappedIndex] = v_in[i];
+    }
+    return v_out;
+  }
+  std::vector<TLorentzVector> mapP4(const std::vector<TLorentzVector>& v_in
+				    , const Permutation& mapping
+				    ) const{
+    std::vector<TLorentzVector> v_out(v_in.size());
+    return mapP4(v_in, mapping, v_out);
+  }
   
  public:
   // for now keep them public:
@@ -84,9 +114,9 @@ class DalitzBWArea{
 
   bool checkIntegration() const;
 
-  mutable std::map<std::vector<int> , std::pair<DalitzCoordinate, MINT::counted_ptr<IGenFct> > >  _coords;
+  mutable std::map<DalitzCoordKey , std::pair<DalitzCoordinate, MINT::counted_ptr<IGenFct> > >  _coords;
  
-  mutable std::map<std::vector<int> , std::pair<DalitzCoordinate, MINT::counted_ptr<IGenFct> > >  _mappedCoords;
+  mutable std::map<DalitzCoordKey , std::pair<DalitzCoordinate, MINT::counted_ptr<IGenFct> > >  _mappedCoords;
  
 
   bool unWeightPs()const{ return _unWeightPs;}
@@ -168,7 +198,7 @@ class DalitzBWArea{
   // actually these integrals are WITHOUT phase space
   // but go with the try...EventWithPhaseSpace routines.
 
-  MINT::counted_ptr<DalitzEvent> tryEventForOwner() const;
+  MINT::counted_ptr<DalitzEvent> tryEventForOwner(const Permutation& mapping=Permutation::unity()) const;
 
   /* one day...(3 body)
   MINT::counted_ptr<DalitzEvent> makeEventForOwner(double scale0

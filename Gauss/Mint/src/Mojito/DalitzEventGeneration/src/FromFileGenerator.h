@@ -43,6 +43,10 @@ class FromFileGenerator
   virtual bool ensureFreshEvents();
   virtual bool saveFile();
   virtual bool closeFile();
+
+  DiskResidentEventList& getEventList();
+  const DiskResidentEventList& getEventList() const;
+
 };
 
 #endif

@@ -93,11 +93,10 @@ FitAmpSum::FitAmpSum(const FitAmpSum& other)
   , IEventAccess<IDalitzEvent>()
   , IReturnReal()
   , IGetRealEvent<IDalitzEvent>()
-  , IReturnRealWithSmoothy()
-  , IGetRealEventWithSmoothy<IDalitzEvent>()
   , IReturnComplex()
   , IGetComplexEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
+  , ILookLikeFitAmpSum()
   , IDalitzEventAccess()
     //  , DalitzEventAccess()
   , FitAmpList(other)
@@ -111,6 +110,7 @@ FitAmpSum::FitAmpSum(const FitAmpList& other)
   , IReturnComplex()
   , IGetComplexEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
+  , ILookLikeFitAmpSum()
   , IDalitzEventAccess()
     //  , DalitzEventAccess()
   , FitAmpList(other)
@@ -192,6 +192,8 @@ std::complex<double> FitAmpSum::getVal(){
   return result;
 }
 
+/*
+
 std::complex<double> FitAmpSum::getSmootherLargerVal(IDalitzEvent* evt){
   //  bool dbthis=false;
   this->setEvent(evt);
@@ -233,6 +235,7 @@ std::complex<double> FitAmpSum::getSmootherLargerVal(){
 
   return sqrt(efficiency())*sum;
 }
+*/
 
 void FitAmpSum::print(std::ostream& os) const{
    os << "FitAmpSum::print\n====================";
@@ -268,8 +271,13 @@ counted_ptr<IntegCalculator> FitAmpSum::makeIntegCalculator(){
     }
   }
 
-  cout << "setting efficiency in integCalculator to " 
-       << _efficiency.get() << endl;
+  cout << "FitAmpSum: setting efficiency POINTER "
+       << " in integCalculator to " 
+       << _efficiency.get();
+  if(0 == _efficiency.get()){
+    cout << " (0 means no pointer, 100% efficiency).";
+  }
+  cout << endl;
 
   l->setEfficiency(_efficiency);
   return l;

@@ -89,7 +89,7 @@ class Neg2LL : public Minimisable, public EventLoop<T>{
 			   << " the pdf is " << valPdf
 			   << " which is <= 0." 
 			   << std::endl;
-      return 9999.e20;
+      return -9999.e20 * (1.0 + fabs(valPdf));
     }
     return log(valPdf);
   }

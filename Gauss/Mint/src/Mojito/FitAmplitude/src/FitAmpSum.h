@@ -18,6 +18,7 @@
 #include "IUnweightedEventGenerator.h"
 #include "IIntegrationCalculator.h"
 
+#include "ILookLikeFitAmpSum.h"
 
 #include "FitAmpList.h"
 
@@ -25,9 +26,10 @@
 // methods formerly defined here are now defined there.
 
 class FitAmpSum 
-: virtual public MINT::IGetRealEventWithSmoothy<IDalitzEvent>
+: virtual public MINT::IGetRealEvent<IDalitzEvent>
 , virtual public MINT::IGetComplexEvent<IDalitzEvent>
 , virtual public IFastAmplitudeIntegrable
+, virtual public ILookLikeFitAmpSum
 , public FitAmpList
 {
  protected:
@@ -113,8 +115,10 @@ class FitAmpSum
   virtual std::complex<double> getVal();
   virtual std::complex<double> getVal(IDalitzEvent* evt);
 
+  /*
   virtual std::complex<double> getSmootherLargerVal();
   virtual std::complex<double> getSmootherLargerVal(IDalitzEvent* evt);
+  */
 
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
@@ -124,20 +128,26 @@ class FitAmpSum
     return res.real()*res.real() + res.imag()*res.imag();
   }
 
+  /*
   virtual double SmootherLargerProb(){
     std::complex<double> res = getSmootherLargerVal();
     return res.real()*res.real() + res.imag()*res.imag();
   }
+  */
 
   virtual double RealVal(){
     return Prob();
   }
+
+  /*
   virtual double SmootherLargerRealVal(){
     return SmootherLargerProb();
   }
+  */
+
   virtual std::complex<double> ComplexVal(){return getVal();}
 
-  MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
+  virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
     makeEventGenerator(TRandom* rnd=gRandom){
     MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
       ptr(new DalitzBWBoxSet(makeBWBoxes(rnd)));

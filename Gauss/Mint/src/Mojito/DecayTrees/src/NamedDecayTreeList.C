@@ -1070,7 +1070,6 @@ int NamedDecayTreeList::makeK3piList(){
  // pi K1(1270)->omega K
  dk = new DecayTree(421);
  dk->addDgtr(211 , -10323)->addDgtr( -321, 223)->addDgtr( 211,-211);
- add(AmpInitialiser(*dk, "RHO_OMEGA"));
  add(*dk);
  if(dbThis) cout << "13th decay: " << *dk << endl;
  
@@ -1140,6 +1139,19 @@ int NamedDecayTreeList::makeK3piList(){
  add(AmpInitialiser(*dk, ""));
  if(dbThis) cout << "16th decay: " << *dk << endl;
  delete dk;
+
+ // K*bar(892) omega(782) S, P, D
+ dk = new DecayTree(421);
+ dk->addDgtr(-313)->addDgtr(-321,211);
+ dk->addDgtr(223)->addDgtr(211,-211);
+ add(*dk);
+ dk->getVal().setL(1);
+ add(*dk);
+ dk->getVal().setL(2);
+ add(*dk);
+ if(dbThis) cout << "57th decay: " << *dk << endl;
+ delete dk;
+
 
  // K*bar(892) non-res scalar
  dk = new DecayTree(421);
@@ -1285,8 +1297,7 @@ int NamedDecayTreeList::makeK3piList(){
  if(dbThis) cout << "29th decay: " << *dk << endl;
  delete dk;
  
-
- // K*bar(892) sigma_1
+  // K*bar(892) sigma_1
  dk = new DecayTree(421);
  dk->addDgtr(-313)->addDgtr(-321,211);
  dk->addDgtr(999001)->addDgtr(211,-211);
@@ -1369,13 +1380,43 @@ int NamedDecayTreeList::makeK3piList(){
  add(*dk);
  if(dbThis) cout << "35th decay: " << *dk << endl;
  delete dk;
-	
-	
+		
  // Added by Molina on Monday 18th January 2010
  // rho(770) NonResT (to K- pi+) P, D
  dk = new DecayTree(421);
  dk->addDgtr(9985)->addDgtr(-321,211);
  dk->addDgtr(113)->addDgtr(211,-211);
+ add(*dk);
+ dk->getVal().setL(2);
+ add(*dk);
+ if(dbThis) cout << "38th decay: " << *dk << endl;
+ delete dk;
+
+ // omega + nonres
+ // omega(782)(->pi+ pi-) NonResS(K- pi+)
+ dk = new DecayTree(421);
+ dk->addDgtr(223)->addDgtr(211,-211);
+ dk->addDgtr(9981)->addDgtr(-321,211);
+ add(*dk);
+ if(dbThis) cout << "62nd decay: " << *dk << endl;
+ delete dk;
+	
+ // omega(782) NonResV (to K- pi+) S, P, D
+ dk = new DecayTree(421);
+ dk->addDgtr(9993)->addDgtr(-321,211);
+ dk->addDgtr(223)->addDgtr(211,-211);
+ add(*dk);
+ dk->getVal().setL(1);
+ add(*dk);
+ dk->getVal().setL(2);
+ add(*dk);
+ if(dbThis) cout << "35th decay: " << *dk << endl;
+ delete dk;
+		
+ // omega(782) NonResT (to K- pi+) P, D
+ dk = new DecayTree(421);
+ dk->addDgtr(9985)->addDgtr(-321,211);
+ dk->addDgtr(223)->addDgtr(211,-211);
  add(*dk);
  dk->getVal().setL(2);
  add(*dk);
@@ -1472,8 +1513,7 @@ int NamedDecayTreeList::makeK3piList(){
  dk->getVal().setL(2);
  add(*dk);
  if(dbThis) cout << "57th decay: " << *dk << endl;
- delete dk;
-	
+ delete dk;	
 	
  // Added by Molina on Friday 29th January 2010
  // K(1)(1270)(->rho(->pi+,pi-),K-) pi+

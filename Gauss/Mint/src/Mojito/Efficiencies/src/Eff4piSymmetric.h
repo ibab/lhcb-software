@@ -6,6 +6,7 @@
 #include "IDalitzEventAccess.h"
 #include "IDalitzEventList.h"
 #include "IDalitzEvent.h"
+#include "DalitzEventPattern.h"
 
 #include "FitParameter.h"
 #include "MinuitParameterSet.h"
@@ -48,14 +49,17 @@ class Eff4piSymmetric : virtual public IGetDalitzEvent
   
  protected:
   int _order;
-  double _typicalValue; // a typical value that s12 etc can have.
 
+  DalitzEventPattern _pat;
   MINT::MinuitParameterSet* _pset;
 
   // can swap all three s terms amongst themselves.
   // can swap the two t-terms (that's the bit
   // that assumes charge symmetry)
   mutable double _t01, _s12, _s23, _s34, _t40;
+  double _t01_ctr, _s12_ctr, _s23_ctr, _s34_ctr, _t40_ctr;
+  double _t01_del, _s12_del, _s23_del, _s34_del, _t40_del;
+  
   mutable std::vector<double* > _tijVec, _sijVec;
 
   std::vector<symMultiPolyTerm> _tTerms, _sTerms;
@@ -64,17 +68,19 @@ class Eff4piSymmetric : virtual public IGetDalitzEvent
   bool init();
   bool makeTerms();
   bool makeSijTijVectors();
+  bool setCentreAndTypicalVal();
 
   virtual double getValFromSavedCoordinates() const;
+
 
  public:
   
   Eff4piSymmetric(int order
-		  , double typicalValue_sij
+		  , const DalitzEventPattern& pat
 		  , IDalitzEventAccess* daddyPDF
 		  , MINT::MinuitParameterSet* pset=0);
   Eff4piSymmetric(int order
-		  , double typicalValue_sij
+		  , const DalitzEventPattern& pat
 		  , IDalitzEventList* evtList
 		  , MINT::MinuitParameterSet* pset=0);
   virtual double getVal( double t01, double s12, double s23
@@ -85,7 +91,7 @@ class Eff4piSymmetric : virtual public IGetDalitzEvent
   virtual double RealVal();
   
   void print(std::ostream& os = std::cout) const;
-
+  void printCentreAndTypicalVal(std::ostream& os = std::cout) const;
   void fixZerothTherm();
 
   virtual ~Eff4piSymmetric(){}

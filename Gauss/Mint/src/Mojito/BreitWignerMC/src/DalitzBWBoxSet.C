@@ -13,7 +13,7 @@
 using namespace std;
 using namespace MINT;
 
-DalitzBWBoxSet::DalitzBWBoxSet(IGetRealEventWithSmoothy<IDalitzEvent>* amps, TRandom* r)
+DalitzBWBoxSet::DalitzBWBoxSet(IGetRealEvent<IDalitzEvent>* amps, TRandom* r)
   : std::vector<DalitzBWBox>()
   , _maxWeightEstimate(-9999.0)
   , _maxWeightInSample(-9999.0)
@@ -267,7 +267,6 @@ void DalitzBWBoxSet::findMax(){
 double DalitzBWBoxSet::findMaxInList(double& sampleMax){
   bool dbThis=false;
 
-  bool beReallyComplicated=false;
 
   time_t startTime = time(0);
   if(0 == _eventPtrList.size()) return -9999;
@@ -279,7 +278,6 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
   _eventPtrList.Start();
   _ampSum->setEventRecord(&_eventPtrList);
 
-  double realSampleMax = -9999;
   while(_eventPtrList.Next()){// 1st call to next gives 1st event
     double w = _eventPtrList.getEvent()->getWeight();
 
@@ -287,15 +285,6 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
 
     if(dbThis) cout << "w = " << w << endl;
 
-    if(beReallyComplicated){
-      if(w <= 0) continue;
-      double den = _ampSum->RealVal();
-      if(den <=0)continue;
-      d=_ampSum->SmootherLargerRealVal() / den * w ;
-      double rd= _ampSum->RealVal() / den * w ;
-      if(rd > realSampleMax || 0 == counter) realSampleMax = rd;
-   }
-    
     if(d > sampleMax || 0 == counter) sampleMax=d;
     vals[counter] = d;
 
@@ -330,12 +319,8 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
   //    sampleMax = sampleMax + fabs(sampleMax * epsilon);
   
   double CL = 1.0 - 1./(_eventPtrList.size()*10000);
-  if(beReallyComplicated){
-    std::cout << "over-sized sampleMax before = " << sampleMax << std::endl;
-    std::cout << "real sampleMax before = " << realSampleMax << std::endl;
-  }else{
-    std::cout << "sampleMax = " << sampleMax << std::endl;
-  }
+  std::cout << "sampleMax = " << sampleMax << std::endl;
+
   double maxValue = generalisedPareto_estimateMaximum(vals, CL);
   std::cout << " maxValue after " << maxValue << std::endl;
   maxValue *= 1.0 + epsilon;

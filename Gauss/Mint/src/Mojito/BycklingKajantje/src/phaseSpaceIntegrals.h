@@ -4,13 +4,38 @@
 // status:  Mon 9 Feb 2009 19:17:58 GMT
 
 #include "DalitzEventPattern.h"
+#include "IGenFct.h"
+#include "lambda.h"
+#include "CLHEPPhysicalConstants.h"
 
 #include "TF1.h"
 
-#include "IGenFct.h"
+#include <iostream>
+#include <cmath>
 
-double phaseSpaceIntegral2body(const DalitzEventPattern& _pat);
-double phaseSpaceIntegral2body(double mum, double d1, double d2);
+
+//double phaseSpaceIntegral2body(const DalitzEventPattern& _pat);
+//double phaseSpaceIntegral2body(double mum, double d1, double d2);
+
+inline double phaseSpaceIntegral2body(double mum, double d1, double d2){
+  if(mum <=0 ) return 0;
+  if(mum < d1 + d2) return 0;
+
+  double la = lambda(mum*mum, d1*d1, d2*d2);
+  if(la <= 0) return 0;
+
+  return pi * sqrt(la)/(2*mum*mum);
+}
+
+inline double phaseSpaceIntegral2body(const DalitzEventPattern& _pat){
+  if(_pat.size() != 3){
+    std::cout << "phaseSpaceIntegral2body: wrong pattern " << _pat << std::endl;
+  }
+  double mum = _pat[0].mass();
+  double d1  = _pat[1].mass();
+  double d2  = _pat[2].mass();
+  return phaseSpaceIntegral2body(mum, d1, d2);
+}
 
 class PhaseSpaceIntegral3body{
  protected:

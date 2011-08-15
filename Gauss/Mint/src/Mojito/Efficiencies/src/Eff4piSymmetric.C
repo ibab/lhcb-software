@@ -6,23 +6,23 @@ using namespace std;
 using namespace MINT;
 
 Eff4piSymmetric::Eff4piSymmetric(int order
-				 , double typicalValue_sij
+				 , const DalitzEventPattern& pat
 				 , IDalitzEventAccess* daddyPDF
 				 , MINT::MinuitParameterSet* pset)
   : DalitzEventAccess(daddyPDF)
   , _order(order)
-  , _typicalValue(typicalValue_sij)
+  , _pat(pat)
   , _pset(pset)
 {
   init();
 }
 Eff4piSymmetric::Eff4piSymmetric(int order
-				 , double typicalValue_sij
+				 , const DalitzEventPattern& pat
 				 , IDalitzEventList* evtList
 				 , MINT::MinuitParameterSet* pset)
   : DalitzEventAccess(evtList)
   , _order(order)
-  , _typicalValue(typicalValue_sij)
+  , _pat(pat)
   , _pset(pset)
 {
   init();
@@ -30,6 +30,7 @@ Eff4piSymmetric::Eff4piSymmetric(int order
 
 bool Eff4piSymmetric::init(){
   bool success = true;
+  success &= setCentreAndTypicalVal();
   success &= makeTerms();
   success &= makeSijTijVectors();
   return success;
@@ -48,8 +49,8 @@ bool Eff4piSymmetric::makeTerms(){
       symMultiPolyTerm& tTermsTord(_tTerms[tord]);
       symMultiPolyTerm& sTermsSord(_sTerms[sord]);
 
-      double guessError = 1.0/pow(_typicalValue*10, thisOrder);
-      
+      double guessError = 1.0/(10*pow(3.0, thisOrder));
+
       for(unsigned int ti = 0; ti < tTermsTord.size(); ti++){
 	for(unsigned int si = 0; si < sTermsSord.size(); si++){
 	  counted_ptr<ProdWithFitParameter>
@@ -68,6 +69,37 @@ bool Eff4piSymmetric::makeTerms(){
     }
   }
   return true;
+}
+
+bool Eff4piSymmetric::setCentreAndTypicalVal(){
+  _t01_ctr = (_pat.sijMax(2,3,4) + _pat.sijMin(2,3,4) ) / 2.0;
+  _s12_ctr = (_pat.sijMax(1,2)   + _pat.sijMin(1,2)   ) / 2.0;
+  _s23_ctr = (_pat.sijMax(2,3)   + _pat.sijMin(2,3)   ) / 2.0;
+  _s34_ctr = (_pat.sijMax(3,4)   + _pat.sijMin(3,4)   ) / 2.0;
+  _t40_ctr = (_pat.sijMax(1,2,3) + _pat.sijMin(1,2,3) ) / 2.0;
+  
+  _t01_del = fabs(_pat.sijMax(2,3,4) - _pat.sijMin(2,3,4) ) / 2.0;
+  _s12_del = fabs(_pat.sijMax(1,2)   - _pat.sijMin(1,2)   ) / 2.0;
+  _s23_del = fabs(_pat.sijMax(2,3)   - _pat.sijMin(2,3)   ) / 2.0;
+  _s34_del = fabs(_pat.sijMax(3,4)   - _pat.sijMin(3,4)   ) / 2.0;
+  _t40_del = fabs(_pat.sijMax(1,2,3) - _pat.sijMin(1,2,3) ) / 2.0;
+  
+  printCentreAndTypicalVal();
+  return true;
+}
+
+void Eff4piSymmetric::printCentreAndTypicalVal(std::ostream& os) const{
+  os << "Eff4piSymmetric: Centre: " 
+     << _t01_ctr << ", " << _s12_ctr 
+     << ", " << _s23_ctr << ", " << _s34_ctr 
+     << ", " << _t40_ctr
+     << endl;
+  os << "... and widths: "
+     << _t01_del << ", " << _s12_del 
+     << ", " << _s23_del << ", " << _s34_del 
+     << ", " << _t40_del
+     << endl;
+  
 }
 
 bool Eff4piSymmetric::makeSijTijVectors(){
@@ -90,11 +122,11 @@ void Eff4piSymmetric::print(std::ostream& os) const{
 
 double Eff4piSymmetric::getVal( double t01, double s12, double s23
 				, double s34, double t40) const{
-  _t01 = t01;
-  _s12 = s12;
-  _s23 = s23;
-  _s34 = s34;
-  _t40 = t40;
+  _t01 = (t01 - _t01_ctr)/_t01_del;
+  _s12 = (s12 - _s12_ctr)/_s12_del;
+  _s23 = (s23 - _s23_ctr)/_s23_del;
+  _s34 = (s34 - _s34_ctr)/_s34_del;
+  _t40 = (t40 - _t40_ctr)/_t40_del;
 
   return getValFromSavedCoordinates();
 }
@@ -102,11 +134,11 @@ double Eff4piSymmetric::getVal(const IDalitzEvent* evt) const{
 
   if(0 == evt) return 0;
 
-  _t01 = evt->t(0,1);
-  _s12 = evt->s(1,2);
-  _s23 = evt->s(2,3);
-  _s34 = evt->s(3,4);
-  _t40 = evt->t(4,0);
+  _t01 = (evt->t(0,1) - _t01_ctr)/_t01_del;
+  _s12 = (evt->s(1,2) - _s12_ctr)/_s12_del;
+  _s23 = (evt->s(2,3) - _s23_ctr)/_s23_del;
+  _s34 = (evt->s(3,4) - _s34_ctr)/_s34_del;
+  _t40 = (evt->t(4,0) - _t40_ctr)/_t40_del;
 
   //  cout << "extracted sij" << endl;
   return getValFromSavedCoordinates();

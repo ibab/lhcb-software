@@ -35,9 +35,43 @@ class MappedDalitzBWArea{
 
   bool allConsecutive() const;
   bool allStandardised() const;
+
+  /*
   static std::vector<TLorentzVector> mapP4(const DalitzEvent& evt
 					   , const Permutation& mapping
 					   );
+  static std::vector<TLorentzVector>& mapP4(const DalitzEvent& evt
+					    , const Permutation& mapping
+					    , std::vector<TLorentzVector>& p4
+					    );
+  */
+  
+  std::vector<TLorentzVector>& mapP4(const DalitzEvent& evt
+				     , const Permutation& mapping
+				     , std::vector<TLorentzVector>& p4
+				     ) const{
+    unsigned int n = evt.eventPattern().size();
+    p4.resize(n); 
+    for(unsigned int i=0; i < n; i++){
+      int mappedIndex = mapping[i];
+      if(mappedIndex < 0 || mappedIndex + 1 > (int) n){
+	std::cout << "ERROR in MappedDalitzBWArea::mapP4()"
+		  << "\n   Index out of range: " << mappedIndex
+		  << " not in [0, " <<   n-1
+		  << std::endl;
+	throw "index out of range.";
+      }
+      p4[mappedIndex] = evt.p(i);
+    }
+    return p4;
+  }
+  std::vector<TLorentzVector> mapP4(const DalitzEvent& evt
+			       , const Permutation& mapping
+			       ) const{
+    std::vector<TLorentzVector> p4(evt.eventPattern().size());
+    return mapP4(evt, mapping, p4);
+  }
+
  public:
   MappedDalitzBWArea();
   MappedDalitzBWArea(const DalitzEventPattern& pat

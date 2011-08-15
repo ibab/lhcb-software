@@ -459,7 +459,7 @@ DalitzBoxSet FitAmpList::makeBoxes(const DalitzEventPattern& pat
 }
 
 
-DalitzBWBoxSet FitAmpList::makeBWBoxes(IGetRealEventWithSmoothy<IDalitzEvent>* pdf
+DalitzBWBoxSet FitAmpList::makeBWBoxes(IGetRealEvent<IDalitzEvent>* pdf
 				       , TRandom* rnd){
     if(0 == getEvent()){
     cout << "NOTE in FitAmpList::makeBWBoxes()"
@@ -482,7 +482,7 @@ DalitzBWBoxSet FitAmpList::makeBWBoxes(IGetRealEventWithSmoothy<IDalitzEvent>* p
 }
 
 DalitzBWBoxSet FitAmpList::makeBWBoxes(const DalitzEventPattern& pat
-				       , IGetRealEventWithSmoothy<IDalitzEvent>* pdf
+				       , IGetRealEvent<IDalitzEvent>* pdf
 				       , TRandom* rnd
 				      ){
   DalitzBWBoxSet boxes(pdf, rnd);
