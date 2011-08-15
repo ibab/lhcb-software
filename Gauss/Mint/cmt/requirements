@@ -25,39 +25,39 @@ apply_pattern install_more_includes more=Mint
 #===========================================================================
 # Component library building rule
 #============================================================================
-library          Mint    Mint/Events/src/*.C           \
-                         Mint/IReturnIntefaces/src/*.C \
-                         Mint/Examples/src/*.C  \
-                         Mint/FitParameter/src/*.C      \
-                         Mint/Minimiser/src/*.C   \
-                         Mint/NamedParameter/src/*.C      \
-                         Mint/Pareto/src/*.C              \
-                         Mint/PdfAndLogL/src/*.C  \
-                         Mint/Utils/src/*.C \
-                         Mojito/Amplitudes/src/*.C \
-                         Mojito/BetterMC/src/*.C   \
-                         Mojito/BreitWignerMC/src/*.C \
-                         Mojito/BycklingKajantje/src/*.C \
-                         Mojito/Chi2Test/src/*.C \
-                         Mojito/CoherenceFactor/src/*.C \
-                         Mojito/DalitzEventGeneration/src/*.C \
-                         Mojito/DalitzEvents/src/*.C \
-                         Mojito/DalitzFits/src/*.C \
-                         Mojito/DalitzIntegrator/src/*.C \
-                         Mojito/DecayTrees/src/*.C \
-                         Mojito/FitAmplitude/src/*.C \
-                         Mojito/FractionFit/src/*.C \
-                         Mojito/GuysK3pi/src/*.C \
-                         Mojito/InstantIntegration/src/*.C \
-                         Mojito/Lineshapes/src/*.C \
-                         Mojito/Lineshapes_complexAdventure/src/*.C \
-                         Mojito/Ratios/src/*.C \
-                         Mojito/ParticleProperties/src/*.C \
-                         Mojito/RooFitInterface/src/*.C \
-                         Mojito/stuff/src/*.C \
-                         Mojito/Zemach/src/*.C \
-                         Mojito/Symmetries/src/*.C \
-                         Mojito/SpinFactors/src/*.C 
+library          Mint    Mint/Events/src/*.cpp           \
+                         Mint/IReturnIntefaces/src/*.cpp \
+                         Mint/Examples/src/*.cpp  \
+                         Mint/FitParameter/src/*.cpp      \
+                         Mint/Minimiser/src/*.cpp   \
+                         Mint/NamedParameter/src/*.cpp      \
+                         Mint/Pareto/src/*.cpp              \
+                         Mint/PdfAndLogL/src/*.cpp  \
+                         Mint/Utils/src/*.cpp \
+                         Mojito/Amplitudes/src/*.cpp \
+                         Mojito/BetterMC/src/*.cpp   \
+                         Mojito/BreitWignerMC/src/*.cpp \
+                         Mojito/BycklingKajantje/src/*.cpp \
+                         Mojito/Chi2Test/src/*.cpp \
+                         Mojito/CoherenceFactor/src/*.cpp \
+                         Mojito/DalitzEventGeneration/src/*.cpp \
+                         Mojito/DalitzEvents/src/*.cpp \
+                         Mojito/DalitzFits/src/*.cpp \
+                         Mojito/DalitzIntegrator/src/*.cpp \
+                         Mojito/DecayTrees/src/*.cpp \
+                         Mojito/FitAmplitude/src/*.cpp \
+                         Mojito/FractionFit/src/*.cpp \
+                         Mojito/GuysK3pi/src/*.cpp \
+                         Mojito/InstantIntegration/src/*.cpp \
+                         Mojito/Lineshapes/src/*.cpp \
+                         Mojito/Lineshapes_complexAdventure/src/*.cpp \
+                         Mojito/Ratios/src/*.cpp \
+                         Mojito/ParticleProperties/src/*.cpp \
+                         Mojito/RooFitInterface/src/*.cpp \
+                         Mojito/stuff/src/*.cpp \
+                         Mojito/Zemach/src/*.cpp \
+                         Mojito/Symmetries/src/*.cpp \
+                         Mojito/SpinFactors/src/*.cpp 
 
 #============================================================================
 # define component library link options
@@ -110,4 +110,7 @@ include_dirs  $(MINTROOT)/src/Mojito/stuff/src
 include_dirs  $(MINTROOT)/src/Mojito/Zemach/src
 include_dirs  $(MINTROOT)/src/Mojito/Symmetries/src
 include_dirs  $(MINTROOT)/src/Mojito/SpinFactors/src
+
+include_dirs  $(MINTROOT)/Mint
+
 end_private
