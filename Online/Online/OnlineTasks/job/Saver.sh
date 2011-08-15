@@ -39,12 +39,13 @@ if test -n "${TOP}"
 fi
 
 echo "options "${OPTIONS} "dim dns node "${DIM_DNS_NODE}  
-. ./setupOnline.sh 
 if [[ ${PARTNAME} == "LHCb" ]]
-   then exec -a ${UTGID} ${CLASS1_TASK} -options=../options/pooper.opts &
+   then 
+      . ./setupOnline.sh 
+      exec -a ${UTGID} ${CLASS1_TASK} -options=../options/pooper.opts &
    else 
-      export ONLINE_VERSION=`python -c "import os;s=os.environ['DIMROOT'];i=s.find('/ONLINE_');print s[i+1:i+1+s[i+1:].find('/')]"`;
-      export GAUDIONLINEROOT="/sw/lib/lhcb/ONLINE/${ONLINE_VERSION}/Online/GaudiOnline/";
+      source /group/online/dataflow/cmtuser/Online/MyOnline/cmt/setup.x86_64-slc5-gcc43-dbg.vars
+      export LOGFIFO=/tmp/logGaudi.fifo
       export gaudi_exe="${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"
-      exec -a ${UTGID}  ${gaudi_exe} -options=/group/online/dataflow/templates/options/FSMDummyTask.opts &
+      exec -a ${UTGID}  ${gaudi_exe} -tasktype=LHCb::Class2Task -options=/group/online/dataflow/templates/options/FSMDummyTask.opts -main=/group/online/dataflow/templates/options/Main.opts &
 fi
