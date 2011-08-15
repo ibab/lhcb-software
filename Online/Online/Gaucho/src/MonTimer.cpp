@@ -44,6 +44,8 @@ void MonTimer::timerHandler ( void )
 void MonTimer::Stop()
 {
   m_Hsys->Lock();
+  dim_lock();
   GenTimer::Stop();
+  dim_unlock();
   m_Hsys->unLock();
 }
