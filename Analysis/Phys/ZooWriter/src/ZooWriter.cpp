@@ -205,7 +205,6 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     declareProperty( "WriteMC",              m_writeMC = false);
     declareProperty( "MCList",               m_MCList);
     declareProperty( "WriteDLL",             m_writeDLL = false);
-    declareProperty( "WriteDLL",             m_writeDLL = false);
     declareProperty( "IntelligentPV",        m_intelligentPV = false);
     declareProperty( "SecondIpSig",          m_secondIpSig = false);
     declareProperty( "OnlyTreefitter",       m_onlyTreefitter = false);

@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-08-15 - Paul Seyfert
+ - Removed double definition of WriteDLL
+
 ! 2011-06-24 - Paul Seyfert
  - Switched from LHCb::Particles to LHCb::Particle::Range
    (see https://savannah.cern.ch/bugs/?78611)
