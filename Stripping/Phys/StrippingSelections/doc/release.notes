@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-15 - Jibo He
+ - Added new test sample, Reco11a, new Root format, Run 97120.
+
 ! 2011-08-14 - Paul Seyfert
  - StrippingTrackEffVeloMuon: remove Velo fit before Velo-Muon matching
    (speedup, tiny eff & ghostrate effect)
