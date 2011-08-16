@@ -380,7 +380,28 @@ void ROFarmMonitor::update( )   {
     for ( std::vector<Descriptor*>::iterator itD = m_datas.begin(); m_datas.end() != itD; ++itD ) {
       const ROMon::Nodeset* ns = (*itD)->data<const ROMon::Nodeset>();
       if ( 0 != ns ) {
+        Nodes::const_iterator prev = ns->nodes.end();
         for (Nodes::const_iterator n=ns->nodes.begin(); n!=ns->nodes.end(); n=ns->nodes.next(n))  {
+
+          //== Protection. Report and exit
+          if ( n < ns->nodes.begin() ||
+               n > ns->nodes.end()   ||
+               n == prev ) {
+            FILE* dump = fopen( "/home/ocallot/FarmMonitor.log", "w" );
+            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %16.16x end %16.16x  current %16.16x", 
+                     (*itP)->name.c_str(), ns->nodes.begin(), ns->nodes.end(), n );
+            prev = ns->nodes.begin();
+            while ( prev != n ) {
+              fprintf( dump, "add %16.16x node %s", prev, (*prev).name );
+              prev = ns->nodes.next( prev );
+            }
+            fclose( dump );
+            std::string command = "tail -n 200 /home/ocallot/FarmMonitor.log | mail -s \" FarmMonitor aborted\" Olivier.Callot@cern.ch";
+            system( command.c_str() );
+            exit(1);
+          }
+          prev = n;
+
           //== is this node in the partition's list ?
           bool isHlt = false;
           bool isCalib = false;
@@ -574,13 +595,24 @@ void ROFarmMonitor::update( )   {
       RONodeCounter blank( "" );
       (*itS++)->update( sumHlt );
 
+      std::vector<RONodeCounter> badCounters;
+      /*
+      //== Force hlta01* node 
+      for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
+        if ( (*itN).name().substr(0,6) == "hlta01" ) {
+          RONodeCounter forced( (*itN).name().c_str() );
+          forced.sum( *itN );
+          badCounters.push_back( forced );
+        }
+      }
+      */
+
       //== Detect nodes with bad counters: tasks, event rate, send rate.
 
       int minEventRate = 0.1 * sumHlt.evtRate() / nbHltNodes;
       if ( minEventRate < 20 ) minEventRate = 0;  // low rate -> some farms without MEP!
       int minMooreTask = 7;
       
-      std::vector<RONodeCounter> badCounters;
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
         std::string badName = "";
         if ( (*itN).evtRate() < minEventRate ) badName = badName + "+";
@@ -592,6 +624,7 @@ void ROFarmMonitor::update( )   {
           badCounters.push_back( badGuy );
         }
       }
+      
       hltCounters = badCounters;
       
       //== If too many lines, compress: sum nodes in sub-farms.

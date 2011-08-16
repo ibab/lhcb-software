@@ -4,6 +4,10 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+!============================== 2011-08-16 v2r8 ==============================
+! 2011-08-16 - Olivier Callot
+ - Detect some corruption of the nodes structure, and mail to  me in case of problem
+
 ! 2011-07-27 - Olivier Callot
  - Fix some Windows compilation warnings.
 
