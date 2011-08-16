@@ -6,6 +6,12 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 16-08-2011 - Matt Coombes
+ - Major changes to structure in order to release into Gauss
+ - Intorduced test/ folder for test jobs.
+ - Test .C files renamed as .cpp
+ - Test files now call header files from Mint/
+ 
 ! 15-08-2011 - Matt Coombes
  - Major changes to structure in order to release into Gauss
  - Intorduced Mint/ folder with exported header files

@@ -64,7 +64,7 @@ library          Mint    Mint/Events/src/*.cpp           \
 #============================================================================
 apply_pattern component_library    library=Mint
 
-macro            Mint_linkopts " -lMint "
+macro            Mint_linkopts " -lMint" "libMint.so"
 
 # -- Need more things from ROOT
 private
@@ -73,44 +73,6 @@ macro_append     ROOT_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -l
 
 # -- Private header files
 private
-include_dirs 	$(MINTROOT)/src/Mint/Utils/src
-include_dirs 	$(MINTROOT)/src/Mint/Events/src
-include_dirs 	$(MINTROOT)/src/Mint/IReturnIntefaces/src
-include_dirs 	$(MINTROOT)/src/Mint/Examples/src
-include_dirs 	$(MINTROOT)/src/Mint/FitParameter/src
-include_dirs 	$(MINTROOT)/src/Mint/Minimiser/src
-include_dirs 	$(MINTROOT)/src/Mint/Pareto/src
-include_dirs 	$(MINTROOT)/src/Mint/PdfAndLogL/src
-include_dirs    $(MINTROOT)/src/Mint/NamedParameter/src
-
-#===========
-# MINT DALITZ
-
-include_dirs  $(MINTROOT)/src/Mojito/Amplitudes/src
-include_dirs  $(MINTROOT)/src/Mojito/BetterMC/src  
-include_dirs  $(MINTROOT)/src/Mojito/BreitWignerMC/src
-include_dirs  $(MINTROOT)/src/Mojito/BycklingKajantje/src
-include_dirs  $(MINTROOT)/src/Mojito/Chi2Test/src
-include_dirs  $(MINTROOT)/src/Mojito/CoherenceFactor/src
-include_dirs  $(MINTROOT)/src/Mojito/DalitzEventGeneration/src
-include_dirs  $(MINTROOT)/src/Mojito/DalitzEvents/src
-include_dirs  $(MINTROOT)/src/Mojito/DalitzFits/src
-include_dirs  $(MINTROOT)/src/Mojito/DalitzIntegrator/src
-include_dirs  $(MINTROOT)/src/Mojito/DecayTrees/src
-include_dirs  $(MINTROOT)/src/Mojito/FitAmplitude/src
-include_dirs  $(MINTROOT)/src/Mojito/FractionFit/src
-include_dirs  $(MINTROOT)/src/Mojito/GuysK3pi/src
-include_dirs  $(MINTROOT)/src/Mojito/InstantIntegration/src
-include_dirs  $(MINTROOT)/src/Mojito/Lineshapes/src
-include_dirs  $(MINTROOT)/src/Mojito/Lineshapes_complexAdventure/src
-include_dirs  $(MINTROOT)/src/Mojito/Ratios/src
-include_dirs  $(MINTROOT)/src/Mojito/ParticleProperties/src
-include_dirs  $(MINTROOT)/src/Mojito/RooFitInterface/src
-include_dirs  $(MINTROOT)/src/Mojito/stuff/src
-include_dirs  $(MINTROOT)/src/Mojito/Zemach/src
-include_dirs  $(MINTROOT)/src/Mojito/Symmetries/src
-include_dirs  $(MINTROOT)/src/Mojito/SpinFactors/src
-
 include_dirs  $(MINTROOT)/Mint
 
 end_private
