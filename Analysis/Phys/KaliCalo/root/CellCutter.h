@@ -30,7 +30,7 @@ private:
   int                               m_cell2;
   float                             m_dist;
   // Internal maps
-  map<int, TString>                 m_fileMap;
+  std::map<int, TString>            m_fileMap;
   TList*                            m_files;
   // Methods
   TChain* configureChain();
