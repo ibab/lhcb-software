@@ -5,6 +5,14 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-08-16 - Jibo He
+ - Fixed the database problem in TestMyStrippingLineOn2011Data.py, from now on,
+   one needs to 
+    SetupDaVinci --use-grid
+    lhcb-proxy-init
+   to do the test
+ - Removed TestMyStrippingLineOnRealData.py to avoid confusion.
+
+! 2011-08-16 - Jibo He
  - Updated TestMyStrippingLineOn2011Data.py to use the Reco11a, Run97120 test sample.   
 
 ! 2011-08-15 - Jibo He
