@@ -48,8 +48,10 @@ void DailyReport::build ( int argc, char** argv ) {
   int minMonth = start->tm_mon  + 1;
   int minDay   = start->tm_mday;
   int minHour  = start->tm_hour;
+  //int weekDay  = start->tm_wday;
 
-  std::cout << "start : " << minYear << " " << minMonth << " " << minDay << " " << minHour << std::endl;
+  std::cout << "start : " << minYear << " " << minMonth << " " << minDay << " " << minHour  //<< " weekday : " << weekDay 
+            << std::endl;
 
   ::strftime( buf, 20, "%Y%m%d", ::localtime(&before) );
   std::string yesterday( buf );
@@ -67,7 +69,12 @@ void DailyReport::build ( int argc, char** argv ) {
   //== Make a dummy file for the 'tomorrow' link
   std::string path = "/group/online/www/DailyReport/";
 
-  if ( 1 < argc ) path = path + std::string( argv[1]) + "-";
+  bool runChief = false;
+
+  if ( 1 < argc ) {
+    path = path + std::string( argv[1]) + "-";
+    if ( "RunChief" == std::string( argv[1] ) ) runChief = true;
+  }  
 
   std::string nextFileName = path + tomorrow + ".html";
 
@@ -101,8 +108,12 @@ void DailyReport::build ( int argc, char** argv ) {
   fprintf( m_web, "<TABLE width=90%% align=center><TR><TD align = left><A href=""./%s.html"">%s</A></TD>",
            yesterday.c_str(), yesterdayNice.c_str() );
   fprintf( m_web, "<TD align=center><FONT size=+3 color=blue >LHCb Daily Report, %s</FONT></TD>", buf );
-  fprintf( m_web, "<TD align=right><A href=""./%s.html"">%s</A></TD></TR></TABLE>",
-           tomorrow.c_str(), tomorrowNice.c_str() );
+  fprintf( m_web, "<TD align=right><A href=""./%s.html"">%s</A></TD></TR>", tomorrow.c_str(), tomorrowNice.c_str() );
+  if ( !runChief ) {
+    fprintf( m_web, "<TR><TD/><TD align=center><A href=""./RunChief-today.html"">");
+    fprintf( m_web, "Logbook extract at 10 AM for Run Chief</A></TD></TR>" );
+  }
+  fprintf( m_web, "</TABLE>" );
 
   fprintf( m_web, "<TABLE width=70%% cellspacing=5 cellpading=2 border=2 align=center><FONT size=+2>" );
   fprintf( m_web, "<tr><th/><th>%-20s</th><th>%-20s</th><th>%-20s</th></tr>", s_SL.c_str(), s_DM.c_str(), s_PR.c_str() );
@@ -254,6 +265,7 @@ void DailyReport::listOnePiquet ( std::string name ) {
 
   } else if ( name == "Online Piquet" ) {
     pbdb.getListOfProblems( problems, "DAQ" );
+    extractFromElog( "Online", "Piquet report" );
 
   } else if ( name == "DQ Piquet" ) {
     pbdb.getListOfProblems( problems, "Alignment" );
