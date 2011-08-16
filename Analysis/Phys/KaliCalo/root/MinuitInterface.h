@@ -69,7 +69,7 @@ public:
   void configure( int );
   // Minimization control
   int addCell( const int , const TString , const double=1.0 );
-  bool hasCell( const int cellID ) { return m_cellIDs.find(cellID) != map::end ; };
+  bool hasCell( const int cellID ) { return ( m_cellIDs.find(cellID) != m_cellIDs.end() ) ; };
   int setFixedVar( const TString, const double );
   int setLimitedVar( const TString , const double, const double, const double );
   int minimize();

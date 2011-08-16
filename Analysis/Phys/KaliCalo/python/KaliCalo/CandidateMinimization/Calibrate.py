@@ -27,60 +27,75 @@ except:
 import KaliCalo.Kali.LambdaMap as LambdaMap
 import KaliCalo.FakeCells      as FakeCells
 import KaliCalo.Cells          as Cells
+from KaliCalo.Det              import getCalo
 
+def getEcalCells():
+  ecal = getCalo()
+  cp = ecal.cellParams()
+  cells = []
+  for p in cp :
+    cell = p.cellID()
+    if ecal.valid ( cell ) and not cell.isPin() :
+      cells.append ( cell )
+  cells.sort()
+  return cells
+
+def indexToCellID(cellList):
+  output = []
+  ecal = getCalo()
+  for cell in cellList:
+    cellID = ecal.cellIdByIndex(int(cell))
+    if ecal.valid(cellID) and not cellID.isPin():
+      output.append(cellID)
+  return output
 
 castorDir = 'castor:/castor/cern.ch/grid/'
 
-CellID = FakeCells.cellID
+CellID = FakeCells.CellID
 betas = [8.3, 8.8, 9.5]
+ecalCells = getEcalCells()
 
 if __name__ == '__main__':
   parser = OptionParser()
-  parser.add_option("-l", "--lambdasDir",
-                    dest="lambdasDir", action="store", type="string", default=""
-                    help="DIR where lambda files are stored", metavar="DIR")
-  parser.add_option("-c", "--cellID",
-                    dest="cellID", action="store", type="int", default=0,
-                    help="CELLID to calibrate", metavar="CELLID")
+  parser.add_option("-l", "--lambdaFile",
+                    dest="lambdaFile", action="store", type="string", default="",
+                    help="FILE where lambda constants are stored", metavar="FILE")
+  parser.add_option("-c", "--cellIDs",
+                    dest="cellIDs", action="store", type="string", default="",
+                    help="comma-separated list of CELLIDs to calibrate", metavar="CELLIDs")
   parser.add_option("-t", "--cellType",
                     dest="cellType", action="store", type="string", default="SameCell",
                     help="use CELLTYPE cell grouping", metavar="CELLTYPE")
-  parser.add_option("-n", "--name",
-                    dest="name", action="store", type="string", default="",
-                    help="CELLNAME to assign to the group of cells", metavar="CELLNAME")
   (options, args) = parser.parse_args()
   # Check the lambdas dir and join lambdas (if any)
-  if not os.path.exists(os.path.abspath(parser.lambdasDir)):
-    os.makedirs(os.path.abspath(parser.lambdasDir))    
-  lambdas = LambdaMap()
-  for lambdaFile in glob.glob(os.path.join(parser.lambdasDir, "*")):
-    newLambda = LambdaMap()
-    newLambda.read(lambdaFile)
-    lambdas = lambdas * LambdaMap()
+  lambdas = LambdaMap.LambdaMap()
+  lambdaFile = options.lambdaFile
+  if os.path.exists(lambdaFile) and os.path.isfile(lambdaFile):
+    print "Found DB -> %s" % lambdaFile
+    lambdas.read(lambdaFile)
   # Load the cell massager
-  CellMassager = getattr(FakeCells, parser.cellType, None)()
+  CellMassager = getattr(FakeCells, options.cellType, None)()
   if not CellMassager:
     print "Wrong Cell Massager!"
     sys.exit(1)
   # Get a list of cells to add
-  if 0 == parser.cellID:
+  if "" == options.cellIDs:
     print "No cell ID specified!"
     sys.exit(1)
-  myCellID = CellMassager(CellID(parser.cellID))
-  cellList = []
-  for i in range(Cells.EcalZone.index()):
-    cellID = CellID(i)
-    if CellMassager(cellID) == myCellID:
-      cellList.append(cellID)
-  if 0 == len(cellList):
-    print "No valid cells found!"
-    sys.exit(1)
+  cellsToCalibrate = {}
+  for cellID in indexToCellID(options.cellIDs.split(',')): # CellIDs are comma separated
+    cellsToCalibrate[CellMassager(cellID)] = []
+  print "Cells to calibrate: %s" % ' '.join(map(str, cellsToCalibrate.keys()))
+  for cellID in ecalCells:
+    mCellID = CellMassager(cellID)
+    if mCellID in cellsToCalibrate.keys():
+      cellsToCalibrate[mCellID].append(cellID)
   # Get ntuples
   ntuples = []
   for arg in args:
     if os.path.exists(arg):
       execfile(arg)
-      ntuples.extend([os.path.join(castorDir, t) for t in tup])
+      ntuples.extend([castorDir+t for t in tup])
   if 0 == len(ntuples):
     print "No valid ntuples found"
     sys.exit(1)
@@ -92,9 +107,32 @@ if __name__ == '__main__':
   for area, beta in enumerate(betas):
     minuit.setBeta(area, beta)
   minuit.loadFiles(fileList)
-  minuit.configure(1)
-  varName = parser.name if parser.name else str(myCellID.index())
-  for cell in cellList:
-    minuit.addCell(cell.index(), varName, lambdas[cell])
+  minuit.configure(len(cellsToCalibrate)+1)
+  # Add cells to calibrate
+  for var, cellList in cellsToCalibrate.items():
+    varName = str(var.all())
+    for cell in cellList:
+      minuit.addCell(cell.index(), varName, lambdas[cell][-1])
+  # Add other cells with a configuration
+  for cell in lambdas:
+    if not minuit.hasCell(cell.index()):
+      minuit.addCell(cell.index(), "fixed", lambdas[cell][-1])
+  # Minimize all vars
+  newLambdas = LambdaMap.LambdaMap()
+  for var in cellsToCalibrate:
+    varName = str(var.all())
+    for varToFix in cellsToCalibrate:
+      varToFix = str(varToFix.all())
+      value = lambdas[cellsToCalibrate[var][0]][-1]
+      if varToFix != varName:
+        minuit.setFixedVar(varToFix, value)
+      else:
+        minuit.setLimitedVar(varToFix, value, value*0.95, value*1.05)
+    sc = minuit.minimize()
+    # TODO: error handling
+    calib = minuit.getVarCalib(varName)
+    for cell in cellsToCalibrate[var]:
+      l = newLambdas[cell]
+      l[-1] = calib
   
 # EOF
