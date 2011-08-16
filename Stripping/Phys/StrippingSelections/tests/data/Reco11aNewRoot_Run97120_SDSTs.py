@@ -86,5 +86,7 @@ EventSelector().Input   = [
 "   DATAFILE='LFN:/lhcb/validation/Collision11/SDST/00011817/0000/00011817_00000216_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='LFN:/lhcb/validation/Collision11/SDST/00011817/0000/00011817_00000217_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
+EventSelector().Input.reverse()
+
 FileCatalog().Catalogs = [
     'xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_Reco11aNewRoot_Run97120.xml']

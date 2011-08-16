@@ -70,4 +70,4 @@ DaVinci().DataType  = "2011"
 DaVinci().InputType = "SDST"
 
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco11a_Run97120_SDSTs.py")
