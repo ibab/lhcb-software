@@ -1,15 +1,15 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:02 GMT
 
-#include "NamedParameter.h"
-#include "DalitzEventList.h"
-#include "DalitzEventPattern.h"
-#include "FitAmplitude.h"
-#include "FitAmpSum.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/DalitzEventList.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/FitAmpSum.h"
 
-#include "DalitzMCIntegrator.h"
+#include "Mint/DalitzMCIntegrator.h"
 
-#include "PlotSet.h"
+#include "Mint/PlotSet.h"
 
 #include <iostream>
 

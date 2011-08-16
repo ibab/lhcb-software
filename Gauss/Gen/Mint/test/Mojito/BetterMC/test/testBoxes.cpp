@@ -5,22 +5,22 @@
 
 #include "TError.h"
 
-#include "DalitzEvent.h"
-#include "DalitzEventList.h"
+#include "Mint/DalitzEvent.h"
+#include "Mint/DalitzEventList.h"
 
-#include "DalitzArea.h"
-#include "DalitzBox.h"
-#include "DalitzBoxSet_Method2.h"
-#include "MappedDalitzArea.h"
-#include "DalitzCoordinate.h"
+#include "Mint/DalitzArea.h"
+#include "Mint/DalitzBox.h"
+#include "Mint/DalitzBoxSet_Method2.h"
+#include "Mint/MappedDalitzArea.h"
+#include "Mint/DalitzCoordinate.h"
 
-#include "FitAmpSum.h"
-#include "PlotSet.h"
-#include "DalitzPdfBase.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/PlotSet.h"
+#include "Mint/DalitzPdfBase.h"
 
-#include "Utils.h"
+#include "Mint/Utils.h"
 
-#include "NamedParameter.h"
+#include "Mint/NamedParameter.h"
 
 #include "TRandom3.h"
 

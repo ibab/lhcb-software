@@ -1,24 +1,24 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
 #include <iostream>
-#include "NamedParameter.h"
-#include "FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/FitParameter.h"
 
-#include "IDalitzEventList.h"
-#include "DalitzEventList.h"
-#include "DalitzEventPattern.h"
+#include "Mint/IDalitzEventList.h"
+#include "Mint/DalitzEventList.h"
+#include "Mint/DalitzEventPattern.h"
 
-#include "ParticlePropertiesList.h"
+#include "Mint/ParticlePropertiesList.h"
 
-#include "DecayTree.h"
+#include "Mint/DecayTree.h"
 
-#include "Amplitude.h"
+#include "Mint/Amplitude.h"
 
-#include "SpinFactorMaker.h"
+#include "Mint/SpinFactorMaker.h"
 
-#include "EventList.h"
+#include "Mint/EventList.h"
 
-#include "DecayTreeComparisons.h"
+#include "Mint/DecayTreeComparisons.h"
 
 using namespace std;
 using namespace MINT;

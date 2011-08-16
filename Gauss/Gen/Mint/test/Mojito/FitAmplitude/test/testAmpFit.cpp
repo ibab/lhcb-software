@@ -1,32 +1,32 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "FitParameter.h"
-#include "NamedParameter.h"
-#include "Minimiser.h"
-#include "Neg2LL.h"
-#include "EventList.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/Minimiser.h"
+#include "Mint/Neg2LL.h"
+#include "Mint/EventList.h"
 
-#include "PdfBase.h"
+#include "Mint/PdfBase.h"
 
 #include "TRandom.h"
 
 #include <iostream>
 
-#include "FitComplex.h"
-#include "FitAmplitude.h"
+#include "Mint/FitComplex.h"
+#include "Mint/FitAmplitude.h"
 
-#include "DalitzEventList.h"
-#include "DalitzEventPattern.h"
+#include "Mint/DalitzEventList.h"
+#include "Mint/DalitzEventPattern.h"
 
 #include "TH1D.h"
 #include "TFile.h"
 
-#include "FitAmpSum.h"
+#include "Mint/FitAmpSum.h"
 
-#include "CLHEPSystemOfUnits.h"
+#include "Mint/CLHEPSystemOfUnits.h"
 
-#include "AllPossibleSij.h"
-#include "PlotSet.h"
+#include "Mint/AllPossibleSij.h"
+#include "Mint/PlotSet.h"
 
 using namespace std;
 using namespace MINT;

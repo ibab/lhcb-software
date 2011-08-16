@@ -20,10 +20,10 @@
 
 #include <iostream>
 
-#include "NamedParameter.h"
-#include "Minimisable.h"
-#include "FitParameter.h"
-#include "Minimiser.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/Minimisable.h"
+#include "Mint/FitParameter.h"
+#include "Mint/Minimiser.h"
 
 using namespace std;
 using namespace MINT;

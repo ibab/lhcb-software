@@ -1,13 +1,13 @@
 
-#include "SignalGenerator.h"
-#include "FromFileGenerator.h"
+#include "Mint/SignalGenerator.h"
+#include "Mint/FromFileGenerator.h"
 
-#include "NamedParameter.h"
-#include "DalitzEventPattern.h"
-#include "DalitzEventList.h"
-#include "DalitzHistoSet.h"
-#include "IReturnReal.h"
-#include "counted_ptr.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/DalitzEventList.h"
+#include "Mint/DalitzHistoSet.h"
+#include "Mint/IReturnReal.h"
+#include "Mint/counted_ptr.h"
 
 #include "TRandom.h"
 
