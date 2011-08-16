@@ -14,8 +14,8 @@ branches          cmt doc src Mint
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use           GaudiAlg          v*
-use ROOT              v*  LCG_Interfaces  -no_auto_imports
+use         GaudiAlg          v*
+use 		ROOT              v*  LCG_Interfaces  -no_auto_imports
 
 #============================================================================
 # Include directories

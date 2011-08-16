@@ -55,25 +55,15 @@ void MintGen::SetDalitzEvent(IDalitzEvent* dE)
 
 void MintGen::Initalize(std::vector<int> patternVec)
 {
-	//ParticlePropertiesList pl();
-	//pl.fillDirList('/afs/cern.ch/user/m/mcoombes/cmtuser/Gauss_v40r0/Mint/');
 	std::cout <<"m_inputFileName " << m_inputFileName << std::endl;
 	NamedParameterBase::setDefaultInputFile(m_inputFileName);
-	NamedParameter<int> RandomSeed("RandomSeed", 0);
-	int RandSeed = RandomSeed;
-
-	NamedParameter<int>  Nevents("Nevents", 1000);
-	NamedParameter<double> integPrecision("IntegPrecision", 1.e-2);
 
 	NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, -211, 211); // takes Pdg_id (421 is D0)
 	std::vector<int> TextEvtpattern = EventPattern.getVector();
 	DalitzEventPattern pdg_text(TextEvtpattern);
 
-	//std::vector<int>
 	DalitzEventPattern pdg(patternVec);
-	//this->EvtPattern(patternVec);
-
-//	NamedParameter<int> doNormCheck("doNormCheck", 0);
+//	DalitzEventPattern pdg(EventPattern.getVector());
 
 	std::cout << " got event pattern: " << pdg << std::endl;
 	std::cout << " Text input event pattern: " << pdg_text << std::endl;
