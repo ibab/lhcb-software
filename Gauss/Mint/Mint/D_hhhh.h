@@ -30,7 +30,7 @@ namespace MINT {
 		void SetInputTextFile(std::string inputFile);
 
 		// Decay Event in parent Rest Frame
-		std::vector<TLorentzVector> DecayEventRFVec();
+		std::vector<std::vector<double> > DecayEventRFVec();
 
 		const TLorentzVector& getDaugtherMom(unsigned int i);
 
