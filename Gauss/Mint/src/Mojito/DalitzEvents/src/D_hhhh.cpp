@@ -81,7 +81,7 @@ void MintGen::Initalize(std::vector<int> patternVec)
 	m_sg = new SignalGenerator(pdg);
 }
 
-std::vector<TLorentzVector> MintGen::DecayEventRFVec()
+std::vector<std::vector<double> > MintGen::DecayEventRFVec()
 {
 	MINT::counted_ptr<IDalitzEvent> newEvt = m_sg->newEvent();
 
@@ -89,11 +89,19 @@ std::vector<TLorentzVector> MintGen::DecayEventRFVec()
 
 	this->SetDalitzEvent(dE);
 
-	std::vector<TLorentzVector> daughters;
+	std::vector<std::vector<double> > daughters;
 
 	for (int i = 1; i < 5; i++)
 	{
-		daughters.push_back(m_dE->p(i));
+		std::vector<double> DaughterMom;
+		DaughterMom.clear();
+		DaughterMom.push_back(m_dE->p(i).T()/1000);
+		DaughterMom.push_back(m_dE->p(i).X()/1000);
+		DaughterMom.push_back(m_dE->p(i).Y()/1000);
+		DaughterMom.push_back(m_dE->p(i).Z()/1000);
+
+		daughters.push_back(DaughterMom);
+
 	}
 	return daughters;
 }
