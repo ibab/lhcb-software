@@ -96,7 +96,7 @@ int MinuitInterface::setFixedVar( const TString varName, const double value ){
     // double value = fMinuit->X()[varNum];
     if (gDebug) std::cout << "Setting fixed var " << varName << " to value " << value << std::endl;    
     fMinuit->SetFixedVariable(varNum, varName.Data(), value);
-    return 1;    
+    return 1;
   }
   return 0;
 }
