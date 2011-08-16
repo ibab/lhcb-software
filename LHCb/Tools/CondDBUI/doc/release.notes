@@ -3,6 +3,10 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-08-16 - Illya Shapoval
+ - 'CondDB_UpdateOnlineSnapshots.py' is prepared for automatic cron-running and
+   polished a bit (now compatible with Python 3.*).
+
 !========================= CondDBUI v3r10 2011-06-14 =========================
 ! 2011-06-14 - Illya Shapoval
  - TagsFilter.py is updated:
