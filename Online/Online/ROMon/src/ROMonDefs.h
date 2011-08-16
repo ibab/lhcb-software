@@ -19,5 +19,10 @@ namespace ROMon {
     DimLock();
     ~DimLock();
   };
+  class DimReverseLock {
+  public:
+    DimReverseLock();
+    ~DimReverseLock();
+  };
 }
 #endif // ROMON_ROMONDEF_H

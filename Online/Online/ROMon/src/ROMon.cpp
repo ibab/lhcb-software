@@ -176,3 +176,11 @@ DimLock::~DimLock() {
   dim_unlock();
 }
 
+DimReverseLock::DimReverseLock() {
+  dim_unlock();
+}
+
+DimReverseLock::~DimReverseLock() {
+  dim_lock();
+}
+

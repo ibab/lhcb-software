@@ -1437,20 +1437,21 @@ void FarmLineDisplay::connect(const vector<string>& vfarms) {
   m_currentLine = 0;
 
   int pos = CLUSTERLINE_FIRSTPOS-1;
+  DimReverseLock lock;  // unlock DIM here, since connect/disconnect calls DIM
   for (FarmSet::const_iterator i=farms.begin(); i != farms.end(); ++i) {
     k = m_farmDisplays.find(*i);
     ++pos;
     if ( k == m_farmDisplays.end() ) {
       if ( m_mode == RECO_MODE )
-        copy.insert(make_pair(*i,createRecFarmClusterLine(this,pos,*i)));
+	copy.insert(make_pair(*i,createRecFarmClusterLine(this,pos,*i)));
       else if ( m_mode == CTRL_MODE )
-        copy.insert(make_pair(*i,createCtrlFarmClusterLine(this,pos,*i)));
+	copy.insert(make_pair(*i,createCtrlFarmClusterLine(this,pos,*i)));
       else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
-        copy.insert(make_pair(*i,createMonitoringClusterLine(this,pos,*i)));
+	copy.insert(make_pair(*i,createMonitoringClusterLine(this,pos,*i)));
       else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
-        copy.insert(make_pair(*i,createStorageClusterLine(this,pos,*i)));
+	copy.insert(make_pair(*i,createStorageClusterLine(this,pos,*i)));
       else
-        copy.insert(make_pair(*i,createFarmClusterLine(this,pos,*i)));
+	copy.insert(make_pair(*i,createFarmClusterLine(this,pos,*i)));
     }
     else {
       copy.insert(*k);
