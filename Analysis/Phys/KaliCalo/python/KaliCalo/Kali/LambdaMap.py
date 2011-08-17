@@ -13,6 +13,7 @@ __version__ = "$Revision$"
 
 # =============================================================================    
 import KaliCalo.Cells   as Cells
+from KaliCalo.Kali  import Counter, VE
 Zones = Cells.Zones
 # =============================================================================    
 ## Helper class to hold the map of { cellID : lambdas }
