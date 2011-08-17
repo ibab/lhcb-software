@@ -39,18 +39,16 @@ void MintGen::SetInputTextFile(std::string inputFile)
 }
 
 
-const TLorentzVector& MintGen::getDaugtherMom(unsigned int i)
+std::vector<double> MintGen::getDaugtherMom(IDalitzEvent* dE, int daughter)
 {
-	 const TLorentzVector& prt_mom = m_dE->p(1+i); //p0 is a D which we are not interested in here
+	std::vector<double> DaughterMom;
+	DaughterMom.push_back(dE->p(daughter).T()/1000);
+	DaughterMom.push_back(dE->p(daughter).X()/1000);
+	DaughterMom.push_back(dE->p(daughter).Y()/1000);
+	DaughterMom.push_back(dE->p(daughter).Z()/1000);
 
-	 return prt_mom;
+	return DaughterMom;
 }
-
-void MintGen::SetDalitzEvent(IDalitzEvent* dE)
-{
-	m_dE = dE;
-}
-
 
 
 void MintGen::Initalize(std::vector<int> patternVec)
@@ -77,21 +75,14 @@ std::vector<std::vector<double> > MintGen::DecayEventRFVec()
 
 	IDalitzEvent* dE = newEvt.get();
 
-	this->SetDalitzEvent(dE);
-
 	std::vector<std::vector<double> > daughters;
 
+	// Loop over 4 daughters
+	// Start at 1 as 0 is the mother particles
 	for (int i = 1; i < 5; i++)
 	{
-		std::vector<double> DaughterMom;
-		DaughterMom.clear();
-		DaughterMom.push_back(m_dE->p(i).T()/1000);
-		DaughterMom.push_back(m_dE->p(i).X()/1000);
-		DaughterMom.push_back(m_dE->p(i).Y()/1000);
-		DaughterMom.push_back(m_dE->p(i).Z()/1000);
-
+		std::vector<double> DaughterMom = this->getDaugtherMom(dE,i);
 		daughters.push_back(DaughterMom);
-
 	}
 	return daughters;
 }

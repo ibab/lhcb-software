@@ -28,25 +28,18 @@ namespace MINT {
 	public:
 		MintGen();
 		virtual ~MintGen();
+
+		void Initalize(std::vector<int>);
+
 		void SetInputTextFile(std::string inputFile);
 
 		// Decay Event in parent Rest Frame
 		std::vector<std::vector<double> > DecayEventRFVec();
 
-		const TLorentzVector& getDaugtherMom(unsigned int i);
-
-		//PGDID
-		void SetDaughters_pgdID(std::vector<int> pgd_id);
-		std::vector<int> GetDaughters_pgdID();
-		void SetMothers_pgdID(std::vector<int>);
-		int GetMothers_pgdID();
+		std::vector<double> getDaugtherMom(IDalitzEvent* , int );
 
 		//DalitzEvent
-
 		void SetDalitzEvent(IDalitzEvent*);
-
-		void Initalize(std::vector<int>);
-
 	
 	private:
 		std::string m_inputFileName;
