@@ -1,9 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DisplVertices
-! Responsible : Neal Gauvin
+! Responsible : Victor Coco
 ! Purpose     : Stripping and Offline algorithms and tools for the selection
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
+
+! 2011-08-17 - Victor Coco
+ - Move the material Veto to a tool. Add the Kernel directory to store
+   the tool interface, and add the dict directory to get the lcg dict declaration
 
 !========================= DisplVertices v7r6 2011-06-21 =========================
 ! 2011-05-27 - Victor Coco
