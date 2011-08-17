@@ -5,12 +5,13 @@
 #ifdef WIN32
 #include "windows.h"
 #define onesec      (unsigned long long)(10000000)
+#define onemilli_nano (unsigned long long 1000000)
 #else
 #include <sys/time.h>
 #define onesec_mu   (unsigned long long)(1000000)
-#define onesec_nano (unsigned long long)(1000000000)
 #define onesec_mili (unsigned long long)(1000000)
 #endif
+#define onesec_nano (unsigned long long)(1000000000)
 
 namespace
 {
@@ -91,7 +92,7 @@ void GenTimer::makeDeltaT()
 //
 #ifdef WIN32
   SYSTEMTIME tim;
-  unsigned long long timstamp,ntim;
+  unsigned long long timestamp,ntim;
   GetLocalTime(&tim);
   SystemTimeToFileTime(&tim, (LPFILETIME)&timstamp);
   timestamp *= 10;
@@ -129,7 +130,7 @@ unsigned long long GenTimer::getDeltaTime(int incr)
   unsigned long long timstamp,ntim;
   GetLocalTime(&tim);
   SystemTimeToFileTime(&tim, (LPFILETIME)&timstamp);
-  timestamp *= 10;
+  timestamp *= 100;
   ntim  = (timstamp/(m_period*onesec_nano))*(m_period*onesec_nano)+(m_period*onesec_nano);
   m_dueTime = ntim;
   unsigned long long dtim = (ntim-timstamp);
@@ -173,6 +174,9 @@ void *GenTimer::ThreadRoutine()
   while (1)
   {
     delta = getDeltaTime(0);
+#ifdef WIN32
+    Sleep(delta/onemilli_nano);
+#else
     unsigned long long s=delta/onesec_nano;
     req.tv_sec = (time_t)s;
     req.tv_nsec = delta % onesec_nano;
@@ -196,6 +200,7 @@ void *GenTimer::ThreadRoutine()
         break;
       }
     }
+#endif
     if (!m_periodic)
     {
       break;
