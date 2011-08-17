@@ -23,8 +23,10 @@
  *  - VerboseL0:   Fill verbose L0 information
  *  - FillHlt1:    Fill Hlt1 decisions
  *  - VerboseHlt1: Fill verbose Hlt1 information
- *  - FillHlt2:    Fill Hlt1 decisions
- *  - VerboseHlt2: Fill verbose Hlt1 information
+ *  - FillHlt2:    Fill Hlt2 decisions
+ *  - VerboseHlt2: Fill verbose Hlt2 information
+ *  - FillStripping:    Fill Stripping decisions
+ *  - VerboseStripping: Fill verbose Stripping information
  *
  *  - Verbose:     Sets all the verbose flags to true
  *
@@ -61,12 +63,20 @@ protected:
   bool m_verboseL0;     ///< get details on L0
   bool m_verboseHlt1;   ///< get details on Hlt1
   bool m_verboseHlt2;   ///< get details on Hlt2
+  bool m_verboseStripping;   ///< get details on Stripping
+  
+  
+  bool m_doL0;     ///< fill L0 global
+  bool m_doHlt1;   ///< fill Hlt1 global
+  bool m_doHlt2;   ///< fill hlt2 global
+  bool m_doStripping;   ///< fill stripping global
   
   
   // do not allow trigger names to mutate from event-to-event
   std::vector<std::string> m_l0;
   std::vector<std::string> m_hlt1;
   std::vector<std::string> m_hlt2;
+  std::vector<std::string> m_stripping;
   
   
   std::vector<std::string> m_triggerList;//property: list of triggers to specifically look at

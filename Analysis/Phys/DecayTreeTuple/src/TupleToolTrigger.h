@@ -14,6 +14,7 @@
  * - L0Decision : LHCb::L0DUReport->decision()
  * - Hlt1Global : Global HLT1 decision
  * - Hlt2Global : Global HLT2 decision
+ * - StrippingGlobal : Global Stripping decision
  *
  * If verbose is true the tool needs somehow to find a list of triggers to fill.
  * In this case it uses the base class TupleToolTriggerBase to sort everything out. 
@@ -26,6 +27,9 @@
  * 
  * If \b VerboseHlt2 = true
  * Hlt2_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
+ * 
+ * If \b VerboseStripping = true
+ * Stripping_xxx_Decision : filled ... [ -1, 0, 1 ] = [not run, decision false, decision true]
  * 
  * Verbose flag is a shortcut to turn all verbosity on.
  *  
@@ -58,13 +62,13 @@ private:
   ///fill verbose information for the HLT
   StatusCode fillHlt( Tuples::Tuple&, const std::string &);
   StatusCode fillRoutingBits( Tuples::Tuple& );
- 
+  
   StatusCode fillBasic(Tuples::Tuple& tuple );
   
   StatusCode fillVerbose(Tuples::Tuple& tuple );
   
-  bool m_fillHlt;     ///< fill Hlt
-  bool m_fillL0;      ///< fill L0
+  //bool m_fillHlt;     ///< fill Hlt, now in the base class
+  //bool m_fillL0;      ///< fill L0, now in the base class
   //bool  m_allSteps ; ///< Fill also intermediate steps
   std::vector<unsigned int> m_routingBits ; ///< Routing bits to fill
   

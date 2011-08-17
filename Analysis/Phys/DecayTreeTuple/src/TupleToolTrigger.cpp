@@ -35,8 +35,8 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   , m_routingBits(0)
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty( "FillL0", m_fillL0=true, "Fill L0" );
-  declareProperty( "FillHlt", m_fillHlt=true, "Fill Hlt" );
+  //declareProperty( "FillL0", m_fillL0=true, "Fill L0" ); now in the base class
+  //declareProperty( "FillHlt", m_fillHlt=true, "Fill Hlt" ); now in the base class
   //depracated, use VerboseHlt1, VerboseHlt2 or VerboseL0
   //declareProperty( "AllIntermediateSteps", m_allSteps=false, "Fill also intermediate steps" );
   for ( unsigned int i = 32 ; i < 96 ; i++)
@@ -53,6 +53,12 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
 StatusCode TupleToolTrigger::initialize ( ) {
   StatusCode sc = TupleToolTriggerBase::initialize();
   
+  if (m_doStripping || m_stripping.size()!=0) 
+  {
+    return Error("You should use TupleToolStripping for that", StatusCode::FAILURE);
+  }
+  
+  
   return sc ;
 }
 //=============================================================================
@@ -61,7 +67,7 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
   
   const std::string prefix=fullName();
   //fill the L0 global
-  if (m_fillL0)
+  if (m_doL0)
   {    
     if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) )
     {
@@ -72,7 +78,7 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
   }
   
   //fill the HLT global
-  if (m_fillHlt)
+  if (m_doHlt1 || m_doHlt2)
   {
     if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) )
     { 
@@ -101,21 +107,21 @@ StatusCode TupleToolTrigger::fillVerbose( Tuples::Tuple& tuple )
   if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Verbose" << endmsg ;
   
   //fill the L0 verbose
-  if (m_fillL0 && m_verboseL0)
+  if (m_doL0 && m_verboseL0)
   {
     test&=fillL0(tuple);
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger L0 " << test << endmsg ;
   
   //fill the HLT1 verbose
-  if (m_fillHlt && m_verboseHlt1)
+  if (m_doHlt1 && m_verboseHlt1)
   {
     test&=fillHlt(tuple, "Hlt1");
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger Hlt1 " << test << endmsg ;
   
   //fill the HLT2 verbose
-  if (m_fillHlt && m_verboseHlt2)
+  if (m_doHlt2 && m_verboseHlt2)
   {
     test&=fillHlt(tuple, "Hlt2");
   }

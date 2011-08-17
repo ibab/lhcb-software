@@ -93,34 +93,58 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle*
   const std::string prefix=fullName(head);
  
   ITriggerTisTos::TisTosDecision classifiedDec;
-
-  m_L0TriggerTisTosTool->setOfflineInput(*P);
-  m_L0TriggerTisTosTool->setTriggerInput("L0.*Decision");
-  classifiedDec = m_L0TriggerTisTosTool->triggerTisTos();
-  tuple->column( prefix+"L0Global"+"_Dec", classifiedDec.decision());
-  tuple->column( prefix+"L0Global"+"_TIS", classifiedDec.tis());
-  tuple->column( prefix+"L0Global"+"_TOS", classifiedDec.tos());
+  
+  if(m_doL0)
+  {
+    
+    m_L0TriggerTisTosTool->setOfflineInput(*P);
+    m_L0TriggerTisTosTool->setTriggerInput("L0.*Decision");
+    classifiedDec = m_L0TriggerTisTosTool->triggerTisTos();
+    tuple->column( prefix+"L0Global"+"_Dec", classifiedDec.decision());
+    tuple->column( prefix+"L0Global"+"_TIS", classifiedDec.tis());
+    tuple->column( prefix+"L0Global"+"_TOS", classifiedDec.tos());
+  }
   
  
   m_TriggerTisTosTool->setOfflineInput(*P);
 
-  //Do the Hlt1
-  m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
-  //Fill the decision, tis and tos parametres for the Hlt1 as a whole   
-  classifiedDec = m_TriggerTisTosTool->triggerTisTos();
-  tuple->column( prefix+"Hlt1Global"+"_Dec", classifiedDec.decision());
-  tuple->column( prefix+"Hlt1Global"+"_TIS", classifiedDec.tis());
-  tuple->column( prefix+"Hlt1Global"+"_TOS", classifiedDec.tos());
+  if(m_doHlt1)
+  {
     
+    //Do the Hlt1
+    m_TriggerTisTosTool->setTriggerInput("Hlt1.*Decision");
+    //Fill the decision, tis and tos parametres for the Hlt1 as a whole   
+    classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+    tuple->column( prefix+"Hlt1Global"+"_Dec", classifiedDec.decision());
+    tuple->column( prefix+"Hlt1Global"+"_TIS", classifiedDec.tis());
+    tuple->column( prefix+"Hlt1Global"+"_TOS", classifiedDec.tos());
+  }
+  
 
-  //Do the Hlt2
-  m_TriggerTisTosTool->setTriggerInput("Hlt2.*Decision");
-  //Fill the decision, tis and tos parametres for the Hlt2 as a whole   
-  classifiedDec = m_TriggerTisTosTool->triggerTisTos();
-  tuple->column( prefix+"Hlt2Global"+"_Dec", classifiedDec.decision());
-  tuple->column( prefix+"Hlt2Global"+"_TIS", classifiedDec.tis());
-  tuple->column( prefix+"Hlt2Global"+"_TOS", classifiedDec.tos());
+  if(m_doHlt2)
+  {
     
+    //Do the Hlt2
+    m_TriggerTisTosTool->setTriggerInput("Hlt2.*Decision");
+    //Fill the decision, tis and tos parametres for the Hlt2 as a whole   
+    classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+    tuple->column( prefix+"Hlt2Global"+"_Dec", classifiedDec.decision());
+    tuple->column( prefix+"Hlt2Global"+"_TIS", classifiedDec.tis());
+    tuple->column( prefix+"Hlt2Global"+"_TOS", classifiedDec.tos());
+  }
+  
+  if(m_doHlt2)
+  {
+    
+    //Do the Hlt2
+    m_TriggerTisTosTool->setTriggerInput("Stripping.*Decision");
+    //Fill the decision, tis and tos parametres for the Hlt2 as a whole   
+    classifiedDec = m_TriggerTisTosTool->triggerTisTos();
+    tuple->column( prefix+"StrippingGlobal"+"_Dec", classifiedDec.decision());
+    tuple->column( prefix+"StrippingGlobal"+"_TIS", classifiedDec.tis());
+    tuple->column( prefix+"StrippingGlobal"+"_TOS", classifiedDec.tos());
+  }
+  
   
   return StatusCode::SUCCESS;
 }
@@ -173,6 +197,19 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle*
   {      
     //Now loop over all the subtriggers
     for( std::vector< std::string >::const_iterator s=m_hlt2.begin();s != m_hlt2.end();++s)
+    {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
+      tuple->column( prefix+*s+"_Dec", decision);
+      tuple->column( prefix+*s+"_TIS", tis);
+      tuple->column( prefix+*s+"_TOS", tos);
+    }
+  }
+  
+  if( m_verboseStripping )
+  {      
+    //Now loop over all the subtriggers
+    for( std::vector< std::string >::const_iterator s=m_stripping.begin();s != m_stripping.end();++s)
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
       m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);

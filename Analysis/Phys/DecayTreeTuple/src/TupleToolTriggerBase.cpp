@@ -39,6 +39,7 @@ TupleToolTriggerBase::TupleToolTriggerBase( const std::string& type,
     m_l0(0),
     m_hlt1(0),
     m_hlt2(0),
+    m_stripping(0),
     m_triggerList(0)
 {
   //declareInterface<IParticleTupleTool>(this);
@@ -47,6 +48,11 @@ TupleToolTriggerBase::TupleToolTriggerBase( const std::string& type,
   declareProperty( "VerboseL0",   m_verboseL0=false );
   declareProperty( "VerboseHlt1", m_verboseHlt1=false );
   declareProperty( "VerboseHlt2", m_verboseHlt2=false );
+  declareProperty( "VerboseStripping", m_verboseStripping=false );
+  declareProperty( "FillL0",   m_doL0=true );
+  declareProperty( "FillHlt1", m_doHlt1=true );
+  declareProperty( "FillHlt2", m_doHlt2=true );
+  declareProperty( "FillStripping", m_doStripping=false );
   
   //List of triggers to look at
   declareProperty( "TriggerList",   m_triggerList=std::vector<std::string>(0) );
@@ -69,8 +75,8 @@ StatusCode TupleToolTriggerBase::initialize( )
   StatusCode sc = TupleToolBase::initialize();
   if (!sc) return sc;
   
-  if(isVerbose()) m_verboseL0=m_verboseHlt1=m_verboseHlt2=true;
-  bool iv=(m_verboseL0||m_verboseHlt1||m_verboseHlt2);
+  if(isVerbose()) m_verboseL0=m_verboseHlt1=m_verboseHlt2=m_verboseStripping=true;
+  bool iv=(m_verboseL0||m_verboseHlt1||m_verboseHlt2||m_verboseStripping);
   
   if(m_triggerList.size() != 0 && !iv)
   {
@@ -83,7 +89,7 @@ StatusCode TupleToolTriggerBase::initialize( )
   {
     warning() << "You have not set a list of triggers to look for, but have asked for verbose output. " 
               << endmsg;
-    m_verboseL0 = m_verboseHlt1 = m_verboseHlt2 =false;
+    m_verboseL0 = m_verboseHlt1 = m_verboseHlt2 = m_verboseStripping =false;
   }
 
   //bug, missing this line
@@ -120,7 +126,7 @@ StatusCode TupleToolTriggerBase::fill( const LHCb::Particle* M
   
   
   //Fill details about the requested triggers
-  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2 || isVerbose()) 
+  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2 || m_verboseStripping || isVerbose()) 
     test &=fillVerbose(M, P, head, tuple);
   
   return StatusCode(test);
@@ -135,7 +141,7 @@ StatusCode TupleToolTriggerBase::fill(Tuples::Tuple& tuple )
   test &= fillBasic(tuple);
   
   //Fill details about the requested triggers
-  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2 || isVerbose()) test &=fillVerbose(tuple);
+  if(m_verboseL0 || m_verboseHlt1 || m_verboseHlt2 || m_verboseStripping || isVerbose()) test &=fillVerbose(tuple);
   
   return StatusCode(test);
   
@@ -153,6 +159,7 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
   boost::regex l0("L0.*Decision");
   boost::regex hlt1("Hlt1.*Decision");
   boost::regex hlt2("Hlt2.*Decision");
+  boost::regex strip("Stripping.*Decision");
   
   //m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
   for( std::vector< std::string >::const_iterator s=list.begin();s != list.end();++s)
@@ -169,6 +176,10 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
     {
       m_hlt2.push_back(*s);
     }
+    if( boost::regex_match( *s,  strip ) ) 
+    {
+      m_stripping.push_back(*s);
+    }
   }
   
   
@@ -182,6 +193,9 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
      debug() <<endmsg;
      debug() << " ==== HLT2 ==== " << endmsg;
      for (std::vector<std::string>::const_iterator s=m_hlt2.begin();s != m_hlt2.end();++s) debug() << " " << (*s);
+     debug() <<endmsg;
+     debug() << " ==== STRIPPING ==== " << endmsg;
+     for (std::vector<std::string>::const_iterator s=m_stripping.begin();s != m_stripping.end();++s) debug() << " " << (*s);
      debug() <<endmsg;
      debug() << " ==== Compiled list ====" << endmsg;
   }

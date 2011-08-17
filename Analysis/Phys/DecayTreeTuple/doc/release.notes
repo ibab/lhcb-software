@@ -1,8 +1,14 @@
-----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2011-08-17 - Rob Lambert
+ - Add Stripping TisTos ability to TUpleToolTISTOS,
+   . requires .TriggerTisTosName = "TESTisTos"
+   .          .FillXXX=False
+   .          .FillStripping=True  
 
 ! 2011-08-10 - Patrick Koppenburg
  - TupleToolEventInfo : 
