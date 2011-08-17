@@ -388,11 +388,11 @@ void ROFarmMonitor::update( )   {
                n > ns->nodes.end()   ||
                n == prev ) {
             FILE* dump = fopen( "/home/ocallot/FarmMonitor.log", "w" );
-            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %16.16x end %16.16x  current %16.16x", 
+            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p", 
                      (*itP)->name.c_str(), ns->nodes.begin(), ns->nodes.end(), n );
             prev = ns->nodes.begin();
             while ( prev != n ) {
-              fprintf( dump, "add %16.16x node %s", prev, (*prev).name );
+              fprintf( dump, "add %p node %s", prev, (*prev).name );
               prev = ns->nodes.next( prev );
             }
             fclose( dump );
