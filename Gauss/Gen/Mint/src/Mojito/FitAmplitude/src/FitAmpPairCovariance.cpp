@@ -1,7 +1,7 @@
 
-#include "Mint/FitAmpPairCovariance.h"
-#include "Mint/FitAmpPairList.h"
-#include "Mint/Utils.h"
+#include "FitAmpPairCovariance.h"
+#include "FitAmpPairList.h"
+#include "Utils.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -3,9 +3,9 @@
 #include <cmath>
 #include <string>
 
-#include "Mint/CLHEPPhysicalConstants.h"
+#include "CLHEPPhysicalConstants.h"
 
-#include "Mint/FitComplexCart.h"
+#include "FitComplexCart.h"
 
 
 using namespace std;

@@ -1,6 +1,6 @@
 
-#include "Mint/GSSpinFactor.h"
-#include "Mint/CLHEPSystemOfUnits.h"
+#include "GSSpinFactor.h"
+#include "CLHEPSystemOfUnits.h"
 
 #include <iostream>
 

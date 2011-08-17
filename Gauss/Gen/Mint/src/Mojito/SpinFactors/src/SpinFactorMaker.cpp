@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
 
-#include "Mint/SpinFactorMaker.h"
-#include "Mint/Utils.h"
-#include "Mint/DecayTree.h"
-#include "Mint/DecayTreeComparisons.h"
-#include "Mint/ISpinFactor.h"
-#include "Mint/SpinFactor.h"
-#include "Mint/SpinFactors.h"
+#include "SpinFactorMaker.h"
+#include "Utils.h"
+#include "DecayTree.h"
+#include "DecayTreeComparisons.h"
+#include "ISpinFactor.h"
+#include "SpinFactor.h"
+#include "SpinFactors.h"
 #include <iostream>
 
 using namespace std;

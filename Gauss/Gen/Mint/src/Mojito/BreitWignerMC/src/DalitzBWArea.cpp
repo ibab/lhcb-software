@@ -1,17 +1,17 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/DalitzBWArea.h"
+#include "DalitzBWArea.h"
 
-#include "Mint/TGenPhaseSpaceWithRnd.h"
-#include "Mint/phaseSpaceIntegrals.h"
+#include "TGenPhaseSpaceWithRnd.h"
+#include "phaseSpaceIntegrals.h"
 
-#include "Mint/FlatFct.h"
-#include "Mint/IGenFct.h"
+#include "FlatFct.h"
+#include "IGenFct.h"
 
-#include "Mint/DalitzEvent.h"
-#include "Mint/Calculate4BodyProps.h"
+#include "DalitzEvent.h"
+#include "Calculate4BodyProps.h"
 
-#include "Mint/Utils.h"
+#include "Utils.h"
 
 #include "TRandom.h"
 

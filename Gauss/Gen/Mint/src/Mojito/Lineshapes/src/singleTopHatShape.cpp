@@ -1,8 +1,8 @@
 #include <sstream>
 
-#include "Mint/singleTopHatShape.h"
-//#include "Mint/Utils.h"
-#include "Mint/FlatFct.h"
+#include "singleTopHatShape.h"
+//#include "Utils.h"
+#include "FlatFct.h"
 
 singleTopHatShape::singleTopHatShape( const AssociatedDecayTree& decay
 				      , IDalitzEventAccess* events

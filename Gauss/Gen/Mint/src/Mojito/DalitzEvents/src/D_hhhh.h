@@ -18,12 +18,13 @@
 //MINT
 #include "SignalGenerator.h"
 #include "IDalitzEvent.h"
+#include "Mint/IMintGen.h"
 
 //ROOT
 #include "TVector3.h"
 
 namespace MINT {
-	class MintGen {
+	class MintGen : virtual public IMintGen{
 	public:
 		MintGen();
 		virtual ~MintGen();

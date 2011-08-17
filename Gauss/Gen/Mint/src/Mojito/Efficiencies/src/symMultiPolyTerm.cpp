@@ -1,5 +1,5 @@
-#include "Mint/symMultiPolyTerm.h"
-#include "Mint/Utils.h"
+#include "symMultiPolyTerm.h"
+#include "Utils.h"
 #include <iostream>
 
 using namespace std;

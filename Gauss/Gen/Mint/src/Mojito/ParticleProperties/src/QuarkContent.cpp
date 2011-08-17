@@ -1,4 +1,4 @@
-#include "Mint/QuarkContent.h"
+#include "QuarkContent.h"
 #include <vector>
 #include <iostream>
 

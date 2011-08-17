@@ -5,16 +5,21 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
-
+! 16-08-2011 - Matt Coombes
+ - Created Interface IMintGen.h
+ - Moved header files to private
+ - Export only IMintGen.h
+ - Corrected Include statements to return to 'old' structure
+ 
 ! 16-08-2011 - Matt Coombes
  - Major changes to structure in order to release into Gauss
- - Intorduced test/ folder for test jobs.
+ - Introduced test/ folder for test jobs.
  - Test .C files renamed as .cpp
  - Test files now call header files from Mint/
  
 ! 15-08-2011 - Matt Coombes
  - Major changes to structure in order to release into Gauss
- - Intorduced Mint/ folder with exported header files
+ - Introduced Mint/ folder with exported header files
  - All Mint header files must now be imported with #import "Mint/header.h"
  - Renamed all source .C files with .cpp. Needed in order to release
  

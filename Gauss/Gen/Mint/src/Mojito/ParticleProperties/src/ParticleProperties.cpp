@@ -1,10 +1,10 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:04 GMT
-#include "Mint/ParticleProperties.h"
-#include "Mint/CLHEPPhysicalConstants.h"
-#include "Mint/CLHEPSystemOfUnits.h"
-#include "Mint/NamedParameter.h"
-#include "Mint/Utils.h"
+#include "ParticleProperties.h"
+#include "CLHEPPhysicalConstants.h"
+#include "CLHEPSystemOfUnits.h"
+#include "NamedParameter.h"
+#include "Utils.h"
 
 
 #include <cstdio>

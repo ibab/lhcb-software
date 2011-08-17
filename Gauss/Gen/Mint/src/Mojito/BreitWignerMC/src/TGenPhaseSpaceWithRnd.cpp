@@ -1,4 +1,4 @@
-#include "Mint/TGenPhaseSpaceWithRnd.h"
+#include "TGenPhaseSpaceWithRnd.h"
 // copy of TGenPhaseSpace, replacing gRandom with _rnd.
 
 /*

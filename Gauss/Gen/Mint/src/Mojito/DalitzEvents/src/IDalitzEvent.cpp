@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/IDalitzEvent.h"
+#include "IDalitzEvent.h"
 
 bool EqualEvent(const IDalitzEvent* a, const IDalitzEvent* b){
 

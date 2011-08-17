@@ -1,10 +1,10 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/DalitzHistoSet.h"
+#include "DalitzHistoSet.h"
 
-#include "Mint/AllPossibleSij.h"
-#include "Mint/IDalitzEvent.h"
-#include "Mint/NamedParameter.h"
+#include "AllPossibleSij.h"
+#include "IDalitzEvent.h"
+#include "NamedParameter.h"
 
 #include "TTree.h"
 #include "TFile.h"

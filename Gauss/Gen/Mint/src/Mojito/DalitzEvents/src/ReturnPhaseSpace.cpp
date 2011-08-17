@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/ReturnPhaseSpace.h"
+#include "ReturnPhaseSpace.h"
 using namespace MINT;
 
 ReturnPhaseSpace::ReturnPhaseSpace(IDalitzEventAccess* evts)

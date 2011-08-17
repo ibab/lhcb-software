@@ -1,6 +1,6 @@
 
-#include "Mint/IDalitzEvent.h"
-#include "Mint/Chi2Box.h"
+#include "IDalitzEvent.h"
+#include "Chi2Box.h"
 
 using namespace std;
 

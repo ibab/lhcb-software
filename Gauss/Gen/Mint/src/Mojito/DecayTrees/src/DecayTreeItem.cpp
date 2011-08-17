@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
 
-#include "Mint/DecayTreeItem.h"
-#include "Mint/ParticlePropertiesList.h"
+#include "DecayTreeItem.h"
+#include "ParticlePropertiesList.h"
 
 
 DecayTreeItem::DecayTreeItem(int i)

@@ -5,11 +5,11 @@
 #include <algorithm>
 #include <vector>
 
-#include "Mint/FitAmplitude.h"
-#include "Mint/NamedDecayTreeList.h"
+#include "FitAmplitude.h"
+#include "NamedDecayTreeList.h"
 
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/DecayTree.h"
+#include "IDalitzEventAccess.h"
+#include "DecayTree.h"
 
 using namespace std;
 using namespace MINT;

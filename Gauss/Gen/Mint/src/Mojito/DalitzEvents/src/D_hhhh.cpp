@@ -5,7 +5,7 @@
  *      Author: mcoombes
  */
 //Local
-#include "Mint/D_hhhh.h"
+#include "D_hhhh.h"
 
 //C++
 #include <iostream>
@@ -14,8 +14,8 @@
 #include "TRandom3.h"
 
 //MINT
-#include "Mint/SignalGenerator.h"
-#include "Mint/ParticlePropertiesList.h"
+#include "SignalGenerator.h"
+#include "ParticlePropertiesList.h"
 
 using namespace std;
 using namespace MINT;

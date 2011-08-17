@@ -1,15 +1,15 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
-#include "Mint/Permutation.h"
+#include "Permutation.h"
 
-#include "Mint/Permutator.h"
-#include "Mint/DalitzEventPattern.h"
-#include "Mint/DalitzEventList.h"
+#include "Permutator.h"
+#include "DalitzEventPattern.h"
+#include "DalitzEventList.h"
 
 
-#include "Mint/DecayTree.h"
+#include "DecayTree.h"
 
-#include "Mint/Amplitude.h"
+#include "Amplitude.h"
 
 
 #include <iostream>

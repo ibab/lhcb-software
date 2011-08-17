@@ -1,13 +1,13 @@
 
-#include "Mint/DalitzPdfSaveInteg.h"
+#include "DalitzPdfSaveInteg.h"
 
-#include "Mint/IDalitzEventList.h"
+#include "IDalitzEventList.h"
 #include <string>
 #include "TRandom.h"
 #include "TRandom3.h"
-#include "Mint/SignalGenerator.h"
-#include "Mint/FromFileGenerator.h"
-#include "Mint/IFastAmplitudeIntegrable.h"
+#include "SignalGenerator.h"
+#include "FromFileGenerator.h"
+#include "IFastAmplitudeIntegrable.h"
 
 using namespace std;
 using namespace MINT;

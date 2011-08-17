@@ -1,17 +1,17 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:05 GMT
-#include "Mint/FitParameter.h"
-#include "Mint/NamedParameter.h"
-#include "Mint/CLHEPPhysicalConstants.h"
+#include "FitParameter.h"
+#include "NamedParameter.h"
+#include "CLHEPPhysicalConstants.h"
 
-#include "Mint/FitAmplitude.h"
-#include "Mint/FitAmpSum.h"
+#include "FitAmplitude.h"
+#include "FitAmpSum.h"
 
-#include "Mint/DalitzEvent.h"
+#include "DalitzEvent.h"
 
-#include "Mint/AmpRatios.h"
+#include "AmpRatios.h"
 
-#include "Mint/cexp.h"
+#include "cexp.h"
 
 
 #include "TGraph.h"

@@ -1,10 +1,10 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:55 GMT
-#include "Mint/MinuitParameterSet.h"
+#include "MinuitParameterSet.h"
 
 #include "TFile.h"
 #include "TNtupleD.h"
-#include "Mint/Utils.h"
+#include "Utils.h"
 
 #include <algorithm>
 #include <iostream>

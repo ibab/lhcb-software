@@ -1,6 +1,6 @@
 
-#include "Mint/Eff4piSymmetric.h"
-#include "Mint/CLHEPSystemOfUnits.h"
+#include "Eff4piSymmetric.h"
+#include "CLHEPSystemOfUnits.h"
 
 using namespace std;
 using namespace MINT;

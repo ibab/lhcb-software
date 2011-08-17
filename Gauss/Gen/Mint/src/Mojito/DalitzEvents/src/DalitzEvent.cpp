@@ -4,10 +4,10 @@
 #include <cmath>
 #include <algorithm>
 
-#include "Mint/DalitzEvent.h"
-#include "Mint/Utils.h"
-#include "Mint/CLHEPSystemOfUnits.h"
-#include "Mint/CLHEPPhysicalConstants.h"
+#include "DalitzEvent.h"
+#include "Utils.h"
+#include "CLHEPSystemOfUnits.h"
+#include "CLHEPPhysicalConstants.h"
 
 #include "TRandom.h"
 #include "TGenPhaseSpace.h"

@@ -1,4 +1,4 @@
-#include "Mint/Chi2Box.h"
+#include "Chi2Box.h"
 
 int main(){
 

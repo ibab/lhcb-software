@@ -1,4 +1,4 @@
-#include "Mint/FitFraction.h"
+#include "FitFraction.h"
 
 using namespace std;
 

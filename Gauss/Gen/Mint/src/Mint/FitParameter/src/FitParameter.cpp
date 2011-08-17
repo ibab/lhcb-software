@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:55 GMT
-#include "Mint/FitParameter.h"
-#include "Mint/MinuitParameterSet.h"
+#include "FitParameter.h"
+#include "MinuitParameterSet.h"
 
 #include <iostream>
 using namespace std;

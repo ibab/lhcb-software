@@ -2,14 +2,14 @@
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 #include <cmath>
 
-#include "Mint/BW_BW.h"
-#include "Mint/ParticleProperties.h"
+#include "BW_BW.h"
+#include "ParticleProperties.h"
 //#include "fitSetup.h"
-#include "Mint/CLHEPSystemOfUnits.h"
-#include "Mint/CLHEPPhysicalConstants.h"
+#include "CLHEPSystemOfUnits.h"
+#include "CLHEPPhysicalConstants.h"
 
-#include "Mint/BWFct.h"
-#include "Mint/FlatFct.h"
+#include "BWFct.h"
+#include "FlatFct.h"
 
 using namespace std;
 using namespace MINT;

@@ -2,10 +2,10 @@
 // status:  Mon 9 Feb 2009 19:18:01 GMT
 #include <iostream>
 
-#include "Mint/IDalitzEvent.h"
-#include "Mint/DalitzEvent.h"
-#include "Mint/DalitzEventList.h"
-#include "Mint/DiskResidentEventList.h"
+#include "IDalitzEvent.h"
+#include "DalitzEvent.h"
+#include "DalitzEventList.h"
+#include "DiskResidentEventList.h"
 using namespace std;
 using namespace MINT;
 

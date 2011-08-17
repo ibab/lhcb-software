@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/phaseSpaceIntegrals.h"
-#include "Mint/NamedParameter.h"
-#include "Mint/DalitzEventPattern.h"
+#include "phaseSpaceIntegrals.h"
+#include "NamedParameter.h"
+#include "DalitzEventPattern.h"
 
 #include <iostream>
 

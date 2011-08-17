@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:12 GMT
-#include "Mint/SpinFactor.h"
-#include "Mint/Utils.h"
+#include "SpinFactor.h"
+#include "Utils.h"
 #include <algorithm> // for swap
 #include <cstdlib>
 

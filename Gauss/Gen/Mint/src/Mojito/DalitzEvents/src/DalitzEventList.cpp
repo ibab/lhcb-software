@@ -1,11 +1,11 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/DalitzEventList.h"
-#include "Mint/DalitzEvent.h"
-#include "Mint/FitAmpSum.h"
-#include "Mint/AllPossibleSij.h"
+#include "DalitzEventList.h"
+#include "DalitzEvent.h"
+#include "FitAmpSum.h"
+#include "AllPossibleSij.h"
 
-#include "Mint/IReturnReal.h"
+#include "IReturnReal.h"
 
 #include "TRandom.h"
 #include "TH1D.h"
@@ -15,7 +15,7 @@
 
 #include "TTree.h"
 
-#include "Mint/counted_ptr.h"
+#include "counted_ptr.h"
 
 #include <iostream>
 #include <ctime>

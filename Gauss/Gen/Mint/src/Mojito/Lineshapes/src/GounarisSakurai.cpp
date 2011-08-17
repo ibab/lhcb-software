@@ -6,8 +6,8 @@
 //           http://link.aps.org/doi/10.1103/PhysRevLett.21.244
 //
 
-#include "Mint/GounarisSakurai.h"
-//#include "Mint/CLHEPPhysicalConstants.h"
+#include "GounarisSakurai.h"
+//#include "CLHEPPhysicalConstants.h"
 #include "TMath.h"
 
 #include <cmath>

@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/NamedDecayTreeList.h"
-#include "Mint/AmpInitialiser.h"
-#include "Mint/DecayTreeComparisons.h"
-#include "Mint/Utils.h"
+#include "NamedDecayTreeList.h"
+#include "AmpInitialiser.h"
+#include "DecayTreeComparisons.h"
+#include "Utils.h"
 
 #include <fstream>
 

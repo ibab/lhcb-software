@@ -1,10 +1,10 @@
-#include "Mint/IDalitzEventList.h"
+#include "IDalitzEventList.h"
 
-#include "Mint/Chi2Binning.h"
-#include "Mint/Chi2Box.h"
-#include "Mint/Chi2BoxSet.h"
+#include "Chi2Binning.h"
+#include "Chi2Box.h"
+#include "Chi2BoxSet.h"
 
-#include "Mint/DalitzHistoStackSet.h"
+#include "DalitzHistoStackSet.h"
 
 #include "TCanvas.h"
 #include "TH1D.h"

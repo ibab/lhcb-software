@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/DalitzEventPtrList.h"
-#include "Mint/DalitzEvent.h"
-#include "Mint/FitAmpSum.h"
-#include "Mint/AllPossibleSij.h"
+#include "DalitzEventPtrList.h"
+#include "DalitzEvent.h"
+#include "FitAmpSum.h"
+#include "AllPossibleSij.h"
 
 #include "TRandom.h"
 #include "TH1D.h"

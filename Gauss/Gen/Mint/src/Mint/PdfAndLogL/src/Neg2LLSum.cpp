@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
-#include "Mint/Neg2LLSum.h"
-#include "Mint/IMinimisable.h"
+#include "Neg2LLSum.h"
+#include "IMinimisable.h"
 
 using namespace MINT;
 

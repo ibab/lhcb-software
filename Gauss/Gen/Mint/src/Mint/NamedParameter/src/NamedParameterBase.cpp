@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
 
-#include "Mint/NamedParameterBase.h"
-#include "Mint/ParsedParameterFileList.h"
-#include "Mint/ParsedParameterFile.h"
+#include "NamedParameterBase.h"
+#include "ParsedParameterFileList.h"
+#include "ParsedParameterFile.h"
 
 using namespace std;
 using namespace MINT;

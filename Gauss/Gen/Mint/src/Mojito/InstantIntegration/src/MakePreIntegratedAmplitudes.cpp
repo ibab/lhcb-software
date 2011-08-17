@@ -1,10 +1,10 @@
-#include "Mint/MakePreIntegratedAmplitudes.h"
+#include "MakePreIntegratedAmplitudes.h"
 
-#include "Mint/SignalGenerator.h"
-#include "Mint/FromFileGenerator.h"
+#include "SignalGenerator.h"
+#include "FromFileGenerator.h"
 
-#include "Mint/FastAmplitudeIntegrator.h"
-#include "Mint/FitAmpSum.h"
+#include "FastAmplitudeIntegrator.h"
+#include "FitAmpSum.h"
 
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#include "Mint/SumOfFitAmpLists.h"
+#include "SumOfFitAmpLists.h"
 
 using namespace std;
 using namespace MINT;

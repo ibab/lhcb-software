@@ -5,24 +5,24 @@
 
 #include "TError.h"
 
-#include "Mint/DalitzEvent.h"
-#include "Mint/DalitzEventList.h"
+#include "DalitzEvent.h"
+#include "DalitzEventList.h"
 
-#include "Mint/DalitzBWArea.h"
-#include "Mint/DalitzBWBox.h"
-#include "Mint/MappedDalitzBWArea.h"
-#include "Mint/DalitzCoordinate.h"
+#include "DalitzBWArea.h"
+#include "DalitzBWBox.h"
+#include "MappedDalitzBWArea.h"
+#include "DalitzCoordinate.h"
 
-#include "Mint/FitAmpSum.h"
-#include "Mint/DalitzHistoSet.h"
-#include "Mint/DalitzPdfBase.h"
+#include "FitAmpSum.h"
+#include "DalitzHistoSet.h"
+#include "DalitzPdfBase.h"
 
-#include "Mint/Utils.h"
+#include "Utils.h"
 
-#include "Mint/NamedParameter.h"
+#include "NamedParameter.h"
 
-#include "Mint/Amplitude.h"
-#include "Mint/ReturnWeight.h"
+#include "Amplitude.h"
+#include "ReturnWeight.h"
 
 #include "TRandom3.h"
 

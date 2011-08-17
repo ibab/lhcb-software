@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/phaseSpaceIntegrals.h"
+#include "phaseSpaceIntegrals.h"
 
-#include "Mint/CLHEPPhysicalConstants.h"
-#include "Mint/lambda.h"
+#include "CLHEPPhysicalConstants.h"
+#include "lambda.h"
 
 #include <iostream>
 #include <cmath>

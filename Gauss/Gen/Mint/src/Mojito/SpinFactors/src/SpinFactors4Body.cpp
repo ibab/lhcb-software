@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
-#include "Mint/SpinFactors.h"
-#include "Mint/DecayTree.h"
-#include "Mint/Utils.h"
-#include "Mint/CLHEPSystemOfUnits.h"
+#include "SpinFactors.h"
+#include "DecayTree.h"
+#include "Utils.h"
+#include "CLHEPSystemOfUnits.h"
 
-#include "Mint/ZTspin1.h"
-#include "Mint/ZTspin2.h"
-#include "Mint/LeviCivita.h"
+#include "ZTspin1.h"
+#include "ZTspin2.h"
+#include "LeviCivita.h"
 
 // These come from:
 // D. Coffman et al: "Resonant substructure in Kbar pi pi pi decays of D mesons"

@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/Phase.h"
+#include "Phase.h"
 #include <cmath>
-#include "Mint/CLHEPPhysicalConstants.h"
+#include "CLHEPPhysicalConstants.h"
 
 using namespace std;
 using namespace MINT;

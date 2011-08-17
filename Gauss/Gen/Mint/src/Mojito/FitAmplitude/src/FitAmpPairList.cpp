@@ -1,14 +1,14 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/FitAmpPairList.h"
+#include "FitAmpPairList.h"
 
-#include "Mint/IDalitzEvent.h"
-#include "Mint/FitAmplitude.h"
-#include "Mint/FitAmpPairFitCovariance.h"
+#include "IDalitzEvent.h"
+#include "FitAmplitude.h"
+#include "FitAmpPairFitCovariance.h"
 
-#include "Mint/Minimiser.h"
+#include "Minimiser.h"
 
-#include "Mint/Utils.h"
+#include "Utils.h"
 
 //#include <io.h>
 #include <sys/types.h>

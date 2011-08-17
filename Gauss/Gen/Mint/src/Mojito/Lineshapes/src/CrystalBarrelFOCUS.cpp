@@ -1,7 +1,7 @@
-#include "Mint/CrystalBarrelFOCUS.h"
+#include "CrystalBarrelFOCUS.h"
 
-#include "Mint/ParticlePropertiesList.h"
-#include "Mint/CLHEPSystemOfUnits.h"
+#include "ParticlePropertiesList.h"
+#include "CLHEPSystemOfUnits.h"
 #include <complex>
 #include <cmath>
 

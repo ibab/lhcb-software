@@ -1,14 +1,14 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/Utils.h"
+#include "Utils.h"
 #include <iostream>
 #include <string>
 
-//#include "Mint/GaussFct.h"
+//#include "GaussFct.h"
 #include "TH1F.h"
 #include "TFile.h"
 
-#include "Mint/counted_ptr.h"
+#include "counted_ptr.h"
 
 using namespace std;
 using namespace MINT;

@@ -1,10 +1,10 @@
 
-#include "Mint/FitAmpSum.h"
-#include "Mint/FitAmpPairList.h"
-#include "Mint/NamedParameter.h"
+#include "FitAmpSum.h"
+#include "FitAmpPairList.h"
+#include "NamedParameter.h"
 
-#include "Mint/MakePreIntegratedAmplitudes.h"
-#include "Mint/DiskResidentEventList.h"
+#include "MakePreIntegratedAmplitudes.h"
+#include "DiskResidentEventList.h"
 
 #include <iostream>
 #include <string>

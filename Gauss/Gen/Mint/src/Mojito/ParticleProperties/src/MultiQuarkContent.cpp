@@ -1,4 +1,4 @@
-#include "Mint/MultiQuarkContent.h"
+#include "MultiQuarkContent.h"
 
 using namespace std;
 

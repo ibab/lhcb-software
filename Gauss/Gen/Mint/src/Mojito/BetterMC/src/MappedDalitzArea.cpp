@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/MappedDalitzArea.h"
-#include "Mint/Permutator.h"
+#include "MappedDalitzArea.h"
+#include "Permutator.h"
 #include <iostream>
 #include <algorithm>
 

@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/FitAmpList.h"
+#include "FitAmpList.h"
 
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/FitAmplitude.h"
-#include "Mint/MinuitParameterSet.h"
-#include "Mint/NamedDecayTreeList.h"
-#include "Mint/FitAmplitude.h"
-#include "Mint/FitAmpPairList.h"
+#include "IDalitzEventAccess.h"
+#include "FitAmplitude.h"
+#include "MinuitParameterSet.h"
+#include "NamedDecayTreeList.h"
+#include "FitAmplitude.h"
+#include "FitAmpPairList.h"
 
 #include <iostream>
 

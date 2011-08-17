@@ -1,5 +1,5 @@
 
-#include "Mint/DalitzCoordSet.h"
+#include "DalitzCoordSet.h"
 #include <algorithm>
 
 using namespace std;

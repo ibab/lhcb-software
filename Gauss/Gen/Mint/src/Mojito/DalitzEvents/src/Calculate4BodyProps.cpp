@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:59 GMT
-#include "Mint/Calculate4BodyProps.h"
+#include "Calculate4BodyProps.h"
 
 #include <iostream>
 #include <vector>
@@ -10,9 +10,9 @@
 #include "TMatrixDSym.h"
 #include "TLorentzVector.h"
 
-#include "Mint/CLHEPPhysicalConstants.h"
+#include "CLHEPPhysicalConstants.h"
 
-#include "Mint/Utils.h"
+#include "Utils.h"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "Mint/DalitzHistoStackSet.h"
+#include "DalitzHistoStackSet.h"
 #include "TCanvas.h"
 #include "TList.h"
 #include "TPaletteAxis.h"

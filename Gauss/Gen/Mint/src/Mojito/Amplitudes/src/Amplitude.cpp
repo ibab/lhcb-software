@@ -1,12 +1,12 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/Amplitude.h"
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/SpinFactorMaker.h"
-#include "Mint/LineshapeMaker.h"
-#include "Mint/Utils.h"
+#include "Amplitude.h"
+#include "IDalitzEventAccess.h"
+#include "SpinFactorMaker.h"
+#include "LineshapeMaker.h"
+#include "Utils.h"
 
-#include "Mint/Permutator.h"
+#include "Permutator.h"
 
 #include <algorithm>
 
