@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !=============================== 2011-08-16 v3r1 =============================
+! 2011-08-17 - Olivier Callot
+ - Revisit reference normalisation.
+
 ! 2011-08-12 - Olivier Callot
  - Log in the logbook when a monitoring alarm is cleared.
  - Clearing alarm available only if shift-crew = true in the configuration

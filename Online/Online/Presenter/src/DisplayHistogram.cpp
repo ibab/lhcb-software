@@ -165,7 +165,7 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
 //=========================================================================
 void DisplayHistogram::normalizeReference ( ) {
   if ( m_referenceHist ) {
-    double normFactor = 0.; //m_referenceHist->GetNormFactor();
+    double normFactor = 0.;
 
     std::string refOption = pres::s_Area;
     std::string sopt;
