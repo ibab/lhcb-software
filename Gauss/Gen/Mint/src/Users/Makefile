@@ -2,7 +2,7 @@
 include $(PWD)/../../Makefile.arch
 
 HdrSuf = h
-SrcSuf = C
+SrcSuf = cpp
 MintDir = $(PWD)/../../../Mint
 MojitoDir = $(PWD)/../../../Mojito
 

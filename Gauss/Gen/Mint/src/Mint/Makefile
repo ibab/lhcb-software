@@ -2,7 +2,7 @@
 include ../../Makefile.arch
 
 HdrSuf = h
-SrcSuf = C
+SrcSuf = cpp
 
 MOREINCS := $(wildcard $(PWD)/../../*/src)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))

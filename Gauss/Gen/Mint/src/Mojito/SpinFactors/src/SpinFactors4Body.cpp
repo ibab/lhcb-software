@@ -1061,7 +1061,7 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_P::printYourself(ostream& os) const{
 // -------------------------------------
 
 double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
-  bool dbThis=false;
+  bool dbThis=true
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
   
   TLorentzVector pV = p(0) + p(1);
@@ -1088,6 +1088,8 @@ double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
     cout << " SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal "
 	 << " returning " << returnVal
 	 << endl;
+    double altVal = LeviCivita(p(0), p(1), p(2), p(3))/(GeV*GeV*GeV*GeV);
+    cout << "check: " << altVal << " ratio: " << altVal/returnVal << endl;
   }
   return returnVal;
   
