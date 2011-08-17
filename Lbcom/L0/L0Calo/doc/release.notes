@@ -3,6 +3,9 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2011-08-17 - Patrick Robbe
+ - L0CaloPRSResetMonitor: tune alarm algorithm
+
 ! 2011-08-11 - Patrick Robbe
  - L0CaloCompare.cpp: add counters of errors
 

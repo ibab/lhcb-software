@@ -32,7 +32,7 @@ L0CaloPRSResetMonitor::L0CaloPRSResetMonitor( const std::string& name,
   m_alarm  ( 0 ) { 
   declareProperty( "InputData"       , 
                    m_inputData  = LHCb::L0CaloCandidateLocation::Full ) ;  
-  declareProperty( "UpdateFrequency" , m_updateFrequency = 1000 )  ;
+  declareProperty( "UpdateFrequency" , m_updateFrequency = 80 )  ;
 
   // define alarm published service
   declareInfo( "L0CaloPRSReset" , m_alarm ,
@@ -93,7 +93,7 @@ StatusCode L0CaloPRSResetMonitor::execute() {
 
   if ( 0 == candidates ) return StatusCode::SUCCESS ;
 
-  int card( 0 ) ;
+  int card( 0 ) , crate( 0 ) , slot( 0 ) ;
 
   bool oneElectronFound = false ;
 
@@ -112,15 +112,23 @@ StatusCode L0CaloPRSResetMonitor::execute() {
     card = m_ecal -> cardNumber( theCand -> id() ) ;
     if ( 0 != m_electronCounter.count( card ) ) 
       m_electronCounter[ card ] = m_electronCounter[ card ] + 1 ;
+
+    // Count the candidates in the extreme boards
+    crate = m_ecal -> cardCrate( card ) ;
+    slot  = m_ecal -> cardSlot( card ) ;
+    if ( ( ( crate == 8 ) && ( slot == 1 ) ) ||
+         ( ( crate == 8 ) && ( slot == 13 ) ) || 
+         ( ( crate == 21 ) && ( slot == 1 ) ) || 
+         ( ( crate == 21 ) && ( slot == 13 ) ) ) 
+      m_nEvents++ ;
   }
 
   if ( ! oneElectronFound ) return StatusCode::SUCCESS ;
 
-  m_nEvents++ ;
-
   // Analyse counters at the requested frequency
-  if ( m_nEvents % m_updateFrequency == 0 ) {
+  if ( m_nEvents > m_updateFrequency ) {
     bool found = false ;
+    m_nEvents = 0 ;
     std::map< int , int >::iterator it = m_electronCounter.begin() ;
     while ( it != m_electronCounter.end() ) {
       found = ( it -> second == 0 ) ;

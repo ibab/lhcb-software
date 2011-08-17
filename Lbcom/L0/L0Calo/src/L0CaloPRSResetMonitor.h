@@ -46,7 +46,7 @@ private:
   /** Frequency with which the search of empty boards is launched.
    *  Set by option.
    */
-  int  m_updateFrequency ;
+  unsigned int  m_updateFrequency ;
 
   /// Alarm flag set when one board is missing in the L0Electron trigger
   int  m_alarm ;
