@@ -165,20 +165,19 @@ void DisplayHistogram::setReferenceHistogram( TH1* ref ) {
 //=========================================================================
 void DisplayHistogram::normalizeReference ( ) {
   if ( m_referenceHist ) {
-    double normFactor = m_referenceHist->GetNormFactor();
+    double normFactor = 0.; //m_referenceHist->GetNormFactor();
 
     std::string refOption = pres::s_Area;
     std::string sopt;
     if ( hasOption("REF", &sopt) ) refOption = sopt;
     if (pres::s_Entries == refOption) {
-      normFactor = m_rootHistogram->GetEntries();
-      m_referenceHist->SetNormFactor(normFactor);
+      normFactor = m_rootHistogram->Integral() * m_rootHistogram->GetEntries() / m_referenceHist->GetEntries();
     } else if (pres::s_Area == refOption) {
       normFactor = m_rootHistogram->Integral();
     }
 
     m_referenceHist->SetNormFactor(normFactor);
-    std::cout << "Normalization of reference = " << normFactor << std::endl;
+    std::cout << "Normalization of reference option " << refOption  << " value = " << normFactor << std::endl;
   }
 }
 //=========================================================================
@@ -393,7 +392,6 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
     gStyle->SetStatStyle(statStyle); // apparently, this must be called before SetOptStat
     gStyle->SetOptStat( statOpt );
     m_statPave = (TPaveStats*)m_rootHistogram->GetListOfFunctions()->FindObject("stats");
-    std::cout << "StatPave = " << m_statPave << std::endl;
     if (m_statPave) {
       double x1=m_statPave->GetX1NDC();
       double x2=m_statPave->GetX2NDC();
@@ -927,7 +925,6 @@ void DisplayHistogram::saveOptionsToDB ( TPad* pad ) {
     TPaveStats* stats = (TPaveStats*)m_rootHistogram->GetListOfFunctions() ->FindObject("stats");
     // if histogram has not been plotted (or has been plotted without stats), do nothing
     if (stats && m_statPave && stats != m_statPave ) {
-      std::cout << "Update state pave add " << m_statPave << std::endl;
 
       iopt = (int) stats->GetOptStat();
       // 111110 seems to be hardcoded in root
