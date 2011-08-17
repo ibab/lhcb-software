@@ -1061,7 +1061,7 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_P::printYourself(ostream& os) const{
 // -------------------------------------
 
 double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
-  bool dbThis=true
+  bool dbThis=true;
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
   
   TLorentzVector pV = p(0) + p(1);

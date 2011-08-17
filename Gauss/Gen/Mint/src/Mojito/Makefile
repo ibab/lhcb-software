@@ -7,6 +7,7 @@ MintDir = $(PWD)/../../../Mint
 
 MOREINCS := $(wildcard $(PWD)/../../*/src)
 MOREINCS += $(wildcard $(MintDir)/*/src)
+MOREINCS += $(wildcard $(MintDir)/../..)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
 
@@ -14,7 +15,7 @@ LIBS += -lMinuit
 LIBS += $(shell clheplib)
 LIBS += -lHepMC
 
-PROG = $(shell grep -l main *.C | sed 's/\.C//g')
+PROG = $(shell grep -l main *.cpp | sed 's/\.cpp//g')
 
 SRCS := $(wildcard ../../*/src/*.$(SrcSuf))
 SRCS += $(wildcard $(MintDir)/*/src/*.$(SrcSuf))
@@ -22,6 +23,7 @@ SRCS += $(wildcard *.$(SrcSuf))
 HDRS := $(wildcard ../../*/src/*.$(HdrSuf))
 HDRS += $(wildcard $(MintDir)/*/src/*.$(HdrSuf))
 HDRS += $(wildcard *.$(HdrSuf))
+HDRS += $(wildcard $(MintDir)/../../Mint/*.$(HdrSuf))
 OBJS := $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS))
 ##OBJS := $(shell echo $(OBJS) | sed 's/\/src\//\/bin\//g')
 SRCSLOCAL += $(wildcard *.$(SrcSuf))

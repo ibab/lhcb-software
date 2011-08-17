@@ -1,31 +1,25 @@
 
-include $(PWD)/../../Makefile.arch
+include ../../Makefile.arch
 
 HdrSuf = h
 SrcSuf = cpp
-MintDir = $(PWD)/../../../Mint
-MojitoDir = $(PWD)/../../../Mojito
+MintDir = $(PWD)/../../../../src/Mint
 
 MOREINCS := $(wildcard $(PWD)/../../*/src)
 MOREINCS += $(wildcard $(MintDir)/*/src)
-MOREINCS += $(wildcard $(MojitoDir)/*/src)
-MOREINCS += $(wildcard $(MintDir)/../../Mint)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
 
 LIBS += -lMinuit
 
-PROG = $(shell grep -l main *.C | sed 's/\.C//g')
+PROG = $(shell grep -l main *.cpp | sed 's/\.cpp//g')
 
 SRCS := $(wildcard ../../*/src/*.$(SrcSuf))
 SRCS += $(wildcard $(MintDir)/*/src/*.$(SrcSuf))
-SRCS += $(wildcard $(MojitoDir)/*/src/*.$(SrcSuf))
 SRCS += $(wildcard *.$(SrcSuf))
 HDRS := $(wildcard ../../*/src/*.$(HdrSuf))
-HDRS += $(wildcard $(MintDir)/*/src/*.$(HdrSuf))
-HDRS += $(wildcard $(MojitoDir)/*/src/*.$(HdrSuf))
 HDRS += $(wildcard *.$(HdrSuf))
-HDRS += $(wildcard $(MintDir)/../../Mint/*.$(HdrSuf))
+HDRS += $(wildcard $(MintDir)/*/src/*.$(HdrSuf))
 OBJS := $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS))
 ##OBJS := $(shell echo $(OBJS) | sed 's/\/src\//\/bin\//g')
 SRCSLOCAL += $(wildcard *.$(SrcSuf))
@@ -57,15 +51,15 @@ debug:
 	@echo "objects " $(OBJS)
 	@echo "pwd " $(PWD)
 	@echo "CXXFLAGS " $(CXXFLAGS)
-	@echo "MintDir " $(MintDir)
+
 $(PROG): $(OBJS)
 	@echo ""; echo " =============== linking ===================="; echo ""
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $(PROG)  -lprofiler
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $(PROG)
 	@echo ""; echo " =============== linking done ==============="; echo ""
 
 include .depend
 
 %.(ObjSuf): %.$(SrcSuf)
 	$(CXX) $(CXXFLAGS) -c $<
-##-ltcmalloc
+##
 # DO NOT DELETE

@@ -9,13 +9,14 @@ MojitoDir = $(PWD)/../../../Mojito
 MOREINCS := $(wildcard $(PWD)/../../*/src)
 MOREINCS += $(wildcard $(MintDir)/*/src)
 MOREINCS += $(wildcard $(MojitoDir)/*/src)
+MOREINCS += $(wildcard $(MintDir)/../..)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
 
 LIBS += -lMinuit
-LIBS += -lprofiler
+#LIBS += -lprofiler
 
-PROG = $(shell grep -l main *.C | sed 's/\.C//g')
+PROG = $(shell grep -l main *.cpp | sed 's/\.cpp//g')
 
 SRCS := $(wildcard ../../*/src/*.$(SrcSuf))
 SRCS += $(wildcard $(MintDir)/*/src/*.$(SrcSuf))
@@ -23,6 +24,7 @@ SRCS += $(wildcard $(MojitoDir)/*/src/*.$(SrcSuf))
 SRCS += $(wildcard *.$(SrcSuf))
 HDRS := $(wildcard ../../*/src/*.$(HdrSuf))
 HDRS += $(wildcard $(MintDir)/*/src/*.$(HdrSuf))
+HDRS += $(wildcard $(MintDir)/../../Mint/*.$(HdrSuf))
 HDRS += $(wildcard $(MojitoDir)/*/src/*.$(HdrSuf))
 HDRS += $(wildcard *.$(HdrSuf))
 OBJS := $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS))

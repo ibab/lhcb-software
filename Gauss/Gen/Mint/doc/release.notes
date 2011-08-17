@@ -5,7 +5,12 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
-! 16-08-2011 - Matt Coombes
+! 17-08-2011 - Jonas Rademacker
+ - Added DalitzFits/4pi_gamma 
+   as method for fitting for gamma using 4pi model
+
+
+! 17-08-2011 - Matt Coombes
  - Created Interface IMintGen.h
  - Moved header files to private
  - Export only IMintGen.h
