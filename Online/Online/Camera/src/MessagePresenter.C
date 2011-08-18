@@ -451,8 +451,6 @@ void MessagePresenter::addwarning(const std::string & msg,int ref)
 int MessagePresenter::GetXtra(const std::string & str , std::string & cachedfile)
 {
 
-  writeCacheFile();
-
   std::string::size_type position1 = str.find("/");
 
   if (position1 == std::string::npos){ // cpb format check
@@ -529,6 +527,8 @@ int MessagePresenter::GetXtra(const std::string & str , std::string & cachedfile
     // std::cerr << "Error Connecting"<<std::endl;
     return -1;
   }
+
+  writeCacheFile();
 
   return 1;
 }
@@ -652,44 +652,46 @@ void MessagePresenter::DoClose(){
 }
 
 void  MessagePresenter::selectWarn(){
-  writeCacheFile();
   //  cout << "selected warn "<<fTextButton659->IsOn()<<endl;
   dowarn = fTextButton659->IsOn();
   UpdateRight();
+  writeCacheFile();
 }
 
 void  MessagePresenter::selectErr(){
-  writeCacheFile();
   //cout << "selected Err "<< fTextButton514->IsOn()<<endl;
   doerr = fTextButton514->IsOn();
   UpdateRight();
+  writeCacheFile();
 }
 
 void  MessagePresenter::selectRun(){
-  writeCacheFile();
   //cout << "selected Err "<< fTextButton514->IsOn()<<endl;
   dorun = fstopped->IsOn();
   UpdateRight();
+  writeCacheFile();
 }
 
 void  MessagePresenter::selectInfo(){
-  writeCacheFile();
   //cout << "selected Info "<<fTextButton699->IsOn()<<endl;
   doinfo = fTextButton699->IsOn();
   UpdateRight();
+  writeCacheFile();
 }
 
 void MessagePresenter::selectleft(){
-  writeCacheFile();
   //cout << "selectleft"<<endl;
   UpdateRight();
+  writeCacheFile();
 
 }
+
 static const char *gFiletypes[] = { "All files",     "*",
                                     "Portable Network Graphics",    "*.png",
                                     "Portable Document Format",    "*.pdf",
                                     "Encapsulated Postscript",   "*.eps",
                                     0,               0 };
+
 void MessagePresenter::dumpmsg(){
   Int_t i =  fListBox863->GetSelected();
   if (i<0) return;
@@ -759,8 +761,7 @@ void MessagePresenter::selectright(){
 
   Int_t i =  fListBox863->GetSelected();
 
-  if (
-      extradata[i]==""){
+  if ( extradata[i]==""){
 
     return ;
 
@@ -778,6 +779,8 @@ void MessagePresenter::selectright(){
   else{
     fStatusBar528->SetText("Error retrieving extra data.");
   }
+
+  writeCacheFile();
   //  new TCanvas;
 }
 
@@ -1082,6 +1085,7 @@ void MessagePresenter::clearlist()
 {
   allpairs.clear();
   UpdateRight();
+  clearCacheFile();
 }
 
 std::string MessagePresenter::getCacheFilename()
@@ -1098,6 +1102,12 @@ std::string MessagePresenter::getCacheFilename()
     to = "./" + _cache_name_;
   }
   return to;
+}
+
+void MessagePresenter::clearCacheFile()
+{
+  std::ofstream file(cachefileName.c_str());
+  file.close();
 }
 
 void MessagePresenter::writeCacheFile(const bool force)

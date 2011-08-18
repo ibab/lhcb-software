@@ -120,6 +120,7 @@ private:
   void writeCacheFile(const bool force = false);
   void readCacheFile();
   std::string getCacheFilename();
+  void clearCacheFile();
 
   void UpdateView();
   void UpdateRight();
