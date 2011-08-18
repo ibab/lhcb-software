@@ -375,9 +375,11 @@ void MessagePresenter::addwarning(const std::string & msg,int ref)
     std::cerr << "Malformed message: "<<msg<<"="<<sstr<<std::endl;
     return;
   }
-  std::string key = sstr.substr(0,position1);
-  std::string val = sstr.substr(position1+1);
-  std::string level =  sstr.substr(position1+1,1);
+  const std::string key   = sstr.substr(0,position1);
+  const std::string val   = sstr.substr(position1+1);
+  const std::string level = sstr.substr(position1+1,1);
+  
+  //cout << key << " | " << val << " | " << level << endl;
 
   allpairs.push_back(msg);
   //val  val;
@@ -1084,6 +1086,10 @@ void MessagePresenter::messageloop(char * host,char * file)
 void MessagePresenter::clearlist()
 {
   allpairs.clear();
+  keys.clear();
+  levels.clear();
+  cachedWarnings.clear();
+  UpdateView();
   UpdateRight();
   clearCacheFile();
 }
