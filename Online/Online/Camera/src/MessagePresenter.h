@@ -91,7 +91,7 @@ private:
   bool dowarn,doerr,doinfo,dorun;
   int savepos;
   
-  std::string cachefileName;
+  std::string cachefileName,xcachefileName;
   std::vector<std::string> cachedWarnings;
   bool writeCacheON;
 
@@ -122,6 +122,8 @@ private:
 
   void UpdateView();
   void UpdateRight();
+
   ClassDef(MessagePresenter,1)
+
 };
 #endif

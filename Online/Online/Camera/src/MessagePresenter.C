@@ -404,8 +404,9 @@ void MessagePresenter::addwarning(const std::string & msg,int ref)
   {
     keys.insert(std::pair<std::string,int>(key,1));
   }
-  else{
-    (*it).second++;
+  else
+  {
+    ++(*it).second;
   }
 
   it = levels.find(key);
@@ -460,25 +461,23 @@ int MessagePresenter::GetXtra(const std::string & str, std::string & cachedfile)
     return 0;
   }
 
-  std::string add = str.substr(0,position1);
-  std::string file = str.substr(position1+1);
+  std::string add  = str.substr(0,position1);
+  const std::string file = str.substr(position1+1);
 
-  const std::string to = getXCacheFilename();
+  const std::string& to = xcachefileName;
 
-  if (getenv("CAMPROXY")!=NULL)
+  char * camproxy = getenv("CAMPROXY");
+  if (camproxy)
   {
-    add = (std::string)getenv("CAMPROXY");
+    add = (std::string)camproxy;
     // cerr << "Using proxy "<< getenv("CAMPROXY") <<endl;
   }
 
   std::string::size_type position2 = add.find(":");
-  std::string host,port;
+  std::string host(add),port("8888");
 
-  host = add;
-  port = "8888";
-
-
-  if (position2 != std::string::npos){
+  if (position2 != std::string::npos)
+  {
     host = add.substr(0,position2);
     port = add.substr(position2+1);
   }
@@ -492,7 +491,8 @@ int MessagePresenter::GetXtra(const std::string & str, std::string & cachedfile)
   //   }
 
   FILE *F = fopen(to.c_str(),"wb");
-  if (F==NULL){
+  if (F==NULL)
+  {
     std::cerr<< "Could not open cache file: "<<to.c_str()<<endl;
     perror("fopen in GetXtra:");
     return 0;
@@ -704,7 +704,8 @@ void MessagePresenter::dumpmsg(){
   new TGFileDialog(fClient->GetDefaultRoot(), this, kFDSave, &fi);
   overwr = fi.fOverwrite;
   std::string namestub;
-  if (fi.fFilename && strlen(fi.fFilename)) {
+  if (fi.fFilename && strlen(fi.fFilename))
+  {
     std::string s = fi.fFilename;
 
     savdir = fi.fIniDir;
@@ -762,13 +763,11 @@ void MessagePresenter::selectright(){
 
   }
   std::string cfile;
-  if ( GetXtra(extradata[i],cfile)> 0){
-
+  if ( GetXtra(extradata[i],cfile)> 0)
+  {
     if (iwAlive < 1) iw = new InfoWindow(&iwAlive);
     if (iwAlive < 2) iw->display();
-
     if (iwAlive>1) iw ->ShowCont(cfile);
-
   }
 
   else{
@@ -813,6 +812,8 @@ MessagePresenter::MessagePresenter(): TGMainFrame()
   Pgreen=TColor::RGB2Pixel(80,255,80);
   Pyellow=TColor::RGB2Pixel(242,242,60);
 
+  cachefileName  = getCacheFilename();
+  xcachefileName = getXCacheFilename();
 
   savdir = ".";
   savname = "msg.png";
@@ -821,10 +822,9 @@ MessagePresenter::MessagePresenter(): TGMainFrame()
   // char *dummy_argv[] =  { "MP", NULL  };
   //m_TApplication = new TApplication("MessagePresenter",&dummy_argc,dummy_argv);
 
-
   lastleft=time(NULL);
   lastright=time(NULL);
-  savepos =-2;
+  savepos = -2;
 }
 
 void MessagePresenter::display(){
@@ -934,8 +934,6 @@ void MessagePresenter::messageloop(char * host,char * file)
 {
 
   //  MessagePresenter mp(NULL,100,100);
-
-  cachefileName = getCacheFilename();
 
   getwarnings(file);
 
@@ -1094,8 +1092,7 @@ std::string MessagePresenter::getCacheFilename()
   char * camcache = getenv("CAMCACHE");
   if ( camcache )
   {
-    to = (std::string)camcache;
-    to = to + "/" + _cache_name_;
+    to = (std::string)camcache + "/" + _cache_name_;
   }
   else
   {
@@ -1113,8 +1110,7 @@ std::string MessagePresenter::getXCacheFilename()
   char * camcache = getenv("CAMCACHE");
   if ( camcache )
   {
-    to = (std::string)camcache;
-    to = to + "/" + _cache_name_;
+    to = (std::string)camcache + "/" + _cache_name_;
   }
   else
   {
