@@ -450,7 +450,7 @@ void MessagePresenter::addwarning(const std::string & msg,int ref)
 
 }
 
-int MessagePresenter::GetXtra(const std::string & str , std::string & cachedfile)
+int MessagePresenter::GetXtra(const std::string & str, std::string & cachedfile)
 {
 
   std::string::size_type position1 = str.find("/");
@@ -463,17 +463,10 @@ int MessagePresenter::GetXtra(const std::string & str , std::string & cachedfile
   std::string add = str.substr(0,position1);
   std::string file = str.substr(position1+1);
 
-  const std::string _cache_name_ = "camera_cached_extra_info.tmp";
-  std::string to;
-  if (getenv("CAMCACHE")!=NULL){
-    to = (std::string)getenv("CAMCACHE");
-    to = to + "/" + _cache_name_;
-  }
-  else{
-    to = "./" + _cache_name_;
-  }
+  const std::string to = getXCacheFilename();
 
-  if (getenv("CAMPROXY")!=NULL){
+  if (getenv("CAMPROXY")!=NULL)
+  {
     add = (std::string)getenv("CAMPROXY");
     // cerr << "Using proxy "<< getenv("CAMPROXY") <<endl;
   }
@@ -1096,17 +1089,39 @@ void MessagePresenter::clearlist()
 
 std::string MessagePresenter::getCacheFilename()
 {
-  const std::string _cache_name_ = "camera_cached_messages.tmp";
+  const std::string _cache_name_ = "camera_messages.cache";
   std::string to;
-  if ( getenv("CAMCACHE") != NULL )
+  char * camcache = getenv("CAMCACHE");
+  if ( camcache )
   {
-    to = (std::string)getenv("CAMCACHE");
+    to = (std::string)camcache;
     to = to + "/" + _cache_name_;
   }
   else
   {
     to = "./" + _cache_name_;
   }
+  char * user = getenv("USER"); 
+  if ( user ) to = to + "." + (std::string)user;
+  return to;
+}
+
+std::string MessagePresenter::getXCacheFilename()
+{
+  const std::string _cache_name_ = "camera_extra_info.cache";
+  std::string to;
+  char * camcache = getenv("CAMCACHE");
+  if ( camcache )
+  {
+    to = (std::string)camcache;
+    to = to + "/" + _cache_name_;
+  }
+  else
+  {
+    to = "./" + _cache_name_;
+  }
+  char * user = getenv("USER"); 
+  if ( user ) to = to + "." + (std::string)user;
   return to;
 }
 

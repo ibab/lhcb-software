@@ -7,10 +7,7 @@
 
 #include "container_ROOT.h"
 
-
 #include "TApplication.h" 
-
-
 
 #include <TGMdiMainFrame.h> 
 #include <TGButton.h> 
@@ -120,6 +117,7 @@ private:
   void writeCacheFile(const bool force = false);
   void readCacheFile();
   std::string getCacheFilename();
+  std::string getXCacheFilename();
   void clearCacheFile();
 
   void UpdateView();
