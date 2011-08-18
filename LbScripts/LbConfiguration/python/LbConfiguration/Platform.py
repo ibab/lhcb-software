@@ -461,9 +461,9 @@ class NativeMachine:
                     cvers = [int(c) for c in self.nativeCompilerVersion(position=2).split(".")]
                     self._compiler = "gcc%d%d" % (cvers[0], cvers[1])
                     if cvers[0] == 3 and cvers[1] < 4 :
-                        self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
+                        self._compiler = "gcc%s" % self.nativeCompilerVersion(position=3).replace(".","")
                     if self._ostype == "Darwin" and self.OSVersion(position=2) == "10.5" :
-                        self._compiler = "gcc%s" %self.nativeCompilerVersion(position=3).replace(".","")
+                        self._compiler = "gcc%s" % self.nativeCompilerVersion(position=3).replace(".","")
                 except :
                     self._compiler = None
         return self._compiler
@@ -610,7 +610,7 @@ class NativeMachine:
         try:
             import multiprocessing
             return multiprocessing.cpu_count()
-        except (ImportError,NotImplementedError):
+        except (ImportError, NotImplementedError):
             pass
 
         # POSIX
@@ -619,7 +619,7 @@ class NativeMachine:
 
             if res > 0:
                 return res
-        except (AttributeError,ValueError):
+        except (AttributeError, ValueError):
             pass
 
         # Windows
