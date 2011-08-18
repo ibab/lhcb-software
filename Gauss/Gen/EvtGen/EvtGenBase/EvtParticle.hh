@@ -28,6 +28,7 @@
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtSpinType.hh"
 #include <string>
+#include <vector>
 
 class EvtDiracSpinor;
 class EvtVector4C;
@@ -156,6 +157,13 @@ public:
   * is left uninitialized, this is _only_ creation.
   */ 
   void makeDaughters(unsigned int ndaug,EvtId *id);
+
+  /**
+  * Creates the daughters in the list of ids and 
+  * adds them to the parent. Note that momentum
+  * is left uninitialized, this is _only_ creation.
+  */ 
+  void makeDaughters(unsigned int ndaug, std::vector<EvtId> idVector);
 
   /**
   * Similar to the routine above except that here 

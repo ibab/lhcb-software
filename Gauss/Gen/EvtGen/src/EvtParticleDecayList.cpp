@@ -108,6 +108,19 @@ void EvtParticleDecayList::removeDecay(){
   
 }
 
+EvtDecayBase* EvtParticleDecayList::getDecayModel(int imode) {
+
+  EvtDecayBase* theModel(0);
+  if (imode >= 0 && imode < _nmode) {
+    EvtParticleDecay* theDecay = _decaylist[imode];
+    if (theDecay != 0) {
+      theModel = theDecay->getDecayModel();
+    }
+  }
+
+  return theModel;
+
+}
 
 EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
 
@@ -276,6 +289,7 @@ void EvtParticleDecayList::addMode(EvtDecayBase* decay, double brfrsum,
       if ( newDec->getModelName() == "JSCONT" || newDec->getModelName() == "PYCONT" ) continue;
       if ( newDec->getModelName() == "PYGAGA"  ) continue;
       if ( newDec->getModelName() == "LUNDAREALAW" ) continue;
+      if ( newDec->getModelName() == "TAUOLA") continue;
       report(ERROR,"EvtGen") << "Two matching decays with same parent in decay table\n";
       report(ERROR,"EvtGen") << "Please fix that\n";
       report(ERROR,"EvtGen") << "Parent " << EvtPDL::name(newDec->getParentId()).c_str() << endl;

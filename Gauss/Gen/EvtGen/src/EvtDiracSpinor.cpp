@@ -118,9 +118,10 @@ void EvtDiracSpinor::applyBoostTo(const EvtVector3R& boost) {
     return;
   }
 
-  assert(b2<1.0);
+  //assert(b2<1.0);
 
-  gamma=1.0/sqrt(1-b2);
+  gamma=1.0;
+  if (b2 < 1.0) {gamma = 1.0/sqrt(1.0-b2);}
   
   f1=sqrt((gamma+1.0)/2.0);
   f2=f1*gamma/(gamma+1.0);

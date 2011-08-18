@@ -157,10 +157,18 @@ int EvtSpinDensity::check(){
 
   int i,j;
 
+  double trace(0.0);
+
+  for (i=0;i<dim;i++) {
+    trace += abs(rho[i][i]);
+  }
+
   for(i=0;i<dim;i++){
 
     if (real(rho[i][i])<0.0) return 0;
-    if (imag(rho[i][i])*1000000.0>abs(rho[i][i])) {
+    if (imag(rho[i][i])*1000000.0>trace) {
+      report(INFO,"EvtGen") << *this << endl;
+      report(INFO,"EvtGen") << trace << endl;
       report(INFO,"EvtGen") << "Failing 1"<<endl;
       return 0;
     }

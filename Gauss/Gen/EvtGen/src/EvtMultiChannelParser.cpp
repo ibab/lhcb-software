@@ -197,7 +197,7 @@ void EvtMultiChannelParser::parse(const std::vector<std::string>& v)
       }
     
 
-    assert(i > i0); _unused( i0 ) ;
+    assert(i > i0); _unused( i0 );
   }
 
   printf("PARSING SUCCESSFUL\n");

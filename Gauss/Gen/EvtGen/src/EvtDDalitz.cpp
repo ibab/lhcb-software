@@ -265,24 +265,6 @@ void EvtDDalitz::init(){
      if ( d3==KP && d2==KM && d1==PIM ) { _flag=6; _d1=2; _d2=1; _d3=0; }
   }
 
-  if ( parnum == DP ) {
-     if ( d1==KM && d2==KP && d3==PIP ) { _flag=7; _d1=0; _d2=1; _d3=2; }
-     if ( d1==KM && d3==KP && d2==PIP ) { _flag=7; _d1=0; _d2=2; _d3=1; }
-     if ( d2==KM && d1==KP && d3==PIP ) { _flag=7; _d1=1; _d2=0; _d3=2; }
-     if ( d2==KM && d3==KP && d1==PIP ) { _flag=7; _d1=2; _d2=0; _d3=1; }
-     if ( d3==KM && d1==KP && d2==PIP ) { _flag=7; _d1=1; _d2=2; _d3=0; }
-     if ( d3==KM && d2==KP && d1==PIP ) { _flag=7; _d1=2; _d2=1; _d3=0; }
-  }
-
-  if ( parnum == DM ) {
-     if ( d1==KP && d2==KM && d3==PIM ) { _flag=7; _d1=0; _d2=1; _d3=2; }
-     if ( d1==KP && d3==KM && d2==PIM ) { _flag=7; _d1=0; _d2=2; _d3=1; }
-     if ( d2==KP && d1==KM && d3==PIM ) { _flag=7; _d1=1; _d2=0; _d3=2; }
-     if ( d2==KP && d3==KM && d1==PIM ) { _flag=7; _d1=2; _d2=0; _d3=1; }
-     if ( d3==KP && d1==KM && d2==PIM ) { _flag=7; _d1=1; _d2=2; _d3=0; }
-     if ( d3==KP && d2==KM && d1==PIM ) { _flag=7; _d1=2; _d2=1; _d3=0; }
-  }
-
   if ( _flag==6) {
     _kkpi_params.push_back(EvtFlatteParam(MPI, MPI, 0.406));
     _kkpi_params.push_back(EvtFlatteParam(MKP, MKP, 0.800));
@@ -304,8 +286,6 @@ void EvtDDalitz::initProbMax() {
   if ( _flag==4 ) {setProbMax(3000.0);}
   if ( _flag==5 ) {setProbMax(10000000.0);}
   if ( _flag==6 ) {setProbMax(50000.0);}
-  if ( _flag==7 ) {setProbMax(50000.0);}
-
 
 }
 
@@ -334,7 +314,7 @@ void EvtDDalitz::decay( EvtParticle *p){
     EvtId parId = p -> getParent()->getId ();                              
     if ( ( BP == parId ) || ( BM == parId ) || ( B0 == parId ) ||              
 	               ( B0B == parId ) )
-      if (EvtDecayTable::getDecayFunc(p->getParent())->getName() == "BTODDALITZCPK") isBToDK=true;   
+      if (EvtDecayTable::getInstance()->getDecayFunc(p->getParent())->getName() == "BTODDALITZCPK") isBToDK=true;   
   }                                                                            
   
 
@@ -400,13 +380,13 @@ void EvtDDalitz::decay( EvtParticle *p){
 
     if ( isBToDK ) {
       // Gamma angle in rad.                                                                       
-      double gamma = EvtDecayTable::getDecayFunc( p->getParent() )
+      double gamma = EvtDecayTable::getInstance()->getDecayFunc( p->getParent() )
         -> getArg( 0 )  ;
       // Strong phase in rad.                                                                      
-      double delta =  EvtDecayTable::getDecayFunc( p->getParent() )
+      double delta =  EvtDecayTable::getInstance()->getDecayFunc( p->getParent() )
         -> getArg( 1 )  ;
       // Ratio between B->D0K and B->D0barK                                                        
-      double A     =  EvtDecayTable::getDecayFunc( p->getParent() )
+      double A     =  EvtDecayTable::getInstance()->getDecayFunc( p->getParent() )
         -> getArg( 2 )  ;
 
       EvtComplex Factor( fabs( A ) * cos ( delta ) ,
@@ -483,13 +463,13 @@ void EvtDDalitz::decay( EvtParticle *p){
 
     if ( isBToDK ){
       // Gamma angle in rad.                                                                       
-      double gamma = EvtDecayTable::getDecayFunc( p->getParent() )
+      double gamma = EvtDecayTable::getInstance()->getDecayFunc( p->getParent() )
         -> getArg( 0 )  ;
       // Strong phase in rad.                                                                      
-      double delta =  EvtDecayTable::getDecayFunc( p->getParent() )
+      double delta =  EvtDecayTable::getInstance()->getDecayFunc( p->getParent() )
         -> getArg( 1 )  ;
       // Ratio between B->D0K and B->D0barK                                                        
-      double A     =  EvtDecayTable::getDecayFunc( p->getParent() )
+      double A     =  EvtDecayTable::getInstance()->getDecayFunc( p->getParent() )
         -> getArg( 2 )  ;
 
       EvtComplex Factor( fabs( A ) * cos ( delta ) ,
@@ -549,23 +529,8 @@ void EvtDDalitz::decay( EvtParticle *p){
 
   }
 
-  //D+ -> K K pi
-  //CLEO PRD 78, 072003 (2008) Fit A
-  if(_flag==7) {
-    EvtResonance2 DpKKpiRes1(p4_p, moms1, moms3, 1.0, 0.0, 0.0503, 0.8960, 1, true); // K*(892)
-    EvtResonance2 DpKKpiRes2(p4_p, moms1, moms3, 3.7, 73., 0.290, 1.414, 0); // K*_0(1430)
-    EvtResonance2 DpKKpiRes3(p4_p, moms1, moms2, 1.189, -179.+180, 0.00426, 1.019455, 1, true); // phi(1020)
-    EvtResonance2 DpKKpiRes4(p4_p, moms1, moms2, 1.72, 123., 0.265, 1.474, 0); // a_0(1450)
-    EvtResonance2 DpKKpiRes5(p4_p, moms1, moms2, 1.9, -52.+180, 0.15, 1.68, 1, true); // phi(1680)
-    EvtResonance2 DpKKpiRes6(p4_p, moms1, moms3, 6.4, 150., 0.109, 1.4324, 2, true); // K*_2(1430)    
-    double pi180inv = 1.0/EvtConst::radToDegrees;    
-    amp = EvtComplex(5.1*cos(53.0*pi180inv),5.1*sin(53.0*pi180inv)) +
-      DpKKpiRes1.resAmpl() + DpKKpiRes2.resAmpl() + DpKKpiRes3.resAmpl()
-      + DpKKpiRes4.resAmpl() + DpKKpiRes5.resAmpl() + DpKKpiRes6.resAmpl();
-  }
-  
-  
-    vertex(amp);
+
+  vertex(amp);
 
   return ;
 }

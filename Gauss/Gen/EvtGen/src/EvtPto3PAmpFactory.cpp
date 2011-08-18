@@ -104,7 +104,7 @@ void EvtPto3PAmpFactory::processAmp(EvtComplex c, std::vector<std::string> vv, b
     // RESONANCE stanza
     
     pairRes = strToPair(vv[1].c_str());
-    EvtSpinType::spintype spinR = EvtSpinType::SCALAR ;
+    EvtSpinType::spintype spinR = EvtSpinType::SCALAR;
     double mR, gR;      
     name = vv[2];
     EvtId resId = EvtPDL::getId(vv[2]);
@@ -238,7 +238,7 @@ void EvtPto3PAmpFactory::processAmp(EvtComplex c, std::vector<std::string> vv, b
 	if(vv[i+1] == "MIN") {
 	  i++;
 	  double min = strtod(vv[++i].c_str(),0);
-	  if(_verbose) std::cout<<"CUTOFF MIN = "<<min<< " " << minwidths<< std::endl;
+	  if(_verbose) std::cout<<"CUTOFF MIN = "<<min<<" "<<minwidths<<std::endl;
 	  //ensure against cutting off too close to the resonance
 	  assert( min<(mR-minwidths*gR) );
 	  partAmp->setmin(min);
@@ -246,7 +246,7 @@ void EvtPto3PAmpFactory::processAmp(EvtComplex c, std::vector<std::string> vv, b
 	else if (vv[i+1] == "MAX") {
 	  i++;
 	  double max = strtod(vv[++i].c_str(),0);
-	  if(_verbose) std::cout<<"CUTOFF MAX = "<<max<<std::endl;
+	  if(_verbose) std::cout<<"CUTOFF MAX = "<<max<<" "<<minwidths<<std::endl;
 	  //ensure against cutting off too close to the resonance
 	  assert( max>(mR+minwidths*gR) );
 	  partAmp->setmax(max);

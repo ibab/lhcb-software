@@ -384,7 +384,7 @@ double EvtPropSLPole::calcMaxProb( EvtId parent, EvtId meson,
   trino=root_part->getDaug(2);
 
   EvtDecayBase *decayer;
-  decayer = EvtDecayTable::getDecayFunc(daughter);
+  decayer = EvtDecayTable::getInstance()->getDecayFunc(daughter);
   if ( decayer ) {
     daughter->makeDaughters(decayer->nRealDaughters(),decayer->getDaugs());
     for(int ii=0; ii<decayer->nRealDaughters(); ii++){

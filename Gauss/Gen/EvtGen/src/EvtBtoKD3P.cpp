@@ -101,11 +101,11 @@ void EvtBtoKD3P::decay(EvtParticle *p){
   // Get the D daughter particle and the decay models of the allowed
   // and suppressed D modes:
   EvtParticle * theD = p->getDaug(D1IND); 
-  EvtPto3P * model1 = (EvtPto3P*)(EvtDecayTable::getDecayFunc(theD));
+  EvtPto3P * model1 = (EvtPto3P*)(EvtDecayTable::getInstance()->getDecayFunc(theD));
 
   // for the suppressed mode, re-initialize theD as the suppressed D alias:
   theD->init(getDaug(D2IND), theD->getP4());
-  EvtPto3P * model2 = (EvtPto3P*)(EvtDecayTable::getDecayFunc(theD));
+  EvtPto3P * model2 = (EvtPto3P*)(EvtDecayTable::getInstance()->getDecayFunc(theD));
 
   // on the first call: 
   if (false == _decayedOnce) {

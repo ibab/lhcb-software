@@ -194,7 +194,7 @@ EvtSpinDensity EvtAmp::getSpinDensity(){
 	int kk;
 
         int allloop = 1;
-        for (kk=0;kk<(_nontrivial-1); kk++ ) {
+        for (kk=0;kk<_ndaug; kk++ ) {
 	  allloop *= dstates[kk];
 	}
         
@@ -413,13 +413,9 @@ EvtSpinDensity EvtAmp::contract(int k,const EvtAmp& amp2){
 }
 
 
-EvtAmp EvtAmp::contract(int i, const EvtAmp& a1,const EvtAmp& a2){
+EvtAmp EvtAmp::contract(int, const EvtAmp&,const EvtAmp&) {
   
   //Do we need this method?
-
-  assert(a2._pstates>1&&a2._nontrivial==1); _unused( a2 ) ;
-  assert(i<=a1._nontrivial); _unused( i ) ; _unused( a1 ) ;
-
   EvtAmp tmp;
   report(DEBUG,"EvtGen") << "EvtAmp::contract not written yet" << endl;
   return tmp;

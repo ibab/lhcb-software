@@ -20,8 +20,7 @@
 // 
 #include "EvtGenBase/EvtPatches.hh"
 #include <iostream>
-#include <math.h>
-#include <assert.h>
+#include <cmath>
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtVector3R.hh"
 #include "EvtGenBase/EvtVector4C.hh"
@@ -131,40 +130,34 @@ void EvtVector4R::applyBoostTo(const EvtVector3R& boost){
 
   b2=bxx+byy+bzz;
 
+  if (b2 > 0.0 && b2 < 1.0) {
 
-  if (b2==0.0){
-    return;
+    gamma=1.0/sqrt(1.0-b2);
+
+    double gb2=(gamma-1.0)/b2;
+
+    double gb2xy=gb2*bx*by;
+    double gb2xz=gb2*bx*bz;
+    double gb2yz=gb2*by*bz;
+
+    double gbx=gamma*bx;
+    double gby=gamma*by;
+    double gbz=gamma*bz;
+
+    double e2=v[0];
+    double px2=v[1];
+    double py2=v[2];
+    double pz2=v[3];
+
+    v[0]=gamma*e2+gbx*px2+gby*py2+gbz*pz2;
+    
+    v[1]=gbx*e2+gb2*bxx*px2+px2+gb2xy*py2+gb2xz*pz2;
+
+    v[2]=gby*e2+gb2*byy*py2+py2+gb2xy*px2+gb2yz*pz2;
+
+    v[3]=gbz*e2+gb2*bzz*pz2+pz2+gb2yz*py2+gb2xz*px2;
+
   }
-
-  assert(b2<1.0);
-
-  gamma=1.0/sqrt(1-b2);
-
-
-  double gb2=(gamma-1.0)/b2;
-
-  double gb2xy=gb2*bx*by;
-  double gb2xz=gb2*bx*bz;
-  double gb2yz=gb2*by*bz;
-
-  double gbx=gamma*bx;
-  double gby=gamma*by;
-  double gbz=gamma*bz;
-
-  double e2=v[0];
-  double px2=v[1];
-  double py2=v[2];
-  double pz2=v[3];
-
-  v[0]=gamma*e2+gbx*px2+gby*py2+gbz*pz2;
-
-  v[1]=gbx*e2+gb2*bxx*px2+px2+gb2xy*py2+gb2xz*pz2;
-
-  v[2]=gby*e2+gb2*byy*py2+py2+gb2xy*px2+gb2yz*pz2;
-
-  v[3]=gbz*e2+gb2*bzz*pz2+pz2+gb2yz*py2+gb2xz*px2;
-
-  return;
 
 }
 

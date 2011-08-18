@@ -23,6 +23,8 @@
 //                               and hold on to it untill done generating
 //                               events. This class will now hold data used
 //                               for the lifetime of the generator.
+//    JBack   June 2011          Added HepMC event interface.
+//
 //------------------------------------------------------------------------
 
 #ifndef EVTGEN_HH
@@ -39,6 +41,7 @@ class EvtStdHep;
 class EvtSpinDensity;
 class EvtAbsRadCorr;
 class EvtDecayBase;
+class EvtHepMCEvent;
 
 class EvtGen{
 
@@ -53,8 +56,9 @@ public:
 
   void readUDecay(const char* const udecay_name);
 
-  void generateDecay(int stdhepid, EvtVector4R P, EvtVector4R D,
-		     EvtStdHep *evtStdHep,EvtSpinDensity *spinDensity=0);
+  EvtHepMCEvent* generateDecay(int PDGid, EvtVector4R refFrameP4,
+			       EvtVector4R translation,
+			       EvtSpinDensity* spinDensity = 0);
 
   void generateDecay(EvtParticle *p);
 
@@ -62,6 +66,9 @@ private:
 
   EvtPDL _pdl;
   int _mixingType;
+  bool _initExternalGenerators;
+
+  void initExternalGenerators();
 
 };
 

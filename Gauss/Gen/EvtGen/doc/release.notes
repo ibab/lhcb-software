@@ -4,6 +4,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-08-11 - John Back
+ - Major changes to use Pythia 8 instead of Pythia 6, including the use of
+   the new C++ interfaced packages of Photos and Tauola (with the new model 
+   name TAUOLA available). The Pythia and Photos model names are unchanged 
+   (they are still called PYTHIA and PHOTOS). See doc/Pythia8_README.txt and 
+   doc/Tauola_README.txt for more details about the use of the new external
+   generators. 
+   EvtGen can now also write out generated decay tree(s) as an HepMC event 
+   structure using EvtGenBase/EvtHepMCEvent. Modified the static class 
+   interface of EvtGenBase/EvtDecayTable to use the singleton pattern.
+
 !========================== EvtGen v12r2 2011-08-18 ==========================
 ! 2011-08-11 - John Back
  - Added Bc -> V + npi and Bc -> P + npi decay models 

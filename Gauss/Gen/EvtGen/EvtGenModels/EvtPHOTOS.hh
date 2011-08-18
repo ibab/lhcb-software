@@ -27,18 +27,20 @@
 #include <string>
 
 class EvtParticle;
+class EvtAbsExternalGen;
 
-class EvtPHOTOS : public EvtAbsRadCorr{
+class EvtPHOTOS : public EvtAbsRadCorr {
 
 public:
     
-    //The photon type to use
-    EvtPHOTOS(std::string photontype="gamma"); 
-	      
-    void doRadCorr(EvtParticle *p);
+  EvtPHOTOS();
+  virtual ~EvtPHOTOS();
+
+  virtual void doRadCorr(EvtParticle *p);
 
 private:
-    std::string _photontype;
+
+  EvtAbsExternalGen* _photosEngine;
 
 };
 

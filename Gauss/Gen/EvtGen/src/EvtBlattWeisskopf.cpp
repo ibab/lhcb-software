@@ -64,25 +64,21 @@ double EvtBlattWeisskopf::operator()(double p) const
 
 double EvtBlattWeisskopf::compute(double p) const
 {
-  if(p < 0) {
-    
-    report(INFO,"EvtGen") << "Momentum " << p << " negative in form factor calculation" << endl;
-    assert(0);
+
+  double value(1.0);
+
+  double z = p*_radial;
+  double zSq = z*z;
+
+  if (_LL == 0) {
+    value = 1.0;
+  } else if (_LL == 1) {
+    value = sqrt(1.0/(1.0 + zSq));
+  } else if (_LL == 2) {
+    value = sqrt(1.0/(zSq*(zSq + 3.0) + 9.0));
   }
-  else {
-    
-    double x = p*p*_radial*_radial;
-    
-    if(0 == _LL) return 1.;
-    else
-      if(1 == _LL) return sqrt(1.0/(1.0+x));
-      else
-	if(2 == _LL) return sqrt(1.0/(1.0+x/3.0+x*x/9.0));
-	else {
-	  report(INFO,"EvtGen") << "Angular momentum " << _LL << " not implemented" << endl;
-	  assert(0);
-	}
-  }
-  return 0.;
+
+  return value;
+
 }
 

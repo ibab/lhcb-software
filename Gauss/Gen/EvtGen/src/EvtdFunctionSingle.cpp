@@ -74,7 +74,7 @@ void EvtdFunctionSingle::init(int j,int m1,int m2){
 
 double EvtdFunctionSingle::d(int j,int m1,int m2, double theta){
 
-  assert(j==_j); _unused( j ) ; 
+  assert(j==_j); _unused( j );
   assert(m1==_m1);
   assert(m2==_m2);
 

@@ -12,6 +12,7 @@
 #include <string.h>
 #include <iostream>
 #include "EvtGenBase/EvtCyclic3.hh"
+#include "EvtGenBase/EvtPatches.hh"
 using std::ostream;
 
 using namespace EvtCyclic3;
@@ -56,7 +57,7 @@ Index EvtCyclic3::permute(Index i, Perm p)
 
 Perm EvtCyclic3::permutation(Index i1,Index i2,Index i3)
 {
-  assert(i1 != i2  && i2 != i3 && i3 != i1); _unused( i3 ) ;
+  assert(i1 != i2  && i2 != i3 && i3 != i1); _unused( i3 );
   if(i1 == A) return (i2 == B) ? ABC : ACB;
   if(i1 == B) return (i2 == C) ? BCA : BAC;
   if(i1 == C) return (i2 == A) ? CAB : CBA;
@@ -238,8 +239,7 @@ Index EvtCyclic3::strToIndex(const char* str)
   if(strcmp(str,"A")) return A;
   else if(strcmp(str,"B")) return B;
   else if(strcmp(str,"C")) return C;
-  else assert(0);
-  return A ;
+  else assert(0); return A;
 }
 
 
@@ -248,8 +248,7 @@ Pair EvtCyclic3::strToPair(const char* str)
   if(!strcmp(str,"AB") || !strcmp(str,"BA")) return AB;
   else if(!strcmp(str,"BC") || !strcmp(str,"CB")) return BC;
   else if(!strcmp(str,"CA") || !strcmp(str,"AC")) return CA;
-  else assert(0);
-  return AB ;
+  else assert(0); return AB;
 }
 
 

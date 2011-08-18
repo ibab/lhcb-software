@@ -337,7 +337,7 @@ void EvtParticle::initDecay(bool useMinMass) {
   }
 
   EvtDecayBase *decayer;
-  decayer = EvtDecayTable::getDecayFunc(p);
+  decayer = EvtDecayTable::getInstance()->getDecayFunc(p);
 
   if ( decayer ) {
     p->makeDaughters(decayer->nRealDaughters(),decayer->getDaugs());
@@ -403,7 +403,7 @@ void EvtParticle::decay(){
   //}
 
   EvtDecayBase *decayer;
-  decayer = EvtDecayTable::getDecayFunc(p);
+  decayer = EvtDecayTable::getInstance()->getDecayFunc(p);
   //  if ( decayer ) {
   //    report(INFO,"EvtGen") << "calling decay for " << EvtPDL::name(p->getId()) << " " << p->mass() << " " << p->getP4() << " " << p->getNDaug() << " " << p << endl;
   //    report(INFO,"EvtGen") << "NDaug= " << decayer->getNDaug() << endl;
@@ -434,7 +434,7 @@ void EvtParticle::decay(){
   //  if ( _ndaug==1 &&  (thisId==BS0||thisId==BSB||thisId==BD0||thisId==BDB||thisId==D0||thisId==D0B) ) {
   if ( _ndaug==1 &&  (thisId==BS0||thisId==BSB||thisId==BD0||thisId==BDB) ) {
     p=p->getDaug(0);
-    decayer = EvtDecayTable::getDecayFunc(p);
+    decayer = EvtDecayTable::getInstance()->getDecayFunc(p);
   }
   //now we have accepted a set of masses - time
   if ( decayer != 0) {
@@ -1119,6 +1119,28 @@ double EvtParticle::initializePhaseSpace(
   }
 
   return weight;
+}
+
+void EvtParticle::makeDaughters(unsigned int ndaugstore, std::vector<EvtId> idVector) {
+
+  // Convert the STL vector method to use the array method for now, since the
+  // array method pervades most of the EvtGen code...
+
+  unsigned int nVector = idVector.size();
+  if (nVector < ndaugstore) {
+    report(ERROR,"EvtGen") << "Asking to make "<<ndaugstore<<" daughters when there "
+			   << "are only "<<nVector<<" EvtId values available"<<endl;
+    return;
+  }
+
+  EvtId idArray[ndaugstore];
+  unsigned int i;
+  for (i = 0; i < ndaugstore; i++) {
+    idArray[i] = idVector[i];
+  }
+
+  this->makeDaughters(ndaugstore, idArray);
+
 }
 
 void EvtParticle::makeDaughters( unsigned int ndaugstore, EvtId *id){

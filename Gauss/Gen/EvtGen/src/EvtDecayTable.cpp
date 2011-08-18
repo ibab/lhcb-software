@@ -41,7 +41,25 @@ using std::endl;
 using std::fstream;
 using std::ifstream;
 
-std::vector<EvtParticleDecayList> EvtDecayTable::_decaytable;
+EvtDecayTable::EvtDecayTable() {
+  _decaytable.clear();
+}
+
+EvtDecayTable::~EvtDecayTable() {
+  _decaytable.clear();
+}
+
+EvtDecayTable* EvtDecayTable::getInstance() {
+
+  static EvtDecayTable* theDecayTable = 0;
+
+  if (theDecayTable == 0) {
+    theDecayTable = new EvtDecayTable();
+  }
+
+  return theDecayTable;
+
+}
 
 int EvtDecayTable::getNMode(int ipar){
    return _decaytable[ipar].getNMode();
@@ -739,6 +757,70 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
       EvtPDL::reSetMassMin(temp,minMass);
     }
   }
+}
+
+EvtDecayBase* EvtDecayTable::findDecayModel(EvtId id, int modeInt) {
+
+  int aliasInt = id.getAlias();
+
+  EvtDecayBase* theModel = this->findDecayModel(aliasInt, modeInt);
+
+  return theModel;
+
+}
+
+EvtDecayBase* EvtDecayTable::findDecayModel(int aliasInt, int modeInt) {
+
+  EvtDecayBase* theModel(0);
+
+  if (aliasInt >= 0 && aliasInt < (int) EvtPDL::entries()) {
+
+    theModel = _decaytable[aliasInt].getDecayModel(modeInt);
+
+  }
+
+  return theModel;
+
+}
+
+bool EvtDecayTable::hasPythia(EvtId id) {
+
+  bool hasPythia = this->hasPythia(id.getAlias());
+  return hasPythia;
+
+}
+
+bool EvtDecayTable::hasPythia(int aliasInt) {
+
+  bool hasPythia(false);
+  if (aliasInt >= 0 && aliasInt < (int) EvtPDL::entries()) {
+
+    hasPythia = _decaytable[aliasInt].isJetSet();
+
+  }
+  
+  return hasPythia;
+
+}
+
+int EvtDecayTable::getNModes(EvtId id) {
+
+  int nModes = this->getNModes(id.getAlias());
+  return nModes;
+
+}
+
+int EvtDecayTable::getNModes(int aliasInt) {
+
+  int nModes(0);
+
+  if (aliasInt >= 0 && aliasInt < (int) EvtPDL::entries()) {
+
+    nModes = _decaytable[aliasInt].getNMode();
+  }
+
+  return nModes;
+
 }
 
 int  EvtDecayTable::findChannel(EvtId parent, std::string model, 

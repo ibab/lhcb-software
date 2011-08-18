@@ -5,17 +5,20 @@
 //      for the BaBar and CLEO collaborations.  If you use all or part
 //      of it, please give an appropriate acknowledgement.
 //
-// Copyright Information: See BelEvtGen/COPYRIGHT
+// Copyright Information: See EvtGen/COPYRIGHT
 //      Copyright (C) 1998      Caltech, UCSB
+//                    2011      University of Warwick, UK
 //
-// Module: BelEvtGen/EvtJetSet.hh
+// Module: EvtGen/EvtPythia.hh
 //
 // Description:
+// Class to handle generic phase space decays not done
+// in other decay models.
 //
 // Modification history:
 //
 //    DJL/RYD     August 11, 1998         Module created
-//    RS          October 28, 2002        copied from JETSET module
+//    JJB         April 2011         Modified to use new Pythia8 interface
 //
 //------------------------------------------------------------------------
 
@@ -23,63 +26,44 @@
 #define EVTPYTHIA_HH
 
 #include "EvtGenBase/EvtDecayIncoherent.hh"
-#include "EvtGenBase/EvtParticle.hh"
+
 #include <string>
+#include <vector>
 
-class ofstream;
+class EvtParticle;
+class EvtAbsExternalGen;
+class EvtDecayBase;
 
-typedef EvtDecayBase* EvtDecayBasePtr;
-
-class EvtPythia:public  EvtDecayIncoherent  {
+class EvtPythia: public  EvtDecayIncoherent  {
 
 public:
-
+  
   EvtPythia();
   virtual ~EvtPythia();
-  
-  virtual std::string getName( );
-  virtual EvtDecayBase* clone();
-  virtual void decay(EvtParticle *p); 
-  
-  std::string commandName();
-  void command(std::string cmd);
-  
-  void init();
-  
+
+  std::string getName();
+
+  EvtDecayBase* clone();
+
   void initProbMax();
-  
-  //initialize jetset; sets up decay table and
-  //paramters. Static so it can be invoked from
-  //from EvtJscont.
-  static void pythiaInit(int f);
-  static void pythiacont(double *,int *, int *,
-			 double *,double *,double *,double *);
-  
+
+  void init();
+
+  void decay(EvtParticle *p);
+
+  std::string commandName();
+  void command(std::string);
+
+protected:
+
+  EvtAbsExternalGen* _pythiaEngine;
+
 private:
-  
-  void store(EvtDecayBase* jsdecay);
-  void fixPolarizations(EvtParticle* p);
-  static void MakePythiaFile(char* fname);
-  static void WritePythiaParticle(std::ofstream &outdec,EvtId ipar,EvtId iparname,int &first);
-  static void WritePythiaEntryHeader(std::ofstream &outdec, int lundkc,
-				     EvtId evtnum,std::string name,
-				     int chg, int cchg, int spin2,double mass,
-				     double width, double maxwidth,double ctau,
-				     int stable,double rawbrfrsum);
-  static bool diquark(int);
-  static bool isPythiaSpecial(int) ;
-  static double NominalMass(int);
-  static int njetsetdecays;
-  static EvtDecayBasePtr* jetsetdecays;
-  static int ntable;
-  
-  static int ncommand;
-  static int lcommand;
-  static std::string* commands;
+
+  void fixPolarisations(EvtParticle *p);
+  std::vector<std::string> _commandList;
+
 };
 
 #endif
-
-
-
 
