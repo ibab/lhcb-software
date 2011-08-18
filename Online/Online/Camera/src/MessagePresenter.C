@@ -1147,6 +1147,8 @@ void MessagePresenter::readCacheFile()
   if ( writeCacheON )
   {
     //cout << "Reading messages from " << cachefileName << endl;
+    std::ofstream file(cachefileName.c_str(),std::ios::app);
+    file.close(); // just to 'touch' the file incase it is not there
     getwarnings((char*)cachefileName.c_str());
   }
 }
