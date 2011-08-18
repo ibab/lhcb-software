@@ -1111,7 +1111,7 @@ void MessagePresenter::writeCacheFile(const bool force)
     {
       lastWrite = timeNow;
 
-      cout << "Writing messages to " << cachefileName << endl;
+      //cout << "Writing messages to " << cachefileName << endl;
 
       std::ofstream file(cachefileName.c_str(),std::ios::app);
 
