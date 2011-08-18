@@ -94,7 +94,7 @@ private:
   bool dowarn,doerr,doinfo,dorun;
   int savepos;
 
-  std::string cachefileName,xcachefileName;
+  std::string cachefileName,xcachefileName,hostS;
   std::vector<std::string> cachedWarnings;
   bool writeCacheON;
 
@@ -119,8 +119,9 @@ public:
 
   void writeCacheFile(const bool force = false);
   void readCacheFile();
-  std::string getCacheFilename();
-  std::string getXCacheFilename();
+  std::string _getCacheFilename(const std::string & _cache_name_);
+  std::string getCacheFilename() { return _getCacheFilename("camera_messages.cache"); }
+  std::string getXCacheFilename() { return _getCacheFilename("camera_extra_info.cache"); }
   void clearCacheFile();
 
   void UpdateView();

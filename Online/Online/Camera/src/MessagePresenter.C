@@ -812,9 +812,6 @@ MessagePresenter::MessagePresenter(): TGMainFrame()
   Pgreen=TColor::RGB2Pixel(80,255,80);
   Pyellow=TColor::RGB2Pixel(242,242,60);
 
-  cachefileName  = getCacheFilename();
-  xcachefileName = getXCacheFilename();
-
   savdir = ".";
   savname = "msg.png";
 
@@ -930,7 +927,7 @@ void MessagePresenter::display(){
   Layout();
 }
 
-void MessagePresenter::messageloop(char * host,char * file)
+void MessagePresenter::messageloop( char * host, char * file )
 {
 
   //  MessagePresenter mp(NULL,100,100);
@@ -938,7 +935,6 @@ void MessagePresenter::messageloop(char * host,char * file)
   getwarnings(file);
 
   writeCacheON = ( file == NULL );
-  readCacheFile();
 
   gSystem->ProcessEvents();
 
@@ -947,7 +943,6 @@ void MessagePresenter::messageloop(char * host,char * file)
 
   std::vector<proto *> protolist;
   std::vector<int> connlist;
-
 
   if (strcmp(host,"NULL")!=0){
 
@@ -960,45 +955,53 @@ void MessagePresenter::messageloop(char * host,char * file)
       // cout << str.substr(0,position1)<<endl;;
       serverlist.push_back(str.substr(0,position1));
       str = str.substr(position1+1);
-
     }
     // cout << str<<endl;;
     serverlist.push_back(str);
 
-    for (unsigned int i = 0;i<serverlist.size();++i){
-
+    hostS = "";
+    for (unsigned int i = 0;i<serverlist.size();++i)
+    {
       std::string hostpart,portpart;
       portpart="12346";
       hostpart=serverlist[i];
       std::string::size_type pos;
       pos = serverlist[i].find(":");
 
-      if (pos!=string::npos){
+      if (pos!=string::npos)
+      {
         hostpart = serverlist[i].substr(0,pos);
         portpart = serverlist[i].substr(pos+1);
       }
 
+      client * c = new client(hostpart.c_str(),atoi(portpart.c_str()));
 
-      client *  c = new client(hostpart.c_str(),atoi(portpart.c_str()));
-
-      // cout <<serverlist[i]<<endl;
       clientlist.push_back(c);
       socklist.push_back((void *)c);
 
-      proto *  p = new proto(c);
+      proto * p = new proto(c);
       protolist.push_back(p);
+
+      hostS.append(hostpart);
 
       connlist.push_back(0);
     }
-    TGString savestat=(TGString)"";
+    TGString savestat = (TGString)"";
 
-    while (1){
+    cachefileName  = getCacheFilename();
+    xcachefileName = getXCacheFilename();
+    readCacheFile();
+
+    while (1)
+    {
 
       //fStatusBar528->SetText(TGString("Connecting to ")+TGString(host));
 
-      for (unsigned int i = 0;i<serverlist.size();++i){
+      for (unsigned int i = 0;i<serverlist.size();++i)
+      {
         if (connlist[i] ==0){
-          if (clientlist[i]->Connect()>0){
+          if (clientlist[i]->Connect()>0)
+          {
             connlist[i] =1;
             // cerr << "Connected to "<< serverlist[i]<<endl;
           }
@@ -1008,22 +1011,25 @@ void MessagePresenter::messageloop(char * host,char * file)
       }
       TGString stat = "Connected to ";
 
-
-      for (unsigned int i = 0;i<serverlist.size();++i){
-        if (connlist[i] ==1){
+      for (unsigned int i = 0;i<serverlist.size();++i)
+      {
+        if (connlist[i] ==1)
+        {
           stat = (TGString)(stat + (TGString)serverlist[i].c_str() + (TGString)", ");
         }
       }
       stat = (TGString)(stat + " / NOT Connected to: ");
-      for (unsigned int i = 0;i<serverlist.size();++i){
-        if (connlist[i] ==0){
-          stat = (TGString)(stat + (TGString)serverlist[i].c_str() + (TGString)", ");
+      for (unsigned int i = 0;i<serverlist.size();++i)
+      {
+        if (connlist[i] ==0)
+        {
+          stat = (TGString)( stat + (TGString)serverlist[i].c_str() + (TGString)", " );
         }
       }
 
       if ((TGString)stat!=(TGString)savestat)
-
         fStatusBar528->SetText(stat);
+      
       savestat = (TGString)stat;
 
       gSystem->ProcessEvents();
@@ -1085,9 +1091,8 @@ void MessagePresenter::clearlist()
   clearCacheFile();
 }
 
-std::string MessagePresenter::getCacheFilename()
+std::string MessagePresenter::_getCacheFilename(const std::string & _cache_name_)
 {
-  const std::string _cache_name_ = "camera_messages.cache";
   std::string to;
   char * camcache = getenv("CAMCACHE");
   if ( camcache )
@@ -1098,24 +1103,7 @@ std::string MessagePresenter::getCacheFilename()
   {
     to = "./" + _cache_name_;
   }
-  char * user = getenv("USER"); 
-  if ( user ) to = to + "." + (std::string)user;
-  return to;
-}
-
-std::string MessagePresenter::getXCacheFilename()
-{
-  const std::string _cache_name_ = "camera_extra_info.cache";
-  std::string to;
-  char * camcache = getenv("CAMCACHE");
-  if ( camcache )
-  {
-    to = (std::string)camcache + "/" + _cache_name_;
-  }
-  else
-  {
-    to = "./" + _cache_name_;
-  }
+  if ( !hostS.empty() ) to = to + "." + hostS;
   char * user = getenv("USER"); 
   if ( user ) to = to + "." + (std::string)user;
   return to;
