@@ -66,6 +66,10 @@ apply_pattern component_library    library=Mint
 
 macro            Mint_linkopts " -lMint " target-winxp " libMint.so "
 
+private
 # -- Need more things from ROOT
 macro_append     Mint_use_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad" \
                  target-winxp " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib libMathCore.lib libCore.lib libGpad.lib"
+end_private
+                 
+                 
