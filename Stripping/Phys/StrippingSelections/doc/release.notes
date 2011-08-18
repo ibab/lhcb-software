@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-18 - Jibo He
+ - StrippingDiMuonNew
+   . Restricted mass range for the J/psi lines on the micro-dst to 3-4 GeV
+   . Tightened PIDmu cut of detached J/psi line to 0
+ - StrippingBd2(Jpsi)eeKstar
+   . Added SumIPS cut 
+ - StrippingBc2JpsiHNew
+   . Moved lifetime cuts to conf dict to avoid wasting CPU timing on nonthing
+
 ! 2011-08-16 - Jibo He
  - Fixed the database problem in TestMyStrippingLineOn2011Data.py, from now on,
    one needs to 

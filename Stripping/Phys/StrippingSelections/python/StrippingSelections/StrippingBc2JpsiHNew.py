@@ -32,13 +32,9 @@ config_default =  {
     'PionP'               :   -5.   ,  # MeV, not applied now
     'BcMassWindow'        :  400.   ,  # MeV, mass window
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 6000.   ,  # MeV, May incrase up to 5000 MeV if needed       
+    'BcPT'                : 6000.   ,  # MeV, May incrase up to 5000 MeV if needed
 
-    'PionIPCHI2'          :   -1.   ,
-    'MuonIPCHI2'          :   -1.   ,
-    'MuMuIPCHI2'          :   -1.   ,
-    'BcIPCHI2'            :    5.0e+9,
-    'BcLTIME'             :   -1.0e+9  
+    'LifetimeCut'         :   ""    
     }
 
 
@@ -61,11 +57,7 @@ config_detached =  {
     'BcVtxCHI2'           :    9.   ,  # adimentional
     'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
-    'PionIPCHI2'          :   -1.   ,
-    'MuonIPCHI2'          :   -1.   ,
-    'MuMuIPCHI2'          :   -1.   ,
-    'BcIPCHI2'            :    5.0e+9,
-    'BcLTIME'             :    0.1  
+    'LifetimeCut'         : " & (BPVLTIME()>0.1*ps)"
     }
 
 
@@ -95,12 +87,8 @@ class Bc2JpsiHConf(LineBuilder):
         'BcMassWindow',  
         'BcVtxCHI2',
         'BcPT',
-
-        'PionIPCHI2',
-        'MuonIPCHI2',
-        'MuMuIPCHI2',
-        'BcIPCHI2',
-        'BcLTIME'
+        
+        'LifetimeCut'
          )
     
     def __init__(self, name, config ):
@@ -126,11 +114,7 @@ class Bc2JpsiHConf(LineBuilder):
                                          BcVtxCHI2 = config['BcVtxCHI2'],
                                          BcMassWindow = config['BcMassWindow'],
                                          BcPT = config['BcPT'],
-                                         PionIPCHI2 = config['PionIPCHI2'],
-                                         MuonIPCHI2 = config['MuonIPCHI2'],
-                                         MuMuIPCHI2 = config['MuMuIPCHI2'],
-                                         BcIPCHI2 = config['BcIPCHI2'],
-                                         BcLTIME = config['BcLTIME']
+                                         LifetimeCut = config['LifetimeCut']
                                          )
                                              
         self.line = StrippingLine( Bc2JpsiHName+"Line",
@@ -176,11 +160,7 @@ def makeBc2JpsiH( name,
                   BcVtxCHI2,
                   BcMassWindow,
                   BcPT,
-                  PionIPCHI2,
-                  MuonIPCHI2,
-                  MuMuIPCHI2,
-                  BcIPCHI2,
-                  BcLTIME
+                  LifetimeCut
                   ):
 
     #---------------------------
@@ -206,12 +186,14 @@ def makeBc2JpsiH( name,
     
     # Bc Cut
     BcCut = "(VFASPF(VCHI2PDOF)< %(BcVtxCHI2)s ) & (PT > %(BcPT)s *MeV)" % locals()
+
+    # Moved to conf dict
+    ##LifetimeBiasedCut = "(MINTREE('pi+'==ABSID,BPVIPCHI2()) > %(PionIPCHI2)s) & (MINTREE('mu+'==ABSID,BPVIPCHI2()) > %(MuonIPCHI2)s) & (MINTREE('J/psi(1S)'==ABSID,BPVIPCHI2()) > %(MuMuIPCHI2)s) & (BPVIPCHI2() < %(BcIPCHI2)s) & (BPVLTIME()> %(BcLTIME)s*ps)" % locals()
     
-    LifetimeBiasedCut = "(MINTREE('pi+'==ABSID,BPVIPCHI2()) > %(PionIPCHI2)s) & (MINTREE('mu+'==ABSID,BPVIPCHI2()) > %(MuonIPCHI2)s) & (MINTREE('J/psi(1S)'==ABSID,BPVIPCHI2()) > %(MuMuIPCHI2)s) & (BPVIPCHI2() < %(BcIPCHI2)s) & (BPVLTIME()> %(BcLTIME)s*ps)" % locals()
     
     _Bc2JpsiH = CombineParticles( DecayDescriptor = "[ B_c+ -> J/psi(1S) pi+ ]cc",
                                   CombinationCut = combCut,
-                                  MotherCut = BcCut + ' & ' + LifetimeBiasedCut,
+                                  MotherCut = BcCut + LifetimeCut,
                                   ReFitPVs = True )
     
     return Selection( name,

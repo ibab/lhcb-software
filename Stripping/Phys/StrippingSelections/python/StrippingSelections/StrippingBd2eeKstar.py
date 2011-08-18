@@ -56,7 +56,8 @@ defaulSettings =  {
         'BIPCHI2'                 :   64.   ,  # pointing
         'BFDCHI2'                 :    9.   , 
         'BDIRA'                   :    0.999, 
-        'BIP'                     :    0.05    # mm
+        'BIP'                     :    0.05 ,  # mm
+        'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
         }
     
 
@@ -110,7 +111,8 @@ class Bd2eeKstarConf(LineBuilder):
         'BIPCHI2',
         'BFDCHI2',
         'BDIRA',
-        'BIP'                
+        'BIP',
+        'SumIPSCut' 
         )
     
     def __init__(self, name, config ):
@@ -161,7 +163,8 @@ class Bd2eeKstarConf(LineBuilder):
                                              BIPCHI2 = config['BIPCHI2'],
                                              BFDCHI2 = config['BFDCHI2'],
                                              BDIRA = config['BDIRA'],
-                                             BIP = config['BIP']
+                                             BIP = config['BIP'],
+                                             SumIPSCut = config['SumIPSCut']
                                              )
                                              
         self.line = StrippingLine( Bd2eeKstarName+"Line",
@@ -260,7 +263,8 @@ def makeBd2eeKstar( name,
                     BIPCHI2,
                     BFDCHI2,
                     BDIRA,
-                    BIP                              
+                    BIP,
+                    SumIPSCut
                     ):
     
     Bd2eeKstarComCut = "(ADAMASS('B0')< %(BComMassW)s *MeV)" % locals()
@@ -271,7 +275,7 @@ def makeBd2eeKstar( name,
     
     _Bd2eeKstar = CombineParticles( DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc",
                                     CombinationCut = Bd2eeKstarComCut, 
-                                    MotherCut = Bd2eeKstarMomCut + "&" + eeFinalCut + "&" + KstarFinalCut 
+                                    MotherCut = Bd2eeKstarMomCut + "&" + eeFinalCut + "&" + KstarFinalCut + SumIPSCut
                                     )
     return Selection( name,
                       Algorithm = _Bd2eeKstar,

@@ -65,7 +65,8 @@ config_default= {
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_MinMass'                           :  3000.   ,  # MeV
+        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                :  3000.   ,  # MeV, no cut now 
 
@@ -82,7 +83,8 @@ config_default= {
         'DiMuonPrescaled_MuonPT'                   :   650.   ,  # MeV
         'DiMuonPrescaled_MuonP'                    : -8000.   ,  # MeV, no cut now 
         'DiMuonPrescaled_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonPrescaled_MinMass'                  :  2900.   ,  # MeV
+        'DiMuonPrescaled_MinMass'                  :  3000.   ,  # MeV
+        'DiMuonPrescaled_MaxMass'                  :  4000.   ,  # MeV
         'DiMuonPrescaled_VCHI2PDOF'                :    20.   , 
         'DiMuonPrescaled_PT'                       : -1000.   ,  # MeV, no cut now 
         
@@ -177,9 +179,9 @@ config_default= {
         'Jpsi2MuMuDetached_Prescale'                       :     1.   ,
         'Jpsi2MuMuDetached_Postscale'                      :     1.   ,
         
-        'Jpsi2MuMuDetached_MuonPT'                         :   500.   ,  # MeV
+        'Jpsi2MuMuDetached_MuonPT'                         :   550.   ,  # MeV
         'Jpsi2MuMuDetached_MuonP'                          : -8000.   ,  # MeV, no cut now
-        'Jpsi2MuMuDetached_MuonPIDmu'                      :    -5.   , 
+        'Jpsi2MuMuDetached_MuonPIDmu'                      :     0.   , 
         'Jpsi2MuMuDetached_MuonTRCHI2DOF'                  :     5.   , 
         'Jpsi2MuMuDetached_MinMass'                        :  2996.916,  # MeV
         'Jpsi2MuMuDetached_MaxMass'                        :  3196.916,  # MeV
@@ -192,9 +194,9 @@ config_default= {
         'Psi2MuMuDetached_Postscale'                       :     1.   ,
 
         'Psi2MuMuDetached_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
-        'Psi2MuMuDetached_MuonPT'                          :   500.   ,  # MeV
-        'Psi2MuMuDetached_MuonP'                           :  8000.   ,  # MeV, no cut now
-        'Psi2MuMuDetached_MuonPIDmu'                       :    -5.   , 
+        'Psi2MuMuDetached_MuonPT'                          :   550.   ,  # MeV
+        'Psi2MuMuDetached_MuonP'                           : -8000.   ,  # MeV, no cut now
+        'Psi2MuMuDetached_MuonPIDmu'                       :     0.   , 
         'Psi2MuMuDetached_MuonTRCHI2DOF'                   :     5.   , 
         'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
@@ -213,7 +215,8 @@ config_microDST= {
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_MinMass'                           :  3000.   ,  # MeV
+        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                :  3000.   ,  # MeV
 
@@ -230,7 +233,8 @@ config_microDST= {
         'DiMuonPrescaled_MuonPT'                   :   650.   ,  # MeV
         'DiMuonPrescaled_MuonP'                    : -8000.   ,  # MeV, no cut now 
         'DiMuonPrescaled_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonPrescaled_MinMass'                  :  2900.   ,  # MeV
+        'DiMuonPrescaled_MinMass'                  :  3000.   ,  # MeV
+        'DiMuonPrescaled_MaxMass'                  :  4000.   ,  # MeV
         'DiMuonPrescaled_VCHI2PDOF'                :    20.   , 
         'DiMuonPrescaled_PT'                       : -1000.   ,  # MeV, no cut now 
 
@@ -371,6 +375,7 @@ class DiMuonConf(LineBuilder):
         'DiMuon_MuonP',
         'DiMuon_MuonTRCHI2DOF', 
         'DiMuon_MinMass',
+        'DiMuon_MaxMass',   
         'DiMuon_VCHI2PDOF',
         'DiMuon_PT',
 
@@ -388,6 +393,7 @@ class DiMuonConf(LineBuilder):
         'DiMuonPrescaled_MuonP',
         'DiMuonPrescaled_MuonTRCHI2DOF', 
         'DiMuonPrescaled_MinMass',
+        'DiMuonPrescaled_MaxMass',   
         'DiMuonPrescaled_VCHI2PDOF',
         'DiMuonPrescaled_PT', 
         
@@ -523,13 +529,14 @@ class DiMuonConf(LineBuilder):
         """
         DiMuon line
         """
-        self.SelDiMuon = filterDiMuon( name + 'DiMuon',
-                                       MuonPT        = config['DiMuon_MuonPT'],
-                                       MuonP         = config['DiMuon_MuonP'],
-                                       MuonTRCHI2DOF = config['DiMuon_MuonTRCHI2DOF'],
-                                       MuMuMinMass   = config['DiMuon_MinMass'],
-                                       MuMuVCHI2PDOF = config['DiMuon_VCHI2PDOF'],
-                                       MuMuPT        = config['DiMuon_PT']
+        self.SelDiMuon = filterDiMuonWMax( name + 'DiMuon',
+                                           MuonPT        = config['DiMuon_MuonPT'],
+                                           MuonP         = config['DiMuon_MuonP'],
+                                           MuonTRCHI2DOF = config['DiMuon_MuonTRCHI2DOF'],
+                                           MuMuMinMass   = config['DiMuon_MinMass'],
+                                           MuMuMaxMass   = config['DiMuon_MaxMass'],
+                                           MuMuVCHI2PDOF = config['DiMuon_VCHI2PDOF'],
+                                           MuMuPT        = config['DiMuon_PT']
                                        )
 
         self.DiMuonLine = StrippingLine( name + 'DiMuonInc' + 'Line',
@@ -560,14 +567,15 @@ class DiMuonConf(LineBuilder):
         """
         DiMuonPrescaled line
         """
-        self.SelDiMuonPrescaled = filterDiMuon( name + 'DiMuonPrescaled',
-                                                MuonPT        = config['DiMuonPrescaled_MuonPT'],
-                                                MuonP         = config['DiMuonPrescaled_MuonP'],
-                                                MuonTRCHI2DOF = config['DiMuonPrescaled_MuonTRCHI2DOF'],
-                                                MuMuMinMass   = config['DiMuonPrescaled_MinMass'],
-                                                MuMuVCHI2PDOF = config['DiMuonPrescaled_VCHI2PDOF'],
-                                                MuMuPT        = config['DiMuonPrescaled_PT']
-                                                )
+        self.SelDiMuonPrescaled = filterDiMuonWMax( name + 'DiMuonPrescaled',
+                                                    MuonPT        = config['DiMuonPrescaled_MuonPT'],
+                                                    MuonP         = config['DiMuonPrescaled_MuonP'],
+                                                    MuonTRCHI2DOF = config['DiMuonPrescaled_MuonTRCHI2DOF'],
+                                                    MuMuMinMass   = config['DiMuonPrescaled_MinMass'],
+                                                    MuMuMaxMass   = config['DiMuonPrescaled_MaxMass'],
+                                                    MuMuVCHI2PDOF = config['DiMuonPrescaled_VCHI2PDOF'],
+                                                    MuMuPT        = config['DiMuonPrescaled_PT']
+                                                    )
         
         self.DiMuonPrescaledLine = StrippingLine( name + 'DiMuonPrescaled' + 'Line',
                                                   prescale  = config['DiMuonPrescaled_Prescale'],
@@ -855,6 +863,32 @@ def filterDiMuonSameSign( name,
                       Algorithm = _MuMu,
                       RequiredSelections = [ _StdLooseDiMuonSameSign ]
                       )
+
+
+def filterDiMuonWMax( name,
+                      MuonPT,
+                      MuonP,
+                      MuonTRCHI2DOF,
+                      MuMuMinMass,
+                      MuMuMaxMass,
+                      MuMuVCHI2PDOF,
+                      MuMuPT 
+                      ):
+    
+    _StdLooseDiMuon = DataOnDemand( Location = 'Phys/StdLooseDiMuon/Particles' )
+    
+    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(MuonTRCHI2DOF)s)" % locals()
+    
+    MuMuCut = "(in_range( %(MuMuMinMass)s *MeV, MM, %(MuMuMaxMass)s *MeV)) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s)" % locals()
+    
+    _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut )
+
+    return Selection( name + "_SelMuMu",
+                      Algorithm = _MuMu,
+                      RequiredSelections = [ _StdLooseDiMuon ]
+                      )
+
+
 
 def filterJpsi2MuMu( name,
                      MuonPT,
