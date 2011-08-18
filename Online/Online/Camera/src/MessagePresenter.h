@@ -7,10 +7,10 @@
 
 #include "container_ROOT.h"
 
-#include "TApplication.h" 
+#include "TApplication.h"
 
-#include <TGMdiMainFrame.h> 
-#include <TGButton.h> 
+#include <TGMdiMainFrame.h>
+#include <TGButton.h>
 #include <TGListBox.h>
 
 
@@ -30,13 +30,15 @@
 
 #include "display.h"
 #include <TString.h>
-class MessagePresenter: public  TGMainFrame{
- 
+class MessagePresenter: public  TGMainFrame
+{
+private:
+
   InfoWindow *iw;
   int iwAlive ;
   container_ROOT cont;
   int lastleft;
-  
+
   int lastright;
 
   Pixel_t Pred,Pgreen,Pyellow;
@@ -46,40 +48,41 @@ class MessagePresenter: public  TGMainFrame{
 
   std::vector<void* > socklist;
 
- public:
+public:
+
   void display();
-private:  
+
+private:
+
   TString savdir;//(".");
   TString savname;//(".");
   void Layout();
   int GetXtra(const std::string & str, std::string &);
-  
-  
+
+
   std::vector<std::string> allpairs;
-  
+
   std::vector<std::string> names;
-  
+
   std::vector<std::string> extradata;
-  
+
   std::map<std::string,int> keys;
   std::map<std::string,int> levels;
 
   std::map<std::string,std::vector<std::string>* > values;
   std::map<std::string,std::vector<int> > vallevels;
-  
-  
 
   TGStatusBar *fStatusBar528;
 
-  TGMainFrame *fMainFrame1933; 
-  TGCheckButton *fTextButton514; 
-  TGCheckButton *fTextButton659; 
+  TGMainFrame *fMainFrame1933;
+  TGCheckButton *fTextButton514;
+  TGCheckButton *fTextButton659;
 
-  TGCheckButton *fTextButton699; 
+  TGCheckButton *fTextButton699;
 
-  TGCheckButton *fstopped; 
+  TGCheckButton *fstopped;
 
-  TGListBox *fListBox863 ; 
+  TGListBox *fListBox863 ;
   TGListBox *fListBox816;
 
   TGTextButton *fTextButton515;
@@ -87,16 +90,16 @@ private:
 
   TGNumberEntry *fNumberEntry670;
   TGLabel *fLabel746;
- 
+
   bool dowarn,doerr,doinfo,dorun;
   int savepos;
-  
+
   std::string cachefileName,xcachefileName;
   std::vector<std::string> cachedWarnings;
   bool writeCacheON;
 
- public:  
-  void DoClose(); 
+public:
+  void DoClose();
   void messageloop(char * host = (char*)"127.0.0.1",char * file = NULL);
   MessagePresenter();
   ~MessagePresenter(){ }
@@ -105,7 +108,7 @@ private:
   void selectRun();
   void clearlist();
   void dumpmsg();
-  
+
   void selectInfo();
   void selectleft();
   void selectright();
@@ -125,5 +128,5 @@ private:
 
   ClassDef(MessagePresenter,1)
 
-};
+    };
 #endif

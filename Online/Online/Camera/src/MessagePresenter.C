@@ -102,7 +102,8 @@ using namespace std;
 #include "MessagePresenter.h"
 
 
-void MessagePresenter::UpdateRight(){
+void MessagePresenter::UpdateRight()
+{
 
   if (!dorun) return;
 
@@ -116,7 +117,6 @@ void MessagePresenter::UpdateRight(){
   if (i<0) return;
   fListBox863->RemoveAll();
   extradata.clear();
-
 
   std::map<std::string,std::vector<std::string>*>::iterator it;
   std::map<std::string,std::vector<std::string>*>::iterator itbegin;
@@ -440,18 +440,18 @@ void MessagePresenter::addwarning(const std::string & msg,int ref)
 
   //i++;
   //if (i%5==1)sleep(3);
-  if (ref ==1){
+  if (ref ==1)
+  {
     UpdateView();
     UpdateRight();
   }
 
   //    if (i%5==1)sleep(3);
 
-
-
 }
 
-int MessagePresenter::GetXtra(const std::string & str, std::string & cachedfile)
+int MessagePresenter::GetXtra(const std::string & str, 
+                              std::string & cachedfile)
 {
 
   std::string::size_type position1 = str.find("/");
@@ -461,7 +461,7 @@ int MessagePresenter::GetXtra(const std::string & str, std::string & cachedfile)
     return 0;
   }
 
-  std::string add  = str.substr(0,position1);
+  std::string add = str.substr(0,position1);
   const std::string file = str.substr(position1+1);
 
   const std::string& to = xcachefileName;
@@ -1134,11 +1134,9 @@ void MessagePresenter::writeCacheFile(const bool force)
     static time_t lastWrite = time(NULL);
 
     const time_t timeNow = time(NULL);
-    if ( force || cachedWarnings.size() > 25 || (timeNow-lastWrite) > 30 )
+    if ( force || cachedWarnings.size() > 100 || (timeNow-lastWrite) >= 30 )
     {
       lastWrite = timeNow;
-
-      //cout << "Writing messages to " << cachefileName << endl;
 
       std::ofstream file(cachefileName.c_str(),std::ios::app);
 
@@ -1147,7 +1145,6 @@ void MessagePresenter::writeCacheFile(const bool force)
             i != cachedWarnings.end(); ++i, ++count )
       {
         file << *i << std::endl;
-        //cout << *i << endl;
       }
 
       file.close();
