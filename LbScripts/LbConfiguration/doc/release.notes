@@ -1,3 +1,7 @@
+2011-08-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: changed default compiler to gcc45 for slc6.
+
 2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: release of version v6r4
