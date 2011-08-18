@@ -64,14 +64,8 @@ library          Mint    Mint/Events/src/*.cpp           \
 #============================================================================
 apply_pattern component_library    library=Mint
 
-macro            Mint_linkopts " -lMint" "libMint.so"
+macro            Mint_linkopts " -lMint " target-winxp " libMint.so "
 
 # -- Need more things from ROOT
-private
-macro_append     ROOT_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad" \
-                 WIN32 " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib libMathCore.lib libCore.lib libGpad.lib"
-
-# -- Private header files
-
-include_dirs  $(MINTROOT)/Mint
-end_private
+macro_append     Mint_use_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad" \
+                 target-winxp " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib libMathCore.lib libCore.lib libGpad.lib"
