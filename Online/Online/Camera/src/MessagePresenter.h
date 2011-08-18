@@ -55,7 +55,7 @@ private:
   TString savdir;//(".");
   TString savname;//(".");
   void Layout();
-  int GetXtra(std::string str, std::string &);
+  int GetXtra(const std::string & str, std::string &);
   
   
   std::vector<std::string> allpairs;
@@ -93,25 +93,33 @@ private:
  
   bool dowarn,doerr,doinfo,dorun;
   int savepos;
+  
+  std::string cachefileName;
+  std::vector<std::string> cachedWarnings;
+  bool writeCacheON;
 
  public:  
   void DoClose(); 
   void messageloop(char * host = (char*)"127.0.0.1",char * file = NULL);
   MessagePresenter();
-  ~MessagePresenter(){}
+  ~MessagePresenter(){ }
   void selectWarn();
   void selectErr();
   void selectRun();
-  void clearlist(){allpairs.clear();UpdateRight();}
+  void clearlist();
   void dumpmsg();
   
   void selectInfo();
   void selectleft();
   void selectright();
   void setup();
-  void addwarning(std::string,int ref = 1);
+  void addwarning(const std::string &,int ref = 1);
 
   void getwarnings(char *);
+
+  void writeCacheFile(const bool force = false);
+  void readCacheFile();
+  std::string getCacheFilename();
 
   void UpdateView();
   void UpdateRight();

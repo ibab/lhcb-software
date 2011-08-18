@@ -117,7 +117,7 @@ void MessagePresenter::UpdateRight(){
   fListBox863->RemoveAll();
   extradata.clear();
 
- 
+
   std::map<std::string,std::vector<std::string>*>::iterator it;
   std::map<std::string,std::vector<std::string>*>::iterator itbegin;
   std::map<std::string,std::vector<std::string>*>::iterator itend;
@@ -167,7 +167,7 @@ void MessagePresenter::UpdateRight(){
 
       if (isextra ==1)
         entrystring=sss+":  " + ss.substr(0,position1)  + " :  "+ss.substr(position1+3,position2 - (position1+3))+ " -> ";
-//+ ss.substr(position2+1);
+      //+ ss.substr(position2+1);
       else
         entrystring = sss+ ":  " + ss.substr(0,position1)  + " :  "+ss.substr(position1+3);
 
@@ -325,12 +325,10 @@ void MessagePresenter::UpdateView(){
 
 }
 
-
-void MessagePresenter::getwarnings(char * fname){
+void MessagePresenter::getwarnings(char * fname)
+{
   char cstr[1512];
   std::string sstr;
-
-
 
   //  ifstream F("warnings");
   if (fname!=NULL){
@@ -363,22 +361,19 @@ void MessagePresenter::getwarnings(char * fname){
 
 }
 
-void MessagePresenter::addwarning(std::string msg,int ref){
-  // cout << "Adding "<< msg<<endl;
-
-  std::string sstr;
-
-
+void MessagePresenter::addwarning(const std::string & msg,int ref)
+{
+  //cout << "Adding " << msg << endl;
 
   //  ifstream F("warnings");
   TDatime t;
   //cout<<cstr<<endl;
-  sstr = msg;
+  std::string sstr = msg;
   string::size_type position1 = sstr.find("/");
   //cout <<sstr.substr(0,position1).c_str()<<" "<< sstr.substr(position1+1).c_str()<<" "<<i<<endl;
   if (position1 == std::string::npos){ // cpb sanity check!
-    std::cerr << "Malformed message: "<<msg<<"="<<sstr<<std::endl; 
-    return; 
+    std::cerr << "Malformed message: "<<msg<<"="<<sstr<<std::endl;
+    return;
   }
   std::string key = sstr.substr(0,position1);
   std::string val = sstr.substr(position1+1);
@@ -453,59 +448,63 @@ void MessagePresenter::addwarning(std::string msg,int ref){
 
 }
 
-int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
+int MessagePresenter::GetXtra(const std::string & str , std::string & cachedfile)
+{
+
+  writeCacheFile();
 
   std::string::size_type position1 = str.find("/");
-  
+
   if (position1 == std::string::npos){ // cpb format check
     std::cerr << "No / in message"<<std::endl;
     return 0;
   }
-  
+
   std::string add = str.substr(0,position1);
   std::string file = str.substr(position1+1);
 
+  const std::string _cache_name_ = "camera_cached_extra_info.tmp";
   std::string to;
   if (getenv("CAMCACHE")!=NULL){
     to = (std::string)getenv("CAMCACHE");
-    to = to + "/" + "cached.tmp";
+    to = to + "/" + _cache_name_;
   }
   else{
-    to = "./cached.tmp";
+    to = "./" + _cache_name_;
   }
-  
+
   if (getenv("CAMPROXY")!=NULL){
     add = (std::string)getenv("CAMPROXY");
     // cerr << "Using proxy "<< getenv("CAMPROXY") <<endl;
   }
-  
+
   std::string::size_type position2 = add.find(":");
   std::string host,port;
-  
+
   host = add;
   port = "8888";
-  
+
 
   if (position2 != std::string::npos){
     host = add.substr(0,position2);
     port = add.substr(position2+1);
   }
-  
-//   char * cpy = strdup(to.c_str());
-//   for (int i=0;i<strlen(cpy);++i){
-//     char slash;
-//     if (cpy[i] == '/' || cpy[i] == '\\'){
-//       slash =;  
-//     }
-//   }
-  
+
+  //   char * cpy = strdup(to.c_str());
+  //   for (int i=0;i<strlen(cpy);++i){
+  //     char slash;
+  //     if (cpy[i] == '/' || cpy[i] == '\\'){
+  //       slash =;
+  //     }
+  //   }
+
   FILE *F = fopen(to.c_str(),"wb");
   if (F==NULL){
     std::cerr<< "Could not open cache file: "<<to.c_str()<<endl;
     perror("fopen in GetXtra:");
     return 0;
   }
-  
+
   client c(host.c_str(),atoi(port.c_str()));
 
   if (c.Connect()>0){
@@ -633,50 +632,55 @@ void MessagePresenter::setup(){
 
 void MessagePresenter::DoClose(){
 
-
   //  close all active sockets first.
 
   //  std::cout<<"closing all sockets"<<std::endl;
-  
+
+  writeCacheFile(true);
+
   for(unsigned int i = 0;i<socklist.size();++i){
     if (socklist[i]!=NULL){
       ((client *)socklist[i])->shut_close();
-      
+
     }
   }
-  
+
   exit(0);
-  
+
   // cout << "I do not like to be closed."<<endl;
   //  fMainFrame1933->DontCallClose();
 }
 
 void  MessagePresenter::selectWarn(){
-
+  writeCacheFile();
   //  cout << "selected warn "<<fTextButton659->IsOn()<<endl;
   dowarn = fTextButton659->IsOn();
   UpdateRight();
 }
 
 void  MessagePresenter::selectErr(){
+  writeCacheFile();
   //cout << "selected Err "<< fTextButton514->IsOn()<<endl;
   doerr = fTextButton514->IsOn();
   UpdateRight();
 }
 
 void  MessagePresenter::selectRun(){
+  writeCacheFile();
   //cout << "selected Err "<< fTextButton514->IsOn()<<endl;
   dorun = fstopped->IsOn();
   UpdateRight();
 }
 
 void  MessagePresenter::selectInfo(){
+  writeCacheFile();
   //cout << "selected Info "<<fTextButton699->IsOn()<<endl;
   doinfo = fTextButton699->IsOn();
   UpdateRight();
 }
 
 void MessagePresenter::selectleft(){
+  writeCacheFile();
   //cout << "selectleft"<<endl;
   UpdateRight();
 
@@ -689,12 +693,12 @@ static const char *gFiletypes[] = { "All files",     "*",
 void MessagePresenter::dumpmsg(){
   Int_t i =  fListBox863->GetSelected();
   if (i<0) return;
-  
+
   //std::cerr << iwAlive <<std::endl;
 
   //static TString dir(".");
-  //std:;string 
-	static Bool_t overwr = kFALSE;
+  //std:;string
+  static Bool_t overwr = kFALSE;
   TGFileInfo fi;
   fi.fFilename = StrDup(savname);
   fi.fFileTypes = gFiletypes;
@@ -705,14 +709,14 @@ void MessagePresenter::dumpmsg(){
   std::string namestub;
   if (fi.fFilename && strlen(fi.fFilename)) {
     std::string s = fi.fFilename;
-    
+
     savdir = fi.fIniDir;
-    size_t pos2 = s.find_last_of("/\\");   
+    size_t pos2 = s.find_last_of("/\\");
     if (pos2!= string::npos) savname = s.substr(pos2+1);
     std::string stext,smsg;
 
     size_t pos = s.find_last_of(".");
-   
+
     std::cout << pos <<" "<<pos2<<" "<<s.length();
     std::cout << fi.fFilename << std::endl;
 
@@ -725,21 +729,21 @@ void MessagePresenter::dumpmsg(){
       stext = s;
       smsg = s;
       if (pos!=string::npos){
-	stext.replace(pos,s.length()-pos,".txt");
-	smsg.replace(pos,s.length()-pos,"_msg.txt");
+        stext.replace(pos,s.length()-pos,".txt");
+        smsg.replace(pos,s.length()-pos,"_msg.txt");
       }
       else {
-	stext = s+".txt";
-	smsg = s+".msg.txt";
+        stext = s+".txt";
+        smsg = s+".msg.txt";
       }
     }
     if (iwAlive>1){// also print png
-      
+
       if (iw->canvas() !=NULL)
-	iw->canvas()->Print(s.c_str());
-      
+        iw->canvas()->Print(s.c_str());
+
       if (iw->textedit() !=NULL){
-	iw->textedit()->SaveFile(stext.c_str());
+        iw->textedit()->SaveFile(stext.c_str());
       }
     }
     FILE * F = fopen(smsg.c_str(),"w");
@@ -747,7 +751,7 @@ void MessagePresenter::dumpmsg(){
       fprintf(F,"%s\n", fListBox863->GetEntry(i)->GetTitle());
       fclose(F);
     }
-    
+
   }
 }
 
@@ -776,6 +780,7 @@ void MessagePresenter::selectright(){
   }
   //  new TCanvas;
 }
+
 void MessagePresenter::Layout(){
   int fWidth =  fMainFrame1933->GetWidth();
   int fHeight =  fMainFrame1933->GetHeight();
@@ -803,7 +808,7 @@ void MessagePresenter::Layout(){
   // UpdateRight();
 
 }
-MessagePresenter::MessagePresenter():TGMainFrame()
+MessagePresenter::MessagePresenter(): TGMainFrame()
 {
 
   Pred=TColor::RGB2Pixel(240,50,50);
@@ -823,14 +828,15 @@ MessagePresenter::MessagePresenter():TGMainFrame()
   lastright=time(NULL);
   savepos =-2;
 }
+
 void MessagePresenter::display(){
 
   fMainFrame1933 = this;
   fMainFrame1933->SetLayoutBroken(kTRUE);
   fMainFrame1933->SetWindowName("CAMERA");
-  
+
   //=====================================
-  
+
   TGFont *ufont;         // will reflect user font changes
   ufont = gClient->GetFont("-adobe-helvetica-bold-r-*-*-14-*-*-*-*-*-iso8859-1");
   TGGC   *uGC;           // will reflect user GC changes
@@ -844,7 +850,7 @@ void MessagePresenter::display(){
   valStopped.fFont = ufont->GetFontHandle();
   valStopped.fGraphicsExposures = kFALSE;
   uGC = gClient->GetGC(&valStopped, kTRUE);
-  // 
+  //
 
   // NM: don't bother to set the layout here since it's set again lather in the function Layout.
   fTextButton515 = new TGTextButton(fMainFrame1933,"Clear all",-1,uGC->GetGC(),ufont->GetFontStruct());
@@ -878,25 +884,25 @@ void MessagePresenter::display(){
   fstopped = new TGCheckButton(fMainFrame1933,"Update",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fstopped, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fstopped->MoveResize(400,0,55,17);
-  
+
   fTextButton659 = new TGCheckButton(fMainFrame1933,"Warnings",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton659, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton659->MoveResize(75,0,72,17);
-  
+
   fTextButton699 = new TGCheckButton(fMainFrame1933,"Info",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton699, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton699->MoveResize(145,0,42,17);
 
   //========================================================================================================
   // list box
-  
+
   // NM: Left list box (algorithms names).
   fListBox816 = new TGListBox(fMainFrame1933,-1,kSunkenFrame);
   fListBox816->AddEntry("Hello",0);
   fMainFrame1933->AddFrame(fListBox816, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
 
   //NM: void MoveResize(Int_t x, Int_t y, UInt_t w, UInt_t h)
-  fListBox816->MoveResize(5,24,320,650); 
+  fListBox816->MoveResize(5,24,320,650);
 
 
 
@@ -926,26 +932,28 @@ void MessagePresenter::display(){
   Layout();
 }
 
-void MessagePresenter::messageloop(char * host,char * file){
-
-
+void MessagePresenter::messageloop(char * host,char * file)
+{
 
   //  MessagePresenter mp(NULL,100,100);
 
+  cachefileName = getCacheFilename();
+
   getwarnings(file);
+
+  writeCacheON = ( file == NULL );
+  readCacheFile();
 
   gSystem->ProcessEvents();
 
   std::vector<std::string> serverlist;
   std::vector<client *> clientlist;
-  
+
   std::vector<proto *> protolist;
   std::vector<int> connlist;
-  
-  
 
 
-    if (strcmp(host,"NULL")!=0){
+  if (strcmp(host,"NULL")!=0){
 
     string s = host;
     string str = s;
@@ -968,15 +976,15 @@ void MessagePresenter::messageloop(char * host,char * file){
       hostpart=serverlist[i];
       std::string::size_type pos;
       pos = serverlist[i].find(":");
-      
+
       if (pos!=string::npos){
         hostpart = serverlist[i].substr(0,pos);
         portpart = serverlist[i].substr(pos+1);
       }
-      
-      
+
+
       client *  c = new client(hostpart.c_str(),atoi(portpart.c_str()));
-      
+
       // cout <<serverlist[i]<<endl;
       clientlist.push_back(c);
       socklist.push_back((void *)c);
@@ -1018,6 +1026,7 @@ void MessagePresenter::messageloop(char * host,char * file){
       }
 
       if ((TGString)stat!=(TGString)savestat)
+
         fStatusBar528->SetText(stat);
       savestat = (TGString)stat;
 
@@ -1035,27 +1044,32 @@ void MessagePresenter::messageloop(char * host,char * file){
             if (r >0){
               buf[r] = '\0';
 
-              std::string s = buf;
+              const std::string s = buf;
+
               addwarning(s,1);
+              cachedWarnings.push_back(s);
+
               gSystem->ProcessEvents();
             }
-            else{
+            else
+            {
               gSystem->ProcessEvents();
             }
+
+            writeCacheFile();
 
           }
           if (r==-1){
             clientlist[i]->new_sock();
             connlist[i] =0;
             string str = "Connection to "+serverlist[i]+" terminated!";
-          
+
           }
-          
+
         }// connlist ==1
       } //for serverlist
     }
   }
-
   else{
     while(1){
       gSystem->ProcessEvents();
@@ -1064,21 +1078,84 @@ void MessagePresenter::messageloop(char * host,char * file){
 
 }
 
+void MessagePresenter::clearlist()
+{
+  allpairs.clear();
+  UpdateRight();
+}
+
+std::string MessagePresenter::getCacheFilename()
+{
+  const std::string _cache_name_ = "camera_cached_messages.tmp";
+  std::string to;
+  if ( getenv("CAMCACHE") != NULL )
+  {
+    to = (std::string)getenv("CAMCACHE");
+    to = to + "/" + _cache_name_;
+  }
+  else
+  {
+    to = "./" + _cache_name_;
+  }
+  return to;
+}
+
+void MessagePresenter::writeCacheFile(const bool force)
+{
+  if ( writeCacheON && !cachedWarnings.empty() )
+  {
+    static time_t lastWrite = time(NULL);
+
+    const time_t timeNow = time(NULL);
+    if ( force || cachedWarnings.size() > 25 || (timeNow-lastWrite) > 30 )
+    {
+      lastWrite = timeNow;
+
+      cout << "Writing messages to " << cachefileName << endl;
+
+      std::ofstream file(cachefileName.c_str(),std::ios::app);
+
+      unsigned int count(0);
+      for ( std::vector<std::string>::const_iterator i = cachedWarnings.begin();
+            i != cachedWarnings.end(); ++i, ++count )
+      {
+        file << *i << std::endl;
+        //cout << *i << endl;
+      }
+
+      file.close();
+
+      cachedWarnings.clear();      
+
+    }
+  }
+
+}
+
+void MessagePresenter::readCacheFile()
+{
+  if ( writeCacheON )
+  {
+    //cout << "Reading messages from " << cachefileName << endl;
+    getwarnings((char*)cachefileName.c_str());
+  }
+}
+
 int main(int /* argc */, char ** argv){
 #ifdef _WIN32
   printf("I will not work properly under windows!\n");
- #endif
- #ifndef _WIN32
+#endif
+#ifndef _WIN32
   dlerror();
- #endif
+#endif
   //  std::cout <<"Hello"<<std::endl;
-  
+
   int   dummy_argc   = 1;
   // NM: modified the following line to couple with warning message:
   // "deprecated conversion from string constant to char*"
   char *dummy_argv[] =  { (char*)"MP", NULL  };
 
-  TApplication * TApp = 
+  TApplication * TApp =
     new TApplication("MessagePresenter",&dummy_argc,dummy_argv);
   MessagePresenter mp;//(NULL,100,100);
   mp.display();

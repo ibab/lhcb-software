@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2011-08-18 - Chris Jones
+ - Add the ability to the camera client to reload old messages when started.
+
 =============== v1r21 ===============
 
 ! 2011-05-31 - Chris Jones

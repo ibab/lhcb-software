@@ -117,7 +117,7 @@ StatusCode CameraTool::initialize()
       for (unsigned int i = 0;i<num;++i){
         client * c = new client(m_servernames[i].c_str(), m_servports[i]);
         if (c->m_healthy==0) {
-          Warning( "Failed to setup CAMERA client" ).ignore();
+          Warning( "Failed to setup CAMERA client for server " + m_servernames[i] ).ignore();
           delete c;
           c = NULL;
         }
@@ -132,7 +132,7 @@ StatusCode CameraTool::initialize()
       m_camc = new client(m_servername.c_str(),m_servport);
       if (m_camc->m_healthy==0) 
       {
-        Warning( "Failed to setup CAMERA client" ).ignore();
+        Warning( "Failed to setup CAMERA client for server " + m_servername ).ignore();
         delete m_camc;
         m_camc = NULL;
 
