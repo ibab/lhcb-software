@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:01 GMT
-#include "ReturnWeight.h"
+#include "Mint/Mojito/DalitzEvents/ReturnWeight.h"
 using namespace MINT;
 
 ReturnWeight::ReturnWeight(IDalitzEventAccess* evts)

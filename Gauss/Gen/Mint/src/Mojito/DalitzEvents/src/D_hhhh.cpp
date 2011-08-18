@@ -5,7 +5,7 @@
  *      Author: mcoombes
  */
 //Local
-#include "D_hhhh.h"
+#include "Mint/Mojito/DalitzEvents/D_hhhh.h"
 
 //C++
 #include <iostream>
@@ -14,8 +14,8 @@
 #include "TRandom3.h"
 
 //MINT
-#include "SignalGenerator.h"
-#include "ParticlePropertiesList.h"
+#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
+#include "Mint/Mojito/ParticleProperties/ParticlePropertiesList.h"
 
 using namespace std;
 using namespace MINT;

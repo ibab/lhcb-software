@@ -1,12 +1,12 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Amplitude.h"
-#include "IDalitzEventAccess.h"
-#include "SpinFactorMaker.h"
-#include "LineshapeMaker.h"
-#include "Utils.h"
+#include "Mint/Mojito/Amplitudes/Amplitude.h"
+#include "Mint/Mojito/DalitzEvents/IDalitzEventAccess.h"
+#include "Mint/Mojito/SpinFactors/SpinFactorMaker.h"
+#include "Mint/Mojito/Lineshapes/LineshapeMaker.h"
+#include "Mint/Mint/Utils/Utils.h"
 
-#include "Permutator.h"
+#include "Mint/Mojito/Symmetries/Permutator.h"
 
 #include <algorithm>
 

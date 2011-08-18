@@ -11,13 +11,13 @@
 #include "TRandom2.h"
 
 #include "RooFitEventInterface.h"
-#include "NamedParameter.h"
-#include "DalitzEventList.h"
-#include "DalitzEventPattern.h"
-#include "FitAmplitude.h"
-#include "FitAmpSum.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
+#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
 
-#include "counted_ptr.h"
+#include "Mint/Mint/Utils/counted_ptr.h"
 
 #include <iostream>
 #include <complex>

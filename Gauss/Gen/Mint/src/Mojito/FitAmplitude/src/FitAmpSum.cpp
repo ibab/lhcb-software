@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "FitAmpSum.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
 
-#include "IDalitzEventAccess.h"
-#include "FitAmplitude.h"
-#include "MinuitParameterSet.h"
-#include "NamedDecayTreeList.h"
-#include "FitAmplitude.h"
-#include "IntegCalculator.h"
+#include "Mint/Mojito/DalitzEvents/IDalitzEventAccess.h"
+#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
+#include "Mint/Mint/Minimiser/MinuitParameterSet.h"
+#include "Mint/Mojito/DecayTrees/NamedDecayTreeList.h"
+#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
+#include "Mint/Mojito/FitAmplitude/IntegCalculator.h"
 
 #include <iostream>
 #include <cmath>

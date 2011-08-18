@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:59 GMT
-#include "FromFileGenerator.h"
+#include "Mint/Mojito/DalitzEventGeneration/FromFileGenerator.h"
 #include <iostream>
 using namespace std;
 using namespace MINT;

@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <algorithm>
-#include "AmpInitialiser.h"
-#include "DecayTreeComparisons.h"
-#include "Utils.h"
-#include "NamedDecayTreeList.h"
+#include "Mint/Mojito/DecayTrees/AmpInitialiser.h"
+#include "Mint/Mojito/DecayTrees/DecayTreeComparisons.h"
+#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/Mojito/DecayTrees/NamedDecayTreeList.h"
 
 using namespace std;
 using namespace MINT;

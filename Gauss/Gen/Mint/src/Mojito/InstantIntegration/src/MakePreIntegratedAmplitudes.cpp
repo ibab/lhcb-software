@@ -1,10 +1,10 @@
-#include "MakePreIntegratedAmplitudes.h"
+#include "Mint/Mojito/InstantIntegration/MakePreIntegratedAmplitudes.h"
 
-#include "SignalGenerator.h"
-#include "FromFileGenerator.h"
+#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
+#include "Mint/Mojito/DalitzEventGeneration/FromFileGenerator.h"
 
-#include "FastAmplitudeIntegrator.h"
-#include "FitAmpSum.h"
+#include "Mint/Mojito/DalitzIntegrator/FastAmplitudeIntegrator.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
 
 #include <iostream>
 

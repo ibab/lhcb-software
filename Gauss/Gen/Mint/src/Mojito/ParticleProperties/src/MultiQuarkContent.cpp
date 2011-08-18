@@ -1,4 +1,4 @@
-#include "MultiQuarkContent.h"
+#include "Mint/Mojito/ParticleProperties/MultiQuarkContent.h"
 
 using namespace std;
 

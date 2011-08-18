@@ -5,22 +5,22 @@
 
 #include "TError.h"
 
-#include "DalitzEvent.h"
-#include "DalitzEventList.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
 
-#include "DalitzArea.h"
-#include "DalitzBox.h"
-#include "DalitzBoxSet_Method2.h"
-#include "MappedDalitzArea.h"
-#include "DalitzCoordinate.h"
+#include "Mint/Mojito/BetterMC/DalitzArea.h"
+#include "Mint/Mojito/BetterMC/DalitzBox.h"
+#include "Mint/Mojito/BetterMC/DalitzBoxSet_Method2.h"
+#include "Mint/Mojito/BetterMC/MappedDalitzArea.h"
+#include "Mint/Mojito/BreitWignerMC/DalitzCoordinate.h"
 
-#include "FitAmpSum.h"
-#include "PlotSet.h"
-#include "DalitzPdfBase.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
+#include "Mint/Mojito/DalitzEvents/PlotSet.h"
+#include "Mint/Mojito/DalitzFits/DalitzPdfBase.h"
 
-#include "Utils.h"
+#include "Mint/Mint/Utils/Utils.h"
 
-#include "NamedParameter.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
 
 #include "TRandom3.h"
 

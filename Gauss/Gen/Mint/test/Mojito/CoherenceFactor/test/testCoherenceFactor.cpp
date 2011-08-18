@@ -1,11 +1,11 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:59 GMT
-#include "FitParameter.h"
-#include "NamedParameter.h"
-#include "DalitzEventPattern.h"
-#include "FitAmpSum.h"
+#include "Mint/Mint/FitParameter/FitParameter.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
 
-#include "CoherenceFactor.h"
+#include "Mint/Mojito/CoherenceFactor/CoherenceFactor.h"
 
 #include <ctime>
 

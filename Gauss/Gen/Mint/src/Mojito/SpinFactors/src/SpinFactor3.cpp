@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
-#include "SpinFactors.h"
-#include "DecayTree.h"
-#include "SpinSumV.h"
-#include "SpinSumT.h"
-#include "CLHEPSystemOfUnits.h"
+#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/Mojito/DecayTrees/DecayTree.h"
+#include "Mint/Mojito/SpinFactors/SpinSumV.h"
+#include "Mint/Mojito/SpinFactors/SpinSumT.h"
+#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
 
-#include "ZTspin1.h"
-#include "ZTspin2.h"
+#include "Mint/Mojito/Zemach/ZTspin1.h"
+#include "Mint/Mojito/Zemach/ZTspin2.h"
 
 #include <iostream>
 

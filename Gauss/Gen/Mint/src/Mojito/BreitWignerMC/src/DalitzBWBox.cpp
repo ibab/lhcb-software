@@ -1,12 +1,12 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
 
-#include "DalitzBWBox.h"
+#include "Mint/Mojito/BreitWignerMC/DalitzBWBox.h"
 
-#include "Minimiser.h"
-#include "Minimisable.h"
-#include "MinuitParameterSet.h"
-#include "FitParameter.h"
+#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/Mint/Minimiser/Minimisable.h"
+#include "Mint/Mint/Minimiser/MinuitParameterSet.h"
+#include "Mint/Mint/FitParameter/FitParameter.h"
 
 #include <iostream>
 #include <ctime>

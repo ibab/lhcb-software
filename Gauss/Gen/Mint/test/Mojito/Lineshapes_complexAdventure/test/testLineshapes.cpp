@@ -1,19 +1,19 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:04 GMT
-#include "FitParameter.h"
-#include "NamedParameter.h"
-#include "DalitzEventPattern.h"
-#include "FitAmpSum.h"
-#include "FitAmplitude.h"
-#include "DalitzHistoSet.h"
+#include "Mint/Mint/FitParameter/FitParameter.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
+#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
+#include "Mint/Mojito/BreitWignerMC/DalitzHistoSet.h"
 
-#include "Minimisable.h"
-#include "Minimiser.h"
+#include "Mint/Mint/Minimiser/Minimisable.h"
+#include "Mint/Mint/Minimiser/Minimiser.h"
 
-#include "SignalGenerator.h"
-#include "FastAmplitudeIntegrator.h"
+#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
+#include "Mint/Mojito/DalitzIntegrator/FastAmplitudeIntegrator.h"
 
-#include "CoherenceFactor.h"
+#include "Mint/Mojito/CoherenceFactor/CoherenceFactor.h"
 
 #include <ctime>
 

@@ -2,9 +2,9 @@
 // status:  Mon 9 Feb 2009 19:18:02 GMT
 #include <vector>
 
-#include "AssociatedDecayTreeItem.h"
-#include "DecayTreeItem.h"
-#include "IDalitzEvent.h"
+#include "Mint/Mojito/DecayTrees/AssociatedDecayTreeItem.h"
+#include "Mint/Mojito/DecayTrees/DecayTreeItem.h"
+#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
 
 AssociatedDecayTreeItem::AssociatedDecayTreeItem(int i)
   : DecayTreeItem(i)

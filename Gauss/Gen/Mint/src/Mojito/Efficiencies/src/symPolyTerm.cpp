@@ -1,5 +1,5 @@
-#include "symPolyTerm.h"
-#include "Utils.h"
+#include "Mint/Mojito/Efficiencies/symPolyTerm.h"
+#include "Mint/Mint/Utils/Utils.h"
 
 #include <iostream>
 #include <algorithm>

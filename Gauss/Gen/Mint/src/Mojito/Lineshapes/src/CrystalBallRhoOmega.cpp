@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:04 GMT
-#include "CrystalBallRhoOmega.h"
-#include "CLHEPPhysicalConstants.h"
-#include "ParticlePropertiesList.h"
+#include "Mint/Mojito/Lineshapes/CrystalBallRhoOmega.h"
+#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/Mojito/ParticleProperties/ParticlePropertiesList.h"
 
 #include <iostream>
 

@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
 
-#include "DalitzBoxSet.h"
+#include "Mint/Mojito/BetterMC/DalitzBoxSet.h"
 #include <algorithm>
 #include <ctime>
 //#include <algo.h>

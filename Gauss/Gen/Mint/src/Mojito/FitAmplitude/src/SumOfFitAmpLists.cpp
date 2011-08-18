@@ -1,4 +1,4 @@
-#include "SumOfFitAmpLists.h"
+#include "Mint/Mojito/FitAmplitude/SumOfFitAmpLists.h"
 
 using namespace std;
 using namespace MINT;

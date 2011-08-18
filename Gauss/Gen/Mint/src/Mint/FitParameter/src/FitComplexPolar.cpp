@@ -3,10 +3,10 @@
 #include <cmath>
 #include <string>
 
-#include "CLHEPPhysicalConstants.h"
+#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
 
-#include "FitComplexPolar.h"
-#include "NamedParameter.h"
+#include "Mint/Mint/FitParameter/FitComplexPolar.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
 
 using namespace std;
 using namespace MINT;

@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
-#include "ParsedParameterFileList.h"
+#include "Mint/Mint/NamedParameter/ParsedParameterFileList.h"
 
-#include "ParsedParameterFile.h"
+#include "Mint/Mint/NamedParameter/ParsedParameterFile.h"
 #include <string>
 #include <cassert>
 

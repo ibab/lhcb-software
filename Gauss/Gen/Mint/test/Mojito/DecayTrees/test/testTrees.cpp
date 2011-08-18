@@ -1,16 +1,16 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
 #include <iostream>
-#include "DecayTree.h"
-#include "DecayTreeComparisons.h"
-#include "AssociatingDecayTree.h"
-#include "AssociatedDecayTree.h"
-#include "NamedDecayTreeList.h"
+#include "Mint/Mojito/DecayTrees/DecayTree.h"
+#include "Mint/Mojito/DecayTrees/DecayTreeComparisons.h"
+#include "Mint/Mojito/DecayTrees/AssociatingDecayTree.h"
+#include "Mint/Mojito/DecayTrees/AssociatedDecayTree.h"
+#include "Mint/Mojito/DecayTrees/NamedDecayTreeList.h"
 
-#include "DalitzEventList.h"
-#include "DalitzEventPattern.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
 
-#include "counted_ptr.h"
+#include "Mint/Mint/Utils/counted_ptr.h"
 
 using namespace std;
 using namespace MINT;

@@ -1,4 +1,4 @@
-#include "Chi2Box.h"
+#include "Mint/Mojito/Chi2Test/Chi2Box.h"
 
 int main(){
 

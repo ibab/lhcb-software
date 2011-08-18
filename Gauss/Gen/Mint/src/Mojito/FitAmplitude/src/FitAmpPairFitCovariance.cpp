@@ -1,7 +1,7 @@
 
-#include "FitAmpPairFitCovariance.h"
-#include "FitAmpPairList.h"
-#include "Utils.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpPairFitCovariance.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpPairList.h"
+#include "Mint/Mint/Utils/Utils.h"
 
 #include <iostream>
 

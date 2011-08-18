@@ -1,10 +1,10 @@
-#include "symPolyTerm.h"
-#include "symMultiPolyTerm.h"
+#include "Mint/Mojito/Efficiencies/symPolyTerm.h"
+#include "Mint/Mojito/Efficiencies/symMultiPolyTerm.h"
 #include <iostream>
-#include "Eff4piSymmetric.h"
-#include "DalitzEventList.h"
+#include "Mint/Mojito/Efficiencies/Eff4piSymmetric.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
 
-#include "CLHEPSystemOfUnits.h"
+#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
 
-#include "IntegCalculator.h"
-#include "FitAmpPairList.h"
-#include "Minimiser.h"
-#include "ParsedParameterLine.h"
+#include "Mint/Mojito/FitAmplitude/IntegCalculator.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpPairList.h"
+#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/Mint/NamedParameter/ParsedParameterLine.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>

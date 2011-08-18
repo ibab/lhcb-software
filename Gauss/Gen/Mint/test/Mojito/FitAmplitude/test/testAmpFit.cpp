@@ -1,32 +1,32 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "FitParameter.h"
-#include "NamedParameter.h"
-#include "Minimiser.h"
-#include "Neg2LL.h"
-#include "EventList.h"
+#include "Mint/Mint/FitParameter/FitParameter.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/Mint/PdfAndLogL/Neg2LL.h"
+#include "Mint/Mint/Events/EventList.h"
 
-#include "PdfBase.h"
+#include "Mint/Mint/PdfAndLogL/PdfBase.h"
 
 #include "TRandom.h"
 
 #include <iostream>
 
-#include "FitComplex.h"
-#include "FitAmplitude.h"
+#include "Mint/Mint/FitParameter/FitComplex.h"
+#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
 
-#include "DalitzEventList.h"
-#include "DalitzEventPattern.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
 
 #include "TH1D.h"
 #include "TFile.h"
 
-#include "FitAmpSum.h"
+#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
 
-#include "CLHEPSystemOfUnits.h"
+#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
 
-#include "AllPossibleSij.h"
-#include "PlotSet.h"
+#include "Mint/Mojito/DalitzEvents/AllPossibleSij.h"
+#include "Mint/Mojito/DalitzEvents/PlotSet.h"
 
 using namespace std;
 using namespace MINT;

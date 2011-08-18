@@ -1,17 +1,17 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 
-#include "LineshapeMaker.h"
-#include "ILineshape.h"
-#include "Utils.h"
-#include "AssociatedDecayTree.h"
-#include "IDalitzEventAccess.h"
-#include "BW_BW.h"
-#include "GounarisSakurai.h"
-#include "Lass.h"
-#include "Flatte.h"
-#include "FocusFlatte.h"
-#include "CrystalBarrelFOCUS.h"
+#include "Mint/Mojito/Lineshapes/LineshapeMaker.h"
+#include "Mint/Mojito/Lineshapes/ILineshape.h"
+#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/Mojito/DecayTrees/AssociatedDecayTree.h"
+#include "Mint/Mojito/DalitzEvents/IDalitzEventAccess.h"
+#include "Mint/Mojito/Lineshapes/BW_BW.h"
+#include "Mint/Mojito/Lineshapes/GounarisSakurai.h"
+#include "Mint/Mojito/Lineshapes/Lass.h"
+#include "Mint/Mojito/Lineshapes/Flatte.h"
+#include "Mint/Mojito/Lineshapes/FocusFlatte.h"
+#include "Mint/Mojito/Lineshapes/CrystalBarrelFOCUS.h"
 
 #include <iostream>
 

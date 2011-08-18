@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "NamedParameter.h"
+#include "Mint/Mint/NamedParameter/NamedParameter.h"
 
 /*
   compile: make

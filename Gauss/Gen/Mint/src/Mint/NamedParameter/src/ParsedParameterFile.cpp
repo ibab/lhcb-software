@@ -1,11 +1,11 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
 
-#include "ParsedParameterFile.h"
+#include "Mint/Mint/NamedParameter/ParsedParameterFile.h"
 #include <fstream>
 #include <iostream>
 
-#include "Utils.h"
+#include "Mint/Mint/Utils/Utils.h"
 using namespace std;
 using namespace MINT;
 

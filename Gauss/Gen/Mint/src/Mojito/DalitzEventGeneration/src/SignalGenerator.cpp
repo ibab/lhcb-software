@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:59 GMT
-#include "SignalGenerator.h"
+#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
 #include <ctime>
 #include <iostream>
 #include <complex>

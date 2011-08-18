@@ -1,5 +1,5 @@
 
-#include "DalitzCoordSet.h"
+#include "Mint/Mojito/BreitWignerMC/DalitzCoordSet.h"
 #include <algorithm>
 
 using namespace std;
