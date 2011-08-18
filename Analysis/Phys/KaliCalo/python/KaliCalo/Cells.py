@@ -21,7 +21,9 @@ __all__     = (
     'InnerZone'  ,
     'MiddleZone' ,
     'OuterZone'  ,
-    'Zones'
+    'Zones'      ,
+    #
+    'oppositeCell'
     )
 # ======================================================================
 import ROOT
@@ -50,6 +52,8 @@ Zones      = (
     EcalZone   
     )
 
+def oppositeCell(cell):
+  return CellID( cell.calo(), cell.area(), ( GlobalRow - cell.row() ) + 32, ( GlobalCol - cell.col() ) + 32 )
 
 # =============================================================================
 if '__main__' == __name__ :
