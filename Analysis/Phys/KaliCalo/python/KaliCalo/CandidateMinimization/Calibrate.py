@@ -40,32 +40,73 @@ def getEcalCells():
   cells.sort()
   return cells
 
-def indexToCellID(cellList):
+def decodeCellID( cellinfo ):
+  """
+  Decodes the CellID.index() information:
+    * 6 bits: col.
+    * 6 bits: row.
+    * 2 bits: area.
+    * 2 bits: calo.
+  """
+  def intToBinary( num , digits = None ):
+    out = ''
+    while num > 0:
+      j = num & 1
+      out = str(j) + out
+      num >>= 1
+    if digits and len(out) > digits:
+      print "Warning: Output is longer than 'digits'."
+      return out
+    if digits:
+      while True:
+        if len(out) < digits:
+          out = '0%s' %out
+        else:
+          break
+    return out
+
+  if not isinstance(cellinfo, int):
+    cellinfo = int(cellinfo)
+  bin = intToBinary( cellinfo , 16 )
+  #calo = int( bin[0:2] , 2 )
+  calo = 2
+  area = int( bin[2:4] , 2 )
+  row  = int( bin[4:10] , 2 )
+  col  = int( bin[10:16] , 2 )
+  return Cells.CellID( calo , area , row , col )
+
+def decodeCellIDs( cellList ):
   output = []
   ecal = getCalo()
   for cell in cellList:
-    cellID = ecal.cellIdByIndex(int(cell))
+    cellID = decodeCellID(cell)
     if ecal.valid(cellID) and not cellID.isPin():
       output.append(cellID)
+    else:
+      print "Non-valid cell -> %s" % cellID
   return output
 
 castorDir = 'castor:/castor/cern.ch/grid/'
 
 CellID = FakeCells.CellID
 betas = [8.3, 8.8, 9.5]
+sigmas = [15.0, 15.0, 15.0]
 ecalCells = getEcalCells()
 
 if __name__ == '__main__':
   parser = OptionParser()
   parser.add_option("-l", "--lambdaFile",
                     dest="lambdaFile", action="store", type="string", default="",
-                    help="FILE where lambda constants are stored", metavar="FILE")
+                    help="FILE where input constants are stored", metavar="FILE")
   parser.add_option("-c", "--cellIDs",
                     dest="cellIDs", action="store", type="string", default="",
                     help="comma-separated list of CELLIDs to calibrate", metavar="CELLIDs")
   parser.add_option("-t", "--cellType",
                     dest="cellType", action="store", type="string", default="SameCell",
                     help="use CELLTYPE cell grouping", metavar="CELLTYPE")
+  parser.add_option("-o", "--outputDir",
+                    dest="outputDir", action="store", type="string", default="",
+                    help="DIR where to store output constants", metavar="DIR")
   (options, args) = parser.parse_args()
   # Check the lambdas dir and join lambdas (if any)
   lambdas = LambdaMap.LambdaMap()
@@ -74,22 +115,35 @@ if __name__ == '__main__':
     print "Found DB -> %s" % lambdaFile
     lambdas.read(lambdaFile)
   # Load the cell massager
-  CellMassager = getattr(FakeCells, options.cellType, None)()
+  CellMassager = getattr(FakeCells, options.cellType, None)
   if not CellMassager:
     print "Wrong Cell Massager!"
     sys.exit(1)
+  CellMassager = CellMassager()
   # Get a list of cells to add
   if "" == options.cellIDs:
     print "No cell ID specified!"
     sys.exit(1)
   cellsToCalibrate = {}
-  for cellID in indexToCellID(options.cellIDs.split(',')): # CellIDs are comma separated
+  oppositeCells = {}
+  cellRel = {}
+  for cellID in decodeCellIDs(options.cellIDs.split(',')): # CellIDs are comma separated
     cellsToCalibrate[CellMassager(cellID)] = []
+    #oppositeCells[CellMassager(Cells.oppositeCell(CellMassager(cellID)))] = []
   print "Cells to calibrate: %s" % ' '.join(map(str, cellsToCalibrate.keys()))
   for cellID in ecalCells:
     mCellID = CellMassager(cellID)
+    oppCellID = Cells.oppositeCell(cellID)
+    oppMCellID = CellMassager(oppCellID)
     if mCellID in cellsToCalibrate.keys():
+      if not mCellID in cellRel:
+        cellRel[mCellID] = []
       cellsToCalibrate[mCellID].append(cellID)
+      if not oppMCellID in oppositeCells:
+        oppositeCells[oppMCellID] = []
+        cellRel[mCellID].append(oppMCellID)
+      oppositeCells[oppMCellID].append(oppCellID)
+  print cellRel
   # Get ntuples
   ntuples = []
   for arg in args:
@@ -106,33 +160,73 @@ if __name__ == '__main__':
   minuit = EcalMinimizer()
   for area, beta in enumerate(betas):
     minuit.setBeta(area, beta)
+  for area, sigma in enumerate(sigmas):
+    minuit.setSigma(area, sigma)
+  #minuit.setDebug()
   minuit.loadFiles(fileList)
-  minuit.configure(len(cellsToCalibrate)+1)
+  minuit.configure(2*len(cellsToCalibrate)+1)
   # Add cells to calibrate
+  print "Adding cells to calibrate"
   for var, cellList in cellsToCalibrate.items():
-    varName = str(var.all())
+    varName = str(var.index())
     for cell in cellList:
-      minuit.addCell(cell.index(), varName, lambdas[cell][-1])
+      minuit.addCell(cell.all(), varName, lambdas[cell][-1])
+    for oppMCell in cellRel[var]:
+      oppVarName = str(oppMCell.index())
+      for cell in oppositeCells[oppMCell]:
+        minuit.addCell(cell.all(), oppVarName, lambdas[cell][-1])
   # Add other cells with a configuration
+  print "Adding fixed cells"
   for cell in lambdas:
-    if not minuit.hasCell(cell.index()):
-      minuit.addCell(cell.index(), "fixed", lambdas[cell][-1])
+    if not minuit.hasCell(cell.all()):
+      minuit.addCell(cell.all(), "fixed", lambdas[cell][-1])
   # Minimize all vars
   newLambdas = LambdaMap.LambdaMap()
   for var in cellsToCalibrate:
-    varName = str(var.all())
+    oppVars = cellRel[var]
+    print "Calibrating -> %s and %s" % (var, ' and '.join(map(str,oppVars)))
+    varName = str(var.index())
     for varToFix in cellsToCalibrate:
-      varToFix = str(varToFix.all())
-      value = lambdas[cellsToCalibrate[var][0]][-1]
+      oppVarsToFix = cellRel[varToFix]
+      value    = lambdas[cellsToCalibrate[varToFix][0]][-1]
+      varToFix    = str(varToFix.index())
       if varToFix != varName:
         minuit.setFixedVar(varToFix, value)
+        for oppVarToFix in oppVarsToFix:
+          oppValue = lambdas[oppositeCells[oppVarToFix][0]][-1]
+          oppVarName = str(oppVarToFix.index())
+          minuit.setFixedVar(oppVarName, oppValue)
       else:
         minuit.setLimitedVar(varToFix, value, value*0.95, value*1.05)
+        for oppVarToFix in oppVarsToFix:
+          oppValue = lambdas[oppositeCells[oppVarToFix][0]][-1]
+          oppVarName = str(oppVarToFix.index())
+          minuit.setLimitedVar(oppVarName, oppValue, oppValue*0.95, oppValue*1.05)
     sc = minuit.minimize()
     # TODO: error handling
     calib = minuit.getVarCalib(varName)
     for cell in cellsToCalibrate[var]:
       l = newLambdas[cell]
       l[-1] = calib
-  
+    for oppVar in cellRel[var]:
+      oppVarName = str(oppVar.index())
+      calib = minuit.getVarCalib(oppVarName)
+      for cell in oppositeCells[oppVar]:
+        l = newLambdas[cell]
+        l[-1] = calib
+  print "We have %s new calibrations" % len(newLambdas.lambdas())
+  fileName = "%s.gz" % '-'.join([str(c.index()) for c in cellsToCalibrate.keys()])
+  outputDir = os.path.abspath(options.outputDir)
+  if not os.path.exists(outputDir):
+    os.makedirs(outputDir)
+  fileName = os.path.join(outputDir, fileName)
+  newLambdas.save(fileName)
+  lambdasFile = os.path.join(outputDir,"lambdas.input")
+  if not os.path.exists(lambdasFile):
+    with open(lambdasFile, 'w') as f:
+      f.write("")
+  with open(lambdasFile, 'a') as f:
+    f.write(" %s " % fileName)
+  print "Done!"
+
 # EOF
