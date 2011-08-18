@@ -53,11 +53,11 @@ int CellCutter::cut(){
   if (!m_cut) return 0;
   if (!m_files) return 0;
   // Configure cut formula
-  m_cutFormula = new TTreeFormula("cut", m_cut, m_chain);
+  if ( !m_cut.Empty() ) m_cutFormula = new TTreeFormula("cut", m_cut, m_chain);
   // Let's rock
   for ( int i=0; m_chain->GetEntry(i); i++ ){
     if ( m_m12 > 250.0 ) continue; // cut on mass
-    if ( !m_cutFormula->EvalInstance() ) continue; // apply user's cuts
+    if ( m_cutFormula && (!m_cutFormula->EvalInstance()) ) continue; // apply user's cuts
     if (m_cell1 != 0 && m_cell2 != 0) {
       if (m_fileMap.count(m_cell1)>0){
         fillTree( m_fileMap[m_cell1] );
