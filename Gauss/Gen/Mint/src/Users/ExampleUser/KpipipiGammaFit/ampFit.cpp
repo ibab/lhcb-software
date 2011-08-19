@@ -1,35 +1,35 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:01 GMT
-#include "FitParameter.h"
-#include "NamedParameter.h"
-#include "Minimiser.h"
-#include "Neg2LL.h"
-#include "Neg2LLSum.h"
-#include "DalitzEventList.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/Minimiser.h"
+#include "Mint/Neg2LL.h"
+#include "Mint/Neg2LLSum.h"
+#include "Mint/DalitzEventList.h"
 #include "TH2D.h"
 #include "TNtupleD.h"
 
-#include "CLHEPPhysicalConstants.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 
 
-#include "PdfBase.h"
-#include "DalitzPdfBase.h"
-#include "DalitzPdfBaseFastInteg.h"
-#include "FitAmplitude.h"
-#include "FitAmpSum.h"
+#include "Mint/PdfBase.h"
+#include "Mint/DalitzPdfBase.h"
+#include "Mint/DalitzPdfBaseFastInteg.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/FitAmpSum.h"
 
-#include "DalitzEvent.h"
+#include "Mint/DalitzEvent.h"
 
-#include "AmpRatios.h"
+#include "Mint/AmpRatios.h"
 
-#include "IEventGenerator.h"
-#include "DalitzBWBoxSet.h"
-#include "DalitzBoxSet.h"
+#include "Mint/IEventGenerator.h"
+#include "Mint/DalitzBWBoxSet.h"
+#include "Mint/DalitzBoxSet.h"
 
-#include "SignalGenerator.h"
-#include "FromFileGenerator.h"
+#include "Mint/SignalGenerator.h"
+#include "Mint/FromFileGenerator.h"
 
-#include "cexp.h"
+#include "Mint/cexp.h"
 
 
 #include "TGraph.h"
@@ -42,9 +42,9 @@
 
 #include <iostream>
 
-#include "DalitzPdfNormChecker.h"
+#include "Mint/DalitzPdfNormChecker.h"
 
-#include "IReturnComplex.h"
+#include "Mint/IReturnComplex.h"
 #include <complex>
 
 using namespace std;
