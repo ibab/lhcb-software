@@ -202,7 +202,7 @@ StatusCode CameraTool::initialize()
     debug() << "Setup of CameraTool is done"<<endreq;
 
   // Send a message myself, announcing I am alive and well
-  this->SendAndClearTS( ICameraTool::INFO, name(), "CameraTool is ACTIVE" );
+  //this->SendAndClearTS( ICameraTool::INFO, name(), "CameraTool is ACTIVE" );
 
   return sc;
 }
@@ -283,7 +283,8 @@ void CameraTool::ReplacePVSSMessageParameters(MessageLevel PVSSl, std::string PV
 
 //=============================================================================
 
-int CameraTool::CameraToPVSSMessageLevel(MessageLevel l){
+int CameraTool::CameraToPVSSMessageLevel(MessageLevel l)
+{
   if(m_WarningPVSS == l) return ICameraTool::WARNING_PVSS;
   else if(m_ErrorPVSS == l) return ICameraTool::ERROR_PVSS;
   else return 0;
@@ -293,9 +294,11 @@ int CameraTool::CameraToPVSSMessageLevel(MessageLevel l){
 //=============================================================================
 
 int CameraTool::CameraToPVSS(MessageLevel l, std::string who, std::string what,
-                             int messagePeriod){
+                             int messagePeriod)
+{
   // Check if the message format is the standard Camera messages format:
-  if( (l != ICameraTool::WARNING_PVSS) && (l != ICameraTool::ERROR_PVSS) ){
+  if( (l != ICameraTool::WARNING_PVSS) && (l != ICameraTool::ERROR_PVSS) )
+  {
     ReplaceMessageParameters(l, who, what);
     // Check if messages must be sent also to PVSS
     if(!m_SendMessagesToPVSS)return 1;
@@ -306,11 +309,13 @@ int CameraTool::CameraToPVSS(MessageLevel l, std::string who, std::string what,
     }
   }
   // Check if a message is explicitly made to be sent to PVSS
-  else if(l == ICameraTool::WARNING_PVSS){
+  else if(l == ICameraTool::WARNING_PVSS)
+  {
     ReplaceMessageParameters(ICameraTool::WARNING, who, what, l, who, what);
     SendToPVSS(messagePeriod);
   }
-  else if(l == ICameraTool::ERROR_PVSS){
+  else if(l == ICameraTool::ERROR_PVSS)
+  {
     ReplaceMessageParameters(ICameraTool::ERROR, who, what, l, who, what);
     SendToPVSS(messagePeriod);
   }
@@ -319,21 +324,25 @@ int CameraTool::CameraToPVSS(MessageLevel l, std::string who, std::string what,
 
 //=============================================================================
 
-int CameraTool::SendToPVSS(int messagePeriod){
+int CameraTool::SendToPVSS(int messagePeriod)
+{
   // Message periods setting:
-  if(m_messagePeriod < 1){
+  if(m_messagePeriod < 1)
+  {
     m_messagePeriod = 1; // Check to avoid unreasonable numbers for m_messagePeriod
     debug()<<"m_messagePeriod have been set to the unreasonable number: "
            <<m_messagePeriod <<", it will be set to 1."<<endmsg;
   }
-  if(messagePeriod < 1){
+  if(messagePeriod < 1)
+  {
     if(messagePeriod < 0)debug()<<"messagePeriod have not been set, "
                                 <<"or it has been set to the unreasonable number: "
                                 <<messagePeriod <<", it will be set to: "<< m_messagePeriod
                                 <<endmsg;
     messagePeriod = m_messagePeriod;
   }
-  if(m_MessageRateCheckFlag && (m_PVSSmsgLev != ICameraTool::CAM_COMMAND)){
+  if(m_MessageRateCheckFlag && (m_PVSSmsgLev != ICameraTool::CAM_COMMAND))
+  {
     if(!MessageRateCheck(m_PVSSmsgLev, m_PVSSwho, m_PVSSwhat,(messagePeriod - 1),true) )return 0;
   }
   // The service content format is:
@@ -347,7 +356,8 @@ int CameraTool::SendToPVSS(int messagePeriod){
                  << "/" << t
                  << "/"<<m_PVSSwho <<": " << m_PVSSwhat;
   m_message = stream_message.str();
-  if (m_DIMService){
+  if (m_DIMService)
+  {
     m_DIMService->updateService((char*)m_message.c_str());
     debug()<<"The message sent to PVSS is: "<<m_message<<endmsg;
     // Use the following line only for tests porpouses.
@@ -360,7 +370,8 @@ int CameraTool::SendToPVSS(int messagePeriod){
 
 int CameraTool::SetCameraToPVSSConfig(bool sendMessagesToPVSS,
                                       MessageLevel warning_PVSS,
-                                      MessageLevel error_PVSS){
+                                      MessageLevel error_PVSS)
+{
   m_SendMessagesToPVSS = sendMessagesToPVSS;
   m_WarningPVSS = warning_PVSS;
   m_ErrorPVSS = error_PVSS;
@@ -369,15 +380,20 @@ int CameraTool::SetCameraToPVSSConfig(bool sendMessagesToPVSS,
 }
 //=============================================================================
 
-std::string CameraTool::StripMessage(std::string what){
+std::string CameraTool::StripMessage(const std::string &what)
+{
   boost::regex rePattern("[\\d]*"); // Pattern to search and eliminate (all numbers).
   return boost::regex_replace(what, rePattern, std::string(""));
 }
 
 //=============================================================================
 
-bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string what,
-                                  int messagePeriod, bool IsPVSSMessageFlag){
+bool CameraTool::MessageRateCheck(const MessageLevel l, 
+                                  const std::string& who, 
+                                  const std::string& what,
+                                  const int messagePeriod, 
+                                  const bool IsPVSSMessageFlag)
+{
   // The following string(s) include the algorithms for which camera must not perform any rate check:
   std::string SafeAlgo1 = "ToolSvc.RichUKL1Disable";
   if(who.find(SafeAlgo1) != std::string::npos)return true;
