@@ -20,6 +20,8 @@ __all__ = (
     'StdLooseDplus2KPiPiOppSignPi' ,
     'StdLooseDsplus2KKPi' ,
     'StdLooseDplus2hhh',
+    'StdLooseDplus2KKK',
+    'StdLooseDsplus2KKPiOppSign',
     'locations'
     )
 # =============================================================================
@@ -73,6 +75,51 @@ locations = updateDoD ( StdLooseDsplus2KKPi )
 StdLooseDplus2KPiPiOppSignPi = StdLooseDplus2KPiPi.clone("StdLooseDplus2KPiPiOppSignPi")
 StdLooseDplus2KPiPiOppSignPi.DecayDescriptor = "[D+ -> pi- pi+ K+]cc"
 locations = updateDoD ( StdLooseDplus2KPiPiOppSignPi )
+
+########################################################################################
+
+StdLooseDplus2KKK = CombineParticles ( 'StdLooseDplus2KKK' )
+
+StdLooseDplus2KKK.Inputs = [ "Phys/StdLooseKaons/Particles" ]
+StdLooseDplus2KKK.DecayDescriptor = "[D+ -> K- K+ K+]cc" 
+StdLooseDplus2KKK.DaughtersCuts = {
+    "K+"  : "(PT > 250*MeV) & (P > 2000*MeV) &((MIPCHI2DV(PRIMARY)) > 2.0 ) & (PIDK-PIDpi > 3.0)"
+    }
+
+#Need an upper mass window of 100 MeV for background estimation
+#and a lower mass window of 200 to catch the D+ and Ds
+
+StdLooseDplus2KKK.CombinationCut =  "(AM>1760.*MeV) & (AM<2080.*MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 2500*MeV) & (ADOCACHI2CUT(50 , '' )) & (ANUM(MIPCHI2DV(PRIMARY) > 4.0 ) >= 2) & (AHASCHILD(MIPCHI2DV(PRIMARY) > 10.0)) & (ADOCAMAX('') < 0.5*mm)"
+StdLooseDplus2KKK.MotherCut = "(PT > 1000) & (VFASPF(VCHI2/VDOF) < 10.0) & (BPVDIRA > 0.98) & (BPVIPCHI2() < 15.0) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > 100.0)"
+
+## configure Data-On-Demand service 
+locations = updateDoD ( StdLooseDplus2KKK )
+
+
+
+
+########################################################################################
+StdLooseDsplus2KKPiOppSign = CombineParticles ( 'StdLooseDsplus2KKPiOppSign' )
+
+StdLooseDsplus2KKPiOppSign.Inputs = [ "Phys/StdLooseKaons/Particles",
+                               "Phys/StdLoosePions/Particles" ]
+StdLooseDsplus2KKPiOppSign.DecayDescriptor = "[D_s+ -> pi- K+ K+]cc" 
+StdLooseDsplus2KKPiOppSign.DaughtersCuts = {
+    "K+"  : "(PT > 250*MeV) & (P > 2000*MeV) &((MIPCHI2DV(PRIMARY)) > 2.5 ) & (PIDK-PIDpi > 3.0)",
+    "pi+" : "(PT > 250*MeV) & (P > 2000*MeV) &((MIPCHI2DV(PRIMARY)) > 2.5 ) & (PIDK-PIDpi < 10.0)"
+    }
+
+#Need an upper mass window of 100 MeV for background estimation
+#and a lower mass window of 200 to catch the D+ and Ds
+
+StdLooseDsplus2KKPiOppSign.CombinationCut = "(AM>1760.*MeV) & (AM<2080.*MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 2500*MeV) & (ADOCACHI2CUT(50 , '' )) & (ANUM(MIPCHI2DV(PRIMARY) > 4.0 ) >= 2) & (AHASCHILD(MIPCHI2DV(PRIMARY) > 10.0)) & (ADOCAMAX('') < 0.5*mm)"
+StdLooseDsplus2KKPiOppSign.MotherCut = "(PT > 1000) & (VFASPF(VCHI2/VDOF) < 10.0) & (BPVDIRA > 0.98) & (BPVIPCHI2() < 15.0) & (VFASPF(VMINVDCHI2DV(PRIMARY)) > 100.0)"
+
+## configure Data-On-Demand service 
+locations = updateDoD ( StdLooseDsplus2KKPiOppSign )
+##########################################################################################
+
+
 
 StdLooseDplus2hhh = CombineParticles ( 'StdLooseDplus2hhh') 
 StdLooseDplus2hhh.Inputs = [ "Phys/StdLoosePions/Particles" ]
