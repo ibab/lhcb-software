@@ -3,6 +3,13 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-08-19 - Illya Shapoval
+ - 'CondDBUI/Browser/MainWindow.py':
+   + Fixed deprecation warning as of python 2.6 on obsolete 'BaseException.message'.
+   + The 'selectedPath' slot is fixed to ignore an empty path. An exception was
+   raised every time the new database is opened while keeping some path selected
+   in the hierarchy of the previous database view.
+
 ! 2011-08-16 - Illya Shapoval
  - 'CondDB_UpdateOnlineSnapshots.py' is prepared for automatic cron-running and
    polished a bit (now compatible with Python 3.*).
@@ -13,7 +20,7 @@
    + 'BookkeepingSystem' module is changed to 'NewBookkeepingSystem' one;
    + SQLDDDBROOT environment variable is changed to the SQLITEDBPATH one
    (latter is set in the SQLDDDB package). This is needed in the frame of
-   SQLite db files distribution model migration where CVMFS will host the files.
+   new optimized CondDB files distribution model.
 
 !========================= CondDBUI v3r9 2011-04-04 =========================
 ! 2011-03-03 - Illya Shapoval

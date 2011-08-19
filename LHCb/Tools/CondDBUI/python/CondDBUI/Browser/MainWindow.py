@@ -80,10 +80,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for m in [self.models[n] for n in ["tree", "nodes", "iovs", "fields"]]:
             QObject.connect(self, SIGNAL("openedDB"), m.connectDB)
         QObject.connect(self, SIGNAL("openedDB"), tagsGlobalCache.setDB)
-        
+
         QObject.connect(self.hierarchyTreeView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         self.selectedItem)
-        
+
         # special settings for the tags model
         tagsmodel = self.models["tags"]
         QObject.connect(self, SIGNAL("changedPath"), tagsmodel.setPath)
@@ -106,9 +106,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.iovView.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
         QObject.connect(self.iovUTCCheckBox, SIGNAL("stateChanged(int)"), iovsmodel.setShowUTC)
         iovsmodel.setShowUTC(self.iovUTCCheckBox.checkState())
-        # Use a consistent DisplayFormat 
+        # Use a consistent DisplayFormat
         iovsmodel.setDisplayFormat(self.sinceFilterWidget.displayFormat())
-        
+
         # connection for the fields model
         fieldsmodel = self.models["fields"]
         QObject.connect(self, SIGNAL("changedPath"), fieldsmodel.setPath)
@@ -116,12 +116,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #self.fieldsView.setEnabled(False)
         QObject.connect(fieldsmodel, SIGNAL("setViewEnabled(bool)"), self.payloadGroupBox, SLOT("setVisible(bool)"))
         self.payloadGroupBox.setVisible(False)
-        
+
         QObject.connect(self.fieldsView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         fieldsmodel.selectionChanged)
         QObject.connect(fieldsmodel, SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
                         self.fieldsView.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
-        
+
         # Filter panel
         # Default startup values for the IOV filter.
         self.sinceFilterWidget.setMaxEnabled(False)
@@ -129,22 +129,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #iovsmodel.setSince(self.sinceFilterWidget.toValidityKey())
         self.untilFilterWidget.setMaxChecked(True)
         #iovsmodel.setUntil(self.untilFilterWidget.toValidityKey())
-        
+
         # When created, we have to ensure that everything is grayed out.
         self.emit(SIGNAL("databaseOpen(bool)"), False)
         self.menuEdit.setEnabled(False)
         self.menuAdvanced.setEnabled(False)
-        
+
         # Triggers for the update of the central panel
         QObject.connect(self.iovView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         self.showData)
         QObject.connect(self.fieldsView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         self.showData)
-        
+
         # Add the list of actions to show/hide the panels
         self.menuPanels.addAction(self.browsePanel.toggleViewAction())
         self.menuPanels.addAction(self.filterPanel.toggleViewAction())
-        
+
         self.readSettings()
         if self._showWelcome:
             self._showWelcome = self.showWelcomeInfo(cancel = True)
@@ -164,18 +164,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.setValue("Size", QVariant(self.browsePanel.size()))
         settings.setValue("Pos", QVariant(self.browsePanel.pos()))
         settings.endGroup()
-        
+
         settings.beginGroup("FilterPanel")
         settings.setValue("Visible", QVariant(self.filterPanel.isVisible()))
         settings.setValue("Floating", QVariant(self.filterPanel.isFloating()))
         settings.setValue("Size", QVariant(self.filterPanel.size()))
         settings.setValue("Pos", QVariant(self.filterPanel.pos()))
         settings.endGroup()
-        
+
         settings.beginGroup("DataView")
         settings.setValue("FixedWidthFont", QVariant(self.dataView.isFixedWidthFont()))
         settings.endGroup()
-        
+
         settings.beginGroup("FindDialog")
         d = self.dataView.findDialog
         settings.setValue("Visible", QVariant(d.isVisible()))
@@ -183,9 +183,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.setValue("Flags", QVariant(d.getFindFlags()))
         settings.setValue("WrappedSearch", QVariant(d.getWrappedSearch()))
         settings.endGroup()
-        
+
         settings.setValue("IOVs/UTC", QVariant(self.iovUTCCheckBox.isChecked()))
-        
+
         settings.beginWriteArray("Recent")
         recents = self.menuRecent.actions()
         i = 0
@@ -199,16 +199,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.setValue("ShowWelcome", QVariant(self._showWelcome))
         settings.setValue("ExternalEditor", QVariant(self._externalEditor))
         settings.endGroup()
-        
+
     ## Load settings from the configuration file
     def readSettings(self):
         settings = QSettings()
-        
+
         settings.beginGroup("MainWindow")
         self.resize(settings.value("Size", QVariant(QSize(965, 655))).toSize())
         self.move(settings.value("Pos", QVariant(QPoint(0, 0))).toPoint())
         settings.endGroup()
-        
+
         settings.beginGroup("BrowsePanel")
         self.browsePanel.setVisible(settings.value("Visible", QVariant(True)).toBool())
         self.browsePanel.setFloating(settings.value("Floating", QVariant(False)).toBool())
@@ -238,7 +238,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.endGroup()
 
         self.iovUTCCheckBox.setChecked(settings.value("IOVs/UTC", QVariant(True)).toBool())
-        
+
         size = settings.beginReadArray("Recent")
         for i in range(size):
             settings.setArrayIndex(i)
@@ -257,7 +257,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Close Event handler
     def closeEvent(self, _event):
         self.writeSettings()
-    
+
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
     def setDefaultDatabases(self, connStrings):
@@ -275,7 +275,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.menuStandard.addAction(action)
             self.defaultDatabases[name] = action
         self.menuStandard.setEnabled(not self.menuStandard.isEmpty())
-    
+
     ## Slot called by the actions in the menu "Database->Standard".
     #  It can also be called passing the name of one of those databases.
     def openStandardDatabase(self, name = None, readOnly = True):
@@ -295,7 +295,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def openRecentDatabase(self):
         sender = self.sender()
         self.openDatabase(str(sender.text()))
-    
+
     ## Open the "create new database" dialog box
     def newDatabaseDialog(self):
         dd = NewDatabaseDialog(self)
@@ -305,14 +305,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             CondDB(connString, readOnly = False, create_new_db = True)
             # and open it in read/write mode
             self.openDatabase(connString, readOnly = False)
-        
+
     ## Open the "open database" dialog box
     def openDatabaseDialog(self):
         dd = OpenDatabaseDialog(self)
         if dd.exec_():
             connString = str(dd.connectionString())
             self.openDatabase(connString, dd.readOnly())
-    
+
     ## Add a connection string to the list of the recent opened databases
     def _addToRecents(self, connString):
         # do nothing if there is no connection string
@@ -342,7 +342,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             # otherwise just add the action
             self.menuRecent.addAction(action)
-    
+
     ## Open the database identified by a connection string or by a nickname.
     #  If name is an empty string (or None) the result is a disconnection from the
     #  current database.
@@ -356,8 +356,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if connString:
                 try:
                     self.db = CondDB(connString, readOnly = readOnly)
-                except Exception, x:
-                    msg = x.message
+                except Exception as x:
+                    from functools import reduce
+                    msg = reduce(lambda x,y: x + y, list(x.args), '')
                     if msg.startswith("Database not found:"):
                         QMessageBox.critical(self, "Cannot open database", msg)
                         return
@@ -394,7 +395,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.emit(SIGNAL("openedDB"), self.db)
         except:
             self.exceptionDialog()
-    
+
     ## Re-open the current database, changing the readOnly flag.
     #  If the database is already in the correct mode, nothing is done.
     def reopenDatabase(self, readOnly):
@@ -403,7 +404,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.openDatabase(self._connectionString, readOnly)
         if path:
             self._selectPath(path[0])
-    
+
     ## Disconnect from the database.
     #  @see: openDatabase()
     def closeDatabase(self):
@@ -423,7 +424,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         <p>The Graphical Library is PyQt %s, based on Qt %s</p>
         <p><i>Marco Clemencic, Nicolas Gilardi</i></p>''' \
         % (app.objectName(), app.applicationVersion(), PYQT_VERSION_STR, qVersion())
-        
+
         QMessageBox.about(self, app.objectName(), message)
 
     ## Slots to react to a selected item in the structure view
@@ -455,7 +456,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Slots to react to a selected entry in the path combo box
     def selectedPath(self, path):
         path = str(path)
-        if self._path != (path, None):
+        if self._path != (path, None) and path:
             index = self.models["tree"].findPath(path)
             self.hierarchyTreeView.setCurrentIndex(index)
             self._path = (path, None)
@@ -491,7 +492,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def icons(self):
         if self._icons is None:
             self._icons = {}
-            style = QApplication.instance().style()            
+            style = QApplication.instance().style()
             for iconName, iconId in [ ("folderset", QStyle.SP_DirIcon),
                                       ("folder", QStyle.SP_FileIcon),
                                       ("up", QStyle.SP_ArrowUp),
@@ -525,14 +526,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         msg += traceback.format_exc()
         print msg
         QMessageBox.critical(self, "Exception in Python code", msg)
-    
+
     ## Helper function useful to force a refresh of the models and the selection
     #  of node if specified.
     def _refreshModels(self, selectPath = None):
         # trigger a refresh of the caches in the models
         self.emit(SIGNAL("openedDB"), self.db)
         self._selectPath(selectPath)
-    
+
     ## Helper function to select a path in both the combo box and the hierarchy
     #  view.
     def _selectPath(self, selectPath = None):
@@ -541,7 +542,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             i = self.pathComboBox.findText(selectPath)
             self.pathComboBox.setCurrentIndex(i)
             self.selectedPath(selectPath)
-    
+
     ## Add a new node to the database
     def newNodeDialog(self):
         fs = self.getSelectedFolderSet()
@@ -578,7 +579,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Now that the node has been created, we have to notify the models.
             # FIXME: this is the easiest solution to implement, but not optimal
             self._refreshModels(path)
-            
+
     ## Ask for confirmation to delete the selected node and delete it if ok
     def deleteNode(self):
         path = str(self.pathComboBox.currentText())
@@ -598,12 +599,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # Now that the node has been deleted, we have to notify the models.
                 # FIXME: this is the easiest solution to implement, but not optimal
                 self._refreshModels(parentpath(path))
-    
-    ## Helper to show a dialog about 
+
+    ## Helper to show a dialog about
     def _unimplemented(self):
         QMessageBox.information(self, "Unimplemented",
                                 "Sorry, the function you selected is not implemented yet.")
-    
+
     ## Dump a snapshot of the current database to files
     def dumpToFiles(self):
         d = DumpToFilesDialog(self)
@@ -629,7 +630,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             except:
                 monitor.reset()
                 self.exceptionDialog()
-    
+
     ## Create a slice of the current database to a database
     def createSlice(self):
         d = CreateSliceDialog(self)
@@ -680,7 +681,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self._refreshModels(folder)
             except:
                 self.exceptionDialog()
-    
+
     ## Create a new tag
     def newTag(self):
         path = self._path[0]
@@ -701,7 +702,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     tags[p + "/" + n] = d.childTagsModel[n]
                 self.db.moveTagOnNodes(path, tag, tags)
             self._refreshModels(path)
-    
+
     ## Delete a tag
     def deleteTag(self):
         path = self._path[0]
@@ -744,7 +745,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             menu.addAction(self.actionDelete_node)
             menu.addAction(self.actionDelete_tag)
             menu.exec_(self.hierarchyTreeView.mapToGlobal(position))
-    
+
     ## Copy the current selected path to the clipboard.
     def copyPathToClipboard(self):
         QApplication.clipboard().setText(self._path[0])
@@ -771,7 +772,7 @@ still use the old version invoking <tt>CondDBBrowserOld.py</tt></p>
 <li>extensive usage of tooltips</li>
 </ul></p>
 <p>If you find a bug post it to <a href="https://savannah.cern.ch/bugs/?group=lhcbcore">savannah</a>, for comments and
-suggestions send an email to <a href="mailto:Marco.Clemencic@cern.ch">Marco Clemencic</a>.</p> 
+suggestions send an email to <a href="mailto:Marco.Clemencic@cern.ch">Marco Clemencic</a>.</p>
 </body></html>""")
         ok = mb.addButton(QMessageBox.Ok)
         if cancel:
