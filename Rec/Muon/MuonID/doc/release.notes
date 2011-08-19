@@ -1,7 +1,9 @@
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
-
+! 2011-08-19 J. Helder Lopes
+ - Remove use of random weights for IsMuon or IsMuonLoose. Keep, however, weight 0 for hits in M4 if p<3.5 GeV and hits in M5 if p<4.2 GeV.
+   Property Weight_flag continues in database, bit is not used anymore.
 
 !========================= MuonID v9r0p1 2011-07-04 =========================
 ! 2011-07-03 X. Cid Vidal

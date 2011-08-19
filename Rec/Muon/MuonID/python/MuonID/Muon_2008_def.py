@@ -29,8 +29,6 @@ OverrideDB = False;
 
 ## Set which DLL is input to MuonPID
 DLL_flag = 1  #0=old; 1=DLL new; 3=hyperbolic tangent mapping
-## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
-Weight_flag = False
 
 PreSelMomentum = 3000.
 

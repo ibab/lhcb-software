@@ -102,6 +102,11 @@
 // both crossed logical channels are present, force the presence of both to accept a hit for
 // MuonID.
 //=====================
+// 15/08/2011: J. Helder Lopes
+// Remove use of random weights for IsMuon or IsMuonLoose
+// Keep, however, weight 0 for hits in M4 if p<3.5 and hits in M5 if p<4.2
+// Property Weight_flag continues in database, bit is not used
+//=====================
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MuonIDAlg );
@@ -186,9 +191,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   // Which property for quality (added as extrainfo)?
   if (m_myMuIDToolName=="Chi2MuIDTool") m_use_dist=false;
   else m_use_dist=true;
-
-  //flag to introduce weights in IsMuon/IsMuonLoose:
-  declareProperty("Weight_flag",m_weightFlag = false);
 
   //--------------------
   // flag to use DLL:
@@ -360,7 +362,6 @@ StatusCode MuonIDAlg::initialize() {
       Condition * XFOIParameters;
       Condition * YFOIParameters;
       Condition * FOIfactor;
-      Condition * Weight_flag;
       Condition * DLL_flag;
 
       // Register condition and read parameters values
@@ -369,7 +370,6 @@ StatusCode MuonIDAlg::initialize() {
       registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/XFOIParameters", XFOIParameters);
       registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/YFOIParameters", YFOIParameters);
       registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/FOIfactor", FOIfactor);
-      registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/Weight_flag", Weight_flag);
       registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/DLL_flag", DLL_flag);
 
       // perform an update without waiting the next BeginEvent incident.
@@ -406,11 +406,6 @@ StatusCode MuonIDAlg::initialize() {
 
       m_foifactor = FOIfactor->param<double>("FOIfactor");
       if (msgLevel(MSG::DEBUG) ) debug()  << "==> FOIfactor:" << m_foifactor << endmsg;
-
-      //flag to introduce weights in IsMuon/IsMuonLoose:
-      m_weightFlag = ( (Weight_flag->param<int>("Weight_flag"))!=0 );
-      if (msgLevel(MSG::DEBUG) ) debug()  << "==> Weight_flag:" << m_weightFlag << endmsg;
-      if (msgLevel(MSG::DEBUG) ) debug()  << endmsg;
 
       int dllFlag  = DLL_flag->param<int>("DLL_flag");
       if(dllFlag != m_dllFlag) info() << "Initialise: OverrideDB=false but dllFlag in options file (="
@@ -1359,8 +1354,9 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     //bool myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);
 
     //GL & SF: IsMuon/IsMuonLoose definition (with/without weights):
-    myIsMuon = IsMuon(stations,m_MomentumPre,w);
-    myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre,w);  
+    //JHL: Remove use of weights 15/08/2011
+    myIsMuon = IsMuon(stations,m_MomentumPre);
+    myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);  
   }
 
   if (msgLevel(MSG::DEBUG) ) {
@@ -1447,9 +1443,10 @@ bool MuonIDAlg::stInStations(const int myst,const std::vector<int>& stations)
 // Common IsMuon (with weights) requirements from set
 // of stations with hits in FOI
 // modified  Sara & Gaia
+// Modified by J. Helder to remove use of weights
 //=============================================================================
 
-bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p,bool *w)
+bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p)
 {
 
   const double pr1=m_PreSelMomentum;
@@ -1458,8 +1455,6 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p,bool *w)
 
   double mom=p;
   //double mom=p/Gaudi::Units::GeV;
-
-  P_weights(p,w);
 
   if (msgLevel(MSG::DEBUG) ) {
     debug()<<"IsMuon"<<endmsg;
@@ -1471,19 +1466,18 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p,bool *w)
 
   if (mom>pr1 && mom<pr2)
   {
-    if (stInStations(1,stations) && stInStations(2,stations)&& w[1] && w[2]) return true;
+    if (stInStations(1,stations) && stInStations(2,stations)) return true;
   }
 
   else if (mom>pr2 && mom<pr3)
   {
     if (stInStations(1,stations) && stInStations(2,stations) &&
-        (stInStations(3,stations) || stInStations(4,stations)) &&
-        (w[1]&&w[2]&&(w[3]||w[4]))) return true;
+        (stInStations(3,stations) || stInStations(4,stations))) return true;
   }
   else if (mom>pr3)
   {
     if (stInStations(1,stations) && stInStations(2,stations)
-        && stInStations(3,stations) && stInStations(4, stations) &&(w[1]&&w[2]&&w[3] &&w[4])) return true;
+        && stInStations(3,stations) && stInStations(4, stations) ) return true;
   }
 
   return false;
@@ -1494,8 +1488,9 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p,bool *w)
 // Common IsMuonLoose (with weights) requirements from set
 // of stations with hits in FOI
 // modified  Sara & Gaia
+// Modified by J. Helder to remove use of weights
 //=============================================================================
-bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bool *w)
+bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p)
 {
   //double mom=p/Gaudi::Units::GeV;
   double mom=p;
@@ -1510,14 +1505,18 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
   const double pr1=m_PreSelMomentum;
   const double pr2=m_MomentumCuts[0];
 
+  // JHL: Aug. 2011: Don't use random weights but assume hits in M4 and M5 for p < 3.5 GeV and hits in M5 for p<4.2 GeV are not signal
+  bool w[5] = {true,true,true,false,false};
+  if(mom>3500) w[3]=true;
+  if(mom>4200) w[4]=true;
+
   if (msgLevel(MSG::DEBUG) ) {
     debug()<<"IsMuonLoose"<<endmsg;
     debug()<<"pr1="<<pr1<<endmsg;
     debug()<<"pr2="<<pr2<<endmsg;
     debug()<<"p IsMuonLoose="<<mom<<endmsg;
+    debug() << "weights: " << w[0] << " " << w[1] << " " << w[2] << " " << w[3] << " " << w[4] <<endmsg;
   }
-
-  P_weights(mom,w);
 
   if (mom>pr1 && mom<pr2)
   {
@@ -1526,7 +1525,7 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
          it != stations.end(); ++it)
     {
       int ist = *it;
-      if (stInStations(ist,vstations_rel1)&& w[ist]) j+=1;
+      if (stInStations(ist,vstations_rel1)&&w[ist]) j+=1;
     }
     if (msgLevel(MSG::DEBUG) ) debug()<<"first bin, j="<<j<<endmsg;
     if (j>1) return true;
@@ -1539,64 +1538,12 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p, bo
          it != stations.end(); ++it)
     {
       int ist = *it;
-      if (stInStations(ist,vstations_rel2)&& w[ist]) j+=1;
+      if (stInStations(ist,vstations_rel2)&&w[ist]) j+=1;
     }
     if (msgLevel(MSG::DEBUG) ) debug()<<"second bin, j="<<j<<endmsg;
     if (j>2) return true;
   }
   return false;
-}
-
-//=============================================================================
-// Weights for momentum dependance (Sara & Gaia)
-//=============================================================================
-void MuonIDAlg::P_weights(const double& p, bool *w){
-
-  if (msgLevel(MSG::DEBUG) ) debug() <<" Weights for momentum dependance "<<endmsg;
-
-  for(int i=0;i<5;i++){ w[i]=0;}
-
-  TRandom1 r;
-  double Prob[5];
-  double eff[5];
-
-  for(int i=0;i<5;i++){ eff[i]=r.Rndm();}
-
-  Prob[0]=1.0;
-  Prob[1]=1.0;
-  Prob[2]=1.0;
-  Prob[3]=0;
-  Prob[4]=0;
-
-  double a,t;
-  //Prob to reach M4 station:
-  if (p>3500) {
-    t = p-3500.;
-    a = 0.001;
-    if(m_weightFlag){
-      Prob[3] = pow(a*t,3)/(1.+pow(a*t,3));
-    }
-    else{
-      Prob[3]=1;
-    }
-  }
-
-  //Prob to reach M5 station:
-  if (p>4200) {
-    t = p-4200.;
-    a = 0.0009;
-    if(m_weightFlag){
-      Prob[4] = pow(a*t,4)/(1.+pow(a*t,4));
-    }
-    else{
-      Prob[4]=1;
-    }
-
-  }
-
-  for(int i=0;i<5;i++){
-    if(eff[i]<Prob[i]) w[i] = kTRUE;
-  }
 }
 
 //=============================================================================

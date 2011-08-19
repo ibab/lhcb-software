@@ -309,7 +309,6 @@ class ConfiguredMuonIDs():
         print "# MuonID WARNING: KalmanFoi incompatible DLL_flag 0. Setting DLL_flag to 1"
         mymuid.DLL_flag = 1
 
-    if "Weight_flag" in dir(self.info): mymuid.Weight_flag= self.info.Weight_flag
     if "step" in dir(self.info): mymuid.step=self.info.step
     if "nMax_bin" in dir(self.info): mymuid.nMax_bin=self.info.nMax_bin
     

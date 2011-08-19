@@ -92,10 +92,10 @@ private:
   bool stInStations(const int myst,const std::vector<int>& stations);
 
   //Common IsMuon requirements from set of stations with hits in FOI
-  bool IsMuon(const std::vector<int>& stations,const double& p, bool *w);
+  bool IsMuon(const std::vector<int>& stations,const double& p);
 
   // Common IsMuonLoose requirements from set of stations with hits in FOI
-  bool IsMuonLoose(const std::vector<int>& stations,const double& p, bool *w);
+  bool IsMuonLoose(const std::vector<int>& stations,const double& p);
 
   // Calculates MuProb based on DeltaSx (slope difference)
   double calcMuProb(LHCb::MuonPID * pMuid);
@@ -187,14 +187,10 @@ private:
   LHCb::Track m_mutrack;
 
   // GL&SF:
-  bool m_weightFlag;// flag to introduce weights in IsMuon/IsMuonLoose
   int m_dllFlag;  // flag to discriminate among the different DLLs
 
   // Use KalmanFoi?
   bool m_kalman_foi;
-
-  /// GL&SF: Calculate weights:
-  void P_weights(const double& p, bool *w);
 
   /// GL&SF: Calculates the Distance Likelihood given a MuonPID
   StatusCode calcMuonLL_dist(LHCb::MuonPID* muonid, const double& p);

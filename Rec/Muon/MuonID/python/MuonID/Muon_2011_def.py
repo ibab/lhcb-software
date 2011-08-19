@@ -33,8 +33,6 @@ UseUncrossed = True
 DLL_flag = 4  #0=old; 1=DLL new; 3=hyperbolic tangent mapping (Do not use it for data type 2010 and 2011)
               #4==hyperbolic tangent for Muon prob form 2010 data + Landau fits MC2009 for NonMuon prob 
 
-## Use arrival probability as weight to IsMuon/IsMuonLoose and Dist
-Weight_flag = False
 
 PreSelMomentum = 3000.
 
