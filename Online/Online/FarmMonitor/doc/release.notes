@@ -4,9 +4,12 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
-!============================== 2011-08-17 v2r8 ==============================
+!============================== 2011-08-19 v2r8 ==============================
+! 2011-08-19 - Olivier Callot
+ - More printout in case of corruption
+
 ! 2011-08-17 - Olivier Callot
- - Fix the warnings in the fomat in case of corruption
+ - Fix the warnings in the format in case of corruption
 
 ! 2011-08-16 - Olivier Callot
  - Detect some corruption of the nodes structure, and mail to  me in case of problem

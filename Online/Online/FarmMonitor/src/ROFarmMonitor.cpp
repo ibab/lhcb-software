@@ -117,7 +117,7 @@ void ROFarmMonitor::initialize ( ) {
     std::string myService( service );
     std::string part = myService.substr(  myService.find( "/" )+1 );
     part = part.substr( 0, part.find("/") );
-    if ( "LHCb" != part && "FEST" != part ) continue;
+    if ( "LHCb" != part /* && "FEST" != part */ ) continue;
 
     PartitionDesc* myPart = new PartitionDesc( part );
 
@@ -388,11 +388,24 @@ void ROFarmMonitor::update( )   {
                n > ns->nodes.end()   ||
                n == prev ) {
             FILE* dump = fopen( "/home/ocallot/FarmMonitor.log", "w" );
-            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p", 
+            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p \n", 
                      (*itP)->name.c_str(), ns->nodes.begin(), ns->nodes.end(), n );
             prev = ns->nodes.begin();
             while ( prev != n ) {
-              fprintf( dump, "add %p node %s", prev, (*prev).name );
+              fprintf( dump, "address %p node %s \n", prev, (*prev).name );
+              const Buffers& buffs = *(*n).buffers();
+              for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+                const Clients& clients = (*ib).clients;
+                std::cout << "  Buffer " << (*ib).name << " prod " << (*ib).ctrl.tot_produced << std::endl;
+                for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+                  printf( "    Node %s  Buffer %s  Task %s Events %d  Part %4x\n",
+                          (*n).name, (*ib).name, (*ic).name, (*ic).events, (*ic).partitionID );
+                }
+              }
+              const Tasks& tasks = *(*n).tasks();
+              for( Tasks::const_iterator it=tasks.begin(); it!= tasks.end(); it = tasks.next(it))  {
+                std::cout << "  FSM Node " << (*n).name << " task " << (*it).name << " state " << (*it).state << std::endl;
+              }
               prev = ns->nodes.next( prev );
             }
             fclose( dump );
