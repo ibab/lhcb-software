@@ -1,6 +1,6 @@
 
-#include "Mint/Mojito/Efficiencies/Eff4piSymmetric.h"
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
+#include "Mint/Eff4piSymmetric.h"
+#include "Mint/CLHEPSystemOfUnits.h"
 
 using namespace std;
 using namespace MINT;

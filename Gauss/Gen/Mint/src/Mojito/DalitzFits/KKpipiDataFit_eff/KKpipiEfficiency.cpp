@@ -5,8 +5,8 @@
 #include "TH1F.h"
 #include "TFile.h"
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEventAccess.h"
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
+#include "Mint/IDalitzEventAccess.h"
+#include "Mint/CLHEPSystemOfUnits.h"
 
 using namespace std;
 using namespace MINT;

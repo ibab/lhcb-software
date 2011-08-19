@@ -1,6 +1,6 @@
 
-#include "Mint/Mojito/SpinFactors/GSSpinFactor.h"
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
+#include "Mint/GSSpinFactor.h"
+#include "Mint/CLHEPSystemOfUnits.h"
 
 #include <iostream>
 

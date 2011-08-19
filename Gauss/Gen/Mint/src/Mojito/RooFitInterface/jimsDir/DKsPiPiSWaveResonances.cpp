@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:07 GMT
 #include "DKsPiPiSWaveResonances.h"
-#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/SpinFactors.h"
 using namespace DKsPiPiSWaveResonances;
 
 RooArgList& makeResonance(RooAbsReal& m12sq

@@ -1,8 +1,8 @@
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mojito/Chi2Test/Chi2BoxSet.h"
-#include "Mint/Mojito/DalitzIntegrator/IIntegrationCalculator.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/Chi2BoxSet.h"
+#include "Mint/IIntegrationCalculator.h"
 
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
+#include "Mint/FitAmpSum.h"
 
 using namespace std;
 using namespace MINT;

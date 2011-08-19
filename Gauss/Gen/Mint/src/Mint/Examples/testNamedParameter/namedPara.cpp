@@ -1,4 +1,4 @@
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/NamedParameter.h"
 #include <iostream>
 #include <cmath>
 

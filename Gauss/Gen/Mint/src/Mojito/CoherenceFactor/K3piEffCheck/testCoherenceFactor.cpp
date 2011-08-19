@@ -1,22 +1,22 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:59 GMT
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mojito/BreitWignerMC/DalitzHistoSet.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/DalitzHistoSet.h"
 
-#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
-#include "Mint/Mojito/DalitzIntegrator/FastAmplitudeIntegrator.h"
+#include "Mint/SignalGenerator.h"
+#include "Mint/FastAmplitudeIntegrator.h"
 
-#include "Mint/Mojito/CoherenceFactor/CoherenceFactorCalculator.h"
-#include "Mint/Mint/FitParameter/FitComplexPolar.h"
+#include "Mint/CoherenceFactorCalculator.h"
+#include "Mint/FitComplexPolar.h"
 
 #include "TH2F.h"
-#include "Mint/Mint/Events/IGetRealEvent.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventAccess.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
+#include "Mint/IGetRealEvent.h"
+#include "Mint/DalitzEventAccess.h"
+#include "Mint/DalitzEventPattern.h"
 
 #include <ctime>
 

@@ -1,7 +1,7 @@
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
-#include "Mint/Mint/Minimiser/Minimisable.h"
-#include "Mint/Mint/Minimiser/MinuitParameterSet.h"
+#include "Mint/FitParameter.h"
+#include "Mint/Minimiser.h"
+#include "Mint/Minimisable.h"
+#include "Mint/MinuitParameterSet.h"
 
 using namespace MINT;
 

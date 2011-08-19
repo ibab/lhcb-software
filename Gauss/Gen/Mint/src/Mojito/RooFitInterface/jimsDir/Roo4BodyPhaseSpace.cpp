@@ -3,7 +3,7 @@
 
 #include "RooRandom.h"
 #include "Roo4BodyPhaseSpace.h"
-#include "Mint/Mojito/DalitzEvents/Calculate4BodyProps.h"
+#include "Mint/Calculate4BodyProps.h"
 #include <complex>
 #include <iostream>
 using namespace std;

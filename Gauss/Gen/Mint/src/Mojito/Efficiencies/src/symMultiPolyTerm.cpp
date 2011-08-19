@@ -1,5 +1,5 @@
-#include "Mint/Mojito/Efficiencies/symMultiPolyTerm.h"
-#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/symMultiPolyTerm.h"
+#include "Mint/Utils.h"
 #include <iostream>
 
 using namespace std;

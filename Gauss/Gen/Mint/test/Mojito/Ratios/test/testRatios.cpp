@@ -1,17 +1,17 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:05 GMT
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/FitAmpSum.h"
 
-#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
+#include "Mint/DalitzEvent.h"
 
-#include "Mint/Mojito/Ratios/AmpRatios.h"
+#include "Mint/AmpRatios.h"
 
-#include "Mint/Mint/Utils/cexp.h"
+#include "Mint/cexp.h"
 
 
 #include "TGraph.h"

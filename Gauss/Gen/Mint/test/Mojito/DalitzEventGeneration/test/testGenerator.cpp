@@ -1,13 +1,13 @@
 
-#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
-#include "Mint/Mojito/DalitzEventGeneration/FromFileGenerator.h"
+#include "Mint/SignalGenerator.h"
+#include "Mint/FromFileGenerator.h"
 
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
-#include "Mint/Mojito/BreitWignerMC/DalitzHistoSet.h"
-#include "Mint/Mint/IReturnIntefaces/IReturnReal.h"
-#include "Mint/Mint/Utils/counted_ptr.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/DalitzEventList.h"
+#include "Mint/DalitzHistoSet.h"
+#include "Mint/IReturnReal.h"
+#include "Mint/counted_ptr.h"
 
 #include "TRandom.h"
 

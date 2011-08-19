@@ -1,9 +1,9 @@
-#include "Mint/Mint/PdfAndLogL/PdfBase.h"
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mint/Events/EventList.h"
-#include "Mint/Mint/PdfAndLogL/Neg2LL.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/PdfBase.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/EventList.h"
+#include "Mint/Neg2LL.h"
+#include "Mint/Minimiser.h"
 
 #include <iostream>
 

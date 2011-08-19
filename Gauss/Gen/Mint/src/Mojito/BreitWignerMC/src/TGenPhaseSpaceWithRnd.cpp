@@ -1,4 +1,4 @@
-#include "Mint/Mojito/BreitWignerMC/TGenPhaseSpaceWithRnd.h"
+#include "Mint/TGenPhaseSpaceWithRnd.h"
 // copy of TGenPhaseSpace, replacing gRandom with _rnd.
 
 /*

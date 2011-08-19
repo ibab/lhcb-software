@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
-#include "Mint/Mojito/Symmetries/Permutator.h"
+#include "Mint/Permutator.h"
 
 #include <algorithm>
 

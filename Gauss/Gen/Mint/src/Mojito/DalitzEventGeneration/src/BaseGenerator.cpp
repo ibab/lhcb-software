@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:59 GMT
-#include "Mint/Mojito/DalitzEventGeneration/BaseGenerator.h"
-#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/BaseGenerator.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 
 #include <ctime>
 #include <iostream>

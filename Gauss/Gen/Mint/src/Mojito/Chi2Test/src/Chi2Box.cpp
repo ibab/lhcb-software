@@ -1,6 +1,6 @@
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mojito/Chi2Test/Chi2Box.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/Chi2Box.h"
 
 using namespace std;
 

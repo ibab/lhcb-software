@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/Mojito/DalitzEvents/DalitzEventPtrList.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mojito/DalitzEvents/AllPossibleSij.h"
+#include "Mint/DalitzEventPtrList.h"
+#include "Mint/DalitzEvent.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/AllPossibleSij.h"
 
 #include "TRandom.h"
 #include "TH1D.h"

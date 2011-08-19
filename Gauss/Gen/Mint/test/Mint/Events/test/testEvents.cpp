@@ -2,9 +2,9 @@
 // status:  Mon 9 Feb 2009 19:17:54 GMT
 #include <iostream>
 
-#include "Mint/Mint/Events/IEventList.h"
-#include "Mint/Mint/Events/EventList.h"
-#include "Mint/Mint/Events/EventAccess.h"
+#include "Mint/IEventList.h"
+#include "Mint/EventList.h"
+#include "Mint/EventAccess.h"
 
 using namespace std;
 using namespace MINT;

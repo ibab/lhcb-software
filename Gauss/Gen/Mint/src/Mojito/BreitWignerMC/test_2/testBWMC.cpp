@@ -5,24 +5,24 @@
 
 #include "TError.h"
 
-#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/DalitzEvent.h"
+#include "Mint/DalitzEventList.h"
 
-#include "Mint/Mojito/BreitWignerMC/DalitzBWArea.h"
-#include "Mint/Mojito/BreitWignerMC/DalitzBWBox.h"
-#include "Mint/Mojito/BreitWignerMC/MappedDalitzBWArea.h"
-#include "Mint/Mojito/BreitWignerMC/DalitzCoordinate.h"
+#include "Mint/DalitzBWArea.h"
+#include "Mint/DalitzBWBox.h"
+#include "Mint/MappedDalitzBWArea.h"
+#include "Mint/DalitzCoordinate.h"
 
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mojito/DalitzEvents/PlotSet.h"
-#include "Mint/Mojito/DalitzFits/DalitzPdfBase.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/PlotSet.h"
+#include "Mint/DalitzPdfBase.h"
 
-#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/Utils.h"
 
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/NamedParameter.h"
 
-#include "Mint/Mojito/Amplitudes/Amplitude.h"
-#include "Mint/Mojito/DalitzEvents/ReturnWeight.h"
+#include "Mint/Amplitude.h"
+#include "Mint/ReturnWeight.h"
 
 #include "TRandom3.h"
 

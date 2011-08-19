@@ -1,4 +1,4 @@
-#include "Mint/Mojito/Zemach/SymmLorentzMatrix.h"
+#include "Mint/SymmLorentzMatrix.h"
 
 #include <iostream>
 #include "TLorentzVector.h"

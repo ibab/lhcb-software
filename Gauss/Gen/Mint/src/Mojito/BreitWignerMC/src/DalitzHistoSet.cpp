@@ -1,10 +1,10 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/Mojito/BreitWignerMC/DalitzHistoSet.h"
+#include "Mint/DalitzHistoSet.h"
 
-#include "Mint/Mojito/DalitzEvents/AllPossibleSij.h"
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/AllPossibleSij.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/NamedParameter.h"
 
 #include "TTree.h"
 #include "TFile.h"

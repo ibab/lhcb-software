@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/Mojito/BetterMC/DalitzArea.h"
+#include "Mint/DalitzArea.h"
 
-#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
-#include "Mint/Mojito/DalitzEvents/Calculate4BodyProps.h"
+#include "Mint/DalitzEvent.h"
+#include "Mint/Calculate4BodyProps.h"
 
 #include "TRandom.h"
 

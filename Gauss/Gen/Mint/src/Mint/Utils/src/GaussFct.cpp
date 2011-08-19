@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/Mint/Utils/GaussFct.h"
+#include "Mint/GaussFct.h"
 
-#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 #include <cmath>
 
 using namespace MINT;

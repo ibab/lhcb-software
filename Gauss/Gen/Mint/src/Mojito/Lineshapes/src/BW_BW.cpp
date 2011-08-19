@@ -2,14 +2,14 @@
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 #include <cmath>
 
-#include "Mint/Mojito/Lineshapes/BW_BW.h"
-#include "Mint/Mojito/ParticleProperties/ParticleProperties.h"
+#include "Mint/BW_BW.h"
+#include "Mint/ParticleProperties.h"
 //#include "fitSetup.h"
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
-#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/CLHEPSystemOfUnits.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 
-#include "Mint/Mojito/BreitWignerMC/BWFct.h"
-#include "Mint/Mojito/BreitWignerMC/FlatFct.h"
+#include "Mint/BWFct.h"
+#include "Mint/FlatFct.h"
 
 using namespace std;
 using namespace MINT;

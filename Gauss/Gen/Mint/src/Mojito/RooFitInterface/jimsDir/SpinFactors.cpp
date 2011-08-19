@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:10 GMT
-#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/SpinFactors.h"
 ClassImp(SF_DtoVP)
 ClassImp(SF_DtoTP)
 ClassImp(SF_DtoAP1_AtoVP2_VtoP3P4)

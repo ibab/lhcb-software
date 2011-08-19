@@ -9,13 +9,13 @@
 
 // we need to include this piece of code:
 
-#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/DalitzEvent.h"
+#include "Mint/DalitzEventList.h"
 #include "TTree.h"
 #include <iostream>
 #include "TVector3.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/CLHEPSystemOfUnits.h"
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TH1.h"

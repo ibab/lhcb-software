@@ -1,14 +1,14 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/Mojito/FitAmplitude/FitAmpPairList.h"
+#include "Mint/FitAmpPairList.h"
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpPairFitCovariance.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/FitAmpPairFitCovariance.h"
 
-#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/Minimiser.h"
 
-#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/Utils.h"
 
 //#include <io.h>
 #include <sys/types.h>

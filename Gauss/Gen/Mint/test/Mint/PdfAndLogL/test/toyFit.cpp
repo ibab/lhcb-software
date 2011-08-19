@@ -1,12 +1,12 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
-#include "Mint/Mint/PdfAndLogL/Neg2LL.h"
-#include "Mint/Mint/Events/EventList.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/Minimiser.h"
+#include "Mint/Neg2LL.h"
+#include "Mint/EventList.h"
 
-#include "Mint/Mint/PdfAndLogL/PdfBase.h"
+#include "Mint/PdfBase.h"
 
 #include "TRandom.h"
 

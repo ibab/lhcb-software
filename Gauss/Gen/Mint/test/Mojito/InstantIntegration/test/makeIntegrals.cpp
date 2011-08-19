@@ -1,10 +1,10 @@
 
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpPairList.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/FitAmpPairList.h"
+#include "Mint/NamedParameter.h"
 
-#include "Mint/Mojito/InstantIntegration/MakePreIntegratedAmplitudes.h"
-#include "Mint/Mojito/DalitzEvents/DiskResidentEventList.h"
+#include "Mint/MakePreIntegratedAmplitudes.h"
+#include "Mint/DiskResidentEventList.h"
 
 #include <iostream>
 #include <string>

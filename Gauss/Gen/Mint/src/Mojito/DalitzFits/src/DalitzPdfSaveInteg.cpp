@@ -1,13 +1,13 @@
 
-#include "Mint/Mojito/DalitzFits/DalitzPdfSaveInteg.h"
+#include "Mint/DalitzPdfSaveInteg.h"
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEventList.h"
+#include "Mint/IDalitzEventList.h"
 #include <string>
 #include "TRandom.h"
 #include "TRandom3.h"
-#include "Mint/Mojito/DalitzEventGeneration/SignalGenerator.h"
-#include "Mint/Mojito/DalitzEventGeneration/FromFileGenerator.h"
-#include "Mint/Mojito/DalitzIntegrator/IFastAmplitudeIntegrable.h"
+#include "Mint/SignalGenerator.h"
+#include "Mint/FromFileGenerator.h"
+#include "Mint/IFastAmplitudeIntegrable.h"
 
 using namespace std;
 using namespace MINT;

@@ -1,4 +1,4 @@
-#include "Mint/Mojito/FitAmplitude/FitFraction.h"
+#include "Mint/FitFraction.h"
 
 using namespace std;
 

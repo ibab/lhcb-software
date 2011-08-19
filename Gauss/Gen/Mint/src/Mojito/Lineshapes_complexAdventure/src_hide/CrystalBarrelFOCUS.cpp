@@ -1,7 +1,7 @@
-#include "Mint/Mojito/Lineshapes/CrystalBarrelFOCUS.h"
+#include "Mint/CrystalBarrelFOCUS.h"
 
-#include "Mint/Mojito/ParticleProperties/ParticlePropertiesList.h"
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
+#include "Mint/ParticlePropertiesList.h"
+#include "Mint/CLHEPSystemOfUnits.h"
 #include <complex>
 #include <cmath>
 

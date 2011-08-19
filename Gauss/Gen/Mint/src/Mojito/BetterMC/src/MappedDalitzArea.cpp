@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
-#include "Mint/Mojito/BetterMC/MappedDalitzArea.h"
-#include "Mint/Mojito/Symmetries/Permutator.h"
+#include "Mint/MappedDalitzArea.h"
+#include "Mint/Permutator.h"
 #include <iostream>
 #include <algorithm>
 

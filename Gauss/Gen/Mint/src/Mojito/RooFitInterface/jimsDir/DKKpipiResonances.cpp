@@ -4,7 +4,7 @@
 
 #include "rhoOmega.h"
 #include "DbleAmplitudeWithRho.h"
-#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/SpinFactors.h"
 #include <iostream>
 #include "RooFormulaVar.h"
 

@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
 
-#include "Mint/Mojito/SpinFactors/SpinFactorMaker.h"
-#include "Mint/Mint/Utils/Utils.h"
-#include "Mint/Mojito/DecayTrees/DecayTree.h"
-#include "Mint/Mojito/DecayTrees/DecayTreeComparisons.h"
-#include "Mint/Mojito/SpinFactors/ISpinFactor.h"
-#include "Mint/Mojito/SpinFactors/SpinFactor.h"
-#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/SpinFactorMaker.h"
+#include "Mint/Utils.h"
+#include "Mint/DecayTree.h"
+#include "Mint/DecayTreeComparisons.h"
+#include "Mint/ISpinFactor.h"
+#include "Mint/SpinFactor.h"
+#include "Mint/SpinFactors.h"
 #include <iostream>
 
 using namespace std;

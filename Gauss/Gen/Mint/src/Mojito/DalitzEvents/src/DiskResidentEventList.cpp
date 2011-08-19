@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/Mojito/DalitzEvents/DiskResidentEventList.h"
-#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/DiskResidentEventList.h"
+#include "Mint/Utils.h"
 
 #include "TNtupleD.h"
 #include "TFile.h"

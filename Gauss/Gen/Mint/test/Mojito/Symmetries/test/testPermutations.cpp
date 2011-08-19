@@ -1,15 +1,15 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
-#include "Mint/Mojito/Symmetries/Permutation.h"
+#include "Mint/Permutation.h"
 
-#include "Mint/Mojito/Symmetries/Permutator.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/Permutator.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/DalitzEventList.h"
 
 
-#include "Mint/Mojito/DecayTrees/DecayTree.h"
+#include "Mint/DecayTree.h"
 
-#include "Mint/Mojito/Amplitudes/Amplitude.h"
+#include "Mint/Amplitude.h"
 
 
 #include <iostream>

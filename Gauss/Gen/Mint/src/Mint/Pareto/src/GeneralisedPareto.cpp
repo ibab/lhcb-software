@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
-#include "Mint/Mint/Pareto/GeneralisedPareto.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/GeneralisedPareto.h"
+#include "Mint/Minimiser.h"
 
 #include <cmath>
 #include <algorithm>

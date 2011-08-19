@@ -3,7 +3,7 @@
 #include "DKsPiPiResonances_globals.h"
 
 #include "DKsPiPiResonances.h"
-#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/SpinFactors.h"
 using namespace DKsPiPiResonances;
 
 RooArgList& makeResonance(RooAbsReal& m12sq

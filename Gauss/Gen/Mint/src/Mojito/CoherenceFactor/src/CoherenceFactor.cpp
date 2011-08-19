@@ -5,11 +5,11 @@
 // Phys. Rev. D 68, 033003 (2003), 
 // http://prola.aps.org/abstract/PRD/v68/i3/e033003
 //
-#include "Mint/Mojito/CoherenceFactor/CoherenceFactor.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mint/Events/IGetRealEvent.h"
-#include "Mint/Mint/Events/IGetComplexEvent.h"
-#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/CoherenceFactor.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/IGetRealEvent.h"
+#include "Mint/IGetComplexEvent.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 
 using namespace std;
 using namespace MINT;

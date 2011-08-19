@@ -1,4 +1,4 @@
-#include "Mint/Mojito/FitAmplitude/FitFractionList.h"
+#include "Mint/FitFractionList.h"
 #include <algorithm>
 
 

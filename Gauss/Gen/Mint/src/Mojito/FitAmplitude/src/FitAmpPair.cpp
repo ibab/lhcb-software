@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/Mojito/FitAmplitude/FitAmpPair.h"
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/FitAmpPair.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/NamedParameter.h"
 
 #include <iostream>
 #include <iomanip>

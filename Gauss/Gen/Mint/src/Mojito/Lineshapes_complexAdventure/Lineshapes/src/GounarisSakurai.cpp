@@ -6,8 +6,8 @@
 //           http://link.aps.org/doi/10.1103/PhysRevLett.21.244
 //
 
-#include "Mint/Mojito/Lineshapes/GounarisSakurai.h"
-//#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/GounarisSakurai.h"
+//#include "Mint/CLHEPPhysicalConstants.h"
 #include "TMath.h"
 
 #include <cmath>

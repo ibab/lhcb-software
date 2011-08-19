@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:56 GMT
-#include "Mint/Mint/NamedParameter/ParsedParameterLine.h"
+#include "Mint/ParsedParameterLine.h"
 #include <cctype>
 #include <iostream>
 

@@ -1,10 +1,10 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
-#include "Mint/Mojito/DecayTrees/DecayTree.h"
-#include "Mint/Mint/Utils/counted_ptr.h"
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/DecayTree.h"
+#include "Mint/counted_ptr.h"
 
-#include "Mint/Mojito/DecayTrees/AmpInitialiser.h"
+#include "Mint/AmpInitialiser.h"
 
 #include <algorithm>
 

@@ -1,8 +1,8 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:55 GMT
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
-#include "Mint/Mint/Minimiser/Minimisable.h"
+#include "Mint/FitParameter.h"
+#include "Mint/Minimiser.h"
+#include "Mint/Minimisable.h"
 
 using namespace MINT;
 

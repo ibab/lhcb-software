@@ -1,10 +1,10 @@
-#include "Mint/Mojito/DalitzEvents/IDalitzEventList.h"
+#include "Mint/IDalitzEventList.h"
 
-#include "Mint/Mojito/Chi2Test/Chi2Binning.h"
-#include "Mint/Mojito/Chi2Test/Chi2Box.h"
-#include "Mint/Mojito/Chi2Test/Chi2BoxSet.h"
+#include "Mint/Chi2Binning.h"
+#include "Mint/Chi2Box.h"
+#include "Mint/Chi2BoxSet.h"
 
-#include "Mint/Mojito/BreitWignerMC/DalitzHistoStackSet.h"
+#include "Mint/DalitzHistoStackSet.h"
 
 #include "TCanvas.h"
 #include "TH1D.h"

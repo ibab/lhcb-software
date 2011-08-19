@@ -1,24 +1,24 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
 #include <iostream>
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mint/FitParameter/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/FitParameter.h"
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEventList.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventPattern.h"
+#include "Mint/IDalitzEventList.h"
+#include "Mint/DalitzEventList.h"
+#include "Mint/DalitzEventPattern.h"
 
-#include "Mint/Mojito/ParticleProperties/ParticlePropertiesList.h"
+#include "Mint/ParticlePropertiesList.h"
 
-#include "Mint/Mojito/DecayTrees/DecayTree.h"
+#include "Mint/DecayTree.h"
 
-#include "Mint/Mojito/Amplitudes/Amplitude.h"
+#include "Mint/Amplitude.h"
 
-#include "Mint/Mojito/SpinFactors/SpinFactorMaker.h"
+#include "Mint/SpinFactorMaker.h"
 
-#include "Mint/Mint/Events/EventList.h"
+#include "Mint/EventList.h"
 
-#include "Mint/Mojito/DecayTrees/DecayTreeComparisons.h"
+#include "Mint/DecayTreeComparisons.h"
 
 using namespace std;
 using namespace MINT;

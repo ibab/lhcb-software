@@ -1,13 +1,13 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/Mojito/FitAmplitude/FitAmpIncoherentSum.h"
+#include "Mint/FitAmpIncoherentSum.h"
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEventAccess.h"
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mint/Minimiser/MinuitParameterSet.h"
-#include "Mint/Mojito/DecayTrees/NamedDecayTreeList.h"
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mojito/FitAmplitude/IntegCalculator.h"
+#include "Mint/IDalitzEventAccess.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/MinuitParameterSet.h"
+#include "Mint/NamedDecayTreeList.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/IntegCalculator.h"
 
 #include <iostream>
 #include <complex>

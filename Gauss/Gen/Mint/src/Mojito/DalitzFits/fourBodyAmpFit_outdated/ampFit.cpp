@@ -1,33 +1,33 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:01 GMT
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
-#include "Mint/Mint/PdfAndLogL/Neg2LL.h"
-#include "Mint/Mint/PdfAndLogL/Neg2LLSum.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEventList.h"
+#include "Mint/FitParameter.h"
+#include "Mint/NamedParameter.h"
+#include "Mint/Minimiser.h"
+#include "Mint/Neg2LL.h"
+#include "Mint/Neg2LLSum.h"
+#include "Mint/DalitzEventList.h"
 
-#include "Mint/Mint/Utils/CLHEPPhysicalConstants.h"
+#include "Mint/CLHEPPhysicalConstants.h"
 
 
-#include "Mint/Mint/PdfAndLogL/PdfBase.h"
-#include "Mint/Mojito/DalitzFits/DalitzPdfBase.h"
-#include "Mint/Mojito/DalitzFits/DalitzPdfBaseFastInteg.h"
-#include "Mint/Mojito/FitAmplitude/FitAmplitude.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
+#include "Mint/PdfBase.h"
+#include "Mint/DalitzPdfBase.h"
+#include "Mint/DalitzPdfBaseFastInteg.h"
+#include "Mint/FitAmplitude.h"
+#include "Mint/FitAmpSum.h"
 
-#include "Mint/Mojito/DalitzEvents/PlotSet.h"
-#include "Mint/Mojito/DalitzEvents/DalitzEvent.h"
+#include "Mint/PlotSet.h"
+#include "Mint/DalitzEvent.h"
 
-#include "Mint/Mojito/Ratios/AmpRatios.h"
+#include "Mint/AmpRatios.h"
 
-#include "Mint/Mint/Events/IEventGenerator.h"
-#include "Mint/Mojito/BreitWignerMC/DalitzBWBoxSet.h"
-#include "Mint/Mojito/BetterMC/DalitzBoxSet.h"
+#include "Mint/IEventGenerator.h"
+#include "Mint/DalitzBWBoxSet.h"
+#include "Mint/DalitzBoxSet.h"
 
-#include "Mint/Mint/Minimiser/MinuitParameterSet.h"
+#include "Mint/MinuitParameterSet.h"
 
-#include "Mint/Mint/Utils/cexp.h"
+#include "Mint/cexp.h"
 
 
 #include "TGraph.h"

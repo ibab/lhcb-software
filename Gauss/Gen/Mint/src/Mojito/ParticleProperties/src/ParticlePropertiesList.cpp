@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:04 GMT
-#include "Mint/Mojito/ParticleProperties/ParticlePropertiesList.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/ParticlePropertiesList.h"
+#include "Mint/NamedParameter.h"
 
 #include <string>
 #include <fstream>

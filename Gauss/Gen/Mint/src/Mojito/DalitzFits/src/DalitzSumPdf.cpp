@@ -1,18 +1,18 @@
 //
-#include "Mint/Mint/PdfAndLogL/SumPdf.h"
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mint/PdfAndLogL/PdfBase.h"
+#include "Mint/SumPdf.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/PdfBase.h"
 
-#include "Mint/Mojito/DalitzFits/IDalitzPdf.h"
-#include "Mint/Mint/FitParameter/FitParameter.h"
-#include "Mint/Mint/PdfAndLogL/IPdf.h"
-#include "Mint/Mint/Events/IEventList.h"
+#include "Mint/IDalitzPdf.h"
+#include "Mint/FitParameter.h"
+#include "Mint/IPdf.h"
+#include "Mint/IEventList.h"
 
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mojito/DalitzEvents/IDalitzEventAccess.h"
-#include "Mint/Mint/Events/IGetRealEvent.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/IDalitzEventAccess.h"
+#include "Mint/IGetRealEvent.h"
 
-#include "Mint/Mojito/DalitzFits/DalitzSumPdf.h"
+#include "Mint/DalitzSumPdf.h"
 
 #include <iostream>
 

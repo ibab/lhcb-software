@@ -1,11 +1,11 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/Mojito/BreitWignerMC/DalitzHistogram.h"
-#include "Mint/Mint/NamedParameter/NamedParameter.h"
+#include "Mint/DalitzHistogram.h"
+#include "Mint/NamedParameter.h"
 
-#include "Mint/Mint/Utils/CLHEPSystemOfUnits.h"
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mint/Utils/Utils.h"
+#include "Mint/CLHEPSystemOfUnits.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/Utils.h"
 
 #include <string>
 #include <algorithm>

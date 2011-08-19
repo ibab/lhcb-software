@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:02 GMT
-#include "Mint/Mojito/DalitzIntegrator/FastAmplitudeIntegrator.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mojito/DalitzEvents/IDalitzEvent.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/FastAmplitudeIntegrator.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/Minimiser.h"
 
 #include "TRandom.h"
 #include "TRandom3.h"

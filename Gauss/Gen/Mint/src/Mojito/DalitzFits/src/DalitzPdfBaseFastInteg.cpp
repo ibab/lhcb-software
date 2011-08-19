@@ -1,9 +1,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:01 GMT
-#include "Mint/Mojito/DalitzFits/DalitzPdfBaseFastInteg.h"
-#include "Mint/Mojito/FitAmplitude/FitAmpSum.h"
-#include "Mint/Mojito/BreitWignerMC/DalitzBWBoxSet.h"
-#include "Mint/Mint/Minimiser/Minimiser.h"
+#include "Mint/DalitzPdfBaseFastInteg.h"
+#include "Mint/FitAmpSum.h"
+#include "Mint/DalitzBWBoxSet.h"
+#include "Mint/Minimiser.h"
 
 #include <iostream>
 

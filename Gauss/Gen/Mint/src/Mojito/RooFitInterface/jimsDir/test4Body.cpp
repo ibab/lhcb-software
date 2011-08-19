@@ -13,14 +13,14 @@
 #include "TGenPhaseSpace.h"
 #include "TRandom.h"
 
-#include "Mint/Mojito/DalitzEvents/Calculate4BodyProps.h"
+#include "Mint/Calculate4BodyProps.h"
 #include "fourMxy.h"
 #include "Roo4BodyPhaseSpace.h"
 
 #include "DKKpipiResonances.h"
 #include "Grahm.h"
 
-#include "Mint/Mojito/SpinFactors/SpinFactors.h"
+#include "Mint/SpinFactors.h"
 
 using namespace RooFit;
 using namespace DKKpipiResonances;

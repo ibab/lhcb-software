@@ -1,6 +1,6 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/Mojito/BycklingKajantje/lambda.h"
+#include "Mint/lambda.h"
 
 /*
 inlining it instead. see header.

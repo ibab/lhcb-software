@@ -1,10 +1,10 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:58 GMT
-#include "Mint/Mojito/BreitWignerMC/DalitzBWBoxSet.h"
+#include "Mint/DalitzBWBoxSet.h"
 
-#include "Mint/Mojito/BycklingKajantje/phaseSpaceIntegrals.h"
-#include "Mint/Mojito/DalitzEvents/ReturnWeight.h"
-#include "Mint/Mojito/DalitzEvents/DiskResidentEventList.h"
+#include "Mint/phaseSpaceIntegrals.h"
+#include "Mint/ReturnWeight.h"
+#include "Mint/DiskResidentEventList.h"
 
 #include <ctime>
 #include <cmath>
