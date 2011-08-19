@@ -71,11 +71,12 @@ class D2hhhConf(LineBuilder) :
                               'Daughter2IPChi2',
                               'D2KKKDaughterIPChi2',
                               'D2KKKDaughter2IPChi2',
-                              'D2KKKDaughter1IPChi2',
+##                               'D2KKKDaughter1IPChi2',
                               'KPIDK',
                               'piPIDK',
                               'PTSum',
                               'DOCAChi2',
+                      #        'DOCAmax',
                               'DPt',
                               'DIPChi2',
                               'DdcaFDChi2',
@@ -121,7 +122,8 @@ class D2hhhConf(LineBuilder) :
         self.selKPP = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
         self.selPPP = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi/Particles")
         self.selKPPos = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi/Particles")
-
+        self.selKKK = DataOnDemand(Location = "Phys/StdLooseDplus2KKK/Particles")
+        self.selKKPos = DataOnDemand(Location = "Phys/StdLooseDsplus2KKPiOppSign/Particles")
 
         self.selD2KKP = makeStdD2hhh(D2KKP_name,  
                                      hhhSel = self.selKKP, 
@@ -190,15 +192,14 @@ class D2hhhConf(LineBuilder) :
                                      KPIDK = config['KPIDK'],
                                      piPIDK = config['piPIDK']
                                      )
-        self.selD2KKK = makeD2KKK(D2KKK_name,  
+        self.selD2KKK = makeStdD2hhh(D2KKK_name,
+                                     hhhSel = self.selKKK,
                                      DaughterPT= config['DaughterPT'],
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['D2KKKDaughterIPChi2'],
                                      Daughter2IPChi2 = config['D2KKKDaughter2IPChi2'],
-                                     Daughter1IPChi2 = config['D2KKKDaughter1IPChi2'],
                                      PTSum = config['PTSum'],
-                                     DaughterDOCA = config['DOCAChi2'],
-				     DDIRA= config['DDIRA'],
+                                     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
 				     DdcaFDChi2= config['DdcaFDChi2'],
                                      DPt = config['DPt'],
@@ -207,24 +208,60 @@ class D2hhhConf(LineBuilder) :
 				     MaxMassPosFit= config['MaxMassPosFit'],
                                      KPIDK = config['KPIDK']
                                      )
-        self.selDs2KKPos = makeDs2KKPos(Ds2KKPos_name,  
+        self.selDs2KKPos = makeStdD2hhh(Ds2KKPos_name,
+                                     hhhSel = self.selKKPos,
                                      DaughterPT= config['DaughterPT'],
                                      DaughterP = config['DaughterP'],
-                                     DaughterIPChi2 = config['DaughterIPChi2'],
-                                     Daughter2IPChi2 = config['Daughter2IPChi2'],
-                                     Daughter1IPChi2 = config['D2KKKDaughter1IPChi2'],
+                                     DaughterIPChi2 = config['D2KKKDaughterIPChi2'],
+                                     Daughter2IPChi2 = config['D2KKKDaughter2IPChi2'],
                                      PTSum = config['PTSum'],
-                                     DaughterDOCA = config['DOCAChi2'],
-				     DDIRA= config['DDIRA'],
+                                     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
 				     DdcaFDChi2= config['DdcaFDChi2'],
                                      DPt = config['DPt'],
                                      DVXChi2NDOF = config['DVXChi2NDOF'],
-				     Ds2KKPosMinMassPosFit = config['Ds2KKPosMinMassPosFit'],
-                                     MaxMassPosFit= config['MaxMassPosFit'],
+				     MinMassPosFit= config['Ds2KKPosMinMassPosFit'],
+				     MaxMassPosFit= config['MaxMassPosFit'],
                                      KPIDK = config['KPIDK'],
                                      piPIDK = config['piPIDK']
                                      )
+        ## self.selD2KKK = makeD2KKK(D2KKK_name,  
+##                                      DaughterPT= config['DaughterPT'],
+##                                      DaughterP = config['DaughterP'],
+##                                      DaughterIPChi2 = config['D2KKKDaughterIPChi2'],
+##                                      Daughter2IPChi2 = config['D2KKKDaughter2IPChi2'],
+##                                      Daughter1IPChi2 = config['D2KKKDaughter1IPChi2'],
+##                                      PTSum = config['PTSum'],
+##                                      DaughterDOCA = config['DOCAChi2'],
+##                                      DOCAmax = config['DOCAmax'],
+## 				     DDIRA= config['DDIRA'],
+## 				     DIPChi2= config['DIPChi2'],
+## 				     DdcaFDChi2= config['DdcaFDChi2'],
+##                                      DPt = config['DPt'],
+##                                      DVXChi2NDOF = config['DVXChi2NDOF'],
+## 				     MinMassPosFit= config['MinMassPosFit'],
+## 				     MaxMassPosFit= config['MaxMassPosFit'],
+##                                      KPIDK = config['KPIDK']
+##                                      )
+       ##  self.selDs2KKPos = makeDs2KKPos(Ds2KKPos_name,  
+##                                      DaughterPT= config['DaughterPT'],
+##                                      DaughterP = config['DaughterP'],
+##                                      DaughterIPChi2 = config['DaughterIPChi2'],
+##                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
+##                                      Daughter1IPChi2 = config['D2KKKDaughter1IPChi2'],
+##                                      PTSum = config['PTSum'],
+##                                      DaughterDOCA = config['DOCAChi2'],
+##                                      DOCAmax = config['DOCAmax'],
+## 				     DDIRA= config['DDIRA'],
+## 				     DIPChi2= config['DIPChi2'],
+## 				     DdcaFDChi2= config['DdcaFDChi2'],
+##                                      DPt = config['DPt'],
+##                                      DVXChi2NDOF = config['DVXChi2NDOF'],
+## 				     Ds2KKPosMinMassPosFit = config['Ds2KKPosMinMassPosFit'],
+##                                      MaxMassPosFit= config['MaxMassPosFit'],
+##                                      KPIDK = config['KPIDK'],
+##                                      piPIDK = config['piPIDK']
+##                                      )
         self.selD2HHHInc = makeD2HHHInc(D2HHHInc_name,  
                                      DaughterPT= config['DaughterPT'],
                                      DaughterP = config['DaughterP'],
@@ -378,146 +415,150 @@ def makeStdD2hhh(name,
                        RequiredSelections = [hhhSel])
 
 
-def makeD2KKK(name,
-#              kaonSel,
-              DaughterPT,
-              DaughterP,
-              DaughterIPChi2,
-              Daughter2IPChi2,
-              Daughter1IPChi2,
-              DaughterDOCA,
-              PTSum,
-              DDIRA,
-              DIPChi2,
-              DdcaFDChi2,
-              DPt,
-              DVXChi2NDOF,
-              MinMassPosFit,
-              MaxMassPosFit,
-              KPIDK=None
-              ):
-    """
-    Create and return a D -> KKK Selection object.
-    Arguments:
-    name           : name of the Selection.
-    kaonSel        : Input Selection of Kaons 
-    DaughterPT     : Minimum PT among daughters
-    DaughterP      : Minimum P among daughters
-    DaughterIPChi2 : Minimum IPChi2 among daughters
-    Daughter2IPChi2: Minimum IPChi2 required to at least 2 daughters 
-    Daughter1IPChi2: Minimum IPChi2 required to at least 1 daughters 
-    DaughterDOCA   : Maximum distance of closest approach between 2 daughters 
-    PTSum          : Minimum sum of daughters momenta
-    DDIRA          : Minimum opening angle between sum_p and FD-direction
-    DIPChi2        : Maximum IPChi2 of the D
-    DdcaFDChi2     : Minimum distance from SV to any PV
-    DPt            : Minimum D Momentum
-    DVXChi2NDOF    : Maximum Chi2 of the D Vertex
-    MinMassPosFit  : Minimum value of HHH invariant mass (MeV)
-    MaxMassPosFit  : Maximum value of HHH invariant mass (MeV).
-    KPIDK=None     : Minimum Kaon - pion DLL for kaons
-    """
+## def makeD2KKK(name,
+## #              kaonSel,
+##               DaughterPT,
+##               DaughterP,
+##               DaughterIPChi2,
+##               Daughter2IPChi2,
+##               Daughter1IPChi2,
+##               DaughterDOCA,
+##               DOCAmax,
+##               PTSum,
+##               DDIRA,
+##               DIPChi2,
+##               DdcaFDChi2,
+##               DPt,
+##               DVXChi2NDOF,
+##               MinMassPosFit,
+##               MaxMassPosFit,
+##               KPIDK=None
+##               ):
+##     """
+##     Create and return a D -> KKK Selection object.
+##     Arguments:
+##     name           : name of the Selection.
+##     kaonSel        : Input Selection of Kaons 
+##     DaughterPT     : Minimum PT among daughters
+##     DaughterP      : Minimum P among daughters
+##     DaughterIPChi2 : Minimum IPChi2 among daughters
+##     Daughter2IPChi2: Minimum IPChi2 required to at least 2 daughters 
+##     Daughter1IPChi2: Minimum IPChi2 required to at least 1 daughters 
+##     DaughterDOCA   : Maximum chi2 distance of closest approach between 2 daughters
+##     DOCAmax        : Maximum distance of closest approach between 2 daughter
+##     PTSum          : Minimum sum of daughters momenta
+##     DDIRA          : Minimum opening angle between sum_p and FD-direction
+##     DIPChi2        : Maximum IPChi2 of the D
+##     DdcaFDChi2     : Minimum distance from SV to any PV
+##     DPt            : Minimum D Momentum
+##     DVXChi2NDOF    : Maximum Chi2 of the D Vertex
+##     MinMassPosFit  : Minimum value of HHH invariant mass (MeV)
+##     MaxMassPosFit  : Maximum value of HHH invariant mass (MeV).
+##     KPIDK=None     : Minimum Kaon - pion DLL for kaons
+##     """
 
-    _Daughtercuts_K = "(PT > %(DaughterPT)s *MeV) & (P > %(DaughterP)s *MeV) &((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) " % locals() 
+##     _Daughtercuts_K = "(PT > %(DaughterPT)s *MeV) & (P > %(DaughterP)s *MeV) &((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) " % locals() 
                       
-    _Combcuts_HHH = "(ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) &(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) &(ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daughter1IPChi2)s))" % locals() 
+##     _Combcuts_HHH = "(ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) &(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) &(ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daughter1IPChi2)s)) & (ADOCAMAX('') < %(DOCAmax)s*mm)" % locals() 
                     
-    _Mothercuts_HHH = """ 
-                      (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
-                      (BPVDIRA > %(DDIRA)s) & (BPVIPCHI2() < %(DIPChi2)s) & 
-                      (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DdcaFDChi2)s)
-                      """ % locals()
+##     _Mothercuts_HHH = """ 
+##                       (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
+##                       (BPVDIRA > %(DDIRA)s) & (BPVIPCHI2() < %(DIPChi2)s) & 
+##                       (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DdcaFDChi2)s)
+##                       """ % locals()
 
-    _cutsMassPosFit = " (in_range ( %(MinMassPosFit)s ,  M  , %(MaxMassPosFit)s )) " % locals()
+##     _cutsMassPosFit = " (in_range ( %(MinMassPosFit)s ,  M  , %(MaxMassPosFit)s )) " % locals()
 
-    _DaughterCuts = _Daughtercuts_K
+##     _DaughterCuts = _Daughtercuts_K
 
-    if KPIDK != None :
-       _DaughterCuts += " & ((PIDK-PIDpi) > %(KPIDK)s )" %locals()
+##     if KPIDK != None :
+##        _DaughterCuts += " & ((PIDK-PIDpi) > %(KPIDK)s )" %locals()
                    
-    _combKKK = CombineParticles()
-    _combKKK.DecayDescriptor = '[D+ -> K- K+ K+]cc' 
-    _combKKK.DaughtersCuts = { "K+" : '(' + _DaughterCuts + ')' } 
-    _combKKK.CombinationCut = '(' + _Combcuts_HHH + ')' 
-    _combKKK.MotherCut = '(' + _Mothercuts_HHH + ' & ' + _cutsMassPosFit  + ')' 
+##     _combKKK = CombineParticles()
+##     _combKKK.DecayDescriptor = '[D+ -> K- K+ K+]cc' 
+##     _combKKK.DaughtersCuts = { "K+" : '(' + _DaughterCuts + ')' } 
+##     _combKKK.CombinationCut = '(' + _Combcuts_HHH + ')' 
+##     _combKKK.MotherCut = '(' + _Mothercuts_HHH + ' & ' + _cutsMassPosFit  + ')' 
 
 
-    return Selection ( name,
-                       Algorithm = _combKKK,
-                       RequiredSelections = [StdTightKaons])
+##     return Selection ( name,
+##                        Algorithm = _combKKK,
+##                        RequiredSelections = [StdTightKaons])
 
-def makeDs2KKPos(name,
-#              kaonSel,
-              DaughterPT,
-              DaughterP,
-              DaughterIPChi2,
-              Daughter2IPChi2,
-              Daughter1IPChi2,
-              DaughterDOCA,
-              PTSum,
-              DDIRA,
-              DIPChi2,
-              DdcaFDChi2,
-              DPt,
-              DVXChi2NDOF,
-              Ds2KKPosMinMassPosFit,
-              MaxMassPosFit,
-              KPIDK=None,
-              piPIDK=None
-              ):
-    """
-    Create and return a Ds -> KKpiOS Selection object.
-    Arguments:
-    name                  : name of the Selection.
-    kaonSel               : Input Selection of Kaons 
-    DaughterPT            : Minimum PT among daughters
-    DaughterP             : Minimum P among daughters
-    DaughterIPChi2        : Minimum IPChi2 among daughters
-    Daughter2IPChi2       : Minimum IPChi2 required to at least 2 daughters 
-    Daughter1IPChi2       : Minimum IPChi2 required to at least 1 daughters 
-    DaughterDOCA          : Maximum distance of closest approach between 2 daughters 
-    PTSum                 : Minimum sum of daughters momenta
-    DDIRA                 : Minimum opening angle between sum_p and FD-direction
-    DIPChi2               : Maximum IPChi2 of the D
-    DdcaFDChi2            : Minimum distance from SV to any PV
-    DPt                   : Minimum D Momentum
-    DVXChi2NDOF           : Maximum Chi2 of the D Vertex
-    Ds2KKPosMinMassPosFit : Minimum value of KKP invariant mass (MeV)
-    MaxMassPosFit         : Maximum value of HHH invariant mass (MeV).
-    KPIDK=None            : Minimum Kaon - pion DLL for kaons
-    piPIDK=None           : Maximum Kaon - pion DLL for pions
-    """
+## def makeDs2KKPos(name,
+## #              kaonSel,
+##               DaughterPT,
+##               DaughterP,
+##               DaughterIPChi2,
+##               Daughter2IPChi2,
+##               Daughter1IPChi2,
+##               DaughterDOCA,
+##               DOCAmax,
+##               PTSum,
+##               DDIRA,
+##               DIPChi2,
+##               DdcaFDChi2,
+##               DPt,
+##               DVXChi2NDOF,
+##               Ds2KKPosMinMassPosFit,
+##               MaxMassPosFit,
+##               KPIDK=None,
+##               piPIDK=None
+##               ):
+##     """
+##     Create and return a Ds -> KKpiOS Selection object.
+##     Arguments:
+##     name                  : name of the Selection.
+##     kaonSel               : Input Selection of Kaons 
+##     DaughterPT            : Minimum PT among daughters
+##     DaughterP             : Minimum P among daughters
+##     DaughterIPChi2        : Minimum IPChi2 among daughters
+##     Daughter2IPChi2       : Minimum IPChi2 required to at least 2 daughters 
+##     Daughter1IPChi2       : Minimum IPChi2 required to at least 1 daughters 
+##     DaughterDOCA          : Maximum chi2 distance of closest approach between 2 daughters
+##     DOCAmax               : Maximum distance of closest approach between 2 daughters 
+##     PTSum                 : Minimum sum of daughters momenta
+##     DDIRA                 : Minimum opening angle between sum_p and FD-direction
+##     DIPChi2               : Maximum IPChi2 of the D
+##     DdcaFDChi2            : Minimum distance from SV to any PV
+##     DPt                   : Minimum D Momentum
+##     DVXChi2NDOF           : Maximum Chi2 of the D Vertex
+##     Ds2KKPosMinMassPosFit : Minimum value of KKP invariant mass (MeV)
+##     MaxMassPosFit         : Maximum value of HHH invariant mass (MeV).
+##     KPIDK=None            : Minimum Kaon - pion DLL for kaons
+##     piPIDK=None           : Maximum Kaon - pion DLL for pions
+##     """
 
-    _Daughtercuts = "(PT > %(DaughterPT)s *MeV) & (P > %(DaughterP)s *MeV) &((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) " % locals() 
+##     _Daughtercuts = "(PT > %(DaughterPT)s *MeV) & (P > %(DaughterP)s *MeV) &((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) " % locals() 
                       
-    _Combcuts_HHH = "(ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) &(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) &(ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daughter1IPChi2)s))" % locals() 
+##     _Combcuts_HHH = "(ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) &(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) &(ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daughter1IPChi2)s)) & (ADOCAMAX('') < %(DOCAmax)s*mm)" % locals() 
                     
-    _Mothercuts_HHH = """ 
-                      (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
-                      (BPVDIRA > %(DDIRA)s) & (BPVIPCHI2() < %(DIPChi2)s) & 
-                      (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DdcaFDChi2)s)
-                      """ % locals()
+##     _Mothercuts_HHH = """ 
+##                       (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
+##                       (BPVDIRA > %(DDIRA)s) & (BPVIPCHI2() < %(DIPChi2)s) & 
+##                       (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DdcaFDChi2)s)
+##                       """ % locals()
 
-    _cutsMassPosFit = " (in_range ( %(Ds2KKPosMinMassPosFit)s ,  M  , %(MaxMassPosFit)s )) " % locals()
+##     _cutsMassPosFit = " (in_range ( %(Ds2KKPosMinMassPosFit)s ,  M  , %(MaxMassPosFit)s )) " % locals()
 
-    _DaughterCuts_K = _Daughtercuts
-    _DaughterCuts_Pi = _Daughtercuts
+##     _DaughterCuts_K = _Daughtercuts
+##     _DaughterCuts_Pi = _Daughtercuts
 
-    if KPIDK != None :
-       _DaughterCuts_K += " & (MINTREE('K-'==ABSID, PIDK-PIDpi) > %(KPIDK)s )" %locals()
+##     if KPIDK != None :
+##        _DaughterCuts_K += " & (MINTREE('K-'==ABSID, PIDK-PIDpi) > %(KPIDK)s )" %locals()
         
-    if piPIDK != None :
-       _DaughterCuts_Pi += " & (MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDK)s) " % locals()               
-    _combKKpiOS = CombineParticles()
-    _combKKpiOS.DecayDescriptor = '[D_s+ -> pi- K+ K+]cc' 
-    _combKKpiOS.DaughtersCuts = { "K+" : '(' + _DaughterCuts_K + ')', "pi+" :  '(' + _DaughterCuts_Pi + ')' } 
-    _combKKpiOS.CombinationCut = '(' + _Combcuts_HHH + ')' 
-    _combKKpiOS.MotherCut = '(' + _Mothercuts_HHH + ' & ' + _cutsMassPosFit  + ')' 
+##     if piPIDK != None :
+##        _DaughterCuts_Pi += " & (MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDK)s) " % locals()               
+##     _combKKpiOS = CombineParticles()
+##     _combKKpiOS.DecayDescriptor = '[D_s+ -> pi- K+ K+]cc' 
+##     _combKKpiOS.DaughtersCuts = { "K+" : '(' + _DaughterCuts_K + ')', "pi+" :  '(' + _DaughterCuts_Pi + ')' } 
+##     _combKKpiOS.CombinationCut = '(' + _Combcuts_HHH + ')' 
+##     _combKKpiOS.MotherCut = '(' + _Mothercuts_HHH + ' & ' + _cutsMassPosFit  + ')' 
 
 
-    return Selection ( name,
-                       Algorithm = _combKKpiOS,
-                       RequiredSelections = [StdTightKaons, StdNoPIDsPions])
+##     return Selection ( name,
+##                        Algorithm = _combKKpiOS,
+##                        RequiredSelections = [StdTightKaons, StdNoPIDsPions])
 
 def makeD2HHHInc(name,
               DaughterPT,
