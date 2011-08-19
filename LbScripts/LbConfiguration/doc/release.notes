@@ -1,3 +1,8 @@
+2011-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/doxygen: added protection to avoid infinite recursion (if the target executable is not
+	found)
+
 2011-08-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: changed default compiler to gcc45 for slc6.

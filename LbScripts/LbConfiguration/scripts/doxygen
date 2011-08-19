@@ -25,4 +25,13 @@ if [ "$SetupProjectStatus" != 0 ] ; then
     echo "ERROR: Cannot prepare the environment to use doxygen."
     exit 1
 fi
+
+# Prevent infinite recursion of the script if the gerenated
+# environment is frong (e.g. because of unsupported platform).
+if [ $0 == $(which doxygen) ] ; then
+    echo "ERROR: Cannot find Doxygen executable (unsupported platform?)"
+    exit 1
+fi
+
+
 doxygen "${args[@]}"
