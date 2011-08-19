@@ -11,6 +11,7 @@ __author__ = "Albert Puig (albert.puig@cern.ch)"
 
 from optparse import OptionParser
 import os
+import sys
 
 from KaliCalo.Kali.LambdaMap import LambdaMap
 
@@ -29,6 +30,8 @@ if __name__ == '__main__':
                     dest="outputFile", action="store", type="string", default=None,
                     help="join specified constants in FILE", metavar="FILE")
   (options, args) = parser.parse_args()
+  if not args:
+    (options, args) = parser.parse_args(sys.stdin.readline().split())
   newL = combineLambdaMaps([arg for arg in args if os.path.exists(arg)])
   if options.outputFile:
     newL.save(options.outputFile)
