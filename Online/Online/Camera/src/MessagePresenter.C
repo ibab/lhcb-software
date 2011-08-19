@@ -123,9 +123,11 @@ void MessagePresenter::UpdateRight()
   std::map<std::string,std::vector<std::string>*>::iterator itend;
 
 
-  if (i==0){
+  if (i==0)
+  {
     int k=0;
-    for (int j=allpairs.size()-1;j>=0 && k<fNumberEntry670->GetIntNumber();--j){
+    for (int j=allpairs.size()-1;j>=0 && k<fNumberEntry670->GetIntNumber();--j)
+    {
 
       int l=3;
 
@@ -160,8 +162,6 @@ void MessagePresenter::UpdateRight()
       if (l==1 && !doinfo) continue;
       if (l==2 && !dowarn) continue;
       if (l==3 && !doerr) continue;
-
-
 
       string entrystring;
 
@@ -327,7 +327,7 @@ void MessagePresenter::UpdateView()
 
 }
 
-void MessagePresenter::getwarnings(char * fname)
+void MessagePresenter::getwarnings(const char * fname)
 {
   char cstr[1512];
   std::string sstr;
@@ -363,7 +363,7 @@ void MessagePresenter::getwarnings(char * fname)
 
 }
 
-void MessagePresenter::addwarning(const std::string & msg,int ref)
+void MessagePresenter::addwarning(const std::string & msg,const int ref)
 {
   //cout << "Adding " << msg << endl;
 
@@ -468,7 +468,7 @@ int MessagePresenter::GetXtra(const std::string & str,
 
   const std::string& to = xcachefileName;
 
-  char * camproxy = getenv("CAMPROXY");
+  const char * camproxy = getenv("CAMPROXY");
   if (camproxy)
   {
     add = (std::string)camproxy;
@@ -524,8 +524,6 @@ int MessagePresenter::GetXtra(const std::string & str,
     // std::cerr << "Error Connecting"<<std::endl;
     return -1;
   }
-
-  writeCacheFile();
 
   return 1;
 }
@@ -620,7 +618,6 @@ void MessagePresenter::setup()
   fTextButton514->Connect("Clicked()","MessagePresenter",this,"selectErr()");
 
   fTextButton515->Connect("Clicked()","MessagePresenter",this,"clearlist()");
-  //fTextButton516->Connect("Clicked()","MessagePresenter",this,"reloadlist()");
 
   fTextButtonDump->Connect("Clicked()","MessagePresenter",this,"dumpmsg()");
 
@@ -648,35 +645,29 @@ void  MessagePresenter::selectWarn(){
   //  cout << "selected warn "<<fTextButton659->IsOn()<<endl;
   dowarn = fTextButton659->IsOn();
   UpdateRight();
-  writeCacheFile();
 }
 
 void  MessagePresenter::selectErr(){
   //cout << "selected Err "<< fTextButton514->IsOn()<<endl;
   doerr = fTextButton514->IsOn();
   UpdateRight();
-  writeCacheFile();
 }
 
 void  MessagePresenter::selectRun(){
   //cout << "selected Err "<< fTextButton514->IsOn()<<endl;
   dorun = fstopped->IsOn();
   UpdateRight();
-  writeCacheFile();
 }
 
 void  MessagePresenter::selectInfo(){
   //cout << "selected Info "<<fTextButton699->IsOn()<<endl;
   doinfo = fTextButton699->IsOn();
   UpdateRight();
-  writeCacheFile();
 }
 
 void MessagePresenter::selectleft(){
   //cout << "selectleft"<<endl;
   UpdateRight();
-  writeCacheFile();
-
 }
 
 static const char *gFiletypes[] = { "All files",     "*",
@@ -714,8 +705,8 @@ void MessagePresenter::dumpmsg()
 
     size_t pos = s.find_last_of(".");
 
-    std::cout << pos <<" "<<pos2<<" "<<s.length();
-    std::cout << fi.fFilename << std::endl;
+    //std::cout << pos <<" "<<pos2<<" "<<s.length();
+    //std::cout << fi.fFilename << std::endl;
 
 
     if ((pos2!=string::npos) && (pos2>pos)){ // no "." in name
@@ -774,7 +765,6 @@ void MessagePresenter::selectright()
     fStatusBar528->SetText("Error retrieving extra data.");
   }
 
-  writeCacheFile();
   //  new TCanvas;
 }
 
@@ -863,13 +853,6 @@ void MessagePresenter::display()
   fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButtonDump->MoveResize(600,2,90,20);
 
-//   fTextButton516 = new TGTextButton(fMainFrame1933,"Reload",-1,uGC->GetGC(),ufont->GetFontStruct());
-//   fTextButton516->SetTextJustify(36);
-//   fTextButton516->Resize(90,24);
-//   fTextButton516->SetToolTipText("Reload all messages");
-//   fMainFrame1933->AddFrame(fTextButton516, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
-//   fTextButton516->MoveResize(700,2,90,20);
-
   fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fNumberEntry670->MoveResize(260,2,120,20);
@@ -935,7 +918,7 @@ void MessagePresenter::display()
   Layout();
 }
 
-void MessagePresenter::messageloop( char * host, char * file )
+void MessagePresenter::messageloop( const char * host, const char * file )
 {
 
   //  MessagePresenter mp(NULL,100,100);
@@ -1044,14 +1027,18 @@ void MessagePresenter::messageloop( char * host, char * file )
 #ifndef _WIN32
       usleep(100000);
 #endif
-      for (unsigned int i = 0;i<serverlist.size();++i){
+
+      for (unsigned int i = 0;i<serverlist.size();++i)
+      {
 
         if (connlist[i] ==1){
 
           char buf[512];
           int r;
-          while ((r = protolist[i]->getline(buf,511)) >0 ){
-            if (r >0){
+          while ((r = protolist[i]->getline(buf,511)) >0 )
+          {
+            if (r > 0)
+            {
               buf[r] = '\0';
 
               const std::string s = buf;
@@ -1080,8 +1067,10 @@ void MessagePresenter::messageloop( char * host, char * file )
       } //for serverlist
     }
   }
-  else{
-    while(1){
+  else
+  {
+    while(1)
+    {
       gSystem->ProcessEvents();
     }
   }
@@ -1099,22 +1088,10 @@ void MessagePresenter::clearlist()
   clearCacheFile();
 }
 
-void MessagePresenter::reloadlist()
-{
-  writeCacheFile(true);
-  allpairs.clear();
-  keys.clear();
-  levels.clear();
-  cachedWarnings.clear();
-  readCacheFile();
-  UpdateView();
-  UpdateRight();
-}
-
 std::string MessagePresenter::_getCacheFilename(const std::string & _cache_name_)
 {
   std::string to;
-  char * camcache = getenv("CAMCACHE");
+  const char * camcache = getenv("CAMCACHE");
   if ( camcache )
   {
     to = (std::string)camcache + "/" + _cache_name_;
@@ -1124,7 +1101,7 @@ std::string MessagePresenter::_getCacheFilename(const std::string & _cache_name_
     to = "./" + _cache_name_;
   }
   if ( !hostS.empty() ) to = to + "." + hostS;
-  char * user = getenv("USER"); 
+  const char * user = getenv("USER"); 
   if ( user ) to = to + "." + (std::string)user;
   return to;
 }
@@ -1142,17 +1119,19 @@ void MessagePresenter::writeCacheFile(const bool force)
     static time_t lastWrite = time(NULL);
 
     const time_t timeNow = time(NULL);
-    if ( force || cachedWarnings.size() > 100 || (timeNow-lastWrite) >= 30 )
+    if ( force || cachedWarnings.size() >= 50 || (timeNow-lastWrite) >= 30 )
     {
       lastWrite = timeNow;
 
       std::ofstream file(cachefileName.c_str(),std::ios::app);
+      //cout << "Writing to cache file " << cachefileName << endl;
 
       unsigned int count(0);
       for ( std::vector<std::string>::const_iterator i = cachedWarnings.begin();
             i != cachedWarnings.end(); ++i, ++count )
       {
         file << *i << std::endl;
+        //cout << "   " << *i << endl;
       }
 
       file.close();
@@ -1171,7 +1150,7 @@ void MessagePresenter::readCacheFile()
     //cout << "Reading messages from " << cachefileName << endl;
     std::ofstream file(cachefileName.c_str(),std::ios::app);
     file.close(); // just to 'touch' the file incase it is not there
-    getwarnings((char*)cachefileName.c_str());
+    getwarnings(cachefileName.c_str());
   }
 }
 
@@ -1187,7 +1166,7 @@ int main(int /* argc */, char ** argv){
   int   dummy_argc   = 1;
   // NM: modified the following line to couple with warning message:
   // "deprecated conversion from string constant to char*"
-  char *dummy_argv[] =  { (char*)"MP", NULL  };
+  char *dummy_argv[] = { (char*)"MP", NULL  };
 
   TApplication * TApp =
     new TApplication("MessagePresenter",&dummy_argc,dummy_argv);

@@ -519,13 +519,17 @@ int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const s
 }
 
 //=============================================================================
-int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what)
+int CameraTool::SendAndClear(MessageLevel o_l,
+                             const std::string& o_who,
+                             const std::string& o_what)
 {
   return SendAndClear(o_l, o_who, o_what, 0);
 }
 
 
-int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what,
+int CameraTool::SendAndClear(MessageLevel o_l,
+                             const std::string& o_who,
+                             const std::string& o_what,
                              int messagePeriod)
 {
   // Message periods setting:
@@ -657,12 +661,16 @@ int CameraTool::SendAndClear(MessageLevel o_l,const std::string& o_who,const std
 }
 
 //=============================================================================
-int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)
+int CameraTool::SendAndClearTS(MessageLevel l,
+                               const std::string& who,
+                               const std::string& what)
 {
   return SendAndClearTS(l,who,what,0);
 }
 
-int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what,
+int CameraTool::SendAndClearTS(MessageLevel l,
+                               const std::string& who,
+                               const std::string& what,
                                int messagePeriod)
 {
   m_out.add("TEXT","Time of report: ");

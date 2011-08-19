@@ -101,7 +101,7 @@ private:
 
 public:
   void DoClose();
-  void messageloop(char * host = (char*)"127.0.0.1",char * file = NULL);
+  void messageloop(const char * host = "127.0.0.1", const char * file = NULL);
   MessagePresenter();
   ~MessagePresenter(){ }
   void selectWarn();
@@ -114,11 +114,9 @@ public:
   void selectleft();
   void selectright();
   void setup();
-  void addwarning(const std::string &,int ref = 1);
+  void addwarning(const std::string &,const int ref = 1);
 
-  void getwarnings(char *);
-
-  void reloadlist();
+  void getwarnings(const char *);
 
   void writeCacheFile(const bool force = false);
   void readCacheFile();
