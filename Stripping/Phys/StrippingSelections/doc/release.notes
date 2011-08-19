@@ -3,7 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
-
+! 2011-08-19 - Hamish Gordon
+ - Added stripping line in StrippingD2hhh_conf.py for DCS Ds+->K+K+pi-
 ! 2011-08-18 - Jibo He
  - StrippingDiMuonNew
    . Restricted mass range for the J/psi lines on the micro-dst to 3-4 GeV
