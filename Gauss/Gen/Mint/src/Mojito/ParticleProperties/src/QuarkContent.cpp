@@ -1,4 +1,4 @@
-#include "Mint/Mojito/ParticleProperties/QuarkContent.h"
+#include "Mint/QuarkContent.h"
 #include <vector>
 #include <iostream>
 
