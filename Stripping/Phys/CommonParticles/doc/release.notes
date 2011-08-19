@@ -7,6 +7,8 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+!2011-08-19 Hamish Gordon
+ - Add CommonParticles for D(s)->KKK and Ds->K+K+pi-, with Oxford/Rio stripping selection to keep the timing down
 
 !========================= CommonParticles v8r4 2011-08-04 =========================
 ! 2011-08-03 - Rob Lambert
