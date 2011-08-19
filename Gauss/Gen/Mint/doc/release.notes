@@ -5,7 +5,14 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
-
+! 19-08-2011 - Matt Coombes
+ - Moved header files back into exported directory Mint/
+   with flat directory structure so that include statements are simple
+ - Corrected all include statements accordingly
+ - Added missing AmpFit.cpp to Users area
+ - Removed directory structure under Mint/
+ 
+ 
 ! 18-08-2011 - Matt Coombes
  - Moved header files back into exported directory Mint/
    this now has directory structure which has changed imports a bit
