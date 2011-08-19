@@ -15,7 +15,6 @@
 // The spin factors are in Table II, page 2201.
 
 DecayTree* SF_DtoPP0_PtoVP1_VtoP2P3::_exampleDecay=0;
-DecayTree* SF_DtoAP0_AtoVP1_VtoP2P3::_exampleDecay=0; // see below for D-wave version of this
 DecayTree* SF_DtoAP0_AtoSP1_StoP2P3::_exampleDecay=0;
 DecayTree* SF_DtoV1V2_V1toP0P1_V1toP2P3_S::_exampleDecayS=0;
 DecayTree* SF_DtoV1V2_V1toP0P1_V1toP2P3_P::_exampleDecayP=0;// ?
@@ -31,6 +30,7 @@ DecayTree* SF_DtoVT_VtoP0P1_TtoP2P3_D::_exampleDecayD=0;
 
 DecayTree* SF_DtoTS_TtoP0P1_StoP2P3::_exampleDecay=0;
 
+DecayTree* SF_DtoAP0_AtoVP1_VtoP2P3::_exampleDecay=0;
 DecayTree* SF_DtoAP0_AtoVP1Dwave_VtoP2P3::_exampleDecayD=0;
 
 using namespace std;
@@ -114,7 +114,7 @@ bool SF_DtoPP0_PtoVP1_VtoP2P3::parseTree(){
   fsPS[3] = V->getDgtrTreePtr(1);
   normalOrder(fsPS[2], fsPS[3]);
 
-  this->printYourself();
+  // this->printYourself();
 
   return true;
 }
@@ -137,7 +137,8 @@ void SF_DtoPP0_PtoVP1_VtoP2P3::printYourself(ostream& os) const{
   //  bool debugThis = false;
 
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) return;
-  os << "spin factor SF_DtoPP0_PtoVP1_VtoP2P3 "
+  os << "---------------------------------------------------------"
+     << "\n spin factor SF_DtoPP0_PtoVP1_VtoP2P3 "
      << "\n      (p(1).Dot(qV) -p(1).Dot(pV) * pV.Dot(qV) / (MassV*MassV))  /  (GeV*GeV)"
      << "\n      with pV = p(2) + p(3); qV = p(2) - p(3)"
      << "\n      parsed tree " << theDecay().oneLiner()
@@ -165,7 +166,7 @@ const DecayTree& SF_DtoAP0_AtoVP1_VtoP2P3::exampleDecay(){
 //==================================================================
 //==================================================================
 
-bool SF_DtoAP0_AtoVP1_VtoP2P3::parseTree(){
+bool SF_DtoAP0_AtoVP1_VtoP2P3_BASE::parseTree(){
   bool debugThis=false;
 
   if(fsPS.size() < 4) fsPS.reserve(4);
@@ -215,7 +216,7 @@ bool SF_DtoAP0_AtoVP1_VtoP2P3::parseTree(){
 	   << endl;
     }
   }
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
@@ -320,7 +321,7 @@ bool SF_DtoAP0_AtoSP1_StoP2P3::parseTree(){
 
   normalOrder(fsPS[2], fsPS[3]);
 
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
@@ -404,11 +405,11 @@ const DecayTree& SF_DtoV1V2_V1toP0P1_V1toP2P3_D::exampleDecay(){
   return getExampleDecay();
 }
 
-bool SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree(){
+bool SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
   if(! theDecay().nDgtr() == 2){
-    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree"
+    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
     return false;
@@ -417,12 +418,12 @@ bool SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree(){
   V2 = theDecay().getDgtrTreePtr(1);
   
   if(0==V1 || 0==V2){
-    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree"
+    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree"
 	 << " Didn't find V1 or V2 " << V1.get() << ", " << V2.get() << endl;
     return false;
   }
   if(V1->nDgtr() != 2){
-    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree"
+    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree"
 	 << " V1 should have 2 daughters, but it says it has "
 	 << V1->nDgtr() << "."
 	 << endl;
@@ -433,7 +434,7 @@ bool SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree(){
   normalOrder(fsPS[0], fsPS[1]);
 
   if(V2->nDgtr() != 2){
-    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree"
+    cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree"
 	 << " V2 should have 2 daughters, but it says it has "
 	 << V2->nDgtr() << "."
 	 << endl;
@@ -443,8 +444,6 @@ bool SF_DtoV1V2_V1toP0P1_V1toP2P3_S::parseTree(){
   fsPS[3] = V2->getDgtrTreePtr(1);
 
   normalOrder(fsPS[2], fsPS[3]);
-
-  printYourself();
 
   return true;
 }
@@ -589,9 +588,19 @@ double SF_DtoV1V2_V1toP0P1_V1toP2P3_D::getVal(){
     ZTspin2 tD(qD, pD, mD);
     //ZTspin2 tD(qD, pD, mD);
     
-    double zResult = tV1.Contract(tD.Contract(tV2))/(GeV*GeV*GeV*GeV);
-    cout << "SF_DtoV1V2_V1toP0P1_V1toP2P3_D compare: " << zResult << " / "
-	 << returnVal << " = " << zResult/returnVal << endl;
+    double z1Result = tV1.Contract(tD.Contract(tV2))/(GeV*GeV*GeV*GeV);
+    double z2Result = tV1.Dot(pV2) * tV2.Dot(pV1)/(GeV*GeV*GeV*GeV);
+    double z3Result = tV1.Dot(tV2) * tD.Contract_2(tD)/(GeV*GeV*GeV*GeV);
+    cout << "SF_DtoV1V2_V1toP0P1_V1toP2P3_D compare: 1/n " << z1Result << " / "
+	 << returnVal << " = " << z1Result/returnVal << endl;
+    cout << " .... and compare: 2/n " << z2Result << " / "
+	 << returnVal << " = " << z2Result/returnVal << endl;
+    cout << " .... and compare: 2/1 " << z2Result << " / "
+	 << z1Result << " = " << z2Result/z1Result << endl;
+    cout << " .... and compare: 3/n " << z3Result << " / "
+	 << returnVal << " = " << z3Result/returnVal << endl;
+    cout << " .... and compare: 3/1 " << z3Result << " / "
+	 << z1Result << " = " << z3Result/z1Result << endl;
 
   }
 
@@ -601,7 +610,7 @@ double SF_DtoV1V2_V1toP0P1_V1toP2P3_D::getVal(){
 void SF_DtoV1V2_V1toP0P1_V1toP2P3_D::printYourself(ostream& os) const{
   //  bool debugThis = false;
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) return;
-  os << "spin factor SF_DtoV1V2_V1toP0P1_V1toP2P3_S"
+  os << "spin factor SF_DtoV1V2_V1toP0P1_V1toP2P3_D"
      << "\n\t (  qV1.Dot(pV2) - qV1.Dot(pV1) * pV1.Dot(pV2)/(MV1*MV1)"
      <<	"\n\t  )*( "
      << "\n\t	    qV2.Dot(pV1) - qV2.Dot(pV2) * pV2.Dot(pV1)/(MV2*MV2)"
@@ -663,7 +672,7 @@ bool SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1::parseTree(){
   fsPS[3] = V2->getDgtrTreePtr(1);
   normalOrder(fsPS[2], fsPS[3]);
   
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
@@ -759,7 +768,7 @@ bool SF_DtoVS_VtoP0P1_StoP2P3::parseTree(){
   fsPS[3] = S->getDgtrTreePtr(1);
   normalOrder(fsPS[2], fsPS[3]);
 
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
@@ -838,7 +847,7 @@ bool SF_DtoVS_VtoP0P1_StoP2P3_nonResV::parseTree(){
   fsPS[3] = S->getDgtrTreePtr(1);
   normalOrder(fsPS[2], fsPS[3]);
 
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
@@ -968,11 +977,11 @@ bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(){
   fsPS[3] = S->getDgtrTreePtr(1);
   normalOrder(fsPS[2], fsPS[3]);
 
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
-bool SF_DtoVT_VtoP0P1_TtoP2P3_P::parseTree(){
+bool SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
   if(! theDecay().nDgtr() == 2){
@@ -989,12 +998,12 @@ bool SF_DtoVT_VtoP0P1_TtoP2P3_P::parseTree(){
   }
 
   if(0==V || 0==T){
-    cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_S::parseTree"
+    cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_P::parseTree"
 	 << " Didn't find V or T " << V.get() << ", " << T.get() << endl;
     return false;
   }
   if(V->nDgtr() != 2){
-    cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_S::parseTree"
+    cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_P::parseTree"
 	 << " V should have 2 daughters, but it says it has "
 	 << V->nDgtr() << "."
 	 << endl;
@@ -1015,7 +1024,7 @@ bool SF_DtoVT_VtoP0P1_TtoP2P3_P::parseTree(){
   fsPS[3] = T->getDgtrTreePtr(1);
   normalOrder(fsPS[2], fsPS[3]);
 
-  printYourself();
+  // this->printYourself();
   return true;
 }
 
@@ -1061,7 +1070,7 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_P::printYourself(ostream& os) const{
 // -------------------------------------
 
 double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
-  bool dbThis=true;
+  bool dbThis=false;
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
   
   TLorentzVector pV = p(0) + p(1);
@@ -1088,8 +1097,9 @@ double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
     cout << " SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal "
 	 << " returning " << returnVal
 	 << endl;
-    double altVal = LeviCivita(p(0), p(1), p(2), p(3))/(GeV*GeV*GeV*GeV);
-    cout << "check: " << altVal << " ratio: " << altVal/returnVal << endl;
+    double checkVal = LeviCivita(p(0), p(1), p(2), p(3))*MV*MT/units;
+    cout << "cross check: " << checkVal
+	 << " ratio " << checkVal/returnVal << endl;
   }
   return returnVal;
   
@@ -1204,7 +1214,7 @@ bool SF_DtoV1P0_V1toV2P1_V2toP2P3::parseTree(){
  fsPS[3] = V2->getDgtrTreePtr(1);
  normalOrder(fsPS[2], fsPS[3]);
 
- printYourself();
+ // this->printYourself();
  return true;
 }
 
