@@ -456,7 +456,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Slots to react to a selected entry in the path combo box
     def selectedPath(self, path):
         path = str(path)
-        if self._path != (path, None):
+        if self._path != (path, None) and path:
             index = self.models["tree"].findPath(path)
             self.hierarchyTreeView.setCurrentIndex(index)
             self._path = (path, None)
@@ -537,8 +537,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Helper function to select a path in both the combo box and the hierarchy
     #  view.
     def _selectPath(self, selectPath = None):
-        print selectPath, len(selectPath)
-        if selectPath and len(selectPath):
+        if selectPath:
             #  select the specified path
             i = self.pathComboBox.findText(selectPath)
             self.pathComboBox.setCurrentIndex(i)
