@@ -3,6 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2011-08-19 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ - added one line for charmless decays to pairs of light resonances with 2 neutrals
+   in the final state
+
 ! 2011-08-19 - Hamish Gordon
  - Added stripping line in StrippingD2hhh_conf.py for DCS Ds+->K+K+pi-
 ! 2011-08-18 - Jibo He
