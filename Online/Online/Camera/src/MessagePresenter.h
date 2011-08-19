@@ -32,6 +32,7 @@
 #include <TString.h>
 class MessagePresenter: public  TGMainFrame
 {
+
 private:
 
   InfoWindow *iw;
@@ -85,7 +86,7 @@ private:
   TGListBox *fListBox863 ;
   TGListBox *fListBox816;
 
-  TGTextButton *fTextButton515;
+  TGTextButton *fTextButton515,*fTextButton516;
   TGTextButton *fTextButtonDump;
 
   TGNumberEntry *fNumberEntry670;
@@ -117,6 +118,8 @@ public:
 
   void getwarnings(char *);
 
+  void reloadlist();
+
   void writeCacheFile(const bool force = false);
   void readCacheFile();
   std::string _getCacheFilename(const std::string & _cache_name_);
@@ -127,7 +130,8 @@ public:
   void UpdateView();
   void UpdateRight();
 
-  ClassDef(MessagePresenter,1)
+  ClassDef(MessagePresenter,1);
 
-    };
+};
+
 #endif

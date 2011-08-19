@@ -196,7 +196,8 @@ void MessagePresenter::UpdateRight()
     if (itend==values.end()) itend--;
     int offset=0;
 
-    for (it=itend; ;it--){
+    for ( it=itend; ; --it )
+    {
 
       int k=0;
       //string::size_type position1 = allpairs[j].find("/");
@@ -281,7 +282,8 @@ void MessagePresenter::UpdateRight()
 
 }
 
-void MessagePresenter::UpdateView(){
+void MessagePresenter::UpdateView()
+{
   // if (time (NULL) > lastleft)
   //   lastleft = time(NULL);
   // else
@@ -528,7 +530,8 @@ int MessagePresenter::GetXtra(const std::string & str,
   return 1;
 }
 
-void MessagePresenter::setup(){
+void MessagePresenter::setup()
+{
   const int colNum     = 1024;   // Number of colors in the palette
   int       startIndex =  1000;    // starting index of allocated colors
   int       palette[colNum];
@@ -617,22 +620,20 @@ void MessagePresenter::setup(){
   fTextButton514->Connect("Clicked()","MessagePresenter",this,"selectErr()");
 
   fTextButton515->Connect("Clicked()","MessagePresenter",this,"clearlist()");
-  fTextButtonDump->Connect("Clicked()","MessagePresenter",this,"dumpmsg()");
+  //fTextButton516->Connect("Clicked()","MessagePresenter",this,"reloadlist()");
 
+  fTextButtonDump->Connect("Clicked()","MessagePresenter",this,"dumpmsg()");
 
   fListBox816->Connect("Selected(Int_t)","MessagePresenter",this,"selectleft()");;
   fListBox863->Connect("Selected(Int_t)","MessagePresenter",this,"selectright()");;
   fMainFrame1933->Connect("CloseWindow()","MessagePresenter",this,"DoClose()");
 }
 
-void MessagePresenter::DoClose(){
-
-  //  close all active sockets first.
-
-  //  std::cout<<"closing all sockets"<<std::endl;
-
+void MessagePresenter::DoClose()
+{
   writeCacheFile(true);
 
+  //  close all active sockets
   for(unsigned int i = 0;i<socklist.size();++i){
     if (socklist[i]!=NULL){
       ((client *)socklist[i])->shut_close();
@@ -641,9 +642,6 @@ void MessagePresenter::DoClose(){
   }
 
   exit(0);
-
-  // cout << "I do not like to be closed."<<endl;
-  //  fMainFrame1933->DontCallClose();
 }
 
 void  MessagePresenter::selectWarn(){
@@ -687,7 +685,8 @@ static const char *gFiletypes[] = { "All files",     "*",
                                     "Encapsulated Postscript",   "*.eps",
                                     0,               0 };
 
-void MessagePresenter::dumpmsg(){
+void MessagePresenter::dumpmsg()
+{
   Int_t i =  fListBox863->GetSelected();
   if (i<0) return;
 
@@ -753,7 +752,8 @@ void MessagePresenter::dumpmsg(){
   }
 }
 
-void MessagePresenter::selectright(){
+void MessagePresenter::selectright()
+{
 
   Int_t i =  fListBox863->GetSelected();
 
@@ -824,7 +824,8 @@ MessagePresenter::MessagePresenter(): TGMainFrame()
   savepos = -2;
 }
 
-void MessagePresenter::display(){
+void MessagePresenter::display()
+{
 
   fMainFrame1933 = this;
   fMainFrame1933->SetLayoutBroken(kTRUE);
@@ -855,12 +856,19 @@ void MessagePresenter::display(){
   fMainFrame1933->AddFrame(fTextButton515, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton515->MoveResize(400,2,90,20);
 
-  fTextButtonDump = new TGTextButton(fMainFrame1933,"Print Msg",-1,uGC->GetGC(),ufont->GetFontStruct());
+  fTextButtonDump = new TGTextButton(fMainFrame1933,"Print",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButtonDump->SetTextJustify(36);
   fTextButtonDump->Resize(90,24);
   fTextButtonDump->SetToolTipText("Save the message text");
   fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButtonDump->MoveResize(600,2,90,20);
+
+//   fTextButton516 = new TGTextButton(fMainFrame1933,"Reload",-1,uGC->GetGC(),ufont->GetFontStruct());
+//   fTextButton516->SetTextJustify(36);
+//   fTextButton516->Resize(90,24);
+//   fTextButton516->SetToolTipText("Reload all messages");
+//   fMainFrame1933->AddFrame(fTextButton516, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+//   fTextButton516->MoveResize(700,2,90,20);
 
   fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
@@ -1089,6 +1097,18 @@ void MessagePresenter::clearlist()
   UpdateView();
   UpdateRight();
   clearCacheFile();
+}
+
+void MessagePresenter::reloadlist()
+{
+  writeCacheFile(true);
+  allpairs.clear();
+  keys.clear();
+  levels.clear();
+  cachedWarnings.clear();
+  readCacheFile();
+  UpdateView();
+  UpdateRight();
 }
 
 std::string MessagePresenter::_getCacheFilename(const std::string & _cache_name_)

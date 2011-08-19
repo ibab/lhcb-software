@@ -180,7 +180,8 @@ StatusCode CameraTool::initialize()
     if (pos1 != std::string::npos   &&
         pos2 != std::string::npos   &&
         pos3 != std::string::npos   &&
-        pos4 == std::string::npos ) {
+        pos4 == std::string::npos )
+    {
       utgidNew = utgidNew.replace(pos1+1, pos2-pos1-1, "x");
     }//if
 
@@ -200,6 +201,9 @@ StatusCode CameraTool::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Setup of CameraTool is done"<<endreq;
 
+  // Send a message myself, announcing I am alive and well
+  this->SendAndClearTS( ICameraTool::INFO, name(), "CameraTool is ACTIVE" );
+
   return sc;
 }
 
@@ -207,17 +211,16 @@ StatusCode CameraTool::initialize()
 StatusCode CameraTool::finalize()
 {
   delete m_DIMService;
-  if (NULL != m_camc) {
-    delete m_camc;
-    m_camc = NULL;
-  }// if(NULL!=m_camc)
-
+  m_DIMService = NULL;
+  delete m_camc;
+  m_camc = NULL;
   return GaudiTool::finalize();
 }
 
 //=============================================================================
 
-std::string CameraTool::NumToTextMessage(MessageLevel l){
+std::string CameraTool::NumToTextMessage(MessageLevel l)
+{
   std::string txtMessage = "NONE";
   switch (l) {
   case ICameraTool::NONE:
@@ -450,14 +453,15 @@ bool CameraTool::MessageRateCheck(MessageLevel l, std::string who, std::string w
 
 //=============================================================================
 int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
-                             MessageLevel p_l,const std::string& p_who,const std::string& p_what){
+                             MessageLevel p_l,const std::string& p_who,const std::string& p_what)
+{
   return SendAndClear(c_l, c_who, c_what, p_l, p_who, p_what,0);
 }
 
 int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
                              MessageLevel p_l,const std::string& p_who,const std::string& p_what,
-                             int messagePeriod){
-
+                             int messagePeriod)
+{
   ReplaceMessageParameters(c_l, c_who, c_what, p_l, p_who, p_what);
   m_skipCameraToPVSSFlag = true;
   SendAndClear(c_l, c_who, c_what, messagePeriod);
@@ -468,15 +472,16 @@ int CameraTool::SendAndClear(MessageLevel c_l,const std::string& c_who,const std
 
 //=============================================================================
 int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
-                               MessageLevel p_l,const std::string& p_who,const std::string& p_what){
+                               MessageLevel p_l,const std::string& p_who,const std::string& p_what)
+{
   return SendAndClearTS(c_l, c_who, c_what, p_l, p_who, p_what,0);
 }
 
 
 int CameraTool::SendAndClearTS(MessageLevel c_l,const std::string& c_who,const std::string& c_what,
                                MessageLevel p_l,const std::string& p_who,const std::string& p_what,
-                               int messagePeriod){
-
+                               int messagePeriod)
+{
   ReplaceMessageParameters(c_l, c_who, c_what, p_l, p_who, p_what);
   m_skipCameraToPVSSFlag = true;
   SendAndClearTS(c_l, c_who, c_what, messagePeriod);
@@ -795,7 +800,8 @@ int CameraTool::Append(TH2D * H, const char * opts)
 }
 
 
-std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) {
+std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) 
+{
   switch (l) {
   case ICameraTool::NONE:
     os << 0;
