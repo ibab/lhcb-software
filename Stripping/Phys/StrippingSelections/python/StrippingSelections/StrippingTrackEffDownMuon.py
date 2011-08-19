@@ -135,14 +135,14 @@ def selMuonPParts(name, DataType, downstreamSeq):
    cm.configureMuonIDAlg(idalg)
    idalg.TrackLocation = "Rec/Downstream/FittedTracks"
    idalg.MuonIDLocation = "Rec/Muon/MuonPID/Downstream"
-   idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream" # I would call it FromDownstream …but just to be »Klugscheißer«
+   idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream" # I would call it FromDownstream
 
    downprotoseq = GaudiSequencer(name+"ProtoPSeq")
    downprotos = ChargedProtoParticleMaker(name+"ProtoPMaker")
    downprotos.Inputs = ["Rec/Downstream/FittedTracks"]
    downprotos.Output = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
-   #tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed …
+   #tracktypes = [ "Long","Upstream","Downstream","Ttrack","Velo","VeloR" ] # only downstream needed 
    tracktypes = ["Downstream"]
    #if (trackcont == "Best") :
    #	tracktypes = [ "Long" ]
