@@ -330,37 +330,28 @@ void MessagePresenter::UpdateView()
 void MessagePresenter::getwarnings(const char * fname)
 {
   char cstr[1512];
-  std::string sstr;
-
-  //  ifstream F("warnings");
-  if (fname!=NULL){
-    FILE *F;
-    F = fopen(fname,"r");
-    if (F==NULL){
+  if (fname)
+  {
+    FILE *F = fopen(fname,"r");
+    if (!F)
+    {
       printf("Cant open %s\n",fname);
     }
-    else{
-
-      while (fgets(cstr,1511,F)!=NULL){
-        int s = strlen(cstr);
+    else
+    {
+      while (fgets(cstr,1511,F))
+      {
+        const int s = strlen(cstr);
         cstr[s-1] = '\0';
-        sstr = cstr;
-        //usleep(1000);
-        //cout << "Adding from file"<< sstr<<endl;
+        const std::string sstr = cstr;
         addwarning(sstr,0);
-
       }
     }
-    //    cout << "S " <<allpairs.size()<<endl;
     lastleft = -1;
     lastright = -1;
     UpdateView();
     UpdateRight();
-
-    //    if (i%5==1)sleep(3);
-
   }
-
 }
 
 void MessagePresenter::addwarning(const std::string & msg,const int ref)
@@ -629,10 +620,13 @@ void MessagePresenter::setup()
 void MessagePresenter::DoClose()
 {
   writeCacheFile(true);
+  checkCacheFileLength();
 
   //  close all active sockets
-  for(unsigned int i = 0;i<socklist.size();++i){
-    if (socklist[i]!=NULL){
+  for(unsigned int i = 0;i<socklist.size();++i)
+  {
+    if (socklist[i])
+    {
       ((client *)socklist[i])->shut_close();
 
     }
@@ -1110,6 +1104,41 @@ void MessagePresenter::clearCacheFile()
 {
   std::ofstream file(cachefileName.c_str());
   file.close();
+}
+
+void MessagePresenter::checkCacheFileLength()
+{
+  writeCacheFile(true);
+  cachedWarnings.clear();
+
+  FILE *F = fopen(cachefileName.c_str(),"r");
+  if (!F)
+  {
+    cout << "Cannot open " << cachefileName << endl;
+  }
+  else
+  {
+    const unsigned int maxSize = 5000;
+    char cstr[1512];
+    std::vector<std::string> lines;
+    while (fgets(cstr,1511,F))
+    {
+      const int s = strlen(cstr);
+      cstr[s-1] = '\0';
+      const std::string sstr = cstr;
+      lines.push_back(sstr);
+    }
+    if ( lines.size() > maxSize )
+    {
+      clearCacheFile();
+      for ( unsigned int i = lines.size()-1-maxSize; i < lines.size(); ++i )
+      {
+        cachedWarnings.push_back(lines[i]);
+      }
+      writeCacheFile(true);
+    }
+    cachedWarnings.clear();
+  }
 }
 
 void MessagePresenter::writeCacheFile(const bool force)

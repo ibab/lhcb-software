@@ -121,9 +121,10 @@ public:
   void writeCacheFile(const bool force = false);
   void readCacheFile();
   std::string _getCacheFilename(const std::string & _cache_name_);
-  std::string getCacheFilename() { return _getCacheFilename("camera_messages.cache"); }
-  std::string getXCacheFilename() { return _getCacheFilename("camera_extra_info.cache"); }
+  std::string getCacheFilename()  { return _getCacheFilename(".camera_messages.cache"); }
+  std::string getXCacheFilename() { return _getCacheFilename(".camera_extra_info.cache"); }
   void clearCacheFile();
+  void checkCacheFileLength();
 
   void UpdateView();
   void UpdateRight();
