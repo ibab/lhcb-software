@@ -10,6 +10,8 @@
    in the final state
 
 ! 2011-08-19 - Hamish Gordon
+ - Updated strippingD2hhh to use CommonParticles for all modes
+! 2011-08-19 - Hamish Gordon
  - Added stripping line in StrippingD2hhh_conf.py for DCS Ds+->K+K+pi-
 ! 2011-08-18 - Jibo He
  - StrippingDiMuonNew
