@@ -7,6 +7,11 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2011-08-19 - Jibo He
+ - StdLooseDiElectron
+  . Added PT>500 MeV for electron to speed up. 
+
 !2011-08-19 Hamish Gordon
  - Add CommonParticles for D(s)->KKK and Ds->K+K+pi-, with Oxford/Rio stripping selection to keep the timing down
 
